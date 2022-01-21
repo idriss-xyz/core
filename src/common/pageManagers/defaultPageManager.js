@@ -58,7 +58,7 @@ export class DefaultPageManager extends AbstractPageManager {
         if (new Date() - this.lastEvent?.date >= 500 && this.lastEvent?.input.value == this.lastEvent?.value && this.lastEvent?.value.length >= 3) {
             let event = this.lastEvent;
             let data = await this.apiCall(this.lastEvent?.value);
-            if (data && Object.values(data.result).length > 0 && event == this.lastEvent) {
+            if (data && event == this.lastEvent) {
                 this.showPopup(this.lastEvent.input, this.lastEvent.value, data.result);
             }
         }

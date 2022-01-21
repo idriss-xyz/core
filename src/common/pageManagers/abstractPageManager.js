@@ -11,6 +11,16 @@ export class AbstractPageManager {
         let style = document.createElement('style')
         style.textContent = css.toString();
         div.shadowRoot.append(style);
+        if (Object.values(elements).length == 0) {
+            let item = document.createElement('div')
+            item.className = 'empty';
+            item.append("nothing found. sign up ");
+            let a = document.createElement('a')
+            a.textContent = 'now';
+            a.href = 'https://idriss-crypto.com/';
+            item.append(a)
+            div.shadowRoot.append(item)
+        }
         for (const elementsKey in elements) {
             let item = document.createElement('div')
             let typeElement = document.createElement('div')
@@ -33,7 +43,7 @@ export class AbstractPageManager {
             item.onmousedown = () => {
                 callback(elements[elementsKey])
                 tooltip.style.visibility = "visible";
-                setTimeout(function(){
+                setTimeout(function () {
                     tooltip.style.visibility = "hidden";
                 }, 1000);
             }

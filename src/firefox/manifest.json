@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "IDriss",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Resolving addresses of cryptocurrency wallets by phone number or email address",
   "author": "IDriss",
   "content_scripts": [
