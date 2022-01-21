@@ -25,8 +25,18 @@ export class AbstractPageManager {
             valueElement.className = 'value'
             valueElement.textContent = elements[elementsKey];
             item.append(valueElement)
+            let tooltip = document.createElement('div')
+            tooltip.className = 'tooltip'
+            tooltip.textContent = "Copied address!";
+            item.append(tooltip)
             div.shadowRoot.append(item)
-            item.onmousedown = () => callback(elements[elementsKey])
+            item.onmousedown = () => {
+                callback(elements[elementsKey])
+                tooltip.style.visibility = "visible";
+                setTimeout(function(){
+                    tooltip.style.visibility = "hidden";
+                }, 1000);
+            }
         }
     }
 

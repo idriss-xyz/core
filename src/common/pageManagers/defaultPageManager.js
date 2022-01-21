@@ -1,7 +1,7 @@
 import {AbstractPageManager} from "./abstractPageManager";
 import css from "!css-loader!sass-loader!./popup.scss";
 
-const badWords = ["login", "signin"]
+const badWords = ["login", "signup"]
 
 export class DefaultPageManager extends AbstractPageManager {
     lastEvent = null;
