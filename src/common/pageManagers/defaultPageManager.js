@@ -4,7 +4,12 @@ import css from "!css-loader!sass-loader!./popup.scss";
 const badWords = ["login", "signup"]
 
 export class DefaultPageManager extends AbstractPageManager {
-    lastEvent = null;
+
+    constructor(document) {
+        super();
+        this.lastEvent = null;
+        this.document = document;
+    }
 
     isEnabled() {
         return new Promise(r => chrome.storage.local.get(['enabled'], x => r(x?.enabled ?? true)))
