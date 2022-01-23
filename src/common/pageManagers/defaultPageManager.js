@@ -28,7 +28,8 @@ export class DefaultPageManager extends AbstractPageManager {
         if (!this.allowedFiled(input)) return;
         const regxE = /^[^@]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
         const regxP = /^[+\s\(\)-]*([\s\(\)-]*\d){6,}[\s\(\)-]*/;
-        if (!regxP.test(input.value) && !regxE.test(input.value)) return;
+        const regxT = /^@[^\s]+/;
+        if (!regxP.test(input.value) && !regxE.test(input.value) && !regxT.test(input.value)) return;
         this.lastPopup?.remove();
         this.lastEvent = {event: e, date: new Date(), input: input, value: input.value}
         setTimeout(() => this.checkInputChanged(), 500)

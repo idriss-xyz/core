@@ -2,6 +2,7 @@ html {
     margin: 0;
     padding: 0;
     user-select: none;
+    font-family: 'Segoe UI', sans-serif;
 }
 
 body {
@@ -10,7 +11,7 @@ body {
     min-height: 100vh;
     margin: 0;
     padding: 0;
-    background: linear-gradient(135deg, #11dd74, #350e47);;
+    background: linear-gradient(135deg, #11dd74, #350e47);
 }
 
 header {
@@ -21,13 +22,13 @@ header {
 }
 
 header img {
-    width: 80%;
-    max-width: 80vh;
+    width: 70%;
+    max-width: 70vh;
 }
 
 section {
     flex: 1 0 auto;
-    padding: 20px;
+    padding: 40px;
 }
 
 input[type="text"] {
@@ -35,8 +36,9 @@ input[type="text"] {
     width: 100%;
     height: 38px;
     padding: 8px 12px;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     font-size: 14px;
+    font-family: 'Segoe UI', sans-serif;
     line-height: 1.428571429;
     color: #333333;
     vertical-align: middle;
@@ -44,6 +46,10 @@ input[type="text"] {
     border: 1px solid #cccccc;
     box-sizing: border-box;
     border-radius: 4px;
+    outline: none;
+}
+input[type="text"]:focus {
+  border: 1px solid #a6a6a6;
 }
 
 footer a {
@@ -53,6 +59,7 @@ footer a {
     padding: 20px;
     text-decoration: none;
     font-size: 20px;
+    font-family: 'Segoe UI', sans-serif;
 }
 
 .enabled {

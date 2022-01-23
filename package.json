@@ -4,11 +4,11 @@
     "buildOnce": "webpack"
   },
   "devDependencies": {
-    "webpack": "^5.59.0",
-    "webpack-cli": "^4.9.1",
     "copy-webpack-plugin": "^9.0.1",
     "css-loader": "^6.4.0",
+    "sass": "^1.43.2",
     "sass-loader": "^12.2.0",
-    "sass": "^1.43.2"
+    "webpack": "^5.59.0",
+    "webpack-cli": "^4.9.1"
   }
 }
