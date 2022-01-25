@@ -27,6 +27,9 @@ const defaultDomainList = [
     "zaif.jp",
     "ascendex.com",
     "tokocrypto.com",
+    "poap.xyz",
+    "etherscan.io",
+    "guarda.co"
 ];
 
 export async function pageManagerFactory(document, url) {
