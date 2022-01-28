@@ -11,7 +11,7 @@ body {
     min-height: 100vh;
     margin: 0;
     padding: 0;
-    background: linear-gradient(135deg, #11dd74, #350e47);
+    background: #ffffff;
 }
 
 header {
@@ -29,6 +29,13 @@ header img {
 section {
     flex: 1 0 auto;
     padding: 40px;
+    font-weight: ;
+    font-size: 16px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+div#InputHeader {
+    margin-bottom: 5px;
 }
 
 input[type="text"] {
@@ -53,18 +60,18 @@ input[type="text"]:focus {
 }
 
 footer a {
-    color: #ffffff;
+    color: #000000;
     display: block;
     text-align: center;
     padding: 20px;
     text-decoration: none;
-    font-size: 20px;
+    font-size: 16px;
     font-family: 'Segoe UI', sans-serif;
 }
 
 .enabled {
     text-align: right;
-    color: #fff;
+    color: #000000;
     margin: 10px;
 }
 
@@ -89,7 +96,7 @@ input[type="checkbox"]::before {
     position: absolute;
     left: -10px;
     top: -5px;
-    background: #ffffff;
+    background: #000000;
     box-shadow: 0 1px 3px 0 rgb(0 0 0 / 40%)
 }
 

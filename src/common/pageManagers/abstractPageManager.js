@@ -14,10 +14,11 @@ export class AbstractPageManager {
         if (Object.values(elements).length == 0) {
             let item = document.createElement('div')
             item.className = 'empty';
-            item.append("nothing found. sign up ");
+            item.append("Nothing found. ");
             let a = document.createElement('a')
-            a.textContent = 'now';
-            a.href = 'https://idriss-crypto.com/';
+            a.textContent = 'Sign up for IDriss now!';
+            a.href = 'https://www.idriss.xyz';
+            a.target = '_blank';
             item.append(a)
             div.shadowRoot.append(item)
         }
