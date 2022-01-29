@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
   "name": "IDriss",
-  "version": "0.1.4",
-  "description": "Resolving addresses of cryptocurrency wallets by phone number or email address",
+  "version": "0.1.5",
+  "description": "Use emails, phone numbers or Twitter usernames instead of crypto wallet addresses.",
   "author": "IDriss",
   "content_scripts": [
     {
@@ -25,7 +25,7 @@
     "contextMenus",
     "storage"
   ],
-  "homepage_url": "https://www.idriss-crypto.com/",
+  "homepage_url": "https://www.idriss.xyz",
   "icons": {
     "16": "img/icon16.png",
     "48": "img/icon48.png",
