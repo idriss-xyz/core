@@ -34,7 +34,7 @@ export class AbstractPageManager {
             item.append(keyElement)
             if (key.startsWith("@")){keyElement.style.color="#1DA1F2";
             let imgElement = document.createElement('img')
-            imgElement.src = "img/twitter.png"
+            imgElement.src = "https://www.idriss.xyz/static/images/twitter.png"
             imgElement.alt = "Twitter"
             imgElement.className = 'img'
             item.append(imgElement)}
