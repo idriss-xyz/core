@@ -9,7 +9,11 @@ export class AbstractPageManager {
     generatePopupContent(div, key, elements, callback) {
         div.attachShadow({mode: 'open'})
         let style = document.createElement('style')
-        style.textContent = css.toString();
+        let addition;
+        if (Object.values(elements).length > 3) {
+            addition = (":host {max-height: 125px!important; overflow-y: auto!important; overflow-x: hidden!important;}");
+        }
+        style.textContent = css.toString() + addition;
         div.shadowRoot.append(style);
         if (Object.values(elements).length == 0) {
             let item = document.createElement('div')
