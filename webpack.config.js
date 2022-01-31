@@ -21,13 +21,11 @@ module.exports = {
         new CopyPlugin({
             patterns: [
                 {from: "./src/chromium/manifest.json", to: "chromium"},
-                {from: "./src/common/popup.html", to: "chromium"},
                 {from: "./src/common/standalone.html", to: "chromium"},
                 {from: "./src/common/standalone.css", to: "chromium"},
                 {from: "./src/common/img", to: "chromium/img"},
 
                 {from: "./src/firefox/manifest.json", to: "firefox"},
-                {from: "./src/common/popup.html", to: "firefox"},
                 {from: "./src/common/standalone.html", to: "firefox"},
                 {from: "./src/common/standalone.css", to: "firefox"},
                 {from: "./src/common/img", to: "firefox/img"},

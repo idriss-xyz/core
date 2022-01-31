@@ -30,7 +30,7 @@
     "148": "img/icon148.png"
   },
   "action": {
-    "default_popup": "popup.html",
+    "default_popup": "standalone.html",
     "default_icon": "img/icon16bw.png"
   }
 }
