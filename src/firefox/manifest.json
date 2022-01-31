@@ -33,7 +33,7 @@
     "148": "img/icon148.png"
   },
   "browser_action": {
-    "default_popup": "popup.html",
+    "default_popup": "standalone.html",
     "default_icon": "img/icon16bw.png"
   },
   "browser_specific_settings": {

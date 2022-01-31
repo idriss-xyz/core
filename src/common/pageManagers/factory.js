@@ -1,15 +1,21 @@
 import {DefaultPageManager} from "./defaultPageManager";
 import {StandalonePageManager} from "./standalonePageManager";
+import {FtxPageManager} from "./FtxPageManager";
+import {HuobiPageManager} from "./HuobiPageManager";
+import {PoapPageManager} from "./PoapPageManager";
 
+const specificDomainList = {
+    "app.poap.xyz": PoapPageManager,
+    "ftx.com": FtxPageManager,
+    "huobi.com": HuobiPageManager
+}
 const defaultDomainList = [
     "binance.com",
     "coinbase.com",
     "kucoin.com",
-    "ftx.com",
     "kraken.com",
     "bitfinex.com",
     "gate.io",
-    "huobi.com",
     "binance.us",
     "bithumb.com",
     "bitstamp.net",
@@ -33,7 +39,10 @@ const defaultDomainList = [
 ];
 
 export async function pageManagerFactory(document, url) {
-    if (defaultDomainList.some(x => url.hostname === x || url.hostname.endsWith('.' + x))) {
+    let specific = Object.entries(specificDomainList).find(([domain, constructor]) => url.hostname === domain || url.hostname.endsWith('.' + domain))
+    if (specific) {
+        return new specific[1](document)
+    } else if (defaultDomainList.some(x => url.hostname === x || url.hostname.endsWith('.' + x))) {
         return new DefaultPageManager(document)
     }
 }

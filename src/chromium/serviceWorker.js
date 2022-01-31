@@ -32,7 +32,7 @@ chrome.contextMenus.create({
     documentUrlPatterns: ["chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/*", "chrome-extension://hnfanknocfeofbddgcijnmhnfnkdnaad/*", "chrome-extension://bfnaelmomeimhlpmgjnjophhpkkoljpa/*", "chrome-extension://eajafomhmkipbjmfmhebemolkcicgfmd/*", "chrome-extension://bhhhlbepdkbapadjdnnojkbgioiodbic/*", "chrome-extension://bgpipimickeadkjlklgciifhnalhdjhe/*", "chrome-extension://fhbohimaelbohpjbbldcngcnapndodjp/*", "chrome-extension://aiifbnbfobpmeekipheeijimdpnlpgpp/*", "chrome-extension://ogcmjchbmdichlfelhmceldndgmgpcem/*", "chrome-extension://hmeobnfnfcmdkdcmlblgagmfpfboieaf/*", "chrome-extension://dlcobpjiigpikoobohmabehhmhfoodbb/*", "chrome-extension://fnjhmkhhmkbjkkabndcnnogagogbneec/*"]
 });
 chrome.contextMenus.onClicked.addListener((info, tab) => {
-    chrome.windows.create({url: '/popup.html', width: 450, height: 640, type: 'popup'})
+    chrome.windows.create({url: '/standalone.html', width: 450, height: 640, type: 'popup'})
 })
 chrome.tabs.onUpdated.addListener(async (tabId, _, tab) => {
     let isActive = tab.url.includes("nkbihfbeogaeaoehlefnkodbefgpgknn") || tab.url.includes("hnfanknocfeofbddgcijnmhnfnkdnaad") || tab.url.includes("bfnaelmomeimhlpmgjnjophhpkkoljpa") || tab.url.includes("eajafomhmkipbjmfmhebemolkcicgfmd") || tab.url.includes("bhhhlbepdkbapadjdnnojkbgioiodbic") || tab.url.includes("bgpipimickeadkjlklgciifhnalhdjhe") || tab.url.includes("fhbohimaelbohpjbbldcngcnapndodjp") || tab.url.includes("aiifbnbfobpmeekipheeijimdpnlpgpp") || tab.url.includes("ogcmjchbmdichlfelhmceldndgmgpcem") || tab.url.includes("hmeobnfnfcmdkdcmlblgagmfpfboieaf") || tab.url.includes("dlcobpjiigpikoobohmabehhmhfoodbb") || tab.url.includes("fnjhmkhhmkbjkkabndcnnogagogbneec")
