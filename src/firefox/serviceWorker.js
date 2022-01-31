@@ -25,7 +25,7 @@ browser.contextMenus.create({
     documentUrlPatterns: ["moz-extension://f8447b2f-6dfc-45ef-acea-dbe7d9828659/*", "moz-extension://92744c8c-9eb2-4c22-8d0c-f0fb8a0bb9ca/*", "moz-extension://b40d9360-a5a5-43e5-928d-cbe6a73b66a1/*", "moz-extension://0b8be570-8dcc-4755-95b4-bb5da48fa031/*", "moz-extension://b7f2adfa-eee4-4e2e-a1dc-b6264f24087b/*"]
 });
 browser.contextMenus.onClicked.addListener((info, tab) => {
-    chrome.windows.create({url: '/popup.html', width: 450, height: 600, type: 'popup'})
+    browser.windows.create({url: '/popup.html', width: 450, height: 640, type: 'popup'})
 })
 browser.tabs.onUpdated.addListener(async (tabId, _, tab) => {
     let isActive = tab.url.includes("f8447b2f-6dfc-45ef-acea-dbe7d9828659") || tab.url.includes("92744c8c-9eb2-4c22-8d0c-f0fb8a0bb9ca") || tab.url.includes("b40d9360-a5a5-43e5-928d-cbe6a73b66a1") || tab.url.includes("0b8be570-8dcc-4755-95b4-bb5da48fa031") || tab.url.includes("b7f2adfa-eee4-4e2e-a1dc-b6264f24087b")
