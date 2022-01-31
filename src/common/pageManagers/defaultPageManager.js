@@ -1,9 +1,9 @@
 import {AbstractPageManager} from "./abstractPageManager";
 import css from "!css-loader!sass-loader!./popup.scss";
 
-const badWords = ["login", "signup"]
 
 export class DefaultPageManager extends AbstractPageManager {
+    badWords = ["login", "signup"];
 
     constructor(document) {
         super();
@@ -36,20 +36,24 @@ export class DefaultPageManager extends AbstractPageManager {
     }
 
     allowedFiled(input) {
-        if (badWords.some(w => this.document.location.toString().toLowerCase().includes(w))) return false;
-        if (input.type === 'password') return false;
+        if (this.badWords.some(w => this.document.location.toString().toLowerCase().includes(w))) return false;
+        return !this.getDisallowedNode(input)
+    }
+
+    getDisallowedNode(input) {
+        if (input.type === 'password') return input;
         let node = input;
         while (node) {
-            if (this.hasBadWord(node)) return false;
+            if (this.hasBadWord(node)) return node;
             node = node.parentNode;
         }
-        return true;
+        return null;
     }
 
     hasBadWord(node) {
         if (node?.attributes) {
             for (const attribute of Array.from(node.attributes)) {
-                if (badWords.some(w => attribute.name.toLowerCase().includes(w) || attribute.value.toLowerCase().includes(w))) return true;
+                if (this.badWords.some(w => attribute.name.toLowerCase().includes(w) || attribute.value.toLowerCase().includes(w))) return true;
             }
         }
         return false;
