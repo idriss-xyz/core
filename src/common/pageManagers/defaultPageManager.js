@@ -3,7 +3,7 @@ import css from "!css-loader!sass-loader!./popup.scss";
 
 
 export class DefaultPageManager extends AbstractPageManager {
-    badWords = ["login", "signup"];
+    badWords = ["login", "signup", "email", "mail", "phone", "signin"];
 
     constructor(document) {
         super();
