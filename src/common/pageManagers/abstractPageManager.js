@@ -36,12 +36,14 @@ export class AbstractPageManager {
             keyElement.className = 'key'
             keyElement.textContent = key;
             item.append(keyElement)
-            if (key.startsWith("@")){keyElement.style.color="#1DA1F2";
-            let imgElement = document.createElement('img')
-            imgElement.src = "https://www.idriss.xyz/static/images/twitter.png"
-            imgElement.alt = "Twitter"
-            imgElement.className = 'img'
-            item.append(imgElement)}
+            if (key.startsWith("@")){
+                keyElement.style.color="#1DA1F2";
+                let imgElement = document.createElement('img')
+                imgElement.src = "https://www.idriss.xyz/static/images/twitter.png"
+                imgElement.alt = "Twitter"
+                imgElement.className = 'img'
+                item.append(imgElement)
+            }
             let valueElement = document.createElement('div')
             valueElement.className = 'value'
             valueElement.textContent = elements[elementsKey];
