@@ -1,13 +1,37 @@
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
+        console.log('mes')
         if (request.type === 'apiAddressesRequest') {
             fetch("https://www.idriss.xyz/v1/Addresses?InputCombination=" + encodeURIComponent(request.value))
                 .then(fetchRequest => fetchRequest.json())
                 .then(x => sendResponse(x));
             return true;
+        } else if (request.type === 'apiBulkAddressesRequest') {
+            fetch("https://www.idriss.xyz/v2/Addresses?identifiers=" + encodeURIComponent(JSON.stringify(request.value)))
+                .then(fetchRequest => fetchRequest.json())
+                .then(x => sendResponse(x));
+            return true;
+        } else if (request.type === 'getIconUrl') {
+            fetch(chrome.runtime.getURL('img/icon148.png'))
+                .then(fetchRequest => fetchRequest.blob())
+                .then(blob => readBlob(blob))
+                .then(x => sendResponse(x));
+            return true;
         }
     }
 );
+
+function readBlob(b) {
+    return new Promise(function (resolve, reject) {
+        const reader = new FileReader();
+
+        reader.onloadend = function () {
+            resolve(reader.result);
+        };
+
+        reader.readAsDataURL(b);
+    });
+}
 
 /*  Chromium Wallets
     nkbihfbeogaeaoehlefnkodbefgpgknn - MetaMask
