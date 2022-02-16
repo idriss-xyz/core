@@ -1,8 +1,10 @@
-export class TwitterPageManager {
+import {AbstractPageManager} from "./abstractPageManager";
+
+export class TwitterPageManager extends AbstractPageManager {
     static namesResults = {};
 
     constructor(document) {
-        this.document = document;
+        super(document)
     }
 
     async init() {
@@ -11,6 +13,7 @@ export class TwitterPageManager {
         this.searchPlaces()
         addEventListener('load', () => this.searchPlaces())
         addEventListener('focus', () => this.searchPlaces())
+        setInterval(()=>this.searchPlaces(), 2000);
     }
 
     searchPlaces() {
@@ -68,7 +71,35 @@ export class TwitterPageManager {
                     icon.style.margin = '0 0.3em';
                     icon.style.background = `url(${this.iconUrl}) no-repeat`;
                     icon.style.backgroundSize = `contain`;
+                    icon.setAttribute('tabindex', '-1')
+                    const dropdown = document.createElement('div');
+                    icon.append(dropdown);
                     div.querySelector('.r-1fmj7o5').append(icon)
+                    icon.onclick = e => {
+                        e.stopPropagation();
+                        e.preventDefault();
+
+                        let dropdown = this.document.createElement('div');
+                        this.document.body.append(dropdown);
+                        let rect = icon.getBoundingClientRect()
+                        dropdown.style.position = 'absolute';
+                        dropdown.style.left = rect.left + 'px';
+                        dropdown.style.top = rect.top + rect.height + 'px';
+                        dropdown.style.width = rect.width + 'px';
+                        dropdown.style.minWidth = '400px';
+                        dropdown.style.zindex = 1000000;
+
+                        this.lastDropdown?.remove();
+                        this.lastDropdown=dropdown
+                        this.generatePopupContent(dropdown, name, data, (value) => {
+                            navigator.clipboard.writeText(value)
+                            let lastPopup = this.lastDropdown;
+                            setTimeout(() => lastPopup?.remove(), 100);
+                        })
+                        icon.onblur=()=>{
+                            setTimeout(() => dropdown.remove(), 100);
+                        }
+                    }
                 }
             }
             if (name) {
