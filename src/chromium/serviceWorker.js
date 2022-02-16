@@ -24,11 +24,9 @@ chrome.runtime.onMessage.addListener(
 function readBlob(b) {
     return new Promise(function (resolve, reject) {
         const reader = new FileReader();
-
         reader.onloadend = function () {
             resolve(reader.result);
         };
-
         reader.readAsDataURL(b);
     });
 }
