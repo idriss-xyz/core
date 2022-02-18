@@ -61,7 +61,7 @@ export class TwitterPageManager extends AbstractPageManager {
     * listPlaces() {
         for (const div of document.querySelectorAll('div.r-dnmrzs.r-1ny4l3l')) {
             if (div.querySelector('.idrissIcon')) continue;
-            const name = div.querySelector('.r-9ilb82')?.textContent;//r-18u37iz r-1wbh5a2
+            const name = div.querySelector('.r-9ilb82, .r-14j79pv')?.textContent;//r-18u37iz r-1wbh5a2
             const addCallback = data => {
                 if (Object.values(data).length > 0 && !div.querySelector('.idrissIcon')) {
                     const icon = document.createElement('div');
@@ -74,7 +74,7 @@ export class TwitterPageManager extends AbstractPageManager {
                     icon.setAttribute('tabindex', '-1')
                     const dropdown = document.createElement('div');
                     icon.append(dropdown);
-                    div.querySelector('.r-1fmj7o5').append(icon)
+                    div.querySelector('.r-1fmj7o5, .r-18jsvk2').append(icon)
                     icon.onclick = e => {
                         e.stopPropagation();
                         e.preventDefault();
