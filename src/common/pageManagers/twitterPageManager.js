@@ -13,7 +13,7 @@ export class TwitterPageManager extends AbstractPageManager {
         this.searchPlaces()
         addEventListener('load', () => this.searchPlaces())
         addEventListener('focus', () => this.searchPlaces())
-        setInterval(()=>this.searchPlaces(), 2000);
+        setInterval(() => this.searchPlaces(), 2000);
     }
 
     searchPlaces() {
@@ -82,7 +82,8 @@ export class TwitterPageManager extends AbstractPageManager {
                         let dropdown = this.document.createElement('div');
                         this.document.body.append(dropdown);
                         let rect = icon.getBoundingClientRect()
-                        dropdown.style.position = 'absolute';
+                        console.log({rect, PAR: icon.offsetParent});
+                        dropdown.style.position = 'fixed';
                         dropdown.style.left = rect.left + 'px';
                         dropdown.style.top = rect.top + rect.height + 'px';
                         dropdown.style.width = rect.width + 'px';
@@ -90,15 +91,18 @@ export class TwitterPageManager extends AbstractPageManager {
                         dropdown.style.zindex = 1000000;
 
                         this.lastDropdown?.remove();
-                        this.lastDropdown=dropdown
+                        this.lastDropdown = dropdown
                         this.generatePopupContent(dropdown, name, data, (value) => {
                             navigator.clipboard.writeText(value)
                             let lastPopup = this.lastDropdown;
                             setTimeout(() => lastPopup?.remove(), 100);
                         })
-                        icon.onblur=()=>{
+                        const eventCallback = () => {
                             setTimeout(() => dropdown.remove(), 100);
-                        }
+                            removeEventListener('scroll', eventCallback)
+                        };
+                        icon.onblur = eventCallback
+                        addEventListener('scroll', eventCallback)
                     }
                 }
             }
