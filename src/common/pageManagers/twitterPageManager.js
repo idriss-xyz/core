@@ -68,9 +68,14 @@ export class TwitterPageManager extends AbstractPageManager {
                     icon.className = 'idrissIcon';
                     icon.style.width = '1.1em';
                     icon.style.height = '1.1em';
-                    icon.style.margin = '0 0.3em';
+                    icon.style.margin = '-1px 0 -1px 0';
+                    icon.style.borderTop = '2px solid transparent';
+                    icon.style.borderbottom = '2px solid transparent';
+                    icon.style.borderLeft = '0.3em solid transparent';
+                    icon.style.borderRight = '0.3em solid transparent';
                     icon.style.background = `url(${this.iconUrl}) no-repeat`;
                     icon.style.backgroundSize = `contain`;
+                    icon.onmouseover = e => e.stopPropagation();
                     icon.setAttribute('tabindex', '-1')
                     const dropdown = document.createElement('div');
                     icon.append(dropdown);
