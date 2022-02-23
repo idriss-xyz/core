@@ -75,7 +75,7 @@ export class TwitterPageManager extends AbstractPageManager {
             if (div.querySelector('.idrissIcon')) continue;
             const name = div.querySelector('.r-9ilb82, .r-14j79pv')?.textContent;//r-18u37iz r-1wbh5a2
             const addCallback = data => {
-                if (Object.values(data).length > 0 && !div.querySelector('.idrissIcon')) {
+                if (Object.values(data).length > 0 && !data.error && !div.querySelector('.idrissIcon')) {
                     const icon = document.createElement('div');
                     icon.className = 'idrissIcon';
                     icon.style.width = '1.1em';
