@@ -3,15 +3,16 @@ import {StandalonePageManager} from "./standalonePageManager";
 import {FtxPageManager} from "./FtxPageManager";
 import {HuobiPageManager} from "./HuobiPageManager";
 import {PoapPageManager} from "./PoapPageManager";
+import {CoinbasePageManager} from "./CoinbasePageManager";
 
 const specificDomainList = {
     "app.poap.xyz": PoapPageManager,
     "ftx.com": FtxPageManager,
-    "huobi.com": HuobiPageManager
+    "huobi.com": HuobiPageManager,
+    "coinbase.com": CoinbasePageManager
 }
 const defaultDomainList = [
     "binance.com",
-    "coinbase.com",
     "kucoin.com",
     "kraken.com",
     "bitfinex.com",
