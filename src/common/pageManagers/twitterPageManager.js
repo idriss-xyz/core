@@ -80,7 +80,7 @@ export class TwitterPageManager extends AbstractPageManager {
                     const dropdown = document.createElement('div');
                     icon.append(dropdown);
                     div.querySelector('.r-1fmj7o5:not(h2), .r-18jsvk2:not(h2)').append(icon)
-                    icon.onclick = e => {
+                    icon.onmouseover = e => {
                         e.stopPropagation();
                         e.preventDefault();
 
@@ -106,6 +106,11 @@ export class TwitterPageManager extends AbstractPageManager {
                             setTimeout(() => dropdown.remove(), 100);
                             removeEventListener('scroll', eventCallback)
                         };
+
+                        dropdown.onmouseout=()=>{
+                            setTimeout(() => dropdown.remove(), 100);
+                        }
+
                         icon.onblur = eventCallback
                         addEventListener('scroll', eventCallback)
                     }

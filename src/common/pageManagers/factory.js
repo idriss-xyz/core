@@ -37,7 +37,9 @@ const defaultDomainList = [
     "tokocrypto.com",
     "poap.xyz",
     "etherscan.io",
-    "guarda.co"
+    "guarda.co",
+    "polygonscan.com",
+    "zapper.fi"
 ];
 
 export async function pageManagerFactory(document, url) {
