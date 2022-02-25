@@ -3,18 +3,18 @@ import {StandalonePageManager} from "./standalonePageManager";
 import {FtxPageManager} from "./FtxPageManager";
 import {HuobiPageManager} from "./HuobiPageManager";
 import {PoapPageManager} from "./PoapPageManager";
-import {CoinbasePageManager} from "./CoinbasePageManager";
 import {TwitterPageManager} from "./twitterPageManager";
+import {CoinbasePageManager} from "./CoinbasePageManager";
 
 const specificDomainList = {
     "app.poap.xyz": PoapPageManager,
     "ftx.com": FtxPageManager,
     "huobi.com": HuobiPageManager,
+    "twitter.com": TwitterPageManager,
     "coinbase.com": CoinbasePageManager
 }
 const defaultDomainList = [
     "binance.com",
-    "coinbase.com",
     "kucoin.com",
     "kraken.com",
     "bitfinex.com",
@@ -38,9 +38,7 @@ const defaultDomainList = [
     "tokocrypto.com",
     "poap.xyz",
     "etherscan.io",
-    "guarda.co",
-    "polygonscan.com",
-    "zapper.fi"
+    "guarda.co"
 ];
 
 export async function pageManagerFactory(document, url) {

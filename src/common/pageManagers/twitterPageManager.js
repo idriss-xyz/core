@@ -11,9 +11,15 @@ export class TwitterPageManager extends AbstractPageManager {
         console.log('searchPlaces')
         this.iconUrl = await this.getIcon()
         this.searchPlaces()
-        addEventListener('load', () => this.searchPlaces())
-        addEventListener('focus', () => this.searchPlaces())
-        setInterval(() => this.searchPlaces(), 2000);
+        addEventListener('load', () => this.check())
+        addEventListener('focus', () => this.check())
+        addEventListener('click', () => this.lastDropdown?.remove())
+        setInterval(() => this.check(), 2000);
+    }
+
+    check() {
+        this.searchPlaces();
+        this.checkGarbageDropdown();
     }
 
     searchPlaces() {
@@ -24,6 +30,12 @@ export class TwitterPageManager extends AbstractPageManager {
             TwitterPageManager.namesResults[place.name].then(x => {
                 place.addCallback(x);
             })
+        }
+    }
+
+    checkGarbageDropdown() {
+        if (!document.querySelector('.idrissIcon:focus')) {
+            this.lastDropdown?.remove();
         }
     }
 
@@ -59,11 +71,11 @@ export class TwitterPageManager extends AbstractPageManager {
     }
 
     * listPlaces() {
-        for (const div of document.querySelectorAll('div.r-dnmrzs.r-1ny4l3l, .r-gtdqiz .css-1dbjc4n.r-1iusvr4.r-16y2uox.r-1777fci')) {
+        for (const div of document.querySelectorAll('div.r-dnmrzs.r-1ny4l3l, .r-gtdqiz .css-1dbjc4n.r-1iusvr4.r-16y2uox.r-1777fci, .css-1dbjc4n.r-16y2uox.r-1wbh5a2.r-1pi2tsx.r-1777fci')) {
             if (div.querySelector('.idrissIcon')) continue;
             const name = div.querySelector('.r-9ilb82, .r-14j79pv')?.textContent;//r-18u37iz r-1wbh5a2
             const addCallback = data => {
-                if (Object.values(data).length > 0 && !div.querySelector('.idrissIcon')) {
+                if (Object.values(data).length > 0 && !data.error && !div.querySelector('.idrissIcon')) {
                     const icon = document.createElement('div');
                     icon.className = 'idrissIcon';
                     icon.style.width = '1.1em';
