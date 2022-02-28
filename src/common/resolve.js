@@ -114,8 +114,6 @@ async function digestMessage(message) {
 export async function simpleResolve(identifier, coin="", network="") {
     let twitterID;
     let identifierT;
-    let address;
-    let foundMatches = {}
     identifier = lowerFirst(identifier).replace(" ", "");
     if (identifier.match(regPh)) {
         identifier = convertPhone(identifier)
@@ -128,50 +126,26 @@ export async function simpleResolve(identifier, coin="", network="") {
         // endpoint: /v1/getTwitterID, method:GET
         identifier = 123 //api call here or custom twitter lookup, try catch block if twitter handle not found return error "Twitter handle not found"
     }
-    if (network && coin) {
-        for (let [tag, tag_key] of Object.values(walletTags[network][coin])) {
-            address = await contract.methods.getIDriss(digestMessage(identifier.concat(tag_key)));
-            if (address != "") {
-                foundMatches[tag] = address
+
+    let foundMatchesPromises = {}
+    for (let [network_, coins] of Object.entries(walletTags)) {
+        if (network && network_ != network) continue;
+        for (let [coin_, tags] of Object.entries(coins)) {
+            if (coin && coin_ != coin) continue;
+            for (let [tag_, tag_key] of Object.entries(tags)) {
+                foundMatchesPromises[tag_] = contract.methods.getIDriss(hashlib.sha256(identifier.concat(tag_key)));
             }
         }
     }
-    else if (network) {
-        for (let [coin, tags] of Object.entries(walletTags[network])) {
-            for (let [tag, tag_key] of Object.entries(tags)) {
-                address = await contract.methods.getIDriss(digestMessage(identifier.concat(tag_key)));
-                if (address != "") {
-                    foundMatches[tag] = address
-                }
-            }
+    ///awaiting on the end for better performance
+    let foundMatches = {}
+    for (let [tag_, promise] of Object.entries(foundMatchesPromises)) {
+        let address = await promise;
+        if (address) {
+            foundMatches[tag_] = address;
         }
     }
-    else if (coin) {
-        for (let [network, coins] of Object.entries(walletTags)) {
-            for (let [coin_, tags] of Object.entries(coins)) {
-                if (coin_ == coin) {
-                    for (let [tag, tag_key] of Object.entries(tags)) {
-                        address = await contract.methods.getIDriss(hashlib.sha256(identifier.concat(tag_key)));
-                        if (address != "") {
-                            foundMatches[tag] = address
-                        }
-                    }
-                }
-            }
-        }
-    }
-    else {
-        for (let [network, coins] of Object.entries(walletTags)) {
-            for (let [coin, tags] of Object.entries(coins)) {
-                for (let [tag, tag_key] of Object.entries(tags)) {
-                    address = contract.functions.getIDriss(hashlib.sha256(identifier.concat(tag_key)));
-                    if (address != "") {
-                        foundMatches[tag] = address
-                    }
-                }
-            }
-        }
-    }
+
     // return twitter id when twitter id was searched for
     if (twitterID) {
         return {"input": identifierT, "result": foundMatches, "twitterID": identifier}
