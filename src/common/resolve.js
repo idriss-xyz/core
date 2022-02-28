@@ -113,8 +113,10 @@ async function digestMessage(message) {
 // call this function also for twitter plugin functionality?
 export async function simpleResolve(identifier, coin="", network="") {
     let twitterID;
+    let identifierT;
+    let address;
     let foundMatches = {}
-    let identifier = lowerFirst(identifier).replace(" ", "");
+    identifier = lowerFirst(identifier).replace(" ", "");
     if (identifier.match(regPh)) {
         identifier = convertPhone(identifier)
     } else if (!identifier.match(regM) && !identifier.match(regT)) {
@@ -127,7 +129,7 @@ export async function simpleResolve(identifier, coin="", network="") {
         identifier = 123 //api call here or custom twitter lookup, try catch block if twitter handle not found return error "Twitter handle not found"
     }
     if (network && coin) {
-        for tag, tag_key in walletTags[network][coin] {
+        for (let [tag, tag_key] of Object.values(walletTags[network][coin])) {
             address = await contract.methods.getIDriss(digestMessage(identifier.concat(tag_key)));
             if (address != "") {
                 foundMatches[tag] = address
@@ -135,8 +137,8 @@ export async function simpleResolve(identifier, coin="", network="") {
         }
     }
     else if (network) {
-        for coin, tags in walletTags[network] {
-            for tag, tag_key in tags {
+        for (let [coin, tags] of Object.entries(walletTags[network])) {
+            for (let [tag, tag_key] of Object.entries(tags)) {
                 address = await contract.methods.getIDriss(digestMessage(identifier.concat(tag_key)));
                 if (address != "") {
                     foundMatches[tag] = address
@@ -145,10 +147,10 @@ export async function simpleResolve(identifier, coin="", network="") {
         }
     }
     else if (coin) {
-        for network, coins in walletTags {
-            for coin_, tags in coins {
+        for (let [network, coins] of Object.entries(walletTags)) {
+            for (let [coin_, tags] of Object.entries(coins)) {
                 if (coin_ == coin) {
-                    for tag, tag_key in tags {
+                    for (let [tag, tag_key] of Object.entries(tags)) {
                         address = await contract.methods.getIDriss(hashlib.sha256(identifier.concat(tag_key)));
                         if (address != "") {
                             foundMatches[tag] = address
@@ -159,9 +161,9 @@ export async function simpleResolve(identifier, coin="", network="") {
         }
     }
     else {
-        for network, coins in walletTags {
-            for coin, tags in coins {
-                for tag, tag_key in tags {
+        for (let [network, coins] of Object.entries(walletTags)) {
+            for (let [coin, tags] of Object.entries(coins)) {
+                for (let [tag, tag_key] of Object.entries(tags)) {
                     address = contract.functions.getIDriss(hashlib.sha256(identifier.concat(tag_key)));
                     if (address != "") {
                         foundMatches[tag] = address
