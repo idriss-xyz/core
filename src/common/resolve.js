@@ -1,4 +1,6 @@
 // load the smart contract the same way you did in the library
+globalThis.window = globalThis;
+const Web3 = require("web3/dist/web3.min.js");
 
 var walletTags = {
     evm: {
@@ -109,9 +111,334 @@ async function digestMessage(message) {
     return hashHex;
 }
 
+const web3 = new Web3(new Web3.providers.HttpProvider("https://rpc-mumbai.maticvigil.com"))
+const contract = generateContract();
+
+function generateContract() {
+    return new web3.eth.Contract(
+        [
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "adminAddress",
+                        "type": "address"
+                    }
+                ],
+                "name": "addAdmin",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "string",
+                        "name": "hashPub",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "hashID",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "address_",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "ownerAddress",
+                        "type": "address"
+                    }
+                ],
+                "name": "addIDriss",
+                "outputs": [],
+                "stateMutability": "payable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "string",
+                        "name": "hashPub",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "hashID",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "address_",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "token",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "amount",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "ownerAddress",
+                        "type": "address"
+                    }
+                ],
+                "name": "addIDrissToken",
+                "outputs": [],
+                "stateMutability": "payable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "string",
+                        "name": "hashPub",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "newOwner",
+                        "type": "address"
+                    }
+                ],
+                "name": "changeOwner",
+                "outputs": [],
+                "stateMutability": "payable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "adminAddress",
+                        "type": "address"
+                    }
+                ],
+                "name": "deleteAdmin",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "string",
+                        "name": "hashPub",
+                        "type": "string"
+                    }
+                ],
+                "name": "deleteIDriss",
+                "outputs": [],
+                "stateMutability": "payable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "newPrice",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "setPrice",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "stateMutability": "nonpayable",
+                "type": "constructor"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "value",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "Increment",
+                "type": "event"
+            },
+            {
+                "inputs": [],
+                "name": "withdrawl",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "tokenContract",
+                        "type": "address"
+                    }
+                ],
+                "name": "withdrawTokens",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "countAdding",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "countDeleting",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "creationTime",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "string",
+                        "name": "hashPub",
+                        "type": "string"
+                    }
+                ],
+                "name": "getIDriss",
+                "outputs": [
+                    {
+                        "internalType": "string",
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "string",
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "name": "IDrissOwners",
+                "outputs": [
+                    {
+                        "internalType": "address",
+                        "name": "",
+                        "type": "address"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "mapKeys",
+                "outputs": [
+                    {
+                        "internalType": "string",
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "owner",
+                "outputs": [
+                    {
+                        "internalType": "address",
+                        "name": "",
+                        "type": "address"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "string",
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "name": "payDates",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "price",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ]
+        , '0x4a85839aEc7ab18496C35115002EB53BE604b24E');
+}
+
 
 // call this function also for twitter plugin functionality?
-export async function simpleResolve(identifier, coin="", network="") {
+export async function simpleResolve(identifier, coin = "", network = "") {
     let twitterID;
     let identifierT;
     identifier = lowerFirst(identifier).replace(" ", "");
@@ -133,24 +460,27 @@ export async function simpleResolve(identifier, coin="", network="") {
         for (let [coin_, tags] of Object.entries(coins)) {
             if (coin && coin_ != coin) continue;
             for (let [tag_, tag_key] of Object.entries(tags)) {
-                foundMatchesPromises[tag_] = contract.methods.getIDriss(hashlib.sha256(identifier.concat(tag_key)));
+                foundMatchesPromises[tag_] = digestMessage(identifier.concat(tag_key)).then(digested => contract.methods.getIDriss(digested).call());
             }
         }
     }
     ///awaiting on the end for better performance
     let foundMatches = {}
     for (let [tag_, promise] of Object.entries(foundMatchesPromises)) {
-        let address = await promise;
-        if (address) {
-            foundMatches[tag_] = address;
+        try {
+            let address = await promise;
+            if (address) {
+                foundMatches[tag_] = address;
+            }
+        }catch (e) {
+            console.warn(e);
         }
     }
 
     // return twitter id when twitter id was searched for
     if (twitterID) {
         return {"input": identifierT, "result": foundMatches, "twitterID": identifier}
-    }
-    else {
+    } else {
         return {"input": identifier, "result": foundMatches}
     }
     // catch block if coin/network (combination) is invalid/not found
