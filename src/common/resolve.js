@@ -1,18 +1,13 @@
 // load the smart contract the same way you did in the library
+import {RequestLimiter} from "./RequestLimiter";
+
 globalThis.window = globalThis;
 const Web3 = require("web3/dist/web3.min.js");
-
+const requestLimiter = new RequestLimiter([{amount: 40, time: 1000}]);
 var walletTags = {
     evm: {
         ETH: {
-            "Metamask ETH": "",
-            "Binance ETH": "",
-            "Coinbase ETH": "",
-            "Exchange ETH": "",
-            "Private ETH": "",
-            "Essentials ETH": "",
-            "Rainbow ETH": "",
-            "Argent ETH": "",
+
             "Tally ETH": "f368de8673a59b860b71f54c7ba8ab17f0b9648ad014797e5f8d8fa9f7f1d11a",
             "Trust ETH": "",
             "Public ETH": "",
@@ -436,6 +431,9 @@ function generateContract() {
         , '0x4a85839aEc7ab18496C35115002EB53BE604b24E');
 }
 
+export async function resolveLowPriority(identifier, coin = "", network = "") {
+    return await requestLimiter.schedule(() => simpleResolve(identifier, coin, network))
+}
 
 // call this function also for twitter plugin functionality?
 export async function simpleResolve(identifier, coin = "", network = "") {
@@ -445,7 +443,7 @@ export async function simpleResolve(identifier, coin = "", network = "") {
     if (identifier.match(regPh)) {
         identifier = convertPhone(identifier)
     } else if (!identifier.match(regM) && !identifier.match(regT)) {
-        return "Not a valid input. Input must start with valid phone number, email or @twitter handle." // return error
+        throw new Error("Not a valid input. Input must start with valid phone number, email or @twitter handle.")
     }
     if (identifier.match(regT)) {
         // make API call to get twitter id
@@ -472,7 +470,7 @@ export async function simpleResolve(identifier, coin = "", network = "") {
             if (address) {
                 foundMatches[tag_] = address;
             }
-        }catch (e) {
+        } catch (e) {
             console.warn(e);
         }
     }

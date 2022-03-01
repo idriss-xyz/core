@@ -41,19 +41,16 @@ export class TwitterPageManager extends AbstractPageManager {
 
     getInfo(names) {
         const lacking = Array.from(names).filter(x => !TwitterPageManager.namesResults[x]);
-        if (lacking.length > 0) {
-            const promise = this.apiCall(lacking);
-            for (const name of lacking) {
-                TwitterPageManager.namesResults[name] = promise.then(x => x[name]);
-            }
+        for (const name of lacking) {
+            TwitterPageManager.namesResults[name] = this.apiCall(name);
         }
     }
 
-    apiCall(names) {
+    apiCall(name) {
         return new Promise((resolve, reject) => {
             chrome.runtime.sendMessage({
-                type: "apiBulkAddressesRequest",
-                value: Object.fromEntries(names.map(x => ([x, {coin: "", network: ""}])))
+                type: "apiAddressesRequestLowPriority",
+                value: name
             }, response => {
                 resolve(response);
             });
@@ -119,7 +116,7 @@ export class TwitterPageManager extends AbstractPageManager {
                             removeEventListener('scroll', eventCallback)
                         };
 
-                        dropdown.onmouseout=()=>{
+                        dropdown.onmouseout = () => {
                             setTimeout(() => dropdown.remove(), 100);
                         }
 

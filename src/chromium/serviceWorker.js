@@ -1,17 +1,14 @@
-import {simpleResolve} from "../common/resolve";
+import {resolveLowPriority, simpleResolve} from "../common/resolve";
 
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
         console.log('mes')
         if (request.type === 'apiAddressesRequest') {
-            fetch("https://www.idriss.xyz/v1/Addresses?InputCombination=" + encodeURIComponent(request.value))
-                .then(fetchRequest => fetchRequest.json())
-                .then(x => sendResponse(x));
+            simpleResolve(request.value).then(x => sendResponse(x)).catch(e=>sendResponse({}));
             return true;
-        } else if (request.type === 'apiBulkAddressesRequest') {
-            fetch("https://www.idriss.xyz/v2/Addresses?identifiers=" + encodeURIComponent(JSON.stringify(request.value)))
-                .then(fetchRequest => fetchRequest.json())
-                .then(x => sendResponse(x));
+        } else if (request.type === 'apiAddressesRequestLowPriority') {
+            console.log('apiAddressesRequestLowPriority')
+            resolveLowPriority(request.value).then(x => sendResponse(x)).catch(e=>sendResponse({}));
             return true;
         } else if (request.type === 'getIconUrl') {
             fetch(chrome.runtime.getURL('img/icon148.png'))
