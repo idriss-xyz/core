@@ -1,4 +1,5 @@
 import {AbstractPageManager} from "./abstractPageManager";
+import {RequestLimiter} from "../RequestLimiter";
 
 export class TwitterPageManager extends AbstractPageManager {
     static namesResults = {};
@@ -8,7 +9,7 @@ export class TwitterPageManager extends AbstractPageManager {
     }
 
     async init() {
-        console.log('searchPlaces')
+        this.requestLimiter = new RequestLimiter([{amount: 200, time: 1000}]);
         this.iconUrl = await this.getIcon()
         this.searchPlaces()
         addEventListener('load', () => this.check())
@@ -28,7 +29,7 @@ export class TwitterPageManager extends AbstractPageManager {
         this.getInfo(names);
         for (const place of places) {
             TwitterPageManager.namesResults[place.name].then(x => {
-                place.addCallback(x);
+                place.addCallback(x?.result??{});
             })
         }
     }
@@ -47,12 +48,14 @@ export class TwitterPageManager extends AbstractPageManager {
     }
 
     apiCall(name) {
-        return new Promise((resolve, reject) => {
-            chrome.runtime.sendMessage({
-                type: "apiAddressesRequestLowPriority",
-                value: name
-            }, response => {
-                resolve(response);
+        return this.requestLimiter.schedule(() => {
+            return new Promise((resolve, reject) => {
+                chrome.runtime.sendMessage({
+                    type: "apiAddressesRequest",
+                    value: name
+                }, response => {
+                    resolve(response);
+                });
             });
         });
     }

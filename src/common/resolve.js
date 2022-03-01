@@ -1,9 +1,10 @@
 // load the smart contract the same way you did in the library
 import {RequestLimiter} from "./RequestLimiter";
 
-globalThis.window = globalThis;
+if (globalThis.window != globalThis) {
+    globalThis.window = globalThis;
+}
 const Web3 = require("web3/dist/web3.min.js");
-const requestLimiter = new RequestLimiter([{amount: 40, time: 1000}]);
 var walletTags = {
     evm: {
         ETH: {
@@ -431,10 +432,6 @@ function generateContract() {
         , '0x4a85839aEc7ab18496C35115002EB53BE604b24E');
 }
 
-export async function resolveLowPriority(identifier, coin = "", network = "") {
-    return await requestLimiter.schedule(() => simpleResolve(identifier, coin, network))
-}
-
 // call this function also for twitter plugin functionality?
 export async function simpleResolve(identifier, coin = "", network = "") {
     let twitterID;
@@ -458,7 +455,9 @@ export async function simpleResolve(identifier, coin = "", network = "") {
         for (let [coin_, tags] of Object.entries(coins)) {
             if (coin && coin_ != coin) continue;
             for (let [tag_, tag_key] of Object.entries(tags)) {
-                foundMatchesPromises[tag_] = digestMessage(identifier.concat(tag_key)).then(digested => contract.methods.getIDriss(digested).call());
+                if (tag_key) {
+                    foundMatchesPromises[tag_] = digestMessage(identifier + tag_key).then(digested => makeApiCall(digested));
+                }
             }
         }
     }
@@ -482,4 +481,18 @@ export async function simpleResolve(identifier, coin = "", network = "") {
         return {"input": identifier, "result": foundMatches}
     }
     // catch block if coin/network (combination) is invalid/not found
+}
+
+async function makeApiCall(digested) {
+    for (let i = 0; i < 10; i++) {
+        try {
+            return await contract.methods.getIDriss(digested).call()
+        } catch (e) {
+            if (e.message.includes('Rate limit exceeded')) {
+                await new Promise(r => setTimeout(r, Math.random() * 2000));
+            } else {
+                throw e;
+            }
+        }
+    }
 }

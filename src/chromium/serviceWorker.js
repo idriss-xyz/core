@@ -1,14 +1,10 @@
-import {resolveLowPriority, simpleResolve} from "../common/resolve";
+import {simpleResolve} from "../common/resolve";
 
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
-        console.log('mes')
+        console.log('serviceWorker message ' + request.type, request.value)
         if (request.type === 'apiAddressesRequest') {
-            simpleResolve(request.value).then(x => sendResponse(x)).catch(e=>sendResponse({}));
-            return true;
-        } else if (request.type === 'apiAddressesRequestLowPriority') {
-            console.log('apiAddressesRequestLowPriority')
-            resolveLowPriority(request.value).then(x => sendResponse(x)).catch(e=>sendResponse({}));
+            simpleResolve(request.value).then(x => sendResponse(x)).catch(e => sendResponse({}));
             return true;
         } else if (request.type === 'getIconUrl') {
             fetch(chrome.runtime.getURL('img/icon148.png'))
