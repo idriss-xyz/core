@@ -9,7 +9,7 @@ export class TwitterPageManager extends AbstractPageManager {
     }
 
     async init() {
-        this.requestLimiter = new RequestLimiter([{amount: 200, time: 1000}]);
+        this.requestLimiter = new RequestLimiter([{amount: 10, time: 1000}]);
         this.iconUrl = await this.getIcon()
         this.searchPlaces()
         addEventListener('load', () => this.check())

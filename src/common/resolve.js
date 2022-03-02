@@ -8,7 +8,14 @@ const Web3 = require("web3/dist/web3.min.js");
 var walletTags = {
     evm: {
         ETH: {
-
+            "Metamask ETH": "",
+            "Binance ETH": "",
+            "Coinbase ETH": "",
+            "Exchange ETH": "",
+            "Private ETH": "",
+            "Essentials ETH": "",
+            "Rainbow ETH": "",
+            "Argent ETH": "",
             "Tally ETH": "f368de8673a59b860b71f54c7ba8ab17f0b9648ad014797e5f8d8fa9f7f1d11a",
             "Trust ETH": "",
             "Public ETH": "",
@@ -443,10 +450,10 @@ export async function simpleResolve(identifier, coin = "", network = "") {
         throw new Error("Not a valid input. Input must start with valid phone number, email or @twitter handle.")
     }
     if (identifier.match(regT)) {
-        // make API call to get twitter id
         identifierT = identifier;
-        // endpoint: /v1/getTwitterID, method:GET
-        identifier = 123 //api call here or custom twitter lookup, try catch block if twitter handle not found return error "Twitter handle not found"
+        identifier = await getTwitterID(identifier);
+        if (identifier == "Not found")
+            throw new Error("Twitter handle not found.")
     }
 
     let foundMatchesPromises = {}
@@ -481,6 +488,12 @@ export async function simpleResolve(identifier, coin = "", network = "") {
         return {"input": identifier, "result": foundMatches}
     }
     // catch block if coin/network (combination) is invalid/not found
+}
+
+async function getTwitterID(identifier) {
+    const request = await fetch("https://www.idriss.xyz/v1/getTwitterID?identifier=" + encodeURIComponent(identifier));
+    const response = await request.json();
+    return response.twitterID;
 }
 
 async function makeApiCall(digested) {
