@@ -29,11 +29,12 @@ export class RequestLimiter {
     async run(callback) {
         const obj = {callback, start: new Date};
         this.working.push(obj)
+        setTimeout(() => this.tryNext(), this.limits[0].time);
         try {
             return await callback();
         } finally {
             this.working.splice(this.working.indexOf(obj), 1);
-            this.tryNext();
+
         }
     }
 
@@ -41,6 +42,9 @@ export class RequestLimiter {
         while (this.isGood() && this.waiting.length > 0) {
             const waiting = this.waiting.pop();
             this.run(waiting.callback).then(waiting.resolve, waiting.reject);
+        }
+        if(this.waiting.length > 0){
+            setTimeout(() => this.tryNext(), this.limits[0].time);
         }
     }
 }
