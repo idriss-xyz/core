@@ -34,7 +34,7 @@ export class TwitterPageManager extends AbstractPageManager {
     }
 
     checkGarbageDropdown() {
-        if (!document.querySelector('.idrissIcon:focus')) {
+        if (!document.querySelector('.idrissIcon:focus, .idrissIcon:hover')) {
             this.lastDropdown?.remove();
         }
     }
@@ -73,7 +73,7 @@ export class TwitterPageManager extends AbstractPageManager {
     * listPlaces() {
         for (const div of document.querySelectorAll('div.r-dnmrzs.r-1ny4l3l, .r-gtdqiz .css-1dbjc4n.r-1iusvr4.r-16y2uox.r-1777fci, .css-1dbjc4n.r-16y2uox.r-1wbh5a2.r-1pi2tsx.r-1777fci')) {
             if (div.querySelector('.idrissIcon')) continue;
-            const name = div.querySelector('.r-9ilb82, .r-14j79pv')?.textContent;//r-18u37iz r-1wbh5a2
+            const name = Array.from(div.querySelectorAll('.r-9ilb82, .r-14j79pv, .r-rjixqe')).map(x=>x.textContent).find(x=>x[0]=='@');
             const addCallback = data => {
                 if (Object.values(data).length > 0 && !data.error && !div.querySelector('.idrissIcon')) {
                     const icon = document.createElement('div');
