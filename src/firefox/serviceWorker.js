@@ -5,9 +5,30 @@ browser.runtime.onMessage.addListener(
                 .then(fetchRequest => fetchRequest.json())
                 .then(x => sendResponse(x));
             return true;
+        }else if (request.type === 'apiBulkAddressesRequest') {
+            fetch("https://www.idriss.xyz/v2/Addresses?identifiers=" + encodeURIComponent(JSON.stringify(request.value)))
+                .then(fetchRequest => fetchRequest.json())
+                .then(x => sendResponse(x));
+            return true;
+        } else if (request.type === 'getIconUrl') {
+            fetch(browser.runtime.getURL('img/icon148.png'))
+                .then(fetchRequest => fetchRequest.blob())
+                .then(blob => readBlob(blob))
+                .then(x => sendResponse(x));
+            return true;
         }
     }
 );
+
+function readBlob(b) {
+    return new Promise(function (resolve, reject) {
+        const reader = new FileReader();
+        reader.onloadend = function () {
+            resolve(reader.result);
+        };
+        reader.readAsDataURL(b);
+    });
+}
 
 /*  Firefox Wallets
     f8447b2f-6dfc-45ef-acea-dbe7d9828659 - MetaMask

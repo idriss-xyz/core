@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "IDriss",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "Use emails, phone numbers or Twitter usernames instead of crypto wallet addresses.",
   "author": "IDriss",
   "content_scripts": [
