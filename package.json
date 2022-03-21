@@ -3,6 +3,9 @@
     "build": "webpack --watch",
     "buildOnce": "webpack"
   },
+  "dependencies": {
+    "web3": "^1.7.0"
+  },
   "devDependencies": {
     "copy-webpack-plugin": "^9.0.1",
     "css-loader": "^6.4.0",
