@@ -1,4 +1,5 @@
 import {AbstractPageManager} from "./abstractPageManager";
+import {RequestLimiter} from "../RequestLimiter";
 
 export class TwitterPageManager extends AbstractPageManager {
     static namesResults = {};
@@ -9,6 +10,7 @@ export class TwitterPageManager extends AbstractPageManager {
 
     async init() {
         console.log('searchPlaces')
+        this.requestLimiter = new RequestLimiter([{amount: 10, time: 1000}]);
         this.iconUrl = await this.getIcon()
         this.searchPlaces()
         addEventListener('load', () => this.check())
@@ -28,7 +30,7 @@ export class TwitterPageManager extends AbstractPageManager {
         this.getInfo(names);
         for (const place of places) {
             TwitterPageManager.namesResults[place.name].then(x => {
-                place.addCallback(x);
+                place.addCallback(x?.result??{});
             })
         }
     }
@@ -46,21 +48,20 @@ export class TwitterPageManager extends AbstractPageManager {
 
     getInfo(names) {
         const lacking = Array.from(names).filter(x => !TwitterPageManager.namesResults[x]);
-        if (lacking.length > 0) {
-            const promise = this.apiCall(lacking);
-            for (const name of lacking) {
-                TwitterPageManager.namesResults[name] = promise.then(x => x[name]);
-            }
+        for (const name of lacking) {
+            TwitterPageManager.namesResults[name] = this.apiCall(name);
         }
     }
 
-    apiCall(names) {
-        return new Promise((resolve, reject) => {
-            chrome.runtime.sendMessage({
-                type: "apiBulkAddressesRequest",
-                value: Object.fromEntries(names.map(x => ([x, {coin: "", network: ""}])))
-            }, response => {
-                resolve(response);
+    apiCall(name) {
+        return this.requestLimiter.schedule(() => {
+            return new Promise((resolve, reject) => {
+                chrome.runtime.sendMessage({
+                    type: "apiAddressesRequest",
+                    value: name
+                }, response => {
+                    resolve(response);
+                });
             });
         });
     }
