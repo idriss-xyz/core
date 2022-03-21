@@ -1,5 +1,4 @@
 import {AbstractPageManager} from "./abstractPageManager";
-import {RequestLimiter} from "../RequestLimiter";
 
 export class TwitterPageManager extends AbstractPageManager {
     static namesResults = {};
@@ -9,7 +8,7 @@ export class TwitterPageManager extends AbstractPageManager {
     }
 
     async init() {
-        this.requestLimiter = new RequestLimiter([{amount: 10, time: 1000}]);
+        console.log('searchPlaces')
         this.iconUrl = await this.getIcon()
         this.searchPlaces()
         addEventListener('load', () => this.check())
@@ -29,33 +28,39 @@ export class TwitterPageManager extends AbstractPageManager {
         this.getInfo(names);
         for (const place of places) {
             TwitterPageManager.namesResults[place.name].then(x => {
-                place.addCallback(x?.result??{});
+                place.addCallback(x);
             })
         }
     }
 
     checkGarbageDropdown() {
-        if (!document.querySelector('.idrissIcon:focus, .idrissIcon:hover')) {
-            this.lastDropdown?.remove();
+        const selector = '.idrissIcon:focus, .idrissIcon:hover, .idrissDropdown:hover, .idrissDropdown:focus';
+        if (!document.querySelector(selector)) {
+            setTimeout(() => {
+                if (!document.querySelector(selector)) {
+                    this.lastDropdown?.remove();
+                }
+            }, 500);
         }
     }
 
     getInfo(names) {
         const lacking = Array.from(names).filter(x => !TwitterPageManager.namesResults[x]);
-        for (const name of lacking) {
-            TwitterPageManager.namesResults[name] = this.apiCall(name);
+        if (lacking.length > 0) {
+            const promise = this.apiCall(lacking);
+            for (const name of lacking) {
+                TwitterPageManager.namesResults[name] = promise.then(x => x[name]);
+            }
         }
     }
 
-    apiCall(name) {
-        return this.requestLimiter.schedule(() => {
-            return new Promise((resolve, reject) => {
-                chrome.runtime.sendMessage({
-                    type: "apiAddressesRequest",
-                    value: name
-                }, response => {
-                    resolve(response);
-                });
+    apiCall(names) {
+        return new Promise((resolve, reject) => {
+            chrome.runtime.sendMessage({
+                type: "apiBulkAddressesRequest",
+                value: Object.fromEntries(names.map(x => ([x, {coin: "", network: ""}])))
+            }, response => {
+                resolve(response);
             });
         });
     }
@@ -73,7 +78,7 @@ export class TwitterPageManager extends AbstractPageManager {
     * listPlaces() {
         for (const div of document.querySelectorAll('div.r-dnmrzs.r-1ny4l3l, .r-gtdqiz .css-1dbjc4n.r-1iusvr4.r-16y2uox.r-1777fci, .css-1dbjc4n.r-16y2uox.r-1wbh5a2.r-1pi2tsx.r-1777fci')) {
             if (div.querySelector('.idrissIcon')) continue;
-            const name = Array.from(div.querySelectorAll('.r-9ilb82, .r-14j79pv, .r-rjixqe')).map(x=>x.textContent).find(x=>x[0]=='@');
+            const name = Array.from(div.querySelectorAll('.r-9ilb82, .r-14j79pv, .r-rjixqe')).map(x => x.textContent).find(x => x[0] == '@');
             const addCallback = data => {
                 if (Object.values(data).length > 0 && !data.error && !div.querySelector('.idrissIcon')) {
                     const icon = document.createElement('div');
@@ -99,7 +104,7 @@ export class TwitterPageManager extends AbstractPageManager {
                         let dropdown = this.document.createElement('div');
                         this.document.body.append(dropdown);
                         let rect = icon.getBoundingClientRect()
-                        console.log({rect, PAR: icon.offsetParent});
+                        dropdown.classList.add('idrissDropdown')
                         dropdown.style.position = 'fixed';
                         dropdown.style.left = rect.left + 'px';
                         dropdown.style.top = rect.top + rect.height + 'px';
