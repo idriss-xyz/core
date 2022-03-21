@@ -135,9 +135,11 @@ export async function simpleResolve(identifier, coin="", network="") {
     }
     if (identifier.match(regT)) {
         identifierT = identifier;
-        identifier = await getTwitterID(identifier);
-        if (identifier == "Not found")
+        identifier = await getTwitterID(identifierT);
+        if (identifier == "Not found") {
             throw new Error("Twitter handle not found.")
+        }
+        twitterID = true;
     }
 
     let foundMatchesPromises = {}
