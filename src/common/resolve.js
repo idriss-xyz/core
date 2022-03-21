@@ -134,7 +134,6 @@ export async function simpleResolve(identifier, coin="", network="") {
         throw new Error("Not a valid input. Input must start with valid phone number, email or @twitter handle.")
     }
     if (identifier.match(regT)) {
-        // make API call to get twitter id
         identifierT = identifier;
         identifier = await getTwitterID(identifier);
         if (identifier == "Not found")
@@ -169,8 +168,7 @@ export async function simpleResolve(identifier, coin="", network="") {
     // return twitter id when twitter id was searched for
     if (twitterID) {
         return {"input": identifierT, "result": foundMatches, "twitterID": identifier}
-    }
-    else {
+    } else {
         return {"input": identifier, "result": foundMatches}
     }
     // catch block if coin/network (combination) is invalid/not found
