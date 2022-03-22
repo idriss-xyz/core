@@ -97,7 +97,7 @@ export class TwitterPageManager extends AbstractPageManager {
                     icon.setAttribute('tabindex', '-1')
                     const dropdown = document.createElement('div');
                     icon.append(dropdown);
-                    div.querySelector('.r-1fmj7o5:not(h2), .r-18jsvk2:not(h2)')?.append(icon)
+                    div.querySelector('.r-1fmj7o5:not(h2), .r-18jsvk2:not(h2), .r-1nao33i:not(h2)')?.append(icon)
                     icon.onmouseover = e => {
                         e.stopPropagation();
                         e.preventDefault();
