@@ -70,4 +70,7 @@ export class AbstractPageManager {
             });
         });
     }
+    isEnabled() {
+        return new Promise(r => chrome.storage.local.get(['enabled'], x => r(x?.enabled ?? true)))
+    }
 }

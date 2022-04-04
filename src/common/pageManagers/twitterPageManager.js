@@ -9,18 +9,23 @@ export class TwitterPageManager extends AbstractPageManager {
     }
 
     async init() {
-        console.log('searchPlaces')
         this.requestLimiter = new RequestLimiter([{amount: 10, time: 1000}]);
         this.iconUrl = await this.getIcon()
-        this.searchPlaces()
+        this.check()
         addEventListener('load', () => this.check())
         addEventListener('focus', () => this.check())
+        addEventListener('popstate', () => this.check())
+        addEventListener('click', () => setTimeout(() => this.check(), 250))
         addEventListener('click', () => this.lastDropdown?.remove())
         setInterval(() => this.check(), 2000);
     }
 
-    check() {
-        this.searchPlaces();
+    async check() {
+        if (await this.isEnabled()) {
+            this.searchPlaces();
+        } else {
+            Array.from(document.querySelectorAll('.idrissIcon')).forEach(x => x.remove());
+        }
         this.checkGarbageDropdown();
     }
 
@@ -30,7 +35,7 @@ export class TwitterPageManager extends AbstractPageManager {
         this.getInfo(names);
         for (const place of places) {
             TwitterPageManager.namesResults[place.name].then(x => {
-                place.addCallback(x?.result??{});
+                place.addCallback(x?.result ?? {});
             })
         }
     }
@@ -78,12 +83,21 @@ export class TwitterPageManager extends AbstractPageManager {
 
     * listPlaces() {
         for (const div of document.querySelectorAll('div.r-dnmrzs.r-1ny4l3l, .r-gtdqiz .css-1dbjc4n.r-1iusvr4.r-16y2uox.r-1777fci, .css-1dbjc4n.r-16y2uox.r-1wbh5a2.r-1pi2tsx.r-1777fci')) {
-            if (div.querySelector('.idrissIcon')) continue;
             const name = Array.from(div.querySelectorAll('.r-9ilb82, .r-14j79pv, .r-rjixqe')).map(x => x.textContent).find(x => x[0] == '@');
+            let existingIcon = div.querySelector('.idrissIcon');
+            if (existingIcon) {
+                if (existingIcon.dataset.sourceName == name) {
+                    return;
+                } else {
+                    existingIcon.remove()
+                    existingIcon = null
+                }
+            }
             const addCallback = data => {
                 if (Object.values(data).length > 0 && !data.error && !div.querySelector('.idrissIcon')) {
                     const icon = document.createElement('div');
                     icon.className = 'idrissIcon';
+                    icon.dataset.sourceName = name;
                     icon.style.width = '1.1em';
                     icon.style.height = '1.1em';
                     icon.style.margin = '-1px 0 -1px 0';
