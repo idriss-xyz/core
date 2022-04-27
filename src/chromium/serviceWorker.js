@@ -1,13 +1,20 @@
-import {preload, simpleResolve} from "../common/resolve";
+import {AdressesResolver} from "../common/resolvers/AdressesResolver";
+import {lowerFirst, regT} from "../common/utils";
+import {TwitterIdResolver} from "../common/resolvers/TwitterIdResolver";
 
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
         console.log('serviceWorker message ' + request.type, request.value)
         if (request.type === 'apiAddressesRequest') {
-            simpleResolve(request.value).then(x => sendResponse(x)).catch(e => sendResponse({}));
+            AdressesResolver.get(request.value).then(x => sendResponse(x)).catch(e => sendResponse({}));
             return true;
         } else if (request.type === 'apiAddressesPreload') {
-            preload(request.value);
+            let twitter = request.value.map(identifier => {
+                return lowerFirst(identifier).replace(" ", "");
+            }).filter(identifier => identifier?.match(regT));
+            if (twitter.length > 0) {
+                TwitterIdResolver.preloadMany(twitter);
+            }
             return false;
         } else if (request.type === 'getIconUrl') {
             fetch(chrome.runtime.getURL('img/icon148.png'))

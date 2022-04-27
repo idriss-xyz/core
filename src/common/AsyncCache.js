@@ -1,6 +1,6 @@
 export class AsyncCache {
     static TwitterID = new AsyncCache('TwitterID');
-    static final = new AsyncCache('TwitterID');
+    static Adresses = new AsyncCache('Adresses');
     promises = {}
 
     constructor(name, expirationTime = 3600000) {
@@ -11,7 +11,7 @@ export class AsyncCache {
     async getOne(args, fun) {
         let str = JSON.stringify([this.name, args]);
 
-        let cacheResp = await this.readCache();
+        let cacheResp = await this.readCache(args);
         if (cacheResp) return cacheResp;
         let date = +new Date();
         let promise = fun();
@@ -51,17 +51,20 @@ export class AsyncCache {
     }
 
     async preloadMany(argsArray, fun) {
-        argsArray = (await Promise.all(argsArray.map(async x => [x, !await this.checkCache(x)]))).filter(([x, f]) => f).map(([x, _]) => x);
+        let cacheChecks = (await Promise.all(argsArray.map(async x => [x, !(await this.checkCache(x))])));
+        let argsArrayOfNeeded = cacheChecks.filter(([x, f]) => f).map(([x, _]) => x);
         let date = +new Date();
-        let promise = Promise.resolve(fun(argsArray));
-        for (let args of argsArray) {
-            let str = JSON.stringify([this.name, args]);
-            this.promises[str] = {date, promise: promise.then(a => a[str])};
-            promise.then(a => {
-                let obj = {};
-                obj['cache' + str] = {date, value: a[str]};
-                chrome.storage.local.set(obj);
-            });
+        if (argsArrayOfNeeded.length > 0) {
+            let promise = Promise.resolve(fun(argsArrayOfNeeded));
+            for (let args of argsArray) {
+                let str = JSON.stringify([this.name, args]);
+                this.promises[str] = {date, promise: promise.then(a => a[str])};
+                promise.then(a => {
+                    let obj = {};
+                    obj['cache' + str] = {date, value: a[str]};
+                    chrome.storage.local.set(obj);
+                });
+            }
         }
     }
 }
