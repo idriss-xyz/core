@@ -1,5 +1,6 @@
 // load the smart contract the same way you did in the library
 import {RequestLimiter} from "./RequestLimiter";
+import {TwitterIdResolver} from "./resolvers/twitterIdResolver";
 
 if (globalThis.window != globalThis) {
     globalThis.window = globalThis;
@@ -123,8 +124,17 @@ function generateContract() {
         , '0x2EcCb53ca2d4ef91A79213FDDF3f8c2332c2a814');
 }
 
+export async function preload(identifiers) {
+    let twitter = identifiers.map(identifier => {
+        return lowerFirst(identifier).replace(" ", "");
+    }).filter(identifier => identifier?.match(regT));
+    if (twitter.length > 0) {
+        (new TwitterIdResolver()).preloadMany(twitter);
+    }
+}
+
 // call this function also for twitter plugin functionality?
-export async function simpleResolve(identifier, coin="", network="") {
+export async function simpleResolve(identifier, coin = "", network = "") {
     let twitterID;
     let identifierT;
     identifier = lowerFirst(identifier).replace(" ", "");
@@ -135,7 +145,7 @@ export async function simpleResolve(identifier, coin="", network="") {
     }
     if (identifier.match(regT)) {
         identifierT = identifier;
-        identifier = await getTwitterID(identifierT);
+        identifier = await (new TwitterIdResolver()).get(identifierT);
         if (identifier == "Not found") {
             throw new Error("Twitter handle not found.")
         }
@@ -174,12 +184,6 @@ export async function simpleResolve(identifier, coin="", network="") {
         return {"input": identifier, "result": foundMatches}
     }
     // catch block if coin/network (combination) is invalid/not found
-}
-
-async function getTwitterID(identifier) {
-    const request = await fetch("https://www.idriss.xyz/v1/getTwitterID?identifier=" + encodeURIComponent(identifier));
-    const response = await request.json();
-    return response.twitterID;
 }
 
 async function makeApiCall(digested) {

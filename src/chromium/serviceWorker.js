@@ -1,4 +1,4 @@
-import {simpleResolve} from "../common/resolve";
+import {preload, simpleResolve} from "../common/resolve";
 
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
@@ -6,6 +6,9 @@ chrome.runtime.onMessage.addListener(
         if (request.type === 'apiAddressesRequest') {
             simpleResolve(request.value).then(x => sendResponse(x)).catch(e => sendResponse({}));
             return true;
+        } else if (request.type === 'apiAddressesPreload') {
+            preload(request.value);
+            return false;
         } else if (request.type === 'getIconUrl') {
             fetch(chrome.runtime.getURL('img/icon148.png'))
                 .then(fetchRequest => fetchRequest.blob())

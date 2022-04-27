@@ -53,6 +53,8 @@ export class TwitterPageManager extends AbstractPageManager {
 
     getInfo(names) {
         const lacking = Array.from(names).filter(x => !TwitterPageManager.namesResults[x]);
+        if (lacking.length > 0)
+            this.apiCallPreload(lacking);
         for (const name of lacking) {
             TwitterPageManager.namesResults[name] = this.apiCall(name);
         }
@@ -64,6 +66,19 @@ export class TwitterPageManager extends AbstractPageManager {
                 chrome.runtime.sendMessage({
                     type: "apiAddressesRequest",
                     value: name
+                }, response => {
+                    resolve(response);
+                });
+            });
+        });
+    }
+
+    apiCallPreload(names) {
+        return this.requestLimiter.schedule(() => {
+            return new Promise((resolve, reject) => {
+                chrome.runtime.sendMessage({
+                    type: "apiAddressesPreload",
+                    value: names
                 }, response => {
                     resolve(response);
                 });
