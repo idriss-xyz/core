@@ -102,7 +102,7 @@ export class TwitterPageManager extends AbstractPageManager {
             let existingIcon = div.querySelector('.idrissIcon');
             if (existingIcon) {
                 if (existingIcon.dataset.sourceName == name) {
-                    return;
+                    continue;
                 } else {
                     existingIcon.remove()
                     existingIcon = null
