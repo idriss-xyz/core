@@ -17,7 +17,9 @@ export class TwitterPageManager extends AbstractPageManager {
         addEventListener('focus', () => this.check())
         addEventListener('popstate', () => this.check())
         addEventListener('click', () => setTimeout(() => this.check(), 250))
-        addEventListener('click', () => this.lastDropdown?.remove())
+        addEventListener('click', e => {
+            if (!e.path.includes(this.lastDropdown)) this.lastDropdown?.remove();
+        });
         setInterval(() => this.check(), 2000);
     }
 
@@ -126,6 +128,7 @@ export class TwitterPageManager extends AbstractPageManager {
                     icon.onmouseover = e => e.stopPropagation();
                     icon.setAttribute('tabindex', '-1')
                     const dropdown = document.createElement('div');
+                    dropdown.addEventListener('click', e => e.stopPropagation())
                     icon.append(dropdown);
                     div.querySelector('.r-1fmj7o5:not(h2), .r-18jsvk2:not(h2), .r-1nao33i:not(h2)')?.append(icon)
                     icon.onmouseover = e => {
@@ -148,8 +151,11 @@ export class TwitterPageManager extends AbstractPageManager {
 
 
                         const eventCallback = () => {
-                            setTimeout(() => dropdown.remove(), 100);
-                            removeEventListener('scroll', eventCallback)
+                            console.log('ddddd')
+                            if (!dropdown.matches(':hover, :focus, :focus-within') && !icon.matches(':hover, :focus, :focus-within')) {
+                                setTimeout(() => dropdown.remove(), 100);
+                                removeEventListener('scroll', eventCallback)
+                            }
                         };
 
                         dropdown.onmouseout = () => {

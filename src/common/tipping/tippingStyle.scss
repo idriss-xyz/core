@@ -50,6 +50,10 @@
             line-height: 1.5rem;
             font-weight: 500;
             box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+
+            &:hover {
+                background: rgb(17 204 116)
+            }
         }
     }
 
@@ -65,11 +69,13 @@
 
         .select {
             margin-top: 0.25rem;
+            position: relative;
 
             > button {
                 line-height: inherit;
                 color: inherit;
                 font-family: inherit;
+                font-size: inherit;
                 position: relative;
                 width: 100%;
                 cursor: default;
@@ -78,7 +84,7 @@
                 border-color: rgb(209 213 219);
                 border-style: solid;
                 background-color: rgb(255 255 255);
-                padding: 0.5rem 2.5rem 0.5rem 0.75rem;
+                padding: 0.5rem 0.5rem 0.5rem 0.75rem;
                 text-align: left;
                 box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
                 display: flex;
@@ -92,34 +98,35 @@
                     box-shadow: 0px 0px 0px 1px rgb(99, 102, 241), 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
 
                 }
+            }
 
-                img {
+            img {
 
-                    border-radius: 9999px;
-                    flex-shrink: 0;
-                    width: 1.5rem;
-                    height: 1.5rem;
-                }
+                border-radius: 9999px;
+                flex-shrink: 0;
+                width: 1.5rem;
+                height: 1.5rem;
+            }
 
-                .name {
+            .name {
 
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                    display: block;
-                    margin-left: 0.75rem;
-                }
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                display: block;
+                margin-left: 0.75rem;
+                flex: 1 1 auto;
+            }
 
-                .arrow {
-                    top: 0px;
-                    bottom: 0px;
-                    right: 0px;
-                    margin-left: 0.75rem;
-                    display: flex;
-                    align-items: center;
-                    padding-right: 0.5rem;
+            .arrow {
+                top: 0px;
+                bottom: 0px;
+                right: 0px;
+                margin-left: 0.75rem;
+                display: flex;
+                align-items: center;
+                padding-right: 0.5rem;
 
-                }
             }
 
             > ul {
@@ -139,13 +146,47 @@
                 padding-bottom: 0.25rem;
                 font-size: 1rem;
                 line-height: 1.5rem;
-                box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px
+                box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px;
+
+                li {
+                    display: flex;
+                    align-items: center;
+
+                    color: rgb(17 24 39);
+                    padding: 0.5rem 2.25rem 0.5rem 0.75rem;
+                    user-select: none;
+                    cursor: default;
+                }
             }
 
             &:focus-within {
                 > ul {
                     display: block;
                 }
+            }
+        }
+    }
+
+    footer {
+        margin-top: 1.5rem;
+
+        button {
+
+            width: 100%;
+            justify-content: center;
+            border-radius: 0.375rem;
+            border-width: 1px;
+            border-color: transparent;
+            background-color: rgb(17 221 116);
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            line-height: 1.5rem;
+            font-weight: 500;
+            color: #fff;
+            box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
+
+            &:hover {
+                background: rgb(17 204 116)
             }
         }
     }

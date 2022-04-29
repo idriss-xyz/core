@@ -22,39 +22,21 @@
         </button>
 
         <button type="button" class="more">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
-            </svg>
+            <img alt="" src=pen/>
         </button>
     </div>
     <div class="select-wrapper">
         <label for="network">Network:</label>
         <div class="select">
             <button type="button" id="network">
-                    <img src="eth_logo.png" alt=""/>
-                    <span class="name">Ethereum</span>
-                <span class="arrow">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd"
-                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                              clip-rule="evenodd"/>
-                    </svg>
-                </span>
+                <img src=eth_logo alt=""/>
+                <span class="name">Ethereum</span>
+                <img class="arrow" src=arrow/>
             </button>
             <ul tabindex="-1" role="listbox">
                 <li role="option">
-                    <div>
-                        <img src="eth_logo.png" alt=""/>
-                        <span>Polygon</span>
-                    </div>
-                    <span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20"
-                             fill="currentColor">
-                            <path fill-rule="evenodd"
-                                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                  clip-rule="evenodd"/>
-                        </svg>
-                    </span>
+                    <img src=eth_logo alt=""/>
+                    <span class="name">Polygon</span>
                 </li>
             </ul>
         </div>
@@ -62,33 +44,15 @@
     <div class="select-wrapper">
         <label for="network">Coin:</label>
         <div class="select">
-            <button type="button" id="network">
-                <span class="flex items-center">
-                    <img src="usdc_logo.png" alt=""/>
-                    <span>USDC</span>
-                </span>
-                <span class="arrow">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd"
-                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                              clip-rule="evenodd"/>
-                    </svg>
-                </span>
+            <button type="button">
+                <img src=usdc_logo alt=""/>
+                <span class="name">USDC</span>
+                <img class="arrow" src=arrow/>
             </button>
             <ul tabindex="-1" role="listbox">
                 <li role="option">
-                    <div>
-                        <img src="eth_logo.png" alt=""/>
-                        <span>MATIC</span>
-                    </div>
-                    <span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20"
-                             fill="currentColor">
-                            <path fill-rule="evenodd"
-                                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                  clip-rule="evenodd"/>
-                        </svg>
-                    </span>
+                    <img src=usdc_logo alt=""/>
+                    <span class="name">MATIC</span>
                 </li>
             </ul>
         </div>
