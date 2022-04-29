@@ -1,5 +1,6 @@
 import {AbstractPageManager} from "./abstractPageManager";
 import {RequestLimiter} from "../RequestLimiter";
+import {Tipping} from "../tipping/Tipping";
 
 export class TwitterPageManager extends AbstractPageManager {
     static namesResults = {};
@@ -131,7 +132,7 @@ export class TwitterPageManager extends AbstractPageManager {
                         e.stopPropagation();
                         e.preventDefault();
 
-                        let dropdown = this.document.createElement('div');
+                        let dropdown = (new Tipping()).div;
                         this.document.body.append(dropdown);
                         let rect = icon.getBoundingClientRect()
                         dropdown.classList.add('idrissDropdown')
@@ -144,11 +145,8 @@ export class TwitterPageManager extends AbstractPageManager {
 
                         this.lastDropdown?.remove();
                         this.lastDropdown = dropdown
-                        this.generatePopupContent(dropdown, name, data, (value) => {
-                            navigator.clipboard.writeText(value)
-                            let lastPopup = this.lastDropdown;
-                            setTimeout(() => lastPopup?.remove(), 100);
-                        })
+
+
                         const eventCallback = () => {
                             setTimeout(() => dropdown.remove(), 100);
                             removeEventListener('scroll', eventCallback)
