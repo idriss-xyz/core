@@ -1,3 +1,152 @@
-*{
-    background: red;
+.tipping-popup {
+
+    width: 16rem;
+    justify-content: center;
+    border-radius: 0.375rem;
+    border-color: #000;
+    padding: 0.75rem;
+    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    background: #fff;
+
+    line-height: 1.5;
+    tab-size: 4;
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+    header {
+        display: flex;
+        justify-content: space-between;
+
+        h1 {
+            color: rgb(17 24 39);
+            line-height: 1.5rem;
+            font-weight: 500;
+            font-size: 1.125rem;
+            margin: 0;
+        }
+
+        .closeButton {
+            align-self: center;
+            cursor: pointer;
+        }
+    }
+
+    .valueSelection {
+        margin-top: 1rem;
+        display: flex;
+        justify-content: space-between;
+
+        button {
+            margin: 0;
+            color: inherit;
+            font-family: inherit;
+            cursor: pointer;
+            justify-content: center;
+            border-radius: 0.375rem;
+            border-width: 1px;
+            border-color: transparent;
+            background-color: rgb(220 252 231);
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            line-height: 1.5rem;
+            font-weight: 500;
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        }
+    }
+
+    .select-wrapper {
+        margin-top: 0.25rem;
+
+        label {
+            color: rgb(107 114 128);
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+
+        }
+
+        .select {
+            margin-top: 0.25rem;
+
+            > button {
+                line-height: inherit;
+                color: inherit;
+                font-family: inherit;
+                position: relative;
+                width: 100%;
+                cursor: default;
+                border-radius: 0.375rem;
+                border-width: 1px;
+                border-color: rgb(209 213 219);
+                border-style: solid;
+                background-color: rgb(255 255 255);
+                padding: 0.5rem 2.5rem 0.5rem 0.75rem;
+                text-align: left;
+                box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+                display: flex;
+                align-items: center;
+
+                &:focus {
+
+                    border-color: rgb(99 102 241 / var(--tw-border-opacity));
+                    outline: 2px solid transparent;
+                    outline-offset: 2px;
+                    box-shadow: 0px 0px 0px 1px rgb(99, 102, 241), 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+
+                }
+
+                img {
+
+                    border-radius: 9999px;
+                    flex-shrink: 0;
+                    width: 1.5rem;
+                    height: 1.5rem;
+                }
+
+                .name {
+
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    display: block;
+                    margin-left: 0.75rem;
+                }
+
+                .arrow {
+                    top: 0px;
+                    bottom: 0px;
+                    right: 0px;
+                    margin-left: 0.75rem;
+                    display: flex;
+                    align-items: center;
+                    padding-right: 0.5rem;
+
+                }
+            }
+
+            > ul {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+                position: absolute;
+                z-index: 10;
+                margin-top: 0.25rem;
+                max-height: 14rem;
+                display: none;
+                width: 100%;
+                overflow: auto;
+                border-radius: 0.375rem;
+                background: #fff;
+                padding-top: 0.25rem;
+                padding-bottom: 0.25rem;
+                font-size: 1rem;
+                line-height: 1.5rem;
+                box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px
+            }
+
+            &:focus-within {
+                > ul {
+                    display: block;
+                }
+            }
+        }
+    }
 }

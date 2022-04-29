@@ -132,7 +132,7 @@ export class TwitterPageManager extends AbstractPageManager {
                         e.stopPropagation();
                         e.preventDefault();
 
-                        let dropdown = (new Tipping()).div;
+                        let dropdown = (new Tipping(name)).div;
                         this.document.body.append(dropdown);
                         let rect = icon.getBoundingClientRect()
                         dropdown.classList.add('idrissDropdown')

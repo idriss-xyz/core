@@ -1,107 +1,102 @@
-<div class="justify-center border-1 border-black w-64 rounded-md p-3 m-auto mt-10 shadow-2xl">
-    <div class="flex justify-between">
-        <p class="text-lg leading-6 font-medium text-gray-900">Send to @geoist_</p>
-<!-- X ICON (CLOSE POPUP) -->
-        <div onclick="" class="self-center hover:cursor-pointer">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500 ml-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+<section class="tipping-popup">
+    <header>
+        <h1>Send to {{identifier}}</h1>
+        <div class="closeButton">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500 ml-auto" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
             </svg>
         </div>
-    </div>
-<!-- $ VALUE SELECTION -->
-    <div class="flex justify-between space-x-1 mt-4">
-        <button id="" type="button" onclick="" class="justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-100 text-base font-medium hover:bg-[#11cc74]">
-            <span id="">$1</span>
+    </header>
+    <div class="valueSelection">
+        <button type="button">
+            <span>$1</span>
         </button>
 
-        <button id="" type="button" onclick="" class="justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-100 text-base font-medium hover:bg-[#11cc74]">
-            <span id="">$2</span>
+        <button type="button">
+            <span>$2</span>
         </button>
 
-        <button id="" type="button" onclick="" class="justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-100 text-base font-medium hover:bg-[#11cc74]">
-            <span id="">$5</span>
+        <button type="button">
+            <span>$5</span>
         </button>
 
-        <button id="" type="button" onclick="" class="justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-100 text-base font-medium hover:bg-[#11cc74]">
+        <button type="button" class="more">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
             </svg>
         </button>
     </div>
-<!-- DROPDOWN 1 -->
-    <div class="mt-1">
-        <label id="listbox-label" class="text-sm text-gray-500">Network:</label>
-        <div class="mt-1 relative">
-            <button type="button" class="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                <span class="flex items-center">
-                    <img src="eth_logo.png" alt="" class="flex-shrink-0 h-6 w-6 rounded-full" />
-                    <span class="ml-3 block truncate">Ethereum</span>
-                </span>
-                <span class="ml-3 absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+    <div class="select-wrapper">
+        <label for="network">Network:</label>
+        <div class="select">
+            <button type="button" id="network">
+                    <img src="eth_logo.png" alt=""/>
+                    <span class="name">Ethereum</span>
+                <span class="arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                              clip-rule="evenodd"/>
                     </svg>
                 </span>
             </button>
-<!-- DROPDOWN BODY (SHOW/HIDE) -->
-            <ul class="hidden absolute z-10 mt-1 w-full bg-white shadow-lg max-h-56 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm" tabindex="-1" role="listbox">
-<!-- DROPDOWN RESULTS
-selected result: font-semibold + display checkmark
-all not selected results: font-normal
- -->
-                <li class="list-none text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9" id="listbox-option-0" role="option">
-                    <div class="flex items-center">
-                        <img src="eth_logo.png" alt="" class="flex-shrink-0 h-6 w-6 rounded-full" />
-                        <span class="ml-3 block truncate">Polygon</span>
+            <ul tabindex="-1" role="listbox">
+                <li role="option">
+                    <div>
+                        <img src="eth_logo.png" alt=""/>
+                        <span>Polygon</span>
                     </div>
-                    <span class="text-indigo-600 absolute inset-y-0 right-0 flex items-center pr-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    <span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20"
+                             fill="currentColor">
+                            <path fill-rule="evenodd"
+                                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                  clip-rule="evenodd"/>
                         </svg>
                     </span>
                 </li>
             </ul>
         </div>
     </div>
-<!-- DROPDOWN 2 -->
-    <div class="mt-1">
-        <label id="listbox-label" class="text-sm text-gray-500">Coin:</label>
-        <div class="mt-1 relative">
-            <button type="button" class="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+    <div class="select-wrapper">
+        <label for="network">Coin:</label>
+        <div class="select">
+            <button type="button" id="network">
                 <span class="flex items-center">
-                    <img src="usdc_logo.png" alt="" class="flex-shrink-0 h-6 w-6 rounded-full" />
-                    <span class="ml-3 block truncate">USDC</span>
+                    <img src="usdc_logo.png" alt=""/>
+                    <span>USDC</span>
                 </span>
-                <span class="ml-3 absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                <span class="arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                              clip-rule="evenodd"/>
                     </svg>
                 </span>
             </button>
-<!-- DROPDOWN BODY (SHOW/HIDE) -->
-            <ul class="hidden absolute z-10 mt-1 w-full bg-white shadow-lg max-h-56 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm" tabindex="-1" role="listbox">
-<!-- DROPDOWN RESULTS
-selected result: font-semibold + display checkmark
-all not selected results: font-normal
- -->
-                <li class="text-gray-900 cursor-default select-none relative py-2 pl-3 pr-9" id="listbox-option-0" role="option">
-                    <div class="flex items-center">
-                        <img src="usdc_logo.png" alt="" class="flex-shrink-0 h-6 w-6 rounded-full" />
-                        <span class="font-normal ml-3 block truncate">MATIC</span>
+            <ul tabindex="-1" role="listbox">
+                <li role="option">
+                    <div>
+                        <img src="eth_logo.png" alt=""/>
+                        <span>MATIC</span>
                     </div>
-                    <span class="text-indigo-600 absolute inset-y-0 right-0 flex items-center pr-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    <span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20"
+                             fill="currentColor">
+                            <path fill-rule="evenodd"
+                                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                  clip-rule="evenodd"/>
                         </svg>
                     </span>
                 </li>
             </ul>
         </div>
     </div>
-<!-- SEND BUTTON -->
-    <div class="flex justify-center mt-6">
-        <button id="" type="button" onclick="" class="w-full justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-[#11dd74] text-base font-medium text-white hover:bg-[#11cc74]">
-            <span id="">Send</span>
+    <!-- SEND BUTTON -->
+    <footer>
+        <button type="button" class="send">
+            <span>Send</span>
         </button>
-    </div>
-</div>
+    </footer>
+</section>
