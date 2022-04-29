@@ -9,7 +9,7 @@ export const TwitterIdResolver = {
     }
     ,
     preloadMany(names) {
-        names = names.map(x => x.replace(/^@/, ''));
+        names = names.map(x => x.replace(/^@/, '').toLowerCase());
         return this.cache.preloadMany(names, async () => (await this.apiCall(names)))
     }
     ,
