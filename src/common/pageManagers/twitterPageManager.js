@@ -161,7 +161,7 @@ export class TwitterPageManager extends AbstractPageManager {
                         dropdown.onmouseout = () => {
                             setTimeout(() => dropdown.remove(), 100);
                         }
-
+                        dropdown.shadowRoot.querySelector('.closeButton').onclick = () => dropdown.remove();
                         icon.onblur = eventCallback
                         addEventListener('scroll', eventCallback)
                     }
