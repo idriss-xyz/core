@@ -39,12 +39,13 @@ export class AsyncCache {
 
     async readCache(args) {
         let str = JSON.stringify([this.name, args]);
+        let cacheInvalidation = (await chrome.storage.local.get('cacheInvalidate'))['cacheInvalidate'] ?? 0
 
-        if (this.promises[str] && new Date() - this.promises[str].date < this.expirationTime) {
+        if (this.promises[str] && new Date() - this.promises[str].date < this.expirationTime && cacheInvalidation < this.promises[str].date) {
             return this.promises[str].promise;
         }
         let response = (await chrome.storage.local.get('cache' + str))['cache' + str];
-        if (response && new Date() - response.date < this.expirationTime) {
+        if (response && new Date() - response.date < this.expirationTime && cacheInvalidation < response.date) {
             return response.value;
         }
         return null;
