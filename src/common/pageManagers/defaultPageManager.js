@@ -11,10 +11,6 @@ export class DefaultPageManager extends AbstractPageManager {
         this.document = document;
     }
 
-    isEnabled() {
-        return new Promise(r => chrome.storage.local.get(['enabled'], x => r(x?.enabled ?? true)))
-    }
-
     init() {
         this.document.addEventListener('input', e => this.inputChanged(e, e.target))
         this.document.addEventListener('change', e => this.inputChanged(e, e.target))
