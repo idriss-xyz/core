@@ -53,11 +53,14 @@ export class TwitterPageManager extends AbstractPageManager {
 
     async getInfo(names) {
         const lacking = Array.from(names).filter(x => !TwitterPageManager.namesResults[x]);
-        if (lacking.length > 0)
+        if (lacking.length > 0) {
             await this.apiCallPreload(lacking);
+            console.log('preloaded', lacking)
+        }
         for (const name of lacking) {
             TwitterPageManager.namesResults[name] = this.apiCall(name);
         }
+        console.log('TwitterPageManager.namesResults',names, TwitterPageManager.namesResults)
     }
 
     apiCall(name) {
