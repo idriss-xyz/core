@@ -1,6 +1,5 @@
 import {TwitterIdResolver} from "./TwitterIdResolver";
 
-import {AsyncCache} from "../AsyncCache";
 import {lowerFirst, regM, regPh, regT} from "../utils";
 if (globalThis.window != globalThis) {
     globalThis.window = globalThis;
@@ -77,11 +76,10 @@ var walletTags = {
 
 
 export const AdressesResolver = {
-    cache: AsyncCache.Adresses,
     web3: new Web3(new Web3.providers.HttpProvider("https://polygon-rpc.com/")),
 
     async get(identifier, coin = "", network = "") {
-        return await this.cache.getOne([identifier, coin, network],()=>this.simpleResolve(identifier, coin, network))
+        return await this.simpleResolve(identifier, coin, network)
     },
     generateContract() {
         return new this.web3.eth.Contract(
@@ -135,7 +133,7 @@ export const AdressesResolver = {
         if (identifier.match(regT)) {
             identifierT = identifier;
             identifier = await TwitterIdResolver.get(identifierT);
-            if (identifier == "Not found") {
+            if (!identifier || identifier == "Not found") {
                 throw new Error("Twitter handle not found.")
             }
             twitterID = true;
