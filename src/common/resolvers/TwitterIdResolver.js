@@ -3,12 +3,14 @@ import {AsyncCache} from "../AsyncCache";
 
 export const TwitterIdResolver = {
     cache: AsyncCache.TwitterID,
-    get(name) {
+    async get(name) {
         name = name.replace(/^@/, '').toLowerCase();
-        return this.cache.getOne(name, async () => (await this.apiCall([name]))[name])
+        return (await this.apiCall([name]))[name];
+       // return await this.cache.getOne(name, async () => (await this.apiCall([name]))[name])
     }
     ,
     preloadMany(names) {
+        return;
         names = names.map(x => x.replace(/^@/, '').toLowerCase());
         return this.cache.preloadMany(names, async () => (await this.apiCall(names)))
     }

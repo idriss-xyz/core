@@ -1,6 +1,7 @@
 import {TwitterIdResolver} from "./TwitterIdResolver";
 
 import {lowerFirst, regM, regPh, regT} from "../utils";
+
 if (globalThis.window != globalThis) {
     globalThis.window = globalThis;
 }
@@ -74,7 +75,6 @@ var walletTags = {
 };
 
 
-
 export const AdressesResolver = {
     web3: new Web3(new Web3.providers.HttpProvider("https://polygon-rpc.com/")),
 
@@ -122,6 +122,7 @@ export const AdressesResolver = {
     ,
     // call this function also for twitter plugin functionality?
     async simpleResolve(identifier, coin = "", network = "") {
+        console.log('resovleStart', identifier);
         let twitterID;
         let identifierT;
         identifier = lowerFirst(identifier).replace(" ", "");
@@ -151,6 +152,7 @@ export const AdressesResolver = {
                 }
             }
         }
+        console.log('resovle promise created', identifier, foundMatchesPromises);
         ///awaiting on the end for better performance
         let foundMatches = {}
         for (let [tag_, promise] of Object.entries(foundMatchesPromises)) {
@@ -163,7 +165,7 @@ export const AdressesResolver = {
                 console.warn(e);
             }
         }
-
+        console.log({identifierT, identifier, foundMatches})
         // return twitter id when twitter id was searched for
         if (twitterID) {
             return {"input": identifierT, "result": foundMatches, "twitterID": identifier}
