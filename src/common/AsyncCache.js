@@ -12,7 +12,7 @@ export class AsyncCache {
         let str = JSON.stringify([this.name, args]);
 
         let cacheResp = await this.readCache(args);
-        if (cacheResp) return cacheResp;
+        if (cacheResp) return cacheResp.resp;
         let date = +new Date();
         let promise = fun();
         this.promises[str] = {date, promise};
@@ -39,14 +39,13 @@ export class AsyncCache {
 
     async readCache(args) {
         let str = JSON.stringify([this.name, args]);
-        let cacheInvalidation = (await chrome.storage.local.get('cacheInvalidate'))['cacheInvalidate'] ?? 0
 
-        if (this.promises[str] && new Date() - this.promises[str].date < this.expirationTime && cacheInvalidation < this.promises[str].date) {
-            return this.promises[str].promise;
+        if (this.promises[str] && new Date() - this.promises[str].date < this.expirationTime) {
+            return {resp: await this.promises[str].promise};
         }
         let response = (await chrome.storage.local.get('cache' + str))['cache' + str];
-        if (response && new Date() - response.date < this.expirationTime && cacheInvalidation < response.date) {
-            return response.value;
+        if (response && new Date() - response.date < this.expirationTime) {
+            return {resp:response.value};
         }
         return null;
     }
@@ -66,6 +65,7 @@ export class AsyncCache {
                     chrome.storage.local.set(obj);
                 });
             }
+            await promise;
         }
     }
 }

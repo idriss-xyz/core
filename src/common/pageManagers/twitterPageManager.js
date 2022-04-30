@@ -32,10 +32,10 @@ export class TwitterPageManager extends AbstractPageManager {
         this.checkGarbageDropdown();
     }
 
-    searchPlaces() {
+    async searchPlaces() {
         const places = Array.from(this.listPlaces());
         const names = new Set(places.map(x => x.name).filter(x => x));
-        this.getInfo(names);
+        await this.getInfo(names);
         for (const place of places) {
             TwitterPageManager.namesResults[place.name].then(x => {
                 place.addCallback(x?.result ?? {});
@@ -54,10 +54,10 @@ export class TwitterPageManager extends AbstractPageManager {
         }
     }
 
-    getInfo(names) {
+    async getInfo(names) {
         const lacking = Array.from(names).filter(x => !TwitterPageManager.namesResults[x]);
         if (lacking.length > 0)
-            this.apiCallPreload(lacking);
+            await this.apiCallPreload(lacking);
         for (const name of lacking) {
             TwitterPageManager.namesResults[name] = this.apiCall(name);
         }

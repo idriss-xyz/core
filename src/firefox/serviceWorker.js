@@ -4,7 +4,6 @@ import {lowerFirst, regT} from "../common/utils";
 
 browser.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
-        console.log('serviceWorker message ' + request.type, request.value)
         if (request.type === 'apiAddressesRequest') {
             AdressesResolver.get(request.value).then(x => sendResponse(x)).catch(e => sendResponse({}));
             return true;
@@ -13,9 +12,9 @@ browser.runtime.onMessage.addListener(
                 return lowerFirst(identifier).replace(" ", "");
             }).filter(identifier => identifier?.match(regT));
             if (twitter.length > 0) {
-                TwitterIdResolver.preloadMany(twitter);
+                TwitterIdResolver.preloadMany(twitter).then(x => sendResponse(x)).catch(e => sendResponse({}));
             }
-            return false;
+            return true;
         } else if (request.type === 'getIconUrl') {
             fetch(browser.runtime.getURL('img/icon148.png'))
                 .then(fetchRequest => fetchRequest.blob())
