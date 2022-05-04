@@ -17,11 +17,20 @@ const tokens = [
         "chainId": 1,
         "decimals": 18,
         "logoURI": "https://tokens.pancakeswap.finance/images/0x3EE2200Efb3400fAbB9AacF31297cBdD1d435D47.png"
-    }, {
+    },
+    {
+        "name": "CULT (Cult DAO)",
+        "symbol": "CULT",
+        "address": "0xf0f9d895aca5c8678f706fb8216fa22957685a13",
+        "chainId": 1,
+        "decimals": 18,
+        "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/17742.png"
+    },
+    {
         "name": "Test2",
         "symbol": "Test",
         "address": "0x32",
-        "chainId": 127,
+        "chainId": 137,
         "decimals": 18,
         "logoURI": "https://tokens.pancakeswap.finance/images/0x3EE2200Efb3400fAbB9AacF31297cBdD1d435D47.png"
     },
@@ -819,7 +828,7 @@ export class Tipping {
         console.log({identifier, eth_logo})
         const networks = [
             {name: 'BSC', img: biannceCoinLogo, chainId: 56},
-            {name: 'Etherium', img: eth_logo, chainId: 1},
+            {name: 'Ethereum', img: eth_logo, chainId: 1},
             {name: 'Polygon ', img: maticTokenIcon, chainId: 137},
         ]
 
