@@ -53,40 +53,29 @@ export class TwitterPageManager extends AbstractPageManager {
 
     async getInfo(names) {
         const lacking = Array.from(names).filter(x => !TwitterPageManager.namesResults[x]);
-        if (lacking.length > 0) {
-            await this.apiCallPreload(lacking);
-            console.log('preloaded', lacking)
-        }
+        if (lacking.length == 0) return
+
+        let requestPromise = this.apiCall(lacking);
+
         for (const name of lacking) {
-            TwitterPageManager.namesResults[name] = this.apiCall(name);
+            TwitterPageManager.namesResults[name] = requestPromise.then(d => d[name]);
         }
-        console.log('TwitterPageManager.namesResults',names, TwitterPageManager.namesResults)
+        await requestPromise;
     }
 
-    apiCall(name) {
-        return this.requestLimiter.schedule(() => {
+    async apiCall(names) {
+        console.log('twitter manager call');
+        let responses=await this.requestLimiter.scheduleMany(names, (x) => {
             return new Promise((resolve, reject) => {
                 chrome.runtime.sendMessage({
-                    type: "apiAddressesRequest",
-                    value: name
+                    type: "apiAddressesRequestBulk",
+                    value: x
                 }, response => {
                     resolve(response);
                 });
             });
         });
-    }
-
-    apiCallPreload(names) {
-        return this.requestLimiter.schedule(() => {
-            return new Promise((resolve, reject) => {
-                chrome.runtime.sendMessage({
-                    type: "apiAddressesPreload",
-                    value: names
-                }, response => {
-                    resolve(response);
-                });
-            });
-        });
+        return responses.reduce((a,b)=>({...a,...b}));
     }
 
     getIcon() {
