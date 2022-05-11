@@ -5,20 +5,33 @@ export class RequestLimiter {
         this.waiting = [];
     }
 
-    isGood() {
+    isGood(howMuch = 1) {
         for (const limit of this.limits) {
             const now = new Date();
-            const count = this.working.filter(x => now - x.start <= limit.time);
-            if (count >= limit.amount) {
+            const count = this.working.filter(x => now - x.start <= limit.time).map(x => x.count).reduce((a, b) => a + b, 0);
+            if (count + howMuch > limit.amount) {
                 return false;
             }
         }
         return true;
     }
 
-    schedule(callback) {
-        if (this.isGood()) {
-            return this.run(callback);
+    scheduleOne(item, callback) {
+        return this.scheduleGroup([item], callback)
+    }
+
+    scheduleMany(array, callback) {
+        let groups = [];
+        const size = this.limits[0].amount;
+        for (let i = 0; i < array.length; i += size) {
+            groups.push(array.slice(i, size));
+        }
+        return Promise.all(groups.map(x => this.scheduleGroup(x, callback)))
+    }
+
+    scheduleGroup(array, callback) {
+        if (this.isGood(array.length)) {
+            return this.run(array, callback);
         } else {
             return new Promise((resolve, reject) => {
                 this.waiting.push({callback, resolve, reject});
@@ -26,24 +39,23 @@ export class RequestLimiter {
         }
     }
 
-    async run(callback) {
-        const obj = {callback, start: new Date};
+    async run(data, callback) {
+        const obj = {data, callback, count: data.length, start: new Date};
         this.working.push(obj)
         setTimeout(() => this.tryNext(), this.limits[0].time);
         try {
-            return await callback();
+            return await callback(data);
         } finally {
             this.working.splice(this.working.indexOf(obj), 1);
-
         }
     }
 
     tryNext() {
-        while (this.isGood() && this.waiting.length > 0) {
+        while (this.waiting.length > 0 && this.isGood(this.waiting[0].count)) {
             const waiting = this.waiting.pop();
-            this.run(waiting.callback).then(waiting.resolve, waiting.reject);
+            this.run(waiting.data, waiting.callback).then(waiting.resolve, waiting.reject);
         }
-        if(this.waiting.length > 0){
+        if (this.waiting.length > 0) {
             setTimeout(() => this.tryNext(), this.limits[0].time);
         }
     }

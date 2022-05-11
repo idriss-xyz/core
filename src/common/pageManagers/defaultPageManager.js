@@ -62,6 +62,8 @@ export class DefaultPageManager extends AbstractPageManager {
             if (data && event == this.lastEvent) {
                 this.showPopup(this.lastEvent.input, this.lastEvent.value, data.result);
             }
+        }else{
+            this.lastPopup?.remove();
         }
     }
 

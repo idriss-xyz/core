@@ -1,6 +1,5 @@
 export class AsyncCache {
     static TwitterID = new AsyncCache('TwitterID');
-    static Adresses = new AsyncCache('Adresses');
     promises = {}
 
     constructor(name, expirationTime = 3600000) {
@@ -61,7 +60,7 @@ export class AsyncCache {
                 this.promises[str] = {date, promise: promise.then(a => a[str])};
                 promise.then(a => {
                     let obj = {};
-                    obj['cache' + str] = {date, value: a[str]};
+                    obj['cache' + str] = {date, value: a[args]};
                     chrome.storage.local.set(obj);
                 });
             }

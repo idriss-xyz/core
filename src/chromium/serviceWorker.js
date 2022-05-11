@@ -7,13 +7,8 @@ chrome.runtime.onMessage.addListener(
         if (request.type === 'apiAddressesRequest') {
             AdressesResolver.get(request.value).then(x => sendResponse(x)).catch(e => sendResponse({}));
             return true;
-        } else if (request.type === 'apiAddressesPreload') {
-            let twitter = request.value.map(identifier => {
-                return lowerFirst(identifier).replace(" ", "");
-            }).filter(identifier => identifier?.match(regT));
-            if (twitter.length > 0) {
-                TwitterIdResolver.preloadMany(twitter).then(x => sendResponse(x)).catch(e => sendResponse({}));
-            }
+        } else if (request.type === 'apiAddressesRequestBulk') {
+            AdressesResolver.getMany(request.value).then(x => sendResponse(x)).catch(e => sendResponse({}));
             return true;
         } else if (request.type === 'getIconUrl') {
             fetch(chrome.runtime.getURL('img/icon148.png'))

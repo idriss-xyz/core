@@ -20,6 +20,11 @@ export class StandalonePageManager extends AbstractPageManager {
                     navigator.clipboard.writeText(value)
                 })
             }
+        }else
+        {
+            const results = this.document.createElement('div')
+            results.className = 'results';
+            this.document.querySelector('.results').replaceWith(results)
         }
     }
 }
