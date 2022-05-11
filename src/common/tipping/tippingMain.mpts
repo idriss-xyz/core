@@ -1,65 +1,62 @@
-<section class="tipping-popup">
-    <header>
-        <h1>Send to {{identifier}}</h1>
-        <img class="closeButton" src=close alt="close" />
-    </header>
-    <div class="valueSelection">
-        <button type="button">
-            <span>$1</span>
-        </button>
+<header>
+    <h1>Send to {{identifier}}</h1>
+    <img class="closeButton" src=close alt="close"/>
+</header>
+<div class="valueSelection">
+    <button type="button">
+        <span>$1</span>
+    </button>
 
-        <button type="button">
-            <span>$2</span>
-        </button>
+    <button type="button">
+        <span>$2</span>
+    </button>
 
-        <button type="button">
-            <span>$5</span>
-        </button>
+    <button type="button">
+        <span>$5</span>
+    </button>
 
-        <button type="button" class="more">
-            <img alt="" src=pen/>
+    <button type="button" class="more">
+        <img alt="" src=pen/>
+    </button>
+</div>
+<div class="select-wrapper">
+    <label for="network">Network:</label>
+    <div class="select networkSelect" data-chain-id=networks.0.chainId>
+        <button type="button" id="network">
+            <img src=networks.0.img alt=""/>
+            <span class="name">{{networks.0.name}}</span>
+            <img class="arrow" src=arrow/>
         </button>
-    </div>
-    <div class="select-wrapper">
-        <label for="network">Network:</label>
-        <div class="select networkSelect" data-chain-id=networks.0.chainId>
-            <button type="button" id="network">
-                <img src=networks.0.img alt=""/>
-                <span class="name">{{networks.0.name}}</span>
-                <img class="arrow" src=arrow/>
-            </button>
-            <ul tabindex="-1" role="listbox">
-                <:foreach collection=networks item=network>
+        <ul tabindex="-1" role="listbox">
+            <:foreach collection=networks item=network>
                 <li role="option" data-chain-id=network.chainId>
                     <img src=network.img alt=""/>
                     <span class="name">{{network.name}}</span>
                 </li>
-                </:foreach>
-            </ul>
-        </div>
+            </:foreach>
+        </ul>
     </div>
-    <div class="select-wrapper">
-        <label for="tokenButton">Coin:</label>
-        <div class="select tokenSelect" data-chain-id=tokens.0.chainId>
-            <button type="button" id="tokenButton">
-                <img src=tokens.0.logoURI alt=""/>
-                <span class="name">{{tokens.0.name}}</span>
-                <img class="arrow" src=arrow/>
-            </button>
-            <ul tabindex="-1" role="listbox">
-                <:foreach collection=tokens item=token>
-                    <li role="option" data-chain-id=token.chainId data-address=token.address>
-                        <img src=token.logoURI alt=""/>
-                        <span class="name">{{token.name}}</span>
-                    </li>
-                </:foreach>
-            </ul>
-        </div>
-    </div>
-    <!-- SEND BUTTON -->
-    <footer>
-        <button type="button" class="send">
-            <span>Send</span>
+</div>
+<div class="select-wrapper">
+    <label for="tokenButton">Coin:</label>
+    <div class="select tokenSelect" data-chain-id=tokens.0.chainId>
+        <button type="button" id="tokenButton">
+            <img src=tokens.0.logoURI alt=""/>
+            <span class="name">{{tokens.0.name}}</span>
+            <img class="arrow" src=arrow/>
         </button>
-    </footer>
-</section>
+        <ul tabindex="-1" role="listbox">
+            <:foreach collection=tokens item=token>
+                <li role="option" data-chain-id=token.chainId data-address=token.address>
+                    <img src=token.logoURI alt=""/>
+                    <span class="name">{{token.name}}</span>
+                </li>
+            </:foreach>
+        </ul>
+    </div>
+</div>
+<footer>
+    <button type="button" class="send">
+        <span>Send</span>
+    </button>
+</footer>

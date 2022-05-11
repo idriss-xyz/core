@@ -1,0 +1,13 @@
+<header class="noH1">
+    <img class="closeButton" src=close alt="close"/>
+</header>
+
+<div class="loader"/>
+<h2>Waiting for Approval</h2>
+<p class="subtitle">Allow <strong>IDriss</strong> to use your ETH</p>
+<p>Confirm this transaction in your wallet</p>
+<footer>
+    <p class="link">
+        <a href="https://polygonscan.com/" target="_blank" class="underline text-[#5865F2]">Contract source code</a>
+    </p>
+</footer>
