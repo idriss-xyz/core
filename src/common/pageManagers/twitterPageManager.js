@@ -68,7 +68,7 @@ export class TwitterPageManager extends AbstractPageManager {
 
     async apiCall(names) {
         console.log('twitter manager call');
-        let responses=await this.requestLimiter.scheduleMany(names, (x) => {
+        let responses = await this.requestLimiter.scheduleMany(names, (x) => {
             return new Promise((resolve, reject) => {
                 chrome.runtime.sendMessage({
                     type: "apiAddressesRequestBulk",
@@ -78,7 +78,7 @@ export class TwitterPageManager extends AbstractPageManager {
                 });
             });
         });
-        return responses.reduce((a,b)=>({...a,...b}));
+        return responses.reduce((a, b) => ({...a, ...b}));
     }
 
     getIcon() {
@@ -93,7 +93,7 @@ export class TwitterPageManager extends AbstractPageManager {
 
     * listPlaces() {
         for (const div of document.querySelectorAll('div.r-dnmrzs.r-1ny4l3l, .r-gtdqiz .css-1dbjc4n.r-1iusvr4.r-16y2uox.r-1777fci, .css-1dbjc4n.r-16y2uox.r-1wbh5a2.r-1pi2tsx.r-1777fci')) {
-            if(div.matches('.css-1dbjc4n.r-xoduu5.r-1wbh5a2.r-dnmrzs.r-1ny4l3l'))continue;
+            if (div.matches('.css-1dbjc4n.r-xoduu5.r-1wbh5a2.r-dnmrzs.r-1ny4l3l')) continue;
             const name = Array.from(div.querySelectorAll('.r-9ilb82, .r-14j79pv, .r-rjixqe')).map(x => x.textContent).find(x => x[0] == '@');
             let existingIcon = div.querySelector('.idrissIcon');
             if (existingIcon) {
@@ -155,6 +155,7 @@ export class TwitterPageManager extends AbstractPageManager {
                             setTimeout(() => dropdown.remove(), 100);
                         }
                         dropdown.shadowRoot.querySelector('.closeButton').onclick = () => dropdown.remove();
+                        dropdown.shadowRoot.addEventListener('close', () => dropdown.remove());
                         icon.onblur = eventCallback
                         addEventListener('scroll', eventCallback)
                     }

@@ -1,0 +1,13 @@
+<header class="noH1">
+    <img class="closeButton" src=close alt="close"/>
+</header>
+<main>
+    <img src=success alt="" class="success"/>
+    <h2>Transaction Submitted🥳</h2>
+    <p class="subtitle"><a href="https://etherscan.io/">View on Explorer<img src=link alt="" class="linkIcon"/></a></p>
+</main>
+<footer>
+    <button type="button" class="close">
+        <span>Close</span>
+    </button>
+</footer>
