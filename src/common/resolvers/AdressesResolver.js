@@ -79,7 +79,35 @@ export const AdressesResolver = {
     web3: new Web3(new Web3.providers.HttpProvider("https://polygon-rpc.com/")),
 
     async get(identifier, coin = "", network = "") {
-        return await this.simpleResolve(identifier, coin, network)
+        if (identifier.match(regT)) {
+            let twitterId = await TwitterIdResolver.get(identifier);
+            if (!identifier || identifier == "Not found") {
+                throw new Error("Twitter handle not found.")
+            }
+            return await this.simpleResolve(identifier, coin, network, twitterId)
+        } else {
+            return await this.simpleResolve(identifier, coin, network)
+        }
+    },
+    async getMany(identifiers, coin = "", network = "") {
+        let twitterNames = identifiers.filter(x => x.match(regT));
+        let twitterIds = [];
+        if (twitterNames.length > 0) {
+            twitterIds = await TwitterIdResolver.getMany(twitterNames)
+        }
+        let promises = [];
+        for (let identifier of identifiers) {
+            promises.push(this.simpleResolve(identifier, coin, network, twitterIds[identifier] ?? null))
+        }
+        let ret = {};
+        for (let promise of promises) {
+            try {
+                ret[(await promise).input] = await promise;
+            }catch(ex){
+
+            }
+        }
+        return ret;
     },
     generateContract() {
         return new this.web3.eth.Contract(
@@ -121,7 +149,7 @@ export const AdressesResolver = {
     }
     ,
     // call this function also for twitter plugin functionality?
-    async simpleResolve(identifier, coin = "", network = "") {
+    async simpleResolve(identifier, coin = "", network = "", twitterId) {
         console.log('resovleStart', identifier);
         let twitterID;
         let identifierT;
@@ -133,7 +161,7 @@ export const AdressesResolver = {
         }
         if (identifier.match(regT)) {
             identifierT = identifier;
-            identifier = await TwitterIdResolver.get(identifierT);
+            identifier = twitterId;
             if (!identifier || identifier == "Not found") {
                 throw new Error("Twitter handle not found.")
             }

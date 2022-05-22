@@ -53,40 +53,29 @@ export class TwitterPageManager extends AbstractPageManager {
 
     async getInfo(names) {
         const lacking = Array.from(names).filter(x => !TwitterPageManager.namesResults[x]);
-        if (lacking.length > 0) {
-            await this.apiCallPreload(lacking);
-            console.log('preloaded', lacking)
-        }
+        if (lacking.length == 0) return
+
+        let requestPromise = this.apiCall(lacking);
+
         for (const name of lacking) {
-            TwitterPageManager.namesResults[name] = this.apiCall(name);
+            TwitterPageManager.namesResults[name] = requestPromise.then(d => d[name]);
         }
-        console.log('TwitterPageManager.namesResults',names, TwitterPageManager.namesResults)
+        await requestPromise;
     }
 
-    apiCall(name) {
-        return this.requestLimiter.schedule(() => {
+    async apiCall(names) {
+        console.log('twitter manager call');
+        let responses=await this.requestLimiter.scheduleMany(names, (x) => {
             return new Promise((resolve, reject) => {
                 chrome.runtime.sendMessage({
-                    type: "apiAddressesRequest",
-                    value: name
+                    type: "apiAddressesRequestBulk",
+                    value: x
                 }, response => {
                     resolve(response);
                 });
             });
         });
-    }
-
-    apiCallPreload(names) {
-        return this.requestLimiter.schedule(() => {
-            return new Promise((resolve, reject) => {
-                chrome.runtime.sendMessage({
-                    type: "apiAddressesPreload",
-                    value: names
-                }, response => {
-                    resolve(response);
-                });
-            });
-        });
+        return responses.reduce((a,b)=>({...a,...b}));
     }
 
     getIcon() {
@@ -101,6 +90,7 @@ export class TwitterPageManager extends AbstractPageManager {
 
     * listPlaces() {
         for (const div of document.querySelectorAll('div.r-dnmrzs.r-1ny4l3l, .r-gtdqiz .css-1dbjc4n.r-1iusvr4.r-16y2uox.r-1777fci, .css-1dbjc4n.r-16y2uox.r-1wbh5a2.r-1pi2tsx.r-1777fci')) {
+            if(div.matches('.css-1dbjc4n.r-xoduu5.r-1wbh5a2.r-dnmrzs.r-1ny4l3l'))continue;
             const name = Array.from(div.querySelectorAll('.r-9ilb82, .r-14j79pv, .r-rjixqe')).map(x => x.textContent).find(x => x[0] == '@');
             let existingIcon = div.querySelector('.idrissIcon');
             if (existingIcon) {
