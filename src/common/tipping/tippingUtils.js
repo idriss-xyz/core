@@ -1,15 +1,16 @@
-
 export const tokens = [
     {
         "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
         "chainId": 1,
+        "network": "ETH",
         "name": "USD Coin",
         "symbol": "USDC",
         "decimals": 6,
         "logoURI": "https://tokens.1inch.io/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.png"
     },
-     {
+    {
         "chainId": 137,
+        "network": "Polygon",
         "name": "USD Coin",
         "symbol": "USDC",
         "decimals": 6,
@@ -18,6 +19,7 @@ export const tokens = [
     },
     {
         "chainId": 56,
+        "network": "BSC",
         "name": "USD Coin",
         "symbol": "USDC",
         "decimals": 18,
@@ -26,6 +28,7 @@ export const tokens = [
     },
     {
         "chainId": 137,
+        "network": "Polygon",
         "name": "ETH on Polygon",
         "symbol": "WETH",
         "decimals": 18,
@@ -34,6 +37,7 @@ export const tokens = [
     },
     {
         "chainId": 56,
+        "network": "BSC",
         "name": "ETH on BSC",
         "symbol": "WETH",
         "decimals": 18,
@@ -43,6 +47,7 @@ export const tokens = [
     {
         "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
         "chainId": 1,
+        "network": "ETH",
         "name": "Dai",
         "symbol": "DAI",
         "decimals": 18,
@@ -51,6 +56,7 @@ export const tokens = [
     {
         "address": "0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3",
         "chainId": 56,
+        "network": "BSC",
         "name": "Dai",
         "symbol": "DAI",
         "decimals": 18,
@@ -58,6 +64,7 @@ export const tokens = [
     },
     {
         "chainId": 137,
+        "network": "Polygon",
         "name": "Dai",
         "symbol": "DAI",
         "decimals": 18,
@@ -67,6 +74,7 @@ export const tokens = [
     {
         "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
         "chainId": 1,
+        "network": "ETH",
         "name": "Tether",
         "symbol": "USDT",
         "decimals": 6,
@@ -74,6 +82,7 @@ export const tokens = [
     },
     {
         "chainId": 137,
+        "network": "Polygon",
         "name": "Tether",
         "symbol": "USDT",
         "decimals": 6,
@@ -85,6 +94,7 @@ export const tokens = [
         "symbol": "Test",
         "address": "0x32",
         "chainId": 1,
+        "network": "ETH",
         "decimals": 18,
         "logoURI": "https://tokens.pancakeswap.finance/images/0x3EE2200Efb3400fAbB9AacF31297cBdD1d435D47.png"
     },
@@ -93,6 +103,7 @@ export const tokens = [
         "symbol": "CULT",
         "address": "0xf0f9d895aca5c8678f706fb8216fa22957685a13",
         "chainId": 1,
+        "network": "ETH",
         "decimals": 18,
         "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/17742.png"
     }

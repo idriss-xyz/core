@@ -16,30 +16,9 @@ export class Tipping {
         let popup = create('section.tipping-popup')
         this.div.shadowRoot.append(popup);
         popup.append(new TippingMain(identifier).html);
-        popup.addEventListener('sendMoney', async () => {
-            popup.firstElementChild.remove();
-            popup.append(new TippingWaitingApproval(identifier).html)
-            console.log('ssssssssssssssss')
-            const web3Modal = new Web3Modal({
-                network: 'mainnet',
-                cacheProvider: false, // optional
-                providerOptions: TippingLogic.providerOptions, // required
-                disableInjectedProvider: false,
-            });
-            await web3Modal.clearCachedProvider();
-            let provider = await web3Modal.connect();
-            setTimeout(() => {//dummy
-
-                popup.firstElementChild.remove();
-                popup.append(new TippingWaitingConfirmation(identifier).html)
-            }, 5000)
-
-            setTimeout(() => {//dummy
-
-                popup.firstElementChild.remove();
-                popup.append(new TippingSuccess(identifier).html)
-            }, 10000)
+        popup.addEventListener('sendMoney', async (e) => {
+            console.log({e})
+            window.open(`https://www.idriss.xyz/tip/?identifier=${encodeURIComponent(identifier)}&recipent=0xb794f5ea0ba39494ce839613fffba74279579268&tippingValue=${e.amount}&network=${e.network}&token=${e.token}ETH&message=test`)
         })
     }
-
 }

@@ -12,11 +12,11 @@ import {create} from "fast-creator";
 export class TippingMain {
     constructor(identifier) {
         const networks = [
-            {name: 'BSC', img: biannceCoinLogo, chainId: 56},
-            {name: 'Ethereum', img: eth_logo, chainId: 1},
-            {name: 'Polygon ', img: maticTokenIcon, chainId: 137},
+            {name: 'BSC', img: biannceCoinLogo, chainId: 56, code: 'BSC'},
+            {name: 'Ethereum', img: eth_logo, chainId: 1, code: 'ETH'},
+            {name: 'Polygon ', img: maticTokenIcon, chainId: 137, code: 'Polygon'},
         ]
-        this.html = create('div',{},template({identifier, networks, tokens, eth_logo, usdc_logo, arrow, pen, close}));
+        this.html = create('div', {}, template({identifier, networks, tokens, eth_logo, usdc_logo, arrow, pen, close}));
 
         this.html.querySelectorAll('.select').forEach(select => {
             select.onclick = e => select.classList.toggle('isOpen')
@@ -34,20 +34,31 @@ export class TippingMain {
             }
         })
         this.html.querySelector('.send')?.addEventListener('click', (e) => {
-            let chainId = this.html.querySelector('.networkSelect').dataset.chainId;
-            this.html.dispatchEvent(Object.assign(new Event('sendMoney', {bubbles :true}), {identifier, chainId}))
+            let network = this.html.querySelector('.networkSelect').dataset.network;
+            let amount = this.html.querySelector('.valueSelection .isSelected').dataset.value;
+            this.html.dispatchEvent(Object.assign(new Event('sendMoney', {bubbles: true}), {
+                identifier,
+                network,
+                amount
+            }))
         });
+        this.html.querySelectorAll('.valueSelection [data-value]').forEach(li => {
+            li.onclick = e => {
+                this.html.querySelectorAll('.valueSelection [data-value]').forEach(x => x.classList.remove('isSelected'))
+                li.classList.add('isSelected')
+            }
+        })
         this.refreshVisibleCoins();
     }
 
     refreshVisibleCoins() {
-        let chainId = this.html.querySelector('.networkSelect').dataset.chainId;
+        let network = this.html.querySelector('.networkSelect').dataset.network;
         let tokens = this.html.querySelectorAll('.tokenSelect li')
         for (let token of tokens) {
-            token.style.display = token.dataset.chainId == chainId ? '' : 'none';
+            token.style.display = token.dataset.network == network ? '' : 'none';
         }
-        if (this.html.querySelector('.tokenSelect').dataset.chainId != chainId) {
-            this.html.querySelector(`.tokenSelect li[data-chain-id="${chainId}"]`).click();
+        if (this.html.querySelector('.tokenSelect').dataset.network != network) {
+            this.html.querySelector(`.tokenSelect li[data-network="${network}"]`).click();
         }
     }
 }
