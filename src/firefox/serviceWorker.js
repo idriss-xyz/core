@@ -8,7 +8,7 @@ browser.runtime.onMessage.addListener(
             AdressesResolver.get(request.value).then(x => sendResponse(x)).catch(e => sendResponse({}));
             return true;
         } else if (request.type === 'apiAddressesRequestBulk') {
-            AdressesResolver.getMany(request.value).then(x => sendResponse(x)).catch(e => sendResponse({}));
+            AdressesResolver.getMany(request.value, '', request.network??'').then(x => sendResponse(x)).catch(e => sendResponse({}));
             return true;
         } else if (request.type === 'getIconUrl') {
             fetch(browser.runtime.getURL('img/icon148.png'))

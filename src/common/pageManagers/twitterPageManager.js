@@ -72,7 +72,8 @@ export class TwitterPageManager extends AbstractPageManager {
             return new Promise((resolve, reject) => {
                 chrome.runtime.sendMessage({
                     type: "apiAddressesRequestBulk",
-                    value: x
+                    value: x,
+                    network:'evm'
                 }, response => {
                     resolve(response);
                 });
@@ -128,7 +129,7 @@ export class TwitterPageManager extends AbstractPageManager {
                         e.stopPropagation();
                         e.preventDefault();
 
-                        let dropdown = (new Tipping(name)).div;
+                        let dropdown = (new Tipping(name, data)).div;
                         this.document.body.append(dropdown);
                         let rect = icon.getBoundingClientRect()
                         dropdown.classList.add('idrissDropdown')
@@ -144,7 +145,6 @@ export class TwitterPageManager extends AbstractPageManager {
 
 
                         const eventCallback = () => {
-                            console.log('ddddd')
                             if (!dropdown.matches(':hover, :focus, :focus-within') && !icon.matches(':hover, :focus, :focus-within')) {
                                 setTimeout(() => dropdown.remove(), 100);
                                 removeEventListener('scroll', eventCallback)

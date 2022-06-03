@@ -16,9 +16,11 @@
             <span>$5</span>
         </button>
 
-        <button type="button" class="more">
+        <div class="more">
             <img alt="" src=pen/>
-        </button>
+            <span>$</span>
+            <input/>
+        </div>
     </div>
     <div class="select-wrapper">
         <label for="network">Network:</label>
@@ -40,7 +42,7 @@
     </div>
     <div class="select-wrapper">
         <label for="tokenButton">Coin:</label>
-        <div class="select tokenSelect" data-network=tokens.0.network>
+        <div class="select tokenSelect" data-symbol=tokens.0.symbol>
             <button type="button" id="tokenButton">
                 <img src=tokens.0.logoURI alt=""/>
                 <span class="name">{{tokens.0.name}}</span>
@@ -48,7 +50,7 @@
             </button>
             <ul tabindex="-1" role="listbox">
                 <:foreach collection=tokens item=token>
-                    <li role="option" data-network=token.network data-address=token.address>
+                    <li role="option" data-network=token.network data-symbol=token.symbol>
                         <img src=token.logoURI alt=""/>
                         <span class="name">{{token.name}}</span>
                     </li>

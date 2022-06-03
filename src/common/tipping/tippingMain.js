@@ -35,17 +35,20 @@ export class TippingMain {
         })
         this.html.querySelector('.send')?.addEventListener('click', (e) => {
             let network = this.html.querySelector('.networkSelect').dataset.network;
-            let amount = this.html.querySelector('.valueSelection .isSelected').dataset.value;
+            let token = this.html.querySelector('.tokenSelect').dataset.symbol;
+            let amount = this.html.querySelector('.valueSelection .isSelected input')?.value || this.html.querySelector('.valueSelection .isSelected').dataset.value;
             this.html.dispatchEvent(Object.assign(new Event('sendMoney', {bubbles: true}), {
                 identifier,
                 network,
-                amount
+                amount,
+                token
             }))
         });
-        this.html.querySelectorAll('.valueSelection [data-value]').forEach(li => {
-            li.onclick = e => {
-                this.html.querySelectorAll('.valueSelection [data-value]').forEach(x => x.classList.remove('isSelected'))
-                li.classList.add('isSelected')
+        this.html.querySelectorAll('.valueSelection > *').forEach(b => {
+            b.onclick = e => {
+                this.html.querySelectorAll('.valueSelection  > *').forEach(x => x.classList.remove('isSelected'))
+                b.classList.add('isSelected')
+                b.querySelector('input')?.focus();
             }
         })
         this.refreshVisibleCoins();
