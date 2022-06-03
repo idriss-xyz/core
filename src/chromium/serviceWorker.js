@@ -1,7 +1,6 @@
 import {AdressesResolver} from "../common/resolvers/AdressesResolver";
 import {lowerFirst, regT} from "../common/utils";
 import {TwitterIdResolver} from "../common/resolvers/TwitterIdResolver";
-import {TippingLogic} from "../common/tipping/TippingLogic";
 
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
@@ -16,9 +15,6 @@ chrome.runtime.onMessage.addListener(
                 .then(fetchRequest => fetchRequest.blob())
                 .then(blob => readBlob(blob))
                 .then(x => sendResponse(x));
-            return true;
-        } else if (request.type === 'prepareTip') {
-            TippingLogic.prepareTip(request.value.chain, request.value.coin, request.value.address, request.value.amountUSD).then(x => sendResponse(x));
             return true;
         }
     }
