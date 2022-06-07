@@ -106,5 +106,32 @@ export const tokens = [
         "network": "ETH",
         "decimals": 18,
         "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/17742.png"
+    },
+    {
+        "name": "Ethereum",
+        "symbol": "ETH",
+        "address": null,
+        "chainId": 1,
+        "network": "ETH",
+        "decimals": 0,//todo
+        "logoURI": ""//todo
+    },
+    {
+        "name": "MATIC",
+        "symbol": "MATIC",
+        "address": null,
+        "chainId": 137,
+        "network": "Polygon",
+        "decimals": 0,//todo
+        "logoURI": ""//todo
+    },
+    {
+        "name": "BNB",
+        "symbol": "BNB",
+        "address": null,
+        "chainId": 56,
+        "network": "BSC",
+        "decimals": 0,//todo
+        "logoURI": ""//todo
     }
 ]
