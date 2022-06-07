@@ -71,28 +71,47 @@
             box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
 
         }
-        .more{
-            span{
+
+        .more {
+            width: 27px;
+            align-items: center;
+
+            span {
                 display: none;
             }
-            input{
+
+            input {
                 display: none;
             }
-            &.isSelected{
+
+            &.isSelected {
                 display: flex;
-                img{
+
+                img {
                     display: none;
                 }
-                span{
+
+                span {
                     display: block;
-                    flex:0 0 auto;
+                    flex: 0 0 auto;
                 }
-                input{
+
+                input {
                     display: block;
-                    flex:1 1 auto;
+                    flex: 1 1 auto;
                     background: transparent;
-                    border:none;
+                    border: none;
                     width: 25px;
+                    font-family: inherit;
+                    font-size: inherit;
+                    margin-right: -10px;
+                    padding: 0;
+                    line-height: 1;
+                    height: 1em;
+
+                    &:focus {
+                        outline: none;
+                    }
                 }
             }
         }
@@ -214,7 +233,7 @@
                 }
             }
 
-            &.isOpen {
+            &:focus-within {
                 > ul {
                     display: block;
                 }

@@ -44,7 +44,7 @@ export class TwitterPageManager extends AbstractPageManager {
     }
 
     checkGarbageDropdown() {
-        const selector = '.idrissIcon:focus, .idrissIcon:hover, .idrissDropdown:hover, .idrissDropdown:focus';
+        const selector = '.idrissIcon:focus, .idrissIcon:hover, .idrissTwitterDropdown:hover, .idrissTwitterDropdown:focus, .idrissTwitterDropdown.isClicked';
         if (!document.querySelector(selector)) {
             setTimeout(() => {
                 if (!document.querySelector(selector)) {
@@ -73,7 +73,7 @@ export class TwitterPageManager extends AbstractPageManager {
                 chrome.runtime.sendMessage({
                     type: "apiAddressesRequestBulk",
                     value: x,
-                    network:'evm'
+                    network: 'evm'
                 }, response => {
                     resolve(response);
                 });
@@ -132,32 +132,35 @@ export class TwitterPageManager extends AbstractPageManager {
                         let dropdown = (new Tipping(name, data)).div;
                         this.document.body.append(dropdown);
                         let rect = icon.getBoundingClientRect()
-                        dropdown.classList.add('idrissDropdown')
-                        dropdown.style.position = 'fixed';
-                        dropdown.style.left = rect.left + 'px';
-                        dropdown.style.top = rect.top + rect.height + 'px';
-                        dropdown.style.width = rect.width + 'px';
-                        dropdown.style.minWidth = '400px';
+                        dropdown.classList.add('idrissTwitterDropdown')
+                        dropdown.style.position = 'absolute';
+                        dropdown.style.left = scrollX + rect.left + 'px';
+                        dropdown.style.top = scrollY + rect.top + rect.height + 'px';
                         dropdown.style.zindex = 1000000;
+                        dropdown.onclick = () => dropdown.classList.add('isClicked')
 
                         this.lastDropdown?.remove();
                         this.lastDropdown = dropdown
 
 
                         const eventCallback = () => {
-                            if (!dropdown.matches(':hover, :focus, :focus-within') && !icon.matches(':hover, :focus, :focus-within')) {
-                                setTimeout(() => dropdown.remove(), 100);
+                            if (!dropdown.matches(':hover, :focus, :focus-within, .isClicked') && !icon.matches(':hover, :focus, :focus-within')) {
+                                setTimeout(() => this.checkGarbageDropdown(), 100);
                                 removeEventListener('scroll', eventCallback)
                             }
                         };
 
                         dropdown.onmouseout = () => {
-                            setTimeout(() => dropdown.remove(), 100);
+                            setTimeout(() => this.checkGarbageDropdown(), 100);
                         }
                         dropdown.shadowRoot.querySelector('.closeButton').onclick = () => dropdown.remove();
                         dropdown.shadowRoot.addEventListener('close', () => dropdown.remove());
                         icon.onblur = eventCallback
                         addEventListener('scroll', eventCallback)
+                    }
+                    icon.onclick = (e) => {
+                        dropdown.classList.add('isClicked')
+                        e.stopPropagation()
                     }
                 }
             }

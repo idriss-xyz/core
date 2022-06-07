@@ -19,8 +19,7 @@ export class TippingMain {
         this.html = create('div', {}, template({identifier, networks, tokens, eth_logo, usdc_logo, arrow, pen, close}));
 
         this.html.querySelectorAll('.select').forEach(select => {
-            select.onclick = e => select.classList.toggle('isOpen')
-            select.onblur = e => select.classList.remove('isOpen')
+            select.onclick = e => select.firstElementChild.focus();
         })
         this.html.querySelectorAll('.select ul li').forEach(li => {
             li.onclick = e => {
@@ -29,7 +28,7 @@ export class TippingMain {
                 button.querySelector('.name').textContent = li.querySelector('.name').textContent;
                 button.querySelector('img').src = li.querySelector('img').src;
                 Object.assign(button.parentNode.dataset, li.dataset);
-                li.parentNode.parentNode.classList.remove('isOpen')
+                this.html.querySelector(':focus')?.blur()
                 this.refreshVisibleCoins()
             }
         })

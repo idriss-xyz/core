@@ -4,7 +4,7 @@
 </header>
 <main>
     <div class="valueSelection">
-        <button type="button" data-value="1">
+        <button type="button" data-value="1" class="isSelected">
             <span>$1</span>
         </button>
 
@@ -12,7 +12,7 @@
             <span>$2</span>
         </button>
 
-        <button type="button" data-value="5" class="isSelected">
+        <button type="button" data-value="5">
             <span>$5</span>
         </button>
 
