@@ -15,13 +15,13 @@ export class Tipping {
         popup.addEventListener('sendMoney', async (e) => {
             console.log({e, data})
             let params = {
-                recipent: data['Public ETH'] ?? Object.values(data)[0],
+                recipient: data['Public ETH'] ?? Object.values(data)[0],
                 identifier,
                 tippingValue: e.amount,
                 network: e.network,
                 token: e.token
             }
-            window.open(`https://www.idriss.xyz/tip/?` + Object.entries(params).map(x => encodeURIComponent(x[0]) + '=' + encodeURIComponent(x[1])).join('&'))
+            window.open(`https://www.idriss.xyz/tip?` + Object.entries(params).map(x => encodeURIComponent(x[0]) + '=' + encodeURIComponent(x[1])).join('&'))
             //window.open(`http://localhost:8080/?` + Object.entries(params).map(x => encodeURIComponent(x[0]) + '=' + encodeURIComponent(x[1])).join('&'))
         })
     }

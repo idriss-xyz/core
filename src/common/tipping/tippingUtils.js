@@ -1,5 +1,29 @@
 export const tokens = [
     {
+        "chainId": 1,
+        "network": "ETH",
+        "name": "Ethereum",
+        "symbol": "ETH",
+        "decimals": 18,
+        "logoURI": "https://s2.coinmarketcap.com/static/img/coins/32x32/1027.png"
+    },
+    {
+        "chainId": 137,
+        "network": "Polygon",
+        "name": "MATIC",
+        "symbol": "MATIC",
+        "decimals": 18,
+        "logoURI": "https://polygonscan.com/token/images/matic_32.png"
+    },
+    {
+        "chainId": 56,
+        "network": "BSC",
+        "name": "BNB",
+        "symbol": "BNB",
+        "decimals": 18,
+        "logoURI": "https://s2.coinmarketcap.com/static/img/coins/32x32/1839.png"
+    },
+    {
         "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
         "chainId": 1,
         "network": "ETH",
@@ -106,29 +130,5 @@ export const tokens = [
         "network": "ETH",
         "decimals": 18,
         "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/17742.png"
-    },
-    {
-        "chainId": 1,
-        "network": "ETH",
-        "name": "Ethereum",
-        "symbol": "ETH",
-        "decimals": 18,
-        "logoURI": "https://s2.coinmarketcap.com/static/img/coins/32x32/1027.png"
-    },
-    {
-        "chainId": 137,
-        "network": "Polygon",
-        "name": "MATIC",
-        "symbol": "MATIC",
-        "decimals": 18,
-        "logoURI": "https://polygonscan.com/token/images/matic_32.png"
-    },
-    {
-        "chainId": 56,
-        "network": "BSC",
-        "name": "BNB",
-        "symbol": "BNB",
-        "decimals": 18,
-        "logoURI": "https://s2.coinmarketcap.com/static/img/coins/32x32/1839.png"
-    },
+    }
 ]
