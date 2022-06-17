@@ -5,13 +5,39 @@ export const TwitterIdResolver = {
     cache: AsyncCache.TwitterID,
     async get(name) {
         name = name.replace(/^@/, '').toLowerCase();
-        return (await this.apiCall([name]))[name];
+        let cacheResponse = await this.cache.getOne(name);
+        if (cacheResponse) return cacheResponse.value
+        else {
+            let value = (await this.apiCall([name]))[name];
+            this.cache.setOne(name, value);
+            return value;
+        }
         // return await this.cache.getOne(name, async () => (await this.apiCall([name]))[name])
     },
-    async getMany(names) {
-        let names2 = names.map(x => x.replace(/^@/, '').toLowerCase());
-        let results = await this.apiCall(names2)
-        return Object.fromEntries(names.map(n => [n, results[n.replace(/^@/, '').toLowerCase()]]))
+    async getMany(originalNames) {
+        let names = originalNames.map(x => x.replace(/^@/, '').toLowerCase());
+
+        let toRead = [];
+        let ret = [];
+
+        for (let name of names) {
+            let cacheResponse = await this.cache.getOne(name);
+            if (cacheResponse) {
+                ret.push([name, cacheResponse.value]);
+            } else {
+                toRead.push(name);
+            }
+        }
+        if (toRead.length > 0) {
+            let results = await this.apiCall(toRead)
+            for (const name of toRead) {
+                let value = results[name.replace(/^@/, '').toLowerCase()];
+                ret.push([name, value]);
+                this.cache.setOne(name, value);
+            }
+        }
+
+        return Object.fromEntries(ret.map(([k, v]) => [originalNames.filter(x => x.replace(/^@/, '').toLowerCase() == k)[0], v]));
     },
     async apiCall(names) {
         const request = await fetch("https://www.idriss.xyz/v1/getTwitterIDPlugin?usernames=" + encodeURIComponent(names.join(',')));

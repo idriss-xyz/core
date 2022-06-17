@@ -137,7 +137,7 @@ export const AdressesResolver = {
     ,
     convertPhone(string_) {
         // allow for letters because secret word can follow phone number
-        return string_.replace(/[^\da-zA-Z]/, "")
+        return "+" + string_.replace(/[^\da-zA-Z]/, "")
     }
     ,
     async digestMessage(message) {
