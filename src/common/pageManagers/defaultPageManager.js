@@ -60,7 +60,7 @@ export class DefaultPageManager extends AbstractPageManager {
             let event = this.lastEvent;
             let data = await this.apiCall(this.lastEvent?.value);
             if (data && event == this.lastEvent) {
-                this.showPopup(this.lastEvent.input, this.lastEvent.value, data.result);
+                this.showPopup(this.lastEvent.input, this.lastEvent.value, data.result||{});
             }
         }else{
             this.lastPopup?.remove();
@@ -76,6 +76,7 @@ export class DefaultPageManager extends AbstractPageManager {
             navigator.clipboard.writeText(value)
             input.value = value;
             input.focus();
+            input.dispatchEvent(new Event('input'));
             let lastPopup = this.lastPopup;
             setTimeout(() => lastPopup?.remove(), 100);
             let entries = Object.entries(input);
