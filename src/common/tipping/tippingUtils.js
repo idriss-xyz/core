@@ -114,13 +114,13 @@ export const tokens = [
         "logoURI": "https://wallet-asset.matic.network/img/tokens/usdt.svg"
     },
     {
-        "name": "Test",
-        "symbol": "Test",
-        "address": "0x32",
-        "chainId": 1,
-        "network": "ETH",
-        "decimals": 18,
-        "logoURI": "https://tokens.pancakeswap.finance/images/0x3EE2200Efb3400fAbB9AacF31297cBdD1d435D47.png"
+        "name": "Dogecoin",
+        "symbol": "DOGE",
+        "address": "0xbA2aE424d960c26247Dd6c32edC70B295c744C43",
+        "chainId": 56,
+        "network": "BSC",
+        "decimals": 8,
+        "logoURI": "https://tokens.pancakeswap.finance/images/0xbA2aE424d960c26247Dd6c32edC70B295c744C43.png"
     },
     {
         "name": "Cult DAO",

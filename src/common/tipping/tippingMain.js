@@ -12,9 +12,9 @@ import {create} from "fast-creator";
 export class TippingMain {
     constructor(identifier) {
         const networks = [
-            {name: 'BSC', img: biannceCoinLogo, chainId: 56, code: 'BSC'},
-            {name: 'Ethereum', img: eth_logo, chainId: 1, code: 'ETH'},
             {name: 'Polygon ', img: maticTokenIcon, chainId: 137, code: 'Polygon'},
+            {name: 'Ethereum', img: eth_logo, chainId: 1, code: 'ETH'},
+            {name: 'BSC', img: biannceCoinLogo, chainId: 56, code: 'BSC'},
         ]
         this.html = create('div', {}, template({identifier, networks, tokens, eth_logo, usdc_logo, arrow, pen, close}));
 
