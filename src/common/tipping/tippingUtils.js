@@ -130,5 +130,14 @@ export const tokens = [
         "network": "ETH",
         "decimals": 18,
         "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/17742.png"
-    }
+    },
+    {
+        "name": "Revolt 2 Earn",
+        "symbol": "RVLT",
+        "address": "0xf0f9D895aCa5c8678f706FB8216fa22957685A13",
+        "chainId": 137,
+        "network": "Polygon",
+        "decimals": 18,
+        "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/19893.png"
+    },
 ]
