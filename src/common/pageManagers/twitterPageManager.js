@@ -96,6 +96,7 @@ export class TwitterPageManager extends AbstractPageManager {
         for (const div of document.querySelectorAll('div.r-dnmrzs.r-1ny4l3l, .r-gtdqiz .css-1dbjc4n.r-1iusvr4.r-16y2uox.r-1777fci, .css-1dbjc4n.r-16y2uox.r-1wbh5a2.r-1pi2tsx.r-1777fci')) {
             if (div.matches('.css-1dbjc4n.r-xoduu5.r-1wbh5a2.r-dnmrzs.r-1ny4l3l')) continue;
             const name = Array.from(div.querySelectorAll('.r-9ilb82, .r-14j79pv, .r-rjixqe')).map(x => x.textContent).find(x => x[0] == '@');
+            if(!name) continue;
             let existingIcon = div.querySelector('.idrissIcon');
             if (existingIcon) {
                 if (existingIcon.dataset.sourceName == name) {
