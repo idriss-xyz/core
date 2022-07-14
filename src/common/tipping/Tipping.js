@@ -1,6 +1,6 @@
-import css from "!!css-loader!sass-loader!./tippingStyle.scss";
+import css from "@idriss-crypto/tipping-core/tippingStyle";
 import {create} from "fast-creator";
-import {TippingMain} from "./tippingMain";
+import {TippingMain} from "@idriss-crypto/tipping-core/tippingMain";
 
 
 export class Tipping {
