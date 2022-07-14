@@ -76,7 +76,7 @@ var walletTags = {
 
 
 export const AdressesResolver = {
-    web3: new Web3(new Web3.providers.HttpProvider("https://polygon-rpc.com/")),
+    web3: new Web3(new Web3.providers.HttpProvider("https://rpc.ankr.com/polygon")),
 
     async get(identifier, coin = "", network = "") {
         if (identifier.match(regT)) {
@@ -180,7 +180,7 @@ export const AdressesResolver = {
                 }
             }
         }
-        console.log('resovle promise created', identifier, foundMatchesPromises);
+        console.log('resolve promise created', identifier, foundMatchesPromises);
         ///awaiting on the end for better performance
         let foundMatches = {}
         for (let [tag_, promise] of Object.entries(foundMatchesPromises)) {

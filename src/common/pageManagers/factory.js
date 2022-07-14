@@ -38,6 +38,8 @@ const defaultDomainList = [
     "tokocrypto.com",
     "poap.xyz",
     "etherscan.io",
+    "polygonscan.com",
+    "bscscan.com",
     "guarda.co",
     "app.wirexapp.com"
 ];
