@@ -6,7 +6,8 @@
   "dependencies": {
     "fast-creator": "^1.6.0",
     "web3": "^1.7.0",
-    "@idriss-crypto/tipping-core": "^1.0.0"
+    "@idriss-crypto/tipping-core": "^1.0.0",
+    "idriss-crypto": "^1.6.1-beta.7"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^11.0.0",

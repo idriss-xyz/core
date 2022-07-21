@@ -5,13 +5,15 @@ import {HuobiPageManager} from "./HuobiPageManager";
 import {PoapPageManager} from "./PoapPageManager";
 import {TwitterPageManager} from "./twitterPageManager";
 import {CoinbasePageManager} from "./CoinbasePageManager";
+import {EtherscanPageManager} from "./etherscanPageManager";
 
 const specificDomainList = {
     "app.poap.xyz": PoapPageManager,
     "ftx.com": FtxPageManager,
     "huobi.com": HuobiPageManager,
     "twitter.com": TwitterPageManager,
-    "coinbase.com": CoinbasePageManager
+    "coinbase.com": CoinbasePageManager,
+    "etherscan.io": EtherscanPageManager
 }
 const defaultDomainList = [
     "binance.com",
@@ -37,7 +39,6 @@ const defaultDomainList = [
     "ascendex.com",
     "tokocrypto.com",
     "poap.xyz",
-    "etherscan.io",
     "polygonscan.com",
     "bscscan.com",
     "guarda.co",

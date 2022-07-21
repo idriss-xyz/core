@@ -1,6 +1,5 @@
 import {AdressesResolver} from "../common/resolvers/AdressesResolver";
-import {TwitterIdResolver} from "../common/resolvers/TwitterIdResolver";
-import {lowerFirst, regT} from "../common/utils";
+
 
 browser.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
