@@ -70,7 +70,21 @@ export class AbstractPageManager {
             });
         });
     }
+    reverseResolveRequest(value) {
+        return new Promise((resolve, reject) => {
+            chrome.runtime.sendMessage({type: "reverseResolveRequest", value}, response => {
+                resolve(response);
+            });
+        });
+    }
     isEnabled() {
         return new Promise(r => chrome.storage.local.get(['enabled'], x => r(x?.enabled ?? true)))
+    }
+
+    /**
+     * @virtual
+     */
+    findPlacesForReverseResolve(){
+        return [];
     }
 }

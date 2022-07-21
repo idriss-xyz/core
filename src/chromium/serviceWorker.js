@@ -9,6 +9,9 @@ chrome.runtime.onMessage.addListener(
         } else if (request.type === 'apiAddressesRequestBulk') {
             AdressesResolver.getMany(request.value, '', request.network??'').then(x => sendResponse(x)).catch(e => sendResponse({}));
             return true;
+        } else if (request.type === 'reverseResolveRequest') {
+            AdressesResolver.getManyReverse(request.value).then(x => sendResponse(x)).catch(e => sendResponse({}));
+            return true;
         } else if (request.type === 'getIconUrl') {
             fetch(chrome.runtime.getURL('img/icon148.png'))
                 .then(fetchRequest => fetchRequest.blob())

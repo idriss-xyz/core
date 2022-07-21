@@ -127,6 +127,10 @@ class AdressesResolverClass extends IdrissCrypto {
             }
         }
     }
+
+    async getManyReverse(value) {
+     return Object.fromEntries(await Promise.all(value.map(async x=>[x,await this.reverseResolve(x)])));
+    }
 }
 
 export const AdressesResolver = new AdressesResolverClass();
