@@ -48,7 +48,7 @@ var walletTags = {
             "Essentials MATIC": "336fb6cdd7fec196c6e66966bd1c326072538a94e700b8bc1111d1574b8357ba",
         },
         ERC20: {
-            "ERC20": "63d95e64e7caff988f97fdf32de5f16624f971149749c90fbc7bbe44244d3ced",
+            ERC20: "63d95e64e7caff988f97fdf32de5f16624f971149749c90fbc7bbe44244d3ced",
         },
     },
     btc: {
@@ -75,8 +75,11 @@ var walletTags = {
 };
 
 
-export const AdressesResolver = {
-    web3: new Web3(new Web3.providers.HttpProvider("https://polygon-rpc.com/")),
+class AdressesResolverClass {
+    constructor() {
+        this.web3 = new Web3(new Web3.providers.HttpProvider("https://polygon-rpc.com/"))
+        this.contract = this.generateContract();
+    }
 
     async get(identifier, coin = "", network = "") {
         if (identifier.match(regT)) {
@@ -88,7 +91,8 @@ export const AdressesResolver = {
         } else {
             return await this.simpleResolve(identifier, coin, network)
         }
-    },
+    }
+
     async getMany(identifiers, coin = "", network = "") {
         let twitterNames = identifiers.filter(x => x.match(regT));
         let twitterIds = [];
@@ -103,12 +107,13 @@ export const AdressesResolver = {
         for (let promise of promises) {
             try {
                 ret[(await promise).input] = await promise;
-            }catch(ex){
+            } catch (ex) {
 
             }
         }
         return ret;
-    },
+    }
+
     generateContract() {
         return new this.web3.eth.Contract(
             [
@@ -134,12 +139,12 @@ export const AdressesResolver = {
             ]
             , '0x2EcCb53ca2d4ef91A79213FDDF3f8c2332c2a814');
     }
-    ,
+
     convertPhone(string_) {
         // allow for letters because secret word can follow phone number
         return "+" + string_.replace(/[^\da-zA-Z]/, "")
     }
-    ,
+
     async digestMessage(message) {
         const msgUint8 = new TextEncoder().encode(message);                           // encode as (utf-8) Uint8Array
         const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);           // hash the message
@@ -147,7 +152,7 @@ export const AdressesResolver = {
         const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); // convert bytes to hex string
         return hashHex;
     }
-    ,
+
     // call this function also for twitter plugin functionality?
     async simpleResolve(identifier, coin = "", network = "", twitterId) {
         console.log('resovleStart', identifier);
@@ -202,7 +207,7 @@ export const AdressesResolver = {
         }
         // catch block if coin/network (combination) is invalid/not found
     }
-    ,
+
     async makeApiCall(digested) {
         for (let i = 0; i < 10; i++) {
             try {
@@ -217,4 +222,5 @@ export const AdressesResolver = {
         }
     }
 }
-AdressesResolver.contract = AdressesResolver.generateContract();
+
+export const AdressesResolver = new AdressesResolverClass();
