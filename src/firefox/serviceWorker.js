@@ -9,8 +9,17 @@ browser.runtime.onMessage.addListener(
         } else if (request.type === 'apiAddressesRequestBulk') {
             AdressesResolver.getMany(request.value, '', request.network??'').then(x => sendResponse(x)).catch(e => sendResponse({}));
             return true;
+        } else if (request.type === 'reverseResolveRequest') {
+            AdressesResolver.getManyReverse(request.value).then(x => sendResponse(x)).catch(e => sendResponse({}));
+            return true;
         } else if (request.type === 'getIconUrl') {
-            fetch(browser.runtime.getURL('img/icon148.png'))
+            fetch(chrome.runtime.getURL('img/icon148.png'))
+                .then(fetchRequest => fetchRequest.blob())
+                .then(blob => readBlob(blob))
+                .then(x => sendResponse(x));
+            return true;
+        } else if (request.type === 'getTwitterIconUrl') {
+            fetch(chrome.runtime.getURL('img/twitter.svg'))
                 .then(fetchRequest => fetchRequest.blob())
                 .then(blob => readBlob(blob))
                 .then(x => sendResponse(x));

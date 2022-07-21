@@ -18,6 +18,12 @@ chrome.runtime.onMessage.addListener(
                 .then(blob => readBlob(blob))
                 .then(x => sendResponse(x));
             return true;
+        } else if (request.type === 'getTwitterIconUrl') {
+            fetch(chrome.runtime.getURL('img/twitter.svg'))
+                .then(fetchRequest => fetchRequest.blob())
+                .then(blob => readBlob(blob))
+                .then(x => sendResponse(x));
+            return true;
         }
     }
 );

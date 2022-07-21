@@ -4,6 +4,7 @@ export class AbstractPageManager {
 
     constructor(document) {
         this.document = document;
+        this.reverseKnownAddresses = {};
     }
 
     generatePopupContent(div, key, elements, callback) {
@@ -36,8 +37,8 @@ export class AbstractPageManager {
             keyElement.className = 'key'
             keyElement.textContent = key;
             item.append(keyElement)
-            if (key.startsWith("@")){
-                keyElement.style.color="#1DA1F2";
+            if (key.startsWith("@")) {
+                keyElement.style.color = "#1DA1F2";
                 let imgElement = document.createElement('img')
                 imgElement.src = "https://www.idriss.xyz/static/images/twitter.png"
                 imgElement.alt = "Twitter"
@@ -70,6 +71,7 @@ export class AbstractPageManager {
             });
         });
     }
+
     reverseResolveRequest(value) {
         return new Promise((resolve, reject) => {
             chrome.runtime.sendMessage({type: "reverseResolveRequest", value}, response => {
@@ -77,6 +79,7 @@ export class AbstractPageManager {
             });
         });
     }
+
     isEnabled() {
         return new Promise(r => chrome.storage.local.get(['enabled'], x => r(x?.enabled ?? true)))
     }
@@ -84,9 +87,10 @@ export class AbstractPageManager {
     /**
      * @virtual
      */
-    findPlacesForReverseResolve(){
+    findPlacesForReverseResolve() {
         return [];
     }
+
     /**
      * @virtual
      */
@@ -95,21 +99,44 @@ export class AbstractPageManager {
     }
 
     async findReverseResolve() {
-        let places=this.findPlacesForReverseResolve();
-        let addresses = places.map(x => x.address);
+        let places = this.findPlacesForReverseResolve();
+        let addresses = places.map(x => x.address).filter(a => this.reverseKnownAddresses[a] === undefined);
         if (addresses.length > 0) {
             let resp = await this.reverseResolveRequest(addresses)
-            console.log(resp);
-            for (const place of places) {
-                if(resp[place.address]){
-                    place.callback(resp[place.address])
-                }
+            this.reverseKnownAddresses = {...this.reverseKnownAddresses, ...resp}
+        }
+        console.log(this.reverseKnownAddresses);
+        for (const place of places) {
+            if (this.reverseKnownAddresses[place.address]) {
+                place.callback(this.reverseKnownAddresses[place.address])
             }
         }
     }
-    defaultReverseResolve(x, element) {
-        element.title='Resolveds by Idriss from '+element.textContent;
+
+    async defaultReverseResolve(x, element) {
+        if (element.classList.contains('idrissReverseResolved')) return;
+        element.title = 'Resolveds by Idriss from ' + element.textContent;
         element.textContent = x;
         element.classList.add('idrissReverseResolved');
+        if (x[0] == '@') {
+            let img = this.document.createElement('img')
+            img.src = await this.getTwitterIcon();
+            img.alt = "Twitter";
+            img.style.width = '1em';
+            img.style.height = '1em';
+            element.prepend(img)
+        }
+    }
+
+    async getTwitterIcon() {
+        if (this.twitterIcon) return this.twitterIcon
+        return await new Promise((resolve, reject) => {
+            chrome.runtime.sendMessage({
+                type: "getTwitterIconUrl"
+            }, response => {
+                resolve(response);
+                this.twitterIcon = response;
+            });
+        });
     }
 }
