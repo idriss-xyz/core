@@ -11,23 +11,6 @@ export class EtherscanPageManager extends AbstractPageManager {
         setInterval(() => this.check(), 2000);
     }
 
-    check() {
-        this.findReverseResolve();
-    }
-
-    async findReverseResolve() {
-        let places=this.findPlacesForReverseResolve();
-        let addresses = places.map(x => x.address);
-        if (addresses.length > 0) {
-            let resp = await this.reverseResolveRequest(addresses)
-            console.log(resp);
-            for (const place of places) {
-                if(resp[place.address]){
-                    place.callback(resp[place.address])
-                }
-            }
-        }
-    }
 
     findPlacesForReverseResolve() {
         let ret = super.findPlacesForReverseResolve();
@@ -41,7 +24,4 @@ export class EtherscanPageManager extends AbstractPageManager {
         return ret;
     }
 
-    defaultReverseResolve(x, element) {
-        element.textContent = x;
-    }
 }

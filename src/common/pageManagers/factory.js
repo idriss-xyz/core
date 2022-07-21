@@ -46,6 +46,7 @@ const defaultDomainList = [
 ];
 
 export async function pageManagerFactory(document, url) {
+    console.log('pageManagerFactory')
     let specific = Object.entries(specificDomainList).find(([domain, constructor]) => url.hostname === domain || url.hostname.endsWith('.' + domain))
     if (specific) {
         return new specific[1](document)

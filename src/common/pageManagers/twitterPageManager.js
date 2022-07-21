@@ -24,6 +24,7 @@ export class TwitterPageManager extends AbstractPageManager {
     }
 
     async check() {
+        super.check();
         if (await this.isEnabled()) {
             this.searchPlaces();
         } else {

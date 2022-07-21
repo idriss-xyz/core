@@ -87,4 +87,27 @@ export class AbstractPageManager {
     findPlacesForReverseResolve(){
         return [];
     }
+    /**
+     * @virtual
+     */
+    check() {
+        this.findReverseResolve();
+    }
+
+    async findReverseResolve() {
+        let places=this.findPlacesForReverseResolve();
+        let addresses = places.map(x => x.address);
+        if (addresses.length > 0) {
+            let resp = await this.reverseResolveRequest(addresses)
+            console.log(resp);
+            for (const place of places) {
+                if(resp[place.address]){
+                    place.callback(resp[place.address])
+                }
+            }
+        }
+    }
+    defaultReverseResolve(x, element) {
+        element.textContent = x;
+    }
 }
