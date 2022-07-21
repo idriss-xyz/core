@@ -108,6 +108,8 @@ export class AbstractPageManager {
         }
     }
     defaultReverseResolve(x, element) {
+        element.title='Resolveds by Idriss from '+element.textContent;
         element.textContent = x;
+        element.classList.add('idrissReverseResolved');
     }
 }

@@ -13,7 +13,9 @@ const specificDomainList = {
     "huobi.com": HuobiPageManager,
     "twitter.com": TwitterPageManager,
     "coinbase.com": CoinbasePageManager,
-    "etherscan.io": EtherscanPageManager
+    "etherscan.io": EtherscanPageManager,
+    "polygonscan.com": EtherscanPageManager,
+    "bscscan.com": EtherscanPageManager
 }
 const defaultDomainList = [
     "binance.com",
@@ -39,8 +41,6 @@ const defaultDomainList = [
     "ascendex.com",
     "tokocrypto.com",
     "poap.xyz",
-    "polygonscan.com",
-    "bscscan.com",
     "guarda.co",
     "app.wirexapp.com"
 ];

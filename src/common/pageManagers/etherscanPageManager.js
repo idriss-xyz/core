@@ -14,7 +14,7 @@ export class EtherscanPageManager extends AbstractPageManager {
 
     findPlacesForReverseResolve() {
         let ret = super.findPlacesForReverseResolve();
-        for (const element of this.document.querySelectorAll('#mainaddress')) {
+        for (const element of this.document.querySelectorAll('#mainaddress, .hash-tag')) {
             if (element.classList.contains('idrissReverseResolved')) continue;
             let address = element.textContent;
             if (/^0x[0-9a-fA-F]{40}$/.test(address)) {
