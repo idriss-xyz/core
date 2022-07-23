@@ -15,7 +15,11 @@ const specificDomainList = {
     "coinbase.com": CoinbasePageManager,
     "etherscan.io": EtherscanPageManager,
     "polygonscan.com": EtherscanPageManager,
-    "bscscan.com": EtherscanPageManager
+    "bscscan.com": EtherscanPageManager,
+    "ftmscan.com": EtherscanPageManager,
+    "arbiscan.io": EtherscanPageManager,
+    "snowtrace.io": EtherscanPageManager,
+    "optimistic.etherscan.io": EtherscanPageManager
 }
 const defaultDomainList = [
     "binance.com",
