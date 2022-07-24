@@ -115,16 +115,20 @@ export class AbstractPageManager {
 
     async defaultReverseResolve(x, element) {
         if (element.classList.contains('idrissReverseResolved')) return;
-        element.title = 'Resolveds by Idriss from ' + element.textContent;
+        element.title = 'Resolved by IDriss from ' + element.textContent;
         element.textContent = x;
         element.classList.add('idrissReverseResolved');
         if (x[0] == '@') {
+            let link = this.document.createElement('a')
+            link.href = "https://twitter.com/" + x.slice(1,);
+            link.target = "_blank"
             let img = this.document.createElement('img')
             img.src = await this.getTwitterIcon();
             img.alt = "Twitter";
             img.style.width = '1em';
             img.style.height = '1em';
-            element.prepend(img)
+            link.append(img)
+            element.prepend(link)
         }
     }
 
