@@ -19,7 +19,8 @@ const specificDomainList = {
     "ftmscan.com": EtherscanPageManager,
     "arbiscan.io": EtherscanPageManager,
     "snowtrace.io": EtherscanPageManager,
-    "optimistic.etherscan.io": EtherscanPageManager
+    "optimistic.etherscan.io": EtherscanPageManager,
+    "moonriver.moonscan.io": EtherscanPageManager
 }
 const defaultDomainList = [
     "binance.com",
