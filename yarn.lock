@@ -764,14 +764,15 @@
     "@ethersproject/properties" "^5.6.0"
     "@ethersproject/strings" "^5.6.1"
 
-"@idriss-crypto/tipping-core@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@idriss-crypto/tipping-core/-/tipping-core-1.0.0.tgz#ac6e787c3ea26f752130b82947484f1707dbde1e"
-  integrity sha512-2BYvGI7NAbg/zppnSryAdjHWoQ4X4D+Q5gal5qHy0dJvEO5bkoX3jPj9V+HMbdxPKiTmJpU610p1YwmSgQx9OA==
+"@idriss-crypto/tipping-core@^1.2.0-beta.10":
+  version "1.2.0-beta.11"
+  resolved "https://registry.yarnpkg.com/@idriss-crypto/tipping-core/-/tipping-core-1.2.0-beta.11.tgz#a2d714962bfd02c071d2449079fbf0ebca34d14d"
+  integrity sha512-fX9IVgiDTEu5WWusLKaHI7DHlRlZvx+sM/fxfmFg5kx+h9FT35yFR9gkdbHQ5dTPV/ISYE7+NuC6i3ci2inkrw==
   dependencies:
     "@depay/coinbase-wallet-sdk" "^1.0.5"
     "@walletconnect/web3-provider" "^1.7.8"
     fast-creator "^1.6.0"
+    idriss-crypto "^1.6.0"
     web3 "^1.7.0"
     web3modal "^1.9.7"
 
@@ -3274,7 +3275,7 @@ idna-uts46-hx@^2.3.1:
   dependencies:
     punycode "2.1.0"
 
-idriss-crypto@^1.6.1:
+idriss-crypto@^1.6.0, idriss-crypto@^1.6.1:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/idriss-crypto/-/idriss-crypto-1.6.1.tgz#7867820d9ed9530051881701d241a4ecb4b87a67"
   integrity sha512-ZVxeE1ZFMxhYoSHomGLR9/ilfg4j4RWZoKZzUU1l0myum2/7JV3jK6UbZd3MmNxHOhqZyz1gFCJ7xW9y7K77VA==
