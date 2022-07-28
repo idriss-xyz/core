@@ -1,6 +1,6 @@
 import css from "@idriss-crypto/tipping-core/tippingStyle";
 import {create} from "fast-creator";
-import {TippingMain} from "@idriss-crypto/tipping-core/tippingMain";
+import {TippingMain} from "@idriss-crypto/tipping-core/subpages";
 
 
 export class Tipping {
@@ -19,7 +19,8 @@ export class Tipping {
                 identifier,
                 tippingValue: e.amount,
                 network: e.network,
-                token: e.token
+                token: e.token,
+                back:'close'
             }
             window.open(`https://www.idriss.xyz/tip?` + Object.entries(params).map(x => encodeURIComponent(x[0]) + '=' + encodeURIComponent(x[1])).join('&'))
             //window.open(`http://localhost:8080/?` + Object.entries(params).map(x => encodeURIComponent(x[0]) + '=' + encodeURIComponent(x[1])).join('&'))
