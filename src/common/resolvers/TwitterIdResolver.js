@@ -5,7 +5,9 @@ export const TwitterIdResolver = {
     cache: AsyncCache.TwitterID,
     async get(name) {
         name = name.replace(/^@/, '').toLowerCase();
-        let cacheResponse = await this.cache.getOne(name);
+        let cacheResponse
+        try {cacheResponse = await this.cache.getOne(name);}
+        catch {cacheResponse=""}
         if (cacheResponse) return cacheResponse.value
         else {
             let value = (await this.apiCall([name]))[name];

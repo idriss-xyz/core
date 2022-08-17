@@ -4,10 +4,10 @@
     "buildOnce": "webpack"
   },
   "dependencies": {
-    "fast-creator": "^1.6.0",
-    "web3": "^1.7.0",
     "@idriss-crypto/tipping-core": "^2.0.0",
-    "idriss-crypto": "^1.6.1"
+    "fast-creator": "^1.6.0",
+    "idriss-crypto": "^1.6.1",
+    "web3": "^1.7.0"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^11.0.0",

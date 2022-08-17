@@ -20,7 +20,8 @@ const specificDomainList = {
     "arbiscan.io": EtherscanPageManager,
     "snowtrace.io": EtherscanPageManager,
     "optimistic.etherscan.io": EtherscanPageManager,
-    "moonriver.moonscan.io": EtherscanPageManager
+    "moonriver.moonscan.io": EtherscanPageManager,
+    "moonscan.io": EtherscanPageManager
 }
 const defaultDomainList = [
     "binance.com",
