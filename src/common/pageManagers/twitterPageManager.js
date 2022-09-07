@@ -1,6 +1,7 @@
 import {AbstractPageManager} from "./abstractPageManager";
 import {RequestLimiter} from "../RequestLimiter";
 import {Tipping} from "../tipping/Tipping";
+import {CustomTwitter} from "../tipping/customTwitter";
 
 export class TwitterPageManager extends AbstractPageManager {
     static namesResults = {};
@@ -130,8 +131,11 @@ export class TwitterPageManager extends AbstractPageManager {
                     icon.onmouseover = e => {
                         e.stopPropagation();
                         e.preventDefault();
-
-                        let dropdown = (new Tipping(name, data)).div;
+                        // ToDo: check if name in some dict to show custom Tipping (new file CustomTipping?)
+                        let dropdown;
+                        console.log("Data is ", data)
+                        if (data[name]) { dropdown = (new CustomTwitter(data[name])).div;}
+                        else { dropdown = (new Tipping(name, data)).div;}
                         this.document.body.append(dropdown);
                         let rect = icon.getBoundingClientRect()
                         dropdown.classList.add('idrissTwitterDropdown')

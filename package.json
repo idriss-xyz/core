@@ -4,7 +4,7 @@
     "buildOnce": "webpack"
   },
   "dependencies": {
-    "@idriss-crypto/tipping-core": "^2.0.0",
+    "@idriss-crypto/tipping-core": "link:../tipping-core",
     "fast-creator": "^1.6.0",
     "idriss-crypto": "^1.6.1",
     "web3": "^1.7.0"

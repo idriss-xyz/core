@@ -4,3 +4,18 @@ export function lowerFirst(string_) {
 export const regPh = /^(\+\(?\d{1,4}\s?)\)?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/;
 export const regM = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
 export const regT = /^@[a-zA-Z0-9_]{1,15}$/;
+
+export const customTwitterAccounts = {
+    '1204625363353001984': {
+        customHeader: "Vouch for someone",
+        buttonValue: "Vouch!",
+        hostURL: "http://localhost:3000/?",
+        showNetworkSelection: false,
+        showValueSelection: true,
+        showTokenSelection: false,
+        showInput: true,
+        showMessageBox: false,
+        tokenFilter: null,
+        networkFilter: null,
+    },
+};

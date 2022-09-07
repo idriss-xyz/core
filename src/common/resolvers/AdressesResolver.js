@@ -1,6 +1,6 @@
 import {TwitterIdResolver} from "./TwitterIdResolver";
 
-import {lowerFirst, regM, regPh, regT} from "../utils";
+import {lowerFirst, regM, regPh, regT, customTwitterAccounts} from "../utils";
 const {IdrissCrypto}= require("idriss-crypto/cjs/browser");
 
 if (globalThis.window != globalThis) {
@@ -61,7 +61,7 @@ class AdressesResolverClass extends IdrissCrypto {
 
     // call this function also for twitter plugin functionality?
     async simpleResolve(identifier, coin = "", network = "", twitterId) {
-        console.log('resovleStart', identifier);
+        console.log('resolveStart', identifier);
         let twitterID;
         let identifierT;
         identifier = lowerFirst(identifier).replace(" ", "");
@@ -77,6 +77,13 @@ class AdressesResolverClass extends IdrissCrypto {
                                  throw new Error("Twitter handle not found.")
             }
             twitterID = true;
+            // ToDo: if twitter id in list, return proxy result
+            if (customTwitterAccounts[identifier]) {
+                let foundMatches = {}
+                foundMatches[identifierT] = customTwitterAccounts[identifier]
+                console.log({identifierT, identifier, foundMatches})
+                return {"input": identifierT, "result": foundMatches, "twitterID": identifier}
+            }
         }
 
         let foundMatchesPromises = {}
