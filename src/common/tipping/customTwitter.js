@@ -16,16 +16,15 @@ export class CustomTwitter {
         popup.addEventListener('customEvent', async (e) => {
             console.log({e, data})
             let params = {
-                amount: e.amount,
-                network: e.network,
-                token: e.token,
-                message: e.message,
-                input: e.input,
+                amount: e.amount ?? null,
+                network: e.network ?? null,
+                token: e.token ?? null,
+                message: e.message ?? null,
+                input: e.input ?? null,
 
                 back:'close'
             }
-            window.open(data['hostURL'] + Object.entries(params).map(x => encodeURIComponent(x[0]) + '=' + encodeURIComponent(x[1])).join('&'))
-            //window.open(`http://localhost:8080/?` + Object.entries(params).map(x => encodeURIComponent(x[0]) + '=' + encodeURIComponent(x[1])).join('&'))
+            window.open(data['hostURL'] + Object.entries(params).filter(([k, v]) => v).map(x => encodeURIComponent(x[0]) + '=' + encodeURIComponent(x[1])).join('&'))
         })
     }
 }
