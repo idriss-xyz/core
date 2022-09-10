@@ -21,17 +21,3 @@ export const customTwitterAccounts = {
     },
 };
 
-export const customTwitterAccounts = {
-    '1204625363353001984': {
-        customHeader: "Vouch for someone",
-        buttonValue: "Vouch!",
-        hostURL: "http://localhost:3000/?",
-        showNetworkSelection: false,
-        showValueSelection: true,
-        showTokenSelection: false,
-        showInput: true,
-        showMessageBox: false,
-        tokenFilter: null,
-        networkFilter: null,
-    },
-};
