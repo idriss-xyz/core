@@ -18,4 +18,32 @@ export const customTwitterAccounts = {
         tokenFilter: null,
         networkFilter: null,
     },
+    '856446453157376003': {
+        customHeader: "Donate on Gitcoin",
+        customText: "Help make web3 more usable for everyone by donating even a small amount to our gitcoin grant 💚",
+        buttonValue: "Donate",
+        hostURL: "https://gitcoin.co/grants/7233/idriss-a-better-way-to-interact-in-web3?",
+        showNetworkSelection: false,
+        showValueSelection: false,
+        showTokenSelection: false,
+        showInput: false,
+        showMessageBox: false,
+        tokenFilter: null,
+        networkFilter: null,
+    },
+};
+
+export const customTwitterAccounts = {
+    '1204625363353001984': {
+        customHeader: "Vouch for someone",
+        buttonValue: "Vouch!",
+        hostURL: "http://localhost:3000/?",
+        showNetworkSelection: false,
+        showValueSelection: true,
+        showTokenSelection: false,
+        showInput: true,
+        showMessageBox: false,
+        tokenFilter: null,
+        networkFilter: null,
+    },
 };
