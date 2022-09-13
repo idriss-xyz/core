@@ -127,7 +127,7 @@ export class TwitterPageManager extends AbstractPageManager {
                     const dropdown = document.createElement('div');
                     dropdown.addEventListener('click', e => e.stopPropagation())
                     icon.append(dropdown);
-                    div.querySelector('.r-1fmj7o5:not(h2), .r-18jsvk2:not(h2), .r-1nao33i:not(h2)')?.append(icon)
+                    div.querySelector('.r-1fmj7o5:not(h2), .r-18jsvk2:not(h2), .r-1nao33i:not(h2), .r-vlxjld:not(h2)')?.append(icon)
                     icon.onmouseover = e => {
                         e.stopPropagation();
                         e.preventDefault();
