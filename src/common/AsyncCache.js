@@ -10,7 +10,7 @@ export class AsyncCache {
     async getOne(args) {
         let str = JSON.stringify([this.name, args]);
 
-        let response = (await chrome.storage.local.get('cache' + str))['cache' + str];
+        let response = ((await chrome.storage.local.get('cache' + str))??{})['cache' + str];
         if (response && new Date() - response.date < this.expirationTime) {
             return {value: response.value};
         }
