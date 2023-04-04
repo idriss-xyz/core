@@ -1,7 +1,7 @@
 import css from "@idriss-crypto/tipping-core/tippingStyle";
 import { create } from "fast-creator";
 import { FrameworkDapp } from "@idriss-crypto/tipping-core/subpages";
-import { SendToAnyoneAddress } from "@idriss-crypto/send-to-anyone-core/subpages";
+import { SendToAnyoneAddress, SendToAnyoneMain } from "@idriss-crypto/send-to-anyone-core/subpages";
 
 export class TippingUnregistered {
   data;
@@ -23,8 +23,8 @@ export class TippingUnregistered {
   initPopup() {
     this.popup = create("section.tipping-popup");
     this.container.shadowRoot.append(this.popup);
-
-    this.popup.append(new SendToAnyoneAddress().html);
+    console.log('TEST-----',this.data)
+    this.popup.append(new SendToAnyoneMain('test', false, []).html);
     // popup.addEventListener("customEvent", async (e) => {
     //   console.log({ e, data });
     //   let params = {

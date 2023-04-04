@@ -4,14 +4,14 @@ import {TippingMain} from "@idriss-crypto/tipping-core/subpages";
 
 
 export class Tipping {
-    constructor(identifier, data) {
+    constructor(identifier, data, tokenFilter) {
         this.div = document.createElement('div')
         this.div.attachShadow({mode: 'open'})
         this.div.shadowRoot.append(create('style', {text: css}));
 
         let popup = create('section.tipping-popup')
         this.div.shadowRoot.append(popup);
-        popup.append(new TippingMain(identifier).html);
+        popup.append(new TippingMain(identifier, undefined, tokenFilter).html);
         popup.addEventListener('sendMoney', async (e) => {
             console.log({e, data})
             let params = {
@@ -22,7 +22,7 @@ export class Tipping {
                 token: e.token,
                 back:'close'
             }
-            window.open(`https://www.idriss.xyz/tip?` + Object.entries(params).map(x => encodeURIComponent(x[0]) + '=' + encodeURIComponent(x[1])).join('&'))
+            window.open(`https://www.idriss.xyz/send?` + Object.entries(params).map(x => encodeURIComponent(x[0]) + '=' + encodeURIComponent(x[1])).join('&'))
             //window.open(`http://localhost:8080/?` + Object.entries(params).map(x => encodeURIComponent(x[0]) + '=' + encodeURIComponent(x[1])).join('&'))
         })
     }
