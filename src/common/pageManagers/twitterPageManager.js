@@ -20,7 +20,7 @@ export class TwitterPageManager extends AbstractPageManager {
         addEventListener('popstate', () => this.check())
         addEventListener('click', () => setTimeout(() => this.check(), 250))
         addEventListener('click', e => {
-            if (!e.path.includes(this.lastDropdown)) this.lastDropdown?.remove();
+            if (!e.path?.includes(this.lastDropdown)) this.lastDropdown?.remove();
         });
         setInterval(() => this.check(), 2000);
     }
@@ -112,8 +112,7 @@ export class TwitterPageManager extends AbstractPageManager {
             const addCallback = (data) => {
               if (!data.error && !div.querySelector(".idrissIcon")) {
                 if (Object.values(data).length === 0) {
-                  console.log({ data, name });
-                  const dropdownContent = new Tipping(name, data, {polygon: ["MATIC"]}).div;
+                  const dropdownContent = new TippingUnregistered(data, name).container;
                   const { icon } = this.createIcon(div, data, dropdownContent);
                   icon.style.filter = `grayscale(100%)`;
                 } else {
@@ -158,13 +157,6 @@ export class TwitterPageManager extends AbstractPageManager {
         e.preventDefault();
         // ToDo: check if name in some dict to show custom Tipping (new file CustomTipping?)
         let dropdown = dropdownContent;
-        // if (data[name]) {
-        //   console.log("Custom Twitter");
-        //   dropdown = new CustomTwitter(data[name]).div;
-        // } else {
-        //   console.log("Tipping");
-        //   dropdown = new Tipping(name, data).div;
-        // }
         this.document.body.append(dropdown);
         let rect = icon.getBoundingClientRect();
         dropdown.classList.add("idrissTwitterDropdown");

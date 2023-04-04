@@ -1,15 +1,16 @@
+import { SendToAnyoneMain } from "@idriss-crypto/send-to-anyone-core/subpages";
 import css from "@idriss-crypto/tipping-core/tippingStyle";
 import { create } from "fast-creator";
-import { FrameworkDapp } from "@idriss-crypto/tipping-core/subpages";
-import { SendToAnyoneAddress, SendToAnyoneMain } from "@idriss-crypto/send-to-anyone-core/subpages";
 
 export class TippingUnregistered {
   data;
   container;
   popup;
+  name;
 
-  constructor(data) {
+  constructor(data, name) {
     this.data = data;
+    this.name = name;
     this.initContainer();
     this.initPopup();
   }
@@ -23,28 +24,17 @@ export class TippingUnregistered {
   initPopup() {
     this.popup = create("section.tipping-popup");
     this.container.shadowRoot.append(this.popup);
-    console.log('TEST-----',this.data)
-    this.popup.append(new SendToAnyoneMain('test', false, []).html);
-    // popup.addEventListener("customEvent", async (e) => {
-    //   console.log({ e, data });
-    //   let params = {
-    //     amount: e.amount ?? null,
-    //     network: e.network ?? null,
-    //     token: e.token ?? null,
-    //     message: e.message ?? null,
-    //     input: e.input ?? null,
-
-    //     back: "close",
-    //   };
-    //   window.open(
-    //     data["hostURL"] +
-    //       Object.entries(params)
-    //         .filter(([k, v]) => v)
-    //         .map(
-    //           (x) => encodeURIComponent(x[0]) + "=" + encodeURIComponent(x[1])
-    //         )
-    //         .join("&")
-    //   );
-    // });
+    this.popup.append(new SendToAnyoneMain(this.name, false, []).html);
+    this.popup.addEventListener('sendMoney', async (e) => {
+      let params = {
+          recipient: this.data['Public ETH'] ?? Object.values(this.data)[0],
+          identifier: this.name,
+          tippingValue: e.amount,
+          network: e.network,
+          token: e.token,
+          back:'close'
+      }
+      window.open(`https://www.idriss.xyz/send?` + Object.entries(params).map(x => encodeURIComponent(x[0]) + '=' + encodeURIComponent(x[1])).join('&'))
+  })
   }
 }
