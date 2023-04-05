@@ -1,5 +1,5 @@
 import { SendToAnyoneMain } from "@idriss-crypto/send-to-anyone-core/subpages";
-import css from "@idriss-crypto/tipping-core/tippingStyle";
+import css from "@idriss-crypto/send-to-anyone-core/sendToAnyoneStyle";
 import { create } from "fast-creator";
 
 export class TippingUnregistered {
@@ -22,8 +22,9 @@ export class TippingUnregistered {
   }
 
   initPopup() {
-    this.popup = create("section.tipping-popup");
+    this.popup = create("section.sendToAnyone-popup");
     this.container.shadowRoot.append(this.popup);
+    this.popup.onclick = e => { e.preventDefault(); e.stopPropagation(); }
     this.popup.append(new SendToAnyoneMain(this.name, false, []).html);
     this.popup.addEventListener('sendMoney', async (e) => {
       let params = {

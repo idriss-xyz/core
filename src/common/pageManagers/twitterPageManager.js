@@ -182,11 +182,10 @@ export class TwitterPageManager extends AbstractPageManager {
         dropdown.onmouseout = () => {
           setTimeout(() => this.checkGarbageDropdown(), 100);
         };
-        dropdown.shadowRoot.querySelector(".closeButton").onclick = () =>
-          dropdown.remove();
         dropdown.shadowRoot.addEventListener("close", () => dropdown.remove());
         icon.onblur = eventCallback;
         addEventListener("scroll", eventCallback);
+        dropdown.shadowRoot.querySelector(".closeButton").onclick = () => dropdown.remove();
       };
       icon.onclick = (e) => {
         dropdown.classList.add("isClicked");
