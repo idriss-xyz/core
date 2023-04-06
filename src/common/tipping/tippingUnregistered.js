@@ -33,6 +33,7 @@ export class TippingUnregistered {
           tippingValue: e.amount,
           network: e.network,
           token: e.token,
+          message: e.message,
           back:'close'
       }
       window.open(`https://www.idriss.xyz/send?` + Object.entries(params).map(x => encodeURIComponent(x[0]) + '=' + encodeURIComponent(x[1])).join('&'))
