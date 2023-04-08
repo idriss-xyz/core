@@ -3362,14 +3362,9 @@ idriss-crypto@^1.6.1:
     node-fetch "^2.6.7"
     web3 "^1.7.4"
 
-idriss-crypto@^1.8.9:
-  version "1.8.9"
-  resolved "https://registry.yarnpkg.com/idriss-crypto/-/idriss-crypto-1.8.9.tgz#081db71e1e94bab0d02773080d2cf0f256b4d06c"
-  integrity sha512-R8AQxlYbIj/53ewRDQd7qSHewTCkHZhkb1wxIBK9wS4su7JLCaMf7VpSUexEtY54/KCxqisLEsr7zjXAB6JV+w==
-  dependencies:
-    "@types/node-fetch" "^2.5.12"
-    node-fetch "^2.6.7"
-    web3 "^1.7.4"
+"idriss-crypto@link:../ts-library":
+  version "0.0.0"
+  uid ""
 
 ieee754@^1.1.13, ieee754@^1.2.1:
   version "1.2.1"
