@@ -113,13 +113,13 @@ export class TwitterPageManager extends AbstractPageManager {
               if (!data.error && !div.querySelector(".idrissIcon")) {
                 if (Object.values(data).length === 0) {
                   const dropdownContent = new TippingUnregistered(data, name).container;
-                  const { icon } = this.createIcon(div, data, dropdownContent);
+                  const { icon } = this.createIcon(div, data, dropdownContent, name);
                   icon.style.filter = `grayscale(100%)`;
                 } else {
                   const dropdownContent = data[name]
                     ? new CustomTwitter(data[name]).div
                     : new Tipping(name, data).div;
-                  this.createIcon(div, data, dropdownContent);
+                  this.createIcon(div, data, dropdownContent, name);
                 }
               }
             };
@@ -129,7 +129,7 @@ export class TwitterPageManager extends AbstractPageManager {
         }
     }
 
-    createIcon = (parent, data, dropdownContent) => {
+    createIcon = (parent, data, dropdownContent, name) => {
       const icon = document.createElement("div");
       icon.className = "idrissIcon";
       icon.dataset.sourceName = name;
