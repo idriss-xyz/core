@@ -105,7 +105,6 @@ export class AbstractPageManager {
             let resp = await this.reverseResolveRequest(addresses)
             this.reverseKnownAddresses = {...this.reverseKnownAddresses, ...resp}
         }
-        console.log(this.reverseKnownAddresses);
         for (const place of places) {
             if (this.reverseKnownAddresses[place.address]) {
                 place.callback(this.reverseKnownAddresses[place.address])
@@ -122,6 +121,7 @@ export class AbstractPageManager {
             let link = this.document.createElement('a')
             link.href = "https://twitter.com/" + x.slice(1,);
             link.target = "_blank"
+            if (document.location.hostname.endsWith('explorer.zksync.io')) link.style.margin = '2px 0 0 0';
             let img = this.document.createElement('img')
             img.src = await this.getTwitterIcon();
             img.alt = "Twitter";

@@ -6,6 +6,7 @@ import {PoapPageManager} from "./PoapPageManager";
 import {TwitterPageManager} from "./twitterPageManager";
 import {CoinbasePageManager} from "./CoinbasePageManager";
 import {EtherscanPageManager} from "./etherscanPageManager";
+import {ZKScanPageManager} from "./zkSyncScanPageManager";
 
 const specificDomainList = {
     "app.poap.xyz": PoapPageManager,
@@ -21,7 +22,8 @@ const specificDomainList = {
     "snowtrace.io": EtherscanPageManager,
     "optimistic.etherscan.io": EtherscanPageManager,
     "moonriver.moonscan.io": EtherscanPageManager,
-    "moonscan.io": EtherscanPageManager
+    "moonscan.io": EtherscanPageManager,
+    "explorer.zksync.io": ZKScanPageManager
 }
 const defaultDomainList = [
     "binance.com",
