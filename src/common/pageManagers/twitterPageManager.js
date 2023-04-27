@@ -52,6 +52,7 @@ export class TwitterPageManager extends AbstractPageManager {
             setTimeout(() => {
                 if (!document.querySelector(selector)) {
                     this.lastDropdown?.remove();
+                    this.lastDropdown = null;
                 }
             }, 500);
         }
@@ -70,7 +71,6 @@ export class TwitterPageManager extends AbstractPageManager {
     }
 
     async apiCall(names) {
-        console.log('twitter manager call');
         let responses = await this.requestLimiter.scheduleMany(names, (x) => {
             return new Promise((resolve, reject) => {
                 chrome.runtime.sendMessage({
@@ -144,18 +144,17 @@ export class TwitterPageManager extends AbstractPageManager {
       icon.style.backgroundSize = `contain`;
       icon.onmouseover = (e) => e.stopPropagation();
       icon.setAttribute("tabindex", "-1");
+      const dropdown = document.createElement("div");
+      dropdown.addEventListener("click", (e) => e.stopPropagation());
+      icon.append(dropdown);
       parent
         .querySelector(
           ".r-1fmj7o5:not(h2), .r-18jsvk2:not(h2), .r-1nao33i:not(h2), .r-vlxjld:not(h2)"
         )
         ?.append(icon);
-      const dropdown = document.createElement("div");
-      dropdown.addEventListener("click", (e) => e.stopPropagation());
-      icon.append(dropdown);
       icon.onmouseover = (e) => {
         e.stopPropagation();
         e.preventDefault();
-        // ToDo: check if name in some dict to show custom Tipping (new file CustomTipping?)
         let dropdown = dropdownContent;
         this.document.body.append(dropdown);
         let rect = icon.getBoundingClientRect();
@@ -168,7 +167,7 @@ export class TwitterPageManager extends AbstractPageManager {
   
         this.lastDropdown?.remove();
         this.lastDropdown = dropdown;
-  
+
         const eventCallback = () => {
           if (
             !dropdown.matches(":hover, :focus, :focus-within, .isClicked") &&
