@@ -52,7 +52,6 @@ export class TwitterPageManager extends AbstractPageManager {
             setTimeout(() => {
                 if (!document.querySelector(selector)) {
                     this.lastDropdown?.remove();
-                    this.lastDropdown = null;
                 }
             }, 500);
         }
