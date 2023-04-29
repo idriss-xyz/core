@@ -52,7 +52,7 @@ export class TwitterPageManager extends AbstractPageManager {
             setTimeout(() => {
                 if (!document.querySelector(selector)) {
                     this.lastDropdown?.remove();
-                    this.lastDropdown = null;
+                    //this.lastDropdown = null;
                 }
             }, 500);
         }
@@ -165,7 +165,9 @@ export class TwitterPageManager extends AbstractPageManager {
         dropdown.style.zindex = 1000000;
         dropdown.onclick = () => dropdown.classList.add("isClicked");
   
-        this.lastDropdown?.remove();
+        if (dropdown !== this.lastDropdown) {
+          this.lastDropdown?.remove();
+        }
         this.lastDropdown = dropdown;
 
         const eventCallback = () => {

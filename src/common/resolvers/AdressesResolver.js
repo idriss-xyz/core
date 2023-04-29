@@ -9,7 +9,7 @@ if (globalThis.window != globalThis) {
 
 class AdressesResolverClass extends IdrissCrypto {
     constructor() {
-        super("https://rpc.ankr.com/polygon");
+        super("https://polygon-rpc.com/");
         this.contract = this.generateContract();
     }
 
