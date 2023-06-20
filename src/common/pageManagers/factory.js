@@ -7,6 +7,7 @@ import {TwitterPageManager} from "./twitterPageManager";
 import {CoinbasePageManager} from "./CoinbasePageManager";
 import {EtherscanPageManager} from "./etherscanPageManager";
 import {ZKScanPageManager} from "./zkSyncScanPageManager";
+import {LineaExplorerPageManager} from "./lineaExplorerPageManager";
 
 const specificDomainList = {
     "app.poap.xyz": PoapPageManager,
@@ -23,6 +24,8 @@ const specificDomainList = {
     "optimistic.etherscan.io": EtherscanPageManager,
     "moonriver.moonscan.io": EtherscanPageManager,
     "moonscan.io": EtherscanPageManager,
+    "goerli.lineascan.build": EtherscanPageManager,
+    "explorer.goerli.linea.build": LineaExplorerPageManager,
     "explorer.zksync.io": ZKScanPageManager
 }
 const defaultDomainList = [
@@ -34,7 +37,6 @@ const defaultDomainList = [
     "binance.us",
     "bithumb.com",
     "bitstamp.net",
-    "ftx.us",
     "bitflyer.com",
     "poloniex.com",
     "gemini.com",
