@@ -19,18 +19,35 @@ export class EtherscanPageManager extends AbstractPageManager {
 
 
     findPlacesForReverseResolve() {
-        let ret = super.findPlacesForReverseResolve();
-        const selector='#mainaddress, .hash-tag, #contractCopy, #addressCopy, a[href^="/address/"]';
-        for (const element of this.document.querySelectorAll(selector)) {
-            if (element.classList.contains('idrissReverseResolved')) continue;
-            if(element.querySelector(selector)) continue;//has another element inside
-            let address = element.textContent;
-            if (/^0x[0-9a-fA-F]{40}$/.test(address)) {
-                ret.push({address, callback:x => this.defaultReverseResolve(x, element)})
-            }
+  return new Promise((resolve) => {
+    let ret = super.findPlacesForReverseResolve();
+    const selector = '#mainaddress, .hash-tag, #contractCopy, #addressCopy, a[href^="/address/"]';
+    const elements = this.document.querySelectorAll(selector);
+
+    const observer = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          const element = entry.target;
+          if (element.classList.contains('idrissReverseResolved')) continue;
+          if (element.querySelector(selector)) continue; // has another element inside
+          let address = element.textContent;
+          if (/^0x[0-9a-fA-F]{40}$/.test(address)) {
+            ret.push({ address, callback: x => this.defaultReverseResolve(x, element) });
+          }
+          observer.unobserve(element); // Stop observing this element once it's in view
         }
-        return ret;
-    }
+      }
+
+      resolve(ret); // Resolve the promise with the populated `ret` array
+    });
+
+    elements.forEach(element => {
+      observer.observe(element);
+    });
+  });
+}
+
+
 
     badWords = ["login", "signup", "email", "mail", "phone", "signin"];
 

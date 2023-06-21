@@ -99,7 +99,7 @@ export class AbstractPageManager {
     }
 
     async findReverseResolve() {
-        let places = this.findPlacesForReverseResolve();
+        let places = await this.findPlacesForReverseResolve();
         let addresses = places.map(x => x.address).filter(a => this.reverseKnownAddresses[a] === undefined);
         if (addresses.length > 0) {
             let resp = await this.reverseResolveRequest(addresses)
@@ -122,6 +122,15 @@ export class AbstractPageManager {
             link.href = "https://twitter.com/" + x.slice(1,);
             link.target = "_blank"
             if (document.location.hostname.endsWith('explorer.zksync.io')) link.style.margin = '2px 0 0 0';
+            if (document.location.hostname.endsWith('explorer.goerli.linea.build')) {
+                var sibling = element.nextElementSibling;
+                if (sibling.matches('.d-md-inline-block.d-xl-none')) {
+                    console.log("removing sibling")
+                    sibling.remove()
+                }
+                element.classList.remove('d-none', 'd-md-none')
+                element.classList.add('d-md-inline-block')
+            };
             let img = this.document.createElement('img')
             img.src = await this.getTwitterIcon();
             img.alt = "Twitter";

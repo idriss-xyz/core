@@ -19,31 +19,45 @@ export class LineaExplorerPageManager extends AbstractPageManager {
 
 
     findPlacesForReverseResolve() {
-        let ret = super.findPlacesForReverseResolve();
-        const selector = '.address-detail-hash-title, span.d-none.d-md-none.d-xl-inline';
-        const spans = document.querySelectorAll(selector);
+  return new Promise((resolve) => {
+    let ret = super.findPlacesForReverseResolve();
+    const selector = '.address-detail-hash-title, span.d-none.d-md-none.d-xl-inline';
+    const spans = document.querySelectorAll(selector);
 
-        const ethereumAddressSpans = Array.from(spans).filter(span => {
-          const ethereumAddress = span.textContent.trim();
-          const isEthereumAddress = /^0x[a-fA-F0-9]{40}$/.test(ethereumAddress);
-          return isEthereumAddress;
-        });
+    const ethereumAddressSpans = Array.from(spans).filter(span => {
+      const ethereumAddress = span.textContent.trim();
+      const isEthereumAddress = /^0x[a-fA-F0-9]{40}$/.test(ethereumAddress);
+      return isEthereumAddress;
+    });
 
-        for (const element of ethereumAddressSpans) {
-            if (element.classList.contains('idrissReverseResolved')) continue;
-            if(element.querySelector(selector)) continue;//has another element inside
-            let address;
-            if (!element.href) address = element.textContent;
-            else if (element.href) address = element.href.match(/\/address\/(0x[0-9a-fA-F]{40})/)[1];
-            if (element.nextSibling && element.nextSibling.className === "icon" && element.nextSibling.innerHTML === "") element.nextSibling.remove()
-            if (/^0x[0-9a-fA-F]{40}$/.test(address)) {
-                console.log("Reversing: ", address)
-                element.style.display = 'flex';
-                ret.push({address, callback:x => this.defaultReverseResolve(x, element)})
-            }
+    const observer = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          const element = entry.target;
+          if (element.classList.contains('idrissReverseResolved')) continue;
+          if (element.querySelector(selector)) continue; // has another element inside
+          let address;
+          if (!element.href) address = element.textContent;
+          else if (element.href) address = element.href.match(/\/address\/(0x[0-9a-fA-F]{40})/)[1];
+          if (element.nextSibling && element.nextSibling.className === "icon" && element.nextSibling.innerHTML === "") element.nextSibling.remove();
+          if (/^0x[0-9a-fA-F]{40}$/.test(address)) {
+            element.style.display = 'flex';
+            ret.push({ address, callback: x => this.defaultReverseResolve(x, element) });
+          }
+          observer.unobserve(element); // Stop observing this element once it's in view
         }
-        return ret;
+      }
+
+      resolve(ret); // Resolve the promise with the populated `ret` array
+    });
+
+    for (const element of ethereumAddressSpans) {
+      observer.observe(element);
     }
+  });
+}
+
+
 
     badWords = ["login", "signup", "email", "mail", "phone", "signin"];
 

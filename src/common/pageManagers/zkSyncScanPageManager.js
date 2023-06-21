@@ -17,24 +17,38 @@ export class ZKScanPageManager extends AbstractPageManager {
         this.document.addEventListener('focus', e => this.inputChanged(e, e.target))
     }
 
+findPlacesForReverseResolve() {
+  return new Promise((resolve) => {
+    let ret = super.findPlacesForReverseResolve();
+    const selector = '.displayed-string, a[href^="/address/"]:not(.token-link)';
+    const elements = this.document.querySelectorAll(selector);
 
-    findPlacesForReverseResolve() {
-        let ret = super.findPlacesForReverseResolve();
-        const selector='.displayed-string, a[href^="/address/"]:not(.token-link)';
-        for (const element of this.document.querySelectorAll(selector)) {
-            if (element.classList.contains('idrissReverseResolved')) continue;
-            if(element.querySelector(selector)) continue;//has another element inside
-            let address;
-            if (!element.href) address = element.textContent;
-            else if (element.href) address = element.href.match(/\/address\/(0x[0-9a-fA-F]{40})/)[1];
-            if (element.nextSibling && element.nextSibling.className === "icon" && element.nextSibling.innerHTML === "") element.nextSibling.remove()
-            if (/^0x[0-9a-fA-F]{40}$/.test(address)) {
-                element.style.display = 'flex';
-                ret.push({address, callback:x => this.defaultReverseResolve(x, element)})
-            }
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          const element = entry.target;
+          if (element.classList.contains('idrissReverseResolved')) continue;
+          if (element.querySelector(selector)) continue; // has another element inside
+          let address;
+          if (!element.href) address = element.textContent;
+          else if (element.href) address = element.href.match(/\/address\/(0x[0-9a-fA-F]{40})/)[1];
+          if (element.nextSibling && element.nextSibling.className === "icon" && element.nextSibling.innerHTML === "") element.nextSibling.remove();
+          if (/^0x[0-9a-fA-F]{40}$/.test(address)) {
+            element.style.display = 'flex';
+            ret.push({ address, callback: x => this.defaultReverseResolve(x, element) });
+          }
+          observer.unobserve(element); // Stop observing this element once it's in view
         }
-        return ret;
+      }
+      resolve(ret);
+    });
+
+    for (const element of elements) {
+      observer.observe(element);
     }
+  });
+}
+
 
     badWords = ["login", "signup", "email", "mail", "phone", "signin"];
 
