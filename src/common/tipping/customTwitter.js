@@ -1,18 +1,18 @@
-import css from "@idriss-crypto/tipping-core/tippingStyle";
+import css from "@idriss-crypto/send-to-anyone-core/sendToAnyoneStyle";
 import {create} from "fast-creator";
-import {FrameworkDapp} from "@idriss-crypto/tipping-core/subpages";
+import {CustomTwitter} from "@idriss-crypto/send-to-anyone-core/subpages";
 
 
-export class CustomTwitter {
+export class CustomWidget {
     constructor(data) {
         this.div = document.createElement('div')
         this.div.attachShadow({mode: 'open'})
         this.div.shadowRoot.append(create('style', {text: css}));
 
-        let popup = create('section.tipping-popup')
+        let popup = create('section.sendToAnyone-popup')
         this.div.shadowRoot.append(popup);
 
-        popup.append(new FrameworkDapp(data).html);
+        popup.append(new CustomTwitter(data).html);
         popup.addEventListener('customEvent', async (e) => {
             console.log({e, data})
             let params = {

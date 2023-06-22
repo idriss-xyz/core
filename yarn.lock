@@ -816,32 +816,9 @@
     "@ethersproject/properties" "^5.7.0"
     "@ethersproject/strings" "^5.7.0"
 
-"@idriss-crypto/send-to-anyone-core@^0.4.2":
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/@idriss-crypto/send-to-anyone-core/-/send-to-anyone-core-0.4.2.tgz#8b3f29affd4d7aa77a9057fb7a8592ea08fde6cc"
-  integrity sha512-lS5Dkr5g5XbrUUza4rIw5SxG63TyCC2LYhyCcAZDKJ18+mar/ZiEmfVV26vloO6zP6U8Dn6amTms+usJzKNZdw==
-  dependencies:
-    "@depay/coinbase-wallet-sdk" "^1.0.5"
-    "@magic-ext/connect" "^3.1.0"
-    "@walletconnect/web3-provider" "^1.7.8"
-    alchemy-sdk "^2.0.2"
-    fast-creator "^1.6.0"
-    idriss-crypto "^1.8.10"
-    magic-sdk "^10.1.0"
-    web3 "^1.7.0"
-    web3modal "^1.9.7"
-
-"@idriss-crypto/tipping-core@^2.2.5":
-  version "2.2.5"
-  resolved "https://registry.yarnpkg.com/@idriss-crypto/tipping-core/-/tipping-core-2.2.5.tgz#e8fcd0bda85e074a2cdb7fc727d5de935572f5dd"
-  integrity sha512-zO/G55EnqFTWEzgpbFCMFKH8jM2iK3XC/EEDleuxbxN/071pcxO59apH9f6bV3QRp86w3T3ZaqbPDNCmLAXCSA==
-  dependencies:
-    "@depay/coinbase-wallet-sdk" "^1.0.5"
-    "@walletconnect/web3-provider" "^1.7.8"
-    fast-creator "^1.6.0"
-    idriss-crypto "^1.6.0"
-    web3 "^1.7.0"
-    web3modal "^1.9.7"
+"@idriss-crypto/send-to-anyone-core@link:../send-to-anyone-core":
+  version "0.0.0"
+  uid ""
 
 "@jridgewell/gen-mapping@^0.1.0":
   version "0.1.1"
@@ -3402,15 +3379,6 @@ idna-uts46-hx@^2.3.1:
   integrity sha512-PWoF9Keq6laYdIRwwCdhTPl60xRqAloYNMQLiyUnG42VjT53oW07BXIRM+NK7eQjzXjAk2gUvX9caRxlnF9TAA==
   dependencies:
     punycode "2.1.0"
-
-idriss-crypto@^1.6.0:
-  version "1.6.7"
-  resolved "https://registry.yarnpkg.com/idriss-crypto/-/idriss-crypto-1.6.7.tgz#fad962c543ed83c4a6e72ddc61924a10c12481c2"
-  integrity sha512-F0lVtHh6ZVxMwPHtYnUEiRRWdhsUrgFz1r3a/p99PDtIQZPuFvWmtDKDbz6gN1Oeq5mhGgzzLfeMl8nVBGyNhg==
-  dependencies:
-    "@types/node-fetch" "^2.5.12"
-    node-fetch "^2.6.7"
-    web3 "^1.7.4"
 
 idriss-crypto@^1.6.1, idriss-crypto@^1.8.10:
   version "1.8.10"

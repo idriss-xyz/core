@@ -2,7 +2,7 @@ import {AbstractPageManager} from "./abstractPageManager";
 import {RequestLimiter} from "../RequestLimiter";
 import {Tipping} from "../tipping/Tipping";
 import {TippingUnregistered} from '../tipping/tippingUnregistered'
-import {CustomTwitter} from "../tipping/customTwitter";
+import {CustomWidget} from "../tipping/customTwitter";
 
 export class TwitterPageManager extends AbstractPageManager {
     static namesResults = {};
@@ -117,7 +117,7 @@ export class TwitterPageManager extends AbstractPageManager {
                   icon.style.filter = `grayscale(100%)`;
                 } else {
                   const dropdownContent = data[name]
-                    ? new CustomTwitter(data[name]).div
+                    ? new CustomWidget(data[name]).div
                     : new Tipping(name, data).div;
                   this.createIcon(div, data, dropdownContent, name);
                 }
