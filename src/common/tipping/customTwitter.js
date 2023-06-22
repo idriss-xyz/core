@@ -16,12 +16,15 @@ export class CustomWidget {
         popup.addEventListener('customEvent', async (e) => {
             console.log({e, data})
             let params = {
-                amount: e.amount ?? null,
+                identifier: e.identifier ?? null,
+                recipient: data['recipient_address'] ?? null,
                 network: e.network ?? null,
+                assetType: e.assetType ?? null,
+                assetAddress: e.assetAddress ?? null,
+                tippingValue: e.amount ?? null,
                 token: e.token ?? null,
                 message: e.message ?? null,
                 input: e.input ?? null,
-
                 back:'close'
             }
             window.open(data['hostURL'] + Object.entries(params).filter(([k, v]) => v).map(x => encodeURIComponent(x[0]) + '=' + encodeURIComponent(x[1])).join('&'))

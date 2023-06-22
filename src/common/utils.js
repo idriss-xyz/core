@@ -26,6 +26,7 @@ export const customTwitterAccounts = {
         buttonValue: "Donate",
         hostURL: "https://idriss.xyz/send?",
         recipient: "@JediSwap",
+        recipient_address: "0xjediaddress",
         showNetworkSelection: true,
         showValueSelection: true,
         showTokenSelection: true,
