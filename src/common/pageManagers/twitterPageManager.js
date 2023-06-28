@@ -145,7 +145,6 @@ export class TwitterPageManager extends AbstractPageManager {
       icon.onmouseover = (e) => e.stopPropagation();
       icon.setAttribute("tabindex", "-1");
       const dropdown = document.createElement("div");
-      dropdown.addEventListener("click", (e) => e.stopPropagation());
       icon.append(dropdown);
       parent
         .querySelector(
@@ -156,6 +155,7 @@ export class TwitterPageManager extends AbstractPageManager {
         e.stopPropagation();
         e.preventDefault();
         let dropdown = dropdownContent;
+      dropdown.addEventListener("click", (e) => e.stopPropagation());
         this.document.body.append(dropdown);
         let rect = icon.getBoundingClientRect();
         dropdown.classList.add("idrissTwitterDropdown");

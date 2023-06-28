@@ -11,7 +11,6 @@ export class CustomWidget {
 
         let popup = create('section.sendToAnyone-popup')
         this.div.shadowRoot.append(popup);
-
         popup.append(new CustomTwitter(data).html);
         popup.addEventListener('customEvent', async (e) => {
             console.log({e, data})

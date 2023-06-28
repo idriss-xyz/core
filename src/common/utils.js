@@ -12,6 +12,7 @@ export const customTwitterAccounts = {
         buttonValue: "Donate",
         hostURL: "https://gitcoin.co/grants/7233/idriss-a-better-way-to-interact-in-web3?",
         recipient: "@Gitcoin",
+        recipient_address: "@Gitcoin_address",
         showNetworkSelection: false,
         showValueSelection: false,
         showTokenSelection: false,
