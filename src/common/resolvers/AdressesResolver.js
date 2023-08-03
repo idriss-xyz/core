@@ -1,6 +1,6 @@
 import {TwitterIdResolver} from "./TwitterIdResolver";
 
-import {lowerFirst, regM, regPh, regT, customTwitterAccounts} from "../utils";
+import {lowerFirst, getCustomTwitter, regM, regPh, regT, customTwitterAccounts} from "../utils";
 const {IdrissCrypto}= require("idriss-crypto/cjs/browser");
 
 if (globalThis.window != globalThis) {

@@ -24,8 +24,10 @@ const specificDomainList = {
     "optimistic.etherscan.io": EtherscanPageManager,
     "moonriver.moonscan.io": EtherscanPageManager,
     "moonscan.io": EtherscanPageManager,
+    "lineascan.build": EtherscanPageManager,
     "goerli.lineascan.build": EtherscanPageManager,
     "explorer.goerli.linea.build": LineaExplorerPageManager,
+    "explorer.linea.build": LineaExplorerPageManager,
     "explorer.zksync.io": ZKScanPageManager
 }
 const defaultDomainList = [
