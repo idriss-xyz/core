@@ -2,26 +2,6 @@ export function lowerFirst(string_) {
     return string_.charAt(0).toLowerCase() + string_.slice(1);
 }
 
-let freshCustomTwitter = {}
-
-async function fetchCustomTwitter() {
-  try {
-    const response = await fetch('https://raw.githubusercontent.com/idriss-crypto/browser-extensions/master/src/common/customTwitterAccounts.json');
-    const data = await response.json();
-    freshCustomTwitter = data;
-  } catch (error) {
-    console.error('Error fetching Twitter accounts:', error);
-  }
-}
-
-export function getCustomTwitter() {
-  return freshCustomTwitter;
-}
-
-// Automatic fetching every 5 minutes
-const fetchInterval = 5 * 60 * 1000; // 5 minutes in milliseconds
-setInterval(fetchCustomTwitter, fetchInterval);
-
 export const regPh = /^(\+\(?\d{1,4}\s?)\)?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/;
 export const regM = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
 export const regT = /^@[a-zA-Z0-9_]{1,15}$/;
@@ -61,3 +41,22 @@ export const customTwitterAccounts = {
 //    },
 };
 
+let freshCustomTwitter = customTwitterAccounts
+
+async function fetchCustomTwitter() {
+  try {
+    const response = await fetch('https://raw.githubusercontent.com/idriss-crypto/browser-extensions/master/src/common/customTwitterAccounts.json');
+    const data = await response.json();
+    freshCustomTwitter = data;
+  } catch (error) {
+    freshCustomTwitter = customTwitterAccounts;
+  }
+}
+
+export function getCustomTwitter() {
+  return freshCustomTwitter;
+}
+
+// Automatic fetching every 5 minutes
+const fetchInterval = 5 * 60 * 1000; // 5 minutes in milliseconds
+setInterval(fetchCustomTwitter, fetchInterval);
