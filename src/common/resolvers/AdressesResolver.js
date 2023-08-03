@@ -1,6 +1,6 @@
 import {TwitterIdResolver} from "./TwitterIdResolver";
 
-import {lowerFirst, getCustomTwitter, regM, regPh, regT, customTwitterAccounts} from "../utils";
+import {lowerFirst, getCustomTwitter, regM, regPh, regT} from "../utils";
 const {IdrissCrypto}= require("idriss-crypto/cjs/browser");
 
 if (globalThis.window != globalThis) {
@@ -77,6 +77,7 @@ class AdressesResolverClass extends IdrissCrypto {
                                  throw new Error("Twitter handle not found.")
             }
             twitterID = true;
+            let customTwitterAccounts = getCustomTwitter();
             // custom dropdowns on twitter
             if (customTwitterAccounts[identifier]) {
                 let foundMatches = {}

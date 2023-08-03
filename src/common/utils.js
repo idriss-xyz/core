@@ -45,7 +45,8 @@ let freshCustomTwitter = customTwitterAccounts
 
 async function fetchCustomTwitter() {
   try {
-    const response = await fetch('https://raw.githubusercontent.com/idriss-crypto/browser-extensions/master/src/common/customTwitterAccounts.json');
+  // ToDo: change url
+    const response = await fetch('https://raw.githubusercontent.com/idriss-crypto/browser-extensions/custom-twitter/src/common/customTwitterAccounts.json');
     const data = await response.json();
     freshCustomTwitter = data;
   } catch (error) {
@@ -57,6 +58,7 @@ export function getCustomTwitter() {
   return freshCustomTwitter;
 }
 
+fetchCustomTwitter();
 // Automatic fetching every 5 minutes
 const fetchInterval = 5 * 60 * 1000; // 5 minutes in milliseconds
 setInterval(fetchCustomTwitter, fetchInterval);

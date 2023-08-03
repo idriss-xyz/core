@@ -14,5 +14,28 @@
         "showMessageBox": false,
         "tokenFilter": null,
         "networkFilter": null
+    },
+    "1470315931142393857": {
+        "customHeader": "Donate to @JediSwap",
+        "customText": "IDriss test funding round",
+        "buttonValue": "Donate",
+        "hostURL": "https://idriss.xyz/send?",
+        "recipient": "@JediSwap",
+        "forwardRecipient": true,
+        "recipientAddress": {
+            "ETH": "0x1",
+            "Polygon": "0x2",
+            "BSC": "0x3",
+            "zkSync": "0x4"
+        },
+        "showNetworkSelection": true,
+        "showValueSelection": true,
+        "showTokenSelection": true,
+        "showInput": false,
+        "showMessageBox": false,
+        "tokenFilter": {
+            "network": ["ETH", "Polygon", "zkSync"]
+        },
+        "networkFilter": null
     }
 }
