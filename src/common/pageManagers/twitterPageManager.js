@@ -14,7 +14,6 @@ export class TwitterPageManager extends AbstractPageManager {
 
     async init() {
         this.requestLimiter = new RequestLimiter([{amount: 10, time: 1000}]);
-        console.log("Pre loading")
         this.iconUrl = await this.getIcon();
 
         const entriesWithIcons = Object.entries(customTwitterAccounts).filter(([, value]) =>
@@ -25,8 +24,6 @@ export class TwitterPageManager extends AbstractPageManager {
         this.allIcons = entriesWithIcons.reduce((acc, [, value], index) => ((acc[value.iconUrl] = icons[index]), acc), {});
 
         this.allIcons.default = this.iconUrl;
-
-        console.log(this.allIcons)
 
         this.check()
         addEventListener('load', () => this.check())
