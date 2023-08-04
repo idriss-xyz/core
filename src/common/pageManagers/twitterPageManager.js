@@ -85,7 +85,7 @@ export class TwitterPageManager extends AbstractPageManager {
         return responses.reduce((a, b) => ({...a, ...b}));
     }
 
-    getIcon() {
+    getIcon(custom="") {
         return new Promise((resolve, reject) => {
             chrome.runtime.sendMessage({
                 type: "getIconUrl"
@@ -116,6 +116,7 @@ export class TwitterPageManager extends AbstractPageManager {
                   const { icon } = this.createIcon(div, data, dropdownContent, name);
                   icon.style.filter = `grayscale(100%)`;
                 } else {
+                // create icon based on param here
                   const dropdownContent = data[name]
                     ? new CustomWidget(data[name]).div
                     : new Tipping(name, data).div;
@@ -129,7 +130,7 @@ export class TwitterPageManager extends AbstractPageManager {
         }
     }
 
-    createIcon = (parent, data, dropdownContent, name) => {
+    createIcon = async (parent, data, dropdownContent, name) => {
       const icon = document.createElement("div");
       icon.className = "idrissIcon";
       icon.dataset.sourceName = name;
@@ -140,7 +141,8 @@ export class TwitterPageManager extends AbstractPageManager {
       icon.style.borderbottom = "2px solid transparent";
       icon.style.borderLeft = "0.3em solid transparent";
       icon.style.borderRight = "0.3em solid transparent";
-      icon.style.background = `url(${this.iconUrl}) no-repeat`;
+      let _iconUrl = data[name] ? this.iconUrl : await this.getIcon(data[name].iconUrl)
+      icon.style.background = `url(${_iconUrl}) no-repeat`;
       icon.style.backgroundSize = `contain`;
       icon.onmouseover = (e) => e.stopPropagation();
       icon.setAttribute("tabindex", "-1");
