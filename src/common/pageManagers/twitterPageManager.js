@@ -3,6 +3,7 @@ import {RequestLimiter} from "../RequestLimiter";
 import {Tipping} from "../tipping/Tipping";
 import {TippingUnregistered} from '../tipping/tippingUnregistered'
 import {CustomWidget} from "../tipping/customTwitter";
+import {customTwitterAccounts} from "../utils";
 
 export class TwitterPageManager extends AbstractPageManager {
     static namesResults = {};
@@ -13,7 +14,20 @@ export class TwitterPageManager extends AbstractPageManager {
 
     async init() {
         this.requestLimiter = new RequestLimiter([{amount: 10, time: 1000}]);
-        this.iconUrl = await this.getIcon()
+        console.log("Pre loading")
+        this.iconUrl = await this.getIcon();
+
+        const entriesWithIcons = Object.entries(customTwitterAccounts).filter(([, value]) =>
+          value.iconUrl && value.iconUrl !== "" && value.iconUrl !== "default"
+        );
+        const icons = await Promise.all(entriesWithIcons.map(([, value]) => this.getIcon(value.iconUrl)));
+
+        this.allIcons = entriesWithIcons.reduce((acc, [, value], index) => ((acc[value.iconUrl] = icons[index]), acc), {});
+
+        this.allIcons.default = this.iconUrl;
+
+        console.log(this.allIcons)
+
         this.check()
         addEventListener('load', () => this.check())
         addEventListener('focus', () => this.check())
@@ -85,10 +99,11 @@ export class TwitterPageManager extends AbstractPageManager {
         return responses.reduce((a, b) => ({...a, ...b}));
     }
 
-    getIcon(custom="") {
+    getIcon(_custom="") {
         return new Promise((resolve, reject) => {
             chrome.runtime.sendMessage({
-                type: "getIconUrl"
+                type: "getIconUrl",
+                custom: _custom
             }, response => {
                 resolve(response);
             });
@@ -130,7 +145,7 @@ export class TwitterPageManager extends AbstractPageManager {
         }
     }
 
-    createIcon = async (parent, data, dropdownContent, name) => {
+    createIcon = (parent, data, dropdownContent, name) => {
       const icon = document.createElement("div");
       icon.className = "idrissIcon";
       icon.dataset.sourceName = name;
@@ -141,7 +156,7 @@ export class TwitterPageManager extends AbstractPageManager {
       icon.style.borderbottom = "2px solid transparent";
       icon.style.borderLeft = "0.3em solid transparent";
       icon.style.borderRight = "0.3em solid transparent";
-      let _iconUrl = data[name] ? this.iconUrl : await this.getIcon(data[name].iconUrl)
+      let _iconUrl = data[name] ? this.allIcons[data[name].iconUrl] : this.allIcons.default;
       icon.style.background = `url(${_iconUrl}) no-repeat`;
       icon.style.backgroundSize = `contain`;
       icon.onmouseover = (e) => e.stopPropagation();
@@ -194,7 +209,6 @@ export class TwitterPageManager extends AbstractPageManager {
         dropdown.classList.add("isClicked");
         e.stopPropagation();
       };
-  
       return { icon };
     };
 }
