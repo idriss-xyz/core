@@ -22,7 +22,7 @@ export const customTwitterAccounts = {
         showMessageBox: false, // forward message to recipient
         tokenFilter: null, // filter token and networks
         networkFilter: null,
-        iconUrl: "" // if icon is custom, add to img folder and use "img/iconName.png"
+        iconUrl: "default" // if icon is custom, add to img folder and use "img/iconName.png", otherwise use "default"
     },
     "856446453157376003": {
         "customHeader": "Donate on Gitcoin",

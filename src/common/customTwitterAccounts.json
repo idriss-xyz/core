@@ -38,6 +38,6 @@
             "network": ["ETH", "Polygon", "zkSync"]
         },
         "networkFilter": null,
-        "iconUrl": ""
+        "iconUrl": "default"
     }
 }
