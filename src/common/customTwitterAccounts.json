@@ -7,14 +7,16 @@
         "recipient": "@Gitcoin",
         "forwardRecipient": true,
         "recipientAddress": {
-            "optimism": "0x1"
+            "ETH": "0xde21F729137C5Af1b01d73aF1dC21eFfa2B8a0d6"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
         "showTokenSelection": true,
         "showInput": false,
         "showMessageBox": false,
-        "tokenFilter": null,
+        "tokenFilter": {
+            "network": ["ETH"]
+        },
         "networkFilter": null,
         "iconUrl": "img/customGitcoin.png"
     },
