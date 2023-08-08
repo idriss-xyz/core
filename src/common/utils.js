@@ -24,39 +24,27 @@ export const customTwitterAccounts = {
         networkFilter: null,
         iconUrl: "default" // if icon is custom, add it to img folder and use "img/iconName.png", otherwise use "default"
     },
-    "856446453157376003": {
+   "856446453157376003": {
         "customHeader": "Donate on Gitcoin",
         "customText": "Support Public Goods by contributing to the matching pool 💚",
         "buttonValue": "Donate",
         "hostURL": "https://idriss.xyz/send?",
         "recipient": "@Gitcoin",
         "forwardRecipient": true,
-        "recipientAddress": null,
+        "recipientAddress": {
+            "ETH": "0xde21F729137C5Af1b01d73aF1dC21eFfa2B8a0d6"
+        },
         "showNetworkSelection": true,
         "showValueSelection": true,
         "showTokenSelection": true,
         "showInput": false,
         "showMessageBox": false,
-        "tokenFilter": null,
+        "tokenFilter": {
+            "network": ["ETH"]
+        },
         "networkFilter": null,
         "iconUrl": "img/customGitcoin.png"
     },
-//    '1470315931142393857': {
-//        customHeader: "Donate to @JediSwap",
-//        customText: "IDriss test funding round",
-//        buttonValue: "Donate",
-//        hostURL: "https://idriss.xyz/send?",
-//        recipient: "@JediSwap",
-//        forwardRecipient: true,
-//        recipientAddress: {"ETH": "0x1", "Polygon": "0x2", "BSC": "0x3", "zkSync": "0x4"},
-//        showNetworkSelection: true,
-//        showValueSelection: true,
-//        showTokenSelection: true,
-//        showInput: false,
-//        showMessageBox: false,
-//        tokenFilter: {"network": ["ETH", "Polygon", "zkSync"]},
-//        networkFilter: null,
-//    },
 };
 
 let freshCustomTwitter = customTwitterAccounts
