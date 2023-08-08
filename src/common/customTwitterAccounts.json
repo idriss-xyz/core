@@ -6,7 +6,9 @@
         "hostURL": "https://idriss.xyz/send?",
         "recipient": "@Gitcoin",
         "forwardRecipient": true,
-        "recipientAddress": "0xa",
+        "recipientAddress": {
+            "optimism": "0x1"
+        },
         "showNetworkSelection": true,
         "showValueSelection": true,
         "showTokenSelection": true,
