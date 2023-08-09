@@ -3,6 +3,7 @@ import {RequestLimiter} from "../RequestLimiter";
 import {Tipping} from "../tipping/Tipping";
 import {TippingUnregistered} from '../tipping/tippingUnregistered'
 import {CustomWidget} from "../tipping/customTwitter";
+import {customTwitterAccounts} from "../utils";
 
 export class TwitterPageManager extends AbstractPageManager {
     static namesResults = {};
@@ -13,7 +14,17 @@ export class TwitterPageManager extends AbstractPageManager {
 
     async init() {
         this.requestLimiter = new RequestLimiter([{amount: 10, time: 1000}]);
-        this.iconUrl = await this.getIcon()
+        this.iconUrl = await this.getIcon();
+
+        const entriesWithIcons = Object.entries(customTwitterAccounts).filter(([, value]) =>
+          value.iconUrl && value.iconUrl !== "" && value.iconUrl !== "default"
+        );
+        const icons = await Promise.all(entriesWithIcons.map(([, value]) => this.getIcon(value.iconUrl)));
+
+        this.allIcons = entriesWithIcons.reduce((acc, [, value], index) => ((acc[value.iconUrl] = icons[index]), acc), {});
+
+        this.allIcons.default = this.iconUrl;
+
         this.check()
         addEventListener('load', () => this.check())
         addEventListener('focus', () => this.check())
@@ -85,10 +96,11 @@ export class TwitterPageManager extends AbstractPageManager {
         return responses.reduce((a, b) => ({...a, ...b}));
     }
 
-    getIcon() {
+    getIcon(_custom="") {
         return new Promise((resolve, reject) => {
             chrome.runtime.sendMessage({
-                type: "getIconUrl"
+                type: "getIconUrl",
+                custom: _custom
             }, response => {
                 resolve(response);
             });
@@ -116,6 +128,7 @@ export class TwitterPageManager extends AbstractPageManager {
                   const { icon } = this.createIcon(div, data, dropdownContent, name);
                   icon.style.filter = `grayscale(100%)`;
                 } else {
+                // create icon based on param here
                   const dropdownContent = data[name]
                     ? new CustomWidget(data[name]).div
                     : new Tipping(name, data).div;
@@ -140,7 +153,8 @@ export class TwitterPageManager extends AbstractPageManager {
       icon.style.borderbottom = "2px solid transparent";
       icon.style.borderLeft = "0.3em solid transparent";
       icon.style.borderRight = "0.3em solid transparent";
-      icon.style.background = `url(${this.iconUrl}) no-repeat`;
+      let _iconUrl = data[name] ? this.allIcons[data[name].iconUrl] : this.allIcons.default;
+      icon.style.background = `url(${_iconUrl}) no-repeat`;
       icon.style.backgroundSize = `contain`;
       icon.onmouseover = (e) => e.stopPropagation();
       icon.setAttribute("tabindex", "-1");
@@ -192,7 +206,6 @@ export class TwitterPageManager extends AbstractPageManager {
         dropdown.classList.add("isClicked");
         e.stopPropagation();
       };
-  
       return { icon };
     };
 }

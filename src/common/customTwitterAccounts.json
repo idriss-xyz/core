@@ -1,32 +1,13 @@
 {
     "856446453157376003": {
         "customHeader": "Donate on Gitcoin",
-        "customText": "Help make web3 more usable for everyone by donating even a small amount to our gitcoin grant 💚",
-        "buttonValue": "Donate",
-        "hostURL": "https://gitcoin.co/grants/7233/idriss-a-better-way-to-interact-in-web3?",
-        "recipient": "@Gitcoin",
-        "forwardRecipient": false,
-        "recipientAddress": null,
-        "showNetworkSelection": false,
-        "showValueSelection": false,
-        "showTokenSelection": false,
-        "showInput": false,
-        "showMessageBox": false,
-        "tokenFilter": null,
-        "networkFilter": null
-    },
-    "1470315931142393857": {
-        "customHeader": "Donate to @JediSwap",
-        "customText": "IDriss test funding round",
+        "customText": "Support Public Goods by contributing to the matching pool 💚",
         "buttonValue": "Donate",
         "hostURL": "https://idriss.xyz/send?",
-        "recipient": "@JediSwap",
+        "recipient": "@Gitcoin",
         "forwardRecipient": true,
         "recipientAddress": {
-            "ETH": "0x1",
-            "Polygon": "0x2",
-            "BSC": "0x3",
-            "zkSync": "0x4"
+            "ETH": "0xde21F729137C5Af1b01d73aF1dC21eFfa2B8a0d6"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -34,8 +15,33 @@
         "showInput": false,
         "showMessageBox": false,
         "tokenFilter": {
-            "network": ["ETH", "Polygon", "zkSync"]
+            "network": ["ETH"]
         },
-        "networkFilter": null
+        "networkFilter": null,
+        "iconUrl": "img/customGitcoin.png"
+    },
+    "1416199220978089987": {
+        "customHeader": "Donate to @IDriss_xyz",
+        "customText": "",
+        "buttonValue": "Donate",
+        "hostURL": "https://idriss.xyz/send?",
+        "recipient": "@IDriss_xyz",
+        "forwardRecipient": true,
+        "recipientAddress": {
+            "optimism": "0x5ABca791C22E7f99237fCC04639E094Ffa0cCce9"
+        },
+        "showNetworkSelection": true,
+        "showValueSelection": true,
+        "showTokenSelection": true,
+        "showInput": false,
+        "showMessageBox": false,
+        "tokenFilter": {
+            "network": ["optimism"]
+        },
+        "networkFilter": null,
+        "isGrantee": true,
+        "projectId": 1,
+        "applicationIndex": 2,
+        "iconUrl": "img/customGitcoin.png"
     }
 }
