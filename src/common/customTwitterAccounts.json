@@ -20,18 +20,15 @@
         "networkFilter": null,
         "iconUrl": "img/customGitcoin.png"
     },
-    "1470315931142393857": {
-        "customHeader": "Donate to @JediSwap",
-        "customText": "IDriss test funding round",
+    "1416199220978089987": {
+        "customHeader": "Donate to @IDriss_xyz",
+        "customText": "GR18",
         "buttonValue": "Donate",
         "hostURL": "https://idriss.xyz/send?",
-        "recipient": "@JediSwap",
+        "recipient": "@IDriss_xyz",
         "forwardRecipient": true,
         "recipientAddress": {
-            "ETH": "0x1",
-            "Polygon": "0x2",
-            "BSC": "0x3",
-            "zkSync": "0x4"
+            "optimism": "0x5ABca791C22E7f99237fCC04639E094Ffa0cCce9"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -39,9 +36,12 @@
         "showInput": false,
         "showMessageBox": false,
         "tokenFilter": {
-            "network": ["ETH", "Polygon", "zkSync"]
+            "network": ["optimism"]
         },
         "networkFilter": null,
-        "iconUrl": "default"
+        "isGrantee": true,
+        "projectId": 1,
+        "applicationIndex": 2,
+        "iconUrl": "img/customGitcoin.png"
     }
 }
