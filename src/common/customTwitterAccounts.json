@@ -42,6 +42,7 @@
         "isGrantee": true,
         "projectId": 1,
         "applicationIndex": 2,
+        "roundAddress": "0x",
         "iconUrl": "img/customGitcoin.png"
     }
 }
