@@ -9598,7 +9598,8 @@
         "tokenFilter": {
             "network": [
                 "optimism"
-            ]
+            ],
+            "token": ["ETH"]
         },
         "networkFilter": null,
         "isGrantee": true,
