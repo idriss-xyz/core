@@ -29,6 +29,7 @@ export class CustomWidget {
                     grantAddress: data['grantAddress'],
                     projectId: data['projectId'],
                     applicationIndex: data['applicationIndex'],
+                    roundIndex: data['roundAddress'],
                     message: null,
                     input: null,
                     back:'close'
