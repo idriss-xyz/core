@@ -58,7 +58,7 @@
         "recipient": "@coincashew_",
         "forwardRecipient": true,
         "recipientAddress": {
-            "optimism": "0xCF83d0c22dd54475cC0C52721B0ef07d9756E8C0"
+            "pgn": "0xCF83d0c22dd54475cC0C52721B0ef07d9756E8C0"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
