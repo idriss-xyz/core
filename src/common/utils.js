@@ -51,7 +51,6 @@ let freshCustomTwitter = customTwitterAccounts
 
 async function fetchCustomTwitter() {
   try {
-  // ToDo: change url
     const response = await fetch('https://raw.githubusercontent.com/idriss-crypto/browser-extensions/master/src/common/customTwitterAccounts.json');
     const data = await response.json();
     freshCustomTwitter = data;
