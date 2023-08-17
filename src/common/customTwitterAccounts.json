@@ -1,7 +1,7 @@
 {
     "856446453157376003": {
         "customHeader": "Donate to Gitcoin",
-        "customText": "Support Public Goods by contributing to the matching pool 💚",
+        "customText": "",
         "buttonValue": "Donate",
         "hostURL": "https://idriss.xyz/send?",
         "recipient": "@Gitcoin",
