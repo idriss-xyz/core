@@ -8,7 +8,8 @@
         "forwardRecipient": true,
         "recipientAddress": {
             "ETH": "0xde21F729137C5Af1b01d73aF1dC21eFfa2B8a0d6",
-            "optimism":  "0x0cC7a824B8760b426c597BbF997524DE0cad9988"
+            "optimism":  "0x0cC7a824B8760b426c597BbF997524DE0cad9988",
+            "pgn":  "0x555277050AF4F7A11DB559d5ca1E4C4833a4Dbdd"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -16,7 +17,7 @@
         "showInput": false,
         "showMessageBox": false,
         "tokenFilter": {
-            "network": ["ETH", "optimism"]
+            "network": ["ETH", "optimism", "pgn"]
         },
         "networkFilter": null,
         "isGrantee": false,
