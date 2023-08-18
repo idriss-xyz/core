@@ -4,7 +4,7 @@
 * https://addons.mozilla.org/pl/firefox/addon/idriss-crypto/?utm_source=addons.mozilla.org&utm_medium=referral&utm_content=search
 
 
-## Gitcoin Donations (_coming soon_)
+## Gitcoin Donations
 Donations on Twitter sent to a project's Gitcoin logo are not going through IDriss' contracts, but to these Gitcoin contracts directly:
 
 | Round Name                 | Contract Address                               |
@@ -25,9 +25,8 @@ Donations on Twitter sent to a project's Gitcoin logo are not going through IDri
 Donations on Gitcoin's Twitter profile are routed to the treasury and matching pool addresses on these networks:
 | Network                 | Gitcoin Treasury Address                               |
 |----------------------------|-----------------------------------------------|
-| Ethereum           |    0xde21F729137C5Af1b01d73aF1dC21eFfa2B8a0d6   |
-| Optimism                      | 0x0cC7a824B8760b426c597BbF997524DE0cad9988  |
-| PGN (Public Goods Network) | 0x555277050AF4F7A11DB559d5ca1E4C4833a4Dbdd   |
+| Optimism                      | 0x0cC7a824B8760b426c597BbF997524DE0cad9988 (optimism.grants.gitcoin.eth) |
+| PGN (Public Goods Network) | 0x555277050AF4F7A11DB559d5ca1E4C4833a4Dbdd  (pgn.grants.gitcoin.eth) |
 
 
 ## build
