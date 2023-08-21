@@ -3828,8 +3828,8 @@
         "networkFilter": null,
         "isGrantee": true,
         "projectId": "0x29c7846924f3b461b036f260af5e881ef1cfd3481615d0cf1c46dc4944b2144e",
-        "applicationIndex": 2,
-        "roundAddress": "0xf591E42dfDfE8E62C2085CCaAdFE05F84D89D0c6",
+        "applicationIndex": 1,
+        "roundAddress": "0x10be322DE44389DeD49c0b2b73d8c3A1E3B6D871",
         "iconUrl": "img/customGitcoin.png"
     },
     "1431010028605960192": {
