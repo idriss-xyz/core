@@ -3,7 +3,7 @@
         "customHeader": "Donate to Gitcoin",
         "customText": "",
         "buttonValue": "Donate",
-        "hostURL": "https://idriss.xyz/send?",
+        "hostURL": "https://www.idriss.xyz/send?",
         "recipient": "@Gitcoin",
         "forwardRecipient": true,
         "recipientAddress": {
