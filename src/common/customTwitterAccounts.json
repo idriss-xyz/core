@@ -21,6 +21,6 @@
         },
         "networkFilter": null,
         "isGrantee": false,
-        "iconUrl": "default"
+        "iconUrl": "img/customGitcoin.png"
     }
 }
