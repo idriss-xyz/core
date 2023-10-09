@@ -1,7 +1,7 @@
 ## Links to download:
-* https://chrome.google.com/webstore/detail/idriss-crypto/fghhpjoffbgecjikiipbkpdakfmkbmig
-* https://microsoftedge.microsoft.com/addons/detail/idrisscrypto/jgnmbeoapdbocaajhmfjhldhcpngfiol
-* https://addons.mozilla.org/pl/firefox/addon/idriss-crypto/?utm_source=addons.mozilla.org&utm_medium=referral&utm_content=search
+* [Chrome / Brave](https://chrome.google.com/webstore/detail/idriss-crypto/fghhpjoffbgecjikiipbkpdakfmkbmig)
+* [Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/idrisscrypto/jgnmbeoapdbocaajhmfjhldhcpngfiol)
+* [Mozilla](https://addons.mozilla.org/pl/firefox/addon/idriss-crypto/?utm_source=addons.mozilla.org&utm_medium=referral&utm_content=search)
 
 ## Twitter Tipping
 
@@ -45,7 +45,7 @@ Donations on Gitcoin's Twitter profile are routed to the treasury and matching p
 
 
 ## build
-To compile plugin install [yarn](https://yarnpkg.com/) and then from CLI
+To compile the extension install [yarn](https://yarnpkg.com/) and then from CLI
 
 ```bash
 yarn
