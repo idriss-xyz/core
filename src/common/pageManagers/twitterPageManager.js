@@ -3,7 +3,7 @@ import {RequestLimiter} from "../RequestLimiter";
 import {Tipping} from "../tipping/Tipping";
 import {TippingUnregistered} from '../tipping/tippingUnregistered'
 import {CustomWidget} from "../tipping/customTwitter";
-import {customTwitterAccounts} from "../utils";
+import {getCustomTwitter} from "../utils";
 
 export class TwitterPageManager extends AbstractPageManager {
     static namesResults = {};
@@ -15,6 +15,7 @@ export class TwitterPageManager extends AbstractPageManager {
     async init() {
         this.requestLimiter = new RequestLimiter([{amount: 10, time: 1000}]);
         this.iconUrl = await this.getIcon();
+        let customTwitterAccounts = await getCustomTwitter();
 
         const entriesWithIcons = Object.entries(customTwitterAccounts).filter(([, value]) =>
           value.iconUrl && value.iconUrl !== "" && value.iconUrl !== "default"
