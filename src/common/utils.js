@@ -25,14 +25,15 @@ export const customTwitterAccounts = {
         iconUrl: "default" // if icon is custom, add it to img folder and use "img/iconName.png", otherwise use "default"
     },
    "856446453157376003": {
-        "customHeader": "Donate on Gitcoin",
-        "customText": "Support Public Goods by contributing to the matching pool 💚",
+        "customHeader": "Donate to Gitcoin",
+        "customText": "",
         "buttonValue": "Donate",
-        "hostURL": "https://idriss.xyz/send?",
+        "hostURL": "https://www.idriss.xyz/send?",
         "recipient": "@Gitcoin",
         "forwardRecipient": true,
         "recipientAddress": {
-            "ETH": "0xde21F729137C5Af1b01d73aF1dC21eFfa2B8a0d6"
+            "optimism":  "0x0cC7a824B8760b426c597BbF997524DE0cad9988",
+            "pgn":  "0x555277050AF4F7A11DB559d5ca1E4C4833a4Dbdd"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -40,7 +41,7 @@ export const customTwitterAccounts = {
         "showInput": false,
         "showMessageBox": false,
         "tokenFilter": {
-            "network": ["ETH"]
+            "network": ["optimism", "pgn"]
         },
         "networkFilter": null,
         "iconUrl": "img/customGitcoin.png"
