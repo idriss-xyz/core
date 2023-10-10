@@ -5,7 +5,7 @@
 
 ## Twitter Transfers
 
-Sending a transfer through an IDriss badge on Twitter creates a contract call with IDriss' smart contracts. They are live on several networks:
+Sending a transfer through a green IDriss badge on Twitter creates a contract call with IDriss' smart contracts, which are live on several networks:
 
 | Network                 | Contract Address                               |
 |----------------------------|-----------------------------------------------|
@@ -18,6 +18,14 @@ Sending a transfer through an IDriss badge on Twitter creates a contract call wi
 | PGN      | 0x43f532d678b6a1587be989a50526f89428f68315   |
 
 Additionally, sending through a grey badge interacts with 0xf333EDE8D49dD100F02c946809C9F5D9867D10C0 on Polygon.
+
+## Donations to Public Goods
+
+Donations in the meta-infinite PGF round (red badges) are routed through the contract on Optimism: 0x43f532d678b6a1587be989a50526f89428f68315.
+
+List of grantees and their associated wallet addresses and Twitter names can be found [here](https://github.com/idriss-crypto/browser-extensions/blob/master/src/common/customTwitterAccounts.json).
+
+If your project is not on the list or you'd like to change a wallet address/Twitter username, please DM us on Twitter from your official project account or send us an email to hello@idriss.xyz from your official domain.
 
 ## Gitcoin GG18 Donations
 Donations on Twitter sent to a project's Gitcoin logo are not going through IDriss' contracts, but to these Gitcoin contracts directly:
