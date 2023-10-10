@@ -1,6 +1,5 @@
 import {DefaultPageManager} from "./defaultPageManager";
 import {StandalonePageManager} from "./standalonePageManager";
-import {FtxPageManager} from "./FtxPageManager";
 import {HuobiPageManager} from "./HuobiPageManager";
 import {PoapPageManager} from "./PoapPageManager";
 import {TwitterPageManager} from "./twitterPageManager";
@@ -11,7 +10,6 @@ import {LineaExplorerPageManager} from "./lineaExplorerPageManager";
 
 const specificDomainList = {
     "app.poap.xyz": PoapPageManager,
-    "ftx.com": FtxPageManager,
     "huobi.com": HuobiPageManager,
     "twitter.com": TwitterPageManager,
     "coinbase.com": CoinbasePageManager,
@@ -21,6 +19,7 @@ const specificDomainList = {
     "ftmscan.com": EtherscanPageManager,
     "arbiscan.io": EtherscanPageManager,
     "snowtrace.io": EtherscanPageManager,
+    "basescan.org": EtherscanPageManager,
     "optimistic.etherscan.io": EtherscanPageManager,
     "moonriver.moonscan.io": EtherscanPageManager,
     "moonscan.io": EtherscanPageManager,
