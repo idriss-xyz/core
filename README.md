@@ -1,11 +1,11 @@
-## Links to download:
+## Download
 * [Chrome / Brave](https://chrome.google.com/webstore/detail/idriss-crypto/fghhpjoffbgecjikiipbkpdakfmkbmig)
 * [Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/idrisscrypto/jgnmbeoapdbocaajhmfjhldhcpngfiol)
 * [Mozilla](https://addons.mozilla.org/pl/firefox/addon/idriss-crypto/?utm_source=addons.mozilla.org&utm_medium=referral&utm_content=search)
 
-## Twitter Tipping
+## Twitter Transfers
 
-Sending a transaction through a green IDriss badge on Twitter creates a contract call with IDriss' tipping contracts. They are live on several networks:
+Sending a transfer through an IDriss badge on Twitter creates a contract call with IDriss' smart contracts. They are live on several networks:
 
 | Network                 | Contract Address                               |
 |----------------------------|-----------------------------------------------|
@@ -19,7 +19,7 @@ Sending a transaction through a green IDriss badge on Twitter creates a contract
 
 Additionally, sending through a grey badge interacts with 0xf333EDE8D49dD100F02c946809C9F5D9867D10C0 on Polygon.
 
-## Gitcoin Donations
+## Gitcoin GG18 Donations
 Donations on Twitter sent to a project's Gitcoin logo are not going through IDriss' contracts, but to these Gitcoin contracts directly:
 
 | Round Name                 | Contract Address                               |
@@ -44,7 +44,7 @@ Donations on Gitcoin's Twitter profile are routed to the treasury and matching p
 | PGN (Public Goods Network) | 0x555277050AF4F7A11DB559d5ca1E4C4833a4Dbdd  (pgn.grants.gitcoin.eth) |
 
 
-## build
+## Build
 To compile the extension install [yarn](https://yarnpkg.com/) and then from CLI
 
 ```bash
