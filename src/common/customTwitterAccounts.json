@@ -7327,7 +7327,7 @@
         "recipient": "@herdaolatam",
         "forwardRecipient": true,
         "recipientAddress": {
-            "optimism": "0x5d36a202687fD6Bd0f670545334bF0B4827Cc1E2"
+            "optimism": "0x2948A68525287fB8252032a300D50d3fd63d9C22"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
