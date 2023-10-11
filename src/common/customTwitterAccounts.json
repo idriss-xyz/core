@@ -384,14 +384,14 @@
         "iconUrl": "img/icon148_red.png"
     },
     "1518774419224768514": {
-        "customHeader": "Donate to @0xynamu",
+        "customHeader": "Donate to @0xyNaMu ",
         "customText": "",
         "buttonValue": "Donate",
         "hostURL": "https://www.idriss.xyz/send?",
-        "recipient": "@0xynamu",
+        "recipient": "@0xyNaMu ",
         "forwardRecipient": true,
         "recipientAddress": {
-            "optimism": "0x14abF805E218129dFdFAC33Fd16355C594f9FBAd"
+            "optimism": "0x5d36a202687fD6Bd0f670545334bF0B4827Cc1E2"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
