@@ -11,6 +11,7 @@ import {LineaExplorerPageManager} from "./lineaExplorerPageManager";
 const specificDomainList = {
     "app.poap.xyz": PoapPageManager,
     "huobi.com": HuobiPageManager,
+    "htx.com": HuobiPageManager,
     "twitter.com": TwitterPageManager,
     "coinbase.com": CoinbasePageManager,
     "etherscan.io": EtherscanPageManager,
@@ -39,22 +40,15 @@ const defaultDomainList = [
     "bithumb.com",
     "bitstamp.net",
     "bitflyer.com",
-    "poloniex.com",
     "gemini.com",
-    "coinone.co.kr",
     "bybit.com",
     "bittrex.com",
-    "okex.com",
-    "liquid.com",
+    "okx.com",
     "coincheck.com",
     "crypto.com",
-    "zaif.jp",
-    "ascendex.com",
-    "tokocrypto.com",
     "poap.xyz",
-    "guarda.co",
-    "app.wirexapp.com"
-];
+    "guarda.co"
+  ];
 
 export async function pageManagerFactory(document, url) {
     console.log('pageManagerFactory')
