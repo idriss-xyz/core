@@ -33,6 +33,7 @@ class AdressesResolverClass extends IdrissCrypto {
         }
         let promises = [];
         for (let identifier of identifiers) {
+        // use separate simpleResolve call for twitter page manager `apiAddressesRequestBulk`
             promises.push(this.simpleResolve(identifier, coin, network, twitterIds[identifier] ?? null))
         }
         let ret = {};
@@ -59,7 +60,7 @@ class AdressesResolverClass extends IdrissCrypto {
         return hashHex;
     }
 
-    // call this function also for twitter plugin functionality?
+    // create a separate copy-paste call for extension window context and twitter page manager `apiAddressesRequestBulk`
     async simpleResolve(identifier, coin = "", network = "", twitterId) {
         console.log('resolveStart', identifier);
         let twitterID;
@@ -82,7 +83,6 @@ class AdressesResolverClass extends IdrissCrypto {
             if (customTwitterAccounts[identifier]) {
                 let foundMatches = {}
                 foundMatches[identifierT] = customTwitterAccounts[identifier]
-                console.log({identifierT, identifier, foundMatches})
                 return {"input": identifierT, "result": foundMatches, "twitterID": identifier}
             }
         }
