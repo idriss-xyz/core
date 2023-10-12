@@ -41,7 +41,7 @@ class AddressResolverClass extends IdrissCrypto {
             try {
                 ret[(await promise).input] = await promise;
             } catch (ex) {
-                ret[identifier] = {"input": identifier, "result": {}, "twitterID": null}
+
             }
         }
         return ret;
@@ -78,13 +78,6 @@ class AddressResolverClass extends IdrissCrypto {
                                  throw new Error("Twitter handle not found.")
             }
             twitterID = true;
-            let customTwitterAccounts = getCustomTwitter();
-            // custom dropdowns on twitter
-            if (customTwitterAccounts[identifier]) {
-                let foundMatches = {}
-                foundMatches[identifierT] = customTwitterAccounts[identifier]
-                return {"input": identifierT, "result": foundMatches, "twitterID": identifier}
-            }
         }
 
         let foundMatchesPromises = {}
