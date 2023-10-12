@@ -1,13 +1,13 @@
 import {TwitterIdResolver} from "./TwitterIdResolver";
 
-import {lowerFirst, getCustomTwitter, regM, regPh, regT} from "../utils";
+import {lowerFirst, getCustomTwitter, regM, regPh, regT, priorityTags} from "../utils";
 const {IdrissCrypto}= require("idriss-crypto/cjs/browser");
 
 if (globalThis.window != globalThis) {
     globalThis.window = globalThis;
 }
 
-class AdressesResolverClass extends IdrissCrypto {
+class AddressResolverClass extends IdrissCrypto {
     constructor() {
         super("https://polygon-rpc.com/");
         this.contract = this.generateIDrissRegistryContract();
@@ -34,14 +34,14 @@ class AdressesResolverClass extends IdrissCrypto {
         let promises = [];
         for (let identifier of identifiers) {
         // use separate simpleResolve call for twitter page manager `apiAddressesRequestBulk`
-            promises.push(this.simpleResolve(identifier, coin, network, twitterIds[identifier] ?? null))
+            promises.push(this.simpleResolveTwitter(identifier, coin, network, twitterIds[identifier] ?? null))
         }
         let ret = {};
         for (let promise of promises) {
             try {
                 ret[(await promise).input] = await promise;
             } catch (ex) {
-
+                ret[identifier] = {"input": identifier, "result": {}, "twitterID": null}
             }
         }
         return ret;
@@ -122,12 +122,95 @@ class AdressesResolverClass extends IdrissCrypto {
         // catch block if coin/network (combination) is invalid/not found
     }
 
+    async simpleResolveTwitter(identifier, coin = "", network = "", twitterId) {
+        console.log('resolveStart for Twitter', identifier);
+        let twitterID;
+        let identifierT;
+        identifier = lowerFirst(identifier).replace(" ", "");
+        if (identifier.match(regPh)) {
+            identifier = this.convertPhone(identifier)
+        } else if (!identifier.match(regM) && !identifier.match(regT)) {
+            throw new Error("Not a valid input. Input must start with valid phone number, email or @twitter handle.")
+        }
+        if (identifier.match(regT)) {
+            identifierT = identifier;
+            identifier = twitterId;
+            if (!identifier || identifier == "Not found") {
+                                 throw new Error("Twitter handle not found.")
+            }
+            twitterID = true;
+            let customTwitterAccounts = getCustomTwitter();
+            // custom dropdowns on twitter
+            if (customTwitterAccounts[identifier]) {
+                let foundMatches = {}
+                foundMatches[identifierT] = customTwitterAccounts[identifier]
+                return {"input": identifierT, "result": foundMatches, "twitterID": identifier}
+            }
+        }
+
+        // adjust batch resolver size accordingly
+        const batchSize = 3;
+        let digestedMessages = [];
+
+        for (let [network_, coins] of Object.entries(IdrissCrypto.getWalletTags())) {
+            if (network && network_ != network) continue;
+            for (let [coin_, tags] of Object.entries(coins)) {
+                if (coin && coin_ != coin) continue;
+                for (let [tag_, tag_key] of Object.entries(tags)) {
+                    if (tag_key) {
+                        const digested = this.digestMessage(identifier + tag_key);
+                        digestedMessages.push({ tag: tag_, digested });
+                    }
+                }
+            }
+        }
+
+        console.log('digested strings created', identifier, digestedMessages);
+        ///awaiting on the end for better performance
+        let foundMatches = {}
+        for (let i = 0; i < digestedMessages.length; i += batchSize) {
+            const batch = digestedMessages.slice(i, i + batchSize);
+
+            const batchPromises = batch.map(({ tag, digested }) => ({
+              tag,
+              promise: this.makeApiCall(digested).then(address => address),
+            }));
+
+            for (let { tag, promise } of batchPromises) {
+                try {
+                    const address = await promise;
+                    if (address) {
+                        foundMatches[tag] = address;
+                    }
+                } catch (e) {
+                    console.warn(e);
+                }
+            }
+            console.log({identifierT, identifier, foundMatches})
+            if (Object.keys(foundMatches).length > 0) {
+                // return twitter id when twitter id was searched for
+                if (twitterID) {
+                    return {"input": identifierT, "result": foundMatches, "twitterID": identifier}
+                } else {
+                    return {"input": identifier, "result": foundMatches}
+                }
+            }
+        }
+        if (twitterID) {
+            return {"input": identifierT, "result": {}, "twitterID": identifier}
+        } else {
+            return {"input": identifier, "result": {}}
+        }
+    }
+
     async makeApiCall(digested) {
         for (let i = 0; i < 10; i++) {
             try {
                 return await (await this.contract).methods.getIDriss(digested).call()
             } catch (e) {
-                if (e.message.includes('Rate limit exceeded')) {
+                console.log(e)
+                if (e.code == 429) {
+                    console.log("Rate limits, trying again")
                     await new Promise(r => setTimeout(r, Math.random() * 2000));
                 } else {
                     throw e;
@@ -141,4 +224,4 @@ class AdressesResolverClass extends IdrissCrypto {
     }
 }
 
-export const AdressesResolver = new AdressesResolverClass();
+export const AddressResolver = new AddressResolverClass();

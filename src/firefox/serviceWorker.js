@@ -1,16 +1,16 @@
-import {AdressesResolver} from "../common/resolvers/AdressesResolver";
+import {AddressesResolver} from "../common/resolvers/AddressResolver";
 
 
 browser.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
         if (request.type === 'apiAddressesRequest') {
-            AdressesResolver.get(request.value).then(x => sendResponse(x)).catch(e => sendResponse({}));
+            AddressResolver.get(request.value).then(x => sendResponse(x)).catch(e => sendResponse({}));
             return true;
         } else if (request.type === 'apiAddressesRequestBulk') {
-            AdressesResolver.getMany(request.value, '', request.network??'').then(x => sendResponse(x)).catch(e => sendResponse({}));
+            AddressResolver.getMany(request.value, '', request.network??'').then(x => sendResponse(x)).catch(e => sendResponse({}));
             return true;
         } else if (request.type === 'reverseResolveRequest') {
-            AdressesResolver.getManyReverse(request.value).then(x => sendResponse(x)).catch(e => sendResponse({}));
+            AddressResolver.getManyReverse(request.value).then(x => sendResponse(x)).catch(e => sendResponse({}));
             return true;
         } else if (request.type === 'getIconUrl') {
             fetch(chrome.runtime.getURL('img/icon148.png'))
