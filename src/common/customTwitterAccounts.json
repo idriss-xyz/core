@@ -6943,7 +6943,7 @@
         "recipient": "@glodollar",
         "forwardRecipient": true,
         "recipientAddress": {
-            "optimism": "0x85bDCb8c603FDe2a36624A59225D05AEe456f958"
+            "optimism": "0x1bbfC95B826693BF17665f36a66ac9c389b7E581"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
