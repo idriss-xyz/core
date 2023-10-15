@@ -41,7 +41,7 @@ class AddressResolverClass extends IdrissCrypto {
             try {
                 ret[(await promise).input] = await promise;
             } catch (ex) {
-                ret[identifier] = {"input": identifier, "result": {}, "twitterID": null}
+//                ret[identifier] = {"input": identifier, "result": {}, "twitterID": null}
             }
         }
         return ret;
@@ -62,7 +62,7 @@ class AddressResolverClass extends IdrissCrypto {
 
     // create a separate copy-paste call for extension window context and twitter page manager `apiAddressesRequestBulk`
     async simpleResolve(identifier, coin = "", network = "", twitterId) {
-        console.log("resolveStart", identifier);
+        console.log("resolveStart", identifier, twitterId);
         let twitterID;
         let identifierT;
         identifier = lowerFirst(identifier).replace(" ", "");
@@ -145,7 +145,7 @@ class AddressResolverClass extends IdrissCrypto {
         const batchSize = 3;
         let digestedMessages = [];
 
-        for (let [network_, coins] of Object.entries(IdrissCrypto.getWalletTags())) {
+        for (let [network_, coins] of Object.entries(priorityTags)) {
             if (network && network_ != network) continue;
             for (let [coin_, tags] of Object.entries(coins)) {
                 if (coin && coin_ != coin) continue;
@@ -179,7 +179,6 @@ class AddressResolverClass extends IdrissCrypto {
                     console.warn(e);
                 }
             }
-            console.log({ identifierT, identifier, foundMatches });
             if (Object.keys(foundMatches).length > 0) {
                 // return twitter id when twitter id was searched for
                 if (twitterID) {
