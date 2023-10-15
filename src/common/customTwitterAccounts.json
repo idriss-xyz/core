@@ -6943,7 +6943,7 @@
         "recipient": "@glodollar",
         "forwardRecipient": true,
         "recipientAddress": {
-            "optimism": "0x85bDCb8c603FDe2a36624A59225D05AEe456f958"
+            "optimism": "0x1bbfC95B826693BF17665f36a66ac9c389b7E581"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -16824,11 +16824,11 @@
         "iconUrl": "img/icon148_red.png"
     },
     "864162152": {
-        "customHeader": "Donate to @zen_bacon?lang=en",
+        "customHeader": "Donate to @zen_bacon",
         "customText": "",
         "buttonValue": "Donate",
         "hostURL": "https://www.idriss.xyz/send?",
-        "recipient": "@zen_bacon?lang=en",
+        "recipient": "@zen_bacon",
         "forwardRecipient": true,
         "recipientAddress": {
             "optimism": "0x4B7C0Da1C299Ce824f55A0190Efb13663442FA2c"
