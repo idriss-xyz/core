@@ -9527,30 +9527,6 @@
         "isGrantee": false,
         "iconUrl": "img/icon148_red.png"
     },
-    "1280901529004920832": {
-        "customHeader": "Donate to @MatheusPagani77",
-        "customText": "",
-        "buttonValue": "Donate",
-        "hostURL": "https://www.idriss.xyz/send?",
-        "recipient": "@MatheusPagani77",
-        "forwardRecipient": true,
-        "recipientAddress": {
-            "optimism": "0x33a8Cdd353Fb8842DCea6163FA76ED10e81EDcF1"
-        },
-        "showNetworkSelection": true,
-        "showValueSelection": true,
-        "showTokenSelection": true,
-        "showInput": false,
-        "showMessageBox": false,
-        "tokenFilter": {
-            "network": [
-                "optimism"
-            ]
-        },
-        "networkFilter": null,
-        "isGrantee": false,
-        "iconUrl": "img/icon148_red.png"
-    },
     "271612547": {
         "customHeader": "Donate to @maxsemenchuk",
         "customText": "",
@@ -15751,7 +15727,55 @@
         "recipient": "@ventureminer",
         "forwardRecipient": true,
         "recipientAddress": {
-            "optimism": "0xfE5032b9183C2A498B7172a6f512726570482B66"
+            "optimism": "0x33a8Cdd353Fb8842DCea6163FA76ED10e81EDcF1"
+        },
+        "showNetworkSelection": true,
+        "showValueSelection": true,
+        "showTokenSelection": true,
+        "showInput": false,
+        "showMessageBox": false,
+        "tokenFilter": {
+            "network": [
+                "optimism"
+            ]
+        },
+        "networkFilter": null,
+        "isGrantee": false,
+        "iconUrl": "img/icon148_red.png"
+    },
+    "1605667603": {
+        "customHeader": "Donate to @prophetrewardfo",
+        "customText": "",
+        "buttonValue": "Donate",
+        "hostURL": "https://www.idriss.xyz/send?",
+        "recipient": "@prophetrewardfo",
+        "forwardRecipient": true,
+        "recipientAddress": {
+            "optimism": "0x95729bb493A6a9Ae2763815aFc9aE950E94d63e7"
+        },
+        "showNetworkSelection": true,
+        "showValueSelection": true,
+        "showTokenSelection": true,
+        "showInput": false,
+        "showMessageBox": false,
+        "tokenFilter": {
+            "network": [
+                "optimism"
+            ]
+        },
+        "networkFilter": null,
+        "isGrantee": false,
+        "iconUrl": "img/icon148_red.png"
+    },
+    "1224480857588674563": {
+        "customHeader": "Donate to @DreamVillageGh",
+        "customText": "",
+        "buttonValue": "Donate",
+        "hostURL": "https://www.idriss.xyz/send?",
+        "recipient": "@DreamVillageGh",
+        "forwardRecipient": true,
+        "recipientAddress": {
+            "optimism": "0x756EC4d5eC7282d3ec89066FE701114d70811d5d"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
