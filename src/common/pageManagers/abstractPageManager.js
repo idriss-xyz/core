@@ -114,7 +114,7 @@ export class AbstractPageManager {
 
     async defaultReverseResolve(x, element) {
         if (element.classList.contains('idrissReverseResolved')) return;
-        element.title = 'Resolved by IDriss from ' + element.textContent;
+        element.title = 'Resolved by IDriss from ' + element.textContent.trim();
         element.textContent = x;
         element.classList.add('idrissReverseResolved');
         if (x[0] == '@') {

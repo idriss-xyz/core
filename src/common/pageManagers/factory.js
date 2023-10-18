@@ -7,6 +7,7 @@ import {CoinbasePageManager} from "./CoinbasePageManager";
 import {EtherscanPageManager} from "./etherscanPageManager";
 import {ZKScanPageManager} from "./zkSyncScanPageManager";
 import {LineaExplorerPageManager} from "./lineaExplorerPageManager";
+import {MantleExplorerPageManager} from "./mantleExplorerPageManager";
 
 const specificDomainList = {
     "app.poap.xyz": PoapPageManager,
@@ -28,6 +29,7 @@ const specificDomainList = {
     "goerli.lineascan.build": EtherscanPageManager,
     "explorer.goerli.linea.build": LineaExplorerPageManager,
     "explorer.linea.build": LineaExplorerPageManager,
+    "explorer.mantle.xyz": MantleExplorerPageManager,
     "explorer.zksync.io": ZKScanPageManager
 }
 const defaultDomainList = [
