@@ -8863,7 +8863,7 @@
         "recipient": "@l2beat",
         "forwardRecipient": true,
         "recipientAddress": {
-            "optimism": "0xa142aB9eab9264807A41F0E5cbDab877D204E233"
+            "optimism": "0x41626BA92c0C2a1aD38fC83920300434082B1870"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
