@@ -61,3 +61,8 @@ yarn buildOnce
 ```
 
 Results will appear in buildResults directory: ./buildResults/firefox and ./buildResults/chromium
+
+## License
+
+This project is licensed under [GPLv3](https://github.com/idriss-crypto/contracts/blob/main/LICENSE)
+
