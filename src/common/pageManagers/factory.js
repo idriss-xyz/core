@@ -21,6 +21,7 @@ const specificDomainList = {
     "arbiscan.io": EtherscanPageManager,
     "snowtrace.io": EtherscanPageManager,
     "basescan.org": EtherscanPageManager,
+    "scrollscan.org": EtherscanPageManager,
     "optimistic.etherscan.io": EtherscanPageManager,
     "moonriver.moonscan.io": EtherscanPageManager,
     "moonscan.io": EtherscanPageManager,
