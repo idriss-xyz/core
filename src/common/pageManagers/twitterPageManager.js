@@ -174,6 +174,7 @@ export class TwitterPageManager extends AbstractPageManager {
         this.document.body.append(dropdown);
         let rect = icon.getBoundingClientRect();
         dropdown.classList.add("idrissTwitterDropdown");
+        dropdown.style.all = "initial";
         dropdown.style.position = "absolute";
         dropdown.style.left = scrollX + rect.left + "px";
         dropdown.style.top = scrollY + rect.top + rect.height + "px";
