@@ -23,6 +23,28 @@
         "isGrantee": false,
         "iconUrl": "img/icon148_red.png"
     },
+    "1562619196415942656": {
+        "customHeader": "Donate to @IDriss_xyz_Bot",
+        "customText": "",
+        "buttonValue": "Donate",
+        "hostURL": "https://www.idriss.xyz/send?",
+        "recipient": "@IDriss_xyz_Bot",
+        "forwardRecipient": true,
+        "recipientAddress": {
+            "pgn":  "0x5abca791c22e7f99237fcc04639e094ffa0ccce9"
+        },
+        "showNetworkSelection": true,
+        "showValueSelection": true,
+        "showTokenSelection": true,
+        "showInput": false,
+        "showMessageBox": false,
+        "tokenFilter": {
+            "network": ["pgn"]
+        },
+        "networkFilter": null,
+        "isGrantee": false,
+        "iconUrl": "default"
+    },
     "1286844247388364800": {
         "customHeader": "Donate to @0x_salon",
         "customText": "",
