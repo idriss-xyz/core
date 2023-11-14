@@ -31,7 +31,7 @@
         "recipient": "@IDriss_xyz_Bot",
         "forwardRecipient": true,
         "recipientAddress": {
-            "arbitrum":  "0x555277050AF4F7A11DB559d5ca1E4C4833a4Dbdd"
+            "pgn":  "0x5abca791c22e7f99237fcc04639e094ffa0ccce9"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -39,12 +39,11 @@
         "showInput": false,
         "showMessageBox": false,
         "tokenFilter": {
-            "network": ["arbitrum"]
+            "network": ["pgn"]
         },
         "networkFilter": null,
-        "isGrantee": true,
-        "iconUrl": "img/customGitcoin.png"
-
+        "isGrantee": false,
+        "iconUrl": "default"
     },
     "1286844247388364800": {
         "customHeader": "Donate to @0x_salon",
