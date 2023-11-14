@@ -31,7 +31,7 @@
         "recipient": "@IDriss_xyz_Bot",
         "forwardRecipient": true,
         "recipientAddress": {
-            "pgn":  "0x5abca791c22e7f99237fcc04639e094ffa0ccce9"
+            "arbitrum":  "0x555277050AF4F7A11DB559d5ca1E4C4833a4Dbdd"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -39,11 +39,12 @@
         "showInput": false,
         "showMessageBox": false,
         "tokenFilter": {
-            "network": ["pgn"]
+            "network": ["arbitrum"]
         },
         "networkFilter": null,
-        "isGrantee": false,
-        "iconUrl": "default"
+        "isGrantee": true,
+        "iconUrl": "img/customGitcoin.png"
+
     },
     "1286844247388364800": {
         "customHeader": "Donate to @0x_salon",
@@ -10653,30 +10654,6 @@
         "isGrantee": false,
         "iconUrl": "img/icon148_red.png"
     },
-    "1567618801000390656": {
-        "customHeader": "Donate to @pblcasmbly",
-        "customText": "",
-        "buttonValue": "Donate",
-        "hostURL": "https://www.idriss.xyz/send?",
-        "recipient": "@pblcasmbly",
-        "forwardRecipient": true,
-        "recipientAddress": {
-            "optimism": "0xB00A93fF31217E49c3674e05b525f239a85bb78f"
-        },
-        "showNetworkSelection": true,
-        "showValueSelection": true,
-        "showTokenSelection": true,
-        "showInput": false,
-        "showMessageBox": false,
-        "tokenFilter": {
-            "network": [
-                "optimism"
-            ]
-        },
-        "networkFilter": null,
-        "isGrantee": false,
-        "iconUrl": "img/icon148_red.png"
-    },
     "895403549798137856": {
         "customHeader": "Donate to @nuel_ikwuoma",
         "customText": "",
@@ -15846,30 +15823,6 @@
         "forwardRecipient": true,
         "recipientAddress": {
             "optimism": "0x796119C2751c371f984B9225E896BbE1fdAfFa6e"
-        },
-        "showNetworkSelection": true,
-        "showValueSelection": true,
-        "showTokenSelection": true,
-        "showInput": false,
-        "showMessageBox": false,
-        "tokenFilter": {
-            "network": [
-                "optimism"
-            ]
-        },
-        "networkFilter": null,
-        "isGrantee": false,
-        "iconUrl": "img/icon148_red.png"
-    },
-    "1618135111173562369": {
-        "customHeader": "Donate to @venturetothex",
-        "customText": "",
-        "buttonValue": "Donate",
-        "hostURL": "https://www.idriss.xyz/send?",
-        "recipient": "@venturetothex",
-        "forwardRecipient": true,
-        "recipientAddress": {
-            "optimism": "0x13C8F410A583c357F1f702bd1dAF783E8C9Cfb5d"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
