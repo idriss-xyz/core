@@ -3499,7 +3499,7 @@
         "recipient": "@commonsstack",
         "forwardRecipient": true,
         "recipientAddress": {
-            "pgn": "0x8110d1D04ac316fdCACe8f24fD60C86b810AB15A"
+            "arbitrum": "0x8110d1D04ac316fdCACe8f24fD60C86b810AB15A"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -3508,7 +3508,7 @@
         "showMessageBox": false,
         "tokenFilter": {
             "network": [
-                "pgn"
+                "arbitrum"
             ],
             "token": [
                 "ETH"
@@ -3516,9 +3516,9 @@
         },
         "networkFilter": null,
         "isGrantee": true,
-        "projectId": "0x545a2e6892237e3eff0f58142e0e215f7d58a6c41f59c88c3b1aedd1099b4a8a",
-        "applicationIndex": 83,
-        "roundAddress": "0xd4CC0dd193c7DC1d665AE244cE12D7FAB337a008",
+        "projectId": "0x6f0dada1385d326e6e4076f304dad4db7cd0e2f383a32d13b7c6c29f6614afd9",
+        "applicationIndex": 5,
+        "roundAddress": "0x0F0b9d9F72C1660905C57864e79CeB409ADa0C9e",
         "iconUrl": "img/customGitcoin.png"
     },
     "1683123482278633473": {
@@ -7483,7 +7483,8 @@
         "recipient": "@gitcoin",
         "forwardRecipient": true,
         "recipientAddress": {
-            "optimism": "0x0cC7a824B8760b426c597BbF997524DE0cad9988"
+            "optimism": "0x0cC7a824B8760b426c597BbF997524DE0cad9988",
+            "pgn": "0x555277050AF4F7A11DB559d5ca1E4C4833a4Dbdd"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -7492,7 +7493,8 @@
         "showMessageBox": false,
         "tokenFilter": {
             "network": [
-                "optimism"
+                "optimism",
+                "pgn"
             ]
         },
         "networkFilter": null,
@@ -24777,6 +24779,36 @@
         "projectId": "0xbecb2d4f81a360d47b4354f84195d8c57cc1db1da364bd18654b22a2513974d2",
         "applicationIndex": 21,
         "roundAddress": "0x0F0b9d9F72C1660905C57864e79CeB409ADa0C9e",
+        "iconUrl": "img/customGitcoin.png"
+    },
+    "1550126922528878592": {
+        "customHeader": "Donate to @seek_web3",
+        "customText": "",
+        "buttonValue": "Donate",
+        "hostURL": "https://www.idriss.xyz/send?",
+        "recipient": "@seek_web3",
+        "forwardRecipient": true,
+        "recipientAddress": {
+            "optimism": "0xe3b4ECd2EC88026F84cF17fef8bABfD9184C94F0"
+        },
+        "showNetworkSelection": true,
+        "showValueSelection": true,
+        "showTokenSelection": true,
+        "showInput": false,
+        "showMessageBox": false,
+        "tokenFilter": {
+            "network": [
+                "optimism"
+            ],
+            "token": [
+                "ETH"
+            ]
+        },
+        "networkFilter": null,
+        "isGrantee": true,
+        "projectId": "0xe6cdce65c4d5e328ad823cceb103dbf2ea2228ada07c1dd9440c0aa24ee4f48d",
+        "applicationIndex": 19,
+        "roundAddress": "0x6726FE9C89fb04eAEf388C11cF55Be6AA0a62fb9",
         "iconUrl": "img/customGitcoin.png"
     }
 }
