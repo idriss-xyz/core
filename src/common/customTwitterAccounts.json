@@ -31,7 +31,7 @@
         "recipient": "@IDriss_xyz_Bot",
         "forwardRecipient": true,
         "recipientAddress": {
-            "arbitrum": "0x555277050AF4F7A11DB559d5ca1E4C4833a4Dbdd"
+            "Polygon": "0x555277050AF4F7A11DB559d5ca1E4C4833a4Dbdd"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -40,7 +40,7 @@
         "showMessageBox": false,
         "tokenFilter": {
             "network": [
-                "arbitrum"
+                "Polygon"
             ]
         },
         "networkFilter": null,
@@ -1906,7 +1906,7 @@
         "recipient": "@beaconcha_in",
         "forwardRecipient": true,
         "recipientAddress": {
-            "polygon": "0x9d4E94dB689Bc471E45b0a18B7BdA36FcCeC9c3b"
+            "Polygon": "0x9d4E94dB689Bc471E45b0a18B7BdA36FcCeC9c3b"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -1915,10 +1915,10 @@
         "showMessageBox": false,
         "tokenFilter": {
             "network": [
-                "polygon"
+                "Polygon"
             ],
             "token": [
-                "ETH"
+                "MATIC"
             ]
         },
         "networkFilter": null,
@@ -2374,7 +2374,7 @@
         "recipient": "@blockscoutcom",
         "forwardRecipient": true,
         "recipientAddress": {
-            "polygon": "0x242ba6d68FfEb4a098B591B32d370F973FF882B7"
+            "Polygon": "0x242ba6d68FfEb4a098B591B32d370F973FF882B7"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -2383,10 +2383,10 @@
         "showMessageBox": false,
         "tokenFilter": {
             "network": [
-                "polygon"
+                "Polygon"
             ],
             "token": [
-                "ETH"
+                "MATIC"
             ]
         },
         "networkFilter": null,
@@ -2818,7 +2818,7 @@
         "recipient": "@candidelabs",
         "forwardRecipient": true,
         "recipientAddress": {
-            "polygon": "0xc52FbF3769056cA421656b9C98b14A453A251a28"
+            "Polygon": "0xc52FbF3769056cA421656b9C98b14A453A251a28"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -2827,10 +2827,10 @@
         "showMessageBox": false,
         "tokenFilter": {
             "network": [
-                "polygon"
+                "Polygon"
             ],
             "token": [
-                "ETH"
+                "MATIC"
             ]
         },
         "networkFilter": null,
@@ -3580,7 +3580,7 @@
         "recipient": "@connormcmk",
         "forwardRecipient": true,
         "recipientAddress": {
-            "optimism": "0x4f8c531df3d97c6Cd437aC8DfE756975445D1161"
+            "arbitrum": "0x4f8c531df3d97c6Cd437aC8DfE756975445D1161"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -3589,12 +3589,18 @@
         "showMessageBox": false,
         "tokenFilter": {
             "network": [
-                "optimism"
+                "arbitrum"
+            ],
+            "token": [
+                "ETH"
             ]
         },
         "networkFilter": null,
-        "isGrantee": false,
-        "iconUrl": "img/icon148_red.png"
+        "isGrantee": true,
+        "projectId": "0xf1f4942df7878a8626d441ae1b9e40f9dd6e67b66bd88138c9285451d871412f",
+        "applicationIndex": 14,
+        "roundAddress": "0x0F0b9d9F72C1660905C57864e79CeB409ADa0C9e",
+        "iconUrl": "img/customGitcoin.png"
     },
     "1506946821616246788": {
         "customHeader": "Donate to @cosmos4humanity",
@@ -4300,7 +4306,7 @@
         "recipient": "@dappnode",
         "forwardRecipient": true,
         "recipientAddress": {
-            "polygon": "0x2A5b95c0770BD74B66D7214E60ea6619FD233687"
+            "Polygon": "0x2A5b95c0770BD74B66D7214E60ea6619FD233687"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -4309,10 +4315,10 @@
         "showMessageBox": false,
         "tokenFilter": {
             "network": [
-                "polygon"
+                "Polygon"
             ],
             "token": [
-                "ETH"
+                "MATIC"
             ]
         },
         "networkFilter": null,
@@ -6334,7 +6340,7 @@
         "recipient": "@EthereumOnARM",
         "forwardRecipient": true,
         "recipientAddress": {
-            "polygon": "0x1bCDB2226ee2b023e3886Dd2027c4eE95457699f"
+            "Polygon": "0x1bCDB2226ee2b023e3886Dd2027c4eE95457699f"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -6343,10 +6349,10 @@
         "showMessageBox": false,
         "tokenFilter": {
             "network": [
-                "polygon"
+                "Polygon"
             ],
             "token": [
-                "ETH"
+                "MATIC"
             ]
         },
         "networkFilter": null,
@@ -6658,7 +6664,7 @@
         "recipient": "@ethStaker",
         "forwardRecipient": true,
         "recipientAddress": {
-            "polygon": "0xD165df4296C85e780509fa1eace0150d945d49Fd"
+            "Polygon": "0xD165df4296C85e780509fa1eace0150d945d49Fd"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -6667,10 +6673,10 @@
         "showMessageBox": false,
         "tokenFilter": {
             "network": [
-                "polygon"
+                "Polygon"
             ],
             "token": [
-                "ETH"
+                "MATIC"
             ]
         },
         "networkFilter": null,
@@ -6712,7 +6718,7 @@
         "recipient": "@EVMcrispr",
         "forwardRecipient": true,
         "recipientAddress": {
-            "optimism": "0xeafFF6dB1965886348657E79195EB6f1A84657eB"
+            "arbitrum": "0x0035cC37599241D007D0AbA1Fb931C5FA757f7A1"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -6721,12 +6727,18 @@
         "showMessageBox": false,
         "tokenFilter": {
             "network": [
-                "optimism"
+                "arbitrum"
+            ],
+            "token": [
+                "ETH"
             ]
         },
         "networkFilter": null,
-        "isGrantee": false,
-        "iconUrl": "img/icon148_red.png"
+        "isGrantee": true,
+        "projectId": "0xe61a206a3312eb4e3f8b4ff9a7c85cd0af0021eff0f2e66947305360efb3f7a7",
+        "applicationIndex": 8,
+        "roundAddress": "0x0F0b9d9F72C1660905C57864e79CeB409ADa0C9e",
+        "iconUrl": "img/customGitcoin.png"
     },
     "1561135171658809355": {
         "customHeader": "Donate to @Evolving_Space",
@@ -9730,7 +9742,7 @@
         "recipient": "@l2beat",
         "forwardRecipient": true,
         "recipientAddress": {
-            "polygon": "0x41626BA92c0C2a1aD38fC83920300434082B1870"
+            "Polygon": "0x41626BA92c0C2a1aD38fC83920300434082B1870"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -9739,10 +9751,10 @@
         "showMessageBox": false,
         "tokenFilter": {
             "network": [
-                "polygon"
+                "Polygon"
             ],
             "token": [
-                "ETH"
+                "MATIC"
             ]
         },
         "networkFilter": null,
@@ -11524,7 +11536,7 @@
         "recipient": "@NiceNodeApp",
         "forwardRecipient": true,
         "recipientAddress": {
-            "polygon": "0x9cce47E9cF12C6147c9844adBB81fE85880c4df4"
+            "Polygon": "0x9cce47E9cF12C6147c9844adBB81fE85880c4df4"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -11533,10 +11545,10 @@
         "showMessageBox": false,
         "tokenFilter": {
             "network": [
-                "polygon"
+                "Polygon"
             ],
             "token": [
-                "ETH"
+                "MATIC"
             ]
         },
         "networkFilter": null,
@@ -12238,7 +12250,7 @@
         "recipient": "@otterscan",
         "forwardRecipient": true,
         "recipientAddress": {
-            "polygon": "0xb7081Fd06E7039D198D10A8b72B824e60C1B1E16"
+            "Polygon": "0xb7081Fd06E7039D198D10A8b72B824e60C1B1E16"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -12247,10 +12259,10 @@
         "showMessageBox": false,
         "tokenFilter": {
             "network": [
-                "polygon"
+                "Polygon"
             ],
             "token": [
-                "ETH"
+                "MATIC"
             ]
         },
         "networkFilter": null,
@@ -14062,7 +14074,7 @@
         "recipient": "@remy_roy",
         "forwardRecipient": true,
         "recipientAddress": {
-            "polygon": "0xdbB16c68aA373229Db9f37D85087264361691AB9"
+            "Polygon": "0xdbB16c68aA373229Db9f37D85087264361691AB9"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -14071,10 +14083,10 @@
         "showMessageBox": false,
         "tokenFilter": {
             "network": [
-                "polygon"
+                "Polygon"
             ],
             "token": [
-                "ETH"
+                "MATIC"
             ]
         },
         "networkFilter": null,
@@ -14230,7 +14242,7 @@
         "recipient": "@ricmoo",
         "forwardRecipient": true,
         "recipientAddress": {
-            "polygon": "0x8ba1f109551bD432803012645Ac136ddd64DBA72"
+            "Polygon": "0x8ba1f109551bD432803012645Ac136ddd64DBA72"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -14239,10 +14251,10 @@
         "showMessageBox": false,
         "tokenFilter": {
             "network": [
-                "polygon"
+                "Polygon"
             ],
             "token": [
-                "ETH"
+                "MATIC"
             ]
         },
         "networkFilter": null,
@@ -14494,7 +14506,7 @@
         "recipient": "@rotkiapp",
         "forwardRecipient": true,
         "recipientAddress": {
-            "polygon": "0x9531C059098e3d194fF87FebB587aB07B30B1306"
+            "Polygon": "0x9531C059098e3d194fF87FebB587aB07B30B1306"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -14503,10 +14515,10 @@
         "showMessageBox": false,
         "tokenFilter": {
             "network": [
-                "polygon"
+                "Polygon"
             ],
             "token": [
-                "ETH"
+                "MATIC"
             ]
         },
         "networkFilter": null,
@@ -15352,7 +15364,7 @@
         "recipient": "@SomerEsat",
         "forwardRecipient": true,
         "recipientAddress": {
-            "polygon": "0x32B74B90407309F6637245292cd90347DE658A37"
+            "Polygon": "0x32B74B90407309F6637245292cd90347DE658A37"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -15361,10 +15373,10 @@
         "showMessageBox": false,
         "tokenFilter": {
             "network": [
-                "polygon"
+                "Polygon"
             ],
             "token": [
-                "ETH"
+                "MATIC"
             ]
         },
         "networkFilter": null,
@@ -15694,7 +15706,7 @@
         "recipient": "@stereumdev",
         "forwardRecipient": true,
         "recipientAddress": {
-            "polygon": "0x6E41fe2F8303b89c9dbcCABE59A7F7f8F4312cA9"
+            "Polygon": "0x6E41fe2F8303b89c9dbcCABE59A7F7f8F4312cA9"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -15703,10 +15715,10 @@
         "showMessageBox": false,
         "tokenFilter": {
             "network": [
-                "polygon"
+                "Polygon"
             ],
             "token": [
-                "ETH"
+                "MATIC"
             ]
         },
         "networkFilter": null,
@@ -16816,7 +16828,7 @@
         "recipient": "@turtleshell_xyz",
         "forwardRecipient": true,
         "recipientAddress": {
-            "optimism": "0xc1EDd32AD70De1A1D55299FDa37A78ad5540b2f5"
+            "arbitrum": "0x99d5Ce23335BffC8289F67Eb2723270776f2785e"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -16825,12 +16837,18 @@
         "showMessageBox": false,
         "tokenFilter": {
             "network": [
-                "optimism"
+                "arbitrum"
+            ],
+            "token": [
+                "ETH"
             ]
         },
         "networkFilter": null,
-        "isGrantee": false,
-        "iconUrl": "img/icon148_red.png"
+        "isGrantee": true,
+        "projectId": "0x915b81dbeff8550b4b7d170a82548f307a4d913e651b4d346f2796bf6ce2608b",
+        "applicationIndex": 7,
+        "roundAddress": "0x0F0b9d9F72C1660905C57864e79CeB409ADa0C9e",
+        "iconUrl": "img/customGitcoin.png"
     },
     "1598050657528909865": {
         "customHeader": "Donate to @twittensxyz",
@@ -17602,7 +17620,7 @@
         "recipient": "@wagmi_sh",
         "forwardRecipient": true,
         "recipientAddress": {
-            "polygon": "0xd2135CfB216b74109775236E36d4b433F1DF507B"
+            "Polygon": "0xd2135CfB216b74109775236E36d4b433F1DF507B"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -17611,10 +17629,10 @@
         "showMessageBox": false,
         "tokenFilter": {
             "network": [
-                "polygon"
+                "Polygon"
             ],
             "token": [
-                "ETH"
+                "MATIC"
             ]
         },
         "networkFilter": null,
@@ -18388,7 +18406,7 @@
         "recipient": "@yush_g",
         "forwardRecipient": true,
         "recipientAddress": {
-            "polygon": "0x23aDa6E6A9E9D4EcDDd185e3ec353163BCeeBF2a"
+            "Polygon": "0x23aDa6E6A9E9D4EcDDd185e3ec353163BCeeBF2a"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -18397,10 +18415,10 @@
         "showMessageBox": false,
         "tokenFilter": {
             "network": [
-                "polygon"
+                "Polygon"
             ],
             "token": [
-                "ETH"
+                "MATIC"
             ]
         },
         "networkFilter": null,
@@ -18496,7 +18514,7 @@
         "recipient": "@zen_bacon",
         "forwardRecipient": true,
         "recipientAddress": {
-            "optimism": "0x4B7C0Da1C299Ce824f55A0190Efb13663442FA2c"
+            "arbitrum": "0x4B7C0Da1C299Ce824f55A0190Efb13663442FA2c"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -18505,12 +18523,18 @@
         "showMessageBox": false,
         "tokenFilter": {
             "network": [
-                "optimism"
+                "arbitrum"
+            ],
+            "token": [
+                "ETH"
             ]
         },
         "networkFilter": null,
-        "isGrantee": false,
-        "iconUrl": "img/icon148_red.png"
+        "isGrantee": true,
+        "projectId": "0xe857fa6dc8c1012e168c45c7abdaf298273b0cee34bee3120f128e0e3ac03135",
+        "applicationIndex": 12,
+        "roundAddress": "0x0F0b9d9F72C1660905C57864e79CeB409ADa0C9e",
+        "iconUrl": "img/customGitcoin.png"
     },
     "1278701650442665984": {
         "customHeader": "Donate to @zenbitMX",
@@ -20320,7 +20344,7 @@
         "recipient": "@proofofemail",
         "forwardRecipient": true,
         "recipientAddress": {
-            "polygon": "0x35292bbd442373046a6fb4bF7e2529FA9A8D5Bb0"
+            "Polygon": "0x35292bbd442373046a6fb4bF7e2529FA9A8D5Bb0"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -20329,10 +20353,10 @@
         "showMessageBox": false,
         "tokenFilter": {
             "network": [
-                "polygon"
+                "Polygon"
             ],
             "token": [
-                "ETH"
+                "MATIC"
             ]
         },
         "networkFilter": null,
@@ -24660,6 +24684,126 @@
         "projectId": "0x63dfe7dd4b0ee38e21b7a11c35f62219f8e0ef325df1222fc643c1b73fd7883a",
         "applicationIndex": 133,
         "roundAddress": "0xd4CC0dd193c7DC1d665AE244cE12D7FAB337a008",
+        "iconUrl": "img/customGitcoin.png"
+    },
+    "708712320071913472": {
+        "customHeader": "Donate to @alexslobodnik",
+        "customText": "",
+        "buttonValue": "Donate",
+        "hostURL": "https://www.idriss.xyz/send?",
+        "recipient": "@alexslobodnik",
+        "forwardRecipient": true,
+        "recipientAddress": {
+            "arbitrum": "0x534631Bcf33BDb069fB20A93d2fdb9e4D4dD42CF"
+        },
+        "showNetworkSelection": true,
+        "showValueSelection": true,
+        "showTokenSelection": true,
+        "showInput": false,
+        "showMessageBox": false,
+        "tokenFilter": {
+            "network": [
+                "arbitrum"
+            ],
+            "token": [
+                "ETH"
+            ]
+        },
+        "networkFilter": null,
+        "isGrantee": true,
+        "projectId": "0xbc88356f901d2c7900ff86b19c75165cd8a94faacea44076e2a8642f71d0aa57",
+        "applicationIndex": 19,
+        "roundAddress": "0x3ac78e1Ae5086904d53b41c747188216789f59a7",
+        "iconUrl": "img/customGitcoin.png"
+    },
+    "3363548950": {
+        "customHeader": "Donate to @audsssy",
+        "customText": "",
+        "buttonValue": "Donate",
+        "hostURL": "https://www.idriss.xyz/send?",
+        "recipient": "@audsssy",
+        "forwardRecipient": true,
+        "recipientAddress": {
+            "arbitrum": "0x4744cda32bE7b3e75b9334001da9ED21789d4c0d"
+        },
+        "showNetworkSelection": true,
+        "showValueSelection": true,
+        "showTokenSelection": true,
+        "showInput": false,
+        "showMessageBox": false,
+        "tokenFilter": {
+            "network": [
+                "arbitrum"
+            ],
+            "token": [
+                "ETH"
+            ]
+        },
+        "networkFilter": null,
+        "isGrantee": true,
+        "projectId": "0x2166293b13f56182f7932f2f03139a34bfc67d5b6b85ef36a21037d8a99926bf",
+        "applicationIndex": 3,
+        "roundAddress": "0x0F0b9d9F72C1660905C57864e79CeB409ADa0C9e",
+        "iconUrl": "img/customGitcoin.png"
+    },
+    "1212576315687104512": {
+        "customHeader": "Donate to @valerio_eth",
+        "customText": "",
+        "buttonValue": "Donate",
+        "hostURL": "https://www.idriss.xyz/send?",
+        "recipient": "@valerio_eth",
+        "forwardRecipient": true,
+        "recipientAddress": {
+            "arbitrum": "0x61319Eb36d29781586988fC8dD0A78dBfE201cef"
+        },
+        "showNetworkSelection": true,
+        "showValueSelection": true,
+        "showTokenSelection": true,
+        "showInput": false,
+        "showMessageBox": false,
+        "tokenFilter": {
+            "network": [
+                "arbitrum"
+            ],
+            "token": [
+                "ETH"
+            ]
+        },
+        "networkFilter": null,
+        "isGrantee": true,
+        "projectId": "0xf8b22d1f3e6a6d9258fc85e8df59e414e500b665aeea5550b0db20459e98eaf4",
+        "applicationIndex": 6,
+        "roundAddress": "0x0F0b9d9F72C1660905C57864e79CeB409ADa0C9e",
+        "iconUrl": "img/customGitcoin.png"
+    },
+    "1337341371670269952": {
+        "customHeader": "Donate to @cad_EVM",
+        "customText": "",
+        "buttonValue": "Donate",
+        "hostURL": "https://www.idriss.xyz/send?",
+        "recipient": "@cad_EVM",
+        "forwardRecipient": true,
+        "recipientAddress": {
+            "arbitrum": "0x5ce15dBcDF9a7c65eF7f31d11Ccd49DF4ECd860D"
+        },
+        "showNetworkSelection": true,
+        "showValueSelection": true,
+        "showTokenSelection": true,
+        "showInput": false,
+        "showMessageBox": false,
+        "tokenFilter": {
+            "network": [
+                "arbitrum"
+            ],
+            "token": [
+                "ETH"
+            ]
+        },
+        "networkFilter": null,
+        "isGrantee": true,
+        "projectId": "0xbecb2d4f81a360d47b4354f84195d8c57cc1db1da364bd18654b22a2513974d2",
+        "applicationIndex": 21,
+        "roundAddress": "0x0F0b9d9F72C1660905C57864e79CeB409ADa0C9e",
         "iconUrl": "img/customGitcoin.png"
     }
 }
