@@ -3613,7 +3613,7 @@
         "recipient": "@CostaOro80489",
         "forwardRecipient": true,
         "recipientAddress": {
-            "optimism": "0x7CA809C9f505FB3F5A42383c4B07fFC27B8A19C8"
+            "arbitrum": "0x7CA809C9f505FB3F5A42383c4B07fFC27B8A19C8"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -3622,7 +3622,7 @@
         "showMessageBox": false,
         "tokenFilter": {
             "network": [
-                "optimism"
+                "arbitrum"
             ],
             "token": [
                 "ETH"
@@ -3631,8 +3631,8 @@
         "networkFilter": null,
         "isGrantee": true,
         "projectId": "0xed04796b2e46ebfe574a98567b6e864e9871760919a71c5048488efa0bf16b13",
-        "applicationIndex": 106,
-        "roundAddress": "0x5eB890e41c8D2cFF75ea942085E406bB90016561",
+        "applicationIndex": 6,
+        "roundAddress": "0xE168Ac27b7c32Db85478a6807640C8bcA1220D15",
         "iconUrl": "img/customGitcoin.png"
     },
     "1365673523033894916": {
@@ -6667,7 +6667,7 @@
         "recipient": "@ethvenezuela",
         "forwardRecipient": true,
         "recipientAddress": {
-            "optimism": "0xdA3DdDae8119644F8Be18C7AfD16850B02a4C841"
+            "arbitrum": "0x518fd709703c98F127a481817b987D2B361931B9"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -6676,12 +6676,18 @@
         "showMessageBox": false,
         "tokenFilter": {
             "network": [
-                "optimism"
+                "arbitrum"
+            ],
+            "token": [
+                "ETH"
             ]
         },
         "networkFilter": null,
-        "isGrantee": false,
-        "iconUrl": "img/icon148_red.png"
+        "isGrantee": true,
+        "projectId": "0xe2e9b444eb139fbd6a7831fa1d3cad2a739464909742293a26713d918d539bd3",
+        "applicationIndex": 10,
+        "roundAddress": "0xE168Ac27b7c32Db85478a6807640C8bcA1220D15",
+        "iconUrl": "img/customGitcoin.png"
     },
     "1648333185476861955": {
         "customHeader": "Donate to @EVMcrispr",
@@ -15315,7 +15321,7 @@
         "recipient": "@solowcripto",
         "forwardRecipient": true,
         "recipientAddress": {
-            "optimism": "0x929e1b374FB07486c9A64570e5BDA99383f48785"
+            "arbitrum": "0x929e1b374FB07486c9A64570e5BDA99383f48785"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -15324,12 +15330,18 @@
         "showMessageBox": false,
         "tokenFilter": {
             "network": [
-                "optimism"
+                "arbitrum"
+            ],
+            "token": [
+                "ETH"
             ]
         },
         "networkFilter": null,
-        "isGrantee": false,
-        "iconUrl": "img/icon148_red.png"
+        "isGrantee": true,
+        "projectId": "0xdfa4005d484b413fbdec038ab5b5f0c716527a1c32e9b7e0e9111ca0b35d5d9e",
+        "applicationIndex": 8,
+        "roundAddress": "0xE168Ac27b7c32Db85478a6807640C8bcA1220D15",
+        "iconUrl": "img/customGitcoin.png"
     },
     "732899923": {
         "customHeader": "Donate to @SomerEsat",
@@ -21536,8 +21548,8 @@
         },
         "networkFilter": null,
         "isGrantee": true,
-        "projectId": "0x5ec7f8fa33688bb1a047bbc8c2f9ebe4408bbfb73b62814921ca9342040ba5a7",
-        "applicationIndex": 282,
+        "projectId": "0x87fc73855cd59fb87c824d9f52fcaba5ad43b4c67e0068f491cf7b6b3ed2e12a",
+        "applicationIndex": 290,
         "roundAddress": "0x98720dD1925d34a2453ebC1F91C9d48E7e89ec29",
         "iconUrl": "img/customGitcoin.png"
     },
@@ -24809,6 +24821,126 @@
         "projectId": "0xe6cdce65c4d5e328ad823cceb103dbf2ea2228ada07c1dd9440c0aa24ee4f48d",
         "applicationIndex": 19,
         "roundAddress": "0x6726FE9C89fb04eAEf388C11cF55Be6AA0a62fb9",
+        "iconUrl": "img/customGitcoin.png"
+    },
+    "1399538584449810433": {
+        "customHeader": "Donate to @Endeavors_Oak",
+        "customText": "",
+        "buttonValue": "Donate",
+        "hostURL": "https://www.idriss.xyz/send?",
+        "recipient": "@Endeavors_Oak",
+        "forwardRecipient": true,
+        "recipientAddress": {
+            "pgn": "0x132253270b2c116C9938d4Ac7730E6ff93E44B1e"
+        },
+        "showNetworkSelection": true,
+        "showValueSelection": true,
+        "showTokenSelection": true,
+        "showInput": false,
+        "showMessageBox": false,
+        "tokenFilter": {
+            "network": [
+                "pgn"
+            ],
+            "token": [
+                "ETH"
+            ]
+        },
+        "networkFilter": null,
+        "isGrantee": true,
+        "projectId": "0xf128e7858c7eadaee4158633142b88a29bef9375418e29f86bb1761d430e780b",
+        "applicationIndex": 287,
+        "roundAddress": "0x98720dD1925d34a2453ebC1F91C9d48E7e89ec29",
+        "iconUrl": "img/customGitcoin.png"
+    },
+    "1481037698890620929": {
+        "customHeader": "Donate to @intell_on_chain",
+        "customText": "",
+        "buttonValue": "Donate",
+        "hostURL": "https://www.idriss.xyz/send?",
+        "recipient": "@intell_on_chain",
+        "forwardRecipient": true,
+        "recipientAddress": {
+            "pgn": "0xC2b9399C0c92e332EA34E2Ac3D8FF7f9e313CB89"
+        },
+        "showNetworkSelection": true,
+        "showValueSelection": true,
+        "showTokenSelection": true,
+        "showInput": false,
+        "showMessageBox": false,
+        "tokenFilter": {
+            "network": [
+                "pgn"
+            ],
+            "token": [
+                "ETH"
+            ]
+        },
+        "networkFilter": null,
+        "isGrantee": true,
+        "projectId": "0xbd58608868056c3dd0709ccdf64ebe7b1e42ec0589612e26a37fa748e9a4c1c6",
+        "applicationIndex": 288,
+        "roundAddress": "0x98720dD1925d34a2453ebC1F91C9d48E7e89ec29",
+        "iconUrl": "img/customGitcoin.png"
+    },
+    "1653798643726704640": {
+        "customHeader": "Donate to @greenpill_LA",
+        "customText": "",
+        "buttonValue": "Donate",
+        "hostURL": "https://www.idriss.xyz/send?",
+        "recipient": "@greenpill_LA",
+        "forwardRecipient": true,
+        "recipientAddress": {
+            "pgn": "0xD2838aCb302F40E06f3FDC05f5b357034113262E"
+        },
+        "showNetworkSelection": true,
+        "showValueSelection": true,
+        "showTokenSelection": true,
+        "showInput": false,
+        "showMessageBox": false,
+        "tokenFilter": {
+            "network": [
+                "pgn"
+            ],
+            "token": [
+                "ETH"
+            ]
+        },
+        "networkFilter": null,
+        "isGrantee": true,
+        "projectId": "0xa76109df202d323c9a1be47e7ef0515d61965c09c8f995d03ad2a5545e81470d",
+        "applicationIndex": 295,
+        "roundAddress": "0x98720dD1925d34a2453ebC1F91C9d48E7e89ec29",
+        "iconUrl": "img/customGitcoin.png"
+    },
+    "1561828000555048963": {
+        "customHeader": "Donate to @Solve3_org",
+        "customText": "",
+        "buttonValue": "Donate",
+        "hostURL": "https://www.idriss.xyz/send?",
+        "recipient": "@Solve3_org",
+        "forwardRecipient": true,
+        "recipientAddress": {
+            "pgn": "0x737A8b78b911F49c45D04b35FBc5330535a68700"
+        },
+        "showNetworkSelection": true,
+        "showValueSelection": true,
+        "showTokenSelection": true,
+        "showInput": false,
+        "showMessageBox": false,
+        "tokenFilter": {
+            "network": [
+                "pgn"
+            ],
+            "token": [
+                "ETH"
+            ]
+        },
+        "networkFilter": null,
+        "isGrantee": true,
+        "projectId": "0x5e31416410f61cb1eabfc7e4f74d41355d21fcc0d7d51f82375a83452f04d530",
+        "applicationIndex": 55,
+        "roundAddress": "0xd4CC0dd193c7DC1d665AE244cE12D7FAB337a008",
         "iconUrl": "img/customGitcoin.png"
     }
 }
