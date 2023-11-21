@@ -163,7 +163,7 @@ export class TwitterPageManager extends AbstractPageManager {
       icon.append(dropdown);
       parent
         .querySelector(
-          ".r-1fmj7o5:not(h2), .r-18jsvk2:not(h2), .r-1nao33i:not(h2), .r-vlxjld:not(h2)"
+          ".r-adyw6z.r-135wba7.r-1vr29t4.r-1awozwy.r-6koalj, .r-bcqeeo.r-qvutc0.r-37j5jr.r-a023e6.r-rjixqe.r-b88u0q.r-1awozwy"
         )
         ?.append(icon);
       icon.onmouseover = (e) => {
