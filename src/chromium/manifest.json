@@ -47,7 +47,8 @@
     "https://*.bybit.com/*",
     "https://*.bittrex.com/*",
     "https://*.coincheck.com/*",
-    "https://*.guarda.co/*"
+    "https://*.guarda.co/*",
+    "https://*.blockscout.com/*"
   ],
   "content_scripts": [
     {
@@ -89,7 +90,8 @@
         "https://*.bybit.com/*",
         "https://*.bittrex.com/*",
         "https://*.coincheck.com/*",
-        "https://*.guarda.co/*"
+        "https://*.guarda.co/*",
+        "https://*.blockscout.com/*"
       ],
       "js": ["contentScript.js"],
       "all_frames": true

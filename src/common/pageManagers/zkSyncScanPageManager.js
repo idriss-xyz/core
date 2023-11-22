@@ -17,7 +17,8 @@ export class ZKScanPageManager extends AbstractPageManager {
         this.document.addEventListener('focus', e => this.inputChanged(e, e.target))
     }
 
-findPlacesForReverseResolve() {
+
+    findPlacesForReverseResolve() {
   return new Promise((resolve) => {
     let ret = super.findPlacesForReverseResolve();
     const selector = '.displayed-string, a[href^="/address/"]:not(.token-link)';
@@ -48,6 +49,7 @@ findPlacesForReverseResolve() {
     }
   });
 }
+
 
 
     badWords = ["login", "signup", "email", "mail", "phone", "signin"];

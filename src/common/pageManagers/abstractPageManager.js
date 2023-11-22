@@ -43,6 +43,7 @@ export class AbstractPageManager {
                 imgElement.src = "https://www.idriss.xyz/static/images/twitter.png"
                 imgElement.alt = "Twitter"
                 imgElement.className = 'img'
+                imgElement.style.width = '2em';
                 item.append(imgElement)
             }
             let valueElement = document.createElement('div')
@@ -122,6 +123,7 @@ export class AbstractPageManager {
             link.href = "https://twitter.com/" + x.slice(1,);
             link.target = "_blank"
             if (document.location.hostname.endsWith('explorer.zksync.io')) link.style.margin = '2px 0 0 0';
+            if (document.location.hostname.endsWith('base.blockscout.com')) link.style.margin = '6px 0 0 0';
             if (document.location.hostname.endsWith('explorer.goerli.linea.build')) {
                 var sibling = element.nextElementSibling;
                 if (sibling.matches('.d-md-inline-block.d-xl-none')) {
