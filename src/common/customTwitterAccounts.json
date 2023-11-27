@@ -1,28 +1,4 @@
 {
-    "1362289791379898370": {
-        "customHeader": "Send to @ParallelTCG",
-        "customText": "",
-        "buttonValue": "Donate",
-        "hostURL": "https://www.idriss.xyz/send?",
-        "recipient": "@ParallelTCG",
-        "forwardRecipient": true,
-        "recipientAddress": {
-            "base": "0x02f086dbc384d69b3041bc738f0a8af5e49da181"
-        },
-        "showNetworkSelection": true,
-        "showValueSelection": true,
-        "showTokenSelection": true,
-        "showInput": false,
-        "showMessageBox": false,
-        "tokenFilter": {
-            "network": [
-                "base"
-            ]
-        },
-        "networkFilter": null,
-        "isGrantee": false,
-        "iconUrl": "default"
-    },
     "1453366601399611405": {
         "customHeader": "Donate to @dao_drops",
         "customText": "",
