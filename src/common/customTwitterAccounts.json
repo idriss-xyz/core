@@ -17134,6 +17134,30 @@
         "networkFilter": null,
         "isGrantee": false,
         "iconUrl": "img/icon148_red.png"
+    },
+    "1507136083447922692": {
+        "customHeader": "Donate to @ethereum_sg",
+        "customText": "",
+        "buttonValue": "Donate",
+        "hostURL": "https://www.idriss.xyz/send?",
+        "recipient": "@ethereum_sg",
+        "forwardRecipient": true,
+        "recipientAddress": {
+            "mantle": "0x12fD44062F9EdeC06ef1F58248eF8fcF093ac74c"
+        },
+        "showNetworkSelection": true,
+        "showValueSelection": true,
+        "showTokenSelection": true,
+        "showInput": false,
+        "showMessageBox": false,
+        "tokenFilter": {
+            "network": [
+                "mantle"
+            ]
+        },
+        "networkFilter": null,
+        "isGrantee": false,
+        "iconUrl": "img/icon148_red.png"
     }
 }
 
