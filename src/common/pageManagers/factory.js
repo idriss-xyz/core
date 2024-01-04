@@ -8,6 +8,7 @@ import {EtherscanPageManager} from "./etherscanPageManager";
 import {ZKScanPageManager} from "./zkSyncScanPageManager";
 import {LineaExplorerPageManager} from "./lineaExplorerPageManager";
 import {BlockscoutPageManager} from "./blockscoutPageManager";
+import {MantleExplorerPageManager} from "./mantleExplorerPageManager";
 
 const specificDomainList = {
     "app.poap.xyz": PoapPageManager,
@@ -32,6 +33,7 @@ const specificDomainList = {
     "explorer.linea.build": LineaExplorerPageManager,
     "explorer.zksync.io": ZKScanPageManager,
     "base.blockscout.com": BlockscoutPageManager
+    "explorer.mantle.xyz": MantleExplorerPageManager
 }
 const defaultDomainList = [
     "binance.com",
