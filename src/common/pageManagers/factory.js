@@ -32,7 +32,7 @@ const specificDomainList = {
     "explorer.goerli.linea.build": LineaExplorerPageManager,
     "explorer.linea.build": LineaExplorerPageManager,
     "explorer.zksync.io": ZKScanPageManager,
-    "base.blockscout.com": BlockscoutPageManager
+    "base.blockscout.com": BlockscoutPageManager,
     "explorer.mantle.xyz": MantleExplorerPageManager
 }
 const defaultDomainList = [
