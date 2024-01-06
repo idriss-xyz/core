@@ -7703,30 +7703,6 @@
         "isGrantee": false,
         "iconUrl": "img/icon148_red.png"
     },
-    "1416199220978089987": {
-        "customHeader": "Donate to @IDriss_xyz",
-        "customText": "",
-        "buttonValue": "Donate",
-        "hostURL": "https://www.idriss.xyz/send?",
-        "recipient": "@IDriss_xyz",
-        "forwardRecipient": true,
-        "recipientAddress": {
-            "optimism": "0x778C17bB94Ea2d3b27b75b46Bd0Ea6B2192754D4"
-        },
-        "showNetworkSelection": true,
-        "showValueSelection": true,
-        "showTokenSelection": true,
-        "showInput": false,
-        "showMessageBox": false,
-        "tokenFilter": {
-            "network": [
-                "optimism"
-            ]
-        },
-        "networkFilter": null,
-        "isGrantee": false,
-        "iconUrl": "img/icon148_red.png"
-    },
     "1465400205889749004": {
         "customHeader": "Donate to @IMNbankless",
         "customText": "",
