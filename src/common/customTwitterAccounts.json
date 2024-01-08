@@ -3031,6 +3031,7 @@
         "recipient": "@clrfund",
         "forwardRecipient": true,
         "recipientAddress": {
+            "mantle": "0x0CF30daf2Fb962Ed1d5D19C97F5f6651F3b691c1",
             "optimism": "0xAb6D6a37c5110d1377832c451C33e4fA16A9BA05"
         },
         "showNetworkSelection": true,
@@ -3040,6 +3041,7 @@
         "showMessageBox": false,
         "tokenFilter": {
             "network": [
+                "mantle",
                 "optimism"
             ]
         },
