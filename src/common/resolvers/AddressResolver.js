@@ -200,8 +200,6 @@ class AddressResolverClass extends IdrissCrypto {
             try {
                 return await (await this.contract).methods.getIDriss(digested).call();
             } catch (e) {
-//                console.log(e);
-//                console.log(e.message);
                 if (e.code == 429) {
                     console.log("Rate limits, trying again");
                     await new Promise((r) => setTimeout(r, Math.random() * 2000));

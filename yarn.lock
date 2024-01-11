@@ -2949,10 +2949,6 @@ idna-uts46-hx@^2.3.1:
   dependencies:
     punycode "2.1.0"
 
-idriss-crypto@^1.6.1:
-  version "0.0.0"
-  uid ""
-
 "idriss-crypto@link:../ts-library":
   version "0.0.0"
   uid ""
