@@ -15,6 +15,7 @@ export class TwitterPageManager extends AbstractPageManager {
     async init() {
         this.requestLimiter = new RequestLimiter([{amount: 10, time: 1000}]);
         this.iconUrl = await this.getIcon();
+        this.sbtIconUrl = await this.getIcon("sbt.png")
         let customTwitterAccounts = await getCustomTwitter();
 
         const entriesWithIcons = Object.entries(customTwitterAccounts).filter(([, value]) =>
@@ -143,20 +144,40 @@ export class TwitterPageManager extends AbstractPageManager {
         }
     }
 
+    createIconStyling = (url, data, className, name) => {
+      const tempIcon = this.document.createElement('div');
+      tempIcon.className = className;
+      tempIcon.dataset.sourceName = name;
+      tempIcon.style.width = "1.1em";
+      tempIcon.style.height = "1.1em";
+      tempIcon.style.margin = "-1px 0 -1px 0";
+      tempIcon.style.borderTop = "2px solid transparent";
+      tempIcon.style.borderbottom = "2px solid transparent";
+      tempIcon.style.borderLeft = "0.3em solid transparent";
+      tempIcon.style.borderRight = "0.3em solid transparent";
+      let _iconUrl = url;
+      tempIcon.style.background = `url(${_iconUrl}) no-repeat`;
+      tempIcon.style.backgroundSize = `contain`;
+      return tempIcon
+    }
+
     createIcon = (parent, data, dropdownContent, name) => {
-      const icon = document.createElement("div");
-      icon.className = "idrissIcon";
-      icon.dataset.sourceName = name;
-      icon.style.width = "1.1em";
-      icon.style.height = "1.1em";
-      icon.style.margin = "-1px 0 -1px 0";
-      icon.style.borderTop = "2px solid transparent";
-      icon.style.borderbottom = "2px solid transparent";
-      icon.style.borderLeft = "0.3em solid transparent";
-      icon.style.borderRight = "0.3em solid transparent";
+      const sbtIcon = this.createIconStyling(this.sbtIconUrl, data, "sbtIcon", "MJ-SBT");
       let _iconUrl = data[name] ? this.allIcons[data[name].iconUrl] : this.allIcons.default;
-      icon.style.background = `url(${_iconUrl}) no-repeat`;
-      icon.style.backgroundSize = `contain`;
+      let iconClassName = "idrissIcon"
+      const icon = this.createIconStyling(_iconUrl, data, iconClassName, name);
+      // const icon = document.createElement("div");
+      // icon.className = "idrissIcon";
+      // icon.dataset.sourceName = name;
+      // icon.style.width = "1.1em";
+      // icon.style.height = "1.1em";
+      // icon.style.margin = "-1px 0 -1px 0";
+      // icon.style.borderTop = "2px solid transparent";
+      // icon.style.borderbottom = "2px solid transparent";
+      // icon.style.borderLeft = "0.3em solid transparent";
+      // icon.style.borderRight = "0.3em solid transparent";
+      // icon.style.background = `url(${_iconUrl}) no-repeat`;
+      // icon.style.backgroundSize = `contain`;
       icon.onmouseover = (e) => e.stopPropagation();
       icon.setAttribute("tabindex", "-1");
       const dropdown = document.createElement("div");
@@ -166,7 +187,7 @@ export class TwitterPageManager extends AbstractPageManager {
           ".r-adyw6z.r-135wba7.r-1vr29t4.r-1awozwy.r-6koalj, .r-bcqeeo.r-qvutc0.r-37j5jr.r-a023e6.r-rjixqe.r-b88u0q.r-1awozwy, .r-1b6yd1w.r-7ptqe7.r-1vr29t4.r-1awozwy.r-6koalj, .r-bcqeeo.r-qvutc0.r-37j5jr.r-1b43r93.r-hjklzo.r-b88u0q.r-1awozwy"
         )
         ?.append(icon);
-      icon.onmouseover = (e) => {
+            icon.onmouseover = (e) => {
         e.stopPropagation();
         e.preventDefault();
         let dropdown = dropdownContent;
