@@ -186,7 +186,7 @@ export class TwitterPageManager extends AbstractPageManager {
     }
 
     createIcon = async (parent, data, dropdownContent, name) => {
-      const sbtIcon = this.createIconStyling(this.sbtIconUrl, "sbtIcon", "MJ-SBT", {borderLeft: "", width: "1.2em", height: "1.2em", margin: "-1px 0 -1px -2px"});
+    //   const sbtIcon = this.createIconStyling(this.sbtIconUrl, "sbtIcon", "MJ-SBT", {borderLeft: "", width: "1.2em", height: "1.2em", margin: "-1px 0 -1px -2px"});
       let _iconUrl = data[name] ? this.allIcons[data[name].iconUrl] : this.allIcons.default;
       let iconClassName = "idrissIcon"
       const icon = this.createIconStyling(_iconUrl, iconClassName, name);
@@ -199,7 +199,7 @@ export class TwitterPageManager extends AbstractPageManager {
           ".r-adyw6z.r-135wba7.r-1vr29t4.r-1awozwy.r-6koalj, .r-bcqeeo.r-qvutc0.r-37j5jr.r-a023e6.r-rjixqe.r-b88u0q.r-1awozwy, .r-1b6yd1w.r-7ptqe7.r-1vr29t4.r-1awozwy.r-6koalj, .r-bcqeeo.r-qvutc0.r-37j5jr.r-1b43r93.r-hjklzo.r-b88u0q.r-1awozwy"
         )
       appendingElem?.append(icon);
-      if (await this.checkSBT(Object.values(data)[0])) appendingElem?.append(sbtIcon);
+    //   if (await this.checkSBT(Object.values(data)[0])) appendingElem?.append(sbtIcon);
       icon.onmouseover = (e) => {
       e.stopPropagation();
       e.preventDefault();
