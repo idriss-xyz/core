@@ -13,13 +13,9 @@ export class TwitterPageManager extends AbstractPageManager {
             }
 
     async init() {
-      console.log("Starting init")
         this.requestLimiter = new RequestLimiter([{amount: 10, time: 1000}]);
-        console.log("Getting icon now")
         this.iconUrl = await this.getIcon();
-        console.log("Running init")
         this.sbtIconUrl = await this.getIcon("img/sbt.png");
-        console.log("Running init after getting sbt")
         let customTwitterAccounts = await getCustomTwitter();
 
         const entriesWithIcons = Object.entries(customTwitterAccounts).filter(([, value]) =>
@@ -43,7 +39,6 @@ export class TwitterPageManager extends AbstractPageManager {
     }
 
     async check() {
-        console.log("Check called")
         super.check();
         if (await this.isEnabled()) {
             this.searchPlaces();
@@ -54,7 +49,6 @@ export class TwitterPageManager extends AbstractPageManager {
     }
 
     async searchPlaces() {
-      console.log("Searching places")
         const places = Array.from(this.listPlaces());
         const names = new Set(places.map(x => x.name).filter(x => x));
         await this.getInfo(names);
@@ -106,7 +100,6 @@ export class TwitterPageManager extends AbstractPageManager {
 
     async checkSBT(address) {
       if (!address) return false;
-      console.log(address)
       try {
           return new Promise((resolve, reject) => {
               chrome.runtime.sendMessage({ type: "sbtRequest", value: address }, response => {
@@ -151,18 +144,18 @@ export class TwitterPageManager extends AbstractPageManager {
                     existingIcon = null
                 }
             }
-            const addCallback = (data) => {
+            const addCallback = async (data) => {
               if (!data.error && !div.querySelector(".idrissIcon")) {
                 if (Object.values(data).length === 0) {
                   const dropdownContent = new TippingUnregistered(data, name).container;
-                  const { icon } = this.createIcon(div, data, dropdownContent, name);
+                  const { icon } = await this.createIcon(div, data, dropdownContent, name);
                   icon.style.filter = `grayscale(100%)`;
                 } else {
                 // create icon based on param here
                   const dropdownContent = data[name]
                     ? new CustomWidget(data[name]).div
                     : new Tipping(name, data).div;
-                  this.createIcon(div, data, dropdownContent, name);
+                  await this.createIcon(div, data, dropdownContent, name);
                 }
               }
             };
@@ -203,7 +196,6 @@ export class TwitterPageManager extends AbstractPageManager {
           ".r-adyw6z.r-135wba7.r-1vr29t4.r-1awozwy.r-6koalj, .r-bcqeeo.r-qvutc0.r-37j5jr.r-a023e6.r-rjixqe.r-b88u0q.r-1awozwy, .r-1b6yd1w.r-7ptqe7.r-1vr29t4.r-1awozwy.r-6koalj, .r-bcqeeo.r-qvutc0.r-37j5jr.r-1b43r93.r-hjklzo.r-b88u0q.r-1awozwy"
         )
       appendingElem?.append(icon);
-      // console.log("check sbt", await this.checkSBT(Object.values(data)[0]))
       if (await this.checkSBT(Object.values(data)[0])) appendingElem?.append(sbtIcon);
       icon.onmouseover = (e) => {
       e.stopPropagation();

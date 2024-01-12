@@ -21,7 +21,6 @@ export const SbtResolver = {
         const contract = this.init()
         try {    
             const balance = await contract.methods.balanceOf(address, 1).call();
-            console.log(`Balance of token ID 1:`, balance);
             return balance > 0;
         } catch (error) {
             console.error(error);
