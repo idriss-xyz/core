@@ -1,5 +1,6 @@
 const path = require('path');
 const CopyPlugin = require("copy-webpack-plugin");
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
 module.exports = {
     mode: "development", // "production" | "development" | "none"
@@ -31,6 +32,7 @@ module.exports = {
                 {from: "./src/common/img", to: "firefox/img"},
             ],
         }),
+        new NodePolyfillPlugin()
     ],
     module: {
         rules: [

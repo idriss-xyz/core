@@ -1,4 +1,5 @@
 import {AddressResolver} from "../common/resolvers/AddressResolver";
+import {SbtResolver} from "../common/resolvers/SbtResolver";
 
 
 chrome.runtime.onMessage.addListener(
@@ -11,6 +12,9 @@ chrome.runtime.onMessage.addListener(
             return true;
         } else if (request.type === 'reverseResolveRequest') {
             AddressResolver.getManyReverse(request.value).then(x => sendResponse(x)).catch(e => sendResponse({}));
+            return true;
+        } else if (request.type === 'sbtRequest') {
+            SbtResolver.getSBT(request.value).then(x => sendResponse(x)).catch(e => sendResponse({}));
             return true;
         } else if (request.type === 'getIconUrl') {
             if (request.custom=="") {

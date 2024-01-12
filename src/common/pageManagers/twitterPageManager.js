@@ -10,11 +10,12 @@ export class TwitterPageManager extends AbstractPageManager {
 
     constructor(document) {
         super(document)
-    }
+            }
 
     async init() {
         this.requestLimiter = new RequestLimiter([{amount: 10, time: 1000}]);
         this.iconUrl = await this.getIcon();
+        this.sbtIconUrl = await this.getIcon("img/sbt.png");
         let customTwitterAccounts = await getCustomTwitter();
 
         const entriesWithIcons = Object.entries(customTwitterAccounts).filter(([, value]) =>
@@ -97,6 +98,27 @@ export class TwitterPageManager extends AbstractPageManager {
         return responses.reduce((a, b) => ({...a, ...b}));
     }
 
+    async checkSBT(address) {
+      if (!address) return false;
+      try {
+          return new Promise((resolve, reject) => {
+              chrome.runtime.sendMessage({ type: "sbtRequest", value: address }, response => {
+                  if (chrome.runtime.lastError) {
+                      reject(new Error(chrome.runtime.lastError.message));
+                  } else if (response && response.error) {
+                      reject(new Error(response.error));
+                  } else {
+                      resolve(response);
+                  }
+              });
+          });
+      } catch (error) {
+          console.error('Error in checkSBT:', error);
+          return false;
+      }
+    }
+      
+
     getIcon(_custom="") {
         return new Promise((resolve, reject) => {
             chrome.runtime.sendMessage({
@@ -122,18 +144,18 @@ export class TwitterPageManager extends AbstractPageManager {
                     existingIcon = null
                 }
             }
-            const addCallback = (data) => {
+            const addCallback = async (data) => {
               if (!data.error && !div.querySelector(".idrissIcon")) {
                 if (Object.values(data).length === 0) {
                   const dropdownContent = new TippingUnregistered(data, name).container;
-                  const { icon } = this.createIcon(div, data, dropdownContent, name);
+                  const { icon } = await this.createIcon(div, data, dropdownContent, name);
                   icon.style.filter = `grayscale(100%)`;
                 } else {
                 // create icon based on param here
                   const dropdownContent = data[name]
                     ? new CustomWidget(data[name]).div
                     : new Tipping(name, data).div;
-                  this.createIcon(div, data, dropdownContent, name);
+                  await this.createIcon(div, data, dropdownContent, name);
                 }
               }
             };
@@ -143,33 +165,45 @@ export class TwitterPageManager extends AbstractPageManager {
         }
     }
 
-    createIcon = (parent, data, dropdownContent, name) => {
-      const icon = document.createElement("div");
-      icon.className = "idrissIcon";
-      icon.dataset.sourceName = name;
-      icon.style.width = "1.1em";
-      icon.style.height = "1.1em";
-      icon.style.margin = "-1px 0 -1px 0";
-      icon.style.borderTop = "2px solid transparent";
-      icon.style.borderbottom = "2px solid transparent";
-      icon.style.borderLeft = "0.3em solid transparent";
-      icon.style.borderRight = "0.3em solid transparent";
+    createIconStyling = (url, className, name, options = {}) => {
+      const tempIcon = this.document.createElement('div');
+      tempIcon.className = className;
+      tempIcon.dataset.sourceName = name;
+      tempIcon.style.width = "1.1em";
+      tempIcon.style.height = "1.1em";
+      tempIcon.style.margin = "-1px 0 -1px 0";
+      tempIcon.style.borderTop = "2px solid transparent";
+      tempIcon.style.borderbottom = "2px solid transparent";
+      tempIcon.style.borderLeft = "0.3em solid transparent";
+      tempIcon.style.borderRight = "0.3em solid transparent";
+      tempIcon.style.background = `url(${url}) no-repeat`;
+      tempIcon.style.backgroundSize = `contain`;
+
+      for (const [key, value] of Object.entries({...options})) {
+          tempIcon.style[key] = value;
+      }
+      return tempIcon
+    }
+
+    createIcon = async (parent, data, dropdownContent, name) => {
+      const sbtIcon = this.createIconStyling(this.sbtIconUrl, "sbtIcon", "MJ-SBT", {borderLeft: "", width: "1.2em", height: "1.2em", margin: "-1px 0 -1px -2px"});
       let _iconUrl = data[name] ? this.allIcons[data[name].iconUrl] : this.allIcons.default;
-      icon.style.background = `url(${_iconUrl}) no-repeat`;
-      icon.style.backgroundSize = `contain`;
+      let iconClassName = "idrissIcon"
+      const icon = this.createIconStyling(_iconUrl, iconClassName, name);
       icon.onmouseover = (e) => e.stopPropagation();
       icon.setAttribute("tabindex", "-1");
       const dropdown = document.createElement("div");
       icon.append(dropdown);
-      parent
+      let appendingElem = parent
         .querySelector(
           ".r-adyw6z.r-135wba7.r-1vr29t4.r-1awozwy.r-6koalj, .r-bcqeeo.r-qvutc0.r-37j5jr.r-a023e6.r-rjixqe.r-b88u0q.r-1awozwy, .r-1b6yd1w.r-7ptqe7.r-1vr29t4.r-1awozwy.r-6koalj, .r-bcqeeo.r-qvutc0.r-37j5jr.r-1b43r93.r-hjklzo.r-b88u0q.r-1awozwy"
         )
-        ?.append(icon);
+      appendingElem?.append(icon);
+      if (await this.checkSBT(Object.values(data)[0])) appendingElem?.append(sbtIcon);
       icon.onmouseover = (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        let dropdown = dropdownContent;
+      e.stopPropagation();
+      e.preventDefault();
+      let dropdown = dropdownContent;
       dropdown.addEventListener("click", (e) => e.stopPropagation());
         this.document.body.append(dropdown);
         let rect = icon.getBoundingClientRect();

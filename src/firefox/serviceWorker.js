@@ -1,4 +1,5 @@
-import {AddressesResolver} from "../common/resolvers/AddressResolver";
+import {AddressResolver} from "../common/resolvers/AddressResolver";
+import {SbtResolver} from "../common/resolvers/SbtResolver";
 
 
 browser.runtime.onMessage.addListener(
@@ -12,12 +13,23 @@ browser.runtime.onMessage.addListener(
         } else if (request.type === 'reverseResolveRequest') {
             AddressResolver.getManyReverse(request.value).then(x => sendResponse(x)).catch(e => sendResponse({}));
             return true;
-        } else if (request.type === 'getIconUrl') {
-            fetch(chrome.runtime.getURL('img/icon148.png'))
-                .then(fetchRequest => fetchRequest.blob())
-                .then(blob => readBlob(blob))
-                .then(x => sendResponse(x));
+        } else if (request.type === 'sbtRequest') {
+            SbtResolver.getSBT(request.value).then(x => sendResponse(x)).catch(e => sendResponse({}));
             return true;
+        } else if (request.type === 'getIconUrl') {
+            if (request.custom=="") {
+                fetch(chrome.runtime.getURL('img/icon148.png'))
+                    .then(fetchRequest => fetchRequest.blob())
+                    .then(blob => readBlob(blob))
+                    .then(x => sendResponse(x));
+                return true;
+            } else {
+                fetch(chrome.runtime.getURL(request.custom))
+                    .then(fetchRequest => fetchRequest.blob())
+                    .then(blob => readBlob(blob))
+                    .then(x => sendResponse(x));
+                return true;
+            }
         } else if (request.type === 'getTwitterIconUrl') {
             fetch(chrome.runtime.getURL('img/twitter.svg'))
                 .then(fetchRequest => fetchRequest.blob())
