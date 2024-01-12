@@ -3031,7 +3031,7 @@
         "recipient": "@clrfund",
         "forwardRecipient": true,
         "recipientAddress": {
-            "mantle": "0x0CF30daf2Fb962Ed1d5D19C97F5f6651F3b691c1"
+            "mantle": "0x6978e581B12979dadd9A4BA136F77cA00e1111fC"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
