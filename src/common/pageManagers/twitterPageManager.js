@@ -10,12 +10,16 @@ export class TwitterPageManager extends AbstractPageManager {
 
     constructor(document) {
         super(document)
-    }
+            }
 
     async init() {
+      console.log("Starting init")
         this.requestLimiter = new RequestLimiter([{amount: 10, time: 1000}]);
+        console.log("Getting icon now")
         this.iconUrl = await this.getIcon();
+        console.log("Running init")
         this.sbtIconUrl = await this.getIcon("img/sbt.png");
+        console.log("Running init after getting sbt")
         let customTwitterAccounts = await getCustomTwitter();
 
         const entriesWithIcons = Object.entries(customTwitterAccounts).filter(([, value]) =>
@@ -39,6 +43,7 @@ export class TwitterPageManager extends AbstractPageManager {
     }
 
     async check() {
+        console.log("Check called")
         super.check();
         if (await this.isEnabled()) {
             this.searchPlaces();
@@ -49,6 +54,7 @@ export class TwitterPageManager extends AbstractPageManager {
     }
 
     async searchPlaces() {
+      console.log("Searching places")
         const places = Array.from(this.listPlaces());
         const names = new Set(places.map(x => x.name).filter(x => x));
         await this.getInfo(names);
@@ -97,6 +103,28 @@ export class TwitterPageManager extends AbstractPageManager {
         });
         return responses.reduce((a, b) => ({...a, ...b}));
     }
+
+    async checkSBT(address) {
+      if (!address) return false;
+      console.log(address)
+      try {
+          return new Promise((resolve, reject) => {
+              chrome.runtime.sendMessage({ type: "sbtRequest", value: address }, response => {
+                  if (chrome.runtime.lastError) {
+                      reject(new Error(chrome.runtime.lastError.message));
+                  } else if (response && response.error) {
+                      reject(new Error(response.error));
+                  } else {
+                      resolve(response);
+                  }
+              });
+          });
+      } catch (error) {
+          console.error('Error in checkSBT:', error);
+          return false;
+      }
+    }
+      
 
     getIcon(_custom="") {
         return new Promise((resolve, reject) => {
@@ -161,7 +189,7 @@ export class TwitterPageManager extends AbstractPageManager {
       return tempIcon
     }
 
-    createIcon = (parent, data, dropdownContent, name) => {
+    createIcon = async (parent, data, dropdownContent, name) => {
       const sbtIcon = this.createIconStyling(this.sbtIconUrl, "sbtIcon", "MJ-SBT");
       let _iconUrl = data[name] ? this.allIcons[data[name].iconUrl] : this.allIcons.default;
       let iconClassName = "idrissIcon"
@@ -170,12 +198,13 @@ export class TwitterPageManager extends AbstractPageManager {
       icon.setAttribute("tabindex", "-1");
       const dropdown = document.createElement("div");
       icon.append(dropdown);
-      parent
+      let appendingElem = parent
         .querySelector(
           ".r-adyw6z.r-135wba7.r-1vr29t4.r-1awozwy.r-6koalj, .r-bcqeeo.r-qvutc0.r-37j5jr.r-a023e6.r-rjixqe.r-b88u0q.r-1awozwy, .r-1b6yd1w.r-7ptqe7.r-1vr29t4.r-1awozwy.r-6koalj, .r-bcqeeo.r-qvutc0.r-37j5jr.r-1b43r93.r-hjklzo.r-b88u0q.r-1awozwy"
         )
-        ?.append(icon);
-      // if (checkSBT(Object.values(data)?[0]))
+      appendingElem?.append(icon);
+      // console.log("check sbt", await this.checkSBT(Object.values(data)[0]))
+      if (await this.checkSBT(Object.values(data)[0])) appendingElem?.append(sbtIcon);
       icon.onmouseover = (e) => {
       e.stopPropagation();
       e.preventDefault();

@@ -7,7 +7,8 @@
     "@idriss-crypto/send-to-anyone-core": "link:../send-to-anyone-core",
     "fast-creator": "^1.6.0",
     "idriss-crypto": "link:../ts-library",
-    "web3": "^1.7.0"
+    "node-polyfill-webpack-plugin": "^3.0.0",
+    "web3": "^4.3.0"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^11.0.0",
