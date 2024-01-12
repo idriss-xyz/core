@@ -165,7 +165,7 @@ export class TwitterPageManager extends AbstractPageManager {
         }
     }
 
-    createIconStyling = (url, className, name) => {
+    createIconStyling = (url, className, name, options = {}) => {
       const tempIcon = this.document.createElement('div');
       tempIcon.className = className;
       tempIcon.dataset.sourceName = name;
@@ -176,14 +176,17 @@ export class TwitterPageManager extends AbstractPageManager {
       tempIcon.style.borderbottom = "2px solid transparent";
       tempIcon.style.borderLeft = "0.3em solid transparent";
       tempIcon.style.borderRight = "0.3em solid transparent";
-      let _iconUrl = url;
-      tempIcon.style.background = `url(${_iconUrl}) no-repeat`;
+      tempIcon.style.background = `url(${url}) no-repeat`;
       tempIcon.style.backgroundSize = `contain`;
+
+      for (const [key, value] of Object.entries({...options})) {
+          tempIcon.style[key] = value;
+      }
       return tempIcon
     }
 
     createIcon = async (parent, data, dropdownContent, name) => {
-      const sbtIcon = this.createIconStyling(this.sbtIconUrl, "sbtIcon", "MJ-SBT");
+      const sbtIcon = this.createIconStyling(this.sbtIconUrl, "sbtIcon", "MJ-SBT", {borderLeft: "", width: "1.2em", height: "1.2em", margin: "-1px 0 -1px -2px"});
       let _iconUrl = data[name] ? this.allIcons[data[name].iconUrl] : this.allIcons.default;
       let iconClassName = "idrissIcon"
       const icon = this.createIconStyling(_iconUrl, iconClassName, name);
