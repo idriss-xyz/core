@@ -145,57 +145,38 @@ class AddressResolverClass extends IdrissCrypto {
             }
         }
 
-        // adjust batch resolver size accordingly
-        const batchSize = 3;
-        let digestedMessages = [];
-
+        let digestedPromises = {};
         for (let [network_, coins] of Object.entries(priorityTags)) {
             if (network && network_ != network) continue;
             for (let [coin_, tags] of Object.entries(coins)) {
                 if (coin && coin_ != coin) continue;
                 for (let [tag_, tag_key] of Object.entries(tags)) {
                     if (tag_key) {
-                        const digested = this.digestMessage(identifier + tag_key);
-                        digestedMessages.push({ tag: tag_, digested });
+                        digestedPromises[tag_] = await this.digestMessage(identifier + tag_key);
                     }
                 }
             }
         }
 
-        console.log("digested strings created", identifier, digestedMessages);
-        ///awaiting on the end for better performance
+        const digestedMessages = Object.values(digestedPromises);
+
+        const resolvedPromises = await this.makeApiCallBatch(digestedMessages);
+
         let foundMatches = {};
-        for (let i = 0; i < digestedMessages.length; i += batchSize) {
-            const batch = digestedMessages.slice(i, i + batchSize);
 
-            const batchPromises = batch.map(({ tag, digested }) => ({
-                tag,
-                promise: digested.then((digestedHash) => this.makeApiCall(digestedHash)),
-            }));
+        resolvedPromises.forEach(obj => {
+            if (obj.result && obj.result !== "") {
+                const hashKey = Object.keys(digestedPromises).find(key => digestedPromises[key] === obj.hash);
+                if (hashKey) {
+                    foundMatches[hashKey] = obj.result;
+                } else{console.log("no match", hashKey, obj.result, obj.hash)}
+            }
+        });
 
-            for (let { tag, promise } of batchPromises) {
-                try {
-                    const address = await promise;
-                    if (address) {
-                        foundMatches[tag] = address;
-                    }
-                } catch (e) {
-                    console.warn(e);
-                }
-            }
-            if (Object.keys(foundMatches).length > 0) {
-                // return twitter id when twitter id was searched for
-                if (twitterID) {
-                    return { input: identifierT, result: foundMatches, twitterID: identifier };
-                } else {
-                    return { input: identifier, result: foundMatches };
-                }
-            }
-        }
         if (twitterID) {
-            return { input: identifierT, result: {}, twitterID: identifier };
+            return { input: identifierT, result: foundMatches, twitterID: identifier };
         } else {
-            return { input: identifier, result: {} };
+            return { input: identifier, result: foundMatches };
         }
     }
 
