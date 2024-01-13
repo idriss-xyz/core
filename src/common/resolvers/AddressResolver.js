@@ -1,16 +1,20 @@
 import { TwitterIdResolver } from "./TwitterIdResolver";
 
-import { lowerFirst, getCustomTwitter, regM, regPh, regT, priorityTags } from "../utils";
+import { lowerFirst, getCustomTwitter, regM, regPh, regT, priorityTags, MULTIRESOLVER_ABI, MULTIRESOLVER_ADDRESS } from "../utils";
 const { IdrissCrypto } = require("idriss-crypto/cjs/browser");
+import { Web3 } from 'web3';
+
 
 if (globalThis.window != globalThis) {
     globalThis.window = globalThis;
 }
 
 class AddressResolverClass extends IdrissCrypto {
-    constructor() {
-        super("https://polygon-rpc.com/");
+    constructor(rpc="https://polygon-rpc.com/") {
+        super(rpc);
+        this.web3 = new Web3(rpc);
         this.contract = this.generateIDrissRegistryContract();
+        this.multiResolver = new this.web3.eth.Contract(MULTIRESOLVER_ABI, MULTIRESOLVER_ADDRESS);
     }
 
     async get(identifier, coin = "", network = "") {
@@ -80,39 +84,39 @@ class AddressResolverClass extends IdrissCrypto {
             twitterID = true;
         }
 
-        let foundMatchesPromises = {};
+        let digestedPromises = {};
         for (let [network_, coins] of Object.entries(IdrissCrypto.getWalletTags())) {
             if (network && network_ != network) continue;
             for (let [coin_, tags] of Object.entries(coins)) {
                 if (coin && coin_ != coin) continue;
                 for (let [tag_, tag_key] of Object.entries(tags)) {
                     if (tag_key) {
-                        foundMatchesPromises[tag_] = this.digestMessage(identifier + tag_key).then((digested) => this.makeApiCall(digested));
+                        digestedPromises[tag_] = await this.digestMessage(identifier + tag_key);
                     }
                 }
             }
         }
-        console.log("resolve promise created", identifier, foundMatchesPromises);
-        ///awaiting on the end for better performance
+
+        const digestedMessages = Object.values(digestedPromises);
+
+        const resolvedPromises = await this.makeApiCallBatch(digestedMessages);
+
         let foundMatches = {};
-        for (let [tag_, promise] of Object.entries(foundMatchesPromises)) {
-            try {
-                let address = await promise;
-                if (address) {
-                    foundMatches[tag_] = address;
+
+        resolvedPromises.forEach(obj => {
+            if (obj.result && obj.result !== "") {
+                const hashKey = Object.keys(digestedPromises).find(key => digestedPromises[key] === obj.hash);
+                if (hashKey) {
+                    foundMatches[hashKey] = obj.result;
                 }
-            } catch (e) {
-                console.warn(e);
             }
-        }
-        console.log({ identifierT, identifier, foundMatches });
-        // return twitter id when twitter id was searched for
+        });
+
         if (twitterID) {
             return { input: identifierT, result: foundMatches, twitterID: identifier };
         } else {
             return { input: identifier, result: foundMatches };
         }
-        // catch block if coin/network (combination) is invalid/not found
     }
 
     async simpleResolveTwitter(identifier, coin = "", network = "", twitterId) {
@@ -210,6 +214,11 @@ class AddressResolverClass extends IdrissCrypto {
                 }
             }
         }
+    }
+
+    async makeApiCallBatch(digestedArray) {
+        console.log("Multiresolving")
+        return await this.multiResolver.methods.getMultipleIDriss(digestedArray).call();
     }
 
     async getManyReverse(value) {

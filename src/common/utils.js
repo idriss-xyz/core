@@ -6,7 +6,9 @@ export const regPh = /^(\+\(?\d{1,4}\s?)\)?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-
 export const regM = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
 export const regT = /^@[a-zA-Z0-9_]{1,15}$/;
 export const ERC1155_ABI = [{"constant":true,"inputs":[{"name":"_owner","type":"address"},{"name":"_id","type":"uint256"}],"name":"balanceOf","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"}];
+export const MULTIRESOLVER_ABI = [{"inputs":[{"internalType":"string[]","name":"hashes","type":"string[]"}],"name":"getMultipleIDriss","outputs":[{"components":[{"internalType":"string","name":"hash","type":"string"},{"internalType":"string","name":"result","type":"string"}],"internalType":"struct IDrissWrapperContract.IDrissResult[]","name":"","type":"tuple[]"}],"stateMutability":"view","type":"function"}];
 export const SBT_ADDRESS = "0x3803856585A7fbC6A3bCa94A0b9C49a48af90DD3";
+export const MULTIRESOLVER_ADDRESS = "0xd7F1f92079B8c2563D8989aD4d08ca8BFA602Ca7"
 
 export const customTwitterAccounts = {
     '1': {
