@@ -198,7 +198,6 @@ class AddressResolverClass extends IdrissCrypto {
     }
 
     async makeApiCallBatch(digestedArray) {
-        console.log("Multiresolving")
         return await this.multiResolver.methods.getMultipleIDriss(digestedArray).call();
     }
 
