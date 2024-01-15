@@ -3,14 +3,16 @@ import {RequestLimiter} from "../RequestLimiter";
 import {Tipping} from "../tipping/Tipping";
 import {TippingUnregistered} from '../tipping/tippingUnregistered'
 import {CustomWidget} from "../tipping/customTwitter";
-import {getCustomTwitter} from "../utils";
+import {getCustomTwitter, deviceType} from "../utils";
 
 export class TwitterPageManager extends AbstractPageManager {
     static namesResults = {};
 
     constructor(document) {
         super(document)
-            }
+        this.mobile = deviceType() == 'mobile'
+        console.log("this.mobile", this.mobile)
+    }
 
     async init() {
         this.requestLimiter = new RequestLimiter([{amount: 10, time: 1000}]);
@@ -187,6 +189,13 @@ export class TwitterPageManager extends AbstractPageManager {
 
     createIcon = async (parent, data, dropdownContent, name) => {
     //   const sbtIcon = this.createIconStyling(this.sbtIconUrl, "sbtIcon", "MJ-SBT", {borderLeft: "", width: "1.2em", height: "1.2em", margin: "-1px 0 -1px -2px"});
+      let linkElem = parent.querySelector(`a[href="/${name.replace('@', '')}"]`);
+      if (this.mobile){
+        linkElem?.addEventListener('click', function(event) {
+            event.preventDefault();  // Prevents the default link action
+            event.stopPropagation(); // Stops the event from propagating to other handlers
+        }, true);
+      }
       let _iconUrl = data[name] ? this.allIcons[data[name].iconUrl] : this.allIcons.default;
       let iconClassName = "idrissIcon"
       const icon = this.createIconStyling(_iconUrl, iconClassName, name);
