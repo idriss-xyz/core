@@ -192,8 +192,8 @@ export class TwitterPageManager extends AbstractPageManager {
       let linkElem = parent.querySelector(`a[href="/${name.replace('@', '')}"]`);
       if (this.mobile){
         linkElem?.addEventListener('click', function(event) {
-            event.preventDefault();  // Prevents the default link action
-            event.stopPropagation(); // Stops the event from propagating to other handlers
+            event.preventDefault(); 
+            event.stopPropagation();
         }, true);
       }
       let _iconUrl = data[name] ? this.allIcons[data[name].iconUrl] : this.allIcons.default;
