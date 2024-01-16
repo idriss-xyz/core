@@ -11,7 +11,6 @@ export class TwitterPageManager extends AbstractPageManager {
     constructor(document) {
         super(document)
         this.mobile = deviceType() == 'mobile'
-        console.log("this.mobile", this.mobile)
     }
 
     async init() {
@@ -215,14 +214,26 @@ export class TwitterPageManager extends AbstractPageManager {
       let dropdown = dropdownContent;
       dropdown.addEventListener("click", (e) => e.stopPropagation());
         this.document.body.append(dropdown);
+
         let rect = icon.getBoundingClientRect();
         dropdown.classList.add("idrissTwitterDropdown");
         dropdown.style.all = "initial";
         dropdown.style.position = "absolute";
-        dropdown.style.left = scrollX + rect.left + "px";
-        dropdown.style.top = scrollY + rect.top + rect.height + "px";
+
+        let dropdownLeft = scrollX + rect.left;
+        let dropdownTop = scrollY + rect.top + rect.height;
+
+        dropdown.style.left = `${dropdownLeft}px`;
+        dropdown.style.top = `${dropdownTop}px`;
         dropdown.style.zindex = 1000000;
         dropdown.onclick = () => dropdown.classList.add("isClicked");
+
+        let viewportWidth = window.innerWidth;
+        let dropdownRightEdge = dropdownLeft + dropdown.offsetWidth;
+
+        if (this.mobile && dropdownRightEdge > viewportWidth) {
+            dropdown.style.left = Math.max(viewportWidth - dropdown.offsetWidth, 0) + "px";
+        }
   
         if (dropdown !== this.lastDropdown) {
           this.lastDropdown?.remove();
