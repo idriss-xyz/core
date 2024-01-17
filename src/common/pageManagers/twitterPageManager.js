@@ -209,10 +209,10 @@ export class TwitterPageManager extends AbstractPageManager {
       appendingElem?.append(icon);
     //   if (await this.checkSBT(Object.values(data)[0])) appendingElem?.append(sbtIcon);
       icon.onmouseover = (e) => {
-      e.stopPropagation();
-      e.preventDefault();
-      let dropdown = dropdownContent;
-      dropdown.addEventListener("click", (e) => e.stopPropagation());
+        e.stopPropagation();
+        e.preventDefault();
+        let dropdown = dropdownContent;
+        dropdown.addEventListener("click", (e) => e.stopPropagation());
         this.document.body.append(dropdown);
 
         let rect = icon.getBoundingClientRect();
