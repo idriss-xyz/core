@@ -114,6 +114,17 @@ export function getCustomTwitter() {
   return freshCustomTwitter;
 }
 
+export function deviceType() {
+    const ua = navigator.userAgent;
+    if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
+        return "tablet";
+    }
+    if (/Mobile|iP(hone|od)|Android|BlackBerry|IEMobile|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(ua)) {
+        return "mobile";
+    }
+    return "desktop";
+}
+
 fetchCustomTwitter();
 // Automatic fetching every 5 minutes
 const fetchInterval = 5 * 60 * 1000; // 5 minutes in milliseconds
