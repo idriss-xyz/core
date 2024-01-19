@@ -1,6 +1,6 @@
 import { TwitterIdResolver } from "./TwitterIdResolver";
 
-import { lowerFirst, getCustomTwitter, regM, regPh, regT, priorityTags, MULTIRESOLVER_ABI, MULTIRESOLVER_ADDRESS } from "../utils";
+import { lowerFirst, getCustomTwitter, regM, regPh, regT, priorityTags, walletTags, MULTIRESOLVER_ABI, MULTIRESOLVER_ADDRESS } from "../utils";
 const { IdrissCrypto } = require("idriss-crypto/cjs/browser");
 import { Web3 } from 'web3';
 
@@ -13,7 +13,6 @@ class AddressResolverClass extends IdrissCrypto {
     constructor(rpc="https://polygon-rpc.com/") {
         super(rpc);
         this.web3 = new Web3(rpc);
-        this.contract = this.generateIDrissRegistryContract();
         this.multiResolver = new this.web3.eth.Contract(MULTIRESOLVER_ABI, MULTIRESOLVER_ADDRESS);
     }
 
@@ -85,7 +84,7 @@ class AddressResolverClass extends IdrissCrypto {
         }
 
         let digestedPromises = {};
-        for (let [network_, coins] of Object.entries(IdrissCrypto.getWalletTags())) {
+        for (let [network_, coins] of Object.entries(walletTags)) {
             if (network && network_ != network) continue;
             for (let [coin_, tags] of Object.entries(coins)) {
                 if (coin && coin_ != coin) continue;
@@ -177,23 +176,6 @@ class AddressResolverClass extends IdrissCrypto {
             return { input: identifierT, result: foundMatches, twitterID: identifier };
         } else {
             return { input: identifier, result: foundMatches };
-        }
-    }
-
-    async makeApiCall(digested) {
-        for (let i = 0; i < 10; i++) {
-            try {
-                return await (await this.contract).methods.getIDriss(digested).call();
-            } catch (e) {
-                if (e.code == 429) {
-                    console.log("Rate limits, trying again");
-                    await new Promise((r) => setTimeout(r, Math.random() * 2000));
-                } else if (e.message.includes("Binding does not exist")) {
-                    return // does not exist
-                } else {
-                    throw e;
-                }
-            }
         }
     }
 
