@@ -23,6 +23,30 @@
         "isGrantee": false,
         "iconUrl": "img/icon148_red.png"
     },
+    "1280538599557984256": {
+        "customHeader": "Send to @aavegotchi",
+        "customText": "",
+        "buttonValue": "Send",
+        "hostURL": "https://www.idriss.xyz/send?",
+        "recipient": "@aavegotchi",
+        "forwardRecipient": true,
+        "recipientAddress": {
+            "Polygon": "0xb208f8BB431f580CC4b216826AFfB128cd1431aB "
+        },
+        "showNetworkSelection": true,
+        "showValueSelection": true,
+        "showTokenSelection": true,
+        "showInput": false,
+        "showMessageBox": false,
+        "tokenFilter": {
+            "network": [
+                "Polygon"
+            ]
+        },
+        "networkFilter": null,
+        "isGrantee": false,
+        "iconUrl": "default"
+    },
     "1286844247388364800": {
         "customHeader": "Donate to @0x_salon",
         "customText": "",
