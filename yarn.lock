@@ -830,15 +830,15 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-2.0.2.tgz#d9fae00a2d5cb40f92cfe64b47ad749fbc38f917"
   integrity sha512-6EwiSjwWYP7pTckG6I5eyFANjPhmPjUX9JRLUSfNPC7FX7zK9gyZAfUEaECL6ALTpGX5AjnBq3C9XmVWPitNpw==
 
-"@idriss-crypto/send-to-anyone-core@^0.4.6":
-  version "0.4.6"
-  resolved "https://registry.yarnpkg.com/@idriss-crypto/send-to-anyone-core/-/send-to-anyone-core-0.4.6.tgz#9b89a288d4977f1077e85a50fb046904be24efa8"
-  integrity sha512-vA8ZPO2DCHy7cOgdmB+nLOwDYYnvgTiwk1NNeAIzk8ZjAdmRBhlxQtBSz4MNndeYLD9u5goIcza/FVOSM6NmFg==
+"@idriss-crypto/send-to-anyone-core@^0.4.9":
+  version "0.4.9"
+  resolved "https://registry.yarnpkg.com/@idriss-crypto/send-to-anyone-core/-/send-to-anyone-core-0.4.9.tgz#58786d4eca9ee2c582d8a9411f98953a1a89f603"
+  integrity sha512-HdfXefnSXaKpWH32uc6NAx6taip1yuRIh3jh9uhf1giMa0w/BI9aue/m2cAm7NzutN/AFJTZxdFNhtNr2IFUhA==
   dependencies:
     "@web3modal/ethers5" "^3.5.3"
     alchemy-sdk "^2.0.2"
     fast-creator "^1.6.0"
-    idriss-crypto "^1.9.0"
+    idriss-crypto "^1.9.2"
     web3 "^1.7.0"
 
 "@ioredis/commands@^1.1.1":
@@ -4591,10 +4591,10 @@ idna-uts46-hx@^2.3.1:
   dependencies:
     punycode "2.1.0"
 
-idriss-crypto@^1.9.0:
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/idriss-crypto/-/idriss-crypto-1.9.0.tgz#75c4ad6da351943f76b0c9c788f272a1468f21af"
-  integrity sha512-U1zvd1cNzKtbgL+PAYCWfbRtOZlx80Y8kDy+NcBriDHIKecoFiJxygFaC5g5wHctwjNyG0zRqopHZ6QRfbclPA==
+idriss-crypto@^1.9.1, idriss-crypto@^1.9.2:
+  version "1.9.2"
+  resolved "https://registry.yarnpkg.com/idriss-crypto/-/idriss-crypto-1.9.2.tgz#cb796ce5d9c95ab44bdce7cd5c0b2358583c5988"
+  integrity sha512-pNT+18gVJUmKlPJvfI1i9NQGCi9m06U4tz0kjCLirZMOcpo++cGDIX4VfeSjfNFAxrpNG7hipXjcoEeErYpJCA==
   dependencies:
     "@ethersproject/bignumber" "^5.7.0"
     "@types/node-fetch" "^2.5.12"
