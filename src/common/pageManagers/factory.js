@@ -32,8 +32,9 @@ const specificDomainList = {
     "explorer.goerli.linea.build": LineaExplorerPageManager,
     "explorer.linea.build": LineaExplorerPageManager,
     "explorer.zksync.io": ZKScanPageManager,
-    "base.blockscout.com": BlockscoutPageManager,
-    "explorer.mantle.xyz": MantleExplorerPageManager
+    "blockscout.com": BlockscoutPageManager,
+    "explorer.mantle.xyz": MantleExplorerPageManager,
+    "blockscout.scroll.io": LineaExplorerPageManager
 }
 const defaultDomainList = [
     "binance.com",

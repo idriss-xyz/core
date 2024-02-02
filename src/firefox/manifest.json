@@ -46,7 +46,8 @@
         "https://*.bittrex.com/*",
         "https://*.coincheck.com/*",
         "https://*.guarda.co/*",
-        "https://*.blockscout.com/*"
+        "https://*.blockscout.com/*",
+        "https://*.blockscout.scroll.io/*"
       ],
       "js": ["contentScript.js"],
       "all_frames": true
@@ -96,7 +97,8 @@
     "https://*.bittrex.com/*",
     "https://*.coincheck.com/*",
     "https://*.guarda.co/*",
-    "https://*.blockscout.com/*"
+    "https://*.blockscout.com/*",
+    "https://*.blockscout.scroll.io/*"
   ],
   "homepage_url": "https://www.idriss.xyz",
   "icons": {

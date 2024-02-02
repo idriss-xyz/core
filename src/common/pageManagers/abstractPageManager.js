@@ -123,8 +123,10 @@ export class AbstractPageManager {
             link.href = "https://twitter.com/" + x.slice(1,);
             link.target = "_blank"
             if (document.location.hostname.endsWith('explorer.zksync.io')) link.style.margin = '2px 0 0 0';
-            if (document.location.hostname.endsWith('base.blockscout.com')) link.style.margin = '6px 0 0 0';
-            if (document.location.hostname.endsWith('explorer.goerli.linea.build')) {
+            if (document.location.hostname.endsWith('blockscout.com')) link.style.margin = '6px 0 0 0';
+            if (document.location.hostname.endsWith('explorer.goerli.linea.build') ||
+                document.location.hostname.endsWith('explorer.linea.build') ||
+                document.location.hostname.endsWith('blockscout.scroll.io')) {
                 var sibling = element.nextElementSibling;
                 if (sibling.matches('.d-md-inline-block.d-xl-none')) {
                     console.log("removing sibling")
