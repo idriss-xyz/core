@@ -4,7 +4,7 @@
     "buildOnce": "webpack"
   },
   "dependencies": {
-    "@idriss-crypto/send-to-anyone-core": "^0.4.10",
+    "@idriss-crypto/send-to-anyone-core": "^0.4.11",
     "fast-creator": "^1.6.0",
     "idriss-crypto": "^1.9.1",
     "node-polyfill-webpack-plugin": "^3.0.0",
