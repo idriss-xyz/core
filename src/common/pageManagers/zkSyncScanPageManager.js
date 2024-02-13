@@ -1,8 +1,57 @@
 import {AbstractPageManager} from "./abstractPageManager";
-import css from "!css-loader!sass-loader!./popup.scss";
+import {RequestLimiter} from "../RequestLimiter";
+
+export class ZKScanPageManager extends AbstractPageManager {
+    async init() {
+        this.check()
+        addEventListener('load', () => this.check())
+        addEventListener('focus', () => this.check())
+        addEventListener('popstate', () => this.check())
+        addEventListener('click', () => setTimeout(() => this.check(), 250))
+        setInterval(() => this.check(), 2000);
+
+        // default
+        this.document.addEventListener('input', e => this.inputChanged(e, e.target))
+        this.document.addEventListener('change', e => this.inputChanged(e, e.target))
+        this.document.addEventListener('paste', e => this.inputChanged(e, e.target))
+        this.document.addEventListener('focus', e => this.inputChanged(e, e.target))
+    }
 
 
-export class DefaultPageManager extends AbstractPageManager {
+    findPlacesForReverseResolve() {
+  return new Promise((resolve) => {
+    let ret = super.findPlacesForReverseResolve();
+    const selector = '.displayed-string, a[href^="/address/"]:not(.token-link)';
+    const elements = this.document.querySelectorAll(selector);
+
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          const element = entry.target;
+          if (element.classList.contains('idrissReverseResolved')) continue;
+          if (element.querySelector(selector)) continue; // has another element inside
+          let address;
+          if (!element.href) address = element.textContent;
+          else if (element.href) address = element.href.match(/\/address\/(0x[0-9a-fA-F]{40})/)[1];
+          if (element.nextSibling && element.nextSibling.className === "icon" && element.nextSibling.innerHTML === "") element.nextSibling.remove();
+          if (/^0x[0-9a-fA-F]{40}$/.test(address)) {
+            element.style.display = 'flex';
+            ret.push({ address, callback: x => this.defaultReverseResolve(x, element) });
+          }
+          observer.unobserve(element); // Stop observing this element once it's in view
+        }
+      }
+      resolve(ret);
+    });
+
+    for (const element of elements) {
+      observer.observe(element);
+    }
+  });
+}
+
+
+
     badWords = ["login", "signup", "email", "mail", "phone", "signin"];
 
     constructor(document) {
@@ -11,12 +60,6 @@ export class DefaultPageManager extends AbstractPageManager {
         this.document = document;
     }
 
-    init() {
-        this.document.addEventListener('input', e => this.inputChanged(e, e.target))
-        this.document.addEventListener('change', e => this.inputChanged(e, e.target))
-        this.document.addEventListener('paste', e => this.inputChanged(e, e.target))
-        this.document.addEventListener('focus', e => this.inputChanged(e, e.target))
-    }
 
     async inputChanged(e, input) {
         if (!await this.isEnabled()) return;

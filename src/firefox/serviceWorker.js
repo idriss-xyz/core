@@ -1,22 +1,37 @@
-import {AdressesResolver} from "../common/resolvers/AdressesResolver";
-import {TwitterIdResolver} from "../common/resolvers/TwitterIdResolver";
-import {lowerFirst, regT} from "../common/utils";
+import {AddressResolver} from "../common/resolvers/AddressResolver";
+import {SbtResolver} from "../common/resolvers/SbtResolver";
+
 
 browser.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
         if (request.type === 'apiAddressesRequest') {
-            AdressesResolver.get(request.value).then(x => sendResponse(x)).catch(e => sendResponse({}));
+            AddressResolver.get(request.value).then(x => sendResponse(x)).catch(e => sendResponse({}));
             return true;
-        } else if (request.type === 'apiAddressesPreload') {
-            let twitter = request.value.map(identifier => {
-                return lowerFirst(identifier).replace(" ", "");
-            }).filter(identifier => identifier?.match(regT));
-            if (twitter.length > 0) {
-                TwitterIdResolver.preloadMany(twitter).then(x => sendResponse(x)).catch(e => sendResponse({}));
-            }
+        } else if (request.type === 'apiAddressesRequestBulk') {
+            AddressResolver.getMany(request.value, '', request.network??'').then(x => sendResponse(x)).catch(e => sendResponse({}));
+            return true;
+        } else if (request.type === 'reverseResolveRequest') {
+            AddressResolver.getManyReverse(request.value).then(x => sendResponse(x)).catch(e => sendResponse({}));
+            return true;
+        } else if (request.type === 'sbtRequest') {
+            SbtResolver.getSBT(request.value).then(x => sendResponse(x)).catch(e => sendResponse({}));
             return true;
         } else if (request.type === 'getIconUrl') {
-            fetch(browser.runtime.getURL('img/icon148.png'))
+            if (request.custom=="") {
+                fetch(chrome.runtime.getURL('img/icon148.png'))
+                    .then(fetchRequest => fetchRequest.blob())
+                    .then(blob => readBlob(blob))
+                    .then(x => sendResponse(x));
+                return true;
+            } else {
+                fetch(chrome.runtime.getURL(request.custom))
+                    .then(fetchRequest => fetchRequest.blob())
+                    .then(blob => readBlob(blob))
+                    .then(x => sendResponse(x));
+                return true;
+            }
+        } else if (request.type === 'getTwitterIconUrl') {
+            fetch(chrome.runtime.getURL('img/twitter.svg'))
                 .then(fetchRequest => fetchRequest.blob())
                 .then(blob => readBlob(blob))
                 .then(x => sendResponse(x));

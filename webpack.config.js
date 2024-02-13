@@ -1,5 +1,6 @@
 const path = require('path');
 const CopyPlugin = require("copy-webpack-plugin");
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
 module.exports = {
     mode: "development", // "production" | "development" | "none"
@@ -31,6 +32,7 @@ module.exports = {
                 {from: "./src/common/img", to: "firefox/img"},
             ],
         }),
+        new NodePolyfillPlugin()
     ],
     module: {
         rules: [
@@ -41,7 +43,19 @@ module.exports = {
                     "sass-loader" // compiles Sass to CSS, using Node Sass by default
                 ]
 
+            },
+            {
+                test: /\.mpts$/,
+                use: [
+                    "mpts-loader"
+                ]
+
             }
         ]
-    }
+    } ,
+    optimization: {
+        splitChunks: {
+            chunks: ()=>false,
+        },
+    },
 }

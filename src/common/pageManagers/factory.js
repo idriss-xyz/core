@@ -1,17 +1,40 @@
 import {DefaultPageManager} from "./defaultPageManager";
 import {StandalonePageManager} from "./standalonePageManager";
-import {FtxPageManager} from "./FtxPageManager";
 import {HuobiPageManager} from "./HuobiPageManager";
 import {PoapPageManager} from "./PoapPageManager";
 import {TwitterPageManager} from "./twitterPageManager";
 import {CoinbasePageManager} from "./CoinbasePageManager";
+import {EtherscanPageManager} from "./etherscanPageManager";
+import {ZKScanPageManager} from "./zkSyncScanPageManager";
+import {LineaExplorerPageManager} from "./lineaExplorerPageManager";
+import {BlockscoutPageManager} from "./blockscoutPageManager";
+import {MantleExplorerPageManager} from "./mantleExplorerPageManager";
 
 const specificDomainList = {
     "app.poap.xyz": PoapPageManager,
-    "ftx.com": FtxPageManager,
     "huobi.com": HuobiPageManager,
+    "htx.com": HuobiPageManager,
     "twitter.com": TwitterPageManager,
-    "coinbase.com": CoinbasePageManager
+    "coinbase.com": CoinbasePageManager,
+    "etherscan.io": EtherscanPageManager,
+    "polygonscan.com": EtherscanPageManager,
+    "bscscan.com": EtherscanPageManager,
+    "ftmscan.com": EtherscanPageManager,
+    "arbiscan.io": EtherscanPageManager,
+    "snowtrace.io": EtherscanPageManager,
+    "basescan.org": EtherscanPageManager,
+    "scrollscan.org": EtherscanPageManager,
+    "optimistic.etherscan.io": EtherscanPageManager,
+    "moonriver.moonscan.io": EtherscanPageManager,
+    "moonscan.io": EtherscanPageManager,
+    "lineascan.build": EtherscanPageManager,
+    "goerli.lineascan.build": EtherscanPageManager,
+    "explorer.goerli.linea.build": LineaExplorerPageManager,
+    "explorer.linea.build": LineaExplorerPageManager,
+    "explorer.zksync.io": ZKScanPageManager,
+    "blockscout.com": BlockscoutPageManager,
+    "explorer.mantle.xyz": MantleExplorerPageManager,
+    "blockscout.scroll.io": LineaExplorerPageManager
 }
 const defaultDomainList = [
     "binance.com",
@@ -22,26 +45,19 @@ const defaultDomainList = [
     "binance.us",
     "bithumb.com",
     "bitstamp.net",
-    "ftx.us",
     "bitflyer.com",
-    "poloniex.com",
     "gemini.com",
-    "coinone.co.kr",
     "bybit.com",
     "bittrex.com",
-    "okex.com",
-    "liquid.com",
+    "okx.com",
     "coincheck.com",
     "crypto.com",
-    "zaif.jp",
-    "ascendex.com",
-    "tokocrypto.com",
     "poap.xyz",
-    "etherscan.io",
     "guarda.co"
-];
+  ];
 
 export async function pageManagerFactory(document, url) {
+    console.log('pageManagerFactory')
     let specific = Object.entries(specificDomainList).find(([domain, constructor]) => url.hostname === domain || url.hostname.endsWith('.' + domain))
     if (specific) {
         return new specific[1](document)

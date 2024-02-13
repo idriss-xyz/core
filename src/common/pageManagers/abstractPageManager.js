@@ -4,6 +4,7 @@ export class AbstractPageManager {
 
     constructor(document) {
         this.document = document;
+        this.reverseKnownAddresses = {};
     }
 
     generatePopupContent(div, key, elements, callback) {
@@ -36,12 +37,13 @@ export class AbstractPageManager {
             keyElement.className = 'key'
             keyElement.textContent = key;
             item.append(keyElement)
-            if (key.startsWith("@")){
-                keyElement.style.color="#1DA1F2";
+            if (key.startsWith("@")) {
+                keyElement.style.color = "#1DA1F2";
                 let imgElement = document.createElement('img')
                 imgElement.src = "https://www.idriss.xyz/static/images/twitter.png"
                 imgElement.alt = "Twitter"
                 imgElement.className = 'img'
+                imgElement.style.width = '2em';
                 item.append(imgElement)
             }
             let valueElement = document.createElement('div')
@@ -70,7 +72,88 @@ export class AbstractPageManager {
             });
         });
     }
+
+    reverseResolveRequest(value) {
+        return new Promise((resolve, reject) => {
+            chrome.runtime.sendMessage({type: "reverseResolveRequest", value}, response => {
+                resolve(response);
+            });
+        });
+    }
+
     isEnabled() {
         return new Promise(r => chrome.storage.local.get(['enabled'], x => r(x?.enabled ?? true)))
+    }
+
+    /**
+     * @virtual
+     */
+    findPlacesForReverseResolve() {
+        return [];
+    }
+
+    /**
+     * @virtual
+     */
+    check() {
+        this.findReverseResolve();
+    }
+
+    async findReverseResolve() {
+        let places = await this.findPlacesForReverseResolve();
+        let addresses = places.map(x => x.address).filter(a => this.reverseKnownAddresses[a] === undefined);
+        if (addresses.length > 0) {
+            let resp = await this.reverseResolveRequest(addresses)
+            this.reverseKnownAddresses = {...this.reverseKnownAddresses, ...resp}
+        }
+        for (const place of places) {
+            if (this.reverseKnownAddresses[place.address]) {
+                place.callback(this.reverseKnownAddresses[place.address])
+            }
+        }
+    }
+
+    async defaultReverseResolve(x, element) {
+        if (element.classList.contains('idrissReverseResolved')) return;
+        element.title = 'Resolved by IDriss from ' + element.textContent.trim();
+        element.textContent = x;
+        element.classList.add('idrissReverseResolved');
+        if (x[0] == '@') {
+            let link = this.document.createElement('a')
+            link.href = "https://twitter.com/" + x.slice(1,);
+            link.target = "_blank"
+            if (document.location.hostname.endsWith('explorer.zksync.io')) link.style.margin = '2px 0 0 0';
+            if (document.location.hostname.endsWith('blockscout.com')) link.style.margin = '6px 0 0 0';
+            if (document.location.hostname.endsWith('explorer.goerli.linea.build') ||
+                document.location.hostname.endsWith('explorer.linea.build') ||
+                document.location.hostname.endsWith('blockscout.scroll.io')) {
+                var sibling = element.nextElementSibling;
+                if (sibling.matches('.d-md-inline-block.d-xl-none')) {
+                    console.log("removing sibling")
+                    sibling.remove()
+                }
+                element.classList.remove('d-none', 'd-md-none')
+                element.classList.add('d-md-inline-block')
+            };
+            let img = this.document.createElement('img')
+            img.src = await this.getTwitterIcon();
+            img.alt = "Twitter";
+            img.style.width = '1em';
+            img.style.height = '1em';
+            link.append(img)
+            element.prepend(link)
+        }
+    }
+
+    async getTwitterIcon() {
+        if (this.twitterIcon) return this.twitterIcon
+        return await new Promise((resolve, reject) => {
+            chrome.runtime.sendMessage({
+                type: "getTwitterIconUrl"
+            }, response => {
+                resolve(response);
+                this.twitterIcon = response;
+            });
+        });
     }
 }

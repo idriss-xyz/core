@@ -7,64 +7,21 @@ export class AsyncCache {
         this.expirationTime = expirationTime;
     }
 
-    async getOne(args, fun) {
+    async getOne(args) {
         let str = JSON.stringify([this.name, args]);
 
-        let cacheResp = await this.readCache(args);
-        if (cacheResp) return cacheResp.resp;
-        let date = +new Date();
-        let promise = fun();
-        this.promises[str] = {date, promise};
-        promise.then(a => {
-            let obj = {};
-            obj['cache' + str] = {date, value: a};
-            chrome.storage.local.set(obj);
-        });
-        return await promise;
-    }
-
-    async checkCache(args) {
-        let str = JSON.stringify([this.name, args]);
-
-        if (this.promises[str] && new Date() - this.promises[str].date < this.expirationTime) {
-            return true;
-        }
-        let response = (await chrome.storage.local.get('cache' + str))['cache' + str];
+        let response = ((await chrome.storage.local.get('cache' + str))??{})['cache' + str];
         if (response && new Date() - response.date < this.expirationTime) {
-            return true;
-        }
-        return false;
-    }
-
-    async readCache(args) {
-        let str = JSON.stringify([this.name, args]);
-
-        if (this.promises[str] && new Date() - this.promises[str].date < this.expirationTime) {
-            return {resp: await this.promises[str].promise};
-        }
-        let response = (await chrome.storage.local.get('cache' + str))['cache' + str];
-        if (response && new Date() - response.date < this.expirationTime) {
-            return {resp:response.value};
+            return {value: response.value};
         }
         return null;
     }
 
-    async preloadMany(argsArray, fun) {
-        let cacheChecks = (await Promise.all(argsArray.map(async x => [x, !(await this.checkCache(x))])));
-        let argsArrayOfNeeded = cacheChecks.filter(([x, f]) => f).map(([x, _]) => x);
-        let date = +new Date();
-        if (argsArrayOfNeeded.length > 0) {
-            let promise = Promise.resolve(fun(argsArrayOfNeeded));
-            for (let args of argsArray) {
-                let str = JSON.stringify([this.name, args]);
-                this.promises[str] = {date, promise: promise.then(a => a[str])};
-                promise.then(a => {
-                    let obj = {};
-                    obj['cache' + str] = {date, value: a[args]};
-                    chrome.storage.local.set(obj);
-                });
-            }
-            await promise;
-        }
+    async setOne(args, value) {
+        let str = JSON.stringify([this.name, args]);
+
+        let obj = {};
+        obj['cache' + str] = {date: +new Date(), value}
+        await chrome.storage.local.set(obj)
     }
 }
