@@ -1,3 +1,4 @@
 buildResults/
 .idea/
 node_modules/
+.DS_STORE

@@ -110,5 +110,15 @@
   "action": {
     "default_popup": "standalone.html",
     "default_icon": "img/icon16bw.png"
-  }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "widgets.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ]
 }
