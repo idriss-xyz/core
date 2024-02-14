@@ -1,36 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 html {
+    width: 400px;
+    height: 400px;
     margin: 0;
     padding: 0;
+    margin: 0 auto;
     user-select: none;
-    font-family: 'Segoe UI', sans-serif;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 
 body {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    min-height: 40vh;
+    width: 400px;
+    height: 400px;
     margin: 0;
     padding: 0;
-    background: #ffffff;
-}
-
-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-}
-
-header img {
-    width: 70%;
-    max-width: 70vh;
-}
-
-section {
-    flex: 1 0 auto;
-    padding: 40px;
-    font-size: 16px;
-    font-family: 'Segoe UI', sans-serif;
+    background-color: #f9fafb;
 }
 
 div#InputHeader {
@@ -56,16 +46,6 @@ input[type="text"] {
 }
 input[type="text"]:focus {
   border: 1px solid #a6a6a6;
-}
-
-footer a {
-    color: #000000;
-    display: block;
-    text-align: center;
-    padding: 20px;
-    text-decoration: none;
-    font-size: 16px;
-    font-family: 'Segoe UI', sans-serif;
 }
 
 .enabled {

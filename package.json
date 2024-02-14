@@ -1,13 +1,17 @@
 {
   "scripts": {
-    "build": "webpack --watch",
-    "buildOnce": "webpack"
+    "buildTailwindDev": "npx tailwind -i ./src/common/standalone.css -o ./src/common/tailwindStandalone.css",
+    "buildTailwind": "npx tailwind -i ./src/common/standalone.css -o ./src/common/tailwindStandalone.css --minify",
+    "build": "yarn buildTailwindDev && webpack --watch",
+    "buildDev": "yarn buildTailwindDev && webpack",
+    "buildOnce": "yarn buildTailwind && webpack"
   },
   "dependencies": {
     "@idriss-crypto/send-to-anyone-core": "^0.4.11",
     "fast-creator": "^1.6.0",
     "idriss-crypto": "^1.9.1",
     "node-polyfill-webpack-plugin": "^3.0.0",
+    "tailwindcss": "^3.4.1",
     "web3": "^4.3.0"
   },
   "devDependencies": {
