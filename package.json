@@ -5,7 +5,7 @@
     "build": "yarn buildTailwindDev && webpack --watch",
     "buildDev": "yarn buildTailwindDev && webpack",
     "buildOnce": "yarn buildTailwind && webpack",
-    "lint": "eslint \"src/**/*.ts\"",
+    "lint": "eslint \"src/**/*.ts\""
   },
   "dependencies": {
     "@idriss-crypto/send-to-anyone-core": "^0.4.11",
@@ -14,7 +14,7 @@
     "idriss-crypto": "^1.9.1",
     "node-polyfill-webpack-plugin": "^3.0.0",
     "web3": "^4.3.0",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
     "tailwindcss": "^3.4.1"
   },
   "devDependencies": {
