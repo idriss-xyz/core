@@ -12,7 +12,7 @@
         <img class="my-2 ml-2 h-12 w-auto" src="img/logo.png" alt="IDriss Logo">
     </a>
     <label class="flex items-center mr-1">
-        <input type="checkbox" class="noTransition cursor-pointer">
+        <input id="globalToggle" type="checkbox" class="noTransition cursor-pointer">
     </label>
 </nav>
 <!-- BODY -->
@@ -24,6 +24,17 @@
     <div class="results"></div>
 </div>
 <!-- FOOTER -->
+<div class="bg-green-400 transition-colors text-white">
+    <div class="p-3 container mx-auto flex items-center">
+        <div class="flex items-center">
+          <span class="text-lg mr-2">🧪</span>
+            <p class="text-sm">Enable <span href="https://twitter.com/IDriss_xyz" target="_blank" rel="noopener noreferrer" class="underline cursor-pointer">alpha features</span> for Twitter</p>
+        </div>
+        <div class="ml-2 mt-1">
+            <input id="experimentalToggle" name="remember-me" type="checkbox" class="h-4 w-4 accent-white rounded cursor-pointer">
+        </div>
+    </div>
+</div>
 <div class="grid grid-cols-3 divide-x divide-gray-900/5 bg-white drop-shadow-2xl">
     <a href="https://docs.idriss.xyz/user-guides/idriss-book#where-can-you-use-the-extension" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-x-2 p-3 font-medium text-gray-900 hover:bg-gray-50">
         <svg class="h-5 w-5 flex-none text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

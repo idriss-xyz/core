@@ -48,13 +48,7 @@ input[type="text"]:focus {
   border: 1px solid #a6a6a6;
 }
 
-.enabled {
-    text-align: right;
-    color: #000000;
-    margin: 10px;
-}
-
-input[type="checkbox"] {
+input[id="globalToggle"] {
     display: inline-block;
     appearance: none;
     height: 10px;
@@ -66,7 +60,7 @@ input[type="checkbox"] {
     margin: 0 15px;
 }
 
-input[type="checkbox"]::before {
+input[id="globalToggle"]::before {
     content: '';
     width: 20px;
     height: 20px;
@@ -79,16 +73,16 @@ input[type="checkbox"]::before {
     box-shadow: 0 1px 3px 0 rgb(0 0 0 / 40%)
 }
 
-input[type="checkbox"]:not(.noTransition), input[type="checkbox"]:not(.noTransition)::before {
+input[id="globalToggle"]:not(.noTransition), input[id="globalToggle"]:not(.noTransition)::before {
     transition: 300ms ease all;
 }
 
-input[type="checkbox"]:checked {
+input[id="globalToggle"]:checked {
     background: #11dd7488;
 
 }
 
-input[type="checkbox"]:checked::before {
+input[id="globalToggle"]:checked::before {
     background: #11dd74;
     left: 20px;
 }
