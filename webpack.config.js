@@ -9,10 +9,12 @@ module.exports = {
         "chromium/contentScript": "./src/chromium/contentScript/index.ts",
         "chromium/serviceWorker": "./src/chromium/serviceWorker.ts",
         "chromium/standalone": "./src/common/standalone.js",
+        "chromium/polyfills": "./src/common/polyfills.ts",
         "firefox/widgets": "./src/firefox/widgets.ts",
         "firefox/contentScript": "./src/firefox/contentScript/index.ts",
         "firefox/serviceWorker": "./src/firefox/serviceWorker.ts",
         "firefox/standalone": "./src/common/standalone.js",
+        "firefox/polyfills": "./src/common/polyfills.ts",
     },
     devtool: "inline-source-map",
     output: {

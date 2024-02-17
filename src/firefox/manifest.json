@@ -126,6 +126,7 @@
     }
   },
   "web_accessible_resources": [
+    "polyfills.js",
     "widgets.js"
   ]
 }
