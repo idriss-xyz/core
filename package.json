@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "buildTailwindDev": "npx tailwind -i ./src/common/standalone.css -o ./src/common/tailwindStandalone.css",
-    "buildTailwind": "npx tailwind -i ./src/common/standalone.css -o ./src/common/tailwindStandalone.css --minify",
+    "buildTailwindDev": "npx tailwind -i ./src/infrastructure/popup/standalone.css -o ./src/infrastructure/popup/tailwindStandalone.css",
+    "buildTailwind": "npx tailwind -i ./src/infrastructure/popup/standalone.css -o ./src/infrastructure/popup/tailwindStandalone.css --minify",
     "build": "yarn buildTailwindDev && webpack --watch",
     "buildDev": "yarn buildTailwindDev && webpack",
     "buildOnce": "yarn buildTailwind && webpack",

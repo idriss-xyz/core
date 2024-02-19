@@ -5,16 +5,16 @@ const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 module.exports = {
     mode: "development", // "production" | "development" | "none"
     entry: {
-        "chromium/widgets": "./src/chromium/widgets.ts",
-        "chromium/contentScript": "./src/chromium/contentScript/index.ts",
-        "chromium/serviceWorker": "./src/chromium/serviceWorker.ts",
-        "chromium/standalone": "./src/common/standalone.js",
-        "chromium/polyfills": "./src/common/polyfills.ts",
-        "firefox/widgets": "./src/firefox/widgets.ts",
-        "firefox/contentScript": "./src/firefox/contentScript/index.ts",
-        "firefox/serviceWorker": "./src/firefox/serviceWorker.ts",
-        "firefox/standalone": "./src/common/standalone.js",
-        "firefox/polyfills": "./src/common/polyfills.ts",
+        "chromium/webpageScript": "./src/runtime/chromium/webpageScript.ts",
+        "chromium/contentScript": "./src/runtime/chromium/contentScript.ts",
+        "chromium/serviceWorker": "./src/runtime/chromium/serviceWorker.ts",
+        "chromium/polyfills": "./src/runtime/polyfills.ts",
+        "chromium/standalone": "./src/infrastructure/popup/standalone.ts",
+        "firefox/webpageScript": "./src/runtime/firefox/webpageScript.ts",
+        "firefox/contentScript": "./src/runtime/firefox/contentScript.ts",
+        "firefox/serviceWorker": "./src/runtime/firefox/serviceWorker.ts",
+        "firefox/polyfills": "./src/runtime/polyfills.ts",
+        "firefox/standalone": "./src/infrastructure/popup/standalone.ts"
     },
     devtool: "inline-source-map",
     output: {
@@ -25,14 +25,14 @@ module.exports = {
     plugins: [
         new CopyPlugin({
             patterns: [
-                { from: "./src/chromium/manifest.json", to: "chromium" },
-                { from: "./src/common/standalone.html", to: "chromium" },
-                { from: "./src/common/tailwindStandalone.css", to: "chromium" },
+                { from: "./src/runtime/chromium/manifest.json", to: "chromium" },
+                { from: "./src/infrastructure/popup/standalone.html", to: "chromium" },
+                { from: "./src/infrastructure/popup/tailwindStandalone.css", to: "chromium" },
                 { from: "./src/common/img", to: "chromium/img" },
 
-                { from: "./src/firefox/manifest.json", to: "firefox" },
-                { from: "./src/common/standalone.html", to: "firefox" },
-                { from: "./src/common/tailwindStandalone.css", to: "firefox" },
+                { from: "./src/runtime/firefox/manifest.json", to: "firefox" },
+                { from: "./src/infrastructure/popup/standalone.html", to: "firefox" },
+                { from: "./src/infrastructure/popup/tailwindStandalone.css", to: "firefox" },
                 { from: "./src/common/img", to: "firefox/img" },
             ],
         }),
