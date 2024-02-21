@@ -1,5 +1,8 @@
 import { onWindowMessage } from '../../lib/dom';
-import { COMMAND_BUS_RESPONSE_MESSAGE, COMMAND_BUS_REQUEST_MESSAGE } from '../constants';
+import {
+  COMMAND_BUS_RESPONSE_MESSAGE,
+  COMMAND_BUS_REQUEST_MESSAGE,
+} from '../constants';
 
 import { SERVICE_WORKER_COMMAND_HANDLERS_MAP } from './constants';
 import type { ServiceWorkerCommand, ServiceWorkerResponse } from './types';

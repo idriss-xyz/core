@@ -14,6 +14,7 @@ export const TWITTER_HANDLE_TO_SNAPSHOT = {
   stargatefinance: 'stgdao.eth',
   starknet: 'starknet.eth',
   uniswap: 'uniswapgovernance.eth',
+  thetnetwork: 'threshold.eth',
 } as const;
 
 export const SNAPSHOT_WEBSITE_URL = 'https://snapshot.org';
