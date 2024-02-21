@@ -15,6 +15,15 @@ export const TWITTER_HANDLE_TO_SNAPSHOT = {
   starknet: 'starknet.eth',
   uniswap: 'uniswapgovernance.eth',
   thetnetwork: 'threshold.eth',
+  decentraland: 'snapshot.dcl.eth',
+  galxe: 'gal.eth',
+  banklessdao: 'banklessvault.eth',
+  rhinofi: 'rhinofi.vote',
+  '1inch': '1inch.eth',
+  '1inchdao': '1inch.eth',
+  sushiswap: 'sushigov.eth',
+  gearboxprotocol: 'gearbox.eth',
+  metisl2: 'metislayer2.eth',
 } as const;
 
 export const SNAPSHOT_WEBSITE_URL = 'https://snapshot.org';
