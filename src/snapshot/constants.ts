@@ -1,5 +1,5 @@
 export const TWITTER_HANDLE_TO_SNAPSHOT = {
-  aaveaave: 'aave.eth',
+  aave: 'aave.eth',
   aavegotchi: 'aavegotchi.eth',
   acrossprotocol: 'acrossprotocol.eth',
   apecoin: 'apecoin.eth',
