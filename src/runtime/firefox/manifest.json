@@ -1,0 +1,132 @@
+{
+  "manifest_version": 2,
+  "name": "IDriss",
+  "version": "1.1.25",
+  "description": "A more usable web3 for everyone.",
+  "author": "IDriss",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.twitter.com/*",
+        "https://*.app.poap.xyz/*",
+        "https://*.poap.xyz/*",
+        "https://*.optimistic.etherscan.io/*",
+        "https://*.etherscan.io/*",
+        "https://*.polygonscan.com/*",
+        "https://*.basescan.org/*",
+        "https://*.scrollscan.com/*",
+        "https://*.explorer.zksync.io/*",
+        "https://*.explorer.linea.build/*",
+        "https://*.lineascan.build/*",
+        "https://*.bscscan.com/*",
+        "https://*.ftmscan.com/*",
+        "https://*.arbiscan.io/*",
+        "https://*.snowtrace.io/*",
+        "https://*.moonriver.moonscan.io/*",
+        "https://*.moonscan.io/*",
+        "https://*.goerli.lineascan.build/*",
+        "https://*.explorer.goerli.linea.build/*",
+        "https://*.explorer.mantle.xyz/*",
+        "https://*.coinbase.com/*",
+        "https://*.binance.com/*",
+        "https://*.kucoin.com/*",
+        "https://*.okx.com/*",
+        "https://*.gemini.com/*",
+        "https://*.kraken.com/*",
+        "https://*.crypto.com/*",
+        "https://*.huobi.com/*",
+        "https://*.htx.com/*",
+        "https://*.bitfinex.com/*",
+        "https://*.gate.io/*",
+        "https://*.binance.us/*",
+        "https://*.bithumb.com/*",
+        "https://*.bitstamp.net/*",
+        "https://*.bitflyer.com/*",
+        "https://*.bybit.com/*",
+        "https://*.bittrex.com/*",
+        "https://*.coincheck.com/*",
+        "https://*.guarda.co/*",
+        "https://*.blockscout.com/*",
+        "https://*.blockscout.scroll.io/*"
+      ],
+      "js": [
+        "polyfills.js",
+        "contentScript.js"
+      ],
+      "all_frames": true
+    }
+  ],
+  "background": {
+    "scripts": [
+      "serviceWorker.js"
+    ]
+  },
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "contextMenus",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://*.twitter.com/*",
+    "https://*.app.poap.xyz/*",
+    "https://*.poap.xyz/*",
+    "https://*.optimistic.etherscan.io/*",
+    "https://*.etherscan.io/*",
+    "https://*.polygonscan.com/*",
+    "https://*.basescan.org/*",
+    "https://*.scrollscan.com/*",
+    "https://*.explorer.zksync.io/*",
+    "https://*.explorer.linea.build/*",
+    "https://*.lineascan.build/*",
+    "https://*.bscscan.com/*",
+    "https://*.ftmscan.com/*",
+    "https://*.arbiscan.io/*",
+    "https://*.snowtrace.io/*",
+    "https://*.moonriver.moonscan.io/*",
+    "https://*.moonscan.io/*",
+    "https://*.goerli.lineascan.build/*",
+    "https://*.explorer.goerli.linea.build/*",
+    "https://*.explorer.mantle.xyz/*",
+    "https://*.coinbase.com/*",
+    "https://*.binance.com/*",
+    "https://*.kucoin.com/*",
+    "https://*.okx.com/*",
+    "https://*.gemini.com/*",
+    "https://*.kraken.com/*",
+    "https://*.crypto.com/*",
+    "https://*.huobi.com/*",
+    "https://*.htx.com/*",
+    "https://*.bitfinex.com/*",
+    "https://*.gate.io/*",
+    "https://*.binance.us/*",
+    "https://*.bithumb.com/*",
+    "https://*.bitstamp.net/*",
+    "https://*.bitflyer.com/*",
+    "https://*.bybit.com/*",
+    "https://*.bittrex.com/*",
+    "https://*.coincheck.com/*",
+    "https://*.guarda.co/*",
+    "https://*.blockscout.com/*",
+    "https://*.blockscout.scroll.io/*"
+  ],
+  "homepage_url": "https://www.idriss.xyz",
+  "icons": {
+    "16": "img/icon16.png",
+    "48": "img/icon48.png",
+    "128": "img/icon128.png",
+    "148": "img/icon148.png"
+  },
+  "browser_action": {
+    "default_popup": "standalone.html",
+    "default_icon": "img/icon16bw.png"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "addon@idriss-crypto.com"
+    }
+  },
+  "web_accessible_resources": [
+    "webpageScript.js"
+  ]
+}

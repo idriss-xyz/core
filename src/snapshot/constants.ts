@@ -1,0 +1,30 @@
+export const TWITTER_HANDLE_TO_SNAPSHOT = {
+  aave: 'aave.eth',
+  aavegotchi: 'aavegotchi.eth',
+  acrossprotocol: 'acrossprotocol.eth',
+  apecoin: 'apecoin.eth',
+  arbitrum: 'arbitrumfoundation.eth',
+  balancer: 'balancer.eth',
+  ensdomains: 'ens.eth',
+  gitcoin: 'gitcoindao.eth',
+  lidofinance: 'lido-snapshot.eth',
+  pancakeswap: 'cakevote.eth',
+  safe: 'safe.eth',
+  safegovernance: 'safe.eth',
+  stargatefinance: 'stgdao.eth',
+  starknet: 'starknet.eth',
+  uniswap: 'uniswapgovernance.eth',
+  thetnetwork: 'threshold.eth',
+  decentraland: 'snapshot.dcl.eth',
+  galxe: 'gal.eth',
+  banklessdao: 'banklessvault.eth',
+  rhinofi: 'rhinofi.vote',
+  '1inch': '1inch.eth',
+  '1inchdao': '1inch.eth',
+  sushiswap: 'sushigov.eth',
+  gearboxprotocol: 'gearbox.eth',
+  metisl2: 'metislayer2.eth',
+} as const;
+
+export const SNAPSHOT_WEBSITE_URL = 'https://snapshot.org';
+export const SNAPSHOT_GRAPHQL_API_URL = 'https://hub.snapshot.org/graphql?';

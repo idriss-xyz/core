@@ -1,6 +1,6 @@
 import {create} from "fast-creator";
-import { SendToAnyoneMain } from "@idriss-crypto/send-to-anyone-core/subpages";
-import css from "@idriss-crypto/send-to-anyone-core/sendToAnyoneStyle";
+import { SendToAnyoneMain } from "@idriss-crypto/send-core/subpages";
+import css from "@idriss-crypto/send-core/sendToAnyoneStyle";
 
 export class Tipping {
     constructor(identifier, data) {

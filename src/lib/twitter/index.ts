@@ -1,0 +1,1 @@
+export { getTypeOfTwitterPage } from './getTypeOfTwitterPage'

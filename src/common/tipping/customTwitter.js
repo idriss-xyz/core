@@ -1,6 +1,6 @@
-import css from "@idriss-crypto/send-to-anyone-core/sendToAnyoneStyle";
+import css from "@idriss-crypto/send-core/sendToAnyoneStyle";
 import {create} from "fast-creator";
-import {CustomTwitter} from "@idriss-crypto/send-to-anyone-core/subpages";
+import {CustomTwitter} from "@idriss-crypto/send-core/subpages";
 
 
 export class CustomWidget {
