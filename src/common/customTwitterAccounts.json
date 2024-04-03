@@ -31,7 +31,7 @@
         "recipient": "@aavegotchi",
         "forwardRecipient": true,
         "recipientAddress": {
-            "Polygon": "0xb208f8BB431f580CC4b216826AFfB128cd1431aB "
+            "Polygon": "0xb208f8BB431f580CC4b216826AFfB128cd1431aB"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -42,6 +42,27 @@
             "network": [
                 "Polygon"
             ]
+        },
+        "networkFilter": null,
+        "isGrantee": false,
+        "iconUrl": "default"
+    },
+    "1743720976569782272": {
+        "customHeader": "Send to @degentokenbase",
+        "customText": "",
+        "buttonValue": "Send",
+        "hostURL": "https://www.idriss.xyz/send?",
+        "recipient": "@degentokenbase",
+        "forwardRecipient": true,
+        "recipientAddress": {
+            "Polygon": "0xf1e7dbedd9e06447e2f99b1310c09287b734addc"
+        },
+        "showNetworkSelection": true,
+        "showValueSelection": true,
+        "showTokenSelection": true,
+        "showInput": false,
+        "showMessageBox": false,
+        "tokenFilter": {
         },
         "networkFilter": null,
         "isGrantee": false,
@@ -17160,4 +17181,3 @@
         "iconUrl": "img/icon148_red.png"
     }
 }
-
