@@ -55,7 +55,15 @@
         "recipient": "@degentokenbase",
         "forwardRecipient": true,
         "recipientAddress": {
-            "Polygon": "0xf1e7dbedd9e06447e2f99b1310c09287b734addc"
+            "Polygon": "0xf1e7dbedd9e06447e2f99b1310c09287b734addc",
+            "base": "0xf1e7dbedd9e06447e2f99b1310c09287b734addc",
+            "ETH": "0xf1e7dbedd9e06447e2f99b1310c09287b734addc",
+            "zkSync": "0xf1e7dbedd9e06447e2f99b1310c09287b734addc",
+            "scroll": "0xf1e7dbedd9e06447e2f99b1310c09287b734addc",
+            "optimism": "0xf1e7dbedd9e06447e2f99b1310c09287b734addc",
+            "mantle": "0xf1e7dbedd9e06447e2f99b1310c09287b734addc",
+            "linea": "0xf1e7dbedd9e06447e2f99b1310c09287b734addc",
+            "BSC": "0xf1e7dbedd9e06447e2f99b1310c09287b734addc"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
@@ -63,6 +71,17 @@
         "showInput": false,
         "showMessageBox": false,
         "tokenFilter": {
+            "network": [
+                "optimism",
+                "base",
+                "mantle",
+                "scroll",
+                "Polygon",
+                "ETH",
+                "BSC",
+                "zkSync",
+                "linea"
+            ]
         },
         "networkFilter": null,
         "isGrantee": false,
