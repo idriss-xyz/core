@@ -148,9 +148,10 @@ export class TwitterPageManager extends AbstractPageManager {
             const addCallback = async (data) => {
               if (!data.error && !div.querySelector(".idrissIcon")) {
                 if (Object.values(data).length === 0) {
-                  const dropdownContent = new TippingUnregistered(data, name).container;
-                  const { icon } = await this.createIcon(div, data, dropdownContent, name);
-                  icon.style.filter = `grayscale(100%)`;
+                //   Temporarily remove grey badge
+                //   const dropdownContent = new TippingUnregistered(data, name).container;
+                //   const { icon } = await this.createIcon(div, data, dropdownContent, name);
+                //   icon.style.filter = `grayscale(100%)`;
                 } else {
                 // create icon based on param here
                   const dropdownContent = data[name]
