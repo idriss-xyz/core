@@ -13,6 +13,7 @@
     "resolveJsonModule": true,
     "moduleResolution": "node",
     "strict": true,
+    "skipLibCheck": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
     "noImplicitReturns": true,
@@ -21,11 +22,27 @@
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "noUncheckedIndexedAccess": true,
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "infrastructure/*": [
+        "src/infrastructure/*"
+      ],
+      "application": [
+        "src/application/index.ts"
+      ],
+      "application/*": [
+        "src/application/*"
+      ],
+      "shared/*": [
+        "src/shared/*"
+      ]
+    }
   },
   "include": [
     "src"
   ],
   "exclude": [
     "node_modules"
-  ],
+  ]
 }

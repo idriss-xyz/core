@@ -51,14 +51,14 @@
       ],
       "js": [
         "polyfills.js",
-        "contentScript.js"
+        "content-script.js"
       ],
       "all_frames": true
     }
   ],
   "background": {
     "scripts": [
-      "serviceWorker.js"
+      "service-sorker.js"
     ]
   },
   "permissions": [
@@ -127,6 +127,6 @@
     }
   },
   "web_accessible_resources": [
-    "webpageScript.js"
+    "webpage-script.js"
   ]
 }

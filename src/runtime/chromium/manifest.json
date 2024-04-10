@@ -5,7 +5,7 @@
   "description": "A more usable web3 for everyone.",
   "author": "IDriss",
   "background": {
-    "service_worker": "serviceWorker.js"
+    "service_worker": "service-worker.js"
   },
   "homepage_url": "https://www.idriss.xyz",
   "permissions": [
@@ -103,7 +103,7 @@
       ],
       "js": [
         "polyfills.js",
-        "contentScript.js"
+        "content-script.js"
       ],
       "all_frames": true
     }
@@ -121,7 +121,7 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "webpageScript.js"
+        "webpage-script.js"
       ],
       "matches": [
         "<all_urls>"

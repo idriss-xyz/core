@@ -1,6 +1,8 @@
 /** @type {import("prettier").Config} */
 export default {
+  plugins: ['prettier-plugin-tailwindcss'],
   singleQuote: true,
+  quoteProps: 'consistent',
   trailingComma: 'all',
   useTabs: false,
   endOfLine: 'lf',
@@ -9,4 +11,5 @@ export default {
   printWidth: 80,
   arrowParens: 'always',
   editorconfig: true,
+  bracketSpacing: true,
 };
