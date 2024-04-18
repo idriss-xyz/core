@@ -2,6 +2,7 @@ import { COMMAND_BUS_REQUEST_MESSAGE, Command } from 'shared/messaging';
 
 import { AddressResolver } from '../../common/resolvers/AddressResolver';
 import { SbtResolver } from '../../common/resolvers/SbtResolver';
+import { GtcResolver } from '../../common/resolvers/GtcResolver';
 
 import { CommandBus } from './command-bus';
 
@@ -86,6 +87,16 @@ export class ServiceWorker {
               })
               .catch(() => {
                 return sendResponse({});
+              });
+            return true;
+          }
+          case 'gtcRequest': {
+            GtcResolver.getRoundInfo()
+              .then((x) => {
+                return sendResponse(x);
+              })
+              .catch(() => {
+                return sendResponse([]);
               });
             return true;
           }

@@ -18,6 +18,7 @@ export class TwitterPageManager extends AbstractPageManager {
         this.iconUrl = await this.getIcon();
         this.sbtIconUrl = await this.getIcon("img/sbt.png");
         let customTwitterAccounts = await getCustomTwitter();
+        this.applicants = await this.checkGtcIndexer();
 
         const entriesWithIcons = Object.entries(customTwitterAccounts).filter(([, value]) =>
           value.iconUrl && value.iconUrl !== "" && value.iconUrl !== "default"
@@ -118,7 +119,24 @@ export class TwitterPageManager extends AbstractPageManager {
           return false;
       }
     }
-      
+
+    async checkGtcIndexer() {
+        try {
+            return new Promise((resolve, reject) => {
+                chrome.runtime.sendMessage({ type: "gtcRequest" }, response => {
+                    if (chrome.runtime.lastError) {
+                        reject(new Error(chrome.runtime.lastError.message));
+                    } else if (response && response.error) {
+                        reject(new Error(response.error));
+                    } else {
+                        resolve(response);
+                    }
+                });
+            });
+        } catch (error) {
+            return false;
+        }
+      }
 
     getIcon(_custom="") {
         return new Promise((resolve, reject) => {
@@ -147,6 +165,7 @@ export class TwitterPageManager extends AbstractPageManager {
             }
             const addCallback = async (data) => {
               if (!data.error && !div.querySelector(".idrissIcon")) {
+                if (this.applicants && this.applicants.includes(name.replace('@', '').toLowerCase())) return;
                 if (Object.values(data).length === 0) {
                 //   Temporarily remove grey badge
                 //   const dropdownContent = new TippingUnregistered(data, name).container;
