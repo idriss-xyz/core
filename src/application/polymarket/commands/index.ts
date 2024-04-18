@@ -33,7 +33,7 @@ import {
 } from './get-tokens-prices';
 import { PostOrderCommand, PostOrderHandler } from './post-order';
 
-export const POLYMARKET_COMMAND_TO_HANDLER_MAP = {
+export const HANDLER_MAP = {
   [PostOrderCommand.name]: new PostOrderHandler(),
   [GetApiKeyCommand.name]: new GetApiKeyHandler(),
   [GetTokenChanceCommand.name]: new GetTokenChanceHandler(),

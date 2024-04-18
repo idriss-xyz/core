@@ -2,7 +2,9 @@ import { Handler, OkResult } from 'shared/messaging';
 
 import { SendExceptionEventCommand } from './send-exception-event.command';
 
-export class SendExceptionEventHandler implements Handler {
+export class SendExceptionEventHandler
+  implements Handler<SendExceptionEventCommand>
+{
   async handle(command: SendExceptionEventCommand) {
     const response = await fetch('https://www.idriss.xyz/submit-error', {
       method: 'POST',
@@ -12,7 +14,6 @@ export class SendExceptionEventHandler implements Handler {
       },
     });
     await response.json();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return new OkResult({});
+    return new OkResult(undefined);
   }
 }

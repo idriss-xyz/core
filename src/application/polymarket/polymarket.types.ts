@@ -1,4 +1,8 @@
 import { z } from 'zod';
+import { EIP1193Provider } from 'mipd';
+import { TickSize } from '@polymarket/clob-client';
+
+import { Hex, Wallet } from 'shared/web3';
 
 import { getApiKeyResponseSchema, marketFormSchema } from './polymarket.schema';
 import { OUTCOME } from './polymarket.constants';
@@ -68,4 +72,41 @@ export interface EnhancedToken extends Token {
   book: Book;
 }
 
-export type MarketForm = z.infer<ReturnType<typeof marketFormSchema>>;
+export type MarketFormValues = z.infer<ReturnType<typeof marketFormSchema>>;
+
+export interface PolymarketUser {
+  wallet?: Wallet;
+  isSigning: boolean;
+  hasUsdcAllowed: boolean;
+  isSigningError: boolean;
+  hasPolymarketAccount: boolean;
+  safeWalletDetails?: SafeWallet;
+  signIn: () => Promise<void>;
+  switchToPolygon: (provider: EIP1193Provider) => Promise<void>;
+}
+
+export interface SafeWallet {
+  address: Hex;
+  balance: number;
+}
+
+export interface OrderDetails {
+  minimumTickSize: TickSize;
+  negRisk: boolean;
+  tokenId: string;
+  amount: number;
+}
+
+export interface PlaceOrderParameters {
+  wallet: Wallet;
+  funderAddress: Hex;
+  orderDetails: OrderDetails;
+}
+
+export interface OrderPlacer {
+  reset: () => void;
+  place: (parameters: PlaceOrderParameters) => Promise<void>;
+  isError: boolean;
+  isPlaced: boolean;
+  isPlacing: boolean;
+}

@@ -8,21 +8,13 @@ import { sendHandlerExceptionEvent } from 'shared/monitoring';
 
 import { GetFunderAddresCommand } from './get-funder-address.command';
 
-export class GetFunderAddressHandler implements Handler {
+export class GetFunderAddressHandler
+  implements Handler<GetFunderAddresCommand>
+{
   async handle(command: GetFunderAddresCommand) {
     try {
       const response = await fetch(
         `https://safe-transaction-polygon.safe.global/api/v1/owners/${command.details.address}/safes/`,
-        {
-          method: 'GET',
-          headers: {
-            'Accept-Encoding': 'gzip',
-            'Content-Type': 'application/json',
-            'User-Agent': `@polymarket/clob-client`,
-            'Accept': '*/*',
-            'Connection': 'keep-alive',
-          },
-        },
       );
 
       if (response.status !== 200) {

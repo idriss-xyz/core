@@ -14,3 +14,9 @@ export type TwitterPage = TwitterHandlePage | TwitterMainPage;
 export interface UnknownPage {
   name: 'unknown';
 }
+
+export interface TwitterUserPoolingResult {
+  node: Element;
+  username: string;
+  top: number;
+}

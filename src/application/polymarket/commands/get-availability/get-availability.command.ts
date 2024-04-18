@@ -1,6 +1,9 @@
 import { Command } from 'shared/messaging';
 
-export class GetAvailabilityCommand extends Command<Record<string, never>> {
+export class GetAvailabilityCommand extends Command<
+  Record<string, never>,
+  boolean
+> {
   public readonly name = 'GetAvailabilityCommand' as const;
   public id: string;
 

@@ -7,19 +7,19 @@ import { GetConditionIdCommand } from '../../commands';
 
 const getConditionId = (url: string) => {
   const command = new GetConditionIdCommand({ url });
-  return command.send<string>();
+  return command.send();
 };
 
 export const useTwitterMarkets = () => {
-  const { links } = useTwitterExternalLinksPooling();
+  const { results } = useTwitterExternalLinksPooling();
 
   const imageLinks = useMemo(() => {
-    return links.filter((link) => {
+    return results.filter((result) => {
       // twitter posts 2 links next to each other which breaks our UI
-      const img = link.node.querySelector('img');
+      const img = result.node.querySelector('img');
       return Boolean(img);
     });
-  }, [links]);
+  }, [results]);
 
   const availableUrls = imageLinks
     .map((v) => {

@@ -11,21 +11,11 @@ import { POLYMARKET_CLOB_API } from '../../polymarket.constants';
 
 import { GetTokenChanceCommand } from './get-token-chance.command';
 
-export class GetTokenChanceHandler implements Handler {
+export class GetTokenChanceHandler implements Handler<GetTokenChanceCommand> {
   async handle(command: GetTokenChanceCommand) {
     try {
       const response = await fetch(
         `${POLYMARKET_CLOB_API}/midpoint?token_id=${command.details.tokenId}`,
-        {
-          method: 'GET',
-          headers: {
-            'Accept-Encoding': 'gzip',
-            'Content-Type': 'application/json',
-            'User-Agent': `@polymarket/clob-client`,
-            'Accept': '*/*',
-            'Connection': 'keep-alive',
-          },
-        },
       );
 
       if (response.status !== 200) {

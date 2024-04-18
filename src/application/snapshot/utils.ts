@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
+import { TwitterUserPoolingResult } from 'shared/twitter';
+
 import { SNAPSHOT_WEBSITE_URL, TWITTER_HANDLE_TO_SNAPSHOT } from './constants';
 import { GetProposalsOptions, ProposalData } from './types';
 
@@ -6,6 +8,7 @@ export const generateGetProposalsQuery = (
   snapshotNames: string[],
   options: GetProposalsOptions,
 ) => {
+  // TODO: use GQL variables for this
   return `query Proposals {
   proposals (
     first: ${options.first},
@@ -39,7 +42,7 @@ export const getUserUrl = (userId: string) => {
   return `${SNAPSHOT_WEBSITE_URL}/#/profile/${userId}`;
 };
 
-export const getSnapshotFromTwitterHandle = (handle: string) => {
+export const getSnapshotFromTwitterUsername = (handle: string) => {
   return TWITTER_HANDLE_TO_SNAPSHOT[handle.toLowerCase()];
 };
 
@@ -85,34 +88,19 @@ export const getProposalAuthor = (proposal: ProposalData) => {
   );
 };
 
-// TODO: generic function inside twitter module
-export const getSnapshotUsernameNodes = (usernameNodes: Element[]) => {
-  return usernameNodes
-    .map((node) => {
-      const anchor = node.querySelector('a');
-
-      if (!anchor) {
-        return;
-      }
-      const anchorRect = anchor.getBoundingClientRect();
-
-      // for some reason there are some tweets that are not visible on the screen, they have height 0 but in DOM they are almost the same as normal tweet, they have 0 height
-      if (anchorRect.height === 0) {
-        return;
-      }
-
-      const handle = anchor.getAttribute('href')?.replace('/', '');
-      if (!handle) {
-        return;
-      }
-      const snapshotName = getSnapshotFromTwitterHandle(handle);
+export const getSnapshotUsernameNodes = (
+  poolingResults: TwitterUserPoolingResult[],
+) => {
+  return poolingResults
+    .map((result) => {
+      const snapshotName = getSnapshotFromTwitterUsername(result.username);
       if (!snapshotName) {
         return;
       }
 
       return {
         snapshotName,
-        top: anchorRect.top + window.scrollY,
+        ...result,
       };
     })
     .filter(Boolean);

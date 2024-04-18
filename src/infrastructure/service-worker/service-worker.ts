@@ -17,7 +17,7 @@ export class ServiceWorker {
   }
 
   onServiceWorkerCommandRequests() {
-    this.onMessage<Command>(
+    this.onMessage<Command<unknown, unknown>>(
       COMMAND_BUS_REQUEST_MESSAGE,
       (command, sendResponse) => {
         CommandBus.handle(command)

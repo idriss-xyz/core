@@ -5,8 +5,9 @@ import { CHAIN, useSwitchChain, useWallet } from 'shared/web3';
 
 import { useSafeWallet } from '../use-safe-wallet';
 import { useIsUsdcAllowed } from '../use-is-usdc-allowed';
+import { PolymarketUser } from '../../polymarket.types';
 
-export const useUser = () => {
+export const useUser = (): PolymarketUser => {
   const { wallet, openConnectionModal } = useWallet();
 
   const safeWalletQuery = useSafeWallet();
@@ -35,8 +36,8 @@ export const useUser = () => {
     switchChain.isPending ||
     isUsdcAllowedQuery.isLoading;
   const isSigningError = switchChain.isError;
-  const hasPolymarketAccount = !safeWalletQuery.isError;
-  const hasUsdcAllowed = isUsdcAllowedQuery.data;
+  const hasPolymarketAccount = safeWalletQuery.isSuccess;
+  const hasUsdcAllowed = Boolean(isUsdcAllowedQuery.data);
 
   return {
     wallet,

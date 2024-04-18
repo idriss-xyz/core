@@ -10,7 +10,7 @@ import { POLYMARKET_CLOB_API } from '../../polymarket.constants';
 
 import { PostOrderCommand } from './post-order.command';
 
-export class PostOrderHandler implements Handler {
+export class PostOrderHandler implements Handler<PostOrderCommand> {
   async handle(command: PostOrderCommand) {
     try {
       const response = await fetch(`${POLYMARKET_CLOB_API}/order`, {

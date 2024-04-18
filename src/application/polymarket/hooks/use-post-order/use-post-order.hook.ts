@@ -16,7 +16,7 @@ import {
 
 const postOrder = async ({ l2Headers, orderPayload }: PostOrderProperties) => {
   const command = new PostOrderCommand({ orderPayload, headers: l2Headers });
-  return command.send<void>();
+  return command.send();
 };
 
 export const usePostOrder = () => {

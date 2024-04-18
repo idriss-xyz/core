@@ -9,11 +9,11 @@ interface Properties {
 }
 
 export const useTwitterVisibleSnapshots = ({ hidden }: Properties) => {
-  const { nodes } = useTwitterUsersPooling();
+  const { results } = useTwitterUsersPooling();
 
   const snapshotUserNodes = useMemo(() => {
-    return getSnapshotUsernameNodes(nodes);
-  }, [nodes]);
+    return getSnapshotUsernameNodes(results);
+  }, [results]);
 
   const visibleSnapshots = useMemo(() => {
     return [

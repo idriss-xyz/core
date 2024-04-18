@@ -4,7 +4,7 @@ import { GetAvailabilityCommand } from '../../commands';
 
 const getAvailability = async () => {
   const command = new GetAvailabilityCommand({});
-  return command.send<boolean>();
+  return command.send();
 };
 
 export const useAvailability = () => {

@@ -34,7 +34,7 @@ const extractScriptContent = (htmlString: string, scriptId: string) => {
   return match?.[1];
 };
 
-export class GetConditionIdHandler implements Handler {
+export class GetConditionIdHandler implements Handler<GetConditionIdCommand> {
   async handle(command: GetConditionIdCommand) {
     try {
       const twitterUrlShortenerResponse = await fetch(command.details.url, {

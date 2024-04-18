@@ -2,7 +2,10 @@ import { Command } from 'shared/messaging';
 
 import { GetFunderAddressCommandDetails } from './get-funder-address.types';
 
-export class GetFunderAddresCommand extends Command<GetFunderAddressCommandDetails> {
+export class GetFunderAddresCommand extends Command<
+  GetFunderAddressCommandDetails,
+  string
+> {
   public name = 'GetFunderAddresCommand' as const;
   public id: string;
 

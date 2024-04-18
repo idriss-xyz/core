@@ -11,7 +11,7 @@ import { getSafeWalletQueryKey } from './use-safe-wallet';
 
 const getFunderAddress = async (address: string) => {
   const command = new GetFunderAddresCommand({ address });
-  return command.send<string | undefined>();
+  return command.send();
 };
 
 export const useSafeWallet = () => {

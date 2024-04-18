@@ -11,21 +11,13 @@ import { MarketData } from '../../polymarket.types';
 
 import { GetMarketByConditionIdCommand } from './get-market-by-condition-id.command';
 
-export class GetMarketsByConditionIdHandler implements Handler {
+export class GetMarketsByConditionIdHandler
+  implements Handler<GetMarketByConditionIdCommand>
+{
   async handle(command: GetMarketByConditionIdCommand) {
     try {
       const response = await fetch(
         `${POLYMARKET_CLOB_API}/markets/${command.details.conditionId}`,
-        {
-          method: 'GET',
-          headers: {
-            'Accept-Encoding': 'gzip',
-            'Content-Type': 'application/json',
-            'User-Agent': `@polymarket/clob-client`,
-            'Accept': '*/*',
-            'Connection': 'keep-alive',
-          },
-        },
       );
 
       if (response.status !== 200) {

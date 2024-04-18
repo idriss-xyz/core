@@ -1,8 +1,10 @@
 import { Command } from './command';
-import { FailureResult, OkResult } from './result';
+import { Result } from './result';
 
-export abstract class Handler<ResultData = unknown> {
-  abstract handle(
-    command: Command,
-  ): Promise<OkResult<ResultData> | FailureResult>;
+type HandlerResponse<CommandImpl extends Command<unknown, unknown>> = Promise<
+  Result<Awaited<ReturnType<CommandImpl['send']>>>
+>;
+
+export abstract class Handler<CommandImpl extends Command<unknown, unknown>> {
+  abstract handle(command: CommandImpl): HandlerResponse<CommandImpl>;
 }

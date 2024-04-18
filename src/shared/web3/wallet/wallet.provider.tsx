@@ -1,11 +1,12 @@
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { useModal } from '@ebay/nice-modal-react';
 
-import { Hex, Wallet } from '../web3.types';
-import { hexStringToNumber } from '../web3.utils';
+import { Hex } from '../web3.types';
+import { hexToDecimal } from '../web3.utils';
 
 import { WalletContext, WalletContextValue } from './wallet.context';
 import { WalletConnectModal } from './wallet-connect-modal.component';
+import { Wallet } from './wallet.types';
 
 interface Properties {
   children: ReactNode;
@@ -34,7 +35,7 @@ export const WalletContextProvider = ({ children }: Properties) => {
           return;
         }
 
-        return { ...previous, chainId: hexStringToNumber(chainId) };
+        return { ...previous, chainId: hexToDecimal(chainId) };
       });
     };
     wallet?.provider.on('chainChanged', onChainChanged);
@@ -59,8 +60,9 @@ export const WalletContextProvider = ({ children }: Properties) => {
     return {
       wallet,
       openConnectionModal,
+      isConnectionModalOpened: walletConnectModal.visible,
     };
-  }, [openConnectionModal, wallet]);
+  }, [openConnectionModal, wallet, walletConnectModal.visible]);
 
   return (
     <WalletContext.Provider value={contextValue}>

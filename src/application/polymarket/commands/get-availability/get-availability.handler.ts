@@ -5,7 +5,7 @@ import { POLYMARKET_CLOB_API } from '../../polymarket.constants';
 
 import { GetAvailabilityCommand } from './get-availability.command';
 
-export class GetAvailabilityHandler implements Handler {
+export class GetAvailabilityHandler implements Handler<GetAvailabilityCommand> {
   async handle(_command: GetAvailabilityCommand) {
     try {
       // order throws 403 if user is sending this request from banned region

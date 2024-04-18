@@ -28,7 +28,7 @@ export const Container = () => {
           data={data}
           className="absolute"
           top={top - 12}
-          onHide={() => {
+          onClose={() => {
             hideSnapshot(data.space.id);
           }}
         />

@@ -1,4 +1,5 @@
 import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
+import webpack from 'webpack';
 import path from 'path';
 import CopyPlugin from 'copy-webpack-plugin';
 import NodePolyfillPlugin from 'node-polyfill-webpack-plugin';
@@ -48,6 +49,9 @@ export default {
       ],
     }),
     new NodePolyfillPlugin(),
+    new webpack.DefinePlugin({
+      ENABLE_EVENTS: JSON.stringify(false),
+    }),
     // new BundleAnalyzerPlugin()
   ],
   resolve: {

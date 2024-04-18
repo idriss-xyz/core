@@ -87,6 +87,7 @@ module.exports = {
     },
   ],
   rules: {
+    'tailwindcss/classnames-order': 'off',
     'boundaries/element-types': [
       2,
       {

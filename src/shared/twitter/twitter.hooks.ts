@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { usePooling } from 'shared/ui/hooks';
 
@@ -15,7 +15,35 @@ export const useTwitterUsersPooling = () => {
     callback: poolUsers,
   });
 
-  return { nodes: value };
+  const results = useMemo(() => {
+    return value
+      .map((node) => {
+        const linkNode = node.querySelector('a');
+
+        if (!linkNode) {
+          return;
+        }
+
+        const username = linkNode.getAttribute('href')?.replace('/', '');
+        if (!username) {
+          return;
+        }
+
+        const linkNodeRect = linkNode.getBoundingClientRect();
+        if (!linkNodeRect.height) {
+          return;
+        }
+
+        return {
+          node,
+          username,
+          top: linkNodeRect.top + window.scrollY,
+        };
+      })
+      .filter(Boolean);
+  }, [value]);
+
+  return { results };
 };
 
 export const useTwitterExternalLinksPooling = () => {
@@ -28,22 +56,24 @@ export const useTwitterExternalLinksPooling = () => {
     callback: poolUsers,
   });
 
-  const links = value
-    .map((node) => {
-      const { height, top } = node.getBoundingClientRect();
-      if (height === 0) {
-        return;
-      }
+  const results = useMemo(() => {
+    return value
+      .map((node) => {
+        const { height, top } = node.getBoundingClientRect();
+        if (!height) {
+          return;
+        }
 
-      const url = node.getAttribute('href');
+        const url = node.getAttribute('href');
 
-      if (!url) {
-        return;
-      }
+        if (!url) {
+          return;
+        }
 
-      return { node, url, top: top + window.scrollY };
-    })
-    .filter(Boolean);
+        return { node, url, top: top + window.scrollY };
+      })
+      .filter(Boolean);
+  }, [value]);
 
-  return { links };
+  return { results };
 };

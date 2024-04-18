@@ -1,4 +1,6 @@
 import NiceModal from '@ebay/nice-modal-react';
+import { createRoot } from 'react-dom/client';
+import { createElement } from 'react';
 
 import {
   PortalContextProvider,
@@ -10,10 +12,9 @@ import { ExtensionSettingsProvider } from 'shared/extension';
 import { TwitterPageProvider } from 'shared/twitter';
 import { ErrorBoundary } from 'shared/monitoring';
 
-import { PolymarketApp } from './polymarket';
-import { SnapshotApp } from './snapshot';
+import { Applications } from './applications.component';
 
-export const Application = () => {
+const Bootstrap = () => {
   return (
     <ErrorBoundary exceptionEventName="application-runtime-error">
       <PortalContextProvider>
@@ -23,8 +24,7 @@ export const Application = () => {
               <WalletContextProvider>
                 <ExtensionSettingsProvider>
                   <TwitterPageProvider>
-                    <PolymarketApp />
-                    <SnapshotApp />
+                    <Applications />
                   </TwitterPageProvider>
                 </ExtensionSettingsProvider>
               </WalletContextProvider>
@@ -34,4 +34,12 @@ export const Application = () => {
       </PortalContextProvider>
     </ErrorBoundary>
   );
+};
+
+export const bootstrapApplication = () => {
+  const root = document.createElement('div');
+  const shadowRoot = root.attachShadow({ mode: 'open' });
+  const reactRoot = createRoot(shadowRoot);
+  reactRoot.render(createElement(Bootstrap));
+  document.body.append(root);
 };

@@ -4,6 +4,6 @@ export interface WidgetBaseProperties {
   children: ReactNode;
   className?: string;
   top?: number;
-  onHide?: () => void;
+  onClose?: () => void;
   closeButtonClassName?: string;
 }

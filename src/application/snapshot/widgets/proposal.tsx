@@ -14,10 +14,10 @@ interface Properties {
   data: ProposalData;
   className?: string;
   top?: number;
-  onHide?: () => void;
+  onClose?: () => void;
 }
 
-export const Proposal = ({ data, className, top, onHide }: Properties) => {
+export const Proposal = ({ data, className, top, onClose }: Properties) => {
   return (
     <WidgetBase
       className={classes(
@@ -25,7 +25,7 @@ export const Proposal = ({ data, className, top, onHide }: Properties) => {
         className,
       )}
       top={top}
-      onHide={onHide}
+      onClose={onClose}
     >
       <header className="flex items-center justify-between space-x-3">
         <a

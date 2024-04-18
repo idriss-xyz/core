@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { EIP1193Provider } from 'mipd';
 
-import { hexStringToNumber, numberToHexString } from './web3.utils';
+import { hexToDecimal, decimalToHex } from './web3.utils';
 import { CHAIN } from './web3.constants';
 
 interface SwitchChainArguments {
@@ -19,7 +19,7 @@ export const useSwitchChain = () => {
         method: 'eth_chainId',
       });
 
-      if (hexStringToNumber(currentChainId) !== chainId) {
+      if (hexToDecimal(currentChainId) !== chainId) {
         const foundChain = Object.values(CHAIN).find((chain) => {
           return chain.id === chainId;
         });
@@ -31,7 +31,7 @@ export const useSwitchChain = () => {
         try {
           await walletProvider.request({
             method: 'wallet_switchEthereumChain',
-            params: [{ chainId: numberToHexString(chainId) }],
+            params: [{ chainId: decimalToHex(Number(chainId)) }],
           });
         } catch (error) {
           if (
@@ -44,7 +44,7 @@ export const useSwitchChain = () => {
               method: 'wallet_addEthereumChain',
               params: [
                 {
-                  chainId: numberToHexString(chainId),
+                  chainId: decimalToHex(Number(chainId)),
                   chainName: foundChain.name,
                   nativeCurrency: foundChain.nativeCurrency,
                   rpcUrls: foundChain.rpcUrls,

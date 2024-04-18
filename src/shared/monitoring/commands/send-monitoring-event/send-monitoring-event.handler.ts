@@ -2,7 +2,9 @@ import { Handler, OkResult } from 'shared/messaging';
 
 import { SendMonitoringEventCommand } from './send-monitoring-event.command';
 
-export class SendMonitoringEventHandler implements Handler {
+export class SendMonitoringEventHandler
+  implements Handler<SendMonitoringEventCommand>
+{
   async handle(command: SendMonitoringEventCommand) {
     const response = await fetch('https://www.idriss.xyz/submit-event', {
       method: 'POST',
@@ -12,7 +14,6 @@ export class SendMonitoringEventHandler implements Handler {
       },
     });
     await response.json();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return new OkResult({});
+    return new OkResult(undefined);
   }
 }

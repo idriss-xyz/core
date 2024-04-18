@@ -7,7 +7,7 @@ import { UseMarketByConditionIdArguments } from './use-market-by-condition-id.ty
 
 const getMarketByConditionId = async (conditionId: string) => {
   const command = new GetMarketByConditionIdCommand({ conditionId });
-  return command.send<MarketData>();
+  return command.send();
 };
 
 export const useMarketByConditionId = ({

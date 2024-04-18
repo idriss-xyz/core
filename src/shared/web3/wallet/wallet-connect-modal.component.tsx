@@ -9,11 +9,13 @@ import {
   Icon,
   IdrissLogo,
   Modal,
+  Spinner,
 } from 'shared/ui/components';
 import { classes } from 'shared/ui/utils';
 
-import { Wallet } from '../web3.types';
-import { hexStringToNumber, toAddressWithValidChecksum } from '../web3.utils';
+import { hexToDecimal, toAddressWithValidChecksum } from '../web3.utils';
+
+import { Wallet } from './wallet.types';
 
 export const WalletConnectModal = createModal(() => {
   const modal = useModal();
@@ -31,7 +33,7 @@ export const WalletConnectModal = createModal(() => {
       });
 
       const chainId = await provider.request({ method: 'eth_chainId' });
-      return { accounts, chainId: hexStringToNumber(chainId) };
+      return { accounts, chainId: hexToDecimal(chainId) };
     },
     onSuccess: ({ accounts, chainId }, provider) => {
       // auto select account if there is only a single one
@@ -107,23 +109,29 @@ export const WalletConnectModal = createModal(() => {
         )}
         {connectedProvider && connectedProviderChainId ? (
           <>
-            {availableAccounts.map((account) => {
-              return (
-                <button
-                  className="flex items-center space-x-4 rounded bg-[#555] px-4 py-2.5 shadow-md hover:bg-[#777]"
-                  onClick={() => {
-                    void resolveWallet({
-                      account,
-                      provider: connectedProvider,
-                      chainId: connectedProviderChainId,
-                    });
-                  }}
-                  key={account}
-                >
-                  <span className="truncate">{account}</span>
-                </button>
-              );
-            })}
+            {availableAccounts.length > 1 ? (
+              availableAccounts.map((account) => {
+                return (
+                  <button
+                    className="flex items-center space-x-4 rounded bg-[#555] px-4 py-2.5 shadow-md hover:bg-[#777]"
+                    onClick={() => {
+                      void resolveWallet({
+                        account,
+                        provider: connectedProvider,
+                        chainId: connectedProviderChainId,
+                      });
+                    }}
+                    key={account}
+                  >
+                    <span className="truncate">{account}</span>
+                  </button>
+                );
+              })
+            ) : (
+              <div className="flex w-full items-center justify-center">
+                <Spinner />
+              </div>
+            )}
           </>
         ) : (
           <>

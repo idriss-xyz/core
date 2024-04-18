@@ -2,15 +2,15 @@ import { useCallback } from 'react';
 
 import { createEthersProvider } from 'shared/web3';
 
+import { OrderPlacer, PlaceOrderParameters } from '../../polymarket.types';
 import { useRequestAuth } from '../use-request-auth';
 import { usePostOrder } from '../use-post-order';
 
-import {
-  PlaceOrderParameters,
-  UseOrderPlacerParameters,
-} from './use-order.types';
+import { UseOrderPlacerParameters } from './use-order.types';
 
-export const useOrderPlacer = ({ onSuccess }: UseOrderPlacerParameters) => {
+export const useOrderPlacer = ({
+  onSuccess,
+}: UseOrderPlacerParameters): OrderPlacer => {
   const requestAuth = useRequestAuth();
   const postOrder = usePostOrder();
 

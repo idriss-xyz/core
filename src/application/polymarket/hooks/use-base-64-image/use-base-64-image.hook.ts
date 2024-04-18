@@ -6,7 +6,7 @@ import { UseBase64ImageArguments } from './use-base-64-image.types';
 
 const getBase64Image = async (url: string) => {
   const command = new GetImageAsBase64Command({ url });
-  return command.send<string>();
+  return command.send();
 };
 
 export const useBase64Image = ({ url }: UseBase64ImageArguments) => {

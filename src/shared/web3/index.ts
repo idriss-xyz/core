@@ -1,9 +1,20 @@
 export { CHAIN } from './web3.constants';
-export type { Hex, Wallet } from './web3.types';
+export type { Hex, Chain } from './web3.types';
+export type { Wallet } from './wallet';
 export { useWallet, WalletContextProvider } from './wallet';
 export {
   createEthersProvider,
   resolveAddress,
-  hexStringToNumber,
+  hexToDecimal,
+  dollarToWei,
+  createContract,
+  roundToSignificantFigures,
 } from './web3.utils';
 export { useSwitchChain } from './web3.hooks';
+export { ChainSelect } from './components';
+export {
+  HANDLER_MAP as WEB3_HANDLER_MAP,
+  useGetTokenPriceCommandQuery,
+  useGetAcrossChainFeesCommandQuery,
+  useGetAcrossChainFeeCommandMutation,
+} from './commands';

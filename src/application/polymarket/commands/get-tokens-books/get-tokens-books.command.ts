@@ -1,8 +1,13 @@
 import { Command } from 'shared/messaging';
 
+import { TokenIdToBook } from '../../polymarket.types';
+
 import { GetTokensBooksCommandDetails } from './get-tokens-books.types';
 
-export class GetTokensBooksCommand extends Command<GetTokensBooksCommandDetails> {
+export class GetTokensBooksCommand extends Command<
+  GetTokensBooksCommandDetails,
+  TokenIdToBook
+> {
   public readonly name = 'GetTokensBooksCommand' as const;
   public id: string;
 

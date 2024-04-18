@@ -1,9 +1,13 @@
-import { EnhancedToken, MarketData, MarketForm } from '../../polymarket.types';
+import {
+  EnhancedToken,
+  MarketData,
+  MarketFormValues,
+} from '../../polymarket.types';
 
 export interface MarketProperties {
   data: MarketData;
   tokens: EnhancedToken[];
-  defaultValues?: Partial<MarketForm>;
+  defaultValues?: Partial<MarketFormValues>;
   onRefresh: () => void;
   top: number;
   isAvailable: boolean;

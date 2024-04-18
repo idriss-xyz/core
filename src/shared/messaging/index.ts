@@ -10,3 +10,5 @@ export {
   COMMAND_BUS_REQUEST_MESSAGE,
   COMMAND_BUS_RESPONSE_MESSAGE,
 } from './constants';
+
+export { useCommandQuery, useCommandMutation } from './command.hook';

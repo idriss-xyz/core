@@ -6,3 +6,5 @@ export { SomethingWentWrongMessage } from './something-went-wrong-message';
 export { SuccessButton } from './success-button';
 export { UsdcNotAllowedMessage } from './usdc-not-allowed-message';
 export { Progress } from './progress';
+export { UserError } from './user-error';
+export { OrderPlacerError } from './order-placer-error';

@@ -1,13 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { GetTokensPricesCommand } from '../../commands';
-import { TokenIdToPrice } from '../../polymarket.types';
 
 import { UseTokensPriceArguments } from './use-tokens-prices.types';
 
 const getTokensPrices = async (tokensIds: string[]) => {
   const command = new GetTokensPricesCommand({ tokensIds });
-  return command.send<TokenIdToPrice>();
+  return command.send();
 };
 
 // TODO: there is literally endpoint getPrices but we cannot use it because with fetch you cannot GET with body

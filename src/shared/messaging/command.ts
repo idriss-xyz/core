@@ -10,12 +10,12 @@ export interface CommandResponse<ExpectedResponse> {
   commandId: string;
 }
 
-export abstract class Command<Details = unknown> {
+export abstract class Command<Parameters, ExpectedResponse> {
   public abstract readonly name: string;
   public abstract readonly id: string;
-  public abstract readonly details: Details;
+  public abstract readonly details: Parameters;
 
-  public send<ExpectedResponse>(): Promise<ExpectedResponse> {
+  public send(): Promise<ExpectedResponse> {
     return new Promise((resolve, reject) => {
       window.postMessage({
         type: COMMAND_BUS_REQUEST_MESSAGE,

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { TickSize } from '@polymarket/clob-client';
 import { Controller, SubmitHandler } from 'react-hook-form';
 
@@ -12,7 +12,7 @@ import {
 } from 'shared/ui/components';
 import { sendMonitoringEvent } from 'shared/monitoring';
 
-import { MarketForm } from '../../polymarket.types';
+import { MarketFormValues } from '../../polymarket.types';
 import { useMarketForm, useOrderPlacer, useUser } from '../../hooks';
 import {
   BuyClickedEvent,
@@ -22,13 +22,12 @@ import {
 import { calculateTotalSharesForAmount } from '../../polymarket.library';
 import {
   UnavailableButton,
-  AccountNotFoundMessage,
   ActionButton,
   Progress,
-  SomethingWentWrongMessage,
+  OrderPlacerError,
   SuccessButton,
   VoteButton,
-  UsdcNotAllowedMessage,
+  UserError,
 } from '../../components';
 
 import { MarketProperties } from './market.types';
@@ -99,22 +98,35 @@ export const Market = ({
     }
   }, [orderPlacer.isPlaced, orderPlacer.reset]);
 
-  const submit: SubmitHandler<MarketForm> = async (formValues) => {
-    if (!user.wallet || !user.safeWalletDetails) {
-      return;
-    }
+  const submit: SubmitHandler<MarketFormValues> = useCallback(
+    async (formValues) => {
+      if (!user.wallet || !user.safeWalletDetails) {
+        return;
+      }
 
-    await orderPlacer.place({
-      wallet: user.wallet,
-      funderAddress: user.safeWalletDetails.address,
-      orderDetails: {
-        minimumTickSize: data.minimum_tick_size as TickSize,
-        negRisk: data.neg_risk,
-        amount: formValues.amount,
-        tokenId: formValues.selectedTokenId,
-      },
-    });
-  };
+      await orderPlacer.place({
+        wallet: user.wallet,
+        funderAddress: user.safeWalletDetails.address,
+        orderDetails: {
+          minimumTickSize: data.minimum_tick_size as TickSize,
+          negRisk: data.neg_risk,
+          amount: formValues.amount,
+          tokenId: formValues.selectedTokenId,
+        },
+      });
+    },
+    [
+      data.minimum_tick_size,
+      data.neg_risk,
+      orderPlacer,
+      user.safeWalletDetails,
+      user.wallet,
+    ],
+  );
+
+  const retry = useCallback(() => {
+    formReference.current?.requestSubmit();
+  }, []);
 
   return (
     <WidgetBase
@@ -139,7 +151,7 @@ export const Market = ({
           <div className="mb-1.5 mt-8 flex items-center justify-between">
             <InputBase.Label label="Outcome" />
             <IconButton
-              className="border border-[#2c3f4f] bg-transparent hover:enabled:bg-[#53535a]"
+              className="border border-[#2c3f4f] bg-transparent hover:enabled:bg-[#53535a] active:enabled:bg-[#92a5b5]"
               iconProps={{ name: 'SymbolIcon', size: 16 }}
               onClick={onRefresh}
             />
@@ -181,7 +193,7 @@ export const Market = ({
                   <CurrencyInput
                     value={field.value}
                     onChange={field.onChange}
-                    iconButtonClassName="hover:enabled:bg-[#5f7282]"
+                    iconButtonClassName="bg:bg-[#2c3f4f] hover:enabled:bg-[#5f7282] active:enabled:bg-[#92a5b5]"
                     inputBaseProps={{
                       errorMessage: fieldState.error?.message,
                       renderLabel: () => {
@@ -268,27 +280,13 @@ export const Market = ({
               ${potentialReturn} ({potentialReturnPercentage}%)
             </span>
           </div>
-          {user.isSigning ||
-          !user.wallet ||
-          user.wallet.chainId !== CHAIN.POLYGON.id ? null : (
-            <>
-              {user.hasPolymarketAccount ? (
-                user.hasUsdcAllowed ? null : (
-                  <UsdcNotAllowedMessage onSwitchWallet={user.signIn} />
-                )
-              ) : (
-                <AccountNotFoundMessage onSwitchWallet={user.signIn} />
-              )}
-              {user.isSigningError ?? orderPlacer.isError ? (
-                <SomethingWentWrongMessage
-                  onRetry={() => {
-                    return formReference.current?.requestSubmit();
-                  }}
-                  onSwitchWallet={user.signIn}
-                />
-              ) : null}
-            </>
-          )}
+
+          <UserError user={user} onRetry={retry} />
+          <OrderPlacerError
+            orderPlacer={orderPlacer}
+            onRetry={retry}
+            onSwitchWallet={user.signIn}
+          />
         </div>
       </form>
     </WidgetBase>

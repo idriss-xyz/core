@@ -13,7 +13,7 @@ import { generateGetProposalsQuery } from '../utils';
 
 import { GetProposalCommand } from './get-proposal.command';
 
-export class GetProposalHandler implements Handler {
+export class GetProposalHandler implements Handler<GetProposalCommand> {
   async handle(command: GetProposalCommand) {
     try {
       const query = generateGetProposalsQuery([command.details.snapshotName], {
@@ -24,7 +24,6 @@ export class GetProposalHandler implements Handler {
         body: JSON.stringify({
           query: query,
           operationName: 'Proposals',
-          // TODO: make sure undefined is fine
           variables: undefined,
         }),
         headers: {

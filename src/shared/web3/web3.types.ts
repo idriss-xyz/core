@@ -1,9 +1,18 @@
-import { EIP1193Provider } from 'mipd';
+export type Hex = `0x${string}`;
 
-export interface Wallet {
-  provider: EIP1193Provider;
-  account: Hex;
-  chainId: number;
+export interface Chain {
+  id: number;
+  name: string;
+  logo: string;
+  nativeCurrency: {
+    name: string;
+    symbol: string;
+    decimals: number;
+  };
+  rpcUrls: string[];
+  blockExplorerUrls: string[];
 }
 
-export type Hex = `0x${string}`;
+export interface GetEthPriceResponse {
+  price: string;
+}

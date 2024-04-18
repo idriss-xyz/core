@@ -6,7 +6,7 @@ import { UseTokenChanceArguments } from './use-chance.types';
 
 const getTokenChance = async (tokenId: string) => {
   const command = new GetTokenChanceCommand({ tokenId });
-  return command.send<number>();
+  return command.send();
 };
 
 export const useChance = ({ tokenId }: UseTokenChanceArguments) => {

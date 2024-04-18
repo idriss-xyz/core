@@ -35,7 +35,7 @@ export class Twitter {
 
     const handle = Twitter.extractHandle(url);
     if (handle) {
-      return { name: 'twitter', type: 'handle', handle: handle.toLowerCase() };
+      return { name: 'twitter', type: 'handle', handle: handle };
     }
 
     return { name: 'unknown' };

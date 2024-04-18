@@ -4,3 +4,4 @@ export {
   useTwitterUsersPooling,
   useTwitterExternalLinksPooling,
 } from './twitter.hooks';
+export type { TwitterUserPoolingResult } from './twitter.types';

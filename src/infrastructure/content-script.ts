@@ -58,26 +58,29 @@ export class ContentScript {
   }
 
   bridgeFromWebpageScriptToServiceWorker() {
-    onWindowMessage<Command>(COMMAND_BUS_REQUEST_MESSAGE, (command) => {
-      chrome.runtime.sendMessage(
-        {
-          type: COMMAND_BUS_REQUEST_MESSAGE,
-          data: command,
-        },
-        (response) => {
-          const messageDetail: CommandResponse<unknown> = {
-            response,
-            commandId: command.id,
-          };
+    onWindowMessage<Command<unknown, unknown>>(
+      COMMAND_BUS_REQUEST_MESSAGE,
+      (command) => {
+        chrome.runtime.sendMessage(
+          {
+            type: COMMAND_BUS_REQUEST_MESSAGE,
+            data: command,
+          },
+          (response) => {
+            const messageDetail: CommandResponse<unknown> = {
+              response,
+              commandId: command.id,
+            };
 
-          const message = {
-            type: COMMAND_BUS_RESPONSE_MESSAGE,
-            detail: messageDetail,
-          };
+            const message = {
+              type: COMMAND_BUS_RESPONSE_MESSAGE,
+              detail: messageDetail,
+            };
 
-          window.postMessage(message);
-        },
-      );
-    });
+            window.postMessage(message);
+          },
+        );
+      },
+    );
   }
 }

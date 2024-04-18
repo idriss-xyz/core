@@ -1,6 +1,6 @@
 import { ErrorBoundary } from 'shared/monitoring';
 
-import { getSnapshotFromTwitterHandle } from '../../utils';
+import { getSnapshotFromTwitterUsername } from '../../utils';
 
 import { Container } from './container';
 
@@ -9,7 +9,7 @@ interface Properties {
 }
 
 export const Inject = ({ handle }: Properties) => {
-  const snapshotName = getSnapshotFromTwitterHandle(handle);
+  const snapshotName = getSnapshotFromTwitterUsername(handle);
 
   if (!snapshotName) {
     return null;

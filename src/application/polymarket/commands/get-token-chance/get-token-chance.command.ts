@@ -2,7 +2,10 @@ import { Command } from 'shared/messaging';
 
 import { GetTokenChanceCommandDetails } from './get-token-chance.types';
 
-export class GetTokenChanceCommand extends Command<GetTokenChanceCommandDetails> {
+export class GetTokenChanceCommand extends Command<
+  GetTokenChanceCommandDetails,
+  number
+> {
   public readonly name = 'GetTokenChanceCommand' as const;
   public id: string;
 
