@@ -77,6 +77,7 @@ export const DonationWidget = memo(
         closeOnClickAway={closeOnClickAway}
       >
         <DonationForm
+          onClose={close}
           application={application}
           className="mt-4"
           username={username}

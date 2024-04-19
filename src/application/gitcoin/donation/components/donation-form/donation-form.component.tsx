@@ -42,6 +42,7 @@ export const DonationForm = ({
   className,
   username,
   onStartDonating,
+  onClose,
 }: DonationFormProperties) => {
   const { wallet, openConnectionModal, isConnectionModalOpened } = useWallet();
   const [isCrossChain, setIsCrossChain] = useState(false);
@@ -164,7 +165,7 @@ export const DonationForm = ({
           size={124}
         />
         <p className="mt-4 text-lg font-medium leading-6 text-gray-900">
-          Transaction Submitted🥳
+          Transaction Submitted 🥳
         </p>
         <a
           href={`${
@@ -181,6 +182,12 @@ export const DonationForm = ({
           </span>
           <Icon name="ExternalLinkIcon" size={16} className="text-gray-500" />
         </a>
+        <Button
+          onClick={onClose}
+          className="mt-5 w-full rounded-md bg-idriss-primary-500 py-2 text-base font-medium text-white shadow-sm hover:bg-idriss-primary-400"
+        >
+          Close
+        </Button>
       </div>
     );
   }

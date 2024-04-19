@@ -5,4 +5,5 @@ export interface DonationFormProperties {
   className?: string;
   username: string;
   onStartDonating?: () => void;
+  onClose: () => void;
 }

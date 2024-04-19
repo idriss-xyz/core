@@ -950,8 +950,8 @@ video {
 .fill-current {
   fill: currentColor;
 }
-.fill-gray-500 {
-  fill: #6b7280;
+.fill-gray-200 {
+  fill: #e5e7eb;
 }
 .stroke-\[\#27AE60\] {
   stroke: #27AE60;

@@ -26,6 +26,10 @@ query Applications ($currentIsoDate: Datetime!) {
       roundId: { in: ["9", "19"] }
       chainId: { equalTo: 10 }
       status: { equalTo: APPROVED }
+      round: {
+        donationsStartTime: { lessThan: $currentIsoDate }
+        donationsEndTime: { greaterThan: $currentIsoDate }
+      }
     }
     first: 1000
     offset: 0
