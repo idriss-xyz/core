@@ -116,7 +116,7 @@ export const CHAIN = {
       decimals: 18,
     },
     rpcUrls: ['https://rpc.scroll.io'],
-    blockExplorerUrls: ['https://scrollscan.com/'],
+    blockExplorerUrls: ['https://scrollscan.com'],
   },
   BNB_CHAIN: {
     id: 56,
@@ -127,8 +127,8 @@ export const CHAIN = {
       symbol: 'BNB',
       decimals: 18,
     },
-    rpcUrls: ['https://bsc-dataseed.binance.org/'],
-    blockExplorerUrls: ['https://bscscan.com/'],
+    rpcUrls: ['https://bsc-dataseed.binance.org'],
+    blockExplorerUrls: ['https://bscscan.com'],
   },
   ETHEREUM: {
     id: 1,
@@ -140,6 +140,6 @@ export const CHAIN = {
       decimals: 18,
     },
     rpcUrls: ['https://eth.llamarpc.com'],
-    blockExplorerUrls: ['https://etherscan.io/'],
+    blockExplorerUrls: ['https://etherscan.io'],
   },
 } satisfies Record<string, Chain>;
