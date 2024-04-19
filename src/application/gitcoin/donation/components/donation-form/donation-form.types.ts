@@ -4,4 +4,5 @@ export interface DonationFormProperties {
   application: Application;
   className?: string;
   username: string;
+  onStartDonating?: () => void;
 }

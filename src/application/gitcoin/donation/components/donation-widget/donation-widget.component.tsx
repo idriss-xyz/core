@@ -17,15 +17,23 @@ export const DonationWidget = memo(
   ({ application, node, username, iconSize }: Properties) => {
     const [isVisible, setIsVisible] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
+    const [closeOnClickAway, setCloseOnClickAway] = useState(true);
 
     useEffect(() => {
       const element = document.createElement('img');
       element.style.height = `${iconSize}px`;
       element.style.width = `${iconSize}px`;
-      element.style.marginLeft = '4px';
       element.style.cursor = 'pointer';
       element.src = GITCOIN_ICON;
-      node.querySelector('span')?.append(element);
+      const elementToInject = node.querySelector('span');
+      if (!elementToInject) {
+        return;
+      }
+
+      elementToInject.style.setProperty('display', 'inline-flex', 'important');
+      elementToInject.style.setProperty('align-items', 'center', 'important');
+      elementToInject.style.setProperty('gap', '4px', 'important');
+      elementToInject?.append(element);
       const updatePosition = () => {
         const elementRect = element.getBoundingClientRect();
         setPosition({
@@ -60,18 +68,21 @@ export const DonationWidget = memo(
 
     return (
       <Closable
-        left={position.x - 16}
-        top={position.y + 16}
+        left={position.x}
+        top={position.y + iconSize}
         onClose={close}
         className="absolute w-64 rounded-md bg-white text-gray-900 shadow-2xl"
         closeButtonClassName="hover:enabled:bg-black/20 active:enabled:bg-black/40"
         closeButtonIconClassName="text-[#000]"
-        closeOnClickAway
+        closeOnClickAway={closeOnClickAway}
       >
         <DonationForm
           application={application}
           className="mt-4"
           username={username}
+          onStartDonating={() => {
+            setCloseOnClickAway(false);
+          }}
         />
       </Closable>
     );

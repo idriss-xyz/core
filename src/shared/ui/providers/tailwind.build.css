@@ -629,6 +629,9 @@ video {
 .flex {
   display: flex;
 }
+.inline-flex {
+  display: inline-flex;
+}
 .grid {
   display: grid;
 }
@@ -645,6 +648,10 @@ video {
 .size-24 {
   width: 96px;
   height: 96px;
+}
+.size-3 {
+  width: 12px;
+  height: 12px;
 }
 .size-4 {
   width: 16px;
@@ -1052,10 +1059,6 @@ video {
 .text-sm {
   font-size: 14px;
   line-height: 20px;
-}
-.text-xl {
-  font-size: 20px;
-  line-height: 28px;
 }
 .text-xs {
   font-size: 12px;

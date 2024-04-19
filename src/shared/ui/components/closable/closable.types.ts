@@ -5,8 +5,8 @@ export interface ClosableProperties {
   className?: string;
   top?: number;
   left?: number;
-  onClose?: () => void;
   closeButtonClassName?: string;
   closeButtonIconClassName?: string;
   closeOnClickAway?: boolean;
+  onClose?: () => void;
 }

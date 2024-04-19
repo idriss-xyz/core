@@ -23,7 +23,7 @@ export const SelectOptionContainer: SelectOptionContainerComponent = forwardRef(
       <Component
         {...restProperties}
         className={classes(
-          'w-full rounded-md bg-white shadow-sm ring-1 ring-gray-300 focus:outline-none focus:ring-indigo-500',
+          'w-full rounded-md bg-white shadow-sm focus:outline-none',
           className,
         )}
         ref={reference}

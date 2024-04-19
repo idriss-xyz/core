@@ -35,11 +35,13 @@ import { useDonationMaker } from '../../hooks/use-donation-maker';
 import { createDonationOptionsSchema } from '../../donation.schema';
 
 import { DonationFormProperties } from './donation-form.types';
+import { GasIcon } from './gas-icon.component';
 
 export const DonationForm = ({
   application,
   className,
   username,
+  onStartDonating,
 }: DonationFormProperties) => {
   const { wallet, openConnectionModal, isConnectionModalOpened } = useWallet();
   const [isCrossChain, setIsCrossChain] = useState(false);
@@ -47,7 +49,6 @@ export const DonationForm = ({
   const { control, watch, trigger, handleSubmit } = useForm<DonationOptions>({
     defaultValues: getDefaultDonationOptions(application),
     resolver: zodResolver(createDonationOptionsSchema(isCrossChain)),
-    mode: 'onChange',
   });
 
   useEffect(() => {
@@ -103,13 +104,14 @@ export const DonationForm = ({
 
   const donate: SubmitHandler<DonationOptions> = useCallback(
     (data) => {
+      onStartDonating?.();
       void donationMaker.donate({
         application,
         options: data,
         oneDollarPriceInEth,
       });
     },
-    [application, donationMaker, oneDollarPriceInEth],
+    [application, donationMaker, onStartDonating, oneDollarPriceInEth],
   );
 
   const formReference = useRef<HTMLFormElement | null>(null);
@@ -120,7 +122,7 @@ export const DonationForm = ({
     });
   }, [application.chainId]);
 
-  if (donationMaker.isDonating) {
+  if (!donationMaker.isDonating) {
     return (
       <div className="flex flex-col items-center text-center">
         <Spinner className="size-24 text-idriss-primary-500" />
@@ -161,7 +163,7 @@ export const DonationForm = ({
           className="text-idriss-primary-500"
           size={124}
         />
-        <p className="mt-4 text-xl font-medium leading-6 text-gray-900">
+        <p className="mt-4 text-lg font-medium leading-6 text-gray-900">
           Transaction Submitted🥳
         </p>
         <a
@@ -177,7 +179,7 @@ export const DonationForm = ({
           <span className="text-base font-normal leading-6 text-gray-500">
             View on Explorer
           </span>
-          <Icon name="ExternalLinkIcon" size={16} />
+          <Icon name="ExternalLinkIcon" size={16} className="text-gray-500" />
         </a>
       </div>
     );
@@ -216,14 +218,6 @@ export const DonationForm = ({
               <ChainSelect
                 className="mt-5"
                 label="Network"
-                renderLabel={() => {
-                  return (
-                    <div className="mb-1 flex items-center justify-between text-sm text-gray-500">
-                      <span>Network</span>
-                      <span className="text-xs">Bridge fee</span>
-                    </div>
-                  );
-                }}
                 allowedChainsIds={allowedChainsIds}
                 renderSuffix={(chainId) => {
                   if (chainId === application.chainId) {
@@ -238,13 +232,15 @@ export const DonationForm = ({
                   }
                   const feeInDollars = getChainFeeInDollars(chainId);
                   return (
-                    <p className="w-full text-right text-xs text-gray-500">
+                    <>
                       {feeInDollars > 0 ? (
-                        <>
+                        <p className="flex w-full items-center justify-end space-x-1 text-xs text-gray-500">
                           <span>{`$${feeInDollars}`}</span>
-                        </>
+                          <span>+</span>
+                          <GasIcon />
+                        </p>
                       ) : null}
-                    </p>
+                    </>
                   );
                 }}
                 onChange={(value) => {
