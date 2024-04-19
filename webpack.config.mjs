@@ -50,7 +50,7 @@ export default {
     }),
     new NodePolyfillPlugin(),
     new webpack.DefinePlugin({
-      ENABLE_EVENTS: JSON.stringify(false),
+      ENABLE_EVENTS: JSON.stringify(true),
     }),
     // new BundleAnalyzerPlugin()
   ],
