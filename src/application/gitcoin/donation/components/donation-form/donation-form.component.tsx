@@ -122,7 +122,7 @@ export const DonationForm = ({
     });
   }, [application.chainId]);
 
-  if (!donationMaker.isDonating) {
+  if (donationMaker.isDonating) {
     return (
       <div className="flex flex-col items-center text-center">
         <Spinner className="size-24 text-idriss-primary-500" />
