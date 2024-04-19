@@ -23,7 +23,7 @@ query Applications ($currentIsoDate: Datetime!) {
 
   optimism: applications(
     filter: {
-      roundId: { in: ["9", "19"] }
+      roundId: { in: ["9"] }
       chainId: { equalTo: 10 }
       status: { equalTo: APPROVED }
       round: {
