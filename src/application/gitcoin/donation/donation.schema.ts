@@ -19,7 +19,12 @@ export const createDonationOptionsSchema = (isCrossChain: boolean) => {
             MIN_CROSS_CHAIN_DONATION_AMOUNT,
             `Value must be at least $${MIN_CROSS_CHAIN_DONATION_AMOUNT}`,
           )
-      : z.number().gte(MIN_DONATION_AMOUNT, `Value must be at least $${MIN_DONATION_AMOUNT}`),
+      : z
+          .number()
+          .gte(
+            MIN_DONATION_AMOUNT,
+            `Value must be at least $${MIN_DONATION_AMOUNT}`,
+          ),
     chainId: z.union(possibleChainIdsSchema),
   });
 };

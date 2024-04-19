@@ -11,7 +11,7 @@ export {
   roundToSignificantFigures,
 } from './web3.utils';
 export { useSwitchChain } from './web3.hooks';
-export { ChainSelect } from './components';
+export { ChainSelect, TokenSelect } from './components';
 export {
   HANDLER_MAP as WEB3_HANDLER_MAP,
   useGetTokenPriceCommandQuery,

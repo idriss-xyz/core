@@ -13,6 +13,7 @@ import {
 import {
   CHAIN,
   ChainSelect,
+  TokenSelect,
   dollarToWei,
   roundToSignificantFigures,
   useGetTokenPriceCommandQuery,
@@ -258,6 +259,12 @@ export const DonationForm = ({
               />
             );
           }}
+        />
+        <TokenSelect
+          label="Token"
+          value="ETH"
+          className="mt-1"
+          onChange={() => {}}
         />
         {wallet ? (
           <Button

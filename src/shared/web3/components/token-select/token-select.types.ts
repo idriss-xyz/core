@@ -1,10 +1,6 @@
-import { ReactNode } from 'react';
-
-export interface ChainSelectProperties {
-  value: number;
+export interface TokenSelectProperties {
+  value: string;
   label?: string;
   className?: string;
-  onChange: (value: number) => void;
-  allowedChainsIds?: number[];
-  renderSuffix?: (chainId: number) => ReactNode;
+  onChange: (value: string) => void;
 }

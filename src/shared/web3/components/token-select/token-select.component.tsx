@@ -2,20 +2,18 @@ import { useMemo } from 'react';
 
 import { Select } from 'shared/ui/components';
 
-import { ChainSelectProperties } from './token-select.types';
+import { TokenSelectProperties } from './token-select.types';
 import { getOptions } from './token-select.library';
 
-export const ChainSelect = ({
+export const TokenSelect = ({
   value,
   label,
   onChange,
   className,
-  allowedChainsIds,
-  renderSuffix,
-}: ChainSelectProperties) => {
+}: TokenSelectProperties) => {
   const options = useMemo(() => {
-    return getOptions(allowedChainsIds, renderSuffix);
-  }, [allowedChainsIds, renderSuffix]);
+    return getOptions();
+  }, []);
 
   return (
     <Select

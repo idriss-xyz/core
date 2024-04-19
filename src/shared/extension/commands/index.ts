@@ -1,4 +1,7 @@
-import { GetServiceStatusCommand, GetServiceStatusHandler } from './get-service-status';
+import {
+  GetServiceStatusCommand,
+  GetServiceStatusHandler,
+} from './get-service-status';
 
 export {
   useGetServiceStatus,

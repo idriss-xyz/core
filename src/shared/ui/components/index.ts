@@ -14,4 +14,4 @@ export { Checkbox } from './checkbox';
 export { Closable } from './closable';
 export type { Option } from './select';
 export { Select } from './select';
-export {IdrissMoneyInput} from './idriss-money-input'
+export { IdrissMoneyInput } from './idriss-money-input';

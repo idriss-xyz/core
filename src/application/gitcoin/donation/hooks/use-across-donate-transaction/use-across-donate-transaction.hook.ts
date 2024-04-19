@@ -105,8 +105,8 @@ export const useAcrossDonateTransaction = () => {
         to: contractOrigin.address,
       });
 
-      const {transactionHash} = await result.wait();
-      return {transactionHash}
+      const { transactionHash } = await result.wait();
+      return { transactionHash };
     },
   });
 };

@@ -27,7 +27,8 @@ export const useFees = ({
       }),
       amount: amountInWei.toString(),
       message: SMALLEST_AMOUNT_MESSAGE_PER_CHAIN_ID[application.chainId] ?? '',
-      recipient: DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[application.chainId] ?? '',
+      recipient:
+        DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[application.chainId] ?? '',
     },
     {
       enabled,

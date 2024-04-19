@@ -31,7 +31,7 @@ export const Progress = ({ value }: ProgressProperties) => {
       </svg>
       <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 flex-col text-center">
         <span className="text-base font-medium leading-none">
-          {parseInt((normalisedValue * 100).toFixed(2))}%
+          {Number.parseInt((normalisedValue * 100).toFixed(2))}%
         </span>
         <span className="text-xs leading-none opacity-50">chance</span>
       </div>

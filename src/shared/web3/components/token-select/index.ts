@@ -1,1 +1,1 @@
-export { ChainSelect } from './token-select.component';
+export { TokenSelect } from './token-select.component';

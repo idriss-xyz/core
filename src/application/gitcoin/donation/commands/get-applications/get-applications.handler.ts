@@ -23,7 +23,7 @@ export class GetApplicationsHandler implements Handler<GetApplicationsCommand> {
           query: GET_APPLICATIONS_QUERY,
           operationName: 'Applications',
           variables: {
-            currentIsoDate:(new Date()).toISOString()
+            currentIsoDate: new Date().toISOString(),
           },
         }),
         headers: {

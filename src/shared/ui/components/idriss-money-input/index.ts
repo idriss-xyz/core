@@ -1,1 +1,1 @@
-export {IdrissMoneyInput} from './idriss-money-input.component'
+export { IdrissMoneyInput } from './idriss-money-input.component';
