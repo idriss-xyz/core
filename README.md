@@ -9,15 +9,15 @@ Sending a transfer through a green IDriss badge on Twitter creates a contract ca
 
 | Network                 | Contract Address                               |
 |----------------------------|-----------------------------------------------|
-| Ethereum                    | 0xe18036D7E3377801a19d5Db3f9b236617979674E   |
-| Polygon | 0xe35B356ac2c880cCcc769bA9393F0748d94ABBCa   |
-| Optimism                 | 0x43f532d678b6a1587be989a50526f89428f68315   |
-| BNB | 0xdffce6d7a3c1ada65aed49096b380b5b6814fffd   |
-| zkSync Era     | 0x6753D35A81d52C49485f5fbB93a059046D1f47a8   |
-| Linea           | 0x7Ef966A9F75Ae230F0583DCD24Ac689E47f533be   |
-| PGN      | 0x43f532d678b6a1587be989a50526f89428f68315   |
+| Ethereum                    | [0xe18036D7E3377801a19d5Db3f9b236617979674E](https://etherscan.io/address/0xe18036D7E3377801a19d5Db3f9b236617979674E#code)   |
+| Polygon | [0xe35B356ac2c880cCcc769bA9393F0748d94ABBCa](https://polygonscan.com/address/0xe35B356ac2c880cCcc769bA9393F0748d94ABBCa#code)   |
+| Optimism                 | [0x43f532d678b6a1587be989a50526f89428f68315](https://optimistic.etherscan.io/address/0x43f532d678b6a1587be989a50526f89428f68315#code)   |
+| BNB | [0xdffce6d7a3c1ada65aed49096b380b5b6814fffd](https://bscscan.com/address/0xdffce6d7a3c1ada65aed49096b380b5b6814fffd#code)   |
+| zkSync Era     | [0x6753D35A81d52C49485f5fbB93a059046D1f47a8](https://explorer.zksync.io/address/0x6753D35A81d52C49485f5fbB93a059046D1f47a8#contract)   |
+| Linea           | [0x7Ef966A9F75Ae230F0583DCD24Ac689E47f533be](https://lineascan.build/address/0x7Ef966A9F75Ae230F0583DCD24Ac689E47f533be#code)   |
+| Mantle           | [0x324Ad1738B9308D5AF5E81eDd6389BFa082a8968](https://explorer.mantle.xyz/address/0x324Ad1738B9308D5AF5E81eDd6389BFa082a8968?tab=contract)   |
+| Scroll           | [0x324ad1738b9308d5af5e81edd6389bfa082a8968](https://scrollscan.com/address/0x324ad1738b9308d5af5e81edd6389bfa082a8968#code)   |
 
-Additionally, sending through a grey badge interacts with 0xf333EDE8D49dD100F02c946809C9F5D9867D10C0 on Polygon.
 
 ## Donations to Public Goods
 
@@ -27,29 +27,19 @@ List of grantees and their associated wallet addresses and Twitter names can be 
 
 If your project is not on the list or you'd like to change a wallet address/Twitter username, please DM us on Twitter from your official project account or send us an email to hello@idriss.xyz from your official domain.
 
-## Gitcoin GG18 Donations
-Donations on Twitter sent to a project's Gitcoin logo are not going through IDriss' contracts, but to these Gitcoin contracts directly:
+## Gitcoin GG20 Donations
+For the first time, donations sent to a project's Gitcoin round through Twitter can be sent cross-chain. 
+Donations sent on the network the round is running on (same chain donations) are routed directly through Gitcoin's [AlloV2 contracts](https://github.com/allo-protocol/allo-v2). They do not go through any contracts deployed by IDriss. The AlloV2 contract address on all networks is `0x1133eA7Af70876e64665ecD07C0A0476d09465a1`.
+Cross chain donations leverage the Across protocol through an [Across+ integration](https://docs.across.to/integration-guides/across+-integration). On the origin chain, as well as on the destination chain, donations are routed through our [wrapper contract](https://github.com/idriss-crypto/contracts/blob/DonationWrapper/src/contracts/DonationWrapper.sol). The addresses of this contract on different networks are
 
-| Round Name                 | Contract Address                               |
+| Network                 | Contract Address                               |
 |----------------------------|-----------------------------------------------|
-| **Core Rounds**            |                                               |
-| OSS  (OP)                      | 0x8de918f0163b2021839a8d84954dd7e8e151326d   |
-| Web3 Community and Education  (OP) | 0x2871742b184633f8dc8546c6301cbc209945033e   |
-| Climate   (OP)                 | 0xb6be0ecafdb66dd848b0480db40056ff94a9465d   |
-| Ethereum Infrastructure   (PGN) | 0x222ea76664ed77d18d4416d2b2e77937b76f0a35   |
-| **Featured Rounds**        |                                               |
-| ReFi DAO Local Node   (OP)     | 0x10be322de44389ded49c0b2b73d8c3a1e3b6d871   |
-| Zuzalu     (OP)                | 0x5b95acf46c73fd116f0fedadcbedf453530e35d0   |
-| Token Engineering   (OP)       | 0xc5fdf5cff79e92fac1d6efa725c319248d279200   |
-| Latin America    (OP)          | 0xf591e42dfdfe8e62c2085ccaadfe05f84d89d0c6   |
-| Web3 Social   (OP)             | 0x9331fde4db7b9d9d1498c09d30149929f24cf9d5   |
-| Global Chinese Community  (OP)  | 0x30c381033aa2830ceb0aa372c2e4d28f004b3db9   |
-
-Donations on Gitcoin's Twitter profile are routed to the treasury and matching pool addresses on these networks:
-| Network                 | Gitcoin Treasury Address                               |
-|----------------------------|-----------------------------------------------|
-| Optimism                      | 0x0cC7a824B8760b426c597BbF997524DE0cad9988 (optimism.grants.gitcoin.eth) |
-| PGN (Public Goods Network) | 0x555277050AF4F7A11DB559d5ca1E4C4833a4Dbdd  (pgn.grants.gitcoin.eth) |
+| Ethereum Mainnet                    | [0xcA6742d2d6B9dBFFD841DF25C15cFf45FBbB98f4](https://etherscan.io/address/0xcA6742d2d6B9dBFFD841DF25C15cFf45FBbB98f4#code)   |
+| Optimism | [0xd82BDb8391109f8BaD393Ff2CDa9E7Cd56F8239C](https://optimistic.etherscan.io/address/0xd82BDb8391109f8BaD393Ff2CDa9E7Cd56F8239C#code)   |
+| Base                | [0x51C2DDC09B67aB9152ACFB6a9a5E7A8DB1485ae8](https://basescan.org/address/0x51C2DDC09B67aB9152ACFB6a9a5E7A8DB1485ae8#code)   |
+| Arbitrum One | [0xaA098E5c9B002F815d7c9756BCfce0fC18B3F362](https://arbiscan.io/address/0xaA098E5c9B002F815d7c9756BCfce0fC18B3F362#code)   |
+| Linea     | [0xcbf32F0a9BF93256BAD8cD31cF37a3e914245908](https://lineascan.build/address/0xcbf32F0a9BF93256BAD8cD31cF37a3e914245908#code)   |
+| zkSync Era                | [0x8F5fc20f5a3e69B7DCc5AC477dCC4484C64897dA](https://explorer.zksync.io/address/0x8F5fc20f5a3e69B7DCc5AC477dCC4484C64897dA#contract)   |
 
 
 ## Build
@@ -64,5 +54,5 @@ Results will appear in buildResults directory: ./buildResults/firefox and ./buil
 
 ## License
 
-This project is licensed under [GPLv3](https://github.com/idriss-crypto/contracts/blob/main/LICENSE)
+This project is licensed under [GPLv3](https://github.com/idriss-crypto/browser-extensions/blob/master/LICENSE)
 
