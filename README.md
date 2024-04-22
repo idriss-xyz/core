@@ -29,7 +29,9 @@ If your project is not on the list or you'd like to change a wallet address/Twit
 
 ## Gitcoin GG20 Donations
 For the first time, donations sent to a project's Gitcoin round through Twitter can be sent cross-chain. 
+
 Donations sent on the network the round is running on (same chain donations) are routed directly through Gitcoin's [AlloV2 contracts](https://github.com/allo-protocol/allo-v2). They do not go through any contracts deployed by IDriss. The AlloV2 contract address on all networks is `0x1133eA7Af70876e64665ecD07C0A0476d09465a1`.
+
 Cross chain donations leverage the Across Protocol through an [Across+ integration](https://docs.across.to/integration-guides/across+-integration). On the origin chain, as well as on the destination chain, donations are routed through our [wrapper contract](https://github.com/idriss-crypto/contracts/blob/DonationWrapper/src/contracts/DonationWrapper.sol). The addresses of this contract on different networks are
 
 | Network                 | Contract Address                               |
@@ -40,6 +42,8 @@ Cross chain donations leverage the Across Protocol through an [Across+ integrati
 | Arbitrum One | [0xaA098E5c9B002F815d7c9756BCfce0fC18B3F362](https://arbiscan.io/address/0xaA098E5c9B002F815d7c9756BCfce0fC18B3F362#code)   |
 | Linea     | [0xcbf32F0a9BF93256BAD8cD31cF37a3e914245908](https://lineascan.build/address/0xcbf32F0a9BF93256BAD8cD31cF37a3e914245908#code)   |
 | zkSync Era                | [0x8F5fc20f5a3e69B7DCc5AC477dCC4484C64897dA](https://explorer.zksync.io/address/0x8F5fc20f5a3e69B7DCc5AC477dCC4484C64897dA#contract)   |
+
+More information regarding technicalities can be found in [CONTRACTS.md](https://github.com/idriss-crypto/browser-extensions/blob/master/CONTRACTS.md)
 
 
 ## Build
