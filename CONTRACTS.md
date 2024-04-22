@@ -1,4 +1,4 @@
-## Matcing calculation with cross-chain donations
+## Matching calculation with cross-chain donations
 This guide is a technical explanation of how cross-chain donations can be included in the GG20 matching calculations.
 
 Using the GraphQL indexer provided by [EAS](https://github.com/ethereum-attestation-service/eas-docs-site/blob/main/docs/developer-tools/api.md), we can query all successful cross chain donations using
