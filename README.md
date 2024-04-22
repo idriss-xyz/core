@@ -30,7 +30,7 @@ If your project is not on the list or you'd like to change a wallet address/Twit
 ## Gitcoin GG20 Donations
 For the first time, donations sent to a project's Gitcoin round through Twitter can be sent cross-chain. 
 Donations sent on the network the round is running on (same chain donations) are routed directly through Gitcoin's [AlloV2 contracts](https://github.com/allo-protocol/allo-v2). They do not go through any contracts deployed by IDriss. The AlloV2 contract address on all networks is `0x1133eA7Af70876e64665ecD07C0A0476d09465a1`.
-Cross chain donations leverage the Across protocol through an [Across+ integration](https://docs.across.to/integration-guides/across+-integration). On the origin chain, as well as on the destination chain, donations are routed through our [wrapper contract](https://github.com/idriss-crypto/contracts/blob/DonationWrapper/src/contracts/DonationWrapper.sol). The addresses of this contract on different networks are
+Cross chain donations leverage the Across Protocol through an [Across+ integration](https://docs.across.to/integration-guides/across+-integration). On the origin chain, as well as on the destination chain, donations are routed through our [wrapper contract](https://github.com/idriss-crypto/contracts/blob/DonationWrapper/src/contracts/DonationWrapper.sol). The addresses of this contract on different networks are
 
 | Network                 | Contract Address                               |
 |----------------------------|-----------------------------------------------|
