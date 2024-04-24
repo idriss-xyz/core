@@ -53,8 +53,11 @@ export const GitcoinDonationWidget = memo(({ handle }: Properties) => {
     if (!handle) {
       return;
     }
-    const foundApplication = applications.find((application) => {
-      return application.username.toLowerCase() === handle.toLowerCase();
+    const foundApplication = getApplicationsQuery.data?.find((application) => {
+      return (
+        application.project.metadata.projectTwitter?.toLowerCase() ===
+        handle.toLowerCase()
+      );
     });
 
     const spans = document.querySelectorAll('[data-testid="UserName"] span');
@@ -73,7 +76,7 @@ export const GitcoinDonationWidget = memo(({ handle }: Properties) => {
       return;
     }
     setHandleApplication({
-      application: foundApplication.application,
+      application: foundApplication,
       top: 0,
       username: username,
       node: mainUserName,
@@ -82,7 +85,7 @@ export const GitcoinDonationWidget = memo(({ handle }: Properties) => {
     return () => {
       setHandleApplication(undefined);
     };
-  }, [applications, handle]);
+  }, [getApplicationsQuery.data, handle]);
 
   return (
     <>
