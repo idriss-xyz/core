@@ -12,7 +12,7 @@ The `handleV3AcrossMessage` function verifies that the caller is the authorized 
 ### Attestatons
 Donations automatically issue an attestation with EAS. It contains all the needed information to match donations with the original sender address for matching calculations. As cross-chain donations are only accepted when relayed through Across and when the passed message is verified through the signature of the user, the attestations made by our wrapper contract can be trusted as a source of truth for matching calculation. Noone can issue fraudulent attestations through calling our contract. This process is as decentralized as Across’ decentralized network of relayers.
 
-The relevant schemas are deployed on [Arbitrum](https://arbitrum.easscan.org/schema/view/0x199429ee45da2c99fd2617ec4865749ca292009f44ee2a0a43721ade) and [Optimism](https://optimism.easscan.org/schema/view/0x199429ee45da2c99fd2617ec4865749ca292009f44ee2a0a43721adef1c9c9df).
+The relevant schemas are deployed on [Arbitrum](https://arbitrum.easscan.org/schema/view/0x199429ee45da2c99fd2617ec4865749ca292009f44ee2a0a43721adef1c9c9df) and [Optimism](https://optimism.easscan.org/schema/view/0x199429ee45da2c99fd2617ec4865749ca292009f44ee2a0a43721adef1c9c9df).
 
 ### Miscellaneous 
 If for some reason the bridge transaction cannot be filled (transaction was sent just before the round ended and now the Allo contract reverts because the round is over when the relayer tries to fill, or any other reason), the donor receives back their funds on the origin chain after some `fillDeadline` (currently around 6 hours) has passed.
