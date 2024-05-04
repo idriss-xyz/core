@@ -10671,30 +10671,6 @@
         "isGrantee": false,
         "iconUrl": "img/icon148_red.png"
     },
-    "1567618801000390656": {
-        "customHeader": "Donate to @pblcasmbly",
-        "customText": "",
-        "buttonValue": "Donate",
-        "hostURL": "https://www.idriss.xyz/send?",
-        "recipient": "@pblcasmbly",
-        "forwardRecipient": true,
-        "recipientAddress": {
-            "optimism": "0xB00A93fF31217E49c3674e05b525f239a85bb78f"
-        },
-        "showNetworkSelection": true,
-        "showValueSelection": true,
-        "showTokenSelection": true,
-        "showInput": false,
-        "showMessageBox": false,
-        "tokenFilter": {
-            "network": [
-                "optimism"
-            ]
-        },
-        "networkFilter": null,
-        "isGrantee": false,
-        "iconUrl": "img/icon148_red.png"
-    },
     "895403549798137856": {
         "customHeader": "Donate to @nuel_ikwuoma",
         "customText": "",
@@ -15912,30 +15888,6 @@
         "forwardRecipient": true,
         "recipientAddress": {
             "optimism": "0xdb0c831283c003686aef40ca228e42bdabf6674c"
-        },
-        "showNetworkSelection": true,
-        "showValueSelection": true,
-        "showTokenSelection": true,
-        "showInput": false,
-        "showMessageBox": false,
-        "tokenFilter": {
-            "network": [
-                "optimism"
-            ]
-        },
-        "networkFilter": null,
-        "isGrantee": false,
-        "iconUrl": "img/icon148_red.png"
-    },
-    "1618135111173562369": {
-        "customHeader": "Donate to @venturetothex",
-        "customText": "",
-        "buttonValue": "Donate",
-        "hostURL": "https://www.idriss.xyz/send?",
-        "recipient": "@venturetothex",
-        "forwardRecipient": true,
-        "recipientAddress": {
-            "optimism": "0x13C8F410A583c357F1f702bd1dAF783E8C9Cfb5d"
         },
         "showNetworkSelection": true,
         "showValueSelection": true,
