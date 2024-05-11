@@ -13,7 +13,7 @@ export {
 export { useSwitchChain } from './web3.hooks';
 export { ChainSelect, TokenSelect } from './components';
 export {
-  HANDLER_MAP as WEB3_HANDLER_MAP,
+  COMMAND_MAP as WEB3_COMMAND_MAP,
   useGetTokenPriceCommandQuery,
   useGetAcrossChainFeesCommandQuery,
   useGetAcrossChainFeeCommandMutation,

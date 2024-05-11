@@ -1,1 +1,1 @@
-export { TwitterPolymarketWidget } from './twitter';
+export { MarketWidgetContainer } from './market-widget.container';

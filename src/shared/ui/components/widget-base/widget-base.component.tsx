@@ -29,7 +29,7 @@ export const WidgetBase = ({
     <Closable
       top={top}
       onClose={close}
-      className={classes('right-4 w-96 text-white', className)}
+      className={classes('right-4 z-10 w-96 text-white', className)}
       closeButtonClassName={closeButtonClassName}
     >
       {children}

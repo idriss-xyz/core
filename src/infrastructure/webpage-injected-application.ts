@@ -1,4 +1,4 @@
-import { bootstrapApplication } from 'application';
+import { bootstrap } from 'application/bootstrap';
 import {
   ExtensionSettings,
   GET_EXTENSION_SETTINGS_REQUEST,
@@ -10,7 +10,7 @@ export class WebpageApplication {
   private constructor() {}
 
   static run() {
-    bootstrapApplication();
+    bootstrap();
   }
 
   static async getExtensionSettings(): Promise<ExtensionSettings> {

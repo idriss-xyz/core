@@ -1,6 +1,9 @@
 import { useMemo } from 'react';
 
-import { useProposals } from './use-proposals';
+import { useCommandQuery } from 'shared/messaging';
+
+import { GetProposalsCommand } from '../commands';
+
 import { useTwitterVisibleSnapshots } from './use-twitter-visible-snapshots';
 
 interface Properties {
@@ -13,7 +16,14 @@ export const useTwitterProposalsToDisplay = ({ hidden }: Properties) => {
       hidden,
     });
 
-  const proposalsQuery = useProposals(visibleSnapshotsNames.sort());
+  const proposalsQuery = useCommandQuery({
+    command: new GetProposalsCommand({
+      snapshotNames: visibleSnapshotsNames.sort(),
+    }),
+    placeholderData: (previousData) => {
+      return previousData;
+    },
+  });
 
   const proposalsToDisplay = useMemo(() => {
     return visibleSnapshots

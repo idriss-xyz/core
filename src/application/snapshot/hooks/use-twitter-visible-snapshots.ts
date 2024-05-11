@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { useTwitterUsersPooling } from 'shared/twitter';
+import { useTwitterUsersPooling } from 'src/host/twitter';
 
 import { getSnapshotUsernameNodes } from '../utils';
 

@@ -28,7 +28,7 @@ List of grantees and their associated wallet addresses and Twitter names can be 
 If your project is not on the list or you'd like to change a wallet address/Twitter username, please DM us on Twitter from your official project account or send us an email to hello@idriss.xyz from your official domain.
 
 ## Gitcoin GG20 Donations
-For the first time, donations sent to a project's Gitcoin round through Twitter can be sent cross-chain. 
+For the first time, donations sent to a project's Gitcoin round through Twitter can be sent cross-chain.
 
 Donations sent on the network the round is running on (same chain donations) are routed directly through Gitcoin's [AlloV2 contracts](https://github.com/allo-protocol/allo-v2). They do not go through any contracts deployed by IDriss. The AlloV2 contract address on all networks is `0x1133eA7Af70876e64665ecD07C0A0476d09465a1`.
 
@@ -47,11 +47,11 @@ More information regarding technicalities can be found in [CONTRACTS.md](https:/
 
 
 ## Build
-To compile the extension install [yarn](https://yarnpkg.com/) and then from CLI
+To compile the extension install [pnpm](https://pnpm.io/) and then from CLI
 
 ```bash
-yarn
-yarn buildOnce
+pnpm
+pnpm build:prod
 ```
 
 Results will appear in buildResults directory: ./buildResults/firefox and ./buildResults/chromium

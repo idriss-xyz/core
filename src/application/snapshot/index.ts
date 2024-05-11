@@ -1,2 +1,2 @@
 export { App as SnapshotApp } from './app';
-export { HANDLER_MAP as SNAPSHOT_HANDLER_MAP } from './commands';
+export { COMMAND_MAP as SNAPSHOT_COMMAND_MAP } from './commands';

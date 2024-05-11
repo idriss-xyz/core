@@ -1,15 +1,9 @@
-import {
-  SendExceptionEventCommand,
-  SendExceptionEventHandler,
-} from './send-exception-event';
-import {
-  SendMonitoringEventCommand,
-  SendMonitoringEventHandler,
-} from './send-monitoring-event';
+import { SendExceptionEventCommand } from './send-exception-event';
+import { SendMonitoringEventCommand } from './send-monitoring-event';
 
-export const MONITORING_HANDLER_MAP = {
-  [SendMonitoringEventCommand.name]: new SendMonitoringEventHandler(),
-  [SendExceptionEventCommand.name]: new SendExceptionEventHandler(),
+export const COMMAND_MAP = {
+  [SendMonitoringEventCommand.name]: SendMonitoringEventCommand,
+  [SendExceptionEventCommand.name]: SendExceptionEventCommand,
 };
 
 export { SendMonitoringEventCommand } from './send-monitoring-event';

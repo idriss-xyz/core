@@ -7,6 +7,5 @@ export {
 export { ExtensionSettingsProvider, useExtensionSettings } from './settings';
 export {
   useGetServiceStatus,
-  GET_SERVICE_STATUS_QUERY_KEY,
-  HANDLER_MAP as EXTENSION_HANDLER_MAP,
+  COMMAND_MAP as EXTENSION_COMMAND_MAP,
 } from './commands';

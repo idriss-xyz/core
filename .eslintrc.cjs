@@ -11,7 +11,7 @@ module.exports = {
   },
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: 'tsconfig.json',
+    project: project,
     tsconfigRootDir: __dirname,
     sourceType: 'module',
     ecmaVersion: 2022,
@@ -49,23 +49,27 @@ module.exports = {
     },
     'boundaries/elements': [
       {
-        type: 'shared',
-        pattern: 'src/shared/*',
-        capture: ['module'],
+        type: 'runtime',
+        pattern: 'src/runtime/*',
       },
       {
         type: 'infrastructure',
         pattern: 'src/infrastructure/*',
       },
       {
-        type: 'runtime',
-        pattern: 'src/runtime/*',
-      },
-
-      {
         type: 'application',
         pattern: 'src/application/*',
         capture: ['applicationName'],
+      },
+      {
+        type: 'host',
+        pattern: 'src/host/*',
+        capture: ['hostName'],
+      },
+      {
+        type: 'shared',
+        pattern: 'src/shared/*',
+        capture: ['module'],
       },
     ],
     'boundaries/include': ['src/**/*.ts', 'src/**/*.tsx'],
@@ -95,43 +99,28 @@ module.exports = {
         default: 'disallow',
         rules: [
           {
-            from: [['shared', { module: 'ui' }]],
-            allow: [['shared', { module: 'ui' }]],
+            from: ['runtime'],
+            allow: ['infrastructure'],
           },
           {
-            from: [['shared', { module: 'monitoring' }]],
-            allow: [['shared', { module: 'monitoring' }]],
-          },
-
-          {
-            from: [['shared', { module: 'messaging' }]],
-            allow: [['shared', { module: 'messaging' }]],
+            from: ['host'],
+            allow: ['shared'],
           },
           {
-            from: [
-              ['shared', { module: '!messaging' }],
-              ['shared', { module: '!ui' }],
-            ],
-            allow: [
-              ['shared', { module: 'ui' }],
-              ['shared', { module: 'messaging' }],
-              ['shared', { module: '${this.module}' }],
-            ],
+            from: ['shared'],
+            allow: ['shared'],
+          },
+          {
+            from: ['infrastructure'],
+            allow: ['application', 'host', 'shared'],
           },
           {
             from: ['application'],
             allow: [
               ['application', { applicationName: '${this.applicationName}' }],
               'shared',
+              'host'
             ],
-          },
-          {
-            from: ['infrastructure'],
-            allow: ['application', 'shared'],
-          },
-          {
-            from: ['runtime'],
-            allow: ['infrastructure'],
           },
         ],
       },

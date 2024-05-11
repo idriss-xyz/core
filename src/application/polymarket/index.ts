@@ -1,2 +1,2 @@
-export { App as PolymarketApp } from './polymarket.app';
-export { HANDLER_MAP as POLYMARKET_HANDLER_MAP } from './commands';
+export { App as PolymarketApp } from './app';
+export { COMMAND_MAP as POLYMARKET_COMMAND_MAP } from './commands';

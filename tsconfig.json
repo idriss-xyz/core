@@ -28,11 +28,11 @@
       "infrastructure/*": [
         "src/infrastructure/*"
       ],
-      "application": [
-        "src/application/index.ts"
-      ],
       "application/*": [
         "src/application/*"
+      ],
+      "host/*": [
+        "src/host/*"
       ],
       "shared/*": [
         "src/shared/*"

@@ -3,3 +3,5 @@ buildResults/
 node_modules/
 .DS_STORE
 src/shared/ui/providers/tailwind.build.css
+tailwind.build.css
+tailwindStandalone.css

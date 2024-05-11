@@ -1,5 +1,4 @@
-import { GITCOIN_GRAPHQL_API_URL } from "application/gitcoin/donation/commands/get-applications/get-applications.constants";
-import { GET_APPLICATIONS_QUERY } from "application/gitcoin/donation/commands/get-applications/get-applications.constants";
+import { GITCOIN_GRAPHQL_API_URL, GET_APPLICATIONS_QUERY } from "application/gitcoin/api";
 
 export const GtcResolver = {
   async fetchApplicants() {

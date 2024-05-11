@@ -1,2 +1,2 @@
-export { TwitterHandleWidget } from './twitter-handle';
-export { TwitterMainWidget } from './twitter-main';
+export { ProposalMainContainer } from './proposal-main.container';
+export { ProposalHandleContainer } from './proposal-handle.container';

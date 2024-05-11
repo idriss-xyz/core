@@ -30,7 +30,7 @@ export class ExperimentalFeaturesSettingsManager {
         [ExperimentalFeaturesSettingsManager.STORAGE_KEY],
         (result) => {
           const isEnabled = Boolean(
-            result[ExperimentalFeaturesSettingsManager.STORAGE_KEY],
+            result[ExperimentalFeaturesSettingsManager.STORAGE_KEY] ?? true,
           );
           resolve(isEnabled);
         },

@@ -1,11 +1,9 @@
 import { GetProposalCommand } from './get-proposal.command';
-import { GetProposalHandler } from './get-proposal.handler';
 import { GetProposalsCommand } from './get-proposals.command';
-import { GetProposalsHandler } from './get-proposals.handler';
 
-export const HANDLER_MAP = {
-  [GetProposalCommand.name]: new GetProposalHandler(),
-  [GetProposalsCommand.name]: new GetProposalsHandler(),
+export const COMMAND_MAP = {
+  [GetProposalCommand.name]: GetProposalCommand,
+  [GetProposalsCommand.name]: GetProposalsCommand,
 };
 
 export { GetProposalCommand } from './get-proposal.command';

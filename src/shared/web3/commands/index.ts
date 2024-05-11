@@ -1,17 +1,11 @@
-import {
-  GetAcrossChainFeeCommand,
-  GetAcrossChainFeeHandler,
-} from './get-across-chain-fee';
-import {
-  GetAcrossChainFeesCommand,
-  GetAcrossChainFeesHandler,
-} from './get-across-chain-fees';
-import { GetTokenPriceCommand, GetTokenPriceHandler } from './get-token-price';
+import { GetAcrossChainFeeCommand } from './get-across-chain-fee';
+import { GetAcrossChainFeesCommand } from './get-across-chain-fees';
+import { GetTokenPriceCommand } from './get-token-price';
 
-export const HANDLER_MAP = {
-  [GetTokenPriceCommand.name]: new GetTokenPriceHandler(),
-  [GetAcrossChainFeesCommand.name]: new GetAcrossChainFeesHandler(),
-  [GetAcrossChainFeeCommand.name]: new GetAcrossChainFeeHandler(),
+export const COMMAND_MAP = {
+  [GetTokenPriceCommand.name]: GetTokenPriceCommand,
+  [GetAcrossChainFeeCommand.name]: GetAcrossChainFeeCommand,
+  [GetAcrossChainFeesCommand.name]: GetAcrossChainFeesCommand,
 };
 
 export { useGetTokenPriceCommandQuery } from './get-token-price';

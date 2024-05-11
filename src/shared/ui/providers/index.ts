@@ -1,3 +1,3 @@
-export { usePortal, PortalContextProvider } from './portal';
-export { WithTailwind } from './with-tailwind';
-export { WithQueryClient } from './with-query-client';
+export { usePortal, PortalProvider } from './portal';
+export { TailwindProvider } from './tailwind';
+export { QueryProvider } from './query';

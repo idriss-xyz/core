@@ -1,2 +1,2 @@
-export { App as GitcoinApp } from './gitcoin.app';
-export { HANDLER_MAP as GITCOIN_HANDLER_MAP } from './donation';
+export { App as GitcoinApp } from './app';
+export { COMMAND_MAP as GITCOIN_COMMAND_MAP } from './commands';

@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 
 import { Option } from 'shared/ui/components';
-import { CHAIN } from 'shared/web3';
+import { CHAIN } from 'shared/web3/web3.constants';
 
 import { Chain } from '../../web3.types';
 

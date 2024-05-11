@@ -1,45 +1,75 @@
+import { useMemo, createElement } from 'react';
 import NiceModal from '@ebay/nice-modal-react';
 import { createRoot } from 'react-dom/client';
-import { createElement } from 'react';
 
 import {
-  PortalContextProvider,
-  WithQueryClient,
-  WithTailwind,
+  useGetServiceStatus,
+  ExtensionSettingsProvider,
+} from 'shared/extension';
+import {
+  PortalProvider,
+  QueryProvider,
+  TailwindProvider,
 } from 'shared/ui/providers';
 import { WalletContextProvider } from 'shared/web3';
-import { ExtensionSettingsProvider } from 'shared/extension';
-import { TwitterPageProvider } from 'shared/twitter';
 import { ErrorBoundary } from 'shared/monitoring';
 
-import { Applications } from './applications.component';
+import { SnapshotApp } from './snapshot';
+import { GitcoinApp } from './gitcoin';
+import { PolymarketApp } from './polymarket';
 
-const Bootstrap = () => {
+export const bootstrap = () => {
+  const root = document.createElement('div');
+  const shadowRoot = root.attachShadow({ mode: 'open' });
+  const reactRoot = createRoot(shadowRoot);
+  reactRoot.render(createElement(ApplicationWithProviders));
+  document.body.append(root);
+};
+
+const ApplicationWithProviders = () => {
   return (
     <ErrorBoundary exceptionEventName="application-runtime-error">
-      <PortalContextProvider>
-        <WithTailwind>
-          <WithQueryClient>
+      <PortalProvider>
+        <TailwindProvider>
+          <QueryProvider>
             <NiceModal.Provider>
               <WalletContextProvider>
                 <ExtensionSettingsProvider>
-                  <TwitterPageProvider>
-                    <Applications />
-                  </TwitterPageProvider>
+                  <Applications />
                 </ExtensionSettingsProvider>
               </WalletContextProvider>
             </NiceModal.Provider>
-          </WithQueryClient>
-        </WithTailwind>
-      </PortalContextProvider>
+          </QueryProvider>
+        </TailwindProvider>
+      </PortalProvider>
     </ErrorBoundary>
   );
 };
 
-export const bootstrapApplication = () => {
-  const root = document.createElement('div');
-  const shadowRoot = root.attachShadow({ mode: 'open' });
-  const reactRoot = createRoot(shadowRoot);
-  reactRoot.render(createElement(Bootstrap));
-  document.body.append(root);
+const Applications = () => {
+  const serviceStatusQuery = useGetServiceStatus();
+
+  const applicationsStatus = useMemo(() => {
+    return {
+      polymarket: Boolean(serviceStatusQuery.data?.polymarket),
+      snapshot: Boolean(serviceStatusQuery.data?.snapshot),
+      gitcoin: Boolean(serviceStatusQuery.data?.gitcoin),
+    };
+  }, [
+    serviceStatusQuery.data?.gitcoin,
+    serviceStatusQuery.data?.polymarket,
+    serviceStatusQuery.data?.snapshot,
+  ]);
+
+  if (!serviceStatusQuery.data) {
+    return;
+  }
+
+  return (
+    <>
+      {applicationsStatus.polymarket ? <PolymarketApp /> : null}
+      {applicationsStatus.snapshot ? <SnapshotApp /> : null}
+      {applicationsStatus.gitcoin ? <GitcoinApp /> : null}
+    </>
+  );
 };

@@ -1,1 +1,0 @@
-export { bootstrapApplication } from './bootstrap';
