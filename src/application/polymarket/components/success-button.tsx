@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 
-import { Button, ButtonProperties, Icon } from 'shared/ui/components';
+import { Button, ButtonProperties } from 'shared/ui/components';
 import { classes } from 'shared/ui/utils';
 
 export const SuccessButton = forwardRef<
@@ -17,7 +17,7 @@ export const SuccessButton = forwardRef<
       )}
       disabled
     >
-      <Icon name="CheckIcon" />
+      Success
     </Button>
   );
 });

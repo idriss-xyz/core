@@ -1,5 +1,5 @@
 export const isTwitterHostname = (hostname: string) => {
-  return hostname === 'twitter.com';
+  return hostname === 'twitter.com' || hostname === 'x.com';
 };
 
 export const isTwitterHandlePathname = (pathname: string) => {

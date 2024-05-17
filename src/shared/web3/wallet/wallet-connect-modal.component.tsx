@@ -16,6 +16,7 @@ import { classes } from 'shared/ui/utils';
 import { hexToDecimal, toAddressWithValidChecksum } from '../web3.utils';
 
 import { Wallet } from './wallet.types';
+import { WalletStorage } from './storage';
 
 export const WalletConnectModal = createModal(() => {
   const modal = useModal();
@@ -42,6 +43,7 @@ export const WalletConnectModal = createModal(() => {
           account: toAddressWithValidChecksum(accounts[0]),
           provider,
           chainId,
+          providerRdns: chosenProviderRdns ?? '',
         });
       }
     },
@@ -64,6 +66,10 @@ export const WalletConnectModal = createModal(() => {
     async (wallet: Wallet) => {
       await new Promise((resolve) => {
         setTimeout(resolve, 1000);
+      });
+      WalletStorage.save({
+        account: wallet.account,
+        providerRdns: wallet.providerRdns,
       });
       modal.resolve(wallet);
       modal.remove();
@@ -119,6 +125,7 @@ export const WalletConnectModal = createModal(() => {
                         account,
                         provider: connectedProvider,
                         chainId: connectedProviderChainId,
+                        providerRdns: chosenProviderRdns ?? '',
                       });
                     }}
                     key={account}

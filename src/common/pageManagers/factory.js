@@ -15,6 +15,7 @@ const specificDomainList = {
     "huobi.com": HuobiPageManager,
     "htx.com": HuobiPageManager,
     "twitter.com": TwitterPageManager,
+    "x.com": TwitterPageManager,
     "coinbase.com": CoinbasePageManager,
     "etherscan.io": EtherscanPageManager,
     "polygonscan.com": EtherscanPageManager,

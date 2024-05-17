@@ -118,7 +118,7 @@ export const Market = ({
 
   useEffect(() => {
     if (orderPlacer.isPlaced) {
-      setTimeout(orderPlacer.reset, 2000);
+      setTimeout(orderPlacer.reset, 4000);
     }
   }, [orderPlacer.isPlaced, orderPlacer.reset]);
 
@@ -175,7 +175,7 @@ export const Market = ({
           <div className="mb-1.5 mt-8 flex items-center justify-between">
             <InputBase.Label label="Outcome" />
             <IconButton
-              className="flex border border-[#2c3f4f] bg-transparent hover:enabled:bg-[#53535a] active:enabled:bg-[#92a5b5]"
+              className="border border-[#2c3f4f] bg-transparent hover:enabled:bg-[#53535a] active:enabled:bg-[#92a5b5]"
               iconProps={{ name: 'SymbolIcon', size: 16 }}
               onClick={onRefresh}
             />
