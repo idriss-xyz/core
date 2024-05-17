@@ -2,6 +2,7 @@ import { EIP1193Provider, createStore } from 'mipd';
 import { useCallback, useMemo, useState, useSyncExternalStore } from 'react';
 import { create as createModal, useModal } from '@ebay/nice-modal-react';
 import { useMutation } from '@tanstack/react-query';
+import { useLocation } from 'react-use';
 
 import {
   Button,
@@ -12,6 +13,7 @@ import {
   Spinner,
 } from 'shared/ui/components';
 import { classes } from 'shared/ui/utils';
+import { isTwitterHostname } from 'host/twitter';
 
 import { hexToDecimal, toAddressWithValidChecksum } from '../web3.utils';
 
@@ -86,12 +88,22 @@ export const WalletConnectModal = createModal(() => {
     walletProvidersStore.getProviders,
   );
 
-  const providers = [...availableWalletProviders].sort((a) => {
-    if (a.info.rdns === 'io.metamask') {
-      return -1;
-    }
-    return 0;
-  });
+  const location = useLocation();
+
+  const providers = [...availableWalletProviders]
+    .filter((provider) => {
+      if (isTwitterHostname(location.hostname ?? '')) {
+      // coinbase breaks on twitter due to CSP
+        return !provider.info.rdns.includes('coinbase');
+      }
+      return true;
+    })
+    .sort((a) => {
+      if (a.info.rdns === 'io.metamask') {
+        return -1;
+      }
+      return 0;
+    });
 
   const closeModalWithoutFinishing = useCallback(() => {
     modal.reject();

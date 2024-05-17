@@ -44,16 +44,21 @@ export const WalletContextProvider = ({ children }: Properties) => {
       return;
     }
 
-    const foundProvider = availableWalletProviders.find((provider) => {
-      return provider.info.rdns === storedWallet.providerRdns;
-    });
-    if (!foundProvider) {
+    const foundProvider =
+      storedWallet.providerRdns === 'browser'
+        ? { provider: window.ethereum, info: { rdns: 'browser' } }
+        : availableWalletProviders.find((provider) => {
+            return provider.info.rdns === storedWallet.providerRdns;
+          });
+
+    const connectedProvider = foundProvider?.provider;
+    if (!foundProvider || !connectedProvider) {
       return;
     }
 
     const connectToStoredWallet = async () => {
-      const accounts = await foundProvider.provider.request({
-        method: 'eth_requestAccounts',
+      const accounts = await connectedProvider.request({
+        method: 'eth_accounts',
       });
 
       if (
@@ -70,13 +75,13 @@ export const WalletContextProvider = ({ children }: Properties) => {
         setTimeout(resolve, 500);
       });
 
-      const chainId = await foundProvider.provider.request({
+      const chainId = await connectedProvider.request({
         method: 'eth_chainId',
       });
 
       setWallet({
         providerRdns: foundProvider.info.rdns,
-        provider: foundProvider.provider,
+        provider: connectedProvider,
         account: storedWallet.account,
         chainId: hexToDecimal(chainId),
       });
