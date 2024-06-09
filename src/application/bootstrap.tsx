@@ -17,6 +17,7 @@ import { ErrorBoundary } from 'shared/monitoring';
 import { SnapshotApp } from './snapshot';
 import { GitcoinApp } from './gitcoin';
 import { PolymarketApp } from './polymarket';
+import { AgoraApp } from './agora';
 
 export const bootstrap = () => {
   const root = document.createElement('div');
@@ -54,11 +55,13 @@ const Applications = () => {
       polymarket: Boolean(serviceStatusQuery.data?.polymarket),
       snapshot: Boolean(serviceStatusQuery.data?.snapshot),
       gitcoin: Boolean(serviceStatusQuery.data?.gitcoin),
+      agora: Boolean(serviceStatusQuery.data?.agora),
     };
   }, [
     serviceStatusQuery.data?.gitcoin,
     serviceStatusQuery.data?.polymarket,
     serviceStatusQuery.data?.snapshot,
+    serviceStatusQuery.data?.agora,
   ]);
 
   if (!serviceStatusQuery.data) {
@@ -70,6 +73,7 @@ const Applications = () => {
       {applicationsStatus.polymarket ? <PolymarketApp /> : null}
       {applicationsStatus.snapshot ? <SnapshotApp /> : null}
       {applicationsStatus.gitcoin ? <GitcoinApp /> : null}
+      {applicationsStatus.agora ? <AgoraApp /> : null}
     </>
   );
 };

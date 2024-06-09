@@ -6,7 +6,6 @@ import { ProposalHandleContainer, ProposalMainContainer } from './widgets';
 
 export const App = () => {
   const { experimentalFeatures } = useExtensionSettings();
-
   const {
     isTwitter,
     isTwitterHandlePage,
@@ -19,11 +18,11 @@ export const App = () => {
   }
 
   return (
-    <ErrorBoundary exceptionEventName="snapshot-runtime-error">
-      {isTwitterHandlePage ? (
+    <ErrorBoundary exceptionEventName="agora-runtime-error">
+      {isTwitterHandlePage && (
         <ProposalHandleContainer handle={twitterHandleFromPathname} />
-      ) : null}
-      {isTwitterHomePage ? <ProposalMainContainer /> : null}
+      )}
+      {isTwitterHomePage && <ProposalMainContainer />}
     </ErrorBoundary>
   );
 };

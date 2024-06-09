@@ -1,14 +1,9 @@
 import { classes } from 'shared/ui/utils';
 import { Chip, WidgetBase } from 'shared/ui/components';
+import { getDifferenceInDays, getEndsInLabel } from 'shared/utils';
 
 import { ProposalData } from '../types';
-import {
-  getDaysUntil,
-  getEndsInLabel,
-  getProposalAuthor,
-  getProposalUrl,
-  getUserUrl,
-} from '../utils';
+import { getProposalAuthor, getProposalUrl, getUserUrl } from '../utils';
 
 interface Properties {
   data: ProposalData;
@@ -46,7 +41,7 @@ export const Proposal = ({ data, className, top, onClose }: Properties) => {
       </main>
       <footer className="mt-2 flex items-center space-x-2">
         <div className="text-[#aaa]">
-          {getEndsInLabel(getDaysUntil(data.end * 1000))}
+          {getEndsInLabel(getDifferenceInDays(data.end * 1000))}
         </div>
         <a
           href={getProposalUrl(data.space.id, data.id)}

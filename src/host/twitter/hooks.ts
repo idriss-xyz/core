@@ -1,8 +1,15 @@
 import { useCallback, useMemo } from 'react';
+import { useLocation } from 'react-use';
 
 import { usePooling } from 'shared/ui';
 
 import { Twitter } from './twitter';
+import {
+  extractTwitterHandleFromPathname,
+  isTwitterHandlePathname,
+  isTwitterHomePathname,
+  isTwitterHostname,
+} from './utils';
 
 export const useTwitterUsersPooling = () => {
   const poolUsers = useCallback(() => {
@@ -76,4 +83,22 @@ export const useTwitterExternalLinksPooling = () => {
   }, [value]);
 
   return { results };
+};
+
+export const useTwitterLocationInfo = () => {
+  const location = useLocation();
+
+  const isTwitter = isTwitterHostname(location.hostname ?? '');
+  const isTwitterHandlePage = isTwitterHandlePathname(location.pathname ?? '');
+  const isTwitterHomePage = isTwitterHomePathname(location.pathname ?? '');
+  const twitterHandleFromPathname = extractTwitterHandleFromPathname(
+    location.pathname ?? '',
+  );
+
+  return {
+    isTwitter,
+    isTwitterHandlePage,
+    isTwitterHomePage,
+    twitterHandleFromPathname,
+  };
 };

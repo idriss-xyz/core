@@ -1,29 +1,17 @@
-import { useLocation } from 'react-use';
-
-import {
-  extractTwitterHandleFromPathname,
-  isTwitterHandlePathname,
-  isTwitterHostname,
-} from 'host/twitter';
+import { useTwitterLocationInfo } from 'host/twitter';
 import { ErrorBoundary } from 'shared/monitoring';
 
 import { DonationWidgetContainer } from './widgets';
 
 export const App = () => {
-  const location = useLocation();
-
-  const isTwitter = isTwitterHostname(location.hostname ?? '');
-  const isTwitterHandlePage = isTwitterHandlePathname(location.pathname ?? '');
+  const { isTwitter, isTwitterHandlePage, twitterHandleFromPathname } =
+    useTwitterLocationInfo();
 
   return (
     <ErrorBoundary exceptionEventName="gitcoin-runtime-error">
       {isTwitter ? (
         <DonationWidgetContainer
-          handle={
-            isTwitterHandlePage
-              ? extractTwitterHandleFromPathname(location.pathname ?? '')
-              : undefined
-          }
+          handle={isTwitterHandlePage ? twitterHandleFromPathname : undefined}
         />
       ) : null}
     </ErrorBoundary>

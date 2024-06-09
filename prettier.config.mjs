@@ -5,7 +5,7 @@ export default {
   quoteProps: 'consistent',
   trailingComma: 'all',
   useTabs: false,
-  endOfLine: 'lf',
+  endOfLine: 'auto',
   semi: true,
   tabWidth: 2,
   printWidth: 80,

@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import {
   useTwitterExternalLinksPooling,
   GetOriginalShortenedUrlCommand,
-} from 'src/host/twitter';
+} from 'host/twitter';
 
 import { GetConditionIdCommand } from '../commands';
 import { isEventUrl } from '../utils';

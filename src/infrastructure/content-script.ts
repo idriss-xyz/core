@@ -11,7 +11,8 @@ import {
   GET_EXTENSION_SETTINGS_REQUEST,
   GET_EXTENSION_SETTINGS_RESPONSE,
 } from 'shared/extension';
-import { ExperimentalFeaturesSettingsManager } from 'src/popup/experimental-features-settings-manager';
+
+import { ExperimentalFeaturesSettingsManager } from '../popup/experimental-features-settings-manager';
 
 export class ContentScript {
   private constructor(private environment: typeof chrome) {}

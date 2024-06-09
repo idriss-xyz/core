@@ -24,7 +24,7 @@ export const TWITTER_HANDLE_TO_SNAPSHOT: Record<string, string> = {
   'sushiswap': 'sushigov.eth',
   'gearboxprotocol': 'gearbox.eth',
   'metisl2': 'metislayer2.eth',
-} as const;
+};
 
 export const SNAPSHOT_WEBSITE_URL = 'https://snapshot.org';
 export const SNAPSHOT_GRAPHQL_API_URL = 'https://hub.snapshot.org/graphql?';
