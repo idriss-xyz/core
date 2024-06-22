@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { createEthersProvider } from 'shared/web3';
+import { createSigner } from 'shared/web3';
 
 import { OrderPlacer, PlaceOrderParameters } from '../types';
 
@@ -23,8 +23,7 @@ export const useOrderPlacer = ({
 
   const place = useCallback(
     async (parameters: PlaceOrderParameters) => {
-      const ethersProvider = createEthersProvider(parameters.wallet.provider);
-      const signer = ethersProvider.getSigner(parameters.wallet.account);
+      const signer = createSigner(parameters.wallet);
       const credentials = await authorizer.authorize(signer);
 
       await postOrder.mutateAsync(

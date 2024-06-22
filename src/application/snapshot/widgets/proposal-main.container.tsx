@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 
-import { ErrorBoundary } from 'shared/monitoring';
+import { ErrorBoundary } from 'shared/observability';
 
 import { useTwitterProposalsToDisplay } from '../hooks';
 

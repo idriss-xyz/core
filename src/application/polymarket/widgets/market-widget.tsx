@@ -10,8 +10,8 @@ import {
   CurrencyInput,
   IconButton,
   InputBase,
-} from 'shared/ui/components';
-import { sendMonitoringEvent } from 'shared/monitoring';
+} from 'shared/ui';
+import { logEvent } from 'shared/observability';
 import { EMPTY_MARKET_FORM } from 'application/polymarket/constants';
 import { marketFormSchema } from 'application/polymarket/schema';
 
@@ -57,7 +57,7 @@ export const Market = ({
   const user = useUser();
   const orderPlacer = useOrderPlacer({
     onSuccess: (parameters) => {
-      void sendMonitoringEvent(
+      void logEvent(
         new OrderSucceededEvent({
           conditionId: data.condition_id,
           tokenId: parameters.orderDetails.tokenId,
@@ -252,7 +252,7 @@ export const Market = ({
                     loading={orderPlacer.isPlacing || user.isSigning}
                     disabled={user.isSigningError}
                     onClick={() => {
-                      void sendMonitoringEvent(
+                      void logEvent(
                         new BuyClickedEvent({
                           conditionId: data.condition_id,
                           tokenId: selectedTokenId,
@@ -281,7 +281,7 @@ export const Market = ({
                 <ActionButton
                   loading={user.isSigning}
                   onClick={() => {
-                    void sendMonitoringEvent(
+                    void logEvent(
                       new LoginClickedEvent({
                         conditionId: data.condition_id,
                         question: data.question,

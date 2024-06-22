@@ -2,11 +2,12 @@ import { useMutation } from '@tanstack/react-query';
 import { ethers } from 'ethers';
 
 import {
+  GetAcrossChainFeeCommand,
   Wallet,
   createContract,
-  createEthersProvider,
-  useGetAcrossChainFeeCommandMutation,
+  createSigner,
 } from 'shared/web3';
+import { useCommandMutation } from 'shared/messaging';
 
 import {
   generateCombinedMessage,
@@ -28,7 +29,7 @@ interface Properties {
 }
 
 export const useAcrossDonateTransaction = () => {
-  const checkAcrossChainFee = useGetAcrossChainFeeCommandMutation();
+  const checkAcrossChainFee = useCommandMutation(GetAcrossChainFeeCommand);
 
   return useMutation({
     mutationFn: async ({
@@ -37,8 +38,7 @@ export const useAcrossDonateTransaction = () => {
       userAmountInWei,
       chainId,
     }: Properties) => {
-      const ethersProvider = createEthersProvider(wallet.provider);
-      const signer = ethersProvider.getSigner(wallet.account);
+      const signer = createSigner(wallet);
 
       const vote = generateVote(
         application.project.anchorAddress,
@@ -53,7 +53,7 @@ export const useAcrossDonateTransaction = () => {
       const contractOrigin = createContract({
         address: DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[chainId] ?? '',
         abi: DONATION_CONTRACT_ABI,
-        signer,
+        signerOrProvider: signer,
       });
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       const messageHash = await contractOrigin.getMessageHash(encodedMessage);

@@ -1,4 +1,4 @@
-import { ErrorMessage } from 'shared/ui/components';
+import { ErrorMessage } from 'shared/ui';
 
 import { POLYMARKET_WEBSITE } from '../constants';
 

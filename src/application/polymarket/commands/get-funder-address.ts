@@ -5,15 +5,15 @@ import {
   OkResult,
 } from 'shared/messaging';
 
-interface Details {
+interface Payload {
   address: string;
 }
 
-export class GetFunderAddresCommand extends Command<Details, string> {
+export class GetFunderAddresCommand extends Command<Payload, string> {
   public name = 'GetFunderAddresCommand' as const;
 
   constructor(
-    public details: Details,
+    public payload: Payload,
     id?: string,
   ) {
     super(id ?? null);
@@ -22,7 +22,7 @@ export class GetFunderAddresCommand extends Command<Details, string> {
   async handle() {
     try {
       const response = await fetch(
-        `https://safe-transaction-polygon.safe.global/api/v1/owners/${this.details.address}/safes/`,
+        `https://safe-transaction-polygon.safe.global/api/v1/owners/${this.payload.address}/safes/`,
       );
 
       if (response.status !== 200) {
@@ -50,7 +50,7 @@ export class GetFunderAddresCommand extends Command<Details, string> {
       }
       return new OkResult(pickedSafe);
     } catch (error) {
-      await this.trackHandlerException();
+      await this.logException();
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }

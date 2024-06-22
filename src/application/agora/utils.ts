@@ -1,4 +1,4 @@
-import { TwitterUserPoolingResult } from 'host/twitter';
+import { ScrapingResult } from 'shared/scraping';
 
 import { AGORA_WEBSITE_URL, TWITTER_HANDLE_TO_AGORA } from './constants';
 
@@ -10,14 +10,10 @@ export const getAgoraUsernameFromTwitterUsername = (handle: string) => {
   return TWITTER_HANDLE_TO_AGORA[handle.toLowerCase()];
 };
 
-export const getAgoraUserNodes = (
-  poolingResults: TwitterUserPoolingResult[],
-) => {
+export const getAgoraUserNodes = (poolingResults: ScrapingResult[]) => {
   return poolingResults
     .map((result) => {
-      const agoraUsername = getAgoraUsernameFromTwitterUsername(
-        result.username,
-      );
+      const agoraUsername = getAgoraUsernameFromTwitterUsername(result.value);
       if (!agoraUsername) {
         return;
       }

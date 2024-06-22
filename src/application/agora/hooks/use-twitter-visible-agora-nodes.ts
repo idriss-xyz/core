@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { useTwitterUsersPooling } from 'host/twitter';
+import { useTwitterScraping } from 'host/twitter';
 
 import { getAgoraUserNodes } from '../utils';
 
@@ -9,11 +9,11 @@ interface Properties {
 }
 
 export const useTwitterVisibleAgoraNodes = ({ hidden }: Properties) => {
-  const { results } = useTwitterUsersPooling();
+  const { users } = useTwitterScraping();
 
   const agoraNodes = useMemo(() => {
-    return getAgoraUserNodes(results);
-  }, [results]);
+    return getAgoraUserNodes(users);
+  }, [users]);
 
   const visibleAgoraNodes = useMemo(() => {
     return agoraNodes

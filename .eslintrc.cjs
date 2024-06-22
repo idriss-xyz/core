@@ -55,10 +55,12 @@ module.exports = {
       {
         type: 'infrastructure',
         pattern: 'src/infrastructure/*',
+        capture: ['infrastructureElement'],
       },
+      ,
       {
         type: 'application',
-        pattern: 'src/application/*',
+        pattern: ['src/application/*', 'src/application'],
         capture: ['applicationName'],
       },
       {
@@ -69,7 +71,11 @@ module.exports = {
       {
         type: 'shared',
         pattern: 'src/shared/*',
-        capture: ['module'],
+        capture: ['moduleName'],
+      },
+      {
+        type: 'types',
+        pattern: 'src/types',
       },
     ],
     'boundaries/include': ['src/**/*.ts', 'src/**/*.tsx'],
@@ -92,6 +98,19 @@ module.exports = {
   ],
   rules: {
     'tailwindcss/classnames-order': 'off',
+    'boundaries/no-unknown-files': [2],
+    'boundaries/entry-point': [
+      2,
+      {
+        default: 'disallow',
+        rules: [
+          {
+            target: ['shared', 'host', 'application', 'infrastructure'],
+            allow: 'index.(ts|tsx)',
+          },
+        ],
+      },
+    ],
     'boundaries/element-types': [
       2,
       {
@@ -119,7 +138,7 @@ module.exports = {
             allow: [
               ['application', { applicationName: '${this.applicationName}' }],
               'shared',
-              'host'
+              'host',
             ],
           },
         ],

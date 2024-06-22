@@ -3,25 +3,25 @@ import {
   FailureResult,
   HandlerError,
   OkResult,
-  useCommandQuery,
 } from 'shared/messaging';
 
-import { GetEthPriceResponse } from '../web3.types';
+import { GetEthPriceResponse } from '../types';
 
-interface GetTokenPriceCommandDetails {
+interface Payload {
   buyToken: string;
   sellToken: string;
+  chainId: number;
   amount: number;
 }
 
 export class GetTokenPriceCommand extends Command<
-  GetTokenPriceCommandDetails,
+  Payload,
   GetEthPriceResponse
 > {
   public readonly name = 'GetTokenPriceCommand' as const;
 
   constructor(
-    public details: GetTokenPriceCommandDetails,
+    public payload: Payload,
     id?: string,
   ) {
     super(id ?? null);
@@ -29,11 +29,16 @@ export class GetTokenPriceCommand extends Command<
 
   async handle() {
     try {
+      if (this.payload.buyToken === this.payload.sellToken) {
+        return new OkResult({ price: '1' });
+      }
+
       const response = await fetch(
-        `https://www.idriss.xyz/token-price?${new URLSearchParams({
-          sellToken: this.details.sellToken,
-          buyToken: this.details.buyToken,
-          sellAmount: this.details.amount.toString(),
+        `https://api.idriss.xyz/token-price?${new URLSearchParams({
+          sellToken: this.payload.sellToken,
+          buyToken: this.payload.buyToken,
+          sellAmount: this.payload.amount.toString(),
+          network: this.payload.chainId.toString(),
         }).toString()}`,
       );
 
@@ -46,7 +51,7 @@ export class GetTokenPriceCommand extends Command<
 
       return new OkResult(json);
     } catch (error) {
-      await this.trackHandlerException();
+      await this.logException();
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }
@@ -55,12 +60,3 @@ export class GetTokenPriceCommand extends Command<
     }
   }
 }
-
-export const useGetTokenPriceCommandQuery = (
-  details: GetTokenPriceCommandDetails,
-) => {
-  return useCommandQuery({
-    command: new GetTokenPriceCommand(details),
-    refetchInterval: 60_000, // each 1m,
-  });
-};

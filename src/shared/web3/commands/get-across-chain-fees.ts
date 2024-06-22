@@ -3,10 +3,9 @@ import {
   FailureResult,
   HandlerError,
   OkResult,
-  useCommandQuery,
 } from 'shared/messaging';
 
-interface GetAcrossChainFeesCommandDetails {
+interface Payload {
   chains: { id: number; wrappedEthAddress: string }[];
   destinationChainId: number;
   amount: string;
@@ -14,20 +13,19 @@ interface GetAcrossChainFeesCommandDetails {
   recipient: string;
 }
 
-interface GetAcrossChainFeesResponse {
+interface SingleChainResponse {
   totalRelayFee: {
     total: string;
   };
 }
 
-export class GetAcrossChainFeesCommand extends Command<
-  GetAcrossChainFeesCommandDetails,
-  Record<string, GetAcrossChainFeesResponse>
-> {
+type Response = Record<string, SingleChainResponse>;
+
+export class GetAcrossChainFeesCommand extends Command<Payload, Response> {
   public readonly name = 'GetAcrossChainFeesCommand' as const;
 
   constructor(
-    public details: GetAcrossChainFeesCommandDetails,
+    public payload: Payload,
     id?: string,
   ) {
     super(id ?? null);
@@ -35,15 +33,15 @@ export class GetAcrossChainFeesCommand extends Command<
 
   async handle() {
     try {
-      const promises = this.details.chains.map(async (chain) => {
+      const promises = this.payload.chains.map(async (chain) => {
         const url = `https://across.to/api/suggested-fees?${new URLSearchParams(
           {
             originChainId: chain.id.toString(),
             token: chain.wrappedEthAddress,
-            amount: this.details.amount,
-            message: this.details.message,
-            recipient: this.details.recipient,
-            destinationChainId: this.details.destinationChainId.toString(),
+            amount: this.payload.amount,
+            message: this.payload.message,
+            recipient: this.payload.recipient,
+            destinationChainId: this.payload.destinationChainId.toString(),
           },
         ).toString()}`;
 
@@ -59,16 +57,17 @@ export class GetAcrossChainFeesCommand extends Command<
           throw new HandlerError();
         }
 
-        const json = (await response.json()) as GetAcrossChainFeesResponse;
+        const json = (await response.json()) as SingleChainResponse;
         return [chain.id.toString(), json];
       });
 
-      const response: Record<string, GetAcrossChainFeesResponse> =
-        Object.fromEntries(await Promise.all(promises));
+      const response: Record<string, SingleChainResponse> = Object.fromEntries(
+        await Promise.all(promises),
+      );
 
       return new OkResult(response);
     } catch (error) {
-      await this.trackHandlerException();
+      await this.logException();
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }
@@ -77,17 +76,3 @@ export class GetAcrossChainFeesCommand extends Command<
     }
   }
 }
-
-export const useGetAcrossChainFeesCommandQuery = (
-  details: GetAcrossChainFeesCommandDetails,
-  options: {
-    enabled?: boolean;
-  } = {},
-) => {
-  return useCommandQuery({
-    command: new GetAcrossChainFeesCommand(details),
-    enabled: options?.enabled ?? Number(details.amount) > 0,
-    refetchInterval: 60_000, // each 1m,
-    retry: 3,
-  });
-};

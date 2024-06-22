@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import { TwitterUserPoolingResult } from 'host/twitter';
+
+import { ScrapingResult } from 'shared/scraping';
 
 import { SNAPSHOT_WEBSITE_URL, TWITTER_HANDLE_TO_SNAPSHOT } from './constants';
 import { GetProposalsOptions, ProposalData } from './types';
@@ -53,12 +54,10 @@ export const getProposalAuthor = (proposal: ProposalData) => {
   );
 };
 
-export const getSnapshotUsernameNodes = (
-  poolingResults: TwitterUserPoolingResult[],
-) => {
+export const getSnapshotUsernameNodes = (poolingResults: ScrapingResult[]) => {
   return poolingResults
     .map((result) => {
-      const snapshotName = getSnapshotFromTwitterUsername(result.username);
+      const snapshotName = getSnapshotFromTwitterUsername(result.value);
       if (!snapshotName) {
         return;
       }

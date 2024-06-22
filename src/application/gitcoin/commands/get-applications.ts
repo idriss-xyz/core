@@ -8,16 +8,16 @@ import {
 import { Api } from '../api';
 import { GetApplicationsResponse } from '../types';
 
-type Details = Record<string, never>;
+type Payload = Record<string, never>;
 
 export class GetApplicationsCommand extends Command<
-  Details,
+  Payload,
   GetApplicationsResponse
 > {
   public readonly name = 'GetApplicationsCommand' as const;
 
   constructor(
-    public details: Details,
+    public payload: Payload,
     id?: string,
   ) {
     super(id ?? null);
@@ -36,7 +36,7 @@ export class GetApplicationsCommand extends Command<
 
       return new OkResult(json.data);
     } catch (error) {
-      await this.trackHandlerException();
+      await this.logException();
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }

@@ -1,12 +1,14 @@
 import { memo, useEffect, useMemo, useState } from 'react';
 
-import { useTwitterUsersPooling } from 'host/twitter';
-import { ErrorBoundary } from 'shared/monitoring';
+import { useTwitterScraping } from 'host/twitter';
+import { ErrorBoundary } from 'shared/observability';
 import { useCommandQuery } from 'shared/messaging';
+import { GetTokenPriceCommand } from 'shared/web3';
 
 import { GetApplicationsCommand } from '../commands';
 import { Application } from '../types';
 import { selectTwitterApplications } from '../utils';
+import { GET_ETH_PER_DOLLAR_COMMAND_DETAILS } from '../constants';
 
 import { DonationWidget } from './donation-widget';
 
@@ -18,21 +20,32 @@ export const DonationWidgetContainer = memo(({ handle }: Properties) => {
   const getApplicationsQuery = useCommandQuery({
     command: new GetApplicationsCommand({}),
     select: selectTwitterApplications,
+    placeholderData: (previousData) => {
+      return previousData;
+    },
   });
 
-  const { results } = useTwitterUsersPooling();
+  const getEthPerDollarQuery = useCommandQuery({
+    command: new GetTokenPriceCommand(GET_ETH_PER_DOLLAR_COMMAND_DETAILS),
+    refetchInterval: 60_000,
+    select: (v) => {
+      return Number(v.price);
+    },
+  });
+
+  const { users } = useTwitterScraping();
 
   const applications = useMemo(() => {
     if (!getApplicationsQuery.data) {
       return [];
     }
 
-    return results
+    return users
       .map((result) => {
         const application = getApplicationsQuery.data.find((application) => {
           return (
             application.project.metadata.projectTwitter?.toLowerCase() ===
-            result.username.toLowerCase()
+            result.value.toLowerCase()
           );
         });
 
@@ -43,7 +56,7 @@ export const DonationWidgetContainer = memo(({ handle }: Properties) => {
         return { ...result, application };
       })
       .filter(Boolean);
-  }, [getApplicationsQuery.data, results]);
+  }, [getApplicationsQuery.data, users]);
 
   const [handleApplication, setHandleApplication] = useState<{
     application: Application;
@@ -90,18 +103,34 @@ export const DonationWidgetContainer = memo(({ handle }: Properties) => {
     };
   }, [getApplicationsQuery.data, handle]);
 
+  if (!getEthPerDollarQuery.data) {
+    return null;
+  }
+
   return (
     <>
       {handleApplication ? (
-        <DonationWidget {...handleApplication} iconSize={22} />
+        <DonationWidget
+          ethPerDollar={getEthPerDollarQuery.data}
+          application={handleApplication.application}
+          username={handleApplication.username}
+          node={handleApplication.node as HTMLElement}
+          iconSize={22}
+        />
       ) : null}
-      {applications.map((application) => {
+      {applications.map(({ node, value, application, top }) => {
         return (
           <ErrorBoundary
-            key={`${application.username}-${application.top}`}
+            key={`${value}-${top}`}
             exceptionEventName="gitcoin-donation-widget"
           >
-            <DonationWidget {...application} iconSize={16} />
+            <DonationWidget
+              ethPerDollar={getEthPerDollarQuery.data}
+              application={application}
+              username={value}
+              node={node as HTMLElement}
+              iconSize={16}
+            />
           </ErrorBoundary>
         );
       })}
@@ -109,4 +138,4 @@ export const DonationWidgetContainer = memo(({ handle }: Properties) => {
   );
 });
 
-DonationWidgetContainer.displayName = 'GitcoinDonationWidgetContainer';
+DonationWidgetContainer.displayName = 'DonationWidgetContainer';

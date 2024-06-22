@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 
 import { OSS_ROUNDS } from './constants';
-import { Application, DonationOptions, GetApplicationsResponse } from './types';
+import { Application, DonationPayload, GetApplicationsResponse } from './types';
 
 export const selectTwitterApplications = (
   applications: GetApplicationsResponse,
@@ -46,9 +46,10 @@ const pickApplicationByPriority = (applications: Application[]) => {
 
 export const getDefaultDonationOptions = (
   application: Application,
-): DonationOptions => {
+): DonationPayload => {
   return {
     amount: 1,
+    tokenAddress: '0x0',
     chainId: application.chainId,
   };
 };

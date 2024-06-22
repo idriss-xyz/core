@@ -5,15 +5,17 @@ import {
   OkResult,
 } from 'shared/messaging';
 
-interface Details {
+interface Payload {
   url: string;
 }
 
-export class GetOriginalShortenedUrlCommand extends Command<Details, string> {
+type Response = string;
+
+export class GetOriginalShortenedUrlCommand extends Command<Payload, Response> {
   public readonly name = 'GetOriginalShortenedUrlCommand' as const;
 
   constructor(
-    public details: Details,
+    public payload: Payload,
     id?: string,
   ) {
     super(id ?? null);
@@ -21,7 +23,7 @@ export class GetOriginalShortenedUrlCommand extends Command<Details, string> {
 
   async handle() {
     try {
-      const response = await fetch(this.details.url, {
+      const response = await fetch(this.payload.url, {
         redirect: 'manual', // TODO: is it needed?
       });
       const html = await response.text();
@@ -33,7 +35,7 @@ export class GetOriginalShortenedUrlCommand extends Command<Details, string> {
       }
       return new OkResult(match[1]);
     } catch (error) {
-      await this.trackHandlerException();
+      await this.logException();
 
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);

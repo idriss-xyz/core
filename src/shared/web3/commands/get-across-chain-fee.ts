@@ -3,10 +3,9 @@ import {
   FailureResult,
   HandlerError,
   OkResult,
-  useCommandMutation,
 } from 'shared/messaging';
 
-interface GetAcrossChainFeeCommandDetails {
+interface Payload {
   chain: {
     id: number;
     wrappedEthAddress: string;
@@ -17,21 +16,18 @@ interface GetAcrossChainFeeCommandDetails {
   recipient: string;
 }
 
-interface GetAcrossChainFeeResponse {
+interface Response {
   timestamp: string;
   totalRelayFee: {
     total: string;
   };
 }
 
-export class GetAcrossChainFeeCommand extends Command<
-  GetAcrossChainFeeCommandDetails,
-  GetAcrossChainFeeResponse
-> {
+export class GetAcrossChainFeeCommand extends Command<Payload, Response> {
   public readonly name = 'GetAcrossChainFeeCommand' as const;
 
   constructor(
-    public details: GetAcrossChainFeeCommandDetails,
+    public payload: Payload,
     id?: string,
   ) {
     super(id ?? null);
@@ -40,12 +36,12 @@ export class GetAcrossChainFeeCommand extends Command<
   async handle() {
     try {
       const url = `https://across.to/api/suggested-fees?${new URLSearchParams({
-        originChainId: this.details.chain.id.toString(),
-        token: this.details.chain.wrappedEthAddress,
-        amount: this.details.amount,
-        message: this.details.message,
-        recipient: this.details.recipient,
-        destinationChainId: this.details.destinationChainId.toString(),
+        originChainId: this.payload.chain.id.toString(),
+        token: this.payload.chain.wrappedEthAddress,
+        amount: this.payload.amount,
+        message: this.payload.message,
+        recipient: this.payload.recipient,
+        destinationChainId: this.payload.destinationChainId.toString(),
       }).toString()}`;
 
       const response = await fetch(`https://www.idriss.xyz/post-data`, {
@@ -60,11 +56,11 @@ export class GetAcrossChainFeeCommand extends Command<
         throw new HandlerError();
       }
 
-      const json = (await response.json()) as GetAcrossChainFeeResponse;
+      const json = (await response.json()) as Response;
 
       return new OkResult(json);
     } catch (error) {
-      await this.trackHandlerException();
+      await this.logException();
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }
@@ -73,7 +69,3 @@ export class GetAcrossChainFeeCommand extends Command<
     }
   }
 }
-
-export const useGetAcrossChainFeeCommandMutation = () => {
-  return useCommandMutation(GetAcrossChainFeeCommand);
-};

@@ -6,7 +6,6 @@ import { Closable } from '../closable';
 
 import { WidgetBaseProperties } from './widget-base.types';
 
-// TODO: make it polymorhpic
 export const WidgetBase = ({
   top,
   onClose,

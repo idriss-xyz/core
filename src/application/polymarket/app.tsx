@@ -1,9 +1,7 @@
-import { useLocation } from 'react-use';
-
+import { ErrorBoundary } from 'shared/observability';
 import { useExtensionSettings } from 'shared/extension';
-import { ErrorBoundary } from 'shared/monitoring';
 import { useTwitterLocationInfo } from 'host/twitter';
-import { isWarpcastHostname } from 'host/warpcast';
+import { useWarpcastLocationInfo } from 'host/warpcast';
 
 import { MarketWidgetContainer } from './widgets';
 import {
@@ -13,12 +11,11 @@ import {
 } from './context';
 
 export const App = () => {
-  const location = useLocation();
   const { experimentalFeatures } = useExtensionSettings();
 
   const { isTwitter } = useTwitterLocationInfo();
 
-  const isWarpcast = isWarpcastHostname(location.hostname ?? '');
+  const { isWarpcast } = useWarpcastLocationInfo();
 
   if (!experimentalFeatures) {
     return null;

@@ -17,7 +17,7 @@ export const useDonationMaker = ({ wallet }: Properties) => {
   const acrossDonateTransaction = useAcrossDonateTransaction();
 
   const donate = useCallback(
-    async ({ options, application, oneDollarPriceInEth }: DonateParameters) => {
+    async ({ options, application, ethPerDollar }: DonateParameters) => {
       if (!wallet) {
         return;
       }
@@ -27,7 +27,7 @@ export const useDonationMaker = ({ wallet }: Properties) => {
         walletProvider: wallet.provider,
       });
 
-      const userAmountInWei = dollarToWei(options.amount, oneDollarPriceInEth);
+      const userAmountInWei = dollarToWei(options.amount, ethPerDollar);
 
       if (options.chainId === application.chainId) {
         donateTransaction.mutate({
@@ -60,11 +60,13 @@ export const useDonationMaker = ({ wallet }: Properties) => {
   const isSuccess =
     donateTransaction.isSuccess || acrossDonateTransaction.isSuccess;
 
+  const data = donateTransaction.data ?? acrossDonateTransaction.data;
+
   return {
     donate,
     isDonating,
     isError,
     isSuccess,
-    data: donateTransaction.data ?? acrossDonateTransaction.data,
+    data,
   };
 };

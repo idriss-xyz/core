@@ -9,7 +9,10 @@ export const QueryProvider = ({ children }: Properties) => {
   const queryClient = useMemo(() => {
     return new QueryClient({
       defaultOptions: {
-        queries: { retry: false, staleTime: Number.POSITIVE_INFINITY },
+        queries: {
+          retry: false,
+          staleTime: Number.POSITIVE_INFINITY,
+        },
         mutations: { retry: false },
       },
     });

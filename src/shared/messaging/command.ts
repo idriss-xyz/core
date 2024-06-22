@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { useCallback, useMemo } from 'react';
 
 import {
   COMMAND_BUS_REQUEST_MESSAGE,
@@ -13,31 +14,31 @@ export interface CommandResponse<ExpectedResponse> {
   commandId: string;
 }
 
-export interface SerializedCommand<Parameters> {
+export interface SerializedCommand<Payload> {
   id: string;
   name: string;
-  details: Parameters;
+  payload: Payload;
 }
 
-export abstract class Command<Parameters, ExpectedResponse> {
+export abstract class Command<Payload, Response> {
   public abstract readonly name: string;
-  public abstract readonly details: Parameters;
+  public abstract readonly payload: Payload;
   public readonly id: string;
 
   constructor(id: string | null) {
     this.id = id ?? uuidv4();
   }
 
-  public abstract handle(): Promise<Result<ExpectedResponse>>;
+  public abstract handle(): Promise<Result<Response>>;
 
-  public send(): Promise<ExpectedResponse> {
+  public send(): Promise<Response> {
     return new Promise((resolve, reject) => {
       window.postMessage({
         type: COMMAND_BUS_REQUEST_MESSAGE,
         detail: this.serialize(),
       });
 
-      onWindowMessage<CommandResponse<Result<ExpectedResponse>>>(
+      onWindowMessage<CommandResponse<Result<Response>>>(
         COMMAND_BUS_RESPONSE_MESSAGE,
         (detail, removeEventListener) => {
           if (detail.commandId !== this.id) {
@@ -55,11 +56,11 @@ export abstract class Command<Parameters, ExpectedResponse> {
     });
   }
 
-  public serialize(): SerializedCommand<Parameters> {
-    return { name: this.name, details: this.details, id: this.id };
+  public serialize(): SerializedCommand<Payload> {
+    return { name: this.name, payload: this.payload, id: this.id };
   }
 
-  protected trackHandlerException() {
+  protected logException() {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     if (!ENABLE_EVENTS) {
@@ -83,35 +84,34 @@ export abstract class Command<Parameters, ExpectedResponse> {
   }
 }
 
-type CommandConstructor<Parameters, ExpectedResponse> = new (
-  parameters: Parameters,
-) => Command<Parameters, ExpectedResponse>;
+type CommandConstructor<Payload, Response> = new (
+  parameters: Payload,
+) => Command<Payload, Response>;
 
-export const useCommandMutation = <Parameters, ExpectedResponse>(
-  commandConstructor: CommandConstructor<Parameters, ExpectedResponse>,
+export const useCommandMutation = <Payload, Response>(
+  commandConstructor: CommandConstructor<Payload, Response>,
 ) => {
-  return useMutation({
-    mutationFn: (parameters: Parameters) => {
+  const mutationFunction = useCallback(
+    (parameters: Payload) => {
       const command = new commandConstructor(parameters);
       return command.send();
     },
+    [commandConstructor],
+  );
+
+  return useMutation({
+    mutationFn: mutationFunction,
   });
 };
 
-interface CommandQueryProperties<
-  Parameters,
-  ExpectedResponse,
-  MappedResponse = ExpectedResponse,
-> {
-  command: Command<Parameters, ExpectedResponse>;
+interface CommandQueryProperties<Payload, Response, MappedResponse = Response> {
+  command: Command<Payload, Response>;
   retry?: number;
   refetchInterval?: number;
-  select?: (response: ExpectedResponse) => MappedResponse;
+  select?: (response: Response) => MappedResponse;
   enabled?: boolean;
   staleTime?: number;
-  placeholderData?: (
-    previousData?: ExpectedResponse,
-  ) => ExpectedResponse | undefined;
+  placeholderData?: (previousData?: Response) => Response | undefined;
 }
 
 export const useCommandQuery = <
@@ -127,18 +127,34 @@ export const useCommandQuery = <
   placeholderData,
   enabled = true,
 }: CommandQueryProperties<Parameters, ExpectedResponse, MappedResponse>) => {
-  return useQuery({
-    queryKey: [command.name, JSON.stringify(command.details)],
+  const queryFunction = useCallback(() => {
+    return command.send();
+  }, [command]);
+
+  const queryOptions = useMemo(() => {
+    return {
+      queryKey: [command.name, JSON.stringify(command.payload)],
+      refetchInterval,
+      retry,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      placeholderData: placeholderData as any,
+      retryDelay: 1000,
+      staleTime,
+      enabled,
+      select,
+      queryFn: queryFunction,
+    };
+  }, [
+    command.payload,
+    command.name,
+    enabled,
+    placeholderData,
+    queryFunction,
     refetchInterval,
     retry,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    placeholderData: placeholderData as any,
-    retryDelay: 1000,
-    staleTime,
-    enabled,
     select,
-    queryFn: () => {
-      return command.send();
-    },
-  });
+    staleTime,
+  ]);
+
+  return useQuery(queryOptions);
 };

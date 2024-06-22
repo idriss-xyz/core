@@ -5,22 +5,18 @@ import {
   useTwitterExternalLinksPooling,
   GetOriginalShortenedUrlCommand,
 } from 'host/twitter';
+import { useCommandMutation } from 'shared/messaging';
 
 import { GetConditionIdCommand } from '../commands';
 import { isEventUrl } from '../utils';
 
-const getOriginalShortenedUrl = (url: string) => {
-  const command = new GetOriginalShortenedUrlCommand({ url });
-  return command.send();
-};
-
-const getConditionId = (url: string) => {
-  const command = new GetConditionIdCommand({ url });
-  return command.send();
-};
-
 export const useTwitterMarkets = () => {
-  const { results } = useTwitterExternalLinksPooling();
+  const results = useTwitterExternalLinksPooling();
+  const originalShortenedUrlMutation = useCommandMutation(
+    GetOriginalShortenedUrlCommand,
+  );
+
+  const conditionIdMutation = useCommandMutation(GetConditionIdCommand);
 
   const imageLinks = useMemo(() => {
     return results.filter((result) => {
@@ -32,7 +28,7 @@ export const useTwitterMarkets = () => {
 
   const availableUrls = imageLinks
     .map((v) => {
-      return v.url;
+      return v.value;
     })
     .sort();
 
@@ -45,11 +41,13 @@ export const useTwitterMarkets = () => {
     queryFn: async () => {
       const results = await Promise.allSettled(
         imageLinks.map(async (link) => {
-          const url = await getOriginalShortenedUrl(link.url);
+          const url = await originalShortenedUrlMutation.mutateAsync({
+            url: link.value,
+          });
           if (!isEventUrl(url)) {
             throw new Error('Url is not event url');
           }
-          const conditionId = await getConditionId(url);
+          const conditionId = await conditionIdMutation.mutateAsync({ url });
           if (!conditionId) {
             return;
           }

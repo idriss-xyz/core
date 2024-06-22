@@ -1,1 +1,1 @@
-export { Closable } from './closable.component';
+export { Closable } from './closable';

@@ -1,3 +1,3 @@
-import { WebpageApplication } from 'infrastructure/webpage-injected-application';
+import { Application } from 'infrastructure/application';
 
-WebpageApplication.run();
+Application.run();

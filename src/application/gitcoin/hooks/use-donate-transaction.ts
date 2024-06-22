@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { Wallet, createContract, createEthersProvider } from 'shared/web3';
+import { Wallet, createContract, createSigner } from 'shared/web3';
 
 import { ALLO_CONTRACT_ABI, ALLO_CONTRACT_ADDRESS } from '../constants';
 import { generateVote } from '../utils';
@@ -19,13 +19,12 @@ export const useDonateTransaction = () => {
       application,
       userAmountInWei,
     }: Properties) => {
-      const ethersProvider = createEthersProvider(wallet.provider);
-      const signer = ethersProvider.getSigner(wallet.account);
+      const signer = createSigner(wallet);
 
       const alloContract = createContract({
         address: ALLO_CONTRACT_ADDRESS,
         abi: ALLO_CONTRACT_ABI,
-        signer,
+        signerOrProvider: signer,
       });
 
       const vote = generateVote(

@@ -1,17 +1,14 @@
 import { Command, FailureResult, OkResult } from 'shared/messaging';
 
-export interface GetImageAsBase64CommandDetails {
+interface Payload {
   url: string;
 }
 
-export class GetImageAsBase64Command extends Command<
-  GetImageAsBase64CommandDetails,
-  string
-> {
+export class GetImageAsBase64Command extends Command<Payload, string> {
   public readonly name = 'GetImageAsBase64Command' as const;
 
   constructor(
-    public details: GetImageAsBase64CommandDetails,
+    public payload: Payload,
     id?: string,
   ) {
     super(id ?? null);
@@ -19,18 +16,18 @@ export class GetImageAsBase64Command extends Command<
 
   async handle() {
     try {
-      if (this.details.url.startsWith('data:image')) {
-        return new OkResult(this.details.url);
+      if (this.payload.url.startsWith('data:image')) {
+        return new OkResult(this.payload.url);
       }
 
       const response = await fetch(
-        `https://www.idriss.xyz/fetch-image?url=${this.details.url}`,
+        `https://www.idriss.xyz/fetch-image?url=${this.payload.url}`,
       );
       const json = await response.json();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return new OkResult((json as any).image as string);
     } catch {
-      await this.trackHandlerException();
+      await this.logException();
 
       return new FailureResult();
     }

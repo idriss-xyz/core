@@ -1,5 +1,7 @@
+/* eslint-disable boundaries/no-unknown-files */
 import { StandalonePageManager } from './standalonePageManager';
-import { ExperimentalFeaturesSettingsManager } from './experimental-features-settings-manager';
+import { ExperimentalFeaturesManager } from './experimental-features-manager';
+import { ExtensionStatusManager } from './extension-status-manager';
 
 const experimentalFeaturesToggle: HTMLInputElement | null =
   document.querySelector('#experimentalToggle');
@@ -29,12 +31,11 @@ document
     }
 
     if (target.checked) {
-      if (experimentalFeaturesToggle.checked) {
-        ExperimentalFeaturesSettingsManager.enable();
-      }
+      ExtensionStatusManager.enable();
       experimentalFeaturesToggle.disabled = false;
     } else {
-      ExperimentalFeaturesSettingsManager.disable();
+      ExtensionStatusManager.disable();
+      ExperimentalFeaturesManager.disable();
       experimentalFeaturesToggle.disabled = true;
       experimentalFeaturesToggle.checked = false;
     }
@@ -53,7 +54,7 @@ chrome.storage.local.get(['enabled'], (r) => {
   }, 50);
 });
 
-ExperimentalFeaturesSettingsManager.isEnabled()
+ExperimentalFeaturesManager.isEnabled()
   .then((isEnabled) => {
     experimentalFeaturesToggle.checked = isEnabled;
   })
@@ -64,8 +65,8 @@ experimentalFeaturesToggle.addEventListener('change', (event) => {
   const toggle = event.currentTarget as HTMLInputElement;
 
   if (toggle.checked) {
-    ExperimentalFeaturesSettingsManager.enable();
+    ExperimentalFeaturesManager.enable();
   } else {
-    ExperimentalFeaturesSettingsManager.disable();
+    ExperimentalFeaturesManager.disable();
   }
 });

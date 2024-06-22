@@ -1,27 +1,16 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-  NewOrder,
-  OrderBuilder,
-  OrderType,
-  TickSize,
-} from '@polymarket/clob-client';
+import { OrderBuilder, OrderType, TickSize } from '@polymarket/clob-client';
 import { orderToJson } from '@polymarket/clob-client/dist/utilities';
 import { createL2Headers } from '@polymarket/clob-client/dist/headers';
 import { JsonRpcSigner } from '@ethersproject/providers';
 
 import { CHAIN, Hex, useWallet } from 'shared/web3';
+import { useCommandMutation } from 'shared/messaging';
 
 import { PostOrderCommand } from '../commands';
 import { POLYMARKET_GNOSIS_SAFE_SIGNATURE } from '../constants';
-import { L2Headers } from '../types';
 
 import { getSafeWalletQueryKey } from './use-safe-wallet';
-
-export interface PostOrderProperties {
-  orderPayload: NewOrder<OrderType.FOK>;
-  l2Headers: L2Headers;
-}
-
 export interface PostOrderMutationProperties {
   signer: JsonRpcSigner;
   funderAddress: string;
@@ -36,14 +25,10 @@ export interface PostOrderMutationProperties {
   };
 }
 
-const postOrder = async ({ l2Headers, orderPayload }: PostOrderProperties) => {
-  const command = new PostOrderCommand({ orderPayload, headers: l2Headers });
-  return command.send();
-};
-
 export const usePostOrder = () => {
   const queryClient = useQueryClient();
   const { wallet } = useWallet();
+  const postOrderMutation = useCommandMutation(PostOrderCommand);
 
   return useMutation({
     onSuccess: (_, { amount }) => {
@@ -84,14 +69,14 @@ export const usePostOrder = () => {
         },
         { tickSize, negRisk },
       );
-      const orderPayload = orderToJson(order, credentials.key, OrderType.FOK);
-      const l2Headers = await createL2Headers(signer, credentials, {
+      const jsonOrder = orderToJson(order, credentials.key, OrderType.FOK);
+      const headers = await createL2Headers(signer, credentials, {
         method: 'POST',
         requestPath: `/order`,
-        body: JSON.stringify(orderPayload),
+        body: JSON.stringify(jsonOrder),
       });
 
-      return postOrder({ orderPayload, l2Headers });
+      return postOrderMutation.mutate({ order: jsonOrder, headers });
     },
   });
 };

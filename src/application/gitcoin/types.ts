@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { createDonationOptionsSchema } from './schema';
+import { createDonationPayloadSchema } from './schema';
 
 export interface ProjectMetadata {
   projectTwitter?: string;
@@ -25,12 +25,12 @@ export interface GetApplicationsResponse {
   optimism: Application[];
 }
 
-export type DonationOptions = z.infer<
-  ReturnType<typeof createDonationOptionsSchema>
+export type DonationPayload = z.infer<
+  ReturnType<typeof createDonationPayloadSchema>
 >;
 
 export interface DonateParameters {
-  options: DonationOptions;
+  options: DonationPayload;
   application: Application;
-  oneDollarPriceInEth: number;
+  ethPerDollar: number;
 }

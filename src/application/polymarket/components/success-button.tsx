@@ -1,7 +1,6 @@
 import { forwardRef } from 'react';
 
-import { Button, ButtonProperties } from 'shared/ui/components';
-import { classes } from 'shared/ui/utils';
+import { Button, ButtonProperties, classes } from 'shared/ui';
 
 export const SuccessButton = forwardRef<
   HTMLButtonElement,

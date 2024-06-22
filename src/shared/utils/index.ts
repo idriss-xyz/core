@@ -3,4 +3,5 @@ export {
   GetImageAsBase64Command,
 } from './commands';
 
-export * from './date-utils';
+export { getDifferenceInDays, getEndsInLabel } from './date-utils';
+export { reverseObject } from './objects';

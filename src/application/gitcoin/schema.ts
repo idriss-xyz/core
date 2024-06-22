@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { Hex } from 'shared/web3';
+
 import {
   GITCOIN_DONATION_CHAINS_IDS,
   MIN_CROSS_CHAIN_DONATION_AMOUNT,
@@ -10,8 +12,9 @@ const possibleChainIdsSchema = GITCOIN_DONATION_CHAINS_IDS.map((id) => {
   return z.literal(id);
 }) as [z.ZodLiteral<number>, z.ZodLiteral<number>, ...z.ZodLiteral<number>[]];
 
-export const createDonationOptionsSchema = (isCrossChain: boolean) => {
+export const createDonationPayloadSchema = (isCrossChain: boolean) => {
   return z.object({
+    tokenAddress: z.string().regex(/^0x/) as unknown as z.ZodLiteral<Hex>,
     amount: isCrossChain
       ? z
           .number()

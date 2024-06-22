@@ -11,15 +11,15 @@ import {
 
 import { POLYMARKET_CLOB_API } from '../constants';
 
-interface Details {
+interface Payload {
   tokensIds: string[];
 }
 
-export class GetTokensPricesCommand extends Command<Details, TokenIdToPrice> {
+export class GetTokensPricesCommand extends Command<Payload, TokenIdToPrice> {
   public readonly name = 'GetTokensPricesCommand' as const;
 
   constructor(
-    public details: Details,
+    public payload: Payload,
     id?: string,
   ) {
     super(id ?? null);
@@ -27,7 +27,7 @@ export class GetTokensPricesCommand extends Command<Details, TokenIdToPrice> {
 
   async handle() {
     try {
-      const requests = this.details.tokensIds.map(async (tokenId) => {
+      const requests = this.payload.tokensIds.map(async (tokenId) => {
         const response = await fetch(
           `${POLYMARKET_CLOB_API}/price?token_id=${tokenId}&side=sell`,
         );
@@ -44,7 +44,7 @@ export class GetTokensPricesCommand extends Command<Details, TokenIdToPrice> {
       const result: TokenIdToPrice = Object.fromEntries(responses);
       return new OkResult(result);
     } catch (error) {
-      await this.trackHandlerException();
+      await this.logException();
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }

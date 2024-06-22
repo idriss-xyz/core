@@ -1,28 +1,25 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
-import { useWarpcastExternalLinksPooling } from 'host/warpcast';
+import { useWarpcastScraping } from 'host/warpcast';
+import { useCommandMutation } from 'shared/messaging';
 
 import { GetConditionIdCommand } from '../commands';
 import { isEventUrl } from '../utils';
 
-const getConditionId = (url: string) => {
-  const command = new GetConditionIdCommand({ url });
-  return command.send();
-};
-
 export const useWarpcastMarkets = () => {
-  const { results } = useWarpcastExternalLinksPooling();
+  const { externalLinks } = useWarpcastScraping();
+  const conditionIdMutation = useCommandMutation(GetConditionIdCommand);
 
   const polymarketLinks = useMemo(() => {
-    return results.filter((result) => {
-      return isEventUrl(result.url);
+    return externalLinks.filter((result) => {
+      return isEventUrl(result.value);
     });
-  }, [results]);
+  }, [externalLinks]);
 
-  const availableUrls = results
+  const availableUrls = externalLinks
     .map((v) => {
-      return v.url;
+      return v.value;
     })
     .sort();
 
@@ -35,7 +32,9 @@ export const useWarpcastMarkets = () => {
     queryFn: async () => {
       const results = await Promise.allSettled(
         polymarketLinks.map(async (link) => {
-          const conditionId = await getConditionId(link.url);
+          const conditionId = await conditionIdMutation.mutateAsync({
+            url: link.value,
+          });
           if (!conditionId) {
             return;
           }
