@@ -1,4 +1,4 @@
-import { MonitoringEvent } from 'shared/monitoring';
+import { MonitoringEvent } from 'shared/observability';
 
 export interface Data {
   conditionId: string;

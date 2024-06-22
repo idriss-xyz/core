@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { useTwitterUsersPooling } from 'host/twitter';
+import { useTwitterScraping } from 'host/twitter';
 
 import { getSnapshotUsernameNodes } from '../utils';
 
@@ -9,11 +9,11 @@ interface Properties {
 }
 
 export const useTwitterVisibleSnapshots = ({ hidden }: Properties) => {
-  const { results } = useTwitterUsersPooling();
+  const { tweetAuthors } = useTwitterScraping();
 
   const snapshotUserNodes = useMemo(() => {
-    return getSnapshotUsernameNodes(results);
-  }, [results]);
+    return getSnapshotUsernameNodes(tweetAuthors);
+  }, [tweetAuthors]);
 
   const visibleSnapshots = useMemo(() => {
     return [

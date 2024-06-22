@@ -2,7 +2,6 @@ import {DefaultPageManager} from "./defaultPageManager";
 import {StandalonePageManager} from "./standalonePageManager";
 import {HuobiPageManager} from "./HuobiPageManager";
 import {PoapPageManager} from "./PoapPageManager";
-import {TwitterPageManager} from "./twitterPageManager";
 import {CoinbasePageManager} from "./CoinbasePageManager";
 import {EtherscanPageManager} from "./etherscanPageManager";
 import {ZKScanPageManager} from "./zkSyncScanPageManager";
@@ -14,8 +13,6 @@ const specificDomainList = {
     "app.poap.xyz": PoapPageManager,
     "huobi.com": HuobiPageManager,
     "htx.com": HuobiPageManager,
-    "twitter.com": TwitterPageManager,
-    "x.com": TwitterPageManager,
     "coinbase.com": CoinbasePageManager,
     "etherscan.io": EtherscanPageManager,
     "polygonscan.com": EtherscanPageManager,

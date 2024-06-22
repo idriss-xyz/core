@@ -1,5 +1,5 @@
+import { ErrorBoundary } from 'shared/observability';
 import { useTwitterLocationInfo } from 'host/twitter';
-import { ErrorBoundary } from 'shared/monitoring';
 
 import { DonationWidgetContainer } from './widgets';
 

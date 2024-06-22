@@ -8,18 +8,18 @@ import {
 import { MarketData } from '../types';
 import { POLYMARKET_CLOB_API } from '../constants';
 
-interface Details {
+interface Payload {
   conditionId: string;
 }
 
 export class GetMarketByConditionIdCommand extends Command<
-  Details,
+  Payload,
   MarketData
 > {
   public readonly name = 'GetMarketByConditionIdCommand' as const;
 
   constructor(
-    public details: Details,
+    public payload: Payload,
     id?: string,
   ) {
     super(id ?? null);
@@ -28,7 +28,7 @@ export class GetMarketByConditionIdCommand extends Command<
   async handle() {
     try {
       const response = await fetch(
-        `${POLYMARKET_CLOB_API}/markets/${this.details.conditionId}`,
+        `${POLYMARKET_CLOB_API}/markets/${this.payload.conditionId}`,
       );
 
       if (response.status !== 200) {
@@ -39,7 +39,7 @@ export class GetMarketByConditionIdCommand extends Command<
       const json = await response.json();
       return new OkResult(json as MarketData);
     } catch (error) {
-      await this.trackHandlerException();
+      await this.logException();
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }

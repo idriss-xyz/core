@@ -8,6 +8,7 @@ import {
   createEthersProvider,
   useWallet,
 } from 'shared/web3';
+import { useCommandMutation } from 'shared/messaging';
 
 import { GetFunderAddresCommand } from '../commands';
 import { ERC_20_ABI, SAFE_USDC_ADDRES } from '../constants';
@@ -16,14 +17,9 @@ export const getSafeWalletQueryKey = (wallet?: Wallet) => {
   return ['getSafeWallet', wallet?.account, wallet?.chainId];
 };
 
-// TODO: useCommandQuery
-const getFunderAddress = async (address: string) => {
-  const command = new GetFunderAddresCommand({ address });
-  return command.send();
-};
-
 export const useSafeWallet = () => {
   const { wallet } = useWallet();
+  const funderAddressMutation = useCommandMutation(GetFunderAddresCommand);
 
   return useQuery({
     queryKey: getSafeWalletQueryKey(wallet),
@@ -33,7 +29,9 @@ export const useSafeWallet = () => {
         return;
       }
 
-      const address = await getFunderAddress(wallet.account);
+      const address = await funderAddressMutation.mutateAsync({
+        address: wallet.account,
+      });
       if (!address) {
         throw new Error('Account not found');
       }

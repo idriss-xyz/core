@@ -1,6 +1,6 @@
 import { ReactNode, createContext } from 'react';
 
-import { createContextHook } from 'shared/ui/utils';
+import { createContextHook } from 'shared/ui';
 
 import { useTwitterMarkets } from '../hooks';
 import { useWarpcastMarkets } from '../hooks/use-warpcast-markets';

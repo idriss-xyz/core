@@ -1,22 +1,3 @@
-interface TwitterHandlePage {
-  name: 'twitter';
-  type: 'handle';
-  handle: string;
-}
+import { TWITTER_HOST_NAME } from './constants';
 
-interface TwitterMainPage {
-  name: 'twitter';
-  type: 'main';
-}
-
-export type TwitterPage = TwitterHandlePage | TwitterMainPage;
-
-export interface UnknownPage {
-  name: 'unknown';
-}
-
-export interface TwitterUserPoolingResult {
-  node: Element;
-  username: string;
-  top: number;
-}
+export type TwitterHostName = typeof TWITTER_HOST_NAME;

@@ -1,1 +1,1 @@
-export { DonationForm } from './donation-form';
+export { SomethingWentWrongMessage } from './something-went-wrong-message';

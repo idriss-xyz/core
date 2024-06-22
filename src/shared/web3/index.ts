@@ -1,20 +1,25 @@
-export { CHAIN } from './web3.constants';
-export type { Hex, Chain } from './web3.types';
-export type { Wallet } from './wallet';
-export { useWallet, WalletContextProvider } from './wallet';
+export { CHAIN, TOKEN, CHAIN_ID_TO_TOKENS } from './constants';
+export type { Hex, Chain, Wallet, Token, ChainToken } from './types';
+export { useWallet, WalletContextProvider } from './context';
 export {
   createEthersProvider,
   resolveAddress,
   hexToDecimal,
   dollarToWei,
+  ethToWei,
+  weiToEth,
   createContract,
   roundToSignificantFigures,
-} from './web3.utils';
-export { useSwitchChain } from './web3.hooks';
+  ethToDollars,
+  createSigner,
+  applyDecimalsToNumericString,
+  isNativeTokenAddress,
+} from './utils';
+export { useSwitchChain } from './hooks';
 export { ChainSelect, TokenSelect } from './components';
 export {
   COMMAND_MAP as WEB3_COMMAND_MAP,
-  useGetTokenPriceCommandQuery,
-  useGetAcrossChainFeesCommandQuery,
-  useGetAcrossChainFeeCommandMutation,
+  GetTokenPriceCommand,
+  GetAcrossChainFeesCommand,
+  GetAcrossChainFeeCommand,
 } from './commands';

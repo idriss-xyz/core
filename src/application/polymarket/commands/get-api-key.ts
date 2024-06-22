@@ -9,15 +9,15 @@ import { GetApiKeyResponse, L1Headers } from '../types';
 import { POLYMARKET_CLOB_API } from '../constants';
 import { getApiKeyResponseSchema } from '../schema';
 
-interface Details {
+interface Payload {
   headers: L1Headers;
 }
 
-export class GetApiKeyCommand extends Command<Details, GetApiKeyResponse> {
+export class GetApiKeyCommand extends Command<Payload, GetApiKeyResponse> {
   public readonly name = 'GetApiKeyCommand' as const;
 
   constructor(
-    public details: Details,
+    public payload: Payload,
     id?: string,
   ) {
     super(id ?? null);
@@ -29,7 +29,7 @@ export class GetApiKeyCommand extends Command<Details, GetApiKeyResponse> {
         `${POLYMARKET_CLOB_API}/auth/derive-api-key`,
         {
           headers: {
-            ...this.details.headers,
+            ...this.payload.headers,
           },
         },
       );
@@ -43,7 +43,7 @@ export class GetApiKeyCommand extends Command<Details, GetApiKeyResponse> {
       const validResponse = getApiKeyResponseSchema.parse(json);
       return new OkResult(validResponse);
     } catch (error) {
-      await this.trackHandlerException();
+      await this.logException();
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }

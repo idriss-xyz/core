@@ -1,5 +1,5 @@
 import { useExtensionSettings } from 'shared/extension';
-import { ErrorBoundary } from 'shared/monitoring';
+import { ErrorBoundary } from 'shared/observability';
 import { useTwitterLocationInfo } from 'host/twitter';
 
 import { ProposalHandleContainer, ProposalMainContainer } from './widgets';

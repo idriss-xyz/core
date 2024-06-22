@@ -1,37 +1,13 @@
-import { useCallback, useMemo } from 'react';
+import { useLocation } from 'react-use';
 
-import { usePooling } from 'shared/ui';
+import { isWarpcastHostname } from './utils';
 
-import { Warpcast } from './warpcast';
+export const useWarpcastLocationInfo = () => {
+  const location = useLocation();
 
-export const useWarpcastExternalLinksPooling = () => {
-  const poolExternalLinks = useCallback(() => {
-    return Warpcast.getExternalLinksNodes();
-  }, []);
+  const isWarpcast = isWarpcastHostname(location.hostname ?? '');
 
-  const { value } = usePooling({
-    defaultValue: [],
-    callback: poolExternalLinks,
-  });
-
-  const results = useMemo(() => {
-    return value
-      .map((node) => {
-        const { height, top } = node.getBoundingClientRect();
-        if (!height) {
-          return;
-        }
-
-        const url = node.getAttribute('href');
-
-        if (!url) {
-          return;
-        }
-
-        return { node, url, top: top + window.scrollY };
-      })
-      .filter(Boolean);
-  }, [value]);
-
-  return { results };
+  return {
+    isWarpcast,
+  };
 };

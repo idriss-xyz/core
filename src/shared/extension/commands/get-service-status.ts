@@ -1,28 +1,43 @@
-import { Command, OkResult, useCommandQuery } from 'shared/messaging';
+import { z } from 'zod';
 
-export class GetServiceStatusCommand extends Command<
-  Record<string, never>,
-  Record<string, boolean>
-> {
+import {
+  Command,
+  FailureResult,
+  HandlerError,
+  OkResult,
+} from 'shared/messaging';
+
+type Payload = Record<string, never>;
+
+const responseSchema = z.record(z.string(), z.boolean());
+type Response = z.infer<typeof responseSchema>;
+
+export class GetServiceStatusCommand extends Command<Payload, Response> {
   public readonly name = 'GetServiceStatusCommand' as const;
 
   constructor(
-    public details: Record<string, never>,
+    public payload: Record<string, never>,
     id?: string,
   ) {
     super(id ?? null);
   }
 
   async handle() {
-    const response = await fetch('https://www.idriss.xyz/service-status');
-    const json = await response.json();
-    return new OkResult(json as Record<string, boolean>);
+    try {
+      const response = await fetch('https://www.idriss.xyz/service-status');
+      const json = await response.json();
+      const validationResult = responseSchema.safeParse(json);
+      if (!validationResult.success) {
+        throw new HandlerError('Schema validation failed');
+      }
+      return new OkResult(validationResult.data);
+    } catch (error) {
+      await this.logException();
+      if (error instanceof HandlerError) {
+        return new FailureResult(error.message);
+      }
+
+      return new FailureResult();
+    }
   }
 }
-
-export const useGetServiceStatus = () => {
-  return useCommandQuery({
-    staleTime: 0,
-    command: new GetServiceStatusCommand({}),
-  });
-};

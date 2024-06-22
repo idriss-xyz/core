@@ -2,13 +2,13 @@ import { Command, OkResult } from 'shared/messaging';
 
 import { POLYMARKET_CLOB_API } from '../constants';
 
-type Details = Record<string, never>;
+type Payload = Record<string, never>;
 
-export class GetAvailabilityCommand extends Command<Details, boolean> {
+export class GetAvailabilityCommand extends Command<Payload, boolean> {
   public readonly name = 'GetAvailabilityCommand' as const;
 
   constructor(
-    public details: Details,
+    public payload: Payload,
     id?: string,
   ) {
     super(id ?? null);
@@ -26,7 +26,7 @@ export class GetAvailabilityCommand extends Command<Details, boolean> {
       }
       return new OkResult(true);
     } catch {
-      await this.trackHandlerException();
+      await this.logException();
       return new OkResult(false);
     }
   }

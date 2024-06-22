@@ -10,15 +10,15 @@ import {
   polymarketPagePropertiesSchema,
 } from '../schema';
 
-interface Details {
+interface Payload {
   url: string;
 }
 
-export class GetConditionIdCommand extends Command<Details, string> {
+export class GetConditionIdCommand extends Command<Payload, string> {
   public readonly name = 'GetConditionIdCommand' as const;
 
   constructor(
-    public details: Details,
+    public payload: Payload,
     id?: string,
   ) {
     super(id ?? null);
@@ -27,7 +27,7 @@ export class GetConditionIdCommand extends Command<Details, string> {
   async handle() {
     try {
       const polymarketResponse = await fetch(
-        `https://www.idriss.xyz/fetch-data?url=${this.details.url}`,
+        `https://www.idriss.xyz/fetch-data?url=${this.payload.url}`,
       );
       const { text: polymarketHtml } = (await polymarketResponse.json()) as {
         text: string;
@@ -78,7 +78,7 @@ export class GetConditionIdCommand extends Command<Details, string> {
 
       return new OkResult(marketForOpenGraphSlug.conditionId);
     } catch (error) {
-      await this.trackHandlerException();
+      await this.logException();
 
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);

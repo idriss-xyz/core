@@ -7,15 +7,15 @@ import {
 
 import { POLYMARKET_CLOB_API } from '../constants';
 
-interface Details {
+interface Payload {
   tokenId: string;
 }
 
-export class GetTokenChanceCommand extends Command<Details, number> {
+export class GetTokenChanceCommand extends Command<Payload, number> {
   public readonly name = 'GetTokenChanceCommand' as const;
 
   constructor(
-    public details: Details,
+    public payload: Payload,
     id?: string,
   ) {
     super(id ?? null);
@@ -24,7 +24,7 @@ export class GetTokenChanceCommand extends Command<Details, number> {
   async handle() {
     try {
       const response = await fetch(
-        `${POLYMARKET_CLOB_API}/midpoint?token_id=${this.details.tokenId}`,
+        `${POLYMARKET_CLOB_API}/midpoint?token_id=${this.payload.tokenId}`,
       );
 
       if (response.status !== 200) {
@@ -36,7 +36,7 @@ export class GetTokenChanceCommand extends Command<Details, number> {
         Number((Math.round(Number(json.mid) * 100) / 100).toFixed(2)),
       );
     } catch (error) {
-      await this.trackHandlerException();
+      await this.logException();
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }

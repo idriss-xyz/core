@@ -1,7 +1,7 @@
-import { GetAgoraProposalsCommand } from './get-agora-proposals.command';
+import { GetAgoraProposalsCommand } from './get-agora-proposals';
 
 export const COMMAND_MAP = {
   [GetAgoraProposalsCommand.name]: GetAgoraProposalsCommand,
 };
 
-export { GetAgoraProposalsCommand } from './get-agora-proposals.command';
+export { GetAgoraProposalsCommand } from './get-agora-proposals';

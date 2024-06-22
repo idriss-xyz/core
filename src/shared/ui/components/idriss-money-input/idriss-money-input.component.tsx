@@ -16,7 +16,7 @@ export const IdrissMoneyInput = ({
   className,
   errorMessage,
 }: IdrissMoneyInputProperties) => {
-  const [isManual, setIsManual] = useState(false);
+  const [isManual, setIsManual] = useState(!VALUES_TO_PICK.includes(value));
 
   return (
     <div>

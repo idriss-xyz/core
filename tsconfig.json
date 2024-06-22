@@ -4,6 +4,7 @@
     "module": "esnext",
     "lib": [
       "DOM",
+      "DOM.Iterable",
       "ES2022"
     ],
     "outDir": "dist",

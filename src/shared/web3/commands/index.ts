@@ -8,6 +8,6 @@ export const COMMAND_MAP = {
   [GetAcrossChainFeesCommand.name]: GetAcrossChainFeesCommand,
 };
 
-export { useGetTokenPriceCommandQuery } from './get-token-price';
-export { useGetAcrossChainFeesCommandQuery } from './get-across-chain-fees';
-export { useGetAcrossChainFeeCommandMutation } from './get-across-chain-fee';
+export { GetTokenPriceCommand } from './get-token-price';
+export { GetAcrossChainFeesCommand } from './get-across-chain-fees';
+export { GetAcrossChainFeeCommand } from './get-across-chain-fee';

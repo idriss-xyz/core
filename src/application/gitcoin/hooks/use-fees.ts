@@ -1,4 +1,5 @@
-import { useGetAcrossChainFeesCommandQuery } from 'shared/web3';
+import { GetAcrossChainFeesCommand } from 'shared/web3';
+import { useCommandQuery } from 'shared/messaging';
 
 import {
   DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID,
@@ -15,24 +16,26 @@ interface Properties {
 }
 
 export const useFees = ({ application, amountInWei, enabled }: Properties) => {
-  return useGetAcrossChainFeesCommandQuery(
-    {
-      destinationChainId: application.chainId,
-      chains: GITCOIN_DONATION_CHAINS_IDS.filter((id) => {
-        return id !== application.chainId;
-      }).map((id) => {
-        return {
-          id,
-          wrappedEthAddress: WRAPPED_ETH_ADDRESS_PER_CHAIN_ID[id] ?? '',
-        };
-      }),
-      amount: amountInWei.toString(),
-      message: SMALLEST_AMOUNT_MESSAGE_PER_CHAIN_ID[application.chainId] ?? '',
-      recipient:
-        DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[application.chainId] ?? '',
-    },
-    {
-      enabled,
-    },
-  );
+  const payload = {
+    destinationChainId: application.chainId,
+    chains: GITCOIN_DONATION_CHAINS_IDS.filter((id) => {
+      return id !== application.chainId;
+    }).map((id) => {
+      return {
+        id,
+        wrappedEthAddress: WRAPPED_ETH_ADDRESS_PER_CHAIN_ID[id] ?? '',
+      };
+    }),
+    amount: amountInWei.toString(),
+    message: SMALLEST_AMOUNT_MESSAGE_PER_CHAIN_ID[application.chainId] ?? '',
+    recipient:
+      DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[application.chainId] ?? '',
+  };
+
+  return useCommandQuery({
+    command: new GetAcrossChainFeesCommand(payload),
+    enabled: enabled ?? Number(payload.amount) > 0,
+    refetchInterval: 60_000, // each 1m,
+    retry: 3,
+  });
 };

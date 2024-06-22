@@ -10,16 +10,16 @@ import {
 import { POLYMARKET_CLOB_API } from '../constants';
 import { L2Headers } from '../types';
 
-interface Details {
-  orderPayload: NewOrder<OrderType.FOK>;
+interface Payload {
+  order: NewOrder<OrderType.FOK>;
   headers: L2Headers;
 }
 
-export class PostOrderCommand extends Command<Details, undefined> {
+export class PostOrderCommand extends Command<Payload, undefined> {
   public readonly name = 'PostOrderCommand' as const;
 
   constructor(
-    public details: Details,
+    public payload: Payload,
     id?: string,
   ) {
     super(id ?? null);
@@ -31,9 +31,9 @@ export class PostOrderCommand extends Command<Details, undefined> {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...this.details.headers,
+          ...this.payload.headers,
         },
-        body: JSON.stringify(this.details.orderPayload),
+        body: JSON.stringify(this.payload.order),
       });
 
       if (response.status !== 200) {
@@ -42,7 +42,7 @@ export class PostOrderCommand extends Command<Details, undefined> {
 
       return new OkResult(undefined);
     } catch (error) {
-      await this.trackHandlerException();
+      await this.logException();
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }

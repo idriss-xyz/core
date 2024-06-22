@@ -8,15 +8,15 @@ import {
 import { GetTokenBookResponse, TokenIdToBook } from '../types';
 import { POLYMARKET_CLOB_API } from '../constants';
 
-interface Details {
+interface Payload {
   tokensIds: string[];
 }
 
-export class GetTokensBooksCommand extends Command<Details, TokenIdToBook> {
+export class GetTokensBooksCommand extends Command<Payload, TokenIdToBook> {
   public readonly name = 'GetTokensBooksCommand' as const;
 
   constructor(
-    public details: Details,
+    public payload: Payload,
     id?: string,
   ) {
     super(id ?? null);
@@ -24,7 +24,7 @@ export class GetTokensBooksCommand extends Command<Details, TokenIdToBook> {
 
   async handle() {
     try {
-      const requests = this.details.tokensIds.map(async (tokenId) => {
+      const requests = this.payload.tokensIds.map(async (tokenId) => {
         const response = await fetch(
           `${POLYMARKET_CLOB_API}/book?token_id=${tokenId}`,
         );
@@ -42,7 +42,7 @@ export class GetTokensBooksCommand extends Command<Details, TokenIdToBook> {
       const result: TokenIdToBook = Object.fromEntries(responses);
       return new OkResult(result);
     } catch (error) {
-      await this.trackHandlerException();
+      await this.logException();
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }
