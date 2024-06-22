@@ -24,6 +24,16 @@ export const TWITTER_HANDLE_TO_SNAPSHOT: Record<string, string> = {
   'sushiswap': 'sushigov.eth',
   'gearboxprotocol': 'gearbox.eth',
   'metisl2': 'metislayer2.eth',
+  'idriss_xyz': 'idrissxyz.eth',
+  'autonolas': 'autonolas.eth',
+  'unlockprotocol': 'unlock-protocol.eth',
+  'pooltogether_': 'pooltogether.eth',
+  'lineabuild': 'linea-build.eth',
+  'syncswap': 'syncswapxyz.eth',
+  'juiceboxeth': 'jbdao.eth',
+  'echelonfnd': 'echelonassembly.eth',
+  'aiwayfinder': 'wayfinderfoundation.eth',
+  'paragonsdao': 'paragonsdao.eth',
 };
 
 export const SNAPSHOT_WEBSITE_URL = 'https://snapshot.org';
