@@ -5,3 +5,5 @@ node_modules/
 src/shared/ui/providers/tailwind.build.css
 tailwind.build.css
 tailwindStandalone.css
+
+*storybook.log

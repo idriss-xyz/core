@@ -11,7 +11,10 @@
     "circular-deps": "depcruise --config .dependency-cruiser.cjs src",
     "architecture-graph": "depcruise src --include-only ^src --output-type archi | dot -T svg -Grankdir=TD > architecture/graph.svg",
     "architecture-graph:folders": "depcruise src --include-only ^src --output-type ddot | dot -T svg -Grankdir=TD > architecture/folders-graph.svg",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "storybook:prepare": "pnpm build:tailwind && cp ./src/shared/ui/providers/tailwind.build.css ./.storybook/tailwind.css",
+    "storybook:dev": "pnpm storybook:prepare && storybook dev -p 6006",
+    "storybook:build": "pnpm storybook:prepare && storybook build"
   },
   "dependencies": {
     "@babel/core": "^7.23.9",
@@ -50,6 +53,14 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^1.5.0",
+    "@storybook/addon-essentials": "^8.1.10",
+    "@storybook/addon-links": "^8.1.10",
+    "@storybook/addon-webpack5-compiler-babel": "^3.0.3",
+    "@storybook/blocks": "^8.1.10",
+    "@storybook/react": "^8.1.10",
+    "@storybook/react-webpack5": "^8.1.10",
+    "@storybook/test": "^8.1.10",
     "@tailwindcss/forms": "^0.5.7",
     "@tanstack/eslint-plugin-query": "^5.27.7",
     "@total-typescript/ts-reset": "^0.5.1",
@@ -72,6 +83,7 @@
     "eslint-plugin-prettier": "^5.1.2",
     "eslint-plugin-react": "^7.34.0",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-storybook": "^0.8.0",
     "eslint-plugin-tailwindcss": "^3.15.1",
     "eslint-plugin-unicorn": "^51.0.1",
     "mpts-loader": "^1.0.0",
@@ -82,6 +94,7 @@
     "prettier-plugin-tailwindcss": "^0.5.12",
     "sass": "^1.43.2",
     "sass-loader": "^13.0.2",
+    "storybook": "^8.1.10",
     "ts-loader": "^9.5.1",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
     "typescript": "^5.3.3",

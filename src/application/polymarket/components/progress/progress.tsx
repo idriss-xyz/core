@@ -6,7 +6,7 @@ export const Progress = ({ value }: Properties) => {
   const normalisedValue = Math.min(Math.max(0, value), 1);
 
   return (
-    <div className="relative">
+    <div className="relative w-fit">
       <svg
         width="58"
         height="29"

@@ -13,9 +13,9 @@ import {
   classes,
 } from 'shared/ui';
 
-import { hexToDecimal, toAddressWithValidChecksum } from '../utils';
-import { Wallet } from '../types';
-import { WalletStorage } from '../storage';
+import { hexToDecimal, toAddressWithValidChecksum } from '../../utils';
+import { Wallet } from '../../types';
+import { WalletStorage } from '../../storage';
 
 interface Properties {
   disabledWalletsRdns: string[];

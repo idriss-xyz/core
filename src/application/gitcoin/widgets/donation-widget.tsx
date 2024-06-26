@@ -127,7 +127,6 @@ export const DonationWidget = memo(
         iconSize={icon.size}
         recipientName={username}
         closeOnClickAway={closeOnClickAway}
-        closeOnHoverAway={false} // TODO: implement it same way as iDriss Send
       >
         {({ close }) => {
           if (donationMaker.isDonating) {

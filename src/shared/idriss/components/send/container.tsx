@@ -116,7 +116,7 @@ export const Container = memo(
     return (
       <>
         <Closable
-          left={!isMobile ? position.x : undefined}
+          left={isMobile ? undefined : position.x}
           right={isMobile ? 0 : undefined}
           top={position.y + iconSize}
           className="absolute w-64 rounded-md bg-white text-gray-900 shadow-2xl"
