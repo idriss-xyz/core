@@ -9,14 +9,14 @@ import {
 
 type Payload = Record<string, never>;
 
-const responseSchema = z.record(z.string(), z.boolean());
+const responseSchema = z.record(z.string(), z.record(z.string(), z.string()));
 type Response = z.infer<typeof responseSchema>;
 
-export class GetServiceStatusCommand extends Command<Payload, Response> {
-  public readonly name = 'GetServiceStatusCommand' as const;
+export class GetHandleToUsernameMapCommand extends Command<Payload, Response> {
+  public readonly name = 'GetHandleToUsernameMapCommand' as const;
 
   constructor(
-    public payload: Record<string, never>,
+    public payload: Payload,
     id?: string,
   ) {
     super(id ?? null);
@@ -24,12 +24,15 @@ export class GetServiceStatusCommand extends Command<Payload, Response> {
 
   async handle() {
     try {
-      const response = await fetch('https://api.idriss.xyz/service-status');
+      const response = await fetch(
+        'https://api.idriss.xyz/dao-twitter-handles',
+      );
       const json = await response.json();
       const validationResult = responseSchema.safeParse(json);
       if (!validationResult.success) {
         throw new HandlerError('Schema validation failed');
       }
+
       return new OkResult(validationResult.data);
     } catch (error) {
       await this.logException();

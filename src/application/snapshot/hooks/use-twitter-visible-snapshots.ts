@@ -1,8 +1,6 @@
 import { useMemo } from 'react';
 
-import { useTwitterScraping } from 'host/twitter';
-
-import { getSnapshotUsernameNodes } from '../utils';
+import { useTwitterScraping, useHandleToUsernameMap } from 'host/twitter';
 
 interface Properties {
   hidden: string[];
@@ -10,10 +8,20 @@ interface Properties {
 
 export const useTwitterVisibleSnapshots = ({ hidden }: Properties) => {
   const { tweetAuthors } = useTwitterScraping();
+  const { data: daoHandles } = useHandleToUsernameMap('snapshot');
 
   const snapshotUserNodes = useMemo(() => {
-    return getSnapshotUsernameNodes(tweetAuthors);
-  }, [tweetAuthors]);
+    if (!daoHandles) {
+      return [];
+    }
+
+    return tweetAuthors
+      .map((author) => {
+        const snapshotName = daoHandles[author.value.toLowerCase()];
+        return snapshotName ? { snapshotName, ...author } : undefined;
+      })
+      .filter(Boolean);
+  }, [daoHandles, tweetAuthors]);
 
   const visibleSnapshots = useMemo(() => {
     return [

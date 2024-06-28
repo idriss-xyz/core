@@ -24,6 +24,7 @@ import {
   useWarpcastLocationInfo,
 } from 'host/warpcast';
 import { AgoraApp } from 'application/agora';
+import { TallyApp } from 'application/tally';
 export class Application {
   private constructor() {}
 
@@ -93,6 +94,7 @@ const Applications = () => {
       gitcoin: Boolean(serviceStatusQuery.data?.gitcoin),
       agora: Boolean(serviceStatusQuery.data?.agora),
       idrissSend: Boolean(serviceStatusQuery.data?.['idriss-send']),
+      tally: Boolean(serviceStatusQuery.data?.tally),
     };
   }, [serviceStatusQuery.data]);
 
@@ -116,6 +118,7 @@ const Applications = () => {
       {applicationsStatus.agora ? <AgoraApp /> : null}
       {/* {applicationsStatus.gitcoin ? <GitcoinApp /> : null} */}
       {applicationsStatus.idrissSend ? <IdrissSendApp /> : null}
+      {applicationsStatus.tally ? <TallyApp /> : null}
     </>
   );
 };

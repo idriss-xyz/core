@@ -107,6 +107,7 @@ export const useCommandMutation = <Payload, Response>(
 interface CommandQueryProperties<Payload, Response, MappedResponse = Response> {
   command: Command<Payload, Response>;
   retry?: number;
+  retryDelay?: number;
   refetchInterval?: number;
   select?: (response: Response) => MappedResponse;
   enabled?: boolean;
@@ -122,6 +123,7 @@ export const useCommandQuery = <
   command,
   select,
   retry,
+  retryDelay = 1000,
   staleTime,
   refetchInterval,
   placeholderData,
@@ -138,22 +140,23 @@ export const useCommandQuery = <
       retry,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       placeholderData: placeholderData as any,
-      retryDelay: 1000,
+      retryDelay: retryDelay,
       staleTime,
       enabled,
       select,
       queryFn: queryFunction,
     };
   }, [
-    command.payload,
     command.name,
-    enabled,
-    placeholderData,
-    queryFunction,
+    command.payload,
     refetchInterval,
     retry,
-    select,
+    placeholderData,
+    retryDelay,
     staleTime,
+    enabled,
+    select,
+    queryFunction,
   ]);
 
   return useQuery(queryOptions);

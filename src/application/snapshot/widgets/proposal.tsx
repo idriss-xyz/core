@@ -33,12 +33,14 @@ export const Proposal = ({ data, className, top, onClose }: Properties) => {
         <Chip>Active</Chip>
       </header>
       <main className="mt-2">
-        <p className="text-base font-semibold">{data.title}</p>
-        <p className="mt-1 overflow-hidden text-[#ccc]">
-          ${data.body.slice(0, 120)}...
+        <p className="line-clamp-[1] break-all text-base font-semibold">
+          {data.title}
+        </p>
+        <p className="mt-1 line-clamp-[2] overflow-hidden break-all text-[#ccc]">
+          {data.body}
         </p>
       </main>
-      <footer className="mt-2 flex items-center space-x-2">
+      <footer className="mt-3.5 flex items-center space-x-2">
         <div className="text-[#aaa]">
           {getEndsInLabel(getDifferenceInDays(data.end * 1000))}
         </div>

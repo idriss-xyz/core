@@ -1,7 +1,7 @@
 import { useCommandQuery } from 'shared/messaging';
+import { useHandleToUsernameMap } from 'host/twitter';
 
 import { GetProposalCommand } from '../commands';
-import { getSnapshotFromTwitterUsername } from '../utils';
 
 import { Proposal } from './proposal';
 
@@ -10,7 +10,10 @@ interface Properties {
 }
 
 export const ProposalHandleContainer = ({ handle }: Properties) => {
-  const snapshotName = getSnapshotFromTwitterUsername(handle);
+  const { data: daoHandles } = useHandleToUsernameMap('snapshot');
+  const snapshotName = daoHandles
+    ? daoHandles[handle.toLowerCase()]
+    : undefined;
 
   const proposalQuery = useCommandQuery({
     command: new GetProposalCommand({ snapshotName: snapshotName ?? '' }),

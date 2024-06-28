@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 
 import { ErrorBoundary } from 'shared/observability';
 import { useCommandQuery } from 'shared/messaging';
+import { Pagination } from 'shared/ui';
 
 import { useTwitterVisibleAgoraNodes } from '../hooks';
 import { GetAgoraProposalsCommand } from '../commands';
@@ -62,6 +63,13 @@ export const ProposalMainContainer = () => {
     });
   };
 
+  const pagination: Pagination = {
+    hasPrevious: isPreviousProposalAvailable,
+    hasNext: isNextProposalAvailable,
+    onPrevious: showPreviousProposal,
+    onNext: showNextProposal,
+  };
+
   if (!currentProposal || !visibleAgoraNodes?.length) {
     return null;
   }
@@ -73,10 +81,7 @@ export const ProposalMainContainer = () => {
         exceptionEventName="agora-widget-twitter-main-runtime-error"
       >
         <Proposal
-          isPreviousProposalAvailable={isPreviousProposalAvailable}
-          isNextProposalAvailable={isNextProposalAvailable}
-          onNext={showNextProposal}
-          onPrevious={showPreviousProposal}
+          pagination={pagination}
           isLoading={isLoadingProposal}
           data={currentProposal}
           className="absolute"

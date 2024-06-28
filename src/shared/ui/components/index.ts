@@ -16,3 +16,6 @@ export type { Option } from './select';
 export { Select } from './select';
 export { IdrissMoneyInput } from './idriss-money-input';
 export { GasIcon } from './gas-icon';
+export type { Pagination } from './pagination';
+export { PaginationComponent } from './pagination';
+export { PulsingLoadingBar } from './pulsing-loading-bar';
