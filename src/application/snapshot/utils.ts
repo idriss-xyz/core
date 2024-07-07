@@ -1,36 +1,28 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-
 import { SNAPSHOT_WEBSITE_URL } from './constants';
-import { GetProposalsOptions, ProposalData } from './types';
+import { ProposalData } from './types';
 
-export const generateGetProposalsQuery = (
-  snapshotNames: string[],
-  options: GetProposalsOptions,
-) => {
-  // TODO: use GQL variables for this
-  return `query Proposals {
-  proposals (
-    first: ${options.first},
-    skip: 0,
-    where: {
-      space_in: [${snapshotNames.map((name) => {
-        return `"${name}"`;
-      })}],
-      state: "active"
-    },
-    orderBy: "end",
-    orderDirection: asc
-  ) {
-    id
-    title
-    body
-    end
-    author
-    space {
-      id
-    }
-  }
-}`;
+export const generateGetProposalsQuery = () => {
+  return `query Proposals($first: Int,$skip: Int , $snapshotNames: [String!]) {
+      proposals (
+        first: $first,
+        skip: $skip,
+        where: {
+          space_in: $snapshotNames,
+          state: "active"
+        },
+        orderBy: "end",
+        orderDirection: asc
+      ) {
+        id
+        title
+        body
+        end
+        author
+        space {
+          id
+        }
+      }
+    }`;
 };
 
 export const getProposalUrl = (snapshotName: string, proposalId: string) => {

@@ -1,4 +1,11 @@
-import { Chip, WidgetBase, classes } from 'shared/ui';
+import {
+  Chip,
+  Pagination,
+  PaginationComponent,
+  PulsingLoadingBar,
+  WidgetBase,
+  classes,
+} from 'shared/ui';
 import { getDifferenceInDays, getEndsInLabel } from 'shared/utils';
 
 import { ProposalData } from '../types';
@@ -8,19 +15,29 @@ interface Properties {
   data: ProposalData;
   className?: string;
   top?: number;
+  pagination: Pagination;
+  isLoading: boolean;
   onClose?: () => void;
 }
 
-export const Proposal = ({ data, className, top, onClose }: Properties) => {
+export const Proposal = ({
+  data,
+  className,
+  top,
+  pagination,
+  isLoading,
+  onClose,
+}: Properties) => {
   return (
     <WidgetBase
       className={classes(
-        'rounded-lg bg-[#2d2d2d] text-xs leading-tight',
+        'rounded-md bg-[#2d2d2d] text-xs leading-tight',
         className,
       )}
       top={top}
       onClose={onClose}
     >
+      <PulsingLoadingBar isLoading={isLoading} />
       <header className="flex items-center justify-between space-x-3">
         <a
           href={getUserUrl(data.author.address)}
@@ -40,19 +57,25 @@ export const Proposal = ({ data, className, top, onClose }: Properties) => {
           {data.body}
         </p>
       </main>
-      <footer className="mt-3.5 flex items-center space-x-2">
-        <div className="text-[#aaa]">
-          {getEndsInLabel(getDifferenceInDays(data.end * 1000))}
+      <footer className="mt-3.5 flex items-center justify-between space-x-2">
+        <div className="flex items-center justify-start gap-1.5">
+          <div className="text-[#aaa]">
+            {getEndsInLabel(getDifferenceInDays(data.end * 1000))}
+          </div>
+          <a
+            href={getProposalUrl(data.space.id, data.id)}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <Chip className="py-1" variant="info" width="long">
+              Vote
+            </Chip>
+          </a>
         </div>
-        <a
-          href={getProposalUrl(data.space.id, data.id)}
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          <Chip className="py-1" variant="info" width="long">
-            Vote
-          </Chip>
-        </a>
+        <PaginationComponent
+          pagination={pagination}
+          buttonClassNames="text-white bg-transparent hover:enabled:bg-transparent active:enabled:bg-transparent"
+        />
       </footer>
     </WidgetBase>
   );

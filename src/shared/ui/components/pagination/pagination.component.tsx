@@ -1,12 +1,13 @@
+import { classes } from 'shared/ui/utils';
+
 import { IconButton } from '../icon-button';
 
-import { Pagination } from './pagination.types';
+import { PaginationComponentProperties } from './pagination.types';
 
 export const PaginationComponent = ({
   pagination,
-}: {
-  pagination: Pagination;
-}) => {
+  buttonClassNames,
+}: PaginationComponentProperties) => {
   const { hasPrevious, hasNext, onPrevious, onNext } = pagination;
 
   if (!hasPrevious && !hasNext) {
@@ -18,13 +19,13 @@ export const PaginationComponent = ({
         disabled={!hasPrevious}
         onClick={onPrevious}
         iconProps={{ name: 'ArrowLeftIcon' }}
-        className="px-1"
+        className={classes('px-1', buttonClassNames)}
       />
       <IconButton
         disabled={!hasNext}
         onClick={onNext}
         iconProps={{ name: 'ArrowRightIcon' }}
-        className="px-1"
+        className={classes('px-1', buttonClassNames)}
       />
     </div>
   );

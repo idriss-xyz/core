@@ -12,10 +12,16 @@ import { SNAPSHOT_GRAPHQL_API_URL } from '../constants';
 import { getProposalsResponseSchema } from '../schema';
 
 interface Payload {
-  snapshotName: string;
+  snapshotNames: string[];
+  pageNumber: number;
 }
 
-export class GetProposalCommand extends Command<Payload, ProposalData> {
+interface Response {
+  proposal: ProposalData | null;
+  hasNextProposal: boolean;
+}
+
+export class GetProposalCommand extends Command<Payload, Response> {
   public readonly name = 'GetProposalCommand' as const;
 
   constructor(
@@ -27,15 +33,17 @@ export class GetProposalCommand extends Command<Payload, ProposalData> {
 
   async handle() {
     try {
-      const query = generateGetProposalsQuery([this.payload.snapshotName], {
-        first: 1,
-      });
+      const query = generateGetProposalsQuery();
       const response = await fetch(SNAPSHOT_GRAPHQL_API_URL, {
         method: 'POST',
         body: JSON.stringify({
           query: query,
           operationName: 'Proposals',
-          variables: undefined,
+          variables: {
+            first: 2,
+            snapshotNames: this.payload.snapshotNames,
+            skip: this.payload.pageNumber,
+          },
         }),
         headers: {
           'Content-Type': 'application/json',
@@ -50,18 +58,23 @@ export class GetProposalCommand extends Command<Payload, ProposalData> {
       if (!validationResult.success) {
         throw new HandlerError('Schema validation failed');
       }
-      const proposal = validationResult.data.data.proposals[0];
-      if (!proposal) {
-        throw new HandlerError('Proposal not found');
+      const [currentProposal, nextProposal] =
+        validationResult.data.data.proposals;
+      const hasNextProposal = Boolean(nextProposal);
+      if (!currentProposal) {
+        return new OkResult({
+          proposal: null,
+          hasNextProposal: false,
+        });
       }
 
-      const resolvedAddress = await resolveAddress(proposal.author);
+      const resolvedAddress = await resolveAddress(currentProposal.author);
       return new OkResult({
-        ...proposal,
-        author: {
-          address: proposal.author,
-          resolvedAddress,
+        proposal: {
+          ...currentProposal,
+          author: { address: currentProposal.author, resolvedAddress },
         },
+        hasNextProposal,
       });
     } catch (error) {
       await this.logException();

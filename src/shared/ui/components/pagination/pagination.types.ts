@@ -4,3 +4,8 @@ export interface Pagination {
   onPrevious: () => void;
   onNext: () => void;
 }
+
+export interface PaginationComponentProperties {
+  pagination: Pagination;
+  buttonClassNames?: string;
+}
