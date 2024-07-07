@@ -60,10 +60,11 @@ export abstract class Command<Payload, Response> {
     return { name: this.name, payload: this.payload, id: this.id };
   }
 
-  protected logException() {
+  protected logException(error: unknown) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     if (!ENABLE_EVENTS) {
+      console.error(error);
       return;
     }
 

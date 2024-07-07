@@ -5,6 +5,7 @@ export const logEvent = (event: MonitoringEvent) => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   if (!ENABLE_EVENTS) {
+    console.log(event);
     return;
   }
 
@@ -16,6 +17,7 @@ export const logException = (event: ExceptionEvent) => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   if (!ENABLE_EVENTS) {
+    console.error(event);
     return;
   }
 

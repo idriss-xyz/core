@@ -50,7 +50,7 @@ export class GetFunderAddresCommand extends Command<Payload, string> {
       }
       return new OkResult(pickedSafe);
     } catch (error) {
-      await this.logException();
+      await this.logException(error);
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }

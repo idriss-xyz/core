@@ -42,7 +42,7 @@ export class GetTokensBooksCommand extends Command<Payload, TokenIdToBook> {
       const result: TokenIdToBook = Object.fromEntries(responses);
       return new OkResult(result);
     } catch (error) {
-      await this.logException();
+      await this.logException(error);
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }

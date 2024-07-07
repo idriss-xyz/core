@@ -39,7 +39,7 @@ export class GetMarketByConditionIdCommand extends Command<
       const json = await response.json();
       return new OkResult(json as MarketData);
     } catch (error) {
-      await this.logException();
+      await this.logException(error);
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }

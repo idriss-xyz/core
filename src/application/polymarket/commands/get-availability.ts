@@ -25,8 +25,8 @@ export class GetAvailabilityCommand extends Command<Payload, boolean> {
         return new OkResult(false);
       }
       return new OkResult(true);
-    } catch {
-      await this.logException();
+    } catch(error) {
+      await this.logException(error);
       return new OkResult(false);
     }
   }

@@ -43,7 +43,7 @@ export class GetApiKeyCommand extends Command<Payload, GetApiKeyResponse> {
       const validResponse = getApiKeyResponseSchema.parse(json);
       return new OkResult(validResponse);
     } catch (error) {
-      await this.logException();
+      await this.logException(error);
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }

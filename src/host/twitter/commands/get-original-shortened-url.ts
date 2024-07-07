@@ -35,7 +35,7 @@ export class GetOriginalShortenedUrlCommand extends Command<Payload, Response> {
       }
       return new OkResult(match[1]);
     } catch (error) {
-      await this.logException();
+      await this.logException(error);
 
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);

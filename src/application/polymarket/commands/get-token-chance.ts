@@ -36,7 +36,7 @@ export class GetTokenChanceCommand extends Command<Payload, number> {
         Number((Math.round(Number(json.mid) * 100) / 100).toFixed(2)),
       );
     } catch (error) {
-      await this.logException();
+      await this.logException(error);
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }

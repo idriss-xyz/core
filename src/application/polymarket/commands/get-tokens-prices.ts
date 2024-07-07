@@ -7,7 +7,7 @@ import {
 import {
   GetTokenPriceResponse,
   TokenIdToPrice,
-} from 'application/polymarket/types';
+} from '../types';
 
 import { POLYMARKET_CLOB_API } from '../constants';
 
@@ -44,7 +44,7 @@ export class GetTokensPricesCommand extends Command<Payload, TokenIdToPrice> {
       const result: TokenIdToPrice = Object.fromEntries(responses);
       return new OkResult(result);
     } catch (error) {
-      await this.logException();
+      await this.logException(error);
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }

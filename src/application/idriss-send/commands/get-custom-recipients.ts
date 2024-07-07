@@ -39,7 +39,7 @@ export class GetCustomRecipientsCommand extends Command<Payload, Response> {
       }
       return new OkResult(validationResult.data);
     } catch (error) {
-      await this.logException();
+      await this.logException(error);
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }

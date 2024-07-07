@@ -67,7 +67,7 @@ export class GetAcrossChainFeesCommand extends Command<Payload, Response> {
 
       return new OkResult(response);
     } catch (error) {
-      await this.logException();
+      await this.logException(error);
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }

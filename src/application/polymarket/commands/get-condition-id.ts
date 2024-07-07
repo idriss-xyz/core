@@ -78,7 +78,7 @@ export class GetConditionIdCommand extends Command<Payload, string> {
 
       return new OkResult(marketForOpenGraphSlug.conditionId);
     } catch (error) {
-      await this.logException();
+      await this.logException(error);
 
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);

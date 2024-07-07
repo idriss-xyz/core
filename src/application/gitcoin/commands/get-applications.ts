@@ -36,7 +36,7 @@ export class GetApplicationsCommand extends Command<
 
       return new OkResult(json.data);
     } catch (error) {
-      await this.logException();
+      await this.logException(error);
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }

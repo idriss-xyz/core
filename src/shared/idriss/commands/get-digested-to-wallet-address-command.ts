@@ -42,7 +42,7 @@ export class GetDigestToWalletAddressCommand extends Command<
 
       return new OkResult(Object.fromEntries(result));
     } catch (error) {
-      await this.logException();
+      await this.logException(error);
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }

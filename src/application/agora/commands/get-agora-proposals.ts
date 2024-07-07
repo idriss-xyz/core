@@ -47,7 +47,7 @@ export class GetAgoraProposalsCommand extends Command<
       const validResponse = getProposalsResponseSchema.parse(json);
       return new OkResult(validResponse.data);
     } catch (error) {
-      await this.logException();
+      await this.logException(error);
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }

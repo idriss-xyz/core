@@ -35,7 +35,7 @@ export class GetHandleToTwitterIdCommand extends Command<Payload, Response> {
       // TODO: schema validation
       return new OkResult(json as Response);
     } catch (error) {
-      await this.logException();
+      await this.logException(error);
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }
