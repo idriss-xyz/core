@@ -12,6 +12,8 @@ import {
   GET_EXTENSION_SETTINGS_RESPONSE,
 } from 'shared/extension';
 import { ExtensionStatusManager } from 'src/popup/extension-status-manager';
+import { isTwitterHostname } from 'host/twitter';
+import { isWarpcastHostname } from 'host/warpcast';
 
 import { ExperimentalFeaturesManager } from '../../popup/experimental-features-manager';
 
@@ -20,10 +22,20 @@ export class ContentScript {
 
   static run(environment: typeof chrome) {
     const contentScript = new ContentScript(environment);
+    if (!contentScript.shouldRun()) {
+      return;
+    }
     contentScript.injectScriptToWebpage();
     contentScript.bridgeCommunication();
 
     contentScript.subscribeToExtensionSettings();
+  }
+
+  shouldRun() {
+    return (
+      isTwitterHostname(window.location.hostname ?? '') ||
+      isWarpcastHostname(window.location.hostname ?? '')
+    );
   }
 
   injectScriptToWebpage() {

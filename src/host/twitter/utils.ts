@@ -1,5 +1,7 @@
+import { TWITTER_HOST_NAMES } from './constants';
+
 export const isTwitterHostname = (hostname: string) => {
-  return hostname === 'twitter.com' || hostname === 'x.com';
+  return TWITTER_HOST_NAMES.includes(hostname);
 };
 
 export const isTwitterHandlePathname = (pathname: string) => {

@@ -22,7 +22,6 @@
         "<all_urls>"
       ],
       "js": [
-        "polyfills.js",
         "content-script.js"
       ],
       "all_frames": true

@@ -9,3 +9,4 @@ export {
   GetHandleToUsernameMapCommand,
 } from './commands';
 export { useTwitterScraping, TwitterScrapingContextProvider } from './context';
+export {isTwitterHostname} from './utils';
