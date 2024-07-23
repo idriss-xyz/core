@@ -11,9 +11,9 @@ import {MantleExplorerPageManager} from "./mantleExplorerPageManager";
 
 const specificDomainList = {
     "app.poap.xyz": PoapPageManager,
-    "huobi.com": HuobiPageManager,
-    "htx.com": HuobiPageManager,
-    "coinbase.com": CoinbasePageManager,
+    // "huobi.com": HuobiPageManager,
+    // "htx.com": HuobiPageManager,
+    // "coinbase.com": CoinbasePageManager,
     "etherscan.io": EtherscanPageManager,
     "polygonscan.com": EtherscanPageManager,
     "bscscan.com": EtherscanPageManager,
@@ -35,23 +35,23 @@ const specificDomainList = {
     "blockscout.scroll.io": LineaExplorerPageManager
 }
 const defaultDomainList = [
-    "binance.com",
-    "kucoin.com",
-    "kraken.com",
-    "bitfinex.com",
-    "gate.io",
-    "binance.us",
-    "bithumb.com",
-    "bitstamp.net",
-    "bitflyer.com",
-    "gemini.com",
-    "bybit.com",
-    "bittrex.com",
-    "okx.com",
-    "coincheck.com",
-    "crypto.com",
+    // "binance.com",
+    // "kucoin.com",
+    // "kraken.com",
+    // "bitfinex.com",
+    // "gate.io",
+    // "binance.us",
+    // "bithumb.com",
+    // "bitstamp.net",
+    // "bitflyer.com",
+    // "gemini.com",
+    // "bybit.com",
+    // "bittrex.com",
+    // "okx.com",
+    // "coincheck.com",
+    // "crypto.com",
     "poap.xyz",
-    "guarda.co"
+    // "guarda.co"
   ];
 
 export async function pageManagerFactory(document, url) {
