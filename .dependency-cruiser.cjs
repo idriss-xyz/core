@@ -9,26 +9,26 @@ module.exports = {
         'your solution (i.e. use dependency inversion, make sure the modules have a single responsibility) ',
       from: {},
       to: {
-        circular: true
-      }
+        circular: true,
+      },
     },
     {
       name: 'no-orphans',
       comment:
         "This is an orphan module - it's likely not used (anymore?). Either use it or " +
         "remove it. If it's logical this module is an orphan (i.e. it's a config file), " +
-        "add an exception for it in your dependency-cruiser configuration. By default " +
-        "this rule does not scrutinize dot-files (e.g. .eslintrc.js), TypeScript declaration " +
-        "files (.d.ts), tsconfig.json and some of the babel and webpack configs.",
+        'add an exception for it in your dependency-cruiser configuration. By default ' +
+        'this rule does not scrutinize dot-files (e.g. .eslintrc.js), TypeScript declaration ' +
+        'files (.d.ts), tsconfig.json and some of the babel and webpack configs.',
       severity: 'warn',
       from: {
         orphan: true,
         pathNot: [
-          '(^|/)[.][^/]+[.](?:js|cjs|mjs|ts|cts|mts|json)$',                  // dot files
-          '[.]d[.]ts$',                                                       // TypeScript declaration files
-          '(^|/)tsconfig[.]json$',                                            // TypeScript config
-          '(^|/)(?:babel|webpack)[.]config[.](?:js|cjs|mjs|ts|cts|mts|json)$' // other configs
-        ]
+          '(^|/)[.][^/]+[.](?:js|cjs|mjs|ts|cts|mts|json)$', // dot files
+          '[.]d[.]ts$', // TypeScript declaration files
+          '(^|/)tsconfig[.]json$', // TypeScript config
+          '(^|/)(?:babel|webpack)[.]config[.](?:js|cjs|mjs|ts|cts|mts|json)$', // other configs
+        ],
       },
       to: {},
     },
@@ -40,9 +40,7 @@ module.exports = {
       severity: 'warn',
       from: {},
       to: {
-        dependencyTypes: [
-          'core'
-        ],
+        dependencyTypes: ['core'],
         path: [
           '^v8/tools/codemap$',
           '^v8/tools/consarray$',
@@ -63,9 +61,9 @@ module.exports = {
           '^constants$',
           '^sys$',
           '^_linklist$',
-          '^_stream_wrap$'
+          '^_stream_wrap$',
         ],
-      }
+      },
     },
     {
       name: 'not-to-deprecated',
@@ -75,10 +73,8 @@ module.exports = {
       severity: 'warn',
       from: {},
       to: {
-        dependencyTypes: [
-          'deprecated'
-        ]
-      }
+        dependencyTypes: ['deprecated'],
+      },
     },
     {
       name: 'no-non-package-json',
@@ -86,15 +82,12 @@ module.exports = {
       comment:
         "This module depends on an npm package that isn't in the 'dependencies' section of your package.json. " +
         "That's problematic as the package either (1) won't be available on live (2 - worse) will be " +
-        "available on live with an non-guaranteed version. Fix it by adding the package to the dependencies " +
-        "in your package.json.",
+        'available on live with an non-guaranteed version. Fix it by adding the package to the dependencies ' +
+        'in your package.json.',
       from: {},
       to: {
-        dependencyTypes: [
-          'npm-no-pkg',
-          'npm-unknown'
-        ]
-      }
+        dependencyTypes: ['npm-no-pkg', 'npm-unknown'],
+      },
     },
     {
       name: 'not-to-unresolvable',
@@ -104,15 +97,15 @@ module.exports = {
       severity: 'error',
       from: {},
       to: {
-        couldNotResolve: true
-      }
+        couldNotResolve: true,
+      },
     },
     {
       name: 'no-duplicate-dep-types',
       comment:
         "Likely this module depends on an external ('npm') package that occurs more than once " +
-        "in your package.json i.e. bot as a devDependencies and in dependencies. This will cause " +
-        "maintenance problems later on.",
+        'in your package.json i.e. bot as a devDependencies and in dependencies. This will cause ' +
+        'maintenance problems later on.',
       severity: 'warn',
       from: {},
       to: {
@@ -120,8 +113,8 @@ module.exports = {
         // as it's pretty common to have a type import be a type only import
         // _and_ (e.g.) a devDependency - don't consider type-only dependency
         // types for this rule
-        dependencyTypesNot: ["type-only"]
-      }
+        dependencyTypesNot: ['type-only'],
+      },
     },
 
     /* rules you might want to tweak for your specific situation: */
@@ -135,8 +128,8 @@ module.exports = {
       severity: 'error',
       from: {},
       to: {
-        path: '[.](?:spec|test)[.](?:js|mjs|cjs|jsx|ts|mts|cts|tsx|ls|coffee|litcoffee|coffee[.]md)$'
-      }
+        path: '[.](?:spec|test)[.](?:js|mjs|cjs|jsx|ts|mts|cts|tsx|ls|coffee|litcoffee|coffee[.]md)$',
+      },
     },
     {
       name: 'not-to-dev-dep',
@@ -149,63 +142,55 @@ module.exports = {
         'from.pathNot re of the not-to-dev-dep rule in the dependency-cruiser configuration',
       from: {
         path: '^(src)',
-        pathNot: ['[.](?:spec|test)[.](?:js|mjs|cjs|jsx|ts|mts|cts|tsx|ls|coffee|litcoffee|coffee[.]md)$', '.d.ts']
+        pathNot: [
+          '[.](?:spec|test)[.](?:js|mjs|cjs|jsx|ts|mts|cts|tsx|ls|coffee|litcoffee|coffee[.]md)$',
+          '.d.ts',
+        ],
       },
       to: {
-        dependencyTypes: [
-          'npm-dev',
-        ],
+        dependencyTypes: ['npm-dev'],
         // type only dependencies are not a problem as they don't end up in the
         // production code or are ignored by the runtime.
-        dependencyTypesNot: [
-          'type-only'
-        ],
-        pathNot: [
-          'node_modules/@types/'
-        ]
-      }
+        dependencyTypesNot: ['type-only'],
+        pathNot: ['node_modules/@types/'],
+      },
     },
     {
       name: 'optional-deps-used',
       severity: 'info',
       comment:
-        "This module depends on an npm package that is declared as an optional dependency " +
+        'This module depends on an npm package that is declared as an optional dependency ' +
         "in your package.json. As this makes sense in limited situations only, it's flagged here. " +
         "If you're using an optional dependency here by design - add an exception to your" +
-        "dependency-cruiser configuration.",
+        'dependency-cruiser configuration.',
       from: {},
       to: {
-        dependencyTypes: [
-          'npm-optional'
-        ]
-      }
+        dependencyTypes: ['npm-optional'],
+      },
     },
     {
       name: 'peer-deps-used',
       comment:
-        "This module depends on an npm package that is declared as a peer dependency " +
-        "in your package.json. This makes sense if your package is e.g. a plugin, but in " +
-        "other cases - maybe not so much. If the use of a peer dependency is intentional " +
-        "add an exception to your dependency-cruiser configuration.",
+        'This module depends on an npm package that is declared as a peer dependency ' +
+        'in your package.json. This makes sense if your package is e.g. a plugin, but in ' +
+        'other cases - maybe not so much. If the use of a peer dependency is intentional ' +
+        'add an exception to your dependency-cruiser configuration.',
       severity: 'warn',
       from: {},
       to: {
-        dependencyTypes: [
-          'npm-peer'
-        ]
-      }
-    }
+        dependencyTypes: ['npm-peer'],
+      },
+    },
   ],
   options: {
-
     /* Which modules not to follow further when encountered */
     doNotFollow: {
       /* path: an array of regular expressions in strings to match against */
-      path: ['node_modules']
+      path: ['node_modules'],
     },
 
     /* Which modules to exclude */
-    exclude : {
+    exclude: {
       /* path: an array of regular expressions in strings to match against */
       path: ['src/common', 'src/infrastructure/popup', 'src/types'],
     },
@@ -268,7 +253,7 @@ module.exports = {
        defaults to './tsconfig.json'.
      */
     tsConfig: {
-      fileName: 'tsconfig.json'
+      fileName: 'tsconfig.json',
     },
 
     /* Webpack configuration to use to get resolve options from.
@@ -292,7 +277,7 @@ module.exports = {
       source code).
      */
     babelConfig: {
-      fileName: '.babelrc'
+      fileName: '.babelrc',
     },
 
     /* List of strings you have in use in addition to cjs/ es6 requires
@@ -311,11 +296,11 @@ module.exports = {
      */
     enhancedResolveOptions: {
       /* What to consider as an 'exports' field in package.jsons */
-      exportsFields: ["exports"],
+      exportsFields: ['exports'],
       /* List of conditions to check for in the exports field.
          Only works when the 'exportsFields' array is non-empty.
       */
-      conditionNames: ["import", "require", "node", "default", "types"],
+      conditionNames: ['import', 'require', 'node', 'default', 'types'],
       /*
          The extensions, by default are the same as the ones dependency-cruiser
          can access (run `npx depcruise --info` to see which ones that are in
@@ -330,7 +315,7 @@ module.exports = {
       // if you migrate to ESM (or are in an ESM environment already) you will want to
       // have "module" in the list of mainFields, like so:
       // mainFields: ["module", "main", "types", "typings"],
-      mainFields: ["main", "types", "typings"],
+      mainFields: ['main', 'types', 'typings'],
       /*
          A list of alias fields in package.jsons
          See [this specification](https://github.com/defunctzombie/package-browser-field-spec) and
@@ -372,7 +357,8 @@ module.exports = {
           dependency graph reporter (`archi`) you probably want to tweak
           this collapsePattern to your situation.
         */
-        collapsePattern: '^(?:packages|src|lib(s?)|app(s?)|bin|test(s?)|spec(s?))/[^/]+|node_modules/(?:@[^/]+/[^/]+|[^/]+)',
+        collapsePattern:
+          '^(?:packages|src|lib(s?)|app(s?)|bin|test(s?)|spec(s?))/[^/]+|node_modules/(?:@[^/]+/[^/]+|[^/]+)',
 
         /* Options to tweak the appearance of your graph.See
            https://github.com/sverweij/dependency-cruiser/blob/main/doc/options-reference.md#reporteroptions
@@ -383,10 +369,10 @@ module.exports = {
         // theme: {
         // },
       },
-      "text": {
-        "highlightFocused": true
+      text: {
+        highlightFocused: true,
       },
-    }
-  }
+    },
+  },
 };
 // generated: dependency-cruiser@16.2.4 on 2024-03-21T07:08:28.023Z

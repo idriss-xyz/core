@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import { useEffectOnce } from 'react-use';
 
-import { useWidgetTabs } from '../../providers/widget-tabs';
+import { useWidgetTabs } from '../../providers';
 import { WidgetBase } from '../widget-base';
 import { classes } from '../../utils/classes';
 

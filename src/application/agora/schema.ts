@@ -12,7 +12,7 @@ export const proposalSchema = z.object({
   }),
 });
 
-export const proposalsMetadata = z.object({
+const proposalsMetadata = z.object({
   has_next: z.boolean(),
 });
 

@@ -1,4 +1,4 @@
-import { classes } from 'shared/ui/utils';
+import { classes } from '../../utils';
 
 import { ErrorMessageProperties } from './error-message.types';
 

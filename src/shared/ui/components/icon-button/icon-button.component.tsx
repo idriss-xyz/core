@@ -1,5 +1,4 @@
-import { classes } from 'shared/ui/utils';
-
+import { classes } from '../../utils';
 import { Icon } from '../icon';
 
 import { IconButtonProperties } from './icon-button.types';

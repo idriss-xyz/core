@@ -15,11 +15,6 @@ import {
 } from 'shared/ui';
 import { WalletContextProvider } from 'shared/web3';
 import { ErrorBoundary } from 'shared/observability';
-import { PolymarketApp } from 'application/polymarket';
-import { SnapshotApp } from 'application/snapshot';
-// import { GitcoinApp } from 'application/gitcoin';
-import { IdrissSendApp } from 'application/idriss-send';
-import { useCommandQuery } from 'shared/messaging';
 import {
   TwitterScrapingContextProvider,
   useTwitterLocationInfo,
@@ -28,8 +23,12 @@ import {
   WarpcastScrapingContextProvider,
   useWarpcastLocationInfo,
 } from 'host/warpcast';
-import { AgoraApp } from 'application/agora';
+import { Final } from 'final';
+import { useCommandQuery } from 'shared/messaging';
 import { TallyApp } from 'application/tally';
+import { AgoraApp } from 'application/agora';
+import { SnapshotApp } from 'application/snapshot';
+import { PolymarketApp } from 'application/polymarket';
 export class Application {
   private constructor() {}
 
@@ -86,6 +85,17 @@ const Applications = () => {
   const { isWarpcast } = useWarpcastLocationInfo();
   const { enabled } = useExtensionSettings();
 
+  useEffect(() => {
+    if (!enabled) {
+      for (const element of document.querySelectorAll(
+        '[data-idriss-widget="true"]',
+      ))
+        element.remove();
+    }
+  }, [enabled]);
+
+  const isExpectedPage = isTwitter || isWarpcast;
+
   const serviceStatusQuery = useCommandQuery({
     staleTime: Number.POSITIVE_INFINITY,
     command: new GetServiceStatusCommand({}),
@@ -96,23 +106,12 @@ const Applications = () => {
     return {
       polymarket: Boolean(serviceStatusQuery.data?.polymarket),
       snapshot: Boolean(serviceStatusQuery.data?.snapshot),
-      gitcoin: Boolean(serviceStatusQuery.data?.gitcoin),
       agora: Boolean(serviceStatusQuery.data?.agora),
-      idrissSend: Boolean(serviceStatusQuery.data?.['idriss-send']),
       tally: Boolean(serviceStatusQuery.data?.tally),
     };
   }, [serviceStatusQuery.data]);
 
-  useEffect(() => {
-    if (!enabled) {
-      for (const element of document.querySelectorAll(
-        '[data-idriss-send-widget="true"]',
-      ))
-        element.remove();
-    }
-  }, [enabled]);
-
-  if (!serviceStatusQuery.data || !enabled) {
+  if (!enabled || !isExpectedPage) {
     return null;
   }
 
@@ -124,8 +123,7 @@ const Applications = () => {
         {applicationsStatus.agora ? <AgoraApp /> : null}
       </WidgetTabsProvider>
       {applicationsStatus.polymarket ? <PolymarketApp /> : null}
-      {/* {applicationsStatus.gitcoin ? <GitcoinApp /> : null} */}
-      {applicationsStatus.idrissSend ? <IdrissSendApp /> : null}
+      <Final />
     </>
   );
 };

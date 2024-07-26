@@ -26,6 +26,10 @@
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
+      "final": ["src/final"],
+      "final/*": [
+        "src/final/*"
+      ],
       "infrastructure/*": [
         "src/infrastructure/*"
       ],
@@ -44,6 +48,7 @@
     "src"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "**/*.stories.tsx"
   ]
 }

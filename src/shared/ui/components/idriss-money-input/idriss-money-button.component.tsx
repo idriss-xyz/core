@@ -1,4 +1,4 @@
-import { classes } from 'shared/ui/utils';
+import { classes } from '../../utils';
 
 import { IdrissMoneyButtonProperties } from './idriss-money-input.types';
 

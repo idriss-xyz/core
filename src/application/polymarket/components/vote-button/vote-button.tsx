@@ -3,7 +3,7 @@ import { Button, ButtonProperties, classes } from 'shared/ui';
 import { OUTCOME } from '../../constants';
 import { Outcome } from '../../types';
 
-export interface Properties
+interface Properties
   extends Pick<
     ButtonProperties,
     'onClick' | 'disabled' | 'children' | 'className'

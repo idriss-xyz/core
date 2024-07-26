@@ -1,3 +1,4 @@
+// TODO: migrate this to <Icon />
 export const GasIcon = () => {
   return (
     <svg

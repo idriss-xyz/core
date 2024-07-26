@@ -11,7 +11,8 @@ import { PostOrderCommand } from '../commands';
 import { POLYMARKET_GNOSIS_SAFE_SIGNATURE } from '../constants';
 
 import { getSafeWalletQueryKey } from './use-safe-wallet';
-export interface PostOrderMutationProperties {
+
+interface PostOrderMutationProperties {
   signer: JsonRpcSigner;
   funderAddress: string;
   tokenID: string;

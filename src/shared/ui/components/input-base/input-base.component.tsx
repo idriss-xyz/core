@@ -1,5 +1,4 @@
-import { classes } from 'shared/ui/utils';
-
+import { classes } from '../../utils';
 import { ErrorMessage } from '../error-message';
 
 import { InputBaseLabel } from './input-base-label.component';

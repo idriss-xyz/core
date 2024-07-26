@@ -1,7 +1,7 @@
 import { ReactNode, forwardRef } from 'react';
 
-import { classes } from 'shared/ui/utils';
-import { PolymorphicReference } from 'shared/ui/types';
+import { PolymorphicReference } from '../../types';
+import { classes } from '../../utils';
 
 import {
   PolymorphicSelectOptionContainerProperties,

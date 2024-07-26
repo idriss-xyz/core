@@ -1,7 +1,6 @@
 import { forwardRef } from 'react';
 
-import { classes } from 'shared/ui/utils';
-
+import { classes } from '../../utils';
 import { Spinner } from '../spinner';
 
 import { ButtonProperties } from './button.types';

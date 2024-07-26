@@ -4,7 +4,6 @@ import { IconType } from './schema';
 
 export interface Recipient {
   top: number;
-  node: Element;
   username: string;
   availableNetworks: number[];
   widgetOverrides?: {
@@ -13,4 +12,6 @@ export interface Recipient {
     iconType: IconType;
   };
   walletAddress: Hex;
+  nodeToInject: HTMLElement;
+  isHandleUser: boolean;
 }

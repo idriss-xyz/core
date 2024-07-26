@@ -60,6 +60,8 @@ export const useDonationMaker = ({ wallet }: Properties) => {
   const isSuccess =
     donateTransaction.isSuccess || acrossDonateTransaction.isSuccess;
 
+  const isIdle = !isDonating && !isError && !isSuccess;
+
   const data = donateTransaction.data ?? acrossDonateTransaction.data;
 
   return {
@@ -68,5 +70,6 @@ export const useDonationMaker = ({ wallet }: Properties) => {
     isError,
     isSuccess,
     data,
+    isIdle,
   };
 };

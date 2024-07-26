@@ -1,4 +1,4 @@
-import { classes } from 'shared/ui/utils';
+import { classes } from '../../utils';
 
 import { InputBaseLabelProperties } from './input-base.types';
 

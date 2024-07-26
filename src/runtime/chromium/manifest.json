@@ -31,11 +31,16 @@
     "16": "img/icon16.png",
     "48": "img/icon48.png",
     "128": "img/icon128.png",
-    "148": "img/icon148.png"
+    "148": "img/icon148.png",
+    "256": "img/icon256.png"
   },
   "action": {
     "default_popup": "standalone.html",
-    "default_icon": "img/icon16bw.png"
+    "default_icon": {
+      "16": "img/icon16.png",
+      "24": "img/icon24.png",
+      "32": "img/icon32.png"
+    }
   },
   "web_accessible_resources": [
     {

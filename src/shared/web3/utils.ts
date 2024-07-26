@@ -54,7 +54,7 @@ export const toAddressWithValidChecksum = (address: Hex) => {
   return getAddress(address) as Hex;
 };
 
-export const ethToWei = (amount: number) => {
+const ethToWei = (amount: number) => {
   return amount * 10 ** 18;
 };
 
@@ -66,7 +66,7 @@ export const dollarToWei = (amount: number, ethPerDollar: number) => {
   return Math.floor(ethToWei(ethPerDollar * amount));
 };
 
-export const ethToRawDollars = (amount: number, ethPerDollar: number) => {
+const ethToRawDollars = (amount: number, ethPerDollar: number) => {
   return amount / ethPerDollar;
 };
 

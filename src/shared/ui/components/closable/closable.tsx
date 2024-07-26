@@ -4,7 +4,7 @@ import { classes } from '../../utils';
 import { IconButton } from '../icon-button';
 import { Backdrop } from '../backdrop';
 
-export interface Properties {
+interface Properties {
   children: ReactNode;
   className?: string;
   top?: number;

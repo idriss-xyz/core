@@ -16,7 +16,25 @@ module.exports = {
     sourceType: 'module',
     ecmaVersion: 2022,
   },
-  extends: ['eslint:recommended', 'plugin:unicorn/recommended', 'plugin:@typescript-eslint/recommended', 'plugin:@typescript-eslint/recommended-type-checked', 'plugin:@typescript-eslint/stylistic', 'plugin:@typescript-eslint/stylistic-type-checked', 'plugin:import/recommended', 'plugin:import/typescript', 'plugin:boundaries/recommended', 'plugin:react/recommended', 'plugin:react/jsx-runtime', 'plugin:react-hooks/recommended', 'plugin:tailwindcss/recommended', 'plugin:@tanstack/eslint-plugin-query/recommended', 'prettier', 'plugin:prettier/recommended', 'plugin:storybook/recommended'],
+  extends: [
+    'eslint:recommended',
+    'plugin:unicorn/recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:@typescript-eslint/recommended-type-checked',
+    'plugin:@typescript-eslint/stylistic',
+    'plugin:@typescript-eslint/stylistic-type-checked',
+    'plugin:import/recommended',
+    'plugin:import/typescript',
+    'plugin:boundaries/recommended',
+    'plugin:react/recommended',
+    'plugin:react/jsx-runtime',
+    'plugin:react-hooks/recommended',
+    'plugin:tailwindcss/recommended',
+    'plugin:@tanstack/eslint-plugin-query/recommended',
+    'prettier',
+    'plugin:prettier/recommended',
+    'plugin:storybook/recommended',
+  ],
   settings: {
     'react': {
       version: 'detect',
@@ -36,6 +54,10 @@ module.exports = {
         pattern: 'src/runtime/*',
       },
       {
+        type: 'final',
+        pattern: ['src/final/index.ts', 'src/final', 'src/final/*'],
+      },
+      {
         type: 'infrastructure',
         pattern: 'src/infrastructure/*',
         capture: ['infrastructureElement'],
@@ -43,7 +65,7 @@ module.exports = {
       ,
       {
         type: 'application',
-        pattern: ['src/application/*', 'src/application'],
+        pattern: ['src/application/*'],
         capture: ['applicationName'],
       },
       {
@@ -88,7 +110,7 @@ module.exports = {
         default: 'disallow',
         rules: [
           {
-            target: ['shared', 'host', 'application', 'infrastructure'],
+            target: ['shared', 'host', 'application', 'infrastructure', 'final'],
             allow: 'index.(ts|tsx)',
           },
         ],
@@ -114,7 +136,15 @@ module.exports = {
           },
           {
             from: ['infrastructure'],
-            allow: ['application', 'host', 'shared'],
+            allow: ['application', 'host', 'shared', 'final'],
+          },
+          {
+            from: ['final'],
+            allow: [
+              'application',
+              'shared',
+              'host',
+            ],
           },
           {
             from: ['application'],

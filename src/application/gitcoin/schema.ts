@@ -31,3 +31,17 @@ export const createDonationPayloadSchema = (isCrossChain: boolean) => {
     chainId: z.union(possibleChainIdsSchema),
   });
 };
+
+export const applicationSchema = z.object({
+  roundId: z.string(),
+  chainId: z.number(),
+  project: z.object({
+    id: z.string(),
+    name: z.string(),
+    anchorAddress: z.string(),
+    registryAddress: z.string(),
+    metadata: z.object({
+      projectTwitter: z.string().optional(),
+    }),
+  }),
+});

@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 import {
   Command,
   FailureResult,
@@ -6,14 +8,13 @@ import {
 } from 'shared/messaging';
 
 import { Api } from '../api';
-import { GetApplicationsResponse } from '../types';
+import { Application } from '../types';
+import { applicationSchema } from '../schema';
 
 type Payload = Record<string, never>;
+const responseSchema = z.array(applicationSchema);
 
-export class GetApplicationsCommand extends Command<
-  Payload,
-  GetApplicationsResponse
-> {
+export class GetApplicationsCommand extends Command<Payload, Application[]> {
   public readonly name = 'GetApplicationsCommand' as const;
 
   constructor(
@@ -31,10 +32,14 @@ export class GetApplicationsCommand extends Command<
         throw new HandlerError();
       }
 
-      // TODO: schema validation
-      const json = (await response.json()) as { data: GetApplicationsResponse };
+      const json = await response.json();
 
-      return new OkResult(json.data);
+      const validationResult = responseSchema.safeParse(json);
+      if (!validationResult.success) {
+        throw new HandlerError('Schema validation failed');
+      }
+
+      return new OkResult(validationResult.data);
     } catch (error) {
       await this.logException(error);
       if (error instanceof HandlerError) {

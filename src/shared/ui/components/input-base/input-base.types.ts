@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { PolymorphicComponentProperties } from 'shared/ui/types';
+import { PolymorphicComponentProperties } from '../../types';
 
 export interface InputBaseLabelProperties {
   className?: string;
@@ -19,7 +19,7 @@ export interface InputBaseProperties {
   renderLabel?: () => ReactNode;
 }
 
-export type PolymorphicInputBaseProperties<C extends React.ElementType> =
+type PolymorphicInputBaseProperties<C extends React.ElementType> =
   PolymorphicComponentProperties<C, InputBaseProperties>;
 
 export type InputBaseComponent = {
