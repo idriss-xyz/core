@@ -1,1 +1,1 @@
-export { useTwitterVisibleAgoraNodes } from './use-twitter-visible-agora-nodes';
+export { useTwitterAgoraWidgetsInfo } from './use-twitter-agora-widgets-info';

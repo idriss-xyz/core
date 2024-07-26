@@ -26,7 +26,7 @@ export class GetImageAsBase64Command extends Command<Payload, string> {
       const json = await response.json();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return new OkResult((json as any).image as string);
-    } catch(error) {
+    } catch (error) {
       await this.logException(error);
 
       return new FailureResult();

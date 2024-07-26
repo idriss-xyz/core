@@ -10,7 +10,7 @@ export const getAgoraUsernameFromTwitterUsername = (handle: string) => {
   return TWITTER_HANDLE_TO_AGORA[handle.toLowerCase()];
 };
 
-export const getAgoraUserNodes = (poolingResults: ScrapingResult[]) => {
+export const getAgoraWidgetsInfo = (poolingResults: ScrapingResult[]) => {
   return poolingResults
     .map((result) => {
       const agoraUsername = getAgoraUsernameFromTwitterUsername(result.value);

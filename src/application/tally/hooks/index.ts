@@ -1,1 +1,1 @@
-export { useTwitterVisibleTallyUsersNodes } from './use-twitter-visible-tally-users-nodes';
+export { useTwitterTallyWidgetsInfo } from './use-twitter-tally-widgets-info';

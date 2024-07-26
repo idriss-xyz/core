@@ -7,7 +7,12 @@ import {
   GetServiceStatusCommand,
   useExtensionSettings,
 } from 'shared/extension';
-import { PortalProvider, QueryProvider, TailwindProvider } from 'shared/ui';
+import {
+  PortalProvider,
+  QueryProvider,
+  TailwindProvider,
+  WidgetTabsProvider,
+} from 'shared/ui';
 import { WalletContextProvider } from 'shared/web3';
 import { ErrorBoundary } from 'shared/observability';
 import { PolymarketApp } from 'application/polymarket';
@@ -113,12 +118,14 @@ const Applications = () => {
 
   return (
     <>
+      <WidgetTabsProvider>
+        {applicationsStatus.snapshot ? <SnapshotApp /> : null}
+        {applicationsStatus.tally ? <TallyApp /> : null}
+        {applicationsStatus.agora ? <AgoraApp /> : null}
+      </WidgetTabsProvider>
       {applicationsStatus.polymarket ? <PolymarketApp /> : null}
-      {applicationsStatus.snapshot ? <SnapshotApp /> : null}
-      {applicationsStatus.agora ? <AgoraApp /> : null}
       {/* {applicationsStatus.gitcoin ? <GitcoinApp /> : null} */}
       {applicationsStatus.idrissSend ? <IdrissSendApp /> : null}
-      {applicationsStatus.tally ? <TallyApp /> : null}
     </>
   );
 };

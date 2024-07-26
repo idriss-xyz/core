@@ -1,3 +1,3 @@
-import { TWITTER_HOST_NAME } from './constants';
+import { TWITTER_HOST_NAMES } from './constants';
 
-export type TwitterHostName = typeof TWITTER_HOST_NAME;
+export type TwitterHostName = typeof TWITTER_HOST_NAMES;

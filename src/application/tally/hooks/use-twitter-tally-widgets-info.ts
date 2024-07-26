@@ -6,11 +6,11 @@ interface Properties {
   hidden: string[];
 }
 
-export const useTwitterVisibleTallyUsersNodes = ({ hidden }: Properties) => {
+export const useTwitterTallyWidgetsInfo = ({ hidden }: Properties) => {
   const { tweetAuthors } = useTwitterScraping();
   const { data: daoHandles } = useHandleToUsernameMap('tally');
 
-  const tallyUserNodes = useMemo(() => {
+  const tallyWidgets = useMemo(() => {
     if (!daoHandles) {
       return [];
     }
@@ -23,8 +23,8 @@ export const useTwitterVisibleTallyUsersNodes = ({ hidden }: Properties) => {
       .filter(Boolean);
   }, [daoHandles, tweetAuthors]);
 
-  const visibleTallyNodes = useMemo(() => {
-    return tallyUserNodes
+  const visibleTallyWidgetsInfo = useMemo(() => {
+    return tallyWidgets
       .filter((tallyNode) => {
         return !hidden.includes(tallyNode.tallyName);
       })
@@ -35,7 +35,7 @@ export const useTwitterVisibleTallyUsersNodes = ({ hidden }: Properties) => {
           top: tallyNode.top,
         };
       });
-  }, [hidden, tallyUserNodes]);
+  }, [hidden, tallyWidgets]);
 
-  return { visibleTallyNodes };
+  return { visibleTallyWidgetsInfo };
 };

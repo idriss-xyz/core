@@ -19,3 +19,4 @@ export { GasIcon } from './gas-icon';
 export type { Pagination } from './pagination';
 export { PaginationComponent } from './pagination';
 export { PulsingLoadingBar } from './pulsing-loading-bar';
+export { WidgetTab } from './widget-tab';

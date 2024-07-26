@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import isEqual from 'lodash.isequal';
 
 interface Properties<T> {
   defaultValue: T;
@@ -20,7 +21,10 @@ export const usePooling = <T>({
       return;
     }
     const intervalId = setInterval(() => {
-      setValue(callback());
+      const newValue = callback();
+      setValue((previous) => {
+        return isEqual(previous, newValue) ? previous : newValue;
+      });
     }, interval);
 
     return () => {

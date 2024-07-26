@@ -1,1 +1,1 @@
-export { useTwitterVisibleSnapshots } from './use-twitter-visible-snapshots';
+export { useTwitterSnapshotWidgetsInfo } from './use-twitter-snapshot-widgets-info';

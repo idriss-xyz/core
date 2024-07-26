@@ -55,7 +55,7 @@ export class GetTallyProposalsCommand extends Command<
       };
       return new OkResult(activeProposals);
     } catch (error) {
-      await this.logException();
+      await this.logException(error);
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }
