@@ -42,8 +42,7 @@ export const useRecipients = ({ users, handle, enabled }: Properties) => {
           return;
         }
 
-        const { value, node, top } = user;
-        const username = value;
+        const { value: username, node, top } = user;
 
         const isHandleUser =
           handle === username && isHandleNode(node as HTMLElement);

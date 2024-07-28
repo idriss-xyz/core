@@ -161,7 +161,7 @@ const Base = ({ recipient, onClose, ethPerDollar }: BaseProperties) => {
 
         return (
           <>
-            <IdrissSend.Heading>Donate to @${username}</IdrissSend.Heading>
+            <IdrissSend.Heading>Donate to @{username}</IdrissSend.Heading>
             <IdrissSend.Form
               formMethods={formMethods}
               tokens={[{ ...TOKEN.ETHEREUM, decimals: 18, address: '0x0' }]}

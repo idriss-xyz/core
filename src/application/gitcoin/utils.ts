@@ -15,7 +15,7 @@ export const selectTwitterApplications = (applications: Application[]) => {
   return twitterApplications;
 };
 
-// TODO: consider using lodash.groupBy
+// TODO: consider using lodash.groupBy or native Object.groupBy
 const groupApplicationsByTwitterName = (applications: Application[]) => {
   const twitterToApplications: Record<string, Application[]> = {};
   for (const application of applications) {
