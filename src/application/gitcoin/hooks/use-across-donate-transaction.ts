@@ -10,6 +10,7 @@ import { useCommandMutation } from 'shared/messaging';
 
 import {
   generateDonationData,
+  generateDonationDataV2,
   generateEIP712Signature,
   generateVote,
 } from '../utils';
@@ -19,6 +20,7 @@ import {
   WRAPPED_ETH_ADDRESS_PER_CHAIN_ID,
 } from '../constants';
 import { Application } from '../types';
+import { GetNonceCommand } from '../commands';
 
 interface Properties {
   wallet: Wallet;
@@ -48,12 +50,20 @@ export const useAcrossDonateTransaction = () => {
       );
       console.log('VOTE IS', vote);
 
-      const data = await generateDonationData(
+      const getNonceCommand = new GetNonceCommand({
+        destinationChainId: chainId,
+        senderAddress: wallet.account,
+      });
+
+      const nonce = await getNonceCommand.send();
+
+      const data = generateDonationDataV2(
         Number(application.roundId),
         chainId,
         DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[chainId] ?? '',
         wallet.account,
         vote,
+        nonce,
       );
       console.log('DATA IS', data);
 

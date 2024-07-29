@@ -117,6 +117,26 @@ export const generateDonationData = async (
   return data;
 };
 
+export const generateDonationDataV2 = (
+  roundId: number,
+  destinationChainId: number,
+  destinationContractAddress: string,
+  senderAddress: string,
+  voteParameters: string,
+  nonce: number,
+) => {
+  const data: CrossChainDonationData = {
+    chainId: destinationChainId,
+    roundId: roundId,
+    donor: senderAddress,
+    voteParams: voteParameters,
+    nonce: nonce,
+    validUntil: Math.round(Date.now() / 1000) + 3600, // 1 hour
+    verifyingContract: destinationContractAddress,
+  };
+  return data;
+};
+
 export const generateEIP712Signature = async (
   signer: AnySigner,
   data: CrossChainDonationData,
@@ -171,7 +191,7 @@ const encodeDataAndSignature = (
   return encoded;
 };
 
-const getNonce = async (donor: string, destinationChainId: number) => {
+export const getNonce = async (donor: string, destinationChainId: number) => {
   const wrapper = createContract({
     abi: DONATION_CONTRACT_ABI,
     address: DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[destinationChainId]!,
