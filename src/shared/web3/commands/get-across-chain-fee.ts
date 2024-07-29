@@ -44,7 +44,7 @@ export class GetAcrossChainFeeCommand extends Command<Payload, Response> {
         destinationChainId: this.payload.destinationChainId.toString(),
       }).toString()}`;
 
-      const response = await fetch(`https://www.idriss.xyz/post-data`, {
+      const response = await fetch(`https://api.idriss.xyz/post-data`, {
         method: 'POST',
         body: JSON.stringify({ url }),
         headers: {

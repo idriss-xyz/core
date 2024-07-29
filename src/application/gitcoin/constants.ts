@@ -23,12 +23,12 @@ export const WRAPPED_ETH_ADDRESS_PER_CHAIN_ID = {
 };
 
 export const DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID = {
-  [CHAIN.BASE.id]: '0x51C2DDC09B67aB9152ACFB6a9a5E7A8DB1485ae8',
-  [CHAIN.LINEA.id]: '0xcbf32F0a9BF93256BAD8cD31cF37a3e914245908',
-  [CHAIN.OPTIMISM.id]: '0xd82BDb8391109f8BaD393Ff2CDa9E7Cd56F8239C',
-  [CHAIN.ZK_SYNC_ERA.id]: '0x8F5fc20f5a3e69B7DCc5AC477dCC4484C64897dA',
-  [CHAIN.ARBITRUM_ONE.id]: '0xaA098E5c9B002F815d7c9756BCfce0fC18B3F362',
-  [CHAIN.ETHEREUM.id]: '0xcA6742d2d6B9dBFFD841DF25C15cFf45FBbB98f4',
+  [CHAIN.BASE.id]: '0x7960312ca63e291244d180E75A8A0AC4a18032F7',
+  [CHAIN.LINEA.id]: '0x63c461A407FaE2E7F743B9be79A8DdF815D0F487',
+  [CHAIN.OPTIMISM.id]: '0x0c51AE117e8e4028e653FA3Bd5ccBaB97861c045',
+  [CHAIN.ZK_SYNC_ERA.id]: '0x13B73661A4B601f22346421c19Cf97628ba1FdCF',
+  [CHAIN.ARBITRUM_ONE.id]: '0xF3D400cA68F79d27DDa6cc7B1E6fEf8b444FE016',
+  [CHAIN.ETHEREUM.id]: '0x63c461A407FaE2E7F743B9be79A8DdF815D0F487',
 };
 
 export const GET_ETH_PER_DOLLAR_COMMAND_DETAILS = {
@@ -36,13 +36,6 @@ export const GET_ETH_PER_DOLLAR_COMMAND_DETAILS = {
   sellToken: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
   buyToken: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
   chainId: CHAIN.ETHEREUM.id,
-};
-
-export const SMALLEST_AMOUNT_MESSAGE_PER_CHAIN_ID = {
-  [CHAIN.ARBITRUM_ONE.id]:
-    '0x0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000022000000000000000000000000000000000000000000000000000000000000001c00000000000000000000000000000000000000000000000000000000000000022000000000000000000000000974fdbc4ff3ae73ceeba5b4c85521f2638ee54e500000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000140000000000000000000000000f8590ccb6c0d7069f61e397beeb7c0f931b6fc0d00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000060000000000000000000000000eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee00000000000000000000000000000000000000000000000000000000c3e893270000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000041138a90ae0915d9deecb8592791d3e30b6294c941b60039dbbc2568910bbe73682015e01ffd65ca386c6d9fed3ab18a87928a615bf37af8feb9952f47a3189b001b00000000000000000000000000000000000000000000000000000000000000',
-  [CHAIN.OPTIMISM.id]:
-    '0x0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000022000000000000000000000000000000000000000000000000000000000000001c00000000000000000000000000000000000000000000000000000000000000013000000000000000000000000974fdbc4ff3ae73ceeba5b4c85521f2638ee54e500000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000140000000000000000000000000f8590ccb6c0d7069f61e397beeb7c0f931b6fc0d00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000060000000000000000000000000eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee00000000000000000000000000000000000000000000000000000000c6e7c4810000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000041e75f93f39aa6140aea4c177f9f23457c81d6b6c01fea3a3e48e81a05e0c0ce001e651b1281f5e0df21aa1ca749314803d77aadb84744c922c23150645fd7afd11b00000000000000000000000000000000000000000000000000000000000000',
 };
 
 export const ALLO_CONTRACT_ADDRESS =
@@ -838,16 +831,63 @@ export const DONATION_CONTRACT_ABI = [
     stateMutability: 'nonpayable',
     type: 'constructor',
   },
-  { inputs: [], name: 'InsufficientFunds', type: 'error' },
+  { inputs: [], name: 'EasAlreadySet', type: 'error' },
+  { inputs: [], name: 'InvalidAmount', type: 'error' },
   { inputs: [], name: 'InvalidEAS', type: 'error' },
   { inputs: [], name: 'NoRoundOnDestination', type: 'error' },
+  { inputs: [], name: 'OutputAmountZero', type: 'error' },
   { inputs: [], name: 'Unauthorized', type: 'error' },
   {
     anonymous: false,
     inputs: [
-      { indexed: false, internalType: 'bytes', name: '', type: 'bytes' },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'donor',
+        type: 'address',
+      },
+      { indexed: false, internalType: 'bytes', name: 'message', type: 'bytes' },
     ],
-    name: 'Logger',
+    name: 'Deposit',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: 'roundId',
+        type: 'uint256',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'donor',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'bytes',
+        name: 'voteData',
+        type: 'bytes',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'Donate',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'address', name: 'eas', type: 'address' },
+    ],
+    name: 'InitializeEAS',
     type: 'event',
   },
   {
@@ -869,6 +909,7 @@ export const DONATION_CONTRACT_ABI = [
     name: 'OwnershipTransferred',
     type: 'event',
   },
+  { anonymous: false, inputs: [], name: 'Withdraw', type: 'event' },
   {
     inputs: [],
     name: 'ALLO_ADDRESS',
@@ -944,22 +985,6 @@ export const DONATION_CONTRACT_ABI = [
   },
   {
     inputs: [
-      { internalType: 'bytes32', name: '_messageHash', type: 'bytes32' },
-    ],
-    name: 'getEthSignedMessageHash',
-    outputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
-    stateMutability: 'pure',
-    type: 'function',
-  },
-  {
-    inputs: [{ internalType: 'bytes', name: '_message', type: 'bytes' }],
-    name: 'getMessageHash',
-    outputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
-    stateMutability: 'pure',
-    type: 'function',
-  },
-  {
-    inputs: [
       { internalType: 'address', name: 'tokenSent', type: 'address' },
       { internalType: 'uint256', name: 'amount', type: 'uint256' },
       { internalType: 'address', name: 'relayer', type: 'address' },
@@ -971,6 +996,23 @@ export const DONATION_CONTRACT_ABI = [
     type: 'function',
   },
   {
+    inputs: [
+      { internalType: 'address', name: 'eas', type: 'address' },
+      { internalType: 'bytes32', name: 'easSchema', type: 'bytes32' },
+    ],
+    name: 'initializeEAS',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [{ internalType: 'address', name: '', type: 'address' }],
+    name: 'nonces',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
     inputs: [],
     name: 'owner',
     outputs: [{ internalType: 'address', name: '', type: 'address' }],
@@ -979,47 +1021,9 @@ export const DONATION_CONTRACT_ABI = [
   },
   {
     inputs: [],
-    name: 'permit2',
-    outputs: [
-      {
-        internalType: 'contract ISignatureTransfer',
-        name: '',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'bytes32',
-        name: '_ethSignedMessageHash',
-        type: 'bytes32',
-      },
-      { internalType: 'bytes', name: '_signature', type: 'bytes' },
-    ],
-    name: 'recoverSigner',
-    outputs: [{ internalType: 'address', name: '', type: 'address' }],
-    stateMutability: 'pure',
-    type: 'function',
-  },
-  {
-    inputs: [],
     name: 'renounceOwnership',
     outputs: [],
     stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [{ internalType: 'bytes', name: 'sig', type: 'bytes' }],
-    name: 'splitSignature',
-    outputs: [
-      { internalType: 'bytes32', name: 'r', type: 'bytes32' },
-      { internalType: 'bytes32', name: 's', type: 'bytes32' },
-      { internalType: 'uint8', name: 'v', type: 'uint8' },
-    ],
-    stateMutability: 'pure',
     type: 'function',
   },
   {
@@ -1037,24 +1041,10 @@ export const DONATION_CONTRACT_ABI = [
     type: 'function',
   },
   {
-    inputs: [
-      { internalType: 'address', name: '_signer', type: 'address' },
-      { internalType: 'bytes', name: '_message', type: 'bytes' },
-      { internalType: 'bytes', name: '_signature', type: 'bytes' },
-    ],
-    name: 'verify',
-    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
-    stateMutability: 'pure',
-    type: 'function',
-  },
-  {
-    inputs: [
-      { internalType: 'bytes', name: 'donationData', type: 'bytes' },
-      { internalType: 'bytes', name: 'signature', type: 'bytes' },
-    ],
+    inputs: [{ internalType: 'bytes', name: 'encoded', type: 'bytes' }],
     name: 'verifyDonation',
     outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
-    stateMutability: 'pure',
+    stateMutability: 'view',
     type: 'function',
   },
   {

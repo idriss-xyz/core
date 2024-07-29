@@ -27,7 +27,7 @@ export class GetConditionIdCommand extends Command<Payload, string> {
   async handle() {
     try {
       const polymarketResponse = await fetch(
-        `https://www.idriss.xyz/fetch-data?url=${this.payload.url}`,
+        `https://api.idriss.xyz/fetch-data?url=${this.payload.url}`,
       );
       const { text: polymarketHtml } = (await polymarketResponse.json()) as {
         text: string;

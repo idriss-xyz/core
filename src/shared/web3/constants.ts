@@ -205,7 +205,6 @@ export const TOKEN = {
   DEGEN: { name: 'Degen', symbol: 'DEGEN', logo: DEGEN_LOGO },
 } satisfies Record<string, Token>;
 
-// TODO: Lennard double check this before merging
 export const CHAIN_ID_TO_TOKENS = {
   [CHAIN.ETHEREUM.id]: [
     {

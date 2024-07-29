@@ -1,5 +1,4 @@
 import { useMutation } from '@tanstack/react-query';
-import { ethers } from 'ethers';
 
 import {
   GetAcrossChainFeeCommand,
@@ -10,8 +9,8 @@ import {
 import { useCommandMutation } from 'shared/messaging';
 
 import {
-  generateCombinedMessage,
   generateDonationData,
+  generateEIP712Signature,
   generateVote,
 } from '../utils';
 import {
@@ -38,36 +37,42 @@ export const useAcrossDonateTransaction = () => {
       userAmountInWei,
       chainId,
     }: Properties) => {
+      //  ToDo: check where/when chain switch is happening
       const signer = createSigner(wallet);
+
+      console.log('GENERATING VOTE with', signer);
 
       const vote = generateVote(
         application.project.anchorAddress,
         userAmountInWei,
       );
+      console.log('VOTE IS', vote);
 
-      const encodedMessage = generateDonationData(
+      const data = await generateDonationData(
         Number(application.roundId),
+        chainId,
+        DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[chainId] ?? '',
         wallet.account,
         vote,
       );
+      console.log('DATA IS', data);
+
+      const encodedDataWithSignature = await generateEIP712Signature(
+        signer,
+        data,
+      );
+      console.log('ENCODED MSG is', encodedDataWithSignature);
+
       const contractOrigin = createContract({
         address: DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[chainId] ?? '',
         abi: DONATION_CONTRACT_ABI,
         signerOrProvider: signer,
       });
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      const messageHash = await contractOrigin.getMessageHash(encodedMessage);
-      const signature = await signer.signMessage(
-        ethers.utils.arrayify(messageHash),
-      );
-      const messageCombined = generateCombinedMessage(
-        encodedMessage,
-        signature,
-      );
+      console.log('CONTRACT IS', contractOrigin);
 
       const feeResponse = await checkAcrossChainFee.mutateAsync({
         amount: userAmountInWei.toString(),
-        message: messageCombined,
+        message: encodedDataWithSignature,
         recipient:
           DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[application.chainId] ?? '',
         chain: {
@@ -76,6 +81,8 @@ export const useAcrossDonateTransaction = () => {
         },
         destinationChainId: application.chainId,
       });
+
+      console.log('FEE IS', feeResponse);
 
       const fee = Math.floor(Number(feeResponse.totalRelayFee.total) * 1.01);
 
@@ -98,7 +105,7 @@ export const useAcrossDonateTransaction = () => {
       const preparedTx =
         await contractOrigin.populateTransaction.callDepositV3?.(
           depositParameters,
-          messageCombined,
+          encodedDataWithSignature,
         );
 
       const sendOptions = {

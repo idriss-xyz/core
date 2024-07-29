@@ -5,12 +5,12 @@ import {
   OkResult,
 } from 'shared/messaging';
 
-interface Payload {
+export interface Payload {
   chains: { id: number; wrappedEthAddress: string }[];
-  destinationChainId: number;
-  amount: string;
+  amount: number;
   message: string;
   recipient: string;
+  destinationChainId: number;
 }
 
 interface SingleChainResponse {
@@ -19,7 +19,7 @@ interface SingleChainResponse {
   };
 }
 
-type Response = Record<string, SingleChainResponse>;
+export type Response = Record<string, SingleChainResponse>;
 
 export class GetAcrossChainFeesCommand extends Command<Payload, Response> {
   public readonly name = 'GetAcrossChainFeesCommand' as const;
@@ -38,14 +38,14 @@ export class GetAcrossChainFeesCommand extends Command<Payload, Response> {
           {
             originChainId: chain.id.toString(),
             token: chain.wrappedEthAddress,
-            amount: this.payload.amount,
+            amount: this.payload.amount.toString(),
             message: this.payload.message,
             recipient: this.payload.recipient,
             destinationChainId: this.payload.destinationChainId.toString(),
           },
         ).toString()}`;
 
-        const response = await fetch(`https://www.idriss.xyz/post-data`, {
+        const response = await fetch(`https://api.idriss.xyz/post-data`, {
           method: 'POST',
           body: JSON.stringify({ url }),
           headers: {

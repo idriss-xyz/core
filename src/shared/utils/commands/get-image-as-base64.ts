@@ -21,7 +21,7 @@ export class GetImageAsBase64Command extends Command<Payload, string> {
       }
 
       const response = await fetch(
-        `https://www.idriss.xyz/fetch-image?url=${this.payload.url}`,
+        `https://api.idriss.xyz/fetch-image?url=${this.payload.url}`,
       );
       const json = await response.json();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

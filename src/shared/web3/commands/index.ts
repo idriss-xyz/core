@@ -9,5 +9,9 @@ export const COMMAND_MAP = {
 };
 
 export { GetTokenPriceCommand } from './get-token-price';
+export type {
+  Payload as GetAcrossChainFeesPayload,
+  Response as GetAcrossChainFeesResponse,
+} from './get-across-chain-fees';
 export { GetAcrossChainFeesCommand } from './get-across-chain-fees';
 export { GetAcrossChainFeeCommand } from './get-across-chain-fee';
