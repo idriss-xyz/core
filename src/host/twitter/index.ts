@@ -8,4 +8,8 @@ export {
   GetOriginalShortenedUrlCommand,
 } from './commands';
 export { useTwitterScraping, TwitterScrapingContextProvider } from './context';
-export { isTwitterHostname, isHandleNode } from './utils';
+export {
+  isTwitterHostname,
+  isHandleNode,
+  getNodeToInjectToUser,
+} from './utils';

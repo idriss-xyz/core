@@ -8,7 +8,7 @@ import {
 import { Hex } from 'shared/web3';
 import { reverseObject } from 'shared/utils';
 import { ScrapingResult } from 'shared/scraping';
-import { isHandleNode } from 'host/twitter';
+import { getNodeToInjectToUser, isHandleNode } from 'host/twitter';
 
 import { GetCustomRecipientsCommand } from '../commands';
 import { DEFAULT_ALLOWED_CHAINS_IDS, PUBLIC_ETH_TAG_NAME } from '../constants';
@@ -190,11 +190,7 @@ export const useRecipients = ({ users, handle, enabled }: Properties) => {
         const isHandleUser =
           handle === username && isHandleNode(node as HTMLElement);
 
-        const nodeToInject: HTMLElement | null = isHandleUser
-          ? node.querySelector('div > div > div > span') ??
-            node.querySelector('div > div > a > div')
-          : node.querySelector('div > div > a > div') ??
-            node.querySelector('div:has(> div > span)');
+        const nodeToInject = getNodeToInjectToUser(node, isHandleUser);
 
         if (!nodeToInject || nodeToInject?.textContent === 'Follows you') {
           return;

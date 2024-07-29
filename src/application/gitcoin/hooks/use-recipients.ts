@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import { useCommandQuery } from 'shared/messaging';
 import { ScrapingResult } from 'shared/scraping';
-import { isHandleNode } from 'host/twitter'; // TODO: abstract this so it's not specific to Twitter, probably we need to accept it via Properties
+import { getNodeToInjectToUser, isHandleNode } from 'host/twitter'; // TODO: abstract this so it's not specific to Twitter, probably we need to accept it via Properties
 
 import { GetApplicationsCommand } from '../commands';
 import { selectTwitterApplications } from '../utils';
@@ -47,11 +47,7 @@ export const useRecipients = ({ users, handle, enabled }: Properties) => {
         const isHandleUser =
           handle === username && isHandleNode(node as HTMLElement);
 
-        const nodeToInject: HTMLElement | null = isHandleUser
-          ? node.querySelector('div > div > div > span') ??
-            node.querySelector('div > div > a > div')
-          : node.querySelector('div > div > a > div') ??
-            node.querySelector('div:has(> div > span)');
+        const nodeToInject = getNodeToInjectToUser(node, isHandleUser);
 
         if (!nodeToInject || nodeToInject?.textContent === 'Follows you') {
           return;
