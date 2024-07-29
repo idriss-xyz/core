@@ -17,6 +17,7 @@ interface RenderChildrenProperties {
 interface Properties {
   node: HTMLElement;
   recipientName: string;
+  onOpen?: () => void;
   onClose?: () => void;
   children: (v: RenderChildrenProperties) => ReactNode;
   iconSize: number;
@@ -31,6 +32,7 @@ export const Container = memo(
     iconSrc,
     children,
     onClose,
+    onOpen,
     closeOnClickAway,
   }: Properties) => {
     const [closeOnHoverAway, setCloseOnHoverAway] = useState(true);
@@ -80,6 +82,7 @@ export const Container = memo(
         event.preventDefault();
         setIsVisible(true);
         updatePosition();
+        onOpen?.();
       };
 
       injectedWidgetReference.current?.addEventListener(
@@ -96,7 +99,7 @@ export const Container = memo(
         window.removeEventListener('resize', updatePosition);
         injectedWidgetReference.current?.remove();
       };
-    }, [iconSize, iconSrc, node]);
+    }, [iconSize, iconSrc, node, onOpen]);
 
     const close = useCallback(() => {
       setIsVisible(false);

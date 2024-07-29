@@ -1,3 +1,4 @@
+import { TypedDataDomain, TypedDataField } from 'ethers';
 import { EIP1193Provider } from 'mipd';
 
 export type Hex = `0x${string}`;
@@ -35,4 +36,16 @@ export interface Wallet {
   account: Hex;
   chainId: number;
   providerRdns: string;
+}
+
+// type taken from ethers@5
+type SignMethod = (
+  domain: TypedDataDomain,
+  types: Record<string, TypedDataField[]>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  value: Record<string, any>,
+) => Promise<string>;
+
+export interface AnySigner {
+  _signTypedData: SignMethod;
 }

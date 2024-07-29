@@ -28,10 +28,32 @@ interface Properties {
 
 interface BaseProperties extends Properties {
   onClose: () => void;
-  ethPerDollar: number;
 }
 
-const Base = ({ recipient, onClose, ethPerDollar }: BaseProperties) => {
+const Base = ({ recipient, onClose }: BaseProperties) => {
+  const [isOpened, setIsOpened] = useState(false);
+
+  const handleOpen = useCallback(() => {
+    setIsOpened(true);
+  }, []);
+
+  const handleClose = useCallback(() => {
+    setIsOpened(false);
+    onClose();
+  }, [onClose]);
+
+  const getEthPerDollarQuery = useCommandQuery({
+    command: new GetTokenPriceCommand(GET_ETH_PER_DOLLAR_COMMAND_DETAILS),
+    refetchInterval: 60_000,
+    select: (v) => {
+      return Number(v.price);
+    },
+    retry: 0,
+    enabled: isOpened,
+  });
+
+  const ethPerDollar = getEthPerDollarQuery.data ?? 0;
+
   const { nodeToInject, username, isHandleUser, application } = recipient;
 
   const { wallet } = useWallet();
@@ -126,7 +148,8 @@ const Base = ({ recipient, onClose, ethPerDollar }: BaseProperties) => {
       iconSize={iconSize}
       recipientName={username}
       closeOnClickAway={donationMaker.isIdle}
-      onClose={onClose}
+      onClose={handleClose}
+      onOpen={handleOpen}
     >
       {({ close }) => {
         if (donationMaker.isDonating) {
@@ -203,31 +226,12 @@ const Base = ({ recipient, onClose, ethPerDollar }: BaseProperties) => {
 export const DonationWidget = memo((properties: Properties) => {
   const [closeCount, setCloseCount] = useState(0);
 
-  const getEthPerDollarQuery = useCommandQuery({
-    command: new GetTokenPriceCommand(GET_ETH_PER_DOLLAR_COMMAND_DETAILS),
-    refetchInterval: 60_000,
-    select: (v) => {
-      return Number(v.price);
-    },
-  });
-
-  const onClose = useCallback(() => {
+  const handleClose = useCallback(() => {
     setCloseCount((previous) => {
       return previous + 1;
     });
   }, []);
 
-  if (!getEthPerDollarQuery.data) {
-    return null;
-  }
-
-  return (
-    <Base
-      {...properties}
-      key={closeCount}
-      onClose={onClose}
-      ethPerDollar={getEthPerDollarQuery.data}
-    />
-  );
+  return <Base {...properties} key={closeCount} onClose={handleClose} />;
 });
 DonationWidget.displayName = 'DonationWidget';

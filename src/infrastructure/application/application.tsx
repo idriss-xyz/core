@@ -2,6 +2,7 @@ import { useMemo, createElement, StrictMode, useEffect } from 'react';
 import NiceModal from '@ebay/nice-modal-react';
 import { createRoot } from 'react-dom/client';
 
+import { Final } from 'final';
 import {
   ExtensionSettingsProvider,
   GetServiceStatusCommand,
@@ -23,7 +24,6 @@ import {
   WarpcastScrapingContextProvider,
   useWarpcastLocationInfo,
 } from 'host/warpcast';
-import { Final } from 'final';
 import { useCommandQuery } from 'shared/messaging';
 import { TallyApp } from 'application/tally';
 import { AgoraApp } from 'application/agora';

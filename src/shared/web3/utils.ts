@@ -29,6 +29,11 @@ export const createEthersProvider = (provider: EIP1193Provider) => {
   return new ethers.providers.Web3Provider(provider as ExternalProvider);
 };
 
+export const createRandomWallet = () => {
+  const temporaryWallet = ethers.Wallet.createRandom();
+  return temporaryWallet;
+};
+
 export const createSigner = (wallet: Wallet) => {
   const ethersProvider = createEthersProvider(wallet.provider);
   const signer = ethersProvider.getSigner(wallet.account);

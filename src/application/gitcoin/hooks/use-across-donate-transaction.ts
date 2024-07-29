@@ -1,5 +1,4 @@
 import { useMutation } from '@tanstack/react-query';
-import { ethers } from 'ethers';
 
 import {
   GetAcrossChainFeeCommand,
@@ -10,8 +9,8 @@ import {
 import { useCommandMutation } from 'shared/messaging';
 
 import {
-  generateCombinedMessage,
-  generateDonationData,
+  generateDonationDataV2,
+  generateEIP712Signature,
   generateVote,
 } from '../utils';
 import {
@@ -20,6 +19,7 @@ import {
   WRAPPED_ETH_ADDRESS_PER_CHAIN_ID,
 } from '../constants';
 import { Application } from '../types';
+import { GetNonceCommand } from '../commands';
 
 interface Properties {
   wallet: Wallet;
@@ -38,6 +38,7 @@ export const useAcrossDonateTransaction = () => {
       userAmountInWei,
       chainId,
     }: Properties) => {
+      //  ToDo: check where/when chain switch is happening
       const signer = createSigner(wallet);
 
       const vote = generateVote(
@@ -45,29 +46,36 @@ export const useAcrossDonateTransaction = () => {
         userAmountInWei,
       );
 
-      const encodedMessage = generateDonationData(
+      const getNonceCommand = new GetNonceCommand({
+        destinationChainId: chainId,
+        senderAddress: wallet.account,
+      });
+
+      const nonce = await getNonceCommand.send();
+
+      const data = generateDonationDataV2(
         Number(application.roundId),
+        application.chainId,
+        DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[application.chainId] ?? '',
         wallet.account,
         vote,
+        nonce,
       );
+
+      const encodedDataWithSignature = await generateEIP712Signature(
+        signer,
+        data,
+      );
+
       const contractOrigin = createContract({
         address: DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[chainId] ?? '',
         abi: DONATION_CONTRACT_ABI,
         signerOrProvider: signer,
       });
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      const messageHash = await contractOrigin.getMessageHash(encodedMessage);
-      const signature = await signer.signMessage(
-        ethers.utils.arrayify(messageHash),
-      );
-      const messageCombined = generateCombinedMessage(
-        encodedMessage,
-        signature,
-      );
 
       const feeResponse = await checkAcrossChainFee.mutateAsync({
         amount: userAmountInWei.toString(),
-        message: messageCombined,
+        message: encodedDataWithSignature,
         recipient:
           DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[application.chainId] ?? '',
         chain: {
@@ -98,7 +106,7 @@ export const useAcrossDonateTransaction = () => {
       const preparedTx =
         await contractOrigin.populateTransaction.callDepositV3?.(
           depositParameters,
-          messageCombined,
+          encodedDataWithSignature,
         );
 
       const sendOptions = {
