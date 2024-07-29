@@ -9,7 +9,6 @@ import {
 import { useCommandMutation } from 'shared/messaging';
 
 import {
-  generateDonationData,
   generateDonationDataV2,
   generateEIP712Signature,
   generateVote,
@@ -42,13 +41,10 @@ export const useAcrossDonateTransaction = () => {
       //  ToDo: check where/when chain switch is happening
       const signer = createSigner(wallet);
 
-      console.log('GENERATING VOTE with', signer);
-
       const vote = generateVote(
         application.project.anchorAddress,
         userAmountInWei,
       );
-      console.log('VOTE IS', vote);
 
       const getNonceCommand = new GetNonceCommand({
         destinationChainId: chainId,
@@ -59,26 +55,23 @@ export const useAcrossDonateTransaction = () => {
 
       const data = generateDonationDataV2(
         Number(application.roundId),
-        chainId,
-        DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[chainId] ?? '',
+        application.chainId,
+        DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[application.chainId] ?? '',
         wallet.account,
         vote,
         nonce,
       );
-      console.log('DATA IS', data);
 
       const encodedDataWithSignature = await generateEIP712Signature(
         signer,
         data,
       );
-      console.log('ENCODED MSG is', encodedDataWithSignature);
 
       const contractOrigin = createContract({
         address: DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[chainId] ?? '',
         abi: DONATION_CONTRACT_ABI,
         signerOrProvider: signer,
       });
-      console.log('CONTRACT IS', contractOrigin);
 
       const feeResponse = await checkAcrossChainFee.mutateAsync({
         amount: userAmountInWei.toString(),
@@ -91,8 +84,6 @@ export const useAcrossDonateTransaction = () => {
         },
         destinationChainId: application.chainId,
       });
-
-      console.log('FEE IS', feeResponse);
 
       const fee = Math.floor(Number(feeResponse.totalRelayFee.total) * 1.01);
 
