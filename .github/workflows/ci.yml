@@ -1,0 +1,112 @@
+name: CI
+
+on:
+  pull_request:
+
+jobs:
+  install-dependencies:
+    environment: ci
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/iron'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+  type-check:
+    environment: ci
+    runs-on: ubuntu-latest
+    needs: install-dependencies
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/iron'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build tailwind
+        run: pnpm tailwind:react
+
+      - name: Run type-check
+        run: pnpm type-check
+
+  lint:
+    environment: ci
+    runs-on: ubuntu-latest
+    needs: install-dependencies
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/iron'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build tailwind
+        run: pnpm tailwind:react
+
+      - name: Run lint
+        run: pnpm lint
+
+  circular-deps:
+    environment: ci
+    runs-on: ubuntu-latest
+    needs: install-dependencies
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/iron'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build tailwind
+        run: pnpm tailwind:react
+
+      - name: Run circular dependencies check
+        run: pnpm circular-deps
+
+  unused-exports:
+    environment: ci
+    runs-on: ubuntu-latest
+    needs: install-dependencies
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/iron'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run circular dependencies check
+        run: pnpm unused-exports
+
+
