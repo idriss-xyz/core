@@ -32,7 +32,7 @@ export const App = () => {
         <OrganizationProposalsContainer
           userHandle={twitterHandleFromPathname}
           snapshotHandle={snapshotHandle}
-          key={snapshotHandle}
+          key={'snapshot_proposal_container_for_' + twitterHandleFromPathname}
         />
       ) : null}
       {isTwitterHomePage ? <ProposalMainContainer /> : null}
