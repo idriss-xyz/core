@@ -10,4 +10,4 @@ export const COMMAND_MAP = {
 
 export { GetApplicationsCommand } from './get-applications';
 export { GetGitcoinAcrossChainFeesCommand } from './get-gitcoin-across-chain-fees';
-export {GetNonceCommand} from './get-nonce'
+export { GetNonceCommand } from './get-nonce';

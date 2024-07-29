@@ -17,13 +17,12 @@ type Response = number;
 export class GetNonceCommand extends Command<Payload, Response> {
   public readonly name = 'GetNonceCommand' as const;
 
-    constructor(
+  constructor(
     public payload: Payload,
     id?: string,
   ) {
     super(id ?? null);
   }
-
 
   async handle() {
     try {

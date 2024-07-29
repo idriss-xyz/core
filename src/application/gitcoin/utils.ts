@@ -97,7 +97,7 @@ export const generateVote = (recipientId: string, amount: number) => {
   return abiCoder.encode(types, data);
 };
 
-export const generateDonationData = async (
+const generateDonationData = async (
   roundId: number,
   destinationChainId: number,
   destinationContractAddress: string,
