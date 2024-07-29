@@ -1,7 +1,6 @@
 import * as Portal from '@radix-ui/react-portal';
 
-import { usePortal } from 'shared/ui/providers';
-
+import { usePortal } from '../../providers';
 import { IconButton } from '../icon-button';
 
 import { ModalProperties } from './modal.types';

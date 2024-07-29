@@ -20,7 +20,7 @@ export const proposalSchema = z.object({
   }),
 });
 
-export const proposalsPageInfoSchema = z.object({
+const proposalsPageInfoSchema = z.object({
   firstCursor: z.string(),
 });
 

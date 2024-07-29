@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { NumericFormat } from 'react-number-format';
 
-import { classes } from 'shared/ui/utils';
-
+import { classes } from '../../utils';
 import { ErrorMessage } from '../error-message';
 import { Icon } from '../icon';
 

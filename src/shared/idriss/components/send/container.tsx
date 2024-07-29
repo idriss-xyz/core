@@ -21,7 +21,6 @@ interface Properties {
   children: (v: RenderChildrenProperties) => ReactNode;
   iconSize: number;
   iconSrc: string;
-  widgetDataAttribute: string;
   closeOnClickAway: boolean;
 }
 
@@ -32,7 +31,6 @@ export const Container = memo(
     iconSrc,
     children,
     onClose,
-    widgetDataAttribute,
     closeOnClickAway,
   }: Properties) => {
     const [closeOnHoverAway, setCloseOnHoverAway] = useState(true);
@@ -54,7 +52,7 @@ export const Container = memo(
     useEffect(() => {
       injectedWidgetReference.current = document.createElement('img');
       injectedWidgetReference.current.setAttribute(
-        `data-${widgetDataAttribute}`,
+        `data-idriss-widget`,
         'true',
       );
       injectedWidgetReference.current.style.height = `${iconSize}px`;
@@ -98,7 +96,7 @@ export const Container = memo(
         window.removeEventListener('resize', updatePosition);
         injectedWidgetReference.current?.remove();
       };
-    }, [iconSize, iconSrc, node, widgetDataAttribute]);
+    }, [iconSize, iconSrc, node]);
 
     const close = useCallback(() => {
       setIsVisible(false);

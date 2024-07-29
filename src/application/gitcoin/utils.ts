@@ -1,14 +1,11 @@
 import { ethers } from 'ethers';
 
 import { OSS_ROUNDS } from './constants';
-import { Application, DonationPayload, GetApplicationsResponse } from './types';
+import { Application, DonationPayload } from './types';
 
-export const selectTwitterApplications = (
-  applications: GetApplicationsResponse,
-) => {
-  const allApplications = [...applications.arbitrum, ...applications.optimism];
+export const selectTwitterApplications = (applications: Application[]) => {
   const applicationsGroupedByTwitter =
-    groupApplicationsByTwitterName(allApplications);
+    groupApplicationsByTwitterName(applications);
 
   const twitterApplications = applicationsGroupedByTwitter
     .map((applications) => {
@@ -18,6 +15,7 @@ export const selectTwitterApplications = (
   return twitterApplications;
 };
 
+// TODO: consider using lodash.groupBy or native Object.groupBy
 const groupApplicationsByTwitterName = (applications: Application[]) => {
   const twitterToApplications: Record<string, Application[]> = {};
   for (const application of applications) {

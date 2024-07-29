@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 // TODO: consider lazy loading
 import * as Icons from '@radix-ui/react-icons';
 
-import { classes } from 'shared/ui/utils';
+import { classes } from '../../utils';
 
 import { IconProperties } from './icon.types';
 

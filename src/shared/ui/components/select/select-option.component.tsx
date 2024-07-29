@@ -1,6 +1,6 @@
 import { ForwardedRef, forwardRef } from 'react';
 
-import { classes } from 'shared/ui/utils';
+import { classes } from '../../utils';
 
 import { SelectOptionProperties } from './select.types';
 

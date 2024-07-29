@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { PolymorphicComponentProperties } from 'shared/ui/types';
+import { PolymorphicComponentProperties } from '../../types';
 
 export interface Option<T> {
   prefix?: ReactNode;

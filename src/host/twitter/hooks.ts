@@ -12,26 +12,6 @@ import {
 } from './utils';
 import { GetHandleToUsernameMapCommand } from './commands';
 
-export const useTwitterUsersPooling = () => {
-  const { isTwitter } = useTwitterLocationInfo();
-
-  return usePooling({
-    defaultValue: [],
-    callback: Twitter.getUsers,
-    enabled: isTwitter,
-  });
-};
-
-export const useTweetAuthorsPooling = () => {
-  const { isTwitter } = useTwitterLocationInfo();
-
-  return usePooling({
-    defaultValue: [],
-    callback: Twitter.getTweetAuthors,
-    enabled: isTwitter,
-  });
-};
-
 export const useTwitterExternalLinksPooling = () => {
   const { isTwitter } = useTwitterLocationInfo();
 

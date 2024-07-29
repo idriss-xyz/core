@@ -1,6 +1,6 @@
 import { MonitoringEvent } from 'shared/observability';
 
-export interface Data {
+interface Data {
   conditionId: string;
   amount: number;
   tokenId: string;

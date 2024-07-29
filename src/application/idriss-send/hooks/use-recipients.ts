@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import { useTwitterScraping } from 'host/twitter';
 import { useCommandQuery } from 'shared/messaging';
 import {
   GetDigestToWalletAddressCommand,
@@ -8,20 +7,31 @@ import {
 } from 'shared/idriss';
 import { Hex } from 'shared/web3';
 import { reverseObject } from 'shared/utils';
+import { ScrapingResult } from 'shared/scraping';
+import { getNodeToInjectToUser, isHandleNode } from 'host/twitter';
 
 import { GetCustomRecipientsCommand } from '../commands';
 import { DEFAULT_ALLOWED_CHAINS_IDS, PUBLIC_ETH_TAG_NAME } from '../constants';
 import { mapDigestedMessageToWalletTag } from '../utils';
 import { Recipient } from '../types';
 
-type RecipientCandidate = Omit<Recipient, 'walletAddress'> & {
+type RecipientCandidate = Omit<
+  Recipient,
+  'walletAddress' | 'isHandleUser' | 'nodeToInject'
+> & {
   walletAddress?: Hex;
   digestedMessageToWalletTag: Record<string, string>;
   walletTagToDigestedMessage: Record<string, string>;
+  node: Element;
 };
 
-export const useRecipients = () => {
-  const { users } = useTwitterScraping();
+interface Properties {
+  users: ScrapingResult[];
+  handle?: string;
+  enabled: boolean;
+}
+
+export const useRecipients = ({ users, handle, enabled }: Properties) => {
   const [digestToWallet, setDigestToWallet] = useState<Record<string, string>>(
     {},
   );
@@ -46,11 +56,12 @@ export const useRecipients = () => {
     placeholderData: (previousData) => {
       return previousData;
     },
+    enabled,
   });
 
   const getHandlesToTwitterIdsQuery = useCommandQuery({
     command: new GetHandleToTwitterIdCommand({ handles }),
-    enabled: handles.length > 0,
+    enabled: enabled && handles.length > 0,
     placeholderData: (previousData) => {
       return previousData;
     },
@@ -115,6 +126,7 @@ export const useRecipients = () => {
     command: new GetDigestToWalletAddressCommand({
       digestedMessages,
     }),
+    enabled,
   });
 
   useEffect(() => {
@@ -172,17 +184,30 @@ export const useRecipients = () => {
           return;
         }
 
+        const { top, node, username, availableNetworks, widgetOverrides } =
+          user;
+
+        const isHandleUser =
+          handle === username && isHandleNode(node as HTMLElement);
+
+        const nodeToInject = getNodeToInjectToUser(node, isHandleUser);
+
+        if (!nodeToInject || nodeToInject?.textContent === 'Follows you') {
+          return;
+        }
+
         return {
-          top: user.top,
-          node: user.node,
-          username: user.username,
-          availableNetworks: user.availableNetworks,
-          widgetOverrides: user.widgetOverrides,
-          walletAddress: walletAddress,
+          top,
+          username,
+          availableNetworks,
+          widgetOverrides,
+          walletAddress,
+          nodeToInject,
+          isHandleUser,
         };
       })
       .filter(Boolean);
-  }, [recipientsWithOptionalWallet, digestToWallet]);
+  }, [recipientsWithOptionalWallet, handle, digestToWallet]);
 
   return { recipients };
 };

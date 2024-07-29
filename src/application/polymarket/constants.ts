@@ -7,11 +7,6 @@ export const OUTCOME = {
   NO: 'No',
 } as const;
 
-export const EMPTY_TOKEN = {
-  outcome: OUTCOME.YES,
-  token_id: '',
-} as const;
-
 export const POLYMARKET_CONDITIONAL_TOKENS_CONTRACT_ADDRESS =
   '0x4D97DCd97eC945f40cF65F87097ACe5EA0476045';
 

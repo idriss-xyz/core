@@ -39,8 +39,6 @@ export interface MarketData {
   accepting_orders: boolean;
 }
 
-export type GetMarketByConditionIdResponse = MarketData;
-
 export interface GetTokenPriceResponse {
   price: string;
 }
@@ -50,7 +48,7 @@ export interface BookItem {
   size: string;
 }
 
-export interface Book {
+interface Book {
   bids: BookItem[];
   asks: BookItem[];
 }
@@ -62,7 +60,7 @@ export type TokenIdToBook = Record<string, Book>;
 // TODO: lookup
 export type Outcome = (typeof OUTCOME)[keyof typeof OUTCOME];
 
-export interface Token {
+interface Token {
   token_id: string;
   outcome: Outcome;
 }
@@ -85,12 +83,12 @@ export interface PolymarketUser {
   switchToPolygon: (provider: EIP1193Provider) => Promise<void>;
 }
 
-export interface SafeWallet {
+interface SafeWallet {
   address: Hex;
   balance: number;
 }
 
-export interface OrderDetails {
+interface OrderDetails {
   minimumTickSize: TickSize;
   negRisk: boolean;
   tokenId: string;

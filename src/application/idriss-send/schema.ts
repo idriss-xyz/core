@@ -22,10 +22,7 @@ const createPossibleChainIdsSchema = (chainIds: number[]) => {
 
 export type SendPayload = z.infer<ReturnType<typeof createSendPayloadSchema>>;
 
-export const iconTypeSchema = z.union([
-  z.literal('redBadge'),
-  z.literal('default'),
-]);
+const iconTypeSchema = z.union([z.literal('redBadge'), z.literal('default')]);
 
 export type IconType = z.infer<typeof iconTypeSchema>;
 
@@ -38,5 +35,3 @@ export const customRecipientSchema = z.object({
     iconType: iconTypeSchema,
   }),
 });
-
-export type CustomRecipient = z.infer<typeof customRecipientSchema>;

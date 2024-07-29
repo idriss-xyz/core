@@ -44,27 +44,6 @@ const onInstalled = () => {
       })
       .catch(console.error);
   });
-  chrome.tabs.onUpdated.addListener((tabId, _, tab) => {
-    const isActive =
-      Boolean(tab.url?.includes('nkbihfbeogaeaoehlefnkodbefgpgknn')) ||
-      Boolean(tab.url?.includes('hnfanknocfeofbddgcijnmhnfnkdnaad')) ||
-      Boolean(tab.url?.includes('bfnaelmomeimhlpmgjnjophhpkkoljpa')) ||
-      Boolean(tab.url?.includes('eajafomhmkipbjmfmhebemolkcicgfmd')) ||
-      Boolean(tab.url?.includes('bhhhlbepdkbapadjdnnojkbgioiodbic')) ||
-      Boolean(tab.url?.includes('bgpipimickeadkjlklgciifhnalhdjhe')) ||
-      Boolean(tab.url?.includes('fhbohimaelbohpjbbldcngcnapndodjp')) ||
-      Boolean(tab.url?.includes('aiifbnbfobpmeekipheeijimdpnlpgpp')) ||
-      Boolean(tab.url?.includes('ogcmjchbmdichlfelhmceldndgmgpcem')) ||
-      Boolean(tab.url?.includes('hmeobnfnfcmdkdcmlblgagmfpfboieaf')) ||
-      Boolean(tab.url?.includes('dlcobpjiigpikoobohmabehhmhfoodbb')) ||
-      Boolean(tab.url?.includes('fnjhmkhhmkbjkkabndcnnogagogbneec)'));
-    chrome.action.setIcon(
-      { path: isActive ? 'img/icon16.png' : 'img/icon16bw.png', tabId },
-      () => {
-        /* ... */
-      },
-    );
-  });
 };
 
 ServiceWorker.run(chrome, onInstalled);

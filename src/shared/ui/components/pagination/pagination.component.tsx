@@ -1,5 +1,4 @@
-import { classes } from 'shared/ui/utils';
-
+import { classes } from '../../utils';
 import { IconButton } from '../icon-button';
 
 import { PaginationComponentProperties } from './pagination.types';

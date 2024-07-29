@@ -1,7 +1,6 @@
 import { useCallback, useState } from 'react';
 
-import { classes } from 'shared/ui/utils';
-
+import { classes } from '../../utils';
 import { Closable } from '../closable';
 
 import { WidgetBaseProperties } from './widget-base.types';

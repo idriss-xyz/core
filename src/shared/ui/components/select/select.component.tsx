@@ -1,8 +1,8 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { useMemo } from 'react';
 
-import { usePortal } from 'shared/ui/providers';
-import { classes } from 'shared/ui/utils';
+import { usePortal } from '../../providers';
+import { classes } from '../../utils';
 
 import { SelectProperties } from './select.types';
 import { SelectOption } from './select-option.component';

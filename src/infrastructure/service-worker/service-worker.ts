@@ -15,7 +15,6 @@ import { IDRISS_COMMAND_MAP } from 'shared/idriss';
 import { IDRISS_SEND_COMMAND_MAP } from 'application/idriss-send';
 import { TALLY_COMMAND_MAP } from 'application/tally';
 
-import { GtcResolver } from '../../common/resolvers/GtcResolver';
 import { SbtResolver } from '../../common/resolvers/SbtResolver';
 import { AddressResolver } from '../../common/resolvers/AddressResolver';
 
@@ -119,16 +118,6 @@ export class ServiceWorker {
               })
               .catch(() => {
                 return sendResponse({});
-              });
-            return true;
-          }
-          case 'gtcRequest': {
-            GtcResolver.getRoundInfo()
-              .then((x) => {
-                return sendResponse(x);
-              })
-              .catch(() => {
-                return sendResponse([]);
               });
             return true;
           }

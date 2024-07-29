@@ -1,9 +1,8 @@
-import { ReactNode, memo, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 
 import { IdrissSend } from 'shared/idriss';
 import {
   CHAIN_ID_TO_TOKENS,
-  Hex,
   applyDecimalsToNumericString,
   isNativeTokenAddress,
   roundToSignificantFigures,
@@ -13,30 +12,26 @@ import { ErrorMessage } from 'shared/ui';
 
 import { useSendForm, useSender } from '../hooks';
 import { SendPayload } from '../schema';
-import { getLoadingMessage } from '../utils';
+import { getIconSource, getLoadingMessage } from '../utils';
+import { Recipient } from '../types';
 
 interface Properties {
-  node: HTMLElement;
-  recipientAddress: Hex;
-  username: string;
-  iconSize: number;
-  iconSrc: string;
-  headerCopy?: ReactNode;
-  sendButtonCopy?: ReactNode;
-  availableNetworks: number[];
+  recipient: Recipient;
 }
 
-const _SendWidget = ({
-  username,
-  iconSize,
-  iconSrc,
-  node,
-  recipientAddress,
-  availableNetworks,
-  headerCopy,
-  sendButtonCopy,
-  onClose,
-}: Properties & { onClose: () => void }) => {
+interface BaseProperties extends Properties {
+  onClose: () => void;
+}
+
+const Base = ({ recipient, onClose }: BaseProperties) => {
+  const {
+    nodeToInject,
+    walletAddress,
+    username,
+    availableNetworks,
+    widgetOverrides,
+    isHandleUser,
+  } = recipient;
   const { wallet } = useWallet();
 
   const sender = useSender({ wallet });
@@ -54,10 +49,10 @@ const _SendWidget = ({
     async (sendPayload: SendPayload) => {
       await sender.send({
         sendPayload,
-        recipientAddress,
+        recipientAddress: walletAddress,
       });
     },
-    [recipientAddress, sender],
+    [walletAddress, sender],
   );
 
   const amountInSelectedToken = useMemo(() => {
@@ -71,12 +66,14 @@ const _SendWidget = ({
     );
   }, [selectedToken?.decimals, sender.tokensToSend]);
 
+  const iconSize = isHandleUser ? 22 : 16;
+  const iconSource = getIconSource(widgetOverrides?.iconType ?? 'default');
+
   return (
     <IdrissSend.Container
-      widgetDataAttribute="idriss-send-widget"
-      node={node}
+      node={nodeToInject}
       iconSize={iconSize}
-      iconSrc={iconSrc}
+      iconSrc={iconSource}
       recipientName={username}
       onClose={onClose}
       closeOnClickAway={sender.isIdle}
@@ -118,7 +115,7 @@ const _SendWidget = ({
         return (
           <>
             <IdrissSend.Heading>
-              {headerCopy ?? `Send to @${username}`}
+              {widgetOverrides?.headerCopy ?? `Send to @${username}`}
             </IdrissSend.Heading>
             <IdrissSend.Form
               formMethods={formMethods}
@@ -131,7 +128,7 @@ const _SendWidget = ({
                 <>
                   {wallet ? (
                     <IdrissSend.SubmitButton>
-                      {sendButtonCopy ?? 'Send'}
+                      {widgetOverrides?.sendButtonCopy ?? 'Send'}
                     </IdrissSend.SubmitButton>
                   ) : (
                     <IdrissSend.ConnectWalletButton />
@@ -160,7 +157,7 @@ export const SendWidget = memo((properties: Properties) => {
     });
   }, []);
 
-  return <_SendWidget {...properties} key={closeCount} onClose={onClose} />;
+  return <Base {...properties} key={closeCount} onClose={onClose} />;
 });
 
 SendWidget.displayName = 'SendWidget';

@@ -1,1 +1,1 @@
-export { DonationWidgetContainer } from './donation-widget.container';
+export { DonationWidget } from './donation-widget';
