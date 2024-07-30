@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 
 import {
+  EMPTY_HEX,
   GetAcrossChainFeeCommand,
   Wallet,
   createContract,
@@ -56,7 +57,8 @@ export const useAcrossDonateTransaction = () => {
       const data = generateDonationDataV2(
         Number(application.roundId),
         application.chainId,
-        DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[application.chainId] ?? '',
+        DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[application.chainId] ??
+          EMPTY_HEX,
         wallet.account,
         vote,
         nonce,

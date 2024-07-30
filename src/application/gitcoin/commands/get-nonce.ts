@@ -4,11 +4,12 @@ import {
   HandlerError,
   OkResult,
 } from 'shared/messaging';
+import { Hex } from 'shared/web3';
 
 import { getNonce } from '../utils';
 
 interface Payload {
-  senderAddress: string;
+  senderAddress: Hex;
   destinationChainId: number;
 }
 

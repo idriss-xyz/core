@@ -2,13 +2,19 @@ import { useCallback } from 'react';
 
 import { Wallet, dollarToWei, useSwitchChain } from 'shared/web3';
 
-import { DonateParameters } from '../types';
+import { Application, DonationPayload } from '../types';
 
 import { useAcrossDonateTransaction } from './use-across-donate-transaction';
 import { useDonateTransaction } from './use-donate-transaction';
 
 interface Properties {
   wallet?: Wallet;
+}
+
+interface DonateParameters {
+  options: DonationPayload;
+  application: Application;
+  ethPerDollar: number;
 }
 
 export const useDonationMaker = ({ wallet }: Properties) => {

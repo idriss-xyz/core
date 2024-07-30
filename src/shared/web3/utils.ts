@@ -5,7 +5,7 @@ import { getAddress } from 'ethers/lib/utils';
 import { IdrissCrypto } from 'idriss-crypto/lib/browser';
 
 import { Hex, Wallet } from './types';
-import { NATIVE_COIN_ADDRESS } from './constants';
+import { CHAIN, NATIVE_COIN_ADDRESS } from './constants';
 
 export const resolveAddress = async (address: string) => {
   const idriss = new IdrissCrypto();
@@ -125,4 +125,10 @@ export const applyDecimalsToNumericString = (
 
 export const isNativeTokenAddress = (tokenAddress: Hex) => {
   return tokenAddress === NATIVE_COIN_ADDRESS;
+};
+
+export const getChainById = (chainId: number) => {
+  return Object.values(CHAIN).find((chain) => {
+    return chain.id === chainId;
+  });
 };

@@ -1,7 +1,7 @@
 import { sha256 } from '@noble/hashes/sha256';
 import { bytesToHex } from '@noble/hashes/utils';
 
-import { CHAIN_ID_TO_TOKENS } from 'shared/web3';
+import { CHAIN_ID_TO_TOKENS, EMPTY_HEX } from 'shared/web3';
 
 import { IconType, SendPayload } from './schema';
 import { ICON_TYPE_TO_SRC, WALLET_TAGS } from './constants';
@@ -66,7 +66,7 @@ export const getSendFormDefaultValues = (
   return {
     amount: 1,
     chainId,
-    tokenAddress: CHAIN_ID_TO_TOKENS[chainId]?.[0]?.address ?? '0x',
+    tokenAddress: CHAIN_ID_TO_TOKENS[chainId]?.[0]?.address ?? EMPTY_HEX,
   };
 };
 

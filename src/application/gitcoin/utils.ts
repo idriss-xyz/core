@@ -2,9 +2,11 @@ import { BigNumber, ethers } from 'ethers';
 
 import {
   AnySigner,
-  CHAIN,
+  EMPTY_HEX,
+  Hex,
   createContract,
   createRandomWallet,
+  getChainById,
 } from 'shared/web3';
 
 import {
@@ -100,8 +102,8 @@ export const generateVote = (recipientId: string, amount: number) => {
 const generateDonationData = async (
   roundId: number,
   destinationChainId: number,
-  destinationContractAddress: string,
-  senderAddress: string,
+  destinationContractAddress: Hex,
+  senderAddress: Hex,
   voteParameters: string,
 ) => {
   const nonce = await getNonce(senderAddress, destinationChainId);
@@ -120,8 +122,8 @@ const generateDonationData = async (
 export const generateDonationDataV2 = (
   roundId: number,
   destinationChainId: number,
-  destinationContractAddress: string,
-  senderAddress: string,
+  destinationContractAddress: Hex,
+  senderAddress: Hex,
   voteParameters: string,
   nonce: number,
 ) => {
@@ -195,9 +197,7 @@ export const getNonce = async (donor: string, destinationChainId: number) => {
   const wrapper = createContract({
     abi: DONATION_CONTRACT_ABI,
     address: DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[destinationChainId]!,
-    signerOrProvider: Object.values(CHAIN).find((chain) => {
-      return chain.id === destinationChainId;
-    })?.rpcUrls[0],
+    signerOrProvider: getChainById(destinationChainId)?.rpcUrls[0],
   });
 
   const result = await wrapper.functions.nonces?.(donor);
@@ -222,11 +222,12 @@ export const generateAcrossMessage = async (payload: {
 }) => {
   const wallet = createRandomWallet();
   const vote = generateVote(payload.anchorAddress, payload.amount);
-  const address = await wallet.getAddress();
+  const address = (await wallet.getAddress()) as Hex;
   const data = await generateDonationData(
     payload.roundId,
     payload.destinationChainId,
-    DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[payload.destinationChainId] ?? '',
+    DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[payload.destinationChainId] ??
+      EMPTY_HEX,
     address,
     vote,
   );
