@@ -8,12 +8,6 @@ export type DonationPayload = z.infer<
   ReturnType<typeof createDonationPayloadSchema>
 >;
 
-export interface DonateParameters {
-  options: DonationPayload;
-  application: Application;
-  ethPerDollar: number;
-}
-
 export interface Recipient {
   top: number;
   username: string;

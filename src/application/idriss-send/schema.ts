@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { Hex } from 'shared/web3';
+import { Hex, hexSchema } from 'shared/web3';
 
 const MIN_SEND_AMOUNT = 0.001;
 
@@ -9,7 +9,7 @@ export const createSendPayloadSchema = (allowedChainIds: number[]) => {
     amount: z
       .number()
       .gte(MIN_SEND_AMOUNT, `Value must be at least $${MIN_SEND_AMOUNT}`),
-    tokenAddress: z.string().regex(/^0x/) as unknown as z.ZodLiteral<Hex>,
+    tokenAddress: hexSchema,
     chainId: z.union(createPossibleChainIdsSchema(allowedChainIds)),
   });
 };

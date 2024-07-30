@@ -5,11 +5,13 @@ import {
   OkResult,
 } from 'shared/messaging';
 
+import { Hex } from '../types';
+
 export interface Payload {
   chains: { id: number; wrappedEthAddress: string }[];
   amount: number;
   message: string;
-  recipient: string;
+  recipient: Hex;
   destinationChainId: number;
 }
 
