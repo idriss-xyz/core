@@ -18,11 +18,8 @@ export class GetMarketByConditionIdCommand extends Command<
 > {
   public readonly name = 'GetMarketByConditionIdCommand' as const;
 
-  constructor(
-    public payload: Payload,
-    id?: string,
-  ) {
-    super(id ?? null);
+  constructor(public payload: Payload) {
+    super();
   }
 
   async handle() {
@@ -39,7 +36,7 @@ export class GetMarketByConditionIdCommand extends Command<
       const json = await response.json();
       return new OkResult(json as MarketData);
     } catch (error) {
-      await this.logException(error);
+      this.captureException(error);
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }

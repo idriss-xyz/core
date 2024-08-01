@@ -11,17 +11,11 @@ import {
   IconButton,
   InputBase,
 } from 'shared/ui';
-import { logEvent } from 'shared/observability';
 import { EMPTY_MARKET_FORM } from 'application/polymarket/constants';
 import { marketFormSchema } from 'application/polymarket/schema';
 
 import { EnhancedToken, MarketData, MarketFormValues } from '../types';
 import { useOrderPlacer, useUser } from '../hooks';
-import {
-  BuyClickedEvent,
-  LoginClickedEvent,
-  OrderSucceededEvent,
-} from '../events';
 import { calculateTotalSharesForAmount } from '../utils';
 import {
   UnavailableButton,
@@ -55,18 +49,7 @@ export const Market = ({
   onRefresh,
 }: Properties) => {
   const user = useUser();
-  const orderPlacer = useOrderPlacer({
-    onSuccess: (parameters) => {
-      void logEvent(
-        new OrderSucceededEvent({
-          conditionId: data.condition_id,
-          tokenId: parameters.orderDetails.tokenId,
-          amount: parameters.orderDetails.amount,
-          funderAddress: parameters.funderAddress,
-        }),
-      );
-    },
-  });
+  const orderPlacer = useOrderPlacer();
 
   const marketForm = useForm<MarketFormValues>({
     defaultValues: {
@@ -251,15 +234,6 @@ export const Market = ({
                     type="submit"
                     loading={orderPlacer.isPlacing || user.isSigning}
                     disabled={user.isSigningError}
-                    onClick={() => {
-                      void logEvent(
-                        new BuyClickedEvent({
-                          conditionId: data.condition_id,
-                          tokenId: selectedTokenId,
-                          amount: amount,
-                        }),
-                      );
-                    }}
                   >
                     Buy
                   </ActionButton>
@@ -278,19 +252,7 @@ export const Market = ({
                   </ActionButton>
                 )
               ) : (
-                <ActionButton
-                  loading={user.isSigning}
-                  onClick={() => {
-                    void logEvent(
-                      new LoginClickedEvent({
-                        conditionId: data.condition_id,
-                        question: data.question,
-                      }),
-                    );
-
-                    void user.signIn();
-                  }}
-                >
+                <ActionButton loading={user.isSigning} onClick={user.signIn}>
                   Connect wallet
                 </ActionButton>
               )

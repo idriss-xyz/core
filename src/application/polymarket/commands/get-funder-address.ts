@@ -12,11 +12,8 @@ interface Payload {
 export class GetFunderAddresCommand extends Command<Payload, string> {
   public name = 'GetFunderAddresCommand' as const;
 
-  constructor(
-    public payload: Payload,
-    id?: string,
-  ) {
-    super(id ?? null);
+  constructor(public payload: Payload) {
+    super();
   }
 
   async handle() {
@@ -50,7 +47,7 @@ export class GetFunderAddresCommand extends Command<Payload, string> {
       }
       return new OkResult(pickedSafe);
     } catch (error) {
-      await this.logException(error);
+      this.captureException(error);
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }

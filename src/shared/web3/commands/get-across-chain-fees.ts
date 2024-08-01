@@ -26,11 +26,8 @@ export type Response = Record<string, SingleChainResponse>;
 export class GetAcrossChainFeesCommand extends Command<Payload, Response> {
   public readonly name = 'GetAcrossChainFeesCommand' as const;
 
-  constructor(
-    public payload: Payload,
-    id?: string,
-  ) {
-    super(id ?? null);
+  constructor(public payload: Payload) {
+    super();
   }
 
   async handle() {
@@ -69,7 +66,7 @@ export class GetAcrossChainFeesCommand extends Command<Payload, Response> {
 
       return new OkResult(response);
     } catch (error) {
-      await this.logException(error);
+      this.captureException(error);
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }

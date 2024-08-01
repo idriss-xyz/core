@@ -8,7 +8,11 @@ import { GITCOIN_COMMAND_MAP } from 'application/gitcoin';
 import { POLYMARKET_COMMAND_MAP } from 'application/polymarket';
 import { SNAPSHOT_COMMAND_MAP } from 'application/snapshot';
 import { EXTENSION_COMMAND_MAP } from 'shared/extension';
-import { MONITORING_COMMAND_MAP } from 'shared/observability';
+import {
+  createObservabilityScope,
+  OBESRVABILITY_COMMAND_MAP,
+  ObservabilityScope,
+} from 'shared/observability';
 import { UTILS_COMMAND_MAP } from 'shared/utils';
 import { AGORA_COMMAND_MAP } from 'application/agora';
 import { IDRISS_COMMAND_MAP } from 'shared/idriss';
@@ -20,7 +24,7 @@ import { AddressResolver } from '../../common/resolvers/AddressResolver';
 
 const COMMAND_MAP = {
   ...WEB3_COMMAND_MAP,
-  ...MONITORING_COMMAND_MAP,
+  ...OBESRVABILITY_COMMAND_MAP,
   ...GITCOIN_COMMAND_MAP,
   ...POLYMARKET_COMMAND_MAP,
   ...EXTENSION_COMMAND_MAP,
@@ -34,6 +38,8 @@ const COMMAND_MAP = {
 };
 
 export class ServiceWorker {
+  private observabilityScope: ObservabilityScope =
+    createObservabilityScope('service-worker');
   private constructor(private environment: typeof chrome) {}
 
   static run(environment: typeof chrome, onInstalled: () => void) {
@@ -44,6 +50,10 @@ export class ServiceWorker {
     serviceWorker.onInstalled(onInstalled);
     // TODO: remove check after refactoring rest of extension
     serviceWorker.onRestMessages();
+
+    self.addEventListener('error', (event) => {
+      serviceWorker.observabilityScope.captureException(event.error);
+    });
   }
 
   subscribeToCommands() {
@@ -53,20 +63,25 @@ export class ServiceWorker {
       (serializedCommand, sendResponse) => {
         const commandDefinition = COMMAND_MAP[serializedCommand.name];
         if (!commandDefinition) {
-          throw new Error(
+          const error = new Error(
             `Missing command definition for ${serializedCommand.name}. Make sure it's added to COMMAND_MAP`,
           );
+          this.observabilityScope.captureException(error);
+          throw error;
         }
-        const command = new commandDefinition(
-          serializedCommand.payload,
-          serializedCommand.id,
-        );
+
+        const command = new commandDefinition(serializedCommand.payload);
+        command.id = serializedCommand.id;
+        command.observabilityScope = this.observabilityScope;
+
         command
           .handle()
           .then((response: unknown) => {
             return sendResponse(response);
           })
-          .catch(console.error);
+          .catch((error) => {
+            this.observabilityScope.captureException(error);
+          });
       },
     );
   }

@@ -16,11 +16,8 @@ interface Payload {
 export class GetApiKeyCommand extends Command<Payload, GetApiKeyResponse> {
   public readonly name = 'GetApiKeyCommand' as const;
 
-  constructor(
-    public payload: Payload,
-    id?: string,
-  ) {
-    super(id ?? null);
+  constructor(public payload: Payload) {
+    super();
   }
 
   async handle() {
@@ -43,7 +40,7 @@ export class GetApiKeyCommand extends Command<Payload, GetApiKeyResponse> {
       const validResponse = getApiKeyResponseSchema.parse(json);
       return new OkResult(validResponse);
     } catch (error) {
-      await this.logException(error);
+      this.captureException(error);
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }

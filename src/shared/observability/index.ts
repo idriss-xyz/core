@@ -1,4 +1,8 @@
-export type { MonitoringEvent } from './types';
-export { COMMAND_MAP as MONITORING_COMMAND_MAP } from './commands';
-export { logEvent } from './utils';
+export { COMMAND_MAP as OBESRVABILITY_COMMAND_MAP } from './commands';
 export { ErrorBoundary } from './components';
+export type { ObservabilityScope } from './scope';
+export {
+  createObservabilityScope,
+  WithObservabilityScope,
+  useObservabilityScope,
+} from './scope';

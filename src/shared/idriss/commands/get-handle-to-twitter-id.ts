@@ -14,11 +14,8 @@ type Response = Record<string, string | null>;
 export class GetHandleToTwitterIdCommand extends Command<Payload, Response> {
   public readonly name = 'GetHandleToTwitterIdCommand' as const;
 
-  constructor(
-    public payload: Payload,
-    id?: string,
-  ) {
-    super(id ?? null);
+  constructor(public payload: Payload) {
+    super();
   }
 
   async handle() {
@@ -35,7 +32,7 @@ export class GetHandleToTwitterIdCommand extends Command<Payload, Response> {
       // TODO: schema validation
       return new OkResult(json as Response);
     } catch (error) {
-      await this.logException(error);
+      this.captureException(error);
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }

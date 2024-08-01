@@ -24,11 +24,8 @@ const NUMBER_OF_FETCHED_PROPOSALS = 2;
 export class GetAgoraProposalsCommand extends Command<Payload, Response> {
   public readonly name = 'GetAgoraProposalsCommand' as const;
 
-  constructor(
-    public payload: Payload,
-    id?: string,
-  ) {
-    super(id ?? null);
+  constructor(public payload: Payload) {
+    super();
   }
 
   async handle() {
@@ -63,7 +60,7 @@ export class GetAgoraProposalsCommand extends Command<Payload, Response> {
       };
       return new OkResult(result);
     } catch (error) {
-      await this.logException(error);
+      this.captureException(error);
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }

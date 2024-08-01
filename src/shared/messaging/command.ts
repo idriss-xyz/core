@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
+import { Scope } from '@sentry/browser';
 
 import {
   COMMAND_BUS_REQUEST_MESSAGE,
@@ -23,10 +24,11 @@ export interface SerializedCommand<Payload> {
 export abstract class Command<Payload, Response> {
   public abstract readonly name: string;
   public abstract readonly payload: Payload;
-  public readonly id: string;
+  public id: string;
+  public observabilityScope?: Scope;
 
-  constructor(id: string | null) {
-    this.id = id ?? uuidv4();
+  constructor() {
+    this.id = uuidv4();
   }
 
   public abstract handle(): Promise<Result<Response>>;
@@ -60,28 +62,8 @@ export abstract class Command<Payload, Response> {
     return { name: this.name, payload: this.payload, id: this.id };
   }
 
-  protected logException(error: unknown) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    if (!ENABLE_EVENTS) {
-      console.error(error);
-      return;
-    }
-
-    const payload = {
-      name: 'handler-exception',
-      meta: {
-        command: this.serialize(),
-      },
-    };
-
-    return fetch('https://www.idriss.xyz/submit-error', {
-      method: 'POST',
-      body: JSON.stringify(payload),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+  protected captureException(exception: unknown) {
+    this.observabilityScope?.captureException(exception);
   }
 }
 

@@ -15,11 +15,8 @@ interface Payload {
 export class GetTokensBooksCommand extends Command<Payload, TokenIdToBook> {
   public readonly name = 'GetTokensBooksCommand' as const;
 
-  constructor(
-    public payload: Payload,
-    id?: string,
-  ) {
-    super(id ?? null);
+  constructor(public payload: Payload) {
+    super();
   }
 
   async handle() {
@@ -42,7 +39,7 @@ export class GetTokensBooksCommand extends Command<Payload, TokenIdToBook> {
       const result: TokenIdToBook = Object.fromEntries(responses);
       return new OkResult(result);
     } catch (error) {
-      await this.logException(error);
+      this.captureException(error);
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }

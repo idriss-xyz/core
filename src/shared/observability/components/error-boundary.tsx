@@ -1,25 +1,20 @@
-import { ErrorInfo, ReactNode, useCallback } from 'react';
+import { ReactNode, useCallback } from 'react';
 import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
 
-import { logException } from '../utils';
+import { useObservabilityScope } from '../scope';
 
 interface Properties {
   exceptionEventName: string;
   children: ReactNode;
 }
 
-export const ErrorBoundary = ({ exceptionEventName, children }: Properties) => {
+export const ErrorBoundary = ({ children }: Properties) => {
+  const observabilityScope = useObservabilityScope();
   const onRuntimeError = useCallback(
-    (error: Error, errorInfo: ErrorInfo) => {
-      void logException({
-        name: exceptionEventName,
-        meta: {
-          message: error.message,
-          ...errorInfo,
-        },
-      });
+    (error: Error) => {
+      observabilityScope.captureException(error);
     },
-    [exceptionEventName],
+    [observabilityScope],
   );
 
   return (

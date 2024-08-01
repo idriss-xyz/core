@@ -15,7 +15,7 @@ import {
   WidgetTabsProvider,
 } from 'shared/ui';
 import { WalletContextProvider } from 'shared/web3';
-import { ErrorBoundary } from 'shared/observability';
+import { ErrorBoundary, WithObservabilityScope } from 'shared/observability';
 import {
   TwitterScrapingContextProvider,
   useTwitterLocationInfo,
@@ -57,25 +57,29 @@ const ApplicationWithProviders = () => {
 
   return (
     <StrictMode>
-      <ErrorBoundary exceptionEventName="application-runtime-error">
-        <PortalProvider>
-          <TailwindProvider>
-            <QueryProvider>
-              <NiceModal.Provider>
-                <WalletContextProvider disabledWalletsRdns={disabledWalletRdns}>
-                  <ExtensionSettingsProvider>
-                    <TwitterScrapingContextProvider>
-                      <WarpcastScrapingContextProvider>
-                        <Applications />
-                      </WarpcastScrapingContextProvider>
-                    </TwitterScrapingContextProvider>
-                  </ExtensionSettingsProvider>
-                </WalletContextProvider>
-              </NiceModal.Provider>
-            </QueryProvider>
-          </TailwindProvider>
-        </PortalProvider>
-      </ErrorBoundary>
+      <WithObservabilityScope>
+        <ErrorBoundary exceptionEventName="application-runtime-error">
+          <PortalProvider>
+            <TailwindProvider>
+              <QueryProvider>
+                <NiceModal.Provider>
+                  <WalletContextProvider
+                    disabledWalletsRdns={disabledWalletRdns}
+                  >
+                    <ExtensionSettingsProvider>
+                      <TwitterScrapingContextProvider>
+                        <WarpcastScrapingContextProvider>
+                          <Applications />
+                        </WarpcastScrapingContextProvider>
+                      </TwitterScrapingContextProvider>
+                    </ExtensionSettingsProvider>
+                  </WalletContextProvider>
+                </NiceModal.Provider>
+              </QueryProvider>
+            </TailwindProvider>
+          </PortalProvider>
+        </ErrorBoundary>
+      </WithObservabilityScope>
     </StrictMode>
   );
 };

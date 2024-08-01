@@ -15,11 +15,8 @@ interface Payload {
 export class GetTokensPricesCommand extends Command<Payload, TokenIdToPrice> {
   public readonly name = 'GetTokensPricesCommand' as const;
 
-  constructor(
-    public payload: Payload,
-    id?: string,
-  ) {
-    super(id ?? null);
+  constructor(public payload: Payload) {
+    super();
   }
 
   async handle() {
@@ -41,7 +38,7 @@ export class GetTokensPricesCommand extends Command<Payload, TokenIdToPrice> {
       const result: TokenIdToPrice = Object.fromEntries(responses);
       return new OkResult(result);
     } catch (error) {
-      await this.logException(error);
+      this.captureException(error);
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }

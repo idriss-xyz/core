@@ -20,11 +20,8 @@ export class GetGitcoinAcrossChainFeesCommand extends Command<
 > {
   public readonly name = 'GetGitcoinAcrossChainFeesCommand' as const;
 
-  constructor(
-    public payload: Payload,
-    id?: string,
-  ) {
-    super(id ?? null);
+  constructor(public payload: Payload) {
+    super();
   }
 
   async handle() {
@@ -44,7 +41,7 @@ export class GetGitcoinAcrossChainFeesCommand extends Command<
       });
       return command.handle();
     } catch (error) {
-      await this.logException(error);
+      this.captureException(error);
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }
