@@ -9,7 +9,11 @@ import {
 import { getDifferenceInDays, getEndsInLabel } from 'shared/utils';
 
 import { ProposalData } from '../types';
-import { getProposalUrl } from '../utils';
+import {
+  formatProposalAddress,
+  getProposalUrl,
+  getProposerUrl,
+} from '../utils';
 import { AGORA_LOGO } from '../constants';
 
 interface Properties {
@@ -31,9 +35,7 @@ export const Proposal = ({
   pagination,
   onClose,
 }: Properties) => {
-  const proposalEndDateInMs = new Date(
-    data.proposalData.endTimestamp,
-  ).getTime();
+  const proposalEndDateInMs = new Date(data.endTime).getTime();
 
   return (
     <WidgetTab
@@ -47,16 +49,21 @@ export const Proposal = ({
     >
       <PulsingLoadingBar isLoading={isLoading} />
       <header className="flex items-center justify-between space-x-3">
-        <p className="line-clamp-[1] text-xs text-gray-700">
-          By {data.proposerAddress}
-        </p>
+        <a
+          href={getProposerUrl(data.proposer)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="line-clamp-[1] text-xs text-gray-700"
+        >
+          By {formatProposalAddress(data.proposer)}
+        </a>
         <Chip className="rounded-sm bg-green-200 px-1 py-0.5 font-semibold uppercase text-green-600">
-          {data.proposalData.state}
+          {data.status}
         </Chip>
       </header>
       <main className="mt-2">
         <p className="line-clamp-[1] break-all text-base font-black text-black">
-          {data.proposalData.title}
+          {data.markdowntitle}
         </p>
         <p className="mt-1 line-clamp-[2] overflow-hidden break-all text-[#374151]">
           {data.description}
@@ -68,7 +75,7 @@ export const Proposal = ({
             {getEndsInLabel(getDifferenceInDays(proposalEndDateInMs))}
           </div>
           <a
-            href={getProposalUrl(data.proposalId)}
+            href={getProposalUrl(data.id)}
             rel="noopener noreferrer"
             target="_blank"
           >

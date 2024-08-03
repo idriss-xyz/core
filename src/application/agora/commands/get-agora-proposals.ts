@@ -5,19 +5,23 @@ import {
   OkResult,
 } from 'shared/messaging';
 
-import { ProposalsResponseData } from '../types';
+import { ProposalData, ProposalMetadata } from '../types';
 import { getProposalsResponseSchema } from '../schema';
 import { AGORA_API_URL } from '../constants';
 
 interface Payload {
-  limit: number;
   offset: number;
 }
 
-export class GetAgoraProposalsCommand extends Command<
-  Payload,
-  ProposalsResponseData
-> {
+interface Response {
+  metadata: ProposalMetadata;
+  proposal: ProposalData | undefined;
+}
+
+const DISPLAYED_PROPOSAL_STATUS = 'ACTIVE';
+const NUMBER_OF_FETCHED_PROPOSALS = 2;
+
+export class GetAgoraProposalsCommand extends Command<Payload, Response> {
   public readonly name = 'GetAgoraProposalsCommand' as const;
 
   constructor(
@@ -30,7 +34,7 @@ export class GetAgoraProposalsCommand extends Command<
   async handle() {
     try {
       const response = await fetch(
-        `${AGORA_API_URL}?limit=${this.payload.limit}&offset=${this.payload.offset}`,
+        `${AGORA_API_URL}?limit=${NUMBER_OF_FETCHED_PROPOSALS}&offset=${this.payload.offset}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -45,7 +49,19 @@ export class GetAgoraProposalsCommand extends Command<
       const json = await response.json();
 
       const validResponse = getProposalsResponseSchema.parse(json);
-      return new OkResult(validResponse.data);
+      const [currentProposal, nextProposal] = validResponse.data;
+      const result: Response = {
+        proposal:
+          currentProposal?.status.toUpperCase() === DISPLAYED_PROPOSAL_STATUS
+            ? currentProposal
+            : undefined,
+        metadata: {
+          has_next:
+            nextProposal?.status.toUpperCase() === DISPLAYED_PROPOSAL_STATUS &&
+            validResponse.meta.has_next,
+        },
+      };
+      return new OkResult(result);
     } catch (error) {
       await this.logException(error);
       if (error instanceof HandlerError) {

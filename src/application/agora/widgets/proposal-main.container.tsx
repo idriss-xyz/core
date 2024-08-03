@@ -26,16 +26,16 @@ export const ProposalMainContainer = () => {
 
   const proposalQuery = useCommandQuery({
     command: new GetAgoraProposalsCommand({
-      limit: 1,
       offset: currentProposalIndex,
     }),
     enabled: visibleAgoraNodes ? visibleAgoraNodes.length > 0 : false,
+    staleTime: Number.POSITIVE_INFINITY,
     placeholderData: (previousData) => {
       return previousData;
     },
   });
 
-  const currentProposal = proposalQuery.data?.proposals?.at(0);
+  const currentProposal = proposalQuery.data?.proposal;
   const isLoadingProposal =
     proposalQuery.isLoading || proposalQuery.isPlaceholderData;
 
@@ -78,7 +78,7 @@ export const ProposalMainContainer = () => {
   return visibleAgoraNodes.map(({ top, twitterHandle }) => {
     return (
       <ErrorBoundary
-        key={`${currentProposal?.proposalId}at_${top}`}
+        key={`${currentProposal?.id}at_${top}`}
         exceptionEventName="agora-widget-twitter-main-runtime-error"
       >
         <Proposal
@@ -89,7 +89,7 @@ export const ProposalMainContainer = () => {
           className="absolute"
           top={top - 12}
           onClose={() => {
-            hideAgoraUser(currentProposal.proposerAddress);
+            hideAgoraUser(currentProposal.proposer);
           }}
         />
       </ErrorBoundary>

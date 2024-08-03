@@ -1,24 +1,19 @@
 import { z } from 'zod';
 
 export const proposalSchema = z.object({
-  proposalId: z.string(),
-  proposerAddress: z.string(),
+  id: z.string(),
+  proposer: z.string(),
   description: z.string(),
-  endBlock: z.string(),
-  proposalData: z.object({
-    title: z.string(),
-    endTimestamp: z.string().datetime(),
-    state: z.string(),
-  }),
+  markdowntitle: z.string(),
+  endTime: z.string().datetime(),
+  status: z.string(),
 });
 
-const proposalsMetadata = z.object({
+export const proposalsMetadata = z.object({
   has_next: z.boolean(),
 });
 
 export const getProposalsResponseSchema = z.object({
-  data: z.object({
-    metadata: proposalsMetadata,
-    proposals: z.array(proposalSchema),
-  }),
+  meta: proposalsMetadata,
+  data: z.array(proposalSchema),
 });

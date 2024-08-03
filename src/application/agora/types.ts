@@ -1,8 +1,6 @@
 import { z } from 'zod';
 
-import { getProposalsResponseSchema, proposalSchema } from './schema';
+import { proposalSchema, proposalsMetadata } from './schema';
 
 export type ProposalData = z.infer<typeof proposalSchema>;
-
-type ProposalsResponse = z.infer<typeof getProposalsResponseSchema>;
-export type ProposalsResponseData = ProposalsResponse['data'];
+export type ProposalMetadata = z.infer<typeof proposalsMetadata>;

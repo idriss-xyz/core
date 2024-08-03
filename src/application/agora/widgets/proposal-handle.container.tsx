@@ -18,16 +18,16 @@ export const ProposalHandleContainer = ({ handle }: Properties) => {
   const agoraUsername = getAgoraUsernameFromTwitterUsername(handle);
   const proposalQuery = useCommandQuery({
     command: new GetAgoraProposalsCommand({
-      limit: 1,
       offset: currentProposalIndex,
     }),
     enabled: agoraUsername ? agoraUsername.length > 0 : false,
+    staleTime: Number.POSITIVE_INFINITY,
     placeholderData: (previousData) => {
       return previousData;
     },
   });
 
-  const currentProposal = proposalQuery.data?.proposals?.at(0);
+  const currentProposal = proposalQuery.data?.proposal;
   const isLoadingProposal =
     proposalQuery.isLoading || proposalQuery.isPlaceholderData;
 
