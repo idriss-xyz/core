@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
+import { BigNumber } from 'ethers';
 
 import {
   EMPTY_HEX,
@@ -15,6 +16,7 @@ import {
   generateVote,
 } from '../utils';
 import {
+  ACROSS_DONATION_MODIFIER,
   DONATION_CONTRACT_ABI,
   DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID,
   WRAPPED_ETH_ADDRESS_PER_CHAIN_ID,
@@ -25,7 +27,7 @@ import { GetNonceCommand } from '../commands';
 interface Properties {
   wallet: Wallet;
   application: Application;
-  userAmountInWei: number;
+  userAmountInWei: string;
   chainId: number;
 }
 
@@ -44,11 +46,11 @@ export const useAcrossDonateTransaction = () => {
 
       const vote = generateVote(
         application.project.anchorAddress,
-        userAmountInWei,
+        BigNumber.from(userAmountInWei),
       );
 
       const getNonceCommand = new GetNonceCommand({
-        destinationChainId: chainId,
+        destinationChainId: application.chainId,
         senderAddress: wallet.account,
       });
 
@@ -70,13 +72,14 @@ export const useAcrossDonateTransaction = () => {
       );
 
       const contractOrigin = createContract({
-        address: DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[chainId] ?? '',
+        address:
+          DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[chainId]?.toLowerCase() ?? '',
         abi: DONATION_CONTRACT_ABI,
         signerOrProvider: signer,
       });
 
       const feeResponse = await checkAcrossChainFee.mutateAsync({
-        amount: userAmountInWei.toString(),
+        amount: userAmountInWei,
         message: encodedDataWithSignature,
         recipient:
           DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[application.chainId] ?? '',
@@ -87,20 +90,22 @@ export const useAcrossDonateTransaction = () => {
         destinationChainId: application.chainId,
       });
 
-      const fee = Math.floor(Number(feeResponse.totalRelayFee.total) * 1.01);
+      const fee = BigNumber.from(feeResponse.totalRelayFee.total)
+        .mul(101)
+        .div(100);
 
-      const inputAmount = userAmountInWei + fee;
+      const inputAmount = BigNumber.from(userAmountInWei).add(fee);
 
       const depositParameters = {
         recipient:
           DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[application.chainId] ?? '',
-        inputAmount: inputAmount,
-        outputAmount: userAmountInWei,
         inputToken: WRAPPED_ETH_ADDRESS_PER_CHAIN_ID[chainId] ?? '',
         outputToken: '0x0000000000000000000000000000000000000000',
+        inputAmount: inputAmount,
+        outputAmount: BigNumber.from(userAmountInWei),
         destinationChainId: application.chainId,
         exclusiveRelayer: '0x0000000000000000000000000000000000000000',
-        quoteTimestamp: feeResponse.timestamp,
+        quoteTimestamp: Number(feeResponse.timestamp),
         fillDeadline: Math.round(Date.now() / 1000) + 21_600,
         exclusivityDeadline: 0,
       };
@@ -111,6 +116,12 @@ export const useAcrossDonateTransaction = () => {
           encodedDataWithSignature,
         );
 
+      if (!preparedTx) {
+        throw new Error('Expected preparedTx');
+      }
+
+      const modifiedData = preparedTx.data + ACROSS_DONATION_MODIFIER;
+
       const sendOptions = {
         from: wallet.account,
         value: inputAmount,
@@ -118,8 +129,10 @@ export const useAcrossDonateTransaction = () => {
 
       const result = await signer.sendTransaction({
         ...preparedTx,
+        data: modifiedData,
         ...sendOptions,
         to: contractOrigin.address,
+        gasLimit: 500_000,
       });
 
       const { transactionHash } = await result.wait();

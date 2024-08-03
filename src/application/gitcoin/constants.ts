@@ -1,5 +1,7 @@
 import { CHAIN } from 'shared/web3';
 
+export const ACROSS_DONATION_MODIFIER = '1dc0de0012';
+
 export const MIN_CROSS_CHAIN_DONATION_AMOUNT = 1;
 export const MIN_DONATION_AMOUNT = 0.001;
 

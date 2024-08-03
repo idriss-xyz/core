@@ -33,7 +33,7 @@ export const useDonationMaker = ({ wallet }: Properties) => {
         walletProvider: wallet.provider,
       });
 
-      const userAmountInWei = dollarToWei(options.amount, ethPerDollar);
+      const userAmountInWei = String(dollarToWei(options.amount, ethPerDollar));
 
       if (options.chainId === application.chainId) {
         donateTransaction.mutate({

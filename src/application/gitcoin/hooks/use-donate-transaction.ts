@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
+import { BigNumber } from 'ethers';
 
 import { Wallet, createContract, createSigner } from 'shared/web3';
 
@@ -9,7 +10,7 @@ import { Application } from '../types';
 interface Properties {
   wallet: Wallet;
   application: Application;
-  userAmountInWei: number;
+  userAmountInWei: string;
 }
 
 export const useDonateTransaction = () => {
@@ -29,7 +30,7 @@ export const useDonateTransaction = () => {
 
       const vote = generateVote(
         application.project.anchorAddress,
-        userAmountInWei,
+        BigNumber.from(userAmountInWei),
       );
 
       const populatedTransaction =

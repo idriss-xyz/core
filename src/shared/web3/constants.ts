@@ -38,7 +38,7 @@ export const CHAIN = {
       decimals: 18,
     },
     rpcUrls: ['https://polygon-rpc.com'],
-    blockExplorerUrls: ['https://polygonscan.com'],
+    blockExplorerUrls: ['https://polygon.blockscout.com'],
   },
   ARBITRUM_ONE: {
     id: 42_161,
@@ -50,7 +50,7 @@ export const CHAIN = {
       decimals: 18,
     },
     rpcUrls: ['https://arbitrum.llamarpc.com'],
-    blockExplorerUrls: ['https://arbiscan.io'],
+    blockExplorerUrls: ['https://arbitrum.blockscout.com'],
   },
   OPTIMISM: {
     id: 10,
@@ -62,7 +62,7 @@ export const CHAIN = {
       decimals: 18,
     },
     rpcUrls: ['https://mainnet.optimism.io'],
-    blockExplorerUrls: ['https://optimistic.etherscan.io'],
+    blockExplorerUrls: ['https://optimism.blockscout.com'],
   },
   BASE: {
     id: 8453,
@@ -74,7 +74,7 @@ export const CHAIN = {
       decimals: 18,
     },
     rpcUrls: ['https://mainnet.base.org'],
-    blockExplorerUrls: ['https://basescan.org'],
+    blockExplorerUrls: ['https://base.blockscout.com'],
   },
   LINEA: {
     id: 59_144,
@@ -98,7 +98,7 @@ export const CHAIN = {
       decimals: 18,
     },
     rpcUrls: ['https://mainnet.era.zksync.io'],
-    blockExplorerUrls: ['https://explorer.zksync.io'],
+    blockExplorerUrls: ['https://zksync.blockscout.com'],
   },
   MANTLE: {
     id: 5000,
@@ -146,7 +146,7 @@ export const CHAIN = {
       decimals: 18,
     },
     rpcUrls: ['https://eth.llamarpc.com'],
-    blockExplorerUrls: ['https://etherscan.io'],
+    blockExplorerUrls: ['https://eth.blockscout.com/'],
   },
 } satisfies Record<string, Chain>;
 
