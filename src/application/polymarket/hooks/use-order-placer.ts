@@ -7,13 +7,7 @@ import { OrderPlacer, PlaceOrderParameters } from '../types';
 import { useAuthorizer } from './use-authorizer';
 import { usePostOrder } from './use-post-order';
 
-interface UseOrderPlacerParameters {
-  onSuccess?: (parameters: PlaceOrderParameters) => void;
-}
-
-export const useOrderPlacer = ({
-  onSuccess,
-}: UseOrderPlacerParameters): OrderPlacer => {
+export const useOrderPlacer = (): OrderPlacer => {
   const authorizer = useAuthorizer();
   const postOrder = usePostOrder();
 
@@ -26,28 +20,21 @@ export const useOrderPlacer = ({
       const signer = createSigner(parameters.wallet);
       const credentials = await authorizer.authorize(signer);
 
-      await postOrder.mutateAsync(
-        {
-          funderAddress: parameters.funderAddress,
-          tickSize: parameters.orderDetails.minimumTickSize,
-          negRisk: parameters.orderDetails.negRisk,
-          tokenID: parameters.orderDetails.tokenId,
-          amount: parameters.orderDetails.amount,
-          credentials: {
-            passphrase: credentials.passphrase,
-            secret: credentials.secret,
-            key: credentials.apiKey,
-          },
-          signer,
+      await postOrder.mutateAsync({
+        funderAddress: parameters.funderAddress,
+        tickSize: parameters.orderDetails.minimumTickSize,
+        negRisk: parameters.orderDetails.negRisk,
+        tokenID: parameters.orderDetails.tokenId,
+        amount: parameters.orderDetails.amount,
+        credentials: {
+          passphrase: credentials.passphrase,
+          secret: credentials.secret,
+          key: credentials.apiKey,
         },
-        {
-          onSuccess: () => {
-            return onSuccess?.(parameters);
-          },
-        },
-      );
+        signer,
+      });
     },
-    [authorizer, onSuccess, postOrder],
+    [authorizer, postOrder],
   );
 
   const reset = useCallback(() => {

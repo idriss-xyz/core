@@ -7,11 +7,8 @@ interface Payload {
 export class GetImageAsBase64Command extends Command<Payload, string> {
   public readonly name = 'GetImageAsBase64Command' as const;
 
-  constructor(
-    public payload: Payload,
-    id?: string,
-  ) {
-    super(id ?? null);
+  constructor(public payload: Payload) {
+    super();
   }
 
   async handle() {
@@ -27,7 +24,7 @@ export class GetImageAsBase64Command extends Command<Payload, string> {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return new OkResult((json as any).image as string);
     } catch (error) {
-      await this.logException(error);
+      this.captureException(error);
 
       return new FailureResult();
     }

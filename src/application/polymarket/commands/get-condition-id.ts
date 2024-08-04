@@ -17,11 +17,8 @@ interface Payload {
 export class GetConditionIdCommand extends Command<Payload, string> {
   public readonly name = 'GetConditionIdCommand' as const;
 
-  constructor(
-    public payload: Payload,
-    id?: string,
-  ) {
-    super(id ?? null);
+  constructor(public payload: Payload) {
+    super();
   }
 
   async handle() {
@@ -78,7 +75,7 @@ export class GetConditionIdCommand extends Command<Payload, string> {
 
       return new OkResult(marketForOpenGraphSlug.conditionId);
     } catch (error) {
-      await this.logException(error);
+      this.captureException(error);
 
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);

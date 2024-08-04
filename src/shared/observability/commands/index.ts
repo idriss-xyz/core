@@ -1,10 +1,7 @@
-import { LogExceptionCommand } from './log-exception';
-import { LogEventCommand } from './log-event';
+import { SendToSentryCommand } from './send-to-sentry';
 
 export const COMMAND_MAP = {
-  [LogEventCommand.name]: LogEventCommand,
-  [LogExceptionCommand.name]: LogExceptionCommand,
+  [SendToSentryCommand.name]: SendToSentryCommand,
 };
 
-export { LogEventCommand } from './log-event';
-export { LogExceptionCommand } from './log-exception';
+export { SendToSentryCommand } from './send-to-sentry';

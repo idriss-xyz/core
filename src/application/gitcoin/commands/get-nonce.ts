@@ -18,11 +18,8 @@ type Response = number;
 export class GetNonceCommand extends Command<Payload, Response> {
   public readonly name = 'GetNonceCommand' as const;
 
-  constructor(
-    public payload: Payload,
-    id?: string,
-  ) {
-    super(id ?? null);
+  constructor(public payload: Payload) {
+    super();
   }
 
   async handle() {
@@ -33,7 +30,7 @@ export class GetNonceCommand extends Command<Payload, Response> {
       );
       return new OkResult(nonce);
     } catch (error) {
-      await this.logException(error);
+      this.captureException(error);
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }

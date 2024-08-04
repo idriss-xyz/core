@@ -20,11 +20,8 @@ export class GetTallyProposalsCommand extends Command<
 > {
   public readonly name = 'GetTallyProposalsCommand' as const;
 
-  constructor(
-    public payload: Payload,
-    id?: string,
-  ) {
-    super(id ?? null);
+  constructor(public payload: Payload) {
+    super();
   }
 
   async handle() {
@@ -55,7 +52,7 @@ export class GetTallyProposalsCommand extends Command<
       };
       return new OkResult(activeProposals);
     } catch (error) {
-      await this.logException(error);
+      this.captureException(error);
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }

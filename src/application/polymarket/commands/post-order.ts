@@ -18,11 +18,8 @@ interface Payload {
 export class PostOrderCommand extends Command<Payload, undefined> {
   public readonly name = 'PostOrderCommand' as const;
 
-  constructor(
-    public payload: Payload,
-    id?: string,
-  ) {
-    super(id ?? null);
+  constructor(public payload: Payload) {
+    super();
   }
 
   async handle() {
@@ -42,7 +39,7 @@ export class PostOrderCommand extends Command<Payload, undefined> {
 
       return new OkResult(undefined);
     } catch (error) {
-      await this.logException(error);
+      this.captureException(error);
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }

@@ -14,11 +14,8 @@ type Response = string;
 export class GetOriginalShortenedUrlCommand extends Command<Payload, Response> {
   public readonly name = 'GetOriginalShortenedUrlCommand' as const;
 
-  constructor(
-    public payload: Payload,
-    id?: string,
-  ) {
-    super(id ?? null);
+  constructor(public payload: Payload) {
+    super();
   }
 
   async handle() {
@@ -35,7 +32,7 @@ export class GetOriginalShortenedUrlCommand extends Command<Payload, Response> {
       }
       return new OkResult(match[1]);
     } catch (error) {
-      await this.logException(error);
+      this.captureException(error);
 
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);

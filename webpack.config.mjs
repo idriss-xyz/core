@@ -3,21 +3,32 @@ import webpack from 'webpack';
 import path from 'path';
 import CopyPlugin from 'copy-webpack-plugin';
 import NodePolyfillPlugin from 'node-polyfill-webpack-plugin';
+import { sentryWebpackPlugin } from '@sentry/webpack-plugin';
 import * as url from 'url';
+import { config as loadEnvironmentVariables } from 'dotenv-safe';
 // import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
+const webpackModeToEnvFilePath = {
+  production: '.env.production',
+  development: '.env.development',
+};
+
 export default (_env, argv) => {
+  loadEnvironmentVariables({
+    path: webpackModeToEnvFilePath[argv.mode],
+  });
+
   return {
     mode: argv.mode,
     entry: {
       'chromium/webpage-script': './src/runtime/chromium/webpage-script.ts',
       'chromium/content-script': './src/runtime/chromium/content-script.ts',
       'chromium/service-worker': './src/runtime/chromium/service-worker.ts',
-      'chromium/standalone': './src/popup/standalone.ts'
+      'chromium/standalone': './src/popup/standalone.ts',
     },
-    devtool: 'inline-source-map',
+    devtool: 'source-map',
     output: {
       path: path.resolve(__dirname, 'buildResults'),
       filename: '[name].js',
@@ -36,8 +47,12 @@ export default (_env, argv) => {
         ],
       }),
       new NodePolyfillPlugin(),
-      new webpack.DefinePlugin({
-        ENABLE_EVENTS: argv.mode === 'production' ? 'true' : 'false',
+      new webpack.EnvironmentPlugin(['SENTRY_ENVIRONMENT', 'SENTRY_DSN']),
+      sentryWebpackPlugin({
+        authToken: process.env.SENTRY_AUTH_TOKEN,
+        org: process.env.SENTRY_ORGANISATION,
+        project: process.env.SENTRY_PROJECT,
+        telemetry: false,
       }),
       // new BundleAnalyzerPlugin()
     ],

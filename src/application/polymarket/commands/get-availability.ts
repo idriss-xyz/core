@@ -7,11 +7,8 @@ type Payload = Record<string, never>;
 export class GetAvailabilityCommand extends Command<Payload, boolean> {
   public readonly name = 'GetAvailabilityCommand' as const;
 
-  constructor(
-    public payload: Payload,
-    id?: string,
-  ) {
-    super(id ?? null);
+  constructor(public payload: Payload) {
+    super();
   }
 
   async handle() {
@@ -26,7 +23,7 @@ export class GetAvailabilityCommand extends Command<Payload, boolean> {
       }
       return new OkResult(true);
     } catch (error) {
-      await this.logException(error);
+      this.captureException(error);
       return new OkResult(false);
     }
   }

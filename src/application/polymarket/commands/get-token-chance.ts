@@ -14,11 +14,8 @@ interface Payload {
 export class GetTokenChanceCommand extends Command<Payload, number> {
   public readonly name = 'GetTokenChanceCommand' as const;
 
-  constructor(
-    public payload: Payload,
-    id?: string,
-  ) {
-    super(id ?? null);
+  constructor(public payload: Payload) {
+    super();
   }
 
   async handle() {
@@ -36,7 +33,7 @@ export class GetTokenChanceCommand extends Command<Payload, number> {
         Number((Math.round(Number(json.mid) * 100) / 100).toFixed(2)),
       );
     } catch (error) {
-      await this.logException(error);
+      this.captureException(error);
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }

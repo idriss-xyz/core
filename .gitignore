@@ -6,5 +6,6 @@ src/shared/ui/providers/tailwind.build.css
 tailwind.build.css
 tailwindStandalone.css
 .vscode
-
 *storybook.log
+.env.*
+!.env.example

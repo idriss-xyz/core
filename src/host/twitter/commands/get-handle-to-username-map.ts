@@ -15,11 +15,8 @@ type Response = z.infer<typeof responseSchema>;
 export class GetHandleToUsernameMapCommand extends Command<Payload, Response> {
   public readonly name = 'GetHandleToUsernameMapCommand' as const;
 
-  constructor(
-    public payload: Payload,
-    id?: string,
-  ) {
-    super(id ?? null);
+  constructor(public payload: Payload) {
+    super();
   }
 
   async handle() {
@@ -35,7 +32,7 @@ export class GetHandleToUsernameMapCommand extends Command<Payload, Response> {
 
       return new OkResult(validationResult.data);
     } catch (error) {
-      await this.logException(error);
+      this.captureException(error);
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);
       }
