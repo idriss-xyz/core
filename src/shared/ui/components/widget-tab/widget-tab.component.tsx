@@ -59,9 +59,9 @@ export const WidgetTab = ({
   return (
     <WidgetBase
       className={classes(
-        'z-10 overflow-visible rounded-[0.375rem] text-xs leading-tight ',
+        'z-10 overflow-visible rounded-[0.750rem] text-xs leading-tight',
         {
-          'z-20': userPreferredTab === tabName,
+          'z-20 rounded-[0.375rem]': userPreferredTab === tabName,
           'rounded-tl-none': userTabs.length > 1,
           'bg-[#2d2d2d]': theme === 'dark',
           'bg-white': theme === 'bright',
