@@ -12,14 +12,14 @@ export const useWarpcastMarkets = () => {
   const conditionIdMutation = useCommandMutation(GetConditionIdCommand);
 
   const polymarketLinks = useMemo(() => {
-    return externalLinks.filter((result) => {
-      return isEventUrl(result.value);
+    return externalLinks.filter((scrapedLink) => {
+      return isEventUrl(scrapedLink.data.link);
     });
   }, [externalLinks]);
 
   const availableUrls = externalLinks
-    .map((v) => {
-      return v.value;
+    .map((scrapedLink) => {
+      return scrapedLink.data.link;
     })
     .sort();
 
@@ -31,14 +31,14 @@ export const useWarpcastMarkets = () => {
 
     queryFn: async () => {
       const results = await Promise.allSettled(
-        polymarketLinks.map(async (link) => {
+        polymarketLinks.map(async (scrapedLink) => {
           const conditionId = await conditionIdMutation.mutateAsync({
-            url: link.value,
+            url: scrapedLink.data.link,
           });
           if (!conditionId) {
             return;
           }
-          return { conditionId, top: link.top };
+          return { conditionId, top: scrapedLink.top };
         }),
       );
 

@@ -5,15 +5,9 @@ import { createRoot } from 'react-dom/client';
 import { Final } from 'final';
 import {
   ExtensionSettingsProvider,
-  GetServiceStatusCommand,
   useExtensionSettings,
 } from 'shared/extension';
-import {
-  PortalProvider,
-  QueryProvider,
-  TailwindProvider,
-  WidgetTabsProvider,
-} from 'shared/ui';
+import { PortalProvider, QueryProvider, TailwindProvider } from 'shared/ui';
 import { WalletContextProvider } from 'shared/web3';
 import { ErrorBoundary, WithObservabilityScope } from 'shared/observability';
 import {
@@ -24,11 +18,6 @@ import {
   WarpcastScrapingContextProvider,
   useWarpcastLocationInfo,
 } from 'host/warpcast';
-import { useCommandQuery } from 'shared/messaging';
-import { TallyApp } from 'application/tally';
-import { AgoraApp } from 'application/agora';
-import { SnapshotApp } from 'application/snapshot';
-import { PolymarketApp } from 'application/polymarket';
 export class Application {
   private constructor() {}
 
@@ -58,7 +47,7 @@ const ApplicationWithProviders = () => {
   return (
     <StrictMode>
       <WithObservabilityScope>
-        <ErrorBoundary exceptionEventName="application-runtime-error">
+        <ErrorBoundary>
           <PortalProvider>
             <TailwindProvider>
               <QueryProvider>
@@ -100,20 +89,19 @@ const Applications = () => {
 
   const isExpectedPage = isTwitter || isWarpcast;
 
-  const serviceStatusQuery = useCommandQuery({
-    staleTime: Number.POSITIVE_INFINITY,
-    command: new GetServiceStatusCommand({}),
-    enabled: isTwitter || isWarpcast,
-  });
-
-  const applicationsStatus = useMemo(() => {
-    return {
-      polymarket: Boolean(serviceStatusQuery.data?.polymarket),
-      snapshot: Boolean(serviceStatusQuery.data?.snapshot),
-      agora: Boolean(serviceStatusQuery.data?.agora),
-      tally: Boolean(serviceStatusQuery.data?.tally),
-    };
-  }, [serviceStatusQuery.data]);
+  // const serviceStatusQuery = useCommandQuery({
+  //   staleTime: Number.POSITIVE_INFINITY,
+  //   command: new GetServiceStatusCommand({}),
+  //   enabled: isTwitter || isWarpcast,
+  // });
+  // const applicationsStatus = useMemo(() => {
+  //   return {
+  //     polymarket: Boolean(serviceStatusQuery.data?.polymarket),
+  //     snapshot: Boolean(serviceStatusQuery.data?.snapshot),
+  //     agora: Boolean(serviceStatusQuery.data?.agora),
+  //     tally: Boolean(serviceStatusQuery.data?.tally),
+  //   };
+  // }, [serviceStatusQuery.data]);
 
   if (!enabled || !isExpectedPage) {
     return null;
@@ -121,12 +109,7 @@ const Applications = () => {
 
   return (
     <>
-      <WidgetTabsProvider>
-        {applicationsStatus.snapshot ? <SnapshotApp /> : null}
-        {applicationsStatus.tally ? <TallyApp /> : null}
-        {applicationsStatus.agora ? <AgoraApp /> : null}
-      </WidgetTabsProvider>
-      {applicationsStatus.polymarket ? <PolymarketApp /> : null}
+      {/* {applicationsStatus.polymarket ? <PolymarketApp /> : null} */}
       <Final />
     </>
   );

@@ -1,40 +1,25 @@
 import { useState } from 'react';
 
-import { useCommandQuery } from 'shared/messaging';
 import { Pagination } from 'shared/ui';
+import { ErrorBoundary } from 'shared/observability';
 
-import { GetProposalCommand } from '../commands';
+import { useProposalsQuery } from '../hooks';
 
 import { Proposal } from './proposal';
 
 interface Properties {
-  userHandle: string;
-  snapshotHandle: string;
   className?: string;
-  top?: number;
   onClose?: () => void;
+  officialName: string;
 }
 
-export const OrganizationProposalsContainer = ({
-  userHandle,
-  snapshotHandle,
-  className = 'fixed top-20',
-  top,
-  onClose,
-}: Properties) => {
+const Base = ({ className, officialName, onClose }: Properties) => {
   const [currentProposalIndex, setCurrentProposalIndex] = useState(0);
 
-  const proposalQuery = useCommandQuery({
-    command: new GetProposalCommand({
-      snapshotNames: [snapshotHandle],
-      pageNumber: currentProposalIndex,
-    }),
-    staleTime: Number.POSITIVE_INFINITY,
-    placeholderData: (previousData) => {
-      return previousData;
-    },
+  const proposalQuery = useProposalsQuery({
+    officialName,
+    pageNumber: currentProposalIndex,
   });
-
   const currentProposal = proposalQuery.data?.proposal;
 
   const isLoadingProposal =
@@ -71,19 +56,25 @@ export const OrganizationProposalsContainer = ({
     onNext: showNextProposal,
   };
 
-  if (!currentProposal || !snapshotHandle) {
+  if (!currentProposal || !officialName) {
     return null;
   }
 
   return (
     <Proposal
-      userHandle={userHandle}
       pagination={pagination}
       isLoading={isLoadingProposal}
       data={currentProposal}
       className={className}
-      top={top}
       onClose={onClose}
     />
+  );
+};
+
+export const OrganizationProposalsContainer = (properties: Properties) => {
+  return (
+    <ErrorBoundary>
+      <Base {...properties} />
+    </ErrorBoundary>
   );
 };

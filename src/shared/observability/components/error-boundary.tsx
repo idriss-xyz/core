@@ -4,7 +4,6 @@ import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
 import { useObservabilityScope } from '../scope';
 
 interface Properties {
-  exceptionEventName: string;
   children: ReactNode;
 }
 

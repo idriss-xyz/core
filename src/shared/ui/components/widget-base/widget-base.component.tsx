@@ -6,7 +6,6 @@ import { Closable } from '../closable';
 import { WidgetBaseProperties } from './widget-base.types';
 
 export const WidgetBase = ({
-  top,
   onClose,
   children,
   className,
@@ -25,9 +24,8 @@ export const WidgetBase = ({
 
   return (
     <Closable
-      top={top}
       onClose={close}
-      className={classes('right-4 z-10 w-96 text-white', className)}
+      className={classes('text-white', className)}
       closeButtonClassName={closeButtonClassName}
     >
       {children}

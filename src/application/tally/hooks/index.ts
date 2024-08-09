@@ -1,1 +1,1 @@
-export { useTwitterTallyWidgetsInfo } from './use-twitter-tally-widgets-info';
+export { useProposalsQuery } from './use-proposals-query';

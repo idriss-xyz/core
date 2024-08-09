@@ -7,17 +7,17 @@ import {
 } from 'shared/idriss';
 import { Hex } from 'shared/web3';
 import { reverseObject } from 'shared/utils';
-import { ScrapingResult } from 'shared/scraping';
+import { UserScrapingResult } from 'shared/scraping';
 import { getNodeToInjectToUser, isHandleNode } from 'host/twitter';
 
 import { GetCustomRecipientsCommand } from '../commands';
 import { DEFAULT_ALLOWED_CHAINS_IDS, PUBLIC_ETH_TAG_NAME } from '../constants';
 import { mapDigestedMessageToWalletTag } from '../utils';
-import { Recipient } from '../types';
+import { WidgetData } from '../types';
 
 type RecipientCandidate = Omit<
-  Recipient,
-  'walletAddress' | 'isHandleUser' | 'nodeToInject'
+  WidgetData,
+  'walletAddress' | 'isHandleUser' | 'nodeToInject' | 'type'
 > & {
   walletAddress?: Hex;
   digestedMessageToWalletTag: Record<string, string>;
@@ -26,12 +26,16 @@ type RecipientCandidate = Omit<
 };
 
 interface Properties {
-  users: ScrapingResult[];
+  scrapedUsers: UserScrapingResult[];
   handle?: string;
   enabled: boolean;
 }
 
-export const useRecipients = ({ users, handle, enabled }: Properties) => {
+export const useWidgetsData = ({
+  scrapedUsers,
+  handle,
+  enabled,
+}: Properties) => {
   const [digestToWallet, setDigestToWallet] = useState<Record<string, string>>(
     {},
   );
@@ -42,14 +46,14 @@ export const useRecipients = ({ users, handle, enabled }: Properties) => {
   const handles = useMemo(() => {
     return [
       ...new Set(
-        users.map((result) => {
-          return result.value;
+        scrapedUsers.map((scrapedUser) => {
+          return scrapedUser.data.username;
         }),
       ),
     ].filter((handle) => {
       return !Object.keys(usernameToTwitterId).includes(handle.toLowerCase());
     });
-  }, [usernameToTwitterId, users]);
+  }, [usernameToTwitterId, scrapedUsers]);
 
   const customRecipientsQuery = useCommandQuery({
     command: new GetCustomRecipientsCommand({}),
@@ -72,9 +76,10 @@ export const useRecipients = ({ users, handle, enabled }: Properties) => {
       return [];
     }
 
-    return users
-      ?.map((result) => {
-        const twitterId = usernameToTwitterId[result.value.toLowerCase()];
+    return scrapedUsers
+      ?.map((scrapedUser) => {
+        const twitterId =
+          usernameToTwitterId[scrapedUser.data.username.toLowerCase()];
 
         if (!twitterId) {
           return;
@@ -90,8 +95,8 @@ export const useRecipients = ({ users, handle, enabled }: Properties) => {
         );
 
         return {
-          ...result,
-          username: result.value,
+          ...scrapedUser,
+          username: scrapedUser.data.username,
           digestedMessageToWalletTag,
           walletTagToDigestedMessage,
           walletAddress: customRecipientData?.walletAddress,
@@ -102,7 +107,7 @@ export const useRecipients = ({ users, handle, enabled }: Properties) => {
         };
       })
       .filter(Boolean);
-  }, [customRecipientsQuery.data, usernameToTwitterId, users]);
+  }, [customRecipientsQuery.data, usernameToTwitterId, scrapedUsers]);
 
   const usersWithoutWalletYet = useMemo(() => {
     return recipientsWithOptionalWallet.filter((user) => {
@@ -155,7 +160,7 @@ export const useRecipients = ({ users, handle, enabled }: Properties) => {
     });
   }, [getHandlesToTwitterIdsQuery.data]);
 
-  const recipients: Recipient[] = useMemo(() => {
+  const widgets: WidgetData[] = useMemo(() => {
     return recipientsWithOptionalWallet
       .map((user) => {
         let walletAddress: Hex | undefined;
@@ -204,10 +209,11 @@ export const useRecipients = ({ users, handle, enabled }: Properties) => {
           walletAddress,
           nodeToInject,
           isHandleUser,
+          type: 'idrissSend' as const,
         };
       })
       .filter(Boolean);
   }, [recipientsWithOptionalWallet, handle, digestToWallet]);
 
-  return { recipients };
+  return { widgets };
 };

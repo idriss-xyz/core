@@ -1,1 +1,5 @@
-export type { ScrapingResult } from './types';
+export type {
+  UserScrapingResult,
+  PostScrapingResult,
+  ExternalLinksScrapingResult,
+} from './types';

@@ -116,20 +116,26 @@ export const Container = memo(
 
     return (
       <>
-        <Closable
-          left={isMobile ? undefined : position.x}
-          right={isMobile ? 0 : undefined}
-          top={position.y + iconSize}
-          className="absolute w-64 rounded-md bg-white text-gray-900 shadow-2xl"
-          closeButtonClassName="hover:enabled:bg-black/20 active:enabled:bg-black/40"
-          closeButtonIconClassName="text-[#000]"
-          onClickInside={disableCloseOnHoverAway}
-          onClose={close}
-          closeOnHoverAway={closeOnHoverAway}
-          closeOnClickAway={closeOnClickAway}
+        <div
+          className="absolute"
+          style={{
+            left: isMobile ? undefined : position.x,
+            right: isMobile ? 0 : undefined,
+            top: position.y + iconSize,
+          }}
         >
-          {children({ close })}
-        </Closable>
+          <Closable
+            className="w-64 rounded-md bg-white text-gray-900 shadow-2xl"
+            closeButtonClassName="hover:enabled:bg-black/20 active:enabled:bg-black/40"
+            closeButtonIconClassName="text-[#000]"
+            onClickInside={disableCloseOnHoverAway}
+            onClose={close}
+            closeOnHoverAway={closeOnHoverAway}
+            closeOnClickAway={closeOnClickAway}
+          >
+            {children({ close })}
+          </Closable>
+        </div>
         <img
           className="absolute"
           style={{

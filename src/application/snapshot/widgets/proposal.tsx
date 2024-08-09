@@ -3,43 +3,33 @@ import {
   Pagination,
   PaginationComponent,
   PulsingLoadingBar,
-  WidgetTab,
+  WidgetBase,
   classes,
 } from 'shared/ui';
 import { getDifferenceInDays, getEndsInLabel } from 'shared/utils';
 
 import { ProposalData } from '../types';
 import { getProposalAuthor, getProposalUrl, getUserUrl } from '../utils';
-import { SNAPSHOT_LOGO } from '../constants';
 
 interface Properties {
-  userHandle: string;
   data: ProposalData;
   className?: string;
-  top?: number;
   pagination: Pagination;
   isLoading: boolean;
   onClose?: () => void;
 }
 
 export const Proposal = ({
-  userHandle,
   data,
   className,
-  top,
   pagination,
   isLoading,
   onClose,
 }: Properties) => {
   return (
-    <WidgetTab
-      userHandle={userHandle}
-      tabName="Snapshot"
-      tabImage={SNAPSHOT_LOGO}
-      className={classes('text-xs leading-tight', className)}
-      top={top}
+    <WidgetBase
+      className={classes('bg-[#2d2d2d] text-xs leading-tight', className)}
       onClose={onClose}
-      theme="dark"
     >
       <PulsingLoadingBar isLoading={isLoading} />
       <header className="flex items-center justify-between space-x-3">
@@ -81,6 +71,6 @@ export const Proposal = ({
           buttonClassNames="text-white bg-transparent hover:enabled:bg-transparent active:enabled:bg-transparent"
         />
       </footer>
-    </WidgetTab>
+    </WidgetBase>
   );
 };

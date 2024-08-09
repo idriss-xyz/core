@@ -1,40 +1,21 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 
-import { ErrorBoundary } from 'shared/observability';
-import { useCommandQuery } from 'shared/messaging';
 import { Pagination } from 'shared/ui';
+import { ErrorBoundary } from 'shared/observability';
 
-import { useTwitterAgoraWidgetsInfo } from '../hooks';
-import { GetAgoraProposalsCommand } from '../commands';
+import { useProposalsQuery } from '../hooks';
 
 import { Proposal } from './proposal';
 
-export const ProposalMainContainer = () => {
-  const [hiddenAgoraUsers, setHiddenAgoraUsers] = useState<string[]>([]);
+interface Properties {
+  className?: string;
+  onClose?: () => void;
+}
+
+const Base = ({ className, onClose }: Properties) => {
   const [currentProposalIndex, setCurrentProposalIndex] = useState(0);
 
-  const { visibleAgoraWidgetsInfo: visibleAgoraNodes } =
-    useTwitterAgoraWidgetsInfo({
-      hidden: hiddenAgoraUsers,
-    });
-
-  const hideAgoraUser = useCallback((agoraUsername: string) => {
-    setHiddenAgoraUsers((previous) => {
-      return [...previous, agoraUsername];
-    });
-  }, []);
-
-  const proposalQuery = useCommandQuery({
-    command: new GetAgoraProposalsCommand({
-      offset: currentProposalIndex,
-    }),
-    enabled: visibleAgoraNodes ? visibleAgoraNodes.length > 0 : false,
-    staleTime: Number.POSITIVE_INFINITY,
-    placeholderData: (previousData) => {
-      return previousData;
-    },
-  });
-
+  const proposalQuery = useProposalsQuery({ offset: currentProposalIndex });
   const currentProposal = proposalQuery.data?.proposal;
   const isLoadingProposal =
     proposalQuery.isLoading || proposalQuery.isPlaceholderData;
@@ -71,28 +52,25 @@ export const ProposalMainContainer = () => {
     onNext: showNextProposal,
   };
 
-  if (!currentProposal || !visibleAgoraNodes?.length) {
+  if (!currentProposal) {
     return null;
   }
 
-  return visibleAgoraNodes.map(({ top, twitterHandle }) => {
-    return (
-      <ErrorBoundary
-        key={`${currentProposal?.id}at_${top}`}
-        exceptionEventName="agora-widget-twitter-main-runtime-error"
-      >
-        <Proposal
-          userHandle={twitterHandle}
-          pagination={pagination}
-          isLoading={isLoadingProposal}
-          data={currentProposal}
-          className="absolute"
-          top={top - 12}
-          onClose={() => {
-            hideAgoraUser(currentProposal.proposer);
-          }}
-        />
-      </ErrorBoundary>
-    );
-  });
+  return (
+    <Proposal
+      pagination={pagination}
+      isLoading={isLoadingProposal}
+      data={currentProposal}
+      className={className}
+      onClose={onClose}
+    />
+  );
+};
+
+export const ProposalMainContainer = (properties: Properties) => {
+  return (
+    <ErrorBoundary>
+      <Base {...properties} />
+    </ErrorBoundary>
+  );
 };

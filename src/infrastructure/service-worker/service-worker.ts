@@ -4,7 +4,7 @@ import {
   SerializedCommand,
 } from 'shared/messaging';
 import { WEB3_COMMAND_MAP } from 'shared/web3';
-import { GITCOIN_COMMAND_MAP } from 'application/gitcoin';
+import { GITCOIN_DONATION_COMMAND_MAP } from 'application/gitcoin';
 import { POLYMARKET_COMMAND_MAP } from 'application/polymarket';
 import { SNAPSHOT_COMMAND_MAP } from 'application/snapshot';
 import { EXTENSION_COMMAND_MAP } from 'shared/extension';
@@ -25,7 +25,7 @@ import { AddressResolver } from '../../common/resolvers/AddressResolver';
 const COMMAND_MAP = {
   ...WEB3_COMMAND_MAP,
   ...OBESRVABILITY_COMMAND_MAP,
-  ...GITCOIN_COMMAND_MAP,
+  ...GITCOIN_DONATION_COMMAND_MAP,
   ...POLYMARKET_COMMAND_MAP,
   ...EXTENSION_COMMAND_MAP,
   ...SNAPSHOT_COMMAND_MAP,

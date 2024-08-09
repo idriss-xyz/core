@@ -2,13 +2,13 @@ import { TALLY_GRAPHQL_API_URL, TALLY_WEBSITE_URL } from './constants';
 import { ProposalData } from './types';
 
 export const generateGetProposalsQuery = ({
-  twitterName,
+  username,
   afterCursor,
 }: {
-  twitterName: string;
+  username: string;
   afterCursor: string | null;
 }) => {
-  return `${TALLY_GRAPHQL_API_URL}?twitter-name=${twitterName}${afterCursor ? `&afterCursor=${afterCursor}` : ''}`;
+  return `${TALLY_GRAPHQL_API_URL}?twitter-name=${username}${afterCursor ? `&afterCursor=${afterCursor}` : ''}`;
 };
 
 export const getProposalUrl = (userName: string, proposalId: string) => {

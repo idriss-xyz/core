@@ -2,7 +2,7 @@ import { Hex } from 'shared/web3';
 
 import { IconType } from './schema';
 
-export interface Recipient {
+export interface WidgetData {
   top: number;
   username: string;
   availableNetworks: number[];
@@ -14,4 +14,5 @@ export interface Recipient {
   walletAddress: Hex;
   nodeToInject: HTMLElement;
   isHandleUser: boolean;
+  type: 'idrissSend';
 }

@@ -1,7 +1,8 @@
-import { ErrorBoundary } from 'shared/observability';
-import { useExtensionSettings } from 'shared/extension';
+import { useMemo } from 'react';
+
 import { useTwitterLocationInfo } from 'host/twitter';
 import { useWarpcastLocationInfo } from 'host/warpcast';
+import { ErrorBoundary } from 'shared/observability';
 
 import { MarketWidgetContainer } from './widgets';
 import {
@@ -10,30 +11,31 @@ import {
   useVisibleMarkets,
 } from './context';
 
-export const App = () => {
-  const { experimentalFeatures } = useExtensionSettings();
-
+const Base = () => {
   const { isTwitter } = useTwitterLocationInfo();
-
   const { isWarpcast } = useWarpcastLocationInfo();
 
-  if (!experimentalFeatures) {
+  const isExpectedHost = isTwitter || isWarpcast;
+
+  const Wrapper = useMemo(() => {
+    if (isTwitter) {
+      return TwitterVisibleMarketsProvider;
+    }
+    if (isWarpcast) {
+      return WarpcastVisibleMarketsProvider;
+    }
+
+    throw new Error('Unexpected host');
+  }, [isTwitter, isWarpcast]);
+
+  if (!isExpectedHost) {
     return null;
   }
 
   return (
-    <ErrorBoundary exceptionEventName="polymarket-runtime-error">
-      {isTwitter ? (
-        <TwitterVisibleMarketsProvider>
-          <InjectVisibleMarkets />
-        </TwitterVisibleMarketsProvider>
-      ) : null}
-      {isWarpcast ? (
-        <WarpcastVisibleMarketsProvider>
-          <InjectVisibleMarkets />
-        </WarpcastVisibleMarketsProvider>
-      ) : null}
-    </ErrorBoundary>
+    <Wrapper>
+      <InjectVisibleMarkets />
+    </Wrapper>
   );
 };
 
@@ -42,15 +44,19 @@ const InjectVisibleMarkets = () => {
 
   return markets.map((market) => {
     return (
-      <ErrorBoundary
+      <MarketWidgetContainer
         key={`${market.top}-${market.conditionId}`}
-        exceptionEventName="polymarket-widget-runtime-error"
-      >
-        <MarketWidgetContainer
-          top={market.top}
-          conditionId={market.conditionId}
-        />
-      </ErrorBoundary>
+        top={market.top}
+        conditionId={market.conditionId}
+      />
     );
   });
+};
+
+export const App = () => {
+  return (
+    <ErrorBoundary>
+      <Base />
+    </ErrorBoundary>
+  );
 };

@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
 import { useCommandQuery } from 'shared/messaging';
-import { ScrapingResult } from 'shared/scraping';
+import { UserScrapingResult } from 'shared/scraping';
 import { getNodeToInjectToUser, isHandleNode } from 'host/twitter'; // TODO: abstract this so it's not specific to Twitter, probably we need to accept it via Properties
 
 import { GetApplicationsCommand } from '../commands';
@@ -9,12 +9,16 @@ import { selectTwitterApplications } from '../utils';
 import { Recipient } from '../types';
 
 interface Properties {
-  users: ScrapingResult[];
+  scrapedUsers: UserScrapingResult[];
   handle?: string;
   enabled: boolean;
 }
 
-export const useRecipients = ({ users, handle, enabled }: Properties) => {
+export const useWidgetsData = ({
+  scrapedUsers,
+  handle,
+  enabled,
+}: Properties) => {
   const getApplicationsQuery = useCommandQuery({
     command: new GetApplicationsCommand({}),
     select: selectTwitterApplications,
@@ -24,17 +28,17 @@ export const useRecipients = ({ users, handle, enabled }: Properties) => {
     enabled,
   });
 
-  const recipients: Recipient[] = useMemo(() => {
+  const widgets: Recipient[] = useMemo(() => {
     if (!getApplicationsQuery.data) {
       return [];
     }
 
-    return users
-      .map((user) => {
+    return scrapedUsers
+      .map((scrapedUser) => {
         const application = getApplicationsQuery.data.find((application) => {
           return (
             application.project.metadata.projectTwitter?.toLowerCase() ===
-            user.value.toLowerCase()
+            scrapedUser.data.username.toLowerCase()
           );
         });
 
@@ -42,7 +46,11 @@ export const useRecipients = ({ users, handle, enabled }: Properties) => {
           return;
         }
 
-        const { value: username, node, top } = user;
+        const {
+          node,
+          top,
+          data: { username },
+        } = scrapedUser;
 
         const isHandleUser =
           handle === username && isHandleNode(node as HTMLElement);
@@ -59,10 +67,11 @@ export const useRecipients = ({ users, handle, enabled }: Properties) => {
           username,
           isHandleUser,
           nodeToInject,
+          type: 'gitcoin' as const,
         };
       })
       .filter(Boolean);
-  }, [getApplicationsQuery.data, handle, users]);
+  }, [getApplicationsQuery.data, handle, scrapedUsers]);
 
-  return { recipients };
+  return { widgets };
 };

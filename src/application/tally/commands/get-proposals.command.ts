@@ -10,7 +10,7 @@ import { getProposalsResponseSchema } from '../schema';
 import { ProposalsResponse } from '../types';
 
 interface Payload {
-  twitterHandle: string;
+  username: string;
   afterCursor: string | null;
 }
 
@@ -28,7 +28,7 @@ export class GetTallyProposalsCommand extends Command<
     try {
       const query = generateGetProposalsQuery({
         afterCursor: this.payload.afterCursor,
-        twitterName: this.payload.twitterHandle,
+        username: this.payload.username,
       });
 
       const response = await fetch(query, {

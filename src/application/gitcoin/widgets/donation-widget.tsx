@@ -11,6 +11,7 @@ import {
 } from 'shared/web3';
 import { ErrorMessage, GasIcon, Spinner } from 'shared/ui';
 import { useCommandQuery } from 'shared/messaging';
+import { ErrorBoundary } from 'shared/observability';
 
 import { DonationPayload, Recipient } from '../types';
 import {
@@ -23,14 +24,14 @@ import { SomethingWentWrongMessage } from '../components';
 import { useDonationMaker, useFees, useDonationForm } from '../hooks';
 
 interface Properties {
-  recipient: Recipient;
+  widgetData: Recipient;
 }
 
 interface BaseProperties extends Properties {
   onClose: () => void;
 }
 
-const Base = ({ recipient, onClose }: BaseProperties) => {
+const Base = ({ widgetData, onClose }: BaseProperties) => {
   const [isOpened, setIsOpened] = useState(false);
 
   const handleOpen = useCallback(() => {
@@ -54,7 +55,7 @@ const Base = ({ recipient, onClose }: BaseProperties) => {
 
   const ethPerDollar = getEthPerDollarQuery.data ?? 0;
 
-  const { nodeToInject, username, isHandleUser, application } = recipient;
+  const { nodeToInject, username, isHandleUser, application } = widgetData;
 
   const { wallet } = useWallet();
 
@@ -232,6 +233,10 @@ export const DonationWidget = memo((properties: Properties) => {
     });
   }, []);
 
-  return <Base {...properties} key={closeCount} onClose={handleClose} />;
+  return (
+    <ErrorBoundary>
+      <Base {...properties} key={closeCount} onClose={handleClose} />
+    </ErrorBoundary>
+  );
 });
 DonationWidget.displayName = 'DonationWidget';

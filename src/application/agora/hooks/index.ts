@@ -1,1 +1,1 @@
-export { useTwitterAgoraWidgetsInfo } from './use-twitter-agora-widgets-info';
+export { useProposalsQuery } from './use-proposals-query';

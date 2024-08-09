@@ -18,13 +18,7 @@ export {
   IdrissMoneyInput,
   PulsingLoadingBar,
   PaginationComponent,
-  WidgetTab,
 } from './components';
-export {
-  QueryProvider,
-  PortalProvider,
-  TailwindProvider,
-  WidgetTabsProvider,
-} from './providers';
+export { QueryProvider, PortalProvider, TailwindProvider } from './providers';
 export { classes, createContextHook } from './utils';
 export { usePooling } from './hooks';

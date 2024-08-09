@@ -1,8 +1,4 @@
-export {
-  useTwitterExternalLinksPooling,
-  useTwitterLocationInfo,
-  useHandleToUsernameMap,
-} from './hooks';
+export { useTwitterLocationInfo, useHandleToUsernameMap } from './hooks';
 export {
   COMMAND_MAP as TWITTER_COMMAND_MAP,
   GetOriginalShortenedUrlCommand,

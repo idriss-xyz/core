@@ -1,9 +1,7 @@
 import { useLocation } from 'react-use';
 
-import { usePooling } from 'shared/ui';
 import { useCommandQuery } from 'shared/messaging';
 
-import { Twitter } from './twitter';
 import {
   extractTwitterHandleFromPathname,
   isTwitterHandlePathname,
@@ -11,16 +9,6 @@ import {
   isTwitterHostname,
 } from './utils';
 import { GetHandleToUsernameMapCommand } from './commands';
-
-export const useTwitterExternalLinksPooling = () => {
-  const { isTwitter } = useTwitterLocationInfo();
-
-  return usePooling({
-    defaultValue: [],
-    callback: Twitter.getExternalLinks,
-    enabled: isTwitter,
-  });
-};
 
 export const useTwitterLocationInfo = () => {
   const location = useLocation();
@@ -40,11 +28,15 @@ export const useTwitterLocationInfo = () => {
   };
 };
 
-export const useHandleToUsernameMap = (application: string) => {
+export const useHandleToUsernameMap = (
+  application: string,
+  enabled: boolean,
+) => {
   return useCommandQuery({
     command: new GetHandleToUsernameMapCommand({}),
     select: (handles) => {
       return handles[application.toLowerCase()] ?? {};
     },
+    enabled,
   });
 };

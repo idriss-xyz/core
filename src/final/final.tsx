@@ -1,40 +1,26 @@
-import { useMemo } from 'react';
+import { PolymarketApp } from 'application/polymarket';
+import { useExtensionSettings } from 'shared/extension';
+import { ErrorBoundary } from 'shared/observability';
 
-import { GetServiceStatusCommand } from 'shared/extension';
-import { useCommandQuery } from 'shared/messaging';
-import { GitcoinDonationWidget } from 'application/gitcoin';
-import { IdrissSendWidget } from 'application/idriss-send';
-
-import { useRecipients } from './hooks';
+import { Proposals, UserWidgets } from './widgets';
 
 export const Final = () => {
-  const serviceStatusQuery = useCommandQuery({
-    staleTime: Number.POSITIVE_INFINITY,
-    command: new GetServiceStatusCommand({}),
-  });
+  const { enabled, experimentalFeatures } = useExtensionSettings();
 
-  const applicationsStatus = useMemo(() => {
-    return {
-      gitcoin: Boolean(serviceStatusQuery.data?.gitcoin),
-      idrissSend: Boolean(serviceStatusQuery.data?.['idriss-send']),
-    };
-  }, [serviceStatusQuery.data]);
-
-  const { recipients } = useRecipients({
-    idrissSendEnabled: applicationsStatus.idrissSend,
-    gitcoinEnabled: applicationsStatus.gitcoin,
-  });
+  if (!enabled) {
+    return null;
+  }
 
   return (
-    <>
-      {recipients.map((recipient) => {
-        const key = `${recipient.username}-${recipient.top}`;
-        if (recipient.type === 'gitcoin') {
-          return <GitcoinDonationWidget key={key} recipient={recipient} />;
-        }
+    <ErrorBoundary>
+      <UserWidgets />
 
-        return <IdrissSendWidget key={key} recipient={recipient} />;
-      })}
-    </>
+      {experimentalFeatures ? (
+        <>
+          <PolymarketApp />
+          <Proposals />
+        </>
+      ) : null}
+    </ErrorBoundary>
   );
 };
