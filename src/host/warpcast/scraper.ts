@@ -1,4 +1,7 @@
-import { ExternalLinksScrapingResult } from 'shared/scraping';
+import {
+  ExternalLinksScrapingResult,
+  PostScrapingResult,
+} from 'shared/scraping';
 
 export class Scraper {
   public static getExternalLinks(): ExternalLinksScrapingResult[] {
@@ -23,6 +26,37 @@ export class Scraper {
           top: top + window.scrollY,
           data: {
             link,
+          },
+        };
+      })
+      .filter(Boolean);
+  }
+
+  public static getPosts(): PostScrapingResult[] {
+    const selector = '.min-h-screen > .fade-in > div';
+    const posts = [...document.querySelectorAll(selector)];
+
+    return posts
+      .map((post) => {
+        const username = post
+          .querySelector('a')
+          ?.getAttribute('href')
+          ?.replace('/', '');
+
+        if (!username) {
+          return;
+        }
+
+        const linkNodeRect = post.getBoundingClientRect();
+        if (!linkNodeRect.height) {
+          return;
+        }
+
+        return {
+          node: post,
+          top: linkNodeRect.top + window.scrollY,
+          data: {
+            authorUsername: username,
           },
         };
       })

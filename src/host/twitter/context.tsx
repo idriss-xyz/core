@@ -1,48 +1,38 @@
 import { ReactNode, createContext, useMemo } from 'react';
 
 import { createContextHook, usePooling } from 'shared/ui';
-import {
-  ExternalLinksScrapingResult,
-  PostScrapingResult,
-  UserScrapingResult,
-} from 'shared/scraping';
+import { ScrapingResults } from 'shared/scraping';
 
-import { useTwitterLocationInfo } from './hooks';
+import { useLocationInfo } from './hooks';
 import { Scraper } from './scraper';
 
-interface TwitterScrapingContextValue {
-  users: UserScrapingResult[];
-  posts: PostScrapingResult[];
-  externalLinks: ExternalLinksScrapingResult[]; // TODO: external link is probably subset of post
-}
-
-const TwitterScrapingContext = createContext<
-  TwitterScrapingContextValue | undefined
->(undefined);
+const TwitterScrapingContext = createContext<ScrapingResults | undefined>(
+  undefined,
+);
 
 interface Properties {
   children: ReactNode;
 }
 
 export const TwitterScrapingContextProvider = ({ children }: Properties) => {
-  const { isTwitter } = useTwitterLocationInfo();
+  const { isHost } = useLocationInfo();
 
   const users = usePooling({
     defaultValue: [],
     callback: Scraper.getUsers,
-    enabled: isTwitter,
+    enabled: isHost,
   });
 
   const posts = usePooling({
     defaultValue: [],
     callback: Scraper.getPosts,
-    enabled: isTwitter,
+    enabled: isHost,
   });
 
   const externalLinks = usePooling({
     defaultValue: [],
     callback: Scraper.getExternalLinks,
-    enabled: isTwitter,
+    enabled: isHost,
   });
 
   const contextValue = useMemo(() => {

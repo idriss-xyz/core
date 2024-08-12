@@ -20,3 +20,9 @@ export interface ExternalLinksScrapingResult extends ScrapingResult {
     link: string;
   };
 }
+
+export interface ScrapingResults {
+  users: UserScrapingResult[];
+  posts: PostScrapingResult[];
+  externalLinks: ExternalLinksScrapingResult[]; // TODO: external link is probably subset of post
+}

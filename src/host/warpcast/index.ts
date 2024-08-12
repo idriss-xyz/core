@@ -1,4 +1,4 @@
-export { useWarpcastLocationInfo } from './hooks';
+export { useLocationInfo as useWarpcastLocationInfo } from './hooks';
 export {
   useWarpcastScraping,
   WarpcastScrapingContextProvider,

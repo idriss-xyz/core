@@ -12,8 +12,8 @@ import {
 } from './context';
 
 const Base = () => {
-  const { isTwitter } = useTwitterLocationInfo();
-  const { isWarpcast } = useWarpcastLocationInfo();
+  const { isHost: isTwitter } = useTwitterLocationInfo();
+  const { isHost: isWarpcast } = useWarpcastLocationInfo();
 
   const isExpectedHost = isTwitter || isWarpcast;
 

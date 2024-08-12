@@ -1,32 +1,18 @@
 import { useCallback, useMemo, useState } from 'react';
 
-import {
-  useHandleToUsernameMap,
-  useTwitterLocationInfo,
-  useTwitterScraping,
-} from 'host/twitter';
-import { getAgoraUsernameFromTwitterUsername } from 'application/agora';
-
 import { PostWidgetProposalData, ProposalSource } from '../types';
 
-import { useApplicationStatus } from './use-application-status';
+import { useLocationInfo } from './use-location-info';
+import { useScraping } from './use-scraping';
+import { useHandleToOfficialName } from './use-handle-to-official-name';
 
 export const useProposalsWidgets = () => {
-  const { posts } = useTwitterScraping();
-  const applicationsStatus = useApplicationStatus();
+  const { posts } = useScraping();
 
-  const { isTwitterHandlePage, isTwitterHomePage, twitterHandleFromPathname } =
-    useTwitterLocationInfo();
+  const { isUserPage, isHomePage, username } = useLocationInfo();
   const [hidden, setHidden] = useState<string[]>([]);
 
-  const { data: snapshotHandlesMap } = useHandleToUsernameMap(
-    'snapshot',
-    applicationsStatus.snapshot,
-  );
-  const { data: tallyHandlesMap } = useHandleToUsernameMap(
-    'tally',
-    applicationsStatus.tally,
-  );
+  const handleMap = useHandleToOfficialName();
 
   const widgets: PostWidgetProposalData[] = useMemo(() => {
     return posts
@@ -36,14 +22,9 @@ export const useProposalsWidgets = () => {
         }
 
         const officialNames = {
-          snapshot:
-            snapshotHandlesMap?.[post.data.authorUsername.toLowerCase()],
-          tally: tallyHandlesMap?.[post.data.authorUsername.toLowerCase()],
-          agora: applicationsStatus.agora
-            ? getAgoraUsernameFromTwitterUsername(
-                post.data.authorUsername.toLowerCase(),
-              )
-            : undefined,
+          snapshot: handleMap.snapshot[post.data.authorUsername.toLowerCase()],
+          tally: handleMap.tally[post.data.authorUsername.toLowerCase()],
+          agora: handleMap.agora[post.data.authorUsername.toLowerCase()],
         };
 
         const proposalsSources = Object.entries(officialNames)
@@ -66,24 +47,17 @@ export const useProposalsWidgets = () => {
         };
       })
       .filter(Boolean);
-  }, [
-    applicationsStatus.agora,
-    hidden,
-    posts,
-    snapshotHandlesMap,
-    tallyHandlesMap,
-  ]);
+  }, [handleMap.agora, handleMap.snapshot, handleMap.tally, hidden, posts]);
+
+  console.log({isUserPage, username})
 
   const userPageProposalWidget = useMemo(() => {
-    if (!isTwitterHandlePage) {
+    if (!isUserPage || !username) {
       return;
     }
 
     const foundWidget = widgets.find((widget) => {
-      return (
-        widget.username.toLowerCase() ===
-        twitterHandleFromPathname.toLowerCase()
-      );
+      return widget.username.toLowerCase() === username.toLowerCase();
     });
 
     if (!foundWidget) {
@@ -91,7 +65,7 @@ export const useProposalsWidgets = () => {
     }
 
     return { ...foundWidget, top: 20 };
-  }, [isTwitterHandlePage, widgets, twitterHandleFromPathname]);
+  }, [isUserPage, username, widgets]);
 
   const hideWidget = useCallback((authorUserName: string) => {
     setHidden((previous) => {
@@ -100,7 +74,7 @@ export const useProposalsWidgets = () => {
   }, []);
 
   return {
-    widgets: isTwitterHomePage ? widgets : [],
+    widgets: isHomePage ? widgets : [],
     userPageProposalWidget,
     hideWidget,
   };

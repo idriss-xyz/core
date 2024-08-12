@@ -2,16 +2,16 @@ import { useMemo } from 'react';
 
 import { useGitcoinDonationWidgetsData } from 'application/gitcoin';
 import { useIdrissSendWidgetsData } from 'application/idriss-send';
-import { useTwitterScraping } from 'host/twitter';
 
 import { UserWidgetData } from '../types';
 
 import { useApplicationStatus } from './use-application-status';
+import { useScraping } from './use-scraping';
 
 export const useUserWidgets = () => {
   const applicationsStatus = useApplicationStatus();
 
-  const { users } = useTwitterScraping();
+  const { users } = useScraping();
   const { widgets: idrissSendWidgets } = useIdrissSendWidgetsData({
     scrapedUsers: users,
     enabled: applicationsStatus.idrissSend,

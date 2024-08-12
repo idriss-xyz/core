@@ -48,6 +48,7 @@ export abstract class Command<Payload, Response> {
           }
           // TODO: serialize and de-serialize Result obj
           if ('reason' in detail.response) {
+            // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
             reject(detail.response.reason);
           } else {
             resolve(detail.response.data);

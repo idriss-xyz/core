@@ -1,23 +1,14 @@
-import { useMemo, createElement, StrictMode, useEffect } from 'react';
+import { useMemo, createElement, StrictMode } from 'react';
 import NiceModal from '@ebay/nice-modal-react';
 import { createRoot } from 'react-dom/client';
 
-import { Final } from 'final';
-import {
-  ExtensionSettingsProvider,
-  useExtensionSettings,
-} from 'shared/extension';
+import { Final, useLocationInfo } from 'final';
+import { ExtensionSettingsProvider } from 'shared/extension';
 import { PortalProvider, QueryProvider, TailwindProvider } from 'shared/ui';
 import { WalletContextProvider } from 'shared/web3';
 import { ErrorBoundary, WithObservabilityScope } from 'shared/observability';
-import {
-  TwitterScrapingContextProvider,
-  useTwitterLocationInfo,
-} from 'host/twitter';
-import {
-  WarpcastScrapingContextProvider,
-  useWarpcastLocationInfo,
-} from 'host/warpcast';
+import { TwitterScrapingContextProvider } from 'host/twitter';
+import { WarpcastScrapingContextProvider } from 'host/warpcast';
 export class Application {
   private constructor() {}
 
@@ -35,7 +26,7 @@ const bootstrap = () => {
 };
 
 const ApplicationWithProviders = () => {
-  const { isTwitter } = useTwitterLocationInfo();
+  const { isTwitter, isWarpcast } = useLocationInfo();
 
   const disabledWalletRdns = useMemo(() => {
     if (isTwitter) {
@@ -43,6 +34,12 @@ const ApplicationWithProviders = () => {
     }
     return [];
   }, [isTwitter]);
+
+  const isExpectedPage = isTwitter || isWarpcast;
+
+  if (!isExpectedPage) {
+    return null;
+  }
 
   return (
     <StrictMode>
@@ -58,7 +55,7 @@ const ApplicationWithProviders = () => {
                     <ExtensionSettingsProvider>
                       <TwitterScrapingContextProvider>
                         <WarpcastScrapingContextProvider>
-                          <Applications />
+                          <Final />
                         </WarpcastScrapingContextProvider>
                       </TwitterScrapingContextProvider>
                     </ExtensionSettingsProvider>
@@ -70,47 +67,5 @@ const ApplicationWithProviders = () => {
         </ErrorBoundary>
       </WithObservabilityScope>
     </StrictMode>
-  );
-};
-
-const Applications = () => {
-  const { isTwitter } = useTwitterLocationInfo();
-  const { isWarpcast } = useWarpcastLocationInfo();
-  const { enabled } = useExtensionSettings();
-
-  useEffect(() => {
-    if (!enabled) {
-      for (const element of document.querySelectorAll(
-        '[data-idriss-widget="true"]',
-      ))
-        element.remove();
-    }
-  }, [enabled]);
-
-  const isExpectedPage = isTwitter || isWarpcast;
-
-  // const serviceStatusQuery = useCommandQuery({
-  //   staleTime: Number.POSITIVE_INFINITY,
-  //   command: new GetServiceStatusCommand({}),
-  //   enabled: isTwitter || isWarpcast,
-  // });
-  // const applicationsStatus = useMemo(() => {
-  //   return {
-  //     polymarket: Boolean(serviceStatusQuery.data?.polymarket),
-  //     snapshot: Boolean(serviceStatusQuery.data?.snapshot),
-  //     agora: Boolean(serviceStatusQuery.data?.agora),
-  //     tally: Boolean(serviceStatusQuery.data?.tally),
-  //   };
-  // }, [serviceStatusQuery.data]);
-
-  if (!enabled || !isExpectedPage) {
-    return null;
-  }
-
-  return (
-    <>
-      {/* {applicationsStatus.polymarket ? <PolymarketApp /> : null} */}
-      <Final />
-    </>
   );
 };

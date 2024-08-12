@@ -1,5 +1,9 @@
 export { ProposalMainContainer as AgoraWidget } from './widgets';
 export { COMMAND_MAP as AGORA_COMMAND_MAP } from './commands';
+export {
+  AGORA_LOGO,
+  TWITTER_HANDLE_TO_AGORA,
+  WARPCAST_HANDLE_TO_AGORA,
+} from './constants';
 export { getAgoraUsernameFromTwitterUsername } from './utils';
-export { AGORA_LOGO } from './constants';
 export { useProposalsQuery as useAgoraProposalsQuery } from './hooks';

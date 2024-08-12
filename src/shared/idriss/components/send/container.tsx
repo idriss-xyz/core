@@ -8,6 +8,7 @@ import {
 } from 'react';
 import { useLocation, useUpdateEffect, useWindowSize } from 'react-use';
 
+import { useExtensionSettings } from 'shared/extension';
 import { Closable } from 'shared/ui';
 
 interface RenderChildrenProperties {
@@ -45,6 +46,16 @@ export const Container = memo(
 
     const injectedWidgetReference = useRef<HTMLImageElement | null>(null);
     const location = useLocation();
+    const { enabled } = useExtensionSettings();
+    useEffect(() => {
+      if (!enabled) {
+        for (const element of document.querySelectorAll(
+          '[data-idriss-widget="true"]',
+        ))
+          element.remove();
+      }
+    }, [enabled]);
+
     useUpdateEffect(() => {
       return () => {
         injectedWidgetReference.current?.remove();

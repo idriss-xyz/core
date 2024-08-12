@@ -1,37 +1,41 @@
 import { ReactNode, createContext, useMemo } from 'react';
 
-import { ExternalLinksScrapingResult } from 'shared/scraping';
+import { ScrapingResults } from 'shared/scraping';
 import { createContextHook, usePooling } from 'shared/ui';
 
-import { useWarpcastLocationInfo } from './hooks';
+import { useLocationInfo } from './hooks';
 import { Scraper } from './scraper';
 
-interface WarpcastScrapingContextValue {
-  externalLinks: ExternalLinksScrapingResult[];
-}
-
-const WarpcastScrapingContext = createContext<
-  WarpcastScrapingContextValue | undefined
->(undefined);
+const WarpcastScrapingContext = createContext<ScrapingResults | undefined>(
+  undefined,
+);
 
 interface Properties {
   children: ReactNode;
 }
 
 export const WarpcastScrapingContextProvider = ({ children }: Properties) => {
-  const { isWarpcast } = useWarpcastLocationInfo();
+  const { isHost } = useLocationInfo();
 
   const externalLinks = usePooling({
     defaultValue: [],
     callback: Scraper.getExternalLinks,
-    enabled: isWarpcast,
+    enabled: isHost,
   });
 
-  const contextValue = useMemo(() => {
+  const posts = usePooling({
+    defaultValue: [],
+    callback: Scraper.getPosts,
+    enabled: isHost,
+  });
+
+  const contextValue: ScrapingResults = useMemo(() => {
     return {
       externalLinks,
+      users: [],
+      posts,
     };
-  }, [externalLinks]);
+  }, [externalLinks, posts]);
 
   return (
     <WarpcastScrapingContext.Provider value={contextValue}>

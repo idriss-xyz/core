@@ -4,17 +4,23 @@ export const isTwitterHostname = (hostname: string) => {
   return TWITTER_HOST_NAMES.includes(hostname);
 };
 
-export const isTwitterHandlePathname = (pathname: string) => {
-  return !pathname.startsWith('/home');
+export const isHomePathname = (pathname: string) => {
+  return pathname.startsWith('/home') || pathname.startsWith('i/timeline');
 };
 
-export const extractTwitterHandleFromPathname = (pathname: string) => {
-  return pathname?.split('/')[1] ?? '';
+export const isUserPathname = (pathname: string) => {
+  return !isHomePathname(pathname);
 };
 
-export const isTwitterHomePathname = (pathname: string) => {
-  return pathname.startsWith('/home');
+
+export const extractUsernameFromPathname = (pathname: string) => {
+  if (!isUserPathname(pathname)) {
+    return;
+  }
+
+  return pathname?.split('/')[1];
 };
+
 
 export const isHandleNode = (element: HTMLElement) => {
   let currentElement: HTMLElement | null = element;
