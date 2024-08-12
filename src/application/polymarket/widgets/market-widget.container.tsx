@@ -110,7 +110,7 @@ export const MarketWidgetContainer = memo(
     if (
       !marketQuery.data ||
       !tokensPricesQuery.data ||
-      !imageQuery.data === undefined ||
+      imageQuery.data === undefined ||
       chanceQuery.data === undefined ||
       !availabilityQuery.data ||
       marketQuery.data.closed ||

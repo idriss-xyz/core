@@ -26,7 +26,7 @@ export class GetOriginalShortenedUrlCommand extends Command<Payload, Response> {
       const html = await response.text();
 
       const regex = /URL=(https:\/\/[^"]+)/;
-      const match = html.match(regex);
+      const match = regex.exec(html);
       if (!match?.[1]) {
         return new OkResult('');
       }

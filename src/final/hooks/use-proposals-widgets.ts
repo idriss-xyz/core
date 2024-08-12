@@ -49,8 +49,6 @@ export const useProposalsWidgets = () => {
       .filter(Boolean);
   }, [handleMap.agora, handleMap.snapshot, handleMap.tally, hidden, posts]);
 
-  console.log({isUserPage, username})
-
   const userPageProposalWidget = useMemo(() => {
     if (!isUserPage || !username) {
       return;
