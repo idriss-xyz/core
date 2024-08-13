@@ -3,7 +3,6 @@ import { ReactNode, createContext } from 'react';
 import { createContextHook } from 'shared/ui';
 
 import { useTwitterMarkets } from '../hooks';
-import { useWarpcastMarkets } from '../hooks/use-warpcast-markets';
 
 type VisibleMarketsContextValue = {
   conditionId: string;
@@ -22,16 +21,6 @@ interface Properties {
 
 export const TwitterVisibleMarketsProvider = ({ children }: Properties) => {
   const marketsQuery = useTwitterMarkets();
-
-  return (
-    <VisibleMarketsContext.Provider value={marketsQuery.data ?? []}>
-      {children}
-    </VisibleMarketsContext.Provider>
-  );
-};
-
-export const WarpcastVisibleMarketsProvider = ({ children }: Properties) => {
-  const marketsQuery = useWarpcastMarkets();
 
   return (
     <VisibleMarketsContext.Provider value={marketsQuery.data ?? []}>

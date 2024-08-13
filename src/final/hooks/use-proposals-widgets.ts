@@ -14,26 +14,47 @@ export const useProposalsWidgets = () => {
 
   const handleMap = useHandleToOfficialName();
 
+  const getOfficialNames = useCallback(
+    (username: string) => {
+      return {
+        snapshot: handleMap.snapshot[username],
+        tally: handleMap.tally[username],
+        agora: handleMap.agora[username],
+      };
+    },
+    [handleMap.agora, handleMap.snapshot, handleMap.tally],
+  );
+
+  const getProposalsSources = useCallback(
+    (username: string) => {
+      const officialNames = getOfficialNames(username);
+
+      return Object.entries(officialNames)
+        .filter((entry): entry is [ProposalSource, string] => {
+          return Boolean(entry[1]);
+        })
+        .map((entry) => {
+          return entry[0];
+        });
+    },
+    [getOfficialNames],
+  );
+
   const widgets: PostWidgetProposalData[] = useMemo(() => {
+    if (!isHomePage) {
+      return [];
+    }
+
     return posts
       .map((post) => {
-        if (hidden.includes(post.data.authorUsername)) {
+        const authorUsername = post.data.authorUsername.toLowerCase();
+        if (hidden.includes(authorUsername)) {
           return;
         }
 
-        const officialNames = {
-          snapshot: handleMap.snapshot[post.data.authorUsername.toLowerCase()],
-          tally: handleMap.tally[post.data.authorUsername.toLowerCase()],
-          agora: handleMap.agora[post.data.authorUsername.toLowerCase()],
-        };
+        const officialNames = getOfficialNames(authorUsername);
 
-        const proposalsSources = Object.entries(officialNames)
-          .filter((entry): entry is [ProposalSource, string] => {
-            return Boolean(entry[1]);
-          })
-          .map((entry) => {
-            return entry[0];
-          });
+        const proposalsSources = getProposalsSources(authorUsername);
 
         if (proposalsSources.length === 0) {
           return;
@@ -47,23 +68,28 @@ export const useProposalsWidgets = () => {
         };
       })
       .filter(Boolean);
-  }, [handleMap.agora, handleMap.snapshot, handleMap.tally, hidden, posts]);
+  }, [getOfficialNames, getProposalsSources, hidden, isHomePage, posts]);
 
   const userPageProposalWidget = useMemo(() => {
     if (!isUserPage || !username) {
       return;
     }
 
-    const foundWidget = widgets.find((widget) => {
-      return widget.username.toLowerCase() === username.toLowerCase();
-    });
+    const officialNames = getOfficialNames(username.toLowerCase());
 
-    if (!foundWidget) {
+    const proposalsSources = getProposalsSources(username.toLowerCase());
+
+    if (proposalsSources.length === 0) {
       return;
     }
 
-    return { ...foundWidget, top: 20 };
-  }, [isUserPage, username, widgets]);
+    return {
+      top: 20,
+      username,
+      officialNames,
+      proposalsSources,
+    };
+  }, [getOfficialNames, getProposalsSources, isUserPage, username]);
 
   const hideWidget = useCallback((authorUserName: string) => {
     setHidden((previous) => {
@@ -72,7 +98,7 @@ export const useProposalsWidgets = () => {
   }, []);
 
   return {
-    widgets: isHomePage ? widgets : [],
+    widgets,
     userPageProposalWidget,
     hideWidget,
   };

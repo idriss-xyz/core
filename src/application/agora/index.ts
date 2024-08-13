@@ -5,5 +5,4 @@ export {
   TWITTER_HANDLE_TO_AGORA,
   FARCASTER_HANDLE_TO_AGORA,
 } from './constants';
-export { getAgoraUsernameFromTwitterUsername } from './utils';
 export { useProposalsQuery as useAgoraProposalsQuery } from './hooks';

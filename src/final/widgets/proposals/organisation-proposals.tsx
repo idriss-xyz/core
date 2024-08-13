@@ -107,7 +107,7 @@ const Base = ({ widgetData, onClose, className }: Properties) => {
 
   return (
     <Tabs.Root
-      className={classes('absolute right-4 w-96', className)}
+      className={classes('absolute right-4 z-20 w-96', className)}
       style={{ top: widgetData.top }}
       value={activeTab}
       onValueChange={changeTab}

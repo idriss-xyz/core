@@ -1,7 +1,7 @@
-import { UNSUPPORTED_PATHNAMES, WARPCAST_HOST_NAME } from './constants';
+import { UNSUPPORTED_PATHNAMES, SUPERCAST_HOST_NAME } from './constants';
 
-export const isWarpcastHostname = (hostname: string) => {
-  return hostname.includes(WARPCAST_HOST_NAME);
+export const isSupercastHostname = (hostname: string) => {
+  return hostname.includes(SUPERCAST_HOST_NAME);
 };
 
 const isUnsupportedPathname = (pathname: string) => {
@@ -13,7 +13,7 @@ export const isHomePathname = (pathname: string) => {
     return false;
   }
 
-  return pathname === '/' || pathname.startsWith('/~/trending');
+  return pathname === '/';
 };
 
 export const isUserPathname = (pathname: string) => {
@@ -29,7 +29,7 @@ const isChannelPathname = (pathname: string) => {
     return false;
   }
 
-  return pathname.startsWith('/~/channel');
+  return pathname.startsWith('/channel');
 };
 
 const extractChannelnameFromPathname = (pathname: string) => {
@@ -37,7 +37,7 @@ const extractChannelnameFromPathname = (pathname: string) => {
     return;
   }
 
-  return pathname.split('/')[3];
+  return pathname.split('/')[2];
 };
 
 export const extractUsernameFromPathname = (pathname: string) => {

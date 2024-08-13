@@ -119,8 +119,6 @@ export const MarketWidgetContainer = memo(
       return null;
     }
 
-    console.log('rendering');
-
     return (
       <Market
         top={top}

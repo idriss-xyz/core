@@ -11,7 +11,7 @@ import { useLocationInfo } from './use-location-info';
 
 export const useHandleToOfficialName = () => {
   const applicationsStatus = useApplicationStatus();
-  const { isWarpcast, isTwitter } = useLocationInfo();
+  const { isWarpcast, isTwitter, isSupercast } = useLocationInfo();
 
   const { data: twitterSnapshotHandlesMap } = useTwitterHandleToUsernameMap({
     application: 'snapshot',
@@ -31,7 +31,7 @@ export const useHandleToOfficialName = () => {
     };
   }
 
-  if (isWarpcast) {
+  if (isWarpcast || isSupercast) {
     return {
       snapshot: applicationsStatus.snapshot ? FARCASTER_HANDLE_TO_SNAPSHOT : {},
       tally: applicationsStatus.tally ? FARCASTER_HANDLE_TO_TALLY : {},

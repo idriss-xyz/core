@@ -9,6 +9,7 @@ import { WalletContextProvider } from 'shared/web3';
 import { ErrorBoundary, WithObservabilityScope } from 'shared/observability';
 import { TwitterScrapingContextProvider } from 'host/twitter';
 import { WarpcastScrapingContextProvider } from 'host/warpcast';
+import { SupercastScrapingContextProvider } from 'host/supercast';
 export class Application {
   private constructor() {}
 
@@ -26,7 +27,7 @@ const bootstrap = () => {
 };
 
 const ApplicationWithProviders = () => {
-  const { isTwitter, isWarpcast } = useLocationInfo();
+  const { isTwitter, isWarpcast, isSupercast } = useLocationInfo();
 
   const disabledWalletRdns = useMemo(() => {
     if (isTwitter) {
@@ -35,7 +36,7 @@ const ApplicationWithProviders = () => {
     return [];
   }, [isTwitter]);
 
-  const isExpectedPage = isTwitter || isWarpcast;
+  const isExpectedPage = isTwitter || isWarpcast || isSupercast;
 
   if (!isExpectedPage) {
     return null;
@@ -55,7 +56,9 @@ const ApplicationWithProviders = () => {
                     <ExtensionSettingsProvider>
                       <TwitterScrapingContextProvider>
                         <WarpcastScrapingContextProvider>
-                          <Final />
+                          <SupercastScrapingContextProvider>
+                            <Final />
+                          </SupercastScrapingContextProvider>
                         </WarpcastScrapingContextProvider>
                       </TwitterScrapingContextProvider>
                     </ExtensionSettingsProvider>

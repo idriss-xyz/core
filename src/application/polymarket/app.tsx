@@ -1,41 +1,22 @@
-import { useMemo } from 'react';
-
 import { useTwitterLocationInfo } from 'host/twitter';
-import { useWarpcastLocationInfo } from 'host/warpcast';
 import { ErrorBoundary } from 'shared/observability';
 
 import { MarketWidgetContainer } from './widgets';
-import {
-  TwitterVisibleMarketsProvider,
-  WarpcastVisibleMarketsProvider,
-  useVisibleMarkets,
-} from './context';
+import { TwitterVisibleMarketsProvider, useVisibleMarkets } from './context';
 
 const Base = () => {
   const { isHost: isTwitter } = useTwitterLocationInfo();
-  const { isHost: isWarpcast } = useWarpcastLocationInfo();
 
-  const isExpectedHost = isTwitter || isWarpcast;
-
-  const Wrapper = useMemo(() => {
-    if (isTwitter) {
-      return TwitterVisibleMarketsProvider;
-    }
-    if (isWarpcast) {
-      return WarpcastVisibleMarketsProvider;
-    }
-
-    throw new Error('Unexpected host');
-  }, [isTwitter, isWarpcast]);
+  const isExpectedHost = isTwitter;
 
   if (!isExpectedHost) {
     return null;
   }
 
   return (
-    <Wrapper>
+    <TwitterVisibleMarketsProvider>
       <InjectVisibleMarkets />
-    </Wrapper>
+    </TwitterVisibleMarketsProvider>
   );
 };
 

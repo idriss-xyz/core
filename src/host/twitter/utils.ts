@@ -12,7 +12,6 @@ export const isUserPathname = (pathname: string) => {
   return !isHomePathname(pathname);
 };
 
-
 export const extractUsernameFromPathname = (pathname: string) => {
   if (!isUserPathname(pathname)) {
     return;
@@ -20,7 +19,6 @@ export const extractUsernameFromPathname = (pathname: string) => {
 
   return pathname?.split('/')[1];
 };
-
 
 export const isHandleNode = (element: HTMLElement) => {
   let currentElement: HTMLElement | null = element;

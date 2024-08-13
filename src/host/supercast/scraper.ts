@@ -6,35 +6,17 @@ import {
 
 export class Scraper {
   public static getExternalLinks(): ExternalLinksScrapingResult[] {
-    const selector = 'a';
-    const externalLinksNodes = [...document.querySelectorAll(selector)] ?? [];
+    // not used for now
+    return [];
+  }
 
-    return externalLinksNodes
-      .map((node) => {
-        const { height, top } = node.getBoundingClientRect();
-        if (!height) {
-          return;
-        }
-
-        const link = node.getAttribute('href');
-
-        if (!link) {
-          return;
-        }
-
-        return {
-          node,
-          top: top + window.scrollY,
-          data: {
-            link,
-          },
-        };
-      })
-      .filter(Boolean);
+  public static getUsers(): UserScrapingResult[] {
+    // not used for now
+    return [];
   }
 
   public static getPosts(): PostScrapingResult[] {
-    const selector = '.min-h-screen > .fade-in > div';
+    const selector = 'ul > a';
     const posts = [...document.querySelectorAll(selector)];
 
     return posts
@@ -62,10 +44,5 @@ export class Scraper {
         };
       })
       .filter(Boolean);
-  }
-
-  public static getUsers(): UserScrapingResult[] {
-    // not used for now
-    return [];
   }
 }

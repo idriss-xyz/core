@@ -6,7 +6,7 @@ import { createContextHook, usePooling } from 'shared/ui';
 import { useLocationInfo } from './hooks';
 import { Scraper } from './scraper';
 
-const WarpcastScrapingContext = createContext<ScrapingResults | undefined>(
+const SupercastScrapingContext = createContext<ScrapingResults | undefined>(
   undefined,
 );
 
@@ -14,7 +14,7 @@ interface Properties {
   children: ReactNode;
 }
 
-export const WarpcastScrapingContextProvider = ({ children }: Properties) => {
+export const SupercastScrapingContextProvider = ({ children }: Properties) => {
   const { isHost } = useLocationInfo();
 
   const externalLinks = usePooling({
@@ -44,10 +44,10 @@ export const WarpcastScrapingContextProvider = ({ children }: Properties) => {
   }, [externalLinks, posts, users]);
 
   return (
-    <WarpcastScrapingContext.Provider value={contextValue}>
+    <SupercastScrapingContext.Provider value={contextValue}>
       {children}
-    </WarpcastScrapingContext.Provider>
+    </SupercastScrapingContext.Provider>
   );
 };
 
-export const useWarpcastScraping = createContextHook(WarpcastScrapingContext);
+export const useSupercastScraping = createContextHook(SupercastScrapingContext);

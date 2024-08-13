@@ -7,6 +7,8 @@ import { OrganisationProposals } from './organisation-proposals';
 export const Proposals = () => {
   const { widgets, userPageProposalWidget, hideWidget } = useProposalsWidgets();
 
+  console.log({ userPageProposalWidget });
+
   return (
     <ErrorBoundary>
       {widgets.map((widget) => {
@@ -29,7 +31,7 @@ export const Proposals = () => {
           onClose={() => {
             hideWidget(userPageProposalWidget.username);
           }}
-          className="fixed top-20"
+          className="fixed"
         />
       ) : null}
     </ErrorBoundary>
