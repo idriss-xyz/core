@@ -3,7 +3,7 @@ export const TWITTER_HANDLE_TO_AGORA: Record<string, string> = {
   optimismgov: 'optimism.eth',
 };
 
-export const WARPCAST_HANDLE_TO_AGORA: Record<string, string> = {
+export const FARCASTER_HANDLE_TO_AGORA: Record<string, string> = {
   optimism: 'optimism.eth',
   optimismgov: 'optimism.eth',
 };

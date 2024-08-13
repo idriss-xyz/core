@@ -1,10 +1,10 @@
 import { useTwitterHandleToUsernameMap } from 'host/twitter';
 import {
   TWITTER_HANDLE_TO_AGORA,
-  WARPCAST_HANDLE_TO_AGORA,
+  FARCASTER_HANDLE_TO_AGORA,
 } from 'application/agora';
-import { WARPCAST_HANDLE_TO_TALLY } from 'application/tally';
-import { WARPCAST_HANDLE_TO_SNAPSHOT } from 'application/snapshot';
+import { FARCASTER_HANDLE_TO_TALLY } from 'application/tally';
+import { FARCASTER_HANDLE_TO_SNAPSHOT } from 'application/snapshot';
 
 import { useApplicationStatus } from './use-application-status';
 import { useLocationInfo } from './use-location-info';
@@ -27,15 +27,15 @@ export const useHandleToOfficialName = () => {
     return {
       snapshot: twitterSnapshotHandlesMap ?? {},
       tally: twitterTallyHandlesMap ?? {},
-      agora: TWITTER_HANDLE_TO_AGORA,
+      agora: applicationsStatus.agora ? TWITTER_HANDLE_TO_AGORA : {},
     };
   }
 
   if (isWarpcast) {
     return {
-      snapshot: WARPCAST_HANDLE_TO_SNAPSHOT,
-      tally: WARPCAST_HANDLE_TO_TALLY,
-      agora: WARPCAST_HANDLE_TO_AGORA,
+      snapshot: applicationsStatus.snapshot ? FARCASTER_HANDLE_TO_SNAPSHOT : {},
+      tally: applicationsStatus.tally ? FARCASTER_HANDLE_TO_TALLY : {},
+      agora: applicationsStatus.agora ? FARCASTER_HANDLE_TO_AGORA : {},
     };
   }
 
