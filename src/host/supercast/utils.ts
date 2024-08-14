@@ -5,7 +5,9 @@ export const isSupercastHostname = (hostname: string) => {
 };
 
 const isUnsupportedPathname = (pathname: string) => {
-  return UNSUPPORTED_PATHNAMES.includes(pathname);
+  return UNSUPPORTED_PATHNAMES.some((unsupportedPathname) => {
+    return pathname.startsWith(unsupportedPathname);
+  });
 };
 
 export const isHomePathname = (pathname: string) => {

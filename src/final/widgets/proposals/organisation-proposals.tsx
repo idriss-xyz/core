@@ -80,11 +80,12 @@ const Base = ({ widgetData, onClose, className }: Properties) => {
   }, [onClose]);
 
   const Component = useCallback(
-    (properties: { source: ProposalSource }) => {
+    (properties: { source: ProposalSource; className?: string }) => {
       return PROPOSAL_SOURCE_TO_COMPONENT[properties.source]({
         officialName: widgetData.officialNames[properties.source] ?? '',
         onClose: close,
         username: widgetData.username,
+        className: properties.className,
       });
     },
     [close, widgetData],
@@ -100,7 +101,7 @@ const Base = ({ widgetData, onClose, className }: Properties) => {
         className={classes('absolute right-4 w-96', className)}
         style={{ top: widgetData.top }}
       >
-        <Component source={firstSource} />
+        <Component source={firstSource} className="rounded-xl" />
       </div>
     );
   }
@@ -122,8 +123,10 @@ const Base = ({ widgetData, onClose, className }: Properties) => {
           return (
             <Tabs.Trigger
               className={classes(
-                'flex items-center space-x-1.5 rounded-t-lg px-2 pt-1 text-xs font-bold',
-                !isActive && 'brightness-75',
+                'relative flex h-[25px] w-[100px] items-center space-x-1.5 rounded-t-lg px-2 pt-1 text-xs font-bold',
+                'transition-all duration-75 ease-linear will-change-transform',
+                !isActive &&
+                  'top-[1px] -translate-x-[3px] scale-95 brightness-75',
                 sourceClassnames.trigger,
               )}
               key={source}
@@ -138,7 +141,7 @@ const Base = ({ widgetData, onClose, className }: Properties) => {
       {widgetData.proposalsSources.map((source) => {
         return (
           <Tabs.Content key={source} value={source}>
-            <Component source={source} />
+            <Component source={source} className="rounded-r-xl rounded-bl-xl" />
           </Tabs.Content>
         );
       })}

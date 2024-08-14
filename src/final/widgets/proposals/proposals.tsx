@@ -7,8 +7,6 @@ import { OrganisationProposals } from './organisation-proposals';
 export const Proposals = () => {
   const { widgets, userPageProposalWidget, hideWidget } = useProposalsWidgets();
 
-  console.log({ userPageProposalWidget });
-
   return (
     <ErrorBoundary>
       {widgets.map((widget) => {

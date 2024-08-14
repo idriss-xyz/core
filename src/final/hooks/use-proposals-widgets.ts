@@ -84,7 +84,7 @@ export const useProposalsWidgets = () => {
     }
 
     return {
-      top: 20,
+      top: 80,
       username,
       officialNames,
       proposalsSources,

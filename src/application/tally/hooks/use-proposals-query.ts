@@ -21,9 +21,6 @@ export const useProposalsQuery = ({
     retry: 5,
     retryDelay: 1800,
     staleTime: Number.POSITIVE_INFINITY,
-    placeholderData: (previousData) => {
-      return previousData;
-    },
     enabled,
   });
 };

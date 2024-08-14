@@ -19,9 +19,6 @@ export const useProposalsQuery = ({
       pageNumber,
     }),
     staleTime: Number.POSITIVE_INFINITY,
-    placeholderData: (previousData) => {
-      return previousData;
-    },
     enabled,
   });
 };

@@ -13,9 +13,6 @@ export const useProposalsQuery = ({ offset, enabled = true }: Properties) => {
       offset,
     }),
     staleTime: Number.POSITIVE_INFINITY,
-    placeholderData: (previousData) => {
-      return previousData;
-    },
     enabled,
   });
 };
