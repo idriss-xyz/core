@@ -101,7 +101,7 @@ const Base = ({ widgetData, onClose, className }: Properties) => {
         className={classes('absolute right-4 w-96', className)}
         style={{ top: widgetData.top }}
       >
-        <Component source={firstSource} className="rounded-xl" />
+        <Component source={firstSource} className="rounded-lg" />
       </div>
     );
   }
@@ -141,7 +141,7 @@ const Base = ({ widgetData, onClose, className }: Properties) => {
       {widgetData.proposalsSources.map((source) => {
         return (
           <Tabs.Content key={source} value={source}>
-            <Component source={source} className="rounded-r-xl rounded-bl-xl" />
+            <Component source={source} className="rounded-r-lg rounded-bl-lg" />
           </Tabs.Content>
         );
       })}

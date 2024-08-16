@@ -200,7 +200,7 @@ export const Market = ({
                     <CurrencyInput
                       value={field.value}
                       onChange={field.onChange}
-                      iconButtonClassName="bg:bg-[#2c3f4f] hover:enabled:bg-[#5f7282] active:enabled:bg-[#92a5b5]"
+                      iconButtonClassName="bg-[#2c3f4f] hover:enabled:bg-[#5f7282] active:enabled:bg-[#92a5b5]"
                       inputBaseProps={{
                         errorMessage: fieldState.error?.message,
                         renderLabel: () => {

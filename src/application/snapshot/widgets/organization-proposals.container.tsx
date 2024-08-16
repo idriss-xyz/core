@@ -22,12 +22,9 @@ const Base = ({ className, officialName, onClose }: Properties) => {
   });
   const currentProposal = proposalQuery.data?.proposal;
 
-  const isLoadingProposal =
-    proposalQuery.isLoading || proposalQuery.isPlaceholderData;
-
   const isPreviousProposalAvailable = currentProposalIndex > 0;
   const isNextProposalAvailable =
-    Boolean(proposalQuery.data?.hasNextProposal) && !isLoadingProposal;
+    Boolean(proposalQuery.data?.hasNextProposal) && !proposalQuery.isLoading;
 
   const showPreviousProposal = () => {
     if (!isPreviousProposalAvailable) {
@@ -63,7 +60,7 @@ const Base = ({ className, officialName, onClose }: Properties) => {
   return (
     <Proposal
       pagination={pagination}
-      isLoading={isLoadingProposal}
+      isLoading={proposalQuery.isLoading}
       data={currentProposal}
       className={className}
       onClose={onClose}

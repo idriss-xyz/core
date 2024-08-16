@@ -32,17 +32,15 @@ const Base = ({ className, onClose, username }: Properties) => {
   const currentProposal = proposalQuery.data?.nodes[0];
   const nextProposal = proposalQuery.data?.nodes[1];
 
-  const isLoadingProposal =
-    proposalQuery.isLoading || proposalQuery.isPlaceholderData;
   const isPreviousProposalAvailable = previousProposalCursors.length > 0;
   const isNextProposalAvailable =
-    nextProposal !== undefined && !isLoadingProposal;
+    nextProposal !== undefined && !proposalQuery.isLoading;
 
   const showPreviousProposal = () => {
     const previousProposalCursor = previousProposalCursors.at(-1);
     if (
       !isPreviousProposalAvailable ||
-      isLoadingProposal ||
+      proposalQuery.isLoading ||
       previousProposalCursor === undefined
     ) {
       return;
@@ -90,7 +88,7 @@ const Base = ({ className, onClose, username }: Properties) => {
   return (
     <Proposal
       pagination={pagination}
-      isLoading={isLoadingProposal}
+      isLoading={proposalQuery.isLoading}
       proposalDetails={currentProposal}
       className={className}
       onClose={onClose}
