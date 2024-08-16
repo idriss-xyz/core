@@ -136,145 +136,147 @@ export const Market = ({
   }, []);
 
   return (
-    <WidgetBase
-      className="absolute rounded-xl bg-polymarket-gray font-sans text-white"
-      closeButtonClassName="hover:enabled:bg-[#5f7282]"
-      top={top}
-    >
-      <form ref={formReference} onSubmit={marketForm.handleSubmit(submit)}>
-        <div>
-          <div className="flex items-center justify-between space-x-2">
-            {imageUrl ? (
-              <img src={imageUrl} className="w-10 rounded" alt="" />
-            ) : null}
-            <div
-              className="line-clamp-2 text-base font-semibold"
-              title={data.question}
-            >
-              {data.question}
+    <div className="absolute right-4" style={{ top }}>
+      <WidgetBase
+        className="z-10 w-96 rounded-xl bg-polymarket-gray font-sans text-white"
+        closeButtonClassName="hover:enabled:bg-[#5f7282]"
+      >
+        <form ref={formReference} onSubmit={marketForm.handleSubmit(submit)}>
+          <div>
+            <div className="flex items-center justify-between space-x-2">
+              {imageUrl ? (
+                <img src={imageUrl} className="w-10 rounded" alt="" />
+              ) : null}
+              <div
+                className="line-clamp-2 text-base font-semibold"
+                title={data.question}
+              >
+                {data.question}
+              </div>
+              <Progress value={chance} />
             </div>
-            <Progress value={chance} />
-          </div>
-          <div className="mb-1.5 mt-8 flex items-center justify-between">
-            <InputBase.Label label="Outcome" />
-            <IconButton
-              className="border border-[#2c3f4f] bg-transparent hover:enabled:bg-[#53535a] active:enabled:bg-[#92a5b5]"
-              iconProps={{ name: 'SymbolIcon', size: 16 }}
-              onClick={onRefresh}
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            <Controller
-              control={marketForm.control}
-              name="selectedTokenId"
-              render={({ field }) => {
-                return (
-                  <>
-                    {tokens.map((token) => {
-                      const isActive = field.value === token.token_id;
-                      return (
-                        <VoteButton
-                          isActive={isActive}
-                          outcome={token.outcome}
-                          key={token.token_id}
-                          onClick={() => {
-                            field.onChange(token.token_id);
-                          }}
-                          disabled={orderPlacer.isPlacing}
-                        >
-                          {token.outcome}
-                        </VoteButton>
-                      );
-                    })}
-                  </>
-                );
-              }}
-            />
-          </div>
-          <div className="mt-4">
-            <Controller
-              control={marketForm.control}
-              name="amount"
-              render={({ field, fieldState }) => {
-                return (
-                  <CurrencyInput
-                    value={field.value}
-                    onChange={field.onChange}
-                    iconButtonClassName="bg:bg-[#2c3f4f] hover:enabled:bg-[#5f7282] active:enabled:bg-[#92a5b5]"
-                    inputBaseProps={{
-                      errorMessage: fieldState.error?.message,
-                      renderLabel: () => {
+            <div className="mb-1.5 mt-8 flex items-center justify-between">
+              <InputBase.Label label="Outcome" />
+              <IconButton
+                className="border border-[#2c3f4f] bg-transparent hover:enabled:bg-[#53535a] active:enabled:bg-[#92a5b5]"
+                iconProps={{ name: 'SymbolIcon', size: 16 }}
+                onClick={onRefresh}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <Controller
+                control={marketForm.control}
+                name="selectedTokenId"
+                render={({ field }) => {
+                  return (
+                    <>
+                      {tokens.map((token) => {
+                        const isActive = field.value === token.token_id;
                         return (
-                          <div className="mb-1.5 flex items-center justify-between">
-                            <InputBase.Label label="Amount" />
-                            <Chip className="bg-[#2C3F4F]">
-                              Balance $
-                              {user.safeWalletDetails?.balance.toFixed(2) ?? 0}
-                            </Chip>
-                          </div>
+                          <VoteButton
+                            isActive={isActive}
+                            outcome={token.outcome}
+                            key={token.token_id}
+                            onClick={() => {
+                              field.onChange(token.token_id);
+                            }}
+                            disabled={orderPlacer.isPlacing}
+                          >
+                            {token.outcome}
+                          </VoteButton>
                         );
-                      },
-                    }}
-                    placeholder="$0"
-                    changeBy={10}
-                    decimalScale={6}
-                  />
-                );
-              }}
-            />
-          </div>
-          {/* TODO: this could be nicer */}
-          <div className="mt-4">
-            {isAvailable ? (
-              orderPlacer.isPlaced ? (
-                <SuccessButton />
-              ) : user.wallet ? (
-                user.wallet.chainId === CHAIN.POLYGON.id ? (
-                  <ActionButton
-                    type="submit"
-                    loading={orderPlacer.isPlacing || user.isSigning}
-                    disabled={user.isSigningError}
-                  >
-                    Buy
-                  </ActionButton>
+                      })}
+                    </>
+                  );
+                }}
+              />
+            </div>
+            <div className="mt-4">
+              <Controller
+                control={marketForm.control}
+                name="amount"
+                render={({ field, fieldState }) => {
+                  return (
+                    <CurrencyInput
+                      value={field.value}
+                      onChange={field.onChange}
+                      iconButtonClassName="bg-[#2c3f4f] hover:enabled:bg-[#5f7282] active:enabled:bg-[#92a5b5]"
+                      inputBaseProps={{
+                        errorMessage: fieldState.error?.message,
+                        renderLabel: () => {
+                          return (
+                            <div className="mb-1.5 flex items-center justify-between">
+                              <InputBase.Label label="Amount" />
+                              <Chip className="bg-[#2C3F4F]">
+                                Balance $
+                                {user.safeWalletDetails?.balance.toFixed(2) ??
+                                  0}
+                              </Chip>
+                            </div>
+                          );
+                        },
+                      }}
+                      placeholder="$0"
+                      changeBy={10}
+                      decimalScale={6}
+                    />
+                  );
+                }}
+              />
+            </div>
+            {/* TODO: this could be nicer */}
+            <div className="mt-4">
+              {isAvailable ? (
+                orderPlacer.isPlaced ? (
+                  <SuccessButton />
+                ) : user.wallet ? (
+                  user.wallet.chainId === CHAIN.POLYGON.id ? (
+                    <ActionButton
+                      type="submit"
+                      loading={orderPlacer.isPlacing || user.isSigning}
+                      disabled={user.isSigningError}
+                    >
+                      Buy
+                    </ActionButton>
+                  ) : (
+                    <ActionButton
+                      type="button"
+                      onClick={() => {
+                        if (!user.wallet?.provider) {
+                          return;
+                        }
+                        void user.switchToPolygon(user.wallet.provider);
+                      }}
+                      loading={user.isSigning}
+                    >
+                      Switch to Polygon
+                    </ActionButton>
+                  )
                 ) : (
-                  <ActionButton
-                    type="button"
-                    onClick={() => {
-                      if (!user.wallet?.provider) {
-                        return;
-                      }
-                      void user.switchToPolygon(user.wallet.provider);
-                    }}
-                    loading={user.isSigning}
-                  >
-                    Switch to Polygon
+                  <ActionButton loading={user.isSigning} onClick={user.signIn}>
+                    Connect wallet
                   </ActionButton>
                 )
               ) : (
-                <ActionButton loading={user.isSigning} onClick={user.signIn}>
-                  Connect wallet
-                </ActionButton>
-              )
-            ) : (
-              <UnavailableButton />
-            )}
-          </div>
-          <div className="mt-4 flex items-center justify-between text-base font-normal">
-            <span className="text-[#858D92]">Potential return</span>
-            <span className="font-semibold text-green-400">
-              ${potentialReturn} ({potentialReturnPercentage}%)
-            </span>
-          </div>
+                <UnavailableButton />
+              )}
+            </div>
+            <div className="mt-4 flex items-center justify-between text-base font-normal">
+              <span className="text-[#858D92]">Potential return</span>
+              <span className="font-semibold text-green-400">
+                ${potentialReturn} ({potentialReturnPercentage}%)
+              </span>
+            </div>
 
-          <UserError user={user} onRetry={retry} />
-          <OrderPlacerError
-            orderPlacer={orderPlacer}
-            onRetry={retry}
-            onSwitchWallet={user.signIn}
-          />
-        </div>
-      </form>
-    </WidgetBase>
+            <UserError user={user} onRetry={retry} />
+            <OrderPlacerError
+              orderPlacer={orderPlacer}
+              onRetry={retry}
+              onSwitchWallet={user.signIn}
+            />
+          </div>
+        </form>
+      </WidgetBase>
+    </div>
   );
 };

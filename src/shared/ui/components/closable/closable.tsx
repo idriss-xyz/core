@@ -7,9 +7,6 @@ import { Backdrop } from '../backdrop';
 interface Properties {
   children: ReactNode;
   className?: string;
-  top?: number;
-  left?: number;
-  right?: number;
   closeButtonClassName?: string;
   closeButtonIconClassName?: string;
   closeOnClickAway?: boolean;
@@ -19,9 +16,6 @@ interface Properties {
 }
 
 export const Closable = ({
-  top,
-  left,
-  right,
   children,
   className,
   onClose,
@@ -43,13 +37,8 @@ export const Closable = ({
         />
       )}
       <div
-        className={classes('p-5 shadow-lg', className)}
+        className={classes('relative p-5 shadow-lg', className)}
         onClick={onClickInside}
-        style={{
-          top, // TODO: style won't be needed but need to write scoped css variable and read it from tailwind
-          left,
-          right,
-        }}
       >
         {children}
         <IconButton

@@ -1,4 +1,4 @@
-export { COMMAND_MAP as GITCOIN_COMMAND_MAP } from './commands';
-export { useRecipients as useGitcoinDonationRecipients } from './hooks';
+export { COMMAND_MAP as GITCOIN_DONATION_COMMAND_MAP } from './commands';
+export { useWidgetsData as useGitcoinDonationWidgetsData } from './hooks';
 export { DonationWidget as GitcoinDonationWidget } from './widgets';
-export type { Recipient as GitcoinDonationRecipient } from './types';
+export type { Recipient as GitcoinDonationWidgetData } from './types';

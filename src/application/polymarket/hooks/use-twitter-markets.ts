@@ -2,8 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
 import {
-  useTwitterExternalLinksPooling,
   GetOriginalShortenedUrlCommand,
+  useTwitterScraping,
 } from 'host/twitter';
 import { useCommandMutation } from 'shared/messaging';
 
@@ -11,24 +11,24 @@ import { GetConditionIdCommand } from '../commands';
 import { isEventUrl } from '../utils';
 
 export const useTwitterMarkets = () => {
-  const results = useTwitterExternalLinksPooling();
+  const { externalLinks } = useTwitterScraping();
   const originalShortenedUrlMutation = useCommandMutation(
     GetOriginalShortenedUrlCommand,
   );
 
   const conditionIdMutation = useCommandMutation(GetConditionIdCommand);
 
-  const imageLinks = useMemo(() => {
-    return results.filter((result) => {
+  const scrapedImageLinks = useMemo(() => {
+    return externalLinks.filter((scrapedLink) => {
       // twitter posts 2 links next to each other which breaks our UI
-      const img = result.node.querySelector('img');
+      const img = scrapedLink.node.querySelector('img');
       return Boolean(img);
     });
-  }, [results]);
+  }, [externalLinks]);
 
-  const availableUrls = imageLinks
-    .map((v) => {
-      return v.value;
+  const availableUrls = scrapedImageLinks
+    .map((scrapedImageLink) => {
+      return scrapedImageLink.data.link;
     })
     .sort();
 
@@ -40,9 +40,9 @@ export const useTwitterMarkets = () => {
 
     queryFn: async () => {
       const results = await Promise.allSettled(
-        imageLinks.map(async (link) => {
+        scrapedImageLinks.map(async (link) => {
           const url = await originalShortenedUrlMutation.mutateAsync({
-            url: link.value,
+            url: link.data.link,
           });
           if (!isEventUrl(url)) {
             throw new Error('Url is not event url');

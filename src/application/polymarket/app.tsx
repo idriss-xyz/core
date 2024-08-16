@@ -1,39 +1,22 @@
-import { ErrorBoundary } from 'shared/observability';
-import { useExtensionSettings } from 'shared/extension';
 import { useTwitterLocationInfo } from 'host/twitter';
-import { useWarpcastLocationInfo } from 'host/warpcast';
+import { ErrorBoundary } from 'shared/observability';
 
 import { MarketWidgetContainer } from './widgets';
-import {
-  TwitterVisibleMarketsProvider,
-  WarpcastVisibleMarketsProvider,
-  useVisibleMarkets,
-} from './context';
+import { TwitterVisibleMarketsProvider, useVisibleMarkets } from './context';
 
-export const App = () => {
-  const { experimentalFeatures } = useExtensionSettings();
+const Base = () => {
+  const { isHost: isTwitter } = useTwitterLocationInfo();
 
-  const { isTwitter } = useTwitterLocationInfo();
+  const isExpectedHost = isTwitter;
 
-  const { isWarpcast } = useWarpcastLocationInfo();
-
-  if (!experimentalFeatures) {
+  if (!isExpectedHost) {
     return null;
   }
 
   return (
-    <ErrorBoundary exceptionEventName="polymarket-runtime-error">
-      {isTwitter ? (
-        <TwitterVisibleMarketsProvider>
-          <InjectVisibleMarkets />
-        </TwitterVisibleMarketsProvider>
-      ) : null}
-      {isWarpcast ? (
-        <WarpcastVisibleMarketsProvider>
-          <InjectVisibleMarkets />
-        </WarpcastVisibleMarketsProvider>
-      ) : null}
-    </ErrorBoundary>
+    <TwitterVisibleMarketsProvider>
+      <InjectVisibleMarkets />
+    </TwitterVisibleMarketsProvider>
   );
 };
 
@@ -42,15 +25,19 @@ const InjectVisibleMarkets = () => {
 
   return markets.map((market) => {
     return (
-      <ErrorBoundary
+      <MarketWidgetContainer
         key={`${market.top}-${market.conditionId}`}
-        exceptionEventName="polymarket-widget-runtime-error"
-      >
-        <MarketWidgetContainer
-          top={market.top}
-          conditionId={market.conditionId}
-        />
-      </ErrorBoundary>
+        top={market.top}
+        conditionId={market.conditionId}
+      />
     );
   });
+};
+
+export const App = () => {
+  return (
+    <ErrorBoundary>
+      <Base />
+    </ErrorBoundary>
+  );
 };

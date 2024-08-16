@@ -9,21 +9,22 @@ import {
   useWallet,
 } from 'shared/web3';
 import { ErrorMessage } from 'shared/ui';
+import { ErrorBoundary } from 'shared/observability';
 
 import { useSendForm, useSender } from '../hooks';
 import { SendPayload } from '../schema';
 import { getIconSource, getLoadingMessage } from '../utils';
-import { Recipient } from '../types';
+import { WidgetData } from '../types';
 
 interface Properties {
-  recipient: Recipient;
+  widgetData: WidgetData;
 }
 
 interface BaseProperties extends Properties {
   onClose: () => void;
 }
 
-const Base = ({ recipient, onClose }: BaseProperties) => {
+const Base = ({ widgetData, onClose }: BaseProperties) => {
   const {
     nodeToInject,
     walletAddress,
@@ -31,7 +32,7 @@ const Base = ({ recipient, onClose }: BaseProperties) => {
     availableNetworks,
     widgetOverrides,
     isHandleUser,
-  } = recipient;
+  } = widgetData;
   const { wallet } = useWallet();
 
   const sender = useSender({ wallet });
@@ -157,7 +158,11 @@ export const SendWidget = memo((properties: Properties) => {
     });
   }, []);
 
-  return <Base {...properties} key={closeCount} onClose={onClose} />;
+  return (
+    <ErrorBoundary>
+      <Base {...properties} key={closeCount} onClose={onClose} />
+    </ErrorBoundary>
+  );
 });
 
 SendWidget.displayName = 'SendWidget';

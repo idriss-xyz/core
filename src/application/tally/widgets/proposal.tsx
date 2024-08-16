@@ -4,7 +4,7 @@ import {
   Pagination,
   PaginationComponent,
   PulsingLoadingBar,
-  WidgetTab,
+  WidgetBase,
 } from 'shared/ui';
 import { getDifferenceInDays, getEndsInLabel } from 'shared/utils';
 
@@ -16,23 +16,18 @@ import {
   getProposalStatusLabel,
 } from '../utils';
 import { StatusChip } from '../components';
-import { TALLY_LOGO } from '../constants';
 
 interface Properties {
-  userHandle: string;
   proposalDetails: ProposalData;
   className?: string;
-  top?: number;
   pagination: Pagination;
   isLoading: boolean;
   onClose?: () => void;
 }
 
 export const Proposal = ({
-  userHandle,
   proposalDetails,
   className,
-  top,
   isLoading,
   pagination,
   onClose,
@@ -40,17 +35,12 @@ export const Proposal = ({
   const proposalEndDateInMs = new Date(proposalDetails.end.timestamp).getTime();
 
   return (
-    <WidgetTab
-      userHandle={userHandle}
+    <WidgetBase
       className={classes(
-        'overflow-visible text-xs leading-tight text-tally-text-primary',
+        'bg-white text-xs leading-tight text-tally-text-primary',
         className,
       )}
-      top={top}
       onClose={onClose}
-      tabName="Tally"
-      tabImage={TALLY_LOGO}
-      theme="bright"
     >
       <PulsingLoadingBar isLoading={isLoading} />
       <header className="flex items-center justify-between space-x-3">
@@ -88,7 +78,7 @@ export const Proposal = ({
             target="_blank"
           >
             <Chip
-              className="mr-2 inline-flex select-none items-center justify-center rounded-md border border-tally-gray-700 bg-tally-gray-700 px-4 py-1  font-semibold text-white transition-all duration-200 ease-in-out hover:bg-tally-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+              className="mr-2 inline-flex select-none items-center justify-center rounded-md border border-tally-gray-700 bg-tally-gray-700 px-4 py-1 font-semibold text-white transition-all duration-200 ease-in-out hover:bg-tally-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
               variant="info"
               width="long"
             >
@@ -98,6 +88,6 @@ export const Proposal = ({
         </div>
         <PaginationComponent pagination={pagination} />
       </footer>
-    </WidgetTab>
+    </WidgetBase>
   );
 };

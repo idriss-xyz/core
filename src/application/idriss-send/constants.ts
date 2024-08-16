@@ -697,7 +697,7 @@ export const ICON_TYPE_TO_SRC: Record<IconType, string> = {
   default: IDRISS_ICON,
 };
 
-export const PUBLIC_ETH_TAG_NAME = 'Public ETH' as const;
+export const PUBLIC_ETH_TAG_NAME = 'Public ETH';
 
 export const WALLET_TAGS = [
   {

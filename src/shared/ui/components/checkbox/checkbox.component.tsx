@@ -8,7 +8,7 @@ export const Checkbox = ({ value, onChange }: CheckboxProperties) => {
       onChange={(event) => {
         onChange(event.target.checked);
       }}
-      className="size-4 cursor-pointer rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 "
+      className="size-4 cursor-pointer rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500"
     />
   );
 };

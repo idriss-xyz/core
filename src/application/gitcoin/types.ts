@@ -14,6 +14,7 @@ export interface Recipient {
   nodeToInject: HTMLElement;
   isHandleUser: boolean;
   application: Application;
+  type: 'gitcoin';
 }
 export interface CrossChainDonationData {
   chainId: number;

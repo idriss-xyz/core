@@ -1,6 +1,13 @@
-import { GitcoinDonationRecipient } from 'application/gitcoin';
-import { IdrissSendRecipient } from 'application/idriss-send';
+import { GitcoinDonationWidgetData } from 'application/gitcoin';
+import { IdrissSendWidgetData } from 'application/idriss-send';
 
-export type Recipient =
-  | ({ type: 'gitcoin' } & GitcoinDonationRecipient)
-  | ({ type: 'idrissSend' } & IdrissSendRecipient);
+export type UserWidgetData = GitcoinDonationWidgetData | IdrissSendWidgetData;
+
+export type ProposalSource = 'snapshot' | 'tally' | 'agora';
+
+export interface PostWidgetProposalData {
+  top: number;
+  username: string;
+  officialNames: Record<ProposalSource, string | undefined>;
+  proposalsSources: ProposalSource[];
+}

@@ -8,6 +8,7 @@ import {
 } from 'react';
 import { useLocation, useUpdateEffect, useWindowSize } from 'react-use';
 
+import { useExtensionSettings } from 'shared/extension';
 import { Closable } from 'shared/ui';
 
 interface RenderChildrenProperties {
@@ -45,6 +46,16 @@ export const Container = memo(
 
     const injectedWidgetReference = useRef<HTMLImageElement | null>(null);
     const location = useLocation();
+    const { enabled } = useExtensionSettings();
+    useEffect(() => {
+      if (!enabled) {
+        for (const element of document.querySelectorAll(
+          '[data-idriss-widget="true"]',
+        ))
+          element.remove();
+      }
+    }, [enabled]);
+
     useUpdateEffect(() => {
       return () => {
         injectedWidgetReference.current?.remove();
@@ -116,20 +127,26 @@ export const Container = memo(
 
     return (
       <>
-        <Closable
-          left={isMobile ? undefined : position.x}
-          right={isMobile ? 0 : undefined}
-          top={position.y + iconSize}
-          className="absolute w-64 rounded-md bg-white text-gray-900 shadow-2xl"
-          closeButtonClassName="hover:enabled:bg-black/20 active:enabled:bg-black/40"
-          closeButtonIconClassName="text-[#000]"
-          onClickInside={disableCloseOnHoverAway}
-          onClose={close}
-          closeOnHoverAway={closeOnHoverAway}
-          closeOnClickAway={closeOnClickAway}
+        <div
+          className="absolute"
+          style={{
+            left: isMobile ? undefined : position.x,
+            right: isMobile ? 0 : undefined,
+            top: position.y + iconSize,
+          }}
         >
-          {children({ close })}
-        </Closable>
+          <Closable
+            className="w-64 rounded-md bg-white text-gray-900 shadow-2xl"
+            closeButtonClassName="hover:enabled:bg-black/20 active:enabled:bg-black/40"
+            closeButtonIconClassName="text-[#000]"
+            onClickInside={disableCloseOnHoverAway}
+            onClose={close}
+            closeOnHoverAway={closeOnHoverAway}
+            closeOnClickAway={closeOnClickAway}
+          >
+            {children({ close })}
+          </Closable>
+        </div>
         <img
           className="absolute"
           style={{

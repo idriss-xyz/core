@@ -1,1 +1,1 @@
-export { useTwitterSnapshotWidgetsInfo } from './use-twitter-snapshot-widgets-info';
+export { useProposalsQuery } from './use-proposals-query';

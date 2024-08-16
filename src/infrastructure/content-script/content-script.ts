@@ -14,6 +14,7 @@ import {
 import { ExtensionStatusManager } from 'src/popup/extension-status-manager';
 import { isTwitterHostname } from 'host/twitter';
 import { isWarpcastHostname } from 'host/warpcast';
+import { isSupercastHostname } from 'host/supercast';
 
 import { ExperimentalFeaturesManager } from '../../popup/experimental-features-manager';
 
@@ -34,7 +35,8 @@ export class ContentScript {
   shouldRun() {
     return (
       isTwitterHostname(window.location.hostname ?? '') ||
-      isWarpcastHostname(window.location.hostname ?? '')
+      isWarpcastHostname(window.location.hostname ?? '') ||
+      isSupercastHostname(window.location.hostname ?? '')
     );
   }
 

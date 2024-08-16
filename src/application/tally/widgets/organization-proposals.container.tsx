@@ -1,25 +1,19 @@
 import { useEffect, useState } from 'react';
 
-import { useCommandQuery } from 'shared/messaging';
 import { Pagination } from 'shared/ui';
+import { ErrorBoundary } from 'shared/observability';
 
-import { GetTallyProposalsCommand } from '../commands';
+import { useProposalsQuery } from '../hooks';
 
 import { Proposal } from './proposal';
 
 interface Properties {
-  userHandle: string;
   className?: string;
-  top?: number;
   onClose?: () => void;
+  username: string;
 }
 
-export const OrganizationProposalsContainer = ({
-  userHandle,
-  className = 'fixed top-20',
-  top,
-  onClose,
-}: Properties) => {
+const Base = ({ className, onClose, username }: Properties) => {
   const [previousProposalCursors, setPreviousProposalCursors] = useState<
     (string | null)[]
   >([]);
@@ -30,33 +24,23 @@ export const OrganizationProposalsContainer = ({
     null,
   );
 
-  const proposalQuery = useCommandQuery({
-    command: new GetTallyProposalsCommand({
-      twitterHandle: userHandle,
-      afterCursor: currentProposalCursor,
-    }),
-    retry: 5,
-    retryDelay: 1800,
-    staleTime: Number.POSITIVE_INFINITY,
-    placeholderData: (previousData) => {
-      return previousData;
-    },
+  const proposalQuery = useProposalsQuery({
+    username,
+    afterCursor: currentProposalCursor,
   });
 
   const currentProposal = proposalQuery.data?.nodes[0];
   const nextProposal = proposalQuery.data?.nodes[1];
 
-  const isLoadingProposal =
-    proposalQuery.isLoading || proposalQuery.isPlaceholderData;
   const isPreviousProposalAvailable = previousProposalCursors.length > 0;
   const isNextProposalAvailable =
-    nextProposal !== undefined && !isLoadingProposal;
+    nextProposal !== undefined && !proposalQuery.isLoading;
 
   const showPreviousProposal = () => {
     const previousProposalCursor = previousProposalCursors.at(-1);
     if (
       !isPreviousProposalAvailable ||
-      isLoadingProposal ||
+      proposalQuery.isLoading ||
       previousProposalCursor === undefined
     ) {
       return;
@@ -103,13 +87,19 @@ export const OrganizationProposalsContainer = ({
 
   return (
     <Proposal
-      userHandle={userHandle}
       pagination={pagination}
-      isLoading={isLoadingProposal}
+      isLoading={proposalQuery.isLoading}
       proposalDetails={currentProposal}
       className={className}
-      top={top}
       onClose={onClose}
     />
+  );
+};
+
+export const OrganizationProposalsContainer = (properties: Properties) => {
+  return (
+    <ErrorBoundary>
+      <Base {...properties} />
+    </ErrorBoundary>
   );
 };
