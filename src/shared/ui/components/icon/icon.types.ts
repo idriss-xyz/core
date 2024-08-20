@@ -1,6 +1,6 @@
 import * as Icons from '@radix-ui/react-icons';
 
-type IconName = keyof typeof Icons;
+export type IconName = keyof typeof Icons;
 
 export interface IconProperties {
   name: IconName;

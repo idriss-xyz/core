@@ -1,12 +1,16 @@
 export type { Option, Pagination, ButtonProperties } from './components';
+export type { IconName } from './components';
+export type { ExtendedCheckboxOption } from './components';
 export {
   Chip,
   Icon,
   Modal,
   Button,
+  Toggle,
   Select,
   GasIcon,
   Spinner,
+  Tooltip,
   Checkbox,
   Closable,
   InputBase,

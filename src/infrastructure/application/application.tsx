@@ -10,6 +10,7 @@ import { ErrorBoundary, WithObservabilityScope } from 'shared/observability';
 import { TwitterScrapingContextProvider } from 'host/twitter';
 import { WarpcastScrapingContextProvider } from 'host/warpcast';
 import { SupercastScrapingContextProvider } from 'host/supercast';
+import { ExtensionContextMenu } from 'application/extension-context-menu';
 export class Application {
   private constructor() {}
 
@@ -57,7 +58,12 @@ const ApplicationWithProviders = () => {
                       <TwitterScrapingContextProvider>
                         <WarpcastScrapingContextProvider>
                           <SupercastScrapingContextProvider>
-                            <Final />
+                            <ExtensionSettingsProvider>
+                              <>
+                                <ExtensionContextMenu />
+                                <Final />
+                              </>
+                            </ExtensionSettingsProvider>
                           </SupercastScrapingContextProvider>
                         </WarpcastScrapingContextProvider>
                       </TwitterScrapingContextProvider>

@@ -110,7 +110,13 @@ module.exports = {
         default: 'disallow',
         rules: [
           {
-            target: ['shared', 'host', 'application', 'infrastructure', 'final'],
+            target: [
+              'shared',
+              'host',
+              'application',
+              'infrastructure',
+              'final',
+            ],
             allow: 'index.(ts|tsx)',
           },
         ],
@@ -140,11 +146,7 @@ module.exports = {
           },
           {
             from: ['final'],
-            allow: [
-              'application',
-              'shared',
-              'host',
-            ],
+            allow: ['application', 'shared', 'host'],
           },
           {
             from: ['application'],
@@ -184,7 +186,11 @@ module.exports = {
     'prettier/prettier': 'error',
     '@typescript-eslint/no-unused-vars': [
       'warn',
-      { argsIgnorePattern: '^_', ignoreRestSiblings: true },
+      {
+        argsIgnorePattern: '^_',
+        ignoreRestSiblings: true,
+        varsIgnorePattern: '^_',
+      },
     ],
     'import/order': [
       'error',

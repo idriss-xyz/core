@@ -5,9 +5,9 @@ import { ErrorBoundary } from 'shared/observability';
 import { Proposals, UserWidgets } from './widgets';
 
 export const Final = () => {
-  const { enabled, experimentalFeatures } = useExtensionSettings();
+  const { extensionSettings } = useExtensionSettings();
 
-  if (!enabled) {
+  if (!extensionSettings['entire-extension-enabled']) {
     return null;
   }
 
@@ -15,12 +15,10 @@ export const Final = () => {
     <ErrorBoundary>
       <UserWidgets />
 
-      {experimentalFeatures ? (
-        <>
-          <PolymarketApp />
-          <Proposals />
-        </>
-      ) : null}
+      <>
+        {extensionSettings['polymarket-enabled'] ? <PolymarketApp /> : null}
+        <Proposals />
+      </>
     </ErrorBoundary>
   );
 };

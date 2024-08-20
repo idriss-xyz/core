@@ -24,7 +24,6 @@
     "148": "img/icon148.png"
   },
   "action": {
-    "default_popup": "standalone.html",
     "default_icon": {
       "16": "img/icon16.png"
     }

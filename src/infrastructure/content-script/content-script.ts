@@ -4,19 +4,18 @@ import {
   CommandResponse,
   POPUP_TO_WEBPAGE_MESSAGE,
   SerializedCommand,
+  TOGGLE_EXTENSION_CONTEXT_MENU_VISIBILITY,
   onWindowMessage,
 } from 'shared/messaging';
 import {
-  ExtensionSettings,
+  ExtensionSettingsManager,
   GET_EXTENSION_SETTINGS_REQUEST,
   GET_EXTENSION_SETTINGS_RESPONSE,
 } from 'shared/extension';
-import { ExtensionStatusManager } from 'src/popup/extension-status-manager';
 import { isTwitterHostname } from 'host/twitter';
 import { isWarpcastHostname } from 'host/warpcast';
 import { isSupercastHostname } from 'host/supercast';
-
-import { ExperimentalFeaturesManager } from '../../popup/experimental-features-manager';
+import { EXTENSION_BUTTON_CLICKED } from 'infrastructure/constants';
 
 export class ContentScript {
   private constructor(private environment: typeof chrome) {}
@@ -82,22 +81,30 @@ export class ContentScript {
 
   bridgeFromExtensionToWebpageScript() {
     chrome.runtime.onMessage.addListener((request) => {
+      console.log('request', request);
       if (request.type === POPUP_TO_WEBPAGE_MESSAGE) {
         const message = {
           type: request.detail.postMessageType,
           detail: request.detail.data,
         };
         window.postMessage(message);
+        return;
+      }
+
+      if (request.type === EXTENSION_BUTTON_CLICKED) {
+        const message = {
+          type: TOGGLE_EXTENSION_CONTEXT_MENU_VISIBILITY,
+        };
+        window.postMessage(message);
+        return;
       }
     });
   }
 
   subscribeToExtensionSettings() {
     onWindowMessage(GET_EXTENSION_SETTINGS_REQUEST, async () => {
-      const detail: ExtensionSettings = {
-        experimentalFeatures: await ExperimentalFeaturesManager.isEnabled(),
-        enabled: await ExtensionStatusManager.isEnabled(),
-      };
+      const detail = await ExtensionSettingsManager.getAllSettings();
+
       const message = {
         type: GET_EXTENSION_SETTINGS_RESPONSE,
         detail,
