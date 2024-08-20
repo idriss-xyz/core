@@ -1,4 +1,7 @@
 export interface ExtensionSettings {
-  enabled: boolean;
-  experimentalFeatures: boolean;
+  isExtensionEnabled: boolean;
+  isTallyApplicationEnabled: boolean;
+  isSnapshotApplicationEnabled: boolean;
+  isAgoraApplicationEnabled: boolean;
+  isPolymarketApplicationEnabled: boolean;
 }

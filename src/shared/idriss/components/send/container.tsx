@@ -46,15 +46,15 @@ export const Container = memo(
 
     const injectedWidgetReference = useRef<HTMLImageElement | null>(null);
     const location = useLocation();
-    const { enabled } = useExtensionSettings();
+    const { extensionSettings } = useExtensionSettings();
     useEffect(() => {
-      if (!enabled) {
+      if (!extensionSettings['entire-extension-enabled']) {
         for (const element of document.querySelectorAll(
           '[data-idriss-widget="true"]',
         ))
           element.remove();
       }
-    }, [enabled]);
+    }, [extensionSettings]);
 
     useUpdateEffect(() => {
       return () => {

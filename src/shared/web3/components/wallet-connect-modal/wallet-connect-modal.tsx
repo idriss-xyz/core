@@ -192,6 +192,8 @@ export const WalletConnectModal = createModal(
                   <Checkbox
                     value={termsOfUseAccepted}
                     onChange={setTermsOfUseAccepted}
+                    className="bg-[#53535a] focus:ring-2 focus:ring-blue-500"
+                    additionalClassNameWhenChecked="bg-[#acc3fb] border-[#53535a]"
                   />
                   <p className="text-sm">
                     I agree to the{' '}
