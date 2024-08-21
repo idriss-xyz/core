@@ -21,12 +21,26 @@ import {
   USDC_LOGO,
   WETH_LOGO,
   ZYNK_SYNC_ERA_LOGO,
+  ALEPH_LOGO,
 } from './logos';
 import { Chain, Token, ChainToken } from './types';
 
 export const NATIVE_COIN_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 
 export const CHAIN = {
+  ALEPH: {
+    id: 41_455,
+    name: 'Aleph Zero EVM',
+    logo: ALEPH_LOGO,
+    // TODO: move nativeCurrency to CHAIN_TO_TOKEN_IN_CHAIN, probably something isNative: true,
+    nativeCurrency: {
+      name: 'AZERO',
+      symbol: 'AZERO',
+      decimals: 18,
+    },
+    rpcUrls: ['https://rpc.alephzero.raas.gelato.cloud'],
+    blockExplorerUrls: ['https://evm-explorer.alephzero.org/'],
+  },
   POLYGON: {
     id: 137,
     name: 'Polygon Mainnet',
@@ -38,7 +52,7 @@ export const CHAIN = {
       decimals: 18,
     },
     rpcUrls: ['https://polygon-rpc.com'],
-    blockExplorerUrls: ['https://polygon.blockscout.com'],
+    blockExplorerUrls: ['https://polygon.blockscout.com/'],
   },
   ARBITRUM_ONE: {
     id: 42_161,
@@ -50,7 +64,7 @@ export const CHAIN = {
       decimals: 18,
     },
     rpcUrls: ['https://arbitrum.llamarpc.com'],
-    blockExplorerUrls: ['https://arbitrum.blockscout.com'],
+    blockExplorerUrls: ['https://arbitrum.blockscout.com/'],
   },
   OPTIMISM: {
     id: 10,
@@ -62,7 +76,7 @@ export const CHAIN = {
       decimals: 18,
     },
     rpcUrls: ['https://mainnet.optimism.io'],
-    blockExplorerUrls: ['https://optimism.blockscout.com'],
+    blockExplorerUrls: ['https://optimism.blockscout.com/'],
   },
   BASE: {
     id: 8453,
@@ -74,7 +88,7 @@ export const CHAIN = {
       decimals: 18,
     },
     rpcUrls: ['https://mainnet.base.org'],
-    blockExplorerUrls: ['https://base.blockscout.com'],
+    blockExplorerUrls: ['https://base.blockscout.com/'],
   },
   LINEA: {
     id: 59_144,
@@ -86,7 +100,7 @@ export const CHAIN = {
       decimals: 18,
     },
     rpcUrls: ['https://rpc.linea.build'],
-    blockExplorerUrls: ['https://lineascan.build'],
+    blockExplorerUrls: ['https://lineascan.build/'],
   },
   ZK_SYNC_ERA: {
     id: 324,
@@ -98,7 +112,7 @@ export const CHAIN = {
       decimals: 18,
     },
     rpcUrls: ['https://mainnet.era.zksync.io'],
-    blockExplorerUrls: ['https://zksync.blockscout.com'],
+    blockExplorerUrls: ['https://zksync.blockscout.com/'],
   },
   MANTLE: {
     id: 5000,
@@ -110,7 +124,7 @@ export const CHAIN = {
       decimals: 18,
     },
     rpcUrls: ['https://mantle.publicnode.com'],
-    blockExplorerUrls: ['https://explorer.mantle.xyz'],
+    blockExplorerUrls: ['https://explorer.mantle.xyz/'],
   },
   SCROLL: {
     id: 534_352,
@@ -122,7 +136,7 @@ export const CHAIN = {
       decimals: 18,
     },
     rpcUrls: ['https://rpc.scroll.io'],
-    blockExplorerUrls: ['https://scrollscan.com'],
+    blockExplorerUrls: ['https://scrollscan.com/'],
   },
   BNB_CHAIN: {
     id: 56,
@@ -134,7 +148,7 @@ export const CHAIN = {
       decimals: 18,
     },
     rpcUrls: ['https://bsc-dataseed.binance.org'],
-    blockExplorerUrls: ['https://bscscan.com'],
+    blockExplorerUrls: ['https://bscscan.com/'],
   },
   ETHEREUM: {
     id: 1,
@@ -203,9 +217,29 @@ export const TOKEN = {
   REVOLT2EARN: { name: 'Revolt 2 Earn', symbol: 'RVLT', logo: RVLT_LOGO },
   MANTLE: { name: 'Mantle', symbol: 'MNT', logo: MANTLE_LOGO },
   DEGEN: { name: 'Degen', symbol: 'DEGEN', logo: DEGEN_LOGO },
+  AZERO: { name: 'Aleph Zero', symbol: 'AZERO', logo: ALEPH_LOGO },
 } satisfies Record<string, Token>;
 
 export const CHAIN_ID_TO_TOKENS = {
+  [CHAIN.ALEPH.id]: [
+    {
+      ...TOKEN.AZERO,
+      decimals: 18,
+      address: NATIVE_COIN_ADDRESS,
+    },
+    {
+      ...TOKEN.WETH,
+      name: 'ETH on Aleph',
+      decimals: 18,
+      address: '0xB3f0eE446723f4258862D949B4c9688e7e7d35d3',
+    },
+    {
+      ...TOKEN.USDC,
+      name: 'USDC',
+      decimals: 6,
+      address: '0x4Ca4B85Ead5EA49892d3a81DbfAE2f5c2F75d53D',
+    },
+  ],
   [CHAIN.ETHEREUM.id]: [
     {
       ...TOKEN.ETHEREUM,

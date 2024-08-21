@@ -31,11 +31,7 @@ interface Properties {
   enabled: boolean;
 }
 
-export const useWidgetsData = ({
-  scrapedUsers,
-  handle,
-  enabled,
-}: Properties) => {
+export const useWidgetsData = ({ scrapedUsers, enabled }: Properties) => {
   const [digestToWallet, setDigestToWallet] = useState<Record<string, string>>(
     {},
   );
@@ -191,9 +187,7 @@ export const useWidgetsData = ({
 
         const { top, node, username, availableNetworks, widgetOverrides } =
           user;
-
-        const isHandleUser =
-          handle === username && isHandleNode(node as HTMLElement);
+        const isHandleUser = isHandleNode(node as HTMLElement);
 
         const nodeToInject = getNodeToInjectToUser(node, isHandleUser);
 
@@ -213,7 +207,7 @@ export const useWidgetsData = ({
         };
       })
       .filter(Boolean);
-  }, [recipientsWithOptionalWallet, handle, digestToWallet]);
+  }, [recipientsWithOptionalWallet, digestToWallet]);
 
   return { widgets };
 };

@@ -28,11 +28,12 @@ const specificDomainList = {
     "lineascan.build": EtherscanPageManager,
     "goerli.lineascan.build": EtherscanPageManager,
     "explorer.goerli.linea.build": LineaExplorerPageManager,
-    "explorer.linea.build": LineaExplorerPageManager,
+    "explorer.linea.build": BlockscoutPageManager,
     "explorer.zksync.io": ZKScanPageManager,
     "blockscout.com": BlockscoutPageManager,
-    "explorer.mantle.xyz": MantleExplorerPageManager,
-    "blockscout.scroll.io": LineaExplorerPageManager
+    "explorer.mantle.xyz": BlockscoutPageManager,
+    "blockscout.scroll.io": LineaExplorerPageManager,
+    "evm-explorer.alephzero.org": BlockscoutPageManager
 }
 const defaultDomainList = [
     // "binance.com",

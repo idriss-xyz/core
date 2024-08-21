@@ -67,7 +67,7 @@ const Base = ({ widgetData, onClose }: BaseProperties) => {
     );
   }, [selectedToken?.decimals, sender.tokensToSend]);
 
-  const iconSize = isHandleUser ? 22 : 16;
+  const iconSize = isHandleUser ? 20 : 16;
   const iconSource = getIconSource(widgetOverrides?.iconType ?? 'default');
 
   return (

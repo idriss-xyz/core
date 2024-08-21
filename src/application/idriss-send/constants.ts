@@ -4,6 +4,7 @@ import { IDRISS_ICON, IDRISS_RED_ICON } from 'shared/idriss';
 import { IconType } from './schema';
 
 export const DEFAULT_ALLOWED_CHAINS_IDS = [
+  CHAIN.ALEPH.id,
   CHAIN.POLYGON.id,
   CHAIN.ETHEREUM.id,
   CHAIN.ZK_SYNC_ERA.id,
@@ -690,6 +691,7 @@ export const CHAIN_TO_IDRISS_TIPPING_ADDRESS = {
   [CHAIN.BASE.id]: '0x324Ad1738B9308D5AF5E81eDd6389BFa082a8968',
   [CHAIN.MANTLE.id]: '0x324Ad1738B9308D5AF5E81eDd6389BFa082a8968',
   [CHAIN.SCROLL.id]: '0x324ad1738b9308d5af5e81edd6389bfa082a8968',
+  [CHAIN.ALEPH.id]: '0xcA6742d2d6B9dBFFD841DF25C15cFf45FBbB98f4',
 };
 
 export const ICON_TYPE_TO_SRC: Record<IconType, string> = {

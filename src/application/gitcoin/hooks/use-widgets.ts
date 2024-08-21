@@ -14,11 +14,7 @@ interface Properties {
   enabled: boolean;
 }
 
-export const useWidgetsData = ({
-  scrapedUsers,
-  handle,
-  enabled,
-}: Properties) => {
+export const useWidgetsData = ({ scrapedUsers, enabled }: Properties) => {
   const getApplicationsQuery = useCommandQuery({
     command: new GetApplicationsCommand({}),
     select: selectTwitterApplications,
@@ -52,8 +48,7 @@ export const useWidgetsData = ({
           data: { username },
         } = scrapedUser;
 
-        const isHandleUser =
-          handle === username && isHandleNode(node as HTMLElement);
+        const isHandleUser = isHandleNode(node as HTMLElement);
 
         const nodeToInject = getNodeToInjectToUser(node, isHandleUser);
 
@@ -71,7 +66,7 @@ export const useWidgetsData = ({
         };
       })
       .filter(Boolean);
-  }, [getApplicationsQuery.data, handle, scrapedUsers]);
+  }, [getApplicationsQuery.data, scrapedUsers]);
 
   return { widgets };
 };
