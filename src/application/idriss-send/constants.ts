@@ -4,16 +4,16 @@ import { IDRISS_ICON, IDRISS_RED_ICON } from 'shared/idriss';
 import { IconType } from './schema';
 
 export const DEFAULT_ALLOWED_CHAINS_IDS = [
-  CHAIN.ALEPH.id,
-  CHAIN.POLYGON.id,
-  CHAIN.ETHEREUM.id,
-  CHAIN.ZK_SYNC_ERA.id,
   CHAIN.BASE.id,
-  CHAIN.OPTIMISM.id,
-  CHAIN.SCROLL.id,
-  CHAIN.MANTLE.id,
-  CHAIN.LINEA.id,
+  CHAIN.ALEPH.id,
   CHAIN.BNB_CHAIN.id,
+  CHAIN.ETHEREUM.id,
+  CHAIN.LINEA.id,
+  CHAIN.MANTLE.id,
+  CHAIN.OPTIMISM.id,
+  CHAIN.POLYGON.id,
+  CHAIN.SCROLL.id,
+  CHAIN.ZK_SYNC_ERA.id,
 ];
 
 export const ERC20_ABI = [
