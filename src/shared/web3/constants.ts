@@ -39,7 +39,7 @@ export const CHAIN = {
       decimals: 18,
     },
     rpcUrls: ['https://rpc.alephzero.raas.gelato.cloud'],
-    blockExplorerUrls: ['https://evm-explorer.alephzero.org/'],
+    blockExplorerUrls: ['https://evm-explorer.alephzero.org'],
   },
   POLYGON: {
     id: 137,
@@ -52,7 +52,7 @@ export const CHAIN = {
       decimals: 18,
     },
     rpcUrls: ['https://polygon-rpc.com'],
-    blockExplorerUrls: ['https://polygon.blockscout.com/'],
+    blockExplorerUrls: ['https://polygon.blockscout.com'],
   },
   ARBITRUM_ONE: {
     id: 42_161,
@@ -64,7 +64,7 @@ export const CHAIN = {
       decimals: 18,
     },
     rpcUrls: ['https://arbitrum.llamarpc.com'],
-    blockExplorerUrls: ['https://arbitrum.blockscout.com/'],
+    blockExplorerUrls: ['https://arbitrum.blockscout.com'],
   },
   OPTIMISM: {
     id: 10,
@@ -76,7 +76,7 @@ export const CHAIN = {
       decimals: 18,
     },
     rpcUrls: ['https://mainnet.optimism.io'],
-    blockExplorerUrls: ['https://optimism.blockscout.com/'],
+    blockExplorerUrls: ['https://optimism.blockscout.com'],
   },
   BASE: {
     id: 8453,
@@ -88,7 +88,7 @@ export const CHAIN = {
       decimals: 18,
     },
     rpcUrls: ['https://mainnet.base.org'],
-    blockExplorerUrls: ['https://base.blockscout.com/'],
+    blockExplorerUrls: ['https://base.blockscout.com'],
   },
   LINEA: {
     id: 59_144,
@@ -100,7 +100,7 @@ export const CHAIN = {
       decimals: 18,
     },
     rpcUrls: ['https://rpc.linea.build'],
-    blockExplorerUrls: ['https://lineascan.build/'],
+    blockExplorerUrls: ['https://lineascan.build'],
   },
   ZK_SYNC_ERA: {
     id: 324,
@@ -112,7 +112,7 @@ export const CHAIN = {
       decimals: 18,
     },
     rpcUrls: ['https://mainnet.era.zksync.io'],
-    blockExplorerUrls: ['https://zksync.blockscout.com/'],
+    blockExplorerUrls: ['https://zksync.blockscout.com'],
   },
   MANTLE: {
     id: 5000,
@@ -124,7 +124,7 @@ export const CHAIN = {
       decimals: 18,
     },
     rpcUrls: ['https://mantle.publicnode.com'],
-    blockExplorerUrls: ['https://explorer.mantle.xyz/'],
+    blockExplorerUrls: ['https://explorer.mantle.xyz'],
   },
   SCROLL: {
     id: 534_352,
@@ -136,7 +136,7 @@ export const CHAIN = {
       decimals: 18,
     },
     rpcUrls: ['https://rpc.scroll.io'],
-    blockExplorerUrls: ['https://scrollscan.com/'],
+    blockExplorerUrls: ['https://scrollscan.com'],
   },
   BNB_CHAIN: {
     id: 56,
@@ -148,7 +148,7 @@ export const CHAIN = {
       decimals: 18,
     },
     rpcUrls: ['https://bsc-dataseed.binance.org'],
-    blockExplorerUrls: ['https://bscscan.com/'],
+    blockExplorerUrls: ['https://bscscan.com'],
   },
   ETHEREUM: {
     id: 1,
@@ -160,7 +160,7 @@ export const CHAIN = {
       decimals: 18,
     },
     rpcUrls: ['https://eth.llamarpc.com'],
-    blockExplorerUrls: ['https://eth.blockscout.com/'],
+    blockExplorerUrls: ['https://eth.blockscout.com'],
   },
 } satisfies Record<string, Chain>;
 
