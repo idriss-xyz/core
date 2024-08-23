@@ -5,6 +5,7 @@ import {
   useEffect,
   useState,
 } from 'react';
+import debounce from 'lodash.debounce';
 
 import {
   onWindowMessage,
@@ -53,6 +54,16 @@ export const ExtensionSettingsProvider = ({ children }: Properties) => {
   >(initialExtensionSettings);
   const [isContextMenuVisible, setIsContextMenuVisible] = useState(false);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const toggleContextMenuVisibility = useCallback(
+    debounce(() => {
+      setIsContextMenuVisible((previous) => {
+        return !previous;
+      });
+    }, 50),
+    [],
+  );
+
   const hideContextMenu = useCallback(() => {
     setIsContextMenuVisible(false);
   }, []);
@@ -75,18 +86,9 @@ export const ExtensionSettingsProvider = ({ children }: Properties) => {
   };
 
   useEffect(() => {
-    console.log('setting');
-    let removeListener: (() => void) | undefined;
-    onWindowMessage<void>(
-      TOGGLE_EXTENSION_CONTEXT_MENU_VISIBILITY,
-      (_data, removeEventListener) => {
-        console.log('toggling');
-        removeListener = removeEventListener;
-        setIsContextMenuVisible((previous) => {
-          return !previous;
-        });
-      },
-    );
+    onWindowMessage<void>(TOGGLE_EXTENSION_CONTEXT_MENU_VISIBILITY, () => {
+      toggleContextMenuVisibility();
+    });
 
     onWindowMessage<Record<ExtensionSettingsStorageKey, boolean>>(
       GET_EXTENSION_SETTINGS_RESPONSE,
@@ -95,18 +97,20 @@ export const ExtensionSettingsProvider = ({ children }: Properties) => {
         removeEventListener();
       },
     );
-
-    return () => {
-      console.log('removing', removeListener);
-      removeListener?.();
-    };
-  }, []);
+  }, [toggleContextMenuVisibility]);
 
   useEffect(() => {
     window.postMessage({
       type: GET_EXTENSION_SETTINGS_REQUEST,
     });
   }, []);
+
+  // Clean up the debounced function on component unmount
+  useEffect(() => {
+    return () => {
+      toggleContextMenuVisibility.cancel();
+    };
+  }, [toggleContextMenuVisibility]);
 
   return (
     <ExtensionSettingsContext.Provider

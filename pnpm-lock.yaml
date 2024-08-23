@@ -80,6 +80,9 @@ importers:
       lit:
         specifier: ^3.1.2
         version: 3.1.4
+      lodash.debounce:
+        specifier: ^4.0.8
+        version: 4.0.8
       lodash.isequal:
         specifier: ^4.5.0
         version: 4.5.0
@@ -162,6 +165,9 @@ importers:
       '@types/chrome':
         specifier: ^0.0.270
         version: 0.0.270
+      '@types/lodash.debounce':
+        specifier: ^4.0.9
+        version: 4.0.9
       '@types/lodash.isequal':
         specifier: ^4.5.8
         version: 4.5.8
@@ -2806,6 +2812,9 @@ packages:
 
   '@types/keyv@3.1.4':
     resolution: {integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==}
+
+  '@types/lodash.debounce@4.0.9':
+    resolution: {integrity: sha512-Ma5JcgTREwpLRwMM+XwBR7DaWe96nC38uCBDFKZWbNKD+osjVzdpnUSwBcqCptrp16sSOLBAUb50Car5I0TCsQ==}
 
   '@types/lodash.isequal@4.5.8':
     resolution: {integrity: sha512-uput6pg4E/tj2LGxCZo9+y27JNyB2OZuuI/T5F+ylVDYuqICLG2/ktjxx0v6GvVntAf8TvEzeQLcV0ffRirXuA==}
@@ -11209,6 +11218,10 @@ snapshots:
   '@types/keyv@3.1.4':
     dependencies:
       '@types/node': 12.20.55
+
+  '@types/lodash.debounce@4.0.9':
+    dependencies:
+      '@types/lodash': 4.17.7
 
   '@types/lodash.isequal@4.5.8':
     dependencies:

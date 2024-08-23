@@ -38,7 +38,6 @@ const onInstalled = () => {
     ],
   });
   chrome.action.onClicked.addListener((tab) => {
-    console.log('tab', tab);
     chrome.tabs
       .sendMessage(tab?.id ?? 0, {
         type: EXTENSION_BUTTON_CLICKED,

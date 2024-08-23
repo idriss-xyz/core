@@ -19,7 +19,6 @@ export const App = () => {
     changeExtensionSetting,
   } = useExtensionSettings();
 
-  console.log('isContextMenuVisible', isContextMenuVisible);
   if (!isContextMenuVisible) {
     return null;
   }

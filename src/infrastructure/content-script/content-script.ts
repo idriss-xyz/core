@@ -81,7 +81,6 @@ export class ContentScript {
 
   bridgeFromExtensionToWebpageScript() {
     chrome.runtime.onMessage.addListener((request) => {
-      console.log('request', request);
       if (request.type === POPUP_TO_WEBPAGE_MESSAGE) {
         const message = {
           type: request.detail.postMessageType,
