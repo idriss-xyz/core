@@ -14,11 +14,8 @@ export const Final = () => {
   return (
     <ErrorBoundary>
       <UserWidgets />
-
-      <>
-        {extensionSettings['polymarket-enabled'] ? <PolymarketApp /> : null}
-        <Proposals />
-      </>
+      <PolymarketApp />
+      <Proposals />
     </ErrorBoundary>
   );
 };
