@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { useAgoraProposalsQuery } from 'application/agora';
 import { useSnapshotProposalsQuery } from 'application/snapshot';
 import { useTallyProposalsQuery } from 'application/tally';
+import { useExtensionSettings } from 'shared/extension';
 
 import { PostWidgetProposalData, ProposalSource } from '../types';
 
@@ -16,26 +17,38 @@ interface Properties {
  * It is used to postpone rendering until we have initial data so there is no waiting time when switching tab. */
 export const usePrefetchProposals = ({ widgetData }: Properties) => {
   const applicationsStatus = useApplicationStatus();
+  const { extensionSettings } = useExtensionSettings();
+
+  const agoraEnabled =
+    applicationsStatus.agora &&
+    widgetData.proposalsSources.includes('agora') &&
+    extensionSettings['agora-enabled'];
 
   const agoraProposalsQuery = useAgoraProposalsQuery({
     offset: 0,
-    enabled:
-      applicationsStatus.agora && widgetData.proposalsSources.includes('agora'),
+    enabled: agoraEnabled,
   });
+
+  const snapshotEnabled =
+    applicationsStatus.snapshot &&
+    widgetData.proposalsSources.includes('snapshot') &&
+    extensionSettings['snapshot-enabled'];
 
   const snapshotProposalsQuery = useSnapshotProposalsQuery({
     pageNumber: 0,
-    enabled:
-      applicationsStatus.snapshot &&
-      widgetData.proposalsSources.includes('snapshot'),
+    enabled: snapshotEnabled,
     officialName: widgetData.officialNames.snapshot ?? '',
   });
+
+  const tallyEnabled =
+    applicationsStatus.tally &&
+    widgetData.proposalsSources.includes('tally') &&
+    extensionSettings['tally-enabled'];
 
   const tallyProposalsQuery = useTallyProposalsQuery({
     afterCursor: null,
     username: widgetData.username,
-    enabled:
-      applicationsStatus.tally && widgetData.proposalsSources.includes('tally'),
+    enabled: tallyEnabled,
   });
 
   const isPrefetched =
@@ -50,20 +63,27 @@ export const usePrefetchProposals = ({ widgetData }: Properties) => {
   const activeSources = useMemo(() => {
     const sources: ProposalSource[] = [];
 
-    if (hasAgoraProposal) {
+    if (hasAgoraProposal && agoraEnabled) {
       sources.push('agora');
     }
 
-    if (hasSnapshotProposal) {
+    if (hasSnapshotProposal && snapshotEnabled) {
       sources.push('snapshot');
     }
 
-    if (hasTallyProposal) {
+    if (hasTallyProposal && tallyEnabled) {
       sources.push('tally');
     }
 
     return sources;
-  }, [hasAgoraProposal, hasSnapshotProposal, hasTallyProposal]);
+  }, [
+    agoraEnabled,
+    hasAgoraProposal,
+    hasSnapshotProposal,
+    hasTallyProposal,
+    snapshotEnabled,
+    tallyEnabled,
+  ]);
 
   return {
     isPrefetched,
