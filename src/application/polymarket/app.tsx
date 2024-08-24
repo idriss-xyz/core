@@ -1,15 +1,17 @@
 import { useTwitterLocationInfo } from 'host/twitter';
 import { ErrorBoundary } from 'shared/observability';
+import { useExtensionSettings } from 'shared/extension';
 
 import { MarketWidgetContainer } from './widgets';
 import { TwitterVisibleMarketsProvider, useVisibleMarkets } from './context';
 
 const Base = () => {
   const { isHost: isTwitter } = useTwitterLocationInfo();
+  const { extensionSettings } = useExtensionSettings();
 
   const isExpectedHost = isTwitter;
 
-  if (!isExpectedHost) {
+  if (!isExpectedHost || !extensionSettings['polymarket-enabled']) {
     return null;
   }
 
