@@ -98,7 +98,7 @@ const Base = ({ widgetData, onClose, className }: Properties) => {
   if (activeSources.length === 1 && firstSource) {
     return (
       <div
-        className={classes('absolute right-4 w-96', className)}
+        className={classes('absolute right-4 z-20 w-96', className)}
         style={{ top: widgetData.top }}
       >
         <Component source={firstSource} className="rounded-lg" />
