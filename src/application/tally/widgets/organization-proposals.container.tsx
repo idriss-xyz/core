@@ -32,15 +32,17 @@ const Base = ({ className, onClose, username }: Properties) => {
   const currentProposal = proposalQuery.data?.nodes[0];
   const nextProposal = proposalQuery.data?.nodes[1];
 
+  const isLoadingProposal =
+    proposalQuery.isLoading || proposalQuery.isPlaceholderData;
   const isPreviousProposalAvailable = previousProposalCursors.length > 0;
   const isNextProposalAvailable =
-    nextProposal !== undefined && !proposalQuery.isLoading;
+    nextProposal !== undefined && !isLoadingProposal;
 
   const showPreviousProposal = () => {
     const previousProposalCursor = previousProposalCursors.at(-1);
     if (
       !isPreviousProposalAvailable ||
-      proposalQuery.isLoading ||
+      isLoadingProposal ||
       previousProposalCursor === undefined
     ) {
       return;
@@ -65,7 +67,7 @@ const Base = ({ className, onClose, username }: Properties) => {
   };
 
   useEffect(() => {
-    if (proposalQuery.isLoading) {
+    if (isLoadingProposal) {
       return;
     }
 
@@ -73,7 +75,7 @@ const Base = ({ className, onClose, username }: Properties) => {
     if (newFetchedProposalInfo) {
       setNextProposalCursor(newFetchedProposalInfo.pageInfo.firstCursor);
     }
-  }, [proposalQuery]);
+  }, [isLoadingProposal, proposalQuery]);
 
   const pagination: Pagination = {
     hasPrevious: isPreviousProposalAvailable,
@@ -88,7 +90,7 @@ const Base = ({ className, onClose, username }: Properties) => {
   return (
     <Proposal
       pagination={pagination}
-      isLoading={proposalQuery.isLoading}
+      isLoading={isLoadingProposal}
       proposalDetails={currentProposal}
       className={className}
       onClose={onClose}

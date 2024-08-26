@@ -38,10 +38,20 @@ export const usePrefetchProposals = ({ widgetData }: Properties) => {
       applicationsStatus.tally && widgetData.proposalsSources.includes('tally'),
   });
 
-  const isPrefetched =
-    !agoraProposalsQuery.isLoading &&
+  const isAgoraProposalPrefetched =
+    !agoraProposalsQuery.isLoading && !agoraProposalsQuery.isPlaceholderData;
+
+  const isSnapshotProposalPrefetched =
     !snapshotProposalsQuery.isLoading &&
-    !tallyProposalsQuery.isLoading;
+    !snapshotProposalsQuery.isPlaceholderData;
+
+  const isTallyProposalPrefetched =
+    !tallyProposalsQuery.isLoading && !tallyProposalsQuery.isPlaceholderData;
+
+  const isPrefetched =
+    isAgoraProposalPrefetched &&
+    isSnapshotProposalPrefetched &&
+    isTallyProposalPrefetched;
 
   const hasAgoraProposal = Boolean(agoraProposalsQuery.data?.proposal);
   const hasSnapshotProposal = Boolean(snapshotProposalsQuery.data?.proposal);

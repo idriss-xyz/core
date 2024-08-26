@@ -20,5 +20,8 @@ export const useProposalsQuery = ({
     }),
     staleTime: Number.POSITIVE_INFINITY,
     enabled,
+    placeholderData: (previousData) => {
+      return previousData;
+    },
   });
 };
