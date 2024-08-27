@@ -92,18 +92,19 @@ export const ExtensionSettingsProvider = ({ children }: Properties) => {
 
     onWindowMessage<Record<ExtensionSettingsStorageKey, boolean>>(
       GET_EXTENSION_SETTINGS_RESPONSE,
-      (settings, removeEventListener) => {
+      (settings) => {
         setExtensionSettings(settings);
-        removeEventListener();
       },
     );
   }, [toggleContextMenuVisibility]);
 
   useEffect(() => {
-    window.postMessage({
-      type: GET_EXTENSION_SETTINGS_REQUEST,
-    });
-  }, []);
+    if (isContextMenuVisible) {
+      window.postMessage({
+        type: GET_EXTENSION_SETTINGS_REQUEST,
+      });
+    }
+  }, [isContextMenuVisible]);
 
   // Clean up the debounced function on component unmount
   useEffect(() => {

@@ -27,7 +27,7 @@ export const App = () => {
       closeButtonClassName="hidden"
       closeOnClickAway
       onClose={hideContextMenu}
-      className="fixed right-6 top-6 z-50 flex size-[400px] flex-col overflow-hidden rounded-md bg-white p-0"
+      className="fixed right-6 top-6 z-[9999] flex size-[400px] flex-col overflow-hidden rounded-md bg-white p-0 shadow-lg"
     >
       <>
         <nav className="flex items-center justify-between bg-white drop-shadow-sm">

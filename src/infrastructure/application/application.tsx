@@ -40,7 +40,19 @@ const ApplicationWithProviders = () => {
   const isExpectedPage = isTwitter || isWarpcast || isSupercast;
 
   if (!isExpectedPage) {
-    return null;
+    return (
+      <WithObservabilityScope>
+        <ErrorBoundary>
+          <QueryProvider>
+            <TailwindProvider>
+              <ExtensionSettingsProvider>
+                <ExtensionContextMenu />
+              </ExtensionSettingsProvider>
+            </TailwindProvider>
+          </QueryProvider>
+        </ErrorBoundary>
+      </WithObservabilityScope>
+    );
   }
 
   return (
