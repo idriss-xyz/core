@@ -2,6 +2,7 @@ import {
   Command,
   FailureResult,
   HandlerError,
+  HandlerResponseError,
   OkResult,
 } from 'shared/messaging';
 
@@ -22,8 +23,13 @@ export class GetFunderAddresCommand extends Command<Payload, string> {
         `https://safe-transaction-polygon.safe.global/api/v1/owners/${this.payload.address}/safes/`,
       );
 
-      if (response.status !== 200) {
-        throw new HandlerError();
+      if (!response.ok) {
+        const responseText = await response.text();
+        throw new HandlerResponseError(
+          this.name,
+          responseText,
+          response.status,
+        );
       }
       const { safes } = (await response.json()) as { safes: string[] };
       const safesCreationResponse = await Promise.all(

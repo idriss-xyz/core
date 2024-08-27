@@ -2,6 +2,7 @@ import {
   Command,
   FailureResult,
   HandlerError,
+  HandlerResponseError,
   OkResult,
 } from 'shared/messaging';
 
@@ -52,8 +53,13 @@ export class GetAcrossChainFeesCommand extends Command<Payload, Response> {
           },
         });
 
-        if (response.status !== 200) {
-          throw new HandlerError();
+        if (!response.ok) {
+          const responseText = await response.text();
+          throw new HandlerResponseError(
+            this.name,
+            responseText,
+            response.status,
+          );
         }
 
         const json = (await response.json()) as SingleChainResponse;

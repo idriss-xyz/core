@@ -2,6 +2,7 @@ import {
   Command,
   FailureResult,
   HandlerError,
+  HandlerResponseError,
   OkResult,
 } from 'shared/messaging';
 
@@ -24,8 +25,13 @@ export class GetTokenChanceCommand extends Command<Payload, number> {
         `${POLYMARKET_CLOB_API}/midpoint?token_id=${this.payload.tokenId}`,
       );
 
-      if (response.status !== 200) {
-        throw new HandlerError();
+      if (!response.ok) {
+        const responseText = await response.text();
+        throw new HandlerResponseError(
+          this.name,
+          responseText,
+          response.status,
+        );
       }
       // TODO: validate response
       const json = (await response.json()) as { mid: string };

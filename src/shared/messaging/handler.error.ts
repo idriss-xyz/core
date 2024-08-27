@@ -1,7 +1,17 @@
-export class HandlerError extends Error {
+import { CustomError } from 'ts-custom-error';
+
+export class HandlerError extends CustomError {
   constructor(message = 'Something went wrong') {
     super(message);
-    this.name = this.constructor.name;
-    Object.setPrototypeOf(this, new.target.prototype);
+  }
+}
+
+export class HandlerResponseError extends CustomError {
+  constructor(
+    public commandName: string,
+    public response: string,
+    public statusCode: number,
+  ) {
+    super(`${commandName} HandlerResponseError`);
   }
 }

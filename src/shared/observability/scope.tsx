@@ -27,9 +27,19 @@ const integrations = getDefaultIntegrations({}).filter((defaultIntegration) => {
   );
 });
 
-const createClient = (executionEnvironment: SentryExecutionEnvironment) => {
+const createClient = (
+  executionEnvironment: SentryExecutionEnvironment,
+  extensionId: string,
+) => {
   return new BrowserClient({
     dsn: process.env.SENTRY_DSN,
+    enabled: process.env.SENTRY_ENVIRONMENT === 'production',
+    allowUrls: [
+      `chrome-extension://${extensionId}`,
+      'twitter.com',
+      'supercast.xyz',
+      'x.com',
+    ],
     transport:
       executionEnvironment === 'service-worker'
         ? makeFetchTransport
@@ -60,15 +70,16 @@ const createClient = (executionEnvironment: SentryExecutionEnvironment) => {
       extraErrorDataIntegration({ depth: OBJ_DEPTH }),
     ],
 
-    tracesSampleRate: 1,
+    tracesSampleRate: 0.1,
     normalizeDepth: OBJ_DEPTH + 1,
   });
 };
 
 export const createObservabilityScope = (
   executionEnvironment: SentryExecutionEnvironment,
+  allowUrls: string,
 ) => {
-  const client = createClient(executionEnvironment);
+  const client = createClient(executionEnvironment, allowUrls);
   const scope = new Scope();
   scope.setClient(client);
 
@@ -99,9 +110,13 @@ interface Properties {
   children: ReactNode;
 }
 export const WithObservabilityScope = ({ children }: Properties) => {
+  // injected script doesn't have access to chrome.runtime api so we need to inject extension id into script.id which we set before injecting script into html
+  const extensionId =
+    document.querySelector('[data-testid="idriss-injected-script"]')?.id ?? '';
+
   const scope = useMemo(() => {
-    return createObservabilityScope('injected-app');
-  }, []);
+    return createObservabilityScope('injected-app', extensionId);
+  }, [extensionId]);
 
   useEffect(() => {
     const captureException = (event: ErrorEvent) => {

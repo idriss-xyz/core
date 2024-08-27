@@ -2,6 +2,7 @@ import {
   Command,
   FailureResult,
   HandlerError,
+  HandlerResponseError,
   OkResult,
 } from 'shared/messaging';
 
@@ -24,8 +25,13 @@ export class GetHandleToTwitterIdCommand extends Command<Payload, Response> {
         getRegisteredTwittersUrl(this.payload.handles),
       );
 
-      if (response.status !== 200) {
-        throw new HandlerError();
+      if (!response.ok) {
+        const responseText = await response.text();
+        throw new HandlerResponseError(
+          this.name,
+          responseText,
+          response.status,
+        );
       }
       const json = await response.json();
 

@@ -4,6 +4,7 @@ import {
   Command,
   FailureResult,
   HandlerError,
+  HandlerResponseError,
   OkResult,
 } from 'shared/messaging';
 
@@ -26,8 +27,13 @@ export class GetCustomRecipientsCommand extends Command<Payload, Response> {
   async handle() {
     try {
       const response = await Api.getCustomRecipients();
-      if (response.status !== 200) {
-        throw new HandlerError();
+      if (!response.ok) {
+        const responseText = await response.text();
+        throw new HandlerResponseError(
+          this.name,
+          responseText,
+          response.status,
+        );
       }
       const json = await response.json();
       const validationResult = responseSchema.safeParse(json);
