@@ -12,9 +12,6 @@ import {
   GET_EXTENSION_SETTINGS_REQUEST,
   GET_EXTENSION_SETTINGS_RESPONSE,
 } from 'shared/extension';
-import { isTwitterHostname } from 'host/twitter';
-import { isWarpcastHostname } from 'host/warpcast';
-import { isSupercastHostname } from 'host/supercast';
 import { EXTENSION_BUTTON_CLICKED } from 'infrastructure/constants';
 
 export class ContentScript {
@@ -22,21 +19,10 @@ export class ContentScript {
 
   static run(environment: typeof chrome) {
     const contentScript = new ContentScript(environment);
-    if (!contentScript.shouldRun()) {
-      return;
-    }
     contentScript.injectScriptToWebpage();
     contentScript.bridgeCommunication();
 
     contentScript.subscribeToExtensionSettings();
-  }
-
-  shouldRun() {
-    return (
-      isTwitterHostname(window.location.hostname ?? '') ||
-      isWarpcastHostname(window.location.hostname ?? '') ||
-      isSupercastHostname(window.location.hostname ?? '')
-    );
   }
 
   injectScriptToWebpage() {
