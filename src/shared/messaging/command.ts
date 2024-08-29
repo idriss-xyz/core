@@ -21,7 +21,7 @@ export interface SerializedCommand<Payload> {
   payload: Payload;
 }
 
-export abstract class Command<Payload, Response> {
+export abstract class Command<Payload, ExpectedResponse> {
   public abstract readonly name: string;
   public abstract readonly payload: Payload;
   public id: string;
@@ -31,16 +31,16 @@ export abstract class Command<Payload, Response> {
     this.id = uuidv4();
   }
 
-  public abstract handle(): Promise<Result<Response>>;
+  public abstract handle(): Promise<Result<ExpectedResponse>>;
 
-  public send(): Promise<Response> {
+  public send(): Promise<ExpectedResponse> {
     return new Promise((resolve, reject) => {
       window.postMessage({
         type: COMMAND_BUS_REQUEST_MESSAGE,
         detail: this.serialize(),
       });
 
-      onWindowMessage<CommandResponse<Result<Response>>>(
+      onWindowMessage<CommandResponse<Result<ExpectedResponse>>>(
         COMMAND_BUS_RESPONSE_MESSAGE,
         (detail, removeEventListener) => {
           if (detail.commandId !== this.id) {

@@ -2,6 +2,7 @@ import {
   Command,
   FailureResult,
   HandlerError,
+  HandlerResponseError,
   OkResult,
 } from 'shared/messaging';
 
@@ -39,8 +40,13 @@ export class GetAgoraProposalsCommand extends Command<Payload, Response> {
         },
       );
 
-      if (response.status !== 200) {
-        throw new HandlerError('Something went wrong when fetching agora api.');
+      if (!response.ok) {
+        const responseText = await response.text();
+        throw new HandlerResponseError(
+          this.name,
+          responseText,
+          response.status,
+        );
       }
 
       const json = await response.json();

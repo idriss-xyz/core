@@ -4,6 +4,7 @@ import {
   Command,
   FailureResult,
   HandlerError,
+  HandlerResponseError,
   OkResult,
 } from 'shared/messaging';
 
@@ -33,8 +34,13 @@ export class PostOrderCommand extends Command<Payload, undefined> {
         body: JSON.stringify(this.payload.order),
       });
 
-      if (response.status !== 200) {
-        throw new HandlerError();
+      if (!response.ok) {
+        const responseText = await response.text();
+        throw new HandlerResponseError(
+          this.name,
+          responseText,
+          response.status,
+        );
       }
 
       return new OkResult(undefined);

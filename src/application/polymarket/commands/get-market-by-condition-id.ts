@@ -2,6 +2,7 @@ import {
   Command,
   FailureResult,
   HandlerError,
+  HandlerResponseError,
   OkResult,
 } from 'shared/messaging';
 
@@ -28,8 +29,13 @@ export class GetMarketByConditionIdCommand extends Command<
         `${POLYMARKET_CLOB_API}/markets/${this.payload.conditionId}`,
       );
 
-      if (response.status !== 200) {
-        throw new HandlerError();
+      if (!response.ok) {
+        const responseText = await response.text();
+        throw new HandlerResponseError(
+          this.name,
+          responseText,
+          response.status,
+        );
       }
 
       // TODO: validate response

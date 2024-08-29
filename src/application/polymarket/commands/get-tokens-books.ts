@@ -2,6 +2,7 @@ import {
   Command,
   FailureResult,
   HandlerError,
+  HandlerResponseError,
   OkResult,
 } from 'shared/messaging';
 
@@ -26,8 +27,13 @@ export class GetTokensBooksCommand extends Command<Payload, TokenIdToBook> {
           `${POLYMARKET_CLOB_API}/book?token_id=${tokenId}`,
         );
 
-        if (response.status !== 200) {
-          throw new HandlerError();
+        if (!response.ok) {
+          const responseText = await response.text();
+          throw new HandlerResponseError(
+            this.name,
+            responseText,
+            response.status,
+          );
         }
 
         const json = (await response.json()) as GetTokenBookResponse;

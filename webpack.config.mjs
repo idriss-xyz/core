@@ -64,6 +64,7 @@ export default (_env, argv) => {
         org: process.env.SENTRY_ORGANISATION,
         project: process.env.SENTRY_PROJECT,
         telemetry: false,
+        disable: process.env.SENTRY_ENVIRONMENT !== 'production'
       }),
       // new BundleAnalyzerPlugin()
     ],

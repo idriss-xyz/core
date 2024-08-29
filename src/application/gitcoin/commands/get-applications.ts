@@ -4,6 +4,7 @@ import {
   Command,
   FailureResult,
   HandlerError,
+  HandlerResponseError,
   OkResult,
 } from 'shared/messaging';
 
@@ -25,8 +26,13 @@ export class GetApplicationsCommand extends Command<Payload, Application[]> {
     try {
       const response = await Api.getApplications();
 
-      if (response.status !== 200) {
-        throw new HandlerError();
+      if (!response.ok) {
+        const responseText = await response.text();
+        throw new HandlerResponseError(
+          this.name,
+          responseText,
+          response.status,
+        );
       }
 
       const json = await response.json();
