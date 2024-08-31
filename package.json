@@ -9,7 +9,7 @@
     "lint": "eslint src --max-warnings=0",
     "lint:fix": "eslint src --max-warnings=0 --fix",
     "circular-deps": "depcruise --config .dependency-cruiser.cjs src",
-    "unused-exports": "./node_modules/.bin/ts-unused-exports ./tsconfig.json",
+    "unused-exports": "./node_modules/.bin/ts-unused-exports ./tsconfig.json --ignoreFiles=.stories",
     "architecture-graph": "depcruise src --include-only ^src --output-type archi | dot -T svg -Grankdir=TD > architecture/graph.svg",
     "architecture-graph:folders": "depcruise src --include-only ^src --output-type ddot | dot -T svg -Grankdir=TD > architecture/folders-graph.svg",
     "type-check": "tsc --noEmit",

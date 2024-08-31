@@ -48,7 +48,6 @@
     "src"
   ],
   "exclude": [
-    "node_modules",
-    "**/*.stories.tsx"
+    "node_modules"
   ]
 }

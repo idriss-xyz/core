@@ -16,6 +16,7 @@ export interface SelectOptionProperties<T> {
 
 export interface SelectProperties<T> {
   className?: string;
+  optionsContainerClassName?: string;
   value: T;
   label?: string;
   renderLabel?: () => ReactNode;

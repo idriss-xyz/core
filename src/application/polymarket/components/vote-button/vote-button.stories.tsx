@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { OUTCOME } from 'application/polymarket/constants';
+import { OUTCOME } from '../../constants';
 
 import { VoteButton } from './vote-button';
 
