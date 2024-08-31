@@ -2,7 +2,7 @@ import { FormEvent, useState } from 'react';
 import { useDebounce } from 'react-use';
 
 import { useCommandQuery } from 'shared/messaging';
-import { Tooltip } from 'shared/ui';
+import { Icon, Tooltip } from 'shared/ui';
 
 import { GetResolvedAddressCommand, GetTwitterIdsCommand } from '../commands';
 
@@ -74,17 +74,28 @@ export const App = () => {
                           tooltipMessage="Copied address!"
                           key={key + value}
                         >
-                          <div
-                            className="cursor-pointer select-none border-b border-b-stone-300 px-2 hover:bg-gray-200"
-                            onClick={() => {
-                              void navigator.clipboard.writeText(value);
-                            }}
-                          >
-                            <span className="text-sm font-bold">{key}</span>
-                            <span className="text-sm text-[#8adf85]">
-                              {addressesQuery.data?.input}
-                            </span>
-                            <p className="text-xs font-thin">{value}</p>
+                          <div className="flex cursor-pointer select-none justify-between border-b border-b-stone-300 px-2 hover:bg-gray-200">
+                            <div
+                              className="flex-col justify-between"
+                              onClick={() => {
+                                void navigator.clipboard.writeText(value);
+                              }}
+                            >
+                              <div className="flex gap-1.5">
+                                <span className="text-sm font-bold">{key}</span>
+                                <span className="text-sm text-[#8adf85]">
+                                  {addressesQuery.data?.input}
+                                </span>
+                              </div>
+                              <p className="text-xs font-thin">{value}</p>
+                            </div>
+                            {addressesQuery.data?.twitterID && (
+                              <Icon
+                                size={16}
+                                name="TwitterLogoIcon"
+                                className="mt-1 text-twitter-primary [&>path]:fill-rule-non-zero"
+                              />
+                            )}
                           </div>
                         </Tooltip>
                       );
