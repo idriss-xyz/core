@@ -17,6 +17,7 @@ export const useUserWidgets = () => {
 
   const idrissSendEnabled =
     applicationsStatus.idrissSend && extensionSettings['tipping-enabled'];
+
   const { widgets: idrissSendWidgets } = useIdrissSendWidgetsData({
     scrapedUsers: users,
     enabled: idrissSendEnabled,
