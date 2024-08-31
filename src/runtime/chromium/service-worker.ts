@@ -1,3 +1,4 @@
+import { ACTIVE_TAB_CHANGED } from 'infrastructure/constants';
 import {
   EXTENSION_BUTTON_CLICKED,
   ServiceWorker,
@@ -37,6 +38,15 @@ const onInstalled = () => {
       'chrome-extension://fnjhmkhhmkbjkkabndcnnogagogbneec/*',
     ],
   });
+
+  chrome.tabs.onActivated.addListener((tab) => {
+    chrome.tabs
+      .sendMessage(tab?.tabId ?? 0, {
+        type: ACTIVE_TAB_CHANGED,
+      })
+      .catch(console.error);
+  });
+
   chrome.action.onClicked.addListener((tab) => {
     chrome.tabs
       .sendMessage(tab?.id ?? 0, {

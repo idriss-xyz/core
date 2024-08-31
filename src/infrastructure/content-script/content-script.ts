@@ -12,7 +12,10 @@ import {
   GET_EXTENSION_SETTINGS_REQUEST,
   GET_EXTENSION_SETTINGS_RESPONSE,
 } from 'shared/extension';
-import { EXTENSION_BUTTON_CLICKED } from 'infrastructure/constants';
+import {
+  ACTIVE_TAB_CHANGED,
+  EXTENSION_BUTTON_CLICKED,
+} from 'infrastructure/constants';
 
 export class ContentScript {
   private constructor(private environment: typeof chrome) {}
@@ -66,7 +69,7 @@ export class ContentScript {
   }
 
   bridgeFromExtensionToWebpageScript() {
-    chrome.runtime.onMessage.addListener((request) => {
+    chrome.runtime.onMessage.addListener(async (request) => {
       if (request.type === POPUP_TO_WEBPAGE_MESSAGE) {
         const message = {
           type: request.detail.postMessageType,
@@ -79,6 +82,17 @@ export class ContentScript {
       if (request.type === EXTENSION_BUTTON_CLICKED) {
         const message = {
           type: TOGGLE_EXTENSION_CONTEXT_MENU_VISIBILITY,
+        };
+        window.postMessage(message);
+        return;
+      }
+
+      if (request.type === ACTIVE_TAB_CHANGED) {
+        const detail = await ExtensionSettingsManager.getAllSettings();
+
+        const message = {
+          type: GET_EXTENSION_SETTINGS_RESPONSE,
+          detail,
         };
         window.postMessage(message);
         return;

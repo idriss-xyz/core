@@ -99,12 +99,10 @@ export const ExtensionSettingsProvider = ({ children }: Properties) => {
   }, [toggleContextMenuVisibility]);
 
   useEffect(() => {
-    if (isContextMenuVisible) {
-      window.postMessage({
-        type: GET_EXTENSION_SETTINGS_REQUEST,
-      });
-    }
-  }, [isContextMenuVisible]);
+    window.postMessage({
+      type: GET_EXTENSION_SETTINGS_REQUEST,
+    });
+  }, []);
 
   // Clean up the debounced function on component unmount
   useEffect(() => {
