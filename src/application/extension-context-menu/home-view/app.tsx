@@ -20,6 +20,7 @@ export const App = () => {
     command: new GetTwitterIdsCommand({
       username,
     }),
+    staleTime: Number.POSITIVE_INFINITY,
   });
 
   const addressesQuery = useCommandQuery({
@@ -29,6 +30,7 @@ export const App = () => {
         ? Object.values(twitterIdsQuery.data?.twitterIDs)[0]
         : undefined,
     }),
+    staleTime: Number.POSITIVE_INFINITY,
   });
 
   const checkInputChanged = () => {
