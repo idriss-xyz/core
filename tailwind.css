@@ -1,9 +1,3 @@
 @tailwind base;
-
-* {
-  scrollbar-width: thin;
-  scrollbar-color: gray rgb(239, 239, 239);
-}
-
 @tailwind components;
 @tailwind utilities;

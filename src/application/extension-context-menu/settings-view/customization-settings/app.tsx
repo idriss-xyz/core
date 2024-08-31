@@ -43,7 +43,7 @@ export const App = () => {
   };
 
   return (
-    <div className="max-h-[220px] shrink-0 grow overflow-y-auto pl-3 text-base text-black">
+    <div className="max-h-[220px] shrink-0 grow overflow-y-auto pl-3 text-base text-black [scrollbar-color:gray_#efefef] [scrollbar-width:thin]">
       <div className="flex flex-row items-center space-x-2 pb-3 pt-2 font-bold">
         <Checkbox
           type="extended"
