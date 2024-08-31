@@ -66,7 +66,7 @@ export const App = () => {
           <>
             {addressesQuery.data?.result &&
               Object.entries(addressesQuery.data.result).length > 0 && (
-                <div className="absolute max-h-40 w-full overflow-y-auto rounded-md border border-gray-300 text-black">
+                <div className="absolute max-h-40 w-full overflow-y-auto rounded-md border border-gray-300 text-black [scrollbar-color:gray_#efefef] [scrollbar-width:thin]">
                   {Object.entries(addressesQuery.data.result)?.map(
                     ([key, value]) => {
                       return (
