@@ -1,20 +1,14 @@
-import { FormEvent, useRef, useState } from 'react';
+import { FormEvent, useState } from 'react';
+import { useDebounce } from 'react-use';
 
 import { useCommandQuery } from 'shared/messaging';
 import { Tooltip } from 'shared/ui';
 
 import { GetResolvedAddressCommand, GetTwitterIdsCommand } from '../commands';
-interface LastEvent {
-  event: FormEvent<HTMLInputElement>;
-  timestamp: number;
-  input: HTMLInputElement | null;
-  value: string;
-}
 
 export const App = () => {
   const [username, setUsername] = useState<string>('');
-  const [inputValue, setInputValue] = useState<string>();
-  const lastEvent = useRef<LastEvent>();
+  const [inputValue, setInputValue] = useState<string>('');
 
   const twitterIdsQuery = useCommandQuery({
     command: new GetTwitterIdsCommand({
@@ -31,32 +25,21 @@ export const App = () => {
         : undefined,
     }),
     staleTime: Number.POSITIVE_INFINITY,
+    enabled: username.length >= 3,
   });
 
-  const checkInputChanged = () => {
-    if (
-      lastEvent.current?.input &&
-      Date.now() - lastEvent.current.timestamp >= 500 &&
-      lastEvent.current.input.value === lastEvent.current.value &&
-      lastEvent.current.value.length >= 3
-    ) {
-      setUsername(lastEvent.current.value);
-    }
-  };
+  useDebounce(
+    () => {
+      setUsername(inputValue);
+    },
+    500,
+    [inputValue],
+  );
 
   const handleInput = (event: FormEvent<HTMLInputElement>) => {
     const eventTarget = event.target as HTMLInputElement;
-    lastEvent.current = {
-      event: event,
-      timestamp: Date.now(),
-      input: eventTarget,
-      value: eventTarget?.value,
-    };
 
     setInputValue(eventTarget.value);
-    setTimeout(() => {
-      void checkInputChanged();
-    }, 500);
   };
 
   return (
