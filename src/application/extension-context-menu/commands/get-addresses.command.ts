@@ -22,18 +22,11 @@ interface Payload {
   twitterId?: string;
 }
 
-type Response =
-  | {
-      input: string | undefined;
-      result: Record<string, string>;
-      twitterID: string;
-    }
-  | {
-      input: string;
-      result: Record<string, string>;
-      twitterID?: undefined;
-    }
-  | undefined;
+interface Response {
+  input: string | undefined;
+  result: Record<string, string>;
+  twitterID?: string;
+}
 
 interface IDrissResult {
   hash: string;
