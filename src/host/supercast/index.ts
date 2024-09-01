@@ -3,4 +3,3 @@ export {
   useSupercastScraping,
   SupercastScrapingContextProvider,
 } from './context';
-export { isSupercastHostname } from './utils';

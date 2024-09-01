@@ -3,4 +3,3 @@ export {
   useWarpcastScraping,
   WarpcastScrapingContextProvider,
 } from './context';
-export { isWarpcastHostname } from './utils';

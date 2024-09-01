@@ -8,7 +8,7 @@ import { HomeView } from './home-view';
 import { SettingsView } from './settings-view';
 import { Footer } from './footer';
 
-export type MenuContent = 'home' | 'settings';
+type MenuContent = 'home' | 'settings';
 
 export const App = () => {
   const [activeView, setActiveView] = useState<MenuContent>('home');
