@@ -16,7 +16,7 @@ export const useUserWidgets = () => {
   const { users } = useScraping();
 
   const idrissSendEnabled =
-    applicationsStatus.idrissSend && extensionSettings['tipping-enabled'];
+    applicationsStatus.idrissSend && extensionSettings['idriss-send-enabled'];
 
   const { widgets: idrissSendWidgets } = useIdrissSendWidgetsData({
     scrapedUsers: users,

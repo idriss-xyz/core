@@ -10,7 +10,7 @@ export const App = () => {
   const { changeExtensionSetting, extensionSettings } = useExtensionSettings();
 
   const transferSettings = [
-    extensionSettings['tipping-enabled'],
+    extensionSettings['idriss-send-enabled'],
     extensionSettings['gitcoin-enabled'],
   ];
 
@@ -28,7 +28,7 @@ export const App = () => {
   const tradingSettingsState = getSettingsGroupState(tradingSettings);
 
   const handleTransferGroupChange = (enabled: boolean) => {
-    void changeExtensionSetting('tipping-enabled', enabled);
+    void changeExtensionSetting('idriss-send-enabled', enabled);
     void changeExtensionSetting('gitcoin-enabled', enabled);
   };
 
@@ -55,9 +55,9 @@ export const App = () => {
       <div className="flex flex-col pb-3">
         <div className="flex flex-row space-x-2 pb-3 pl-7">
           <Checkbox
-            value={extensionSettings['tipping-enabled']}
+            value={extensionSettings['idriss-send-enabled']}
             onChange={(enabled) => {
-              return changeExtensionSetting('tipping-enabled', enabled);
+              return changeExtensionSetting('idriss-send-enabled', enabled);
             }}
           />
           <span>Tipping</span>

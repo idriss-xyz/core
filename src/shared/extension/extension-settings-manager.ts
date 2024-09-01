@@ -6,7 +6,7 @@ import { EXTENSION_SETTINGS_CHANGE } from './constants';
 import { ExtensionSettings } from './types';
 
 type ExtensionTransfersSettingsStorageKeys =
-  | 'tipping-enabled'
+  | 'idriss-send-enabled'
   | 'gitcoin-enabled';
 type ExtensionGovernanceSettingsStorageKeys =
   | 'snapshot-enabled'

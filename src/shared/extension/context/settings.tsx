@@ -31,7 +31,7 @@ const initialExtensionSettings: Record<ExtensionSettingsStorageKey, boolean> = {
   'polymarket-enabled': false,
   'snapshot-enabled': false,
   'tally-enabled': false,
-  'tipping-enabled': false,
+  'idriss-send-enabled': false,
 };
 
 interface ExtensionSettingsContextValues {
