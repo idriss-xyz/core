@@ -38,7 +38,6 @@ export const App = () => {
 
   const handleInput = (event: FormEvent<HTMLInputElement>) => {
     const eventTarget = event.target as HTMLInputElement;
-
     setInputValue(eventTarget.value);
   };
 
@@ -62,7 +61,7 @@ export const App = () => {
           }}
         />
 
-        {inputValue && inputValue.length > 0 && (
+        {inputValue?.length > 0 && (
           <>
             {addressesQuery.data?.result &&
               Object.entries(addressesQuery.data.result).length > 0 && (

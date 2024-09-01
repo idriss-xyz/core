@@ -20,7 +20,7 @@ export const App = ({ setCurrentView }: SettingsListProperties) => {
           className="absolute right-6"
           iconProps={{ name: 'ChevronRightIcon', size: 25 }}
           onClick={() => {
-            setCurrentView('list');
+            setCurrentView('settings');
           }}
         />
       </div>

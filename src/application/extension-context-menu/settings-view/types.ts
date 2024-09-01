@@ -1,1 +1,1 @@
-export type SettingsView = 'list' | 'customization';
+export type SettingsView = 'settings' | 'customization';
