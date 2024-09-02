@@ -132,7 +132,7 @@ const Base = ({ widgetData, onClose, className }: Properties) => {
                 'relative flex h-[26px] w-[100px] items-center space-x-1.5 rounded-t-lg px-2 pt-1 text-xs font-bold',
                 'transition-all duration-[85] ease-linear will-change-[transform,top]',
                 !isActive &&
-                  'top-[2px] -translate-x-[2px] scale-95 pb-[1px] brightness-[0.85]',
+                  'top-[2px] -translate-x-[2px] scale-95 pb-[2px] brightness-[0.85]',
                 sourceClassnames.trigger,
               )}
               key={source}
