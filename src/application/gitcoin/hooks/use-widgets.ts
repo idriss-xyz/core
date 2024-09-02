@@ -6,7 +6,7 @@ import { getNodeToInjectToUser, isHandleNode } from 'host/twitter'; // TODO: abs
 
 import { GetApplicationsCommand } from '../commands';
 import { selectTwitterApplications } from '../utils';
-import { Recipient } from '../types';
+import { WidgetData } from '../types';
 
 interface Properties {
   scrapedUsers: UserScrapingResult[];
@@ -24,7 +24,7 @@ export const useWidgetsData = ({ scrapedUsers, enabled }: Properties) => {
     enabled,
   });
 
-  const widgets: Recipient[] = useMemo(() => {
+  const widgets: WidgetData[] = useMemo(() => {
     if (!getApplicationsQuery.data) {
       return [];
     }

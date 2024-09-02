@@ -13,7 +13,7 @@ import { ErrorMessage, GasIcon, Spinner } from 'shared/ui';
 import { useCommandQuery } from 'shared/messaging';
 import { ErrorBoundary } from 'shared/observability';
 
-import { DonationPayload, Recipient } from '../types';
+import { DonationPayload, WidgetData } from '../types';
 import {
   GET_ETH_PER_DOLLAR_COMMAND_DETAILS,
   GITCOIN_ICON,
@@ -24,7 +24,7 @@ import { SomethingWentWrongMessage } from '../components';
 import { useDonationMaker, useFees, useDonationForm } from '../hooks';
 
 interface Properties {
-  widgetData: Recipient;
+  widgetData: WidgetData;
 }
 
 interface BaseProperties extends Properties {

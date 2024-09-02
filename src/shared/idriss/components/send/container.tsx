@@ -72,6 +72,7 @@ export const Container = memo(
       injectedWidgetReference.current.style.width = `${iconSize}px`;
       injectedWidgetReference.current.style.cursor = 'pointer';
       injectedWidgetReference.current.style.marginLeft = '2px';
+      injectedWidgetReference.current.style.zIndex = '20';
       injectedWidgetReference.current.src = iconSrc;
 
       node.style.setProperty('display', 'inline-flex', 'important');
@@ -128,7 +129,7 @@ export const Container = memo(
     return (
       <>
         <div
-          className="absolute"
+          className="absolute z-20"
           style={{
             left: isMobile ? undefined : position.x,
             right: isMobile ? 0 : undefined,
@@ -148,7 +149,7 @@ export const Container = memo(
           </Closable>
         </div>
         <img
-          className="absolute"
+          className="absolute z-20"
           style={{
             left: position.x - iconSize,
             top: position.y,

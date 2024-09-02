@@ -8,7 +8,7 @@ export type DonationPayload = z.infer<
   ReturnType<typeof createDonationPayloadSchema>
 >;
 
-export interface Recipient {
+export interface WidgetData {
   top: number;
   username: string;
   nodeToInject: HTMLElement;

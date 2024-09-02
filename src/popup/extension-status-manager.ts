@@ -2,33 +2,32 @@
 import { EXTENSION_SETTINGS_CHANGE, ExtensionSettings } from 'shared/extension';
 import { POPUP_TO_WEBPAGE_MESSAGE } from 'shared/messaging';
 
+const STORAGE_KEY = 'extension-status';
 export class ExtensionStatusManager {
-  private static STORAGE_KEY = 'extension-status';
-
   static enable() {
     chrome.storage.local
       .set({
-        [this.STORAGE_KEY]: true,
+        [STORAGE_KEY]: true,
       })
       .catch(console.error);
 
-    this.publishMessage(true);
+    ExtensionStatusManager.publishMessage(true);
   }
 
   static disable() {
     chrome.storage.local
       .set({
-        [this.STORAGE_KEY]: false,
+        [STORAGE_KEY]: false,
       })
       .catch(console.error);
 
-    this.publishMessage(false);
+    ExtensionStatusManager.publishMessage(false);
   }
 
   static isEnabled(): Promise<boolean> {
     return new Promise((resolve) => {
-      chrome.storage.local.get([this.STORAGE_KEY], (result) => {
-        const isEnabled = Boolean(result[this.STORAGE_KEY] ?? true);
+      chrome.storage.local.get([STORAGE_KEY], (result) => {
+        const isEnabled = Boolean(result[STORAGE_KEY] ?? true);
         resolve(isEnabled);
       });
     });

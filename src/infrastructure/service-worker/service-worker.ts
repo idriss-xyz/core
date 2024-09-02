@@ -18,6 +18,7 @@ import { AGORA_COMMAND_MAP } from 'application/agora';
 import { IDRISS_COMMAND_MAP } from 'shared/idriss';
 import { IDRISS_SEND_COMMAND_MAP } from 'application/idriss-send';
 import { TALLY_COMMAND_MAP } from 'application/tally';
+import { FARCASTER_COMMAND_MAP } from 'shared/farcaster';
 
 import { SbtResolver } from '../../common/resolvers/SbtResolver';
 import { AddressResolver } from '../../common/resolvers/AddressResolver';
@@ -35,6 +36,7 @@ const COMMAND_MAP = {
   ...IDRISS_COMMAND_MAP,
   ...IDRISS_SEND_COMMAND_MAP,
   ...TALLY_COMMAND_MAP,
+  ...FARCASTER_COMMAND_MAP,
 };
 
 export class ServiceWorker {
