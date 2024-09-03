@@ -47,8 +47,8 @@ export const CHAIN = {
     logo: POLYGON_LOGO,
     // TODO: move nativeCurrency to CHAIN_TO_TOKEN_IN_CHAIN, probably something isNative: true,
     nativeCurrency: {
-      name: 'MATIC',
-      symbol: 'MATIC',
+      name: 'POL',
+      symbol: 'POL',
       decimals: 18,
     },
     rpcUrls: ['https://polygon-rpc.com'],
@@ -211,7 +211,7 @@ export const TOKEN = {
   DOGECOIN: { name: 'Dogecoin', symbol: 'DOGE', logo: DOGECOIN_LOGO },
   POLYGON: {
     name: 'Polygon',
-    symbol: 'MATIC',
+    symbol: 'POL',
     logo: POLYGON_LOGO,
   },
   REVOLT2EARN: { name: 'Revolt 2 Earn', symbol: 'RVLT', logo: RVLT_LOGO },
