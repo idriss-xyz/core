@@ -24,7 +24,8 @@ export const useUserWidgets = () => {
 
   if (isWarpcast) {
     return {
-      widgets: userWidgetDataAdapter.fromScrapedUsers({ users }),
+      // widgets: userWidgetDataAdapter.fromScrapedUsers({ users }), // TODO: uncomment to enable user widgets on Warpcast
+      widgets: [],
     };
   }
 

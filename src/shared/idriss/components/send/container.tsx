@@ -11,6 +11,8 @@ import { useLocation, useUpdateEffect, useWindowSize } from 'react-use';
 import { useExtensionSettings } from 'shared/extension';
 import { Closable } from 'shared/ui';
 
+import { WIDGET_WIDTH } from '../../constants';
+
 interface RenderChildrenProperties {
   close: () => void;
 }
@@ -41,8 +43,11 @@ export const Container = memo(
     const [position, setPosition] = useState({ x: 0, y: 0 });
 
     const windowSize = useWindowSize();
-
     const isMobile = windowSize.width < 500;
+    const widgetEndsAtX = position.x + WIDGET_WIDTH;
+    const spaceLeft = windowSize.width - widgetEndsAtX;
+    const left = isMobile || spaceLeft < 0 ? undefined : position.x;
+    const right = isMobile || spaceLeft < 0 ? 0 : undefined;
 
     const injectedWidgetReference = useRef<HTMLImageElement | null>(null);
     const location = useLocation();
@@ -131,13 +136,14 @@ export const Container = memo(
         <div
           className="absolute z-20"
           style={{
-            left: isMobile ? undefined : position.x,
-            right: isMobile ? 0 : undefined,
+            left,
+            right,
             top: position.y + iconSize,
+            width: WIDGET_WIDTH,
           }}
         >
           <Closable
-            className="w-64 rounded-md bg-white text-gray-900 shadow-2xl"
+            className="w-full rounded-md bg-white text-gray-900 shadow-2xl"
             closeButtonClassName="hover:enabled:bg-black/20 active:enabled:bg-black/40"
             closeButtonIconClassName="text-[#000]"
             onClickInside={disableCloseOnHoverAway}
