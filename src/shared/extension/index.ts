@@ -21,3 +21,4 @@ export {
   ExtensionSettingsManager,
   extensionSettingsStorageKeys,
 } from './extension-settings-manager';
+export { createInitialExtensionSettingsStorageKeys } from './utils';

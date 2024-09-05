@@ -18,21 +18,15 @@ import {
   GET_EXTENSION_SETTINGS_RESPONSE,
 } from '../constants';
 import { ManageExtensionSettingsCommand } from '../commands';
-import {
-  ExtensionSettingsStorageKey,
-  extensionSettingsStorageKeys,
-} from '../extension-settings-manager';
+import { ExtensionSettingsStorageKey } from '../extension-settings-manager';
+import { createInitialExtensionSettingsStorageKeys } from '../utils';
 
 interface Properties {
   children: ReactNode;
 }
 
 const initialExtensionSettings: Record<ExtensionSettingsStorageKey, boolean> =
-  Object.fromEntries(
-    [extensionSettingsStorageKeys].map((key) => {
-      return [key, true];
-    }),
-  ) as Record<ExtensionSettingsStorageKey, boolean>;
+  createInitialExtensionSettingsStorageKeys();
 
 interface ExtensionSettingsContextValues {
   isContextMenuVisible: boolean;

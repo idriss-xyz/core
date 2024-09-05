@@ -2,19 +2,15 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 
 import {
+  createInitialExtensionSettingsStorageKeys,
   ExtensionSettingsContext,
   ExtensionSettingsStorageKey,
-  extensionSettingsStorageKeys,
 } from 'shared/extension';
 
 import { App } from './app';
 
 const initialExtensionSettings: Record<ExtensionSettingsStorageKey, boolean> =
-  Object.fromEntries(
-    [extensionSettingsStorageKeys].map((key) => {
-      return [key, true];
-    }),
-  ) as Record<ExtensionSettingsStorageKey, boolean>;
+  createInitialExtensionSettingsStorageKeys();
 
 const WrappedComponent = () => {
   const [extensionSettings, setExtensionSettings] = useState<
