@@ -5,20 +5,40 @@ import { POPUP_TO_WEBPAGE_MESSAGE } from '../messaging';
 import { EXTENSION_SETTINGS_CHANGE } from './constants';
 import { ExtensionSettings } from './types';
 
-type ExtensionTransfersSettingsStorageKeys =
-  | 'idriss-send-enabled'
-  | 'gitcoin-enabled';
-type ExtensionGovernanceSettingsStorageKeys =
-  | 'snapshot-enabled'
-  | 'tally-enabled'
-  | 'agora-enabled';
-type ExtensionTradingSettingsStorageKeys = 'polymarket-enabled';
+const extensionAddressBookSettingsStorageKeys = [
+  'idriss-send-enabled',
+  'block-explorers',
+] as const;
+
+export type ExtensionAddressBookSettingsStorageKeys =
+  (typeof extensionAddressBookSettingsStorageKeys)[number];
+
+const extensionGovernanceSettingsStorageKeys = [
+  'snapshot-enabled',
+  'tally-enabled',
+  'agora-enabled',
+] as const;
+
+export type ExtensionGovernanceSettingsStorageKeys =
+  (typeof extensionGovernanceSettingsStorageKeys)[number];
+
+const extensionIntegrationSettingsStorageKeys = [
+  'polymarket-enabled',
+  'gitcoin-enabled',
+] as const;
+
+export type ExtensionIntegrationSettingsStorageKeys =
+  (typeof extensionIntegrationSettingsStorageKeys)[number];
+
+export const extensionSettingsStorageKeys = [
+  'entire-extension-enabled',
+  ...extensionAddressBookSettingsStorageKeys,
+  ...extensionGovernanceSettingsStorageKeys,
+  ...extensionIntegrationSettingsStorageKeys,
+] as const;
 
 export type ExtensionSettingsStorageKey =
-  | 'entire-extension-enabled'
-  | ExtensionTransfersSettingsStorageKeys
-  | ExtensionGovernanceSettingsStorageKeys
-  | ExtensionTradingSettingsStorageKeys;
+  (typeof extensionSettingsStorageKeys)[number];
 
 export class ExtensionSettingsManager {
   static enable(storageKey: ExtensionSettingsStorageKey) {

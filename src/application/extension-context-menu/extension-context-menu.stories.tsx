@@ -4,19 +4,17 @@ import { useState } from 'react';
 import {
   ExtensionSettingsContext,
   ExtensionSettingsStorageKey,
+  extensionSettingsStorageKeys,
 } from 'shared/extension';
 
 import { App } from './app';
 
-const initialExtensionSettings: Record<ExtensionSettingsStorageKey, boolean> = {
-  'entire-extension-enabled': false,
-  'agora-enabled': false,
-  'gitcoin-enabled': false,
-  'polymarket-enabled': false,
-  'snapshot-enabled': false,
-  'tally-enabled': false,
-  'idriss-send-enabled': false,
-};
+const initialExtensionSettings: Record<ExtensionSettingsStorageKey, boolean> =
+  Object.fromEntries(
+    [extensionSettingsStorageKeys].map((key) => {
+      return [key, true];
+    }),
+  ) as Record<ExtensionSettingsStorageKey, boolean>;
 
 const WrappedComponent = () => {
   const [extensionSettings, setExtensionSettings] = useState<

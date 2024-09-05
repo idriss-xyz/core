@@ -1,4 +1,7 @@
-import { useExtensionSettings } from 'shared/extension';
+import {
+  ExtensionSettingsStorageKey,
+  useExtensionSettings,
+} from 'shared/extension';
 import { Checkbox } from 'shared/ui';
 
 import {
@@ -9,20 +12,21 @@ import { SettingListItem, SettingListItemsGroup } from './types';
 import {
   governanceSettings,
   integrationsSettings,
-  transferSettings,
+  addressBookSettings,
 } from './constants';
 
 export const App = () => {
   const { changeExtensionSetting, extensionSettings } = useExtensionSettings();
 
-  const settingListItemGroups: SettingListItemsGroup[] = [
-    { label: 'Transfer', settingListItems: transferSettings },
-    { label: 'Governance', settingListItems: governanceSettings },
-    { label: 'Integrations', settingListItems: integrationsSettings },
-  ];
+  const settingListItemGroups: SettingListItemsGroup<ExtensionSettingsStorageKey>[] =
+    [
+      { label: 'Address Book', settingListItems: addressBookSettings },
+      { label: 'Governance', settingListItems: governanceSettings },
+      { label: 'Integrations', settingListItems: integrationsSettings },
+    ];
 
   const handleSettingGroupChange = (
-    settingListItems: SettingListItem[],
+    settingListItems: SettingListItem<ExtensionSettingsStorageKey>[],
     enabled: boolean,
   ) => {
     for (const setting of settingListItems) {

@@ -18,21 +18,21 @@ import {
   GET_EXTENSION_SETTINGS_RESPONSE,
 } from '../constants';
 import { ManageExtensionSettingsCommand } from '../commands';
-import { ExtensionSettingsStorageKey } from '../extension-settings-manager';
+import {
+  ExtensionSettingsStorageKey,
+  extensionSettingsStorageKeys,
+} from '../extension-settings-manager';
 
 interface Properties {
   children: ReactNode;
 }
 
-const initialExtensionSettings: Record<ExtensionSettingsStorageKey, boolean> = {
-  'entire-extension-enabled': false,
-  'agora-enabled': false,
-  'gitcoin-enabled': false,
-  'polymarket-enabled': false,
-  'snapshot-enabled': false,
-  'tally-enabled': false,
-  'idriss-send-enabled': false,
-};
+const initialExtensionSettings: Record<ExtensionSettingsStorageKey, boolean> =
+  Object.fromEntries(
+    [extensionSettingsStorageKeys].map((key) => {
+      return [key, true];
+    }),
+  ) as Record<ExtensionSettingsStorageKey, boolean>;
 
 interface ExtensionSettingsContextValues {
   isContextMenuVisible: boolean;

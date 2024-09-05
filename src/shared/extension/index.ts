@@ -11,5 +11,13 @@ export {
   COMMAND_MAP as EXTENSION_COMMAND_MAP,
   GetServiceStatusCommand,
 } from './commands';
-export type { ExtensionSettingsStorageKey } from './extension-settings-manager';
-export { ExtensionSettingsManager } from './extension-settings-manager';
+export type {
+  ExtensionSettingsStorageKey,
+  ExtensionAddressBookSettingsStorageKeys,
+  ExtensionGovernanceSettingsStorageKeys,
+  ExtensionIntegrationSettingsStorageKeys,
+} from './extension-settings-manager';
+export {
+  ExtensionSettingsManager,
+  extensionSettingsStorageKeys,
+} from './extension-settings-manager';
