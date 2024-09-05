@@ -44,7 +44,7 @@ interface ExtensionSettingsContextValues {
   ) => Promise<void>;
 }
 
-const ExtensionSettingsContext = createContext<
+export const ExtensionSettingsContext = createContext<
   ExtensionSettingsContextValues | undefined
 >(undefined);
 
