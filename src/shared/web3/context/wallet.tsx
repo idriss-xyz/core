@@ -19,8 +19,9 @@ import { WalletStorage } from '../storage';
 
 interface WalletContextValue {
   wallet?: Wallet;
-  openConnectionModal: () => Promise<Wallet>;
   isConnectionModalOpened: boolean;
+  openConnectionModal: () => Promise<Wallet>;
+  removeWalletInfo: () => void;
 }
 
 const WalletContext = createContext<WalletContextValue | undefined>(undefined);
@@ -47,6 +48,11 @@ export const WalletContextProvider = ({
     walletProvidersStore.subscribe,
     walletProvidersStore.getProviders,
   );
+
+  const removeWalletInfo = () => {
+    setWallet(undefined);
+    WalletStorage.clear();
+  };
 
   useEffect(() => {
     if (wallet ?? availableWalletProviders.length === 0) {
@@ -105,14 +111,10 @@ export const WalletContextProvider = ({
   }, [availableWalletProviders, availableWalletProviders.length, wallet]);
 
   useEffect(() => {
-    const onAccountsChanged = () => {
-      setWallet(undefined);
-      WalletStorage.clear();
-    };
-    wallet?.provider.on('accountsChanged', onAccountsChanged);
+    wallet?.provider.on('accountsChanged', removeWalletInfo);
 
     return () => {
-      wallet?.provider.removeListener('accountsChanged', onAccountsChanged);
+      wallet?.provider.removeListener('accountsChanged', removeWalletInfo);
     };
   }, [wallet?.provider]);
 
@@ -149,8 +151,9 @@ export const WalletContextProvider = ({
   const contextValue: WalletContextValue = useMemo(() => {
     return {
       wallet,
-      openConnectionModal,
       isConnectionModalOpened: walletConnectModal.visible,
+      openConnectionModal,
+      removeWalletInfo,
     };
   }, [openConnectionModal, wallet, walletConnectModal.visible]);
 
