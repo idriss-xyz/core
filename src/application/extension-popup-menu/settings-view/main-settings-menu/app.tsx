@@ -2,10 +2,10 @@ import { Icon, IconButton } from 'shared/ui';
 
 import { SettingsView } from '../types';
 
-interface SettingsListProperties {
+interface MainSettingsMenuProperties {
   setCurrentView: (view: SettingsView) => void;
 }
-export const App = ({ setCurrentView }: SettingsListProperties) => {
+export const App = ({ setCurrentView }: MainSettingsMenuProperties) => {
   return (
     <div className="shrink-0 grow text-black">
       <div

@@ -17,8 +17,5 @@ export type {
   ExtensionGovernanceSettingsStorageKeys,
   ExtensionIntegrationSettingsStorageKeys,
 } from './extension-settings-manager';
-export {
-  ExtensionSettingsManager,
-  extensionSettingsStorageKeys,
-} from './extension-settings-manager';
+export { ExtensionSettingsManager } from './extension-settings-manager';
 export { createInitialExtensionSettingsStorageKeys } from './utils';

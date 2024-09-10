@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { IconButton } from 'shared/ui';
 
-import { SettingsList } from './settings-list';
+import { MainSettingsMenu } from './main-settings-menu';
 import { CustomizationSettings } from './customization-settings';
 import { SettingsView } from './types';
 
@@ -27,7 +27,7 @@ export const App = () => {
       {currentView === 'customization' ? (
         <CustomizationSettings />
       ) : (
-        <SettingsList setCurrentView={setCurrentView} />
+        <MainSettingsMenu setCurrentView={setCurrentView} />
       )}
     </div>
   );

@@ -3,9 +3,8 @@ import {
   extensionSettingsStorageKeys,
 } from './extension-settings-manager';
 
-// eslint-disable-next-line unicorn/prefer-set-has
 const initiallyDisabledExtensionSettingsStorageKeys: ExtensionSettingsStorageKey[] =
-  ['block-explorers'];
+  [] as const;
 
 export const createInitialExtensionSettingsStorageKeys = () => {
   return Object.fromEntries(

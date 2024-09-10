@@ -18,7 +18,7 @@ import { AGORA_COMMAND_MAP } from 'application/agora';
 import { IDRISS_COMMAND_MAP } from 'shared/idriss';
 import { IDRISS_SEND_COMMAND_MAP } from 'application/idriss-send';
 import { TALLY_COMMAND_MAP } from 'application/tally';
-import { EXTENSION_MENU_COMMAND_MAP } from 'application/extension-context-menu';
+import { EXTENSION_MENU_COMMAND_MAP } from 'application/extension-popup-menu';
 
 import { SbtResolver } from '../../common/resolvers/SbtResolver';
 import { AddressResolver } from '../../common/resolvers/AddressResolver';

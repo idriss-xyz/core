@@ -4,29 +4,29 @@ import { useExtensionSettings } from 'shared/extension';
 import { Closable, IconButton, Toggle } from 'shared/ui';
 import { IDRISS_ICON_WITH_TEXT } from 'shared/idriss';
 
-import { HomeView } from './home-view';
 import { SettingsView } from './settings-view';
 import { Footer } from './footer';
+import { LookUpWalletAddress } from './look-up-wallet-address';
 
 type MenuContent = 'home' | 'settings';
 
 export const App = () => {
   const [activeView, setActiveView] = useState<MenuContent>('home');
   const {
-    isContextMenuVisible,
-    hideContextMenu,
+    isPopupMenuVisible,
+    hidePopupMenu,
     extensionSettings,
     changeExtensionSetting,
   } = useExtensionSettings();
 
-  if (!isContextMenuVisible) {
+  if (!isPopupMenuVisible) {
     return null;
   }
   return (
     <Closable
       closeButtonClassName="hidden"
       closeOnClickAway
-      onClose={hideContextMenu}
+      onClose={hidePopupMenu}
       className="fixed right-6 top-6 z-[9999] flex size-[400px] flex-col overflow-hidden rounded-md bg-white p-0 shadow-lg"
     >
       <>
@@ -66,7 +66,7 @@ export const App = () => {
           </div>
         </nav>
 
-        {activeView === 'home' ? <HomeView /> : <SettingsView />}
+        {activeView === 'home' ? <LookUpWalletAddress /> : <SettingsView />}
       </>
       <Footer />
     </Closable>

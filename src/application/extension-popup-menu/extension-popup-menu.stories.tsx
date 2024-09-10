@@ -33,8 +33,8 @@ const WrappedComponent = () => {
   return (
     <ExtensionSettingsContext.Provider
       value={{
-        isContextMenuVisible: true,
-        hideContextMenu: () => {},
+        isPopupMenuVisible: true,
+        hidePopupMenu: () => {},
         extensionSettings: extensionSettings,
         changeExtensionSetting: changeExtensionSetting,
       }}
@@ -45,7 +45,7 @@ const WrappedComponent = () => {
 };
 
 const meta: Meta<typeof WrappedComponent> = {
-  title: 'application/extension-context-menu',
+  title: 'application/extension-popup-menu',
   component: WrappedComponent,
 };
 
