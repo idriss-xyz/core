@@ -1,16 +1,15 @@
-import { BigNumber } from 'ethers';
-
 import { Command, FailureResult, HandlerError } from 'shared/messaging';
 import {
   GetAcrossChainFeesCommand,
   GetAcrossChainFeesPayload,
   GetAcrossChainFeesResponse,
+  Hex,
 } from 'shared/web3';
 
 import { generateAcrossMessage } from '../utils';
 
 interface Payload extends Omit<GetAcrossChainFeesPayload, 'message'> {
-  anchorAddress: string;
+  anchorAddress: Hex;
   roundId: number;
 }
 
@@ -27,7 +26,7 @@ export class GetGitcoinAcrossChainFeesCommand extends Command<
   async handle() {
     try {
       const message = await generateAcrossMessage({
-        amount: BigNumber.from(this.payload.amount.toString()),
+        amount: BigInt(this.payload.amount.toString()),
         anchorAddress: this.payload.anchorAddress,
         roundId: this.payload.roundId,
         destinationChainId: this.payload.destinationChainId,

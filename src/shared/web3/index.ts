@@ -1,13 +1,10 @@
 export { CHAIN, TOKEN, CHAIN_ID_TO_TOKENS, EMPTY_HEX } from './constants';
-export type { Hex, Wallet, ChainToken, AnySigner } from './types';
+export type { Hex, Wallet, ChainToken } from './types';
 export { useWallet, WalletContextProvider } from './context';
 export {
-  createEthersProvider,
-  createRandomWallet,
   resolveAddress,
   dollarToWei,
   weiToEth,
-  createContract,
   roundToSignificantFigures,
   ethToDollars,
   createSigner,
@@ -15,6 +12,10 @@ export {
   isNativeTokenAddress,
   toAddressWithValidChecksum,
   getChainById,
+  createWalletClient,
+  getTransactionUrl,
+  getRpcUrl,
+  getBlockExplorerUrl,
 } from './utils';
 export { useSwitchChain } from './hooks';
 export { ChainSelect, TokenSelect } from './components';

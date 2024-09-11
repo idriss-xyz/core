@@ -13,7 +13,7 @@ interface Payload {
   destinationChainId: number;
 }
 
-type Response = number;
+type Response = bigint;
 
 export class GetNonceCommand extends Command<Payload, Response> {
   public readonly name = 'GetNonceCommand' as const;

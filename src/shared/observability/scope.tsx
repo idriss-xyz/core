@@ -38,6 +38,7 @@ const createClient = (
       `chrome-extension://${extensionId}`,
       'twitter.com',
       'supercast.xyz',
+      'warpcast.com',
       'x.com',
     ],
     transport:

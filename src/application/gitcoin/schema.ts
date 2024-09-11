@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { Hex } from 'shared/web3';
+import { Hex, hexSchema } from 'shared/web3';
 
 import {
   GITCOIN_DONATION_CHAINS_IDS,
@@ -38,7 +38,7 @@ export const applicationSchema = z.object({
   project: z.object({
     id: z.string(),
     name: z.string(),
-    anchorAddress: z.string(),
+    anchorAddress: hexSchema,
     registryAddress: z.string(),
     metadata: z.object({
       projectTwitter: z.string().optional(),

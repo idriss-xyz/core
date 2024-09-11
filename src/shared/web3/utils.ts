@@ -1,7 +1,10 @@
-import { ExternalProvider, JsonRpcSigner } from '@ethersproject/providers';
-import { ContractInterface, ethers } from 'ethers';
-import { EIP1193Provider } from 'mipd';
-import { getAddress } from 'ethers/lib/utils';
+import { mainnet } from 'viem/chains';
+import {
+  createWalletClient as createViemWalletClient,
+  custom,
+  getAddress,
+  publicActions,
+} from 'viem';
 import { IdrissCrypto } from 'idriss-crypto/lib/browser';
 
 import { Hex, Wallet } from './types';
@@ -17,46 +20,33 @@ export const resolveAddress = async (address: string) => {
   return;
 };
 
-export const decimalToHex = (value: number): Hex => {
-  return `0x${value.toString(16)}`;
+export const createWalletClient = (
+  wallet: Pick<Wallet, 'account' | 'provider'>,
+) => {
+  return createViemWalletClient({
+    transport: custom(wallet.provider),
+    account: wallet.account,
+  }).extend(publicActions);
 };
 
 export const hexToDecimal = (hex: Hex) => {
   return Number.parseInt(hex);
 };
 
-export const createEthersProvider = (provider: EIP1193Provider) => {
-  return new ethers.providers.Web3Provider(provider as ExternalProvider);
-};
-
-export const createRandomWallet = () => {
-  const temporaryWallet = ethers.Wallet.createRandom();
-  return temporaryWallet;
-};
-
-export const createSigner = (wallet: Wallet) => {
-  const ethersProvider = createEthersProvider(wallet.provider);
-  const signer = ethersProvider.getSigner(wallet.account);
-
-  return signer;
-};
-
-export const createContract = (options: {
-  address: string;
-  abi: ContractInterface;
-  signerOrProvider?: JsonRpcSigner | string;
-}) => {
-  return new ethers.Contract(
-    options.address,
-    options.abi,
-    typeof options.signerOrProvider === 'string'
-      ? new ethers.providers.JsonRpcProvider(options.signerOrProvider)
-      : options.signerOrProvider,
-  );
+// TODO: to be removed
+export const createSigner = ({
+  provider,
+  account,
+}: Pick<Wallet, 'provider' | 'account'>) => {
+  return createViemWalletClient({
+    chain: mainnet,
+    transport: custom(provider),
+    account,
+  });
 };
 
 export const toAddressWithValidChecksum = (address: Hex) => {
-  return getAddress(address) as Hex;
+  return getAddress(address);
 };
 
 const ethToWei = (amount: number) => {
@@ -131,4 +121,30 @@ export const getChainById = (chainId: number) => {
   return Object.values(CHAIN).find((chain) => {
     return chain.id === chainId;
   });
+};
+
+const getBlockExplorer = (chainId: number) => {
+  const chain = getChainById(chainId);
+  return chain?.blockExplorers.default;
+};
+
+export const getBlockExplorerUrl = (chainId: number) => {
+  return getBlockExplorer(chainId)?.url;
+};
+
+export const getTransactionUrl = (properties: {
+  chainId: number;
+  transactionHash: Hex;
+}) => {
+  const { chainId, transactionHash } = properties;
+  const baseUrl = getBlockExplorerUrl(chainId);
+  if (!baseUrl) {
+    return '#';
+  }
+  return `${baseUrl}/tx/${transactionHash}`;
+};
+
+export const getRpcUrl = (chainId: number) => {
+  const chain = getChainById(chainId);
+  return chain?.rpcUrls.default.http[0] ?? '#';
 };

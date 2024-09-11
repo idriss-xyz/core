@@ -1,20 +1,19 @@
-import { BigNumber, ethers } from 'ethers';
-
 import {
-  AnySigner,
-  EMPTY_HEX,
-  Hex,
-  createContract,
-  createRandomWallet,
-  getChainById,
-} from 'shared/web3';
+  createPublicClient,
+  encodeAbiParameters,
+  http,
+  parseAbiParameters,
+} from 'viem';
+import { generatePrivateKey, privateKeyToAccount } from 'viem/accounts';
+
+import { EMPTY_HEX, Hex, getRpcUrl } from 'shared/web3';
 
 import {
   OSS_ROUNDS,
-  DONATION_CONTRACT_ABI,
   DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID,
+  DONATION_CONTRACT_ABI,
 } from './constants';
-import { Application, DonationPayload, CrossChainDonationData } from './types';
+import { Application, DonationPayload } from './types';
 
 export const selectTwitterApplications = (applications: Application[]) => {
   const applicationsGroupedByTwitter =
@@ -65,84 +64,72 @@ export const getDefaultDonationOptions = (
   };
 };
 
-export const generateVote = (recipientId: string, amount: BigNumber) => {
+export const generateVote = (recipientId: Hex, amount: bigint) => {
   const PermitTypeNone = 0; // 0 = native currency transfer
   const NATIVE = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'; // Gitcoin internal address for native
   const nonce = 0; // approval specific, always 0 in our case
   const deadline = 0; // approval specific, always 0 in our case
   const signature =
     '0x0000000000000000000000000000000000000000000000000000000000000000'; // approval specific, always 0x in our case
-  const types = [
-    'address',
-    'uint8',
-    'tuple(tuple(tuple(address, uint256), uint256, uint256), bytes)',
-  ];
-  const data = [
-    recipientId,
-    PermitTypeNone, // PermitType.None as 0
+
+  const tuple = [
+    // Permit2Data
     [
-      // Permit2Data
+      // ISignatureTransfer.PermitTransferFrom
       [
-        // ISignatureTransfer.PermitTransferFrom
-        [
-          // ISignatureTransfer.TokenPermissions
-          NATIVE,
-          amount, // Amount
-        ],
-        nonce, // Nonce
-        deadline, // Deadline
+        // ISignatureTransfer.TokenPermissions
+        NATIVE,
+        amount, // Amount
       ],
-      signature, // Signature as an empty byte string
+      nonce, // Nonce
+      deadline, // Deadline
     ],
+    signature, // Signature as an empty byte string
   ];
-  const abiCoder = ethers.utils.defaultAbiCoder;
-  return abiCoder.encode(types, data);
+
+  return encodeAbiParameters(
+    parseAbiParameters(['address', 'uint8', 'tuple']),
+    [recipientId, PermitTypeNone, tuple],
+  );
 };
 
-const generateDonationData = async (
-  roundId: number,
-  destinationChainId: number,
-  destinationContractAddress: Hex,
-  senderAddress: Hex,
-  voteParameters: string,
-) => {
-  const nonce = await getNonce(senderAddress, destinationChainId);
-  const data: CrossChainDonationData = {
-    chainId: destinationChainId,
-    roundId: roundId,
-    donor: senderAddress,
-    voteParams: voteParameters,
-    nonce: nonce,
-    validUntil: Math.round(Date.now() / 1000) + 3600, // 1 hour
-    verifyingContract: destinationContractAddress,
-  };
-  return data;
+export const getDonationContractAddress = (chainId: number) => {
+  return DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[chainId] ?? EMPTY_HEX;
 };
 
-export const generateDonationDataV2 = (
-  roundId: number,
-  destinationChainId: number,
-  destinationContractAddress: Hex,
-  senderAddress: Hex,
-  voteParameters: string,
-  nonce: number,
-) => {
-  const data: CrossChainDonationData = {
-    chainId: destinationChainId,
-    roundId: roundId,
-    donor: senderAddress,
-    voteParams: voteParameters,
-    nonce: nonce,
-    validUntil: Math.round(Date.now() / 1000) + 3600, // 1 hour
-    verifyingContract: destinationContractAddress,
-  };
-  return data;
+export const getNonce = async (donor: Hex, destinationChainId: number) => {
+  const publicClient = createPublicClient({
+    transport: http(getRpcUrl(destinationChainId)),
+  });
+  const nonce = await publicClient.readContract({
+    abi: DONATION_CONTRACT_ABI,
+    functionName: 'nonces',
+    args: [donor],
+    address: getDonationContractAddress(destinationChainId),
+  });
+
+  return nonce;
 };
 
-export const generateEIP712Signature = async (
-  signer: AnySigner,
-  data: CrossChainDonationData,
-) => {
+export const getLoadingMessage = (isCrossChain: boolean) => {
+  if (isCrossChain) {
+    return 'Sign message and confirm transfer';
+  }
+
+  return 'Confirm transfer in your wallet';
+};
+
+export const generateAcrossMessage = async (payload: {
+  anchorAddress: Hex;
+  amount: bigint;
+  roundId: number;
+  destinationChainId: number;
+}) => {
+  const privateKey = generatePrivateKey();
+  const wallet = privateKeyToAccount(privateKey);
+  const vote = generateVote(payload.anchorAddress, payload.amount);
+  const nonce = await getNonce(wallet.address, payload.destinationChainId);
+
   const domain = {
     name: 'IDrissCrossChainDonations',
     version: '1',
@@ -158,18 +145,26 @@ export const generateEIP712Signature = async (
       { name: 'verifyingContract', type: 'address' },
     ],
   };
-  const signature = await signer._signTypedData(domain, types, data);
 
-  const encoded = encodeDataAndSignature(data, signature);
-  return encoded;
-};
+  const data = {
+    chainId: payload.destinationChainId,
+    roundId: payload.roundId,
+    donor: wallet.address,
+    voteParams: vote,
+    nonce: nonce,
+    validUntil: Math.round(Date.now() / 1000) + 3600, // 1 hour
+    verifyingContract: getDonationContractAddress(payload.destinationChainId),
+  } as const;
 
-const encodeDataAndSignature = (
-  data: CrossChainDonationData,
-  signature: string,
-) => {
-  const encoded = ethers.utils.defaultAbiCoder.encode(
-    [
+  const signature = await wallet.signTypedData({
+    domain,
+    types,
+    primaryType: 'Donation',
+    message: data,
+  });
+
+  return encodeAbiParameters(
+    parseAbiParameters([
       'uint256',
       'uint256',
       'address',
@@ -178,59 +173,16 @@ const encodeDataAndSignature = (
       'uint256',
       'address',
       'bytes',
-    ],
+    ]),
     [
-      data.chainId,
-      data.roundId,
+      BigInt(data.chainId),
+      BigInt(data.roundId),
       data.donor,
       data.voteParams,
-      data.nonce,
-      data.validUntil,
+      BigInt(data.nonce),
+      BigInt(data.validUntil),
       data.verifyingContract,
       signature,
     ],
   );
-  return encoded;
-};
-
-export const getNonce = async (donor: string, destinationChainId: number) => {
-  const wrapper = createContract({
-    abi: DONATION_CONTRACT_ABI,
-    address:
-      DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[destinationChainId] ?? EMPTY_HEX,
-    signerOrProvider: getChainById(destinationChainId)?.rpcUrls[0],
-  });
-
-  const result = await wrapper.functions.nonces?.(donor);
-
-  const chainSpecificNonce = (result[0]! as BigNumber).toNumber();
-  return chainSpecificNonce;
-};
-
-export const getLoadingMessage = (isCrossChain: boolean) => {
-  if (isCrossChain) {
-    return 'Sign message and confirm transfer';
-  }
-
-  return 'Confirm transfer in your wallet';
-};
-
-export const generateAcrossMessage = async (payload: {
-  anchorAddress: string;
-  amount: BigNumber;
-  roundId: number;
-  destinationChainId: number;
-}) => {
-  const wallet = createRandomWallet();
-  const vote = generateVote(payload.anchorAddress, payload.amount);
-  const address = (await wallet.getAddress()) as Hex;
-  const data = await generateDonationData(
-    payload.roundId,
-    payload.destinationChainId,
-    DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[payload.destinationChainId] ??
-      EMPTY_HEX,
-    address,
-    vote,
-  );
-  return generateEIP712Signature(wallet, data);
 };

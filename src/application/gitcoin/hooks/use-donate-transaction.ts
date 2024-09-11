@@ -1,16 +1,18 @@
 import { useMutation } from '@tanstack/react-query';
-import { BigNumber } from 'ethers';
+import { encodeFunctionData } from 'viem';
+import { polygon } from 'viem/chains';
 
-import { Wallet, createContract, createSigner } from 'shared/web3';
+import { createWalletClient, getChainById, Wallet } from 'shared/web3';
 
-import { ALLO_CONTRACT_ABI, ALLO_CONTRACT_ADDRESS } from '../constants';
-import { generateVote } from '../utils';
 import { Application } from '../types';
+import { generateVote } from '../utils';
+import { ALLO_CONTRACT_ABI, ALLO_CONTRACT_ADDRESS } from '../constants';
 
 interface Properties {
   wallet: Wallet;
   application: Application;
   userAmountInWei: string;
+  chainId: number;
 }
 
 export const useDonateTransaction = () => {
@@ -19,34 +21,32 @@ export const useDonateTransaction = () => {
       wallet,
       application,
       userAmountInWei,
+      chainId,
     }: Properties) => {
-      const signer = createSigner(wallet);
-
-      const alloContract = createContract({
-        address: ALLO_CONTRACT_ADDRESS,
-        abi: ALLO_CONTRACT_ABI,
-        signerOrProvider: signer,
-      });
+      const walletClient = createWalletClient(wallet);
 
       const vote = generateVote(
         application.project.anchorAddress,
-        BigNumber.from(userAmountInWei),
+        BigInt(userAmountInWei),
       );
 
-      const populatedTransaction =
-        await alloContract.populateTransaction.allocate?.(
-          Number(application.roundId),
-          vote,
-        );
-
-      const result = await signer.sendTransaction({
-        ...populatedTransaction,
-        from: wallet.account,
-        value: userAmountInWei,
-        to: ALLO_CONTRACT_ADDRESS,
+      const encodedData = encodeFunctionData({
+        abi: ALLO_CONTRACT_ABI,
+        functionName: 'allocate',
+        args: [BigInt(application.roundId), vote],
       });
 
-      const { transactionHash } = await result.wait();
+      const transactionHash = await walletClient.sendTransaction({
+        data: encodedData,
+        from: wallet.account,
+        value: BigInt(userAmountInWei),
+        to: ALLO_CONTRACT_ADDRESS,
+        chain: getChainById(chainId),
+      });
+
+      await walletClient.waitForTransactionReceipt({
+        hash: transactionHash,
+      });
       return { transactionHash };
     },
   });
