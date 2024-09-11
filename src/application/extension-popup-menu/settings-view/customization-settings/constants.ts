@@ -14,7 +14,7 @@ export const addressBookSettings: SettingListItem<ExtensionAddressBookSettingsSt
     },
     {
       label: 'Block explorers',
-      storageKey: 'block-explorers',
+      storageKey: 'block-explorers-enabled',
     },
   ];
 

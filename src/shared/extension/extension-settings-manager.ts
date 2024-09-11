@@ -7,7 +7,7 @@ import { ExtensionSettings } from './types';
 
 const extensionAddressBookSettingsStorageKeys = [
   'idriss-send-enabled',
-  'block-explorers',
+  'block-explorers-enabled',
 ] as const;
 
 export type ExtensionAddressBookSettingsStorageKeys =

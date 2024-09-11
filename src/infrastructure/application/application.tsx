@@ -44,11 +44,13 @@ const ApplicationWithProviders = () => {
       <WithObservabilityScope>
         <ErrorBoundary>
           <QueryProvider>
-            <TailwindProvider>
-              <ExtensionSettingsProvider>
-                <ExtensionPopupMenu />
-              </ExtensionSettingsProvider>
-            </TailwindProvider>
+            <WalletContextProvider disabledWalletsRdns={disabledWalletRdns}>
+              <TailwindProvider>
+                <ExtensionSettingsProvider>
+                  <ExtensionPopupMenu />
+                </ExtensionSettingsProvider>
+              </TailwindProvider>
+            </WalletContextProvider>
           </QueryProvider>
         </ErrorBoundary>
       </WithObservabilityScope>

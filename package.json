@@ -1,9 +1,8 @@
 {
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "tailwind:legacy": "npx tailwind -i ./src/popup/standalone.css -o ./src/popup/tailwindStandalone.css",
     "tailwind:react": "postcss tailwind.css -o src/shared/ui/providers/tailwind.build.css",
-    "build:tailwind": "pnpm tailwind:legacy && pnpm tailwind:react",
+    "build:tailwind": "pnpm tailwind:react",
     "build:dev": "pnpm build:tailwind && webpack --mode=development",
     "build:prod": "pnpm build:tailwind && webpack --mode=production",
     "lint": "eslint src --max-warnings=0",

@@ -40,18 +40,8 @@ export default (_env, argv) => {
       new CopyPlugin({
         patterns: [
           { from: './src/runtime/chromium/manifest.json', to: 'chromium' },
-          { from: './src/popup/standalone.html', to: 'chromium' },
-          {
-            from: './src/popup/tailwindStandalone.css',
-            to: 'chromium',
-          },
           { from: './src/common/img', to: 'chromium/img' },
           { from: './src/runtime/firefox/manifest.json', to: 'firefox' },
-          { from: './src/popup/standalone.html', to: 'firefox' },
-          {
-            from: './src/popup/tailwindStandalone.css',
-            to: 'firefox',
-          },
           { from: './src/common/img', to: 'firefox/img' },
         ],
       }),
