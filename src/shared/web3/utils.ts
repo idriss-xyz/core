@@ -1,4 +1,3 @@
-import { mainnet } from 'viem/chains';
 import {
   createWalletClient as createViemWalletClient,
   custom,
@@ -31,18 +30,6 @@ export const createWalletClient = (
 
 export const hexToDecimal = (hex: Hex) => {
   return Number.parseInt(hex);
-};
-
-// TODO: to be removed
-export const createSigner = ({
-  provider,
-  account,
-}: Pick<Wallet, 'provider' | 'account'>) => {
-  return createViemWalletClient({
-    chain: mainnet,
-    transport: custom(provider),
-    account,
-  });
 };
 
 export const toAddressWithValidChecksum = (address: Hex) => {
@@ -147,4 +134,13 @@ export const getTransactionUrl = (properties: {
 export const getRpcUrl = (chainId: number) => {
   const chain = getChainById(chainId);
   return chain?.rpcUrls.default.http[0] ?? '#';
+};
+
+export const isUnrecognizedChainError = (error: unknown) => {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'code' in error &&
+    error.code === 4902
+  );
 };

@@ -7,7 +7,6 @@ export {
   weiToEth,
   roundToSignificantFigures,
   ethToDollars,
-  createSigner,
   applyDecimalsToNumericString,
   isNativeTokenAddress,
   toAddressWithValidChecksum,

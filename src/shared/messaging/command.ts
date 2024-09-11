@@ -80,15 +80,15 @@ export abstract class Command<Payload, ExpectedResponse> {
 }
 
 type CommandConstructor<Payload, Response> = new (
-  parameters: Payload,
+  payload: Payload,
 ) => Command<Payload, Response>;
 
 export const useCommandMutation = <Payload, Response>(
   commandConstructor: CommandConstructor<Payload, Response>,
 ) => {
   const mutationFunction = useCallback(
-    (parameters: Payload) => {
-      const command = new commandConstructor(parameters);
+    (payload: Payload) => {
+      const command = new commandConstructor(payload);
       return command.send();
     },
     [commandConstructor],

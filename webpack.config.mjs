@@ -58,13 +58,22 @@ export default (_env, argv) => {
         ],
       }),
       new NodePolyfillPlugin(),
-      new webpack.EnvironmentPlugin(['SENTRY_ENVIRONMENT', 'SENTRY_DSN']),
+      new webpack.ProvidePlugin({
+        process: 'process/browser.js',
+      }),
+      new webpack.DefinePlugin({
+        'process.env': JSON.stringify({
+          SENTRY_ENVIRONMENT: process.env.SENTRY_ENVIRONMENT,
+          SENTRY_DSN: process.env.SENTRY_DSN,
+        }),
+      }),
+      // new webpack.EnvironmentPlugin(['SENTRY_ENVIRONMENT', 'SENTRY_DSN']),
       sentryWebpackPlugin({
         authToken: process.env.SENTRY_AUTH_TOKEN,
         org: process.env.SENTRY_ORGANISATION,
         project: process.env.SENTRY_PROJECT,
         telemetry: false,
-        disable: process.env.SENTRY_ENVIRONMENT !== 'production'
+        disable: process.env.SENTRY_ENVIRONMENT !== 'production',
       }),
       // new BundleAnalyzerPlugin()
     ],

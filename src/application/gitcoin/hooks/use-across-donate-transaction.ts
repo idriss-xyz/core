@@ -4,7 +4,6 @@ import {
   encodeFunctionData,
   parseAbiParameters,
 } from 'viem';
-import { polygon } from 'viem/chains';
 
 import {
   createWalletClient,

@@ -1,7 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { createWalletClient } from './utils';
-import { CHAIN } from './constants';
+import {
+  createWalletClient,
+  getChainById,
+  isUnrecognizedChainError,
+} from './utils';
 import { Wallet } from './types';
 
 interface SwitchChainArguments {
@@ -22,16 +25,22 @@ export const useSwitchChain = () => {
         return;
       }
 
-      const foundChain = Object.values(CHAIN).find((chain) => {
-        return chain.id === chainId;
-      });
+      const foundChain = getChainById(chainId);
 
       if (!foundChain) {
         throw new Error('Chain is not configured');
       }
 
-      await client.switchChain({ id: chainId });
-      // TODO: double check if chain is not configured
+      try {
+        await client.switchChain({ id: chainId });
+      } catch (error) {
+        if (isUnrecognizedChainError(error)) {
+          await client.addChain({ chain: foundChain });
+          return;
+        }
+
+        throw error;
+      }
     },
   });
 };

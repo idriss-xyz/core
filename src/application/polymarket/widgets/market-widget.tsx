@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { TickSize } from '@polymarket/clob-client';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -11,10 +10,15 @@ import {
   IconButton,
   InputBase,
 } from 'shared/ui';
-import { EMPTY_MARKET_FORM } from 'application/polymarket/constants';
-import { marketFormSchema } from 'application/polymarket/schema';
 
-import { EnhancedToken, MarketData, MarketFormValues } from '../types';
+import { EMPTY_MARKET_FORM, SCENARIO } from '../constants';
+import { marketFormSchema } from '../schema';
+import {
+  EnhancedToken,
+  MarketData,
+  MarketFormValues,
+  TickSize,
+} from '../types';
 import { useOrderPlacer, useUser } from '../hooks';
 import { calculateTotalSharesForAmount } from '../utils';
 import {
@@ -28,7 +32,7 @@ import {
 } from '../components';
 
 interface Properties {
-  data: MarketData;
+  data: Pick<MarketData, 'minimum_tick_size' | 'neg_risk' | 'question'>;
   tokens: EnhancedToken[];
   defaultValues?: Partial<MarketFormValues>;
   onRefresh: () => void;
@@ -58,7 +62,7 @@ export const Market = ({
         defaultValues?.selectedTokenId ?? EMPTY_MARKET_FORM.selectedTokenId,
     },
     resolver: zodResolver(
-      marketFormSchema(user.safeWalletDetails?.balance ?? 0),
+      marketFormSchema(Number(user.safeWalletDetails?.balance ?? 0)),
     ),
     mode: 'onChange',
   });
@@ -99,11 +103,61 @@ export const Market = ({
 
   const formReference = useRef<HTMLFormElement | null>(null);
 
-  useEffect(() => {
-    if (orderPlacer.isPlaced) {
-      setTimeout(orderPlacer.reset, 4000);
+  const scenario = useMemo(() => {
+    if (!isAvailable) {
+      return SCENARIO.BETTING_NOT_AVAILABLE;
     }
-  }, [orderPlacer.isPlaced, orderPlacer.reset]);
+
+    if (!user.wallet) {
+      return SCENARIO.WALLET_NOT_CONNECTED;
+    }
+
+    if (user.wallet.chainId !== CHAIN.POLYGON.id) {
+      return SCENARIO.WRONG_CHAIN;
+    }
+
+    if (orderPlacer.isPlaced) {
+      return SCENARIO.BET_PLACED;
+    }
+
+    return SCENARIO.READY_TO_BET;
+  }, [isAvailable, orderPlacer.isPlaced, user.wallet]);
+
+  const scenarioToActionButton = useMemo(() => {
+    return {
+      [SCENARIO.BET_PLACED]: <SuccessButton />,
+      [SCENARIO.READY_TO_BET]: (
+        <ActionButton
+          type="submit"
+          loading={orderPlacer.isPlacing || user.isSigning}
+          disabled={user.isSigningError}
+        >
+          Buy
+        </ActionButton>
+      ),
+      [SCENARIO.WRONG_CHAIN]: (
+        <ActionButton
+          type="button"
+          onClick={() => {
+            if (!user.wallet) {
+              return;
+            }
+
+            void user.switchToPolygon(user.wallet);
+          }}
+          loading={user.isSigning}
+        >
+          Switch to Polygon
+        </ActionButton>
+      ),
+      [SCENARIO.WALLET_NOT_CONNECTED]: (
+        <ActionButton loading={user.isSigning} onClick={user.signIn}>
+          Connect wallet
+        </ActionButton>
+      ),
+      [SCENARIO.BETTING_NOT_AVAILABLE]: <UnavailableButton />,
+    };
+  }, [orderPlacer.isPlacing, user]);
 
   const submit: SubmitHandler<MarketFormValues> = useCallback(
     async (formValues) => {
@@ -134,6 +188,12 @@ export const Market = ({
   const retry = useCallback(() => {
     formReference.current?.requestSubmit();
   }, []);
+
+  useEffect(() => {
+    if (orderPlacer.isPlaced) {
+      setTimeout(orderPlacer.reset, 4000);
+    }
+  }, [orderPlacer.isPlaced, orderPlacer.reset]);
 
   return (
     <div className="absolute right-4" style={{ top }}>
@@ -170,12 +230,12 @@ export const Market = ({
                 render={({ field }) => {
                   return (
                     <>
-                      {tokens.map((token) => {
+                      {tokens.map((token, index) => {
                         const isActive = field.value === token.token_id;
                         return (
                           <VoteButton
                             isActive={isActive}
-                            outcome={token.outcome}
+                            tokenIndex={index}
                             key={token.token_id}
                             onClick={() => {
                               field.onChange(token.token_id);
@@ -209,8 +269,9 @@ export const Market = ({
                               <InputBase.Label label="Amount" />
                               <Chip className="bg-[#2C3F4F]">
                                 Balance $
-                                {user.safeWalletDetails?.balance.toFixed(2) ??
-                                  0}
+                                {(user.safeWalletDetails?.balance ?? 0).toFixed(
+                                  2,
+                                )}
                               </Chip>
                             </div>
                           );
@@ -224,43 +285,7 @@ export const Market = ({
                 }}
               />
             </div>
-            {/* TODO: this could be nicer */}
-            <div className="mt-4">
-              {isAvailable ? (
-                orderPlacer.isPlaced ? (
-                  <SuccessButton />
-                ) : user.wallet ? (
-                  user.wallet.chainId === CHAIN.POLYGON.id ? (
-                    <ActionButton
-                      type="submit"
-                      loading={orderPlacer.isPlacing || user.isSigning}
-                      disabled={user.isSigningError}
-                    >
-                      Buy
-                    </ActionButton>
-                  ) : (
-                    <ActionButton
-                      type="button"
-                      onClick={() => {
-                        if (!user.wallet?.provider) {
-                          return;
-                        }
-                        void user.switchToPolygon(user.wallet.provider);
-                      }}
-                      loading={user.isSigning}
-                    >
-                      Switch to Polygon
-                    </ActionButton>
-                  )
-                ) : (
-                  <ActionButton loading={user.isSigning} onClick={user.signIn}>
-                    Connect wallet
-                  </ActionButton>
-                )
-              ) : (
-                <UnavailableButton />
-              )}
-            </div>
+            <div className="mt-4">{scenarioToActionButton[scenario]}</div>
             <div className="mt-4 flex items-center justify-between text-base font-normal">
               <span className="text-[#858D92]">Potential return</span>
               <span className="font-semibold text-green-400">

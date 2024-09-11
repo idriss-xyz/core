@@ -5,12 +5,13 @@ import {
   HandlerResponseError,
   OkResult,
 } from 'shared/messaging';
+import { Hex, hexSchema } from 'shared/web3';
 
 interface Payload {
-  address: string;
+  address: Hex;
 }
 
-export class GetFunderAddresCommand extends Command<Payload, string> {
+export class GetFunderAddresCommand extends Command<Payload, Hex> {
   public name = 'GetFunderAddresCommand' as const;
 
   constructor(public payload: Payload) {
@@ -51,7 +52,11 @@ export class GetFunderAddresCommand extends Command<Payload, string> {
       if (!pickedSafe) {
         throw new HandlerError();
       }
-      return new OkResult(pickedSafe);
+      const validationResult = hexSchema.safeParse(pickedSafe);
+      if (!validationResult.success) {
+        throw new HandlerError('Schema validation failed');
+      }
+      return new OkResult(validationResult.data);
     } catch (error) {
       this.captureException(error);
       if (error instanceof HandlerError) {

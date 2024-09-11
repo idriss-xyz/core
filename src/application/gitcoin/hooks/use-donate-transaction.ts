@@ -1,6 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
 import { encodeFunctionData } from 'viem';
-import { polygon } from 'viem/chains';
 
 import { createWalletClient, getChainById, Wallet } from 'shared/web3';
 

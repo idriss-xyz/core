@@ -1,11 +1,11 @@
 import { createPublicClient, http } from 'viem';
-import { mainnet } from 'viem/chains';
 import { normalize } from 'viem/ens';
 
 import { Command, FailureResult, OkResult } from 'shared/messaging';
 
 import { Hex } from '../types';
 import { hexSchema } from '../schema';
+import { CHAIN } from '../constants';
 
 interface Payload {
   username: string;
@@ -24,7 +24,7 @@ export class GetWalletByEnsNameCommand extends Command<Payload, Response> {
     try {
       const client = createPublicClient({
         transport: http('https://eth.llamarpc.com'),
-        chain: mainnet,
+        chain: CHAIN.ETHEREUM,
       });
       const maybeWallet = await client.getEnsAddress({
         name: normalize(this.payload.username),

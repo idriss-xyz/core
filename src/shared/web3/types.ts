@@ -3,19 +3,6 @@ import { Chain as ViemChain } from 'viem';
 
 export type Hex = `0x${string}`;
 
-// export interface Chain {
-//   id: number;
-//   name: string;
-//   logo: string;
-//   nativeCurrency: {
-//     name: string;
-//     symbol: string;
-//     decimals: number;
-//   };
-//   rpcUrls: string[];
-//   blockExplorerUrls: string[];
-// }
-
 export type Chain = ViemChain & { logo: string };
 export interface Token {
   name: string;

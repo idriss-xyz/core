@@ -1,8 +1,7 @@
-import { PolymarketApp } from 'application/polymarket';
 import { useExtensionSettings } from 'shared/extension';
 import { ErrorBoundary } from 'shared/observability';
 
-import { Proposals, UserWidgets } from './widgets';
+import { Proposals, UserWidgets, PolymarketMarkets } from './widgets';
 
 export const Final = () => {
   const { enabled, experimentalFeatures } = useExtensionSettings();
@@ -17,7 +16,7 @@ export const Final = () => {
 
       {experimentalFeatures ? (
         <>
-          <PolymarketApp />
+          <PolymarketMarkets />
           <Proposals />
         </>
       ) : null}

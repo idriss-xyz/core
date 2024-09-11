@@ -1,5 +1,3 @@
-import { NewOrder, OrderType } from '@polymarket/clob-client';
-
 import {
   Command,
   FailureResult,
@@ -9,10 +7,10 @@ import {
 } from 'shared/messaging';
 
 import { POLYMARKET_CLOB_API } from '../constants';
-import { L2Headers } from '../types';
+import { L2Headers, Order } from '../types';
 
 interface Payload {
-  order: NewOrder<OrderType.FOK>;
+  order: Order;
   headers: L2Headers;
 }
 

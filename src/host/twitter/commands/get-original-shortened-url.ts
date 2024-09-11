@@ -20,9 +20,7 @@ export class GetOriginalShortenedUrlCommand extends Command<Payload, Response> {
 
   async handle() {
     try {
-      const response = await fetch(this.payload.url, {
-        redirect: 'manual', // TODO: is it needed?
-      });
+      const response = await fetch(this.payload.url);
       const html = await response.text();
 
       const regex = /URL=(https:\/\/[^"]+)/;
