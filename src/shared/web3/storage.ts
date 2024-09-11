@@ -5,11 +5,11 @@ interface StoredWallet {
   providerRdns: string;
 }
 
-export class WalletStorage {
-  private static key = 'idriss-wallet';
+const STORAGE_KEY = 'idriss-wallet';
 
+export class WalletStorage {
   public static get(): StoredWallet | undefined {
-    const storedWalletRaw = localStorage.getItem(this.key);
+    const storedWalletRaw = localStorage.getItem(STORAGE_KEY);
     const storedWallet = storedWalletRaw
       ? (JSON.parse(storedWalletRaw) as StoredWallet)
       : undefined;
@@ -17,10 +17,10 @@ export class WalletStorage {
   }
 
   public static save(payload: StoredWallet) {
-    localStorage.setItem(this.key, JSON.stringify(payload));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
   }
 
   public static clear() {
-    localStorage.removeItem(this.key);
+    localStorage.removeItem(STORAGE_KEY);
   }
 }

@@ -1,16 +1,16 @@
-import { useMemo } from 'react';
-
 import { useGitcoinDonationWidgetsData } from 'application/gitcoin';
 import { useIdrissSendWidgetsData } from 'application/idriss-send';
 import { useExtensionSettings } from 'shared/extension';
 
-import { UserWidgetData } from '../types';
+import { userWidgetDataAdapter } from '../adapters';
 
 import { useApplicationStatus } from './use-application-status';
 import { useScraping } from './use-scraping';
+import { useLocationInfo } from './use-location-info';
 
 export const useUserWidgets = () => {
   const applicationsStatus = useApplicationStatus();
+  const { isTwitter, isWarpcast } = useLocationInfo();
   const { extensionSettings } = useExtensionSettings();
 
   const { users } = useScraping();
@@ -20,7 +20,7 @@ export const useUserWidgets = () => {
 
   const { widgets: idrissSendWidgets } = useIdrissSendWidgetsData({
     scrapedUsers: users,
-    enabled: idrissSendEnabled,
+    enabled: idrissSendEnabled && isTwitter,
   });
 
   const gitcoinEnabled =
@@ -28,61 +28,24 @@ export const useUserWidgets = () => {
 
   const { widgets: gitcoinDonationWidgets } = useGitcoinDonationWidgetsData({
     scrapedUsers: users,
-    enabled: gitcoinEnabled,
+    enabled: gitcoinEnabled && isTwitter,
   });
 
-  const widgets: UserWidgetData[] = useMemo(() => {
-    if (!gitcoinEnabled && !idrissSendEnabled) {
-      return [];
-    }
+  if (isWarpcast) {
+    return {
+      // widgets: userWidgetDataAdapter.fromScrapedUsers({ users }), // TODO: uncomment to enable user widgets on Warpcast
+      widgets: [],
+    };
+  }
 
-    if (!gitcoinEnabled) {
-      return idrissSendWidgets;
-    }
-
-    if (!idrissSendEnabled) {
-      return gitcoinDonationWidgets;
-    }
-
-    const idrissSendUsernames = idrissSendWidgets.map((recipient) => {
-      return recipient.username;
-    });
-
-    const gitcoinDonationUsernames = gitcoinDonationWidgets.map((recipient) => {
-      return recipient.username;
-    });
-
-    const uniqueUsernames = [
-      ...new Set([...idrissSendUsernames, ...gitcoinDonationUsernames]),
-    ];
-
-    const recipients = uniqueUsernames.flatMap<UserWidgetData>((username) => {
-      const gitcoinRecipientsForThisUsername = gitcoinDonationWidgets.filter(
-        (recipient) => {
-          return recipient.username === username;
-        },
-      );
-
-      if (gitcoinRecipientsForThisUsername.length > 0) {
-        return gitcoinRecipientsForThisUsername;
-      }
-
-      const idrissRecipientsForThisUsername = idrissSendWidgets.filter(
-        (recipient) => {
-          return recipient.username === username;
-        },
-      );
-
-      return idrissRecipientsForThisUsername;
-    });
-
-    return recipients;
-  }, [
-    gitcoinDonationWidgets,
-    gitcoinEnabled,
-    idrissSendEnabled,
-    idrissSendWidgets,
-  ]);
-
-  return { widgets };
+  return {
+    widgets: userWidgetDataAdapter.fromTwitterWidgetsData({
+      applicationsStatus: {
+        gitcoin: gitcoinEnabled,
+        idrissSend: idrissSendEnabled,
+      },
+      idrissSendWidgets,
+      gitcoinDonationWidgets,
+    }),
+  };
 };

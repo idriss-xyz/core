@@ -3,10 +3,12 @@ import { memo, useCallback, useMemo, useState } from 'react';
 import { IdrissSend } from 'shared/idriss';
 import {
   CHAIN_ID_TO_TOKENS,
+  EMPTY_HEX,
   applyDecimalsToNumericString,
   isNativeTokenAddress,
   roundToSignificantFigures,
   useWallet,
+  toAddressWithValidChecksum,
 } from 'shared/web3';
 import { ErrorMessage } from 'shared/ui';
 import { ErrorBoundary } from 'shared/observability';
@@ -14,20 +16,21 @@ import { ErrorBoundary } from 'shared/observability';
 import { useSendForm, useSender } from '../hooks';
 import { SendPayload } from '../schema';
 import { getIconSource, getLoadingMessage } from '../utils';
-import { WidgetData } from '../types';
+import { AddressResolver, WidgetData } from '../types';
+import { DEFAULT_ALLOWED_CHAINS_IDS } from '../constants';
 
 interface Properties {
   widgetData: WidgetData;
+  addressResolver: AddressResolver;
 }
 
 interface BaseProperties extends Properties {
   onClose: () => void;
 }
 
-const Base = ({ widgetData, onClose }: BaseProperties) => {
+const Base = ({ widgetData, addressResolver, onClose }: BaseProperties) => {
   const {
     nodeToInject,
-    walletAddress,
     username,
     availableNetworks,
     widgetOverrides,
@@ -35,11 +38,13 @@ const Base = ({ widgetData, onClose }: BaseProperties) => {
   } = widgetData;
   const { wallet } = useWallet();
 
+  const allowedChainsIds = availableNetworks ?? DEFAULT_ALLOWED_CHAINS_IDS;
+
   const sender = useSender({ wallet });
 
   const { formMethods, chainId, amount, selectedToken, onChangeChainId } =
     useSendForm({
-      allowedChainsIds: availableNetworks,
+      allowedChainsIds,
     });
 
   const tokens = useMemo(() => {
@@ -48,12 +53,15 @@ const Base = ({ widgetData, onClose }: BaseProperties) => {
 
   const submit = useCallback(
     async (sendPayload: SendPayload) => {
+      const walletAddress = await addressResolver.resolve(widgetData);
       await sender.send({
         sendPayload,
-        recipientAddress: walletAddress,
+        recipientAddress: toAddressWithValidChecksum(
+          walletAddress ?? EMPTY_HEX,
+        ),
       });
     },
-    [walletAddress, sender],
+    [addressResolver, sender, widgetData],
   );
 
   const amountInSelectedToken = useMemo(() => {
@@ -80,7 +88,7 @@ const Base = ({ widgetData, onClose }: BaseProperties) => {
       closeOnClickAway={sender.isIdle}
     >
       {({ close }) => {
-        if (sender.isSending) {
+        if (sender.isSending || addressResolver.isResolving) {
           return (
             <IdrissSend.Loading
               heading={
@@ -100,6 +108,16 @@ const Base = ({ widgetData, onClose }: BaseProperties) => {
                 isNativeTokenAddress(selectedToken?.address ?? '0x'),
               )}
             </IdrissSend.Loading>
+          );
+        }
+
+        if (addressResolver.hasError) {
+          return (
+            <IdrissSend.Error heading="Unable to Send Funds" onClose={close}>
+              <p className="text-gray-500">
+                This user has no verified addresses
+              </p>
+            </IdrissSend.Error>
           );
         }
 
@@ -124,7 +142,7 @@ const Base = ({ widgetData, onClose }: BaseProperties) => {
               onChangeChainId={onChangeChainId}
               tokens={tokens}
               className="mt-4"
-              allowedChainsIds={availableNetworks}
+              allowedChainsIds={allowedChainsIds}
               footer={
                 <>
                   {wallet ? (
@@ -149,20 +167,29 @@ const Base = ({ widgetData, onClose }: BaseProperties) => {
   );
 };
 
-export const SendWidget = memo((properties: Properties) => {
-  const [closeCount, setCloseCount] = useState(0);
+export const SendWidget = memo(
+  ({ addressResolver, ...properties }: Properties) => {
+    // resets component state after closing
+    const [resetCount, setResetCount] = useState(0);
 
-  const onClose = useCallback(() => {
-    setCloseCount((previous) => {
-      return previous + 1;
-    });
-  }, []);
+    const resetWidget = useCallback(() => {
+      setResetCount((previous) => {
+        return previous + 1;
+      });
+      addressResolver.reset();
+    }, [addressResolver]);
 
-  return (
-    <ErrorBoundary>
-      <Base {...properties} key={closeCount} onClose={onClose} />
-    </ErrorBoundary>
-  );
-});
+    return (
+      <ErrorBoundary>
+        <Base
+          {...properties}
+          key={resetCount}
+          onClose={resetWidget}
+          addressResolver={addressResolver}
+        />
+      </ErrorBoundary>
+    );
+  },
+);
 
 SendWidget.displayName = 'SendWidget';

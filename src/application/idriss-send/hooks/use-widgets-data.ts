@@ -11,7 +11,7 @@ import { UserScrapingResult } from 'shared/scraping';
 import { getNodeToInjectToUser, isHandleNode } from 'host/twitter';
 
 import { GetCustomRecipientsCommand } from '../commands';
-import { DEFAULT_ALLOWED_CHAINS_IDS, PUBLIC_ETH_TAG_NAME } from '../constants';
+import { PUBLIC_ETH_TAG_NAME } from '../constants';
 import { mapDigestedMessageToWalletTag } from '../utils';
 import { WidgetData } from '../types';
 
@@ -96,9 +96,7 @@ export const useWidgetsData = ({ scrapedUsers, enabled }: Properties) => {
           digestedMessageToWalletTag,
           walletTagToDigestedMessage,
           walletAddress: customRecipientData?.walletAddress,
-          availableNetworks:
-            customRecipientData?.availableNetworks ??
-            DEFAULT_ALLOWED_CHAINS_IDS,
+          availableNetworks: customRecipientData?.availableNetworks,
           widgetOverrides: customRecipientData?.sendWidgetOverrides,
         };
       })

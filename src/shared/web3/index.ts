@@ -13,6 +13,7 @@ export {
   createSigner,
   applyDecimalsToNumericString,
   isNativeTokenAddress,
+  toAddressWithValidChecksum,
   getChainById,
 } from './utils';
 export { useSwitchChain } from './hooks';
@@ -27,4 +28,5 @@ export {
   GetTokenPriceCommand,
   GetAcrossChainFeesCommand,
   GetAcrossChainFeeCommand,
+  GetWalletByEnsNameCommand,
 } from './commands';
