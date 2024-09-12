@@ -1,52 +1,40 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { useState } from 'react';
+import { useEffect } from 'react';
 
-import {
-  createInitialExtensionSettingsStorageKeys,
-  ExtensionSettingsContext,
-  ExtensionSettingsStorageKey,
-} from 'shared/extension';
+import { ExtensionSettingsProvider } from 'shared/extension';
+import { TOGGLE_EXTENSION_CONTEXT_MENU_VISIBILITY } from 'shared/messaging';
 
 import { App } from './app';
 
-const initialExtensionSettings: Record<ExtensionSettingsStorageKey, boolean> =
-  createInitialExtensionSettingsStorageKeys();
+interface WrappedComponentProperties {
+  menuVisible: boolean;
+}
 
-const WrappedComponent = () => {
-  const [extensionSettings, setExtensionSettings] = useState<
-    Record<ExtensionSettingsStorageKey, boolean>
-  >(initialExtensionSettings);
-
-  const changeExtensionSetting = async (
-    settingKey: ExtensionSettingsStorageKey,
-    enabled: boolean,
-    // eslint-disable-next-line @typescript-eslint/require-await
-  ) => {
-    setExtensionSettings((previous) => {
-      return {
-        ...previous,
-        [settingKey]: enabled,
-      };
-    });
-  };
+const WrappedComponent = ({ menuVisible }: WrappedComponentProperties) => {
+  useEffect(() => {
+    const message = {
+      type: TOGGLE_EXTENSION_CONTEXT_MENU_VISIBILITY,
+    };
+    window.postMessage(message);
+  }, [menuVisible]);
 
   return (
-    <ExtensionSettingsContext.Provider
-      value={{
-        isPopupMenuVisible: true,
-        hidePopupMenu: () => {},
-        extensionSettings: extensionSettings,
-        changeExtensionSetting: changeExtensionSetting,
-      }}
-    >
+    <ExtensionSettingsProvider>
       <App />
-    </ExtensionSettingsContext.Provider>
+    </ExtensionSettingsProvider>
   );
 };
 
 const meta: Meta<typeof WrappedComponent> = {
   title: 'application/extension-popup-menu',
   component: WrappedComponent,
+  argTypes: {
+    menuVisible: {
+      control: 'boolean',
+      description: 'Trigger the extension menu visibility',
+      defaultValue: false,
+    },
+  },
 };
 
 export default meta;
