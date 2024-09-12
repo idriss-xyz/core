@@ -1,5 +1,1 @@
-export {
-  useExtensionSettings,
-  ExtensionSettingsProvider,
-  ExtensionSettingsContext,
-} from './settings';
+export { useExtensionSettings, ExtensionSettingsProvider } from './settings';
