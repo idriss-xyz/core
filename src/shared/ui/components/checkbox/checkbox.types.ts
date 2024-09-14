@@ -1,8 +1,10 @@
 export type CheckboxProperties = {
-  onChange: (value: boolean) => void;
   label?: string;
+  disabled?: boolean;
   className?: string;
+  disabledTooltipText?: string;
   additionalClassNameWhenChecked?: string;
+  onChange: (value: boolean) => void;
 } & (
   | {
       value: boolean;

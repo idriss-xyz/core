@@ -12,6 +12,8 @@ export const Checkbox = ({
   label,
   type = 'binary',
   className,
+  disabled,
+  disabledTooltipText,
   additionalClassNameWhenChecked,
 }: CheckboxProperties) => {
   const checked = type === 'binary' ? Boolean(value) : value !== 'unchecked';
@@ -19,14 +21,17 @@ export const Checkbox = ({
   return (
     <div className="flex items-center">
       <RadixCheckbox.Root
+        title={disabled ? disabledTooltipText : undefined}
         className={classes(
           'flex size-[22px] appearance-none items-center justify-center rounded-[4px] bg-gray-100 shadow-[0_0_0_1px_black] outline-none hover:bg-gray-200 focus:shadow-[0_0_0_1px_gray]',
           checked && additionalClassNameWhenChecked,
           className,
+          disabled && 'cursor-not-allowed opacity-60 brightness-90 grayscale',
         )}
         id="c1"
         checked={checked}
         onCheckedChange={onChange}
+        disabled={disabled}
       >
         <RadixCheckbox.Indicator className="flex items-center text-green-500">
           <Icon

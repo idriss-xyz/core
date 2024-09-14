@@ -82,7 +82,7 @@ export class AbstractPageManager {
     }
 
     isEnabled() {
-        return new Promise(r => chrome.storage.local.get(['block-explorers-enabled'], x => r(x?.['block-explorers-enabled'] ?? true)))
+        return new Promise(r => chrome.storage.local.get(['block-explorers-enabled', 'entire-extension-enabled'], x => r((x?.['entire-extension-enabled'] && x?.['block-explorers-enabled']) ?? true)))
     }
 
     /**

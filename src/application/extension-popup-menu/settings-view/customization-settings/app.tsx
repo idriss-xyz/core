@@ -18,6 +18,8 @@ import {
 export const App = () => {
   const { changeExtensionSetting, extensionSettings } = useExtensionSettings();
 
+  const isExtensionEnabled = extensionSettings['entire-extension-enabled'];
+
   const settingListItemGroups: SettingListItemsGroup<ExtensionSettingsStorageKey>[] =
     [
       { label: 'Address Book', settingListItems: addressBookSettings },
@@ -46,8 +48,14 @@ export const App = () => {
           <div key={group.label}>
             <div className="flex flex-row items-center space-x-2 pb-3 pt-2 font-bold">
               <Checkbox
+                disabledTooltipText="Enable the extension to modify these settings"
+                disabled={!isExtensionEnabled}
                 type="extended"
-                value={mapGroupSettingsStateToExtendedCheckbox(groupState)}
+                value={
+                  isExtensionEnabled
+                    ? mapGroupSettingsStateToExtendedCheckbox(groupState)
+                    : 'unchecked'
+                }
                 onChange={(enabled) => {
                   return handleSettingGroupChange(
                     group.settingListItems,
@@ -65,7 +73,13 @@ export const App = () => {
                     className="flex flex-row space-x-2 pb-3 pl-7"
                   >
                     <Checkbox
-                      value={extensionSettings[setting.storageKey]}
+                      disabledTooltipText="Enable the extension to modify these settings"
+                      disabled={!isExtensionEnabled}
+                      value={
+                        isExtensionEnabled
+                          ? extensionSettings[setting.storageKey]
+                          : false
+                      }
                       onChange={(enabled) => {
                         return changeExtensionSetting(
                           setting.storageKey,
