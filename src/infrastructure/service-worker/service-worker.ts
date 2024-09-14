@@ -19,7 +19,7 @@ import { IDRISS_COMMAND_MAP } from 'shared/idriss';
 import { IDRISS_SEND_COMMAND_MAP } from 'application/idriss-send';
 import { TALLY_COMMAND_MAP } from 'application/tally';
 import { FARCASTER_COMMAND_MAP } from 'shared/farcaster';
-import { EXTENSION_MENU_COMMAND_MAP } from 'application/extension-popup-menu';
+import { EXTENSION_MENU_COMMAND_MAP } from 'application/look-up-wallet-address';
 
 import { SbtResolver } from '../../common/resolvers/SbtResolver';
 import { AddressResolver } from '../../common/resolvers/AddressResolver';

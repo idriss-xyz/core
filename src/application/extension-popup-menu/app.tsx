@@ -6,7 +6,6 @@ import { IDRISS_ICON_WITH_TEXT } from 'shared/idriss';
 
 import { SettingsView } from './settings-view';
 import { Footer } from './footer';
-import { LookUpWalletAddress } from './look-up-wallet-address';
 
 type MenuContent = 'home' | 'settings';
 
@@ -66,7 +65,7 @@ export const App = () => {
           </div>
         </nav>
 
-        {activeView === 'home' ? <LookUpWalletAddress /> : <SettingsView />}
+        <SettingsView />
       </>
       <Footer />
     </Closable>
