@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { useDebounce } from 'react-use';
 
 import { useCommandQuery } from 'shared/messaging';
@@ -10,6 +10,7 @@ import { AddressList } from './address-list';
 export const App = () => {
   const [username, setUsername] = useState<string>('');
   const [inputValue, setInputValue] = useState<string>('');
+  const [visible, setVisible] = useState(false);
 
   const twitterIdsQuery = useCommandQuery({
     command: new GetTwitterIdsCommand({
@@ -42,9 +43,34 @@ export const App = () => {
     setInputValue(eventTarget.value);
   };
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.key === 'i') {
+        setVisible((previous) => {
+          return !previous;
+        });
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
+  if (!visible) {
+    return null;
+  }
+
   return (
-    <Closable>
-      <div className="fixed right-6 top-[400px] w-[550px] rounded-md bg-white px-2 py-3">
+    <Closable
+      className="fixed right-6 top-6 z-[9990] p-0"
+      onClose={() => {
+        return setVisible(false);
+      }}
+    >
+      <div className="w-[550px] rounded-md bg-white px-2 py-3">
         <div className="relative">
           <label
             htmlFor="first_name"
