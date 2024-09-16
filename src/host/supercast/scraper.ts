@@ -4,25 +4,63 @@ import {
   UserScrapingResult,
 } from 'shared/scraping';
 
+import { extractUsernameFromPathname, isUserPathname } from './utils';
+
 export class Scraper {
   public static getExternalLinks(): ExternalLinksScrapingResult[] {
     // not used for now
     return [];
   }
 
-  public static getUsers(): UserScrapingResult[] {
-    // not used for now
-    return [];
+  private static getMain() {
+    return document.querySelector('main');
+  }
+
+  private static getHandleUser(): UserScrapingResult | undefined {
+    const pathname = window.location.pathname;
+    if (!isUserPathname(pathname)) {
+      return;
+    }
+    const username = extractUsernameFromPathname(pathname);
+    const main = Scraper.getMain();
+    if (!main || !username) {
+      return;
+    }
+    const allDivsOfMain = [...main.querySelectorAll('div')];
+    const usernameNode = allDivsOfMain.find((div) => {
+      return div.textContent === `@${username}`;
+    });
+    const userFullNameNode =
+      usernameNode?.parentElement?.firstElementChild?.firstElementChild;
+    if (!userFullNameNode?.parentElement) {
+      return;
+    }
+
+    const rect = userFullNameNode.getBoundingClientRect();
+
+    return {
+      node: userFullNameNode.parentElement,
+      top: rect.top + window.scrollY,
+      data: {
+        username,
+      },
+    };
   }
 
   public static getPosts(): PostScrapingResult[] {
-    const selector = 'ul > a';
-    const posts = [...document.querySelectorAll(selector)];
+    const main = Scraper.getMain();
+    if (!main) {
+      return [];
+    }
+    const posts = [...main.querySelectorAll(':scope ul > li')];
 
     return posts
       .map((post) => {
-        const username = post
-          .querySelector('a')
+        const links = [...post.querySelectorAll('a')];
+        const username = links
+          .find((link) => {
+            return link.href.length > 0;
+          })
           ?.getAttribute('href')
           ?.replace('/', '');
 
@@ -44,5 +82,45 @@ export class Scraper {
         };
       })
       .filter(Boolean);
+  }
+
+  public static getUsers(): UserScrapingResult[] {
+    const posts = Scraper.getPosts();
+    const usersFromPosts = posts
+      .map((post) => {
+        const links = [...post.node.querySelectorAll('a')];
+        const userFullName = links
+          .map((link) => {
+            const isUserLink = link.href.endsWith(post.data.authorUsername);
+            if (!isUserLink) {
+              return;
+            }
+            const userFullNameNode = link.querySelector(':scope > span');
+            if (!userFullNameNode?.parentElement) {
+              return;
+            }
+
+            const rect = userFullNameNode.getBoundingClientRect();
+
+            return {
+              node: userFullNameNode.parentElement,
+              top: rect.top + window.scrollY,
+              data: {
+                username: post.data.authorUsername,
+              },
+            };
+          })
+          .find(Boolean);
+        return userFullName;
+      })
+      .filter(Boolean);
+
+    const handleUser = Scraper.getHandleUser();
+
+    if (handleUser) {
+      return [...usersFromPosts, handleUser];
+    }
+
+    return usersFromPosts;
   }
 }
