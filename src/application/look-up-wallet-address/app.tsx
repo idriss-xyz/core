@@ -3,6 +3,7 @@ import { useDebounce } from 'react-use';
 
 import { useCommandQuery } from 'shared/messaging';
 import { Closable, IconButton } from 'shared/ui';
+import { useExtensionSettings } from 'shared/extension';
 
 import { GetResolvedAddressCommand, GetTwitterIdsCommand } from './commands';
 import { AddressList } from './address-list';
@@ -11,6 +12,12 @@ export const App = () => {
   const [username, setUsername] = useState<string>('');
   const [inputValue, setInputValue] = useState<string>('');
   const [visible, setVisible] = useState(false);
+
+  const { extensionSettings } = useExtensionSettings();
+
+  const isEnabled =
+    extensionSettings['entire-extension-enabled'] &&
+    extensionSettings['block-explorers-enabled'];
 
   const twitterIdsQuery = useCommandQuery({
     command: new GetTwitterIdsCommand({
@@ -59,7 +66,7 @@ export const App = () => {
     };
   }, []);
 
-  if (!visible) {
+  if (!visible || !isEnabled) {
     return null;
   }
 

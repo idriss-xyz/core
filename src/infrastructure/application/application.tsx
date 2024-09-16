@@ -12,6 +12,7 @@ import { TwitterScrapingContextProvider } from 'host/twitter';
 import { WarpcastScrapingContextProvider } from 'host/warpcast';
 import { SupercastScrapingContextProvider } from 'host/supercast';
 import { ExtensionPopupMenu } from 'application/extension-popup-menu';
+import { LookUpWalletAddress } from 'application/look-up-wallet-address';
 export class Application {
   private constructor() {}
 
@@ -48,9 +49,12 @@ const ApplicationWithProviders = () => {
             <WalletContextProvider disabledWalletsRdns={disabledWalletRdns}>
               <TailwindProvider>
                 <ExtensionSettingsProvider>
-                  <HashRouter>
-                    <ExtensionPopupMenu />
-                  </HashRouter>
+                  <>
+                    <LookUpWalletAddress />
+                    <HashRouter>
+                      <ExtensionPopupMenu />
+                    </HashRouter>
+                  </>
                 </ExtensionSettingsProvider>
               </TailwindProvider>
             </WalletContextProvider>
