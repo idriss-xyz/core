@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import * as Tabs from '@radix-ui/react-tabs';
 
-import { AgoraWidget, AGORA_LOGO } from 'application/agora';
-import { SnapshotWidget, SNAPSHOT_LOGO } from 'application/snapshot';
-import { TallyWidget, TALLY_LOGO } from 'application/tally';
+import { AgoraWidget } from 'application/agora';
+import { SnapshotWidget } from 'application/snapshot';
+import { TallyWidget } from 'application/tally';
 import { classes } from 'shared/ui';
 import { usePrefetchProposals } from 'final/hooks';
 import { ErrorBoundary } from 'shared/observability';
+import { AGORA_LOGO, SNAPSHOT_LOGO, TALLY_LOGO } from 'shared/web3';
 
 import { PostWidgetProposalData, ProposalSource } from '../../types';
 

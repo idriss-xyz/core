@@ -1,6 +1,7 @@
 import { useMemo, createElement, StrictMode } from 'react';
 import NiceModal from '@ebay/nice-modal-react';
 import { createRoot } from 'react-dom/client';
+import { HashRouter } from 'react-router-dom';
 
 import { Final, useLocationInfo } from 'final';
 import { ExtensionSettingsProvider } from 'shared/extension';
@@ -47,7 +48,9 @@ const ApplicationWithProviders = () => {
             <WalletContextProvider disabledWalletsRdns={disabledWalletRdns}>
               <TailwindProvider>
                 <ExtensionSettingsProvider>
-                  <ExtensionPopupMenu />
+                  <HashRouter>
+                    <ExtensionPopupMenu />
+                  </HashRouter>
                 </ExtensionSettingsProvider>
               </TailwindProvider>
             </WalletContextProvider>
@@ -74,7 +77,9 @@ const ApplicationWithProviders = () => {
                           <SupercastScrapingContextProvider>
                             <ExtensionSettingsProvider>
                               <>
-                                <ExtensionPopupMenu />
+                                <HashRouter>
+                                  <ExtensionPopupMenu />
+                                </HashRouter>
                                 <Final />
                               </>
                             </ExtensionSettingsProvider>

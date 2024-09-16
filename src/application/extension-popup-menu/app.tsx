@@ -1,22 +1,24 @@
-import { useState } from 'react';
+import { Route, Routes, useLocation } from 'react-router-dom';
 
 import { useExtensionSettings } from 'shared/extension';
-import { Closable, IconButton, Toggle } from 'shared/ui';
-import { IDRISS_ICON_WITH_TEXT } from 'shared/idriss';
+import { Closable } from 'shared/ui';
 
-import { SettingsView } from './settings-view';
 import { Footer } from './footer';
+import { PopupHomeView } from './popup-home-view';
+import { TopBar } from './top-bar';
+import { CustomizationSettings } from './settings-view/customization-settings';
+import { MainSettingsMenu } from './settings-view/main-settings-menu';
 
-type MenuContent = 'home' | 'settings';
+export const EXTENSION_POPUP_MENU_ROUTES = {
+  HOME: '/',
+  SETTINGS: {
+    MAIN_VIEW: '/settings',
+    CUSTOMIZATION: '/settings/customization',
+  },
+};
 
 export const App = () => {
-  const [activeView, setActiveView] = useState<MenuContent>('home');
-  const {
-    isPopupMenuVisible,
-    hidePopupMenu,
-    extensionSettings,
-    changeExtensionSetting,
-  } = useExtensionSettings();
+  const { isPopupMenuVisible, hidePopupMenu } = useExtensionSettings();
 
   if (!isPopupMenuVisible) {
     return null;
@@ -26,47 +28,27 @@ export const App = () => {
       closeButtonClassName="hidden"
       closeOnClickAway
       onClose={hidePopupMenu}
-      className="fixed right-6 top-6 z-[9999] flex size-[400px] flex-col overflow-hidden rounded-md bg-white p-0 shadow-lg"
+      className="fixed right-6 top-6 z-[9999] flex size-[570px] flex-col overflow-hidden rounded-md bg-white p-0 shadow-lg"
     >
-      <>
-        <nav className="flex items-center justify-between bg-white drop-shadow-sm">
-          <a
-            href="https://www.idriss.xyz/"
-            className="flex items-center justify-center"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              className="my-2 ml-2 h-12 w-auto"
-              src={IDRISS_ICON_WITH_TEXT}
-              alt="IDriss Logo"
-            />
-          </a>
-          <div className="flex items-center pr-2">
-            <Toggle
-              checked={extensionSettings['entire-extension-enabled']}
-              onCheckedChange={(enabled) => {
-                return changeExtensionSetting(
-                  'entire-extension-enabled',
-                  enabled,
-                );
-              }}
-            />
-            <IconButton
-              className="text-black"
-              iconProps={{
-                name: activeView === 'home' ? 'DotsVerticalIcon' : 'Cross1Icon',
-                size: 26,
-              }}
-              onClick={() => {
-                setActiveView(activeView === 'home' ? 'settings' : 'home');
-              }}
-            />
-          </div>
-        </nav>
+      <TopBar />
 
-        <SettingsView />
-      </>
+      <div className="max-h-[460px] grow overflow-y-auto bg-gray-100 [scrollbar-color:gray_#b7b7b7] [scrollbar-width:thin]">
+        <Routes>
+          <Route
+            path={EXTENSION_POPUP_MENU_ROUTES.HOME}
+            element={<PopupHomeView />}
+          />
+          <Route
+            path={EXTENSION_POPUP_MENU_ROUTES.SETTINGS.MAIN_VIEW}
+            element={<MainSettingsMenu />}
+          />
+          <Route
+            path={EXTENSION_POPUP_MENU_ROUTES.SETTINGS.CUSTOMIZATION}
+            element={<CustomizationSettings />}
+          />
+        </Routes>
+      </div>
+
       <Footer />
     </Closable>
   );
