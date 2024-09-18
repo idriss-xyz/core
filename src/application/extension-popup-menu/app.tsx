@@ -9,8 +9,7 @@ import { Closable } from 'shared/ui';
 import { Footer } from './footer';
 import { PopupHomeView } from './popup-home-view';
 import { TopBar } from './top-bar';
-import { CustomizationSettings } from './settings-view/customization-settings';
-import { MainSettingsMenu } from './settings-view/main-settings-menu';
+import { CustomizationSettings, MainSettingsMenu } from './settings-view';
 
 export const App = () => {
   const { isPopupMenuVisible, hidePopupMenu } = useExtensionSettings();
