@@ -41,7 +41,7 @@ export const SectionTile = ({
           );
         })}
       </div>
-      <h2 className="mb-1 text-lg font-semibold text-black">{title}</h2>
+      <h2 className="mb-1 text-md font-semibold text-black">{title}</h2>
       <p className="text-xs text-gray-500">{subtitle}</p>
 
       {/* <!-- External link icon in the top-right corner --> */}

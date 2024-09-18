@@ -18,7 +18,7 @@ export const App = () => {
   return (
     <div className="flex max-w-[570px] grow flex-col items-center bg-gray-100 px-1 pt-6">
       <header className="mb-6 text-center">
-        <h1 className="mb-2 text-2xl font-bold text-black">
+        <h1 className="mb-2 text-xl font-bold text-black">
           GM, it&apos;s your web3 copilot speaking
         </h1>
         <p className="text-sm text-gray-600">
@@ -41,7 +41,7 @@ export const App = () => {
             { iconSrc: SNAPSHOT_LOGO, iconAlt: 'Snapshot Logo' },
             { iconSrc: TALLY_LOGO, iconAlt: 'Tally Logo' },
           ]}
-          title="Governance Widgets"
+          title="Governance Widget"
           subtitle="Get reminders about active DAO votes"
         />
 
