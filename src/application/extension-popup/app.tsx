@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router';
 
-import { EXTENSION_POPUP_ROUTE, useExtensionSettings } from 'shared/extension';
+import { EXTENSION_POPUP_ROUTE, useExtensionPopup } from 'shared/extension';
 import { Closable } from 'shared/ui';
 
 import { Footer } from './footer';
@@ -9,16 +9,16 @@ import { TopBar } from './top-bar';
 import { CustomizationSettings, MainSettingsMenu } from './settings-view';
 
 export const App = () => {
-  const { isPopupVisible, hidePopup } = useExtensionSettings();
+  const extensionPopup = useExtensionPopup();
 
-  if (!isPopupVisible) {
+  if (!extensionPopup.isVisible) {
     return null;
   }
   return (
     <Closable
       closeButtonClassName="hidden"
       closeOnClickAway
-      onClose={hidePopup}
+      onClose={extensionPopup.hide}
       className="fixed right-6 top-6 z-[9999] flex size-[570px] flex-col overflow-hidden rounded-md bg-white p-0 shadow-lg"
     >
       <TopBar />

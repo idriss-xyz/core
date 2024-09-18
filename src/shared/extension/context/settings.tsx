@@ -1,16 +1,6 @@
-import {
-  ReactNode,
-  createContext,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
-import debounce from 'lodash/debounce';
+import { ReactNode, createContext, useEffect, useState } from 'react';
 
-import {
-  onWindowMessage,
-  TOGGLE_EXTENSION_POPUP_VISIBILITY,
-} from 'shared/messaging';
+import { onWindowMessage } from 'shared/messaging';
 import { createContextHook } from 'shared/ui';
 
 import {
@@ -29,8 +19,6 @@ const initialExtensionSettings: Record<ExtensionSettingsStorageKey, boolean> =
   createInitialExtensionSettingsStorageKeys();
 
 interface ExtensionSettingsContextValues {
-  isPopupVisible: boolean;
-  hidePopup: () => void;
   extensionSettings: Record<ExtensionSettingsStorageKey, boolean>;
   changeExtensionSetting: (
     settingKey: ExtensionSettingsStorageKey,
@@ -46,21 +34,6 @@ export const ExtensionSettingsProvider = ({ children }: Properties) => {
   const [extensionSettings, setExtensionSettings] = useState<
     Record<ExtensionSettingsStorageKey, boolean>
   >(initialExtensionSettings);
-  const [isPopupVisible, setIsPopupVisible] = useState(false);
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const togglePopupVisibility = useCallback(
-    debounce(() => {
-      setIsPopupVisible((previous) => {
-        return !previous;
-      });
-    }, 50),
-    [],
-  );
-
-  const hidePopup = useCallback(() => {
-    setIsPopupVisible(false);
-  }, []);
 
   const changeExtensionSetting = async (
     settingKey: ExtensionSettingsStorageKey,
@@ -80,17 +53,13 @@ export const ExtensionSettingsProvider = ({ children }: Properties) => {
   };
 
   useEffect(() => {
-    onWindowMessage<void>(TOGGLE_EXTENSION_POPUP_VISIBILITY, () => {
-      togglePopupVisibility();
-    });
-
     onWindowMessage<Record<ExtensionSettingsStorageKey, boolean>>(
       GET_EXTENSION_SETTINGS_RESPONSE,
       (settings) => {
         setExtensionSettings(settings);
       },
     );
-  }, [togglePopupVisibility]);
+  }, []);
 
   useEffect(() => {
     window.postMessage({
@@ -98,20 +67,11 @@ export const ExtensionSettingsProvider = ({ children }: Properties) => {
     });
   }, []);
 
-  // Clean up the debounced function on component unmount
-  useEffect(() => {
-    return () => {
-      togglePopupVisibility.cancel();
-    };
-  }, [togglePopupVisibility]);
-
   return (
     <ExtensionSettingsContext.Provider
       value={{
         extensionSettings,
-        isPopupVisible,
         changeExtensionSetting,
-        hidePopup: hidePopup,
       }}
     >
       {children}

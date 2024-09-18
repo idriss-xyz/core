@@ -2,7 +2,10 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { useEffect } from 'react';
 import { MemoryRouter } from 'react-router';
 
-import { ExtensionSettingsProvider } from 'shared/extension';
+import {
+  ExtensionSettingsProvider,
+  ExtensionPopupProvider,
+} from 'shared/extension';
 import { TOGGLE_EXTENSION_POPUP_VISIBILITY } from 'shared/messaging';
 
 import { App } from './app';
@@ -20,11 +23,13 @@ const WrappedComponent = ({ popupVisible }: WrappedComponentProperties) => {
   }, [popupVisible]);
 
   return (
-    <ExtensionSettingsProvider>
-      <MemoryRouter>
-        <App />
-      </MemoryRouter>
-    </ExtensionSettingsProvider>
+    <ExtensionPopupProvider>
+      <ExtensionSettingsProvider>
+        <MemoryRouter>
+          <App />
+        </MemoryRouter>
+      </ExtensionSettingsProvider>
+    </ExtensionPopupProvider>
   );
 };
 

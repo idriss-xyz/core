@@ -4,7 +4,10 @@ import { createRoot } from 'react-dom/client';
 import { MemoryRouter } from 'react-router';
 
 import { Final, useLocationInfo } from 'final';
-import { ExtensionSettingsProvider } from 'shared/extension';
+import {
+  ExtensionPopupProvider,
+  ExtensionSettingsProvider,
+} from 'shared/extension';
 import { PortalProvider, QueryProvider, TailwindProvider } from 'shared/ui';
 import { WalletContextProvider } from 'shared/web3';
 import { ErrorBoundary, WithObservabilityScope } from 'shared/observability';
@@ -49,12 +52,14 @@ const ApplicationWithProviders = () => {
             <QueryProvider>
               <WalletContextProvider disabledWalletsRdns={disabledWalletRdns}>
                 <TailwindProvider>
-                  <ExtensionSettingsProvider>
-                    <>
-                      <LookUpWalletAddress />
-                      <ExtensionPopup />
-                    </>
-                  </ExtensionSettingsProvider>
+                  <ExtensionPopupProvider>
+                    <ExtensionSettingsProvider>
+                      <>
+                        <LookUpWalletAddress />
+                        <ExtensionPopup />
+                      </>
+                    </ExtensionSettingsProvider>
+                  </ExtensionPopupProvider>
                 </TailwindProvider>
               </WalletContextProvider>
             </QueryProvider>
@@ -76,20 +81,20 @@ const ApplicationWithProviders = () => {
                     <WalletContextProvider
                       disabledWalletsRdns={disabledWalletRdns}
                     >
-                      <ExtensionSettingsProvider>
-                        <TwitterScrapingContextProvider>
-                          <WarpcastScrapingContextProvider>
-                            <SupercastScrapingContextProvider>
-                              <ExtensionSettingsProvider>
+                      <ExtensionPopupProvider>
+                        <ExtensionSettingsProvider>
+                          <TwitterScrapingContextProvider>
+                            <WarpcastScrapingContextProvider>
+                              <SupercastScrapingContextProvider>
                                 <>
                                   <ExtensionPopup />
                                   <Final />
                                 </>
-                              </ExtensionSettingsProvider>
-                            </SupercastScrapingContextProvider>
-                          </WarpcastScrapingContextProvider>
-                        </TwitterScrapingContextProvider>
-                      </ExtensionSettingsProvider>
+                              </SupercastScrapingContextProvider>
+                            </WarpcastScrapingContextProvider>
+                          </TwitterScrapingContextProvider>
+                        </ExtensionSettingsProvider>
+                      </ExtensionPopupProvider>
                     </WalletContextProvider>
                   </NiceModal.Provider>
                 </QueryProvider>
