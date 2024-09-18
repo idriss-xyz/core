@@ -1,6 +1,6 @@
 import { Icon } from 'shared/ui';
 
-import { footerLinks } from './constants';
+import { footerLinks } from '../constants';
 
 export const Footer = () => {
   return (

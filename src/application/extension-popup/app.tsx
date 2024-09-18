@@ -3,9 +3,8 @@ import { Route, Routes } from 'react-router';
 import { EXTENSION_POPUP_ROUTE, useExtensionPopup } from 'shared/extension';
 import { Closable } from 'shared/ui';
 
-import { Footer } from './footer';
+import { Footer, TopBar } from './components';
 import { PopupHomeView } from './popup-home-view';
-import { TopBar } from './top-bar';
 import { CustomizationSettings, MainSettingsMenu } from './settings-view';
 
 export const App = () => {
