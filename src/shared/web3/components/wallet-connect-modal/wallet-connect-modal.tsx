@@ -121,7 +121,7 @@ export const WalletConnectModal = createModal(
       >
         <div className="flex flex-col space-y-2">
           {providers.length === 0 && (
-            <p>We couldn&apos;t find any wallet provider.</p>
+            <p>{`We couldn't find any wallet provider.`}</p>
           )}
           {connectedProvider && connectedProviderChainId ? (
             <>

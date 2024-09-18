@@ -19,7 +19,7 @@ export const App = () => {
     <div className="flex max-w-[570px] grow flex-col items-center bg-gray-100 px-1 pt-6">
       <header className="mb-6 text-center">
         <h1 className="mb-2 text-2xl font-bold text-black">
-          Hello, it&apos;s your web3 copilot speaking
+          {`Hello, it's your web3 copilot speaking`}
         </h1>
         <p className="text-sm text-gray-600">
           Explore the features below for your best experience
