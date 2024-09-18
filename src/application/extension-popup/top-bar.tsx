@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router';
 
 import { IDRISS_ICON_WITH_TEXT } from 'shared/idriss';
 import { IconButton, Toggle } from 'shared/ui';

@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { useWallet } from 'shared/web3';
 import { IconButton } from 'shared/ui';

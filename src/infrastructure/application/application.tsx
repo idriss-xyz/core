@@ -1,7 +1,7 @@
 import { useMemo, createElement, StrictMode } from 'react';
 import NiceModal from '@ebay/nice-modal-react';
 import { createRoot } from 'react-dom/client';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import { Final, useLocationInfo } from 'final';
 import { ExtensionSettingsProvider } from 'shared/extension';

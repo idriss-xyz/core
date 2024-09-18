@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 import { EXTENSION_POPUP_ROUTE, useExtensionSettings } from 'shared/extension';
 import { Closable } from 'shared/ui';
