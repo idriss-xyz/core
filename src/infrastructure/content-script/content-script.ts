@@ -16,6 +16,7 @@ import {
   ACTIVE_TAB_CHANGED,
   EXTENSION_BUTTON_CLICKED,
 } from 'infrastructure/constants';
+import { Hex } from 'shared/web3';
 
 export class ContentScript {
   private constructor(private environment: typeof chrome) {}
@@ -26,6 +27,7 @@ export class ContentScript {
     contentScript.bridgeCommunication();
 
     contentScript.subscribeToExtensionSettings();
+    contentScript.subscribeToWallet();
   }
 
   injectScriptToWebpage() {
@@ -112,5 +114,29 @@ export class ContentScript {
       };
       window.postMessage(message);
     });
+  }
+
+  subscribeToWallet() {
+    onWindowMessage('GET_WALLET', async () => {
+      const maybeWallet = await ExtensionSettingsManager.getWallet();
+
+      const message = {
+        type: 'GET_WALLET_RESPONSE',
+        detail: maybeWallet,
+      };
+
+      window.postMessage(message);
+    });
+
+    onWindowMessage('CLEAR_WALLET', () => {
+      void ExtensionSettingsManager.clearWallet();
+    });
+
+    onWindowMessage<{ account: Hex; providerRdns: string }>(
+      'SAVE_WALLET',
+      (v) => {
+        void ExtensionSettingsManager.saveWallet(v);
+      },
+    );
   }
 }

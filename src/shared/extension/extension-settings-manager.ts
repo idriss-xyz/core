@@ -1,5 +1,7 @@
 /* eslint-disable boundaries/no-unknown-files */
 
+import { Hex } from 'shared/web3';
+
 import { POPUP_TO_WEBPAGE_MESSAGE } from '../messaging';
 
 import { EXTENSION_SETTINGS_CHANGE } from './constants';
@@ -40,6 +42,11 @@ export const extensionSettingsStorageKeys = [
 export type ExtensionSettingsStorageKey =
   (typeof extensionSettingsStorageKeys)[number];
 
+interface StoredWallet {
+  account: Hex;
+  providerRdns: string;
+}
+
 export class ExtensionSettingsManager {
   static enable(storageKey: ExtensionSettingsStorageKey) {
     chrome.storage.local
@@ -59,6 +66,27 @@ export class ExtensionSettingsManager {
       .catch(console.error);
 
     this.publishMessage(false);
+  }
+
+  static saveWallet(wallet: StoredWallet) {
+    return chrome.storage.local.set({
+      'idriss-wallet': JSON.stringify(wallet),
+    });
+  }
+
+  static clearWallet() {
+    return chrome.storage.local.remove('idriss-wallet');
+  }
+
+  static getWallet(): Promise<StoredWallet | undefined> {
+    return new Promise((resolve) => {
+      void chrome.storage.local.get('idriss-wallet').then((storedWalletRaw) => {
+        const storedWallet = storedWalletRaw['idriss-wallet']
+          ? (JSON.parse(storedWalletRaw['idriss-wallet']) as StoredWallet)
+          : undefined;
+        return resolve(storedWallet);
+      });
+    });
   }
 
   static getAllSettings(): Promise<
