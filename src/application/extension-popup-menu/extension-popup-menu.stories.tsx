@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useEffect } from 'react';
-import { HashRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 
 import { ExtensionSettingsProvider } from 'shared/extension';
 import { TOGGLE_EXTENSION_CONTEXT_MENU_VISIBILITY } from 'shared/messaging';
@@ -21,9 +21,9 @@ const WrappedComponent = ({ menuVisible }: WrappedComponentProperties) => {
 
   return (
     <ExtensionSettingsProvider>
-      <HashRouter>
+      <MemoryRouter>
         <App />
-      </HashRouter>
+      </MemoryRouter>
     </ExtensionSettingsProvider>
   );
 };
