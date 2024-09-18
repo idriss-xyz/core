@@ -5,8 +5,6 @@ export const GET_EXTENSION_SETTINGS_RESPONSE =
 
 export const EXTENSION_POPUP_ROUTE = {
   HOME: '/',
-  SETTINGS: {
-    MAIN_VIEW: '/settings',
-    CUSTOMIZATION: '/settings/customization',
-  },
+  SETTINGS_HOME: '/settings',
+  SETTINGS_CUSTOMIZATION: '/settings/customization',
 };

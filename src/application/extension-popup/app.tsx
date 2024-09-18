@@ -30,11 +30,11 @@ export const App = () => {
             element={<PopupHomeView />}
           />
           <Route
-            path={EXTENSION_POPUP_ROUTE.SETTINGS.MAIN_VIEW}
+            path={EXTENSION_POPUP_ROUTE.SETTINGS_HOME}
             element={<MainSettingsMenu />}
           />
           <Route
-            path={EXTENSION_POPUP_ROUTE.SETTINGS.CUSTOMIZATION}
+            path={EXTENSION_POPUP_ROUTE.SETTINGS_CUSTOMIZATION}
             element={<CustomizationSettings />}
           />
         </Routes>

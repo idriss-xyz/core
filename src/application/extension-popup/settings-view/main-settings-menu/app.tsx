@@ -29,7 +29,7 @@ export const App = () => {
           prefixIconName="GearIcon"
           label="Customization"
           onClick={() => {
-            navigate(EXTENSION_POPUP_ROUTE.SETTINGS.CUSTOMIZATION);
+            navigate(EXTENSION_POPUP_ROUTE.SETTINGS_CUSTOMIZATION);
           }}
           suffixIconName="ChevronRightIcon"
         />

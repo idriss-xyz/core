@@ -40,7 +40,7 @@ export const TopBar = () => {
           onClick={() => {
             navigate(
               isHomeView
-                ? EXTENSION_POPUP_ROUTE.SETTINGS.MAIN_VIEW
+                ? EXTENSION_POPUP_ROUTE.SETTINGS_HOME
                 : EXTENSION_POPUP_ROUTE.HOME,
             );
           }}

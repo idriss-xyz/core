@@ -46,7 +46,7 @@ export const App = () => {
           className="absolute left-0 text-black hover:text-green-500"
           iconProps={{ name: 'ArrowLeftIcon', size: 25 }}
           onClick={() => {
-            navigate(EXTENSION_POPUP_ROUTE.SETTINGS.MAIN_VIEW);
+            navigate(EXTENSION_POPUP_ROUTE.SETTINGS_HOME);
           }}
         />
 

@@ -64,7 +64,7 @@ export const App = () => {
         <button
           className="rounded-lg bg-[#11dd74] px-6 py-3 font-medium text-white shadow-lg transition-transform duration-300 hover:scale-105 hover:bg-[#11cc74]"
           onClick={() => {
-            navigate(EXTENSION_POPUP_ROUTE.SETTINGS.CUSTOMIZATION);
+            navigate(EXTENSION_POPUP_ROUTE.SETTINGS_CUSTOMIZATION);
           }}
         >
           Customize Your Experience
