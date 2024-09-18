@@ -1,11 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 
 import {
+  EXTENSION_POPUP_MENU_ROUTES,
   ExtensionSettingsStorageKey,
   useExtensionSettings,
 } from 'shared/extension';
 import { Checkbox, IconButton } from 'shared/ui';
-import { EXTENSION_POPUP_MENU_ROUTES } from 'application/extension-popup-menu/app';
 
 import {
   getSettingsGroupState,

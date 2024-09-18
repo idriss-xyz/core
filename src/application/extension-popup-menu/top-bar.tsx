@@ -2,9 +2,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { IDRISS_ICON_WITH_TEXT } from 'shared/idriss';
 import { IconButton, Toggle } from 'shared/ui';
-import { useExtensionSettings } from 'shared/extension';
-
-import { EXTENSION_POPUP_MENU_ROUTES } from './app';
+import {
+  EXTENSION_POPUP_MENU_ROUTES,
+  useExtensionSettings,
+} from 'shared/extension';
 
 export const TopBar = () => {
   const { extensionSettings, changeExtensionSetting } = useExtensionSettings();

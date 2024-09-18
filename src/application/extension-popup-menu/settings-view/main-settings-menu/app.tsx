@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 
 import { useWallet } from 'shared/web3';
-import { EXTENSION_POPUP_MENU_ROUTES } from 'application/extension-popup-menu/app';
 import { IconButton } from 'shared/ui';
+import { EXTENSION_POPUP_MENU_ROUTES } from 'shared/extension';
 
 import { MainSettingsMenuListItem } from './main-settings-menu-item';
 

@@ -1,6 +1,9 @@
 import { Route, Routes } from 'react-router-dom';
 
-import { useExtensionSettings } from 'shared/extension';
+import {
+  EXTENSION_POPUP_MENU_ROUTES,
+  useExtensionSettings,
+} from 'shared/extension';
 import { Closable } from 'shared/ui';
 
 import { Footer } from './footer';
@@ -8,14 +11,6 @@ import { PopupHomeView } from './popup-home-view';
 import { TopBar } from './top-bar';
 import { CustomizationSettings } from './settings-view/customization-settings';
 import { MainSettingsMenu } from './settings-view/main-settings-menu';
-
-export const EXTENSION_POPUP_MENU_ROUTES = {
-  HOME: '/',
-  SETTINGS: {
-    MAIN_VIEW: '/settings',
-    CUSTOMIZATION: '/settings/customization',
-  },
-};
 
 export const App = () => {
   const { isPopupMenuVisible, hidePopupMenu } = useExtensionSettings();

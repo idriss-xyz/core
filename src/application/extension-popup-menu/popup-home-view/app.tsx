@@ -7,9 +7,9 @@ import {
   TALLY_LOGO,
 } from 'shared/web3';
 import { IDRISS_ICON } from 'shared/idriss';
+import { EXTENSION_POPUP_MENU_ROUTES } from 'shared/extension';
 
 import { TRADING_COPILOT_LOGO } from '../constants';
-import { EXTENSION_POPUP_MENU_ROUTES } from '../app';
 
 import { SectionTile } from './components';
 
