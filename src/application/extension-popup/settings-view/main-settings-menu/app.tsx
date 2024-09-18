@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useWallet } from 'shared/web3';
 import { IconButton } from 'shared/ui';
-import { EXTENSION_POPUP_MENU_ROUTES } from 'shared/extension';
+import { EXTENSION_POPUP_ROUTE } from 'shared/extension';
 
 import { MainSettingsMenuListItem } from './main-settings-menu-item';
 
@@ -17,7 +17,7 @@ export const App = () => {
           className="absolute left-0 text-black hover:text-green-500"
           iconProps={{ name: 'ArrowLeftIcon', size: 25 }}
           onClick={() => {
-            navigate(EXTENSION_POPUP_MENU_ROUTES.HOME);
+            navigate(EXTENSION_POPUP_ROUTE.HOME);
           }}
         />
 
@@ -29,7 +29,7 @@ export const App = () => {
           prefixIconName="GearIcon"
           label="Customization"
           onClick={() => {
-            navigate(EXTENSION_POPUP_MENU_ROUTES.SETTINGS.CUSTOMIZATION);
+            navigate(EXTENSION_POPUP_ROUTE.SETTINGS.CUSTOMIZATION);
           }}
           suffixIconName="ChevronRightIcon"
         />

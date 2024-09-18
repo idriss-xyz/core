@@ -3,21 +3,21 @@ import { useEffect } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
 import { ExtensionSettingsProvider } from 'shared/extension';
-import { TOGGLE_EXTENSION_CONTEXT_MENU_VISIBILITY } from 'shared/messaging';
+import { TOGGLE_EXTENSION_POPUP_VISIBILITY } from 'shared/messaging';
 
 import { App } from './app';
 
 interface WrappedComponentProperties {
-  menuVisible: boolean;
+  popupVisible: boolean;
 }
 
-const WrappedComponent = ({ menuVisible }: WrappedComponentProperties) => {
+const WrappedComponent = ({ popupVisible }: WrappedComponentProperties) => {
   useEffect(() => {
     const message = {
-      type: TOGGLE_EXTENSION_CONTEXT_MENU_VISIBILITY,
+      type: TOGGLE_EXTENSION_POPUP_VISIBILITY,
     };
     window.postMessage(message);
-  }, [menuVisible]);
+  }, [popupVisible]);
 
   return (
     <ExtensionSettingsProvider>
@@ -29,12 +29,12 @@ const WrappedComponent = ({ menuVisible }: WrappedComponentProperties) => {
 };
 
 const meta: Meta<typeof WrappedComponent> = {
-  title: 'application/extension-popup-menu',
+  title: 'application/extension-popup',
   component: WrappedComponent,
   argTypes: {
-    menuVisible: {
+    popupVisible: {
       control: 'boolean',
-      description: 'Trigger the extension menu visibility',
+      description: 'Trigger the extension popup visibility',
       defaultValue: false,
     },
   },

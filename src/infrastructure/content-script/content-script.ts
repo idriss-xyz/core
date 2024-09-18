@@ -4,7 +4,7 @@ import {
   CommandResponse,
   POPUP_TO_WEBPAGE_MESSAGE,
   SerializedCommand,
-  TOGGLE_EXTENSION_CONTEXT_MENU_VISIBILITY,
+  TOGGLE_EXTENSION_POPUP_VISIBILITY,
   onWindowMessage,
 } from 'shared/messaging';
 import {
@@ -83,7 +83,7 @@ export class ContentScript {
 
       if (request.type === EXTENSION_BUTTON_CLICKED) {
         const message = {
-          type: TOGGLE_EXTENSION_CONTEXT_MENU_VISIBILITY,
+          type: TOGGLE_EXTENSION_POPUP_VISIBILITY,
         };
         window.postMessage(message);
         return;

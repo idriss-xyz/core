@@ -9,7 +9,7 @@ import debounce from 'lodash/debounce';
 
 import {
   onWindowMessage,
-  TOGGLE_EXTENSION_CONTEXT_MENU_VISIBILITY,
+  TOGGLE_EXTENSION_POPUP_VISIBILITY,
 } from 'shared/messaging';
 import { createContextHook } from 'shared/ui';
 
@@ -29,8 +29,8 @@ const initialExtensionSettings: Record<ExtensionSettingsStorageKey, boolean> =
   createInitialExtensionSettingsStorageKeys();
 
 interface ExtensionSettingsContextValues {
-  isPopupMenuVisible: boolean;
-  hidePopupMenu: () => void;
+  isPopupVisible: boolean;
+  hidePopup: () => void;
   extensionSettings: Record<ExtensionSettingsStorageKey, boolean>;
   changeExtensionSetting: (
     settingKey: ExtensionSettingsStorageKey,
@@ -46,20 +46,20 @@ export const ExtensionSettingsProvider = ({ children }: Properties) => {
   const [extensionSettings, setExtensionSettings] = useState<
     Record<ExtensionSettingsStorageKey, boolean>
   >(initialExtensionSettings);
-  const [isPopupMenuVisible, setIsPopupMenuVisible] = useState(false);
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const togglePopupMenuVisibility = useCallback(
+  const togglePopupVisibility = useCallback(
     debounce(() => {
-      setIsPopupMenuVisible((previous) => {
+      setIsPopupVisible((previous) => {
         return !previous;
       });
     }, 50),
     [],
   );
 
-  const hidePopupMenu = useCallback(() => {
-    setIsPopupMenuVisible(false);
+  const hidePopup = useCallback(() => {
+    setIsPopupVisible(false);
   }, []);
 
   const changeExtensionSetting = async (
@@ -80,8 +80,8 @@ export const ExtensionSettingsProvider = ({ children }: Properties) => {
   };
 
   useEffect(() => {
-    onWindowMessage<void>(TOGGLE_EXTENSION_CONTEXT_MENU_VISIBILITY, () => {
-      togglePopupMenuVisibility();
+    onWindowMessage<void>(TOGGLE_EXTENSION_POPUP_VISIBILITY, () => {
+      togglePopupVisibility();
     });
 
     onWindowMessage<Record<ExtensionSettingsStorageKey, boolean>>(
@@ -90,7 +90,7 @@ export const ExtensionSettingsProvider = ({ children }: Properties) => {
         setExtensionSettings(settings);
       },
     );
-  }, [togglePopupMenuVisibility]);
+  }, [togglePopupVisibility]);
 
   useEffect(() => {
     window.postMessage({
@@ -101,17 +101,17 @@ export const ExtensionSettingsProvider = ({ children }: Properties) => {
   // Clean up the debounced function on component unmount
   useEffect(() => {
     return () => {
-      togglePopupMenuVisibility.cancel();
+      togglePopupVisibility.cancel();
     };
-  }, [togglePopupMenuVisibility]);
+  }, [togglePopupVisibility]);
 
   return (
     <ExtensionSettingsContext.Provider
       value={{
         extensionSettings,
-        isPopupMenuVisible: isPopupMenuVisible,
+        isPopupVisible,
         changeExtensionSetting,
-        hidePopupMenu: hidePopupMenu,
+        hidePopup: hidePopup,
       }}
     >
       {children}

@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
 import {
-  EXTENSION_POPUP_MENU_ROUTES,
+  EXTENSION_POPUP_ROUTE,
   ExtensionSettingsStorageKey,
   useExtensionSettings,
 } from 'shared/extension';
@@ -46,7 +46,7 @@ export const App = () => {
           className="absolute left-0 text-black hover:text-green-500"
           iconProps={{ name: 'ArrowLeftIcon', size: 25 }}
           onClick={() => {
-            navigate(EXTENSION_POPUP_MENU_ROUTES.SETTINGS.MAIN_VIEW);
+            navigate(EXTENSION_POPUP_ROUTE.SETTINGS.MAIN_VIEW);
           }}
         />
 

@@ -1,7 +1,7 @@
 export {
   GET_EXTENSION_SETTINGS_RESPONSE,
   GET_EXTENSION_SETTINGS_REQUEST,
-  EXTENSION_POPUP_MENU_ROUTES,
+  EXTENSION_POPUP_ROUTE,
 } from './constants';
 export { ExtensionSettingsProvider, useExtensionSettings } from './context';
 export {

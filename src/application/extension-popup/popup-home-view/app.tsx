@@ -7,7 +7,7 @@ import {
   TALLY_LOGO,
 } from 'shared/web3';
 import { IDRISS_ICON } from 'shared/idriss';
-import { EXTENSION_POPUP_MENU_ROUTES } from 'shared/extension';
+import { EXTENSION_POPUP_ROUTE } from 'shared/extension';
 
 import { TRADING_COPILOT_LOGO } from '../constants';
 
@@ -64,7 +64,7 @@ export const App = () => {
         <button
           className="rounded-lg bg-[#11dd74] px-6 py-3 font-medium text-white shadow-lg transition-transform duration-300 hover:scale-105 hover:bg-[#11cc74]"
           onClick={() => {
-            navigate(EXTENSION_POPUP_MENU_ROUTES.SETTINGS.CUSTOMIZATION);
+            navigate(EXTENSION_POPUP_ROUTE.SETTINGS.CUSTOMIZATION);
           }}
         >
           Customize Your Experience

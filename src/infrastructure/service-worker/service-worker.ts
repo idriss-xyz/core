@@ -19,7 +19,7 @@ import { IDRISS_COMMAND_MAP } from 'shared/idriss';
 import { IDRISS_SEND_COMMAND_MAP } from 'application/idriss-send';
 import { TALLY_COMMAND_MAP } from 'application/tally';
 import { FARCASTER_COMMAND_MAP } from 'shared/farcaster';
-import { EXTENSION_MENU_COMMAND_MAP } from 'application/look-up-wallet-address';
+import { EXTENSION_POPUP_COMMAND_MAP } from 'application/look-up-wallet-address';
 
 import { SbtResolver } from '../../common/resolvers/SbtResolver';
 import { AddressResolver } from '../../common/resolvers/AddressResolver';
@@ -38,7 +38,7 @@ const COMMAND_MAP = {
   ...IDRISS_SEND_COMMAND_MAP,
   ...TALLY_COMMAND_MAP,
   ...FARCASTER_COMMAND_MAP,
-  ...EXTENSION_MENU_COMMAND_MAP,
+  ...EXTENSION_POPUP_COMMAND_MAP,
 };
 
 export class ServiceWorker {

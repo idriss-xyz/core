@@ -11,7 +11,7 @@ import { ErrorBoundary, WithObservabilityScope } from 'shared/observability';
 import { TwitterScrapingContextProvider } from 'host/twitter';
 import { WarpcastScrapingContextProvider } from 'host/warpcast';
 import { SupercastScrapingContextProvider } from 'host/supercast';
-import { ExtensionPopupMenu } from 'application/extension-popup-menu';
+import { ExtensionPopup } from 'application/extension-popup';
 import { LookUpWalletAddress } from 'application/look-up-wallet-address';
 export class Application {
   private constructor() {}
@@ -52,7 +52,7 @@ const ApplicationWithProviders = () => {
                   <ExtensionSettingsProvider>
                     <>
                       <LookUpWalletAddress />
-                      <ExtensionPopupMenu />
+                      <ExtensionPopup />
                     </>
                   </ExtensionSettingsProvider>
                 </TailwindProvider>
@@ -82,7 +82,7 @@ const ApplicationWithProviders = () => {
                             <SupercastScrapingContextProvider>
                               <ExtensionSettingsProvider>
                                 <>
-                                  <ExtensionPopupMenu />
+                                  <ExtensionPopup />
                                   <Final />
                                 </>
                               </ExtensionSettingsProvider>

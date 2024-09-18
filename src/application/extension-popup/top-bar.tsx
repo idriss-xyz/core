@@ -2,16 +2,13 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { IDRISS_ICON_WITH_TEXT } from 'shared/idriss';
 import { IconButton, Toggle } from 'shared/ui';
-import {
-  EXTENSION_POPUP_MENU_ROUTES,
-  useExtensionSettings,
-} from 'shared/extension';
+import { EXTENSION_POPUP_ROUTE, useExtensionSettings } from 'shared/extension';
 
 export const TopBar = () => {
   const { extensionSettings, changeExtensionSetting } = useExtensionSettings();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const isHomeView = pathname === EXTENSION_POPUP_MENU_ROUTES.HOME;
+  const isHomeView = pathname === EXTENSION_POPUP_ROUTE.HOME;
 
   return (
     <nav className="flex items-center justify-between bg-white drop-shadow-sm">
@@ -43,8 +40,8 @@ export const TopBar = () => {
           onClick={() => {
             navigate(
               isHomeView
-                ? EXTENSION_POPUP_MENU_ROUTES.SETTINGS.MAIN_VIEW
-                : EXTENSION_POPUP_MENU_ROUTES.HOME,
+                ? EXTENSION_POPUP_ROUTE.SETTINGS.MAIN_VIEW
+                : EXTENSION_POPUP_ROUTE.HOME,
             );
           }}
         />
