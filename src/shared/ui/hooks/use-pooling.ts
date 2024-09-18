@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import isEqual from 'lodash.isequal';
+import isEqual from 'lodash/isEqual';
 
 interface Properties<T> {
   defaultValue: T;
