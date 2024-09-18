@@ -16,7 +16,7 @@ import { SectionTile } from './components';
 export const App = () => {
   const navigate = useNavigate();
   return (
-    <div className="flex max-w-[570px] grow flex-col items-center bg-gray-100 px-1 pt-6">
+    <div className="flex grow flex-col items-center bg-gray-100 px-1 pt-6">
       <header className="mb-6 text-center">
         <h1 className="mb-2 text-2xl font-bold text-black">
           {`Hello, it's your web3 copilot speaking`}
