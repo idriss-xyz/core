@@ -4,6 +4,22 @@ import {
   ServiceWorker,
 } from 'infrastructure/service-worker';
 
+const keepAlive = () => {
+  return setInterval(chrome.runtime.getPlatformInfo, 20e3);
+};
+
+const isValidTab = (
+  tab?: chrome.tabs.Tab,
+): tab is chrome.tabs.Tab & { id: number } => {
+  return Boolean(
+    tab?.id &&
+      tab.url &&
+      tab.url?.length > 0 &&
+      !tab.url?.startsWith('chrome') &&
+      !tab.url?.startsWith('about'),
+  );
+};
+
 /*  Chromium Wallets
     nkbihfbeogaeaoehlefnkodbefgpgknn - MetaMask
     hnfanknocfeofbddgcijnmhnfnkdnaad - Coinbase
@@ -39,21 +55,33 @@ const onInstalled = () => {
     ],
   });
 
-  chrome.tabs.onActivated.addListener((tab) => {
-    chrome.tabs
-      .sendMessage(tab?.tabId ?? 0, {
-        type: ACTIVE_TAB_CHANGED,
-      })
-      .catch(console.error);
+  chrome.tabs.onActivated.addListener(() => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const activeTab = tabs[0];
+      if (isValidTab(activeTab)) {
+        chrome.tabs
+          .sendMessage(activeTab.id, {
+            type: ACTIVE_TAB_CHANGED,
+          })
+          .catch(console.error);
+      }
+    });
   });
 
-  chrome.action.onClicked.addListener((tab) => {
-    chrome.tabs
-      .sendMessage(tab?.id ?? 0, {
-        type: EXTENSION_BUTTON_CLICKED,
-      })
-      .catch(console.error);
+  chrome.action.onClicked.addListener(() => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const activeTab = tabs[0];
+      if (isValidTab(activeTab)) {
+        chrome.tabs
+          .sendMessage(activeTab.id, {
+            type: EXTENSION_BUTTON_CLICKED,
+          })
+          .catch(console.error);
+      }
+    });
   });
 };
+chrome.runtime.onStartup.addListener(keepAlive);
+keepAlive();
 
 ServiceWorker.run(chrome, onInstalled);
