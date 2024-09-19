@@ -6,7 +6,9 @@ import {
   useState,
 } from 'react';
 import debounce from 'lodash/debounce';
+import { MemoryRouter, useLocation, useNavigate } from 'react-router';
 
+import { EXTENSION_POPUP_ROUTE } from 'shared/extension';
 import {
   onWindowMessage,
   TOGGLE_EXTENSION_POPUP_VISIBILITY,
@@ -17,8 +19,13 @@ interface Properties {
   children: ReactNode;
 }
 
+type ExtensionPopupRoute =
+  (typeof EXTENSION_POPUP_ROUTE)[keyof typeof EXTENSION_POPUP_ROUTE];
+
 interface ExtensionPopupContextValues {
   isVisible: boolean;
+  navigate: (route: ExtensionPopupRoute) => void;
+  currentRoute: ExtensionPopupRoute;
   hide: () => void;
   open: () => void;
 }
@@ -27,8 +34,11 @@ const ExtensionPopupContext = createContext<
   ExtensionPopupContextValues | undefined
 >(undefined);
 
-export const ExtensionPopupProvider = ({ children }: Properties) => {
+const InnerExtensionPopupProvider = ({ children }: Properties) => {
   const [isVisible, setIsVisible] = useState(false);
+
+  const navigate = useNavigate();
+  const location = useLocation();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const toggleVisibility = useCallback(
@@ -65,12 +75,22 @@ export const ExtensionPopupProvider = ({ children }: Properties) => {
     <ExtensionPopupContext.Provider
       value={{
         isVisible,
+        currentRoute: location.pathname,
+        navigate,
         hide,
         open,
       }}
     >
       {children}
     </ExtensionPopupContext.Provider>
+  );
+};
+
+export const ExtensionPopupProvider = ({ children }: Properties) => {
+  return (
+    <MemoryRouter>
+      <InnerExtensionPopupProvider>{children}</InnerExtensionPopupProvider>
+    </MemoryRouter>
   );
 };
 

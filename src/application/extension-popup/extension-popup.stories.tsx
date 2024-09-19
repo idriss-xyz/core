@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useEffect } from 'react';
-import { MemoryRouter } from 'react-router';
 
 import {
   ExtensionSettingsProvider,
@@ -25,9 +24,7 @@ const WrappedComponent = ({ popupVisible }: WrappedComponentProperties) => {
   return (
     <ExtensionPopupProvider>
       <ExtensionSettingsProvider>
-        <MemoryRouter>
-          <App />
-        </MemoryRouter>
+        <App />
       </ExtensionSettingsProvider>
     </ExtensionPopupProvider>
   );

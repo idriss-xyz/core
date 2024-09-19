@@ -1,8 +1,7 @@
-import { useNavigate } from 'react-router';
-
 import {
   EXTENSION_POPUP_ROUTE,
   ExtensionSettingsStorageKey,
+  useExtensionPopup,
   useExtensionSettings,
 } from 'shared/extension';
 import { Checkbox, IconButton } from 'shared/ui';
@@ -20,7 +19,7 @@ import {
 
 export const App = () => {
   const { changeExtensionSetting, extensionSettings } = useExtensionSettings();
-  const navigate = useNavigate();
+  const extensionPopup = useExtensionPopup();
   const isExtensionEnabled = extensionSettings['entire-extension-enabled'];
 
   const settingListItemGroups: SettingListItemsGroup<ExtensionSettingsStorageKey>[] =
@@ -46,7 +45,7 @@ export const App = () => {
           className="absolute left-0 text-black hover:text-green-500"
           iconProps={{ name: 'ArrowLeftIcon', size: 25 }}
           onClick={() => {
-            navigate(EXTENSION_POPUP_ROUTE.SETTINGS_HOME);
+            extensionPopup.navigate(EXTENSION_POPUP_ROUTE.SETTINGS_HOME);
           }}
         />
 
