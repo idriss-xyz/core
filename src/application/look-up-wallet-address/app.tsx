@@ -81,9 +81,9 @@ export const App = () => {
         <div className="relative">
           <label
             htmlFor="first_name"
-            className="mb-1 block text-xs text-gray-700"
+            className="mb-2 block text-base font-bold text-gray-700"
           >
-            Look up your wallet address
+            Look up an address
           </label>
           <input
             autoFocus
