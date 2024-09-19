@@ -113,7 +113,7 @@ export const WalletConnectModal = createModal(
         title={
           <div className="flex items-center space-x-2">
             <IdrissLogo size={24} />
-            <p className="text-lg font-semibold">Log In</p>
+            <p className="text-lg font-semibold">Log in</p>
           </div>
         }
         onClose={closeModalWithoutFinishing}
