@@ -47,6 +47,18 @@ interface StoredWallet {
   providerRdns: string;
 }
 
+const isValidTab = (
+  tab?: chrome.tabs.Tab,
+): tab is chrome.tabs.Tab & { id: number } => {
+  return Boolean(
+    tab?.id &&
+      tab.url &&
+      tab.url?.length > 0 &&
+      !tab.url?.startsWith('chrome') &&
+      !tab.url?.startsWith('about'),
+  );
+};
+
 export class ExtensionSettingsManager {
   static enable(storageKey: ExtensionSettingsStorageKey) {
     chrome.storage.local
@@ -120,13 +132,14 @@ export class ExtensionSettingsManager {
 
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const activeTab = tabs[0];
-
-      chrome.tabs
-        .sendMessage(activeTab?.id ?? 0, {
-          type: POPUP_TO_WEBPAGE_MESSAGE,
-          detail: detail,
-        })
-        .catch(console.error);
+      if (isValidTab(activeTab)) {
+        chrome.tabs
+          .sendMessage(activeTab?.id, {
+            type: POPUP_TO_WEBPAGE_MESSAGE,
+            detail: detail,
+          })
+          .catch(console.error);
+      }
     });
   }
 }
