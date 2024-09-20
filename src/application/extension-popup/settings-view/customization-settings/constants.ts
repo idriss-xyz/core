@@ -2,11 +2,12 @@ import {
   ExtensionAddressBookSettingsStorageKeys,
   ExtensionGovernanceSettingsStorageKeys,
   ExtensionIntegrationSettingsStorageKeys,
+  ExtensionSettingsStorageKey,
 } from 'shared/extension';
 
-import { SettingListItem } from './types';
+import { SettingListItem, SettingListItemsGroup } from './types';
 
-export const addressBookSettings: SettingListItem<ExtensionAddressBookSettingsStorageKeys>[] =
+const addressBookSettings: SettingListItem<ExtensionAddressBookSettingsStorageKeys>[] =
   [
     {
       label: 'Tipping',
@@ -18,7 +19,7 @@ export const addressBookSettings: SettingListItem<ExtensionAddressBookSettingsSt
     },
   ];
 
-export const governanceSettings: SettingListItem<ExtensionGovernanceSettingsStorageKeys>[] =
+const governanceSettings: SettingListItem<ExtensionGovernanceSettingsStorageKeys>[] =
   [
     {
       label: 'Agora',
@@ -34,7 +35,7 @@ export const governanceSettings: SettingListItem<ExtensionGovernanceSettingsStor
     },
   ];
 
-export const integrationsSettings: SettingListItem<ExtensionIntegrationSettingsStorageKeys>[] =
+const integrationsSettings: SettingListItem<ExtensionIntegrationSettingsStorageKeys>[] =
   [
     {
       label: 'Polymarket',
@@ -44,4 +45,11 @@ export const integrationsSettings: SettingListItem<ExtensionIntegrationSettingsS
       label: 'Gitcoin',
       storageKey: 'gitcoin-enabled',
     },
+  ];
+
+export const settingListItemGroups: SettingListItemsGroup<ExtensionSettingsStorageKey>[] =
+  [
+    { label: 'Address Book', settingListItems: addressBookSettings },
+    { label: 'Governance', settingListItems: governanceSettings },
+    { label: 'Integrations', settingListItems: integrationsSettings },
   ];

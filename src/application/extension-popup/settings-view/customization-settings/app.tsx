@@ -10,24 +10,13 @@ import {
   getSettingsGroupState,
   mapGroupSettingsStateToExtendedCheckbox,
 } from './utils';
-import { SettingListItem, SettingListItemsGroup } from './types';
-import {
-  governanceSettings,
-  integrationsSettings,
-  addressBookSettings,
-} from './constants';
+import { SettingListItem } from './types';
+import { settingListItemGroups } from './constants';
 
 export const App = () => {
   const { changeExtensionSetting, extensionSettings } = useExtensionSettings();
   const extensionPopup = useExtensionPopup();
   const isExtensionEnabled = extensionSettings['entire-extension-enabled'];
-
-  const settingListItemGroups: SettingListItemsGroup<ExtensionSettingsStorageKey>[] =
-    [
-      { label: 'Address Book', settingListItems: addressBookSettings },
-      { label: 'Governance', settingListItems: governanceSettings },
-      { label: 'Integrations', settingListItems: integrationsSettings },
-    ];
 
   const handleSettingGroupChange = (
     settingListItems: SettingListItem<ExtensionSettingsStorageKey>[],
