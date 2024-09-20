@@ -6,10 +6,7 @@ import {
 } from 'shared/extension';
 import { Checkbox, IconButton } from 'shared/ui';
 
-import {
-  getSettingsGroupState,
-  mapGroupSettingsStateToExtendedCheckbox,
-} from './utils';
+import { mapGroupSettingsStateToBoolean } from './utils';
 import { SettingListItem } from './types';
 import { settingListItemGroups } from './constants';
 
@@ -43,7 +40,7 @@ export const App = () => {
 
       <div className="grow pl-3 text-base text-black">
         {settingListItemGroups.map((group) => {
-          const groupState = getSettingsGroupState(
+          const groupState = mapGroupSettingsStateToBoolean(
             group.settingListItems.map((setting) => {
               return extensionSettings[setting.storageKey];
             }),
@@ -54,12 +51,7 @@ export const App = () => {
                 <Checkbox
                   disabledTooltipText="Enable the extension to modify these settings"
                   disabled={!isExtensionEnabled}
-                  type="extended"
-                  value={
-                    isExtensionEnabled
-                      ? mapGroupSettingsStateToExtendedCheckbox(groupState)
-                      : 'unchecked'
-                  }
+                  checked={isExtensionEnabled ? groupState : false}
                   onChange={(enabled) => {
                     return handleSettingGroupChange(
                       group.settingListItems,
@@ -79,7 +71,7 @@ export const App = () => {
                       <Checkbox
                         disabledTooltipText="Enable the extension to modify these settings"
                         disabled={!isExtensionEnabled}
-                        value={
+                        checked={
                           isExtensionEnabled
                             ? extensionSettings[setting.storageKey]
                             : false

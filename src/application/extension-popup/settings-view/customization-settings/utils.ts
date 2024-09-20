@@ -1,27 +1,17 @@
-import { ExtendedCheckboxOption } from 'shared/ui';
-
-export const getSettingsGroupState = (settingsGroupStates: boolean[]) => {
+/** Maps a group of settings to a single state.
+ * @returns {true | false | null}
+ * - ```true``` if all settings are true,
+ * - ```false``` if all settings are false,
+ * - ```null``` if only a part of the settings is true
+ */
+export const mapGroupSettingsStateToBoolean = (
+  settingsGroupStates: boolean[],
+) => {
   if (settingsGroupStates.every(Boolean)) {
-    return 'all';
+    return true;
   }
   if (settingsGroupStates.some(Boolean)) {
-    return 'some';
+    return null;
   }
-  return 'none';
-};
-
-export const mapGroupSettingsStateToExtendedCheckbox: (
-  state: 'all' | 'some' | 'none',
-) => ExtendedCheckboxOption = (state: 'all' | 'some' | 'none') => {
-  switch (state) {
-    case 'all': {
-      return 'checked';
-    }
-    case 'none': {
-      return 'unchecked';
-    }
-    case 'some': {
-      return 'intermediate';
-    }
-  }
+  return false;
 };

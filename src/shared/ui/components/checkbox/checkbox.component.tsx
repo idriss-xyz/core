@@ -6,18 +6,18 @@ import { Icon } from '../icon';
 
 import { CheckboxProperties } from './checkbox.types';
 
+/**
+ * @param checked - if null is passed checkbox  will be checked with the DividerHorizontal icon indicating intermediate state
+ */
 export const Checkbox = ({
-  value,
+  checked,
   onChange,
   label,
-  type = 'binary',
   className,
   disabled,
   disabledTooltipText,
   additionalClassNameWhenChecked,
 }: CheckboxProperties) => {
-  const checked = type === 'binary' ? Boolean(value) : value !== 'unchecked';
-
   return (
     <div className="flex items-center">
       <RadixCheckbox.Root
@@ -29,17 +29,13 @@ export const Checkbox = ({
           disabled && 'cursor-not-allowed opacity-60 brightness-90 grayscale',
         )}
         id="c1"
-        checked={checked}
+        checked={checked ?? checked === null}
         onCheckedChange={onChange}
         disabled={disabled}
       >
         <RadixCheckbox.Indicator className="flex items-center text-green-500">
           <Icon
-            name={
-              value === 'checked' || value === true
-                ? 'CheckIcon'
-                : 'DividerHorizontalIcon'
-            }
+            name={checked === null ? 'DividerHorizontalIcon' : 'CheckIcon'}
             size={18}
           />
         </RadixCheckbox.Indicator>
