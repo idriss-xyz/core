@@ -10,6 +10,8 @@ interface SectionTileProperties {
   icons: SectionTileIconProperties[];
   href?: string;
   disabled?: boolean;
+  className?: string;
+  iconContainerClassName?: string;
 }
 
 export const SectionTile = ({
@@ -18,10 +20,13 @@ export const SectionTile = ({
   subtitle,
   href,
   disabled,
+  iconContainerClassName,
 }: SectionTileProperties) => {
   return (
     <a
       href={href}
+      target={href ? "_blank" : undefined}
+      rel={href ? "noopener noreferrer" : undefined}
       className={classes(
         'relative rounded-lg p-4 text-center shadow-md',
         !disabled &&
@@ -29,15 +34,14 @@ export const SectionTile = ({
         disabled && 'cursor-not-allowed bg-gray-200 opacity-50',
       )}
     >
-      <div className="mb-2 flex justify-center space-x-3">
+      <div className={classes('mb-2 flex justify-center space-x-3', iconContainerClassName)}>
         {icons.map((icon) => {
           return (
             <img
               key={icon.iconSrc}
               src={icon.iconSrc}
               alt={icon.iconAlt}
-              className="size-8 rounded-lg"
-            />
+              className={`${icon.className ? icon.className : 'w-8 h-8'} rounded-lg`}            />
           );
         })}
       </div>

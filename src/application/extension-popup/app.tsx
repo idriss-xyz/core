@@ -19,11 +19,11 @@ export const App = () => {
       closeButtonClassName="hidden"
       closeOnClickAway
       onClose={hidePopup}
-      className="fixed right-6 top-6 z-[9999] flex size-[570px] flex-col overflow-hidden rounded-md bg-white p-0 shadow-lg"
+      className="fixed right-2 top-2 z-[9999] flex w-[470px] h-[513px] flex-col overflow-hidden rounded-md bg-white p-0 shadow-lg"
     >
       <TopBar />
 
-      <div className="max-h-[460px] grow overflow-y-auto bg-gray-100 [scrollbar-color:gray_#b7b7b7] [scrollbar-width:thin]">
+      <div className="max-w-[470px] grow overflow-y-auto bg-gray-100 [scrollbar-color:gray_#b7b7b7] [scrollbar-width:thin]">
         <Routes>
           <Route
             path={EXTENSION_POPUP_ROUTE.HOME}
