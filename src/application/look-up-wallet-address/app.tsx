@@ -50,6 +50,11 @@ export const App = () => {
     setInputValue(eventTarget.value);
   };
 
+  const closeWidget = () => {
+    setVisible(false);
+    setInputValue('');
+  };
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.ctrlKey && event.key === 'i') {
@@ -73,9 +78,7 @@ export const App = () => {
   return (
     <Closable
       className="fixed right-2 top-2 z-[9990] p-0"
-      onClose={() => {
-        return setVisible(false);
-      }}
+      onClose={closeWidget}
     >
       <div className="w-[470px] rounded-md bg-white px-2 py-3">
         <div className="relative">
@@ -112,9 +115,7 @@ export const App = () => {
           {inputValue?.length > 0 && (
             <>
               <AddressList
-                onAddressCopied={() => {
-                  setVisible(false);
-                }}
+                onAddressCopied={closeWidget}
                 foundAddresses={addressesQuery?.data?.result}
                 isTwitterLookup={!!addressesQuery?.data?.twitterID}
                 lookupText={addressesQuery?.data?.input}
