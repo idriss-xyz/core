@@ -129,7 +129,7 @@ export const WalletConnectModal = createModal(
                 availableAccounts.map((account) => {
                   return (
                     <button
-                      className="flex items-center space-x-4 rounded bg-[#555] px-4 py-2.5 shadow-md hover:bg-[#777]"
+                      className="flex items-center space-x-4 rounded bg-white px-4 py-2.5 shadow-md hover:bg-black/10"
                       onClick={() => {
                         void resolveWallet({
                           account,
@@ -156,8 +156,8 @@ export const WalletConnectModal = createModal(
                 return (
                   <button
                     className={classes(
-                      'flex items-center space-x-4 rounded bg-transparent px-4 py-2.5 shadow-md hover:bg-[#53535a] disabled:opacity-50',
-                      chosenProviderRdns === info.rdns && 'bg-[#53535a]',
+                      'flex items-center space-x-4 rounded bg-transparent px-4 py-2.5 shadow-md hover:bg-black/10 disabled:opacity-50',
+                      chosenProviderRdns === info.rdns && 'bg-black/10',
                     )}
                     key={info.uuid}
                     onClick={() => {
@@ -173,8 +173,8 @@ export const WalletConnectModal = createModal(
               {window.ethereum ? (
                 <button
                   className={classes(
-                    'flex items-center space-x-4 rounded bg-transparent px-4 py-2.5 shadow-md hover:bg-[#53535a] disabled:opacity-50',
-                    chosenProviderRdns === 'browser' && 'bg-[#53535a]',
+                    'flex items-center space-x-4 rounded bg-transparent px-4 py-2.5 shadow-md hover:bg-black/10 disabled:opacity-50',
+                    chosenProviderRdns === 'browser' && 'bg-black/10',
                   )}
                   onClick={() => {
                     if (window.ethereum) {
@@ -192,16 +192,16 @@ export const WalletConnectModal = createModal(
                   <Checkbox
                     value={termsOfUseAccepted}
                     onChange={setTermsOfUseAccepted}
-                    className="bg-[#53535a] focus:ring-2 focus:ring-blue-500"
-                    additionalClassNameWhenChecked="bg-[#acc3fb] border-[#53535a]"
+                    className="focus:ring-2 focus:ring-idriss-primary-500"
+                    additionalClassNameWhenChecked="border-black/10"
                   />
-                  <p className="text-sm">
+                  <p className="text-sm text-gray-500">
                     I agree to the{' '}
                     <a
                       href="https://www.idriss.xyz/tos"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="font-semibold text-[#2D9CDB]"
+                      className="font-semibold text-idriss-primary-500"
                     >
                       Terms of Use
                     </a>
@@ -209,7 +209,7 @@ export const WalletConnectModal = createModal(
                 </div>
               </div>
               <Button
-                className="rounded bg-[#2D9CDB] font-medium"
+                className="rounded text-white bg-idriss-primary-500 hover:bg-idriss-primary-400 font-medium"
                 onClick={() => {
                   const providerToConnect =
                     chosenProviderRdns === 'browser'
