@@ -2,7 +2,7 @@ import { FormEvent, useEffect, useState } from 'react';
 import { useDebounce } from 'react-use';
 
 import { useCommandQuery } from 'shared/messaging';
-import { Closable, IconButton } from 'shared/ui';
+import { Closable, IconButton, Spinner } from 'shared/ui';
 import { useExtensionSettings } from 'shared/extension';
 
 import { GetResolvedAddressCommand, GetTwitterIdsCommand } from './commands';
@@ -72,12 +72,12 @@ export const App = () => {
 
   return (
     <Closable
-      className="fixed right-6 top-6 z-[9990] p-0"
+      className="fixed right-2 top-2 z-[9990] p-0"
       onClose={() => {
         return setVisible(false);
       }}
     >
-      <div className="w-[550px] rounded-md bg-white px-2 py-3">
+      <div className="w-[470px] rounded-md bg-white px-2 py-3">
         <div className="relative">
           <label
             htmlFor="first_name"
@@ -95,7 +95,7 @@ export const App = () => {
             }}
             value={inputValue}
           />
-          {inputValue.length > 0 && (
+          {!addressesQuery.isLoading && inputValue.length > 0 && (
             <IconButton
               iconProps={{ name: 'Cross1Icon' }}
               className="absolute right-2 top-1/2 text-black transition-transform hover:scale-90"
@@ -104,10 +104,17 @@ export const App = () => {
               }}
             />
           )}
-
+          {addressesQuery.isLoading && (
+            <div className="absolute right-2 top-1/2 flex size-6 items-center">
+              <Spinner className="h-4" />
+            </div>
+          )}
           {inputValue?.length > 0 && (
             <>
               <AddressList
+                onAddressCopied={() => {
+                  setVisible(false);
+                }}
                 foundAddresses={addressesQuery?.data?.result}
                 isTwitterLookup={!!addressesQuery?.data?.twitterID}
                 lookupText={addressesQuery?.data?.input}

@@ -22,4 +22,3 @@ export type { Pagination } from './pagination';
 export { PaginationComponent } from './pagination';
 export { PulsingLoadingBar } from './pulsing-loading-bar';
 export { Toggle } from './toggle';
-export { Tooltip } from './tooltip';

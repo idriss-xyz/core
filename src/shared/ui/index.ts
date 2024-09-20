@@ -10,7 +10,6 @@ export {
   Select,
   GasIcon,
   Spinner,
-  Tooltip,
   Checkbox,
   Closable,
   InputBase,
