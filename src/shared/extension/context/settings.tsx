@@ -10,6 +10,7 @@ import {
 import { ManageExtensionSettingsCommand } from '../commands';
 import { ExtensionSettingsStorageKey } from '../extension-settings-manager';
 import { createInitialExtensionSettingsStorageKeys } from '../utils';
+import { ExtensionSettings } from '../types';
 
 interface Properties {
   children: ReactNode;
@@ -21,8 +22,7 @@ const initialExtensionSettings: Record<ExtensionSettingsStorageKey, boolean> =
 interface ExtensionSettingsContextValues {
   extensionSettings: Record<ExtensionSettingsStorageKey, boolean>;
   changeExtensionSetting: (
-    settingKey: ExtensionSettingsStorageKey,
-    enabled: boolean,
+    settings: Partial<ExtensionSettings>,
   ) => Promise<void>;
 }
 
@@ -36,26 +36,22 @@ export const ExtensionSettingsProvider = ({ children }: Properties) => {
   >(initialExtensionSettings);
 
   const changeExtensionSetting = async (
-    settingKey: ExtensionSettingsStorageKey,
-    enabled: boolean,
+    settings: Partial<ExtensionSettings>,
   ) => {
-    const command = new ManageExtensionSettingsCommand({
-      settingKey: settingKey,
-      enabled: enabled,
+    const extensionSettingsCommand = new ManageExtensionSettingsCommand({
+      settings,
     });
-    const extensionState = await command.send();
-    setExtensionSettings((previous) => {
-      return {
-        ...previous,
-        [settingKey]: extensionState,
-      };
-    });
+    const extensionSettings = await extensionSettingsCommand.send();
+    console.log('trying to set', settings);
+    console.log('received', extensionSettings);
+    setExtensionSettings(extensionSettings);
   };
 
   useEffect(() => {
     onWindowMessage<Record<ExtensionSettingsStorageKey, boolean>>(
       GET_EXTENSION_SETTINGS_RESPONSE,
       (settings) => {
+        console.log('setting settings on tab change', settings);
         setExtensionSettings(settings);
       },
     );

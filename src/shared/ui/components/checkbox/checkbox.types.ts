@@ -1,9 +1,11 @@
+import { ReactNode } from 'react';
+
 export interface CheckboxProperties {
+  value: boolean;
+  onChange: (value: boolean) => void;
   label?: string;
+  indicator?: ReactNode;
   disabled?: boolean;
   className?: string;
   disabledTooltipText?: string;
-  additionalClassNameWhenChecked?: string;
-  onChange: (value: boolean) => void;
-  checked: boolean | null;
 }

@@ -30,7 +30,9 @@ export const TopBar = () => {
         <Toggle
           checked={extensionSettings['entire-extension-enabled']}
           onCheckedChange={(enabled) => {
-            return changeExtensionSetting('entire-extension-enabled', enabled);
+            return changeExtensionSetting({
+              'entire-extension-enabled': enabled,
+            });
           }}
         />
         <IconButton
