@@ -66,8 +66,8 @@ export const AddressList = ({
                 ) : (
                   <div className="flex-col justify-between">
                     <div className="flex gap-1.5">
-                      <span className="text-sm font-bold">{key}</span>
-                      <span className="text-sm text-[#8adf85]">
+                      <span className="text-sm font-semibold">{key}</span>
+                      <span className="text-sm font-semibold text-[#8adf85]">
                         {lookupText}
                       </span>
                     </div>

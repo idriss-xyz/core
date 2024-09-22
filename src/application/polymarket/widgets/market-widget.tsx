@@ -254,7 +254,7 @@ export const Market = ({
                   )
                 ) : (
                   <ActionButton loading={user.isSigning} onClick={user.signIn}>
-                    Connect wallet
+                    Log In
                   </ActionButton>
                 )
               ) : (

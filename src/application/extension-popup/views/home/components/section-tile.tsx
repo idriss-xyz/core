@@ -3,6 +3,7 @@ import { classes, Icon } from 'shared/ui';
 interface SectionTileIconProperties {
   iconSrc: string;
   iconAlt: string;
+  className?: string;
 }
 interface SectionTileProperties {
   title: string;
@@ -10,6 +11,7 @@ interface SectionTileProperties {
   icons: SectionTileIconProperties[];
   href?: string;
   disabled?: boolean;
+  iconContainerClassName?: string;
 }
 
 export const SectionTile = ({
@@ -18,10 +20,13 @@ export const SectionTile = ({
   subtitle,
   href,
   disabled,
+  iconContainerClassName,
 }: SectionTileProperties) => {
   return (
     <a
       href={href}
+      target={href ? '_blank' : undefined}
+      rel={href ? 'noopener noreferrer' : undefined}
       className={classes(
         'relative rounded-lg p-4 text-center shadow-md',
         !disabled &&
@@ -29,19 +34,24 @@ export const SectionTile = ({
         disabled && 'cursor-not-allowed bg-gray-200 opacity-50',
       )}
     >
-      <div className="mb-2 flex justify-center space-x-3">
+      <div
+        className={classes(
+          'mb-2 flex justify-center space-x-3',
+          iconContainerClassName,
+        )}
+      >
         {icons.map((icon) => {
           return (
             <img
               key={icon.iconSrc}
               src={icon.iconSrc}
               alt={icon.iconAlt}
-              className="size-8 rounded-lg"
+              className={classes('size-8 rounded-lg', icon.className)}
             />
           );
         })}
       </div>
-      <h2 className="mb-1 text-lg font-semibold text-black">{title}</h2>
+      <h2 className="mb-1 text-base font-semibold text-black">{title}</h2>
       <p className="text-xs text-gray-500">{subtitle}</p>
 
       {/* <!-- External link icon in the top-right corner --> */}

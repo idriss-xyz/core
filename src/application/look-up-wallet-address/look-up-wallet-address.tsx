@@ -48,6 +48,7 @@ export const LookUpWalletAddress = () => {
 
   const closeWidget = () => {
     setVisible(false);
+    setUsername('');
     form.reset();
   };
 
@@ -76,9 +77,9 @@ export const LookUpWalletAddress = () => {
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <label
               htmlFor="user_identifier"
-              className="mb-1 block text-xs text-gray-700"
+              className="mb-2 block text-base font-bold text-gray-700"
             >
-              Look up your wallet address
+              Look up an address
             </label>
             <div className="flex flex-row gap-x-[10px]">
               <div className="relative grow">
@@ -95,11 +96,12 @@ export const LookUpWalletAddress = () => {
                     className="absolute right-2 top-1/2 -translate-y-1/2 text-black transition-transform hover:scale-90"
                     onClick={() => {
                       form.reset();
+                      setUsername('');
                     }}
                   />
                 )}
                 {addressesQuery.isLoading && (
-                  <div className="absolute right-2 top-1/2 flex size-6 items-center">
+                  <div className="absolute right-2 top-1/2 flex size-6 -translate-y-1/2 items-center">
                     <Spinner className="h-4" />
                   </div>
                 )}
@@ -112,17 +114,12 @@ export const LookUpWalletAddress = () => {
               </button>
             </div>
           </form>
-
-          {userIdentifier?.length > 0 && (
-            <>
-              <AddressList
-                onAddressCopied={closeWidget}
-                foundAddresses={addressesQuery?.data?.result}
-                isTwitterLookup={!!addressesQuery?.data?.twitterID}
-                lookupText={addressesQuery?.data?.input}
-              />
-            </>
-          )}
+          <AddressList
+            onAddressCopied={closeWidget}
+            foundAddresses={addressesQuery?.data?.result}
+            isTwitterLookup={!!addressesQuery?.data?.twitterID}
+            lookupText={addressesQuery?.data?.input}
+          />
         </div>
       </div>
     </Closable>

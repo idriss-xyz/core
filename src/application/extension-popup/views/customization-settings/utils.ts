@@ -5,7 +5,7 @@ import {
 
 import { SettingListItemsGroup } from './types';
 
-export const isAnySettingInGroupEnabled = (
+const isAnySettingInGroupEnabled = (
   group: SettingListItemsGroup<ExtensionSettingsStorageKey>,
   extensionSettings: Record<ExtensionSettingsStorageKey, boolean>,
 ) => {
