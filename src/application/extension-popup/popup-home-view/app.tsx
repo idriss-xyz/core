@@ -29,8 +29,6 @@ export const App = () => {
       <div className="grid w-full grid-cols-2 gap-3 px-3">
         <SectionTile
           href="https://x.com/IDriss_xyz/status/1729258820441170160"
-          target="_blank"
-          rel="noopener noreferrer"
           icons={[{ iconSrc: IDRISS_ICON, iconAlt: 'Tipping Icon' }]}
           title="Tipping Badges"
           subtitle="Send crypto on X and Farcaster"
@@ -38,12 +36,14 @@ export const App = () => {
 
         <SectionTile
           href="https://x.com/IDriss_xyz/status/1761049574691819798"
-          target="_blank"
-          rel="noopener noreferrer"
           icons={[
-            { iconSrc: AGORA_LOGO, iconAlt: 'Agora Logo', className: 'w-6 h-6' },
-            { iconSrc: SNAPSHOT_LOGO, iconAlt: 'Snapshot Logo', className: 'w-6 h-6' },
-            { iconSrc: TALLY_LOGO, iconAlt: 'Tally Logo', className: 'w-6 h-6' },
+            { iconSrc: AGORA_LOGO, iconAlt: 'Agora Logo', className: 'size-6' },
+            {
+              iconSrc: SNAPSHOT_LOGO,
+              iconAlt: 'Snapshot Logo',
+              className: 'size-6',
+            },
+            { iconSrc: TALLY_LOGO, iconAlt: 'Tally Logo', className: 'size-6' },
           ]}
           title="Governance Widget"
           subtitle="Get alerts about active DAO votes"
@@ -52,8 +52,6 @@ export const App = () => {
 
         <SectionTile
           href="https://x.com/IDriss_xyz/status/1780582103396266085"
-          target="_blank"
-          rel="noopener noreferrer"
           icons={[{ iconSrc: POLYMARKET_LOGO, iconAlt: 'Polymarket Logo' }]}
           title="Polymarket Widget"
           subtitle="Trade directly from your X feed"
