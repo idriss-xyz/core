@@ -19,7 +19,7 @@ export const App = () => {
       closeButtonClassName="hidden"
       closeOnClickAway
       onClose={extensionPopup.hide}
-      className="fixed right-2 top-2 z-[9999] flex w-[470px] h-[513px] flex-col overflow-hidden rounded-md bg-white p-0 shadow-lg"
+      className="fixed right-2 top-2 z-[9999] flex w-[470px] flex-col overflow-hidden rounded-md bg-white p-0 shadow-lg"
     >
       <TopBar />
 
