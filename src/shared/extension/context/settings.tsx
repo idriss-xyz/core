@@ -48,8 +48,13 @@ export const ExtensionSettingsProvider = ({ children }: Properties) => {
   useEffect(() => {
     onWindowMessage<Record<ExtensionSettingsStorageKey, boolean>>(
       GET_EXTENSION_SETTINGS_RESPONSE,
-      (settings) => {
-        setExtensionSettings(settings);
+      async (settings) => {
+        if (Object.keys(settings).length === 0) {
+          //It means the extension was just installed, so we want to set initialSettings to the local storage
+          await changeExtensionSetting(initialExtensionSettings);
+        } else {
+          setExtensionSettings(settings);
+        }
       },
     );
   }, []);
