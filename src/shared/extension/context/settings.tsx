@@ -42,8 +42,6 @@ export const ExtensionSettingsProvider = ({ children }: Properties) => {
       settings,
     });
     const extensionSettings = await extensionSettingsCommand.send();
-    console.log('trying to set', settings);
-    console.log('received', extensionSettings);
     setExtensionSettings(extensionSettings);
   };
 
@@ -51,7 +49,6 @@ export const ExtensionSettingsProvider = ({ children }: Properties) => {
     onWindowMessage<Record<ExtensionSettingsStorageKey, boolean>>(
       GET_EXTENSION_SETTINGS_RESPONSE,
       (settings) => {
-        console.log('setting settings on tab change', settings);
         setExtensionSettings(settings);
       },
     );

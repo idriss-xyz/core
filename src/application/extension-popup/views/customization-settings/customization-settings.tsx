@@ -1,6 +1,7 @@
 import { FormProvider, useForm } from 'react-hook-form';
 import { useUpdateEffect } from 'react-use';
 import isEqual from 'lodash/isEqual';
+import { useState } from 'react';
 
 import {
   EXTENSION_POPUP_ROUTE,
@@ -14,6 +15,9 @@ import { settingListItemGroups } from './constants';
 import { CustomizationSettingsGroup } from './customization-settings-group';
 
 export const CustomizationSettingsView = () => {
+  const [previousFormValues, setPreviousFormValues] =
+    useState<Omit<ExtensionSettings, 'entire-extension-enabled'>>();
+
   const extensionPopup = useExtensionPopup();
   const { changeExtensionSetting, extensionSettings } = useExtensionSettings();
   const {
@@ -28,19 +32,22 @@ export const CustomizationSettingsView = () => {
   const settings = form.watch();
 
   useUpdateEffect(() => {
-    console.log('🔥🔥🔥🔥', settings, customizationSettings);
-    console.log('are equal', isEqual(settings, customizationSettings));
-    if (!isEqual(settings, customizationSettings)) {
-      console.log('setting from form');
+    if (!isEqual(settings, previousFormValues)) {
+      setPreviousFormValues(settings);
       void changeExtensionSetting(settings);
     }
-  }, [settings]);
 
-  // useUpdateEffect(() => {
-  //   if (!isEqual(settings, customizationSettings)) {
-  //     form.reset(customizationSettings); // Sync form with updated customizationSettings
-  //   }
-  // }, [customizationSettings]);
+    if (!isEqual(settings, customizationSettings)) {
+      setPreviousFormValues(customizationSettings);
+      form.reset(customizationSettings); // Sync form with updated customizationSettings
+    }
+  }, [
+    changeExtensionSetting,
+    customizationSettings,
+    form,
+    previousFormValues,
+    settings,
+  ]);
 
   return (
     <div className="shrink-0 grow px-6 pb-2 text-black">
