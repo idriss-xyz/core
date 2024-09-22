@@ -1,7 +1,7 @@
 import { FormProvider, useForm } from 'react-hook-form';
 import { useUpdateEffect } from 'react-use';
 import isEqual from 'lodash/isEqual';
-import { useState } from 'react';
+import { useMemo, useRef } from 'react';
 
 import {
   EXTENSION_POPUP_ROUTE,
@@ -14,40 +14,53 @@ import { IconButton } from 'shared/ui';
 import { settingListItemGroups } from './constants';
 import { CustomizationSettingsGroup } from './customization-settings-group';
 
-export const CustomizationSettingsView = () => {
-  const [previousFormValues, setPreviousFormValues] =
-    useState<Omit<ExtensionSettings, 'entire-extension-enabled'>>();
+type ExtensionSettingsFormValues = Omit<
+  ExtensionSettings,
+  'entire-extension-enabled'
+>;
 
+export const CustomizationSettingsView = () => {
   const extensionPopup = useExtensionPopup();
   const { changeExtensionSetting, extensionSettings } = useExtensionSettings();
-  const {
-    'entire-extension-enabled': isExtensionEnabled,
-    ...customizationSettings
-  } = extensionSettings;
 
-  const form = useForm<Omit<ExtensionSettings, 'entire-extension-enabled'>>({
+  const isExtensionEnabled = useMemo(() => {
+    return extensionSettings['entire-extension-enabled'];
+  }, [extensionSettings]);
+
+  const customizationSettings = useMemo(() => {
+    const { 'entire-extension-enabled': _, ...customizationSettings } =
+      extensionSettings;
+
+    return customizationSettings;
+  }, [extensionSettings]);
+
+  const previousFormValues = useRef<ExtensionSettingsFormValues>(
+    customizationSettings,
+  );
+
+  const form = useForm<ExtensionSettingsFormValues>({
     defaultValues: customizationSettings,
   });
 
-  const settings = form.watch();
+  const formValues = form.watch();
 
   useUpdateEffect(() => {
-    if (!isEqual(settings, previousFormValues)) {
-      setPreviousFormValues(settings);
-      void changeExtensionSetting(settings);
+    //if the formValues has changed
+    if (!isEqual(formValues, previousFormValues.current)) {
+      previousFormValues.current = formValues;
+      void changeExtensionSetting(formValues);
+      return;
     }
+  }, [changeExtensionSetting, formValues]);
 
-    if (!isEqual(settings, customizationSettings)) {
-      setPreviousFormValues(customizationSettings);
+  useUpdateEffect(() => {
+    //if the customizationSettings has changed (e.g. in other tab)
+    if (!isEqual(previousFormValues.current, customizationSettings)) {
+      previousFormValues.current = customizationSettings;
       form.reset(customizationSettings); // Sync form with updated customizationSettings
+      return;
     }
-  }, [
-    changeExtensionSetting,
-    customizationSettings,
-    form,
-    previousFormValues,
-    settings,
-  ]);
+  }, [customizationSettings, form]);
 
   return (
     <div className="shrink-0 grow px-6 pb-2 text-black">
