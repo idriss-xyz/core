@@ -28,8 +28,8 @@ export const TopBar = () => {
       </a>
       <div className="flex items-center pr-2">
         <Toggle
-          checked={extensionSettings['entire-extension-enabled']}
-          onCheckedChange={(enabled) => {
+          value={extensionSettings['entire-extension-enabled']}
+          onChange={(enabled) => {
             return changeExtensionSetting({
               'entire-extension-enabled': enabled,
             });

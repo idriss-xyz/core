@@ -12,7 +12,6 @@ export { CurrencyInput } from './currency-input';
 export { InputBase } from './input-base';
 export { WidgetBase } from './widget-base';
 export { Checkbox } from './checkbox';
-export type { ExtendedCheckboxOption } from './checkbox';
 export { Closable } from './closable';
 export type { Option } from './select';
 export { Select } from './select';

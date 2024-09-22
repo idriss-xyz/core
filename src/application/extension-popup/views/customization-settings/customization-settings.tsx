@@ -13,7 +13,7 @@ import { IconButton } from 'shared/ui';
 import { settingListItemGroups } from './constants';
 import { CustomizationSettingsGroup } from './customization-settings-group';
 
-export const App = () => {
+export const CustomizationSettingsView = () => {
   const extensionPopup = useExtensionPopup();
   const { changeExtensionSetting, extensionSettings } = useExtensionSettings();
   const {

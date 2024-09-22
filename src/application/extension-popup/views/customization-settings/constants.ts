@@ -15,7 +15,7 @@ const addressBookSettings: SettingListItem<ExtensionAddressBookSettingsStorageKe
     },
     {
       label: 'Block explorers',
-      storageKey: 'block-explorers-enabled',
+      storageKey: 'wallet-lookup-enabled',
     },
   ];
 

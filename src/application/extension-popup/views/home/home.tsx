@@ -7,11 +7,11 @@ import {
 import { IDRISS_ICON } from 'shared/idriss';
 import { EXTENSION_POPUP_ROUTE, useExtensionPopup } from 'shared/extension';
 
-import { TRADING_COPILOT_LOGO } from '../constants';
+import { TRADING_COPILOT_LOGO } from '../../constants';
 
 import { SectionTile } from './components';
 
-export const App = () => {
+export const HomeView = () => {
   const extensionPopup = useExtensionPopup();
 
   return (

@@ -4,8 +4,9 @@ import { EXTENSION_POPUP_ROUTE, useExtensionPopup } from 'shared/extension';
 import { Closable } from 'shared/ui';
 
 import { Footer, TopBar } from './components';
-import { PopupHomeView } from './popup-home-view';
-import { CustomizationSettings, MainSettingsMenu } from './settings-view';
+import { HomeView } from './views/home/home';
+import { MainSettingsView } from './views/main-settings/main-settings';
+import { CustomizationSettingsView } from './views/customization-settings/customization-settings';
 
 export const App = () => {
   const extensionPopup = useExtensionPopup();
@@ -24,17 +25,14 @@ export const App = () => {
 
       <div className="max-h-[460px] grow overflow-y-auto bg-gray-100 [scrollbar-color:gray_#b7b7b7] [scrollbar-width:thin]">
         <Routes>
-          <Route
-            path={EXTENSION_POPUP_ROUTE.HOME}
-            element={<PopupHomeView />}
-          />
+          <Route path={EXTENSION_POPUP_ROUTE.HOME} element={<HomeView />} />
           <Route
             path={EXTENSION_POPUP_ROUTE.SETTINGS_HOME}
-            element={<MainSettingsMenu />}
+            element={<MainSettingsView />}
           />
           <Route
             path={EXTENSION_POPUP_ROUTE.SETTINGS_CUSTOMIZATION}
-            element={<CustomizationSettings />}
+            element={<CustomizationSettingsView />}
           />
         </Routes>
       </div>

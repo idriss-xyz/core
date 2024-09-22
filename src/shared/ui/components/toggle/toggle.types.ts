@@ -1,5 +1,4 @@
 export interface ToggleProperties {
-  label?: string;
-  checked: boolean;
-  onCheckedChange: (checked: boolean) => void;
+  value: boolean;
+  onChange: (value: boolean) => void;
 }

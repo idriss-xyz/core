@@ -4,7 +4,7 @@ import { EXTENSION_POPUP_ROUTE, useExtensionPopup } from 'shared/extension';
 
 import { MainSettingsMenuListItem } from './main-settings-menu-item';
 
-export const App = () => {
+export const MainSettingsView = () => {
   const { wallet, openConnectionModal, removeWalletInfo } = useWallet();
   const extensionPopup = useExtensionPopup();
 

@@ -49,10 +49,10 @@ export const WalletContextProvider = ({
     walletProvidersStore.getProviders,
   );
 
-  const removeWalletInfo = () => {
+  const removeWalletInfo = useCallback(() => {
     setWallet(undefined);
     WalletStorage.clear();
-  };
+  }, []);
 
   useEffect(() => {
     const callback = async () => {
@@ -119,7 +119,7 @@ export const WalletContextProvider = ({
     return () => {
       wallet?.provider.removeListener('accountsChanged', removeWalletInfo);
     };
-  }, [wallet?.provider]);
+  }, [removeWalletInfo, wallet?.provider]);
 
   useEffect(() => {
     const onChainChanged = (chainId: Hex) => {
@@ -158,7 +158,12 @@ export const WalletContextProvider = ({
       openConnectionModal,
       removeWalletInfo,
     };
-  }, [openConnectionModal, wallet, walletConnectModal.visible]);
+  }, [
+    openConnectionModal,
+    removeWalletInfo,
+    wallet,
+    walletConnectModal.visible,
+  ]);
 
   return (
     <WalletContext.Provider value={contextValue}>
