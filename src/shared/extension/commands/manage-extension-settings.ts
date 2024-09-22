@@ -3,13 +3,13 @@ import {
   ExtensionSettingsManager,
   ExtensionSettingsStorageKey,
 } from '../extension-settings-manager';
+import { ExtensionSettings } from '../types';
 
 interface Payload {
-  settingKey: ExtensionSettingsStorageKey;
-  enabled: boolean;
+  settings: Partial<ExtensionSettings>;
 }
 
-type Response = boolean;
+type Response = Record<ExtensionSettingsStorageKey, boolean>;
 
 export class ManageExtensionSettingsCommand extends Command<Payload, Response> {
   public readonly name = 'ManageExtensionSettingsCommand' as const;
@@ -30,15 +30,13 @@ export class ManageExtensionSettingsCommand extends Command<Payload, Response> {
       continue;
     }
 
-    if (this.payload.enabled) {
-      ExtensionSettingsManager.enable(this.payload.settingKey);
-    } else {
-      ExtensionSettingsManager.disable(this.payload.settingKey);
-    }
+    ExtensionSettingsManager.setSettings(this.payload.settings);
 
-    const allSettings = await chrome.storage.local.get();
-    const isSettingEnabled = allSettings[this.payload.settingKey];
+    const allSettings = (await chrome.storage.local.get()) as Record<
+      ExtensionSettingsStorageKey,
+      boolean
+    >;
 
-    return new OkResult(isSettingEnabled);
+    return new OkResult(allSettings);
   }
 }

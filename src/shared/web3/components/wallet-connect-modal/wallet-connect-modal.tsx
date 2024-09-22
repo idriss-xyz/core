@@ -121,7 +121,7 @@ export const WalletConnectModal = createModal(
       >
         <div className="flex flex-col space-y-2">
           {providers.length === 0 && (
-            <p>We couldn&apos;t find any wallet provider.</p>
+            <p>{`We couldn't find any wallet provider.`}</p>
           )}
           {connectedProvider && connectedProviderChainId ? (
             <>
@@ -192,8 +192,7 @@ export const WalletConnectModal = createModal(
                   <Checkbox
                     value={termsOfUseAccepted}
                     onChange={setTermsOfUseAccepted}
-                    className="focus:ring-2 focus:ring-idriss-primary-500"
-                    additionalClassNameWhenChecked="border-black/10"
+                    className="bg-[#53535a] checked:black/10 checked:bg-[#acc3fb] focus:ring-2 focus:ring-idriss-primary-500"
                   />
                   <p className="text-sm text-gray-500">
                     I agree to the{' '}
@@ -209,7 +208,7 @@ export const WalletConnectModal = createModal(
                 </div>
               </div>
               <Button
-                className="rounded text-white bg-idriss-primary-500 hover:bg-idriss-primary-400 font-medium"
+                className="rounded bg-idriss-primary-500 font-medium text-white hover:bg-idriss-primary-400"
                 onClick={() => {
                   const providerToConnect =
                     chosenProviderRdns === 'browser'

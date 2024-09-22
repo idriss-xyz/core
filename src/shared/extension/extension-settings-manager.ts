@@ -1,13 +1,12 @@
 /* eslint-disable boundaries/no-unknown-files */
 
-import { POPUP_TO_WEBPAGE_MESSAGE } from '../messaging';
+import { Hex } from 'shared/web3';
 
-import { EXTENSION_SETTINGS_CHANGE } from './constants';
 import { ExtensionSettings } from './types';
 
 const extensionAddressBookSettingsStorageKeys = [
   'idriss-send-enabled',
-  'block-explorers-enabled',
+  'wallet-lookup-enabled',
 ] as const;
 
 export type ExtensionAddressBookSettingsStorageKeys =
@@ -40,65 +39,51 @@ export const extensionSettingsStorageKeys = [
 export type ExtensionSettingsStorageKey =
   (typeof extensionSettingsStorageKeys)[number];
 
-export class ExtensionSettingsManager {
-  static enable(storageKey: ExtensionSettingsStorageKey) {
-    chrome.storage.local
-      .set({
-        [storageKey]: true,
-      })
-      .catch(console.error);
+interface StoredWallet {
+  account: Hex;
+  providerRdns: string;
+}
 
-    this.publishMessage(true);
-  }
+export const ExtensionSettingsManager = {
+  setSettings(settings: Partial<ExtensionSettings>) {
+    chrome.storage.local.set(settings).catch(console.error);
+  },
 
-  static disable(storageKey: ExtensionSettingsStorageKey) {
-    chrome.storage.local
-      .set({
-        [storageKey]: false,
-      })
-      .catch(console.error);
+  saveWallet(wallet: StoredWallet) {
+    return chrome.storage.local.set({
+      'idriss-wallet': JSON.stringify(wallet),
+    });
+  },
 
-    this.publishMessage(false);
-  }
+  clearWallet() {
+    return chrome.storage.local.remove('idriss-wallet');
+  },
 
-  static getAllSettings(): Promise<
-    Record<ExtensionSettingsStorageKey, boolean>
-  > {
+  getWallet(): Promise<StoredWallet | undefined> {
+    return new Promise((resolve) => {
+      void chrome.storage.local.get('idriss-wallet').then((storedWalletRaw) => {
+        const storedWallet = storedWalletRaw['idriss-wallet']
+          ? (JSON.parse(storedWalletRaw['idriss-wallet']) as StoredWallet)
+          : undefined;
+        return resolve(storedWallet);
+      });
+    });
+  },
+
+  getAllSettings(): Promise<Record<ExtensionSettingsStorageKey, boolean>> {
     return new Promise((resolve) => {
       void chrome.storage.local.get().then((result) => {
         return resolve(result as Record<ExtensionSettingsStorageKey, boolean>);
       });
     });
-  }
+  },
 
-  static isEnabled(storageKey: ExtensionSettingsStorageKey): Promise<boolean> {
+  isEnabled(storageKey: ExtensionSettingsStorageKey): Promise<boolean> {
     return new Promise((resolve) => {
       chrome.storage.local.get([storageKey], (result) => {
         const isEnabled = Boolean(result[storageKey] ?? true);
         resolve(isEnabled);
       });
     });
-  }
-
-  private static publishMessage(isEnabled: boolean) {
-    const data: Partial<ExtensionSettings> = {
-      isExtensionEnabled: isEnabled,
-    };
-
-    const detail = {
-      postMessageType: EXTENSION_SETTINGS_CHANGE,
-      data,
-    };
-
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const activeTab = tabs[0];
-
-      chrome.tabs
-        .sendMessage(activeTab?.id ?? 0, {
-          type: POPUP_TO_WEBPAGE_MESSAGE,
-          detail: detail,
-        })
-        .catch(console.error);
-    });
-  }
-}
+  },
+};

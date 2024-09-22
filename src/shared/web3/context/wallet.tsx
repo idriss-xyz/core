@@ -49,65 +49,68 @@ export const WalletContextProvider = ({
     walletProvidersStore.getProviders,
   );
 
-  const removeWalletInfo = () => {
+  const removeWalletInfo = useCallback(() => {
     setWallet(undefined);
     WalletStorage.clear();
-  };
+  }, []);
 
   useEffect(() => {
-    if (wallet ?? availableWalletProviders.length === 0) {
-      return;
-    }
-
-    const storedWallet = WalletStorage.get();
-    if (!storedWallet) {
-      return;
-    }
-
-    const foundProvider =
-      storedWallet.providerRdns === 'browser'
-        ? { provider: window.ethereum, info: { rdns: 'browser' } }
-        : availableWalletProviders.find((provider) => {
-            return provider.info.rdns === storedWallet.providerRdns;
-          });
-
-    const connectedProvider = foundProvider?.provider;
-    if (!foundProvider || !connectedProvider) {
-      return;
-    }
-
-    const connectToStoredWallet = async () => {
-      const accounts = await connectedProvider.request({
-        method: 'eth_accounts',
-      });
-
-      if (
-        !accounts
-          .map((account) => {
-            return toAddressWithValidChecksum(account);
-          })
-          .includes(storedWallet.account)
-      ) {
+    const callback = async () => {
+      if (wallet ?? availableWalletProviders.length === 0) {
         return;
       }
 
-      await new Promise((resolve) => {
-        setTimeout(resolve, 500);
-      });
+      const storedWallet = await WalletStorage.get();
+      if (!storedWallet) {
+        return;
+      }
 
-      const chainId = await connectedProvider.request({
-        method: 'eth_chainId',
-      });
+      const foundProvider =
+        storedWallet.providerRdns === 'browser'
+          ? { provider: window.ethereum, info: { rdns: 'browser' } }
+          : availableWalletProviders.find((provider) => {
+              return provider.info.rdns === storedWallet.providerRdns;
+            });
 
-      setWallet({
-        providerRdns: foundProvider.info.rdns,
-        provider: connectedProvider,
-        account: storedWallet.account,
-        chainId: hexToDecimal(chainId),
-      });
+      const connectedProvider = foundProvider?.provider;
+      if (!foundProvider || !connectedProvider) {
+        return;
+      }
+
+      const connectToStoredWallet = async () => {
+        const accounts = await connectedProvider.request({
+          method: 'eth_accounts',
+        });
+
+        if (
+          !accounts
+            .map((account) => {
+              return toAddressWithValidChecksum(account);
+            })
+            .includes(storedWallet.account)
+        ) {
+          return;
+        }
+
+        await new Promise((resolve) => {
+          setTimeout(resolve, 500);
+        });
+
+        const chainId = await connectedProvider.request({
+          method: 'eth_chainId',
+        });
+
+        setWallet({
+          providerRdns: foundProvider.info.rdns,
+          provider: connectedProvider,
+          account: storedWallet.account,
+          chainId: hexToDecimal(chainId),
+        });
+      };
+
+      void connectToStoredWallet();
     };
-
-    void connectToStoredWallet();
+    void callback();
   }, [availableWalletProviders, availableWalletProviders.length, wallet]);
 
   useEffect(() => {
@@ -116,7 +119,7 @@ export const WalletContextProvider = ({
     return () => {
       wallet?.provider.removeListener('accountsChanged', removeWalletInfo);
     };
-  }, [wallet?.provider]);
+  }, [removeWalletInfo, wallet?.provider]);
 
   useEffect(() => {
     const onChainChanged = (chainId: Hex) => {
@@ -155,7 +158,12 @@ export const WalletContextProvider = ({
       openConnectionModal,
       removeWalletInfo,
     };
-  }, [openConnectionModal, wallet, walletConnectModal.visible]);
+  }, [
+    openConnectionModal,
+    removeWalletInfo,
+    wallet,
+    walletConnectModal.visible,
+  ]);
 
   return (
     <WalletContext.Provider value={contextValue}>

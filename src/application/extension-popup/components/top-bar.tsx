@@ -1,14 +1,16 @@
-import { useLocation, useNavigate } from 'react-router-dom';
-
 import { IDRISS_ICON_WITH_TEXT } from 'shared/idriss';
 import { IconButton, Toggle } from 'shared/ui';
-import { EXTENSION_POPUP_ROUTE, useExtensionSettings } from 'shared/extension';
+import {
+  EXTENSION_POPUP_ROUTE,
+  useExtensionPopup,
+  useExtensionSettings,
+} from 'shared/extension';
 
 export const TopBar = () => {
   const { extensionSettings, changeExtensionSetting } = useExtensionSettings();
-  const navigate = useNavigate();
-  const { pathname } = useLocation();
-  const isHomeView = pathname === EXTENSION_POPUP_ROUTE.HOME;
+  const extensionPopup = useExtensionPopup();
+
+  const isHomeView = extensionPopup.currentRoute === EXTENSION_POPUP_ROUTE.HOME;
 
   return (
     <nav className="flex items-center justify-between bg-white drop-shadow-sm">
@@ -26,9 +28,11 @@ export const TopBar = () => {
       </a>
       <div className="flex items-center pr-2">
         <Toggle
-          checked={extensionSettings['entire-extension-enabled']}
-          onCheckedChange={(enabled) => {
-            return changeExtensionSetting('entire-extension-enabled', enabled);
+          value={extensionSettings['entire-extension-enabled']}
+          onChange={(enabled) => {
+            return changeExtensionSetting({
+              'entire-extension-enabled': enabled,
+            });
           }}
         />
         <IconButton
@@ -38,7 +42,7 @@ export const TopBar = () => {
             size: 26,
           }}
           onClick={() => {
-            navigate(
+            extensionPopup.navigate(
               isHomeView
                 ? EXTENSION_POPUP_ROUTE.SETTINGS_HOME
                 : EXTENSION_POPUP_ROUTE.HOME,

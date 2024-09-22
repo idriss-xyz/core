@@ -3,7 +3,12 @@ export {
   GET_EXTENSION_SETTINGS_REQUEST,
   EXTENSION_POPUP_ROUTE,
 } from './constants';
-export { ExtensionSettingsProvider, useExtensionSettings } from './context';
+export {
+  ExtensionSettingsProvider,
+  useExtensionSettings,
+  ExtensionPopupProvider,
+  useExtensionPopup,
+} from './context';
 export {
   COMMAND_MAP as EXTENSION_COMMAND_MAP,
   GetServiceStatusCommand,
@@ -15,3 +20,5 @@ export type {
   ExtensionIntegrationSettingsStorageKeys,
 } from './extension-settings-manager';
 export { ExtensionSettingsManager } from './extension-settings-manager';
+export { createInitialExtensionSettingsStorageKeys } from './utils';
+export type { ExtensionSettings } from './types';

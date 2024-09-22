@@ -1,10 +1,12 @@
 import { useMemo, createElement, StrictMode } from 'react';
 import NiceModal from '@ebay/nice-modal-react';
 import { createRoot } from 'react-dom/client';
-import { MemoryRouter } from 'react-router-dom';
 
 import { Final, useLocationInfo } from 'final';
-import { ExtensionSettingsProvider } from 'shared/extension';
+import {
+  ExtensionPopupProvider,
+  ExtensionSettingsProvider,
+} from 'shared/extension';
 import { PortalProvider, QueryProvider, TailwindProvider } from 'shared/ui';
 import { WalletContextProvider } from 'shared/web3';
 import { ErrorBoundary, WithObservabilityScope } from 'shared/observability';
@@ -45,20 +47,20 @@ const ApplicationWithProviders = () => {
     return (
       <WithObservabilityScope>
         <ErrorBoundary>
-          <MemoryRouter>
-            <QueryProvider>
-              <WalletContextProvider disabledWalletsRdns={disabledWalletRdns}>
-                <TailwindProvider>
+          <QueryProvider>
+            <WalletContextProvider disabledWalletsRdns={disabledWalletRdns}>
+              <TailwindProvider>
+                <ExtensionPopupProvider>
                   <ExtensionSettingsProvider>
                     <>
                       <LookUpWalletAddress />
                       <ExtensionPopup />
                     </>
                   </ExtensionSettingsProvider>
-                </TailwindProvider>
-              </WalletContextProvider>
-            </QueryProvider>
-          </MemoryRouter>
+                </ExtensionPopupProvider>
+              </TailwindProvider>
+            </WalletContextProvider>
+          </QueryProvider>
         </ErrorBoundary>
       </WithObservabilityScope>
     );
@@ -68,34 +70,32 @@ const ApplicationWithProviders = () => {
     <StrictMode>
       <WithObservabilityScope>
         <ErrorBoundary>
-          <MemoryRouter>
-            <PortalProvider>
-              <TailwindProvider>
-                <QueryProvider>
-                  <NiceModal.Provider>
-                    <WalletContextProvider
-                      disabledWalletsRdns={disabledWalletRdns}
-                    >
+          <PortalProvider>
+            <TailwindProvider>
+              <QueryProvider>
+                <NiceModal.Provider>
+                  <WalletContextProvider
+                    disabledWalletsRdns={disabledWalletRdns}
+                  >
+                    <ExtensionPopupProvider>
                       <ExtensionSettingsProvider>
                         <TwitterScrapingContextProvider>
                           <WarpcastScrapingContextProvider>
                             <SupercastScrapingContextProvider>
-                              <ExtensionSettingsProvider>
-                                <>
-                                  <ExtensionPopup />
-                                  <Final />
-                                </>
-                              </ExtensionSettingsProvider>
+                              <>
+                                <ExtensionPopup />
+                                <Final />
+                              </>
                             </SupercastScrapingContextProvider>
                           </WarpcastScrapingContextProvider>
                         </TwitterScrapingContextProvider>
                       </ExtensionSettingsProvider>
-                    </WalletContextProvider>
-                  </NiceModal.Provider>
-                </QueryProvider>
-              </TailwindProvider>
-            </PortalProvider>
-          </MemoryRouter>
+                    </ExtensionPopupProvider>
+                  </WalletContextProvider>
+                </NiceModal.Provider>
+              </QueryProvider>
+            </TailwindProvider>
+          </PortalProvider>
         </ErrorBoundary>
       </WithObservabilityScope>
     </StrictMode>

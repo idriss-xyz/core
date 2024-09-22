@@ -1,19 +1,11 @@
-export type CheckboxProperties = {
+import { ReactNode } from 'react';
+
+export interface CheckboxProperties {
+  value: boolean;
+  onChange: (value: boolean) => void;
   label?: string;
+  indicator?: ReactNode;
   disabled?: boolean;
   className?: string;
   disabledTooltipText?: string;
-  additionalClassNameWhenChecked?: string;
-  onChange: (value: boolean) => void;
-} & (
-  | {
-      value: boolean;
-      type?: 'binary';
-    }
-  | {
-      type: 'extended';
-      value?: ExtendedCheckboxOption;
-    }
-);
-
-export type ExtendedCheckboxOption = 'checked' | 'intermediate' | 'unchecked';
+}

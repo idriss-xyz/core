@@ -1,5 +1,3 @@
-import { useNavigate } from 'react-router-dom';
-
 import {
   AGORA_LOGO,
   POLYMARKET_LOGO,
@@ -7,14 +5,15 @@ import {
   TALLY_LOGO,
 } from 'shared/web3';
 import { IDRISS_ICON } from 'shared/idriss';
-import { EXTENSION_POPUP_ROUTE } from 'shared/extension';
+import { EXTENSION_POPUP_ROUTE, useExtensionPopup } from 'shared/extension';
 
-import { TRADING_COPILOT_LOGO } from '../constants';
+import { TRADING_COPILOT_LOGO } from '../../constants';
 
 import { SectionTile } from './components';
 
-export const App = () => {
-  const navigate = useNavigate();
+export const HomeView = () => {
+  const extensionPopup = useExtensionPopup();
+
   return (
     <div className="flex max-w-[470px] grow flex-col items-center bg-gray-100 px-1 py-4">
       <header className="mb-4 text-center">
@@ -69,7 +68,9 @@ export const App = () => {
         <button
           className="rounded-lg bg-[#11dd74] px-5 py-2 font-medium text-white shadow-lg transition-transform duration-300 hover:scale-105 hover:bg-[#11cc74]"
           onClick={() => {
-            navigate(EXTENSION_POPUP_ROUTE.SETTINGS_CUSTOMIZATION);
+            extensionPopup.navigate(
+              EXTENSION_POPUP_ROUTE.SETTINGS_CUSTOMIZATION,
+            );
           }}
         >
           Customize Your Experience

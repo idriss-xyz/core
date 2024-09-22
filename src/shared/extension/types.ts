@@ -1,7 +1,3 @@
-export interface ExtensionSettings {
-  isExtensionEnabled: boolean;
-  isTallyApplicationEnabled: boolean;
-  isSnapshotApplicationEnabled: boolean;
-  isAgoraApplicationEnabled: boolean;
-  isPolymarketApplicationEnabled: boolean;
-}
+import { ExtensionSettingsStorageKey } from './extension-settings-manager';
+
+export type ExtensionSettings = Record<ExtensionSettingsStorageKey, boolean>;
