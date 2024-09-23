@@ -8,10 +8,10 @@ import {
 
 import { generateAcrossMessage } from '../utils';
 
-interface Payload extends Omit<GetAcrossChainFeesPayload, 'message'> {
+type Payload = {
   anchorAddress: Hex;
   roundId: number;
-}
+} & Omit<GetAcrossChainFeesPayload, 'message'>;
 
 export class GetGitcoinAcrossChainFeesCommand extends Command<
   Payload,

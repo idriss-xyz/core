@@ -5,9 +5,9 @@ import {
   OkResult,
 } from 'shared/messaging';
 
-interface Payload {
+type Payload = {
   url: string;
-}
+};
 
 type Response = string;
 

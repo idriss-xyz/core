@@ -6,9 +6,9 @@ import {
   OkResult,
 } from 'shared/messaging';
 
-interface Payload {
+type Payload = {
   handles: string[];
-}
+};
 
 type Response = Record<string, string | null>;
 

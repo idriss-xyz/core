@@ -15,10 +15,6 @@ export interface ChainToken extends Token {
   address: Hex;
 }
 
-export interface GetEthPriceResponse {
-  price: string;
-}
-
 export interface Wallet {
   provider: EIP1193Provider;
   account: Hex;

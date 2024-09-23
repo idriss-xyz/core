@@ -1,5 +1,10 @@
 export type { CommandResponse, SerializedCommand } from './command';
-export { Command, useCommandQuery, useCommandMutation } from './command';
+export {
+  Command,
+  useCommandQuery,
+  useCommandMutation,
+  type JsonValue,
+} from './command';
 export { OkResult, FailureResult } from './result';
 export { onWindowMessage } from './on-window-message';
 export { HandlerError, HandlerResponseError } from './handler.error';

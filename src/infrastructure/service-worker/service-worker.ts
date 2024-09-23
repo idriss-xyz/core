@@ -3,6 +3,7 @@ import {
   Command,
   COMMAND_BUS_REQUEST_MESSAGE,
   FailureResult,
+  JsonValue,
   SerializedCommand,
 } from 'shared/messaging';
 import { WEB3_COMMAND_MAP } from 'shared/web3';
@@ -79,7 +80,7 @@ export class ServiceWorker {
         const command = new commandDefinition(
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           serializedCommand.payload as any,
-        ) as Command<unknown, unknown>;
+        ) as Command<unknown, JsonValue>;
         command.id = serializedCommand.id;
         command.observabilityScope = this.observabilityScope;
 

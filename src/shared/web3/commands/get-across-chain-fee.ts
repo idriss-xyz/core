@@ -6,7 +6,7 @@ import {
   OkResult,
 } from 'shared/messaging';
 
-interface Payload {
+type Payload = {
   chain: {
     id: number;
     wrappedEthAddress: string;
@@ -15,7 +15,7 @@ interface Payload {
   amount: string;
   message: string;
   recipient: string;
-}
+};
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type Response = {
@@ -23,7 +23,7 @@ type Response = {
   totalRelayFee: {
     total: string;
   };
-}
+};
 
 export class GetAcrossChainFeeCommand extends Command<Payload, Response> {
   public readonly name = 'GetAcrossChainFeeCommand' as const;

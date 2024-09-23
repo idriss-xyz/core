@@ -9,10 +9,10 @@ import {
 import { POLYMARKET_CLOB_API } from '../constants';
 import { L2Headers, Order } from '../types';
 
-interface Payload {
+type Payload = {
   order: Order;
   headers: L2Headers;
-}
+};
 
 export class PostOrderCommand extends Command<Payload, undefined> {
   public readonly name = 'PostOrderCommand' as const;

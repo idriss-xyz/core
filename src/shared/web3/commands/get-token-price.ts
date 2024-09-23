@@ -6,19 +6,18 @@ import {
   OkResult,
 } from 'shared/messaging';
 
-import { GetEthPriceResponse } from '../types';
-
-interface Payload {
+type Payload = {
   buyToken: string;
   sellToken: string;
   chainId: number;
   amount: number;
-}
+};
 
-export class GetTokenPriceCommand extends Command<
-  Payload,
-  GetEthPriceResponse
-> {
+type Response = {
+  price: string;
+};
+
+export class GetTokenPriceCommand extends Command<Payload, Response> {
   public readonly name = 'GetTokenPriceCommand' as const;
 
   constructor(public payload: Payload) {
@@ -50,7 +49,7 @@ export class GetTokenPriceCommand extends Command<
       }
 
       // TODO: schema validation
-      const json = (await response.json()) as GetEthPriceResponse;
+      const json = (await response.json()) as Response;
 
       return new OkResult(json);
     } catch (error) {

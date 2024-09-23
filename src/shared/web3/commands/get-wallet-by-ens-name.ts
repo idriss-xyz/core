@@ -7,9 +7,9 @@ import { Hex } from '../types';
 import { hexSchema } from '../schema';
 import { CHAIN } from '../constants';
 
-interface Payload {
+type Payload = {
   username: string;
-}
+};
 
 type Response = Hex;
 

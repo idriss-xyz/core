@@ -23,7 +23,7 @@ export interface SerializedCommand<Payload> {
 
 // https://hackernoon.com/mastering-type-safe-json-serialization-in-typescript
 type JsonPrimitive = string | number | boolean | null | undefined;
-type JsonValue =
+export type JsonValue =
   | JsonPrimitive
   | JsonValue[]
   | {

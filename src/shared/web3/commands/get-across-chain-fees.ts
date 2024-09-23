@@ -8,19 +8,19 @@ import {
 
 import { Hex } from '../types';
 
-export interface Payload {
+export type Payload = {
   chains: { id: number; wrappedEthAddress: string }[];
   amount: number;
   message: string;
   recipient: Hex;
   destinationChainId: number;
-}
+};
 
 type SingleChainResponse = {
   totalRelayFee: {
     total: string;
   };
-}
+};
 
 export type Response = Record<string, SingleChainResponse>;
 

@@ -12,15 +12,15 @@ import { generateGetProposalsQuery } from '../utils';
 import { SNAPSHOT_GRAPHQL_API_URL } from '../constants';
 import { getProposalsResponseSchema } from '../schema';
 
-interface Payload {
+type Payload = {
   snapshotNames: string[];
   pageNumber: number;
-}
+};
 
-interface Response {
+type Response = {
   proposal: ProposalData | null;
   hasNextProposal: boolean;
-}
+};
 
 export class GetProposalCommand extends Command<Payload, Response> {
   public readonly name = 'GetProposalCommand' as const;

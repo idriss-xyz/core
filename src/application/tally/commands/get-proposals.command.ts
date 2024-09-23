@@ -10,10 +10,10 @@ import { generateGetProposalsQuery } from '../utils';
 import { getProposalsResponseSchema } from '../schema';
 import { ProposalsResponse } from '../types';
 
-interface Payload {
+type Payload = {
   username: string;
   afterCursor: string | null;
-}
+};
 
 export class GetTallyProposalsCommand extends Command<
   Payload,
