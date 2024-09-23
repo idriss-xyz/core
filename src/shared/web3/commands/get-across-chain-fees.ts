@@ -16,7 +16,7 @@ export interface Payload {
   destinationChainId: number;
 }
 
-interface SingleChainResponse {
+type SingleChainResponse = {
   totalRelayFee: {
     total: string;
   };

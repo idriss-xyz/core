@@ -17,7 +17,8 @@ interface Payload {
   recipient: string;
 }
 
-interface Response {
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+type Response = {
   timestamp: string;
   totalRelayFee: {
     total: string;

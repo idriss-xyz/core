@@ -2,6 +2,7 @@ import { TWITTER_COMMAND_MAP } from 'host/twitter';
 import {
   Command,
   COMMAND_BUS_REQUEST_MESSAGE,
+  FailureResult,
   SerializedCommand,
 } from 'shared/messaging';
 import { WEB3_COMMAND_MAP } from 'shared/web3';
@@ -89,6 +90,7 @@ export class ServiceWorker {
           })
           .catch((error: unknown) => {
             this.observabilityScope.captureException(error);
+            return sendResponse(new FailureResult('Service worker error'));
           });
       },
     );
