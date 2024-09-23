@@ -53,11 +53,11 @@ export const useAcrossDonateTransaction = () => {
         senderAddress: wallet.account,
       });
 
-      const nonce = await getNonceCommand.send();
+      const nonce = BigInt(await getNonceCommand.send());
 
       const signatureData = {
         chainId: application.chainId,
-        roundId: Number(application.roundId),
+        roundId: BigInt(application.roundId),
         donor: wallet.account,
         voteParams: vote,
         nonce: nonce,
@@ -99,10 +99,10 @@ export const useAcrossDonateTransaction = () => {
         ]),
         [
           BigInt(signatureData.chainId),
-          BigInt(signatureData.roundId),
+          signatureData.roundId,
           signatureData.donor,
           signatureData.voteParams,
-          BigInt(signatureData.nonce),
+          signatureData.nonce,
           BigInt(signatureData.validUntil),
           signatureData.verifyingContract,
           signature,
@@ -150,10 +150,11 @@ export const useAcrossDonateTransaction = () => {
       });
 
       const modifiedData = (depositV3Data + ACROSS_DONATION_MODIFIER) as Hex;
+
       const transactionHash = await walletClient.sendTransaction({
         chain: getChainById(chainId),
         data: modifiedData,
-        to: donationContractAddress,
+        to: getDonationContractAddress(chainId),
         gas: BigInt(500_000),
         value: inputAmount,
       });

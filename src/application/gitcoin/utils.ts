@@ -67,8 +67,8 @@ export const getDefaultDonationOptions = (
 export const generateVote = (recipientId: Hex, amount: bigint) => {
   const PermitTypeNone = 0; // 0 = native currency transfer
   const NATIVE = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'; // Gitcoin internal address for native
-  const nonce = 0; // approval specific, always 0 in our case
-  const deadline = 0; // approval specific, always 0 in our case
+  const nonce = BigInt(0); // approval specific, always 0 in our case
+  const deadline = BigInt(0); // approval specific, always 0 in our case
   const signature =
     '0x0000000000000000000000000000000000000000000000000000000000000000'; // approval specific, always 0x in our case
 
@@ -85,10 +85,14 @@ export const generateVote = (recipientId: Hex, amount: bigint) => {
       deadline, // Deadline
     ],
     signature, // Signature as an empty byte string
-  ];
+  ] as const;
 
   return encodeAbiParameters(
-    parseAbiParameters(['address', 'uint8', 'tuple']),
+    parseAbiParameters([
+      'address',
+      'uint8',
+      '(((address,uint256),uint256,uint256),bytes)',
+    ]),
     [recipientId, PermitTypeNone, tuple],
   );
 };
