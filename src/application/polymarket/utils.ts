@@ -1,7 +1,5 @@
-// TODO: crypto package is deprecated, try to replace it with crypto-js, I tried but was not able to succeed because polymarket api throws 401
-// eslint-disable-next-line unicorn/prefer-node-protocol
-import crypto from 'crypto';
-
+import { hmac } from '@noble/hashes/hmac';
+import { sha256 } from '@noble/hashes/sha256';
 import { parseUnits } from 'viem';
 
 import { CHAIN, Hex } from 'shared/web3';
@@ -319,17 +317,14 @@ export const buildPolyHmacSignature = (
   if (body !== undefined) {
     message += body;
   }
+
   const base64Secret = Buffer.from(secret, 'base64');
-  const hmac = crypto.createHmac('sha256', base64Secret);
-  const sig = hmac.update(message).digest('base64');
 
-  // NOTE: Must be url safe base64 encoding, but keep base64 "=" suffix
-  // Convert '+' to '-'
-  // Convert '/' to '_'
-  const sigUrlSafe = replaceAll(replaceAll(sig, '+', '-'), '/', '_');
+  const sigBytes = hmac(sha256, base64Secret, message);
+
+  const sig = Buffer.from(sigBytes).toString('base64');
+
+  const sigUrlSafe = sig.replaceAll('+', '-').replaceAll('/', '_');
+
   return sigUrlSafe;
-};
-
-const replaceAll = (s: string, search: string, replace: string) => {
-  return s.split(search).join(replace);
 };

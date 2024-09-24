@@ -155,7 +155,7 @@ export const useAcrossDonateTransaction = () => {
         chain: getChainById(chainId),
         data: modifiedData,
         to: getDonationContractAddress(chainId),
-        gas: BigInt(500_000),
+        gas: BigInt(600_000),
         value: inputAmount,
       });
 
