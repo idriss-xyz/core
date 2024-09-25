@@ -11,7 +11,7 @@ import { AddressList } from './address-list';
 
 export const LookUpWalletAddress = () => {
   const [username, setUsername] = useState('');
-  const [visible, setVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   const { extensionSettings } = useExtensionSettings();
 
@@ -47,7 +47,7 @@ export const LookUpWalletAddress = () => {
   };
 
   const closeWidget = () => {
-    setVisible(false);
+    setIsVisible(false);
     setUsername('');
     form.reset();
   };
@@ -57,13 +57,13 @@ export const LookUpWalletAddress = () => {
       return event.ctrlKey && event.key === 'i';
     },
     () => {
-      return setVisible((previous) => {
+      return setIsVisible((previous) => {
         return !previous;
       });
     },
   );
 
-  if (!visible || !isEnabled) {
+  if (!isVisible || !isEnabled) {
     return null;
   }
 
