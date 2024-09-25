@@ -17,7 +17,6 @@ type Payload = {
   recipient: string;
 };
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type Response = {
   timestamp: string;
   totalRelayFee: {

@@ -9,7 +9,6 @@ type Payload = {
 
 type Response = {
   status: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   headers: {
     'x-sentry-rate-limits': string | null;
     'retry-after': string | null;
