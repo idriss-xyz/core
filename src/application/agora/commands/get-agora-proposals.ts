@@ -10,14 +10,14 @@ import { ProposalData, ProposalMetadata } from '../types';
 import { getProposalsResponseSchema } from '../schema';
 import { AGORA_API_URL } from '../constants';
 
-interface Payload {
+type Payload = {
   offset: number;
-}
+};
 
-interface Response {
+type Response = {
   metadata: ProposalMetadata;
   proposal: ProposalData | undefined;
-}
+};
 
 const DISPLAYED_PROPOSAL_STATUS = 'ACTIVE';
 const NUMBER_OF_FETCHED_PROPOSALS = 2;

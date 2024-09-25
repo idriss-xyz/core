@@ -21,7 +21,7 @@ export interface L2Headers {
 
 export type GetApiKeyResponse = z.infer<typeof getApiKeyResponseSchema>;
 
-export interface MarketData {
+export type MarketData = {
   enable_order_book: boolean;
   active: boolean;
   closed: boolean;
@@ -34,21 +34,21 @@ export interface MarketData {
   tokens: Token[];
   neg_risk: boolean;
   accepting_orders: boolean;
-}
+};
 
 export interface GetTokenPriceResponse {
   price: string;
 }
 
-export interface BookItem {
+export type BookItem = {
   price: string;
   size: string;
-}
+};
 
-interface Book {
+type Book = {
   bids: BookItem[];
   asks: BookItem[];
-}
+};
 
 export type GetTokenBookResponse = Book;
 export type TokenIdToPrice = Record<string, number>;
@@ -56,10 +56,10 @@ export type TokenIdToBook = Record<string, Book>;
 
 type Outcome = 'Yes' | 'No';
 
-interface Token {
+type Token = {
   token_id: string;
   outcome: Outcome;
-}
+};
 
 export interface EnhancedToken extends Token {
   price: number;

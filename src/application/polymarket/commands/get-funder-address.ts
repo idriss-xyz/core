@@ -7,9 +7,9 @@ import {
 } from 'shared/messaging';
 import { Hex, hexSchema } from 'shared/web3';
 
-interface Payload {
+type Payload = {
   address: Hex;
-}
+};
 
 export class GetFunderAddresCommand extends Command<Payload, Hex> {
   public name = 'GetFunderAddresCommand' as const;

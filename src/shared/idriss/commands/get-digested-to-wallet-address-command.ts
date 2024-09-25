@@ -9,9 +9,9 @@ import {
 
 import { GET_MULTIPLE_IDRISS_REGISTRY_ABI } from '../constants';
 
-interface Payload {
+type Payload = {
   digestedMessages: string[];
-}
+};
 
 type Response = Record<string, string>;
 

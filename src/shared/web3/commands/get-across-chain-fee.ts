@@ -6,7 +6,7 @@ import {
   OkResult,
 } from 'shared/messaging';
 
-interface Payload {
+type Payload = {
   chain: {
     id: number;
     wrappedEthAddress: string;
@@ -15,14 +15,14 @@ interface Payload {
   amount: string;
   message: string;
   recipient: string;
-}
+};
 
-interface Response {
+type Response = {
   timestamp: string;
   totalRelayFee: {
     total: string;
   };
-}
+};
 
 export class GetAcrossChainFeeCommand extends Command<Payload, Response> {
   public readonly name = 'GetAcrossChainFeeCommand' as const;

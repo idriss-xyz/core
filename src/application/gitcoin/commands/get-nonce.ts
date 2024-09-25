@@ -8,10 +8,10 @@ import { Hex } from 'shared/web3';
 
 import { getNonce } from '../utils';
 
-interface Payload {
+type Payload = {
   senderAddress: Hex;
   destinationChainId: number;
-}
+};
 
 type Response = string;
 

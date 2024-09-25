@@ -9,9 +9,9 @@ import {
 import { GetTokenPriceResponse, TokenIdToPrice } from '../types';
 import { POLYMARKET_CLOB_API } from '../constants';
 
-interface Payload {
+type Payload = {
   tokensIds: string[];
-}
+};
 
 export class GetTokensPricesCommand extends Command<Payload, TokenIdToPrice> {
   public readonly name = 'GetTokensPricesCommand' as const;

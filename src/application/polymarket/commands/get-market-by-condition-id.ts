@@ -9,9 +9,9 @@ import {
 import { MarketData } from '../types';
 import { POLYMARKET_CLOB_API } from '../constants';
 
-interface Payload {
+type Payload = {
   conditionId: string;
-}
+};
 
 export class GetMarketByConditionIdCommand extends Command<
   Payload,

@@ -51,10 +51,7 @@ const createClient = (
 
               return {
                 statusCode: status,
-                headers: {
-                  'x-sentry-rate-limits': headers.get('X-Sentry-Rate-Limits'),
-                  'retry-after': headers.get('Retry-After'),
-                },
+                headers,
               };
             });
           },
