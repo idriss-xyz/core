@@ -35,8 +35,6 @@
     "@webcomponents/webcomponentsjs": "^2.8.0",
     "babel-loader": "^9.2.1",
     "clsx": "^2.1.1",
-    "crypto": "^1.0.1",
-    "crypto-js": "^4.2.0",
     "dotenv-safe": "^9.1.0",
     "idriss-crypto": "^1.9.1",
     "lodash.isequal": "^4.5.0",
