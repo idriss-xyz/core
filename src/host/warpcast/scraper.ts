@@ -165,7 +165,6 @@ export class Scraper {
   }
 
   public static getUsers(): UserScrapingResult[] {
-    Scraper.getHandleUser();
     const posts = Scraper.getPosts();
     const usersFromPosts = posts
       .map((post) => {
