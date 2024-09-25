@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { BigNumber, ethers } from 'ethers';
+import { parseAbi } from 'viem';
 
-import { CHAIN, createEthersProvider, useWallet } from 'shared/web3';
+import { CHAIN, createWalletClient, useWallet } from 'shared/web3';
 
 import {
   POLYMARKET_CONDITIONAL_TOKENS_CONTRACT_ADDRESS,
@@ -36,22 +36,19 @@ export const useIsUsdcAllowed = () => {
       ) {
         return;
       }
-      const ethersProvider = createEthersProvider(wallet.provider);
+      const walletClient = createWalletClient(wallet);
 
-      const usdcContract = new ethers.Contract(
-        SAFE_USDC_ADDRES,
-        ERC_20_ABI,
-        ethersProvider,
-      );
-
-      const allowance: BigNumber =
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        await usdcContract.allowance(
+      const allowance = await walletClient.readContract({
+        abi: parseAbi(ERC_20_ABI),
+        address: SAFE_USDC_ADDRES,
+        functionName: 'allowance',
+        args: [
           safeWalletAddress,
           POLYMARKET_CONDITIONAL_TOKENS_CONTRACT_ADDRESS,
-        );
+        ],
+      });
 
-      return allowance.gt(BigNumber.from(0));
+      return allowance > BigInt(0);
     },
   });
 };

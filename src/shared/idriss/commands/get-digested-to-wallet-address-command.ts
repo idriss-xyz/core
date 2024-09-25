@@ -1,20 +1,21 @@
+import { createPublicClient, http } from 'viem';
+
 import {
   Command,
   FailureResult,
   HandlerError,
   OkResult,
 } from 'shared/messaging';
-import { createContract } from 'shared/web3';
 
 import { GET_MULTIPLE_IDRISS_REGISTRY_ABI } from '../constants';
 
-interface Payload {
+type Payload = {
   digestedMessages: string[];
-}
-
-type ResponseBeforeParsing = [string, string][];
+};
 
 type Response = Record<string, string>;
+
+const CONTRACT_ADDRESS = '0xa179BF6f32483A82d4BD726068EfD93E29f3c930';
 
 export class GetDigestToWalletAddressCommand extends Command<
   Payload,
@@ -28,16 +29,23 @@ export class GetDigestToWalletAddressCommand extends Command<
 
   async handle() {
     try {
-      const contract = createContract({
-        abi: GET_MULTIPLE_IDRISS_REGISTRY_ABI,
-        address: '0xa179BF6f32483A82d4BD726068EfD93E29f3c930',
-        signerOrProvider: 'https://polygon-rpc.com/',
+      const publicClient = createPublicClient({
+        transport: http('https://polygon-rpc.com/'),
       });
-      const [result] = (await contract?.functions?.getMultipleIDriss?.(
-        this.payload.digestedMessages,
-      )) as [ResponseBeforeParsing];
+      const results = await publicClient.readContract({
+        abi: GET_MULTIPLE_IDRISS_REGISTRY_ABI,
+        address: CONTRACT_ADDRESS,
+        functionName: 'getMultipleIDriss',
+        args: [this.payload.digestedMessages],
+      });
 
-      return new OkResult(Object.fromEntries(result));
+      return new OkResult(
+        Object.fromEntries(
+          results.map((result) => {
+            return [result._hash, result.result];
+          }),
+        ),
+      );
     } catch (error) {
       this.captureException(error);
       if (error instanceof HandlerError) {

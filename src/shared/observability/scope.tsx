@@ -34,12 +34,7 @@ const createClient = (
   return new BrowserClient({
     dsn: process.env.SENTRY_DSN,
     enabled: process.env.SENTRY_ENVIRONMENT === 'production',
-    allowUrls: [
-      `chrome-extension://${extensionId}`,
-      'twitter.com',
-      'supercast.xyz',
-      'x.com',
-    ],
+    allowUrls: [`chrome-://${extensionId}`],
     transport:
       executionEnvironment === 'service-worker'
         ? makeFetchTransport
@@ -56,10 +51,7 @@ const createClient = (
 
               return {
                 statusCode: status,
-                headers: {
-                  'x-sentry-rate-limits': headers.get('X-Sentry-Rate-Limits'),
-                  'retry-after': headers.get('Retry-After'),
-                },
+                headers,
               };
             });
           },

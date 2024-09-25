@@ -9,9 +9,9 @@ import {
 import { GetTokenBookResponse, TokenIdToBook } from '../types';
 import { POLYMARKET_CLOB_API } from '../constants';
 
-interface Payload {
+type Payload = {
   tokensIds: string[];
-}
+};
 
 export class GetTokensBooksCommand extends Command<Payload, TokenIdToBook> {
   public readonly name = 'GetTokensBooksCommand' as const;

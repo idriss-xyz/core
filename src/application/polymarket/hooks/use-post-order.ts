@@ -1,19 +1,22 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { OrderBuilder, OrderType, TickSize } from '@polymarket/clob-client';
-import { orderToJson } from '@polymarket/clob-client/dist/utilities';
-import { createL2Headers } from '@polymarket/clob-client/dist/headers';
-import { JsonRpcSigner } from '@ethersproject/providers';
 
-import { CHAIN, Hex, useWallet } from 'shared/web3';
+import { createWalletClient, useWallet, Wallet } from 'shared/web3';
 import { useCommandMutation } from 'shared/messaging';
 
+import { L2Headers, SafeWallet, TickSize } from '../types';
+import {
+  buildMarketBuyOrderCreationArguments,
+  buildOrder,
+  buildOrderSignaturePayload,
+  buildPolyHmacSignature,
+  orderToJson,
+} from '../utils';
 import { PostOrderCommand } from '../commands';
-import { POLYMARKET_GNOSIS_SAFE_SIGNATURE } from '../constants';
 
 import { getSafeWalletQueryKey } from './use-safe-wallet';
 
 interface PostOrderMutationProperties {
-  signer: JsonRpcSigner;
+  wallet: Wallet;
   funderAddress: string;
   tokenID: string;
   amount: number;
@@ -24,17 +27,19 @@ interface PostOrderMutationProperties {
     secret: string;
     passphrase: string;
   };
+  timestamp: string;
 }
 
 export const usePostOrder = () => {
   const queryClient = useQueryClient();
   const { wallet } = useWallet();
+
   const postOrderMutation = useCommandMutation(PostOrderCommand);
 
   return useMutation({
     onSuccess: (_, { amount }) => {
       if (wallet?.account) {
-        queryClient.setQueryData<{ address: Hex; balance: number }>(
+        queryClient.setQueryData<SafeWallet>(
           getSafeWalletQueryKey(wallet),
           (currentData) => {
             if (!currentData) {
@@ -48,36 +53,58 @@ export const usePostOrder = () => {
         );
       }
     },
-    mutationFn: async ({
-      signer,
-      funderAddress,
-      amount,
-      negRisk,
-      tokenID,
-      tickSize,
-      credentials,
-    }: PostOrderMutationProperties) => {
-      const orderBuilder = new OrderBuilder(
-        signer,
-        CHAIN.POLYGON.id,
-        POLYMARKET_GNOSIS_SAFE_SIGNATURE,
+    mutationFn: async (properties: PostOrderMutationProperties) => {
+      const {
+        amount,
         funderAddress,
-      );
-      const order = await orderBuilder.buildMarketOrder(
-        {
-          tokenID,
-          amount,
-        },
-        { tickSize, negRisk },
-      );
-      const jsonOrder = orderToJson(order, credentials.key, OrderType.FOK);
-      const headers = await createL2Headers(signer, credentials, {
-        method: 'POST',
-        requestPath: `/order`,
-        body: JSON.stringify(jsonOrder),
+        tickSize,
+        tokenID,
+        wallet,
+        negRisk,
+        credentials,
+        timestamp,
+      } = properties;
+      const walletClient = createWalletClient(wallet);
+      const orderData = buildMarketBuyOrderCreationArguments({
+        address: wallet.account,
+        tokenId: tokenID,
+        tickSize,
+        funderAddress,
+        amount,
       });
 
-      return postOrderMutation.mutate({ order: jsonOrder, headers });
+      const order = buildOrder({
+        orderData,
+      });
+
+      const orderSignaturePayload = buildOrderSignaturePayload({
+        order,
+        negRisk,
+      });
+
+      const orderSignature = await walletClient.signTypedData(
+        orderSignaturePayload,
+      );
+
+      const orderJson = orderToJson(order, orderSignature, credentials.key);
+
+      const sig = buildPolyHmacSignature(
+        credentials.secret,
+        timestamp,
+        'POST',
+        '/order',
+        JSON.stringify(orderJson),
+      );
+
+      const headers: L2Headers = {
+        POLY_ADDRESS: wallet.account,
+        POLY_SIGNATURE: sig,
+        POLY_TIMESTAMP: timestamp,
+        POLY_API_KEY: credentials.key,
+        POLY_PASSPHRASE: credentials.passphrase,
+      };
+
+      return postOrderMutation.mutate({ order: orderJson, headers });
     },
   });
 };

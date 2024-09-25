@@ -126,7 +126,7 @@ const Base = ({ widgetData, addressResolver, onClose }: BaseProperties) => {
             <IdrissSend.Success
               onConfirm={close}
               chainId={chainId}
-              transactionHash={sender.data?.transactionHash ?? ''}
+              transactionHash={sender.data?.transactionHash ?? EMPTY_HEX}
             />
           );
         }

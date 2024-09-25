@@ -1,13 +1,15 @@
-import { ethers } from 'ethers';
+import { createPublicClient, http } from 'viem';
+import { normalize } from 'viem/ens';
 
 import { Command, FailureResult, OkResult } from 'shared/messaging';
 
 import { Hex } from '../types';
 import { hexSchema } from '../schema';
+import { CHAIN } from '../constants';
 
-interface Payload {
+type Payload = {
   username: string;
-}
+};
 
 type Response = Hex;
 
@@ -20,11 +22,13 @@ export class GetWalletByEnsNameCommand extends Command<Payload, Response> {
 
   async handle() {
     try {
-      const provider = new ethers.providers.JsonRpcProvider(
-        'https://eth.llamarpc.com',
-        { chainId: 1, name: 'mainnet' },
-      );
-      const maybeWallet = await provider.resolveName(this.payload.username);
+      const client = createPublicClient({
+        transport: http('https://eth.llamarpc.com'),
+        chain: CHAIN.ETHEREUM,
+      });
+      const maybeWallet = await client.getEnsAddress({
+        name: normalize(this.payload.username),
+      });
       const walletValidationResult = hexSchema.safeParse(maybeWallet);
       if (!walletValidationResult.success) {
         return new FailureResult();

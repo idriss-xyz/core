@@ -1,16 +1,19 @@
 import { Command, OkResult } from 'shared/messaging';
 
-interface Payload {
+type Payload = {
   url: string;
   body: string | Uint8Array;
   headers?: Record<string, string>;
   fetchOptions?: RequestInit;
-}
+};
 
-interface Response {
+type Response = {
   status: number;
-  headers: Headers;
-}
+  headers: {
+    'x-sentry-rate-limits': string | null;
+    'retry-after': string | null;
+  };
+};
 
 export class SendToSentryCommand extends Command<Payload, Response> {
   public readonly name = 'SendToSentryCommand' as const;
@@ -30,7 +33,10 @@ export class SendToSentryCommand extends Command<Payload, Response> {
 
     return new OkResult({
       status: response.status,
-      headers: response.headers,
+      headers: {
+        'x-sentry-rate-limits': response.headers.get('x-sentry-rate-limits'),
+        'retry-after': response.headers.get('retry-after'),
+      },
     });
   }
 }

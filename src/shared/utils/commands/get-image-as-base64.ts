@@ -1,8 +1,8 @@
 import { Command, FailureResult, OkResult } from 'shared/messaging';
 
-interface Payload {
+type Payload = {
   url: string;
-}
+};
 
 export class GetImageAsBase64Command extends Command<Payload, string> {
   public readonly name = 'GetImageAsBase64Command' as const;

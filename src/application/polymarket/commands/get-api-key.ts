@@ -10,9 +10,9 @@ import { GetApiKeyResponse, L1Headers } from '../types';
 import { POLYMARKET_CLOB_API } from '../constants';
 import { getApiKeyResponseSchema } from '../schema';
 
-interface Payload {
+type Payload = {
   headers: L1Headers;
-}
+};
 
 export class GetApiKeyCommand extends Command<Payload, GetApiKeyResponse> {
   public readonly name = 'GetApiKeyCommand' as const;

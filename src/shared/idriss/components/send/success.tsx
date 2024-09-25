@@ -1,9 +1,11 @@
+import { Hex } from 'viem';
+
 import { Button, Icon } from 'shared/ui';
-import { CHAIN } from 'shared/web3';
+import { getTransactionUrl } from 'shared/web3';
 
 interface Properties {
   chainId: number;
-  transactionHash: string;
+  transactionHash: Hex;
   onConfirm: () => void;
 }
 
@@ -12,6 +14,7 @@ export const Success = ({
   transactionHash,
   onConfirm,
 }: Properties) => {
+  const transactionUrl = getTransactionUrl({ chainId, transactionHash });
   return (
     <div className="flex flex-col items-center text-center">
       <Icon
@@ -23,11 +26,7 @@ export const Success = ({
         Transaction Submitted 🥳
       </p>
       <a
-        href={`${
-          Object.values(CHAIN).find((chain) => {
-            return chain.id === chainId;
-          })?.blockExplorerUrls[0] ?? '#'
-        }/tx/${transactionHash}`}
+        href={transactionUrl}
         target="_blank"
         rel="noopener noreferrer"
         className="mt-1 flex items-center space-x-1"

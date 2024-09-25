@@ -36,10 +36,10 @@ export const isHandleNode = (element: HTMLElement) => {
 
 export const getNodeToInjectToUser = (node: Element, isHandleUser: boolean) => {
   const nodeToInject = isHandleUser
-    ? node.querySelector('div > div > div > span') ??
-      node.querySelector('div > div > a > div')
-    : node.querySelector('div > div > a > div') ??
-      node.querySelector('div:has(> div > span)');
+    ? (node.querySelector('div > div > div > span') ??
+      node.querySelector('div > div > a > div'))
+    : (node.querySelector('div > div > a > div') ??
+      node.querySelector('div:has(> div > span)'));
 
   return nodeToInject as HTMLElement | null;
 };

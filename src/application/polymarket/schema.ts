@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { hexSchema } from 'shared/web3';
+
 export const getApiKeyResponseSchema = z.object({
   apiKey: z.string(),
   secret: z.string(),
@@ -25,8 +27,7 @@ export const marketsQueryStateSchema = z.object({
   data: z.object({
     markets: z.array(
       z.object({
-        // TODO: z.hex?
-        conditionId: z.string(),
+        conditionId: hexSchema,
         slug: z.string(),
       }),
     ),

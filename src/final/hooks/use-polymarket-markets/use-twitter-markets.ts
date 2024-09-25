@@ -6,17 +6,17 @@ import {
   useTwitterScraping,
 } from 'host/twitter';
 import { useCommandMutation } from 'shared/messaging';
+import { GetConditionIdCommand, isEventUrl } from 'application/polymarket';
 
-import { GetConditionIdCommand } from '../commands';
-import { isEventUrl } from '../utils';
+interface Properties {
+  enabled: boolean;
+}
 
-export const useTwitterMarkets = () => {
+export const useTwitterMarkets = ({ enabled }: Properties) => {
   const { externalLinks } = useTwitterScraping();
   const originalShortenedUrlMutation = useCommandMutation(
     GetOriginalShortenedUrlCommand,
   );
-
-  const conditionIdMutation = useCommandMutation(GetConditionIdCommand);
 
   const scrapedImageLinks = useMemo(() => {
     return externalLinks.filter((scrapedLink) => {
@@ -32,12 +32,14 @@ export const useTwitterMarkets = () => {
     })
     .sort();
 
-  return useQuery({
+  const conditionIdMutation = useCommandMutation(GetConditionIdCommand);
+
+  const twitterMarketsQuery = useQuery({
     queryKey: ['twitterMarkets', ...availableUrls],
+    enabled,
     placeholderData: (previousData) => {
       return previousData;
     },
-
     queryFn: async () => {
       const results = await Promise.allSettled(
         scrapedImageLinks.map(async (link) => {
@@ -64,4 +66,6 @@ export const useTwitterMarkets = () => {
         .filter(Boolean);
     },
   });
+
+  return twitterMarketsQuery.data ?? [];
 };

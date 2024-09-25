@@ -29,9 +29,9 @@ const getAccountResponseSchema = z.object({
   }),
 });
 
-interface Payload {
+type Payload = {
   username: string;
-}
+};
 
 type Response = Hex;
 

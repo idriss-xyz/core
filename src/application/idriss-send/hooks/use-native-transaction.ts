@@ -1,13 +1,19 @@
 import { useMutation } from '@tanstack/react-query';
-import { BigNumber } from 'ethers';
+import { encodeFunctionData } from 'viem';
 
-import { Hex, Wallet, createContract, createSigner } from 'shared/web3';
+import {
+  createWalletClient,
+  EMPTY_HEX,
+  getChainById,
+  Hex,
+  Wallet,
+} from 'shared/web3';
 
 import { CHAIN_TO_IDRISS_TIPPING_ADDRESS, TIPPING_ABI } from '../constants';
 
 interface Properties {
   recipientAddress: Hex;
-  tokensToSend: BigNumber;
+  tokensToSend: bigint;
   wallet: Wallet;
   chainId: number;
 }
@@ -20,38 +26,35 @@ export const useNativeTransaction = () => {
       wallet,
       chainId,
     }: Properties) => {
-      const signer = createSigner(wallet);
+      const walletClient = createWalletClient(wallet);
 
-      const tippingContract = createContract({
+      const idrissTippingAddress =
+        CHAIN_TO_IDRISS_TIPPING_ADDRESS[chainId] ?? EMPTY_HEX;
+
+      const sendToData = {
         abi: TIPPING_ABI,
-        address: CHAIN_TO_IDRISS_TIPPING_ADDRESS[chainId] ?? '',
-        signerOrProvider: signer,
-      });
+        functionName: 'sendTo',
+        args: [recipientAddress, tokensToSend, ''],
+      } as const;
 
-      const gas = await tippingContract.estimateGas.sendTo?.(
-        recipientAddress,
-        tokensToSend,
-        '',
-        {
-          value: tokensToSend.toString(),
-          from: wallet.account,
-        },
-      );
-
-      const populatedTransaction =
-        await tippingContract.populateTransaction.sendTo?.(
-          recipientAddress,
-          tokensToSend,
-          '',
-        );
-
-      const result = await signer.sendTransaction({
-        ...populatedTransaction,
-        gasLimit: gas,
+      const gas = await walletClient.estimateContractGas({
+        ...sendToData,
+        address: idrissTippingAddress,
+        account: wallet.account,
         value: tokensToSend,
       });
 
-      const { transactionHash } = await result.wait();
+      const encodedData = encodeFunctionData(sendToData);
+
+      const transactionHash = await walletClient.sendTransaction({
+        chain: getChainById(chainId),
+        data: encodedData,
+        value: tokensToSend,
+        to: idrissTippingAddress,
+        gas,
+      });
+
+      await walletClient.waitForTransactionReceipt({ hash: transactionHash });
 
       return { transactionHash };
     },

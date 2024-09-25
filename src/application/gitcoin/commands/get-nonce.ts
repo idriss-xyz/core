@@ -8,12 +8,12 @@ import { Hex } from 'shared/web3';
 
 import { getNonce } from '../utils';
 
-interface Payload {
+type Payload = {
   senderAddress: Hex;
   destinationChainId: number;
-}
+};
 
-type Response = number;
+type Response = string;
 
 export class GetNonceCommand extends Command<Payload, Response> {
   public readonly name = 'GetNonceCommand' as const;
@@ -28,7 +28,7 @@ export class GetNonceCommand extends Command<Payload, Response> {
         this.payload.senderAddress,
         this.payload.destinationChainId,
       );
-      return new OkResult(nonce);
+      return new OkResult(nonce.toString());
     } catch (error) {
       this.captureException(error);
       if (error instanceof HandlerError) {

@@ -2,7 +2,6 @@ import { forwardRef } from 'react';
 
 import { Button, ButtonProperties, Icon, classes } from 'shared/ui';
 
-// TODO: get rid of forwardRef since it's not used
 export const UnavailableButton = forwardRef<
   HTMLButtonElement,
   Pick<ButtonProperties, 'className'>

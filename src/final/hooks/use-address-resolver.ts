@@ -11,7 +11,8 @@ import { GetWalletByEnsNameCommand } from 'shared/web3';
 import { useLocationInfo } from './use-location-info';
 
 export const useAddressResolver = (): AddressResolver => {
-  const { isWarpcast } = useLocationInfo();
+  const { isWarpcast, isSupercast } = useLocationInfo();
+  const isFarcaster = isWarpcast || isSupercast;
 
   const getWalletByFarcasterUsernameMutation = useCommandMutation(
     GetWalletByFarcasterUsernameCommand,
@@ -24,7 +25,7 @@ export const useAddressResolver = (): AddressResolver => {
   const resolve = useCallback(
     async (properties: ResolveAddressProperties) => {
       // on other socials like Twitter we pre-fetch address and it's already defined in WidgetData
-      if (!isWarpcast) {
+      if (!isFarcaster) {
         return properties.walletAddress;
       }
 
@@ -41,7 +42,7 @@ export const useAddressResolver = (): AddressResolver => {
     [
       getWalletByEnsNameMutation,
       getWalletByFarcasterUsernameMutation,
-      isWarpcast,
+      isFarcaster,
     ],
   );
 

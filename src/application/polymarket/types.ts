@@ -1,11 +1,8 @@
 import { z } from 'zod';
-import { EIP1193Provider } from 'mipd';
-import { TickSize } from '@polymarket/clob-client';
 
 import { Hex, Wallet } from 'shared/web3';
 
 import { getApiKeyResponseSchema, marketFormSchema } from './schema';
-import { OUTCOME } from './constants';
 
 export interface L1Headers {
   POLY_ADDRESS: string;
@@ -24,7 +21,7 @@ export interface L2Headers {
 
 export type GetApiKeyResponse = z.infer<typeof getApiKeyResponseSchema>;
 
-export interface MarketData {
+export type MarketData = {
   enable_order_book: boolean;
   active: boolean;
   closed: boolean;
@@ -37,33 +34,32 @@ export interface MarketData {
   tokens: Token[];
   neg_risk: boolean;
   accepting_orders: boolean;
-}
+};
 
 export interface GetTokenPriceResponse {
   price: string;
 }
 
-export interface BookItem {
+export type BookItem = {
   price: string;
   size: string;
-}
+};
 
-interface Book {
+type Book = {
   bids: BookItem[];
   asks: BookItem[];
-}
+};
 
 export type GetTokenBookResponse = Book;
 export type TokenIdToPrice = Record<string, number>;
 export type TokenIdToBook = Record<string, Book>;
 
-// TODO: lookup
-export type Outcome = (typeof OUTCOME)[keyof typeof OUTCOME];
+type Outcome = 'Yes' | 'No';
 
-interface Token {
+type Token = {
   token_id: string;
   outcome: Outcome;
-}
+};
 
 export interface EnhancedToken extends Token {
   price: number;
@@ -80,31 +76,83 @@ export interface PolymarketUser {
   hasPolymarketAccount: boolean;
   safeWalletDetails?: SafeWallet;
   signIn: () => Promise<void>;
-  switchToPolygon: (provider: EIP1193Provider) => Promise<void>;
+  switchToPolygon: (wallet: Wallet) => Promise<void>;
 }
 
-interface SafeWallet {
+export interface SafeWallet {
   address: Hex;
   balance: number;
-}
-
-interface OrderDetails {
-  minimumTickSize: TickSize;
-  negRisk: boolean;
-  tokenId: string;
-  amount: number;
 }
 
 export interface PlaceOrderParameters {
   wallet: Wallet;
   funderAddress: Hex;
-  orderDetails: OrderDetails;
+  orderDetails: {
+    minimumTickSize: TickSize;
+    negRisk: boolean;
+    tokenId: string;
+    amount: number;
+  };
 }
+
+export type SaltedOrderData = OrderData & { salt: string };
 
 export interface OrderPlacer {
   reset: () => void;
-  place: (parameters: PlaceOrderParameters) => Promise<void>;
+  place: (properties: PlaceOrderParameters) => Promise<void>;
   isError: boolean;
   isPlaced: boolean;
   isPlacing: boolean;
 }
+
+export type TickSize = '0.1' | '0.01' | '0.001' | '0.0001';
+
+export interface Order {
+  order: {
+    salt: number;
+    maker: string;
+    signer: string;
+    taker: string;
+    tokenId: string;
+    makerAmount: string;
+    takerAmount: string;
+    side: 'BUY';
+  };
+  owner: string;
+  orderType: 'FOK';
+}
+
+export interface OrderData {
+  maker: string;
+  taker: string;
+  tokenId: string;
+  makerAmount: string;
+  takerAmount: string;
+  side: 0;
+  feeRateBps: string;
+  nonce: string;
+  signer: string;
+  expiration?: string;
+  signatureType?: 2;
+}
+
+export interface RoundConfig {
+  readonly price: number;
+  readonly size: number;
+  readonly amount: number;
+}
+
+export interface ContractConfig {
+  exchange: Hex;
+  negRiskAdapter: string;
+  negRiskExchange: Hex;
+  collateral: string;
+  conditionalTokens: string;
+}
+
+export type Scenario =
+  | 'BET_PLACED'
+  | 'WRONG_CHAIN'
+  | 'WALLET_NOT_CONNECTED'
+  | 'BETTING_NOT_AVAILABLE'
+  | 'READY_TO_BET';

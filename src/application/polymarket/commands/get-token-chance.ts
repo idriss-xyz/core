@@ -8,9 +8,9 @@ import {
 
 import { POLYMARKET_CLOB_API } from '../constants';
 
-interface Payload {
+type Payload = {
   tokenId: string;
-}
+};
 
 export class GetTokenChanceCommand extends Command<Payload, number> {
   public readonly name = 'GetTokenChanceCommand' as const;

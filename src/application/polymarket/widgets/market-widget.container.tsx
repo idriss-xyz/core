@@ -10,7 +10,7 @@ import {
   GetTokensBooksCommand,
   GetTokensPricesCommand,
 } from '../commands';
-import { EnhancedToken, MarketData } from '../types';
+import { EnhancedToken } from '../types';
 
 import { Market } from './market-widget';
 
@@ -25,21 +25,6 @@ export const MarketWidgetContainer = memo(
       command: new GetMarketByConditionIdCommand({ conditionId }),
       placeholderData: (previousData) => {
         return previousData;
-      },
-
-      select: (data): MarketData => {
-        return {
-          ...data,
-          tokens:
-            // TODO: polymarket util sortByOutcome
-            data.tokens.sort((tokenA, tokenB) => {
-              return tokenA.outcome === 'Yes'
-                ? -1
-                : tokenB.outcome === 'Yes'
-                  ? 1
-                  : 0;
-            }) ?? [],
-        };
       },
     });
 

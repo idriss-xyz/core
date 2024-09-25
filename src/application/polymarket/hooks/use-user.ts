@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
-import { EIP1193Provider } from 'mipd';
 
-import { CHAIN, useSwitchChain, useWallet } from 'shared/web3';
+import { CHAIN, useSwitchChain, useWallet, Wallet } from 'shared/web3';
 
 import { PolymarketUser } from '../types';
 
@@ -18,9 +17,9 @@ export const useUser = (): PolymarketUser => {
   const switchChain = useSwitchChain();
 
   const switchToPolygon = useCallback(
-    (provider: EIP1193Provider) => {
+    (wallet: Wallet) => {
       return switchChain.mutateAsync({
-        walletProvider: provider,
+        wallet,
         chainId: CHAIN.POLYGON.id,
       });
     },
@@ -29,7 +28,7 @@ export const useUser = (): PolymarketUser => {
 
   const signIn = useCallback(async () => {
     const connectedWallet = await openConnectionModal();
-    await switchToPolygon(connectedWallet.provider);
+    await switchToPolygon(connectedWallet);
   }, [openConnectionModal, switchToPolygon]);
 
   const isSigning =

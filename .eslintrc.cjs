@@ -171,6 +171,7 @@ module.exports = {
     '@typescript-eslint/unbound-method': 'off',
     '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/consistent-type-exports': 'error',
+    "@typescript-eslint/consistent-type-definitions": 'off', // TODO: ['error', 'type']
     '@typescript-eslint/no-misused-promises': [
       'error',
       {

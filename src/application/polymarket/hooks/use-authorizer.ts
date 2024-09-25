@@ -1,21 +1,31 @@
 import { useMutation } from '@tanstack/react-query';
-import { createL1Headers } from '@polymarket/clob-client/dist/headers';
-import { JsonRpcSigner } from '@ethersproject/providers';
 import { useCallback } from 'react';
 
-import { CHAIN } from 'shared/web3';
 import { useCommandMutation } from 'shared/messaging';
+import { createWalletClient, Wallet } from 'shared/web3';
 
 import { GetApiKeyCommand } from '../commands';
+import { buildL1SignaturePayload } from '../utils';
 
 export const useAuthorizer = () => {
-  const createL1HeadersMutation = useCreateL1HeadersMutation();
+  const createL1HeadersMutation = useCreateL1Signature();
   const getApiKeyCommandMutation = useCommandMutation(GetApiKeyCommand);
 
   const authorize = useCallback(
-    async (signer: JsonRpcSigner) => {
-      const l1Headers = await createL1HeadersMutation.mutateAsync(signer);
-      return getApiKeyCommandMutation.mutateAsync({ headers: l1Headers });
+    async (properties: { wallet: Wallet; timestamp: string }) => {
+      const { wallet, timestamp } = properties;
+      const l1Signature = await createL1HeadersMutation.mutateAsync({
+        wallet,
+        timestamp,
+      });
+      return getApiKeyCommandMutation.mutateAsync({
+        headers: {
+          POLY_NONCE: '0',
+          POLY_ADDRESS: wallet.account,
+          POLY_SIGNATURE: l1Signature,
+          POLY_TIMESTAMP: timestamp,
+        },
+      });
     },
     [createL1HeadersMutation, getApiKeyCommandMutation],
   );
@@ -34,10 +44,14 @@ export const useAuthorizer = () => {
   return { authorize, isAuthorizing, isFailed, reset };
 };
 
-const useCreateL1HeadersMutation = () => {
+const useCreateL1Signature = () => {
   return useMutation({
-    mutationFn: async (signer: JsonRpcSigner) => {
-      return createL1Headers(signer, CHAIN.POLYGON.id);
+    mutationFn: async (properties: { wallet: Wallet; timestamp: string }) => {
+      const { wallet, timestamp } = properties;
+      const walletClient = createWalletClient(wallet);
+      return walletClient.signTypedData(
+        buildL1SignaturePayload({ address: wallet.account, timestamp }),
+      );
     },
   });
 };

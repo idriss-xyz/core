@@ -1,6 +1,9 @@
 import { TWITTER_COMMAND_MAP } from 'host/twitter';
 import {
+  Command,
   COMMAND_BUS_REQUEST_MESSAGE,
+  FailureResult,
+  JsonValue,
   SerializedCommand,
 } from 'shared/messaging';
 import { WEB3_COMMAND_MAP } from 'shared/web3';
@@ -62,7 +65,7 @@ export class ServiceWorker {
 
   subscribeToCommands() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.onMessage<SerializedCommand<any>>(
+    this.onMessage<SerializedCommand<unknown>>(
       COMMAND_BUS_REQUEST_MESSAGE,
       (serializedCommand, sendResponse) => {
         const commandDefinition = COMMAND_MAP[serializedCommand.name];
@@ -74,7 +77,10 @@ export class ServiceWorker {
           throw error;
         }
 
-        const command = new commandDefinition(serializedCommand.payload);
+        const command = new commandDefinition(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          serializedCommand.payload as any,
+        ) as Command<unknown, JsonValue>;
         command.id = serializedCommand.id;
         command.observabilityScope = this.observabilityScope;
 
@@ -83,8 +89,9 @@ export class ServiceWorker {
           .then((response: unknown) => {
             return sendResponse(response);
           })
-          .catch((error) => {
+          .catch((error: unknown) => {
             this.observabilityScope.captureException(error);
+            return sendResponse(new FailureResult('Service worker error'));
           });
       },
     );
