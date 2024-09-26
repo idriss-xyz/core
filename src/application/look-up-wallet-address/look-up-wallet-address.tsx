@@ -38,20 +38,20 @@ export const LookUpWalletAddress = () => {
 
   const form = useForm({
     defaultValues: {
-      user_identifier: '',
+      userIdentifier: '',
     },
   });
 
-  const userIdentifier = form.watch('user_identifier');
+  const userIdentifier = form.watch('userIdentifier');
 
   const onSubmit = () => {
     const values = form.getValues();
-    setUsername(values.user_identifier);
+    setUsername(values.userIdentifier);
   };
 
   const resetComponentState = () => {
     form.reset({
-      user_identifier: '',
+      userIdentifier: '',
     });
     setUsername('');
   };
@@ -92,7 +92,7 @@ export const LookUpWalletAddress = () => {
             <div className="flex flex-row gap-x-[10px]">
               <div className="relative grow">
                 <Controller
-                  name="user_identifier"
+                  name="userIdentifier"
                   control={form.control}
                   render={({ field }) => {
                     return (
