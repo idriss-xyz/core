@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useKey } from 'react-use';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 
 import { useCommandQuery } from 'shared/messaging';
 import { Closable, IconButton, Spinner } from 'shared/ui';
@@ -34,10 +34,14 @@ export const LookUpWalletAddress = () => {
         : undefined,
     }),
     staleTime: Number.POSITIVE_INFINITY,
-    enabled: username.length >= 3,
+    enabled: username?.length >= 3,
   });
 
-  const form = useForm();
+  const form = useForm({
+    defaultValues: {
+      user_identifier: '',
+    },
+  });
 
   const userIdentifier = form.watch('user_identifier');
 
@@ -46,10 +50,15 @@ export const LookUpWalletAddress = () => {
     setUsername(values.user_identifier);
   };
 
+  const resetComponentState = () => {
+    form.reset({
+      user_identifier: '',
+    });
+    setUsername('');
+  };
   const closeWidget = () => {
     setIsVisible(false);
-    setUsername('');
-    form.reset();
+    resetComponentState();
   };
 
   useKey(
@@ -83,20 +92,29 @@ export const LookUpWalletAddress = () => {
             </label>
             <div className="flex flex-row gap-x-[10px]">
               <div className="relative grow">
-                <input
-                  autoFocus
-                  id="user_identifier"
-                  className="mb-1.5 box-border block h-[38px] w-full rounded border border-[#cccccc] bg-white py-2 pl-3 pr-10 align-middle font-sans text-sm text-[#333333] outline-none"
-                  placeholder="hello@idriss.xyz  |  +1 650...  |  @IDriss_xyz"
-                  {...form.register('user_identifier')}
+                <Controller
+                  name="user_identifier"
+                  control={form.control}
+                  render={({ field }) => {
+                    return (
+                      <input
+                        {...field}
+                        value={field.value}
+                        autoFocus
+                        id="user_identifier"
+                        className="mb-1.5 box-border block h-[38px] w-full rounded border border-[#cccccc] bg-white py-2 pl-3 pr-10 align-middle font-sans text-sm text-[#333333] outline-none"
+                        placeholder="hello@idriss.xyz  |  +1 650...  |  @IDriss_xyz"
+                      />
+                    );
+                  }}
                 />
+
                 {!addressesQuery.isLoading && userIdentifier?.length > 0 && (
                   <IconButton
                     iconProps={{ name: 'Cross1Icon' }}
                     className="absolute right-2 top-1/2 -translate-y-1/2 text-black transition-transform hover:scale-90"
                     onClick={() => {
-                      form.reset();
-                      setUsername('');
+                      resetComponentState();
                     }}
                   />
                 )}
