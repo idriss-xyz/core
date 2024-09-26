@@ -1,5 +1,5 @@
 import { useWallet } from 'shared/web3';
-import { IconButton } from 'shared/ui';
+import { Icon, IconButton } from 'shared/ui';
 import { EXTENSION_POPUP_ROUTE, useExtensionPopup } from 'shared/extension';
 
 import { MainSettingsMenuListItem } from './main-settings-menu-item';
@@ -24,17 +24,17 @@ export const MainSettingsView = () => {
 
       <ul className="shrink-0 grow text-black">
         <MainSettingsMenuListItem
-          prefixIconName="GearIcon"
+          prefix={<Icon name="GearIcon" size={20} />}
           label="Customization"
           onClick={() => {
             extensionPopup.navigate(
               EXTENSION_POPUP_ROUTE.SETTINGS_CUSTOMIZATION,
             );
           }}
-          suffixIconName="ChevronRightIcon"
+          suffix={<Icon name="ChevronRightIcon" size={20} />}
         />
         <MainSettingsMenuListItem
-          prefixIconName="ChatBubbleIcon"
+          prefix={<Icon name="ChatBubbleIcon" size={20} />}
           label={
             <a
               href="https://www.idriss.xyz/discord"
@@ -46,7 +46,7 @@ export const MainSettingsView = () => {
           }
         />
         <MainSettingsMenuListItem
-          prefixIconName={wallet ? 'ExitIcon' : 'EnterIcon'}
+          prefix={<Icon name={wallet ? 'ExitIcon' : 'EnterIcon'} size={20} />}
           label={wallet ? 'Log Out' : 'Log In'}
           onClick={wallet ? removeWalletInfo : openConnectionModal}
         />
