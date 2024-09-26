@@ -4,11 +4,9 @@ import { EXTENSION_POPUP_ROUTE, useExtensionPopup } from 'shared/extension';
 import { Closable } from 'shared/ui';
 
 import { Footer, TopBar } from './components';
-import { HomeView } from './views/home/home';
-import { MainSettingsView } from './views/main-settings/main-settings';
-import { CustomizationSettingsView } from './views/customization-settings/customization-settings';
+import { HomeView, MainSettingsView, CustomizationSettingsView } from './views';
 
-export const App = () => {
+export const ExtensionPopup = () => {
   const extensionPopup = useExtensionPopup();
 
   if (!extensionPopup.isVisible) {

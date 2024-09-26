@@ -7,7 +7,7 @@ import {
 } from 'shared/extension';
 import { TOGGLE_EXTENSION_POPUP_VISIBILITY } from 'shared/messaging';
 
-import { App } from './app';
+import { ExtensionPopup } from './extension-popup';
 
 interface WrappedComponentProperties {
   popupVisible: boolean;
@@ -24,7 +24,7 @@ const WrappedComponent = ({ popupVisible }: WrappedComponentProperties) => {
   return (
     <ExtensionPopupProvider>
       <ExtensionSettingsProvider>
-        <App />
+        <ExtensionPopup />
       </ExtensionSettingsProvider>
     </ExtensionPopupProvider>
   );

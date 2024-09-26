@@ -1,1 +1,1 @@
-export { App as ExtensionPopup } from './app';
+export { ExtensionPopup } from './extension-popup';
