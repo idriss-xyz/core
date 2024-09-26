@@ -6,8 +6,10 @@ import {
   EMPTY_HEX,
   getChainById,
   Hex,
+  TransactionRevertedError,
   Wallet,
 } from 'shared/web3';
+import { useObservabilityScope } from 'shared/observability';
 
 import {
   CHAIN_TO_IDRISS_TIPPING_ADDRESS,
@@ -24,6 +26,8 @@ interface Properties {
 }
 
 export const useErc20Transaction = () => {
+  const observabilityScope = useObservabilityScope();
+
   return useMutation({
     mutationFn: async ({
       tokenAddress,
@@ -68,7 +72,15 @@ export const useErc20Transaction = () => {
           gas,
         });
 
-        await walletClient.waitForTransactionReceipt({ hash: transactionHash });
+        const receipt = await walletClient.waitForTransactionReceipt({
+          hash: transactionHash,
+        });
+
+        if (receipt.status === 'reverted') {
+          const error = new TransactionRevertedError({ transactionHash });
+          observabilityScope.captureException(error);
+          throw error;
+        }
       }
 
       const sendTokenToData = {
@@ -91,7 +103,15 @@ export const useErc20Transaction = () => {
         to: idrissTippingAddress,
         gas,
       });
-      await walletClient.waitForTransactionReceipt({ hash: transactionHash });
+      const receipt = await walletClient.waitForTransactionReceipt({
+        hash: transactionHash,
+      });
+
+      if (receipt.status === 'reverted') {
+        const error = new TransactionRevertedError({ transactionHash });
+        observabilityScope.captureException(error);
+        throw error;
+      }
 
       return { transactionHash };
     },

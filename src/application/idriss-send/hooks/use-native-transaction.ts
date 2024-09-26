@@ -6,8 +6,10 @@ import {
   EMPTY_HEX,
   getChainById,
   Hex,
+  TransactionRevertedError,
   Wallet,
 } from 'shared/web3';
+import { useObservabilityScope } from 'shared/observability';
 
 import { CHAIN_TO_IDRISS_TIPPING_ADDRESS, TIPPING_ABI } from '../constants';
 
@@ -19,6 +21,8 @@ interface Properties {
 }
 
 export const useNativeTransaction = () => {
+  const observabilityScope = useObservabilityScope();
+
   return useMutation({
     mutationFn: async ({
       recipientAddress,
@@ -54,7 +58,15 @@ export const useNativeTransaction = () => {
         gas,
       });
 
-      await walletClient.waitForTransactionReceipt({ hash: transactionHash });
+      const receipt = await walletClient.waitForTransactionReceipt({
+        hash: transactionHash,
+      });
+
+      if (receipt.status === 'reverted') {
+        const error = new TransactionRevertedError({ transactionHash });
+        observabilityScope.captureException(error);
+        throw error;
+      }
 
       return { transactionHash };
     },

@@ -44,8 +44,6 @@ export class ContentScript {
     const script = document.createElement('script');
 
     script.src = this.environment.runtime.getURL('webpage-script.js');
-    script.dataset.testid = 'idriss-injected-script'; // TODO: constant in shared/extension
-    script.id = chrome.runtime.id;
     document.body.append(script);
   }
 

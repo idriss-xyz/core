@@ -11,9 +11,11 @@ import {
   GetAcrossChainFeeCommand,
   getChainById,
   Hex,
+  TransactionRevertedError,
   Wallet,
 } from 'shared/web3';
 import { useCommandMutation } from 'shared/messaging';
+import { useObservabilityScope } from 'shared/observability';
 
 import { generateVote, getDonationContractAddress } from '../utils';
 import {
@@ -33,6 +35,7 @@ interface Properties {
 
 export const useAcrossDonateTransaction = () => {
   const checkAcrossChainFee = useCommandMutation(GetAcrossChainFeeCommand);
+  const observabilityScope = useObservabilityScope();
 
   return useMutation({
     mutationFn: async ({
@@ -159,7 +162,14 @@ export const useAcrossDonateTransaction = () => {
         value: inputAmount,
       });
 
-      await walletClient.waitForTransactionReceipt({ hash: transactionHash });
+      const receipt = await walletClient.waitForTransactionReceipt({
+        hash: transactionHash,
+      });
+      if (receipt.status === 'reverted') {
+        const error = new TransactionRevertedError({ transactionHash });
+        observabilityScope.captureException(error);
+        throw error;
+      }
 
       return { transactionHash };
     },

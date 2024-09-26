@@ -50,7 +50,7 @@ export class GetFunderAddresCommand extends Command<Payload, Hex> {
       const safesCreatedByPolymarket = safesCreationResponse.find(Boolean);
       const pickedSafe = safesCreatedByPolymarket;
       if (!pickedSafe) {
-        throw new HandlerError();
+        return new FailureResult(); // user does not have safe account, we don't want to capture this as an exception
       }
       const validationResult = hexSchema.safeParse(pickedSafe);
       if (!validationResult.success) {
