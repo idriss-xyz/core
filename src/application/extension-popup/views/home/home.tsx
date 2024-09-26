@@ -26,41 +26,66 @@ export const HomeView = () => {
       </header>
 
       <div className="grid w-full grid-cols-2 gap-3 px-3">
-        <SectionTile
+        <a
           href="https://x.com/IDriss_xyz/status/1729258820441170160"
-          icons={[{ iconSrc: IDRISS_ICON, iconAlt: 'Tipping Icon' }]}
-          title="Tipping Badges"
-          subtitle="Send crypto on X and Farcaster"
-        />
-
-        <SectionTile
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <SectionTile
+            icons={[{ iconSrc: IDRISS_ICON, iconAlt: 'Tipping Icon' }]}
+            title="Tipping Badges"
+            subtitle="Send crypto on X and Farcaster"
+            className="transition-transform duration-[600ms] hover:scale-105 hover:bg-gray-50"
+          />
+        </a>
+        <a
           href="https://x.com/IDriss_xyz/status/1761049574691819798"
-          icons={[
-            { iconSrc: AGORA_LOGO, iconAlt: 'Agora Logo', className: 'size-6' },
-            {
-              iconSrc: SNAPSHOT_LOGO,
-              iconAlt: 'Snapshot Logo',
-              className: 'size-6',
-            },
-            { iconSrc: TALLY_LOGO, iconAlt: 'Tally Logo', className: 'size-6' },
-          ]}
-          title="Governance Widget"
-          subtitle="Get alerts about active DAO votes"
-          iconContainerClassName="mt-2"
-        />
-
-        <SectionTile
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <SectionTile
+            icons={[
+              {
+                iconSrc: AGORA_LOGO,
+                iconAlt: 'Agora Logo',
+                className: 'size-6',
+              },
+              {
+                iconSrc: SNAPSHOT_LOGO,
+                iconAlt: 'Snapshot Logo',
+                className: 'size-6',
+              },
+              {
+                iconSrc: TALLY_LOGO,
+                iconAlt: 'Tally Logo',
+                className: 'size-6',
+              },
+            ]}
+            title="Governance Widget"
+            subtitle="Get alerts about active DAO votes"
+            iconContainerClassName="mt-2"
+            className="transition-transform duration-[600ms] hover:scale-105 hover:bg-gray-50"
+          />
+        </a>
+        <a
           href="https://x.com/IDriss_xyz/status/1780582103396266085"
-          icons={[{ iconSrc: POLYMARKET_LOGO, iconAlt: 'Polymarket Logo' }]}
-          title="Polymarket Widget"
-          subtitle="Trade directly from your X feed"
-        />
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <SectionTile
+            icons={[{ iconSrc: POLYMARKET_LOGO, iconAlt: 'Polymarket Logo' }]}
+            title="Polymarket Widget"
+            subtitle="Trade directly from your X feed"
+            className="transition-transform duration-[600ms] hover:scale-105 hover:bg-gray-50"
+          />
+        </a>
 
         <SectionTile
           icons={[{ iconSrc: TRADING_COPILOT_LOGO, iconAlt: 'Trading Icon' }]}
           title="Trading Copilot"
           subtitle="Coming soon"
-          disabled
+          className="cursor-not-allowed bg-gray-200 opacity-50"
+          hideExternalLinkIcon
         />
       </div>
 

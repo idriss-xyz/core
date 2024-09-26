@@ -7,10 +7,10 @@ interface SectionTileIconProperties {
 }
 interface SectionTileProperties {
   title: string;
-  subtitle: string;
   icons: SectionTileIconProperties[];
-  href?: string;
-  disabled?: boolean;
+  subtitle: string;
+  className?: string;
+  hideExternalLinkIcon?: boolean;
   iconContainerClassName?: string;
 }
 
@@ -18,20 +18,15 @@ export const SectionTile = ({
   icons,
   title,
   subtitle,
-  href,
-  disabled,
+  className,
+  hideExternalLinkIcon,
   iconContainerClassName,
 }: SectionTileProperties) => {
   return (
-    <a
-      href={href}
-      target={href ? '_blank' : undefined}
-      rel={href ? 'noopener noreferrer' : undefined}
+    <div
       className={classes(
         'relative rounded-lg p-4 text-center shadow-md',
-        !disabled &&
-          'transition-transform duration-[600ms] hover:scale-105 hover:bg-gray-50',
-        disabled && 'cursor-not-allowed bg-gray-200 opacity-50',
+        className,
       )}
     >
       <div
@@ -55,11 +50,11 @@ export const SectionTile = ({
       <p className="text-xs text-gray-500">{subtitle}</p>
 
       {/* <!-- External link icon in the top-right corner --> */}
-      {!disabled && !!href && (
+      {!hideExternalLinkIcon && (
         <div className="absolute right-2 top-2">
           <Icon name="ExternalLinkIcon" size={14} className="text-gray-500" />
         </div>
       )}
-    </a>
+    </div>
   );
 };
