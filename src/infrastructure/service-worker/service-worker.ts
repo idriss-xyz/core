@@ -43,10 +43,8 @@ const COMMAND_MAP = {
 };
 
 export class ServiceWorker {
-  private observabilityScope: ObservabilityScope = createObservabilityScope(
-    'service-worker',
-    chrome.runtime.id,
-  );
+  private observabilityScope: ObservabilityScope =
+    createObservabilityScope('service-worker');
   private constructor(private environment: typeof chrome) {}
 
   static run(environment: typeof chrome, onInstalled: () => void) {

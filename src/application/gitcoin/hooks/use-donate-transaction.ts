@@ -1,7 +1,13 @@
 import { useMutation } from '@tanstack/react-query';
 import { encodeFunctionData } from 'viem';
 
-import { createWalletClient, getChainById, Wallet } from 'shared/web3';
+import {
+  createWalletClient,
+  getChainById,
+  TransactionRevertedError,
+  Wallet,
+} from 'shared/web3';
+import { useObservabilityScope } from 'shared/observability';
 
 import { Application } from '../types';
 import { generateVote } from '../utils';
@@ -15,6 +21,8 @@ interface Properties {
 }
 
 export const useDonateTransaction = () => {
+  const observabilityScope = useObservabilityScope();
+
   return useMutation({
     mutationFn: async ({
       wallet,
@@ -43,9 +51,15 @@ export const useDonateTransaction = () => {
         chain: getChainById(chainId),
       });
 
-      await walletClient.waitForTransactionReceipt({
+      const receipt = await walletClient.waitForTransactionReceipt({
         hash: transactionHash,
       });
+      if (receipt.status === 'reverted') {
+        const error = new TransactionRevertedError({ transactionHash });
+        observabilityScope.captureException(error);
+        throw error;
+      }
+
       return { transactionHash };
     },
   });

@@ -45,6 +45,10 @@ export class GetTokensBooksCommand extends Command<Payload, TokenIdToBook> {
       const result: TokenIdToBook = Object.fromEntries(responses);
       return new OkResult(result);
     } catch (error) {
+      if (error instanceof HandlerResponseError && error.statusCode === 404) {
+        // polymarket api returns 404 if market is closed, we don't want to capture this exception
+        return new FailureResult('Books does not exist for these tokens');
+      }
       this.captureException(error);
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);

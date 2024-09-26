@@ -30,3 +30,4 @@ export {
   GetAcrossChainFeeCommand,
   GetWalletByEnsNameCommand,
 } from './commands';
+export { TransactionRevertedError } from './errors';

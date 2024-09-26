@@ -31,9 +31,8 @@ module.exports = {
     'plugin:react-hooks/recommended',
     'plugin:tailwindcss/recommended',
     'plugin:@tanstack/eslint-plugin-query/recommended',
-    'prettier',
-    'plugin:prettier/recommended',
     'plugin:storybook/recommended',
+    'prettier',
   ],
   settings: {
     'react': {
@@ -178,11 +177,11 @@ module.exports = {
         checksVoidReturn: false,
       },
     ],
+    'import/namespace': 'off', // turned off because this rule is slow
     'react/self-closing-comp': 'error',
     'react/jsx-boolean-value': ['error', 'never'],
     'import/prefer-default-export': 'off',
     'import/no-default-export': 'error',
-    'prettier/prettier': 'error',
     '@typescript-eslint/no-unused-vars': [
       'warn',
       { argsIgnorePattern: '^_', ignoreRestSiblings: true },
