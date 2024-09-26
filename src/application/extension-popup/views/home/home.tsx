@@ -18,7 +18,7 @@ export const HomeView = () => {
     <div className="flex max-w-[470px] grow flex-col items-center bg-gray-100 px-1 py-4">
       <header className="mb-4 text-center">
         <h1 className="mb-1 text-xl font-bold text-black">
-          GM, it&apos;s your web3 copilot speaking
+          {`GM, it's your web3 copilot speaking`}
         </h1>
         <p className="text-sm text-gray-600">
           Explore your favorite features below
