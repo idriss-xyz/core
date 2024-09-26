@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useKey } from 'react-use';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
 import { useCommandQuery } from 'shared/messaging';
 import { Closable, IconButton, Spinner } from 'shared/ui';
@@ -8,6 +8,15 @@ import { useExtensionSettings } from 'shared/extension';
 
 import { GetResolvedAddressCommand, GetTwitterIdsCommand } from './commands';
 import { AddressList } from './address-list';
+import { isShortcut } from './utils';
+
+interface LookupFormValues {
+  userIdentifier: string;
+}
+
+const EMPTY_LOOKUP_FORM_VALUES: LookupFormValues = {
+  userIdentifier: '',
+};
 
 export const LookUpWalletAddress = () => {
   const [username, setUsername] = useState('');
@@ -36,17 +45,13 @@ export const LookUpWalletAddress = () => {
     enabled: username?.length >= 3,
   });
 
-  const form = useForm({
-    defaultValues: {
-      userIdentifier: '',
-    },
+  const form = useForm<LookupFormValues>({
+    defaultValues: EMPTY_LOOKUP_FORM_VALUES,
   });
-
   const userIdentifier = form.watch('userIdentifier');
 
-  const onSubmit = () => {
-    const values = form.getValues();
-    setUsername(values.userIdentifier);
+  const onSubmit: SubmitHandler<LookupFormValues> = (data) => {
+    setUsername(data.userIdentifier);
   };
 
   const resetComponentState = () => {
@@ -60,16 +65,13 @@ export const LookUpWalletAddress = () => {
     resetComponentState();
   };
 
-  useKey(
-    (event) => {
-      return event.ctrlKey && event.key === 'i';
-    },
-    () => {
-      return setIsVisible((previous) => {
-        return !previous;
-      });
-    },
-  );
+  const toggleVisibility = () => {
+    setIsVisible((previous) => {
+      return !previous;
+    });
+  };
+
+  useKey(isShortcut, toggleVisibility);
 
   if (!isVisible || !isEnabled) {
     return null;

@@ -26,3 +26,7 @@ export const digestMessage = async (message: string) => {
     .join(''); // convert bytes to hex string
   return hashHex;
 };
+
+export const isShortcut = (event: KeyboardEvent) => {
+  return event.ctrlKey && event.key === 'i';
+};
