@@ -5,7 +5,6 @@ import {
   OkResult,
 } from 'shared/messaging';
 
-import { TwitterIdsResponse } from '../types';
 import { generateGetTwitterIdsQuery } from '../utils';
 import { twitterIdSchema } from '../schema';
 
@@ -13,7 +12,7 @@ interface Payload {
   username: string;
 }
 
-export class GetTwitterIdsCommand extends Command<Payload, TwitterIdsResponse> {
+export class GetTwitterIdsCommand extends Command<Payload, string | null> {
   public readonly name = 'GetTwitterIdsCommand' as const;
 
   constructor(public payload: Payload) {
@@ -41,8 +40,11 @@ export class GetTwitterIdsCommand extends Command<Payload, TwitterIdsResponse> {
       const json = await response.json();
 
       const validResponse = twitterIdSchema.parse(json);
-
-      return new OkResult(validResponse);
+      /** the response usernames do not start with the '@' */
+      const formattedUsername = this.payload.username.startsWith('@')
+        ? this.payload.username.slice(1)
+        : this.payload.username;
+      return new OkResult(validResponse.twitterIDs[formattedUsername] ?? null);
     } catch (error) {
       this.captureException(error);
       if (error instanceof HandlerError) {

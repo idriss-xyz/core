@@ -24,14 +24,13 @@ export const LookUpWalletAddress = () => {
       username,
     }),
     staleTime: Number.POSITIVE_INFINITY,
+    enabled: username?.length >= 3,
   });
 
   const addressesQuery = useCommandQuery({
     command: new GetResolvedAddressCommand({
       identifier: username,
-      twitterId: twitterIdsQuery.data?.twitterIDs
-        ? Object.values(twitterIdsQuery.data?.twitterIDs)[0]
-        : undefined,
+      twitterId: twitterIdsQuery.data ?? undefined,
     }),
     staleTime: Number.POSITIVE_INFINITY,
     enabled: username?.length >= 3,
