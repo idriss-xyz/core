@@ -34,6 +34,10 @@ export const CustomizationSettingsView = () => {
     return customizationSettings;
   }, [extensionSettings]);
 
+  /**we are using the previousFormValues ref to detect:
+    - if the formValues changed and the extension settings should be updated 
+    - if the extension settings changed (e.g. in another tab) and the form values should be updated
+  */
   const previousFormValues = useRef<ExtensionSettingsFormValues>(
     customizationSettings,
   );
