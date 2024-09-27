@@ -8,26 +8,18 @@ import { CheckboxProperties } from './checkbox.types';
 
 export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProperties>(
   (
-    {
-      indicator,
-      label,
-      disabled,
-      value,
-      className,
-      disabledTooltipText,
-      onChange,
-    },
+    { indicator, label, disabled, value, className, title, onChange },
     reference,
   ) => {
     return (
       <label className="flex items-center">
         <RadixCheckbox.Root
           ref={reference}
-          title={disabled ? disabledTooltipText : undefined}
+          title={title}
           className={classes(
             'flex size-[22px] appearance-none items-center justify-center rounded-[4px] bg-gray-100 shadow-[0_0_0_1px_black] outline-none hover:bg-gray-200 focus:shadow-[0_0_0_1px_gray]',
+            'disabled:cursor-not-allowed disabled:opacity-60 disabled:brightness-90 disabled:grayscale',
             className,
-            disabled && 'cursor-not-allowed opacity-60 brightness-90 grayscale',
           )}
           disabled={disabled}
           checked={value}
@@ -40,7 +32,7 @@ export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProperties>(
             {indicator ?? <CheckIcon />}
           </RadixCheckbox.Indicator>
         </RadixCheckbox.Root>
-        <span className="pl-[15px] text-[15px] leading-none">{label}</span>
+        <span className="pl-4 text-sm leading-none">{label}</span>
       </label>
     );
   },

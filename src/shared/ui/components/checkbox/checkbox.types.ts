@@ -7,5 +7,5 @@ export interface CheckboxProperties {
   indicator?: ReactNode;
   disabled?: boolean;
   className?: string;
-  disabledTooltipText?: string;
+  title?: string;
 }

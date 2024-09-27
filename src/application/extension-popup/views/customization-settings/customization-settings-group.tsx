@@ -67,7 +67,11 @@ export const CustomizationSettingsGroup = ({
           }
           onChange={toggleGroup}
           disabled={disabled}
-          disabledTooltipText="Enable the extension to modify these settings"
+          title={
+            disabled
+              ? 'Enable the extension to modify these settings'
+              : undefined
+          }
         />
       </div>
       <div className="flex flex-col pb-3 last:pb-0">
@@ -86,7 +90,11 @@ export const CustomizationSettingsGroup = ({
                       {...field}
                       indicator={disabled ? <></> : undefined}
                       disabled={disabled}
-                      disabledTooltipText="Enable the extension to modify these settings"
+                      title={
+                        disabled
+                          ? 'Enable the extension to modify these settings'
+                          : undefined
+                      }
                       label={settingListItem.label}
                     />
                   );
