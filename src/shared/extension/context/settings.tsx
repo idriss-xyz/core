@@ -8,19 +8,18 @@ import {
   GET_EXTENSION_SETTINGS_RESPONSE,
 } from '../constants';
 import { ManageExtensionSettingsCommand } from '../commands';
-import { ExtensionSettingsStorageKey } from '../extension-settings-manager';
-import { createInitialExtensionSettingsStorageKeys } from '../utils';
 import { ExtensionSettings } from '../types';
+import { createInitialExtensionSettingsStorageKeys } from '../utils';
 
 interface Properties {
   children: ReactNode;
 }
 
-const initialExtensionSettings: Record<ExtensionSettingsStorageKey, boolean> =
+const initialExtensionSettings: ExtensionSettings =
   createInitialExtensionSettingsStorageKeys();
 
 interface ExtensionSettingsContextValues {
-  extensionSettings: Record<ExtensionSettingsStorageKey, boolean>;
+  extensionSettings: ExtensionSettings;
   changeExtensionSetting: (
     settings: Partial<ExtensionSettings>,
   ) => Promise<void>;
@@ -31,9 +30,9 @@ const ExtensionSettingsContext = createContext<
 >(undefined);
 
 export const ExtensionSettingsProvider = ({ children }: Properties) => {
-  const [extensionSettings, setExtensionSettings] = useState<
-    Record<ExtensionSettingsStorageKey, boolean>
-  >(initialExtensionSettings);
+  const [extensionSettings, setExtensionSettings] = useState<ExtensionSettings>(
+    initialExtensionSettings,
+  );
 
   const changeExtensionSetting = async (
     settings: Partial<ExtensionSettings>,
@@ -45,8 +44,9 @@ export const ExtensionSettingsProvider = ({ children }: Properties) => {
     setExtensionSettings(extensionSettings);
   };
 
+  // TODO: check if this could be achievable with usage of react-query
   useEffect(() => {
-    onWindowMessage<Record<ExtensionSettingsStorageKey, boolean>>(
+    onWindowMessage<ExtensionSettings>(
       GET_EXTENSION_SETTINGS_RESPONSE,
       async (settings) => {
         if (Object.keys(settings).length === 0) {

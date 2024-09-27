@@ -1,8 +1,6 @@
-import { ACTIVE_TAB_CHANGED } from 'infrastructure/constants';
-import {
-  EXTENSION_BUTTON_CLICKED,
-  ServiceWorker,
-} from 'infrastructure/service-worker';
+import { ServiceWorker } from 'infrastructure/service-worker';
+// eslint-disable-next-line boundaries/element-types
+import { ACTIVE_TAB_CHANGED, EXTENSION_BUTTON_CLICKED } from 'shared/extension';
 
 const keepAlive = () => {
   return setInterval(chrome.runtime.getPlatformInfo, 20e3);

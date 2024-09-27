@@ -59,7 +59,7 @@ const InnerExtensionPopupProvider = ({ children }: Properties) => {
   }, []);
 
   useEffect(() => {
-    onWindowMessage<void>(TOGGLE_EXTENSION_POPUP_VISIBILITY, () => {
+    onWindowMessage(TOGGLE_EXTENSION_POPUP_VISIBILITY, () => {
       toggleVisibility();
     });
   }, [toggleVisibility]);

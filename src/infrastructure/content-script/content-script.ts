@@ -11,11 +11,9 @@ import {
   ExtensionSettingsManager,
   GET_EXTENSION_SETTINGS_REQUEST,
   GET_EXTENSION_SETTINGS_RESPONSE,
-} from 'shared/extension';
-import {
-  ACTIVE_TAB_CHANGED,
   EXTENSION_BUTTON_CLICKED,
-} from 'infrastructure/constants';
+  ACTIVE_TAB_CHANGED,
+} from 'shared/extension';
 import { Hex } from 'shared/web3';
 
 export class ContentScript {
@@ -116,6 +114,7 @@ export class ContentScript {
     });
   }
 
+  // TODO: move these message names to constants in shared/web3
   subscribeToWallet() {
     onWindowMessage('GET_WALLET', async () => {
       const maybeWallet = await ExtensionSettingsManager.getWallet();

@@ -1,3 +1,4 @@
+import { SETTINGS_STORAGE_KEY } from 'shared/extension';
 import css from './popup.scss';
 
 export class AbstractPageManager {
@@ -81,13 +82,11 @@ export class AbstractPageManager {
 
   isEnabled() {
     return new Promise((r) =>
-      chrome.storage.local.get(
-        ['wallet-lookup-enabled', 'entire-extension-enabled'],
-        (x) =>
-          r(
-            (x?.['entire-extension-enabled'] && x?.['wallet-lookup-enabled']) ??
-              true,
-          ),
+      chrome.storage.local.get([SETTINGS_STORAGE_KEY], (x) =>
+        r(
+          x?.[SETTINGS_STORAGE_KEY]['entire-extension-enabled'] &&
+            x?.[SETTINGS_STORAGE_KEY]['wallet-lookup-enabled'],
+        ),
       ),
     );
   }

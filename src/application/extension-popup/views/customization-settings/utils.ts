@@ -7,7 +7,7 @@ import { SettingListItemsGroup } from './types';
 
 const isAnySettingInGroupEnabled = (
   group: SettingListItemsGroup<ExtensionSettingsStorageKey>,
-  extensionSettings: Record<ExtensionSettingsStorageKey, boolean>,
+  extensionSettings: ExtensionSettings,
 ) => {
   return group.settingListItems
     .map((setting) => {
@@ -18,7 +18,7 @@ const isAnySettingInGroupEnabled = (
 
 export const isWholeGroupEnabled = (
   group: SettingListItemsGroup<ExtensionSettingsStorageKey>,
-  extensionSettings: Record<ExtensionSettingsStorageKey, boolean>,
+  extensionSettings: ExtensionSettings,
 ) => {
   return group.settingListItems
     .map((setting) => {
@@ -29,7 +29,7 @@ export const isWholeGroupEnabled = (
 
 export const isGroupOnlyPartiallyEnabled = (
   group: SettingListItemsGroup<ExtensionSettingsStorageKey>,
-  extensionSettings: Record<ExtensionSettingsStorageKey, boolean>,
+  extensionSettings: ExtensionSettings,
 ) => {
   return (
     isAnySettingInGroupEnabled(group, extensionSettings) &&

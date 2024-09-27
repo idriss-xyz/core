@@ -13,9 +13,7 @@ export const Toggle = ({ value, onChange }: ToggleProperties) => {
           'bg-[#11dd7488]': value,
         },
       )}
-      onCheckedChange={(value) => {
-        onChange(value);
-      }}
+      onCheckedChange={onChange}
       checked={value}
     >
       <Switch.Thumb

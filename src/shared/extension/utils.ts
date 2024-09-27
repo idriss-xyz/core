@@ -1,7 +1,5 @@
-import {
-  ExtensionSettingsStorageKey,
-  extensionSettingsStorageKeys,
-} from './extension-settings-manager';
+import { ExtensionSettings, ExtensionSettingsStorageKey } from './types';
+import { extensionSettingsStorageKeys } from './constants';
 
 const initiallyDisabledExtensionSettingsStorageKeys: ExtensionSettingsStorageKey[] =
   [] as const;
@@ -14,5 +12,5 @@ export const createInitialExtensionSettingsStorageKeys = () => {
         !initiallyDisabledExtensionSettingsStorageKeys.includes(key),
       ];
     }),
-  ) as Record<ExtensionSettingsStorageKey, boolean>;
+  ) as ExtensionSettings;
 };

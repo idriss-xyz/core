@@ -1,4 +1,4 @@
-export const onWindowMessage = <T>(
+export const onWindowMessage = <T = unknown>(
   type: string,
   callback: (data: T, removeListener: () => void) => void,
 ) => {
