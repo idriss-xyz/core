@@ -3,28 +3,6 @@ export const regPh =
 export const regM = /^[\w.-]+@[\d.A-Za-z-]+\.[A-Za-z]{2,}/;
 export const regT = /^@\w{1,15}$/;
 
-export const MULTIRESOLVER_ADDRESS =
-  '0xd7F1f92079B8c2563D8989aD4d08ca8BFA602Ca7';
-export const MULTIRESOLVER_ABI = [
-  {
-    inputs: [{ internalType: 'string[]', name: 'hashes', type: 'string[]' }],
-    name: 'getMultipleIDriss',
-    outputs: [
-      {
-        components: [
-          { internalType: 'string', name: 'hash', type: 'string' },
-          { internalType: 'string', name: 'result', type: 'string' },
-        ],
-        internalType: 'struct IDrissWrapperContract.IDrissResult[]',
-        name: '',
-        type: 'tuple[]',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-];
-
 export const walletTags = {
   evm: {
     ETH: {
