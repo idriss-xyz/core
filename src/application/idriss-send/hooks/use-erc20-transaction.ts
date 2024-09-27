@@ -1,7 +1,15 @@
 import { useMutation } from '@tanstack/react-query';
-import { BigNumber } from 'ethers';
+import { encodeFunctionData } from 'viem';
 
-import { Hex, Wallet, createContract, createSigner } from 'shared/web3';
+import {
+  createWalletClient,
+  EMPTY_HEX,
+  getChainById,
+  Hex,
+  TransactionRevertedError,
+  Wallet,
+} from 'shared/web3';
+import { useObservabilityScope } from 'shared/observability';
 
 import {
   CHAIN_TO_IDRISS_TIPPING_ADDRESS,
@@ -13,11 +21,13 @@ interface Properties {
   tokenAddress: Hex;
   chainId: number;
   wallet: Wallet;
-  tokensToSend: BigNumber;
+  tokensToSend: bigint;
   recipientAddress: Hex;
 }
 
 export const useErc20Transaction = () => {
+  const observabilityScope = useObservabilityScope();
+
   return useMutation({
     mutationFn: async ({
       tokenAddress,
@@ -26,75 +36,82 @@ export const useErc20Transaction = () => {
       tokensToSend,
       recipientAddress,
     }: Properties) => {
-      const signer = createSigner(wallet);
+      const walletClient = createWalletClient(wallet);
 
-      const tippingContract = createContract({
-        abi: TIPPING_ABI,
-        address: CHAIN_TO_IDRISS_TIPPING_ADDRESS[chainId] ?? '',
-        signerOrProvider: signer,
-      });
+      const idrissTippingAddress =
+        CHAIN_TO_IDRISS_TIPPING_ADDRESS[chainId] ?? EMPTY_HEX;
 
-      const erc20Contract = createContract({
+      const allowanceData = {
         abi: ERC20_ABI,
+        functionName: 'allowance',
+        args: [wallet.account, idrissTippingAddress],
+      } as const;
+      const allowance = await walletClient.readContract({
+        ...allowanceData,
         address: tokenAddress,
-        signerOrProvider: signer,
       });
 
-      const [allowance] = (await erc20Contract.functions.allowance?.(
-        wallet.account,
-        CHAIN_TO_IDRISS_TIPPING_ADDRESS[chainId] ?? '',
-      )) as [BigNumber];
-
-      if (allowance.lt(tokensToSend)) {
-        const gas = await erc20Contract.estimateGas.approve?.(
-          CHAIN_TO_IDRISS_TIPPING_ADDRESS[chainId] ?? '',
-          tokensToSend,
-          {
-            value: 0,
-            from: wallet.account,
-          },
-        );
-
-        const populatedTransaction =
-          await erc20Contract.populateTransaction.approve?.(
-            CHAIN_TO_IDRISS_TIPPING_ADDRESS[chainId] ?? '',
-            tokensToSend,
-          );
-
-        const result = await signer.sendTransaction({
-          ...populatedTransaction,
-          value: 0,
-          gasLimit: gas,
+      if (allowance < tokensToSend) {
+        const approveData = {
+          abi: ERC20_ABI,
+          functionName: 'approve',
+          args: [idrissTippingAddress, tokensToSend],
+        } as const;
+        const gas = await walletClient.estimateContractGas({
+          ...approveData,
+          address: tokenAddress,
+          account: wallet.account,
         });
 
-        await result.wait();
+        const encodedData = encodeFunctionData(approveData);
+
+        const transactionHash = await walletClient.sendTransaction({
+          chain: getChainById(chainId),
+          to: tokenAddress,
+          data: encodedData,
+          gas,
+        });
+
+        const receipt = await walletClient.waitForTransactionReceipt({
+          hash: transactionHash,
+        });
+
+        if (receipt.status === 'reverted') {
+          const error = new TransactionRevertedError({ transactionHash });
+          observabilityScope.captureException(error);
+          throw error;
+        }
       }
-      const gas = await tippingContract.estimateGas.sendTokenTo?.(
-        recipientAddress,
-        tokensToSend,
-        tokenAddress,
-        '',
-        {
-          value: 0,
-          from: wallet.account,
-        },
-      );
 
-      const populatedTransaction =
-        await tippingContract.populateTransaction.sendTokenTo?.(
-          recipientAddress,
-          tokensToSend,
-          tokenAddress,
-          '',
-        );
+      const sendTokenToData = {
+        abi: TIPPING_ABI,
+        functionName: 'sendTokenTo',
+        args: [recipientAddress, tokensToSend, tokenAddress, ''],
+      } as const;
 
-      const result = await signer.sendTransaction({
-        ...populatedTransaction,
-        value: 0,
-        gasLimit: gas,
+      const gas = await walletClient.estimateContractGas({
+        ...sendTokenToData,
+        address: idrissTippingAddress,
+        account: wallet.account,
       });
 
-      const { transactionHash } = await result.wait();
+      const data = encodeFunctionData(sendTokenToData);
+
+      const transactionHash = await walletClient.sendTransaction({
+        chain: getChainById(chainId),
+        data: data,
+        to: idrissTippingAddress,
+        gas,
+      });
+      const receipt = await walletClient.waitForTransactionReceipt({
+        hash: transactionHash,
+      });
+
+      if (receipt.status === 'reverted') {
+        const error = new TransactionRevertedError({ transactionHash });
+        observabilityScope.captureException(error);
+        throw error;
+      }
 
       return { transactionHash };
     },

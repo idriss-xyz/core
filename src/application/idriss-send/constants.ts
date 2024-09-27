@@ -200,7 +200,7 @@ export const ERC20_ABI = [
     stateMutability: 'nonpayable',
     type: 'function',
   },
-];
+] as const;
 
 export const TIPPING_ABI = [
   {
@@ -679,7 +679,7 @@ export const TIPPING_ABI = [
     stateMutability: 'nonpayable',
     type: 'function',
   },
-];
+] as const;
 
 export const CHAIN_TO_IDRISS_TIPPING_ADDRESS = {
   [CHAIN.POLYGON.id]: '0xe35B356ac2c880cCcc769bA9393F0748d94ABBCa',
@@ -692,7 +692,7 @@ export const CHAIN_TO_IDRISS_TIPPING_ADDRESS = {
   [CHAIN.MANTLE.id]: '0x324Ad1738B9308D5AF5E81eDd6389BFa082a8968',
   [CHAIN.SCROLL.id]: '0x324ad1738b9308d5af5e81edd6389bfa082a8968',
   [CHAIN.ALEPH.id]: '0xcA6742d2d6B9dBFFD841DF25C15cFf45FBbB98f4',
-};
+} as const;
 
 export const ICON_TYPE_TO_SRC: Record<IconType, string> = {
   redBadge: IDRISS_RED_ICON,

@@ -2,6 +2,7 @@ import { memo, useCallback, useState } from 'react';
 
 import { IdrissSend } from 'shared/idriss';
 import {
+  EMPTY_HEX,
   GetTokenPriceCommand,
   TOKEN,
   ethToDollars,
@@ -178,7 +179,7 @@ const Base = ({ widgetData, onClose }: BaseProperties) => {
             <IdrissSend.Success
               onConfirm={close}
               chainId={chainId}
-              transactionHash={donationMaker.data?.transactionHash ?? ''}
+              transactionHash={donationMaker.data?.transactionHash ?? EMPTY_HEX}
             />
           );
         }

@@ -30,7 +30,7 @@ export const useDonationMaker = ({ wallet }: Properties) => {
 
       await switchChain.mutateAsync({
         chainId: options.chainId,
-        walletProvider: wallet.provider,
+        wallet,
       });
 
       const userAmountInWei = String(dollarToWei(options.amount, ethPerDollar));
@@ -40,6 +40,7 @@ export const useDonationMaker = ({ wallet }: Properties) => {
           userAmountInWei,
           application,
           wallet,
+          chainId: options.chainId,
         });
       } else {
         acrossDonateTransaction.mutate({

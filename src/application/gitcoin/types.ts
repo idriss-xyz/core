@@ -16,12 +16,3 @@ export interface WidgetData {
   application: Application;
   type: 'gitcoin';
 }
-export interface CrossChainDonationData {
-  chainId: number;
-  roundId: number;
-  donor: string;
-  voteParams: string;
-  nonce: number;
-  validUntil: number;
-  verifyingContract: string;
-}

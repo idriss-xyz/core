@@ -1,13 +1,12 @@
 import { useCommandQuery } from 'shared/messaging';
-import { EMPTY_HEX } from 'shared/web3';
 
 import {
-  DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID,
   GITCOIN_DONATION_CHAINS_IDS,
   WRAPPED_ETH_ADDRESS_PER_CHAIN_ID,
 } from '../constants';
 import { Application } from '../types';
 import { GetGitcoinAcrossChainFeesCommand } from '../commands';
+import { getDonationContractAddress } from '../utils';
 
 interface Properties {
   application: Application;
@@ -21,9 +20,7 @@ export const useFees = ({ application, amountInWei, enabled }: Properties) => {
       amount: amountInWei,
       roundId: Number(application.roundId),
       anchorAddress: application.project.anchorAddress,
-      recipient:
-        DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[application.chainId] ??
-        EMPTY_HEX,
+      recipient: getDonationContractAddress(application.chainId),
       destinationChainId: application.chainId,
       chains: GITCOIN_DONATION_CHAINS_IDS.filter((id) => {
         return id !== application.chainId;

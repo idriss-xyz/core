@@ -5,12 +5,13 @@ import {
   HandlerResponseError,
   OkResult,
 } from 'shared/messaging';
+import { Hex, hexSchema } from 'shared/web3';
 
-interface Payload {
-  address: string;
-}
+type Payload = {
+  address: Hex;
+};
 
-export class GetFunderAddresCommand extends Command<Payload, string> {
+export class GetFunderAddresCommand extends Command<Payload, Hex> {
   public name = 'GetFunderAddresCommand' as const;
 
   constructor(public payload: Payload) {
@@ -49,9 +50,13 @@ export class GetFunderAddresCommand extends Command<Payload, string> {
       const safesCreatedByPolymarket = safesCreationResponse.find(Boolean);
       const pickedSafe = safesCreatedByPolymarket;
       if (!pickedSafe) {
-        throw new HandlerError();
+        return new FailureResult(); // user does not have safe account, we don't want to capture this as an exception
       }
-      return new OkResult(pickedSafe);
+      const validationResult = hexSchema.safeParse(pickedSafe);
+      if (!validationResult.success) {
+        throw new HandlerError('Schema validation failed');
+      }
+      return new OkResult(validationResult.data);
     } catch (error) {
       this.captureException(error);
       if (error instanceof HandlerError) {

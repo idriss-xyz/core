@@ -21,7 +21,16 @@ export interface SerializedCommand<Payload> {
   payload: Payload;
 }
 
-export abstract class Command<Payload, ExpectedResponse> {
+// https://hackernoon.com/mastering-type-safe-json-serialization-in-typescript
+type JsonPrimitive = string | number | boolean | null | undefined;
+export type JsonValue =
+  | JsonPrimitive
+  | JsonValue[]
+  | {
+      [key: string]: JsonValue;
+    };
+
+export abstract class Command<Payload, ExpectedResponse extends JsonValue> {
   public abstract readonly name: string;
   public abstract readonly payload: Payload;
   public id: string;
@@ -46,6 +55,13 @@ export abstract class Command<Payload, ExpectedResponse> {
           if (detail.commandId !== this.id) {
             return;
           }
+          if (!detail?.response) {
+            this.captureWarning('missing response field in event detail', {
+              commandName: this.name,
+              detail: detail,
+            });
+            reject(new Error('Unexpected error'));
+          }
           // TODO: serialize and de-serialize Result obj
           if ('reason' in detail.response) {
             // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
@@ -66,18 +82,22 @@ export abstract class Command<Payload, ExpectedResponse> {
   protected captureException(exception: unknown) {
     this.observabilityScope?.captureException(exception);
   }
+
+  protected captureWarning(warning: string, data?: Record<string, unknown>) {
+    this.observabilityScope?.captureMessage(warning, 'warning', { data });
+  }
 }
 
-type CommandConstructor<Payload, Response> = new (
-  parameters: Payload,
+type CommandConstructor<Payload, Response extends JsonValue> = new (
+  payload: Payload,
 ) => Command<Payload, Response>;
 
-export const useCommandMutation = <Payload, Response>(
+export const useCommandMutation = <Payload, Response extends JsonValue>(
   commandConstructor: CommandConstructor<Payload, Response>,
 ) => {
   const mutationFunction = useCallback(
-    (parameters: Payload) => {
-      const command = new commandConstructor(parameters);
+    (payload: Payload) => {
+      const command = new commandConstructor(payload);
       return command.send();
     },
     [commandConstructor],
@@ -88,7 +108,11 @@ export const useCommandMutation = <Payload, Response>(
   });
 };
 
-interface CommandQueryProperties<Payload, Response, MappedResponse = Response> {
+interface CommandQueryProperties<
+  Payload,
+  Response extends JsonValue,
+  MappedResponse = Response,
+> {
   command: Command<Payload, Response>;
   retry?: number;
   retryDelay?: number;
@@ -101,7 +125,7 @@ interface CommandQueryProperties<Payload, Response, MappedResponse = Response> {
 
 export const useCommandQuery = <
   Parameters,
-  ExpectedResponse,
+  ExpectedResponse extends JsonValue,
   MappedResponse = ExpectedResponse,
 >({
   command,

@@ -1,61 +1,45 @@
 import { useMutation } from '@tanstack/react-query';
-import { EIP1193Provider } from 'mipd';
 
-import { hexToDecimal, decimalToHex } from './utils';
-import { CHAIN } from './constants';
+import {
+  createWalletClient,
+  getChainById,
+  isUnrecognizedChainError,
+} from './utils';
+import { Wallet } from './types';
 
 interface SwitchChainArguments {
-  walletProvider: EIP1193Provider | null;
+  wallet?: Wallet;
   chainId: number;
 }
 
 export const useSwitchChain = () => {
   return useMutation({
-    mutationFn: async ({ chainId, walletProvider }: SwitchChainArguments) => {
-      if (!walletProvider || !walletProvider.request) {
+    mutationFn: async ({ chainId, wallet }: SwitchChainArguments) => {
+      if (!wallet) {
         return;
       }
-      const currentChainId = await walletProvider.request({
-        method: 'eth_chainId',
-      });
 
-      if (hexToDecimal(currentChainId) !== chainId) {
-        const foundChain = Object.values(CHAIN).find((chain) => {
-          return chain.id === chainId;
-        });
+      const client = createWalletClient(wallet);
+      const currentChainId = await client.getChainId();
+      if (chainId === currentChainId) {
+        return;
+      }
 
-        if (!foundChain) {
-          throw new Error('Chain is not configured');
+      const foundChain = getChainById(chainId);
+
+      if (!foundChain) {
+        throw new Error('Chain is not configured');
+      }
+
+      try {
+        await client.switchChain({ id: chainId });
+      } catch (error) {
+        if (isUnrecognizedChainError(error)) {
+          await client.addChain({ chain: foundChain });
+          return;
         }
 
-        try {
-          await walletProvider.request({
-            method: 'wallet_switchEthereumChain',
-            params: [{ chainId: decimalToHex(Number(chainId)) }],
-          });
-        } catch (error) {
-          if (
-            typeof error === 'object' &&
-            error !== null &&
-            'code' in error &&
-            error.code === 4902
-          ) {
-            await walletProvider.request({
-              method: 'wallet_addEthereumChain',
-              params: [
-                {
-                  chainId: decimalToHex(Number(chainId)),
-                  chainName: foundChain.name,
-                  nativeCurrency: foundChain.nativeCurrency,
-                  rpcUrls: foundChain.rpcUrls,
-                  blockExplorerUrls: foundChain.blockExplorerUrls,
-                },
-              ],
-            });
-          } else {
-            throw error;
-          }
-        }
+        throw error;
       }
     },
   });

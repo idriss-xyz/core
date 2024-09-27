@@ -1,20 +1,20 @@
 export { CHAIN, TOKEN, CHAIN_ID_TO_TOKENS, EMPTY_HEX } from './constants';
-export type { Hex, Wallet, ChainToken, AnySigner } from './types';
+export type { Hex, Wallet, ChainToken } from './types';
 export { useWallet, WalletContextProvider } from './context';
 export {
-  createEthersProvider,
-  createRandomWallet,
   resolveAddress,
   dollarToWei,
   weiToEth,
-  createContract,
   roundToSignificantFigures,
   ethToDollars,
-  createSigner,
   applyDecimalsToNumericString,
   isNativeTokenAddress,
   toAddressWithValidChecksum,
   getChainById,
+  createWalletClient,
+  getTransactionUrl,
+  getRpcUrl,
+  getBlockExplorerUrl,
 } from './utils';
 export { useSwitchChain } from './hooks';
 export { ChainSelect, TokenSelect } from './components';
@@ -34,3 +34,4 @@ export { AGORA_LOGO } from './logos';
 export { SNAPSHOT_LOGO } from './logos';
 export { TALLY_LOGO } from './logos';
 export { POLYMARKET_LOGO } from './logos';
+export { TransactionRevertedError } from './errors';

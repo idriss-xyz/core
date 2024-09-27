@@ -9,7 +9,7 @@ import { extractUsernameFromPathname, isUserPathname } from './utils';
 export class Scraper {
   public static getExternalLinks(): ExternalLinksScrapingResult[] {
     const selector = 'a';
-    const externalLinksNodes = [...document.querySelectorAll(selector)] ?? [];
+    const externalLinksNodes = [...document.querySelectorAll(selector)];
 
     return externalLinksNodes
       .map((node) => {
@@ -165,7 +165,6 @@ export class Scraper {
   }
 
   public static getUsers(): UserScrapingResult[] {
-    Scraper.getHandleUser();
     const posts = Scraper.getPosts();
     const usersFromPosts = posts
       .map((post) => {

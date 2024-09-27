@@ -112,6 +112,6 @@ export const GET_MULTIPLE_IDRISS_REGISTRY_ABI = [
     stateMutability: 'view',
     type: 'function',
   },
-];
+] as const;
 
 export const WIDGET_WIDTH = 256;

@@ -7,13 +7,7 @@ import {
   makeFetchTransport,
   getDefaultIntegrations,
 } from '@sentry/browser';
-import {
-  ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-} from 'react';
+import { ReactNode, createContext, useContext, useMemo } from 'react';
 
 import { SendToSentryCommand } from './commands';
 
@@ -27,19 +21,10 @@ const integrations = getDefaultIntegrations({}).filter((defaultIntegration) => {
   );
 });
 
-const createClient = (
-  executionEnvironment: SentryExecutionEnvironment,
-  extensionId: string,
-) => {
+const createClient = (executionEnvironment: SentryExecutionEnvironment) => {
   return new BrowserClient({
     dsn: process.env.SENTRY_DSN,
     enabled: process.env.SENTRY_ENVIRONMENT === 'production',
-    allowUrls: [
-      `chrome-extension://${extensionId}`,
-      'twitter.com',
-      'supercast.xyz',
-      'x.com',
-    ],
     transport:
       executionEnvironment === 'service-worker'
         ? makeFetchTransport
@@ -56,10 +41,7 @@ const createClient = (
 
               return {
                 statusCode: status,
-                headers: {
-                  'x-sentry-rate-limits': headers.get('X-Sentry-Rate-Limits'),
-                  'retry-after': headers.get('Retry-After'),
-                },
+                headers,
               };
             });
           },
@@ -77,9 +59,8 @@ const createClient = (
 
 export const createObservabilityScope = (
   executionEnvironment: SentryExecutionEnvironment,
-  allowUrls: string,
 ) => {
-  const client = createClient(executionEnvironment, allowUrls);
+  const client = createClient(executionEnvironment);
   const scope = new Scope();
   scope.setClient(client);
 
@@ -110,24 +91,9 @@ interface Properties {
   children: ReactNode;
 }
 export const WithObservabilityScope = ({ children }: Properties) => {
-  // injected script doesn't have access to chrome.runtime api so we need to inject extension id into script.id which we set before injecting script into html
-  const extensionId =
-    document.querySelector('[data-testid="idriss-injected-script"]')?.id ?? '';
-
   const scope = useMemo(() => {
-    return createObservabilityScope('injected-app', extensionId);
-  }, [extensionId]);
-
-  useEffect(() => {
-    const captureException = (event: ErrorEvent) => {
-      scope.captureException(event.error);
-    };
-    self.addEventListener('error', captureException);
-
-    return () => {
-      self.removeEventListener('error', captureException);
-    };
-  }, [scope]);
+    return createObservabilityScope('injected-app');
+  }, []);
 
   return (
     <ObservabilityScopeContext.Provider value={scope}>

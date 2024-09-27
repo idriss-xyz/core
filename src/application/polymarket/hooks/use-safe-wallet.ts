@@ -1,22 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
-import { BigNumber, ethers } from 'ethers';
+import { parseAbi } from 'viem';
 
-import {
-  CHAIN,
-  Hex,
-  Wallet,
-  createEthersProvider,
-  useWallet,
-} from 'shared/web3';
+import { CHAIN, Wallet, createWalletClient, useWallet } from 'shared/web3';
 import { useCommandMutation } from 'shared/messaging';
 
 import { GetFunderAddresCommand } from '../commands';
 import { ERC_20_ABI, SAFE_USDC_ADDRES } from '../constants';
+import { SafeWallet } from '../types';
 
 export const getSafeWalletQueryKey = (wallet?: Wallet) => {
   return ['getSafeWallet', wallet?.account, wallet?.chainId];
 };
 
+// TODO: we can skip calling safe API by replacing it with logic that deterministically gets safe wallet
 export const useSafeWallet = () => {
   const { wallet } = useWallet();
   const funderAddressMutation = useCommandMutation(GetFunderAddresCommand);
@@ -36,21 +32,21 @@ export const useSafeWallet = () => {
         throw new Error('Account not found');
       }
 
-      const ethersProvider = createEthersProvider(wallet.provider);
+      const walletClient = createWalletClient(wallet);
 
-      const usdcContract = new ethers.Contract(
-        SAFE_USDC_ADDRES,
-        ERC_20_ABI,
-        ethersProvider,
-      );
+      const balance = await walletClient.readContract({
+        abi: parseAbi(ERC_20_ABI),
+        address: SAFE_USDC_ADDRES,
+        functionName: 'balanceOf',
+        args: [address],
+      });
 
-      const funderBalance: BigNumber =
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        await usdcContract.balanceOf(address);
+      const result: SafeWallet = {
+        address,
+        balance: Number((Number(balance) / 1_000_000).toFixed(2)),
+      };
 
-      const balance = funderBalance.toNumber() / 1_000_000;
-
-      return { address: address as Hex, balance };
+      return result;
     },
   });
 };

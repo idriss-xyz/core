@@ -1,24 +1,26 @@
 import { useMutation } from '@tanstack/react-query';
-import { BigNumber } from 'ethers';
+import {
+  encodeAbiParameters,
+  encodeFunctionData,
+  parseAbiParameters,
+} from 'viem';
 
 import {
+  createWalletClient,
   EMPTY_HEX,
   GetAcrossChainFeeCommand,
+  getChainById,
+  Hex,
+  TransactionRevertedError,
   Wallet,
-  createContract,
-  createSigner,
 } from 'shared/web3';
 import { useCommandMutation } from 'shared/messaging';
+import { useObservabilityScope } from 'shared/observability';
 
-import {
-  generateDonationDataV2,
-  generateEIP712Signature,
-  generateVote,
-} from '../utils';
+import { generateVote, getDonationContractAddress } from '../utils';
 import {
   ACROSS_DONATION_MODIFIER,
   DONATION_CONTRACT_ABI,
-  DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID,
   WRAPPED_ETH_ADDRESS_PER_CHAIN_ID,
 } from '../constants';
 import { Application } from '../types';
@@ -33,6 +35,7 @@ interface Properties {
 
 export const useAcrossDonateTransaction = () => {
   const checkAcrossChainFee = useCommandMutation(GetAcrossChainFeeCommand);
+  const observabilityScope = useObservabilityScope();
 
   return useMutation({
     mutationFn: async ({
@@ -41,12 +44,11 @@ export const useAcrossDonateTransaction = () => {
       userAmountInWei,
       chainId,
     }: Properties) => {
-      //  ToDo: check where/when chain switch is happening
-      const signer = createSigner(wallet);
+      const walletClient = createWalletClient(wallet);
 
       const vote = generateVote(
         application.project.anchorAddress,
-        BigNumber.from(userAmountInWei),
+        BigInt(userAmountInWei),
       );
 
       const getNonceCommand = new GetNonceCommand({
@@ -54,88 +56,121 @@ export const useAcrossDonateTransaction = () => {
         senderAddress: wallet.account,
       });
 
-      const nonce = await getNonceCommand.send();
+      const nonce = BigInt(await getNonceCommand.send());
 
-      const data = generateDonationDataV2(
-        Number(application.roundId),
-        application.chainId,
-        DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[application.chainId] ??
-          EMPTY_HEX,
-        wallet.account,
-        vote,
-        nonce,
-      );
+      const signatureData = {
+        chainId: application.chainId,
+        roundId: BigInt(application.roundId),
+        donor: wallet.account,
+        voteParams: vote,
+        nonce: nonce,
+        validUntil: Math.round(Date.now() / 1000) + 3600, // 1 hour
+        verifyingContract: getDonationContractAddress(application.chainId),
+      } as const;
 
-      const encodedDataWithSignature = await generateEIP712Signature(
-        signer,
-        data,
-      );
-
-      const contractOrigin = createContract({
-        address:
-          DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[chainId]?.toLowerCase() ?? '',
-        abi: DONATION_CONTRACT_ABI,
-        signerOrProvider: signer,
+      const domain = {
+        name: 'IDrissCrossChainDonations',
+        version: '1',
+      };
+      const types = {
+        Donation: [
+          { name: 'chainId', type: 'uint256' },
+          { name: 'roundId', type: 'uint256' },
+          { name: 'donor', type: 'address' },
+          { name: 'voteParams', type: 'bytes' },
+          { name: 'nonce', type: 'uint256' },
+          { name: 'validUntil', type: 'uint256' },
+          { name: 'verifyingContract', type: 'address' },
+        ],
+      };
+      const signature = await walletClient.signTypedData({
+        domain,
+        types,
+        message: signatureData,
+        primaryType: 'Donation',
       });
+      const encodedDataWithSignature = encodeAbiParameters(
+        parseAbiParameters([
+          'uint256',
+          'uint256',
+          'address',
+          'bytes',
+          'uint256',
+          'uint256',
+          'address',
+          'bytes',
+        ]),
+        [
+          BigInt(signatureData.chainId),
+          signatureData.roundId,
+          signatureData.donor,
+          signatureData.voteParams,
+          signatureData.nonce,
+          BigInt(signatureData.validUntil),
+          signatureData.verifyingContract,
+          signature,
+        ],
+      );
 
       const feeResponse = await checkAcrossChainFee.mutateAsync({
         amount: userAmountInWei,
         message: encodedDataWithSignature,
-        recipient:
-          DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[application.chainId] ?? '',
+        recipient: getDonationContractAddress(application.chainId),
         chain: {
           id: chainId,
-          wrappedEthAddress: WRAPPED_ETH_ADDRESS_PER_CHAIN_ID[chainId] ?? '',
+          wrappedEthAddress:
+            WRAPPED_ETH_ADDRESS_PER_CHAIN_ID[chainId] ?? EMPTY_HEX,
         },
         destinationChainId: application.chainId,
       });
 
-      const fee = BigNumber.from(feeResponse.totalRelayFee.total)
-        .mul(101)
-        .div(100);
+      const fee =
+        (BigInt(feeResponse.totalRelayFee.total) * BigInt(101)) / BigInt(100);
 
-      const inputAmount = BigNumber.from(userAmountInWei).add(fee);
+      const inputAmount = BigInt(userAmountInWei) + fee;
+
+      const donationContractAddress = getDonationContractAddress(
+        application.chainId,
+      );
 
       const depositParameters = {
-        recipient:
-          DONATION_CONTRACT_ADDRESS_PER_CHAIN_ID[application.chainId] ?? '',
-        inputToken: WRAPPED_ETH_ADDRESS_PER_CHAIN_ID[chainId] ?? '',
+        recipient: donationContractAddress,
+        inputToken: WRAPPED_ETH_ADDRESS_PER_CHAIN_ID[chainId] ?? EMPTY_HEX,
         outputToken: '0x0000000000000000000000000000000000000000',
         inputAmount: inputAmount,
-        outputAmount: BigNumber.from(userAmountInWei),
-        destinationChainId: application.chainId,
+        outputAmount: BigInt(userAmountInWei),
+        destinationChainId: BigInt(application.chainId),
         exclusiveRelayer: '0x0000000000000000000000000000000000000000',
         quoteTimestamp: Number(feeResponse.timestamp),
         fillDeadline: Math.round(Date.now() / 1000) + 21_600,
         exclusivityDeadline: 0,
-      };
+      } as const;
 
-      const preparedTx =
-        await contractOrigin.populateTransaction.callDepositV3?.(
-          depositParameters,
-          encodedDataWithSignature,
-        );
-
-      if (!preparedTx) {
-        throw new Error('Expected preparedTx');
-      }
-
-      const modifiedData = preparedTx.data + ACROSS_DONATION_MODIFIER;
-
-      const sendOptions = {
-        from: wallet.account,
-        value: inputAmount,
-      };
-
-      const result = await signer.sendTransaction({
-        ...preparedTx,
-        data: modifiedData,
-        ...sendOptions,
-        to: contractOrigin.address,
-        gasLimit: 500_000,
+      const depositV3Data = encodeFunctionData({
+        abi: DONATION_CONTRACT_ABI,
+        functionName: 'callDepositV3',
+        args: [depositParameters, encodedDataWithSignature],
       });
 
-      const { transactionHash } = await result.wait();
+      const modifiedData = (depositV3Data + ACROSS_DONATION_MODIFIER) as Hex;
+
+      const transactionHash = await walletClient.sendTransaction({
+        chain: getChainById(chainId),
+        data: modifiedData,
+        to: getDonationContractAddress(chainId),
+        gas: BigInt(600_000),
+        value: inputAmount,
+      });
+
+      const receipt = await walletClient.waitForTransactionReceipt({
+        hash: transactionHash,
+      });
+      if (receipt.status === 'reverted') {
+        const error = new TransactionRevertedError({ transactionHash });
+        observabilityScope.captureException(error);
+        throw error;
+      }
+
       return { transactionHash };
     },
   });

@@ -1,7 +1,5 @@
 import { useCallback } from 'react';
 
-import { createSigner } from 'shared/web3';
-
 import { OrderPlacer, PlaceOrderParameters } from '../types';
 
 import { useAuthorizer } from './use-authorizer';
@@ -16,22 +14,27 @@ export const useOrderPlacer = (): OrderPlacer => {
   const isError = authorizer.isFailed || postOrder.isError;
 
   const place = useCallback(
-    async (parameters: PlaceOrderParameters) => {
-      const signer = createSigner(parameters.wallet);
-      const credentials = await authorizer.authorize(signer);
+    async (properties: PlaceOrderParameters) => {
+      const { funderAddress, orderDetails, wallet } = properties;
+      const timestamp = `${Math.floor(Date.now() / 1000)}`;
+      const credentials = await authorizer.authorize({
+        wallet,
+        timestamp,
+      });
 
       await postOrder.mutateAsync({
-        funderAddress: parameters.funderAddress,
-        tickSize: parameters.orderDetails.minimumTickSize,
-        negRisk: parameters.orderDetails.negRisk,
-        tokenID: parameters.orderDetails.tokenId,
-        amount: parameters.orderDetails.amount,
+        funderAddress: funderAddress,
+        tickSize: orderDetails.minimumTickSize,
+        negRisk: orderDetails.negRisk,
+        tokenID: orderDetails.tokenId,
+        amount: orderDetails.amount,
         credentials: {
           passphrase: credentials.passphrase,
           secret: credentials.secret,
           key: credentials.apiKey,
         },
-        signer,
+        wallet,
+        timestamp,
       });
     },
     [authorizer, postOrder],

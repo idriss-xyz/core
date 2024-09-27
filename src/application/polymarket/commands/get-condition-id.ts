@@ -10,9 +10,9 @@ import {
   polymarketPagePropertiesSchema,
 } from '../schema';
 
-interface Payload {
+type Payload = {
   url: string;
-}
+};
 
 export class GetConditionIdCommand extends Command<Payload, string> {
   public readonly name = 'GetConditionIdCommand' as const;

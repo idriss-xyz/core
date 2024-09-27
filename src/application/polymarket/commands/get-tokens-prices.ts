@@ -9,9 +9,9 @@ import {
 import { GetTokenPriceResponse, TokenIdToPrice } from '../types';
 import { POLYMARKET_CLOB_API } from '../constants';
 
-interface Payload {
+type Payload = {
   tokensIds: string[];
-}
+};
 
 export class GetTokensPricesCommand extends Command<Payload, TokenIdToPrice> {
   public readonly name = 'GetTokensPricesCommand' as const;
@@ -44,6 +44,10 @@ export class GetTokensPricesCommand extends Command<Payload, TokenIdToPrice> {
       const result: TokenIdToPrice = Object.fromEntries(responses);
       return new OkResult(result);
     } catch (error) {
+      if (error instanceof HandlerResponseError && error.statusCode === 404) {
+        // polymarket api returns 404 if market is closed, we don't want to capture this exception
+        return new FailureResult('Books does not exist for these tokens');
+      }
       this.captureException(error);
       if (error instanceof HandlerError) {
         return new FailureResult(error.message);

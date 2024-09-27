@@ -1,5 +1,4 @@
 import { useCallback } from 'react';
-import { BigNumber } from 'ethers';
 
 import {
   CHAIN_ID_TO_TOKENS,
@@ -64,15 +63,15 @@ export const useSender = ({ wallet }: Properties) => {
         tokenPerDollarNormalised * sendPayload.amount,
       );
 
-      const valueAsBigNumber = BigNumber.from(value.toString());
-
-      const tokensToSend = valueAsBigNumber
-        .mul((10 ** (tokenToSend?.decimals ?? 0)).toString())
-        .div((10 ** decimals).toString());
+      const valueAsBigNumber = BigInt(value.toString());
+      const tokensToSend =
+        (valueAsBigNumber *
+          BigInt((10 ** (tokenToSend?.decimals ?? 0)).toString())) /
+        BigInt((10 ** decimals).toString());
 
       await switchChain.mutateAsync({
         chainId: sendPayload.chainId,
-        walletProvider: wallet.provider,
+        wallet,
       });
 
       if (isNativeTokenAddress(sendPayload.tokenAddress)) {

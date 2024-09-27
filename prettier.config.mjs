@@ -10,6 +10,5 @@ export default {
   tabWidth: 2,
   printWidth: 80,
   arrowParens: 'always',
-  editorconfig: true,
   bracketSpacing: true,
 };

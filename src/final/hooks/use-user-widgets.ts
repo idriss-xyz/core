@@ -10,7 +10,7 @@ import { useLocationInfo } from './use-location-info';
 
 export const useUserWidgets = () => {
   const applicationsStatus = useApplicationStatus();
-  const { isTwitter, isWarpcast } = useLocationInfo();
+  const { isTwitter, isWarpcast, isSupercast } = useLocationInfo();
   const { extensionSettings } = useExtensionSettings();
 
   const { users } = useScraping();
@@ -34,6 +34,13 @@ export const useUserWidgets = () => {
   if (isWarpcast) {
     return {
       // widgets: userWidgetDataAdapter.fromScrapedUsers({ users }), // TODO: uncomment to enable user widgets on Warpcast
+      widgets: [],
+    };
+  }
+
+  if (isSupercast) {
+    return {
+      // widgets: userWidgetDataAdapter.fromScrapedUsers({ users }), // TODO: uncomment to enable user widgets on Supercast
       widgets: [],
     };
   }
