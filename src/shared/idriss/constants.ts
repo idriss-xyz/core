@@ -115,3 +115,5 @@ export const GET_MULTIPLE_IDRISS_REGISTRY_ABI = [
 ] as const;
 
 export const WIDGET_WIDTH = 256;
+
+export const IDRISS_DISCORD_URL = 'https://www.idriss.xyz/discord';

@@ -8,12 +8,13 @@ import {
 import debounce from 'lodash/debounce';
 import { MemoryRouter, useLocation, useNavigate } from 'react-router';
 
-import { EXTENSION_POPUP_ROUTE } from 'shared/extension';
 import {
   onWindowMessage,
   TOGGLE_EXTENSION_POPUP_VISIBILITY,
 } from 'shared/messaging';
 import { createContextHook } from 'shared/ui';
+
+import { EXTENSION_POPUP_ROUTE } from '../constants';
 
 interface Properties {
   children: ReactNode;

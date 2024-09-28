@@ -1,25 +1,20 @@
 import { ReactNode } from 'react';
 
-interface MainSettingsMenuListItem {
+type Properties = {
   label: ReactNode;
   prefix: ReactNode;
   suffix?: ReactNode;
   onClick?: () => void;
-}
+};
 
-export const MainSettingsMenuListItem = ({
-  label,
-  prefix,
-  suffix,
-  onClick,
-}: MainSettingsMenuListItem) => {
+export const MenuItem = ({ label, prefix, suffix, onClick }: Properties) => {
   return (
     <li
-      className="flex shrink-0 grow cursor-pointer items-center space-x-2 whitespace-nowrap py-3 text-base hover:text-green-500"
+      className="flex cursor-pointer items-center space-x-2 whitespace-nowrap py-3 text-base hover:text-green-500"
       onClick={onClick}
     >
       {prefix}
-      <span>{label} </span>
+      <span>{label}</span>
       {suffix}
     </li>
   );

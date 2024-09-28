@@ -11,6 +11,8 @@ import {
 } from 'shared/extension';
 import { IconButton } from 'shared/ui';
 
+import { SettingsLayout } from '../../components';
+
 import { settingListItemGroups } from './constants';
 import { CustomizationSettingsGroup } from './customization-settings-group';
 
@@ -35,7 +37,7 @@ export const CustomizationSettingsView = () => {
   }, [extensionSettings]);
 
   /**we are using the previousFormValues ref to detect:
-    - if the formValues changed and the extension settings should be updated 
+    - if the formValues changed and the extension settings should be updated
     - if the extension settings changed (e.g. in another tab) and the form values should be updated
   */
   const previousFormValues = useRef<ExtensionSettingsFormValues>(
@@ -67,20 +69,20 @@ export const CustomizationSettingsView = () => {
   }, [customizationSettings, form]);
 
   return (
-    <div className="shrink-0 grow px-6 pb-2 text-black">
-      <div className="sticky top-0 flex justify-center whitespace-nowrap bg-gray-100 px-5 py-4 text-lg font-bold">
-        <IconButton
-          className="absolute left-0 text-black hover:text-green-500"
-          iconProps={{ name: 'ArrowLeftIcon', size: 25 }}
-          onClick={() => {
-            extensionPopup.navigate(EXTENSION_POPUP_ROUTE.SETTINGS_HOME);
-          }}
-        />
-
-        <span className="capitalize">Customization</span>
-      </div>
-
-      <div>
+    <SettingsLayout>
+      <SettingsLayout.Header
+        title="Customization"
+        prefix={
+          <IconButton
+            className="text-black hover:text-green-500"
+            iconProps={{ name: 'ArrowLeftIcon', size: 25 }}
+            onClick={() => {
+              extensionPopup.navigate(EXTENSION_POPUP_ROUTE.SETTINGS_HOME);
+            }}
+          />
+        }
+      />
+      <SettingsLayout.Body>
         <FormProvider {...form}>
           {settingListItemGroups.map((group) => {
             return (
@@ -92,7 +94,7 @@ export const CustomizationSettingsView = () => {
             );
           })}
         </FormProvider>
-      </div>
-    </div>
+      </SettingsLayout.Body>
+    </SettingsLayout>
   );
 };

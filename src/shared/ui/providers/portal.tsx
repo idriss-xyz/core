@@ -27,7 +27,8 @@ export const PortalProvider = ({ children }: Properties) => {
   return (
     <PortalContext.Provider value={contextValue}>
       {children}
-      <div ref={setPortal} className="relative z-20" />
+      {/* TODO: z-portal */}
+      <div ref={setPortal} className="relative z-[9999999]" />
     </PortalContext.Provider>
   );
 };

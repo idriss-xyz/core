@@ -56,7 +56,7 @@ export const CustomizationSettingsGroup = ({
     <>
       <div className="flex flex-row items-center space-x-2 pb-3 pt-2 font-bold">
         <Checkbox
-          label={group.label}
+          label={<Checkbox.Label>{group.label}</Checkbox.Label>}
           value={everyGroupSettingsEnabled}
           indicator={
             disabled ? (
@@ -95,7 +95,9 @@ export const CustomizationSettingsGroup = ({
                           ? 'Enable the extension to modify these settings'
                           : undefined
                       }
-                      label={settingListItem.label}
+                      label={
+                        <Checkbox.Label>{settingListItem.label}</Checkbox.Label>
+                      }
                     />
                   );
                 }}

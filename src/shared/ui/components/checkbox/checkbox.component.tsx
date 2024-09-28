@@ -5,20 +5,31 @@ import { CheckIcon } from '@radix-ui/react-icons';
 import { classes } from 'shared/ui/utils';
 
 import { CheckboxProperties } from './checkbox.types';
+import { CheckboxLabel } from './checkbox-label.component';
 
-export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProperties>(
+const Base = forwardRef<HTMLButtonElement, CheckboxProperties>(
   (
-    { indicator, label, disabled, value, className, title, onChange },
+    {
+      indicator,
+      label,
+      disabled,
+      value,
+      className,
+      wrapperClassName,
+      title,
+      onChange,
+    },
     reference,
   ) => {
     return (
-      <label className="flex items-center">
+      <label className={classes('flex items-center', wrapperClassName)}>
         <RadixCheckbox.Root
           ref={reference}
           title={title}
           className={classes(
             'flex size-[22px] appearance-none items-center justify-center rounded-[4px] bg-gray-100 shadow-[0_0_0_1px_black] outline-none hover:bg-gray-200 focus:shadow-[0_0_0_1px_gray]',
             'disabled:cursor-not-allowed disabled:opacity-60 disabled:brightness-90 disabled:grayscale',
+            label && 'mr-2',
             className,
           )}
           disabled={disabled}
@@ -32,10 +43,15 @@ export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProperties>(
             {indicator ?? <CheckIcon />}
           </RadixCheckbox.Indicator>
         </RadixCheckbox.Root>
-        <span className="pl-4 text-sm leading-none">{label}</span>
+        {label}
       </label>
     );
   },
 );
 
-Checkbox.displayName = 'Checkbox';
+Base.displayName = 'Checkbox';
+
+export const Checkbox = Object.assign(Base, {
+  Label: CheckboxLabel,
+  displayName: 'Checkbox',
+});

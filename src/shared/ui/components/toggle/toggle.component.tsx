@@ -8,7 +8,7 @@ export const Toggle = ({ value, onChange }: ToggleProperties) => {
   return (
     <Switch.Root
       className={classes(
-        'relative mx-4 h-2.5 w-[30px] rounded-[5px] bg-[#bdc1c6] shadow-[0_1px_3px_0_rgba(0,0,0,0.4)] transition-all duration-300 ease-in-out',
+        'relative mx-2.5 h-2.5 w-8 rounded-md bg-[#bdc1c6] shadow-[0_1px_3px_0_rgba(0,0,0,0.4)] transition-all duration-300 ease-in-out',
         {
           'bg-[#11dd7488]': value,
         },

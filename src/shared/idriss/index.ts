@@ -8,4 +8,5 @@ export {
   IDRISS_ICON,
   IDRISS_RED_ICON,
   IDRISS_ICON_WITH_TEXT,
+  IDRISS_DISCORD_URL,
 } from './constants';

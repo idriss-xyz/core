@@ -9,4 +9,6 @@ pageManagerFactory(document, document.location)
   })
   .catch(console.error);
 
-ContentScript.run(chrome);
+if (window.top === window) {
+  ContentScript.run(chrome);
+}

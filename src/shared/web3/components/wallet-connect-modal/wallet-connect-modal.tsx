@@ -188,24 +188,25 @@ export const WalletConnectModal = createModal(
                 </button>
               ) : null}
               <div>
-                <div className="mb-2 mt-4 flex items-center space-x-2">
-                  <Checkbox
-                    value={termsOfUseAccepted}
-                    onChange={setTermsOfUseAccepted}
-                    className="bg-[#53535a] checked:bg-black/10 focus:ring-2 focus:ring-idriss-primary-500"
-                  />
-                  <p className="text-sm text-gray-500">
-                    I agree to the{' '}
-                    <a
-                      href="https://www.idriss.xyz/tos"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="font-semibold text-idriss-primary-500"
-                    >
-                      Terms of Use
-                    </a>
-                  </p>
-                </div>
+                <Checkbox
+                  wrapperClassName="mb-2 mt-4"
+                  value={termsOfUseAccepted}
+                  onChange={setTermsOfUseAccepted}
+                  className="focus:ring-2 focus:ring-idriss-primary-500"
+                  label={
+                    <p className="text-sm text-gray-500">
+                      I agree to the{' '}
+                      <a
+                        href="https://www.idriss.xyz/tos"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-semibold text-idriss-primary-500"
+                      >
+                        Terms of Use
+                      </a>
+                    </p>
+                  }
+                />
               </div>
               <Button
                 className="rounded bg-idriss-primary-500 font-medium text-white hover:bg-idriss-primary-400"

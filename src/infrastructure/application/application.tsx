@@ -45,24 +45,32 @@ const ApplicationWithProviders = () => {
 
   if (!isExpectedPage) {
     return (
-      <WithObservabilityScope>
-        <ErrorBoundary>
-          <QueryProvider>
-            <WalletContextProvider disabledWalletsRdns={disabledWalletRdns}>
+      <StrictMode>
+        <WithObservabilityScope>
+          <ErrorBoundary>
+            <PortalProvider>
               <TailwindProvider>
-                <ExtensionPopupProvider>
-                  <ExtensionSettingsProvider>
-                    <>
-                      <LookUpWalletAddress />
-                      <ExtensionPopup />
-                    </>
-                  </ExtensionSettingsProvider>
-                </ExtensionPopupProvider>
+                <QueryProvider>
+                  <NiceModal.Provider>
+                    <WalletContextProvider
+                      disabledWalletsRdns={disabledWalletRdns}
+                    >
+                      <ExtensionPopupProvider>
+                        <ExtensionSettingsProvider>
+                          <>
+                            <LookUpWalletAddress />
+                            <ExtensionPopup />
+                          </>
+                        </ExtensionSettingsProvider>
+                      </ExtensionPopupProvider>
+                    </WalletContextProvider>
+                  </NiceModal.Provider>
+                </QueryProvider>
               </TailwindProvider>
-            </WalletContextProvider>
-          </QueryProvider>
-        </ErrorBoundary>
-      </WithObservabilityScope>
+            </PortalProvider>
+          </ErrorBoundary>
+        </WithObservabilityScope>
+      </StrictMode>
     );
   }
 
