@@ -152,7 +152,7 @@ export const Market = ({
       ),
       [SCENARIO.WALLET_NOT_CONNECTED]: (
         <ActionButton loading={user.isSigning} onClick={user.signIn}>
-          Connect wallet
+          Log In
         </ActionButton>
       ),
       [SCENARIO.BETTING_NOT_AVAILABLE]: <UnavailableButton />,

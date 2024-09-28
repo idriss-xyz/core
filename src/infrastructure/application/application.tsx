@@ -3,13 +3,18 @@ import NiceModal from '@ebay/nice-modal-react';
 import { createRoot } from 'react-dom/client';
 
 import { Final, useLocationInfo } from 'final';
-import { ExtensionSettingsProvider } from 'shared/extension';
+import {
+  ExtensionPopupProvider,
+  ExtensionSettingsProvider,
+} from 'shared/extension';
 import { PortalProvider, QueryProvider, TailwindProvider } from 'shared/ui';
 import { WalletContextProvider } from 'shared/web3';
 import { ErrorBoundary, WithObservabilityScope } from 'shared/observability';
 import { TwitterScrapingContextProvider } from 'host/twitter';
 import { WarpcastScrapingContextProvider } from 'host/warpcast';
 import { SupercastScrapingContextProvider } from 'host/supercast';
+import { ExtensionPopup } from 'application/extension-popup';
+import { LookUpWalletAddress } from 'application/look-up-wallet-address';
 export class Application {
   private constructor() {}
 
@@ -39,7 +44,26 @@ const ApplicationWithProviders = () => {
   const isExpectedPage = isTwitter || isWarpcast || isSupercast;
 
   if (!isExpectedPage) {
-    return null;
+    return (
+      <WithObservabilityScope>
+        <ErrorBoundary>
+          <QueryProvider>
+            <WalletContextProvider disabledWalletsRdns={disabledWalletRdns}>
+              <TailwindProvider>
+                <ExtensionPopupProvider>
+                  <ExtensionSettingsProvider>
+                    <>
+                      <LookUpWalletAddress />
+                      <ExtensionPopup />
+                    </>
+                  </ExtensionSettingsProvider>
+                </ExtensionPopupProvider>
+              </TailwindProvider>
+            </WalletContextProvider>
+          </QueryProvider>
+        </ErrorBoundary>
+      </WithObservabilityScope>
+    );
   }
 
   return (
@@ -53,15 +77,20 @@ const ApplicationWithProviders = () => {
                   <WalletContextProvider
                     disabledWalletsRdns={disabledWalletRdns}
                   >
-                    <ExtensionSettingsProvider>
-                      <TwitterScrapingContextProvider>
-                        <WarpcastScrapingContextProvider>
-                          <SupercastScrapingContextProvider>
-                            <Final />
-                          </SupercastScrapingContextProvider>
-                        </WarpcastScrapingContextProvider>
-                      </TwitterScrapingContextProvider>
-                    </ExtensionSettingsProvider>
+                    <ExtensionPopupProvider>
+                      <ExtensionSettingsProvider>
+                        <TwitterScrapingContextProvider>
+                          <WarpcastScrapingContextProvider>
+                            <SupercastScrapingContextProvider>
+                              <>
+                                <ExtensionPopup />
+                                <Final />
+                              </>
+                            </SupercastScrapingContextProvider>
+                          </WarpcastScrapingContextProvider>
+                        </TwitterScrapingContextProvider>
+                      </ExtensionSettingsProvider>
+                    </ExtensionPopupProvider>
                   </WalletContextProvider>
                 </NiceModal.Provider>
               </QueryProvider>

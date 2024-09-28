@@ -1,9 +1,11 @@
 export type { Option, Pagination, ButtonProperties } from './components';
+export type { IconName } from './components';
 export {
   Chip,
   Icon,
   Modal,
   Button,
+  Toggle,
   Select,
   GasIcon,
   Spinner,

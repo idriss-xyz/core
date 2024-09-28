@@ -13,7 +13,9 @@ interface Properties {
 }
 
 /** Adapter which takes widgets available on twitter - IDrissSend and GitcoinDonation,
- * chooses one of them by priority and adapts to UserWidgetData. */
+ * chooses one of them by priority and adapts to UserWidgetData.
+ * @applicationsStatus Remember that our app uses the `applicationsStatus` API response, along with the customized by the user `extensionSettings`, to manage the feature state.
+ *  */
 export const fromTwitterWidgetsData = ({
   applicationsStatus,
   gitcoinDonationWidgets,

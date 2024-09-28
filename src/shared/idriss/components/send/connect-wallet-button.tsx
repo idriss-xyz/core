@@ -21,7 +21,7 @@ export const ConnectWalletButton = ({ onClick }: Properties) => {
       loading={isConnectionModalOpened}
       onClick={handleClick}
     >
-      Connect wallet
+      Log In
     </Button>
   );
 };

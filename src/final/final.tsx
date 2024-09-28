@@ -1,25 +1,22 @@
 import { useExtensionSettings } from 'shared/extension';
 import { ErrorBoundary } from 'shared/observability';
+import { LookUpWalletAddress } from 'application/look-up-wallet-address';
 
 import { Proposals, UserWidgets, PolymarketMarkets } from './widgets';
 
 export const Final = () => {
-  const { enabled, experimentalFeatures } = useExtensionSettings();
+  const { extensionSettings } = useExtensionSettings();
 
-  if (!enabled) {
+  if (!extensionSettings['entire-extension-enabled']) {
     return null;
   }
 
   return (
     <ErrorBoundary>
+      <LookUpWalletAddress />
       <UserWidgets />
-
-      {experimentalFeatures ? (
-        <>
-          <PolymarketMarkets />
-          <Proposals />
-        </>
-      ) : null}
+      <PolymarketMarkets />
+      <Proposals />
     </ErrorBoundary>
   );
 };

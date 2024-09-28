@@ -30,4 +30,8 @@ export {
   GetAcrossChainFeeCommand,
   GetWalletByEnsNameCommand,
 } from './commands';
+export { AGORA_LOGO } from './logos';
+export { SNAPSHOT_LOGO } from './logos';
+export { TALLY_LOGO } from './logos';
+export { POLYMARKET_LOGO } from './logos';
 export { TransactionRevertedError } from './errors';

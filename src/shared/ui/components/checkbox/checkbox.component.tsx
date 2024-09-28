@@ -1,14 +1,41 @@
+import { forwardRef } from 'react';
+import * as RadixCheckbox from '@radix-ui/react-checkbox';
+import { CheckIcon } from '@radix-ui/react-icons';
+
+import { classes } from 'shared/ui/utils';
+
 import { CheckboxProperties } from './checkbox.types';
 
-export const Checkbox = ({ value, onChange }: CheckboxProperties) => {
-  return (
-    <input
-      checked={value}
-      type="checkbox"
-      onChange={(event) => {
-        onChange(event.target.checked);
-      }}
-      className="size-4 cursor-pointer rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500"
-    />
-  );
-};
+export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProperties>(
+  (
+    { indicator, label, disabled, value, className, title, onChange },
+    reference,
+  ) => {
+    return (
+      <label className="flex items-center">
+        <RadixCheckbox.Root
+          ref={reference}
+          title={title}
+          className={classes(
+            'flex size-[22px] appearance-none items-center justify-center rounded-[4px] bg-gray-100 shadow-[0_0_0_1px_black] outline-none hover:bg-gray-200 focus:shadow-[0_0_0_1px_gray]',
+            'disabled:cursor-not-allowed disabled:opacity-60 disabled:brightness-90 disabled:grayscale',
+            className,
+          )}
+          disabled={disabled}
+          checked={value}
+          onCheckedChange={onChange}
+        >
+          <RadixCheckbox.Indicator
+            className="flex items-center text-green-500"
+            forceMount={indicator ? true : undefined}
+          >
+            {indicator ?? <CheckIcon />}
+          </RadixCheckbox.Indicator>
+        </RadixCheckbox.Root>
+        <span className="pl-4 text-sm leading-none">{label}</span>
+      </label>
+    );
+  },
+);
+
+Checkbox.displayName = 'Checkbox';

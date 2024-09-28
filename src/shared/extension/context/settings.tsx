@@ -1,75 +1,77 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { ReactNode, createContext, useCallback, useEffect } from 'react';
+import { ReactNode, createContext, useEffect, useState } from 'react';
 
 import { onWindowMessage } from 'shared/messaging';
 import { createContextHook } from 'shared/ui';
 
-import { ExtensionSettings } from '../types';
 import {
-  EXTENSION_SETTINGS_CHANGE,
   GET_EXTENSION_SETTINGS_REQUEST,
   GET_EXTENSION_SETTINGS_RESPONSE,
 } from '../constants';
+import { ManageExtensionSettingsCommand } from '../commands';
+import { ExtensionSettings } from '../types';
+import { createInitialExtensionSettingsStorageKeys } from '../utils';
 
 interface Properties {
   children: ReactNode;
 }
 
-const ExtensionSettingsContext = createContext<ExtensionSettings | undefined>(
-  undefined,
-);
+const initialExtensionSettings: ExtensionSettings =
+  createInitialExtensionSettingsStorageKeys();
+
+interface ExtensionSettingsContextValues {
+  extensionSettings: ExtensionSettings;
+  changeExtensionSetting: (
+    settings: Partial<ExtensionSettings>,
+  ) => Promise<void>;
+}
+
+const ExtensionSettingsContext = createContext<
+  ExtensionSettingsContextValues | undefined
+>(undefined);
 
 export const ExtensionSettingsProvider = ({ children }: Properties) => {
-  const queryClient = useQueryClient();
+  const [extensionSettings, setExtensionSettings] = useState<ExtensionSettings>(
+    initialExtensionSettings,
+  );
 
-  const getInitialSettings = useCallback((): Promise<ExtensionSettings> => {
-    return new Promise((resolve) => {
-      window.postMessage({
-        type: GET_EXTENSION_SETTINGS_REQUEST,
-      });
+  const changeExtensionSetting = async (
+    settings: Partial<ExtensionSettings>,
+  ) => {
+    const extensionSettingsCommand = new ManageExtensionSettingsCommand({
+      settings,
+    });
+    const extensionSettings = await extensionSettingsCommand.send();
+    setExtensionSettings(extensionSettings);
+  };
 
-      onWindowMessage<ExtensionSettings>(
-        GET_EXTENSION_SETTINGS_RESPONSE,
-        (settings, removeEventListener) => {
-          resolve(settings);
-          removeEventListener();
-        },
-      );
+  // TODO: check if this could be achievable with usage of react-query
+  useEffect(() => {
+    onWindowMessage<ExtensionSettings>(
+      GET_EXTENSION_SETTINGS_RESPONSE,
+      async (settings) => {
+        if (Object.keys(settings).length === 0) {
+          //It means the extension was just installed, so we want to set initialSettings to the local storage
+          await changeExtensionSetting(initialExtensionSettings);
+        } else {
+          setExtensionSettings(settings);
+        }
+      },
+    );
+  }, []);
+
+  useEffect(() => {
+    window.postMessage({
+      type: GET_EXTENSION_SETTINGS_REQUEST,
     });
   }, []);
 
-  const settingsQuery = useQuery({
-    queryKey: ['settings'],
-    queryFn: getInitialSettings,
-  });
-
-  useEffect(() => {
-    onWindowMessage<Partial<ExtensionSettings>>(
-      EXTENSION_SETTINGS_CHANGE,
-      (settings) => {
-        queryClient.setQueryData<ExtensionSettings>(
-          ['settings'],
-          (cachedSettings) => {
-            if (cachedSettings) {
-              return { ...cachedSettings, ...settings };
-            }
-
-            return {
-              enabled: settings.enabled ?? false,
-              experimentalFeatures: settings.experimentalFeatures ?? false,
-            };
-          },
-        );
-      },
-    );
-  }, [queryClient]);
-
-  if (!settingsQuery.data) {
-    return null;
-  }
-
   return (
-    <ExtensionSettingsContext.Provider value={settingsQuery.data}>
+    <ExtensionSettingsContext.Provider
+      value={{
+        extensionSettings,
+        changeExtensionSetting,
+      }}
+    >
       {children}
     </ExtensionSettingsContext.Provider>
   );

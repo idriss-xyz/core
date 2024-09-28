@@ -1,5 +1,4 @@
 import {DefaultPageManager} from "./defaultPageManager";
-import {StandalonePageManager} from "./standalonePageManager";
 import {HuobiPageManager} from "./HuobiPageManager";
 import {PoapPageManager} from "./PoapPageManager";
 import {CoinbasePageManager} from "./CoinbasePageManager";
@@ -51,8 +50,8 @@ const defaultDomainList = [
     // "okx.com",
     // "coincheck.com",
     // "crypto.com",
-    "poap.xyz",
-    // "guarda.co"
+    // "guarda.co",
+    "poap.xyz"
   ];
 
 export async function pageManagerFactory(document, url) {

@@ -1,5 +1,6 @@
 import { useGitcoinDonationWidgetsData } from 'application/gitcoin';
 import { useIdrissSendWidgetsData } from 'application/idriss-send';
+import { useExtensionSettings } from 'shared/extension';
 
 import { userWidgetDataAdapter } from '../adapters';
 
@@ -10,16 +11,24 @@ import { useLocationInfo } from './use-location-info';
 export const useUserWidgets = () => {
   const applicationsStatus = useApplicationStatus();
   const { isTwitter, isWarpcast, isSupercast } = useLocationInfo();
+  const { extensionSettings } = useExtensionSettings();
 
   const { users } = useScraping();
+
+  const idrissSendEnabled =
+    applicationsStatus.idrissSend && extensionSettings['idriss-send-enabled'];
+
   const { widgets: idrissSendWidgets } = useIdrissSendWidgetsData({
     scrapedUsers: users,
-    enabled: applicationsStatus.idrissSend && isTwitter,
+    enabled: idrissSendEnabled && isTwitter,
   });
+
+  const gitcoinEnabled =
+    applicationsStatus.gitcoin && extensionSettings['gitcoin-enabled'];
 
   const { widgets: gitcoinDonationWidgets } = useGitcoinDonationWidgetsData({
     scrapedUsers: users,
-    enabled: applicationsStatus.gitcoin && isTwitter,
+    enabled: gitcoinEnabled && isTwitter,
   });
 
   if (isWarpcast) {
@@ -38,7 +47,10 @@ export const useUserWidgets = () => {
 
   return {
     widgets: userWidgetDataAdapter.fromTwitterWidgetsData({
-      applicationsStatus,
+      applicationsStatus: {
+        gitcoin: gitcoinEnabled,
+        idrissSend: idrissSendEnabled,
+      },
       idrissSendWidgets,
       gitcoinDonationWidgets,
     }),

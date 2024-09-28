@@ -123,7 +123,6 @@ export class LineaExplorerPageManager extends AbstractPageManager {
         let div = this.document.createElement('div');
         this.lastPopup = div;
         this.generatePopupContent(div, key, elements, (value) => {
-            navigator.clipboard.writeText(value)
             input.value = value;
             input.focus();
             input.dispatchEvent(new Event('input'));

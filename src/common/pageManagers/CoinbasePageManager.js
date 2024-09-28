@@ -10,7 +10,6 @@ export class CoinbasePageManager extends DefaultPageManager {
         let div = this.document.createElement('div');
         this.lastPopup = div;
         this.generatePopupContent(div, key, elements, (value) => {
-            navigator.clipboard.writeText(value)
             input.value = '';
             input.focus();
             document.execCommand("insertText", false, value)
