@@ -1,9 +1,8 @@
 import { ErrorBoundary } from 'shared/observability';
 import { GitcoinDonationWidget } from 'application/gitcoin';
 import { IdrissSendWidget } from 'application/idriss-send';
-import { useAddressResolver } from 'final/hooks/use-address-resolver';
 
-import { useUserWidgets } from '../hooks';
+import { useAddressResolver, useUserWidgets } from '../hooks';
 
 export const UserWidgets = () => {
   const { widgets } = useUserWidgets();
