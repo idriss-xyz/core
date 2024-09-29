@@ -26,9 +26,8 @@
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "final": ["src/final"],
-      "final/*": [
-        "src/final/*"
+      "final": [
+        "src/final"
       ],
       "infrastructure/*": [
         "src/infrastructure/*"
