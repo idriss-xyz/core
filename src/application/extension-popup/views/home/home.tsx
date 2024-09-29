@@ -62,7 +62,7 @@ export const HomeView = () => {
               },
             ]}
             title="Governance Widget"
-            subtitle="Get alerts about active DAO votes"
+            subtitle="Get alerts for active DAO votes"
             iconContainerClassName="mt-2"
             className="transition-transform duration-[600ms] hover:scale-105 hover:bg-gray-50"
           />
@@ -91,7 +91,7 @@ export const HomeView = () => {
 
       <div className="mt-4">
         <button
-          className="rounded-lg bg-[#11dd74] px-5 py-2 font-medium text-white shadow-lg transition-transform duration-300 hover:scale-105 hover:bg-[#11cc74]"
+          className="rounded-lg bg-[#11dd74] px-5 py-2 text-sm font-medium text-white shadow-lg transition-transform duration-300 hover:scale-105 hover:bg-[#11cc74]"
           onClick={() => {
             extensionPopup.navigate(
               EXTENSION_POPUP_ROUTE.SETTINGS_CUSTOMIZATION,
