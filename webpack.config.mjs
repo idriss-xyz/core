@@ -37,6 +37,10 @@ export default (_env, argv) => {
       publicPath: '',
       chunkFormat: false
     },
+    performance: {
+      maxAssetSize: 9999999999,
+      maxEntrypointSize: 9999999999,
+    },
     plugins: [
       new CopyPlugin({
         patterns: [
