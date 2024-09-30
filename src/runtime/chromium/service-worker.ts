@@ -52,33 +52,34 @@ const onInstalled = () => {
       'chrome-extension://fnjhmkhhmkbjkkabndcnnogagogbneec/*',
     ],
   });
-
-  chrome.tabs.onActivated.addListener(() => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const activeTab = tabs[0];
-      if (isValidTab(activeTab)) {
-        chrome.tabs
-          .sendMessage(activeTab.id, {
-            type: ACTIVE_TAB_CHANGED,
-          })
-          .catch(console.error);
-      }
-    });
-  });
-
-  chrome.action.onClicked.addListener(() => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const activeTab = tabs[0];
-      if (isValidTab(activeTab)) {
-        chrome.tabs
-          .sendMessage(activeTab.id, {
-            type: EXTENSION_BUTTON_CLICKED,
-          })
-          .catch(console.error);
-      }
-    });
-  });
 };
+
+chrome.tabs.onActivated.addListener(() => {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const activeTab = tabs[0];
+    if (isValidTab(activeTab)) {
+      chrome.tabs
+        .sendMessage(activeTab.id, {
+          type: ACTIVE_TAB_CHANGED,
+        })
+        .catch(console.error);
+    }
+  });
+});
+
+chrome.action.onClicked.addListener(() => {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const activeTab = tabs[0];
+    if (isValidTab(activeTab)) {
+      chrome.tabs
+        .sendMessage(activeTab.id, {
+          type: EXTENSION_BUTTON_CLICKED,
+        })
+        .catch(console.error);
+    }
+  });
+});
+
 chrome.runtime.onStartup.addListener(keepAlive);
 keepAlive();
 
