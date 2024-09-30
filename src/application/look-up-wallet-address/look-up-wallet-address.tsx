@@ -1,132 +1,114 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useKey } from 'react-use';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { lowerFirst } from 'lodash';
 
 import { Closable } from 'shared/ui';
 import { useExtensionSettings } from 'shared/extension';
+import { useCommandMutation } from 'shared/messaging';
+import {
+  GetDigestToWalletAddressCommand,
+  GetHandleToTwitterIdCommand,
+  getIdrissIdentifierType,
+  IDRISS_IDENTIFIER_TYPE,
+  IDRISS_URL,
+  normalizePhoneIdentifier,
+  normalizeTwitterIdentifier,
+} from 'shared/idriss';
 
-import { AddressList } from './components/address-list';
 import {
   findMatchingAddresses,
-  formatIdentifier,
   generateDigestedPromises,
   isShortcut,
-  useAddressesQuery,
-  useTwitterIdsQuery,
 } from './utils';
-import { LookupFormValues } from './types';
-import { LookupForm } from './components/look-up-form';
-
-interface MatchedAddresses {
-  input: string;
-  result: Record<string, string>;
-  twitterID?: string;
-}
+import { LookupFormValues, SearchResult } from './types';
+import { AddressList, LookupForm } from './components';
 
 const EMPTY_LOOKUP_FORM_VALUES: LookupFormValues = {
-  userIdentifier: '',
+  identifier: '',
 };
 
-export const LookUpWalletAddress: React.FC = () => {
-  const [handle, setHandle] = useState('');
+export const LookUpWalletAddress = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [matchedAddresses, setMatchedAddresses] = useState<MatchedAddresses>();
-  const [digestedMessages, setDigestedMessages] =
-    useState<Record<string, string>>();
+
+  const [result, setResult] = useState<SearchResult>();
+  const foundAddressesCount = Object.values(result?.lookup ?? {}).length;
+  const hasFoundNothing = result && foundAddressesCount === 0;
+  const hasFoundSomething = result && foundAddressesCount > 0;
 
   const { extensionSettings } = useExtensionSettings();
   const form = useForm<LookupFormValues>({
     defaultValues: EMPTY_LOOKUP_FORM_VALUES,
   });
 
-  const userIdentifier = form.watch('userIdentifier');
   const isEnabled =
     extensionSettings['entire-extension-enabled'] &&
     extensionSettings['wallet-lookup-enabled'];
 
-  const twitterIdsQuery = useTwitterIdsQuery(handle);
-  const addressesQuery = useAddressesQuery(digestedMessages);
+  const twitterIdsMutation = useCommandMutation(GetHandleToTwitterIdCommand);
+  const addressesMutation = useCommandMutation(GetDigestToWalletAddressCommand);
 
-  const fetchDigestedMessages = useCallback(
-    async (network = '', coin = '') => {
-      try {
-        const identifier = formatIdentifier(handle, twitterIdsQuery.data);
-        if (!identifier) {
-          setDigestedMessages(undefined);
-          return;
-        }
-
-        const digestedPromises = await generateDigestedPromises(
-          identifier,
-          network,
-          coin,
-        );
-        setDigestedMessages(digestedPromises);
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    [handle, twitterIdsQuery.data],
-  );
-
-  const matchDigestedMessages = useCallback(() => {
-    if (!addressesQuery?.data || !digestedMessages) {
-      setMatchedAddresses(undefined);
-      return;
-    }
-
-    const foundMatches = findMatchingAddresses(
-      addressesQuery.data,
-      digestedMessages,
-    );
-    const formattedHandle = handle.startsWith('@') ? handle.slice(1) : handle;
-
-    const result = {
-      input: formattedHandle,
-      result: foundMatches,
-      ...(twitterIdsQuery.data?.[formattedHandle] && { twitterID: handle }),
-    };
-
-    setMatchedAddresses(result);
-  }, [addressesQuery.data, digestedMessages, handle, twitterIdsQuery.data]);
-
-  const onSubmit: SubmitHandler<LookupFormValues> = (data) => {
-    setHandle(data.userIdentifier);
-    setDigestedMessages(undefined);
-    setMatchedAddresses(undefined);
-  };
-
-  const resetComponentState = () => {
+  const reset = useCallback(() => {
     form.reset(EMPTY_LOOKUP_FORM_VALUES);
-    setHandle('');
-    setDigestedMessages(undefined);
-    setMatchedAddresses(undefined);
-  };
+    setResult(undefined);
+  }, [form]);
 
-  const closeWidget = () => {
+  const closeWidget = useCallback(() => {
+    reset();
     setIsVisible(false);
-    resetComponentState();
-  };
+  }, [reset]);
 
-  const toggleVisibility = () => {
+  const toggleVisibility = useCallback(() => {
     setIsVisible((previous) => {
       return !previous;
     });
-  };
+  }, []);
 
-  useEffect(() => {
-    if (!twitterIdsQuery.isLoading && handle.length >= 3) {
-      void fetchDigestedMessages();
-    }
-  }, [fetchDigestedMessages, handle.length, twitterIdsQuery.isLoading]);
+  const submit: SubmitHandler<LookupFormValues> = useCallback(
+    async (data) => {
+      let identifier = lowerFirst(data.identifier).replaceAll(' ', '');
+      const identifierType = getIdrissIdentifierType(identifier);
+      if (identifierType === IDRISS_IDENTIFIER_TYPE.UNKNOWN) {
+        setResult({ identifier, lookup: {} });
+        return;
+      }
 
-  useEffect(() => {
-    if (addressesQuery?.data) {
-      matchDigestedMessages();
-    }
-  }, [addressesQuery?.data, matchDigestedMessages]);
+      if (identifierType === IDRISS_IDENTIFIER_TYPE.TWITTER) {
+        const twitterIds = await twitterIdsMutation.mutateAsync({
+          handles: [identifier],
+        });
+        const foundTwitterId =
+          twitterIds[normalizeTwitterIdentifier(identifier)];
+
+        if (!foundTwitterId) {
+          setResult({ identifier, lookup: {} });
+          return;
+        }
+        identifier = foundTwitterId;
+      }
+
+      if (identifierType === IDRISS_IDENTIFIER_TYPE.PHONE) {
+        identifier = normalizePhoneIdentifier(identifier);
+      }
+
+      const digestedMessages = await generateDigestedPromises(identifier);
+      const addresses = await addressesMutation.mutateAsync({
+        digestedMessages: Object.values(digestedMessages),
+      });
+      const foundMatches = findMatchingAddresses(addresses, digestedMessages);
+
+      setResult({
+        identifier: data.identifier,
+        lookup: foundMatches,
+      });
+      form.reset({ identifier: data.identifier });
+    },
+    [addressesMutation, form, twitterIdsMutation],
+  );
 
   useKey(isShortcut, toggleVisibility);
+
+  const isLoading = addressesMutation.isPending || twitterIdsMutation.isPending;
 
   if (!isVisible || !isEnabled) {
     return null;
@@ -141,17 +123,27 @@ export const LookUpWalletAddress: React.FC = () => {
         <div className="relative">
           <LookupForm
             form={form}
-            onSubmit={onSubmit}
-            userIdentifier={userIdentifier}
-            isLoading={addressesQuery.isLoading || twitterIdsQuery.isLoading}
-            onReset={resetComponentState}
+            onSubmit={submit}
+            isLoading={isLoading}
+            onReset={reset}
+            className="mb-1.5"
           />
-          <AddressList
-            onAddressCopied={closeWidget}
-            foundAddresses={matchedAddresses?.result}
-            isTwitterLookup={!!matchedAddresses?.twitterID}
-            lookupText={matchedAddresses?.input}
-          />
+          {!form.formState.isDirty && hasFoundSomething && (
+            <AddressList onAddressCopied={closeWidget} searchResult={result} />
+          )}
+          {!form.formState.isDirty && hasFoundNothing && (
+            <div className="absolute w-full rounded-lg border border-gray-300 bg-white p-4 shadow-md">
+              <span className="text-gray-800">Nothing found.</span>
+              <a
+                href={IDRISS_URL}
+                target="_blank"
+                className="ml-2 text-blue-600 hover:underline"
+                rel="noreferrer"
+              >
+                Sign up for IDriss now!
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </Closable>

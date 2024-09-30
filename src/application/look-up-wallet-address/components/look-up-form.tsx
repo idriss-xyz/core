@@ -4,24 +4,24 @@ import { IconButton, Spinner } from 'shared/ui';
 
 import { LookupFormValues } from '../types';
 
-interface LookupFormProperties {
+type Properties = {
   form: UseFormReturn<LookupFormValues>;
   onSubmit: SubmitHandler<LookupFormValues>;
-  userIdentifier: string;
   isLoading: boolean;
   onReset: () => void;
-}
+  className?: string;
+};
 export const LookupForm = ({
   form,
   onSubmit,
-  userIdentifier,
   isLoading,
   onReset,
-}: LookupFormProperties) => {
+  className,
+}: Properties) => {
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
+    <form onSubmit={form.handleSubmit(onSubmit)} className={className}>
       <label
-        htmlFor="user_identifier"
+        htmlFor="identifier"
         className="mb-2 block text-base font-bold text-gray-700"
       >
         Look up an address
@@ -29,28 +29,30 @@ export const LookupForm = ({
       <div className="flex flex-row gap-x-[10px]">
         <div className="relative grow">
           <Controller
-            name="userIdentifier"
+            name="identifier"
             control={form.control}
             render={({ field }) => {
               return (
-                <input
-                  {...field}
-                  value={field.value}
-                  autoFocus
-                  id="user_identifier"
-                  className="mb-1.5 box-border block h-[38px] w-full rounded border border-[#cccccc] bg-white py-2 pl-3 pr-10 align-middle font-sans text-sm text-[#333333] outline-none"
-                  placeholder="hello@idriss.xyz  |  +1 650...  |  @IDriss_xyz"
-                />
+                <>
+                  <input
+                    {...field}
+                    autoFocus
+                    id="identifier"
+                    className="box-border block h-[38px] w-full rounded border border-[#cccccc] bg-white py-2 pl-3 pr-10 align-middle font-sans text-sm text-[#333333] outline-none"
+                    placeholder="hello@idriss.xyz  |  +1 650...  |  @IDriss_xyz"
+                  />
+                  {!isLoading && field.value.length > 0 && (
+                    <IconButton
+                      iconProps={{ name: 'Cross1Icon' }}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-black transition-transform hover:scale-90"
+                      onClick={onReset}
+                    />
+                  )}
+                </>
               );
             }}
           />
-          {!isLoading && userIdentifier?.length > 0 && (
-            <IconButton
-              iconProps={{ name: 'Cross1Icon' }}
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-black transition-transform hover:scale-90"
-              onClick={onReset}
-            />
-          )}
+
           {isLoading && (
             <div className="absolute right-2 top-1/2 flex size-6 -translate-y-1/2 items-center">
               <Spinner className="h-4" />

@@ -9,4 +9,11 @@ export {
   IDRISS_RED_ICON,
   IDRISS_ICON_WITH_TEXT,
   IDRISS_DISCORD_URL,
+  IDRISS_URL,
+  IDRISS_IDENTIFIER_TYPE,
 } from './constants';
+export {
+  getIdrissIdentifierType,
+  normalizePhoneIdentifier,
+  normalizeTwitterIdentifier,
+} from './utils';

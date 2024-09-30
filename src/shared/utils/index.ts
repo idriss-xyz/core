@@ -4,4 +4,4 @@ export {
 } from './commands';
 
 export { getDifferenceInDays, getEndsInLabel } from './date-utils';
-export { reverseObject } from './objects';
+export { reverseObject, createLookup } from './objects';
