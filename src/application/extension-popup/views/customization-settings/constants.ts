@@ -1,13 +1,13 @@
 import {
-  ExtensionAddressBookSettingsStorageKeys,
-  ExtensionGovernanceSettingsStorageKeys,
-  ExtensionIntegrationSettingsStorageKeys,
+  ExtensionAddressBookSettingName,
+  ExtensionGovernanceSettingName,
+  ExtensionIntegrationSettingName,
   ExtensionSettingsStorageKey,
 } from 'shared/extension';
 
 import { SettingListItem, SettingListItemsGroup } from './types';
 
-const addressBookSettings: SettingListItem<ExtensionAddressBookSettingsStorageKeys>[] =
+const addressBookSettings: SettingListItem<ExtensionAddressBookSettingName>[] =
   [
     {
       label: 'Tipping',
@@ -19,23 +19,22 @@ const addressBookSettings: SettingListItem<ExtensionAddressBookSettingsStorageKe
     },
   ];
 
-const governanceSettings: SettingListItem<ExtensionGovernanceSettingsStorageKeys>[] =
-  [
-    {
-      label: 'Agora',
-      storageKey: 'agora-enabled',
-    },
-    {
-      label: 'Snapshot',
-      storageKey: 'snapshot-enabled',
-    },
-    {
-      label: 'Tally',
-      storageKey: 'tally-enabled',
-    },
-  ];
+const governanceSettings: SettingListItem<ExtensionGovernanceSettingName>[] = [
+  {
+    label: 'Agora',
+    storageKey: 'agora-enabled',
+  },
+  {
+    label: 'Snapshot',
+    storageKey: 'snapshot-enabled',
+  },
+  {
+    label: 'Tally',
+    storageKey: 'tally-enabled',
+  },
+];
 
-const integrationsSettings: SettingListItem<ExtensionIntegrationSettingsStorageKeys>[] =
+const integrationsSettings: SettingListItem<ExtensionIntegrationSettingName>[] =
   [
     {
       label: 'Polymarket',

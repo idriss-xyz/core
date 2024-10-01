@@ -129,7 +129,7 @@ module.exports = {
         rules: [
           {
             from: ['runtime'],
-            allow: ['infrastructure'],
+            allow: ['infrastructure', 'shared'],
           },
           {
             from: ['host'],

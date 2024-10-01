@@ -1,10 +1,10 @@
-import { ManageExtensionSettingsCommand } from './manage-extension-settings';
+import { ChangeExtensionSettingsCommand } from './manage-extension-settings';
 import { GetServiceStatusCommand } from './get-service-status';
 
 export const COMMAND_MAP = {
   [GetServiceStatusCommand.name]: GetServiceStatusCommand,
-  [ManageExtensionSettingsCommand.name]: ManageExtensionSettingsCommand,
+  [ChangeExtensionSettingsCommand.name]: ChangeExtensionSettingsCommand,
 };
 
 export { GetServiceStatusCommand } from './get-service-status';
-export { ManageExtensionSettingsCommand } from './manage-extension-settings';
+export { ChangeExtensionSettingsCommand } from './manage-extension-settings';

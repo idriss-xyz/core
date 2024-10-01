@@ -94,6 +94,7 @@ type CommandConstructor<Payload, Response extends JsonValue> = new (
 
 export const useCommandMutation = <Payload, Response extends JsonValue>(
   commandConstructor: CommandConstructor<Payload, Response>,
+  options?: { onMutate: (payload: Payload) => void },
 ) => {
   const mutationFunction = useCallback(
     (payload: Payload) => {
@@ -105,6 +106,7 @@ export const useCommandMutation = <Payload, Response extends JsonValue>(
 
   return useMutation({
     mutationFn: mutationFunction,
+    onMutate: options?.onMutate,
   });
 };
 

@@ -35,6 +35,11 @@ export default (_env, argv) => {
       path: path.resolve(__dirname, 'buildResults'),
       filename: '[name].js',
       publicPath: '',
+      chunkFormat: false
+    },
+    performance: {
+      maxAssetSize: 9999999999,
+      maxEntrypointSize: 9999999999,
     },
     plugins: [
       new CopyPlugin({
@@ -96,9 +101,8 @@ export default (_env, argv) => {
     optimization: {
       concatenateModules: false,
       minimize: false, // minimization causes runtime errors for some reason
-      splitChunks: {
-        chunks: () => false,
-      },
+      runtimeChunk: false,
+      splitChunks: false,
     },
   };
 };

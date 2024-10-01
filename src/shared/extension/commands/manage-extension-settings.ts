@@ -6,27 +6,17 @@ interface Payload {
   settings: Partial<ExtensionSettings>;
 }
 
-type Response = ExtensionSettings;
+type Response = boolean;
 
-export class ManageExtensionSettingsCommand extends Command<Payload, Response> {
-  public readonly name = 'ManageExtensionSettingsCommand' as const;
+export class ChangeExtensionSettingsCommand extends Command<Payload, Response> {
+  public readonly name = 'ChangeExtensionSettingsCommand' as const;
 
   constructor(public payload: Payload) {
     super();
   }
 
   async handle() {
-    chrome.storage.local
-      .set({ cacheInvalidate: Date.now() })
-      .catch(console.error);
-    const allStorage = await chrome.storage.local.get(null);
-    for (const x of Object.keys(allStorage).filter((x) => {
-      return x.startsWith('cache[');
-    })) {
-      await chrome.storage.local.remove(x);
-      continue;
-    }
-    let allSettings = await ExtensionSettingsManager.getAllSettings();
+    const allSettings = await ExtensionSettingsManager.getAllSettings();
 
     // as payload.settings can be just partial of ExtensionSettings
     // we merge it with the previous state to not lose any setting
@@ -34,7 +24,6 @@ export class ManageExtensionSettingsCommand extends Command<Payload, Response> {
       ...allSettings,
       ...this.payload.settings,
     });
-    allSettings = await ExtensionSettingsManager.getAllSettings();
-    return new OkResult(allSettings);
+    return new OkResult(true);
   }
 }
