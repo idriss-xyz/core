@@ -1,20 +1,15 @@
+import React from 'react';
 import NiceModal from '@ebay/nice-modal-react';
+import type { Preview } from '@storybook/react';
+
 import { PortalProvider, QueryProvider } from '../src/shared/ui';
 import { WithObservabilityScope } from '../src/shared/observability';
 import { WalletContextProvider } from '../src/shared/web3';
-import React from 'react';
-import type { Preview } from '@storybook/react';
+import { ExtensionSettingsProvider } from '../src/shared/extension';
+
 import './tailwind.css';
 
 const preview: Preview = {
-  properties: {
-    controls: {
-      matchers: {
-        color: /(background|color)$/i,
-        date: /Date$/i,
-      },
-    },
-  },
   decorators: [
     (Story) => {
       return (
@@ -23,7 +18,9 @@ const preview: Preview = {
             <QueryProvider>
               <NiceModal.Provider>
                 <WalletContextProvider disabledWalletsRdns={[]}>
-                  <Story />
+                  <ExtensionSettingsProvider>
+                    <Story />
+                  </ExtensionSettingsProvider>
                 </WalletContextProvider>
               </NiceModal.Provider>
             </QueryProvider>

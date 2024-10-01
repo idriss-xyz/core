@@ -5,3 +5,5 @@ export interface SendFormValues {
   tokenAddress: Hex;
   amount: number;
 }
+
+export type IdrissIdentifierType = 'EMAIL' | 'PHONE' | 'TWITTER' | 'UNKNOWN';

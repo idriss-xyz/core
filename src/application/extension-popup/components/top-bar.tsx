@@ -1,4 +1,4 @@
-import { IDRISS_ICON_WITH_TEXT } from 'shared/idriss';
+import { IDRISS_ICON_WITH_TEXT, IDRISS_URL } from 'shared/idriss';
 import { IconButton, Toggle } from 'shared/ui';
 import {
   EXTENSION_POPUP_ROUTE,
@@ -16,7 +16,7 @@ export const TopBar = () => {
   return (
     <nav className="flex items-center justify-between bg-white p-2 drop-shadow-sm">
       <a
-        href="https://www.idriss.xyz/"
+        href={IDRISS_URL}
         className="flex items-center justify-center"
         target="_blank"
         rel="noopener noreferrer"
