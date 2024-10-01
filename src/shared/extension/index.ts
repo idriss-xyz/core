@@ -5,6 +5,7 @@ export {
   SETTINGS_STORAGE_KEY,
   ACTIVE_TAB_CHANGED,
   EXTENSION_BUTTON_CLICKED,
+  DEFAULT_EXTENSION_SETTINGS as DEFAULT_SETTINGS,
 } from './constants';
 export {
   ExtensionSettingsProvider,
@@ -18,9 +19,9 @@ export {
 } from './commands';
 export type {
   ExtensionSettingsStorageKey,
-  ExtensionAddressBookSettingsStorageKeys,
-  ExtensionGovernanceSettingsStorageKeys,
-  ExtensionIntegrationSettingsStorageKeys,
+  ExtensionAddressBookSettingName,
+  ExtensionGovernanceSettingName,
+  ExtensionIntegrationSettingName,
 } from './types';
 export { ExtensionSettingsManager } from './extension-settings-manager';
 export type { ExtensionSettings } from './types';

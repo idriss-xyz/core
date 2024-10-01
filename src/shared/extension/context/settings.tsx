@@ -1,22 +1,20 @@
-import { ReactNode, createContext, useEffect, useState } from 'react';
+import { ReactNode, createContext } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { onWindowMessage } from 'shared/messaging';
+import { onWindowMessage, useCommandMutation } from 'shared/messaging';
 import { createContextHook } from 'shared/ui';
 
 import {
+  DEFAULT_EXTENSION_SETTINGS,
   GET_EXTENSION_SETTINGS_REQUEST,
   GET_EXTENSION_SETTINGS_RESPONSE,
 } from '../constants';
-import { ManageExtensionSettingsCommand } from '../commands';
+import { ChangeExtensionSettingsCommand } from '../commands';
 import { ExtensionSettings } from '../types';
-import { createInitialExtensionSettingsStorageKeys } from '../utils';
 
 interface Properties {
   children: ReactNode;
 }
-
-const initialExtensionSettings: ExtensionSettings =
-  createInitialExtensionSettingsStorageKeys();
 
 interface ExtensionSettingsContextValues {
   extensionSettings: ExtensionSettings;
@@ -30,46 +28,61 @@ const ExtensionSettingsContext = createContext<
 >(undefined);
 
 export const ExtensionSettingsProvider = ({ children }: Properties) => {
-  const [extensionSettings, setExtensionSettings] = useState<ExtensionSettings>(
-    initialExtensionSettings,
+  const queryClient = useQueryClient();
+
+  const changeExtensionSettingsMutation = useCommandMutation(
+    ChangeExtensionSettingsCommand,
+    {
+      onMutate: (payload) => {
+        queryClient.setQueryData<ExtensionSettings>(
+          ['EXTENSION_SETTINGS'],
+          (cachedData) => {
+            if (!cachedData) {
+              return { ...DEFAULT_EXTENSION_SETTINGS, ...payload.settings };
+            }
+
+            return {
+              ...DEFAULT_EXTENSION_SETTINGS,
+              ...cachedData,
+              ...payload.settings,
+            };
+          },
+        );
+      },
+    },
   );
 
-  const changeExtensionSetting = async (
-    settings: Partial<ExtensionSettings>,
-  ) => {
-    const extensionSettingsCommand = new ManageExtensionSettingsCommand({
-      settings,
-    });
-    const extensionSettings = await extensionSettingsCommand.send();
-    setExtensionSettings(extensionSettings);
-  };
+  const settingsQuery = useQuery({
+    queryKey: ['EXTENSION_SETTINGS'],
+    queryFn: () => {
+      return new Promise<ExtensionSettings>((resolve) => {
+        window.postMessage({
+          type: GET_EXTENSION_SETTINGS_REQUEST,
+        });
 
-  // TODO: check if this could be achievable with usage of react-query
-  useEffect(() => {
-    onWindowMessage<ExtensionSettings>(
-      GET_EXTENSION_SETTINGS_RESPONSE,
-      async (settings) => {
-        if (Object.keys(settings).length === 0) {
-          //It means the extension was just installed, so we want to set initialSettings to the local storage
-          await changeExtensionSetting(initialExtensionSettings);
-        } else {
-          setExtensionSettings(settings);
-        }
-      },
-    );
-  }, []);
+        onWindowMessage<ExtensionSettings>(
+          GET_EXTENSION_SETTINGS_RESPONSE,
+          (settings, removeEventListener) => {
+            resolve(settings);
+            removeEventListener();
+          },
+        );
+      });
+    },
+    staleTime: 0,
+  });
 
-  useEffect(() => {
-    window.postMessage({
-      type: GET_EXTENSION_SETTINGS_REQUEST,
-    });
-  }, []);
+  if (!settingsQuery.isSuccess) {
+    return null;
+  }
 
   return (
     <ExtensionSettingsContext.Provider
       value={{
-        extensionSettings,
-        changeExtensionSetting,
+        extensionSettings: settingsQuery.data,
+        changeExtensionSetting: async (settings) => {
+          await changeExtensionSettingsMutation.mutateAsync({ settings });
+        },
       }}
     >
       {children}

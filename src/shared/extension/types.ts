@@ -1,25 +1,25 @@
 import { Hex } from 'shared/web3';
 
-import {
-  extensionAddressBookSettingsStorageKeys,
-  extensionGovernanceSettingsStorageKeys,
-  extensionIntegrationSettingsStorageKeys,
-  extensionSettingsStorageKeys,
-} from './constants';
-
 export type ExtensionSettings = Record<ExtensionSettingsStorageKey, boolean>;
 
-export type ExtensionAddressBookSettingsStorageKeys =
-  (typeof extensionAddressBookSettingsStorageKeys)[number];
+export type ExtensionAddressBookSettingName =
+  | 'idriss-send-enabled'
+  | 'wallet-lookup-enabled';
 
-export type ExtensionGovernanceSettingsStorageKeys =
-  (typeof extensionGovernanceSettingsStorageKeys)[number];
+export type ExtensionGovernanceSettingName =
+  | 'snapshot-enabled'
+  | 'tally-enabled'
+  | 'agora-enabled';
 
-export type ExtensionIntegrationSettingsStorageKeys =
-  (typeof extensionIntegrationSettingsStorageKeys)[number];
+export type ExtensionIntegrationSettingName =
+  | 'polymarket-enabled'
+  | 'gitcoin-enabled';
 
 export type ExtensionSettingsStorageKey =
-  (typeof extensionSettingsStorageKeys)[number];
+  | 'entire-extension-enabled'
+  | ExtensionAddressBookSettingName
+  | ExtensionGovernanceSettingName
+  | ExtensionIntegrationSettingName;
 
 export interface StoredWallet {
   account: Hex;

@@ -10,7 +10,12 @@ import { WEB3_COMMAND_MAP } from 'shared/web3';
 import { GITCOIN_DONATION_COMMAND_MAP } from 'application/gitcoin';
 import { POLYMARKET_COMMAND_MAP } from 'application/polymarket';
 import { SNAPSHOT_COMMAND_MAP } from 'application/snapshot';
-import { EXTENSION_COMMAND_MAP } from 'shared/extension';
+import {
+  DEFAULT_SETTINGS,
+  EXTENSION_BUTTON_CLICKED,
+  EXTENSION_COMMAND_MAP,
+  ExtensionSettingsManager,
+} from 'shared/extension';
 import {
   createObservabilityScope,
   OBESRVABILITY_COMMAND_MAP,
@@ -47,21 +52,22 @@ export class ServiceWorker {
     createObservabilityScope('service-worker');
   private constructor(private environment: typeof chrome) {}
 
-  static run(environment: typeof chrome, onInstalled: () => void) {
+  static run(environment: typeof chrome) {
     const serviceWorker = new ServiceWorker(environment);
-    serviceWorker.subscribeToCommands();
 
-    // TODO: double check after refactoring rest of extension
-    serviceWorker.onInstalled(onInstalled);
-    // TODO: remove check after refactoring rest of extension
-    serviceWorker.onRestMessages();
-
-    self.addEventListener('error', (event) => {
-      serviceWorker.observabilityScope.captureException(event.error);
-    });
+    serviceWorker.watchCommands();
+    serviceWorker.watchStartup();
+    serviceWorker.watchInstalled();
+    serviceWorker.watchPopupClick();
+    serviceWorker.watchLegacyMessages();
+    serviceWorker.watchWorkerError();
   }
 
-  subscribeToCommands() {
+  keepAlive() {
+    return setInterval(this.environment.runtime.getPlatformInfo, 20e3);
+  }
+
+  watchCommands() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.onMessage<SerializedCommand<unknown>>(
       COMMAND_BUS_REQUEST_MESSAGE,
@@ -111,7 +117,7 @@ export class ServiceWorker {
   }
 
   // TODO: refactor
-  onRestMessages() {
+  watchLegacyMessages() {
     this.environment.runtime.onMessage.addListener(
       (request, _sender, sendResponse) => {
         switch (request.type) {
@@ -206,7 +212,56 @@ export class ServiceWorker {
     });
   }
 
-  onInstalled(onInstalled: () => void) {
-    this.environment.runtime.onInstalled.addListener(onInstalled);
+  watchStartup() {
+    this.environment.runtime.onStartup.addListener(() => {
+      return this.keepAlive();
+    });
   }
+
+  watchInstalled() {
+    this.environment.runtime.onInstalled.addListener(() => {
+      void ExtensionSettingsManager.getAllSettings().then((currentSettings) => {
+        void ExtensionSettingsManager.setSettings({
+          ...DEFAULT_SETTINGS,
+          ...currentSettings,
+        });
+      });
+    });
+  }
+
+  watchPopupClick() {
+    this.environment.action.onClicked.addListener(() => {
+      this.environment.tabs.query(
+        { active: true, currentWindow: true },
+        (tabs) => {
+          const activeTab = tabs[0];
+          if (ServiceWorker.isValidTab(activeTab)) {
+            this.environment.tabs
+              .sendMessage(activeTab.id, {
+                type: EXTENSION_BUTTON_CLICKED,
+              })
+              .catch(console.error);
+          }
+        },
+      );
+    });
+  }
+
+  watchWorkerError() {
+    self.addEventListener('error', (event) => {
+      this.observabilityScope.captureException(event.error);
+    });
+  }
+
+  private static isValidTab = (
+    tab?: chrome.tabs.Tab,
+  ): tab is chrome.tabs.Tab & { id: number } => {
+    return Boolean(
+      tab?.id &&
+        tab.url &&
+        tab.url?.length > 0 &&
+        !tab.url?.startsWith('chrome') &&
+        !tab.url?.startsWith('about'),
+    );
+  };
 }
