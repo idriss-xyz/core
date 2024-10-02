@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router';
 
 import { EXTENSION_POPUP_ROUTE, useExtensionPopup } from 'shared/extension';
-import { Closable } from 'shared/ui';
+import { Closable, ScrollArea } from 'shared/ui';
 
 import { Footer, TopBar } from './components';
 import { HomeView, MainSettingsView, CustomizationSettingsView } from './views';
@@ -21,7 +21,7 @@ export const ExtensionPopup = () => {
       className="fixed right-2 top-2 z-[999999] flex h-[512px] w-[470px] flex-col overflow-hidden rounded-md bg-white p-0 shadow-lg"
     >
       <TopBar />
-      <div className="grow overflow-y-auto bg-gray-100 [scrollbar-color:gray_#b7b7b7] [scrollbar-width:thin]">
+      <ScrollArea className="grow overflow-y-auto bg-gray-100">
         <Routes>
           <Route path={EXTENSION_POPUP_ROUTE.HOME} element={<HomeView />} />
           <Route
@@ -33,7 +33,7 @@ export const ExtensionPopup = () => {
             element={<CustomizationSettingsView />}
           />
         </Routes>
-      </div>
+      </ScrollArea>
 
       <Footer />
     </Closable>

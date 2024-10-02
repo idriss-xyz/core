@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 
 import { usePortal } from '../../providers';
 import { classes } from '../../utils';
+import { ScrollArea } from '../scroll-area';
 
 import { SelectProperties } from './select.types';
 import { SelectOption } from './select-option.component';
@@ -46,31 +47,33 @@ export const Select = <T,>({
         </DropdownMenu.Trigger>
         <DropdownMenu.Portal container={portal}>
           <DropdownMenu.Content sideOffset={2} asChild>
-            <SelectOptionContainer
-              as="div"
-              className={classes(
-                'max-h-64 w-[var(--radix-popper-anchor-width)] overflow-y-auto text-black [scrollbar-color:gray_#efefef] [scrollbar-width:thin]',
-                optionsContainerClassName,
-              )}
-            >
-              {options.map((option, index) => {
-                return (
-                  <DropdownMenu.Item
-                    key={option.label}
-                    onSelect={() => {
-                      onChange(option.value);
-                    }}
-                  >
-                    <SelectOption
-                      option={option}
-                      className={classes(
-                        index === 0 && 'rounded-t-md',
-                        index === options.length - 1 && 'rounded-b-md',
-                      )}
-                    />
-                  </DropdownMenu.Item>
-                );
-              })}
+            <SelectOptionContainer as="div">
+              <ScrollArea
+                className={classes(
+                  'max-h-64 w-[var(--radix-popper-anchor-width)] overflow-y-auto text-black',
+                  optionsContainerClassName,
+                )}
+              >
+                {options.map((option, index) => {
+                  return (
+                    <DropdownMenu.Item
+                      key={option.label}
+                      onSelect={() => {
+                        onChange(option.value);
+                      }}
+                      className="outline-none"
+                    >
+                      <SelectOption
+                        option={option}
+                        className={classes(
+                          index === 0 && 'rounded-t-md',
+                          index === options.length - 1 && 'rounded-b-md',
+                        )}
+                      />
+                    </DropdownMenu.Item>
+                  );
+                })}
+              </ScrollArea>
             </SelectOptionContainer>
           </DropdownMenu.Content>
         </DropdownMenu.Portal>
