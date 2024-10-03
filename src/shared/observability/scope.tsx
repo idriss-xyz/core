@@ -25,6 +25,10 @@ const createClient = (executionEnvironment: SentryExecutionEnvironment) => {
   return new BrowserClient({
     dsn: process.env.SENTRY_DSN,
     enabled: process.env.SENTRY_ENVIRONMENT === 'production',
+    ignoreErrors: [
+      'TypeError: Failed to fetch',
+      'TypeError: NetworkError when attempting to fetch resource.',
+    ],
     transport:
       executionEnvironment === 'service-worker'
         ? makeFetchTransport
