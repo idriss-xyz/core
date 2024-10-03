@@ -1,14 +1,15 @@
-import { ContentScript } from 'infrastructure/content-script';
+if (window.document.contentType === 'text/html') {
+  void import('infrastructure/content-script').then(({ ContentScript }) => {
+    if (ContentScript.canRun()) {
+      ContentScript.run(chrome);
 
-// TODO: remove after refactoring rest of extension
-import { pageManagerFactory } from '../../common/pageManagers/factory';
-
-pageManagerFactory(document, document.location)
-  .then((x) => {
-    return x?.init();
-  })
-  .catch(console.error);
-
-if (window.top === window) {
-  ContentScript.run(chrome);
+      // TODO: block explorers needs to be refactored asap
+      void import('../../common/pageManagers/factory').then(
+        ({ pageManagerFactory }) => {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+          void pageManagerFactory(document, document.location)?.init();
+        },
+      );
+    }
+  });
 }

@@ -145,7 +145,6 @@ export class AbstractPageManager {
       ) {
         var sibling = element.nextElementSibling;
         if (sibling.matches('.d-md-inline-block.d-xl-none')) {
-          console.log('removing sibling');
           sibling.remove();
         }
         element.classList.remove('d-none', 'd-md-none');

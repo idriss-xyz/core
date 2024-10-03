@@ -43,7 +43,6 @@ class AddressResolverClass extends IdrissCrypto {
 
     // create a separate copy-paste call for extension window context and twitter page manager `apiAddressesRequestBulk`
     async simpleResolve(identifier, coin = "", network = "", twitterId) {
-        console.log("resolveStart", identifier, twitterId);
         let twitterID;
         let identifierT;
         identifier = lowerFirst(identifier).replace(" ", "");

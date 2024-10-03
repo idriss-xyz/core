@@ -29,6 +29,19 @@ const createClient = (executionEnvironment: SentryExecutionEnvironment) => {
       'TypeError: Failed to fetch',
       'TypeError: NetworkError when attempting to fetch resource.',
     ],
+    beforeSend(event, hint) {
+      const error = hint.originalException;
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        'message' in error &&
+        typeof error.message === 'string' &&
+        /failed to fetch/i.test(error.message)
+      ) {
+        event.fingerprint = ['failed-to-fetch'];
+      }
+      return event;
+    },
     transport:
       executionEnvironment === 'service-worker'
         ? makeFetchTransport

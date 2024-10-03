@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { classes } from 'shared/ui';
+import { classes } from '../../utils';
 
 type Properties = {
   children: ReactNode;

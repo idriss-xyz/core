@@ -73,7 +73,7 @@ export const useWidgetsData = ({ scrapedUsers, enabled }: Properties) => {
     }
 
     return scrapedUsers
-      ?.map((scrapedUser) => {
+      .map((scrapedUser) => {
         const twitterId =
           usernameToTwitterId[scrapedUser.data.username.toLowerCase()];
 
@@ -125,7 +125,7 @@ export const useWidgetsData = ({ scrapedUsers, enabled }: Properties) => {
     command: new GetDigestToWalletAddressCommand({
       digestedMessages,
     }),
-    enabled,
+    enabled: enabled && digestedMessages.length > 0,
   });
 
   useEffect(() => {

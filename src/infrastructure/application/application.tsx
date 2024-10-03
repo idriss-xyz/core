@@ -20,6 +20,37 @@ export class Application {
 
   static run() {
     bootstrap();
+    Application.fixTrustedTypes();
+  }
+
+  /*
+   * This fixes issue that occured on Gmail on stopped our extension working on gmail website
+   */
+  private static fixTrustedTypes() {
+    try {
+      if (
+        'trustedTypes' in window &&
+        typeof window.trustedTypes === 'object' &&
+        window.trustedTypes !== null &&
+        'createPolicy' in window.trustedTypes &&
+        typeof window.trustedTypes.createPolicy === 'function'
+      ) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        window.trustedTypes.createPolicy('default', {
+          createHTML: (v: string) => {
+            return v;
+          },
+          createScriptURL: (v: string) => {
+            return v;
+          },
+          createScript: (v: string) => {
+            return v;
+          },
+        });
+      }
+    } catch {
+      // we mute the error because it just means that the policy is already there
+    }
   }
 }
 

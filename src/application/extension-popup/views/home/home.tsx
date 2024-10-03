@@ -48,7 +48,7 @@ export const HomeView = () => {
               {
                 iconSrc: AGORA_LOGO,
                 iconAlt: 'Agora Logo',
-                className: 'size-6',
+                className: 'size-5 rounded-none',
               },
               {
                 iconSrc: SNAPSHOT_LOGO,

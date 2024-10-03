@@ -31,7 +31,7 @@ export const SectionTile = ({
     >
       <div
         className={classes(
-          'mb-2 flex justify-center space-x-3',
+          'mb-2 flex items-center justify-center space-x-3',
           iconContainerClassName,
         )}
       >

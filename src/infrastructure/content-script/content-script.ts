@@ -28,6 +28,10 @@ export class ContentScript {
     contentScript.subscribeToWallet();
   }
 
+  static canRun() {
+    return window.top === window;
+  }
+
   injectScriptToWebpage() {
     const script = document.createElement('script');
 

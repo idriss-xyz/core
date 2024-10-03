@@ -45,7 +45,6 @@ export class MantleExplorerPageManager extends AbstractPageManager {
                             if (/^0x[a-fA-F0-9]{40}$/.test(addressTemp)) address = addressTemp;
                             else address = element.getAttribute('data-address-hash');
                         } else if (element.href) address = element.href.match(/\/address\/(0x[0-9a-fA-F]{40})/)[1];
-                        console.log("address is: ", address)
                         if (element.nextSibling && element.nextSibling.className === "icon" && element.nextSibling.innerHTML === "") element.nextSibling.remove();
                         if (/^0x[0-9a-fA-F]{40}$/.test(address)) {
                             ret.push({ address, callback: (x) => this.defaultReverseResolve(x, element) });

@@ -1,6 +1,6 @@
 import * as Switch from '@radix-ui/react-switch';
 
-import { classes } from 'shared/ui';
+import { classes } from '../../utils';
 
 import { ToggleProperties } from './toggle.types';
 
