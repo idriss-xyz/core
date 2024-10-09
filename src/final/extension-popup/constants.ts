@@ -6,6 +6,12 @@ interface FooterLink {
   text: string;
 }
 
+export const EXTENSION_POPUP_ROUTE = {
+  HOME: '/',
+  SETTINGS_HOME: '/settings',
+  SETTINGS_CUSTOMIZATION: '/settings/customization',
+};
+
 export const footerLinks: FooterLink[] = [
   {
     href: 'https://docs.idriss.xyz/user-guides/idriss-book#where-can-you-use-the-extension',

@@ -3,11 +3,11 @@ import { useEffect } from 'react';
 
 import {
   ExtensionSettingsProvider,
-  ExtensionPopupProvider,
 } from 'shared/extension';
 import { TOGGLE_EXTENSION_POPUP_VISIBILITY } from 'shared/messaging';
 
 import { ExtensionPopup } from './extension-popup';
+import { ExtensionPopupProvider } from './extension-popup-context';
 
 interface WrappedComponentProperties {
   popupVisible: boolean;

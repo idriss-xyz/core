@@ -2,10 +2,11 @@ import { useCallback } from 'react';
 
 import { useWallet } from 'shared/web3';
 import { Icon } from 'shared/ui';
-import { EXTENSION_POPUP_ROUTE, useExtensionPopup } from 'shared/extension';
 import { IDRISS_DISCORD_URL } from 'shared/idriss';
 
 import { SettingsLayout } from '../../components';
+import { useExtensionPopup } from '../../extension-popup-context';
+import { EXTENSION_POPUP_ROUTE } from '../../constants';
 
 import { MenuItem } from './main-settings-menu-item';
 

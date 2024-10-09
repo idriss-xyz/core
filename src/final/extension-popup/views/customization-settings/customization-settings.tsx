@@ -4,14 +4,14 @@ import isEqual from 'lodash/isEqual';
 import { useMemo, useRef } from 'react';
 
 import {
-  EXTENSION_POPUP_ROUTE,
   ExtensionSettings,
-  useExtensionPopup,
   useExtensionSettings,
 } from 'shared/extension';
 import { IconButton } from 'shared/ui';
 
 import { SettingsLayout } from '../../components';
+import { useExtensionPopup } from '../../extension-popup-context';
+import { EXTENSION_POPUP_ROUTE } from '../../constants';
 
 import { settingListItemGroups } from './constants';
 import { CustomizationSettingsGroup } from './customization-settings-group';

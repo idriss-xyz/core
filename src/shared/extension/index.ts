@@ -1,7 +1,6 @@
 export {
   GET_EXTENSION_SETTINGS_RESPONSE,
   GET_EXTENSION_SETTINGS_REQUEST,
-  EXTENSION_POPUP_ROUTE,
   SETTINGS_STORAGE_KEY,
   ACTIVE_TAB_CHANGED,
   EXTENSION_BUTTON_CLICKED,
@@ -9,9 +8,7 @@ export {
 } from './constants';
 export {
   ExtensionSettingsProvider,
-  useExtensionSettings,
-  ExtensionPopupProvider,
-  useExtensionPopup,
+  useExtensionSettings
 } from './context';
 export {
   COMMAND_MAP as EXTENSION_COMMAND_MAP,
