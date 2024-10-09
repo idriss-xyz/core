@@ -96,6 +96,17 @@ export default (_env, argv) => {
           test: /\.mpts$/,
           use: ['mpts-loader'],
         },
+        {
+          test: /\.(png|jpg|gif|svg)$/i,
+          use: [
+            {
+              loader: 'url-loader',
+              options: {
+                limit: true,
+              },
+            },
+          ],
+        },
       ],
     },
     optimization: {

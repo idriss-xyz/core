@@ -81,6 +81,10 @@ module.exports = {
         type: 'types',
         pattern: 'src/types',
       },
+      {
+        type: 'asset',
+        pattern: 'src/assets/*',
+      },
     ],
     'boundaries/include': ['src/**/*.ts', 'src/**/*.tsx'],
   },
@@ -115,6 +119,7 @@ module.exports = {
               'application',
               'infrastructure',
               'final',
+              'asset',
             ],
             allow: 'index.(ts|tsx)',
           },
@@ -127,6 +132,10 @@ module.exports = {
         // disallow importing any element by default
         default: 'disallow',
         rules: [
+          {
+            from: ['*'],
+            allow: ['asset'],
+          },
           {
             from: ['runtime'],
             allow: ['infrastructure', 'shared'],

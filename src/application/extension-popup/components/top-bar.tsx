@@ -1,4 +1,5 @@
-import { IDRISS_ICON_WITH_TEXT, IDRISS_URL } from 'shared/idriss';
+import { IDRISS_URL } from 'shared/idriss';
+import { IDRISS_FULL_LOGO } from 'assets/images';
 import { IconButton, Toggle } from 'shared/ui';
 import {
   EXTENSION_POPUP_ROUTE,
@@ -21,7 +22,7 @@ export const TopBar = () => {
         target="_blank"
         rel="noopener noreferrer"
       >
-        <img className="h-12" src={IDRISS_ICON_WITH_TEXT} alt="IDriss Logo" />
+        <img className="h-12" src={IDRISS_FULL_LOGO} alt="IDriss Logo" />
       </a>
       <div className="flex items-center">
         {showSettingsButton && (
