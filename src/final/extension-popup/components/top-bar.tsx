@@ -2,10 +2,11 @@ import { IDRISS_URL } from 'shared/idriss';
 import { IDRISS_FULL_LOGO } from 'assets/images';
 import { IconButton, Toggle } from 'shared/ui';
 import {
-  EXTENSION_POPUP_ROUTE,
-  useExtensionPopup,
   useExtensionSettings,
 } from 'shared/extension';
+
+import { useExtensionPopup } from '../extension-popup-context';
+import { EXTENSION_POPUP_ROUTE } from '../constants';
 
 export const TopBar = () => {
   const { extensionSettings, changeExtensionSetting } = useExtensionSettings();
