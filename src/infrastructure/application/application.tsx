@@ -2,10 +2,13 @@ import { useMemo, createElement, StrictMode } from 'react';
 import NiceModal from '@ebay/nice-modal-react';
 import { createRoot } from 'react-dom/client';
 
-import { Final, useLocationInfo , ExtensionPopup , ExtensionPopupProvider } from 'final';
 import {
-  ExtensionSettingsProvider,
-} from 'shared/extension';
+  Final,
+  useLocationInfo,
+  ExtensionPopup,
+  ExtensionPopupProvider,
+} from 'final';
+import { ExtensionSettingsProvider } from 'shared/extension';
 import { PortalProvider, QueryProvider, TailwindProvider } from 'shared/ui';
 import { WalletContextProvider } from 'shared/web3';
 import { ErrorBoundary, WithObservabilityScope } from 'shared/observability';

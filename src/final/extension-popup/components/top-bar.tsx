@@ -1,9 +1,7 @@
 import { IDRISS_URL } from 'shared/idriss';
 import { IDRISS_FULL_LOGO } from 'assets/images';
 import { IconButton, Toggle } from 'shared/ui';
-import {
-  useExtensionSettings,
-} from 'shared/extension';
+import { useExtensionSettings } from 'shared/extension';
 
 import { useExtensionPopup } from '../extension-popup-context';
 import { EXTENSION_POPUP_ROUTE } from '../constants';

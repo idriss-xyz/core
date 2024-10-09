@@ -3,10 +3,7 @@ import { useUpdateEffect } from 'react-use';
 import isEqual from 'lodash/isEqual';
 import { useMemo, useRef } from 'react';
 
-import {
-  ExtensionSettings,
-  useExtensionSettings,
-} from 'shared/extension';
+import { ExtensionSettings, useExtensionSettings } from 'shared/extension';
 import { IconButton } from 'shared/ui';
 
 import { SettingsLayout } from '../../components';

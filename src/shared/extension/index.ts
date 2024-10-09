@@ -6,10 +6,7 @@ export {
   EXTENSION_BUTTON_CLICKED,
   DEFAULT_EXTENSION_SETTINGS as DEFAULT_SETTINGS,
 } from './constants';
-export {
-  ExtensionSettingsProvider,
-  useExtensionSettings
-} from './context';
+export { ExtensionSettingsProvider, useExtensionSettings } from './context';
 export {
   COMMAND_MAP as EXTENSION_COMMAND_MAP,
   GetServiceStatusCommand,

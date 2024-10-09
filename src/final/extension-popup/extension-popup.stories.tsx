@@ -1,9 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useEffect } from 'react';
 
-import {
-  ExtensionSettingsProvider,
-} from 'shared/extension';
+import { ExtensionSettingsProvider } from 'shared/extension';
 import { TOGGLE_EXTENSION_POPUP_VISIBILITY } from 'shared/messaging';
 
 import { ExtensionPopup } from './extension-popup';
