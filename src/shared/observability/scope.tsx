@@ -21,27 +21,25 @@ const integrations = getDefaultIntegrations({}).filter((defaultIntegration) => {
   );
 });
 
+const NETWORK_ERRORS_DUE_TO_ABORTED_REQUEST = [
+  'TypeError: Failed to fetch',
+  'TypeError: NetworkError when attempting to fetch resource.',
+];
+
+// Old version and new version in compat mode of MooTools framework is overriding Function.prototype.bind which causes React and other libraries throw runtime error
+const RUNTIME_ERRORS_DUE_TO_MOOTOOLS_FRAMEWORK = [
+  "TypeError: Cannot read properties of undefined (reading 'lastRenderedReducer')",
+  'TypeError: c is not a function',
+];
+
 const createClient = (executionEnvironment: SentryExecutionEnvironment) => {
   return new BrowserClient({
     dsn: process.env.SENTRY_DSN,
     enabled: process.env.SENTRY_ENVIRONMENT === 'production',
     ignoreErrors: [
-      'TypeError: Failed to fetch',
-      'TypeError: NetworkError when attempting to fetch resource.',
+      ...NETWORK_ERRORS_DUE_TO_ABORTED_REQUEST,
+      ...RUNTIME_ERRORS_DUE_TO_MOOTOOLS_FRAMEWORK,
     ],
-    beforeSend(event, hint) {
-      const error = hint.originalException;
-      if (
-        typeof error === 'object' &&
-        error !== null &&
-        'message' in error &&
-        typeof error.message === 'string' &&
-        /failed to fetch/i.test(error.message)
-      ) {
-        event.fingerprint = ['failed-to-fetch'];
-      }
-      return event;
-    },
     transport:
       executionEnvironment === 'service-worker'
         ? makeFetchTransport
