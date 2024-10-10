@@ -1,9 +1,8 @@
 import { ReactNode, useCallback } from 'react';
 
+import { EXTENSION_POPUP_ROUTE, useExtensionPopup } from 'shared/extension';
 import { IconButton } from 'shared/ui';
 
-import { useExtensionPopup } from '../../extension-popup-context';
-import { EXTENSION_POPUP_ROUTE } from '../../constants';
 
 type Properties = {
   title?: string;

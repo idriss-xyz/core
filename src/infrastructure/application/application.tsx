@@ -6,9 +6,8 @@ import {
   Final,
   useLocationInfo,
   ExtensionPopup,
-  ExtensionPopupProvider,
 } from 'final';
-import { ExtensionSettingsProvider } from 'shared/extension';
+import { ExtensionPopupProvider, ExtensionSettingsProvider } from 'shared/extension';
 import { PortalProvider, QueryProvider, TailwindProvider } from 'shared/ui';
 import { WalletContextProvider } from 'shared/web3';
 import { ErrorBoundary, WithObservabilityScope } from 'shared/observability';

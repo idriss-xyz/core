@@ -1,11 +1,10 @@
 import { Route, Routes } from 'react-router';
 
 import { Closable, ScrollArea } from 'shared/ui';
+import { EXTENSION_POPUP_ROUTE, useExtensionPopup } from 'shared/extension';
 
 import { Footer, TopBar } from './components';
 import { HomeView, MainSettingsView, CustomizationSettingsView } from './views';
-import { useExtensionPopup } from './extension-popup-context';
-import { EXTENSION_POPUP_ROUTE } from './constants';
 
 export const ExtensionPopup = () => {
   const extensionPopup = useExtensionPopup();
