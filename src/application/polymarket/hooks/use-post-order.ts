@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { createWalletClient, useWallet, Wallet } from 'shared/web3';
 import { useCommandMutation } from 'shared/messaging';
+import { useEventsLogger } from 'shared/observability';
 
 import { L2Headers, SafeWallet, TickSize } from '../types';
 import {
@@ -12,6 +13,7 @@ import {
   orderToJson,
 } from '../utils';
 import { PostOrderCommand } from '../commands';
+import { EVENT } from '../constants';
 
 import { getSafeWalletQueryKey } from './use-safe-wallet';
 
@@ -35,9 +37,16 @@ export const usePostOrder = () => {
   const { wallet } = useWallet();
 
   const postOrderMutation = useCommandMutation(PostOrderCommand);
+  const eventsLogger = useEventsLogger();
 
   return useMutation({
-    onSuccess: (_, { amount }) => {
+    onSuccess: (response, { amount }) => {
+      void eventsLogger.track(EVENT.BET_PLACED, {
+        amount: amount,
+        orderId: response.orderID,
+        transactionsHashes: response.transactionsHashes,
+      });
+
       if (wallet?.account) {
         queryClient.setQueryData<SafeWallet>(
           getSafeWalletQueryKey(wallet),
@@ -104,7 +113,7 @@ export const usePostOrder = () => {
         POLY_PASSPHRASE: credentials.passphrase,
       };
 
-      return postOrderMutation.mutate({ order: orderJson, headers });
+      return postOrderMutation.mutateAsync({ order: orderJson, headers });
     },
   });
 };

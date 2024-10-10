@@ -4,6 +4,8 @@ declare global {
     interface ProcessEnv {
       SENTRY_ENVIRONMENT: string;
       SENTRY_DSN: string;
+      AMPLITUDE_API_KEY: string;
+      ENVIRONMENT: string;
     }
   }
 }

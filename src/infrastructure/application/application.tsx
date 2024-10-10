@@ -9,7 +9,11 @@ import {
 } from 'shared/extension';
 import { PortalProvider, QueryProvider, TailwindProvider } from 'shared/ui';
 import { WalletContextProvider } from 'shared/web3';
-import { ErrorBoundary, WithObservabilityScope } from 'shared/observability';
+import {
+  ErrorBoundary,
+  WithEventsLogger,
+  WithObservabilityScope,
+} from 'shared/observability';
 import { TwitterScrapingContextProvider } from 'host/twitter';
 import { WarpcastScrapingContextProvider } from 'host/warpcast';
 import { SupercastScrapingContextProvider } from 'host/supercast';
@@ -79,26 +83,28 @@ const ApplicationWithProviders = () => {
       <StrictMode>
         <WithObservabilityScope>
           <ErrorBoundary>
-            <PortalProvider>
-              <TailwindProvider>
-                <QueryProvider>
-                  <NiceModal.Provider>
-                    <WalletContextProvider
-                      disabledWalletsRdns={disabledWalletRdns}
-                    >
-                      <ExtensionPopupProvider>
-                        <ExtensionSettingsProvider>
-                          <>
-                            <LookUpWalletAddress />
-                            <ExtensionPopup />
-                          </>
-                        </ExtensionSettingsProvider>
-                      </ExtensionPopupProvider>
-                    </WalletContextProvider>
-                  </NiceModal.Provider>
-                </QueryProvider>
-              </TailwindProvider>
-            </PortalProvider>
+            <WithEventsLogger>
+              <PortalProvider>
+                <TailwindProvider>
+                  <QueryProvider>
+                    <NiceModal.Provider>
+                      <WalletContextProvider
+                        disabledWalletsRdns={disabledWalletRdns}
+                      >
+                        <ExtensionPopupProvider>
+                          <ExtensionSettingsProvider>
+                            <>
+                              <LookUpWalletAddress />
+                              <ExtensionPopup />
+                            </>
+                          </ExtensionSettingsProvider>
+                        </ExtensionPopupProvider>
+                      </WalletContextProvider>
+                    </NiceModal.Provider>
+                  </QueryProvider>
+                </TailwindProvider>
+              </PortalProvider>
+            </WithEventsLogger>
           </ErrorBoundary>
         </WithObservabilityScope>
       </StrictMode>
@@ -109,32 +115,34 @@ const ApplicationWithProviders = () => {
     <StrictMode>
       <WithObservabilityScope>
         <ErrorBoundary>
-          <PortalProvider>
-            <TailwindProvider>
-              <QueryProvider>
-                <NiceModal.Provider>
-                  <WalletContextProvider
-                    disabledWalletsRdns={disabledWalletRdns}
-                  >
-                    <ExtensionPopupProvider>
-                      <ExtensionSettingsProvider>
-                        <TwitterScrapingContextProvider>
-                          <WarpcastScrapingContextProvider>
-                            <SupercastScrapingContextProvider>
-                              <>
-                                <ExtensionPopup />
-                                <Final />
-                              </>
-                            </SupercastScrapingContextProvider>
-                          </WarpcastScrapingContextProvider>
-                        </TwitterScrapingContextProvider>
-                      </ExtensionSettingsProvider>
-                    </ExtensionPopupProvider>
-                  </WalletContextProvider>
-                </NiceModal.Provider>
-              </QueryProvider>
-            </TailwindProvider>
-          </PortalProvider>
+          <WithEventsLogger>
+            <PortalProvider>
+              <TailwindProvider>
+                <QueryProvider>
+                  <NiceModal.Provider>
+                    <WalletContextProvider
+                      disabledWalletsRdns={disabledWalletRdns}
+                    >
+                      <ExtensionPopupProvider>
+                        <ExtensionSettingsProvider>
+                          <TwitterScrapingContextProvider>
+                            <WarpcastScrapingContextProvider>
+                              <SupercastScrapingContextProvider>
+                                <>
+                                  <ExtensionPopup />
+                                  <Final />
+                                </>
+                              </SupercastScrapingContextProvider>
+                            </WarpcastScrapingContextProvider>
+                          </TwitterScrapingContextProvider>
+                        </ExtensionSettingsProvider>
+                      </ExtensionPopupProvider>
+                    </WalletContextProvider>
+                  </NiceModal.Provider>
+                </QueryProvider>
+              </TailwindProvider>
+            </PortalProvider>
+          </WithEventsLogger>
         </ErrorBoundary>
       </WithObservabilityScope>
     </StrictMode>

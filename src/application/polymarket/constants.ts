@@ -1,3 +1,5 @@
+import { createLookup } from 'shared/utils';
+
 import { ContractConfig, RoundConfig, Scenario, TickSize } from './types';
 
 export const POLYMARKET_WEBSITE = 'https://polymarket.com';
@@ -93,3 +95,5 @@ export const SCENARIO: Record<Scenario, Scenario> = {
   BETTING_NOT_AVAILABLE: 'BETTING_NOT_AVAILABLE',
   READY_TO_BET: 'READY_TO_BET',
 };
+
+export const EVENT = createLookup(['BET_PLACED']);

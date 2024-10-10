@@ -6,3 +6,4 @@ export {
   WithObservabilityScope,
   useObservabilityScope,
 } from './scope';
+export { useEventsLogger, WithEventsLogger } from './events';

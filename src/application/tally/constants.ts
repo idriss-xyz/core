@@ -1,3 +1,5 @@
+import { createLookup } from 'shared/utils';
+
 export const TALLY_WEBSITE_URL = 'https://www.tally.xyz';
 export const TALLY_GRAPHQL_API_URL = 'https://api.idriss.xyz/fetch-tally';
 
@@ -29,3 +31,5 @@ export const FARCASTER_HANDLE_TO_TALLY: Record<string, string> = {
   'unlock-protocol': '2206072050307565245',
   'zksync': '2297436623035434412',
 };
+
+export const EVENT = createLookup(['TALLY_VOTE_CLICKED']);
