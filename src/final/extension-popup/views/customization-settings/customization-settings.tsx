@@ -3,7 +3,12 @@ import { useUpdateEffect } from 'react-use';
 import isEqual from 'lodash/isEqual';
 import { useMemo, useRef } from 'react';
 
-import { EXTENSION_POPUP_ROUTE, ExtensionSettings, useExtensionPopup, useExtensionSettings } from 'shared/extension';
+import {
+  EXTENSION_POPUP_ROUTE,
+  ExtensionSettings,
+  useExtensionPopup,
+  useExtensionSettings,
+} from 'shared/extension';
 import { IconButton } from 'shared/ui';
 
 import { SettingsLayout } from '../../components';

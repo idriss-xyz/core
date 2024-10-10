@@ -3,7 +3,6 @@ import { ReactNode, useCallback } from 'react';
 import { EXTENSION_POPUP_ROUTE, useExtensionPopup } from 'shared/extension';
 import { IconButton } from 'shared/ui';
 
-
 type Properties = {
   title?: string;
   prefix?: ReactNode;
