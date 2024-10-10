@@ -7,6 +7,7 @@ import {
   WidgetBase,
 } from 'shared/ui';
 import { getDifferenceInDays, getEndsInLabel } from 'shared/utils';
+import { useEventsLogger } from 'shared/observability';
 
 import { ProposalData } from '../types';
 import {
@@ -14,6 +15,7 @@ import {
   getProposalUrl,
   getProposerUrl,
 } from '../utils';
+import { EVENT } from '../constants';
 
 interface Properties {
   data: ProposalData;
@@ -31,6 +33,7 @@ export const Proposal = ({
   onClose,
 }: Properties) => {
   const proposalEndDateInMs = new Date(data.endTime).getTime();
+  const eventsLogger = useEventsLogger();
 
   return (
     <WidgetBase
@@ -65,6 +68,9 @@ export const Proposal = ({
             {getEndsInLabel(getDifferenceInDays(proposalEndDateInMs))}
           </div>
           <a
+            onClick={() => {
+              void eventsLogger.track(EVENT.AGORA_VOTE_CLICKED);
+            }}
             href={getProposalUrl(data.id)}
             rel="noopener noreferrer"
             target="_blank"

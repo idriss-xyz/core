@@ -5,6 +5,7 @@ import {
   HandlerResponseError,
   OkResult,
 } from 'shared/messaging';
+import { Hex } from 'shared/web3';
 
 import { POLYMARKET_CLOB_API } from '../constants';
 import { L2Headers, Order } from '../types';
@@ -14,7 +15,12 @@ type Payload = {
   headers: L2Headers;
 };
 
-export class PostOrderCommand extends Command<Payload, undefined> {
+type Response = {
+  transactionsHashes: Hex[];
+  orderID: Hex;
+};
+
+export class PostOrderCommand extends Command<Payload, Response> {
   public readonly name = 'PostOrderCommand' as const;
 
   constructor(public payload: Payload) {
@@ -41,7 +47,12 @@ export class PostOrderCommand extends Command<Payload, undefined> {
         );
       }
 
-      return new OkResult(undefined);
+      // TODO: validate schema
+      const json = (await response.json()) as Response;
+
+      const { transactionsHashes, orderID } = json;
+
+      return new OkResult({ transactionsHashes, orderID });
     } catch (error) {
       this.captureException(error);
       if (error instanceof HandlerError) {

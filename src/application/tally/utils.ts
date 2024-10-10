@@ -47,7 +47,3 @@ export const getProposalAuthorLabel = (proposalDetails: ProposalData) => {
     ? proposalDetails.creator.name
     : formatProposerAddress(proposalDetails.creator.address);
 };
-
-export const getProposalStatusLabel = (status: string) => {
-  return status.toLowerCase() === 'active' ? 'Vote' : 'View';
-};

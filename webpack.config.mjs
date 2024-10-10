@@ -58,9 +58,10 @@ export default (_env, argv) => {
         'process.env': JSON.stringify({
           SENTRY_ENVIRONMENT: process.env.SENTRY_ENVIRONMENT,
           SENTRY_DSN: process.env.SENTRY_DSN,
+          AMPLITUDE_API_KEY: process.env.AMPLITUDE_API_KEY,
+          ENVIRONMENT: process.env.ENVIRONMENT
         }),
       }),
-      // new webpack.EnvironmentPlugin(['SENTRY_ENVIRONMENT', 'SENTRY_DSN']),
       sentryWebpackPlugin({
         authToken: process.env.SENTRY_AUTH_TOKEN,
         org: process.env.SENTRY_ORGANISATION,

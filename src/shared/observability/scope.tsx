@@ -86,6 +86,7 @@ export const createObservabilityScope = (
   return scope;
 };
 
+// TODO: figure out interface which is not coupled with Sentry
 export type ObservabilityScope = Scope;
 
 type ObservabilityScopeContextValue = ObservabilityScope;

@@ -7,15 +7,16 @@ import {
   WidgetBase,
 } from 'shared/ui';
 import { getDifferenceInDays, getEndsInLabel } from 'shared/utils';
+import { useEventsLogger } from 'shared/observability';
 
 import { ProposalData } from '../types';
 import {
   getProposalUrl,
   getProposalAuthorUrl,
   getProposalAuthorLabel,
-  getProposalStatusLabel,
 } from '../utils';
 import { StatusChip } from '../components';
+import { EVENT } from '../constants';
 
 interface Properties {
   proposalDetails: ProposalData;
@@ -33,6 +34,7 @@ export const Proposal = ({
   onClose,
 }: Properties) => {
   const proposalEndDateInMs = new Date(proposalDetails.end.timestamp).getTime();
+  const eventsLogger = useEventsLogger();
 
   return (
     <WidgetBase
@@ -70,6 +72,9 @@ export const Proposal = ({
             {getEndsInLabel(getDifferenceInDays(proposalEndDateInMs))}
           </div>
           <a
+            onClick={() => {
+              void eventsLogger.track(EVENT.TALLY_VOTE_CLICKED);
+            }}
             href={getProposalUrl(
               proposalDetails.organization.slug,
               proposalDetails.id,
@@ -82,7 +87,7 @@ export const Proposal = ({
               variant="info"
               width="long"
             >
-              {getProposalStatusLabel(proposalDetails.status)}
+              Vote
             </Chip>
           </a>
         </div>

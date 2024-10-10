@@ -26,6 +26,7 @@ export class ContentScript {
 
     contentScript.subscribeToExtensionSettings();
     contentScript.subscribeToWallet();
+    contentScript.subscribeToDeviceId();
   }
 
   static canRun() {
@@ -139,5 +140,23 @@ export class ContentScript {
         void ExtensionSettingsManager.saveWallet(v);
       },
     );
+  }
+
+  // TODO: move these message names to constants in shared/web3
+  subscribeToDeviceId() {
+    onWindowMessage('GET_DEVICE_ID', async () => {
+      const maybeDeviceId = await ExtensionSettingsManager.getDeviceId();
+
+      const message = {
+        type: 'GET_DEVICE_ID_RESPONSE',
+        detail: maybeDeviceId,
+      };
+
+      window.postMessage(message);
+    });
+
+    onWindowMessage<string>('SET_DEVICE_ID', (v) => {
+      void ExtensionSettingsManager.setDeviceId(v);
+    });
   }
 }

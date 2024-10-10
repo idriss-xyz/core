@@ -37,4 +37,22 @@ export const ExtensionSettingsManager = {
       });
     });
   },
+
+  // TODO: move the device-id to a separate manager
+  setDeviceId(id: string) {
+    return chrome.storage.local.set({
+      'device-id': id,
+    });
+  },
+
+  getDeviceId() {
+    return new Promise((resolve) => {
+      void chrome.storage.local.get('device-id').then((storageObject) => {
+        const maybeDeviceId = storageObject['device-id'];
+        const deviceId =
+          typeof maybeDeviceId === 'string' ? maybeDeviceId : undefined;
+        return resolve(deviceId);
+      });
+    });
+  },
 };

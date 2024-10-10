@@ -7,9 +7,11 @@ import {
   classes,
 } from 'shared/ui';
 import { getDifferenceInDays, getEndsInLabel } from 'shared/utils';
+import { useEventsLogger } from 'shared/observability';
 
 import { ProposalData } from '../types';
 import { getProposalAuthor, getProposalUrl, getUserUrl } from '../utils';
+import { EVENT } from '../constants';
 
 interface Properties {
   data: ProposalData;
@@ -26,6 +28,8 @@ export const Proposal = ({
   isLoading,
   onClose,
 }: Properties) => {
+  const eventsLogger = useEventsLogger();
+
   return (
     <WidgetBase
       className={classes('bg-[#2d2d2d] text-xs leading-tight', className)}
@@ -57,6 +61,9 @@ export const Proposal = ({
             {getEndsInLabel(getDifferenceInDays(data.end * 1000))}
           </div>
           <a
+            onClick={() => {
+              void eventsLogger.track(EVENT.SNAPSHOT_VOTE_CLICKED);
+            }}
             href={getProposalUrl(data.space.id, data.id)}
             rel="noopener noreferrer"
             target="_blank"
