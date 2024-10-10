@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router';
 
-import { EXTENSION_POPUP_ROUTE, useExtensionPopup } from 'shared/extension';
 import { Closable, ScrollArea } from 'shared/ui';
+import { EXTENSION_POPUP_ROUTE, useExtensionPopup } from 'shared/extension';
 
 import { Footer, TopBar } from './components';
 import { HomeView, MainSettingsView, CustomizationSettingsView } from './views';

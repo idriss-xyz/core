@@ -2,7 +2,7 @@ import { useMemo, createElement, StrictMode } from 'react';
 import NiceModal from '@ebay/nice-modal-react';
 import { createRoot } from 'react-dom/client';
 
-import { Final, useLocationInfo } from 'final';
+import { Final, useLocationInfo, ExtensionPopup } from 'final';
 import {
   ExtensionPopupProvider,
   ExtensionSettingsProvider,
@@ -17,8 +17,8 @@ import {
 import { TwitterScrapingContextProvider } from 'host/twitter';
 import { WarpcastScrapingContextProvider } from 'host/warpcast';
 import { SupercastScrapingContextProvider } from 'host/supercast';
-import { ExtensionPopup } from 'application/extension-popup';
 import { LookUpWalletAddress } from 'application/look-up-wallet-address';
+
 export class Application {
   private constructor() {}
 
