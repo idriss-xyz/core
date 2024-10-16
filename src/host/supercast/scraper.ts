@@ -31,7 +31,9 @@ export class Scraper {
       return div.textContent === `@${username}`;
     });
     const userFullNameNode =
-      usernameNode?.parentElement?.firstElementChild?.firstElementChild;
+      usernameNode?.parentElement?.firstElementChild?.firstElementChild ??
+      usernameNode?.parentElement?.parentElement?.parentElement
+        ?.firstElementChild?.firstElementChild;
     if (!userFullNameNode?.parentElement) {
       return;
     }
@@ -47,12 +49,27 @@ export class Scraper {
     };
   }
 
+  private static getConversationPanel() {
+    return document.querySelector('aside');
+  }
+
   public static getPosts(): PostScrapingResult[] {
     const main = Scraper.getMain();
-    if (!main) {
+    const conversationPanel = Scraper.getConversationPanel();
+    if (!main && !conversationPanel) {
       return [];
     }
-    const posts = [...main.querySelectorAll(':scope ul > li')];
+    const mainPosts = main?.querySelectorAll(':scope ul > li') ?? [];
+    const conversationPosts =
+      conversationPanel?.querySelectorAll(':scope ul > li') ?? [];
+    const conversationRepliesPosts =
+      conversationPanel?.querySelectorAll(':scope ul > div > li') ?? [];
+
+    const posts = [
+      ...mainPosts,
+      ...conversationPosts,
+      ...conversationRepliesPosts,
+    ];
 
     return posts
       .map((post) => {

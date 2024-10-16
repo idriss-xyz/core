@@ -28,7 +28,6 @@ export {
   GetTokenPriceCommand,
   GetAcrossChainFeesCommand,
   GetAcrossChainFeeCommand,
-  GetWalletByEnsNameCommand,
 } from './commands';
 export { AGORA_LOGO } from './logos';
 export { SNAPSHOT_LOGO } from './logos';

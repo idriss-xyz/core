@@ -209,7 +209,7 @@ export const WalletConnectModal = createModal(
                 />
               </div>
               <Button
-                className="rounded bg-idriss-primary-500 font-medium text-white hover:bg-idriss-primary-400"
+                className="rounded bg-idriss-primary-500 font-medium text-white hover:bg-idriss-primary-400 disabled:bg-green-200 disabled:text-white"
                 onClick={() => {
                   const providerToConnect =
                     chosenProviderRdns === 'browser'

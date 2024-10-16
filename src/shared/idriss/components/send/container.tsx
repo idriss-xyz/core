@@ -6,9 +6,8 @@ import {
   useRef,
   useState,
 } from 'react';
-import { useLocation, useUpdateEffect, useWindowSize } from 'react-use';
+import { useWindowSize } from 'react-use';
 
-import { useExtensionSettings } from 'shared/extension';
 import { Closable } from 'shared/ui';
 
 import { WIDGET_WIDTH } from '../../constants';
@@ -50,37 +49,16 @@ export const Container = memo(
     const right = isMobile || spaceLeft < 0 ? 0 : undefined;
 
     const injectedWidgetReference = useRef<HTMLImageElement | null>(null);
-    const location = useLocation();
-    const { extensionSettings } = useExtensionSettings();
-    useEffect(() => {
-      if (!extensionSettings['entire-extension-enabled']) {
-        for (const element of document.querySelectorAll(
-          '[data-idriss-widget="true"]',
-        ))
-          element.remove();
-      }
-    }, [extensionSettings]);
-
-    useUpdateEffect(() => {
-      return () => {
-        injectedWidgetReference.current?.remove();
-      };
-    }, [location.pathname]);
 
     useEffect(() => {
       injectedWidgetReference.current = document.createElement('img');
-      injectedWidgetReference.current.setAttribute(
-        `data-idriss-widget`,
-        'true',
-      );
       injectedWidgetReference.current.style.height = `${iconSize}px`;
       injectedWidgetReference.current.style.width = `${iconSize}px`;
       injectedWidgetReference.current.style.cursor = 'pointer';
       injectedWidgetReference.current.style.marginLeft = '2px';
-      injectedWidgetReference.current.style.zIndex = '20';
+      injectedWidgetReference.current.style.zIndex = '1';
       injectedWidgetReference.current.src = iconSrc;
 
-      node.style.setProperty('display', 'inline-flex', 'important');
       node?.append(injectedWidgetReference.current);
 
       const updatePosition = () => {
@@ -115,6 +93,7 @@ export const Container = memo(
         );
         window.removeEventListener('resize', updatePosition);
         injectedWidgetReference.current?.remove();
+        injectedWidgetReference.current = null;
       };
     }, [iconSize, iconSrc, node, onOpen]);
 
@@ -132,39 +111,27 @@ export const Container = memo(
     }
 
     return (
-      <>
-        <div
-          className="absolute z-20"
-          style={{
-            left,
-            right,
-            top: position.y + iconSize,
-            width: WIDGET_WIDTH,
-          }}
+      <div
+        className="absolute z-10"
+        style={{
+          left,
+          right,
+          top: position.y + iconSize,
+          width: WIDGET_WIDTH,
+        }}
+      >
+        <Closable
+          className="w-full rounded-md bg-white p-4 text-gray-900 shadow-2xl"
+          closeButtonClassName="hover:enabled:bg-black/20 active:enabled:bg-black/40"
+          closeButtonIconClassName="text-[#000]"
+          onClickInside={disableCloseOnHoverAway}
+          onClose={close}
+          closeOnHoverAway={closeOnHoverAway}
+          closeOnClickAway={closeOnClickAway}
         >
-          <Closable
-            className="w-full rounded-md bg-white text-gray-900 shadow-2xl"
-            closeButtonClassName="hover:enabled:bg-black/20 active:enabled:bg-black/40"
-            closeButtonIconClassName="text-[#000]"
-            onClickInside={disableCloseOnHoverAway}
-            onClose={close}
-            closeOnHoverAway={closeOnHoverAway}
-            closeOnClickAway={closeOnClickAway}
-          >
-            {children({ close })}
-          </Closable>
-        </div>
-        <img
-          className="absolute z-20"
-          style={{
-            left: position.x - iconSize,
-            top: position.y,
-            width: iconSize,
-            height: iconSize,
-          }}
-          src={iconSrc}
-        />
-      </>
+          {children({ close })}
+        </Closable>
+      </div>
     );
   },
 );

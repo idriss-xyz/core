@@ -1,9 +1,7 @@
-export const getUserFid = (username: string) => {
-  return fetch(
-    `https://fnames.farcaster.xyz/transfers/current?name=${username}`,
-  );
-};
+import { Hex } from 'shared/web3';
 
-export const getAccountByFid = (fid: number) => {
-  return fetch(`https://api.idriss.xyz/get-connected-addresses?fid=${fid}`);
+export const getFollowers = async () => {
+  const response = await fetch('https://api.idriss.xyz/get-links');
+  const data = (await response.json()) as Record<string, { address: Hex }>;
+  return data;
 };

@@ -16,25 +16,25 @@ import { ErrorBoundary } from 'shared/observability';
 import { useSendForm, useSender } from '../hooks';
 import { SendPayload } from '../schema';
 import { getIconSource, getLoadingMessage } from '../utils';
-import { AddressResolver, WidgetData } from '../types';
+import { WidgetData } from '../types';
 import { DEFAULT_ALLOWED_CHAINS_IDS } from '../constants';
 
 interface Properties {
   widgetData: WidgetData;
-  addressResolver: AddressResolver;
 }
 
 interface BaseProperties extends Properties {
   onClose: () => void;
 }
 
-const Base = ({ widgetData, addressResolver, onClose }: BaseProperties) => {
+const Base = ({ widgetData, onClose }: BaseProperties) => {
   const {
     nodeToInject,
     username,
     availableNetworks,
     widgetOverrides,
     isHandleUser,
+    walletAddress,
   } = widgetData;
   const { wallet } = useWallet();
 
@@ -53,7 +53,6 @@ const Base = ({ widgetData, addressResolver, onClose }: BaseProperties) => {
 
   const submit = useCallback(
     async (sendPayload: SendPayload) => {
-      const walletAddress = await addressResolver.resolve(widgetData);
       await sender.send({
         sendPayload,
         recipientAddress: toAddressWithValidChecksum(
@@ -61,7 +60,7 @@ const Base = ({ widgetData, addressResolver, onClose }: BaseProperties) => {
         ),
       });
     },
-    [addressResolver, sender, widgetData],
+    [sender, walletAddress],
   );
 
   const amountInSelectedToken = useMemo(() => {
@@ -88,7 +87,7 @@ const Base = ({ widgetData, addressResolver, onClose }: BaseProperties) => {
       closeOnClickAway={sender.isIdle}
     >
       {({ close }) => {
-        if (sender.isSending || addressResolver.isResolving) {
+        if (sender.isSending) {
           return (
             <IdrissSend.Loading
               heading={
@@ -108,16 +107,6 @@ const Base = ({ widgetData, addressResolver, onClose }: BaseProperties) => {
                 isNativeTokenAddress(selectedToken?.address ?? '0x'),
               )}
             </IdrissSend.Loading>
-          );
-        }
-
-        if (addressResolver.hasError) {
-          return (
-            <IdrissSend.Error heading="Unable to Send Funds" onClose={close}>
-              <p className="text-gray-500">
-                This user has no verified addresses
-              </p>
-            </IdrissSend.Error>
           );
         }
 
@@ -167,29 +156,21 @@ const Base = ({ widgetData, addressResolver, onClose }: BaseProperties) => {
   );
 };
 
-export const SendWidget = memo(
-  ({ addressResolver, ...properties }: Properties) => {
-    // resets component state after closing
-    const [resetCount, setResetCount] = useState(0);
+export const SendWidget = memo((properties: Properties) => {
+  // resets component state after closing
+  const [resetCount, setResetCount] = useState(0);
 
-    const resetWidget = useCallback(() => {
-      setResetCount((previous) => {
-        return previous + 1;
-      });
-      addressResolver.reset();
-    }, [addressResolver]);
+  const resetWidget = useCallback(() => {
+    setResetCount((previous) => {
+      return previous + 1;
+    });
+  }, []);
 
-    return (
-      <ErrorBoundary>
-        <Base
-          {...properties}
-          key={resetCount}
-          onClose={resetWidget}
-          addressResolver={addressResolver}
-        />
-      </ErrorBoundary>
-    );
-  },
-);
+  return (
+    <ErrorBoundary>
+      <Base {...properties} key={resetCount} onClose={resetWidget} />
+    </ErrorBoundary>
+  );
+});
 
 SendWidget.displayName = 'SendWidget';

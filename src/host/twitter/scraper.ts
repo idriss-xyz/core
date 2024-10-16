@@ -4,6 +4,8 @@ import {
   UserScrapingResult,
 } from 'shared/scraping';
 
+import { isHandleNode } from './utils';
+
 export class Scraper {
   public static getExternalLinks(): ExternalLinksScrapingResult[] {
     const externalLinkNodes = [
@@ -87,6 +89,7 @@ export class Scraper {
     const userBarElements = [...document.querySelectorAll(selector)];
 
     const scrapedUsers: UserScrapingResult[] = [];
+    let isHandleUserFound = false;
 
     for (const userBarElement of userBarElements) {
       const usernameElement = Scraper.findUsernameElement(userBarElement);
@@ -110,6 +113,23 @@ export class Scraper {
         })
       ) {
         continue;
+      }
+
+      // temp hack, we need to apply more explicit scraping for twitter instead of relying on random classnames
+      const isNodeForUserHandle = isHandleNode(userBarElement as HTMLElement);
+      if (isNodeForUserHandle && isHandleUserFound) {
+        continue;
+      }
+      // this is a fix for Twitter styles for handle user
+      if (isNodeForUserHandle) {
+        isHandleUserFound = true;
+        const containerThatWillHaveBadge =
+          userBarElement.querySelector('div > span');
+        (containerThatWillHaveBadge as HTMLElement | null)?.style.setProperty(
+          'display',
+          'flex',
+          'important',
+        );
       }
 
       scrapedUsers.push({

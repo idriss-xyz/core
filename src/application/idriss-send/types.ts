@@ -16,15 +16,3 @@ export interface WidgetData {
   isHandleUser: boolean;
   type: 'idrissSend';
 }
-
-export interface ResolveAddressProperties {
-  walletAddress: Hex;
-  username: string;
-}
-
-export interface AddressResolver {
-  resolve: (properties: ResolveAddressProperties) => Promise<`0x${string}`>;
-  hasError: boolean;
-  isResolving: boolean;
-  reset: () => void;
-}

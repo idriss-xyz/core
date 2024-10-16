@@ -1,8 +1,7 @@
-import { GetWalletByFarcasterUsernameCommand } from './get-wallet-by-farcaster-username';
+import { GetFollowersCommand } from './get-followers-status-lookup-command';
 
 export const COMMAND_MAP = {
-  [GetWalletByFarcasterUsernameCommand.name]:
-    GetWalletByFarcasterUsernameCommand,
+  [GetFollowersCommand.name]: GetFollowersCommand,
 };
 
-export { GetWalletByFarcasterUsernameCommand } from './get-wallet-by-farcaster-username';
+export { GetFollowersCommand } from './get-followers-status-lookup-command';

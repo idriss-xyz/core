@@ -1,6 +1,10 @@
+import { useMemo } from 'react';
+
 import { useGitcoinDonationWidgetsData } from 'application/gitcoin';
 import { useIdrissSendWidgetsData } from 'application/idriss-send';
 import { useExtensionSettings } from 'shared/extension';
+import { useCommandQuery } from 'shared/messaging';
+import { GetFollowersCommand } from 'shared/farcaster';
 
 import { userWidgetDataAdapter } from '../adapters';
 
@@ -11,12 +15,27 @@ import { useLocationInfo } from './use-location-info';
 export const useUserWidgets = () => {
   const applicationsStatus = useApplicationStatus();
   const { isTwitter, isWarpcast, isSupercast } = useLocationInfo();
+  const isFarcaster = isSupercast || isWarpcast;
   const { extensionSettings } = useExtensionSettings();
 
   const { users } = useScraping();
 
+  const usernames = useMemo(() => {
+    return users.map((user) => {
+      return user.data.username;
+    });
+  }, [users]);
+
   const idrissSendEnabled =
     applicationsStatus.idrissSend && extensionSettings['idriss-send-enabled'];
+
+  const followersQuery = useCommandQuery({
+    command: new GetFollowersCommand({ usernames }),
+    enabled: idrissSendEnabled && isFarcaster,
+    placeholderData: (previousData) => {
+      return previousData;
+    },
+  });
 
   const { widgets: idrissSendWidgets } = useIdrissSendWidgetsData({
     scrapedUsers: users,
@@ -31,17 +50,27 @@ export const useUserWidgets = () => {
     enabled: gitcoinEnabled && isTwitter,
   });
 
-  if (isWarpcast) {
-    return {
-      // widgets: userWidgetDataAdapter.fromScrapedUsers({ users }), // TODO: uncomment to enable user widgets on Warpcast
-      widgets: [],
-    };
-  }
+  if (isFarcaster) {
+    const usersThatFollowIdriss = users
+      .map((user) => {
+        const followerData = followersQuery.data?.[user.data.username];
+        if (!followerData) {
+          return;
+        }
+        return {
+          ...user,
+          data: {
+            ...user.data,
+            walletAddress: followerData.address,
+          },
+        };
+      })
+      .filter(Boolean);
 
-  if (isSupercast) {
     return {
-      // widgets: userWidgetDataAdapter.fromScrapedUsers({ users }), // TODO: uncomment to enable user widgets on Supercast
-      widgets: [],
+      widgets: userWidgetDataAdapter.fromFarcasterUsers({
+        users: usersThatFollowIdriss,
+      }),
     };
   }
 

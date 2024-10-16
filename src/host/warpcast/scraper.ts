@@ -1,6 +1,5 @@
 import {
   ExternalLinksScrapingResult,
-  PostScrapingResult,
   UserScrapingResult,
 } from 'shared/scraping';
 
@@ -35,18 +34,40 @@ export class Scraper {
       .filter(Boolean);
   }
 
-  public static getPosts(): PostScrapingResult[] {
+  public static getPosts() {
     const selector = '.min-h-screen > .fade-in > div';
     const posts = [...document.querySelectorAll(selector)];
 
     return posts
       .map((post) => {
-        const username = post
-          .querySelector('a')
+        const links = [...post.querySelectorAll('a')];
+        const usernameClasslist = [
+          'font-semibold',
+          'text-default',
+          'hover:underline',
+        ];
+        const repostUsernameClasslist = [
+          'font-semibold',
+          'text-sm',
+          'hover:underline',
+        ];
+
+        const usernameLinkNode = links.find((link) => {
+          return usernameClasslist.every((className) => {
+            return link.classList.contains(className);
+          });
+        });
+        const repostUsernameLinkNode = links.find((link) => {
+          return repostUsernameClasslist.every((className) => {
+            return link.classList.contains(className);
+          });
+        });
+
+        const username = usernameLinkNode
           ?.getAttribute('href')
           ?.replace('/', '');
 
-        if (!username) {
+        if (!username || !usernameLinkNode) {
           return;
         }
 
@@ -57,6 +78,8 @@ export class Scraper {
 
         return {
           node: post,
+          usernameLinkNode,
+          repostUsernameLinkNode,
           top: linkNodeRect.top + window.scrollY,
           data: {
             authorUsername: username,
@@ -118,8 +141,12 @@ export class Scraper {
 
         const rect = userFullNameNode.getBoundingClientRect();
 
+        const node = userFullNameNode.parentElement;
+        node.style.setProperty('display', 'flex', 'important');
+        node.style.setProperty('align-items', 'center', 'important');
+
         return {
-          node: userFullNameNode.parentElement,
+          node,
           top: rect.top + window.scrollY,
           data: {
             username,
@@ -147,16 +174,287 @@ export class Scraper {
     const usernameNode = allDivsOfMain.find((div) => {
       return div.textContent === `@${username}`;
     });
+
+    // traversing 2 times via parentElement is required when user is following current user as it changes DOM
     const userFullNameNode =
-      usernameNode?.parentElement?.firstElementChild?.firstElementChild;
+      usernameNode?.parentElement?.firstElementChild?.firstElementChild ??
+      usernameNode?.parentElement?.parentElement?.firstElementChild
+        ?.firstElementChild;
     if (!userFullNameNode?.parentElement) {
       return;
     }
 
     const rect = userFullNameNode.getBoundingClientRect();
+    const node = userFullNameNode.parentElement;
+    node.style.setProperty('display', 'inline-flex', 'important');
+    node.style.setProperty('align-items', 'center', 'important');
 
     return {
-      node: userFullNameNode.parentElement,
+      node,
+      top: rect.top + window.scrollY,
+      data: {
+        username,
+      },
+    };
+  }
+
+  private static getUsersFromPosts() {
+    const posts = Scraper.getPosts();
+    return posts
+      .map((post) => {
+        const rect = post.usernameLinkNode.getBoundingClientRect();
+        const node = post.usernameLinkNode.parentElement;
+        if (!node) {
+          return;
+        }
+
+        node.style.setProperty('display', 'inline-flex', 'important');
+        node.style.setProperty('align-items', 'center', 'important');
+
+        return {
+          node,
+          top: rect.top + window.scrollY,
+          data: {
+            username: post.data.authorUsername,
+          },
+        };
+      })
+      .filter(Boolean);
+  }
+
+  private static getUsersFromRePosts() {
+    const posts = Scraper.getPosts();
+    return posts
+      .map((post) => {
+        if (!post.repostUsernameLinkNode) {
+          return;
+        }
+        const username = post.repostUsernameLinkNode
+          .getAttribute('href')
+          ?.replace('/', '');
+        const rect = post.repostUsernameLinkNode.getBoundingClientRect();
+        const node = post.repostUsernameLinkNode.parentElement;
+        if (!node || !username) {
+          return;
+        }
+
+        node.style.setProperty('display', 'inline-flex', 'important');
+        node.style.setProperty('align-items', 'center', 'important');
+
+        return {
+          node,
+          top: rect.top + window.scrollY,
+          data: {
+            username,
+          },
+        };
+      })
+      .filter(Boolean);
+  }
+
+  private static getDirectCastUsersList() {
+    return document.querySelector(
+      String.raw`.h-\[var\(--search-for-direct-cast-targets-list-height\)\]`,
+    );
+  }
+
+  private static getUsersFromDirectCastList() {
+    const list = Scraper.getDirectCastUsersList();
+    if (!list) {
+      return [];
+    }
+    const usersListItem = [...list.querySelectorAll(':scope > div')];
+    return usersListItem
+      .map((userItem) => {
+        const avatarLink = userItem.querySelector('a');
+        const username = avatarLink?.getAttribute('href')?.replace('/', '');
+        const container = avatarLink?.parentElement?.parentElement;
+        const userFullNameNode = container?.querySelector(
+          ':scope > div > div > span',
+        );
+
+        if (!userFullNameNode?.parentElement || !username) {
+          return;
+        }
+
+        const rect = userFullNameNode.getBoundingClientRect();
+
+        const node = userFullNameNode.parentElement;
+        node.style.setProperty('display', 'flex', 'important');
+        node.style.setProperty('align-items', 'center', 'important');
+
+        return {
+          node,
+          top: rect.top + window.scrollY,
+          data: {
+            username,
+          },
+        };
+      })
+      .filter(Boolean);
+  }
+
+  // by meta I mean all 3 subpages - members/followers/meta
+  private static getUsersFromChannelMeta() {
+    const container = Scraper.getMain()?.querySelector('.fade-in');
+    const userItems = [
+      ...(container?.querySelectorAll(':scope > div > div > a') ?? []),
+    ];
+
+    return userItems
+      .map((userItem) => {
+        // workaround because this method matches also another place which is recent list of likes that user received
+        if (userItem.getAttribute('title') === 'View cast') {
+          return;
+        }
+        const username = userItem.getAttribute('href')?.replace('/', '');
+        const container = userItem.parentElement;
+        const userFullNameNode = container?.querySelector(
+          ':scope > div > div > div > span',
+        );
+
+        if (!userFullNameNode?.parentElement || !username) {
+          return;
+        }
+
+        const rect = userFullNameNode.getBoundingClientRect();
+
+        const node = userFullNameNode.parentElement;
+        node.style.setProperty('display', 'flex', 'important');
+        node.style.setProperty('align-items', 'center', 'important');
+
+        return {
+          node,
+          top: rect.top + window.scrollY,
+          data: {
+            username,
+          },
+        };
+      })
+      .filter(Boolean);
+  }
+
+  // by meta I mean all 3 subpages - followers-you-know/followers/following
+  private static getUsersFromUserMeta() {
+    const container = Scraper.getMain()?.querySelector('.fade-in');
+    const userItems = [
+      ...(container?.querySelectorAll(':scope > div > div > div > a') ?? []),
+    ];
+
+    return userItems
+      .map((userItem) => {
+        const username = userItem.getAttribute('href')?.replace('/', '');
+        const container = userItem.parentElement;
+        const userFullNameNode = container?.querySelector(
+          ':scope > div > div > span',
+        );
+
+        if (!userFullNameNode?.parentElement || !username) {
+          return;
+        }
+
+        const rect = userFullNameNode.getBoundingClientRect();
+
+        const node = userFullNameNode.parentElement;
+        node.style.setProperty('display', 'flex', 'important');
+        node.style.setProperty('align-items', 'center', 'important');
+
+        return {
+          node,
+          top: rect.top + window.scrollY,
+          data: {
+            username,
+          },
+        };
+      })
+      .filter(Boolean);
+  }
+
+  private static getUsersFromSearchResults() {
+    const containers = [...document.querySelectorAll('aside .fade-in')];
+    const usersListContainer = containers.find((container) => {
+      const sibling = container.parentElement?.querySelector(':scope > div');
+      return sibling?.textContent === 'Users';
+    });
+    const userItems = [
+      ...(usersListContainer?.querySelectorAll(':scope > div') ?? []),
+    ];
+    return userItems
+      .map((item) => {
+        const link = item.querySelector('a');
+        const username = link?.getAttribute('href')?.replace('/', '');
+        const userFullNameNode = item.querySelector(':scope div > div > span');
+
+        if (!userFullNameNode?.parentElement || !username) {
+          return;
+        }
+
+        const rect = userFullNameNode.getBoundingClientRect();
+
+        const node = userFullNameNode.parentElement;
+        node.style.setProperty('display', 'flex', 'important');
+        node.style.setProperty('align-items', 'center', 'important');
+
+        return {
+          node,
+          top: rect.top + window.scrollY,
+          data: {
+            username,
+          },
+        };
+      })
+      .filter(Boolean);
+  }
+
+  private static getUsersFromDirectCastsList() {
+    const container = document.querySelector('.w-full.w-max-full.fade-in');
+    const userItems = [...(container?.querySelectorAll(':scope > div') ?? [])];
+    return userItems
+      .map((userItem) => {
+        const link = userItem.querySelector('a');
+        const username = link?.getAttribute('href')?.replace('/', '');
+        const userFullNameNode =
+          link?.parentElement?.nextSibling?.firstChild?.firstChild?.firstChild;
+        if (
+          !username ||
+          !userFullNameNode?.parentElement ||
+          !userFullNameNode ||
+          userFullNameNode.childNodes.length > 1 ||
+          userFullNameNode.childNodes[0]?.nodeType != 3
+        ) {
+          return;
+        }
+
+        const node = userFullNameNode.parentElement;
+        node.style.setProperty('display', 'flex', 'important');
+        node.style.setProperty('align-items', 'center', 'important');
+        const rect = node.getBoundingClientRect();
+
+        return {
+          node,
+          top: rect.top + window.scrollY,
+          data: {
+            username,
+          },
+        };
+      })
+      .filter(Boolean);
+  }
+
+  private static getUserFromDirectCastConversation() {
+    const link = Scraper.getMain()?.querySelector('nav div > span > a');
+    const username = link?.getAttribute('href')?.replace('/', '');
+    const userFullNameNode = link?.querySelector(':scope > div > span');
+    if (!username || !userFullNameNode?.parentElement) {
+      return;
+    }
+    const node = userFullNameNode.parentElement;
+    node.style.setProperty('display', 'flex', 'important');
+    node.style.setProperty('align-items', 'center', 'important');
+    const rect = node.getBoundingClientRect();
+
+    return {
+      node,
       top: rect.top + window.scrollY,
       data: {
         username,
@@ -165,44 +463,33 @@ export class Scraper {
   }
 
   public static getUsers(): UserScrapingResult[] {
-    const posts = Scraper.getPosts();
-    const usersFromPosts = posts
-      .map((post) => {
-        const links = [...post.node.querySelectorAll('a')];
-        const userFullName = links
-          .map((link) => {
-            const isUserLink = link.href.endsWith(post.data.authorUsername);
-            if (!isUserLink) {
-              return;
-            }
-            const userFullNameNode = link.querySelector(':scope > div > span');
-            if (!userFullNameNode?.parentElement) {
-              return;
-            }
-
-            const rect = userFullNameNode.getBoundingClientRect();
-
-            return {
-              node: userFullNameNode.parentElement,
-              top: rect.top + window.scrollY,
-              data: {
-                username: post.data.authorUsername,
-              },
-            };
-          })
-          .find(Boolean);
-
-        return userFullName;
-      })
-      .filter(Boolean);
-
+    const usersFromPosts = Scraper.getUsersFromPosts();
+    const usersFromReposts = Scraper.getUsersFromRePosts();
     const usersFromSuggestedFollow = Scraper.getSuggestedFollowsSectionUsers();
+    const usersFromDirectCastList = Scraper.getUsersFromDirectCastList();
+    const usersFromChannelMeta = Scraper.getUsersFromChannelMeta();
+    const usersFromUserMeta = Scraper.getUsersFromUserMeta();
+    const usersFromSearchResults = Scraper.getUsersFromSearchResults();
+    const usersFromDirectCastsList = Scraper.getUsersFromDirectCastsList();
     const handleUser = Scraper.getHandleUser();
+    const handleUsers = handleUser ? [handleUser] : [];
+    const userFromDirectCastConversation =
+      Scraper.getUserFromDirectCastConversation();
+    const usersFromDirectCastConversation = userFromDirectCastConversation
+      ? [userFromDirectCastConversation]
+      : [];
 
-    if (handleUser) {
-      return [...usersFromPosts, ...usersFromSuggestedFollow, handleUser];
-    }
-
-    return [...usersFromPosts, ...usersFromSuggestedFollow];
+    return [
+      ...usersFromPosts,
+      ...usersFromReposts,
+      ...usersFromSuggestedFollow,
+      ...usersFromDirectCastList,
+      ...usersFromChannelMeta,
+      ...usersFromUserMeta,
+      ...usersFromSearchResults,
+      ...usersFromDirectCastsList,
+      ...usersFromDirectCastConversation,
+      ...handleUsers,
+    ];
   }
 }
