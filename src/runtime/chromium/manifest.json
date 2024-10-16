@@ -1,19 +1,29 @@
 {
   "manifest_version": 3,
   "name": "IDriss",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "A more usable web3 for everyone.",
   "author": "IDriss",
   "background": {
     "service_worker": "service-worker.js"
   },
   "homepage_url": "https://www.idriss.xyz",
-  "permissions": ["contextMenus", "tabs", "storage"],
-  "host_permissions": ["<all_urls>"],
+  "permissions": [
+    "contextMenus",
+    "tabs",
+    "storage"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["content-script.js"],
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content-script.js"
+      ],
       "all_frames": true
     }
   ],
@@ -30,8 +40,12 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["webpage-script.js"],
-      "matches": ["<all_urls>"]
+      "resources": [
+        "webpage-script.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
     }
   ]
 }
