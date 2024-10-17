@@ -66,19 +66,19 @@ export class Scraper {
   private static findUsernameElement(element: Element) {
     const usernameElement = [
       ...element.querySelectorAll(
-        '.r-9ilb82, .r-14j79pv, .r-rjixqe, .r-1b43r93.r-hjklzo',
+        '.css-1jxf684.r-bcqeeo.r-1ttztb7.r-qvutc0.r-poiln3',
       ),
     ].find((element) => {
       const textContent = element.textContent;
       return textContent?.startsWith('@');
     });
 
-    if (!usernameElement?.textContent) {
+    if (!usernameElement?.textContent || !usernameElement.parentElement) {
       return;
     }
 
     return {
-      element: usernameElement,
+      element: usernameElement.parentElement,
       username: usernameElement.textContent.replace('@', ''),
     };
   }
