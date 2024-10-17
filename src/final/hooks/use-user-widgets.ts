@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-
 import { useGitcoinDonationWidgetsData } from 'application/gitcoin';
 import { useIdrissSendWidgetsData } from 'application/idriss-send';
 import { useExtensionSettings } from 'shared/extension';
@@ -20,17 +18,11 @@ export const useUserWidgets = () => {
 
   const { users } = useScraping();
 
-  const usernames = useMemo(() => {
-    return users.map((user) => {
-      return user.data.username;
-    });
-  }, [users]);
-
   const idrissSendEnabled =
     applicationsStatus.idrissSend && extensionSettings['idriss-send-enabled'];
 
   const followersQuery = useCommandQuery({
-    command: new GetFollowersCommand({ usernames }),
+    command: new GetFollowersCommand({}),
     enabled: idrissSendEnabled && isFarcaster,
     placeholderData: (previousData) => {
       return previousData;

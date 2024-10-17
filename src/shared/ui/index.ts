@@ -20,6 +20,7 @@ export {
   CurrencyInput,
   IdrissMoneyInput,
   PulsingLoadingBar,
+  PortalWithTailwind,
   PaginationComponent,
 } from './components';
 export { QueryProvider, PortalProvider, TailwindProvider } from './providers';
