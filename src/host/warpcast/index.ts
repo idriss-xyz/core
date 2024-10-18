@@ -3,3 +3,5 @@ export {
   useWarpcastScraping,
   WarpcastScrapingContextProvider,
 } from './context';
+
+export { getWarpcastUserLink } from './utils';

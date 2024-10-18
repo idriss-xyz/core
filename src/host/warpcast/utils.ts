@@ -18,6 +18,10 @@ export const isHomePathname = (pathname: string) => {
   return pathname === '/' || pathname.startsWith('/~/trending');
 };
 
+export const getWarpcastUserLink = (username: string) => {
+  return `https://${WARPCAST_HOST_NAME}/${username}`;
+};
+
 export const isUserPathname = (pathname: string) => {
   if (isUnsupportedPathname(pathname)) {
     return false;
