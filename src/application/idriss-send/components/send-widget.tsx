@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { IdrissSend } from 'shared/idriss';
 import {
@@ -11,7 +11,6 @@ import {
   toAddressWithValidChecksum,
 } from 'shared/web3';
 import { ErrorMessage } from 'shared/ui';
-import { ErrorBoundary } from 'shared/observability';
 
 import { useSendForm, useSender } from '../hooks';
 import { SendPayload } from '../schema';
@@ -19,17 +18,13 @@ import { getIconSource, getLoadingMessage } from '../utils';
 import { WidgetData } from '../types';
 import { DEFAULT_ALLOWED_CHAINS_IDS } from '../constants';
 
-interface Properties {
+type Properties = {
   widgetData: WidgetData;
-}
+};
 
-interface BaseProperties extends Properties {
-  onClose: () => void;
-}
-
-const Base = ({ widgetData, onClose }: BaseProperties) => {
+export const SendWidget = ({ widgetData }: Properties) => {
   const {
-    nodeToInject,
+    node,
     username,
     availableNetworks,
     widgetOverrides,
@@ -77,14 +72,19 @@ const Base = ({ widgetData, onClose }: BaseProperties) => {
   const iconSize = isHandleUser ? 20 : 16;
   const iconSource = getIconSource(widgetOverrides?.iconType ?? 'default');
 
+  const reset = useCallback(() => {
+    sender.reset();
+    formMethods.reset();
+  }, [formMethods, sender]);
+
   return (
     <IdrissSend.Container
-      node={nodeToInject}
+      node={node}
       iconSize={iconSize}
       iconSrc={iconSource}
       recipientName={username}
-      onClose={onClose}
       closeOnClickAway={sender.isIdle}
+      onClose={reset}
     >
       {({ close }) => {
         if (sender.isSending) {
@@ -155,22 +155,5 @@ const Base = ({ widgetData, onClose }: BaseProperties) => {
     </IdrissSend.Container>
   );
 };
-
-export const SendWidget = memo((properties: Properties) => {
-  // resets component state after closing
-  const [resetCount, setResetCount] = useState(0);
-
-  const resetWidget = useCallback(() => {
-    setResetCount((previous) => {
-      return previous + 1;
-    });
-  }, []);
-
-  return (
-    <ErrorBoundary>
-      <Base {...properties} key={resetCount} onClose={resetWidget} />
-    </ErrorBoundary>
-  );
-});
 
 SendWidget.displayName = 'SendWidget';

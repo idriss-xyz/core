@@ -1,4 +1,5 @@
 interface ScrapingResult {
+  nodeId: string;
   node: Element;
   top: number;
 }

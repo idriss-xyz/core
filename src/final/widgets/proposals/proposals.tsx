@@ -10,11 +10,9 @@ export const Proposals = () => {
   return (
     <ErrorBoundary>
       {widgets.map((widget) => {
-        const key = `${widget.username}-${widget.top}`;
-
         return (
           <OrganisationProposals
-            key={key}
+            key={widget.nodeId}
             widgetData={widget}
             onClose={() => {
               hideWidget(widget.username);

@@ -1,5 +1,6 @@
 import {
   ExternalLinksScrapingResult,
+  getScrapedElementId,
   PostScrapingResult,
   UserScrapingResult,
 } from 'shared/scraping';
@@ -24,7 +25,12 @@ export class Scraper {
           return;
         }
 
-        return { node, top: top + window.scrollY, data: { link } };
+        return {
+          node,
+          nodeId: getScrapedElementId(node),
+          top: top + window.scrollY,
+          data: { link },
+        };
       })
       .filter(Boolean);
   }
@@ -54,6 +60,7 @@ export class Scraper {
 
         return {
           node: post,
+          nodeId: getScrapedElementId(post),
           top: linkNodeRect.top + window.scrollY,
           data: {
             authorUsername: username,
@@ -134,6 +141,7 @@ export class Scraper {
 
       scrapedUsers.push({
         node: userBarElement,
+        nodeId: getScrapedElementId(userBarElement),
         top: top + window.scrollY,
         data: {
           username: usernameElement.username,

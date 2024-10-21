@@ -11,7 +11,8 @@ export type DonationPayload = z.infer<
 export interface WidgetData {
   top: number;
   username: string;
-  nodeToInject: HTMLElement;
+  node: HTMLElement;
+  nodeId: string;
   isHandleUser: boolean;
   application: Application;
   type: 'gitcoin';

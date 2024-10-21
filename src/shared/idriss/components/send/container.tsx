@@ -1,14 +1,7 @@
-import {
-  ReactNode,
-  memo,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { ReactNode, memo, useCallback, useEffect, useState } from 'react';
 import { useWindowSize } from 'react-use';
 
-import { Closable } from 'shared/ui';
+import { Closable, PortalWithTailwind } from 'shared/ui';
 
 import { WIDGET_WIDTH } from '../../constants';
 
@@ -39,63 +32,47 @@ export const Container = memo(
   }: Properties) => {
     const [closeOnHoverAway, setCloseOnHoverAway] = useState(true);
     const [isVisible, setIsVisible] = useState(false);
-    const [position, setPosition] = useState({ x: 0, y: 0 });
 
+    const [portal, setPortal] = useState<HTMLDivElement>();
     const windowSize = useWindowSize();
     const isMobile = windowSize.width < 500;
+    const [position, setPosition] = useState({ x: 0, y: 0 });
     const widgetEndsAtX = position.x + WIDGET_WIDTH;
     const spaceLeft = windowSize.width - widgetEndsAtX;
     const left = isMobile || spaceLeft < 0 ? undefined : position.x;
     const right = isMobile || spaceLeft < 0 ? 0 : undefined;
 
-    const injectedWidgetReference = useRef<HTMLImageElement | null>(null);
+    const updatePosition = useCallback(() => {
+      if (!portal) {
+        return;
+      }
+      const elementRect = portal.getBoundingClientRect();
+      setPosition({
+        x: elementRect.right,
+        y: elementRect.top + window.scrollY,
+      });
+    }, [portal]);
+
+    const open = useCallback(() => {
+      updatePosition();
+      setIsVisible(true);
+      onOpen?.();
+    }, [onOpen, updatePosition]);
 
     useEffect(() => {
-      injectedWidgetReference.current = document.createElement('img');
-      injectedWidgetReference.current.style.height = `${iconSize}px`;
-      injectedWidgetReference.current.style.width = `${iconSize}px`;
-      injectedWidgetReference.current.style.cursor = 'pointer';
-      injectedWidgetReference.current.style.marginLeft = '2px';
-      injectedWidgetReference.current.style.zIndex = '1';
-      injectedWidgetReference.current.src = iconSrc;
-
-      node?.append(injectedWidgetReference.current);
-
-      const updatePosition = () => {
-        if (!injectedWidgetReference.current) {
-          return;
-        }
-        const elementRect =
-          injectedWidgetReference.current.getBoundingClientRect();
-        setPosition({
-          x: elementRect.right,
-          y: elementRect.top + window.scrollY,
-        });
-      };
-
-      const openWidget = (event: Event) => {
-        event.preventDefault();
-        setIsVisible(true);
-        updatePosition();
-        onOpen?.();
-      };
-
-      injectedWidgetReference.current?.addEventListener(
-        'mouseover',
-        openWidget,
-      );
-      window.addEventListener('resize', updatePosition);
+      const container = document.createElement('div');
+      node.append(container);
+      const shadowRoot = container.attachShadow({ mode: 'open' });
+      const newPortal = document.createElement('div');
+      shadowRoot.append(newPortal);
+      setPortal(newPortal);
 
       return () => {
-        injectedWidgetReference.current?.removeEventListener(
-          'mouseover',
-          openWidget,
-        );
-        window.removeEventListener('resize', updatePosition);
-        injectedWidgetReference.current?.remove();
-        injectedWidgetReference.current = null;
+        newPortal?.remove();
+        container?.remove();
+        setPortal(undefined);
       };
-    }, [iconSize, iconSrc, node, onOpen]);
+    }, [node]);
 
     const close = useCallback(() => {
       setIsVisible(false);
@@ -106,32 +83,45 @@ export const Container = memo(
       setCloseOnHoverAway(false);
     }, []);
 
-    if (!isVisible) {
+    if (!portal) {
       return null;
     }
 
     return (
-      <div
-        className="absolute z-10"
-        style={{
-          left,
-          right,
-          top: position.y + iconSize,
-          width: WIDGET_WIDTH,
-        }}
-      >
-        <Closable
-          className="w-full rounded-md bg-white p-4 text-gray-900 shadow-2xl"
-          closeButtonClassName="hover:enabled:bg-black/20 active:enabled:bg-black/40"
-          closeButtonIconClassName="text-[#000]"
-          onClickInside={disableCloseOnHoverAway}
-          onClose={close}
-          closeOnHoverAway={closeOnHoverAway}
-          closeOnClickAway={closeOnClickAway}
-        >
-          {children({ close })}
-        </Closable>
-      </div>
+      <>
+        {isVisible && (
+          <div
+            className="absolute z-10"
+            style={{
+              left,
+              right,
+              top: position.y + iconSize,
+              width: WIDGET_WIDTH,
+            }}
+          >
+            <Closable
+              className="w-full rounded-md bg-white p-4 text-gray-900 shadow-2xl"
+              closeButtonClassName="hover:enabled:bg-black/20 active:enabled:bg-black/40"
+              closeButtonIconClassName="text-[#000]"
+              onClickInside={disableCloseOnHoverAway}
+              onClose={close}
+              closeOnHoverAway={closeOnHoverAway}
+              closeOnClickAway={closeOnClickAway}
+            >
+              {children({ close })}
+            </Closable>
+          </div>
+        )}
+        <PortalWithTailwind container={portal}>
+          <img
+            src={iconSrc}
+            width={iconSize}
+            height={iconSize}
+            className="z-[1] ml-0.5 cursor-pointer"
+            onMouseOver={open}
+          />
+        </PortalWithTailwind>
+      </>
     );
   },
 );

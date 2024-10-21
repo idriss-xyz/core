@@ -71,12 +71,19 @@ export const useDonationMaker = ({ wallet }: Properties) => {
 
   const data = donateTransaction.data ?? acrossDonateTransaction.data;
 
+  const reset = useCallback(() => {
+    switchChain.reset();
+    donateTransaction.reset();
+    acrossDonateTransaction.reset();
+  }, [acrossDonateTransaction, donateTransaction, switchChain]);
+
   return {
     donate,
     isDonating,
     isError,
     isSuccess,
     data,
+    reset,
     isIdle,
   };
 };

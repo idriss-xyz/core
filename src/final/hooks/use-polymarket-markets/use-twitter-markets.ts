@@ -53,7 +53,7 @@ export const useTwitterMarkets = ({ enabled }: Properties) => {
           if (!conditionId) {
             return;
           }
-          return { conditionId, top: link.top };
+          return { conditionId, top: link.top, nodeId: link.nodeId };
         }),
       );
 

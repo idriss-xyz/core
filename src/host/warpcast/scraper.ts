@@ -1,5 +1,6 @@
 import {
   ExternalLinksScrapingResult,
+  getScrapedElementId,
   UserScrapingResult,
 } from 'shared/scraping';
 
@@ -25,6 +26,7 @@ export class Scraper {
 
         return {
           node,
+          nodeId: getScrapedElementId(node),
           top: top + window.scrollY,
           data: {
             link,
@@ -78,6 +80,7 @@ export class Scraper {
 
         return {
           node: post,
+          nodeId: getScrapedElementId(post),
           usernameLinkNode,
           repostUsernameLinkNode,
           top: linkNodeRect.top + window.scrollY,
@@ -147,6 +150,7 @@ export class Scraper {
 
         return {
           node,
+          nodeId: getScrapedElementId(node),
           top: rect.top + window.scrollY,
           data: {
             username,
@@ -161,7 +165,7 @@ export class Scraper {
   }
 
   private static getHandleUser(): UserScrapingResult | undefined {
-    const pathname = window.location.pathname;
+    const pathname = globalThis.location.pathname;
     if (!isUserPathname(pathname)) {
       return;
     }
@@ -191,6 +195,7 @@ export class Scraper {
 
     return {
       node,
+      nodeId: getScrapedElementId(node),
       top: rect.top + window.scrollY,
       data: {
         username,
@@ -213,6 +218,7 @@ export class Scraper {
 
         return {
           node,
+          nodeId: getScrapedElementId(node),
           top: rect.top + window.scrollY,
           data: {
             username: post.data.authorUsername,
@@ -243,6 +249,7 @@ export class Scraper {
 
         return {
           node,
+          nodeId: getScrapedElementId(node),
           top: rect.top + window.scrollY,
           data: {
             username,
@@ -285,6 +292,7 @@ export class Scraper {
 
         return {
           node,
+          nodeId: getScrapedElementId(node),
           top: rect.top + window.scrollY,
           data: {
             username,
@@ -325,6 +333,7 @@ export class Scraper {
 
         return {
           node,
+          nodeId: getScrapedElementId(node),
           top: rect.top + window.scrollY,
           data: {
             username,
@@ -361,6 +370,7 @@ export class Scraper {
 
         return {
           node,
+          nodeId: getScrapedElementId(node),
           top: rect.top + window.scrollY,
           data: {
             username,
@@ -397,6 +407,7 @@ export class Scraper {
 
         return {
           node,
+          nodeId: getScrapedElementId(node),
           top: rect.top + window.scrollY,
           data: {
             username,
@@ -432,6 +443,7 @@ export class Scraper {
 
         return {
           node,
+          nodeId: getScrapedElementId(node),
           top: rect.top + window.scrollY,
           data: {
             username,
@@ -455,6 +467,7 @@ export class Scraper {
 
     return {
       node,
+      nodeId: getScrapedElementId(node),
       top: rect.top + window.scrollY,
       data: {
         username,

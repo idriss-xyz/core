@@ -1,5 +1,6 @@
 import {
   ExternalLinksScrapingResult,
+  getScrapedElementId,
   PostScrapingResult,
   UserScrapingResult,
 } from 'shared/scraping';
@@ -17,7 +18,7 @@ export class Scraper {
   }
 
   private static getHandleUser(): UserScrapingResult | undefined {
-    const pathname = window.location.pathname;
+    const pathname = globalThis.location.pathname;
     if (!isUserPathname(pathname)) {
       return;
     }
@@ -42,6 +43,7 @@ export class Scraper {
 
     return {
       node: userFullNameNode.parentElement,
+      nodeId: getScrapedElementId(userFullNameNode.parentElement),
       top: rect.top + window.scrollY,
       data: {
         username,
@@ -92,6 +94,7 @@ export class Scraper {
 
         return {
           node: post,
+          nodeId: getScrapedElementId(post),
           top: linkNodeRect.top + window.scrollY,
           data: {
             authorUsername: username,
@@ -121,6 +124,7 @@ export class Scraper {
 
             return {
               node: userFullNameNode.parentElement,
+              nodeId: getScrapedElementId(userFullNameNode.parentElement),
               top: rect.top + window.scrollY,
               data: {
                 username: post.data.authorUsername,

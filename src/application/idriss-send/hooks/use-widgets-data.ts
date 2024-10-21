@@ -9,6 +9,7 @@ import { Hex } from 'shared/web3';
 import { reverseObject } from 'shared/utils';
 import { UserScrapingResult } from 'shared/scraping';
 import { getNodeToInjectToUser, isHandleNode } from 'host/twitter';
+import { GetFollowersCommand } from 'shared/farcaster';
 
 import { GetCustomRecipientsCommand } from '../commands';
 import { PUBLIC_ETH_TAG_NAME } from '../constants';
@@ -51,6 +52,14 @@ export const useWidgetsData = ({ scrapedUsers, enabled }: Properties) => {
     });
   }, [usernameToTwitterId, scrapedUsers]);
 
+  const followersQuery = useCommandQuery({
+    command: new GetFollowersCommand({}),
+    enabled: enabled,
+    placeholderData: (previousData) => {
+      return previousData;
+    },
+  });
+
   const customRecipientsQuery = useCommandQuery({
     command: new GetCustomRecipientsCommand({}),
     placeholderData: (previousData) => {
@@ -92,6 +101,7 @@ export const useWidgetsData = ({ scrapedUsers, enabled }: Properties) => {
 
         return {
           ...scrapedUser,
+          node: scrapedUser.node as HTMLElement,
           username: scrapedUser.data.username,
           digestedMessageToWalletTag,
           walletTagToDigestedMessage,
@@ -101,7 +111,7 @@ export const useWidgetsData = ({ scrapedUsers, enabled }: Properties) => {
         };
       })
       .filter(Boolean);
-  }, [customRecipientsQuery.data, usernameToTwitterId, scrapedUsers]);
+  }, [customRecipientsQuery.data, scrapedUsers, usernameToTwitterId]);
 
   const usersWithoutWalletYet = useMemo(() => {
     return recipientsWithOptionalWallet.filter((user) => {
@@ -174,17 +184,32 @@ export const useWidgetsData = ({ scrapedUsers, enabled }: Properties) => {
           const publicEthDigestedMessage =
             user.walletTagToDigestedMessage[PUBLIC_ETH_TAG_NAME] ?? '';
 
+          const addressFromFollowersList = Object.values(
+            followersQuery.data ?? {},
+          ).find((follower) => {
+            return (
+              follower.twitter.toLowerCase() === user.username.toLowerCase()
+            );
+          })?.address;
+
           walletAddress =
             userDigestToWallet[publicEthDigestedMessage] ??
-            Object.values(userDigestToWallet)[0];
+            Object.values(userDigestToWallet)[0] ??
+            addressFromFollowersList;
         }
 
         if (!walletAddress) {
           return;
         }
 
-        const { top, node, username, availableNetworks, widgetOverrides } =
-          user;
+        const {
+          top,
+          node,
+          nodeId,
+          username,
+          availableNetworks,
+          widgetOverrides,
+        } = user;
         const isHandleUser = isHandleNode(node as HTMLElement);
 
         const nodeToInject = getNodeToInjectToUser(node, isHandleUser);
@@ -199,13 +224,14 @@ export const useWidgetsData = ({ scrapedUsers, enabled }: Properties) => {
           availableNetworks,
           widgetOverrides,
           walletAddress,
-          nodeToInject,
+          node: nodeToInject,
+          nodeId,
           isHandleUser,
           type: 'idrissSend' as const,
         };
       })
       .filter(Boolean);
-  }, [recipientsWithOptionalWallet, digestToWallet]);
+  }, [recipientsWithOptionalWallet, digestToWallet, followersQuery.data]);
 
   return { widgets };
 };

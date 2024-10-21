@@ -44,6 +44,7 @@ export const useWidgetsData = ({ scrapedUsers, enabled }: Properties) => {
 
         const {
           node,
+          nodeId,
           top,
           data: { username },
         } = scrapedUser;
@@ -61,7 +62,8 @@ export const useWidgetsData = ({ scrapedUsers, enabled }: Properties) => {
           application,
           username,
           isHandleUser,
-          nodeToInject,
+          node: nodeToInject,
+          nodeId,
           type: 'gitcoin' as const,
         };
       })

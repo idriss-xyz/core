@@ -64,6 +64,7 @@ export const FollowOnFarcaster = () => {
   useEffect(() => {
     const cleanup = () => {
       newPortal?.remove();
+      container?.remove();
       setPortal(undefined);
     };
     if (!maybeUserData) {
@@ -75,10 +76,12 @@ export const FollowOnFarcaster = () => {
     if (!followButton) {
       return cleanup;
     }
+    const container = document.createElement('div');
+    buttonsContainer?.insertBefore(container, followButton);
+    const shadowRoot = container.attachShadow({ mode: 'open' });
     const newPortal = document.createElement('div');
+    shadowRoot.append(newPortal);
     setPortal(newPortal);
-
-    buttonsContainer?.insertBefore(newPortal, followButton);
 
     return cleanup;
   }, [

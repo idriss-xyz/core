@@ -22,7 +22,6 @@ interface Properties {
 
 export const useSender = ({ wallet }: Properties) => {
   const switchChain = useSwitchChain();
-
   const getTokenPerDollarMutation = useCommandMutation(GetTokenPriceCommand);
   const nativeTransaction = useNativeTransaction();
   const erc20Transaction = useErc20Transaction();
@@ -124,5 +123,26 @@ export const useSender = ({ wallet }: Properties) => {
 
   const isIdle = !isSending && !isError && !isSuccess;
 
-  return { send, isSending, isError, isSuccess, isIdle, data, tokensToSend };
+  const reset = useCallback(() => {
+    getTokenPerDollarMutation.reset();
+    nativeTransaction.reset();
+    erc20Transaction.reset();
+    switchChain.reset();
+  }, [
+    erc20Transaction,
+    getTokenPerDollarMutation,
+    nativeTransaction,
+    switchChain,
+  ]);
+
+  return {
+    send,
+    isSending,
+    isError,
+    isSuccess,
+    isIdle,
+    data,
+    tokensToSend,
+    reset,
+  };
 };

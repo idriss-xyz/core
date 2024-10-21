@@ -40,35 +40,37 @@ export const useProposalsWidgets = () => {
     [getOfficialNames],
   );
 
-  const widgets: PostWidgetProposalData[] = useMemo(() => {
-    if (!isHomePage) {
-      return [];
-    }
+  const widgets: (PostWidgetProposalData & { nodeId: string })[] =
+    useMemo(() => {
+      if (!isHomePage) {
+        return [];
+      }
 
-    return posts
-      .map((post) => {
-        const authorUsername = post.data.authorUsername.toLowerCase();
-        if (hidden.includes(authorUsername)) {
-          return;
-        }
+      return posts
+        .map((post) => {
+          const authorUsername = post.data.authorUsername.toLowerCase();
+          if (hidden.includes(authorUsername)) {
+            return;
+          }
 
-        const officialNames = getOfficialNames(authorUsername);
+          const officialNames = getOfficialNames(authorUsername);
 
-        const proposalsSources = getProposalsSources(authorUsername);
+          const proposalsSources = getProposalsSources(authorUsername);
 
-        if (proposalsSources.length === 0) {
-          return;
-        }
+          if (proposalsSources.length === 0) {
+            return;
+          }
 
-        return {
-          top: post.top,
-          username: post.data.authorUsername,
-          officialNames,
-          proposalsSources,
-        };
-      })
-      .filter(Boolean);
-  }, [getOfficialNames, getProposalsSources, hidden, isHomePage, posts]);
+          return {
+            top: post.top,
+            nodeId: post.nodeId,
+            username: post.data.authorUsername,
+            officialNames,
+            proposalsSources,
+          };
+        })
+        .filter(Boolean);
+    }, [getOfficialNames, getProposalsSources, hidden, isHomePage, posts]);
 
   const userPageProposalWidget = useMemo(() => {
     if (!isUserPage || !username) {

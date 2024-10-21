@@ -17,7 +17,7 @@ export const PolymarketMarkets = () => {
       {markets.map((market) => {
         return (
           <MarketWidgetContainer
-            key={`${market.top}-${market.conditionId}`}
+            key={market.nodeId}
             top={market.top}
             conditionId={market.conditionId}
           />

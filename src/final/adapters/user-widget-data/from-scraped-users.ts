@@ -1,7 +1,11 @@
 import { UserScrapingResult } from 'shared/scraping';
 import { EMPTY_HEX } from 'shared/web3';
 
-export const fromScrapedUser = (properties: { user: UserScrapingResult }) => {
+import { UserWidgetData } from '../../types';
+
+export const fromScrapedUser = (properties: {
+  user: UserScrapingResult;
+}): UserWidgetData => {
   const { user } = properties;
 
   return {
@@ -9,7 +13,8 @@ export const fromScrapedUser = (properties: { user: UserScrapingResult }) => {
     walletAddress: EMPTY_HEX,
     top: user.top,
     username: user.data.username,
-    nodeToInject: user.node as HTMLElement,
+    node: user.node as HTMLElement,
+    nodeId: user.nodeId,
     isHandleUser: false,
   } as const;
 };

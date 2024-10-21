@@ -12,7 +12,8 @@ export interface WidgetData {
     iconType: IconType;
   };
   walletAddress: Hex;
-  nodeToInject: HTMLElement;
+  node: HTMLElement;
+  nodeId: string;
   isHandleUser: boolean;
   type: 'idrissSend';
 }

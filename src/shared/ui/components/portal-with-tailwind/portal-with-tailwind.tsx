@@ -18,7 +18,7 @@ type Properties = {
  */
 export const PortalWithTailwind = ({ children, container }: Properties) => {
   return (
-    <Portal.Root container={container}>
+    <Portal.Root container={container} asChild>
       <TailwindProvider>{children}</TailwindProvider>
     </Portal.Root>
   );

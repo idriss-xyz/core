@@ -10,13 +10,13 @@ export const UserWidgets = () => {
   return (
     <ErrorBoundary>
       {widgets.map((widget) => {
-        const key = `${widget.username}-${widget.top}`;
-
         if (widget.type === 'gitcoin') {
-          return <GitcoinDonationWidget key={key} widgetData={widget} />;
+          return (
+            <GitcoinDonationWidget key={widget.nodeId} widgetData={widget} />
+          );
         }
 
-        return <IdrissSendWidget key={key} widgetData={widget} />;
+        return <IdrissSendWidget key={widget.nodeId} widgetData={widget} />;
       })}
     </ErrorBoundary>
   );
