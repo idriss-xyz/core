@@ -16,11 +16,28 @@ const config: StorybookConfig = {
     options: {},
   },
   webpackFinal: async (config) => {
+    // include our own injected tailwind string
+    if (config.module?.rules) {
+      config.module.rules = config.module.rules.filter((rule) => {
+        return (rule as any).test?.source !== /\.css$/.source;
+      });
+
+      config.module.rules.push({
+        test: /tailwind\.build\.css$/i,
+        type: 'asset/source',
+      });
+    }
+
     if (config.plugins) {
       config.plugins.push(new NodePolyfillPlugin());
       config.plugins.push(
         new DefinePlugin({
-          ENABLE_EVENTS: 'false',
+          'process.env': JSON.stringify({
+            SENTRY_ENVIRONMENT: 'storybook',
+            SENTRY_DSN: '',
+            AMPLITUDE_API_KEY: '',
+            ENVIRONMENT: 'storybook',
+          }),
         }),
       );
     }

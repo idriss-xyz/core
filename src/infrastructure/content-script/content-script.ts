@@ -30,7 +30,14 @@ export class ContentScript {
   }
 
   static canRun() {
-    return window.top === window;
+    return ContentScript.allowIFrames() || window.top === window;
+  }
+
+  /**
+   * Storybook runs in an iframe
+   */
+  private static allowIFrames() {
+    return window.location.hostname === 'localhost';
   }
 
   injectScriptToWebpage() {

@@ -1,23 +1,10 @@
-import { useMemo, createElement, StrictMode } from 'react';
-import NiceModal from '@ebay/nice-modal-react';
+import { useMemo, createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { Final, useLocationInfo, ExtensionPopup } from 'final';
-import {
-  ExtensionPopupProvider,
-  ExtensionSettingsProvider,
-} from 'shared/extension';
-import { PortalProvider, QueryProvider, TailwindProvider } from 'shared/ui';
-import { WalletContextProvider } from 'shared/web3';
-import {
-  ErrorBoundary,
-  WithEventsLogger,
-  WithObservabilityScope,
-} from 'shared/observability';
-import { TwitterScrapingContextProvider } from 'host/twitter';
-import { WarpcastScrapingContextProvider } from 'host/warpcast';
-import { SupercastScrapingContextProvider } from 'host/supercast';
+import { useLocationInfo, ExtensionPopup, Final } from 'final';
 import { LookUpWalletAddress } from 'application/look-up-wallet-address';
+
+import { Providers } from './providers';
 
 export class Application {
   private constructor() {}
@@ -67,7 +54,7 @@ const bootstrap = () => {
 };
 
 const ApplicationWithProviders = () => {
-  const { isTwitter, isWarpcast, isSupercast } = useLocationInfo();
+  const { isTwitter } = useLocationInfo();
 
   const disabledWalletRdns = useMemo(() => {
     if (isTwitter) {
@@ -76,75 +63,11 @@ const ApplicationWithProviders = () => {
     return [];
   }, [isTwitter]);
 
-  const isExpectedPage = isTwitter || isWarpcast || isSupercast;
-
-  if (!isExpectedPage) {
-    return (
-      <StrictMode>
-        <WithObservabilityScope>
-          <ErrorBoundary>
-            <WithEventsLogger>
-              <PortalProvider>
-                <TailwindProvider>
-                  <QueryProvider>
-                    <NiceModal.Provider>
-                      <WalletContextProvider
-                        disabledWalletsRdns={disabledWalletRdns}
-                      >
-                        <ExtensionPopupProvider>
-                          <ExtensionSettingsProvider>
-                            <>
-                              <LookUpWalletAddress />
-                              <ExtensionPopup />
-                            </>
-                          </ExtensionSettingsProvider>
-                        </ExtensionPopupProvider>
-                      </WalletContextProvider>
-                    </NiceModal.Provider>
-                  </QueryProvider>
-                </TailwindProvider>
-              </PortalProvider>
-            </WithEventsLogger>
-          </ErrorBoundary>
-        </WithObservabilityScope>
-      </StrictMode>
-    );
-  }
-
   return (
-    <StrictMode>
-      <WithObservabilityScope>
-        <ErrorBoundary>
-          <WithEventsLogger>
-            <PortalProvider>
-              <TailwindProvider>
-                <QueryProvider>
-                  <NiceModal.Provider>
-                    <WalletContextProvider
-                      disabledWalletsRdns={disabledWalletRdns}
-                    >
-                      <ExtensionPopupProvider>
-                        <ExtensionSettingsProvider>
-                          <TwitterScrapingContextProvider>
-                            <WarpcastScrapingContextProvider>
-                              <SupercastScrapingContextProvider>
-                                <>
-                                  <ExtensionPopup />
-                                  <Final />
-                                </>
-                              </SupercastScrapingContextProvider>
-                            </WarpcastScrapingContextProvider>
-                          </TwitterScrapingContextProvider>
-                        </ExtensionSettingsProvider>
-                      </ExtensionPopupProvider>
-                    </WalletContextProvider>
-                  </NiceModal.Provider>
-                </QueryProvider>
-              </TailwindProvider>
-            </PortalProvider>
-          </WithEventsLogger>
-        </ErrorBoundary>
-      </WithObservabilityScope>
-    </StrictMode>
+    <Providers disabledWalletRdns={disabledWalletRdns}>
+      <LookUpWalletAddress />
+      <ExtensionPopup />
+      <Final />
+    </Providers>
   );
 };

@@ -105,6 +105,7 @@ module.exports = {
     },
   ],
   rules: {
+    'unicorn/prefer-global-this': 'off',
     'tailwindcss/classnames-order': 'off',
     'boundaries/no-unknown-files': [2],
     'boundaries/entry-point': [
