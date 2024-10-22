@@ -1,7 +1,5 @@
-import { Hex } from 'viem';
-
 import { Button, Icon } from 'shared/ui';
-import { getTransactionUrl } from 'shared/web3';
+import { getTransactionUrl, Hex } from 'shared/web3';
 
 interface Properties {
   chainId: number;

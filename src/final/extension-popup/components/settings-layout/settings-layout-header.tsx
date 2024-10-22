@@ -1,6 +1,10 @@
 import { ReactNode, useCallback } from 'react';
 
-import { EXTENSION_POPUP_ROUTE, useExtensionPopup } from 'shared/extension';
+import {
+  EXTENSION_POPUP_ROUTE,
+  ROUTE_TITLE,
+  useExtensionPopup,
+} from 'shared/extension';
 import { IconButton } from 'shared/ui';
 
 type Properties = {
@@ -17,9 +21,19 @@ export const SettingsLayoutHeader = ({ title, prefix }: Properties) => {
 
   return (
     <div className="sticky top-0 flex items-center justify-between bg-gray-100 px-6 py-4 text-lg font-bold">
-      {prefix ?? <div className="w-7" />}
+      {prefix ?? (
+        <IconButton
+          className="text-black hover:text-green-500"
+          iconProps={{ name: 'ArrowLeftIcon', size: 24 }}
+          onClick={() => {
+            extensionPopup.navigateBack();
+          }}
+        />
+      )}
 
-      <span className="block">{title}</span>
+      <span className="block">
+        {title ?? ROUTE_TITLE[extensionPopup.currentRoute]}
+      </span>
 
       <IconButton
         className="text-black hover:text-green-500"

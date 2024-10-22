@@ -11,7 +11,7 @@ import { GITCOIN_DONATION_COMMAND_MAP } from 'application/gitcoin';
 import { POLYMARKET_COMMAND_MAP } from 'application/polymarket';
 import { SNAPSHOT_COMMAND_MAP } from 'application/snapshot';
 import {
-  DEFAULT_SETTINGS,
+  DEFAULT_EXTENSION_SETTINGS,
   EXTENSION_BUTTON_CLICKED,
   EXTENSION_COMMAND_MAP,
   ExtensionSettingsManager,
@@ -27,6 +27,7 @@ import { IDRISS_COMMAND_MAP } from 'shared/idriss';
 import { IDRISS_SEND_COMMAND_MAP } from 'application/idriss-send';
 import { TALLY_COMMAND_MAP } from 'application/tally';
 import { FARCASTER_COMMAND_MAP } from 'shared/farcaster';
+import { TRADING_COPILOT_COMMAND_MAP } from 'application/trading-copilot';
 
 import { SbtResolver } from '../../common/resolvers/SbtResolver';
 import { AddressResolver } from '../../common/resolvers/AddressResolver';
@@ -45,6 +46,7 @@ const COMMAND_MAP = {
   ...IDRISS_SEND_COMMAND_MAP,
   ...TALLY_COMMAND_MAP,
   ...FARCASTER_COMMAND_MAP,
+  ...TRADING_COPILOT_COMMAND_MAP,
 };
 
 export class ServiceWorker {
@@ -222,7 +224,7 @@ export class ServiceWorker {
     this.environment.runtime.onInstalled.addListener(() => {
       void ExtensionSettingsManager.getAllSettings().then((currentSettings) => {
         void ExtensionSettingsManager.setSettings({
-          ...DEFAULT_SETTINGS,
+          ...DEFAULT_EXTENSION_SETTINGS,
           ...currentSettings,
         });
       });

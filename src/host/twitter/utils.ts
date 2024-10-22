@@ -1,4 +1,12 @@
-import { MAX_PARENT_NODES_TO_CHECK, TWITTER_HOST_NAMES } from './constants';
+import {
+  MAX_PARENT_NODES_TO_CHECK,
+  TWITTER_HOST_NAMES,
+  TWITTER_MAIN_HOST_NAME,
+} from './constants';
+
+export const getTwitterUserLink = (username: string) => {
+  return `https://${TWITTER_MAIN_HOST_NAME}/${username}`;
+};
 
 export const isTwitterHostname = (hostname: string) => {
   return TWITTER_HOST_NAMES.includes(hostname);

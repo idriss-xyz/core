@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 import { ExtensionSettingsStorageKey } from 'shared/extension';
 
 export interface SettingListItem<T extends ExtensionSettingsStorageKey> {
@@ -7,5 +9,6 @@ export interface SettingListItem<T extends ExtensionSettingsStorageKey> {
 
 export interface SettingListItemsGroup<T extends ExtensionSettingsStorageKey> {
   label: string;
+  labelSuffixElement?: ReactNode;
   settingListItems: SettingListItem<T>[];
 }

@@ -5,6 +5,7 @@ import { EXTENSION_POPUP_ROUTE, useExtensionPopup } from 'shared/extension';
 
 import { Footer, TopBar } from './components';
 import { HomeView, MainSettingsView, CustomizationSettingsView } from './views';
+import { TradingCopilotView } from './views/trading-copilot';
 
 export const ExtensionPopup = () => {
   const extensionPopup = useExtensionPopup();
@@ -31,6 +32,10 @@ export const ExtensionPopup = () => {
           <Route
             path={EXTENSION_POPUP_ROUTE.SETTINGS_CUSTOMIZATION}
             element={<CustomizationSettingsView />}
+          />
+          <Route
+            path={EXTENSION_POPUP_ROUTE.TRADING_COPILOT}
+            element={<TradingCopilotView />}
           />
         </Routes>
       </ScrollArea>

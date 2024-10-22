@@ -6,15 +6,21 @@ import { useMemo, useRef } from 'react';
 import {
   EXTENSION_POPUP_ROUTE,
   ExtensionSettings,
-  useExtensionPopup,
+  ExtensionSettingsStorageKey,
   useExtensionSettings,
 } from 'shared/extension';
-import { IconButton } from 'shared/ui';
 
 import { SettingsLayout } from '../../components';
+import { NavigateButton } from '../../components/navigate-button';
 
-import { settingListItemGroups } from './constants';
+import {
+  addressBookSettings,
+  governanceSettings,
+  integrationsSettings,
+  tradingCopilotSettings,
+} from './constants';
 import { CustomizationSettingsGroup } from './customization-settings-group';
+import { SettingListItemsGroup } from './types';
 
 type ExtensionSettingsFormValues = Omit<
   ExtensionSettings,
@@ -22,7 +28,6 @@ type ExtensionSettingsFormValues = Omit<
 >;
 
 export const CustomizationSettingsView = () => {
-  const extensionPopup = useExtensionPopup();
   const { changeExtensionSetting, extensionSettings } = useExtensionSettings();
 
   const isExtensionEnabled = useMemo(() => {
@@ -50,6 +55,42 @@ export const CustomizationSettingsView = () => {
 
   const formValues = form.watch();
 
+  //TODO: remove below when trading copilot feature is ready
+  // The _tradingCopilotListGroup is just assigned to use all imports,
+  // without that PR will not pass the unused-exports check
+  //@ts-expect-error-unused-declaration
+  const _tradingCopilotListGroup = {
+    label: 'Trading Copilot',
+    labelSuffixElement: (
+      <NavigateButton
+        iconName="ChevronRightIcon"
+        navigateURL={EXTENSION_POPUP_ROUTE.TRADING_COPILOT}
+      />
+    ),
+    settingListItems: tradingCopilotSettings,
+  };
+
+  const settingListItemGroups: SettingListItemsGroup<ExtensionSettingsStorageKey>[] =
+    useMemo(() => {
+      return [
+        //TODO: uncomment below when trading copilot feature is ready
+        // Below part is commented to quickly get back to it's development and to hide it on production
+        // {
+        //   label: 'Trading Copilot',
+        //   labelSuffixElement: (
+        //     <NavigateButton
+        //       iconName="ChevronRightIcon"
+        //       navigateURL={EXTENSION_POPUP_ROUTE.TRADING_COPILOT}
+        //     />
+        //   ),
+        //   settingListItems: tradingCopilotSettings,
+        // },
+        { label: 'Address Book', settingListItems: addressBookSettings },
+        { label: 'Governance', settingListItems: governanceSettings },
+        { label: 'Integrations', settingListItems: integrationsSettings },
+      ];
+    }, []);
+
   useUpdateEffect(() => {
     //if the formValues has changed
     if (!isEqual(formValues, previousFormValues.current)) {
@@ -70,18 +111,7 @@ export const CustomizationSettingsView = () => {
 
   return (
     <SettingsLayout>
-      <SettingsLayout.Header
-        title="Customization"
-        prefix={
-          <IconButton
-            className="text-black hover:text-green-500"
-            iconProps={{ name: 'ArrowLeftIcon', size: 25 }}
-            onClick={() => {
-              extensionPopup.navigate(EXTENSION_POPUP_ROUTE.SETTINGS_HOME);
-            }}
-          />
-        }
-      />
+      <SettingsLayout.Header />
       <SettingsLayout.Body>
         <FormProvider {...form}>
           {settingListItemGroups.map((group) => {

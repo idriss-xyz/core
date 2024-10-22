@@ -5,8 +5,10 @@ export {
   SETTINGS_STORAGE_KEY,
   ACTIVE_TAB_CHANGED,
   EXTENSION_BUTTON_CLICKED,
-  DEFAULT_EXTENSION_SETTINGS as DEFAULT_SETTINGS,
+  DEFAULT_EXTENSION_SETTINGS,
+  ROUTE_TITLE,
 } from './constants';
+export type { ExtensionPopupRoute } from './constants';
 export {
   ExtensionSettingsProvider,
   useExtensionSettings,
@@ -22,6 +24,7 @@ export type {
   ExtensionAddressBookSettingName,
   ExtensionGovernanceSettingName,
   ExtensionIntegrationSettingName,
+  ExtensionTradingCopilotSettingName,
 } from './types';
 export { ExtensionSettingsManager } from './extension-settings-manager';
 export type { ExtensionSettings } from './types';

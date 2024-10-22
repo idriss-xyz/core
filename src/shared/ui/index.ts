@@ -3,6 +3,7 @@ export type { IconName } from './components';
 export {
   Chip,
   Icon,
+  Empty,
   Modal,
   Button,
   Toggle,
@@ -16,6 +17,7 @@ export {
   IdrissLogo,
   WidgetBase,
   ScrollArea,
+  LazyImage,
   ErrorMessage,
   CurrencyInput,
   IdrissMoneyInput,
@@ -24,5 +26,5 @@ export {
   PaginationComponent,
 } from './components';
 export { QueryProvider, PortalProvider, TailwindProvider } from './providers';
-export { classes, createContextHook } from './utils';
+export { classes, createContextHook, getGithubUserLink } from './utils';
 export { usePooling } from './hooks';

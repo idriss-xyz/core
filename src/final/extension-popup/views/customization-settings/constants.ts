@@ -2,12 +2,24 @@ import {
   ExtensionAddressBookSettingName,
   ExtensionGovernanceSettingName,
   ExtensionIntegrationSettingName,
-  ExtensionSettingsStorageKey,
+  ExtensionTradingCopilotSettingName,
 } from 'shared/extension';
 
-import { SettingListItem, SettingListItemsGroup } from './types';
+import { SettingListItem } from './types';
 
-const addressBookSettings: SettingListItem<ExtensionAddressBookSettingName>[] =
+export const tradingCopilotSettings: SettingListItem<ExtensionTradingCopilotSettingName>[] =
+  [
+    {
+      label: 'Latest transactions',
+      storageKey: 'trading-copilot-latest-transactions-enabled',
+    },
+    {
+      label: 'Notifications',
+      storageKey: 'trading-copilot-notifications-enabled',
+    },
+  ];
+
+export const addressBookSettings: SettingListItem<ExtensionAddressBookSettingName>[] =
   [
     {
       label: 'Tipping',
@@ -19,22 +31,23 @@ const addressBookSettings: SettingListItem<ExtensionAddressBookSettingName>[] =
     },
   ];
 
-const governanceSettings: SettingListItem<ExtensionGovernanceSettingName>[] = [
-  {
-    label: 'Agora',
-    storageKey: 'agora-enabled',
-  },
-  {
-    label: 'Snapshot',
-    storageKey: 'snapshot-enabled',
-  },
-  {
-    label: 'Tally',
-    storageKey: 'tally-enabled',
-  },
-];
+export const governanceSettings: SettingListItem<ExtensionGovernanceSettingName>[] =
+  [
+    {
+      label: 'Agora',
+      storageKey: 'agora-enabled',
+    },
+    {
+      label: 'Snapshot',
+      storageKey: 'snapshot-enabled',
+    },
+    {
+      label: 'Tally',
+      storageKey: 'tally-enabled',
+    },
+  ];
 
-const integrationsSettings: SettingListItem<ExtensionIntegrationSettingName>[] =
+export const integrationsSettings: SettingListItem<ExtensionIntegrationSettingName>[] =
   [
     {
       label: 'Polymarket',
@@ -44,11 +57,4 @@ const integrationsSettings: SettingListItem<ExtensionIntegrationSettingName>[] =
       label: 'Gitcoin',
       storageKey: 'gitcoin-enabled',
     },
-  ];
-
-export const settingListItemGroups: SettingListItemsGroup<ExtensionSettingsStorageKey>[] =
-  [
-    { label: 'Address Book', settingListItems: addressBookSettings },
-    { label: 'Governance', settingListItems: governanceSettings },
-    { label: 'Integrations', settingListItems: integrationsSettings },
   ];

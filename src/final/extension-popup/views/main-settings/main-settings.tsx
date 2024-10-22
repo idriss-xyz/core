@@ -23,8 +23,7 @@ export const MainSettingsView = () => {
 
   return (
     <SettingsLayout>
-      <SettingsLayout.Header title="Settings" />
-
+      <SettingsLayout.Header />
       <SettingsLayout.Body>
         <ul className="text-black">
           <MenuItem
