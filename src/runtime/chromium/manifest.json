@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "IDriss",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "A more usable web3 for everyone.",
   "author": "IDriss",
   "background": {
