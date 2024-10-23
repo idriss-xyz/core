@@ -23,6 +23,7 @@ import {
   DOGECOIN_LOGO,
   ECHELON_PRIME_LOGO,
   ETHEREUM_LOGO,
+  HIGHER_LOGO,
   LINEA_LOGO,
   MANTLE_LOGO,
   OPTIMISM_LOGO,
@@ -162,6 +163,7 @@ export const TOKEN = {
   MANTLE: { name: 'Mantle', symbol: 'MNT', logo: MANTLE_LOGO },
   DEGEN: { name: 'Degen', symbol: 'DEGEN', logo: DEGEN_LOGO },
   AZERO: { name: 'Aleph Zero', symbol: 'AZERO', logo: ALEPH_LOGO },
+  HIGHER: { name: 'Higher', symbol: 'HIGHER', logo: HIGHER_LOGO },
 } satisfies Record<string, Token>;
 
 export const CHAIN_ID_TO_TOKENS = {
@@ -368,6 +370,11 @@ export const CHAIN_ID_TO_TOKENS = {
       ...TOKEN.DEGEN,
       decimals: 18,
       address: '0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed',
+    },
+    {
+      ...TOKEN.HIGHER,
+      decimals: 18,
+      address: '0x0578d8A44db98B23BF096A382e016e29a5Ce0ffe',
     },
   ],
   [CHAIN.SCROLL.id]: [

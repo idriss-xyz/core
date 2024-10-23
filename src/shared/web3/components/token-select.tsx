@@ -39,7 +39,13 @@ const optionsFrom = (tokens: ChainToken[]) => {
     return {
       label: token.name,
       value: token.address,
-      prefix: <img src={token.logo} className="size-6" alt={token.symbol} />,
+      prefix: (
+        <img
+          src={token.logo}
+          className="size-6 rounded-full"
+          alt={token.symbol}
+        />
+      ),
     };
   });
 };

@@ -47,7 +47,7 @@ const optionsFrom = (
   return {
     label: chain.name,
     value: chain.id,
-    prefix: <img src={chain.logo} className="size-6" alt="" />,
+    prefix: <img src={chain.logo} className="size-6 rounded-full" alt="" />,
     suffix: renderSuffix?.(chain.id),
   };
 };
