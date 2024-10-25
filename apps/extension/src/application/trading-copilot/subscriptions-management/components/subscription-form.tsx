@@ -46,7 +46,7 @@ export const SubscriptionForm = ({ onSubmit }: Properties) => {
     <form onSubmit={form.handleSubmit(addSubscriber)}>
       <label
         htmlFor="subscriptionName"
-        className="block text-sm font-semibold leading-6 text-gray-900"
+        className="block text-sm font-semibold leading-6 text-[#111827]"
       >
         Subscribe to Wallet
       </label>
@@ -59,7 +59,7 @@ export const SubscriptionForm = ({ onSubmit }: Properties) => {
               {...field}
               type="text"
               id="subscriptionName"
-              className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-black shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
+              className="mt-1 block w-full rounded-md border border-[#D1D5DB] bg-white px-3 py-2 text-black shadow-sm focus:border-[#3b82f6] focus:outline-none focus:ring-[#3b82f6] sm:text-sm"
               placeholder="e.g., vitalik.eth"
             />
           );

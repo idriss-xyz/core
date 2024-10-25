@@ -22,7 +22,7 @@ export const LookupForm = ({
     <form onSubmit={form.handleSubmit(onSubmit)} className={className}>
       <label
         htmlFor="identifier"
-        className="mb-2 block text-base font-bold text-gray-700"
+        className="mb-2 block text-base font-bold text-[#374151]"
       >
         Look up an address
       </label>
@@ -61,7 +61,7 @@ export const LookupForm = ({
         </div>
         <button
           type="submit"
-          className="h-[38px] w-20 rounded-md bg-idriss-primary-500 py-2 text-base font-medium text-white shadow-sm hover:bg-idriss-primary-400"
+          className="h-[38px] w-20 rounded-md bg-[#11DD74] py-2 text-base font-medium text-white shadow-sm hover:bg-[#11DD74]"
         >
           Search
         </button>

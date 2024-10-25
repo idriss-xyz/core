@@ -68,7 +68,7 @@ export const SubscriptionItem = ({ subscription, onRemove }: Properties) => {
           }
         />
 
-        <p className="ml-2 flex items-center gap-1 text-sm text-gray-700">
+        <p className="ml-2 flex items-center gap-1 text-sm text-[#374151]">
           {subscription.ensName}
 
           {twitterQuery.data && (
@@ -80,7 +80,7 @@ export const SubscriptionItem = ({ subscription, onRemove }: Properties) => {
               <Icon
                 size={16}
                 name="TwitterLogoIcon"
-                className="text-twitter-primary [&>path]:fill-rule-non-zero"
+                className="text-[#1D9BF0] [&>path]:fill-rule-non-zero"
               />
             </a>
           )}
@@ -93,7 +93,7 @@ export const SubscriptionItem = ({ subscription, onRemove }: Properties) => {
               <Icon
                 size={16}
                 name="GitHubLogoIcon"
-                className="text-twitter-primary"
+                className="text-[#1D9BF0]"
               />
             </a>
           )}
@@ -102,7 +102,7 @@ export const SubscriptionItem = ({ subscription, onRemove }: Properties) => {
               <Icon
                 size={16}
                 name="DiscordLogoIcon"
-                className="text-twitter-primary"
+                className="text-[#1D9BF0]"
               />
             </span>
           )}
@@ -115,7 +115,7 @@ export const SubscriptionItem = ({ subscription, onRemove }: Properties) => {
               <Icon
                 size={16}
                 name="EnvelopeClosedIcon"
-                className="text-twitter-primary"
+                className="text-[#1D9BF0]"
               />
             </a>
           )}
@@ -123,7 +123,7 @@ export const SubscriptionItem = ({ subscription, onRemove }: Properties) => {
       </div>
       <IconButton
         iconProps={{ name: 'Cross1Icon' }}
-        className="text-red-700"
+        className="text-[#b91c1c]"
         onClick={remove}
       />
     </li>

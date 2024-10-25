@@ -118,7 +118,7 @@ export const DonationWidget = ({ widgetData }: Properties) => {
       return (
         <>
           {feeInDollars > 0 ? (
-            <p className="flex w-full items-center justify-end space-x-1 text-xs text-gray-500">
+            <p className="flex w-full items-center justify-end space-x-1 text-xs text-[#64748B]">
               <span>{`$${feeInDollars}`}</span>
               <span>+</span>
               <GasIcon />
@@ -160,10 +160,8 @@ export const DonationWidget = ({ widgetData }: Properties) => {
               heading={
                 <>
                   Sending{' '}
-                  <span className="font-bold text-idriss-primary-500">
-                    ${amount}
-                  </span>{' '}
-                  ({roundToSignificantFigures(userAmountInWei / 10 ** 18, 2)}{' '}
+                  <span className="font-bold text-[#11DD74]">${amount}</span> (
+                  {roundToSignificantFigures(userAmountInWei / 10 ** 18, 2)}{' '}
                   ETH)
                 </>
               }

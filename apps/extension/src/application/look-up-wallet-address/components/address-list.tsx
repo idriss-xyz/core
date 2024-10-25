@@ -60,7 +60,7 @@ export const AddressList = ({
 
   return (
     <div className="absolute w-full">
-      <ScrollArea className="max-h-40 w-full overflow-y-auto rounded-md border border-gray-300 bg-white text-black shadow-[inset_0_4px_4px_-6px_rgba(229,231,235,1),_inset_0_-4px_4px_-6px_rgba(229,231,235,1)] transition-all duration-500 [scrollbar-color:gray_#efefef] [scrollbar-width:thin]">
+      <ScrollArea className="max-h-40 w-full overflow-y-auto rounded-md border border-[#D1D5DB] bg-white text-black shadow-[inset_0_4px_4px_-6px_rgba(229,231,235,1),_inset_0_-4px_4px_-6px_rgba(229,231,235,1)] transition-all duration-500 [scrollbar-color:gray_#efefef] [scrollbar-width:thin]">
         {Object.entries(searchResult.lookup).map(([chain, address]) => {
           const isCopied = isCopiedAddress({ chain, address });
 
@@ -71,8 +71,8 @@ export const AddressList = ({
               }}
               key={chain + address}
               className={classes(
-                'flex h-11 cursor-pointer select-none items-center justify-between border-b border-b-stone-100 bg-white px-2 hover:bg-gray-200',
-                isCopied && 'bg-green-100 hover:bg-green-200',
+                'border-b-stone-100 flex h-11 cursor-pointer select-none items-center justify-between border-b bg-white px-2 hover:bg-[#E5E7EB]',
+                isCopied && 'bg-[#DCFCE7] hover:bg-[#BBF7D0]',
               )}
             >
               {isCopied ? (
@@ -92,7 +92,7 @@ export const AddressList = ({
                     <Icon
                       size={16}
                       name="TwitterLogoIcon"
-                      className="mt-1 text-twitter-primary [&>path]:fill-rule-non-zero"
+                      className="mt-1 text-[#1D9BF0] [&>path]:fill-rule-non-zero"
                     />
                   )}
                 </>

@@ -13,7 +13,7 @@ export const SubmitButton = ({ loading, children, disabled }: Properties) => {
     <Button
       loading={loading}
       disabled={disabled}
-      className="w-full rounded-md bg-idriss-primary-500 py-2 text-base font-medium text-white shadow-sm hover:bg-idriss-primary-400"
+      className="w-full rounded-md bg-[#11DD74] py-2 text-base font-medium text-white shadow-sm hover:bg-[#11DD74]"
       type="submit"
     >
       {children}

@@ -17,7 +17,7 @@ export const ConnectWalletButton = ({ onClick }: Properties) => {
 
   return (
     <Button
-      className="w-full rounded-md bg-idriss-primary-500 py-2 text-base font-medium text-white shadow-sm hover:bg-idriss-primary-400"
+      className="w-full rounded-md bg-[#11DD74] py-2 text-base font-medium text-white shadow-sm hover:bg-[#11DD74]"
       loading={isConnectionModalOpened}
       onClick={handleClick}
     >

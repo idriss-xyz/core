@@ -93,9 +93,7 @@ export const SendWidget = ({ widgetData }: Properties) => {
               heading={
                 <>
                   Sending{' '}
-                  <span className="font-bold text-idriss-primary-500">
-                    ${amount}
-                  </span>{' '}
+                  <span className="font-bold text-[#11DD74]">${amount}</span>{' '}
                   {amountInSelectedToken
                     ? `(${roundToSignificantFigures(Number(amountInSelectedToken), 2)} ${selectedToken?.symbol})`
                     : null}

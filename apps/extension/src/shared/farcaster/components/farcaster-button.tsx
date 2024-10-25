@@ -18,10 +18,7 @@ export const FarcasterButton = ({
   return (
     <Button
       onClick={onClick}
-      className={classes(
-        'bg-farcaster-primary-400 hover:bg-farcaster-primary-500',
-        className,
-      )}
+      className={classes('bg-[#8A63D2] hover:bg-[#7554B3]', className)}
       title={title}
     >
       {children}

@@ -8,6 +8,12 @@
     "@idriss-xyz/extension#dev": {
       "cache": false
     },
+    "@idriss-xyz/extension#build": {
+      "cache": true,
+      "outputs": [
+        "build"
+      ]
+    },
     "lint": {
       "inputs": [
         "$TURBO_DEFAULT$",

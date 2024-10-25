@@ -39,14 +39,14 @@ export const Proposal = ({
   return (
     <WidgetBase
       className={classes(
-        'bg-white text-xs leading-tight text-tally-text-primary',
+        'bg-white text-xs leading-tight text-[#1D2939]',
         className,
       )}
       onClose={onClose}
     >
       <PulsingLoadingBar isLoading={isLoading} />
       <header className="flex items-center justify-between space-x-3">
-        <p className="line-clamp-[1] break-all text-xs leading-5 text-tally-gray-500 hover:underline">
+        <p className="line-clamp-[1] break-all text-xs leading-5 text-[#667085] hover:underline">
           By{' '}
           <a
             href={getProposalAuthorUrl(proposalDetails)}
@@ -68,7 +68,7 @@ export const Proposal = ({
       </main>
       <footer className="mt-3.5 flex items-center justify-between">
         <div className="flex justify-start gap-1.5">
-          <div className="flex min-w-[84px] items-center text-xs leading-5 text-tally-gray-500">
+          <div className="flex min-w-[84px] items-center text-xs leading-5 text-[#667085]">
             {getEndsInLabel(getDifferenceInDays(proposalEndDateInMs))}
           </div>
           <a
@@ -83,7 +83,7 @@ export const Proposal = ({
             target="_blank"
           >
             <Chip
-              className="mr-2 inline-flex select-none items-center justify-center rounded-md border border-tally-gray-700 bg-tally-gray-700 px-4 py-1 font-semibold text-white transition-all duration-200 ease-in-out hover:bg-tally-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+              className="mr-2 inline-flex select-none items-center justify-center rounded-md border border-[#344054] bg-[#344054] px-4 py-1 font-semibold text-white transition-all duration-200 ease-in-out hover:bg-[#101828] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
               variant="info"
               width="long"
             >

@@ -7,6 +7,6 @@ export const ErrorMessage = ({
   className,
 }: ErrorMessageProperties) => {
   return (
-    <p className={classes('text-sm text-red-500', className)}>{children}</p>
+    <p className={classes('text-sm text-[#ef4444]', className)}>{children}</p>
   );
 };

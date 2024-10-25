@@ -10,7 +10,7 @@ type Properties = {
 export const MenuItem = ({ label, prefix, suffix, onClick }: Properties) => {
   return (
     <li
-      className="flex cursor-pointer items-center space-x-2 whitespace-nowrap py-3 text-base hover:text-green-500"
+      className="flex cursor-pointer items-center space-x-2 whitespace-nowrap py-3 text-base hover:text-[#22C55E]"
       onClick={onClick}
     >
       {prefix}

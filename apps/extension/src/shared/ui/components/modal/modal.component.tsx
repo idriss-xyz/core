@@ -19,8 +19,8 @@ export const Modal = ({
 
   return (
     <Portal.Root container={portal}>
-      <div className="fixed inset-0 bg-zinc-800/60" onClick={onClose} />
-      <div className="fixed left-1/2 top-1/2 w-full max-w-xs -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white p-4 text-gray-900 shadow-lg">
+      <div className="fixed inset-0 bg-[#27272a]/60" onClick={onClose} />
+      <div className="fixed left-1/2 top-1/2 w-full max-w-xs -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white p-4 text-[#111827] shadow-lg">
         <div>{title}</div>
         <div className="mt-4">{children}</div>
         <IconButton

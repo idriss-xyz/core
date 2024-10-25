@@ -3,20 +3,20 @@ import { cva, VariantProps } from 'class-variance-authority';
 
 export const button = cva(
   [
-    'rounded-xl tracking-wider relative overflow-hidden group z-1 font-medium',
-    'focus-visible:ring-borderfocus focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+    'group relative z-1 overflow-hidden rounded-xl font-medium tracking-wider',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2',
   ],
   {
     variants: {
       intent: {
         primary: [
-          'bg-brand-primary text-onsurface-primary shadow-input',
-          'hover:bg-brand-secondary',
-          'active:bg-brand-tertiary',
+          'bg-mint-400 text-neutralGreen-900 shadow-input',
+          'hover:bg-mint-500',
+          'active:bg-mint-600',
         ],
       },
       size: {
-        large: ['text-button1 px-5 py-4.5'],
+        large: ['px-5 py-4.5 text-button1'],
       },
     },
   },
@@ -26,7 +26,7 @@ export type ButtonVariants = FullyRequired<VariantProps<typeof button>>;
 
 export const glow = cva(
   [
-    'absolute left-1/2 top-[36px] size-full -translate-x-1/2 overflow-hidden rounded-[100%] -z-1',
+    'absolute left-1/2 top-[36px] -z-1 size-full -translate-x-1/2 overflow-hidden rounded-[100%]',
   ],
   {
     variants: {
