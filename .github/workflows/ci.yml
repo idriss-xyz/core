@@ -35,11 +35,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      #  TODO: replace with turbo command like prepare or smth?
       - name: Build tailwind
-        run: pnpm tailwind:react
+        run: pnpm --filter=@idriss-xyz/extension build:tailwind
 
+      #  TODO: replace with turbo command
       - name: Run type-check
-        run: pnpm type-check
+        run: pnpm --filter=@idriss-xyz/extension type-check
 
   lint:
     runs-on: ubuntu-latest
@@ -57,14 +59,17 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      #  TODO: replace with turbo command like prepare or smth?
       - name: Build tailwind
-        run: pnpm tailwind:react
+        run: pnpm --filter=@idriss-xyz/extension build:tailwind
 
+      #  TODO: replace with turbo command
       - name: Run lint
-        run: pnpm lint
+        run: pnpm --filter=@idriss-xyz/extension lint
 
+      #  TODO: replace with turbo command
       - name: Run format
-        run: pnpm format
+        run: pnpm --filter=@idriss-xyz/extension format
 
 
   circular-deps:
@@ -83,11 +88,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      #  TODO: replace with turbo command like prepare or smth?
       - name: Build tailwind
-        run: pnpm tailwind:react
+        run: pnpm --filter=@idriss-xyz/extension build:tailwind
 
+      #  TODO: replace with turbo command
       - name: Run circular dependencies check
-        run: pnpm circular-deps
+        run: pnpm --filter=@idriss-xyz/extension circular-deps
 
   unused-exports:
     runs-on: ubuntu-latest
@@ -105,5 +112,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      #  TODO: replace with turbo command
       - name: Run circular dependencies check
-        run: pnpm unused-exports
+        run: pnpm --filter=@idriss-xyz/extension unused-exports

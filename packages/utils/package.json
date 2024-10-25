@@ -1,0 +1,19 @@
+{
+  "name": "@idriss-xyz/utils",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "format": "prettier --check --config ../../prettier.config.mjs --ignore-path .prettierignore .",
+    "format:fix": "prettier --write --config ../../prettier.config.mjs --ignore-path .prettierignore .",
+    "lint": "eslint src --max-warnings=0",
+    "lint:fix": "eslint src --max-warnings=0 --fix",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@idriss-xyz/eslint-config": "workspace:*",
+    "@idriss-xyz/typescript-config": "workspace:*",
+    "typescript": "^5.6.2"
+  }
+}

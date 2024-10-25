@@ -1,0 +1,37 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "@idriss-xyz/main-landing#dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "@idriss-xyz/extension#dev": {
+      "cache": false
+    },
+    "lint": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "../../packages/eslint-config/.eslintrc.cjs"
+      ]
+    },
+    "lint:fix": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "../../packages/eslint-config/.eslintrc.cjs"
+      ]
+    },
+    "format": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "../../prettier.config.mjs"
+      ]
+    },
+    "format:fix": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "../../prettier.config.mjs"
+      ]
+    },
+    "type-check": {}
+  }
+}

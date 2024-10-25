@@ -1,6 +1,8 @@
 /** @type {import("prettier").Config} */
 export default {
   plugins: ['prettier-plugin-tailwindcss'],
+  tailwindFunctions: ['clsx', 'twMerge', 'cva', 'classes'],
+  tailwindConfig: './packages/tailwind-config/tailwind.config.mjs',
   singleQuote: true,
   quoteProps: 'consistent',
   trailingComma: 'all',
