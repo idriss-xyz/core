@@ -26,6 +26,7 @@ import {
   HIGHER_LOGO,
   LINEA_LOGO,
   MANTLE_LOGO,
+  MOXIE_LOGO,
   OPTIMISM_LOGO,
   POLYGON_LOGO,
   RVLT_LOGO,
@@ -164,6 +165,7 @@ export const TOKEN = {
   DEGEN: { name: 'Degen', symbol: 'DEGEN', logo: DEGEN_LOGO },
   AZERO: { name: 'Aleph Zero', symbol: 'AZERO', logo: ALEPH_LOGO },
   HIGHER: { name: 'Higher', symbol: 'HIGHER', logo: HIGHER_LOGO },
+  MOXIE: { name: 'Moxie', symbol: 'MOXIE', logo: MOXIE_LOGO },
 } satisfies Record<string, Token>;
 
 export const CHAIN_ID_TO_TOKENS = {
@@ -375,6 +377,11 @@ export const CHAIN_ID_TO_TOKENS = {
       ...TOKEN.HIGHER,
       decimals: 18,
       address: '0x0578d8A44db98B23BF096A382e016e29a5Ce0ffe',
+    },
+    {
+      ...TOKEN.MOXIE,
+      decimals: 18,
+      address: '0x8c9037d1ef5c6d1f6816278c7aaf5491d24cd527',
     },
   ],
   [CHAIN.SCROLL.id]: [
