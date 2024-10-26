@@ -58,7 +58,7 @@ export const Proposal = ({
         <p className="line-clamp-[1] break-all text-base font-black text-black">
           {data.markdowntitle}
         </p>
-        <p className="mt-1 line-clamp-[2] overflow-hidden break-all text-[[#374151]]">
+        <p className="mt-1 line-clamp-[2] overflow-hidden break-all text-[#374151]">
           {data.description}
         </p>
       </main>

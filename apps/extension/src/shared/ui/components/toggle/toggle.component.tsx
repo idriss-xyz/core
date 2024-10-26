@@ -10,7 +10,7 @@ export const Toggle = ({ value, onChange }: ToggleProperties) => {
       className={classes(
         'relative mx-2.5 h-2.5 w-8 rounded-md bg-[#bdc1c6] shadow-[0_1px_3px_0_rgba(0,0,0,0.4)] transition-all duration-300 ease-in-out',
         {
-          'bg-[[#11DD74]88]': value,
+          'bg-[#11DD7488]': value,
         },
       )}
       onCheckedChange={onChange}

@@ -16,7 +16,7 @@ export const Section = ({ title, onItemClick, items = [] }: Properties) => {
         {items.map((item, index) => {
           return (
             <a href="#" onClick={onItemClick} key={index} className="block">
-              <span className="text-button2 block">{item.title}</span>
+              <span className="block text-button2">{item.title}</span>
               <p className="text-body4 opacity-60">{item.description}</p>
             </a>
           );
