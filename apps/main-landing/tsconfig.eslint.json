@@ -2,6 +2,8 @@
   "extends": "./tsconfig",
   "include": [
     "src",
+    "**/*.ts",
+    "**/*.tsx",
     "**/*.cjs",
     "**/*.mjs",
     "**/.*.cjs",
@@ -13,4 +15,3 @@
     "node_modules"
   ]
 }
-

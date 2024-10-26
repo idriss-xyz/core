@@ -82,6 +82,10 @@ export default {
         500: '#4C3DF2',
       },
     },
+    container: {
+      center: true,
+      padding: '24px',
+    },
     extend: {
       boxShadow: {
         input: '0px 0px 0px 4px #F2F2F224',
@@ -100,7 +104,18 @@ export default {
         4.5: '18px',
       },
       fontSize: {
-        button1: ['1rem', { lineHeight: '1.25em' }],
+        body4: [
+          '1rem',
+          { lineHeight: '1.5em', letterSpacing: '0', fontWeight: '400' },
+        ],
+        button1: [
+          '1rem',
+          { lineHeight: '1.25em', letterSpacing: '0.05em', fontWeight: '500' },
+        ],
+        button2: [
+          '0.875rem',
+          { lineHeight: '1rem', letterSpacing: '0.05em', fontWeight: '500' },
+        ],
       },
     },
   },

@@ -3,7 +3,7 @@ import { cva, VariantProps } from 'class-variance-authority';
 
 export const button = cva(
   [
-    'group relative z-1 overflow-hidden rounded-xl font-medium tracking-wider',
+    'group relative z-1 overflow-hidden rounded-xl',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2',
   ],
   {
@@ -13,6 +13,11 @@ export const button = cva(
           'bg-mint-400 text-neutralGreen-900 shadow-input',
           'hover:bg-mint-500',
           'active:bg-mint-600',
+        ],
+        tertiary: [
+          'bg-transparent text-neutralGreen-900 shadow-input2',
+          'hover:text-mint-600',
+          'active:text-mint-600',
         ],
       },
       size: {
@@ -37,6 +42,7 @@ export const glow = cva(
           'group-hover:opacity-0',
           'group-active:opacity-0',
         ],
+        tertiary: ['hidden'],
       },
       size: {
         large: ['h-10'],
