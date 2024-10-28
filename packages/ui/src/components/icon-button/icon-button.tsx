@@ -1,17 +1,18 @@
-import { ComponentProps, ReactNode } from 'react';
+import { ComponentProps } from 'react';
 
-import { Button } from '../button';
+import { Button, BUTTON_SIZE_TO_ICON_SIZE } from '../button';
 import { classes } from '../../utils';
+import { Icon, IconName } from '../icon';
 
 import { iconButton, IconButtonVariants } from './variants';
 
 type Properties = {
-  icon: ReactNode;
+  iconName: IconName;
 } & ComponentProps<typeof Button> &
   IconButtonVariants;
 
 export const IconButton = ({
-  icon,
+  iconName,
   className,
   size,
   ...properties
@@ -22,7 +23,7 @@ export const IconButton = ({
       size={size}
       className={classes(iconButton({ className, size }))}
     >
-      {icon}
+      <Icon name={iconName} size={BUTTON_SIZE_TO_ICON_SIZE[size]} />
     </Button>
   );
 };

@@ -1,14 +1,6 @@
-import {
-  classes,
-  DiscordSocialIcon,
-  FarcasterSocialIcon,
-  IconButton,
-  InstagramSocialIcon,
-  TiktokSocialIcon,
-  XSocialIcon,
-  YoutubeSocialIcon,
-} from '@idriss-xyz/ui';
 import { SOCIAL_LINK } from '@idriss-xyz/constants';
+import { IconButton } from '@idriss-xyz/ui/icon-button';
+import { classes } from '@idriss-xyz/ui/utils';
 
 type Properties = {
   className?: string;
@@ -23,61 +15,60 @@ export const Socials = ({ className }: Properties) => {
       )}
     >
       <IconButton
-        icon={<XSocialIcon />}
+        iconName="TwitterX"
         intent="tertiary"
         size="large"
-        onClick={() => {
-          // TODO: we need to create isomorphic button component so it will be as="a" href={...}
-          window.open(SOCIAL_LINK.X, '_blank');
-        }}
+        href={SOCIAL_LINK.X}
+        rel="noopener noreferrer"
+        target="_blank"
+        asLink
       />
       <IconButton
-        icon={<FarcasterSocialIcon />}
+        iconName="Farcaster"
         intent="tertiary"
         size="large"
-        onClick={() => {
-          // TODO: we need to create isomorphic button component so it will be as="a" href={...}
-          window.open(SOCIAL_LINK.WARPCAST, '_blank');
-        }}
-      />
-
-      <IconButton
-        icon={<DiscordSocialIcon />}
-        intent="tertiary"
-        size="large"
-        onClick={() => {
-          // TODO: we need to create isomorphic button component so it will be as="a" href={...}
-          window.open(SOCIAL_LINK.DISCORD, '_blank');
-        }}
+        href={SOCIAL_LINK.WARPCAST}
+        rel="noopener noreferrer"
+        target="_blank"
+        asLink
       />
 
       <IconButton
-        icon={<InstagramSocialIcon />}
+        iconName="Discord"
         intent="tertiary"
         size="large"
-        onClick={() => {
-          // TODO: we need to create isomorphic button component so it will be as="a" href={...}
-          window.open(SOCIAL_LINK.INSTAGRAM, '_blank');
-        }}
-      />
-      <IconButton
-        icon={<TiktokSocialIcon />}
-        intent="tertiary"
-        size="large"
-        onClick={() => {
-          // TODO: we need to create isomorphic button component so it will be as="a" href={...}
-          window.open(SOCIAL_LINK.TIKTOK, '_blank');
-        }}
+        href={SOCIAL_LINK.DISCORD}
+        rel="noopener noreferrer"
+        target="_blank"
+        asLink
       />
 
       <IconButton
-        icon={<YoutubeSocialIcon />}
+        iconName="Instagram"
         intent="tertiary"
         size="large"
-        onClick={() => {
-          // TODO: we need to create isomorphic button component so it will be as="a" href={...}
-          window.open(SOCIAL_LINK.YOUTUBE, '_blank');
-        }}
+        href={SOCIAL_LINK.INSTAGRAM}
+        rel="noopener noreferrer"
+        target="_blank"
+        asLink
+      />
+      <IconButton
+        iconName="Tiktok"
+        intent="tertiary"
+        size="large"
+        href={SOCIAL_LINK.TIKTOK}
+        rel="noopener noreferrer"
+        target="_blank"
+        asLink
+      />
+      <IconButton
+        iconName="Youtube"
+        intent="tertiary"
+        size="large"
+        href={SOCIAL_LINK.YOUTUBE}
+        rel="noopener noreferrer"
+        target="_blank"
+        asLink
       />
     </div>
   );

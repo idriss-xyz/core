@@ -3,7 +3,7 @@ import { cva, VariantProps } from 'class-variance-authority';
 
 export const button = cva(
   [
-    'group relative z-1 overflow-hidden rounded-xl',
+    'group relative z-1 flex items-center space-x-2 overflow-hidden rounded-xl',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2',
   ],
   {
@@ -23,11 +23,21 @@ export const button = cva(
       size: {
         large: ['px-5 py-4.5 text-button1'],
       },
+      withPrefixIcon: {
+        true: ['pl-3'],
+      },
+      withSuffixIcon: {
+        true: ['pr-3'],
+      },
     },
   },
 );
 
-export type ButtonVariants = FullyRequired<VariantProps<typeof button>>;
+type ComputedVariants = 'withPrefixIcon' | 'withSuffixIcon';
+
+export type ButtonVariants = FullyRequired<
+  Omit<VariantProps<typeof button>, ComputedVariants>
+>;
 
 export const glow = cva(
   [
