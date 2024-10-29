@@ -89,7 +89,6 @@ export default {
     extend: {
       boxShadow: {
         input: '0px 0px 0px 4px #F2F2F224',
-        input2: '0px 0px 0px 4px #FFFFFF24',
       },
       blur: {
         md: '10px',

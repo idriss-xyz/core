@@ -15,7 +15,7 @@ export const button = cva(
           'active:bg-mint-600',
         ],
         tertiary: [
-          'bg-transparent text-neutralGreen-900 shadow-input2',
+          'bg-transparent text-neutralGreen-900',
           'hover:text-mint-600',
           'active:text-mint-600',
         ],

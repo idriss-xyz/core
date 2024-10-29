@@ -4,10 +4,13 @@
   "exports": {
     "./button": "./src/components/button/index.ts",
     "./dialog": "./src/components/dialog/index.ts",
+    "./dropdown": "./src/components/dropdown/index.ts",
     "./icon": "./src/components/icon/index.ts",
     "./icon-button": "./src/components/icon-button/index.ts",
+    "./navigation-menu": "./src/components/navigation-menu/index.ts",
     "./visually-hidden": "./src/components/visually-hidden/index.ts",
-    "./utils": "./src/utils/index.ts"
+    "./utils": "./src/utils/index.ts",
+    "./hooks": "./src/hooks/index.ts"
   },
   "scripts": {
     "format": "prettier --check --config ../../prettier.config.mjs --ignore-path .prettierignore .",
@@ -24,16 +27,21 @@
     "@idriss-xyz/utils": "workspace:*",
     "@swc/helpers": "^0.5.13",
     "@types/react": "18.3.1",
+    "@types/react-dom": "^18.3.1",
     "dependency-cruiser": "^16.4.2",
     "typescript": "^5.6.2"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.2",
+    "@radix-ui/react-dropdown-menu": "^2.1.2",
+    "@radix-ui/react-navigation-menu": "^1.2.1",
     "@radix-ui/react-visually-hidden": "^1.1.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.453.0",
     "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-use": "^17.5.1",
     "tailwind-merge": "^2.5.2"
   }
 }
