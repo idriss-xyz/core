@@ -1,13 +1,14 @@
 type Properties = {
   className?: string;
+  size: number;
 };
 
-export const InstagramSocialIcon = ({ className }: Properties) => {
+export const Instagram = ({ size, className }: Properties) => {
   return (
     <svg
+      width={size}
+      height={size}
       className={className}
-      width="24"
-      height="24"
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

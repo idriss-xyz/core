@@ -1,7 +1,10 @@
 'use client';
-import { Button, Dialog, IconButton, VisuallyHidden } from '@idriss-xyz/ui';
-import { MenuIcon, XIcon } from 'lucide-react';
 import Image from 'next/image';
+import { Dialog } from '@idriss-xyz/ui/dialog';
+import { IconButton } from '@idriss-xyz/ui/icon-button';
+import { VisuallyHidden } from '@idriss-xyz/ui/visually-hidden';
+import { Button } from '@idriss-xyz/ui/button';
+import Link from 'next/link';
 
 import { APPS_SECTION_NAVIGATION_ITEMS } from '../constants';
 
@@ -21,14 +24,16 @@ export const MobileNavigation = () => {
       <Dialog
         className="fixed inset-x-4 bottom-3 top-[76px] flex flex-col rounded-[36px] border border-mint-400 px-4 py-6 text-neutralGreen-900 backdrop-blur-[90px]" // top-[76px] is 64px height of navbar + 12px spacing, ideally it should be ref attached to nav to read component height in case it changes in future
         trigger={({ isOpened }) => {
-          const iconSize = 20;
-          const icon = isOpened ? (
-            <XIcon size={iconSize} />
-          ) : (
-            <MenuIcon size={iconSize} />
+          return (
+            <IconButton
+              aria-label={
+                isOpened ? 'Hide navigation menu' : 'Open navigation menu'
+              }
+              iconName={isOpened ? 'X' : 'Menu'}
+              intent="tertiary"
+              size="large"
+            />
           );
-
-          return <IconButton icon={icon} intent="tertiary" size="large" />;
         }}
       >
         {({ close }) => {
@@ -41,27 +46,45 @@ export const MobileNavigation = () => {
                 <Section
                   items={APPS_SECTION_NAVIGATION_ITEMS}
                   title={
-                    // TODO: we need to create isomorphic button component so it will be as="a" href="/#..."
-                    <Button intent="tertiary" size="large" onClick={close}>
-                      APPS
-                    </Button>
+                    <Link href="/#" passHref legacyBehavior>
+                      <Button
+                        intent="tertiary"
+                        size="large"
+                        onClick={close}
+                        asLink
+                      >
+                        APPS
+                      </Button>
+                    </Link>
                   }
                   onItemClick={close}
                 />
                 <Section
                   title={
-                    // TODO: we need to create isomorphic button component so it will be as="a" href="/#..."
-                    <Button intent="tertiary" size="large" onClick={close}>
-                      TOKEN
-                    </Button>
+                    <Link href="/#" passHref legacyBehavior>
+                      <Button
+                        intent="tertiary"
+                        size="large"
+                        onClick={close}
+                        asLink
+                      >
+                        TOKEN
+                      </Button>
+                    </Link>
                   }
                 />
                 <Section
                   title={
-                    // TODO: we need to create isomorphic button component so it will be as="a" href="/#..."
-                    <Button intent="tertiary" size="large" onClick={close}>
-                      DOCS
-                    </Button>
+                    <Link href="/#" passHref legacyBehavior>
+                      <Button
+                        intent="tertiary"
+                        size="large"
+                        onClick={close}
+                        asLink
+                      >
+                        DOCS
+                      </Button>
+                    </Link>
                   }
                 />
               </div>
