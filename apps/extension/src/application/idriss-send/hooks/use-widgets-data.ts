@@ -86,14 +86,11 @@ export const useWidgetsData = ({ scrapedUsers, enabled }: Properties) => {
         const twitterId =
           usernameToTwitterId[scrapedUser.data.username.toLowerCase()];
 
-        if (!twitterId) {
-          return;
-        }
+        const customRecipientData = customRecipientsQuery.data[twitterId ?? ''];
 
-        const customRecipientData = customRecipientsQuery.data[twitterId];
-
-        const digestedMessageToWalletTag =
-          mapDigestedMessageToWalletTag(twitterId);
+        const digestedMessageToWalletTag = twitterId
+          ? mapDigestedMessageToWalletTag(twitterId)
+          : {};
 
         const walletTagToDigestedMessage = reverseObject(
           digestedMessageToWalletTag,
