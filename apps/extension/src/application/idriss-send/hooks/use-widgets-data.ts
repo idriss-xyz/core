@@ -41,6 +41,10 @@ export const useWidgetsData = ({ scrapedUsers, enabled }: Properties) => {
   >({});
 
   const handles = useMemo(() => {
+    if (!enabled) {
+      return [];
+    }
+
     return [
       ...new Set(
         scrapedUsers.map((scrapedUser) => {
@@ -50,7 +54,7 @@ export const useWidgetsData = ({ scrapedUsers, enabled }: Properties) => {
     ].filter((handle) => {
       return !Object.keys(usernameToTwitterId).includes(handle.toLowerCase());
     });
-  }, [usernameToTwitterId, scrapedUsers]);
+  }, [enabled, scrapedUsers, usernameToTwitterId]);
 
   const followersQuery = useCommandQuery({
     command: new GetFollowersCommand({}),
