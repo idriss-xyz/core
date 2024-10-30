@@ -19,9 +19,15 @@ export const button = cva(
           'hover:text-mint-600',
           'active:text-mint-600',
         ],
+        negative: [
+          'bg-neutralGreen-900 text-white',
+          'hover:bg-neutralGreen-700',
+          'active:bg-neutralGreen-500',
+        ],
       },
       size: {
         large: ['px-5 py-4.5 text-button1'],
+        medium: ['px-5 py-3.5 text-button2'],
       },
       withPrefixIcon: {
         true: ['pl-3'],
@@ -30,6 +36,18 @@ export const button = cva(
         true: ['pr-3'],
       },
     },
+    compoundVariants: [
+      {
+        size: 'medium',
+        withPrefixIcon: true,
+        className: 'py-3',
+      },
+      {
+        size: 'medium',
+        withSuffixIcon: true,
+        className: 'py-3',
+      },
+    ],
   },
 );
 
@@ -41,7 +59,7 @@ export type ButtonVariants = FullyRequired<
 
 export const glow = cva(
   [
-    'absolute left-1/2 top-[36px] -z-1 size-full -translate-x-1/2 overflow-hidden rounded-[100%]',
+    'absolute left-1/2 -z-1 size-full -translate-x-1/2 overflow-hidden rounded-[100%]',
   ],
   {
     variants: {
@@ -53,9 +71,11 @@ export const glow = cva(
           'group-active:opacity-0',
         ],
         tertiary: ['hidden'],
+        negative: ['hidden'],
       },
       size: {
-        large: ['h-10'],
+        large: ['top-[36px] h-10'],
+        medium: ['top-[28px] h-8'],
       },
     },
   },
