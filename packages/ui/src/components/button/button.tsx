@@ -15,11 +15,11 @@ import { BUTTON_SIZE_TO_ICON_SIZE } from './constants';
 type ButtonOrAnchorProperties =
   | (ButtonHTMLAttributes<HTMLButtonElement> & { asLink?: false })
   | (AnchorHTMLAttributes<HTMLAnchorElement> & {
-    asLink: true;
-    href?: string;
-    target?: string;
-    rel?: string;
-  });
+      asLink: true;
+      href?: string;
+      target?: string;
+      rel?: string;
+    });
 
 type Properties = ButtonOrAnchorProperties &
   ButtonVariants & {
