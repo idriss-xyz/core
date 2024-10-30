@@ -103,9 +103,137 @@ export default {
         4.5: '18px',
       },
       fontSize: {
+        display1: [
+          '7.25rem',
+          { lineHeight: '7.25rem', letterSpacing: '0', fontWeight: '400' },
+        ],
+        display2: [
+          '4.5rem',
+          { lineHeight: '4.5rem', letterSpacing: '0', fontWeight: '400' },
+        ],
+        display3: [
+          '3.5rem',
+          { lineHeight: '3.5rem', letterSpacing: '0', fontWeight: '400' },
+        ],
+        display4: [
+          '2.375rem',
+          { lineHeight: '2.375rem', letterSpacing: '0', fontWeight: '400' },
+        ],
+        display5: [
+          '1.875rem',
+          { lineHeight: '1.875rem', letterSpacing: '0', fontWeight: '400' },
+        ],
+        display6: [
+          '1.5rem',
+          { lineHeight: '1.5rem', letterSpacing: '0', fontWeight: '400' },
+        ],
+        heading1: [
+          '3.5rem',
+          {
+            lineHeight: '4rem',
+            letterSpacing: '0',
+            fontWeight: '500',
+          },
+        ],
+        heading2: [
+          '2.625rem',
+          {
+            lineHeight: '3rem',
+            letterSpacing: '0',
+            fontWeight: '500',
+          },
+        ],
+        heading3: [
+          '2',
+          {
+            lineHeight: '2.5rem',
+            letterSpacing: '0',
+            fontWeight: '500',
+          },
+        ],
+        heading4: [
+          '1.5rem',
+          {
+            lineHeight: '1.75rem',
+            letterSpacing: '0',
+            fontWeight: '500',
+          },
+        ],
+        heading5: [
+          '1.25rem',
+          {
+            lineHeight: '1.5rem',
+            letterSpacing: '0',
+            fontWeight: '500',
+          },
+        ],
+        heading6: [
+          '1.125rem',
+          {
+            lineHeight: '1.25rem',
+            letterSpacing: '0',
+            fontWeight: '500',
+          },
+        ],
+        body1: [
+          '1.5rem',
+          { lineHeight: '2.25rem', letterSpacing: '0', fontWeight: '400' },
+        ],
+        body2: [
+          '1.25rem',
+          { lineHeight: '1.875rem', letterSpacing: '0', fontWeight: '400' },
+        ],
+        body3: [
+          '1.125rem',
+          { lineHeight: '1.75rem', letterSpacing: '0', fontWeight: '400' },
+        ],
         body4: [
           '1rem',
-          { lineHeight: '1.5em', letterSpacing: '0', fontWeight: '400' },
+          { lineHeight: '1.5rem', letterSpacing: '0', fontWeight: '400' },
+        ],
+        body5: [
+          '0.875rem',
+          { lineHeight: '1.25rem', letterSpacing: '0', fontWeight: '400' },
+        ],
+        body6: [
+          '0.75rem',
+          { lineHeight: '1.125rem', letterSpacing: '0', fontWeight: '400' },
+        ],
+        body7: [
+          '0.625rem',
+          { lineHeight: '0.875rem', letterSpacing: '0', fontWeight: '400' },
+        ],
+        label1: [
+          '1.5rem',
+          { lineHeight: '1.75rem', letterSpacing: '0', fontWeight: '500' },
+        ],
+        label2: [
+          '1.25rem',
+          { lineHeight: '1.5rem', letterSpacing: '0', fontWeight: '500' },
+        ],
+        label3: [
+          '1.125rem',
+          { lineHeight: '1.375rem', letterSpacing: '0', fontWeight: '500' },
+        ],
+        label4: [
+          '1rem',
+          { lineHeight: '1.125rem', letterSpacing: '0', fontWeight: '500' },
+        ],
+        label5: [
+          '0.875rem',
+          { lineHeight: '1rem', letterSpacing: '0', fontWeight: '500' },
+        ],
+        label6: [
+          '0.75rem',
+          { lineHeight: '1rem', letterSpacing: '0', fontWeight: '500' },
+        ],
+        label7: [
+          '0.75rem',
+          { lineHeight: '0.875rem', letterSpacing: '0', fontWeight: '500' },
+        ],
+        label8: [
+          '0.625rem',
+          { lineHeight: '0.75rem', letterSpacing: '0', fontWeight: '500' },
         ],
         button1: [
           '1rem',
