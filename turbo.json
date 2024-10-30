@@ -6,10 +6,32 @@
       "persistent": true
     },
     "@idriss-xyz/extension#dev": {
-      "cache": false
+      "cache": false,
+      "env": [
+        "AMPLITUDE_API_KEY",
+        "ENVIRONMENT",
+        "SENTRY_DSN",
+        "SENTRY_ENVIRONMENT"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env.development",
+        ".env.production"
+      ]
     },
     "@idriss-xyz/extension#build": {
       "cache": true,
+      "env": [
+        "AMPLITUDE_API_KEY",
+        "ENVIRONMENT",
+        "SENTRY_DSN",
+        "SENTRY_ENVIRONMENT"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env.development",
+        ".env.production"
+      ],
       "outputs": [
         "build"
       ]
@@ -38,6 +60,8 @@
         "../../prettier.config.mjs"
       ]
     },
+    "unused-exports": {},
+    "circular-dependencies": {},
     "type-check": {}
   }
 }

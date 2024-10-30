@@ -11,3 +11,4 @@ build
 *.yml
 .eslintignore
 .next
+*.cjs

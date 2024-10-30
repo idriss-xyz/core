@@ -29,6 +29,7 @@ module.exports = {
     'plugin:tailwindcss/recommended',
     'plugin:@tanstack/eslint-plugin-query/recommended',
     'plugin:storybook/recommended',
+    'turbo',
     'prettier',
   ],
   settings: {

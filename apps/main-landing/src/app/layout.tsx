@@ -26,11 +26,13 @@ const aeonikPro = localFont({
   variable: '--font-aeonikpro',
 });
 
+// ts-unused-exports:disable-next-line
 export const metadata: Metadata = {
   title: 'IDriss',
   description: 'IDriss',
 };
 
+// ts-unused-exports:disable-next-line
 export default function RootLayout({
   children,
 }: Readonly<{

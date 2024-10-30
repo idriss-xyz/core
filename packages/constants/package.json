@@ -9,11 +9,15 @@
     "format:fix": "prettier --write --config ../../prettier.config.mjs --ignore-path .prettierignore .",
     "lint": "eslint src --max-warnings=0",
     "lint:fix": "eslint src --max-warnings=0 --fix",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "circular-dependencies": "depcruise --config .dependency-cruiser.cjs src",
+    "unused-exports": "./node_modules/.bin/ts-unused-exports ./tsconfig.json --excludePathsFromReport=./src/index.ts"
   },
   "devDependencies": {
     "@idriss-xyz/eslint-config": "workspace:*",
     "@idriss-xyz/typescript-config": "workspace:*",
+    "dependency-cruiser": "^16.4.2",
+    "ts-unused-exports": "^10.1.0",
     "typescript": "^5.6.2"
   }
 }

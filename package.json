@@ -9,7 +9,9 @@
     "lint:fix": "turbo run lint:fix",
     "format": "turbo run format",
     "format:fix": "turbo run format:fix",
-    "type-check": "turbo run type-check"
+    "type-check": "turbo run type-check",
+    "unused-exports": "turbo run unused-exports",
+    "circular-dependencies": "turbo run circular-dependencies"
   },
   "devDependencies": {
     "prettier": "^3.3.3",
