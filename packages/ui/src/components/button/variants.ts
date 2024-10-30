@@ -28,6 +28,7 @@ export const button = cva(
       size: {
         large: ['px-5 py-4.5 text-button1'],
         medium: ['px-5 py-3.5 text-button2'],
+        small: ['px-5 py-2 text-button2'],
       },
       withPrefixIcon: {
         true: ['pl-3'],
@@ -76,6 +77,7 @@ export const glow = cva(
       size: {
         large: ['top-[36px] h-10'],
         medium: ['top-[28px] h-8'],
+        small: ['top-[28px] h-8'],
       },
     },
   },
