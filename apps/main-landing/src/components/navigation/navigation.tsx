@@ -7,7 +7,7 @@ import { NavigationContent } from './components';
 export const Navigation = () => {
   return (
     <NavigationMenu.Root>
-      <NavigationMenu.List className="container flex items-center justify-between px-4 py-1 lg:py-3">
+      <NavigationMenu.List className="container flex items-center justify-between py-1 lg:py-3">
         <NavigationMenu.Item>
           <NavigationMenu.Link asChild>
             <Link href="/">
