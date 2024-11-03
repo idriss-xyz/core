@@ -115,6 +115,7 @@ export default {
       },
       spacing: {
         4.5: '18px',
+        5.5: '22px',
       },
       fontSize: {
         display1: [
@@ -261,6 +262,28 @@ export default {
           '0.875rem',
           { lineHeight: '1rem', letterSpacing: '0.05em', fontWeight: '500' },
         ],
+        display1: [
+          '7.25rem',
+          { lineHeight: '1em', letterSpacing: '0', fontWeight: '400' },
+        ],
+        display4: [
+          '2.375rem',
+          { lineHeight: '1em', letterSpacing: '0', fontWeight: '400' },
+        ],
+      },
+      animation: {
+        marquee: 'marquee 35s linear infinite',
+        marquee2: 'marquee2 35s linear infinite',
+      },
+      keyframes: {
+        marquee: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-100%)' },
+        },
+        marquee2: {
+          '0%': { transform: 'translateX(100%)' },
+          '100%': { transform: 'translateX(0%)' },
+        },
       },
     },
   },
@@ -270,6 +293,23 @@ export default {
       const newUtilities = {
         '.fill-rule-non-zero': {
           'fill-rule': 'nonzero',
+        },
+        '.gradient-text': {
+          'background-image':
+            'linear-gradient(130deg, theme(colors.mint.700) 0%, theme(colors.mint.700) 20%, theme(colors.neutralGreen.900) 45%, theme(colors.mint.700) 65%, theme(colors.mint.700) 100%)',
+          'background-clip': 'text',
+          'color': 'transparent',
+          '@screen lg': {
+            'background-image':
+              'linear-gradient(160deg, theme(colors.mint.700) 0%, theme(colors.mint.700) 20%, theme(colors.neutralGreen.900) 45%, theme(colors.mint.700) 60%, theme(colors.mint.700) 100%)',
+          },
+        },
+        '.side-blur': {
+          'mask-image':
+            'linear-gradient(to right, transparent, black 60px, black calc(100% - 60px), transparent)',
+        },
+        '.paused-animation': {
+          'animation-play-state': 'paused',
         },
       };
       addUtilities(newUtilities);
