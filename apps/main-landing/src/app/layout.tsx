@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 
 import './globals.css';
-import { Navigation } from '@/components';
+import { Footer, TopBar } from '@/components';
 
 const aeonikPro = localFont({
   src: [
@@ -41,8 +41,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${aeonikPro.variable} font-sans antialiased`}>
-        <Navigation />
+        <TopBar />
         {children}
+        <Footer />
       </body>
     </html>
   );

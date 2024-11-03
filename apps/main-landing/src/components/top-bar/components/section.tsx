@@ -23,7 +23,9 @@ export const Section = ({ onItemClick, className, items = [] }: Properties) => {
                     <span className="block text-button2 group-hover:text-mint-600">
                       {item.title}
                     </span>
-                    <p className="text-body4 opacity-60">{item.description}</p>
+                    <p className="text-body5 opacity-60 lg:text-body4">
+                      {item.description}
+                    </p>
                   </a>
                 </Link>
               </span>

@@ -1,6 +1,8 @@
 import * as RadixDialog from '@radix-ui/react-dialog';
 import { ReactNode, useCallback, useState } from 'react';
 
+import { classes } from '../../utils';
+
 type TriggerRenderProperties = { isOpened: boolean };
 type ChildrenRenderProperties = { close: () => void };
 
@@ -22,7 +24,10 @@ const DialogBase = ({ trigger, children, className }: Properties) => {
       <RadixDialog.Trigger asChild>{trigger({ isOpened })}</RadixDialog.Trigger>
       <RadixDialog.Portal>
         <RadixDialog.Overlay className="fixed inset-0" />
-        <RadixDialog.Content aria-describedby="" className={className}>
+        <RadixDialog.Content
+          aria-describedby=""
+          className={classes('z-dialog', className)}
+        >
           {children({ close })}
         </RadixDialog.Content>
       </RadixDialog.Portal>

@@ -39,6 +39,10 @@ jobs:
       - name: Build tailwind
         run: pnpm --filter=@idriss-xyz/extension build:tailwind
 
+      - name: Build main landing
+        run: pnpm --filter=@idriss-xyz/main-landing build
+
+
       - name: Run type-check
         run: pnpm type-check
 

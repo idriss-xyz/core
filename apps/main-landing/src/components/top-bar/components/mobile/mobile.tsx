@@ -35,7 +35,6 @@ export const Mobile = () => {
               <Dialog.Title>Website navigation</Dialog.Title>
             </VisuallyHidden>
 
-            {/* we need another instance of NavigationMenu because it gets rendered inside Portal */}
             <NavigationMenu.Root>
               <NavigationMenu.List>
                 <div className="space-y-6">
