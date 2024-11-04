@@ -12,6 +12,7 @@
     "./visually-hidden": "./src/components/visually-hidden/index.ts",
     "./branding-assets": "./src/components/branding-assets/index.ts",
     "./marquee": "./src/components/marquee/index.ts",
+    "./gradient-border": "./src/components/gradient-border/index.ts",
     "./utils": "./src/utils/index.ts"
   },
   "scripts": {

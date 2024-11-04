@@ -5,4 +5,5 @@ export { Instagram } from './instagram';
 export { TwitterX } from './x';
 export { Youtube } from './youtube';
 export { Tiktok } from './tiktok';
+export { Check } from './check';
 export { IdrissCircled } from './idriss-circled';
