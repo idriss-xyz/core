@@ -54,11 +54,19 @@ export const Button = forwardRef(
     const content = (
       <>
         {prefixIconName && (
-          <Icon name={prefixIconName} size={BUTTON_SIZE_TO_ICON_SIZE[size]} />
+          <Icon
+            name={prefixIconName}
+            size={BUTTON_SIZE_TO_ICON_SIZE[size]}
+            className="mr-2"
+          />
         )}
         <span>{children}</span>
         {suffixIconName && (
-          <Icon name={suffixIconName} size={BUTTON_SIZE_TO_ICON_SIZE[size]} />
+          <Icon
+            name={suffixIconName}
+            size={BUTTON_SIZE_TO_ICON_SIZE[size]}
+            className="ml-2"
+          />
         )}
         <Glow intent={intent} size={size} />
       </>

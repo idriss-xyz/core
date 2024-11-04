@@ -1,6 +1,9 @@
 import { Button } from '@idriss-xyz/ui/button';
 import { NavigationMenu } from '@idriss-xyz/ui/navigation-menu';
 import Link from 'next/link';
+import { DOCUMENTATION_LINK } from '@idriss-xyz/constants';
+
+import { INTERNAL_LINK } from '@/constants';
 
 import { APPS_SECTION_NAVIGATION_ITEMS } from '../../constants';
 import { Section } from '../section';
@@ -21,7 +24,7 @@ export const Menu = ({ className }: Properties) => {
           </NavigationMenu.Trigger>
           <NavigationMenu.Content className="absolute left-[-128px] w-max">
             <Section
-              className="rounded-[24px] bg-white p-8"
+              className="rounded-[24px] bg-white p-8 [box-shadow:0px_32px_64px_0px_#00000026,_0px_1px_3px_0px_#0000001A]"
               items={APPS_SECTION_NAVIGATION_ITEMS}
             />
           </NavigationMenu.Content>
@@ -29,9 +32,9 @@ export const Menu = ({ className }: Properties) => {
         <NavigationMenu.Item>
           <NavigationMenu.Link asChild>
             <span>
-              <Link href="/#" passHref legacyBehavior>
+              <Link href={INTERNAL_LINK.DAO} passHref legacyBehavior>
                 <Button intent="tertiary" size="large" asLink>
-                  TOKEN
+                  DAO
                 </Button>
               </Link>
             </span>
@@ -41,11 +44,16 @@ export const Menu = ({ className }: Properties) => {
         <NavigationMenu.Item>
           <NavigationMenu.Link asChild>
             <span>
-              <Link href="/#" passHref legacyBehavior>
-                <Button intent="tertiary" size="large" asLink>
-                  DOCS
-                </Button>
-              </Link>
+              <Button
+                intent="tertiary"
+                size="large"
+                href={DOCUMENTATION_LINK}
+                target="_blank"
+                rel="noreferrer noopener"
+                asLink
+              >
+                DOCS
+              </Button>
             </span>
           </NavigationMenu.Link>
         </NavigationMenu.Item>

@@ -1,5 +1,6 @@
 import { Button } from '@idriss-xyz/ui/button';
 import { forwardRef } from 'react';
+import Link from 'next/link';
 
 import { SectionItem } from '../types';
 
@@ -17,16 +18,37 @@ export const Section = forwardRef<HTMLDivElement, Properties>(
         </span>
         <ul className="list-none space-y-2">
           {items.map((item, index) => {
+            if (item.isExternal) {
+              return (
+                <li key={index}>
+                  <Button
+                    className="pl-0 text-left"
+                    intent="tertiary"
+                    size="small"
+                    prefixIconName={item.prefixIconName}
+                    href={item.link}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    asLink
+                  >
+                    {item.name}
+                  </Button>
+                </li>
+              );
+            }
             return (
               <li key={index}>
-                <Button
-                  className="pl-0 text-left"
-                  intent="tertiary"
-                  size="small"
-                  prefixIconName={item.prefixIconName}
-                >
-                  {item.name}
-                </Button>
+                <Link href={item.link} passHref legacyBehavior>
+                  <Button
+                    className="pl-0 text-left"
+                    intent="tertiary"
+                    size="small"
+                    prefixIconName={item.prefixIconName}
+                    asLink
+                  >
+                    {item.name}
+                  </Button>
+                </Link>
               </li>
             );
           })}

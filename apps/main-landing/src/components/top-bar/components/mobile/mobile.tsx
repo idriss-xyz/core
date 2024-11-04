@@ -5,6 +5,9 @@ import { VisuallyHidden } from '@idriss-xyz/ui/visually-hidden';
 import { Button } from '@idriss-xyz/ui/button';
 import Link from 'next/link';
 import { NavigationMenu } from '@idriss-xyz/ui/navigation-menu';
+import { DOCUMENTATION_LINK } from '@idriss-xyz/constants';
+
+import { INTERNAL_LINK } from '@/constants';
 
 import { APPS_SECTION_NAVIGATION_ITEMS } from '../../constants';
 import { Section } from '../section';
@@ -65,14 +68,14 @@ export const Mobile = () => {
 
                   <NavigationMenu.Link asChild>
                     <span>
-                      <Link href="/#" passHref legacyBehavior>
+                      <Link href={INTERNAL_LINK.DAO} passHref legacyBehavior>
                         <Button
                           intent="tertiary"
                           size="large"
                           onClick={close}
                           asLink
                         >
-                          TOKEN
+                          DAO
                         </Button>
                       </Link>
                     </span>
@@ -80,16 +83,17 @@ export const Mobile = () => {
 
                   <NavigationMenu.Link asChild>
                     <span>
-                      <Link href="/#" passHref legacyBehavior>
-                        <Button
-                          intent="tertiary"
-                          size="large"
-                          onClick={close}
-                          asLink
-                        >
-                          DOCS
-                        </Button>
-                      </Link>
+                      <Button
+                        intent="tertiary"
+                        size="large"
+                        onClick={close}
+                        href={DOCUMENTATION_LINK}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        asLink
+                      >
+                        DOCS
+                      </Button>
                     </span>
                   </NavigationMenu.Link>
                 </div>

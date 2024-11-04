@@ -1,7 +1,7 @@
 import { IconProperties } from './types';
 import { ICON } from './constants';
 
-export const Icon = ({ name, ...properties }: IconProperties) => {
+export const Icon = ({ name, className, ...properties }: IconProperties) => {
   const Icon = ICON[name];
-  return <Icon {...properties} />;
+  return <Icon className={className} {...properties} />;
 };

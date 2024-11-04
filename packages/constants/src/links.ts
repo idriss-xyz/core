@@ -7,11 +7,11 @@ export const SOCIAL_LINK = {
   YOUTUBE: 'https://www.youtube.com/@IDriss_xyz',
 };
 
-export const DOCUMENTATION_LINK = 'https://www.docs.idriss.xyz/';
+export const DOCUMENTATION_LINK = 'https://docs.idriss.xyz/';
 export const GITHUB_LINK = 'https://www.github.com/idriss-crypto';
 export const BLOG_LINK = 'https://www.paragraph.xyz/@idriss';
 export const BRAND_KIT_LINK =
-  'https://www.docs.idriss.xyz/contributor-guides/brand-resources';
+  'https://docs.idriss.xyz/contributor-guides/brand-resources';
 
 export const PRIVACY_POLICY_LINK = 'https://www.idriss.xyz/pp';
 export const TERMS_OF_SERVICE_LINK = 'https://www.idriss.xyz/tos';
