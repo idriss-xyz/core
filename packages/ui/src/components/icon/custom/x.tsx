@@ -1,9 +1,12 @@
+import { useId } from 'react';
+
 type Properties = {
   className?: string;
   size: number;
 };
 
 export const TwitterX = ({ size, className }: Properties) => {
+  const id = useId();
   return (
     <svg
       width={size}
@@ -13,7 +16,7 @@ export const TwitterX = ({ size, className }: Properties) => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <mask id="path-1-inside-1_4429_1947" fill="white">
+      <mask id={id} fill="white">
         <path
           fillRule="evenodd"
           clipRule="evenodd"
@@ -27,7 +30,7 @@ export const TwitterX = ({ size, className }: Properties) => {
         fill="currentColor"
         stroke="currentColor"
         strokeWidth="2"
-        mask="url(#path-1-inside-1_4429_1947)"
+        mask={`url(#${id})`}
       />
     </svg>
   );

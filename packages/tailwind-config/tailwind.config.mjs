@@ -107,7 +107,7 @@ export default {
       },
       zIndex: {
         1: '1',
-        navigationMenu: '10',
+        topBar: '10',
         dialog: '20',
       },
       fontFamily: {

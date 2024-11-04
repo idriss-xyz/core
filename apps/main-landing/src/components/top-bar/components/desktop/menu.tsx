@@ -5,9 +5,13 @@ import Link from 'next/link';
 import { APPS_SECTION_NAVIGATION_ITEMS } from '../../constants';
 import { Section } from '../section';
 
-export const Menu = () => {
+type Properties = {
+  className?: string;
+};
+
+export const Menu = ({ className }: Properties) => {
   return (
-    <NavigationMenu.Root>
+    <NavigationMenu.Root className={className}>
       <NavigationMenu.List className="flex space-x-10">
         <NavigationMenu.Item className="relative">
           <NavigationMenu.Trigger asChild>
@@ -17,7 +21,7 @@ export const Menu = () => {
           </NavigationMenu.Trigger>
           <NavigationMenu.Content className="absolute left-[-128px] w-max">
             <Section
-              className="relative z-navigationMenu rounded-[24px] bg-white p-8"
+              className="rounded-[24px] bg-white p-8"
               items={APPS_SECTION_NAVIGATION_ITEMS}
             />
           </NavigationMenu.Content>

@@ -4,8 +4,8 @@ import { Socials } from './socials';
 export const Desktop = () => {
   return (
     <>
-      <Menu />
-      <Socials />
+      <Menu className="hidden lg:flex" />
+      <Socials className="hidden lg:flex" />
     </>
   );
 };

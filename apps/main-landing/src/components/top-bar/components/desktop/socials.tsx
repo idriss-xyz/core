@@ -1,6 +1,7 @@
 import { SOCIAL_LINK } from '@idriss-xyz/constants';
 import { IconName } from '@idriss-xyz/ui/icon';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
+import { classes } from '@idriss-xyz/ui/utils';
 
 const SOCIALS: { iconName: IconName; link: string }[] = [
   {
@@ -13,9 +14,13 @@ const SOCIALS: { iconName: IconName; link: string }[] = [
   },
 ];
 
-export const Socials = () => {
+type Properties = {
+  className?: string;
+};
+
+export const Socials = ({ className }: Properties) => {
   return (
-    <div className="flex items-center space-x-2">
+    <div className={classes('flex items-center space-x-2', className)}>
       {SOCIALS.map((social, index) => {
         return (
           <IconButton
