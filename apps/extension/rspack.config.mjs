@@ -43,8 +43,10 @@ export default (_env, argv) => {
       new rspack.CopyRspackPlugin({
         patterns: [
           { from: './src/runtime/chromium/manifest.json', to: 'chromium' },
+          { from: './src/assets/fonts', to: 'chromium/fonts' },
           { from: './src/common/img', to: 'chromium/img' },
           { from: './src/runtime/firefox/manifest.json', to: 'firefox' },
+          { from: './src/assets/fonts', to: 'firefox/fonts' },
           { from: './src/common/img', to: 'firefox/img' },
         ],
       }),

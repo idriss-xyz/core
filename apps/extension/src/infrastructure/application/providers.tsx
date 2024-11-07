@@ -8,7 +8,13 @@ import {
   WithEventsLogger,
   WithObservabilityScope,
 } from 'shared/observability';
-import { PortalProvider, QueryProvider, TailwindProvider } from 'shared/ui';
+import {
+  FontProvider,
+  PortalProvider,
+  QueryProvider,
+  TailwindProvider,
+  WithExtensionInfo,
+} from 'shared/ui';
 import { TwitterScrapingContextProvider } from 'host/twitter';
 import {
   ExtensionPopupProvider,
@@ -31,27 +37,31 @@ export const Providers = ({
         <ErrorBoundary>
           <WithEventsLogger>
             <PortalProvider>
-              <TailwindProvider>
-                <QueryProvider>
-                  <NiceModal.Provider>
-                    <WalletContextProvider
-                      disabledWalletsRdns={disabledWalletRdns}
-                    >
-                      <ExtensionPopupProvider>
-                        <ExtensionSettingsProvider>
-                          <TwitterScrapingContextProvider>
-                            <WarpcastScrapingContextProvider>
-                              <SupercastScrapingContextProvider>
-                                {children}
-                              </SupercastScrapingContextProvider>
-                            </WarpcastScrapingContextProvider>
-                          </TwitterScrapingContextProvider>
-                        </ExtensionSettingsProvider>
-                      </ExtensionPopupProvider>
-                    </WalletContextProvider>
-                  </NiceModal.Provider>
-                </QueryProvider>
-              </TailwindProvider>
+              <WithExtensionInfo>
+                <FontProvider>
+                  <TailwindProvider>
+                    <QueryProvider>
+                      <NiceModal.Provider>
+                        <WalletContextProvider
+                          disabledWalletsRdns={disabledWalletRdns}
+                        >
+                          <ExtensionPopupProvider>
+                            <ExtensionSettingsProvider>
+                              <TwitterScrapingContextProvider>
+                                <WarpcastScrapingContextProvider>
+                                  <SupercastScrapingContextProvider>
+                                    {children}
+                                  </SupercastScrapingContextProvider>
+                                </WarpcastScrapingContextProvider>
+                              </TwitterScrapingContextProvider>
+                            </ExtensionSettingsProvider>
+                          </ExtensionPopupProvider>
+                        </WalletContextProvider>
+                      </NiceModal.Provider>
+                    </QueryProvider>
+                  </TailwindProvider>
+                </FontProvider>
+              </WithExtensionInfo>
             </PortalProvider>
           </WithEventsLogger>
         </ErrorBoundary>

@@ -42,6 +42,8 @@ export class ContentScript {
 
   injectScriptToWebpage() {
     const script = document.createElement('script');
+    script.id = 'idriss-extension-script';
+    script.dataset.idrissExtensionId = this.environment.runtime.id;
 
     script.src = this.environment.runtime.getURL('webpage-script.js');
     document.body.append(script);

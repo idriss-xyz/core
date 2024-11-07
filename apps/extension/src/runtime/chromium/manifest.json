@@ -41,7 +41,8 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "webpage-script.js"
+        "webpage-script.js",
+        "fonts/*"
       ],
       "matches": [
         "<all_urls>"
