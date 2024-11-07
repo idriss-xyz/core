@@ -15,7 +15,7 @@ export const Check = ({ size, className }: Properties) => {
     >
       <path
         d="M16.6673 5L7.50065 14.1667L3.33398 10"
-        stroke="#323D37"
+        stroke="currentColor"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"

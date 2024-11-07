@@ -25,7 +25,11 @@ export const ProductTile = ({
           return (
             <li className="flex flex-row gap-3" key={point}>
               <div>
-                <Icon name="Check" size={20} />
+                <Icon
+                  name="Check"
+                  className="text-neutralGreen-700"
+                  size={20}
+                />
               </div>
               <div className="text-body5 lg:text-body4">{point}</div>
             </li>
