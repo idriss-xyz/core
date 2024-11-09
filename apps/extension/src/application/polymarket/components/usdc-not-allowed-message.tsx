@@ -1,3 +1,5 @@
+import { ExternalLink } from '@idriss-xyz/ui/external-link';
+
 import { ErrorMessage } from 'shared/ui';
 
 import { POLYMARKET_WEBSITE } from '../constants';
@@ -12,14 +14,12 @@ export const UsdcNotAllowedMessage = ({
   return (
     <ErrorMessage className="mt-4">
       Please enable USDC at{' '}
-      <a
+      <ExternalLink
         href={POLYMARKET_WEBSITE}
-        target="_blank"
-        rel="noreferrer"
         className="font-semibold underline"
       >
         Polymarket
-      </a>{' '}
+      </ExternalLink>{' '}
       or{' '}
       <span
         className="cursor-pointer font-semibold underline"

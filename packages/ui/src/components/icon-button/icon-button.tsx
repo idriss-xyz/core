@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react';
+import { ComponentProps, forwardRef } from 'react';
 
 import { Button, BUTTON_SIZE_TO_ICON_SIZE } from '../button';
 import { classes } from '../../utils';
@@ -11,19 +11,19 @@ type Properties = {
 } & ComponentProps<typeof Button> &
   IconButtonVariants;
 
-export const IconButton = ({
-  iconName,
-  className,
-  size,
-  ...properties
-}: Properties) => {
-  return (
-    <Button
-      {...properties}
-      size={size}
-      className={classes(iconButton({ className, size }))}
-    >
-      <Icon name={iconName} size={BUTTON_SIZE_TO_ICON_SIZE[size]} />
-    </Button>
-  );
-};
+export const IconButton = forwardRef(
+  ({ iconName, className, size, ...properties }: Properties, reference) => {
+    return (
+      <Button
+        {...properties}
+        ref={reference}
+        size={size}
+        className={classes(iconButton({ className, size }))}
+      >
+        <Icon name={iconName} size={BUTTON_SIZE_TO_ICON_SIZE[size]} />
+      </Button>
+    );
+  },
+);
+
+IconButton.displayName = 'IconButton';

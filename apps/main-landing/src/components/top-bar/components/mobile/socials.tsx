@@ -8,28 +8,34 @@ type Properties = {
   className?: string;
 };
 
-const SOCIALS: { iconName: IconName; link: string }[] = [
+const SOCIALS: { label: string; iconName: IconName; link: string }[] = [
   {
+    label: 'Go to Twitter',
     iconName: 'TwitterX',
     link: SOCIAL_LINK.X,
   },
   {
+    label: 'Go to Farcaster',
     iconName: 'Farcaster',
     link: SOCIAL_LINK.WARPCAST,
   },
   {
+    label: 'Go to Discord',
     iconName: 'Discord',
     link: SOCIAL_LINK.DISCORD,
   },
   {
+    label: 'Go to Instagram',
     iconName: 'Instagram',
     link: SOCIAL_LINK.INSTAGRAM,
   },
   {
+    label: 'Go to Tiktok',
     iconName: 'Tiktok',
     link: SOCIAL_LINK.TIKTOK,
   },
   {
+    label: 'Go to Youtube',
     iconName: 'Youtube',
     link: SOCIAL_LINK.YOUTUBE,
   },
@@ -52,8 +58,7 @@ export const Socials = ({ className }: Properties) => {
                 intent="tertiary"
                 size="large"
                 href={social.link}
-                rel="noopener noreferrer"
-                target="_blank"
+                isExternal
                 asLink
               />
             </NavigationMenu.Link>

@@ -2,6 +2,7 @@ import { EIP1193Provider, createStore } from 'mipd';
 import { useCallback, useMemo, useState, useSyncExternalStore } from 'react';
 import { create as createModal, useModal } from '@ebay/nice-modal-react';
 import { useMutation } from '@tanstack/react-query';
+import { ExternalLink } from '@idriss-xyz/ui/external-link';
 
 import {
   Button,
@@ -196,14 +197,12 @@ export const WalletConnectModal = createModal(
                   label={
                     <p className="text-sm text-[#6b7280]">
                       I agree to the{' '}
-                      <a
+                      <ExternalLink
                         href="https://www.idriss.xyz/tos"
-                        target="_blank"
-                        rel="noopener noreferrer"
                         className="font-semibold text-[#11DD74]"
                       >
                         Terms of Use
-                      </a>
+                      </ExternalLink>
                     </p>
                   }
                 />

@@ -32,6 +32,12 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.9.0
         version: 3.9.0(react-hook-form@7.53.1(react@18.3.1))
+      '@idriss-xyz/constants':
+        specifier: workspace:*
+        version: link:../../packages/constants
+      '@idriss-xyz/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       '@noble/hashes':
         specifier: ^1.5.0
         version: 1.5.0
@@ -132,9 +138,6 @@ importers:
       '@idriss-xyz/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
-      '@idriss-xyz/ui':
-        specifier: workspace:*
-        version: link:../../packages/ui
       '@rspack/cli':
         specifier: ^1.0.14
         version: 1.0.14(@rspack/core@1.0.14(@swc/helpers@0.5.13))(@types/express@4.17.21)(bufferutil@4.0.8)(utf-8-validate@5.0.10)(webpack@5.95.0(esbuild@0.23.1))
@@ -228,6 +231,12 @@ importers:
 
   apps/main-landing:
     dependencies:
+      '@idriss-xyz/constants':
+        specifier: workspace:*
+        version: link:../../packages/constants
+      '@idriss-xyz/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       next:
         specifier: 15.0.1
         version: 15.0.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.80.3)
@@ -241,9 +250,6 @@ importers:
         specifier: ^17.5.1
         version: 17.5.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
-      '@idriss-xyz/constants':
-        specifier: workspace:*
-        version: link:../../packages/constants
       '@idriss-xyz/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
@@ -253,9 +259,6 @@ importers:
       '@idriss-xyz/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
-      '@idriss-xyz/ui':
-        specifier: workspace:*
-        version: link:../../packages/ui
       '@next/bundle-analyzer':
         specifier: ^15.0.1
         version: 15.0.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
@@ -360,6 +363,9 @@ importers:
 
   packages/ui:
     dependencies:
+      '@idriss-xyz/utils':
+        specifier: workspace:*
+        version: link:../utils
       '@radix-ui/react-dialog':
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@18.3.1)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -369,6 +375,9 @@ importers:
       '@radix-ui/react-navigation-menu':
         specifier: ^1.2.1
         version: 1.2.1(@types/react-dom@18.3.1)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-switch':
+        specifier: ^1.1.1
+        version: 1.1.1(@types/react-dom@18.3.1)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-visually-hidden':
         specifier: ^1.1.0
         version: 1.1.0(@types/react-dom@18.3.1)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -400,9 +409,6 @@ importers:
       '@idriss-xyz/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
-      '@idriss-xyz/utils':
-        specifier: workspace:*
-        version: link:../utils
       '@swc/helpers':
         specifier: ^0.5.13
         version: 0.5.13
@@ -8280,6 +8286,21 @@ snapshots:
       react: 18.3.1
     optionalDependencies:
       '@types/react': 18.3.12
+
+  '@radix-ui/react-switch@1.1.1(@types/react-dom@18.3.1)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@radix-ui/primitive': 1.1.0
+      '@radix-ui/react-compose-refs': 1.1.0(@types/react@18.3.1)(react@18.3.1)
+      '@radix-ui/react-context': 1.1.1(@types/react@18.3.1)(react@18.3.1)
+      '@radix-ui/react-primitive': 2.0.0(@types/react-dom@18.3.1)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-use-controllable-state': 1.1.0(@types/react@18.3.1)(react@18.3.1)
+      '@radix-ui/react-use-previous': 1.1.0(@types/react@18.3.1)(react@18.3.1)
+      '@radix-ui/react-use-size': 1.1.0(@types/react@18.3.1)(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+    optionalDependencies:
+      '@types/react': 18.3.1
+      '@types/react-dom': 18.3.1
 
   '@radix-ui/react-switch@1.1.1(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:

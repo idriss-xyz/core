@@ -100,7 +100,14 @@ export default {
         '2xl': '1608px',
       },
       boxShadow: {
-        input: '0px 0px 0px 4px #F2F2F224',
+        'xs': '0px 1px 4px 0px #1018280D',
+        'sm': '0px 1px 2px 0px #1018280F, 0px 1px 10px 0px #1018281A',
+        'md': '0px 2px 8px -2px #1018280A, 0px 4px 14px -2px #1018281A',
+        'lg': '0px 4px 6px -2px #10182808, 0px 12px 16px -4px #10182814',
+        'xl': '0px 8px 8px -4px #10182808, 0px 20px 24px -4px #10182814',
+        '2xl': 'box-shadow: 0px 24px 48px -12px #1018282E',
+        '3xl': 'box-shadow: 0px 32px 64px -12px #1018283D',
+        'input': '0px 0px 0px 4px #F2F2F224',
       },
       blur: {
         md: '10px',
@@ -109,6 +116,7 @@ export default {
         1: '1',
         topBar: '10',
         dialog: '20',
+        extensionPopup: '100000',
       },
       fontFamily: {
         sans: ['var(--font-aeonikpro)'],

@@ -24,10 +24,9 @@ export const Footer = () => {
             size="medium"
             prefixIconName="Puzzle"
             className="mt-6 lg:mt-10"
-            asLink
             href="https://chromewebstore.google.com/detail/idriss/fghhpjoffbgecjikiipbkpdakfmkbmig"
-            target="_blank"
-            rel="noopener noreferrer"
+            isExternal
+            asLink
           >
             DOWNLOAD EXTENSION
           </Button>
@@ -48,7 +47,7 @@ export const Footer = () => {
         <div>
           <Image
             className="mb-6 lg:mb-0"
-            src="/logo-idriss-dark.png"
+            src="/idriss-dark-logo.png"
             height={24}
             width={98}
             alt=""
@@ -64,8 +63,7 @@ export const Footer = () => {
               size="medium"
               href={PRIVACY_POLICY_LINK}
               className="whitespace-nowrap"
-              target="_blank"
-              rel="noopener noreferrer"
+              isExternal
             >
               Privacy policy
             </Link>
@@ -74,8 +72,7 @@ export const Footer = () => {
               size="medium"
               className="whitespace-nowrap"
               href={TERMS_OF_SERVICE_LINK}
-              target="_blank"
-              rel="noopener noreferrer"
+              isExternal
             >
               Terms of service
             </Link>

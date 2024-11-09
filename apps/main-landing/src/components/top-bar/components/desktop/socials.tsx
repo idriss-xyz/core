@@ -3,12 +3,14 @@ import { IconName } from '@idriss-xyz/ui/icon';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { classes } from '@idriss-xyz/ui/utils';
 
-const SOCIALS: { iconName: IconName; link: string }[] = [
+const SOCIALS: { label: string; iconName: IconName; link: string }[] = [
   {
+    label: 'Go to Twitter',
     iconName: 'TwitterX',
     link: SOCIAL_LINK.X,
   },
   {
+    label: 'Go to Farcaster',
     iconName: 'Farcaster',
     link: SOCIAL_LINK.WARPCAST,
   },
@@ -29,8 +31,8 @@ export const Socials = ({ className }: Properties) => {
             intent="tertiary"
             iconName={social.iconName}
             href={social.link}
-            target="_blank"
-            rel="noopener noreferrer"
+            aria-label={social.label}
+            isExternal
             asLink
           />
         );

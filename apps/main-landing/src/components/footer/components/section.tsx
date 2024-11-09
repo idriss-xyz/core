@@ -27,8 +27,7 @@ export const Section = forwardRef<HTMLDivElement, Properties>(
                     size="small"
                     prefixIconName={item.prefixIconName}
                     href={item.link}
-                    target="_blank"
-                    rel="noreferrer noopener"
+                    isExternal
                     asLink
                   >
                     {item.name}

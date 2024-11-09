@@ -1,2 +1,9 @@
-export { default as IDRISS_FULL_LOGO } from './idriss-full-logo.png';
+export { default as IDRISS_DARK_LOGO } from './idriss-dark-logo.png';
 export { default as FARCASTER_LOGO } from './farcaster-logo.png';
+export { default as IDRISS_COIN } from './idriss-coin.png';
+export { default as AGORA_LOGO } from './agora-logo.png';
+export { default as SNAPSHOT_LOGO } from './snapshot-logo.png';
+export { default as TALLY_LOGO } from './tally-logo.png';
+export { default as POLYMARKET_LOGO } from './polymarket-logo.png';
+export { default as LINES } from './lines.png';
+export { default as IDRISS_ICON_CIRCLE } from './idriss-icon-circle.png';

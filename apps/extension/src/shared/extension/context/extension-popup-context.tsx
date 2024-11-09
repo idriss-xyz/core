@@ -14,7 +14,7 @@ import {
 } from 'shared/messaging';
 import { createContextHook } from 'shared/ui';
 
-import { ExtensionPopupRoute } from '../constants';
+import { POPUP_ROUTE, PopupRoute } from '../constants';
 
 interface Properties {
   children: ReactNode;
@@ -22,9 +22,9 @@ interface Properties {
 
 interface ExtensionPopupContextValues {
   isVisible: boolean;
-  navigate: (route: ExtensionPopupRoute) => void;
+  navigate: (route: PopupRoute) => void;
   navigateBack: () => void;
-  currentRoute: ExtensionPopupRoute;
+  currentRoute: PopupRoute;
   hide: () => void;
   open: () => void;
 }
@@ -78,7 +78,7 @@ const InnerExtensionPopupProvider = ({ children }: Properties) => {
     <ExtensionPopupContext.Provider
       value={{
         isVisible,
-        currentRoute: location.pathname as ExtensionPopupRoute,
+        currentRoute: location.pathname as PopupRoute,
         navigate,
         navigateBack,
         hide,
@@ -92,7 +92,7 @@ const InnerExtensionPopupProvider = ({ children }: Properties) => {
 
 export const ExtensionPopupProvider = ({ children }: Properties) => {
   return (
-    <MemoryRouter>
+    <MemoryRouter initialEntries={[POPUP_ROUTE.PRODUCTS]}>
       <InnerExtensionPopupProvider>{children}</InnerExtensionPopupProvider>
     </MemoryRouter>
   );

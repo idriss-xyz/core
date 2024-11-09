@@ -132,9 +132,25 @@ export class Scraper {
         isHandleUserFound = true;
         const containerThatWillHaveBadge =
           userBarElement.querySelector('div > span');
+        const arrayMaybeWithBlueCheck =
+          containerThatWillHaveBadge?.querySelectorAll(
+            ':scope > span > span',
+          ) ?? [];
+        for (const element of arrayMaybeWithBlueCheck) {
+          (element as HTMLElement | null)?.parentElement?.style.setProperty(
+            'display',
+            'flex',
+            'important',
+          );
+        }
         (containerThatWillHaveBadge as HTMLElement | null)?.style.setProperty(
           'display',
           'flex',
+          'important',
+        );
+        (containerThatWillHaveBadge as HTMLElement | null)?.style.setProperty(
+          'align-items',
+          'center',
           'important',
         );
       }

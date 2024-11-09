@@ -14,17 +14,17 @@
     "unused-exports": "./node_modules/.bin/ts-unused-exports ./tsconfig.unused-exports.json"
   },
   "dependencies": {
+    "@idriss-xyz/constants": "workspace:*",
+    "@idriss-xyz/ui": "workspace:*",
     "next": "15.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-use": "^17.5.1"
   },
   "devDependencies": {
-    "@idriss-xyz/constants": "workspace:*",
     "@idriss-xyz/eslint-config": "workspace:*",
     "@idriss-xyz/tailwind-config": "workspace:*",
     "@idriss-xyz/typescript-config": "workspace:*",
-    "@idriss-xyz/ui": "workspace:*",
     "@next/bundle-analyzer": "^15.0.1",
     "@types/node": "^20",
     "@types/react": "^18.3.11",

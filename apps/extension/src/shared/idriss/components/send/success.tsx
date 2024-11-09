@@ -1,3 +1,5 @@
+import { ExternalLink } from '@idriss-xyz/ui/external-link';
+
 import { Button, Icon } from 'shared/ui';
 import { getTransactionUrl, Hex } from 'shared/web3';
 
@@ -19,17 +21,15 @@ export const Success = ({
       <p className="mt-4 text-lg font-medium leading-6 text-[#111827]">
         Transaction Submitted 🥳
       </p>
-      <a
+      <ExternalLink
         href={transactionUrl}
-        target="_blank"
-        rel="noopener noreferrer"
         className="mt-1 flex items-center space-x-1"
       >
         <span className="text-base font-normal leading-6 text-[#64748B]">
           View on Explorer
         </span>
         <Icon name="ExternalLinkIcon" size={16} className="text-[#64748B]" />
-      </a>
+      </ExternalLink>
       <Button
         onClick={onConfirm}
         className="mt-5 w-full rounded-md bg-[#11DD74] py-2 text-base font-medium text-white shadow-sm hover:bg-[#11DD74]"

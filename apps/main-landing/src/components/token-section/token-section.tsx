@@ -28,8 +28,7 @@ export const TokenSection = () => {
               prefixIconName="TwitterX"
               suffixIconName="IdrissArrowRight"
               href={SOCIAL_LINK.X}
-              target="_blank"
-              rel="noopener noreferrer"
+              isExternal
               asLink
             >
               FOLLOW FOR UPDATES

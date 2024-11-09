@@ -10,7 +10,7 @@ import {
   GET_EXTENSION_SETTINGS_RESPONSE,
 } from '../constants';
 import { ChangeExtensionSettingsCommand } from '../commands';
-import { ExtensionSettings } from '../types';
+import { ExtensionSettingName, ExtensionSettings } from '../types';
 
 interface Properties {
   children: ReactNode;
@@ -18,9 +18,10 @@ interface Properties {
 
 interface ExtensionSettingsContextValues {
   extensionSettings: ExtensionSettings;
-  changeExtensionSetting: (
-    settings: Partial<ExtensionSettings>,
-  ) => Promise<void>;
+  changeExtensionSetting: (properties: {
+    name: ExtensionSettingName;
+    value: boolean;
+  }) => Promise<void>;
 }
 
 const ExtensionSettingsContext = createContext<
@@ -80,8 +81,10 @@ export const ExtensionSettingsProvider = ({ children }: Properties) => {
     <ExtensionSettingsContext.Provider
       value={{
         extensionSettings: settingsQuery.data,
-        changeExtensionSetting: async (settings) => {
-          await changeExtensionSettingsMutation.mutateAsync({ settings });
+        changeExtensionSetting: async (setting) => {
+          await changeExtensionSettingsMutation.mutateAsync({
+            settings: { [setting.name]: setting.value },
+          });
         },
       }}
     >

@@ -1,3 +1,5 @@
+import { ExternalLink } from '@idriss-xyz/ui/external-link';
+
 import {
   classes,
   Chip,
@@ -42,14 +44,12 @@ export const Proposal = ({
     >
       <PulsingLoadingBar isLoading={isLoading} />
       <header className="flex items-center justify-between space-x-3">
-        <a
+        <ExternalLink
           href={getProposerUrl(data.proposer)}
-          target="_blank"
-          rel="noopener noreferrer"
           className="line-clamp-[1] text-xs text-[#374151]"
         >
           By {formatProposalAddress(data.proposer)}
-        </a>
+        </ExternalLink>
         <Chip className="rounded-sm bg-[#BBF7D0] px-1 py-0.5 font-semibold uppercase text-[#16A34A]">
           {data.status}
         </Chip>
@@ -67,13 +67,11 @@ export const Proposal = ({
           <div className="flex items-center text-xs text-[#374151]">
             {getEndsInLabel(getDifferenceInDays(proposalEndDateInMs))}
           </div>
-          <a
+          <ExternalLink
             onClick={() => {
               void eventsLogger.track(EVENT.AGORA_VOTE_CLICKED);
             }}
             href={getProposalUrl(data.id)}
-            rel="noopener noreferrer"
-            target="_blank"
           >
             <Chip
               className="mr-2 inline-flex select-none items-center justify-center rounded-md border px-4 py-1 font-medium transition-colors hover:bg-[#F1F5F9] hover:text-[#0F172A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
@@ -82,7 +80,7 @@ export const Proposal = ({
             >
               Vote
             </Chip>
-          </a>
+          </ExternalLink>
         </div>
         <PaginationComponent pagination={pagination} />
       </footer>

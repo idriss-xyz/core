@@ -1,4 +1,8 @@
 import {
+  ANNOUNCEMENT_LINK,
+  EXTERNAL_ANNOUNCEMENT_LINK,
+} from '@idriss-xyz/constants';
+import {
   AavegotchiLogo,
   AcrossLogo,
   AgoraFullLogo,
@@ -21,48 +25,56 @@ const logoClassName =
 
 const collaborationLinks = [
   {
+    label: 'Go to tweet about Parallel collaboration',
     logo: <ParallelLogo className={logoClassName} />,
-    link: 'https://x.com/IDriss_xyz/status/1729258820441170160',
+    link: ANNOUNCEMENT_LINK.PARALLEL,
   },
   {
+    label: 'Go to tweet about Across collaboration',
     logo: <AcrossLogo className={logoClassName} />,
-    link: 'https://x.com/AcrossProtocol/status/1782919859439092151',
+    link: EXTERNAL_ANNOUNCEMENT_LINK.ACROSS,
   },
   {
+    label: 'Go to tweet about Polymarket collaboration',
     logo: <PolymarketLogo className={logoClassName} />,
-    link: 'https://x.com/Polymarket/status/1778470611083313375',
+    link: EXTERNAL_ANNOUNCEMENT_LINK.POLYMARKET,
   },
   {
+    label: 'Go to tweet about Gitcoin collaboration',
     logo: <GitcoinLogo className={logoClassName} />,
-    link: 'https://x.com/gitcoin/status/1786121984105144501',
+    link: EXTERNAL_ANNOUNCEMENT_LINK.GITCOIN,
   },
   {
+    label: 'Go to tweet about Aavegotchi collaboration',
     logo: (
       <AavegotchiLogo
         className={classes(logoClassName, 'h-[17px] lg:h-[32px]')}
       />
     ),
-    link: 'https://x.com/IDriss_xyz/status/1750851248121930167',
+    link: ANNOUNCEMENT_LINK.AAVEGOTCHI,
   },
   {
+    label: 'Go to tweet about Tally collaboration',
     logo: <TallyLogo className={logoClassName} />,
-    link: 'https://x.com/IDriss_xyz/status/1807798872930202007',
+    link: ANNOUNCEMENT_LINK.TALLY,
   },
   {
+    label: 'Go to tweet about Agora collaboration',
     logo: (
       <AgoraFullLogo
         className={classes(logoClassName, 'h-[17px] lg:h-[32px]')}
       />
     ),
-    link: 'https://x.com/AgoraGovernance/status/1820834836770329005',
+    link: EXTERNAL_ANNOUNCEMENT_LINK.AGORA,
   },
   {
+    label: 'Go to tweet about Snapshot collaboration',
     logo: (
       <SnapshotFullLogo
         className={classes(logoClassName, 'h-[17px] lg:h-[32px]')}
       />
     ),
-    link: 'https://x.com/IDriss_xyz/status/1761049574691819798',
+    link: ANNOUNCEMENT_LINK.SNAPSHOT,
   },
 ];
 
@@ -86,10 +98,11 @@ export const CollaborationsShowcase = ({ className }: Properties) => {
               key={collaborationLink.link}
               intent="tertiary"
               size="large"
-              asLink
-              target="_blank"
               href={collaborationLink.link}
               tabIndex={-1}
+              aria-label={collaborationLink.label}
+              isExternal
+              asLink
             >
               {collaborationLink.logo}
             </Button>

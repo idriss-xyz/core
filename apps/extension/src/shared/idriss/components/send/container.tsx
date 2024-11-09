@@ -100,7 +100,7 @@ export const Container = memo(
             }}
           >
             <Closable
-              className="w-full rounded-md bg-white p-4 text-[#111827] shadow-2xl"
+              className="shadow-2xl w-full rounded-md bg-white p-4 text-[#111827]"
               closeButtonClassName="hover:enabled:bg-black/20 active:enabled:bg-black/40"
               closeButtonIconClassName="text-[#000]"
               onClickInside={disableCloseOnHoverAway}

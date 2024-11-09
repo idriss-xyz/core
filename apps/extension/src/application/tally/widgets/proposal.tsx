@@ -1,3 +1,5 @@
+import { ExternalLink } from '@idriss-xyz/ui/external-link';
+
 import {
   classes,
   Chip,
@@ -48,13 +50,9 @@ export const Proposal = ({
       <header className="flex items-center justify-between space-x-3">
         <p className="line-clamp-[1] break-all text-xs leading-5 text-[#667085] hover:underline">
           By{' '}
-          <a
-            href={getProposalAuthorUrl(proposalDetails)}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <ExternalLink href={getProposalAuthorUrl(proposalDetails)}>
             {getProposalAuthorLabel(proposalDetails)}
-          </a>
+          </ExternalLink>
         </p>
         <StatusChip status={proposalDetails.status} />
       </header>
@@ -71,7 +69,7 @@ export const Proposal = ({
           <div className="flex min-w-[84px] items-center text-xs leading-5 text-[#667085]">
             {getEndsInLabel(getDifferenceInDays(proposalEndDateInMs))}
           </div>
-          <a
+          <ExternalLink
             onClick={() => {
               void eventsLogger.track(EVENT.TALLY_VOTE_CLICKED);
             }}
@@ -79,8 +77,6 @@ export const Proposal = ({
               proposalDetails.organization.slug,
               proposalDetails.id,
             )}
-            rel="noopener noreferrer"
-            target="_blank"
           >
             <Chip
               className="mr-2 inline-flex select-none items-center justify-center rounded-md border border-[#344054] bg-[#344054] px-4 py-1 font-semibold text-white transition-all duration-200 ease-in-out hover:bg-[#101828] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
@@ -89,7 +85,7 @@ export const Proposal = ({
             >
               Vote
             </Chip>
-          </a>
+          </ExternalLink>
         </div>
         <PaginationComponent pagination={pagination} />
       </footer>

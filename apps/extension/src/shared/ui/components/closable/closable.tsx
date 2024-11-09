@@ -4,7 +4,7 @@ import { classes } from '../../utils';
 import { IconButton } from '../icon-button';
 import { Backdrop } from '../backdrop';
 
-interface Properties {
+type Properties = {
   children: ReactNode;
   className?: string;
   closeButtonClassName?: string;
@@ -13,7 +13,7 @@ interface Properties {
   closeOnHoverAway?: boolean;
   onClose?: () => void;
   onClickInside?: () => void;
-}
+};
 
 export const Closable = ({
   children,

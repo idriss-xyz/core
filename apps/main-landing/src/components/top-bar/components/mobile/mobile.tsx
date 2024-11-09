@@ -88,8 +88,7 @@ export const Mobile = () => {
                         size="large"
                         onClick={close}
                         href={DOCUMENTATION_LINK}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        isExternal
                         asLink
                       >
                         DOCS

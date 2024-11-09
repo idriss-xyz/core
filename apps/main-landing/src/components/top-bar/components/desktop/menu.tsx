@@ -48,8 +48,7 @@ export const Menu = ({ className }: Properties) => {
                 intent="tertiary"
                 size="large"
                 href={DOCUMENTATION_LINK}
-                target="_blank"
-                rel="noreferrer noopener"
+                isExternal
                 asLink
               >
                 DOCS

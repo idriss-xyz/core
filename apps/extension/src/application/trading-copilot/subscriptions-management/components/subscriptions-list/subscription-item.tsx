@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { ExternalLink } from '@idriss-xyz/ui/external-link';
 
 import { useCommandQuery } from 'shared/messaging';
 import { Icon, IconButton, LazyImage, getGithubUserLink } from 'shared/ui';
@@ -72,30 +73,22 @@ export const SubscriptionItem = ({ subscription, onRemove }: Properties) => {
           {subscription.ensName}
 
           {twitterQuery.data && (
-            <a
-              href={getTwitterUserLink(twitterQuery.data)}
-              target="_blank"
-              rel="noreferrer noopener"
-            >
+            <ExternalLink href={getTwitterUserLink(twitterQuery.data)}>
               <Icon
                 size={16}
                 name="TwitterLogoIcon"
                 className="text-[#1D9BF0] [&>path]:fill-rule-non-zero"
               />
-            </a>
+            </ExternalLink>
           )}
           {githubQuery.data && (
-            <a
-              href={getGithubUserLink(githubQuery.data)}
-              target="_blank"
-              rel="noreferrer noopener"
-            >
+            <ExternalLink href={getGithubUserLink(githubQuery.data)}>
               <Icon
                 size={16}
                 name="GitHubLogoIcon"
                 className="text-[#1D9BF0]"
               />
-            </a>
+            </ExternalLink>
           )}
           {discordQuery.data && (
             <span title={discordQuery.data}>
@@ -107,17 +100,13 @@ export const SubscriptionItem = ({ subscription, onRemove }: Properties) => {
             </span>
           )}
           {emailQuery.data && (
-            <a
-              href={`mailto:${emailQuery.data}`}
-              target="_blank"
-              rel="noreferrer noopener"
-            >
+            <ExternalLink href={`mailto:${emailQuery.data}`}>
               <Icon
                 size={16}
                 name="EnvelopeClosedIcon"
                 className="text-[#1D9BF0]"
               />
-            </a>
+            </ExternalLink>
           )}
         </p>
       </div>

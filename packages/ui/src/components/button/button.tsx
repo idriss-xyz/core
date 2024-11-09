@@ -7,6 +7,7 @@ import {
 
 import { classes } from '../../utils';
 import { Icon, IconName } from '../icon';
+import { ExternalLink } from '../external-link';
 
 import { button, ButtonVariants } from './variants';
 import { Glow } from './glow';
@@ -16,6 +17,7 @@ type ButtonOrAnchorProperties =
   | (ButtonHTMLAttributes<HTMLButtonElement> & { asLink?: false })
   | (AnchorHTMLAttributes<HTMLAnchorElement> & {
       asLink: true;
+      isExternal?: boolean;
       href?: string;
       target?: string;
       rel?: string;
@@ -36,7 +38,6 @@ export const Button = forwardRef(
       size,
       prefixIconName,
       suffixIconName,
-      asLink = false,
       ...properties
     }: Properties,
     reference,
@@ -72,21 +73,26 @@ export const Button = forwardRef(
       </>
     );
 
-    if (asLink) {
+    if (properties.asLink) {
+      const Component = properties.isExternal ? ExternalLink : 'a';
+      const { isExternal, asLink, ...htmlValidProperties } = properties;
+
       return (
-        <a
-          {...(properties as AnchorHTMLAttributes<HTMLAnchorElement>)}
+        <Component
+          {...(htmlValidProperties as AnchorHTMLAttributes<HTMLAnchorElement>)}
           ref={reference as ForwardedRef<HTMLAnchorElement>}
           className={variantClassName}
         >
           {content}
-        </a>
+        </Component>
       );
     }
 
+    const { asLink, ...htmlValidProperties } = properties;
+
     return (
       <button
-        {...(properties as ButtonHTMLAttributes<HTMLButtonElement>)}
+        {...(htmlValidProperties as ButtonHTMLAttributes<HTMLButtonElement>)}
         ref={reference as ForwardedRef<HTMLButtonElement>}
         className={variantClassName}
       >

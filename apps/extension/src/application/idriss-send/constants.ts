@@ -1,7 +1,4 @@
 import { CHAIN } from 'shared/web3';
-import { IDRISS_ICON, IDRISS_RED_ICON } from 'shared/idriss';
-
-import { IconType } from './schema';
 
 export const DEFAULT_ALLOWED_CHAINS_IDS = [
   CHAIN.BASE.id,
@@ -693,11 +690,6 @@ export const CHAIN_TO_IDRISS_TIPPING_ADDRESS = {
   [CHAIN.SCROLL.id]: '0x324ad1738b9308d5af5e81edd6389bfa082a8968',
   [CHAIN.ALEPH.id]: '0xcA6742d2d6B9dBFFD841DF25C15cFf45FBbB98f4',
 } as const;
-
-export const ICON_TYPE_TO_SRC: Record<IconType, string> = {
-  redBadge: IDRISS_RED_ICON,
-  default: IDRISS_ICON,
-};
 
 export const PUBLIC_ETH_TAG_NAME = 'Public ETH';
 

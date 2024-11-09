@@ -1,3 +1,5 @@
+import { ExternalLink } from '@idriss-xyz/ui/external-link';
+
 import {
   Chip,
   Pagination,
@@ -37,14 +39,12 @@ export const Proposal = ({
     >
       <PulsingLoadingBar isLoading={isLoading} />
       <header className="flex items-center justify-between space-x-3">
-        <a
+        <ExternalLink
           href={getUserUrl(data.author.address)}
           className="text-[#aaa]"
-          target="_blank"
-          rel="noopener noreferrer"
         >
           By {getProposalAuthor(data)}
-        </a>
+        </ExternalLink>
         <Chip>Active</Chip>
       </header>
       <main className="my-2">
@@ -60,18 +60,16 @@ export const Proposal = ({
           <div className="text-[#aaa]">
             {getEndsInLabel(getDifferenceInDays(data.end * 1000))}
           </div>
-          <a
+          <ExternalLink
             onClick={() => {
               void eventsLogger.track(EVENT.SNAPSHOT_VOTE_CLICKED);
             }}
             href={getProposalUrl(data.space.id, data.id)}
-            rel="noopener noreferrer"
-            target="_blank"
           >
             <Chip className="border py-1" variant="info" width="long">
               Vote
             </Chip>
-          </a>
+          </ExternalLink>
         </div>
         <PaginationComponent
           pagination={pagination}

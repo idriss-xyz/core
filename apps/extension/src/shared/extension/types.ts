@@ -1,30 +1,18 @@
 import { Hex } from 'shared/web3';
 
-export type ExtensionSettings = Record<ExtensionSettingsStorageKey, boolean>;
+export type ExtensionSettings = Record<ExtensionSettingName, boolean>;
 
-export type ExtensionTradingCopilotSettingName =
-  | 'trading-copilot-latest-transactions-enabled'
-  | 'trading-copilot-notifications-enabled';
-
-export type ExtensionAddressBookSettingName =
+export type ExtensionSettingName =
+  | 'entire-extension-enabled'
   | 'idriss-send-enabled'
-  | 'wallet-lookup-enabled';
-
-export type ExtensionGovernanceSettingName =
+  | 'wallet-lookup-enabled'
   | 'snapshot-enabled'
   | 'tally-enabled'
-  | 'agora-enabled';
-
-export type ExtensionIntegrationSettingName =
+  | 'agora-enabled'
   | 'polymarket-enabled'
-  | 'gitcoin-enabled';
-
-export type ExtensionSettingsStorageKey =
-  | 'entire-extension-enabled'
-  | ExtensionAddressBookSettingName
-  | ExtensionGovernanceSettingName
-  | ExtensionIntegrationSettingName
-  | ExtensionTradingCopilotSettingName;
+  | 'gitcoin-enabled'
+  | 'trading-copilot-latest-transactions-enabled'
+  | 'trading-copilot-notifications-enabled';
 
 export interface StoredWallet {
   account: Hex;

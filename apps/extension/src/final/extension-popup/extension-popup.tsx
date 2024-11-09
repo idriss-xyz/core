@@ -1,11 +1,20 @@
 import { Route, Routes } from 'react-router';
 
-import { Closable, ScrollArea } from 'shared/ui';
-import { EXTENSION_POPUP_ROUTE, useExtensionPopup } from 'shared/extension';
+import { Closable } from 'shared/ui';
+import { POPUP_ROUTE, useExtensionPopup } from 'shared/extension';
 
-import { Footer, TopBar } from './components';
-import { HomeView, MainSettingsView, CustomizationSettingsView } from './views';
-import { TradingCopilotView } from './views/trading-copilot';
+import {
+  TopBar,
+  Footer,
+  PopupContentLayout,
+  SettingsLayout,
+} from './components';
+import {
+  GovernanceSettings,
+  MainSettings,
+  OtherSettings,
+  Products,
+} from './views';
 
 export const ExtensionPopup = () => {
   const extensionPopup = useExtensionPopup();
@@ -16,31 +25,31 @@ export const ExtensionPopup = () => {
   return (
     <Closable
       closeButtonClassName="hidden"
-      closeOnClickAway
       onClose={extensionPopup.hide}
-      // TODO: z-popup
-      className="fixed right-2 top-2 z-[999999] flex h-[512px] w-[470px] flex-col overflow-hidden rounded-md bg-white p-0 shadow-lg"
+      className="fixed right-2 top-2 z-extensionPopup flex w-[460px] flex-col overflow-hidden p-0 shadow-lg"
+      closeOnClickAway
     >
-      <TopBar />
-      <ScrollArea className="grow overflow-y-auto bg-[#F3F4F6]">
-        <Routes>
-          <Route path={EXTENSION_POPUP_ROUTE.HOME} element={<HomeView />} />
-          <Route
-            path={EXTENSION_POPUP_ROUTE.SETTINGS_HOME}
-            element={<MainSettingsView />}
-          />
-          <Route
-            path={EXTENSION_POPUP_ROUTE.SETTINGS_CUSTOMIZATION}
-            element={<CustomizationSettingsView />}
-          />
-          <Route
-            path={EXTENSION_POPUP_ROUTE.TRADING_COPILOT}
-            element={<TradingCopilotView />}
-          />
-        </Routes>
-      </ScrollArea>
+      <TopBar className="rounded-t-xl" />
 
-      <Footer />
+      <Routes>
+        <Route element={<PopupContentLayout />}>
+          <Route path={POPUP_ROUTE.PRODUCTS} element={<Products />} />
+
+          <Route element={<SettingsLayout />}>
+            <Route path={POPUP_ROUTE.SETTINGS} element={<MainSettings />} />
+            <Route
+              path={POPUP_ROUTE.GOVERNANCE_SETTINGS}
+              element={<GovernanceSettings />}
+            />
+            <Route
+              path={POPUP_ROUTE.OTHER_SETTINGS}
+              element={<OtherSettings />}
+            />
+          </Route>
+        </Route>
+      </Routes>
+
+      <Footer className="z-1 rounded-b-xl" />
     </Closable>
   );
 };

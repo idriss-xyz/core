@@ -1,3 +1,2 @@
-export { CustomizationSettingsView } from './customization-settings';
-export { HomeView } from './home';
-export { MainSettingsView } from './main-settings';
+export { Products } from './products';
+export { MainSettings, GovernanceSettings, OtherSettings } from './settings';

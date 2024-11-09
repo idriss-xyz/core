@@ -1,22 +1,47 @@
-import { Icon } from 'shared/ui';
+import { IconName } from '@idriss-xyz/ui/icon';
+import { SOCIAL_LINK } from '@idriss-xyz/constants';
+import { IconButton } from '@idriss-xyz/ui/icon-button';
+import { classes } from '@idriss-xyz/ui/utils';
 
-import { footerLinks } from '../constants';
+const SOCIALS: { iconName: IconName; link: string }[] = [
+  {
+    iconName: 'Discord',
+    link: SOCIAL_LINK.DISCORD,
+  },
+  {
+    iconName: 'TwitterX',
+    link: SOCIAL_LINK.X,
+  },
+  {
+    iconName: 'Farcaster',
+    link: SOCIAL_LINK.WARPCAST,
+  },
+];
 
-export const Footer = () => {
+type Properties = {
+  className?: string;
+};
+
+export const Footer = ({ className }: Properties) => {
   return (
-    <footer className="grid grid-cols-3 divide-x divide-[#111827]/5 bg-white drop-shadow-2xl">
-      {footerLinks.map((link) => {
+    <footer
+      className={classes(
+        'flex justify-between border-t border-t-neutral-300 bg-white p-3',
+        className,
+      )}
+    >
+      {SOCIALS.map((social, index) => {
         return (
-          <a
-            key={link.iconName}
-            href={link.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-x-2 p-3 font-medium text-[#111827] hover:bg-[#f9fafb]"
-          >
-            <Icon name={link.iconName} className="text-[#9fa2ae]" />
-            {link.text}
-          </a>
+          <IconButton
+            className="w-full"
+            iconName={social.iconName}
+            intent="tertiary"
+            size="small"
+            key={index}
+            href={social.link}
+            isExternal
+            asLink
+          />
         );
       })}
     </footer>

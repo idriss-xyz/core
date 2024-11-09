@@ -35,7 +35,10 @@
   },
   "action": {
     "default_icon": {
-      "16": "img/icon16.png"
+      "16": "img/icon16.png",
+      "48": "img/icon48.png",
+      "128": "img/icon128.png",
+      "148": "img/icon148.png"
     }
   },
   "web_accessible_resources": [
