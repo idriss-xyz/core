@@ -28,10 +28,6 @@ export const createWalletClient = (
   }).extend(publicActions);
 };
 
-export const hexToDecimal = (hex: Hex) => {
-  return Number.parseInt(hex);
-};
-
 export const toAddressWithValidChecksum = (address: Hex) => {
   return getAddress(address);
 };

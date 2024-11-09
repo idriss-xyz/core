@@ -1,5 +1,7 @@
 import NiceModal from '@ebay/nice-modal-react';
 import { ReactNode, StrictMode } from 'react';
+import { WithPortal } from '@idriss-xyz/ui/providers/with-portal';
+import { WalletContextProvider } from '@idriss-xyz/wallet-connect';
 
 import { SupercastScrapingContextProvider } from 'host/supercast';
 import { WarpcastScrapingContextProvider } from 'host/warpcast';
@@ -20,7 +22,7 @@ import {
   ExtensionPopupProvider,
   ExtensionSettingsProvider,
 } from 'shared/extension';
-import { WalletContextProvider } from 'shared/web3';
+import { WalletStorage } from 'shared/web3';
 
 type Properties = {
   children: ReactNode;
@@ -36,33 +38,38 @@ export const Providers = ({
       <WithObservabilityScope>
         <ErrorBoundary>
           <WithEventsLogger>
-            <PortalProvider>
-              <WithExtensionInfo>
-                <FontProvider>
-                  <TailwindProvider>
-                    <QueryProvider>
-                      <NiceModal.Provider>
-                        <WalletContextProvider
-                          disabledWalletsRdns={disabledWalletRdns}
-                        >
-                          <ExtensionPopupProvider>
-                            <ExtensionSettingsProvider>
-                              <TwitterScrapingContextProvider>
-                                <WarpcastScrapingContextProvider>
-                                  <SupercastScrapingContextProvider>
-                                    {children}
-                                  </SupercastScrapingContextProvider>
-                                </WarpcastScrapingContextProvider>
-                              </TwitterScrapingContextProvider>
-                            </ExtensionSettingsProvider>
-                          </ExtensionPopupProvider>
-                        </WalletContextProvider>
-                      </NiceModal.Provider>
-                    </QueryProvider>
-                  </TailwindProvider>
-                </FontProvider>
-              </WithExtensionInfo>
-            </PortalProvider>
+            <WithPortal>
+              <PortalProvider>
+                <WithExtensionInfo>
+                  <FontProvider>
+                    <TailwindProvider>
+                      <QueryProvider>
+                        <NiceModal.Provider>
+                          <WalletContextProvider
+                            disabledWalletsRdns={disabledWalletRdns}
+                            onGetWallet={WalletStorage.get}
+                            onClearWallet={WalletStorage.clear}
+                            onSaveWallet={WalletStorage.save}
+                          >
+                            <ExtensionPopupProvider>
+                              <ExtensionSettingsProvider>
+                                <TwitterScrapingContextProvider>
+                                  <WarpcastScrapingContextProvider>
+                                    <SupercastScrapingContextProvider>
+                                      {children}
+                                    </SupercastScrapingContextProvider>
+                                  </WarpcastScrapingContextProvider>
+                                </TwitterScrapingContextProvider>
+                              </ExtensionSettingsProvider>
+                            </ExtensionPopupProvider>
+                          </WalletContextProvider>
+                        </NiceModal.Provider>
+                      </QueryProvider>
+                    </TailwindProvider>
+                  </FontProvider>
+                </WithExtensionInfo>
+              </PortalProvider>
+            </WithPortal>
           </WithEventsLogger>
         </ErrorBoundary>
       </WithObservabilityScope>

@@ -1,0 +1,36 @@
+{
+  "name": "@idriss-xyz/wallet-connect",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "format": "prettier --check --config ../../prettier.config.mjs --ignore-path .prettierignore .",
+    "format:fix": "prettier --write --config ../../prettier.config.mjs --ignore-path .prettierignore .",
+    "lint": "eslint src --max-warnings=0",
+    "lint:fix": "eslint src --max-warnings=0 --fix",
+    "type-check": "tsc --noEmit",
+    "circular-dependencies": "depcruise --config .dependency-cruiser.cjs src",
+    "unused-exports": "./node_modules/.bin/ts-unused-exports ./tsconfig.json --excludePathsFromReport=./src/index.ts"
+  },
+  "devDependencies": {
+    "@idriss-xyz/eslint-config": "workspace:*",
+    "@idriss-xyz/tailwind-config": "workspace:*",
+    "@idriss-xyz/typescript-config": "workspace:*",
+    "@swc/helpers": "^0.5.13",
+    "@types/react": "18.3.1",
+    "@types/react-dom": "^18.3.1",
+    "dependency-cruiser": "^16.4.2",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "ts-unused-exports": "^10.1.0",
+    "typescript": "^5.6.2"
+  },
+  "dependencies": {
+    "@ebay/nice-modal-react": "^1.2.13",
+    "@idriss-xyz/ui": "workspace:*",
+    "mipd": "^0.0.7",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "viem": "^2.21.32"
+  }
+}

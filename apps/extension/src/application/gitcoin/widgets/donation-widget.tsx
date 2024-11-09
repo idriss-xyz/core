@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import { useWallet } from '@idriss-xyz/wallet-connect';
 
 import { IdrissSend } from 'shared/idriss';
 import {
@@ -7,7 +8,6 @@ import {
   TOKEN,
   ethToDollars,
   roundToSignificantFigures,
-  useWallet,
   weiToEth,
 } from 'shared/web3';
 import { ErrorMessage, GasIcon, Spinner } from 'shared/ui';

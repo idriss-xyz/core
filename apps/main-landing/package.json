@@ -14,9 +14,12 @@
     "unused-exports": "./node_modules/.bin/ts-unused-exports ./tsconfig.unused-exports.json"
   },
   "dependencies": {
+    "@ebay/nice-modal-react": "^1.2.13",
     "@idriss-xyz/constants": "workspace:*",
     "@idriss-xyz/ui": "workspace:*",
+    "@idriss-xyz/wallet-connect": "workspace:*",
     "@tanstack/react-query": "^5.59.15",
+    "mipd": "^0.0.7",
     "next": "15.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

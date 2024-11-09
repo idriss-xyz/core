@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useWallet } from '@idriss-xyz/wallet-connect';
 
-import { createWalletClient, useWallet, Wallet } from 'shared/web3';
+import { createWalletClient, Wallet } from 'shared/web3';
 import { useCommandMutation } from 'shared/messaging';
 import { useEventsLogger } from 'shared/observability';
 

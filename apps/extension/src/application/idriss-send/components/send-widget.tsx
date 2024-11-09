@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from 'react';
+import { useWallet } from '@idriss-xyz/wallet-connect';
 
 import { IdrissSend } from 'shared/idriss';
 import {
@@ -7,7 +8,6 @@ import {
   applyDecimalsToNumericString,
   isNativeTokenAddress,
   roundToSignificantFigures,
-  useWallet,
   toAddressWithValidChecksum,
 } from 'shared/web3';
 import { ErrorMessage } from 'shared/ui';

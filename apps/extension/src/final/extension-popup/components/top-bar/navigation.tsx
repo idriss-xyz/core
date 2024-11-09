@@ -3,8 +3,8 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { ExternalLink } from '@idriss-xyz/ui/external-link';
 import { useCallback } from 'react';
 import { NavigationMenu } from '@idriss-xyz/ui/navigation-menu';
+import { useWallet } from '@idriss-xyz/wallet-connect';
 
-import { useWallet } from 'shared/web3';
 import { POPUP_ROUTE, useExtensionPopup } from 'shared/extension';
 
 export const Navigation = () => {

@@ -3,7 +3,7 @@ export const MAIN_LANDING_LINK = 'https://www.idriss.xyz';
 export const SOCIAL_LINK = {
   X: 'https://x.com/idriss_xyz',
   WARPCAST: 'https://warpcast.com/idriss',
-  DISCORD: 'https://www.idriss.xyz/discord',
+  DISCORD: 'https://discord.com/invite/RJhJKamjw5',
   INSTAGRAM: 'https://www.instagram.com/idriss_xyz_',
   TIKTOK: 'https://www.tiktok.com/@idriss_xyz_',
   YOUTUBE: 'https://www.youtube.com/@IDriss_xyz',

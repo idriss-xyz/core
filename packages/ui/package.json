@@ -9,12 +9,15 @@
     "./icon": "./src/components/icon/index.ts",
     "./icon-button": "./src/components/icon-button/index.ts",
     "./link": "./src/components/link/index.ts",
+    "./modal": "./src/components/modal/index.ts",
     "./navigation-menu": "./src/components/navigation-menu/index.ts",
     "./visually-hidden": "./src/components/visually-hidden/index.ts",
     "./branding-assets": "./src/components/branding-assets/index.ts",
     "./marquee": "./src/components/marquee/index.ts",
     "./gradient-border": "./src/components/gradient-border/index.ts",
     "./switch": "./src/components/switch/index.ts",
+    "./wallet-connect-modal": "./src/components/wallet-connect-modal/index.ts",
+    "./providers/with-portal": "./src/providers/with-portal.tsx",
     "./utils": "./src/utils/index.ts"
   },
   "scripts": {
@@ -24,7 +27,7 @@
     "lint:fix": "eslint src --max-warnings=0 --fix",
     "type-check": "tsc --noEmit",
     "circular-dependencies": "depcruise --config .dependency-cruiser.cjs src",
-    "unused-exports": "./node_modules/.bin/ts-unused-exports ./tsconfig.json --excludePathsFromReport=\"./src/components/.*/index.ts;./src/hooks/index.ts;./src/utils/index.ts\""
+    "unused-exports": "./node_modules/.bin/ts-unused-exports ./tsconfig.json --excludePathsFromReport=\"./src/components/.*/index.ts;./src/hooks/index.ts;./src/providers/with-portal.ts;./src/utils/index.ts\""
   },
   "devDependencies": {
     "@idriss-xyz/eslint-config": "workspace:*",
@@ -38,15 +41,18 @@
     "typescript": "^5.6.2"
   },
   "dependencies": {
+    "@idriss-xyz/constants": "workspace:*",
     "@idriss-xyz/utils": "workspace:*",
     "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-dropdown-menu": "^2.1.2",
     "@radix-ui/react-navigation-menu": "^1.2.1",
+    "@radix-ui/react-portal": "^1.1.2",
     "@radix-ui/react-switch": "^1.1.1",
     "@radix-ui/react-visually-hidden": "^1.1.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.453.0",
+    "mipd": "^0.0.7",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "tailwind-merge": "^2.5.2"

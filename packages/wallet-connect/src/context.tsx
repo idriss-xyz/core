@@ -1,45 +1,53 @@
+'use client';
 import {
-  ReactNode,
   createContext,
+  ReactNode,
   useCallback,
   useEffect,
   useMemo,
   useState,
   useSyncExternalStore,
 } from 'react';
-import { useModal } from '@ebay/nice-modal-react';
 import { createStore } from 'mipd';
+import { useModal } from '@ebay/nice-modal-react';
+import { createContextHook } from '@idriss-xyz/ui/utils';
+import { getAddress, hexToNumber } from 'viem';
 
-import { createContextHook } from 'shared/ui';
+import { Hex, Wallet } from './types';
+import { WalletConnectModal } from './modal';
 
-import { Hex, Wallet } from '../types';
-import { hexToDecimal, toAddressWithValidChecksum } from '../utils';
-import { WalletConnectModal } from '../components';
-import { WalletStorage } from '../storage';
-
-interface WalletContextValue {
+type WalletContextValue = {
   wallet?: Wallet;
   isConnectionModalOpened: boolean;
   openConnectionModal: () => Promise<Wallet>;
   removeWalletInfo: () => void;
-}
+};
+
+type StoredWallet = {
+  account: Hex;
+  providerRdns: string;
+};
 
 const WalletContext = createContext<WalletContextValue | undefined>(undefined);
 
-interface Properties {
-  children: ReactNode;
-  disabledWalletsRdns: string[];
-}
+const SERVER_SIDE_SNAPSHOT: [] = [];
+const getProvidersServerSnapshot = () => {
+  return SERVER_SIDE_SNAPSHOT;
+};
 
-export const WalletContextProvider = ({
-  children,
-  disabledWalletsRdns,
-}: Properties) => {
+export const WalletContextProvider = (properties: {
+  children: ReactNode;
+  disabledWalletsRdns?: string[];
+  onClearWallet?: () => void;
+  onGetWallet?: () => Promise<StoredWallet | undefined>;
+  onSaveWallet?: (wallet: StoredWallet) => void;
+}) => {
   const walletConnectModal = useModal(WalletConnectModal, {
-    disabledWalletsRdns,
+    disabledWalletsRdns: properties.disabledWalletsRdns ?? [],
   });
 
   const [wallet, setWallet] = useState<Wallet>();
+
   const walletProvidersStore = useMemo(() => {
     return createStore();
   }, []);
@@ -47,12 +55,13 @@ export const WalletContextProvider = ({
   const availableWalletProviders = useSyncExternalStore(
     walletProvidersStore.subscribe,
     walletProvidersStore.getProviders,
+    getProvidersServerSnapshot,
   );
 
   const removeWalletInfo = useCallback(() => {
     setWallet(undefined);
-    WalletStorage.clear();
-  }, []);
+    properties.onClearWallet?.();
+  }, [properties]);
 
   useEffect(() => {
     const callback = async () => {
@@ -60,7 +69,7 @@ export const WalletContextProvider = ({
         return;
       }
 
-      const storedWallet = await WalletStorage.get();
+      const storedWallet = await properties.onGetWallet?.();
       if (!storedWallet) {
         return;
       }
@@ -84,8 +93,8 @@ export const WalletContextProvider = ({
 
         if (
           !accounts
-            .map((account) => {
-              return toAddressWithValidChecksum(account);
+            .map((account: Hex) => {
+              return getAddress(account);
             })
             .includes(storedWallet.account)
         ) {
@@ -104,14 +113,19 @@ export const WalletContextProvider = ({
           providerRdns: foundProvider.info.rdns,
           provider: connectedProvider,
           account: storedWallet.account,
-          chainId: hexToDecimal(chainId),
+          chainId: hexToNumber(chainId),
         });
       };
 
       void connectToStoredWallet();
     };
     void callback();
-  }, [availableWalletProviders, availableWalletProviders.length, wallet]);
+  }, [
+    availableWalletProviders,
+    availableWalletProviders.length,
+    properties,
+    wallet,
+  ]);
 
   useEffect(() => {
     wallet?.provider.on('accountsChanged', removeWalletInfo);
@@ -128,7 +142,7 @@ export const WalletContextProvider = ({
           return;
         }
 
-        return { ...previous, chainId: hexToDecimal(chainId) };
+        return { ...previous, chainId: hexToNumber(chainId) };
       });
     };
     wallet?.provider.on('chainChanged', onChainChanged);
@@ -141,15 +155,19 @@ export const WalletContextProvider = ({
   const openConnectionModal = useCallback(async () => {
     try {
       const resolvedWallet = (await walletConnectModal.show({
-        disabledWalletsRdns,
+        disabledWalletsRdns: properties.disabledWalletsRdns ?? [],
       })) as Wallet;
       setWallet(resolvedWallet);
+      properties.onSaveWallet?.({
+        account: resolvedWallet.account,
+        providerRdns: resolvedWallet.providerRdns,
+      });
       return resolvedWallet;
     } catch (error) {
       setWallet(undefined);
       throw error;
     }
-  }, [disabledWalletsRdns, walletConnectModal]);
+  }, [properties, walletConnectModal]);
 
   const contextValue: WalletContextValue = useMemo(() => {
     return {
@@ -167,7 +185,7 @@ export const WalletContextProvider = ({
 
   return (
     <WalletContext.Provider value={contextValue}>
-      {children}
+      {properties.children}
     </WalletContext.Provider>
   );
 };

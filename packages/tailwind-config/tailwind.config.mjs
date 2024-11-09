@@ -8,6 +8,7 @@ const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 export default {
   content: [
     path.resolve(__dirname, '../ui/src/**/*.{ts,tsx}'),
+    path.resolve(__dirname, '../wallet-connect/src/**/*.{ts,tsx}'),
     path.resolve(__dirname, '../../apps/extension/src/**/*.{ts,tsx}'),
     path.resolve(__dirname, '../../apps/main-landing/src/**/*.{ts,tsx}'),
   ],
@@ -117,6 +118,7 @@ export default {
         topBar: '10',
         dialog: '20',
         extensionPopup: '100000',
+        portal: '100001',
       },
       fontFamily: {
         sans: ['var(--font-aeonikpro)'],

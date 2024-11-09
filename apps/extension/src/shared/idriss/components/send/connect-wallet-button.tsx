@@ -1,7 +1,7 @@
+import { useWallet } from '@idriss-xyz/wallet-connect';
 import { useCallback } from 'react';
 
 import { Button } from 'shared/ui';
-import { useWallet } from 'shared/web3';
 
 interface Properties {
   onClick?: () => void;

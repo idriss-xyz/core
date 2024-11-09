@@ -1,6 +1,5 @@
 export { CHAIN, TOKEN, CHAIN_ID_TO_TOKENS, EMPTY_HEX } from './constants';
 export type { Hex, Wallet, ChainToken } from './types';
-export { useWallet, WalletContextProvider } from './context';
 export {
   resolveAddress,
   dollarToWei,
@@ -33,3 +32,4 @@ export { AGORA_LOGO } from './logos';
 export { SNAPSHOT_LOGO } from './logos';
 export { TALLY_LOGO } from './logos';
 export { TransactionRevertedError } from './errors';
+export { WalletStorage } from './storage';
