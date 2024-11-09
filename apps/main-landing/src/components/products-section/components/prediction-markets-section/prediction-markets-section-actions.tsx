@@ -66,7 +66,7 @@ export const PredictionMarketsSectionActions = () => {
               <input
                 type="email"
                 className={classes(
-                  'flex h-12 w-full flex-[1_0_0] items-center rounded-[12px] px-3 py-2 shadow-[0_0_0_4px_rgba(242,242,242,0.14)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 lg:w-[290px]',
+                  'flex h-12 w-full flex-[1_0_0] items-center rounded-[12px] px-3 py-2 shadow-[0_0_0_4px_rgba(242,242,242,0.14)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 lg:w-[290px]',
 
                   mutation.isError && 'border-red-500',
                   mutation.isSuccess && 'border-mint-500',

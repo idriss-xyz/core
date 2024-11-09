@@ -4,8 +4,7 @@ import { cva, VariantProps } from 'class-variance-authority';
 export const button = cva(
   [
     'group/button relative z-1 flex w-max items-center justify-center overflow-hidden rounded-xl',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2',
-    'disabled:bg-neutral-400 disabled:text-white',
+    'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500',
   ],
   {
     variants: {
@@ -14,21 +13,25 @@ export const button = cva(
           'bg-mint-400 text-neutralGreen-900 shadow-input',
           'hover:bg-mint-500',
           'active:bg-mint-600',
+          'disabled:bg-neutral-400 disabled:text-white',
         ],
         secondary: [
           'border border-mint-400 bg-white text-neutralGreen-900 shadow-input',
           'hover:border-mint-500 hover:bg-mint-200',
           'active:border-mint-600 active:bg-mint-300',
+          'disabled:border-none disabled:bg-neutral-400 disabled:text-white',
         ],
         tertiary: [
           'bg-transparent text-neutralGreen-900',
           'hover:text-mint-600',
           'active:text-mint-600',
+          'disabled:text-neutral-500',
         ],
         negative: [
           'bg-neutralGreen-900 text-white',
           'hover:bg-neutralGreen-700',
           'active:bg-neutralGreen-500',
+          'disabled:bg-neutral-400 disabled:text-white',
         ],
       },
       size: {
@@ -76,8 +79,12 @@ export const glow = cva(
           'bg-lime-400 opacity-70 blur-md',
           'group-hover/button:opacity-0',
           'group-active/button:opacity-0',
+          'group-disabled/button:hidden',
         ],
-        secondary: ['bg-mint-400 opacity-40 blur-md'],
+        secondary: [
+          'bg-mint-400 opacity-40 blur-md',
+          'group-disabled/button:hidden',
+        ],
         tertiary: ['hidden'],
         negative: ['hidden'],
         disabled: ['hidden'],

@@ -86,7 +86,7 @@ export const SuperpowersSection = () => {
             actions={
               <>
                 <Button
-                  intent="tertiary"
+                  intent="secondary"
                   disabled
                   size="large"
                   className="w-full"

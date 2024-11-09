@@ -19,7 +19,7 @@ export const ExtensionSectionActions = () => {
       <Button
         intent="tertiary"
         size="large"
-        className="text-[#E2E2E2]"
+        className="text-neutral-100"
         asLink
         href={DOCUMENTATION_LINK}
         isExternal

@@ -8,7 +8,7 @@ type Properties = {
 export const Switch = ({ value, onChange }: Properties) => {
   return (
     <RadixSwitch.Root
-      className="group p-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
+      className="group p-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
       checked={value}
       onCheckedChange={onChange}
     >

@@ -18,7 +18,7 @@ export const Tabs = ({ activeOptionKey, options, asLink }: Properties) => {
             href={`/#${option.key}`}
             key={option.key}
             className={classes(
-              'flex cursor-pointer items-start rounded-[100px] bg-[#17ff4a1a] px-[9.5px] py-2 text-midnightGreen-100 transition-colors duration-1000 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 lg:px-4',
+              'flex cursor-pointer items-start rounded-[100px] bg-[#17ff4a1a] px-[9.5px] py-2 text-midnightGreen-100 transition-colors duration-1000 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 lg:px-4',
               activeOptionKey === option.key &&
                 'bg-mint-400 text-neutralGreen-900',
             )}
