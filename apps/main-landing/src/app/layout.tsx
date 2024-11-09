@@ -51,12 +51,12 @@ export const metadata: Metadata = {
       url: '/favicon-16x16.png',
     },
   ],
-  metadataBase: process.env.WEBSITE_URL
-    ? new URL(process.env.WEBSITE_URL)
+  metadataBase: process.env.RAILWAY_PUBLIC_DOMAIN
+    ? new URL(process.env.RAILWAY_PUBLIC_DOMAIN)
     : undefined,
   openGraph: {
     type: 'website',
-    url: process.env.WEBSITE_URL,
+    url: process.env.RAILWAY_PUBLIC_DOMAIN,
     title: 'Superpowers for your internet',
     description:
       'Our apps bring the power of crypto and AI to your browsing experience, empower creators through digital ownership, and help find what’s true on the internet.',
