@@ -26,6 +26,10 @@ const aeonikPro = localFont({
   variable: '--font-aeonikpro',
 });
 
+const DEPLOYMENT_URL = process.env.RAILWAY_PUBLIC_DOMAIN
+  ? new URL(`https://${process.env.RAILWAY_PUBLIC_DOMAIN}`)
+  : undefined;
+
 // ts-unused-exports:disable-next-line
 export const metadata: Metadata = {
   title: 'Superpowers for your internet',
@@ -51,12 +55,10 @@ export const metadata: Metadata = {
       url: '/favicon-16x16.png',
     },
   ],
-  metadataBase: process.env.RAILWAY_PUBLIC_DOMAIN
-    ? new URL(process.env.RAILWAY_PUBLIC_DOMAIN)
-    : undefined,
+  metadataBase: DEPLOYMENT_URL,
   openGraph: {
     type: 'website',
-    url: process.env.RAILWAY_PUBLIC_DOMAIN,
+    url: DEPLOYMENT_URL,
     title: 'Superpowers for your internet',
     description:
       'Our apps bring the power of crypto and AI to your browsing experience, empower creators through digital ownership, and help find what’s true on the internet.',
