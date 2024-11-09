@@ -47,7 +47,7 @@ export const Footer = () => {
         <div>
           <Image
             className="mb-6 lg:mb-0"
-            src="/idriss-dark-logo.png"
+            src="/idriss-dark-logo.svg"
             height={24}
             width={98}
             alt=""

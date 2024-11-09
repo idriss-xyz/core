@@ -8,7 +8,7 @@ export const TopBar = () => {
     <div className="container absolute inset-x-0 top-0 z-topBar flex items-center justify-between py-1 lg:py-3">
       <Link href="/">
         <Image
-          src="/idriss-dark-logo.png"
+          src="/idriss-dark-logo.svg"
           height={24}
           width={98}
           alt=""
