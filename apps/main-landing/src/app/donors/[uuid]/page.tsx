@@ -22,7 +22,7 @@ const OpenWalletShowcase = () => {
 
   return (
     <Button intent="primary" size="large" onClick={openConnectionModal}>
-      Open wallet
+      Login
     </Button>
   );
 };
