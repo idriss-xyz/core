@@ -13,7 +13,8 @@
       "env": [
         "BASIC_AUTH_USER",
         "BASIC_AUTH_PASSWORD",
-        "ENVIRONMENT"
+        "ENVIRONMENT",
+        "WEBSITE_URL"
       ]
     },
     "@idriss-xyz/main-landing#start": {
@@ -23,7 +24,8 @@
       "env": [
         "BASIC_AUTH_USER",
         "BASIC_AUTH_PASSWORD",
-        "ENVIRONMENT"
+        "ENVIRONMENT",
+        "WEBSITE_URL"
       ]
     },
     "@idriss-xyz/main-landing#dev": {
@@ -32,7 +34,8 @@
       "env": [
         "BASIC_AUTH_USER",
         "BASIC_AUTH_PASSWORD",
-        "ENVIRONMENT"
+        "ENVIRONMENT",
+        "WEBSITE_URL"
       ]
     },
     "@idriss-xyz/extension#dev": {

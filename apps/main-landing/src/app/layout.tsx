@@ -32,38 +32,40 @@ export const metadata: Metadata = {
   description:
     'Our apps bring the power of crypto and AI to your browsing experience, empower creators through digital ownership, and help find what’s true on the internet.',
   // TODO: uncomment before final release
-  // icons: [
-  //   {
-  //     rel: 'apple-touch-icon',
-  //     sizes: '180x180',
-  //     url: '/apple-touch-icon.png',
-  //   },
-  //   {
-  //     rel: 'icon',
-  //     sizes: '32x32',
-  //     type: 'image/png',
-  //     url: '/favicon-32x32.png',
-  //   },
-  //   {
-  //     rel: 'icon',
-  //     sizes: '16x16',
-  //     type: 'image/png',
-  //     url: '/favicon-16x16.png',
-  //   },
-  // ],
-  // metadataBase: new URL(MAIN_LANDING_LINK),
-  // openGraph: {
-  //   type: 'website',
-  //   url: MAIN_LANDING_LINK,
-  //   title: 'Superpowers for your internet',
-  //   description:
-  //     'Our apps bring the power of crypto and AI to your browsing experience, empower creators through digital ownership, and help find what’s true on the internet.',
-  //   images: [
-  //     {
-  //       url: '/og.png',
-  //     },
-  //   ],
-  // },
+  icons: [
+    {
+      rel: 'apple-touch-icon',
+      sizes: '180x180',
+      url: '/apple-touch-icon.png',
+    },
+    {
+      rel: 'icon',
+      sizes: '32x32',
+      type: 'image/png',
+      url: '/favicon-32x32.png',
+    },
+    {
+      rel: 'icon',
+      sizes: '16x16',
+      type: 'image/png',
+      url: '/favicon-16x16.png',
+    },
+  ],
+  metadataBase: process.env.WEBSITE_URL
+    ? new URL(process.env.WEBSITE_URL)
+    : undefined,
+  openGraph: {
+    type: 'website',
+    url: process.env.WEBSITE_URL,
+    title: 'Superpowers for your internet',
+    description:
+      'Our apps bring the power of crypto and AI to your browsing experience, empower creators through digital ownership, and help find what’s true on the internet.',
+    images: [
+      {
+        url: '/og.png',
+      },
+    ],
+  },
 };
 
 // ts-unused-exports:disable-next-line
