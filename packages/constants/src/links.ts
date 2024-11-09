@@ -39,3 +39,7 @@ export const BRAND_KIT_LINK =
 
 export const PRIVACY_POLICY_LINK = 'https://www.idriss.xyz/pp';
 export const TERMS_OF_SERVICE_LINK = 'https://www.idriss.xyz/tos';
+export const CREATORS_LINK = 'https://idriss.xyz/creators';
+
+export const CHROME_EXTENSION_LINK =
+  'https://chromewebstore.google.com/detail/idriss/fghhpjoffbgecjikiipbkpdakfmkbmig';

@@ -1,6 +1,7 @@
 import { Button } from '@idriss-xyz/ui/button';
 import Image from 'next/image';
 import { SOCIAL_LINK } from '@idriss-xyz/constants';
+import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 
 import background from './background.png';
 
@@ -8,7 +9,14 @@ export const TokenSection = () => {
   return (
     <div className="relative z-1" id="dao">
       <div className="container flex justify-center py-10 lg:py-[169px]">
-        <div className="flex flex-col items-center rounded-[36px] border border-mint-300 bg-white/50 px-4 py-10 backdrop-blur-[90px] lg:w-max lg:px-16 lg:py-20">
+        <div className="relative flex flex-col items-center rounded-[36px] bg-white/50 px-4 py-10 backdrop-blur-[45px] lg:w-max lg:px-16 lg:py-20">
+          <GradientBorder
+            borderRadius={36}
+            borderWidth={1}
+            gradientDirection="toTop"
+            gradientStartColor="#5FEB3C"
+            gradientStopColor="rgba(145,206,154,0.50)"
+          />
           <video muted loop autoPlay className="size-[88px] lg:size-[200px]">
             <source type="video/webm" src="/coin.webm" />
           </video>

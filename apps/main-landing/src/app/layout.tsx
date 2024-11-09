@@ -1,8 +1,8 @@
 // import { MAIN_LANDING_LINK } from '@idriss-xyz/constants';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-
 import './globals.css';
+import { ReactNode } from 'react';
 
 const aeonikPro = localFont({
   src: [
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   return (
     <html lang="en">

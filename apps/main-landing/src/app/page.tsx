@@ -4,6 +4,7 @@ import {
   Footer,
   HeroSection,
   SuperpowersSection,
+  ProductsSection,
   TokenSection,
   TopBar,
 } from '@/components';
@@ -27,6 +28,7 @@ export default async function Home() {
       <main>
         <HeroSection />
         <SuperpowersSection />
+        <ProductsSection />
         <TokenSection />
       </main>
       <Footer />

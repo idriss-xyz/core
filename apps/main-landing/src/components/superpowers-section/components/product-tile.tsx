@@ -1,27 +1,25 @@
 import { Icon } from '@idriss-xyz/ui/icon';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
+import { ReactNode } from 'react';
 
-type ProductTitleProperties = {
-  productName: string;
-  tileTitle: string;
-  tileListPoints: string[];
+type Properties = {
+  name: string;
+  title: string;
+  features: string[];
+  actions: ReactNode;
 };
 
-export const ProductTile = ({
-  productName,
-  tileTitle,
-  tileListPoints,
-}: ProductTitleProperties) => {
+export const ProductTile = ({ name, title, features, actions }: Properties) => {
   return (
-    <div className="flex flex-1 flex-col gap-4 self-stretch rounded-[24px] bg-white/80 px-4 py-6 backdrop-blur-[7px] lg:gap-6 lg:px-10 lg:py-11">
+    <div className="group relative flex flex-1 flex-col gap-4 self-stretch rounded-[24px] bg-white/80 px-4 py-6 backdrop-blur-[7px] lg:gap-6 lg:px-10 lg:py-11">
       <span className="text-label5 text-neutralGreen-700 lg:text-label4">
-        {productName}
+        {name}
       </span>
       <span className="text-balance text-heading5 text-neutral-900 lg:text-heading4">
-        {tileTitle}
+        {title}
       </span>
       <ul className="flex flex-col gap-4 text-neutralGreen-700">
-        {tileListPoints.map((point) => {
+        {features.map((point) => {
           return (
             <li className="flex flex-row gap-3" key={point}>
               <div>
@@ -36,8 +34,11 @@ export const ProductTile = ({
           );
         })}
       </ul>
+      <div className="flex w-full justify-center gap-2 rounded-[15px] text-center transition-opacity lg:absolute lg:bottom-[2px] lg:right-[1.667px] lg:gap-4 lg:bg-[linear-gradient(180deg,_rgba(255,255,255,0)_0%,_rgba(255,255,255,0.96)_24.58%)] lg:px-10 lg:pb-6 lg:pt-10 lg:opacity-0 lg:group-hover:opacity-100">
+        {actions}
+      </div>
 
-      <GradientBorder borderRadius={24} />
+      <GradientBorder gradientDirection="toTop" borderRadius={24} />
     </div>
   );
 };

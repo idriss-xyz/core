@@ -13,7 +13,7 @@ interface Properties {
   tokens: ChainToken[];
   formMethods: UseFormReturn<SendFormValues>;
   onSubmit: (v: SendFormValues) => void;
-  renderChainSuffix?: (chainId: number) => React.ReactNode;
+  renderChainSuffix?: (chainId: number) => ReactNode;
   onChangeChainId?: (chainId: number) => void;
 }
 

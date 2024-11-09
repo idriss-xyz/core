@@ -2,7 +2,7 @@ import { Button } from '@idriss-xyz/ui/button';
 import Image from 'next/image';
 
 import { CollaborationsShowcase } from './components';
-import { backgroundLines, tokensFlow } from './assets';
+import { backgroundLines } from './assets';
 
 export const HeroSection = () => {
   return (
@@ -25,12 +25,15 @@ export const HeroSection = () => {
       >
         EXPLORE
       </Button>
-      <Image
-        priority
-        src={tokensFlow}
-        className="pointer-events-none z-0 mt-[-22%] w-full min-w-[500px] md:mt-[-18%] lg:mt-[-15%]"
-        alt=""
-      />
+
+      <video
+        muted
+        loop
+        autoPlay
+        className="pointer-events-none z-0 mt-[-22%] w-full min-w-[500px]"
+      >
+        <source type="video/webm" src="/tokens-flow.webm" />
+      </video>
       <CollaborationsShowcase className="container mt-9 text-center lg:my-20" />
     </header>
   );

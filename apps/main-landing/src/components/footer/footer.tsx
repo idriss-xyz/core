@@ -3,6 +3,7 @@ import { Link } from '@idriss-xyz/ui/link';
 import Image from 'next/image';
 import { Button } from '@idriss-xyz/ui/button';
 import {
+  CHROME_EXTENSION_LINK,
   PRIVACY_POLICY_LINK,
   TERMS_OF_SERVICE_LINK,
 } from '@idriss-xyz/constants';
@@ -24,7 +25,7 @@ export const Footer = () => {
             size="medium"
             prefixIconName="Puzzle"
             className="mt-6 lg:mt-10"
-            href="https://chromewebstore.google.com/detail/idriss/fghhpjoffbgecjikiipbkpdakfmkbmig"
+            href={CHROME_EXTENSION_LINK}
             isExternal
             asLink
           >

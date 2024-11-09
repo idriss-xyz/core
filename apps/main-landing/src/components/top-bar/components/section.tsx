@@ -18,15 +18,17 @@ export const Section = ({ onItemClick, className, items = [] }: Properties) => {
           <li key={index} className="group">
             <NavigationMenu.Link asChild>
               <span>
-                <Link href="/#" passHref legacyBehavior>
-                  <a onClick={onItemClick} className="block">
-                    <span className="block text-button2 group-hover:text-mint-600">
-                      {item.title}
-                    </span>
-                    <p className="text-body5 opacity-60 lg:text-body4">
-                      {item.description}
-                    </p>
-                  </a>
+                <Link
+                  href={`${item.url}`}
+                  onClick={onItemClick}
+                  className="block cursor-pointer"
+                >
+                  <span className="block text-button2 group-hover:text-mint-600">
+                    {item.title}
+                  </span>
+                  <p className="text-body5 opacity-60 lg:text-body4">
+                    {item.description}
+                  </p>
                 </Link>
               </span>
             </NavigationMenu.Link>
