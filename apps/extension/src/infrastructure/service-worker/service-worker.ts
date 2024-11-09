@@ -182,8 +182,8 @@ export class ServiceWorker {
               return true;
             }
           }
-          case 'getTwitterIconUrl': {
-            fetch(this.environment.runtime.getURL('img/twitter.svg'))
+          case 'getXIconUrl': {
+            fetch(this.environment.runtime.getURL('img/x.svg'))
               .then((fetchRequest) => {
                 return fetchRequest.blob();
               })
@@ -196,7 +196,6 @@ export class ServiceWorker {
               .catch(console.error);
             return true;
           }
-          // No default
         }
 
         return true;

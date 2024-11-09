@@ -128,17 +128,17 @@ export class AbstractPageManager {
     element.classList.add('idrissReverseResolved');
     if (x[0] == '@') {
       let link = this.document.createElement('a');
-      link.href = 'https://twitter.com/' + x.slice(1);
+      link.href = 'https://x.com/' + x.slice(1);
       link.target = '_blank';
       if (document.location.hostname.endsWith('explorer.zksync.io'))
-        link.style.margin = '2px 0 0 0';
+        link.style.margin = '2px 2px 0 0';
       if (
         document.location.hostname.endsWith('blockscout.com') ||
         document.location.hostname.endsWith('explorer.linea.build') ||
         document.location.hostname.endsWith('evm-explorer.alephzero.org') ||
         document.location.hostname.endsWith('explorer.mantle.xyz')
       )
-        link.style.margin = '6px 0 0 0';
+        link.style.margin = '6px 2px 0 0';
       if (
         document.location.hostname.endsWith('explorer.goerli.linea.build') ||
         document.location.hostname.endsWith('blockscout.scroll.io')
@@ -151,8 +151,8 @@ export class AbstractPageManager {
         element.classList.add('d-md-inline-block');
       }
       let img = this.document.createElement('img');
-      img.src = await this.getTwitterIcon();
-      img.alt = 'Twitter';
+      img.src = await this.getXIcon();
+      img.alt = 'X';
       img.style.width = '1em';
       img.style.height = '1em';
       link.append(img);
@@ -160,16 +160,16 @@ export class AbstractPageManager {
     }
   }
 
-  async getTwitterIcon() {
-    if (this.twitterIcon) return this.twitterIcon;
+  async getXIcon() {
+    if (this.XIcon) return this.XIcon;
     return await new Promise((resolve, reject) => {
       chrome.runtime.sendMessage(
         {
-          type: 'getTwitterIconUrl',
+          type: 'getXIconUrl',
         },
         (response) => {
           resolve(response);
-          this.twitterIcon = response;
+          this.XIcon = response;
         },
       );
     });

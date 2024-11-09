@@ -49,7 +49,7 @@ export class GetHandleToTwitterIdCommand extends Command<Payload, Response> {
 }
 
 const GET_REGISTERED_TWITTERS_URL =
-  'https://www.idriss.xyz/v2/getTwitterIDPlugin';
+  'https://api.idriss.xyz/v2/getTwitterIDPlugin';
 
 const getRegisteredTwittersUrl = (handles: string[]) => {
   return `${GET_REGISTERED_TWITTERS_URL}?usernames=${encodeURIComponent(handles.join(','))}`;

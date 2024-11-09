@@ -14,7 +14,6 @@ export const TwitterIdResolver = {
             this.cache.setOne(name, value);
             return value;
         }
-        // return await this.cache.getOne(name, async () => (await this.apiCall([name]))[name])
     },
     async getMany(originalNames) {
         let names = originalNames.map(x => x.replace(/^@/, '').toLowerCase());
@@ -42,8 +41,8 @@ export const TwitterIdResolver = {
         return Object.fromEntries(ret.map(([k, v]) => [originalNames.filter(x => x.replace(/^@/, '').toLowerCase() == k)[0], v]));
     },
     async apiCall(names) {
-        const request = await fetch("https://www.idriss.xyz/v1/getTwitterIDPlugin?usernames=" + encodeURIComponent(names.join(',')));
+        const request = await fetch("https://api.idriss.xyz/v2/getTwitterIDPlugin?usernames=" + encodeURIComponent(names.join(',')));
         const response = await request.json();
-        return Object.fromEntries(Object.entries(response.twitterIDs).map(x => [x[0].toLowerCase(), x[1]]));
+        return Object.fromEntries(Object.entries(response).map(x => [x[0].toLowerCase(), x[1]]));
     }
 }
