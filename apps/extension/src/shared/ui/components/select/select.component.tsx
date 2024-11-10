@@ -20,9 +20,11 @@ export const Select = <T,>({
 }: SelectProperties<T>) => {
   const { portal } = usePortal();
   const pickedOption = useMemo(() => {
-    return options.find((option) => {
-      return option.value === value;
-    });
+    return (
+      options.find((option) => {
+        return option.value === value;
+      }) ?? options[0]
+    );
   }, [value, options]);
 
   if (!pickedOption) {
