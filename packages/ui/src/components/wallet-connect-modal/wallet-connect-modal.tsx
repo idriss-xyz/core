@@ -112,7 +112,8 @@ export const WalletConnectModal = ({
           intent="primary"
           size="large"
           onClick={hasSomeProvider ? connectProvider : onClose}
-          disabled={hasNotSatisfyAllRequirementsYet || isConnecting}
+          disabled={hasNotSatisfyAllRequirementsYet}
+          loading={isConnecting}
         >
           {hasSomeProvider ? 'CONTINUE' : 'CLOSE'}
         </Button>

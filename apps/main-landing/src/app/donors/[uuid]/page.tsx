@@ -10,7 +10,9 @@ export default function Donors() {
     <WithPortal>
       <NiceModal.Provider>
         <WalletContextProvider>
-          <OpenWalletShowcase />
+          <main className="pt-[104px]">
+            <OpenWalletShowcase />
+          </main>
         </WalletContextProvider>
       </NiceModal.Provider>
     </WithPortal>
