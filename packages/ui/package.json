@@ -17,6 +17,7 @@
     "./gradient-border": "./src/components/gradient-border/index.ts",
     "./switch": "./src/components/switch/index.ts",
     "./spinner": "./src/components/spinner/index.ts",
+    "./checkbox": "./src/components/checkbox/index.ts",
     "./wallet-connect-modal": "./src/components/wallet-connect-modal/index.ts",
     "./providers/with-portal": "./src/providers/with-portal.tsx",
     "./utils": "./src/utils/index.ts"
@@ -44,6 +45,7 @@
   "dependencies": {
     "@idriss-xyz/constants": "workspace:*",
     "@idriss-xyz/utils": "workspace:*",
+    "@radix-ui/react-checkbox": "^1.1.2",
     "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-dropdown-menu": "^2.1.2",
     "@radix-ui/react-navigation-menu": "^1.2.1",
