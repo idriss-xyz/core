@@ -17,7 +17,7 @@ import { stackedHex } from './assets';
 
 export const SuperpowersSection = () => {
   return (
-    <section className="relative bg-mint-100 pb-20">
+    <section className="relative bg-mint-100 pb-20" id="superpowers">
       <TopWave className="absolute left-0 top-0 z-0 w-full translate-y-[-15%] text-white" />
       <Image
         priority

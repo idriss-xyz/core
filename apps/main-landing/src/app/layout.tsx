@@ -4,8 +4,6 @@ import './globals.css';
 import { ReactNode } from 'react';
 import { headers } from 'next/headers';
 
-import { Footer, TopBar } from '@/components';
-
 const aeonikPro = localFont({
   src: [
     {
@@ -95,10 +93,10 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${aeonikPro.variable} font-sans antialiased`}>
-        <TopBar />
+      <body
+        className={`${aeonikPro.variable} flex min-h-screen flex-col font-sans antialiased`}
+      >
         {children}
-        <Footer />
       </body>
     </html>
   );

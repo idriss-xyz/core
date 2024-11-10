@@ -15,9 +15,12 @@
   },
   "dependencies": {
     "@ebay/nice-modal-react": "^1.2.13",
+    "@hookform/resolvers": "^3.9.0",
     "@idriss-xyz/constants": "workspace:*",
     "@idriss-xyz/ui": "workspace:*",
     "@idriss-xyz/wallet-connect": "workspace:*",
+    "@radix-ui/react-dropdown-menu": "^2.1.2",
+    "@radix-ui/react-scroll-area": "^1.2.0",
     "@tanstack/react-query": "^5.59.15",
     "mipd": "^0.0.7",
     "next": "15.0.1",
@@ -25,6 +28,7 @@
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.53.1",
     "react-use": "^17.5.1",
+    "viem": "^2.21.32",
     "zod": "^3.23.8"
   },
   "devDependencies": {

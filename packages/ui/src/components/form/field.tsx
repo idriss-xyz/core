@@ -28,7 +28,7 @@ export const Field = forwardRef(
     reference: ForwardedRef<HTMLDivElement>,
   ) => {
     return (
-      <RadixForm.Field name={name} ref={reference}>
+      <RadixForm.Field name={name} ref={reference} className={className}>
         {label && (
           <RadixForm.Label className="mb-2 block text-label4 text-neutral-700">
             {label}
@@ -54,7 +54,7 @@ export const Field = forwardRef(
         {helperText && (
           <span
             className={classes(
-              'flex space-x-1 text-label7 text-neutral-600 lg:text-label6',
+              'flex items-center space-x-1 text-label7 text-neutral-600 lg:text-label6',
               inputProperties.error && 'text-red-500',
             )}
           >

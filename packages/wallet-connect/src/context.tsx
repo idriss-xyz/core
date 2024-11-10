@@ -78,8 +78,8 @@ export const WalletContextProvider = (properties: {
         storedWallet.providerRdns === 'browser'
           ? { provider: window.ethereum, info: { rdns: 'browser' } }
           : availableWalletProviders.find((provider) => {
-              return provider.info.rdns === storedWallet.providerRdns;
-            });
+            return provider.info.rdns === storedWallet.providerRdns;
+          });
 
       const connectedProvider = foundProvider?.provider;
       if (!foundProvider || !connectedProvider) {

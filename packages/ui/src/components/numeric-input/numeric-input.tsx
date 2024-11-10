@@ -8,7 +8,10 @@ type Properties = Omit<ComponentProps<typeof Input>, 'onChange'> & {
 };
 
 export const NumericInput = forwardRef(
-  (inputProperties: Properties, reference: ForwardedRef<HTMLInputElement>) => {
+  (
+    inputProperties: Properties,
+    reference: ForwardedRef<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     return (
       <NumericFormat
         getInputRef={reference}

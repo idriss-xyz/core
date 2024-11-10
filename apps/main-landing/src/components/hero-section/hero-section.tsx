@@ -1,8 +1,10 @@
 import { Button } from '@idriss-xyz/ui/button';
 import Image from 'next/image';
 
+import { backgroundLines } from '@/assets';
+import { INTERNAL_LINK } from '@/constants';
+
 import { CollaborationsShowcase } from './components';
-import { backgroundLines } from './assets';
 
 export const HeroSection = () => {
   return (
@@ -22,6 +24,8 @@ export const HeroSection = () => {
         size="large"
         className="z-1 my-9 lg:mb-0 lg:mt-9"
         suffixIconName="IdrissArrowRight"
+        asLink
+        href={INTERNAL_LINK.SUPERPOWERS}
       >
         EXPLORE
       </Button>

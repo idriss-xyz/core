@@ -12,6 +12,7 @@ export const link = cva(
     variants: {
       size: {
         medium: ['text-body5 lg:text-body4'],
+        xs: ['text-label7 lg:text-label6'],
       },
     },
   },
