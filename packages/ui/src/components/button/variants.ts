@@ -46,8 +46,13 @@ export const button = cva(
       withSuffixIcon: {
         true: ['pr-3'],
       },
+      isLoading: {
+        true: [''],
+        false: [''],
+      },
     },
     compoundVariants: [
+      //icon
       {
         size: 'medium',
         withPrefixIcon: true,
@@ -58,11 +63,33 @@ export const button = cva(
         withSuffixIcon: true,
         className: 'py-3',
       },
+      //loading
+      {
+        isLoading: true,
+        intent: 'primary',
+        className: 'disabled:bg-mint-400 disabled:text-neutralGreen-900',
+      },
+      {
+        isLoading: true,
+        intent: 'secondary',
+        className:
+          'disabled:border-solid disabled:bg-white disabled:text-neutralGreen-900',
+      },
+      {
+        isLoading: true,
+        intent: 'tertiary',
+        className: 'disabled:text-neutralGreen-900',
+      },
+      {
+        isLoading: true,
+        intent: 'negative',
+        className: 'disabled:bg-neutralGreen-900 disabled:text-white',
+      },
     ],
   },
 );
 
-type ComputedVariants = 'withPrefixIcon' | 'withSuffixIcon';
+type ComputedVariants = 'withPrefixIcon' | 'withSuffixIcon' | 'isLoading';
 
 export type ButtonVariants = FullyRequired<
   Omit<VariantProps<typeof button>, ComputedVariants>
@@ -94,7 +121,24 @@ export const glow = cva(
         medium: ['top-[28px] h-8'],
         small: ['top-[28px] h-8'],
       },
+      loading: {
+        true: [''],
+        false: [''],
+      },
     },
+    compoundVariants: [
+      //loading
+      {
+        loading: true,
+        intent: 'primary',
+        className: 'group-disabled/button:block',
+      },
+      {
+        loading: true,
+        intent: 'secondary',
+        className: 'group-disabled/button:block',
+      },
+    ],
   },
 );
 

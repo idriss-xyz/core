@@ -16,6 +16,7 @@
     "./marquee": "./src/components/marquee/index.ts",
     "./gradient-border": "./src/components/gradient-border/index.ts",
     "./switch": "./src/components/switch/index.ts",
+    "./spinner": "./src/components/spinner/index.ts",
     "./wallet-connect-modal": "./src/components/wallet-connect-modal/index.ts",
     "./providers/with-portal": "./src/providers/with-portal.tsx",
     "./utils": "./src/utils/index.ts"

@@ -8,13 +8,17 @@ import {
 import { classes } from '../../utils';
 import { Icon, IconName } from '../icon';
 import { ExternalLink } from '../external-link';
+import { Spinner } from '../spinner';
 
 import { button, ButtonVariants } from './variants';
 import { Glow } from './glow';
 import { BUTTON_SIZE_TO_ICON_SIZE } from './constants';
 
 type ButtonOrAnchorProperties =
-  | (ButtonHTMLAttributes<HTMLButtonElement> & { asLink?: false })
+  | (ButtonHTMLAttributes<HTMLButtonElement> & {
+      asLink?: false;
+      loading?: boolean;
+    })
   | (AnchorHTMLAttributes<HTMLAnchorElement> & {
       asLink: true;
       isExternal?: boolean;
@@ -42,11 +46,13 @@ export const Button = forwardRef(
     }: Properties,
     reference,
   ) => {
+    const isLoading = (!properties.asLink && properties.loading) ?? false;
     const variantClassName = classes(
       button({
         intent,
         size,
         className,
+        isLoading: isLoading,
         withPrefixIcon: Boolean(prefixIconName),
         withSuffixIcon: Boolean(suffixIconName),
       }),
@@ -58,18 +64,18 @@ export const Button = forwardRef(
           <Icon
             name={prefixIconName}
             size={BUTTON_SIZE_TO_ICON_SIZE[size]}
-            className="mr-2"
+            className={classes('mr-2', isLoading && 'opacity-0')}
           />
         )}
-        <span>{children}</span>
+        <span className={classes(isLoading && 'opacity-0')}>{children}</span>
         {suffixIconName && (
           <Icon
             name={suffixIconName}
             size={BUTTON_SIZE_TO_ICON_SIZE[size]}
-            className="ml-2"
+            className={classes('ml-2', isLoading && 'opacity-0')}
           />
         )}
-        <Glow intent={intent} size={size} />
+        <Glow intent={intent} size={size} loading={isLoading} />
       </>
     );
 
@@ -88,15 +94,35 @@ export const Button = forwardRef(
       );
     }
 
-    const { asLink, ...htmlValidProperties } = properties;
+    const {
+      asLink,
+      disabled: disabledFromProperties,
+      loading,
+      ...htmlValidProperties
+    } = properties;
+
+    const disabled = Boolean(loading ?? disabledFromProperties);
+
+    const contentWithSpinner = (
+      <>
+        {content}
+        <Spinner
+          className={classes(
+            'absolute left-1/2 top-1/2 size-5 -translate-x-1/2 -translate-y-1/2',
+            size === 'large' && 'size-[34px]',
+          )}
+        />
+      </>
+    );
 
     return (
       <button
         {...(htmlValidProperties as ButtonHTMLAttributes<HTMLButtonElement>)}
         ref={reference as ForwardedRef<HTMLButtonElement>}
         className={variantClassName}
+        disabled={disabled}
       >
-        {content}
+        {loading ? contentWithSpinner : content}
       </button>
     );
   },
