@@ -15,7 +15,6 @@ export {
   LazyImage,
   ErrorMessage,
   CurrencyInput,
-  IdrissMoneyInput,
   PulsingLoadingBar,
   PortalWithTailwind,
   PaginationComponent,

@@ -23,7 +23,7 @@ Sending a transfer through a green IDriss badge on Twitter creates a contract ca
 
 Donations in the meta-infinite PGF round (red badges) are routed through the contract on Optimism: 0x43f532d678b6a1587be989a50526f89428f68315.
 
-List of grantees and their associated wallet addresses and Twitter names can be found [here](https://github.com/idriss-crypto/browser-extensions/blob/master/src/common/customTwitterAccounts.json).
+List of grantees and their associated wallet addresses and Twitter names can be found [here](https://github.com/idriss-xyz/core/blob/master/apps/extension/src/common/customTwitterAccounts.json).
 
 If your project is not on the list or you'd like to change a wallet address/Twitter username, please DM us on Twitter from your official project account or send us an email to hello@idriss.xyz from your official domain.
 
@@ -43,7 +43,7 @@ Cross chain donations leverage the Across Protocol through an [Across+ integrati
 | Linea     | [0xcbf32F0a9BF93256BAD8cD31cF37a3e914245908](https://lineascan.build/address/0xcbf32F0a9BF93256BAD8cD31cF37a3e914245908#code)   |
 | zkSync Era                | [0x8F5fc20f5a3e69B7DCc5AC477dCC4484C64897dA](https://explorer.zksync.io/address/0x8F5fc20f5a3e69B7DCc5AC477dCC4484C64897dA#contract)   |
 
-More information regarding technicalities can be found in [CONTRACTS.md](https://github.com/idriss-crypto/browser-extensions/blob/master/CONTRACTS.md)
+More information regarding technicalities can be found in [CONTRACTS.md](https://github.com/idriss-xyz/core/blob/master/CONTRACTS.md)
 
 
 ## Build
@@ -58,5 +58,4 @@ Results will appear in buildResults directory: ./buildResults/firefox and ./buil
 
 ## License
 
-This project is licensed under [GPLv3](https://github.com/idriss-crypto/browser-extensions/blob/master/LICENSE)
-
+This project is licensed under [GPLv3](https://github.com/idriss-xyz/core/blob/master/LICENSE)

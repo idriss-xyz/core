@@ -19,7 +19,9 @@ export const SelectOption = forwardRef(
         )}
       >
         {option.prefix}
-        <div className="whitespace-nowrap">{option.label}</div>
+        <div className="whitespace-nowrap text-neutralGreen-900">
+          {option.label}
+        </div>
         {option.suffix}
       </div>
     );

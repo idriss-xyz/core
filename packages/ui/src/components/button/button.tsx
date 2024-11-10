@@ -101,7 +101,7 @@ export const Button = forwardRef(
       ...htmlValidProperties
     } = properties;
 
-    const disabled = Boolean(loading ?? disabledFromProperties);
+    const disabled = Boolean(loading) || Boolean(disabledFromProperties);
 
     const contentWithSpinner = (
       <>
@@ -118,6 +118,7 @@ export const Button = forwardRef(
     return (
       <button
         {...(htmlValidProperties as ButtonHTMLAttributes<HTMLButtonElement>)}
+        type={htmlValidProperties.type ?? 'button'}
         ref={reference as ForwardedRef<HTMLButtonElement>}
         className={variantClassName}
         disabled={disabled}

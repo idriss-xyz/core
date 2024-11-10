@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "IDriss",
+  "name": "IDRISS",
   "version": "1.2.9",
-  "description": "A more usable web3 for everyone.",
+  "description": "Crypto and AI expansion pack for your browser",
   "author": "IDriss",
   "background": {
     "service_worker": "service-worker.js"

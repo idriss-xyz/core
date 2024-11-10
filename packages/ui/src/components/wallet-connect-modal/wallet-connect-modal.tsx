@@ -5,6 +5,7 @@ import { classes } from '../../utils';
 import { Button } from '../button';
 import { Modal } from '../modal';
 import { ExternalLink } from '../external-link';
+import { Checkbox } from '../checkbox';
 
 type WalletProvider = {
   uuid: string;
@@ -29,7 +30,7 @@ export const WalletConnectModal = ({
   onConnect,
 }: Properties) => {
   const [chosenProvider, setChosenProvider] = useState<WalletProvider>();
-  const [termsOfUseAccepted] = useState(true);
+  const [termsOfServiceAccepted, setTermsOfServiceAccepted] = useState(false);
 
   const connectProvider = useCallback(() => {
     if (!chosenProvider) {
@@ -41,14 +42,13 @@ export const WalletConnectModal = ({
 
   const hasSomeProvider = walletProviders.length > 0;
 
-  const hasNotSatisfyAllRequirementsYet =
-    hasSomeProvider && (!termsOfUseAccepted || !chosenProvider);
+  const hasNotSatisfiedAllRequirementsYet =
+    hasSomeProvider && (!termsOfServiceAccepted || !chosenProvider);
 
   return (
     <Modal
-      className="p-4"
       header={
-        <div>
+        <div className="px-5 pt-5">
           <h2 className="text-heading5 text-neutral-900">Log in</h2>
           {hasSomeProvider && (
             <p className="mt-2 text-body5 text-neutral-600">
@@ -61,7 +61,7 @@ export const WalletConnectModal = ({
       onClose={onClose}
       isOpened={isOpened}
     >
-      <div className="mt-6">
+      <div className="mt-6 px-5 pb-5">
         {hasSomeProvider ? (
           <>
             <p className="text-label6 text-neutral-600">Installed wallets</p>
@@ -100,19 +100,29 @@ export const WalletConnectModal = ({
           </p>
         )}
 
-        <p className="mt-6 text-body5 text-neutralGreen-900">
-          <span>{`By connecting your wallet you're accepting `}</span>
-          <ExternalLink className="text-mint-600" href={TERMS_OF_SERVICE_LINK}>
-            Terms of service
-          </ExternalLink>
-        </p>
+        <Checkbox
+          className="mt-6"
+          label={
+            <span className="mt-6 text-body5 text-neutralGreen-900">
+              I agree to the{' '}
+              <ExternalLink
+                className="text-mint-600"
+                href={TERMS_OF_SERVICE_LINK}
+              >
+                Terms of service
+              </ExternalLink>
+            </span>
+          }
+          value={termsOfServiceAccepted}
+          onChange={setTermsOfServiceAccepted}
+        />
 
         <Button
           className="mt-6 w-full"
           intent="primary"
           size="large"
           onClick={hasSomeProvider ? connectProvider : onClose}
-          disabled={hasNotSatisfyAllRequirementsYet}
+          disabled={hasNotSatisfiedAllRequirementsYet}
           loading={isConnecting}
         >
           {hasSomeProvider ? 'CONTINUE' : 'CLOSE'}

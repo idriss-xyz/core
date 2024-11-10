@@ -6,19 +6,19 @@ export const SOCIAL_LINK = {
   DISCORD: 'https://discord.com/invite/RJhJKamjw5',
   INSTAGRAM: 'https://www.instagram.com/idriss_xyz_',
   TIKTOK: 'https://www.tiktok.com/@idriss_xyz_',
-  YOUTUBE: 'https://www.youtube.com/@IDriss_xyz',
+  YOUTUBE: 'https://www.youtube.com/@idriss_xyz',
 };
 
 /**
  * Our things announced by us
  */
 export const ANNOUNCEMENT_LINK = {
-  POLYMARKET: 'https://x.com/IDriss_xyz/status/1780582103396266085',
-  SNAPSHOT: 'https://x.com/IDriss_xyz/status/1761049574691819798',
-  TALLY: 'https://x.com/IDriss_xyz/status/1807798872930202007',
-  AAVEGOTCHI: 'https://x.com/IDriss_xyz/status/1750851248121930167',
-  PARALLEL: 'https://x.com/IDriss_xyz/status/1729258820441170160',
-  TIPPING: 'https://x.com/IDriss_xyz/status/1729258820441170160',
+  POLYMARKET: 'https://x.com/idriss_xyz/status/1780582103396266085',
+  SNAPSHOT: 'https://x.com/idriss_xyz/status/1761049574691819798',
+  TALLY: 'https://x.com/idriss_xyz/status/1807798872930202007',
+  AAVEGOTCHI: 'https://x.com/idriss_xyz/status/1750851248121930167',
+  PARALLEL: 'https://x.com/idriss_xyz/status/1729258820441170160',
+  TIPPING: 'https://x.com/idriss_xyz/status/1729258820441170160',
 };
 
 /**
@@ -32,13 +32,15 @@ export const EXTERNAL_ANNOUNCEMENT_LINK = {
 };
 
 export const DOCUMENTATION_LINK = 'https://docs.idriss.xyz/';
-export const GITHUB_LINK = 'https://www.github.com/idriss-crypto';
+export const GITHUB_LINK = 'https://www.github.com/idriss-xyz';
 export const BLOG_LINK = 'https://www.paragraph.xyz/@idriss';
 export const BRAND_KIT_LINK =
   'https://docs.idriss.xyz/contributor-guides/brand-resources';
 
-export const PRIVACY_POLICY_LINK = 'https://www.idriss.xyz/pp';
-export const TERMS_OF_SERVICE_LINK = 'https://www.idriss.xyz/tos';
+export const PRIVACY_POLICY_LINK =
+  'https://docs.idriss.xyz/resources/privacy-policy';
+export const TERMS_OF_SERVICE_LINK =
+  'https://docs.idriss.xyz/resources/terms-of-service';
 export const CREATORS_LINK = 'https://idriss.xyz/creators';
 
 export const CHROME_EXTENSION_LINK =

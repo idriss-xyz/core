@@ -8,8 +8,10 @@
     "./external-link": "./src/components/external-link/index.ts",
     "./icon": "./src/components/icon/index.ts",
     "./icon-button": "./src/components/icon-button/index.ts",
+    "./form": "./src/components/form/index.ts",
     "./link": "./src/components/link/index.ts",
     "./modal": "./src/components/modal/index.ts",
+    "./numeric-input": "./src/components/numeric-input/index.ts",
     "./navigation-menu": "./src/components/navigation-menu/index.ts",
     "./visually-hidden": "./src/components/visually-hidden/index.ts",
     "./branding-assets": "./src/components/branding-assets/index.ts",
@@ -48,6 +50,7 @@
     "@radix-ui/react-checkbox": "^1.1.2",
     "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-dropdown-menu": "^2.1.2",
+    "@radix-ui/react-form": "^0.1.0",
     "@radix-ui/react-navigation-menu": "^1.2.1",
     "@radix-ui/react-portal": "^1.1.2",
     "@radix-ui/react-switch": "^1.1.1",
@@ -58,6 +61,7 @@
     "mipd": "^0.0.7",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-number-format": "^5.4.2",
     "tailwind-merge": "^2.5.2"
   }
 }

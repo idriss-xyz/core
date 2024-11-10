@@ -1,18 +1,21 @@
 import * as RadixCheckbox from '@radix-ui/react-checkbox';
-import { forwardRef } from 'react';
+import { forwardRef, ReactNode } from 'react';
+
+import { classes } from '../../utils';
 
 import { CheckIcon } from './assets';
 
 type Properties = {
-  label?: string;
+  label?: ReactNode;
   value: boolean;
   onChange: (value: boolean) => void;
+  className?: string;
 };
 
 export const Checkbox = forwardRef<HTMLButtonElement, Properties>(
-  ({ label, value, onChange }, reference) => {
+  ({ label, value, onChange, className }, reference) => {
     return (
-      <label>
+      <label className={classes('block', className)}>
         <div className="flex items-center">
           <RadixCheckbox.Root
             ref={reference}

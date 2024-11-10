@@ -34,12 +34,14 @@ export const Select = <T,>({
       {renderLabel ? (
         renderLabel()
       ) : label ? (
-        <p className="mb-1 text-sm text-[#64748B]">{label}</p>
+        <p className="mb-2 text-label5 text-neutral-700 lg:text-label4">
+          {label}
+        </p>
       ) : null}
       <DropdownMenu.Root modal={false}>
         <DropdownMenu.Trigger asChild>
           <SelectOptionContainer
-            className="ring-1 ring-[#D1D5DB] focus:ring-indigo-500"
+            className="text-neutralGreen-900 ring-1 ring-[#D1D5DB] focus:ring-indigo-500"
             as="button"
           >
             <SelectOption option={pickedOption} className="rounded-md" />

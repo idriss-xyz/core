@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { useWallet } from '@idriss-xyz/wallet-connect';
+import { Button } from '@idriss-xyz/ui/button';
 
 import { IdrissSend } from 'shared/idriss';
 import {
@@ -33,6 +34,7 @@ export const SendWidget = ({ widgetData }: Properties) => {
     walletAddress,
   } = widgetData;
   const { wallet } = useWallet();
+  const { isConnectionModalOpened, openConnectionModal } = useWallet();
 
   const allowedChainsIds = availableNetworks ?? DEFAULT_ALLOWED_CHAINS_IDS;
 
@@ -70,7 +72,7 @@ export const SendWidget = ({ widgetData }: Properties) => {
     );
   }, [selectedToken?.decimals, sender.tokensToSend]);
 
-  const iconSize = isHandleUser ? 16 : 14;
+  const iconSize = isHandleUser ? 17 : 16;
 
   const reset = useCallback(() => {
     sender.reset();
@@ -86,19 +88,21 @@ export const SendWidget = ({ widgetData }: Properties) => {
       closeOnClickAway={sender.isIdle}
       onClose={reset}
       header={
-        <IdrissSend.Heading>
-          {widgetOverrides?.headerCopy ?? `Send to @${username}`}
-        </IdrissSend.Heading>
+        sender.isSending || sender.isSuccess ? undefined : (
+          <IdrissSend.Heading>
+            {widgetOverrides?.headerCopy ?? `Send to @${username}`}
+          </IdrissSend.Heading>
+        )
       }
     >
       {({ close }) => {
         if (sender.isSending) {
           return (
             <IdrissSend.Loading
+              className="px-5 pb-9 pt-5"
               heading={
                 <>
-                  Sending{' '}
-                  <span className="font-bold text-[#11DD74]">${amount}</span>{' '}
+                  Sending <span className="text-mint-600">${amount}</span>{' '}
                   {amountInSelectedToken
                     ? `(${roundToSignificantFigures(Number(amountInSelectedToken), 2)} ${selectedToken?.symbol})`
                     : null}
@@ -116,6 +120,7 @@ export const SendWidget = ({ widgetData }: Properties) => {
         if (sender.isSuccess) {
           return (
             <IdrissSend.Success
+              className="p-5"
               onConfirm={close}
               chainId={chainId}
               transactionHash={sender.data?.transactionHash ?? EMPTY_HEX}
@@ -133,11 +138,24 @@ export const SendWidget = ({ widgetData }: Properties) => {
             footer={
               <>
                 {wallet ? (
-                  <IdrissSend.SubmitButton>
+                  <Button
+                    intent="primary"
+                    size="medium"
+                    className="w-full"
+                    type="submit"
+                  >
                     {widgetOverrides?.sendButtonCopy ?? 'Send'}
-                  </IdrissSend.SubmitButton>
+                  </Button>
                 ) : (
-                  <IdrissSend.ConnectWalletButton />
+                  <Button
+                    intent="primary"
+                    size="medium"
+                    onClick={openConnectionModal}
+                    className="w-full"
+                    loading={isConnectionModalOpened}
+                  >
+                    Log In
+                  </Button>
                 )}
                 {sender.isError ? (
                   <ErrorMessage className="mt-4">

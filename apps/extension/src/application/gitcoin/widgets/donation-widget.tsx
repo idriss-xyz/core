@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useWallet } from '@idriss-xyz/wallet-connect';
+import { Button } from '@idriss-xyz/ui/button';
 
 import { IdrissSend } from 'shared/idriss';
 import {
@@ -29,6 +30,7 @@ type Properties = {
 
 export const DonationWidget = ({ widgetData }: Properties) => {
   const [isOpened, setIsOpened] = useState(false);
+  const { isConnectionModalOpened, openConnectionModal } = useWallet();
 
   const handleOpen = useCallback(() => {
     setIsOpened(true);
@@ -158,10 +160,10 @@ export const DonationWidget = ({ widgetData }: Properties) => {
         if (donationMaker.isDonating) {
           return (
             <IdrissSend.Loading
+              className="px-5 pb-9 pt-5"
               heading={
                 <>
-                  Sending{' '}
-                  <span className="font-bold text-[#11DD74]">${amount}</span> (
+                  Sending <span className="text-mint-600">${amount}</span> (
                   {roundToSignificantFigures(userAmountInWei / 10 ** 18, 2)}{' '}
                   ETH)
                 </>
@@ -176,6 +178,7 @@ export const DonationWidget = ({ widgetData }: Properties) => {
         if (donationMaker.isSuccess) {
           return (
             <IdrissSend.Success
+              className="p-5"
               onConfirm={close}
               chainId={chainId}
               transactionHash={donationMaker.data?.transactionHash ?? EMPTY_HEX}
@@ -195,14 +198,26 @@ export const DonationWidget = ({ widgetData }: Properties) => {
               footer={
                 <>
                   {wallet ? (
-                    <IdrissSend.SubmitButton
+                    <Button
+                      intent="primary"
+                      size="medium"
+                      type="submit"
+                      className="w-full"
                       loading={feesQuery.isLoading}
                       disabled={feesQuery.isError}
                     >
                       Donate
-                    </IdrissSend.SubmitButton>
+                    </Button>
                   ) : (
-                    <IdrissSend.ConnectWalletButton />
+                    <Button
+                      intent="primary"
+                      size="medium"
+                      className="w-full"
+                      onClick={openConnectionModal}
+                      loading={isConnectionModalOpened}
+                    >
+                      Log In
+                    </Button>
                   )}
                   {feesQuery.isError ? (
                     <SomethingWentWrongMessage onRetry={feesQuery.refetch} />

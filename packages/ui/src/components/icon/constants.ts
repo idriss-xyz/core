@@ -11,6 +11,8 @@ import {
   LogIn,
   ArrowLeft,
   ArrowRight,
+  AlertCircle,
+  CheckCircle2,
 } from 'lucide-react';
 
 import * as customIcons from './custom';
@@ -28,5 +30,7 @@ export const ICON = {
   ArrowRight,
   HelpCircle,
   ChevronDown,
+  AlertCircle,
+  CheckCircle2,
   ...customIcons,
 };

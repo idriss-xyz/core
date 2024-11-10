@@ -19,7 +19,7 @@ interface Properties {
   iconSize: number;
   iconSrc: string;
   closeOnClickAway: boolean;
-  header: ReactNode;
+  header?: ReactNode;
 }
 
 export const Container = memo(
@@ -96,7 +96,7 @@ export const Container = memo(
           <div onClick={disableCloseOnHoverAway}>
             <Modal
               header={header}
-              headerContainerClassName="pl-6 pt-5.5 pb-2.5 border-b border-b-neutral-300"
+              headerContainerClassName="pl-6 pt-5.5 pb-2.5"
               isOpened={isOpened}
               closeOnHoverAway={closeOnHoverAway}
               closeOnClickAway={closeOnClickAway}
