@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { classes, Icon, ScrollArea } from 'shared/ui';
+import { classes, ScrollArea } from 'shared/ui';
 
 import { SearchResult } from '../types';
 
@@ -88,13 +88,6 @@ export const AddressList = ({
                     </div>
                     <p className="text-xs font-thin">{address}</p>
                   </div>
-                  {isTwitterLookup && (
-                    <Icon
-                      size={16}
-                      name="TwitterLogoIcon"
-                      className="mt-1 text-[#1D9BF0] [&>path]:fill-rule-non-zero"
-                    />
-                  )}
                 </>
               )}
             </div>
