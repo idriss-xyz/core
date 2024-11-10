@@ -109,7 +109,7 @@ export const GET_MULTIPLE_IDRISS_REGISTRY_ABI = [
   },
 ] as const;
 
-export const WIDGET_WIDTH = 256;
+export const WIDGET_WIDTH = 315;
 
 export const PHONE_REGEXP =
   /^(\+\(?\d{1,4}\s?)\)?-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/;

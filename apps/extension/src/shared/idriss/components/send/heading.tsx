@@ -5,5 +5,7 @@ interface Properties {
 }
 
 export const Heading = ({ children }: Properties) => {
-  return <p className="truncate text-lg font-medium leading-6">{children}</p>;
+  return (
+    <p className="truncate text-heading5 text-neutralGreen-900">{children}</p>
+  );
 };

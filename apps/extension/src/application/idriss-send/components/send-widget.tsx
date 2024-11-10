@@ -85,6 +85,11 @@ export const SendWidget = ({ widgetData }: Properties) => {
       recipientName={username}
       closeOnClickAway={sender.isIdle}
       onClose={reset}
+      header={
+        <IdrissSend.Heading>
+          {widgetOverrides?.headerCopy ?? `Send to @${username}`}
+        </IdrissSend.Heading>
+      }
     >
       {({ close }) => {
         if (sender.isSending) {
@@ -119,35 +124,29 @@ export const SendWidget = ({ widgetData }: Properties) => {
         }
 
         return (
-          <>
-            <IdrissSend.Heading>
-              {widgetOverrides?.headerCopy ?? `Send to @${username}`}
-            </IdrissSend.Heading>
-            <IdrissSend.Form
-              formMethods={formMethods}
-              onSubmit={submit}
-              onChangeChainId={onChangeChainId}
-              tokens={tokens}
-              className="mt-4"
-              allowedChainsIds={allowedChainsIds}
-              footer={
-                <>
-                  {wallet ? (
-                    <IdrissSend.SubmitButton>
-                      {widgetOverrides?.sendButtonCopy ?? 'Send'}
-                    </IdrissSend.SubmitButton>
-                  ) : (
-                    <IdrissSend.ConnectWalletButton />
-                  )}
-                  {sender.isError ? (
-                    <ErrorMessage className="mt-4">
-                      Something went wrong.
-                    </ErrorMessage>
-                  ) : null}
-                </>
-              }
-            />
-          </>
+          <IdrissSend.Form
+            formMethods={formMethods}
+            onSubmit={submit}
+            onChangeChainId={onChangeChainId}
+            tokens={tokens}
+            allowedChainsIds={allowedChainsIds}
+            footer={
+              <>
+                {wallet ? (
+                  <IdrissSend.SubmitButton>
+                    {widgetOverrides?.sendButtonCopy ?? 'Send'}
+                  </IdrissSend.SubmitButton>
+                ) : (
+                  <IdrissSend.ConnectWalletButton />
+                )}
+                {sender.isError ? (
+                  <ErrorMessage className="mt-4">
+                    Something went wrong.
+                  </ErrorMessage>
+                ) : null}
+              </>
+            }
+          />
         );
       }}
     </IdrissSend.Container>

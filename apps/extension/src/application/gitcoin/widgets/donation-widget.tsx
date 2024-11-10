@@ -152,6 +152,7 @@ export const DonationWidget = ({ widgetData }: Properties) => {
       closeOnClickAway={donationMaker.isIdle}
       onClose={handleClose}
       onOpen={handleOpen}
+      header={<IdrissSend.Heading>Donate to @{username}</IdrissSend.Heading>}
     >
       {({ close }) => {
         if (donationMaker.isDonating) {
@@ -184,12 +185,10 @@ export const DonationWidget = ({ widgetData }: Properties) => {
 
         return (
           <>
-            <IdrissSend.Heading>Donate to @{username}</IdrissSend.Heading>
             <IdrissSend.Form
               formMethods={formMethods}
               tokens={[{ ...TOKEN.ETHEREUM, decimals: 18, address: '0x0' }]}
               onSubmit={submit}
-              className="mt-4"
               allowedChainsIds={chainIdOptions}
               renderChainSuffix={renderChainSuffix}
               onChangeChainId={onChangeChainId}

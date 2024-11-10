@@ -35,55 +35,56 @@ export const Form = ({
       className={className}
       onSubmit={formMethods.handleSubmit(onSubmit)}
     >
-      <Controller
-        control={formMethods.control}
-        name="amount"
-        render={({ field, fieldState }) => {
-          return (
-            <IdrissMoneyInput
-              value={field.value}
-              onChange={field.onChange}
-              className="mt-4"
-              errorMessage={fieldState.error?.message}
-            />
-          );
-        }}
-      />
-      <Controller
-        control={formMethods.control}
-        name="chainId"
-        render={({ field }) => {
-          return (
-            <ChainSelect
-              className="mt-5"
-              label="Network"
-              allowedChainsIds={allowedChainsIds}
-              renderSuffix={renderChainSuffix}
-              onChange={(value) => {
-                onChangeChainId?.(value);
-                field.onChange(value);
-              }}
-              value={field.value}
-            />
-          );
-        }}
-      />
-      <Controller
-        control={formMethods.control}
-        name="tokenAddress"
-        render={({ field }) => {
-          return (
-            <TokenSelect
-              className="mt-1"
-              label="Token"
-              tokens={tokens}
-              onChange={field.onChange}
-              value={field.value}
-            />
-          );
-        }}
-      />
-      <div className="mt-6">{footer}</div>
+      <div className="px-6 py-3">
+        <Controller
+          control={formMethods.control}
+          name="amount"
+          render={({ field, fieldState }) => {
+            return (
+              <IdrissMoneyInput
+                value={field.value}
+                onChange={field.onChange}
+                errorMessage={fieldState.error?.message}
+              />
+            );
+          }}
+        />
+        <Controller
+          control={formMethods.control}
+          name="chainId"
+          render={({ field }) => {
+            return (
+              <ChainSelect
+                className="mt-5"
+                label="Network"
+                allowedChainsIds={allowedChainsIds}
+                renderSuffix={renderChainSuffix}
+                onChange={(value) => {
+                  onChangeChainId?.(value);
+                  field.onChange(value);
+                }}
+                value={field.value}
+              />
+            );
+          }}
+        />
+        <Controller
+          control={formMethods.control}
+          name="tokenAddress"
+          render={({ field }) => {
+            return (
+              <TokenSelect
+                className="mt-1"
+                label="Token"
+                tokens={tokens}
+                onChange={field.onChange}
+                value={field.value}
+              />
+            );
+          }}
+        />
+      </div>
+      <div className="border-t border-t-neutral-300 px-6 py-3">{footer}</div>
     </form>
   );
 };

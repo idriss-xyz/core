@@ -1,7 +1,8 @@
 import { ReactNode, memo, useCallback, useEffect, useState } from 'react';
 import { useWindowSize } from 'react-use';
+import { Modal } from '@idriss-xyz/ui/modal';
 
-import { Closable, PortalWithTailwind } from 'shared/ui';
+import { PortalWithTailwind } from 'shared/ui';
 
 import { WIDGET_WIDTH } from '../../constants';
 
@@ -18,6 +19,7 @@ interface Properties {
   iconSize: number;
   iconSrc: string;
   closeOnClickAway: boolean;
+  header: ReactNode;
 }
 
 export const Container = memo(
@@ -28,10 +30,11 @@ export const Container = memo(
     children,
     onClose,
     onOpen,
+    header,
     closeOnClickAway,
   }: Properties) => {
     const [closeOnHoverAway, setCloseOnHoverAway] = useState(true);
-    const [isVisible, setIsVisible] = useState(false);
+    const [isOpened, setIsOpened] = useState(false);
 
     const [portal, setPortal] = useState<HTMLDivElement>();
     const windowSize = useWindowSize();
@@ -55,7 +58,7 @@ export const Container = memo(
 
     const open = useCallback(() => {
       updatePosition();
-      setIsVisible(true);
+      setIsOpened(true);
       onOpen?.();
     }, [onOpen, updatePosition]);
 
@@ -75,7 +78,7 @@ export const Container = memo(
     }, [node]);
 
     const close = useCallback(() => {
-      setIsVisible(false);
+      setIsOpened(false);
       onClose?.();
     }, [onClose]);
 
@@ -89,27 +92,25 @@ export const Container = memo(
 
     return (
       <>
-        {isVisible && (
-          <div
-            className="absolute z-10"
-            style={{
-              left,
-              right,
-              top: position.y + iconSize,
-              width: WIDGET_WIDTH,
-            }}
-          >
-            <Closable
-              className="shadow-2xl w-full rounded-md bg-white p-4 text-[#111827]"
-              closeButtonClassName="hover:enabled:bg-black/20 active:enabled:bg-black/40"
-              closeButtonIconClassName="text-[#000]"
-              onClickInside={disableCloseOnHoverAway}
-              onClose={close}
+        {isOpened && (
+          <div onClick={disableCloseOnHoverAway}>
+            <Modal
+              header={header}
+              headerContainerClassName="pl-6 pt-5.5 pb-2.5 border-b border-b-neutral-300"
+              isOpened={isOpened}
               closeOnHoverAway={closeOnHoverAway}
               closeOnClickAway={closeOnClickAway}
+              onClose={close}
+              backdropClassName="bg-transparent"
+              onClickInside={disableCloseOnHoverAway}
+              left={left}
+              top={position.y + iconSize}
+              right={right}
+              width={WIDGET_WIDTH}
+              withoutPortal
             >
-              {children({ close })}
-            </Closable>
+              <div>{children({ close })}</div>
+            </Modal>
           </div>
         )}
         <PortalWithTailwind container={portal}>
