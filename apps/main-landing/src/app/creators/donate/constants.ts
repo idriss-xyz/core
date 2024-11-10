@@ -230,8 +230,6 @@ export const CHAIN_ID_TO_TOKENS = {
   ],
 } satisfies Record<string, ChainToken[]>;
 
-const EMPTY_HEX = '0x';
-
 export const DEFAULT_ALLOWED_CHAINS_IDS = [
   CHAIN.ALEPH.id,
   CHAIN.BASE.id,
