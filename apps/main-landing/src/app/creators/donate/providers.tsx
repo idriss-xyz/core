@@ -4,18 +4,22 @@ import NiceModal from '@ebay/nice-modal-react';
 import { WithPortal } from '@idriss-xyz/ui/providers/with-portal';
 import { ReactNode } from 'react';
 
+import { QueryProvider } from '@/providers';
+
 type Properties = {
   children: ReactNode;
 };
 
 export const Providers = ({ children }: Properties) => {
   return (
-    <WithPortal>
-      <NiceModal.Provider>
-        <WalletContextProvider>
-          <>{children}</>
-        </WalletContextProvider>
-      </NiceModal.Provider>
-    </WithPortal>
+    <QueryProvider>
+      <WithPortal>
+        <NiceModal.Provider>
+          <WalletContextProvider>
+            <>{children}</>
+          </WalletContextProvider>
+        </NiceModal.Provider>
+      </WithPortal>
+    </QueryProvider>
   );
 };

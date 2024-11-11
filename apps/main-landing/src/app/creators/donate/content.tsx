@@ -10,6 +10,8 @@ import { useSearchParams } from 'next/navigation';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { classes } from '@idriss-xyz/ui/utils';
 import { useWallet } from '@idriss-xyz/wallet-connect';
+import { getAddress } from 'viem';
+import { Spinner } from '@idriss-xyz/ui/spinner';
 
 import { ChainSelect, TokenSelect } from './components';
 import {
@@ -19,8 +21,15 @@ import {
   TOKEN,
 } from './constants';
 import { createSendPayloadSchema, hexSchema, SendPayload } from './schema';
-import { getDefaultTokenForChainId, getSendFormDefaultValues } from './utils';
+import {
+  applyDecimalsToNumericString,
+  getDefaultTokenForChainId,
+  getSendFormDefaultValues,
+  getTransactionUrl,
+  roundToSignificantFigures,
+} from './utils';
 import { Token } from './types';
+import { useSender } from './hooks';
 
 const SEARCH_PARAMETER = {
   ADDRESS: 'address',
@@ -34,7 +43,7 @@ type Properties = {
 };
 
 const baseClassName =
-  'z-1 w-[426px] max-w-full rounded-xl bg-white px-4 pb-9 pt-6';
+  'z-1 w-[426px] max-w-full rounded-xl bg-white px-4 pb-9 pt-6 flex flex-col items-center';
 
 export const Content = ({ className }: Properties) => {
   const { wallet, openConnectionModal, isConnectionModalOpened } = useWallet();
@@ -124,7 +133,11 @@ export const Content = ({ className }: Properties) => {
     resolver: zodResolver(createSendPayloadSchema(allowedChainsIds)),
   });
 
-  const [chainId] = formMethods.watch(['chainId']);
+  const [chainId, tokenAddress, amount] = formMethods.watch([
+    'chainId',
+    'tokenAddress',
+    'amount',
+  ]);
 
   const onChangeChainId = useCallback(
     (chainId: number) => {
@@ -149,9 +162,38 @@ export const Content = ({ className }: Properties) => {
     return tokens;
   }, [possibleTokens, chainId]);
 
-  const onSubmit: SubmitHandler<SendPayload> = useCallback(() => {
-    //
-  }, []);
+  const sender = useSender({ wallet });
+
+  const selectedToken = useMemo(() => {
+    return CHAIN_ID_TO_TOKENS[chainId]?.find((token) => {
+      return token.address === tokenAddress;
+    });
+  }, [chainId, tokenAddress]);
+
+  const amountInSelectedToken = useMemo(() => {
+    if (!sender.tokensToSend || !selectedToken?.decimals) {
+      return;
+    }
+
+    return applyDecimalsToNumericString(
+      sender.tokensToSend.toString(),
+      selectedToken.decimals,
+    );
+  }, [selectedToken?.decimals, sender.tokensToSend]);
+
+  const onSubmit: SubmitHandler<SendPayload> = useCallback(
+    async (sendPayload) => {
+      if (!addressValidationResult.success) {
+        return;
+      }
+      const validAddress = getAddress(addressValidationResult.data);
+      await sender.send({
+        sendPayload,
+        recipientAddress: validAddress,
+      });
+    },
+    [addressValidationResult.data, addressValidationResult.success, sender],
+  );
 
   if (addressValidationResult.error) {
     return (
@@ -163,10 +205,69 @@ export const Content = ({ className }: Properties) => {
     );
   }
 
+  if (sender.isSending) {
+    return (
+      <div className={classes(baseClassName, className)}>
+        <Spinner className="size-16 text-mint-600" />
+        <p className="mt-6 text-heading5 text-neutral-900 lg:text-heading4">
+          Waiting for confirmation
+        </p>
+        <p className="mt-3 flex flex-wrap justify-center gap-1 text-body5 text-neutral-600 lg:text-body4">
+          Sending <span className="text-mint-600">${amount}</span>{' '}
+          {amountInSelectedToken
+            ? `(${roundToSignificantFigures(Number(amountInSelectedToken), 2)} ${selectedToken?.symbol})`
+            : null}
+        </p>
+        <p className="mt-1 text-body5 text-neutral-600 lg:text-body4">
+          Confirm transfer in your wallet
+        </p>
+      </div>
+    );
+  }
+
+  if (sender.isSuccess) {
+    const transactionUrl = getTransactionUrl({
+      chainId,
+      transactionHash: sender.data?.transactionHash ?? '0x',
+    });
+
+    return (
+      <div className={classes(baseClassName, className)}>
+        <div className="rounded-[100%] bg-mint-200 p-4">
+          <Icon
+            name="CheckCircle2"
+            className="stroke-1 text-mint-600"
+            size={48}
+          />
+        </div>
+        <p className="text-heading4 text-neutral-900">Transfer completed</p>
+        <Link
+          size="medium"
+          href={transactionUrl}
+          className="mt-2 flex items-center"
+          isExternal
+        >
+          View on explorer
+        </Link>
+        <Button
+          className="mt-6 w-full"
+          intent="negative"
+          size="medium"
+          onClick={() => {
+            sender.reset();
+            formMethods.reset();
+          }}
+        >
+          CLOSE
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <div className={classes(baseClassName, className)}>
-      <h1 className="text-heading4">Select your donation details</h1>
-      <Form onSubmit={formMethods.handleSubmit(onSubmit)}>
+      <h1 className="self-start text-heading4">Select your donation details</h1>
+      <Form onSubmit={formMethods.handleSubmit(onSubmit)} className="w-full">
         <Controller
           control={formMethods.control}
           name="chainId"
