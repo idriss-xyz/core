@@ -58,10 +58,6 @@ export const ImageSequencer = ({
     }
 
     const run = async () => {
-      // const _images = JSON.parse(JSON.stringify(images)) as string[];
-      // if (direction === 'backward') {
-      //   _images.reverse();
-      // }
       const [_firstImage, ...restImages] = images;
       const v = await preloadImages(restImages);
       setLoadedImages((previous) => {
@@ -89,21 +85,15 @@ export const ImageSequencer = ({
           }
         });
       } else {
-        setCurrentIndex(
-          (previousIndex) => {
-            if (direction === 'forward') {
-              return previousIndex < endIndex
-                ? previousIndex + 1
-                : previousIndex;
-            } else {
-              return previousIndex > startIndex
-                ? previousIndex - 1
-                : previousIndex;
-            }
-          },
-
-          // prevIndex < endIndex ? prevIndex + 1 : prevIndex,
-        );
+        setCurrentIndex((previousIndex) => {
+          if (direction === 'forward') {
+            return previousIndex < endIndex ? previousIndex + 1 : previousIndex;
+          } else {
+            return previousIndex > startIndex
+              ? previousIndex - 1
+              : previousIndex;
+          }
+        });
       }
     }, frameInterval);
 
@@ -113,16 +103,6 @@ export const ImageSequencer = ({
       }
     };
   }, [images.length, isLoaded, direction, endIndex, infinite, startIndex]);
-
-  // useEffect(() => {
-  //   if (
-  //     !infinite &&
-  //     currentIndex === images.length - 1 &&
-  //     intervalRef.current
-  //   ) {
-  //     clearInterval(intervalRef.current);
-  //   }
-  // }, [infinite, currentIndex]);
 
   if (!hasFirstImage) {
     return null;

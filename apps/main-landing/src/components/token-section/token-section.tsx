@@ -36,7 +36,7 @@ export const TokenSection = () => {
           <h2 className="mt-6 text-display6 gradient-text lg:text-display3">
             IDRISS DAO
           </h2>
-          <p className="mt-4 max-w-[597px] text-center text-body3 text-neutralGreen-900 lg:text-body2">
+          <p className="mt-4 max-w-[630px] text-center text-body3 text-neutralGreen-900 lg:text-body2">
             Work together, earn together. This is the original promise of
             decentralized organizations. IDRISS is on the path to becoming a
             DAO, giving the community true ownership in its success.
