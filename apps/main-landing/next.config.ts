@@ -1,5 +1,6 @@
 import type { NextConfig } from 'next';
 import withBundleAnalyzer from '@next/bundle-analyzer';
+import { BRAND_GUIDELINE_LINK } from '@idriss-xyz/constants';
 
 const LEGACY_URLS = [
   '/partner-whitelist',
@@ -36,6 +37,12 @@ const nextConfig: NextConfig = {
       {
         source: '/docs',
         destination: 'https://docs.idriss.xyz/',
+        basePath: false,
+        permanent: false,
+      },
+      {
+        source: '/brand',
+        destination: BRAND_GUIDELINE_LINK,
         basePath: false,
         permanent: false,
       },

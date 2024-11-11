@@ -46,7 +46,7 @@ export const EXTERNAL_RESOURCES: SectionItem[] = [
   },
   {
     link: BRAND_GUIDELINE_LINK,
-    name: 'BRAND KIT',
+    name: 'BRAND',
     isExternal: true,
   },
 ];

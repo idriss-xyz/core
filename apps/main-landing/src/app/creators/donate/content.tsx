@@ -3,7 +3,7 @@ import { Form } from '@idriss-xyz/ui/form';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { Button } from '@idriss-xyz/ui/button';
 import { Link } from '@idriss-xyz/ui/link';
-import { PROTOCOL_FEE_USER_GUIDE_LINK } from '@idriss-xyz/constants';
+import { CREATORS_USER_GUIDE_LINK } from '@idriss-xyz/constants';
 import { useCallback, useMemo } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSearchParams } from 'next/navigation';
@@ -362,7 +362,7 @@ export const Content = ({ className }: Properties) => {
       </Form>
 
       <div className="mt-6 flex justify-center">
-        <Link size="xs" href={PROTOCOL_FEE_USER_GUIDE_LINK} isExternal>
+        <Link size="xs" href={CREATORS_USER_GUIDE_LINK} isExternal>
           1% supplies IDRISS’s treasury
         </Link>
       </div>

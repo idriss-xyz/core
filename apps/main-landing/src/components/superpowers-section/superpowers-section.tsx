@@ -2,8 +2,8 @@ import { Button } from '@idriss-xyz/ui/button';
 import Image from 'next/image';
 import {
   CHROME_EXTENSION_LINK,
-  CREATORS_DOCS_LINK,
   CREATORS_LINK,
+  EXTENSION_USER_GUIDE_LINK,
 } from '@idriss-xyz/constants';
 
 import { ProductTile } from './components/product-tile';
@@ -49,13 +49,13 @@ export const SuperpowersSection = () => {
                   href={CHROME_EXTENSION_LINK}
                   isExternal
                 >
-                  Download
+                  DOWNLOAD
                 </Button>
                 <Button
                   intent="secondary"
                   size="large"
                   asLink
-                  href={CREATORS_DOCS_LINK}
+                  href={EXTENSION_USER_GUIDE_LINK}
                   isExternal
                 >
                   LEARN MORE

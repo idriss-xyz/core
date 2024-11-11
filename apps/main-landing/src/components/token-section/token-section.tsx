@@ -38,8 +38,8 @@ export const TokenSection = () => {
           </h2>
           <p className="mt-4 max-w-[597px] text-center text-body3 text-neutralGreen-900 lg:text-body2">
             Work together, earn together. This is the original promise of
-            decentralized organizations. IDRISS is on a path to become a DAO,
-            giving the community true ownership in its success.
+            decentralized organizations. IDRISS is on the path to becoming a
+            DAO, giving the community true ownership in its success.
           </p>
           <div className="mt-10 flex w-full flex-col space-y-6 lg:mt-[60px] lg:flex-row lg:justify-center lg:space-x-6 lg:space-y-0">
             <Button

@@ -1,4 +1,4 @@
-import { CHROME_EXTENSION_LINK } from '@idriss-xyz/constants';
+import { CREATORS_LINK } from '@idriss-xyz/constants';
 import { Button } from '@idriss-xyz/ui/button';
 export const CreatorsSectionActions = () => {
   return (
@@ -7,7 +7,7 @@ export const CreatorsSectionActions = () => {
       size="large"
       className="w-full md:w-fit"
       asLink
-      href={CHROME_EXTENSION_LINK}
+      href={CREATORS_LINK}
       isExternal
     >
       CREATE DONATION LINK
