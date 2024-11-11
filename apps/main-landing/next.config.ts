@@ -7,6 +7,11 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: '/streamers',
+        destination: '/creators',
+        permanent: true,
+      },
+      {
         source: '/streamers/donate',
         destination: '/creators/donate',
         permanent: true,
