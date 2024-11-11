@@ -3,6 +3,7 @@ import localFont from 'next/font/local';
 import './globals.css';
 import { ReactNode } from 'react';
 import { headers } from 'next/headers';
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 const aeonikPro = localFont({
   src: [
@@ -97,6 +98,7 @@ export default async function RootLayout({
         className={`${aeonikPro.variable} flex min-h-screen flex-col font-sans antialiased`}
       >
         {children}
+        <GoogleAnalytics gaId="G-YM1B80KWY4" />
       </body>
     </html>
   );
