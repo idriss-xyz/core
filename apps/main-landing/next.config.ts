@@ -11,6 +11,12 @@ const nextConfig: NextConfig = {
         destination: '/creators/donate',
         permanent: true,
       },
+      {
+        source: '/streamers/obs',
+        destination: 'https://api.idriss.xyz/creators/obs',
+        basePath: false,
+        permanent: false,
+      },
     ];
   },
   experimental: {
