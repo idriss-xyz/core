@@ -22,6 +22,37 @@ const nextConfig: NextConfig = {
         basePath: false,
         permanent: false,
       },
+      {
+        source: '/docs',
+        destination: 'https://docs.idriss.xyz/',
+        basePath: false,
+        permanent: false,
+      },
+      {
+        source: '/discord',
+        destination: 'https://www.discord.gg/RJhJKamjw5',
+        basePath: false,
+        permanent: false,
+      },
+      {
+        source: '/github',
+        destination: 'https://www.github.com/idriss-xyz',
+        basePath: false,
+        permanent: false,
+      },
+      {
+        source: '/extension',
+        destination:
+          'https://chromewebstore.google.com/detail/idriss/fghhpjoffbgecjikiipbkpdakfmkbmig',
+        basePath: false,
+        permanent: false,
+      },
+      {
+        source: '/metamask',
+        destination: 'https://snaps.metamask.io/snap/npm/idriss-crypto/snap/',
+        basePath: false,
+        permanent: false,
+      },
     ];
   },
   experimental: {
