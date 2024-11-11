@@ -88,6 +88,9 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ['@idriss-xyz/ui'],
   },
+  images: {
+    domains: ['localhost'],
+  },
 };
 
 // eslint-disable-next-line import/no-default-export

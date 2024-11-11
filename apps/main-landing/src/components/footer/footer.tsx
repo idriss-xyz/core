@@ -14,7 +14,7 @@ import { EXTERNAL_RESOURCES, INTERNAL_LINKS, SOCIALS } from './constants';
 
 export const Footer = () => {
   return (
-    <footer className="relative bg-mint-100 p-2.5 lg:p-0">
+    <footer className="relative overflow-x-hidden bg-mint-100 p-2.5 lg:p-0">
       <div className="container pt-20 lg:grid lg:grid-cols-2 lg:gap-6 lg:pb-40">
         <div className="flex flex-col items-start">
           <h2 className="text-balance text-display6 text-neutral-900 lg:text-display3">

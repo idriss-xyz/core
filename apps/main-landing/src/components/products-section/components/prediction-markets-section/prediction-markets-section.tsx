@@ -8,6 +8,9 @@ type Properties = {
   fadeOut: boolean;
 };
 
+const CIRCLE_IMAGE_PATH =
+  'extension-to-prediction-markets-circle-optimized/IDRISS_CIRCLE_0038.webp';
+
 export const PredictionMarketsSection = ({
   className,
   fadeOut,
@@ -22,6 +25,8 @@ export const PredictionMarketsSection = ({
       title={PredictionMarketsSectionData.info.title}
       features={PredictionMarketsSectionData.info.features}
       tabsAsLinks
+      animated={false}
+      circleImage={CIRCLE_IMAGE_PATH}
     />
   );
 };

@@ -1,11 +1,11 @@
 'use client';
-import Image from 'next/image';
 import { Icon, IconName } from '@idriss-xyz/ui/icon';
 import { CSSProperties, ReactNode } from 'react';
 import { classes } from '@idriss-xyz/ui/utils';
 
+import { ImageSequencer } from '@/components/image-sequencer';
+
 import { tabOptions } from '../constants';
-import { circleWithScreen } from '../assets';
 
 import { ProductInfo } from './product-info';
 import { Tabs } from './tabs';
@@ -20,7 +20,20 @@ type ProductSectionProperties = {
   className?: string;
   fadeOut: boolean;
   style?: CSSProperties;
-};
+} & (
+  | {
+      animated: true;
+      animationStartIndex: number;
+      animationEndIndex: number;
+      animationDirection: 'forward' | 'backward';
+      animationImages: string[];
+    }
+  | {
+      animated: false;
+      circleImage: string;
+    }
+);
+
 type ProductSectionFeature = {
   icon: IconName;
   title: string;
@@ -42,11 +55,12 @@ export const ProductSection = ({
   tabsAsLinks,
   fadeOut,
   style,
+  ...properties
 }: ProductSectionProperties) => {
   return (
     <div className={classes('relative flex size-full bg-mint-100', className)}>
       <div
-        className="flex size-full flex-col bg-[linear-gradient(114deg,_#022B1E_34.81%,_#079165_123.57%)] px-4 py-10 transition-[border-radius] duration-150 will-change-[border-radius] lg:px-[120px] lg:py-[80px] [@media(max-height:1100px)]:py-[30px]"
+        className="flex size-full flex-col bg-[linear-gradient(114deg,_#022B1E_34.81%,_#079165_123.57%)] px-4 transition-[border-radius] duration-150 will-change-[border-radius] lg:px-[120px] lg:pt-[80px] lg:[@media(max-height:1100px)]:pt-[30px]"
         style={style}
       >
         <div className="container flex flex-col gap-10 p-0 lg:gap-[104px] lg:[@media(max-height:1000px)]:gap-[30px] lg:[@media(max-height:770px)]:gap-[24px] lg:[@media(min-height:1001px)]:[@media(max-height:1100px)]:gap-[50px]">
@@ -56,21 +70,21 @@ export const ProductSection = ({
               activeOptionKey={activeOptionKey}
               asLink={tabsAsLinks}
             />
-            <div className="flex flex-col gap-4">
-              <div className="overflow-hidden">
+            <div className="z-1 flex flex-col gap-4">
+              <div className="z-1 overflow-hidden">
                 <h2
                   className={classes(
-                    'text-balance text-display5 text-midnightGreen-100 transition-transform duration-1000 [@media(min-width:1181px)]:text-display2',
+                    'text-balance text-display5 text-midnightGreen-100 transition-transform duration-1000 [@media(max-width:1440px)]:[@media(max-height:1000px)]:text-display4 [@media(min-width:1441px)]:text-display2',
                     fadeOut && 'translate-y-[-120%]',
                   )}
                 >
                   {title}
                 </h2>
               </div>
-              <div className="overflow-hidden">
+              <div className="z-1 overflow-hidden">
                 <p
                   className={classes(
-                    'text-balance text-body3 text-midnightGreen-200 transition-transform duration-1000 lg:w-[60%] [@media(min-width:1181px)]:text-body2',
+                    'text-balance text-body3 text-midnightGreen-200 transition-transform duration-1000 lg:w-[60%] [@media(max-width:1440px)]:[@media(max-height:1000px)]:text-body4 [@media(min-width:1441px)]:text-body2',
                     fadeOut && 'translate-y-[-120%]',
                   )}
                 >
@@ -88,36 +102,46 @@ export const ProductSection = ({
                 {actions}
               </div>
             </div>
-            <Image
-              priority
-              src={circleWithScreen}
-              alt=""
-              className="bottom-0 right-0 top-1/2 lg:absolute lg:max-w-[45%] lg:-translate-y-1/2 lg:[@media(max-width:1440px)]:[@media(max-height:1000px)]:translate-y-[-30%] lg:[@media(min-height:1300px)]:-translate-y-full [@media(min-width:1001px)]:[@media(min-height:901px)]:[@media(max-height:1100px)]:translate-y-[-40%]"
-            />
-          </div>
-          <div className="overflow-hidden">
-            <div
-              className={classes(
-                'grid size-fit flex-wrap items-start gap-6 p-1.5 transition-transform duration-1000 md:grid-cols-2 lg:grid-cols-2',
-                fadeOut && 'translate-y-[-120%]',
-              )}
-            >
-              {features.map((feature) => {
-                return (
-                  <ProductInfo
-                    key={feature.title}
-                    icon={
-                      <Icon
-                        name={feature.icon}
-                        size={65}
-                        className="size-10 text-[#55EB3C] lg:size-[65px]"
-                      />
-                    }
-                    title={feature.title}
-                    description={feature.description}
-                  />
-                );
-              })}
+            {properties.animated ? (
+              <ImageSequencer
+                infinite={false}
+                images={properties.animationImages}
+                direction={properties.animationDirection}
+                startIndex={properties.animationStartIndex}
+                endIndex={properties.animationEndIndex}
+                className="bottom-0 right-0 top-1/2 z-0 lg:absolute lg:max-w-[45%] lg:-translate-y-1/2 lg:[@media(max-width:1440px)]:[@media(max-height:1000px)]:translate-y-[-30%] lg:[@media(min-height:1300px)]:-translate-y-full [@media(min-width:1001px)]:[@media(min-height:901px)]:[@media(max-height:1100px)]:translate-y-[-40%]"
+              />
+            ) : (
+              <img
+                src={properties.circleImage}
+                alt=""
+                className="bottom-0 right-0 top-1/2 z-0 lg:absolute lg:max-w-[45%] lg:-translate-y-1/2 lg:[@media(max-width:1440px)]:[@media(max-height:1000px)]:translate-y-[-30%] lg:[@media(min-height:1300px)]:-translate-y-full [@media(min-width:1001px)]:[@media(min-height:901px)]:[@media(max-height:1100px)]:translate-y-[-40%]"
+              />
+            )}
+            <div className="z-1 overflow-hidden">
+              <div
+                className={classes(
+                  'grid size-fit flex-wrap items-start gap-6 p-1.5 pb-10 transition-transform duration-1000 md:grid-cols-2 lg:grid-cols-2 lg:pb-[80px] [@media(max-height:1100px)]:pb-[30px]',
+                  fadeOut && 'translate-y-[-120%]',
+                )}
+              >
+                {features.map((feature) => {
+                  return (
+                    <ProductInfo
+                      key={feature.title}
+                      icon={
+                        <Icon
+                          name={feature.icon}
+                          size={65}
+                          className="size-10 text-[#55EB3C] lg:size-[65px]"
+                        />
+                      }
+                      title={feature.title}
+                      description={feature.description}
+                    />
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>

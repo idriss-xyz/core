@@ -9,7 +9,7 @@ type Properties = {
 
 export const ProductInfo = ({ icon, title, description }: Properties) => {
   return (
-    <div className="relative flex max-w-[384px] items-center gap-4 rounded-[24px] bg-[rgba(255,255,255,0.10)] px-5 py-4 shadow-[0_0_0_6px_rgba(255,255,255,0.08)] md:h-full md:py-[34px] lg:py-[34px] lg:[@media(max-width:1440px)]:bg-[rgba(5,101,70,0.6)]">
+    <div className="relative flex max-w-[384px] items-center gap-4 rounded-[24px] bg-[rgba(255,255,255,0.10)] px-5 py-4 shadow-[0_0_0_6px_rgba(255,255,255,0.08)] md:h-full md:py-[34px] lg:py-[34px] lg:[@media(max-height:700px)]:p-2 lg:[@media(max-width:1440px)]:bg-[rgba(5,101,70,0.6)]">
       <div className="flex items-center justify-center gap-2 rounded-[24px] border-[0.765px] border-[rgba(85,235,60,0.30)] bg-[radial-gradient(50%_50%_at_50%_50%,_rgba(252,_255,_242,_0)_0%,_rgba(23,_255,_74,_0.18)_100%)] p-6">
         {icon}
       </div>

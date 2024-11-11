@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { backgroundLines } from '@/assets';
 import { INTERNAL_LINK } from '@/constants';
 
+import tokensFlow from './assets/IDRISS_SCENE_STREAM_4_2 1.png';
 import { CollaborationsShowcase } from './components';
 
 export const HeroSection = () => {
@@ -29,16 +30,12 @@ export const HeroSection = () => {
       >
         EXPLORE
       </Button>
-
-      <video
-        muted
-        loop
-        autoPlay
-        className="pointer-events-none z-0 mt-[-22%] w-full min-w-[500px]"
-      >
-        <source type="video/webm" src="/tokens-flow.webm" />
-      </video>
-      <CollaborationsShowcase className="container mt-9 text-center lg:my-20" />
+      <Image
+        src={tokensFlow}
+        className="pointer-events-none z-0 mt-[-40%] w-full min-w-[600px] lg:mt-[-24%] [@media(max-width:768px)]:[@media(min-width:470px)]:mt-[-30%] [@media(max-width:1023px)]:[@media(min-width:768px)]:mt-[-25%]"
+        alt=""
+      />
+      <CollaborationsShowcase className="container mt-[-10%] text-center md:mb-10 lg:mb-14 lg:mt-[-10%]" />
     </header>
   );
 };

@@ -8,11 +8,39 @@ import { ExtensionSectionData } from './extension-section';
 import { CreatorsSectionData } from './creators-section';
 import { PredictionMarketsSectionData } from './prediction-markets-section';
 
+function usePreviousValue<T>(value: T): T | undefined {
+  const reference = useRef<T>();
+  const previousValue = useRef<T>();
+
+  useEffect(() => {
+    if (value !== previousValue.current) {
+      reference.current = previousValue.current;
+      previousValue.current = value;
+    }
+  }, [value]);
+
+  return reference.current;
+}
+
 type Properties = {
   className?: string;
 };
 
 const numberOfSections = 3;
+
+const CIRCLE_IMAGE_NUMBER_START_GAP = 38;
+const CIRCLE_IMAGES_COUNT = 113;
+const EXTENSION_CIRCLE_INDEX = 0;
+const CREATORS_CIRCLE_INDEX = 57;
+const PREDICTION_MARKETS_CIRCLE_INDEX = 112;
+
+const CIRCLE_IMAGES_BASE_NAME = `extension-to-prediction-markets-circle-optimized/IDRISS_CIRCLE_`;
+
+const circleImages = [...Array.from({ length: CIRCLE_IMAGES_COUNT }).keys()]
+  .map((_, index) => {
+    return `${CIRCLE_IMAGES_BASE_NAME}${(index + CIRCLE_IMAGE_NUMBER_START_GAP).toString().padStart(4, '0')}.webp`;
+  })
+  .reverse();
 
 export const DesktopProductsSection = ({ className }: Properties) => {
   const containerReference = useRef<HTMLDivElement>(null);
@@ -25,6 +53,7 @@ export const DesktopProductsSection = ({ className }: Properties) => {
   const [isContainerVisible, setIsContainerVisible] = useState(false);
 
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
+  const previousSectionIndex = usePreviousValue(currentSectionIndex);
   const [debouncedCurrentSectionIndex, setDebouncedCurrentSectionIndex] =
     useState(0);
 
@@ -43,6 +72,56 @@ export const DesktopProductsSection = ({ className }: Properties) => {
       PredictionMarketsSectionData,
     ];
   }, []);
+
+  const animationDirection = useMemo(() => {
+    if (!previousSectionIndex) {
+      return 'forward';
+    }
+
+    return previousSectionIndex < currentSectionIndex ? 'forward' : 'backward';
+  }, [currentSectionIndex, previousSectionIndex]);
+
+  const animationStartIndex = useMemo(() => {
+    const sectionIndex = previousSectionIndex
+      ? Math.min(previousSectionIndex, currentSectionIndex)
+      : 0;
+
+    switch (sectionIndex) {
+      case 0: {
+        return EXTENSION_CIRCLE_INDEX;
+      }
+      case 1: {
+        return CREATORS_CIRCLE_INDEX;
+      }
+      case 2: {
+        return PREDICTION_MARKETS_CIRCLE_INDEX;
+      }
+      default: {
+        return EXTENSION_CIRCLE_INDEX;
+      }
+    }
+  }, [currentSectionIndex, previousSectionIndex]);
+
+  const animationEndIndex = useMemo(() => {
+    const sectionIndex = previousSectionIndex
+      ? Math.max(previousSectionIndex, currentSectionIndex)
+      : currentSectionIndex;
+
+    switch (sectionIndex) {
+      case 0: {
+        return EXTENSION_CIRCLE_INDEX;
+      }
+      case 1: {
+        return CREATORS_CIRCLE_INDEX;
+      }
+      case 2: {
+        return PREDICTION_MARKETS_CIRCLE_INDEX;
+      }
+      default: {
+        return EXTENSION_CIRCLE_INDEX;
+      }
+    }
+  }, [currentSectionIndex, previousSectionIndex]);
 
   const selectedSectionData = useMemo(() => {
     return sectionsData[debouncedCurrentSectionIndex] ?? ExtensionSectionData;
@@ -167,6 +246,11 @@ export const DesktopProductsSection = ({ className }: Properties) => {
             features={selectedSectionData.info.features}
             tabsAsLinks
             fadeOut={currentSectionIndex !== debouncedCurrentSectionIndex}
+            animated
+            animationDirection={animationDirection}
+            animationStartIndex={animationStartIndex}
+            animationEndIndex={animationEndIndex}
+            animationImages={circleImages}
           />
         </div>
         <div className="w-[0.5px]">
