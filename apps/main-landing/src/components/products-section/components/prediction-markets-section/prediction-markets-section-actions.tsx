@@ -45,7 +45,7 @@ export const PredictionMarketsSectionActions = () => {
   };
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex w-full flex-col gap-2">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col items-center gap-3 transition-transform duration-1000 md:flex-row lg:flex-row lg:gap-2"

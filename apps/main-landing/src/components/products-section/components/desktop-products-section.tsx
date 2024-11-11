@@ -8,20 +8,6 @@ import { ExtensionSectionData } from './extension-section';
 import { CreatorsSectionData } from './creators-section';
 import { PredictionMarketsSectionData } from './prediction-markets-section';
 
-function usePreviousValue<T>(value: T): T | undefined {
-  const reference = useRef<T>();
-  const previousValue = useRef<T>();
-
-  useEffect(() => {
-    if (value !== previousValue.current) {
-      reference.current = previousValue.current;
-      previousValue.current = value;
-    }
-  }, [value]);
-
-  return reference.current;
-}
-
 type Properties = {
   className?: string;
 };
@@ -53,7 +39,8 @@ export const DesktopProductsSection = ({ className }: Properties) => {
   const [isContainerVisible, setIsContainerVisible] = useState(false);
 
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
-  const previousSectionIndex = usePreviousValue(currentSectionIndex);
+  const previousSectionIndex = useRef<number>(0);
+
   const [debouncedCurrentSectionIndex, setDebouncedCurrentSectionIndex] =
     useState(0);
 
@@ -74,17 +61,20 @@ export const DesktopProductsSection = ({ className }: Properties) => {
   }, []);
 
   const animationDirection = useMemo(() => {
-    if (!previousSectionIndex) {
+    if (previousSectionIndex.current === undefined) {
       return 'forward';
     }
 
-    return previousSectionIndex < currentSectionIndex ? 'forward' : 'backward';
+    return previousSectionIndex.current < currentSectionIndex
+      ? 'forward'
+      : 'backward';
   }, [currentSectionIndex, previousSectionIndex]);
 
   const animationStartIndex = useMemo(() => {
-    const sectionIndex = previousSectionIndex
-      ? Math.min(previousSectionIndex, currentSectionIndex)
-      : 0;
+    const sectionIndex =
+      previousSectionIndex.current === undefined
+        ? 0
+        : Math.min(previousSectionIndex.current, currentSectionIndex);
 
     switch (sectionIndex) {
       case 0: {
@@ -103,9 +93,10 @@ export const DesktopProductsSection = ({ className }: Properties) => {
   }, [currentSectionIndex, previousSectionIndex]);
 
   const animationEndIndex = useMemo(() => {
-    const sectionIndex = previousSectionIndex
-      ? Math.max(previousSectionIndex, currentSectionIndex)
-      : currentSectionIndex;
+    const sectionIndex =
+      previousSectionIndex.current === undefined
+        ? currentSectionIndex
+        : Math.max(previousSectionIndex.current, currentSectionIndex);
 
     switch (sectionIndex) {
       case 0: {
@@ -225,6 +216,12 @@ export const DesktopProductsSection = ({ className }: Properties) => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
+  useEffect(() => {
+    if (currentSectionIndex !== previousSectionIndex.current) {
+      previousSectionIndex.current = currentSectionIndex;
+    }
+  }, [currentSectionIndex]);
 
   return (
     <section>

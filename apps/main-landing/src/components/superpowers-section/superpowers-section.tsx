@@ -2,8 +2,8 @@ import { Button } from '@idriss-xyz/ui/button';
 import Image from 'next/image';
 import {
   CHROME_EXTENSION_LINK,
+  CREATORS_DOCS_LINK,
   CREATORS_LINK,
-  DOCUMENTATION_LINK,
 } from '@idriss-xyz/constants';
 
 import { ProductTile } from './components/product-tile';
@@ -55,7 +55,7 @@ export const SuperpowersSection = () => {
                   intent="secondary"
                   size="large"
                   asLink
-                  href={DOCUMENTATION_LINK}
+                  href={CREATORS_DOCS_LINK}
                   isExternal
                 >
                   LEARN MORE

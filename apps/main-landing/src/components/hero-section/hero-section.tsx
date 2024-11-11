@@ -31,6 +31,7 @@ export const HeroSection = () => {
         EXPLORE
       </Button>
       <Image
+        priority
         src={tokensFlow}
         className="pointer-events-none z-0 mt-[-40%] w-full min-w-[600px] lg:mt-[-24%] [@media(max-width:768px)]:[@media(min-width:470px)]:mt-[-30%] [@media(max-width:1023px)]:[@media(min-width:768px)]:mt-[-25%]"
         alt=""

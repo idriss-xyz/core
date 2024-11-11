@@ -1,6 +1,6 @@
 import {
   BLOG_LINK,
-  BRAND_KIT_LINK,
+  BRAND_GUIDELINE_LINK,
   DOCUMENTATION_LINK,
   GITHUB_LINK,
   SOCIAL_LINK,
@@ -45,7 +45,7 @@ export const EXTERNAL_RESOURCES: SectionItem[] = [
     isExternal: true,
   },
   {
-    link: BRAND_KIT_LINK,
+    link: BRAND_GUIDELINE_LINK,
     name: 'BRAND KIT',
     isExternal: true,
   },

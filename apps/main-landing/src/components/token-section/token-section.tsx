@@ -3,7 +3,17 @@ import Image from 'next/image';
 import { SOCIAL_LINK } from '@idriss-xyz/constants';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 
+import { ImageSequencer } from '../image-sequencer';
+
 import background from './background.png';
+
+const TOKEN_COIN_BASE_NAME = `spining-token-coin-optimized/IDRISS_COIN_`;
+const TOKEN_COIN_IMAGES_COUNT = 91;
+const tokenCoinImages = [
+  ...Array.from({ length: TOKEN_COIN_IMAGES_COUNT }).keys(),
+].map((_, index) => {
+  return `${TOKEN_COIN_BASE_NAME}${index.toString().padStart(4, '0')}.webp`;
+});
 
 export const TokenSection = () => {
   return (
@@ -17,9 +27,12 @@ export const TokenSection = () => {
             gradientStartColor="#5FEB3C"
             gradientStopColor="rgba(145,206,154,0.50)"
           />
-          <video muted loop autoPlay className="size-[88px] lg:size-[200px]">
-            <source type="video/webm" src="/IDRISS_COIN.webm" />
-          </video>
+
+          <ImageSequencer
+            images={tokenCoinImages}
+            className="size-[88px] lg:size-[200px]"
+          />
+
           <h2 className="mt-6 text-display6 gradient-text lg:text-display3">
             IDRISS DAO
           </h2>

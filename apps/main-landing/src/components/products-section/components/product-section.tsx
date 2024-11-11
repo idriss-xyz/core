@@ -64,7 +64,7 @@ export const ProductSection = ({
         style={style}
       >
         <div className="container flex flex-col gap-10 p-0 lg:gap-[104px] lg:[@media(max-height:1000px)]:gap-[30px] lg:[@media(max-height:770px)]:gap-[24px] lg:[@media(min-height:1001px)]:[@media(max-height:1100px)]:gap-[50px]">
-          <div className="flex flex-col items-start gap-[64px] lg:[@media(max-height:1100px)]:gap-[50px] lg:[@media(max-height:770px)]:gap-[24px]">
+          <div className="flex flex-col items-start gap-[64px] lg:[@media(max-height:1100px)]:gap-[50px]">
             <Tabs
               options={tabOptions}
               activeOptionKey={activeOptionKey}
@@ -109,13 +109,13 @@ export const ProductSection = ({
                 direction={properties.animationDirection}
                 startIndex={properties.animationStartIndex}
                 endIndex={properties.animationEndIndex}
-                className="bottom-0 right-0 top-1/2 z-0 lg:absolute lg:max-w-[45%] lg:-translate-y-1/2 lg:[@media(max-width:1440px)]:[@media(max-height:1000px)]:translate-y-[-30%] lg:[@media(min-height:1300px)]:-translate-y-full [@media(min-width:1001px)]:[@media(min-height:901px)]:[@media(max-height:1100px)]:translate-y-[-40%]"
+                className="bottom-0 right-0 top-1/2 z-0 lg:absolute lg:max-w-[45%] lg:-translate-y-1/2 lg:[@media(max-width:1440px)]:[@media(max-height:1000px)]:translate-y-[-30%] lg:[@media(min-height:1300px)]:-translate-y-full [@media(min-width:1001px)]:[@media(min-height:800px)]:[@media(max-height:1100px)]:translate-y-[-40%]"
               />
             ) : (
               <img
                 src={properties.circleImage}
                 alt=""
-                className="bottom-0 right-0 top-1/2 z-0 lg:absolute lg:max-w-[45%] lg:-translate-y-1/2 lg:[@media(max-width:1440px)]:[@media(max-height:1000px)]:translate-y-[-30%] lg:[@media(min-height:1300px)]:-translate-y-full [@media(min-width:1001px)]:[@media(min-height:901px)]:[@media(max-height:1100px)]:translate-y-[-40%]"
+                className="bottom-0 right-0 top-1/2 z-0 lg:absolute lg:max-w-[45%] lg:-translate-y-1/2 lg:[@media(max-width:1440px)]:[@media(max-height:1000px)]:translate-y-[-30%] lg:[@media(min-height:1300px)]:-translate-y-full [@media(min-width:1001px)]:[@media(min-height:800px)]:[@media(max-height:1100px)]:translate-y-[-40%]"
               />
             )}
             <div className="z-1 overflow-hidden">
