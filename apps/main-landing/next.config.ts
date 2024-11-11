@@ -1,6 +1,17 @@
 import type { NextConfig } from 'next';
 import withBundleAnalyzer from '@next/bundle-analyzer';
 
+const LEGACY_URLS = [
+  '/partner-whitelist',
+  '/pricing',
+  '/token-price',
+  '/v1/getTwitterIDPlugin',
+  '/v2/getTwitterIDPlugin',
+  '/v2/getTwitterNamesPlugin',
+  '/v1/getTwitterID',
+  '/v1/getTwitterNames',
+];
+
 const nextConfig: NextConfig = {
   productionBrowserSourceMaps: true,
   // eslint-disable-next-line @typescript-eslint/require-await
@@ -53,6 +64,25 @@ const nextConfig: NextConfig = {
         basePath: false,
         permanent: false,
       },
+      {
+        source: '/pp',
+        destination: 'https://docs.idriss.xyz/resources/privacy-policy',
+        basePath: false,
+        permanent: false,
+      },
+      {
+        source: '/tos',
+        destination: 'https://docs.idriss.xyz/resources/terms-of-service',
+        basePath: false,
+        permanent: false,
+      },
+      ...LEGACY_URLS.map((url) => {
+        return {
+          source: url,
+          destination: `https://legacy.idriss.xyz${url}`,
+          permanent: false,
+        };
+      }),
     ];
   },
   experimental: {

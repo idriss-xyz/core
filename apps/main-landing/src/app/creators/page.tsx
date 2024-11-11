@@ -63,7 +63,7 @@ export default function Donors() {
       })?.symbol ?? '';
 
     await navigator.clipboard.writeText(
-      `https://idriss.xyz/creators/donate?address=${address}&token=${tokenSymbol}&network=${chainShortName}`,
+      `https://www.idriss.xyz/creators/donate?address=${address}&token=${tokenSymbol}&network=${chainShortName}`,
     );
 
     setCopiedDonationLink(true);
