@@ -12,6 +12,8 @@ import {
   POLYGON_LOGO,
   USDC_LOGO,
   ALEPH_LOGO,
+  YGG_LOGO,
+  PDT_LOGO,
 } from './logos';
 import { Chain, Token, ChainToken } from './types';
 
@@ -93,14 +95,12 @@ export const TOKEN = {
   YGG: {
     name: 'Yield Guild Games',
     symbol: 'YGG',
-    // logo: YGG_LOGO,
-    logo: AAVEGOTCHI_LOGO,
+    logo: YGG_LOGO,
   },
   PDT: {
     name: 'ParagonsDAO',
     symbol: 'PDT',
-    // logo: PDT_LOGO,
-    logo: AAVEGOTCHI_LOGO,
+    logo: PDT_LOGO,
   },
 } satisfies Record<string, Token>;
 
