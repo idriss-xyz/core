@@ -1,3 +1,4 @@
+'use client';
 import { Button } from '@idriss-xyz/ui/button';
 import Image from 'next/image';
 
@@ -5,6 +6,7 @@ import { backgroundLines } from '@/assets';
 import { INTERNAL_LINK } from '@/constants';
 
 import tokensFlow from './assets/IDRISS_SCENE_STREAM_4_2 1.png';
+import tokensFlowLowResolution from './assets/IDRISS_SCENE_STREAM_4_2 1_LOW_RES.png';
 import { CollaborationsShowcase } from './components';
 
 export const HeroSection = () => {
@@ -32,6 +34,8 @@ export const HeroSection = () => {
       </Button>
       <Image
         priority
+        blurDataURL={tokensFlowLowResolution.src}
+        placeholder="blur"
         src={tokensFlow}
         className="pointer-events-none z-0 mt-[-40%] w-full min-w-[600px] lg:mt-[-24%] [@media(max-width:768px)]:[@media(min-width:470px)]:mt-[-30%] [@media(max-width:1023px)]:[@media(min-width:768px)]:mt-[-25%]"
         alt=""
