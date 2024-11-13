@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
 import { ReactNode } from 'react';
@@ -68,6 +68,12 @@ export const metadata: Metadata = {
       },
     ],
   },
+};
+
+// ts-unused-exports:disable-next-line
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 0.9,
 };
 
 // ts-unused-exports:disable-next-line
