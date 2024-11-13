@@ -1,11 +1,9 @@
-## Download
-* [Chrome / Brave](https://chrome.google.com/webstore/detail/idriss-crypto/fghhpjoffbgecjikiipbkpdakfmkbmig)
-* [Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/idrisscrypto/jgnmbeoapdbocaajhmfjhldhcpngfiol)
-* [Mozilla](https://addons.mozilla.org/pl/firefox/addon/idriss-crypto/?utm_source=addons.mozilla.org&utm_medium=referral&utm_content=search)
+## Download Extension
+* [Chrome / Brave / Arc](https://chrome.google.com/webstore/detail/idriss-crypto/fghhpjoffbgecjikiipbkpdakfmkbmig)
 
-## Twitter Transfers
+## X (Twitter) Transfers
 
-Sending a transfer through a green IDriss badge on Twitter creates a contract call with IDriss' smart contracts, which are live on several networks:
+Sending a transfer through a green IDRISS badge on X (Twitter) and Farcaster clients (Warpcast and Supercast) creates a contract call with IDRISS' smart contracts, which are live on several networks:
 
 | Network                 | Contract Address                               |
 |----------------------------|-----------------------------------------------|
@@ -17,20 +15,22 @@ Sending a transfer through a green IDriss badge on Twitter creates a contract ca
 | Linea           | [0x7Ef966A9F75Ae230F0583DCD24Ac689E47f533be](https://lineascan.build/address/0x7Ef966A9F75Ae230F0583DCD24Ac689E47f533be#code)   |
 | Mantle           | [0x324Ad1738B9308D5AF5E81eDd6389BFa082a8968](https://explorer.mantle.xyz/address/0x324Ad1738B9308D5AF5E81eDd6389BFa082a8968?tab=contract)   |
 | Scroll           | [0x324ad1738b9308d5af5e81edd6389bfa082a8968](https://scrollscan.com/address/0x324ad1738b9308d5af5e81edd6389bfa082a8968#code)   |
+| Aleph Zero EVM          | [0xcA6742d2d6B9dBFFD841DF25C15cFf45FBbB98f4](https://evm-explorer.alephzero.org/address/0xcA6742d2d6B9dBFFD841DF25C15cFf45FBbB98f4?tab=contract)   |
+
 
 
 ## Donations to Public Goods
 
-Donations in the meta-infinite PGF round (red badges) are routed through the contract on Optimism: 0x43f532d678b6a1587be989a50526f89428f68315.
+Donations in the meta-infinite PGF round are routed through the contract on Optimism: 0x43f532d678b6a1587be989a50526f89428f68315.
 
-List of grantees and their associated wallet addresses and Twitter names can be found [here](https://github.com/idriss-xyz/core/blob/master/apps/extension/src/common/customTwitterAccounts.json).
+List of grantees and their associated wallet addresses and X (Twitter) names can be found [here](https://github.com/idriss-xyz/core/blob/master/apps/extension/src/common/customTwitterAccounts.json).
 
-If your project is not on the list or you'd like to change a wallet address/Twitter username, please DM us on Twitter from your official project account or send us an email to hello@idriss.xyz from your official domain.
+If your project is not on the list or you'd like to change a wallet address/X (Twitter) username, please DM us on X (Twitter) from your official project account or send us an email to hello@idriss.xyz from your official domain.
 
-## Gitcoin GG20 Donations
-For the first time, donations sent to a project's Gitcoin round through Twitter can be sent cross-chain.
+## Gitcoin Donations
+For the first time, donations sent to a project's Gitcoin round through X (Twitter) can be sent cross-chain.
 
-Donations sent on the network the round is running on (same chain donations) are routed directly through Gitcoin's [AlloV2 contracts](https://github.com/allo-protocol/allo-v2). They do not go through any contracts deployed by IDriss. The AlloV2 contract address on all networks is `0x1133eA7Af70876e64665ecD07C0A0476d09465a1`.
+Donations sent on the network the round is running on (same chain donations) are routed directly through Gitcoin's [AlloV2 contracts](https://github.com/allo-protocol/allo-v2). They do not go through any contracts deployed by IDRISS. The AlloV2 contract address on all networks is `0x1133eA7Af70876e64665ecD07C0A0476d09465a1`.
 
 Cross chain donations leverage the Across Protocol through an [Across+ integration](https://docs.across.to/integration-guides/across+-integration). On the origin chain, as well as on the destination chain, donations are routed through our [wrapper contract](https://github.com/idriss-crypto/contracts/blob/DonationWrapper/src/contracts/DonationWrapper.sol). The addresses of this contract on different networks are
 
