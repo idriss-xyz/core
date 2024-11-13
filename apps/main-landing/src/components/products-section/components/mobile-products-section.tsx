@@ -9,13 +9,13 @@ type Properties = {
 export const MobileProductsSection = ({ className }: Properties) => {
   return (
     <>
-      <section className={className} id="extension-product">
+      <section className={className} id="extension">
         <ExtensionSection fadeOut={false} />
       </section>
-      <section className={className} id="creators-product">
+      <section className={className} id="creators">
         <CreatorsSection fadeOut={false} />
       </section>
-      <section className={className} id="prediction-markets-product">
+      <section className={className} id="prediction-markets">
         <PredictionMarketsSection fadeOut={false} />
       </section>
     </>

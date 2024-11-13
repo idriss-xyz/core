@@ -34,5 +34,5 @@ const BROWSER_EXTENSION_INFO: ProductSectionInfo = {
 export const ExtensionSectionData = {
   actions: <ExtensionSectionActions />,
   info: BROWSER_EXTENSION_INFO,
-  defaultOptionKey: 'extension-product',
+  defaultOptionKey: 'extension',
 };

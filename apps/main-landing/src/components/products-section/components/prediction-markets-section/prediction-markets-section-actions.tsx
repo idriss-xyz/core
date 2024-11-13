@@ -86,7 +86,7 @@ export const PredictionMarketsSectionActions = () => {
           className="w-full md:w-fit"
           disabled={mutation.isPending}
         >
-          GET EARLY ACCESS
+          JOIN WAITLIST
         </Button>
       </form>
       <div className="flex flex-col gap-1 pl-1">

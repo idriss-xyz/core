@@ -25,5 +25,5 @@ const PREDICTION_MARKETS_INFO: ProductSectionInfo = {
 export const PredictionMarketsSectionData = {
   actions: <PredictionMarketsSectionActions />,
   info: PREDICTION_MARKETS_INFO,
-  defaultOptionKey: 'prediction-markets-product',
+  defaultOptionKey: 'prediction-markets',
 };

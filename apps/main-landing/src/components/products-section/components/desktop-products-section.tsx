@@ -253,11 +253,11 @@ export const DesktopProductsSection = ({ className }: Properties) => {
         <div className="w-[0.5px]">
           <div
             ref={firstSectionAnchorReference}
-            id="extension-product"
+            id="extension"
             className="my-10 h-screen"
           />
-          <div id="creators-product" className="h-screen" />
-          <div id="prediction-markets-product" className="h-screen" />
+          <div id="creators" className="h-screen" />
+          <div id="prediction-markets" className="h-screen" />
         </div>
       </div>
     </section>

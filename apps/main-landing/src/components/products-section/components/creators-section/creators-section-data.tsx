@@ -25,5 +25,5 @@ const CREATORS_INFO: ProductSectionInfo = {
 export const CreatorsSectionData = {
   actions: <CreatorsSectionActions />,
   info: CREATORS_INFO,
-  defaultOptionKey: 'creators-product',
+  defaultOptionKey: 'creators',
 };
