@@ -54,7 +54,7 @@ export const Field = forwardRef(
         {helperText && (
           <span
             className={classes(
-              'flex items-center space-x-1 pt-1 text-label7 text-neutral-600 lg:text-label6',
+              'flex items-center space-x-1 text-label7 text-neutral-600 lg:text-label6',
               inputProperties.error && 'text-red-500',
             )}
           >
