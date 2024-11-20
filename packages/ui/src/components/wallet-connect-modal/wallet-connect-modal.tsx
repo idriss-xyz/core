@@ -57,9 +57,9 @@ export const WalletConnectModal = ({
           )}
         </div>
       }
-      width={400}
       onClose={onClose}
       isOpened={isOpened}
+      className="w-[calc(100vw-16px)] lg:w-[400px]"
     >
       <div className="mt-6 px-5 pb-5">
         {hasSomeProvider ? (
