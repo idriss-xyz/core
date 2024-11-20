@@ -1,4 +1,6 @@
 import Image from 'next/image';
+import { Button } from '@idriss-xyz/ui/button';
+import { ANNOUNCEMENT_LINK } from '@idriss-xyz/constants';
 
 import { TopBar } from '@/components';
 import { backgroundLines2 } from '@/assets';
@@ -19,7 +21,17 @@ export default function Donors() {
           alt=""
         />
 
-        <Content className="container lg:mt-[108px]" />
+        <Content className="container mt-10 lg:mt-[108px]" />
+        <Button
+          className="absolute bottom-6 right-1/2 translate-x-1/2 px-5 py-3.5 lg:right-7 lg:translate-x-0"
+          intent="secondary"
+          size="small"
+          href={ANNOUNCEMENT_LINK.CREATORS_DONATIONS}
+          isExternal
+          asLink
+        >
+          CREATE YOUR LINK
+        </Button>
       </main>
     </Providers>
   );

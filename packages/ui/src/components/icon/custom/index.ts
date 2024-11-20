@@ -17,3 +17,4 @@ export { Users } from './users';
 export { Verifying } from './verifying';
 export { Head } from './head';
 export { ExpandUpDown } from './expand-up-down';
+export { InfoCircle } from './info-circle';

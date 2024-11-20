@@ -12,6 +12,9 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { useWallet } from '@idriss-xyz/wallet-connect';
 import { getAddress } from 'viem';
 import { Spinner } from '@idriss-xyz/ui/spinner';
+import Image from 'next/image';
+
+import { backgroundLines3 } from '@/assets';
 
 import { ChainSelect, TokenSelect } from './components';
 import {
@@ -43,7 +46,7 @@ type Properties = {
 };
 
 const baseClassName =
-  'z-1 w-[440px] max-w-full rounded-xl bg-white px-4 pb-9 pt-6 flex flex-col items-center';
+  'z-1 w-[440px] max-w-full rounded-xl bg-white px-4 pb-9 pt-6 flex flex-col items-center relative';
 
 export const Content = ({ className }: Properties) => {
   const { wallet, openConnectionModal, isConnectionModalOpened } = useWallet();
@@ -266,6 +269,12 @@ export const Content = ({ className }: Properties) => {
 
   return (
     <div className={classes(baseClassName, className)}>
+      <Image
+        priority
+        src={backgroundLines3}
+        className="pointer-events-none absolute top-0 hidden h-full opacity-40 lg:block"
+        alt=""
+      />
       <h1 className="self-start text-heading4">Select your donation details</h1>
       <Form onSubmit={formMethods.handleSubmit(onSubmit)} className="w-full">
         <Controller

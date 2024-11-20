@@ -6,8 +6,10 @@ import { Controller, useForm } from 'react-hook-form';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Multiselect, MultiselectOption } from '@idriss-xyz/ui/multiselect';
+import { ANNOUNCEMENT_LINK } from '@idriss-xyz/constants';
+import { Link } from '@idriss-xyz/ui/link';
 
-import { backgroundLines2 } from '@/assets';
+import { backgroundLines2, backgroundLines3 } from '@/assets';
 import { TopBar } from '@/components';
 
 import {
@@ -81,13 +83,17 @@ export default function Donors() {
   }, [chainsIds]);
 
   const uniqueTokenOptions: MultiselectOption<string>[] = useMemo(() => {
+    if (!selectedChainsTokens) {
+      return [];
+    }
+
     return new Map(
       selectedChainsTokens.map((token) => {
         return [token.symbol, token];
       }),
     )
       .values()
-      .map((token) => {
+      ?.map((token) => {
         return {
           label: token.name,
           value: token.symbol,
@@ -196,7 +202,7 @@ export default function Donors() {
   return (
     <Providers>
       <TopBar />
-      <main className="flex grow items-start justify-center overflow-hidden bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] px-2 pt-[56px] lg:px-0">
+      <main className="relative flex grow items-start justify-center overflow-hidden bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] px-2 pt-[56px] lg:px-0">
         <Image
           priority
           src={backgroundLines2}
@@ -204,9 +210,15 @@ export default function Donors() {
           alt=""
         />
 
-        <div className="container flex w-[440px] max-w-full flex-col items-center rounded-xl bg-white px-4 pb-3 pt-6 lg:mt-[108px]">
+        <div className="container relative mt-10 flex w-[440px] max-w-full flex-col items-center overflow-hidden rounded-xl bg-white px-4 pb-3 pt-6 lg:mt-[108px]">
+          <Image
+            priority
+            src={backgroundLines3}
+            className="pointer-events-none absolute top-0 hidden h-full opacity-40 lg:block"
+            alt=""
+          />
           <h1 className="self-start text-heading4">
-            Create your donation links
+            Create your donation link
           </h1>
           <div className="w-full">
             <Form className="w-full">
@@ -316,7 +328,25 @@ export default function Donors() {
               </div>
             </Form>
           </div>
+          <Link
+            size="s"
+            href="creators/banner"
+            className="mb-4 mt-[38px] border-none text-neutral-900"
+          >
+            DOWNLOAD A BANNER FOR YOUR BIO
+          </Link>
         </div>
+        <Button
+          className="absolute bottom-6 right-1/2 translate-x-1/2 px-5 py-3.5 lg:right-7 lg:translate-x-0"
+          intent="secondary"
+          size="small"
+          prefixIconName="InfoCircle"
+          href={ANNOUNCEMENT_LINK.CREATORS_DONATIONS}
+          isExternal
+          asLink
+        >
+          STEP-BY-STEP GUIDE
+        </Button>
       </main>
     </Providers>
   );
