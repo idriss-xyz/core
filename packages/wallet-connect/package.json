@@ -18,7 +18,7 @@
     "@idriss-xyz/tailwind-config": "workspace:*",
     "@idriss-xyz/typescript-config": "workspace:*",
     "@swc/helpers": "^0.5.13",
-    "@types/react": "18.3.1",
+    "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.1",
     "dependency-cruiser": "^16.4.2",
     "eslint-plugin-react-hooks": "^4.6.2",

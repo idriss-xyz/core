@@ -2,6 +2,7 @@
 import { Icon, IconName } from '@idriss-xyz/ui/icon';
 import { CSSProperties, ReactNode } from 'react';
 import { classes } from '@idriss-xyz/ui/utils';
+import Image from 'next/image';
 
 import { ImageSequencer } from '@/components/image-sequencer';
 
@@ -112,7 +113,7 @@ export const ProductSection = ({
                 className="bottom-0 right-0 top-1/2 z-0 lg:absolute lg:max-w-[45%] lg:-translate-y-1/2 lg:[@media(max-width:1440px)]:[@media(max-height:1000px)]:translate-y-[-30%] lg:[@media(min-height:1300px)]:-translate-y-full [@media(min-width:1001px)]:[@media(min-height:800px)]:[@media(max-height:1100px)]:translate-y-[-40%]"
               />
             ) : (
-              <img
+              <Image
                 src={properties.circleImage}
                 alt=""
                 className="bottom-0 right-0 top-1/2 z-0 lg:absolute lg:max-w-[45%] lg:-translate-y-1/2 lg:[@media(max-width:1440px)]:[@media(max-height:1000px)]:translate-y-[-30%] lg:[@media(min-height:1300px)]:-translate-y-full [@media(min-width:1001px)]:[@media(min-height:800px)]:[@media(max-height:1100px)]:translate-y-[-40%]"

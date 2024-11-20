@@ -16,3 +16,4 @@ export { YoutubeOutlined } from './youtube-outlined';
 export { Users } from './users';
 export { Verifying } from './verifying';
 export { Head } from './head';
+export { ExpandUpDown } from './expand-up-down';

@@ -43,7 +43,7 @@ type Properties = {
 };
 
 const baseClassName =
-  'z-1 w-[426px] max-w-full rounded-xl bg-white px-4 pb-9 pt-6 flex flex-col items-center';
+  'z-1 w-[440px] max-w-full rounded-xl bg-white px-4 pb-9 pt-6 flex flex-col items-center';
 
 export const Content = ({ className }: Properties) => {
   const { wallet, openConnectionModal, isConnectionModalOpened } = useWallet();

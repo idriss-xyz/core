@@ -1,6 +1,7 @@
 'use client';
 
 import { classes } from '@idriss-xyz/ui/utils';
+import NextImage from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 
 type Properties = {
@@ -109,7 +110,10 @@ export const ImageSequencer = ({
   }
 
   return (
-    <img
+    <NextImage
+      priority
+      width={800}
+      height={800}
       src={isLoaded ? loadedImages[currentIndex]!.src : loadedImages[0]!.src}
       className={classes('pointer-events-none', className)}
       alt="Animated Sequence"
