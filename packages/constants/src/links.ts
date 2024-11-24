@@ -13,12 +13,12 @@ export const SOCIAL_LINK = {
  * Our things announced by us
  */
 export const ANNOUNCEMENT_LINK = {
-  POLYMARKET: 'https://x.com/idriss_xyz/status/1780582103396266085',
-  SNAPSHOT: 'https://x.com/idriss_xyz/status/1761049574691819798',
+  POLYMARKET: 'https://x.com/idriss_xyz/status/1857374379887517788',
+  SNAPSHOT: 'https://x.com/idriss_xyz/status/1857374376540438785',
   TALLY: 'https://x.com/idriss_xyz/status/1807798872930202007',
   AAVEGOTCHI: 'https://x.com/idriss_xyz/status/1750851248121930167',
   PARALLEL: 'https://x.com/idriss_xyz/status/1729258820441170160',
-  TIPPING: 'https://x.com/idriss_xyz/status/1729258820441170160',
+  TIPPING: 'https://x.com/idriss_xyz/status/1857374373688078528',
   CREATORS_DONATIONS: 'https://x.com/IDriss_xyz/status/1737850506528362982',
 };
 
