@@ -13,6 +13,7 @@ const CIRCLE_IMAGE_PATH =
 export const CreatorsSection = ({ className, fadeOut }: Properties) => {
   return (
     <ProductSection
+      tabsVisibile={false}
       fadeOut={fadeOut}
       className={className}
       actions={CreatorsSectionData.actions}

@@ -1,5 +1,6 @@
 import { classes } from '@idriss-xyz/ui/utils';
 import Link from 'next/link';
+import { RefObject } from 'react';
 
 import { TabOption } from '../../types';
 
@@ -7,11 +8,15 @@ type Properties = {
   options: TabOption[];
   activeOptionKey: string;
   asLink: boolean;
+  ref?: RefObject<HTMLDivElement>;
 };
 
-export const Tabs = ({ activeOptionKey, options, asLink }: Properties) => {
+export const Tabs = ({ activeOptionKey, options, asLink, ref }: Properties) => {
   return (
-    <div className="sticky left-0 top-0 z-[9999] flex w-screen -translate-x-4 items-start gap-1 bg-[linear-gradient(0deg,transparent,rgba(2,34,24,1)_20%,rgba(2,34,24,1)_80%)] p-3 py-5 text-label5 lg:flex lg:w-fit lg:rounded-[50px] lg:bg-[#022218] lg:p-1 lg:text-label4 lg:[position:unset]">
+    <div
+      ref={ref}
+      className="sticky left-0 top-0 z-[9999] flex w-screen items-start gap-1 bg-[linear-gradient(0deg,transparent,rgba(2,34,24,1)_20%,rgba(2,34,24,1)_80%)] p-3 py-5 text-label5 lg:flex lg:w-fit lg:-translate-x-4 lg:rounded-[50px] lg:bg-[#022218] lg:p-1 lg:text-label4 lg:[position:unset]"
+    >
       {options.map((option) => {
         return asLink ? (
           <Link

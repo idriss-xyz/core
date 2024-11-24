@@ -18,7 +18,9 @@ type ProductSectionProperties = {
   features: ProductSectionFeature[];
   tabsAsLinks: boolean;
   className?: string;
+  headerClassName?: string;
   fadeOut: boolean;
+  tabsVisibile?: boolean;
   style?: CSSProperties;
 } & (
   | {
@@ -47,6 +49,7 @@ export type ProductSectionInfo = {
 
 export const ProductSection = ({
   className,
+  headerClassName,
   activeOptionKey,
   title,
   description,
@@ -55,6 +58,7 @@ export const ProductSection = ({
   tabsAsLinks,
   fadeOut,
   style,
+  tabsVisibile = true,
   ...properties
 }: ProductSectionProperties) => {
   return (
@@ -65,16 +69,19 @@ export const ProductSection = ({
       >
         <div className="container flex flex-col gap-10 p-0 lg:gap-[104px] lg:[@media(max-height:1000px)]:gap-[30px] lg:[@media(max-height:770px)]:gap-[24px] lg:[@media(min-height:1001px)]:[@media(max-height:1100px)]:gap-[50px]">
           <div className="flex flex-col items-start gap-[64px] lg:[@media(max-height:1100px)]:gap-[50px]">
-            <Tabs
-              options={tabOptions}
-              activeOptionKey={activeOptionKey}
-              asLink={tabsAsLinks}
-            />
+            {tabsVisibile && (
+              <Tabs
+                options={tabOptions}
+                activeOptionKey={activeOptionKey}
+                asLink={tabsAsLinks}
+              />
+            )}
             <div className="z-1 flex flex-col gap-4">
               <div className="z-1 overflow-hidden">
                 <h2
                   className={classes(
-                    'text-balance text-display5 text-midnightGreen-100 transition-transform duration-1000 [@media(max-width:1440px)]:[@media(max-height:1000px)]:text-display4 [@media(min-width:1441px)]:text-display2',
+                    'text-balance pt-16 text-display5 text-midnightGreen-100 transition-transform duration-1000 lg:pt-0 [@media(max-width:1440px)]:[@media(max-height:1000px)]:text-display4 [@media(min-width:1441px)]:text-display2',
+                    headerClassName,
                     fadeOut && 'translate-y-[-120%]',
                   )}
                 >

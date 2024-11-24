@@ -17,6 +17,7 @@ export const PredictionMarketsSection = ({
 }: Properties) => {
   return (
     <ProductSection
+      tabsVisibile={false}
       fadeOut={fadeOut}
       className={className}
       actions={PredictionMarketsSectionData.actions}
