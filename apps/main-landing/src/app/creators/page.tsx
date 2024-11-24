@@ -328,7 +328,7 @@ export default function Donors() {
           <Link
             size="s"
             href="creators/banner"
-            className="mb-4 mt-[38px] border-none text-neutral-900"
+            className="mb-4 mt-[38px] border-none text-neutral-900 hover:text-mint-600"
           >
             DOWNLOAD A BANNER FOR YOUR BIO
           </Link>

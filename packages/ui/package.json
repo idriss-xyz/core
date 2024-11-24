@@ -21,6 +21,7 @@
     "./spinner": "./src/components/spinner/index.ts",
     "./checkbox": "./src/components/checkbox/index.ts",
     "./multiselect": "./src/components/multiselect/index.ts",
+    "./scroll-area": "./src/components/scroll-area/index.ts",
     "./wallet-connect-modal": "./src/components/wallet-connect-modal/index.ts",
     "./providers/with-portal": "./src/providers/with-portal.tsx",
     "./utils": "./src/utils/index.ts"

@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { classes } from '@idriss-xyz/ui/utils';
 import { ANNOUNCEMENT_LINK } from '@idriss-xyz/constants';
+import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 
 import { TopBar } from '@/components';
 import { backgroundLines2, backgroundLines3 } from '@/assets';
@@ -69,14 +70,14 @@ export default function Banner() {
           alt=""
         />
 
-        <div className="container relative mt-8 flex w-[460px] max-w-full flex-col items-center overflow-hidden rounded-xl bg-white px-4 pb-3 pt-6 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]">
+        <div className="container relative mt-8 flex w-[460px] max-w-full flex-col items-center overflow-hidden rounded-xl bg-white px-1 pb-3 pt-6 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]">
           <Image
             priority
             src={backgroundLines3}
             className="pointer-events-none absolute top-0 hidden h-full opacity-40 lg:block"
             alt=""
           />
-          <div className="flex w-full items-center">
+          <div className="mb-6 flex w-full items-center">
             <IconButton
               asLink
               href="/creators"
@@ -85,53 +86,60 @@ export default function Banner() {
               size="medium"
             />
             <h1 className="my-auto self-start text-balance text-heading4">
-              Download a banner for you
+              Download a banner
             </h1>
           </div>
-          <div className="mt-6 grid w-full grid-cols-2 justify-center gap-4">
-            {banners.map((banner) => {
-              const isSelected = banner.src === selectedBannerSource;
-              return (
-                <div
-                  className="relative select-none overflow-hidden rounded-lg"
-                  key={banner.src}
-                >
-                  <Image
-                    onClick={() => {
-                      setSelectedBannerSource(banner.src);
-                    }}
-                    className={classes(
-                      'cursor-pointer rounded-lg p-[1px] transition-transform duration-300 hover:scale-[1.03]',
-                      isSelected && 'border border-mint-400 p-0',
-                    )}
-                    priority
-                    width={600}
-                    height={200}
-                    src={banner}
-                    alt=""
-                  />
-                  {isSelected && (
-                    <div className="absolute right-3 top-3 flex size-4 cursor-pointer items-center justify-center rounded-full bg-mint-400 p-[3px]">
-                      <Icon
-                        name="Check"
-                        size={20}
-                        className="text-white [&_path]:stroke-[3]"
-                      />
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-          <Button
-            disabled={!selectedBannerSource}
-            className="mt-6 w-full"
-            intent="secondary"
-            size="medium"
-            onClick={handleDownload}
+          <ScrollArea
+            className="right-0 max-h-[350px] transition-all duration-500"
+            scrollBarClassName="bg-white hover:bg-white data-[orientation=vertical]:w-2.5 "
           >
-            DOWNLOAD
-          </Button>
+            <div className="grid w-full grid-cols-2 justify-center gap-4 px-3">
+              {banners.map((banner) => {
+                const isSelected = banner.src === selectedBannerSource;
+                return (
+                  <div
+                    className="relative select-none overflow-hidden rounded-lg"
+                    key={banner.src}
+                  >
+                    <Image
+                      onClick={() => {
+                        setSelectedBannerSource(banner.src);
+                      }}
+                      className={classes(
+                        'cursor-pointer rounded-lg p-[1px] transition-transform duration-300 hover:scale-[1.03]',
+                        isSelected && 'border border-mint-400 p-0',
+                      )}
+                      priority
+                      width={600}
+                      height={200}
+                      src={banner}
+                      alt=""
+                    />
+                    {isSelected && (
+                      <div className="absolute right-3 top-3 flex size-4 cursor-pointer items-center justify-center rounded-full bg-mint-400 p-[3px]">
+                        <Icon
+                          name="Check"
+                          size={20}
+                          className="text-white [&_path]:stroke-[3]"
+                        />
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </ScrollArea>
+          <div className="flex w-full px-3">
+            <Button
+              disabled={!selectedBannerSource}
+              className="mt-6 w-full"
+              intent="secondary"
+              size="medium"
+              onClick={handleDownload}
+            >
+              DOWNLOAD
+            </Button>
+          </div>
         </div>
         <Button
           className="px-5 py-3.5 lg:absolute lg:bottom-6 lg:right-7 lg:translate-x-0"
