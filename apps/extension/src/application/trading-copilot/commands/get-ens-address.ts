@@ -1,7 +1,8 @@
 import { createPublicClient, http } from 'viem';
+import { mainnet } from 'viem/chains';
 import { normalize } from 'viem/ens';
 
-import { Hex, CHAIN } from 'shared/web3';
+import { Hex } from 'shared/web3';
 import {
   Command,
   FailureResult,
@@ -23,7 +24,7 @@ export class GetEnsAddressCommand extends Command<Payload, Hex | null> {
   async handle() {
     try {
       const client = createPublicClient({
-        chain: { ...CHAIN.ETHEREUM, fees: undefined },
+        chain: { ...mainnet },
         transport: http(),
       });
       const response = await client.getEnsAddress({

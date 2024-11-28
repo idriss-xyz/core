@@ -294,6 +294,14 @@ export default {
           '0%': { transform: 'translateX(100%)' },
           '100%': { transform: 'translateX(0%)' },
         },
+        swipeRight: {
+          '0%': { translate: '0 0' },
+          '100%': { translate: '100% 0' },
+        },
+        swipeLeft: {
+          '0%': { translate: '100% 0' },
+          '100%': { translate: '0 0' },
+        },
       },
     },
   },

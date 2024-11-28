@@ -69,7 +69,7 @@ export const SubscriptionItem = ({ subscription, onRemove }: Properties) => {
           }
         />
 
-        <p className="ml-2 flex items-center gap-1 text-sm text-[#374151]">
+        <p className="ml-2 flex items-center gap-1 text-sm text-neutral-700">
           {subscription.ensName}
 
           {twitterQuery.data && (
@@ -77,42 +77,30 @@ export const SubscriptionItem = ({ subscription, onRemove }: Properties) => {
               <Icon
                 size={16}
                 name="TwitterLogoIcon"
-                className="text-[#1D9BF0] [&>path]:fill-rule-non-zero"
+                className="[&>path]:fill-rule-non-zero"
               />
             </ExternalLink>
           )}
           {githubQuery.data && (
             <ExternalLink href={getGithubUserLink(githubQuery.data)}>
-              <Icon
-                size={16}
-                name="GitHubLogoIcon"
-                className="text-[#1D9BF0]"
-              />
+              <Icon size={16} name="GitHubLogoIcon" />
             </ExternalLink>
           )}
           {discordQuery.data && (
             <span title={discordQuery.data}>
-              <Icon
-                size={16}
-                name="DiscordLogoIcon"
-                className="text-[#1D9BF0]"
-              />
+              <Icon size={16} name="DiscordLogoIcon" />
             </span>
           )}
           {emailQuery.data && (
             <ExternalLink href={`mailto:${emailQuery.data}`}>
-              <Icon
-                size={16}
-                name="EnvelopeClosedIcon"
-                className="text-[#1D9BF0]"
-              />
+              <Icon size={16} name="EnvelopeClosedIcon" />
             </ExternalLink>
           )}
         </p>
       </div>
       <IconButton
         iconProps={{ name: 'Cross1Icon' }}
-        className="text-[#b91c1c]"
+        className="text-red-700"
         onClick={remove}
       />
     </li>

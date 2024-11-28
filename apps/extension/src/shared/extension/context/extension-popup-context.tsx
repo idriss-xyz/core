@@ -12,7 +12,7 @@ import {
   onWindowMessage,
   TOGGLE_EXTENSION_POPUP_VISIBILITY,
 } from 'shared/messaging';
-import { createContextHook } from 'shared/ui';
+import { createContextHook, useNotification } from 'shared/ui';
 
 import { POPUP_ROUTE, PopupRoute } from '../constants';
 
@@ -27,6 +27,7 @@ interface ExtensionPopupContextValues {
   currentRoute: PopupRoute;
   hide: () => void;
   open: () => void;
+  showNotification: (message: string) => void;
 }
 
 const ExtensionPopupContext = createContext<
@@ -35,9 +36,14 @@ const ExtensionPopupContext = createContext<
 
 const InnerExtensionPopupProvider = ({ children }: Properties) => {
   const [isVisible, setIsVisible] = useState(false);
+  const notification = useNotification();
 
   const navigate = useNavigate();
   const location = useLocation();
+
+  const showNotification = (message: string) => {
+    notification.show(<span>{message}</span>, 'top-right');
+  };
 
   const navigateBack = useCallback(() => {
     navigate(-1);
@@ -83,6 +89,7 @@ const InnerExtensionPopupProvider = ({ children }: Properties) => {
         navigateBack,
         hide,
         open,
+        showNotification,
       }}
     >
       {children}

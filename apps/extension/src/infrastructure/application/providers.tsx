@@ -11,6 +11,7 @@ import {
   WithObservabilityScope,
 } from 'shared/observability';
 import {
+  NotificationsProvider,
   FontProvider,
   PortalProvider,
   QueryProvider,
@@ -45,24 +46,26 @@ export const Providers = ({
                     <TailwindProvider>
                       <QueryProvider>
                         <NiceModal.Provider>
-                          <WalletContextProvider
-                            disabledWalletsRdns={disabledWalletRdns}
-                            onGetWallet={WalletStorage.get}
-                            onClearWallet={WalletStorage.clear}
-                            onSaveWallet={WalletStorage.save}
-                          >
-                            <ExtensionPopupProvider>
-                              <ExtensionSettingsProvider>
-                                <TwitterScrapingContextProvider>
-                                  <WarpcastScrapingContextProvider>
-                                    <SupercastScrapingContextProvider>
-                                      {children}
-                                    </SupercastScrapingContextProvider>
-                                  </WarpcastScrapingContextProvider>
-                                </TwitterScrapingContextProvider>
-                              </ExtensionSettingsProvider>
-                            </ExtensionPopupProvider>
-                          </WalletContextProvider>
+                          <NotificationsProvider>
+                            <WalletContextProvider
+                              disabledWalletsRdns={disabledWalletRdns}
+                              onGetWallet={WalletStorage.get}
+                              onClearWallet={WalletStorage.clear}
+                              onSaveWallet={WalletStorage.save}
+                            >
+                              <ExtensionPopupProvider>
+                                <ExtensionSettingsProvider>
+                                  <TwitterScrapingContextProvider>
+                                    <WarpcastScrapingContextProvider>
+                                      <SupercastScrapingContextProvider>
+                                        {children}
+                                      </SupercastScrapingContextProvider>
+                                    </WarpcastScrapingContextProvider>
+                                  </TwitterScrapingContextProvider>
+                                </ExtensionSettingsProvider>
+                              </ExtensionPopupProvider>
+                            </WalletContextProvider>
+                          </NotificationsProvider>
                         </NiceModal.Provider>
                       </QueryProvider>
                     </TailwindProvider>
