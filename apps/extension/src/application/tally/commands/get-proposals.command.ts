@@ -50,12 +50,14 @@ export class GetTallyProposalsCommand extends Command<
       const json = await response.json();
 
       const validResponse = getProposalsResponseSchema.parse(json);
+      const { nodes, pageInfo } = validResponse.data.proposalsV2;
       const activeProposals = {
-        nodes: validResponse.data.proposalsV2.nodes.filter((proposal) => {
-          return proposal.status === 'active';
+        nodes: nodes.filter(({ status }) => {
+          return status === 'active' || status === 'extended';
         }),
-        pageInfo: validResponse.data.proposalsV2.pageInfo,
+        pageInfo,
       };
+
       return new OkResult(activeProposals);
     } catch (error) {
       this.captureException(error);
