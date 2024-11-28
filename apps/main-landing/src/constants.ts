@@ -1,5 +1,5 @@
 export const INTERNAL_LINK = {
-  SUPERPOWERS: '/#superpowers',
+  SUPERPOWERS: '/#apps',
   EXTENSION: '/#extension',
   CREATORS: '/#creators',
   PREDICTION_MARKETS: '/#prediction-markets',
