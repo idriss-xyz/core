@@ -1,5 +1,5 @@
-import { Wallet } from '@idriss-xyz/wallet-connect';
 import { useCallback } from 'react';
+import { PublicClient, WalletClient } from 'viem';
 
 import { Hex } from '../types';
 import { SendPayload } from '../schema';
@@ -12,10 +12,11 @@ import { useNativeTransaction } from './use-native-transaction';
 import { useErc20Transaction } from './use-erc20-transaction';
 
 type Properties = {
-  wallet?: Wallet;
+  walletClient?: WalletClient;
+  publicClient?: PublicClient;
 };
 
-export const useSender = ({ wallet }: Properties) => {
+export const useSender = ({ walletClient, publicClient }: Properties) => {
   const switchChain = useSwitchChain();
 
   const getTokenPerDollarMutation = useGetTokenPerDollar();
@@ -30,7 +31,8 @@ export const useSender = ({ wallet }: Properties) => {
       recipientAddress: Hex;
       sendPayload: SendPayload;
     }) => {
-      if (!wallet) {
+      if (!walletClient || !publicClient) {
+        console.error('walletClient or publicClient not defined');
         return;
       }
 
@@ -66,14 +68,15 @@ export const useSender = ({ wallet }: Properties) => {
 
       await switchChain.mutateAsync({
         chainId: sendPayload.chainId,
-        wallet,
+        walletClient,
       });
 
       if (isNativeTokenAddress(sendPayload.tokenAddress)) {
         nativeTransaction.mutate({
           tokensToSend,
           recipientAddress,
-          wallet,
+          walletClient,
+          publicClient,
           chainId: sendPayload.chainId,
           message: sendPayload.message,
         });
@@ -81,7 +84,8 @@ export const useSender = ({ wallet }: Properties) => {
         erc20Transaction.mutate({
           recipientAddress,
           tokenAddress: sendPayload.tokenAddress,
-          wallet,
+          walletClient,
+          publicClient,
           tokensToSend,
           chainId: sendPayload.chainId,
           message: sendPayload.message,
@@ -93,7 +97,7 @@ export const useSender = ({ wallet }: Properties) => {
       getTokenPerDollarMutation,
       nativeTransaction,
       switchChain,
-      wallet,
+      walletClient,
     ],
   );
 

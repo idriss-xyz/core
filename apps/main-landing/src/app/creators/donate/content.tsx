@@ -9,10 +9,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useSearchParams } from 'next/navigation';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { classes } from '@idriss-xyz/ui/utils';
-import { useWallet } from '@idriss-xyz/wallet-connect';
 import { getAddress } from 'viem';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import Image from 'next/image';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { useAccount, usePublicClient, useWalletClient } from 'wagmi';
 
 import { backgroundLines3 } from '@/assets';
 
@@ -50,7 +51,11 @@ const baseClassName =
   'z-1 w-[440px] max-w-full rounded-xl bg-white px-4 pb-9 pt-6 flex flex-col items-center relative';
 
 export const Content = ({ className }: Properties) => {
-  const { wallet, openConnectionModal, isConnectionModalOpened } = useWallet();
+  const { isConnected } = useAccount();
+  const { data: walletClient } = useWalletClient();
+  const publicClient = usePublicClient();
+  const { connectModalOpen, openConnectModal } = useConnectModal();
+
   const searchParameters = useSearchParams();
   const addressFromParameters =
     searchParameters.get(SEARCH_PARAMETER.ADDRESS) ??
@@ -169,7 +174,7 @@ export const Content = ({ className }: Properties) => {
     return tokens;
   }, [possibleTokens, chainId]);
 
-  const sender = useSender({ wallet });
+  const sender = useSender({ walletClient, publicClient });
 
   const selectedToken = useMemo(() => {
     return CHAIN_ID_TO_TOKENS[chainId]?.find((token) => {
@@ -194,6 +199,7 @@ export const Content = ({ className }: Properties) => {
         return;
       }
       const validAddress = getAddress(addressValidationResult.data);
+      // TODO: Add error handling
       await sender.send({
         sendPayload,
         recipientAddress: validAddress,
@@ -356,7 +362,7 @@ export const Content = ({ className }: Properties) => {
           }}
         />
 
-        {wallet ? (
+        {isConnected ? (
           <Button
             type="submit"
             intent="primary"
@@ -370,8 +376,8 @@ export const Content = ({ className }: Properties) => {
             intent="primary"
             size="medium"
             className="mt-6 w-full"
-            onClick={openConnectionModal}
-            loading={isConnectionModalOpened}
+            onClick={openConnectModal}
+            loading={connectModalOpen}
           >
             LOG IN
           </Button>

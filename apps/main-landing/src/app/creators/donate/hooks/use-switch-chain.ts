@@ -1,26 +1,21 @@
-import { Wallet } from '@idriss-xyz/wallet-connect';
 import { useMutation } from '@tanstack/react-query';
+import { WalletClient } from 'viem';
 
-import {
-  createWalletClient,
-  getChainById,
-  isUnrecognizedChainError,
-} from '../utils';
+import { getChainById, isUnrecognizedChainError } from '../utils';
 
 interface SwitchChainArguments {
-  wallet?: Wallet;
+  walletClient?: WalletClient;
   chainId: number;
 }
 
 export const useSwitchChain = () => {
   return useMutation({
-    mutationFn: async ({ chainId, wallet }: SwitchChainArguments) => {
-      if (!wallet) {
+    mutationFn: async ({ chainId, walletClient }: SwitchChainArguments) => {
+      if (!walletClient) {
         return;
       }
 
-      const client = createWalletClient(wallet);
-      const currentChainId = await client.getChainId();
+      const currentChainId = await walletClient.getChainId();
       if (chainId === currentChainId) {
         return;
       }
@@ -32,10 +27,10 @@ export const useSwitchChain = () => {
       }
 
       try {
-        await client.switchChain({ id: chainId });
+        await walletClient.switchChain({ id: chainId });
       } catch (error) {
         if (isUnrecognizedChainError(error)) {
-          await client.addChain({ chain: foundChain });
+          await walletClient.addChain({ chain: foundChain });
           return;
         }
 

@@ -1,10 +1,3 @@
-import { Wallet } from '@idriss-xyz/wallet-connect';
-import {
-  createWalletClient as createViemWalletClient,
-  custom,
-  publicActions,
-} from 'viem';
-
 import { CHAIN, CHAIN_ID_TO_TOKENS, NATIVE_COIN_ADDRESS } from './constants';
 import { SendPayload } from './schema';
 import { Hex } from './types';
@@ -33,15 +26,6 @@ export const getSendFormDefaultValues = (
     tokenAddress: defaultTokenAddress,
     message: '',
   };
-};
-
-export const createWalletClient = (
-  wallet: Pick<Wallet, 'account' | 'provider'>,
-) => {
-  return createViemWalletClient({
-    transport: custom(wallet.provider),
-    account: wallet.account,
-  }).extend(publicActions);
 };
 
 export const getChainById = (chainId: number) => {
