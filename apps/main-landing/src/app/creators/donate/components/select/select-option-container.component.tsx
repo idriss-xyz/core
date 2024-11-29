@@ -12,7 +12,7 @@ export const SelectOptionContainer = forwardRef(
       <div
         {...restProperties}
         className={classes(
-          'w-full rounded-md bg-white shadow-sm focus:outline-none',
+          'w-full rounded-xl bg-white shadow-input focus:outline-none',
           className,
         )}
         ref={reference}

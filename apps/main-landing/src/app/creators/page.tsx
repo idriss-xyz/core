@@ -21,6 +21,7 @@ import { Providers } from './providers';
 import { ChainToken, TokenSymbol } from './donate/types';
 
 type FormPayload = {
+  name: string;
   address: string;
   tokensSymbols: string[];
   chainsIds: number[];
@@ -54,13 +55,15 @@ export default function Donors() {
 
   const formMethods = useForm<FormPayload>({
     defaultValues: {
+      name: '',
       address: '',
       chainsIds: ALL_CHAIN_IDS,
       tokensSymbols: UNIQUE_ALL_TOKEN_SYMBOLS,
     },
     mode: 'onChange',
   });
-  const [chainsIds, tokensSymbols, address] = formMethods.watch([
+  const [creatorName, chainsIds, tokensSymbols, address] = formMethods.watch([
+    'name',
     'chainsIds',
     'tokensSymbols',
     'address',
@@ -171,7 +174,7 @@ export default function Donors() {
       .filter(Boolean);
 
     await navigator.clipboard.writeText(
-      `https://www.idriss.xyz/creators/donate?address=${address}&token=${tokensSymbols.join(',')}&network=${chainsShortNames.join(',')}`,
+      `https://www.idriss.xyz/creators/donate?address=${address}&token=${tokensSymbols.join(',')}&network=${chainsShortNames.join(',')}&creatorName=${creatorName}`,
     );
 
     setCopiedDonationLink(true);
@@ -221,6 +224,28 @@ export default function Donors() {
             <Form className="w-full">
               <Controller
                 control={formMethods.control}
+                name="name"
+                rules={{
+                  required: 'Name is required',
+                  maxLength: {
+                    value: 20,
+                    message: 'Name cannot be longer than 20 characters',
+                  },
+                }}
+                render={({ field, fieldState }) => {
+                  return (
+                    <Form.Field
+                      label="Name"
+                      className="mt-6 w-full"
+                      helperText={fieldState.error?.message}
+                      error={Boolean(fieldState.error?.message)}
+                      {...field}
+                    />
+                  );
+                }}
+              />
+              <Controller
+                control={formMethods.control}
                 name="address"
                 rules={{
                   required: 'Address is required',
@@ -241,7 +266,6 @@ export default function Donors() {
                   );
                 }}
               />
-
               <Controller
                 control={formMethods.control}
                 name="chainsIds"
