@@ -6,3 +6,4 @@ export { PolymarketLogo } from './polymarket';
 export { TallyLogo } from './tally';
 export { AgoraFullLogo } from './agora-full';
 export { SnapshotFullLogo } from './snapshot-full';
+export { MetamaskLogo } from './metamask';

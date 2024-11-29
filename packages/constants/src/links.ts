@@ -20,6 +20,7 @@ export const ANNOUNCEMENT_LINK = {
   PARALLEL: 'https://x.com/idriss_xyz/status/1729258820441170160',
   TIPPING: 'https://x.com/idriss_xyz/status/1857374373688078528',
   CREATORS_DONATIONS: 'https://x.com/IDriss_xyz/status/1737850506528362982',
+  METAMASK: 'https://x.com/idriss_xyz/status/1848069254609858813',
 };
 
 /**

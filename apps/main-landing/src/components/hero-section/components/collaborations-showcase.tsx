@@ -7,6 +7,7 @@ import {
   AcrossLogo,
   AgoraFullLogo,
   GitcoinLogo,
+  MetamaskLogo,
   ParallelLogo,
   PolymarketLogo,
   SnapshotFullLogo,
@@ -66,6 +67,19 @@ const collaborationLinks = [
       />
     ),
     link: EXTERNAL_ANNOUNCEMENT_LINK.AGORA,
+  },
+  {
+    label: 'Go to tweet about Metamask collaboration',
+    logo: (
+      <MetamaskLogo
+        className={classes(
+          logoClassName,
+          'group/metamaskLogo h-[17px] lg:h-[32px]',
+        )}
+        foxIconClassName="group-hover/metamaskLogo:brightness-90"
+      />
+    ),
+    link: ANNOUNCEMENT_LINK.METAMASK,
   },
   {
     label: 'Go to tweet about Snapshot collaboration',
