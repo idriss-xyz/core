@@ -24,7 +24,7 @@ const alephzero = defineChain({
 
 export const wagmiconfig = getDefaultConfig({
   appName: 'IDRISS Creators Login',
-  projectId: 'd9b05a544ca612833e810a77724e5af8', // TODO: change for production WalletConnect ID
+  projectId: 'c68a9fb876e8a1c0a99f89debcfeb2bf',
   chains: [mainnet, polygon, optimism, mantle, base, alephzero],
   ssr: true,
 });
