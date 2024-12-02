@@ -158,7 +158,13 @@ export default function Donors() {
   const validateAndCopy = async (copyFunction: () => Promise<void>) => {
     const isValid = await formMethods.trigger();
     if (isValid) {
-      await copyFunction();
+      // iOS is strict about gestures, and will throw NotAllowedError with async validation (e.g. API calls)
+      // setTimeout works here because it executes code in a subsequent event loop tick.
+      // This "trick" helps iOS associate the clipboard operation with the earlier gesture,
+      // as long as the user gesture initiates the chain of events
+      setTimeout(() => {
+        void copyFunction();
+      }, 0);
     }
   };
 
