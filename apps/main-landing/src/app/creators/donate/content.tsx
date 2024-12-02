@@ -4,7 +4,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { Button } from '@idriss-xyz/ui/button';
 import { Link } from '@idriss-xyz/ui/link';
 import { CREATORS_USER_GUIDE_LINK } from '@idriss-xyz/constants';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSearchParams } from 'next/navigation';
 import { Icon } from '@idriss-xyz/ui/icon';
@@ -31,6 +31,7 @@ import {
   getSendFormDefaultValues,
   getTransactionUrl,
   roundToSignificantFigures,
+  validateAddressOrENS,
 } from './utils';
 import { Token } from './types';
 import { useSender } from './hooks';
@@ -55,12 +56,24 @@ export const Content = ({ className }: Properties) => {
   const { data: walletClient } = useWalletClient();
   const publicClient = usePublicClient();
   const { connectModalOpen, openConnectModal } = useConnectModal();
+  const [validatedAddress, setValidatedAddress] = useState<
+    string | null | undefined
+  >();
 
   const searchParameters = useSearchParams();
   const addressFromParameters =
     searchParameters.get(SEARCH_PARAMETER.ADDRESS) ??
     searchParameters.get(SEARCH_PARAMETER.LEGACY_ADDRESS);
-  const addressValidationResult = hexSchema.safeParse(addressFromParameters);
+
+  useEffect(() => {
+    const validateAddress = async () => {
+      const address = await validateAddressOrENS(addressFromParameters);
+      setValidatedAddress(address);
+    };
+    void validateAddress();
+  }, [addressFromParameters]);
+
+  const addressValidationResult = hexSchema.safeParse(validatedAddress);
 
   const networkParameter = searchParameters.get(SEARCH_PARAMETER.NETWORK);
   const tokenParameter = searchParameters.get(SEARCH_PARAMETER.TOKEN);
@@ -195,7 +208,7 @@ export const Content = ({ className }: Properties) => {
 
   const onSubmit: SubmitHandler<SendPayload> = useCallback(
     async (sendPayload) => {
-      if (!addressValidationResult.success) {
+      if (!addressValidationResult.success || !validatedAddress) {
         return;
       }
       const validAddress = getAddress(addressValidationResult.data);
@@ -208,7 +221,7 @@ export const Content = ({ className }: Properties) => {
     [addressValidationResult.data, addressValidationResult.success, sender],
   );
 
-  if (addressValidationResult.error) {
+  if (validatedAddress !== undefined && addressValidationResult.error) {
     return (
       <div className={classes(baseClassName, className)}>
         <h1 className="flex items-center justify-center gap-2 text-center text-heading4 text-red-500">
