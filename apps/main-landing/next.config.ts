@@ -16,6 +16,20 @@ const LEGACY_URLS = [
 const nextConfig: NextConfig = {
   productionBrowserSourceMaps: true,
   // eslint-disable-next-line @typescript-eslint/require-await
+  async headers() {
+    return [
+      {
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-cache, no-store, must-revalidate',
+          },
+        ],
+      },
+    ];
+  },
+  // eslint-disable-next-line @typescript-eslint/require-await
   async redirects() {
     return [
       {
@@ -80,6 +94,12 @@ const nextConfig: NextConfig = {
       {
         source: '/tos',
         destination: 'https://docs.idriss.xyz/resources/terms-of-service',
+        basePath: false,
+        permanent: false,
+      },
+      {
+        source: '/service-status',
+        destination: 'https://api.idriss.xyz/service-status',
         basePath: false,
         permanent: false,
       },
