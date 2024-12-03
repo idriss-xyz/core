@@ -59,12 +59,11 @@ export const useSender = ({ walletClient, publicClient }: Properties) => {
       const { decimals, value } = getSafeNumber(
         tokenPerDollarNormalised * sendPayload.amount,
       );
-
       const valueAsBigNumber = BigInt(value.toString());
+
       const tokensToSend =
-        (valueAsBigNumber *
-          BigInt((10 ** (tokenToSend?.decimals ?? 0)).toString())) /
-        BigInt((10 ** decimals).toString());
+        (valueAsBigNumber * BigInt(10) ** BigInt(tokenToSend?.decimals ?? 0)) /
+        BigInt(10) ** BigInt(decimals);
 
       await switchChain.mutateAsync({
         chainId: sendPayload.chainId,
@@ -98,6 +97,7 @@ export const useSender = ({ walletClient, publicClient }: Properties) => {
       nativeTransaction,
       switchChain,
       walletClient,
+      publicClient,
     ],
   );
 

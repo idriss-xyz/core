@@ -49,8 +49,8 @@ export const isUnrecognizedChainError = (error: unknown) => {
 export const getSafeNumber = (
   number: number,
 ): { value: number; decimals: number } => {
-  // Convert the number to a string and split by the decimal point
-  const numberString = number.toString();
+  // Convert the number to a string and split by the decimal point, adjust for european style of decimal
+  const numberString = number.toString().replace(',', '.');
 
   // Check if there is a decimal point in the number
   if (numberString.includes('.')) {
