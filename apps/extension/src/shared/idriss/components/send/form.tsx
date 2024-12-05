@@ -141,7 +141,7 @@ export const Form = ({
           }}
         />
       </div>
-      <div className="px-6 py-3">{footer}</div>
+      <div className="border-t border-t-neutral-200 px-6 py-3">{footer}</div>
     </DesignSystemForm>
   );
 };

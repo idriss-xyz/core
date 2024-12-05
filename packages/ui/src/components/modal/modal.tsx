@@ -86,7 +86,12 @@ export const Modal = ({
           {/* pr-8 at end on purpose so header never overflows icon */}
           {header && (
             <div
-              className={classes('relative', headerContainerClassName, 'pr-14')}
+              className={classes(
+                'relative',
+                headerContainerClassName,
+                'pr-14',
+                'border-b-secondary border-b',
+              )}
             >
               {header}
               <IconButton

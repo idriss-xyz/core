@@ -30,7 +30,7 @@ export const Field = forwardRef(
     return (
       <RadixForm.Field name={name} ref={reference} className={className}>
         {label && (
-          <RadixForm.Label className="mb-2 block text-label4 text-neutral-700">
+          <RadixForm.Label className="mb-2 block text-label4 text-neutralGreen-700">
             {label}
           </RadixForm.Label>
         )}

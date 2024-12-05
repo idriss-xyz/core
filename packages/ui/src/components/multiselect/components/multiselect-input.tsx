@@ -58,7 +58,7 @@ const _MultiselectInput = <T,>(
         onKeyDown={onKeyDown}
         {...rest}
         className={classes(
-          'flex flex-row items-center justify-between rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutralGreen-900 shadow-input placeholder:text-neutral-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500',
+          'flex min-h-11 flex-row items-center justify-between rounded-xl border border-neutral-200 bg-white px-3 py-2 text-neutralGreen-900 shadow-input placeholder:text-neutral-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500',
         )}
       >
         {displayedOptions.length === 0 ? (

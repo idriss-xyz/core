@@ -27,13 +27,12 @@ import {
 import { createSendPayloadSchema, hexSchema, SendPayload } from './schema';
 import {
   applyDecimalsToNumericString,
-  getDefaultTokenForChainId,
   getSendFormDefaultValues,
   getTransactionUrl,
   roundToSignificantFigures,
   validateAddressOrENS,
 } from './utils';
-import { Token } from './types';
+import { ChainToken, Token } from './types';
 import { useSender } from './hooks';
 
 const SEARCH_PARAMETER = {
@@ -75,6 +74,8 @@ export const Content = ({ className }: Properties) => {
 
   const addressValidationResult = hexSchema.safeParse(validatedAddress);
 
+  const [selectedTokenKey, setSelectedTokenKey] = useState<string>('ETH');
+
   const networkParameter = searchParameters.get(SEARCH_PARAMETER.NETWORK);
   const tokenParameter = searchParameters.get(SEARCH_PARAMETER.TOKEN);
   const creatorNameParameter = searchParameters.get(
@@ -110,17 +111,9 @@ export const Content = ({ className }: Properties) => {
 
       const tokensForThisChain = CHAIN_ID_TO_TOKENS[chain.id];
 
-      const chainIncludesSomeOfTheTokens = possibleTokens.some((token) => {
-        return Boolean(
-          tokensForThisChain?.find((chainToken) => {
-            return (
-              chainToken.symbol.toLowerCase() === token.symbol.toLowerCase()
-            );
-          }),
-        );
+      return !!tokensForThisChain?.find((token) => {
+        return token.symbol === selectedTokenKey;
       });
-
-      return chainIncludesSomeOfTheTokens;
     });
 
     if (chains.length === 0) {
@@ -131,7 +124,7 @@ export const Content = ({ className }: Properties) => {
     return chains.map((chain) => {
       return chain.id;
     });
-  }, [possibleTokens, networkParameter]);
+  }, [networkParameter, selectedTokenKey]);
 
   const defaultChainId = allowedChainsIds[0] ?? 0;
 
@@ -164,36 +157,31 @@ export const Content = ({ className }: Properties) => {
     'amount',
   ]);
 
-  const onChangeChainId = useCallback(
-    (chainId: number) => {
-      formMethods.resetField('tokenAddress', {
-        defaultValue: getDefaultTokenForChainId(chainId).address,
-      });
-    },
-    [formMethods],
-  );
-
   const allowedTokens = useMemo(() => {
-    const tokensForThisChain = CHAIN_ID_TO_TOKENS[chainId] ?? [];
-    const tokens = tokensForThisChain.filter((chainToken) => {
-      return possibleTokens.find((token) => {
-        return token.symbol === chainToken.symbol;
+    const allTokens = Object.values(CHAIN_ID_TO_TOKENS).flat();
+    const uniqueTokens: ChainToken[] = [];
+    for (const token of allTokens) {
+      const exists = uniqueTokens.find((uniqueToken) => {
+        return uniqueToken.symbol === token.symbol;
       });
-    });
-    if (tokens.length === 0) {
-      return CHAIN_ID_TO_TOKENS[chainId] ?? [];
+      if (exists) {
+        continue;
+      }
+      uniqueTokens.push(token);
     }
 
-    return tokens;
-  }, [possibleTokens, chainId]);
+    return uniqueTokens;
+  }, []);
 
   const sender = useSender({ walletClient, publicClient });
 
   const selectedToken = useMemo(() => {
-    return CHAIN_ID_TO_TOKENS[chainId]?.find((token) => {
+    const token = allowedTokens?.find((token) => {
       return token.address === tokenAddress;
     });
-  }, [chainId, tokenAddress]);
+    setSelectedTokenKey(token?.symbol ?? '');
+    return token;
+  }, [allowedTokens, tokenAddress]);
 
   const amountInSelectedToken = useMemo(() => {
     if (!sender.tokensToSend || !selectedToken?.decimals) {
@@ -295,7 +283,7 @@ export const Content = ({ className }: Properties) => {
       <Image
         priority
         src={backgroundLines3}
-        className="pointer-events-none absolute top-0 hidden h-full opacity-40 lg:block"
+        className="pointer-events-none absolute top-0 hidden h-full opacity-100 lg:block"
         alt=""
       />
       <h1 className="self-start text-heading4">
@@ -306,17 +294,14 @@ export const Content = ({ className }: Properties) => {
       <Form onSubmit={formMethods.handleSubmit(onSubmit)} className="w-full">
         <Controller
           control={formMethods.control}
-          name="chainId"
+          name="tokenAddress"
           render={({ field }) => {
             return (
-              <ChainSelect
-                className="mt-6 w-full"
-                label="Network"
-                allowedChainsIds={allowedChainsIds}
-                onChange={(value) => {
-                  onChangeChainId(value);
-                  field.onChange(value);
-                }}
+              <TokenSelect
+                className="mt-4 w-full"
+                label="Token"
+                tokens={allowedTokens}
+                onChange={field.onChange}
                 value={field.value}
               />
             );
@@ -325,13 +310,13 @@ export const Content = ({ className }: Properties) => {
 
         <Controller
           control={formMethods.control}
-          name="tokenAddress"
+          name="chainId"
           render={({ field }) => {
             return (
-              <TokenSelect
-                className="mt-4 w-full"
-                label="Token"
-                tokens={allowedTokens}
+              <ChainSelect
+                className="mt-6 w-full"
+                label="Network"
+                allowedChainsIds={allowedChainsIds}
                 onChange={field.onChange}
                 value={field.value}
               />

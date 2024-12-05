@@ -55,7 +55,7 @@ export const TopBar = ({ className }: Properties) => {
               <NavigationMenu.Trigger asChild>
                 <IconButton iconName="Grip" size="medium" intent="tertiary" />
               </NavigationMenu.Trigger>
-              <NavigationMenu.Content className="absolute right-0 w-[240px] rounded-xl border border-neutral-300 bg-white shadow-lg">
+              <NavigationMenu.Content className="absolute right-2 top-10 w-[240px] rounded-xl border border-neutral-300 bg-white shadow-lg">
                 <Navigation />
               </NavigationMenu.Content>
             </NavigationMenu.Item>
