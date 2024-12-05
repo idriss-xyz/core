@@ -63,7 +63,7 @@ export default function Donors() {
       chainsIds: ALL_CHAIN_IDS,
       tokensSymbols: UNIQUE_ALL_TOKEN_SYMBOLS,
     },
-    mode: 'onChange',
+    mode: 'onSubmit',
   });
   const [creatorName, chainsIds, tokensSymbols, address] = formMethods.watch([
     'name',
@@ -260,7 +260,7 @@ export default function Donors() {
                   required: 'Address is required',
                   validate: async (value) => {
                     try {
-                      if (value.includes('.')) {
+                      if (value.includes('.') && !value.endsWith('.')) {
                         const resolvedAddress =
                           await ethereumClient?.getEnsAddress({
                             name: normalize(value),
