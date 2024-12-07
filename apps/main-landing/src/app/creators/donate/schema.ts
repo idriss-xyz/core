@@ -13,7 +13,7 @@ export const createSendPayloadSchema = (allowedChainIds: number[]) => {
     amount: z
       .number()
       .gte(MIN_SEND_AMOUNT, `Value must be at least $${MIN_SEND_AMOUNT}`),
-    tokenAddress: hexSchema,
+    tokenAddress: z.string(),
     chainId: z.union(createPossibleChainIdsSchema(allowedChainIds)),
     message: z.string().max(70),
   });

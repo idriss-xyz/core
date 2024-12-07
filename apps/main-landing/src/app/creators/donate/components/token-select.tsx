@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { ChainToken } from '../types';
+import { Token } from '../types';
 
 import { Select } from './select';
 
@@ -8,7 +8,7 @@ interface Properties {
   value: string;
   label?: string;
   className?: string;
-  tokens: ChainToken[];
+  tokens: Token[];
   onChange: (value: string) => void;
 }
 
@@ -34,11 +34,11 @@ export const TokenSelect = ({
   );
 };
 
-const optionsFrom = (tokens: ChainToken[]) => {
+const optionsFrom = (tokens: Token[]) => {
   return tokens.map((token) => {
     return {
       label: token.name,
-      value: token.address,
+      value: token.symbol,
       prefix: (
         // eslint-disable-next-line @next/next/no-img-element
         <img
