@@ -1,0 +1,28 @@
+{
+  "name": "idriss-monorepo",
+  "scripts": {
+    "extension:dev": "turbo watch dev --filter=@idriss-xyz/extension",
+    "extension:prod": "turbo run build --filter=@idriss-xyz/extension",
+    "main-landing:dev": "turbo dev --filter=@idriss-xyz/main-landing",
+    "main-landing:prod": "turbo start --filter=@idriss-xyz/main-landing",
+    "dev": "turbo dev",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
+    "format": "turbo run format",
+    "format:fix": "turbo run format:fix",
+    "type-check": "turbo run type-check",
+    "unused-exports": "turbo run unused-exports",
+    "circular-dependencies": "turbo run circular-dependencies"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "prettier-plugin-tailwindcss": "^0.6.8",
+    "turbo": "^2.2.2",
+    "typescript": "^5.6.2"
+  },
+  "packageManager": "pnpm@9.1.0",
+  "engines": {
+    "node": ">=20.13.0",
+    "pnpm": ">=9.1.0"
+  }
+}

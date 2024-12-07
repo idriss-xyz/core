@@ -1,0 +1,95 @@
+:host {
+  font-size: 14px!important;
+  line-height: 20px!important;
+  color: #000000!important;
+  border: 2px solid #E6E6E3!important;
+  border-radius: 4px!important;
+  background-color: #d7d7d7!important;
+  z-index: 1000000!important;
+  background: #fff!important;
+
+  > div {
+    border-style: none none solid;
+    border-width: 0px 0px 1px;
+    border-color: #E6E6E3;
+    padding-left: 8px;
+    cursor: pointer;
+    position: relative;
+
+
+    &:hover {
+      background: #E3E3E6;
+    }
+  }
+}
+
+.type {
+  font-weight: 600;
+  display: inline;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.key {
+  display: inline;
+  font-family: 'Segoe UI', sans-serif;
+  color: #11dd74;
+  font-weight: 600;
+
+  &::before {
+    content: ' ';
+  }
+}
+
+.value {
+  font-family: 'Segoe UI', sans-serif;
+   font-size: 10px;
+}
+
+.img {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    max-width: 5%;
+}
+
+.tooltip {
+  font-family: 'Segoe UI', sans-serif;
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+  top: 5px;
+  right: 5px;
+
+}
+
+.empty {
+    padding: 5px;
+    height: 19px;
+}
+
+:host::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+:host::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background: rgba(0,0,0,0.1);
+}
+:host::-webkit-scrollbar-thumb{
+    border-radius: 10px;
+    background: rgba(0,0,0,0.2);
+}
+:host::-webkit-scrollbar-thumb:hover{
+  	background: rgba(0,0,0,0.4);
+}
+:host::-webkit-scrollbar-thumb:active{
+  	background: rgba(0,0,0,.9);
+}

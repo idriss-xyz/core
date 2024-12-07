@@ -1,0 +1,100 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "@idriss-xyz/main-landing#build": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*"
+      ],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**"
+      ],
+      "env": [
+        "BASIC_AUTH_USER",
+        "BASIC_AUTH_PASSWORD",
+        "ENVIRONMENT",
+        "RAILWAY_PUBLIC_DOMAIN"
+      ]
+    },
+    "@idriss-xyz/main-landing#start": {
+      "dependsOn": [
+        "@idriss-xyz/main-landing#build"
+      ],
+      "env": [
+        "BASIC_AUTH_USER",
+        "BASIC_AUTH_PASSWORD",
+        "ENVIRONMENT",
+        "RAILWAY_PUBLIC_DOMAIN"
+      ]
+    },
+    "@idriss-xyz/main-landing#dev": {
+      "cache": false,
+      "persistent": true,
+      "env": [
+        "BASIC_AUTH_USER",
+        "BASIC_AUTH_PASSWORD",
+        "ENVIRONMENT",
+        "RAILWAY_PUBLIC_DOMAIN"
+      ]
+    },
+    "@idriss-xyz/extension#dev": {
+      "cache": false,
+      "env": [
+        "AMPLITUDE_API_KEY",
+        "ENVIRONMENT",
+        "SENTRY_DSN",
+        "SENTRY_ENVIRONMENT"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env.development",
+        ".env.production"
+      ]
+    },
+    "@idriss-xyz/extension#build": {
+      "cache": true,
+      "env": [
+        "AMPLITUDE_API_KEY",
+        "ENVIRONMENT",
+        "SENTRY_DSN",
+        "SENTRY_ENVIRONMENT"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env.development",
+        ".env.production"
+      ],
+      "outputs": [
+        "build"
+      ]
+    },
+    "lint": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "../../packages/eslint-config/.eslintrc.cjs"
+      ]
+    },
+    "lint:fix": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "../../packages/eslint-config/.eslintrc.cjs"
+      ]
+    },
+    "format": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "../../prettier.config.mjs"
+      ]
+    },
+    "format:fix": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "../../prettier.config.mjs"
+      ]
+    },
+    "unused-exports": {},
+    "circular-dependencies": {},
+    "type-check": {}
+  }
+}

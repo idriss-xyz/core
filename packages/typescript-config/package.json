@@ -1,0 +1,8 @@
+{
+  "name": "@idriss-xyz/typescript-config",
+  "exports":{
+    "./next": "./next.json",
+    "./react": "./react.json",
+    "./base": "./base.json"
+  }
+}
