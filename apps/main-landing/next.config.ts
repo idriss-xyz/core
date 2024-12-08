@@ -116,7 +116,6 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ['@idriss-xyz/ui'],
   },
   images: {
-    domains: ['localhost'],
   },
 };
 

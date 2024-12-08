@@ -60,10 +60,9 @@ export const TokenSection = () => {
               TOKEN SALE
             </h2>
             <p className="text-center text-body3 text-neutralGreen-900 opacity-70 lg:text-body2">
-              IDRISS is the utility token that powers the entire IDRISS
-              ecosystem, <br />
-              including the extension, creators, and prediction markets. <br />
-              Buy IDRISS for DAO rights, airdrops, and more.
+              IDRISS is the utility token powering the IDRISS DAO, <br />
+              giving you access to decentralized revenue sharing, governance
+              rights, and more.
             </p>
             <div className="flex flex-row gap-6">
               <Button
@@ -123,7 +122,7 @@ export const TokenSection = () => {
             </div>
             <div className="self-stretch text-center opacity-70">
               <span className="text-body2 text-neutralGreen-900">
-                By participating, I agree to the{' '}
+                By participating, you agree to the{' '}
               </span>
               <Link size="medium" href="" isExternal>
                 Terms and Conditions

@@ -172,7 +172,7 @@ export default {
           },
         ],
         heading3: [
-          '2',
+          '2rem',
           {
             lineHeight: '2.5rem',
             letterSpacing: '0',
