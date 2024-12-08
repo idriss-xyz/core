@@ -18,3 +18,7 @@ export { Verifying } from './verifying';
 export { Head } from './head';
 export { ExpandUpDown } from './expand-up-down';
 export { InfoCircle } from './info-circle';
+export { IdrissLogoCircle } from './idriss-logo-circle'
+export { Copy } from './copy'
+export { Uniswap } from './uniswap'
+export { Jumper } from './jumper'
