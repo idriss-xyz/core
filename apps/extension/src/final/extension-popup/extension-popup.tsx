@@ -19,6 +19,10 @@ import {
 export const ExtensionPopup = () => {
   const extensionPopup = useExtensionPopup();
 
+  const userVersion = localStorage.getItem('extensionVersion') ?? '';
+  // TODO: Get version from API
+  const newestVersion = '1.3.6';
+
   if (!extensionPopup.isVisible) {
     return null;
   }
@@ -29,7 +33,11 @@ export const ExtensionPopup = () => {
       className="fixed right-2 top-2 z-extensionPopup flex w-[460px] flex-col overflow-hidden p-0 shadow-lg"
       closeOnClickAway
     >
-      <TopBar className="rounded-t-xl" />
+      <TopBar
+        className="rounded-t-xl"
+        userVersion={userVersion}
+        newestVersion={newestVersion}
+      />
 
       <Routes>
         <Route element={<PopupContentLayout />}>
