@@ -219,167 +219,169 @@ export default function Donors() {
           alt=""
         />
 
-        <div className="container relative mt-8 flex w-[440px] max-w-full flex-col items-center overflow-hidden rounded-xl bg-white px-4 pb-3 pt-6 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]">
-          <Image
-            priority
-            src={backgroundLines3}
-            className="pointer-events-none absolute top-0 hidden h-full opacity-40 lg:block"
-            alt=""
-          />
-          <h1 className="self-start text-heading4">
-            Create your donation link
-          </h1>
-          <div className="w-full">
-            <Form className="w-full">
-              <Controller
-                control={formMethods.control}
-                name="name"
-                rules={{
-                  required: 'Name is required',
-                  maxLength: {
-                    value: 20,
-                    message: 'Name cannot be longer than 20 characters',
-                  },
-                }}
-                render={({ field, fieldState }) => {
-                  return (
-                    <Form.Field
-                      label="Name"
-                      className="mt-6 w-full"
-                      helperText={fieldState.error?.message}
-                      error={Boolean(fieldState.error?.message)}
-                      {...field}
-                    />
-                  );
-                }}
-              />
-              <Controller
-                control={formMethods.control}
-                name="address"
-                rules={{
-                  required: 'Address is required',
-                  validate: async (value) => {
-                    try {
-                      if (value.includes('.') && !value.endsWith('.')) {
-                        const resolvedAddress =
-                          await ethereumClient?.getEnsAddress({
-                            name: normalize(value),
-                          });
-                        return resolvedAddress
+        <div className="mt-8 w-[440px] max-w-full overflow-hidden px-safe lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]">
+          <div className="container relative flex w-full flex-col items-center rounded-xl bg-white px-4 pb-3 pt-6">
+            <Image
+              priority
+              src={backgroundLines3}
+              className="pointer-events-none absolute top-0 hidden h-full opacity-40 lg:block"
+              alt=""
+            />
+            <h1 className="self-start text-heading4">
+              Create your donation link
+            </h1>
+            <div className="w-full">
+              <Form className="w-full">
+                <Controller
+                  control={formMethods.control}
+                  name="name"
+                  rules={{
+                    required: 'Name is required',
+                    maxLength: {
+                      value: 20,
+                      message: 'Name cannot be longer than 20 characters',
+                    },
+                  }}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <Form.Field
+                        label="Name"
+                        className="mt-6 w-full"
+                        helperText={fieldState.error?.message}
+                        error={Boolean(fieldState.error?.message)}
+                        {...field}
+                      />
+                    );
+                  }}
+                />
+                <Controller
+                  control={formMethods.control}
+                  name="address"
+                  rules={{
+                    required: 'Address is required',
+                    validate: async (value) => {
+                      try {
+                        if (value.includes('.') && !value.endsWith('.')) {
+                          const resolvedAddress =
+                            await ethereumClient?.getEnsAddress({
+                              name: normalize(value),
+                            });
+                          return resolvedAddress
+                            ? true
+                            : 'This address doesn’t exist.';
+                        }
+                        return isAddress(value)
                           ? true
                           : 'This address doesn’t exist.';
+                      } catch (error) {
+                        console.log(error);
+                        return 'An unexpected error occurred. Try again.';
                       }
-                      return isAddress(value)
-                        ? true
-                        : 'This address doesn’t exist.';
-                    } catch (error) {
-                      console.log(error);
-                      return 'An unexpected error occurred. Try again.';
-                    }
-                  },
-                }}
-                render={({ field, fieldState }) => {
-                  return (
-                    <Form.Field
-                      label="Wallet address"
-                      className="mt-6 w-full"
-                      helperText={fieldState.error?.message}
-                      error={Boolean(fieldState.error?.message)}
-                      {...field}
-                    />
-                  );
-                }}
-              />
-              <Controller
-                control={formMethods.control}
-                name="chainsIds"
-                rules={{
-                  required: 'Select at least one network',
-                }}
-                render={({ field, fieldState }) => {
-                  return (
-                    <>
-                      <Multiselect<number>
+                    },
+                  }}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <Form.Field
+                        label="Wallet address"
+                        className="mt-6 w-full"
+                        helperText={fieldState.error?.message}
+                        error={Boolean(fieldState.error?.message)}
+                        {...field}
+                      />
+                    );
+                  }}
+                />
+                <Controller
+                  control={formMethods.control}
+                  name="chainsIds"
+                  rules={{
+                    required: 'Select at least one network',
+                  }}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <>
+                        <Multiselect<number>
+                          inputClassName="mt-6 w-full"
+                          label="Network"
+                          options={allowedChainOptions}
+                          onChange={(value) => {
+                            onChangeChainId();
+                            field.onChange(value);
+                          }}
+                          value={field.value}
+                          helperText={fieldState.error?.message}
+                          error={Boolean(fieldState.error?.message)}
+                        />
+                      </>
+                    );
+                  }}
+                />
+
+                <Controller
+                  control={formMethods.control}
+                  name="tokensSymbols"
+                  rules={{
+                    required: 'Select at least one token',
+                  }}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <Multiselect<string>
                         inputClassName="mt-6 w-full"
-                        label="Network"
-                        options={allowedChainOptions}
-                        onChange={(value) => {
-                          onChangeChainId();
-                          field.onChange(value);
-                        }}
+                        label="Token"
+                        options={uniqueTokenOptions}
+                        onChange={field.onChange}
                         value={field.value}
                         helperText={fieldState.error?.message}
                         error={Boolean(fieldState.error?.message)}
                       />
-                    </>
-                  );
-                }}
-              />
-
-              <Controller
-                control={formMethods.control}
-                name="tokensSymbols"
-                rules={{
-                  required: 'Select at least one token',
-                }}
-                render={({ field, fieldState }) => {
-                  return (
-                    <Multiselect<string>
-                      inputClassName="mt-6 w-full"
-                      label="Token"
-                      options={uniqueTokenOptions}
-                      onChange={field.onChange}
-                      value={field.value}
-                      helperText={fieldState.error?.message}
-                      error={Boolean(fieldState.error?.message)}
-                    />
-                  );
-                }}
-              />
-              <div className="mt-6 grid grid-cols-2 gap-2 lg:gap-4">
-                <Button
-                  intent="primary"
-                  size="medium"
-                  prefixIconName={
-                    copiedDonationLink ? 'CheckCircle2' : undefined
-                  }
-                  className={classes(
-                    'w-full',
-                    copiedDonationLink &&
-                      'bg-mint-600 hover:bg-mint-600 [&>div]:hidden',
-                  )}
-                  onClick={() => {
-                    return validateAndCopy(copyDonationLink);
+                    );
                   }}
-                >
-                  {copiedDonationLink ? 'COPIED' : 'DONATION LINK'}
-                </Button>
+                />
+                <div className="mt-6 grid grid-cols-2 gap-2 lg:gap-4">
+                  <Button
+                    intent="primary"
+                    size="medium"
+                    prefixIconName={
+                      copiedDonationLink ? 'CheckCircle2' : undefined
+                    }
+                    className={classes(
+                      'w-full',
+                      copiedDonationLink &&
+                        'bg-mint-600 hover:bg-mint-600 [&>div]:hidden',
+                    )}
+                    onClick={() => {
+                      return validateAndCopy(copyDonationLink);
+                    }}
+                  >
+                    {copiedDonationLink ? 'COPIED' : 'DONATION LINK'}
+                  </Button>
 
-                <Button
-                  intent="secondary"
-                  size="medium"
-                  prefixIconName={copiedObsLink ? 'CheckCircle2' : undefined}
-                  className={classes(
-                    'w-full',
-                    copiedObsLink &&
-                      'border-mint-600 bg-mint-300 hover:bg-mint-300',
-                  )}
-                  onClick={() => {
-                    return validateAndCopy(copyObsLink);
-                  }}
-                >
-                  {copiedObsLink ? 'COPIED' : 'OBS LINK'}
-                </Button>
-              </div>
-            </Form>
+                  <Button
+                    intent="secondary"
+                    size="medium"
+                    prefixIconName={copiedObsLink ? 'CheckCircle2' : undefined}
+                    className={classes(
+                      'w-full',
+                      copiedObsLink &&
+                        'border-mint-600 bg-mint-300 hover:bg-mint-300',
+                    )}
+                    onClick={() => {
+                      return validateAndCopy(copyObsLink);
+                    }}
+                  >
+                    {copiedObsLink ? 'COPIED' : 'OBS LINK'}
+                  </Button>
+                </div>
+              </Form>
+            </div>
+            <Link
+              size="s"
+              href="creators/banner"
+              className="mb-4 mt-[38px] border-none text-neutral-900 hover:text-mint-600"
+            >
+              DOWNLOAD A BANNER FOR YOUR BIO
+            </Link>
           </div>
-          <Link
-            size="s"
-            href="creators/banner"
-            className="mb-4 mt-[38px] border-none text-neutral-900 hover:text-mint-600"
-          >
-            DOWNLOAD A BANNER FOR YOUR BIO
-          </Link>
         </div>
         <Button
           className="px-5 py-3.5 lg:absolute lg:bottom-6 lg:right-7 lg:translate-x-0"

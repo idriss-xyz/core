@@ -17,7 +17,7 @@ const tokenCoinImages = [
 
 export const TokenSection = () => {
   return (
-    <div className="relative z-1" id="dao">
+    <div className="relative z-1 px-safe" id="dao">
       <div className="container flex justify-center py-10 lg:py-[169px]">
         <div className="relative flex flex-col items-center rounded-[36px] bg-white/50 px-4 py-10 backdrop-blur-[45px] lg:w-max lg:px-16 lg:py-20">
           <GradientBorder

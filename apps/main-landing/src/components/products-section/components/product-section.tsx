@@ -68,7 +68,7 @@ export const ProductSection = ({
         style={style}
       >
         <div className="container flex flex-col gap-10 p-0 lg:gap-[104px] lg:[@media(max-height:1000px)]:gap-[30px] lg:[@media(max-height:770px)]:gap-[24px] lg:[@media(min-height:1001px)]:[@media(max-height:1100px)]:gap-[50px]">
-          <div className="flex flex-col items-start gap-[64px] lg:[@media(max-height:1100px)]:gap-[50px]">
+          <div className="flex flex-col items-start gap-[64px] px-safe lg:[@media(max-height:1100px)]:gap-[50px]">
             {tabsVisibile && (
               <Tabs
                 options={tabOptions}

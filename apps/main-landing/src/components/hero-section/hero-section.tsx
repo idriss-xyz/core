@@ -18,9 +18,11 @@ export const HeroSection = () => {
         className="pointer-events-none absolute top-0 hidden opacity-40 lg:block"
         alt=""
       />
-      <h1 className="container z-1 my-0 text-balance text-center text-display4 font-normal gradient-text lg:text-display1">
-        APPS UNIQUELY ENABLED BY CRYPTO AND AI
-      </h1>
+      <div className="z-1 px-safe">
+        <h1 className="container my-0 text-balance text-center text-display4 font-normal gradient-text lg:text-display1">
+          APPS UNIQUELY ENABLED BY CRYPTO AND AI
+        </h1>
+      </div>
       <Button
         aria-label="Get started"
         intent="primary"
@@ -40,7 +42,9 @@ export const HeroSection = () => {
         className="pointer-events-none z-0 mt-[-40%] w-full min-w-[600px] lg:mt-[-24%] [@media(max-width:768px)]:[@media(min-width:470px)]:mt-[-30%] [@media(max-width:1023px)]:[@media(min-width:768px)]:mt-[-25%]"
         alt=""
       />
-      <CollaborationsShowcase className="container mt-[-10%] text-center md:mb-10 lg:mb-14 lg:mt-[-10%]" />
+      <div className="mt-[-10%] px-safe md:mb-10 lg:mb-14 lg:mt-[-10%]">
+        <CollaborationsShowcase className="container text-center" />
+      </div>
     </header>
   );
 };
