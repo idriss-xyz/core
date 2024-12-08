@@ -24,7 +24,12 @@ import {
   DEFAULT_ALLOWED_CHAINS_IDS,
   TOKEN,
 } from './constants';
-import { createSendPayloadSchema, hexSchema, SendPayload } from './schema';
+import {
+  createFormPayloadSchema,
+  FormPayload,
+  hexSchema,
+  SendPayload,
+} from './schema';
 import {
   applyDecimalsToNumericString,
   getSendFormDefaultValues,
@@ -32,7 +37,7 @@ import {
   roundToSignificantFigures,
   validateAddressOrENS,
 } from './utils';
-import { Token } from './types';
+import { Hex, Token } from './types';
 import { useSender } from './hooks';
 
 const SEARCH_PARAMETER = {
@@ -74,7 +79,7 @@ export const Content = ({ className }: Properties) => {
 
   const addressValidationResult = hexSchema.safeParse(validatedAddress);
 
-  const [selectedTokenKey, setSelectedTokenKey] = useState<string>('ETH');
+  const [selectedTokenSymbol, setSelectedTokenSymbol] = useState<string>('ETH');
 
   const networkParameter = searchParameters.get(SEARCH_PARAMETER.NETWORK);
   const tokenParameter = searchParameters.get(SEARCH_PARAMETER.TOKEN);
@@ -112,7 +117,7 @@ export const Content = ({ className }: Properties) => {
       const tokensForThisChain = CHAIN_ID_TO_TOKENS[chain.id];
 
       return !!tokensForThisChain?.find((token) => {
-        return token.symbol === selectedTokenKey;
+        return token.symbol === selectedTokenSymbol;
       });
     });
 
@@ -124,11 +129,11 @@ export const Content = ({ className }: Properties) => {
     return chains.map((chain) => {
       return chain.id;
     });
-  }, [networkParameter, selectedTokenKey]);
+  }, [networkParameter, selectedTokenSymbol]);
 
   const defaultChainId = allowedChainsIds[0] ?? 0;
 
-  const defaultTokenAddress = useMemo(() => {
+  const defaultTokenSymbol = useMemo(() => {
     const chainTokens =
       CHAIN_ID_TO_TOKENS[defaultChainId]?.filter((chainToken) => {
         return possibleTokens.some((token) => {
@@ -137,23 +142,20 @@ export const Content = ({ className }: Properties) => {
       }) ?? [];
 
     return (
-      chainTokens[0]?.address ??
-      CHAIN_ID_TO_TOKENS[defaultChainId]?.[0]?.address ??
-      '0x'
+      chainTokens[0]?.symbol ??
+      CHAIN_ID_TO_TOKENS[defaultChainId]?.[0]?.symbol ??
+      ''
     );
   }, [defaultChainId, possibleTokens]);
 
-  const formMethods = useForm<SendPayload>({
-    defaultValues: getSendFormDefaultValues(
-      defaultChainId,
-      defaultTokenAddress,
-    ),
-    resolver: zodResolver(createSendPayloadSchema(allowedChainsIds)),
+  const formMethods = useForm<FormPayload>({
+    defaultValues: getSendFormDefaultValues(defaultChainId, defaultTokenSymbol),
+    resolver: zodResolver(createFormPayloadSchema(allowedChainsIds)),
   });
 
-  const [chainId, tokenAddress, amount] = formMethods.watch([
+  const [chainId, tokenSymbol, amount] = formMethods.watch([
     'chainId',
-    'tokenAddress',
+    'tokenSymbol',
     'amount',
   ]);
 
@@ -161,38 +163,48 @@ export const Content = ({ className }: Properties) => {
 
   const selectedToken = useMemo(() => {
     const token = possibleTokens?.find((token) => {
-      return token.symbol === tokenAddress;
+      return token.symbol === tokenSymbol;
     });
-    setSelectedTokenKey(token?.symbol ?? '');
+    setSelectedTokenSymbol(token?.symbol ?? '');
     return token;
-  }, [possibleTokens, tokenAddress]);
+  }, [possibleTokens, tokenSymbol]);
 
   const amountInSelectedToken = useMemo(() => {
-    const decimals =
-      CHAIN_ID_TO_TOKENS[chainId]?.find((token) => {
-        return token.symbol === selectedTokenKey;
-      })?.decimals ?? 1;
     if (!sender.tokensToSend || !selectedToken?.symbol) {
       return;
     }
+
+    const decimals =
+      CHAIN_ID_TO_TOKENS[chainId]?.find((token) => {
+        return token.symbol === selectedTokenSymbol;
+      })?.decimals ?? 1;
 
     return applyDecimalsToNumericString(
       sender.tokensToSend.toString(),
       decimals,
     );
-  }, [selectedTokenKey, chainId, sender.tokensToSend]);
+  }, [
+    selectedTokenSymbol,
+    chainId,
+    sender.tokensToSend,
+    selectedToken?.symbol,
+  ]);
 
-  const onSubmit: SubmitHandler<SendPayload> = useCallback(
+  const onSubmit: SubmitHandler<FormPayload> = useCallback(
     async (payload) => {
       if (!addressValidationResult.success || !validatedAddress) {
         return;
       }
-      const { chainId, tokenAddress: symbol, ...rest } = payload;
-      const address =
+      const { chainId, tokenSymbol, ...rest } = payload;
+      const address: Hex =
         CHAIN_ID_TO_TOKENS[chainId]?.find((token: Token) => {
-          return token.symbol === symbol;
+          return token.symbol === tokenSymbol;
         })?.address ?? '0x';
-      const sendPayload = { ...rest, chainId, tokenAddress: address };
+      const sendPayload: SendPayload = {
+        ...rest,
+        chainId,
+        tokenAddress: address,
+      };
       const validAddress = getAddress(addressValidationResult.data);
       //TODO: Add error handling
       await sender.send({
@@ -200,7 +212,12 @@ export const Content = ({ className }: Properties) => {
         recipientAddress: validAddress,
       });
     },
-    [addressValidationResult.data, addressValidationResult.success, sender],
+    [
+      addressValidationResult.data,
+      addressValidationResult.success,
+      sender,
+      validatedAddress,
+    ],
   );
 
   if (validatedAddress !== undefined && addressValidationResult.error) {
@@ -288,7 +305,7 @@ export const Content = ({ className }: Properties) => {
       <Form onSubmit={formMethods.handleSubmit(onSubmit)} className="w-full">
         <Controller
           control={formMethods.control}
-          name="tokenAddress"
+          name="tokenSymbol"
           render={({ field }) => {
             return (
               <TokenSelect

@@ -70,7 +70,7 @@ export const useSender = ({ walletClient, publicClient }: Properties) => {
         walletClient,
       });
 
-      if (isNativeTokenAddress(sendPayload.tokenAddress as `0x${string}`)) {
+      if (isNativeTokenAddress(sendPayload.tokenAddress)) {
         nativeTransaction.mutate({
           tokensToSend,
           recipientAddress,
@@ -82,7 +82,7 @@ export const useSender = ({ walletClient, publicClient }: Properties) => {
       } else {
         erc20Transaction.mutate({
           recipientAddress,
-          tokenAddress: sendPayload.tokenAddress as `0x${string}`,
+          tokenAddress: sendPayload.tokenAddress,
           walletClient,
           publicClient,
           tokensToSend,
