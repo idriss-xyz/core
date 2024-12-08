@@ -24,7 +24,8 @@
     "tabs",
     "activeTab",
     "contextMenus",
-    "storage"
+    "storage",
+    "runtime"
   ],
   "host_permissions": [
     "<all_urls>"
