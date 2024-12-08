@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+import { io } from 'socket.io-client';
+
 import { TWITTER_COMMAND_MAP } from 'host/twitter';
 import {
   Command,
@@ -27,7 +30,10 @@ import { IDRISS_COMMAND_MAP } from 'shared/idriss';
 import { IDRISS_SEND_COMMAND_MAP } from 'application/idriss-send';
 import { TALLY_COMMAND_MAP } from 'application/tally';
 import { FARCASTER_COMMAND_MAP } from 'shared/farcaster';
-import { TRADING_COPILOT_COMMAND_MAP } from 'application/trading-copilot';
+import {
+  TRADING_COPILOT_COMMAND_MAP,
+  SwapData,
+} from 'application/trading-copilot';
 
 import { SbtResolver } from '../../common/resolvers/SbtResolver';
 import { AddressResolver } from '../../common/resolvers/AddressResolver';
@@ -49,10 +55,19 @@ const COMMAND_MAP = {
   ...TRADING_COPILOT_COMMAND_MAP,
 };
 
+const SERVER_URL = 'https://copilot-production-e887.up.railway.app/';
+
 export class ServiceWorker {
   private observabilityScope: ObservabilityScope =
     createObservabilityScope('service-worker');
-  private constructor(private environment: typeof chrome) {}
+
+  private socket: ReturnType<typeof io>;
+
+  private constructor(private environment: typeof chrome) {
+    this.socket = io(SERVER_URL, { transports: ['websocket'] });
+    console.log('Creating socket connection', this.socket);
+    this.initializeSocketEvents();
+  }
 
   static run(environment: typeof chrome) {
     const serviceWorker = new ServiceWorker(environment);
@@ -63,6 +78,52 @@ export class ServiceWorker {
     serviceWorker.watchPopupClick();
     serviceWorker.watchLegacyMessages();
     serviceWorker.watchWorkerError();
+    serviceWorker.watchWorkerInactivity();
+  }
+
+  initializeSocketEvents() {
+    console.log('Initializing socket');
+
+    this.socket.on('connect', () => {
+      console.log('Connected to server');
+
+      const subscriberId = 'id1';
+
+      if (subscriberId) {
+        this.registerWithServer(subscriberId);
+      } else {
+        console.error('No subscriberId found in storage');
+      }
+    });
+
+    this.socket.on('disconnect', () => {
+      console.log('Disconnected from server');
+    });
+
+    this.socket.on('swapEvent', (swapData) => {
+      this.createSwapNotification(swapData);
+    });
+  }
+
+  private registerWithServer(subscriberId: string) {
+    this.socket.emit('register', subscriberId);
+  }
+
+  private createSwapNotification(swapData: SwapData) {
+    const message = `Swap detected: ${swapData.tokenIn?.amount} of ${swapData.tokenIn?.symbol} swapped for ${swapData.tokenOut?.amount} of ${swapData.tokenOut?.symbol}`;
+    console.log('Websocket event message:', message);
+
+    this.environment.tabs.query(
+      { active: true, currentWindow: true },
+      (tabs) => {
+        if (tabs[0]?.id) {
+          void chrome.tabs.sendMessage(tabs[0].id, {
+            type: 'SWAP_EVENT',
+            data: swapData,
+          });
+        }
+      },
+    );
   }
 
   keepAlive() {
@@ -182,8 +243,8 @@ export class ServiceWorker {
               return true;
             }
           }
-          case 'getXIconUrl': {
-            fetch(this.environment.runtime.getURL('img/x.svg'))
+          case 'getTwitterIconUrl': {
+            fetch(this.environment.runtime.getURL('img/twitter.svg'))
               .then((fetchRequest) => {
                 return fetchRequest.blob();
               })
@@ -196,6 +257,7 @@ export class ServiceWorker {
               .catch(console.error);
             return true;
           }
+          // No default
         }
 
         return true;
@@ -251,6 +313,12 @@ export class ServiceWorker {
   watchWorkerError() {
     self.addEventListener('error', (event) => {
       this.observabilityScope.captureException(event.error);
+    });
+  }
+
+  watchWorkerInactivity() {
+    self.addEventListener('uninstall', () => {
+      this.socket.disconnect();
     });
   }
 

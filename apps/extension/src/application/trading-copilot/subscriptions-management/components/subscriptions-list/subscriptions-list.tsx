@@ -2,16 +2,16 @@ import { useMemo } from 'react';
 
 import { Empty, Spinner } from 'shared/ui';
 
-import { Subscription } from '../../../types';
+import { SubscriptionRequest, SubscriptionsResponse } from '../../../types';
 
 import { SubscriptionItem } from './subscription-item';
 
 type Properties = {
-  subscriptions: Subscription[];
+  subscriptions: SubscriptionsResponse | undefined;
   subscriptionsLoading: boolean;
   subscriptionsUpdatePending: boolean;
   className?: string;
-  onRemove: (ensName: Subscription['ensName']) => void;
+  onRemove: (address: SubscriptionRequest['address']) => void;
 };
 
 export const SubscriptionsList = ({
@@ -28,7 +28,7 @@ export const SubscriptionsList = ({
       );
     }
 
-    if (subscriptions.length === 0) {
+    if (subscriptions === undefined || subscriptions.addresses.length === 0) {
       return (
         <Empty text="Your subscriptions list is empty" className="mt-10" />
       );
@@ -36,12 +36,12 @@ export const SubscriptionsList = ({
 
     return (
       <div className="relative mt-2">
-        <ul>
-          {subscriptions.map((subscription) => {
+        <ul className="flex flex-col gap-y-3">
+          {subscriptions.addresses.map((subscription) => {
             return (
               <SubscriptionItem
                 subscription={subscription}
-                key={subscription.ensName}
+                key={subscription}
                 onRemove={onRemove}
               />
             );

@@ -34,11 +34,10 @@ export const TradingCopilotLayout = () => {
       <div className="mb-4 flex items-center justify-between gap-2">
         {leftColumn}
 
-        <h1 className="text-heading4 text-neutralGreen-900">{title}</h1>
+        <h1 className="text-heading4 text-neutral-900">{title}</h1>
 
         <IconPlaceholder />
       </div>
-
       <Outlet />
     </div>
   );
