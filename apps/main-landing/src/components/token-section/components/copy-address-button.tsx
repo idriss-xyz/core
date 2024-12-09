@@ -20,8 +20,8 @@ export const CopyAddressButton = () => {
 
   return (
     <div className="flex items-center gap-2">
-      <Icon name="IdrissLogoCircle" size={24} />
-      <span className="min-w-[130px] text-body2 text-neutralGreen-900">
+      <Icon name="BaseLogo" size={24} />
+      <span className="min-w-[130px] text-body2 text-neutralGreen-900 text-center">
         {copied ? 'Copied!' : formatAddress(IDRISS_TOKEN_ADDRESS)}
       </span>
       <IconButton

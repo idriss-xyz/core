@@ -80,7 +80,7 @@ export const ProductSection = ({
               <div className="z-1 overflow-hidden">
                 <h2
                   className={classes(
-                    'text-balance pt-16 text-display5 text-midnightGreen-100 transition-transform duration-1000 lg:pt-0 [@media(max-width:1540px)]:[@media(max-height:1000px)]:text-display4 [@media(min-width:1541px)]:text-display2',
+                    'text-balance pt-16 text-display5 text-midnightGreen-100 transition-transform duration-1000 lg:pt-0 lg:[@media(max-width:1540px)]:[@media(max-height:1000px)]:text-display4 [@media(min-width:1541px)]:text-display2',
                     headerClassName,
                     fadeOut && 'translate-y-[-120%]',
                   )}

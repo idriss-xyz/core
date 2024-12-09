@@ -57,14 +57,14 @@ export const TokenSaleCountdown = () => {
         gradientStopColor="rgba(255,255,255,1)"
       />
       <span className="text-center text-body2 text-neutralGreen-900">
-        TOKEN SALES ENDS IN
+        ENDS IN
       </span>
       <div className="flex justify-between self-stretch">
         <div className="flex min-w-14 flex-col items-center justify-center">
           <span className="text-heading2 gradient-text">
             {timeRemaining.days}
           </span>
-          <span className="text-center text-body2 text-neutralGreen-900">
+          <span className="text-center text-body2 text-neutralGreen-500">
             DAYS
           </span>
         </div>
@@ -73,7 +73,7 @@ export const TokenSaleCountdown = () => {
           <span className="text-heading2 gradient-text">
             {timeRemaining.hours}
           </span>
-          <span className="text-center text-body2 text-neutralGreen-900">
+          <span className="text-center text-body2 text-neutralGreen-500">
             HRS
           </span>
         </div>
@@ -82,7 +82,7 @@ export const TokenSaleCountdown = () => {
           <span className="text-heading2 gradient-text">
             {timeRemaining.minutes}
           </span>
-          <span className="text-center text-body2 text-neutralGreen-900">
+          <span className="text-center text-body2 text-neutralGreen-500">
             MIN
           </span>
         </div>
@@ -91,7 +91,7 @@ export const TokenSaleCountdown = () => {
           <span className="text-heading2 gradient-text">
             {timeRemaining.seconds}
           </span>
-          <span className="text-center text-body2 text-neutralGreen-900">
+          <span className="text-center text-body2 text-neutralGreen-500">
             SEC
           </span>
         </div>

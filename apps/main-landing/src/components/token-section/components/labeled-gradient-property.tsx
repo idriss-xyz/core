@@ -12,11 +12,11 @@ export const LabeledGradientProperty = ({
   additionalContent,
 }: Properties) => {
   return (
-    <div className="flex flex-col items-center gap-3 lg:min-w-56">
+    <div className="w-full flex flex-col items-center gap-3 lg:min-w-36">
       <span className="text-body3 text-neutralGreen-900 lg:text-body2">
         {label}
       </span>
-      <span className="mt-3 text-display3 text-neutralGreen-900 gradient-text lg:text-display2">
+      <span className="mt-3 text-heading3 text-neutralGreen-900 gradient-text lg:text-heading2">
         {content}
       </span>
       {additionalContent}
