@@ -15,7 +15,7 @@ export const APPS_SECTION_NAVIGATION_ITEMS: NavigationSectionItem[] = [
   },
   {
     title: 'PREDICTION MARKETS',
-    description: 'Explore the full potential of prediction markets',
+    description: 'Decentralized community notes for the internet',
     url: `/${INTERNAL_LINK.PREDICTION_MARKETS}`,
   },
 ];
