@@ -19,7 +19,7 @@ export const ANNOUNCEMENT_LINK = {
   AAVEGOTCHI: 'https://x.com/idriss_xyz/status/1750851248121930167',
   PARALLEL: 'https://x.com/idriss_xyz/status/1729258820441170160',
   TIPPING: 'https://x.com/idriss_xyz/status/1857374373688078528',
-  CREATORS_DONATIONS: 'https://x.com/IDriss_xyz/status/1737850506528362982',
+  CREATORS_DONATIONS: 'https://x.com/idriss_xyz/status/1864316262811357450',
   METAMASK: 'https://x.com/idriss_xyz/status/1848069254609858813',
 };
 
