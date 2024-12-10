@@ -48,7 +48,7 @@ export const TokenSaleCountdown = () => {
     setTimeRemaining({ days, hours, minutes, seconds });
   };
   return (
-    <div className="relative flex w-full flex-col items-center gap-5 rounded-2xl bg-white/20 px-10 py-8">
+    <div className="relative flex w-full flex-col items-center gap-5 rounded-2xl bg-white/20 px-6 lg:px-10 py-8">
       <GradientBorder
         borderRadius={16}
         borderWidth={1}
@@ -56,42 +56,42 @@ export const TokenSaleCountdown = () => {
         gradientStartColor="#5FEB3C"
         gradientStopColor="rgba(255,255,255,1)"
       />
-      <span className="text-center text-body2 text-neutralGreen-900">
+      <span className="text-center text-body3 text-neutralGreen-900 lg:text-body2">
         ENDS IN
       </span>
       <div className="flex justify-between self-stretch">
         <div className="flex min-w-14 flex-col items-center justify-center">
-          <span className="text-heading2 gradient-text">
+          <span className="text-heading4 gradient-text lg:text-heading2">
             {timeRemaining.days}
           </span>
-          <span className="text-center text-body2 text-neutralGreen-500">
+          <span className="text-center text-body4 text-neutralGreen-500 lg:text-body2">
             DAYS
           </span>
         </div>
         <span className="text-heading3 text-neutralGreen-900">:</span>
         <div className="flex min-w-14 flex-col items-center justify-center">
-          <span className="text-heading2 gradient-text">
+          <span className="text-heading4 gradient-text lg:text-heading2">
             {timeRemaining.hours}
           </span>
-          <span className="text-center text-body2 text-neutralGreen-500">
+          <span className="text-center text-body4 text-neutralGreen-500 lg:text-body2">
             HRS
           </span>
         </div>
         <span className="text-heading3 text-neutralGreen-900">:</span>
         <div className="flex min-w-14 flex-col items-center justify-center">
-          <span className="text-heading2 gradient-text">
+          <span className="text-heading4 gradient-text lg:text-heading2">
             {timeRemaining.minutes}
           </span>
-          <span className="text-center text-body2 text-neutralGreen-500">
+          <span className="text-center text-body4 text-neutralGreen-500 lg:text-body2">
             MIN
           </span>
         </div>
         <span className="text-heading3 text-neutralGreen-900">:</span>
         <div className="flex min-w-14 flex-col items-center justify-center">
-          <span className="text-heading2 gradient-text">
+          <span className="text-heading4 gradient-text lg:text-heading2">
             {timeRemaining.seconds}
           </span>
-          <span className="text-center text-body2 text-neutralGreen-500">
+          <span className="text-center text-body4 text-neutralGreen-500 lg:text-body2">
             SEC
           </span>
         </div>
@@ -106,14 +106,18 @@ export const TokenSaleCountdown = () => {
           indicatorClassName="rounded-full bg-[linear-gradient(94deg,_#2AD012_-11.21%,_#156A09_75.88%)] h-4"
         />
       </div>
-      <div className="flex justify-between w-full">
+      <div className="flex w-full justify-between">
         <div className="flex items-center gap-2">
-          <div className="size-5 rounded-full bg-[linear-gradient(94deg,_#2AD012_-11.21%,_#156A09_75.88%)]" />
-          <span className="text-body1 text-neutral-800">Sold</span>
+          <div className="size-4 rounded-full bg-[linear-gradient(94deg,_#2AD012_-11.21%,_#156A09_75.88%)] lg:size-5" />
+          <span className="text-body4 text-neutral-800 lg:text-body2">
+            Sold
+          </span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="size-5 rounded-full bg-[linear-gradient(90deg,_#EBFEF3_29.61%,_#D7F1E2_75.72%)] opacity-70 " />
-          <span className="text-body1 text-neutral-800">Total available</span>
+          <div className="size-4 rounded-full bg-[linear-gradient(90deg,_#EBFEF3_29.61%,_#D7F1E2_75.72%)] opacity-70 lg:size-5" />
+          <span className="text-body4 text-neutral-800 lg:text-body2">
+            Total available
+          </span>
         </div>
       </div>
     </div>

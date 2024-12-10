@@ -44,15 +44,40 @@ export const TokenSection = () => {
     <div className="relative z-1" id="dao">
       <div className="container flex flex-col items-center justify-center py-10 lg:py-[143px]">
         <div className="flex flex-col items-center">
-          <h2 className="text-display6 gradient-text lg:text-display3">
+          <h2 className="text-heading3 gradient-text lg:text-display3">
             TOKEN SALE
           </h2>
-          <p className="mt-4 text-center text-body3 text-neutralGreen-900 opacity-70 lg:text-body2">
-            IDRISS is the utility token powering the IDRISS DAO, <br />
-            giving you access to decentralized revenue sharing, governance
-            rights, and more.
+          <p className="mt-4 text-balance text-center text-body4 text-neutralGreen-900 opacity-70 lg:text-body2">
+            IDRISS is the utility token powering{'\u00A0'}the IDRISS{'\u00A0'}
+            DAO,
+            <br className="hidden lg:block" /> giving you access{'\u00A0'}to
+            decentralized{'\u00A0'}revenue sharing, governance rights, and more.
           </p>
-          <div className="mb-4 flex flex-row gap-6">
+          {/* Mobile */}
+          <div className="lg:hidden mb-4 flex flex-row justify-center gap-6">
+            <Button
+              intent="tertiary"
+              size="medium"
+              suffixIconName="IdrissArrowRight"
+              asLink
+              href=""
+              isExternal
+            >
+              FAQ
+            </Button>
+            <Button
+              intent="tertiary"
+              size="medium"
+              suffixIconName="IdrissArrowRight"
+              asLink
+              href=""
+              isExternal
+            >
+              TOKENOMICS
+            </Button>
+          </div>
+          {/* Desktop */}
+          <div className="mb-4 hidden flex-row justify-normal gap-6 lg:flex">
             <Button
               intent="tertiary"
               size="large"
@@ -61,7 +86,7 @@ export const TokenSection = () => {
               href=""
               isExternal
             >
-              LEGAL TERMS
+              FAQ
             </Button>
             <Button
               intent="tertiary"
@@ -84,10 +109,10 @@ export const TokenSection = () => {
             />
             <ImageSequencer
               images={tokenCoinImages}
-              className="size-[88px] lg:size-[200px] mb-2.5"
+              className="lg:mb-2.5 size-[164px] lg:size-[200px]"
             />
 
-            <div className="w-full flex justify-between">
+            <div className="flex w-full flex-col justify-between gap-10 lg:flex-row lg:gap-0">
               <LabeledGradientProperty
                 label="TOKEN"
                 content="IDRISS"
@@ -98,8 +123,8 @@ export const TokenSection = () => {
               <LabeledGradientProperty label="PRICE" content="$0.03" />
             </div>
             <TokenSaleCountdown />
-            <div className="flex flex-col gap-4">
-              <div className="flex gap-6">
+            <div className="flex flex-col gap-6 lg:gap-4">
+              <div className="flex flex-col gap-6 lg:flex-row">
                 <Button
                   intent="primary"
                   size="large"
@@ -107,6 +132,7 @@ export const TokenSection = () => {
                   asLink
                   href=""
                   isExternal
+                  className="w-full lg:w-auto"
                 >
                   BUY ON UNISWAP
                 </Button>
@@ -117,23 +143,24 @@ export const TokenSection = () => {
                   asLink
                   href=""
                   isExternal
+                  className="w-full lg:w-auto"
                 >
                   BUY ON JUMPER
                 </Button>
               </div>
               <div className="self-stretch text-center opacity-70">
-                <span className="text-body2 text-neutralGreen-900">
+                <span className="text-body4 text-neutralGreen-900 lg:text-body2">
                   By participating, you agree to the{' '}
                 </span>
                 <Link size="medium" href="" isExternal>
-                  Terms and Conditions
+                  Terms{'\u00A0'}and{'\u00A0'}Conditions
                 </Link>
               </div>
             </div>
           </div>
           <Image
             src={background}
-            className="pointer-events-none absolute left-0 top-0 -z-1 overflow-visible lg:size-full lg:object-cover"
+            className="pointer-events-none absolute left-0 top-0 -z-1 size-full overflow-visible object-cover"
             alt=""
           />
         </div>

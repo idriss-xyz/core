@@ -8,11 +8,12 @@ import { iconButton, IconButtonVariants } from './variants';
 
 type Properties = {
   iconName: IconName;
+  iconClassName?: string;
 } & ComponentProps<typeof Button> &
   IconButtonVariants;
 
 export const IconButton = forwardRef(
-  ({ iconName, className, size, ...properties }: Properties, reference) => {
+  ({ iconName, iconClassName, className, size, ...properties }: Properties, reference) => {
     return (
       <Button
         {...properties}
@@ -20,7 +21,11 @@ export const IconButton = forwardRef(
         size={size}
         className={classes(iconButton({ className, size }))}
       >
-        <Icon name={iconName} size={BUTTON_SIZE_TO_ICON_SIZE[size]} />
+        <Icon
+          className={iconClassName}
+          name={iconName}
+          size={BUTTON_SIZE_TO_ICON_SIZE[size]}
+        />
       </Button>
     );
   },

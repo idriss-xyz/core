@@ -1,13 +1,14 @@
 type Properties = {
   className?: string;
+  size?: number;
 };
 
-export const Copy = ({ className }: Properties) => {
+export const Copy = ({ className, size }: Properties) => {
   return (
     <svg
+      width={size}
+      height={size}
       className={className}
-      width="25"
-      height="24"
       viewBox="0 0 25 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
