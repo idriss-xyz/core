@@ -3,7 +3,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
 import { useCommandMutation } from 'shared/messaging';
 
-import { Subscription } from '../../types';
+import { SubscriptionRequest } from '../../types';
 import { GetEnsAddressCommand } from '../../commands';
 
 type SubscriptionFormValues = {
@@ -11,7 +11,7 @@ type SubscriptionFormValues = {
 };
 
 type Properties = {
-  onSubmit: (subscription: Subscription) => void;
+  onSubmit: (address: SubscriptionRequest['address']) => void;
 };
 
 const EMPTY_FORM: SubscriptionFormValues = {
@@ -33,10 +33,7 @@ export const SubscriptionForm = ({ onSubmit }: Properties) => {
       if (!address) {
         return;
       }
-      onSubmit({
-        ensName: data.ensName,
-        walletAddress: address,
-      });
+      onSubmit(address);
       form.reset(EMPTY_FORM);
     },
     [form, getEnsAddressMutation, onSubmit],

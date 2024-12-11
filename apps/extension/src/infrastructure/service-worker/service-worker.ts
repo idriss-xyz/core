@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+import { io } from 'socket.io-client';
+
 import { TWITTER_COMMAND_MAP } from 'host/twitter';
 import {
   Command,
@@ -5,6 +8,7 @@ import {
   FailureResult,
   JsonValue,
   SerializedCommand,
+  SWAP_EVENT,
 } from 'shared/messaging';
 import { WEB3_COMMAND_MAP } from 'shared/web3';
 import { GITCOIN_DONATION_COMMAND_MAP } from 'application/gitcoin';
@@ -27,7 +31,10 @@ import { IDRISS_COMMAND_MAP } from 'shared/idriss';
 import { IDRISS_SEND_COMMAND_MAP } from 'application/idriss-send';
 import { TALLY_COMMAND_MAP } from 'application/tally';
 import { FARCASTER_COMMAND_MAP } from 'shared/farcaster';
-import { TRADING_COPILOT_COMMAND_MAP } from 'application/trading-copilot';
+import {
+  TRADING_COPILOT_COMMAND_MAP,
+  SwapData,
+} from 'application/trading-copilot';
 
 import { SbtResolver } from '../../common/resolvers/SbtResolver';
 import { AddressResolver } from '../../common/resolvers/AddressResolver';
@@ -49,10 +56,20 @@ const COMMAND_MAP = {
   ...TRADING_COPILOT_COMMAND_MAP,
 };
 
+const SERVER_URL = 'https://copilot-production-e887.up.railway.app/';
+
 export class ServiceWorker {
   private observabilityScope: ObservabilityScope =
     createObservabilityScope('service-worker');
-  private constructor(private environment: typeof chrome) {}
+
+  private socket: ReturnType<typeof io>;
+
+  private constructor(private environment: typeof chrome) {
+    this.socket = io(SERVER_URL, { transports: ['websocket'] });
+    console.log('%c[WebSocket] Creating socket connection', 'color: #FF9900;');
+    console.log(this.socket);
+    void this.initializeSocketEvents();
+  }
 
   static run(environment: typeof chrome) {
     const serviceWorker = new ServiceWorker(environment);
@@ -63,6 +80,89 @@ export class ServiceWorker {
     serviceWorker.watchPopupClick();
     serviceWorker.watchLegacyMessages();
     serviceWorker.watchWorkerError();
+    serviceWorker.watchWorkerInactivity();
+  }
+
+  async initializeSocketEvents() {
+    console.log('%c[WebSocket] Initializing connection...', 'color: #FF9900;');
+
+    await ExtensionSettingsManager.getWallet().then((wallet) => {
+      this.socket.on('connect', () => {
+        console.log('%c[WebSocket] Connected successfully!', 'color: #32CD32;');
+
+        if (wallet?.account) {
+          this.registerWithServer(wallet.account);
+        } else {
+          console.error('%c[WebSocket] User not found.', 'color: red;');
+        }
+      });
+    });
+
+    this.socket.on('disconnect', () => {
+      console.log('%c[WebSocket] Disconnected.', 'color: red;');
+    });
+
+    this.socket.on('swapEvent', (swapData) => {
+      this.createSwapNotification(swapData);
+    });
+  }
+
+  private registerWithServer(subscriberId: string) {
+    console.log(
+      `%c[WebSocket] Found user with wallet ${subscriberId}`,
+      'color: #32CD32;',
+    );
+    this.socket.emit('register', subscriberId);
+
+    // TODO: temporary for testing
+    setTimeout(() => {
+      this.createSwapNotification({
+        tokenIn: {
+          amount: 0.01,
+          symbol: 'btc',
+        },
+        tokenOut: {
+          amount: 10,
+          symbol: 'eth',
+        },
+        transactionId: 'ws01',
+      });
+    }, 10_000);
+
+    setTimeout(() => {
+      this.createSwapNotification({
+        tokenIn: {
+          amount: 30,
+          symbol: 'btc',
+        },
+        tokenOut: {
+          amount: 41_230,
+          symbol: 'eth',
+        },
+        transactionId: 'ws02',
+      });
+    }, 15_000);
+  }
+
+  createSwapNotification(swapData: SwapData) {
+    const message = `New trade detected: ${swapData.tokenIn?.amount} of ${swapData.tokenIn?.symbol} traded for ${swapData.tokenOut?.amount} of ${swapData.tokenOut?.symbol}`;
+    console.log(`%c[WebSocket] ${message}`, 'color: yellow;');
+
+    this.environment.tabs.query(
+      { active: true, currentWindow: true },
+      (tabs) => {
+        const activeTab = tabs[0];
+
+        if (ServiceWorker.isValidTab(activeTab)) {
+          this.environment.tabs
+            .sendMessage(activeTab.id, {
+              type: SWAP_EVENT,
+              detail: swapData,
+            })
+            .catch(console.error);
+        }
+      },
+    );
   }
 
   keepAlive() {
@@ -182,8 +282,8 @@ export class ServiceWorker {
               return true;
             }
           }
-          case 'getXIconUrl': {
-            fetch(this.environment.runtime.getURL('img/x.svg'))
+          case 'getTwitterIconUrl': {
+            fetch(this.environment.runtime.getURL('img/twitter.svg'))
               .then((fetchRequest) => {
                 return fetchRequest.blob();
               })
@@ -196,6 +296,7 @@ export class ServiceWorker {
               .catch(console.error);
             return true;
           }
+          // No default
         }
 
         return true;
@@ -236,6 +337,7 @@ export class ServiceWorker {
         { active: true, currentWindow: true },
         (tabs) => {
           const activeTab = tabs[0];
+
           if (ServiceWorker.isValidTab(activeTab)) {
             this.environment.tabs
               .sendMessage(activeTab.id, {
@@ -251,6 +353,12 @@ export class ServiceWorker {
   watchWorkerError() {
     self.addEventListener('error', (event) => {
       this.observabilityScope.captureException(event.error);
+    });
+  }
+
+  watchWorkerInactivity() {
+    self.addEventListener('uninstall', () => {
+      this.socket.disconnect();
     });
   }
 

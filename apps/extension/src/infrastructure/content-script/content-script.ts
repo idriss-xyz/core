@@ -3,6 +3,7 @@ import {
   COMMAND_BUS_RESPONSE_MESSAGE,
   CommandResponse,
   POPUP_TO_WEBPAGE_MESSAGE,
+  SWAP_EVENT,
   SerializedCommand,
   TOGGLE_EXTENSION_POPUP_VISIBILITY,
   onWindowMessage,
@@ -27,6 +28,7 @@ export class ContentScript {
     contentScript.subscribeToExtensionSettings();
     contentScript.subscribeToWallet();
     contentScript.subscribeToDeviceId();
+    contentScript.blockGithubSearchShortcut();
   }
 
   static canRun() {
@@ -101,6 +103,15 @@ export class ContentScript {
         return;
       }
 
+      if (request.type === SWAP_EVENT) {
+        const message = {
+          type: SWAP_EVENT,
+          detail: request.detail,
+        };
+        window.postMessage(message);
+        return;
+      }
+
       if (request.type === ACTIVE_TAB_CHANGED) {
         const detail = await ExtensionSettingsManager.getAllSettings();
 
@@ -167,5 +178,22 @@ export class ContentScript {
     onWindowMessage<string>('SET_DEVICE_ID', (v) => {
       void ExtensionSettingsManager.setDeviceId(v);
     });
+  }
+
+  blockGithubSearchShortcut() {
+    document.addEventListener(
+      'keydown',
+      (event) => {
+        const activeElement = document.activeElement;
+
+        if (
+          activeElement?.className === 'idriss-root' &&
+          window.location.hostname === 'github.com'
+        ) {
+          event.stopPropagation();
+        }
+      },
+      true,
+    );
   }
 }

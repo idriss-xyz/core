@@ -2,6 +2,7 @@ import { AddTradingCopilotSubscriptionCommand } from './add-trading-copilot-subs
 import { GetTradingCopilotSubscriptionsCommand } from './get-trading-copilot-subscriptions';
 import { RemoveTradingCopilotSubscriptionCommand } from './remove-trading-copilot-subscription';
 import { GetEnsInfoCommand } from './get-ens-info';
+import { GetEnsNameCommand } from './get-ens-name';
 import { GetEnsAddressCommand } from './get-ens-address';
 
 export const COMMAND_MAP = {
@@ -12,6 +13,7 @@ export const COMMAND_MAP = {
   [RemoveTradingCopilotSubscriptionCommand.name]:
     RemoveTradingCopilotSubscriptionCommand,
   [GetEnsInfoCommand.name]: GetEnsInfoCommand,
+  [GetEnsNameCommand.name]: GetEnsNameCommand,
   [GetEnsAddressCommand.name]: GetEnsAddressCommand,
 };
 

@@ -6,58 +6,91 @@ import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { useCommandQuery } from 'shared/messaging';
 import { Icon, LazyImage, getGithubUserLink } from 'shared/ui';
 import { getTwitterUserLink } from 'host/twitter';
+import { GetEnsNameCommand } from 'application/trading-copilot/commands/get-ens-name';
 
 import { GetEnsInfoCommand } from '../../../commands';
-import { Subscription } from '../../../types';
+import { SubscriptionRequest, SubscriptionResponse } from '../../../types';
 
 type Properties = {
-  subscription: Subscription;
-  onRemove: (ensName: Subscription['ensName']) => void;
+  subscription: SubscriptionResponse;
+  onRemove: (address: SubscriptionRequest['address']) => void;
 };
 
 export const SubscriptionItem = ({ subscription, onRemove }: Properties) => {
+  const ensNameQuery = useCommandQuery({
+    command: new GetEnsNameCommand({
+      address: subscription,
+    }),
+  });
+
+  return (
+    <SubscriptionItemContent
+      onRemove={onRemove}
+      subscription={subscription}
+      isFallback={ensNameQuery.isFetched && ensNameQuery.data === null}
+      ensName={ensNameQuery.data ?? subscription}
+    />
+  );
+};
+
+type SubscriptionItemContentProperties = Properties & {
+  ensName: string;
+  isFallback: boolean;
+};
+
+const SubscriptionItemContent = ({
+  ensName,
+  subscription,
+  onRemove,
+  isFallback,
+}: SubscriptionItemContentProperties) => {
   const remove = useCallback(() => {
-    onRemove(subscription.ensName);
+    onRemove(subscription);
   }, [onRemove, subscription]);
 
   const emailQuery = useCommandQuery({
     command: new GetEnsInfoCommand({
-      ensName: subscription.ensName,
+      ensName: ensName,
       infoKey: 'email',
     }),
     staleTime: Number.POSITIVE_INFINITY,
+    enabled: !isFallback,
   });
 
   const twitterQuery = useCommandQuery({
     command: new GetEnsInfoCommand({
-      ensName: subscription.ensName,
+      ensName: ensName,
       infoKey: 'com.twitter',
     }),
     staleTime: Number.POSITIVE_INFINITY,
+    enabled: !isFallback,
   });
 
   const githubQuery = useCommandQuery({
     command: new GetEnsInfoCommand({
-      ensName: subscription.ensName,
+      ensName: ensName,
       infoKey: 'com.github',
     }),
     staleTime: Number.POSITIVE_INFINITY,
+    enabled: !isFallback,
   });
 
   const discordQuery = useCommandQuery({
     command: new GetEnsInfoCommand({
-      ensName: subscription.ensName,
+      ensName: ensName,
       infoKey: 'com.discord',
     }),
     staleTime: Number.POSITIVE_INFINITY,
+    enabled: !isFallback,
   });
 
   const avatarQuery = useCommandQuery({
     command: new GetEnsInfoCommand({
-      ensName: subscription.ensName,
+      ensName: ensName,
       infoKey: 'avatar',
     }),
     staleTime: Number.POSITIVE_INFINITY,
+    enabled: !isFallback,
   });
 
   return (
@@ -78,7 +111,7 @@ export const SubscriptionItem = ({ subscription, onRemove }: Properties) => {
         />
 
         <p className="ml-1.5 flex items-center gap-1.5 text-label5 text-neutral-600">
-          {subscription.ensName}
+          {ensName}
 
           {twitterQuery.data && (
             <ExternalLink href={getTwitterUserLink(twitterQuery.data)}>

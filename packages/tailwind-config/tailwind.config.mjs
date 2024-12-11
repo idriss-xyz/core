@@ -122,6 +122,7 @@ export default {
         dialog: '20',
         extensionPopup: '100000',
         portal: '100001',
+        notification: '99999'
       },
       fontFamily: {
         sans: ['var(--font-aeonikpro)'],
