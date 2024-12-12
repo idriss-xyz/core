@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { PublicClient, WalletClient } from 'viem';
+import { WalletClient } from 'viem';
 
 import { Hex } from '../types';
 import { SendPayload } from '../schema';
@@ -13,10 +13,9 @@ import { useErc20Transaction } from './use-erc20-transaction';
 
 type Properties = {
   walletClient?: WalletClient;
-  publicClient?: PublicClient;
 };
 
-export const useSender = ({ walletClient, publicClient }: Properties) => {
+export const useSender = ({ walletClient }: Properties) => {
   const switchChain = useSwitchChain();
 
   const getTokenPerDollarMutation = useGetTokenPerDollar();
@@ -31,8 +30,8 @@ export const useSender = ({ walletClient, publicClient }: Properties) => {
       recipientAddress: Hex;
       sendPayload: SendPayload;
     }) => {
-      if (!walletClient || !publicClient) {
-        console.error('walletClient or publicClient not defined');
+      if (!walletClient) {
+        console.error('walletClient not defined');
         return;
       }
 
@@ -75,7 +74,6 @@ export const useSender = ({ walletClient, publicClient }: Properties) => {
           tokensToSend,
           recipientAddress,
           walletClient,
-          publicClient,
           chainId: sendPayload.chainId,
           message: sendPayload.message,
         });
@@ -84,7 +82,6 @@ export const useSender = ({ walletClient, publicClient }: Properties) => {
           recipientAddress,
           tokenAddress: sendPayload.tokenAddress,
           walletClient,
-          publicClient,
           tokensToSend,
           chainId: sendPayload.chainId,
           message: sendPayload.message,
@@ -97,7 +94,6 @@ export const useSender = ({ walletClient, publicClient }: Properties) => {
       nativeTransaction,
       switchChain,
       walletClient,
-      publicClient,
     ],
   );
 

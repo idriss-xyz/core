@@ -13,7 +13,7 @@ import { getAddress } from 'viem';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import Image from 'next/image';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { useAccount, usePublicClient, useWalletClient } from 'wagmi';
+import { useAccount, useWalletClient } from 'wagmi';
 
 import { backgroundLines3 } from '@/assets';
 
@@ -58,7 +58,6 @@ const baseClassName =
 export const Content = ({ className }: Properties) => {
   const { isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
-  const publicClient = usePublicClient();
   const { connectModalOpen, openConnectModal } = useConnectModal();
   const [validatedAddress, setValidatedAddress] = useState<
     string | null | undefined
@@ -159,7 +158,7 @@ export const Content = ({ className }: Properties) => {
     'amount',
   ]);
 
-  const sender = useSender({ walletClient, publicClient });
+  const sender = useSender({ walletClient });
 
   const selectedToken = useMemo(() => {
     const token = possibleTokens?.find((token) => {
@@ -192,6 +191,10 @@ export const Content = ({ className }: Properties) => {
 
   const onSubmit: SubmitHandler<FormPayload> = useCallback(
     async (payload) => {
+      if (!walletClient) {
+        return;
+      }
+
       if (!addressValidationResult.success || !validatedAddress) {
         return;
       }
@@ -206,11 +209,15 @@ export const Content = ({ className }: Properties) => {
         tokenAddress: address,
       };
       const validAddress = getAddress(addressValidationResult.data);
-      //TODO: Add error handling
-      await sender.send({
-        sendPayload,
-        recipientAddress: validAddress,
-      });
+
+      try {
+        await sender.send({
+          sendPayload,
+          recipientAddress: validAddress,
+        });
+      } catch (error) {
+        console.error('Unknown error sending transaction.', error);
+      }
     },
     [
       addressValidationResult.data,
