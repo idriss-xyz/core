@@ -2,6 +2,7 @@ import { Button } from '@idriss-xyz/ui/button';
 import { classes } from '@idriss-xyz/ui/utils';
 import { useMutation } from '@tanstack/react-query';
 import { Controller, useForm } from 'react-hook-form';
+import axios from 'axios';
 
 type WaitlistInput = {
   email: string;
@@ -21,19 +22,12 @@ export const PredictionMarketsSectionActions = () => {
   });
 
   const mutation = useMutation({
-    mutationFn: async (data: WaitlistInput) => {
-      //TODO Add axios and replace native fetch
-      const response = await fetch('https://api.idriss.xyz/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to join waitlist');
-      }
-
-      await response.json();
+    mutationFn: async (waitlistInput: WaitlistInput) => {
+      const { data } = await axios.post(
+        'https://api.idriss.xyz/subscribe',
+        waitlistInput,
+      );
+      return data;
     },
     onSuccess: () => {
       reset();

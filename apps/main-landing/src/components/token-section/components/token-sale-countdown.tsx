@@ -1,9 +1,7 @@
 'use client';
 
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
-import { ProgressBar } from '@idriss-xyz/ui/progress-bar';
 import { useEffect, useState } from 'react';
-import { classes } from '@idriss-xyz/ui/utils';
 
 import { IDRISS_TOKEN_SALE_END } from '../constants';
 
@@ -48,7 +46,7 @@ export const TokenSaleCountdown = () => {
     setTimeRemaining({ days, hours, minutes, seconds });
   };
   return (
-    <div className="relative flex w-full flex-col items-center gap-5 rounded-2xl bg-white/20 px-6 lg:px-10 py-8">
+    <div className="relative flex w-full flex-col items-center gap-5 rounded-2xl bg-white/20 px-4 py-6 lg:px-10 lg:py-8">
       <GradientBorder
         borderRadius={16}
         borderWidth={1}
@@ -56,7 +54,7 @@ export const TokenSaleCountdown = () => {
         gradientStartColor="#5FEB3C"
         gradientStopColor="rgba(255,255,255,1)"
       />
-      <span className="text-center text-body3 text-neutralGreen-900 lg:text-body2">
+      <span className="text-center text-body4 text-neutralGreen-900 lg:text-body2">
         ENDS IN
       </span>
       <div className="flex justify-between self-stretch">
@@ -68,7 +66,9 @@ export const TokenSaleCountdown = () => {
             DAYS
           </span>
         </div>
-        <span className="text-heading3 text-neutralGreen-900">:</span>
+        <span className="text-heading4 text-neutralGreen-900 lg:text-heading3">
+          :
+        </span>
         <div className="flex min-w-14 flex-col items-center justify-center">
           <span className="text-heading4 gradient-text lg:text-heading2">
             {timeRemaining.hours}
@@ -77,7 +77,9 @@ export const TokenSaleCountdown = () => {
             HRS
           </span>
         </div>
-        <span className="text-heading3 text-neutralGreen-900">:</span>
+        <span className="text-heading4 text-neutralGreen-900 lg:text-heading3">
+          :
+        </span>
         <div className="flex min-w-14 flex-col items-center justify-center">
           <span className="text-heading4 gradient-text lg:text-heading2">
             {timeRemaining.minutes}
@@ -86,7 +88,9 @@ export const TokenSaleCountdown = () => {
             MIN
           </span>
         </div>
-        <span className="text-heading3 text-neutralGreen-900">:</span>
+        <span className="text-heading4 text-neutralGreen-900 lg:text-heading3">
+          :
+        </span>
         <div className="flex min-w-14 flex-col items-center justify-center">
           <span className="text-heading4 gradient-text lg:text-heading2">
             {timeRemaining.seconds}
@@ -96,9 +100,10 @@ export const TokenSaleCountdown = () => {
           </span>
         </div>
       </div>
-      <div className="w-full">
+      {/* Progress bar may be uncommented post sale */}
+      {/* <div className="w-full">
         <ProgressBar
-          progress={15}
+          progress={100}
           className={classes(
             'relative flex h-5 w-full items-center rounded-full border border-[#E3F8D9]/70 bg-[linear-gradient(90deg,_#EBFEF3_29.61%,_#D7F1E2_75.72%)] py-0.5 opacity-70',
             "after:absolute after:left-0 after:top-0 after:size-full after:blur-[5px] after:content-['']",
@@ -119,7 +124,7 @@ export const TokenSaleCountdown = () => {
             Total available
           </span>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

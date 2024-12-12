@@ -6,18 +6,9 @@ import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import dynamic from 'next/dynamic';
 import { Link } from '@idriss-xyz/ui/link';
 
-import { ImageSequencer } from '../image-sequencer';
-
+import idrissCoin from './assets/IDRISS_COIN 1.png';
 import background from './background.png';
 import { LabeledGradientProperty } from './components';
-
-const TOKEN_COIN_BASE_NAME = `spining-token-coin-optimized/IDRISS_COIN_`;
-const TOKEN_COIN_IMAGES_COUNT = 91;
-const tokenCoinImages = [
-  ...Array.from({ length: TOKEN_COIN_IMAGES_COUNT }).keys(),
-].map((_, index) => {
-  return `${TOKEN_COIN_BASE_NAME}${index.toString().padStart(4, '0')}.webp`;
-});
 
 const CopyAddressButton = dynamic(
   async () => {
@@ -47,14 +38,14 @@ export const TokenSection = () => {
           <h2 className="text-heading3 gradient-text lg:text-display3">
             TOKEN SALE
           </h2>
-          <p className="mt-4 text-balance text-center text-body4 text-neutralGreen-900 opacity-70 lg:text-body2">
+          <p className="mt-4 text-balance text-center text-body3 text-neutralGreen-900 opacity-70 lg:text-body2">
             IDRISS is the utility token powering{'\u00A0'}the IDRISS{'\u00A0'}
             DAO,
             <br className="hidden lg:block" /> giving you access{'\u00A0'}to
             decentralized{'\u00A0'}revenue sharing, governance rights, and more.
           </p>
           {/* Mobile */}
-          <div className="lg:hidden mb-4 flex flex-row justify-center gap-6">
+          <div className="mb-4 flex flex-row justify-center gap-6 lg:hidden">
             <Button
               intent="tertiary"
               size="medium"
@@ -107,16 +98,22 @@ export const TokenSection = () => {
               gradientStartColor="#5FEB3C"
               gradientStopColor="rgba(145,206,154,0.50)"
             />
-            <ImageSequencer
+            {/* <ImageSequencer
               images={tokenCoinImages}
-              className="lg:mb-2.5 size-[164px] lg:size-[200px]"
+              className="size-[164px] lg:mb-2.5 lg:size-[200px]"
+            /> */}
+            <Image
+              priority
+              src={idrissCoin}
+              alt="IDRISS coin"
+              className="size-[164px] lg:mb-2.5 lg:size-[200px]"
             />
-
-            <div className="flex w-full flex-col justify-between gap-10 lg:flex-row lg:gap-0">
+            <div className="flex w-full flex-wrap justify-between gap-2">
               <LabeledGradientProperty
                 label="TOKEN"
                 content="IDRISS"
                 additionalContent={<CopyAddressButton />}
+                className="mb-8 w-full lg:mb-0 lg:w-fit"
               />
               <LabeledGradientProperty label="FOR SALE" content="5%" />
               <LabeledGradientProperty label="FDV" content="$30M" />
@@ -143,17 +140,17 @@ export const TokenSection = () => {
                   asLink
                   href=""
                   isExternal
-                  className="w-full lg:w-auto"
+                  className="w-full whitespace-nowrap lg:w-auto"
                 >
-                  BUY ON JUMPER
+                  BUY CROSS-CHAIN ON JUMPER
                 </Button>
               </div>
               <div className="self-stretch text-center opacity-70">
                 <span className="text-body4 text-neutralGreen-900 lg:text-body2">
                   By participating, you agree to the{' '}
                 </span>
-                <Link size="medium" href="" isExternal>
-                  Terms{'\u00A0'}and{'\u00A0'}Conditions
+                <Link size="medium" href="" isExternal className='text-body4 lg:text-body2'>
+                  Terms{'\u00A0'}and{'\u00A0'}conditions
                 </Link>
               </div>
             </div>
