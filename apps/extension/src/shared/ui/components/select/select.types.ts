@@ -12,6 +12,7 @@ export interface Option<T> {
 export interface SelectOptionProperties<T> {
   option: Option<T>;
   className?: string;
+  selected?: boolean;
 }
 
 export interface SelectProperties<T> {
