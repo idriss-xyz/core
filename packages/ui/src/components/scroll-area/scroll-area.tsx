@@ -59,7 +59,7 @@ export const ScrollArea = ({
       >
         <RadixScrollArea.Thumb className="relative w-2 flex-1 rounded-full bg-neutral-300 transition-colors duration-150 ease-out hover:bg-neutral-400 active:bg-neutral-500" />
       </RadixScrollArea.Scrollbar>
-      <RadixScrollArea.Corner className="bg-neutral-300" />
+      <RadixScrollArea.Corner className="bg-transparent" />
     </RadixScrollArea.Root>
   );
 };
