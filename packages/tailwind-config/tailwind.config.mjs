@@ -122,6 +122,7 @@ export default {
         dialog: '20',
         extensionPopup: '100000',
         portal: '100001',
+        scrollbar: '100010'
       },
       fontFamily: {
         sans: ['var(--font-aeonikpro)'],

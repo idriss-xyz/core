@@ -210,10 +210,10 @@ export const DesktopProductsSection = ({ className }: Properties) => {
       setCurrentSectionIndex(sectionId);
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('landingPageScroll', handleScroll);
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('landingPageScroll', handleScroll);
     };
   }, []);
 
