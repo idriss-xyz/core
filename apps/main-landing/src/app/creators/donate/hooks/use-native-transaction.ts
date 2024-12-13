@@ -47,6 +47,7 @@ export const useNativeTransaction = () => {
       const gas = await estimateGas(walletClient, {
         to: idrissTippingAddress,
         account,
+        value: tokensToSend,
         data: encodedData,
       }).catch((error) => {
         console.error('Error estimating gas:', error.message);
