@@ -1,9 +1,9 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { useMemo } from 'react';
+import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 
 import { usePortal } from '../../providers';
 import { classes } from '../../utils';
-import { ScrollArea } from '../scroll-area';
 
 import { SelectProperties } from './select.types';
 import { SelectOption } from './select-option.component';

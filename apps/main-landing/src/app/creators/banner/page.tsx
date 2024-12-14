@@ -91,7 +91,6 @@ export default function Banner() {
           </div>
           <ScrollArea
             className="right-0 max-h-[350px] transition-all duration-500"
-            scrollBarClassName="bg-white hover:bg-white data-[orientation=vertical]:w-2.5 "
           >
             <div className="grid w-full grid-cols-2 justify-center gap-4 px-3">
               {banners.map((banner) => {

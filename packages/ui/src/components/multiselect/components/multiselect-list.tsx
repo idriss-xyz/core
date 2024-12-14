@@ -1,6 +1,7 @@
+import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
+
 import { classes } from '../../../utils';
 import { Checkbox } from '../../checkbox';
-import { ScrollArea } from '../../scroll-area';
 import { MultiselectOption } from '../types';
 
 type Properties<T> = {
@@ -24,8 +25,7 @@ export const MultiselectInputList = <T,>({
       )}
     >
       <ScrollArea
-        className="max-h-[184px] transition-all duration-500"
-        scrollBarClassName="bg-white hover:bg-white data-[orientation=vertical]:w-2.5"
+        className="max-h-[184px]"
       >
         {options.length === 0 && (
           <span
