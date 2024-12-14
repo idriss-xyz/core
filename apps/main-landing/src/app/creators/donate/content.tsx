@@ -11,7 +11,6 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { classes } from '@idriss-xyz/ui/utils';
 import { getAddress } from 'viem';
 import { Spinner } from '@idriss-xyz/ui/spinner';
-import Image from 'next/image';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useAccount, useWalletClient } from 'wagmi';
 
@@ -298,9 +297,8 @@ export const Content = ({ className }: Properties) => {
 
   return (
     <div className={classes(baseClassName, className)}>
-      <Image
-        priority
-        src={backgroundLines3}
+      <img
+        src={backgroundLines3.src}
         className="pointer-events-none absolute top-0 hidden h-full opacity-100 lg:block"
         alt=""
       />

@@ -1,6 +1,5 @@
 'use client';
 import { Link } from '@idriss-xyz/ui/link';
-import Image from 'next/image';
 import { Button } from '@idriss-xyz/ui/button';
 import {
   CHROME_EXTENSION_LINK,
@@ -42,8 +41,8 @@ export const Footer = () => {
         </div>
       </div>
 
-      <Image
-        src={idrissHalfTransparent}
+      <img
+        src={idrissHalfTransparent.src}
         className="pointer-events-none -mx-2.5 my-2.5 max-w-[100vw] lg:absolute lg:inset-x-2.5 lg:bottom-0 lg:m-0 lg:max-w-[calc(100%_-20px)]"
         alt=""
       />
@@ -51,7 +50,7 @@ export const Footer = () => {
       <div className="border-t border-t-[#002D1E4D] px-safe">
         <div className="container justify-between gap-x-6 py-10 lg:mt-10 lg:flex xl:grid xl:grid-cols-2">
           <div>
-            <Image
+            <img
               className="mb-6 lg:mb-0"
               src="/idriss-dark-logo.svg"
               height={24}

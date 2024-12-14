@@ -1,5 +1,4 @@
 import { Button } from '@idriss-xyz/ui/button';
-import Image from 'next/image';
 import { SOCIAL_LINK } from '@idriss-xyz/constants';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 
@@ -56,8 +55,8 @@ export const TokenSection = () => {
             </Button>
           </div>
         </div>
-        <Image
-          src={background}
+        <img
+          src={background.src}
           className="pointer-events-none absolute left-0 top-0 -z-1 overflow-visible lg:size-full lg:object-cover"
           alt=""
         />
