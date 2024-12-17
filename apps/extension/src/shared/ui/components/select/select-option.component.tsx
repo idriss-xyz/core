@@ -3,6 +3,7 @@ import { ForwardedRef, forwardRef } from 'react';
 import { classes } from '../../utils';
 
 import { SelectOptionProperties } from './select.types';
+import SelectIcon from 'shared/ui/utils/select-icon';
 
 export const SelectOption = forwardRef(
   (
@@ -24,10 +25,11 @@ export const SelectOption = forwardRef(
         <div className={classes('relative mr-1 pr-2', selectedClassName)}>
           {option.prefix}
         </div>
-        <div className="whitespace-nowrap text-neutralGreen-900">
+        <div className="flex-1 whitespace-nowrap text-neutralGreen-900">
           {option.label}
         </div>
         {option.suffix}
+        <div className="items-center">{selected ? <SelectIcon /> : ''}</div>
       </div>
     );
   },
