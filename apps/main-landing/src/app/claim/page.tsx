@@ -6,18 +6,18 @@ import { backgroundLines2 } from '@/assets';
 import { Button } from '@idriss-xyz/ui/button';
 import idrissCoin from './IDRISS_COIN 1.png';
 import idrissSceneStream from './IDRISS_SCENE_STREAM_4_2 1.png';
+import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 
 export default function Claim() {
   return (
     <Providers>
       <TopBar />
+
       <main className="relative flex min-h-screen grow flex-col items-center justify-around gap-4 overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] px-2 pb-1 pt-[56px] lg:flex-row lg:items-start lg:justify-center lg:px-0">
-        <Image
-          priority
-          src={idrissSceneStream}
-          className="pointer-events-none absolute z-1 lg:block"
-          alt=""
-        />
+        <img
+          src={idrissSceneStream.src}
+          className="pointer-events-none absolute left-[-310px] top-[-20px] z-1 h-[1440.673px] w-[2306.238px] min-w-[120vw] max-w-none rotate-[25.903deg] lg:block"
+        ></img>
         <Image
           priority
           src={backgroundLines2}
@@ -31,7 +31,12 @@ export default function Claim() {
               Check your eligibility and claim $IDRISS
             </span>
           </div>
-          <div className="flex w-full flex-col items-center gap-10 rounded-[36px] border border-[rgba(145,206,154,0.5)] bg-[rgba(255,255,255,0.5)] p-[40px_40px_60px_40px] backdrop-blur-[45px]">
+          <div className="relative flex w-full flex-col items-center gap-10 rounded-[25px] bg-[rgba(255,255,255,0.5)] p-[40px_40px_60px_40px] backdrop-blur-[45px]">
+            <GradientBorder
+              gradientDirection="toTop"
+              gradientStopColor="rgba(145, 206, 154, 0.50)"
+              borderWidth={1}
+            />
             <img className="size-[136px]" src={idrissCoin.src} />
             <div className="flex w-full flex-col items-center gap-2 rounded-[16px] border border-[var(--gradient-light-radial,#E7F5E7)] bg-[rgba(255,255,255,0.2)] px-10 py-8">
               <span className="text-body3 text-neutralGreen-700">
