@@ -46,15 +46,20 @@ export const MobileProductsSection = ({ className }: Properties) => {
   }, []);
 
   return (
-    <div className="relative bg-[#022B1E]">
+    <div
+      className={classes(
+        'relative py-5 pt-10 text-label5 lg:flex lg:w-fit lg:-translate-x-4 lg:rounded-[50px] lg:p-1 lg:text-label4 lg:[position:unset]',
+        'bg-[linear-gradient(0deg,transparent,rgb(21,43,30)_20%,rgb(21,43,30)_80%)] lg:bg-[#022218]',
+      )}
+    >
       <Tabs
         options={tabOptions}
         activeOptionKey={currentTopSection}
         asLink
         ref={reference}
       />
-      {/* mt-[-71px] was added to compensate the Tabs height */}
-      <section className={classes('mt-[-71px]', className)} id="extension">
+      {/* -mt-5 was added to compensate the Tabs height */}
+      <section className={classes('-mt-5', className)} id="extension">
         <ExtensionSection fadeOut={false} />
       </section>
       <section className={className} id="creators">

@@ -1,6 +1,7 @@
 'use client';
 import { Button } from '@idriss-xyz/ui/button';
 import Image from 'next/image';
+import { classes } from '@idriss-xyz/ui/utils';
 
 import { backgroundLines } from '@/assets';
 import { INTERNAL_LINK } from '@/constants';
@@ -37,10 +38,21 @@ export const HeroSection = () => {
         blurDataURL={tokensFlowLowResolution.src}
         placeholder="blur"
         src={tokensFlow}
-        className="pointer-events-none z-0 mt-[-40%] w-full min-w-[600px] lg:mt-[-24%] [@media(max-width:768px)]:[@media(min-width:470px)]:mt-[-30%] [@media(max-width:1023px)]:[@media(min-width:768px)]:mt-[-25%]"
+        className={classes(
+          'pointer-events-none z-0 mt-[-40%] w-full min-w-[600px]',
+          '[@media(max-width:703px)]:[@media(min-width:470px)]:mt-[-30%]',
+          'md:mt-[-25%]',
+          'lg:mt-[-24%]',
+        )}
         alt=""
       />
-      <CollaborationsShowcase className="container mt-[-10%] text-center md:mb-10 lg:mb-14 lg:mt-[-10%]" />
+      <CollaborationsShowcase
+        className={classes(
+          'container mt-[-6%] text-center md:mb-10 lg:mb-14',
+          'md:mt-[-5%]',
+          'lg:mt-[-10%]',
+        )}
+      />
     </header>
   );
 };
