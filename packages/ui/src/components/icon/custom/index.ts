@@ -18,7 +18,9 @@ export { Verifying } from './verifying';
 export { Head } from './head';
 export { ExpandUpDown } from './expand-up-down';
 export { InfoCircle } from './info-circle';
-export { BaseLogo } from './base-logo'
-export { Copy } from './copy'
-export { Uniswap } from './uniswap'
-export { Jumper } from './jumper'
+export { BaseLogo } from './base-logo';
+export { Copy } from './copy';
+export { Uniswap } from './uniswap';
+export { Jumper } from './jumper';
+export { Minus } from './minus';
+export { Plus } from './plus';

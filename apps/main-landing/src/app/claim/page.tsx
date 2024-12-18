@@ -4,11 +4,17 @@ import { Providers } from './providers';
 import { TopBar } from '@/components';
 import { backgroundLines2 } from '@/assets';
 import { Button } from '@idriss-xyz/ui/button';
-import idrissCoin from './IDRISS_COIN 1.png';
-import idrissSceneStream from './IDRISS_SCENE_STREAM_4_2 1.png';
+import idrissCoin from './assets/IDRISS_COIN 1.png';
+import idrissSceneStream from './assets/IDRISS_SCENE_STREAM_4_2 1.png';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
+import { Icon } from '@idriss-xyz/ui/icon';
+import { CopyAddressButton } from './components/copy-address-button';
+import { ExpandableInfo } from './components/expandable-info';
+import { Checkbox } from '@idriss-xyz/ui/checkbox';
+import { useState } from 'react';
 
-export default function Claim() {
+export default function CheckEligibility() {
+  const [termsChecked, setTermsChecked] = useState(false);
   return (
     <Providers>
       <TopBar />
@@ -24,37 +30,74 @@ export default function Claim() {
           className="pointer-events-none absolute top-0 hidden h-full opacity-40 lg:block"
           alt=""
         />
-        <div className="z-10 inline-flex flex-col items-center gap-4 overflow-hidden px-4 pb-3 pt-6 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]">
-          <div className="flex flex-col items-center gap-2 text-center">
-            <h1 className="text-display2 gradient-text">COMMUNITY AIRDROP</h1>
-            <span className="text-body2 text-neutralGreen-900 opacity-70">
-              Check your eligibility and claim $IDRISS
-            </span>
-          </div>
-          <div className="relative flex w-full flex-col items-center gap-10 rounded-[25px] bg-[rgba(255,255,255,0.5)] p-[40px_40px_60px_40px] backdrop-blur-[45px]">
+
+        <div className="z-10 inline-flex flex-col items-center gap-[72px] overflow-hidden px-4 pb-3 pt-6 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]">
+          <img className="size-[137px]" src={idrissCoin.src} />
+          <div className="relative flex w-full flex-row gap-20 rounded-[25px] bg-[rgba(255,255,255,0.5)] p-[40px_40px_60px_40px] backdrop-blur-[45px]">
             <GradientBorder
               gradientDirection="toTop"
               gradientStopColor="rgba(145, 206, 154, 0.50)"
               borderWidth={1}
             />
-            <img className="size-[136px]" src={idrissCoin.src} />
-            <div className="flex w-full flex-col items-center gap-2 rounded-[16px] border border-[var(--gradient-light-radial,#E7F5E7)] bg-[rgba(255,255,255,0.2)] px-10 py-8">
-              <span className="text-body3 text-neutralGreen-700">
-                CLAIM UNTIL
+            <div className="flex flex-col">
+              <div className="flex flex-col items-start gap-10">
+                <span className="text-heading3 gradient-text">
+                  YOU’RE ELIGIBLE
+                </span>
+                <span className="text-body3 text-neutralGreen-700">
+                  YOU WILL RECEIVE
+                </span>
+              </div>
+
+              <div className="relative mb-4 mt-2 flex w-full flex-col items-start gap-2 rounded-[25px] bg-[rgba(255,255,255,0.2)] p-6">
+                <GradientBorder
+                  gradientDirection="toBottom"
+                  gradientStopColor="rgba(145, 206, 154)"
+                  gradientStartColor="#ffffff"
+                  borderWidth={1}
+                />
+                <span className="text-heading2 gradient-text">
+                  1,250.0 $IDRISS
+                </span>
+                <div className="flex flex-row gap-2">
+                  <CopyAddressButton />
+                </div>
+              </div>
+              <span className="mb-10 text-body3 text-neutralGreen-700">
+                The next step is to claim your tokens and choose a delegate to
+                vote on your behalf
               </span>
-              <span className="text-heading3 gradient-text">
-                Monday, 24th March
-              </span>
+              <div className="mb-4 flex flex-row items-center">
+                <Checkbox
+                  onChange={setTermsChecked}
+                  value={termsChecked}
+                  className="border-neutral-300"
+                />
+                <span className="ml-2 text-body5 text-neutralGreen-900">
+                  By participating, you agree to the{' '}
+                </span>
+                <span className="text-body5 text-mint-700 underline decoration-solid">
+                  Terms and Conditions
+                </span>
+              </div>
+              <Button
+                intent="primary"
+                size="large"
+                isExternal
+                asLink
+                className="w-full"
+              >
+                START CLAIM
+              </Button>
             </div>
-            <Button
-              intent="primary"
-              size="large"
-              isExternal
-              suffixIconName="ArrowRight"
-              asLink
-            >
-              CHECK MY ELIGIBILITY
-            </Button>
+            <div className="flex flex-col">
+              <div>
+                <span className="text-label2 text-neutralGreen-700">USER</span>
+                <ExpandableInfo title="SEND VIA IDRISS" />
+                <ExpandableInfo title="EXTENSION USER" />
+                <ExpandableInfo title="EXTENSION USER" />
+              </div>
+            </div>
           </div>
         </div>
       </main>
