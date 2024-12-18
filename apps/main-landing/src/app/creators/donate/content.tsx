@@ -198,6 +198,7 @@ export const Content = ({ className }: Properties) => {
         return;
       }
       const { chainId, tokenSymbol, ...rest } = payload;
+      rest.message = ' ' + rest.message;
       const address: Hex =
         CHAIN_ID_TO_TOKENS[chainId]?.find((token: Token) => {
           return token.symbol === tokenSymbol;
