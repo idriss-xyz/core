@@ -38,14 +38,14 @@ export const TokenSection = () => {
           <h2 className="text-heading3 gradient-text lg:text-display3">
             TOKEN SALE
           </h2>
-          <p className="mt-4 text-balance text-center text-body3 text-neutralGreen-900 opacity-70 lg:text-body2">
+          <p className="mt-4 mb-2 text-balance text-center text-body3 text-neutralGreen-900 opacity-70 lg:text-body2">
             IDRISS is the utility token powering{'\u00A0'}the IDRISS{'\u00A0'}
             DAO,
             <br className="hidden lg:block" /> giving you access{'\u00A0'}to
             decentralized{'\u00A0'}revenue sharing, governance rights, and more.
           </p>
           {/* Mobile */}
-          <div className="mb-4 flex flex-row justify-center gap-6 lg:hidden">
+          <div className="mb-3 flex flex-row justify-center gap-6 lg:hidden">
             <Button
               intent="tertiary"
               size="medium"

@@ -38,7 +38,7 @@ export const SuperpowersSection = () => {
               find what’s true on the internet.
             </p>
           </div>
-          <div className="flex flex-col items-start justify-center gap-6 md:grid md:grid-cols-[repeat(3,1fr)] md:flex-row lg:grid-cols-[repeat(3,_minmax(auto,_431px))]">
+          <div className="flex flex-col items-start justify-center gap-6 md:grid lg:flex-row md:grid-cols-[minmax(auto,_531px)] md:grid-rows-[repeat(3,1fr)] lg:grid-cols-[repeat(3,_minmax(auto,_431px))]">
             <ProductTile
               {...EXTENSION_INFO}
               actions={
@@ -50,6 +50,7 @@ export const SuperpowersSection = () => {
                     asLink
                     href={CHROME_EXTENSION_LINK}
                     isExternal
+                    className="w-full"
                   >
                     DOWNLOAD
                   </Button>
@@ -59,6 +60,7 @@ export const SuperpowersSection = () => {
                     asLink
                     href={EXTENSION_USER_GUIDE_LINK}
                     isExternal
+                    className="w-full"
                   >
                     LEARN MORE
                   </Button>
