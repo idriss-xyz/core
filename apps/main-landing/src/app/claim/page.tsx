@@ -7,7 +7,6 @@ import { Button } from '@idriss-xyz/ui/button';
 import idrissCoin from './assets/IDRISS_COIN 1.png';
 import idrissSceneStream from './assets/IDRISS_SCENE_STREAM_4_2 1.png';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
-import { Icon } from '@idriss-xyz/ui/icon';
 import { CopyAddressButton } from './components/copy-address-button';
 import { ExpandableInfo } from './components/expandable-info';
 import { Checkbox } from '@idriss-xyz/ui/checkbox';
@@ -19,10 +18,10 @@ export default function CheckEligibility() {
     <Providers>
       <TopBar />
 
-      <main className="relative flex min-h-screen grow flex-col items-center justify-around gap-4 overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] px-2 pb-1 pt-[56px] lg:flex-row lg:items-start lg:justify-center lg:px-0">
+      <main className="relative flex min-h-screen grow flex-col items-center justify-around overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] lg:flex-row lg:items-start lg:justify-center lg:px-0">
         <img
           src={idrissSceneStream.src}
-          className="pointer-events-none absolute left-[-310px] top-[-20px] z-1 h-[1440.673px] w-[2306.238px] min-w-[120vw] max-w-none rotate-[25.903deg] lg:block"
+          className="pointer-events-none absolute left-[-310px] top-[-20px] z-1 h-[1440px] w-[2306.px] min-w-[120vw] max-w-none rotate-[25.903deg] lg:block"
         ></img>
         <Image
           priority
@@ -31,52 +30,47 @@ export default function CheckEligibility() {
           alt=""
         />
 
-        <div className="z-10 inline-flex flex-col items-center gap-[72px] overflow-hidden px-4 pb-3 pt-6 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]">
+        <div className="z-10 inline-flex flex-col items-center gap-[78px] overflow-hidden px-4 pb-3 lg:mt-[78px] lg:[@media(max-height:800px)]:mt-[60px]">
           <img className="size-[137px]" src={idrissCoin.src} />
-          <div className="relative flex w-full flex-row gap-20 rounded-[25px] bg-[rgba(255,255,255,0.5)] p-[40px_40px_60px_40px] backdrop-blur-[45px]">
+          <div className="relative flex flex-row rounded-[25px] bg-[rgba(255,255,255,0.5)] p-[40px_40px_60px_40px] backdrop-blur-[45px]">
             <GradientBorder
               gradientDirection="toTop"
               gradientStopColor="rgba(145, 206, 154, 0.50)"
               borderWidth={1}
             />
-            <div className="flex flex-col">
+            <div className="flex w-[459px] flex-col">
               <div className="flex flex-col items-start gap-10">
-                <span className="text-heading3 gradient-text">
-                  YOU’RE ELIGIBLE
-                </span>
+                <span className="text-heading3">YOU’RE ELIGIBLE</span>
                 <span className="text-body3 text-neutralGreen-700">
                   YOU WILL RECEIVE
                 </span>
               </div>
 
-              <div className="relative mb-4 mt-2 flex w-full flex-col items-start gap-2 rounded-[25px] bg-[rgba(255,255,255,0.2)] p-6">
+              <div className="relative mb-10 mt-2 flex w-full flex-col items-start gap-2 self-stretch rounded-[25px] bg-[rgba(255,255,255,0.2)] p-6">
                 <GradientBorder
                   gradientDirection="toBottom"
                   gradientStopColor="rgba(145, 206, 154)"
                   gradientStartColor="#ffffff"
                   borderWidth={1}
                 />
-                <span className="text-heading2 gradient-text">
+                <span className="flex text-heading2 gradient-text">
                   1,250.0 $IDRISS
                 </span>
                 <div className="flex flex-row gap-2">
                   <CopyAddressButton />
                 </div>
               </div>
-              <span className="mb-10 text-body3 text-neutralGreen-700">
-                The next step is to claim your tokens and choose a delegate to
-                vote on your behalf
-              </span>
-              <div className="mb-4 flex flex-row items-center">
+
+              <div className="mb-4 flex w-full flex-row items-center">
                 <Checkbox
                   onChange={setTermsChecked}
                   value={termsChecked}
-                  className="border-neutral-300"
+                  rootClassName="border-neutral-300"
                 />
-                <span className="ml-2 text-body5 text-neutralGreen-900">
+                <span className="ml-2 w-full text-body5 text-neutralGreen-900">
                   By participating, you agree to the{' '}
                 </span>
-                <span className="text-body5 text-mint-700 underline decoration-solid">
+                <span className="w-full text-body5 text-mint-700 underline decoration-solid">
                   Terms and Conditions
                 </span>
               </div>
@@ -87,16 +81,52 @@ export default function CheckEligibility() {
                 asLink
                 className="w-full"
               >
-                START CLAIM
+                CLAIM YOUR $IDRISS
               </Button>
             </div>
-            <div className="flex flex-col">
-              <div>
-                <span className="text-label2 text-neutralGreen-700">USER</span>
-                <ExpandableInfo title="SEND VIA IDRISS" />
-                <ExpandableInfo title="EXTENSION USER" />
-                <ExpandableInfo title="EXTENSION USER" />
+            <div className="ml-10 mr-10 h-[434px] w-px bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] opacity-50"></div>
+            <div className="flex w-[389px] flex-col">
+              <div className="flex flex-col gap-4">
+                <span className="text-label2 text-neutralGreen-700">
+                  ELIGIBILITY CRITERIA
+                </span>
+                <ExpandableInfo
+                  title="REGISTERED IDRISS"
+                  subTitle="1,200 IDRISS"
+                  describtion="You have registered your account"
+                />
+                <ExpandableInfo
+                  title="BROWSER EXTENSION USER"
+                  subTitle="1,200 IDRISS"
+                  describtion="You have made at least 1 transaction"
+                />
+                <ExpandableInfo
+                  title="EARLY USER MULTIPLIER"
+                  subTitle="200 IDRISS"
+                  describtion="You have registered on 12 Dec, 2022"
+                />
+                <ExpandableInfo
+                  title="REFERRAL MULTIPLIER"
+                  subTitle="1,200 IDRISS"
+                  describtion="You have invited 62 members"
+                />
+                <ExpandableInfo
+                  title="EXTENSION USER"
+                  subTitle="1,200 IDRISS"
+                  describtion="You are an active member of Parallel"
+                />
               </div>
+              <div className="mt-4 h-px w-[389px] bg-[var(--Colors-Border-border-onsurface-primary,#E7FED8)] opacity-50"></div>
+              <Button
+                intent="tertiary"
+                size="medium"
+                isExternal
+                asLink
+                className="mt-8 w-full"
+                suffixIconName="ArrowRight"
+              >
+                LEARN MORE
+              </Button>
             </div>
           </div>
         </div>

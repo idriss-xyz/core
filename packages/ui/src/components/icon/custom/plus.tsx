@@ -18,9 +18,9 @@ export const Plus = ({ size, className }: Properties) => {
           id="Vector"
           d="M5 12H19M12 5V19"
           stroke="#4E505A"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
       </g>
     </svg>

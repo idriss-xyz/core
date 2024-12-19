@@ -12,10 +12,10 @@ export default function CheckEligibility() {
   return (
     <Providers>
       <TopBar />
-      <main className="relative flex min-h-screen grow flex-col items-center justify-around gap-4 overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] px-2 pb-1 pt-[56px] lg:flex-row lg:items-start lg:justify-center lg:px-0">
+      <main className="relative flex min-h-screen grow flex-col items-center justify-around gap-4 overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] px-2 pb-1 lg:flex-row lg:items-start lg:justify-center lg:px-0">
         <img
           src={idrissSceneStream.src}
-          className="pointer-events-none absolute left-[-310px] top-[-20px] z-1 h-[1440.673px] w-[2306.238px] min-w-[120vw] max-w-none rotate-[25.903deg] lg:block"
+          className="pointer-events-none absolute left-[-310px] top-[-20px] z-1 h-[1440px] w-[2306px] min-w-[120vw] max-w-none rotate-[25.903deg] lg:block"
         ></img>
         <Image
           priority
@@ -23,7 +23,7 @@ export default function CheckEligibility() {
           className="pointer-events-none absolute top-0 hidden h-full opacity-40 lg:block"
           alt=""
         />
-        <div className="z-10 inline-flex flex-col items-center gap-4 overflow-hidden px-4 pb-3 pt-6 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]">
+        <div className="z-10 inline-flex flex-col items-center gap-4 overflow-hidden px-4 pb-3 pt-6 lg:mt-[170px] lg:[@media(max-height:800px)]:mt-[60px]">
           <div className="flex flex-col items-center gap-2 text-center">
             <h1 className="text-display2 gradient-text">COMMUNITY AIRDROP</h1>
             <span className="text-body2 text-neutralGreen-900 opacity-70">
@@ -37,12 +37,18 @@ export default function CheckEligibility() {
               borderWidth={1}
             />
             <img className="size-[136px]" src={idrissCoin.src} />
-            <div className="flex w-full flex-col items-center gap-2 rounded-[16px] border border-[var(--gradient-light-radial,#E7F5E7)] bg-[rgba(255,255,255,0.2)] px-10 py-8">
+            <div className="relative flex w-full flex-col items-center gap-2 rounded-[25px] bg-[rgba(255,255,255,0.2)] px-10 py-8">
+              <GradientBorder
+                gradientDirection="toBottom"
+                gradientStopColor="rgba(145, 206, 154)"
+                gradientStartColor="#ffffff"
+                borderWidth={1}
+              />
               <span className="text-body3 text-neutralGreen-700">
                 CLAIM UNTIL
               </span>
               <span className="text-heading3 gradient-text">
-                Monday, 24th March
+                FEBRUARY 28, 2025
               </span>
             </div>
             <Button
@@ -52,7 +58,7 @@ export default function CheckEligibility() {
               suffixIconName="ArrowRight"
               asLink
             >
-              CHECK MY ELIGIBILITY
+              CHECK ELIGIBILITY
             </Button>
           </div>
         </div>
