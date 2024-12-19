@@ -11,6 +11,7 @@ import { CopyAddressButton } from './components/copy-address-button';
 import { ExpandableInfo } from './components/expandable-info';
 import { Checkbox } from '@idriss-xyz/ui/checkbox';
 import { useState } from 'react';
+import { ClaimSuccessfulModal } from './components/claim-successful-modal';
 
 export default function CheckEligibility() {
   const [termsChecked, setTermsChecked] = useState(false);
@@ -130,6 +131,7 @@ export default function CheckEligibility() {
             </div>
           </div>
         </div>
+        <ClaimSuccessfulModal />
       </main>
     </Providers>
   );
