@@ -5,7 +5,7 @@ export const CreatorsSectionActions = () => {
     <Button
       intent="secondary"
       size="large"
-      className="w-full md:w-fit"
+      className="w-full md:w-1/2 lg:w-fit"
       asLink
       href={CREATORS_LINK}
       isExternal

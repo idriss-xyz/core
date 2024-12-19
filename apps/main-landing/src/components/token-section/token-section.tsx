@@ -33,9 +33,9 @@ const TokenSaleCountdown = dynamic(
 export const TokenSection = () => {
   return (
     <div className="relative z-1" id="dao">
-      <div className="container flex flex-col items-center justify-center py-10 lg:py-[143px]">
+      <div className="container flex flex-col items-center justify-center py-10 md:py-[60px] lg:py-[143px]">
         <div className="flex flex-col items-center">
-          <h2 className="text-heading3 gradient-text lg:text-display3">
+          <h2 className="text-heading3 md:text-display4 gradient-text lg:text-display3">
             TOKEN SALE
           </h2>
           <p className="mt-4 mb-2 text-balance text-center text-body3 text-neutralGreen-900 opacity-70 lg:text-body2">
@@ -45,7 +45,7 @@ export const TokenSection = () => {
             decentralized{'\u00A0'}revenue sharing, governance rights, and more.
           </p>
           {/* Mobile */}
-          <div className="mb-3 flex flex-row justify-center gap-6 lg:hidden">
+          <div className="mb-3 md:mb-4 flex flex-row justify-center gap-6 lg:hidden">
             <Button
               intent="tertiary"
               size="medium"
@@ -90,7 +90,7 @@ export const TokenSection = () => {
               TOKENOMICS
             </Button>
           </div>
-          <div className="relative flex flex-col items-center gap-[40px] rounded-[36px] bg-white/50 px-4 py-10 backdrop-blur-[45px] lg:w-[893px] lg:px-[54px] lg:py-[60px]">
+          <div className="relative flex flex-col items-center gap-[40px] rounded-[36px] bg-white/50 px-4 md:px-10 py-10 backdrop-blur-[45px] w-full lg:w-[893px] lg:px-[54px] lg:py-[60px]">
             <GradientBorder
               borderRadius={36}
               borderWidth={1}
@@ -113,7 +113,7 @@ export const TokenSection = () => {
                 label="TOKEN"
                 content="IDRISS"
                 additionalContent={<CopyAddressButton />}
-                className="mb-8 w-full lg:mb-0 lg:w-fit"
+                className="mb-8 w-full lg:mb-0 md:w-fit"
               />
               <LabeledGradientProperty label="FOR SALE" content="5%" />
               <LabeledGradientProperty label="FDV" content="$30M" />
@@ -121,7 +121,7 @@ export const TokenSection = () => {
             </div>
             <TokenSaleCountdown />
             <div className="flex flex-col gap-6 lg:gap-4">
-              <div className="flex flex-col gap-6 lg:flex-row">
+              <div className="flex flex-col gap-6 md:flex-row">
                 <Button
                   intent="primary"
                   size="large"
@@ -129,7 +129,7 @@ export const TokenSection = () => {
                   asLink
                   href=""
                   isExternal
-                  className="w-full lg:w-auto"
+                  className="w-full md:w-auto"
                 >
                   BUY ON UNISWAP
                 </Button>
@@ -140,16 +140,16 @@ export const TokenSection = () => {
                   asLink
                   href=""
                   isExternal
-                  className="w-full whitespace-nowrap lg:w-auto"
+                  className="w-full whitespace-nowrap md:w-auto"
                 >
                   BUY CROSS-CHAIN ON JUMPER
                 </Button>
               </div>
               <div className="self-stretch text-center opacity-70">
-                <span className="text-body4 text-neutralGreen-900 lg:text-body2">
+                <span className="text-body4 text-neutralGreen-900 md:text-body2">
                   By participating, you agree to the{' '}
                 </span>
-                <Link size="medium" href="" isExternal className='text-body4 lg:text-body2'>
+                <Link size="medium" href="" isExternal className='text-body4 md:text-body2'>
                   Terms{'\u00A0'}and{'\u00A0'}conditions
                 </Link>
               </div>

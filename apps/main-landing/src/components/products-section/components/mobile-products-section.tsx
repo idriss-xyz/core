@@ -60,7 +60,7 @@ export const MobileProductsSection = ({ className }: Properties) => {
       />
       {/* -mt-5 was added to compensate the Tabs height */}
       <section className={classes('-mt-5', className)} id="extension">
-        <ExtensionSection fadeOut={false} />
+        <ExtensionSection fadeOut={false} headerClassName='md:pt-10' />
       </section>
       <section className={className} id="creators">
         <CreatorsSection fadeOut={false} />

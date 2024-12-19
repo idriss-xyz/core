@@ -9,7 +9,7 @@ export const ExtensionSectionActions = () => {
       <Button
         intent="secondary"
         size="large"
-        className="w-full md:w-fit"
+        className="w-full lg:w-fit"
         asLink
         href={CHROME_EXTENSION_LINK}
         isExternal
@@ -19,10 +19,11 @@ export const ExtensionSectionActions = () => {
       <Button
         intent="tertiary"
         size="large"
-        className="text-neutral-100"
+        className="text-neutral-100 w-full lg:w-fit"
         asLink
         href={EXTENSION_USER_GUIDE_LINK}
         isExternal
+        
       >
         LEARN MORE
       </Button>

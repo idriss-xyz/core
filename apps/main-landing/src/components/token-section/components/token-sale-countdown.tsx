@@ -46,7 +46,7 @@ export const TokenSaleCountdown = () => {
     setTimeRemaining({ days, hours, minutes, seconds });
   };
   return (
-    <div className="relative flex w-full flex-col items-center gap-5 rounded-2xl bg-white/20 px-4 py-6 lg:px-10 lg:py-8">
+    <div className="relative flex w-full flex-col items-center gap-5 rounded-2xl bg-white/20 px-4 py-6 md:px-10 md:py-8">
       <GradientBorder
         borderRadius={16}
         borderWidth={1}
