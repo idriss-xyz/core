@@ -5,6 +5,7 @@ import {
   CREATORS_LINK,
   EXTENSION_USER_GUIDE_LINK,
 } from '@idriss-xyz/constants';
+import { classes } from '@idriss-xyz/ui/utils';
 
 import { ProductTile } from './components/product-tile';
 import { TopWave } from './components/top-wave';
@@ -24,21 +25,43 @@ export const SuperpowersSection = () => {
           priority
           src={stackedHex}
           alt=""
-          className="absolute hidden md:right-0 md:top-24 md:block md:translate-x-1/2 lg:bottom-0 lg:right-0 lg:translate-x-[10%] lg:translate-y-[15%]"
+          className={classes(
+            'absolute hidden',
+            'md:right-0 md:top-24 md:block md:translate-x-1/2',
+            'lg:bottom-0 lg:right-0 lg:translate-x-[10%] lg:translate-y-[10%]',
+          )}
         />
 
-        <div className="container relative z-1 lg:flex lg:flex-col lg:items-center pb-20">
+        <div className="container relative z-1 pb-28 4xl:pb-32 lg:flex lg:flex-col lg:items-center">
           <div className="mb-10 flex w-full flex-col items-center gap-4 lg:mb-20">
-            <h2 className="mt-20 text-center text-display5 gradient-text lg:mt-[60px] md:text-display4 lg:text-display2">
+            <h2
+              className={classes(
+                'mt-20 text-center text-display5 gradient-text',
+                'md:text-display4',
+                'lg:mt-[60px] lg:text-display3',
+              )}
+            >
               SUPERPOWERS FOR YOUR INTERNET
             </h2>
-            <p className="max-w-[940px] text-center text-body3 text-neutralGreen-900 opacity-70 lg:text-body1">
+            <p
+              className={classes(
+                'max-w-[940px] text-balance text-center text-body3 text-neutralGreen-900 opacity-70',
+                'lg:text-body2',
+                '4xl:text-body1',
+              )}
+            >
               Our apps bring the power of crypto and AI to your browsing
               experience, empower creators through digital ownership, and help
               find what’s true on the internet.
             </p>
           </div>
-          <div className="flex flex-col items-start justify-center gap-6 md:grid lg:flex-row md:grid-cols-[minmax(auto,_531px)] md:grid-rows-[repeat(3,1fr)] lg:grid-cols-[repeat(3,_minmax(auto,_431px))]">
+          <div
+            className={classes(
+              'flex flex-col items-start justify-center gap-6',
+              'md:grid md:grid-cols-[minmax(auto,_600px)] md:grid-rows-[repeat(3,1fr)]',
+              'lg:grid-cols-[repeat(3,_minmax(auto,_431px))] lg:grid-rows-1 lg:flex-row',
+            )}
+          >
             <ProductTile
               {...EXTENSION_INFO}
               actions={
