@@ -5,6 +5,7 @@ export {
   COMMAND_MAP as TRADING_COPILOT_COMMAND_MAP,
   GetEnsInfoCommand,
   GetEnsNameCommand,
+  GetSiweMessageCommand,
 } from './commands';
 export type { SwapData } from './types';
 export { SubscriptionsManagement } from './subscriptions-management';

@@ -5,6 +5,7 @@ import { GetEnsInfoCommand } from './get-ens-info';
 import { GetEnsNameCommand } from './get-ens-name';
 import { GetEnsAddressCommand } from './get-ens-address';
 import { GetFarcasterAddressCommand } from './get-farcaster-address';
+import { GetSiweMessageCommand } from './get-siwe-message';
 
 export const COMMAND_MAP = {
   [AddTradingCopilotSubscriptionCommand.name]:
@@ -17,6 +18,7 @@ export const COMMAND_MAP = {
   [GetEnsInfoCommand.name]: GetEnsInfoCommand,
   [GetEnsNameCommand.name]: GetEnsNameCommand,
   [GetEnsAddressCommand.name]: GetEnsAddressCommand,
+  [GetSiweMessageCommand.name]: GetSiweMessageCommand,
 };
 
 export { AddTradingCopilotSubscriptionCommand } from './add-trading-copilot-subscription';
@@ -26,3 +28,4 @@ export { GetEnsInfoCommand } from './get-ens-info';
 export { GetEnsNameCommand } from './get-ens-name';
 export { GetEnsAddressCommand } from './get-ens-address';
 export { GetFarcasterAddressCommand } from './get-farcaster-address';
+export { GetSiweMessageCommand } from './get-siwe-message';
