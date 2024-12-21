@@ -4,10 +4,11 @@ import { formatEther, parseEther } from 'viem';
 
 import { Wallet, CHAIN } from 'shared/web3';
 import { useCommandMutation } from 'shared/messaging';
-import { SwapData, useCopilotTransaction } from 'application/trading-copilot';
 
-import { FormValues, QuotePayload } from '../types';
+import { SwapData, FormValues, QuotePayload } from '../types';
 import { GetQuoteCommand } from '../commands/get-quote';
+
+import { useCopilotTransaction } from './use-copilot-transaction';
 
 interface Properties {
   wallet?: Wallet;

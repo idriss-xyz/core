@@ -83,20 +83,30 @@ export class ServiceWorker {
     serviceWorker.watchTabChanges();
   }
 
-  async initializeSocketEvents() {
-    console.log('%c[WebSocket] Initializing connection...', 'color: #FF9900;');
+  initializeSocketEvents() {
+    this.socket.on('connect', async () => {
+      console.log(
+        '%c[WebSocket] Initializing connection...',
+        'color: #FF9900;',
+      );
+      const wallet = await ExtensionSettingsManager.getWallet();
 
-    await ExtensionSettingsManager.getWallet().then((wallet) => {
-      this.socket.on('connect', () => {
-        console.log('%c[WebSocket] Connected successfully!', 'color: #32CD32;');
+      if (wallet?.account) {
+        this.registerWithServer(wallet.account);
+      } else {
+        console.log('%c[WebSocket] User not found.', 'color: red;');
+        this.socket.disconnect();
+      }
+    });
 
-        if (wallet?.account) {
-          this.registerWithServer(wallet.account);
-        } else {
-          console.log('%c[WebSocket] User not found.', 'color: red;');
-          this.socket.disconnect();
-        }
-      });
+    ExtensionSettingsManager.onWalletChange((wallet) => {
+      if (this.socket.connected) {
+        this.socket.disconnect();
+      }
+
+      if (wallet?.account) {
+        this.socket.connect();
+      }
     });
 
     this.socket.on('disconnect', () => {

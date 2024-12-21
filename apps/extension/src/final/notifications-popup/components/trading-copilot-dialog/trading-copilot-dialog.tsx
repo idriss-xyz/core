@@ -195,7 +195,7 @@ const TradingCopilotDialogContent = ({
                   value={value}
                   placeholder="ETH"
                   onChange={onChange}
-                  decimalScale={5}
+                  decimalScale={4}
                   className="ps-[60px] text-right"
                 />
                 <div className="pointer-events-none absolute start-0 top-1/2 flex h-full w-12 -translate-y-1/2 items-center justify-center after:absolute after:right-0 after:top-1.5 after:h-[calc(100%_-_12px)] after:w-px after:bg-neutral-200">
