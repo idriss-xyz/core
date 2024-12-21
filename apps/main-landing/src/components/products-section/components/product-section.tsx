@@ -74,13 +74,14 @@ export const ProductSection = ({
           'flex size-full flex-col overflow-hidden bg-[linear-gradient(114deg,_#022B1E_34.81%,_#079165_123.57%)] px-4 transition-[border-radius] duration-150 will-change-[border-radius]',
           'lg:px-[120px] lg:pt-20',
           '2xl:px-[112px] 2xl:py-20',
+          '4xl:px-[180px] 4xl:py-[120px]',
         )}
         style={style}
       >
         <div
           className={classes(
             'container flex flex-col gap-10 p-0',
-            'lg:gap-[104px] lg:[@media(max-height:1000px)]:gap-[30px] lg:[@media(max-height:770px)]:gap-[24px] lg:[@media(min-height:1001px)]:[@media(max-height:1100px)]:gap-[50px]',
+            'lg:gap-[104px]',
           )}
         >
           {properties.animated ? (
@@ -103,8 +104,7 @@ export const ProductSection = ({
               className={classes(
                 'bottom-0 right-0 top-1/2 z-0 m-auto w-[320px] translate-y-[-15%]',
                 'md:w-[450px] md:translate-y-0',
-                'lg:absolute lg:max-w-[45%] lg:-translate-y-1/2 lg:[@media(max-width:1540px)]:[@media(max-height:1000px)]:translate-y-[-30%] lg:[@media(min-height:1300px)]:-translate-y-full',
-                '[@media(min-width:1001px)]:[@media(min-height:800px)]:[@media(max-height:1100px)]:translate-y-[-40%]',
+                'lg:absolute lg:max-w-[45%] lg:-translate-y-1/2',
               )}
             />
           )}
@@ -114,6 +114,7 @@ export const ProductSection = ({
               'md:gap-10',
               'left-[112px] w-screen lg:absolute',
               '2xl:gap-6',
+              '3xl:gap-10',
             )}
           >
             {tabsVisibile && (
@@ -136,6 +137,7 @@ export const ProductSection = ({
                     'md:text-display4',
                     'lg:pt-0',
                     '2xl:text-display3',
+
                     headerClassName,
                     fadeOut && 'translate-y-[-120%]',
                   )}
@@ -146,9 +148,10 @@ export const ProductSection = ({
               <div className="z-1 overflow-hidden">
                 <p
                   className={classes(
-                    'text-balance text-body3 text-midnightGreen-200 transition-transform duration-1000',
-                    '[@media(min-width:1541px)]:text-body2',
+                    'text-body3 text-midnightGreen-200 transition-transform duration-1000',
+
                     '2xl:text-body3',
+                    '4xl:text-body2',
                     fadeOut && 'translate-y-[-120%]',
                   )}
                 >
@@ -156,7 +159,15 @@ export const ProductSection = ({
                 </p>
               </div>
             </div>
-            <div className="w-full overflow-hidden p-1 lg:w-fit">
+            <div
+              className={classes(
+                'w-full overflow-hidden p-1',
+                'lg:w-fit',
+                '2xl:pb-[16px]',
+                '3xl:pb-5',
+                '4xl:pb-10',
+              )}
+            >
               <div
                 className={classes(
                   'flex flex-col items-center gap-3 transition-transform duration-1000',
@@ -175,7 +186,7 @@ export const ProductSection = ({
                   'grid size-fit flex-wrap items-start gap-6 p-1.5 pb-10 transition-transform duration-1000',
                   'md:grid-cols-2',
                   'lg:grid-cols-2 lg:pb-[80px]',
-                  '[@media(max-height:1100px)]:pb-[30px]',
+
                   fadeOut && 'translate-y-[-120%]',
                 )}
               >

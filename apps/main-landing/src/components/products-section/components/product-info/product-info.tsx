@@ -14,7 +14,6 @@ export const ProductInfo = ({ icon, title, description }: Properties) => {
       className={classes(
         'relative flex items-center gap-4 rounded-[24px] bg-[rgba(255,255,255,0.10)] p-4 shadow-[0_0_0_6px_rgba(255,255,255,0.08)]',
         'md:h-full md:max-w-[384px]',
-        'lg:[@media(max-height:864px)]:px-3 lg:[@media(max-height:864px)]:py-2 lg:[@media(max-width:1440px)]:bg-[rgba(5,101,70,0.6)]',
         '2xl:max-w-[354px]',
       )}
     >
