@@ -111,7 +111,8 @@ export const ProductSection = ({
             <div
               className={classes(
                 'z-1 flex flex-col gap-4',
-                '2xl:w-[730px] 2xl:gap-2',
+                'lg:w-[730px]',
+                '2xl:gap-2',
               )}
             >
               <div className="z-1 overflow-hidden">
@@ -184,7 +185,7 @@ export const ProductSection = ({
                 alt=""
                 className={classes(
                   'bottom-0 right-0 top-1/2 z-0 m-auto w-[320px] translate-y-[-15%]',
-                  'md:w-[450px] md:translate-y-0',
+                  'md:w-[550px] md:translate-y-0',
                   'lg:absolute lg:max-w-[45%] lg:-translate-y-1/2',
                 )}
               />
@@ -207,7 +208,7 @@ export const ProductSection = ({
                         <Icon
                           name={feature.icon}
                           size={65}
-                          className="size-10 text-[#55EB3C] lg:size-[57.14px]"
+                          className="size-10 text-[#55EB3C] md:size-[57.14px]"
                         />
                       }
                       title={feature.title}
