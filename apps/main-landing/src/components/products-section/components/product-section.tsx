@@ -77,7 +77,7 @@ export const ProductSection = ({
         className={classes(
           'relative flex size-full flex-col overflow-hidden bg-[linear-gradient(114deg,_#022B1E_34.81%,_#079165_123.57%)] px-4 will-change-[border-radius,margin]',
           'lg:pt-20',
-          ' 4xl:py-[120px]',
+          '4xl:py-[120px]',
         )}
         style={{
           margin: `${marginY}px ${marginX}px`,
@@ -97,7 +97,7 @@ export const ProductSection = ({
               'lg:absolute lg:w-screen lg:will-change-[left]',
               '2xl:gap-6',
               '3xl:gap-10',
-              '4xl:pl-[78px]'
+              '4xl:pl-[78px]',
             )}
             style={{ left: `${112 - (marginX ?? 0) / 2}px` }}
           >
@@ -174,6 +174,8 @@ export const ProductSection = ({
                   'bottom-0 right-0 top-1/2 z-0',
                   'lg:absolute lg:max-w-[45%] lg:-translate-y-1/2',
                   '2xl:right-[-40px] 2xl:top-[310px] 2xl:w-[780px] 2xl:max-w-[unset]',
+                  '3xl:right-16',
+                  '4xl:right-28 4xl:top-[380px] 4xl:w-[970px]',
                 )}
               />
             ) : (
