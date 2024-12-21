@@ -123,8 +123,7 @@ export class ServiceWorker {
       `%c[WebSocket] Found user with wallet ${subscriberId}`,
       'color: #32CD32;',
     );
-    // TODO: set subscriberId as id when we will end using test-swap
-    this.socket.emit('register', 'id1');
+    this.socket.emit('register', subscriberId);
   }
 
   createSwapNotification(swapData: SwapData) {
