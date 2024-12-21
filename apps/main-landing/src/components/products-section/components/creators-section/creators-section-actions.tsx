@@ -7,7 +7,7 @@ export const CreatorsSectionActions = () => {
       <Button
         intent="secondary"
         size="medium"
-        className="block w-full md:w-1/2 lg:w-fit 4xl:hidden"
+        className="flex w-full md:w-1/2 lg:w-fit 4xl:hidden"
         asLink
         href={CREATORS_LINK}
         isExternal
@@ -18,7 +18,7 @@ export const CreatorsSectionActions = () => {
       <Button
         intent="secondary"
         size="large"
-        className="hidden w-full md:w-1/2 lg:w-fit 4xl:block"
+        className="hidden w-full md:w-1/2 lg:w-fit 4xl:flex"
         asLink
         href={CREATORS_LINK}
         isExternal

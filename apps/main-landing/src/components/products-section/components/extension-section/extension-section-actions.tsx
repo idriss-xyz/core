@@ -10,7 +10,7 @@ export const ExtensionSectionActions = () => {
       <Button
         intent="secondary"
         size="medium"
-        className="block w-full lg:w-fit 4xl:hidden"
+        className="flex w-full lg:w-fit 4xl:hidden"
         asLink
         href={CHROME_EXTENSION_LINK}
         isExternal
@@ -20,7 +20,7 @@ export const ExtensionSectionActions = () => {
       <Button
         intent="tertiary"
         size="medium"
-        className="block w-full text-neutral-100 lg:w-fit 4xl:hidden"
+        className="flex w-full text-neutral-100 lg:w-fit 4xl:hidden"
         asLink
         href={EXTENSION_USER_GUIDE_LINK}
         isExternal
@@ -31,7 +31,7 @@ export const ExtensionSectionActions = () => {
       <Button
         intent="secondary"
         size="large"
-        className="hidden w-full lg:w-fit 4xl:block"
+        className="hidden w-full lg:w-fit 4xl:flex"
         asLink
         href={CHROME_EXTENSION_LINK}
         isExternal
@@ -41,7 +41,7 @@ export const ExtensionSectionActions = () => {
       <Button
         intent="tertiary"
         size="large"
-        className="hidden w-full text-neutral-100 lg:w-fit 4xl:block"
+        className="hidden w-full text-neutral-100 lg:w-fit 4xl:flex"
         asLink
         href={EXTENSION_USER_GUIDE_LINK}
         isExternal

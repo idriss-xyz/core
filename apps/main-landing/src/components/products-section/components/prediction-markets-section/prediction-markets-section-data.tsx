@@ -3,7 +3,7 @@ import { ProductSectionInfo } from '../product-section';
 import { PredictionMarketsSectionActions } from './prediction-markets-section-actions';
 
 const PREDICTION_MARKETS_INFO: ProductSectionInfo = {
-  title: 'EXPLORE THE FULL POTENTIAL\u00A0OF\u00A0PREDICTION MARKETS',
+  title: 'EXPLORE THE FULL POTENTIAL OF PREDICTION MARKETS',
   description:
     'Bigger, better, and bolder: harness the wisdom of the crowd to drive social engagement, verify news authenticity, and detect generative AI.',
   features: [

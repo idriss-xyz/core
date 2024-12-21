@@ -132,7 +132,7 @@ export const ProductSection = ({
               <div className="z-1 overflow-hidden">
                 <p
                   className={classes(
-                    'text-body3 text-midnightGreen-200 transition-transform duration-1000',
+                    'text-balance text-body2 text-midnightGreen-200 transition-transform duration-1000',
 
                     '2xl:text-body3',
                     '4xl:text-body2',
