@@ -183,7 +183,7 @@ export const ProductSection = ({
                   '3xl:right-16',
                   '4xl:right-28 4xl:w-[970px]',
                   //iPadPro
-                  '[@media(width:1024px)]:[@media(height:1366px)]:top-[75%] [@media(width:1024px)]:[@media(height:1366px)]:left-[20%]'
+                  '[@media(width:1024px)]:[@media(height:1366px)]:top-[60%] [@media(width:1024px)]:[@media(height:1366px)]:left-[20%]'
                 )}
               />
             ) : (
