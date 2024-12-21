@@ -1,6 +1,7 @@
 'use client';
 
 import { useLayoutEffect, useRef, useState } from 'react';
+import { classes } from '@idriss-xyz/ui/utils';
 
 import { tabOptions } from '../constants';
 
@@ -52,8 +53,9 @@ export const MobileProductsSection = ({ className }: Properties) => {
         asLink
         ref={reference}
       />
-      <section className={className} id="extension">
-        <ExtensionSection fadeOut={false} headerClassName="pt-0" />
+      {/* mt-[-71px] was added to compensate the Tabs height */}
+      <section className={classes('mt-[-71px]', className)} id="extension">
+        <ExtensionSection fadeOut={false} />
       </section>
       <section className={className} id="creators">
         <CreatorsSection fadeOut={false} />

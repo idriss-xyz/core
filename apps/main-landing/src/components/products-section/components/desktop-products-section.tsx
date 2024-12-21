@@ -1,5 +1,12 @@
 'use client';
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import {
+  MutableRefObject,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useDebounce } from 'react-use';
 import { classes } from '@idriss-xyz/ui/utils';
 
@@ -10,9 +17,18 @@ import { PredictionMarketsSectionData } from './prediction-markets-section';
 
 type Properties = {
   className?: string;
+  isFirstRender: MutableRefObject<boolean>;
 };
 
 const numberOfSections = 3;
+
+const getSectionNumberByName = (key: string) => {
+  return {
+    'extension': 0,
+    'creators': 1,
+    'prediction-markets': 2,
+  }[key];
+};
 
 const CIRCLE_IMAGE_NUMBER_START_GAP = 38;
 const CIRCLE_IMAGES_COUNT = 113;
@@ -28,7 +44,10 @@ const circleImages = [...Array.from({ length: CIRCLE_IMAGES_COUNT }).keys()]
   })
   .reverse();
 
-export const DesktopProductsSection = ({ className }: Properties) => {
+export const DesktopProductsSection = ({
+  className,
+  isFirstRender,
+}: Properties) => {
   const containerReference = useRef<HTMLDivElement>(null);
   const topOfContainerReference = useRef<HTMLDivElement>(null);
   const firstSectionAnchorReference = useRef<HTMLDivElement>(null);
@@ -37,8 +56,11 @@ export const DesktopProductsSection = ({ className }: Properties) => {
   const [isTopOfContainerFullyVisible, setIsTopOfContainerFullyVisible] =
     useState(false);
   const [isContainerVisible, setIsContainerVisible] = useState(false);
-
-  const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
+  const windowHash =
+    typeof window === 'undefined' ? '' : window.location.hash.slice(1);
+  const [currentSectionIndex, setCurrentSectionIndex] = useState(
+    (isFirstRender && getSectionNumberByName(windowHash)) ?? 0,
+  );
   const previousSectionIndex = useRef<number>(0);
 
   const [debouncedCurrentSectionIndex, setDebouncedCurrentSectionIndex] =

@@ -1,6 +1,5 @@
 'use client';
 import { Button } from '@idriss-xyz/ui/button';
-import Image from 'next/image';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { useState } from 'react';
 import { Icon } from '@idriss-xyz/ui/icon';
@@ -63,17 +62,15 @@ export default function Banner() {
     <Providers>
       <TopBar />
       <main className="relative flex min-h-screen grow flex-col items-center justify-around gap-4 overflow-hidden bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#b5d8ae_100%)] px-2 pb-1 pt-[56px] lg:flex-row lg:items-start lg:justify-center lg:px-0">
-        <Image
-          priority
-          src={backgroundLines2}
+        <img
+          src={backgroundLines2.src}
           className="pointer-events-none absolute top-0 hidden h-full opacity-40 lg:block"
           alt=""
         />
 
         <div className="container relative mt-8 flex w-[460px] max-w-full flex-col items-center overflow-hidden rounded-xl bg-white px-1 pb-3 pt-6 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]">
-          <Image
-            priority
-            src={backgroundLines3}
+          <img
+            src={backgroundLines3.src}
             className="pointer-events-none absolute top-0 hidden h-full opacity-40 lg:block"
             alt=""
           />
@@ -101,7 +98,7 @@ export default function Banner() {
                     className="relative select-none overflow-hidden rounded-lg"
                     key={banner.src}
                   >
-                    <Image
+                    <img
                       onClick={() => {
                         setSelectedBannerSource(banner.src);
                       }}
@@ -109,10 +106,9 @@ export default function Banner() {
                         'cursor-pointer rounded-lg p-[1px] transition-transform duration-300 hover:scale-[1.03]',
                         isSelected && 'border border-mint-400 p-0',
                       )}
-                      priority
                       width={600}
                       height={200}
-                      src={banner}
+                      src={banner.src}
                       alt=""
                     />
                     {isSelected && (

@@ -3,15 +3,15 @@ import { ProductSectionInfo } from '../product-section';
 import { CreatorsSectionActions } from './creators-section-actions';
 
 const CREATORS_INFO: ProductSectionInfo = {
-  title: 'MONETIZE YOUR CONTENT',
+  title: 'MONETIZE YOUR CONTENT EVERYWHERE YOU CREATE',
   description:
-    'Get instant donations of your favorite cryptos directly to your wallet on Twitch, YouTube, and more.',
+    'Get instant donations in your favorite cryptocurrencies and unlock new ways to grow on Twitch, YouTube, and more.',
   features: [
     {
       icon: 'TwitchOutlined',
       title: 'Twitch',
       description:
-        'Engage your live audience with crypto donations for real-time interactions on your gaming streams and beyond',
+        'Engage your audience with crypto donations for real-time interactions on your gaming streams and beyond',
     },
     {
       icon: 'YoutubeOutlined',

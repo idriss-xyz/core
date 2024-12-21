@@ -144,7 +144,7 @@ export const SendWidget = ({ widgetData }: Properties) => {
                     className="w-full"
                     type="submit"
                   >
-                    {widgetOverrides?.sendButtonCopy ?? 'SEND'}
+                    {widgetOverrides?.sendButtonCopy ?? 'Send'}
                   </Button>
                 ) : (
                   <Button
@@ -154,7 +154,7 @@ export const SendWidget = ({ widgetData }: Properties) => {
                     className="w-full"
                     loading={isConnectionModalOpened}
                   >
-                    LOG IN
+                    Log in
                   </Button>
                 )}
                 {sender.isError ? (

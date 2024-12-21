@@ -5,6 +5,8 @@
     "extension:prod": "turbo run build --filter=@idriss-xyz/extension",
     "main-landing:dev": "turbo dev --filter=@idriss-xyz/main-landing",
     "main-landing:prod": "turbo start --filter=@idriss-xyz/main-landing",
+    "copilot-api:start": "turbo start --filter=@idriss-xyz/copilot-api",
+    "copilot-api:prod": "turbo build --filter=@idriss-xyz/copilot-api",
     "dev": "turbo dev",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix",

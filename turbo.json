@@ -69,6 +69,32 @@
         "build"
       ]
     },
+    "@idriss-xyz/copilot-api#start": {
+      "cache": false,
+      "persistent": true,
+      "env": [
+        "CHALLENGE_SECRET",
+        "JWT_SECRET",
+        "DATABASE_HOST",
+        "DATABASE_PORT",
+        "DATABASE_USER",
+        "DATABASE_PASS",
+        "DATABASE_DB_NAME"
+      ]
+    },
+    "@idriss-xyz/copilot-api#prod": {
+      "cache": true,
+      "persistent": true,
+      "env": [
+        "CHALLENGE_SECRET",
+        "JWT_SECRET",
+        "DATABASE_HOST",
+        "DATABASE_PORT",
+        "DATABASE_USER",
+        "DATABASE_PASS",
+        "DATABASE_DB_NAME"
+      ]
+    },
     "lint": {
       "inputs": [
         "$TURBO_DEFAULT$",

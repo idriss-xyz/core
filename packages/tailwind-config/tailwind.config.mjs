@@ -333,6 +333,20 @@ export default {
         '.paused-animation': {
           'animation-play-state': 'paused',
         },
+        '.p-safe': {
+          paddingTop: 'env(safe-area-inset-top)',
+          paddingRight: 'env(safe-area-inset-right)',
+          paddingBottom: 'env(safe-area-inset-bottom)',
+          paddingLeft: 'env(safe-area-inset-left)',
+        },
+        '.px-safe': {
+          paddingLeft: 'env(safe-area-inset-left)',
+          paddingRight: 'env(safe-area-inset-right)',
+        },
+        '.py-safe': {
+          paddingTop: 'env(safe-area-inset-top)',
+          paddingBottom: 'env(safe-area-inset-bottom)',
+        },
       };
       addUtilities(newUtilities);
     }),
