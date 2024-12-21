@@ -60,7 +60,7 @@ export const PredictionMarketsSectionActions = () => {
               <input
                 type="email"
                 className={classes(
-                  'flex h-12 w-full flex-[1_0_0] items-center rounded-[12px] px-3 py-2 shadow-[0_0_0_4px_rgba(242,242,242,0.14)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 lg:w-[290px]',
+                  'flex w-full flex-[1_0_0] items-center rounded-[12px] px-3 py-[10px] text-body4 shadow-[0_0_0_4px_rgba(242,242,242,0.14)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 md:w-1/2 lg:w-[290px]',
 
                   mutation.isError && 'border-red-500',
                   mutation.isSuccess && 'border-mint-500',
@@ -77,10 +77,10 @@ export const PredictionMarketsSectionActions = () => {
           type="submit"
           intent="secondary"
           size="medium"
-          className="w-full md:w-fit"
+          className="w-full md:w-1/2 lg:w-fit"
           disabled={mutation.isPending}
         >
-          JOIN WAITLIST
+          GET EARLY ACCESS
         </Button>
       </form>
       <div className="flex flex-col gap-1 pl-1">

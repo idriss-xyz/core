@@ -21,7 +21,7 @@ export const Mobile = () => {
       trigger={({ isOpened }) => {
         return (
           <IconButton
-            className="lg:hidden"
+            className="md:hidden"
             aria-label={
               isOpened ? 'Hide navigation menu' : 'Open navigation menu'
             }

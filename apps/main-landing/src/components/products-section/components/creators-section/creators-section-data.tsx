@@ -5,7 +5,7 @@ import { CreatorsSectionActions } from './creators-section-actions';
 const CREATORS_INFO: ProductSectionInfo = {
   title: 'MONETIZE YOUR CONTENT',
   description:
-    'Get instant donations in your favorite cryptocurrencies and\u00A0unlock new ways to grow on Twitch, YouTube, and more.',
+    'Get instant donations of your favorite cryptos directly to your wallet on\u00A0Twitch,\u00A0YouTube,\u00A0and more',
   features: [
     {
       icon: 'TwitchOutlined',
