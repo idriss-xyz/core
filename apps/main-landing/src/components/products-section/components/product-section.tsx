@@ -93,8 +93,8 @@ export const ProductSection = ({
             className={classes(
               'flex flex-col items-start gap-[64px]',
               'md:gap-10',
-              'lg:absolute lg:left-0 lg:top-0 lg:h-screen lg:w-screen lg:pt-20 lg:will-change-[margin-left]',
-              '2xl:gap-6',
+              'lg:absolute lg:left-0 lg:top-0 lg:h-screen lg:w-screen lg:pt-10 lg:will-change-[margin-left]',
+              '2xl:pt-20 2xl:gap-6',
               '3xl:gap-10',
               '4xl:pl-[78px] 4xl:pt-[120px]',
             )}
