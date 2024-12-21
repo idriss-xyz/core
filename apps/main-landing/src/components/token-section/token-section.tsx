@@ -9,6 +9,7 @@ import { Link } from '@idriss-xyz/ui/link';
 import idrissCoin from './assets/IDRISS_COIN 1.png';
 import background from './background.png';
 import { LabeledGradientProperty } from './components';
+import { classes } from '@idriss-xyz/ui/utils';
 
 const CopyAddressButton = dynamic(
   async () => {
@@ -33,19 +34,44 @@ const TokenSaleCountdown = dynamic(
 export const TokenSection = () => {
   return (
     <div className="relative z-1" id="dao">
-      <div className="container flex flex-col items-center justify-center py-10 md:py-[60px] lg:py-[143px]">
+      <div
+        className={classes(
+          'container flex flex-col items-center justify-center py-10',
+          'md:py-[60px]',
+          'lg:py-[116px]',
+          '4xl:py-[110px]',
+        )}
+      >
         <div className="flex flex-col items-center">
-          <h2 className="text-heading3 md:text-display4 gradient-text lg:text-display3">
+          <h2
+            className={classes(
+              'text-heading3 gradient-text',
+              'md:text-display4',
+              'lg:text-display3',
+            )}
+          >
             TOKEN SALE
           </h2>
-          <p className="mt-4 mb-2 text-balance text-center text-body3 text-neutralGreen-900 opacity-70 lg:text-body2">
+          <p
+            className={classes(
+              'mb-2 mt-4 text-balance text-center text-body3 text-neutralGreen-900 opacity-70',
+              'lg:text-body2',
+              '4xl:text-body1',
+            )}
+          >
             IDRISS is the utility token powering{'\u00A0'}the IDRISS{'\u00A0'}
             DAO,
             <br className="hidden lg:block" /> giving you access{'\u00A0'}to
             decentralized{'\u00A0'}revenue sharing, governance rights, and more.
           </p>
           {/* Mobile */}
-          <div className="mb-3 md:mb-4 flex flex-row justify-center gap-6 lg:hidden">
+          <div
+            className={classes(
+              'mb-3 flex flex-row justify-center gap-6',
+              'md:mb-4',
+              'lg:hidden',
+            )}
+          >
             <Button
               intent="tertiary"
               size="medium"
@@ -90,7 +116,14 @@ export const TokenSection = () => {
               TOKENOMICS
             </Button>
           </div>
-          <div className="relative flex flex-col items-center gap-[40px] rounded-[36px] bg-white/50 px-4 md:px-10 py-10 backdrop-blur-[45px] w-full lg:w-[893px] lg:px-[54px] lg:py-[60px]">
+          <div
+            className={classes(
+              'relative flex w-full flex-col items-center gap-[40px] rounded-[36px] bg-white/50 px-4 py-10 backdrop-blur-[45px]',
+              'md:px-10 lg:w-[893px]',
+              'lg:px-[54px] lg:py-[60px]',
+              '2xl:w-[803px] 2xl:px-10 2xl:pb-[60px] 2xl:pt-10',
+            )}
+          >
             <GradientBorder
               borderRadius={36}
               borderWidth={1}
@@ -106,14 +139,18 @@ export const TokenSection = () => {
               priority
               src={idrissCoin}
               alt="IDRISS coin"
-              className="size-[164px] lg:mb-2.5 lg:size-[200px]"
+              className={classes(
+                'size-[164px]',
+                'lg:mb-2.5 lg:size-[200px]',
+                '2xl:size-[136px]',
+              )}
             />
             <div className="flex w-full flex-wrap justify-between gap-2">
               <LabeledGradientProperty
                 label="TOKEN"
                 content="IDRISS"
                 additionalContent={<CopyAddressButton />}
-                className="mb-8 w-full lg:mb-0 md:w-fit"
+                className="mb-8 w-full md:w-fit lg:mb-0"
               />
               <LabeledGradientProperty label="FOR SALE" content="5%" />
               <LabeledGradientProperty label="FDV" content="$30M" />
@@ -146,10 +183,25 @@ export const TokenSection = () => {
                 </Button>
               </div>
               <div className="self-stretch text-center opacity-70">
-                <span className="text-body4 text-neutralGreen-900 md:text-body2">
+                <span
+                  className={classes(
+                    'text-body4 text-neutralGreen-900',
+                    'md:text-body2',
+                    '2xl:text-body2',
+                  )}
+                >
                   By participating, you agree to the{' '}
                 </span>
-                <Link size="medium" href="" isExternal className='text-body4 md:text-body2'>
+                <Link
+                  size="medium"
+                  href=""
+                  isExternal
+                  className={classes(
+                    'text-body4',
+                    'md:text-body2',
+                    '2xl:text-body2',
+                  )}
+                >
                   Terms{'\u00A0'}and{'\u00A0'}conditions
                 </Link>
               </div>

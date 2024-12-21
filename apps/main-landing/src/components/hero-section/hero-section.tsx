@@ -56,7 +56,7 @@ export const HeroSection = () => {
           'lg:mt-[-33%] lg:min-w-[1985px]',
           '2xl:mt-[-30%]',
           '3xl:mt-[-29%]',
-          '4xl:min-w-[unset] 4xl:mt-[-24%]',
+          '4xl:mt-[-24%] 4xl:min-w-[unset]',
         )}
         alt=""
       />

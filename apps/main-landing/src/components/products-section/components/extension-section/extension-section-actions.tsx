@@ -6,10 +6,32 @@ import { Button } from '@idriss-xyz/ui/button';
 export const ExtensionSectionActions = () => {
   return (
     <>
+      {/* 2xl, 3xl */}
+      <Button
+        intent="secondary"
+        size="medium"
+        className="block w-full lg:w-fit 4xl:hidden"
+        asLink
+        href={CHROME_EXTENSION_LINK}
+        isExternal
+      >
+        DOWNLOAD EXTENSION
+      </Button>
+      <Button
+        intent="tertiary"
+        size="medium"
+        className="block w-full text-neutral-100 lg:w-fit 4xl:hidden"
+        asLink
+        href={EXTENSION_USER_GUIDE_LINK}
+        isExternal
+      >
+        LEARN MORE
+      </Button>
+      {/* 4xl */}
       <Button
         intent="secondary"
         size="large"
-        className="w-full lg:w-fit"
+        className="hidden w-full lg:w-fit 4xl:block"
         asLink
         href={CHROME_EXTENSION_LINK}
         isExternal
@@ -19,11 +41,10 @@ export const ExtensionSectionActions = () => {
       <Button
         intent="tertiary"
         size="large"
-        className="text-neutral-100 w-full lg:w-fit"
+        className="hidden w-full text-neutral-100 lg:w-fit 4xl:block"
         asLink
         href={EXTENSION_USER_GUIDE_LINK}
         isExternal
-        
       >
         LEARN MORE
       </Button>
