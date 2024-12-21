@@ -57,8 +57,10 @@ const TradingCopilotToastContent = ({
         }
       />
       <div className="flex w-full flex-col gap-y-1">
-        <p className="text-label3 text-neutral-900">
-          {userName}{' '}
+        <p className="break-all text-label3 text-neutral-900">
+          {userName?.startsWith('0x')
+            ? `${userName.slice(0, 6)}...${userName.slice(-4)}`
+            : userName}{' '}
           <span className="text-body3 text-neutral-600">
             purchased {roundToSignificantFigures(toast.tokenIn.amount, 2)}{' '}
             {toast.tokenIn.symbol}

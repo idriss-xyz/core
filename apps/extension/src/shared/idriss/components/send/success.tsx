@@ -10,6 +10,7 @@ interface Properties {
   transactionHash: Hex;
   onConfirm: () => void;
   className?: string;
+  heading?: string;
 }
 
 export const Success = ({
@@ -17,6 +18,7 @@ export const Success = ({
   transactionHash,
   onConfirm,
   className,
+  heading,
 }: Properties) => {
   const transactionUrl = getTransactionUrl({ chainId, transactionHash });
   return (
@@ -30,7 +32,9 @@ export const Success = ({
           size={48}
         />
       </div>
-      <p className="text-heading4 text-neutral-900">Transfer completed</p>
+      <p className="text-heading4 text-neutral-900">
+        {heading ?? 'Transfer completed'}
+      </p>
       <Link
         size="medium"
         href={transactionUrl}

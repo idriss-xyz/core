@@ -128,6 +128,7 @@ const TradingCopilotDialogContent = ({
     return (
       <IdrissSend.Success
         className="p-5"
+        heading="Exchange completed"
         onConfirm={closeDialog}
         chainId={exchanger.quoteData.transactionData.chainId}
         transactionHash={exchanger.transactionData.transactionHash}
@@ -157,8 +158,10 @@ const TradingCopilotDialogContent = ({
           }
         />
         <div className="flex w-full flex-col">
-          <p className="text-label3 text-neutral-900">
-            {userName}{' '}
+          <p className="break-all text-label3 text-neutral-900">
+            {userName?.startsWith('0x')
+              ? `${userName.slice(0, 6)}...${userName.slice(-4)}`
+              : userName}{' '}
             <span className="text-body3 text-neutral-600">
               got {roundToSignificantFigures(dialog.tokenIn.amount, 2)}{' '}
               {dialog.tokenIn.symbol}
@@ -192,6 +195,7 @@ const TradingCopilotDialogContent = ({
                   value={value}
                   placeholder="ETH"
                   onChange={onChange}
+                  decimalScale={5}
                   className="ps-[60px] text-right"
                 />
                 <div className="pointer-events-none absolute start-0 top-1/2 flex h-full w-12 -translate-y-1/2 items-center justify-center after:absolute after:right-0 after:top-1.5 after:h-[calc(100%_-_12px)] after:w-px after:bg-neutral-200">
