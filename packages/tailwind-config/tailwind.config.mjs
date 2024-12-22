@@ -124,7 +124,7 @@ export default {
         dialog: '20',
         extensionPopup: '100000',
         portal: '100001',
-        scrollbar: '100010'
+        scrollbar: '100010',
       },
       fontFamily: {
         sans: ['var(--font-aeonikpro)'],
@@ -313,7 +313,6 @@ export default {
   },
   plugins: [
     '@tailwindcss/forms',
-    
     plugin(function ({ addUtilities, addComponents }) {
       const newUtilities = {
         '.fill-rule-non-zero': {
@@ -358,8 +357,8 @@ export default {
           '@screen 4xl': {
             maxWidth: '1696px',
           },
-        }
-      })
+        },
+      });
     }),
   ],
 };

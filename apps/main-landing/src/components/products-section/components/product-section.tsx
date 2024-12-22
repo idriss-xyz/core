@@ -94,9 +94,8 @@ export const ProductSection = ({
               'flex flex-col items-start gap-[64px]',
               'md:gap-10',
               'lg:absolute lg:left-0 lg:top-0 lg:h-screen lg:w-screen lg:pt-10 lg:will-change-[margin-left]',
-              '2xl:gap-6 2xl:pt-20',
+              '2xl:gap-6',
               '3xl:gap-10',
-              '4xl:pl-[78px] 4xl:pt-[120px]',
             )}
             style={
               marginX === undefined
@@ -116,7 +115,7 @@ export const ProductSection = ({
             <div
               className={classes(
                 'z-1 flex flex-col gap-4',
-                'lg:w-[730px]',
+                'lg:w-[800px]',
                 '2xl:gap-2',
               )}
             >
@@ -139,7 +138,6 @@ export const ProductSection = ({
                 <p
                   className={classes(
                     'text-balance text-body2 text-midnightGreen-200 transition-transform duration-1000',
-
                     '2xl:text-body3',
                     '4xl:text-body2',
                     fadeOut && 'translate-y-[-120%]',
@@ -155,7 +153,6 @@ export const ProductSection = ({
                 'lg:w-fit',
                 '2xl:pb-[16px]',
                 '3xl:pb-5',
-                '4xl:pb-10',
               )}
             >
               <div

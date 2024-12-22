@@ -194,6 +194,8 @@ export const TokenSection = () => {
                   className={classes(
                     'text-body4',
                     'md:text-body2',
+                    //lg here is intentional to override the Link variant style
+                    'lg:text-body2',
                   )}
                 >
                   Terms{'\u00A0'}and{'\u00A0'}conditions
