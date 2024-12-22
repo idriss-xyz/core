@@ -30,6 +30,6 @@ export const ExpandableInfo = ({
           </span>
         </div>
       }
-    ></Collapsible>
+     />
   );
 };

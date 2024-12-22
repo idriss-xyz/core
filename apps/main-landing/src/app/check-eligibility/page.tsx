@@ -1,12 +1,14 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
-import Image from 'next/image';
-import { Providers } from './providers';
+import { Button } from '@idriss-xyz/ui/button';
+import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
+
 import { TopBar } from '@/components';
 import { backgroundLines2 } from '@/assets';
-import { Button } from '@idriss-xyz/ui/button';
+
+import { Providers } from './providers';
 import idrissCoin from './assets/IDRISS_COIN 1.png';
 import idrissSceneStream from './assets/IDRISS_SCENE_STREAM_4_2 1.png';
-import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 
 export default function CheckEligibility() {
   return (
@@ -16,10 +18,10 @@ export default function CheckEligibility() {
         <img
           src={idrissSceneStream.src}
           className="pointer-events-none absolute left-[-310px] top-[-20px] z-1 h-[1440px] w-[2306px] min-w-[120vw] max-w-none rotate-[25.903deg] lg:block"
-        ></img>
-        <Image
-          priority
-          src={backgroundLines2}
+          alt=""
+        />
+        <img
+          src={backgroundLines2.src}
           className="pointer-events-none absolute top-0 hidden h-full opacity-40 lg:block"
           alt=""
         />
@@ -36,7 +38,7 @@ export default function CheckEligibility() {
               gradientStopColor="rgba(145, 206, 154, 0.50)"
               borderWidth={1}
             />
-            <img className="size-[136px]" src={idrissCoin.src} />
+            <img className="size-[136px]" src={idrissCoin.src} alt="" />
             <div className="relative flex w-full flex-col items-center gap-2 rounded-[25px] bg-[rgba(255,255,255,0.2)] px-10 py-8">
               <GradientBorder
                 gradientDirection="toBottom"

@@ -89,9 +89,7 @@ export default function Banner() {
               Download a banner
             </h1>
           </div>
-          <ScrollArea
-            className="right-0 max-h-[350px] transition-all duration-500"
-          >
+          <ScrollArea className="right-0 max-h-[350px] transition-all duration-500">
             <div className="grid w-full grid-cols-2 justify-center gap-4 px-3">
               {banners.map((banner) => {
                 const isSelected = banner.src === selectedBannerSource;

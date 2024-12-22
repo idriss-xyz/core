@@ -149,7 +149,12 @@ export const TokenSection = () => {
                 <span className="text-body4 text-neutralGreen-900 lg:text-body2">
                   By participating, you agree to the{' '}
                 </span>
-                <Link size="medium" href="" isExternal className='text-body4 lg:text-body2'>
+                <Link
+                  size="medium"
+                  href=""
+                  isExternal
+                  className="text-body4 lg:text-body2"
+                >
                   Terms{'\u00A0'}and{'\u00A0'}conditions
                 </Link>
               </div>

@@ -17,7 +17,7 @@ export const Plus = ({ size, className }: Properties) => {
         <path
           id="Vector"
           d="M5 12H19M12 5V19"
-          stroke="#4E505A"
+          stroke="currentColor"
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"

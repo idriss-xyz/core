@@ -17,7 +17,7 @@ export const Minus = ({ size, className }: Properties) => {
         <path
           id="Vector"
           d="M5 12H19"
-          stroke="#4E505A"
+          stroke="currentColor"
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"

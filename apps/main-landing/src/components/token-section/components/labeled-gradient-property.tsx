@@ -4,7 +4,7 @@ import { ReactNode } from 'react';
 type Properties = {
   label: string;
   content: string;
-  className?: string
+  className?: string;
   additionalContent?: ReactNode;
 };
 
@@ -15,11 +15,16 @@ export const LabeledGradientProperty = ({
   additionalContent,
 }: Properties) => {
   return (
-    <div className={classes("self-stretch flex flex-col items-center lg:min-w-36 flex-grow", className)}>
-      <span className="text-body4  text-neutralGreen-900 lg:text-body2">
+    <div
+      className={classes(
+        'flex flex-grow flex-col items-center self-stretch lg:min-w-36',
+        className,
+      )}
+    >
+      <span className="text-body4 text-neutralGreen-900 lg:text-body2">
         {label}
       </span>
-      <span className="mt-1 lg:mt-2 text-heading3 text-neutralGreen-900 gradient-text lg:text-heading2">
+      <span className="mt-1 text-heading3 text-neutralGreen-900 gradient-text lg:mt-2 lg:text-heading2">
         {content}
       </span>
       {additionalContent}

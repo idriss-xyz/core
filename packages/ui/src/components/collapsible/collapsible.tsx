@@ -1,5 +1,6 @@
-import React, { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import * as RadixCollapsible from '@radix-ui/react-collapsible';
+
 import { Icon } from '@idriss-xyz/ui/icon';
 
 type Properties = {
@@ -8,7 +9,7 @@ type Properties = {
 };
 
 export const Collapsible = ({ header, content }: Properties) => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   return (
     <RadixCollapsible.Root open={open} onOpenChange={setOpen}>
       <div className="flex flex-row items-center justify-between gap-4">
