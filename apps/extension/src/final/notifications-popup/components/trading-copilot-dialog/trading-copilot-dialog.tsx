@@ -50,7 +50,7 @@ export const TradingCopilotDialog = ({ dialog, closeDialog }: Properties) => {
       hideCloseButton
     >
       <div className="flex size-full items-center justify-center">
-        <div className="relative flex w-[400px] flex-col gap-y-5 rounded-lg border border-black/20 bg-white p-5">
+        <div className="relative flex min-h-[300px] w-[400px] flex-col justify-center gap-y-5 rounded-lg border border-black/20 bg-white p-5">
           <TradingCopilotDialogContent
             dialog={dialog}
             closeDialog={closeDialog}
@@ -195,7 +195,7 @@ const TradingCopilotDialogContent = ({
                   value={value}
                   placeholder="ETH"
                   onChange={onChange}
-                  decimalScale={4}
+                  decimalScale={5}
                   className="ps-[60px] text-right"
                 />
                 <div className="pointer-events-none absolute start-0 top-1/2 flex h-full w-12 -translate-y-1/2 items-center justify-center after:absolute after:right-0 after:top-1.5 after:h-[calc(100%_-_12px)] after:w-px after:bg-neutral-200">

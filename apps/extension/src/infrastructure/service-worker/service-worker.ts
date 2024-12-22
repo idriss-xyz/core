@@ -118,12 +118,12 @@ export class ServiceWorker {
     });
   }
 
-  private registerWithServer(subscriberId: string) {
+  private registerWithServer(walletAddress: string) {
     console.log(
-      `%c[WebSocket] Found user with wallet ${subscriberId}`,
+      `%c[WebSocket] Found user with wallet ${walletAddress}`,
       'color: #32CD32;',
     );
-    this.socket.emit('register', subscriberId);
+    this.socket.emit('register', walletAddress);
   }
 
   createSwapNotification(swapData: SwapData) {
