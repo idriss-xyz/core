@@ -22,3 +22,6 @@ export { BaseLogo } from './base-logo';
 export { Copy } from './copy';
 export { Uniswap } from './uniswap';
 export { Jumper } from './jumper';
+export { Minus } from './minus';
+export { Plus } from './plus';
+export { Download } from './download';

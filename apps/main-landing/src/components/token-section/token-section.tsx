@@ -199,7 +199,6 @@ export const TokenSection = () => {
                   className={classes(
                     'text-body4',
                     'md:text-body2',
-                    '2xl:text-body2',
                   )}
                 >
                   Terms{'\u00A0'}and{'\u00A0'}conditions

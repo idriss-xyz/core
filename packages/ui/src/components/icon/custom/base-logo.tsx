@@ -1,12 +1,15 @@
 type Properties = {
   className?: string;
+  size: number;
 };
 
-export const BaseLogo = ({ className }: Properties) => {
+export const BaseLogo = ({ size, className }: Properties) => {
   return (
     <svg
       className={className}
       viewBox="0 0 25 24"
+      width={size}
+      height={size}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
