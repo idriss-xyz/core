@@ -5,11 +5,11 @@ import Image from 'next/image';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import dynamic from 'next/dynamic';
 import { Link } from '@idriss-xyz/ui/link';
+import { classes } from '@idriss-xyz/ui/utils';
 
 import idrissCoin from './assets/IDRISS_COIN 1.png';
 import background from './background.png';
 import { LabeledGradientProperty } from './components';
-import { classes } from '@idriss-xyz/ui/utils';
 
 const CopyAddressButton = dynamic(
   async () => {

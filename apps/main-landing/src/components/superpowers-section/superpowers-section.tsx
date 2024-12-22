@@ -32,7 +32,7 @@ export const SuperpowersSection = () => {
           )}
         />
 
-        <div className="container relative z-1 pb-28 4xl:pb-32 lg:flex lg:flex-col lg:items-center">
+        <div className="container relative z-1 pb-28 lg:flex lg:flex-col lg:items-center 4xl:pb-32">
           <div className="mb-10 flex w-full flex-col items-center gap-4 lg:mb-20">
             <h2
               className={classes(

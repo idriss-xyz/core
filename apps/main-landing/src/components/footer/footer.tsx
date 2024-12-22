@@ -7,11 +7,11 @@ import {
   PRIVACY_POLICY_LINK,
   TERMS_OF_SERVICE_LINK,
 } from '@idriss-xyz/constants';
+import { classes } from '@idriss-xyz/ui/utils';
 
 import idrissHalfTransparent from './idriss-half-transparent.png';
 import { Section } from './components';
 import { EXTERNAL_RESOURCES, INTERNAL_LINKS, SOCIALS } from './constants';
-import { classes } from '@idriss-xyz/ui/utils';
 
 export const Footer = () => {
   return (

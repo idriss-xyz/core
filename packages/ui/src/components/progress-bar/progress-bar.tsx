@@ -16,7 +16,7 @@ export const ProgressBar = ({
   return (
     <div className="size-full">
       <div className="flex justify-end" style={{ width: `${progress}%` }}>
-        <span className="translate-x-1/2 lg:text-body2 text-body4 text-neutral-800">
+        <span className="translate-x-1/2 text-body4 text-neutral-800 lg:text-body2">
           {progress}%
         </span>
       </div>

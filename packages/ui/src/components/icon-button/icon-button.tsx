@@ -13,7 +13,10 @@ type Properties = {
   IconButtonVariants;
 
 export const IconButton = forwardRef(
-  ({ iconName, iconClassName, className, size, ...properties }: Properties, reference) => {
+  (
+    { iconName, iconClassName, className, size, ...properties }: Properties,
+    reference,
+  ) => {
     return (
       <Button
         {...properties}

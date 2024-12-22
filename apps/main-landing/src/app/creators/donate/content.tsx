@@ -180,7 +180,7 @@ export const Content = ({ className }: Properties) => {
       sender.tokensToSend.toString(),
       decimals,
     );
-  }, [selectedTokenKey, chainId, sender.tokensToSend]);
+  }, [chainId, sender.tokensToSend, selectedToken?.symbol, selectedTokenKey]);
 
   const onSubmit: SubmitHandler<SendPayload> = useCallback(
     async (payload) => {
@@ -200,7 +200,7 @@ export const Content = ({ className }: Properties) => {
         recipientAddress: validAddress,
       });
     },
-    [addressValidationResult.data, addressValidationResult.success, sender],
+    [addressValidationResult.data, addressValidationResult.success, sender, validatedAddress],
   );
 
   if (validatedAddress !== undefined && addressValidationResult.error) {

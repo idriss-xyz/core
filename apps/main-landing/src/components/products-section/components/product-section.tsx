@@ -94,7 +94,7 @@ export const ProductSection = ({
               'flex flex-col items-start gap-[64px]',
               'md:gap-10',
               'lg:absolute lg:left-0 lg:top-0 lg:h-screen lg:w-screen lg:pt-10 lg:will-change-[margin-left]',
-              '2xl:pt-20 2xl:gap-6',
+              '2xl:gap-6 2xl:pt-20',
               '3xl:gap-10',
               '4xl:pl-[78px] 4xl:pt-[120px]',
             )}
@@ -178,12 +178,12 @@ export const ProductSection = ({
                 endIndex={properties.animationEndIndex}
                 className={classes(
                   'bottom-0 right-0 top-1/2 z-0',
-                  'lg:absolute lg:max-w-[45%] lg:top-[10px]',
+                  'lg:absolute lg:top-[10px] lg:max-w-[45%]',
                   '2xl:right-[-40px] 2xl:w-[780px] 2xl:max-w-[unset]',
                   '3xl:right-16',
                   '4xl:right-28 4xl:w-[970px]',
                   //iPadPro
-                  '[@media(width:1024px)]:[@media(height:1366px)]:top-[60%] [@media(width:1024px)]:[@media(height:1366px)]:left-[20%]'
+                  '[@media(width:1024px)]:[@media(height:1366px)]:left-[20%] [@media(width:1024px)]:[@media(height:1366px)]:top-[60%]',
                 )}
               />
             ) : (

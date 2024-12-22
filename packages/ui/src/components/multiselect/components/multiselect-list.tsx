@@ -24,9 +24,7 @@ export const MultiselectInputList = <T,>({
         className,
       )}
     >
-      <ScrollArea
-        className="max-h-[184px]"
-      >
+      <ScrollArea className="max-h-[184px]">
         {options.length === 0 && (
           <span
             className={classes(
