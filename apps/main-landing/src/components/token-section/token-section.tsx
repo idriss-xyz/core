@@ -131,10 +131,6 @@ export const TokenSection = () => {
               gradientStartColor="#5FEB3C"
               gradientStopColor="rgba(145,206,154,0.50)"
             />
-            {/* <ImageSequencer
-              images={tokenCoinImages}
-              className="size-[164px] lg:mb-2.5 lg:size-[200px]"
-            /> */}
             <Image
               priority
               src={idrissCoin}
@@ -187,7 +183,6 @@ export const TokenSection = () => {
                   className={classes(
                     'text-body4 text-neutralGreen-900',
                     'md:text-body2',
-                    '2xl:text-body2',
                   )}
                 >
                   By participating, you agree to the{' '}
