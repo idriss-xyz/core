@@ -57,7 +57,7 @@ export default {
         900: '#002D1E',
       },
       gray: {
-        200: '#E5E5E5'
+        200: '#E5E5E5',
       },
       lime: {
         100: '#FBFFE6',
@@ -88,20 +88,22 @@ export default {
     },
     container: {
       center: true,
-      screens: {
-        '2xl': '1608px',
-      },
       padding: {
         'DEFAULT': '1rem',
         'sm': 0,
         'lg': 0,
         'xl': 0,
         '2xl': 0,
+        '3xl': 0,
+        '4xl': 0,
       },
     },
     extend: {
       screens: {
-        '2xl': '1608px',
+        'md': '768px',
+        '2xl': '1440px',
+        '3xl': '1536px',
+        '4xl': '1696px',
       },
       boxShadow: {
         'xs': '0px 1px 4px 0px #1018280D',
@@ -311,7 +313,8 @@ export default {
   },
   plugins: [
     '@tailwindcss/forms',
-    plugin(function ({ addUtilities }) {
+    
+    plugin(function ({ addUtilities, addComponents }) {
       const newUtilities = {
         '.fill-rule-non-zero': {
           'fill-rule': 'nonzero',
@@ -335,6 +338,28 @@ export default {
         },
       };
       addUtilities(newUtilities);
+      addComponents({
+        '.container': {
+          '@screen md': {
+            maxWidth: '704px',
+          },
+          '@screen lg': {
+            maxWidth: '968px',
+          },
+          '@screen xl': {
+            maxWidth: '1168px',
+          },
+          '@screen 2xl': {
+            maxWidth: '1216px',
+          },
+          '@screen 3xl': {
+            maxWidth: '1312px',
+          },
+          '@screen 4xl': {
+            maxWidth: '1696px',
+          },
+        }
+      })
     }),
   ],
 };

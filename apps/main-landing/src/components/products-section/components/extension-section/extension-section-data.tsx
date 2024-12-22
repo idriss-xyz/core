@@ -3,7 +3,7 @@ import { ProductSectionInfo } from '../product-section';
 import { ExtensionSectionActions } from './extension-section-actions';
 
 const BROWSER_EXTENSION_INFO: ProductSectionInfo = {
-  title: 'CRYPTO AND\u00A0AI EXPANSION\u00A0PACK\u00A0FOR YOUR BROWSER',
+  title: 'CRYPTO AND AI EXPANSION PACK FOR YOUR BROWSER',
   description:
     'Enhance your browsing experience with crypto micropayments, DAO vote alerts, and trading widgets directly in your browser.',
   features: [

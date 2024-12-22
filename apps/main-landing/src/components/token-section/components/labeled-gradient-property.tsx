@@ -21,10 +21,20 @@ export const LabeledGradientProperty = ({
         className,
       )}
     >
-      <span className="text-body4 text-neutralGreen-900 lg:text-body2">
+      <span
+        className={classes(
+          'text-body4 text-neutralGreen-900',
+          'lg:text-body2',
+        )}
+      >
         {label}
       </span>
-      <span className="mt-1 text-heading3 text-neutralGreen-900 gradient-text lg:mt-2 lg:text-heading2">
+      <span
+        className={classes(
+          'mt-1 text-heading3 text-neutralGreen-900 gradient-text',
+          'lg:mt-2 lg:text-heading2',
+        )}
+      >
         {content}
       </span>
       {additionalContent}

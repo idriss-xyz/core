@@ -32,7 +32,7 @@ export const DesktopProductsSection = ({ className }: Properties) => {
   const containerReference = useRef<HTMLDivElement>(null);
   const topOfContainerReference = useRef<HTMLDivElement>(null);
   const firstSectionAnchorReference = useRef<HTMLDivElement>(null);
-  const [padding, setPadding] = useState(40);
+  const [margin, setMargin] = useState(40);
   const [borderRadius, setBorderRadius] = useState(40);
   const [isTopOfContainerFullyVisible, setIsTopOfContainerFullyVisible] =
     useState(false);
@@ -137,11 +137,11 @@ export const DesktopProductsSection = ({ className }: Properties) => {
       },
     );
 
-    const paddingObserver = new IntersectionObserver(
+    const marginObserver = new IntersectionObserver(
       ([entry]) => {
-        //if we navigate to the anchor the top container is skipped so we need to set padding 0 manually
+        //if we navigate to the anchor the top container is skipped so we need to set margin 0 manually
         if (!isTopOfContainerFullyVisible && isContainerVisible) {
-          setPadding(0);
+          setMargin(0);
           setBorderRadius(0);
           return;
         }
@@ -150,15 +150,15 @@ export const DesktopProductsSection = ({ className }: Properties) => {
           const intersectionRatio = entry?.intersectionRatio ?? 0;
 
           if (intersectionRatio <= 0.5) {
-            // When intersection is 0-50%, padding and radius stays at 40px
-            setPadding(40);
+            // When intersection is 0-50%, margin and radius stays at 40px
+            setMargin(40);
             setBorderRadius(40);
           } else {
-            // Map intersection ratio from 0.5-1 to 50-0 for padding and 40-0 for radius
+            // Map intersection ratio from 0.5-1 to 50-0 for margin and 40-0 for radius
             const calculatedValue = Math.round(
               40 * (2 - 2 * intersectionRatio),
             );
-            setPadding(calculatedValue > 5 ? calculatedValue : 0);
+            setMargin(calculatedValue > 2 ? calculatedValue : 0);
             setBorderRadius(calculatedValue > 5 ? calculatedValue : 0);
           }
         }
@@ -177,13 +177,13 @@ export const DesktopProductsSection = ({ className }: Properties) => {
       topOfContainerObserver.observe(topOfContainerReference.current);
     }
     if (firstSectionAnchorReference.current) {
-      paddingObserver.observe(firstSectionAnchorReference.current);
+      marginObserver.observe(firstSectionAnchorReference.current);
     }
 
     return () => {
       containerObserver.disconnect();
       topOfContainerObserver.disconnect();
-      paddingObserver.disconnect();
+      marginObserver.disconnect();
     };
   }, [isTopOfContainerFullyVisible, isContainerVisible]);
 
@@ -230,12 +230,11 @@ export const DesktopProductsSection = ({ className }: Properties) => {
         className={classes('relative flex bg-mint-100', className)}
         ref={containerReference}
       >
-        <div
-          style={{ padding: `${padding / 2}px ${padding}px` }}
-          className="sticky left-0 top-0 z-[99999] h-screen w-screen transition-[padding] duration-150 will-change-[padding]"
-        >
+        <div className="sticky left-0 top-0 z-[99999] h-screen w-screen">
           <ProductSection
-            style={{ borderRadius: `${borderRadius}px` }}
+            marginX={margin}
+            marginY={margin / 2}
+            borderRadius={borderRadius}
             actions={selectedSectionData.actions}
             activeOptionKey={selectedSectionData.defaultOptionKey}
             description={selectedSectionData.info.description}

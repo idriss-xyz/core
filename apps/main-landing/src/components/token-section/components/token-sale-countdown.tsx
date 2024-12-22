@@ -2,6 +2,7 @@
 
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { useEffect, useState } from 'react';
+import { classes } from '@idriss-xyz/ui/utils';
 
 import { IDRISS_TOKEN_SALE_END } from '../constants';
 
@@ -46,7 +47,7 @@ export const TokenSaleCountdown = () => {
     setTimeRemaining({ days, hours, minutes, seconds });
   };
   return (
-    <div className="relative flex w-full flex-col items-center gap-5 rounded-2xl bg-white/20 px-4 py-6 lg:px-10 lg:py-8">
+    <div className="relative flex w-full flex-col items-center gap-5 rounded-2xl bg-white/20 px-4 py-6 md:px-10 md:py-8">
       <GradientBorder
         borderRadius={16}
         borderWidth={1}
@@ -54,48 +55,112 @@ export const TokenSaleCountdown = () => {
         gradientStartColor="#5FEB3C"
         gradientStopColor="rgba(255,255,255,1)"
       />
-      <span className="text-center text-body4 text-neutralGreen-900 lg:text-body2">
+      <span
+        className={classes(
+          'text-center text-body4 text-neutralGreen-900',
+          'lg:text-body2',
+        )}
+      >
         ENDS IN
       </span>
       <div className="flex justify-between self-stretch">
         <div className="flex min-w-14 flex-col items-center justify-center">
-          <span className="text-heading4 gradient-text lg:text-heading2">
+          <span
+            className={classes(
+              'text-heading4 gradient-text',
+              'lg:text-heading2',
+              '2xl:text-heading3',
+            )}
+          >
             {timeRemaining.days}
           </span>
-          <span className="text-center text-body4 text-neutralGreen-500 lg:text-body2">
+          <span
+            className={classes(
+              'text-center text-body4 text-neutralGreen-500',
+              'lg:text-body2',
+            )}
+          >
             DAYS
           </span>
         </div>
-        <span className="text-heading4 text-neutralGreen-900 lg:text-heading3">
+        <span
+          className={classes(
+            'text-heading4 text-neutralGreen-900',
+            'lg:text-heading3',
+          )}
+        >
           :
         </span>
         <div className="flex min-w-14 flex-col items-center justify-center">
-          <span className="text-heading4 gradient-text lg:text-heading2">
+          <span
+            className={classes(
+              'text-heading4 gradient-text',
+              'lg:text-heading2',
+              '2xl:text-heading3',
+            )}
+          >
             {timeRemaining.hours}
           </span>
-          <span className="text-center text-body4 text-neutralGreen-500 lg:text-body2">
+          <span
+            className={classes(
+              'text-center text-body4 text-neutralGreen-500',
+              'lg:text-body2',
+            )}
+          >
             HRS
           </span>
         </div>
-        <span className="text-heading4 text-neutralGreen-900 lg:text-heading3">
+        <span
+          className={classes(
+            'text-heading4 text-neutralGreen-900',
+            'lg:text-heading3',
+          )}
+        >
           :
         </span>
         <div className="flex min-w-14 flex-col items-center justify-center">
-          <span className="text-heading4 gradient-text lg:text-heading2">
+          <span
+            className={classes(
+              'text-heading4 gradient-text',
+              'lg:text-heading2',
+              '2xl:text-heading3',
+            )}
+          >
             {timeRemaining.minutes}
           </span>
-          <span className="text-center text-body4 text-neutralGreen-500 lg:text-body2">
+          <span
+            className={classes(
+              'text-center text-body4 text-neutralGreen-500',
+              'lg:text-body2',
+            )}
+          >
             MIN
           </span>
         </div>
-        <span className="text-heading4 text-neutralGreen-900 lg:text-heading3">
+        <span
+          className={classes(
+            'text-heading4 text-neutralGreen-900',
+            'lg:text-heading3',
+          )}
+        >
           :
         </span>
         <div className="flex min-w-14 flex-col items-center justify-center">
-          <span className="text-heading4 gradient-text lg:text-heading2">
+          <span
+            className={classes(
+              'text-heading4 gradient-text',
+              'lg:text-heading2',
+              '2xl:text-heading3',
+            )}
+          >
             {timeRemaining.seconds}
           </span>
-          <span className="text-center text-body4 text-neutralGreen-500 lg:text-body2">
+          <span
+            className={classes(
+              'text-center text-body4 text-neutralGreen-500',
+              'lg:text-body2',
+            )}
+          >
             SEC
           </span>
         </div>
