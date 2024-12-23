@@ -11,9 +11,8 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { classes } from '@idriss-xyz/ui/utils';
 import { getAddress } from 'viem';
 import { Spinner } from '@idriss-xyz/ui/spinner';
-import Image from 'next/image';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { useAccount, usePublicClient, useWalletClient } from 'wagmi';
+import { useAccount, useWalletClient } from 'wagmi';
 
 import { backgroundLines3 } from '@/assets';
 
@@ -24,7 +23,12 @@ import {
   DEFAULT_ALLOWED_CHAINS_IDS,
   TOKEN,
 } from './constants';
-import { createSendPayloadSchema, hexSchema, SendPayload } from './schema';
+import {
+  createFormPayloadSchema,
+  FormPayload,
+  hexSchema,
+  SendPayload,
+} from './schema';
 import {
   applyDecimalsToNumericString,
   getSendFormDefaultValues,
@@ -32,7 +36,7 @@ import {
   roundToSignificantFigures,
   validateAddressOrENS,
 } from './utils';
-import { ChainToken, Token } from './types';
+import { Hex, Token } from './types';
 import { useSender } from './hooks';
 
 const SEARCH_PARAMETER = {
@@ -53,7 +57,6 @@ const baseClassName =
 export const Content = ({ className }: Properties) => {
   const { isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
-  const publicClient = usePublicClient();
   const { connectModalOpen, openConnectModal } = useConnectModal();
   const [validatedAddress, setValidatedAddress] = useState<
     string | null | undefined
@@ -74,7 +77,7 @@ export const Content = ({ className }: Properties) => {
 
   const addressValidationResult = hexSchema.safeParse(validatedAddress);
 
-  const [selectedTokenKey, setSelectedTokenKey] = useState<string>('ETH');
+  const [selectedTokenSymbol, setSelectedTokenSymbol] = useState<string>('ETH');
 
   const networkParameter = searchParameters.get(SEARCH_PARAMETER.NETWORK);
   const tokenParameter = searchParameters.get(SEARCH_PARAMETER.TOKEN);
@@ -112,7 +115,7 @@ export const Content = ({ className }: Properties) => {
       const tokensForThisChain = CHAIN_ID_TO_TOKENS[chain.id];
 
       return !!tokensForThisChain?.find((token) => {
-        return token.symbol === selectedTokenKey;
+        return token.symbol === selectedTokenSymbol;
       });
     });
 
@@ -124,11 +127,11 @@ export const Content = ({ className }: Properties) => {
     return chains.map((chain) => {
       return chain.id;
     });
-  }, [networkParameter, selectedTokenKey]);
+  }, [networkParameter, selectedTokenSymbol]);
 
   const defaultChainId = allowedChainsIds[0] ?? 0;
 
-  const defaultTokenAddress = useMemo(() => {
+  const defaultTokenSymbol = useMemo(() => {
     const chainTokens =
       CHAIN_ID_TO_TOKENS[defaultChainId]?.filter((chainToken) => {
         return possibleTokens.some((token) => {
@@ -137,76 +140,90 @@ export const Content = ({ className }: Properties) => {
       }) ?? [];
 
     return (
-      chainTokens[0]?.address ??
-      CHAIN_ID_TO_TOKENS[defaultChainId]?.[0]?.address ??
-      '0x'
+      chainTokens[0]?.symbol ??
+      CHAIN_ID_TO_TOKENS[defaultChainId]?.[0]?.symbol ??
+      ''
     );
   }, [defaultChainId, possibleTokens]);
 
-  const formMethods = useForm<SendPayload>({
-    defaultValues: getSendFormDefaultValues(
-      defaultChainId,
-      defaultTokenAddress,
-    ),
-    resolver: zodResolver(createSendPayloadSchema(allowedChainsIds)),
+  const formMethods = useForm<FormPayload>({
+    defaultValues: getSendFormDefaultValues(defaultChainId, defaultTokenSymbol),
+    resolver: zodResolver(createFormPayloadSchema(allowedChainsIds)),
   });
 
-  const [chainId, tokenAddress, amount] = formMethods.watch([
+  const [chainId, tokenSymbol, amount] = formMethods.watch([
     'chainId',
-    'tokenAddress',
+    'tokenSymbol',
     'amount',
   ]);
 
-  const allowedTokens = useMemo(() => {
-    const allTokens = Object.values(CHAIN_ID_TO_TOKENS).flat();
-    const uniqueTokens: ChainToken[] = [];
-    for (const token of allTokens) {
-      const exists = uniqueTokens.find((uniqueToken) => {
-        return uniqueToken.symbol === token.symbol;
-      });
-      if (exists) {
-        continue;
-      }
-      uniqueTokens.push(token);
-    }
-
-    return uniqueTokens;
-  }, []);
-
-  const sender = useSender({ walletClient, publicClient });
+  const sender = useSender({ walletClient });
 
   const selectedToken = useMemo(() => {
-    const token = allowedTokens?.find((token) => {
-      return token.address === tokenAddress;
+    const token = possibleTokens?.find((token) => {
+      return token.symbol === tokenSymbol;
     });
-    setSelectedTokenKey(token?.symbol ?? '');
+    setSelectedTokenSymbol(token?.symbol ?? '');
     return token;
-  }, [allowedTokens, tokenAddress]);
+  }, [possibleTokens, tokenSymbol]);
 
   const amountInSelectedToken = useMemo(() => {
-    if (!sender.tokensToSend || !selectedToken?.decimals) {
+    if (!sender.tokensToSend || !selectedToken?.symbol) {
       return;
     }
 
+    const decimals =
+      CHAIN_ID_TO_TOKENS[chainId]?.find((token) => {
+        return token.symbol === selectedTokenSymbol;
+      })?.decimals ?? 1;
+
     return applyDecimalsToNumericString(
       sender.tokensToSend.toString(),
-      selectedToken.decimals,
+      decimals,
     );
-  }, [selectedToken?.decimals, sender.tokensToSend]);
+  }, [
+    selectedTokenSymbol,
+    chainId,
+    sender.tokensToSend,
+    selectedToken?.symbol,
+  ]);
 
-  const onSubmit: SubmitHandler<SendPayload> = useCallback(
-    async (sendPayload) => {
+  const onSubmit: SubmitHandler<FormPayload> = useCallback(
+    async (payload) => {
+      if (!walletClient) {
+        return;
+      }
+
       if (!addressValidationResult.success || !validatedAddress) {
         return;
       }
+      const { chainId, tokenSymbol, ...rest } = payload;
+      const address: Hex =
+        CHAIN_ID_TO_TOKENS[chainId]?.find((token: Token) => {
+          return token.symbol === tokenSymbol;
+        })?.address ?? '0x';
+      const sendPayload: SendPayload = {
+        ...rest,
+        chainId,
+        tokenAddress: address,
+      };
       const validAddress = getAddress(addressValidationResult.data);
-      // TODO: Add error handling
-      await sender.send({
-        sendPayload,
-        recipientAddress: validAddress,
-      });
+
+      try {
+        await sender.send({
+          sendPayload,
+          recipientAddress: validAddress,
+        });
+      } catch (error) {
+        console.error('Unknown error sending transaction.', error);
+      }
     },
-    [addressValidationResult.data, addressValidationResult.success, sender],
+    [
+      addressValidationResult.data,
+      addressValidationResult.success,
+      sender,
+      validatedAddress,
+    ],
   );
 
   if (validatedAddress !== undefined && addressValidationResult.error) {
@@ -280,9 +297,8 @@ export const Content = ({ className }: Properties) => {
 
   return (
     <div className={classes(baseClassName, className)}>
-      <Image
-        priority
-        src={backgroundLines3}
+      <img
+        src={backgroundLines3.src}
         className="pointer-events-none absolute top-0 hidden h-full opacity-100 lg:block"
         alt=""
       />
@@ -294,13 +310,13 @@ export const Content = ({ className }: Properties) => {
       <Form onSubmit={formMethods.handleSubmit(onSubmit)} className="w-full">
         <Controller
           control={formMethods.control}
-          name="tokenAddress"
+          name="tokenSymbol"
           render={({ field }) => {
             return (
               <TokenSelect
                 className="mt-4 w-full"
                 label="Token"
-                tokens={allowedTokens}
+                tokens={possibleTokens}
                 onChange={field.onChange}
                 value={field.value}
               />

@@ -46,7 +46,11 @@ export const Select = <T,>({
             className="text-neutralGreen-900 ring-1 ring-[#D1D5DB] focus:ring-indigo-500"
             as="button"
           >
-            <SelectOption option={pickedOption} className="rounded-md" />
+            <SelectOption
+              option={pickedOption}
+              className="rounded-md"
+              selected
+            />
           </SelectOptionContainer>
         </DropdownMenu.Trigger>
         <DropdownMenu.Portal container={portal}>

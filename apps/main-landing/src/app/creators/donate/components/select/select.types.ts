@@ -10,6 +10,7 @@ export type Option<T> = {
 export type SelectOptionProperties<T> = {
   option: Option<T>;
   className?: string;
+  selected?: boolean;
 };
 
 export type SelectProperties<T> = {

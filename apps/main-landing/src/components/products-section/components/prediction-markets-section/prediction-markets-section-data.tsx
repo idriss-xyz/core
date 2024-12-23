@@ -3,21 +3,21 @@ import { ProductSectionInfo } from '../product-section';
 import { PredictionMarketsSectionActions } from './prediction-markets-section-actions';
 
 const PREDICTION_MARKETS_INFO: ProductSectionInfo = {
-  title: 'EXPLORE THE FULL POTENTIAL OF PREDICTION MARKETS',
+  title: 'DECENTRALIZED COMMUNITY NOTES FOR THE INTERNET',
   description:
-    'Bigger, better, and bolder: harness the wisdom of the crowd to drive social engagement, verify news authenticity, and detect generative AI.',
+    "Harness the wisdom of the crowd through prediction markets to find what's true online.",
   features: [
     {
       icon: 'Users',
-      title: 'Micro markets embedded in socials',
+      title: 'Embeddable in social feeds and media sites',
     },
     {
       icon: 'Verifying',
-      title: 'Verifying authenticity of news and detecting genAI',
+      title: 'Verify authenticity of news and detect generative AI',
     },
     {
       icon: 'Head',
-      title: 'Markets for AI agents',
+      title: 'Powered by humans and AI agents',
     },
   ],
 };

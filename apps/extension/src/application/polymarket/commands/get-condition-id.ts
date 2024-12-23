@@ -49,13 +49,13 @@ export class GetConditionIdCommand extends Command<Payload, string> {
       const apiEventQuery =
         polymarketPageProperties.props.pageProps.dehydratedState.queries.find(
           (query) => {
-            return query.queryKey[0] === '/api/event';
+            return query.queryKey[0] === '/copilot-api/event';
           },
         );
 
       if (!apiEventQuery) {
         throw new HandlerError(
-          'Could not find api event query in page properties',
+          'Could not find copilot-api event query in page properties',
         );
       }
 

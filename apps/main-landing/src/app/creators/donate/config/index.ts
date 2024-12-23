@@ -31,5 +31,5 @@ export const wagmiconfig = getDefaultConfig({
 
 export const ethereumClient = createPublicClient({
   chain: mainnet,
-  transport: http(), // TODO: Add custom RPC provider if needed
+  transport: http('https://eth.llamarpc.com'),
 });

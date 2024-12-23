@@ -68,7 +68,7 @@ export const ProductSection = ({
         style={style}
       >
         <div className="container flex flex-col gap-10 p-0 lg:gap-[104px] lg:[@media(max-height:1000px)]:gap-[30px] lg:[@media(max-height:770px)]:gap-[24px] lg:[@media(min-height:1001px)]:[@media(max-height:1100px)]:gap-[50px]">
-          <div className="flex flex-col items-start gap-[64px] lg:[@media(max-height:1100px)]:gap-[50px]">
+          <div className="flex flex-col items-start gap-[64px] px-safe lg:[@media(max-height:1100px)]:gap-[50px]">
             {tabsVisibile && (
               <Tabs
                 options={tabOptions}
@@ -80,7 +80,7 @@ export const ProductSection = ({
               <div className="z-1 overflow-hidden">
                 <h2
                   className={classes(
-                    'text-balance pt-16 text-display5 text-midnightGreen-100 transition-transform duration-1000 lg:pt-0 [@media(max-width:1440px)]:[@media(max-height:1000px)]:text-display4 [@media(min-width:1441px)]:text-display2',
+                    'text-balance pt-16 text-display5 text-midnightGreen-100 transition-transform duration-1000 lg:pt-0 [@media(max-width:1540px)]:[@media(max-height:1000px)]:text-display4 [@media(min-width:1541px)]:text-display2',
                     headerClassName,
                     fadeOut && 'translate-y-[-120%]',
                   )}
@@ -91,7 +91,7 @@ export const ProductSection = ({
               <div className="z-1 overflow-hidden">
                 <p
                   className={classes(
-                    'text-balance text-body3 text-midnightGreen-200 transition-transform duration-1000 lg:w-[60%] [@media(max-width:1440px)]:[@media(max-height:1000px)]:text-body4 [@media(min-width:1441px)]:text-body2',
+                    'text-balance text-body3 text-midnightGreen-200 transition-transform duration-1000 lg:w-[60%] [@media(max-width:1540px)]:[@media(max-height:1000px)]:text-body4 [@media(min-width:1541px)]:text-body2',
                     fadeOut && 'translate-y-[-120%]',
                   )}
                 >
@@ -116,13 +116,13 @@ export const ProductSection = ({
                 direction={properties.animationDirection}
                 startIndex={properties.animationStartIndex}
                 endIndex={properties.animationEndIndex}
-                className="bottom-0 right-0 top-1/2 z-0 lg:absolute lg:max-w-[45%] lg:-translate-y-1/2 lg:[@media(max-width:1440px)]:[@media(max-height:1000px)]:translate-y-[-30%] lg:[@media(min-height:1300px)]:-translate-y-full [@media(min-width:1001px)]:[@media(min-height:800px)]:[@media(max-height:1100px)]:translate-y-[-40%]"
+                className="bottom-0 right-0 top-1/2 z-0 lg:absolute lg:max-w-[45%] lg:-translate-y-1/2 lg:[@media(max-width:1540px)]:[@media(max-height:1000px)]:translate-y-[-30%] lg:[@media(min-height:1300px)]:-translate-y-full [@media(min-width:1001px)]:[@media(min-height:800px)]:[@media(max-height:1100px)]:translate-y-[-40%]"
               />
             ) : (
               <img
                 src={properties.circleImage}
                 alt=""
-                className="bottom-0 right-0 top-1/2 z-0 lg:absolute lg:max-w-[45%] lg:-translate-y-1/2 lg:[@media(max-width:1440px)]:[@media(max-height:1000px)]:translate-y-[-30%] lg:[@media(min-height:1300px)]:-translate-y-full [@media(min-width:1001px)]:[@media(min-height:800px)]:[@media(max-height:1100px)]:translate-y-[-40%]"
+                className="bottom-0 right-0 top-1/2 z-0 lg:absolute lg:max-w-[45%] lg:-translate-y-1/2 lg:[@media(max-width:1540px)]:[@media(max-height:1000px)]:translate-y-[-30%] lg:[@media(min-height:1300px)]:-translate-y-full [@media(min-width:1001px)]:[@media(min-height:800px)]:[@media(max-height:1100px)]:translate-y-[-40%]"
               />
             )}
             <div className="z-1 overflow-hidden">
