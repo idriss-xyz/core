@@ -28,7 +28,7 @@ export class ContentScript {
     contentScript.subscribeToExtensionSettings();
     contentScript.subscribeToWallet();
     contentScript.subscribeToDeviceId();
-    contentScript.blockGithubSearchShortcut();
+    contentScript.blockGithubShortcuts();
   }
 
   static canRun() {
@@ -180,14 +180,14 @@ export class ContentScript {
     });
   }
 
-  blockGithubSearchShortcut() {
+  blockGithubShortcuts() {
     document.addEventListener(
       'keydown',
       (event) => {
         const activeElement = document.activeElement;
 
         if (
-          activeElement?.className === 'idriss-root' &&
+          activeElement?.classList.contains('idriss-root') &&
           window.location.hostname === 'github.com'
         ) {
           event.stopPropagation();
