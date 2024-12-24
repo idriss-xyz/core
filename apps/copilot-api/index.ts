@@ -9,6 +9,7 @@ import authRoutes from './routes/auth'
 import defaultRoutes from './routes'
 import subscriptionsRoutes from './routes/subscribtions'
 import {getSigningKey} from "./services/subscriptionManager";
+import { createConfig } from '@lifi/sdk'
 
 dotenv.config();
 
@@ -81,6 +82,12 @@ app.post(
 app.use('/auth', authRoutes)
 app.use('/subscriptions', subscriptionsRoutes)
 app.use('/', defaultRoutes)
+
+// TODO: Replace for production and check positioning
+createConfig({
+  integrator: 'IDRISS',
+  apiKey: 'OUR_API_KEY'
+})
 
 
 server.listen(PORT, () => {
