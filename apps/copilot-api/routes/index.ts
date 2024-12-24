@@ -3,6 +3,7 @@ import {throwInternalError} from "../middleware/error.middleware";
 import {subscribeAddress, unsubscribeAddress} from "../services/subscriptionManager";
 import connectedClients from '../index'
 import {verifyToken} from "../middleware/auth.middleware";
+import { getQuote } from "@lifi/sdk";
 
 const router = express.Router();
 
@@ -90,4 +91,54 @@ router.get('/test-swap', async (req, res) => {
     }
 })
 
+router.post('/get-quote', verifyToken(), async (req, res) => {
+  const {
+    fromAddress,
+    originChain,
+    destinationChain,
+    originToken,
+    destinationToken,
+    amount,
+  } = req.body;
+
+  // Validate required parameters
+  if (
+    !originChain ||
+    !destinationChain ||
+    !originToken ||
+    !destinationToken ||
+    !amount
+  ) {
+    res.status(400).json({
+      success: false,
+      message: "Missing required parameters",
+    });
+  }
+
+  try {
+    const quote = await getQuote({
+      fromAddress,
+      fromChain: originChain,
+      toChain: destinationChain,
+      fromToken: originToken,
+      toToken: destinationToken,
+      fromAmount: amount,
+    });
+
+    const quoteResult = {
+      success: true,
+      estimate: quote.estimate,
+      type: quote.type, // for debugging purposes
+      tool: quote.tool, // for debugging purposes
+      includedSteps: quote.includedSteps, // for debugging purposes
+      transactionData: quote.transactionRequest,
+    };
+
+    res.status(200).json(quoteResult);
+
+  } catch (err) {
+    throwInternalError(res, 'Error getting quote.', err)
+  }
+
+});
 export default router;
