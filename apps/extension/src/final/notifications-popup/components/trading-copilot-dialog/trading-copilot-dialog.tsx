@@ -119,7 +119,7 @@ const TradingCopilotDialogContent = ({
           </>
         }
       >
-        Confirm transfer in your wallet.
+        Confirm swap in your wallet.
       </IdrissSend.Loading>
     );
   }
@@ -128,7 +128,7 @@ const TradingCopilotDialogContent = ({
     return (
       <IdrissSend.Success
         className="p-5"
-        heading="Exchange completed"
+        heading="Swap completed"
         onConfirm={closeDialog}
         chainId={exchanger.quoteData.transactionData.chainId}
         transactionHash={exchanger.transactionData.transactionHash}
@@ -273,7 +273,7 @@ const TradingCopilotTradeValue = ({ wallet, dialog }: TradeValueProperties) => {
 
   const quotePayload = {
     amount: amountInWei,
-    destinationChain: 8453,
+    destinationChain: CHAIN[dialog.tokenOut.network].id,
     fromAddress: wallet.account,
     originToken: dialog.tokenIn.address,
     originChain: CHAIN[dialog.tokenIn.network].id,

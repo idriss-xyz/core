@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import { formatEther, parseEther } from 'viem';
-// import { createSiweMessage } from 'viem/siwe';
 
 import { Wallet, CHAIN } from 'shared/web3';
 import { useCommandMutation } from 'shared/messaging';
@@ -38,7 +37,7 @@ export const useExchanger = ({ wallet }: Properties) => {
 
       const quotePayload = {
         amount: amountInWei,
-        destinationChain: 8453,
+        destinationChain: CHAIN[dialog.tokenOut.network].id,
         fromAddress: wallet.account,
         destinationToken: dialog.tokenIn.address,
         originChain: CHAIN[dialog.tokenIn.network].id,
@@ -46,15 +45,6 @@ export const useExchanger = ({ wallet }: Properties) => {
       };
 
       const quoteData = await handleQuoteQuery(quotePayload);
-
-      // const siweMessage = createSiweMessage({
-      //   version: '1',
-      //   nonce: 'foobarbaz',
-      //   domain: 'idriss.xyz',
-      //   address: wallet.account,
-      //   uri: 'https://idriss.xyz/',
-      //   chainId: quoteData.transactionData.chainId,
-      // });
 
       const transactionData = {
         gas: quoteData.estimate.gasCosts[0]
