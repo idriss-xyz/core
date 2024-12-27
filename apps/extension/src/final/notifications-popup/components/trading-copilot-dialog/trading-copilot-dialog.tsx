@@ -17,7 +17,7 @@ import {
   GetQuoteCommand,
   useExchanger,
 } from 'application/trading-copilot';
-import { getFormattedTimeDifference } from 'shared/utils';
+import { TimeDifferenceCounter } from 'shared/utils';
 import { CHAIN, roundToSignificantFigures } from 'shared/web3';
 import { IdrissSend } from 'shared/idriss';
 
@@ -171,7 +171,7 @@ const TradingCopilotDialogContent = ({
             ) : null}
           </p>
           <p className="text-body6 text-mint-700">
-            {getFormattedTimeDifference(dialog.timestamp)} ago
+            <TimeDifferenceCounter timestamp={dialog.timestamp} text="ago" />
           </p>
         </div>
       </div>

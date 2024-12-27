@@ -44,7 +44,7 @@ export const Success = ({
         View on explorer
       </Link>
       <Button
-        className="mt-6 w-full"
+        className="mt-6 w-full uppercase"
         intent="negative"
         size="medium"
         onClick={onConfirm}

@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+
 /**
  * Returns the difference in days between the given date and today.
  *
@@ -28,16 +30,18 @@ export const getDifferenceInDays = (dateInMs: number) => {
  * - For days: "1 day 20 hrs 30 mins"
  * - For hours: "20 hrs 30 mins"
  * - For minutes: "30 mins"
+ * - For seconds (only if under 1 min): "30 secs"
  */
 export const getFormattedTimeDifference = (isoTimestamp: string) => {
   const currentDate = new Date();
   const targetDate = new Date(isoTimestamp);
   const differenceInMs = targetDate.getTime() - currentDate.getTime();
 
-  const totalMinutes = Math.abs(Math.floor(differenceInMs / (1000 * 60)));
-  const days = Math.floor(totalMinutes / (60 * 24));
-  const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
-  const minutes = totalMinutes % 60;
+  const totalSeconds = Math.abs(Math.floor(differenceInMs / 1000));
+  const days = Math.floor(totalSeconds / (60 * 60 * 24));
+  const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
+  const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+  const seconds = totalSeconds % 60;
 
   let result = '';
 
@@ -49,9 +53,39 @@ export const getFormattedTimeDifference = (isoTimestamp: string) => {
     result += `${hours} hrs `;
   }
 
-  result += `${minutes} mins`;
+  if (minutes > 0 || days > 0) {
+    result += `${minutes} ${minutes > 1 ? 'mins' : 'min'}`;
+  }
+
+  if (minutes < 1 && hours < 1 && days < 1) {
+    result += `${seconds} ${seconds > 1 ? 'secs' : 'sec'}`;
+  }
 
   return result.trim();
+};
+
+export const TimeDifferenceCounter = ({
+  timestamp,
+  text,
+}: {
+  timestamp: string;
+  text: string;
+}) => {
+  const [timeDifference, setTimeDifference] = useState(
+    getFormattedTimeDifference(timestamp),
+  );
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeDifference(getFormattedTimeDifference(timestamp));
+    }, 1000);
+
+    return () => {
+      return clearInterval(interval);
+    };
+  }, [timestamp]);
+
+  return text ? `${timeDifference} ${text}` : timeDifference;
 };
 
 /**

@@ -69,7 +69,7 @@ export const SubscriptionForm = ({ onSubmit }: Properties) => {
         htmlFor="subscriptionDetails"
         className="block text-label4 text-neutralGreen-700"
       >
-        Subscribe to Wallet
+        Subscribe to wallet
       </label>
       <Controller
         control={form.control}

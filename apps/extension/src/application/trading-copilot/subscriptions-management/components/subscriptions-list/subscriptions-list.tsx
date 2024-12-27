@@ -53,7 +53,7 @@ export const SubscriptionsList = ({
   return (
     <div className={className}>
       <p className="mb-1 block text-label4 text-neutralGreen-700">
-        Your Subscriptions
+        Your subscriptions
       </p>
       {subscriptionsListBody}
     </div>

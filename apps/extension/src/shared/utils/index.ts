@@ -7,6 +7,7 @@ export {
 export {
   getDifferenceInDays,
   getFormattedTimeDifference,
+  TimeDifferenceCounter,
   getEndsInLabel,
 } from './date-utils';
 export { reverseObject, createLookup } from './objects';
