@@ -6,7 +6,6 @@ export {
 
 export {
   getDifferenceInDays,
-  getFormattedTimeDifference,
   TimeDifferenceCounter,
   getEndsInLabel,
 } from './date-utils';
