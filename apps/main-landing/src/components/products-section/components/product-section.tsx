@@ -91,7 +91,7 @@ export const ProductSection = ({
         >
           <div
             className={classes(
-              'flex flex-col items-start gap-[64px]',
+              'flex flex-col items-start gap-[64px] px-safe',
               'md:gap-10',
               'lg:absolute lg:left-0 lg:top-0 lg:h-screen lg:w-screen lg:pt-10 lg:will-change-[margin-left]',
               '2xl:gap-6',

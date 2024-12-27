@@ -17,7 +17,7 @@ import { Socials } from './socials';
 export const Mobile = () => {
   return (
     <Dialog
-      className="fixed inset-x-4 bottom-3 top-[76px] flex flex-col rounded-[36px] border border-[#5FEB3C] bg-white/50 px-4 py-6 text-neutralGreen-900 backdrop-blur-[45px]" // top-[76px] is 64px height of navbar + 12px spacing, ideally it should be ref attached to nav to read component height in case it changes in future
+      className="fixed inset-x-4 bottom-3 top-[76px] px-safe" // top-[76px] is 64px height of navbar + 12px spacing, ideally it should be ref attached to nav to read component height in case it changes in future
       trigger={({ isOpened }) => {
         return (
           <IconButton
@@ -39,67 +39,69 @@ export const Mobile = () => {
               <Dialog.Title>Website navigation</Dialog.Title>
             </VisuallyHidden>
 
-            <NavigationMenu.Root className="flex h-full">
-              <NavigationMenu.List className="flex h-full flex-col justify-between">
-                <div className="space-y-6">
-                  <div>
-                    <NavigationMenu.Item>
-                      <NavigationMenu.Link asChild>
-                        <span>
-                          <Link href="/#" passHref legacyBehavior>
-                            <Button
-                              intent="tertiary"
-                              size="large"
-                              onClick={close}
-                              asLink
-                            >
-                              APPS
-                            </Button>
-                          </Link>
-                        </span>
-                      </NavigationMenu.Link>
-                    </NavigationMenu.Item>
-                    <Section
-                      className="px-5"
-                      items={APPS_SECTION_NAVIGATION_ITEMS}
-                      onItemClick={close}
-                    />
-                  </div>
+            <div className="flex size-full flex-col overflow-auto rounded-[36px] border border-[#5FEB3C] bg-white/50 px-4 py-6 text-neutralGreen-900 backdrop-blur-[45px]">
+              <NavigationMenu.Root className="flex h-full">
+                <NavigationMenu.List className="flex h-full flex-col justify-between">
+                  <div className="space-y-6">
+                    <div>
+                      <NavigationMenu.Item>
+                        <NavigationMenu.Link asChild>
+                          <span>
+                            <Link href="/#" passHref legacyBehavior>
+                              <Button
+                                intent="tertiary"
+                                size="large"
+                                onClick={close}
+                                asLink
+                              >
+                                APPS
+                              </Button>
+                            </Link>
+                          </span>
+                        </NavigationMenu.Link>
+                      </NavigationMenu.Item>
+                      <Section
+                        className="px-5"
+                        items={APPS_SECTION_NAVIGATION_ITEMS}
+                        onItemClick={close}
+                      />
+                    </div>
 
-                  <NavigationMenu.Link asChild>
-                    <span>
-                      <Link href={INTERNAL_LINK.DAO} passHref legacyBehavior>
+                    <NavigationMenu.Link asChild>
+                      <span>
+                        <Link href={INTERNAL_LINK.DAO} passHref legacyBehavior>
+                          <Button
+                            intent="tertiary"
+                            size="large"
+                            onClick={close}
+                            asLink
+                          >
+                            DAO
+                          </Button>
+                        </Link>
+                      </span>
+                    </NavigationMenu.Link>
+
+                    <NavigationMenu.Link asChild>
+                      <span>
                         <Button
                           intent="tertiary"
                           size="large"
                           onClick={close}
+                          href={DOCUMENTATION_LINK}
+                          isExternal
                           asLink
                         >
-                          DAO
+                          DOCS
                         </Button>
-                      </Link>
-                    </span>
-                  </NavigationMenu.Link>
+                      </span>
+                    </NavigationMenu.Link>
+                  </div>
 
-                  <NavigationMenu.Link asChild>
-                    <span>
-                      <Button
-                        intent="tertiary"
-                        size="large"
-                        onClick={close}
-                        href={DOCUMENTATION_LINK}
-                        isExternal
-                        asLink
-                      >
-                        DOCS
-                      </Button>
-                    </span>
-                  </NavigationMenu.Link>
-                </div>
-
-                <Socials className="mt-auto" />
-              </NavigationMenu.List>
-            </NavigationMenu.Root>
+                  <Socials className="mt-auto" />
+                </NavigationMenu.List>
+              </NavigationMenu.Root>
+            </div>
           </>
         );
       }}

@@ -1,0 +1,116 @@
+name: CI
+
+on:
+  pull_request:
+
+jobs:
+  install-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/iron'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+  type-check:
+    runs-on: ubuntu-latest
+    needs: install-dependencies
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/iron'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      #  TODO: replace with turbo command like prepare or smth?
+      - name: Build tailwind
+        run: pnpm --filter=@idriss-xyz/extension build:tailwind
+
+      - name: Build main landing
+        run: pnpm --filter=@idriss-xyz/main-landing build
+
+
+      - name: Run type-check
+        run: pnpm type-check
+
+  lint:
+    runs-on: ubuntu-latest
+    needs: install-dependencies
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/iron'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      #  TODO: replace with turbo command like prepare or smth?
+      - name: Build tailwind
+        run: pnpm --filter=@idriss-xyz/extension build:tailwind
+
+      - name: Run lint
+        run: pnpm lint
+
+      - name: Run format
+        run: pnpm format
+
+
+  circular-dependencies:
+    runs-on: ubuntu-latest
+    needs: install-dependencies
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/iron'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      #  TODO: replace with turbo command like prepare or smth?
+      - name: Build tailwind
+        run: pnpm --filter=@idriss-xyz/extension build:tailwind
+
+      - name: Run circular dependencies check
+        run: pnpm circular-dependencies
+
+  unused-exports:
+    runs-on: ubuntu-latest
+    needs: install-dependencies
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/iron'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run circular dependencies check
+        run: pnpm unused-exports

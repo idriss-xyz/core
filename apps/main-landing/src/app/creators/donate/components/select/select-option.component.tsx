@@ -5,9 +5,13 @@ import { SelectOptionProperties } from './select.types';
 
 export const SelectOption = forwardRef(
   (
-    { option, className }: SelectOptionProperties<unknown>,
+    { option, className, selected }: SelectOptionProperties<unknown>,
     reference: ForwardedRef<HTMLDivElement>,
   ) => {
+    const selectedClassName = selected
+      ? 'after:absolute after:-top-1.5 after:right-0 after:h-[calc(2.625rem_-_6px)] after:w-px after:bg-gray-200'
+      : '';
+
     return (
       <div
         ref={reference}
@@ -17,7 +21,7 @@ export const SelectOption = forwardRef(
           className,
         )}
       >
-        <div className="relative mr-1 pr-2 after:absolute after:-top-1.5 after:right-0 after:h-[calc(2.625rem_-_6px)] after:w-px after:bg-gray-200">
+        <div className={classes('relative mr-1 pr-2', selectedClassName)}>
           {option.prefix}
         </div>
         <div className="whitespace-nowrap text-neutralGreen-900">

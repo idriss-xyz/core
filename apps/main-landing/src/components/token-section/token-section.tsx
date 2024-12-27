@@ -1,7 +1,6 @@
 'use client';
 
 import { Button } from '@idriss-xyz/ui/button';
-import Image from 'next/image';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import dynamic from 'next/dynamic';
 import { Link } from '@idriss-xyz/ui/link';
@@ -33,7 +32,7 @@ const TokenSaleCountdown = dynamic(
 
 export const TokenSection = () => {
   return (
-    <div className="relative z-1" id="dao">
+    <div className="relative z-1 px-safe" id="dao">
       <div
         className={classes(
           'container flex flex-col items-center justify-center py-10',
@@ -131,9 +130,9 @@ export const TokenSection = () => {
               gradientStartColor="#5FEB3C"
               gradientStopColor="rgba(145,206,154,0.50)"
             />
-            <Image
+            <img
               priority
-              src={idrissCoin}
+              src={idrissCoin.src}
               alt="IDRISS coin"
               className={classes(
                 'size-[164px]',
@@ -203,8 +202,8 @@ export const TokenSection = () => {
               </div>
             </div>
           </div>
-          <Image
-            src={background}
+          <img
+            src={background.src}
             className="pointer-events-none absolute left-0 top-0 -z-1 size-full overflow-visible object-cover"
             alt=""
           />

@@ -1,5 +1,4 @@
 import { Button } from '@idriss-xyz/ui/button';
-import Image from 'next/image';
 import {
   CHROME_EXTENSION_LINK,
   CREATORS_LINK,
@@ -21,9 +20,9 @@ export const SuperpowersSection = () => {
     <section className="relative bg-mint-100" id="apps">
       <TopWave className="absolute left-0 top-0 z-0 w-full translate-y-[-12%] text-white" />
       <div className="relative overflow-hidden">
-        <Image
+        <img
           priority
-          src={stackedHex}
+          src={stackedHex.src}
           alt=""
           className={classes(
             'absolute hidden',
@@ -31,8 +30,9 @@ export const SuperpowersSection = () => {
             'lg:bottom-0 lg:right-0 lg:translate-x-[10%] lg:translate-y-[10%]',
           )}
         />
+        <div className="z-1 px-safe">
 
-        <div className="container relative z-1 pb-28 lg:flex lg:flex-col lg:items-center 4xl:pb-32">
+        <div className="container relative pb-28 lg:flex lg:flex-col lg:items-center 4xl:pb-32">
           <div className="mb-10 flex w-full flex-col items-center gap-4 lg:mb-20">
             <h2
               className={classes(
@@ -124,6 +124,7 @@ export const SuperpowersSection = () => {
               }
             />
           </div>
+        </div>
         </div>
       </div>
     </section>

@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
-import { encodeFunctionData, PublicClient, WalletClient } from 'viem';
-import { waitForTransactionReceipt } from 'viem/actions';
+import { decodeFunctionResult, encodeFunctionData, WalletClient } from 'viem';
+import { call, estimateGas, waitForTransactionReceipt } from 'viem/actions';
 
 import {
   CHAIN_TO_IDRISS_TIPPING_ADDRESS,
@@ -15,7 +15,6 @@ interface Properties {
   tokenAddress: Hex;
   chainId: number;
   walletClient: WalletClient;
-  publicClient: PublicClient;
   tokensToSend: bigint;
   recipientAddress: Hex;
   message: string;
@@ -26,7 +25,6 @@ export const useErc20Transaction = () => {
     mutationFn: async ({
       tokenAddress,
       walletClient,
-      publicClient,
       chainId,
       tokensToSend,
       recipientAddress,
@@ -46,29 +44,47 @@ export const useErc20Transaction = () => {
         functionName: 'allowance',
         args: [account, idrissTippingAddress],
       } as const;
-      const allowance = await publicClient.readContract({
-        ...allowanceData,
-        address: tokenAddress,
+
+      const encodedAllowanceData = encodeFunctionData(allowanceData);
+
+      const allowanceRaw = await call(walletClient, {
+        account,
+        to: tokenAddress,
+        data: encodedAllowanceData,
       });
 
-      if (allowance < tokensToSend) {
+      if (allowanceRaw.data === undefined) {
+        throw new Error('Allowance data is not defined');
+      }
+
+      const allowanceNumber = decodeFunctionResult({
+        abi: ERC20_ABI,
+        functionName: 'allowance',
+        data: allowanceRaw.data,
+      });
+
+      if (allowanceNumber < tokensToSend) {
         const approveData = {
           abi: ERC20_ABI,
           functionName: 'approve',
           args: [idrissTippingAddress, tokensToSend],
         } as const;
-        const gas = await publicClient.estimateContractGas({
-          ...approveData,
-          address: tokenAddress,
-          account,
-        });
 
         const encodedData = encodeFunctionData(approveData);
 
+        const gas = await estimateGas(walletClient, {
+          account,
+          to: tokenAddress,
+          data: encodedData,
+        }).catch((error) => {
+          console.error('Error estimating gas:', error.message);
+          throw error;
+        });
+
         const transactionHash = await walletClient.sendTransaction({
           account,
-          chain: getChainById(chainId),
           to: tokenAddress,
+          chain: getChainById(chainId),
           data: encodedData,
           gas,
         });
@@ -88,13 +104,13 @@ export const useErc20Transaction = () => {
         args: [recipientAddress, tokensToSend, tokenAddress, message],
       } as const;
 
-      const gas = await publicClient.estimateContractGas({
-        ...sendTokenToData,
-        address: idrissTippingAddress,
-        account,
-      });
-
       const data = encodeFunctionData(sendTokenToData);
+
+      const gas = await estimateGas(walletClient, {
+        account,
+        to: idrissTippingAddress,
+        data: data,
+      });
 
       const transactionHash = await walletClient.sendTransaction({
         account,

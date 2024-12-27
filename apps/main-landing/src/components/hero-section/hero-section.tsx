@@ -1,6 +1,5 @@
 'use client';
 import { Button } from '@idriss-xyz/ui/button';
-import Image from 'next/image';
 import { classes } from '@idriss-xyz/ui/utils';
 
 import { backgroundLines } from '@/assets';
@@ -18,9 +17,8 @@ export const HeroSection = () => {
         'lg:bg-[radial-gradient(222.94%_366.93%_at_16.62%_20%,_#E7F5E7_0%,_#76C282_100%)] lg:pb-[80px] lg:pt-[200px]',
       )}
     >
-      <Image
-        priority
-        src={backgroundLines}
+      <img
+        src={backgroundLines.src}
         className="pointer-events-none absolute top-0 hidden opacity-40 lg:block"
         alt=""
       />
@@ -44,11 +42,8 @@ export const HeroSection = () => {
       >
         EXPLORE
       </Button>
-      <Image
-        priority
-        blurDataURL={tokensFlowLowResolution.src}
-        placeholder="blur"
-        src={tokensFlow}
+      <img
+        src={tokensFlow.src}
         className={classes(
           'pointer-events-none z-0 mt-[-40%] w-full min-w-[600px]',
           '[@media(max-width:768px)]:[@media(min-width:470px)]:mt-[-30%]',
@@ -60,15 +55,15 @@ export const HeroSection = () => {
         )}
         alt=""
       />
-      <CollaborationsShowcase
-        className={classes(
+      <div className="mt-[-10%] px-safe md:mb-10 lg:mb-14 lg:mt-[-10%]">
+        <CollaborationsShowcase className={classes(
           'container mt-[-6%] text-center md:mb-10 lg:mb-14',
           'md:mt-[-5%]',
           'lg:mt-[-14%]',
           '3xl:mt-[-12%]',
           '4xl:mt-[-9%]',
-        )}
-      />
+        )} />
+      </div>
     </header>
   );
 };
