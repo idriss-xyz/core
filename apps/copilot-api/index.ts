@@ -86,7 +86,7 @@ app.use('/', defaultRoutes)
 // TODO: Replace for production and check positioning
 createConfig({
   integrator: 'IDRISS',
-  apiKey: 'OUR_API_KEY'
+  // apiKey: 'OUR_API_KEY'
 })
 
 
