@@ -32,7 +32,7 @@ export const getDifferenceInDays = (dateInMs: number) => {
  * - For minutes: "30 mins"
  * - For seconds (only if under 1 min): "30 secs"
  */
-export const getFormattedTimeDifference = (isoTimestamp: string) => {
+const getFormattedTimeDifference = (isoTimestamp: string) => {
   const currentDate = new Date();
   const targetDate = new Date(isoTimestamp);
   const differenceInMs = targetDate.getTime() - currentDate.getTime();
