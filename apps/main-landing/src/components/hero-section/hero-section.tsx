@@ -18,6 +18,7 @@ export const HeroSection = () => {
       )}
     >
       <img
+        data-priority="true"
         src={backgroundLines.src}
         className="pointer-events-none absolute top-0 hidden opacity-40 lg:block"
         alt=""
@@ -43,6 +44,9 @@ export const HeroSection = () => {
         EXPLORE
       </Button>
       <img
+        data-priority="true"
+        data-blurdataul={tokensFlowLowResolution.src}
+        data-placeholder="blur"
         src={tokensFlow.src}
         className={classes(
           'pointer-events-none z-0 mt-[-40%] w-full min-w-[600px]',
@@ -55,17 +59,17 @@ export const HeroSection = () => {
         )}
         alt=""
       />
-      <div className="mt-[-10%] px-safe md:mb-10 lg:mb-14 lg:mt-[-10%]">
-        <CollaborationsShowcase
-          className={classes(
+      <div className={classes(
             'container mt-[-6%] text-center md:mb-10 lg:mb-14',
             'md:mt-[-5%]',
             'lg:mt-[-14%]',
             '3xl:mt-[-12%]',
             '4xl:mt-[-9%]',
-          )}
+          )}>
+        <CollaborationsShowcase
+          className="container text-center"
         />
-      </div>
+        </div>
     </header>
   );
 };
