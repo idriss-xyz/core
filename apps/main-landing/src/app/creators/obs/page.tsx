@@ -171,15 +171,13 @@ export default function Obs() {
   const shouldDisplayDonation = isDisplayingDonation && currentDonation;
 
   return (
-    <div className="h-screen w-full bg-black">
-      <div className="h-screen w-full bg-transparent">
-        {shouldDisplayDonation && (
-          <DonationNotification
-            key={currentDonation.txnHash}
-            {...currentDonation}
-          />
-        )}
-      </div>
+    <div className="h-screen w-full bg-transparent">
+      {shouldDisplayDonation && (
+        <DonationNotification
+          key={currentDonation.txnHash}
+          {...currentDonation}
+        />
+      )}
     </div>
   );
 }

@@ -92,6 +92,8 @@ export const TIP_MESSAGE_EVENT_ABI: Record<string, string> = {
     'event TipMessage(address recipientAddress, string message, address sender, address tokenAddress)',
   polygon:
     'event TipMessage(address recipientAddress, string message, address sender, address tokenAddress)',
+  optimism:
+    'event TipMessage(address recipientAddress, string message, address sender, address tokenAddress, uint256 fee)',
   aleph:
     'event TipMessage(address recipientAddress, string message, address sender, address tokenAddress, uint256 amount, uint256 fee)',
   mantle:

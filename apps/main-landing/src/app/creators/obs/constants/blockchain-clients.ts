@@ -27,6 +27,11 @@ export const clientMantle = createPublicClient({
   transport: http(),
 });
 
+export const clientOptimism = createPublicClient({
+  chain: CHAIN.OPTIMISM,
+  transport: http(),
+});
+
 export const clients = [
   {
     chain: CHAIN.BASE.id,
@@ -42,6 +47,11 @@ export const clients = [
     chain: CHAIN.POLYGON.id,
     client: clientPolygon,
     name: CHAIN.POLYGON.name.toLowerCase(),
+  },
+  {
+    chain: CHAIN.OPTIMISM.id,
+    client: clientOptimism,
+    name: CHAIN.OPTIMISM.shortName.toLowerCase(),
   },
   {
     chain: CHAIN.ALEPH.id,
