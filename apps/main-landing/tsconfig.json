@@ -2,6 +2,7 @@
   "extends": "@idriss-xyz/typescript-config/next",
   "compilerOptions": {
     "incremental": true,
+    "target": "ES2020",
     "plugins": [
       {
         "name": "next"
