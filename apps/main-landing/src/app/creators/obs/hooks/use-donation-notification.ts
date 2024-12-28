@@ -1,31 +1,33 @@
 import { useState, useEffect } from 'react';
 
 export const useDonationNotification = (
-   audio: HTMLAudioElement,
-   amount: string,
-   duration: number
+  audio: HTMLAudioElement,
+  amount: string,
+  duration: number,
 ) => {
-   const [showNotification, setShowNotification] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
 
-   useEffect(() => {
-      if (amount) {
-         audio.play().catch((error) => {
-            console.error('Audio playback failed:', error);
-         });
+  useEffect(() => {
+    if (amount) {
+      audio.play().catch((error) => {
+        console.error('Audio playback failed:', error);
+      });
 
-         setShowNotification(true);
+      setShowNotification(true);
 
-         const timeout = setTimeout(() => {
-            setShowNotification(false);
-         }, duration);
-
-         return () => {return clearTimeout(timeout)};
-      }
+      const timeout = setTimeout(() => {
+        setShowNotification(false);
+      }, duration);
 
       return () => {
-         setShowNotification(false);
+        return clearTimeout(timeout);
       };
-   }, [amount, audio, duration]);
+    }
 
-   return { showNotification };
+    return () => {
+      setShowNotification(false);
+    };
+  }, [amount, audio, duration]);
+
+  return { showNotification };
 };
