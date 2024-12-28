@@ -1,10 +1,12 @@
 'use client';
 
 import { useMemo, type CSSProperties } from 'react';
+
 import { IDRISS_ICON_CIRCLE, NOTIFICATION_SOUND } from '@/assets';
+
 import { useDonationNotification } from '../hooks/use-donation-notification';
 
-export type DonationNotificationProps = {
+export type DonationNotificationProperties = {
   txnHash: string;
   donor: string;
   amount: string;
@@ -15,7 +17,7 @@ export type DonationNotificationProps = {
   style?: CSSProperties;
 };
 
-const NOTIFICATION_DISPLAY_DURATION = 10000;
+const NOTIFICATION_DISPLAY_DURATION = 10_000;
 
 const DonationNotification = ({
   txnHash,
@@ -26,11 +28,10 @@ const DonationNotification = ({
   customIcon = IDRISS_ICON_CIRCLE.src,
   notificationSound = NOTIFICATION_SOUND,
   style = {},
-}: DonationNotificationProps) => {
-  const audio = useMemo(
-    () => new Audio(notificationSound),
-    [notificationSound],
-  );
+}: DonationNotificationProperties) => {
+  const audio = useMemo(() => {
+    return new Audio(notificationSound);
+  }, [notificationSound]);
 
   const { showNotification } = useDonationNotification(
     audio,
@@ -49,7 +50,7 @@ const DonationNotification = ({
         showNotification ? 'opacity-100' : 'opacity-0'
       }`}
     >
-      <div className="flex h-14 w-14 items-center justify-center">
+      <div className="flex size-14 items-center justify-center">
         <img
           className="h-14 w-auto rounded-full"
           src={customIcon}

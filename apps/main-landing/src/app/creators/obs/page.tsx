@@ -2,39 +2,40 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-
-import DonationNotification, {
-  type DonationNotificationProps,
-} from './components/DonationNotification';
 import {
   type AbiEvent,
   decodeFunctionData,
   type Hex,
   parseAbiItem,
 } from 'viem';
+
 import {
   CHAIN_TO_IDRISS_TIPPING_ADDRESS,
   NATIVE_COIN_ADDRESS,
   TIPPING_ABI,
 } from '../donate/constants';
-import { clients } from './constants/blockchainClients';
+
+import DonationNotification, {
+  type DonationNotificationProperties,
+} from './components/donation-notification';
+import { clients } from './constants/blockchain-clients';
 import {
   calculateDollar,
   resolveEnsName,
   TIP_MESSAGE_EVENT_ABI,
 } from './utils';
 
-const DONATION_DISPLAY_DURATION = 11000;
+const DONATION_DISPLAY_DURATION = 11_000;
 const BLOCK_LOOKBACK_RANGE = 5n;
 const FETCH_INTERVAL = 5000;
 
 export default function Obs() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const address = searchParams.get('address') as Hex;
+  const searchParameters = useSearchParams();
+  const address = searchParameters.get('address') as Hex;
 
   const [donationsQueue, setDonationsQueue] = useState<
-    DonationNotificationProps[]
+    DonationNotificationProperties[]
   >([]);
   const [isDisplayingDonation, setIsDisplayingDonation] = useState(false);
 
@@ -48,23 +49,28 @@ export default function Obs() {
     setIsDisplayingDonation(true);
 
     setTimeout(() => {
-      setDonationsQueue((prev) => prev.slice(1));
+      setDonationsQueue((previous) => {
+        return previous.slice(1);
+      });
       setIsDisplayingDonation(false);
     }, DONATION_DISPLAY_DURATION);
   }, [setDonationsQueue]);
 
-  const addDonation = useCallback((donation: DonationNotificationProps) => {
-    setDonationsQueue((prev) => {
-      if (
-        prev.some(
-          (existingDonation) => existingDonation.txnHash === donation.txnHash,
-        )
-      ) {
-        return prev;
-      }
-      return [...prev, donation];
-    });
-  }, []);
+  const addDonation = useCallback(
+    (donation: DonationNotificationProperties) => {
+      setDonationsQueue((previous) => {
+        if (
+          previous.some((existingDonation) => {
+            return existingDonation.txnHash === donation.txnHash;
+          })
+        ) {
+          return previous;
+        }
+        return [...previous, donation];
+      });
+    },
+    [],
+  );
 
   const fetchTipMessageLogs = useCallback(async () => {
     if (!address) return;
@@ -73,8 +79,7 @@ export default function Obs() {
       try {
         const latestBlock = await client.getBlockNumber();
 
-        const eventSignature =
-          TIP_MESSAGE_EVENT_ABI[name as keyof typeof TIP_MESSAGE_EVENT_ABI];
+        const eventSignature = TIP_MESSAGE_EVENT_ABI[name];
 
         if (!eventSignature) {
           console.warn(`Unsupported event signature for chain: ${name}`);
@@ -124,10 +129,10 @@ export default function Obs() {
             continue;
           }
 
-          let resolved = await resolveEnsName(txn.from);
+          const resolved = await resolveEnsName(txn.from);
 
           const senderIdentifier =
-            resolved || `${txn.from.slice(0, 4)}...${txn.from.slice(-2)}`;
+            resolved ?? `${txn.from.slice(0, 4)}...${txn.from.slice(-2)}`;
 
           const amountInDollar = await calculateDollar(
             tokenAddress as Hex,
@@ -140,7 +145,7 @@ export default function Obs() {
             txnHash: log.transactionHash,
             donor: senderIdentifier,
             amount: amountInDollar,
-            message: message!,
+            message: message ?? '',
           });
         }
       } catch (error) {
@@ -151,7 +156,9 @@ export default function Obs() {
 
   useEffect(() => {
     const intervalId = setInterval(fetchTipMessageLogs, FETCH_INTERVAL);
-    return () => clearInterval(intervalId);
+    return () => {
+      return clearInterval(intervalId);
+    };
   }, [fetchTipMessageLogs]);
 
   useEffect(() => {

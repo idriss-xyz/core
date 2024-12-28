@@ -1,6 +1,8 @@
 import { type Hex } from "viem";
+
 import { CHAIN } from "../donate/constants";
-import { clientEthereum } from "./constants/blockchainClients";
+
+import { clientEthereum } from "./constants/blockchain-clients";
 
 const SELL_TOKEN_BY_NETWORK: Record<string, string> = {
    [CHAIN.BASE.name.toLowerCase()]: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',
@@ -49,11 +51,11 @@ export async function calculateDollar(
       const data = await response.json();
       amountPerDollar = data.price;
 
-      const val = Number(amount) / 10 ** decimals / amountPerDollar;
+      const value = Number(amount) / 10 ** decimals / amountPerDollar;
 
-      return Number(val.toFixed(2)).toString();
+      return Number(value.toFixed(2)).toString();
 
-   } catch (error: any) {
+   } catch (error) {
       console.error('Error in calculateDollar:', error);
       return '0';
    }

@@ -19,7 +19,7 @@ export const useDonationNotification = (
             setShowNotification(false);
          }, duration);
 
-         return () => clearTimeout(timeout);
+         return () => {return clearTimeout(timeout)};
       }
 
       return () => {
