@@ -44,7 +44,11 @@ export const Select = <T,>({
         <DropdownMenu.Trigger asChild>
           <button className="w-full">
             <SelectOptionContainer className="border border-neutral-200 bg-white text-neutralGreen-900 shadow-input focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
-              <SelectOption option={pickedOption} className="rounded-md" />
+              <SelectOption
+                option={pickedOption}
+                className="rounded-xl"
+                selected
+              />
             </SelectOptionContainer>
           </button>
         </DropdownMenu.Trigger>

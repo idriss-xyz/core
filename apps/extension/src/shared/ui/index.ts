@@ -13,6 +13,7 @@ export {
   WidgetBase,
   ScrollArea,
   LazyImage,
+  ToastWrapper,
   ErrorMessage,
   CurrencyInput,
   PulsingLoadingBar,

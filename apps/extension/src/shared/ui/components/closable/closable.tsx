@@ -7,6 +7,7 @@ import { Backdrop } from '../backdrop';
 type Properties = {
   children: ReactNode;
   className?: string;
+  hideCloseButton?: boolean;
   closeButtonClassName?: string;
   closeButtonIconClassName?: string;
   closeOnClickAway?: boolean;
@@ -19,6 +20,7 @@ export const Closable = ({
   children,
   className,
   onClose,
+  hideCloseButton = false,
   closeButtonClassName,
   closeButtonIconClassName,
   onClickInside,
@@ -41,18 +43,20 @@ export const Closable = ({
         onClick={onClickInside}
       >
         {children}
-        <IconButton
-          onClick={onClose}
-          className={classes(
-            'absolute right-1 top-1 flex items-center justify-center bg-transparent p-0.5',
-            closeButtonClassName,
-          )}
-          iconProps={{
-            name: 'Cross2Icon',
-            size: 16,
-            className: classes('text-[#aaa]', closeButtonIconClassName),
-          }}
-        />
+        {hideCloseButton ? null : (
+          <IconButton
+            onClick={onClose}
+            className={classes(
+              'absolute right-1 top-1 flex items-center justify-center bg-transparent p-0.5',
+              closeButtonClassName,
+            )}
+            iconProps={{
+              name: 'Cross2Icon',
+              size: 16,
+              className: classes('text-[#aaa]', closeButtonIconClassName),
+            }}
+          />
+        )}
       </div>
     </>
   );

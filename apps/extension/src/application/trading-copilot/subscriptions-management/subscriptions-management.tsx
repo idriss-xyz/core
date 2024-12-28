@@ -33,7 +33,7 @@ export const SubscriptionsManagement = () => {
     <>
       <SubscriptionForm onSubmit={handleAddNewSubscription} />
       <SubscriptionsList
-        className="mt-4"
+        className="mt-6"
         subscriptions={subscriptionsQuery.data ?? []}
         subscriptionsLoading={subscriptionsQuery.isLoading}
         subscriptionsUpdatePending={

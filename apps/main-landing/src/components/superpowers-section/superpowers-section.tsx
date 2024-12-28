@@ -1,5 +1,4 @@
 import { Button } from '@idriss-xyz/ui/button';
-import Image from 'next/image';
 import {
   CHROME_EXTENSION_LINK,
   CREATORS_LINK,
@@ -19,9 +18,8 @@ export const SuperpowersSection = () => {
   return (
     <section className="relative bg-mint-100 pb-20" id="apps">
       <TopWave className="absolute left-0 top-0 z-0 w-full translate-y-[-15%] text-white" />
-      <Image
-        priority
-        src={stackedHex}
+      <img
+        src={stackedHex.src}
         alt=""
         className="absolute bottom-0 right-0 hidden translate-x-[-5%] lg:block"
       />

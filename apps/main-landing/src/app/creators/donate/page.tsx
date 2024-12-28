@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { Button } from '@idriss-xyz/ui/button';
 import { CREATORS_LINK } from '@idriss-xyz/constants';
 
@@ -16,9 +15,8 @@ export default function Donors() {
     <RainbowKitProviders>
       <TopBar />
       <main className="relative flex min-h-screen grow flex-col items-center justify-around gap-4 overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] px-2 pb-1 pt-[56px] lg:flex-row lg:items-start lg:justify-center lg:px-0">
-        <Image
-          priority
-          src={backgroundLines2}
+        <img
+          src={backgroundLines2.src}
           className="pointer-events-none absolute top-0 hidden h-full opacity-40 lg:block"
           alt=""
         />
