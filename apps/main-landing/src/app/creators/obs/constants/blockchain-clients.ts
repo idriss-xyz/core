@@ -2,7 +2,7 @@ import { createPublicClient, http } from 'viem';
 
 import { CHAIN } from '../../donate/constants';
 
-export const clientBase = createPublicClient({
+const clientBase = createPublicClient({
   chain: CHAIN.BASE,
   transport: http(),
 });
@@ -12,22 +12,22 @@ export const clientEthereum = createPublicClient({
   transport: http('https://eth.llamarpc.com'),
 });
 
-export const clientPolygon = createPublicClient({
+const clientPolygon = createPublicClient({
   chain: CHAIN.POLYGON,
   transport: http('https://polygon-rpc.com/'),
 });
 
-export const clientAleph = createPublicClient({
+const clientAleph = createPublicClient({
   chain: CHAIN.ALEPH,
   transport: http(),
 });
 
-export const clientMantle = createPublicClient({
+const clientMantle = createPublicClient({
   chain: CHAIN.MANTLE,
   transport: http(),
 });
 
-export const clientOptimism = createPublicClient({
+const clientOptimism = createPublicClient({
   chain: CHAIN.OPTIMISM,
   transport: http(),
 });

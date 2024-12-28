@@ -29,6 +29,7 @@ const DONATION_DISPLAY_DURATION = 11_000;
 const BLOCK_LOOKBACK_RANGE = 5n;
 const FETCH_INTERVAL = 5000;
 
+// ts-unused-exports:disable-next-line
 export default function Obs() {
   const router = useRouter();
   const searchParameters = useSearchParams();
