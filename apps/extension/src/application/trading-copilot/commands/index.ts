@@ -5,6 +5,8 @@ import { GetEnsInfoCommand } from './get-ens-info';
 import { GetEnsNameCommand } from './get-ens-name';
 import { GetEnsAddressCommand } from './get-ens-address';
 import { GetFarcasterAddressCommand } from './get-farcaster-address';
+import { GetQuoteCommand } from './get-quote';
+import { GetEnsBalanceCommand } from './get-ens-balance';
 import { GetSiweMessageCommand } from './get-siwe-message';
 import { VerifySiweSignatureCommand } from './verify-siwe-signature';
 
@@ -19,6 +21,8 @@ export const COMMAND_MAP = {
   [GetEnsInfoCommand.name]: GetEnsInfoCommand,
   [GetEnsNameCommand.name]: GetEnsNameCommand,
   [GetEnsAddressCommand.name]: GetEnsAddressCommand,
+  [GetQuoteCommand.name]: GetQuoteCommand,
+  [GetEnsBalanceCommand.name]: GetEnsBalanceCommand,
   [GetSiweMessageCommand.name]: GetSiweMessageCommand,
   [VerifySiweSignatureCommand.name]: VerifySiweSignatureCommand,
 };
@@ -32,3 +36,5 @@ export { GetEnsAddressCommand } from './get-ens-address';
 export { GetFarcasterAddressCommand } from './get-farcaster-address';
 export { GetSiweMessageCommand } from './get-siwe-message';
 export { VerifySiweSignatureCommand } from './verify-siwe-signature';
+export { GetEnsBalanceCommand } from './get-ens-balance';
+export { GetQuoteCommand } from './get-quote';

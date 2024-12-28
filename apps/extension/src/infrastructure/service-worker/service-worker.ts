@@ -35,7 +35,6 @@ import {
   TRADING_COPILOT_COMMAND_MAP,
   SwapData,
 } from 'application/trading-copilot';
-import { QUOTE_COMMAND_MAP } from 'src/final';
 
 import { SbtResolver } from '../../common/resolvers/SbtResolver';
 import { AddressResolver } from '../../common/resolvers/AddressResolver';
@@ -55,7 +54,6 @@ const COMMAND_MAP = {
   ...TALLY_COMMAND_MAP,
   ...FARCASTER_COMMAND_MAP,
   ...TRADING_COPILOT_COMMAND_MAP,
-  ...QUOTE_COMMAND_MAP,
 };
 
 const SERVER_URL = 'https://copilot-production-e887.up.railway.app/';
@@ -85,19 +83,30 @@ export class ServiceWorker {
     serviceWorker.watchTabChanges();
   }
 
-  async initializeSocketEvents() {
-    console.log('%c[WebSocket] Initializing connection...', 'color: #FF9900;');
+  initializeSocketEvents() {
+    this.socket.on('connect', async () => {
+      console.log(
+        '%c[WebSocket] Initializing connection...',
+        'color: #FF9900;',
+      );
+      const wallet = await ExtensionSettingsManager.getWallet();
 
-    await ExtensionSettingsManager.getWallet().then((wallet) => {
-      this.socket.on('connect', () => {
-        console.log('%c[WebSocket] Connected successfully!', 'color: #32CD32;');
+      if (wallet?.account) {
+        this.registerWithServer(wallet.account);
+      } else {
+        console.log('%c[WebSocket] User not found.', 'color: red;');
+        this.socket.disconnect();
+      }
+    });
 
-        if (wallet?.account) {
-          this.registerWithServer(wallet.account);
-        } else {
-          console.log('%c[WebSocket] User not found.', 'color: red;');
-        }
-      });
+    ExtensionSettingsManager.onWalletChange((wallet) => {
+      if (this.socket.connected) {
+        this.socket.disconnect();
+      }
+
+      if (wallet?.account) {
+        this.socket.connect();
+      }
     });
 
     this.socket.on('disconnect', () => {
@@ -109,13 +118,12 @@ export class ServiceWorker {
     });
   }
 
-  private registerWithServer(subscriberId: string) {
+  private registerWithServer(walletAddress: string) {
     console.log(
-      `%c[WebSocket] Found user with wallet ${subscriberId}`,
+      `%c[WebSocket] Found user with wallet ${walletAddress}`,
       'color: #32CD32;',
     );
-    // TODO: set subscriberId as id when we will end using test-swap
-    this.socket.emit('register', 'id1');
+    this.socket.emit('register', walletAddress);
   }
 
   createSwapNotification(swapData: SwapData) {

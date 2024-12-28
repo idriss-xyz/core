@@ -1,16 +1,12 @@
 import { SwapData } from 'application/trading-copilot';
 import { Wallet } from 'shared/web3';
 
-export interface TradingCopilotDialogFormValues {
-  amount: string;
-}
-
 export interface Properties {
   dialog: SwapData;
   closeDialog: () => void;
 }
 
-export interface TradingCopilotDialogContentProperties extends Properties {
+export interface ContentProperties extends Properties {
   userName: string;
 }
 

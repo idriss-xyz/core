@@ -5,29 +5,30 @@ import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { NumericInput } from '@idriss-xyz/ui/numeric-input';
 import { useWallet } from '@idriss-xyz/wallet-connect';
 import { formatEther, parseEther } from 'viem';
+import { useCallback } from 'react';
 
-import { Closable, Icon, LazyImage } from 'shared/ui';
-import { useCommandMutation, useCommandQuery } from 'shared/messaging';
+import { Closable, ErrorMessage, Icon, LazyImage } from 'shared/ui';
+import { useCommandQuery } from 'shared/messaging';
 import {
+  FormValues,
+  GetEnsBalanceCommand,
   GetEnsInfoCommand,
   GetEnsNameCommand,
+  GetQuoteCommand,
+  useExchanger,
 } from 'application/trading-copilot';
-import { getFormattedTimeDifference } from 'shared/utils';
+import { TimeDifferenceCounter } from 'shared/utils';
 import { CHAIN, roundToSignificantFigures } from 'shared/web3';
-
-import { GetQuoteCommand } from '../../commands/get-quote';
-import { GetEnsBalanceCommand } from '../../commands/get-ens-balance';
-import { QuotePayload } from '../../types';
+import { IdrissSend } from 'shared/idriss';
 
 import {
   Properties,
-  TradingCopilotDialogFormValues,
-  TradingCopilotDialogContentProperties,
+  ContentProperties,
   WalletBalanceProperties,
   TradeValueProperties,
 } from './trading-copilot-dialog.types';
 
-const EMPTY_FORM: TradingCopilotDialogFormValues = {
+const EMPTY_FORM: FormValues = {
   amount: '',
 };
 
@@ -44,11 +45,20 @@ export const TradingCopilotDialog = ({ dialog, closeDialog }: Properties) => {
   }
 
   return (
-    <TradingCopilotDialogContent
-      dialog={dialog}
-      closeDialog={closeDialog}
-      userName={ensNameQuery.data ?? dialog.from}
-    />
+    <Closable
+      className="fixed left-0 top-0 z-portal size-full bg-black/50"
+      hideCloseButton
+    >
+      <div className="flex size-full items-center justify-center">
+        <div className="relative flex min-h-[300px] w-[400px] flex-col justify-center gap-y-5 rounded-lg border border-black/20 bg-white p-5">
+          <TradingCopilotDialogContent
+            dialog={dialog}
+            closeDialog={closeDialog}
+            userName={ensNameQuery.data ?? dialog.from}
+          />
+        </div>
+      </div>
+    </Closable>
   );
 };
 
@@ -56,39 +66,9 @@ const TradingCopilotDialogContent = ({
   dialog,
   userName,
   closeDialog,
-}: TradingCopilotDialogContentProperties) => {
-  const getQuote = useCommandMutation(GetQuoteCommand);
+}: ContentProperties) => {
   const { wallet, isConnectionModalOpened, openConnectionModal } = useWallet();
-
-  const { handleSubmit, control } = useForm<TradingCopilotDialogFormValues>({
-    defaultValues: EMPTY_FORM,
-  });
-
-  const handleGetQuote = async (payload: QuotePayload) => {
-    return await getQuote.mutateAsync(payload);
-  };
-
-  const onSubmit = async (data: TradingCopilotDialogFormValues) => {
-    if (!wallet) {
-      return;
-    }
-
-    const amountInEth = data.amount;
-    const amountInWei = parseEther(amountInEth).toString();
-
-    const payload = {
-      amount: amountInWei,
-      destinationChain: 8453,
-      fromAddress: wallet.account,
-      destinationToken: dialog.tokenIn.address,
-      originToken: '0x0000000000000000000000000000000000000000',
-      originChain: CHAIN[dialog.tokenIn.network].id,
-    };
-
-    const payloadData = await handleGetQuote(payload);
-
-    return console.log(payloadData);
-  };
+  const exchanger = useExchanger({ wallet });
 
   const avatarQuery = useCommandQuery({
     command: new GetEnsInfoCommand({
@@ -98,115 +78,172 @@ const TradingCopilotDialogContent = ({
     staleTime: Number.POSITIVE_INFINITY,
   });
 
+  const balanceQuery = useCommandQuery({
+    command: new GetEnsBalanceCommand({
+      address: wallet?.account ?? '0x',
+      blockTag: 'safe',
+    }),
+    staleTime: Number.POSITIVE_INFINITY,
+  });
+
+  const { handleSubmit, control, watch } = useForm<FormValues>({
+    defaultValues: EMPTY_FORM,
+  });
+
+  const onSubmit = useCallback(
+    async (formValues: FormValues) => {
+      await exchanger.exchange({
+        formValues: formValues,
+        dialog: dialog,
+      });
+    },
+    [dialog, exchanger],
+  );
+
+  if (exchanger.isSending && exchanger.quoteData?.includedSteps[0]) {
+    return (
+      <IdrissSend.Loading
+        className="px-5 pb-9 pt-5"
+        heading={
+          <>
+            Exchanging{' '}
+            <span className="text-mint-600">
+              {roundToSignificantFigures(exchanger.details.from.amount, 2)}{' '}
+              {exchanger.details.from.symbol}
+            </span>
+            for
+            <span className="text-mint-600">
+              {roundToSignificantFigures(exchanger.details.to.amount, 2)}{' '}
+              {exchanger.details.to.symbol}
+            </span>
+          </>
+        }
+      >
+        Confirm swap in your wallet.
+      </IdrissSend.Loading>
+    );
+  }
+
+  if (exchanger.isSuccess && exchanger.quoteData && exchanger.transactionData) {
+    return (
+      <IdrissSend.Success
+        className="p-5"
+        heading="Swap completed"
+        onConfirm={closeDialog}
+        chainId={exchanger.quoteData.transactionData.chainId}
+        transactionHash={exchanger.transactionData.transactionHash}
+      />
+    );
+  }
+
   return (
-    <Closable
-      className="fixed left-0 top-0 z-portal size-full bg-black/50"
-      hideCloseButton
-    >
-      <div className="flex size-full items-center justify-center">
-        <div className="flex w-[400px] flex-col gap-y-5 rounded-lg border border-black/20 bg-white p-5">
-          <div className="flex flex-row items-center justify-between">
-            <h1 className="text-heading4 text-neutral-900">Copy trade</h1>
-            <IconButton
-              intent="tertiary"
-              size="medium"
-              iconName="X"
-              onClick={closeDialog}
-            />
-          </div>
-          <div className="grid grid-cols-[48px,1fr] gap-2">
-            <LazyImage
-              src={avatarQuery.data}
-              className="size-12 rounded-full border border-neutral-400 bg-neutral-200"
-              fallbackComponent={
-                <div className="flex size-12 items-center justify-center rounded-full border border-neutral-300 bg-neutral-200">
-                  <Icon
-                    size={30}
-                    name="PersonIcon"
-                    className="text-neutral-500"
-                  />
-                </div>
-              }
-            />
-            <div className="flex w-full flex-col">
-              <p className="text-label3 text-neutral-900">
-                {userName}{' '}
-                <span className="text-body3 text-neutral-600">
-                  got {roundToSignificantFigures(dialog.tokenIn.amount, 2)}{' '}
-                  {dialog.tokenIn.symbol}
-                </span>{' '}
-                {wallet ? (
-                  <TradingCopilotTradeValue wallet={wallet} dialog={dialog} />
-                ) : null}
-              </p>
-              <p className="text-body6 text-mint-700">
-                {getFormattedTimeDifference(dialog.timestamp)} ago
-              </p>
+    <>
+      <div className="flex flex-row items-center justify-between">
+        <h1 className="text-heading4 text-neutral-900">Copy trade</h1>
+        <IconButton
+          intent="tertiary"
+          size="medium"
+          iconName="X"
+          onClick={closeDialog}
+        />
+      </div>
+      <div className="grid grid-cols-[48px,1fr] gap-2">
+        <LazyImage
+          src={avatarQuery.data}
+          className="size-12 rounded-full border border-neutral-400 bg-neutral-200"
+          fallbackComponent={
+            <div className="flex size-12 items-center justify-center rounded-full border border-neutral-300 bg-neutral-200">
+              <Icon size={30} name="PersonIcon" className="text-neutral-500" />
             </div>
-          </div>
-          <form className="mt-1" onSubmit={handleSubmit(onSubmit)}>
-            <div className="flex flex-row items-center justify-between">
-              <label
-                htmlFor="cryptoAmount"
-                className="block text-label4 text-neutralGreen-700"
-              >
-                Amount
-              </label>
-              {wallet ? <TradingCopilotWalletBalance wallet={wallet} /> : null}
-            </div>
-            <Controller
-              control={control}
-              name="amount"
-              render={({ field: { value, onChange } }) => {
-                return (
-                  <span className="relative mt-2 flex">
-                    <NumericInput
-                      value={value}
-                      placeholder="ETH"
-                      onChange={onChange}
-                      className="ps-[60px] text-right"
-                    />
-                    <div className="pointer-events-none absolute start-0 top-1/2 flex h-full w-12 -translate-y-1/2 items-center justify-center after:absolute after:right-0 after:top-1.5 after:h-[calc(100%_-_12px)] after:w-px after:bg-neutral-200">
-                      <span className="flex size-6 items-center justify-center rounded-full bg-neutral-200">
-                        <IdrissIcon
-                          size={18}
-                          name="Eth"
-                          className="text-neutral-700"
-                        />
-                      </span>
-                    </div>
-                  </span>
-                );
-              }}
-            />
-            <div className="mt-5">
-              {wallet ? (
-                <Button
-                  intent="primary"
-                  size="medium"
-                  className="w-full"
-                  type="submit"
-                  loading={getQuote.isPending}
-                  disabled={getQuote.isError}
-                >
-                  BUY {dialog.tokenIn.symbol}
-                </Button>
-              ) : (
-                <Button
-                  intent="primary"
-                  size="medium"
-                  onClick={openConnectionModal}
-                  className="w-full"
-                  loading={isConnectionModalOpened}
-                >
-                  LOG IN
-                </Button>
-              )}
-            </div>
-          </form>
+          }
+        />
+        <div className="flex w-full flex-col">
+          <p className="break-all text-label3 text-neutral-900">
+            {userName?.startsWith('0x')
+              ? `${userName.slice(0, 6)}...${userName.slice(-4)}`
+              : userName}{' '}
+            <span className="text-body3 text-neutral-600">
+              got {roundToSignificantFigures(dialog.tokenIn.amount, 2)}{' '}
+              {dialog.tokenIn.symbol}
+            </span>{' '}
+            {wallet ? (
+              <TradingCopilotTradeValue wallet={wallet} dialog={dialog} />
+            ) : null}
+          </p>
+          <p className="text-body6 text-mint-700">
+            <TimeDifferenceCounter timestamp={dialog.timestamp} text="ago" />
+          </p>
         </div>
       </div>
-    </Closable>
+      <form className="mt-1" onSubmit={handleSubmit(onSubmit)}>
+        <div className="flex flex-row items-center justify-between">
+          <label
+            htmlFor="cryptoAmount"
+            className="block text-label4 text-neutralGreen-700"
+          >
+            Amount
+          </label>
+          {wallet ? <TradingCopilotWalletBalance wallet={wallet} /> : null}
+        </div>
+        <Controller
+          control={control}
+          name="amount"
+          render={({ field: { value, onChange } }) => {
+            return (
+              <span className="relative mt-2 flex">
+                <NumericInput
+                  value={value}
+                  placeholder="ETH"
+                  onChange={onChange}
+                  decimalScale={5}
+                  className="ps-[60px] text-right"
+                />
+                <div className="pointer-events-none absolute start-0 top-1/2 flex h-full w-12 -translate-y-1/2 items-center justify-center after:absolute after:right-0 after:top-1.5 after:h-[calc(100%_-_12px)] after:w-px after:bg-neutral-200">
+                  <span className="flex size-6 items-center justify-center rounded-full bg-neutral-200">
+                    <IdrissIcon
+                      size={18}
+                      name="Eth"
+                      className="text-neutral-700"
+                    />
+                  </span>
+                </div>
+              </span>
+            );
+          }}
+        />
+        <div className="mt-5">
+          {wallet ? (
+            <>
+              <Button
+                intent="primary"
+                size="medium"
+                className="w-full"
+                type="submit"
+                loading={exchanger.isSending}
+                disabled={Number(watch('amount')) < Number(balanceQuery.data)}
+              >
+                BUY {dialog.tokenIn.symbol}
+              </Button>
+              {exchanger.isError ? (
+                <ErrorMessage className="mt-4">
+                  Something went wrong.
+                </ErrorMessage>
+              ) : null}
+            </>
+          ) : (
+            <Button
+              intent="primary"
+              size="medium"
+              onClick={openConnectionModal}
+              className="w-full"
+              loading={isConnectionModalOpened}
+            >
+              LOG IN
+            </Button>
+          )}
+        </div>
+      </form>
+    </>
   );
 };
 
@@ -234,17 +271,17 @@ const TradingCopilotTradeValue = ({ wallet, dialog }: TradeValueProperties) => {
   const amountInEth = dialog.tokenIn.amount.toString();
   const amountInWei = parseEther(amountInEth).toString();
 
-  const payload = {
+  const quotePayload = {
     amount: amountInWei,
-    destinationChain: CHAIN[dialog.tokenIn.network].id,
+    destinationChain: CHAIN[dialog.tokenOut.network].id,
     fromAddress: wallet.account,
-    destinationToken: dialog.tokenIn.address,
-    originToken: '0x0000000000000000000000000000000000000000',
-    originChain: 8453,
+    originToken: dialog.tokenIn.address,
+    originChain: CHAIN[dialog.tokenIn.network].id,
+    destinationToken: '0x0000000000000000000000000000000000000000',
   };
 
   const quoteQuery = useCommandQuery({
-    command: new GetQuoteCommand(payload),
+    command: new GetQuoteCommand(quotePayload),
     staleTime: Number.POSITIVE_INFINITY,
   });
 

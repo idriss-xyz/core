@@ -6,7 +6,7 @@ import {
   GetEnsInfoCommand,
   GetEnsNameCommand,
 } from 'application/trading-copilot';
-import { getFormattedTimeDifference } from 'shared/utils';
+import { TimeDifferenceCounter } from 'shared/utils';
 import { roundToSignificantFigures } from 'shared/web3';
 
 import { Properties, ContentProperties } from './trading-copilot-toast.types';
@@ -45,6 +45,8 @@ const TradingCopilotToastContent = ({
     staleTime: Number.POSITIVE_INFINITY,
   });
 
+  console.log(toast);
+
   return (
     <div className="grid grid-cols-[48px,1fr] gap-2">
       <LazyImage
@@ -57,8 +59,10 @@ const TradingCopilotToastContent = ({
         }
       />
       <div className="flex w-full flex-col gap-y-1">
-        <p className="text-label3 text-neutral-900">
-          {userName}{' '}
+        <p className="break-all text-label3 text-neutral-900">
+          {userName?.startsWith('0x')
+            ? `${userName.slice(0, 6)}...${userName.slice(-4)}`
+            : userName}{' '}
           <span className="text-body3 text-neutral-600">
             purchased {roundToSignificantFigures(toast.tokenIn.amount, 2)}{' '}
             {toast.tokenIn.symbol}
@@ -66,7 +70,7 @@ const TradingCopilotToastContent = ({
         </p>
         <div className="flex w-full justify-between">
           <p className="text-body6 text-mint-700">
-            {getFormattedTimeDifference(toast.timestamp)} ago
+            <TimeDifferenceCounter timestamp={toast.timestamp} text="ago" />
           </p>
           <Button
             intent="primary"
