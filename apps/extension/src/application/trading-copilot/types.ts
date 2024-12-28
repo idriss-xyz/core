@@ -67,12 +67,26 @@ export type SwapData = {
   isComplete: boolean;
 };
 
+export interface FormValues {
+  amount: string;
+}
+
 export type SiweMessageRequest = {
-  walletAddress: string;
+  walletAddress: Hex;
   chainId: number;
 };
 
 export type SiweMessageResponse = {
   nonce: string;
   message: string;
+};
+
+export type VerifySiweSignatureRequest = {
+  walletAddress: Hex;
+  message: string;
+  signature: Hex;
+};
+
+export type VerifySiweSignatureResponse = {
+  token: string;
 };

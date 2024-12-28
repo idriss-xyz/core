@@ -7,14 +7,14 @@ import {
 } from 'shared/messaging';
 
 import {
-  SiweMessageRequest as Payload,
-  SiweMessageResponse as Response,
+  VerifySiweSignatureRequest as Payload,
+  VerifySiweSignatureResponse as Response,
 } from '../types';
 
 import { AUTH_API_URL } from './constants';
 
-export class GetSiweMessageCommand extends Command<Payload, Response> {
-  public readonly name = 'GetSiweMessageCommand' as const;
+export class VerifySiweSignatureCommand extends Command<Payload, Response> {
+  public readonly name = 'VerifySiweSignatureCommand' as const;
 
   constructor(public payload: Payload) {
     super();
@@ -22,7 +22,7 @@ export class GetSiweMessageCommand extends Command<Payload, Response> {
 
   async handle() {
     try {
-      const response = await fetch(`${AUTH_API_URL}/wallet-address`, {
+      const response = await fetch(`${AUTH_API_URL}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
