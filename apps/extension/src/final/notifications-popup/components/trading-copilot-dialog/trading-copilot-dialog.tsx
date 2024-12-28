@@ -16,6 +16,7 @@ import {
   GetEnsNameCommand,
   GetQuoteCommand,
   useExchanger,
+  useLoginViaSiwe,
 } from 'application/trading-copilot';
 import { TimeDifferenceCounter } from 'shared/utils';
 import { CHAIN, roundToSignificantFigures } from 'shared/web3';
@@ -69,6 +70,7 @@ const TradingCopilotDialogContent = ({
 }: ContentProperties) => {
   const { wallet, isConnectionModalOpened, openConnectionModal } = useWallet();
   const exchanger = useExchanger({ wallet });
+  const siwe = useLoginViaSiwe();
 
   const avatarQuery = useCommandQuery({
     command: new GetEnsInfoCommand({
@@ -92,12 +94,22 @@ const TradingCopilotDialogContent = ({
 
   const onSubmit = useCallback(
     async (formValues: FormValues) => {
+      const siweLoggedIn = siwe.loggedIn();
+
+      if (!wallet) {
+        return;
+      }
+
+      if (!siweLoggedIn) {
+        await siwe.login(wallet);
+      }
+
       await exchanger.exchange({
         formValues: formValues,
         dialog: dialog,
       });
     },
-    [dialog, exchanger],
+    [dialog, exchanger, siwe, wallet],
   );
 
   if (exchanger.isSending && exchanger.quoteData?.includedSteps[0]) {
@@ -219,12 +231,15 @@ const TradingCopilotDialogContent = ({
                 size="medium"
                 className="w-full"
                 type="submit"
-                loading={exchanger.isSending}
-                disabled={Number(watch('amount')) < Number(balanceQuery.data)}
+                loading={siwe.isSending || exchanger.isSending}
+                disabled={
+                  Number(watch('amount')) < Number(balanceQuery.data) ||
+                  Number(watch('amount')) <= 0
+                }
               >
                 BUY {dialog.tokenIn.symbol}
               </Button>
-              {exchanger.isError ? (
+              {siwe.isError || exchanger.isError ? (
                 <ErrorMessage className="mt-4">
                   Something went wrong.
                 </ErrorMessage>

@@ -1,7 +1,9 @@
 import { useCallback } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { useWallet } from '@idriss-xyz/wallet-connect';
 
 import { useCommandMutation } from 'shared/messaging';
+import { useLoginViaSiwe } from 'application/trading-copilot';
 
 import {
   GetEnsAddressCommand,
@@ -15,6 +17,9 @@ const EMPTY_FORM: FormValues = {
 };
 
 export const SubscriptionForm = ({ onSubmit }: Properties) => {
+  const { wallet } = useWallet();
+  const siwe = useLoginViaSiwe();
+
   const form = useForm<FormValues>({
     defaultValues: EMPTY_FORM,
   });
@@ -30,6 +35,15 @@ export const SubscriptionForm = ({ onSubmit }: Properties) => {
       const farcasterPattern = /^[^.]+$/;
       const isWalletAddress = hexPattern.test(data.subscriptionDetails);
       const isFarcasterName = farcasterPattern.test(data.subscriptionDetails);
+      const siweLoggedIn = siwe.loggedIn();
+
+      if (!wallet) {
+        return;
+      }
+
+      if (!siweLoggedIn) {
+        await siwe.login(wallet);
+      }
 
       if (isWalletAddress) {
         onSubmit(data.subscriptionDetails);
@@ -60,7 +74,14 @@ export const SubscriptionForm = ({ onSubmit }: Properties) => {
       onSubmit(address);
       form.reset(EMPTY_FORM);
     },
-    [form, getEnsAddressMutation, getFarcasterAddressMutation, onSubmit],
+    [
+      form,
+      getEnsAddressMutation,
+      getFarcasterAddressMutation,
+      onSubmit,
+      siwe,
+      wallet,
+    ],
   );
 
   return (

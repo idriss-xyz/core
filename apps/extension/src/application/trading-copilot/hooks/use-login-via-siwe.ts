@@ -41,16 +41,22 @@ export const useLoginViaSiwe = () => {
         message: siweMessage.message,
       });
 
-      const verifiedSignature = await handleVerifySiweSignature({
+      const verifiedSiweSignature = await handleVerifySiweSignature({
         walletAddress: wallet.account,
         message: siweMessage.message,
         signature: siweSignature,
       });
 
-      console.log(verifiedSignature);
+      localStorage.setItem('authToken', verifiedSiweSignature.token);
     },
     [getSiweMessage, verifySiweSignature],
   );
+
+  const loggedIn = useCallback(() => {
+    const authToken = localStorage.getItem('authToken');
+
+    return !!authToken;
+  }, []);
 
   const isSending = getSiweMessage.isPending || verifySiweSignature.isPending;
 
@@ -67,6 +73,7 @@ export const useLoginViaSiwe = () => {
 
   return {
     login,
+    loggedIn,
     isSending,
     isError,
     isSuccess,
