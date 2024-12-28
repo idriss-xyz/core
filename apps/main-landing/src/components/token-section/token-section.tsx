@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { Button } from '@idriss-xyz/ui/button';
@@ -130,8 +131,8 @@ export const TokenSection = () => {
               gradientStartColor="#5FEB3C"
               gradientStopColor="rgba(145,206,154,0.50)"
             />
+            <link rel="preload" as="image" href={idrissCoin.src} />
             <img
-              data-priority="true"
               src={idrissCoin.src}
               alt="IDRISS coin"
               className={classes(

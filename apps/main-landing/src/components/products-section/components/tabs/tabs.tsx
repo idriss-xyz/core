@@ -18,7 +18,7 @@ export const Tabs = ({ activeOptionKey, options, asLink, ref }: Properties) => {
       className={classes(
         'sticky left-0 top-0 z-[9999] w-full bg-[linear-gradient(0deg,transparent,rgb(21,43,30)_20%,rgb(21,43,30)_80%)] p-3 py-5',
         'md:justify-center',
-        'lg:w-fit lg:rounded-[50px] lg:bg-[#022218] lg:p-1 lg:[position:unset]',
+        'lg:w-fit lg:-translate-x-4 lg:rounded-[50px] lg:bg-[#022218] lg:p-1 lg:[position:unset]',
       )}
     >
       <div

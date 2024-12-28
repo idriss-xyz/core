@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 import { Button } from '@idriss-xyz/ui/button';
 import { classes } from '@idriss-xyz/ui/utils';
@@ -6,7 +7,6 @@ import { backgroundLines } from '@/assets';
 import { INTERNAL_LINK } from '@/constants';
 
 import tokensFlow from './assets/IDRISS_SCENE_STREAM_4_2 1.png';
-import tokensFlowLowResolution from './assets/IDRISS_SCENE_STREAM_4_2 1_LOW_RES.png';
 import { CollaborationsShowcase } from './components';
 
 export const HeroSection = () => {
@@ -17,21 +17,23 @@ export const HeroSection = () => {
         'lg:bg-[radial-gradient(222.94%_366.93%_at_16.62%_20%,_#E7F5E7_0%,_#76C282_100%)] lg:pb-[80px] lg:pt-[200px]',
       )}
     >
+      <link rel="preload" as="image" href={backgroundLines.src} />
       <img
-        data-priority="true"
         src={backgroundLines.src}
         className="pointer-events-none absolute top-0 hidden opacity-40 lg:block"
         alt=""
       />
-      <h1
-        className={classes(
-          'container z-1 my-0 text-balance text-center text-display4 font-normal gradient-text lg:text-display2',
-          '2xl:text-[100px] 2xl:leading-[116px]',
-          '4xl:text-display1',
-        )}
-      >
-        APPS UNIQUELY ENABLED BY CRYPTO AND AI
-      </h1>
+      <div className="z-1 px-safe">
+        <h1
+          className={classes(
+            'container my-0 text-balance text-center text-display4 font-normal gradient-text lg:text-display2',
+            '2xl:text-[100px] 2xl:leading-[116px]',
+            '4xl:text-display1',
+          )}
+        >
+          APPS UNIQUELY ENABLED BY CRYPTO AND AI
+        </h1>
+      </div>
       <Button
         aria-label="Get started"
         intent="primary"
@@ -43,9 +45,9 @@ export const HeroSection = () => {
       >
         EXPLORE
       </Button>
+      <link rel="preload" as="image" href={tokensFlow.src} />
       <img
-        data-priority="true"
-        data-blurdataul={tokensFlowLowResolution.src}
+        data-blurdataul={tokensFlow.src}
         data-placeholder="blur"
         src={tokensFlow.src}
         className={classes(
@@ -59,17 +61,17 @@ export const HeroSection = () => {
         )}
         alt=""
       />
-      <div className={classes(
-            'container mt-[-6%] text-center md:mb-10 lg:mb-14',
-            'md:mt-[-5%]',
-            'lg:mt-[-14%]',
-            '3xl:mt-[-12%]',
-            '4xl:mt-[-9%]',
-          )}>
-        <CollaborationsShowcase
-          className="container text-center"
-        />
-        </div>
+      <div
+        className={classes(
+          'mt-[-6%] px-safe md:mb-10 lg:mb-14',
+          'md:mt-[-5%]',
+          'lg:mt-[-14%]',
+          '3xl:mt-[-12%]',
+          '4xl:mt-[-9%]',
+        )}
+      >
+        <CollaborationsShowcase className="container text-center" />
+      </div>
     </header>
   );
 };

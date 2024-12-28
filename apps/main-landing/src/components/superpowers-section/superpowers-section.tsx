@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { Button } from '@idriss-xyz/ui/button';
 import {
   CHROME_EXTENSION_LINK,
@@ -20,8 +21,8 @@ export const SuperpowersSection = () => {
     <section className="relative bg-mint-100" id="apps">
       <TopWave className="absolute left-0 top-0 z-0 w-full translate-y-[-12%] text-white" />
       <div className="relative overflow-hidden">
+        <link rel="preload" as="image" href={stackedHex.src} />
         <img
-          data-priority="true"
           src={stackedHex.src}
           alt=""
           className={classes(
