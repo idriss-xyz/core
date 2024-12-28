@@ -21,7 +21,11 @@ export const Tabs = ({ activeOptionKey, options, asLink, ref }: Properties) => {
         'lg:w-fit lg:rounded-[50px] lg:bg-[#022218] lg:p-1 lg:[position:unset]',
       )}
     >
-      <div className={classes('flex items-start gap-1 text-label5 px-safe lg:flex lg:text-label4')}>
+      <div
+        className={classes(
+          'flex items-start gap-1 text-label5 px-safe lg:flex lg:text-label4',
+        )}
+      >
         {options.map((option) => {
           return asLink ? (
             <Link

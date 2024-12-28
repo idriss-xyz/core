@@ -131,7 +131,7 @@ export const TokenSection = () => {
               gradientStopColor="rgba(145,206,154,0.50)"
             />
             <img
-              priority
+              data-priority="true"
               src={idrissCoin.src}
               alt="IDRISS coin"
               className={classes(

@@ -56,13 +56,15 @@ export const HeroSection = () => {
         alt=""
       />
       <div className="mt-[-10%] px-safe md:mb-10 lg:mb-14 lg:mt-[-10%]">
-        <CollaborationsShowcase className={classes(
-          'container mt-[-6%] text-center md:mb-10 lg:mb-14',
-          'md:mt-[-5%]',
-          'lg:mt-[-14%]',
-          '3xl:mt-[-12%]',
-          '4xl:mt-[-9%]',
-        )} />
+        <CollaborationsShowcase
+          className={classes(
+            'container mt-[-6%] text-center md:mb-10 lg:mb-14',
+            'md:mt-[-5%]',
+            'lg:mt-[-14%]',
+            '3xl:mt-[-12%]',
+            '4xl:mt-[-9%]',
+          )}
+        />
       </div>
     </header>
   );

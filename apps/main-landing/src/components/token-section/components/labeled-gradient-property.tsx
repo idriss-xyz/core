@@ -22,10 +22,7 @@ export const LabeledGradientProperty = ({
       )}
     >
       <span
-        className={classes(
-          'text-body4 text-neutralGreen-900',
-          'lg:text-body2',
-        )}
+        className={classes('text-body4 text-neutralGreen-900', 'lg:text-body2')}
       >
         {label}
       </span>
