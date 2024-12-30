@@ -4,6 +4,7 @@ export const onWindowMessage = <T = unknown>(
 ) => {
   const listener = (event: MessageEvent) => {
     const message = event.data;
+
     if (message.type === type) {
       callback(message.detail, () => {
         window.removeEventListener('message', listener);

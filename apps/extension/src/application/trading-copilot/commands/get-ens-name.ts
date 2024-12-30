@@ -1,7 +1,7 @@
 import { createPublicClient, http } from 'viem';
 import { mainnet } from 'viem/chains';
-import { normalize } from 'viem/ens';
 
+import { Hex } from 'shared/web3';
 import {
   Command,
   FailureResult,
@@ -10,12 +10,11 @@ import {
 } from 'shared/messaging';
 
 type Payload = {
-  ensName: string;
-  infoKey: 'com.discord' | 'email' | 'com.github' | 'com.twitter' | 'avatar';
+  address: Hex;
 };
 
-export class GetEnsInfoCommand extends Command<Payload, string | null> {
-  public readonly name = 'GetEnsInfoCommand' as const;
+export class GetEnsNameCommand extends Command<Payload, string | null> {
+  public readonly name = 'GetEnsNameCommand' as const;
 
   constructor(public payload: Payload) {
     super();
@@ -27,11 +26,7 @@ export class GetEnsInfoCommand extends Command<Payload, string | null> {
         chain: { ...mainnet },
         transport: http('https://eth.llamarpc.com'),
       });
-
-      const result = await client.getEnsText({
-        name: normalize(this.payload.ensName),
-        key: this.payload.infoKey,
-      });
+      const result = await client.getEnsName(this.payload);
 
       return new OkResult(result);
     } catch (error) {

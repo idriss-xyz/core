@@ -1,7 +1,7 @@
-import { createPublicClient, http } from 'viem';
+import { createPublicClient, formatEther, http } from 'viem';
 import { mainnet } from 'viem/chains';
-import { normalize } from 'viem/ens';
 
+import { Hex } from 'shared/web3';
 import {
   Command,
   FailureResult,
@@ -10,12 +10,12 @@ import {
 } from 'shared/messaging';
 
 type Payload = {
-  ensName: string;
-  infoKey: 'com.discord' | 'email' | 'com.github' | 'com.twitter' | 'avatar';
+  address: Hex;
+  blockTag: 'latest' | 'earliest' | 'pending' | 'safe' | 'finalized';
 };
 
-export class GetEnsInfoCommand extends Command<Payload, string | null> {
-  public readonly name = 'GetEnsInfoCommand' as const;
+export class GetEnsBalanceCommand extends Command<Payload, string | null> {
+  public readonly name = 'GetEnsBalanceCommand' as const;
 
   constructor(public payload: Payload) {
     super();
@@ -28,12 +28,10 @@ export class GetEnsInfoCommand extends Command<Payload, string | null> {
         transport: http('https://eth.llamarpc.com'),
       });
 
-      const result = await client.getEnsText({
-        name: normalize(this.payload.ensName),
-        key: this.payload.infoKey,
-      });
+      const result = await client.getBalance(this.payload);
+      const balanceAsEth = formatEther(result);
 
-      return new OkResult(result);
+      return new OkResult(balanceAsEth);
     } catch (error) {
       this.captureException(error);
       if (error instanceof HandlerError) {

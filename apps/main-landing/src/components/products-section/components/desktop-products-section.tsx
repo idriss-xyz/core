@@ -254,7 +254,7 @@ export const DesktopProductsSection = ({
       >
         <div
           style={{ padding: `${padding / 2}px ${padding}px` }}
-          className="sticky left-0 top-0 z-[99999] h-screen w-screen transition-[padding] duration-150 will-change-[padding]"
+          className="sticky left-0 top-0 z-notification h-screen w-screen transition-[padding] duration-150 will-change-[padding]"
         >
           <ProductSection
             style={{ borderRadius: `${borderRadius}px` }}
