@@ -1,4 +1,4 @@
-const SelectIcon = () => {
+export const SelectIcon = () => {
   return (
     <svg
       width="24"
@@ -17,4 +17,4 @@ const SelectIcon = () => {
   );
 };
 
-export default SelectIcon;
+

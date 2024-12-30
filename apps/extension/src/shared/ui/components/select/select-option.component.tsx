@@ -1,13 +1,14 @@
-import { ForwardedRef, forwardRef } from 'react';
+import {ForwardedRef, forwardRef} from 'react';
 
-import { classes } from '../../utils';
+import {SelectIcon} from 'shared/ui/utils/select-icon';
 
-import { SelectOptionProperties } from './select.types';
-import SelectIcon from 'shared/ui/utils/select-icon';
+import {classes} from '../../utils';
+
+import {SelectOptionProperties} from './select.types';
 
 export const SelectOption = forwardRef(
   (
-    { option, className, selected }: SelectOptionProperties<unknown>,
+    {option, className, selected}: SelectOptionProperties<unknown>,
     reference: ForwardedRef<HTMLDivElement>,
   ) => {
     const selectedClassName = selected
@@ -29,7 +30,7 @@ export const SelectOption = forwardRef(
           {option.label}
         </div>
         {option.suffix}
-        <div className="items-center">{selected ? <SelectIcon /> : ''}</div>
+        <div className="items-center">{selected ? <SelectIcon/> : ''}</div>
       </div>
     );
   },
