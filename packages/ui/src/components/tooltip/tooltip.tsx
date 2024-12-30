@@ -36,7 +36,7 @@ export const TooltipContent = React.forwardRef<
         className={classes(
           'z-50 w-[243px] text-balance rounded-lg px-3 py-2 text-xs font-medium transition-all',
           'data-[state=closed]:animate-fade-out data-[state=delayed-open]:animate-fade-in',
-          'data-[side=top]:animate-slide-in-from-bottom data-[side=bottom]:animate-slide-in-from-top',
+          'data-[side=bottom]:animate-slide-in-from-top data-[side=top]:animate-slide-in-from-bottom',
           'data-[side=left]:animate-slide-in-from-right data-[side=right]:animate-slide-in-from-left',
           className,
         )}
