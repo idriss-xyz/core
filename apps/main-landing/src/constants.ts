@@ -5,3 +5,5 @@ export const INTERNAL_LINK = {
   PREDICTION_MARKETS: '/#prediction-markets',
   DAO: '/#dao',
 };
+
+export const restrictedCountries = ['United States'];
