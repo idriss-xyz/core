@@ -8,7 +8,7 @@ interface GeoJsGeoLocationResponse {
    name?: string;
 }
 
-const useGeoLocation = () => {
+export const useGeoLocation = () => {
    const [country, setCountry] = useState<string | null>(null);
    const [loading, setLoading] = useState<boolean>(true);
    const controller = useRef(new AbortController());
@@ -54,7 +54,9 @@ const useGeoLocation = () => {
          }
       };
 
-      fetchGeoLocation();
+      fetchGeoLocation().catch((error) => {
+         console.error('Unexpected error in fetching geolocation:', error);
+      });
 
       return () => {
          controller.current.abort();
@@ -63,5 +65,3 @@ const useGeoLocation = () => {
 
    return { country, loading };
 };
-
-export default useGeoLocation;

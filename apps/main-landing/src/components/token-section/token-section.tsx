@@ -5,7 +5,7 @@ import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { ImageSequencer } from '../image-sequencer';
 
 import background from './background.png';
-import GeoConditionalButton from './components/geo-conditional-button';
+import { GeoConditionalButton } from './components/geo-conditional-button';
 
 const TOKEN_COIN_BASE_NAME = `spining-token-coin-optimized/IDRISS_COIN_`;
 const TOKEN_COIN_IMAGES_COUNT = 91;

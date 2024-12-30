@@ -1,15 +1,17 @@
 'use client';
 
 import { Spinner } from '@idriss-xyz/ui/spinner';
-import { BlockedButton } from './blocked-button';
-import useGeoLocation from './hooks/use-geo-location';
+
 import { restrictedCountries } from '@/constants';
+
+import { BlockedButton } from './blocked-button';
+import { useGeoLocation } from './hooks/use-geo-location';
 
 type GeoConditionalButtonProperties = {
   defaultButton: React.ReactNode;
 };
 
-const GeoConditionalButton: React.FC<GeoConditionalButtonProperties> = ({
+export const GeoConditionalButton: React.FC<GeoConditionalButtonProperties> = ({
   defaultButton,
 }) => {
   const { country, loading } = useGeoLocation();
@@ -26,5 +28,3 @@ const GeoConditionalButton: React.FC<GeoConditionalButtonProperties> = ({
 
   return defaultButton;
 };
-
-export default GeoConditionalButton;
