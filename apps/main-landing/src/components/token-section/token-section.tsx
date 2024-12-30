@@ -5,6 +5,7 @@ import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { ImageSequencer } from '../image-sequencer';
 
 import background from './background.png';
+import GeoConditionalButton from './components/geo-conditional-button';
 
 const TOKEN_COIN_BASE_NAME = `spining-token-coin-optimized/IDRISS_COIN_`;
 const TOKEN_COIN_IMAGES_COUNT = 91;
@@ -41,18 +42,22 @@ export const TokenSection = () => {
             DAO, giving the community true ownership in its success.
           </p>
           <div className="mt-10 flex w-full flex-col space-y-6 lg:mt-[60px] lg:flex-row lg:justify-center lg:space-x-6 lg:space-y-0">
-            <Button
-              className="w-full lg:w-auto"
-              intent="primary"
-              size="large"
-              prefixIconName="TwitterX"
-              suffixIconName="IdrissArrowRight"
-              href={SOCIAL_LINK.X}
-              isExternal
-              asLink
-            >
-              FOLLOW FOR UPDATES
-            </Button>
+            <GeoConditionalButton
+              defaultButton={
+                <Button
+                  className="w-full lg:w-auto"
+                  intent="primary"
+                  size="large"
+                  prefixIconName="TwitterX"
+                  suffixIconName="IdrissArrowRight"
+                  href={SOCIAL_LINK.X}
+                  isExternal
+                  asLink
+                >
+                  FOLLOW FOR UPDATES
+                </Button>
+              }
+            />
           </div>
         </div>
         <img
