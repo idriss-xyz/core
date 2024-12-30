@@ -1,12 +1,12 @@
-import { dataSource } from '../db';
-import { WebhookEntity } from '../entities/webhook.entity';
-import { SubscribersEntity } from '../entities/subscribers.entity';
-import { AddressesEntity } from '../entities/addreesses.entity';
-import { SubscriptionsEntity } from '../entities/subscribtions.entity';
-import { AddressWebhookMapEntity } from '../entities/addressWebhookMap.entity';
+import {dataSource} from '../db';
+import {WebhookEntity} from '../entities/webhook.entity';
+import {SubscribersEntity} from '../entities/subscribers.entity';
+import {AddressesEntity} from '../entities/addreesses.entity';
+import {SubscriptionsEntity} from '../entities/subscribtions.entity';
+import {AddressWebhookMapEntity} from '../entities/addressWebhookMap.entity';
 import axios from 'axios';
-import { v4 as uuidv4 } from 'uuid';
-import { webhooks } from '../constants';
+import {v4 as uuidv4} from 'uuid';
+import {webhooks} from '../constants';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -29,19 +29,18 @@ const webhooksRepo = dataSource.getRepository(WebhookEntity);
 export const subscribeAddress = async (
   subscriber_id: string,
   address: string,
-  network: string | null,
 ) => {
   address = address.toLowerCase();
 
-  await subscribersRepo.save({ subscriber_id });
-  await addressRepo.save({ address });
-  await subscribtionsRepo.save({ subscriber_id, address });
+  await subscribersRepo.save({subscriber_id});
+  await addressRepo.save({address});
+  await subscribtionsRepo.save({subscriber_id, address});
 
   const addressWebhookMap = await addressMapWhebhooksRepo.findOne({
-    where: { address },
+    where: {address},
   });
   if (!addressWebhookMap) {
-    await addAddressToWebhook(address, network);
+    await addAddressToWebhook(address);
   }
 };
 
@@ -51,27 +50,27 @@ export const unsubscribeAddress = async (
 ): Promise<void> => {
   address = address.toLowerCase();
   try {
-    await subscribtionsRepo.delete({ subscriber_id: subscriberId, address });
+    await subscribtionsRepo.delete({subscriber_id: subscriberId, address});
 
     // Check if the subscriber has any other subscriptions
     const subscriberRes = await subscribtionsRepo.count({
-      where: { subscriber_id: subscriberId },
+      where: {subscriber_id: subscriberId},
     });
 
     if (parseInt(subscriberRes.toString(), 10) === 0) {
       // Subscriber has no more subscriptions, remove from subscribers table
-      await subscribtionsRepo.delete({ subscriber_id: subscriberId });
+      await subscribtionsRepo.delete({subscriber_id: subscriberId});
     }
 
     // Check if the address has any other subscribers
-    const addressRes = await subscribtionsRepo.count({ where: { address } });
+    const addressRes = await subscribtionsRepo.count({where: {address}});
 
     if (parseInt(addressRes.toString(), 10) === 0) {
       // No more subscribers, remove address from webhook and addresses table
       await removeAddressFromWebhook(address);
 
       // Remove address from addresses table
-      await addressRepo.delete({ address });
+      await addressRepo.delete({address});
     }
   } catch (error) {
     console.error('Error unsubscribing address:', error);
@@ -79,7 +78,7 @@ export const unsubscribeAddress = async (
   }
 };
 
-const addAddressToWebhook = async (address: string, network: string | null) => {
+const addAddressToWebhook = async (address: string) => {
   const res = await webhooksRepo
     .createQueryBuilder('webhooks')
     .select(['webhooks.internal_id', 'webhooks.webhook_id'])
@@ -99,9 +98,8 @@ const addAddressToWebhook = async (address: string, network: string | null) => {
     .getRawOne();
 
   if (!res) {
-    const { webhookId, internalWebhookId, signingKey } = await createNewWebhook(
+    const {webhookId, internalWebhookId, signingKey} = await createNewWebhook(
       address,
-      network,
     );
     await webhooksRepo.save({
       internal_id: internalWebhookId,
@@ -109,11 +107,11 @@ const addAddressToWebhook = async (address: string, network: string | null) => {
       signing_key: signingKey,
     });
   } else {
-    const { webhook_id } = res;
+    const {webhook_id} = res;
     await updateWebhookAddresses(webhook_id, [address], []);
   }
 
-  const { internal_id = '' } = res || {};
+  const {internal_id = ''} = res || {};
 
   await addressMapWhebhooksRepo.save({
     address,
@@ -123,18 +121,18 @@ const addAddressToWebhook = async (address: string, network: string | null) => {
 
 async function removeAddressFromWebhook(address: string): Promise<void> {
   // Get the webhook associated with the address
-  const res = await addressMapWhebhooksRepo.findOne({ where: { address } });
+  const res = await addressMapWhebhooksRepo.findOne({where: {address}});
 
   if (!res) {
     // Address is not associated with any webhook
     return;
   }
 
-  const { webhook_internal_id } = res;
+  const {webhook_internal_id} = res;
 
   // Get webhook ID and signing key
   const webhookData = await webhooksRepo.findOne({
-    where: { internal_id: webhook_internal_id },
+    where: {internal_id: webhook_internal_id},
   });
 
   if (!webhookData) {
@@ -142,43 +140,36 @@ async function removeAddressFromWebhook(address: string): Promise<void> {
     return;
   }
 
-  const { webhook_id } = webhookData;
+  const {webhook_id} = webhookData;
 
   // Update the webhook via Alchemy's API
   await updateWebhookAddresses(webhook_id, [], [address]);
 
   // Remove address from address_webhook_map
-  await addressMapWhebhooksRepo.delete({ address });
+  await addressMapWhebhooksRepo.delete({address});
 
   // Check if webhook has any other addresses
   const countRes = await addressMapWhebhooksRepo.count({
-    where: { webhook_internal_id },
+    where: {webhook_internal_id},
   });
 
   if (parseInt(countRes.toString(), 10) === 0) {
     // Delete webhook from Alchemy and database
     await deleteWebhook(webhook_id);
-    await webhooksRepo.delete({ internal_id: webhook_internal_id });
+    await webhooksRepo.delete({internal_id: webhook_internal_id});
   }
 }
 
-const createNewWebhook = async (address: string, network: string | null) => {
+const createNewWebhook = async (address: string) => {
   try {
     const internalWebhookId = uuidv4();
     const webhookUrl = `${WEBHOOK_URL}/webhook/${internalWebhookId}`;
-
-    const network_for_query =
-      typeof network === 'string'
-        ? network.includes('_MAINNET')
-          ? network.toUpperCase()
-          : `${network?.toUpperCase()}_MAINNET`
-        : NETWORK;
 
     const response = await axios.post(
       `${ALCHEMY_API_BASE_URL}/api/create-webhook`,
       {
         webhook_url: webhookUrl,
-        network: network_for_query,
+        network: NETWORK,
         webhook_type: 'ADDRESS_ACTIVITY',
         addresses: [address],
       },
@@ -200,7 +191,7 @@ const createNewWebhook = async (address: string, network: string | null) => {
       `Created new webhook with ID: ${webhookId} and internal ID: ${internalWebhookId}`,
     );
 
-    return { webhookId, internalWebhookId, signingKey };
+    return {webhookId, internalWebhookId, signingKey};
   } catch (err) {
     console.error('Error creating webhook: ', err);
     return {};
@@ -259,7 +250,7 @@ export const getSubscriberAddresses = async (
   subscriberId: string,
 ): Promise<string[]> => {
   const res = await subscribtionsRepo.find({
-    where: { subscriber_id: subscriberId },
+    where: {subscriber_id: subscriberId},
   });
   return res.map((subscription: SubscriptionsEntity) => subscription.address);
 };
@@ -268,7 +259,7 @@ export const isSubscribedAddress = async (
   address: string,
 ): Promise<boolean> => {
   address = address.toLowerCase();
-  const res = await subscribtionsRepo.count({ where: { address } });
+  const res = await subscribtionsRepo.count({where: {address}});
   return parseInt(res.toString(), 10) > 0;
 };
 
@@ -276,7 +267,7 @@ export const getSubscribersByAddress = async (
   address: string,
 ): Promise<string[]> => {
   address = address.toLowerCase();
-  const res = await subscribtionsRepo.find({ where: { address } });
+  const res = await subscribtionsRepo.find({where: {address}});
   return res.map(
     (subscription: SubscriptionsEntity) => subscription.subscriber_id,
   );
@@ -286,7 +277,7 @@ export const getSigningKey = async (
   internalWebhookId: string,
 ): Promise<string | undefined> => {
   const res = await webhooksRepo.find({
-    where: { internal_id: internalWebhookId },
+    where: {internal_id: internalWebhookId},
   });
   return res.length > 0 ? res[0].signing_key : undefined;
 };
