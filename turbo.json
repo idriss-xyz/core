@@ -82,7 +82,7 @@
         "DATABASE_DB_NAME"
       ]
     },
-    "@idriss-xyz/copilot-api#prod": {
+    "@idriss-xyz/copilot-api#build": {
       "cache": true,
       "persistent": true,
       "env": [
