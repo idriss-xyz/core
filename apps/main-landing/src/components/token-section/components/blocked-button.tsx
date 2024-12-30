@@ -9,7 +9,7 @@ import {
 
 export const BlockedButton = () => {
   return (
-    <TooltipProvider>
+    <TooltipProvider delayDuration={400}>
       <Tooltip>
         <TooltipTrigger asChild>
           <Button

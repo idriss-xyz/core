@@ -5,29 +5,47 @@ import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 
 import { classes } from '../../utils';
 
+/**
+ * TooltipProvider - Global configuration for tooltips
+ */
 export const TooltipProvider = TooltipPrimitive.Provider;
 
+/**
+ * Tooltip - Root wrapper for tooltip
+ */
 export const Tooltip = TooltipPrimitive.Root;
 
+/**
+ * TooltipTrigger - Element that triggers the tooltip
+ */
 export const TooltipTrigger = TooltipPrimitive.Trigger;
 
+/**
+ * TooltipContent - Displays the tooltip content with animations and styles
+ */
 export const TooltipContent = React.forwardRef<
   React.ElementRef<typeof TooltipPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>
 >(({ className, sideOffset = 4, children, ...properties }, reference) => {
   return (
-    <TooltipPrimitive.Content
-      ref={reference}
-      sideOffset={sideOffset}
-      className={classes(
-        'animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 w-64 overflow-hidden rounded-lg px-3 py-2 text-xs font-medium',
-        className,
-      )}
-      {...properties}
-    >
-      {children}
-      <TooltipPrimitive.Arrow width={12} height={6} />
-    </TooltipPrimitive.Content>
+    <TooltipPrimitive.Portal>
+      <TooltipPrimitive.Content
+        ref={reference}
+        sideOffset={sideOffset}
+        aria-live="polite"
+        className={classes(
+          'z-50 w-[243px] text-balance rounded-lg px-3 py-2 text-xs font-medium transition-all',
+          'data-[state=closed]:animate-fade-out data-[state=delayed-open]:animate-fade-in',
+          'data-[side=top]:animate-slide-in-from-bottom data-[side=bottom]:animate-slide-in-from-top',
+          'data-[side=left]:animate-slide-in-from-right data-[side=right]:animate-slide-in-from-left',
+          className,
+        )}
+        {...properties}
+      >
+        {children}
+        <TooltipPrimitive.Arrow width={12} height={6} />
+      </TooltipPrimitive.Content>
+    </TooltipPrimitive.Portal>
   );
 });
 
