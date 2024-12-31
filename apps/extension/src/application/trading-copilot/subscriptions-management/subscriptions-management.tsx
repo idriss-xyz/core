@@ -62,9 +62,12 @@ const SubscriptionsManagementContent = ({
 
   return (
     <>
-      <SubscriptionForm onSubmit={handleSubscribe} />
+      <SubscriptionForm
+        onSubmit={handleSubscribe}
+        subscriptionsAmount={subscriptionsQuery?.data?.addresses.length}
+      />
       <SubscriptionsList
-        className="mt-6"
+        className="mt-6 flex h-full flex-col overflow-hidden"
         subscriptions={subscriptionsQuery.data}
         subscriptionsLoading={subscriptionsQuery.isLoading}
         subscriptionsUpdatePending={

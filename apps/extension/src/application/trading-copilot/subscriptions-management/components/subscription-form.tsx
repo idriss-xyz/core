@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
 import { useCommandMutation } from 'shared/messaging';
+import { ErrorMessage } from 'shared/ui';
 
 import {
   GetEnsAddressCommand,
@@ -14,10 +15,17 @@ const EMPTY_FORM: FormValues = {
   subscriptionDetails: '',
 };
 
-export const SubscriptionForm = ({ onSubmit }: Properties) => {
+export const SubscriptionForm = ({
+  onSubmit,
+  subscriptionsAmount,
+}: Properties) => {
   const form = useForm<FormValues>({
     defaultValues: EMPTY_FORM,
   });
+  const subscriptionLimit = 10;
+  const isSubscriptionLimitExceeded =
+    subscriptionsAmount !== undefined &&
+    subscriptionsAmount >= subscriptionLimit;
 
   const getEnsAddressMutation = useCommandMutation(GetEnsAddressCommand);
   const getFarcasterAddressMutation = useCommandMutation(
@@ -82,10 +90,16 @@ export const SubscriptionForm = ({ onSubmit }: Properties) => {
               id="subscriptionDetails"
               className="mt-1 block w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-black shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
               placeholder="e.g., vitalik.eth"
+              disabled={isSubscriptionLimitExceeded}
             />
           );
         }}
       />
+      {isSubscriptionLimitExceeded && (
+        <ErrorMessage className="mt-1">
+          Subscriptions limit exceeded ({subscriptionLimit}).
+        </ErrorMessage>
+      )}
     </form>
   );
 };

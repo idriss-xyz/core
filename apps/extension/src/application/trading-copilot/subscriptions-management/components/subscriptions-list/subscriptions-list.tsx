@@ -26,7 +26,7 @@ export const SubscriptionsList = ({
     }
 
     return (
-      <div className="relative mt-2">
+      <div className="relative mt-2 h-full overflow-y-auto">
         <ul className="flex flex-col gap-y-3">
           {subscriptions.addresses.map((subscription) => {
             return (
