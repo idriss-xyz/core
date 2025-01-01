@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { Empty, Spinner } from 'shared/ui';
+import { Empty, ScrollArea, Spinner } from 'shared/ui';
 
 import { ListProperties } from './subscription-list.types';
 import { SubscriptionItem } from './subscription-item';
@@ -26,18 +26,20 @@ export const SubscriptionsList = ({
     }
 
     return (
-      <div className="relative mt-2 h-full overflow-y-auto">
-        <ul className="flex flex-col gap-y-3">
-          {subscriptions.addresses.map((subscription) => {
-            return (
-              <SubscriptionItem
-                subscription={subscription}
-                key={subscription}
-                onRemove={onRemove}
-              />
-            );
-          })}
-        </ul>
+      <div className="relative mt-2 h-full">
+        <ScrollArea className="size-full overflow-y-auto transition-all duration-500 [scrollbar-color:gray_#efefef] [scrollbar-width:thin]">
+          <ul className="flex flex-col gap-y-3 pr-2">
+            {subscriptions.addresses.map((subscription) => {
+              return (
+                <SubscriptionItem
+                  subscription={subscription}
+                  key={subscription}
+                  onRemove={onRemove}
+                />
+              );
+            })}
+          </ul>
+        </ScrollArea>
         {subscriptionsUpdatePending && (
           <Spinner className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
         )}
