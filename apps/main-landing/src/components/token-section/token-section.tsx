@@ -77,7 +77,7 @@ export const TokenSection = () => {
               size="medium"
               suffixIconName="IdrissArrowRight"
               asLink
-              href=""
+              href="https://docs.idriss.xyz/dao/token-sale#faq"
               isExternal
             >
               FAQ
@@ -87,7 +87,7 @@ export const TokenSection = () => {
               size="medium"
               suffixIconName="IdrissArrowRight"
               asLink
-              href=""
+              href="https://docs.idriss.xyz/dao/tokenomics"
               isExternal
             >
               TOKENOMICS
@@ -100,7 +100,7 @@ export const TokenSection = () => {
               size="large"
               suffixIconName="IdrissArrowRight"
               asLink
-              href=""
+              href="https://docs.idriss.xyz/dao/token-sale#faq"
               isExternal
             >
               FAQ
@@ -110,7 +110,7 @@ export const TokenSection = () => {
               size="large"
               suffixIconName="IdrissArrowRight"
               asLink
-              href=""
+              href="https://docs.idriss.xyz/dao/tokenomics"
               isExternal
             >
               TOKENOMICS
@@ -189,7 +189,7 @@ export const TokenSection = () => {
                 </span>
                 <Link
                   size="medium"
-                  href=""
+                  href="https://docs.idriss.xyz/dao/terms-and-conditions"
                   isExternal
                   className={classes(
                     'text-body4',

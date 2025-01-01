@@ -61,7 +61,7 @@ export const TokenSaleCountdown = () => {
           'lg:text-body2',
         )}
       >
-        ENDS IN
+        STARTS IN
       </span>
       <div className="flex justify-between self-stretch">
         <div className="flex min-w-14 flex-col items-center justify-center">
