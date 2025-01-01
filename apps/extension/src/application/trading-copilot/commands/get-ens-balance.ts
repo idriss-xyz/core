@@ -29,7 +29,6 @@ export class GetEnsBalanceCommand extends Command<Payload, string | null> {
       });
 
       const result = await client.getBalance(this.payload);
-      console.log(result);
       const balanceAsEth = formatEther(result);
 
       return new OkResult(balanceAsEth);

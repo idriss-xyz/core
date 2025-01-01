@@ -123,7 +123,7 @@ export class ServiceWorker {
       `%c[WebSocket] Found user with wallet ${walletAddress}`,
       'color: #32CD32;',
     );
-    this.socket.emit('register', 'id1');
+    this.socket.emit('register', walletAddress);
   }
 
   createSwapNotification(swapData: SwapData) {
