@@ -160,7 +160,7 @@ export const TokenSection = () => {
                   size="large"
                   prefixIconName="Uniswap"
                   asLink
-                  href=""
+                  href="https://app.uniswap.org/swap?inputCurrency=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913&outputCurrency=0x000096630066820566162C94874A776532705231"
                   isExternal
                   className="w-full md:w-auto"
                 >
@@ -171,7 +171,7 @@ export const TokenSection = () => {
                   size="large"
                   prefixIconName="Jumper"
                   asLink
-                  href=""
+                  href="https://jumper.exchange/?fromChain=8453&fromToken=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913&toChain=8453&toToken=0x000096630066820566162C94874A776532705231"
                   isExternal
                   className="w-full whitespace-nowrap md:w-auto"
                 >
