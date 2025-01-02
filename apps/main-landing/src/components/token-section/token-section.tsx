@@ -33,7 +33,7 @@ const TokenSaleCountdown = dynamic(
 
 export const TokenSection = () => {
   return (
-    <div className="relative z-1 px-safe" id="dao">
+    <div className="relative z-1 px-safe" id="token">
       <div
         className={classes(
           'container flex flex-col items-center justify-center py-10',
@@ -159,10 +159,12 @@ export const TokenSection = () => {
                   intent="primary"
                   size="large"
                   prefixIconName="Uniswap"
-                  asLink
+                  // asLink
                   href="https://app.uniswap.org/swap?inputCurrency=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913&outputCurrency=0x000096630066820566162C94874A776532705231"
-                  isExternal
+                  // isExternal
                   className="w-full md:w-auto"
+                  aria-disabled
+                  disabled
                 >
                   BUY ON UNISWAP
                 </Button>
@@ -170,10 +172,12 @@ export const TokenSection = () => {
                   intent="primary"
                   size="large"
                   prefixIconName="Jumper"
-                  asLink
+                  // asLink
                   href="https://jumper.exchange/?fromChain=8453&fromToken=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913&toChain=8453&toToken=0x000096630066820566162C94874A776532705231"
-                  isExternal
+                  // isExternal
                   className="w-full whitespace-nowrap md:w-auto"
+                  aria-disabled
+                  disabled
                 >
                   BUY CROSS-CHAIN ON JUMPER
                 </Button>
@@ -185,7 +189,7 @@ export const TokenSection = () => {
                     'md:text-body2',
                   )}
                 >
-                  By participating, you agree to the{' '}
+                  By purchasing, you agree to the{' '}
                 </span>
                 <Link
                   size="medium"
