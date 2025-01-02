@@ -16,14 +16,12 @@ import {
   Bitcoin,
   CircleUserRound,
   Trash2,
-  Plus,
 } from 'lucide-react';
 
 import * as customIcons from './custom';
 
 export const ICON = {
   X,
-  Plus,
   Menu,
   Grip,
   LogIn,

@@ -198,7 +198,7 @@ const FollowTradingCopilotContent = ({
         <Icon
           name="Plus"
           size={iconHeight}
-          className={`stroke-[#0f1419] transition-transform duration-300 ${isSubscribed ? 'rotate-45' : ''}`}
+          className={`text-[#0f1419] transition-transform duration-300 ${isSubscribed ? 'rotate-45' : ''}`}
         />
       </Button>
     </PortalWithTailwind>

@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
+import { ScrollArea } from '@radix-ui/react-scroll-area';
 
-import { Empty, ScrollArea, Spinner } from 'shared/ui';
+import { Empty, Spinner } from 'shared/ui';
 
 import { ListProperties } from './subscription-list.types';
 import { SubscriptionItem } from './subscription-item';
