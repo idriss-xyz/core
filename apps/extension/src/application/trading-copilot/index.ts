@@ -4,7 +4,10 @@ export {
   GetEnsNameCommand,
   GetEnsBalanceCommand,
   GetQuoteCommand,
+  AddTradingCopilotSubscriptionCommand,
+  GetTradingCopilotSubscriptionsCommand,
+  RemoveTradingCopilotSubscriptionCommand,
 } from './commands';
-export type { SwapData, FormValues } from './types';
+export type { SwapData, FormValues, SubscriptionRequest } from './types';
 export { SubscriptionsManagement } from './subscriptions-management';
 export { useExchanger } from './hooks';

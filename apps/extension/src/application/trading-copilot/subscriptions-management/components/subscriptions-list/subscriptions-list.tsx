@@ -26,7 +26,7 @@ export const SubscriptionsList = ({
     }
 
     return (
-      <div className="relative mt-2 h-full">
+      <div className="relative mt-2 h-full overflow-hidden">
         <ScrollArea className="size-full overflow-y-auto transition-all duration-500 [scrollbar-color:gray_#efefef] [scrollbar-width:thin]">
           <ul className="flex flex-col gap-y-3 pr-2">
             {subscriptions.addresses.map((subscription) => {

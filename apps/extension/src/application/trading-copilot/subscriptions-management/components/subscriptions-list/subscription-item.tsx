@@ -7,7 +7,7 @@ import { useCommandQuery } from 'shared/messaging';
 import { Icon, LazyImage, getGithubUserLink } from 'shared/ui';
 import { getTwitterUserLink } from 'host/twitter';
 import { GetEnsNameCommand } from 'application/trading-copilot/commands/get-ens-name';
-import { LsFarcasterUserImages } from 'application/trading-copilot/types';
+import { LsFarcasterUserDetails } from 'application/trading-copilot/types';
 
 import { GetEnsInfoCommand } from '../../../commands';
 
@@ -43,13 +43,14 @@ const SubscriptionItemContent = ({
   isFallback,
   subscription,
 }: ItemContentProperties) => {
-  const lsFarcasterPfps = localStorage.getItem('farcasterPfps');
+  const lsFarcasterKey = 'farcasterDetails';
+  const lsFarcasterDetails = localStorage.getItem(lsFarcasterKey);
   // @ts-expect-error TODO: temporary, remove when API will be ready
-  const parsedLsFarcasterPfps: LsFarcasterUserImages = JSON.parse(
-    lsFarcasterPfps ?? '[]',
+  const parsedLsFarcasterDetails: LsFarcasterUserDetails = JSON.parse(
+    lsFarcasterDetails ?? '[]',
   );
 
-  const farcasterSubscriptionDetails = parsedLsFarcasterPfps.find(
+  const farcasterSubscriptionDetails = parsedLsFarcasterDetails.find(
     (farcaster) => {
       return farcaster.wallet === subscription;
     },
@@ -128,7 +129,9 @@ const SubscriptionItemContent = ({
         />
 
         <p className="ml-1.5 flex items-center gap-1.5 text-label5 text-neutral-600">
-          {ensName}
+          {isFarcasterSubscription
+            ? farcasterSubscriptionDetails.name
+            : ensName}
 
           {twitterQuery.data && (
             <ExternalLink href={getTwitterUserLink(twitterQuery.data)}>

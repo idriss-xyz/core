@@ -61,6 +61,7 @@ export type FarcasterUserResponse = {
   result: {
     user: {
       fid: number;
+      displayName: string;
       pfp: {
         url: string;
       };
@@ -68,8 +69,9 @@ export type FarcasterUserResponse = {
   };
 };
 
-export type LsFarcasterUserImages = {
+export type LsFarcasterUserDetails = {
   wallet: string;
+  name: string;
   pfp: string;
 }[];
 

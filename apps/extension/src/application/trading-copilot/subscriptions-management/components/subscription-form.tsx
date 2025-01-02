@@ -3,7 +3,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
 import { useCommandMutation } from 'shared/messaging';
 import { ErrorMessage } from 'shared/ui';
-import { LsFarcasterUserImages } from 'application/trading-copilot/types';
+import { LsFarcasterUserDetails } from 'application/trading-copilot/types';
 
 import {
   GetEnsAddressCommand,
@@ -45,6 +45,7 @@ export const SubscriptionForm = ({
       if (isWalletAddress) {
         onSubmit(data.subscriptionDetails);
         form.reset(EMPTY_FORM);
+        return;
       }
 
       if (isFarcasterName) {
@@ -61,18 +62,20 @@ export const SubscriptionForm = ({
         });
 
         if (farcasterUser) {
-          const lsFarcasterPfps = localStorage.getItem('farcasterPfps');
-          // @ts-expect-error TODO: temporary, remove when API will be ready
-          const parsedLsFarcasterPfps: LsFarcasterUserImages = JSON.parse(
-            lsFarcasterPfps ?? '[]',
+          const lsFarcasterKey = 'farcasterDetails';
+          const lsFarcasterDetails = localStorage.getItem(lsFarcasterKey);
+          // @ts-expect-error TODO: temporary solution, remove when API will be ready
+          const parsedLsFarcasterDetails: LsFarcasterUserDetails = JSON.parse(
+            lsFarcasterDetails ?? '[]',
           );
 
           localStorage.setItem(
-            'farcasterPfps',
+            lsFarcasterKey,
             JSON.stringify([
-              ...parsedLsFarcasterPfps,
+              ...parsedLsFarcasterDetails,
               {
                 wallet: farcasterDetails.address,
+                name: farcasterUser.result.user.displayName,
                 pfp: farcasterUser.result.user.pfp.url,
               },
             ]),
@@ -81,6 +84,7 @@ export const SubscriptionForm = ({
 
         onSubmit(farcasterDetails.address);
         form.reset(EMPTY_FORM);
+        return;
       }
 
       const address = await getEnsAddressMutation.mutateAsync({
