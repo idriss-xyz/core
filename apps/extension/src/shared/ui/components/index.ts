@@ -15,7 +15,6 @@ export { GasIcon } from './gas-icon';
 export type { Pagination } from './pagination';
 export { PaginationComponent } from './pagination';
 export { PulsingLoadingBar } from './pulsing-loading-bar';
-export { ScrollArea } from './scroll-area';
 export { PortalWithTailwind } from './portal-with-tailwind';
 export { LazyImage } from './lazy-image';
 export { Empty } from './empty';
