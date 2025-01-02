@@ -7,6 +7,7 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { formatAddress } from '../utils';
 import { IDRISS_TOKEN_ADDRESS } from '../constants';
 
+// ts-unused-exports:disable-next-line
 export const CopyAddressButton = () => {
   const [copied, setCopied] = useState(false);
 

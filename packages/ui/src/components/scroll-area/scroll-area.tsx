@@ -22,6 +22,7 @@ const handleScroll = (
   window.dispatchEvent(customEvent);
 };
 
+// ts-unused-exports:disable-next-line
 export const ScrollArea = ({
   children,
   className,

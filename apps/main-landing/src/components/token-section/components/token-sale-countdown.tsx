@@ -8,6 +8,7 @@ import { IDRISS_TOKEN_SALE_END } from '../constants';
 
 const targetDate = new Date(IDRISS_TOKEN_SALE_END);
 
+// ts-unused-exports:disable-next-line
 export const TokenSaleCountdown = () => {
   const [timeRemaining, setTimeRemaining] = useState<{
     days: number;

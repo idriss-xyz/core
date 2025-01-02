@@ -8,6 +8,7 @@ interface ScrollAreaProperties extends RadixScrollArea.ScrollAreaProps {
   className?: string;
 }
 
+// ts-unused-exports:disable-next-line
 export const ScrollArea = ({
   children,
   className,
