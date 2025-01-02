@@ -23,7 +23,7 @@ export const Tabs = ({ activeOptionKey, options, asLink, ref }: Properties) => {
     >
       <div
         className={classes(
-          'flex items-start gap-1 text-label5 px-safe lg:flex lg:text-label4',
+          'flex gap-1 text-label5 px-safe sm:justify-center lg:flex lg:items-start lg:text-label4',
         )}
       >
         {options.map((option) => {

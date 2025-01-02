@@ -123,8 +123,9 @@ export const ProductSection = ({
                 <h2
                   className={classes(
                     'text-balance pt-20 text-display5 text-midnightGreen-100 transition-transform duration-1000',
+                    'sm:text-center',
                     'md:text-display4',
-                    'lg:pt-0',
+                    'lg:pt-0 lg:text-start',
                     '2xl:text-display3',
 
                     headerClassName,
@@ -138,6 +139,8 @@ export const ProductSection = ({
                 <p
                   className={classes(
                     'text-balance text-body2 text-midnightGreen-200 transition-transform duration-1000',
+                    'sm:text-center',
+                    'lg:text-start',
                     '2xl:text-body3',
                     '4xl:text-body2',
                     fadeOut && 'translate-y-[-120%]',

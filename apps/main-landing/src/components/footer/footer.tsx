@@ -55,7 +55,8 @@ export const Footer = () => {
           <div
             className={classes(
               'mt-6 grid grid-cols-[auto,_1fr] gap-6',
-              'lg:mt-0 lg:grid-cols-3',
+              'sm:grid-cols-3',
+              'lg:mt-0',
             )}
           >
             <Section title="GET STARTED" items={INTERNAL_LINKS} />
