@@ -69,14 +69,18 @@ export const Mobile = () => {
 
                     <NavigationMenu.Link asChild>
                       <span>
-                        <Link href={INTERNAL_LINK.DAO} passHref legacyBehavior>
+                        <Link
+                          href={INTERNAL_LINK.TOKEN}
+                          passHref
+                          legacyBehavior
+                        >
                           <Button
                             intent="tertiary"
                             size="large"
                             onClick={close}
                             asLink
                           >
-                            DAO
+                            TOKEN
                           </Button>
                         </Link>
                       </span>

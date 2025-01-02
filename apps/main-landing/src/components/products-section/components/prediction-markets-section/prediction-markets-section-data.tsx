@@ -13,11 +13,15 @@ const PREDICTION_MARKETS_INFO: ProductSectionInfo = {
     },
     {
       icon: 'Verifying',
-      title: 'Verify authenticity of news and detect generative AI',
+      title: 'Verify authenticity of news',
     },
     {
       icon: 'Head',
       title: 'Powered by humans and AI agents',
+    },
+    {
+      icon: 'Lens',
+      title: 'Detect generative AI',
     },
   ],
 };
