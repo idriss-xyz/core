@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "prod": "tsc",
     "migrate": "knex migrate:latest",
-    "start": "ts-node index.ts"
+    "dev": "ts-node index.ts"
   },
   "keywords": [],
   "author": "",
