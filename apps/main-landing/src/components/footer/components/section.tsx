@@ -1,6 +1,7 @@
 import { Button } from '@idriss-xyz/ui/button';
 import { forwardRef } from 'react';
 import Link from 'next/link';
+import { classes } from '@idriss-xyz/ui/utils';
 
 import { SectionItem } from '../types';
 
@@ -13,7 +14,12 @@ export const Section = forwardRef<HTMLDivElement, Properties>(
   ({ title, items }, reference) => {
     return (
       <div ref={reference}>
-        <span className="mb-6 block text-label5 text-neutral-500 lg:text-label4">
+        <span
+          className={classes(
+            'mb-6 block text-label5 text-neutral-500',
+            'lg:text-label4',
+          )}
+        >
           {title}
         </span>
         <ul className="list-none space-y-2">
