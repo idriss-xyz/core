@@ -7,6 +7,7 @@ import { useCommandQuery } from 'shared/messaging';
 import { Icon, LazyImage, getGithubUserLink } from 'shared/ui';
 import { getTwitterUserLink } from 'host/twitter';
 import { GetEnsNameCommand } from 'application/trading-copilot/commands/get-ens-name';
+import { LsFarcasterUserImages } from 'application/trading-copilot/types';
 
 import { GetEnsInfoCommand } from '../../../commands';
 
@@ -42,6 +43,20 @@ const SubscriptionItemContent = ({
   isFallback,
   subscription,
 }: ItemContentProperties) => {
+  const lsFarcasterPfps = localStorage.getItem('farcasterPfps');
+  // @ts-expect-error TODO: temporary, remove when API will be ready
+  const parsedLsFarcasterPfps: LsFarcasterUserImages = JSON.parse(
+    lsFarcasterPfps ?? '[]',
+  );
+
+  const farcasterSubscriptionDetails = parsedLsFarcasterPfps.find(
+    (farcaster) => {
+      return farcaster.wallet === subscription;
+    },
+  );
+
+  const isFarcasterSubscription = !!farcasterSubscriptionDetails;
+
   const remove = useCallback(() => {
     onRemove(subscription);
   }, [onRemove, subscription]);
@@ -88,14 +103,18 @@ const SubscriptionItemContent = ({
       infoKey: 'avatar',
     }),
     staleTime: Number.POSITIVE_INFINITY,
-    enabled: !isFallback,
+    enabled: !isFallback && !isFarcasterSubscription,
   });
 
   return (
     <li className="flex items-center justify-between">
       <div className="flex items-center">
         <LazyImage
-          src={avatarQuery.data}
+          src={
+            isFarcasterSubscription
+              ? farcasterSubscriptionDetails.pfp
+              : avatarQuery.data
+          }
           className="size-8 rounded-full border border-neutral-400 bg-neutral-200"
           fallbackComponent={
             <div className="flex size-8 items-center justify-center rounded-full border border-neutral-300 bg-neutral-200">

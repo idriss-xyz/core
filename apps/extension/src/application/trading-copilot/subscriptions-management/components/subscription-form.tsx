@@ -3,10 +3,12 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
 import { useCommandMutation } from 'shared/messaging';
 import { ErrorMessage } from 'shared/ui';
+import { LsFarcasterUserImages } from 'application/trading-copilot/types';
 
 import {
   GetEnsAddressCommand,
   GetFarcasterAddressCommand,
+  GetFarcasterUserCommand,
 } from '../../commands';
 
 import { Properties, FormValues } from './subscription-form.types';
@@ -31,6 +33,7 @@ export const SubscriptionForm = ({
   const getFarcasterAddressMutation = useCommandMutation(
     GetFarcasterAddressCommand,
   );
+  const getFarcasterUserMutation = useCommandMutation(GetFarcasterUserCommand);
 
   const addSubscriber: SubmitHandler<FormValues> = useCallback(
     async (data) => {
@@ -45,15 +48,38 @@ export const SubscriptionForm = ({
       }
 
       if (isFarcasterName) {
-        const address = await getFarcasterAddressMutation.mutateAsync({
+        const farcasterDetails = await getFarcasterAddressMutation.mutateAsync({
           name: data.subscriptionDetails,
         });
 
-        if (!address) {
+        if (!farcasterDetails) {
           return;
         }
 
-        onSubmit(address);
+        const farcasterUser = await getFarcasterUserMutation.mutateAsync({
+          id: farcasterDetails.fid,
+        });
+
+        if (farcasterUser) {
+          const lsFarcasterPfps = localStorage.getItem('farcasterPfps');
+          // @ts-expect-error TODO: temporary, remove when API will be ready
+          const parsedLsFarcasterPfps: LsFarcasterUserImages = JSON.parse(
+            lsFarcasterPfps ?? '[]',
+          );
+
+          localStorage.setItem(
+            'farcasterPfps',
+            JSON.stringify([
+              ...parsedLsFarcasterPfps,
+              {
+                wallet: farcasterDetails.address,
+                pfp: farcasterUser.result.user.pfp.url,
+              },
+            ]),
+          );
+        }
+
+        onSubmit(farcasterDetails.address);
         form.reset(EMPTY_FORM);
       }
 
@@ -68,7 +94,13 @@ export const SubscriptionForm = ({
       onSubmit(address);
       form.reset(EMPTY_FORM);
     },
-    [form, getEnsAddressMutation, getFarcasterAddressMutation, onSubmit],
+    [
+      form,
+      getEnsAddressMutation,
+      getFarcasterAddressMutation,
+      getFarcasterUserMutation,
+      onSubmit,
+    ],
   );
 
   return (

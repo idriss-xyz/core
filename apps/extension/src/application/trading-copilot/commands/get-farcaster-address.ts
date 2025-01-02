@@ -9,7 +9,7 @@ import {
 import {
   FarcasterAddressRequest as Payload,
   FarcasterAddressResponse as Response,
-  FarcasterTransfersResponse,
+  FarcasterTransferResponse,
   FarcasterConnectedAddressesResponse,
 } from '../types';
 
@@ -22,27 +22,27 @@ export class GetFarcasterAddressCommand extends Command<Payload, Response> {
 
   async handle() {
     try {
-      const transfersResponse = await fetch(
+      const transferResponse = await fetch(
         `https://fnames.farcaster.xyz/transfers/current?name=${this.payload.name}`,
         {
           method: 'GET',
         },
       );
 
-      if (!transfersResponse.ok) {
-        const responseText = await transfersResponse.text();
+      if (!transferResponse.ok) {
+        const responseText = await transferResponse.text();
         throw new HandlerResponseError(
           this.name,
           responseText,
-          transfersResponse.status,
+          transferResponse.status,
         );
       }
 
-      const transfersData =
-        (await transfersResponse.json()) as FarcasterTransfersResponse;
+      const transferData =
+        (await transferResponse.json()) as FarcasterTransferResponse;
 
       const connectedAddressesResponse = await fetch(
-        `https://api.idriss.xyz/snap/get-connected-addresses?fid=${transfersData.transfer.to}`,
+        `https://api.idriss.xyz/snap/get-connected-addresses?fid=${transferData.transfer.to}`,
         {
           method: 'GET',
         },
@@ -66,7 +66,10 @@ export class GetFarcasterAddressCommand extends Command<Payload, Response> {
         });
 
       return verifiedAddress
-        ? new OkResult(verifiedAddress.address)
+        ? new OkResult({
+            fid: transferData.transfer.to,
+            address: verifiedAddress.address,
+          })
         : new OkResult(null);
     } catch (error) {
       this.captureException(error);
