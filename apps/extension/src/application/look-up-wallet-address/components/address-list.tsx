@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
+import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 
-import { classes, ScrollArea } from 'shared/ui';
+import { classes } from 'shared/ui';
 
 import { SearchResult } from '../types';
 

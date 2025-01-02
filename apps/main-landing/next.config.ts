@@ -43,6 +43,16 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: '/token',
+        destination: '/#token',
+        permanent: true,
+      },
+      {
+        source: '/buy',
+        destination: '/#token',
+        permanent: true,
+      },
+      {
         source: '/streamers/obs',
         destination: 'https://api.idriss.xyz/creators/obs',
         basePath: false,
@@ -100,6 +110,18 @@ const nextConfig: NextConfig = {
       {
         source: '/service-status',
         destination: 'https://api.idriss.xyz/service-status',
+        basePath: false,
+        permanent: false,
+      },
+      {
+        source: '/tokenomics',
+        destination: 'https://docs.idriss.xyz/idriss-token',
+        basePath: false,
+        permanent: false,
+      },
+      {
+        source: '/sale-faq',
+        destination: 'https://docs.idriss.xyz/idriss-token/token-sale#faq',
         basePath: false,
         permanent: false,
       },
