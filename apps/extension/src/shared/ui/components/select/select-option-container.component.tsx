@@ -1,7 +1,7 @@
-import { ReactNode, forwardRef } from 'react';
+import {ReactNode, forwardRef} from 'react';
 
-import { PolymorphicReference } from '../../types';
-import { classes } from '../../utils';
+import {PolymorphicReference} from '../../types';
+import {classes} from '../../utils';
 
 import {
   PolymorphicSelectOptionContainerProperties,
@@ -23,7 +23,7 @@ export const SelectOptionContainer: SelectOptionContainerComponent = forwardRef(
       <Component
         {...restProperties}
         className={classes(
-          'w-full rounded-md bg-white shadow-sm focus:outline-none',
+          'w-full rounded-md bg-white shadow-xs focus:outline-none',
           className,
         )}
         ref={reference}

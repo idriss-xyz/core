@@ -1,11 +1,11 @@
-import { ReactNode, useMemo, useState } from 'react';
+import {ReactNode, useMemo, useState} from 'react';
 import * as Portal from '@radix-ui/react-portal';
 
-import { usePortal } from '../../providers/with-portal';
-import { IconButton } from '../icon-button';
-import { classes } from '../../utils';
+import {usePortal} from '../../providers/with-portal';
+import {IconButton} from '../icon-button';
+import {classes} from '../../utils';
 
-import { Backdrop } from './backdrop';
+import {Backdrop} from './backdrop';
 
 type Properties = {
   header?: ReactNode;
@@ -26,24 +26,24 @@ type Properties = {
 };
 
 export const Modal = ({
-  children,
-  header,
-  isOpened,
-  onClose,
-  className,
-  backdropClassName,
-  closeOnHoverAway,
-  closeOnClickAway,
-  onClickInside,
-  headerContainerClassName,
-  width,
-  left,
-  right,
-  top,
-  withoutPortal,
-}: Properties) => {
+                        children,
+                        header,
+                        isOpened,
+                        onClose,
+                        className,
+                        backdropClassName,
+                        closeOnHoverAway,
+                        closeOnClickAway,
+                        onClickInside,
+                        headerContainerClassName,
+                        width,
+                        left,
+                        right,
+                        top,
+                        withoutPortal,
+                      }: Properties) => {
   const [fakePortal, setFakePortal] = useState<HTMLDivElement | null>(null);
-  const { portal } = usePortal();
+  const {portal} = usePortal();
 
   const shouldBeCentered = useMemo(() => {
     return [left, right, top].every((value) => {
@@ -90,7 +90,6 @@ export const Modal = ({
                 'relative',
                 headerContainerClassName,
                 'pr-14',
-                'border-b-secondary border-b',
               )}
             >
               {header}

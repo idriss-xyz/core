@@ -1,24 +1,24 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { useMemo } from 'react';
+import {useMemo} from 'react';
 
-import { usePortal } from '../../providers';
-import { classes } from '../../utils';
-import { ScrollArea } from '../scroll-area';
+import {usePortal} from '../../providers';
+import {classes} from '../../utils';
+import {ScrollArea} from '../scroll-area';
 
-import { SelectProperties } from './select.types';
-import { SelectOption } from './select-option.component';
-import { SelectOptionContainer } from './select-option-container.component';
+import {SelectProperties} from './select.types';
+import {SelectOption} from './select-option.component';
+import {SelectOptionContainer} from './select-option-container.component';
 
-export const Select = <T,>({
-  label,
-  options,
-  value,
-  className,
-  optionsContainerClassName,
-  renderLabel,
-  onChange,
-}: SelectProperties<T>) => {
-  const { portal } = usePortal();
+export const Select = <T, >({
+                              label,
+                              options,
+                              value,
+                              className,
+                              optionsContainerClassName,
+                              renderLabel,
+                              onChange,
+                            }: SelectProperties<T>) => {
+  const {portal} = usePortal();
   const pickedOption = useMemo(() => {
     return (
       options.find((option) => {
@@ -43,7 +43,7 @@ export const Select = <T,>({
       <DropdownMenu.Root modal={false}>
         <DropdownMenu.Trigger asChild>
           <SelectOptionContainer
-            className="text-neutralGreen-900 ring-1 ring-[#D1D5DB] focus:ring-indigo-500"
+            className="text-neutralGreen-900 ring-[#D1D5DB] focus:ring-indigo-500"
             as="button"
           >
             <SelectOption
