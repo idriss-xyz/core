@@ -115,13 +115,13 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/tokenomics',
-        destination: 'https://docs.idriss.xyz/idriss-token',
+        destination: 'https://docs.idriss.xyz/dao',
         basePath: false,
         permanent: false,
       },
       {
         source: '/sale-faq',
-        destination: 'https://docs.idriss.xyz/idriss-token/token-sale#faq',
+        destination: 'https://docs.idriss.xyz/dao/token-sale#faq',
         basePath: false,
         permanent: false,
       },
