@@ -38,6 +38,17 @@ export const ExtensionSettingsManager = {
     });
   },
 
+  onWalletChange(callback: (newWallet: StoredWallet | undefined) => void) {
+    chrome.storage.onChanged.addListener((changes, namespace) => {
+      if (namespace === 'local' && changes['idriss-wallet']) {
+        const newWallet = changes['idriss-wallet'].newValue
+          ? (JSON.parse(changes['idriss-wallet'].newValue) as StoredWallet)
+          : undefined;
+        callback(newWallet);
+      }
+    });
+  },
+
   // TODO: move the device-id to a separate manager
   setDeviceId(id: string) {
     return chrome.storage.local.set({

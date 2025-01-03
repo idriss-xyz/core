@@ -11,11 +11,20 @@ type Properties = {
   error?: boolean;
   success?: boolean;
   asTextArea?: boolean;
+  placeholder?: string;
 };
 
 export const Input = forwardRef(
   (
-    { value, onChange, className, success, error, asTextArea }: Properties,
+    {
+      value,
+      onChange,
+      className,
+      success,
+      error,
+      asTextArea,
+      placeholder,
+    }: Properties,
     reference: ForwardedRef<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const properties = {
@@ -28,6 +37,7 @@ export const Input = forwardRef(
       ),
       value,
       onChange,
+      placeholder,
     };
 
     if (asTextArea) {

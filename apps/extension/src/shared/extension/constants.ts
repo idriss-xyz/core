@@ -9,6 +9,7 @@ export const POPUP_ROUTE = {
   SETTINGS: '/settings',
   GOVERNANCE_SETTINGS: '/settings/governance',
   OTHER_SETTINGS: '/settings/other',
+  TRADING_COPILOT: '/trading-copilot',
 } as const;
 
 export type PopupRoute = (typeof POPUP_ROUTE)[keyof typeof POPUP_ROUTE];

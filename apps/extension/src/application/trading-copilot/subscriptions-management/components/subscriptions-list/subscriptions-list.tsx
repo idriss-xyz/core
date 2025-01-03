@@ -2,46 +2,37 @@ import { useMemo } from 'react';
 
 import { Empty, Spinner } from 'shared/ui';
 
-import { Subscription } from '../../../types';
-
+import { ListProperties } from './subscription-list.types';
 import { SubscriptionItem } from './subscription-item';
 
-type Properties = {
-  subscriptions: Subscription[];
-  subscriptionsLoading: boolean;
-  subscriptionsUpdatePending: boolean;
-  className?: string;
-  onRemove: (ensName: Subscription['ensName']) => void;
-};
-
 export const SubscriptionsList = ({
+  onRemove,
+  className,
   subscriptions,
   subscriptionsLoading,
   subscriptionsUpdatePending,
-  onRemove,
-  className,
-}: Properties) => {
+}: ListProperties) => {
   const subscriptionsListBody = useMemo(() => {
     if (subscriptionsLoading) {
       return (
-        <Spinner className="mt-14 flex w-full items-center justify-center" />
+        <Spinner className="mt-10 flex w-full items-center justify-center" />
       );
     }
 
-    if (subscriptions.length === 0) {
+    if (subscriptions === undefined || subscriptions.addresses.length === 0) {
       return (
-        <Empty text="Your subscriptions list is empty" className="mt-14" />
+        <Empty text="Your subscriptions list is empty" className="mt-10" />
       );
     }
 
     return (
-      <div className="relative">
-        <ul className="space-y-2">
-          {subscriptions.map((subscription) => {
+      <div className="relative mt-2">
+        <ul className="flex flex-col gap-y-3">
+          {subscriptions.addresses.map((subscription) => {
             return (
               <SubscriptionItem
                 subscription={subscription}
-                key={subscription.ensName}
+                key={subscription}
                 onRemove={onRemove}
               />
             );
@@ -61,8 +52,8 @@ export const SubscriptionsList = ({
 
   return (
     <div className={className}>
-      <p className="mb-2 text-sm font-semibold leading-6 text-mint-900">
-        Your Subscriptions
+      <p className="mb-1 block text-label4 text-neutralGreen-700">
+        Your subscriptions
       </p>
       {subscriptionsListBody}
     </div>

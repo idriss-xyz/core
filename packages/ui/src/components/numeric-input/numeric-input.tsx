@@ -5,6 +5,8 @@ import { Input } from '../input';
 
 type Properties = Omit<ComponentProps<typeof Input>, 'onChange'> & {
   onChange: (value: string) => void;
+  placeholder?: string;
+  decimalScale?: number;
 };
 
 export const NumericInput = forwardRef(

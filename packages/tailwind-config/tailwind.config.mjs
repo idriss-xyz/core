@@ -125,6 +125,7 @@ export default {
         extensionPopup: '100000',
         portal: '100001',
         scrollbar: '100010',
+        notification: '99999'
       },
       fontFamily: {
         sans: ['var(--font-aeonikpro)'],
