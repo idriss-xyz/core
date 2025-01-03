@@ -1,4 +1,5 @@
 import {
+  LsFarcasterUserDetails,
   SubscriptionRequest,
   SubscriptionResponse,
   SubscriptionsResponse,
@@ -20,4 +21,6 @@ export interface ItemProperties {
 export interface ItemContentProperties extends ItemProperties {
   ensName: string;
   isFallback: boolean;
+  isFarcasterSubscription?: boolean;
+  farcasterSubscriptionDetails?: LsFarcasterUserDetails;
 }
