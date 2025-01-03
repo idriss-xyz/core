@@ -3,7 +3,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
 import { useCommandMutation } from 'shared/messaging';
 import { ErrorMessage } from 'shared/ui';
-import { LsFarcasterUserDetails } from 'application/trading-copilot/types';
+import { LsFarcasterUsersDetails } from 'application/trading-copilot/types';
 
 import {
   GetEnsAddressCommand,
@@ -65,7 +65,7 @@ export const SubscriptionForm = ({
           const lsFarcasterKey = 'farcasterDetails';
           const lsFarcasterDetails = localStorage.getItem(lsFarcasterKey);
           // @ts-expect-error TODO: temporary solution, remove when API will be ready
-          const parsedLsFarcasterDetails: LsFarcasterUserDetails = JSON.parse(
+          const parsedLsFarcasterDetails: LsFarcasterUsersDetails = JSON.parse(
             lsFarcasterDetails ?? '[]',
           );
 
@@ -75,7 +75,8 @@ export const SubscriptionForm = ({
               ...parsedLsFarcasterDetails,
               {
                 wallet: farcasterDetails.address,
-                name: farcasterUser.result.user.displayName,
+                username: farcasterUser.result.user.username,
+                displayName: farcasterUser.result.user.displayName,
                 pfp: farcasterUser.result.user.pfp.url,
               },
             ]),

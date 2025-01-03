@@ -9,7 +9,7 @@ import {
   GetTradingCopilotSubscriptionsCommand,
   RemoveTradingCopilotSubscriptionCommand,
 } from '../commands';
-import { LsFarcasterUserDetails, SubscriptionRequest } from '../types';
+import { LsFarcasterUsersDetails, SubscriptionRequest } from '../types';
 
 import { SubscriptionForm, SubscriptionsList } from './components';
 import { ContentProperties } from './subscriptions-management.types';
@@ -61,7 +61,7 @@ const SubscriptionsManagementContent = ({
       const lsFarcasterKey = 'farcasterDetails';
       const lsFarcasterDetails = localStorage.getItem(lsFarcasterKey);
       // @ts-expect-error TODO: temporary, remove when API will be ready
-      const parsedLsFarcasterDetails: LsFarcasterUserDetails = JSON.parse(
+      const parsedLsFarcasterDetails: LsFarcasterUsersDetails = JSON.parse(
         lsFarcasterDetails ?? '[]',
       );
 
