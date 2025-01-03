@@ -235,12 +235,6 @@ export class ServiceWorker {
     }
   }
 
-  private async handleTabChange(tab: chrome.tabs.Tab) {
-    await this.delay(500); // Temporary delay to prevent rendering notifications before extension content is loaded
-    await this.renderSavedNotifications(tab);
-    await this.notifyActiveTab();
-  }
-
   private async notifyActiveTab() {
     const tabs = await this.queryActiveTabs();
     const activeTab = tabs[0];
@@ -254,6 +248,12 @@ export class ServiceWorker {
         //
       }
     }
+  }
+
+  private async handleTabChange(tab: chrome.tabs.Tab) {
+    await this.delay(500); // Temporary delay to prevent rendering notifications before extension content is loaded
+    await this.renderSavedNotifications(tab);
+    await this.notifyActiveTab();
   }
 
   watchTabChanges() {

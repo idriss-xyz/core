@@ -124,11 +124,11 @@ export class ContentScript {
       if (request.type === ACTIVE_TAB_CHANGED) {
         const detail = await ExtensionSettingsManager.getAllSettings();
 
-        const extensionMessage = {
+        const message = {
           type: GET_EXTENSION_SETTINGS_RESPONSE,
           detail,
         };
-        window.postMessage(extensionMessage);
+        window.postMessage(message);
         return;
       }
     });
