@@ -1,7 +1,8 @@
 import { DataSource } from 'typeorm';
 import dotenv from 'dotenv';
+import {join} from "path";
 
-dotenv.config();
+dotenv.config({path: join(__dirname, `.env.${process.env.NODE_ENV}`)})
 
 export const dataSource = new DataSource({
   type: 'postgres',

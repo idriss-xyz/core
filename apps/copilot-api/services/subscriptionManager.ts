@@ -6,10 +6,10 @@ import {SubscriptionsEntity} from "../entities/subscribtions.entity";
 import {AddressWebhookMapEntity} from "../entities/addressWebhookMap.entity";
 import axios from "axios";
 import {v4 as uuidv4} from 'uuid'
-import {webhooks} from "../constants";
 import dotenv from "dotenv";
+import {join} from "path";
 
-dotenv.config()
+dotenv.config({path: join(__dirname, `../.env.${process.env.NODE_ENV}`)})
 
 const ALCHEMY_API_BASE_URL = "https://dashboard.alchemyapi.io";
 const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY!;
