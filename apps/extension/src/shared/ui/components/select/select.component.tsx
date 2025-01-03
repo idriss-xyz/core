@@ -1,24 +1,24 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import {useMemo} from 'react';
+import { useMemo } from 'react';
+import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 
-import {usePortal} from '../../providers';
-import {classes} from '../../utils';
-import {ScrollArea} from '../scroll-area';
+import { usePortal } from '../../providers';
+import { classes } from '../../utils';
 
-import {SelectProperties} from './select.types';
-import {SelectOption} from './select-option.component';
-import {SelectOptionContainer} from './select-option-container.component';
+import { SelectProperties } from './select.types';
+import { SelectOption } from './select-option.component';
+import { SelectOptionContainer } from './select-option-container.component';
 
-export const Select = <T, >({
-                              label,
-                              options,
-                              value,
-                              className,
-                              optionsContainerClassName,
-                              renderLabel,
-                              onChange,
-                            }: SelectProperties<T>) => {
-  const {portal} = usePortal();
+export const Select = <T,>({
+  label,
+  options,
+  value,
+  className,
+  optionsContainerClassName,
+  renderLabel,
+  onChange,
+}: SelectProperties<T>) => {
+  const { portal } = usePortal();
   const pickedOption = useMemo(() => {
     return (
       options.find((option) => {

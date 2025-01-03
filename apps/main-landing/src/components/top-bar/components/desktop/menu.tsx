@@ -32,9 +32,9 @@ export const Menu = ({ className }: Properties) => {
         <NavigationMenu.Item>
           <NavigationMenu.Link asChild>
             <span>
-              <Link href={INTERNAL_LINK.DAO} passHref legacyBehavior>
+              <Link href={INTERNAL_LINK.TOKEN} passHref legacyBehavior>
                 <Button intent="tertiary" size="large" asLink>
-                  DAO
+                  TOKEN
                 </Button>
               </Link>
             </span>

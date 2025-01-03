@@ -1,21 +1,19 @@
-import {ReactNode, useMemo, useState} from 'react';
+import { ReactNode, useMemo, useState } from 'react';
 import * as Portal from '@radix-ui/react-portal';
 
-import {usePortal} from '../../providers/with-portal';
-import {IconButton} from '../icon-button';
-import {classes} from '../../utils';
+import { usePortal } from '../../providers/with-portal';
+import { IconButton } from '../icon-button';
+import { classes } from '../../utils';
 
-import {Backdrop} from './backdrop';
+import { Backdrop } from './backdrop';
 
 type Properties = {
   header?: ReactNode;
   children: ReactNode;
   isOpened: boolean;
-  onClose: () => void;
+  onClose?: () => void;
   className?: string;
   backdropClassName?: string;
-  closeOnHoverAway?: boolean;
-  closeOnClickAway?: boolean;
   onClickInside?: () => void;
   width?: number;
   left?: number;
@@ -23,27 +21,44 @@ type Properties = {
   top?: number;
   headerContainerClassName?: string;
   withoutPortal?: boolean;
-};
+  closeOnHoverAway?: boolean;
+  closeOnClickAway?: boolean;
+} & (
+  | {
+      closeOnHoverAway: true;
+      closeOnClickAway?: boolean;
+      onClose: () => void;
+    }
+  | {
+      closeOnClickAway: true;
+      closeOnHoverAway?: boolean;
+      onClose: () => void;
+    }
+  | {
+      closeOnHoverAway?: false;
+      closeOnClickAway?: false;
+    }
+);
 
 export const Modal = ({
-                        children,
-                        header,
-                        isOpened,
-                        onClose,
-                        className,
-                        backdropClassName,
-                        closeOnHoverAway,
-                        closeOnClickAway,
-                        onClickInside,
-                        headerContainerClassName,
-                        width,
-                        left,
-                        right,
-                        top,
-                        withoutPortal,
-                      }: Properties) => {
+  children,
+  header,
+  isOpened,
+  onClose,
+  className,
+  backdropClassName,
+  closeOnHoverAway,
+  closeOnClickAway,
+  onClickInside,
+  headerContainerClassName,
+  width,
+  left,
+  right,
+  top,
+  withoutPortal,
+}: Properties) => {
   const [fakePortal, setFakePortal] = useState<HTMLDivElement | null>(null);
-  const {portal} = usePortal();
+  const { portal } = usePortal();
 
   const shouldBeCentered = useMemo(() => {
     return [left, right, top].every((value) => {
@@ -89,17 +104,19 @@ export const Modal = ({
               className={classes(
                 'relative',
                 headerContainerClassName,
-                'pr-14',
+                onClose && 'pr-14',
               )}
             >
               {header}
-              <IconButton
-                onClick={onClose}
-                className="absolute right-3 top-3"
-                intent="tertiary"
-                size="medium"
-                iconName="X"
-              />
+              {onClose && (
+                <IconButton
+                  onClick={onClose}
+                  className="absolute right-3 top-3"
+                  intent="tertiary"
+                  size="medium"
+                  iconName="X"
+                />
+              )}
             </div>
           )}
           {children}

@@ -1,12 +1,12 @@
-import {Controller, UseFormReturn} from 'react-hook-form';
-import {Form as DesignSystemForm} from '@idriss-xyz/ui/form';
-import {ReactNode, useCallback, useRef} from 'react';
-import {Button} from '@idriss-xyz/ui/button';
-import {classes} from '@idriss-xyz/ui/utils';
+import { Controller, UseFormReturn } from 'react-hook-form';
+import { Form as DesignSystemForm } from '@idriss-xyz/ui/form';
+import { ReactNode, useCallback, useRef } from 'react';
+import { Button } from '@idriss-xyz/ui/button';
+import { classes } from '@idriss-xyz/ui/utils';
 
-import {ChainSelect, ChainToken, TokenSelect} from 'shared/web3';
+import { ChainSelect, ChainToken, TokenSelect } from 'shared/web3';
 
-import {SendFormValues} from '../../types';
+import { SendFormValues } from '../../types';
 
 interface Properties {
   footer: ReactNode;
@@ -20,15 +20,15 @@ interface Properties {
 }
 
 export const Form = ({
-                       footer,
-                       tokens,
-                       className,
-                       formMethods,
-                       allowedChainsIds,
-                       onSubmit,
-                       onChangeChainId,
-                       renderChainSuffix,
-                     }: Properties) => {
+  footer,
+  tokens,
+  className,
+  formMethods,
+  allowedChainsIds,
+  onSubmit,
+  onChangeChainId,
+  renderChainSuffix,
+}: Properties) => {
   const amount = formMethods.watch('amount');
   const formReference = useRef<HTMLFormElement | null>(null);
 
@@ -51,7 +51,7 @@ export const Form = ({
         <Controller
           control={formMethods.control}
           name="amount"
-          render={({field}) => {
+          render={({ field }) => {
             return (
               <DesignSystemForm.Field
                 {...field}
@@ -72,7 +72,7 @@ export const Form = ({
             className={classes(
               'w-full',
               amount === 1 &&
-              'border-mint-600 bg-mint-300 hover:border-mint-600 hover:bg-mint-300',
+                'border-mint-600 bg-mint-300 hover:border-mint-600 hover:bg-mint-300',
             )}
             intent="secondary"
             size="medium"
@@ -84,7 +84,7 @@ export const Form = ({
             className={classes(
               'w-full',
               amount === 2 &&
-              'border-mint-600 bg-mint-300 hover:border-mint-600 hover:bg-mint-300',
+                'border-mint-600 bg-mint-300 hover:border-mint-600 hover:bg-mint-300',
             )}
             intent="secondary"
             size="medium"
@@ -96,7 +96,7 @@ export const Form = ({
             className={classes(
               'w-full',
               amount === 5 &&
-              'border-mint-600 bg-mint-300 hover:border-mint-600 hover:bg-mint-300',
+                'border-mint-600 bg-mint-300 hover:border-mint-600 hover:bg-mint-300',
             )}
             intent="secondary"
             size="medium"
@@ -108,7 +108,7 @@ export const Form = ({
         <Controller
           control={formMethods.control}
           name="chainId"
-          render={({field}) => {
+          render={({ field }) => {
             return (
               <ChainSelect
                 className="mt-4"
@@ -128,7 +128,7 @@ export const Form = ({
         <Controller
           control={formMethods.control}
           name="tokenAddress"
-          render={({field}) => {
+          render={({ field }) => {
             return (
               <TokenSelect
                 className="mt-4"
