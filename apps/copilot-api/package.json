@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "prod": "NODE_ENV=production tsc",
     "migrate": "knex migrate:latest",
-    "start": "ts-node index.ts"
+    "dev": "NODE_ENV=development ts-node index.ts",
+    "format": "prettier --check --config ./prettier.config.mjs --ignore-path .prettierignore .",
+    "format:fix": "prettier --write --config ./prettier.config.mjs --ignore-path .prettierignore ."
   },
   "keywords": [],
   "author": "",

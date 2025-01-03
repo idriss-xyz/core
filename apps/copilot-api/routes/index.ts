@@ -1,11 +1,11 @@
 import express from 'express';
-import {throwInternalError} from '../middleware/error.middleware';
+import { throwInternalError } from '../middleware/error.middleware';
 import {
   subscribeAddress,
   unsubscribeAddress,
 } from '../services/subscriptionManager';
 import connectedClients from '../index';
-import {verifyToken} from '../middleware/auth.middleware';
+import { verifyToken } from '../middleware/auth.middleware';
 
 const router = express.Router();
 
@@ -13,11 +13,11 @@ router.get('/', (_, res) => {
   res.status(200).send('Express');
 });
 
-router.post('/subscribe', verifyToken(), async (req, res) => {
-  const {subscriberId, address} = req.body;
+router.post('/subscribe', async (req, res) => {
+  const { subscriberId, address } = req.body;
 
   if (!subscriberId || !address) {
-    res.status(400).json({error: 'subscriberId and address are required'});
+    res.status(400).json({ error: 'subscriberId and address are required' });
     return;
   }
 
@@ -26,17 +26,17 @@ router.post('/subscribe', verifyToken(), async (req, res) => {
 
     res
       .status(200)
-      .json({message: `Subscribed ${subscriberId} to ${address}`});
+      .json({ message: `Subscribed ${subscriberId} to ${address}` });
   } catch (err) {
     throwInternalError(res, 'Error subscribing address', err);
   }
 });
 
 router.post('/unsubscribe', verifyToken(), async (req, res) => {
-  const {subscriberId, address} = req.body;
+  const { subscriberId, address } = req.body;
 
   if (!subscriberId || !address) {
-    res.status(400).json({error: 'subscriberId and address are required'});
+    res.status(400).json({ error: 'subscriberId and address are required' });
     return;
   }
 
@@ -45,7 +45,7 @@ router.post('/unsubscribe', verifyToken(), async (req, res) => {
 
     res
       .status(200)
-      .json({message: `Unsubscribed ${subscriberId} to ${address}`});
+      .json({ message: `Unsubscribed ${subscriberId} to ${address}` });
   } catch (err) {
     throwInternalError(res, 'Error unsubscribing address', err);
   }
@@ -77,7 +77,7 @@ router.get('/test-swap', async (req, res) => {
 
   // Validate swapData here if necessary
   if (!swapData || !swapData.isComplete) {
-    res.status(400).json({error: 'Invalid swap data'});
+    res.status(400).json({ error: 'Invalid swap data' });
     return;
   }
 
@@ -89,7 +89,7 @@ router.get('/test-swap', async (req, res) => {
       console.log(`Sent swap event to user ${subscriberId}`);
     }
 
-    res.status(200).json({message: 'Swap event sent to subscribers'});
+    res.status(200).json({ message: 'Swap event sent to subscribers' });
   } catch (err) {
     throwInternalError(res, 'Error sending swap event', err);
   }

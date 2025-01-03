@@ -1,4 +1,7 @@
-require('dotenv').config();
+const dotenv = require('dotenv');
+const { join } = require('path');
+
+dotenv.config({ path: join(__dirname, `.env.${process.env.NODE_ENV}`) });
 
 module.exports = {
   development: {

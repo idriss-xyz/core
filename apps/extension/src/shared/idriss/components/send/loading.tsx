@@ -4,9 +4,9 @@ import { ReactNode } from 'react';
 import { Spinner } from 'shared/ui';
 
 interface Properties {
-  recipient: string;
   heading: ReactNode;
-  children: ReactNode;
+  children?: ReactNode;
+  recipient?: string;
   className?: string;
 }
 
@@ -26,17 +26,24 @@ export const Loading = ({
       </p>
       <p className="mt-3 flex flex-wrap justify-center gap-1 text-body5 text-neutral-600 lg:text-body4">
         {heading}
-        <span>to </span>
-        <span
-          className="block max-w-40 truncate whitespace-nowrap"
-          title={recipient}
-        >
-          @{recipient}
-        </span>{' '}
+        {recipient ? (
+          <>
+            <span>to </span>
+            <span
+              className="block max-w-40 truncate whitespace-nowrap"
+              title={recipient}
+            >
+              @{recipient}
+            </span>
+          </>
+        ) : null}
       </p>
-      <p className="mt-1 text-body5 text-neutral-600 lg:text-body4">
-        {children}
-      </p>
+      {children ? (
+        <p className="mt-1 text-body5 text-neutral-600 lg:text-body4">
+          {' '}
+          {children}
+        </p>
+      ) : null}
     </div>
   );
 };

@@ -4,7 +4,7 @@
     // Specify ECMAScript target version
     "module": "commonjs",
     // Specify module code generation
-    "rootDir": "./src",
+    "rootDir": "./",
     // Specify the root directory of input files
     "outDir": "./dist",
     // Redirect output structure to the directory
@@ -16,12 +16,7 @@
     "skipLibCheck": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "typeRoots": [
-      "./types"
-    ],
-    "types": [
-      "node",
-      "express"
-    ]
+    "typeRoots": ["./types"],
+    "types": ["express"]
   }
 }
