@@ -44,10 +44,10 @@ const ArrowRightButton = (properties: { onClick: () => void }) => {
   return (
     <IconButton
       onClick={properties.onClick}
-      iconName="ArrowRight"
+      iconName="ChevronRight"
       intent="tertiary"
       size="medium"
-      className="p-0.5"
+      className="p-0.5 text-gray-300"
     />
   );
 };

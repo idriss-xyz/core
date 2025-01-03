@@ -103,7 +103,6 @@ export const Modal = ({
             <div
               className={classes(
                 'relative',
-                'border-b-secondary border-b',
                 headerContainerClassName,
                 onClose && 'pr-14',
               )}

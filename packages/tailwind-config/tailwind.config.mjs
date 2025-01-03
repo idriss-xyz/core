@@ -58,6 +58,7 @@ export default {
       },
       gray: {
         200: '#E5E5E5',
+        300: '#757575',
       },
       lime: {
         100: '#FBFFE6',
