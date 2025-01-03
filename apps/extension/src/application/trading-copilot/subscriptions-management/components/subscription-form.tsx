@@ -75,7 +75,6 @@ export const SubscriptionForm = ({
               ...parsedLsFarcasterDetails,
               {
                 wallet: farcasterDetails.address,
-                username: farcasterUser.result.user.username,
                 displayName: farcasterUser.result.user.displayName,
                 pfp: farcasterUser.result.user.pfp.url,
               },

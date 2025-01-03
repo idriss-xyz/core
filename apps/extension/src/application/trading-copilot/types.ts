@@ -61,7 +61,6 @@ export type FarcasterUserResponse = {
   result: {
     user: {
       fid: number;
-      username: string;
       displayName: string;
       pfp: {
         url: string;
@@ -72,7 +71,6 @@ export type FarcasterUserResponse = {
 
 export type LsFarcasterUserDetails = {
   wallet: string;
-  username: string;
   displayName: string;
   pfp: string;
 };
