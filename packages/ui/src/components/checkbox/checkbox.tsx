@@ -10,16 +10,20 @@ type Properties = {
   value: boolean;
   onChange: (value: boolean) => void;
   className?: string;
+  rootClassName?: string;
 };
 
 export const Checkbox = forwardRef<HTMLButtonElement, Properties>(
-  ({ label, value, onChange, className }, reference) => {
+  ({ label, value, onChange, className, rootClassName }, reference) => {
     return (
       <label className={classes('block', className)}>
         <div className="flex items-center">
           <RadixCheckbox.Root
             ref={reference}
-            className="flex size-5 items-center justify-center rounded border-2 border-neutral-400 hover:border-mint-500 focus:border-mint-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 active:border-mint-600 disabled:border-neutral-200 data-[state=checked]:border-none data-[state=checked]:bg-mint-400"
+            className={classes(
+              'flex size-5 items-center justify-center rounded border-2 border-neutral-400 hover:border-mint-500 focus:border-mint-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 active:border-mint-600 disabled:border-neutral-200 data-[state=checked]:border-none data-[state=checked]:bg-mint-400',
+              rootClassName,
+            )}
             checked={value}
             onCheckedChange={onChange}
           >

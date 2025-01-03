@@ -25,7 +25,7 @@ export class GetEnsBalanceCommand extends Command<Payload, string | null> {
     try {
       const client = createPublicClient({
         chain: { ...mainnet },
-        transport: http('https://eth.llamarpc.com'),
+        transport: http('https://base.llamarpc.com/'),
       });
 
       const result = await client.getBalance(this.payload);

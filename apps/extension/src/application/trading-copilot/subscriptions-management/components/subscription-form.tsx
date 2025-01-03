@@ -2,10 +2,13 @@ import { useCallback } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
 import { useCommandMutation } from 'shared/messaging';
+import { ErrorMessage } from 'shared/ui';
+import { LsFarcasterUserDetails } from 'application/trading-copilot/types';
 
 import {
   GetEnsAddressCommand,
   GetFarcasterAddressCommand,
+  GetFarcasterUserCommand,
 } from '../../commands';
 
 import { Properties, FormValues } from './subscription-form.types';
@@ -14,15 +17,23 @@ const EMPTY_FORM: FormValues = {
   subscriptionDetails: '',
 };
 
-export const SubscriptionForm = ({ onSubmit }: Properties) => {
+export const SubscriptionForm = ({
+  onSubmit,
+  subscriptionsAmount,
+}: Properties) => {
   const form = useForm<FormValues>({
     defaultValues: EMPTY_FORM,
   });
+  const subscriptionLimit = 10;
+  const isSubscriptionLimitExceeded =
+    subscriptionsAmount !== undefined &&
+    subscriptionsAmount >= subscriptionLimit;
 
   const getEnsAddressMutation = useCommandMutation(GetEnsAddressCommand);
   const getFarcasterAddressMutation = useCommandMutation(
     GetFarcasterAddressCommand,
   );
+  const getFarcasterUserMutation = useCommandMutation(GetFarcasterUserCommand);
 
   const addSubscriber: SubmitHandler<FormValues> = useCallback(
     async (data) => {
@@ -34,19 +45,46 @@ export const SubscriptionForm = ({ onSubmit }: Properties) => {
       if (isWalletAddress) {
         onSubmit(data.subscriptionDetails);
         form.reset(EMPTY_FORM);
+        return;
       }
 
       if (isFarcasterName) {
-        const address = await getFarcasterAddressMutation.mutateAsync({
+        const farcasterDetails = await getFarcasterAddressMutation.mutateAsync({
           name: data.subscriptionDetails,
         });
 
-        if (!address) {
+        if (!farcasterDetails) {
           return;
         }
 
-        onSubmit(address);
+        const farcasterUser = await getFarcasterUserMutation.mutateAsync({
+          id: farcasterDetails.fid,
+        });
+
+        if (farcasterUser) {
+          const lsFarcasterKey = 'farcasterDetails';
+          const lsFarcasterDetails = localStorage.getItem(lsFarcasterKey);
+          // @ts-expect-error TODO: temporary solution, remove when API will be ready
+          const parsedLsFarcasterDetails: LsFarcasterUserDetails = JSON.parse(
+            lsFarcasterDetails ?? '[]',
+          );
+
+          localStorage.setItem(
+            lsFarcasterKey,
+            JSON.stringify([
+              ...parsedLsFarcasterDetails,
+              {
+                wallet: farcasterDetails.address,
+                name: farcasterUser.result.user.displayName,
+                pfp: farcasterUser.result.user.pfp.url,
+              },
+            ]),
+          );
+        }
+
+        onSubmit(farcasterDetails.address);
         form.reset(EMPTY_FORM);
+        return;
       }
 
       const address = await getEnsAddressMutation.mutateAsync({
@@ -60,7 +98,13 @@ export const SubscriptionForm = ({ onSubmit }: Properties) => {
       onSubmit(address);
       form.reset(EMPTY_FORM);
     },
-    [form, getEnsAddressMutation, getFarcasterAddressMutation, onSubmit],
+    [
+      form,
+      getEnsAddressMutation,
+      getFarcasterAddressMutation,
+      getFarcasterUserMutation,
+      onSubmit,
+    ],
   );
 
   return (
@@ -82,10 +126,16 @@ export const SubscriptionForm = ({ onSubmit }: Properties) => {
               id="subscriptionDetails"
               className="mt-1 block w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-black shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
               placeholder="e.g., vitalik.eth"
+              disabled={isSubscriptionLimitExceeded}
             />
           );
         }}
       />
+      {isSubscriptionLimitExceeded && (
+        <ErrorMessage className="mt-1">
+          Subscriptions limit exceeded ({subscriptionLimit}).
+        </ErrorMessage>
+      )}
     </form>
   );
 };

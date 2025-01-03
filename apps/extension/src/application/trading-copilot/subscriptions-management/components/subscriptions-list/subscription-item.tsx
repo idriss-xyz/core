@@ -7,6 +7,7 @@ import { useCommandQuery } from 'shared/messaging';
 import { Icon, LazyImage, getGithubUserLink } from 'shared/ui';
 import { getTwitterUserLink } from 'host/twitter';
 import { GetEnsNameCommand } from 'application/trading-copilot/commands/get-ens-name';
+import { LsFarcasterUserDetails } from 'application/trading-copilot/types';
 
 import { GetEnsInfoCommand } from '../../../commands';
 
@@ -42,6 +43,21 @@ const SubscriptionItemContent = ({
   isFallback,
   subscription,
 }: ItemContentProperties) => {
+  const lsFarcasterKey = 'farcasterDetails';
+  const lsFarcasterDetails = localStorage.getItem(lsFarcasterKey);
+  // @ts-expect-error TODO: temporary, remove when API will be ready
+  const parsedLsFarcasterDetails: LsFarcasterUserDetails = JSON.parse(
+    lsFarcasterDetails ?? '[]',
+  );
+
+  const farcasterSubscriptionDetails = parsedLsFarcasterDetails.find(
+    (farcaster) => {
+      return farcaster.wallet === subscription;
+    },
+  );
+
+  const isFarcasterSubscription = !!farcasterSubscriptionDetails;
+
   const remove = useCallback(() => {
     onRemove(subscription);
   }, [onRemove, subscription]);
@@ -88,14 +104,18 @@ const SubscriptionItemContent = ({
       infoKey: 'avatar',
     }),
     staleTime: Number.POSITIVE_INFINITY,
-    enabled: !isFallback,
+    enabled: !isFallback && !isFarcasterSubscription,
   });
 
   return (
     <li className="flex items-center justify-between">
       <div className="flex items-center">
         <LazyImage
-          src={avatarQuery.data}
+          src={
+            isFarcasterSubscription
+              ? farcasterSubscriptionDetails.pfp
+              : avatarQuery.data
+          }
           className="size-8 rounded-full border border-neutral-400 bg-neutral-200"
           fallbackComponent={
             <div className="flex size-8 items-center justify-center rounded-full border border-neutral-300 bg-neutral-200">
@@ -109,7 +129,9 @@ const SubscriptionItemContent = ({
         />
 
         <p className="ml-1.5 flex items-center gap-1.5 text-label5 text-neutral-600">
-          {ensName}
+          {isFarcasterSubscription
+            ? farcasterSubscriptionDetails.name
+            : ensName}
 
           {twitterQuery.data && (
             <ExternalLink href={getTwitterUserLink(twitterQuery.data)}>

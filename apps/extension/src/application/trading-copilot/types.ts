@@ -20,9 +20,12 @@ export type FarcasterAddressRequest = {
   name: string;
 };
 
-export type FarcasterAddressResponse = string | null;
+export type FarcasterAddressResponse = {
+  fid: number;
+  address: string;
+} | null;
 
-export type FarcasterTransfersResponse = {
+export type FarcasterTransferResponse = {
   transfer: {
     id: number;
     timestamp: number;
@@ -48,6 +51,29 @@ export type FarcasterConnectedAddressesResponse = {
     verifications: FarcasterConnectedAddress[];
   };
 };
+
+export type FarcasterUserRequest = {
+  id: number;
+};
+
+// We can expand those types, currently we added only used ones
+export type FarcasterUserResponse = {
+  result: {
+    user: {
+      fid: number;
+      displayName: string;
+      pfp: {
+        url: string;
+      };
+    };
+  };
+};
+
+export type LsFarcasterUserDetails = {
+  wallet: string;
+  name: string;
+  pfp: string;
+}[];
 
 type SwapDataToken = {
   address: Hex;

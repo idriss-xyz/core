@@ -9,7 +9,7 @@ import {
   GetTradingCopilotSubscriptionsCommand,
   RemoveTradingCopilotSubscriptionCommand,
 } from '../commands';
-import { SubscriptionRequest } from '../types';
+import { LsFarcasterUserDetails, SubscriptionRequest } from '../types';
 
 import { SubscriptionForm, SubscriptionsList } from './components';
 import { ContentProperties } from './subscriptions-management.types';
@@ -57,14 +57,35 @@ const SubscriptionsManagementContent = ({
 
   const handleUnsubscribe = async (address: SubscriptionRequest['address']) => {
     await unsubscribe.mutateAsync({ address, subscriberId });
-    void subscriptionsQuery.refetch();
+    void subscriptionsQuery.refetch().then(() => {
+      const lsFarcasterKey = 'farcasterDetails';
+      const lsFarcasterDetails = localStorage.getItem(lsFarcasterKey);
+      // @ts-expect-error TODO: temporary, remove when API will be ready
+      const parsedLsFarcasterDetails: LsFarcasterUserDetails = JSON.parse(
+        lsFarcasterDetails ?? '[]',
+      );
+
+      const updatedLsFarcasterDetails = parsedLsFarcasterDetails.filter(
+        (farcaster) => {
+          return farcaster.wallet !== address;
+        },
+      );
+
+      localStorage.setItem(
+        lsFarcasterKey,
+        JSON.stringify(updatedLsFarcasterDetails),
+      );
+    });
   };
 
   return (
     <>
-      <SubscriptionForm onSubmit={handleSubscribe} />
+      <SubscriptionForm
+        onSubmit={handleSubscribe}
+        subscriptionsAmount={subscriptionsQuery?.data?.addresses.length}
+      />
       <SubscriptionsList
-        className="mt-6"
+        className="mt-6 flex h-full flex-col overflow-hidden"
         subscriptions={subscriptionsQuery.data}
         subscriptionsLoading={subscriptionsQuery.isLoading}
         subscriptionsUpdatePending={
