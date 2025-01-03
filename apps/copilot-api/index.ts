@@ -9,8 +9,9 @@ import authRoutes from './routes/auth'
 import defaultRoutes from './routes'
 import subscriptionsRoutes from './routes/subscribtions'
 import {getSigningKey} from "./services/subscriptionManager";
+import {join} from "path";
 
-dotenv.config();
+dotenv.config({path: join(__dirname, `.env.${process.env.NODE_ENV}`)})
 
 dataSource.initialize().then(() => console.log('DB connected...')).catch(err => console.error('Error during DB initialization: ', err))
 

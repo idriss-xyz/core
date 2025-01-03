@@ -1,10 +1,11 @@
 import type {Request, Response, NextFunction} from 'express'
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv'
+import {join} from 'path'
 import {dataSource} from "../db";
 import {UsersEntity} from "../entities/users.entity";
 
-dotenv.config()
+dotenv.config({path: join(__dirname, `../.env.${process.env.NODE_ENV}`)})
 
 export const verifyToken = () => {
   return async (req: Request, res: Response, next: NextFunction) => {

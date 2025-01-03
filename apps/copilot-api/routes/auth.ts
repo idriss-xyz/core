@@ -8,8 +8,9 @@ import {dataSource} from '../db';
 import {AddressesEntity} from '../entities/addreesses.entity';
 import {UsersEntity} from '../entities/users.entity';
 import {v4 as uuidv4} from 'uuid';
+import {join} from "path";
 
-dotenv.config();
+dotenv.config({path: join(__dirname, `../.env.${process.env.NODE_ENV}`)})
 
 const router = express.Router();
 
