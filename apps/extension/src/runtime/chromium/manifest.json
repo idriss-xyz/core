@@ -11,7 +11,8 @@
   "permissions": [
     "contextMenus",
     "tabs",
-    "storage"
+    "storage",
+    "runtime"
   ],
   "host_permissions": [
     "<all_urls>"
