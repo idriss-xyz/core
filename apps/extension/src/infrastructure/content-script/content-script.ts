@@ -4,6 +4,7 @@ import {
   CommandResponse,
   POPUP_TO_WEBPAGE_MESSAGE,
   SWAP_EVENT,
+  TAB_CHANGED,
   SerializedCommand,
   TOGGLE_EXTENSION_POPUP_VISIBILITY,
   onWindowMessage,
@@ -112,14 +113,22 @@ export class ContentScript {
         return;
       }
 
+      if (request.type === TAB_CHANGED) {
+        const message = {
+          type: TAB_CHANGED,
+        };
+        window.postMessage(message);
+        return;
+      }
+
       if (request.type === ACTIVE_TAB_CHANGED) {
         const detail = await ExtensionSettingsManager.getAllSettings();
 
-        const message = {
+        const extensionMessage = {
           type: GET_EXTENSION_SETTINGS_RESPONSE,
           detail,
         };
-        window.postMessage(message);
+        window.postMessage(extensionMessage);
         return;
       }
     });

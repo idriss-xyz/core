@@ -7,6 +7,7 @@ import {
   COMMAND_BUS_REQUEST_MESSAGE,
   FailureResult,
   JsonValue,
+  TAB_CHANGED,
   SerializedCommand,
   SWAP_EVENT,
 } from 'shared/messaging';
@@ -234,23 +235,51 @@ export class ServiceWorker {
     }
   }
 
+  private async handleTabChange(tab: chrome.tabs.Tab) {
+    await this.delay(500); // Temporary delay to prevent rendering notifications before extension content is loaded
+    await this.renderSavedNotifications(tab);
+    await this.notifyActiveTab();
+  }
+
+  private async notifyActiveTab() {
+    const tabs = await this.queryActiveTabs();
+    const activeTab = tabs[0];
+
+    if (ServiceWorker.isValidTab(activeTab)) {
+      try {
+        await this.environment.tabs.sendMessage(activeTab.id, {
+          type: TAB_CHANGED,
+        });
+      } catch {
+        //
+      }
+    }
+  }
+
   watchTabChanges() {
     this.environment.tabs.onActivated.addListener(async (activeInfo) => {
       const tab = await this.getTabById(activeInfo.tabId);
       if (tab?.status === 'complete' && ServiceWorker.isValidTab(tab)) {
-        await this.delay(500); // Temporary delay to prevent rendering notifications before extension content is loaded
-        await this.renderSavedNotifications(tab);
+        await this.handleTabChange(tab);
       }
     });
 
     this.environment.tabs.onUpdated.addListener(
       async (_tabId, changeInfo, tab) => {
         if (changeInfo.status === 'complete' && ServiceWorker.isValidTab(tab)) {
-          await this.delay(500); // Temporary delay to prevent rendering notifications before extension content is loaded
-          await this.renderSavedNotifications(tab);
+          await this.handleTabChange(tab);
         }
       },
     );
+  }
+
+  private queryActiveTabs(): Promise<chrome.tabs.Tab[]> {
+    return new Promise((resolve) => {
+      this.environment.tabs.query(
+        { active: true, currentWindow: true },
+        resolve,
+      );
+    });
   }
 
   // TODO: remove after fixing rendering saved notifications
