@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 import { Form } from '@idriss-xyz/ui/form';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
@@ -198,6 +199,7 @@ export const Content = ({ className }: Properties) => {
         return;
       }
       const { chainId, tokenSymbol, ...rest } = payload;
+      rest.message = ' ' + rest.message;
       const address: Hex =
         CHAIN_ID_TO_TOKENS[chainId]?.find((token: Token) => {
           return token.symbol === tokenSymbol;
@@ -297,6 +299,7 @@ export const Content = ({ className }: Properties) => {
 
   return (
     <div className={classes(baseClassName, className)}>
+      <link rel="preload" as="image" href={backgroundLines3.src} />
       <img
         src={backgroundLines3.src}
         className="pointer-events-none absolute top-0 hidden h-full opacity-100 lg:block"

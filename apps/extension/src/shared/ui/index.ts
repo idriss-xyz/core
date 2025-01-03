@@ -11,7 +11,6 @@ export {
   InputBase,
   IconButton,
   WidgetBase,
-  ScrollArea,
   LazyImage,
   ErrorMessage,
   CurrencyInput,

@@ -13,6 +13,7 @@ type GradientBorderProperties = {
   className?: string;
 };
 
+/** The parent element should be positioned relative to ensure the border is placed correctly. */
 export const GradientBorder = ({
   borderRadius = 24,
   borderWidth = 2,
