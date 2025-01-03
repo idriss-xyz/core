@@ -1,13 +1,13 @@
 import express from 'express';
-import type {Request, Response} from 'express';
+import type { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
-import {throwInternalError} from '../middleware/error.middleware';
-import {isAddress} from 'viem';
-import {dataSource} from '../db';
-import {AddressesEntity} from '../entities/addreesses.entity';
-import {UsersEntity} from '../entities/users.entity';
-import { createSiweMessage, generateSiweNonce } from 'viem/siwe'
+import { throwInternalError } from '../middleware/error.middleware';
+import { isAddress } from 'viem';
+import { dataSource } from '../db';
+import { AddressesEntity } from '../entities/addreesses.entity';
+import { UsersEntity } from '../entities/users.entity';
+import { createSiweMessage, generateSiweNonce } from 'viem/siwe';
 import { publicClient } from '../config/publicClient';
 
 dotenv.config();
@@ -18,10 +18,10 @@ const addressesRepo = dataSource.getRepository(AddressesEntity);
 const usersRepo = dataSource.getRepository(UsersEntity);
 
 router.post('/login', async (req: Request, res: Response) => {
-  const {signature, walletAddress, message} = req.body;
+  const { signature, walletAddress, message } = req.body;
 
   if (!isAddress(walletAddress)) {
-    res.status(403).json({error: 'Invalid wallet address'});
+    res.status(403).json({ error: 'Invalid wallet address' });
     return;
   }
 
@@ -30,19 +30,19 @@ router.post('/login', async (req: Request, res: Response) => {
       address: walletAddress,
       message,
       signature,
-    })
+    });
 
     if (!valid) {
-      res.status(403).json({error: 'Invalid signature'});
+      res.status(403).json({ error: 'Invalid signature' });
       return;
     }
 
     const existingAddress = await addressesRepo.findOne({
-      where: {address: walletAddress},
+      where: { address: walletAddress },
     });
 
     const user = await usersRepo.findOne({
-      where: {uuid: existingAddress?.userId},
+      where: { uuid: existingAddress?.userId },
     });
 
     if (!user) {
@@ -57,7 +57,7 @@ router.post('/login', async (req: Request, res: Response) => {
         expiresIn: '7d',
       });
 
-      res.status(200).send({token});
+      res.status(200).send({ token });
       return;
     }
 
@@ -71,26 +71,25 @@ router.post('/login', async (req: Request, res: Response) => {
       expiresIn: '7d',
     });
 
-    res.status(200).send({token});
-  } catch (err) {
-  }
+    res.status(200).send({ token });
+  } catch (err) {}
 });
 
 router.post('/wallet-address', async (req, res) => {
   try {
-    const { walletAddress, chainId } = req.body;
+    const { walletAddress, chainId, domain } = req.body;
     const nonce = generateSiweNonce();
     const timestamp = new Date();
 
     const message = createSiweMessage({
       address: walletAddress,
       chainId,
-      domain: 'idriss.xyz',
+      domain,
       nonce,
-      uri: 'https://idriss.xyz/api/login', // TODO: Change for production
+      uri: `https://${domain}`, // TODO: Change for production
       version: '1',
-      issuedAt: timestamp
-    })
+      issuedAt: timestamp,
+    });
 
     res.status(200).json({ nonce, message });
   } catch (err) {
@@ -99,17 +98,17 @@ router.post('/wallet-address', async (req, res) => {
 });
 
 router.post('/verify-token', async (req, res) => {
-  const {token} = req.body;
+  const { token } = req.body;
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!);
 
     const id: number = (decoded as Request)['user'].id;
 
-    const user = await usersRepo.findOne({where: {uuid: id}});
+    const user = await usersRepo.findOne({ where: { uuid: id } });
 
     if (!user) {
-      res.status(401).json({error: 'Invalid token'});
+      res.status(401).json({ error: 'Invalid token' });
       return;
     }
 

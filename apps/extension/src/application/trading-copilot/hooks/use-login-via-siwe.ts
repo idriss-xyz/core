@@ -34,6 +34,7 @@ export const useLoginViaSiwe = () => {
       const siweMessage = await handleGetSiweMessage({
         walletAddress: wallet.account,
         chainId: wallet.chainId,
+        domain: window.location.hostname,
       });
 
       const siweSignature = await walletClient.signMessage({

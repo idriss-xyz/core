@@ -179,6 +179,7 @@ export interface FormValues {
 export type SiweMessageRequest = {
   walletAddress: Hex;
   chainId: number;
+  domain: string;
 };
 
 export type SiweMessageResponse = {
