@@ -44,11 +44,12 @@ const TOKENS_ORDER: Record<TokenSymbol, number> = {
   ETH: 1,
   USDC: 2,
   DAI: 3,
-  GHST: 4,
-  PRIME: 5,
-  YGG: 6,
-  PDT: 7,
-  DEGEN: 8,
+  IDRISS: 4,
+  GHST: 5,
+  PRIME: 6,
+  YGG: 7,
+  PDT: 8,
+  DEGEN: 9,
 };
 
 // ts-unused-exports:disable-next-line
