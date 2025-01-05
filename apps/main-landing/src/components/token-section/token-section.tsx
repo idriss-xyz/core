@@ -158,7 +158,8 @@ export const TokenSection = () => {
             <div className="flex flex-col gap-6 lg:gap-4">
               <div className="flex flex-col justify-center gap-6 md:flex-row">
                 <GeoConditionalButton
-                  defaultButton={
+                  blockAll
+                  defaultButtons={[
                     <Button
                       intent="primary"
                       size="large"
@@ -169,11 +170,7 @@ export const TokenSection = () => {
                       className="w-full md:w-auto"
                     >
                       BUY ON UNISWAP
-                    </Button>
-                  }
-                />
-                <GeoConditionalButton
-                  defaultButton={
+                    </Button>,
                     <Button
                       intent="primary"
                       size="large"
@@ -184,8 +181,8 @@ export const TokenSection = () => {
                       className="w-full whitespace-nowrap md:w-auto"
                     >
                       BUY CROSS-CHAIN ON JUMPER
-                    </Button>
-                  }
+                    </Button>,
+                  ]}
                 />
               </div>
               <div className="self-stretch text-center opacity-70">

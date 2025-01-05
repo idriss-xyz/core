@@ -9,11 +9,13 @@ import { useGeoLocation } from '../hooks/use-geo-location';
 import { BlockedButton } from './blocked-button';
 
 type GeoConditionalButtonProperties = {
-  defaultButton: React.ReactNode;
+  defaultButtons: React.ReactNode[];
+  blockAll?: boolean; // If true, block all buttons as a group and display a single blocked button
 };
 
 export const GeoConditionalButton: React.FC<GeoConditionalButtonProperties> = ({
-  defaultButton,
+  defaultButtons,
+  blockAll = false,
 }) => {
   const { country, loading } = useGeoLocation();
 
@@ -23,9 +25,29 @@ export const GeoConditionalButton: React.FC<GeoConditionalButtonProperties> = ({
     );
   }
 
-  if (!country || restrictedCountries.includes(country)) {
-    return <BlockedButton />;
-  }
+  if (blockAll) {
+    // Block all buttons collectively if the condition applies
+    if (!country || restrictedCountries.includes(country)) {
+      return <BlockedButton />;
+    }
 
-  return defaultButton;
+    return (
+      <div className="flex flex-col justify-center gap-6 md:flex-row">
+        {defaultButtons}
+      </div>
+    );
+  }
+  return (
+    <div className="flex flex-col justify-center gap-6 md:flex-row">
+      {defaultButtons.map((button, index) => (
+        <div key={index}>
+          {!country || restrictedCountries.includes(country) ? (
+            <BlockedButton />
+          ) : (
+            button
+          )}
+        </div>
+      ))}
+    </div>
+  );
 };
