@@ -24,6 +24,7 @@ import {
   ECHELON_PRIME_LOGO,
   ETHEREUM_LOGO,
   HIGHER_LOGO,
+  IDRISS_LOGO,
   LINEA_LOGO,
   MANTLE_LOGO,
   MOXIE_LOGO,
@@ -163,6 +164,7 @@ export const TOKEN = {
   REVOLT2EARN: { name: 'Revolt 2 Earn', symbol: 'RVLT', logo: RVLT_LOGO },
   MANTLE: { name: 'Mantle', symbol: 'MNT', logo: MANTLE_LOGO },
   DEGEN: { name: 'Degen', symbol: 'DEGEN', logo: DEGEN_LOGO },
+  IDRISS: { name: 'IDRISS', symbol: 'IDRISS', logo: IDRISS_LOGO },
   AZERO: { name: 'Aleph Zero', symbol: 'AZERO', logo: ALEPH_LOGO },
   HIGHER: { name: 'Higher', symbol: 'HIGHER', logo: HIGHER_LOGO },
   MOXIE: { name: 'Moxie', symbol: 'MOXIE', logo: MOXIE_LOGO },
@@ -377,6 +379,11 @@ export const CHAIN_ID_TO_TOKENS = {
       ...TOKEN.HIGHER,
       decimals: 18,
       address: '0x0578d8A44db98B23BF096A382e016e29a5Ce0ffe',
+    },
+    {
+      ...TOKEN.IDRISS,
+      decimals: 18,
+      address: '0x000096630066820566162c94874a776532705231',
     },
     {
       ...TOKEN.MOXIE,
