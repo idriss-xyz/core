@@ -1,14 +1,14 @@
-import { ForwardedRef, forwardRef } from 'react';
+import {ForwardedRef, forwardRef} from 'react';
 
-import { SelectIcon } from 'shared/ui/utils/select-icon';
+import {SelectIcon} from 'shared/ui/utils/select-icon';
 
-import { classes } from '../../utils';
+import {classes} from '../../utils';
 
-import { SelectOptionProperties } from './select.types';
+import {SelectOptionProperties} from './select.types';
 
 export const SelectOption = forwardRef(
   (
-    { option, className, selected }: SelectOptionProperties<unknown>,
+    {option, className, selected}: SelectOptionProperties<unknown>,
     reference: ForwardedRef<HTMLDivElement>,
   ) => {
     const selectedClassName = selected
@@ -18,10 +18,10 @@ export const SelectOption = forwardRef(
       <div
         ref={reference}
         className={classes(
-          'flex w-full cursor-pointer items-center space-x-2 rounded-xl border-r border-r-neutral-200 px-3 py-2 text-left',
+          'flex w-full cursor-pointer items-center space-x-2 px-3 py-2 text-left',
           'hover:bg-black/10 focus:bg-black/50',
           className,
-          selected ? 'border border-neutral-200' : '',
+          selected ? 'border border-neutral-200 rounded-xl' : '',
         )}
       >
         <div className={classes('relative mr-1 pr-2', selectedClassName)}>
@@ -31,7 +31,7 @@ export const SelectOption = forwardRef(
           {option.label}
         </div>
         {option.suffix}
-        <div className="items-center">{selected ? <SelectIcon /> : ''}</div>
+        <div className="items-center">{selected ? <SelectIcon/> : ''}</div>
       </div>
     );
   },
