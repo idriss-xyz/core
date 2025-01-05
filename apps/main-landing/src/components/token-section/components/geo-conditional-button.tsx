@@ -9,13 +9,11 @@ import { useGeoLocation } from '../hooks/use-geo-location';
 import { BlockedButton } from './blocked-button';
 
 type GeoConditionalButtonProperties = {
-  defaultButtons: React.ReactNode[];
-  blockAll?: boolean; // If true, block all buttons as a group and display a single blocked button
+  defaultButton: React.ReactNode | React.ReactNode[]; // Support single or multiple buttons
 };
 
 export const GeoConditionalButton: React.FC<GeoConditionalButtonProperties> = ({
-  defaultButtons,
-  blockAll = false,
+  defaultButton,
 }) => {
   const { country, loading } = useGeoLocation();
 
@@ -25,31 +23,22 @@ export const GeoConditionalButton: React.FC<GeoConditionalButtonProperties> = ({
     );
   }
 
-  if (blockAll) {
-    // Block all buttons collectively if the condition applies
-    if (!country || restrictedCountries.includes(country)) {
+  const isRestricted = !country || restrictedCountries.includes(country);
+
+  if (isRestricted) {
+    if (Array.isArray(defaultButton)) {
       return <BlockedButton />;
     }
+    return <BlockedButton />;
+  }
 
+  if (Array.isArray(defaultButton)) {
     return (
       <div className="flex flex-col justify-center gap-6 md:flex-row">
-        {defaultButtons}
+        {defaultButton}
       </div>
     );
   }
-  return (
-    <div className="flex flex-col justify-center gap-6 md:flex-row">
-      {defaultButtons.map((button, index) => {
-        return (
-          <div key={index}>
-            {!country || restrictedCountries.includes(country) ? (
-              <BlockedButton />
-            ) : (
-              button
-            )}
-          </div>
-        );
-      })}
-    </div>
-  );
+
+  return defaultButton;
 };

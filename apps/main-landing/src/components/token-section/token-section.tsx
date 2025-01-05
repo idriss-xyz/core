@@ -158,8 +158,7 @@ export const TokenSection = () => {
             <div className="flex flex-col gap-6 lg:gap-4">
               <div className="flex flex-col justify-center gap-6 md:flex-row">
                 <GeoConditionalButton
-                  blockAll
-                  defaultButtons={[
+                  defaultButton={[
                     <Button
                       key="uniswap"
                       intent="primary"
