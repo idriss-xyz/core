@@ -39,15 +39,17 @@ export const GeoConditionalButton: React.FC<GeoConditionalButtonProperties> = ({
   }
   return (
     <div className="flex flex-col justify-center gap-6 md:flex-row">
-      {defaultButtons.map((button, index) => {return (
-        <div key={index}>
-          {!country || restrictedCountries.includes(country) ? (
-            <BlockedButton />
-          ) : (
-            button
-          )}
-        </div>
-      )})}
+      {defaultButtons.map((button, index) => {
+        return (
+          <div key={index}>
+            {!country || restrictedCountries.includes(country) ? (
+              <BlockedButton />
+            ) : (
+              button
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 };
