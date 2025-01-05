@@ -161,6 +161,7 @@ export const TokenSection = () => {
                   blockAll
                   defaultButtons={[
                     <Button
+                      key="uniswap"
                       intent="primary"
                       size="large"
                       prefixIconName="Uniswap"
@@ -172,6 +173,7 @@ export const TokenSection = () => {
                       BUY ON UNISWAP
                     </Button>,
                     <Button
+                      key="jumper"
                       intent="primary"
                       size="large"
                       prefixIconName="Jumper"
