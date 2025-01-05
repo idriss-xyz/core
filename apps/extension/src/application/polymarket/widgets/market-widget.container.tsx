@@ -97,7 +97,7 @@ export const MarketWidgetContainer = memo(
       !tokensPricesQuery.data ||
       imageQuery.data === undefined ||
       chanceQuery.data === undefined ||
-      !availabilityQuery.data ||
+      availabilityQuery.data === undefined ||
       marketQuery.data.closed ||
       tokens.length === 0
     ) {
