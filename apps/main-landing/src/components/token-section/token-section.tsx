@@ -6,11 +6,11 @@ import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import dynamic from 'next/dynamic';
 import { Link } from '@idriss-xyz/ui/link';
 import { classes } from '@idriss-xyz/ui/utils';
+import { TOKEN_TERMS_AND_CONDITIONS_LINK } from '@idriss-xyz/constants';
 
 import idrissCoin from './assets/IDRISS_COIN 1.png';
 import background from './background.png';
 import { LabeledGradientProperty } from './components';
-import { TOKEN_TERMS_AND_CONDITIONS_LINK } from '@idriss-xyz/constants';
 import { GeoConditionalButton } from './components/geo-conditional-button';
 
 const CopyAddressButton = dynamic(

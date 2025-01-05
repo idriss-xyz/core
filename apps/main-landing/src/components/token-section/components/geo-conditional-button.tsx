@@ -4,8 +4,9 @@ import { Spinner } from '@idriss-xyz/ui/spinner';
 
 import { restrictedCountries } from '@/constants';
 
-import { BlockedButton } from './blocked-button';
 import { useGeoLocation } from '../hooks/use-geo-location';
+
+import { BlockedButton } from './blocked-button';
 
 type GeoConditionalButtonProperties = {
   defaultButton: React.ReactNode;
