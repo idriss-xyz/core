@@ -17,15 +17,7 @@ export const TokenSaleCountdown = () => {
     seconds: number;
   }>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
-  const [isClient, setIsClient] = useState(false);
-
   useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  useEffect(() => {
-    if (!isClient) return;
-
     const interval = setInterval(() => {
       updateCountdown();
     }, 1000);
@@ -56,10 +48,6 @@ export const TokenSaleCountdown = () => {
     setTimeRemaining({ days, hours, minutes, seconds });
   };
 
-  if (!isClient) {
-    return null;
-  }
-
   return (
     <div className="relative flex w-full flex-col items-center gap-5 rounded-2xl bg-white/20 px-4 py-6 md:px-10 md:py-8">
       <GradientBorder
@@ -75,7 +63,7 @@ export const TokenSaleCountdown = () => {
           'lg:text-body2',
         )}
       >
-        STARTS IN
+        ENDS IN
       </span>
       <div className="flex justify-between self-stretch">
         <div className="flex min-w-14 flex-col items-center justify-center">
