@@ -8,7 +8,7 @@ export const hexSchema = z
 
 const MIN_SEND_AMOUNT = 0.001;
 
-const createSendPayloadSchema = (allowedChainIds: number[]) => {
+export const createSendPayloadSchema = (allowedChainIds: number[]) => {
   return z.object({
     amount: z
       .number()
