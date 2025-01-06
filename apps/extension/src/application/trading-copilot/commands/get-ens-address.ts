@@ -25,7 +25,7 @@ export class GetEnsAddressCommand extends Command<Payload, Hex | null> {
     try {
       const client = createPublicClient({
         chain: { ...mainnet },
-        transport: http(),
+        transport: http('https://eth.llamarpc.com'),
       });
       const response = await client.getEnsAddress({
         name: normalize(this.payload.ensName),

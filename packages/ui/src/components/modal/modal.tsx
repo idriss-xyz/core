@@ -11,11 +11,9 @@ type Properties = {
   header?: ReactNode;
   children: ReactNode;
   isOpened: boolean;
-  onClose: () => void;
+  onClose?: () => void;
   className?: string;
   backdropClassName?: string;
-  closeOnHoverAway?: boolean;
-  closeOnClickAway?: boolean;
   onClickInside?: () => void;
   width?: number;
   left?: number;
@@ -23,7 +21,24 @@ type Properties = {
   top?: number;
   headerContainerClassName?: string;
   withoutPortal?: boolean;
-};
+  closeOnHoverAway?: boolean;
+  closeOnClickAway?: boolean;
+} & (
+  | {
+      closeOnHoverAway: true;
+      closeOnClickAway?: boolean;
+      onClose: () => void;
+    }
+  | {
+      closeOnClickAway: true;
+      closeOnHoverAway?: boolean;
+      onClose: () => void;
+    }
+  | {
+      closeOnHoverAway?: false;
+      closeOnClickAway?: false;
+    }
+);
 
 export const Modal = ({
   children,
@@ -88,19 +103,21 @@ export const Modal = ({
             <div
               className={classes(
                 'relative',
-                headerContainerClassName,
-                'pr-14',
                 'border-b-secondary border-b',
+                headerContainerClassName,
+                onClose && 'pr-14',
               )}
             >
               {header}
-              <IconButton
-                onClick={onClose}
-                className="absolute right-3 top-3"
-                intent="tertiary"
-                size="medium"
-                iconName="X"
-              />
+              {onClose && (
+                <IconButton
+                  onClick={onClose}
+                  className="absolute right-3 top-3"
+                  intent="tertiary"
+                  size="medium"
+                  iconName="X"
+                />
+              )}
             </div>
           )}
           {children}

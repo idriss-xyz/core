@@ -2,15 +2,13 @@ import {
   Command,
   FailureResult,
   HandlerError,
+  HandlerResponseError,
   OkResult,
 } from 'shared/messaging';
 
-import { Subscription } from '../types';
-import { TradingCopilotSettingsManager } from '../subscriptions-manager';
+import { SubscriptionRequest as Payload } from '../types';
 
-interface Payload {
-  ensName: Subscription['ensName'];
-}
+import { COPILOT_API_URL } from './constants';
 
 type Response = boolean;
 
@@ -26,9 +24,26 @@ export class RemoveTradingCopilotSubscriptionCommand extends Command<
 
   async handle() {
     try {
-      await TradingCopilotSettingsManager.unsubscribe(this.payload.ensName);
+      const response = await fetch(`${COPILOT_API_URL}/unsubscribe`, {
+        method: 'POST',
+        body: JSON.stringify(this.payload),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
-      return new OkResult(true);
+      if (!response.ok) {
+        const responseText = await response.text();
+        throw new HandlerResponseError(
+          this.name,
+          responseText,
+          response.status,
+        );
+      }
+
+      const json = (await response.json()) as Response;
+
+      return new OkResult(json);
     } catch (error) {
       this.captureException(error);
       if (error instanceof HandlerError) {
