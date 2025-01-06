@@ -15,7 +15,6 @@ dotenv.config({ path: join(__dirname, `../.env.${process.env.NODE_ENV}`) });
 const ALCHEMY_API_BASE_URL = 'https://dashboard.alchemyapi.io';
 const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY!;
 const WEBHOOK_URL = process.env.WEBHOOK_URL!;
-const NETWORK = process.env.NETWORK!;
 const MAX_ADDRESSES_PER_WEBHOOK =
   Number(process.env.MAX_ADDRESSES_PER_WEBHOOK) || 100;
 
