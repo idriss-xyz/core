@@ -25,7 +25,7 @@ export const TokenSection = () => {
         <div className="flex flex-col items-center">
           <div
             className={classes(
-              'relative flex w-full flex-col items-center gap-[40px] rounded-[36px] bg-white/50 px-4 py-10 backdrop-blur-[45px]',
+              'relative flex w-full flex-col items-center gap-[15px] rounded-[36px] bg-white/50 px-4 py-10 backdrop-blur-[45px]',
               'md:px-10 lg:w-[893px]',
               'lg:px-[54px] lg:py-[60px]',
               '2xl:w-[803px] 2xl:px-10 2xl:pb-[60px] 2xl:pt-10',
