@@ -3,35 +3,13 @@
 
 import { Button } from '@idriss-xyz/ui/button';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
-import dynamic from 'next/dynamic';
 import { Link } from '@idriss-xyz/ui/link';
 import { classes } from '@idriss-xyz/ui/utils';
 import { TOKEN_TERMS_AND_CONDITIONS_LINK } from '@idriss-xyz/constants';
 
 import idrissCoin from './assets/IDRISS_COIN 1.png';
 import background from './background.png';
-import { LabeledGradientProperty } from './components';
 import { GeoConditionalButton } from './components/geo-conditional-button';
-
-const CopyAddressButton = dynamic(
-  async () => {
-    const { CopyAddressButton } = await import(
-      './components/copy-address-button'
-    );
-    return CopyAddressButton;
-  },
-  { ssr: false },
-);
-
-const TokenSaleCountdown = dynamic(
-  async () => {
-    const { TokenSaleCountdown } = await import(
-      './components/token-sale-countdown'
-    );
-    return TokenSaleCountdown;
-  },
-  { ssr: false },
-);
 
 export const TokenSection = () => {
   return (
@@ -45,79 +23,6 @@ export const TokenSection = () => {
         )}
       >
         <div className="flex flex-col items-center">
-          <h2
-            className={classes(
-              'text-heading3 gradient-text',
-              'md:text-display4',
-              'lg:text-display3',
-            )}
-          >
-            TOKEN SALE
-          </h2>
-          <p
-            className={classes(
-              'mb-2 mt-4 text-balance text-center text-body3 text-neutralGreen-900 opacity-70',
-              'lg:text-body2',
-              '4xl:text-body1',
-            )}
-          >
-            IDRISS is the utility token powering{'\u00A0'}the IDRISS{'\u00A0'}
-            DAO,
-            <br className="hidden lg:block" /> giving you access{'\u00A0'}to
-            decentralized{'\u00A0'}revenue sharing, governance rights, and more.
-          </p>
-          {/* Mobile */}
-          <div
-            className={classes(
-              'mb-3 flex flex-row justify-center gap-6',
-              'md:mb-4',
-              'lg:hidden',
-            )}
-          >
-            <Button
-              intent="tertiary"
-              size="medium"
-              suffixIconName="IdrissArrowRight"
-              asLink
-              href="https://docs.idriss.xyz/idriss-token/token-sale#faq"
-              isExternal
-            >
-              FAQ
-            </Button>
-            <Button
-              intent="tertiary"
-              size="medium"
-              suffixIconName="IdrissArrowRight"
-              asLink
-              href="https://docs.idriss.xyz/idriss-token"
-              isExternal
-            >
-              TOKENOMICS
-            </Button>
-          </div>
-          {/* Desktop */}
-          <div className="mb-4 hidden flex-row justify-normal gap-6 lg:flex">
-            <Button
-              intent="tertiary"
-              size="large"
-              suffixIconName="IdrissArrowRight"
-              asLink
-              href="https://docs.idriss.xyz/idriss-token/token-sale#faq"
-              isExternal
-            >
-              FAQ
-            </Button>
-            <Button
-              intent="tertiary"
-              size="large"
-              suffixIconName="IdrissArrowRight"
-              asLink
-              href="https://docs.idriss.xyz/idriss-token"
-              isExternal
-            >
-              TOKENOMICS
-            </Button>
-          </div>
           <div
             className={classes(
               'relative flex w-full flex-col items-center gap-[40px] rounded-[36px] bg-white/50 px-4 py-10 backdrop-blur-[45px]',
@@ -143,18 +48,80 @@ export const TokenSection = () => {
                 '2xl:size-[136px]',
               )}
             />
-            <div className="flex w-full flex-wrap justify-between gap-2">
-              <LabeledGradientProperty
-                label="TOKEN"
-                content="IDRISS"
-                additionalContent={<CopyAddressButton />}
-                className="mb-8 w-full md:w-fit lg:mb-0"
-              />
-              <LabeledGradientProperty label="FOR SALE" content="5%" />
-              <LabeledGradientProperty label="FDV" content="$30M" />
-              <LabeledGradientProperty label="PRICE" content="$0.03" />
+            <h2
+              className={classes(
+                'text-heading3 gradient-text',
+                'md:text-display4',
+                'lg:text-display3',
+              )}
+            >
+              TOKEN
+            </h2>
+            <p
+              className={classes(
+                'mb-2 mt-4 text-balance text-center text-body3 text-neutralGreen-900 opacity-70',
+                'lg:text-body2',
+                '4xl:text-body1',
+              )}
+            >
+              IDRISS is the utility token powering{'\u00A0'}the IDRISS{'\u00A0'}
+              DAO,
+              <br className="hidden lg:block" /> giving you access{'\u00A0'}to
+              decentralized{'\u00A0'}revenue sharing, governance rights, and
+              more.
+            </p>
+            {/* Mobile */}
+            <div
+              className={classes(
+                'mb-3 flex flex-row justify-center gap-6',
+                'md:mb-4',
+                'lg:hidden',
+              )}
+            >
+              <Button
+                intent="tertiary"
+                size="medium"
+                suffixIconName="IdrissArrowRight"
+                asLink
+                href="https://docs.idriss.xyz/idriss-token/token-sale#faq"
+                isExternal
+              >
+                FAQ
+              </Button>
+              <Button
+                intent="tertiary"
+                size="medium"
+                suffixIconName="IdrissArrowRight"
+                asLink
+                href="https://docs.idriss.xyz/idriss-token"
+                isExternal
+              >
+                TOKENOMICS
+              </Button>
             </div>
-            <TokenSaleCountdown />
+            {/* Desktop */}
+            <div className="hidden flex-row justify-normal gap-6 lg:flex">
+              <Button
+                intent="tertiary"
+                size="large"
+                suffixIconName="IdrissArrowRight"
+                asLink
+                href="https://docs.idriss.xyz/idriss-token/token-sale#faq"
+                isExternal
+              >
+                FAQ
+              </Button>
+              <Button
+                intent="tertiary"
+                size="large"
+                suffixIconName="IdrissArrowRight"
+                asLink
+                href="https://docs.idriss.xyz/idriss-token"
+                isExternal
+              >
+                TOKENOMICS
+              </Button>
+            </div>
             <div className="flex flex-col gap-6 lg:gap-4">
               <div className="flex flex-col justify-center gap-6 md:flex-row">
                 <GeoConditionalButton
@@ -209,6 +176,7 @@ export const TokenSection = () => {
                   Terms{'\u00A0'}and{'\u00A0'}conditions
                 </Link>
               </div>
+              <div className="flex justify-center" />
             </div>
           </div>
           <img
