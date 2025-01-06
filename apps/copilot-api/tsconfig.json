@@ -16,11 +16,7 @@
     "skipLibCheck": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "typeRoots": [
-      "./types"
-    ],
-    "types": [
-      "express"
-    ]
+    "typeRoots": ["./types"],
+    "types": ["express"]
   }
 }
