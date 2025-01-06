@@ -71,9 +71,11 @@ export type FarcasterUserResponse = {
 
 export type LsFarcasterUserDetails = {
   wallet: string;
-  name: string;
+  displayName: string;
   pfp: string;
-}[];
+};
+
+export type LsFarcasterUsersDetails = LsFarcasterUserDetails[];
 
 type SwapDataToken = {
   address: Hex;

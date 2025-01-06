@@ -7,7 +7,7 @@ import { useCommandQuery } from 'shared/messaging';
 import { Icon, LazyImage, getGithubUserLink } from 'shared/ui';
 import { getTwitterUserLink } from 'host/twitter';
 import { GetEnsNameCommand } from 'application/trading-copilot/commands/get-ens-name';
-import { LsFarcasterUserDetails } from 'application/trading-copilot/types';
+import { LsFarcasterUsersDetails } from 'application/trading-copilot/types';
 
 import { GetEnsInfoCommand } from '../../../commands';
 
@@ -20,6 +20,21 @@ export const SubscriptionItem = ({
   onRemove,
   subscription,
 }: ItemProperties) => {
+  const lsFarcasterKey = 'farcasterDetails';
+  const lsFarcasterDetails = localStorage.getItem(lsFarcasterKey);
+  // @ts-expect-error TODO: temporary, remove when API will be ready
+  const parsedLsFarcasterDetails: LsFarcasterUsersDetails = JSON.parse(
+    lsFarcasterDetails ?? '[]',
+  );
+
+  const farcasterSubscriptionDetails = parsedLsFarcasterDetails.find(
+    (farcaster) => {
+      return farcaster.wallet === subscription;
+    },
+  );
+
+  const isFarcasterSubscription = !!farcasterSubscriptionDetails;
+
   const ensNameQuery = useCommandQuery({
     command: new GetEnsNameCommand({
       address: subscription,
@@ -33,6 +48,8 @@ export const SubscriptionItem = ({
       subscription={subscription}
       isFallback={ensNameQuery.isFetched && ensNameQuery.data === null}
       ensName={ensNameQuery.data ?? subscription}
+      isFarcasterSubscription={isFarcasterSubscription}
+      farcasterSubscriptionDetails={farcasterSubscriptionDetails}
     />
   );
 };
@@ -42,22 +59,9 @@ const SubscriptionItemContent = ({
   onRemove,
   isFallback,
   subscription,
+  isFarcasterSubscription,
+  farcasterSubscriptionDetails,
 }: ItemContentProperties) => {
-  const lsFarcasterKey = 'farcasterDetails';
-  const lsFarcasterDetails = localStorage.getItem(lsFarcasterKey);
-  // @ts-expect-error TODO: temporary, remove when API will be ready
-  const parsedLsFarcasterDetails: LsFarcasterUserDetails = JSON.parse(
-    lsFarcasterDetails ?? '[]',
-  );
-
-  const farcasterSubscriptionDetails = parsedLsFarcasterDetails.find(
-    (farcaster) => {
-      return farcaster.wallet === subscription;
-    },
-  );
-
-  const isFarcasterSubscription = !!farcasterSubscriptionDetails;
-
   const remove = useCallback(() => {
     onRemove(subscription);
   }, [onRemove, subscription]);
@@ -113,7 +117,7 @@ const SubscriptionItemContent = ({
         <LazyImage
           src={
             isFarcasterSubscription
-              ? farcasterSubscriptionDetails.pfp
+              ? farcasterSubscriptionDetails?.pfp
               : avatarQuery.data
           }
           className="size-8 rounded-full border border-neutral-400 bg-neutral-200"
@@ -130,7 +134,7 @@ const SubscriptionItemContent = ({
 
         <p className="ml-1.5 flex items-center gap-1.5 text-label5 text-neutral-600">
           {isFarcasterSubscription
-            ? farcasterSubscriptionDetails.name
+            ? farcasterSubscriptionDetails?.displayName
             : ensName}
 
           {twitterQuery.data && (

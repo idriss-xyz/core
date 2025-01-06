@@ -13,7 +13,7 @@ router.get('/', (_, res) => {
   res.status(200).send('Express');
 });
 
-router.post('/subscribe', async (req, res) => {
+router.post('/subscribe', verifyToken(), async (req, res) => {
   const { subscriberId, address } = req.body;
 
   if (!subscriberId || !address) {

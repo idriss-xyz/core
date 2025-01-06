@@ -4,6 +4,7 @@ import {
   CommandResponse,
   POPUP_TO_WEBPAGE_MESSAGE,
   SWAP_EVENT,
+  TAB_CHANGED,
   SerializedCommand,
   TOGGLE_EXTENSION_POPUP_VISIBILITY,
   onWindowMessage,
@@ -107,6 +108,14 @@ export class ContentScript {
         const message = {
           type: SWAP_EVENT,
           detail: request.detail,
+        };
+        window.postMessage(message);
+        return;
+      }
+
+      if (request.type === TAB_CHANGED) {
+        const message = {
+          type: TAB_CHANGED,
         };
         window.postMessage(message);
         return;

@@ -1,7 +1,12 @@
 import { useWallet } from '@idriss-xyz/wallet-connect';
 import { Button } from '@idriss-xyz/ui/button';
 
-import { useCommandMutation, useCommandQuery } from 'shared/messaging';
+import {
+  onWindowMessage,
+  TAB_CHANGED,
+  useCommandMutation,
+  useCommandQuery,
+} from 'shared/messaging';
 import { Empty } from 'shared/ui';
 
 import {
@@ -9,7 +14,7 @@ import {
   GetTradingCopilotSubscriptionsCommand,
   RemoveTradingCopilotSubscriptionCommand,
 } from '../commands';
-import { LsFarcasterUserDetails, SubscriptionRequest } from '../types';
+import { LsFarcasterUsersDetails, SubscriptionRequest } from '../types';
 
 import { SubscriptionForm, SubscriptionsList } from './components';
 import { ContentProperties } from './subscriptions-management.types';
@@ -50,6 +55,10 @@ const SubscriptionsManagementContent = ({
     RemoveTradingCopilotSubscriptionCommand,
   );
 
+  onWindowMessage(TAB_CHANGED, () => {
+    void subscriptionsQuery.refetch();
+  });
+
   const handleSubscribe = async (address: SubscriptionRequest['address']) => {
     await subscribe.mutateAsync({ address, subscriberId });
     void subscriptionsQuery.refetch();
@@ -61,7 +70,7 @@ const SubscriptionsManagementContent = ({
       const lsFarcasterKey = 'farcasterDetails';
       const lsFarcasterDetails = localStorage.getItem(lsFarcasterKey);
       // @ts-expect-error TODO: temporary, remove when API will be ready
-      const parsedLsFarcasterDetails: LsFarcasterUserDetails = JSON.parse(
+      const parsedLsFarcasterDetails: LsFarcasterUsersDetails = JSON.parse(
         lsFarcasterDetails ?? '[]',
       );
 
