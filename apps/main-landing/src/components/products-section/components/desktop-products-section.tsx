@@ -252,7 +252,7 @@ export const DesktopProductsSection = ({
         className={classes('relative flex bg-mint-100', className)}
         ref={containerReference}
       >
-        <div className="sticky left-0 top-0 z-[99999] h-screen w-screen">
+        <div className="sticky left-0 top-0 z-notification h-screen w-screen">
           <ProductSection
             marginX={margin}
             marginY={margin / 2}

@@ -8,6 +8,7 @@ import {
   PolymarketMarkets,
   FollowOnFarcaster,
 } from './widgets';
+import { FollowTradingCopilot } from './widgets/follow-trading-copilot';
 
 export const Final = () => {
   const { extensionSettings } = useExtensionSettings();
@@ -23,6 +24,7 @@ export const Final = () => {
       <PolymarketMarkets />
       <Proposals />
       <FollowOnFarcaster />
+      <FollowTradingCopilot />
     </ErrorBoundary>
   );
 };

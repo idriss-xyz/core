@@ -9,8 +9,9 @@ import { AddressesEntity } from '../entities/addreesses.entity';
 import { UsersEntity } from '../entities/users.entity';
 import { createSiweMessage, generateSiweNonce } from 'viem/siwe';
 import { publicClient } from '../config/publicClient';
+import { join } from 'path';
 
-dotenv.config();
+dotenv.config({ path: join(__dirname, `../.env.${process.env.NODE_ENV}`) });
 
 const router = express.Router();
 
