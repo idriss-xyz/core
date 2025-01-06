@@ -5,6 +5,7 @@ import {
   BASE_LOGO,
   DAI_LOGO,
   DEGEN_LOGO,
+  IDRISS_LOGO,
   ECHELON_PRIME_LOGO,
   ETHEREUM_LOGO,
   MANTLE_LOGO,
@@ -92,6 +93,7 @@ export const TOKEN = {
     logo: AAVEGOTCHI_LOGO,
   },
   DEGEN: { name: 'Degen', symbol: 'DEGEN', logo: DEGEN_LOGO },
+  IDRISS: { name: 'IDRISS', symbol: 'IDRISS', logo: IDRISS_LOGO },
   YGG: {
     name: 'Yield Guild Games',
     symbol: 'YGG',
@@ -231,6 +233,11 @@ export const CHAIN_ID_TO_TOKENS = {
       ...TOKEN.DEGEN,
       decimals: 18,
       address: '0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed',
+    },
+    {
+      ...TOKEN.IDRISS,
+      decimals: 18,
+      address: '0x000096630066820566162c94874a776532705231',
     },
   ],
 } satisfies Record<string, ChainToken[]>;
