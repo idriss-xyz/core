@@ -1,5 +1,6 @@
 import {
   ChevronDown,
+  ChevronRight,
   Menu,
   Puzzle,
   X,
@@ -31,6 +32,7 @@ export const ICON = {
   ArrowRight,
   HelpCircle,
   ChevronDown,
+  ChevronRight,
   AlertCircle,
   CheckCircle2,
   GlobeIcon,
