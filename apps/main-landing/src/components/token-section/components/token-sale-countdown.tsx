@@ -4,9 +4,7 @@ import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { useEffect, useState } from 'react';
 import { classes } from '@idriss-xyz/ui/utils';
 
-import { IDRISS_TOKEN_SALE_END } from '../constants';
-
-const targetDate = new Date(IDRISS_TOKEN_SALE_END);
+const targetDate = new Date();
 
 // ts-unused-exports:disable-next-line
 export const TokenSaleCountdown = () => {
