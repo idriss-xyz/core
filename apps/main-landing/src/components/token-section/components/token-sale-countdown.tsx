@@ -1,51 +1,11 @@
 'use client';
 
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
-import { useEffect, useState } from 'react';
-import { classes } from '@idriss-xyz/ui/utils';
 
-const targetDate = new Date();
+import { LabeledGradientProperty } from './labeled-gradient-property';
 
 // ts-unused-exports:disable-next-line
 export const TokenSaleCountdown = () => {
-  const [timeRemaining, setTimeRemaining] = useState<{
-    days: number;
-    hours: number;
-    minutes: number;
-    seconds: number;
-  }>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      updateCountdown();
-    }, 1000);
-
-    return () => {
-      return clearInterval(interval);
-    };
-  }, []);
-
-  const updateCountdown = () => {
-    const currentTime = new Date();
-    const remainingTime = targetDate.getTime() - currentTime.getTime();
-
-    if (remainingTime <= 0) {
-      setTimeRemaining({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-      return;
-    }
-
-    const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
-    const hours = Math.floor(
-      (remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-    );
-    const minutes = Math.floor(
-      (remainingTime % (1000 * 60 * 60)) / (1000 * 60),
-    );
-    const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
-
-    setTimeRemaining({ days, hours, minutes, seconds });
-  };
-
   return (
     <div className="relative flex w-full flex-col items-center gap-5 rounded-2xl bg-white/20 px-4 py-6 md:px-10 md:py-8">
       <GradientBorder
@@ -55,115 +15,8 @@ export const TokenSaleCountdown = () => {
         gradientStartColor="#5FEB3C"
         gradientStopColor="rgba(255,255,255,1)"
       />
-      <span
-        className={classes(
-          'text-center text-body4 text-neutralGreen-900',
-          'lg:text-body2',
-        )}
-      >
-        ENDS IN
-      </span>
-      <div className="flex justify-between self-stretch">
-        <div className="flex min-w-14 flex-col items-center justify-center">
-          <span
-            className={classes(
-              'text-heading4 gradient-text',
-              'lg:text-heading2',
-              '2xl:text-heading3',
-            )}
-          >
-            {timeRemaining.days}
-          </span>
-          <span
-            className={classes(
-              'text-center text-body4 text-neutralGreen-500',
-              'lg:text-body2',
-            )}
-          >
-            DAYS
-          </span>
-        </div>
-        <span
-          className={classes(
-            'text-heading4 text-neutralGreen-900',
-            'lg:text-heading3',
-          )}
-        >
-          :
-        </span>
-        <div className="flex min-w-14 flex-col items-center justify-center">
-          <span
-            className={classes(
-              'text-heading4 gradient-text',
-              'lg:text-heading2',
-              '2xl:text-heading3',
-            )}
-          >
-            {timeRemaining.hours}
-          </span>
-          <span
-            className={classes(
-              'text-center text-body4 text-neutralGreen-500',
-              'lg:text-body2',
-            )}
-          >
-            HRS
-          </span>
-        </div>
-        <span
-          className={classes(
-            'text-heading4 text-neutralGreen-900',
-            'lg:text-heading3',
-          )}
-        >
-          :
-        </span>
-        <div className="flex min-w-14 flex-col items-center justify-center">
-          <span
-            className={classes(
-              'text-heading4 gradient-text',
-              'lg:text-heading2',
-              '2xl:text-heading3',
-            )}
-          >
-            {timeRemaining.minutes}
-          </span>
-          <span
-            className={classes(
-              'text-center text-body4 text-neutralGreen-500',
-              'lg:text-body2',
-            )}
-          >
-            MIN
-          </span>
-        </div>
-        <span
-          className={classes(
-            'text-heading4 text-neutralGreen-900',
-            'lg:text-heading3',
-          )}
-        >
-          :
-        </span>
-        <div className="flex min-w-14 flex-col items-center justify-center">
-          <span
-            className={classes(
-              'text-heading4 gradient-text',
-              'lg:text-heading2',
-              '2xl:text-heading3',
-            )}
-          >
-            {timeRemaining.seconds}
-          </span>
-          <span
-            className={classes(
-              'text-center text-body4 text-neutralGreen-500',
-              'lg:text-body2',
-            )}
-          >
-            SEC
-          </span>
-        </div>
+      <div className="flex justify-center self-stretch">
+        <LabeledGradientProperty label="" content="SOLD OUT" />
       </div>
       {/* Progress bar may be uncommented post sale */}
       {/* <div className="w-full">
