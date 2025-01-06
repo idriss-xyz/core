@@ -1,7 +1,12 @@
 import { useMemo, createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { useLocationInfo, ExtensionPopup, Final } from 'final';
+import {
+  useLocationInfo,
+  ExtensionPopup,
+  Final,
+  NotificationsPopup,
+} from 'final';
 import { LookUpWalletAddress } from 'application/look-up-wallet-address';
 
 import { Providers } from './providers';
@@ -47,6 +52,7 @@ export class Application {
 
 const bootstrap = () => {
   const root = document.createElement('div');
+  root.classList.add('idriss-root');
   const shadowRoot = root.attachShadow({ mode: 'open' });
   const reactRoot = createRoot(shadowRoot);
   reactRoot.render(createElement(ApplicationWithProviders));
@@ -66,6 +72,7 @@ const ApplicationWithProviders = () => {
   return (
     <Providers disabledWalletRdns={disabledWalletRdns}>
       <LookUpWalletAddress />
+      <NotificationsPopup />
       <ExtensionPopup />
       <Final />
     </Providers>

@@ -6,10 +6,11 @@ import { SubscriptionsEntity } from '../entities/subscribtions.entity';
 import { AddressWebhookMapEntity } from '../entities/addressWebhookMap.entity';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
-import { webhooks } from '../constants';
 import dotenv from 'dotenv';
+import { join } from 'path';
+import { WEBHOOK_NETWORKS } from '../constants';
 
-dotenv.config();
+dotenv.config({ path: join(__dirname, `../.env.${process.env.NODE_ENV}`) });
 
 const ALCHEMY_API_BASE_URL = 'https://dashboard.alchemyapi.io';
 const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY!;
@@ -29,7 +30,6 @@ const webhooksRepo = dataSource.getRepository(WebhookEntity);
 export const subscribeAddress = async (
   subscriber_id: string,
   address: string,
-  network: string | null,
 ) => {
   address = address.toLowerCase();
 
@@ -41,7 +41,7 @@ export const subscribeAddress = async (
     where: { address },
   });
   if (!addressWebhookMap) {
-    await addAddressToWebhook(address, network);
+    await addAddressToWebhook(address);
   }
 };
 
@@ -79,7 +79,7 @@ export const unsubscribeAddress = async (
   }
 };
 
-const addAddressToWebhook = async (address: string, network: string | null) => {
+const addAddressToWebhook = async (address: string) => {
   const res = await webhooksRepo
     .createQueryBuilder('webhooks')
     .select(['webhooks.internal_id', 'webhooks.webhook_id'])
@@ -99,26 +99,32 @@ const addAddressToWebhook = async (address: string, network: string | null) => {
     .getRawOne();
 
   if (!res) {
-    const { webhookId, internalWebhookId, signingKey } = await createNewWebhook(
-      address,
-      network,
-    );
+    const webhooks = await createNewWebhook(address);
+    for (const webhook of webhooks) {
+      const { webhookId, internalWebhookId, signingKey } = webhook;
+      await webhooksRepo.save({
+        internal_id: internalWebhookId,
+        webhook_id: webhookId,
+        signing_key: signingKey,
+      });
+    }
     await webhooksRepo.save({
       internal_id: internalWebhookId,
       webhook_id: webhookId,
       signing_key: signingKey,
     });
+    await addressMapWhebhooksRepo.save({
+      address,
+      webhook_internal_id: internalWebhookId,
+    });
   } else {
-    const { webhook_id } = res;
+    const { webhook_id, internal_id } = res;
     await updateWebhookAddresses(webhook_id, [address], []);
+    await addressMapWhebhooksRepo.save({
+      address,
+      webhook_internal_id: internal_id,
+    });
   }
-
-  const { internal_id = '' } = res || {};
-
-  await addressMapWhebhooksRepo.save({
-    address,
-    webhook_internal_id: internal_id,
-  });
 };
 
 async function removeAddressFromWebhook(address: string): Promise<void> {
@@ -162,48 +168,45 @@ async function removeAddressFromWebhook(address: string): Promise<void> {
   }
 }
 
-const createNewWebhook = async (address: string, network: string | null) => {
+const createNewWebhook = async (address: string) => {
   try {
-    const internalWebhookId = uuidv4();
-    const webhookUrl = `${WEBHOOK_URL}/webhook/${internalWebhookId}`;
+    const webhooks = [];
+    for (const NETWORK of WEBHOOK_NETWORKS) {
+      const internalWebhookId = uuidv4();
+      const webhookUrl = `${WEBHOOK_URL}/webhook/${internalWebhookId}`;
 
-    const network_for_query =
-      typeof network === 'string'
-        ? network.includes('_MAINNET')
-          ? network.toUpperCase()
-          : `${network?.toUpperCase()}_MAINNET`
-        : NETWORK;
-
-    const response = await axios.post(
-      `${ALCHEMY_API_BASE_URL}/api/create-webhook`,
-      {
-        webhook_url: webhookUrl,
-        network: network_for_query,
-        webhook_type: 'ADDRESS_ACTIVITY',
-        addresses: [address],
-      },
-      {
-        headers: {
-          'accept': 'application/json',
-          'content-type': 'application/json',
-          'X-Alchemy-Token': ALCHEMY_API_KEY,
+      const response = await axios.post(
+        `${ALCHEMY_API_BASE_URL}/api/create-webhook`,
+        {
+          webhook_url: webhookUrl,
+          network: NETWORK,
+          webhook_type: 'ADDRESS_ACTIVITY',
+          addresses: [address],
         },
-      },
-    );
+        {
+          headers: {
+            'accept': 'application/json',
+            'content-type': 'application/json',
+            'X-Alchemy-Token': ALCHEMY_API_KEY,
+          },
+        },
+      );
 
-    const data = response.data;
+      const data = response.data;
 
-    const webhookId = data.data.id;
-    const signingKey = data.data.signing_key;
+      const webhookId = data.data.id;
+      const signingKey = data.data.signing_key;
 
-    console.log(
-      `Created new webhook with ID: ${webhookId} and internal ID: ${internalWebhookId}`,
-    );
+      console.log(
+        `Created new webhook with ID: ${webhookId} and internal ID: ${internalWebhookId}`,
+      );
 
-    return { webhookId, internalWebhookId, signingKey };
+      webhooks.push({ webhookId, internalWebhookId, signingKey });
+    }
+    return webhooks;
   } catch (err) {
     console.error('Error creating webhook: ', err);
-    return {};
+    return [];
   }
 };
 

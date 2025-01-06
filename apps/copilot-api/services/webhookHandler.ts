@@ -57,7 +57,7 @@ async function handleIncomingEvent(
   }
 
   for (const activity of activities) {
-    activity.network = webhookEvent.event.network?.replace('_MAINNET', '');
+    activity.network = webhookEvent.event.network;
   }
 
   console.log('New event:');

@@ -2,69 +2,140 @@ import { useCallback } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
 import { useCommandMutation } from 'shared/messaging';
+import { ErrorMessage } from 'shared/ui';
+import { LsFarcasterUsersDetails } from 'application/trading-copilot/types';
 
-import { Subscription } from '../../types';
-import { GetEnsAddressCommand } from '../../commands';
+import {
+  GetEnsAddressCommand,
+  GetFarcasterAddressCommand,
+  GetFarcasterUserCommand,
+} from '../../commands';
 
-type SubscriptionFormValues = {
-  ensName: string;
+import { Properties, FormValues } from './subscription-form.types';
+
+const EMPTY_FORM: FormValues = {
+  subscriptionDetails: '',
 };
 
-type Properties = {
-  onSubmit: (subscription: Subscription) => void;
-};
-
-const EMPTY_FORM: SubscriptionFormValues = {
-  ensName: '',
-};
-
-export const SubscriptionForm = ({ onSubmit }: Properties) => {
-  const form = useForm<SubscriptionFormValues>({
+export const SubscriptionForm = ({
+  onSubmit,
+  subscriptionsAmount,
+}: Properties) => {
+  const form = useForm<FormValues>({
     defaultValues: EMPTY_FORM,
   });
+  const subscriptionLimit = 10;
+  const isSubscriptionLimitExceeded =
+    subscriptionsAmount !== undefined &&
+    subscriptionsAmount >= subscriptionLimit;
 
   const getEnsAddressMutation = useCommandMutation(GetEnsAddressCommand);
+  const getFarcasterAddressMutation = useCommandMutation(
+    GetFarcasterAddressCommand,
+  );
+  const getFarcasterUserMutation = useCommandMutation(GetFarcasterUserCommand);
 
-  const addSubscriber: SubmitHandler<SubscriptionFormValues> = useCallback(
+  const addSubscriber: SubmitHandler<FormValues> = useCallback(
     async (data) => {
+      const hexPattern = /^0x[\dA-Fa-f]+$/;
+      const farcasterPattern = /^[^.]+$/;
+      const isWalletAddress = hexPattern.test(data.subscriptionDetails);
+      const isFarcasterName = farcasterPattern.test(data.subscriptionDetails);
+
+      if (isWalletAddress) {
+        onSubmit(data.subscriptionDetails);
+        form.reset(EMPTY_FORM);
+        return;
+      }
+
+      if (isFarcasterName) {
+        const farcasterDetails = await getFarcasterAddressMutation.mutateAsync({
+          name: data.subscriptionDetails,
+        });
+
+        if (!farcasterDetails) {
+          return;
+        }
+
+        const farcasterUser = await getFarcasterUserMutation.mutateAsync({
+          id: farcasterDetails.fid,
+        });
+
+        if (farcasterUser) {
+          const lsFarcasterKey = 'farcasterDetails';
+          const lsFarcasterDetails = localStorage.getItem(lsFarcasterKey);
+          // @ts-expect-error TODO: temporary solution, remove when API will be ready
+          const parsedLsFarcasterDetails: LsFarcasterUsersDetails = JSON.parse(
+            lsFarcasterDetails ?? '[]',
+          );
+
+          localStorage.setItem(
+            lsFarcasterKey,
+            JSON.stringify([
+              ...parsedLsFarcasterDetails,
+              {
+                wallet: farcasterDetails.address,
+                displayName: farcasterUser.result.user.displayName,
+                pfp: farcasterUser.result.user.pfp.url,
+              },
+            ]),
+          );
+        }
+
+        onSubmit(farcasterDetails.address);
+        form.reset(EMPTY_FORM);
+        return;
+      }
+
       const address = await getEnsAddressMutation.mutateAsync({
-        ensName: data.ensName,
+        ensName: data.subscriptionDetails,
       });
+
       if (!address) {
         return;
       }
-      onSubmit({
-        ensName: data.ensName,
-        walletAddress: address,
-      });
+
+      onSubmit(address);
       form.reset(EMPTY_FORM);
     },
-    [form, getEnsAddressMutation, onSubmit],
+    [
+      form,
+      getEnsAddressMutation,
+      getFarcasterAddressMutation,
+      getFarcasterUserMutation,
+      onSubmit,
+    ],
   );
 
   return (
     <form onSubmit={form.handleSubmit(addSubscriber)}>
       <label
-        htmlFor="subscriptionName"
+        htmlFor="subscriptionDetails"
         className="block text-label4 text-neutralGreen-700"
       >
-        Subscribe to Wallet
+        Subscribe to wallet
       </label>
       <Controller
         control={form.control}
-        name="ensName"
+        name="subscriptionDetails"
         render={({ field }) => {
           return (
             <input
               {...field}
               type="text"
-              id="subscriptionName"
+              id="subscriptionDetails"
               className="mt-1 block w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-black shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
               placeholder="e.g., vitalik.eth"
+              disabled={isSubscriptionLimitExceeded}
             />
           );
         }}
       />
+      {isSubscriptionLimitExceeded && (
+        <ErrorMessage className="mt-1">
+          Subscriptions limit exceeded ({subscriptionLimit}).
+        </ErrorMessage>
+      )}
     </form>
   );
 };
