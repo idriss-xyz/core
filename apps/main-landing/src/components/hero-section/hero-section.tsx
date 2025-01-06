@@ -54,10 +54,11 @@ export const HeroSection = () => {
           'pointer-events-none z-0 mt-[-40%] w-full min-w-[600px]',
           '[@media(max-width:768px)]:[@media(min-width:470px)]:mt-[-30%]',
           'md:mt-[-25%]',
-          'lg:mt-[-33%] lg:min-w-[1985px]',
-          '2xl:mt-[-30%]',
-          '3xl:mt-[-29%]',
-          '4xl:mt-[-24%] 4xl:min-w-[unset]',
+          'lg:mt-[-33%] lg:min-w-[1024px] lg:pb-28 lg:pt-36',
+          'xl:pb-32',
+          '2xl:mt-[-30%] 2xl:pb-24 2xl:pt-28',
+          '3xl:mt-[-29%] 3xl:pb-16 3xl:pt-24',
+          '4xl:mt-[-24%] 4xl:min-w-[unset] 4xl:pb-8 4xl:pt-10',
         )}
         alt=""
       />
