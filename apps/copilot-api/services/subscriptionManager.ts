@@ -8,15 +8,16 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import dotenv from 'dotenv';
 import { join } from 'path';
+import { WEBHOOK_NETWORKS } from '../constants/networks';
 
 dotenv.config({ path: join(__dirname, `../.env.${process.env.NODE_ENV}`) });
 
 const ALCHEMY_API_BASE_URL = 'https://dashboard.alchemyapi.io';
 const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY!;
 const WEBHOOK_URL = process.env.WEBHOOK_URL!;
-const NETWORK = process.env.NETWORK!;
 const MAX_ADDRESSES_PER_WEBHOOK =
   Number(process.env.MAX_ADDRESSES_PER_WEBHOOK) || 100;
+const NETWORK = process.env.NETWORK!;
 
 const subscribersRepo = dataSource.getRepository(SubscribersEntity);
 const addressRepo = dataSource.getRepository(AddressesEntity);
@@ -30,17 +31,22 @@ export const subscribeAddress = async (
   subscriber_id: string,
   address: string,
 ) => {
-  address = address.toLowerCase();
+  try {
+    address = address.toLowerCase();
 
-  await subscribersRepo.save({ subscriber_id });
-  await addressRepo.save({ address });
-  await subscribtionsRepo.save({ subscriber_id, address });
+    await subscribersRepo.save({ subscriber_id });
+    await addressRepo.save({ address });
+    await subscribtionsRepo.save({ subscriber_id, address });
 
-  const addressWebhookMap = await addressMapWhebhooksRepo.findOne({
-    where: { address },
-  });
-  if (!addressWebhookMap) {
-    await addAddressToWebhook(address);
+    const addressWebhookMap = await addressMapWhebhooksRepo.findOne({
+      where: { address },
+    });
+    if (!addressWebhookMap) {
+      await addAddressToWebhook(address);
+    }
+  } catch (error) {
+    console.error('Error subscribing address:', error);
+    throw error;
   }
 };
 
@@ -79,43 +85,49 @@ export const unsubscribeAddress = async (
 };
 
 const addAddressToWebhook = async (address: string) => {
-  const res = await webhooksRepo
-    .createQueryBuilder('webhooks')
-    .select(['webhooks.internal_id', 'webhooks.webhook_id'])
-    .where((qb) => {
-      const subQuery = qb
-        .subQuery()
-        .select('address_webhook_map.webhook_internal_id')
-        .from(AddressWebhookMapEntity, 'address_webhook_map')
-        .groupBy('address_webhook_map.webhook_internal_id')
-        .having('COUNT(address_webhook_map.address) < :maxCount', {
-          maxCount: MAX_ADDRESSES_PER_WEBHOOK,
-        })
-        .getQuery();
-      return `webhooks.internal_id IN (${subQuery})`;
-    })
-    .limit(1)
-    .getRawOne();
+  try {
+    const res = await webhooksRepo
+      .createQueryBuilder('webhooks')
+      .select(['webhooks.internal_id', 'webhooks.webhook_id'])
+      .where((qb) => {
+        const subQuery = qb
+          .subQuery()
+          .select('address_webhook_map.webhook_internal_id')
+          .from(AddressWebhookMapEntity, 'address_webhook_map')
+          .groupBy('address_webhook_map.webhook_internal_id')
+          .having('COUNT(address_webhook_map.address) < :maxCount', {
+            maxCount: MAX_ADDRESSES_PER_WEBHOOK,
+          })
+          .getQuery();
+        return `webhooks.internal_id IN (${subQuery})`;
+      })
+      .limit(1)
+      .getRawOne();
 
-  if (!res) {
-    const { webhookId, internalWebhookId, signingKey } =
-      await createNewWebhook(address);
-    await webhooksRepo.save({
-      internal_id: internalWebhookId,
-      webhook_id: webhookId,
-      signing_key: signingKey,
-    });
-  } else {
-    const { webhook_id } = res;
-    await updateWebhookAddresses(webhook_id, [address], []);
+    if (!res) {
+      const { webhookId, internalWebhookId, signingKey } =
+        await createNewWebhook(address);
+      await webhooksRepo.save({
+        internal_id: internalWebhookId,
+        webhook_id: webhookId,
+        signing_key: signingKey,
+      });
+      await addressMapWhebhooksRepo.save({
+        address,
+        webhook_internal_id: internalWebhookId,
+      });
+    } else {
+      const { webhook_id, internal_id = '' } = res;
+      await updateWebhookAddresses(webhook_id, [address], []);
+      await addressMapWhebhooksRepo.save({
+        address,
+        webhook_internal_id: internal_id,
+      });
+    }
+  } catch (error) {
+    console.error('Error creating address for webhook:', error);
+    throw error;
   }
-
-  const { internal_id = '' } = res || {};
-
-  await addressMapWhebhooksRepo.save({
-    address,
-    webhook_internal_id: internal_id,
-  });
 };
 
 async function removeAddressFromWebhook(address: string): Promise<void> {
@@ -193,7 +205,7 @@ const createNewWebhook = async (address: string) => {
     return { webhookId, internalWebhookId, signingKey };
   } catch (err) {
     console.error('Error creating webhook: ', err);
-    return {};
+    return [];
   }
 };
 

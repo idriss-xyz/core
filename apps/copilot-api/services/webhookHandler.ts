@@ -57,7 +57,7 @@ async function handleIncomingEvent(
   }
 
   for (const activity of activities) {
-    activity.network = webhookEvent.event.network;
+    activity.network = webhookEvent.event.network?.replace('_MAINNET', '');
   }
 
   console.log('New event:');
@@ -232,12 +232,8 @@ function isCompleteSwap(swapData: SwapData): boolean {
   }
 
   // Ensure tokenIn and tokenOut are different
-  if (
-    swapData.tokenIn!.address.toLowerCase() ===
+  return (
+    swapData.tokenIn!.address.toLowerCase() !==
     swapData.tokenOut!.address.toLowerCase()
-  ) {
-    return false;
-  }
-
-  return true;
+  );
 }
