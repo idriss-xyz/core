@@ -232,12 +232,8 @@ function isCompleteSwap(swapData: SwapData): boolean {
   }
 
   // Ensure tokenIn and tokenOut are different
-  if (
-    swapData.tokenIn!.address.toLowerCase() ===
+  return (
+    swapData.tokenIn!.address.toLowerCase() !==
     swapData.tokenOut!.address.toLowerCase()
-  ) {
-    return false;
-  }
-
-  return true;
+  );
 }
