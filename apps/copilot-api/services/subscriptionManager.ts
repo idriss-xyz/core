@@ -8,7 +8,7 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import dotenv from 'dotenv';
 import { join } from 'path';
-import { WEBHOOK_NETWORKS } from '../constants/networks';
+import { WEBHOOK_NETWORKS } from '../constants';
 
 dotenv.config({ path: join(__dirname, `../.env.${process.env.NODE_ENV}`) });
 
@@ -17,7 +17,6 @@ const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY!;
 const WEBHOOK_URL = process.env.WEBHOOK_URL!;
 const MAX_ADDRESSES_PER_WEBHOOK =
   Number(process.env.MAX_ADDRESSES_PER_WEBHOOK) || 100;
-const NETWORK = process.env.NETWORK!;
 
 const subscribersRepo = dataSource.getRepository(SubscribersEntity);
 const addressRepo = dataSource.getRepository(AddressesEntity);
@@ -31,22 +30,17 @@ export const subscribeAddress = async (
   subscriber_id: string,
   address: string,
 ) => {
-  try {
-    address = address.toLowerCase();
+  address = address.toLowerCase();
 
-    await subscribersRepo.save({ subscriber_id });
-    await addressRepo.save({ address });
-    await subscribtionsRepo.save({ subscriber_id, address });
+  await subscribersRepo.save({ subscriber_id });
+  await addressRepo.save({ address });
+  await subscribtionsRepo.save({ subscriber_id, address });
 
-    const addressWebhookMap = await addressMapWhebhooksRepo.findOne({
-      where: { address },
-    });
-    if (!addressWebhookMap) {
-      await addAddressToWebhook(address);
-    }
-  } catch (error) {
-    console.error('Error subscribing address:', error);
-    throw error;
+  const addressWebhookMap = await addressMapWhebhooksRepo.findOne({
+    where: { address },
+  });
+  if (!addressWebhookMap) {
+    await addAddressToWebhook(address);
   }
 };
 
@@ -85,48 +79,50 @@ export const unsubscribeAddress = async (
 };
 
 const addAddressToWebhook = async (address: string) => {
-  try {
-    const res = await webhooksRepo
-      .createQueryBuilder('webhooks')
-      .select(['webhooks.internal_id', 'webhooks.webhook_id'])
-      .where((qb) => {
-        const subQuery = qb
-          .subQuery()
-          .select('address_webhook_map.webhook_internal_id')
-          .from(AddressWebhookMapEntity, 'address_webhook_map')
-          .groupBy('address_webhook_map.webhook_internal_id')
-          .having('COUNT(address_webhook_map.address) < :maxCount', {
-            maxCount: MAX_ADDRESSES_PER_WEBHOOK,
-          })
-          .getQuery();
-        return `webhooks.internal_id IN (${subQuery})`;
-      })
-      .limit(1)
-      .getRawOne();
+  const res = await webhooksRepo
+    .createQueryBuilder('webhooks')
+    .select(['webhooks.internal_id', 'webhooks.webhook_id'])
+    .where((qb) => {
+      const subQuery = qb
+        .subQuery()
+        .select('address_webhook_map.webhook_internal_id')
+        .from(AddressWebhookMapEntity, 'address_webhook_map')
+        .groupBy('address_webhook_map.webhook_internal_id')
+        .having('COUNT(address_webhook_map.address) < :maxCount', {
+          maxCount: MAX_ADDRESSES_PER_WEBHOOK,
+        })
+        .getQuery();
+      return `webhooks.internal_id IN (${subQuery})`;
+    })
+    .limit(1)
+    .getRawOne();
 
-    if (!res) {
-      const { webhookId, internalWebhookId, signingKey } =
-        await createNewWebhook(address);
+  if (!res) {
+    const webhooks = await createNewWebhook(address);
+    for (const webhook of webhooks) {
+      const { webhookId, internalWebhookId, signingKey } = webhook;
       await webhooksRepo.save({
         internal_id: internalWebhookId,
         webhook_id: webhookId,
         signing_key: signingKey,
       });
-      await addressMapWhebhooksRepo.save({
-        address,
-        webhook_internal_id: internalWebhookId,
-      });
-    } else {
-      const { webhook_id, internal_id = '' } = res;
-      await updateWebhookAddresses(webhook_id, [address], []);
-      await addressMapWhebhooksRepo.save({
-        address,
-        webhook_internal_id: internal_id,
-      });
     }
-  } catch (error) {
-    console.error('Error creating address for webhook:', error);
-    throw error;
+    await webhooksRepo.save({
+      internal_id: internalWebhookId,
+      webhook_id: webhookId,
+      signing_key: signingKey,
+    });
+    await addressMapWhebhooksRepo.save({
+      address,
+      webhook_internal_id: internalWebhookId,
+    });
+  } else {
+    const { webhook_id, internal_id } = res;
+    await updateWebhookAddresses(webhook_id, [address], []);
+    await addressMapWhebhooksRepo.save({
+      address,
+      webhook_internal_id: internal_id,
+    });
   }
 };
 
@@ -173,36 +169,40 @@ async function removeAddressFromWebhook(address: string): Promise<void> {
 
 const createNewWebhook = async (address: string) => {
   try {
-    const internalWebhookId = uuidv4();
-    const webhookUrl = `${WEBHOOK_URL}/webhook/${internalWebhookId}`;
+    const webhooks = [];
+    for (const NETWORK of WEBHOOK_NETWORKS) {
+      const internalWebhookId = uuidv4();
+      const webhookUrl = `${WEBHOOK_URL}/webhook/${internalWebhookId}`;
 
-    const response = await axios.post(
-      `${ALCHEMY_API_BASE_URL}/api/create-webhook`,
-      {
-        webhook_url: webhookUrl,
-        network: NETWORK,
-        webhook_type: 'ADDRESS_ACTIVITY',
-        addresses: [address],
-      },
-      {
-        headers: {
-          'accept': 'application/json',
-          'content-type': 'application/json',
-          'X-Alchemy-Token': ALCHEMY_API_KEY,
+      const response = await axios.post(
+        `${ALCHEMY_API_BASE_URL}/api/create-webhook`,
+        {
+          webhook_url: webhookUrl,
+          network: NETWORK,
+          webhook_type: 'ADDRESS_ACTIVITY',
+          addresses: [address],
         },
-      },
-    );
+        {
+          headers: {
+            'accept': 'application/json',
+            'content-type': 'application/json',
+            'X-Alchemy-Token': ALCHEMY_API_KEY,
+          },
+        },
+      );
 
-    const data = response.data;
+      const data = response.data;
 
-    const webhookId = data.data.id;
-    const signingKey = data.data.signing_key;
+      const webhookId = data.data.id;
+      const signingKey = data.data.signing_key;
 
-    console.log(
-      `Created new webhook with ID: ${webhookId} and internal ID: ${internalWebhookId}`,
-    );
+      console.log(
+        `Created new webhook with ID: ${webhookId} and internal ID: ${internalWebhookId}`,
+      );
 
-    return { webhookId, internalWebhookId, signingKey };
+      webhooks.push({ webhookId, internalWebhookId, signingKey });
+    }
+    return webhooks;
   } catch (err) {
     console.error('Error creating webhook: ', err);
     return [];
