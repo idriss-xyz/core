@@ -8,6 +8,7 @@ type Properties = {
   additionalContent?: ReactNode;
 };
 
+// ts-unused-exports:disable-next-line
 export const LabeledGradientProperty = ({
   label,
   content,

@@ -96,6 +96,7 @@ export const ProductSection = ({
               'lg:absolute lg:left-0 lg:top-0 lg:h-screen lg:w-screen lg:pt-10 lg:will-change-[margin-left]',
               '2xl:gap-6',
               '3xl:gap-10',
+              '4xl:z-0',
             )}
             style={
               marginX === undefined
