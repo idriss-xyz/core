@@ -351,6 +351,11 @@ export const CHAIN_ID_TO_TOKENS = {
   ],
   [CHAIN.BASE.id]: [
     {
+      ...TOKEN.IDRISS,
+      decimals: 18,
+      address: '0x000096630066820566162c94874a776532705231',
+    },
+    {
       ...TOKEN.ETHEREUM,
       decimals: 18,
       address: NATIVE_COIN_ADDRESS,
@@ -379,11 +384,6 @@ export const CHAIN_ID_TO_TOKENS = {
       ...TOKEN.HIGHER,
       decimals: 18,
       address: '0x0578d8A44db98B23BF096A382e016e29a5Ce0ffe',
-    },
-    {
-      ...TOKEN.IDRISS,
-      decimals: 18,
-      address: '0x000096630066820566162c94874a776532705231',
     },
     {
       ...TOKEN.MOXIE,
