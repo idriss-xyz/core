@@ -16,8 +16,6 @@ dotenv.config(
   mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
 );
 
-console.log(process.env);
-
 dataSource
   .initialize()
   .then(() => console.log('DB connected...'))
