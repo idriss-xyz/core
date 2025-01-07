@@ -3,9 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "copy-env": "node -e \"require('fs').copyFileSync('.env.production', 'dist/.env.production')\"",
-    "prod": "tsc && node dist/index.js",
-    "dev": "ts-node index.ts --mode=development",
+    "prod": "ts-node src/index.ts --mode=production",
+    "dev": "ts-node src/index.ts --mode=development",
     "format": "prettier --check --config ./prettier.config.mjs --ignore-path .prettierignore .",
     "format:fix": "prettier --write --config ./prettier.config.mjs --ignore-path .prettierignore .",
     "lint": "eslint --max-warnings=0",
