@@ -6,7 +6,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Multiselect, MultiselectOption } from '@idriss-xyz/ui/multiselect';
-import { ANNOUNCEMENT_LINK } from '@idriss-xyz/constants';
+import { ANNOUNCEMENT_LINK, CREATORS_LINK } from '@idriss-xyz/constants';
 import { Link } from '@idriss-xyz/ui/link';
 import { isAddress } from 'viem';
 import { normalize } from 'viem/ens';
@@ -193,7 +193,7 @@ export default function Donors() {
   // eslint-disable-next-line unicorn/consistent-function-scoping
   const copyObsLink = async () => {
     await navigator.clipboard.writeText(
-      `https://api.idriss.xyz/creators/obs?address=${address}`,
+      `${CREATORS_LINK}/obs?address=${address}`,
     );
 
     setCopiedDonationLink(false);

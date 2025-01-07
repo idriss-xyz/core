@@ -58,12 +58,6 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        source: '/streamers/obs',
-        destination: 'https://api.idriss.xyz/creators/obs',
-        basePath: false,
-        permanent: false,
-      },
-      {
         source: '/docs',
         destination: 'https://docs.idriss.xyz/',
         basePath: false,
@@ -138,6 +132,14 @@ const nextConfig: NextConfig = {
         };
       }),
     ];
+  },
+  webpack(config) {
+    config.module.rules.push({
+      test: /\.mp3$/,
+      type: 'asset/resource',
+    });
+
+    return config;
   },
   experimental: {
     optimizePackageImports: ['@idriss-xyz/ui'],
