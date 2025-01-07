@@ -12,7 +12,9 @@ import { publicClient } from '../config/publicClient';
 import { join } from 'path';
 import { mode } from '../utils/mode';
 
-dotenv.config({ path: join(__dirname, `../.env.${mode}`) });
+dotenv.config(
+  mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
+);
 
 const router = express.Router();
 
