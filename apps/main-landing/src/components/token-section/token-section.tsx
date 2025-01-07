@@ -13,7 +13,10 @@ import { GeoConditionalButton } from './components/geo-conditional-button';
 
 export const TokenSection = () => {
   return (
-    <div className="relative z-1 px-safe" id="token">
+    <div
+      className="relative z-40 overflow-visible px-safe lg:h-[100vh] 3xl:h-[unset]"
+      id="token"
+    >
       <div
         className={classes(
           'container flex flex-col items-center justify-center py-10',
@@ -44,8 +47,8 @@ export const TokenSection = () => {
               src={idrissCoin.src}
               alt="IDRISS coin"
               className={classes(
-                'size-[164px]',
-                'lg:mb-2.5 lg:size-[200px]',
+                'mb-6 size-[164px]',
+                'lg:size-[200px]',
                 '2xl:size-[136px]',
               )}
             />
@@ -60,14 +63,14 @@ export const TokenSection = () => {
             </h2>
             <p
               className={classes(
-                'mb-2 mt-4 text-balance text-center text-body3 text-neutralGreen-900 opacity-70',
+                'mb-9 text-balance text-center text-body3 text-neutralGreen-900 opacity-70',
                 'lg:text-body2',
                 '4xl:text-body',
               )}
             >
               IDRISS is the utility token powering{'\u00A0'}the IDRISS{'\u00A0'}
-              DAO,
-              <br className="hidden lg:block" /> giving you access{'\u00A0'}to
+              DAO, giving you access{'\u00A0'}to
+              <br className="hidden lg:block" />
               decentralized{'\u00A0'}revenue sharing, governance rights, and
               more.
             </p>
@@ -103,7 +106,7 @@ export const TokenSection = () => {
                     ]}
                   />
                   <Button
-                    intent="tertiary"
+                    intent="secondary"
                     size="large"
                     suffixIconName="IdrissArrowRight"
                     asLink
@@ -116,8 +119,8 @@ export const TokenSection = () => {
                 <div className="self-stretch text-center opacity-70">
                   <span
                     className={classes(
-                      'text-body4 text-neutralGreen-900',
-                      'md:text-body3',
+                      'text-body5 text-neutralGreen-900',
+                      'md:text-body5',
                     )}
                   >
                     By purchasing, you agree to the{' '}
@@ -127,10 +130,10 @@ export const TokenSection = () => {
                     href={TOKEN_TERMS_AND_CONDITIONS_LINK}
                     isExternal
                     className={classes(
-                      'text-body4',
-                      'md:text-body3',
+                      'border-none text-body5',
+                      'md:text-body5',
                       //lg here is intentional to override the Link variant style
-                      'lg:text-body3',
+                      'lg:text-body5',
                     )}
                   >
                     Terms{'\u00A0'}and{'\u00A0'}conditions
@@ -142,7 +145,7 @@ export const TokenSection = () => {
           </div>
           <img
             src={background.src}
-            className="pointer-events-none absolute left-0 top-0 -z-1 size-full overflow-visible object-cover"
+            className="pointer-events-none absolute left-0 top-0 -z-10 size-full overflow-visible object-cover"
             alt=""
           />
         </div>
