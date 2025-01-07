@@ -21,7 +21,7 @@ const MAX_ADDRESSES_PER_WEBHOOK =
 const subscribersRepo = dataSource.getRepository(SubscribersEntity);
 const addressRepo = dataSource.getRepository(AddressesEntity);
 const subscribtionsRepo = dataSource.getRepository(SubscriptionsEntity);
-const addressMapWhebhooksRepo = dataSource.getRepository(
+const addressMapWebhooksRepo = dataSource.getRepository(
   AddressWebhookMapEntity,
 );
 const webhooksRepo = dataSource.getRepository(WebhookEntity);
@@ -36,7 +36,7 @@ export const subscribeAddress = async (
   await addressRepo.save({ address });
   await subscribtionsRepo.save({ subscriber_id, address });
 
-  const addressWebhookMap = await addressMapWhebhooksRepo.findOne({
+  const addressWebhookMap = await addressMapWebhooksRepo.findOne({
     where: { address },
   });
   if (!addressWebhookMap) {
@@ -106,20 +106,15 @@ const addAddressToWebhook = async (address: string) => {
         webhook_id: webhookId,
         signing_key: signingKey,
       });
+      await addressMapWebhooksRepo.save({
+        address,
+        webhook_internal_id: internalWebhookId,
+      });
     }
-    await webhooksRepo.save({
-      internal_id: internalWebhookId,
-      webhook_id: webhookId,
-      signing_key: signingKey,
-    });
-    await addressMapWhebhooksRepo.save({
-      address,
-      webhook_internal_id: internalWebhookId,
-    });
   } else {
     const { webhook_id, internal_id } = res;
     await updateWebhookAddresses(webhook_id, [address], []);
-    await addressMapWhebhooksRepo.save({
+    await addressMapWebhooksRepo.save({
       address,
       webhook_internal_id: internal_id,
     });
@@ -128,7 +123,7 @@ const addAddressToWebhook = async (address: string) => {
 
 async function removeAddressFromWebhook(address: string): Promise<void> {
   // Get the webhook associated with the address
-  const res = await addressMapWhebhooksRepo.findOne({ where: { address } });
+  const res = await addressMapWebhooksRepo.findOne({ where: { address } });
 
   if (!res) {
     // Address is not associated with any webhook
@@ -153,10 +148,10 @@ async function removeAddressFromWebhook(address: string): Promise<void> {
   await updateWebhookAddresses(webhook_id, [], [address]);
 
   // Remove address from address_webhook_map
-  await addressMapWhebhooksRepo.delete({ address });
+  await addressMapWebhooksRepo.delete({ address });
 
   // Check if webhook has any other addresses
-  const countRes = await addressMapWhebhooksRepo.count({
+  const countRes = await addressMapWebhooksRepo.count({
     where: { webhook_internal_id },
   });
 
