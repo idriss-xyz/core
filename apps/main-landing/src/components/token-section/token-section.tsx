@@ -14,7 +14,7 @@ import { GeoConditionalButton } from './components/geo-conditional-button';
 export const TokenSection = () => {
   return (
     <div
-      className="relative z-40 overflow-visible px-safe lg:h-[100vh] 3xl:h-[unset]"
+      className="relative z-40 overflow-visible px-safe lg:h-screen 3xl:h-[unset]"
       id="token"
     >
       <div
