@@ -12,7 +12,9 @@ import { getSigningKey } from './services/subscriptionManager';
 import { join } from 'path';
 import { mode } from './utils/mode';
 
-dotenv.config({ path: join(__dirname, `.env.${mode}`) });
+dotenv.config(
+  mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
+);
 
 dataSource
   .initialize()
