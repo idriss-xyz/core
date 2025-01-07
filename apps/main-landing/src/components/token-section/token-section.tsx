@@ -6,10 +6,19 @@ import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { Link } from '@idriss-xyz/ui/link';
 import { classes } from '@idriss-xyz/ui/utils';
 import { TOKEN_TERMS_AND_CONDITIONS_LINK } from '@idriss-xyz/constants';
+import dynamic from 'next/dynamic';
 
 import idrissCoin from './assets/IDRISS_COIN 1.png';
 import background from './background.png';
 import { GeoConditionalButton } from './components/geo-conditional-button';
+
+const TokenomicsButton = dynamic(
+  async () => {
+    const { Button } = await import('@idriss-xyz/ui/button');
+    return Button;
+  },
+  { ssr: false },
+);
 
 export const TokenSection = () => {
   return (
@@ -105,7 +114,7 @@ export const TokenSection = () => {
                       </Button>,
                     ]}
                   />
-                  <Button
+                  <TokenomicsButton
                     intent="secondary"
                     size="large"
                     suffixIconName="IdrissArrowRight"
@@ -114,7 +123,7 @@ export const TokenSection = () => {
                     isExternal
                   >
                     TOKENOMICS
-                  </Button>
+                  </TokenomicsButton>
                 </div>
                 <div className="self-stretch text-center opacity-70">
                   <span
