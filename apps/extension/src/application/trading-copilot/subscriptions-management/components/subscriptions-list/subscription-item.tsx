@@ -2,11 +2,13 @@ import { useCallback } from 'react';
 import { ExternalLink } from '@idriss-xyz/ui/external-link';
 import { Icon as IdrissIcon } from '@idriss-xyz/ui/icon';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
+import { useWallet } from '@idriss-xyz/wallet-connect';
 
 import { useCommandQuery } from 'shared/messaging';
 import { Icon, LazyImage, getGithubUserLink } from 'shared/ui';
 import { getTwitterUserLink } from 'host/twitter';
 import { GetEnsNameCommand } from 'application/trading-copilot/commands/get-ens-name';
+import { useLoginViaSiwe } from 'application/trading-copilot';
 import { LsFarcasterUsersDetails } from 'application/trading-copilot/types';
 
 import { GetEnsInfoCommand } from '../../../commands';
@@ -62,9 +64,22 @@ const SubscriptionItemContent = ({
   isFarcasterSubscription,
   farcasterSubscriptionDetails,
 }: ItemContentProperties) => {
-  const remove = useCallback(() => {
+  const { wallet } = useWallet();
+  const siwe = useLoginViaSiwe();
+
+  const remove = useCallback(async () => {
+    const siweLoggedIn = siwe.loggedIn();
+
+    if (!wallet) {
+      return;
+    }
+
+    if (!siweLoggedIn) {
+      await siwe.login(wallet);
+    }
+
     onRemove(subscription);
-  }, [onRemove, subscription]);
+  }, [onRemove, siwe, subscription, wallet]);
 
   const emailQuery = useCommandQuery({
     command: new GetEnsInfoCommand({

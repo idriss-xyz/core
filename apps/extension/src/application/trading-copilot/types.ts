@@ -203,3 +203,24 @@ type Options = {
 export interface FormValues {
   amount: string;
 }
+
+export type SiweMessageRequest = {
+  walletAddress: Hex;
+  chainId: number;
+  domain: string;
+};
+
+export type SiweMessageResponse = {
+  nonce: string;
+  message: string;
+};
+
+export type VerifySiweSignatureRequest = {
+  walletAddress: Hex;
+  message: string;
+  signature: Hex;
+};
+
+export type VerifySiweSignatureResponse = {
+  token: string;
+};

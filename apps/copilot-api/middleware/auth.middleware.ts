@@ -4,8 +4,9 @@ import dotenv from 'dotenv';
 import { join } from 'path';
 import { dataSource } from '../db';
 import { UsersEntity } from '../entities/users.entity';
+import { mode } from '../utils/mode';
 
-dotenv.config({ path: join(__dirname, `../.env.${process.env.NODE_ENV}`) });
+dotenv.config({ path: join(__dirname, `../.env.${mode}`) });
 
 export const verifyToken = () => {
   return async (req: Request, res: Response, next: NextFunction) => {

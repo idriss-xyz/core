@@ -8,20 +8,21 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import dotenv from 'dotenv';
 import { join } from 'path';
+import { WEBHOOK_NETWORKS } from '../constants';
+import { mode } from '../utils/mode';
 
-dotenv.config({ path: join(__dirname, `../.env.${process.env.NODE_ENV}`) });
+dotenv.config({ path: join(__dirname, `../.env.${mode}`) });
 
 const ALCHEMY_API_BASE_URL = 'https://dashboard.alchemyapi.io';
 const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY!;
 const WEBHOOK_URL = process.env.WEBHOOK_URL!;
-const NETWORK = process.env.NETWORK!;
 const MAX_ADDRESSES_PER_WEBHOOK =
   Number(process.env.MAX_ADDRESSES_PER_WEBHOOK) || 100;
 
 const subscribersRepo = dataSource.getRepository(SubscribersEntity);
 const addressRepo = dataSource.getRepository(AddressesEntity);
 const subscribtionsRepo = dataSource.getRepository(SubscriptionsEntity);
-const addressMapWhebhooksRepo = dataSource.getRepository(
+const addressMapWebhooksRepo = dataSource.getRepository(
   AddressWebhookMapEntity,
 );
 const webhooksRepo = dataSource.getRepository(WebhookEntity);
@@ -36,7 +37,7 @@ export const subscribeAddress = async (
   await addressRepo.save({ address });
   await subscribtionsRepo.save({ subscriber_id, address });
 
-  const addressWebhookMap = await addressMapWhebhooksRepo.findOne({
+  const addressWebhookMap = await addressMapWebhooksRepo.findOne({
     where: { address },
   });
   if (!addressWebhookMap) {
@@ -98,29 +99,32 @@ const addAddressToWebhook = async (address: string) => {
     .getRawOne();
 
   if (!res) {
-    const { webhookId, internalWebhookId, signingKey } =
-      await createNewWebhook(address);
-    await webhooksRepo.save({
-      internal_id: internalWebhookId,
-      webhook_id: webhookId,
-      signing_key: signingKey,
-    });
+    const webhooks = await createNewWebhook(address);
+    for (const webhook of webhooks) {
+      const { webhookId, internalWebhookId, signingKey } = webhook;
+      await webhooksRepo.save({
+        internal_id: internalWebhookId,
+        webhook_id: webhookId,
+        signing_key: signingKey,
+      });
+      await addressMapWebhooksRepo.save({
+        address,
+        webhook_internal_id: internalWebhookId,
+      });
+    }
   } else {
-    const { webhook_id } = res;
+    const { webhook_id, internal_id } = res;
     await updateWebhookAddresses(webhook_id, [address], []);
+    await addressMapWebhooksRepo.save({
+      address,
+      webhook_internal_id: internal_id,
+    });
   }
-
-  const { internal_id = '' } = res || {};
-
-  await addressMapWhebhooksRepo.save({
-    address,
-    webhook_internal_id: internal_id,
-  });
 };
 
 async function removeAddressFromWebhook(address: string): Promise<void> {
   // Get the webhook associated with the address
-  const res = await addressMapWhebhooksRepo.findOne({ where: { address } });
+  const res = await addressMapWebhooksRepo.findOne({ where: { address } });
 
   if (!res) {
     // Address is not associated with any webhook
@@ -145,10 +149,10 @@ async function removeAddressFromWebhook(address: string): Promise<void> {
   await updateWebhookAddresses(webhook_id, [], [address]);
 
   // Remove address from address_webhook_map
-  await addressMapWhebhooksRepo.delete({ address });
+  await addressMapWebhooksRepo.delete({ address });
 
   // Check if webhook has any other addresses
-  const countRes = await addressMapWhebhooksRepo.count({
+  const countRes = await addressMapWebhooksRepo.count({
     where: { webhook_internal_id },
   });
 
@@ -161,39 +165,43 @@ async function removeAddressFromWebhook(address: string): Promise<void> {
 
 const createNewWebhook = async (address: string) => {
   try {
-    const internalWebhookId = uuidv4();
-    const webhookUrl = `${WEBHOOK_URL}/webhook/${internalWebhookId}`;
+    const webhooks = [];
+    for (const NETWORK of WEBHOOK_NETWORKS) {
+      const internalWebhookId = uuidv4();
+      const webhookUrl = `${WEBHOOK_URL}/webhook/${internalWebhookId}`;
 
-    const response = await axios.post(
-      `${ALCHEMY_API_BASE_URL}/api/create-webhook`,
-      {
-        webhook_url: webhookUrl,
-        network: NETWORK,
-        webhook_type: 'ADDRESS_ACTIVITY',
-        addresses: [address],
-      },
-      {
-        headers: {
-          'accept': 'application/json',
-          'content-type': 'application/json',
-          'X-Alchemy-Token': ALCHEMY_API_KEY,
+      const response = await axios.post(
+        `${ALCHEMY_API_BASE_URL}/api/create-webhook`,
+        {
+          webhook_url: webhookUrl,
+          network: NETWORK,
+          webhook_type: 'ADDRESS_ACTIVITY',
+          addresses: [address],
         },
-      },
-    );
+        {
+          headers: {
+            'accept': 'application/json',
+            'content-type': 'application/json',
+            'X-Alchemy-Token': ALCHEMY_API_KEY,
+          },
+        },
+      );
 
-    const data = response.data;
+      const data = response.data;
 
-    const webhookId = data.data.id;
-    const signingKey = data.data.signing_key;
+      const webhookId = data.data.id;
+      const signingKey = data.data.signing_key;
 
-    console.log(
-      `Created new webhook with ID: ${webhookId} and internal ID: ${internalWebhookId}`,
-    );
+      console.log(
+        `Created new webhook with ID: ${webhookId} and internal ID: ${internalWebhookId}`,
+      );
 
-    return { webhookId, internalWebhookId, signingKey };
+      webhooks.push({ webhookId, internalWebhookId, signingKey });
+    }
+    return webhooks;
   } catch (err) {
     console.error('Error creating webhook: ', err);
-    return {};
+    return [];
   }
 };
 

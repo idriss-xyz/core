@@ -45,8 +45,6 @@ const TradingCopilotToastContent = ({
     staleTime: Number.POSITIVE_INFINITY,
   });
 
-  console.log(toast);
-
   return (
     <div className="grid grid-cols-[48px,1fr] gap-2">
       <LazyImage

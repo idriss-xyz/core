@@ -10,8 +10,9 @@ import defaultRoutes from './routes';
 import subscriptionsRoutes from './routes/subscribtions';
 import { getSigningKey } from './services/subscriptionManager';
 import { join } from 'path';
+import { mode } from './utils/mode';
 
-dotenv.config({ path: join(__dirname, `.env.${process.env.NODE_ENV}`) });
+dotenv.config({ path: join(__dirname, `.env.${mode}`) });
 
 dataSource
   .initialize()

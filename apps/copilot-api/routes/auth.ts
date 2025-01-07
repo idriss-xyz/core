@@ -3,14 +3,16 @@ import type { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import { throwInternalError } from '../middleware/error.middleware';
-import { isAddress, verifyMessage } from 'viem';
+import { isAddress } from 'viem';
 import { dataSource } from '../db';
 import { AddressesEntity } from '../entities/addreesses.entity';
 import { UsersEntity } from '../entities/users.entity';
-import { v4 as uuidv4 } from 'uuid';
+import { createSiweMessage, generateSiweNonce } from 'viem/siwe';
+import { publicClient } from '../config/publicClient';
 import { join } from 'path';
+import { mode } from '../utils/mode';
 
-dotenv.config({ path: join(__dirname, `../.env.${process.env.NODE_ENV}`) });
+dotenv.config({ path: join(__dirname, `../.env.${mode}`) });
 
 const router = express.Router();
 
@@ -18,7 +20,7 @@ const addressesRepo = dataSource.getRepository(AddressesEntity);
 const usersRepo = dataSource.getRepository(UsersEntity);
 
 router.post('/login', async (req: Request, res: Response) => {
-  const { signature, walletAddress, challengeMessage } = req.body;
+  const { signature, walletAddress, message } = req.body;
 
   if (!isAddress(walletAddress)) {
     res.status(403).json({ error: 'Invalid wallet address' });
@@ -26,13 +28,13 @@ router.post('/login', async (req: Request, res: Response) => {
   }
 
   try {
-    const valid_address = await verifyMessage({
-      signature,
+    const valid = await publicClient.verifySiweMessage({
       address: walletAddress,
-      message: challengeMessage,
+      message,
+      signature,
     });
 
-    if (!valid_address) {
+    if (!valid) {
       res.status(403).json({ error: 'Invalid signature' });
       return;
     }
@@ -77,20 +79,23 @@ router.post('/login', async (req: Request, res: Response) => {
 
 router.post('/wallet-address', async (req, res) => {
   try {
-    const { walletAddress } = req.body;
-    const nonce = uuidv4();
-    const timestamp = new Date().toISOString();
-    const challengeMessage = `
-            Challenge: ${process.env.CHALLENGE_SECRET},
-            Wallet Address: ${walletAddress},
-            Nonce: ${nonce},
-            Timestamp: ${timestamp}
-        `
-      .replace(/\\s+/g, ' ')
-      .trim();
-    res.status(200).json({ nonce, challengeMessage });
+    const { walletAddress, chainId, domain } = req.body;
+    const nonce = generateSiweNonce();
+    const timestamp = new Date();
+
+    const message = createSiweMessage({
+      address: walletAddress,
+      chainId,
+      domain,
+      nonce,
+      uri: `https://${domain}`, // TODO: Change for production
+      version: '1',
+      issuedAt: timestamp,
+    });
+
+    res.status(200).json({ nonce, message });
   } catch (err) {
-    throwInternalError(res, 'Error generating challenge message: ', err);
+    throwInternalError(res, 'Error generating login message: ', err);
   }
 });
 
