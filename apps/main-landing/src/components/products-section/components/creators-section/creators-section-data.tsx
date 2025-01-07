@@ -19,6 +19,18 @@ const CREATORS_INFO: ProductSectionInfo = {
       description:
         'Monetize both streams and videos with donation links that continue earning even after you go offline',
     },
+    {
+      icon: 'Facebook',
+      title: 'Facebook',
+      description:
+        'Turn live streams into a new way to interact with your audience onchain',
+    },
+    {
+      icon: 'More',
+      title: 'More',
+      description:
+        'Use it on your personal website or any platform that allows sharing links',
+    },
   ],
 };
 

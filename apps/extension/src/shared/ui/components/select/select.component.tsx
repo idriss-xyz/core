@@ -1,9 +1,9 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { useMemo } from 'react';
+import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 
 import { usePortal } from '../../providers';
 import { classes } from '../../utils';
-import { ScrollArea } from '../scroll-area';
 
 import { SelectProperties } from './select.types';
 import { SelectOption } from './select-option.component';
@@ -43,7 +43,7 @@ export const Select = <T,>({
       <DropdownMenu.Root modal={false}>
         <DropdownMenu.Trigger asChild>
           <SelectOptionContainer
-            className="text-neutralGreen-900 ring-1 ring-[#D1D5DB] focus:ring-indigo-500"
+            className="text-neutralGreen-900 ring-[#D1D5DB] focus:ring-indigo-500"
             as="button"
           >
             <SelectOption

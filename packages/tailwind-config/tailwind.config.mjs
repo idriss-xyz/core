@@ -57,7 +57,8 @@ export default {
         900: '#002D1E',
       },
       gray: {
-        200: '#E5E5E5'
+        200: '#E5E5E5',
+        300: '#757575',
       },
       lime: {
         100: '#FBFFE6',
@@ -88,20 +89,22 @@ export default {
     },
     container: {
       center: true,
-      screens: {
-        '2xl': '1608px',
-      },
       padding: {
         'DEFAULT': '1rem',
         'sm': 0,
         'lg': 0,
         'xl': 0,
         '2xl': 0,
+        '3xl': 0,
+        '4xl': 0,
       },
     },
     extend: {
       screens: {
-        '2xl': '1608px',
+        'md': '768px',
+        '2xl': '1440px',
+        '3xl': '1536px',
+        '4xl': '1696px',
       },
       boxShadow: {
         'xs': '0px 1px 4px 0px #1018280D',
@@ -122,6 +125,7 @@ export default {
         dialog: '20',
         extensionPopup: '100000',
         portal: '100001',
+        scrollbar: '100010',
       },
       fontFamily: {
         sans: ['var(--font-aeonikpro)'],
@@ -172,7 +176,7 @@ export default {
           },
         ],
         heading3: [
-          '2',
+          '2rem',
           {
             lineHeight: '2.5rem',
             letterSpacing: '0',
@@ -287,6 +291,12 @@ export default {
       animation: {
         marquee: 'marquee 35s linear infinite',
         marquee2: 'marquee2 35s linear infinite',
+        'fade-in': 'fade-in 200ms ease-out',
+        'fade-out': 'fade-out 200ms ease-in',
+        'slide-in-from-top': 'slide-in-from-top 200ms ease-out',
+        'slide-in-from-bottom': 'slide-in-from-bottom 200ms ease-out',
+        'slide-in-from-left': 'slide-in-from-left 200ms ease-out',
+        'slide-in-from-right': 'slide-in-from-right 200ms ease-out',
       },
       keyframes: {
         marquee: {
@@ -305,12 +315,18 @@ export default {
           '0%': { translate: '100% 0' },
           '100%': { translate: '0 0' },
         },
+        'fade-in': { '0%': { opacity: 0 }, '100%': { opacity: 1 } },
+        'fade-out': { '0%': { opacity: 1 }, '100%': { opacity: 0 } },
+        'slide-in-from-top': { '0%': { transform: 'translateY(-4px)' }, '100%': { transform: 'translateY(0)' } },
+        'slide-in-from-bottom': { '0%': { transform: 'translateY(4px)' }, '100%': { transform: 'translateY(0)' } },
+        'slide-in-from-left': { '0%': { transform: 'translateX(-4px)' }, '100%': { transform: 'translateX(0)' } },
+        'slide-in-from-right': { '0%': { transform: 'translateX(4px)' }, '100%': { transform: 'translateX(0)' } },
       },
     },
   },
   plugins: [
     '@tailwindcss/forms',
-    plugin(function ({ addUtilities }) {
+    plugin(function ({ addUtilities, addComponents }) {
       const newUtilities = {
         '.fill-rule-non-zero': {
           'fill-rule': 'nonzero',
@@ -348,6 +364,28 @@ export default {
         },
       };
       addUtilities(newUtilities);
+      addComponents({
+        '.container': {
+          '@screen md': {
+            maxWidth: '704px',
+          },
+          '@screen lg': {
+            maxWidth: '968px',
+          },
+          '@screen xl': {
+            maxWidth: '1168px',
+          },
+          '@screen 2xl': {
+            maxWidth: '1216px',
+          },
+          '@screen 3xl': {
+            maxWidth: '1312px',
+          },
+          '@screen 4xl': {
+            maxWidth: '1696px',
+          },
+        },
+      });
     }),
   ],
 };

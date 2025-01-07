@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 import { Form } from '@idriss-xyz/ui/form';
 import { Button } from '@idriss-xyz/ui/button';
@@ -43,11 +44,12 @@ const TOKENS_ORDER: Record<TokenSymbol, number> = {
   ETH: 1,
   USDC: 2,
   DAI: 3,
-  GHST: 4,
-  PRIME: 5,
-  YGG: 6,
-  PDT: 7,
-  DEGEN: 8,
+  IDRISS: 4,
+  GHST: 5,
+  PRIME: 6,
+  YGG: 7,
+  PDT: 8,
+  DEGEN: 9,
 };
 
 // ts-unused-exports:disable-next-line
@@ -211,6 +213,7 @@ export default function Donors() {
     <Providers>
       <TopBar />
       <main className="relative flex min-h-screen grow flex-col items-center justify-around gap-4 overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] px-2 pb-1 pt-[56px] lg:flex-row lg:items-start lg:justify-center lg:px-0">
+        <link rel="preload" as="image" href={backgroundLines2.src} />
         <img
           src={backgroundLines2.src}
           className="pointer-events-none absolute top-0 hidden h-full opacity-40 lg:block"
@@ -219,6 +222,7 @@ export default function Donors() {
 
         <div className="mt-8 w-[440px] max-w-full overflow-hidden px-safe lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]">
           <div className="container relative flex w-full flex-col items-center rounded-xl bg-white px-4 pb-3 pt-6">
+            <link rel="preload" as="image" href={backgroundLines3.src} />
             <img
               src={backgroundLines3.src}
               className="pointer-events-none absolute top-0 hidden h-full opacity-40 lg:block"
