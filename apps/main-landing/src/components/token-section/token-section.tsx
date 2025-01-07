@@ -6,10 +6,12 @@ import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import dynamic from 'next/dynamic';
 import { Link } from '@idriss-xyz/ui/link';
 import { classes } from '@idriss-xyz/ui/utils';
+import { TOKEN_TERMS_AND_CONDITIONS_LINK } from '@idriss-xyz/constants';
 
 import idrissCoin from './assets/IDRISS_COIN 1.png';
 import background from './background.png';
 import { LabeledGradientProperty } from './components';
+import { GeoConditionalButton } from './components/geo-conditional-button';
 
 const CopyAddressButton = dynamic(
   async () => {
@@ -154,33 +156,35 @@ export const TokenSection = () => {
             </div>
             <TokenSaleCountdown />
             <div className="flex flex-col gap-6 lg:gap-4">
-              <div className="flex flex-col gap-6 md:flex-row">
-                <Button
-                  intent="primary"
-                  size="large"
-                  prefixIconName="Uniswap"
-                  // asLink
-                  href="https://app.uniswap.org/swap?inputCurrency=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913&outputCurrency=0x000096630066820566162C94874A776532705231"
-                  // isExternal
-                  className="w-full md:w-auto"
-                  aria-disabled
-                  disabled
-                >
-                  BUY ON UNISWAP
-                </Button>
-                <Button
-                  intent="primary"
-                  size="large"
-                  prefixIconName="Jumper"
-                  // asLink
-                  href="https://jumper.exchange/?fromChain=8453&fromToken=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913&toChain=8453&toToken=0x000096630066820566162C94874A776532705231"
-                  // isExternal
-                  className="w-full whitespace-nowrap md:w-auto"
-                  aria-disabled
-                  disabled
-                >
-                  BUY CROSS-CHAIN ON JUMPER
-                </Button>
+              <div className="flex flex-col justify-center gap-6 md:flex-row">
+                <GeoConditionalButton
+                  defaultButton={[
+                    <Button
+                      key="uniswap"
+                      intent="primary"
+                      size="large"
+                      prefixIconName="Uniswap"
+                      asLink
+                      href="https://app.uniswap.org/swap?inputCurrency=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913&outputCurrency=0x000096630066820566162C94874A776532705231"
+                      isExternal
+                      className="w-full md:w-auto"
+                    >
+                      BUY ON UNISWAP
+                    </Button>,
+                    <Button
+                      key="jumper"
+                      intent="primary"
+                      size="large"
+                      prefixIconName="Jumper"
+                      asLink
+                      href="https://jumper.exchange/?fromChain=8453&fromToken=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913&toChain=8453&toToken=0x000096630066820566162C94874A776532705231"
+                      isExternal
+                      className="w-full whitespace-nowrap md:w-auto"
+                    >
+                      BUY CROSS-CHAIN ON JUMPER
+                    </Button>,
+                  ]}
+                />
               </div>
               <div className="self-stretch text-center opacity-70">
                 <span
@@ -193,7 +197,7 @@ export const TokenSection = () => {
                 </span>
                 <Link
                   size="medium"
-                  href="https://docs.idriss.xyz/idriss-token/terms-and-conditions"
+                  href={TOKEN_TERMS_AND_CONDITIONS_LINK}
                   isExternal
                   className={classes(
                     'text-body4',

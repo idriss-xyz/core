@@ -1,5 +1,6 @@
 import {
   ChevronDown,
+  ChevronRight,
   Menu,
   Puzzle,
   X,
@@ -16,6 +17,7 @@ import {
   Bitcoin,
   CircleUserRound,
   Trash2,
+  GlobeIcon,
 } from 'lucide-react';
 
 import * as customIcons from './custom';
@@ -35,8 +37,10 @@ export const ICON = {
   ArrowRight,
   HelpCircle,
   ChevronDown,
+  ChevronRight,
   AlertCircle,
   CheckCircle2,
   CircleUserRound,
+  GlobeIcon,
   ...customIcons,
 };

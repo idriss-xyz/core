@@ -446,6 +446,30 @@ export class ServiceWorker {
 
   watchInstalled() {
     this.environment.runtime.onInstalled.addListener(() => {
+      this.environment.tabs.query({}, (tabs) => {
+        for (const tab of tabs) {
+          if (ServiceWorker.isValidTab(tab)) {
+            this.environment.scripting.executeScript(
+              {
+                target: { tabId: tab.id },
+                func: () => {
+                  return !!document.querySelector('#idriss-extension-script');
+                },
+              },
+              async (results) => {
+                const [result] = results || [];
+                if (!result?.result) {
+                  await this.environment.scripting.executeScript({
+                    target: { tabId: tab.id },
+                    files: ['content-script.js'],
+                  });
+                }
+              },
+            );
+          }
+        }
+      });
+
       void ExtensionSettingsManager.getAllSettings().then((currentSettings) => {
         void ExtensionSettingsManager.setSettings({
           ...DEFAULT_EXTENSION_SETTINGS,
@@ -504,6 +528,7 @@ export class ServiceWorker {
         tab.url &&
         tab.url?.length > 0 &&
         !tab.url?.startsWith('chrome') &&
+        !tab.url?.startsWith('edge') &&
         !tab.url?.startsWith('about'),
     );
   };

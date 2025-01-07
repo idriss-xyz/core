@@ -59,6 +59,11 @@ const nextConfig: NextConfig = {
         permanent: false,
       },
       {
+        source: '/prediction-markets',
+        destination: '/#prediction-markets',
+        permanent: true,
+      },
+      {
         source: '/docs',
         destination: 'https://docs.idriss.xyz/',
         basePath: false,
@@ -133,6 +138,14 @@ const nextConfig: NextConfig = {
         };
       }),
     ];
+  },
+  webpack(config) {
+    config.module.rules.push({
+      test: /\.mp3$/,
+      type: 'asset/resource',
+    });
+
+    return config;
   },
   experimental: {
     optimizePackageImports: ['@idriss-xyz/ui'],

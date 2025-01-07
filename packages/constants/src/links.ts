@@ -54,3 +54,6 @@ export const CHROME_EXTENSION_LINK =
 
 export const CREATORS_USER_GUIDE_LINK =
   'https://docs.idriss.xyz/user-guides/creators';
+
+export const TOKEN_TERMS_AND_CONDITIONS_LINK =
+  'https://docs.idriss.xyz/idriss-token/terms-and-conditions';
