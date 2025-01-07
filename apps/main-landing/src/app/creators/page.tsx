@@ -41,10 +41,10 @@ const ALL_TOKEN_SYMBOLS = Object.values(CHAIN_ID_TO_TOKENS)
 const UNIQUE_ALL_TOKEN_SYMBOLS = [...new Set(ALL_TOKEN_SYMBOLS)];
 
 const TOKENS_ORDER: Record<TokenSymbol, number> = {
-  ETH: 1,
-  USDC: 2,
-  DAI: 3,
-  IDRISS: 4,
+  IDRISS: 1,
+  ETH: 2,
+  USDC: 3,
+  DAI: 4,
   GHST: 5,
   PRIME: 6,
   YGG: 7,
