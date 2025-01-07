@@ -9,8 +9,9 @@ import { v4 as uuidv4 } from 'uuid';
 import dotenv from 'dotenv';
 import { join } from 'path';
 import { WEBHOOK_NETWORKS } from '../constants';
+import { mode } from '../utils/mode';
 
-dotenv.config({ path: join(__dirname, `../.env.${process.env.NODE_ENV}`) });
+dotenv.config({ path: join(__dirname, `../.env.${mode}`) });
 
 const ALCHEMY_API_BASE_URL = 'https://dashboard.alchemyapi.io';
 const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY!;
