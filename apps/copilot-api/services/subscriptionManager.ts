@@ -11,7 +11,9 @@ import { join } from 'path';
 import { WEBHOOK_NETWORKS } from '../constants';
 import { mode } from '../utils/mode';
 
-dotenv.config({ path: join(__dirname, `../.env.${mode}`) });
+dotenv.config(
+  mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
+);
 
 const ALCHEMY_API_BASE_URL = 'https://dashboard.alchemyapi.io';
 const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY!;
