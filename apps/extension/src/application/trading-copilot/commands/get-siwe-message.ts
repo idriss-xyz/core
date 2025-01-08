@@ -11,7 +11,7 @@ import {
   SiweMessageResponse as Response,
 } from '../types';
 
-import { AUTH_API_URL } from './constants';
+import { COPILOT_API_URL } from './constants';
 
 export class GetSiweMessageCommand extends Command<Payload, Response> {
   public readonly name = 'GetSiweMessageCommand' as const;
@@ -22,7 +22,7 @@ export class GetSiweMessageCommand extends Command<Payload, Response> {
 
   async handle() {
     try {
-      const response = await fetch(`${AUTH_API_URL}/wallet-address`, {
+      const response = await fetch(`${COPILOT_API_URL}/auth/wallet-address`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

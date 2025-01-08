@@ -5,7 +5,7 @@ import { verifyToken } from '../middleware/auth.middleware';
 
 const router = express.Router();
 
-router.get('/:subscriberId', verifyToken(), async (req, res) => {
+router.get('/:subscriberId', async (req, res) => {
   const { subscriberId } = req.params || {};
   try {
     const addresses = await getSubscriberAddresses(subscriberId);

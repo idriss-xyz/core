@@ -11,7 +11,7 @@ import {
   VerifySiweSignatureResponse as Response,
 } from '../types';
 
-import { AUTH_API_URL } from './constants';
+import { COPILOT_API_URL } from './constants';
 
 export class VerifySiweSignatureCommand extends Command<Payload, Response> {
   public readonly name = 'VerifySiweSignatureCommand' as const;
@@ -22,7 +22,7 @@ export class VerifySiweSignatureCommand extends Command<Payload, Response> {
 
   async handle() {
     try {
-      const response = await fetch(`${AUTH_API_URL}/login`, {
+      const response = await fetch(`${COPILOT_API_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

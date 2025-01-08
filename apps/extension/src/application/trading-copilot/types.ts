@@ -1,8 +1,8 @@
 import { CHAIN, Hex } from 'shared/web3';
 
 export type SubscriptionRequest = {
-  subscriberId: string;
-  address: string;
+  subscription: { subscriberId: string; address: string };
+  authToken: string;
 };
 
 export type SubscriptionResponse = Hex;
