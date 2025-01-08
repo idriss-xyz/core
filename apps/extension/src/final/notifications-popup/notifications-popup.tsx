@@ -56,17 +56,9 @@ const NotificationsPopupContent = ({
 const playNotificationSound = () => {
   let audioFile;
 
-  if (
-    typeof chrome !== 'undefined' &&
-    chrome.runtime &&
-    chrome.runtime.getURL
-  ) {
+  if (chrome?.runtime?.getURL) {
     audioFile = chrome.runtime.getURL('audio/notification.mp3');
-  } else if (
-    typeof browser !== 'undefined' &&
-    browser.runtime &&
-    browser.runtime.getURL
-  ) {
+  } else if (browser?.runtime?.getURL) {
     audioFile = browser.runtime.getURL('audio/notification.mp3');
   }
 
