@@ -167,13 +167,23 @@ const FollowTradingCopilotContent = ({
     RemoveTradingCopilotSubscriptionCommand,
   );
 
-  const handleSubscribe = async (address: SubscriptionRequest['address']) => {
-    await subscribe.mutateAsync({ address, subscriberId });
+  const handleSubscribe = async (
+    address: SubscriptionRequest['subscription']['address'],
+  ) => {
+    await subscribe.mutateAsync({
+      subscription: { address, subscriberId },
+      authToken: localStorage.getItem('authToken') ?? '',
+    });
     void subscriptionsQuery.refetch();
   };
 
-  const handleUnsubscribe = async (address: SubscriptionRequest['address']) => {
-    await unsubscribe.mutateAsync({ address, subscriberId });
+  const handleUnsubscribe = async (
+    address: SubscriptionRequest['subscription']['address'],
+  ) => {
+    await unsubscribe.mutateAsync({
+      subscription: { address, subscriberId },
+      authToken: localStorage.getItem('authToken') ?? '',
+    });
     void subscriptionsQuery.refetch();
   };
 
