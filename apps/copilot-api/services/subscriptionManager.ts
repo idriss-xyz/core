@@ -116,7 +116,10 @@ const addAddressToWebhook = async (address: string) => {
       });
     }
   } else {
-    const { webhook_id, internal_id } = res;
+    const {
+      webhooks_webhook_id: webhook_id,
+      webhooks_internal_id: internal_id,
+    } = res;
     await updateWebhookAddresses(webhook_id, [address], []);
     await addressMapWebhooksRepo.save({
       address,
