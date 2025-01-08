@@ -158,9 +158,9 @@ const FollowTradingCopilotContent = ({
     staleTime: Number.POSITIVE_INFINITY,
   });
 
-  const isSubscribed = subscriptionsQuery?.data?.addresses.includes(
-    userId.toLowerCase(),
-  );
+  const isSubscribed = subscriptionsQuery?.data?.details.some((detail) => {
+    return detail.address.toLowerCase() === userId.toLowerCase();
+  });
 
   const subscribe = useCommandMutation(AddTradingCopilotSubscriptionCommand);
   const unsubscribe = useCommandMutation(

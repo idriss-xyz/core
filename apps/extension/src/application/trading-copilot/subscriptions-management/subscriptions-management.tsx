@@ -1,5 +1,6 @@
 import { useWallet } from '@idriss-xyz/wallet-connect';
 import { Button } from '@idriss-xyz/ui/button';
+import { useEffect } from 'react';
 
 import {
   onWindowMessage,
@@ -14,16 +15,24 @@ import {
   GetTradingCopilotSubscriptionsCommand,
   RemoveTradingCopilotSubscriptionCommand,
 } from '../commands';
-import { LsFarcasterUsersDetails, SubscriptionRequest } from '../types';
+import { SubscriptionRequest } from '../types';
 
 import { SubscriptionForm, SubscriptionsList } from './components';
-import { ContentProperties } from './subscriptions-management.types';
+import {
+  Properties,
+  ContentProperties,
+} from './subscriptions-management.types';
 
-export const SubscriptionsManagement = () => {
+export const SubscriptionsManagement = ({
+  isTabChangedListenerAdded,
+}: Properties) => {
   const { wallet, isConnectionModalOpened, openConnectionModal } = useWallet();
 
   return wallet ? (
-    <SubscriptionsManagementContent subscriberId={wallet.account} />
+    <SubscriptionsManagementContent
+      subscriberId={wallet.account}
+      isTabChangedListenerAdded={isTabChangedListenerAdded}
+    />
   ) : (
     <>
       <Empty text="Log in to see your subscriptions list" className="mt-10" />
@@ -42,6 +51,7 @@ export const SubscriptionsManagement = () => {
 
 const SubscriptionsManagementContent = ({
   subscriberId,
+  isTabChangedListenerAdded,
 }: ContentProperties) => {
   const subscriptionsQuery = useCommandQuery({
     command: new GetTradingCopilotSubscriptionsCommand({
@@ -55,15 +65,23 @@ const SubscriptionsManagementContent = ({
     RemoveTradingCopilotSubscriptionCommand,
   );
 
-  onWindowMessage(TAB_CHANGED, () => {
-    void subscriptionsQuery.refetch();
-  });
+  useEffect(() => {
+    if (!isTabChangedListenerAdded.current) {
+      const handleTabChange = async () => {
+        await subscriptionsQuery.refetch();
+      };
+
+      onWindowMessage(TAB_CHANGED, handleTabChange);
+      isTabChangedListenerAdded.current = true;
+    }
+  }, [isTabChangedListenerAdded, subscriptionsQuery]);
 
   const handleSubscribe = async (
     address: SubscriptionRequest['subscription']['address'],
+    fid: SubscriptionRequest['subscription']['fid'],
   ) => {
     await subscribe.mutateAsync({
-      subscription: { address, subscriberId },
+      subscription: { address, fid, subscriberId },
       authToken: localStorage.getItem('authToken') ?? '',
     });
     void subscriptionsQuery.refetch();
@@ -76,32 +94,14 @@ const SubscriptionsManagementContent = ({
       subscription: { address, subscriberId },
       authToken: localStorage.getItem('authToken') ?? '',
     });
-    void subscriptionsQuery.refetch().then(() => {
-      const lsFarcasterKey = 'farcasterDetails';
-      const lsFarcasterDetails = localStorage.getItem(lsFarcasterKey);
-      // @ts-expect-error TODO: temporary, remove when API will be ready
-      const parsedLsFarcasterDetails: LsFarcasterUsersDetails = JSON.parse(
-        lsFarcasterDetails ?? '[]',
-      );
-
-      const updatedLsFarcasterDetails = parsedLsFarcasterDetails.filter(
-        (farcaster) => {
-          return farcaster.wallet !== address;
-        },
-      );
-
-      localStorage.setItem(
-        lsFarcasterKey,
-        JSON.stringify(updatedLsFarcasterDetails),
-      );
-    });
+    void subscriptionsQuery.refetch();
   };
 
   return (
     <>
       <SubscriptionForm
         onSubmit={handleSubscribe}
-        subscriptionsAmount={subscriptionsQuery?.data?.addresses.length}
+        subscriptionsAmount={subscriptionsQuery?.data?.details.length}
       />
       <SubscriptionsList
         className="mt-6 flex h-full flex-col overflow-hidden"

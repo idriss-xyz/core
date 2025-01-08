@@ -1,4 +1,4 @@
-import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { SubscribersEntity } from './subscribers.entity';
 import { AddressesEntity } from './addreesses.entity';
 
@@ -9,6 +9,9 @@ export class SubscriptionsEntity {
 
   @PrimaryColumn({ type: 'text', name: 'address' })
   readonly address!: string;
+
+  @Column({ type: 'integer', name: 'fid', nullable: true })
+  readonly fid!: number;
 
   @ManyToOne(() => SubscribersEntity)
   @JoinColumn({ name: 'subscriber_id' })
