@@ -10,12 +10,12 @@ export interface ListProperties {
   subscriptionsLoading: boolean;
   subscriptionsUpdatePending: boolean;
   subscriptions: SubscriptionsResponse | undefined;
-  onRemove: (address: SubscriptionRequest['address']) => void;
+  onRemove: (address: SubscriptionRequest['subscription']['address']) => void;
 }
 
 export interface ItemProperties {
   subscription: SubscriptionResponse;
-  onRemove: (address: SubscriptionRequest['address']) => void;
+  onRemove: (address: SubscriptionRequest['subscription']['address']) => void;
 }
 
 export interface ItemContentProperties extends ItemProperties {

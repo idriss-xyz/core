@@ -26,9 +26,10 @@ export class RemoveTradingCopilotSubscriptionCommand extends Command<
     try {
       const response = await fetch(`${COPILOT_API_URL}/unsubscribe`, {
         method: 'POST',
-        body: JSON.stringify(this.payload),
+        body: JSON.stringify(this.payload.subscription),
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.payload.authToken}`,
         },
       });
 
