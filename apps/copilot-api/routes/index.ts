@@ -14,7 +14,7 @@ router.get('/', (_, res) => {
 });
 
 router.post('/subscribe', verifyToken(), async (req, res) => {
-  const { subscriberId, address } = req.body;
+  const { subscriberId, fid, address } = req.body;
 
   if (!subscriberId || !address) {
     res.status(400).json({ error: 'subscriberId and address are required' });
@@ -22,7 +22,7 @@ router.post('/subscribe', verifyToken(), async (req, res) => {
   }
 
   try {
-    await subscribeAddress(subscriberId, address);
+    await subscribeAddress(subscriberId, address, fid);
 
     res
       .status(200)

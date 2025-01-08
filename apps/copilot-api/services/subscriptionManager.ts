@@ -32,12 +32,17 @@ const webhooksRepo = dataSource.getRepository(WebhookEntity);
 export const subscribeAddress = async (
   subscriber_id: string,
   address: string,
+  fid?: number,
 ) => {
   address = address.toLowerCase();
 
   await subscribersRepo.save({ subscriber_id });
   await addressRepo.save({ address });
-  await subscribtionsRepo.save({ subscriber_id, address });
+  await subscribtionsRepo.save({
+    subscriber_id,
+    address,
+    fid,
+  });
 
   const addressWebhookMap = await addressMapWebhooksRepo.findOne({
     where: { address },
@@ -255,13 +260,16 @@ async function deleteWebhook(webhookId: string): Promise<void> {
   }
 }
 
-export const getSubscriberAddresses = async (
+export const getSubscriptionsDetails = async (
   subscriberId: string,
-): Promise<string[]> => {
+): Promise<{ address: string; fid: number | null }[]> => {
   const res = await subscribtionsRepo.find({
     where: { subscriber_id: subscriberId },
   });
-  return res.map((subscription: SubscriptionsEntity) => subscription.address);
+  return res.map((subscription: SubscriptionsEntity) => ({
+    address: subscription.address,
+    fid: subscription.fid,
+  }));
 };
 
 export const isSubscribedAddress = async (

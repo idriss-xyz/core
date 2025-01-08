@@ -1,13 +1,10 @@
 import { useCallback } from 'react';
 
-import {
-  GetSiweMessageCommand,
-  VerifySiweSignatureCommand,
-  VerifySiweSignatureRequest,
-} from 'application/trading-copilot';
 import { useCommandMutation } from 'shared/messaging';
-import { SiweMessageRequest } from 'application/trading-copilot/types';
 import { createWalletClient, Wallet } from 'shared/web3';
+
+import { GetSiweMessageCommand, VerifySiweSignatureCommand } from '../commands';
+import { SiweMessageRequest, VerifySiweSignatureRequest } from '../types';
 
 export const useLoginViaSiwe = () => {
   const getSiweMessage = useCommandMutation(GetSiweMessageCommand);
