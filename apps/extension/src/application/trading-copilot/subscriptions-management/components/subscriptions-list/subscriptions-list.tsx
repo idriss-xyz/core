@@ -20,7 +20,7 @@ export const SubscriptionsList = ({
       );
     }
 
-    if (subscriptions === undefined || subscriptions.addresses.length === 0) {
+    if (subscriptions === undefined || subscriptions.details.length === 0) {
       return (
         <Empty text="Your subscriptions list is empty" className="mt-10" />
       );
@@ -30,11 +30,11 @@ export const SubscriptionsList = ({
       <div className="relative mt-2 h-full overflow-hidden">
         <ScrollArea className="size-full overflow-y-auto transition-all duration-500 [scrollbar-color:gray_#efefef] [scrollbar-width:thin]">
           <ul className="flex flex-col gap-y-3 pr-2">
-            {subscriptions.addresses.map((subscription) => {
+            {subscriptions.details.map((subscription) => {
               return (
                 <SubscriptionItem
                   subscription={subscription}
-                  key={subscription}
+                  key={subscription.address}
                   onRemove={onRemove}
                 />
               );

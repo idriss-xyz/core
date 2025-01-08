@@ -503,6 +503,7 @@ export class ServiceWorker {
       tab?.id &&
         tab.url &&
         tab.url?.length > 0 &&
+        !tab.url?.startsWith('edge') &&
         !tab.url?.startsWith('chrome') &&
         !tab.url?.startsWith('about'),
     );
