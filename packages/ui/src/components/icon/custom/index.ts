@@ -29,3 +29,5 @@ export { Jumper } from './jumper';
 export { Minus } from './minus';
 export { Plus } from './plus';
 export { Download } from './download';
+export { SoundEnabled } from './sound-enabled';
+export { SoundDisabled } from './sound-disabled';
