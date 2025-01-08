@@ -6,7 +6,7 @@ export class AddressesEntity {
   @PrimaryColumn({ type: 'text', name: 'address' })
   readonly address!: string;
 
-  @Column({ type: 'uuid', name: 'user_uuid', nullable: true })
+  @Column({ type: 'uuid', name: 'user_uuid' })
   @ManyToOne(() => UsersEntity, (user) => user.uuid, {
     onDelete: 'CASCADE',
   })
