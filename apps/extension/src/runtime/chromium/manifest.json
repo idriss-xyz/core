@@ -45,7 +45,8 @@
     {
       "resources": [
         "webpage-script.js",
-        "fonts/*"
+        "fonts/*",
+        "audio/notification.mp3"
       ],
       "matches": [
         "<all_urls>"

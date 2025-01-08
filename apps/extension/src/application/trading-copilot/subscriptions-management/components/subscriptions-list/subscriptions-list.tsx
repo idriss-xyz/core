@@ -3,6 +3,8 @@ import { ScrollArea } from '@radix-ui/react-scroll-area';
 
 import { Empty, Spinner } from 'shared/ui';
 
+import { SoundToggle } from '../sound-toggle';
+
 import { ListProperties } from './subscription-list.types';
 import { SubscriptionItem } from './subscription-item';
 
@@ -55,9 +57,12 @@ export const SubscriptionsList = ({
 
   return (
     <div className={className}>
-      <p className="mb-1 block text-label4 text-neutralGreen-700">
-        Your subscriptions
-      </p>
+      <div className="flex items-center justify-between">
+        <p className="mb-1 block text-label4 text-neutralGreen-700">
+          Your subscriptions
+        </p>
+        <SoundToggle />
+      </div>
       {subscriptionsListBody}
     </div>
   );
