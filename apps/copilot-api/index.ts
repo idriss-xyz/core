@@ -106,10 +106,10 @@ app.use('/auth', authRoutes);
 app.use('/subscriptions', subscriptionsRoutes);
 app.use('/', defaultRoutes);
 
-// TODO: Replace for production and check positioning
+// Initialize LiFi SDK
 createConfig({
-  integrator: 'IDRISS',
-  // apiKey: 'OUR_API_KEY'
+  integrator: process.env.LIFI_INTEGRATOR_STRING,
+  apiKey: process.env.LIFI_API_KEY,
 });
 
 server.listen(PORT, () => {
