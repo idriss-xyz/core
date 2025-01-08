@@ -10,7 +10,7 @@ export function validateAlchemySignature(
     const signature = (req as any).signature as string | undefined;
     const internalWebhookId = req.params.internalWebhookId;
 
-    if (!rawBody || !signature) {
+    if (!signature) {
       res.status(400).send('Invalid request: missing raw body or signature');
       return;
     }
