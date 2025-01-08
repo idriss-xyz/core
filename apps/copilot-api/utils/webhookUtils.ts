@@ -6,7 +6,7 @@ export function validateAlchemySignature(
   getSigningKey: (internalWebhookId: string) => Promise<string | undefined>,
 ) {
   return async (req: Request, res: Response, next: NextFunction) => {
-    const rawBody = (req as any).rawBody as string;
+    const rawBody = JSON.stringify(req.body);
     const signature = req.headers['x-alchemy-signature'] as string | undefined;
     const internalWebhookId = req.params.internalWebhookId;
 
