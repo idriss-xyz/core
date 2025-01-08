@@ -85,6 +85,22 @@ app.post(
   webhookHandler(io, connectedClients),
 );
 
+app.get(
+  '/webhook/:internalWebhookId',
+  express.json({
+    verify: (
+      req: Request,
+      res: Response,
+      buf: Buffer,
+      encoding: BufferEncoding,
+    ) => {
+      (req as any).signature = req.headers['x-alchemy-signature'];
+    },
+  }),
+  validateAlchemySignature(getSigningKey),
+  webhookHandler(io, connectedClients),
+);
+
 app.use('/auth', authRoutes);
 app.use('/subscriptions', subscriptionsRoutes);
 app.use('/', defaultRoutes);
