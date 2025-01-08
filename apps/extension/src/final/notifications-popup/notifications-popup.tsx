@@ -40,6 +40,8 @@ const NotificationsPopupContent = ({
       'bottom-right',
       data.transactionHash,
     );
+
+    playNotificationSound();
   });
 
   if (!activeDialog) {
@@ -49,4 +51,31 @@ const NotificationsPopupContent = ({
   return (
     <TradingCopilotDialog dialog={activeDialog} closeDialog={closeDialog} />
   );
+};
+
+const playNotificationSound = () => {
+  let audioFile;
+
+  if (
+    typeof chrome !== 'undefined' &&
+    chrome.runtime &&
+    chrome.runtime.getURL
+  ) {
+    audioFile = chrome.runtime.getURL('audio/notification.mp3');
+  } else if (
+    typeof browser !== 'undefined' &&
+    browser.runtime &&
+    browser.runtime.getURL
+  ) {
+    audioFile = browser.runtime.getURL('audio/notification.mp3');
+  }
+
+  if (audioFile) {
+    const audio = new Audio(audioFile);
+    audio.play().catch((error) => {
+      console.error('Failed to play notification sound:', error);
+    });
+  } else {
+    console.error('Audio file path is missing or not supported');
+  }
 };

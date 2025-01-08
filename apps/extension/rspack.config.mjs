@@ -44,10 +44,12 @@ export default (_env, argv) => {
         patterns: [
           { from: './src/runtime/chromium/manifest.json', to: 'chromium' },
           { from: './src/assets/fonts', to: 'chromium/fonts' },
+          { from: './src/assets/audio', to: 'chromium/audio' },
           { from: './src/common/img', to: 'chromium/img' },
           { from: './src/runtime/firefox/manifest.json', to: 'firefox' },
           { from: './src/assets/fonts', to: 'firefox/fonts' },
           { from: './src/common/img', to: 'firefox/img' },
+          { from: './src/assets/audio', to: 'firefox/audio' },
         ],
       }),
       new NodePolyfillPlugin(),
