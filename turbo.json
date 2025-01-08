@@ -69,7 +69,7 @@
         "build"
       ]
     },
-    "@idriss-xyz/copilot-api#start": {
+    "@idriss-xyz/copilot-api#dev": {
       "cache": false,
       "persistent": true,
       "env": [
@@ -92,7 +92,12 @@
         "DATABASE_PORT",
         "DATABASE_USER",
         "DATABASE_PASS",
-        "DATABASE_DB_NAME"
+        "DATABASE_DB_NAME",
+        "PORT",
+        "HOST",
+        "ALCHEMY_API_KEY",
+        "WEBHOOK_URL",
+        "VIEM_TRANSPORTER_URL"
       ]
     },
     "lint": {

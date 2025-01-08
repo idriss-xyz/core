@@ -30,15 +30,14 @@ export const TradingCopilotLayout = () => {
   }, [popup.currentRoute, popup.navigateBack]);
 
   return (
-    <div className="h-full bg-white px-4 py-5">
+    <div className="flex h-full flex-col bg-white px-4 py-5">
       <div className="mb-4 flex items-center justify-between gap-2">
         {leftColumn}
 
-        <h1 className="text-heading4 text-neutralGreen-900">{title}</h1>
+        <h1 className="text-heading4 text-neutral-900">{title}</h1>
 
         <IconPlaceholder />
       </div>
-
       <Outlet />
     </div>
   );

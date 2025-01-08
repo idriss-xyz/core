@@ -1,10 +1,15 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+import { io } from 'socket.io-client';
+
 import { TWITTER_COMMAND_MAP } from 'host/twitter';
 import {
   Command,
   COMMAND_BUS_REQUEST_MESSAGE,
   FailureResult,
   JsonValue,
+  TAB_CHANGED,
   SerializedCommand,
+  SWAP_EVENT,
 } from 'shared/messaging';
 import { WEB3_COMMAND_MAP } from 'shared/web3';
 import { GITCOIN_DONATION_COMMAND_MAP } from 'application/gitcoin';
@@ -27,7 +32,10 @@ import { IDRISS_COMMAND_MAP } from 'shared/idriss';
 import { IDRISS_SEND_COMMAND_MAP } from 'application/idriss-send';
 import { TALLY_COMMAND_MAP } from 'application/tally';
 import { FARCASTER_COMMAND_MAP } from 'shared/farcaster';
-import { TRADING_COPILOT_COMMAND_MAP } from 'application/trading-copilot';
+import {
+  TRADING_COPILOT_COMMAND_MAP,
+  SwapData,
+} from 'application/trading-copilot';
 
 import { SbtResolver } from '../../common/resolvers/SbtResolver';
 import { AddressResolver } from '../../common/resolvers/AddressResolver';
@@ -49,10 +57,19 @@ const COMMAND_MAP = {
   ...TRADING_COPILOT_COMMAND_MAP,
 };
 
+const SERVER_URL = 'https://copilot-production-e887.up.railway.app/';
+
 export class ServiceWorker {
   private observabilityScope: ObservabilityScope =
     createObservabilityScope('service-worker');
-  private constructor(private environment: typeof chrome) {}
+
+  private socket: ReturnType<typeof io>;
+
+  private constructor(private environment: typeof chrome) {
+    this.socket = io(SERVER_URL, { transports: ['websocket'] });
+    console.log('%c[WebSocket] Creating socket connection', 'color: #FF9900;');
+    void this.initializeSocketEvents();
+  }
 
   static run(environment: typeof chrome) {
     const serviceWorker = new ServiceWorker(environment);
@@ -63,6 +80,213 @@ export class ServiceWorker {
     serviceWorker.watchPopupClick();
     serviceWorker.watchLegacyMessages();
     serviceWorker.watchWorkerError();
+    serviceWorker.watchWorkerInactivity();
+    serviceWorker.watchTabChanges();
+  }
+
+  initializeSocketEvents() {
+    this.socket.on('connect', async () => {
+      console.log(
+        '%c[WebSocket] Initializing connection...',
+        'color: #FF9900;',
+      );
+      const wallet = await ExtensionSettingsManager.getWallet();
+
+      if (wallet?.account) {
+        this.registerWithServer(wallet.account);
+      } else {
+        console.log('%c[WebSocket] User not found.', 'color: red;');
+        this.socket.disconnect();
+      }
+    });
+
+    ExtensionSettingsManager.onWalletChange((wallet) => {
+      if (this.socket.connected) {
+        this.socket.disconnect();
+      }
+
+      if (wallet?.account) {
+        this.socket.connect();
+      }
+    });
+
+    this.socket.on('disconnect', () => {
+      console.log('%c[WebSocket] Disconnected.', 'color: red;');
+    });
+
+    this.socket.on('swapEvent', (swapData) => {
+      this.createSwapNotification(swapData);
+    });
+  }
+
+  private registerWithServer(walletAddress: string) {
+    console.log(
+      `%c[WebSocket] Found user with wallet ${walletAddress}`,
+      'color: #32CD32;',
+    );
+    this.socket.emit('register', walletAddress);
+  }
+
+  createSwapNotification(swapData: SwapData) {
+    const message = `New trade detected: ${swapData.tokenIn?.amount} of ${swapData.tokenIn?.symbol} traded for ${swapData.tokenOut?.amount} of ${swapData.tokenOut?.symbol}`;
+    console.log(`%c[WebSocket] ${message}`, 'color: yellow;');
+
+    this.environment.tabs.query(
+      { active: true, currentWindow: true },
+      async (tabs) => {
+        const activeTab = tabs[0];
+
+        if (ServiceWorker.isValidTab(activeTab)) {
+          try {
+            await this.environment.tabs.sendMessage(activeTab.id, {
+              type: SWAP_EVENT,
+              detail: swapData,
+            });
+          } catch {
+            console.log(
+              '%c[Notifications] Failed to render notification',
+              'color: red;',
+            );
+            await this.saveNotificationToStorage(swapData);
+          }
+        } else {
+          console.log(
+            '%c[Notifications] Failed to render notification',
+            'color: red;',
+          );
+          await this.saveNotificationToStorage(swapData);
+        }
+      },
+    );
+  }
+
+  private async saveNotificationToStorage(swapData: SwapData) {
+    const key = 'swapNotifications';
+    try {
+      const notificationsFromStorage = await this.getNotificationsFromStorage();
+      await this.environment.storage.local.set({
+        [key]: [...notificationsFromStorage, swapData],
+      });
+      console.log(
+        '%c[Notifications] Notification saved to storage',
+        'color: orange;',
+      );
+    } catch {
+      console.log(
+        '%c[Notifications] Failed to save notification to storage',
+        'color: red;',
+      );
+    }
+  }
+
+  private async getNotificationsFromStorage(): Promise<SwapData[]> {
+    const key = 'swapNotifications';
+    return new Promise((resolve) => {
+      this.environment.storage.local.get([key], (result) => {
+        resolve(result[key] || []);
+      });
+    });
+  }
+
+  private async clearNotificationsFromStorage() {
+    const key = 'swapNotifications';
+    return new Promise((resolve) => {
+      this.environment.storage.local.remove([key], () => {
+        console.log(
+          '%c[Notifications] Notifications storage cleared',
+          'color: #32CD32;',
+        );
+        resolve(true);
+      });
+    });
+  }
+
+  private async renderSavedNotifications(tab: chrome.tabs.Tab) {
+    const savedNotifications = await this.getNotificationsFromStorage();
+
+    if (savedNotifications.length === 0) {
+      return;
+    }
+
+    const renderPromises = savedNotifications.map((notification) => {
+      return this.environment.tabs.sendMessage(tab.id!, {
+        type: SWAP_EVENT,
+        detail: notification,
+      });
+    });
+
+    try {
+      await Promise.all(renderPromises);
+      console.log(
+        '%c[Notifications] All notifications rendered successfully',
+        'color: #32CD32;',
+      );
+
+      await this.clearNotificationsFromStorage();
+    } catch {
+      console.log(
+        '%c[Notifications] Failed to render notifications from storage',
+        'color: red;',
+      );
+      console.log(
+        '%c[Notifications] Notifications in storage still waiting for render',
+        'color: orange;',
+      );
+    }
+  }
+
+  private async notifyActiveTab() {
+    const tabs = await this.queryActiveTabs();
+    const activeTab = tabs[0];
+
+    if (ServiceWorker.isValidTab(activeTab)) {
+      try {
+        await this.environment.tabs.sendMessage(activeTab.id, {
+          type: TAB_CHANGED,
+        });
+      } catch {
+        //
+      }
+    }
+  }
+
+  private async handleTabChange(tab: chrome.tabs.Tab) {
+    await this.delay(500); // Temporary delay to prevent rendering notifications before extension content is loaded
+    await this.renderSavedNotifications(tab);
+    await this.notifyActiveTab();
+  }
+
+  watchTabChanges() {
+    this.environment.tabs.onActivated.addListener(async (activeInfo) => {
+      const tab = await this.getTabById(activeInfo.tabId);
+      if (tab?.status === 'complete' && ServiceWorker.isValidTab(tab)) {
+        await this.handleTabChange(tab);
+      }
+    });
+
+    this.environment.tabs.onUpdated.addListener(
+      async (_tabId, changeInfo, tab) => {
+        if (changeInfo.status === 'complete' && ServiceWorker.isValidTab(tab)) {
+          await this.handleTabChange(tab);
+        }
+      },
+    );
+  }
+
+  private queryActiveTabs(): Promise<chrome.tabs.Tab[]> {
+    return new Promise((resolve) => {
+      this.environment.tabs.query(
+        { active: true, currentWindow: true },
+        resolve,
+      );
+    });
+  }
+
+  // TODO: remove after fixing rendering saved notifications
+  private delay(ms: number): Promise<void> {
+    return new Promise((resolve) => {
+      return setTimeout(resolve, ms);
+    });
   }
 
   keepAlive() {
@@ -182,8 +406,8 @@ export class ServiceWorker {
               return true;
             }
           }
-          case 'getXIconUrl': {
-            fetch(this.environment.runtime.getURL('img/x.svg'))
+          case 'getTwitterIconUrl': {
+            fetch(this.environment.runtime.getURL('img/twitter.svg'))
               .then((fetchRequest) => {
                 return fetchRequest.blob();
               })
@@ -196,6 +420,7 @@ export class ServiceWorker {
               .catch(console.error);
             return true;
           }
+          // No default
         }
 
         return true;
@@ -236,6 +461,7 @@ export class ServiceWorker {
         { active: true, currentWindow: true },
         (tabs) => {
           const activeTab = tabs[0];
+
           if (ServiceWorker.isValidTab(activeTab)) {
             this.environment.tabs
               .sendMessage(activeTab.id, {
@@ -251,6 +477,22 @@ export class ServiceWorker {
   watchWorkerError() {
     self.addEventListener('error', (event) => {
       this.observabilityScope.captureException(event.error);
+    });
+  }
+
+  watchWorkerInactivity() {
+    self.addEventListener('uninstall', () => {
+      this.socket.disconnect();
+    });
+  }
+
+  private async getTabById(
+    tabId: number,
+  ): Promise<chrome.tabs.Tab | undefined> {
+    return new Promise((resolve) => {
+      this.environment.tabs.get(tabId, (tab) => {
+        resolve(tab);
+      });
     });
   }
 

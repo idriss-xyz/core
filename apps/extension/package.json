@@ -53,6 +53,7 @@
     "react-number-format": "^5.4.2",
     "react-router": "^6.27.0",
     "react-use": "^17.5.1",
+    "socket.io-client": "^4.8.1",
     "tailwind-merge": "^2.5.4",
     "ts-custom-error": "^3.3.1",
     "ts-pattern": "^5.5.0",
