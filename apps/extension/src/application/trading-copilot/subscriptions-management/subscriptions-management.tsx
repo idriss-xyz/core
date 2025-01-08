@@ -15,7 +15,7 @@ import {
   GetTradingCopilotSubscriptionsCommand,
   RemoveTradingCopilotSubscriptionCommand,
 } from '../commands';
-import { LsFarcasterUsersDetails, SubscriptionRequest } from '../types';
+import { SubscriptionRequest } from '../types';
 
 import { SubscriptionForm, SubscriptionsList } from './components';
 import {
@@ -78,9 +78,10 @@ const SubscriptionsManagementContent = ({
 
   const handleSubscribe = async (
     address: SubscriptionRequest['subscription']['address'],
+    fid: SubscriptionRequest['subscription']['fid'],
   ) => {
     await subscribe.mutateAsync({
-      subscription: { address, subscriberId },
+      subscription: { address, fid, subscriberId },
       authToken: localStorage.getItem('authToken') ?? '',
     });
     void subscriptionsQuery.refetch();
@@ -93,32 +94,14 @@ const SubscriptionsManagementContent = ({
       subscription: { address, subscriberId },
       authToken: localStorage.getItem('authToken') ?? '',
     });
-    void subscriptionsQuery.refetch().then(() => {
-      const lsFarcasterKey = 'farcasterDetails';
-      const lsFarcasterDetails = localStorage.getItem(lsFarcasterKey);
-      // @ts-expect-error TODO: temporary, remove when API will be ready
-      const parsedLsFarcasterDetails: LsFarcasterUsersDetails = JSON.parse(
-        lsFarcasterDetails ?? '[]',
-      );
-
-      const updatedLsFarcasterDetails = parsedLsFarcasterDetails.filter(
-        (farcaster) => {
-          return farcaster.wallet !== address;
-        },
-      );
-
-      localStorage.setItem(
-        lsFarcasterKey,
-        JSON.stringify(updatedLsFarcasterDetails),
-      );
-    });
+    void subscriptionsQuery.refetch();
   };
 
   return (
     <>
       <SubscriptionForm
         onSubmit={handleSubscribe}
-        subscriptionsAmount={subscriptionsQuery?.data?.addresses.length}
+        subscriptionsAmount={subscriptionsQuery?.data?.details.length}
       />
       <SubscriptionsList
         className="mt-6 flex h-full flex-col overflow-hidden"
