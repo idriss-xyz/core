@@ -23,7 +23,7 @@ const MAX_ADDRESSES_PER_WEBHOOK =
 
 const subscribersRepo = dataSource.getRepository(SubscribersEntity);
 const addressRepo = dataSource.getRepository(AddressesEntity);
-const subscribtionsRepo = dataSource.getRepository(SubscriptionsEntity);
+const subscriptionsRepo = dataSource.getRepository(SubscriptionsEntity);
 const addressMapWebhooksRepo = dataSource.getRepository(
   AddressWebhookMapEntity,
 );
@@ -32,12 +32,13 @@ const webhooksRepo = dataSource.getRepository(WebhookEntity);
 export const subscribeAddress = async (
   subscriber_id: string,
   address: string,
+  userId: number,
 ) => {
   address = address.toLowerCase();
 
   await subscribersRepo.save({ subscriber_id });
-  await addressRepo.save({ address });
-  await subscribtionsRepo.save({ subscriber_id, address });
+  await addressRepo.save({ address, userId });
+  await subscriptionsRepo.save({ subscriber_id, address });
 
   const addressWebhookMap = await addressMapWebhooksRepo.findOne({
     where: { address },
@@ -53,20 +54,20 @@ export const unsubscribeAddress = async (
 ): Promise<void> => {
   address = address.toLowerCase();
   try {
-    await subscribtionsRepo.delete({ subscriber_id: subscriberId, address });
+    await subscriptionsRepo.delete({ subscriber_id: subscriberId, address });
 
     // Check if the subscriber has any other subscriptions
-    const subscriberRes = await subscribtionsRepo.count({
+    const subscriberRes = await subscriptionsRepo.count({
       where: { subscriber_id: subscriberId },
     });
 
     if (parseInt(subscriberRes.toString(), 10) === 0) {
       // Subscriber has no more subscriptions, remove from subscribers table
-      await subscribtionsRepo.delete({ subscriber_id: subscriberId });
+      await subscriptionsRepo.delete({ subscriber_id: subscriberId });
     }
 
     // Check if the address has any other subscribers
-    const addressRes = await subscribtionsRepo.count({ where: { address } });
+    const addressRes = await subscriptionsRepo.count({ where: { address } });
 
     if (parseInt(addressRes.toString(), 10) === 0) {
       // No more subscribers, remove address from webhook and addresses table
@@ -258,7 +259,7 @@ async function deleteWebhook(webhookId: string): Promise<void> {
 export const getSubscriberAddresses = async (
   subscriberId: string,
 ): Promise<string[]> => {
-  const res = await subscribtionsRepo.find({
+  const res = await subscriptionsRepo.find({
     where: { subscriber_id: subscriberId },
   });
   return res.map((subscription: SubscriptionsEntity) => subscription.address);
@@ -268,7 +269,7 @@ export const isSubscribedAddress = async (
   address: string,
 ): Promise<boolean> => {
   address = address.toLowerCase();
-  const res = await subscribtionsRepo.count({ where: { address } });
+  const res = await subscriptionsRepo.count({ where: { address } });
   return parseInt(res.toString(), 10) > 0;
 };
 
@@ -276,7 +277,7 @@ export const getSubscribersByAddress = async (
   address: string,
 ): Promise<string[]> => {
   address = address.toLowerCase();
-  const res = await subscribtionsRepo.find({ where: { address } });
+  const res = await subscriptionsRepo.find({ where: { address } });
   return res.map(
     (subscription: SubscriptionsEntity) => subscription.subscriber_id,
   );
