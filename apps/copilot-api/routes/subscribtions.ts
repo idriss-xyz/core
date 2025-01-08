@@ -1,15 +1,14 @@
 import express from 'express';
-import { getSubscriberAddresses } from '../services/subscriptionManager';
+import { getSubscriptionsDetails } from '../services/subscriptionManager';
 import { throwInternalError } from '../middleware/error.middleware';
-import { verifyToken } from '../middleware/auth.middleware';
 
 const router = express.Router();
 
 router.get('/:subscriberId', async (req, res) => {
   const { subscriberId } = req.params || {};
   try {
-    const addresses = await getSubscriberAddresses(subscriberId);
-    res.status(200).json({ subscriberId, addresses });
+    const details = await getSubscriptionsDetails(subscriberId);
+    res.status(200).json({ subscriberId, details });
   } catch (error) {
     throwInternalError(res, 'Error fetching subscriptions', error);
   }

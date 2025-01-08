@@ -1,11 +1,18 @@
 import { CHAIN, Hex } from 'shared/web3';
 
 export type SubscriptionRequest = {
-  subscription: { subscriberId: string; address: string };
+  subscription: {
+    subscriberId: string;
+    fid?: number;
+    address: string;
+  };
   authToken: string;
 };
 
-export type SubscriptionResponse = Hex;
+export type SubscriptionResponse = {
+  address: Hex;
+  fid: number | null;
+};
 
 export type SubscriptionsRequest = {
   subscriberId: string;
@@ -13,7 +20,7 @@ export type SubscriptionsRequest = {
 
 export type SubscriptionsResponse = {
   subscriberId: string;
-  addresses: SubscriptionResponse[];
+  details: SubscriptionResponse[];
 };
 
 export type FarcasterAddressRequest = {
@@ -68,14 +75,6 @@ export type FarcasterUserResponse = {
     };
   };
 };
-
-export type LsFarcasterUserDetails = {
-  wallet: string;
-  displayName: string;
-  pfp: string;
-};
-
-export type LsFarcasterUsersDetails = LsFarcasterUserDetails[];
 
 type SwapDataToken = {
   address: Hex;
