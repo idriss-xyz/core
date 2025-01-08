@@ -6,7 +6,7 @@ import {
 } from '../services/subscriptionManager';
 import connectedClients from '../index';
 import { verifyToken } from '../middleware/auth.middleware';
-import { getQuote } from "@lifi/sdk";
+import { getQuote } from '@lifi/sdk';
 
 const router = express.Router();
 
@@ -116,7 +116,7 @@ router.post('/get-quote', verifyToken(), async (req, res) => {
   ) {
     res.status(400).json({
       success: false,
-      message: "Missing required parameters",
+      message: 'Missing required parameters',
     });
   }
 
@@ -140,10 +140,8 @@ router.post('/get-quote', verifyToken(), async (req, res) => {
     };
 
     res.status(200).json(quoteResult);
-
   } catch (err) {
-    throwInternalError(res, 'Error getting quote.', err)
+    throwInternalError(res, 'Error getting quote.', err);
   }
-
 });
 export default router;

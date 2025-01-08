@@ -11,7 +11,7 @@ import subscriptionsRoutes from './routes/subscribtions';
 import { getSigningKey } from './services/subscriptionManager';
 import { join } from 'path';
 import { mode } from './utils/mode';
-import { createConfig } from '@lifi/sdk'
+import { createConfig } from '@lifi/sdk';
 
 dotenv.config(
   mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
@@ -86,16 +86,15 @@ app.post(
   webhookHandler(io, connectedClients),
 );
 
-app.use('/auth', authRoutes)
-app.use('/subscriptions', subscriptionsRoutes)
-app.use('/', defaultRoutes)
+app.use('/auth', authRoutes);
+app.use('/subscriptions', subscriptionsRoutes);
+app.use('/', defaultRoutes);
 
 // TODO: Replace for production and check positioning
 createConfig({
   integrator: 'IDRISS',
   // apiKey: 'OUR_API_KEY'
-})
-
+});
 
 server.listen(PORT, () => {
   console.log(`Server is running at port ${PORT}`);
