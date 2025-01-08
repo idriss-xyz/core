@@ -26,9 +26,10 @@ export class AddTradingCopilotSubscriptionCommand extends Command<
     try {
       const response = await fetch(`${COPILOT_API_URL}/subscribe`, {
         method: 'POST',
-        body: JSON.stringify(this.payload),
+        body: JSON.stringify(this.payload.subscription),
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.payload.authToken}`,
         },
       });
 
