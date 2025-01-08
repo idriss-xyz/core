@@ -108,7 +108,7 @@ app.use('/', defaultRoutes);
 
 // Initialize LiFi SDK
 createConfig({
-  integrator: process.env.LIFI_INTEGRATOR_STRING,
+  integrator: process.env.LIFI_INTEGRATOR_STRING ?? 'IDRISS',
   apiKey: process.env.LIFI_API_KEY,
 });
 
