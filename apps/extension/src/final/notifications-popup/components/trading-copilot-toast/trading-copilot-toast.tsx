@@ -1,4 +1,5 @@
 import { Button } from '@idriss-xyz/ui/button';
+import { Icon as IdrissIcon } from '@idriss-xyz/ui/icon';
 import { isAddress } from 'viem';
 
 import { Icon, LazyImage } from 'shared/ui';
@@ -31,7 +32,10 @@ export const TradingCopilotToast = ({
           {isAddress(userName) ? getShortWalletHex(userName) : userName}{' '}
           <span className="text-body3 text-neutral-600">
             purchased {roundToSignificantFigures(toast.tokenIn.amount, 2)}{' '}
-            {toast.tokenIn.symbol}
+            <span className="flex items-center justify-center space-x-1">
+              <IdrissIcon name="IdrissToken" size={24} />
+              <span>{toast.tokenIn.symbol}</span>
+            </span>
           </span>
         </p>
         <div className="flex w-full justify-between">

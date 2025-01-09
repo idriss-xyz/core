@@ -7,6 +7,7 @@ export { Youtube } from './youtube';
 export { Tiktok } from './tiktok';
 export { Check } from './check';
 export { IdrissCircled } from './idriss-circled';
+export { IdrissToken } from './idriss-token';
 export { Governance } from './governance';
 export { PolymarketIcon } from './polymarket-icon';
 export { Tipping } from './tipping';
