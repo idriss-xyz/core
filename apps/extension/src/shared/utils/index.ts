@@ -9,4 +9,5 @@ export {
   TimeDifferenceCounter,
   getEndsInLabel,
 } from './date-utils';
+export { getShortWalletHex } from './wallet-utils';
 export { reverseObject, createLookup } from './objects';

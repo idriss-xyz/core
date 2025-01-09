@@ -1,8 +1,16 @@
 import { useState } from 'react';
 
 import { useNotification } from 'shared/ui';
-import { onWindowMessage, SWAP_EVENT } from 'shared/messaging';
-import { SwapData } from 'application/trading-copilot';
+import {
+  onWindowMessage,
+  SWAP_EVENT,
+  useCommandMutation,
+} from 'shared/messaging';
+import {
+  GetEnsInfoCommand,
+  GetEnsNameCommand,
+  SwapData,
+} from 'application/trading-copilot';
 
 import { TradingCopilotToast, TradingCopilotDialog } from './components';
 import { ContentProperties } from './notifications-popup.types';
@@ -33,10 +41,26 @@ const NotificationsPopupContent = ({
   activeDialog,
 }: ContentProperties) => {
   const notification = useNotification();
+  const ensNameMutation = useCommandMutation(GetEnsNameCommand);
+  const ensInfoMutation = useCommandMutation(GetEnsInfoCommand);
 
-  onWindowMessage(SWAP_EVENT, (data: SwapData) => {
+  onWindowMessage(SWAP_EVENT, async (data: SwapData) => {
+    const ensName = await ensNameMutation.mutateAsync({
+      address: data.from,
+    });
+
+    const ensAvatar = await ensInfoMutation.mutateAsync({
+      ensName: ensName ?? '',
+      infoKey: 'avatar',
+    });
+
     notification.show(
-      <TradingCopilotToast toast={data} openDialog={openDialog} />,
+      <TradingCopilotToast
+        toast={data}
+        openDialog={openDialog}
+        ensName={ensName}
+        ensAvatar={ensAvatar}
+      />,
       'bottom-right',
       data.transactionHash,
     );
