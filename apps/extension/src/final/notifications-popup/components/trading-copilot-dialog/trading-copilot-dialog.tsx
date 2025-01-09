@@ -4,7 +4,7 @@ import { Icon as IdrissIcon } from '@idriss-xyz/ui/icon';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { NumericInput } from '@idriss-xyz/ui/numeric-input';
 import { useWallet } from '@idriss-xyz/wallet-connect';
-import { formatEther, parseEther } from 'viem';
+import { formatEther, isAddress, parseEther } from 'viem';
 import { useCallback } from 'react';
 
 import { Closable, ErrorMessage, Icon, LazyImage } from 'shared/ui';
@@ -18,11 +18,7 @@ import {
   useExchanger,
   useLoginViaSiwe,
 } from 'application/trading-copilot';
-import {
-  getShortWalletHex,
-  isWalletHex,
-  TimeDifferenceCounter,
-} from 'shared/utils';
+import { getShortWalletHex, TimeDifferenceCounter } from 'shared/utils';
 import { CHAIN, roundToSignificantFigures } from 'shared/web3';
 import { IdrissSend } from 'shared/idriss';
 
@@ -175,7 +171,7 @@ const TradingCopilotDialogContent = ({
         />
         <div className="flex w-full flex-col">
           <p className="break-all text-label3 text-neutral-900">
-            {isWalletHex(userName) ? getShortWalletHex(userName) : userName}{' '}
+            {isAddress(userName) ? getShortWalletHex(userName) : userName}{' '}
             <span className="text-body3 text-neutral-600">
               got {roundToSignificantFigures(dialog.tokenIn.amount, 2)}{' '}
               {dialog.tokenIn.symbol}

@@ -1,11 +1,8 @@
 import { Button } from '@idriss-xyz/ui/button';
+import { isAddress } from 'viem';
 
 import { Icon, LazyImage } from 'shared/ui';
-import {
-  getShortWalletHex,
-  isWalletHex,
-  TimeDifferenceCounter,
-} from 'shared/utils';
+import { getShortWalletHex, TimeDifferenceCounter } from 'shared/utils';
 import { roundToSignificantFigures } from 'shared/web3';
 
 import { Properties } from './trading-copilot-toast.types';
@@ -31,7 +28,7 @@ export const TradingCopilotToast = ({
       />
       <div className="flex w-full flex-col gap-y-1">
         <p className="break-all text-label3 text-neutral-900">
-          {isWalletHex(userName) ? getShortWalletHex(userName) : userName}{' '}
+          {isAddress(userName) ? getShortWalletHex(userName) : userName}{' '}
           <span className="text-body3 text-neutral-600">
             purchased {roundToSignificantFigures(toast.tokenIn.amount, 2)}{' '}
             {toast.tokenIn.symbol}
