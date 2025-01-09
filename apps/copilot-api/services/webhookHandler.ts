@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { AlchemyWebhookEvent, CachedTransaction } from '../interfaces';
-import { NULL_ADDRESS } from '../constants';
+import { BLOCK_LIST, NULL_ADDRESS } from '../constants';
 import {
   getSubscribersByAddress,
   isSubscribedAddress,
@@ -86,6 +86,10 @@ setInterval(async () => {
       for (const address of addresses) {
         if (address) {
           const subscriberIds = await getSubscribersByAddress(address);
+          if (BLOCK_LIST.includes(swapData.tokenIn?.symbol as string)) {
+            console.log('tokenIn on block list swap not sent to user');
+            return;
+          }
           for (const subscriberId of subscriberIds) {
             const clientSocket = connectedClients.get(subscriberId);
             if (clientSocket) {
