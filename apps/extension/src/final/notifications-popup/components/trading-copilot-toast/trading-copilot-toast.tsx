@@ -33,7 +33,7 @@ export const TradingCopilotToast = ({
           <span className="text-body3 text-neutral-600">
             purchased {roundToSignificantFigures(toast.tokenIn.amount, 2)}{' '}
             <span className="flex items-center justify-center space-x-1">
-              <IdrissIcon name="IdrissToken" size={24} className="h-6 w-6" />
+              <IdrissIcon name="IdrissToken" size={24} className="size-6" />
               <span>{toast.tokenIn.symbol}</span>
             </span>
           </span>
