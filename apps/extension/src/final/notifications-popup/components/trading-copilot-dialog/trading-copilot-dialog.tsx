@@ -176,7 +176,7 @@ const TradingCopilotDialogContent = ({
               got {roundToSignificantFigures(dialog.tokenIn.amount, 2)}{' '}
               <span className="flex items-center justify-center gap-x-1">
                 {dialog.tokenIn.symbol}
-                <IdrissIcon name="IdrissToken" size={24} />
+                <IdrissIcon name="IdrissToken" size={24} className="size-6" />
               </span>
             </span>{' '}
             {wallet ? (
