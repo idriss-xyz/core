@@ -82,7 +82,6 @@ setInterval(async () => {
         if (address) {
           const subscriberIds = await getSubscribersByAddress(address);
           if (BLOCK_LIST.includes(swapData.tokenIn?.symbol as string)) {
-            console.log('tokenIn on block list swap not sent to user');
             return;
           }
           for (const subscriberId of subscriberIds) {
