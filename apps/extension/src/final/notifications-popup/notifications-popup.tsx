@@ -41,7 +41,7 @@ const NotificationsPopupContent = ({
       data.transactionHash,
     );
 
-    playNotificationSound();
+    playNotificationSound(data.soundFile);
   });
 
   if (!activeDialog) {
@@ -53,30 +53,18 @@ const NotificationsPopupContent = ({
   );
 };
 
-const playNotificationSound = () => {
+const playNotificationSound = (soundFile?: string) => {
   try {
     const enableSound = localStorage.getItem('idriss-widget-enable-sound');
 
-    if (enableSound === 'false') {
+    if (enableSound === 'false' || !soundFile) {
       return;
     }
 
-    let audioFile;
-
-    if (chrome?.runtime?.getURL) {
-      audioFile = chrome.runtime.getURL('audio/notification.mp3');
-    } else if (browser?.runtime?.getURL) {
-      audioFile = browser.runtime.getURL('audio/notification.mp3');
-    }
-
-    if (audioFile) {
-      const audio = new Audio(audioFile);
-      audio.play().catch((error) => {
-        console.error('Failed to play notification sound:', error);
-      });
-    } else {
-      console.error('Audio file path is missing or not supported');
-    }
+    const audio = new Audio(soundFile);
+    audio.play().catch((error) => {
+      console.error('Failed to play notification sound:', error);
+    });
   } catch (error) {
     console.error('Error while trying to play notification sound:', error);
   }

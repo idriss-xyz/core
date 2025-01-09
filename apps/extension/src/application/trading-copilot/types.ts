@@ -92,6 +92,7 @@ export type SwapData = {
   tokenOut: SwapDataToken;
   timestamp: string;
   isComplete: boolean;
+  soundFile?: string;
 };
 
 export interface QuotePayload {
