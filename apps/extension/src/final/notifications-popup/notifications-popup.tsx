@@ -42,14 +42,14 @@ const NotificationsPopupContent = ({
 }: ContentProperties) => {
   const notification = useNotification();
   const ensNameMutation = useCommandMutation(GetEnsNameCommand);
-  const ensAvatarMutation = useCommandMutation(GetEnsInfoCommand);
+  const ensInfoMutation = useCommandMutation(GetEnsInfoCommand);
 
   onWindowMessage(SWAP_EVENT, async (data: SwapData) => {
     const ensName = await ensNameMutation.mutateAsync({
       address: data.from,
     });
 
-    const ensAvatar = await ensAvatarMutation.mutateAsync({
+    const ensAvatar = await ensInfoMutation.mutateAsync({
       ensName: ensName ?? '',
       infoKey: 'avatar',
     });
