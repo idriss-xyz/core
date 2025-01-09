@@ -1,54 +1,27 @@
 import { Button } from '@idriss-xyz/ui/button';
 
-import { Icon, LazyImage, Spinner } from 'shared/ui';
-import { useCommandQuery } from 'shared/messaging';
+import { Icon, LazyImage } from 'shared/ui';
 import {
-  GetEnsInfoCommand,
-  GetEnsNameCommand,
-} from 'application/trading-copilot';
-import { TimeDifferenceCounter } from 'shared/utils';
+  getShortWalletHex,
+  isWalletHex,
+  TimeDifferenceCounter,
+} from 'shared/utils';
 import { roundToSignificantFigures } from 'shared/web3';
 
-import { Properties, ContentProperties } from './trading-copilot-toast.types';
+import { Properties } from './trading-copilot-toast.types';
 
-export const TradingCopilotToast = ({ toast, openDialog }: Properties) => {
-  const ensNameQuery = useCommandQuery({
-    command: new GetEnsNameCommand({
-      address: toast.from,
-    }),
-    staleTime: Number.POSITIVE_INFINITY,
-  });
-
-  if (ensNameQuery.isFetching) {
-    return <Spinner className="flex w-full items-center justify-center" />;
-  }
-
-  return (
-    <TradingCopilotToastContent
-      toast={toast}
-      openDialog={openDialog}
-      userName={ensNameQuery.data ?? toast.from}
-    />
-  );
-};
-
-const TradingCopilotToastContent = ({
+export const TradingCopilotToast = ({
   toast,
-  userName,
+  ensName,
+  ensAvatar,
   openDialog,
-}: ContentProperties) => {
-  const avatarQuery = useCommandQuery({
-    command: new GetEnsInfoCommand({
-      ensName: userName,
-      infoKey: 'avatar',
-    }),
-    staleTime: Number.POSITIVE_INFINITY,
-  });
+}: Properties) => {
+  const userName = ensName ?? toast.from;
 
   return (
     <div className="grid grid-cols-[48px,1fr] gap-2">
       <LazyImage
-        src={avatarQuery.data}
+        src={ensAvatar}
         className="size-12 rounded-full border border-neutral-400 bg-neutral-200"
         fallbackComponent={
           <div className="flex size-12 items-center justify-center rounded-full border border-neutral-300 bg-neutral-200">
@@ -58,9 +31,7 @@ const TradingCopilotToastContent = ({
       />
       <div className="flex w-full flex-col gap-y-1">
         <p className="break-all text-label3 text-neutral-900">
-          {userName?.startsWith('0x')
-            ? `${userName.slice(0, 6)}...${userName.slice(-4)}`
-            : userName}{' '}
+          {isWalletHex(userName) ? getShortWalletHex(userName) : userName}{' '}
           <span className="text-body3 text-neutral-600">
             purchased {roundToSignificantFigures(toast.tokenIn.amount, 2)}{' '}
             {toast.tokenIn.symbol}

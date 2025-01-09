@@ -18,7 +18,11 @@ import {
   useExchanger,
   useLoginViaSiwe,
 } from 'application/trading-copilot';
-import { TimeDifferenceCounter } from 'shared/utils';
+import {
+  getShortWalletHex,
+  isWalletHex,
+  TimeDifferenceCounter,
+} from 'shared/utils';
 import { CHAIN, roundToSignificantFigures } from 'shared/web3';
 import { IdrissSend } from 'shared/idriss';
 
@@ -171,9 +175,7 @@ const TradingCopilotDialogContent = ({
         />
         <div className="flex w-full flex-col">
           <p className="break-all text-label3 text-neutral-900">
-            {userName?.startsWith('0x')
-              ? `${userName.slice(0, 6)}...${userName.slice(-4)}`
-              : userName}{' '}
+            {isWalletHex(userName) ? getShortWalletHex(userName) : userName}{' '}
             <span className="text-body3 text-neutral-600">
               got {roundToSignificantFigures(dialog.tokenIn.amount, 2)}{' '}
               {dialog.tokenIn.symbol}
@@ -233,7 +235,7 @@ const TradingCopilotDialogContent = ({
                 type="submit"
                 loading={siwe.isSending || exchanger.isSending}
                 disabled={
-                  Number(watch('amount')) < Number(balanceQuery.data) ||
+                  Number(watch('amount')) > Number(balanceQuery.data) ||
                   Number(watch('amount')) <= 0
                 }
               >
