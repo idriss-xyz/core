@@ -174,7 +174,10 @@ const TradingCopilotDialogContent = ({
             {isAddress(userName) ? getShortWalletHex(userName) : userName}{' '}
             <span className="text-body3 text-neutral-600">
               got {roundToSignificantFigures(dialog.tokenIn.amount, 2)}{' '}
-              {dialog.tokenIn.symbol}
+              <span className="flex items-center justify-center gap-x-1">
+                {dialog.tokenIn.symbol}
+                <IdrissIcon name="IdrissToken" size={24} className="size-6" />
+              </span>
             </span>{' '}
             {wallet ? (
               <TradingCopilotTradeValue wallet={wallet} dialog={dialog} />

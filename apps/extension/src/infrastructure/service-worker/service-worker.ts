@@ -131,6 +131,10 @@ export class ServiceWorker {
     const message = `New trade detected: ${swapData.tokenIn?.amount} of ${swapData.tokenIn?.symbol} traded for ${swapData.tokenOut?.amount} of ${swapData.tokenOut?.symbol}`;
     console.log(`%c[WebSocket] ${message}`, 'color: yellow;');
 
+    const soundFile = this.environment.runtime.getURL('audio/notification.mp3');
+
+    const swapDataWithSoundFile = { ...swapData, soundFile };
+
     this.environment.tabs.query(
       { active: true, currentWindow: true },
       async (tabs) => {
@@ -140,7 +144,7 @@ export class ServiceWorker {
           try {
             await this.environment.tabs.sendMessage(activeTab.id, {
               type: SWAP_EVENT,
-              detail: swapData,
+              detail: swapDataWithSoundFile,
             });
           } catch {
             console.log(
@@ -209,9 +213,14 @@ export class ServiceWorker {
     }
 
     const renderPromises = savedNotifications.map((notification) => {
+      const soundFile = this.environment.runtime.getURL(
+        'audio/notification.mp3',
+      );
+      const notificationWithSoundFile = { ...notification, soundFile };
+
       return this.environment.tabs.sendMessage(tab.id!, {
         type: SWAP_EVENT,
-        detail: notification,
+        detail: notificationWithSoundFile,
       });
     });
 

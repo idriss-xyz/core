@@ -20,12 +20,17 @@ export const FollowTradingCopilot = () => {
   const { isTwitter, isUserPage, username } = useLocationInfo();
   const [portal, setPortal] = useState<HTMLDivElement>();
 
+  const widgetsWithMatchingUsername = widgets.filter((widget) => {
+    return widget.username === username;
+  });
+
   const userId =
-    widgets.find((widget) => {
+    widgetsWithMatchingUsername.find((widget) => {
       return widget.type === 'idrissSend';
     })?.walletAddress ?? '';
 
-  const enabled = isTwitter && isUserPage && Boolean(username);
+  const enabled =
+    isTwitter && isUserPage && Boolean(username) && Boolean(userId);
 
   const childOfContainerForInjection = usePooling<Element | null>({
     callback: () => {
