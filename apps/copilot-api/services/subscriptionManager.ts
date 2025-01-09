@@ -203,10 +203,6 @@ const createNewWebhook = async (address: string) => {
       const webhookId = data.data.id;
       const signingKey = data.data.signing_key;
 
-      console.log(
-        `Created new webhook with ID: ${webhookId} and internal ID: ${internalWebhookId}`,
-      );
-
       webhooks.push({ webhookId, internalWebhookId, signingKey });
     }
     return webhooks;
@@ -237,10 +233,6 @@ const updateWebhookAddresses = async (
         },
       },
     );
-
-    console.log(
-      `Updated webhook ${webhookId}: Added ${addressesToAdd.length} addresses, removed ${addressesToRemove.length} addresses.`,
-    );
   } catch (err) {
     console.error('Error updating webhook: ', err);
   }
@@ -257,7 +249,6 @@ async function deleteWebhook(webhookId: string): Promise<void> {
         },
       },
     );
-    console.log(`Deleted webhook ${webhookId}`);
     return;
   } catch (err) {
     console.error('Error deleting webhook: ', err);
