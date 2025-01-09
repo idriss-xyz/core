@@ -25,7 +25,8 @@ export const FollowTradingCopilot = () => {
       return widget.type === 'idrissSend';
     })?.walletAddress ?? '';
 
-  const enabled = isTwitter && isUserPage && Boolean(username);
+  const enabled =
+    isTwitter && isUserPage && Boolean(username) && Boolean(userId);
 
   const childOfContainerForInjection = usePooling<Element | null>({
     callback: () => {
