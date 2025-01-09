@@ -172,7 +172,7 @@ const TradingCopilotDialogContent = ({
         <div className="flex w-full flex-col">
           <p className="break-all text-label3 text-neutral-900">
             {isAddress(userName) ? getShortWalletHex(userName) : userName}{' '}
-            <span className="text-body3 text-neutral-600">
+            <span className="inline-flex items-center gap-x-1 text-body3 text-neutral-600">
               got {roundToSignificantFigures(dialog.tokenIn.amount, 2)}{' '}
               <span className="flex items-center justify-center gap-x-1">
                 {dialog.tokenIn.symbol}

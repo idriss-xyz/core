@@ -30,11 +30,14 @@ export const TradingCopilotToast = ({
       <div className="flex w-full flex-col gap-y-1">
         <p className="break-all text-label3 text-neutral-900">
           {isAddress(userName) ? getShortWalletHex(userName) : userName}{' '}
-          <span className="text-body3 text-neutral-600">
-            purchased {roundToSignificantFigures(toast.tokenIn.amount, 2)}{' '}
-            <span className="flex items-center justify-center space-x-1">
+          <span className="inline-flex items-center gap-x-1 text-body3 text-neutral-600">
+            purchased{' '}
+            <span className="inline-flex items-center justify-center gap-x-1">
               <IdrissIcon name="IdrissToken" size={24} className="size-6" />
-              <span>{toast.tokenIn.symbol}</span>
+              <span>
+                {roundToSignificantFigures(toast.tokenIn.amount, 2)}{' '}
+                {toast.tokenIn.symbol}
+              </span>
             </span>
           </span>
         </p>
