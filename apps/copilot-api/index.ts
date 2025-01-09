@@ -52,7 +52,6 @@ io.on('connection', (socket) => {
   // Handle client registration
   socket.on('register', (userId: string) => {
     connectedClients.set(userId, socket);
-    console.log(`User ${userId} registered`);
     // Store the userId in the socket object
     socket.data.userId = userId;
   });
@@ -62,7 +61,6 @@ io.on('connection', (socket) => {
     const userId = socket.data.userId;
     if (userId) {
       connectedClients.delete(userId);
-      console.log(`User ${userId} disconnected`);
     }
   });
 });

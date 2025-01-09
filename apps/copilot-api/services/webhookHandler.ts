@@ -60,9 +60,6 @@ async function handleIncomingEvent(
     activity.network = webhookEvent.event.network?.replace('_MAINNET', '');
   }
 
-  console.log('New event:');
-  console.log(activities);
-
   // Add activities to the cache
   eventCache[txHash].activities.push(...activities);
 }
@@ -75,11 +72,9 @@ setInterval(async () => {
   for (const [txHash, cachedTransaction] of cacheEntries) {
     const { activities, timestamp } = cachedTransaction;
     const swapData = await extractSwapData(txHash, activities);
-    console.log(swapData);
 
     if (swapData.isComplete) {
       // Complete swap
-      console.log('Complete Swap:', JSON.stringify(swapData, null, 2));
 
       // Send swapData to subscribed users
       const addresses = [swapData.from, swapData.to];
@@ -90,7 +85,6 @@ setInterval(async () => {
             const clientSocket = connectedClients.get(subscriberId);
             if (clientSocket) {
               clientSocket.emit('swapEvent', swapData);
-              console.log(`Sent swap event to user ${subscriberId}`);
             }
           }
         }
@@ -102,7 +96,6 @@ setInterval(async () => {
       // Check if the transaction has been in the cache for more than 2 seconds
       if (now - timestamp >= 2000) {
         // Incomplete swap, time expired
-        console.log('Incomplete Swap:', JSON.stringify(swapData, null, 2));
         // Remove from cache
         delete eventCache[txHash];
       }
