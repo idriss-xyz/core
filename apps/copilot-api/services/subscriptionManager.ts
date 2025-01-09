@@ -39,11 +39,19 @@ export const subscribeAddress = async (
 
   await subscribersRepo.save({ subscriber_id });
   await addressRepo.save({ address, userId });
-  await subscriptionsRepo.save({
-    subscriber_id,
-    address,
-    fid,
-  });
+  await subscriptionsRepo
+    .createQueryBuilder()
+    .insert()
+    .into(SubscriptionsEntity)
+    .values({
+      subscriber_id,
+      address,
+      fid,
+    })
+    .orUpdate(['fid'], ['subscriber_id', 'address'], {
+      skipUpdateIfNoValuesChanged: true,
+    })
+    .execute();
 
   const addressWebhookMap = await addressMapWebhooksRepo.findOne({
     where: { address },
