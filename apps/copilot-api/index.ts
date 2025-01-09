@@ -26,14 +26,12 @@ const app = express();
 const server = http.createServer(app);
 
 const HOST = process.env.HOST;
-const PORT = process.env.PORT || 3000;
+const PORT = +process.env.PORT! || 3000;
 
 if (!PORT || !HOST) {
   console.error('variabes are not provided');
   process.exit(1);
 }
-
-app.use(express.json());
 
 const io = new SocketIOServer(server, {
   cors: {
@@ -83,21 +81,7 @@ app.post(
   webhookHandler(io, connectedClients),
 );
 
-app.get(
-  '/webhook/:internalWebhookId',
-  express.json({
-    verify: (
-      req: Request,
-      res: Response,
-      buf: Buffer,
-      encoding: BufferEncoding,
-    ) => {
-      (req as any).signature = req.headers['x-alchemy-signature'];
-    },
-  }),
-  validateAlchemySignature(getSigningKey),
-  webhookHandler(io, connectedClients),
-);
+app.use(express.json());
 
 app.use('/auth', authRoutes);
 app.use('/subscriptions', subscriptionsRoutes);
