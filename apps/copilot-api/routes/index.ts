@@ -88,7 +88,6 @@ router.get('/test-swap', async (req, res) => {
     const clientSocket = connectedClients.get(subscriberId);
     if (clientSocket) {
       clientSocket.emit('swapEvent', swapData);
-      console.log(`Sent swap event to user ${subscriberId}`);
     }
 
     res.status(200).json({ message: 'Swap event sent to subscribers' });
