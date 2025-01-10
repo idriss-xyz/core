@@ -1,5 +1,4 @@
 import { Button } from '@idriss-xyz/ui/button';
-import { Icon as IdrissIcon } from '@idriss-xyz/ui/icon';
 import { isAddress } from 'viem';
 
 import { Icon, PreloadedImage } from 'shared/ui';
@@ -7,6 +6,7 @@ import { getShortWalletHex, TimeDifferenceCounter } from 'shared/utils';
 import { roundToSignificantFigures } from 'shared/web3';
 
 import { Properties } from './trading-copilot-toast.types';
+import { TokenIcon } from '../../utils';
 
 export const TradingCopilotToast = ({
   toast,
@@ -33,7 +33,7 @@ export const TradingCopilotToast = ({
           <span className="inline-flex items-center gap-x-1 text-body3 text-neutral-600">
             purchased{' '}
             <span className="inline-flex items-center justify-center gap-x-1">
-              <IdrissIcon name="IdrissToken" size={24} className="size-6" />
+              <TokenIcon tokenAddress={toast.tokenIn.address} />
               <span>
                 {roundToSignificantFigures(toast.tokenIn.amount, 2)}{' '}
                 {toast.tokenIn.symbol}

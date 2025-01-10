@@ -28,6 +28,7 @@ import {
   WalletBalanceProperties,
   TradeValueProperties,
 } from './trading-copilot-dialog.types';
+import { TokenIcon } from '../../utils';
 
 const EMPTY_FORM: FormValues = {
   amount: '',
@@ -176,7 +177,7 @@ const TradingCopilotDialogContent = ({
               got {roundToSignificantFigures(dialog.tokenIn.amount, 2)}{' '}
               <span className="flex items-center justify-center gap-x-1">
                 {dialog.tokenIn.symbol}
-                <IdrissIcon name="IdrissToken" size={24} className="size-6" />
+                <TokenIcon tokenAddress={dialog.tokenIn.address} />
               </span>
             </span>{' '}
             {wallet ? (
