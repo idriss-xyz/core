@@ -1,4 +1,4 @@
-import { useMemo, createElement } from 'react';
+import { useMemo, createElement, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import {
@@ -61,6 +61,7 @@ const bootstrap = () => {
 
 const ApplicationWithProviders = () => {
   const { isTwitter } = useLocationInfo();
+  const isSwapEventListenerAdded = useRef(false);
 
   const disabledWalletRdns = useMemo(() => {
     if (isTwitter) {
@@ -72,7 +73,7 @@ const ApplicationWithProviders = () => {
   return (
     <Providers disabledWalletRdns={disabledWalletRdns}>
       <LookUpWalletAddress />
-      <NotificationsPopup />
+      <NotificationsPopup isSwapEventListenerAdded={isSwapEventListenerAdded} />
       <ExtensionPopup />
       <Final />
     </Providers>

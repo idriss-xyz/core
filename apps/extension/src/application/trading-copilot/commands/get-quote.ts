@@ -8,7 +8,7 @@ import {
 
 import { QuoteResponse as Response, QuotePayload as Payload } from '../types';
 
-import { QUOTE_API_URL } from './constants';
+import { COPILOT_API_URL } from './constants';
 
 export class GetQuoteCommand extends Command<Payload, Response> {
   public readonly name = 'GetQuoteCommand' as const;
@@ -19,7 +19,7 @@ export class GetQuoteCommand extends Command<Payload, Response> {
 
   async handle() {
     try {
-      const response = await fetch(QUOTE_API_URL, {
+      const response = await fetch(`${COPILOT_API_URL}/get-quote`, {
         method: 'POST',
         body: JSON.stringify(this.payload),
         headers: {

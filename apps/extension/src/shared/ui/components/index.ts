@@ -17,4 +17,5 @@ export { PaginationComponent } from './pagination';
 export { PulsingLoadingBar } from './pulsing-loading-bar';
 export { PortalWithTailwind } from './portal-with-tailwind';
 export { LazyImage } from './lazy-image';
+export { PreloadedImage } from './preloaded-image';
 export { Empty } from './empty';
