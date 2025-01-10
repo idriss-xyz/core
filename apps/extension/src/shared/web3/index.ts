@@ -2,6 +2,7 @@ export { CHAIN, TOKEN, CHAIN_ID_TO_TOKENS, EMPTY_HEX } from './constants';
 export type { Hex, Wallet, ChainToken } from './types';
 export {
   resolveAddress,
+  formatBigNumber,
   dollarToWei,
   weiToEth,
   roundToSignificantFigures,

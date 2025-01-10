@@ -52,12 +52,29 @@ export const ethToDollars = (amount: number, ethPerDollar: number) => {
   return Number(ethToRawDollars(amount, ethPerDollar).toFixed(2));
 };
 
+export const formatBigNumber = (number: number): string => {
+  return number.toLocaleString('en-US', {
+    minimumFractionDigits: number % 1 === 0 ? 0 : 2,
+    maximumFractionDigits: 2,
+  });
+};
+
 export const roundToSignificantFigures = (
   number: number,
   significantFigures: number,
-): number => {
+): number | string => {
   if (number === 0) {
     return 0;
+  }
+
+  if (number >= 1_000_000_000) {
+    return `${(number / 1_000_000_000).toFixed(significantFigures)}B`;
+  }
+  if (number >= 1_000_000) {
+    return `${(number / 1_000_000).toFixed(significantFigures)}M`;
+  }
+  if (number >= 1000) {
+    return `${(number / 1000).toFixed(significantFigures)}K`;
   }
 
   const multiplier = Math.pow(

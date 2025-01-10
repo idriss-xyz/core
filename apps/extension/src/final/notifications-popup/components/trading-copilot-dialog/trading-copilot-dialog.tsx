@@ -19,10 +19,11 @@ import {
   useLoginViaSiwe,
 } from 'application/trading-copilot';
 import { getShortWalletHex, TimeDifferenceCounter } from 'shared/utils';
-import { CHAIN, roundToSignificantFigures } from 'shared/web3';
+import { CHAIN, roundToSignificantFigures, formatBigNumber } from 'shared/web3';
 import { IdrissSend } from 'shared/idriss';
 
 import { TokenIcon } from '../../utils';
+import { TradingCopilotTooltip } from '../trading-copilot-tooltip';
 
 import {
   Properties,
@@ -174,9 +175,22 @@ const TradingCopilotDialogContent = ({
         />
         <div className="flex w-full flex-col">
           <p className="break-all text-label3 text-neutral-900">
-            {isAddress(userName) ? getShortWalletHex(userName) : userName}{' '}
+            {isAddress(userName) ? (
+              <TradingCopilotTooltip content={userName}>
+                {getShortWalletHex(userName)}
+              </TradingCopilotTooltip>
+            ) : (
+              userName
+            )}{' '}
             <span className="inline-flex items-center gap-x-1 text-body3 text-neutral-600">
-              got {roundToSignificantFigures(dialog.tokenIn.amount, 2)}{' '}
+              got{' '}
+              <TradingCopilotTooltip
+                content={formatBigNumber(dialog.tokenIn.amount)}
+              >
+                <span>
+                  {roundToSignificantFigures(dialog.tokenIn.amount, 2)}
+                </span>
+              </TradingCopilotTooltip>{' '}
               <span className="flex items-center justify-center gap-x-1">
                 {dialog.tokenIn.symbol}
                 <TokenIcon tokenAddress={dialog.tokenIn.address} />
@@ -312,8 +326,10 @@ const TradingCopilotTradeValue = ({ wallet, dialog }: TradeValueProperties) => {
   const tradeValueInEth = Number(formatEther(tradeValueInWei));
 
   return (
-    <span className="text-body6 text-neutral-500">
-      ({roundToSignificantFigures(tradeValueInEth, 2)} ETH)
-    </span>
+    <TradingCopilotTooltip content={tradeValueInEth}>
+      <span className="text-body6 text-neutral-500">
+        ({roundToSignificantFigures(tradeValueInEth, 2)} ETH)
+      </span>
+    </TradingCopilotTooltip>
   );
 };
