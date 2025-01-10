@@ -19,7 +19,13 @@ import {
   useLoginViaSiwe,
 } from 'application/trading-copilot';
 import { getShortWalletHex, TimeDifferenceCounter } from 'shared/utils';
-import { CHAIN, roundToSignificantFigures, formatBigNumber } from 'shared/web3';
+import {
+  CHAIN,
+  roundToSignificantFigures,
+  formatBigNumber,
+  getWholeNumber,
+  roundToSignificantFiguresForCopilotTrading,
+} from 'shared/web3';
 import { IdrissSend } from 'shared/idriss';
 
 import { TokenIcon } from '../../utils';
@@ -116,6 +122,16 @@ const TradingCopilotDialogContent = ({
   );
 
   if (exchanger.isSending && exchanger.quoteData?.includedSteps[0]) {
+    const { value: fromRoundedNumber, index: fromZerosIndex } =
+      roundToSignificantFiguresForCopilotTrading(
+        exchanger.details.from.amount,
+        2,
+      );
+    const { value: toRoundedNumber, index: toZerosIndex } =
+      roundToSignificantFiguresForCopilotTrading(
+        exchanger.details.to.amount,
+        2,
+      );
     return (
       <IdrissSend.Loading
         className="px-5 pb-9 pt-5"
@@ -123,12 +139,42 @@ const TradingCopilotDialogContent = ({
           <>
             Exchanging{' '}
             <span className="text-mint-600">
-              {roundToSignificantFigures(exchanger.details.from.amount, 2)}{' '}
+              <TradingCopilotTooltip
+                content={getWholeNumber(
+                  exchanger.details.from.amount.toString(),
+                )}
+              >
+                {fromZerosIndex ? (
+                  <>
+                    0.0
+                    <span className="inline-block translate-y-1 px-px text-xs">
+                      {fromZerosIndex}
+                    </span>
+                    {fromRoundedNumber}
+                  </>
+                ) : (
+                  fromRoundedNumber
+                )}
+              </TradingCopilotTooltip>{' '}
               {exchanger.details.from.symbol}
             </span>
             for
             <span className="text-mint-600">
-              {roundToSignificantFigures(exchanger.details.to.amount, 2)}{' '}
+              <TradingCopilotTooltip
+                content={getWholeNumber(exchanger.details.to.amount.toString())}
+              >
+                {toZerosIndex ? (
+                  <>
+                    0.0
+                    <span className="inline-block translate-y-1 px-px text-xs">
+                      {toZerosIndex}
+                    </span>
+                    {toRoundedNumber}
+                  </>
+                ) : (
+                  toRoundedNumber
+                )}
+              </TradingCopilotTooltip>{' '}
               {exchanger.details.to.symbol}
             </span>
           </>
@@ -150,6 +196,9 @@ const TradingCopilotDialogContent = ({
       />
     );
   }
+
+  const { value: roundedNumber, index: zerosIndex } =
+    roundToSignificantFiguresForCopilotTrading(dialog.tokenIn.amount, 2);
 
   return (
     <>
@@ -185,10 +234,22 @@ const TradingCopilotDialogContent = ({
             <span className="inline-flex items-center gap-x-1 text-body3 text-neutral-600">
               got{' '}
               <TradingCopilotTooltip
-                content={formatBigNumber(dialog.tokenIn.amount)}
+                content={formatBigNumber(
+                  getWholeNumber(dialog.tokenIn.amount.toString()),
+                )}
               >
                 <span>
-                  {roundToSignificantFigures(dialog.tokenIn.amount, 2)}
+                  {zerosIndex ? (
+                    <>
+                      0.0
+                      <span className="inline-block translate-y-1 px-px text-xs">
+                        {zerosIndex}
+                      </span>
+                      {roundedNumber}
+                    </>
+                  ) : (
+                    roundedNumber
+                  )}
                 </span>
               </TradingCopilotTooltip>{' '}
               <span className="flex items-center justify-center gap-x-1">
@@ -293,9 +354,26 @@ const TradingCopilotWalletBalance = ({ wallet }: WalletBalanceProperties) => {
     return;
   }
 
+  const { value: roundedNumber, index: zerosIndex } =
+    roundToSignificantFiguresForCopilotTrading(Number(balanceQuery.data), 2);
+
   return (
     <p className="text-body6 text-neutral-500">
-      Balance: {roundToSignificantFigures(Number(balanceQuery.data), 2)} ETH
+      Balance:{' '}
+      <TradingCopilotTooltip content={getWholeNumber(balanceQuery.data)}>
+        {zerosIndex ? (
+          <>
+            0.0
+            <span className="inline-block translate-y-1 px-px text-xs">
+              {zerosIndex}
+            </span>
+            {roundedNumber}
+          </>
+        ) : (
+          roundedNumber
+        )}
+      </TradingCopilotTooltip>{' '}
+      ETH
     </p>
   );
 };

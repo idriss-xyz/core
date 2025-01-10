@@ -3,6 +3,8 @@ export type { Hex, Wallet, ChainToken } from './types';
 export {
   resolveAddress,
   formatBigNumber,
+  getWholeNumber,
+  roundToSignificantFiguresForCopilotTrading,
   dollarToWei,
   weiToEth,
   roundToSignificantFigures,

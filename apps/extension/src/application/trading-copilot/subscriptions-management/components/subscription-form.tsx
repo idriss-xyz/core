@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useWallet } from '@idriss-xyz/wallet-connect';
 
@@ -36,6 +36,20 @@ export const SubscriptionForm = ({
   const getFarcasterAddressMutation = useCommandMutation(
     GetFarcasterAddressCommand,
   );
+
+  const [showError, setShowError] = useState(false);
+
+  useEffect(() => {
+    if (isSubscriptionLimitExceeded) {
+      setShowError(true);
+    }
+  }, [isSubscriptionLimitExceeded]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setShowError(false);
+    }, 3500);
+  }, [showError]);
 
   const addSubscriber: SubmitHandler<FormValues> = useCallback(
     async (data) => {
@@ -118,7 +132,7 @@ export const SubscriptionForm = ({
           );
         }}
       />
-      {isSubscriptionLimitExceeded && (
+      {showError && (
         <ErrorMessage className="mt-1">
           Subscriptions limit exceeded ({subscriptionLimit}).
         </ErrorMessage>
