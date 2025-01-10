@@ -14,7 +14,7 @@ interface TokenListResponse {
   tokens: Token[];
 }
 
-interface TokenIconProps {
+interface TokenIconProperties {
   tokenAddress: string;
 }
 
@@ -25,18 +25,18 @@ const fetchTokenIconData = async (
     const response = await fetch(COINGECKO_API_URL);
     const tokenList = (await response.json()) as TokenListResponse;
 
-    const tokenData = tokenList.tokens.find(
-      (t: Token) => t.address.toLowerCase() === tokenAddress.toLowerCase(),
-    );
+    const tokenData = tokenList.tokens.find((t: Token) => {
+      return t.address.toLowerCase() === tokenAddress.toLowerCase();
+    });
 
-    return tokenData || null;
+    return tokenData ?? null;
   } catch (error) {
     console.error('Error fetching token icon:', error);
     return null;
   }
 };
 
-export const TokenIcon: React.FC<TokenIconProps> = ({ tokenAddress }) => {
+export const TokenIcon: React.FC<TokenIconProperties> = ({ tokenAddress }) => {
   const [icon, setIcon] = useState<JSX.Element | null>(null);
 
   useEffect(() => {
@@ -59,7 +59,9 @@ export const TokenIcon: React.FC<TokenIconProps> = ({ tokenAddress }) => {
       }
     };
 
-    loadIcon();
+    loadIcon().catch((error) => {
+      console.error('Error loading token icon:', error);
+    });
   }, [tokenAddress]);
 
   return icon;

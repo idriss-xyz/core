@@ -5,8 +5,9 @@ import { Icon, PreloadedImage } from 'shared/ui';
 import { getShortWalletHex, TimeDifferenceCounter } from 'shared/utils';
 import { roundToSignificantFigures } from 'shared/web3';
 
-import { Properties } from './trading-copilot-toast.types';
 import { TokenIcon } from '../../utils';
+
+import { Properties } from './trading-copilot-toast.types';
 
 export const TradingCopilotToast = ({
   toast,

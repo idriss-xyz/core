@@ -22,13 +22,14 @@ import { getShortWalletHex, TimeDifferenceCounter } from 'shared/utils';
 import { CHAIN, roundToSignificantFigures } from 'shared/web3';
 import { IdrissSend } from 'shared/idriss';
 
+import { TokenIcon } from '../../utils';
+
 import {
   Properties,
   ContentProperties,
   WalletBalanceProperties,
   TradeValueProperties,
 } from './trading-copilot-dialog.types';
-import { TokenIcon } from '../../utils';
 
 const EMPTY_FORM: FormValues = {
   amount: '',
