@@ -20,6 +20,7 @@ export interface ItemProperties {
 
 export interface ItemContentProperties extends ItemProperties {
   ensName: string;
-  isFallback: boolean;
+  avatar: string | null | undefined;
+  loading: boolean;
   farcasterSubscriptionDetails?: FarcasterUserResponse;
 }
