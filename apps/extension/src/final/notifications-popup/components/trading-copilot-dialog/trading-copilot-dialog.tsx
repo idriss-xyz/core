@@ -152,12 +152,13 @@ const TradingCopilotDialogContent = ({
 
   return (
     <>
-      <div className="flex flex-row items-center justify-between">
+      <div className="flex h-[28px] flex-row items-center justify-between">
         <h1 className="text-heading4 text-neutral-900">Copy trade</h1>
         <IconButton
           intent="tertiary"
           size="medium"
           iconName="X"
+          className="pr-0 pt-1.5 text-neutral-600"
           onClick={closeDialog}
         />
       </div>

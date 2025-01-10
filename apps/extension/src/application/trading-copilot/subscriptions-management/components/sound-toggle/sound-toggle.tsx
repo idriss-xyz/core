@@ -2,11 +2,13 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { useState, useEffect } from 'react';
 
 export const SoundToggle = () => {
-  const [isSoundEnabled, setIsSoundEnabled] = useState(false);
+  const [isSoundEnabled, setIsSoundEnabled] = useState(true);
 
   useEffect(() => {
     const enableSound = localStorage.getItem('idriss-widget-enable-sound');
-    setIsSoundEnabled(enableSound === 'true');
+    if (enableSound !== null) {
+      setIsSoundEnabled(enableSound === 'true');
+    }
   }, []);
 
   const toggleSound = () => {
