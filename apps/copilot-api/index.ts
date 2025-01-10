@@ -11,6 +11,7 @@ import subscriptionsRoutes from './routes/subscribtions';
 import { getSigningKey } from './services/subscriptionManager';
 import { join } from 'path';
 import { mode } from './utils/mode';
+import { createConfig } from '@lifi/sdk';
 
 dotenv.config(
   mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
@@ -86,6 +87,12 @@ app.use(express.json());
 app.use('/auth', authRoutes);
 app.use('/subscriptions', subscriptionsRoutes);
 app.use('/', defaultRoutes);
+
+// Initialize LiFi SDK
+createConfig({
+  integrator: process.env.LIFI_INTEGRATOR_STRING ?? 'IDRISS',
+  apiKey: process.env.LIFI_API_KEY,
+});
 
 server.listen(PORT, () => {
   console.log(`Server is running at port ${PORT}`);
