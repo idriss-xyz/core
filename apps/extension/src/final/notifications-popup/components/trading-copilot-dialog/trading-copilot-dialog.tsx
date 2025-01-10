@@ -297,6 +297,7 @@ const TradingCopilotTradeValue = ({ wallet, dialog }: TradeValueProperties) => {
     originToken: dialog.tokenIn.address,
     originChain: CHAIN[dialog.tokenIn.network].id,
     destinationToken: '0x0000000000000000000000000000000000000000',
+    authToken: localStorage.getItem('authToken') ?? '',
   };
 
   const quoteQuery = useCommandQuery({
