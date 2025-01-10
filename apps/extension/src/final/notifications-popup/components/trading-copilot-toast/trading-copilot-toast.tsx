@@ -32,7 +32,7 @@ export const TradingCopilotToast = ({
         <p className="break-all text-label3 text-neutral-900">
           {isAddress(userName) ? getShortWalletHex(userName) : userName}{' '}
           <span className="inline-flex items-center gap-x-1 text-body3 text-neutral-600">
-            purchased{' '}
+            got{' '}
             <span className="inline-flex items-center justify-center gap-x-1">
               <TokenIcon tokenAddress={toast.tokenIn.address} />
               <span>
