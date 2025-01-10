@@ -24,6 +24,7 @@ export class GetQuoteCommand extends Command<Payload, Response> {
         body: JSON.stringify(this.payload),
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.payload.authToken}`,
         },
       });
 

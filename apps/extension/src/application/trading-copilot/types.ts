@@ -102,6 +102,7 @@ export interface QuotePayload {
   fromAddress: string;
   destinationToken: string;
   destinationChain: number;
+  authToken: string;
 }
 
 export type QuoteResponse = {

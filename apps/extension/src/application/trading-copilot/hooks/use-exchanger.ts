@@ -42,6 +42,7 @@ export const useExchanger = ({ wallet }: Properties) => {
         destinationToken: dialog.tokenIn.address,
         originChain: CHAIN[dialog.tokenIn.network].id,
         originToken: '0x0000000000000000000000000000000000000000',
+        authToken: localStorage.getItem('authToken') ?? '',
       };
 
       const quoteData = await handleQuoteQuery(quotePayload);
