@@ -2,7 +2,7 @@ import { Button } from '@idriss-xyz/ui/button';
 import { Icon as IdrissIcon } from '@idriss-xyz/ui/icon';
 import { isAddress } from 'viem';
 
-import { Icon, LazyImage } from 'shared/ui';
+import { Icon, PreloadedImage } from 'shared/ui';
 import { getShortWalletHex, TimeDifferenceCounter } from 'shared/utils';
 import { roundToSignificantFigures } from 'shared/web3';
 
@@ -11,15 +11,15 @@ import { Properties } from './trading-copilot-toast.types';
 export const TradingCopilotToast = ({
   toast,
   ensName,
-  ensAvatar,
+  avatarImage,
   openDialog,
 }: Properties) => {
   const userName = ensName ?? toast.from;
 
   return (
     <div className="grid grid-cols-[48px,1fr] gap-2">
-      <LazyImage
-        src={ensAvatar}
+      <PreloadedImage
+        avatarImage={avatarImage}
         className="size-12 rounded-full border border-neutral-400 bg-neutral-200"
         fallbackComponent={
           <div className="flex size-12 items-center justify-center rounded-full border border-neutral-300 bg-neutral-200">
