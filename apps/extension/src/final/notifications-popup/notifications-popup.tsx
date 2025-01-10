@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useNotification } from 'shared/ui';
 import {
@@ -11,11 +11,14 @@ import {
   GetEnsNameCommand,
   SwapData,
 } from 'application/trading-copilot';
+import { GetImageCommand } from 'shared/utils';
 
 import { TradingCopilotToast, TradingCopilotDialog } from './components';
-import { ContentProperties } from './notifications-popup.types';
+import { Properties, ContentProperties } from './notifications-popup.types';
 
-export const NotificationsPopup = () => {
+export const NotificationsPopup = ({
+  isSwapEventListenerAdded,
+}: Properties) => {
   const [activeDialog, setActiveDialog] = useState<SwapData | null>(null);
 
   const openDialog = (dialog: SwapData) => {
@@ -31,6 +34,7 @@ export const NotificationsPopup = () => {
       openDialog={openDialog}
       closeDialog={closeDialog}
       activeDialog={activeDialog}
+      isSwapEventListenerAdded={isSwapEventListenerAdded}
     />
   );
 };
@@ -39,34 +43,56 @@ const NotificationsPopupContent = ({
   openDialog,
   closeDialog,
   activeDialog,
+  isSwapEventListenerAdded,
 }: ContentProperties) => {
   const notification = useNotification();
   const ensNameMutation = useCommandMutation(GetEnsNameCommand);
   const ensInfoMutation = useCommandMutation(GetEnsInfoCommand);
+  const imageMutation = useCommandMutation(GetImageCommand);
 
-  onWindowMessage(SWAP_EVENT, async (data: SwapData) => {
-    const ensName = await ensNameMutation.mutateAsync({
-      address: data.from,
-    });
+  useEffect(() => {
+    if (!isSwapEventListenerAdded.current) {
+      const handleSwapEvent = async (data: SwapData) => {
+        const ensName = await ensNameMutation.mutateAsync({
+          address: data.from,
+        });
 
-    const ensAvatar = await ensInfoMutation.mutateAsync({
-      ensName: ensName ?? '',
-      infoKey: 'avatar',
-    });
+        const ensAvatarUrl = await ensInfoMutation.mutateAsync({
+          ensName: ensName ?? '',
+          infoKey: 'avatar',
+        });
 
-    notification.show(
-      <TradingCopilotToast
-        toast={data}
-        openDialog={openDialog}
-        ensName={ensName}
-        ensAvatar={ensAvatar}
-      />,
-      'bottom-right',
-      data.transactionHash,
-    );
+        const avatarImage = await imageMutation.mutateAsync({
+          src: ensAvatarUrl ?? '',
+        });
 
-    playNotificationSound(data.soundFile);
-  });
+        notification.show(
+          <TradingCopilotToast
+            toast={data}
+            openDialog={openDialog}
+            ensName={ensName}
+            avatarImage={avatarImage}
+          />,
+          'bottom-right',
+          data.transactionHash,
+        );
+
+        playNotificationSound(data.soundFile);
+      };
+
+      onWindowMessage(SWAP_EVENT, async (data: SwapData) => {
+        return handleSwapEvent(data);
+      });
+      isSwapEventListenerAdded.current = true;
+    }
+  }, [
+    ensInfoMutation,
+    ensNameMutation,
+    imageMutation,
+    isSwapEventListenerAdded,
+    notification,
+    openDialog,
+  ]);
 
   if (!activeDialog) {
     return null;

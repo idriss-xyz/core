@@ -14,6 +14,7 @@ export {
   LazyImage,
   ErrorMessage,
   CurrencyInput,
+  PreloadedImage,
   PulsingLoadingBar,
   PortalWithTailwind,
   PaginationComponent,
