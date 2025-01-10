@@ -19,10 +19,11 @@ import {
   useLoginViaSiwe,
 } from 'application/trading-copilot';
 import { getShortWalletHex, TimeDifferenceCounter } from 'shared/utils';
-import { CHAIN, roundToSignificantFigures } from 'shared/web3';
+import { CHAIN, roundToSignificantFigures, formatBigNumber } from 'shared/web3';
 import { IdrissSend } from 'shared/idriss';
 
 import { TokenIcon } from '../../utils';
+import { TradingCopilotTooltip } from '../trading-copilot-tooltip';
 
 import {
   Properties,
@@ -30,7 +31,6 @@ import {
   WalletBalanceProperties,
   TradeValueProperties,
 } from './trading-copilot-dialog.types';
-import TradingCopilotTooltip from '../trading-copilot-tooltip';
 
 const EMPTY_FORM: FormValues = {
   amount: '',

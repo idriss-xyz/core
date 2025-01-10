@@ -1,1 +1,1 @@
-export { default } from './trading-copilot-tooltip';
+export { TradingCopilotTooltip } from './trading-copilot-tooltip';

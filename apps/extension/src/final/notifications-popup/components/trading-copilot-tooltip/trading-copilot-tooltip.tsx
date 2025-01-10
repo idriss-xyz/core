@@ -1,8 +1,8 @@
-import { TradingCopilotTooltipProperties } from './trading-copilot-tooltip.types';
-
 import { useState } from 'react';
 
-const TradingCopilotTooltip = ({
+import { TradingCopilotTooltipProperties } from './trading-copilot-tooltip.types';
+
+export const TradingCopilotTooltip = ({
   content,
   children,
 }: TradingCopilotTooltipProperties) => {
@@ -31,5 +31,3 @@ const TradingCopilotTooltip = ({
     </div>
   );
 };
-
-export default TradingCopilotTooltip;
