@@ -53,7 +53,9 @@ router.post('/unsubscribe', verifyToken(), async (req, res) => {
   }
 });
 
-router.get('/test-swap', async (req, res) => {
+router.get('/test-swap/:subscriberId', async (req, res) => {
+  const { subscriberId } = req.params || {};
+
   const swapData = {
     transactionHash:
       '0xcbe526713e8c2095369191287c1fd4c1832716a55abe0b58db7ee91bebe21542',
@@ -84,13 +86,12 @@ router.get('/test-swap', async (req, res) => {
   }
 
   try {
-    const subscriberId = 'id1';
     const clientSocket = connectedClients.get(subscriberId);
     if (clientSocket) {
       clientSocket.emit('swapEvent', swapData);
     }
 
-    res.status(200).json({ message: 'Swap event sent to subscribers' });
+    res.status(200).json({ message: `Swap event sent to ${subscriberId}` });
   } catch (err) {
     throwInternalError(res, 'Error sending swap event', err);
   }
