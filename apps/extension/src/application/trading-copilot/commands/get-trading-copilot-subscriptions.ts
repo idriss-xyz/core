@@ -5,12 +5,12 @@ import {
   HandlerResponseError,
   OkResult,
 } from 'shared/messaging';
-import { COPILOT_API_URL } from 'application/trading-copilot/commands/constants';
 
 import {
   SubscriptionsRequest as Payload,
   SubscriptionsResponse as Response,
 } from '../types';
+import { COPILOT_API_URL } from './constants';
 
 export class GetTradingCopilotSubscriptionsCommand extends Command<
   Payload,
