@@ -8,7 +8,7 @@ export const hexSchema = z
 
 const MIN_SEND_AMOUNT = 0.001;
 
-const createSendPayloadSchema = (allowedChainIds: number[]) => {
+const _createSendPayloadSchema = (allowedChainIds: number[]) => {
   return z.object({
     amount: z
       .number()
@@ -36,5 +36,5 @@ const createPossibleChainIdsSchema = (chainIds: number[]) => {
   }) as [z.ZodLiteral<number>, z.ZodLiteral<number>, ...z.ZodLiteral<number>[]];
 };
 
-export type SendPayload = z.infer<ReturnType<typeof createSendPayloadSchema>>;
+export type SendPayload = z.infer<ReturnType<typeof _createSendPayloadSchema>>;
 export type FormPayload = z.infer<ReturnType<typeof createFormPayloadSchema>>;
