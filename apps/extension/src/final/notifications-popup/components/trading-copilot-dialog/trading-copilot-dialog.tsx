@@ -22,6 +22,8 @@ import { getShortWalletHex, TimeDifferenceCounter } from 'shared/utils';
 import { CHAIN, roundToSignificantFigures } from 'shared/web3';
 import { IdrissSend } from 'shared/idriss';
 
+import { TokenIcon } from '../../utils';
+
 import {
   Properties,
   ContentProperties,
@@ -176,7 +178,7 @@ const TradingCopilotDialogContent = ({
               got {roundToSignificantFigures(dialog.tokenIn.amount, 2)}{' '}
               <span className="flex items-center justify-center gap-x-1">
                 {dialog.tokenIn.symbol}
-                <IdrissIcon name="IdrissToken" size={24} className="size-6" />
+                <TokenIcon tokenAddress={dialog.tokenIn.address} />
               </span>
             </span>{' '}
             {wallet ? (
