@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { type MutableRefObject, useRef, useState } from 'react';
 
 import { useNotification } from 'shared/ui';
 import {
@@ -40,6 +40,13 @@ const NotificationsPopupContent = ({
   closeDialog,
   activeDialog,
 }: ContentProperties) => {
+  const playedTransactionHashes: MutableRefObject<Set<string>> = useRef(
+    new Set(),
+  );
+  const audioInstanceReference: MutableRefObject<HTMLAudioElement | null> =
+    useRef(null);
+  const lastPlayedTimestampReference: MutableRefObject<number | null> =
+    useRef(null);
   const notification = useNotification();
   const ensNameMutation = useCommandMutation(GetEnsNameCommand);
   const ensInfoMutation = useCommandMutation(GetEnsInfoCommand);
@@ -65,7 +72,13 @@ const NotificationsPopupContent = ({
       data.transactionHash,
     );
 
-    playNotificationSound(data.soundFile);
+    playNotificationSound(
+      data.transactionHash,
+      playedTransactionHashes,
+      audioInstanceReference,
+      lastPlayedTimestampReference,
+      data.soundFile,
+    );
   });
 
   if (!activeDialog) {
@@ -77,18 +90,52 @@ const NotificationsPopupContent = ({
   );
 };
 
-const playNotificationSound = (soundFile?: string) => {
+const playNotificationSound = (
+  transactionHash: string,
+  playedTransactionHashes: MutableRefObject<Set<string>>,
+  audioInstanceReference: MutableRefObject<HTMLAudioElement | null>,
+  lastPlayedTimestampReference: MutableRefObject<number | null>,
+  soundFile?: string,
+) => {
   try {
+    if (playedTransactionHashes.current.has(transactionHash)) {
+      return;
+    }
+
     const enableSound = localStorage.getItem('idriss-widget-enable-sound');
 
     if (enableSound === 'false' || !soundFile) {
       return;
     }
 
-    const audio = new Audio(soundFile);
-    audio.play().catch((error) => {
-      console.error('Failed to play notification sound:', error);
-    });
+    const now = Date.now();
+
+    if (
+      lastPlayedTimestampReference.current &&
+      now - lastPlayedTimestampReference.current < 1000
+    ) {
+      return;
+    }
+
+    if (
+      !audioInstanceReference.current ||
+      audioInstanceReference.current.ended ||
+      audioInstanceReference.current.paused
+    ) {
+      audioInstanceReference.current = new Audio(soundFile);
+      audioInstanceReference.current.addEventListener('ended', () => {
+        audioInstanceReference.current = null;
+      });
+    }
+
+    if (audioInstanceReference.current?.paused) {
+      audioInstanceReference.current.play().catch((error) => {
+        console.error('Failed to play notification sound:', error);
+      });
+    }
+
+    playedTransactionHashes.current.add(transactionHash);
+    lastPlayedTimestampReference.current = now;
   } catch (error) {
     console.error('Error while trying to play notification sound:', error);
   }
