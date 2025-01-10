@@ -177,7 +177,7 @@ const FollowTradingCopilotContent = ({
   ) => {
     await subscribe.mutateAsync({
       subscription: { address, subscriberId },
-      authToken: localStorage.getItem('authToken') ?? '',
+      authToken: await chrome.storage?.local?.get('authToken') ?? '',
     });
     void subscriptionsQuery.refetch();
   };
@@ -187,7 +187,7 @@ const FollowTradingCopilotContent = ({
   ) => {
     await unsubscribe.mutateAsync({
       subscription: { address, subscriberId },
-      authToken: localStorage.getItem('authToken') ?? '',
+      authToken: await chrome.storage?.local?.get('authToken') ?? '',
     });
     void subscriptionsQuery.refetch();
   };

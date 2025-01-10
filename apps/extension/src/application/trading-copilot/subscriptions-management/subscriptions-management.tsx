@@ -80,9 +80,10 @@ const SubscriptionsManagementContent = ({
     address: SubscriptionRequest['subscription']['address'],
     fid: SubscriptionRequest['subscription']['fid'],
   ) => {
+    const storage = await chrome.storage.local.get('authToken');
     await subscribe.mutateAsync({
       subscription: { address, fid, subscriberId },
-      authToken: localStorage.getItem('authToken') ?? '',
+      authToken: storage.authToken ?? '',
     });
     void subscriptionsQuery.refetch();
   };
@@ -90,9 +91,10 @@ const SubscriptionsManagementContent = ({
   const handleUnsubscribe = async (
     address: SubscriptionRequest['subscription']['address'],
   ) => {
+    const storage = await chrome.storage.local.get('authToken');
     await unsubscribe.mutateAsync({
       subscription: { address, subscriberId },
-      authToken: localStorage.getItem('authToken') ?? '',
+      authToken: storage.authToken ?? '',
     });
     void subscriptionsQuery.refetch();
   };

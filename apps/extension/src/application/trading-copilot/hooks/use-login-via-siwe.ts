@@ -45,16 +45,27 @@ export const useLoginViaSiwe = () => {
         signature: siweSignature,
       });
 
-      localStorage.setItem('authToken', verifiedSiweSignature.token);
+      if (chrome.storage && chrome.storage.local) {
+        chrome.storage.local.set({'authToken': verifiedSiweSignature.token});
+      } else {
+        console.log('Storage not available yet');
+      }
+
     },
-    [getSiweMessage, verifySiweSignature],
+    [getSiweMessage, verifySiweSignature, chrome.storage],
   );
 
-  const loggedIn = useCallback(() => {
-    const authToken = localStorage.getItem('authToken');
+  const loggedIn = useCallback(async () => {
+    if (chrome.storage && chrome.storage.local) {
+      const authToken = await chrome.storage.local.get('authToken');
+      return !!authToken;
 
-    return !!authToken;
-  }, []);
+  } else {
+    console.log('Storage not available yet');
+    return false;
+  }
+
+  }, [chrome.storage]);
 
   const isSending = getSiweMessage.isPending || verifySiweSignature.isPending;
 
