@@ -18,7 +18,8 @@ export const Footer = () => {
     <footer
       className={classes(
         'relative z-1 overflow-x-hidden bg-mint-100 p-2.5',
-        'lg:p-0',
+        'lg:-z-10 lg:p-0',
+        '4xl:z-40',
       )}
     >
       <div className="px-safe">

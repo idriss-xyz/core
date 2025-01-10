@@ -58,6 +58,7 @@ export default {
       },
       gray: {
         200: '#E5E5E5',
+        300: '#757575',
       },
       lime: {
         100: '#FBFFE6',
@@ -125,7 +126,6 @@ export default {
         extensionPopup: '100000',
         portal: '100001',
         scrollbar: '100010',
-        notification: '99999'
       },
       fontFamily: {
         sans: ['var(--font-aeonikpro)'],
@@ -267,6 +267,10 @@ export default {
           '0.625rem',
           { lineHeight: '0.75rem', letterSpacing: '0', fontWeight: '500' },
         ],
+        body5: [
+          '0.875rem',
+          { lineHeight: '1.25em', letterSpacing: '0', fontWeight: '400' },
+        ],
         button1: [
           '1rem',
           { lineHeight: '1.25em', letterSpacing: '0.05em', fontWeight: '500' },
@@ -275,10 +279,24 @@ export default {
           '0.875rem',
           { lineHeight: '1rem', letterSpacing: '0.05em', fontWeight: '500' },
         ],
+        display1: [
+          '7.25rem',
+          { lineHeight: '1em', letterSpacing: '0', fontWeight: '400' },
+        ],
+        display4: [
+          '2.375rem',
+          { lineHeight: '1em', letterSpacing: '0', fontWeight: '400' },
+        ],
       },
       animation: {
         marquee: 'marquee 35s linear infinite',
         marquee2: 'marquee2 35s linear infinite',
+        'fade-in': 'fade-in 200ms ease-out',
+        'fade-out': 'fade-out 200ms ease-in',
+        'slide-in-from-top': 'slide-in-from-top 200ms ease-out',
+        'slide-in-from-bottom': 'slide-in-from-bottom 200ms ease-out',
+        'slide-in-from-left': 'slide-in-from-left 200ms ease-out',
+        'slide-in-from-right': 'slide-in-from-right 200ms ease-out',
       },
       keyframes: {
         marquee: {
@@ -297,6 +315,12 @@ export default {
           '0%': { translate: '100% 0' },
           '100%': { translate: '0 0' },
         },
+        'fade-in': { '0%': { opacity: 0 }, '100%': { opacity: 1 } },
+        'fade-out': { '0%': { opacity: 1 }, '100%': { opacity: 0 } },
+        'slide-in-from-top': { '0%': { transform: 'translateY(-4px)' }, '100%': { transform: 'translateY(0)' } },
+        'slide-in-from-bottom': { '0%': { transform: 'translateY(4px)' }, '100%': { transform: 'translateY(0)' } },
+        'slide-in-from-left': { '0%': { transform: 'translateX(-4px)' }, '100%': { transform: 'translateX(0)' } },
+        'slide-in-from-right': { '0%': { transform: 'translateX(4px)' }, '100%': { transform: 'translateX(0)' } },
       },
     },
   },

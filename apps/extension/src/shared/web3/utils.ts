@@ -52,6 +52,13 @@ export const ethToDollars = (amount: number, ethPerDollar: number) => {
   return Number(ethToRawDollars(amount, ethPerDollar).toFixed(2));
 };
 
+export const formatBigNumber = (number: number): string => {
+  return number.toLocaleString('en-US', {
+    minimumFractionDigits: number % 1 === 0 ? 0 : 2,
+    maximumFractionDigits: 2,
+  });
+};
+
 export const roundToSignificantFigures = (
   number: number,
   significantFigures: number,
