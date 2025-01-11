@@ -61,6 +61,7 @@ export const SubscriptionItem = ({
       <SubscriptionItemContent
         onRemove={onRemove}
         subscription={subscription}
+        isFallback={ensNameQuery.isFetched && ensNameQuery.data === null}
         loading={loading}
         ensName={ensNameQuery.data ?? subscription.address}
         farcasterSubscriptionDetails={farcasterUserQuery.data}
@@ -74,6 +75,7 @@ const SubscriptionItemContent = ({
   ensName,
   onRemove,
   loading,
+  isFallback,
   subscription,
   farcasterSubscriptionDetails,
   avatar,
@@ -102,7 +104,7 @@ const SubscriptionItemContent = ({
       infoKey: 'email',
     }),
     staleTime: Number.POSITIVE_INFINITY,
-    enabled: !loading,
+    enabled: !isFallback,
   });
 
   const twitterQuery = useCommandQuery({
@@ -111,7 +113,7 @@ const SubscriptionItemContent = ({
       infoKey: 'com.twitter',
     }),
     staleTime: Number.POSITIVE_INFINITY,
-    enabled: !loading,
+    enabled: !isFallback,
   });
 
   const githubQuery = useCommandQuery({
@@ -120,7 +122,7 @@ const SubscriptionItemContent = ({
       infoKey: 'com.github',
     }),
     staleTime: Number.POSITIVE_INFINITY,
-    enabled: !loading,
+    enabled: !isFallback,
   });
 
   const discordQuery = useCommandQuery({
@@ -129,7 +131,7 @@ const SubscriptionItemContent = ({
       infoKey: 'com.discord',
     }),
     staleTime: Number.POSITIVE_INFINITY,
-    enabled: !loading,
+    enabled: !isFallback,
   });
 
   return (
@@ -145,7 +147,8 @@ const SubscriptionItemContent = ({
               }
               className="size-8 rounded-full border border-neutral-400 bg-neutral-200"
               fallbackComponent={
-                !loading && (
+                !farcasterSubscriptionDetails?.result?.user?.pfp?.url &&
+                !avatar && (
                   <div className="flex size-8 items-center justify-center rounded-full border border-neutral-300 bg-neutral-200">
                     <IdrissIcon
                       size={20}
