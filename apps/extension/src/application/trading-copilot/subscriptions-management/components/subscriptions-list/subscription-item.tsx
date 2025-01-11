@@ -5,7 +5,7 @@ import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { useWallet } from '@idriss-xyz/wallet-connect';
 
 import { useCommandQuery } from 'shared/messaging';
-import { Icon, LazyImage, Spinner, getGithubUserLink } from 'shared/ui';
+import { Icon, LazyImage, getGithubUserLink } from 'shared/ui';
 import { getTwitterUserLink } from 'host/twitter';
 
 import {
