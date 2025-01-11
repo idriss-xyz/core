@@ -31,7 +31,7 @@ export const SubscriptionsList = ({
     return (
       <div className="relative mt-2 h-full overflow-hidden">
         <ScrollArea className="size-full overflow-y-auto transition-all duration-500">
-          <ul className="flex flex-col gap-y-3">
+          <ul className="flex flex-col gap-y-3 pr-4">
             {subscriptions.details.map((subscription) => {
               return (
                 <SubscriptionItem
@@ -57,7 +57,7 @@ export const SubscriptionsList = ({
 
   return (
     <div className={className}>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between pr-4">
         <p className="mb-1 block text-label4 text-neutralGreen-700">
           Your subscriptions
         </p>
