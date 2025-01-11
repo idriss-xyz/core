@@ -27,6 +27,7 @@ import {
   roundToSignificantFiguresForCopilotTrading,
 } from 'shared/web3';
 import { IdrissSend } from 'shared/idriss';
+import { useAuthToken } from 'shared/extension';
 
 import { TokenIcon } from '../../utils';
 import { TradingCopilotTooltip } from '../trading-copilot-tooltip';
@@ -78,6 +79,7 @@ const TradingCopilotDialogContent = ({
   closeDialog,
 }: ContentProperties) => {
   const { wallet, isConnectionModalOpened, openConnectionModal } = useWallet();
+  const { authToken } = useAuthToken();
   const exchanger = useExchanger({ wallet });
   const siwe = useLoginViaSiwe();
 
@@ -257,8 +259,12 @@ const TradingCopilotDialogContent = ({
                 <TokenIcon tokenAddress={dialog.tokenIn.address} />
               </span>
             </span>{' '}
-            {wallet ? (
-              <TradingCopilotTradeValue wallet={wallet} dialog={dialog} />
+            {wallet && authToken ? (
+              <TradingCopilotTradeValue
+                wallet={wallet}
+                dialog={dialog}
+                authToken={authToken}
+              />
             ) : null}
           </p>
           <p className="text-body6 text-mint-700">
@@ -378,18 +384,24 @@ const TradingCopilotWalletBalance = ({ wallet }: WalletBalanceProperties) => {
   );
 };
 
-const TradingCopilotTradeValue = ({ wallet, dialog }: TradeValueProperties) => {
+const TradingCopilotTradeValue = ({
+  wallet,
+  dialog,
+  authToken,
+}: TradeValueProperties) => {
   const amountInEth = dialog.tokenIn.amount.toString();
   const amountInWei = parseEther(amountInEth).toString();
 
   const quotePayload = {
-    amount: amountInWei,
-    destinationChain: CHAIN[dialog.tokenOut.network].id,
-    fromAddress: wallet.account,
-    originToken: dialog.tokenIn.address,
-    originChain: CHAIN[dialog.tokenIn.network].id,
-    destinationToken: '0x0000000000000000000000000000000000000000',
-    authToken: localStorage.getItem('authToken') ?? '',
+    quote: {
+      amount: amountInWei,
+      destinationChain: CHAIN[dialog.tokenOut.network].id,
+      fromAddress: wallet.account,
+      originToken: dialog.tokenIn.address,
+      originChain: CHAIN[dialog.tokenIn.network].id,
+      destinationToken: '0x0000000000000000000000000000000000000000',
+    },
+    authToken: authToken ?? '',
   };
 
   const quoteQuery = useCommandQuery({

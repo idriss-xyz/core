@@ -11,6 +11,7 @@ import {
   SubscriptionRequest,
 } from 'application/trading-copilot';
 import { Hex } from 'shared/web3';
+import { useAuthToken } from 'shared/extension';
 
 import { useUserWidgets, useLocationInfo } from '../hooks';
 
@@ -156,6 +157,8 @@ const FollowTradingCopilotContent = ({
   userId,
   className,
 }: ContentProperties) => {
+  const { authToken } = useAuthToken();
+
   const subscriptionsQuery = useCommandQuery({
     command: new GetTradingCopilotSubscriptionsCommand({
       subscriberId,
@@ -177,7 +180,7 @@ const FollowTradingCopilotContent = ({
   ) => {
     await subscribe.mutateAsync({
       subscription: { address, subscriberId },
-      authToken: localStorage.getItem('authToken') ?? '',
+      authToken: authToken ?? '',
     });
     void subscriptionsQuery.refetch();
   };
@@ -187,7 +190,7 @@ const FollowTradingCopilotContent = ({
   ) => {
     await unsubscribe.mutateAsync({
       subscription: { address, subscriberId },
-      authToken: localStorage.getItem('authToken') ?? '',
+      authToken: authToken ?? '',
     });
     void subscriptionsQuery.refetch();
   };

@@ -21,7 +21,7 @@ export class GetQuoteCommand extends Command<Payload, Response> {
     try {
       const response = await fetch(`${COPILOT_API_URL}/get-quote`, {
         method: 'POST',
-        body: JSON.stringify(this.payload),
+        body: JSON.stringify(this.payload.quote),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${this.payload.authToken}`,

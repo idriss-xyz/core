@@ -3,6 +3,7 @@ import { formatEther, parseEther } from 'viem';
 
 import { Wallet, CHAIN } from 'shared/web3';
 import { useCommandMutation } from 'shared/messaging';
+import { useAuthToken } from 'shared/extension';
 
 import { SwapData, FormValues, QuotePayload } from '../types';
 import { GetQuoteCommand } from '../commands/get-quote';
@@ -19,6 +20,7 @@ interface CallbackProperties {
 }
 
 export const useExchanger = ({ wallet }: Properties) => {
+  const { authToken } = useAuthToken();
   const quoteQuery = useCommandMutation(GetQuoteCommand);
   const copilotTransaction = useCopilotTransaction();
 
@@ -36,13 +38,15 @@ export const useExchanger = ({ wallet }: Properties) => {
       const amountInWei = parseEther(amountInEth).toString();
 
       const quotePayload = {
-        amount: amountInWei,
-        destinationChain: CHAIN[dialog.tokenOut.network].id,
-        fromAddress: wallet.account,
-        destinationToken: dialog.tokenIn.address,
-        originChain: CHAIN[dialog.tokenIn.network].id,
-        originToken: '0x0000000000000000000000000000000000000000',
-        authToken: localStorage.getItem('authToken') ?? '',
+        quote: {
+          amount: amountInWei,
+          destinationChain: CHAIN[dialog.tokenOut.network].id,
+          fromAddress: wallet.account,
+          destinationToken: dialog.tokenIn.address,
+          originChain: CHAIN[dialog.tokenIn.network].id,
+          originToken: '0x0000000000000000000000000000000000000000',
+        },
+        authToken: authToken ?? '',
       };
 
       const quoteData = await handleQuoteQuery(quotePayload);
@@ -62,7 +66,7 @@ export const useExchanger = ({ wallet }: Properties) => {
         transactionData,
       });
     },
-    [copilotTransaction, quoteQuery, wallet],
+    [authToken, copilotTransaction, quoteQuery, wallet],
   );
 
   const isSending = quoteQuery.isPending || copilotTransaction.isPending;

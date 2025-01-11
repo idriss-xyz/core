@@ -9,6 +9,7 @@ import {
   useCommandQuery,
 } from 'shared/messaging';
 import { Empty } from 'shared/ui';
+import { useAuthToken } from 'shared/extension';
 
 import {
   AddTradingCopilotSubscriptionCommand,
@@ -53,6 +54,8 @@ const SubscriptionsManagementContent = ({
   subscriberId,
   isTabChangedListenerAdded,
 }: ContentProperties) => {
+  const { authToken } = useAuthToken();
+
   const subscriptionsQuery = useCommandQuery({
     command: new GetTradingCopilotSubscriptionsCommand({
       subscriberId,
@@ -82,7 +85,7 @@ const SubscriptionsManagementContent = ({
   ) => {
     await subscribe.mutateAsync({
       subscription: { address, fid, subscriberId },
-      authToken: localStorage.getItem('authToken') ?? '',
+      authToken: authToken ?? '',
     });
     void subscriptionsQuery.refetch();
   };
@@ -92,7 +95,7 @@ const SubscriptionsManagementContent = ({
   ) => {
     await unsubscribe.mutateAsync({
       subscription: { address, subscriberId },
-      authToken: localStorage.getItem('authToken') ?? '',
+      authToken: authToken ?? '',
     });
     void subscriptionsQuery.refetch();
   };
