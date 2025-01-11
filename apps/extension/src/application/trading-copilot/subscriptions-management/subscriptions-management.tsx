@@ -11,6 +11,7 @@ import {
 import { Empty } from 'shared/ui';
 import { useAuthToken } from 'shared/extension';
 
+import { useLoginViaSiwe } from '../hooks/use-login-via-siwe';
 import {
   AddTradingCopilotSubscriptionCommand,
   GetTradingCopilotSubscriptionsCommand,
@@ -31,6 +32,7 @@ export const SubscriptionsManagement = ({
 
   return wallet ? (
     <SubscriptionsManagementContent
+      wallet={wallet}
       subscriberId={wallet.account}
       isTabChangedListenerAdded={isTabChangedListenerAdded}
     />
@@ -53,8 +55,10 @@ export const SubscriptionsManagement = ({
 const SubscriptionsManagementContent = ({
   subscriberId,
   isTabChangedListenerAdded,
+  wallet,
 }: ContentProperties) => {
-  const { authToken } = useAuthToken();
+  const siwe = useLoginViaSiwe();
+  const { getAuthToken } = useAuthToken();
 
   const subscriptionsQuery = useCommandQuery({
     command: new GetTradingCopilotSubscriptionsCommand({
@@ -83,6 +87,14 @@ const SubscriptionsManagementContent = ({
     address: SubscriptionRequest['subscription']['address'],
     fid: SubscriptionRequest['subscription']['fid'],
   ) => {
+    const siweLoggedIn = await siwe.loggedIn();
+
+    if (!siweLoggedIn) {
+      await siwe.login(wallet);
+    }
+
+    const authToken = await getAuthToken();
+
     await subscribe.mutateAsync({
       subscription: { address, fid, subscriberId },
       authToken: authToken ?? '',
@@ -93,6 +105,14 @@ const SubscriptionsManagementContent = ({
   const handleUnsubscribe = async (
     address: SubscriptionRequest['subscription']['address'],
   ) => {
+    const siweLoggedIn = await siwe.loggedIn();
+
+    if (!siweLoggedIn) {
+      await siwe.login(wallet);
+    }
+
+    const authToken = await getAuthToken();
+
     await unsubscribe.mutateAsync({
       subscription: { address, subscriberId },
       authToken: authToken ?? '',

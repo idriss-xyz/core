@@ -105,14 +105,8 @@ const TradingCopilotDialogContent = ({
 
   const onSubmit = useCallback(
     async (formValues: FormValues) => {
-      const siweLoggedIn = siwe.loggedIn();
-
       if (!wallet) {
         return;
-      }
-
-      if (!siweLoggedIn) {
-        await siwe.login(wallet);
       }
 
       await exchanger.exchange({
@@ -120,7 +114,7 @@ const TradingCopilotDialogContent = ({
         dialog: dialog,
       });
     },
-    [dialog, exchanger, siwe, wallet],
+    [dialog, exchanger, wallet],
   );
 
   if (exchanger.isSending && exchanger.quoteData?.includedSteps[0]) {

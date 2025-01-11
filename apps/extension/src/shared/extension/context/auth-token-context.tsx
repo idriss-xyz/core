@@ -17,6 +17,7 @@ type AuthTokenContextValue = {
   authToken?: StoredAuthToken;
   saveAuthToken: (payload: StoredAuthToken) => void;
   clearAuthToken: () => void;
+  getAuthToken: () => Promise<StoredAuthToken>;
 };
 
 const AuthTokenContext = createContext<AuthTokenContextValue | undefined>(
@@ -45,6 +46,10 @@ export const AuthTokenContextProvider = ({
     void fetchAuthToken();
   }, [onGetAuthToken]);
 
+  const getAuthToken = useCallback(async () => {
+    return onGetAuthToken?.();
+  }, [onGetAuthToken]);
+
   const saveAuthToken = useCallback(
     (payload: StoredAuthToken) => {
       onSaveAuthToken?.(payload);
@@ -61,10 +66,11 @@ export const AuthTokenContextProvider = ({
   const contextValue = useMemo(() => {
     return {
       authToken,
+      getAuthToken,
       saveAuthToken,
       clearAuthToken,
     };
-  }, [authToken, saveAuthToken, clearAuthToken]);
+  }, [authToken, getAuthToken, saveAuthToken, clearAuthToken]);
 
   return (
     <AuthTokenContext.Provider value={contextValue}>

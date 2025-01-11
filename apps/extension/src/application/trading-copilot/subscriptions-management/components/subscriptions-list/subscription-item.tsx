@@ -13,7 +13,6 @@ import {
   GetEnsInfoCommand,
   GetFarcasterUserCommand,
 } from '../../../commands';
-import { useLoginViaSiwe } from '../../../hooks';
 
 import {
   ItemProperties,
@@ -81,22 +80,15 @@ const SubscriptionItemContent = ({
   avatar,
 }: ItemContentProperties) => {
   const { wallet } = useWallet();
-  const siwe = useLoginViaSiwe();
   const isFarcasterSubscription = !!farcasterSubscriptionDetails;
 
-  const remove = useCallback(async () => {
-    const siweLoggedIn = siwe.loggedIn();
-
+  const remove = useCallback(() => {
     if (!wallet) {
       return;
     }
 
-    if (!siweLoggedIn) {
-      await siwe.login(wallet);
-    }
-
     onRemove(subscription.address);
-  }, [onRemove, siwe, subscription, wallet]);
+  }, [onRemove, subscription, wallet]);
 
   const emailQuery = useCommandQuery({
     command: new GetEnsInfoCommand({

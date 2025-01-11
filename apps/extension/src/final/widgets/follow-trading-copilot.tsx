@@ -9,8 +9,9 @@ import {
   GetTradingCopilotSubscriptionsCommand,
   RemoveTradingCopilotSubscriptionCommand,
   SubscriptionRequest,
+  useLoginViaSiwe,
 } from 'application/trading-copilot';
-import { Hex } from 'shared/web3';
+import { Hex, Wallet } from 'shared/web3';
 import { useAuthToken } from 'shared/extension';
 
 import { useUserWidgets, useLocationInfo } from '../hooks';
@@ -91,6 +92,7 @@ export const FollowTradingCopilot = () => {
       subscriberId={wallet.account}
       iconHeight={iconHeight}
       portal={portal}
+      wallet={wallet}
       className="mb-3 mr-2 p-1.5"
     />
   );
@@ -137,6 +139,7 @@ export const FollowTradingCopilotBadge = ({
       subscriberId={wallet.account}
       iconHeight={iconSize}
       portal={portal}
+      wallet={wallet}
       className={isHandleUser ? 'ml-1 p-0' : 'ml-0.5 p-0'}
     />
   );
@@ -148,6 +151,7 @@ type ContentProperties = {
   iconHeight: number;
   portal: HTMLDivElement;
   className?: string;
+  wallet: Wallet;
 };
 
 const FollowTradingCopilotContent = ({
@@ -156,8 +160,10 @@ const FollowTradingCopilotContent = ({
   subscriberId,
   userId,
   className,
+  wallet,
 }: ContentProperties) => {
-  const { authToken } = useAuthToken();
+  const siwe = useLoginViaSiwe();
+  const { getAuthToken } = useAuthToken();
 
   const subscriptionsQuery = useCommandQuery({
     command: new GetTradingCopilotSubscriptionsCommand({
@@ -178,6 +184,18 @@ const FollowTradingCopilotContent = ({
   const handleSubscribe = async (
     address: SubscriptionRequest['subscription']['address'],
   ) => {
+    const siweLoggedIn = await siwe.loggedIn();
+
+    if (!siweLoggedIn) {
+      await siwe.login(wallet);
+    }
+
+    const authToken = await getAuthToken();
+
+    if (!authToken) {
+      return;
+    }
+
     await subscribe.mutateAsync({
       subscription: { address, subscriberId },
       authToken: authToken ?? '',
@@ -188,6 +206,18 @@ const FollowTradingCopilotContent = ({
   const handleUnsubscribe = async (
     address: SubscriptionRequest['subscription']['address'],
   ) => {
+    const siweLoggedIn = await siwe.loggedIn();
+
+    if (!siweLoggedIn) {
+      await siwe.login(wallet);
+    }
+
+    const authToken = await getAuthToken();
+
+    if (!authToken) {
+      return;
+    }
+
     await unsubscribe.mutateAsync({
       subscription: { address, subscriberId },
       authToken: authToken ?? '',

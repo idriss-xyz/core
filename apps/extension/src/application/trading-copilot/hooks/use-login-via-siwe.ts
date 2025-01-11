@@ -8,7 +8,7 @@ import { GetSiweMessageCommand, VerifySiweSignatureCommand } from '../commands';
 import { SiweMessageRequest, VerifySiweSignatureRequest } from '../types';
 
 export const useLoginViaSiwe = () => {
-  const { authToken, saveAuthToken } = useAuthToken();
+  const { getAuthToken, saveAuthToken } = useAuthToken();
   const getSiweMessage = useCommandMutation(GetSiweMessageCommand);
   const verifySiweSignature = useCommandMutation(VerifySiweSignatureCommand);
 
@@ -52,9 +52,7 @@ export const useLoginViaSiwe = () => {
     [getSiweMessage, saveAuthToken, verifySiweSignature],
   );
 
-  const loggedIn = useCallback(() => {
-    return !!authToken;
-  }, [authToken]);
+  const loggedIn = getAuthToken;
 
   const isSending = getSiweMessage.isPending || verifySiweSignature.isPending;
 
