@@ -57,14 +57,16 @@ export const SubscriptionItem = ({
   }, [ensNameQuery.isLoading, avatarQuery.isLoading]);
 
   return (
-    <SubscriptionItemContent
-      onRemove={onRemove}
-      subscription={subscription}
-      loading={loading}
-      ensName={ensNameQuery.data ?? subscription.address}
-      farcasterSubscriptionDetails={farcasterUserQuery.data}
-      avatar={avatarQuery.data}
-    />
+    !loading && (
+      <SubscriptionItemContent
+        onRemove={onRemove}
+        subscription={subscription}
+        loading={loading}
+        ensName={ensNameQuery.data ?? subscription.address}
+        farcasterSubscriptionDetails={farcasterUserQuery.data}
+        avatar={avatarQuery.data}
+      />
+    )
   );
 };
 
@@ -132,11 +134,9 @@ const SubscriptionItemContent = ({
 
   return (
     <li className="flex items-center justify-between">
-      <div className="flex items-center">
-        {loading ? (
-          <Spinner className="size-2" />
-        ) : (
-          <>
+      {!loading && (
+        <>
+          <div className="flex items-center">
             <LazyImage
               src={
                 farcasterSubscriptionDetails?.result?.user?.pfp
@@ -157,57 +157,67 @@ const SubscriptionItemContent = ({
               }
             />
             <p className="ml-1.5 flex items-center gap-1.5 text-label5 text-neutral-600">
-              {isFarcasterSubscription &&
-              farcasterSubscriptionDetails?.result?.user
-                ? farcasterSubscriptionDetails.result.user.displayName
-                : ensName || subscription.address}
-              {twitterQuery.data && (
-                <ExternalLink href={getTwitterUserLink(twitterQuery.data)}>
-                  <IdrissIcon
-                    name="TwitterX"
-                    size={16}
-                    className="text-[#757575]"
-                  />
-                </ExternalLink>
-              )}
-              {githubQuery.data && (
-                <ExternalLink href={getGithubUserLink(githubQuery.data)}>
-                  <Icon
-                    size={16}
-                    name="GitHubLogoIcon"
-                    className="text-[#757575]"
-                  />
-                </ExternalLink>
-              )}
-              {discordQuery.data && (
-                <span title={discordQuery.data}>
-                  <Icon
-                    size={16}
-                    name="DiscordLogoIcon"
-                    className="text-[#757575]"
-                  />
-                </span>
-              )}
-              {emailQuery.data && (
-                <ExternalLink href={`mailto:${emailQuery.data}`}>
-                  <Icon
-                    size={16}
-                    name="EnvelopeClosedIcon"
-                    className="text-[#757575]"
-                  />
-                </ExternalLink>
-              )}
+              <>
+                {ensName ? (
+                  <>
+                    {isFarcasterSubscription &&
+                    farcasterSubscriptionDetails?.result?.user
+                      ? farcasterSubscriptionDetails.result.user.displayName
+                      : ensName}
+                    {twitterQuery.data && (
+                      <ExternalLink
+                        href={getTwitterUserLink(twitterQuery.data)}
+                      >
+                        <IdrissIcon
+                          name="TwitterX"
+                          size={16}
+                          className="text-[#757575]"
+                        />
+                      </ExternalLink>
+                    )}
+                    {githubQuery.data && (
+                      <ExternalLink href={getGithubUserLink(githubQuery.data)}>
+                        <Icon
+                          size={16}
+                          name="GitHubLogoIcon"
+                          className="text-[#757575]"
+                        />
+                      </ExternalLink>
+                    )}
+                    {discordQuery.data && (
+                      <span title={discordQuery.data}>
+                        <Icon
+                          size={16}
+                          name="DiscordLogoIcon"
+                          className="text-[#757575]"
+                        />
+                      </span>
+                    )}
+                    {emailQuery.data && (
+                      <ExternalLink href={`mailto:${emailQuery.data}`}>
+                        <Icon
+                          size={16}
+                          name="EnvelopeClosedIcon"
+                          className="text-[#757575]"
+                        />
+                      </ExternalLink>
+                    )}
+                  </>
+                ) : (
+                  <span>{subscription.address}</span>
+                )}
+              </>
             </p>
-          </>
-        )}
-      </div>
-      <IconButton
-        intent="tertiary"
-        size="small"
-        iconName="X"
-        onClick={remove}
-        className="text-red-500"
-      />
+          </div>
+          <IconButton
+            intent="tertiary"
+            size="small"
+            iconName="X"
+            onClick={remove}
+            className="text-red-500"
+          />
+        </>
+      )}
     </li>
   );
 };
