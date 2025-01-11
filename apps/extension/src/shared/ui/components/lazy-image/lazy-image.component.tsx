@@ -7,7 +7,7 @@ import { GetImageCommand } from 'shared/utils';
 interface ImageProperties {
   src: string | null | undefined;
   /** The fallback component will be displayed during image loading and as a fallback if fetching the image fails */
-  fallbackComponent?: ReactElement;
+  fallbackComponent?: ReactElement | false;
   className?: string;
 }
 
@@ -37,10 +37,13 @@ export const LazyImage = ({
     }
   }, [imageQuery.data]);
 
+  const resolvedFallback =
+    fallbackComponent === false ? undefined : fallbackComponent;
+
   return imageQuery.data && imageLoaded ? (
     <img src={imageQuery.data} className={className} alt="" />
   ) : (
-    (fallbackComponent ?? (
+    (resolvedFallback ?? (
       <div
         className={classes(
           className,
