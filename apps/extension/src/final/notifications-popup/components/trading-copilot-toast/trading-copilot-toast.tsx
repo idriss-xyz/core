@@ -3,9 +3,14 @@ import { isAddress } from 'viem';
 
 import { Icon, PreloadedImage } from 'shared/ui';
 import { getShortWalletHex, TimeDifferenceCounter } from 'shared/utils';
-import { roundToSignificantFigures } from 'shared/web3';
+import {
+  getWholeNumber,
+  formatBigNumber,
+  roundToSignificantFiguresForCopilotTrading,
+} from 'shared/web3';
 
 import { TokenIcon } from '../../utils';
+import { TradingCopilotTooltip } from '../trading-copilot-tooltip';
 
 import { Properties } from './trading-copilot-toast.types';
 
@@ -16,6 +21,9 @@ export const TradingCopilotToast = ({
   openDialog,
 }: Properties) => {
   const userName = ensName ?? toast.from;
+
+  const { value: roundedNumber, index: zerosIndex } =
+    roundToSignificantFiguresForCopilotTrading(toast.tokenIn.amount, 2);
 
   return (
     <div className="grid grid-cols-[48px,1fr] gap-2">
@@ -30,13 +38,35 @@ export const TradingCopilotToast = ({
       />
       <div className="flex w-full flex-col gap-y-1">
         <p className="break-all text-label3 text-neutral-900">
-          {isAddress(userName) ? getShortWalletHex(userName) : userName}{' '}
+          {isAddress(userName) ? (
+            <TradingCopilotTooltip content={userName}>
+              {getShortWalletHex(userName)}
+            </TradingCopilotTooltip>
+          ) : (
+            userName
+          )}{' '}
           <span className="inline-flex items-center gap-x-1 text-body3 text-neutral-600">
             got{' '}
             <span className="inline-flex items-center justify-center gap-x-1">
               <TokenIcon tokenAddress={toast.tokenIn.address} />
               <span>
-                {roundToSignificantFigures(toast.tokenIn.amount, 2)}{' '}
+                <TradingCopilotTooltip
+                  content={formatBigNumber(
+                    getWholeNumber(toast.tokenIn.amount.toString()),
+                  )}
+                >
+                  {zerosIndex ? (
+                    <>
+                      0.0
+                      <span className="inline-block translate-y-1 px-px text-xs">
+                        {zerosIndex}
+                      </span>
+                      {roundedNumber}
+                    </>
+                  ) : (
+                    roundedNumber
+                  )}
+                </TradingCopilotTooltip>{' '}
                 {toast.tokenIn.symbol}
               </span>
             </span>
