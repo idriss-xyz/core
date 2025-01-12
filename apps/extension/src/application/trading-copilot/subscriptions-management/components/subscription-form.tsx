@@ -101,7 +101,7 @@ export const SubscriptionForm = ({
   );
 
   return (
-    <form onSubmit={form.handleSubmit(addSubscriber)}>
+    <form className="pr-4" onSubmit={form.handleSubmit(addSubscriber)}>
       <label
         htmlFor="subscriptionDetails"
         className="block text-label4 text-neutralGreen-700"
