@@ -2,11 +2,13 @@ import { useCallback } from 'react';
 
 import { useCommandMutation } from 'shared/messaging';
 import { createWalletClient, Wallet } from 'shared/web3';
+import { useAuthToken } from 'shared/extension';
 
 import { GetSiweMessageCommand, VerifySiweSignatureCommand } from '../commands';
 import { SiweMessageRequest, VerifySiweSignatureRequest } from '../types';
 
 export const useLoginViaSiwe = () => {
+  const { getAuthToken, saveAuthToken } = useAuthToken();
   const getSiweMessage = useCommandMutation(GetSiweMessageCommand);
   const verifySiweSignature = useCommandMutation(VerifySiweSignatureCommand);
 
@@ -45,16 +47,12 @@ export const useLoginViaSiwe = () => {
         signature: siweSignature,
       });
 
-      localStorage.setItem('authToken', verifiedSiweSignature.token);
+      saveAuthToken(verifiedSiweSignature.token);
     },
-    [getSiweMessage, verifySiweSignature],
+    [getSiweMessage, saveAuthToken, verifySiweSignature],
   );
 
-  const loggedIn = useCallback(() => {
-    const authToken = localStorage.getItem('authToken');
-
-    return !!authToken;
-  }, []);
+  const loggedIn = getAuthToken;
 
   const isSending = getSiweMessage.isPending || verifySiweSignature.isPending;
 

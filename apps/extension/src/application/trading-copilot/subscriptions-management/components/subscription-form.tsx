@@ -5,7 +5,6 @@ import { useWallet } from '@idriss-xyz/wallet-connect';
 import { useCommandMutation } from 'shared/messaging';
 import { ErrorMessage } from 'shared/ui';
 
-import { useLoginViaSiwe } from '../../hooks';
 import {
   GetEnsAddressCommand,
   GetFarcasterAddressCommand,
@@ -22,7 +21,6 @@ export const SubscriptionForm = ({
   subscriptionsAmount,
 }: Properties) => {
   const { wallet } = useWallet();
-  const siwe = useLoginViaSiwe();
 
   const form = useForm<FormValues>({
     defaultValues: EMPTY_FORM,
@@ -57,14 +55,9 @@ export const SubscriptionForm = ({
       const farcasterPattern = /^[^.]+$/;
       const isWalletAddress = hexPattern.test(data.subscriptionDetails);
       const isFarcasterName = farcasterPattern.test(data.subscriptionDetails);
-      const siweLoggedIn = siwe.loggedIn();
 
       if (!wallet) {
         return;
-      }
-
-      if (!siweLoggedIn) {
-        await siwe.login(wallet);
       }
 
       if (isWalletAddress) {
@@ -103,13 +96,12 @@ export const SubscriptionForm = ({
       getEnsAddressMutation,
       getFarcasterAddressMutation,
       onSubmit,
-      siwe,
       wallet,
     ],
   );
 
   return (
-    <form onSubmit={form.handleSubmit(addSubscriber)}>
+    <form className="pr-4" onSubmit={form.handleSubmit(addSubscriber)}>
       <label
         htmlFor="subscriptionDetails"
         className="block text-label4 text-neutralGreen-700"
