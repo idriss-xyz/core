@@ -1,20 +1,12 @@
 'use client';
 
-import {
-  createContext,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import { createContext, ReactNode, useCallback, useMemo } from 'react';
 
 import { createContextHook } from 'shared/ui';
 
 import { StoredAuthToken } from '../types';
 
 type AuthTokenContextValue = {
-  authToken?: StoredAuthToken;
   saveAuthToken: (payload: StoredAuthToken) => void;
   clearAuthToken: () => void;
   getAuthToken: () => Promise<StoredAuthToken>;
@@ -35,17 +27,6 @@ export const AuthTokenContextProvider = ({
   onGetAuthToken?: () => Promise<StoredAuthToken>;
   onSaveAuthToken?: (payload: StoredAuthToken) => void;
 }) => {
-  const [authToken, setAuthToken] = useState<StoredAuthToken>();
-
-  useEffect(() => {
-    const fetchAuthToken = async () => {
-      const token = await onGetAuthToken?.();
-      setAuthToken(token);
-    };
-
-    void fetchAuthToken();
-  }, [onGetAuthToken]);
-
   const getAuthToken = useCallback(async () => {
     return onGetAuthToken?.();
   }, [onGetAuthToken]);
@@ -53,24 +34,21 @@ export const AuthTokenContextProvider = ({
   const saveAuthToken = useCallback(
     (payload: StoredAuthToken) => {
       onSaveAuthToken?.(payload);
-      setAuthToken(payload);
     },
     [onSaveAuthToken],
   );
 
   const clearAuthToken = useCallback(() => {
     onClearAuthToken?.();
-    setAuthToken(undefined);
   }, [onClearAuthToken]);
 
   const contextValue = useMemo(() => {
     return {
-      authToken,
       getAuthToken,
       saveAuthToken,
       clearAuthToken,
     };
-  }, [authToken, getAuthToken, saveAuthToken, clearAuthToken]);
+  }, [getAuthToken, saveAuthToken, clearAuthToken]);
 
   return (
     <AuthTokenContext.Provider value={contextValue}>

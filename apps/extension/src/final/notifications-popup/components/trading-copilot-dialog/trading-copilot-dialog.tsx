@@ -5,7 +5,7 @@ import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { NumericInput } from '@idriss-xyz/ui/numeric-input';
 import { useWallet } from '@idriss-xyz/wallet-connect';
 import { formatEther, isAddress, parseEther } from 'viem';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { Closable, ErrorMessage, Icon, LazyImage } from 'shared/ui';
 import { useCommandQuery } from 'shared/messaging';
@@ -27,7 +27,7 @@ import {
   roundToSignificantFiguresForCopilotTrading,
 } from 'shared/web3';
 import { IdrissSend } from 'shared/idriss';
-import { useAuthToken } from 'shared/extension';
+import { StoredAuthToken, useAuthToken } from 'shared/extension';
 
 import { TokenIcon } from '../../utils';
 import { TradingCopilotTooltip } from '../trading-copilot-tooltip';
@@ -79,7 +79,6 @@ const TradingCopilotDialogContent = ({
   closeDialog,
 }: ContentProperties) => {
   const { wallet, isConnectionModalOpened, openConnectionModal } = useWallet();
-  const { authToken } = useAuthToken();
   const exchanger = useExchanger({ wallet });
   const siwe = useLoginViaSiwe();
 
@@ -253,12 +252,8 @@ const TradingCopilotDialogContent = ({
                 <TokenIcon tokenAddress={dialog.tokenIn.address} />
               </span>
             </span>{' '}
-            {wallet && authToken ? (
-              <TradingCopilotTradeValue
-                wallet={wallet}
-                dialog={dialog}
-                authToken={authToken}
-              />
+            {wallet ? (
+              <TradingCopilotTradeValue wallet={wallet} dialog={dialog} />
             ) : null}
           </p>
           <p className="text-body6 text-mint-700">
@@ -378,13 +373,19 @@ const TradingCopilotWalletBalance = ({ wallet }: WalletBalanceProperties) => {
   );
 };
 
-const TradingCopilotTradeValue = ({
-  wallet,
-  dialog,
-  authToken,
-}: TradeValueProperties) => {
+const TradingCopilotTradeValue = ({ wallet, dialog }: TradeValueProperties) => {
+  const { getAuthToken } = useAuthToken();
+  const [authToken, setAuthToken] = useState<StoredAuthToken>();
   const amountInEth = dialog.tokenIn.amount.toString();
   const amountInWei = parseEther(amountInEth).toString();
+
+  useEffect(() => {
+    const fetchAuthToken = async () => {
+      const latestAuthToken = await getAuthToken();
+      setAuthToken(latestAuthToken);
+    };
+    void fetchAuthToken();
+  }, [getAuthToken]);
 
   const quotePayload = {
     quote: {
@@ -401,6 +402,7 @@ const TradingCopilotTradeValue = ({
   const quoteQuery = useCommandQuery({
     command: new GetQuoteCommand(quotePayload),
     staleTime: Number.POSITIVE_INFINITY,
+    enabled: !!authToken,
   });
 
   if (!quoteQuery.data) {
