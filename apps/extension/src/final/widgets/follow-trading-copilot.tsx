@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-import { Icon } from '@idriss-xyz/ui/icon';
-import { useWallet } from '@idriss-xyz/wallet-connect';
+import {useEffect, useState} from 'react';
+import {Icon} from '@idriss-xyz/ui/icon';
+import {useWallet} from '@idriss-xyz/wallet-connect';
 
-import { useCommandMutation, useCommandQuery } from 'shared/messaging';
-import { Button, classes, PortalWithTailwind, usePooling } from 'shared/ui';
+import {useCommandMutation, useCommandQuery} from 'shared/messaging';
+import {Button, classes, PortalWithTailwind, usePooling} from 'shared/ui';
 import {
   AddTradingCopilotSubscriptionCommand,
   GetTradingCopilotSubscriptionsCommand,
@@ -11,16 +11,16 @@ import {
   SubscriptionRequest,
   useLoginViaSiwe,
 } from 'application/trading-copilot';
-import { Hex, Wallet } from 'shared/web3';
-import { useAuthToken } from 'shared/extension';
+import {Hex, Wallet} from 'shared/web3';
+import {useAuthToken} from 'shared/extension';
 
-import { useUserWidgets, useLocationInfo } from '../hooks';
-import { TradingCopilotTooltip } from '../notifications-popup/components/trading-copilot-tooltip';
+import {useUserWidgets, useLocationInfo} from '../hooks';
+import {TradingCopilotTooltip} from '../notifications-popup/components/trading-copilot-tooltip';
 
 export const FollowTradingCopilot = () => {
-  const { wallet } = useWallet();
-  const { widgets } = useUserWidgets();
-  const { isTwitter, isUserPage, username, isWarpcast } = useLocationInfo();
+  const {wallet} = useWallet();
+  const {widgets} = useUserWidgets();
+  const {isTwitter, isUserPage, username, isWarpcast} = useLocationInfo();
   const [portal, setPortal] = useState<HTMLDivElement>();
 
   const widgetsWithMatchingUsername = widgets.filter((widget) => {
@@ -79,7 +79,7 @@ export const FollowTradingCopilot = () => {
 
     const container = document.createElement('div');
     buttonsContainer?.insertBefore(container, followButton);
-    const shadowRoot = container.attachShadow({ mode: 'open' });
+    const shadowRoot = container.attachShadow({mode: 'open'});
     const newPortal = document.createElement('div');
     shadowRoot.append(newPortal);
     setPortal(newPortal);
@@ -132,15 +132,15 @@ type ContentProperties = {
 };
 
 const FollowTradingCopilotContent = ({
-  portal,
-  iconHeight,
-  subscriberId,
-  userId,
-  className,
-  wallet,
-}: ContentProperties) => {
+                                       portal,
+                                       iconHeight,
+                                       subscriberId,
+                                       userId,
+                                       className,
+                                       wallet,
+                                     }: ContentProperties) => {
   const siwe = useLoginViaSiwe();
-  const { getAuthToken } = useAuthToken();
+  const {getAuthToken} = useAuthToken();
 
   const subscriptionsQuery = useCommandQuery({
     command: new GetTradingCopilotSubscriptionsCommand({
@@ -149,7 +149,7 @@ const FollowTradingCopilotContent = ({
     staleTime: Number.POSITIVE_INFINITY,
   });
 
-  const { isWarpcast } = useLocationInfo();
+  const {isWarpcast} = useLocationInfo();
 
   const isSubscribed = subscriptionsQuery?.data?.details.some((detail) => {
     return detail.address.toLowerCase() === userId.toLowerCase();
@@ -176,7 +176,7 @@ const FollowTradingCopilotContent = ({
     }
 
     await subscribe.mutateAsync({
-      subscription: { address, subscriberId },
+      subscription: {address, subscriberId},
       authToken: authToken ?? '',
     });
     void subscriptionsQuery.refetch();
@@ -198,7 +198,7 @@ const FollowTradingCopilotContent = ({
     }
 
     await unsubscribe.mutateAsync({
-      subscription: { address, subscriberId },
+      subscription: {address, subscriberId},
       authToken: authToken ?? '',
     });
     void subscriptionsQuery.refetch();
@@ -251,4 +251,4 @@ const FollowTradingCopilotContent = ({
       </TradingCopilotTooltip>
     </PortalWithTailwind>
   );
-};
+}

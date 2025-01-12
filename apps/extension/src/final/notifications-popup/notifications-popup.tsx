@@ -1,6 +1,6 @@
-import { type MutableRefObject, useRef, useEffect, useState } from 'react';
+import {type MutableRefObject, useRef, useEffect, useState} from 'react';
 
-import { useNotification } from 'shared/ui';
+import {useNotification} from 'shared/ui';
 import {
   onWindowMessage,
   SWAP_EVENT,
@@ -11,14 +11,14 @@ import {
   GetEnsNameCommand,
   SwapData,
 } from 'application/trading-copilot';
-import { GetImageCommand } from 'shared/utils';
+import {GetImageCommand} from 'shared/utils';
 
-import { TradingCopilotToast, TradingCopilotDialog } from './components';
-import { Properties, ContentProperties } from './notifications-popup.types';
+import {TradingCopilotToast, TradingCopilotDialog} from './components';
+import {Properties, ContentProperties} from './notifications-popup.types';
 
 export const NotificationsPopup = ({
-  isSwapEventListenerAdded,
-}: Properties) => {
+                                     isSwapEventListenerAdded,
+                                   }: Properties) => {
   const [activeDialog, setActiveDialog] = useState<SwapData | null>(null);
 
   const openDialog = (dialog: SwapData) => {
@@ -40,11 +40,11 @@ export const NotificationsPopup = ({
 };
 
 const NotificationsPopupContent = ({
-  openDialog,
-  closeDialog,
-  activeDialog,
-  isSwapEventListenerAdded,
-}: ContentProperties) => {
+                                     openDialog,
+                                     closeDialog,
+                                     activeDialog,
+                                     isSwapEventListenerAdded,
+                                   }: ContentProperties) => {
   const playedTransactionHashes: MutableRefObject<Set<string>> = useRef(
     new Set(),
   );
@@ -94,6 +94,7 @@ const NotificationsPopupContent = ({
       };
 
       onWindowMessage(SWAP_EVENT, async (data: SwapData) => {
+        console.log(data)
         return handleSwapEvent(data);
       });
       isSwapEventListenerAdded.current = true;
@@ -112,7 +113,7 @@ const NotificationsPopupContent = ({
   }
 
   return (
-    <TradingCopilotDialog dialog={activeDialog} closeDialog={closeDialog} />
+    <TradingCopilotDialog dialog={activeDialog} closeDialog={closeDialog}/>
   );
 };
 
