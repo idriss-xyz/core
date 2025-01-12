@@ -20,10 +20,11 @@ import {
 } from 'shared/ui';
 import { TwitterScrapingContextProvider } from 'host/twitter';
 import {
+  AuthTokenContextProvider,
   ExtensionPopupProvider,
   ExtensionSettingsProvider,
 } from 'shared/extension';
-import { WalletStorage } from 'shared/web3';
+import { AuthTokenStorage, WalletStorage } from 'shared/web3';
 
 type Properties = {
   children: ReactNode;
@@ -46,26 +47,32 @@ export const Providers = ({
                     <TailwindProvider>
                       <QueryProvider>
                         <NiceModal.Provider>
-                          <NotificationsProvider>
-                            <WalletContextProvider
-                              disabledWalletsRdns={disabledWalletRdns}
-                              onGetWallet={WalletStorage.get}
-                              onClearWallet={WalletStorage.clear}
-                              onSaveWallet={WalletStorage.save}
-                            >
-                              <ExtensionPopupProvider>
-                                <ExtensionSettingsProvider>
-                                  <TwitterScrapingContextProvider>
-                                    <WarpcastScrapingContextProvider>
-                                      <SupercastScrapingContextProvider>
-                                        {children}
-                                      </SupercastScrapingContextProvider>
-                                    </WarpcastScrapingContextProvider>
-                                  </TwitterScrapingContextProvider>
-                                </ExtensionSettingsProvider>
-                              </ExtensionPopupProvider>
-                            </WalletContextProvider>
-                          </NotificationsProvider>
+                          <AuthTokenContextProvider
+                            onGetAuthToken={AuthTokenStorage.get}
+                            onClearAuthToken={AuthTokenStorage.clear}
+                            onSaveAuthToken={AuthTokenStorage.save}
+                          >
+                            <NotificationsProvider>
+                              <WalletContextProvider
+                                disabledWalletsRdns={disabledWalletRdns}
+                                onGetWallet={WalletStorage.get}
+                                onClearWallet={WalletStorage.clear}
+                                onSaveWallet={WalletStorage.save}
+                              >
+                                <ExtensionPopupProvider>
+                                  <ExtensionSettingsProvider>
+                                    <TwitterScrapingContextProvider>
+                                      <WarpcastScrapingContextProvider>
+                                        <SupercastScrapingContextProvider>
+                                          {children}
+                                        </SupercastScrapingContextProvider>
+                                      </WarpcastScrapingContextProvider>
+                                    </TwitterScrapingContextProvider>
+                                  </ExtensionSettingsProvider>
+                                </ExtensionPopupProvider>
+                              </WalletContextProvider>
+                            </NotificationsProvider>
+                          </AuthTokenContextProvider>
                         </NiceModal.Provider>
                       </QueryProvider>
                     </TailwindProvider>

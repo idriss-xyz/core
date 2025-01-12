@@ -18,3 +18,5 @@ export interface StoredWallet {
   account: Hex;
   providerRdns: string;
 }
+
+export type StoredAuthToken = string | undefined;

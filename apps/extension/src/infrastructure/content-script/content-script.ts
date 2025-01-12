@@ -10,11 +10,13 @@ import {
   onWindowMessage,
 } from 'shared/messaging';
 import {
+  AuthTokenManager,
   ExtensionSettingsManager,
   GET_EXTENSION_SETTINGS_REQUEST,
   GET_EXTENSION_SETTINGS_RESPONSE,
   EXTENSION_BUTTON_CLICKED,
   ACTIVE_TAB_CHANGED,
+  StoredAuthToken,
 } from 'shared/extension';
 import { Hex } from 'shared/web3';
 
@@ -28,6 +30,7 @@ export class ContentScript {
 
     contentScript.subscribeToExtensionSettings();
     contentScript.subscribeToWallet();
+    contentScript.subscribeToAuthToken();
     contentScript.subscribeToDeviceId();
     contentScript.blockGithubShortcuts();
   }
@@ -169,6 +172,28 @@ export class ContentScript {
         void ExtensionSettingsManager.saveWallet(v);
       },
     );
+  }
+
+  // TODO: move these message names to constants in shared/web3
+  subscribeToAuthToken() {
+    onWindowMessage('GET_AUTH_TOKEN', async () => {
+      const maybeAuthToken = await AuthTokenManager.getAuthToken();
+
+      const message = {
+        type: 'GET_AUTH_TOKEN_RESPONSE',
+        detail: maybeAuthToken,
+      };
+
+      window.postMessage(message);
+    });
+
+    onWindowMessage('CLEAR_AUTH_TOKEN', () => {
+      void AuthTokenManager.clearAuthToken();
+    });
+
+    onWindowMessage<StoredAuthToken>('SAVE_AUTH_TOKEN', (v) => {
+      void AuthTokenManager.saveAuthToken(v);
+    });
   }
 
   // TODO: move these message names to constants in shared/web3

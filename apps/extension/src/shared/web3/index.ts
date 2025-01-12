@@ -35,4 +35,4 @@ export { AGORA_LOGO } from './logos';
 export { SNAPSHOT_LOGO } from './logos';
 export { TALLY_LOGO } from './logos';
 export { TransactionRevertedError } from './errors';
-export { WalletStorage } from './storage';
+export { WalletStorage, AuthTokenStorage } from './storage';

@@ -3,7 +3,9 @@ import { formatEther, parseEther } from 'viem';
 
 import { Wallet, CHAIN } from 'shared/web3';
 import { useCommandMutation } from 'shared/messaging';
+import { useAuthToken } from 'shared/extension';
 
+import { useLoginViaSiwe } from '../hooks/use-login-via-siwe';
 import { SwapData, FormValues, QuotePayload } from '../types';
 import { GetQuoteCommand } from '../commands/get-quote';
 
@@ -19,12 +21,26 @@ interface CallbackProperties {
 }
 
 export const useExchanger = ({ wallet }: Properties) => {
+  const siwe = useLoginViaSiwe();
+  const { getAuthToken } = useAuthToken();
   const quoteQuery = useCommandMutation(GetQuoteCommand);
   const copilotTransaction = useCopilotTransaction();
 
   const exchange = useCallback(
     async ({ formValues, dialog }: CallbackProperties) => {
       if (!wallet || Number(formValues.amount) === 0) {
+        return;
+      }
+
+      const siweLoggedIn = await siwe.loggedIn();
+
+      if (!siweLoggedIn) {
+        await siwe.login(wallet);
+      }
+
+      const authToken = await getAuthToken();
+
+      if (!authToken) {
         return;
       }
 
@@ -36,13 +52,15 @@ export const useExchanger = ({ wallet }: Properties) => {
       const amountInWei = parseEther(amountInEth).toString();
 
       const quotePayload = {
-        amount: amountInWei,
-        destinationChain: CHAIN[dialog.tokenOut.network].id,
-        fromAddress: wallet.account,
-        destinationToken: dialog.tokenIn.address,
-        originChain: CHAIN[dialog.tokenIn.network].id,
-        originToken: '0x0000000000000000000000000000000000000000',
-        authToken: localStorage.getItem('authToken') ?? '',
+        quote: {
+          amount: amountInWei,
+          destinationChain: CHAIN[dialog.tokenOut.network].id,
+          fromAddress: wallet.account,
+          destinationToken: dialog.tokenIn.address,
+          originChain: CHAIN[dialog.tokenIn.network].id,
+          originToken: '0x0000000000000000000000000000000000000000',
+        },
+        authToken: authToken ?? '',
       };
 
       const quoteData = await handleQuoteQuery(quotePayload);
@@ -62,7 +80,7 @@ export const useExchanger = ({ wallet }: Properties) => {
         transactionData,
       });
     },
-    [copilotTransaction, quoteQuery, wallet],
+    [copilotTransaction, getAuthToken, quoteQuery, siwe, wallet],
   );
 
   const isSending = quoteQuery.isPending || copilotTransaction.isPending;
