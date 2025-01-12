@@ -1,5 +1,5 @@
-import {Icon} from '@idriss-xyz/ui/icon';
-import {useEffect, useState} from 'react';
+import { Icon } from '@idriss-xyz/ui/icon';
+import { useEffect, useState } from 'react';
 
 const COINGECKO_API_URL = 'https://tokens.coingecko.com/uniswap/all.json';
 const IDRISS_TOKEN_ADDRESS = '0x000096630066820566162c94874a776532705231';
@@ -36,13 +36,13 @@ const fetchTokenIconData = async (
   }
 };
 
-export const TokenIcon: React.FC<TokenIconProperties> = ({tokenAddress}) => {
+export const TokenIcon: React.FC<TokenIconProperties> = ({ tokenAddress }) => {
   const [icon, setIcon] = useState<JSX.Element | null>(null);
 
   useEffect(() => {
     const loadIcon = async () => {
       if (tokenAddress.toLowerCase() === IDRISS_TOKEN_ADDRESS.toLowerCase()) {
-        setIcon(<Icon name="IdrissToken" size={24} className="size-6"/>);
+        setIcon(<Icon name="IdrissToken" size={24} className="size-6" />);
       } else {
         const tokenData = await fetchTokenIconData(tokenAddress);
         if (tokenData) {
