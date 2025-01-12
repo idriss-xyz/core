@@ -98,7 +98,7 @@ router.get('/test-swap/:subscriberId', async (req, res) => {
   }
 });
 
-router.post('/get-quote', async (req, res) => {
+router.post('/get-quote', verifyToken(), async (req, res) => {
   const {
     fromAddress,
     originChain,
