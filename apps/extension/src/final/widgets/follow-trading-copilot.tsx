@@ -231,7 +231,7 @@ const FollowTradingCopilotContent = ({
         Unsubscribe in trading copilot
       </span>
       <span
-        className={`relative left-2 transition duration-500 ${isSubscribed ? 'opacity-0 delay-0' : 'opacity-100 delay-200'}`}
+        className={`relative transition duration-500 ${isSubscribed ? 'opacity-0 delay-0' : 'opacity-100 delay-200'}`}
       >
         Subscribe in trading copilot
       </span>
@@ -242,15 +242,13 @@ const FollowTradingCopilotContent = ({
     <PortalWithTailwind container={portal}>
       <TradingCopilotTooltip
         content={tooltipContent}
-        className={`!w-[11.25rem] ${isWarpcast ? 'translate-y-[-55px]' : 'translate-y-[-70px]'}`}
+        className={`custom-transition ${isSubscribed ? '!w-[11.25rem]' : '!w-[165px]'} ${isWarpcast ? 'translate-y-[-55px]' : 'translate-y-[-70px]'}`}
       >
         <Button
           onClick={onClickHandler}
           className={classes(
             'relative flex cursor-pointer overflow-hidden rounded-full border-none outline-none transition delay-300 duration-300',
-            isSubscribed
-              ? 'bg-[#55EB3B] hover:bg-[#56c942]'
-              : 'bg-[#eff3f4] hover:bg-[#d7dbdc]',
+            'bg-[#eff3f4] hover:bg-[#d7dbdc]',
             className,
           )}
         >

@@ -25,7 +25,7 @@ export const TradingCopilotTooltip = ({
     >
       <div className="inline-block cursor-default">{children}</div>
       <div
-        className={`absolute left-1/2 z-10 w-max -translate-x-1/2 -translate-y-12 rounded-lg bg-black px-2 py-0.5 text-xs text-white transition-opacity delay-500 ease-in-out ${isVisible ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'} ${className}`}
+        className={`custom-transition absolute left-1/2 z-10 w-max -translate-x-1/2 -translate-y-12 rounded-lg bg-black px-2 py-0.5 text-xs text-white ease-in-out ${isVisible ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'} ${className}`}
       >
         {content}
       </div>
