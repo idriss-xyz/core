@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { formatEther, parseEther } from 'viem';
 
-import { Wallet, CHAIN } from 'shared/web3';
+import { Wallet, CHAIN, useSwitchChain } from 'shared/web3';
 import { useCommandMutation } from 'shared/messaging';
 import { useAuthToken } from 'shared/extension';
 
@@ -25,6 +25,7 @@ export const useExchanger = ({ wallet }: Properties) => {
   const { getAuthToken } = useAuthToken();
   const quoteQuery = useCommandMutation(GetQuoteCommand);
   const copilotTransaction = useCopilotTransaction();
+  const switchChain = useSwitchChain();
 
   const exchange = useCallback(
     async ({ formValues, dialog }: CallbackProperties) => {
@@ -74,6 +75,11 @@ export const useExchanger = ({ wallet }: Properties) => {
         value: parseEther(amountInEth),
         to: quoteData.transactionData.to,
       };
+
+      await switchChain.mutateAsync({
+        chainId: quoteData.transactionData.chainId,
+        wallet,
+      });
 
       copilotTransaction.mutate({
         wallet: wallet,
