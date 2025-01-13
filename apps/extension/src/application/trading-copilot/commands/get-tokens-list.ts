@@ -6,11 +6,13 @@ import {
   OkResult,
 } from 'shared/messaging';
 
-import { QuoteResponse as Response } from '../types';
-
 type Payload = {
   tokenAddress: string;
 };
+
+type Response = {
+  tokens: Record<string, string>
+}
 
 export class GetTokensListCommand extends Command<Payload, Response> {
   public readonly name = 'GetTokensListCommand' as const;

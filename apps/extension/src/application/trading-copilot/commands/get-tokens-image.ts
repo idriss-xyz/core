@@ -36,7 +36,7 @@ export class GetTokensImageCommand extends Command<Payload, string> {
         (await new Promise((resolve, reject) => {
           const reader = new FileReader();
           reader.onloadend = () => {
-            resolve(reader.result);
+            resolve(reader.result as string);
           };
           //eslint-disable-next-line unicorn/prefer-add-event-listener
           reader.onerror = reject;
