@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useWallet } from '@idriss-xyz/wallet-connect';
 
 import { useCommandMutation } from 'shared/messaging';
 import { ErrorMessage } from 'shared/ui';
+import { useExtensionPopup } from 'shared/extension';
 
 import {
   GetEnsAddressCommand,
@@ -22,9 +23,16 @@ export const SubscriptionForm = ({
 }: Properties) => {
   const { wallet } = useWallet();
 
+  const {
+    showSubscriptionsExceededError,
+    handleShowSubscriptionsExceededError,
+    subscriptionsExceededErrorDisplayed,
+  } = useExtensionPopup();
+
   const form = useForm<FormValues>({
     defaultValues: EMPTY_FORM,
   });
+
   const subscriptionLimit = 10;
   const isSubscriptionLimitExceeded =
     subscriptionsAmount !== undefined &&
@@ -35,19 +43,23 @@ export const SubscriptionForm = ({
     GetFarcasterAddressCommand,
   );
 
-  const [showError, setShowError] = useState(false);
+  // 0x456d9347342B72BCf800bBf117391ac2f807c6bF
 
   useEffect(() => {
-    if (isSubscriptionLimitExceeded) {
-      setShowError(true);
+    if (isSubscriptionLimitExceeded && !subscriptionsExceededErrorDisplayed) {
+      handleShowSubscriptionsExceededError(true);
     }
-  }, [isSubscriptionLimitExceeded]);
+  }, [
+    isSubscriptionLimitExceeded,
+    subscriptionsExceededErrorDisplayed,
+    handleShowSubscriptionsExceededError,
+  ]);
 
   useEffect(() => {
     setTimeout(() => {
-      setShowError(false);
+      handleShowSubscriptionsExceededError(false);
     }, 3500);
-  }, [showError]);
+  }, [showSubscriptionsExceededError, handleShowSubscriptionsExceededError]);
 
   const addSubscriber: SubmitHandler<FormValues> = useCallback(
     async (data) => {
@@ -124,7 +136,7 @@ export const SubscriptionForm = ({
           );
         }}
       />
-      {showError && (
+      {showSubscriptionsExceededError && (
         <ErrorMessage className="mt-1">
           Subscriptions limit exceeded ({subscriptionLimit}).
         </ErrorMessage>
