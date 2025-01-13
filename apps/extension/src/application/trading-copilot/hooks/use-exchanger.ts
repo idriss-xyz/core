@@ -86,7 +86,7 @@ export const useExchanger = ({ wallet }: Properties) => {
         transactionData,
       });
     },
-    [copilotTransaction, getAuthToken, quoteQuery, siwe, wallet],
+    [copilotTransaction, getAuthToken, quoteQuery, siwe, wallet, switchChain],
   );
 
   const isSending = quoteQuery.isPending || copilotTransaction.isPending;
