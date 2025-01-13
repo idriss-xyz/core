@@ -245,7 +245,10 @@ const TradingCopilotDialogContent = ({
                     )}
                     ~
                     {wallet ? (
-                      <TradingCopilotTradeValue wallet={wallet} dialog={dialog} />
+                      <TradingCopilotTradeValue
+                        wallet={wallet}
+                        dialog={dialog}
+                      />
                     ) : null}
                   </>
                 }
