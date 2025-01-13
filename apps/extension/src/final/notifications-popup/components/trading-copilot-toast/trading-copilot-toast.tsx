@@ -14,6 +14,8 @@ export const TradingCopilotToast = ({
   ensName,
   avatarImage,
   openDialog,
+  tokenImage,
+  tokenData,
 }: Properties) => {
   const userName = ensName ?? toast.from;
 
@@ -37,7 +39,7 @@ export const TradingCopilotToast = ({
           <span className="inline-flex items-center gap-x-1 text-body3 text-neutral-600">
             got{' '}
             <span className="inline-flex items-center justify-center gap-x-1">
-              <TokenIcon tokenAddress={toast.tokenIn.address} />
+              <TokenIcon tokenImage={tokenImage} tokenData={tokenData} />
               <span>
                 {zerosIndex ? (
                   <>

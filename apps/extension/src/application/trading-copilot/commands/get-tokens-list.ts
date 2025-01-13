@@ -6,18 +6,15 @@ import {
   OkResult,
 } from 'shared/messaging';
 
-type Payload = {
-  tokenAddress: string;
-};
-
 type Response = {
   tokens: Record<string, string>[];
 };
 
-export class GetTokensListCommand extends Command<Payload, Response> {
+export class GetTokensListCommand extends Command<void, Response> {
   public readonly name = 'GetTokensListCommand' as const;
+  public readonly payload = undefined;
 
-  constructor(public payload: Payload) {
+  constructor() {
     super();
   }
 
