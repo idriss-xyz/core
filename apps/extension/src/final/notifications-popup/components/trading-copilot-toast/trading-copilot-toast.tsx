@@ -3,14 +3,9 @@ import { isAddress } from 'viem';
 
 import { Icon, PreloadedImage } from 'shared/ui';
 import { getShortWalletHex, TimeDifferenceCounter } from 'shared/utils';
-import {
-  getWholeNumber,
-  formatBigNumber,
-  roundToSignificantFiguresForCopilotTrading,
-} from 'shared/web3';
+import { roundToSignificantFiguresForCopilotTrading } from 'shared/web3';
 
 import { TokenIcon } from '../../utils';
-import { TradingCopilotTooltip } from '../trading-copilot-tooltip';
 
 import { Properties } from './trading-copilot-toast.types';
 
@@ -19,6 +14,8 @@ export const TradingCopilotToast = ({
   ensName,
   avatarImage,
   openDialog,
+  tokenImage,
+  tokenData,
 }: Properties) => {
   const userName = ensName ?? toast.from;
 
@@ -38,35 +35,23 @@ export const TradingCopilotToast = ({
       />
       <div className="flex w-full flex-col gap-y-1">
         <p className="break-all text-label3 text-neutral-900">
-          {isAddress(userName) ? (
-            <TradingCopilotTooltip content={userName}>
-              {getShortWalletHex(userName)}
-            </TradingCopilotTooltip>
-          ) : (
-            userName
-          )}{' '}
+          {isAddress(userName) ? getShortWalletHex(userName) : userName}{' '}
           <span className="inline-flex items-center gap-x-1 text-body3 text-neutral-600">
             got{' '}
             <span className="inline-flex items-center justify-center gap-x-1">
-              <TokenIcon tokenAddress={toast.tokenIn.address} />
+              <TokenIcon tokenImage={tokenImage} tokenData={tokenData} />
               <span>
-                <TradingCopilotTooltip
-                  content={formatBigNumber(
-                    getWholeNumber(toast.tokenIn.amount.toString()),
-                  )}
-                >
-                  {zerosIndex ? (
-                    <>
-                      0.0
-                      <span className="inline-block translate-y-1 px-px text-xs">
-                        {zerosIndex}
-                      </span>
-                      {roundedNumber}
-                    </>
-                  ) : (
-                    roundedNumber
-                  )}
-                </TradingCopilotTooltip>{' '}
+                {zerosIndex ? (
+                  <>
+                    0.0
+                    <span className="inline-block translate-y-1 px-px text-xs">
+                      {zerosIndex}
+                    </span>
+                    {roundedNumber}
+                  </>
+                ) : (
+                  roundedNumber
+                )}{' '}
                 {toast.tokenIn.symbol}
               </span>
             </span>

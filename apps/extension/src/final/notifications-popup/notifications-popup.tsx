@@ -9,12 +9,16 @@ import {
 import {
   GetEnsInfoCommand,
   GetEnsNameCommand,
+  GetTokensImageCommand,
+  GetTokensListCommand,
   SwapData,
 } from 'application/trading-copilot';
 import { GetImageCommand } from 'shared/utils';
 
 import { TradingCopilotToast, TradingCopilotDialog } from './components';
 import { Properties, ContentProperties } from './notifications-popup.types';
+
+const IDRISS_TOKEN_ADDRESS = '0x000096630066820566162c94874a776532705231';
 
 export const NotificationsPopup = ({
   isSwapEventListenerAdded,
@@ -52,10 +56,14 @@ const NotificationsPopupContent = ({
     useRef(null);
   const lastPlayedTimestampReference: MutableRefObject<number | null> =
     useRef(null);
+  const selectedToken = useRef<Record<string, string>>({});
+  const selectedTokenImage = useRef<string>('');
   const notification = useNotification();
   const ensNameMutation = useCommandMutation(GetEnsNameCommand);
   const ensInfoMutation = useCommandMutation(GetEnsInfoCommand);
   const imageMutation = useCommandMutation(GetImageCommand);
+  const tokenListMutation = useCommandMutation(GetTokensListCommand);
+  const tokenIconMutation = useCommandMutation(GetTokensImageCommand);
 
   useEffect(() => {
     if (!isSwapEventListenerAdded.current) {
@@ -73,8 +81,31 @@ const NotificationsPopupContent = ({
           src: ensAvatarUrl ?? '',
         });
 
+        const tokensList = await tokenListMutation.mutateAsync();
+
+        const tokenAddress = data.tokenIn.address;
+
+        const tokens = tokensList?.tokens ?? [];
+
+        const tokenData =
+          tokens.find((t) => {
+            return t?.address?.toLowerCase() === tokenAddress.toLowerCase();
+          }) ?? {};
+
+        selectedToken.current = tokenData;
+
+        const tokenImage =
+          tokenAddress.toLowerCase() === IDRISS_TOKEN_ADDRESS
+            ? 'IdrissToken'
+            : ((await tokenIconMutation.mutateAsync({
+                tokeURI: tokenData?.logoURI ?? '',
+              })) ?? '');
+        selectedTokenImage.current = tokenImage;
+
         notification.show(
           <TradingCopilotToast
+            tokenData={tokenData}
+            tokenImage={tokenImage}
             toast={data}
             openDialog={openDialog}
             ensName={ensName}
@@ -99,6 +130,8 @@ const NotificationsPopupContent = ({
       isSwapEventListenerAdded.current = true;
     }
   }, [
+    tokenIconMutation,
+    tokenListMutation,
     ensInfoMutation,
     ensNameMutation,
     imageMutation,
@@ -112,7 +145,12 @@ const NotificationsPopupContent = ({
   }
 
   return (
-    <TradingCopilotDialog dialog={activeDialog} closeDialog={closeDialog} />
+    <TradingCopilotDialog
+      tokenData={selectedToken.current}
+      tokenImage={selectedTokenImage.current}
+      dialog={activeDialog}
+      closeDialog={closeDialog}
+    />
   );
 };
 

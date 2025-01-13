@@ -4,6 +4,8 @@ export {
   GetEnsNameCommand,
   GetQuoteCommand,
   GetEnsBalanceCommand,
+  GetTokensImageCommand,
+  GetTokensListCommand,
   AddTradingCopilotSubscriptionCommand,
   GetTradingCopilotSubscriptionsCommand,
   RemoveTradingCopilotSubscriptionCommand,

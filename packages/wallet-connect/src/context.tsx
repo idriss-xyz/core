@@ -13,6 +13,8 @@ import { useModal } from '@ebay/nice-modal-react';
 import { createContextHook } from '@idriss-xyz/ui/utils';
 import { getAddress, hexToNumber } from 'viem';
 
+import { onWindowMessage } from '../../../apps/extension/src/shared/messaging';
+
 import { Hex, Wallet } from './types';
 import { WalletConnectModal } from './modal';
 
@@ -42,11 +44,30 @@ export const WalletContextProvider = (properties: {
   onGetWallet?: () => Promise<StoredWallet | undefined>;
   onSaveWallet?: (wallet: StoredWallet) => void;
 }) => {
+  const { onClearWallet, onGetWallet, onSaveWallet, disabledWalletsRdns } =
+    properties;
+  const [tabChangedListenerInitialized, setTabChangedListenerInitialized] =
+    useState(false);
+  const [wallet, setWallet] = useState<Wallet>();
   const walletConnectModal = useModal(WalletConnectModal, {
-    disabledWalletsRdns: properties.disabledWalletsRdns ?? [],
+    disabledWalletsRdns: disabledWalletsRdns ?? [],
   });
 
-  const [wallet, setWallet] = useState<Wallet>();
+  const removeWalletInfo = useCallback(() => {
+    onClearWallet?.();
+    setWallet(undefined);
+  }, [onClearWallet]);
+
+  const setWalletInfo = useCallback(
+    (wallet: Wallet) => {
+      setWallet(wallet);
+      onSaveWallet?.({
+        account: wallet.account,
+        providerRdns: wallet.providerRdns,
+      });
+    },
+    [onSaveWallet],
+  );
 
   const walletProvidersStore = useMemo(() => {
     return createStore();
@@ -58,10 +79,50 @@ export const WalletContextProvider = (properties: {
     getProvidersServerSnapshot,
   );
 
-  const removeWalletInfo = useCallback(() => {
-    setWallet(undefined);
-    properties.onClearWallet?.();
-  }, [properties]);
+  const getWallet = useCallback(async () => {
+    if (availableWalletProviders.length === 0) {
+      return;
+    }
+
+    const storedWallet = await onGetWallet?.();
+
+    if (!storedWallet) {
+      return;
+    }
+
+    const foundProvider =
+      storedWallet.providerRdns === 'browser'
+        ? { provider: window.ethereum, info: { rdns: 'browser' } }
+        : availableWalletProviders.find((provider) => {
+            return provider.info.rdns === storedWallet.providerRdns;
+          });
+
+    const connectedProvider = foundProvider?.provider;
+
+    if (!foundProvider || !connectedProvider) {
+      return;
+    }
+
+    const chainId = await connectedProvider.request({
+      method: 'eth_chainId',
+    });
+
+    return {
+      providerRdns: foundProvider.info.rdns,
+      provider: connectedProvider,
+      account: storedWallet.account,
+      chainId: hexToNumber(chainId),
+    };
+  }, [availableWalletProviders, onGetWallet]);
+
+  if (!tabChangedListenerInitialized) {
+    onWindowMessage('TAB_CHANGED', async () => {
+      const latestWallet = await getWallet();
+
+      setWallet(latestWallet);
+    });
+    setTabChangedListenerInitialized(true);
+  }
 
   useEffect(() => {
     const callback = async () => {
@@ -69,71 +130,36 @@ export const WalletContextProvider = (properties: {
         return;
       }
 
-      const storedWallet = await properties.onGetWallet?.();
-      if (!storedWallet) {
-        return;
-      }
+      const latestWallet = await getWallet();
 
-      const foundProvider =
-        storedWallet.providerRdns === 'browser'
-          ? { provider: window.ethereum, info: { rdns: 'browser' } }
-          : availableWalletProviders.find((provider) => {
-              return provider.info.rdns === storedWallet.providerRdns;
-            });
-
-      const connectedProvider = foundProvider?.provider;
-      if (!foundProvider || !connectedProvider) {
-        return;
-      }
-
-      const connectToStoredWallet = async () => {
-        const accounts = await connectedProvider.request({
-          method: 'eth_accounts',
-        });
-
-        if (
-          !accounts
-            .map((account: Hex) => {
-              return getAddress(account);
-            })
-            .includes(storedWallet.account)
-        ) {
-          return;
-        }
-
-        await new Promise((resolve) => {
-          setTimeout(resolve, 500);
-        });
-
-        const chainId = await connectedProvider.request({
-          method: 'eth_chainId',
-        });
-
-        setWallet({
-          providerRdns: foundProvider.info.rdns,
-          provider: connectedProvider,
-          account: storedWallet.account,
-          chainId: hexToNumber(chainId),
-        });
-      };
-
-      void connectToStoredWallet();
+      setWallet(latestWallet);
     };
+
     void callback();
   }, [
     availableWalletProviders,
     availableWalletProviders.length,
+    getWallet,
+    onGetWallet,
     properties,
     wallet,
   ]);
 
   useEffect(() => {
-    wallet?.provider.on('accountsChanged', removeWalletInfo);
+    wallet?.provider.on('accountsChanged', (accounts) => {
+      const loggedInToCurrentWallet = getAddress(accounts[0] ?? '0x').includes(
+        wallet.account,
+      );
+
+      if (!loggedInToCurrentWallet) {
+        removeWalletInfo();
+      }
+    });
 
     return () => {
       wallet?.provider.removeListener('accountsChanged', removeWalletInfo);
     };
-  }, [removeWalletInfo, wallet?.provider]);
+  }, [properties, removeWalletInfo, wallet?.account, wallet?.provider]);
 
   useEffect(() => {
     const onChainChanged = (chainId: Hex) => {
@@ -150,24 +176,25 @@ export const WalletContextProvider = (properties: {
     return () => {
       wallet?.provider.removeListener('chainChanged', onChainChanged);
     };
-  }, [wallet?.provider]);
+  }, [properties, wallet?.provider]);
 
   const openConnectionModal = useCallback(async () => {
     try {
       const resolvedWallet = (await walletConnectModal.show({
-        disabledWalletsRdns: properties.disabledWalletsRdns ?? [],
+        disabledWalletsRdns: disabledWalletsRdns ?? [],
       })) as Wallet;
-      setWallet(resolvedWallet);
-      properties.onSaveWallet?.({
-        account: resolvedWallet.account,
-        providerRdns: resolvedWallet.providerRdns,
-      });
+      setWalletInfo(resolvedWallet);
       return resolvedWallet;
     } catch (error) {
-      setWallet(undefined);
+      removeWalletInfo();
       throw error;
     }
-  }, [properties, walletConnectModal]);
+  }, [
+    walletConnectModal,
+    disabledWalletsRdns,
+    setWalletInfo,
+    removeWalletInfo,
+  ]);
 
   const contextValue: WalletContextValue = useMemo(() => {
     return {
