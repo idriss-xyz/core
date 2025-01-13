@@ -19,5 +19,4 @@ export interface WalletBalanceProperties {
 export interface TradeValueProperties {
   wallet: Wallet;
   dialog: SwapData;
-  authToken: string;
 }

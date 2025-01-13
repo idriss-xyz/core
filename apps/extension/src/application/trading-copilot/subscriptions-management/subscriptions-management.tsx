@@ -11,7 +11,7 @@ import {
 import { Empty } from 'shared/ui';
 import { useAuthToken } from 'shared/extension';
 
-import { useLoginViaSiwe } from '../hooks/use-login-via-siwe';
+import { useLoginViaSiwe } from '../hooks';
 import {
   AddTradingCopilotSubscriptionCommand,
   GetTradingCopilotSubscriptionsCommand,

@@ -5,7 +5,7 @@ import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { NumericInput } from '@idriss-xyz/ui/numeric-input';
 import { useWallet } from '@idriss-xyz/wallet-connect';
 import { formatEther, isAddress, parseEther } from 'viem';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Closable, ErrorMessage, Icon, LazyImage } from 'shared/ui';
 import { useCommandQuery } from 'shared/messaging';
@@ -27,7 +27,7 @@ import {
   roundToSignificantFiguresForCopilotTrading,
 } from 'shared/web3';
 import { IdrissSend } from 'shared/idriss';
-import { useAuthToken } from 'shared/extension';
+import { StoredAuthToken, useAuthToken } from 'shared/extension';
 
 import { TokenIcon } from '../../utils';
 import { TradingCopilotTooltip } from '../trading-copilot-tooltip';
@@ -88,7 +88,6 @@ const TradingCopilotDialogContent = ({
   tokenImage,
 }: ContentProperties) => {
   const { wallet, isConnectionModalOpened, openConnectionModal } = useWallet();
-  const { authToken } = useAuthToken();
   const exchanger = useExchanger({ wallet });
   const siwe = useLoginViaSiwe();
 
@@ -245,11 +244,10 @@ const TradingCopilotDialogContent = ({
                       getWholeNumber(dialog.tokenIn.amount.toString()),
                     )}
                     ~
-                    {wallet && authToken ? (
+                    {wallet ? (
                       <TradingCopilotTradeValue
                         wallet={wallet}
                         dialog={dialog}
-                        authToken={authToken}
                       />
                     ) : null}
                   </>
@@ -392,13 +390,41 @@ const TradingCopilotWalletBalance = ({ wallet }: WalletBalanceProperties) => {
   );
 };
 
-const TradingCopilotTradeValue = ({
-  wallet,
-  dialog,
-  authToken,
-}: TradeValueProperties) => {
+const TradingCopilotTradeValue = ({ wallet, dialog }: TradeValueProperties) => {
+  const { getAuthToken } = useAuthToken();
+  const siwe = useLoginViaSiwe();
+  const [authToken, setAuthToken] = useState<StoredAuthToken>();
+  const siweLoginDisplayed = useRef(false);
+
   const amountInEth = dialog.tokenIn.amount.toString();
   const amountInWei = parseEther(amountInEth).toString();
+
+  useEffect(() => {
+    const fetchAuthToken = async () => {
+      const latestAuthToken = await getAuthToken();
+      setAuthToken(latestAuthToken);
+    };
+    void fetchAuthToken();
+  }, [getAuthToken]);
+
+  useEffect(() => {
+    const initiateLogin = async () => {
+      const siweLoggedIn = await siwe.loggedIn();
+
+      if (!siweLoggedIn && !siwe.isSending && !siweLoginDisplayed.current) {
+        siweLoginDisplayed.current = true;
+
+        await siwe.login(wallet);
+
+        const latestAuthToken = await getAuthToken();
+
+        setAuthToken(latestAuthToken);
+
+        siweLoginDisplayed.current = false;
+      }
+    };
+    void initiateLogin();
+  }, [siwe.isSending, wallet, siwe, getAuthToken]);
 
   const quotePayload = {
     quote: {
@@ -415,10 +441,11 @@ const TradingCopilotTradeValue = ({
   const quoteQuery = useCommandQuery({
     command: new GetQuoteCommand(quotePayload),
     staleTime: Number.POSITIVE_INFINITY,
+    enabled: !!authToken,
   });
 
   if (!quoteQuery.data) {
-    return;
+    return null;
   }
 
   const tradeValueInWei = BigInt(quoteQuery.data.estimate.toAmount);
