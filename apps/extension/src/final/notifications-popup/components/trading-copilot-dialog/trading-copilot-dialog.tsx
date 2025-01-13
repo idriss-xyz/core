@@ -43,7 +43,12 @@ const EMPTY_FORM: FormValues = {
   amount: '',
 };
 
-export const TradingCopilotDialog = ({ dialog, closeDialog }: Properties) => {
+export const TradingCopilotDialog = ({
+  dialog,
+  closeDialog,
+  tokenData,
+  tokenImage,
+}: Properties) => {
   const ensNameQuery = useCommandQuery({
     command: new GetEnsNameCommand({
       address: dialog.from,
@@ -63,6 +68,8 @@ export const TradingCopilotDialog = ({ dialog, closeDialog }: Properties) => {
       <div className="flex size-full items-center justify-center">
         <div className="relative flex min-h-[300px] w-[400px] flex-col justify-center gap-y-5 rounded-lg border border-black/20 bg-white p-5">
           <TradingCopilotDialogContent
+            tokenData={tokenData}
+            tokenImage={tokenImage}
             dialog={dialog}
             closeDialog={closeDialog}
             userName={ensNameQuery.data ?? dialog.from}
@@ -77,6 +84,8 @@ const TradingCopilotDialogContent = ({
   dialog,
   userName,
   closeDialog,
+  tokenData,
+  tokenImage,
 }: ContentProperties) => {
   const { wallet, isConnectionModalOpened, openConnectionModal } = useWallet();
   const { authToken } = useAuthToken();
@@ -262,7 +271,7 @@ const TradingCopilotDialogContent = ({
               </TradingCopilotTooltip>{' '}
               <span className="flex items-center justify-center gap-x-1">
                 {dialog.tokenIn.symbol}
-                <TokenIcon tokenAddress={dialog.tokenIn.address} />
+                <TokenIcon tokenImage={tokenImage} tokenData={tokenData} />
               </span>
             </span>
           </p>
