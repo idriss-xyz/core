@@ -85,7 +85,7 @@ const NotificationsPopupContent = ({
 
         const tokenAddress = data.tokenIn.address;
 
-        const tokens = tokensList?.tokens ?? [];
+        const tokens = tokensList?.items ?? [];
 
         const tokenData =
           tokens.find((t) => {
@@ -98,7 +98,7 @@ const NotificationsPopupContent = ({
           tokenAddress.toLowerCase() === IDRISS_TOKEN_ADDRESS
             ? 'IdrissToken'
             : ((await tokenIconMutation.mutateAsync({
-                tokeURI: tokenData?.logoURI ?? '',
+                tokeURI: tokenData?.icon_url ?? '',
               })) ?? '');
         selectedTokenImage.current = tokenImage;
 

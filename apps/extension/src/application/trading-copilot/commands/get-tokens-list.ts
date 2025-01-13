@@ -21,7 +21,7 @@ export class GetTokensListCommand extends Command<void, Response> {
   async handle() {
     try {
       const response = await fetch(
-        'https://tokens.coingecko.com/uniswap/all.json',
+        'https://base.blockscout.com/api/v2/tokens',
         {
           headers: {
             'Content-Type': 'application/json',
