@@ -28,9 +28,6 @@ interface ExtensionPopupContextValues {
   hide: () => void;
   open: () => void;
   showNotification: (message: string) => void;
-  handleShowSubscriptionsExceededError: (value: boolean) => void;
-  showSubscriptionsExceededError: boolean;
-  subscriptionsExceededErrorDisplayed: boolean;
 }
 
 const ExtensionPopupContext = createContext<
@@ -39,12 +36,6 @@ const ExtensionPopupContext = createContext<
 
 const InnerExtensionPopupProvider = ({ children }: Properties) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [showSubscriptionsExceededError, setShowSubscriptionsExceededError] =
-    useState(false);
-  const [
-    subscriptionsExceededErrorDisplayed,
-    setSubscriptionsExceededErrorDisplayed,
-  ] = useState(false);
   const notification = useNotification();
 
   const navigate = useNavigate();
@@ -52,13 +43,6 @@ const InnerExtensionPopupProvider = ({ children }: Properties) => {
 
   const showNotification = (message: string) => {
     notification.show(<span>{message}</span>, 'top-right');
-  };
-
-  const handleShowSubscriptionsExceededError = (value: boolean) => {
-    if (value && !subscriptionsExceededErrorDisplayed) {
-      setSubscriptionsExceededErrorDisplayed(true);
-    }
-    setShowSubscriptionsExceededError(value);
   };
 
   const navigateBack = useCallback(() => {
@@ -99,9 +83,6 @@ const InnerExtensionPopupProvider = ({ children }: Properties) => {
   return (
     <ExtensionPopupContext.Provider
       value={{
-        subscriptionsExceededErrorDisplayed,
-        handleShowSubscriptionsExceededError,
-        showSubscriptionsExceededError,
         isVisible,
         currentRoute: location.pathname as PopupRoute,
         navigate,

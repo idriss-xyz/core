@@ -1,10 +1,9 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useWallet } from '@idriss-xyz/wallet-connect';
 
 import { useCommandMutation } from 'shared/messaging';
 import { ErrorMessage } from 'shared/ui';
-import { useExtensionPopup } from 'shared/extension';
 
 import {
   GetEnsAddressCommand,
@@ -23,46 +22,32 @@ export const SubscriptionForm = ({
 }: Properties) => {
   const { wallet } = useWallet();
 
-  const {
-    showSubscriptionsExceededError,
-    handleShowSubscriptionsExceededError,
-    subscriptionsExceededErrorDisplayed,
-  } = useExtensionPopup();
+  const [showError, setShowError] = useState(false);
 
   const form = useForm<FormValues>({
     defaultValues: EMPTY_FORM,
   });
 
   const subscriptionLimit = 10;
-  const isSubscriptionLimitExceeded =
-    subscriptionsAmount !== undefined &&
-    subscriptionsAmount >= subscriptionLimit;
 
   const getEnsAddressMutation = useCommandMutation(GetEnsAddressCommand);
   const getFarcasterAddressMutation = useCommandMutation(
     GetFarcasterAddressCommand,
   );
 
-  // 0x456d9347342B72BCf800bBf117391ac2f807c6bF
-
-  useEffect(() => {
-    if (isSubscriptionLimitExceeded && !subscriptionsExceededErrorDisplayed) {
-      handleShowSubscriptionsExceededError(true);
-    }
-  }, [
-    isSubscriptionLimitExceeded,
-    subscriptionsExceededErrorDisplayed,
-    handleShowSubscriptionsExceededError,
-  ]);
-
   useEffect(() => {
     setTimeout(() => {
-      handleShowSubscriptionsExceededError(false);
+      setShowError(false);
     }, 3500);
-  }, [showSubscriptionsExceededError, handleShowSubscriptionsExceededError]);
+  }, [showError]);
 
   const addSubscriber: SubmitHandler<FormValues> = useCallback(
     async (data) => {
+      if (Number(subscriptionsAmount) >= subscriptionLimit) {
+        form.reset(EMPTY_FORM);
+        setShowError(true);
+        return;
+      }
       const hexPattern = /^0x[\dA-Fa-f]+$/;
       const farcasterPattern = /^[^.]+$/;
       const isWalletAddress = hexPattern.test(data.subscriptionDetails);
@@ -109,6 +94,7 @@ export const SubscriptionForm = ({
       getFarcasterAddressMutation,
       onSubmit,
       wallet,
+      subscriptionsAmount,
     ],
   );
 
@@ -131,12 +117,11 @@ export const SubscriptionForm = ({
               id="subscriptionDetails"
               className="mt-1 block w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-black shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
               placeholder="e.g., vitalik.eth"
-              disabled={isSubscriptionLimitExceeded}
             />
           );
         }}
       />
-      {showSubscriptionsExceededError && (
+      {showError && (
         <ErrorMessage className="mt-1">
           Subscriptions limit exceeded ({subscriptionLimit}).
         </ErrorMessage>
