@@ -123,7 +123,8 @@ export const SubscriptionForm = ({
       />
       {showError && (
         <ErrorMessage className="mt-1">
-          Subscriptions limit exceeded ({subscriptionLimit}).
+          Maximum 10 subscriptions reached. Lock $IDRISS to access premium
+          features (coming soon).
         </ErrorMessage>
       )}
     </form>
