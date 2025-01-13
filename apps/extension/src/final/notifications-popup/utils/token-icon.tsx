@@ -1,7 +1,7 @@
-import {Icon} from '@idriss-xyz/ui/icon';
-import {useEffect, useState} from 'react';
+import { Icon } from '@idriss-xyz/ui/icon';
+import { useEffect, useState } from 'react';
 
-import {useCommandMutation} from 'shared/messaging';
+import { useCommandMutation } from 'shared/messaging';
 import {
   GetTokensImageCommand,
   GetTokensListCommand,
@@ -19,7 +19,7 @@ interface TokenIconProperties {
   tokenAddress: string;
 }
 
-export const TokenIcon: React.FC<TokenIconProperties> = ({tokenAddress}) => {
+export const TokenIcon: React.FC<TokenIconProperties> = ({ tokenAddress }) => {
   const [icon, setIcon] = useState<JSX.Element | null>(null);
   const tokensListMutation = useCommandMutation(GetTokensListCommand);
   const tokenImgMutation = useCommandMutation(GetTokensImageCommand);
@@ -27,7 +27,7 @@ export const TokenIcon: React.FC<TokenIconProperties> = ({tokenAddress}) => {
   useEffect(() => {
     const loadIcon = async () => {
       if (tokenAddress.toLowerCase() === IDRISS_TOKEN_ADDRESS.toLowerCase()) {
-        setIcon(<Icon name="IdrissToken" size={24} className="size-6"/>);
+        setIcon(<Icon name="IdrissToken" size={24} className="size-6" />);
       } else {
         const tokensList = await tokensListMutation.mutateAsync({
           tokenAddress,
@@ -41,7 +41,7 @@ export const TokenIcon: React.FC<TokenIconProperties> = ({tokenAddress}) => {
             tokeURI: tokenData.logoURI,
           });
           setIcon(
-            <img src={tokenImg} alt={tokenData.symbol} className="size-6"/>,
+            <img src={tokenImg} alt={tokenData.symbol} className="size-6" />,
           );
         } else {
           setIcon(null);

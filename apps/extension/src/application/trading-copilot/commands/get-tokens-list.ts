@@ -11,8 +11,8 @@ type Payload = {
 };
 
 type Response = {
-  tokens: Record<string, string>
-}
+  tokens: Record<string, string>;
+};
 
 export class GetTokensListCommand extends Command<Payload, Response> {
   public readonly name = 'GetTokensListCommand' as const;
