@@ -230,9 +230,21 @@ const TradingCopilotDialogContent = ({
             <span className="inline-flex items-center gap-x-1 text-body3 text-neutral-600">
               got{' '}
               <TradingCopilotTooltip
-                content={formatBigNumber(
-                  getWholeNumber(dialog.tokenIn.amount.toString()),
-                )}
+                content={
+                  <>
+                    {formatBigNumber(
+                      getWholeNumber(dialog.tokenIn.amount.toString()),
+                    )}
+                    ~
+                    {wallet && authToken ? (
+                      <TradingCopilotTradeValue
+                        wallet={wallet}
+                        dialog={dialog}
+                        authToken={authToken}
+                      />
+                    ) : null}
+                  </>
+                }
               >
                 <span>
                   {zerosIndex ? (
@@ -252,14 +264,7 @@ const TradingCopilotDialogContent = ({
                 {dialog.tokenIn.symbol}
                 <TokenIcon tokenAddress={dialog.tokenIn.address} />
               </span>
-            </span>{' '}
-            {wallet && authToken ? (
-              <TradingCopilotTradeValue
-                wallet={wallet}
-                dialog={dialog}
-                authToken={authToken}
-              />
-            ) : null}
+            </span>
           </p>
           <p className="text-body6 text-mint-700">
             <TimeDifferenceCounter timestamp={dialog.timestamp} text="ago" />
