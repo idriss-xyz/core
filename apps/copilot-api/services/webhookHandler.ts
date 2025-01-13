@@ -97,7 +97,7 @@ setInterval(async () => {
       delete eventCache[txHash];
     } else {
       // Check if the transaction has been in the cache for more than 2 seconds
-      if (now - timestamp >= 2000) {
+      if (now - timestamp >= 5000) {
         // Incomplete swap, time expired
         // Remove from cache
         delete eventCache[txHash];

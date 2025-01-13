@@ -9,12 +9,6 @@ import {
 
 const IDRISS_TOKEN_ADDRESS = '0x000096630066820566162c94874a776532705231';
 
-interface Token {
-  address: string;
-  symbol: string;
-  logoURI: string;
-}
-
 interface TokenIconProperties {
   tokenAddress: string;
 }
@@ -32,13 +26,13 @@ export const TokenIcon: React.FC<TokenIconProperties> = ({ tokenAddress }) => {
         const tokensList = await tokensListMutation.mutateAsync({
           tokenAddress,
         });
-        const tokenList: Token[] = tokensList?.tokens ?? [];
-        const tokenData = tokenList.find((t: Token) => {
-          return t.address.toLowerCase() === tokenAddress.toLowerCase();
+        const tokenList = tokensList?.tokens ?? [];
+        const tokenData = tokenList.find((t) => {
+          return t?.address?.toLowerCase() === tokenAddress.toLowerCase();
         });
         if (tokenData) {
           const tokenImg = await tokenImgMutation.mutateAsync({
-            tokeURI: tokenData.logoURI,
+            tokeURI: tokenData?.logoURI ?? '',
           });
           setIcon(
             <img src={tokenImg} alt={tokenData.symbol} className="size-6" />,
