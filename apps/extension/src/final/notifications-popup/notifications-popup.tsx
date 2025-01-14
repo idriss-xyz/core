@@ -14,10 +14,10 @@ import {
   SwapData,
 } from 'application/trading-copilot';
 import { GetImageCommand } from 'shared/utils';
+import { CHAIN } from 'shared/web3';
 
 import { TradingCopilotToast, TradingCopilotDialog } from './components';
 import { Properties, ContentProperties } from './notifications-popup.types';
-import { CHAIN } from 'shared/web3';
 
 const IDRISS_TOKEN_ADDRESS = '0x000096630066820566162c94874a776532705231';
 
