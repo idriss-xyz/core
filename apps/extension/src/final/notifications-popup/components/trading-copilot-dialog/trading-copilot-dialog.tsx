@@ -21,7 +21,6 @@ import {
 import { getShortWalletHex, TimeDifferenceCounter } from 'shared/utils';
 import {
   CHAIN,
-  roundToSignificantFigures,
   formatBigNumber,
   getWholeNumber,
   roundToSignificantFiguresForCopilotTrading,
@@ -242,8 +241,8 @@ const TradingCopilotDialogContent = ({
                   <>
                     {formatBigNumber(
                       getWholeNumber(dialog.tokenIn.amount.toString()),
-                    )}
-                    ~
+                    )}{' '}
+                    ~{' '}
                     {wallet ? (
                       <TradingCopilotTradeValue
                         wallet={wallet}
@@ -451,11 +450,5 @@ const TradingCopilotTradeValue = ({ wallet, dialog }: TradeValueProperties) => {
   const tradeValueInWei = BigInt(quoteQuery.data.estimate.toAmount);
   const tradeValueInEth = Number(formatEther(tradeValueInWei));
 
-  return (
-    <TradingCopilotTooltip content={tradeValueInEth}>
-      <span className="text-body6 text-neutral-500">
-        ({roundToSignificantFigures(tradeValueInEth, 2)} ETH)
-      </span>
-    </TradingCopilotTooltip>
-  );
+  return <span>({getWholeNumber(tradeValueInEth.toString())} ETH)</span>;
 };
