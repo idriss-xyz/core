@@ -22,26 +22,18 @@ export const SubscriptionForm = ({
 }: Properties) => {
   const { wallet } = useWallet();
 
+  const [showError, setShowError] = useState(false);
+
   const form = useForm<FormValues>({
     defaultValues: EMPTY_FORM,
   });
+
   const subscriptionLimit = 10;
-  const isSubscriptionLimitExceeded =
-    subscriptionsAmount !== undefined &&
-    subscriptionsAmount >= subscriptionLimit;
 
   const getEnsAddressMutation = useCommandMutation(GetEnsAddressCommand);
   const getFarcasterAddressMutation = useCommandMutation(
     GetFarcasterAddressCommand,
   );
-
-  const [showError, setShowError] = useState(false);
-
-  useEffect(() => {
-    if (isSubscriptionLimitExceeded) {
-      setShowError(true);
-    }
-  }, [isSubscriptionLimitExceeded]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -51,6 +43,11 @@ export const SubscriptionForm = ({
 
   const addSubscriber: SubmitHandler<FormValues> = useCallback(
     async (data) => {
+      if (Number(subscriptionsAmount) >= subscriptionLimit) {
+        form.reset(EMPTY_FORM);
+        setShowError(true);
+        return;
+      }
       const hexPattern = /^0x[\dA-Fa-f]+$/;
       const farcasterPattern = /^[^.]+$/;
       const isWalletAddress = hexPattern.test(data.subscriptionDetails);
@@ -97,6 +94,7 @@ export const SubscriptionForm = ({
       getFarcasterAddressMutation,
       onSubmit,
       wallet,
+      subscriptionsAmount,
     ],
   );
 
@@ -119,14 +117,14 @@ export const SubscriptionForm = ({
               id="subscriptionDetails"
               className="mt-1 block w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-black shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
               placeholder="e.g., vitalik.eth"
-              disabled={isSubscriptionLimitExceeded}
             />
           );
         }}
       />
       {showError && (
         <ErrorMessage className="mt-1">
-          Subscriptions limit exceeded ({subscriptionLimit}).
+          Maximum 10 subscriptions reached. Lock $IDRISS to access premium
+          features (coming soon).
         </ErrorMessage>
       )}
     </form>
