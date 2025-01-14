@@ -450,5 +450,5 @@ const TradingCopilotTradeValue = ({ wallet, dialog }: TradeValueProperties) => {
   const tradeValueInWei = BigInt(quoteQuery.data.estimate.toAmount);
   const tradeValueInEth = Number(formatEther(tradeValueInWei));
 
-  return <span>({getWholeNumber(tradeValueInEth.toString())} ETH)</span>;
+  return <span>{getWholeNumber(tradeValueInEth.toString())} ETH</span>;
 };
