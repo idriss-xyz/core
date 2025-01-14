@@ -45,6 +45,21 @@ router.post('/login', async (req: Request, res: Response) => {
       where: { address: walletAddress },
     });
 
+    if (!existingAddress) {
+      const newUser = await usersRepo.save({});
+      const payload = {
+        user: {
+          id: newUser.uuid,
+        },
+      };
+
+      const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
+        expiresIn: '7d',
+      });
+
+      res.status(200).send({ token });
+      return;
+    }
     const user = await usersRepo.findOne({
       where: { uuid: existingAddress?.userId },
     });
