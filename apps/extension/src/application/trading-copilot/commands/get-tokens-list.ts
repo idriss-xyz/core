@@ -7,7 +7,9 @@ import {
 } from 'shared/messaging';
 
 type Response = {
-  items: Record<string, string>[];
+  tokens: {
+    [chainId: string]: Record<string, string>[]; // TODO: Correctly type record depending on API response
+  }
 };
 
 export class GetTokensListCommand extends Command<void, Response> {
@@ -21,7 +23,7 @@ export class GetTokensListCommand extends Command<void, Response> {
   async handle() {
     try {
       const response = await fetch(
-        'https://base.blockscout.com/api/v2/tokens',
+        'https://li.quest/v1/tokens?chains=bas',
         {
           headers: {
             'Content-Type': 'application/json',
