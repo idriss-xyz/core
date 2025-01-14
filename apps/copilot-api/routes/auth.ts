@@ -101,7 +101,7 @@ router.post('/wallet-address', async (req, res) => {
     const timestamp = new Date();
 
     const message = createSiweMessage({
-      statement: 'Some test message',
+      statement: 'Log in to the IDRISS extension',
       address: walletAddress,
       chainId,
       domain,
