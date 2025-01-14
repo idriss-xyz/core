@@ -7,9 +7,7 @@ import {
 } from 'shared/messaging';
 
 type Response = {
-  tokens: {
-    [chainId: string]: Record<string, string>[]; // TODO: Correctly type record depending on API response
-  }
+  tokens: Record<string, Record<string, string>[]>;
 };
 
 export class GetTokensListCommand extends Command<void, Response> {
@@ -22,14 +20,11 @@ export class GetTokensListCommand extends Command<void, Response> {
 
   async handle() {
     try {
-      const response = await fetch(
-        'https://li.quest/v1/tokens?chains=bas',
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
+      const response = await fetch('https://li.quest/v1/tokens?chains=bas', {
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
+      });
 
       if (!response.ok) {
         const responseText = await response.text();
