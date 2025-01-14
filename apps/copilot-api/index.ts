@@ -12,6 +12,7 @@ import { getSigningKey } from './services/subscriptionManager';
 import { join } from 'path';
 import { mode } from './utils/mode';
 import { createConfig } from '@lifi/sdk';
+import { connectedClients } from './services/scheduler';
 
 dotenv.config(
   mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
@@ -41,8 +42,6 @@ const io = new SocketIOServer(server, {
   },
 });
 
-// Map to store userId to socket mappings
-const connectedClients = new Map<string, Socket>();
 
 // Socket.IO connection handler
 io.on('connection', (socket) => {
@@ -79,7 +78,7 @@ app.post(
     },
   }),
   validateAlchemySignature(getSigningKey),
-  webhookHandler(io, connectedClients),
+  webhookHandler(),
 );
 
 app.use(express.json());
