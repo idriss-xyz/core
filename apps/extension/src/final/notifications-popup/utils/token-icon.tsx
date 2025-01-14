@@ -12,12 +12,15 @@ export const TokenIcon: React.FC<TokenIconProperties> = ({
 }) => {
   const [icon, setIcon] = useState<JSX.Element | null>(null);
 
+  const tokenImageArray = tokenImage.split('/');
+  const isCorrectImage = tokenImageArray[0] === 'data:image';
+
   useEffect(() => {
     const loadIcon = () => {
       if (tokenImage === 'IdrissToken') {
         setIcon(<Icon name="IdrissToken" size={24} className="size-6" />);
       } else {
-        if (tokenData && tokenImage) {
+        if (tokenData && isCorrectImage) {
           setIcon(
             <img src={tokenImage} alt={tokenData.symbol} className="size-6" />,
           );
