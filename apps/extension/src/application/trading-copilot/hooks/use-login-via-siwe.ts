@@ -1,4 +1,6 @@
 import { useCallback } from 'react';
+import { useWallet } from '@idriss-xyz/wallet-connect';
+import { getAddress, hexToNumber } from 'viem';
 
 import { useCommandMutation } from 'shared/messaging';
 import { createWalletClient, Wallet } from 'shared/web3';
@@ -8,6 +10,7 @@ import { GetSiweMessageCommand, VerifySiweSignatureCommand } from '../commands';
 import { SiweMessageRequest, VerifySiweSignatureRequest } from '../types';
 
 export const useLoginViaSiwe = () => {
+  const { setWalletInfo } = useWallet();
   const { getAuthToken, saveAuthToken } = useAuthToken();
   const getSiweMessage = useCommandMutation(GetSiweMessageCommand);
   const verifySiweSignature = useCommandMutation(VerifySiweSignatureCommand);
@@ -27,6 +30,28 @@ export const useLoginViaSiwe = () => {
       ) => {
         return await verifySiweSignature.mutateAsync(payload);
       };
+
+      const provider = wallet.provider;
+      const providerRdns = wallet.providerRdns;
+
+      const accounts = await provider.request({
+        method: 'eth_requestAccounts',
+      });
+
+      const chainId = await provider.request({ method: 'eth_chainId' });
+
+      const loggedInToCurrentWallet = getAddress(accounts[0] ?? '0x').includes(
+        wallet.account,
+      );
+
+      if (!loggedInToCurrentWallet && accounts[0]) {
+        setWalletInfo({
+          account: getAddress(accounts[0]),
+          provider,
+          chainId: hexToNumber(chainId),
+          providerRdns: providerRdns,
+        });
+      }
 
       const walletClient = createWalletClient(wallet);
 
@@ -49,7 +74,7 @@ export const useLoginViaSiwe = () => {
 
       saveAuthToken(verifiedSiweSignature.token);
     },
-    [getSiweMessage, saveAuthToken, verifySiweSignature],
+    [getSiweMessage, saveAuthToken, setWalletInfo, verifySiweSignature],
   );
 
   const loggedIn = getAuthToken;
