@@ -17,7 +17,7 @@ export const TokenIcon: React.FC<TokenIconProperties> = ({
       if (tokenImage === 'IdrissToken') {
         setIcon(<Icon name="IdrissToken" size={24} className="size-6" />);
       } else {
-        if (tokenData) {
+        if (tokenData && tokenImage) {
           setIcon(
             <img src={tokenImage} alt={tokenData.symbol} className="size-6" />,
           );
