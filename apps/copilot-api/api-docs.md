@@ -138,6 +138,34 @@ socket.on('swapEvent', (swapData) => {
 });
 ```
 
+### swapData object
+
+```typescript
+interface swapData {
+  transactionHash: string;
+  from: string;
+  to: string;
+  // Token incoming to the from address
+  tokenIn: {
+    address: string;
+    symbol: string;
+    amount: number;
+    decimals: number;
+    network: number;
+  };
+  // token used for the swap from from address
+  tokenOut: {
+    address: string;
+    symbol: string;
+    amount: number;
+    decimals: number;
+    network: string;
+  };
+  timestamp: string;
+  isComplete: boolean;
+}
+```
+
 ### Swap Event
 
 **Event Name:** `swapEvent`
