@@ -47,7 +47,8 @@ Completes the authentication process using the signed message.
 
 ```json
 {
-  "token": "string" // Valid for 7 days
+  "token": "string"
+  // Valid for 7 days
 }
 ```
 
@@ -79,8 +80,10 @@ Subscribes to updates from a specific wallet address.
 
 ```json
 {
-  "subscriberId": "string", // Subscriber's wallet address
-  "address": "string" // Target wallet address to subscribe to
+  "subscriberId": "string",
+  // Subscriber's wallet address
+  "address": "string"
+  // Target wallet address to subscribe to
 }
 ```
 
@@ -94,8 +97,10 @@ Unsubscribes from updates of a specific wallet address. Uses the same request fo
 
 ```json
 {
-  "subscriberId": "string", // Subscriber's wallet address
-  "address": "string" // Target wallet address to unsubscribe from
+  "subscriberId": "string",
+  // Subscriber's wallet address
+  "address": "string"
+  // Target wallet address to unsubscribe from
 }
 ```
 
@@ -121,6 +126,17 @@ Retrieves a quote for token swap.
 ## WebSocket Events
 
 When a client is connected to the WebSocket, they will receive the following events after successful subscription:
+
+### Example of Connection to websocket
+
+```javascript
+import { io } from 'socket.io-client';
+
+const socket = io(SERVER_URL, { transports: ['websocket'] });
+socket.on('swapEvent', (swapData) => {
+  //do something with swapData from API
+});
+```
 
 ### Swap Event
 
