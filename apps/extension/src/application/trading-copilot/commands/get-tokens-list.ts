@@ -7,7 +7,7 @@ import {
 } from 'shared/messaging';
 
 type Response = {
-  tokens: Record<string, string>[];
+  items: Record<string, string>[];
 };
 
 export class GetTokensListCommand extends Command<void, Response> {
