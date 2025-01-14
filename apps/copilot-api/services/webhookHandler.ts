@@ -2,10 +2,8 @@ import { Request, Response } from 'express';
 import { AlchemyWebhookEvent } from '../interfaces';
 import { handleIncomingEvent } from '../utils/webhookUtils';
 
-
 // Webhook handler function
-export function webhookHandler(
-) {
+export function webhookHandler() {
   return async (req: Request, res: Response): Promise<void> => {
     const webhookEvent = req.body as AlchemyWebhookEvent;
 
@@ -14,6 +12,3 @@ export function webhookHandler(
     res.send('Event received');
   };
 }
-
-
-

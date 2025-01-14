@@ -42,7 +42,6 @@ const io = new SocketIOServer(server, {
   },
 });
 
-
 // Socket.IO connection handler
 io.on('connection', (socket) => {
   console.log('Client connected');
