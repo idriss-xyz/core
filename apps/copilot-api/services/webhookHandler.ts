@@ -81,9 +81,9 @@ setInterval(async () => {
       for (const address of addresses) {
         if (address) {
           const subscriberIds = await getSubscribersByAddress(address);
-          if (BLOCK_LIST.includes(swapData.tokenIn?.symbol as string)) {
-            return;
-          }
+          // if (BLOCK_LIST.includes(swapData.tokenIn?.symbol as string)) {
+          //   return;
+          // }
           for (const subscriberId of subscriberIds) {
             const clientSocket = connectedClients.get(subscriberId);
             if (clientSocket) {
