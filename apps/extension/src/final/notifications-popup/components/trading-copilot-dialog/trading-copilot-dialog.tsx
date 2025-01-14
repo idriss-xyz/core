@@ -140,7 +140,7 @@ const TradingCopilotDialogContent = ({
         className="px-5 pb-9 pt-5"
         heading={
           <>
-            Exchanging{' '}
+            Swapping{' '}
             <span className="text-mint-600">
               <TradingCopilotTooltip
                 content={getWholeNumber(
