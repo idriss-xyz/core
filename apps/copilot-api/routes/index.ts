@@ -4,9 +4,9 @@ import {
   subscribeAddress,
   unsubscribeAddress,
 } from '../services/subscriptionManager';
-import connectedClients from '../index';
 import { verifyToken } from '../middleware/auth.middleware';
 import { getQuote } from '@lifi/sdk';
+import { connectedClients } from '../services/scheduler';
 
 const router = express.Router();
 
