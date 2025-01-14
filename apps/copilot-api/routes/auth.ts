@@ -101,6 +101,7 @@ router.post('/wallet-address', async (req, res) => {
     const timestamp = new Date();
 
     const message = createSiweMessage({
+      statement: 'Log in to the IDRISS extension',
       address: walletAddress,
       chainId,
       domain,
@@ -108,6 +109,7 @@ router.post('/wallet-address', async (req, res) => {
       uri: `https://${domain}`, // TODO: Change for production
       version: '1',
       issuedAt: timestamp,
+      expirationTime: new Date(timestamp.setDate(timestamp.getDate() + 1)),
     });
 
     res.status(200).json({ nonce, message });
