@@ -3,9 +3,8 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { ExternalLink } from '@idriss-xyz/ui/external-link';
 import { useCallback } from 'react';
 import { NavigationMenu } from '@idriss-xyz/ui/navigation-menu';
-import { useWallet } from '@idriss-xyz/wallet-connect';
 
-import { POPUP_ROUTE, useExtensionPopup } from 'shared/extension';
+import { POPUP_ROUTE, useExtensionPopup, useWallet } from 'shared/extension';
 
 export const Navigation = () => {
   const { wallet, openConnectionModal, removeWalletInfo } = useWallet();

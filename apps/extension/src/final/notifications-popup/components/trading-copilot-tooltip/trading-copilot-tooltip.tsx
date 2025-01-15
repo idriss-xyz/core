@@ -18,17 +18,17 @@ export const TradingCopilotTooltip = ({
   };
 
   return (
-    <div
+    <span
       className="relative inline-block"
       onMouseEnter={showModal}
       onMouseLeave={hideModal}
     >
-      <div className="inline-block cursor-default">{children}</div>
-      <div
+      <span className="inline-block cursor-default">{children}</span>
+      <span
         className={`custom-transition absolute left-1/2 z-10 w-max -translate-x-1/2 -translate-y-12 rounded-lg bg-black px-2 py-0.5 text-xs text-white ease-in-out ${isVisible ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'} ${className}`}
       >
         {content}
-      </div>
-    </div>
+      </span>
+    </span>
   );
 };

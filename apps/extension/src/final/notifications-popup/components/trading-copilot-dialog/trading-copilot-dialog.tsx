@@ -3,10 +3,10 @@ import { Controller, useForm } from 'react-hook-form';
 import { Icon as IdrissIcon } from '@idriss-xyz/ui/icon';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { NumericInput } from '@idriss-xyz/ui/numeric-input';
-import { useWallet } from '@idriss-xyz/wallet-connect';
 import { formatEther, isAddress, parseEther } from 'viem';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { useWallet, StoredAuthToken, useAuthToken } from 'shared/extension';
 import { Closable, ErrorMessage, Icon, LazyImage } from 'shared/ui';
 import { useCommandQuery } from 'shared/messaging';
 import {
@@ -26,7 +26,6 @@ import {
   roundToSignificantFiguresForCopilotTrading,
 } from 'shared/web3';
 import { IdrissSend } from 'shared/idriss';
-import { StoredAuthToken, useAuthToken } from 'shared/extension';
 
 import { TokenIcon } from '../../utils';
 import { TradingCopilotTooltip } from '../trading-copilot-tooltip';
@@ -226,7 +225,7 @@ const TradingCopilotDialogContent = ({
           }
         />
         <div className="flex w-full flex-col">
-          <div className="break-all text-label3 text-neutral-900">
+          <p className="break-all text-label3 text-neutral-900">
             {isAddress(userName) ? (
               <TradingCopilotTooltip content={userName}>
                 {getShortWalletHex(userName)}
@@ -271,7 +270,7 @@ const TradingCopilotDialogContent = ({
                 <TokenIcon tokenImage={tokenImage} tokenData={tokenData} />
               </span>
             </span>
-          </div>
+          </p>
           <p className="text-body6 text-mint-700">
             <TimeDifferenceCounter timestamp={dialog.timestamp} text="ago" />
           </p>
@@ -369,7 +368,7 @@ const TradingCopilotWalletBalance = ({ wallet }: WalletBalanceProperties) => {
     roundToSignificantFiguresForCopilotTrading(Number(balanceQuery.data), 2);
 
   return (
-    <div className="text-body6 text-neutral-500">
+    <p className="text-body6 text-neutral-500">
       Balance:{' '}
       <TradingCopilotTooltip content={getWholeNumber(balanceQuery.data)}>
         {zerosIndex ? (
@@ -385,7 +384,7 @@ const TradingCopilotWalletBalance = ({ wallet }: WalletBalanceProperties) => {
         )}
       </TradingCopilotTooltip>{' '}
       ETH
-    </div>
+    </p>
   );
 };
 

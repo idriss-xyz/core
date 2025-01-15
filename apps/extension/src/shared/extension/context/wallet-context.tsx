@@ -12,11 +12,11 @@ import { createStore } from 'mipd';
 import { useModal } from '@ebay/nice-modal-react';
 import { createContextHook } from '@idriss-xyz/ui/utils';
 import { getAddress, hexToNumber } from 'viem';
+import { Hex, Wallet, WalletConnectModal } from '@idriss-xyz/wallet-connect';
 
-import { onWindowMessage } from '../../../apps/extension/src/shared/messaging';
+import { onWindowMessage } from '../../messaging';
 
-import { Hex, Wallet } from './types';
-import { WalletConnectModal } from './modal';
+import { useAuthToken } from './auth-token-context';
 
 type WalletContextValue = {
   wallet?: Wallet;
@@ -49,6 +49,7 @@ export const WalletContextProvider = (properties: {
     properties;
   const [tabChangedListenerInitialized, setTabChangedListenerInitialized] =
     useState(false);
+  const { clearAuthToken } = useAuthToken();
   const [wallet, setWallet] = useState<Wallet>();
   const walletConnectModal = useModal(WalletConnectModal, {
     disabledWalletsRdns: disabledWalletsRdns ?? [],
@@ -57,7 +58,8 @@ export const WalletContextProvider = (properties: {
   const removeWalletInfo = useCallback(() => {
     onClearWallet?.();
     setWallet(undefined);
-  }, [onClearWallet]);
+    clearAuthToken();
+  }, [clearAuthToken, onClearWallet]);
 
   const setWalletInfo = useCallback(
     (wallet: Wallet) => {

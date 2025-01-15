@@ -1,10 +1,9 @@
 import { useCallback } from 'react';
-import { useWallet } from '@idriss-xyz/wallet-connect';
 import { getAddress, hexToNumber } from 'viem';
 
+import { useWallet, useAuthToken } from 'shared/extension';
 import { useCommandMutation } from 'shared/messaging';
 import { createWalletClient, Wallet } from 'shared/web3';
-import { useAuthToken } from 'shared/extension';
 
 import { GetSiweMessageCommand, VerifySiweSignatureCommand } from '../commands';
 import { SiweMessageRequest, VerifySiweSignatureRequest } from '../types';
@@ -44,13 +43,15 @@ export const useLoginViaSiwe = () => {
         wallet.account,
       );
 
-      if (!loggedInToCurrentWallet && accounts[0]) {
+      if (loggedInToCurrentWallet && accounts[0]) {
         setWalletInfo({
           account: getAddress(accounts[0]),
           provider,
           chainId: hexToNumber(chainId),
           providerRdns: providerRdns,
         });
+      } else {
+        return;
       }
 
       const walletClient = createWalletClient(wallet);

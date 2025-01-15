@@ -1,7 +1,6 @@
 import NiceModal from '@ebay/nice-modal-react';
 import { ReactNode, StrictMode } from 'react';
 import { WithPortal } from '@idriss-xyz/ui/providers/with-portal';
-import { WalletContextProvider } from '@idriss-xyz/wallet-connect';
 
 import { SupercastScrapingContextProvider } from 'host/supercast';
 import { WarpcastScrapingContextProvider } from 'host/warpcast';
@@ -23,6 +22,7 @@ import {
   AuthTokenContextProvider,
   ExtensionPopupProvider,
   ExtensionSettingsProvider,
+  WalletContextProvider,
 } from 'shared/extension';
 import { AuthTokenStorage, WalletStorage } from 'shared/web3';
 
