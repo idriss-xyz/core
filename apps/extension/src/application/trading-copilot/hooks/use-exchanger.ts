@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
-import { formatEther, parseEther } from 'viem';
+import { formatEther, getAddress, hexToNumber, parseEther } from 'viem';
+import { useWallet } from '@idriss-xyz/wallet-connect';
 
 import { Wallet, CHAIN, useSwitchChain } from 'shared/web3';
 import { useCommandMutation } from 'shared/messaging';
@@ -21,11 +22,12 @@ interface CallbackProperties {
 }
 
 export const useExchanger = ({ wallet }: Properties) => {
-  const siwe = useLoginViaSiwe();
+  const { setWalletInfo } = useWallet();
   const { getAuthToken } = useAuthToken();
-  const quoteQuery = useCommandMutation(GetQuoteCommand);
-  const copilotTransaction = useCopilotTransaction();
+  const siwe = useLoginViaSiwe();
   const switchChain = useSwitchChain();
+  const copilotTransaction = useCopilotTransaction();
+  const quoteQuery = useCommandMutation(GetQuoteCommand);
 
   const exchange = useCallback(
     async ({ formValues, dialog }: CallbackProperties) => {
@@ -76,6 +78,30 @@ export const useExchanger = ({ wallet }: Properties) => {
         to: quoteData.transactionData.to,
       };
 
+      const provider = wallet.provider;
+      const providerRdns = wallet.providerRdns;
+
+      const accounts = await provider.request({
+        method: 'eth_requestAccounts',
+      });
+
+      const chainId = await provider.request({ method: 'eth_chainId' });
+
+      const loggedInToCurrentWallet = getAddress(accounts[0] ?? '0x').includes(
+        wallet.account,
+      );
+
+      if (loggedInToCurrentWallet && accounts[0]) {
+        setWalletInfo({
+          account: getAddress(accounts[0]),
+          provider,
+          chainId: hexToNumber(chainId),
+          providerRdns: providerRdns,
+        });
+      } else {
+        return;
+      }
+
       await switchChain.mutateAsync({
         chainId: quoteData.transactionData.chainId,
         wallet,
@@ -86,7 +112,15 @@ export const useExchanger = ({ wallet }: Properties) => {
         transactionData,
       });
     },
-    [copilotTransaction, getAuthToken, quoteQuery, siwe, wallet, switchChain],
+    [
+      wallet,
+      siwe,
+      getAuthToken,
+      switchChain,
+      copilotTransaction,
+      quoteQuery,
+      setWalletInfo,
+    ],
   );
 
   const isSending = quoteQuery.isPending || copilotTransaction.isPending;
