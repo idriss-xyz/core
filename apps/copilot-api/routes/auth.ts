@@ -5,13 +5,12 @@ import jwt from 'jsonwebtoken';
 import { throwInternalError } from '../middleware/error.middleware';
 import { isAddress } from 'viem';
 import { dataSource } from '../db';
-import { AddressesEntity } from '../entities/addreesses.entity';
-import { UsersEntity } from '../entities/users.entity';
 import { createSiweMessage, generateSiweNonce } from 'viem/siwe';
 import { publicClient } from '../config/publicClient';
 import { join } from 'path';
 import { mode } from '../utils/mode';
 import { ExpiringMap } from '../utils/nonceMap';
+import { SubscribersEntity } from '../entities/subscribers.entity';
 
 dotenv.config(
   mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
@@ -22,8 +21,7 @@ const expiringMap = new ExpiringMap<string, string>(expiryTime);
 
 const router = express.Router();
 
-const addressesRepo = dataSource.getRepository(AddressesEntity);
-const usersRepo = dataSource.getRepository(UsersEntity);
+const subscribersRepo = dataSource.getRepository(SubscribersEntity);
 
 router.post('/login', async (req: Request, res: Response) => {
   const { signature, walletAddress, message } = req.body;
@@ -47,48 +45,17 @@ router.post('/login', async (req: Request, res: Response) => {
       return;
     }
 
-    const existingAddress = await addressesRepo.findOne({
-      where: { address: walletAddress },
+    const existingAddress = await subscribersRepo.findOne({
+      where: { subscriber_id: walletAddress },
     });
 
     if (!existingAddress) {
-      const newUser = await usersRepo.save({});
-      const payload = {
-        user: {
-          id: newUser.uuid,
-        },
-      };
-
-      const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
-        expiresIn: '7d',
-      });
-
-      res.status(200).send({ token });
-      return;
-    }
-    const user = await usersRepo.findOne({
-      where: { uuid: existingAddress?.userId },
-    });
-
-    if (!user) {
-      const newUser = await usersRepo.save({});
-      const payload = {
-        user: {
-          id: newUser.uuid,
-        },
-      };
-
-      const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
-        expiresIn: '7d',
-      });
-
-      res.status(200).send({ token });
-      return;
+      await subscribersRepo.save({ subscriber_id: walletAddress });
     }
 
     const payload = {
       user: {
-        id: user.uuid,
+        id: walletAddress,
       },
     };
 
@@ -133,9 +100,9 @@ router.post('/verify-token', async (req, res) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!);
 
-    const id: number = (decoded as Request)['user'].id;
+    const subscriber_id: string = (decoded as Request)['user'].id;
 
-    const user = await usersRepo.findOne({ where: { uuid: id } });
+    const user = await subscribersRepo.findOne({ where: { subscriber_id } });
 
     if (!user) {
       res.status(401).json({ error: 'Invalid token' });

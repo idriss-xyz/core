@@ -3,8 +3,8 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { join } from 'path';
 import { dataSource } from '../db';
-import { UsersEntity } from '../entities/users.entity';
 import { mode } from '../utils/mode';
+import { SubscribersEntity } from '../entities/subscribers.entity';
 
 dotenv.config(
   mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
@@ -20,12 +20,12 @@ export const verifyToken = () => {
     }
 
     try {
-      const usersRepo = dataSource.getRepository(UsersEntity);
+      const subscribersRepo = dataSource.getRepository(SubscribersEntity);
       const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
 
-      const id: number = (decoded as Request)['user'].id;
+      const subscriber_id: string = (decoded as Request)['user'].id;
 
-      const user = await usersRepo.findOne({ where: { uuid: id } });
+      const user = await subscribersRepo.findOne({ where: { subscriber_id } });
 
       if (!user) {
         res.status(401).json({ error: 'Invalid token' });
@@ -33,7 +33,7 @@ export const verifyToken = () => {
       }
 
       req.user = {
-        id: user.uuid,
+        id: subscriber_id,
       };
 
       next();
