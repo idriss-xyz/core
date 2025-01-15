@@ -18,11 +18,11 @@ export const TokenIcon: React.FC<TokenIconProperties> = ({
   useEffect(() => {
     const loadIcon = () => {
       if (tokenImage === 'IdrissToken') {
-        setIcon(<Icon name="IdrissToken" size={24} className="size-6" />);
+        setIcon(<Icon name="IdrissToken" size={24} className="size-6 rounded-full" />);
       } else {
         if (tokenData && isCorrectImage) {
           setIcon(
-            <img src={tokenImage} alt={tokenData.symbol} className="size-6" />,
+            <img src={tokenImage} alt={tokenData.symbol} className="size-6 rounded-full" />,
           );
         } else {
           setIcon(null);
