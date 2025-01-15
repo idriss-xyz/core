@@ -116,7 +116,9 @@ router.post('/wallet-address', async (req, res) => {
       uri: `https://${domain}`, // TODO: Change for production
       version: '1',
       issuedAt: timestamp,
-      expirationTime: new Date(timestamp.setTime(timestamp.getTime() + 10 * 60 * 1000)),
+      expirationTime: new Date(
+        timestamp.setTime(timestamp.getTime() + 10 * 60 * 1000),
+      ),
     });
 
     res.status(200).json({ message });
