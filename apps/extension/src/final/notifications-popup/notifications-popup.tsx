@@ -14,6 +14,7 @@ import {
   SwapData,
 } from 'application/trading-copilot';
 import { GetImageCommand } from 'shared/utils';
+import { CHAIN } from 'shared/web3';
 
 import { TradingCopilotToast, TradingCopilotDialog } from './components';
 import { Properties, ContentProperties } from './notifications-popup.types';
@@ -85,7 +86,8 @@ const NotificationsPopupContent = ({
 
         const tokenAddress = data.tokenIn.address;
 
-        const tokens = tokensList?.items ?? [];
+        // Filter token list by chain (Base)
+        const tokens = tokensList?.tokens?.[CHAIN.BASE.id] ?? [];
 
         const tokenData =
           tokens.find((t) => {
@@ -98,7 +100,7 @@ const NotificationsPopupContent = ({
           tokenAddress.toLowerCase() === IDRISS_TOKEN_ADDRESS
             ? 'IdrissToken'
             : ((await tokenIconMutation.mutateAsync({
-                tokeURI: tokenData?.icon_url ?? '',
+                tokeURI: tokenData?.logoURI ?? '',
               })) ?? '');
         selectedTokenImage.current = tokenImage;
 
