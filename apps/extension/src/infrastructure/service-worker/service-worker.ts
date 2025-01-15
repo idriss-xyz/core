@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import {io} from 'socket.io-client';
+import { io } from 'socket.io-client';
 
-import {TWITTER_COMMAND_MAP} from 'host/twitter';
+import { TWITTER_COMMAND_MAP } from 'host/twitter';
 import {
   Command,
   COMMAND_BUS_REQUEST_MESSAGE,
@@ -11,10 +11,10 @@ import {
   SerializedCommand,
   SWAP_EVENT,
 } from 'shared/messaging';
-import {WEB3_COMMAND_MAP} from 'shared/web3';
-import {GITCOIN_DONATION_COMMAND_MAP} from 'application/gitcoin';
-import {POLYMARKET_COMMAND_MAP} from 'application/polymarket';
-import {SNAPSHOT_COMMAND_MAP} from 'application/snapshot';
+import { WEB3_COMMAND_MAP } from 'shared/web3';
+import { GITCOIN_DONATION_COMMAND_MAP } from 'application/gitcoin';
+import { POLYMARKET_COMMAND_MAP } from 'application/polymarket';
+import { SNAPSHOT_COMMAND_MAP } from 'application/snapshot';
 import {
   DEFAULT_EXTENSION_SETTINGS,
   EXTENSION_BUTTON_CLICKED,
@@ -26,19 +26,19 @@ import {
   OBESRVABILITY_COMMAND_MAP,
   ObservabilityScope,
 } from 'shared/observability';
-import {UTILS_COMMAND_MAP} from 'shared/utils';
-import {AGORA_COMMAND_MAP} from 'application/agora';
-import {IDRISS_COMMAND_MAP} from 'shared/idriss';
-import {IDRISS_SEND_COMMAND_MAP} from 'application/idriss-send';
-import {TALLY_COMMAND_MAP} from 'application/tally';
-import {FARCASTER_COMMAND_MAP} from 'shared/farcaster';
+import { UTILS_COMMAND_MAP } from 'shared/utils';
+import { AGORA_COMMAND_MAP } from 'application/agora';
+import { IDRISS_COMMAND_MAP } from 'shared/idriss';
+import { IDRISS_SEND_COMMAND_MAP } from 'application/idriss-send';
+import { TALLY_COMMAND_MAP } from 'application/tally';
+import { FARCASTER_COMMAND_MAP } from 'shared/farcaster';
 import {
   TRADING_COPILOT_COMMAND_MAP,
   SwapData,
 } from 'application/trading-copilot';
 
-import {SbtResolver} from '../../common/resolvers/SbtResolver';
-import {AddressResolver} from '../../common/resolvers/AddressResolver';
+import { SbtResolver } from '../../common/resolvers/SbtResolver';
+import { AddressResolver } from '../../common/resolvers/AddressResolver';
 
 const COMMAND_MAP = {
   ...WEB3_COMMAND_MAP,
@@ -67,7 +67,7 @@ export class ServiceWorker {
   private socket: ReturnType<typeof io>;
 
   private constructor(private environment: typeof chrome) {
-    this.socket = io(SERVER_URL, {transports: ['websocket']});
+    this.socket = io(SERVER_URL, { transports: ['websocket'] });
     console.log('%c[WebSocket] Creating socket connection', 'color: #FF9900;');
     void this.initializeSocketEvents();
   }
@@ -134,10 +134,10 @@ export class ServiceWorker {
 
     const soundFile = this.environment.runtime.getURL('audio/notification.mp3');
 
-    const swapDataWithSoundFile = {...swapData, soundFile};
+    const swapDataWithSoundFile = { ...swapData, soundFile };
 
     this.environment.tabs.query(
-      {active: true, currentWindow: true},
+      { active: true, currentWindow: true },
       async (tabs) => {
         const activeTab = tabs[0];
 
@@ -217,7 +217,7 @@ export class ServiceWorker {
       const soundFile = this.environment.runtime.getURL(
         'audio/notification.mp3',
       );
-      const notificationWithSoundFile = {...notification, soundFile};
+      const notificationWithSoundFile = { ...notification, soundFile };
 
       return this.environment.tabs.sendMessage(tab.id!, {
         type: SWAP_EVENT,
@@ -286,7 +286,7 @@ export class ServiceWorker {
   private queryActiveTabs(): Promise<chrome.tabs.Tab[]> {
     return new Promise((resolve) => {
       this.environment.tabs.query(
-        {active: true, currentWindow: true},
+        { active: true, currentWindow: true },
         resolve,
       );
     });
@@ -461,7 +461,7 @@ export class ServiceWorker {
           if (ServiceWorker.isValidTab(tab)) {
             this.environment.scripting.executeScript(
               {
-                target: {tabId: tab.id},
+                target: { tabId: tab.id },
                 func: () => {
                   return !!document.querySelector('#idriss-extension-script');
                 },
@@ -470,7 +470,7 @@ export class ServiceWorker {
                 const [result] = results || [];
                 if (!result?.result) {
                   await this.environment.scripting.executeScript({
-                    target: {tabId: tab.id},
+                    target: { tabId: tab.id },
                     files: ['content-script.js'],
                   });
                 }
@@ -492,7 +492,7 @@ export class ServiceWorker {
   watchPopupClick() {
     this.environment.action.onClicked.addListener(() => {
       this.environment.tabs.query(
-        {active: true, currentWindow: true},
+        { active: true, currentWindow: true },
         (tabs) => {
           const activeTab = tabs[0];
 
@@ -535,12 +535,12 @@ export class ServiceWorker {
   ): tab is chrome.tabs.Tab & { id: number } => {
     return Boolean(
       tab?.id &&
-      tab.url &&
-      tab.url?.length > 0 &&
-      !tab.url?.startsWith('edge') &&
-      !tab.url?.startsWith('chrome') &&
-      !tab.url?.startsWith('edge') &&
-      !tab.url?.startsWith('about'),
+        tab.url &&
+        tab.url?.length > 0 &&
+        !tab.url?.startsWith('edge') &&
+        !tab.url?.startsWith('chrome') &&
+        !tab.url?.startsWith('edge') &&
+        !tab.url?.startsWith('about'),
     );
   };
 }
