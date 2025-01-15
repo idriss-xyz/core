@@ -1,12 +1,12 @@
 import express from 'express';
-import { throwInternalError } from '../middleware/error.middleware';
+import {throwInternalError} from '../middleware/error.middleware';
 import {
   subscribeAddress,
   unsubscribeAddress,
 } from '../services/subscriptionManager';
-import { verifyToken } from '../middleware/auth.middleware';
-import { getQuote } from '@lifi/sdk';
-import { connectedClients } from '../services/scheduler';
+import {verifyToken} from '../middleware/auth.middleware';
+import {getQuote} from '@lifi/sdk';
+import {connectedClients} from '../services/scheduler';
 
 const router = express.Router();
 
@@ -15,31 +15,33 @@ router.get('/', (_, res) => {
 });
 
 router.post('/subscribe', verifyToken(), async (req, res) => {
-  const { subscriberId, fid, address } = req.body;
+  const {fid, address} = req.body;
 
-  const { id: user_id } = req.user;
+  const {id: subscriberId} = req.user;
 
-  if (!subscriberId || !address) {
-    res.status(400).json({ error: 'subscriberId and address are required' });
+  if (!address) {
+    res.status(400).json({error: 'subscriberId and address are required'});
     return;
   }
 
   try {
-    await subscribeAddress(subscriberId, address, user_id, fid);
+    await subscribeAddress(subscriberId, address, fid);
 
     res
       .status(200)
-      .json({ message: `Subscribed ${subscriberId} to ${address}` });
+      .json({message: `Subscribed ${subscriberId} to ${address}`});
   } catch (err) {
     throwInternalError(res, 'Error subscribing address', err);
   }
 });
 
 router.post('/unsubscribe', verifyToken(), async (req, res) => {
-  const { subscriberId, address } = req.body;
+  const {address} = req.body;
 
-  if (!subscriberId || !address) {
-    res.status(400).json({ error: 'subscriberId and address are required' });
+  const {id: subscriberId} = req.user;
+
+  if (!address) {
+    res.status(400).json({error: 'subscriberId and address are required'});
     return;
   }
 
@@ -48,14 +50,14 @@ router.post('/unsubscribe', verifyToken(), async (req, res) => {
 
     res
       .status(200)
-      .json({ message: `Unsubscribed ${subscriberId} to ${address}` });
+      .json({message: `Unsubscribed ${subscriberId} to ${address}`});
   } catch (err) {
     throwInternalError(res, 'Error unsubscribing address', err);
   }
 });
 
 router.get('/test-swap/:subscriberId', async (req, res) => {
-  const { subscriberId } = req.params || {};
+  const {subscriberId} = req.params || {};
 
   const swapData = {
     transactionHash:
@@ -82,7 +84,7 @@ router.get('/test-swap/:subscriberId', async (req, res) => {
 
   // Validate swapData here if necessary
   if (!swapData || !swapData.isComplete) {
-    res.status(400).json({ error: 'Invalid swap data' });
+    res.status(400).json({error: 'Invalid swap data'});
     return;
   }
 
@@ -92,7 +94,7 @@ router.get('/test-swap/:subscriberId', async (req, res) => {
       clientSocket.emit('swapEvent', swapData);
     }
 
-    res.status(200).json({ message: `Swap event sent to ${subscriberId}` });
+    res.status(200).json({message: `Swap event sent to ${subscriberId}`});
   } catch (err) {
     throwInternalError(res, 'Error sending swap event', err);
   }
@@ -144,7 +146,7 @@ router.post('/get-quote', verifyToken(), async (req, res) => {
     res.status(200).json(quoteResult);
   } catch (err) {
     console.error('Error getting quote: ' + err);
-    res.status(429).json({ error: 'You reach Lifi limit' });
+    res.status(429).json({error: 'You reach Lifi limit'});
   }
 });
 export default router;

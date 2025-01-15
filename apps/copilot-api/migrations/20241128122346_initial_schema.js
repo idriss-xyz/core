@@ -2,9 +2,6 @@
 
 exports.up = function (knex) {
   return knex.schema
-    .createTable('users', function (table) {
-      table.uuid('uuid').primary();
-    })
     .createTable('webhooks', function (table) {
       table.uuid('internal_id').primary();
       table.text('webhook_id').notNullable();
