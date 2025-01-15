@@ -3,10 +3,10 @@ import { Controller, useForm } from 'react-hook-form';
 import { Icon as IdrissIcon } from '@idriss-xyz/ui/icon';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { NumericInput } from '@idriss-xyz/ui/numeric-input';
-import { useWallet } from '@idriss-xyz/wallet-connect';
 import { formatEther, isAddress, parseEther } from 'viem';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { useWallet, StoredAuthToken, useAuthToken } from 'shared/extension';
 import { Closable, ErrorMessage, Icon, LazyImage } from 'shared/ui';
 import { useCommandQuery } from 'shared/messaging';
 import {
@@ -26,7 +26,6 @@ import {
   roundToSignificantFiguresForCopilotTrading,
 } from 'shared/web3';
 import { IdrissSend } from 'shared/idriss';
-import { StoredAuthToken, useAuthToken } from 'shared/extension';
 
 import { TokenIcon } from '../../utils';
 import { TradingCopilotTooltip } from '../trading-copilot-tooltip';

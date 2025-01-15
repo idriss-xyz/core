@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { useWallet } from '@idriss-xyz/wallet-connect';
 
+import { useWallet } from 'shared/extension';
 import { useCommandMutation } from 'shared/messaging';
 import { ErrorMessage } from 'shared/ui';
 
