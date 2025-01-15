@@ -148,11 +148,15 @@ export const WalletContextProvider = (properties: {
 
   useEffect(() => {
     wallet?.provider.on('accountsChanged', (accounts) => {
-      const loggedInToCurrentWallet = getAddress(accounts[0] ?? '0x').includes(
-        wallet.account,
-      );
+      if (accounts[0]) {
+        const loggedInToCurrentWallet = getAddress(accounts[0]).includes(
+          wallet.account,
+        );
 
-      if (!loggedInToCurrentWallet) {
+        if (!loggedInToCurrentWallet) {
+          removeWalletInfo();
+        }
+      } else {
         removeWalletInfo();
       }
     });
