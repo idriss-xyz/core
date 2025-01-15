@@ -225,7 +225,7 @@ const TradingCopilotDialogContent = ({
           }
         />
         <div className="flex w-full flex-col">
-          <div className="break-all text-label3 text-neutral-900">
+          <p className="break-all text-label3 text-neutral-900">
             {isAddress(userName) ? (
               <TradingCopilotTooltip content={userName}>
                 {getShortWalletHex(userName)}
@@ -270,7 +270,7 @@ const TradingCopilotDialogContent = ({
                 <TokenIcon tokenImage={tokenImage} tokenData={tokenData} />
               </span>
             </span>
-          </div>
+          </p>
           <p className="text-body6 text-mint-700">
             <TimeDifferenceCounter timestamp={dialog.timestamp} text="ago" />
           </p>
@@ -368,7 +368,7 @@ const TradingCopilotWalletBalance = ({ wallet }: WalletBalanceProperties) => {
     roundToSignificantFiguresForCopilotTrading(Number(balanceQuery.data), 2);
 
   return (
-    <div className="text-body6 text-neutral-500">
+    <p className="text-body6 text-neutral-500">
       Balance:{' '}
       <TradingCopilotTooltip content={getWholeNumber(balanceQuery.data)}>
         {zerosIndex ? (
@@ -384,7 +384,7 @@ const TradingCopilotWalletBalance = ({ wallet }: WalletBalanceProperties) => {
         )}
       </TradingCopilotTooltip>{' '}
       ETH
-    </div>
+    </p>
   );
 };
 
