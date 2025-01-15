@@ -2,8 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { ExternalLink } from '@idriss-xyz/ui/external-link';
 import { Icon as IdrissIcon } from '@idriss-xyz/ui/icon';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
-import { useWallet } from '@idriss-xyz/wallet-connect';
 
+import { useWallet } from 'shared/extension';
 import { useCommandQuery } from 'shared/messaging';
 import { Icon, LazyImage, getGithubUserLink } from 'shared/ui';
 import { getTwitterUserLink } from 'host/twitter';

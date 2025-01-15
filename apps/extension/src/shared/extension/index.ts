@@ -15,6 +15,8 @@ export {
   useExtensionSettings,
   ExtensionPopupProvider,
   useExtensionPopup,
+  WalletContextProvider,
+  useWallet,
 } from './context';
 export {
   COMMAND_MAP as EXTENSION_COMMAND_MAP,

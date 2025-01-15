@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Icon } from '@idriss-xyz/ui/icon';
-import { useWallet } from '@idriss-xyz/wallet-connect';
 
 import { useCommandMutation, useCommandQuery } from 'shared/messaging';
 import { Button, classes, PortalWithTailwind, usePooling } from 'shared/ui';
@@ -12,7 +11,7 @@ import {
   useLoginViaSiwe,
 } from 'application/trading-copilot';
 import { Hex, Wallet } from 'shared/web3';
-import { useAuthToken } from 'shared/extension';
+import { useAuthToken, useWallet } from 'shared/extension';
 
 import { useUserWidgets, useLocationInfo } from '../hooks';
 import { TradingCopilotTooltip } from '../notifications-popup/components/trading-copilot-tooltip';

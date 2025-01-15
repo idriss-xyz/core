@@ -1,7 +1,7 @@
-import { useWallet } from '@idriss-xyz/wallet-connect';
 import { Button } from '@idriss-xyz/ui/button';
 import { useEffect } from 'react';
 
+import { useWallet, useAuthToken } from 'shared/extension';
 import {
   onWindowMessage,
   TAB_CHANGED,
@@ -9,7 +9,6 @@ import {
   useCommandQuery,
 } from 'shared/messaging';
 import { Empty } from 'shared/ui';
-import { useAuthToken } from 'shared/extension';
 
 import { useLoginViaSiwe } from '../hooks';
 import {

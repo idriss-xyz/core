@@ -1,10 +1,9 @@
 import { useCallback } from 'react';
 import { formatEther, getAddress, hexToNumber, parseEther } from 'viem';
-import { useWallet } from '@idriss-xyz/wallet-connect';
 
+import { useWallet, useAuthToken } from 'shared/extension';
 import { Wallet, CHAIN, useSwitchChain } from 'shared/web3';
 import { useCommandMutation } from 'shared/messaging';
-import { useAuthToken } from 'shared/extension';
 
 import { useLoginViaSiwe } from '../hooks/use-login-via-siwe';
 import { SwapData, FormValues, QuotePayload } from '../types';
