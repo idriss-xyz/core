@@ -18,13 +18,13 @@ export const SelectOption = forwardRef(
       <div
         ref={reference}
         className={classes(
-          'flex w-full cursor-pointer items-center space-x-2 px-3 py-2 text-left',
+          'flex w-full cursor-pointer items-center space-x-3 py-2 ps-3 text-left',
           'hover:bg-black/10 focus:bg-black/50',
           className,
           selected ? 'rounded-xl border border-neutral-200' : '',
         )}
       >
-        <div className={classes('relative mr-1 pr-2', selectedClassName)}>
+        <div className={classes('relative pr-3', selectedClassName)}>
           {option.prefix}
         </div>
         <div className="flex-1 whitespace-nowrap text-neutralGreen-900">
