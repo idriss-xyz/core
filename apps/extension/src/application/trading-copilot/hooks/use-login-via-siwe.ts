@@ -44,13 +44,15 @@ export const useLoginViaSiwe = () => {
         wallet.account,
       );
 
-      if (!loggedInToCurrentWallet && accounts[0]) {
+      if (loggedInToCurrentWallet && accounts[0]) {
         setWalletInfo({
           account: getAddress(accounts[0]),
           provider,
           chainId: hexToNumber(chainId),
           providerRdns: providerRdns,
         });
+      } else {
+        return;
       }
 
       const walletClient = createWalletClient(wallet);
