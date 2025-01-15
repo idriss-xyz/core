@@ -11,10 +11,14 @@ import { createSiweMessage, generateSiweNonce } from 'viem/siwe';
 import { publicClient } from '../config/publicClient';
 import { join } from 'path';
 import { mode } from '../utils/mode';
+import { ExpiringMap } from '../utils/nonceMap';
 
 dotenv.config(
   mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
 );
+
+const expiryTime = 5 * 60 * 1000;
+const expiringMap = new ExpiringMap<string, string>(expiryTime);
 
 const router = express.Router();
 
@@ -30,8 +34,10 @@ router.post('/login', async (req: Request, res: Response) => {
   }
 
   try {
+    const currentNonce = expiringMap.get(walletAddress);
     const valid = await publicClient.verifySiweMessage({
       address: walletAddress,
+      nonce: currentNonce,
       message,
       signature,
     });
@@ -98,6 +104,7 @@ router.post('/wallet-address', async (req, res) => {
   try {
     const { walletAddress, chainId, domain } = req.body;
     const nonce = generateSiweNonce();
+    expiringMap.set(walletAddress, nonce);
     const timestamp = new Date();
 
     const message = createSiweMessage({
@@ -112,7 +119,7 @@ router.post('/wallet-address', async (req, res) => {
       expirationTime: new Date(timestamp.setDate(timestamp.getDate() + 1)),
     });
 
-    res.status(200).json({ nonce, message });
+    res.status(200).json({ message });
   } catch (err) {
     throwInternalError(res, 'Error generating login message: ', err);
   }
