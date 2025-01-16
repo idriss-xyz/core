@@ -59,8 +59,8 @@ export const SubscriptionsManagement = ({
       <div className="self-stretch text-center opacity-70">
         <span
           className={classes(
-            'text-body5 text-neutralGreen-900',
-            'md:text-body5',
+            'text-body6 text-neutralGreen-900',
+            'md:text-body6',
           )}
         >
           Only trade on sites you trust.{' '}
@@ -70,13 +70,13 @@ export const SubscriptionsManagement = ({
           href="https://support.metamask.io/more-web3/dapps/user-guide-dapps/"
           isExternal
           className={classes(
-            'border-none text-body5',
-            'md:text-body5',
+            'border-none text-body6',
+            'md:text-body6',
             //lg here is intentional to override the Link variant style
-            'lg:text-body5',
+            'lg:text-body6',
           )}
         >
-          Learn{'\u00A0'}more.
+          Learn{'\u00A0'}more
         </Link>
       </div>
     </>

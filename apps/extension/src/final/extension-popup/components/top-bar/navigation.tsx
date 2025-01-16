@@ -67,7 +67,7 @@ export const Navigation = () => {
               size={20}
             />
             <span className="text-body4 text-neutral-900 group-hover:text-mint-600">
-              Terms and conditions
+              Terms of Service
             </span>
           </ExternalLink>
         </NavigationMenu.Link>

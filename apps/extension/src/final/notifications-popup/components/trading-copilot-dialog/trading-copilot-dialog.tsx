@@ -66,7 +66,7 @@ export const TradingCopilotDialog = ({
       hideCloseButton
     >
       <div className="flex size-full items-center justify-center">
-        <div className="relative flex min-h-[300px] w-[400px] flex-col justify-center gap-y-5 rounded-lg border border-black/20 bg-white p-5">
+        <div className="relative flex min-h-[300px] w-[400px] flex-col justify-center gap-y-3 rounded-lg border border-black/20 bg-white p-5">
           <TradingCopilotDialogContent
             tokenData={tokenData}
             tokenImage={tokenImage}
@@ -77,8 +77,8 @@ export const TradingCopilotDialog = ({
           <div className="self-stretch text-center opacity-70">
             <span
               className={classes(
-                'text-body5 text-neutralGreen-900',
-                'md:text-body5',
+                'text-body6 text-neutralGreen-900',
+                'md:text-body6',
               )}
             >
               Only trade on sites you trust.{' '}
@@ -88,13 +88,13 @@ export const TradingCopilotDialog = ({
               href="https://support.metamask.io/more-web3/dapps/user-guide-dapps/"
               isExternal
               className={classes(
-                'border-none text-body5',
-                'md:text-body5',
+                'border-none text-body6',
+                'md:text-body6',
                 //lg here is intentional to override the Link variant style
-                'lg:text-body5',
+                'lg:text-body6',
               )}
             >
-              Learn{'\u00A0'}more.
+              Learn{'\u00A0'}more
             </Link>
           </div>
         </div>
@@ -239,7 +239,7 @@ const TradingCopilotDialogContent = ({
           onClick={closeDialog}
         />
       </div>
-      <div className="grid grid-cols-[48px,1fr] gap-2">
+      <div className="grid grid-cols-[48px,1fr] gap-2 py-2">
         <LazyImage
           src={avatarQuery.data}
           className="size-12 rounded-full border border-neutral-400 bg-neutral-200"
@@ -343,7 +343,7 @@ const TradingCopilotDialogContent = ({
               <Button
                 intent="primary"
                 size="medium"
-                className="w-full"
+                className="mt-2 w-full"
                 type="submit"
                 loading={siwe.isSending || exchanger.isSending}
                 disabled={
