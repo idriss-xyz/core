@@ -56,7 +56,7 @@ export const SubscriptionsManagement = ({
           </Button>
         </>
       )}
-      <div className="self-stretch text-center opacity-70">
+      <div className="mt-auto self-stretch text-center opacity-70">
         <span
           className={classes(
             'text-body6 text-neutralGreen-900',
