@@ -1,7 +1,5 @@
 import { Button } from '@idriss-xyz/ui/button';
 import { useEffect } from 'react';
-import { classes } from '@idriss-xyz/ui/utils';
-import { Link } from '@idriss-xyz/ui/link';
 
 import { useWallet, useAuthToken } from 'shared/extension';
 import {
@@ -31,54 +29,24 @@ export const SubscriptionsManagement = ({
 }: Properties) => {
   const { wallet, isConnectionModalOpened, openConnectionModal } = useWallet();
 
-  return (
+  return wallet ? (
+    <SubscriptionsManagementContent
+      wallet={wallet}
+      subscriberId={wallet.account}
+      isTabChangedListenerAdded={isTabChangedListenerAdded}
+    />
+  ) : (
     <>
-      {wallet ? (
-        <SubscriptionsManagementContent
-          wallet={wallet}
-          subscriberId={wallet.account}
-          isTabChangedListenerAdded={isTabChangedListenerAdded}
-        />
-      ) : (
-        <>
-          <Empty
-            text="Log in to see your subscriptions list"
-            className="mt-10"
-          />
-          <Button
-            intent="primary"
-            size="medium"
-            onClick={openConnectionModal}
-            className="mx-auto mt-10"
-            loading={isConnectionModalOpened}
-          >
-            LOG IN
-          </Button>
-        </>
-      )}
-      <div className="self-stretch text-center opacity-70">
-        <span
-          className={classes(
-            'text-body5 text-neutralGreen-900',
-            'md:text-body5',
-          )}
-        >
-          Only trade on sites you trust.{' '}
-        </span>
-        <Link
-          size="medium"
-          href="https://support.metamask.io/more-web3/dapps/user-guide-dapps/"
-          isExternal
-          className={classes(
-            'border-none text-body5',
-            'md:text-body5',
-            //lg here is intentional to override the Link variant style
-            'lg:text-body5',
-          )}
-        >
-          Learn{'\u00A0'}more.
-        </Link>
-      </div>
+      <Empty text="Log in to see your subscriptions list" className="mt-10" />
+      <Button
+        intent="primary"
+        size="medium"
+        onClick={openConnectionModal}
+        className="mx-auto mt-10"
+        loading={isConnectionModalOpened}
+      >
+        LOG IN
+      </Button>
     </>
   );
 };
