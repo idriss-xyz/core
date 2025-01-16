@@ -12,6 +12,7 @@ import { GetSiweMessageCommand } from './get-siwe-message';
 import { VerifySiweSignatureCommand } from './verify-siwe-signature';
 import { GetTokensListCommand } from './get-tokens-list';
 import { GetTokensImageCommand } from './get-tokens-image';
+import { VerifyTokenCommand } from './verify-token';
 
 export const COMMAND_MAP = {
   [AddTradingCopilotSubscriptionCommand.name]:
@@ -31,6 +32,7 @@ export const COMMAND_MAP = {
   [VerifySiweSignatureCommand.name]: VerifySiweSignatureCommand,
   [GetTokensListCommand.name]: GetTokensListCommand,
   [GetTokensImageCommand.name]: GetTokensImageCommand,
+  [VerifyTokenCommand.name]: VerifyTokenCommand,
 };
 
 export { AddTradingCopilotSubscriptionCommand } from './add-trading-copilot-subscription';
@@ -47,3 +49,4 @@ export { GetEnsBalanceCommand } from './get-ens-balance';
 export { GetQuoteCommand } from './get-quote';
 export { GetTokensListCommand } from './get-tokens-list';
 export { GetTokensImageCommand } from './get-tokens-image';
+export { VerifyTokenCommand } from './verify-token';
