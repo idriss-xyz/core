@@ -1,11 +1,15 @@
 import { useCallback } from 'react';
 import { getAddress, hexToNumber } from 'viem';
 
-import { useWallet, useAuthToken } from 'shared/extension';
+import { useAuthToken, useWallet } from 'shared/extension';
 import { useCommandMutation } from 'shared/messaging';
 import { createWalletClient, Wallet } from 'shared/web3';
 
-import { GetSiweMessageCommand, VerifySiweSignatureCommand } from '../commands';
+import {
+  GetSiweMessageCommand,
+  VerifySiweSignatureCommand,
+  VerifyTokenCommand,
+} from '../commands';
 import { SiweMessageRequest, VerifySiweSignatureRequest } from '../types';
 
 export const useLoginViaSiwe = () => {
@@ -13,6 +17,7 @@ export const useLoginViaSiwe = () => {
   const { getAuthToken, saveAuthToken } = useAuthToken();
   const getSiweMessage = useCommandMutation(GetSiweMessageCommand);
   const verifySiweSignature = useCommandMutation(VerifySiweSignatureCommand);
+  const verifyAuthTokenMutation = useCommandMutation(VerifyTokenCommand);
 
   const login = useCallback(
     async (wallet: Wallet) => {
@@ -78,7 +83,17 @@ export const useLoginViaSiwe = () => {
     [getSiweMessage, saveAuthToken, setWalletInfo, verifySiweSignature],
   );
 
-  const loggedIn = getAuthToken;
+  const loggedIn = useCallback(async () => {
+    const authToken = await getAuthToken();
+
+    if (!authToken) {
+      return false;
+    }
+
+    return await verifyAuthTokenMutation.mutateAsync({
+      token: authToken,
+    });
+  }, [getAuthToken, verifyAuthTokenMutation]);
 
   const isSending = getSiweMessage.isPending || verifySiweSignature.isPending;
 

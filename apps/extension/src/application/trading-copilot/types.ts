@@ -227,3 +227,7 @@ export type VerifySiweSignatureRequest = {
 export type VerifySiweSignatureResponse = {
   token: string;
 };
+
+export type VerifyAuthTokenPayload = {
+  token: string;
+};
