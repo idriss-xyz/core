@@ -130,6 +130,18 @@ const nextConfig: NextConfig = {
         basePath: false,
         permanent: false,
       },
+      {
+        source: '/tokenomics',
+        destination: 'https://docs.idriss.xyz/idriss-token',
+        basePath: false,
+        permanent: false,
+      },
+      {
+        source: '/sale-faq',
+        destination: 'https://docs.idriss.xyz/idriss-token/token-sale#faq',
+        basePath: false,
+        permanent: false,
+      },
       ...LEGACY_URLS.map((url) => {
         return {
           source: url,
