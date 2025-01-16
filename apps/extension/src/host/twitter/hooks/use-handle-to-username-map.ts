@@ -15,7 +15,7 @@ export const useHandleToUsernameMap = ({
     select: (handles) => {
       return handles[application.toLowerCase()] ?? {};
     },
-    retryDelay: 60000,
+    retryDelay: 60_000,
     staleTime: Number.POSITIVE_INFINITY,
     enabled,
   });
