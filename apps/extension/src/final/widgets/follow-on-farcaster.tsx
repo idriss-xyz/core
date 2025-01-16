@@ -10,6 +10,7 @@ import { useEventsLogger } from 'shared/observability';
 import { createLookup } from 'shared/utils';
 
 import { useLocationInfo } from '../hooks';
+import { TradingCopilotTooltip } from '../notifications-popup/components/trading-copilot-tooltip';
 
 const EVENT = createLookup(['FOLLOW_ON_FC_CLICKED']);
 
@@ -112,18 +113,24 @@ export const FollowOnFarcaster = () => {
   // some weird styles in the button are there to replicate buttons from Twitter which have weird styling method themself (like margin-bottom for centering)
   return (
     <PortalWithTailwind container={portal}>
-      <FarcasterButton
-        className={classes('mb-3 mr-2 flex cursor-pointer rounded-full p-1.5')}
-        onClick={goToUserPage}
-        title="Follow on Farcaster"
+      <TradingCopilotTooltip
+        className="-translate-y-6"
+        content="Follow on Farcaster"
       >
-        <img
-          src={FARCASTER_LOGO}
-          alt=""
-          width={iconHeight}
-          height={iconHeight}
-        />
-      </FarcasterButton>
+        <FarcasterButton
+          className={classes(
+            'mb-3 mr-2 flex cursor-pointer rounded-full p-1.5',
+          )}
+          onClick={goToUserPage}
+        >
+          <img
+            src={FARCASTER_LOGO}
+            alt=""
+            width={iconHeight}
+            height={iconHeight}
+          />
+        </FarcasterButton>
+      </TradingCopilotTooltip>
     </PortalWithTailwind>
   );
 };
