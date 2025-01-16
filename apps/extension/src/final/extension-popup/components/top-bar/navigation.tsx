@@ -1,4 +1,7 @@
-import { SOCIAL_LINK } from '@idriss-xyz/constants';
+import {
+  SOCIAL_LINK,
+  TOKEN_TERMS_AND_CONDITIONS_LINK,
+} from '@idriss-xyz/constants';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { ExternalLink } from '@idriss-xyz/ui/external-link';
 import { useCallback } from 'react';
@@ -47,6 +50,24 @@ export const Navigation = () => {
             />
             <span className="text-body4 text-neutral-900 group-hover:text-mint-600">
               Support
+            </span>
+          </ExternalLink>
+        </NavigationMenu.Link>
+      </li>
+
+      <li>
+        <NavigationMenu.Link asChild>
+          <ExternalLink
+            href={TOKEN_TERMS_AND_CONDITIONS_LINK}
+            className="group flex w-full items-center space-x-3 px-3 pb-3 pt-1.5"
+          >
+            <Icon
+              className="text-neutral-600 group-hover:text-mint-600"
+              name="FileCheck"
+              size={20}
+            />
+            <span className="text-body4 text-neutral-900 group-hover:text-mint-600">
+              Terms and conditions
             </span>
           </ExternalLink>
         </NavigationMenu.Link>

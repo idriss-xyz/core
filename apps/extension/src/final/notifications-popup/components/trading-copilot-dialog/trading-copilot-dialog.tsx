@@ -5,6 +5,8 @@ import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { NumericInput } from '@idriss-xyz/ui/numeric-input';
 import { formatEther, isAddress, parseEther } from 'viem';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { classes } from '@idriss-xyz/ui/utils';
+import { Link } from '@idriss-xyz/ui/link';
 
 import { useWallet, StoredAuthToken, useAuthToken } from 'shared/extension';
 import { Closable, ErrorMessage, Icon, LazyImage } from 'shared/ui';
@@ -72,6 +74,29 @@ export const TradingCopilotDialog = ({
             closeDialog={closeDialog}
             userName={ensNameQuery.data ?? dialog.from}
           />
+          <div className="self-stretch text-center opacity-70">
+            <span
+              className={classes(
+                'text-body5 text-neutralGreen-900',
+                'md:text-body5',
+              )}
+            >
+              Only trade on sites you trust.{' '}
+            </span>
+            <Link
+              size="medium"
+              href="https://support.metamask.io/more-web3/dapps/user-guide-dapps/"
+              isExternal
+              className={classes(
+                'border-none text-body5',
+                'md:text-body5',
+                //lg here is intentional to override the Link variant style
+                'lg:text-body5',
+              )}
+            >
+              Learn{'\u00A0'}more.
+            </Link>
+          </div>
         </div>
       </div>
     </Closable>

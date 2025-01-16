@@ -8,6 +8,7 @@ import {
   Rocket,
   Settings,
   HelpCircle,
+  FileCheck,
   LogOut,
   LogIn,
   ArrowLeft,
@@ -25,6 +26,7 @@ import * as customIcons from './custom';
 export const ICON = {
   X,
   Menu,
+  FileCheck,
   Grip,
   LogIn,
   Puzzle,
