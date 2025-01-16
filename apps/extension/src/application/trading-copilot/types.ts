@@ -96,15 +96,12 @@ export type SwapData = {
 };
 
 export interface QuotePayload {
-  quote: {
-    amount: string;
-    originChain: number;
-    originToken: string;
-    fromAddress: string;
-    destinationToken: string;
-    destinationChain: number;
-  };
-  authToken: string;
+  amount: string;
+  originChain: number;
+  originToken: string;
+  fromAddress: string;
+  destinationToken: string;
+  destinationChain: number;
 }
 
 export type QuoteResponse = {
