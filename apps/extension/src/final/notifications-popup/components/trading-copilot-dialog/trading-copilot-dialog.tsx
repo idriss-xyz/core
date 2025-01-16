@@ -4,9 +4,9 @@ import { Icon as IdrissIcon } from '@idriss-xyz/ui/icon';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { NumericInput } from '@idriss-xyz/ui/numeric-input';
 import { formatEther, isAddress, parseEther } from 'viem';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback } from 'react';
 
-import { useWallet, StoredAuthToken, useAuthToken } from 'shared/extension';
+import { useWallet } from 'shared/extension';
 import { Closable, ErrorMessage, Icon, LazyImage } from 'shared/ui';
 import { useCommandQuery } from 'shared/messaging';
 import {
@@ -389,57 +389,21 @@ const TradingCopilotWalletBalance = ({ wallet }: WalletBalanceProperties) => {
 };
 
 const TradingCopilotTradeValue = ({ wallet, dialog }: TradeValueProperties) => {
-  const { getAuthToken } = useAuthToken();
-  const siwe = useLoginViaSiwe();
-  const [authToken, setAuthToken] = useState<StoredAuthToken>();
-  const siweLoginDisplayed = useRef(false);
-
   const amountInEth = dialog.tokenIn.amount.toString();
   const amountInWei = parseEther(amountInEth).toString();
 
-  useEffect(() => {
-    const fetchAuthToken = async () => {
-      const latestAuthToken = await getAuthToken();
-      setAuthToken(latestAuthToken);
-    };
-    void fetchAuthToken();
-  }, [getAuthToken]);
-
-  useEffect(() => {
-    const initiateLogin = async () => {
-      const siweLoggedIn = await siwe.loggedIn();
-
-      if (!siweLoggedIn && !siwe.isSending && !siweLoginDisplayed.current) {
-        siweLoginDisplayed.current = true;
-
-        await siwe.login(wallet);
-
-        const latestAuthToken = await getAuthToken();
-
-        setAuthToken(latestAuthToken);
-
-        siweLoginDisplayed.current = false;
-      }
-    };
-    void initiateLogin();
-  }, [siwe.isSending, wallet, siwe, getAuthToken]);
-
   const quotePayload = {
-    quote: {
-      amount: amountInWei,
-      destinationChain: CHAIN[dialog.tokenOut.network].id,
-      fromAddress: wallet.account,
-      originToken: dialog.tokenIn.address,
-      originChain: CHAIN[dialog.tokenIn.network].id,
-      destinationToken: '0x0000000000000000000000000000000000000000',
-    },
-    authToken: authToken ?? '',
+    amount: amountInWei,
+    destinationChain: CHAIN[dialog.tokenOut.network].id,
+    fromAddress: wallet.account,
+    originToken: dialog.tokenIn.address,
+    originChain: CHAIN[dialog.tokenIn.network].id,
+    destinationToken: '0x0000000000000000000000000000000000000000',
   };
 
   const quoteQuery = useCommandQuery({
     command: new GetQuoteCommand(quotePayload),
     staleTime: Number.POSITIVE_INFINITY,
-    enabled: !!authToken,
   });
 
   if (!quoteQuery.data) {
