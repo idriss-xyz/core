@@ -48,7 +48,7 @@ Completes the authentication process using the signed message.
 ```json
 {
   "token": "string"
-  // Valid for 7 days
+  // Valid for 60 days
 }
 ```
 
@@ -60,7 +60,7 @@ Retrieves the list of subscribers for a specific wallet account.
 
 **Parameters:**
 
-- `subscriber`: Wallet account address
+- `subscriber`: Account wallet address
 
 ## Protected Endpoints
 
