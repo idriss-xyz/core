@@ -157,7 +157,8 @@ router.post('/get-quote', async (req, res) => {
 router.get('/top-addresses', async (req, res) => {
   const { secret } = req.query;
   if (secret !== process.env.TOP_ADDRESSES_SECRET) {
-    return res.status(401).json({ error: 'Unauthorized' });
+    res.status(401).json({ error: 'Unauthorized' });
+    return;
   }
 
   const data = await subscriptionsRepo
