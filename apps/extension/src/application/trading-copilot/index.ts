@@ -6,9 +6,6 @@ export {
   GetEnsBalanceCommand,
   GetTokensImageCommand,
   GetTokensListCommand,
-  AddTradingCopilotSubscriptionCommand,
-  GetTradingCopilotSubscriptionsCommand,
-  RemoveTradingCopilotSubscriptionCommand,
 } from './commands';
 export type {
   SwapData,
