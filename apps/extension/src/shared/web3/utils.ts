@@ -136,8 +136,10 @@ export const roundToSignificantFiguresForCopilotTrading = (
     };
   }
 
+  const offset = 0.000_000_001;
   const multiplier = Math.pow(10, significantFigures);
-  const rounded_number = Math.round(number * multiplier) / multiplier;
+  const rounded_number =
+    Math.round((number + offset) * multiplier) / multiplier;
 
   return {
     value: rounded_number,
