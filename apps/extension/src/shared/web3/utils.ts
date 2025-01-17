@@ -129,7 +129,7 @@ export const roundToSignificantFiguresForCopilotTrading = (
 
   const { value, zeros } = extractSignificantNumber(number.toString());
 
-  if (zeros >= 2) {
+  if (zeros >= 2 && number < 1) {
     return {
       value,
       index: zeros,
