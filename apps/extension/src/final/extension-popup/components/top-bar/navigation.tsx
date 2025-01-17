@@ -52,6 +52,24 @@ export const Navigation = () => {
         </NavigationMenu.Link>
       </li>
 
+      <li>
+        <NavigationMenu.Link asChild>
+          <ExternalLink
+            href="https://docs.idriss.xyz/resources/terms-of-service"
+            className="group flex w-full items-center space-x-3 px-3 pb-3"
+          >
+            <Icon
+              className="text-neutral-600 group-hover:text-mint-600"
+              name="FileCheck"
+              size={20}
+            />
+            <span className="text-body4 text-neutral-900 group-hover:text-mint-600">
+              Terms of Service
+            </span>
+          </ExternalLink>
+        </NavigationMenu.Link>
+      </li>
+
       <hr className="text-neutral-200" />
 
       <li>

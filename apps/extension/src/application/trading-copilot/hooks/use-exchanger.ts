@@ -1,11 +1,10 @@
 import { useCallback } from 'react';
 import { formatEther, getAddress, hexToNumber, parseEther } from 'viem';
 
-import { useWallet, useAuthToken } from 'shared/extension';
+import { useWallet } from 'shared/extension';
 import { Wallet, CHAIN, useSwitchChain } from 'shared/web3';
 import { useCommandMutation } from 'shared/messaging';
 
-import { useLoginViaSiwe } from '../hooks/use-login-via-siwe';
 import { SwapData, FormValues, QuotePayload } from '../types';
 import { GetQuoteCommand } from '../commands/get-quote';
 
@@ -22,11 +21,9 @@ interface CallbackProperties {
 
 export const useExchanger = ({ wallet }: Properties) => {
   const { setWalletInfo } = useWallet();
-  const { getAuthToken } = useAuthToken();
-  const siwe = useLoginViaSiwe();
   const switchChain = useSwitchChain();
   const copilotTransaction = useCopilotTransaction();
-  const quoteQuery = useCommandMutation(GetQuoteCommand);
+  const getQuoteMutation = useCommandMutation(GetQuoteCommand);
 
   const exchange = useCallback(
     async ({ formValues, dialog }: CallbackProperties) => {
@@ -34,38 +31,23 @@ export const useExchanger = ({ wallet }: Properties) => {
         return;
       }
 
-      const siweLoggedIn = await siwe.loggedIn();
-
-      if (!siweLoggedIn) {
-        await siwe.login(wallet);
-      }
-
-      const authToken = await getAuthToken();
-
-      if (!authToken) {
-        return;
-      }
-
-      const handleQuoteQuery = async (payload: QuotePayload) => {
-        return await quoteQuery.mutateAsync(payload);
+      const handleGetQuoteMutation = async (payload: QuotePayload) => {
+        return await getQuoteMutation.mutateAsync(payload);
       };
 
       const amountInEth = formValues.amount;
       const amountInWei = parseEther(amountInEth).toString();
 
       const quotePayload = {
-        quote: {
-          amount: amountInWei,
-          destinationChain: CHAIN[dialog.tokenOut.network].id,
-          fromAddress: wallet.account,
-          destinationToken: dialog.tokenIn.address,
-          originChain: CHAIN[dialog.tokenIn.network].id,
-          originToken: '0x0000000000000000000000000000000000000000',
-        },
-        authToken: authToken ?? '',
+        amount: amountInWei,
+        destinationChain: CHAIN[dialog.tokenOut.network].id,
+        fromAddress: wallet.account,
+        destinationToken: dialog.tokenIn.address,
+        originChain: CHAIN[dialog.tokenIn.network].id,
+        originToken: '0x0000000000000000000000000000000000000000',
       };
 
-      const quoteData = await handleQuoteQuery(quotePayload);
+      const quoteData = await handleGetQuoteMutation(quotePayload);
 
       const transactionData = {
         gas: quoteData.estimate.gasCosts[0]
@@ -111,24 +93,16 @@ export const useExchanger = ({ wallet }: Properties) => {
         transactionData,
       });
     },
-    [
-      wallet,
-      siwe,
-      getAuthToken,
-      switchChain,
-      copilotTransaction,
-      quoteQuery,
-      setWalletInfo,
-    ],
+    [wallet, switchChain, copilotTransaction, getQuoteMutation, setWalletInfo],
   );
 
-  const isSending = quoteQuery.isPending || copilotTransaction.isPending;
+  const isSending = getQuoteMutation.isPending || copilotTransaction.isPending;
 
-  const isError = quoteQuery.isError || copilotTransaction.isError;
+  const isError = getQuoteMutation.isError || copilotTransaction.isError;
 
-  const isSuccess = quoteQuery.isSuccess && copilotTransaction.isSuccess;
+  const isSuccess = getQuoteMutation.isSuccess && copilotTransaction.isSuccess;
 
-  const quoteData = quoteQuery.data;
+  const quoteData = getQuoteMutation.data;
 
   const transactionData = copilotTransaction.data;
 
@@ -137,22 +111,22 @@ export const useExchanger = ({ wallet }: Properties) => {
   const details = {
     from: {
       amount: Number(
-        formatEther(BigInt(quoteQuery.data?.estimate.fromAmount ?? 0)),
+        formatEther(BigInt(getQuoteMutation.data?.estimate.fromAmount ?? 0)),
       ),
-      symbol: quoteQuery.data?.includedSteps[0]?.action.fromToken.symbol,
+      symbol: getQuoteMutation.data?.includedSteps[0]?.action.fromToken.symbol,
     },
     to: {
       amount: Number(
-        formatEther(BigInt(quoteQuery.data?.estimate.toAmount ?? 0)),
+        formatEther(BigInt(getQuoteMutation.data?.estimate.toAmount ?? 0)),
       ),
-      symbol: quoteQuery.data?.includedSteps[0]?.action.toToken.symbol,
+      symbol: getQuoteMutation.data?.includedSteps[0]?.action.toToken.symbol,
     },
   };
 
   const reset = useCallback(() => {
-    quoteQuery.reset();
+    getQuoteMutation.reset();
     copilotTransaction.reset();
-  }, [copilotTransaction, quoteQuery]);
+  }, [copilotTransaction, getQuoteMutation]);
 
   return {
     exchange,
