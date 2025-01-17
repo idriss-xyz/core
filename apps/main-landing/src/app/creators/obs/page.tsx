@@ -7,7 +7,10 @@ import {
   decodeFunctionData,
   type Hex,
   parseAbiItem,
+  createPublicClient,
+  http,
 } from 'viem';
+import { mainnet } from 'viem/chains';
 
 import {
   CHAIN_TO_IDRISS_TIPPING_ADDRESS,
@@ -19,11 +22,7 @@ import DonationNotification, {
   type DonationNotificationProperties,
 } from './components/donation-notification';
 import { clients } from './constants/blockchain-clients';
-import {
-  calculateDollar,
-  resolveEnsName,
-  TIP_MESSAGE_EVENT_ABI,
-} from './utils';
+import { calculateDollar, TIP_MESSAGE_EVENT_ABI } from './utils';
 
 const DONATION_DISPLAY_DURATION = 11_000;
 const BLOCK_LOOKBACK_RANGE = 5n;
@@ -33,7 +32,14 @@ const FETCH_INTERVAL = 5000;
 export default function Obs() {
   const router = useRouter();
   const searchParameters = useSearchParams();
-  const address = searchParameters.get('address') as Hex;
+  let address = searchParameters.get('address') as Hex;
+  const streamerAddress = searchParameters.get('streamerAddress') as Hex;
+  if (streamerAddress) address = streamerAddress;
+
+  const publicClient = createPublicClient({
+    chain: mainnet,
+    transport: http('https://eth.llamarpc.com'),
+  });
 
   const [donationsQueue, setDonationsQueue] = useState<
     DonationNotificationProperties[]
@@ -130,7 +136,7 @@ export default function Obs() {
             continue;
           }
 
-          const resolved = await resolveEnsName(txn.from);
+          const resolved = await publicClient.getEnsName({ address: txn.from });
 
           const senderIdentifier =
             resolved ?? `${txn.from.slice(0, 4)}...${txn.from.slice(-2)}`;

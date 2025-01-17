@@ -2,8 +2,6 @@ import { type Hex } from 'viem';
 
 import { CHAIN } from '../donate/constants';
 
-import { clientEthereum } from './constants/blockchain-clients';
-
 const SELL_TOKEN_BY_NETWORK: Record<string, string> = {
   [CHAIN.BASE.name.toLowerCase()]: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',
   [CHAIN.ETHEREUM.name.toLowerCase()]:
@@ -67,24 +65,6 @@ export async function calculateDollar(
     return '0';
   }
 }
-
-export const resolveEnsName = async (address: Hex) => {
-  let resolved = await clientEthereum.getEnsName({ address });
-
-  if (!resolved) {
-    try {
-      const response = await fetch(
-        `https://api.idriss.xyz/v1/ENS-Addresses?identifier=${address}`,
-      );
-      const data = await response.json();
-      resolved = data.ens;
-    } catch (error) {
-      console.error('Error resolving ENS:', error);
-    }
-  }
-
-  return resolved;
-};
 
 export const TIP_MESSAGE_EVENT_ABI: Record<string, string> = {
   base: 'event TipMessage(address indexed recipientAddress, string message, address indexed sender, address indexed tokenAddress, uint256 amount, uint256 fee)',
