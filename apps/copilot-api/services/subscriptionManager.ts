@@ -1,7 +1,7 @@
 import { dataSource } from '../db';
 import { WebhookEntity } from '../entities/webhook.entity';
 import { SubscribersEntity } from '../entities/subscribers.entity';
-import { AddressesEntity } from '../entities/addreesses.entity';
+import { AddressesEntity } from '../entities/addresses.entity';
 import { SubscriptionsEntity } from '../entities/subscribtions.entity';
 import { AddressWebhookMapEntity } from '../entities/addressWebhookMap.entity';
 import axios from 'axios';
