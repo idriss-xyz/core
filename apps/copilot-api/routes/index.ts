@@ -168,6 +168,6 @@ router.get('/top-addresses', async (req, res) => {
     .orderBy('count', 'DESC')
     .limit(10)
     .getRawMany();
-  res.status(200).json({ data });
+  res.status(200).json(data);
 });
 export default router;
