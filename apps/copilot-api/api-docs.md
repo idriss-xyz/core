@@ -62,6 +62,25 @@ Retrieves the list of subscribers for a specific wallet account.
 
 - `subscriber`: Account wallet address
 
+### Get Quote
+
+Retrieves a quote for token swap.
+
+**Endpoint:** `POST /get-quote`
+
+**Request Body:**
+
+```json
+{
+  "fromAddress": "string",
+  "originChain": "string",
+  "destinationChain": "string",
+  "originToken": "string",
+  "destinationToken": "string",
+  "amount": "string"
+}
+```
+
 ## Protected Endpoints
 
 The following endpoints require authentication. Include the token in the request header:
@@ -101,25 +120,6 @@ Unsubscribes from updates of a specific wallet address. Uses the same request fo
   // Subscriber's wallet address
   "address": "string"
   // Target wallet address to unsubscribe from
-}
-```
-
-### Get Quote
-
-Retrieves a quote for token swap.
-
-**Endpoint:** `POST /get-quote`
-
-**Request Body:**
-
-```json
-{
-  "fromAddress": "string",
-  "originChain": "string",
-  "destinationChain": "string",
-  "originToken": "string",
-  "destinationToken": "string",
-  "amount": "string"
 }
 ```
 
