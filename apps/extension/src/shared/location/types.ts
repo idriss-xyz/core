@@ -3,4 +3,5 @@ export interface LocationInfo {
   isHomePage: boolean;
   isUserPage: boolean;
   username?: string;
+  isConversation?: boolean;
 }

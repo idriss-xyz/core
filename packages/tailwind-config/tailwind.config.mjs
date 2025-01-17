@@ -123,10 +123,10 @@ export default {
         1: '1',
         topBar: '10',
         dialog: '20',
+        notification: '99999',
         extensionPopup: '100000',
         portal: '100001',
-        scrollbar: '100010',
-        notification: '99999'
+        scrollbar: '100010'
       },
       fontFamily: {
         sans: ['var(--font-aeonikpro)'],

@@ -1,16 +1,23 @@
 import { useCallback } from 'react';
+import { getAddress, hexToNumber } from 'viem';
 
+import { useAuthToken, useWallet } from 'shared/extension';
 import { useCommandMutation } from 'shared/messaging';
 import { createWalletClient, Wallet } from 'shared/web3';
-import { useAuthToken } from 'shared/extension';
 
-import { GetSiweMessageCommand, VerifySiweSignatureCommand } from '../commands';
+import {
+  GetSiweMessageCommand,
+  VerifySiweSignatureCommand,
+  VerifyTokenCommand,
+} from '../commands';
 import { SiweMessageRequest, VerifySiweSignatureRequest } from '../types';
 
 export const useLoginViaSiwe = () => {
+  const { setWalletInfo } = useWallet();
   const { getAuthToken, saveAuthToken } = useAuthToken();
   const getSiweMessage = useCommandMutation(GetSiweMessageCommand);
   const verifySiweSignature = useCommandMutation(VerifySiweSignatureCommand);
+  const verifyAuthTokenMutation = useCommandMutation(VerifyTokenCommand);
 
   const login = useCallback(
     async (wallet: Wallet) => {
@@ -27,6 +34,30 @@ export const useLoginViaSiwe = () => {
       ) => {
         return await verifySiweSignature.mutateAsync(payload);
       };
+
+      const provider = wallet.provider;
+      const providerRdns = wallet.providerRdns;
+
+      const accounts = await provider.request({
+        method: 'eth_requestAccounts',
+      });
+
+      const chainId = await provider.request({ method: 'eth_chainId' });
+
+      const loggedInToCurrentWallet = getAddress(accounts[0] ?? '0x').includes(
+        wallet.account,
+      );
+
+      if (loggedInToCurrentWallet && accounts[0]) {
+        setWalletInfo({
+          account: getAddress(accounts[0]),
+          provider,
+          chainId: hexToNumber(chainId),
+          providerRdns: providerRdns,
+        });
+      } else {
+        return;
+      }
 
       const walletClient = createWalletClient(wallet);
 
@@ -49,10 +80,20 @@ export const useLoginViaSiwe = () => {
 
       saveAuthToken(verifiedSiweSignature.token);
     },
-    [getSiweMessage, saveAuthToken, verifySiweSignature],
+    [getSiweMessage, saveAuthToken, setWalletInfo, verifySiweSignature],
   );
 
-  const loggedIn = getAuthToken;
+  const loggedIn = useCallback(async () => {
+    const authToken = await getAuthToken();
+
+    if (!authToken) {
+      return false;
+    }
+
+    return await verifyAuthTokenMutation.mutateAsync({
+      token: authToken,
+    });
+  }, [getAuthToken, verifyAuthTokenMutation]);
 
   const isSending = getSiweMessage.isPending || verifySiweSignature.isPending;
 

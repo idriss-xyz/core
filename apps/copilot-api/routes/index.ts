@@ -4,9 +4,9 @@ import {
   subscribeAddress,
   unsubscribeAddress,
 } from '../services/subscriptionManager';
-import connectedClients from '../index';
 import { verifyToken } from '../middleware/auth.middleware';
 import { getQuote } from '@lifi/sdk';
+import { connectedClients } from '../services/scheduler';
 
 const router = express.Router();
 
@@ -15,17 +15,17 @@ router.get('/', (_, res) => {
 });
 
 router.post('/subscribe', verifyToken(), async (req, res) => {
-  const { subscriberId, fid, address } = req.body;
+  const { fid, address } = req.body;
 
-  const { id: user_id } = req.user;
+  const { id: subscriberId } = req.user;
 
-  if (!subscriberId || !address) {
+  if (!address) {
     res.status(400).json({ error: 'subscriberId and address are required' });
     return;
   }
 
   try {
-    await subscribeAddress(subscriberId, address, user_id, fid);
+    await subscribeAddress(subscriberId, address, fid);
 
     res
       .status(200)
@@ -36,9 +36,11 @@ router.post('/subscribe', verifyToken(), async (req, res) => {
 });
 
 router.post('/unsubscribe', verifyToken(), async (req, res) => {
-  const { subscriberId, address } = req.body;
+  const { address } = req.body;
 
-  if (!subscriberId || !address) {
+  const { id: subscriberId } = req.user;
+
+  if (!address) {
     res.status(400).json({ error: 'subscriberId and address are required' });
     return;
   }
@@ -98,7 +100,7 @@ router.get('/test-swap/:subscriberId', async (req, res) => {
   }
 });
 
-router.post('/get-quote', verifyToken(), async (req, res) => {
+router.post('/get-quote', async (req, res) => {
   const {
     fromAddress,
     originChain,

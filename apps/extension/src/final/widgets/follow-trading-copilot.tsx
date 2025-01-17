@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Icon } from '@idriss-xyz/ui/icon';
-import { useWallet } from '@idriss-xyz/wallet-connect';
 
 import { useCommandMutation, useCommandQuery } from 'shared/messaging';
 import { Button, classes, PortalWithTailwind, usePooling } from 'shared/ui';
@@ -12,7 +11,7 @@ import {
   useLoginViaSiwe,
 } from 'application/trading-copilot';
 import { Hex, Wallet } from 'shared/web3';
-import { useAuthToken } from 'shared/extension';
+import { useAuthToken, useWallet } from 'shared/extension';
 
 import { useUserWidgets, useLocationInfo } from '../hooks';
 import { TradingCopilotTooltip } from '../notifications-popup/components/trading-copilot-tooltip';
@@ -20,7 +19,8 @@ import { TradingCopilotTooltip } from '../notifications-popup/components/trading
 export const FollowTradingCopilot = () => {
   const { wallet } = useWallet();
   const { widgets } = useUserWidgets();
-  const { isTwitter, isUserPage, username, isWarpcast } = useLocationInfo();
+  const { isTwitter, isUserPage, username, isWarpcast, isConversation } =
+    useLocationInfo();
   const [portal, setPortal] = useState<HTMLDivElement>();
 
   const widgetsWithMatchingUsername = widgets.filter((widget) => {
@@ -36,7 +36,11 @@ export const FollowTradingCopilot = () => {
     isTwitter && isUserPage && Boolean(username) && Boolean(userId);
 
   const enabledForWarpcast =
-    isWarpcast && isUserPage && Boolean(username) && Boolean(userId);
+    isWarpcast &&
+    isUserPage &&
+    Boolean(username) &&
+    Boolean(userId) &&
+    !isConversation;
 
   const childOfContainerForInjectionOnTwitter = usePooling<Element | null>({
     callback: () => {
@@ -53,6 +57,15 @@ export const FollowTradingCopilot = () => {
   const childOfContainerForInjectionOnWarpcast = usePooling<Element | null>({
     callback: () => {
       return document.querySelector('[aria-haspopup="menu"]');
+    },
+    defaultValue: null,
+    interval: 1000,
+    enabled: enabledForWarpcast,
+  });
+
+  const isOwnProfile = !!usePooling<Element | null>({
+    callback: () => {
+      return document.querySelector('[href="/~/settings"] button');
     },
     defaultValue: null,
     interval: 1000,
@@ -97,6 +110,7 @@ export const FollowTradingCopilot = () => {
       !childOfContainerForInjectionOnWarpcast) ||
     !wallet ||
     (!enabledForTwitter && !enabledForWarpcast) ||
+    (enabledForWarpcast && isOwnProfile) ||
     !userId
   ) {
     return;
@@ -148,8 +162,6 @@ const FollowTradingCopilotContent = ({
     }),
     staleTime: Number.POSITIVE_INFINITY,
   });
-
-  const { isWarpcast } = useLocationInfo();
 
   const isSubscribed = subscriptionsQuery?.data?.details.some((detail) => {
     return detail.address.toLowerCase() === userId.toLowerCase();
@@ -227,13 +239,13 @@ const FollowTradingCopilotContent = ({
     <PortalWithTailwind container={portal}>
       <TradingCopilotTooltip
         content={tooltipContent}
-        className={`custom-transition ${isSubscribed ? '!w-[11.25rem]' : '!w-[165px]'} ${isWarpcast ? 'translate-y-[-55px]' : 'translate-y-[-70px]'}`}
+        className={`custom-transition -translate-y-6 ${isSubscribed ? '!w-[11.25rem]' : '!w-[165px]'}`}
       >
         <Button
           onClick={onClickHandler}
           className={classes(
-            'relative flex cursor-pointer overflow-hidden rounded-full border-none outline-none transition delay-300 duration-300',
-            'bg-[#eff3f4] hover:bg-[#d7dbdc]',
+            'relative flex cursor-pointer overflow-hidden rounded-full outline-none transition delay-300 duration-300',
+            'border border-[#cfd9de] bg-white hover:bg-[##0f14191a]',
             className,
           )}
         >

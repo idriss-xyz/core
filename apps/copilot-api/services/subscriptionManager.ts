@@ -32,13 +32,11 @@ const webhooksRepo = dataSource.getRepository(WebhookEntity);
 export const subscribeAddress = async (
   subscriber_id: string,
   address: string,
-  userId: number,
   fid?: number,
 ) => {
   address = address.toLowerCase();
 
-  await subscribersRepo.save({ subscriber_id });
-  await addressRepo.save({ address, userId });
+  await addressRepo.save({ address });
   await subscriptionsRepo.save({
     subscriber_id,
     address,
@@ -68,7 +66,7 @@ export const unsubscribeAddress = async (
 
     if (parseInt(subscriberRes.toString(), 10) === 0) {
       // Subscriber has no more subscriptions, remove from subscribers table
-      await subscriptionsRepo.delete({ subscriber_id: subscriberId });
+      await subscribersRepo.delete({ subscriber_id: subscriberId });
     }
 
     // Check if the address has any other subscribers

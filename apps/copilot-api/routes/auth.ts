@@ -5,21 +5,23 @@ import jwt from 'jsonwebtoken';
 import { throwInternalError } from '../middleware/error.middleware';
 import { isAddress } from 'viem';
 import { dataSource } from '../db';
-import { AddressesEntity } from '../entities/addreesses.entity';
-import { UsersEntity } from '../entities/users.entity';
 import { createSiweMessage, generateSiweNonce } from 'viem/siwe';
 import { publicClient } from '../config/publicClient';
 import { join } from 'path';
 import { mode } from '../utils/mode';
+import { ExpiringMap } from '../utils/nonceMap';
+import { SubscribersEntity } from '../entities/subscribers.entity';
 
 dotenv.config(
   mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
 );
 
+const expiryTime = 5 * 60 * 1000;
+const expiringMap = new ExpiringMap<string, string>(expiryTime);
+
 const router = express.Router();
 
-const addressesRepo = dataSource.getRepository(AddressesEntity);
-const usersRepo = dataSource.getRepository(UsersEntity);
+const subscribersRepo = dataSource.getRepository(SubscribersEntity);
 
 router.post('/login', async (req: Request, res: Response) => {
   const { signature, walletAddress, message } = req.body;
@@ -30,8 +32,10 @@ router.post('/login', async (req: Request, res: Response) => {
   }
 
   try {
+    const currentNonce = expiringMap.get(walletAddress);
     const valid = await publicClient.verifySiweMessage({
       address: walletAddress,
+      nonce: currentNonce,
       message,
       signature,
     });
@@ -41,38 +45,22 @@ router.post('/login', async (req: Request, res: Response) => {
       return;
     }
 
-    const existingAddress = await addressesRepo.findOne({
-      where: { address: walletAddress },
+    const existingAddress = await subscribersRepo.findOne({
+      where: { subscriber_id: walletAddress },
     });
 
-    const user = await usersRepo.findOne({
-      where: { uuid: existingAddress?.userId },
-    });
-
-    if (!user) {
-      const newUser = await usersRepo.save({});
-      const payload = {
-        user: {
-          id: newUser.uuid,
-        },
-      };
-
-      const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
-        expiresIn: '7d',
-      });
-
-      res.status(200).send({ token });
-      return;
+    if (!existingAddress) {
+      await subscribersRepo.save({ subscriber_id: walletAddress });
     }
 
     const payload = {
       user: {
-        id: user.uuid,
+        id: walletAddress,
       },
     };
 
     const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
-      expiresIn: '7d',
+      expiresIn: '60d',
     });
 
     res.status(200).send({ token });
@@ -83,9 +71,11 @@ router.post('/wallet-address', async (req, res) => {
   try {
     const { walletAddress, chainId, domain } = req.body;
     const nonce = generateSiweNonce();
+    expiringMap.set(walletAddress, nonce);
     const timestamp = new Date();
 
     const message = createSiweMessage({
+      statement: 'Log in to the IDRISS extension',
       address: walletAddress,
       chainId,
       domain,
@@ -93,9 +83,12 @@ router.post('/wallet-address', async (req, res) => {
       uri: `https://${domain}`, // TODO: Change for production
       version: '1',
       issuedAt: timestamp,
+      expirationTime: new Date(
+        timestamp.setTime(timestamp.getTime() + 10 * 60 * 1000),
+      ),
     });
 
-    res.status(200).json({ nonce, message });
+    res.status(200).json({ message });
   } catch (err) {
     throwInternalError(res, 'Error generating login message: ', err);
   }
@@ -107,9 +100,9 @@ router.post('/verify-token', async (req, res) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!);
 
-    const id: number = (decoded as Request)['user'].id;
+    const subscriber_id: string = (decoded as Request)['user'].id;
 
-    const user = await usersRepo.findOne({ where: { uuid: id } });
+    const user = await subscribersRepo.findOne({ where: { subscriber_id } });
 
     if (!user) {
       res.status(401).json({ error: 'Invalid token' });

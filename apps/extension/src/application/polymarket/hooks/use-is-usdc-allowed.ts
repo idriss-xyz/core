@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { useWallet } from '@idriss-xyz/wallet-connect';
 import { parseAbi } from 'viem';
 
+import { useWallet } from 'shared/extension';
 import { CHAIN, createWalletClient } from 'shared/web3';
 
 import {

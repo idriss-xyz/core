@@ -3,10 +3,10 @@ import { Controller, useForm } from 'react-hook-form';
 import { Icon as IdrissIcon } from '@idriss-xyz/ui/icon';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { NumericInput } from '@idriss-xyz/ui/numeric-input';
-import { useWallet } from '@idriss-xyz/wallet-connect';
 import { formatEther, isAddress, parseEther } from 'viem';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { useWallet, StoredAuthToken, useAuthToken } from 'shared/extension';
 import { Closable, ErrorMessage, Icon, LazyImage } from 'shared/ui';
 import { useCommandQuery } from 'shared/messaging';
 import {
@@ -21,13 +21,11 @@ import {
 import { getShortWalletHex, TimeDifferenceCounter } from 'shared/utils';
 import {
   CHAIN,
-  roundToSignificantFigures,
   formatBigNumber,
   getWholeNumber,
   roundToSignificantFiguresForCopilotTrading,
 } from 'shared/web3';
 import { IdrissSend } from 'shared/idriss';
-import { StoredAuthToken, useAuthToken } from 'shared/extension';
 
 import { TokenIcon } from '../../utils';
 import { TradingCopilotTooltip } from '../trading-copilot-tooltip';
@@ -141,7 +139,7 @@ const TradingCopilotDialogContent = ({
         className="px-5 pb-9 pt-5"
         heading={
           <>
-            Exchanging{' '}
+            Swapping{' '}
             <span className="text-mint-600">
               <TradingCopilotTooltip
                 content={getWholeNumber(
@@ -242,8 +240,8 @@ const TradingCopilotDialogContent = ({
                   <>
                     {formatBigNumber(
                       getWholeNumber(dialog.tokenIn.amount.toString()),
-                    )}
-                    ~
+                    )}{' '}
+                    ~{' '}
                     {wallet ? (
                       <TradingCopilotTradeValue
                         wallet={wallet}
@@ -451,11 +449,5 @@ const TradingCopilotTradeValue = ({ wallet, dialog }: TradeValueProperties) => {
   const tradeValueInWei = BigInt(quoteQuery.data.estimate.toAmount);
   const tradeValueInEth = Number(formatEther(tradeValueInWei));
 
-  return (
-    <TradingCopilotTooltip content={tradeValueInEth}>
-      <span className="text-body6 text-neutral-500">
-        ({roundToSignificantFigures(tradeValueInEth, 2)} ETH)
-      </span>
-    </TradingCopilotTooltip>
-  );
+  return <span>{getWholeNumber(tradeValueInEth.toString())} ETH</span>;
 };
