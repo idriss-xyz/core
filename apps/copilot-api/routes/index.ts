@@ -72,7 +72,7 @@ router.get('/test-swap/:subscriberId', async (req, res) => {
     tokenIn: {
       address: '0x4ed4e862860bed51a9570b96d89af5e1b0efefed',
       symbol: 'DEGEN',
-      amount: 100.00812,
+      amount: 357.09,
       decimals: 18,
       network: 'BASE',
     },
