@@ -4,9 +4,11 @@ import { Icon as IdrissIcon } from '@idriss-xyz/ui/icon';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { NumericInput } from '@idriss-xyz/ui/numeric-input';
 import { formatEther, isAddress, parseEther } from 'viem';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback } from 'react';
+import { classes } from '@idriss-xyz/ui/utils';
+import { Link } from '@idriss-xyz/ui/link';
 
-import { useWallet, StoredAuthToken, useAuthToken } from 'shared/extension';
+import { useWallet } from 'shared/extension';
 import { Closable, ErrorMessage, Icon, LazyImage } from 'shared/ui';
 import { useCommandQuery } from 'shared/messaging';
 import {
@@ -64,7 +66,7 @@ export const TradingCopilotDialog = ({
       hideCloseButton
     >
       <div className="flex size-full items-center justify-center">
-        <div className="relative flex min-h-[300px] w-[400px] flex-col justify-center gap-y-5 rounded-lg border border-black/20 bg-white p-5">
+        <div className="relative flex min-h-[300px] w-[400px] flex-col justify-center gap-y-3 rounded-lg border border-black/20 bg-white p-5">
           <TradingCopilotDialogContent
             tokenData={tokenData}
             tokenImage={tokenImage}
@@ -72,6 +74,29 @@ export const TradingCopilotDialog = ({
             closeDialog={closeDialog}
             userName={ensNameQuery.data ?? dialog.from}
           />
+          <div className="self-stretch text-center opacity-70">
+            <span
+              className={classes(
+                'text-body6 text-neutralGreen-900',
+                'md:text-body6',
+              )}
+            >
+              Only trade on sites you trust.{' '}
+            </span>
+            <Link
+              size="medium"
+              href="https://support.metamask.io/more-web3/dapps/user-guide-dapps/"
+              isExternal
+              className={classes(
+                'border-none text-body6',
+                'md:text-body6',
+                //lg here is intentional to override the Link variant style
+                'lg:text-body6',
+              )}
+            >
+              Learn{'\u00A0'}more
+            </Link>
+          </div>
         </div>
       </div>
     </Closable>
@@ -214,7 +239,7 @@ const TradingCopilotDialogContent = ({
           onClick={closeDialog}
         />
       </div>
-      <div className="grid grid-cols-[48px,1fr] gap-2">
+      <div className="grid grid-cols-[48px,1fr] gap-2 py-2">
         <LazyImage
           src={avatarQuery.data}
           className="size-12 rounded-full border border-neutral-400 bg-neutral-200"
@@ -318,7 +343,7 @@ const TradingCopilotDialogContent = ({
               <Button
                 intent="primary"
                 size="medium"
-                className="w-full"
+                className="mt-2 w-full"
                 type="submit"
                 loading={siwe.isSending || exchanger.isSending}
                 disabled={
@@ -389,57 +414,21 @@ const TradingCopilotWalletBalance = ({ wallet }: WalletBalanceProperties) => {
 };
 
 const TradingCopilotTradeValue = ({ wallet, dialog }: TradeValueProperties) => {
-  const { getAuthToken } = useAuthToken();
-  const siwe = useLoginViaSiwe();
-  const [authToken, setAuthToken] = useState<StoredAuthToken>();
-  const siweLoginDisplayed = useRef(false);
-
   const amountInEth = dialog.tokenIn.amount.toString();
   const amountInWei = parseEther(amountInEth).toString();
 
-  useEffect(() => {
-    const fetchAuthToken = async () => {
-      const latestAuthToken = await getAuthToken();
-      setAuthToken(latestAuthToken);
-    };
-    void fetchAuthToken();
-  }, [getAuthToken]);
-
-  useEffect(() => {
-    const initiateLogin = async () => {
-      const siweLoggedIn = await siwe.loggedIn();
-
-      if (!siweLoggedIn && !siwe.isSending && !siweLoginDisplayed.current) {
-        siweLoginDisplayed.current = true;
-
-        await siwe.login(wallet);
-
-        const latestAuthToken = await getAuthToken();
-
-        setAuthToken(latestAuthToken);
-
-        siweLoginDisplayed.current = false;
-      }
-    };
-    void initiateLogin();
-  }, [siwe.isSending, wallet, siwe, getAuthToken]);
-
   const quotePayload = {
-    quote: {
-      amount: amountInWei,
-      destinationChain: CHAIN[dialog.tokenOut.network].id,
-      fromAddress: wallet.account,
-      originToken: dialog.tokenIn.address,
-      originChain: CHAIN[dialog.tokenIn.network].id,
-      destinationToken: '0x0000000000000000000000000000000000000000',
-    },
-    authToken: authToken ?? '',
+    amount: amountInWei,
+    destinationChain: CHAIN[dialog.tokenOut.network].id,
+    fromAddress: wallet.account,
+    originToken: dialog.tokenIn.address,
+    originChain: CHAIN[dialog.tokenIn.network].id,
+    destinationToken: '0x0000000000000000000000000000000000000000',
   };
 
   const quoteQuery = useCommandQuery({
     command: new GetQuoteCommand(quotePayload),
     staleTime: Number.POSITIVE_INFINITY,
-    enabled: !!authToken,
   });
 
   if (!quoteQuery.data) {
