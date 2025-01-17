@@ -7,6 +7,11 @@ import {
 import { verifyToken } from '../middleware/auth.middleware';
 import { getQuote } from '@lifi/sdk';
 import { connectedClients } from '../services/scheduler';
+import { dataSource } from '../db';
+import { AddressesEntity } from '../entities/addreesses.entity';
+import { SubscriptionsEntity } from '../entities/subscribtions.entity';
+
+const subscriptionsRepo = dataSource.getRepository(SubscriptionsEntity);
 
 const router = express.Router();
 
@@ -67,7 +72,7 @@ router.get('/test-swap/:subscriberId', async (req, res) => {
     tokenIn: {
       address: '0x4ed4e862860bed51a9570b96d89af5e1b0efefed',
       symbol: 'DEGEN',
-      amount: 357.09,
+      amount: 100.00812,
       decimals: 18,
       network: 'BASE',
     },
@@ -148,5 +153,21 @@ router.post('/get-quote', async (req, res) => {
     console.error('Error getting quote: ' + err);
     res.status(429).json({ error: 'You reach Lifi limit' });
   }
+});
+
+router.get('/top-addresses', async (req, res) => {
+  const { secret } = req.query;
+  if (secret !== process.env.TOP_ADDRESSES_SECRET) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  const data = await subscriptionsRepo
+    .createQueryBuilder()
+    .select(['address', 'CAST(COUNT(subscriber_id) AS INTEGER) as count'])
+    .groupBy('address')
+    .orderBy('count', 'DESC')
+    .limit(10)
+    .getRawMany();
+  res.status(200).json({ data });
 });
 export default router;
