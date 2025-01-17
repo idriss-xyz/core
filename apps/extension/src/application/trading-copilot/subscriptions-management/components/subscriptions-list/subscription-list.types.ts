@@ -5,8 +5,8 @@ import {
 
 export interface Properties {
   className?: string;
+  subscriptionsAmount?: number;
   subscriptionsLoading: boolean;
-  subscriptionsAmount: number | undefined;
+  subscriptions?: SubscriptionsResponse;
   onRemove: (payload: UnsubscribePayload) => void;
-  subscriptions: SubscriptionsResponse | undefined;
 }

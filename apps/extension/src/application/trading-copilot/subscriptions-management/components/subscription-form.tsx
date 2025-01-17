@@ -73,15 +73,15 @@ export const SubscriptionForm = ({
         return;
       }
 
-      const address = await getEnsAddressMutation.mutateAsync({
+      const ensAddress = await getEnsAddressMutation.mutateAsync({
         ensName: data.subscription,
       });
 
-      if (!address) {
+      if (!ensAddress) {
         return;
       }
 
-      onSubmit({ address });
+      onSubmit({ address: ensAddress });
       form.reset(EMPTY_FORM);
     },
     [

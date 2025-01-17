@@ -134,18 +134,18 @@ export const FollowTradingCopilot = () => {
 
 type ContentProperties = {
   userId: Hex;
-  iconHeight: number;
-  portal: HTMLDivElement;
-  className?: string;
   wallet: Wallet;
+  iconHeight: number;
+  className?: string;
+  portal: HTMLDivElement;
 };
 
 const FollowTradingCopilotContent = ({
-  portal,
-  iconHeight,
   userId,
-  className,
   wallet,
+  portal,
+  className,
+  iconHeight,
 }: ContentProperties) => {
   const { subscriptions, subscribe, unsubscribe } = useSubscriptions({
     wallet,

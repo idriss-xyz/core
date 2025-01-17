@@ -58,11 +58,11 @@ export const SubscriptionItem = ({ onRemove, subscription }: Properties) => {
 };
 
 const SubscriptionItemContent = ({
+  name,
+  avatar,
   onRemove,
   subscription,
-  name,
   farcasterDetails,
-  avatar,
 }: ContentProperties) => {
   const ensNameNotFound = isAddress(name);
   const isFarcasterSubscription = !!farcasterDetails;
