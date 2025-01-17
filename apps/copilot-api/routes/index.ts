@@ -8,7 +8,6 @@ import { verifyToken } from '../middleware/auth.middleware';
 import { getQuote } from '@lifi/sdk';
 import { connectedClients } from '../services/scheduler';
 import { dataSource } from '../db';
-import { AddressesEntity } from '../entities/addreesses.entity';
 import { SubscriptionsEntity } from '../entities/subscribtions.entity';
 
 const subscriptionsRepo = dataSource.getRepository(SubscriptionsEntity);
