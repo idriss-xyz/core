@@ -10,7 +10,7 @@ import {
   VerifySiweSignatureCommand,
   VerifyTokenCommand,
 } from '../commands';
-import { SiweMessageRequest, VerifySiweSignatureRequest } from '../types';
+import { SiweMessagePayload, VerifySiweSignaturePayload } from '../types';
 
 export const useLoginViaSiwe = () => {
   const { setWalletInfo } = useWallet();
@@ -25,12 +25,12 @@ export const useLoginViaSiwe = () => {
         return;
       }
 
-      const handleGetSiweMessage = async (payload: SiweMessageRequest) => {
+      const handleGetSiweMessage = async (payload: SiweMessagePayload) => {
         return await getSiweMessage.mutateAsync(payload);
       };
 
       const handleVerifySiweSignature = async (
-        payload: VerifySiweSignatureRequest,
+        payload: VerifySiweSignaturePayload,
       ) => {
         return await verifySiweSignature.mutateAsync(payload);
       };

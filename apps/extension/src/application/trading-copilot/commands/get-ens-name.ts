@@ -13,7 +13,9 @@ type Payload = {
   address: Hex;
 };
 
-export class GetEnsNameCommand extends Command<Payload, string | null> {
+type Response = string | null;
+
+export class GetEnsNameCommand extends Command<Payload, Response> {
   public readonly name = 'GetEnsNameCommand' as const;
 
   constructor(public payload: Payload) {

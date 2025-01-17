@@ -7,7 +7,7 @@ import {
 } from 'shared/messaging';
 
 import {
-  SiweMessageRequest as Payload,
+  SiweMessagePayload as Payload,
   SiweMessageResponse as Response,
 } from '../types';
 

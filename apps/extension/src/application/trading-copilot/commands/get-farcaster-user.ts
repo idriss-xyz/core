@@ -7,11 +7,14 @@ import {
 } from 'shared/messaging';
 
 import {
-  FarcasterUserRequest as Payload,
+  FarcasterUserPayload as Payload,
   FarcasterUserResponse as Response,
 } from '../types';
 
-export class GetFarcasterUserCommand extends Command<Payload, Response> {
+export class GetFarcasterUserCommand extends Command<
+  Payload,
+  Response['result']
+> {
   public readonly name = 'GetFarcasterUserCommand' as const;
 
   constructor(public payload: Payload) {
@@ -38,7 +41,7 @@ export class GetFarcasterUserCommand extends Command<Payload, Response> {
 
       const userData = (await userResponse.json()) as Response;
 
-      return new OkResult(userData);
+      return new OkResult(userData.result);
     } catch (error) {
       this.captureException(error);
       if (error instanceof HandlerError) {

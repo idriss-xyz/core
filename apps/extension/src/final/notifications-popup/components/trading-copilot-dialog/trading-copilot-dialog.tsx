@@ -4,7 +4,7 @@ import { Icon as IdrissIcon } from '@idriss-xyz/ui/icon';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { NumericInput } from '@idriss-xyz/ui/numeric-input';
 import { formatEther, isAddress, parseEther } from 'viem';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback } from 'react';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
 

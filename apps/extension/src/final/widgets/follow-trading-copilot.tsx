@@ -1,17 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Icon } from '@idriss-xyz/ui/icon';
 
-import { useCommandMutation, useCommandQuery } from 'shared/messaging';
 import { Button, classes, PortalWithTailwind, usePooling } from 'shared/ui';
 import {
-  AddTradingCopilotSubscriptionCommand,
-  GetTradingCopilotSubscriptionsCommand,
-  RemoveTradingCopilotSubscriptionCommand,
-  SubscriptionRequest,
-  useLoginViaSiwe,
+  SubscribePayload,
+  UnsubscribePayload,
+  useSubscriptions,
 } from 'application/trading-copilot';
 import { Hex, Wallet } from 'shared/web3';
-import { useAuthToken, useWallet } from 'shared/extension';
+import { useWallet } from 'shared/extension';
 
 import { useUserWidgets, useLocationInfo } from '../hooks';
 import { TradingCopilotTooltip } from '../notifications-popup/components/trading-copilot-tooltip';
@@ -127,7 +124,6 @@ export const FollowTradingCopilot = () => {
   return (
     <FollowTradingCopilotContent
       userId={userId}
-      subscriberId={wallet.account}
       iconHeight={iconHeight}
       portal={portal}
       wallet={wallet}
@@ -138,7 +134,6 @@ export const FollowTradingCopilot = () => {
 
 type ContentProperties = {
   userId: Hex;
-  subscriberId: Hex;
   iconHeight: number;
   portal: HTMLDivElement;
   className?: string;
@@ -148,76 +143,30 @@ type ContentProperties = {
 const FollowTradingCopilotContent = ({
   portal,
   iconHeight,
-  subscriberId,
   userId,
   className,
   wallet,
 }: ContentProperties) => {
-  const siwe = useLoginViaSiwe();
-  const { getAuthToken } = useAuthToken();
-
-  const subscriptionsQuery = useCommandQuery({
-    command: new GetTradingCopilotSubscriptionsCommand({
-      subscriberId,
-    }),
-    staleTime: Number.POSITIVE_INFINITY,
+  const { subscriptions, subscribe, unsubscribe } = useSubscriptions({
+    wallet,
   });
 
-  const isSubscribed = subscriptionsQuery?.data?.details.some((detail) => {
+  const handleUnsubscribe = (payload: UnsubscribePayload) => {
+    return unsubscribe.use(payload);
+  };
+
+  const handleSubscribe = (payload: SubscribePayload) => {
+    return subscribe.use(payload);
+  };
+
+  const isSubscribed = subscriptions.data?.details.some((detail) => {
     return detail.address.toLowerCase() === userId.toLowerCase();
   });
 
-  const subscribe = useCommandMutation(AddTradingCopilotSubscriptionCommand);
-  const unsubscribe = useCommandMutation(
-    RemoveTradingCopilotSubscriptionCommand,
-  );
-
-  const handleSubscribe = async (
-    address: SubscriptionRequest['subscription']['address'],
-  ) => {
-    const siweLoggedIn = await siwe.loggedIn();
-
-    if (!siweLoggedIn) {
-      await siwe.login(wallet);
-    }
-
-    const authToken = await getAuthToken();
-
-    if (!authToken) {
-      return;
-    }
-
-    await subscribe.mutateAsync({
-      subscription: { address, subscriberId },
-      authToken: authToken ?? '',
-    });
-    void subscriptionsQuery.refetch();
-  };
-
-  const handleUnsubscribe = async (
-    address: SubscriptionRequest['subscription']['address'],
-  ) => {
-    const siweLoggedIn = await siwe.loggedIn();
-
-    if (!siweLoggedIn) {
-      await siwe.login(wallet);
-    }
-
-    const authToken = await getAuthToken();
-
-    if (!authToken) {
-      return;
-    }
-
-    await unsubscribe.mutateAsync({
-      subscription: { address, subscriberId },
-      authToken: authToken ?? '',
-    });
-    void subscriptionsQuery.refetch();
-  };
-
   const onClickHandler = async () => {
-    await (isSubscribed ? handleUnsubscribe(userId) : handleSubscribe(userId));
+    await (isSubscribed
+      ? handleUnsubscribe({ address: userId })
+      : handleSubscribe({ address: userId }));
   };
 
   const tooltipContent = (
