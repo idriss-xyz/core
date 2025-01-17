@@ -136,11 +136,7 @@ export const roundToSignificantFiguresForCopilotTrading = (
     };
   }
 
-  const multiplier = Math.pow(
-    10,
-    significantFigures - Math.floor(Math.log10(Math.abs(number))) - 1,
-  );
-
+  const multiplier = Math.pow(10, significantFigures);
   const rounded_number = Math.round(number * multiplier) / multiplier;
 
   return {
