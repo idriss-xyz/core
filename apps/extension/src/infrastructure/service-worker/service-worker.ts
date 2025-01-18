@@ -128,7 +128,7 @@ export class ServiceWorker {
   }
 
   createSwapNotification(swapData: SwapData) {
-    const message = `New trade detected: ${swapData.tokenIn?.amount} of ${swapData.tokenIn?.symbol} traded for ${swapData.tokenOut?.amount} of ${swapData.tokenOut?.symbol}`;
+    const message = `New trade detected: ${swapData.tokenIn?.amount} of ${swapData.tokenIn?.symbol} traded for ${swapData.tokenOut?.amount} of ${swapData.tokenOut?.symbol} at txn ${swapData.transactionHash}`;
     console.log(`%c[WebSocket] ${message}`, 'color: yellow;');
 
     const soundFile = this.environment.runtime.getURL('audio/notification.mp3');
