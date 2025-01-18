@@ -10,11 +10,11 @@ import {
 import { useObservabilityScope } from 'shared/observability';
 
 interface SwapProperties {
-  to: `0x${string}`;
+  data: Hex;
+  gas?: bigint;
   chain: number;
   value: bigint;
-  gas?: bigint;
-  data: Hex;
+  to: `0x${string}`;
 }
 
 interface Properties {

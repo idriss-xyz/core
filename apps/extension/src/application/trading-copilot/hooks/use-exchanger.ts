@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { formatEther, getAddress, hexToNumber, parseEther } from 'viem';
+import { formatEther, parseEther } from 'viem';
 
 import { useWallet } from 'shared/extension';
 import { Wallet, CHAIN, useSwitchChain } from 'shared/web3';
@@ -15,12 +15,12 @@ interface Properties {
 }
 
 interface CallbackProperties {
-  formValues: FormValues;
   dialog: SwapData;
+  formValues: FormValues;
 }
 
 export const useExchanger = ({ wallet }: Properties) => {
-  const { setWalletInfo } = useWallet();
+  const { verifyWalletProvider } = useWallet();
   const switchChain = useSwitchChain();
   const copilotTransaction = useCopilotTransaction();
   const getQuoteMutation = useCommandMutation(GetQuoteCommand);
@@ -28,6 +28,12 @@ export const useExchanger = ({ wallet }: Properties) => {
   const exchange = useCallback(
     async ({ formValues, dialog }: CallbackProperties) => {
       if (!wallet || Number(formValues.amount) === 0) {
+        return;
+      }
+
+      const isWalletProviderValid = await verifyWalletProvider(wallet);
+
+      if (!isWalletProviderValid) {
         return;
       }
 
@@ -59,30 +65,6 @@ export const useExchanger = ({ wallet }: Properties) => {
         to: quoteData.transactionData.to,
       };
 
-      const provider = wallet.provider;
-      const providerRdns = wallet.providerRdns;
-
-      const accounts = await provider.request({
-        method: 'eth_requestAccounts',
-      });
-
-      const chainId = await provider.request({ method: 'eth_chainId' });
-
-      const loggedInToCurrentWallet = getAddress(accounts[0] ?? '0x').includes(
-        wallet.account,
-      );
-
-      if (loggedInToCurrentWallet && accounts[0]) {
-        setWalletInfo({
-          account: getAddress(accounts[0]),
-          provider,
-          chainId: hexToNumber(chainId),
-          providerRdns: providerRdns,
-        });
-      } else {
-        return;
-      }
-
       await switchChain.mutateAsync({
         chainId: quoteData.transactionData.chainId,
         wallet,
@@ -93,7 +75,13 @@ export const useExchanger = ({ wallet }: Properties) => {
         transactionData,
       });
     },
-    [wallet, switchChain, copilotTransaction, getQuoteMutation, setWalletInfo],
+    [
+      wallet,
+      verifyWalletProvider,
+      switchChain,
+      copilotTransaction,
+      getQuoteMutation,
+    ],
   );
 
   const isSending = getQuoteMutation.isPending || copilotTransaction.isPending;

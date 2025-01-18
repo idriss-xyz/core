@@ -1,5 +1,4 @@
 import { useCallback } from 'react';
-import { getAddress, hexToNumber } from 'viem';
 
 import { useAuthToken, useWallet } from 'shared/extension';
 import { useCommandMutation } from 'shared/messaging';
@@ -13,7 +12,7 @@ import {
 import { SiweMessagePayload, VerifySiweSignaturePayload } from '../types';
 
 export const useLoginViaSiwe = () => {
-  const { setWalletInfo } = useWallet();
+  const { verifyWalletProvider } = useWallet();
   const { getAuthToken, saveAuthToken } = useAuthToken();
   const getSiweMessage = useCommandMutation(GetSiweMessageCommand);
   const verifySiweSignature = useCommandMutation(VerifySiweSignatureCommand);
@@ -35,27 +34,9 @@ export const useLoginViaSiwe = () => {
         return await verifySiweSignature.mutateAsync(payload);
       };
 
-      const provider = wallet.provider;
-      const providerRdns = wallet.providerRdns;
+      const isWalletProviderValid = await verifyWalletProvider(wallet);
 
-      const accounts = await provider.request({
-        method: 'eth_requestAccounts',
-      });
-
-      const chainId = await provider.request({ method: 'eth_chainId' });
-
-      const loggedInToCurrentWallet = getAddress(accounts[0] ?? '0x').includes(
-        wallet.account,
-      );
-
-      if (loggedInToCurrentWallet && accounts[0]) {
-        setWalletInfo({
-          account: getAddress(accounts[0]),
-          provider,
-          chainId: hexToNumber(chainId),
-          providerRdns: providerRdns,
-        });
-      } else {
+      if (!isWalletProviderValid) {
         return;
       }
 
@@ -80,7 +61,7 @@ export const useLoginViaSiwe = () => {
 
       saveAuthToken(verifiedSiweSignature.token);
     },
-    [getSiweMessage, saveAuthToken, setWalletInfo, verifySiweSignature],
+    [getSiweMessage, saveAuthToken, verifySiweSignature, verifyWalletProvider],
   );
 
   const loggedIn = useCallback(async () => {
