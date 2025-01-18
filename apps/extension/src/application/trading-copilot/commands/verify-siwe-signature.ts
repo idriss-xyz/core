@@ -7,7 +7,7 @@ import {
 } from 'shared/messaging';
 
 import {
-  VerifySiweSignatureRequest as Payload,
+  VerifySiweSignaturePayload as Payload,
   VerifySiweSignatureResponse as Response,
 } from '../types';
 

@@ -14,7 +14,9 @@ type Payload = {
   infoKey: 'com.discord' | 'email' | 'com.github' | 'com.twitter' | 'avatar';
 };
 
-export class GetEnsInfoCommand extends Command<Payload, string | null> {
+type Response = string | null;
+
+export class GetEnsInfoCommand extends Command<Payload, Response> {
   public readonly name = 'GetEnsInfoCommand' as const;
 
   constructor(public payload: Payload) {

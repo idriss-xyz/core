@@ -7,7 +7,7 @@ import {
 } from 'shared/messaging';
 
 import {
-  SubscriptionsRequest as Payload,
+  SubscriptionsPayload as Payload,
   SubscriptionsResponse as Response,
 } from '../types';
 

@@ -1,10 +1,14 @@
 import { Command, OkResult } from 'shared/messaging';
 
-import { VerifyAuthTokenPayload as Payload } from '../types';
-
 import { COPILOT_API_URL } from './constants';
 
-export class VerifyTokenCommand extends Command<Payload, boolean> {
+type Payload = {
+  token: string;
+};
+
+type Response = boolean;
+
+export class VerifyTokenCommand extends Command<Payload, Response> {
   public readonly name = 'VerifyTokenCommand' as const;
 
   constructor(public payload: Payload) {

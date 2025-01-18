@@ -6,7 +6,7 @@ import {
   OkResult,
 } from 'shared/messaging';
 
-import { SubscriptionRequest as Payload } from '../types';
+import { UnsubscribeCommandPayload as Payload } from '../types';
 
 import { COPILOT_API_URL } from './constants';
 

@@ -1,5 +1,4 @@
 import { Route, Routes } from 'react-router';
-import { useRef } from 'react';
 
 import { Closable } from 'shared/ui';
 import { POPUP_ROUTE, useExtensionPopup } from 'shared/extension';
@@ -22,7 +21,6 @@ import {
 
 export const ExtensionPopup = () => {
   const extensionPopup = useExtensionPopup();
-  const isTabChangedListenerAdded = useRef(false);
 
   if (!extensionPopup.isVisible) {
     return null;
@@ -57,11 +55,7 @@ export const ExtensionPopup = () => {
           <Route element={<TradingCopilotLayout />}>
             <Route
               path={POPUP_ROUTE.TRADING_COPILOT}
-              element={
-                <SubscriptionsManagement
-                  isTabChangedListenerAdded={isTabChangedListenerAdded}
-                />
-              }
+              element={<SubscriptionsManagement />}
             />
           </Route>
         </Route>

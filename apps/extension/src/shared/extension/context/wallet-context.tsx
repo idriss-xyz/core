@@ -23,7 +23,7 @@ type WalletContextValue = {
   isConnectionModalOpened: boolean;
   openConnectionModal: () => Promise<Wallet>;
   removeWalletInfo: () => void;
-  setWalletInfo: (wallet: Wallet) => void;
+  verifyWalletProvider: (wallet: Wallet) => Promise<boolean>;
 };
 
 type StoredWallet = {
@@ -118,6 +118,35 @@ export const WalletContextProvider = (properties: {
     };
   }, [availableWalletProviders, onGetWallet]);
 
+  const verifyWalletProvider = useCallback(
+    async (wallet: Wallet) => {
+      const provider = wallet.provider;
+
+      const accounts = await provider.request({
+        method: 'eth_requestAccounts',
+      });
+
+      const chainId = await provider.request({ method: 'eth_chainId' });
+
+      const loggedInToCurrentWallet = getAddress(accounts[0] ?? '0x').includes(
+        wallet.account,
+      );
+
+      if (loggedInToCurrentWallet && accounts[0]) {
+        setWalletInfo({
+          provider,
+          chainId: hexToNumber(chainId),
+          account: getAddress(accounts[0]),
+          providerRdns: wallet.providerRdns,
+        });
+        return true;
+      } else {
+        return false;
+      }
+    },
+    [setWalletInfo],
+  );
+
   if (!tabChangedListenerInitialized) {
     onWindowMessage('TAB_CHANGED', async () => {
       const latestWallet = await getWallet();
@@ -206,16 +235,16 @@ export const WalletContextProvider = (properties: {
   const contextValue: WalletContextValue = useMemo(() => {
     return {
       wallet,
-      setWalletInfo,
       removeWalletInfo,
       openConnectionModal,
+      verifyWalletProvider,
       isConnectionModalOpened: walletConnectModal.visible,
     };
   }, [
     wallet,
-    setWalletInfo,
     removeWalletInfo,
     openConnectionModal,
+    verifyWalletProvider,
     walletConnectModal.visible,
   ]);
 

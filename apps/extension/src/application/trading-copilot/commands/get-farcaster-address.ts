@@ -7,7 +7,7 @@ import {
 } from 'shared/messaging';
 
 import {
-  FarcasterAddressRequest as Payload,
+  FarcasterAddressPayload as Payload,
   FarcasterAddressResponse as Response,
   FarcasterTransferResponse,
   FarcasterConnectedAddressesResponse,

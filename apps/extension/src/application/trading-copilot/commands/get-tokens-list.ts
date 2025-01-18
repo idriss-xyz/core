@@ -6,11 +6,13 @@ import {
   OkResult,
 } from 'shared/messaging';
 
+type Payload = void;
+
 type Response = {
   tokens: Record<string, Record<string, string>[]>;
 };
 
-export class GetTokensListCommand extends Command<void, Response> {
+export class GetTokensListCommand extends Command<Payload, Response> {
   public readonly name = 'GetTokensListCommand' as const;
   public readonly payload = undefined;
 
