@@ -184,24 +184,19 @@ export async function handleIncomingEvent(
     return;
   }
 
-  const txHash = activities[0].hash;
-  if (!txHash) {
-    console.error('Transaction hash is missing in the event data.');
-    return;
-  }
-
-  // Initialize cache entry if it doesn't exist
-  if (!eventCache[txHash]) {
-    eventCache[txHash] = {
-      activities: [],
-      timestamp: Date.now(),
-    };
-  }
-
   for (const activity of activities) {
+    if (!activity.hash) {
+      console.error('Transaction hash is missing in an activity.', activity);
+      continue;
+    }
+    const txHash = activity.hash;
+    if (!eventCache[txHash]) {
+      eventCache[txHash] = {
+        activities: [],
+        timestamp: Date.now(),
+      };
+    }
     activity.network = webhookEvent.event.network?.replace('_MAINNET', '');
+    eventCache[txHash].activities.push(activity);
   }
-
-  // Add activities to the cache
-  eventCache[txHash].activities.push(...activities);
 }
