@@ -1,6 +1,22 @@
+import path from 'node:path';
+import * as url from 'node:url';
+
 import type { NextConfig } from 'next';
 import withBundleAnalyzer from '@next/bundle-analyzer';
 import { BRAND_GUIDELINE_LINK } from '@idriss-xyz/constants';
+import { config } from 'dotenv-safe';
+
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
+const environment = process.env.ENVIRONMENT;
+
+const environmentFile = {
+  production: '.env.production',
+  development: '.env.development'
+}
+config({
+  path: path.resolve(__dirname, environmentFile[environment]),
+  example: './.env.example',
+});
 
 const LEGACY_URLS = [
   '/partner-whitelist',
@@ -146,6 +162,10 @@ const nextConfig: NextConfig = {
   },
   images: {
     domains: ['localhost'],
+  },
+  env: {
+    DEV_LOGIN_PASSWORD: process.env.DEV_LOGIN_PASSWORD, 
+    RAILWAY_PUBLIC_DOMAIN: process.env.RAILWAY_PUBLIC_DOMAIN,
   },
 };
 
