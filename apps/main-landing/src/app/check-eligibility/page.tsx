@@ -2,6 +2,11 @@
 'use client';
 import { Button } from '@idriss-xyz/ui/button';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
+import { Controller, useForm } from 'react-hook-form';
+import { createPublicClient, http, isAddress } from 'viem';
+import { mainnet } from 'viem/chains';
+import { normalize } from 'viem/ens';
+import { Form } from '@idriss-xyz/ui/form';
 
 import { TopBar } from '@/components';
 import { backgroundLines2 } from '@/assets';
@@ -9,8 +14,36 @@ import { backgroundLines2 } from '@/assets';
 import { Providers } from './providers';
 import idrissCoin from './assets/IDRISS_COIN 1.png';
 import idrissSceneStream from './assets/IDRISS_SCENE_STREAM_4_2 1.png';
+import { FormPayload } from './types';
+
+const ethereumClient = createPublicClient({
+  chain: mainnet,
+  transport: http('https://eth.llamarpc.com'),
+});
 
 export default function CheckEligibility() {
+  const formMethods = useForm<FormPayload>({
+    defaultValues: {
+      address: '',
+    },
+    mode: 'onSubmit',
+  });
+
+  const verifyEligibility = async () => {
+    const isValid = await formMethods.trigger();
+    if (!isValid) {
+      return;
+    }
+    
+    const { address } = formMethods.getValues();
+    if (address.includes('.')) {
+      const resolvedAddress = await ethereumClient?.getEnsAddress({
+        name: normalize(address),
+      });
+      console.log('ens address', resolvedAddress);
+    }
+    console.log(address);
+  };
   return (
     <Providers>
       <TopBar />
@@ -52,6 +85,45 @@ export default function CheckEligibility() {
               <span className="text-heading3 gradient-text">
                 FEBRUARY 28, 2025
               </span>
+              <Form className="w-full">
+                <Controller
+                  control={formMethods.control}
+                  name="address"
+                  rules={{
+                    required: 'Address is required',
+                    validate: async (value) => {
+                      try {
+                        if (value.includes('.') && !value.endsWith('.')) {
+                          const resolvedAddress =
+                            await ethereumClient?.getEnsAddress({
+                              name: normalize(value),
+                            });
+                          return resolvedAddress
+                            ? true
+                            : 'This address doesn’t exist.';
+                        }
+                        return isAddress(value)
+                          ? true
+                          : 'This address doesn’t exist.';
+                      } catch (error) {
+                        console.log(error);
+                        return 'An unexpected error occurred. Try again.';
+                      }
+                    },
+                  }}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <Form.Field
+                        label="Wallet address"
+                        className="mt-6 w-full"
+                        helperText={fieldState.error?.message}
+                        error={Boolean(fieldState.error?.message)}
+                        {...field}
+                      />
+                    );
+                  }}
+                />
+              </Form>
             </div>
             <Button
               intent="primary"
@@ -59,6 +131,7 @@ export default function CheckEligibility() {
               isExternal
               suffixIconName="ArrowRight"
               asLink
+              onClick={verifyEligibility}
             >
               CHECK ELIGIBILITY
             </Button>
