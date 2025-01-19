@@ -80,9 +80,10 @@ export const ClaimContent = () => {
           <Button
             intent="primary"
             size="large"
-            isExternal
-            asLink
             className="w-full"
+            onClick={() => {
+              return navigate('/vesting-plans');
+            }}
           >
             CLAIM YOUR $IDRISS
           </Button>
@@ -117,7 +118,9 @@ export const ClaimContent = () => {
               subTitle={`${new Intl.NumberFormat('en-US', {
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0,
-              }).format(Number(eligibilityData.allocation_extension ?? 0))} IDRISS`}
+              }).format(
+                Number(eligibilityData.allocation_extension ?? 0),
+              )} IDRISS`}
               description="You have made at least 1 transaction"
             />
             <ExpandableInfo
