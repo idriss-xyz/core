@@ -11,10 +11,9 @@
         "!.next/cache/**"
       ],
       "env": [
-        "BASIC_AUTH_USER",
-        "BASIC_AUTH_PASSWORD",
         "ENVIRONMENT",
-        "RAILWAY_PUBLIC_DOMAIN"
+        "RAILWAY_PUBLIC_DOMAIN",
+        "DEV_LOGIN_PASSWORD"
       ]
     },
     "@idriss-xyz/main-landing#start": {
@@ -22,20 +21,18 @@
         "@idriss-xyz/main-landing#build"
       ],
       "env": [
-        "BASIC_AUTH_USER",
-        "BASIC_AUTH_PASSWORD",
         "ENVIRONMENT",
-        "RAILWAY_PUBLIC_DOMAIN"
+        "RAILWAY_PUBLIC_DOMAIN",
+        "DEV_LOGIN_PASSWORD"
       ]
     },
     "@idriss-xyz/main-landing#dev": {
       "cache": false,
       "persistent": true,
       "env": [
-        "BASIC_AUTH_USER",
-        "BASIC_AUTH_PASSWORD",
         "ENVIRONMENT",
-        "RAILWAY_PUBLIC_DOMAIN"
+        "RAILWAY_PUBLIC_DOMAIN",
+        "DEV_LOGIN_PASSWORD"
       ]
     },
     "@idriss-xyz/extension#dev": {
