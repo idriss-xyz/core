@@ -18,9 +18,7 @@ export const Providers = ({ children }: Properties) => {
       <WithPortal>
         <NiceModal.Provider>
           <WalletContextProvider>
-            <ClaimPageProvider>
-              {children}
-            </ClaimPageProvider>
+            <ClaimPageProvider>{children}</ClaimPageProvider>
           </WalletContextProvider>
         </NiceModal.Provider>
       </WithPortal>

@@ -8,4 +8,5 @@ export const CLAIM_PAGE_ROUTE = {
   CLAIM_SUCCESSFUL: '/claim-successful',
 } as const;
 
-export type ClaimPageRoute = (typeof CLAIM_PAGE_ROUTE)[keyof typeof CLAIM_PAGE_ROUTE];
+export type ClaimPageRoute =
+  (typeof CLAIM_PAGE_ROUTE)[keyof typeof CLAIM_PAGE_ROUTE];

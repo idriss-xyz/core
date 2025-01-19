@@ -11,8 +11,8 @@ const environment = process.env.ENVIRONMENT;
 
 const environmentFile = {
   production: '.env.production',
-  development: '.env.development'
-}
+  development: '.env.development',
+};
 config({
   path: path.resolve(__dirname, environmentFile[environment]),
   example: './.env.example',
@@ -164,7 +164,7 @@ const nextConfig: NextConfig = {
     domains: ['localhost'],
   },
   env: {
-    DEV_LOGIN_PASSWORD: process.env.DEV_LOGIN_PASSWORD, 
+    DEV_LOGIN_PASSWORD: process.env.DEV_LOGIN_PASSWORD,
     RAILWAY_PUBLIC_DOMAIN: process.env.RAILWAY_PUBLIC_DOMAIN,
   },
 };

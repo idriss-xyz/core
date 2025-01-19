@@ -25,7 +25,7 @@ export const Collapsible = ({ header, content }: Properties) => {
         </RadixCollapsible.Trigger>
       </div>
 
-      <RadixCollapsible.Content className="data-[state=open]:animate-collapsible-slide-down data-[state=closed]:animate-collapsible-slide-up overflow-hidden">
+      <RadixCollapsible.Content className="overflow-hidden data-[state=closed]:animate-collapsible-slide-up data-[state=open]:animate-collapsible-slide-down">
         {content}
       </RadixCollapsible.Content>
     </RadixCollapsible.Root>

@@ -23,7 +23,12 @@ const ethereumClient = createPublicClient({
 });
 
 export const CheckEligibilityContent = () => {
-  const { navigate, setWalletAddress, eligibilityData, eligibilityDataLoading } = useClaimPage();
+  const {
+    navigate,
+    setWalletAddress,
+    eligibilityData,
+    eligibilityDataLoading,
+  } = useClaimPage();
   const formMethods = useForm<FormPayload>({
     defaultValues: {
       address: '',
@@ -137,7 +142,9 @@ export const CheckEligibilityContent = () => {
           size="large"
           suffixIconName="ArrowRight"
           onClick={verifyEligibility}
-          loading={resolveEnsAddressMutation.isPending || eligibilityDataLoading}
+          loading={
+            resolveEnsAddressMutation.isPending || eligibilityDataLoading
+          }
         >
           CHECK ELIGIBILITY
         </Button>
