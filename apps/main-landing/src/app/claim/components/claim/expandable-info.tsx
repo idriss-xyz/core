@@ -4,13 +4,13 @@ import { Collapsible } from '@idriss-xyz/ui/collapsible';
 type Properties = {
   title: string;
   subTitle: string;
-  describtion: string;
+  description: string;
 };
 
 export const ExpandableInfo = ({
   title,
   subTitle,
-  describtion,
+  description,
 }: Properties) => {
   return (
     <Collapsible
@@ -26,7 +26,7 @@ export const ExpandableInfo = ({
       content={
         <div className="flex flex-row">
           <span className="mt-1 pl-10 text-body5 text-neutralGreen-500">
-            {describtion}
+            {description}
           </span>
         </div>
       }

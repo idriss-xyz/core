@@ -6,6 +6,8 @@ import { ReactNode } from 'react';
 
 import { QueryProvider } from '@/providers';
 
+import { ClaimPageProvider } from './claim-page-context';
+
 type Properties = {
   children: ReactNode;
 };
@@ -16,7 +18,9 @@ export const Providers = ({ children }: Properties) => {
       <WithPortal>
         <NiceModal.Provider>
           <WalletContextProvider>
-            <>{children}</>
+            <ClaimPageProvider>
+              {children}
+            </ClaimPageProvider>
           </WalletContextProvider>
         </NiceModal.Provider>
       </WithPortal>

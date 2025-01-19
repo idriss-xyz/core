@@ -3,7 +3,7 @@ import { Modal } from '@idriss-xyz/ui/modal';
 import { Button } from '@idriss-xyz/ui/button';
 import { Icon } from '@idriss-xyz/ui/icon';
 
-import idrissCoin from '../assets/IDRISS_COIN 1.png';
+import idrissCoin from '../../assets/IDRISS_COIN 1.png';
 
 export const ClaimSuccessfulModal = () => {
   return (

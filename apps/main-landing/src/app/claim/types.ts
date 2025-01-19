@@ -1,7 +1,3 @@
-export type FormPayload = {
-  address: string;
-};
-
 export type EligibilityCheckResponse = {
   "paid": number,
   "free": number,
@@ -22,5 +18,8 @@ export type EligibilityCheckResponse = {
   "invite_multiplier": number,
   "allocation_usage": number,
   "allocation_partner": number,
-  "allocation": number
+  "allocation": number,
+  "allocation_gitcoin": number,
+  "allocation_extension": number,
+  "allocation_registrations": number
 }
