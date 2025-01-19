@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-const protectedRoutes = ['/check-eligibility', '/claim'];
+const protectedRoutes = ['/stake', '/claim'];
 
 export function middleware(request: NextRequest) {
   const url = request.nextUrl;
