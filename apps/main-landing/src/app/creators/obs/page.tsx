@@ -35,7 +35,6 @@ const FETCH_INTERVAL = 5000;
 export default function Obs() {
   const router = useRouter();
   const searchParameters = useSearchParams();
-  const address = searchParameters.get('address');
   const [resolvedAddress, setResolvedAddress] = useState<Hex | null>(null);
   const [donationsQueue, setDonationsQueue] = useState<
     DonationNotificationProperties[]
@@ -44,6 +43,13 @@ export default function Obs() {
 
   useEffect(() => {
     const resolveAddress = async () => {
+      let address = searchParameters.get('streamerAddress');
+      const newStreamerAddress = searchParameters.get('address');
+
+      if (newStreamerAddress) {
+        address = newStreamerAddress;
+      }
+
       if (!address) {
         router.push('/creators');
         return;
@@ -71,7 +77,7 @@ export default function Obs() {
       console.error('Unexpected error resolving address:', error);
       router.push('/creators');
     });
-  }, [address, router]);
+  }, [searchParameters, router]);
 
   const displayNextDonation = useCallback(() => {
     setIsDisplayingDonation(true);
