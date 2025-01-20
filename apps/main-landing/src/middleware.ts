@@ -3,6 +3,7 @@ import type { NextRequest } from 'next/server';
 
 const protectedRoutes = ['/stake', '/claim'];
 
+// ts-unused-exports:disable-next-line
 export function middleware(request: NextRequest) {
   const url = request.nextUrl;
   const password = request.cookies.get('password')?.value;
@@ -19,6 +20,7 @@ export function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
+// ts-unused-exports:disable-next-line
 export const config = {
   matcher: protectedRoutes,
 };
