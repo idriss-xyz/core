@@ -1,0 +1,25 @@
+export type EligibilityCheckResponse = {
+  paid: number;
+  free: number;
+  extension: number;
+  registration: string;
+  invites: number;
+  farcaster: number;
+  hacker: number;
+  ardent: number;
+  aavegotchi: number;
+  gitcoin: number;
+  across: number;
+  polymarket: number;
+  snapshot: number;
+  tally: number;
+  jumper: number;
+  time_multiplier: number;
+  invite_multiplier: number;
+  allocation_usage: number;
+  allocation_partner: number;
+  allocation: number;
+  allocation_gitcoin: number;
+  allocation_extension: number;
+  allocation_registrations: number;
+};
