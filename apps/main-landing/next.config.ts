@@ -7,7 +7,7 @@ import { BRAND_GUIDELINE_LINK } from '@idriss-xyz/constants';
 import { config } from 'dotenv-safe';
 
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
-const environment = process.env.ENVIRONMENT;
+const environment = process.env.ENVIRONMENT || 'development';
 
 const environmentFile = {
   production: '.env.production',
