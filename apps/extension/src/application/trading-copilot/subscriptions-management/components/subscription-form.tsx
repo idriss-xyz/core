@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { isAddress } from 'viem';
 
 import { useCommandMutation } from 'shared/messaging';
 import { ErrorMessage } from 'shared/ui';
+import { isFarcasterName } from 'shared/utils';
 
 import {
   GetEnsAddressCommand,
@@ -39,24 +41,21 @@ export const SubscriptionForm = ({
 
   const addSubscriber: SubmitHandler<FormValues> = useCallback(
     async (data) => {
-      const hexPattern = /^0x[\dA-Fa-f]+$/;
-      const farcasterPattern = /^[^.]+$/;
-      const isWalletAddress = hexPattern.test(data.subscription);
-      const isFarcasterName = farcasterPattern.test(data.subscription);
-
       if (Number(subscriptionsAmount) >= subscriptionLimit) {
         setShowError(true);
         form.reset(EMPTY_FORM);
+
         return;
       }
 
-      if (isWalletAddress) {
+      if (isAddress(data.subscription)) {
         onSubmit({ address: data.subscription });
         form.reset(EMPTY_FORM);
+
         return;
       }
 
-      if (isFarcasterName) {
+      if (isFarcasterName(data.subscription)) {
         const farcasterDetails = await getFarcasterAddressMutation.mutateAsync({
           name: data.subscription,
         });
@@ -70,6 +69,7 @@ export const SubscriptionForm = ({
           fid: farcasterDetails.fid,
         });
         form.reset(EMPTY_FORM);
+
         return;
       }
 
