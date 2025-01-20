@@ -5,15 +5,15 @@ import {
   HandlerResponseError,
   OkResult,
 } from 'shared/messaging';
+import { Hex } from 'shared/web3';
 
-type Payload = Record<string, never>;
-type Response = Record<
-  string,
-  {
-    fid: number;
-    address: string;
-  } | null
->;
+type Payload = {
+  name: string;
+};
+type Response = {
+  fid: number;
+  address: Hex;
+} | null;
 
 export class GetFarcasterVerifiedAddressCommand extends Command<
   Payload,

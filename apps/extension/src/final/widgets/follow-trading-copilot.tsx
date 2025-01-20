@@ -12,25 +12,25 @@ import {
 } from 'application/trading-copilot';
 import { Hex, Wallet } from 'shared/web3';
 import { useAuthToken, useWallet } from 'shared/extension';
+import { GetFarcasterVerifiedAddressCommand } from 'shared/farcaster';
 
-import { useUserWidgets, useLocationInfo } from '../hooks';
+import { useLocationInfo } from '../hooks';
 import { TradingCopilotTooltip } from '../notifications-popup/components/trading-copilot-tooltip';
 
 export const FollowTradingCopilot = () => {
   const { wallet } = useWallet();
-  const { widgets } = useUserWidgets();
   const { isTwitter, isUserPage, username, isWarpcast, isConversation } =
     useLocationInfo();
   const [portal, setPortal] = useState<HTMLDivElement>();
 
-  const widgetsWithMatchingUsername = widgets.filter((widget) => {
-    return widget.username === username;
+  const getFarcasterAddressQuery = useCommandQuery({
+    command: new GetFarcasterVerifiedAddressCommand({
+      name: username ?? '',
+    }),
+    staleTime: Number.POSITIVE_INFINITY,
   });
 
-  const userId =
-    widgetsWithMatchingUsername.find((widget) => {
-      return widget.type === 'idrissSend';
-    })?.walletAddress ?? '';
+  const userId = getFarcasterAddressQuery.data?.address;
 
   const enabledForTwitter =
     isTwitter && isUserPage && Boolean(username) && Boolean(userId);
