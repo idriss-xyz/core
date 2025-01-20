@@ -28,6 +28,7 @@ export const FollowTradingCopilot = () => {
       name: username ?? '',
     }),
     staleTime: Number.POSITIVE_INFINITY,
+    enabled: !!username,
   });
 
   const userId = getFarcasterAddressQuery.data?.address;
