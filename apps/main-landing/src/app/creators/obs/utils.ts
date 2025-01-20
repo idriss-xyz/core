@@ -68,22 +68,42 @@ export async function calculateDollar(
   }
 }
 
-export const resolveEnsName = async (address: Hex) => {
-  let resolved = await clientEthereum.getEnsName({ address });
+export const resolveEnsName = async (address: Hex): Promise<string | null> => {
+  try {
+    let resolved = await clientEthereum.getEnsName({ address });
+    if (resolved) return resolved;
 
-  if (!resolved) {
-    try {
-      const response = await fetch(
-        `https://api.idriss.xyz/v1/ENS-Addresses?identifier=${address}`,
+    const response = await fetch(
+      `https://api.idriss.xyz/v1/ENS-Addresses?identifier=${address}`,
+    );
+    if (!response.ok) {
+      console.error(
+        `Idriss API error: ${response.status} ${response.statusText}`,
       );
-      const data = await response.json();
-      resolved = data.ens;
-    } catch (error) {
-      console.error('Error resolving ENS:', error);
+      return null;
     }
-  }
 
-  return resolved;
+    const data = await response.json();
+    resolved = data.ens || null;
+    return resolved;
+  } catch (error) {
+    console.error('Error resolving ENS name from address:', error);
+    return null;
+  }
+};
+
+export const resolveEnsToHex = async (ensName: string): Promise<Hex | null> => {
+  try {
+    const resolvedAddress = await clientEthereum.getEnsAddress({
+      name: ensName,
+    });
+    if (resolvedAddress) return resolvedAddress;
+    console.error(`Unable to resolve ENS name to an address: ${ensName}`);
+    return null;
+  } catch (error) {
+    console.error('Error resolving ENS name to hex address:', error);
+    return null;
+  }
 };
 
 export const TIP_MESSAGE_EVENT_ABI: Record<string, string> = {

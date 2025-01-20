@@ -6,6 +6,7 @@ import {
   type AbiEvent,
   decodeFunctionData,
   type Hex,
+  isAddress,
   parseAbiItem,
 } from 'viem';
 
@@ -22,6 +23,7 @@ import { clients } from './constants/blockchain-clients';
 import {
   calculateDollar,
   resolveEnsName,
+  resolveEnsToHex,
   TIP_MESSAGE_EVENT_ABI,
 } from './utils';
 
@@ -33,18 +35,49 @@ const FETCH_INTERVAL = 5000;
 export default function Obs() {
   const router = useRouter();
   const searchParameters = useSearchParams();
-  const address = searchParameters.get('address') as Hex;
-
+  const [resolvedAddress, setResolvedAddress] = useState<Hex | null>(null);
   const [donationsQueue, setDonationsQueue] = useState<
     DonationNotificationProperties[]
   >([]);
   const [isDisplayingDonation, setIsDisplayingDonation] = useState(false);
 
   useEffect(() => {
-    if (!address) {
+    const resolveAddress = async () => {
+      let address = searchParameters.get('streamerAddress');
+      const newStreamerAddress = searchParameters.get('address');
+
+      if (newStreamerAddress) {
+        address = newStreamerAddress;
+      }
+
+      if (!address) {
+        router.push('/creators');
+        return;
+      }
+
+      if (isAddress(address)) {
+        setResolvedAddress(address);
+      } else {
+        try {
+          const resolved = await resolveEnsToHex(address);
+          if (resolved && isAddress(resolved)) {
+            setResolvedAddress(resolved);
+          } else {
+            console.error('Invalid ENS name or address provided:', address);
+            router.push('/creators');
+          }
+        } catch (error) {
+          console.error('Error resolving ENS or address:', error);
+          router.push('/creators');
+        }
+      }
+    };
+
+    resolveAddress().catch((error) => {
+      console.error('Unexpected error resolving address:', error);
       router.push('/creators');
-    }
-  }, [address, router]);
+    });
+  }, [searchParameters, router]);
 
   const displayNextDonation = useCallback(() => {
     setIsDisplayingDonation(true);
@@ -74,7 +107,7 @@ export default function Obs() {
   );
 
   const fetchTipMessageLogs = useCallback(async () => {
-    if (!address) return;
+    if (!resolvedAddress) return;
 
     for (const { chain, client, name } of clients) {
       try {
@@ -93,7 +126,7 @@ export default function Obs() {
           address: CHAIN_TO_IDRISS_TIPPING_ADDRESS[chain],
           event: parsedEvent,
           args: {
-            recipientAddress: address,
+            recipientAddress: resolvedAddress,
           },
           fromBlock: latestBlock - BLOCK_LOOKBACK_RANGE,
           toBlock: latestBlock,
@@ -153,14 +186,16 @@ export default function Obs() {
         console.error('Error fetching tip message log:', error);
       }
     }
-  }, [address, addDonation]);
+  }, [resolvedAddress, addDonation]);
 
   useEffect(() => {
+    if (!resolvedAddress) return;
+
     const intervalId = setInterval(fetchTipMessageLogs, FETCH_INTERVAL);
     return () => {
       return clearInterval(intervalId);
     };
-  }, [fetchTipMessageLogs]);
+  }, [resolvedAddress, fetchTipMessageLogs]);
 
   useEffect(() => {
     if (!isDisplayingDonation && donationsQueue.length > 0) {
