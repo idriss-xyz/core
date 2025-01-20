@@ -73,7 +73,7 @@
       "cache": false,
       "persistent": true,
       "env": [
-        "CHALLENGE_SECRET",
+        "TOP_ADDRESSES_SECRET",
         "JWT_SECRET",
         "DATABASE_HOST",
         "DATABASE_PORT",
@@ -86,7 +86,7 @@
       "cache": true,
       "persistent": true,
       "env": [
-        "CHALLENGE_SECRET",
+        "TOP_ADDRESSES_SECRET",
         "JWT_SECRET",
         "DATABASE_HOST",
         "DATABASE_PORT",
