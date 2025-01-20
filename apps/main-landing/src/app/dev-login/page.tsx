@@ -11,7 +11,7 @@ export default function DevelopmentLoginPage() {
     const checkPassword = () => {
       const password = prompt('Enter the password to access this page:');
 
-      if (password === process.env.DEV_LOGIN_PASSWORD) {
+      if (process.env.DEV_LOGIN_PASSWORD && password === process.env.DEV_LOGIN_PASSWORD) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         Cookies.set('password', password, { path: '/' });
 

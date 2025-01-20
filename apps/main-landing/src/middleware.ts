@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-const protectedRoutes = ['/stake', '/claim'];
 
 // ts-unused-exports:disable-next-line
 export function middleware(request: NextRequest) {
@@ -9,8 +8,8 @@ export function middleware(request: NextRequest) {
   const password = request.cookies.get('password')?.value;
 
   if (
-    protectedRoutes.includes(url.pathname) &&
-    password !== process.env.DEV_LOGIN_PASSWORD
+    ['/stake', '/claim'].includes(url.pathname) &&
+    (password !== process.env.DEV_LOGIN_PASSWORD || !process.env.DEV_LOGIN_PASSWORD)
   ) {
     const loginUrl = new URL('/dev-login', request.url);
     loginUrl.searchParams.set('redirect', url.pathname);
@@ -22,5 +21,5 @@ export function middleware(request: NextRequest) {
 
 // ts-unused-exports:disable-next-line
 export const config = {
-  matcher: protectedRoutes,
+  matcher: ['/stake', '/claim'],
 };
