@@ -7,6 +7,10 @@ import {
 import { verifyToken } from '../middleware/auth.middleware';
 import { getQuote } from '@lifi/sdk';
 import { connectedClients } from '../services/scheduler';
+import { dataSource } from '../db';
+import { SubscriptionsEntity } from '../entities/subscribtions.entity';
+
+const subscriptionsRepo = dataSource.getRepository(SubscriptionsEntity);
 
 const router = express.Router();
 
@@ -148,5 +152,22 @@ router.post('/get-quote', async (req, res) => {
     console.error('Error getting quote: ' + err);
     res.status(429).json({ error: 'You reach Lifi limit' });
   }
+});
+
+router.get('/top-addresses', async (req, res) => {
+  const { secret } = req.query;
+  if (secret !== process.env.TOP_ADDRESSES_SECRET) {
+    res.status(401).json({ error: 'Unauthorized' });
+    return;
+  }
+
+  const data = await subscriptionsRepo
+    .createQueryBuilder()
+    .select(['address', 'CAST(COUNT(subscriber_id) AS INTEGER) as count'])
+    .groupBy('address')
+    .orderBy('count', 'DESC')
+    .limit(10)
+    .getRawMany();
+  res.status(200).json(data);
 });
 export default router;
