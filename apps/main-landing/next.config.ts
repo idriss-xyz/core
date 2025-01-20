@@ -11,11 +11,6 @@ const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 const loadEnvironmentConfig = () => {
   // Skip dotenv-safe in CI environment
   if (process.env.CI) {
-    console.log('Skipping dotenv-safe in CI environment');
-    console.log('Available environment variables:', process.env);
-
-    console.log('ENVIRONMENT:', process.env.ENVIRONMENT);
-    console.log('CI:', process.env.CI);
     return;
   }
 
@@ -31,16 +26,11 @@ const loadEnvironmentConfig = () => {
       allowEmptyValues: true,
       example: path.resolve(__dirname, '.env.example'),
     });
-    console.log(
-      `Loaded environment config from ${environmentFile[environment]}`,
-    );
   } catch (error) {
     console.warn('Error loading environment config:', error);
-    // Don't throw error, allow process to continue
   }
 };
 
-// Load environment configuration before defining Next.js config
 loadEnvironmentConfig();
 
 const LEGACY_URLS = [
