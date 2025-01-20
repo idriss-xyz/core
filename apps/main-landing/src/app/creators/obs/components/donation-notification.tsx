@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, type CSSProperties } from 'react';
+import Image from 'next/image';
 
 import { IDRISS_ICON_CIRCLE, NOTIFICATION_SOUND } from '@/assets';
 
@@ -46,23 +47,23 @@ const DonationNotification = ({
       aria-live="polite"
       nonce={txnHash}
       style={style}
-      className={`absolute left-0 top-0 flex items-center rounded-r-md bg-opacity-80 p-4 transition-opacity duration-1000 ${bgColor} ${
+      className={`absolute left-0 top-0 flex items-center rounded-r-md p-4 transition-opacity duration-1000 ${bgColor} ${
         showNotification ? 'opacity-100' : 'opacity-0'
       }`}
     >
       <div className="flex size-14 items-center justify-center">
-        <img
+        <Image
           className="h-14 w-auto rounded-full"
           src={customIcon}
           alt="IDRISS logo"
         />
       </div>
       <div>
-        <p id="baseInfo" className="text-gray-900 ml-3 text-xl font-bold">
+        <p id="baseInfo" className="text-neutral-900 ml-3 text-xl font-bold">
           {`${donor} sent $${amount}`}
         </p>
         {message && (
-          <p id="message" className="text-gray-900 ml-3 text-lg font-medium">
+          <p id="message" className="text-neutral-900 ml-3 text-lg font-medium">
             {message}
           </p>
         )}
