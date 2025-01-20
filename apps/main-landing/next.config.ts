@@ -15,6 +15,7 @@ const environmentFile = {
 };
 config({
   path: path.resolve(__dirname, environmentFile[environment]),
+  allowEmptyValues: true
 });
 
 const LEGACY_URLS = [
