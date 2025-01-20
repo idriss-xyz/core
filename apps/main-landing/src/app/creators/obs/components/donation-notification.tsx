@@ -41,30 +41,30 @@ const DonationNotification = ({
 
   return (
     <div
-      id="fader"
       role="alert"
       aria-live="polite"
       nonce={txnHash}
       style={style}
-      className={`absolute left-0 top-0 flex items-center rounded-r-md bg-opacity-80 p-4 transition-opacity duration-1000 ${bgColor} ${
+      className={`absolute left-0 top-0 m-3 flex items-start rounded-xl p-4 shadow-lg transition-opacity duration-1000 ${bgColor} ${
         showNotification ? 'opacity-100' : 'opacity-0'
       }`}
     >
-      <div className="flex size-14 items-center justify-center">
+      <div className="flex items-center justify-center">
         <img
-          className="h-14 w-auto rounded-full"
+          className="size-12 rounded-full"
           src={customIcon}
           alt="IDRISS logo"
         />
       </div>
-      <div>
-        <p id="baseInfo" className="text-gray-900 ml-3 text-xl font-bold">
-          {`${donor} sent $${amount}`}
-        </p>
-        {message && (
-          <p id="message" className="text-gray-900 ml-3 text-lg font-medium">
-            {message}
+      <div className="ml-2 flex flex-col justify-center">
+        <div className="flex items-center gap-x-2">
+          <p className="text-label3 text-neutral-900">
+            {`${donor} `}
+            <span className="text-body3 text-neutral-600">{`sent $${amount}`}</span>
           </p>
+        </div>
+        {message && (
+          <p className="text-body3 font-medium text-neutral-900">{message}</p>
         )}
       </div>
     </div>
