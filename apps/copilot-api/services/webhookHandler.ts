@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { AlchemyWebhookEvent } from '../interfaces';
-import { handleIncomingEvent } from '../utils/webhookUtils';
+import { AlchemyWebhookEvent, ComplexHeliusWebhookEvent } from '../interfaces';
+import { handleIncomingEvent, handleIncomingSolanaEvent } from '../utils/webhookUtils';
 
 // Webhook handler function
 export function webhookHandler() {
@@ -12,3 +12,14 @@ export function webhookHandler() {
     res.send('Event received');
   };
 }
+
+export const heliusWebhookHandler = () => {
+  return async (req: Request, res: Response): Promise<void> => {
+    const { accountData, events, slot } = req.body as ComplexHeliusWebhookEvent;
+
+    // Process different Helius webhook events
+    await handleIncomingSolanaEvent(events)
+
+    res.status(200).json({ received: true });
+  };
+};

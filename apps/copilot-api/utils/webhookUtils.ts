@@ -1,10 +1,9 @@
-import { NextFunction } from 'express';
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import * as crypto from 'crypto';
 import { SwapData } from '../types';
 import { isSubscribedAddress } from '../services/subscriptionManager';
 import { NULL_ADDRESS } from '../constants';
-import { AlchemyWebhookEvent } from '../interfaces';
+import { AlchemyWebhookEvent, ComplexHeliusWebhookEvent } from '../interfaces';
 import { eventCache } from '../services/scheduler';
 
 export function validateAlchemySignature(
@@ -35,6 +34,25 @@ export function validateAlchemySignature(
     }
   };
 }
+
+export const validateHeliusSignature = (getKey: Function) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    const rawBody = (req as any).rawBody as string;
+    const signature = req.headers['x-helius-signature'] as string;
+    const webhookId = req.params.internalWebhookId;
+    const key = await getKey(webhookId);
+
+    // Helius uses HMAC SHA-256 for webhook signatures
+    const isValid = isValidSignatureForStringBody(rawBody, signature,  key);
+
+    if (!isValid) {
+      return res.status(401).json({ error: 'Invalid signature' });
+    }
+
+    next();
+  };
+};
+
 
 function isValidSignatureForStringBody(
   body: string,
@@ -199,4 +217,10 @@ export async function handleIncomingEvent(
     activity.network = webhookEvent.event.network?.replace('_MAINNET', '');
     eventCache[txHash].activities.push(activity);
   }
+}
+
+export async function handleIncomingSolanaEvent (
+  webhookEvent: ComplexHeliusWebhookEvent,
+): Promise<void> {
+  // Extract the necessary data from the webhook event and add it to activities cache
 }
