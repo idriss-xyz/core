@@ -13,7 +13,7 @@ const loadEnvironmentConfig = () => {
   if (process.env.CI) {
     console.log('Skipping dotenv-safe in CI environment');
     console.log('Available environment variables:', process.env);
-    
+
     console.log('ENVIRONMENT:', process.env.ENVIRONMENT);
     console.log('CI:', process.env.CI);
     return;
@@ -29,9 +29,11 @@ const loadEnvironmentConfig = () => {
     config({
       path: path.resolve(__dirname, environmentFile[environment]),
       allowEmptyValues: true,
-      example: path.resolve(__dirname, '.env.example')
+      example: path.resolve(__dirname, '.env.example'),
     });
-    console.log(`Loaded environment config from ${environmentFile[environment]}`);
+    console.log(
+      `Loaded environment config from ${environmentFile[environment]}`,
+    );
   } catch (error) {
     console.warn('Error loading environment config:', error);
     // Don't throw error, allow process to continue

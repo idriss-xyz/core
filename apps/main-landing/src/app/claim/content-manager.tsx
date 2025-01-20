@@ -10,7 +10,7 @@ import { useClaimPage } from './claim-page-context';
 import { CheckEligibilityContent } from './components/check-eligibility/check-eligibility-content';
 import { ClaimContent } from './components/claim/claim-content';
 import { ClaimSuccessfulModal } from './components/claim/claim-successful-modal';
-import { VestingPlanContent } from './components/vesting-plan/vesting-plan-content';
+// import { VestingPlanContent } from './components/vesting-plan/vesting-plan-content';
 
 export const ContentManager = () => {
   const { currentRoute } = useClaimPage();
@@ -27,7 +27,7 @@ export const ContentManager = () => {
         return <ClaimSuccessfulModal />;
       }
       case '/vesting-plans': {
-        return <VestingPlanContent />;
+        return <h1>{/* <VestingPlanContent /> */}</h1>;
       }
       default: {
         return <CheckEligibilityContent />;
