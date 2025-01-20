@@ -5,9 +5,8 @@ declare global {
       DEV_LOGIN_PASSWORD: string;
       RAILWAY_PUBLIC_DOMAIN: string;
       ENVIRONMENT: 'production' | 'development';
-      CI: string
     }
   }
 }
 
-export {};
+export { };

@@ -15,8 +15,6 @@ const environmentFile = {
 };
 config({
   path: path.resolve(__dirname, environmentFile[environment]),
-  example: './.env.example',
-  allowEmptyValues: process.env.CI === 'true',
 });
 
 const LEGACY_URLS = [
