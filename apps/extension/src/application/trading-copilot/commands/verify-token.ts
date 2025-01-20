@@ -25,12 +25,12 @@ export class VerifyTokenCommand extends Command<Payload, Response> {
         body: JSON.stringify(this.payload),
       });
 
-      // endpoint throws 401 if token is outdated
-      if (response.status === 401) {
-        return new OkResult(false);
+      // endpoint return status 200 if token is valid
+      if (response.status === 200) {
+        return new OkResult(true);
       }
 
-      return new OkResult(true);
+      return new OkResult(false);
     } catch (error) {
       this.captureException(error);
       return new OkResult(false);
