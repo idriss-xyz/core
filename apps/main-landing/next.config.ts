@@ -12,8 +12,7 @@ const loadEnvironmentConfig = () => {
   // Skip dotenv-safe in CI environment
   if (process.env.CI) {
     console.log('Skipping dotenv-safe in CI environment');
-    const environmentKeys = Object.keys(process.env);
-    console.log('Available environment variables:', environmentKeys);
+    console.log('Available environment variables:', process.env);
     
     console.log('ENVIRONMENT:', process.env.ENVIRONMENT);
     console.log('CI:', process.env.CI);
@@ -188,8 +187,8 @@ const nextConfig: NextConfig = {
     domains: ['localhost'],
   },
   env: {
-    DEV_LOGIN_PASSWORD: process.env.DEV_LOGIN_PASSWORD,
-    RAILWAY_PUBLIC_DOMAIN: process.env.RAILWAY_PUBLIC_DOMAIN,
+    DEV_LOGIN_PASSWORD: process.env.DEV_LOGIN_PASSWORD || '',
+    RAILWAY_PUBLIC_DOMAIN: process.env.RAILWAY_PUBLIC_DOMAIN || '',
   },
 };
 
