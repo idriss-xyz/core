@@ -7,16 +7,40 @@ import { BRAND_GUIDELINE_LINK } from '@idriss-xyz/constants';
 import { config } from 'dotenv-safe';
 
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
-const environment = process.env.ENVIRONMENT || 'production';
 
-const environmentFile = {
-  production: '.env.production',
-  development: '.env.development',
+const loadEnvironmentConfig = () => {
+  // Skip dotenv-safe in CI environment
+  if (process.env.CI) {
+    console.log('Skipping dotenv-safe in CI environment');
+    const environmentKeys = Object.keys(process.env);
+    console.log('Available environment variables:', environmentKeys);
+    
+    console.log('ENVIRONMENT:', process.env.ENVIRONMENT);
+    console.log('CI:', process.env.CI);
+    return;
+  }
+
+  const environment = process.env.ENVIRONMENT || 'production';
+  const environmentFile = {
+    production: '.env.production',
+    development: '.env.development',
+  };
+
+  try {
+    config({
+      path: path.resolve(__dirname, environmentFile[environment]),
+      allowEmptyValues: true,
+      example: path.resolve(__dirname, '.env.example')
+    });
+    console.log(`Loaded environment config from ${environmentFile[environment]}`);
+  } catch (error) {
+    console.warn('Error loading environment config:', error);
+    // Don't throw error, allow process to continue
+  }
 };
-config({
-  path: path.resolve(__dirname, environmentFile[environment]),
-  allowEmptyValues: true
-});
+
+// Load environment configuration before defining Next.js config
+loadEnvironmentConfig();
 
 const LEGACY_URLS = [
   '/partner-whitelist',
