@@ -163,13 +163,22 @@ const FollowTradingCopilotContent = ({
     return detail.address.toLowerCase() === userId.toLowerCase();
   });
 
+  const subscriptionLimit = 10;
+  const subscriptionLimitExceeded =
+    Number(subscriptions.amount) >= subscriptionLimit;
+  const isButtonDisabled = !isSubscribed && subscriptionLimitExceeded;
+
   const onClickHandler = async () => {
     await (isSubscribed
       ? handleUnsubscribe({ address: userId })
       : handleSubscribe({ address: userId }));
   };
 
-  const tooltipContent = (
+  const tooltipContent = isButtonDisabled ? (
+    <span className="relative opacity-100 transition delay-200 duration-500">
+      Maximum {subscriptionLimit} subscriptions reached.
+    </span>
+  ) : (
     <>
       <span
         className={`absolute opacity-0 transition duration-500 ${isSubscribed ? 'opacity-100 delay-200' : 'opacity-0 delay-0'}`}
@@ -193,10 +202,14 @@ const FollowTradingCopilotContent = ({
         <Button
           onClick={onClickHandler}
           className={classes(
-            'relative flex cursor-pointer overflow-hidden rounded-full outline-none transition delay-300 duration-300',
+            'relative flex overflow-hidden rounded-full outline-none transition delay-300 duration-300',
             'border border-[#cfd9de] bg-white hover:bg-[##0f14191a]',
+            isButtonDisabled
+              ? 'cursor-not-allowed border-[#808080]'
+              : 'cursor-pointer',
             className,
           )}
+          disabled={isButtonDisabled}
         >
           <Icon
             name="Rocket"
