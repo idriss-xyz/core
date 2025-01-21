@@ -59,11 +59,11 @@ const DonationNotification = ({
         />
       </div>
       <div>
-        <p id="baseInfo" className="text-neutral-900 ml-3 text-xl font-bold">
+        <p id="baseInfo" className="ml-3 text-xl font-bold text-neutral-900">
           {`${donor} sent $${amount}`}
         </p>
         {message && (
-          <p id="message" className="text-neutral-900 ml-3 text-lg font-medium">
+          <p id="message" className="ml-3 text-lg font-medium text-neutral-900">
             {message}
           </p>
         )}
