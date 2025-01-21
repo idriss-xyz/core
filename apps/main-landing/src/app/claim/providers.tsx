@@ -11,7 +11,6 @@ import { QueryProvider } from '@/providers';
 import { ClaimPageProvider } from './claim-page-context';
 import { wagmiconfig } from './config';
 
-
 type Properties = {
   children: ReactNode;
 };
