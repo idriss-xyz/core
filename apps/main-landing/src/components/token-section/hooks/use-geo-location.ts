@@ -104,12 +104,14 @@ export const useGeoLocation = () => {
       }
     };
 
+    const currentController = controller.current;
+
     fetchGeoLocation().catch((error) => {
       console.error('Unexpected error in fetching geolocation:', error);
     });
 
     return () => {
-      controller.current.abort();
+      currentController.abort();
     };
   }, []);
 

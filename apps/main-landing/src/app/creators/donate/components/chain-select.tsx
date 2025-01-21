@@ -47,7 +47,6 @@ const optionsFrom = (
   return {
     label: chain.name,
     value: chain.id,
-    // eslint-disable-next-line @next/next/no-img-element
     prefix: <img src={chain.logo} className="size-6 rounded-full" alt="" />,
     suffix: renderSuffix?.(chain.id),
   };
