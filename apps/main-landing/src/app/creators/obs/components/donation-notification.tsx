@@ -1,7 +1,6 @@
 'use client';
 
 import { useMemo, type CSSProperties } from 'react';
-import Image from 'next/image';
 
 import { IDRISS_ICON_CIRCLE, NOTIFICATION_SOUND } from '@/assets';
 
@@ -52,7 +51,7 @@ const DonationNotification = ({
       }`}
     >
       <div className="flex size-14 items-center justify-center">
-        <Image
+        <img
           className="h-14 w-auto rounded-full"
           src={customIcon}
           alt="IDRISS logo"
