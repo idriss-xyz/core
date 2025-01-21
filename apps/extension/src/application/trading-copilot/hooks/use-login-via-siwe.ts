@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { useAuthToken, useWallet } from 'shared/extension';
+import { useTradingCopilot, useWallet } from 'shared/extension';
 import { useCommandMutation } from 'shared/messaging';
 import { createWalletClient, Wallet } from 'shared/web3';
 
@@ -13,7 +13,7 @@ import { SiweMessagePayload, VerifySiweSignaturePayload } from '../types';
 
 export const useLoginViaSiwe = () => {
   const { verifyWalletProvider } = useWallet();
-  const { getAuthToken, saveAuthToken } = useAuthToken();
+  const { getAuthToken, saveAuthToken } = useTradingCopilot();
   const getSiweMessage = useCommandMutation(GetSiweMessageCommand);
   const verifySiweSignature = useCommandMutation(VerifySiweSignatureCommand);
   const verifyAuthTokenMutation = useCommandMutation(VerifyTokenCommand);

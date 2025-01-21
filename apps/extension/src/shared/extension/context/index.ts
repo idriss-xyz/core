@@ -3,5 +3,8 @@ export {
   useExtensionPopup,
   ExtensionPopupProvider,
 } from './extension-popup-context';
-export { useAuthToken, AuthTokenContextProvider } from './auth-token-context';
+export {
+  useTradingCopilot,
+  TradingCopilotContextProvider,
+} from './trading-copilot-context';
 export { WalletContextProvider, useWallet } from './wallet-context';

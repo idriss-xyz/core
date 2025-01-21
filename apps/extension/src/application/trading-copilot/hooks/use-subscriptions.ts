@@ -7,7 +7,7 @@ import {
   useCommandQuery,
 } from 'shared/messaging';
 import { Wallet } from 'shared/web3';
-import { useAuthToken } from 'shared/extension';
+import { useTradingCopilot } from 'shared/extension';
 
 import {
   AddTradingCopilotSubscriptionCommand,
@@ -24,7 +24,7 @@ interface Properties {
 }
 
 export const useSubscriptions = ({ wallet, addTabListener }: Properties) => {
-  const { getAuthToken } = useAuthToken();
+  const { getAuthToken } = useTradingCopilot();
   const siwe = useLoginViaSiwe();
   const tabChangedListenerAdded = useRef(false);
 

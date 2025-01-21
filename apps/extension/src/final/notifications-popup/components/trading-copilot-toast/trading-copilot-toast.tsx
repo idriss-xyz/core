@@ -1,9 +1,11 @@
 import { Button } from '@idriss-xyz/ui/button';
 import { isAddress } from 'viem';
+import { MutableRefObject, useRef } from 'react';
 
 import { Icon, PreloadedImage } from 'shared/ui';
 import { getShortWalletHex, TimeDifferenceCounter } from 'shared/utils';
 import { roundToSignificantFiguresForCopilotTrading } from 'shared/web3';
+import { useTradingCopilot } from 'shared/extension';
 
 import { TokenIcon } from '../../utils';
 
@@ -17,6 +19,25 @@ export const TradingCopilotToast = ({
   tokenImage,
   tokenData,
 }: Properties) => {
+  const { toastSoundEnabled } = useTradingCopilot();
+  const playedTransactionHashes: MutableRefObject<Set<string>> = useRef(
+    new Set(),
+  );
+  const audioInstanceReference: MutableRefObject<HTMLAudioElement | null> =
+    useRef(null);
+  const lastPlayedTimestampReference: MutableRefObject<number | null> =
+    useRef(null);
+
+  if (toastSoundEnabled && toast.soundFile) {
+    playNotificationSound(
+      toast.transactionHash,
+      playedTransactionHashes,
+      audioInstanceReference,
+      lastPlayedTimestampReference,
+      toast.soundFile,
+    );
+  }
+
   const userName = ensName ?? toast.from;
 
   const { value: roundedNumber, index: zerosIndex } =
@@ -75,4 +96,49 @@ export const TradingCopilotToast = ({
       </div>
     </div>
   );
+};
+
+const playNotificationSound = (
+  transactionHash: string,
+  playedTransactionHashes: MutableRefObject<Set<string>>,
+  audioInstanceReference: MutableRefObject<HTMLAudioElement | null>,
+  lastPlayedTimestampReference: MutableRefObject<number | null>,
+  soundFile?: string,
+) => {
+  try {
+    if (playedTransactionHashes.current.has(transactionHash)) {
+      return;
+    }
+
+    const now = Date.now();
+
+    if (
+      lastPlayedTimestampReference.current &&
+      now - lastPlayedTimestampReference.current < 1000
+    ) {
+      return;
+    }
+
+    if (
+      !audioInstanceReference.current ||
+      audioInstanceReference.current.ended ||
+      audioInstanceReference.current.paused
+    ) {
+      audioInstanceReference.current = new Audio(soundFile);
+      audioInstanceReference.current.addEventListener('ended', () => {
+        audioInstanceReference.current = null;
+      });
+    }
+
+    if (audioInstanceReference.current?.paused) {
+      audioInstanceReference.current.play().catch((error) => {
+        console.error('Failed to play notification sound:', error);
+      });
+    }
+
+    playedTransactionHashes.current.add(transactionHash);
+    lastPlayedTimestampReference.current = now;
+  } catch (error) {
+    console.error('Error while trying to play notification sound:', error);
+  }
 };

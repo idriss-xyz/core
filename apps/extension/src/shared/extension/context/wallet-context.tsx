@@ -16,7 +16,7 @@ import { Hex, Wallet, WalletConnectModal } from '@idriss-xyz/wallet-connect';
 
 import { onWindowMessage } from '../../messaging';
 
-import { useAuthToken } from './auth-token-context';
+import { useTradingCopilot } from './trading-copilot-context';
 
 type WalletContextValue = {
   wallet?: Wallet;
@@ -49,7 +49,7 @@ export const WalletContextProvider = (properties: {
     properties;
   const [tabChangedListenerInitialized, setTabChangedListenerInitialized] =
     useState(false);
-  const { clearAuthToken } = useAuthToken();
+  const { clearAuthToken } = useTradingCopilot();
   const [wallet, setWallet] = useState<Wallet>();
   const walletConnectModal = useModal(WalletConnectModal, {
     disabledWalletsRdns: disabledWalletsRdns ?? [],
