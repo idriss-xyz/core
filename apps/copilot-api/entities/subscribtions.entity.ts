@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { SubscribersEntity } from './subscribers.entity';
-import { AddressesEntity } from './addreesses.entity';
+import { AddressesEntity } from './addresses.entity';
 
 @Entity('subscriptions')
 export class SubscriptionsEntity {
