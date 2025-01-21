@@ -1,10 +1,14 @@
 import { Command, OkResult } from 'shared/messaging';
 
-import { VerifyAuthTokenPayload as Payload } from '../types';
-
 import { COPILOT_API_URL } from './constants';
 
-export class VerifyTokenCommand extends Command<Payload, boolean> {
+type Payload = {
+  token: string;
+};
+
+type Response = boolean;
+
+export class VerifyTokenCommand extends Command<Payload, Response> {
   public readonly name = 'VerifyTokenCommand' as const;
 
   constructor(public payload: Payload) {
@@ -21,12 +25,12 @@ export class VerifyTokenCommand extends Command<Payload, boolean> {
         body: JSON.stringify(this.payload),
       });
 
-      // endpoint throws 401 if token is outdated
-      if (response.status === 401) {
-        return new OkResult(false);
+      // endpoint return status 200 if token is valid
+      if (response.status === 200) {
+        return new OkResult(true);
       }
 
-      return new OkResult(true);
+      return new OkResult(false);
     } catch (error) {
       this.captureException(error);
       return new OkResult(false);

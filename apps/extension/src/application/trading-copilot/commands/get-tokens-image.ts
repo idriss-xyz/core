@@ -10,7 +10,9 @@ type Payload = {
   tokeURI: string;
 };
 
-export class GetTokensImageCommand extends Command<Payload, string> {
+type Response = string;
+
+export class GetTokensImageCommand extends Command<Payload, Response> {
   public readonly name = 'GetTokensImageCommand' as const;
 
   constructor(public payload: Payload) {

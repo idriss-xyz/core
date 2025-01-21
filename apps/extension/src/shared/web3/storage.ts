@@ -9,6 +9,8 @@ interface StoredWallet {
 
 type StoredAuthToken = string | undefined;
 
+type StoredToastSoundState = boolean | undefined;
+
 export class WalletStorage {
   public static get(): Promise<StoredWallet | undefined> {
     return new Promise((resolve) => {
@@ -65,6 +67,36 @@ export class AuthTokenStorage {
   public static clear() {
     window.postMessage({
       type: 'CLEAR_AUTH_TOKEN',
+    });
+  }
+}
+
+export class ToastSoundStateStorage {
+  public static get(): Promise<StoredToastSoundState> {
+    return new Promise((resolve) => {
+      window.postMessage({
+        type: 'GET_TOAST_SOUND_STATE',
+      });
+
+      onWindowMessage<StoredToastSoundState>(
+        'GET_TOAST_SOUND_STATE_RESPONSE',
+        (maybeToastSoundState) => {
+          resolve(maybeToastSoundState);
+        },
+      );
+    });
+  }
+
+  public static save(payload: StoredToastSoundState) {
+    window.postMessage({
+      type: 'SAVE_TOAST_SOUND_STATE',
+      detail: payload,
+    });
+  }
+
+  public static clear() {
+    window.postMessage({
+      type: 'CLEAR_TOAST_SOUND_STATE',
     });
   }
 }

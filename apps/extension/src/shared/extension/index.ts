@@ -10,8 +10,8 @@ export {
 export type { PopupRoute } from './constants';
 export {
   ExtensionSettingsProvider,
-  AuthTokenContextProvider,
-  useAuthToken,
+  TradingCopilotContextProvider,
+  useTradingCopilot,
   useExtensionSettings,
   ExtensionPopupProvider,
   useExtensionPopup,
@@ -22,6 +22,10 @@ export {
   COMMAND_MAP as EXTENSION_COMMAND_MAP,
   GetServiceStatusCommand,
 } from './commands';
-export type { ExtensionSettingName, StoredAuthToken } from './types';
+export type {
+  ExtensionSettingName,
+  StoredAuthToken,
+  StoredToastSoundState,
+} from './types';
 export { ExtensionSettingsManager } from './extension-settings-manager';
-export { AuthTokenManager } from './auth-token-manager';
+export { TradingCopilotManager } from './trading-copilot-manager';

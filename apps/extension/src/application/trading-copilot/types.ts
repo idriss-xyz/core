@@ -1,21 +1,35 @@
 import { CHAIN, Hex } from 'shared/web3';
 
-export type SubscriptionRequest = {
+export interface SubscribePayload {
+  fid?: number;
+  address: string;
+}
+
+export type SubscribeCommandPayload = {
   subscription: {
     subscriberId: string;
-    fid?: number;
-    address: string;
-  };
+  } & SubscribePayload;
   authToken: string;
+};
+
+export type UnsubscribePayload = {
+  address: string;
+};
+
+export type UnsubscribeCommandPayload = {
+  subscription: {
+    subscriberId: string;
+  } & UnsubscribePayload;
+  authToken: string;
+};
+
+export type SubscriptionsPayload = {
+  subscriberId: string;
 };
 
 export type SubscriptionResponse = {
   address: Hex;
-  fid: number | null;
-};
-
-export type SubscriptionsRequest = {
-  subscriberId: string;
+  fid?: number | null;
 };
 
 export type SubscriptionsResponse = {
@@ -23,7 +37,7 @@ export type SubscriptionsResponse = {
   details: SubscriptionResponse[];
 };
 
-export type FarcasterAddressRequest = {
+export type FarcasterAddressPayload = {
   name: string;
 };
 
@@ -59,20 +73,22 @@ export type FarcasterConnectedAddressesResponse = {
   };
 };
 
-export type FarcasterUserRequest = {
+export type FarcasterUserPayload = {
   id: number;
+};
+
+export type FarcasterUserDetails = {
+  fid: number;
+  displayName: string;
+  pfp: {
+    url: string;
+  };
 };
 
 // We can expand those types, currently we added only used ones
 export type FarcasterUserResponse = {
   result: {
-    user: {
-      fid: number;
-      displayName: string;
-      pfp: {
-        url: string;
-      };
-    };
+    user: FarcasterUserDetails;
   };
 };
 
@@ -204,7 +220,7 @@ export interface FormValues {
   amount: string;
 }
 
-export type SiweMessageRequest = {
+export type SiweMessagePayload = {
   walletAddress: Hex;
   chainId: number;
   domain: string;
@@ -215,16 +231,12 @@ export type SiweMessageResponse = {
   message: string;
 };
 
-export type VerifySiweSignatureRequest = {
+export type VerifySiweSignaturePayload = {
   walletAddress: Hex;
   message: string;
   signature: Hex;
 };
 
 export type VerifySiweSignatureResponse = {
-  token: string;
-};
-
-export type VerifyAuthTokenPayload = {
   token: string;
 };

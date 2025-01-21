@@ -1,13 +1,10 @@
-import { SubscriptionRequest } from 'application/trading-copilot/types';
-
-export interface Properties {
-  onSubmit: (
-    address: SubscriptionRequest['subscription']['address'],
-    fid?: SubscriptionRequest['subscription']['fid'],
-  ) => void;
-  subscriptionsAmount: number | undefined;
-}
+import { SubscribePayload } from '../../types';
 
 export interface FormValues {
-  subscriptionDetails: string;
+  subscription: string;
+}
+
+export interface Properties {
+  subscriptionsAmount?: number;
+  onSubmit: (payload: SubscribePayload) => void;
 }
