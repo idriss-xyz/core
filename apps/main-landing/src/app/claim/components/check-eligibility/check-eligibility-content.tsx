@@ -69,7 +69,7 @@ export const CheckEligibilityContent = () => {
   }, [eligibilityData, navigate]);
 
   return (
-    <div className="z-[5] inline-flex flex-col items-center gap-4 overflow-hidden px-4 pb-3 pt-6 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]">
+    <div className="z-[5] inline-flex flex-col items-center gap-4 overflow-hidden px-4 pb-3 pt-6 lg:mt-[78px] lg:[@media(max-height:800px)]:mt-[60px]">
       <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-display2 gradient-text">COMMUNITY AIRDROP</h1>
         <span className="text-body2 text-neutralGreen-900 opacity-70">

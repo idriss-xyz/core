@@ -2,9 +2,13 @@
 'use client';
 
 import { useMemo } from 'react';
+import { useAccount, useWalletClient, useDisconnect } from 'wagmi';
+import { Button } from '@idriss-xyz/ui/button';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 import { backgroundLines2 } from '@/assets';
 
+import '@rainbow-me/rainbowkit/styles.css';
 import idrissSceneStream from './assets/IDRISS_SCENE_STREAM_4_2 1.png';
 import { useClaimPage } from './claim-page-context';
 import { CheckEligibilityContent } from './components/check-eligibility/check-eligibility-content';
@@ -14,6 +18,14 @@ import { ClaimSuccessfulModal } from './components/claim/claim-successful-modal'
 
 export const ContentManager = () => {
   const { currentRoute } = useClaimPage();
+
+  const { isConnected } = useAccount();
+
+  const { data: walletClient } = useWalletClient();
+  const { disconnect } = useDisconnect();
+  const { connectModalOpen, openConnectModal } = useConnectModal();
+
+  console.log('walletClient', walletClient);
 
   const routeContent = useMemo(() => {
     switch (currentRoute) {
@@ -46,7 +58,37 @@ export const ContentManager = () => {
         className="pointer-events-none absolute top-0 hidden h-full opacity-40 lg:block"
         alt=""
       />
-      {routeContent}
+      <div className="flex flex-col">
+        {routeContent}
+        {isConnected ? (
+          <div className="relative z-10 flex w-full flex-col items-center gap-10 rounded-[25px] bg-[rgba(255,255,255,0.5)] p-5 backdrop-blur-[45px]">
+            <span className="text-heading3 text-neutralGreen-700">
+              All good, your wallet is connected!
+            </span>
+            <Button
+              intent="secondary"
+              size="small"
+              className="w-full"
+              onClick={() => {
+                console.log('clicked');
+                disconnect();
+              }}
+            >
+              DISCONNECT WALLET
+            </Button>
+          </div>
+        ) : (
+          <Button
+            intent="primary"
+            size="medium"
+            className="mt-6 w-full"
+            onClick={openConnectModal}
+            loading={connectModalOpen}
+          >
+            CONNECT WALLET
+          </Button>
+        )}
+      </div>
     </main>
   );
 };
