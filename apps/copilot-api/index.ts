@@ -1,6 +1,9 @@
 import express, { Request, Response } from 'express';
 import { validateAlchemySignature } from './utils/webhookUtils';
-import { webhookHandler } from './services/webhookHandler';
+import {
+  heliusWebhookHandler,
+  webhookHandler,
+} from './services/webhookHandler';
 import dotenv from 'dotenv';
 import { dataSource } from './db';
 import http from 'http';
@@ -78,6 +81,24 @@ app.post(
   }),
   validateAlchemySignature(getSigningKey),
   webhookHandler(),
+);
+
+app.post(
+  '/webhook/solana/:internalWebhookId',
+  express.json({
+    verify: (
+      req: Request,
+      res: Response,
+      buf: Buffer,
+      encoding: BufferEncoding,
+    ) => {
+      const rawBody = buf.toString(encoding);
+      (req as any).rawBody = rawBody;
+      (req as any).signature = req.headers['x-helius-signature'];
+    },
+  }),
+  validateAlchemySignature(getSigningKey),
+  heliusWebhookHandler(),
 );
 
 app.use(express.json());

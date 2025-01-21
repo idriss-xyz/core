@@ -35,25 +35,6 @@ export function validateAlchemySignature(
   };
 }
 
-export const validateHeliusSignature = (getKey: Function) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
-    const rawBody = (req as any).rawBody as string;
-    const signature = req.headers['x-helius-signature'] as string;
-    const webhookId = req.params.internalWebhookId;
-    const key = await getKey(webhookId);
-
-    // Helius uses HMAC SHA-256 for webhook signatures
-    const isValid = isValidSignatureForStringBody(rawBody, signature,  key);
-
-    if (!isValid) {
-      return res.status(401).json({ error: 'Invalid signature' });
-    }
-
-    next();
-  };
-};
-
-
 function isValidSignatureForStringBody(
   body: string,
   signature: string,
@@ -219,8 +200,10 @@ export async function handleIncomingEvent(
   }
 }
 
-export async function handleIncomingSolanaEvent (
-  webhookEvent: ComplexHeliusWebhookEvent,
-): Promise<void> {
-  // Extract the necessary data from the webhook event and add it to activities cache
+export async function handleIncomingSolanaEvent(webhookEvents: {
+  [eventName: string]: Record<string, unknown>;
+}): Promise<void> {
+  // TODO: Verify activity of webhook event and add it to activities cache, where scheduler.ts will take care of extracting swap data after.
+  // For now just print the event
+  console.log('Received event from solana webhook', webhookEvents);
 }

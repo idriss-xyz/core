@@ -21,7 +21,7 @@ export interface AlchemyWebhookEvent {
 // TODO: Use one or the other (ComplexHeliusWebhookEvent or HeliusWebhookEvent)
 export interface HeliusWebhookEvent {
   accountData: any;
-  events: any[];
+  events: { [eventName: string]: Record<string, unknown> };
   slot: number;
 }
 
@@ -41,27 +41,7 @@ export interface ComplexHeliusWebhookEvent {
     }[];
   }[];
   description: string;
-  events: {
-    nft: {
-      amount: number;
-      buyer: string;
-      description: string;
-      fee: number;
-      feePayer: string;
-      nfts: {
-        mint: string;
-        tokenStandard: string;
-      }[];
-      saleType: string;
-      seller: string;
-      signature: string;
-      slot: number;
-      source: string;
-      staker: string;
-      timestamp: number;
-      type: string;
-    };
-  };
+  events: { [eventName: string]: Record<string, unknown> };
   fee: number;
   feePayer: string;
   nativeTransfers: {
@@ -83,7 +63,8 @@ export interface ComplexHeliusWebhookEvent {
     tokenStandard: string;
   }[];
   type: string;
-}[];
+}
+[];
 
 export interface CachedTransaction {
   activities: any[];
