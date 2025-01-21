@@ -9,7 +9,7 @@ interface StoredWallet {
 
 type StoredAuthToken = string | undefined;
 
-export type StoredToastSoundState = boolean | undefined;
+type StoredToastSoundState = boolean | undefined;
 
 export class WalletStorage {
   public static get(): Promise<StoredWallet | undefined> {

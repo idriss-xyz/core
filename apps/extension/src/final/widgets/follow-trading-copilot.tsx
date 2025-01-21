@@ -8,8 +8,9 @@ import {
   useSubscriptions,
 } from 'application/trading-copilot';
 import { Hex, Wallet } from 'shared/web3';
-import { useAuthToken, useWallet } from 'shared/extension';
+import { useWallet } from 'shared/extension';
 import { GetFarcasterVerifiedAddressCommand } from 'shared/farcaster';
+import { useCommandQuery } from 'shared/messaging';
 
 import { useLocationInfo } from '../hooks';
 import { TradingCopilotTooltip } from '../notifications-popup/components/trading-copilot-tooltip';
