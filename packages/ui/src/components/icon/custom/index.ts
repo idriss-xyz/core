@@ -28,3 +28,6 @@ export { Jumper } from './jumper';
 export { Minus } from './minus';
 export { Plus } from './plus';
 export { Download } from './download';
+export { PiggyBank } from './piggy-bank'
+export { Gem } from './gem'
+export { PieChart } from './pie-chart'
