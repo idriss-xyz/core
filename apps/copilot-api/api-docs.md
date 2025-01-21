@@ -48,7 +48,7 @@ Completes the authentication process using the signed message.
 ```json
 {
   "token": "string"
-  // Valid for 7 days
+  // Valid for 60 days
 }
 ```
 
@@ -60,7 +60,26 @@ Retrieves the list of subscribers for a specific wallet account.
 
 **Parameters:**
 
-- `subscriber`: Wallet account address
+- `subscriber`: Account wallet address
+
+### Get Quote
+
+Retrieves a quote for token swap.
+
+**Endpoint:** `POST /get-quote`
+
+**Request Body:**
+
+```json
+{
+  "fromAddress": "string",
+  "originChain": "string",
+  "destinationChain": "string",
+  "originToken": "string",
+  "destinationToken": "string",
+  "amount": "string"
+}
+```
 
 ## Protected Endpoints
 
@@ -101,25 +120,6 @@ Unsubscribes from updates of a specific wallet address. Uses the same request fo
   // Subscriber's wallet address
   "address": "string"
   // Target wallet address to unsubscribe from
-}
-```
-
-### Get Quote
-
-Retrieves a quote for token swap.
-
-**Endpoint:** `POST /get-quote`
-
-**Request Body:**
-
-```json
-{
-  "fromAddress": "string",
-  "originChain": "string",
-  "destinationChain": "string",
-  "originToken": "string",
-  "destinationToken": "string",
-  "amount": "string"
 }
 ```
 

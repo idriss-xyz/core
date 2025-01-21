@@ -129,19 +129,17 @@ export const roundToSignificantFiguresForCopilotTrading = (
 
   const { value, zeros } = extractSignificantNumber(number.toString());
 
-  if (zeros >= 2) {
+  if (zeros >= 2 && number < 1) {
     return {
       value,
       index: zeros,
     };
   }
 
-  const multiplier = Math.pow(
-    10,
-    significantFigures - Math.floor(Math.log10(Math.abs(number))) - 1,
-  );
-
-  const rounded_number = Math.round(number * multiplier) / multiplier;
+  const offset = 0.000_000_001;
+  const multiplier = Math.pow(10, significantFigures);
+  const rounded_number =
+    Math.round((number + offset) * multiplier) / multiplier;
 
   return {
     value: rounded_number,
