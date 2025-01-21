@@ -46,7 +46,7 @@ const DonationNotification = ({
       aria-live="polite"
       nonce={txnHash}
       style={style}
-      className={`absolute left-0 top-0 flex items-center rounded-r-md bg-opacity-80 p-4 transition-opacity duration-1000 ${bgColor} ${
+      className={`absolute left-0 top-0 flex items-center rounded-r-md p-4 transition-opacity duration-1000 ${bgColor} ${
         showNotification ? 'opacity-100' : 'opacity-0'
       }`}
     >
@@ -58,11 +58,11 @@ const DonationNotification = ({
         />
       </div>
       <div>
-        <p id="baseInfo" className="text-gray-900 ml-3 text-xl font-bold">
+        <p id="baseInfo" className="ml-3 text-xl font-bold text-neutral-900">
           {`${donor} sent $${amount}`}
         </p>
         {message && (
-          <p id="message" className="text-gray-900 ml-3 text-lg font-medium">
+          <p id="message" className="ml-3 text-lg font-medium text-neutral-900">
             {message}
           </p>
         )}

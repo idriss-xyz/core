@@ -167,5 +167,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-// eslint-disable-next-line import/no-default-export
 export default withBundleAnalyzer({ enabled: false })(nextConfig);

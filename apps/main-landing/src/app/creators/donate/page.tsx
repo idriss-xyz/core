@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { Button } from '@idriss-xyz/ui/button';
 import { CREATORS_LINK } from '@idriss-xyz/constants';
 
