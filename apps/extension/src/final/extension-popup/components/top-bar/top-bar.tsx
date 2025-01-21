@@ -15,9 +15,15 @@ import { Navigation } from './navigation';
 
 type Properties = {
   className?: string;
+  userVersion: string;
+  newestVersion: string;
 };
 
-export const TopBar = ({ className }: Properties) => {
+export const TopBar = ({
+  className,
+  userVersion,
+  newestVersion,
+}: Properties) => {
   const { extensionSettings, changeExtensionSetting } = useExtensionSettings();
   const popup = useExtensionPopup();
 
@@ -35,6 +41,12 @@ export const TopBar = ({ className }: Properties) => {
     popup.navigate(POPUP_ROUTE.PRODUCTS);
   }, [popup]);
 
+  // TODO: render buttons based on condition
+  // const isVersionOutdated = checkIfVersionIsOutdated(
+  //   userVersion,
+  //   newestVersion,
+  // );
+
   return (
     <div
       className={classes(
@@ -49,6 +61,32 @@ export const TopBar = ({ className }: Properties) => {
         alt=""
       />
       <div className="flex items-center space-x-6">
+        {/*{isVersionOutdated ? (*/}
+        <IconButton
+          iconName="AlertCircle"
+          size="medium"
+          intent="tertiary"
+          onClick={() => {
+            return window.alert(
+              `Your extension is outdated. You're currently using version ${userVersion}, while the latest version available is ${newestVersion}.`,
+            );
+          }}
+          className="text-red-500"
+        />
+        {/*) : (*/}
+        <IconButton
+          iconName="CheckCircle2"
+          size="medium"
+          intent="tertiary"
+          onClick={() => {
+            return window.alert(
+              `You're using the latest version ${userVersion}.`,
+            );
+          }}
+          className="text-mint-600"
+        />
+        {/*)}*/}
+
         <NavigationMenu.Root>
           <NavigationMenu.List>
             <NavigationMenu.Item className="relative">
@@ -70,3 +108,17 @@ export const TopBar = ({ className }: Properties) => {
     </div>
   );
 };
+
+// const convertVersionIntoNumber = (version: string): string => {
+//   return version.replaceAll('.', '');
+// };
+//
+// const checkIfVersionIsOutdated = (
+//   userVersion: string,
+//   newestVersion: string,
+// ): boolean => {
+//   return (
+//     convertVersionIntoNumber(userVersion) <
+//     convertVersionIntoNumber(newestVersion)
+//   );
+// };

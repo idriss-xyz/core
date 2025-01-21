@@ -27,6 +27,7 @@ export class ContentScript {
     contentScript.subscribeToExtensionSettings();
     contentScript.subscribeToWallet();
     contentScript.subscribeToDeviceId();
+    contentScript.saveExtensionVersion();
   }
 
   static canRun() {
@@ -167,5 +168,11 @@ export class ContentScript {
     onWindowMessage<string>('SET_DEVICE_ID', (v) => {
       void ExtensionSettingsManager.setDeviceId(v);
     });
+  }
+
+  saveExtensionVersion() {
+    const extensionManifest = this.environment.runtime.getManifest();
+    const version = extensionManifest.version;
+    localStorage.setItem('extensionVersion', version);
   }
 }
