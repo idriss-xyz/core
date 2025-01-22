@@ -8,7 +8,8 @@
     "format": "prettier --check --config ./prettier.config.mjs --ignore-path .prettierignore .",
     "format:fix": "prettier --write --config ./prettier.config.mjs --ignore-path .prettierignore .",
     "lint": "eslint --max-warnings=0",
-    "lint:fix": "eslint --max-warnings=0 --fix"
+    "lint:fix": "eslint --max-warnings=0 --fix",
+    "circular-dependencies": "depcruise --config .dependency-cruiser.cjs ."
   },
   "keywords": [],
   "author": "",
@@ -36,6 +37,7 @@
     "@types/node": "^22.7.5",
     "@types/pg": "^8.11.10",
     "@types/uuid": "^10.0.0",
+    "dependency-cruiser": "^16.4.2",
     "eslint": "^8.57.0",
     "globals": "^15.14.0",
     "ts-node": "^10.9.2",

@@ -8,8 +8,9 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import dotenv from 'dotenv';
 import { join } from 'path';
-import { WEBHOOK_NETWORKS } from '../constants';
+import { WEBHOOK_NETWORKS, MAX_ADDRESSES_PER_WEBHOOK } from '../constants';
 import { mode } from '../utils/mode';
+import { SubscriptionsDetailsInterface, WebhookDataInterface } from '../types';
 
 dotenv.config(
   mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
@@ -18,8 +19,6 @@ dotenv.config(
 const ALCHEMY_API_BASE_URL = 'https://dashboard.alchemyapi.io';
 const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY!;
 const WEBHOOK_URL = process.env.WEBHOOK_URL!;
-const MAX_ADDRESSES_PER_WEBHOOK =
-  Number(process.env.MAX_ADDRESSES_PER_WEBHOOK) || 100;
 
 const subscribersRepo = dataSource.getRepository(SubscribersEntity);
 const addressRepo = dataSource.getRepository(AddressesEntity);
@@ -172,9 +171,11 @@ async function removeAddressFromWebhook(address: string): Promise<void> {
   }
 }
 
-const createNewWebhook = async (address: string) => {
+const createNewWebhook = async (
+  address: string,
+): Promise<WebhookDataInterface[]> => {
   try {
-    const webhooks = [];
+    const webhooks: WebhookDataInterface[] = [];
     for (const NETWORK of WEBHOOK_NETWORKS) {
       const internalWebhookId = uuidv4();
       const webhookUrl = `${WEBHOOK_URL}/webhook/${internalWebhookId}`;
@@ -255,7 +256,7 @@ async function deleteWebhook(webhookId: string): Promise<void> {
 
 export const getSubscriptionsDetails = async (
   subscriberId: string,
-): Promise<{ address: string; fid: number | null }[]> => {
+): Promise<SubscriptionsDetailsInterface[]> => {
   const res = await subscriptionsRepo.find({
     where: { subscriber_id: subscriberId },
   });

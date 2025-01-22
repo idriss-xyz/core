@@ -1,12 +1,12 @@
 import { Socket } from 'socket.io';
 import { BLOCK_LIST } from '../constants';
-import { CachedTransaction } from '../interfaces';
-import { extractSwapData } from '../utils/webhookUtils';
+import { CachedEventsInterface } from '../types';
+import { extractSwapData } from './webhook';
 import { getSubscribersByAddress } from './subscriptionManager';
 
 // Map to store userId to socket mappings
 export const connectedClients = new Map<string, Socket>();
-export const eventCache: { [txHash: string]: CachedTransaction } = {};
+export const eventCache: CachedEventsInterface = {};
 
 // Scheduler to process the cache every 2 seconds
 setInterval(async () => {
