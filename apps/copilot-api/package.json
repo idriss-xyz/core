@@ -9,7 +9,8 @@
     "format:fix": "prettier --write --config ./prettier.config.mjs --ignore-path .prettierignore .",
     "lint": "eslint --max-warnings=0",
     "lint:fix": "eslint --max-warnings=0 --fix",
-    "circular-dependencies": "depcruise --config .dependency-cruiser.cjs ."
+    "circular-dependencies": "depcruise --config .dependency-cruiser.cjs .",
+    "type-check": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",
