@@ -57,7 +57,7 @@ router.post('/verify-token', async (req, res) => {
 
   try {
     const user = await validateToken(token);
-    
+
     if (!user) {
       res.status(401).json({ error: 'Invalid token' });
       return;
