@@ -17,6 +17,8 @@ dotenv.config(
 
 const ALCHEMY_API_BASE_URL = 'https://dashboard.alchemyapi.io';
 const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY!;
+const HELIUS_API_BASE_URL = 'https://api.helius.xyz';
+const HELIUS_API_KEY = process.env.HELIUS_API_KEY!;
 const WEBHOOK_URL = process.env.WEBHOOK_URL!;
 const MAX_ADDRESSES_PER_WEBHOOK =
   Number(process.env.MAX_ADDRESSES_PER_WEBHOOK) || 100;
@@ -209,6 +211,44 @@ const createNewWebhook = async (address: string) => {
     return [];
   }
 };
+
+const createNewSolanaWebhook = async (address: string) => {
+  try {
+    const webhookUrl = `${WEBHOOK_URL}/webhook/${address}`;
+    const internalWebhookId = uuidv4();
+
+    const response = await axios.post(
+      `${HELIUS_API_BASE_URL}?api-key=${HELIUS_API_KEY}`,
+      {
+        webhook_url: webhookUrl,
+        webhook_type: 'SWAP',
+        accountAddresses: [address],
+      },
+      {
+        headers: {
+          'accept': 'application/json',
+          'content-type': 'application/json',
+        },
+      },
+    );
+
+    const data = response.data;
+
+    console.log("Received data from hook creation: ", data);
+
+    const webhookId = data.webhookID;
+    // No signing key for Helius webhooks
+    return ({ webhookId, internalWebhookId, signingKey: '' });
+
+  }
+
+
+  catch (err) {
+    console.error('Error creating Solana webhook: ', err);
+    return null;
+  }
+
+}
 
 const updateWebhookAddresses = async (
   webhookId: string,
