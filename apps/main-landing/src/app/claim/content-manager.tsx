@@ -27,8 +27,6 @@ export const ContentManager = () => {
   const { disconnect } = useDisconnect();
   const { connectModalOpen, openConnectModal } = useConnectModal();
 
-  console.log('walletClient', walletClient);
-
   const routeContent = useMemo(() => {
     switch (currentRoute) {
       case '/check-eligibility': {
@@ -98,7 +96,6 @@ export const ContentManager = () => {
               size="small"
               className="w-full"
               onClick={() => {
-                console.log('clicked');
                 disconnect();
               }}
             >
