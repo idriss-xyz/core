@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { isAddress } from 'viem';
+import { isAddress as isSolanaAddress } from "@solana/web3.js";
 
 import { useWallet } from 'shared/extension';
 import { useCommandMutation } from 'shared/messaging';
@@ -50,15 +52,27 @@ export const SubscriptionForm = ({
       }
       const hexPattern = /^0x[\dA-Fa-f]+$/;
       const farcasterPattern = /^[^.]+$/;
-      const isWalletAddress = hexPattern.test(data.subscriptionDetails);
+      const isHex = hexPattern.test(data.subscriptionDetails);
       const isFarcasterName = farcasterPattern.test(data.subscriptionDetails);
 
       if (!wallet) {
         return;
       }
 
-      if (isWalletAddress) {
-        onSubmit(data.subscriptionDetails);
+      if (isHex) {
+        let chainType: 'EVM' | 'SOLANA' = 'EVM'
+
+        if (!isAddress(data.subscriptionDetails)){
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+          if (isSolanaAddress(data.subscriptionDetails)){
+            chainType = 'SOLANA'
+          }
+          else {
+            // TODO: throw error to the user "Not an address"
+            return;
+          }
+        }
+        onSubmit(data.subscriptionDetails, undefined, chainType);
         form.reset(EMPTY_FORM);
         return;
       }

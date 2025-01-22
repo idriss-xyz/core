@@ -117,6 +117,7 @@ const SubscriptionsManagementContent = ({
   const handleSubscribe = async (
     address: SubscriptionRequest['subscription']['address'],
     fid: SubscriptionRequest['subscription']['fid'],
+    chainType?: "EVM" | "SOLANA"
   ) => {
     const siweLoggedIn = await siwe.loggedIn();
 
@@ -127,7 +128,7 @@ const SubscriptionsManagementContent = ({
     const authToken = await getAuthToken();
 
     await subscribe.mutateAsync({
-      subscription: { address, fid, subscriberId },
+      subscription: { address, fid, subscriberId, chainType },
       authToken: authToken ?? '',
     });
     void subscriptionsQuery.refetch();

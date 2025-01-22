@@ -4,6 +4,7 @@ export interface Properties {
   onSubmit: (
     address: SubscriptionRequest['subscription']['address'],
     fid?: SubscriptionRequest['subscription']['fid'],
+    chainType?: "EVM" | "SOLANA",
   ) => void;
   subscriptionsAmount: number | undefined;
 }

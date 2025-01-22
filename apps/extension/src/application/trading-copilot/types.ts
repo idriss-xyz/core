@@ -5,6 +5,7 @@ export type SubscriptionRequest = {
     subscriberId: string;
     fid?: number;
     address: string;
+    chainType?: 'EVM' | 'SOLANA';
   };
   authToken: string;
 };
