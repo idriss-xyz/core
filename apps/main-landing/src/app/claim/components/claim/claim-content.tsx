@@ -84,6 +84,7 @@ export const ClaimContent = () => {
             onClick={() => {
               return navigate('/vesting-plans');
             }}
+            disabled={!termsChecked}
           >
             CLAIM YOUR $IDRISS
           </Button>
