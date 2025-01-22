@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { AlchemyWebhookEvent } from '../interfaces';
+import { AlchemyWebhookEvent } from '../types';
 import { handleIncomingEvent } from '../utils/webhookUtils';
 
 // Webhook handler function
