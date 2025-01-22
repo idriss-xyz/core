@@ -5,10 +5,11 @@ import { createSiweMessage, generateSiweNonce } from 'viem/siwe';
 import { ExpiringMap } from '../utils/nonceMap';
 import { publicClient } from '../config/publicClient';
 import type { Request } from 'express';
+import { Hex } from 'viem';
+import { expiryTime } from '../constants';
 
 const subscribersRepo = dataSource.getRepository(SubscribersEntity);
 
-const expiryTime = 5 * 60 * 1000;
 const expiringMap = new ExpiringMap<string, string>(expiryTime);
 
 export async function login(walletAddress: string): Promise<string> {
@@ -32,9 +33,9 @@ export async function login(walletAddress: string): Promise<string> {
 }
 
 export async function validateMessage(
-  walletAddress: `0x${string}`,
+  walletAddress: Hex,
   message: string,
-  signature: `0x${string}`,
+  signature: Hex,
 ) {
   const currentNonce = expiringMap.get(walletAddress);
   return publicClient.verifySiweMessage({
@@ -46,7 +47,7 @@ export async function validateMessage(
 }
 
 export async function createMessage(
-  walletAddress: `0x${string}`,
+  walletAddress: Hex,
   chainId: number,
   domain: string,
 ) {

@@ -9,11 +9,12 @@ import { connectedClients } from '../services/scheduler';
 import { dataSource } from '../db';
 import { SubscriptionsEntity } from '../entities/subscribtions.entity';
 import rateLimit from 'express-rate-limit';
-import { testSwapData, getQuoteData, getTopAddresses } from '../services';
+import { getQuoteData, getTopAddresses } from '../services';
 import {
   GetQuoteDataResponseInterface,
   TopAddressesResponseInterface,
 } from '../types';
+import { testSwapData } from '../constants';
 
 const subscriptionsRepo = dataSource.getRepository(SubscriptionsEntity);
 
