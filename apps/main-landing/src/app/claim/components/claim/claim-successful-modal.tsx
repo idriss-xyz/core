@@ -4,14 +4,18 @@ import { Button } from '@idriss-xyz/ui/button';
 import { Icon } from '@idriss-xyz/ui/icon';
 
 import idrissCoin from '../../assets/IDRISS_COIN 1.png';
+import { useClaimPage } from '../../claim-page-context';
 
 export const ClaimSuccessfulModal = () => {
+  const { vestingPlan } = useClaimPage();
   return (
     <Modal
       isOpened
       headerContainerClassName="border-none"
       header={
-        <span className="text-heading3 text-neutral-900">Claim successful</span>
+        <span className="text-heading3 text-neutral-900">
+          CLAIM {vestingPlan !== 'claim_50' && '& STAKE'} SUCCESSFUL
+        </span>
       }
       className="flex w-[400px] flex-col items-center rounded-lg p-5"
     >

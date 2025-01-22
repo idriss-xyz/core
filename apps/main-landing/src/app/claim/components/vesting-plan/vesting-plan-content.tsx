@@ -9,14 +9,14 @@ import { useMemo } from 'react';
 import { Icon } from '@idriss-xyz/ui/icon';
 
 import idrissCoin from '../../assets/IDRISS_COIN 1.png';
-import { useClaimPage } from '../../claim-page-context';
+import { useClaimPage, VestingPlan } from '../../claim-page-context';
 
 type FormPayload = {
-  vestingPlan: string;
+  vestingPlan: VestingPlan;
 };
 
 export const VestingPlanContent = () => {
-  const { eligibilityData, navigate } = useClaimPage();
+  const { eligibilityData, navigate, setVestingPlan } = useClaimPage();
 
   const formMethods = useForm<FormPayload>({
     defaultValues: {
@@ -27,7 +27,7 @@ export const VestingPlanContent = () => {
 
   const [vestingPlan] = formMethods.watch(['vestingPlan']);
 
-  const vestingPlanOptions: RadioItem[] = [
+  const vestingPlanOptions: RadioItem<VestingPlan>[] = [
     {
       label: 'Claim 50% amount within 24h',
       value: 'claim_50',
@@ -77,12 +77,7 @@ export const VestingPlanContent = () => {
           <span className="text-label3 text-neutralGreen-700">
             SELECT YOUR VESTING PLAN
           </span>
-          <Form
-            className="w-full"
-            onSubmit={(event) => {
-              event.preventDefault();
-            }}
-          >
+          <Form className="w-full">
             <Controller
               control={formMethods.control}
               name="vestingPlan"
@@ -100,7 +95,8 @@ export const VestingPlanContent = () => {
             size="large"
             className="w-full"
             onClick={() => {
-              return navigate('/vesting-plans');
+              setVestingPlan(vestingPlan);
+              return navigate('/claim-successful');
             }}
           >
             {vestingPlanButtonLabel}

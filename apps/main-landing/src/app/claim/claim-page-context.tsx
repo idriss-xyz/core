@@ -11,14 +11,20 @@ type Properties = {
 };
 
 type ClaimPageContextValues = {
-  walletAddress: string | undefined;
   currentRoute: ClaimPageRoute;
-  eligibilityData: EligibilityCheckResponse | undefined;
   eligibilityDataLoading: boolean;
+  walletAddress: string | undefined;
+  vestingPlan: VestingPlan | undefined;
+  eligibilityData: EligibilityCheckResponse | undefined;
   navigate: (route: ClaimPageRoute) => void;
   setWalletAddress: (walletAddress: string) => void;
+  setVestingPlan: (vestingPlan: VestingPlan) => void;
 };
 
+export type VestingPlan =
+  | 'claim_50'
+  | 'claim_and_stake_50'
+  | 'claim_and_stake_100';
 const ClaimPageContext = createContext<ClaimPageContextValues | undefined>(
   undefined,
 );
@@ -27,6 +33,7 @@ export const ClaimPageProvider = ({ children }: Properties) => {
   const [currentRoute, setCurrentRoute] = useState<ClaimPageRoute>(
     CLAIM_PAGE_ROUTE.CHECK_ELIGIBILITY,
   );
+  const [vestingPlan, setVestingPlan] = useState<VestingPlan>();
   const [walletAddress, setWalletAddress] = useState<string>();
 
   const eligibilityMutation = useMutation({
@@ -52,12 +59,14 @@ export const ClaimPageProvider = ({ children }: Properties) => {
   return (
     <ClaimPageContext.Provider
       value={{
+        vestingPlan,
         currentRoute,
         walletAddress,
         eligibilityData: eligibilityMutation.data,
         eligibilityDataLoading: eligibilityMutation.isPending,
-        setWalletAddress,
         navigate,
+        setVestingPlan,
+        setWalletAddress,
       }}
     >
       {children}

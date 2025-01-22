@@ -2,8 +2,8 @@ import * as RadixRadioGroup from '@radix-ui/react-radio-group';
 
 import { classes } from '../../utils';
 
-export type RadioItem = {
-  value: string;
+export type RadioItem<T = string> = {
+  value: T;
   label: string;
 };
 
