@@ -21,11 +21,8 @@ export const RadioGroup = ({
   className,
 }: Properties) => {
   return (
-    <RadixRadioGroup.Root
-      value={value}
-      onValueChange={onChange}
-    >
-      <div className={classes('flex flex-col gap-2.5', className)}>
+    <RadixRadioGroup.Root value={value} onValueChange={onChange}>
+      <div className={classes('flex flex-col gap-4', className)}>
         {items.map((item) => {
           return (
             <div key={item.value}>
@@ -34,10 +31,10 @@ export const RadioGroup = ({
                 value={item.value}
                 id={item.value}
               >
-                <RadixRadioGroup.Indicator className="relative flex size-full items-center justify-center after:block after:size-[16px] after:border-2 after:border-neutral-100 after:rounded-full after:bg-mint-500" />
+                <RadixRadioGroup.Indicator className="relative flex size-full items-center justify-center after:block after:size-[16px] after:rounded-full after:border-2 after:border-neutral-100 after:bg-mint-500" />
               </RadixRadioGroup.Item>
               <label
-                className="pl-[15px] text-[15px] leading-none text-neutral-900"
+                className="pl-[15px] text-body5 text-neutral-900"
                 htmlFor={item.value}
               >
                 {item.label}
