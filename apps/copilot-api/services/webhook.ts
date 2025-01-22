@@ -4,7 +4,7 @@ import { NULL_ADDRESS } from '../constants';
 import { isSubscribedAddress } from './subscriptionManager';
 
 // Function to determine if the swap is complete
-export function isCompleteSwap(swapData: SwapData): boolean {
+function isCompleteSwap(swapData: SwapData): boolean {
   // Check all required fields
   const requiredFields = [
     'transactionHash',

@@ -1,6 +1,6 @@
-export type AlchemyWebhookType = 'ADDRESS_ACTIVITY';
+type AlchemyWebhookType = 'ADDRESS_ACTIVITY';
 
-export type Token = {
+type Token = {
   address: string;
   symbol: string;
   amount: number;
@@ -18,13 +18,6 @@ export type SwapData = {
   isComplete: boolean;
 };
 
-export interface AlchemyRequest extends Request {
-  alchemy: {
-    rawBody: string;
-    signature: string;
-  };
-}
-
 export interface AlchemyWebhookEvent {
   webhookId: string;
   id: string;
@@ -34,11 +27,6 @@ export interface AlchemyWebhookEvent {
     network: string;
     activity: any[];
   };
-}
-
-export interface CachedTransaction {
-  activities: any[];
-  timestamp: number; // Time when the transaction was first added to the cache
 }
 
 export interface Webhook {

@@ -1,4 +1,3 @@
-import { CachedTransaction } from './shared.types';
 import { Estimate, Step, TransactionRequest } from '@lifi/sdk';
 
 export interface WebhookDataInterface {
@@ -10,6 +9,11 @@ export interface WebhookDataInterface {
 export interface SubscriptionsDetailsInterface {
   address: string;
   fid: number | null;
+}
+
+interface CachedTransaction {
+  activities: any[];
+  timestamp: number; // Time when the transaction was first added to the cache
 }
 
 export type CachedEventsInterface = Record<string, CachedTransaction>;

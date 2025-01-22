@@ -10,7 +10,8 @@
     "lint": "eslint --max-warnings=0",
     "lint:fix": "eslint --max-warnings=0 --fix",
     "circular-dependencies": "depcruise --config .dependency-cruiser.cjs .",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "unused-exports": "./node_modules/.bin/ts-unused-exports ./tsconfig.json --ignoreFiles=.stories"
   },
   "keywords": [],
   "author": "",
@@ -42,6 +43,7 @@
     "eslint": "^8.57.0",
     "globals": "^15.14.0",
     "ts-node": "^10.9.2",
+    "ts-unused-exports": "^10.1.0",
     "typescript": "^5.6.3",
     "typescript-eslint": "^8.19.0"
   }
