@@ -2,9 +2,13 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { useAccount, useWalletClient, useDisconnect } from 'wagmi';
+import { Button } from '@idriss-xyz/ui/button';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 import { backgroundLines2 } from '@/assets';
 
+import '@rainbow-me/rainbowkit/styles.css';
 import idrissSceneStream from './assets/IDRISS_SCENE_STREAM_4_2 1.png';
 import idrissCoinFalling from './assets/ID-Coin falling 2.png';
 import { useClaimPage } from './claim-page-context';
@@ -16,6 +20,14 @@ import { ClaimSuccessfulContent } from './components/claim-successful/claim-succ
 export const ContentManager = () => {
   const { currentRoute } = useClaimPage();
   const [videoError, setVideoError] = useState(false);
+
+  const { isConnected } = useAccount();
+
+  const { data: walletClient } = useWalletClient();
+  const { disconnect } = useDisconnect();
+  const { connectModalOpen, openConnectModal } = useConnectModal();
+
+  console.log('walletClient', walletClient);
 
   const routeContent = useMemo(() => {
     switch (currentRoute) {
@@ -53,7 +65,9 @@ export const ContentManager = () => {
             loop
             playsInline
             className="fixed inset-0 size-auto min-h-full min-w-full object-cover"
-            onError={() => {return setVideoError(true)}}
+            onError={() => {
+              return setVideoError(true);
+            }}
           >
             <source src="/videos/coinsRain.mp4" type="video/mp4" />
           </video>
@@ -72,7 +86,37 @@ export const ContentManager = () => {
           />
         </>
       )}
-      {routeContent}
+      <div className="flex flex-col">
+        {routeContent}
+        {isConnected ? (
+          <div className="relative z-10 flex w-full flex-col items-center gap-2 rounded-2xl bg-[rgba(255,255,255,0.5)] px-5 py-3 backdrop-blur-[45px]">
+            <span className="text-heading6 text-neutralGreen-700">
+              All good, your wallet is connected!
+            </span>
+            <Button
+              intent="secondary"
+              size="small"
+              className="w-full"
+              onClick={() => {
+                console.log('clicked');
+                disconnect();
+              }}
+            >
+              DISCONNECT WALLET
+            </Button>
+          </div>
+        ) : (
+          <Button
+            intent="primary"
+            size="medium"
+            className="mt-6 w-full"
+            onClick={openConnectModal}
+            loading={connectModalOpen}
+          >
+            CONNECT WALLET
+          </Button>
+        )}
+      </div>
     </main>
   );
 };

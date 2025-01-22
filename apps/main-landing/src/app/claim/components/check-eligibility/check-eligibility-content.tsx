@@ -9,6 +9,8 @@ import { normalize } from 'viem/ens';
 import { Form } from '@idriss-xyz/ui/form';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
+import { useWalletClient } from 'wagmi';
+import { useEffect } from 'react';
 
 import idrissCoin from '../../assets/IDRISS_COIN 1.png';
 import { useClaimPage } from '../../claim-page-context';
@@ -26,6 +28,7 @@ const ethereumClient = createPublicClient({
 
 export const CheckEligibilityContent = () => {
   const { navigate, setWalletAddress, setEligibilityData } = useClaimPage();
+  const { data: walletClient } = useWalletClient();
   const formMethods = useForm<FormPayload>({
     defaultValues: {
       address: '',
@@ -73,8 +76,14 @@ export const CheckEligibilityContent = () => {
     }
   };
 
+  useEffect(() => {
+    if (walletClient?.account.address) {
+      formMethods.setValue('address', walletClient.account.address);
+    }
+  }, [walletClient?.account.address]);
+
   return (
-    <div className="z-[5] inline-flex flex-col items-center gap-4 overflow-hidden px-4 pb-3 pt-6 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]">
+    <div className="z-[5] inline-flex flex-col items-center gap-4 overflow-hidden px-4 pb-3 pt-6 lg:mt-[78px] lg:[@media(max-height:800px)]:mt-[60px]">
       <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-display2 gradient-text">COMMUNITY AIRDROP</h1>
         <span className="text-body2 text-neutralGreen-900 opacity-70">
