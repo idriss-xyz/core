@@ -10,4 +10,5 @@ export {
   getEndsInLabel,
 } from './date-utils';
 export { getShortWalletHex } from './wallet-utils';
+export { isFarcasterName } from './subscription-utils';
 export { reverseObject, createLookup } from './objects';

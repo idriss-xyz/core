@@ -16,14 +16,14 @@ import { Hex, Wallet, WalletConnectModal } from '@idriss-xyz/wallet-connect';
 
 import { onWindowMessage } from '../../messaging';
 
-import { useAuthToken } from './auth-token-context';
+import { useTradingCopilot } from './trading-copilot-context';
 
 type WalletContextValue = {
   wallet?: Wallet;
   isConnectionModalOpened: boolean;
   openConnectionModal: () => Promise<Wallet>;
   removeWalletInfo: () => void;
-  setWalletInfo: (wallet: Wallet) => void;
+  verifyWalletProvider: (wallet: Wallet) => Promise<boolean>;
 };
 
 type StoredWallet = {
@@ -49,7 +49,7 @@ export const WalletContextProvider = (properties: {
     properties;
   const [tabChangedListenerInitialized, setTabChangedListenerInitialized] =
     useState(false);
-  const { clearAuthToken } = useAuthToken();
+  const { clearAuthToken } = useTradingCopilot();
   const [wallet, setWallet] = useState<Wallet>();
   const walletConnectModal = useModal(WalletConnectModal, {
     disabledWalletsRdns: disabledWalletsRdns ?? [],
@@ -117,6 +117,35 @@ export const WalletContextProvider = (properties: {
       chainId: hexToNumber(chainId),
     };
   }, [availableWalletProviders, onGetWallet]);
+
+  const verifyWalletProvider = useCallback(
+    async (wallet: Wallet) => {
+      const provider = wallet.provider;
+
+      const accounts = await provider.request({
+        method: 'eth_requestAccounts',
+      });
+
+      const chainId = await provider.request({ method: 'eth_chainId' });
+
+      const loggedInToCurrentWallet = getAddress(accounts[0] ?? '0x').includes(
+        wallet.account,
+      );
+
+      if (loggedInToCurrentWallet && accounts[0]) {
+        setWalletInfo({
+          provider,
+          chainId: hexToNumber(chainId),
+          account: getAddress(accounts[0]),
+          providerRdns: wallet.providerRdns,
+        });
+        return true;
+      } else {
+        return false;
+      }
+    },
+    [setWalletInfo],
+  );
 
   if (!tabChangedListenerInitialized) {
     onWindowMessage('TAB_CHANGED', async () => {
@@ -206,16 +235,16 @@ export const WalletContextProvider = (properties: {
   const contextValue: WalletContextValue = useMemo(() => {
     return {
       wallet,
-      setWalletInfo,
       removeWalletInfo,
       openConnectionModal,
+      verifyWalletProvider,
       isConnectionModalOpened: walletConnectModal.visible,
     };
   }, [
     wallet,
-    setWalletInfo,
     removeWalletInfo,
     openConnectionModal,
+    verifyWalletProvider,
     walletConnectModal.visible,
   ]);
 

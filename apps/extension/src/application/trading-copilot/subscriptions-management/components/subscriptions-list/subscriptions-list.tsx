@@ -3,18 +3,16 @@ import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 
 import { Empty, Spinner } from 'shared/ui';
 
-import { SoundToggle } from '../sound-toggle';
-
-import { ListProperties } from './subscription-list.types';
-import { SubscriptionItem } from './subscription-item';
+import { Properties } from './subscription-list.types';
+import { SubscriptionItem, SoundToggle } from './components';
 
 export const SubscriptionsList = ({
   onRemove,
   className,
   subscriptions,
+  subscriptionsAmount,
   subscriptionsLoading,
-  subscriptionsUpdatePending,
-}: ListProperties) => {
+}: Properties) => {
   const subscriptionsListBody = useMemo(() => {
     if (subscriptionsLoading) {
       return (
@@ -22,7 +20,7 @@ export const SubscriptionsList = ({
       );
     }
 
-    if (subscriptions === undefined || subscriptions.details.length === 0) {
+    if (subscriptions === undefined || subscriptionsAmount === 0) {
       return (
         <Empty text="Your subscriptions list is empty" className="mt-10" />
       );
@@ -35,25 +33,17 @@ export const SubscriptionsList = ({
             {subscriptions.details.map((subscription) => {
               return (
                 <SubscriptionItem
-                  subscription={subscription}
-                  key={subscription.address}
                   onRemove={onRemove}
+                  key={subscription.address}
+                  subscription={subscription}
                 />
               );
             })}
           </ul>
         </ScrollArea>
-        {subscriptionsUpdatePending && (
-          <Spinner className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
-        )}
       </div>
     );
-  }, [
-    onRemove,
-    subscriptions,
-    subscriptionsLoading,
-    subscriptionsUpdatePending,
-  ]);
+  }, [onRemove, subscriptions, subscriptionsAmount, subscriptionsLoading]);
 
   return (
     <div className={className}>

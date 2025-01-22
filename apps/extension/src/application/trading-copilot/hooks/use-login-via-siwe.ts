@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
-import { getAddress, hexToNumber } from 'viem';
 
-import { useAuthToken, useWallet } from 'shared/extension';
+import { useTradingCopilot, useWallet } from 'shared/extension';
 import { useCommandMutation } from 'shared/messaging';
 import { createWalletClient, Wallet } from 'shared/web3';
 
@@ -10,11 +9,11 @@ import {
   VerifySiweSignatureCommand,
   VerifyTokenCommand,
 } from '../commands';
-import { SiweMessageRequest, VerifySiweSignatureRequest } from '../types';
+import { SiweMessagePayload, VerifySiweSignaturePayload } from '../types';
 
 export const useLoginViaSiwe = () => {
-  const { setWalletInfo } = useWallet();
-  const { getAuthToken, saveAuthToken } = useAuthToken();
+  const { verifyWalletProvider } = useWallet();
+  const { getAuthToken, saveAuthToken } = useTradingCopilot();
   const getSiweMessage = useCommandMutation(GetSiweMessageCommand);
   const verifySiweSignature = useCommandMutation(VerifySiweSignatureCommand);
   const verifyAuthTokenMutation = useCommandMutation(VerifyTokenCommand);
@@ -25,37 +24,19 @@ export const useLoginViaSiwe = () => {
         return;
       }
 
-      const handleGetSiweMessage = async (payload: SiweMessageRequest) => {
+      const handleGetSiweMessage = async (payload: SiweMessagePayload) => {
         return await getSiweMessage.mutateAsync(payload);
       };
 
       const handleVerifySiweSignature = async (
-        payload: VerifySiweSignatureRequest,
+        payload: VerifySiweSignaturePayload,
       ) => {
         return await verifySiweSignature.mutateAsync(payload);
       };
 
-      const provider = wallet.provider;
-      const providerRdns = wallet.providerRdns;
+      const isWalletProviderValid = await verifyWalletProvider(wallet);
 
-      const accounts = await provider.request({
-        method: 'eth_requestAccounts',
-      });
-
-      const chainId = await provider.request({ method: 'eth_chainId' });
-
-      const loggedInToCurrentWallet = getAddress(accounts[0] ?? '0x').includes(
-        wallet.account,
-      );
-
-      if (loggedInToCurrentWallet && accounts[0]) {
-        setWalletInfo({
-          account: getAddress(accounts[0]),
-          provider,
-          chainId: hexToNumber(chainId),
-          providerRdns: providerRdns,
-        });
-      } else {
+      if (!isWalletProviderValid) {
         return;
       }
 
@@ -80,7 +61,7 @@ export const useLoginViaSiwe = () => {
 
       saveAuthToken(verifiedSiweSignature.token);
     },
-    [getSiweMessage, saveAuthToken, setWalletInfo, verifySiweSignature],
+    [getSiweMessage, saveAuthToken, verifySiweSignature, verifyWalletProvider],
   );
 
   const loggedIn = useCallback(async () => {

@@ -9,8 +9,17 @@ import { getQuote } from '@lifi/sdk';
 import { connectedClients } from '../services/scheduler';
 import { dataSource } from '../db';
 import { SubscriptionsEntity } from '../entities/subscribtions.entity';
+import rateLimit from 'express-rate-limit';
 
 const subscriptionsRepo = dataSource.getRepository(SubscriptionsEntity);
+
+const requestLimitation = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 10,
+  message: 'Too many requests, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 const router = express.Router();
 
@@ -104,7 +113,7 @@ router.get('/test-swap/:subscriberId', async (req, res) => {
   }
 });
 
-router.post('/get-quote', async (req, res) => {
+router.post('/get-quote', requestLimitation, async (req, res) => {
   const {
     fromAddress,
     originChain,

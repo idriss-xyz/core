@@ -19,12 +19,16 @@ import {
 } from 'shared/ui';
 import { TwitterScrapingContextProvider } from 'host/twitter';
 import {
-  AuthTokenContextProvider,
+  TradingCopilotContextProvider,
   ExtensionPopupProvider,
   ExtensionSettingsProvider,
   WalletContextProvider,
 } from 'shared/extension';
-import { AuthTokenStorage, WalletStorage } from 'shared/web3';
+import {
+  AuthTokenStorage,
+  WalletStorage,
+  ToastSoundStateStorage,
+} from 'shared/web3';
 
 type Properties = {
   children: ReactNode;
@@ -47,10 +51,15 @@ export const Providers = ({
                     <TailwindProvider>
                       <QueryProvider>
                         <NiceModal.Provider>
-                          <AuthTokenContextProvider
+                          <TradingCopilotContextProvider
                             onGetAuthToken={AuthTokenStorage.get}
                             onClearAuthToken={AuthTokenStorage.clear}
                             onSaveAuthToken={AuthTokenStorage.save}
+                            onClearToastSoundState={
+                              ToastSoundStateStorage.clear
+                            }
+                            onGetToastSoundState={ToastSoundStateStorage.get}
+                            onSaveToastSoundState={ToastSoundStateStorage.save}
                           >
                             <NotificationsProvider>
                               <WalletContextProvider
@@ -72,7 +81,7 @@ export const Providers = ({
                                 </ExtensionPopupProvider>
                               </WalletContextProvider>
                             </NotificationsProvider>
-                          </AuthTokenContextProvider>
+                          </TradingCopilotContextProvider>
                         </NiceModal.Provider>
                       </QueryProvider>
                     </TailwindProvider>
