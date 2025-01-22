@@ -2,11 +2,11 @@
 'use client';
 import { Button } from '@idriss-xyz/ui/button';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
+import { IconButton } from '@idriss-xyz/ui/icon-button';
 
 import { useClaimPage } from '../../claim-page-context';
 
 import idrissCoin from './assets/IDRISS_SCENE_CIRCLE_2 2.png';
-import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { SOCIALS } from './constants';
 
 export const ClaimSuccessfulContent = () => {
@@ -39,7 +39,7 @@ export const ClaimSuccessfulContent = () => {
             onClick={() => {}}
             className="absolute right-6 top-6 flex size-6 p-0 text-midnightGreen-100"
           />
-          <div className="relative flex w-full flex-row justify-center"></div>
+          <div className="relative flex w-full flex-row justify-center" />
           <div className="flex flex-col items-center gap-2">
             <span className="text-body4 text-neutralGreen-700">
               YOU RECEIVED

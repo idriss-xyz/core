@@ -8,7 +8,6 @@ import { mainnet } from 'viem/chains';
 import { normalize } from 'viem/ens';
 import { Form } from '@idriss-xyz/ui/form';
 import { useMutation } from '@tanstack/react-query';
-import { useEffect } from 'react';
 import axios from 'axios';
 
 import idrissCoin from '../../assets/IDRISS_COIN 1.png';
@@ -26,8 +25,7 @@ const ethereumClient = createPublicClient({
 });
 
 export const CheckEligibilityContent = () => {
-  const { eligibilityData, navigate, setWalletAddress, setEligibilityData } =
-    useClaimPage();
+  const { navigate, setWalletAddress, setEligibilityData } = useClaimPage();
   const formMethods = useForm<FormPayload>({
     defaultValues: {
       address: '',
@@ -69,9 +67,9 @@ export const CheckEligibilityContent = () => {
 
     const { address, resolvedEnsAddress } = formMethods.getValues();
     if (address.includes('.') && resolvedEnsAddress) {
-      storeDataAndNavigate(resolvedEnsAddress);
+      void storeDataAndNavigate(resolvedEnsAddress);
     } else if (address) {
-      storeDataAndNavigate(address);
+      void storeDataAndNavigate(address);
     }
   };
 
