@@ -28,6 +28,7 @@ import {
   AuthTokenStorage,
   WalletStorage,
   ToastSoundStateStorage,
+  SubscriptionsAmountStorage,
 } from 'shared/web3';
 
 type Properties = {
@@ -60,6 +61,12 @@ export const Providers = ({
                             }
                             onGetToastSoundState={ToastSoundStateStorage.get}
                             onSaveToastSoundState={ToastSoundStateStorage.save}
+                            onSaveSubscriptionsAmount={
+                              SubscriptionsAmountStorage.save
+                            }
+                            onClearSubscriptionsAmount={
+                              SubscriptionsAmountStorage.clear
+                            }
                           >
                             <NotificationsProvider>
                               <WalletContextProvider

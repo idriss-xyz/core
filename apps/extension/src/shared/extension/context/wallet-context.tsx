@@ -49,7 +49,7 @@ export const WalletContextProvider = (properties: {
     properties;
   const [tabChangedListenerInitialized, setTabChangedListenerInitialized] =
     useState(false);
-  const { clearAuthToken } = useTradingCopilot();
+  const { clearAuthToken, clearSubscriptionsAmount } = useTradingCopilot();
   const [wallet, setWallet] = useState<Wallet>();
   const walletConnectModal = useModal(WalletConnectModal, {
     disabledWalletsRdns: disabledWalletsRdns ?? [],
@@ -59,7 +59,8 @@ export const WalletContextProvider = (properties: {
     onClearWallet?.();
     setWallet(undefined);
     clearAuthToken();
-  }, [clearAuthToken, onClearWallet]);
+    clearSubscriptionsAmount();
+  }, [clearAuthToken, clearSubscriptionsAmount, onClearWallet]);
 
   const setWalletInfo = useCallback(
     (wallet: Wallet) => {

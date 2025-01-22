@@ -24,7 +24,7 @@ interface Properties {
 }
 
 export const useSubscriptions = ({ wallet, addTabListener }: Properties) => {
-  const { getAuthToken } = useTradingCopilot();
+  const { getAuthToken, saveSubscriptionsAmount } = useTradingCopilot();
   const siwe = useLoginViaSiwe();
   const tabChangedListenerAdded = useRef(false);
 
@@ -40,6 +40,17 @@ export const useSubscriptions = ({ wallet, addTabListener }: Properties) => {
     }),
     staleTime: Number.POSITIVE_INFINITY,
   });
+
+  useEffect(() => {
+    if (subscriptionsQuery.isSuccess) {
+      console.log(subscriptionsQuery.data?.details.length);
+      saveSubscriptionsAmount(subscriptionsQuery.data?.details.length);
+    }
+  }, [
+    saveSubscriptionsAmount,
+    subscriptionsQuery.data?.details.length,
+    subscriptionsQuery.isSuccess,
+  ]);
 
   useEffect(() => {
     if (!tabChangedListenerAdded.current && addTabListener) {
@@ -73,6 +84,7 @@ export const useSubscriptions = ({ wallet, addTabListener }: Properties) => {
         subscription: { ...payload, subscriberId: wallet.account },
         authToken: authToken ?? '',
       });
+
       void subscriptionsQuery.refetch();
     },
     [
@@ -97,6 +109,7 @@ export const useSubscriptions = ({ wallet, addTabListener }: Properties) => {
         subscription: { ...payload, subscriberId: wallet.account },
         authToken: authToken ?? '',
       });
+
       void subscriptionsQuery.refetch();
     },
     [

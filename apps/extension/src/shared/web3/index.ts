@@ -39,4 +39,5 @@ export {
   WalletStorage,
   AuthTokenStorage,
   ToastSoundStateStorage,
+  SubscriptionsAmountStorage,
 } from './storage';

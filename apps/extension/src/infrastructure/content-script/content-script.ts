@@ -18,6 +18,7 @@ import {
   ACTIVE_TAB_CHANGED,
   StoredAuthToken,
   StoredToastSoundState,
+  StoredSubscriptionsAmount,
 } from 'shared/extension';
 import { Hex } from 'shared/web3';
 
@@ -215,6 +216,17 @@ export class ContentScript {
     onWindowMessage<StoredToastSoundState>('SAVE_TOAST_SOUND_STATE', (v) => {
       void TradingCopilotManager.saveToastSoundState(v);
     });
+
+    onWindowMessage('CLEAR_SUBSCRIPTIONS_AMOUNT', () => {
+      void TradingCopilotManager.clearSubscriptionsAmount();
+    });
+
+    onWindowMessage<StoredSubscriptionsAmount>(
+      'SAVE_SUBSCRIPTIONS_AMOUNT',
+      (v) => {
+        void TradingCopilotManager.saveSubscriptionsAmount(v);
+      },
+    );
   }
 
   // TODO: move these message names to constants in shared/web3

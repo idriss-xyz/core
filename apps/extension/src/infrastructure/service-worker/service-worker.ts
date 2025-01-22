@@ -20,6 +20,7 @@ import {
   EXTENSION_BUTTON_CLICKED,
   EXTENSION_COMMAND_MAP,
   ExtensionSettingsManager,
+  TradingCopilotManager,
 } from 'shared/extension';
 import {
   createObservabilityScope,
@@ -91,9 +92,18 @@ export class ServiceWorker {
         'color: #FF9900;',
       );
       const wallet = await ExtensionSettingsManager.getWallet();
+      const subscriptionsAmount =
+        await TradingCopilotManager.getSubscriptionsAmount();
 
       if (wallet?.account) {
-        this.registerWithServer(wallet.account);
+        if (Number(subscriptionsAmount) > 0) {
+          this.registerWithServer(wallet.account);
+        } else {
+          console.log(
+            '%c[WebSocket] User subscriptions not found.',
+            'color: orange;',
+          );
+        }
       } else {
         console.log('%c[WebSocket] User not found.', 'color: red;');
         this.socket.disconnect();
