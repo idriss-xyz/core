@@ -9,12 +9,15 @@ import { normalize } from 'viem/ens';
 import { Form } from '@idriss-xyz/ui/form';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect } from 'react';
+import axios from 'axios';
 
 import idrissCoin from '../../assets/IDRISS_COIN 1.png';
 import { useClaimPage } from '../../claim-page-context';
+import { EligibilityCheckResponse } from '../../types';
 
 type FormPayload = {
   address: string;
+  resolvedEnsAddress?: string;
 };
 
 const ethereumClient = createPublicClient({
@@ -23,17 +26,23 @@ const ethereumClient = createPublicClient({
 });
 
 export const CheckEligibilityContent = () => {
-  const {
-    navigate,
-    setWalletAddress,
-    eligibilityData,
-    eligibilityDataLoading,
-  } = useClaimPage();
+  const { eligibilityData, navigate, setWalletAddress, setEligibilityData } =
+    useClaimPage();
   const formMethods = useForm<FormPayload>({
     defaultValues: {
       address: '',
+      resolvedEnsAddress: undefined,
     },
     mode: 'onSubmit',
+  });
+
+  const eligibilityMutation = useMutation({
+    mutationFn: async (walletAddress: string) => {
+      const { data } = await axios.get<EligibilityCheckResponse>(
+        `https://api.idriss.xyz/check-eligibility/${walletAddress}`,
+      );
+      return data;
+    },
   });
 
   const resolveEnsAddressMutation = useMutation({
@@ -45,28 +54,26 @@ export const CheckEligibilityContent = () => {
     },
   });
 
+  const storeDataAndNavigate = async (walletAddress: string) => {
+    const eligilibility = await eligibilityMutation.mutateAsync(walletAddress);
+    setEligibilityData(eligilibility);
+    setWalletAddress(walletAddress);
+    navigate('/claim');
+  };
+
   const verifyEligibility = async () => {
     const isValid = await formMethods.trigger();
     if (!isValid) {
       return;
     }
 
-    const { address } = formMethods.getValues();
-    let resolvedAddress: string | null | undefined = address;
-    if (address.includes('.')) {
-      resolvedAddress = await resolveEnsAddressMutation.mutateAsync(address);
-    }
-
-    if (resolvedAddress) {
-      setWalletAddress(resolvedAddress);
+    const { address, resolvedEnsAddress } = formMethods.getValues();
+    if (address.includes('.') && resolvedEnsAddress) {
+      storeDataAndNavigate(resolvedEnsAddress);
+    } else if (address) {
+      storeDataAndNavigate(address);
     }
   };
-
-  useEffect(() => {
-    if (eligibilityData) {
-      navigate('/claim');
-    }
-  }, [eligibilityData, navigate]);
 
   return (
     <div className="z-[5] inline-flex flex-col items-center gap-4 overflow-hidden px-4 pb-3 pt-6 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]">
@@ -109,10 +116,16 @@ export const CheckEligibilityContent = () => {
                     if (value.includes('.') && !value.endsWith('.')) {
                       const resolvedAddress =
                         await resolveEnsAddressMutation.mutateAsync(value);
+                      if (resolvedAddress) {
+                        formMethods.setValue(
+                          'resolvedEnsAddress',
+                          resolvedAddress,
+                          { shouldValidate: false },
+                        );
+                        return true;
+                      }
 
-                      return resolvedAddress
-                        ? true
-                        : 'This address doesn’t exist.';
+                      return 'This address doesn’t exist.';
                     }
                     return isAddress(value)
                       ? true
@@ -143,7 +156,7 @@ export const CheckEligibilityContent = () => {
           suffixIconName="ArrowRight"
           onClick={verifyEligibility}
           loading={
-            resolveEnsAddressMutation.isPending || eligibilityDataLoading
+            resolveEnsAddressMutation.isPending || eligibilityMutation.isPending
           }
         >
           CHECK ELIGIBILITY
