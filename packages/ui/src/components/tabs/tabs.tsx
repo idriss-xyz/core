@@ -36,7 +36,7 @@ export const Tabs = ({ items, onChange }: Properties) => {
         ))}
         {/* Sliding indicator */}
         <div
-          className="absolute bottom-0 left-0 h-[2px] bg-mint-500 transition-transform duration-300"
+          className="absolute bottom-0 left-0 h-[1px] bg-mint-500 transition-transform duration-300"
           style={{
             width: `${100 / items.length}%`,
             transform: `translateX(${items.findIndex((item) => item.key === activeTab) * 100}%)`,
@@ -46,8 +46,8 @@ export const Tabs = ({ items, onChange }: Properties) => {
       {items.map((item) => (
         <RadixTabs.Content
           key={item.key}
-          className="grow rounded-b-md p-5 outline-none"
           value={item.key}
+          className="grow rounded-b-md p-5 outline-none"
         >
           {item.children}
         </RadixTabs.Content>
