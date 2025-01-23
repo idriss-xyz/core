@@ -19,7 +19,7 @@ router.get('/', (_, res) => {
 });
 
 router.post('/subscribe', verifyToken(), async (req, res) => {
-  const { fid, address } = req.body;
+  const { fid, address, chainType } = req.body;
 
   const { id: subscriberId } = req.user;
 
@@ -29,7 +29,7 @@ router.post('/subscribe', verifyToken(), async (req, res) => {
   }
 
   try {
-    await subscribeAddress(subscriberId, address, fid);
+    await subscribeAddress(subscriberId, address, chainType, fid);
 
     res
       .status(200)

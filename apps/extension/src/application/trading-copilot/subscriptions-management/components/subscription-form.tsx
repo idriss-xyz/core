@@ -58,20 +58,20 @@ export const SubscriptionForm = ({
       if (!wallet) {
         return;
       }
+      let chainType: 'EVM' | 'SOLANA' = 'EVM'
 
       if (isHex) {
-        let chainType: 'EVM' | 'SOLANA' = 'EVM'
-
         if (!isAddress(data.subscriptionDetails)){
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-          if (isSolanaAddress(data.subscriptionDetails)){
-            chainType = 'SOLANA'
-          }
-          else {
-            // TODO: throw error to the user "Not an address"
+            // TODO: Move validation to input error message
+            console.error('Not an address');
             return;
-          }
         }
+        onSubmit(data.subscriptionDetails, undefined, chainType);
+        form.reset(EMPTY_FORM);
+        return;
+      }
+      if (isSolanaAddress(data.subscriptionDetails)){
+        chainType = 'SOLANA'
         onSubmit(data.subscriptionDetails, undefined, chainType);
         form.reset(EMPTY_FORM);
         return;
@@ -94,6 +94,7 @@ export const SubscriptionForm = ({
       const address = await getEnsAddressMutation.mutateAsync({
         ensName: data.subscriptionDetails,
       });
+
 
       if (!address) {
         return;

@@ -8,7 +8,7 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import dotenv from 'dotenv';
 import { join } from 'path';
-import { WEBHOOK_NETWORKS } from '../constants';
+import { WEBHOOK_NETWORK_TYPES, WEBHOOK_NETWORKS } from '../constants';
 import { mode } from '../utils/mode';
 
 dotenv.config(
@@ -34,6 +34,7 @@ const webhooksRepo = dataSource.getRepository(WebhookEntity);
 export const subscribeAddress = async (
   subscriber_id: string,
   address: string,
+  chainType: string,
   fid?: number,
 ) => {
   address = address.toLowerCase();
@@ -49,7 +50,7 @@ export const subscribeAddress = async (
     where: { address },
   });
   if (!addressWebhookMap) {
-    await addAddressToWebhook(address);
+    await addAddressToWebhook(address, chainType);
   }
 };
 
@@ -87,7 +88,21 @@ export const unsubscribeAddress = async (
   }
 };
 
-const addAddressToWebhook = async (address: string) => {
+const saveWebhookToDb = async (address: string, webhook: { webhookId: any, internalWebhookId: string, signingKey: string } | null) => {
+  if (webhook == null) return;
+  const { webhookId, internalWebhookId, signingKey } = webhook;
+  await webhooksRepo.save({
+    internal_id: internalWebhookId,
+    webhook_id: webhookId,
+    signing_key: signingKey,
+  });
+  await addressMapWebhooksRepo.save({
+    address,
+    webhook_internal_id: internalWebhookId,
+  });
+};
+
+const addAddressToWebhook = async (address: string, chainType: string) => {
   const res = await webhooksRepo
     .createQueryBuilder('webhooks')
     .select(['webhooks.internal_id', 'webhooks.webhook_id'])
@@ -107,18 +122,17 @@ const addAddressToWebhook = async (address: string) => {
     .getRawOne();
 
   if (!res) {
-    const webhooks = await createNewWebhook(address);
-    for (const webhook of webhooks) {
-      const { webhookId, internalWebhookId, signingKey } = webhook;
-      await webhooksRepo.save({
-        internal_id: internalWebhookId,
-        webhook_id: webhookId,
-        signing_key: signingKey,
-      });
-      await addressMapWebhooksRepo.save({
-        address,
-        webhook_internal_id: internalWebhookId,
-      });
+    if (chainType === WEBHOOK_NETWORK_TYPES.EVM) {
+      const webhooks = await createNewWebhook(address);
+      for (const webhook of webhooks) {
+        console.log('Creating normal webhook: ', address);
+        await saveWebhookToDb(address, webhook);
+      }
+    }
+    else if (chainType === WEBHOOK_NETWORK_TYPES.SOLANA) {
+      console.log('Creating new solana webhook for: ', address);
+      const webhook = await createNewSolanaWebhook(address);
+      await saveWebhookToDb(address, webhook);
     }
   } else {
     const {
@@ -218,11 +232,12 @@ const createNewSolanaWebhook = async (address: string) => {
     const internalWebhookId = uuidv4();
 
     const response = await axios.post(
-      `${HELIUS_API_BASE_URL}?api-key=${HELIUS_API_KEY}`,
+      `${HELIUS_API_BASE_URL}/v0/webhooks?api-key=${HELIUS_API_KEY}`,
       {
-        webhook_url: webhookUrl,
-        webhook_type: 'SWAP',
+        webhookURL: webhookUrl,
+        transactionTypes: ['SWAP'],
         accountAddresses: [address],
+        webhookType: 'enhanced',
       },
       {
         headers: {
