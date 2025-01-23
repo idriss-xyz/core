@@ -27,14 +27,14 @@ router.post('/login', async (req: Request, res: Response) => {
   }
 
   try {
-    const valid = validateMessage(walletAddress, message, signature);
+    const valid = await validateMessage(walletAddress, message, signature);
 
     if (!valid) {
       res.status(403).json({ error: 'Invalid signature' });
       return;
     }
 
-    const token = login(walletAddress);
+    const token = await login(walletAddress);
 
     res.status(200).send({ token });
   } catch (err) {}
@@ -44,7 +44,7 @@ router.post('/wallet-address', async (req, res) => {
   try {
     const { walletAddress, chainId, domain } = req.body;
 
-    const message = createMessage(walletAddress, chainId, domain);
+    const message = await createMessage(walletAddress, chainId, domain);
 
     res.status(200).json({ message });
   } catch (err) {
