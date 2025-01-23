@@ -4,17 +4,25 @@ import {
   createContext,
   ReactNode,
   useCallback,
+  useEffect,
   useMemo,
   useState,
 } from 'react';
 
 import { createContextHook } from 'shared/ui';
-import { onWindowMessage } from 'shared/messaging';
+import { onWindowMessage, useCommandMutation } from 'shared/messaging';
+// TODO: add new command to shared command?
+// eslint-disable-next-line boundaries/entry-point,boundaries/element-types
+import { GetTradingCopilotSubscriptionsCommand } from 'application/trading-copilot/commands';
+// TODO: add new type to shared types?
+// eslint-disable-next-line boundaries/entry-point,boundaries/element-types
+import { SubscriptionsPayload } from 'application/trading-copilot/types';
 
 import {
   StoredAuthToken,
   StoredSubscriptionsAmount,
   StoredToastSoundState,
+  StoredWallet,
 } from '../types';
 
 type TradingCopilotContextValue = {
@@ -40,6 +48,7 @@ export const TradingCopilotContextProvider = ({
   onClearToastSoundState,
   onGetToastSoundState,
   onSaveToastSoundState,
+  onGetWallet,
   onClearSubscriptionsAmount,
   onSaveSubscriptionsAmount,
 }: {
@@ -50,6 +59,7 @@ export const TradingCopilotContextProvider = ({
   onClearToastSoundState?: () => void;
   onGetToastSoundState?: () => Promise<StoredToastSoundState>;
   onSaveToastSoundState?: (payload: StoredToastSoundState) => void;
+  onGetWallet?: () => Promise<StoredWallet | undefined>;
   onClearSubscriptionsAmount?: () => void;
   onSaveSubscriptionsAmount?: (payload: StoredSubscriptionsAmount) => void;
 }) => {
@@ -57,6 +67,46 @@ export const TradingCopilotContextProvider = ({
     useState<StoredToastSoundState>();
   const [tabChangedListenerInitialized, setTabChangedListenerInitialized] =
     useState(false);
+  const getSubscriptionsMutation = useCommandMutation(
+    GetTradingCopilotSubscriptionsCommand,
+  );
+
+  useEffect(() => {
+    const callback = async () => {
+      const handleGetSubscriptionsMutation = async (
+        payload: SubscriptionsPayload,
+      ) => {
+        return await getSubscriptionsMutation.mutateAsync(payload);
+      };
+
+      if (
+        getSubscriptionsMutation.isSuccess ||
+        getSubscriptionsMutation.isPending
+      ) {
+        return;
+      }
+
+      const storedWallet = await onGetWallet?.();
+
+      if (!storedWallet) {
+        return;
+      }
+
+      const subscriptionsResponse = await handleGetSubscriptionsMutation({
+        subscriberId: storedWallet.account,
+      });
+
+      onSaveSubscriptionsAmount?.(subscriptionsResponse.details.length);
+    };
+
+    void callback();
+  }, [
+    getSubscriptionsMutation,
+    getSubscriptionsMutation.isPending,
+    getSubscriptionsMutation.isSuccess,
+    onGetWallet,
+    onSaveSubscriptionsAmount,
+  ]);
 
   if (!tabChangedListenerInitialized) {
     onWindowMessage('TAB_CHANGED', async () => {

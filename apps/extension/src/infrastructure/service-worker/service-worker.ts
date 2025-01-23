@@ -95,6 +95,8 @@ export class ServiceWorker {
       const subscriptionsAmount =
         await TradingCopilotManager.getSubscriptionsAmount();
 
+      console.log(wallet, subscriptionsAmount);
+
       if (wallet?.account) {
         if (Number(subscriptionsAmount) > 0) {
           this.registerWithServer(wallet.account);

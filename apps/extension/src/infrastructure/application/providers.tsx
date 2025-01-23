@@ -61,6 +61,7 @@ export const Providers = ({
                             }
                             onGetToastSoundState={ToastSoundStateStorage.get}
                             onSaveToastSoundState={ToastSoundStateStorage.save}
+                            onGetWallet={WalletStorage.get}
                             onSaveSubscriptionsAmount={
                               SubscriptionsAmountStorage.save
                             }
