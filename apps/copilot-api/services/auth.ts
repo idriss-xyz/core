@@ -46,7 +46,7 @@ export async function validateMessage(
   });
 }
 
-export async function createMessage(
+export function createMessage(
   walletAddress: Hex,
   chainId: number,
   domain: string,

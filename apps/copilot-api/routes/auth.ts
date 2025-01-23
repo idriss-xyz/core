@@ -44,7 +44,7 @@ router.post('/wallet-address', async (req, res) => {
   try {
     const { walletAddress, chainId, domain } = req.body;
 
-    const message = await createMessage(walletAddress, chainId, domain);
+    const message = createMessage(walletAddress, chainId, domain);
 
     res.status(200).json({ message });
   } catch (err) {
