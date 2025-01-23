@@ -2,7 +2,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { useAccount, useWalletClient, useDisconnect } from 'wagmi';
+import { useAccount, useDisconnect } from 'wagmi';
 import { Button } from '@idriss-xyz/ui/button';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 
@@ -23,7 +23,6 @@ export const ContentManager = () => {
 
   const { isConnected } = useAccount();
 
-  const { data: walletClient } = useWalletClient();
   const { disconnect } = useDisconnect();
   const { connectModalOpen, openConnectModal } = useConnectModal();
 
