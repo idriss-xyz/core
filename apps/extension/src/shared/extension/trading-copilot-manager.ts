@@ -85,9 +85,7 @@ export const TradingCopilotManager = {
   },
 
   onSubscriptionsAmountChange(
-    callback: (
-      newSubscriptionsAmount: StoredSubscriptionsAmount | undefined,
-    ) => void,
+    callback: (newSubscriptionsAmount: StoredSubscriptionsAmount) => void,
   ) {
     chrome.storage.onChanged.addListener((changes, namespace) => {
       if (namespace === 'local' && changes['subscriptions-amount']) {

@@ -11,10 +11,8 @@ import {
 
 import { createContextHook } from 'shared/ui';
 import { onWindowMessage, useCommandMutation } from 'shared/messaging';
-// TODO: add new command to shared command?
 // eslint-disable-next-line boundaries/entry-point,boundaries/element-types
 import { GetTradingCopilotSubscriptionsCommand } from 'application/trading-copilot/commands';
-// TODO: add new type to shared types?
 // eslint-disable-next-line boundaries/entry-point,boundaries/element-types
 import { SubscriptionsPayload } from 'application/trading-copilot/types';
 
