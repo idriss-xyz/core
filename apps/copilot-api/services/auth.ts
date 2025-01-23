@@ -32,7 +32,7 @@ export async function login(walletAddress: string): Promise<string> {
   });
 }
 
-export function validateMessage(
+export async function validateMessage(
   walletAddress: Hex,
   message: string,
   signature: Hex,
