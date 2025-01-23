@@ -28,7 +28,8 @@
     "./providers/with-portal": "./src/providers/with-portal.tsx",
     "./utils": "./src/utils/index.ts",
     "./radio-group": "./src/components/radio-group/index.ts",
-    "./collapsible": "./src/components/collapsible/index.ts"
+    "./collapsible": "./src/components/collapsible/index.ts",
+    "./tabs": "./src/components/tabs/index.ts"
   },
   "scripts": {
     "format": "prettier --check --config ../../prettier.config.mjs --ignore-path .prettierignore .",
@@ -64,6 +65,7 @@
     "@radix-ui/react-radio-group": "^1.2.2",
     "@radix-ui/react-scroll-area": "^1.2.0",
     "@radix-ui/react-switch": "^1.1.1",
+    "@radix-ui/react-tabs": "^1.1.1",
     "@radix-ui/react-tooltip": "^1.1.6",
     "@radix-ui/react-visually-hidden": "^1.1.0",
     "class-variance-authority": "^0.7.0",

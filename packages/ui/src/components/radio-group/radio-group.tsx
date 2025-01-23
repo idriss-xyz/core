@@ -2,8 +2,8 @@ import * as RadixRadioGroup from '@radix-ui/react-radio-group';
 
 import { classes } from '../../utils';
 
-type RadioItem = {
-  value: string;
+export type RadioItem<T = string> = {
+  value: T;
   label: string;
 };
 
@@ -21,24 +21,20 @@ export const RadioGroup = ({
   className,
 }: Properties) => {
   return (
-    <RadixRadioGroup.Root
-      className={classes('flex flex-col gap-2.5', className)}
-      value={value}
-      onValueChange={onChange}
-    >
-      <div className="flex items-center">
+    <RadixRadioGroup.Root value={value} onValueChange={onChange}>
+      <div className={classes('flex flex-col gap-4', className)}>
         {items.map((item) => {
           return (
             <div key={item.value}>
               <RadixRadioGroup.Item
-                className="size-[25px] cursor-default rounded-full border-2 border-neutral-200 bg-transparent shadow-[0_2px_10px] outline-none hover:border-neutral-400 focus:shadow-[0_0_0_2px] focus:shadow-black"
+                className="size-[20px] cursor-default rounded-full border-2 border-neutral-200 bg-transparent outline-none hover:cursor-pointer hover:border-neutral-100 data-[state=checked]:border-mint-500"
                 value={item.value}
                 id={item.value}
               >
-                <RadixRadioGroup.Indicator className="relative flex size-full items-center justify-center after:block after:size-[11px] after:rounded-full after:bg-mint-500" />
+                <RadixRadioGroup.Indicator className="relative flex size-full items-center justify-center after:block after:size-[16px] after:rounded-full after:border-2 after:border-neutral-100 after:bg-mint-500" />
               </RadixRadioGroup.Item>
               <label
-                className="pl-[15px] text-[15px] leading-none text-white"
+                className="pl-[15px] text-body5 text-neutral-900 hover:cursor-pointer"
                 htmlFor={item.value}
               >
                 {item.label}
