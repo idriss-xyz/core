@@ -83,4 +83,21 @@ export const TradingCopilotManager = {
   clearSubscriptionsAmount() {
     return chrome.storage.local.remove('subscriptions-amount');
   },
+
+  onSubscriptionsAmountChange(
+    callback: (
+      newSubscriptionsAmount: StoredSubscriptionsAmount | undefined,
+    ) => void,
+  ) {
+    chrome.storage.onChanged.addListener((changes, namespace) => {
+      if (namespace === 'local' && changes['subscriptions-amount']) {
+        const newSubscriptionsAmount = changes['subscriptions-amount'].newValue
+          ? (JSON.parse(
+              changes['subscriptions-amount'].newValue,
+            ) as StoredSubscriptionsAmount)
+          : undefined;
+        callback(newSubscriptionsAmount);
+      }
+    });
+  },
 };

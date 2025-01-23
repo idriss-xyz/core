@@ -95,16 +95,15 @@ export class ServiceWorker {
       const subscriptionsAmount =
         await TradingCopilotManager.getSubscriptionsAmount();
 
-      console.log(wallet, subscriptionsAmount);
-
       if (wallet?.account) {
-        if (Number(subscriptionsAmount) > 0) {
+        if (subscriptionsAmount) {
           this.registerWithServer(wallet.account);
         } else {
           console.log(
-            '%c[WebSocket] User subscriptions not found.',
-            'color: orange;',
+            '%c[WebSocket] User dont have any subscriptions.',
+            'color: red;',
           );
+          this.socket.disconnect();
         }
       } else {
         console.log('%c[WebSocket] User not found.', 'color: red;');
@@ -118,6 +117,16 @@ export class ServiceWorker {
       }
 
       if (wallet?.account) {
+        this.socket.connect();
+      }
+    });
+
+    TradingCopilotManager.onSubscriptionsAmountChange((subscriptionAmount) => {
+      if (this.socket.connected && !subscriptionAmount) {
+        this.socket.disconnect();
+      }
+
+      if (!this.socket.connected && subscriptionAmount) {
         this.socket.connect();
       }
     });

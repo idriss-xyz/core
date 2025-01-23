@@ -43,13 +43,12 @@ export const useSubscriptions = ({ wallet, addTabListener }: Properties) => {
 
   useEffect(() => {
     if (subscriptionsQuery.isSuccess) {
-      console.log(subscriptionsQuery.data?.details.length);
       saveSubscriptionsAmount(subscriptionsQuery.data?.details.length);
     }
   }, [
     saveSubscriptionsAmount,
-    subscriptionsQuery.data?.details.length,
     subscriptionsQuery.isSuccess,
+    subscriptionsQuery.data?.details.length,
   ]);
 
   useEffect(() => {
