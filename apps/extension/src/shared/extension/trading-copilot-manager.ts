@@ -1,4 +1,8 @@
-import { StoredAuthToken, StoredToastSoundState } from './types';
+import {
+  StoredAuthToken,
+  StoredSubscriptionsAmount,
+  StoredToastSoundState,
+} from './types';
 
 export const TradingCopilotManager = {
   saveAuthToken(authToken: StoredAuthToken) {
@@ -51,5 +55,47 @@ export const TradingCopilotManager = {
 
   clearToastSoundState() {
     return chrome.storage.local.remove('toast-toggle-state');
+  },
+
+  saveSubscriptionsAmount(payload: StoredSubscriptionsAmount) {
+    return chrome.storage.local.set({
+      'subscriptions-amount': JSON.stringify(payload),
+    });
+  },
+
+  getSubscriptionsAmount(): Promise<StoredSubscriptionsAmount> {
+    return new Promise((resolve) => {
+      void chrome.storage.local
+        .get('subscriptions-amount')
+        .then((StoredSubscriptionsAmountRaw) => {
+          const StoredSubscriptionsAmount = StoredSubscriptionsAmountRaw[
+            'subscriptions-amount'
+          ]
+            ? (JSON.parse(
+                StoredSubscriptionsAmountRaw['subscriptions-amount'],
+              ) as StoredSubscriptionsAmount)
+            : undefined;
+          return resolve(StoredSubscriptionsAmount);
+        });
+    });
+  },
+
+  clearSubscriptionsAmount() {
+    return chrome.storage.local.remove('subscriptions-amount');
+  },
+
+  onSubscriptionsAmountChange(
+    callback: (newSubscriptionsAmount: StoredSubscriptionsAmount) => void,
+  ) {
+    chrome.storage.onChanged.addListener((changes, namespace) => {
+      if (namespace === 'local' && changes['subscriptions-amount']) {
+        const newSubscriptionsAmount = changes['subscriptions-amount'].newValue
+          ? (JSON.parse(
+              changes['subscriptions-amount'].newValue,
+            ) as StoredSubscriptionsAmount)
+          : undefined;
+        callback(newSubscriptionsAmount);
+      }
+    });
   },
 };

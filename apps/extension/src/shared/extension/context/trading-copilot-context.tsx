@@ -4,14 +4,24 @@ import {
   createContext,
   ReactNode,
   useCallback,
+  useEffect,
   useMemo,
   useState,
 } from 'react';
 
 import { createContextHook } from 'shared/ui';
-import { onWindowMessage } from 'shared/messaging';
+import { onWindowMessage, useCommandMutation } from 'shared/messaging';
+// eslint-disable-next-line boundaries/entry-point,boundaries/element-types
+import { GetTradingCopilotSubscriptionsCommand } from 'application/trading-copilot/commands';
+// eslint-disable-next-line boundaries/entry-point,boundaries/element-types
+import { SubscriptionsPayload } from 'application/trading-copilot/types';
 
-import { StoredAuthToken, StoredToastSoundState } from '../types';
+import {
+  StoredAuthToken,
+  StoredSubscriptionsAmount,
+  StoredToastSoundState,
+  StoredWallet,
+} from '../types';
 
 type TradingCopilotContextValue = {
   saveAuthToken: (payload: StoredAuthToken) => void;
@@ -20,6 +30,8 @@ type TradingCopilotContextValue = {
   saveToastSoundState: (payload: StoredToastSoundState) => void;
   clearToastSoundState: () => void;
   toastSoundEnabled: StoredToastSoundState;
+  saveSubscriptionsAmount: (payload: StoredSubscriptionsAmount) => void;
+  clearSubscriptionsAmount: () => void;
 };
 
 const TradingCopilotContext = createContext<
@@ -34,6 +46,9 @@ export const TradingCopilotContextProvider = ({
   onClearToastSoundState,
   onGetToastSoundState,
   onSaveToastSoundState,
+  onGetWallet,
+  onClearSubscriptionsAmount,
+  onSaveSubscriptionsAmount,
 }: {
   children: ReactNode;
   onClearAuthToken?: () => void;
@@ -42,11 +57,54 @@ export const TradingCopilotContextProvider = ({
   onClearToastSoundState?: () => void;
   onGetToastSoundState?: () => Promise<StoredToastSoundState>;
   onSaveToastSoundState?: (payload: StoredToastSoundState) => void;
+  onGetWallet?: () => Promise<StoredWallet | undefined>;
+  onClearSubscriptionsAmount?: () => void;
+  onSaveSubscriptionsAmount?: (payload: StoredSubscriptionsAmount) => void;
 }) => {
   const [toastSoundEnabled, setToastSoundEnabled] =
     useState<StoredToastSoundState>();
   const [tabChangedListenerInitialized, setTabChangedListenerInitialized] =
     useState(false);
+  const getSubscriptionsMutation = useCommandMutation(
+    GetTradingCopilotSubscriptionsCommand,
+  );
+
+  useEffect(() => {
+    const callback = async () => {
+      const handleGetSubscriptionsMutation = async (
+        payload: SubscriptionsPayload,
+      ) => {
+        return await getSubscriptionsMutation.mutateAsync(payload);
+      };
+
+      if (
+        getSubscriptionsMutation.isSuccess ||
+        getSubscriptionsMutation.isPending
+      ) {
+        return;
+      }
+
+      const storedWallet = await onGetWallet?.();
+
+      if (!storedWallet) {
+        return;
+      }
+
+      const subscriptionsResponse = await handleGetSubscriptionsMutation({
+        subscriberId: storedWallet.account,
+      });
+
+      onSaveSubscriptionsAmount?.(subscriptionsResponse.details.length);
+    };
+
+    void callback();
+  }, [
+    getSubscriptionsMutation,
+    getSubscriptionsMutation.isPending,
+    getSubscriptionsMutation.isSuccess,
+    onGetWallet,
+    onSaveSubscriptionsAmount,
+  ]);
 
   if (!tabChangedListenerInitialized) {
     onWindowMessage('TAB_CHANGED', async () => {
@@ -88,6 +146,17 @@ export const TradingCopilotContextProvider = ({
     onClearToastSoundState?.();
   }, [onClearToastSoundState]);
 
+  const saveSubscriptionsAmount = useCallback(
+    (payload: StoredSubscriptionsAmount) => {
+      onSaveSubscriptionsAmount?.(payload);
+    },
+    [onSaveSubscriptionsAmount],
+  );
+
+  const clearSubscriptionsAmount = useCallback(() => {
+    onClearSubscriptionsAmount?.();
+  }, [onClearSubscriptionsAmount]);
+
   const contextValue = useMemo(() => {
     return {
       getAuthToken,
@@ -96,6 +165,8 @@ export const TradingCopilotContextProvider = ({
       toastSoundEnabled,
       saveToastSoundState,
       clearToastSoundState,
+      saveSubscriptionsAmount,
+      clearSubscriptionsAmount,
     };
   }, [
     getAuthToken,
@@ -104,6 +175,8 @@ export const TradingCopilotContextProvider = ({
     toastSoundEnabled,
     saveToastSoundState,
     clearToastSoundState,
+    saveSubscriptionsAmount,
+    clearSubscriptionsAmount,
   ]);
 
   return (

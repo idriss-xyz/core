@@ -11,6 +11,8 @@ type StoredAuthToken = string | undefined;
 
 type StoredToastSoundState = boolean | undefined;
 
+type StoredSubscriptionsAmount = number | undefined;
+
 export class WalletStorage {
   public static get(): Promise<StoredWallet | undefined> {
     return new Promise((resolve) => {
@@ -97,6 +99,21 @@ export class ToastSoundStateStorage {
   public static clear() {
     window.postMessage({
       type: 'CLEAR_TOAST_SOUND_STATE',
+    });
+  }
+}
+
+export class SubscriptionsAmountStorage {
+  public static save(payload: StoredSubscriptionsAmount) {
+    window.postMessage({
+      type: 'SAVE_SUBSCRIPTIONS_AMOUNT',
+      detail: payload,
+    });
+  }
+
+  public static clear() {
+    window.postMessage({
+      type: 'CLEAR_SUBSCRIPTIONS_AMOUNT',
     });
   }
 }

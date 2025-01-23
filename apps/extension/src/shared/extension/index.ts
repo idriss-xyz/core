@@ -26,6 +26,7 @@ export type {
   ExtensionSettingName,
   StoredAuthToken,
   StoredToastSoundState,
+  StoredSubscriptionsAmount,
 } from './types';
 export { ExtensionSettingsManager } from './extension-settings-manager';
 export { TradingCopilotManager } from './trading-copilot-manager';
