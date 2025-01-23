@@ -2,12 +2,15 @@
 import { useAccount, useDisconnect } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { Button } from '@idriss-xyz/ui/button';
-import { backgroundLines2 } from '@/assets';
-import idrissSceneStream from './assets/IDRISS_SCENE_STREAM_4_2 1.png';
-import idrissCoin from './assets/IDRISS_COIN 1.png';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { TabItem, Tabs } from '@idriss-xyz/ui/tabs';
 import { Icon } from '@idriss-xyz/ui/icon';
+import '@rainbow-me/rainbowkit/styles.css';
+
+import { backgroundLines2 } from '@/assets';
+
+import idrissSceneStream from './assets/IDRISS_SCENE_STREAM_4_2 1.png';
+import idrissCoin from './assets/IDRISS_COIN 1.png';
 import { StakeTabContent, UnstakeTabContent } from './components';
 
 export const StakingContent = () => {
