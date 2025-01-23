@@ -1,0 +1,57 @@
+import * as RadixTabs from '@radix-ui/react-tabs';
+import { ReactNode, useState } from 'react';
+
+export type TabItem = {
+  key: string;
+  label: ReactNode;
+  children: ReactNode;
+};
+
+type Properties = {
+  items: TabItem[];
+  onChange?: (tabKey: string) => void;
+};
+
+export const Tabs = ({ items, onChange }: Properties) => {
+  const [activeTab, setActiveTab] = useState(items[0]?.key);
+
+  return (
+    <RadixTabs.Root
+      className="flex flex-col"
+      defaultValue={items[0]?.key}
+      onValueChange={(value) => {
+        setActiveTab(value);
+        onChange?.(value);
+      }}
+    >
+      <RadixTabs.List className="relative flex shrink-0 border-b border-neutral-300">
+        {items.map((item) => (
+          <RadixTabs.Trigger
+            key={item.key}
+            className="flex h-[40px] flex-1 cursor-pointer select-none items-center justify-center px-5 text-button2 leading-none text-neutral-900 outline-none"
+            value={item.key}
+          >
+            {item.label}
+          </RadixTabs.Trigger>
+        ))}
+        {/* Sliding indicator */}
+        <div
+          className="absolute bottom-0 left-0 h-[2px] bg-mint-500 transition-transform duration-300"
+          style={{
+            width: `${100 / items.length}%`,
+            transform: `translateX(${items.findIndex((item) => item.key === activeTab) * 100}%)`,
+          }}
+        />
+      </RadixTabs.List>
+      {items.map((item) => (
+        <RadixTabs.Content
+          key={item.key}
+          className="grow rounded-b-md p-5 outline-none"
+          value={item.key}
+        >
+          {item.children}
+        </RadixTabs.Content>
+      ))}
+    </RadixTabs.Root>
+  );
+};

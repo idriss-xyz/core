@@ -6,13 +6,9 @@ import { backgroundLines2 } from '@/assets';
 import idrissSceneStream from './assets/IDRISS_SCENE_STREAM_4_2 1.png';
 import idrissCoin from './assets/IDRISS_COIN 1.png';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
-import { Controller, useForm } from 'react-hook-form';
+import { TabItem, Tabs } from '@idriss-xyz/ui/tabs';
 import { Icon } from '@idriss-xyz/ui/icon';
-import { Form } from '@idriss-xyz/ui/form';
-
-type FormPayload = {
-  amount: number;
-};
+import { StakeTabContent, UnstakeTabContent } from './components';
 
 export const StakingContent = () => {
   const { isConnected } = useAccount();
@@ -20,12 +16,19 @@ export const StakingContent = () => {
   const { disconnect } = useDisconnect();
   const { connectModalOpen, openConnectModal } = useConnectModal();
 
-  const formMethods = useForm<FormPayload>({
-    defaultValues: {
-      amount: 1,
+  const tabItems: TabItem[] = [
+    {
+      key: 'stake',
+      label: <span className="text-label3 text-neutralGreen-700">STAKE</span>,
+      children: <StakeTabContent />,
     },
-    mode: 'onSubmit',
-  });
+    {
+      key: 'unstake',
+      label: <span className="text-label3 text-neutralGreen-700">UNSTAKE</span>,
+      children: <UnstakeTabContent />,
+    },
+  ];
+
   return (
     <main className="relative flex min-h-screen grow flex-col items-center justify-around overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] lg:flex-row lg:items-start lg:justify-center lg:px-0">
       <img
@@ -49,30 +52,7 @@ export const StakingContent = () => {
               borderWidth={1}
             />
             <div className="flex w-[459px] flex-col gap-6">
-              <span className="text-label3 text-neutralGreen-700">
-                STAKE | UNSTAKE
-              </span>
-              <Form className="w-full">
-                <Controller
-                  control={formMethods.control}
-                  name="amount"
-                  render={({ field }) => {
-                    return (
-                      <Form.Field
-                        {...field}
-                        className="mt-6"
-                        value={field.value.toString()}
-                        onChange={(value) => {
-                          field.onChange(Number(value));
-                        }}
-                        label="Amount"
-                        numeric
-                      />
-                    );
-                  }}
-                />
-              </Form>
-
+              <Tabs items={tabItems} />
               <Button
                 intent="primary"
                 size="large"

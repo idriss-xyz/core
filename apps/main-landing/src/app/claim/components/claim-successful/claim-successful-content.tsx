@@ -57,10 +57,11 @@ export const ClaimSuccessfulContent = () => {
           </div>
         </div>
         <Button
+          asLink
           intent="primary"
           size="large"
           className="w-full"
-          onClick={() => {}}
+          href="/staking"
         >
           STAKE YOUR $IDRISS
         </Button>
