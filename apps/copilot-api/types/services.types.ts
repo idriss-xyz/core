@@ -9,6 +9,7 @@ export interface WebhookDataInterface {
 export interface SubscriptionsDetailsInterface {
   address: string;
   fid: number | null;
+  createdAt: number;
 }
 
 interface CachedTransaction {
