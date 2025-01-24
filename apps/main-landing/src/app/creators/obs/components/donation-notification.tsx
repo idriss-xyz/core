@@ -13,6 +13,7 @@ export type DonationNotificationProperties = {
   message: string;
   bgColor?: string;
   customIcon?: string;
+  avatarUrl?: string;
   notificationSound?: string;
   style?: CSSProperties;
 };
@@ -26,6 +27,7 @@ const DonationNotification = ({
   message,
   bgColor = 'bg-white',
   customIcon = IDRISS_ICON_CIRCLE.src,
+  avatarUrl,
   notificationSound = NOTIFICATION_SOUND,
   style = {},
 }: DonationNotificationProperties) => {
@@ -41,31 +43,31 @@ const DonationNotification = ({
 
   return (
     <div
-      id="fader"
       role="alert"
       aria-live="polite"
       nonce={txnHash}
       style={style}
-      className={`absolute left-0 top-0 flex items-center rounded-r-md p-4 transition-opacity duration-1000 ${bgColor} ${
+      className={`absolute left-0 top-0 m-3 flex w-[400px] items-start gap-x-2 rounded-xl p-4 shadow-lg transition-opacity duration-1000 ${bgColor} ${
         showNotification ? 'opacity-100' : 'opacity-0'
       }`}
     >
-      <div className="flex size-14 items-center justify-center">
+      <div className="flex shrink-0 items-center justify-center">
         <img
-          className="h-14 w-auto rounded-full"
-          src={customIcon}
-          alt="IDRISS logo"
+          className={`size-12 rounded-full ${
+            avatarUrl ? 'border border-neutral-400' : ''
+          }`}
+          src={avatarUrl ?? customIcon}
+          alt={avatarUrl ? 'Donor avatar' : 'IDRISS logo'}
         />
       </div>
-      <div>
-        <p id="baseInfo" className="ml-3 text-xl font-bold text-neutral-900">
-          {`${donor} sent $${amount}`}
-        </p>
-        {message && (
-          <p id="message" className="ml-3 text-lg font-medium text-neutral-900">
-            {message}
+      <div className="flex flex-col justify-center gap-y-1">
+        <div className="flex items-center gap-x-2">
+          <p className="text-label3 text-neutral-900">
+            {`${donor} `}
+            <span className="text-body3 text-neutral-600">{`sent $${amount}`}</span>
           </p>
-        )}
+        </div>
+        {message && <p className="text-body5 text-neutral-600">{message}</p>}
       </div>
     </div>
   );

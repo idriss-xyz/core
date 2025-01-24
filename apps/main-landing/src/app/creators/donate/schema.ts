@@ -15,7 +15,7 @@ const _createSendPayloadSchema = (allowedChainIds: number[]) => {
       .gte(MIN_SEND_AMOUNT, `Value must be at least $${MIN_SEND_AMOUNT}`),
     tokenAddress: hexSchema,
     chainId: z.union(createPossibleChainIdsSchema(allowedChainIds)),
-    message: z.string().max(70),
+    message: z.string().max(90),
   });
 };
 
@@ -26,7 +26,7 @@ export const createFormPayloadSchema = (allowedChainIds: number[]) => {
       .gte(MIN_SEND_AMOUNT, `Value must be at least $${MIN_SEND_AMOUNT}`),
     tokenSymbol: z.string(),
     chainId: z.union(createPossibleChainIdsSchema(allowedChainIds)),
-    message: z.string().max(70),
+    message: z.string().max(90),
   });
 };
 
