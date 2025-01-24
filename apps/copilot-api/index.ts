@@ -97,7 +97,7 @@ app.post(
       (req as any).signature = req.headers['x-helius-signature'];
     },
   }),
-  validateAlchemySignature(getSigningKey),
+  // TODO: Implement some form of validateSignature for Helius (currently not using authHeader)
   heliusWebhookHandler(),
 );
 
