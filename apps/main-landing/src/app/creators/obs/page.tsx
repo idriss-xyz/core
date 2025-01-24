@@ -8,12 +8,15 @@ import {
   type Hex,
   parseAbiItem,
 } from 'viem';
+import { getEnsAvatar } from 'viem/actions';
+import { normalize } from 'viem/ens';
 
 import {
   CHAIN_TO_IDRISS_TIPPING_ADDRESS,
   NATIVE_COIN_ADDRESS,
   TIPPING_ABI,
 } from '../donate/constants';
+import { ethereumClient } from '../donate/config';
 
 import DonationNotification, {
   type DonationNotificationProperties,
@@ -135,6 +138,14 @@ export default function Obs() {
           const senderIdentifier =
             resolved ?? `${txn.from.slice(0, 4)}...${txn.from.slice(-2)}`;
 
+          const donorAvatar = resolved
+            ? await getEnsAvatar(ethereumClient, {
+                name: normalize(resolved),
+              })
+            : null;
+
+          const avatarUrl = donorAvatar ?? undefined;
+
           const amountInDollar = await calculateDollar(
             tokenAddress as Hex,
             tokenAmount,
@@ -147,6 +158,7 @@ export default function Obs() {
             donor: senderIdentifier,
             amount: amountInDollar,
             message: message ?? '',
+            avatarUrl,
           });
         }
       } catch (error) {
