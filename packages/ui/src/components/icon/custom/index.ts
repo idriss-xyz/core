@@ -32,3 +32,7 @@ export { Plus } from './plus';
 export { Download } from './download';
 export { SoundEnabled } from './sound-enabled';
 export { SoundDisabled } from './sound-disabled';
+export { PiggyBank } from './piggy-bank';
+export { Gem } from './gem';
+export { PieChart } from './pie-chart';
+export { Github } from './github';

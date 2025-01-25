@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 import { Link } from '@idriss-xyz/ui/link';
 import { Button } from '@idriss-xyz/ui/button';
@@ -17,7 +18,7 @@ export const Footer = () => {
     <footer
       className={classes(
         'relative z-1 overflow-x-hidden bg-mint-100 p-2.5',
-        'lg:-z-10 lg:p-0',
+        'lg:z-10 lg:p-0',
         '4xl:z-40',
       )}
     >

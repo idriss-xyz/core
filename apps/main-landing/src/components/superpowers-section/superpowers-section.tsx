@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { Button } from '@idriss-xyz/ui/button';
 import {
   CHROME_EXTENSION_LINK,
