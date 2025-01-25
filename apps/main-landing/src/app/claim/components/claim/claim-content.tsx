@@ -12,74 +12,71 @@ import { useClaimPage } from '../../claim-page-context';
 import { CopyAddressButton } from './copy-address-button';
 import { ExpandableInfo } from './expandable-info';
 
-import { createWalletClient, encodeFunctionData, http } from 'viem';
+import { createWalletClient, encodeFunctionData, http, wait } from 'viem';
 import { baseSepolia } from 'viem/chains';
 import { estimateGas, waitForTransactionReceipt } from 'viem/actions';
 import { CLAIM_ABI, CLAIM_PAGE_ROUTE, claimContractAddress } from '../../constants';
+import { useWalletClient, useWriteContract } from 'wagmi';
 
 export const ClaimContent = () => {
   const [termsChecked, setTermsChecked] = useState(false);
   const { eligibilityData, walletAddress, navigate } = useClaimPage();
+  const { data: walletClient } = useWalletClient();
+  const { writeContractAsync } = useWriteContract();
 
   if (!eligibilityData) {
     navigate(CLAIM_PAGE_ROUTE.CHECK_ELIGIBILITY);
     return;
   }
 
-  if (walletAddress === undefined) {
+  if (!walletClient || walletAddress === undefined) {
     console.error("Wallet not connected")
     return;
   }
 
-  const walletClient = createWalletClient({
-    chain: baseSepolia,
-    transport: http(),
-    account: walletAddress,
-  });
-
   const handleClaim = async () => {
 
-    const claimData = {
-      abi: CLAIM_ABI,
-      functionName: 'claim',
-      args: [
-        walletClient.account.address,
-        eligibilityData.claimData.amount,
-        eligibilityData.claimData.claimIndices,
-        eligibilityData.claimData.signature,
-        eligibilityData.claimData.expiry,
-        `0x${Buffer.from(eligibilityData.claimData.memo, 'utf8').toString('hex')}`
-      ],
-    };
+    try {
+      const claimData = {
+        abi: CLAIM_ABI,
+        functionName: 'claim',
+        args: [
+          walletClient.account.address,
+          eligibilityData.claimData.amount,
+          eligibilityData.claimData.claimIndices,
+          eligibilityData.claimData.signature,
+          eligibilityData.claimData.expiry,
+          `0x${Buffer.from(eligibilityData.claimData.memo, 'utf8').toString('hex')}`
+        ],
+      };
+      const encodedClaimData = encodeFunctionData(claimData);
 
-    const encodedClaimData = encodeFunctionData(claimData);
+      const gas = await estimateGas(walletClient, {
+        to: claimContractAddress,
+        data: encodedClaimData,
+      }).catch((error) => {
+        console.error('Error estimating gas:', error.message);
+        throw error;
+      });
 
-    const gas = await estimateGas(walletClient, {
-      to: claimContractAddress,
-      data: encodedClaimData,
-    }).catch((error) => {
-      console.error('Error estimating gas:', error.message);
+      const hash = await writeContractAsync({
+        address: claimContractAddress,
+        ...claimData,
+        gas
+      });
+
+      const { status } = await waitForTransactionReceipt(walletClient, { hash });
+
+      if (status === 'reverted') {
+        throw new Error('Claim transaction reverted');
+      }
+
+      return navigate(CLAIM_PAGE_ROUTE.VESTING_PLANS);
+    } catch (error) {
+      console.error('Error claiming:', error);
       throw error;
-    });
-
-    const transactionHash = await walletClient.sendTransaction({
-      chain: baseSepolia,
-      data: encodedClaimData,
-      to: claimContractAddress,
-      gas,
-    });
-
-    const receipt = await waitForTransactionReceipt(walletClient,{
-      hash: transactionHash,
-    });
-
-    if (receipt.status === 'reverted') {
-      throw new Error('Claim transaction reverted');
     }
-
-    return navigate(CLAIM_PAGE_ROUTE.VESTING_PLANS);
   };
-
   return (
     <div className="z-[5] inline-flex flex-col items-center gap-[78px] overflow-hidden px-4 pb-3 lg:mt-[78px] lg:[@media(max-height:800px)]:mt-[60px]">
       <img className="size-[137px]" src={idrissCoin.src} alt="" />
