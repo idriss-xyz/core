@@ -27,7 +27,8 @@ const ethereumClient = createPublicClient({
 });
 
 export const CheckEligibilityContent = () => {
-  const { navigate, setWalletAddress, setEligibilityData } = useClaimPage();
+  const { setCurrentContent, setWalletAddress, setEligibilityData } =
+    useClaimPage();
   const { data: walletClient } = useWalletClient();
   const formMethods = useForm<FormPayload>({
     defaultValues: {
@@ -59,7 +60,7 @@ export const CheckEligibilityContent = () => {
     const eligilibility = await eligibilityMutation.mutateAsync(walletAddress);
     setEligibilityData(eligilibility);
     setWalletAddress(walletAddress);
-    navigate('/claim');
+    setCurrentContent('claim');
   };
 
   const verifyEligibility = async () => {
@@ -80,95 +81,86 @@ export const CheckEligibilityContent = () => {
     if (walletClient?.account.address) {
       formMethods.setValue('address', walletClient.account.address);
     }
-  }, [walletClient?.account.address]);
+  }, [walletClient?.account.address, formMethods]);
 
   return (
-    <div className="z-[5] inline-flex flex-col items-center gap-4 overflow-hidden px-4 pb-3 pt-6 lg:mt-[78px] lg:[@media(max-height:800px)]:mt-[60px]">
-      <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-display2 gradient-text">COMMUNITY AIRDROP</h1>
-        <span className="text-body2 text-neutralGreen-900 opacity-70">
-          Check your eligibility and claim $IDRISS
-        </span>
-      </div>
-      <div className="relative flex w-full flex-col items-center gap-10 rounded-[25px] bg-[rgba(255,255,255,0.5)] p-[40px_40px_60px_40px] backdrop-blur-[45px]">
+    <div className="relative z-[5] flex w-[800px] flex-col items-center gap-10 rounded-[25px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">
+      <GradientBorder
+        gradientDirection="toTop"
+        gradientStopColor="rgba(145, 206, 154, 0.50)"
+        borderWidth={1}
+      />
+      <img className="size-[136px]" src={idrissCoin.src} alt="" />
+      <div className="relative flex w-full flex-col items-center gap-2 rounded-[25px] bg-[rgba(255,255,255,0.2)] px-10 py-8">
         <GradientBorder
-          gradientDirection="toTop"
-          gradientStopColor="rgba(145, 206, 154, 0.50)"
+          gradientDirection="toBottom"
+          gradientStopColor="rgba(145, 206, 154)"
+          gradientStartColor="#ffffff"
           borderWidth={1}
         />
-        <img className="size-[136px]" src={idrissCoin.src} alt="" />
-        <div className="relative flex w-full flex-col items-center gap-2 rounded-[25px] bg-[rgba(255,255,255,0.2)] px-10 py-8">
-          <GradientBorder
-            gradientDirection="toBottom"
-            gradientStopColor="rgba(145, 206, 154)"
-            gradientStartColor="#ffffff"
-            borderWidth={1}
-          />
-          <span className="text-body3 text-neutralGreen-700">CLAIM UNTIL</span>
-          <span className="text-heading3 gradient-text">FEBRUARY 28, 2025</span>
-          <Form
-            className="w-full"
-            onSubmit={(event) => {
-              event.preventDefault();
-              void verifyEligibility();
-            }}
-          >
-            <Controller
-              control={formMethods.control}
-              name="address"
-              rules={{
-                required: 'Address is required',
-                validate: async (value) => {
-                  try {
-                    if (value.includes('.') && !value.endsWith('.')) {
-                      const resolvedAddress =
-                        await resolveEnsAddressMutation.mutateAsync(value);
-                      if (resolvedAddress) {
-                        formMethods.setValue(
-                          'resolvedEnsAddress',
-                          resolvedAddress,
-                          { shouldValidate: false },
-                        );
-                        return true;
-                      }
-
-                      return 'This address doesn’t exist.';
-                    }
-                    return isAddress(value)
-                      ? true
-                      : 'This address doesn’t exist.';
-                  } catch (error) {
-                    console.error(error);
-                    return 'An unexpected error occurred. Try again.';
-                  }
-                },
-              }}
-              render={({ field, fieldState }) => {
-                return (
-                  <Form.Field
-                    label="Wallet address"
-                    className="mt-6 w-full"
-                    helperText={fieldState.error?.message}
-                    error={Boolean(fieldState.error?.message)}
-                    {...field}
-                  />
-                );
-              }}
-            />
-          </Form>
-        </div>
-        <Button
-          intent="primary"
-          size="large"
-          suffixIconName="ArrowRight"
-          onClick={verifyEligibility}
-          loading={
-            resolveEnsAddressMutation.isPending || eligibilityMutation.isPending
-          }
+        <span className="text-heading3 gradient-text">CLAIM YOUR $IDRISS</span>
+        <Form
+          className="w-full"
+          onSubmit={(event) => {
+            event.preventDefault();
+            void verifyEligibility();
+          }}
         >
-          CHECK ELIGIBILITY
-        </Button>
+          <Controller
+            control={formMethods.control}
+            name="address"
+            rules={{
+              required: 'Address is required',
+              validate: async (value) => {
+                try {
+                  if (value.includes('.') && !value.endsWith('.')) {
+                    const resolvedAddress =
+                      await resolveEnsAddressMutation.mutateAsync(value);
+                    if (resolvedAddress) {
+                      formMethods.setValue(
+                        'resolvedEnsAddress',
+                        resolvedAddress,
+                        { shouldValidate: false },
+                      );
+                      return true;
+                    }
+
+                    return 'This address doesn’t exist.';
+                  }
+                  return isAddress(value)
+                    ? true
+                    : 'This address doesn’t exist.';
+                } catch (error) {
+                  console.error(error);
+                  return 'An unexpected error occurred. Try again.';
+                }
+              },
+            }}
+            render={({ field, fieldState }) => {
+              return (
+                <Form.Field
+                  label="Wallet address"
+                  className="mt-6 w-full"
+                  helperText={fieldState.error?.message}
+                  error={Boolean(fieldState.error?.message)}
+                  {...field}
+                />
+              );
+            }}
+          />
+        </Form>
       </div>
+      <Button
+        intent="primary"
+        size="large"
+        suffixIconName="ArrowRight"
+        onClick={verifyEligibility}
+        loading={
+          resolveEnsAddressMutation.isPending || eligibilityMutation.isPending
+        }
+      >
+        CHECK ELIGIBILITY
+      </Button>
     </div>
   );
 };
