@@ -106,6 +106,35 @@ export const ContentManager = () => {
         </>
       )}
       <div className="flex flex-col lg:mt-32 lg:[@media(max-height:800px)]:mt-[60px]">
+        <div className='z-10 absolute bottom-2 left-1/2 -translate-x-1/2'>
+          {isConnected ? (
+            <div className="relative  flex w-full flex-col items-center gap-2 rounded-2xl bg-[rgba(255,255,255,0.5)] px-5 py-3 backdrop-blur-[45px]">
+              <span className="text-heading6 text-neutralGreen-700">
+                All good, your wallet is connected!
+              </span>
+              <Button
+                intent="secondary"
+                size="small"
+                className="w-full"
+                onClick={() => {
+                  disconnect();
+                }}
+              >
+                DISCONNECT WALLET
+              </Button>
+            </div>
+          ) : (
+            <Button
+              intent="primary"
+              size="small"
+              className="mt-6"
+              onClick={openConnectModal}
+              loading={connectModalOpen}
+            >
+              CONNECT WALLET
+            </Button>
+          )}
+        </div>
         {currentContent !== 'claim-successful' && (
           <Steps
             steps={claimSteps}
@@ -113,34 +142,7 @@ export const ContentManager = () => {
             className="m-auto mb-[60px] w-[800px]"
           />
         )}
-        {currentContentComponent}
-        {isConnected ? (
-          <div className="relative z-10 flex w-full flex-col items-center gap-2 rounded-2xl bg-[rgba(255,255,255,0.5)] px-5 py-3 backdrop-blur-[45px]">
-            <span className="text-heading6 text-neutralGreen-700">
-              All good, your wallet is connected!
-            </span>
-            <Button
-              intent="secondary"
-              size="small"
-              className="w-full"
-              onClick={() => {
-                disconnect();
-              }}
-            >
-              DISCONNECT WALLET
-            </Button>
-          </div>
-        ) : (
-          <Button
-            intent="primary"
-            size="medium"
-            className="mt-6 w-full"
-            onClick={openConnectModal}
-            loading={connectModalOpen}
-          >
-            CONNECT WALLET
-          </Button>
-        )}
+        <div className="hidden lg:block">{currentContentComponent}</div>
       </div>
     </main>
   );
