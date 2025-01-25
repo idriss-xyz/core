@@ -22,4 +22,11 @@ export type EligibilityCheckResponse = {
   allocation_gitcoin: number;
   allocation_extension: number;
   allocation_registrations: number;
+  claimData: {
+    amount: number,
+    claimIndices: number[],
+    expiry: number,
+    memo: string,
+    signature: string
+  },
 };

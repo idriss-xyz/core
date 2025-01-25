@@ -3,6 +3,7 @@ import { createContextHook } from '@idriss-xyz/ui/utils';
 
 import { CLAIM_PAGE_ROUTE, ClaimPageRoute } from './constants';
 import { EligibilityCheckResponse } from './types';
+import { Hex } from 'viem';
 
 type Properties = {
   children: ReactNode;
@@ -10,11 +11,11 @@ type Properties = {
 
 type ClaimPageContextValues = {
   currentRoute: ClaimPageRoute;
-  walletAddress: string | undefined;
+  walletAddress: Hex | undefined;
   vestingPlan: VestingPlan | undefined;
   eligibilityData: EligibilityCheckResponse | undefined;
   navigate: (route: ClaimPageRoute) => void;
-  setWalletAddress: (walletAddress: string) => void;
+  setWalletAddress: (walletAddress: Hex) => void;
   setVestingPlan: (vestingPlan: VestingPlan) => void;
   setEligibilityData: (eligibilityData: EligibilityCheckResponse) => void;
 };
