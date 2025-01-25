@@ -30,6 +30,7 @@ export type SubscriptionsPayload = {
 export type SubscriptionResponse = {
   address: Hex;
   fid?: number | null;
+  createdAt: number;
 };
 
 export type SubscriptionsResponse = {

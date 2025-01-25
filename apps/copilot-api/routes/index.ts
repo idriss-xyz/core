@@ -75,7 +75,13 @@ router.post('/unsubscribe', verifyToken(), async (req, res) => {
 });
 
 router.get('/test-swap/:subscriberId', async (req, res) => {
-  const { subscriberId } = req.params || {};
+  const { subscriberId } = req.params;
+  const { secret } = req.query;
+
+  if (secret !== process.env.API_SECRET) {
+    res.status(401).json({ error: 'Unauthorized' });
+    return;
+  }
 
   // Validate swapData here if necessary
   if (!testSwapData || !testSwapData.isComplete) {

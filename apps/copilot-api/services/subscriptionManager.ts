@@ -263,6 +263,7 @@ export const getSubscriptionsDetails = async (
   return res.map((subscription: SubscriptionsEntity) => ({
     address: subscription.address,
     fid: subscription.fid,
+    createdAt: subscription.created_at.getTime(),
   }));
 };
 
