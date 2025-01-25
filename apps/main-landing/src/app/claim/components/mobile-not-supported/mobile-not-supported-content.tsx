@@ -1,4 +1,5 @@
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
+
 import idrissSceneStream from '../../assets/IDRISS_SCENE_STREAM_4_2 1.png';
 
 export const MobileNotSupportedContent = () => {

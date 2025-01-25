@@ -7,8 +7,6 @@ import { Button } from '@idriss-xyz/ui/button';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { Steps } from '@idriss-xyz/ui/steps';
 
-import { backgroundLines2 } from '@/assets';
-
 import '@rainbow-me/rainbowkit/styles.css';
 import idrissSceneStream from './assets/IDRISS_SCENE_STREAM_4_2 1.png';
 import idrissCoinFalling from './assets/ID-Coin falling 2.png';
@@ -96,11 +94,6 @@ export const DesktopContentManager = () => {
           <img
             src={idrissSceneStream.src}
             className="pointer-events-none absolute left-[-310px] top-[-20px] z-1 h-[1440px] w-[2306.px] min-w-[120vw] max-w-none rotate-[25.903deg] lg:block"
-            alt=""
-          />
-          <img
-            src={backgroundLines2.src}
-            className="pointer-events-none absolute top-0 hidden h-full opacity-40 lg:block"
             alt=""
           />
         </>
