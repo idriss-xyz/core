@@ -7,7 +7,11 @@ import { Input } from '../input';
 import { NumericInput } from '../numeric-input';
 
 type InputProperties = ComponentProps<typeof Input>;
-type InputUnion = InputProperties extends infer T ? T extends never ? never : Omit<T, 'onChange'> : never;
+type InputUnion = InputProperties extends infer T
+  ? T extends never
+    ? never
+    : Omit<T, 'onChange'>
+  : never;
 
 type Properties = InputUnion & {
   name: string;
