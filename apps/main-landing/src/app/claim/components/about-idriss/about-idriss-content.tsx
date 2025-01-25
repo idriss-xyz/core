@@ -1,7 +1,5 @@
 import { Button } from '@idriss-xyz/ui/button';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
-
-import { useClaimPage } from '../../claim-page-context';
 import { useEffect, useRef, useState } from 'react';
 import {
   Tooltip,
@@ -10,30 +8,29 @@ import {
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
 
+import { useClaimPage } from '../../claim-page-context';
+
+import { formatTime } from './utils';
+
 export const AboutIdrissContent = () => {
   const { setCurrentContent } = useClaimPage();
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoReference = useRef<HTMLVideoElement>(null);
   const [remainingTime, setRemainingTime] = useState<number>();
   const [isSuccess, setIsSuccess] = useState(false);
   const [shouldShowTooltip, setShouldShowTooltip] = useState(false);
 
-  const formatTime = (seconds: number): string => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = Math.floor(seconds % 60);
-    return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
-  };
-
   const updateTime = () => {
-    if (videoRef.current) {
-      const time = videoRef.current.duration - videoRef.current.currentTime;
+    if (videoReference.current) {
+      const time =
+        videoReference.current.duration - videoReference.current.currentTime;
       setRemainingTime(Math.floor(time));
     }
   };
 
   const handleVideoEnd = () => {
     setIsSuccess(true);
-    if (videoRef.current) {
-      videoRef.current.pause();
+    if (videoReference.current) {
+      videoReference.current.pause();
     }
   };
 
@@ -44,9 +41,9 @@ export const AboutIdrissContent = () => {
       }
 
       if (document.hidden) {
-        videoRef.current?.pause();
+        videoReference.current?.pause();
       } else {
-        videoRef.current?.play();
+        void videoReference.current?.play();
       }
     };
 
@@ -54,7 +51,7 @@ export const AboutIdrissContent = () => {
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, []);
+  }, [isSuccess]);
 
   return (
     <div className="relative z-[5] flex w-[800px] flex-col items-center gap-10 rounded-[25px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">
@@ -72,14 +69,16 @@ export const AboutIdrissContent = () => {
           borderRadius={24}
         />
         <video
-          ref={videoRef}
+          ref={videoReference}
           autoPlay
           muted
           onTimeUpdate={updateTime}
           onEnded={handleVideoEnd}
           className="pointer-events-none w-full rounded-3xl"
           loop={false}
-          onClick={(e) => e.preventDefault()}
+          onClick={(event) => {
+            return event.preventDefault();
+          }}
         >
           <source src="/videos/brand-intro.mp4" type="video/mp4" />
           Your browser does not support the video tag.

@@ -27,6 +27,7 @@ export const ClaimSuccessfulContent = () => {
       <span className="text-heading4 text-neutral-900">CLAIM SUCCESSFUL</span>
       <div className="relative flex h-[354px] w-[480px] flex-col items-center justify-center gap-6 self-stretch overflow-hidden rounded-2xl bg-mint-100 p-6">
         <img
+          alt=""
           src={idrissCoin.src}
           className="pointer-events-none absolute left-0 top-0"
         />

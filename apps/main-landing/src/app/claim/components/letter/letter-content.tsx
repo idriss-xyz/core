@@ -1,8 +1,10 @@
 import { Button } from '@idriss-xyz/ui/button';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
+
+import { useClaimPage } from '../../claim-page-context';
+
 import geoist_avatar from './assets/geoist_avatar.png';
 import levertz_avatar from './assets/levertz_avatar.png';
-import { useClaimPage } from '../../claim-page-context';
 
 export const LetterContent = () => {
   const { setCurrentContent } = useClaimPage();
@@ -33,11 +35,15 @@ export const LetterContent = () => {
           <span>Founding contributors of IDRISS DAO</span>
         </div>
         <div className="absolute bottom-[-20px] right-[70px] inline-flex rotate-[-7.71deg] flex-col items-center gap-2 rounded-lg border border-neutral-300 bg-white p-2 shadow-lg">
-          <img src={geoist_avatar.src} className="h-[70px] rounded-md" />
+          <img src={geoist_avatar.src} className="h-[70px] rounded-md" alt="" />
           <span className="text-label5 text-neutral-900">Geoist</span>
         </div>
         <div className="absolute bottom-[-8px] right-[-17px] inline-flex rotate-[9.718deg] flex-col items-center gap-2 rounded-lg border border-neutral-300 bg-white p-2 shadow-lg">
-          <img src={levertz_avatar.src} className="h-[70px] rounded-md" />
+          <img
+            src={levertz_avatar.src}
+            className="h-[70px] rounded-md"
+            alt=""
+          />
           <span className="text-label5 text-neutral-900">Levertz</span>
         </div>
       </div>

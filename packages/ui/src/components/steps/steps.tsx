@@ -16,7 +16,7 @@ export const Steps = ({ steps, activeStepIndex, className }: Properties) => {
     <div
       className={classes('flex w-full items-center justify-between', className)}
     >
-      {steps.map((step, index) => (
+      {steps.map((step, index) => {return (
         <div
           className={classes(
             'flex items-center',
@@ -42,10 +42,10 @@ export const Steps = ({ steps, activeStepIndex, className }: Properties) => {
           </span>
 
           {index < steps.length - 1 && (
-            <div className="mx-4 h-[1px] flex-grow bg-neutral-500"></div>
+            <div className="mx-4 h-px grow bg-neutral-500" />
           )}
         </div>
-      ))}
+      )})}
     </div>
   );
 };

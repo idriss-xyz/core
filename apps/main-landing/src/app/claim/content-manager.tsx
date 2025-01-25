@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react';
 import { useAccount, useDisconnect } from 'wagmi';
 import { Button } from '@idriss-xyz/ui/button';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { Steps } from '@idriss-xyz/ui/steps';
 
 import { backgroundLines2 } from '@/assets';
 
@@ -16,7 +17,6 @@ import { CheckEligibilityContent } from './components/check-eligibility/check-el
 import { ClaimContent } from './components/claim/claim-content';
 import { VestingPlanContent } from './components/vesting-plan/vesting-plan-content';
 import { ClaimSuccessfulContent } from './components/claim-successful/claim-successful-content';
-import { Steps } from '@idriss-xyz/ui/steps';
 import { claimSteps } from './constants';
 import { LetterContent } from './components/letter/letter-content';
 import { AboutIdrissContent } from './components/about-idriss/about-idriss-content';
@@ -40,7 +40,7 @@ export const ContentManager = () => {
     }
 
     return 2;
-  }, []);
+  }, [currentContent]);
 
   const currentContentComponent = useMemo(() => {
     switch (currentContent) {

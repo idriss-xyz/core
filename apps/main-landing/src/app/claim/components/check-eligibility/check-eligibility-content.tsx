@@ -81,7 +81,7 @@ export const CheckEligibilityContent = () => {
     if (walletClient?.account.address) {
       formMethods.setValue('address', walletClient.account.address);
     }
-  }, [walletClient?.account.address]);
+  }, [walletClient?.account.address, formMethods]);
 
   return (
     <div className="relative z-[5] flex w-[800px] flex-col items-center gap-10 rounded-[25px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">
