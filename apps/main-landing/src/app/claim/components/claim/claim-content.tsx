@@ -12,7 +12,7 @@ import { useClaimPage } from '../../claim-page-context';
 import { CopyAddressButton } from './copy-address-button';
 import { ExpandableInfo } from './expandable-info';
 
-import { createWalletClient, encodeFunctionData, http, wait } from 'viem';
+import { encodeFunctionData} from 'viem';
 import { baseSepolia } from 'viem/chains';
 import { estimateGas, waitForTransactionReceipt } from 'viem/actions';
 import { CLAIM_ABI, CLAIM_PAGE_ROUTE, claimContractAddress } from '../../constants';
@@ -61,6 +61,7 @@ export const ClaimContent = () => {
 
       const hash = await writeContractAsync({
         address: claimContractAddress,
+        chain: baseSepolia,
         ...claimData,
         gas
       });
