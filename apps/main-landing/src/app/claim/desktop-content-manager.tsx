@@ -66,7 +66,7 @@ export const DesktopContentManager = () => {
     }
   }, [currentContent]);
   return (
-    <main className="hidden relative lg:flex min-h-screen grow flex-col items-center justify-around overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] lg:flex-row lg:items-start lg:justify-center lg:px-0">
+    <main className="relative hidden min-h-screen grow flex-col items-center justify-around overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] lg:flex lg:flex-row lg:items-start lg:justify-center lg:px-0">
       {currentContent === 'claim-successful' ? (
         videoError ? (
           <img
@@ -99,9 +99,9 @@ export const DesktopContentManager = () => {
         </>
       )}
       <div className="flex flex-col lg:mt-32 lg:[@media(max-height:800px)]:mt-[60px]">
-        <div className='z-10 absolute bottom-2 left-1/2 -translate-x-1/2'>
+        <div className="absolute bottom-2 left-1/2 z-10 -translate-x-1/2">
           {isConnected ? (
-            <div className="relative  flex w-full flex-col items-center gap-2 rounded-2xl bg-[rgba(255,255,255,0.5)] px-5 py-3 backdrop-blur-[45px]">
+            <div className="relative flex w-full flex-col items-center gap-2 rounded-2xl bg-[rgba(255,255,255,0.5)] px-5 py-3 backdrop-blur-[45px]">
               <span className="text-heading6 text-neutralGreen-700">
                 All good, your wallet is connected!
               </span>
