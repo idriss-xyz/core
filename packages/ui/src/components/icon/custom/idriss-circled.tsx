@@ -13,12 +13,10 @@ export const IdrissCircled = ({ size, className }: Properties) => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <circle cx="12.5" cy="12" r="12" fill="black" />
+      <circle cx="12" cy="12" r="12" fill="#55EB3C" />
       <path
-        d="M13.9877 4.00001V7.02805L13.9648 7.02811L11.011 7.03555V4.00001H13.9877ZM11.011 9.82677L13.9877 7.22485V20H11.011V9.82677Z"
-        fill="white"
-        stroke="currentColor"
-        strokeWidth="0.186046"
+        d="M13.5812 3.90674V20.0928H10.4185V9.78429L13.4655 7.12089L10.4185 7.12856V3.90674H13.5812Z"
+        fill="black"
       />
     </svg>
   );
