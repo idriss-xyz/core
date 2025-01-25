@@ -45,7 +45,8 @@ const LEGACY_URLS = [
 ];
 
 const nextConfig: NextConfig = {
-  generateBuildId: () => process.env.RAILWAY_GIT_COMMIT_SHA || `build-${Date.now()}`,
+  generateBuildId: () =>
+    process.env.RAILWAY_GIT_COMMIT_SHA || `build-${Date.now()}`,
 
   productionBrowserSourceMaps: true,
   // eslint-disable-next-line @typescript-eslint/require-await
@@ -53,11 +54,13 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/_next/static/:path*',
-        headers: [{ 
-          key: 'Cache-Control', 
-          value: 'public, max-age=31536000, immutable' 
-        }],
-      }
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
     ];
   },
   // eslint-disable-next-line @typescript-eslint/require-await
