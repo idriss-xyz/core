@@ -28,6 +28,10 @@ export const StakeTabContent = () => {
               }}
               label="Amount"
               numeric
+              prefixIconName="IdrissCircled"
+              suffixElement={
+                <span className="text-body4 text-neutral-500">IDRISS</span>
+              }
             />
           );
         }}
