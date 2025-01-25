@@ -61,37 +61,41 @@ export const Input = forwardRef(
       );
     }
     return (
-      <div className="relative">
-        {properties.prefixIconName && (
-          <div
-            ref={prefixRef}
-            className={'absolute left-0 top-0 flex h-full items-center pl-3 py-[2px]'}
-          >
-            <Icon name={properties.prefixIconName} size={24} />
-            <div className='border-r-[1px] ml-3 h-full  border-gray-200' />
-          </div>
-        )}
-        <input
-          ref={reference as ForwardedRef<HTMLInputElement>}
-          {...inputProperties}
-          style={{
-            paddingLeft:
-              properties.prefixIconName &&
-              `${(prefixRef.current?.offsetWidth ?? 0) + 12}px`,
-            paddingRight:
-              properties.suffixElement &&
-              `${(suffixRef.current?.offsetWidth ?? 0) + 12}px`,
-          }}
-        />
-        {properties.suffixElement && (
-          <div
-            ref={suffixRef}
-            className="absolute right-0 top-0 flex h-full items-center pr-3"
-          >
-            {properties.suffixElement}
-          </div>
-        )}
-      </div>
+      <label>
+        <div className="relative">
+          {properties.prefixIconName && (
+            <div
+              ref={prefixRef}
+              className={
+                'absolute left-0 top-0 flex h-full items-center py-[2px] pl-3'
+              }
+            >
+              <Icon name={properties.prefixIconName} size={24} />
+              <div className="ml-3 h-full border-r-[1px] border-gray-200" />
+            </div>
+          )}
+          <input
+            ref={reference as ForwardedRef<HTMLInputElement>}
+            {...inputProperties}
+            style={{
+              paddingLeft:
+                properties.prefixIconName &&
+                `${(prefixRef.current?.offsetWidth ?? 0) + 12}px`,
+              paddingRight:
+                properties.suffixElement &&
+                `${(suffixRef.current?.offsetWidth ?? 0) + 12}px`,
+            }}
+          />
+          {properties.suffixElement && (
+            <div
+              ref={suffixRef}
+              className="absolute right-0 top-0 flex h-full items-center pr-3"
+            >
+              {properties.suffixElement}
+            </div>
+          )}
+        </div>
+      </label>
     );
   },
 );

@@ -5,16 +5,19 @@ import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { RadioGroup, RadioItem } from '@idriss-xyz/ui/radio-group';
 import { Form } from '@idriss-xyz/ui/form';
 import { Controller, useForm } from 'react-hook-form';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Icon } from '@idriss-xyz/ui/icon';
 
 import { useClaimPage, VestingPlan } from '../../claim-page-context';
+import { Checkbox } from '@idriss-xyz/ui/checkbox';
+import { Link } from '@idriss-xyz/ui/link';
 
 type FormPayload = {
   vestingPlan: VestingPlan;
 };
 
 export const VestingPlanContent = () => {
+  const [termsChecked, setTermsChecked] = useState(false);
   const { eligibilityData, setCurrentContent, setVestingPlan } = useClaimPage();
 
   const formMethods = useForm<FormPayload>({
@@ -28,15 +31,11 @@ export const VestingPlanContent = () => {
 
   const vestingPlanOptions: RadioItem<VestingPlan>[] = [
     {
-      label: 'Claim 50% amount within 24h',
+      label: 'Early claim: 50% immediately',
       value: 'claim_50',
     },
     {
-      label: 'Claim and stake 50% airdropped amount (no lock)',
-      value: 'claim_and_stake_50',
-    },
-    {
-      label: 'Claim and stake 100% airdropped amount (180 days lock)',
+      label: `Full claim: 100% airdropped in 180 days to the staking contract (but you're starting to get benefits immediately)`,
       value: 'claim_and_stake_100',
     },
   ];
@@ -70,7 +69,7 @@ export const VestingPlanContent = () => {
         gradientStopColor="rgba(145, 206, 154, 0.50)"
         borderWidth={1}
       />
-      <div className="flex w-[459px] flex-col gap-6">
+      <div className="flex w-[485px] flex-col gap-6">
         <span className="text-label3 text-neutralGreen-700">
           SELECT YOUR VESTING PLAN
         </span>
@@ -86,7 +85,27 @@ export const VestingPlanContent = () => {
             }}
           />
         </Form>
-
+        <div className="w-full border-t border-mint-200 opacity-50" />
+        <div className="mb-4 flex w-full flex-row items-center">
+          <Checkbox
+            onChange={setTermsChecked}
+            value={termsChecked}
+            rootClassName="border-neutral-300"
+            label={
+              <span className="ml-2 w-full text-body5 text-neutralGreen-900">
+                By claiming, you agree to the{' '}
+              </span>
+            }
+          />
+          <Link
+            size="medium"
+            href=""
+            isExternal
+            className="text-body5 lg:text-body5"
+          >
+            Terms{'\u00A0'}and{'\u00A0'}conditions
+          </Link>
+        </div>
         <Button
           intent="primary"
           size="large"
@@ -95,6 +114,7 @@ export const VestingPlanContent = () => {
             setVestingPlan(vestingPlan);
             return setCurrentContent('claim-successful');
           }}
+          disabled={!termsChecked}
         >
           {vestingPlanButtonLabel}
         </Button>
