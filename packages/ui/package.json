@@ -29,7 +29,8 @@
     "./utils": "./src/utils/index.ts",
     "./radio-group": "./src/components/radio-group/index.ts",
     "./collapsible": "./src/components/collapsible/index.ts",
-    "./tabs": "./src/components/tabs/index.ts"
+    "./tabs": "./src/components/tabs/index.ts",
+    "./steps": "./src/components/steps/index.ts"
   },
   "scripts": {
     "format": "prettier --check --config ../../prettier.config.mjs --ignore-path .prettierignore .",
