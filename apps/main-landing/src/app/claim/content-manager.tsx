@@ -19,6 +19,7 @@ import { ClaimSuccessfulContent } from './components/claim-successful/claim-succ
 import { Steps } from '@idriss-xyz/ui/steps';
 import { claimSteps } from './constants';
 import { LetterContent } from './components/letter/letter-content';
+import { AboutIdrissContent } from './components/about-idriss/about-idriss-content';
 
 export const ContentManager = () => {
   const { currentContent } = useClaimPage();
@@ -45,6 +46,9 @@ export const ContentManager = () => {
     switch (currentContent) {
       case 'letter': {
         return <LetterContent />;
+      }
+      case 'about-idriss': {
+        return <AboutIdrissContent />;
       }
       case 'check-eligibility': {
         return <CheckEligibilityContent />;
@@ -84,7 +88,7 @@ export const ContentManager = () => {
               return setVideoError(true);
             }}
           >
-            <source src="/videos/coinsRain.mp4" type="video/mp4" />
+            <source src="/videos/coins-rain.mp4" type="video/mp4" />
           </video>
         )
       ) : (
