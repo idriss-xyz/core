@@ -7,10 +7,10 @@ import { Form } from '@idriss-xyz/ui/form';
 import { Controller, useForm } from 'react-hook-form';
 import { useMemo, useState } from 'react';
 import { Icon } from '@idriss-xyz/ui/icon';
-
-import { useClaimPage, VestingPlan } from '../../claim-page-context';
 import { Checkbox } from '@idriss-xyz/ui/checkbox';
 import { Link } from '@idriss-xyz/ui/link';
+
+import { useClaimPage, VestingPlan } from '../../claim-page-context';
 
 type FormPayload = {
   vestingPlan: VestingPlan;

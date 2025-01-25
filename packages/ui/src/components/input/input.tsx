@@ -34,8 +34,8 @@ export const Input = forwardRef(
     properties: Properties,
     reference: ForwardedRef<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    const prefixRef = useRef<HTMLDivElement>(null);
-    const suffixRef = useRef<HTMLDivElement>(null);
+    const prefixReference = useRef<HTMLDivElement>(null);
+    const suffixReference = useRef<HTMLDivElement>(null);
 
     const { value, onChange, className, success, error, asTextArea } =
       properties;
@@ -65,13 +65,11 @@ export const Input = forwardRef(
         <div className="relative">
           {properties.prefixIconName && (
             <div
-              ref={prefixRef}
-              className={
-                'absolute left-0 top-0 flex h-full items-center py-[2px] pl-3'
-              }
+              ref={prefixReference}
+              className="absolute left-0 top-0 flex h-full items-center py-[2px] pl-3"
             >
               <Icon name={properties.prefixIconName} size={24} />
-              <div className="ml-3 h-full border-r-[1px] border-gray-200" />
+              <div className="ml-3 h-full border-r border-gray-200" />
             </div>
           )}
           <input
@@ -80,15 +78,15 @@ export const Input = forwardRef(
             style={{
               paddingLeft:
                 properties.prefixIconName &&
-                `${(prefixRef.current?.offsetWidth ?? 0) + 12}px`,
+                `${(prefixReference.current?.offsetWidth ?? 0) + 12}px`,
               paddingRight:
                 properties.suffixElement &&
-                `${(suffixRef.current?.offsetWidth ?? 0) + 12}px`,
+                `${(suffixReference.current?.offsetWidth ?? 0) + 12}px`,
             }}
           />
           {properties.suffixElement && (
             <div
-              ref={suffixRef}
+              ref={suffixReference}
               className="absolute right-0 top-0 flex h-full items-center pr-3"
             >
               {properties.suffixElement}
