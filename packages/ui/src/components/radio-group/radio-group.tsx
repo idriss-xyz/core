@@ -27,7 +27,7 @@ export const RadioGroup = ({
           return (
             <div key={item.value}>
               <RadixRadioGroup.Item
-                className="size-[20px] cursor-default rounded-full border-2 border-neutral-200 bg-transparent outline-none hover:cursor-pointer hover:border-neutral-100 data-[state=checked]:border-mint-500"
+                className="size-[20px] cursor-default rounded-full border-2 border-white bg-transparent outline-none hover:cursor-pointer hover:border-neutral-100 data-[state=checked]:border-mint-500"
                 value={item.value}
                 id={item.value}
               >

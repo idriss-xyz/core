@@ -28,6 +28,10 @@ export const UnstakeTabContent = () => {
               }}
               label="Amount to unstake"
               numeric
+              prefixIconName="IdrissCircled"
+              suffixElement={
+                <span className="text-body4 text-neutral-500">IDRISS</span>
+              }
             />
           );
         }}

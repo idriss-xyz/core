@@ -6,7 +6,14 @@ import { Icon } from '../icon';
 import { Input } from '../input';
 import { NumericInput } from '../numeric-input';
 
-type Properties = Omit<ComponentProps<typeof Input>, 'onChange'> & {
+type InputProperties = ComponentProps<typeof Input>;
+type InputUnion = InputProperties extends infer T
+  ? T extends never
+    ? never
+    : Omit<T, 'onChange'>
+  : never;
+
+type Properties = InputUnion & {
   name: string;
   label?: string;
   helperText?: string;
@@ -23,7 +30,7 @@ export const Field = forwardRef(
       className,
       numeric,
       onChange,
-      ...inputProperties
+      ...inputProperties // Spread all Input props here
     }: Properties,
     reference: ForwardedRef<HTMLDivElement>,
   ) => {
@@ -37,14 +44,14 @@ export const Field = forwardRef(
         <RadixForm.Control asChild>
           {numeric ? (
             <NumericInput
-              {...inputProperties}
+              {...inputProperties} // Pass all Input props
               onChange={(value) => {
                 onChange(value);
               }}
             />
           ) : (
             <Input
-              {...inputProperties}
+              {...inputProperties} // Pass all Input props
               onChange={(event) => {
                 onChange(event.target.value);
               }}
