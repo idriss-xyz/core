@@ -21,7 +21,7 @@ import { claimSteps } from './constants';
 import { LetterContent } from './components/letter/letter-content';
 import { AboutIdrissContent } from './components/about-idriss/about-idriss-content';
 
-export const ContentManager = () => {
+export const DesktopContentManager = () => {
   const { currentContent } = useClaimPage();
   const [videoError, setVideoError] = useState(false);
 
@@ -68,7 +68,7 @@ export const ContentManager = () => {
     }
   }, [currentContent]);
   return (
-    <main className="relative flex min-h-screen grow flex-col items-center justify-around overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] lg:flex-row lg:items-start lg:justify-center lg:px-0">
+    <main className="hidden relative lg:flex min-h-screen grow flex-col items-center justify-around overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] lg:flex-row lg:items-start lg:justify-center lg:px-0">
       {currentContent === 'claim-successful' ? (
         videoError ? (
           <img
