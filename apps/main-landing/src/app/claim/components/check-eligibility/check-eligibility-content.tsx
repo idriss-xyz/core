@@ -57,10 +57,10 @@ export const CheckEligibilityContent = () => {
   });
 
   const storeDataAndNavigate = async (walletAddress: string) => {
-    const eligilibility = await eligibilityMutation.mutateAsync(walletAddress);
-    setEligibilityData(eligilibility);
+    const eligibility = await eligibilityMutation.mutateAsync(walletAddress);
+    setEligibilityData(eligibility);
     setWalletAddress(walletAddress);
-    setCurrentContent('claim');
+    setCurrentContent(eligibility.allocation ? 'claim' : 'not-eligible');
   };
 
   const verifyEligibility = async () => {

@@ -17,16 +17,19 @@ export const MobileNotSupportedContent = () => {
           gradientStopColor="rgba(145, 206, 154, 0.50)"
           borderWidth={1}
         />
-        <div className="relative flex w-full flex-col items-center gap-2 rounded-[25px] bg-[rgba(255,255,255,0.8)] px-10 py-8">
+        <div className="relative flex w-full flex-col items-center rounded-[25px] bg-[rgba(255,255,255,0.8)] px-4 py-11">
           <GradientBorder
             gradientDirection="toBottom"
             gradientStopColor="rgba(145, 206, 154)"
             gradientStartColor="#ffffff"
             borderWidth={2}
           />
-          <span className="text-balance text-center text-heading5 text-neutralGreen-700">
-            This is a desktop or webapp experience, please use a PC
-          </span>
+          <p className="text-balance text-center text-heading5 text-neutralGreen-700">
+            The claim experience is designed for desktop.
+          </p>
+          <p className="text-balance text-center text-heading5 text-neutralGreen-700">
+            Please use a PC or laptop.
+          </p>
         </div>
       </div>
     </main>

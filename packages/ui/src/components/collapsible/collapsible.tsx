@@ -6,17 +6,32 @@ import { Icon } from '@idriss-xyz/ui/icon';
 type Properties = {
   header: ReactNode;
   content: ReactNode;
-};
+} & (
+  | { controlled: true; open: boolean; onOpenChange: (open: boolean) => void }
+  | { controlled?: false }
+);
 
-export const Collapsible = ({ header, content }: Properties) => {
-  const [open, setOpen] = useState(false);
+export const Collapsible = (properties: Properties) => {
+  const { header, content, controlled } = properties;
+  const [_open, _setOpen] = useState(false);
+
+  const isOpen = controlled ? properties.open : _open;
+
+  const handleOpenChange = (open: boolean) => {
+    if (controlled) {
+      properties.onOpenChange(open);
+    } else {
+      _setOpen(open);
+    }
+  };
+
   return (
-    <RadixCollapsible.Root open={open} onOpenChange={setOpen}>
+    <RadixCollapsible.Root open={isOpen} onOpenChange={handleOpenChange}>
       <div className="flex flex-row items-center justify-between gap-4">
         {header}
         <RadixCollapsible.Trigger asChild>
           <button>
-            {open ? (
+            {isOpen ? (
               <Icon name="Minus" size={24} className="text-neutral-800" />
             ) : (
               <Icon name="Plus" size={24} className="text-neutral-800" />

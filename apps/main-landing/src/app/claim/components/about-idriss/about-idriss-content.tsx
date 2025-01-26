@@ -121,16 +121,16 @@ export const AboutIdrissContent = () => {
 
         {!showPlayOverlay && remainingTime !== 0 && (
           <>
-            <div className="pointer-events-none absolute bottom-2 left-2 mt-4 min-h-[25px] min-w-[60px] rounded-md bg-black/30 px-2 py-1 text-center text-body5 text-white">
+            <div className="pointer-events-none absolute bottom-2 left-3 flex min-h-[25px] min-w-[60px] items-center justify-center rounded-md bg-black/30 px-2 py-1">
               {remainingTime && (
-                <span className="animate-fade-in duration-75">
+                <span className="animate-fade-in text-center text-body5 text-white duration-75">
                   {formatTime(remainingTime)}
                 </span>
               )}
             </div>
 
             <button
-              className="absolute bottom-2 right-2 flex size-6 items-center justify-center rounded-md bg-black/30 p-1"
+              className="absolute bottom-2 right-3 flex size-6 items-center justify-center rounded-md bg-black/30 p-1"
               onClick={toggleMute}
             >
               {isMuted ? (
