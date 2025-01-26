@@ -4,11 +4,7 @@ import { Button } from '@idriss-xyz/ui/button';
 import { Config, useAccount, useWalletClient, useWriteContract } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { decodeFunctionResult, encodeFunctionData, WalletClient } from 'viem';
-import {
-  call,
-  estimateGas,
-  waitForTransactionReceipt,
-} from 'viem/actions';
+import { call, estimateGas, waitForTransactionReceipt } from 'viem/actions';
 import { baseSepolia } from 'viem/chains';
 import { WriteContractMutateAsync } from 'wagmi/query';
 
@@ -107,14 +103,17 @@ export const StakeTabContent = () => {
         return;
       }
 
-      await approveTokens(walletClient, BigInt(data.amount), writeContractAsync);
+      await approveTokens(
+        walletClient,
+        BigInt(data.amount),
+        writeContractAsync,
+      );
 
       const stakeData = {
         abi: StakingABI,
         functionName: 'stake',
         args: [data.amount],
       };
-
 
       const encodedStakeData = encodeFunctionData(stakeData);
 

@@ -6,7 +6,7 @@ import { Checkbox } from '@idriss-xyz/ui/checkbox';
 import { useState } from 'react';
 import { Link } from '@idriss-xyz/ui/link';
 import { classes } from '@idriss-xyz/ui/utils';
-import { encodeFunctionData} from 'viem';
+import { encodeFunctionData } from 'viem';
 import { baseSepolia } from 'viem/chains';
 import { estimateGas, waitForTransactionReceipt } from 'viem/actions';
 import { useWalletClient, useWriteContract } from 'wagmi';
@@ -21,9 +21,6 @@ import {
   EligibilityCriteriaTitle,
 } from './constants';
 import { IdrissUserCriteriaDescription } from './components/idriss-user-criteria-description';
-
-
-
 
 export const ClaimContent = () => {
   const [termsChecked, setTermsChecked] = useState(false);
@@ -42,12 +39,11 @@ export const ClaimContent = () => {
   }
 
   if (!walletClient || walletAddress === undefined) {
-    console.error("Wallet not connected")
+    console.error('Wallet not connected');
     return;
   }
 
   const handleClaim = async () => {
-
     try {
       const claimData = {
         abi: CLAIM_ABI,
@@ -58,7 +54,7 @@ export const ClaimContent = () => {
           eligibilityData.claimData.claimIndices,
           eligibilityData.claimData.signature,
           eligibilityData.claimData.expiry,
-          `0x${Buffer.from(eligibilityData.claimData.memo, 'utf8').toString('hex')}`
+          `0x${Buffer.from(eligibilityData.claimData.memo, 'utf8').toString('hex')}`,
         ],
       };
       const encodedClaimData = encodeFunctionData(claimData);
@@ -75,10 +71,12 @@ export const ClaimContent = () => {
         address: claimContractAddress,
         chain: baseSepolia,
         ...claimData,
-        gas
+        gas,
       });
 
-      const { status } = await waitForTransactionReceipt(walletClient, { hash });
+      const { status } = await waitForTransactionReceipt(walletClient, {
+        hash,
+      });
 
       if (status === 'reverted') {
         throw new Error('Claim transaction reverted');
