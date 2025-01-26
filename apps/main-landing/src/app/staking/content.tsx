@@ -8,7 +8,6 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { VAULT_DOCS_LINK } from '@idriss-xyz/constants';
 
 import { backgroundLines2 } from '@/assets';
-import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 
 import idrissSceneStream from './assets/IDRISS_SCENE_STREAM_4_2 1.png';
 import idrissCoin from './assets/IDRISS_COIN 1.png';
