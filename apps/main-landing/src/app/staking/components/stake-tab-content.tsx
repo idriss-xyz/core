@@ -25,10 +25,13 @@ const approveTokens = async (
   tokensToSend: bigint,
   writeContractAsync: WriteContractMutateAsync<Config, unknown>,
 ) => {
+  if (!walletClient.account) {
+    return;
+  }
   const allowanceData = {
     abi: ERC20_ABI,
     functionName: 'allowance',
-    args: [walletClient.account?.address, stakingContractAddress],
+    args: [walletClient.account.address, stakingContractAddress],
   } as const;
 
   const encodedAllowanceData = encodeFunctionData(allowanceData);
