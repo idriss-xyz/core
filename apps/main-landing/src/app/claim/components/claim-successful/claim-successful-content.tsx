@@ -52,7 +52,9 @@ export const ClaimSuccessfulContent = () => {
               return;
             }
 
-            const dataUrl = await toPng(downloadAreaReference.current, {pixelRatio: 5});
+            const dataUrl = await toPng(downloadAreaReference.current, {
+              pixelRatio: 5,
+            });
             const link = document.createElement('a');
             link.href = dataUrl;
             link.setAttribute('download', `claim-successful.png`);
