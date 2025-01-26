@@ -8,12 +8,18 @@ import { Link } from '@idriss-xyz/ui/link';
 
 import { useClaimPage } from '../../claim-page-context';
 
-import { CopyAddressButton } from './copy-address-button';
-import { ExpandableInfo } from './expandable-info';
+import { CopyAddressButton } from './components/copy-address-button';
+import { ExpandableInfo } from './components/expandable-info';
+import {
+  ELIGIBILITY_CRITERIA_TITLES,
+  EligibilityCriteriaTitle,
+} from './constants';
 
 export const ClaimContent = () => {
   const [termsChecked, setTermsChecked] = useState(false);
   const { eligibilityData, setCurrentContent } = useClaimPage();
+  const [expandedItemTitle, setExpandedItemTitle] =
+    useState<EligibilityCriteriaTitle>();
 
   if (!eligibilityData) {
     setCurrentContent('check-eligibility');
@@ -31,7 +37,7 @@ export const ClaimContent = () => {
         <div className="flex flex-col items-start gap-10">
           <span className="text-heading3">YOU’RE ELIGIBLE</span>
           <span className="text-body3 text-neutralGreen-700">
-            YOU WILL RECEIVE
+            AVAILABLE TO CLAIM
           </span>
         </div>
 
@@ -93,13 +99,15 @@ export const ClaimContent = () => {
             ELIGIBILITY CRITERIA
           </span>
           <ExpandableInfo
-            title="REGISTERED IDRISS"
+            open={expandedItemTitle === ELIGIBILITY_CRITERIA_TITLES.IDRISS_USER}
+            onOpenChange={() =>
+              setExpandedItemTitle(ELIGIBILITY_CRITERIA_TITLES.IDRISS_USER)
+            }
+            title={ELIGIBILITY_CRITERIA_TITLES.IDRISS_USER}
             subTitle={`${new Intl.NumberFormat('en-US', {
               minimumFractionDigits: 0,
               maximumFractionDigits: 0,
-            }).format(
-              Number(eligibilityData.allocation_registrations ?? 0),
-            )} IDRISS`}
+            }).format(Number(eligibilityData.allocation_ido ?? 0))} IDRISS`}
             description={
               `You have registered` +
               (eligibilityData.paid
@@ -112,17 +120,37 @@ export const ClaimContent = () => {
             }
           />
           <ExpandableInfo
-            title="BROWSER EXTENSION USER"
+            open={
+              expandedItemTitle === ELIGIBILITY_CRITERIA_TITLES.GITCOIN_DONOR
+            }
+            onOpenChange={() =>
+              setExpandedItemTitle(ELIGIBILITY_CRITERIA_TITLES.GITCOIN_DONOR)
+            }
+            title={ELIGIBILITY_CRITERIA_TITLES.GITCOIN_DONOR}
             subTitle={`${new Intl.NumberFormat('en-US', {
               minimumFractionDigits: 0,
               maximumFractionDigits: 0,
-            }).format(
-              Number(eligibilityData.allocation_extension ?? 0),
-            )} IDRISS`}
-            description="You have made at least 1 transaction"
+            }).format(Number(eligibilityData.allocation_usage ?? 0))} IDRISS`}
+            description={
+              `You have registered` +
+              (eligibilityData.paid
+                ? ` ${eligibilityData.paid} paid account${eligibilityData.paid > 1 ? 's' : ''}`
+                : '') +
+              (eligibilityData.paid && eligibilityData.free ? ' and' : '') +
+              (eligibilityData.free
+                ? ` ${eligibilityData.free} free account${eligibilityData.free > 1 ? 's' : ''}`
+                : '')
+            }
           />
+
           <ExpandableInfo
-            title="EARLY USER MULTIPLIER"
+            open={
+              expandedItemTitle === ELIGIBILITY_CRITERIA_TITLES.SALE_PARTICIPANT
+            }
+            onOpenChange={() =>
+              setExpandedItemTitle(ELIGIBILITY_CRITERIA_TITLES.SALE_PARTICIPANT)
+            }
+            title={ELIGIBILITY_CRITERIA_TITLES.SALE_PARTICIPANT}
             subTitle={`x ${eligibilityData.time_multiplier}`}
             description={`You have registered on ${new Intl.DateTimeFormat(
               'en-US',
@@ -134,25 +162,18 @@ export const ClaimContent = () => {
             ).format(new Date(eligibilityData.registration))}`}
           />
           <ExpandableInfo
-            title="REFERRAL MULTIPLIER"
+            open={
+              expandedItemTitle ===
+              ELIGIBILITY_CRITERIA_TITLES.PARTNER_COMMUNITY_MEMBER
+            }
+            onOpenChange={() =>
+              setExpandedItemTitle(
+                ELIGIBILITY_CRITERIA_TITLES.PARTNER_COMMUNITY_MEMBER,
+              )
+            }
+            title={ELIGIBILITY_CRITERIA_TITLES.PARTNER_COMMUNITY_MEMBER}
             subTitle={`x ${eligibilityData.invite_multiplier}`}
             description={`You have invited ${eligibilityData.invites} members`}
-          />
-          <ExpandableInfo
-            title="GITCOIN DONOR"
-            subTitle={`${new Intl.NumberFormat('en-US', {
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
-            }).format(Number(eligibilityData.allocation_gitcoin ?? 0))} IDRISS`}
-            description={`You have invited ${eligibilityData.invites} members`}
-          />
-          <ExpandableInfo
-            title="PARTNER COMMUNITY"
-            subTitle={`${new Intl.NumberFormat('en-US', {
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
-            }).format(Number(eligibilityData.allocation_partner ?? 0))} IDRISS`}
-            description="You are an active member of Parallel"
           />
         </div>
         <div className="mt-4 h-px w-[389px] bg-[var(--Colors-Border-border-onsurface-primary,#E7FED8)] opacity-50" />

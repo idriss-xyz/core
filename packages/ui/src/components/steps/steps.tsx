@@ -27,8 +27,8 @@ export const Steps = ({ steps, activeStepIndex, className }: Properties) => {
           >
             <div
               className={classes(
-                'flex min-w-6 items-center justify-center rounded bg-neutral-400 px-1 text-center text-label6 text-neutral-300',
-                activeStepIndex === index && 'bg-neutral-900 text-white',
+                'flex min-w-6 items-center justify-center rounded bg-neutral-400 px-1 text-center text-label6 text-white',
+                activeStepIndex === index && 'bg-mint-600',
               )}
             >
               {step.step}
@@ -36,14 +36,14 @@ export const Steps = ({ steps, activeStepIndex, className }: Properties) => {
             <span
               className={classes(
                 'ml-2 text-body4 text-neutral-600',
-                activeStepIndex === index && 'ml-2 text-body4 text-neutral-900',
+                activeStepIndex === index && 'ml-2',
               )}
             >
               {step.title}
             </span>
 
             {index < steps.length - 1 && (
-              <div className="mx-4 h-px grow bg-neutral-500" />
+              <div className="mx-4 h-[0.5px] grow bg-neutral-500" />
             )}
           </div>
         );

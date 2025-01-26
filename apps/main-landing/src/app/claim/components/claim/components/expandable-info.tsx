@@ -1,19 +1,27 @@
 import { Icon } from '@idriss-xyz/ui/icon';
 import { Collapsible } from '@idriss-xyz/ui/collapsible';
+import { EligibilityCriteriaTitle } from '../constants';
 
 type Properties = {
-  title: string;
+  open: boolean;
+  title: EligibilityCriteriaTitle;
   subTitle: string;
   description: string;
+  onOpenChange: (open: boolean) => void;
 };
 
 export const ExpandableInfo = ({
+  open,
   title,
   subTitle,
   description,
+  onOpenChange,
 }: Properties) => {
   return (
     <Collapsible
+      controlled
+      open={open}
+      onOpenChange={onOpenChange}
       header={
         <div className="flex grow flex-row gap-2">
           <Icon name="Check" size={24} className="mr-2 text-mint-400" />
