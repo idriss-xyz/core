@@ -1,17 +1,17 @@
 import { Button } from '@idriss-xyz/ui/button';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { Icon } from '@idriss-xyz/ui/icon';
-
-import { useClaimPage } from '../../claim-page-context';
-
-import geoist_avatar from './assets/geoist_avatar.png';
-import levertz_avatar from './assets/levertz_avatar.png';
 import { Link } from '@idriss-xyz/ui/link';
 import {
   ANNOUNCEMENT_LINK,
   SNAPSHOT_IDRISS_LINK,
   TOKENOMICS_DOCS_LINK,
 } from '@idriss-xyz/constants';
+
+import { useClaimPage } from '../../claim-page-context';
+
+import geoist_avatar from './assets/geoist_avatar.png';
+import levertz_avatar from './assets/levertz_avatar.png';
 
 export const LetterContent = () => {
   const { setCurrentContent } = useClaimPage();
