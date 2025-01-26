@@ -20,7 +20,6 @@ export type EligibilityCheckResponse = {
   allocation_partner: number;
   allocation_raw: number;
   allocation_usage: number;
-  allocation_claim: number;
   ardent: number;
   avatar: number;
   claimData: ClaimData;
