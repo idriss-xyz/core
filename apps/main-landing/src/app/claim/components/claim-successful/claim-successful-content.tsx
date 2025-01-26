@@ -13,12 +13,12 @@ import { GeoConditionalButton } from '@/components/token-section/components/geo-
 
 import { useClaimPage } from '../../claim-page-context';
 
-import idrissCoin from './assets/IDRISS_SCENE_CIRCLE_2 2.png';
+import idrissCoinsCircle from './assets/IDRISS_SCENE_CIRCLE_2 2.png';
 import { SOCIALS } from './constants';
 
 export const ClaimSuccessfulContent = () => {
   const { setCurrentContent, eligibilityData, vestingPlan } = useClaimPage();
-  const downloadAreaRef = useRef<HTMLDivElement>();
+  const downloadAreaReference = useRef<HTMLDivElement>(null);
 
   if (!eligibilityData) {
     setCurrentContent('check-eligibility');
@@ -34,12 +34,12 @@ export const ClaimSuccessfulContent = () => {
       />
       <span className="text-heading4 text-neutral-900">CLAIM SUCCESSFUL</span>
       <div
-        ref={downloadAreaRef as any}
+        ref={downloadAreaReference}
         className="relative flex h-[354px] w-[480px] flex-col items-center justify-center gap-6 self-stretch overflow-hidden rounded-2xl bg-mint-100 p-6"
       >
         <img
           alt=""
-          src={idrissCoin.src}
+          src={idrissCoinsCircle.src}
           className="pointer-events-none absolute left-0 top-0"
         />
         <IconButton
@@ -47,20 +47,20 @@ export const ClaimSuccessfulContent = () => {
           iconName="Download"
           intent="tertiary"
           iconClassName="size-6"
-          onMouseDown={() => {
-            if (!downloadAreaRef.current) {
+          onMouseDown={async () => {
+            if (!downloadAreaReference.current) {
               return;
             }
-            toPng(downloadAreaRef.current).then(function (dataUrl) {
-              const link = document.createElement('a');
-              link.href = dataUrl;
-              link.setAttribute('download', `claim-successful.png`);
-              document.body.appendChild(link);
-              link.click();
-              link.parentNode?.removeChild(link);
-            });
+
+            const dataUrl = await toPng(downloadAreaReference.current, {pixelRatio: 5});
+            const link = document.createElement('a');
+            link.href = dataUrl;
+            link.setAttribute('download', `claim-successful.png`);
+            document.body.append(link);
+            link.click();
+            link.remove();
           }}
-          className="absolute right-6 top-6 flex size-6 p-0 text-midnightGreen-100 active:opacity-0"
+          className="absolute right-6 top-6 flex size-6 p-0 text-mint-500 active:opacity-0"
         />
         <div className="relative flex w-full flex-row justify-center" />
         <div className="flex flex-col items-center gap-2">
@@ -104,7 +104,7 @@ export const ClaimSuccessfulContent = () => {
       ) : (
         <div className="flex w-full flex-col gap-4">
           <GeoConditionalButton
-            defaultButton={[
+            defaultButton={
               <Button
                 key="uniswap"
                 intent="primary"
@@ -116,7 +116,11 @@ export const ClaimSuccessfulContent = () => {
                 className="w-full"
               >
                 BUY MORE ON UNISWAP
-              </Button>,
+              </Button>
+            }
+          />
+          <GeoConditionalButton
+            defaultButton={
               <Button
                 key="jumper"
                 intent="primary"
@@ -128,8 +132,8 @@ export const ClaimSuccessfulContent = () => {
                 className="w-full"
               >
                 BUY MORE ON JUMPER
-              </Button>,
-            ]}
+              </Button>
+            }
           />
           <div className="flex w-full items-center justify-center opacity-70">
             <span
