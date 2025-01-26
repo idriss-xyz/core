@@ -8,11 +8,11 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import '@rainbow-me/rainbowkit/styles.css';
 
 import { backgroundLines2 } from '@/assets';
+import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 
 import idrissSceneStream from './assets/IDRISS_SCENE_STREAM_4_2 1.png';
 import idrissCoin from './assets/IDRISS_COIN 1.png';
 import { StakeTabContent, UnstakeTabContent } from './components';
-import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 
 export const StakingContent = () => {
   const { isConnected } = useAccount();

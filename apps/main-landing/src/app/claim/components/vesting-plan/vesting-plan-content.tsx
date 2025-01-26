@@ -10,8 +10,9 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { Checkbox } from '@idriss-xyz/ui/checkbox';
 import { Link } from '@idriss-xyz/ui/link';
 
-import { useClaimPage, VestingPlan } from '../../claim-page-context';
 import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
+
+import { useClaimPage, VestingPlan } from '../../claim-page-context';
 
 type FormPayload = {
   vestingPlan: VestingPlan;

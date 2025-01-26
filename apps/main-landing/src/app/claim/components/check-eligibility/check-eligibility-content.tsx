@@ -12,10 +12,11 @@ import axios from 'axios';
 import { useWalletClient } from 'wagmi';
 import { useEffect } from 'react';
 
+import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
+
 import idrissCoin from '../../assets/IDRISS_COIN 1.png';
 import { useClaimPage } from '../../claim-page-context';
 import { EligibilityCheckResponse } from '../../types';
-import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 
 type FormPayload = {
   address: string;

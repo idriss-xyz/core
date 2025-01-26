@@ -4,11 +4,12 @@ import { Button } from '@idriss-xyz/ui/button';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 
+import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
+
 import { useClaimPage } from '../../claim-page-context';
 
 import idrissCoin from './assets/IDRISS_SCENE_CIRCLE_2 2.png';
 import { SOCIALS } from './constants';
-import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 
 export const ClaimSuccessfulContent = () => {
   const { setCurrentContent, eligibilityData } = useClaimPage();

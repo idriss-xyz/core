@@ -7,6 +7,8 @@ import { useState } from 'react';
 import { Link } from '@idriss-xyz/ui/link';
 import { classes } from '@idriss-xyz/ui/utils';
 
+import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
+
 import { useClaimPage } from '../../claim-page-context';
 
 import { CopyAddressButton } from './components/copy-address-button';
@@ -16,7 +18,6 @@ import {
   EligibilityCriteriaTitle,
 } from './constants';
 import { IdrissUserCriteriaDescription } from './components/idriss-user-criteria-description';
-import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 
 export const ClaimContent = () => {
   const [termsChecked, setTermsChecked] = useState(false);

@@ -1,9 +1,10 @@
-import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 import { TOKEN_TERMS_AND_CONDITIONS_LINK } from '@idriss-xyz/constants';
 import { Button } from '@idriss-xyz/ui/button';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { Link } from '@idriss-xyz/ui/link';
 import { classes } from '@idriss-xyz/ui/utils';
+
+import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 
 export const NotEligibleContent = () => {
   return (
