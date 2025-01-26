@@ -61,7 +61,11 @@ export const IdrissUserCriteriaDescription = ({
         )}
       >
         <span>
-          You made transfers on {eligibilityData.extension_days>1? eligibilityData.extension_days: "<2"} unique days with the
+          You made transfers on{' '}
+          {eligibilityData.extension_days > 1
+            ? eligibilityData.extension_days
+            : '<2'}{' '}
+          unique days with the
           {'\u00A0'}browser extension
         </span>
         <span>{formatNumber(eligibilityData.allocation_extension)}</span>
