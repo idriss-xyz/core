@@ -16,6 +16,7 @@ import {
   EligibilityCriteriaTitle,
 } from './constants';
 import { IdrissUserCriteriaDescription } from './components/idriss-user-criteria-description';
+import { PartnerMemberDescription } from './components/partner-member-description';
 
 export const ClaimContent = () => {
   const [termsChecked, setTermsChecked] = useState(false);
@@ -120,6 +121,7 @@ export const ClaimContent = () => {
             description={
               <IdrissUserCriteriaDescription
                 eligibilityData={eligibilityData}
+                liBaseClassName={liBaseClassName}
               />
             }
             positive={!!eligibilityData.allocation_usage}
@@ -147,7 +149,7 @@ export const ClaimContent = () => {
                   eligibilityData.allocation_gitcoin && 'before:text-mint-600',
                 )}
               >
-                You donated a total of {eligibilityData.gitcoin} to open source
+                You donated a total of ${eligibilityData.gitcoin} to open source
                 rounds between GR15 and GG20
               </li>
             }
@@ -171,7 +173,12 @@ export const ClaimContent = () => {
               maximumFractionDigits: 0,
             }).format(Number(eligibilityData.allocation_ido ?? 0))}`}
             description={
-              <li className={classes(liBaseClassName, 'before:text-mint-600')}>
+              <li
+                className={classes(
+                  liBaseClassName,
+                  eligibilityData.allocation_ido && 'before:text-mint-600',
+                )}
+              >
                 You purchased IDRISS within the first 12{'\u00A0'}hours of the
                 sale and held it for 2 weeks
               </li>
@@ -197,14 +204,10 @@ export const ClaimContent = () => {
               maximumFractionDigits: 0,
             }).format(Number(eligibilityData.allocation_partner))}`}
             description={
-              <li
-                className={classes(
-                  liBaseClassName,
-                  eligibilityData.allocation_partner && 'before:text-mint-600',
-                )}
-              >
-                You have invited ${eligibilityData.invites} members
-              </li>
+              <PartnerMemberDescription
+                eligibilityData={eligibilityData}
+                liBaseClassName={liBaseClassName}
+              />
             }
             positive={!!eligibilityData.allocation_partner}
           />
