@@ -6,6 +6,7 @@ import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { TabItem, Tabs } from '@idriss-xyz/ui/tabs';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { VAULT_DOCS_LINK } from '@idriss-xyz/constants';
+import { useMemo } from 'react';
 
 import { backgroundLines2 } from '@/assets';
 
@@ -13,7 +14,6 @@ import idrissSceneStream from './assets/IDRISS_SCENE_STREAM_4_2 1.png';
 import idrissCoin from './assets/IDRISS_COIN 1.png';
 import { StakeTabContent, UnstakeTabContent } from './components';
 import '@rainbow-me/rainbowkit/styles.css';
-import { useMemo } from 'react';
 
 export const StakingContent = () => {
   const { isConnected } = useAccount();
@@ -21,7 +21,7 @@ export const StakingContent = () => {
   const { connectModalOpen, openConnectModal } = useConnectModal();
 
   const tabItems: TabItem[] = useMemo(
-    () => [
+    () => {return [
       {
         key: 'stake',
         label: (
@@ -40,7 +40,7 @@ export const StakingContent = () => {
         ),
         children: <UnstakeTabContent />,
       },
-    ],
+    ]},
     [],
   );
 

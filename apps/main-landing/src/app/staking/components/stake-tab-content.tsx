@@ -15,17 +15,17 @@ import {
 import { call, estimateGas, waitForTransactionReceipt } from 'viem/actions';
 import { baseSepolia } from 'viem/chains';
 import { WriteContractMutateAsync } from 'wagmi/query';
+import { useEffect, useState } from 'react';
+import { Spinner } from '@idriss-xyz/ui/spinner';
 
 import { ERC20_ABI } from '@/app/creators/donate/constants';
+import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 
 import {
   StakingABI,
   stakingContractAddress,
   testTokenAddress,
 } from '../constants';
-import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
-import { useEffect, useState } from 'react';
-import { Spinner } from '@idriss-xyz/ui/spinner';
 
 type FormPayload = {
   amount: number;
@@ -163,7 +163,7 @@ export const StakeTabContent = () => {
   };
 
   useEffect(() => {
-    (async () => {
+    void (async () => {
       if (!walletClient) {
         return;
       }
@@ -179,7 +179,7 @@ export const StakeTabContent = () => {
         const formattedBalance = new Intl.NumberFormat('en-US', {
           minimumFractionDigits: 0,
           maximumFractionDigits: 0,
-        }).format(Number(formatEther(balance as bigint)) ?? 0);
+        }).format(Number(formatEther(balance)) ?? 0);
 
         setAvailableAmount(formattedBalance);
       } catch (error) {
@@ -208,17 +208,17 @@ export const StakeTabContent = () => {
                   <span className="text-label4 text-neutralGreen-700">
                     Amount
                   </span>
-                  <div className="flex text-label6 text-neutral-800">
-                    Available:{' '}
-                    <span className="mx-1 flex justify-center">
-                      {availableAmount ? (
-                        availableAmount
-                      ) : (
-                        <Spinner className="size-3" />
-                      )}
-                    </span>{' '}
-                    IDRISS
-                  </div>
+                  {walletClient ? (
+                    <div className="flex text-label6 text-neutral-800">
+                      Available:{' '}
+                      <span className="mx-1 flex justify-center">
+                        {availableAmount ?? <Spinner className="size-3" />}
+                      </span>{' '}
+                      IDRISS
+                    </div>
+                  ) : (
+                    ''
+                  )}
                 </div>
               }
               numeric

@@ -1,4 +1,3 @@
-import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 import { Button } from '@idriss-xyz/ui/button';
 import { Form } from '@idriss-xyz/ui/form';
 import { Spinner } from '@idriss-xyz/ui/spinner';
@@ -6,8 +5,11 @@ import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { createPublicClient, formatEther, http } from 'viem';
 import { baseSepolia } from 'viem/chains';
-import { StakingABI, stakingContractAddress } from '../constants';
 import { useWalletClient } from 'wagmi';
+
+import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
+
+import { StakingABI, stakingContractAddress } from '../constants';
 
 type FormPayload = {
   amount: number;
@@ -29,7 +31,7 @@ export const UnstakeTabContent = () => {
   });
 
   useEffect(() => {
-    (async () => {
+    void (async () => {
       if (!walletClient) {
         return;
       }
@@ -74,17 +76,17 @@ export const UnstakeTabContent = () => {
                   <span className="text-label4 text-neutralGreen-700">
                     Amount to unlock
                   </span>
-                  <div className="flex text-label6 text-neutral-800">
-                    Available:{' '}
-                    <span className="mx-1 flex justify-center">
-                      {availableAmount ? (
-                        availableAmount
-                      ) : (
-                        <Spinner className="size-3" />
-                      )}
-                    </span>{' '}
-                    IDRISS
-                  </div>
+                  {walletClient ? (
+                    <div className="flex text-label6 text-neutral-800">
+                      Available:{' '}
+                      <span className="mx-1 flex justify-center">
+                        {availableAmount ?? <Spinner className="size-3" />}
+                      </span>{' '}
+                      IDRISS
+                    </div>
+                  ) : (
+                    ''
+                  )}
                 </div>
               }
               numeric
