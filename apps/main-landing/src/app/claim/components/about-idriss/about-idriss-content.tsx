@@ -177,6 +177,7 @@ export const AboutIdrissContent = () => {
                 onClick={() => {
                   setCurrentContent('check-eligibility');
                 }}
+                disabled={!isSuccess}
               >
                 Next
               </Button>
