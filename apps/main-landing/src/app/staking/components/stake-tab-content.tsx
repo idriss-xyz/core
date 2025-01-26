@@ -24,6 +24,9 @@ import {
 type FormPayload = {
   amount: number;
 };
+type Properties = {
+  availableAmount: number;
+};
 
 const approveTokens = async (
   walletClient: WalletClient,
@@ -88,7 +91,7 @@ const approveTokens = async (
   }
 };
 
-export const StakeTabContent = () => {
+export const StakeTabContent = ({ availableAmount }: Properties) => {
   const { isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
 
@@ -165,7 +168,16 @@ export const StakeTabContent = () => {
               onChange={(value) => {
                 field.onChange(Number(value));
               }}
-              label="Amount"
+              label={
+                <div className="flex justify-between">
+                  <span className="text-label4 text-neutralGreen-700">
+                    Amount
+                  </span>
+                  <span className="text-label6 text-neutral-800">
+                    Available: {availableAmount} IDRISS
+                  </span>
+                </div>
+              }
               numeric
               prefixIconName="IdrissCircled"
               suffixElement={
