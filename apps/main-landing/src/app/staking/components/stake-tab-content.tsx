@@ -3,13 +3,82 @@ import { Controller, useForm } from 'react-hook-form';
 import { Button } from '@idriss-xyz/ui/button';
 import { useAccount, useWalletClient, useWriteContract } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { StakingABI, stakingContractAddress } from '../constants';
-import { encodeFunctionData } from 'viem';
-import { estimateGas, waitForTransactionReceipt } from 'viem/actions';
+import {
+  StakingABI,
+  stakingContractAddress,
+  testTokenAddress,
+} from '../constants';
+import { decodeFunctionResult, encodeFunctionData, WalletClient } from 'viem';
+import {
+  call,
+  estimateGas,
+  waitForTransactionReceipt,
+} from 'viem/actions';
 import { baseSepolia } from 'viem/chains';
+import { ERC20_ABI } from '@/app/creators/donate/constants';
 
 type FormPayload = {
   amount: number;
+};
+
+const approveTokens = async (
+  walletClient: WalletClient,
+  tokensToSend: bigint,
+  writeContractAsync: any,
+) => {
+  const allowanceData = {
+    abi: ERC20_ABI,
+    args: [walletClient.account?.address, stakingContractAddress],
+    functionName: 'allowance',
+  };
+
+  const encodedAllowanceData = encodeFunctionData(allowanceData);
+
+  const allowanceRaw = await call(walletClient, {
+    account: walletClient.account,
+    to: testTokenAddress,
+    data: encodedAllowanceData,
+  });
+
+  if (allowanceRaw.data === undefined) {
+    throw new Error('Allowance data is not defined');
+  }
+
+  const allowanceNumber = decodeFunctionResult({
+    abi: ERC20_ABI,
+    functionName: 'allowance',
+    data: allowanceRaw.data,
+  });
+
+  if (allowanceNumber < tokensToSend) {
+    const approveData = {
+      abi: ERC20_ABI,
+      functionName: 'approve',
+      args: [stakingContractAddress, tokensToSend],
+    } as const;
+
+    const encodedData = encodeFunctionData(approveData);
+
+    const gas = await estimateGas(walletClient, {
+      to: testTokenAddress,
+      data: encodedData,
+    });
+
+    const hash = await writeContractAsync({
+      chain: baseSepolia,
+      to: testTokenAddress,
+      ...approveData,
+      gas,
+    });
+
+    const receipt = await waitForTransactionReceipt(walletClient, {
+      hash,
+    });
+
+    if (receipt.status === 'reverted') {
+      console.error('Error approving tokens');
+    }
+  }
 };
 
 export const StakeTabContent = () => {
@@ -31,16 +100,18 @@ export const StakeTabContent = () => {
       openConnectModal();
     } else {
       if (!walletClient) {
-        console.error("Wallet not connected")
+        console.error('Wallet not connected');
         return;
       }
+
+      await approveTokens(walletClient, BigInt(data.amount), writeContractAsync);
+
       const stakeData = {
         abi: StakingABI,
         functionName: 'stake',
         args: [data.amount],
       };
 
-      console.log("input data", data)
 
       const encodedStakeData = encodeFunctionData(stakeData);
 
@@ -92,7 +163,7 @@ export const StakeTabContent = () => {
         intent="primary"
         size="large"
         className="mt-8 w-full" // TODO: check margin on DS
-        type='submit'
+        type="submit"
       >
         STAKE
       </Button>

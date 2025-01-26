@@ -146,3 +146,5 @@ export const StakingABI = [
 ]
 
 export const stakingContractAddress = "0xBFB79112F2cE4E202ea126132AA43C9Fc2C4826A"
+
+export const testTokenAddress = "0xeBa8FaF94d7DFA462B6b1CEE55a83818a256cDa4"
