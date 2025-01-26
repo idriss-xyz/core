@@ -26,7 +26,7 @@ export const UnstakeTabContent = () => {
               onChange={(value) => {
                 field.onChange(Number(value));
               }}
-              label="Amount to unstake"
+              label="Amount to unlock"
               numeric
               prefixIconName="IdrissCircled"
               suffixElement={

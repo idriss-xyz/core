@@ -1,6 +1,7 @@
-import { EligibilityCheckResponse } from '@/app/claim/types';
 import { classes } from '@idriss-xyz/ui/utils';
 import { useMemo } from 'react';
+
+import { EligibilityCheckResponse } from '@/app/claim/types';
 
 type Properties = {
   eligibilityData: EligibilityCheckResponse;
@@ -27,7 +28,11 @@ export const PartnerMemberDescription = ({
   ].filter(Boolean);
 
   const activeCommunitiesList = useMemo(() => {
-    switch (communities.filter(community => community.isActiveMember).length) {
+    switch (
+      communities.filter((community) => {
+        return community.isActiveMember;
+      }).length
+    ) {
       case 1: {
         return (
           <span>
@@ -40,7 +45,8 @@ export const PartnerMemberDescription = ({
       case 2: {
         return (
           <span>
-            of{'\u00A0'}the {communities[0]?.communityName}{'\u00A0'}and{'\u00A0'}
+            of{'\u00A0'}the {communities[0]?.communityName}
+            {'\u00A0'}and{'\u00A0'}
             {communities[1]?.communityName} communities
           </span>
         );
@@ -56,13 +62,13 @@ export const PartnerMemberDescription = ({
         );
       }
 
-      case 0:
-      default:
+      default: {
         return (
           <span>
             of{'\u00A0'}a{'\u00A0'}partner{'\u00A0'}community
           </span>
         );
+      }
     }
   }, [communities]);
 

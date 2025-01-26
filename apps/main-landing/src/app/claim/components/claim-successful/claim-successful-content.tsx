@@ -3,14 +3,14 @@
 import { Button } from '@idriss-xyz/ui/button';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
+import { classes } from '@idriss-xyz/ui/utils';
+import { Link } from '@idriss-xyz/ui/link';
+import { TOKEN_TERMS_AND_CONDITIONS_LINK } from '@idriss-xyz/constants';
 
 import { useClaimPage } from '../../claim-page-context';
 
 import idrissCoin from './assets/IDRISS_SCENE_CIRCLE_2 2.png';
 import { SOCIALS } from './constants';
-import { classes } from '@idriss-xyz/ui/utils';
-import { Link } from '@idriss-xyz/ui/link';
-import { TOKEN_TERMS_AND_CONDITIONS_LINK } from '@idriss-xyz/constants';
 
 export const ClaimSuccessfulContent = () => {
   const { setCurrentContent, eligibilityData, vestingPlan } = useClaimPage();
