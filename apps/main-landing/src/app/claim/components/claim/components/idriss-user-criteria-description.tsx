@@ -2,30 +2,32 @@ import { classes } from '@idriss-xyz/ui/utils';
 
 import { EligibilityCheckResponse } from '@/app/claim/types';
 
-type Properties = { eligibilityData: EligibilityCheckResponse };
+type Properties = {
+  eligibilityData: EligibilityCheckResponse;
+  liBaseClassName: string;
+};
 
-const formatNumber = (value: number | undefined) => {
+const formatNumber = (value: number | undefined, digits = 0) => {
   return new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits,
   }).format(value ?? 0);
 };
 
 const formatDate = (date: string | undefined) => {
   return new Intl.DateTimeFormat('en-US', {
     day: '2-digit',
-    month: 'short',
+    month: 'long',
     year: 'numeric',
   }).format(new Date(date ?? ''));
 };
 
 export const IdrissUserCriteriaDescription = ({
   eligibilityData,
+  liBaseClassName,
 }: Properties) => {
-  const liBaseClassName =
-    "relative flex justify-between pr-1 before:absolute before:-left-4 before:text-red-500 before:content-['•']";
   return (
-    <ul className="list-none pl-5">
+    <ul className="flex list-none flex-col gap-3 pl-5">
       <li
         className={classes(
           liBaseClassName,
@@ -77,7 +79,7 @@ export const IdrissUserCriteriaDescription = ({
         </span>
         <span>
           x{'\u00A0'}
-          {eligibilityData.time_multiplier}
+          {formatNumber(eligibilityData.time_multiplier, 2)}
         </span>
       </li>
       <li
@@ -93,7 +95,7 @@ export const IdrissUserCriteriaDescription = ({
         </span>
         <span>
           x{'\u00A0'}
-          {eligibilityData.invite_multiplier}
+          {formatNumber(eligibilityData.invite_multiplier, 2)}
         </span>
       </li>
     </ul>

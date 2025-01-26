@@ -5,20 +5,24 @@ type ClaimData = {
   memo: string;
   signature: string;
 };
-
 export type EligibilityCheckResponse = {
   aavegotchi: number;
   across: number;
+  agora: number;
   allocation: number;
+  allocation_claim: number;
   allocation_extension: number;
   allocation_free: number;
   allocation_gitcoin: number;
   allocation_ido: number;
+  allocation_ido_7d: number;
   allocation_paid: number;
   allocation_partner: number;
+  allocation_raw: number;
   allocation_usage: number;
   allocation_claim: number;
   ardent: number;
+  avatar: number;
   claimData: ClaimData;
   extension: number;
   extension_days: number;
