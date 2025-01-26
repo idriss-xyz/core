@@ -136,6 +136,7 @@ export const ClaimSuccessfulContent = () => {
               size="large"
               intent="tertiary"
               iconName={social.iconName}
+              className="text-neutral-800"
               href={social.link}
               aria-label={social.label}
               isExternal

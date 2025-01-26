@@ -47,6 +47,9 @@ export const PRIVACY_POLICY_LINK =
   'https://docs.idriss.xyz/resources/privacy-policy';
 export const TERMS_OF_SERVICE_LINK =
   'https://docs.idriss.xyz/resources/terms-of-service';
+export const AIRDROP_DOCS_LINK = 'https://docs.idriss.xyz/idriss-token/airdrop';
+export const VAULT_DOCS_LINK = 'https://docs.idriss.xyz/idriss-token/vault';
+
 export const CREATORS_LINK = 'https://www.idriss.xyz/creators';
 
 export const CHROME_EXTENSION_LINK =
@@ -57,3 +60,5 @@ export const CREATORS_USER_GUIDE_LINK =
 
 export const TOKEN_TERMS_AND_CONDITIONS_LINK =
   'https://docs.idriss.xyz/idriss-token/terms-and-conditions';
+
+export const COINMARKETCAP_LINK = 'https://coinmarketcap.com/currencies/idriss';
