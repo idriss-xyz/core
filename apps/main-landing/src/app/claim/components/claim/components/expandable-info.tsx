@@ -41,7 +41,7 @@ export const ExpandableInfo = ({
       }
       content={
         <div className="flex flex-row">
-          <span className="mt-1 pl-10 text-body5 text-neutralGreen-500">
+          <span className="mt-3 pl-9 text-body5 text-neutralGreen-500">
             {description}
           </span>
         </div>

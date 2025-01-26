@@ -58,20 +58,20 @@ export const NotEligibleContent = () => {
             )}
           >
             By purchasing, you agree to the{' '}
+            <Link
+              size="medium"
+              href={TOKEN_TERMS_AND_CONDITIONS_LINK}
+              isExternal
+              className={classes(
+                'text-body5',
+                'md:text-body5',
+                //lg here is intentional to override the Link variant style
+                'lg:text-body5',
+              )}
+            >
+              Terms{'\u00A0'}and{'\u00A0'}conditions
+            </Link>
           </span>
-          <Link
-            size="medium"
-            href={TOKEN_TERMS_AND_CONDITIONS_LINK}
-            isExternal
-            className={classes(
-              'text-body5',
-              'md:text-body5',
-              //lg here is intentional to override the Link variant style
-              'lg:text-body5',
-            )}
-          >
-            Terms{'\u00A0'}and{'\u00A0'}conditions
-          </Link>
         </div>
       </div>
     </div>
