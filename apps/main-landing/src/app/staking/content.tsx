@@ -80,7 +80,7 @@ export const StakingContent = () => {
               </Button>
             </div>
             <div className="mb-4 mt-8 h-px w-full bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] opacity-50 lg:mx-10 lg:my-0 lg:h-auto lg:w-px" />
-            <div className="flex flex-col lg:w-[389px]">
+            <div className="flex flex-col lg:w-[292px]">
               <div className="flex flex-col gap-2">
                 <span className="pb-1 text-label4 text-neutralGreen-700 lg:pb-4 lg:text-label3">
                   VAULT BENEFITS
