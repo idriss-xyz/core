@@ -28,7 +28,7 @@ const approveTokens = async (
   const allowanceData = {
     abi: ERC20_ABI,
     args: [walletClient.account?.address, stakingContractAddress],
-    functionName: 'allowance',
+    functionName: 'allowance'
   };
 
   const encodedAllowanceData = encodeFunctionData(allowanceData);

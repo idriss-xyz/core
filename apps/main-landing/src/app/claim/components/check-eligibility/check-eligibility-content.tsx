@@ -3,7 +3,7 @@
 import { Button } from '@idriss-xyz/ui/button';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { Controller, useForm } from 'react-hook-form';
-import { createPublicClient, http, isAddress } from 'viem';
+import { createPublicClient, Hex, http, isAddress, stringToHex } from 'viem';
 import { mainnet } from 'viem/chains';
 import { normalize } from 'viem/ens';
 import { Form } from '@idriss-xyz/ui/form';
@@ -56,7 +56,7 @@ export const CheckEligibilityContent = () => {
     },
   });
 
-  const storeDataAndNavigate = async (walletAddress: string) => {
+  const storeDataAndNavigate = async (walletAddress: Hex) => {
     const eligibility = await eligibilityMutation.mutateAsync(walletAddress);
     setEligibilityData(eligibility);
     setWalletAddress(walletAddress);
@@ -71,9 +71,9 @@ export const CheckEligibilityContent = () => {
 
     const { address, resolvedEnsAddress } = formMethods.getValues();
     if (address.includes('.') && resolvedEnsAddress) {
-      void storeDataAndNavigate(resolvedEnsAddress);
+      void storeDataAndNavigate(stringToHex(resolvedEnsAddress));
     } else if (address) {
-      void storeDataAndNavigate(address);
+      void storeDataAndNavigate(stringToHex(address));
     }
   };
 
