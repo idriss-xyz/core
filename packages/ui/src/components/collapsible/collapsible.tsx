@@ -27,7 +27,7 @@ export const Collapsible = (properties: Properties) => {
         {header}
         <RadixCollapsible.Trigger asChild>
           <button>
-            {_open ? (
+            {isOpen ? (
               <Icon name="Minus" size={24} className="text-neutral-800" />
             ) : (
               <Icon name="Plus" size={24} className="text-neutral-800" />

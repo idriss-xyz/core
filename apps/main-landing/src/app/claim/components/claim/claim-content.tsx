@@ -14,6 +14,8 @@ import {
   ELIGIBILITY_CRITERIA_TITLES,
   EligibilityCriteriaTitle,
 } from './constants';
+import { IdrissUserCriteriaDescription } from './components/idriss-user-criteria-description';
+import { classes } from '@idriss-xyz/ui/utils';
 
 export const ClaimContent = () => {
   const [termsChecked, setTermsChecked] = useState(false);
@@ -25,6 +27,9 @@ export const ClaimContent = () => {
     setCurrentContent('check-eligibility');
     return;
   }
+
+  const liBaseClassName =
+    "relative flex justify-between pr-1 before:absolute before:-left-4 before:text-red-500 before:content-['•']";
 
   return (
     <div className="relative z-[5] flex w-[1000px] flex-row rounded-[25px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">
@@ -101,46 +106,52 @@ export const ClaimContent = () => {
           <ExpandableInfo
             open={expandedItemTitle === ELIGIBILITY_CRITERIA_TITLES.IDRISS_USER}
             onOpenChange={() =>
-              setExpandedItemTitle(ELIGIBILITY_CRITERIA_TITLES.IDRISS_USER)
+              setExpandedItemTitle((prev) =>
+                prev === ELIGIBILITY_CRITERIA_TITLES.IDRISS_USER
+                  ? undefined
+                  : ELIGIBILITY_CRITERIA_TITLES.IDRISS_USER,
+              )
             }
             title={ELIGIBILITY_CRITERIA_TITLES.IDRISS_USER}
             subTitle={`${new Intl.NumberFormat('en-US', {
               minimumFractionDigits: 0,
               maximumFractionDigits: 0,
-            }).format(Number(eligibilityData.allocation_ido ?? 0))} IDRISS`}
+            }).format(Number(eligibilityData.allocation_ido ?? 0))}`}
             description={
-              `You have registered` +
-              (eligibilityData.paid
-                ? ` ${eligibilityData.paid} paid account${eligibilityData.paid > 1 ? 's' : ''}`
-                : '') +
-              (eligibilityData.paid && eligibilityData.free ? ' and' : '') +
-              (eligibilityData.free
-                ? ` ${eligibilityData.free} free account${eligibilityData.free > 1 ? 's' : ''}`
-                : '')
+              <IdrissUserCriteriaDescription
+                eligibilityData={eligibilityData}
+              />
             }
+            positive={!!eligibilityData.allocation_ido}
           />
           <ExpandableInfo
             open={
               expandedItemTitle === ELIGIBILITY_CRITERIA_TITLES.GITCOIN_DONOR
             }
             onOpenChange={() =>
-              setExpandedItemTitle(ELIGIBILITY_CRITERIA_TITLES.GITCOIN_DONOR)
+              setExpandedItemTitle((prev) =>
+                prev === ELIGIBILITY_CRITERIA_TITLES.GITCOIN_DONOR
+                  ? undefined
+                  : ELIGIBILITY_CRITERIA_TITLES.GITCOIN_DONOR,
+              )
             }
             title={ELIGIBILITY_CRITERIA_TITLES.GITCOIN_DONOR}
             subTitle={`${new Intl.NumberFormat('en-US', {
               minimumFractionDigits: 0,
               maximumFractionDigits: 0,
-            }).format(Number(eligibilityData.allocation_usage ?? 0))} IDRISS`}
+            }).format(Number(eligibilityData.allocation_gitcoin ?? 0))}`}
             description={
-              `You have registered` +
-              (eligibilityData.paid
-                ? ` ${eligibilityData.paid} paid account${eligibilityData.paid > 1 ? 's' : ''}`
-                : '') +
-              (eligibilityData.paid && eligibilityData.free ? ' and' : '') +
-              (eligibilityData.free
-                ? ` ${eligibilityData.free} free account${eligibilityData.free > 1 ? 's' : ''}`
-                : '')
+              <li
+                className={classes(
+                  liBaseClassName,
+                  eligibilityData.allocation_gitcoin && 'before:text-mint-600',
+                )}
+              >
+                You donated a total of {eligibilityData.gitcoin} to open source
+                rounds between GR15 and GG20
+              </li>
             }
+            positive={!!eligibilityData.allocation_gitcoin}
           />
 
           <ExpandableInfo
@@ -148,18 +159,24 @@ export const ClaimContent = () => {
               expandedItemTitle === ELIGIBILITY_CRITERIA_TITLES.SALE_PARTICIPANT
             }
             onOpenChange={() =>
-              setExpandedItemTitle(ELIGIBILITY_CRITERIA_TITLES.SALE_PARTICIPANT)
+              setExpandedItemTitle((prev) =>
+                prev === ELIGIBILITY_CRITERIA_TITLES.SALE_PARTICIPANT
+                  ? undefined
+                  : ELIGIBILITY_CRITERIA_TITLES.SALE_PARTICIPANT,
+              )
             }
             title={ELIGIBILITY_CRITERIA_TITLES.SALE_PARTICIPANT}
-            subTitle={`x ${eligibilityData.time_multiplier}`}
-            description={`You have registered on ${new Intl.DateTimeFormat(
-              'en-US',
-              {
-                day: '2-digit',
-                month: 'short',
-                year: 'numeric',
-              },
-            ).format(new Date(eligibilityData.registration))}`}
+            subTitle={`${new Intl.NumberFormat('en-US', {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            }).format(Number(1200))}`}
+            description={
+              <li className={classes(liBaseClassName, 'before:text-mint-600')}>
+                You purchased IDRISS within the first 12{'\u00A0'}hours of the
+                sale and held it for 2 weeks
+              </li>
+            }
+            positive
           />
           <ExpandableInfo
             open={
@@ -167,13 +184,28 @@ export const ClaimContent = () => {
               ELIGIBILITY_CRITERIA_TITLES.PARTNER_COMMUNITY_MEMBER
             }
             onOpenChange={() =>
-              setExpandedItemTitle(
-                ELIGIBILITY_CRITERIA_TITLES.PARTNER_COMMUNITY_MEMBER,
+              setExpandedItemTitle((prev) =>
+                prev === ELIGIBILITY_CRITERIA_TITLES.PARTNER_COMMUNITY_MEMBER
+                  ? undefined
+                  : ELIGIBILITY_CRITERIA_TITLES.PARTNER_COMMUNITY_MEMBER,
               )
             }
             title={ELIGIBILITY_CRITERIA_TITLES.PARTNER_COMMUNITY_MEMBER}
-            subTitle={`x ${eligibilityData.invite_multiplier}`}
-            description={`You have invited ${eligibilityData.invites} members`}
+            subTitle={`${new Intl.NumberFormat('en-US', {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            }).format(Number(eligibilityData.allocation_partner))}`}
+            description={
+              <li
+                className={classes(
+                  liBaseClassName,
+                  eligibilityData.allocation_partner && 'before:text-mint-600',
+                )}
+              >
+                You have invited ${eligibilityData.invites} members
+              </li>
+            }
+            positive={!!eligibilityData.allocation_partner}
           />
         </div>
         <div className="mt-4 h-px w-[389px] bg-[var(--Colors-Border-border-onsurface-primary,#E7FED8)] opacity-50" />
