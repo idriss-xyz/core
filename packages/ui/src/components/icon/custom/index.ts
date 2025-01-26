@@ -36,3 +36,4 @@ export { PiggyBank } from './piggy-bank';
 export { Gem } from './gem';
 export { PieChart } from './pie-chart';
 export { Github } from './github';
+export { Coinmarketcap } from './coinmarketcap';

@@ -4,8 +4,11 @@ import { Controller, useForm } from 'react-hook-form';
 type FormPayload = {
   amount: number;
 };
+type Properties = {
+  availableAmount: number;
+};
 
-export const StakeTabContent = () => {
+export const StakeTabContent = ({ availableAmount }: Properties) => {
   const formMethods = useForm<FormPayload>({
     defaultValues: {
       amount: 1,
@@ -26,8 +29,21 @@ export const StakeTabContent = () => {
               onChange={(value) => {
                 field.onChange(Number(value));
               }}
-              label="Amount"
+              label={
+                <div className="flex justify-between">
+                  <span className="text-label4 text-neutralGreen-700">
+                    Amount
+                  </span>
+                  <span className="text-label6 text-neutral-800">
+                    Available: {availableAmount} IDRISS
+                  </span>
+                </div>
+              }
               numeric
+              prefixIconName="IdrissCircled"
+              suffixElement={
+                <span className="text-body4 text-neutral-500">IDRISS</span>
+              }
             />
           );
         }}
