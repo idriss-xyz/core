@@ -80,20 +80,6 @@ export const VestingPlanContent = () => {
     }
   }, [vestingPlan]);
 
-  const vestingPlanSubmitFunction = async () => {
-    switch (vestingPlan) {
-      case 'claim_50': {
-        return await handleClaim();
-      }
-      case 'claim_and_stake_100': {
-        return handleClaimWithBonus();
-      }
-      default: {
-        return await handleClaim();
-      }
-    }
-  };
-
   if (!eligibilityData) {
     setCurrentContent('check-eligibility');
     return;
@@ -108,7 +94,7 @@ export const VestingPlanContent = () => {
     try {
       const claimData = {
         abi: CLAIM_ABI,
-        functionName: 'claim',
+        functionName: vestingPlan === 'claim_50' ? 'claim' : 'claimWithBonus',
         args: [
           walletClient.account.address,
           eligibilityData.claimData.amount,
@@ -143,20 +129,11 @@ export const VestingPlanContent = () => {
         throw new Error('Claim transaction reverted');
       }
 
-      return setCurrentContent('vesting-plans');
+      return setCurrentContent('claim-successful');
     } catch (error) {
       console.error('Error claiming:', error);
       throw error;
     }
-  };
-
-  const handleClaimWithBonus = () => {
-    if (!walletClient || walletAddress === undefined) {
-      console.error('Wallet not connected');
-      return;
-    }
-    //  TODO: Implement claim with bonus
-    console.log('To be implemented');
   };
 
   return (
@@ -211,7 +188,7 @@ export const VestingPlanContent = () => {
               className="w-full"
               onClick={async () => {
                 setVestingPlan(vestingPlan);
-                await vestingPlanSubmitFunction();
+                await handleClaim();
               }}
               disabled={!termsChecked}
             >
