@@ -17,9 +17,11 @@ export type EligibilityCheckResponse = {
   allocation_paid: number;
   allocation_partner: number;
   allocation_usage: number;
+  allocation_claim: number;
   ardent: number;
   claimData: ClaimData;
   extension: number;
+  extension_days: number;
   farcaster: number;
   free: number;
   gitcoin: number;
