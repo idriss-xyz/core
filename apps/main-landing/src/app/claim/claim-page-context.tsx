@@ -19,9 +19,7 @@ type ClaimPageContextValues = {
   setEligibilityData: (eligibilityData: EligibilityCheckResponse) => void;
 };
 
-export type VestingPlan =
-  | 'claim_50'
-  | 'claim_and_stake_100';
+export type VestingPlan = 'claim_50' | 'claim_and_stake_100';
 const ClaimPageContext = createContext<ClaimPageContextValues | undefined>(
   undefined,
 );

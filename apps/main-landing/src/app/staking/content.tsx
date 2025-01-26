@@ -38,7 +38,7 @@ export const StakingContent = () => {
           UNLOCK
         </span>
       ),
-      children: <UnstakeTabContent />,
+      children: <UnstakeTabContent availableAmount={400} />,
     },
   ];
 
@@ -56,7 +56,7 @@ export const StakingContent = () => {
       />
 
       <div className="flex flex-col">
-        <div className="z-[5] mt-[40px] inline-flex flex-col items-center gap-[78px] overflow-hidden px-4 pb-3 lg:mt-[78px] lg:[@media(max-height:800px)]:mt-[60px]">
+        <div className="z-[5] mt-[40px] inline-flex flex-col items-center gap-[78px] overflow-hidden px-4 pb-3 lg:mt-[120px] lg:[@media(max-height:800px)]:mt-[60px]">
           <img
             className="hidden size-[137px] lg:block"
             src={idrissCoin.src}
