@@ -9,6 +9,7 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { VAULT_DOCS_LINK } from '@idriss-xyz/constants';
 
 import { backgroundLines2 } from '@/assets';
+import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 
 import idrissSceneStream from './assets/IDRISS_SCENE_STREAM_4_2 1.png';
 import idrissCoin from './assets/IDRISS_COIN 1.png';
@@ -71,14 +72,18 @@ export const StakingContent = () => {
             />
             <div className="flex flex-col gap-6 lg:w-[368px]">
               <Tabs items={tabItems} onChange={setActiveTabKey} />
-              <Button
-                intent="primary"
-                size="large"
-                className="mt-2 w-full lg:mt-0"
-                onClick={() => {}}
-              >
-                {activeTabKey === 'stake' ? 'LOCK' : 'UNLOCK'}
-              </Button>
+              <GeoConditionalButton
+                defaultButton={
+                  <Button
+                    intent="primary"
+                    size="large"
+                    className="mt-2 w-full lg:mt-0"
+                    onClick={() => {}}
+                  >
+                    {activeTabKey === 'stake' ? 'LOCK' : 'UNLOCK'}
+                  </Button>
+                }
+              />
             </div>
             <div className="mb-4 mt-8 h-px w-full bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] opacity-50 lg:mx-10 lg:my-0 lg:h-auto lg:w-px" />
             <div className="flex flex-col lg:w-[292px]">
