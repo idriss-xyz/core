@@ -54,7 +54,7 @@ export const Tabs = ({ items, onChange }: Properties) => {
           <RadixTabs.Content
             key={item.key}
             value={item.key}
-            className="grow rounded-b-md p-5 outline-none"
+            className="grow rounded-b-md outline-none"
           >
             {item.children}
           </RadixTabs.Content>

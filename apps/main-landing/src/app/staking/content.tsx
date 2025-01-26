@@ -54,7 +54,7 @@ export const StakingContent = () => {
               gradientStopColor="rgba(145, 206, 154, 0.50)"
               borderWidth={1}
             />
-            <div className="flex w-[459px] flex-col gap-6">
+            <div className="flex w-[368px] flex-col gap-6">
               <Tabs items={tabItems} />
               <Button
                 intent="primary"

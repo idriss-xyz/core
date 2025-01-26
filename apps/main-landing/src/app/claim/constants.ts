@@ -4,6 +4,7 @@ export const IDRISS_TOKEN_ADDRESS =
 export const CLAIM_CONTENT = {
   CHECK_ELIGIBILITY: 'check-eligibility',
   CLAIM: 'claim',
+  NOT_ELIGIBLE: 'not-eligible',
   VESTING_PLANS: 'vesting-plans',
   CLAIM_SUCCESSFUL: 'claim-successful',
   LETTER: 'letter',

@@ -24,7 +24,9 @@ export const LetterContent = () => {
         />
         <div className="flex flex-col gap-6 text-body5 text-neutralGreen-700">
           <span>GM anon,</span>
-          <span>Lorem ipsum dolor sit amet consectetur.</span>
+          <span>
+            Thank you for believing in IDRISS and joining us on this journey.
+          </span>
           <span>
             Lorem ipsum dolor sit amet consectetur. At duis arcu ultricies risus
             aliquam. At consequat faucibus eget ultrices. Aliquet duis aliquam

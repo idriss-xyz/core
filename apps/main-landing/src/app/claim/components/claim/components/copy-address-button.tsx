@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { Icon } from '@idriss-xyz/ui/icon';
 
-import { formatAddress } from '../../utils';
-import { IDRISS_TOKEN_ADDRESS } from '../../constants';
+import { formatAddress } from '../../../utils';
+import { IDRISS_TOKEN_ADDRESS } from '../../../constants';
 
 export const CopyAddressButton = () => {
   const [copied, setCopied] = useState(false);

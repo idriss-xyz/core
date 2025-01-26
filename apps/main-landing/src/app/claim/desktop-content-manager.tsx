@@ -18,6 +18,7 @@ import { ClaimSuccessfulContent } from './components/claim-successful/claim-succ
 import { claimSteps } from './constants';
 import { LetterContent } from './components/letter/letter-content';
 import { AboutIdrissContent } from './components/about-idriss/about-idriss-content';
+import { NotEligibleContent } from './components/not-eligible/not-eligible-content';
 
 export const DesktopContentManager = () => {
   const { currentContent } = useClaimPage();
@@ -59,6 +60,9 @@ export const DesktopContentManager = () => {
       }
       case 'vesting-plans': {
         return <VestingPlanContent />;
+      }
+      case 'not-eligible': {
+        return <NotEligibleContent />;
       }
       default: {
         return <CheckEligibilityContent />;

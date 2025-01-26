@@ -302,12 +302,24 @@ export default {
       },
       keyframes: {
         'collapsibleSlideDown': {
-          from: { height: 0 },
-          to: { height: 'var(--radix-collapsible-content-height)' },
+          '0%': { height: 0, opacity: 0 },
+          '90%': {
+            opacity: 0.7,
+          },
+          '100%': {
+            height: 'var(--radix-collapsible-content-height)',
+            opacity: 1,
+          },
         },
         'collapsibleSlideUp': {
-          from: { height: 'var(--radix-collapsible-content-height)' },
-          to: { height: 0 },
+          '0%': {
+            height: 'var(--radix-collapsible-content-height)',
+            opacity: 1,
+          },
+          '10%': {
+            opacity: 0.5,
+          },
+          '100%': { height: 0, opacity: 0 },
         },
         'marquee': {
           '0%': { transform: 'translateX(0)' },
