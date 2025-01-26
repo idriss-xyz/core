@@ -1,3 +1,4 @@
+import { Button } from '@idriss-xyz/ui/button';
 import { Form } from '@idriss-xyz/ui/form';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -49,6 +50,14 @@ export const UnstakeTabContent = ({ availableAmount }: Properties) => {
           );
         }}
       />
+      <Button
+        intent="primary"
+        size="large"
+        className="mt-6 w-full"
+        type="submit"
+      >
+        UNLOCK
+      </Button>
     </Form>
   );
 };

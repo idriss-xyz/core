@@ -1,6 +1,5 @@
 'use client';
 import { useAccount, useDisconnect } from 'wagmi';
-import { useState } from 'react';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { Button } from '@idriss-xyz/ui/button';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
@@ -16,8 +15,6 @@ import { StakeTabContent, UnstakeTabContent } from './components';
 import '@rainbow-me/rainbowkit/styles.css';
 
 export const StakingContent = () => {
-  const [activeTabKey, setActiveTabKey] = useState<string>('stake');
-
   const { isConnected } = useAccount();
   const { disconnect } = useDisconnect();
   const { connectModalOpen, openConnectModal } = useConnectModal();
@@ -69,16 +66,8 @@ export const StakingContent = () => {
               gradientStopColor="rgba(145, 206, 154, 0.50)"
               borderWidth={1}
             />
-            <div className="flex flex-col gap-6 lg:w-[368px]">
-              <Tabs items={tabItems} onChange={setActiveTabKey} />
-              <Button
-                intent="primary"
-                size="large"
-                className="mt-2 w-full lg:mt-0"
-                onClick={() => {}}
-              >
-                {activeTabKey === 'stake' ? 'LOCK' : 'UNLOCK'}
-              </Button>
+            <div className="lg:w-[368px]">
+              <Tabs items={tabItems} />
             </div>
             <div className="mb-4 mt-8 h-px w-full bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] opacity-50 lg:mx-10 lg:my-0 lg:h-auto lg:w-px" />
             <div className="flex flex-col lg:w-[292px]">

@@ -190,10 +190,10 @@ export const StakeTabContent = ({ availableAmount }: Properties) => {
       <Button
         intent="primary"
         size="large"
-        className="mt-8 w-full" // TODO: check margin on DS
+        className="mt-6 w-full"
         type="submit"
       >
-        STAKE
+        LOCK
       </Button>
     </Form>
   );
