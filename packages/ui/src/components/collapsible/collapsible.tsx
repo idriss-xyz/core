@@ -18,7 +18,11 @@ export const Collapsible = (properties: Properties) => {
   const isOpen = controlled ? properties.open : _open;
 
   const handleOpenChange = (open: boolean) => {
-    controlled ? properties.onOpenChange(open) : _setOpen(open);
+    if(controlled) {
+      properties.onOpenChange(open)
+    } else {
+      _setOpen(open)
+    }
   };
 
   return (

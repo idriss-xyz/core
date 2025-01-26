@@ -1,7 +1,8 @@
 import { Icon } from '@idriss-xyz/ui/icon';
 import { Collapsible } from '@idriss-xyz/ui/collapsible';
-import { EligibilityCriteriaTitle } from '../constants';
 import { ReactNode } from 'react';
+
+import { EligibilityCriteriaTitle } from '../constants';
 
 type Properties = {
   open: boolean;

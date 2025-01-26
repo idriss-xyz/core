@@ -5,6 +5,7 @@ import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { Checkbox } from '@idriss-xyz/ui/checkbox';
 import { useState } from 'react';
 import { Link } from '@idriss-xyz/ui/link';
+import { classes } from '@idriss-xyz/ui/utils';
 
 import { useClaimPage } from '../../claim-page-context';
 
@@ -15,7 +16,6 @@ import {
   EligibilityCriteriaTitle,
 } from './constants';
 import { IdrissUserCriteriaDescription } from './components/idriss-user-criteria-description';
-import { classes } from '@idriss-xyz/ui/utils';
 
 export const ClaimContent = () => {
   const [termsChecked, setTermsChecked] = useState(false);
@@ -106,11 +106,11 @@ export const ClaimContent = () => {
           <ExpandableInfo
             open={expandedItemTitle === ELIGIBILITY_CRITERIA_TITLES.IDRISS_USER}
             onOpenChange={() =>
-              setExpandedItemTitle((prev) =>
-                prev === ELIGIBILITY_CRITERIA_TITLES.IDRISS_USER
+              {return setExpandedItemTitle((previous) =>
+                {return previous === ELIGIBILITY_CRITERIA_TITLES.IDRISS_USER
                   ? undefined
-                  : ELIGIBILITY_CRITERIA_TITLES.IDRISS_USER,
-              )
+                  : ELIGIBILITY_CRITERIA_TITLES.IDRISS_USER},
+              )}
             }
             title={ELIGIBILITY_CRITERIA_TITLES.IDRISS_USER}
             subTitle={`${new Intl.NumberFormat('en-US', {
@@ -129,11 +129,11 @@ export const ClaimContent = () => {
               expandedItemTitle === ELIGIBILITY_CRITERIA_TITLES.GITCOIN_DONOR
             }
             onOpenChange={() =>
-              setExpandedItemTitle((prev) =>
-                prev === ELIGIBILITY_CRITERIA_TITLES.GITCOIN_DONOR
+              {return setExpandedItemTitle((previous) =>
+                {return previous === ELIGIBILITY_CRITERIA_TITLES.GITCOIN_DONOR
                   ? undefined
-                  : ELIGIBILITY_CRITERIA_TITLES.GITCOIN_DONOR,
-              )
+                  : ELIGIBILITY_CRITERIA_TITLES.GITCOIN_DONOR},
+              )}
             }
             title={ELIGIBILITY_CRITERIA_TITLES.GITCOIN_DONOR}
             subTitle={`${new Intl.NumberFormat('en-US', {
@@ -159,11 +159,11 @@ export const ClaimContent = () => {
               expandedItemTitle === ELIGIBILITY_CRITERIA_TITLES.SALE_PARTICIPANT
             }
             onOpenChange={() =>
-              setExpandedItemTitle((prev) =>
-                prev === ELIGIBILITY_CRITERIA_TITLES.SALE_PARTICIPANT
+              {return setExpandedItemTitle((previous) =>
+                {return previous === ELIGIBILITY_CRITERIA_TITLES.SALE_PARTICIPANT
                   ? undefined
-                  : ELIGIBILITY_CRITERIA_TITLES.SALE_PARTICIPANT,
-              )
+                  : ELIGIBILITY_CRITERIA_TITLES.SALE_PARTICIPANT},
+              )}
             }
             title={ELIGIBILITY_CRITERIA_TITLES.SALE_PARTICIPANT}
             subTitle={`${new Intl.NumberFormat('en-US', {
@@ -184,11 +184,11 @@ export const ClaimContent = () => {
               ELIGIBILITY_CRITERIA_TITLES.PARTNER_COMMUNITY_MEMBER
             }
             onOpenChange={() =>
-              setExpandedItemTitle((prev) =>
-                prev === ELIGIBILITY_CRITERIA_TITLES.PARTNER_COMMUNITY_MEMBER
+              {return setExpandedItemTitle((previous) =>
+                {return previous === ELIGIBILITY_CRITERIA_TITLES.PARTNER_COMMUNITY_MEMBER
                   ? undefined
-                  : ELIGIBILITY_CRITERIA_TITLES.PARTNER_COMMUNITY_MEMBER,
-              )
+                  : ELIGIBILITY_CRITERIA_TITLES.PARTNER_COMMUNITY_MEMBER},
+              )}
             }
             title={ELIGIBILITY_CRITERIA_TITLES.PARTNER_COMMUNITY_MEMBER}
             subTitle={`${new Intl.NumberFormat('en-US', {

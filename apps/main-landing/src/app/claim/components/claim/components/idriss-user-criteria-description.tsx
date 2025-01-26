@@ -1,20 +1,21 @@
-import { EligibilityCheckResponse } from '@/app/claim/types';
 import { classes } from '@idriss-xyz/ui/utils';
+
+import { EligibilityCheckResponse } from '@/app/claim/types';
 
 type Properties = { eligibilityData: EligibilityCheckResponse };
 
 const formatNumber = (value: number | undefined) =>
-  new Intl.NumberFormat('en-US', {
+  {return new Intl.NumberFormat('en-US', {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }).format(value ?? 0);
+  }).format(value ?? 0)};
 
 const formatDate = (date: string | undefined) =>
-  new Intl.DateTimeFormat('en-US', {
+  {return new Intl.DateTimeFormat('en-US', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
-  }).format(new Date(date ?? ''));
+  }).format(new Date(date ?? ''))};
 
 export const IdrissUserCriteriaDescription = ({
   eligibilityData,
