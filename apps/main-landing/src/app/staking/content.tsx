@@ -56,14 +56,6 @@ export const StakingContent = () => {
             />
             <div className="flex w-[459px] flex-col gap-6">
               <Tabs items={tabItems} />
-              <Button
-                intent="primary"
-                size="large"
-                className="w-full"
-                onClick={() => {}}
-              >
-                STAKE
-              </Button>
             </div>
             <div className="mx-10 w-px bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] opacity-50" />
             <div className="flex w-[389px] flex-col">
