@@ -5,6 +5,7 @@ import { useClaimPage } from '../../claim-page-context';
 
 import geoist_avatar from './assets/geoist_avatar.png';
 import levertz_avatar from './assets/levertz_avatar.png';
+import { Icon } from '@idriss-xyz/ui/icon';
 
 export const LetterContent = () => {
   const { setCurrentContent } = useClaimPage();
@@ -35,6 +36,21 @@ export const LetterContent = () => {
           </span>
           <span>Onwards!</span>
           <span>Founding contributors of IDRISS DAO</span>
+        </div>
+        <div className="absolute bottom-[-22px] right-[152px] inline-flex rotate-[-24.718deg] flex-col items-center gap-2 rounded-lg border border-neutral-300 bg-white p-2 shadow-lg">
+          <div className="size-[70px] rounded-md bg-gradient-to-b from-neutral-300 to-neutral-400 p-1">
+            <div className="relative flex size-full items-center justify-center rounded-md bg-gradient-to-b from-neutral-300 to-neutral-400">
+              <GradientBorder
+                gradientDirection="toBottom"
+                borderRadius={6}
+                borderWidth={2}
+                gradientStartColor="#EBECEE"
+                gradientStopColor="#DBDDE2"
+              />
+              <Icon name="IdrissCircled" size={24} className="saturate-[0]" />
+            </div>
+          </div>
+          <span className="text-label5 text-neutral-900">You</span>
         </div>
         <div className="absolute bottom-[-20px] right-[70px] inline-flex rotate-[-7.71deg] flex-col items-center gap-2 rounded-lg border border-neutral-300 bg-white p-2 shadow-lg">
           <img src={geoist_avatar.src} className="h-[70px] rounded-md" alt="" />

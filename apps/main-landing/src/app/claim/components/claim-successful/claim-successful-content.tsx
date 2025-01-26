@@ -1,5 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
+import { useRef } from 'react';
+import { toPng } from 'html-to-image';
 import { Button } from '@idriss-xyz/ui/button';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
@@ -16,6 +18,7 @@ import { SOCIALS } from './constants';
 
 export const ClaimSuccessfulContent = () => {
   const { setCurrentContent, eligibilityData, vestingPlan } = useClaimPage();
+  const downloadAreaRef = useRef<HTMLDivElement>();
 
   if (!eligibilityData) {
     setCurrentContent('check-eligibility');
@@ -30,7 +33,10 @@ export const ClaimSuccessfulContent = () => {
         borderWidth={1}
       />
       <span className="text-heading4 text-neutral-900">CLAIM SUCCESSFUL</span>
-      <div className="relative flex h-[354px] w-[480px] flex-col items-center justify-center gap-6 self-stretch overflow-hidden rounded-2xl bg-mint-100 p-6">
+      <div
+        ref={downloadAreaRef as any}
+        className="relative flex h-[354px] w-[480px] flex-col items-center justify-center gap-6 self-stretch overflow-hidden rounded-2xl bg-mint-100 p-6"
+      >
         <img
           alt=""
           src={idrissCoin.src}
@@ -41,8 +47,20 @@ export const ClaimSuccessfulContent = () => {
           iconName="Download"
           intent="tertiary"
           iconClassName="size-6"
-          onClick={() => {}}
-          className="absolute right-6 top-6 flex size-6 p-0 text-midnightGreen-100"
+          onMouseDown={() => {
+            if (!downloadAreaRef.current) {
+              return;
+            }
+            toPng(downloadAreaRef.current).then(function (dataUrl) {
+              const link = document.createElement('a');
+              link.href = dataUrl;
+              link.setAttribute('download', `claim-successful.png`);
+              document.body.appendChild(link);
+              link.click();
+              link.parentNode?.removeChild(link);
+            });
+          }}
+          className="absolute right-6 top-6 flex size-6 p-0 text-midnightGreen-100 active:opacity-0"
         />
         <div className="relative flex w-full flex-row justify-center" />
         <div className="flex flex-col items-center gap-2">
@@ -97,7 +115,7 @@ export const ClaimSuccessfulContent = () => {
                 isExternal
                 className="w-full"
               >
-                BUY ON UNISWAP
+                BUY MORE ON UNISWAP
               </Button>,
               <Button
                 key="jumper"
@@ -109,7 +127,7 @@ export const ClaimSuccessfulContent = () => {
                 isExternal
                 className="w-full"
               >
-                BUY ON JUMPER
+                BUY MORE ON JUMPER
               </Button>,
             ]}
           />
