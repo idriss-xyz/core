@@ -46,8 +46,8 @@ export const ClaimSuccessfulContent = () => {
             <span className="text-heading3 gradient-text">
               +
               {new Intl.NumberFormat('en-US', {
-                minimumFractionDigits: 1,
-                maximumFractionDigits: 1,
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
               }).format(Number(eligibilityData.allocation ?? 0))}{' '}
               $IDRISS
             </span>

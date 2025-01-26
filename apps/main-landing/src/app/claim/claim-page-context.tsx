@@ -21,7 +21,6 @@ type ClaimPageContextValues = {
 
 export type VestingPlan =
   | 'claim_50'
-  | 'claim_and_stake_50'
   | 'claim_and_stake_100';
 const ClaimPageContext = createContext<ClaimPageContextValues | undefined>(
   undefined,

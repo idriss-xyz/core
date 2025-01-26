@@ -28,7 +28,7 @@ export const MobileNotSupportedContent = () => {
             The claim experience is designed for desktop.
           </p>
           <p className="text-balance text-center text-heading5 text-neutralGreen-700">
-            Please use a PC or laptop.
+            Please use a PC or a laptop.
           </p>
         </div>
       </div>

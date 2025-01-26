@@ -42,7 +42,7 @@ export const ClaimContent = () => {
         <div className="flex flex-col items-start gap-10">
           <span className="text-heading3">YOU’RE ELIGIBLE</span>
           <span className="text-body3 text-neutralGreen-700">
-            AVAILABLE TO CLAIM
+            TOKENS TO CLAIM
           </span>
         </div>
 
@@ -55,8 +55,8 @@ export const ClaimContent = () => {
           />
           <span className="flex text-heading2 gradient-text">
             {new Intl.NumberFormat('en-US', {
-              minimumFractionDigits: 1,
-              maximumFractionDigits: 1,
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
             }).format(Number(eligibilityData.allocation ?? 0))}{' '}
             $IDRISS
           </span>
