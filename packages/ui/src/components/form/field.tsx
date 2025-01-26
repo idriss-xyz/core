@@ -1,5 +1,5 @@
 import * as RadixForm from '@radix-ui/react-form';
-import { ComponentProps, ForwardedRef, forwardRef } from 'react';
+import { ComponentProps, ForwardedRef, forwardRef, ReactNode } from 'react';
 
 import { classes } from '../../utils';
 import { Icon } from '../icon';
@@ -15,7 +15,7 @@ type InputUnion = InputProperties extends infer T
 
 type Properties = InputUnion & {
   name: string;
-  label?: string;
+  label?: ReactNode;
   helperText?: string;
   numeric?: boolean;
   onChange: (value: string) => void;
