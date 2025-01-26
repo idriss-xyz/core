@@ -6,8 +6,13 @@ import { Checkbox } from '@idriss-xyz/ui/checkbox';
 import { useState } from 'react';
 import { Link } from '@idriss-xyz/ui/link';
 import { classes } from '@idriss-xyz/ui/utils';
+import { encodeFunctionData} from 'viem';
+import { baseSepolia } from 'viem/chains';
+import { estimateGas, waitForTransactionReceipt } from 'viem/actions';
+import { useWalletClient, useWriteContract } from 'wagmi';
 
 import { useClaimPage } from '../../claim-page-context';
+import { CLAIM_ABI, claimContractAddress } from '../../constants';
 
 import { CopyAddressButton } from './components/copy-address-button';
 import { ExpandableInfo } from './components/expandable-info';
@@ -17,11 +22,8 @@ import {
 } from './constants';
 import { IdrissUserCriteriaDescription } from './components/idriss-user-criteria-description';
 
-import { encodeFunctionData} from 'viem';
-import { baseSepolia } from 'viem/chains';
-import { estimateGas, waitForTransactionReceipt } from 'viem/actions';
-import { CLAIM_ABI, claimContractAddress } from '../../constants';
-import { useWalletClient, useWriteContract } from 'wagmi';
+
+
 
 export const ClaimContent = () => {
   const [termsChecked, setTermsChecked] = useState(false);

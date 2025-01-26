@@ -1,13 +1,8 @@
 import { Form } from '@idriss-xyz/ui/form';
 import { Controller, useForm } from 'react-hook-form';
 import { Button } from '@idriss-xyz/ui/button';
-import { useAccount, useWalletClient, useWriteContract } from 'wagmi';
+import { Config, useAccount, useWalletClient, useWriteContract } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import {
-  StakingABI,
-  stakingContractAddress,
-  testTokenAddress,
-} from '../constants';
 import { decodeFunctionResult, encodeFunctionData, WalletClient } from 'viem';
 import {
   call,
@@ -15,7 +10,15 @@ import {
   waitForTransactionReceipt,
 } from 'viem/actions';
 import { baseSepolia } from 'viem/chains';
+import { WriteContractMutateAsync } from 'wagmi/query';
+
 import { ERC20_ABI } from '@/app/creators/donate/constants';
+
+import {
+  StakingABI,
+  stakingContractAddress,
+  testTokenAddress,
+} from '../constants';
 
 type FormPayload = {
   amount: number;
@@ -24,7 +27,7 @@ type FormPayload = {
 const approveTokens = async (
   walletClient: WalletClient,
   tokensToSend: bigint,
-  writeContractAsync: any,
+  writeContractAsync: WriteContractMutateAsync<Config, unknown>,
 ) => {
   const allowanceData = {
     abi: ERC20_ABI,
@@ -66,7 +69,7 @@ const approveTokens = async (
 
     const hash = await writeContractAsync({
       chain: baseSepolia,
-      to: testTokenAddress,
+      address: testTokenAddress,
       ...approveData,
       gas,
     });

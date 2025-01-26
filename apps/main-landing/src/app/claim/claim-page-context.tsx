@@ -1,9 +1,9 @@
 import { ReactNode, createContext, useState } from 'react';
 import { createContextHook } from '@idriss-xyz/ui/utils';
+import { Hex } from 'viem';
 
 import { CLAIM_CONTENT, ClaimPageContent } from './constants';
 import { EligibilityCheckResponse } from './types';
-import { Hex } from 'viem';
 
 type Properties = {
   children: ReactNode;
