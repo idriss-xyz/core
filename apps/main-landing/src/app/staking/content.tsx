@@ -20,8 +20,8 @@ export const StakingContent = () => {
   const { disconnect } = useDisconnect();
   const { connectModalOpen, openConnectModal } = useConnectModal();
 
-  const tabItems: TabItem[] = useMemo(
-    () => {return [
+  const tabItems: TabItem[] = useMemo(() => {
+    return [
       {
         key: 'stake',
         label: (
@@ -40,9 +40,8 @@ export const StakingContent = () => {
         ),
         children: <UnstakeTabContent />,
       },
-    ]},
-    [],
-  );
+    ];
+  }, []);
 
   return (
     <main className="relative flex min-h-screen grow flex-col items-center justify-around overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] lg:flex-row lg:items-start lg:justify-center lg:px-0">
