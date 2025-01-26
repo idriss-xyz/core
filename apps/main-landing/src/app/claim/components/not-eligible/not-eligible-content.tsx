@@ -44,7 +44,7 @@ export const NotEligibleContent = () => {
         >
           BUY ON JUMPER
         </Button>
-        <div className='w-full justify-center opacity-70 items-center flex'>
+        <div className="flex w-full items-center justify-center opacity-70">
           <span
             className={classes(
               'text-body5 text-neutralGreen-900',

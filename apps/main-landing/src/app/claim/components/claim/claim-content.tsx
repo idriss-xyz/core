@@ -105,13 +105,13 @@ export const ClaimContent = () => {
           </span>
           <ExpandableInfo
             open={expandedItemTitle === ELIGIBILITY_CRITERIA_TITLES.IDRISS_USER}
-            onOpenChange={() =>
-              {return setExpandedItemTitle((previous) =>
-                {return previous === ELIGIBILITY_CRITERIA_TITLES.IDRISS_USER
+            onOpenChange={() => {
+              return setExpandedItemTitle((previous) => {
+                return previous === ELIGIBILITY_CRITERIA_TITLES.IDRISS_USER
                   ? undefined
-                  : ELIGIBILITY_CRITERIA_TITLES.IDRISS_USER},
-              )}
-            }
+                  : ELIGIBILITY_CRITERIA_TITLES.IDRISS_USER;
+              });
+            }}
             title={ELIGIBILITY_CRITERIA_TITLES.IDRISS_USER}
             subTitle={`${new Intl.NumberFormat('en-US', {
               minimumFractionDigits: 0,
@@ -128,13 +128,13 @@ export const ClaimContent = () => {
             open={
               expandedItemTitle === ELIGIBILITY_CRITERIA_TITLES.GITCOIN_DONOR
             }
-            onOpenChange={() =>
-              {return setExpandedItemTitle((previous) =>
-                {return previous === ELIGIBILITY_CRITERIA_TITLES.GITCOIN_DONOR
+            onOpenChange={() => {
+              return setExpandedItemTitle((previous) => {
+                return previous === ELIGIBILITY_CRITERIA_TITLES.GITCOIN_DONOR
                   ? undefined
-                  : ELIGIBILITY_CRITERIA_TITLES.GITCOIN_DONOR},
-              )}
-            }
+                  : ELIGIBILITY_CRITERIA_TITLES.GITCOIN_DONOR;
+              });
+            }}
             title={ELIGIBILITY_CRITERIA_TITLES.GITCOIN_DONOR}
             subTitle={`${new Intl.NumberFormat('en-US', {
               minimumFractionDigits: 0,
@@ -158,13 +158,13 @@ export const ClaimContent = () => {
             open={
               expandedItemTitle === ELIGIBILITY_CRITERIA_TITLES.SALE_PARTICIPANT
             }
-            onOpenChange={() =>
-              {return setExpandedItemTitle((previous) =>
-                {return previous === ELIGIBILITY_CRITERIA_TITLES.SALE_PARTICIPANT
+            onOpenChange={() => {
+              return setExpandedItemTitle((previous) => {
+                return previous === ELIGIBILITY_CRITERIA_TITLES.SALE_PARTICIPANT
                   ? undefined
-                  : ELIGIBILITY_CRITERIA_TITLES.SALE_PARTICIPANT},
-              )}
-            }
+                  : ELIGIBILITY_CRITERIA_TITLES.SALE_PARTICIPANT;
+              });
+            }}
             title={ELIGIBILITY_CRITERIA_TITLES.SALE_PARTICIPANT}
             subTitle={`${new Intl.NumberFormat('en-US', {
               minimumFractionDigits: 0,
@@ -183,13 +183,14 @@ export const ClaimContent = () => {
               expandedItemTitle ===
               ELIGIBILITY_CRITERIA_TITLES.PARTNER_COMMUNITY_MEMBER
             }
-            onOpenChange={() =>
-              {return setExpandedItemTitle((previous) =>
-                {return previous === ELIGIBILITY_CRITERIA_TITLES.PARTNER_COMMUNITY_MEMBER
+            onOpenChange={() => {
+              return setExpandedItemTitle((previous) => {
+                return previous ===
+                  ELIGIBILITY_CRITERIA_TITLES.PARTNER_COMMUNITY_MEMBER
                   ? undefined
-                  : ELIGIBILITY_CRITERIA_TITLES.PARTNER_COMMUNITY_MEMBER},
-              )}
-            }
+                  : ELIGIBILITY_CRITERIA_TITLES.PARTNER_COMMUNITY_MEMBER;
+              });
+            }}
             title={ELIGIBILITY_CRITERIA_TITLES.PARTNER_COMMUNITY_MEMBER}
             subTitle={`${new Intl.NumberFormat('en-US', {
               minimumFractionDigits: 0,

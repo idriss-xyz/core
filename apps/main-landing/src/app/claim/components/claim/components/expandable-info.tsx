@@ -8,7 +8,7 @@ type Properties = {
   open: boolean;
   title: EligibilityCriteriaTitle;
   subTitle: string;
-  positive: boolean
+  positive: boolean;
   description: ReactNode;
   onOpenChange: (open: boolean) => void;
 };
@@ -28,7 +28,11 @@ export const ExpandableInfo = ({
       onOpenChange={onOpenChange}
       header={
         <div className="flex grow flex-row gap-2">
-          {positive ? <Icon name="Check" size={24} className="mr-2 text-mint-600" /> : <Icon name="X" size={24} className="mr-2 text-red-500" />}
+          {positive ? (
+            <Icon name="Check" size={24} className="mr-2 text-mint-600" />
+          ) : (
+            <Icon name="X" size={24} className="mr-2 text-red-500" />
+          )}
           <div className="flex w-full items-center justify-between">
             <span className="text-body4 text-neutralGreen-700">{title}</span>
             <span className="text-body5 text-neutralGreen-500">{subTitle}</span>
