@@ -8,6 +8,7 @@ import { useClaimPage } from '../../claim-page-context';
 
 import idrissCoin from './assets/IDRISS_SCENE_CIRCLE_2 2.png';
 import { SOCIALS } from './constants';
+import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 
 export const ClaimSuccessfulContent = () => {
   const { setCurrentContent, eligibilityData } = useClaimPage();
@@ -54,15 +55,19 @@ export const ClaimSuccessfulContent = () => {
           </div>
         </div>
       </div>
-      <Button
-        asLink
-        intent="primary"
-        size="large"
-        className="w-full"
-        href="/staking"
-      >
-        STAKE YOUR $IDRISS
-      </Button>
+      <GeoConditionalButton
+        defaultButton={
+          <Button
+            asLink
+            intent="primary"
+            size="large"
+            className="w-full"
+            href="/staking"
+          >
+            STAKE YOUR $IDRISS
+          </Button>
+        }
+      />
       <div className="flex">
         {SOCIALS.map((social, index) => {
           return (

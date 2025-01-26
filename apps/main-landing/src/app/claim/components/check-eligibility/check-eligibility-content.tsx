@@ -15,6 +15,7 @@ import { useEffect } from 'react';
 import idrissCoin from '../../assets/IDRISS_COIN 1.png';
 import { useClaimPage } from '../../claim-page-context';
 import { EligibilityCheckResponse } from '../../types';
+import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 
 type FormPayload = {
   address: string;
@@ -150,17 +151,22 @@ export const CheckEligibilityContent = () => {
           />
         </Form>
       </div>
-      <Button
-        intent="primary"
-        size="large"
-        suffixIconName="ArrowRight"
-        onClick={verifyEligibility}
-        loading={
-          resolveEnsAddressMutation.isPending || eligibilityMutation.isPending
+      <GeoConditionalButton
+        defaultButton={
+          <Button
+            intent="primary"
+            size="large"
+            suffixIconName="ArrowRight"
+            onClick={verifyEligibility}
+            loading={
+              resolveEnsAddressMutation.isPending ||
+              eligibilityMutation.isPending
+            }
+          >
+            CHECK ELIGIBILITY
+          </Button>
         }
-      >
-        CHECK ELIGIBILITY
-      </Button>
+      />
     </div>
   );
 };

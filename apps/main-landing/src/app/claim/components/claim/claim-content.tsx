@@ -16,6 +16,7 @@ import {
   EligibilityCriteriaTitle,
 } from './constants';
 import { IdrissUserCriteriaDescription } from './components/idriss-user-criteria-description';
+import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 
 export const ClaimContent = () => {
   const [termsChecked, setTermsChecked] = useState(false);
@@ -85,17 +86,21 @@ export const ClaimContent = () => {
             Terms{'\u00A0'}and{'\u00A0'}conditions
           </Link>
         </div>
-        <Button
-          intent="primary"
-          size="large"
-          className="w-full"
-          onClick={() => {
-            return setCurrentContent('vesting-plans');
-          }}
-          disabled={!termsChecked}
-        >
-          CLAIM YOUR $IDRISS
-        </Button>
+        <GeoConditionalButton
+          defaultButton={
+            <Button
+              intent="primary"
+              size="large"
+              className="w-full"
+              onClick={() => {
+                return setCurrentContent('vesting-plans');
+              }}
+              disabled={!termsChecked}
+            >
+              CLAIM YOUR $IDRISS
+            </Button>
+          }
+        />
       </div>
       <div className="mx-10 h-[434px] w-px bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] opacity-50" />
       <div className="flex w-[389px] flex-col">
