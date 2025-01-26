@@ -13,6 +13,12 @@ import { encodeFunctionData } from 'viem';
 import { baseSepolia } from 'viem/chains';
 import { estimateGas, waitForTransactionReceipt } from 'viem/actions';
 import { useWalletClient, useWriteContract } from 'wagmi';
+import {
+  TOKEN_TERMS_AND_CONDITIONS_LINK,
+  VAULT_DOCS_LINK,
+} from '@idriss-xyz/constants';
+
+import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 
 import { useClaimPage, VestingPlan } from '../../claim-page-context';
 import { CLAIM_ABI, claimContractAddress } from '../../constants';
@@ -187,7 +193,7 @@ export const VestingPlanContent = () => {
                 By claiming, you agree to the{' '}
                 <Link
                   size="medium"
-                  href=""
+                  href={TOKEN_TERMS_AND_CONDITIONS_LINK}
                   isExternal
                   className="text-body5 lg:text-body5"
                 >
@@ -197,18 +203,22 @@ export const VestingPlanContent = () => {
             }
           />
         </div>
-        <Button
-          intent="primary"
-          size="large"
-          className="w-full"
-          onClick={async () => {
-            setVestingPlan(vestingPlan);
-            await vestingPlanSubmitFunction();
-          }}
-          disabled={!termsChecked}
-        >
-          {vestingPlanButtonLabel}
-        </Button>
+        <GeoConditionalButton
+          defaultButton={
+            <Button
+              intent="primary"
+              size="large"
+              className="w-full"
+              onClick={async () => {
+                setVestingPlan(vestingPlan);
+                await vestingPlanSubmitFunction();
+              }}
+              disabled={!termsChecked}
+            >
+              {vestingPlanButtonLabel}
+            </Button>
+          }
+        />
       </div>
       <div className="mx-10 w-px bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] opacity-50" />
       <div className="flex w-[389px] flex-col">
@@ -245,7 +255,7 @@ export const VestingPlanContent = () => {
           asLink
           className="mt-8 w-full"
           suffixIconName="ArrowRight"
-          href="#"
+          href={VAULT_DOCS_LINK}
         >
           LEARN MORE
         </Button>

@@ -5,7 +5,8 @@ import { Button } from '@idriss-xyz/ui/button';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { TabItem, Tabs } from '@idriss-xyz/ui/tabs';
 import { Icon } from '@idriss-xyz/ui/icon';
-import { useState } from 'react';
+import { VAULT_DOCS_LINK } from '@idriss-xyz/constants';
+import { useMemo } from 'react';
 
 import { backgroundLines2 } from '@/assets';
 
@@ -15,32 +16,32 @@ import { StakeTabContent, UnstakeTabContent } from './components';
 import '@rainbow-me/rainbowkit/styles.css';
 
 export const StakingContent = () => {
-  const [activeTabKey, setActiveTabKey] = useState<string>();
-
   const { isConnected } = useAccount();
   const { disconnect } = useDisconnect();
   const { connectModalOpen, openConnectModal } = useConnectModal();
 
-  const tabItems: TabItem[] = [
-    {
-      key: 'stake',
-      label: (
-        <span className="text-label4 text-neutralGreen-700 lg:text-label3">
-          LOCK
-        </span>
-      ),
-      children: <StakeTabContent availableAmount={500} />,
-    },
-    {
-      key: 'unstake',
-      label: (
-        <span className="text-label4 text-neutralGreen-700 lg:text-label3">
-          UNLOCK
-        </span>
-      ),
-      children: <UnstakeTabContent availableAmount={400} />,
-    },
-  ];
+  const tabItems: TabItem[] = useMemo(() => {
+    return [
+      {
+        key: 'stake',
+        label: (
+          <span className="text-label4 text-neutralGreen-700 lg:text-label3">
+            LOCK
+          </span>
+        ),
+        children: <StakeTabContent />,
+      },
+      {
+        key: 'unstake',
+        label: (
+          <span className="text-label4 text-neutralGreen-700 lg:text-label3">
+            UNLOCK
+          </span>
+        ),
+        children: <UnstakeTabContent />,
+      },
+    ];
+  }, []);
 
   return (
     <main className="relative flex min-h-screen grow flex-col items-center justify-around overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] lg:flex-row lg:items-start lg:justify-center lg:px-0">
@@ -68,16 +69,8 @@ export const StakingContent = () => {
               gradientStopColor="rgba(145, 206, 154, 0.50)"
               borderWidth={1}
             />
-            <div className="flex flex-col gap-6 lg:w-[368px]">
-              <Tabs items={tabItems} onChange={setActiveTabKey} />
-              <Button
-                intent="primary"
-                size="large"
-                className="mt-2 w-full lg:mt-0"
-                onClick={() => {}}
-              >
-                {activeTabKey === 'stake' ? 'LOCK' : 'UNLOCK'}
-              </Button>
+            <div className="lg:w-[368px]">
+              <Tabs items={tabItems} />
             </div>
             <div className="mb-4 mt-8 h-px w-full bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] opacity-50 lg:mx-10 lg:my-0 lg:h-auto lg:w-px" />
             <div className="flex flex-col lg:w-[292px]">
@@ -114,7 +107,7 @@ export const StakingContent = () => {
                 asLink
                 className="w-full lg:mt-8"
                 suffixIconName="ArrowRight"
-                href="#"
+                href={VAULT_DOCS_LINK}
               >
                 LEARN MORE
               </Button>

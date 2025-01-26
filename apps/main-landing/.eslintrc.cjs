@@ -20,6 +20,7 @@ module.exports = {
       ],
       rules: {
         'import/no-default-export': 'off',
+        '@next/next/no-img-element': 'off',
       },
     },
   ],

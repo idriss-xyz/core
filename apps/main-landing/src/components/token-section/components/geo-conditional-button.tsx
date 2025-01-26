@@ -19,7 +19,7 @@ export const GeoConditionalButton: React.FC<GeoConditionalButtonProperties> = ({
 
   if (loading) {
     return (
-      <Spinner className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2" />
+      <Spinner className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 animate-fade-in opacity-0 [animationDelay:300ms]" />
     );
   }
 

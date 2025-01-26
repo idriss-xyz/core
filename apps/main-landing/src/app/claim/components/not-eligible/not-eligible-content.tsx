@@ -4,6 +4,8 @@ import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { Link } from '@idriss-xyz/ui/link';
 import { classes } from '@idriss-xyz/ui/utils';
 
+import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
+
 export const NotEligibleContent = () => {
   return (
     <div className="relative z-[5] m-auto flex w-[600px] flex-col items-center gap-10 rounded-[25px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">
@@ -20,30 +22,34 @@ export const NotEligibleContent = () => {
         </span>
       </div>
       <div className="flex w-full flex-col gap-4">
-        <Button
-          key="uniswap"
-          intent="primary"
-          size="large"
-          prefixIconName="Uniswap"
-          asLink
-          href="https://app.uniswap.org/swap?inputCurrency=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913&outputCurrency=0x000096630066820566162C94874A776532705231"
-          isExternal
-          className="w-full"
-        >
-          BUY ON UNISWAP
-        </Button>
-        <Button
-          key="jumper"
-          intent="primary"
-          size="large"
-          prefixIconName="Jumper"
-          asLink
-          href="https://jumper.exchange/?fromChain=8453&fromToken=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913&toChain=8453&toToken=0x000096630066820566162C94874A776532705231"
-          isExternal
-          className="w-full"
-        >
-          BUY ON JUMPER
-        </Button>
+        <GeoConditionalButton
+          defaultButton={[
+            <Button
+              key="uniswap"
+              intent="primary"
+              size="large"
+              prefixIconName="Uniswap"
+              asLink
+              href="https://app.uniswap.org/swap?inputCurrency=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913&outputCurrency=0x000096630066820566162C94874A776532705231"
+              isExternal
+              className="w-full"
+            >
+              BUY ON UNISWAP
+            </Button>,
+            <Button
+              key="jumper"
+              intent="primary"
+              size="large"
+              prefixIconName="Jumper"
+              asLink
+              href="https://jumper.exchange/?fromChain=8453&fromToken=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913&toChain=8453&toToken=0x000096630066820566162C94874A776532705231"
+              isExternal
+              className="w-full"
+            >
+              BUY ON JUMPER
+            </Button>,
+          ]}
+        />
         <div className="flex w-full items-center justify-center opacity-70">
           <span
             className={classes(
