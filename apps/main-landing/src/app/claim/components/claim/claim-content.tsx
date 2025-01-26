@@ -7,6 +7,8 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { AIRDROP_DOCS_LINK, COINMARKETCAP_LINK } from '@idriss-xyz/constants';
 import { Icon } from '@idriss-xyz/ui/icon';
 
+import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
+
 import { useClaimPage } from '../../claim-page-context';
 
 import { ExpandableInfo } from './components/expandable-info';
@@ -84,17 +86,20 @@ export const ClaimContent = () => {
             </Button>
           </div>
         </div>
-
-        <Button
-          intent="primary"
-          size="large"
-          className="w-full"
-          onClick={() => {
-            return setCurrentContent('vesting-plans');
-          }}
-        >
-          CLAIM $IDRISS
-        </Button>
+        <GeoConditionalButton
+          defaultButton={
+            <Button
+              intent="primary"
+              size="large"
+              className="w-full"
+              onClick={() => {
+                return setCurrentContent('vesting-plans');
+              }}
+            >
+              CLAIM $IDRISS
+            </Button>
+          }
+        />
       </div>
       <div className="mx-10 h-[434px] w-px bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] opacity-50" />
       <div className="flex w-[389px] flex-col">
