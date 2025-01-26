@@ -116,13 +116,13 @@ export const ClaimContent = () => {
             subTitle={`${new Intl.NumberFormat('en-US', {
               minimumFractionDigits: 0,
               maximumFractionDigits: 0,
-            }).format(Number(eligibilityData.allocation_ido ?? 0))}`}
+            }).format(Number(eligibilityData.allocation_usage ?? 0))}`}
             description={
               <IdrissUserCriteriaDescription
                 eligibilityData={eligibilityData}
               />
             }
-            positive={!!eligibilityData.allocation_ido}
+            positive={!!eligibilityData.allocation_usage}
           />
           <ExpandableInfo
             open={
@@ -169,14 +169,14 @@ export const ClaimContent = () => {
             subTitle={`${new Intl.NumberFormat('en-US', {
               minimumFractionDigits: 0,
               maximumFractionDigits: 0,
-            }).format(Number(1200))}`}
+            }).format(Number(eligibilityData.allocation_ido ?? 0))}`}
             description={
               <li className={classes(liBaseClassName, 'before:text-mint-600')}>
                 You purchased IDRISS within the first 12{'\u00A0'}hours of the
                 sale and held it for 2 weeks
               </li>
             }
-            positive
+            positive={!!eligibilityData.allocation_ido}
           />
           <ExpandableInfo
             open={
