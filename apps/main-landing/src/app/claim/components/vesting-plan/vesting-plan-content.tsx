@@ -13,6 +13,10 @@ import { encodeFunctionData } from 'viem';
 import { baseSepolia } from 'viem/chains';
 import { estimateGas, waitForTransactionReceipt } from 'viem/actions';
 import { useWalletClient, useWriteContract } from 'wagmi';
+import {
+  TOKEN_TERMS_AND_CONDITIONS_LINK,
+  VAULT_DOCS_LINK,
+} from '@idriss-xyz/constants';
 
 import { useClaimPage, VestingPlan } from '../../claim-page-context';
 import { CLAIM_ABI, claimContractAddress } from '../../constants';
@@ -39,11 +43,21 @@ export const VestingPlanContent = () => {
 
   const vestingPlanOptions: RadioItem<VestingPlan>[] = [
     {
-      label: 'Early claim: 50% immediately',
+      label: `EARLY: Claim ${new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(
+        Number((eligibilityData?.allocation ?? 0) / 2),
+      )} (50%) now and forego the rest`,
       value: 'claim_50',
     },
     {
-      label: `Full claim: 100% airdropped in 180 days to the staking contract (but you're starting to get benefits immediately)`,
+      label: `FULL: Claim ${new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(
+        Number(eligibilityData?.allocation ?? 0),
+      )} (100%) and have it unlocked in your vault on July 6, 2025, with benefits starting today`,
       value: 'claim_and_stake_100',
     },
   ];
@@ -51,11 +65,13 @@ export const VestingPlanContent = () => {
   const vestingPlanButtonLabel = useMemo(() => {
     switch (vestingPlan) {
       case 'claim_50': {
-        return 'CLAIM 50% NOW';
+        return 'CLAIM 50%';
       }
+
       case 'claim_and_stake_100': {
-        return 'CLAIM & STAKE 100%';
+        return 'CLAIM & LOCK 100%';
       }
+
       default: {
         return 'CLAIM NOW';
       }
@@ -150,7 +166,7 @@ export const VestingPlanContent = () => {
       />
       <div className="flex w-[485px] flex-col gap-6">
         <span className="text-label3 text-neutralGreen-700">
-          SELECT YOUR VESTING PLAN
+          SELECT YOUR PLAN
         </span>
         <Form className="w-full">
           <Controller
@@ -171,19 +187,19 @@ export const VestingPlanContent = () => {
             value={termsChecked}
             rootClassName="border-neutral-300"
             label={
-              <span className="ml-2 w-full text-body5 text-neutralGreen-900">
+              <span className="w-full text-body5 text-neutralGreen-900">
                 By claiming, you agree to the{' '}
+                <Link
+                  size="medium"
+                  href={TOKEN_TERMS_AND_CONDITIONS_LINK}
+                  isExternal
+                  className="text-body5 lg:text-body5"
+                >
+                  Terms{'\u00A0'}and{'\u00A0'}conditions
+                </Link>
               </span>
             }
           />
-          <Link
-            size="medium"
-            href=""
-            isExternal
-            className="text-body5 lg:text-body5"
-          >
-            Terms{'\u00A0'}and{'\u00A0'}conditions
-          </Link>
         </div>
         <Button
           intent="primary"
@@ -200,28 +216,28 @@ export const VestingPlanContent = () => {
       </div>
       <div className="mx-10 w-px bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] opacity-50" />
       <div className="flex w-[389px] flex-col">
-        <div className="flex flex-col gap-4">
-          <span className="pb-6 text-label3 text-neutralGreen-700">
-            STAKING BENEFIT
+        <div className="flex flex-col gap-2">
+          <span className="pb-4 text-label3 text-neutralGreen-700">
+            VAULT BENEFITS
           </span>
           <div className="flex gap-2">
             <Icon name="PiggyBank" size={24} className="text-gray-300" />
             <span className="text-body3 text-neutralGreen-700">
-              Earn <span className="gradient-text">12% APR</span> on staked
-              amounts
+              Earn <span className="gradient-text">12% APR</span> on locked
+              tokens
             </span>
           </div>
           <div className="flex gap-2">
             <Icon name="Gem" size={24} className="text-gray-300" />
             <span className="text-body3 text-neutralGreen-700">
-              Stake <span className="gradient-text">10,000 $IDRISS</span> or
-              more to unlock all premium features
+              Lock <span className="gradient-text">10,000 $IDRISS</span> or more
+              to access premium features
             </span>
           </div>
           <div className="flex gap-2">
             <Icon name="PieChart" size={24} className="text-gray-300" />
             <span className="text-body3 text-neutralGreen-700">
-              Access to decentralized revenue sharing
+              Tap into decentralized revenue sharing from IDRISS apps
             </span>
           </div>
         </div>
@@ -233,7 +249,7 @@ export const VestingPlanContent = () => {
           asLink
           className="mt-8 w-full"
           suffixIconName="ArrowRight"
-          href="#"
+          href={VAULT_DOCS_LINK}
         >
           LEARN MORE
         </Button>

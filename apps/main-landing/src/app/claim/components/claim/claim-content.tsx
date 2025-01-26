@@ -1,27 +1,27 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
+import { useState } from 'react';
 import { Button } from '@idriss-xyz/ui/button';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
-import { Checkbox } from '@idriss-xyz/ui/checkbox';
-import { useState } from 'react';
-import { Link } from '@idriss-xyz/ui/link';
 import { classes } from '@idriss-xyz/ui/utils';
+import { AIRDROP_DOCS_LINK, COINMARKETCAP_LINK } from '@idriss-xyz/constants';
+import { Icon } from '@idriss-xyz/ui/icon';
 
 import { useClaimPage } from '../../claim-page-context';
 
-import { CopyAddressButton } from './components/copy-address-button';
 import { ExpandableInfo } from './components/expandable-info';
 import {
   ELIGIBILITY_CRITERIA_TITLES,
   EligibilityCriteriaTitle,
 } from './constants';
 import { IdrissUserCriteriaDescription } from './components/idriss-user-criteria-description';
+import { PartnerMemberDescription } from './components/partner-member-description';
 
 export const ClaimContent = () => {
-  const [termsChecked, setTermsChecked] = useState(false);
   const { eligibilityData, setCurrentContent } = useClaimPage();
-  const [expandedItemTitle, setExpandedItemTitle] =
-    useState<EligibilityCriteriaTitle>();
+  const [expandedItemTitle, setExpandedItemTitle] = useState<
+    EligibilityCriteriaTitle | undefined
+  >('IDRISS USER');
 
   const liBaseClassName =
     "relative flex justify-between pr-1 before:absolute before:-left-4 before:text-red-500 before:content-['•']";
@@ -42,49 +42,49 @@ export const ClaimContent = () => {
         <div className="flex flex-col items-start gap-10">
           <span className="text-heading3">YOU’RE ELIGIBLE</span>
           <span className="text-body3 text-neutralGreen-700">
-            AVAILABLE TO CLAIM
+            TOKENS TO CLAIM
           </span>
         </div>
 
-        <div className="relative mb-10 mt-2 flex w-full flex-col items-start gap-2 self-stretch rounded-[25px] bg-[rgba(255,255,255,0.2)] p-6">
+        <div className="relative mb-10 mt-2 flex w-full flex-col items-start gap-4 self-stretch rounded-[25px] bg-[rgba(255,255,255,0.2)] p-6">
           <GradientBorder
             gradientDirection="toBottom"
             gradientStopColor="rgba(145, 206, 154)"
             gradientStartColor="#ffffff"
             borderWidth={1}
           />
-          <span className="flex text-heading2 gradient-text">
-            {new Intl.NumberFormat('en-US', {
-              minimumFractionDigits: 1,
-              maximumFractionDigits: 1,
-            }).format(Number(eligibilityData.allocation ?? 0))}{' '}
-            $IDRISS
-          </span>
+          <div className="flex gap-4">
+            <span className="flex text-heading2 gradient-text">
+              {new Intl.NumberFormat('en-US', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              }).format(Number(eligibilityData.allocation ?? 0))}{' '}
+              $IDRISS
+            </span>
+            <div className="relative">
+              <Icon name="IdrissCircled" size={48} />
+              <Icon
+                name="BaseLogo"
+                size={24}
+                className="absolute bottom-0 right-0 translate-x-1"
+              />
+            </div>
+          </div>
           <div className="flex flex-row gap-2">
-            <CopyAddressButton />
+            <Button
+              intent="secondary"
+              size="small"
+              className="w-full"
+              asLink
+              prefixIconName="Coinmarketcap"
+              isExternal
+              href={COINMARKETCAP_LINK}
+            >
+              VIEW ON COINMARKETCAP
+            </Button>
           </div>
         </div>
 
-        <div className="mb-4 flex w-full flex-row items-center">
-          <Checkbox
-            onChange={setTermsChecked}
-            value={termsChecked}
-            rootClassName="border-neutral-300"
-            label={
-              <span className="ml-2 w-full text-body5 text-neutralGreen-900">
-                By participating, you agree to the{' '}
-              </span>
-            }
-          />
-          <Link
-            size="medium"
-            href=""
-            isExternal
-            className="text-body5 lg:text-body5"
-          >
-            Terms{'\u00A0'}and{'\u00A0'}conditions
-          </Link>
-        </div>
         <Button
           intent="primary"
           size="large"
@@ -92,14 +92,13 @@ export const ClaimContent = () => {
           onClick={() => {
             return setCurrentContent('vesting-plans');
           }}
-          disabled={!termsChecked}
         >
-          CLAIM YOUR $IDRISS
+          CLAIM $IDRISS
         </Button>
       </div>
       <div className="mx-10 h-[434px] w-px bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] opacity-50" />
       <div className="flex w-[389px] flex-col">
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 lg:min-h-[337px]">
           <span className="text-label2 text-neutralGreen-700">
             ELIGIBILITY CRITERIA
           </span>
@@ -120,6 +119,7 @@ export const ClaimContent = () => {
             description={
               <IdrissUserCriteriaDescription
                 eligibilityData={eligibilityData}
+                liBaseClassName={liBaseClassName}
               />
             }
             positive={!!eligibilityData.allocation_usage}
@@ -147,7 +147,7 @@ export const ClaimContent = () => {
                   eligibilityData.allocation_gitcoin && 'before:text-mint-600',
                 )}
               >
-                You donated a total of {eligibilityData.gitcoin} to open source
+                You donated a total of ${eligibilityData.gitcoin} to open source
                 rounds between GR15 and GG20
               </li>
             }
@@ -171,7 +171,12 @@ export const ClaimContent = () => {
               maximumFractionDigits: 0,
             }).format(Number(eligibilityData.allocation_ido ?? 0))}`}
             description={
-              <li className={classes(liBaseClassName, 'before:text-mint-600')}>
+              <li
+                className={classes(
+                  liBaseClassName,
+                  eligibilityData.allocation_ido && 'before:text-mint-600',
+                )}
+              >
                 You purchased IDRISS within the first 12{'\u00A0'}hours of the
                 sale and held it for 2 weeks
               </li>
@@ -197,14 +202,10 @@ export const ClaimContent = () => {
               maximumFractionDigits: 0,
             }).format(Number(eligibilityData.allocation_partner))}`}
             description={
-              <li
-                className={classes(
-                  liBaseClassName,
-                  eligibilityData.allocation_partner && 'before:text-mint-600',
-                )}
-              >
-                You have invited ${eligibilityData.invites} members
-              </li>
+              <PartnerMemberDescription
+                eligibilityData={eligibilityData}
+                liBaseClassName={liBaseClassName}
+              />
             }
             positive={!!eligibilityData.allocation_partner}
           />
@@ -217,7 +218,7 @@ export const ClaimContent = () => {
           asLink
           className="mt-8 w-full"
           suffixIconName="ArrowRight"
-          href="#"
+          href={AIRDROP_DOCS_LINK}
         >
           LEARN MORE
         </Button>

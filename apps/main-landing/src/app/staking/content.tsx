@@ -1,34 +1,45 @@
 'use client';
 import { useAccount, useDisconnect } from 'wagmi';
+import { useState } from 'react';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { Button } from '@idriss-xyz/ui/button';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { TabItem, Tabs } from '@idriss-xyz/ui/tabs';
 import { Icon } from '@idriss-xyz/ui/icon';
-import '@rainbow-me/rainbowkit/styles.css';
+import { VAULT_DOCS_LINK } from '@idriss-xyz/constants';
 
 import { backgroundLines2 } from '@/assets';
 
 import idrissSceneStream from './assets/IDRISS_SCENE_STREAM_4_2 1.png';
 import idrissCoin from './assets/IDRISS_COIN 1.png';
 import { StakeTabContent, UnstakeTabContent } from './components';
+import '@rainbow-me/rainbowkit/styles.css';
 
 export const StakingContent = () => {
-  const { isConnected } = useAccount();
+  const [activeTabKey, setActiveTabKey] = useState<string>('stake');
 
+  const { isConnected } = useAccount();
   const { disconnect } = useDisconnect();
   const { connectModalOpen, openConnectModal } = useConnectModal();
 
   const tabItems: TabItem[] = [
     {
       key: 'stake',
-      label: <span className="text-label3 text-neutralGreen-700">STAKE</span>,
-      children: <StakeTabContent />,
+      label: (
+        <span className="text-label4 text-neutralGreen-700 lg:text-label3">
+          LOCK
+        </span>
+      ),
+      children: <StakeTabContent availableAmount={500} />,
     },
     {
       key: 'unstake',
-      label: <span className="text-label3 text-neutralGreen-700">UNSTAKE</span>,
-      children: <UnstakeTabContent />,
+      label: (
+        <span className="text-label4 text-neutralGreen-700 lg:text-label3">
+          UNLOCK
+        </span>
+      ),
+      children: <UnstakeTabContent availableAmount={400} />,
     },
   ];
 
@@ -46,41 +57,53 @@ export const StakingContent = () => {
       />
 
       <div className="flex flex-col">
-        <div className="z-[5] inline-flex flex-col items-center gap-[78px] overflow-hidden px-4 pb-3 lg:mt-[78px] lg:[@media(max-height:800px)]:mt-[60px]">
-          <img className="size-[137px]" src={idrissCoin.src} alt="" />
-          <div className="relative flex flex-row rounded-[25px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">
+        <div className="z-[5] mt-[40px] inline-flex flex-col items-center gap-[78px] overflow-hidden px-4 pb-3 lg:mt-[120px] lg:[@media(max-height:800px)]:mt-[60px]">
+          <img
+            className="hidden size-[137px] lg:block"
+            src={idrissCoin.src}
+            alt=""
+          />
+          <div className="relative flex flex-col rounded-[25px] bg-[rgba(255,255,255,0.5)] p-5 pb-2 backdrop-blur-[45px] lg:flex-row lg:p-10">
             <GradientBorder
               gradientDirection="toTop"
               gradientStopColor="rgba(145, 206, 154, 0.50)"
               borderWidth={1}
             />
-            <div className="flex w-[368px] flex-col gap-6">
-              <Tabs items={tabItems} />
+            <div className="flex flex-col gap-6 lg:w-[368px]">
+              <Tabs items={tabItems} onChange={setActiveTabKey} />
+              <Button
+                intent="primary"
+                size="large"
+                className="mt-2 w-full lg:mt-0"
+                onClick={() => {}}
+              >
+                {activeTabKey === 'stake' ? 'LOCK' : 'UNLOCK'}
+              </Button>
             </div>
-            <div className="mx-10 w-px bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] opacity-50" />
-            <div className="flex w-[389px] flex-col">
-              <div className="flex flex-col gap-4">
-                <span className="pb-6 text-label3 text-neutralGreen-700">
-                  STAKING BENEFIT
+            <div className="mb-4 mt-8 h-px w-full bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] opacity-50 lg:mx-10 lg:my-0 lg:h-auto lg:w-px" />
+            <div className="flex flex-col lg:w-[292px]">
+              <div className="flex flex-col gap-2">
+                <span className="pb-1 text-label4 text-neutralGreen-700 lg:pb-4 lg:text-label3">
+                  VAULT BENEFITS
                 </span>
-                <div className="flex gap-2">
+                <div className="flex gap-1 lg:gap-2">
                   <Icon name="PiggyBank" size={24} className="text-gray-300" />
-                  <span className="text-body3 text-neutralGreen-700">
+                  <span className="text-body4 text-neutralGreen-700 lg:text-body3">
                     Earn <span className="gradient-text">12% APR</span> on
-                    staked amounts
+                    locked tokens
                   </span>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-1 lg:gap-2">
                   <Icon name="Gem" size={24} className="text-gray-300" />
-                  <span className="text-body3 text-neutralGreen-700">
-                    Stake <span className="gradient-text">10,000 $IDRISS</span>{' '}
-                    or more to unlock all premium features
+                  <span className="text-body4 text-neutralGreen-700 lg:text-body3">
+                    Lock <span className="gradient-text">10,000 $IDRISS</span>{' '}
+                    or more to access premium features
                   </span>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-1 lg:gap-2">
                   <Icon name="PieChart" size={24} className="text-gray-300" />
-                  <span className="text-body3 text-neutralGreen-700">
-                    Access to decentralized revenue sharing
+                  <span className="text-body4 text-neutralGreen-700 lg:text-body3">
+                    Tap into decentralized revenue sharing from IDRISS apps
                   </span>
                 </div>
               </div>
@@ -90,9 +113,9 @@ export const StakingContent = () => {
                 size="medium"
                 isExternal
                 asLink
-                className="mt-8 w-full"
+                className="w-full lg:mt-8"
                 suffixIconName="ArrowRight"
-                href="#"
+                href={VAULT_DOCS_LINK}
               >
                 LEARN MORE
               </Button>
