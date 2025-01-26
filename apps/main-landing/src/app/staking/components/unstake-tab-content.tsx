@@ -3,13 +3,15 @@ import { Form } from '@idriss-xyz/ui/form';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { createPublicClient, formatEther, http } from 'viem';
+import { createPublicClient, encodeFunctionData, formatEther, http, parseEther } from 'viem';
 import { baseSepolia } from 'viem/chains';
-import { useWalletClient } from 'wagmi';
+import { useAccount, useSwitchChain, useWalletClient, useWriteContract } from 'wagmi';
 
 import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 
 import { StakingABI, stakingContractAddress } from '../constants';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { estimateGas, waitForTransactionReceipt } from 'viem/actions';
 
 type FormPayload = {
   amount: number;
@@ -18,17 +20,66 @@ type FormPayload = {
 export const UnstakeTabContent = () => {
   const [availableAmount, setAvailableAmount] = useState<string>();
   const { data: walletClient } = useWalletClient();
+  const { isConnected } = useAccount();
+  const { openConnectModal } = useConnectModal();
+  const { switchChainAsync } = useSwitchChain();
+  const { writeContractAsync } = useWriteContract();
 
   const publicClient = createPublicClient({
     chain: baseSepolia,
     transport: http(),
   });
-  const formMethods = useForm<FormPayload>({
+  const { handleSubmit, control } = useForm<FormPayload>({
     defaultValues: {
       amount: 1,
     },
     mode: 'onSubmit',
   });
+
+  const handleUnstake = async (data: FormPayload) => {
+    if (!isConnected && openConnectModal) {
+      openConnectModal();
+    } else {
+      if (!walletClient) {
+        console.error('Wallet not connected');
+        return;
+      }
+
+      const parsedAmount = parseEther(data.amount.toString());
+
+      await switchChainAsync({ chainId: baseSepolia.id });
+
+      const stakeData = {
+        abi: StakingABI,
+        functionName: 'withdraw',
+        args: [parsedAmount],
+      };
+
+      const encodedStakeData = encodeFunctionData(stakeData);
+
+      const gas = await estimateGas(walletClient, {
+        to: stakingContractAddress,
+        data: encodedStakeData,
+      }).catch((error) => {
+        throw error;
+      });
+
+      const hash = await writeContractAsync({
+        address: stakingContractAddress,
+        chain: baseSepolia,
+        ...stakeData,
+        gas,
+      });
+
+      const { status } = await waitForTransactionReceipt(walletClient, {
+        hash,
+      });
+
+      if (status === 'reverted') {
+        throw new Error('Claim transaction reverted');
+      }
+    }
+  };
 
   useEffect(() => {
     void (async () => {
@@ -58,9 +109,9 @@ export const UnstakeTabContent = () => {
   }, [walletClient]);
 
   return (
-    <Form className="w-full">
+    <Form className="w-full" onSubmit={handleSubmit(handleUnstake)}>
       <Controller
-        control={formMethods.control}
+        control={control}
         name="amount"
         render={({ field }) => {
           return (
