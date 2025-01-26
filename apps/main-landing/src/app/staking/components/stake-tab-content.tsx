@@ -1,7 +1,7 @@
 import { Form } from '@idriss-xyz/ui/form';
 import { Controller, useForm } from 'react-hook-form';
 import { Button } from '@idriss-xyz/ui/button';
-import { Config, useAccount, useWalletClient, useWriteContract } from 'wagmi';
+import { Config, useAccount, useSwitchChain, useWalletClient, useWriteContract } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import {
   createPublicClient,
@@ -98,6 +98,7 @@ export const StakeTabContent = () => {
   const [availableAmount, setAvailableAmount] = useState<string>();
   const { isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
+  const { switchChainAsync } = useSwitchChain();
   const publicClient = createPublicClient({
     chain: baseSepolia,
     transport: http(),
@@ -123,6 +124,8 @@ export const StakeTabContent = () => {
       }
 
       const parsedAmount = parseEther(data.amount.toString());
+
+      await switchChainAsync({chainId: baseSepolia.id});
 
       await approveTokens(
         walletClient,

@@ -12,7 +12,7 @@ import { Link } from '@idriss-xyz/ui/link';
 import { encodeFunctionData } from 'viem';
 import { baseSepolia } from 'viem/chains';
 import { estimateGas, waitForTransactionReceipt } from 'viem/actions';
-import { useWalletClient, useWriteContract } from 'wagmi';
+import { useSwitchChain, useWalletClient, useWriteContract } from 'wagmi';
 import {
   TOKEN_TERMS_AND_CONDITIONS_LINK,
   VAULT_DOCS_LINK,
@@ -33,6 +33,7 @@ export const VestingPlanContent = () => {
     useClaimPage();
   const { data: walletClient } = useWalletClient();
   const { writeContractAsync } = useWriteContract();
+  const {switchChainAsync} = useSwitchChain();
 
   const formMethods = useForm<FormPayload>({
     defaultValues: {
@@ -105,6 +106,8 @@ export const VestingPlanContent = () => {
         ],
       };
       const encodedClaimData = encodeFunctionData(claimData);
+
+      await switchChainAsync({chainId: baseSepolia.id});
 
       const gas = await estimateGas(walletClient, {
         to: claimContractAddress,
