@@ -13,32 +13,36 @@ import idrissSceneStream from './assets/IDRISS_SCENE_STREAM_4_2 1.png';
 import idrissCoin from './assets/IDRISS_COIN 1.png';
 import { StakeTabContent, UnstakeTabContent } from './components';
 import '@rainbow-me/rainbowkit/styles.css';
+import { useMemo } from 'react';
 
 export const StakingContent = () => {
   const { isConnected } = useAccount();
   const { disconnect } = useDisconnect();
   const { connectModalOpen, openConnectModal } = useConnectModal();
 
-  const tabItems: TabItem[] = [
-    {
-      key: 'stake',
-      label: (
-        <span className="text-label4 text-neutralGreen-700 lg:text-label3">
-          LOCK
-        </span>
-      ),
-      children: <StakeTabContent availableAmount={500} />,
-    },
-    {
-      key: 'unstake',
-      label: (
-        <span className="text-label4 text-neutralGreen-700 lg:text-label3">
-          UNLOCK
-        </span>
-      ),
-      children: <UnstakeTabContent availableAmount={400} />,
-    },
-  ];
+  const tabItems: TabItem[] = useMemo(
+    () => [
+      {
+        key: 'stake',
+        label: (
+          <span className="text-label4 text-neutralGreen-700 lg:text-label3">
+            LOCK
+          </span>
+        ),
+        children: <StakeTabContent availableAmount={500} />,
+      },
+      {
+        key: 'unstake',
+        label: (
+          <span className="text-label4 text-neutralGreen-700 lg:text-label3">
+            UNLOCK
+          </span>
+        ),
+        children: <UnstakeTabContent availableAmount={400} />,
+      },
+    ],
+    [],
+  );
 
   return (
     <main className="relative flex min-h-screen grow flex-col items-center justify-around overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] lg:flex-row lg:items-start lg:justify-center lg:px-0">

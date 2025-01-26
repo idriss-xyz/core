@@ -20,6 +20,7 @@ import {
   stakingContractAddress,
   testTokenAddress,
 } from '../constants';
+import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 
 type FormPayload = {
   amount: number;
@@ -187,14 +188,20 @@ export const StakeTabContent = ({ availableAmount }: Properties) => {
           );
         }}
       />
-      <Button
-        intent="primary"
-        size="large"
-        className="mt-6 w-full"
-        type="submit"
-      >
-        LOCK
-      </Button>
+      <div className='relative'>
+        <GeoConditionalButton
+          defaultButton={
+            <Button
+              intent="primary"
+              size="large"
+              className="mt-6 w-full"
+              type="submit"
+            >
+              LOCK
+            </Button>
+          }
+        />
+      </div>
     </Form>
   );
 };
