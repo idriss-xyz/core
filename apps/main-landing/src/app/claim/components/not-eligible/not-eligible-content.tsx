@@ -12,14 +12,14 @@ export const NotEligibleContent = () => {
         gradientStopColor="rgba(145, 206, 154, 0.50)"
         borderWidth={1}
       />
-      <div className="mt-10 flex flex-col gap-4">
+      <div className="flex flex-col gap-4">
         <span className="text-heading3 text-neutral-900">NOT ELIGIBLE</span>
         <span className="text-body4 text-neutral-700">
           While you do not qualify for the claim, you can still join IDRISS DAO
-          by purchasing IDRISS on decentralized exchanges.
+          by{'\u00A0'}purchasing IDRISS on decentralized exchanges.
         </span>
       </div>
-      <div className="flex flex-col gap-4">
+      <div className="flex w-full flex-col gap-4">
         <Button
           key="uniswap"
           intent="primary"
@@ -28,7 +28,7 @@ export const NotEligibleContent = () => {
           asLink
           href="https://app.uniswap.org/swap?inputCurrency=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913&outputCurrency=0x000096630066820566162C94874A776532705231"
           isExternal
-          className="mx-auto w-full md:w-auto"
+          className="w-full"
         >
           BUY ON UNISWAP
         </Button>
@@ -40,11 +40,11 @@ export const NotEligibleContent = () => {
           asLink
           href="https://jumper.exchange/?fromChain=8453&fromToken=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913&toChain=8453&toToken=0x000096630066820566162C94874A776532705231"
           isExternal
-          className="w-full whitespace-nowrap md:w-auto"
+          className="w-full"
         >
           BUY ON JUMPER
         </Button>
-        <div>
+        <div className='w-full justify-center opacity-70 items-center flex'>
           <span
             className={classes(
               'text-body5 text-neutralGreen-900',
@@ -58,7 +58,7 @@ export const NotEligibleContent = () => {
             href={TOKEN_TERMS_AND_CONDITIONS_LINK}
             isExternal
             className={classes(
-              'border-none text-body5',
+              'text-body5',
               'md:text-body5',
               //lg here is intentional to override the Link variant style
               'lg:text-body5',
