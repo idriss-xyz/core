@@ -54,7 +54,7 @@ export const StakingContent = () => {
               gradientStopColor="rgba(145, 206, 154, 0.50)"
               borderWidth={1}
             />
-            <div className="flex w-[459px] flex-col gap-6">
+            <div className="flex w-[368px] flex-col gap-6">
               <Tabs items={tabItems} />
             </div>
             <div className="mx-10 w-px bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] opacity-50" />
@@ -99,33 +99,35 @@ export const StakingContent = () => {
             </div>
           </div>
         </div>
-        {isConnected ? (
-          <div className="relative z-10 flex w-full flex-col items-center gap-2 rounded-2xl bg-[rgba(255,255,255,0.5)] px-5 py-3 backdrop-blur-[45px]">
-            <span className="text-heading6 text-neutralGreen-700">
-              All good, your wallet is connected!
-            </span>
+        <div className="absolute bottom-2 left-1/2 z-10 -translate-x-1/2">
+          {isConnected ? (
+            <div className="relative flex w-full flex-col items-center gap-2 rounded-2xl bg-[rgba(255,255,255,0.5)] px-5 py-3 backdrop-blur-[45px]">
+              <span className="text-heading6 text-neutralGreen-700">
+                All good, your wallet is connected!
+              </span>
+              <Button
+                intent="secondary"
+                size="small"
+                className="w-full"
+                onClick={() => {
+                  disconnect();
+                }}
+              >
+                DISCONNECT WALLET
+              </Button>
+            </div>
+          ) : (
             <Button
-              intent="secondary"
+              intent="primary"
               size="small"
-              className="w-full"
-              onClick={() => {
-                disconnect();
-              }}
+              className="mt-6"
+              onClick={openConnectModal}
+              loading={connectModalOpen}
             >
-              DISCONNECT WALLET
+              CONNECT WALLET
             </Button>
-          </div>
-        ) : (
-          <Button
-            intent="primary"
-            size="medium"
-            className="mt-6 w-full"
-            onClick={openConnectModal}
-            loading={connectModalOpen}
-          >
-            CONNECT WALLET
-          </Button>
-        )}
+          )}
+        </div>
       </div>
     </main>
   );

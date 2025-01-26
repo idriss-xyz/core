@@ -1,7 +1,7 @@
 import { ReactNode, createContext, useState } from 'react';
 import { createContextHook } from '@idriss-xyz/ui/utils';
 
-import { CLAIM_PAGE_ROUTE, ClaimPageRoute } from './constants';
+import { CLAIM_CONTENT, ClaimPageContent } from './constants';
 import { EligibilityCheckResponse } from './types';
 import { Hex } from 'viem';
 
@@ -10,11 +10,11 @@ type Properties = {
 };
 
 type ClaimPageContextValues = {
-  currentRoute: ClaimPageRoute;
+  currentContent: ClaimPageContent;
   walletAddress: Hex | undefined;
   vestingPlan: VestingPlan | undefined;
   eligibilityData: EligibilityCheckResponse | undefined;
-  navigate: (route: ClaimPageRoute) => void;
+  setCurrentContent: (currentContent: ClaimPageContent) => void;
   setWalletAddress: (walletAddress: Hex) => void;
   setVestingPlan: (vestingPlan: VestingPlan) => void;
   setEligibilityData: (eligibilityData: EligibilityCheckResponse) => void;
@@ -29,28 +29,24 @@ const ClaimPageContext = createContext<ClaimPageContextValues | undefined>(
 );
 
 export const ClaimPageProvider = ({ children }: Properties) => {
-  const [currentRoute, setCurrentRoute] = useState<ClaimPageRoute>(
-    CLAIM_PAGE_ROUTE.CHECK_ELIGIBILITY,
+  const [currentContent, setCurrentContent] = useState<ClaimPageContent>(
+    CLAIM_CONTENT.LETTER,
   );
   const [vestingPlan, setVestingPlan] = useState<VestingPlan>();
   const [eligibilityData, setEligibilityData] =
     useState<EligibilityCheckResponse>();
-  const [walletAddress, setWalletAddress] = useState<string>();
-
-  const navigate = (route: ClaimPageRoute) => {
-    setCurrentRoute(route);
-  };
+  const [walletAddress, setWalletAddress] = useState<Hex>();
 
   return (
     <ClaimPageContext.Provider
       value={{
         vestingPlan,
-        currentRoute,
         walletAddress,
+        currentContent,
         eligibilityData,
-        navigate,
         setVestingPlan,
         setWalletAddress,
+        setCurrentContent,
         setEligibilityData,
       }}
     >

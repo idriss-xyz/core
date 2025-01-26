@@ -1,32 +1,36 @@
+type ClaimData = {
+  amount: string;
+  claimIndices: number[];
+  expiry: number;
+  memo: string;
+  signature: string;
+};
+
 export type EligibilityCheckResponse = {
-  paid: number;
-  free: number;
-  extension: number;
-  registration: string;
-  invites: number;
-  farcaster: number;
-  hacker: number;
-  ardent: number;
   aavegotchi: number;
-  gitcoin: number;
   across: number;
+  allocation: number;
+  allocation_extension: number;
+  allocation_free: number;
+  allocation_gitcoin: number;
+  allocation_ido: number;
+  allocation_paid: number;
+  allocation_partner: number;
+  allocation_usage: number;
+  ardent: number;
+  claimData: ClaimData;
+  extension: number;
+  farcaster: number;
+  free: number;
+  gitcoin: number;
+  hacker: number;
+  invite_multiplier: number;
+  invites: number;
+  jumper: number;
+  paid: number;
   polymarket: number;
+  registration: string;
   snapshot: number;
   tally: number;
-  jumper: number;
   time_multiplier: number;
-  invite_multiplier: number;
-  allocation_usage: number;
-  allocation_partner: number;
-  allocation: number;
-  allocation_gitcoin: number;
-  allocation_extension: number;
-  allocation_registrations: number;
-  claimData: {
-    amount: number,
-    claimIndices: number[],
-    expiry: number,
-    memo: string,
-    signature: string
-  },
 };
