@@ -9,6 +9,10 @@ import { useMemo, useState } from 'react';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { Checkbox } from '@idriss-xyz/ui/checkbox';
 import { Link } from '@idriss-xyz/ui/link';
+import {
+  TOKEN_TERMS_AND_CONDITIONS_LINK,
+  VAULT_DOCS_LINK,
+} from '@idriss-xyz/constants';
 
 import { useClaimPage, VestingPlan } from '../../claim-page-context';
 
@@ -105,7 +109,7 @@ export const VestingPlanContent = () => {
                 By claiming, you agree to the{' '}
                 <Link
                   size="medium"
-                  href=""
+                  href={TOKEN_TERMS_AND_CONDITIONS_LINK}
                   isExternal
                   className="text-body5 lg:text-body5"
                 >
@@ -163,7 +167,7 @@ export const VestingPlanContent = () => {
           asLink
           className="mt-8 w-full"
           suffixIconName="ArrowRight"
-          href="#"
+          href={VAULT_DOCS_LINK}
         >
           LEARN MORE
         </Button>

@@ -1,11 +1,12 @@
 'use client';
 import { useAccount, useDisconnect } from 'wagmi';
+import { useState } from 'react';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { Button } from '@idriss-xyz/ui/button';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { TabItem, Tabs } from '@idriss-xyz/ui/tabs';
 import { Icon } from '@idriss-xyz/ui/icon';
-import { useState } from 'react';
+import { VAULT_DOCS_LINK } from '@idriss-xyz/constants';
 
 import { backgroundLines2 } from '@/assets';
 
@@ -15,7 +16,7 @@ import { StakeTabContent, UnstakeTabContent } from './components';
 import '@rainbow-me/rainbowkit/styles.css';
 
 export const StakingContent = () => {
-  const [activeTabKey, setActiveTabKey] = useState<string>();
+  const [activeTabKey, setActiveTabKey] = useState<string>('stake');
 
   const { isConnected } = useAccount();
   const { disconnect } = useDisconnect();
@@ -114,7 +115,7 @@ export const StakingContent = () => {
                 asLink
                 className="w-full lg:mt-8"
                 suffixIconName="ArrowRight"
-                href="#"
+                href={VAULT_DOCS_LINK}
               >
                 LEARN MORE
               </Button>
