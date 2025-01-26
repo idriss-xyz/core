@@ -1,23 +1,60 @@
 import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 import { Button } from '@idriss-xyz/ui/button';
 import { Form } from '@idriss-xyz/ui/form';
+import { Spinner } from '@idriss-xyz/ui/spinner';
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { createPublicClient, formatEther, http } from 'viem';
+import { baseSepolia } from 'viem/chains';
+import { StakingABI, stakingContractAddress } from '../constants';
+import { useWalletClient } from 'wagmi';
 
 type FormPayload = {
   amount: number;
 };
 
-type Properties = {
-  availableAmount: number;
-};
+export const UnstakeTabContent = () => {
+  const [availableAmount, setAvailableAmount] = useState<string>();
+  const { data: walletClient } = useWalletClient();
 
-export const UnstakeTabContent = ({ availableAmount }: Properties) => {
+  const publicClient = createPublicClient({
+    chain: baseSepolia,
+    transport: http(),
+  });
   const formMethods = useForm<FormPayload>({
     defaultValues: {
       amount: 1,
     },
     mode: 'onSubmit',
   });
+
+  useEffect(() => {
+    (async () => {
+      if (!walletClient) {
+        return;
+      }
+
+      try {
+        const balance = await publicClient?.readContract({
+          abi: StakingABI,
+          address: stakingContractAddress,
+          functionName: 'getStakedBalance',
+          args: [walletClient.account.address],
+        });
+
+        const formattedBalance = new Intl.NumberFormat('en-US', {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(Number(formatEther(balance as bigint)) ?? 0);
+
+        setAvailableAmount(formattedBalance);
+      } catch (error) {
+        setAvailableAmount('0');
+        console.error(error);
+      }
+    })();
+  }, [walletClient]);
+
   return (
     <Form className="w-full">
       <Controller
@@ -37,9 +74,17 @@ export const UnstakeTabContent = ({ availableAmount }: Properties) => {
                   <span className="text-label4 text-neutralGreen-700">
                     Amount to unlock
                   </span>
-                  <span className="text-label6 text-neutral-800">
-                    Available: {availableAmount} IDRISS
-                  </span>
+                  <div className="flex text-label6 text-neutral-800">
+                    Available:{' '}
+                    <span className="mx-1 flex justify-center">
+                      {availableAmount ? (
+                        availableAmount
+                      ) : (
+                        <Spinner className="size-3" />
+                      )}
+                    </span>{' '}
+                    IDRISS
+                  </div>
                 </div>
               }
               numeric

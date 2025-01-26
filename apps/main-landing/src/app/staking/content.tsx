@@ -29,7 +29,7 @@ export const StakingContent = () => {
             LOCK
           </span>
         ),
-        children: <StakeTabContent availableAmount={500} />,
+        children: <StakeTabContent />,
       },
       {
         key: 'unstake',
@@ -38,7 +38,7 @@ export const StakingContent = () => {
             UNLOCK
           </span>
         ),
-        children: <UnstakeTabContent availableAmount={400} />,
+        children: <UnstakeTabContent />,
       },
     ],
     [],

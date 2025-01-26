@@ -4,10 +4,13 @@ import { Button } from '@idriss-xyz/ui/button';
 import { Config, useAccount, useWalletClient, useWriteContract } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import {
+  createPublicClient,
   decodeFunctionResult,
   encodeFunctionData,
+  http,
   parseEther,
   WalletClient,
+  formatEther,
 } from 'viem';
 import { call, estimateGas, waitForTransactionReceipt } from 'viem/actions';
 import { baseSepolia } from 'viem/chains';
@@ -21,12 +24,11 @@ import {
   testTokenAddress,
 } from '../constants';
 import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
+import { useEffect, useState } from 'react';
+import { Spinner } from '@idriss-xyz/ui/spinner';
 
 type FormPayload = {
   amount: number;
-};
-type Properties = {
-  availableAmount: number;
 };
 
 const approveTokens = async (
@@ -92,9 +94,14 @@ const approveTokens = async (
   }
 };
 
-export const StakeTabContent = ({ availableAmount }: Properties) => {
+export const StakeTabContent = () => {
+  const [availableAmount, setAvailableAmount] = useState<string>();
   const { isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
+  const publicClient = createPublicClient({
+    chain: baseSepolia,
+    transport: http(),
+  });
 
   const { handleSubmit, control } = useForm<FormPayload>({
     defaultValues: {
@@ -155,6 +162,33 @@ export const StakeTabContent = ({ availableAmount }: Properties) => {
     }
   };
 
+  useEffect(() => {
+    (async () => {
+      if (!walletClient) {
+        return;
+      }
+
+      try {
+        const balance = await publicClient?.readContract({
+          abi: ERC20_ABI,
+          address: testTokenAddress,
+          functionName: 'balanceOf',
+          args: [walletClient.account.address],
+        });
+
+        const formattedBalance = new Intl.NumberFormat('en-US', {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(Number(formatEther(balance as bigint)) ?? 0);
+
+        setAvailableAmount(formattedBalance);
+      } catch (error) {
+        console.error(error);
+        setAvailableAmount('0');
+      }
+    })();
+  }, [walletClient]);
+
   return (
     <Form className="w-full" onSubmit={handleSubmit(handleStake)}>
       <Controller
@@ -174,9 +208,17 @@ export const StakeTabContent = ({ availableAmount }: Properties) => {
                   <span className="text-label4 text-neutralGreen-700">
                     Amount
                   </span>
-                  <span className="text-label6 text-neutral-800">
-                    Available: {availableAmount} IDRISS
-                  </span>
+                  <div className="flex text-label6 text-neutral-800">
+                    Available:{' '}
+                    <span className="mx-1 flex justify-center">
+                      {availableAmount ? (
+                        availableAmount
+                      ) : (
+                        <Spinner className="size-3" />
+                      )}
+                    </span>{' '}
+                    IDRISS
+                  </div>
                 </div>
               }
               numeric
@@ -188,7 +230,7 @@ export const StakeTabContent = ({ availableAmount }: Properties) => {
           );
         }}
       />
-      <div className='relative'>
+      <div className="relative">
         <GeoConditionalButton
           defaultButton={
             <Button
