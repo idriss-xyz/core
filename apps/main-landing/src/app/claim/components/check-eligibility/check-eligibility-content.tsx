@@ -3,7 +3,7 @@
 import { Button } from '@idriss-xyz/ui/button';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { Controller, useForm } from 'react-hook-form';
-import { createPublicClient, Hex, http, isAddress, stringToHex } from 'viem';
+import { createPublicClient, Hex, http, isAddress } from 'viem';
 import { mainnet } from 'viem/chains';
 import { normalize } from 'viem/ens';
 import { Form } from '@idriss-xyz/ui/form';
@@ -71,9 +71,9 @@ export const CheckEligibilityContent = () => {
 
     const { address, resolvedEnsAddress } = formMethods.getValues();
     if (address.includes('.') && resolvedEnsAddress) {
-      void storeDataAndNavigate(stringToHex(resolvedEnsAddress));
+      void storeDataAndNavigate(resolvedEnsAddress as Hex);
     } else if (address) {
-      void storeDataAndNavigate(stringToHex(address));
+      void storeDataAndNavigate(address as Hex);
     }
   };
 
