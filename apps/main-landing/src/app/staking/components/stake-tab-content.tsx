@@ -3,7 +3,12 @@ import { Controller, useForm } from 'react-hook-form';
 import { Button } from '@idriss-xyz/ui/button';
 import { Config, useAccount, useWalletClient, useWriteContract } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { decodeFunctionResult, encodeFunctionData, parseEther, WalletClient } from 'viem';
+import {
+  decodeFunctionResult,
+  encodeFunctionData,
+  parseEther,
+  WalletClient,
+} from 'viem';
 import { call, estimateGas, waitForTransactionReceipt } from 'viem/actions';
 import { baseSepolia } from 'viem/chains';
 import { WriteContractMutateAsync } from 'wagmi/query';

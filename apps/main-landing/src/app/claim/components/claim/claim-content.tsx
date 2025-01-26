@@ -6,13 +6,8 @@ import { Checkbox } from '@idriss-xyz/ui/checkbox';
 import { useState } from 'react';
 import { Link } from '@idriss-xyz/ui/link';
 import { classes } from '@idriss-xyz/ui/utils';
-import { encodeFunctionData } from 'viem';
-import { baseSepolia } from 'viem/chains';
-import { estimateGas, waitForTransactionReceipt } from 'viem/actions';
-import { useWalletClient, useWriteContract } from 'wagmi';
 
 import { useClaimPage } from '../../claim-page-context';
-import { CLAIM_ABI, claimContractAddress } from '../../constants';
 
 import { CopyAddressButton } from './components/copy-address-button';
 import { ExpandableInfo } from './components/expandable-info';
@@ -24,11 +19,9 @@ import { IdrissUserCriteriaDescription } from './components/idriss-user-criteria
 
 export const ClaimContent = () => {
   const [termsChecked, setTermsChecked] = useState(false);
-  const { eligibilityData, setCurrentContent, walletAddress } = useClaimPage();
+  const { eligibilityData, setCurrentContent } = useClaimPage();
   const [expandedItemTitle, setExpandedItemTitle] =
     useState<EligibilityCriteriaTitle>();
-  const { data: walletClient } = useWalletClient();
-  const { writeContractAsync } = useWriteContract();
 
   const liBaseClassName =
     "relative flex justify-between pr-1 before:absolute before:-left-4 before:text-red-500 before:content-['•']";
@@ -38,56 +31,6 @@ export const ClaimContent = () => {
     return;
   }
 
-  if (!walletClient || walletAddress === undefined) {
-    console.error('Wallet not connected');
-    return;
-  }
-
-  const handleClaim = async () => {
-    try {
-      const claimData = {
-        abi: CLAIM_ABI,
-        functionName: 'claim',
-        args: [
-          walletClient.account.address,
-          eligibilityData.claimData.amount,
-          eligibilityData.claimData.claimIndices,
-          eligibilityData.claimData.signature,
-          eligibilityData.claimData.expiry,
-          `0x${Buffer.from(eligibilityData.claimData.memo, 'utf8').toString('hex')}`,
-        ],
-      };
-      const encodedClaimData = encodeFunctionData(claimData);
-
-      const gas = await estimateGas(walletClient, {
-        to: claimContractAddress,
-        data: encodedClaimData,
-      }).catch((error) => {
-        console.error('Error estimating gas:', error.message);
-        throw error;
-      });
-
-      const hash = await writeContractAsync({
-        address: claimContractAddress,
-        chain: baseSepolia,
-        ...claimData,
-        gas,
-      });
-
-      const { status } = await waitForTransactionReceipt(walletClient, {
-        hash,
-      });
-
-      if (status === 'reverted') {
-        throw new Error('Claim transaction reverted');
-      }
-
-      return setCurrentContent('vesting-plans');
-    } catch (error) {
-      console.error('Error claiming:', error);
-      throw error;
-    }
-  };
   return (
     <div className="relative z-[5] flex w-[1000px] flex-row rounded-[25px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">
       <GradientBorder
@@ -146,7 +89,9 @@ export const ClaimContent = () => {
           intent="primary"
           size="large"
           className="w-full"
-          onClick={handleClaim}
+          onClick={() => {
+            return setCurrentContent('vesting-plans');
+          }}
           disabled={!termsChecked}
         >
           CLAIM YOUR $IDRISS

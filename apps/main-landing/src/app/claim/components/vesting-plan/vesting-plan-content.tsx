@@ -9,8 +9,13 @@ import { useMemo, useState } from 'react';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { Checkbox } from '@idriss-xyz/ui/checkbox';
 import { Link } from '@idriss-xyz/ui/link';
+import { encodeFunctionData } from 'viem';
+import { baseSepolia } from 'viem/chains';
+import { estimateGas, waitForTransactionReceipt } from 'viem/actions';
+import { useWalletClient, useWriteContract } from 'wagmi';
 
 import { useClaimPage, VestingPlan } from '../../claim-page-context';
+import { CLAIM_ABI, claimContractAddress } from '../../constants';
 
 type FormPayload = {
   vestingPlan: VestingPlan;
@@ -18,7 +23,10 @@ type FormPayload = {
 
 export const VestingPlanContent = () => {
   const [termsChecked, setTermsChecked] = useState(false);
-  const { eligibilityData, setCurrentContent, setVestingPlan } = useClaimPage();
+  const { eligibilityData, setCurrentContent, setVestingPlan, walletAddress } =
+    useClaimPage();
+  const { data: walletClient } = useWalletClient();
+  const { writeContractAsync } = useWriteContract();
 
   const formMethods = useForm<FormPayload>({
     defaultValues: {
@@ -45,9 +53,6 @@ export const VestingPlanContent = () => {
       case 'claim_50': {
         return 'CLAIM 50% NOW';
       }
-      case 'claim_and_stake_50': {
-        return 'CLAIM & STAKE 50%';
-      }
       case 'claim_and_stake_100': {
         return 'CLAIM & STAKE 100%';
       }
@@ -57,10 +62,84 @@ export const VestingPlanContent = () => {
     }
   }, [vestingPlan]);
 
+  const vestingPlanSubmitFunction = async () => {
+    switch (vestingPlan) {
+      case 'claim_50': {
+        return await handleClaim();
+      }
+      case 'claim_and_stake_100': {
+        return handleClaimWithBonus();
+      }
+      default: {
+        return await handleClaim();
+      }
+    }
+  };
+
   if (!eligibilityData) {
     setCurrentContent('check-eligibility');
     return;
   }
+
+  const handleClaim = async () => {
+    if (!walletClient || walletAddress === undefined) {
+      console.error('Wallet not connected');
+      return;
+    }
+
+    try {
+      const claimData = {
+        abi: CLAIM_ABI,
+        functionName: 'claim',
+        args: [
+          walletClient.account.address,
+          eligibilityData.claimData.amount,
+          eligibilityData.claimData.claimIndices,
+          eligibilityData.claimData.signature,
+          eligibilityData.claimData.expiry,
+          `0x${Buffer.from(eligibilityData.claimData.memo, 'utf8').toString('hex')}`,
+        ],
+      };
+      const encodedClaimData = encodeFunctionData(claimData);
+
+      const gas = await estimateGas(walletClient, {
+        to: claimContractAddress,
+        data: encodedClaimData,
+      }).catch((error) => {
+        console.error('Error estimating gas:', error.message);
+        throw error;
+      });
+
+      const hash = await writeContractAsync({
+        address: claimContractAddress,
+        chain: baseSepolia,
+        ...claimData,
+        gas,
+      });
+
+      const { status } = await waitForTransactionReceipt(walletClient, {
+        hash,
+      });
+
+      if (status === 'reverted') {
+        throw new Error('Claim transaction reverted');
+      }
+
+      return setCurrentContent('vesting-plans');
+    } catch (error) {
+      console.error('Error claiming:', error);
+      throw error;
+    }
+  };
+
+  const handleClaimWithBonus = () => {
+    if (!walletClient || walletAddress === undefined) {
+      console.error('Wallet not connected');
+      return;
+    }
+    //  TODO: Implement claim with bonus
+    console.log('To be implemented');
+  };
 
   return (
     <div className="relative z-[5] flex w-[800px] flex-row rounded-[25px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">
@@ -110,9 +189,9 @@ export const VestingPlanContent = () => {
           intent="primary"
           size="large"
           className="w-full"
-          onClick={() => {
+          onClick={async () => {
             setVestingPlan(vestingPlan);
-            return setCurrentContent('claim-successful');
+            await vestingPlanSubmitFunction();
           }}
           disabled={!termsChecked}
         >
