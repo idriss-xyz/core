@@ -14,6 +14,8 @@ import {
   VAULT_DOCS_LINK,
 } from '@idriss-xyz/constants';
 
+import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
+
 import { useClaimPage, VestingPlan } from '../../claim-page-context';
 
 type FormPayload = {
@@ -119,18 +121,22 @@ export const VestingPlanContent = () => {
             }
           />
         </div>
-        <Button
-          intent="primary"
-          size="large"
-          className="w-full"
-          onClick={() => {
-            setVestingPlan(vestingPlan);
-            return setCurrentContent('claim-successful');
-          }}
-          disabled={!termsChecked}
-        >
-          {vestingPlanButtonLabel}
-        </Button>
+        <GeoConditionalButton
+          defaultButton={
+            <Button
+              intent="primary"
+              size="large"
+              className="w-full"
+              onClick={() => {
+                setVestingPlan(vestingPlan);
+                return setCurrentContent('claim-successful');
+              }}
+              disabled={!termsChecked}
+            >
+              {vestingPlanButtonLabel}
+            </Button>
+          }
+        />
       </div>
       <div className="mx-10 w-px bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] opacity-50" />
       <div className="flex w-[389px] flex-col">

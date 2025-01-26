@@ -7,6 +7,8 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
 import { TOKEN_TERMS_AND_CONDITIONS_LINK } from '@idriss-xyz/constants';
 
+import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
+
 import { useClaimPage } from '../../claim-page-context';
 
 import idrissCoin from './assets/IDRISS_SCENE_CIRCLE_2 2.png';
@@ -68,41 +70,49 @@ export const ClaimSuccessfulContent = () => {
         </div>
       </div>
       {vestingPlan === 'claim_50' ? (
-        <Button
-          asLink
-          intent="primary"
-          size="large"
-          className="w-full"
-          href="/staking"
-        >
-          LOCK $IDRISS FOR BENEFITS
-        </Button>
+        <GeoConditionalButton
+          defaultButton={
+            <Button
+              asLink
+              intent="primary"
+              size="large"
+              className="w-full"
+              href="/staking"
+            >
+              LOCK $IDRISS FOR BENEFITS
+            </Button>
+          }
+        />
       ) : (
         <div className="flex w-full flex-col gap-4">
-          <Button
-            key="uniswap"
-            intent="primary"
-            size="large"
-            prefixIconName="Uniswap"
-            asLink
-            href="https://app.uniswap.org/swap?inputCurrency=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913&outputCurrency=0x000096630066820566162C94874A776532705231"
-            isExternal
-            className="w-full"
-          >
-            BUY ON UNISWAP
-          </Button>
-          <Button
-            key="jumper"
-            intent="primary"
-            size="large"
-            prefixIconName="Jumper"
-            asLink
-            href="https://jumper.exchange/?fromChain=8453&fromToken=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913&toChain=8453&toToken=0x000096630066820566162C94874A776532705231"
-            isExternal
-            className="w-full"
-          >
-            BUY ON JUMPER
-          </Button>
+          <GeoConditionalButton
+            defaultButton={[
+              <Button
+                key="uniswap"
+                intent="primary"
+                size="large"
+                prefixIconName="Uniswap"
+                asLink
+                href="https://app.uniswap.org/swap?inputCurrency=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913&outputCurrency=0x000096630066820566162C94874A776532705231"
+                isExternal
+                className="w-full"
+              >
+                BUY ON UNISWAP
+              </Button>,
+              <Button
+                key="jumper"
+                intent="primary"
+                size="large"
+                prefixIconName="Jumper"
+                asLink
+                href="https://jumper.exchange/?fromChain=8453&fromToken=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913&toChain=8453&toToken=0x000096630066820566162C94874A776532705231"
+                isExternal
+                className="w-full"
+              >
+                BUY ON JUMPER
+              </Button>,
+            ]}
+          />
           <div className="flex w-full items-center justify-center opacity-70">
             <span
               className={classes(
