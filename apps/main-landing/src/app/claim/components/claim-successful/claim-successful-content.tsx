@@ -13,7 +13,7 @@ import { GeoConditionalButton } from '@/components/token-section/components/geo-
 
 import { useClaimPage } from '../../claim-page-context';
 
-import idrissCoinsCircle from './assets/IDRISS_SCENE_CIRCLE_2 2.png';
+import idrissCoinsCircle from './assets/IDRISS-claim-successful.png';
 import { SOCIALS } from './constants';
 
 export const ClaimSuccessfulContent = () => {
