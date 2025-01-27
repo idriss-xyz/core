@@ -47,8 +47,8 @@ export const PRIVACY_POLICY_LINK =
   'https://docs.idriss.xyz/resources/privacy-policy';
 export const TERMS_OF_SERVICE_LINK =
   'https://docs.idriss.xyz/resources/terms-of-service';
-export const AIRDROP_DOCS_LINK = 'https://docs.idriss.xyz/idriss-token/airdrop';
-export const VAULT_DOCS_LINK = 'https://docs.idriss.xyz/idriss-token/vault';
+export const AIRDROP_DOCS_LINK = 'https://docs.idriss.xyz/idriss-token/retroactive-distribution';
+export const VAULT_DOCS_LINK = 'https://docs.idriss.xyz/idriss-token/retroactive-distribution#vault';
 export const TOKENOMICS_DOCS_LINK =
   'https://docs.idriss.xyz/idriss-token/tokenomics';
 
