@@ -187,17 +187,17 @@ export const VestingPlanContent = () => {
           vestingPlan,
         )}
       />
-      <div className="relative z-[5] flex w-[800px] flex-row rounded-[25px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">
+      <div className="relative z-[5] mb-6 flex w-[800px] flex-row rounded-[25px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">
         <GradientBorder
           gradientDirection="toTop"
           gradientStopColor="rgba(145, 206, 154, 0.50)"
           borderWidth={1}
         />
-        <div className="flex w-[485px] flex-col gap-6">
-          <span className="text-label3 text-neutralGreen-700">
+        <div className="flex w-[485px] flex-col gap-4">
+          <span className="mb-2 text-label3 text-neutralGreen-700">
             SELECT YOUR PLAN
           </span>
-          <Form className="w-full">
+          <Form className="mb-2 w-full">
             <Controller
               control={formMethods.control}
               name="vestingPlan"
@@ -210,7 +210,7 @@ export const VestingPlanContent = () => {
             />
           </Form>
           <div className="w-full border-t border-mint-200 opacity-50" />
-          <div className="mb-4 flex w-full flex-row items-center">
+          <div className="flex w-full flex-row items-center">
             <Checkbox
               onChange={setTermsChecked}
               value={termsChecked}
