@@ -36,7 +36,7 @@ export const ClaimSuccessfulContent = () => {
       <span className="text-heading4 text-neutral-900">
         {hasAlreadyClaimed ? 'TOKENS ALREADY CLAIMED' : 'CLAIM SUCCESSFUL'}
       </span>
-      {hasAlreadyClaimed && (
+      {!hasAlreadyClaimed && (
         <div
           ref={downloadAreaReference}
           className="relative flex h-[354px] w-[480px] flex-col items-center justify-center gap-6 self-stretch overflow-hidden rounded-2xl bg-mint-100 p-6"
