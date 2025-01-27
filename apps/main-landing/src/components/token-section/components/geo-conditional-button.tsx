@@ -10,10 +10,12 @@ import { BlockedButton } from './blocked-button';
 
 type GeoConditionalButtonProperties = {
   defaultButton: React.ReactNode | React.ReactNode[]; // Support single or multiple buttons
+  additionalClasses?: string;
 };
 
 export const GeoConditionalButton: React.FC<GeoConditionalButtonProperties> = ({
   defaultButton,
+  additionalClasses = 'md:flex-row',
 }) => {
   const { country, loading } = useGeoLocation();
 
@@ -34,7 +36,9 @@ export const GeoConditionalButton: React.FC<GeoConditionalButtonProperties> = ({
 
   if (Array.isArray(defaultButton)) {
     return (
-      <div className="flex flex-col justify-center gap-6 md:flex-row">
+      <div
+        className={`flex flex-col justify-center gap-6 ${additionalClasses}`}
+      >
         {defaultButton}
       </div>
     );
