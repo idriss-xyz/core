@@ -6,13 +6,13 @@ import { Controller, useForm } from 'react-hook-form';
 import { createPublicClient, encodeFunctionData, formatEther, http, parseEther } from 'viem';
 import { baseSepolia } from 'viem/chains';
 import { useAccount, useSwitchChain, useWalletClient, useWriteContract } from 'wagmi';
-
-import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
-
-import { StakingABI, stakingContractAddress } from '../constants';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { estimateGas, waitForTransactionReceipt } from 'viem/actions';
+
+import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 import { TxLoadingModal } from '@/app/claim/components/tx-loading-modal/tx-loading-modal';
+
+import { StakingABI, stakingContractAddress } from '../constants';
 
 type FormPayload = {
   amount: number;
@@ -131,7 +131,7 @@ export const UnstakeTabContent = () => {
         console.error(error);
       }
     })();
-  }, [walletClient]);
+  }, [walletClient, publicClient]);
 
   return (
     <>

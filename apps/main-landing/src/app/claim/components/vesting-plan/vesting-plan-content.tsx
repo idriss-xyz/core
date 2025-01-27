@@ -17,12 +17,12 @@ import {
   TOKEN_TERMS_AND_CONDITIONS_LINK,
   VAULT_DOCS_LINK,
 } from '@idriss-xyz/constants';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 
 import { useClaimPage, VestingPlan } from '../../claim-page-context';
 import { CLAIM_ABI, claimContractAddress } from '../../constants';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { TxLoadingModal } from '../tx-loading-modal/tx-loading-modal';
 
 type FormPayload = {
@@ -79,10 +79,7 @@ export const VestingPlanContent = () => {
   ];
 
   const vestingPlanButtonLabel = useMemo(() => {
-    if (!isConnected) {
-      return 'LOG IN';
-    }
-    else {
+    if (isConnected) {
       switch (vestingPlan) {
         case 'claim_50': {
           return 'CLAIM 50%';
@@ -96,6 +93,9 @@ export const VestingPlanContent = () => {
           return 'CLAIM NOW';
         }
       }
+    }
+    else {
+      return 'LOG IN';
     }
   }, [isConnected, vestingPlan]);
 

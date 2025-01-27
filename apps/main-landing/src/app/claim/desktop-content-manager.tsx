@@ -2,9 +2,6 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { useAccount, useDisconnect } from 'wagmi';
-import { Button } from '@idriss-xyz/ui/button';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { Steps } from '@idriss-xyz/ui/steps';
 
 import '@rainbow-me/rainbowkit/styles.css';

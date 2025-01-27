@@ -20,13 +20,13 @@ import { Spinner } from '@idriss-xyz/ui/spinner';
 
 import { ERC20_ABI } from '@/app/creators/donate/constants';
 import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
+import { TxLoadingModal } from '@/app/claim/components/tx-loading-modal/tx-loading-modal';
 
 import {
   StakingABI,
   stakingContractAddress,
   testTokenAddress,
 } from '../constants';
-import { TxLoadingModal } from '@/app/claim/components/tx-loading-modal/tx-loading-modal';
 
 type FormPayload = {
   amount: number;
@@ -213,7 +213,7 @@ export const StakeTabContent = () => {
         setAvailableAmount('0');
       }
     })();
-  }, [walletClient]);
+  }, [walletClient, publicClient]);
 
   return (
     <>

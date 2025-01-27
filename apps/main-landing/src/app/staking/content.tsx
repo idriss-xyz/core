@@ -1,6 +1,4 @@
 'use client';
-import { useAccount, useDisconnect } from 'wagmi';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { Button } from '@idriss-xyz/ui/button';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { TabItem, Tabs } from '@idriss-xyz/ui/tabs';
