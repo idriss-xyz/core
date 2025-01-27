@@ -13,7 +13,7 @@ import { GeoConditionalButton } from '@/components/token-section/components/geo-
 
 import { useClaimPage } from '../../claim-page-context';
 
-import idrissCoinsCircle from './assets/IDRISS-claim-successful.png';
+import idrissClaimSuccessful from './assets/IDRISS-claim-successful.png';
 import { SOCIALS } from './constants';
 
 export const ClaimSuccessfulContent = () => {
@@ -36,21 +36,21 @@ export const ClaimSuccessfulContent = () => {
       <span className="text-heading4 text-neutral-900">
         {hasAlreadyClaimed ? 'TOKENS ALREADY CLAIMED' : 'CLAIM SUCCESSFUL'}
       </span>
-      {!hasAlreadyClaimed && (
+      {hasAlreadyClaimed && (
         <div
           ref={downloadAreaReference}
           className="relative flex h-[354px] w-[480px] flex-col items-center justify-center gap-6 self-stretch overflow-hidden rounded-2xl bg-mint-100 p-6"
         >
           <img
             alt=""
-            src={idrissCoinsCircle.src}
+            src={idrissClaimSuccessful.src}
             className="pointer-events-none absolute left-0 top-0"
           />
           <IconButton
             size="large"
             iconName="Download"
             intent="tertiary"
-            iconClassName="size-6"
+            iconClassName="size-7"
             onMouseDown={async () => {
               if (!downloadAreaReference.current) {
                 return;
@@ -66,7 +66,7 @@ export const ClaimSuccessfulContent = () => {
               link.click();
               link.remove();
             }}
-            className="absolute right-6 top-6 flex size-6 p-0 text-mint-500 active:opacity-0"
+            className="absolute right-6 top-6 flex size-7 p-0 text-mint-500 active:opacity-0"
           />
           <div className="relative flex w-full flex-row justify-center" />
           <div className="flex flex-col items-center gap-2">
