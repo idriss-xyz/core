@@ -42,7 +42,7 @@ export const ClaimContent = () => {
       />
       <div className="flex w-[459px] flex-col">
         <div className="flex flex-col items-start gap-10">
-          <span className="text-heading3">YOU’RE ELIGIBLE</span>
+          <span className="text-heading3">YOU’RE ELIGIBLE!</span>
           <span className="text-body3 text-neutralGreen-700">
             TOKENS TO CLAIM
           </span>
@@ -153,7 +153,7 @@ export const ClaimContent = () => {
                 )}
               >
                 You donated a total of ${eligibilityData.gitcoin} to open source
-                rounds between GR15 and GG20
+                rounds{'\u00A0'}between GR15 and GG20
               </li>
             }
             positive={!!eligibilityData.allocation_gitcoin}
@@ -182,8 +182,8 @@ export const ClaimContent = () => {
                   eligibilityData.allocation_ido && 'before:text-mint-600',
                 )}
               >
-                You purchased IDRISS within the first 12{'\u00A0'}hours of the
-                sale and held it for 2 weeks
+                You purchased IDRISS within the first 12{'\u00A0'}hours of
+                {'\u00A0'}the{'\u00A0'}sale and held it for 2 weeks
               </li>
             }
             positive={!!eligibilityData.allocation_ido}
