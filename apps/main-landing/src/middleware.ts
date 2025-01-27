@@ -6,6 +6,10 @@ export function middleware(request: NextRequest) {
   const url = request.nextUrl;
   const password = request.cookies.get('password')?.value;
 
+  if (process.env.PUBLIC_ACCESS_ENABLED === 'true') {
+    return NextResponse.next();
+  }
+
   if (
     ['/vault', '/claim'].includes(url.pathname) &&
     (password !== process.env.DEV_LOGIN_PASSWORD ||
