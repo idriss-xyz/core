@@ -19,7 +19,7 @@ import {
   formatEther,
 } from 'viem';
 import { call, estimateGas, waitForTransactionReceipt } from 'viem/actions';
-import { baseSepolia } from 'viem/chains';
+import { base } from 'viem/chains';
 import { WriteContractMutateAsync } from 'wagmi/query';
 import { useEffect, useState } from 'react';
 import { Spinner } from '@idriss-xyz/ui/spinner';
@@ -30,12 +30,9 @@ import { TOKEN_TERMS_AND_CONDITIONS_LINK } from '@idriss-xyz/constants';
 import { ERC20_ABI } from '@/app/creators/donate/constants';
 import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 import { TxLoadingModal } from '@/app/claim/components/tx-loading-modal/tx-loading-modal';
+import { IDRISS_TOKEN_ADDRESS } from '@/components/token-section/constants';
 
-import {
-  StakingABI,
-  stakingContractAddress,
-  testTokenAddress,
-} from '../constants';
+import { StakingABI, STAKER_ADDRESS } from '../constants';
 
 type FormPayload = {
   amount: number;
@@ -61,14 +58,14 @@ const approveTokens = async (
   const allowanceData = {
     abi: ERC20_ABI,
     functionName: 'allowance',
-    args: [walletClient.account.address, stakingContractAddress],
+    args: [walletClient.account.address, STAKER_ADDRESS],
   } as const;
 
   const encodedAllowanceData = encodeFunctionData(allowanceData);
 
   const allowanceRaw = await call(walletClient, {
     account: walletClient.account,
-    to: testTokenAddress,
+    to: IDRISS_TOKEN_ADDRESS,
     data: encodedAllowanceData,
   });
 
@@ -86,19 +83,19 @@ const approveTokens = async (
     const approveData = {
       abi: ERC20_ABI,
       functionName: 'approve',
-      args: [stakingContractAddress, tokensToSend],
+      args: [STAKER_ADDRESS, tokensToSend],
     } as const;
 
     const encodedData = encodeFunctionData(approveData);
 
     const gas = await estimateGas(walletClient, {
-      to: testTokenAddress,
+      to: IDRISS_TOKEN_ADDRESS,
       data: encodedData,
     });
 
     const hash = await writeContractAsync({
-      chain: baseSepolia,
-      address: testTokenAddress,
+      chain: base,
+      address: IDRISS_TOKEN_ADDRESS,
       ...approveData,
       gas,
     });
@@ -121,7 +118,7 @@ export const StakeTabContent = () => {
   const { openConnectModal } = useConnectModal();
   const { switchChainAsync } = useSwitchChain();
   const publicClient = createPublicClient({
-    chain: baseSepolia,
+    chain: base,
     transport: http(),
   });
 
@@ -150,7 +147,7 @@ export const StakeTabContent = () => {
 
         const parsedAmount = parseEther(data.amount.toString());
 
-        await switchChainAsync({ chainId: baseSepolia.id });
+        await switchChainAsync({ chainId: base.id });
 
         await approveTokens(
           walletClient,
@@ -167,15 +164,15 @@ export const StakeTabContent = () => {
         const encodedStakeData = encodeFunctionData(stakeData);
 
         const gas = await estimateGas(walletClient, {
-          to: stakingContractAddress,
+          to: STAKER_ADDRESS,
           data: encodedStakeData,
         }).catch((error) => {
           throw error;
         });
 
         const hash = await writeContractAsync({
-          address: stakingContractAddress,
-          chain: baseSepolia,
+          address: STAKER_ADDRESS,
+          chain: base,
           ...stakeData,
           gas,
         });
@@ -207,7 +204,7 @@ export const StakeTabContent = () => {
       try {
         const balance = await publicClient?.readContract({
           abi: ERC20_ABI,
-          address: testTokenAddress,
+          address: IDRISS_TOKEN_ADDRESS,
           functionName: 'balanceOf',
           args: [walletClient.account.address],
         });
