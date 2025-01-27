@@ -7,12 +7,13 @@ import {
   TOKENOMICS_DOCS_LINK,
 } from '@idriss-xyz/constants';
 
+import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
+
 import { useClaimPage } from '../../claim-page-context';
 
 import geoist_avatar from './assets/geoist_avatar.png';
 import levertz_avatar from './assets/levertz_avatar.png';
 import you_avatar from './assets/you_avatar.png';
-import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 
 export const LetterContent = () => {
   const { setCurrentContent } = useClaimPage();
