@@ -62,8 +62,11 @@ export const VestingPlanContent = () => {
   const { openConnectModal } = useConnectModal();
 
   const isOwnerOfCheckedWallet = useMemo(() => {
-    return walletClient?.account.address === walletAddress;
-  }, []);
+    return (
+      walletClient?.account.address.toLowerCase() ===
+      walletAddress?.toLowerCase()
+    );
+  }, [walletClient, walletAddress]);
 
   const formMethods = useForm<FormPayload>({
     defaultValues: {
