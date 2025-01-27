@@ -35,8 +35,12 @@ const baseClient = createPublicClient({
 });
 
 export const CheckEligibilityContent = () => {
-  const { setCurrentContent, setWalletAddress, setEligibilityData } =
-    useClaimPage();
+  const {
+    setCurrentContent,
+    setWalletAddress,
+    setEligibilityData,
+    setHasAlreadyClaimed,
+  } = useClaimPage();
   const { data: walletClient } = useWalletClient();
   const formMethods = useForm<FormPayload>({
     defaultValues: {
@@ -83,6 +87,7 @@ export const CheckEligibilityContent = () => {
 
     if (isClaimed) {
       setCurrentContent('claim-successful');
+      setHasAlreadyClaimed(true);
       return;
     }
     setCurrentContent(eligibility.allocation ? 'claim' : 'not-eligible');

@@ -7,6 +7,8 @@ import {
   TOKENOMICS_DOCS_LINK,
 } from '@idriss-xyz/constants';
 
+import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
+
 import { useClaimPage } from '../../claim-page-context';
 
 import geoist_avatar from './assets/geoist_avatar.png';
@@ -90,17 +92,21 @@ export const LetterContent = () => {
           <span className="text-label5 text-neutral-900">You</span>
         </div>
       </div>
-      <Button
-        intent="primary"
-        size="large"
-        suffixIconName="ArrowRight"
-        className="w-56"
-        onClick={() => {
-          setCurrentContent('about-idriss');
-        }}
-      >
-        Next
-      </Button>
+      <GeoConditionalButton
+        defaultButton={
+          <Button
+            intent="primary"
+            size="large"
+            suffixIconName="ArrowRight"
+            className="w-56"
+            onClick={() => {
+              setCurrentContent('about-idriss');
+            }}
+          >
+            Next
+          </Button>
+        }
+      />
     </div>
   );
 };
