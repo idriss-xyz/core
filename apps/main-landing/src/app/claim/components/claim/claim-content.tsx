@@ -69,7 +69,7 @@ export const ClaimContent = () => {
               <Icon
                 name="BaseLogo"
                 size={24}
-                className="absolute bottom-0 right-0 translate-x-1"
+                className="absolute bottom-0 right-0 translate-x-2.5 rounded-full border-[2.5px] border-white"
               />
             </div>
           </div>

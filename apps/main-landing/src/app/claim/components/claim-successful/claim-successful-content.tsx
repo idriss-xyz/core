@@ -3,6 +3,7 @@
 import { useRef } from 'react';
 import { toPng } from 'html-to-image';
 import { Button } from '@idriss-xyz/ui/button';
+import { Icon } from '@idriss-xyz/ui/icon';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { classes } from '@idriss-xyz/ui/utils';
@@ -13,7 +14,7 @@ import { GeoConditionalButton } from '@/components/token-section/components/geo-
 
 import { useClaimPage } from '../../claim-page-context';
 
-import idrissCoinsCircle from './assets/IDRISS_SCENE_CIRCLE_2 2.png';
+import idrissClaimSuccessful from './assets/IDRISS-claim-successful.png';
 import { SOCIALS } from './constants';
 
 export const ClaimSuccessfulContent = () => {
@@ -43,14 +44,14 @@ export const ClaimSuccessfulContent = () => {
         >
           <img
             alt=""
-            src={idrissCoinsCircle.src}
+            src={idrissClaimSuccessful.src}
             className="pointer-events-none absolute left-0 top-0"
           />
           <IconButton
             size="large"
             iconName="Download"
             intent="tertiary"
-            iconClassName="size-6"
+            iconClassName="size-7"
             onMouseDown={async () => {
               if (!downloadAreaReference.current) {
                 return;
@@ -66,7 +67,7 @@ export const ClaimSuccessfulContent = () => {
               link.click();
               link.remove();
             }}
-            className="absolute right-6 top-6 flex size-6 p-0 text-mint-500 active:opacity-0"
+            className="absolute right-6 top-6 flex size-7 p-0 text-mint-500 active:opacity-0"
           />
           <div className="relative flex w-full flex-row justify-center" />
           <div className="flex flex-col items-center gap-2">
@@ -75,7 +76,7 @@ export const ClaimSuccessfulContent = () => {
                 ? 'YOU RECEIVED'
                 : 'UNLOCK ON JULY 6, 2025'}
             </span>
-            <div className="z-10 flex flex-col items-center justify-center rounded-[12px] border-[0.683px] border-[rgba(85,235,60,0.30)] bg-[radial-gradient(50%_50%_at_50%_50%,_rgba(252,255,242,0.00)_0%,_rgba(23,255,74,0.18)_100%)] px-10 py-5.5">
+            <div className="z-10 flex items-center justify-center gap-3 rounded-[12px] border-[0.683px] border-[rgba(85,235,60,0.30)] bg-[radial-gradient(50%_50%_at_50%_50%,_rgba(252,255,242,0.00)_0%,_rgba(23,255,74,0.18)_100%)] px-10 py-5.5">
               <span className="text-heading3 gradient-text">
                 +
                 {new Intl.NumberFormat('en-US', {
@@ -90,6 +91,14 @@ export const ClaimSuccessfulContent = () => {
                 )}{' '}
                 $IDRISS
               </span>
+              <div className="relative">
+                <Icon name="IdrissCircled" size={40} />
+                <Icon
+                  name="BaseLogo"
+                  size={20}
+                  className="absolute bottom-0 right-0 translate-x-2.5 rounded-full border-[2.5px] border-white"
+                />
+              </div>
             </div>
           </div>
         </div>
