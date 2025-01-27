@@ -63,10 +63,11 @@ export const SubscriptionsManagement = () => {
 };
 
 const SubscriptionsManagementContent = ({ wallet }: ContentProperties) => {
-  const { subscriptions, subscribe, unsubscribe } = useSubscriptions({
-    wallet,
-    addTabListener: true,
-  });
+  const { subscriptions, subscribe, unsubscribe, canSubscribe } =
+    useSubscriptions({
+      wallet,
+      addTabListener: true,
+    });
 
   const handleUnsubscribe = (payload: UnsubscribePayload) => {
     return unsubscribe.use(payload);
@@ -80,7 +81,7 @@ const SubscriptionsManagementContent = ({ wallet }: ContentProperties) => {
     <>
       <SubscriptionForm
         onSubmit={handleSubscribe}
-        subscriptionsAmount={subscriptions.amount}
+        canSubscribe={canSubscribe}
       />
       <SubscriptionsList
         onRemove={handleUnsubscribe}

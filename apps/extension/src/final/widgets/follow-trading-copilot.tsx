@@ -149,9 +149,10 @@ const FollowTradingCopilotContent = ({
   className,
   iconHeight,
 }: ContentProperties) => {
-  const { subscriptions, subscribe, unsubscribe } = useSubscriptions({
-    wallet,
-  });
+  const { subscriptions, subscribe, unsubscribe, canSubscribe } =
+    useSubscriptions({
+      wallet,
+    });
 
   const handleUnsubscribe = (payload: UnsubscribePayload) => {
     return unsubscribe.use(payload);
@@ -165,10 +166,7 @@ const FollowTradingCopilotContent = ({
     return detail.address.toLowerCase() === userId.toLowerCase();
   });
 
-  const subscriptionLimit = 10;
-  const subscriptionLimitExceeded =
-    Number(subscriptions.amount) >= subscriptionLimit;
-  const isButtonDisabled = !isSubscribed && subscriptionLimitExceeded;
+  const isButtonDisabled = !isSubscribed && !canSubscribe;
 
   const onClickHandler = async () => {
     await (isSubscribed
@@ -178,7 +176,7 @@ const FollowTradingCopilotContent = ({
 
   const tooltipContent = isButtonDisabled ? (
     <span className="relative opacity-100 transition delay-200 duration-500">
-      Maximum {subscriptionLimit} subscriptions reached.
+      Maximum subscriptions reached.
     </span>
   ) : (
     <>

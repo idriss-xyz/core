@@ -10,9 +10,13 @@ import { Wallet } from 'shared/web3';
 import { useTradingCopilot } from 'shared/extension';
 
 import {
+  GetEnsBalanceOfCommand,
   AddTradingCopilotSubscriptionCommand,
   GetTradingCopilotSubscriptionsCommand,
   RemoveTradingCopilotSubscriptionCommand,
+  IDRISS_CONTRACT,
+  PREMIUM_THRESHOLD,
+  FREE_SUBSCRIPTIONS,
 } from '../commands';
 import { SubscribePayload, UnsubscribePayload } from '../types';
 
@@ -40,6 +44,18 @@ export const useSubscriptions = ({ wallet, addTabListener }: Properties) => {
     }),
     staleTime: Number.POSITIVE_INFINITY,
   });
+  const tokenBalanceQuery = useCommandQuery({
+    command: new GetEnsBalanceOfCommand({
+      address: IDRISS_CONTRACT,
+      args: [wallet?.account],
+    }),
+    staleTime: Number.POSITIVE_INFINITY,
+  });
+
+  const isPremiumUser = Number(tokenBalanceQuery.data) >= PREMIUM_THRESHOLD;
+  const canSubscribe =
+    isPremiumUser ||
+    Number(subscriptionsQuery.data?.details.length) < FREE_SUBSCRIPTIONS;
 
   useEffect(() => {
     if (subscriptionsQuery.isSuccess) {
@@ -150,6 +166,7 @@ export const useSubscriptions = ({ wallet, addTabListener }: Properties) => {
   return {
     subscribe,
     unsubscribe,
+    canSubscribe,
     subscriptions,
   };
 };

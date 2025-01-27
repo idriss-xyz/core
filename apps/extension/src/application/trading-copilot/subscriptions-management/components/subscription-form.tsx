@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { isAddress } from 'viem';
 
@@ -17,12 +17,8 @@ const EMPTY_FORM: FormValues = {
   subscription: '',
 };
 
-export const SubscriptionForm = ({
-  onSubmit,
-  subscriptionsAmount,
-}: Properties) => {
-  const subscriptionLimit = 10;
-  const [showError, setShowError] = useState(false);
+export const SubscriptionForm = ({ onSubmit, canSubscribe }: Properties) => {
+  const [showError, setShowError] = useState<boolean>();
 
   const getEnsAddressMutation = useCommandMutation(GetEnsAddressCommand);
   const getFarcasterAddressMutation = useCommandMutation(
@@ -33,17 +29,16 @@ export const SubscriptionForm = ({
     defaultValues: EMPTY_FORM,
   });
 
-  useEffect(() => {
-    setTimeout(() => {
-      setShowError(false);
-    }, 3500);
-  }, [showError]);
-
   const addSubscriber: SubmitHandler<FormValues> = useCallback(
     async (data) => {
-      if (Number(subscriptionsAmount) >= subscriptionLimit) {
+      if (!canSubscribe) {
         setShowError(true);
+
         form.reset(EMPTY_FORM);
+
+        setTimeout(() => {
+          setShowError(false);
+        }, 7000);
 
         return;
       }
@@ -87,7 +82,7 @@ export const SubscriptionForm = ({
     [
       form,
       onSubmit,
-      subscriptionsAmount,
+      canSubscribe,
       getEnsAddressMutation,
       getFarcasterAddressMutation,
     ],
@@ -110,6 +105,7 @@ export const SubscriptionForm = ({
               {...field}
               type="text"
               id="subscription"
+              disabled={showError}
               placeholder="e.g., vitalik.eth"
               className="mt-1 block w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-black shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
             />
@@ -118,8 +114,8 @@ export const SubscriptionForm = ({
       />
       {showError && (
         <ErrorMessage className="mt-1">
-          Maximum {subscriptionLimit} subscriptions reached. Lock $IDRISS to
-          access premium features (coming soon).
+          Maximum subscriptions reached. Lock $IDRISS to access premium features
+          (coming soon).
         </ErrorMessage>
       )}
     </form>
