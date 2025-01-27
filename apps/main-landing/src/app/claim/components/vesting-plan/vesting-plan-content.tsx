@@ -9,7 +9,7 @@ import { useMemo, useState } from 'react';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { Checkbox } from '@idriss-xyz/ui/checkbox';
 import { Link } from '@idriss-xyz/ui/link';
-import { encodeFunctionData } from 'viem';
+import { encodeFunctionData, formatEther } from 'viem';
 import { baseSepolia } from 'viem/chains';
 import { estimateGas, waitForTransactionReceipt } from 'viem/actions';
 import { useAccount, useSwitchChain, useWalletClient, useWriteContract } from 'wagmi';
@@ -23,13 +23,23 @@ import { GeoConditionalButton } from '@/components/token-section/components/geo-
 import { useClaimPage, VestingPlan } from '../../claim-page-context';
 import { CLAIM_ABI, claimContractAddress } from '../../constants';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { TxLoadingModal } from '../tx-loading-modal/tx-loading-modal';
 
 type FormPayload = {
   vestingPlan: VestingPlan;
 };
 
+const txLoadingHeading = (amount: string) => {
+  return (
+    <>
+      Claiming <span className="text-mint-600">${amount}</span>{' '}IDRISS
+    </>
+  )
+}
+
 export const VestingPlanContent = () => {
   const [termsChecked, setTermsChecked] = useState(false);
+  const [ isLoading, setIsLoading] = useState(false);
   const { eligibilityData, setCurrentContent, setVestingPlan, walletAddress } =
     useClaimPage();
   const { data: walletClient } = useWalletClient();
@@ -100,6 +110,7 @@ export const VestingPlanContent = () => {
     }
 
     else {
+      setIsLoading(true);
       if (!walletClient || walletAddress === undefined) {
         console.error('Wallet not connected');
         return;
@@ -141,12 +152,16 @@ export const VestingPlanContent = () => {
           hash,
         });
 
+        setIsLoading(false);
+
         if (status === 'reverted') {
           throw new Error('Claim transaction reverted');
         }
 
         return setCurrentContent('claim-successful');
       } catch (error) {
+        setIsLoading(false);
+
         console.error('Error claiming:', error);
         throw error;
       }
@@ -154,106 +169,109 @@ export const VestingPlanContent = () => {
   };
 
   return (
-    <div className="relative z-[5] flex w-[800px] flex-row rounded-[25px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">
-      <GradientBorder
-        gradientDirection="toTop"
-        gradientStopColor="rgba(145, 206, 154, 0.50)"
-        borderWidth={1}
-      />
-      <div className="flex w-[485px] flex-col gap-6">
-        <span className="text-label3 text-neutralGreen-700">
-          SELECT YOUR PLAN
-        </span>
-        <Form className="w-full">
-          <Controller
-            control={formMethods.control}
-            name="vestingPlan"
-            rules={{
-              required: 'vesting plan is required',
-            }}
-            render={({ field }) => {
-              return <RadioGroup {...field} items={vestingPlanOptions} />;
-            }}
-          />
-        </Form>
-        <div className="w-full border-t border-mint-200 opacity-50" />
-        <div className="mb-4 flex w-full flex-row items-center">
-          <Checkbox
-            onChange={setTermsChecked}
-            value={termsChecked}
-            rootClassName="border-neutral-300"
-            label={
-              <span className="w-full text-body5 text-neutralGreen-900">
-                By claiming, you agree to the{' '}
-                <Link
-                  size="medium"
-                  href={TOKEN_TERMS_AND_CONDITIONS_LINK}
-                  isExternal
-                  className="text-body5 lg:text-body5"
-                >
-                  Terms{'\u00A0'}and{'\u00A0'}conditions
-                </Link>
-              </span>
+    <>
+      <TxLoadingModal show={isLoading} heading={txLoadingHeading(formatEther(BigInt(eligibilityData.claimData.amount)))} />
+      <div className="relative z-[5] flex w-[800px] flex-row rounded-[25px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">
+        <GradientBorder
+          gradientDirection="toTop"
+          gradientStopColor="rgba(145, 206, 154, 0.50)"
+          borderWidth={1}
+        />
+        <div className="flex w-[485px] flex-col gap-6">
+          <span className="text-label3 text-neutralGreen-700">
+            SELECT YOUR PLAN
+          </span>
+          <Form className="w-full">
+            <Controller
+              control={formMethods.control}
+              name="vestingPlan"
+              rules={{
+                required: 'vesting plan is required',
+              }}
+              render={({ field }) => {
+                return <RadioGroup {...field} items={vestingPlanOptions} />;
+              }}
+            />
+          </Form>
+          <div className="w-full border-t border-mint-200 opacity-50" />
+          <div className="mb-4 flex w-full flex-row items-center">
+            <Checkbox
+              onChange={setTermsChecked}
+              value={termsChecked}
+              rootClassName="border-neutral-300"
+              label={
+                <span className="w-full text-body5 text-neutralGreen-900">
+                  By claiming, you agree to the{' '}
+                  <Link
+                    size="medium"
+                    href={TOKEN_TERMS_AND_CONDITIONS_LINK}
+                    isExternal
+                    className="text-body5 lg:text-body5"
+                  >
+                    Terms{'\u00A0'}and{'\u00A0'}conditions
+                  </Link>
+                </span>
+              }
+            />
+          </div>
+          <GeoConditionalButton
+            defaultButton={
+              <Button
+                intent="primary"
+                size="large"
+                className="w-full"
+                onClick={async () => {
+                  setVestingPlan(vestingPlan);
+                  await handleClaim();
+                }}
+                disabled={!termsChecked}
+              >
+                {vestingPlanButtonLabel}
+              </Button>
             }
           />
         </div>
-        <GeoConditionalButton
-          defaultButton={
-            <Button
-              intent="primary"
-              size="large"
-              className="w-full"
-              onClick={async () => {
-                setVestingPlan(vestingPlan);
-                await handleClaim();
-              }}
-              disabled={!termsChecked}
-            >
-              {vestingPlanButtonLabel}
-            </Button>
-          }
-        />
-      </div>
-      <div className="mx-10 w-px bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] opacity-50" />
-      <div className="flex w-[389px] flex-col">
-        <div className="flex flex-col gap-2">
-          <span className="pb-4 text-label3 text-neutralGreen-700">
-            VAULT BENEFITS
-          </span>
-          <div className="flex gap-2">
-            <Icon name="PiggyBank" size={24} className="text-gray-300" />
-            <span className="text-body3 text-neutralGreen-700">
-              Earn <span className="gradient-text">12% APR</span> on locked
-              tokens
+        <div className="mx-10 w-px bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] opacity-50" />
+        <div className="flex w-[389px] flex-col">
+          <div className="flex flex-col gap-2">
+            <span className="pb-4 text-label3 text-neutralGreen-700">
+              VAULT BENEFITS
             </span>
+            <div className="flex gap-2">
+              <Icon name="PiggyBank" size={24} className="text-gray-300" />
+              <span className="text-body3 text-neutralGreen-700">
+                Earn <span className="gradient-text">12% APR</span> on locked
+                tokens
+              </span>
+            </div>
+            <div className="flex gap-2">
+              <Icon name="Gem" size={24} className="text-gray-300" />
+              <span className="text-body3 text-neutralGreen-700">
+                Lock <span className="gradient-text">10,000 $IDRISS</span> or more
+                to access premium features
+              </span>
+            </div>
+            <div className="flex gap-2">
+              <Icon name="PieChart" size={24} className="text-gray-300" />
+              <span className="text-body3 text-neutralGreen-700">
+                Tap into decentralized revenue sharing from IDRISS apps
+              </span>
+            </div>
           </div>
-          <div className="flex gap-2">
-            <Icon name="Gem" size={24} className="text-gray-300" />
-            <span className="text-body3 text-neutralGreen-700">
-              Lock <span className="gradient-text">10,000 $IDRISS</span> or more
-              to access premium features
-            </span>
-          </div>
-          <div className="flex gap-2">
-            <Icon name="PieChart" size={24} className="text-gray-300" />
-            <span className="text-body3 text-neutralGreen-700">
-              Tap into decentralized revenue sharing from IDRISS apps
-            </span>
-          </div>
-        </div>
 
-        <Button
-          intent="tertiary"
-          size="medium"
-          isExternal
-          asLink
-          className="mt-8 w-full"
-          suffixIconName="ArrowRight"
-          href={VAULT_DOCS_LINK}
-        >
-          LEARN MORE
-        </Button>
+          <Button
+            intent="tertiary"
+            size="medium"
+            isExternal
+            asLink
+            className="mt-8 w-full"
+            suffixIconName="ArrowRight"
+            href={VAULT_DOCS_LINK}
+          >
+            LEARN MORE
+          </Button>
+        </div>
       </div>
-    </div>
+    </>
   );
 };

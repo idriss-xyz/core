@@ -15,7 +15,7 @@ export const TxLoadingModal = ({
 }: Properties) => {
   if (!show) return null;
   return (
-    <div className="bg-black/50 absolute inset-0 z-[10] h-screen w-screen">
+    <div className="bg-black/50 absolute inset-0 z-[15]">
       <div
         className={classes(
           'w-[440px] max-w-full rounded-xl bg-white px-4 pb-9 pt-6 flex flex-col items-center text-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',

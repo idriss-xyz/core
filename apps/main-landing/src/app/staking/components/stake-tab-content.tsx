@@ -26,10 +26,19 @@ import {
   stakingContractAddress,
   testTokenAddress,
 } from '../constants';
+import { TxLoadingModal } from '@/app/claim/components/tx-loading-modal/tx-loading-modal';
 
 type FormPayload = {
   amount: number;
 };
+
+const txLoadingHeading = (amount: number) => {
+  return (
+    <>
+      Locking <span className="text-mint-600">${amount}</span>{' '}IDRISS
+    </>
+  )
+}
 
 const approveTokens = async (
   walletClient: WalletClient,
@@ -96,6 +105,7 @@ const approveTokens = async (
 
 export const StakeTabContent = () => {
   const [availableAmount, setAvailableAmount] = useState<string>();
+  const [ isLoading, setIsLoading] = useState(false);
   const { isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
   const { switchChainAsync } = useSwitchChain();
@@ -104,12 +114,14 @@ export const StakeTabContent = () => {
     transport: http(),
   });
 
-  const { handleSubmit, control } = useForm<FormPayload>({
+  const { handleSubmit, control, watch } = useForm<FormPayload>({
     defaultValues: {
       amount: 1,
     },
     mode: 'onSubmit',
   });
+
+  const amount = watch("amount");
 
   const { data: walletClient } = useWalletClient();
   const { writeContractAsync } = useWriteContract();
@@ -118,49 +130,60 @@ export const StakeTabContent = () => {
     if (!isConnected && openConnectModal) {
       openConnectModal();
     } else {
-      if (!walletClient) {
-        console.error('Wallet not connected');
-        return;
-      }
+      try {
 
-      const parsedAmount = parseEther(data.amount.toString());
+        setIsLoading(true);
+        if (!walletClient) {
+          console.error('Wallet not connected');
+          return;
+        }
 
-      await switchChainAsync({chainId: baseSepolia.id});
+        const parsedAmount = parseEther(data.amount.toString());
 
-      await approveTokens(
-        walletClient,
-        BigInt(parsedAmount),
-        writeContractAsync,
-      );
+        await switchChainAsync({chainId: baseSepolia.id});
 
-      const stakeData = {
-        abi: StakingABI,
-        functionName: 'stake',
-        args: [parsedAmount],
-      };
+        await approveTokens(
+          walletClient,
+          BigInt(parsedAmount),
+          writeContractAsync,
+        );
 
-      const encodedStakeData = encodeFunctionData(stakeData);
+        const stakeData = {
+          abi: StakingABI,
+          functionName: 'stake',
+          args: [parsedAmount],
+        };
 
-      const gas = await estimateGas(walletClient, {
-        to: stakingContractAddress,
-        data: encodedStakeData,
-      }).catch((error) => {
+        const encodedStakeData = encodeFunctionData(stakeData);
+
+        const gas = await estimateGas(walletClient, {
+          to: stakingContractAddress,
+          data: encodedStakeData,
+        }).catch((error) => {
+          throw error;
+        });
+
+        const hash = await writeContractAsync({
+          address: stakingContractAddress,
+          chain: baseSepolia,
+          ...stakeData,
+          gas,
+        });
+
+        const { status } = await waitForTransactionReceipt(walletClient, {
+          hash,
+        });
+
+        setIsLoading(false);
+
+        if (status === 'reverted') {
+          throw new Error('Claim transaction reverted');
+        }
+      } catch (error) {
+        setIsLoading(false);
+
+        console.error('Error locking:', error);
         throw error;
-      });
-
-      const hash = await writeContractAsync({
-        address: stakingContractAddress,
-        chain: baseSepolia,
-        ...stakeData,
-        gas,
-      });
-
-      const { status } = await waitForTransactionReceipt(walletClient, {
-        hash,
-      });
-
-      if (status === 'reverted') {
-        throw new Error('Claim transaction reverted');
       }
     }
   };
@@ -193,60 +216,63 @@ export const StakeTabContent = () => {
   }, [walletClient]);
 
   return (
-    <Form className="w-full" onSubmit={handleSubmit(handleStake)}>
-      <Controller
-        control={control}
-        name="amount"
-        render={({ field }) => {
-          return (
-            <Form.Field
-              {...field}
-              className="mt-6"
-              value={field.value.toString()}
-              onChange={(value) => {
-                field.onChange(Number(value));
-              }}
-              label={
-                <div className="flex justify-between">
-                  <span className="text-label4 text-neutralGreen-700">
-                    Amount
-                  </span>
-                  {walletClient ? (
-                    <div className="flex text-label6 text-neutral-800">
-                      Available:{' '}
-                      <span className="mx-1 flex justify-center">
-                        {availableAmount ?? <Spinner className="size-3" />}
-                      </span>{' '}
-                      IDRISS
-                    </div>
-                  ) : (
-                    ''
-                  )}
-                </div>
-              }
-              numeric
-              prefixIconName="IdrissCircled"
-              suffixElement={
-                <span className="text-body4 text-neutral-500">IDRISS</span>
-              }
-            />
-          );
-        }}
-      />
-      <div className="relative">
-        <GeoConditionalButton
-          defaultButton={
-            <Button
-              intent="primary"
-              size="large"
-              className="mt-6 w-full"
-              type="submit"
-            >
-              { isConnected ? 'LOCK' : 'LOG IN'}
-            </Button>
-          }
+    <>
+      <TxLoadingModal show={isLoading} heading={txLoadingHeading(amount)}/>
+      <Form className="w-full" onSubmit={handleSubmit(handleStake)}>
+        <Controller
+          control={control}
+          name="amount"
+          render={({ field }) => {
+            return (
+              <Form.Field
+                {...field}
+                className="mt-6"
+                value={field.value.toString()}
+                onChange={(value) => {
+                  field.onChange(Number(value));
+                }}
+                label={
+                  <div className="flex justify-between">
+                    <span className="text-label4 text-neutralGreen-700">
+                      Amount
+                    </span>
+                    {walletClient ? (
+                      <div className="flex text-label6 text-neutral-800">
+                        Available:{' '}
+                        <span className="mx-1 flex justify-center">
+                          {availableAmount ?? <Spinner className="size-3" />}
+                        </span>{' '}
+                        IDRISS
+                      </div>
+                    ) : (
+                      ''
+                    )}
+                  </div>
+                }
+                numeric
+                prefixIconName="IdrissCircled"
+                suffixElement={
+                  <span className="text-body4 text-neutral-500">IDRISS</span>
+                }
+              />
+            );
+          }}
         />
-      </div>
-    </Form>
+        <div className="relative">
+          <GeoConditionalButton
+            defaultButton={
+              <Button
+                intent="primary"
+                size="large"
+                className="mt-6 w-full"
+                type="submit"
+              >
+                { isConnected ? 'LOCK' : 'LOG IN'}
+              </Button>
+            }
+          />
+        </div>
+      </Form>
+    </>
   );
 };

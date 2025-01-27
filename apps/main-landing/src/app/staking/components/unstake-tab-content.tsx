@@ -12,13 +12,23 @@ import { GeoConditionalButton } from '@/components/token-section/components/geo-
 import { StakingABI, stakingContractAddress } from '../constants';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { estimateGas, waitForTransactionReceipt } from 'viem/actions';
+import { TxLoadingModal } from '@/app/claim/components/tx-loading-modal/tx-loading-modal';
 
 type FormPayload = {
   amount: number;
 };
 
+const txLoadingHeading = (amount: number) => {
+  return (
+    <>
+      Unlocking <span className="text-mint-600">${amount}</span>{' '}IDRISS
+    </>
+  )
+}
+
 export const UnstakeTabContent = () => {
   const [availableAmount, setAvailableAmount] = useState<string>();
+  const [ isLoading, setIsLoading] = useState(false);
   const { data: walletClient } = useWalletClient();
   const { isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
@@ -29,55 +39,70 @@ export const UnstakeTabContent = () => {
     chain: baseSepolia,
     transport: http(),
   });
-  const { handleSubmit, control } = useForm<FormPayload>({
+  const { handleSubmit, control, watch } = useForm<FormPayload>({
     defaultValues: {
       amount: 1,
     },
     mode: 'onSubmit',
   });
 
+  const amount = watch("amount");
+
   const handleUnstake = async (data: FormPayload) => {
     if (!isConnected && openConnectModal) {
       openConnectModal();
     } else {
-      if (!walletClient) {
-        console.error('Wallet not connected');
-        return;
-      }
+      try {
+        setIsLoading(true);
 
-      const parsedAmount = parseEther(data.amount.toString());
 
-      await switchChainAsync({ chainId: baseSepolia.id });
+        if (!walletClient) {
+          console.error('Wallet not connected');
+          return;
+        }
 
-      const stakeData = {
-        abi: StakingABI,
-        functionName: 'withdraw',
-        args: [parsedAmount],
-      };
+        const parsedAmount = parseEther(data.amount.toString());
 
-      const encodedStakeData = encodeFunctionData(stakeData);
+        await switchChainAsync({ chainId: baseSepolia.id });
 
-      const gas = await estimateGas(walletClient, {
-        to: stakingContractAddress,
-        data: encodedStakeData,
-      }).catch((error) => {
+        const stakeData = {
+          abi: StakingABI,
+          functionName: 'withdraw',
+          args: [parsedAmount],
+        };
+
+        const encodedStakeData = encodeFunctionData(stakeData);
+
+        const gas = await estimateGas(walletClient, {
+          to: stakingContractAddress,
+          data: encodedStakeData,
+        }).catch((error) => {
+          throw error;
+        });
+
+        const hash = await writeContractAsync({
+          address: stakingContractAddress,
+          chain: baseSepolia,
+          ...stakeData,
+          gas,
+        });
+
+        const { status } = await waitForTransactionReceipt(walletClient, {
+          hash,
+        });
+
+        setIsLoading(false);
+
+        if (status === 'reverted') {
+          throw new Error('Claim transaction reverted');
+        }
+      } catch (error) {
+        setIsLoading(false);
+
+        console.error('Error unlocking:', error);
         throw error;
-      });
-
-      const hash = await writeContractAsync({
-        address: stakingContractAddress,
-        chain: baseSepolia,
-        ...stakeData,
-        gas,
-      });
-
-      const { status } = await waitForTransactionReceipt(walletClient, {
-        hash,
-      });
-
-      if (status === 'reverted') {
-        throw new Error('Claim transaction reverted');
       }
+
     }
   };
 
@@ -109,6 +134,8 @@ export const UnstakeTabContent = () => {
   }, [walletClient]);
 
   return (
+    <>
+    <TxLoadingModal show={isLoading} heading={txLoadingHeading(amount)}/>
     <Form className="w-full" onSubmit={handleSubmit(handleUnstake)}>
       <Controller
         control={control}
@@ -164,5 +191,6 @@ export const UnstakeTabContent = () => {
         />
       </div>
     </Form>
+    </>
   );
 };
