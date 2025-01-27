@@ -12,6 +12,7 @@ import { useClaimPage } from '../../claim-page-context';
 import geoist_avatar from './assets/geoist_avatar.png';
 import levertz_avatar from './assets/levertz_avatar.png';
 import you_avatar from './assets/you_avatar.png';
+import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 
 export const LetterContent = () => {
   const { setCurrentContent } = useClaimPage();
@@ -90,17 +91,21 @@ export const LetterContent = () => {
           <span className="text-label5 text-neutral-900">You</span>
         </div>
       </div>
-      <Button
-        intent="primary"
-        size="large"
-        suffixIconName="ArrowRight"
-        className="w-56"
-        onClick={() => {
-          setCurrentContent('about-idriss');
-        }}
-      >
-        Next
-      </Button>
+      <GeoConditionalButton
+        defaultButton={
+          <Button
+            intent="primary"
+            size="large"
+            suffixIconName="ArrowRight"
+            className="w-56"
+            onClick={() => {
+              setCurrentContent('about-idriss');
+            }}
+          >
+            Next
+          </Button>
+        }
+      />
     </div>
   );
 };
