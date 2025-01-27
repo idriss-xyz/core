@@ -61,6 +61,10 @@ export const VestingPlanContent = () => {
   const { isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
 
+  const isOwnerOfCheckedWallet = useMemo(() => {
+    return walletClient?.account.address === walletAddress;
+  }, []);
+
   const formMethods = useForm<FormPayload>({
     defaultValues: {
       vestingPlan: 'claim_50',
@@ -240,12 +244,20 @@ export const VestingPlanContent = () => {
                   setVestingPlan(vestingPlan);
                   await handleClaim();
                 }}
-                disabled={!termsChecked}
+                disabled={
+                  !termsChecked || (isConnected && !isOwnerOfCheckedWallet)
+                }
               >
                 {vestingPlanButtonLabel}
               </Button>
             }
           />
+          {isConnected && !isOwnerOfCheckedWallet && (
+            <div className="flex items-center justify-center text-label6 text-red-500">
+              <Icon name="AlertCircle" size={16} className="pr-1.5" /> Please
+              connect the eligible wallet to claim
+            </div>
+          )}
         </div>
         <div className="mx-10 w-px bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] opacity-50" />
         <div className="flex w-[389px] flex-col">
