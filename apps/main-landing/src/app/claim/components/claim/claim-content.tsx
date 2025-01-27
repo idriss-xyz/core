@@ -152,8 +152,8 @@ export const ClaimContent = () => {
                   eligibilityData.allocation_gitcoin && 'before:text-mint-600',
                 )}
               >
-                You donated a total of ${eligibilityData.gitcoin} to open source
-                rounds{'\u00A0'}between GR15 and GG20
+                You donated a total of $20 to open source rounds{'\u00A0'}
+                between GR15 and GG20
               </li>
             }
             positive={!!eligibilityData.allocation_gitcoin}

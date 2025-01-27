@@ -1,6 +1,5 @@
 import { Button } from '@idriss-xyz/ui/button';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
-import { Icon } from '@idriss-xyz/ui/icon';
 import { Link } from '@idriss-xyz/ui/link';
 import {
   ANNOUNCEMENT_LINK,
@@ -12,6 +11,7 @@ import { useClaimPage } from '../../claim-page-context';
 
 import geoist_avatar from './assets/geoist_avatar.png';
 import levertz_avatar from './assets/levertz_avatar.png';
+import you_avatar from './assets/you_avatar.png';
 
 export const LetterContent = () => {
   const { setCurrentContent } = useClaimPage();
@@ -72,32 +72,22 @@ export const LetterContent = () => {
           <span>We’re just getting started.</span>
           <span>Contributors of IDRISS DAO</span>
         </div>
-        <div className="absolute -bottom-5.5 right-[152px] inline-flex rotate-[-24.718deg] flex-col items-center gap-2 rounded-lg border border-neutral-300 bg-white p-2 shadow-lg">
-          <div className="size-[70px] rounded-md bg-gradient-to-b from-neutral-300 to-neutral-400 p-1">
-            <div className="relative flex size-full items-center justify-center rounded-md bg-gradient-to-b from-neutral-300 to-neutral-400">
-              <GradientBorder
-                gradientDirection="toBottom"
-                borderRadius={6}
-                borderWidth={2}
-                gradientStartColor="#EBECEE"
-                gradientStopColor="#DBDDE2"
-              />
-              <Icon name="IdrissCircled" size={24} className="saturate-0" />
-            </div>
-          </div>
-          <span className="text-label5 text-neutral-900">You</span>
-        </div>
-        <div className="absolute bottom-[-20px] right-[70px] inline-flex rotate-[-7.71deg] flex-col items-center gap-2 rounded-lg border border-neutral-300 bg-white p-2 shadow-lg">
-          <img src={geoist_avatar.src} className="h-[70px] rounded-md" alt="" />
-          <span className="text-label5 text-neutral-900">Geoist</span>
-        </div>
-        <div className="absolute bottom-[-8px] right-[-17px] inline-flex rotate-[9.718deg] flex-col items-center gap-2 rounded-lg border border-neutral-300 bg-white p-2 shadow-lg">
+        <div className="absolute bottom-[-14px] right-[-17px] inline-flex rotate-[13.922deg] flex-col items-center gap-2 rounded-lg bg-white p-[6px] shadow-lg">
           <img
             src={levertz_avatar.src}
             className="h-[70px] rounded-md"
             alt=""
           />
           <span className="text-label5 text-neutral-900">Levertz</span>
+        </div>
+
+        <div className="absolute bottom-[-4px] right-[62px] inline-flex rotate-[-4.24deg] flex-col items-center gap-2 rounded-lg bg-white p-[6px] shadow-lg">
+          <img src={geoist_avatar.src} className="h-[70px] rounded-md" alt="" />
+          <span className="text-label5 text-neutral-900">Geoist</span>
+        </div>
+        <div className="absolute bottom-[-13px] right-[142px] inline-flex rotate-[-13.603deg] flex-col items-center gap-2 rounded-lg bg-white p-[6px] shadow-lg">
+          <img src={you_avatar.src} className="h-[70px] rounded-md" alt="" />
+          <span className="text-label5 text-neutral-900">You</span>
         </div>
       </div>
       <Button
