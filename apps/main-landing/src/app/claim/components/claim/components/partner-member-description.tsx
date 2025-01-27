@@ -25,14 +25,48 @@ export const PartnerMemberDescription = ({
       communityName: 'Polymarket',
       isActiveMember: eligibilityData.polymarket,
     },
-  ].filter(Boolean);
+    {
+      communityName: 'Aavegotchi',
+      isActiveMember: eligibilityData.aavegotchi,
+    },
+    {
+      communityName: 'Agora',
+      isActiveMember: eligibilityData.agora,
+    },
+    {
+      communityName: 'Farcaster',
+      isActiveMember: eligibilityData.farcaster,
+    },
+    {
+      communityName: 'Gitcoin',
+      isActiveMember: eligibilityData.gitcoin,
+    },
+    {
+      communityName: 'Jumper',
+      isActiveMember: eligibilityData.jumper,
+    },
+    {
+      communityName: 'Snapshot',
+      isActiveMember: eligibilityData.snapshot,
+    },
+    {
+      communityName: 'Tally',
+      isActiveMember: eligibilityData.tally,
+    },
+  ].filter((community) => {
+    return community.isActiveMember;
+  });
 
   const activeCommunitiesList = useMemo(() => {
-    switch (
-      communities.filter((community) => {
-        return community.isActiveMember;
-      }).length
-    ) {
+    switch (communities.length) {
+      case 0: {
+        return (
+          <span>
+            of{'\u00A0'}a{'\u00A0'}partner{'\u00A0'}community
+          </span>
+        );
+      }
+
       case 1: {
         return (
           <span>
@@ -63,9 +97,15 @@ export const PartnerMemberDescription = ({
       }
 
       default: {
+        const firstCommunities = communities
+          .slice(0, -1)
+          .map((community) => community.communityName);
+        const lastCommunity =
+          communities[communities.length - 1]?.communityName;
         return (
           <span>
-            of{'\u00A0'}a{'\u00A0'}partner{'\u00A0'}community
+            of{'\u00A0'}the {firstCommunities.join(', ')}, and {lastCommunity}{' '}
+            communities
           </span>
         );
       }
