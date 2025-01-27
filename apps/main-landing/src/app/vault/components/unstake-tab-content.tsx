@@ -1,6 +1,9 @@
 import { Button } from '@idriss-xyz/ui/button';
 import { Form } from '@idriss-xyz/ui/form';
 import { Spinner } from '@idriss-xyz/ui/spinner';
+import { Checkbox } from '@idriss-xyz/ui/checkbox';
+import { Link } from '@idriss-xyz/ui/link';
+import { TOKEN_TERMS_AND_CONDITIONS_LINK } from '@idriss-xyz/constants';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import {
@@ -10,7 +13,7 @@ import {
   http,
   parseEther,
 } from 'viem';
-import { base } from 'viem/chains';
+import { baseSepolia } from 'viem/chains';
 import {
   useAccount,
   useSwitchChain,
@@ -23,7 +26,7 @@ import { estimateGas, waitForTransactionReceipt } from 'viem/actions';
 import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 import { TxLoadingModal } from '@/app/claim/components/tx-loading-modal/tx-loading-modal';
 
-import { StakingABI, STAKER_ADDRESS } from '../constants';
+import { StakingABI, stakingContractAddress } from '../constants';
 
 type FormPayload = {
   amount: number;
@@ -39,6 +42,7 @@ const txLoadingHeading = (amount: number) => {
 
 export const UnstakeTabContent = () => {
   const [availableAmount, setAvailableAmount] = useState<string>();
+  const [termsChecked, setTermsChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { data: walletClient } = useWalletClient();
   const { isConnected } = useAccount();
@@ -47,7 +51,7 @@ export const UnstakeTabContent = () => {
   const { writeContractAsync } = useWriteContract();
 
   const publicClient = createPublicClient({
-    chain: base,
+    chain: baseSepolia,
     transport: http(),
   });
   const { handleSubmit, control, watch } = useForm<FormPayload>({
@@ -73,7 +77,7 @@ export const UnstakeTabContent = () => {
 
         const parsedAmount = parseEther(data.amount.toString());
 
-        await switchChainAsync({ chainId: base.id });
+        await switchChainAsync({ chainId: baseSepolia.id });
 
         const stakeData = {
           abi: StakingABI,
@@ -84,15 +88,15 @@ export const UnstakeTabContent = () => {
         const encodedStakeData = encodeFunctionData(stakeData);
 
         const gas = await estimateGas(walletClient, {
-          to: STAKER_ADDRESS,
+          to: stakingContractAddress,
           data: encodedStakeData,
         }).catch((error) => {
           throw error;
         });
 
         const hash = await writeContractAsync({
-          address: STAKER_ADDRESS,
-          chain: base,
+          address: stakingContractAddress,
+          chain: baseSepolia,
           ...stakeData,
           gas,
         });
@@ -124,7 +128,7 @@ export const UnstakeTabContent = () => {
       try {
         const balance = await publicClient?.readContract({
           abi: StakingABI,
-          address: STAKER_ADDRESS,
+          address: stakingContractAddress,
           functionName: 'getStakedBalance',
           args: [walletClient.account.address],
         });
@@ -153,7 +157,7 @@ export const UnstakeTabContent = () => {
             return (
               <Form.Field
                 {...field}
-                className="mt-6"
+                className="mt-4 lg:mt-6"
                 value={field.value.toString()}
                 onChange={(value) => {
                   field.onChange(Number(value));
@@ -185,14 +189,34 @@ export const UnstakeTabContent = () => {
             );
           }}
         />
+        <div className="my-4 h-px bg-mint-200 opacity-50 lg:mb-4 lg:mt-6" />
+        <Checkbox
+          onChange={setTermsChecked}
+          value={termsChecked}
+          rootClassName="border-neutral-200"
+          label={
+            <span className="w-full text-body5 text-neutralGreen-900">
+              By unlocking, you agree to the{' '}
+              <Link
+                size="medium"
+                href={TOKEN_TERMS_AND_CONDITIONS_LINK}
+                isExternal
+                className="text-body5 lg:text-body5"
+              >
+                Terms and conditions
+              </Link>
+            </span>
+          }
+        />
         <div className="relative">
           <GeoConditionalButton
             defaultButton={
               <Button
                 intent="primary"
                 size="large"
-                className="mt-6 w-full"
+                className="mt-4 w-full lg:mt-6"
                 type="submit"
+                disabled={!termsChecked}
               >
                 {isConnected ? 'UNLOCK' : 'LOG IN'}
               </Button>

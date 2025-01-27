@@ -69,6 +69,11 @@ export const CheckEligibilityContent = () => {
     setEligibilityData(eligibility);
     setWalletAddress(walletAddress);
 
+    if (!eligibility.claimData && eligibility.allocation === 0) {
+      setCurrentContent('not-eligible');
+      return;
+    }
+
     const isClaimed = await baseClient.readContract({
       address: CLAIMER_ADDRESS,
       abi: CLAIM_ABI,

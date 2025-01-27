@@ -7,7 +7,7 @@ export function middleware(request: NextRequest) {
   const password = request.cookies.get('password')?.value;
 
   if (
-    ['/staking', '/claim'].includes(url.pathname) &&
+    ['/vault', '/claim'].includes(url.pathname) &&
     (password !== process.env.DEV_LOGIN_PASSWORD ||
       !process.env.DEV_LOGIN_PASSWORD)
   ) {
@@ -21,5 +21,5 @@ export function middleware(request: NextRequest) {
 
 // ts-unused-exports:disable-next-line
 export const config = {
-  matcher: ['/staking', '/claim'],
+  matcher: ['/vault', '/claim'],
 };

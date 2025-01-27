@@ -1,6 +1,7 @@
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import { classes } from '@idriss-xyz/ui/utils';
 import { ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 
 interface Properties {
   show: boolean;
@@ -10,7 +11,7 @@ interface Properties {
 
 export const TxLoadingModal = ({ show, heading, className }: Properties) => {
   if (!show) return null;
-  return (
+  return createPortal(
     <div className="absolute inset-0 z-[15] bg-black/50">
       <div
         className={classes(
@@ -29,6 +30,7 @@ export const TxLoadingModal = ({ show, heading, className }: Properties) => {
           Confirm transaction in your wallet
         </p>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 };
