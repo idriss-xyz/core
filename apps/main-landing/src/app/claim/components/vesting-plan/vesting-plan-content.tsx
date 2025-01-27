@@ -27,7 +27,7 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 
 import { useClaimPage, VestingPlan } from '../../claim-page-context';
-import { CLAIM_ABI, claimContractAddress } from '../../constants';
+import { CLAIM_ABI, CLAIMER_ADDRESS } from '../../constants';
 import { TxLoadingModal } from '../tx-loading-modal/tx-loading-modal';
 
 type FormPayload = {
@@ -136,7 +136,7 @@ export const VestingPlanContent = () => {
         await switchChainAsync({ chainId: base.id });
 
         const gas = await estimateGas(walletClient, {
-          to: claimContractAddress,
+          to: CLAIMER_ADDRESS,
           data: encodedClaimData,
         }).catch((error) => {
           console.error('Error estimating gas:', error.message);
@@ -144,7 +144,7 @@ export const VestingPlanContent = () => {
         });
 
         const hash = await writeContractAsync({
-          address: claimContractAddress,
+          address: CLAIMER_ADDRESS,
           chain: base,
           ...claimData,
           gas,

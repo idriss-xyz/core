@@ -30,9 +30,9 @@ import { TxLoadingModal } from '@/app/claim/components/tx-loading-modal/tx-loadi
 
 import {
   StakingABI,
-  stakingContractAddress,
-  testTokenAddress,
+  STAKER_ADDRESS,
 } from '../constants';
+import { IDRISS_TOKEN_ADDRESS } from '@/components/token-section/constants';
 
 type FormPayload = {
   amount: number;
@@ -57,14 +57,14 @@ const approveTokens = async (
   const allowanceData = {
     abi: ERC20_ABI,
     functionName: 'allowance',
-    args: [walletClient.account.address, stakingContractAddress],
+    args: [walletClient.account.address, STAKER_ADDRESS],
   } as const;
 
   const encodedAllowanceData = encodeFunctionData(allowanceData);
 
   const allowanceRaw = await call(walletClient, {
     account: walletClient.account,
-    to: testTokenAddress,
+    to: IDRISS_TOKEN_ADDRESS,
     data: encodedAllowanceData,
   });
 
@@ -82,19 +82,19 @@ const approveTokens = async (
     const approveData = {
       abi: ERC20_ABI,
       functionName: 'approve',
-      args: [stakingContractAddress, tokensToSend],
+      args: [STAKER_ADDRESS, tokensToSend],
     } as const;
 
     const encodedData = encodeFunctionData(approveData);
 
     const gas = await estimateGas(walletClient, {
-      to: testTokenAddress,
+      to: IDRISS_TOKEN_ADDRESS,
       data: encodedData,
     });
 
     const hash = await writeContractAsync({
       chain: base,
-      address: testTokenAddress,
+      address: IDRISS_TOKEN_ADDRESS,
       ...approveData,
       gas,
     });
@@ -162,14 +162,14 @@ export const StakeTabContent = () => {
         const encodedStakeData = encodeFunctionData(stakeData);
 
         const gas = await estimateGas(walletClient, {
-          to: stakingContractAddress,
+          to: STAKER_ADDRESS,
           data: encodedStakeData,
         }).catch((error) => {
           throw error;
         });
 
         const hash = await writeContractAsync({
-          address: stakingContractAddress,
+          address: STAKER_ADDRESS,
           chain: base,
           ...stakeData,
           gas,
@@ -202,7 +202,7 @@ export const StakeTabContent = () => {
       try {
         const balance = await publicClient?.readContract({
           abi: ERC20_ABI,
-          address: testTokenAddress,
+          address: IDRISS_TOKEN_ADDRESS,
           functionName: 'balanceOf',
           args: [walletClient.account.address],
         });

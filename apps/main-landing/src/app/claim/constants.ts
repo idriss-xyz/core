@@ -357,8 +357,8 @@ export const CLAIM_ABI = [
   },
 ];
 
-export const claimContractAddress =
-  '0x0A264390ba8ccC18c3AF9cB8DfbDE1b42a2a229a';
+export const CLAIMER_ADDRESS =
+  '0xfD76c3a2A4534D815c9C5127119e6ea738A28837';
 export const claimSteps = [
   {
     step: '01',

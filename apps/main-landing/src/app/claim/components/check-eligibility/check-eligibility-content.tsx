@@ -17,7 +17,7 @@ import { GeoConditionalButton } from '@/components/token-section/components/geo-
 import idrissCoin from '../../assets/IDRISS_COIN 1.png';
 import { useClaimPage } from '../../claim-page-context';
 import { EligibilityCheckResponse } from '../../types';
-import { CLAIM_ABI, claimContractAddress } from '../../constants';
+import { CLAIM_ABI, CLAIMER_ADDRESS } from '../../constants';
 
 type FormPayload = {
   address: string;
@@ -70,7 +70,7 @@ export const CheckEligibilityContent = () => {
     setWalletAddress(walletAddress);
 
     const isClaimed = await baseClient.readContract({
-      address: claimContractAddress,
+      address: CLAIMER_ADDRESS,
       abi: CLAIM_ABI,
       functionName: 'isClaimed',
       args: [eligibility.claimData.claimIndices[0]],
