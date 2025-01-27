@@ -3,6 +3,7 @@
 import { useRef } from 'react';
 import { toPng } from 'html-to-image';
 import { Button } from '@idriss-xyz/ui/button';
+import { Icon } from '@idriss-xyz/ui/icon';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { classes } from '@idriss-xyz/ui/utils';
@@ -75,7 +76,7 @@ export const ClaimSuccessfulContent = () => {
                 ? 'YOU RECEIVED'
                 : 'UNLOCK ON JULY 6, 2025'}
             </span>
-            <div className="z-10 flex flex-col items-center justify-center rounded-[12px] border-[0.683px] border-[rgba(85,235,60,0.30)] bg-[radial-gradient(50%_50%_at_50%_50%,_rgba(252,255,242,0.00)_0%,_rgba(23,255,74,0.18)_100%)] px-10 py-5.5">
+            <div className="z-10 flex items-center justify-center gap-3 rounded-[12px] border-[0.683px] border-[rgba(85,235,60,0.30)] bg-[radial-gradient(50%_50%_at_50%_50%,_rgba(252,255,242,0.00)_0%,_rgba(23,255,74,0.18)_100%)] px-10 py-5.5">
               <span className="text-heading3 gradient-text">
                 +
                 {new Intl.NumberFormat('en-US', {
@@ -90,6 +91,14 @@ export const ClaimSuccessfulContent = () => {
                 )}{' '}
                 $IDRISS
               </span>
+              <div className="relative">
+                <Icon name="IdrissCircled" size={40} />
+                <Icon
+                  name="BaseLogo"
+                  size={20}
+                  className="absolute bottom-0 right-0 translate-x-2.5 rounded-full border-[2.5px] border-white"
+                />
+              </div>
             </div>
           </div>
         </div>
