@@ -97,7 +97,7 @@ export const ClaimSuccessfulContent = () => {
               intent="primary"
               size="large"
               className="w-full"
-              href="/staking"
+              href="/vault"
             >
               LOCK $IDRISS FOR BENEFITS
             </Button>
