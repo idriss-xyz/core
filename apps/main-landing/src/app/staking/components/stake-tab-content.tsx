@@ -28,10 +28,7 @@ import { ERC20_ABI } from '@/app/creators/donate/constants';
 import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 import { TxLoadingModal } from '@/app/claim/components/tx-loading-modal/tx-loading-modal';
 
-import {
-  StakingABI,
-  STAKER_ADDRESS,
-} from '../constants';
+import { StakingABI, STAKER_ADDRESS } from '../constants';
 import { IDRISS_TOKEN_ADDRESS } from '@/components/token-section/constants';
 
 type FormPayload = {

@@ -145,5 +145,4 @@ export const StakingABI = [
   },
 ];
 
-export const STAKER_ADDRESS =
-  '0x085e2DC1b05dcdbE011B5ad377C9f2fcD69B7057';
+export const STAKER_ADDRESS = '0x085e2DC1b05dcdbE011B5ad377C9f2fcD69B7057';
