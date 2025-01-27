@@ -4,7 +4,7 @@ import { Button } from '@idriss-xyz/ui/button';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { Controller, useForm } from 'react-hook-form';
 import { createPublicClient, Hex, http, isAddress } from 'viem';
-import { baseSepolia, mainnet } from 'viem/chains';
+import { base, mainnet } from 'viem/chains';
 import { normalize } from 'viem/ens';
 import { Form } from '@idriss-xyz/ui/form';
 import { useMutation } from '@tanstack/react-query';
@@ -17,7 +17,7 @@ import { GeoConditionalButton } from '@/components/token-section/components/geo-
 import idrissCoin from '../../assets/IDRISS_COIN 1.png';
 import { useClaimPage } from '../../claim-page-context';
 import { EligibilityCheckResponse } from '../../types';
-import { CLAIM_ABI, claimContractAddress } from '../../constants';
+import { CLAIM_ABI, CLAIMER_ADDRESS } from '../../constants';
 
 type FormPayload = {
   address: string;
@@ -30,7 +30,7 @@ const ethereumClient = createPublicClient({
 });
 
 const baseClient = createPublicClient({
-  chain: baseSepolia,
+  chain: base,
   transport: http(),
 });
 
@@ -79,7 +79,7 @@ export const CheckEligibilityContent = () => {
     }
 
     const isClaimed = await baseClient.readContract({
-      address: claimContractAddress,
+      address: CLAIMER_ADDRESS,
       abi: CLAIM_ABI,
       functionName: 'isClaimed',
       args: [eligibility.claimData.claimIndices[0]],

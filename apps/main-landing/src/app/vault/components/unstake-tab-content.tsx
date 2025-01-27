@@ -13,7 +13,7 @@ import {
   http,
   parseEther,
 } from 'viem';
-import { baseSepolia } from 'viem/chains';
+import { base } from 'viem/chains';
 import {
   useAccount,
   useSwitchChain,
@@ -26,7 +26,7 @@ import { estimateGas, waitForTransactionReceipt } from 'viem/actions';
 import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 import { TxLoadingModal } from '@/app/claim/components/tx-loading-modal/tx-loading-modal';
 
-import { StakingABI, stakingContractAddress } from '../constants';
+import { StakingABI, STAKER_ADDRESS } from '../constants';
 
 type FormPayload = {
   amount: number;
@@ -52,7 +52,7 @@ export const UnstakeTabContent = () => {
   const { writeContractAsync } = useWriteContract();
 
   const publicClient = createPublicClient({
-    chain: baseSepolia,
+    chain: base,
     transport: http(),
   });
   const { handleSubmit, control, watch } = useForm<FormPayload>({
@@ -78,7 +78,7 @@ export const UnstakeTabContent = () => {
 
         const parsedAmount = parseEther(data.amount.toString());
 
-        await switchChainAsync({ chainId: baseSepolia.id });
+        await switchChainAsync({ chainId: base.id });
 
         const stakeData = {
           abi: StakingABI,
@@ -89,15 +89,15 @@ export const UnstakeTabContent = () => {
         const encodedStakeData = encodeFunctionData(stakeData);
 
         const gas = await estimateGas(walletClient, {
-          to: stakingContractAddress,
+          to: STAKER_ADDRESS,
           data: encodedStakeData,
         }).catch((error) => {
           throw error;
         });
 
         const hash = await writeContractAsync({
-          address: stakingContractAddress,
-          chain: baseSepolia,
+          address: STAKER_ADDRESS,
+          chain: base,
           ...stakeData,
           gas,
         });
@@ -129,7 +129,7 @@ export const UnstakeTabContent = () => {
       try {
         const balance = await publicClient?.readContract({
           abi: StakingABI,
-          address: stakingContractAddress,
+          address: STAKER_ADDRESS,
           functionName: 'getStakedBalance',
           args: [walletClient.account.address],
         });
