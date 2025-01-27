@@ -10,7 +10,7 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { Checkbox } from '@idriss-xyz/ui/checkbox';
 import { Link } from '@idriss-xyz/ui/link';
 import { encodeFunctionData, formatEther } from 'viem';
-import { baseSepolia } from 'viem/chains';
+import { base } from 'viem/chains';
 import { estimateGas, waitForTransactionReceipt } from 'viem/actions';
 import {
   useAccount,
@@ -133,7 +133,7 @@ export const VestingPlanContent = () => {
         };
         const encodedClaimData = encodeFunctionData(claimData);
 
-        await switchChainAsync({ chainId: baseSepolia.id });
+        await switchChainAsync({ chainId: base.id });
 
         const gas = await estimateGas(walletClient, {
           to: claimContractAddress,
@@ -145,7 +145,7 @@ export const VestingPlanContent = () => {
 
         const hash = await writeContractAsync({
           address: claimContractAddress,
-          chain: baseSepolia,
+          chain: base,
           ...claimData,
           gas,
         });

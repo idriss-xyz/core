@@ -19,7 +19,7 @@ import {
   formatEther,
 } from 'viem';
 import { call, estimateGas, waitForTransactionReceipt } from 'viem/actions';
-import { baseSepolia } from 'viem/chains';
+import { base } from 'viem/chains';
 import { WriteContractMutateAsync } from 'wagmi/query';
 import { useEffect, useState } from 'react';
 import { Spinner } from '@idriss-xyz/ui/spinner';
@@ -93,7 +93,7 @@ const approveTokens = async (
     });
 
     const hash = await writeContractAsync({
-      chain: baseSepolia,
+      chain: base,
       address: testTokenAddress,
       ...approveData,
       gas,
@@ -116,7 +116,7 @@ export const StakeTabContent = () => {
   const { openConnectModal } = useConnectModal();
   const { switchChainAsync } = useSwitchChain();
   const publicClient = createPublicClient({
-    chain: baseSepolia,
+    chain: base,
     transport: http(),
   });
 
@@ -145,7 +145,7 @@ export const StakeTabContent = () => {
 
         const parsedAmount = parseEther(data.amount.toString());
 
-        await switchChainAsync({ chainId: baseSepolia.id });
+        await switchChainAsync({ chainId: base.id });
 
         await approveTokens(
           walletClient,
@@ -170,7 +170,7 @@ export const StakeTabContent = () => {
 
         const hash = await writeContractAsync({
           address: stakingContractAddress,
-          chain: baseSepolia,
+          chain: base,
           ...stakeData,
           gas,
         });

@@ -10,7 +10,7 @@ import {
   http,
   parseEther,
 } from 'viem';
-import { baseSepolia } from 'viem/chains';
+import { base } from 'viem/chains';
 import {
   useAccount,
   useSwitchChain,
@@ -47,7 +47,7 @@ export const UnstakeTabContent = () => {
   const { writeContractAsync } = useWriteContract();
 
   const publicClient = createPublicClient({
-    chain: baseSepolia,
+    chain: base,
     transport: http(),
   });
   const { handleSubmit, control, watch } = useForm<FormPayload>({
@@ -73,7 +73,7 @@ export const UnstakeTabContent = () => {
 
         const parsedAmount = parseEther(data.amount.toString());
 
-        await switchChainAsync({ chainId: baseSepolia.id });
+        await switchChainAsync({ chainId: base.id });
 
         const stakeData = {
           abi: StakingABI,
@@ -92,7 +92,7 @@ export const UnstakeTabContent = () => {
 
         const hash = await writeContractAsync({
           address: stakingContractAddress,
-          chain: baseSepolia,
+          chain: base,
           ...stakeData,
           gas,
         });

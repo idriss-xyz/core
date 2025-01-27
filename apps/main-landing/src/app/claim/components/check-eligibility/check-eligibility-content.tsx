@@ -4,7 +4,7 @@ import { Button } from '@idriss-xyz/ui/button';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { Controller, useForm } from 'react-hook-form';
 import { createPublicClient, Hex, http, isAddress } from 'viem';
-import { baseSepolia, mainnet } from 'viem/chains';
+import { base, mainnet } from 'viem/chains';
 import { normalize } from 'viem/ens';
 import { Form } from '@idriss-xyz/ui/form';
 import { useMutation } from '@tanstack/react-query';
@@ -30,7 +30,7 @@ const ethereumClient = createPublicClient({
 });
 
 const baseClient = createPublicClient({
-  chain: baseSepolia,
+  chain: base,
   transport: http(),
 });
 
