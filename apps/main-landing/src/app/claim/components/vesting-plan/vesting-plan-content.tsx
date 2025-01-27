@@ -34,11 +34,15 @@ type FormPayload = {
   vestingPlan: VestingPlan;
 };
 
-const txLoadingHeading = (amount: string) => {
+const txLoadingHeading = (amount: string, vestingPlan: VestingPlan) => {
+  const amountDependingOnVestingPlan =
+    vestingPlan === 'claim_and_stake_100' ? Number(amount) * 2 : Number(amount);
+
   const formattedAmount = new Intl.NumberFormat('en-US', {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }).format(Number(amount));
+  }).format(amountDependingOnVestingPlan);
+
   return (
     <>
       Claiming <span className="text-mint-600">{formattedAmount}</span> IDRISS
@@ -180,6 +184,7 @@ export const VestingPlanContent = () => {
         show={isLoading}
         heading={txLoadingHeading(
           formatEther(BigInt(eligibilityData.claimData.amount)),
+          vestingPlan,
         )}
       />
       <div className="relative z-[5] flex w-[800px] flex-row rounded-[25px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">
