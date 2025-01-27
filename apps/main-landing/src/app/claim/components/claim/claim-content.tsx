@@ -6,6 +6,7 @@ import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { classes } from '@idriss-xyz/ui/utils';
 import { AIRDROP_DOCS_LINK, COINMARKETCAP_LINK } from '@idriss-xyz/constants';
 import { Icon } from '@idriss-xyz/ui/icon';
+import { Link } from '@idriss-xyz/ui/link';
 
 import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 
@@ -18,7 +19,6 @@ import {
 } from './constants';
 import { IdrissUserCriteriaDescription } from './components/idriss-user-criteria-description';
 import { PartnerMemberDescription } from './components/partner-member-description';
-import { Link } from '@idriss-xyz/ui/link';
 
 export const ClaimContent = () => {
   const { eligibilityData, setCurrentContent } = useClaimPage();
@@ -101,11 +101,11 @@ export const ClaimContent = () => {
             </Button>
           }
         />
-        <div className='flex w-full items-center justify-center mt-5'>
+        <div className="mt-5 flex w-full items-center justify-center">
           <span className="text-body5 text-neutralGreen-900">
             <Link
               size="medium"
-              className="text-body5 lg:text-body5 cursor-pointer"
+              className="cursor-pointer text-body5 lg:text-body5"
               onClick={() => {
                 setCurrentContent('check-eligibility');
               }}
