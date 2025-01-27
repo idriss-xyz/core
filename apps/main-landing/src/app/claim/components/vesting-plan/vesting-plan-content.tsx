@@ -35,9 +35,13 @@ type FormPayload = {
 };
 
 const txLoadingHeading = (amount: string) => {
+  const formattedAmount = new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(Number(amount));
   return (
     <>
-      Claiming <span className="text-mint-600">${amount}</span> IDRISS
+      Claiming <span className="text-mint-600">${formattedAmount}</span> IDRISS
     </>
   );
 };
