@@ -41,7 +41,8 @@ type FormPayload = {
 const txLoadingHeading = (amount: number) => {
   return (
     <>
-      Locking <span className="text-mint-600">${amount}</span> IDRISS
+      Locking <span className="text-mint-600">{amount.toLocaleString()}</span>{' '}
+      IDRISS
     </>
   );
 };
