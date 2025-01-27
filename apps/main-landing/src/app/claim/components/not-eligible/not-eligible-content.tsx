@@ -49,6 +49,7 @@ export const NotEligibleContent = () => {
               BUY ON JUMPER
             </Button>,
           ]}
+          additionalClasses="md:flex-col"
         />
         <div className="flex w-full items-center justify-center opacity-70">
           <span
