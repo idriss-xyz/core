@@ -14,7 +14,6 @@ import { StakeTabContent, UnstakeTabContent } from './components';
 import '@rainbow-me/rainbowkit/styles.css';
 
 export const StakingContent = () => {
-
   const tabItems: TabItem[] = useMemo(() => {
     return [
       {

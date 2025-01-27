@@ -225,7 +225,7 @@ export const Content = ({ className }: Properties) => {
       addressValidationResult.success,
       sender,
       validatedAddress,
-      walletClient
+      walletClient,
     ],
   );
 

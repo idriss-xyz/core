@@ -12,7 +12,12 @@ import { Link } from '@idriss-xyz/ui/link';
 import { encodeFunctionData, formatEther } from 'viem';
 import { baseSepolia } from 'viem/chains';
 import { estimateGas, waitForTransactionReceipt } from 'viem/actions';
-import { useAccount, useSwitchChain, useWalletClient, useWriteContract } from 'wagmi';
+import {
+  useAccount,
+  useSwitchChain,
+  useWalletClient,
+  useWriteContract,
+} from 'wagmi';
 import {
   TOKEN_TERMS_AND_CONDITIONS_LINK,
   VAULT_DOCS_LINK,
@@ -32,19 +37,19 @@ type FormPayload = {
 const txLoadingHeading = (amount: string) => {
   return (
     <>
-      Claiming <span className="text-mint-600">${amount}</span>{' '}IDRISS
+      Claiming <span className="text-mint-600">${amount}</span> IDRISS
     </>
-  )
-}
+  );
+};
 
 export const VestingPlanContent = () => {
   const [termsChecked, setTermsChecked] = useState(false);
-  const [ isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { eligibilityData, setCurrentContent, setVestingPlan, walletAddress } =
     useClaimPage();
   const { data: walletClient } = useWalletClient();
   const { writeContractAsync } = useWriteContract();
-  const {switchChainAsync} = useSwitchChain();
+  const { switchChainAsync } = useSwitchChain();
   const { isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
 
@@ -93,8 +98,7 @@ export const VestingPlanContent = () => {
           return 'CLAIM NOW';
         }
       }
-    }
-    else {
+    } else {
       return 'LOG IN';
     }
   }, [isConnected, vestingPlan]);
@@ -107,9 +111,7 @@ export const VestingPlanContent = () => {
   const handleClaim = async () => {
     if (!isConnected && openConnectModal) {
       openConnectModal();
-    }
-
-    else {
+    } else {
       setIsLoading(true);
       if (!walletClient || walletAddress === undefined) {
         console.error('Wallet not connected');
@@ -131,7 +133,7 @@ export const VestingPlanContent = () => {
         };
         const encodedClaimData = encodeFunctionData(claimData);
 
-        await switchChainAsync({chainId: baseSepolia.id});
+        await switchChainAsync({ chainId: baseSepolia.id });
 
         const gas = await estimateGas(walletClient, {
           to: claimContractAddress,
@@ -170,7 +172,12 @@ export const VestingPlanContent = () => {
 
   return (
     <>
-      <TxLoadingModal show={isLoading} heading={txLoadingHeading(formatEther(BigInt(eligibilityData.claimData.amount)))} />
+      <TxLoadingModal
+        show={isLoading}
+        heading={txLoadingHeading(
+          formatEther(BigInt(eligibilityData.claimData.amount)),
+        )}
+      />
       <div className="relative z-[5] flex w-[800px] flex-row rounded-[25px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">
         <GradientBorder
           gradientDirection="toTop"
@@ -247,8 +254,8 @@ export const VestingPlanContent = () => {
             <div className="flex gap-2">
               <Icon name="Gem" size={24} className="text-gray-300" />
               <span className="text-body3 text-neutralGreen-700">
-                Lock <span className="gradient-text">10,000 $IDRISS</span> or more
-                to access premium features
+                Lock <span className="gradient-text">10,000 $IDRISS</span> or
+                more to access premium features
               </span>
             </div>
             <div className="flex gap-2">

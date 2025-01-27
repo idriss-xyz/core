@@ -76,7 +76,7 @@ export const CheckEligibilityContent = () => {
       args: [eligibility.claimData.claimIndices[0]],
     });
 
-    if( isClaimed ) {
+    if (isClaimed) {
       setCurrentContent('claim-successful');
       return;
     }

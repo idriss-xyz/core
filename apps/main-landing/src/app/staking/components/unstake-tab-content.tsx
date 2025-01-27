@@ -3,9 +3,20 @@ import { Form } from '@idriss-xyz/ui/form';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { createPublicClient, encodeFunctionData, formatEther, http, parseEther } from 'viem';
+import {
+  createPublicClient,
+  encodeFunctionData,
+  formatEther,
+  http,
+  parseEther,
+} from 'viem';
 import { baseSepolia } from 'viem/chains';
-import { useAccount, useSwitchChain, useWalletClient, useWriteContract } from 'wagmi';
+import {
+  useAccount,
+  useSwitchChain,
+  useWalletClient,
+  useWriteContract,
+} from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { estimateGas, waitForTransactionReceipt } from 'viem/actions';
 
@@ -21,14 +32,14 @@ type FormPayload = {
 const txLoadingHeading = (amount: number) => {
   return (
     <>
-      Unlocking <span className="text-mint-600">${amount}</span>{' '}IDRISS
+      Unlocking <span className="text-mint-600">${amount}</span> IDRISS
     </>
-  )
-}
+  );
+};
 
 export const UnstakeTabContent = () => {
   const [availableAmount, setAvailableAmount] = useState<string>();
-  const [ isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { data: walletClient } = useWalletClient();
   const { isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
@@ -46,7 +57,7 @@ export const UnstakeTabContent = () => {
     mode: 'onSubmit',
   });
 
-  const amount = watch("amount");
+  const amount = watch('amount');
 
   const handleUnstake = async (data: FormPayload) => {
     if (!isConnected && openConnectModal) {
@@ -54,7 +65,6 @@ export const UnstakeTabContent = () => {
     } else {
       try {
         setIsLoading(true);
-
 
         if (!walletClient) {
           console.error('Wallet not connected');
@@ -102,7 +112,6 @@ export const UnstakeTabContent = () => {
         console.error('Error unlocking:', error);
         throw error;
       }
-
     }
   };
 
@@ -135,62 +144,62 @@ export const UnstakeTabContent = () => {
 
   return (
     <>
-    <TxLoadingModal show={isLoading} heading={txLoadingHeading(amount)}/>
-    <Form className="w-full" onSubmit={handleSubmit(handleUnstake)}>
-      <Controller
-        control={control}
-        name="amount"
-        render={({ field }) => {
-          return (
-            <Form.Field
-              {...field}
-              className="mt-6"
-              value={field.value.toString()}
-              onChange={(value) => {
-                field.onChange(Number(value));
-              }}
-              label={
-                <div className="flex justify-between">
-                  <span className="text-label4 text-neutralGreen-700">
-                    Amount to unlock
-                  </span>
-                  {walletClient ? (
-                    <div className="flex text-label6 text-neutral-800">
-                      Available:{' '}
-                      <span className="mx-1 flex justify-center">
-                        {availableAmount ?? <Spinner className="size-3" />}
-                      </span>{' '}
-                      IDRISS
-                    </div>
-                  ) : (
-                    ''
-                  )}
-                </div>
-              }
-              numeric
-              prefixIconName="IdrissCircled"
-              suffixElement={
-                <span className="text-body4 text-neutral-500">IDRISS</span>
-              }
-            />
-          );
-        }}
-      />
-      <div className="relative">
-        <GeoConditionalButton
-          defaultButton={
-            <Button
-              intent="primary"
-              size="large"
-              className="mt-6 w-full"
-              type="submit"
-            >
-              { isConnected ? 'UNLOCK' : 'LOG IN'}
-            </Button>
-          }
+      <TxLoadingModal show={isLoading} heading={txLoadingHeading(amount)} />
+      <Form className="w-full" onSubmit={handleSubmit(handleUnstake)}>
+        <Controller
+          control={control}
+          name="amount"
+          render={({ field }) => {
+            return (
+              <Form.Field
+                {...field}
+                className="mt-6"
+                value={field.value.toString()}
+                onChange={(value) => {
+                  field.onChange(Number(value));
+                }}
+                label={
+                  <div className="flex justify-between">
+                    <span className="text-label4 text-neutralGreen-700">
+                      Amount to unlock
+                    </span>
+                    {walletClient ? (
+                      <div className="flex text-label6 text-neutral-800">
+                        Available:{' '}
+                        <span className="mx-1 flex justify-center">
+                          {availableAmount ?? <Spinner className="size-3" />}
+                        </span>{' '}
+                        IDRISS
+                      </div>
+                    ) : (
+                      ''
+                    )}
+                  </div>
+                }
+                numeric
+                prefixIconName="IdrissCircled"
+                suffixElement={
+                  <span className="text-body4 text-neutral-500">IDRISS</span>
+                }
+              />
+            );
+          }}
         />
-      </div>
-    </Form>
+        <div className="relative">
+          <GeoConditionalButton
+            defaultButton={
+              <Button
+                intent="primary"
+                size="large"
+                className="mt-6 w-full"
+                type="submit"
+              >
+                {isConnected ? 'UNLOCK' : 'LOG IN'}
+              </Button>
+            }
+          />
+        </div>
+      </Form>
     </>
   );
 };

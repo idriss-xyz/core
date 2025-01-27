@@ -8,17 +8,13 @@ interface Properties {
   className?: string;
 }
 
-export const TxLoadingModal = ({
-  show,
-  heading,
-  className,
-}: Properties) => {
+export const TxLoadingModal = ({ show, heading, className }: Properties) => {
   if (!show) return null;
   return (
-    <div className="bg-black/50 absolute inset-0 z-[15]">
+    <div className="absolute inset-0 z-[15] bg-black/50">
       <div
         className={classes(
-          'w-[440px] max-w-full rounded-xl bg-white px-4 pb-9 pt-6 flex flex-col items-center text-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
+          'absolute left-1/2 top-1/2 flex w-[440px] max-w-full -translate-x-1/2 -translate-y-1/2 flex-col items-center rounded-xl bg-white px-4 pb-9 pt-6 text-center',
           className,
         )}
       >
@@ -33,5 +29,6 @@ export const TxLoadingModal = ({
           Confirm transaction in your wallet
         </p>
       </div>
-    </div>  );
+    </div>
+  );
 };

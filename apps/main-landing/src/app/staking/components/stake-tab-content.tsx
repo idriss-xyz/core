@@ -1,7 +1,13 @@
 import { Form } from '@idriss-xyz/ui/form';
 import { Controller, useForm } from 'react-hook-form';
 import { Button } from '@idriss-xyz/ui/button';
-import { Config, useAccount, useSwitchChain, useWalletClient, useWriteContract } from 'wagmi';
+import {
+  Config,
+  useAccount,
+  useSwitchChain,
+  useWalletClient,
+  useWriteContract,
+} from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import {
   createPublicClient,
@@ -35,10 +41,10 @@ type FormPayload = {
 const txLoadingHeading = (amount: number) => {
   return (
     <>
-      Locking <span className="text-mint-600">${amount}</span>{' '}IDRISS
+      Locking <span className="text-mint-600">${amount}</span> IDRISS
     </>
-  )
-}
+  );
+};
 
 const approveTokens = async (
   walletClient: WalletClient,
@@ -105,7 +111,7 @@ const approveTokens = async (
 
 export const StakeTabContent = () => {
   const [availableAmount, setAvailableAmount] = useState<string>();
-  const [ isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
   const { switchChainAsync } = useSwitchChain();
@@ -121,7 +127,7 @@ export const StakeTabContent = () => {
     mode: 'onSubmit',
   });
 
-  const amount = watch("amount");
+  const amount = watch('amount');
 
   const { data: walletClient } = useWalletClient();
   const { writeContractAsync } = useWriteContract();
@@ -131,7 +137,6 @@ export const StakeTabContent = () => {
       openConnectModal();
     } else {
       try {
-
         setIsLoading(true);
         if (!walletClient) {
           console.error('Wallet not connected');
@@ -140,7 +145,7 @@ export const StakeTabContent = () => {
 
         const parsedAmount = parseEther(data.amount.toString());
 
-        await switchChainAsync({chainId: baseSepolia.id});
+        await switchChainAsync({ chainId: baseSepolia.id });
 
         await approveTokens(
           walletClient,
@@ -217,7 +222,7 @@ export const StakeTabContent = () => {
 
   return (
     <>
-      <TxLoadingModal show={isLoading} heading={txLoadingHeading(amount)}/>
+      <TxLoadingModal show={isLoading} heading={txLoadingHeading(amount)} />
       <Form className="w-full" onSubmit={handleSubmit(handleStake)}>
         <Controller
           control={control}
@@ -267,7 +272,7 @@ export const StakeTabContent = () => {
                 className="mt-6 w-full"
                 type="submit"
               >
-                { isConnected ? 'LOCK' : 'LOG IN'}
+                {isConnected ? 'LOCK' : 'LOG IN'}
               </Button>
             }
           />
