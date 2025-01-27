@@ -41,7 +41,7 @@ const txLoadingHeading = (amount: string) => {
   }).format(Number(amount));
   return (
     <>
-      Claiming <span className="text-mint-600">${formattedAmount}</span> IDRISS
+      Claiming <span className="text-mint-600">{formattedAmount}</span> IDRISS
     </>
   );
 };
