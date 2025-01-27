@@ -18,6 +18,7 @@ import {
 } from './constants';
 import { IdrissUserCriteriaDescription } from './components/idriss-user-criteria-description';
 import { PartnerMemberDescription } from './components/partner-member-description';
+import { Link } from '@idriss-xyz/ui/link';
 
 export const ClaimContent = () => {
   const { eligibilityData, setCurrentContent } = useClaimPage();
@@ -42,7 +43,7 @@ export const ClaimContent = () => {
       />
       <div className="flex w-[459px] flex-col">
         <div className="flex flex-col items-start gap-10">
-          <span className="text-heading3">YOU’RE ELIGIBLE!</span>
+          <span className="text-heading3">YOU ARE ELIGIBLE!</span>
           <span className="text-body3 text-neutralGreen-700">
             TOKENS TO CLAIM
           </span>
@@ -100,6 +101,19 @@ export const ClaimContent = () => {
             </Button>
           }
         />
+        <div className='flex w-full items-center justify-center mt-5'>
+          <span className="text-body5 text-neutralGreen-900">
+            <Link
+              size="medium"
+              className="text-body5 lg:text-body5 cursor-pointer"
+              onClick={() => {
+                setCurrentContent('check-eligibility');
+              }}
+            >
+              Check another wallet
+            </Link>
+          </span>
+        </div>
       </div>
       <div className="mx-10 h-[434px] w-px bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] opacity-50" />
       <div className="flex w-[389px] flex-col">
