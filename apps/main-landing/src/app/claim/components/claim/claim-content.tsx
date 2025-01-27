@@ -25,13 +25,13 @@ export const ClaimContent = () => {
     EligibilityCriteriaTitle | undefined
   >('IDRISS USER');
 
+  const liBaseClassName =
+    "relative flex justify-between pr-1 before:absolute before:-left-4 before:text-red-500 before:content-['•']";
+
   if (!eligibilityData) {
     setCurrentContent('check-eligibility');
     return;
   }
-
-  const liBaseClassName =
-    "relative flex justify-between pr-1 before:absolute before:-left-4 before:text-red-500 before:content-['•']";
 
   return (
     <div className="relative z-[5] flex w-[1000px] flex-row rounded-[25px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">

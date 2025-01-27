@@ -1,5 +1,6 @@
 import { ReactNode, createContext, useState } from 'react';
 import { createContextHook } from '@idriss-xyz/ui/utils';
+import { Hex } from 'viem';
 
 import { CLAIM_CONTENT, ClaimPageContent } from './constants';
 import { EligibilityCheckResponse } from './types';
@@ -10,11 +11,11 @@ type Properties = {
 
 type ClaimPageContextValues = {
   currentContent: ClaimPageContent;
-  walletAddress: string | undefined;
+  walletAddress: Hex | undefined;
   vestingPlan: VestingPlan | undefined;
   eligibilityData: EligibilityCheckResponse | undefined;
   setCurrentContent: (currentContent: ClaimPageContent) => void;
-  setWalletAddress: (walletAddress: string) => void;
+  setWalletAddress: (walletAddress: Hex) => void;
   setVestingPlan: (vestingPlan: VestingPlan) => void;
   setEligibilityData: (eligibilityData: EligibilityCheckResponse) => void;
 };
@@ -31,7 +32,7 @@ export const ClaimPageProvider = ({ children }: Properties) => {
   const [vestingPlan, setVestingPlan] = useState<VestingPlan>();
   const [eligibilityData, setEligibilityData] =
     useState<EligibilityCheckResponse>();
-  const [walletAddress, setWalletAddress] = useState<string>();
+  const [walletAddress, setWalletAddress] = useState<Hex>();
 
   return (
     <ClaimPageContext.Provider
