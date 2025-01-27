@@ -57,19 +57,20 @@ export const StakingContent = () => {
             src={idrissCoin.src}
             alt=""
           />
-          <div className="relative flex flex-col rounded-[25px] bg-[rgba(255,255,255,0.5)] p-5 pb-2 backdrop-blur-[45px] lg:flex-row lg:p-10">
+          <div className="relative flex flex-col rounded-[36px] bg-[rgba(255,255,255,0.5)] p-5 pb-2 backdrop-blur-[45px] lg:flex-row lg:p-10">
             <GradientBorder
               gradientDirection="toTop"
               gradientStopColor="rgba(145, 206, 154, 0.50)"
               borderWidth={1}
+              borderRadius={36}
             />
             <div className="lg:w-[368px]">
               <Tabs items={tabItems} />
             </div>
-            <div className="mb-4 mt-8 h-px w-full bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] opacity-50 lg:mx-10 lg:my-0 lg:h-auto lg:w-px" />
+            <div className="my-4 h-px w-full bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] opacity-50 lg:mx-10 lg:my-0 lg:mt-6 lg:h-auto lg:w-px" />
             <div className="flex flex-col lg:w-[292px]">
               <div className="flex flex-col gap-2">
-                <span className="pb-1 text-label4 text-neutralGreen-700 lg:pb-4 lg:text-label3">
+                <span className="pb-4 text-label4 text-neutralGreen-700 lg:text-label3">
                   VAULT BENEFITS
                 </span>
                 <div className="flex gap-1 lg:gap-2">
@@ -99,7 +100,7 @@ export const StakingContent = () => {
                 size="medium"
                 isExternal
                 asLink
-                className="w-full lg:mt-8"
+                className="mb-4 mt-6 w-full lg:mt-8"
                 suffixIconName="ArrowRight"
                 href={VAULT_DOCS_LINK}
               >
