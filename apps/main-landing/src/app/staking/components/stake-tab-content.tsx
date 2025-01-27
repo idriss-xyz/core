@@ -242,7 +242,7 @@ export const StakeTabContent = () => {
               className="mt-6 w-full"
               type="submit"
             >
-              LOCK
+              { isConnected ? 'LOCK' : 'LOG IN'}
             </Button>
           }
         />

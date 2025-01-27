@@ -16,9 +16,6 @@ import { StakeTabContent, UnstakeTabContent } from './components';
 import '@rainbow-me/rainbowkit/styles.css';
 
 export const StakingContent = () => {
-  const { isConnected } = useAccount();
-  const { disconnect } = useDisconnect();
-  const { connectModalOpen, openConnectModal } = useConnectModal();
 
   const tabItems: TabItem[] = useMemo(() => {
     return [
@@ -113,35 +110,6 @@ export const StakingContent = () => {
               </Button>
             </div>
           </div>
-        </div>
-        <div className="absolute bottom-2 left-1/2 z-10 -translate-x-1/2">
-          {isConnected ? (
-            <div className="relative flex w-full flex-col items-center gap-2 rounded-2xl bg-[rgba(255,255,255,0.5)] px-5 py-3 backdrop-blur-[45px]">
-              <span className="text-heading6 text-neutralGreen-700">
-                All good, your wallet is connected!
-              </span>
-              <Button
-                intent="secondary"
-                size="small"
-                className="w-full"
-                onClick={() => {
-                  disconnect();
-                }}
-              >
-                DISCONNECT WALLET
-              </Button>
-            </div>
-          ) : (
-            <Button
-              intent="primary"
-              size="small"
-              className="mt-6"
-              onClick={openConnectModal}
-              loading={connectModalOpen}
-            >
-              CONNECT WALLET
-            </Button>
-          )}
         </div>
       </div>
     </main>

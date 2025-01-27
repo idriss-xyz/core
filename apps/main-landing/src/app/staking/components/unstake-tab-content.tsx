@@ -158,7 +158,7 @@ export const UnstakeTabContent = () => {
               className="mt-6 w-full"
               type="submit"
             >
-              UNLOCK
+              { isConnected ? 'UNLOCK' : 'LOG IN'}
             </Button>
           }
         />

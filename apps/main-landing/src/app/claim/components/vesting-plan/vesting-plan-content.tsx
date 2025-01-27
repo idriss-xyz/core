@@ -12,7 +12,7 @@ import { Link } from '@idriss-xyz/ui/link';
 import { encodeFunctionData } from 'viem';
 import { baseSepolia } from 'viem/chains';
 import { estimateGas, waitForTransactionReceipt } from 'viem/actions';
-import { useSwitchChain, useWalletClient, useWriteContract } from 'wagmi';
+import { useAccount, useSwitchChain, useWalletClient, useWriteContract } from 'wagmi';
 import {
   TOKEN_TERMS_AND_CONDITIONS_LINK,
   VAULT_DOCS_LINK,
@@ -22,6 +22,7 @@ import { GeoConditionalButton } from '@/components/token-section/components/geo-
 
 import { useClaimPage, VestingPlan } from '../../claim-page-context';
 import { CLAIM_ABI, claimContractAddress } from '../../constants';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 type FormPayload = {
   vestingPlan: VestingPlan;
@@ -34,6 +35,8 @@ export const VestingPlanContent = () => {
   const { data: walletClient } = useWalletClient();
   const { writeContractAsync } = useWriteContract();
   const {switchChainAsync} = useSwitchChain();
+  const { isConnected } = useAccount();
+  const { openConnectModal } = useConnectModal();
 
   const formMethods = useForm<FormPayload>({
     defaultValues: {
@@ -66,20 +69,25 @@ export const VestingPlanContent = () => {
   ];
 
   const vestingPlanButtonLabel = useMemo(() => {
-    switch (vestingPlan) {
-      case 'claim_50': {
-        return 'CLAIM 50%';
-      }
+    if (!isConnected) {
+      return 'LOG IN';
+    }
+    else {
+      switch (vestingPlan) {
+        case 'claim_50': {
+          return 'CLAIM 50%';
+        }
 
-      case 'claim_and_stake_100': {
-        return 'CLAIM & LOCK 100%';
-      }
+        case 'claim_and_stake_100': {
+          return 'CLAIM & LOCK 100%';
+        }
 
-      default: {
-        return 'CLAIM NOW';
+        default: {
+          return 'CLAIM NOW';
+        }
       }
     }
-  }, [vestingPlan]);
+  }, [isConnected, vestingPlan]);
 
   if (!eligibilityData) {
     setCurrentContent('check-eligibility');
@@ -87,55 +95,61 @@ export const VestingPlanContent = () => {
   }
 
   const handleClaim = async () => {
-    if (!walletClient || walletAddress === undefined) {
-      console.error('Wallet not connected');
-      return;
+    if (!isConnected && openConnectModal) {
+      openConnectModal();
     }
 
-    try {
-      const claimData = {
-        abi: CLAIM_ABI,
-        functionName: vestingPlan === 'claim_50' ? 'claim' : 'claimWithBonus',
-        args: [
-          walletClient.account.address,
-          eligibilityData.claimData.amount,
-          eligibilityData.claimData.claimIndices,
-          eligibilityData.claimData.signature,
-          eligibilityData.claimData.expiry,
-          `0x${Buffer.from(eligibilityData.claimData.memo, 'utf8').toString('hex')}`,
-        ],
-      };
-      const encodedClaimData = encodeFunctionData(claimData);
-
-      await switchChainAsync({chainId: baseSepolia.id});
-
-      const gas = await estimateGas(walletClient, {
-        to: claimContractAddress,
-        data: encodedClaimData,
-      }).catch((error) => {
-        console.error('Error estimating gas:', error.message);
-        throw error;
-      });
-
-      const hash = await writeContractAsync({
-        address: claimContractAddress,
-        chain: baseSepolia,
-        ...claimData,
-        gas,
-      });
-
-      const { status } = await waitForTransactionReceipt(walletClient, {
-        hash,
-      });
-
-      if (status === 'reverted') {
-        throw new Error('Claim transaction reverted');
+    else {
+      if (!walletClient || walletAddress === undefined) {
+        console.error('Wallet not connected');
+        return;
       }
 
-      return setCurrentContent('claim-successful');
-    } catch (error) {
-      console.error('Error claiming:', error);
-      throw error;
+      try {
+        const claimData = {
+          abi: CLAIM_ABI,
+          functionName: vestingPlan === 'claim_50' ? 'claim' : 'claimWithBonus',
+          args: [
+            walletClient.account.address,
+            eligibilityData.claimData.amount,
+            eligibilityData.claimData.claimIndices,
+            eligibilityData.claimData.signature,
+            eligibilityData.claimData.expiry,
+            `0x${Buffer.from(eligibilityData.claimData.memo, 'utf8').toString('hex')}`,
+          ],
+        };
+        const encodedClaimData = encodeFunctionData(claimData);
+
+        await switchChainAsync({chainId: baseSepolia.id});
+
+        const gas = await estimateGas(walletClient, {
+          to: claimContractAddress,
+          data: encodedClaimData,
+        }).catch((error) => {
+          console.error('Error estimating gas:', error.message);
+          throw error;
+        });
+
+        const hash = await writeContractAsync({
+          address: claimContractAddress,
+          chain: baseSepolia,
+          ...claimData,
+          gas,
+        });
+
+        const { status } = await waitForTransactionReceipt(walletClient, {
+          hash,
+        });
+
+        if (status === 'reverted') {
+          throw new Error('Claim transaction reverted');
+        }
+
+        return setCurrentContent('claim-successful');
+      } catch (error) {
+        console.error('Error claiming:', error);
+        throw error;
+      }
     }
   };
 
