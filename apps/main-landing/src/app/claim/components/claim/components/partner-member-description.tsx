@@ -97,11 +97,10 @@ export const PartnerMemberDescription = ({
       }
 
       default: {
-        const firstCommunities = communities
-          .slice(0, -1)
-          .map((community) => community.communityName);
-        const lastCommunity =
-          communities[communities.length - 1]?.communityName;
+        const firstCommunities = communities.slice(0, -1).map((community) => {
+          return community.communityName;
+        });
+        const lastCommunity = communities.at(-1)?.communityName;
         return (
           <span>
             of{'\u00A0'}the {firstCommunities.join(', ')}, and {lastCommunity}{' '}
