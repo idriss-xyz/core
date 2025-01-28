@@ -26,7 +26,6 @@ import { RadialGradientBorder } from '@idriss-xyz/ui/gradient-border';
 
 import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 import { TxLoadingModal } from '@/app/claim/components/tx-loading-modal/tx-loading-modal';
-import { formatNumber } from '@/app/claim/components/claim/components/idriss-user-criteria-description';
 
 import { StakingABI, STAKER_ADDRESS } from '../constants';
 import { ClaimedEventsResponse } from '../types';
@@ -257,7 +256,7 @@ export const UnstakeTabContent = () => {
                       <div
                         className="flex text-label6 text-neutral-800 hover:cursor-pointer"
                         onClick={() => {
-                          field.onChange(availableAmount);
+                          field.onChange(stakedAmount);
                         }}
                       >
                         Available:{' '}
