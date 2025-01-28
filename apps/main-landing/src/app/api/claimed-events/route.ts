@@ -53,7 +53,12 @@ const fetchClaimedEvents = async (
           ? Number.parseFloat(formatEther(total!)) * 2
           : Number.parseFloat(formatEther(total!));
 
-        events.push({ to, total: adjustedTotal.toString(), bonus, transactionHash });
+        events.push({
+          to,
+          total: adjustedTotal.toString(),
+          bonus,
+          transactionHash,
+        });
       }
     }
 
