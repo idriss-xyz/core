@@ -15,6 +15,8 @@ import {
   AlertCircle,
   CheckCircle2,
   GlobeIcon,
+  Vault,
+  ChartPie,
 } from 'lucide-react';
 
 import * as customIcons from './custom';
@@ -36,5 +38,7 @@ export const ICON = {
   AlertCircle,
   CheckCircle2,
   GlobeIcon,
+  Vault,
+  ChartPie,
   ...customIcons,
 };
