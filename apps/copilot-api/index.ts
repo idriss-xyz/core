@@ -13,6 +13,7 @@ import { join } from 'path';
 import { mode } from './utils/mode';
 import { createConfig } from '@lifi/sdk';
 import { connectedClients } from './services/scheduler';
+import { startFetchingClaimEvents } from './utils/claimEvents';
 
 dotenv.config(
   mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
@@ -91,6 +92,8 @@ createConfig({
   integrator: process.env.LIFI_INTEGRATOR_STRING ?? 'IDRISS',
   apiKey: process.env.LIFI_API_KEY,
 });
+
+startFetchingClaimEvents();
 
 server.listen(PORT, () => {
   console.log(`Server is running at port ${PORT}`);
