@@ -25,6 +25,7 @@ import { estimateGas, waitForTransactionReceipt } from 'viem/actions';
 
 import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 import { TxLoadingModal } from '@/app/claim/components/tx-loading-modal/tx-loading-modal';
+import { formatNumber } from '@/app/claim/components/claim/components/idriss-user-criteria-description';
 
 import { StakingABI, STAKER_ADDRESS } from '../constants';
 
@@ -159,7 +160,7 @@ export const UnstakeTabContent = () => {
               <Form.Field
                 {...field}
                 className="mt-4 lg:mt-6"
-                value={field.value.toString()}
+                value={formatNumber(field.value, 2)}
                 onChange={(value) => {
                   field.onChange(Number(value));
                 }}
@@ -172,12 +173,14 @@ export const UnstakeTabContent = () => {
                       <div
                         className="flex text-label6 text-neutral-800 hover:cursor-pointer"
                         onClick={() => {
-                          return field.onChange(availableAmount);
+                          field.onChange(availableAmount);
                         }}
                       >
                         Available:{' '}
                         <span className="mx-1 flex justify-center">
-                          {availableAmount ?? <Spinner className="size-3" />}
+                          {formatNumber(Number(availableAmount), 2) ?? (
+                            <Spinner className="size-3" />
+                          )}
                         </span>{' '}
                         IDRISS
                       </div>
