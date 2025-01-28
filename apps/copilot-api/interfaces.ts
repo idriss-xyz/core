@@ -66,9 +66,12 @@ export interface ComplexHeliusWebhookEvent {
 }
 [];
 
+// TODO: Probably will have to add more fields for Helius event response to extract
+// necessary swap data
 export interface CachedTransaction {
   activities: any[];
   timestamp: number; // Time when the transaction was first added to the cache
+  type: 'alchemy' | 'helius';
 }
 
 export interface Webhook {

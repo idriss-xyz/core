@@ -81,7 +81,7 @@ export function isCompleteSwap(swapData: SwapData): boolean {
 }
 
 // Extract swap data from activities
-export async function extractSwapData(
+export async function extractAlchemySwapData(
   txHash: string,
   activities: any[],
 ): Promise<SwapData> {
@@ -173,6 +173,23 @@ export async function extractSwapData(
   return swapData;
 }
 
+export async function extractHeliusSwapData(txHash: string,
+  activities: any[],
+): Promise<SwapData>
+{
+  // TODO: Implement Helius swap data extraction according to Trello comment
+  console.log('To be implemented');
+  return {
+    transactionHash: txHash,
+    from: null,
+    to: null,
+    tokenIn: null,
+    tokenOut: null,
+    timestamp: new Date().toISOString(),
+    isComplete: false,
+  };
+}
+
 // Handle incoming events and add them to the cache
 export async function handleIncomingEvent(
   webhookEvent: AlchemyWebhookEvent,
@@ -201,7 +218,7 @@ export async function handleIncomingEvent(
 }
 
 export async function handleIncomingSolanaEvent(webhookEvents: {
-  [eventName: string]: Record<string, unknown>;
+  [eventName: string]: ComplexHeliusWebhookEvent;
 }): Promise<void> {
   // TODO: Verify activity of webhook event and add it to activities cache, where scheduler.ts will take care of extracting swap data after.
   // For now just print the event
