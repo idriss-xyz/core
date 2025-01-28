@@ -112,7 +112,7 @@ const approveTokens = async (
 };
 
 export const StakeTabContent = () => {
-  const [availableAmount, setAvailableAmount] = useState<string>();
+  const [availableAmount, setAvailableAmount] = useState<string>('0');
   const [termsChecked, setTermsChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { isConnected } = useAccount();
@@ -210,12 +210,7 @@ export const StakeTabContent = () => {
           args: [walletClient.account.address],
         });
 
-        const formattedBalance = new Intl.NumberFormat('en-US', {
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 0,
-        }).format(Number(formatEther(balance)) ?? 0);
-
-        setAvailableAmount(formattedBalance);
+        setAvailableAmount(formatEther(balance) ?? '0');
       } catch (error) {
         console.error(error);
         setAvailableAmount('0');
@@ -235,7 +230,7 @@ export const StakeTabContent = () => {
               <Form.Field
                 {...field}
                 className="mt-4 lg:mt-6"
-                value={formatNumber(field.value, 2)}
+                value={field.value.toString()}
                 onChange={(value) => {
                   field.onChange(Number(value));
                 }}

@@ -43,7 +43,7 @@ const txLoadingHeading = (amount: number) => {
 };
 
 export const UnstakeTabContent = () => {
-  const [availableAmount, setAvailableAmount] = useState<string>();
+  const [availableAmount, setAvailableAmount] = useState<string>('0');
   const [termsChecked, setTermsChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { data: walletClient } = useWalletClient();
@@ -135,12 +135,7 @@ export const UnstakeTabContent = () => {
           args: [walletClient.account.address],
         });
 
-        const formattedBalance = new Intl.NumberFormat('en-US', {
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 0,
-        }).format(Number(formatEther(balance as bigint)) ?? 0);
-
-        setAvailableAmount(formattedBalance);
+        setAvailableAmount(formatEther(balance as bigint) ?? '0');
       } catch (error) {
         setAvailableAmount('0');
         console.error(error);
@@ -160,7 +155,7 @@ export const UnstakeTabContent = () => {
               <Form.Field
                 {...field}
                 className="mt-4 lg:mt-6"
-                value={formatNumber(field.value, 2)}
+                value={field.value.toString()}
                 onChange={(value) => {
                   field.onChange(Number(value));
                 }}
