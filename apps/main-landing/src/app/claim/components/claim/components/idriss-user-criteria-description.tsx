@@ -7,9 +7,9 @@ type Properties = {
   liBaseClassName: string;
 };
 
-const formatNumber = (value: number | undefined, digits = 0) => {
+export const formatNumber = (value: number | undefined, digits = 0) => {
   return new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: digits,
+    minimumFractionDigits: value && value % 1 !== 0 ? digits : 0,
     maximumFractionDigits: digits,
   }).format(value ?? 0);
 };

@@ -31,6 +31,7 @@ import { ERC20_ABI } from '@/app/creators/donate/constants';
 import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 import { TxLoadingModal } from '@/app/claim/components/tx-loading-modal/tx-loading-modal';
 import { IDRISS_TOKEN_ADDRESS } from '@/components/token-section/constants';
+import { formatNumber } from '@/app/claim/components/claim/components/idriss-user-criteria-description';
 
 import { StakingABI, STAKER_ADDRESS } from '../constants';
 
@@ -111,7 +112,7 @@ const approveTokens = async (
 };
 
 export const StakeTabContent = () => {
-  const [availableAmount, setAvailableAmount] = useState<string>();
+  const [availableAmount, setAvailableAmount] = useState<string>('0');
   const [termsChecked, setTermsChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { isConnected } = useAccount();
@@ -209,12 +210,7 @@ export const StakeTabContent = () => {
           args: [walletClient.account.address],
         });
 
-        const formattedBalance = new Intl.NumberFormat('en-US', {
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 0,
-        }).format(Number(formatEther(balance)) ?? 0);
-
-        setAvailableAmount(formattedBalance);
+        setAvailableAmount(formatEther(balance) ?? '0');
       } catch (error) {
         console.error(error);
         setAvailableAmount('0');
@@ -244,10 +240,17 @@ export const StakeTabContent = () => {
                       Amount
                     </span>
                     {walletClient ? (
-                      <div className="flex text-label6 text-neutral-800">
+                      <div
+                        className="flex text-label6 text-neutral-800 hover:cursor-pointer"
+                        onClick={() => {
+                          field.onChange(availableAmount);
+                        }}
+                      >
                         Available:{' '}
                         <span className="mx-1 flex justify-center">
-                          {availableAmount ?? <Spinner className="size-3" />}
+                          {formatNumber(Number(availableAmount), 2) ?? (
+                            <Spinner className="size-3" />
+                          )}
                         </span>{' '}
                         IDRISS
                       </div>

@@ -253,7 +253,12 @@ export const UnstakeTabContent = () => {
                       Amount to unlock
                     </span>
                     {walletClient ? (
-                      <div className="flex text-label6 text-neutral-800">
+                      <div
+                        className="flex text-label6 text-neutral-800 hover:cursor-pointer"
+                        onClick={() => {
+                          field.onChange(stakedAmount);
+                        }}
+                      >
                         Available:{' '}
                         <span className="mx-1 flex justify-center">
                           {stakedAmount ?? <Spinner className="size-3" />}
