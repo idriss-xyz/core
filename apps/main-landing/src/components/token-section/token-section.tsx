@@ -128,50 +128,54 @@ export const TokenSection = () => {
                         </Button>
                       );
                     }}
-                  >
-                    <ul className="flex flex-col gap-y-1">
-                      <li>
-                        <Button
-                          className="w-full justify-start px-3 py-1 font-normal text-neutral-900"
-                          intent="tertiary"
-                          size="large"
-                          prefixIconName="Vault"
-                          prefixIconClassName="mr-3"
-                          href={EXTERNAL_LINK.VAULT}
-                          asLink
-                        >
-                          Vault
-                        </Button>
-                      </li>
-                      <li>
-                        <Button
-                          className="w-full justify-start px-3 py-1 font-normal text-neutral-900"
-                          intent="tertiary"
-                          size="large"
-                          prefixIconName="ChartPie"
-                          prefixIconClassName="mr-3"
-                          href={TOKENOMICS_DOCS_LINK}
-                          asLink
-                        >
-                          Tokenomics
-                        </Button>
-                      </li>
-                      <li>
-                        <Button
-                          className="w-full justify-start px-3 py-1 font-normal text-neutral-900"
-                          intent="tertiary"
-                          size="large"
-                          prefixIconName="CoinmarketcapOutlined"
-                          prefixIconClassName="mr-3"
-                          href={COINMARKETCAP_LINK}
-                          isExternal
-                          asLink
-                        >
-                          Coinmarketcap
-                        </Button>
-                      </li>
-                    </ul>
-                  </Dropdown>
+                    // eslint-disable-next-line react/no-children-prop
+                    children={() => {
+                      return (
+                        <ul className="flex flex-col gap-y-1">
+                          <li>
+                            <Button
+                              className="w-full justify-start px-3 py-1 font-normal text-neutral-900"
+                              intent="tertiary"
+                              size="large"
+                              prefixIconName="Vault"
+                              prefixIconClassName="mr-3"
+                              href={EXTERNAL_LINK.VAULT}
+                              asLink
+                            >
+                              Vault
+                            </Button>
+                          </li>
+                          <li>
+                            <Button
+                              className="w-full justify-start px-3 py-1 font-normal text-neutral-900"
+                              intent="tertiary"
+                              size="large"
+                              prefixIconName="ChartPie"
+                              prefixIconClassName="mr-3"
+                              href={TOKENOMICS_DOCS_LINK}
+                              asLink
+                            >
+                              Tokenomics
+                            </Button>
+                          </li>
+                          <li>
+                            <Button
+                              className="w-full justify-start px-3 py-1 font-normal text-neutral-900"
+                              intent="tertiary"
+                              size="large"
+                              prefixIconName="CoinmarketcapOutlined"
+                              prefixIconClassName="mr-3"
+                              href={COINMARKETCAP_LINK}
+                              isExternal
+                              asLink
+                            >
+                              Coinmarketcap
+                            </Button>
+                          </li>
+                        </ul>
+                      );
+                    }}
+                  />
                 </div>
                 <div className="self-stretch text-center opacity-70">
                   <span

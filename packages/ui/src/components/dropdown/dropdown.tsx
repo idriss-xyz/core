@@ -4,10 +4,11 @@ import { ReactNode, useCallback, useState } from 'react';
 type TriggerRenderProperties = {
   isOpened: boolean;
 };
+type ChildrenRenderProperties = { close: () => void };
 
 type Properties = {
   trigger: (properties: TriggerRenderProperties) => ReactNode;
-  children: ReactNode;
+  children: (properties: ChildrenRenderProperties) => ReactNode;
   className?: string;
   contentAlign?: 'start' | 'center' | 'end';
 };
@@ -24,6 +25,10 @@ const DropdownBase = ({
     setIsOpened(opened);
   }, []);
 
+  const close = useCallback(() => {
+    onOpenChange(false);
+  }, [onOpenChange]);
+
   return (
     <RadixDropdown.Root open={isOpened} onOpenChange={onOpenChange}>
       <RadixDropdown.Trigger asChild>
@@ -31,7 +36,7 @@ const DropdownBase = ({
       </RadixDropdown.Trigger>
       <RadixDropdown.Portal>
         <RadixDropdown.Content className={className} align={contentAlign}>
-          {children}
+          {children({ close })}
         </RadixDropdown.Content>
       </RadixDropdown.Portal>
     </RadixDropdown.Root>
