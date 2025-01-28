@@ -207,7 +207,7 @@ export const UnstakeTabContent = () => {
                 {totalLockedAmount} IDRISS
               </p>
             ) : (
-              <Spinner className="size-4" />
+              <p className="text-label3 text-neutralGreen-700">0 IDRISS</p>
             )}
           </div>
           <div className="flex flex-row items-center justify-between">
@@ -217,7 +217,7 @@ export const UnstakeTabContent = () => {
                 {stakedAmount} IDRISS
               </p>
             ) : (
-              <Spinner className="size-4" />
+              <p className="text-label3 text-neutralGreen-700">0 IDRISS</p>
             )}
           </div>
           <div className="flex flex-row items-center justify-between">
@@ -229,7 +229,7 @@ export const UnstakeTabContent = () => {
                 {blockedAmount} IDRISS
               </p>
             ) : (
-              <Spinner className="size-4" />
+              <p className="text-label3 text-neutralGreen-700">0 IDRISS</p>
             )}
           </div>
         </div>
