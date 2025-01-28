@@ -137,19 +137,6 @@ export const TokenSection = () => {
                               className="w-full justify-start px-3 py-1 font-normal text-neutral-900"
                               intent="tertiary"
                               size="large"
-                              prefixIconName="Vault"
-                              prefixIconClassName="mr-3"
-                              href={EXTERNAL_LINK.VAULT}
-                              asLink
-                            >
-                              Vault
-                            </Button>
-                          </li>
-                          <li>
-                            <Button
-                              className="w-full justify-start px-3 py-1 font-normal text-neutral-900"
-                              intent="tertiary"
-                              size="large"
                               prefixIconName="ChartPie"
                               prefixIconClassName="mr-3"
                               href={TOKENOMICS_DOCS_LINK}
@@ -170,6 +157,19 @@ export const TokenSection = () => {
                               asLink
                             >
                               Coinmarketcap
+                            </Button>
+                          </li>
+                          <li>
+                            <Button
+                              className="w-full justify-start px-3 py-1 font-normal text-neutral-900"
+                              intent="tertiary"
+                              size="large"
+                              prefixIconName="Vault"
+                              prefixIconClassName="mr-3"
+                              href={EXTERNAL_LINK.VAULT}
+                              asLink
+                            >
+                              Vault
                             </Button>
                           </li>
                         </ul>
