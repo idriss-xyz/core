@@ -23774,7 +23774,92 @@
       "to": "0x636AB835Fd2DF941b6ED0915783bBC2628cc9B69",
       "total": "2353.0881368595483",
       "bonus": true
+    },
+    {
+      "to": "0xB23C327d46061CD6c464770F217f4009c102336F",
+      "total": "3166.3730854994183",
+      "bonus": false
+    },
+    {
+      "to": "0xC3C8Bf50E71E1D492b17b746ed1243C485237302",
+      "total": "660.8162402199197",
+      "bonus": false
+    },
+    {
+      "to": "0x571C9B09aFe7248421563e7958459413B3af98fc",
+      "total": "3629.0083337576593",
+      "bonus": true
+    },
+    {
+      "to": "0x2B8f30275E01165e71699a5C5D7aA44Fd7781A27",
+      "total": "3166.3730854994183",
+      "bonus": false
+    },
+    {
+      "to": "0xfB277844406CE5bcab4b92d99654Ef6e8f3940b7",
+      "total": "3222.915462026194",
+      "bonus": true
+    },
+    {
+      "to": "0xcc34Bca519e3538eF6a9E75aD4D4981FACBB551c",
+      "total": "3281.5520006465526",
+      "bonus": false
+    },
+    {
+      "to": "0x27e32Ef9576dc05F4D08d978106fC16351d4cb0c",
+      "total": "3873.342554368208",
+      "bonus": false
+    },
+    {
+      "to": "0xdb21b58c882b08Ef367D2336AeD9E234A9Fb9b20",
+      "total": "1258.8001800798206",
+      "bonus": false
+    },
+    {
+      "to": "0x9b9B1108523b39cbFBc12D5a6475a890753C2885",
+      "total": "2591.272448515954",
+      "bonus": false
+    },
+    {
+      "to": "0xC79B6a8Ee35e7Cb7416f35686ab95faBd0bce864",
+      "total": "1258.8001800798206",
+      "bonus": false
+    },
+    {
+      "to": "0x02527c402e9Cd964dF5A9C93e7F04b75579C5068",
+      "total": "3588.974995984724",
+      "bonus": true
+    },
+    {
+      "to": "0xF8Fecf84b7DBA0dCA2BcAaDDc205BF508eDcb95c",
+      "total": "2779.093992250593",
+      "bonus": true
+    },
+    {
+      "to": "0x09c0603b8c334CE4Dba1520e5507047870be2095",
+      "total": "3275.2695143658007",
+      "bonus": true
+    },
+    {
+      "to": "0x546Fb2eaDeDa4830f1eC643755C3979C831E9cf3",
+      "total": "660.8162402199197",
+      "bonus": false
+    },
+    {
+      "to": "0x661E2EB1E64080eEeB5FA6e478f778F6D2858dB7",
+      "total": "660.8162402199197",
+      "bonus": false
+    },
+    {
+      "to": "0x96c7B9168EeD3419F984809f9c09773Ff5DFe285",
+      "total": "3275.2695143658007",
+      "bonus": true
+    },
+    {
+      "to": "0x61f36B9c64f0EC015F2963299CDc76d46d83d2D8",
+      "total": "2531.435496529697",
+      "bonus": false
     }
   ],
-  "lastProcessedBlock": "25642609"
+  "lastProcessedBlock": "25642738"
 }
