@@ -3,7 +3,7 @@ import { NavigationMenu } from '@idriss-xyz/ui/navigation-menu';
 import Link from 'next/link';
 import { DOCUMENTATION_LINK } from '@idriss-xyz/constants';
 
-import { INTERNAL_LINK } from '@/constants';
+import { EXTERNAL_LINK, INTERNAL_LINK } from '@/constants';
 
 import { APPS_SECTION_NAVIGATION_ITEMS } from '../../constants';
 import { Section } from '../section';
@@ -35,6 +35,18 @@ export const Menu = ({ className }: Properties) => {
               <Link href={INTERNAL_LINK.TOKEN} passHref legacyBehavior>
                 <Button intent="tertiary" size="large" asLink>
                   TOKEN
+                </Button>
+              </Link>
+            </span>
+          </NavigationMenu.Link>
+        </NavigationMenu.Item>
+
+        <NavigationMenu.Item>
+          <NavigationMenu.Link asChild>
+            <span>
+              <Link href={EXTERNAL_LINK.VAULT} passHref legacyBehavior>
+                <Button intent="tertiary" size="large" asLink>
+                  VAULT
                 </Button>
               </Link>
             </span>
