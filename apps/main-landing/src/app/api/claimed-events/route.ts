@@ -10,6 +10,7 @@ interface ClaimEvent {
   to: Hex | undefined;
   total: string | undefined;
   bonus: boolean | undefined;
+  transactionHash: Hex | undefined;
 }
 
 interface ApiResponse {
@@ -45,14 +46,14 @@ const fetchClaimedEvents = async (
     });
 
     for (const log of claimLogs) {
-      const { args } = log;
+      const { args, transactionHash } = log;
       if (args) {
         const { to, total, bonus } = args;
         const adjustedTotal = bonus
           ? Number.parseFloat(formatEther(total!)) * 2
           : Number.parseFloat(formatEther(total!));
 
-        events.push({ to, total: adjustedTotal.toString(), bonus });
+        events.push({ to, total: adjustedTotal.toString(), bonus, transactionHash });
       }
     }
 
