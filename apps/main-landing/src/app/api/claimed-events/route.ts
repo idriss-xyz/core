@@ -96,6 +96,7 @@ const saveEventsToFile = (events: ClaimEvent[], lastProcessedBlock: bigint) => {
   fs.writeFileSync(DATA_FILE_PATH, JSON.stringify(data, null, 2), 'utf8');
 };
 
+// ts-unused-exports:disable-next-line
 export async function GET(): Promise<NextResponse<ApiResponse>> {
   try {
     const { events: existingEvents, lastProcessedBlock } = loadExistingEvents();
