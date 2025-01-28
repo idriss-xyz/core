@@ -246,7 +246,9 @@ export const StakeTabContent = () => {
                     {walletClient ? (
                       <div
                         className="flex text-label6 text-neutral-800 hover:cursor-pointer"
-                        onClick={() => field.onChange(availableAmount)}
+                        onClick={() => {
+                          return field.onChange(availableAmount);
+                        }}
                       >
                         Available:{' '}
                         <span className="mx-1 flex justify-center">
