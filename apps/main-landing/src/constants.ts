@@ -6,6 +6,10 @@ export const INTERNAL_LINK = {
   TOKEN: '/#token',
 };
 
+export const EXTERNAL_LINK = {
+  VAULT: '/vault',
+};
+
 export const restrictedCountries = [
   'Afghanistan',
   'Belarus',
