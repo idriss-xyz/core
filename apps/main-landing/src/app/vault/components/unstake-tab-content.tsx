@@ -22,11 +22,15 @@ import {
 } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { estimateGas, waitForTransactionReceipt } from 'viem/actions';
+import { RadialGradientBorder } from '@idriss-xyz/ui/gradient-border';
 
 import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 import { TxLoadingModal } from '@/app/claim/components/tx-loading-modal/tx-loading-modal';
+import { ERC20_ABI } from '@/app/creators/donate/constants';
+import { IDRISS_TOKEN_ADDRESS } from '@/components/token-section/constants';
 
 import { StakingABI, STAKER_ADDRESS } from '../constants';
+import { ClaimedEventsResponse } from '../types';
 
 type FormPayload = {
   amount: number;
@@ -42,7 +46,9 @@ const txLoadingHeading = (amount: number) => {
 };
 
 export const UnstakeTabContent = () => {
-  const [availableAmount, setAvailableAmount] = useState<string>();
+  const [stakedAmount, setStakedAmount] = useState<string>();
+  const [unstakedAmount, setUnstakedAmount] = useState<string>();
+  const [blockedAmount, setBlockedAmount] = useState<string>();
   const [termsChecked, setTermsChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { data: walletClient } = useWalletClient();
@@ -139,10 +145,50 @@ export const UnstakeTabContent = () => {
           maximumFractionDigits: 0,
         }).format(Number(formatEther(balance as bigint)) ?? 0);
 
-        setAvailableAmount(formattedBalance);
+        setStakedAmount(formattedBalance);
       } catch (error) {
-        setAvailableAmount('0');
+        setStakedAmount('0');
         console.error(error);
+      }
+
+      try {
+        const balance = await publicClient?.readContract({
+          abi: ERC20_ABI,
+          address: IDRISS_TOKEN_ADDRESS,
+          functionName: 'balanceOf',
+          args: [walletClient.account.address],
+        });
+
+        const formattedBalance = new Intl.NumberFormat('en-US', {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(Number(formatEther(balance)) ?? 0);
+
+        setUnstakedAmount(formattedBalance);
+      } catch (error) {
+        console.error(error);
+        setUnstakedAmount('0');
+      }
+
+      try {
+        const claimedEvents = await fetch('/api/claimed-events');
+
+        const claimedEventsData =
+          (await claimedEvents.json()) as ClaimedEventsResponse;
+
+        const claimedEvent = claimedEventsData.events.find((event) => {
+          return event.to === walletClient.account.address && event.bonus;
+        });
+
+        const formattedBalance = new Intl.NumberFormat('en-US', {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(Number(claimedEvent?.total) ?? 0);
+
+        setBlockedAmount(formattedBalance);
+      } catch (error) {
+        console.error(error);
+        setBlockedAmount('0');
       }
     })();
   }, [walletClient, publicClient]);
@@ -150,6 +196,43 @@ export const UnstakeTabContent = () => {
   return (
     <>
       <TxLoadingModal show={isLoading} heading={txLoadingHeading(amount)} />
+      <div className="relative mt-4 lg:mt-6">
+        <RadialGradientBorder />
+        <div className="flex flex-col gap-y-2 rounded-2xl bg-white/20 p-6">
+          <div className="flex flex-row items-center justify-between">
+            <p className="text-body4 text-neutralGreen-500">Total locked</p>
+            {stakedAmount ? (
+              <p className="text-label3 text-neutralGreen-700">
+                {stakedAmount} IDRISS
+              </p>
+            ) : (
+              <Spinner className="size-4" />
+            )}
+          </div>
+          <div className="flex flex-row items-center justify-between">
+            <p className="text-body4 text-neutralGreen-500">Unlockable</p>
+            {unstakedAmount ? (
+              <p className="text-label3 text-neutralGreen-700">
+                {unstakedAmount} IDRISS
+              </p>
+            ) : (
+              <Spinner className="size-4" />
+            )}
+          </div>
+          <div className="flex flex-row items-center justify-between">
+            <p className="text-body4 text-neutralGreen-500">
+              Unlockable from July 6
+            </p>
+            {blockedAmount ? (
+              <p className="text-label3 text-neutralGreen-700">
+                {blockedAmount} IDRISS
+              </p>
+            ) : (
+              <Spinner className="size-4" />
+            )}
+          </div>
+        </div>
+      </div>
       <Form className="w-full" onSubmit={handleSubmit(handleUnstake)}>
         <Controller
           control={control}
@@ -172,7 +255,7 @@ export const UnstakeTabContent = () => {
                       <div className="flex text-label6 text-neutral-800">
                         Available:{' '}
                         <span className="mx-1 flex justify-center">
-                          {availableAmount ?? <Spinner className="size-3" />}
+                          {stakedAmount ?? <Spinner className="size-3" />}
                         </span>{' '}
                         IDRISS
                       </div>
