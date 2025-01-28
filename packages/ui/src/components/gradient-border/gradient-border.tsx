@@ -58,3 +58,35 @@ export const GradientBorder = ({
     </svg>
   );
 };
+
+export const RadialGradientBorder = () => {
+  return (
+    <svg
+      fill="none"
+      className="pointer-events-none absolute left-0 top-0 size-full overflow-visible"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect
+        x=".5"
+        y=".5"
+        width="100%"
+        height="100%"
+        rx="15.5"
+        stroke="url(#a)"
+      />
+      <defs>
+        <radialGradient
+          id="a"
+          cx="0"
+          cy="0"
+          r="1"
+          gradientUnits="userSpaceOnUse"
+          gradientTransform="rotate(31.402 30.574 108.762) scale(274.477 246.185)"
+        >
+          <stop stopColor="#E7F5E7" />
+          <stop offset="1" stopColor="#76C282" />
+        </radialGradient>
+      </defs>
+    </svg>
+  );
+};

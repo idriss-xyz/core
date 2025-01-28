@@ -22,12 +22,14 @@ import {
 } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { estimateGas, waitForTransactionReceipt } from 'viem/actions';
+import { RadialGradientBorder } from '@idriss-xyz/ui/gradient-border';
 
 import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 import { TxLoadingModal } from '@/app/claim/components/tx-loading-modal/tx-loading-modal';
 import { formatNumber } from '@/app/claim/components/claim/components/idriss-user-criteria-description';
 
 import { StakingABI, STAKER_ADDRESS } from '../constants';
+import { ClaimedEventsResponse } from '../types';
 
 type FormPayload = {
   amount: number;
@@ -43,7 +45,9 @@ const txLoadingHeading = (amount: number) => {
 };
 
 export const UnstakeTabContent = () => {
-  const [availableAmount, setAvailableAmount] = useState<string>('0');
+  const [stakedAmount, setStakedAmount] = useState<string>();
+  const [blockedAmount, setBlockedAmount] = useState<string>();
+  const [totalLockedAmount, setTotalLockedAmount] = useState<string>();
   const [termsChecked, setTermsChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { data: walletClient } = useWalletClient();
@@ -128,24 +132,109 @@ export const UnstakeTabContent = () => {
       }
 
       try {
-        const balance = await publicClient?.readContract({
+        const stakedBalance = await publicClient.readContract({
           abi: StakingABI,
           address: STAKER_ADDRESS,
           functionName: 'getStakedBalance',
           args: [walletClient.account.address],
         });
 
-        setAvailableAmount(formatEther(balance as bigint) ?? '0');
+        const formattedStakedAmount = new Intl.NumberFormat('en-US', {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(Number(formatEther(stakedBalance as bigint)) ?? 0);
+
+        setStakedAmount(formattedStakedAmount);
       } catch (error) {
-        setAvailableAmount('0');
-        console.error(error);
+        setStakedAmount('0');
+        console.error('Error fetching staked balance:', error);
+      }
+
+      try {
+        const claimedEvents = await fetch('/api/claimed-events');
+
+        const claimedEventsData =
+          (await claimedEvents.json()) as ClaimedEventsResponse;
+
+        const claimedEvent = claimedEventsData.events.find((event) => {
+          return event.to === walletClient.account.address && event.bonus;
+        });
+
+        const formattedBlockedAmount = new Intl.NumberFormat('en-US', {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(Number(claimedEvent?.total ?? 0));
+
+        console.log(claimedEvent?.total);
+
+        setBlockedAmount(formattedBlockedAmount);
+      } catch (error) {
+        setBlockedAmount('0');
+        console.error('Error fetching blocked amount:', error);
       }
     })();
   }, [walletClient, publicClient]);
 
+  useEffect(() => {
+    if (stakedAmount && blockedAmount) {
+      try {
+        const totalLocked =
+          (Number(stakedAmount.replaceAll(',', '')) || 0) +
+          (Number(blockedAmount.replaceAll(',', '')) || 0);
+
+        setTotalLockedAmount(
+          new Intl.NumberFormat('en-US', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+          }).format(totalLocked),
+        );
+      } catch (error) {
+        setTotalLockedAmount('0');
+        console.error('Error calculating total locked amount:', error);
+      }
+    }
+  }, [stakedAmount, blockedAmount]);
+
   return (
     <>
       <TxLoadingModal show={isLoading} heading={txLoadingHeading(amount)} />
+      <div className="relative mt-4 lg:mt-6">
+        <RadialGradientBorder />
+        <div className="flex flex-col gap-y-2 rounded-2xl bg-white/20 p-6">
+          <div className="flex flex-row items-center justify-between">
+            <p className="text-body4 text-neutralGreen-500">Total locked</p>
+            {totalLockedAmount ? (
+              <p className="text-label3 text-neutralGreen-700">
+                {totalLockedAmount} IDRISS
+              </p>
+            ) : (
+              <Spinner className="size-4" />
+            )}
+          </div>
+          <div className="flex flex-row items-center justify-between">
+            <p className="text-body4 text-neutralGreen-500">Unlockable</p>
+            {stakedAmount ? (
+              <p className="text-label3 text-neutralGreen-700">
+                {stakedAmount} IDRISS
+              </p>
+            ) : (
+              <Spinner className="size-4" />
+            )}
+          </div>
+          <div className="flex flex-row items-center justify-between">
+            <p className="text-body4 text-neutralGreen-500">
+              Unlockable from July 6
+            </p>
+            {blockedAmount ? (
+              <p className="text-label3 text-neutralGreen-700">
+                {blockedAmount} IDRISS
+              </p>
+            ) : (
+              <Spinner className="size-4" />
+            )}
+          </div>
+        </div>
+      </div>
       <Form className="w-full" onSubmit={handleSubmit(handleUnstake)}>
         <Controller
           control={control}
@@ -173,9 +262,7 @@ export const UnstakeTabContent = () => {
                       >
                         Available:{' '}
                         <span className="mx-1 flex justify-center">
-                          {formatNumber(Number(availableAmount), 2) ?? (
-                            <Spinner className="size-3" />
-                          )}
+                          {stakedAmount ?? <Spinner className="size-3" />}
                         </span>{' '}
                         IDRISS
                       </div>
