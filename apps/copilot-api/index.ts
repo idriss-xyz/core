@@ -85,19 +85,7 @@ app.post(
 
 app.post(
   '/webhook/solana/:internalWebhookId',
-  express.json({
-    verify: (
-      req: Request,
-      res: Response,
-      buf: Buffer,
-      encoding: BufferEncoding,
-    ) => {
-      const rawBody = buf.toString(encoding);
-      (req as any).rawBody = rawBody;
-      (req as any).signature = req.headers['x-helius-signature'];
-    },
-  }),
-  // TODO: Implement some form of validateSignature for Helius (currently not using authHeader)
+  // TODO: Implement some form of validateSignature for Helius (ex: using authHeader)
   heliusWebhookHandler(),
 );
 
