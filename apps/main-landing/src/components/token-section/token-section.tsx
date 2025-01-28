@@ -5,20 +5,18 @@ import { Button } from '@idriss-xyz/ui/button';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { Link } from '@idriss-xyz/ui/link';
 import { classes } from '@idriss-xyz/ui/utils';
-import { TOKEN_TERMS_AND_CONDITIONS_LINK } from '@idriss-xyz/constants';
-import dynamic from 'next/dynamic';
+import {
+  COINMARKETCAP_LINK,
+  TOKEN_TERMS_AND_CONDITIONS_LINK,
+  TOKENOMICS_DOCS_LINK,
+} from '@idriss-xyz/constants';
+import { Dropdown } from '@idriss-xyz/ui/dropdown';
+
+import { EXTERNAL_LINK } from '@/constants';
 
 import idrissCoin from './assets/IDRISS_COIN 1.png';
 import background from './background.png';
 import { GeoConditionalButton } from './components/geo-conditional-button';
-
-const TokenomicsButton = dynamic(
-  async () => {
-    const { Button } = await import('@idriss-xyz/ui/button');
-    return Button;
-  },
-  { ssr: false },
-);
 
 export const TokenSection = () => {
   return (
@@ -83,9 +81,9 @@ export const TokenSection = () => {
               decentralized{'\u00A0'}revenue sharing, governance rights, and
               more.
             </p>
-            <div className="flex-row justify-normal gap-6 lg:flex">
+            <div className="w-full max-w-[444px] flex-row justify-normal gap-6 lg:flex lg:w-auto lg:max-w-none">
               <div className="flex flex-col gap-6 lg:gap-4">
-                <div className="flex flex-col items-center justify-center gap-6 lg:flex-row">
+                <div className="grid grid-cols-1 items-center justify-center gap-6 lg:grid-cols-[444px,210px]">
                   <GeoConditionalButton
                     defaultButton={[
                       <Button
@@ -96,7 +94,7 @@ export const TokenSection = () => {
                         asLink
                         href="https://app.uniswap.org/swap?inputCurrency=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913&outputCurrency=0x000096630066820566162C94874A776532705231"
                         isExternal
-                        className="mx-auto w-full md:w-auto"
+                        className="w-full"
                       >
                         BUY ON UNISWAP
                       </Button>,
@@ -108,22 +106,72 @@ export const TokenSection = () => {
                         asLink
                         href="https://jumper.exchange/?fromChain=8453&fromToken=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913&toChain=8453&toToken=0x000096630066820566162C94874A776532705231"
                         isExternal
-                        className="w-full whitespace-nowrap md:w-auto"
+                        className="w-full whitespace-nowrap"
                       >
                         BUY ON JUMPER
                       </Button>,
                     ]}
                   />
-                  <TokenomicsButton
-                    intent="secondary"
-                    size="large"
-                    suffixIconName="IdrissArrowRight"
-                    asLink
-                    href="https://docs.idriss.xyz/idriss-token"
-                    isExternal
+                  <Dropdown
+                    className="z-extensionPopup min-w-60 rounded-xl border border-neutral-300 bg-white py-2 shadow-lg"
+                    contentAlign="end"
+                    trigger={({ isOpened }) => {
+                      return (
+                        <Button
+                          size="large"
+                          intent="secondary"
+                          className="w-full"
+                          suffixIconName="ChevronDown"
+                          suffixIconClassName={`transition-all duration-200 ease-in-out ${isOpened ? 'rotate-[180deg]' : ''}`}
+                        >
+                          MORE
+                        </Button>
+                      );
+                    }}
                   >
-                    TOKENOMICS
-                  </TokenomicsButton>
+                    <ul className="flex flex-col gap-y-1">
+                      <li>
+                        <Button
+                          className="w-full justify-start px-3 py-1 font-normal text-neutral-900"
+                          intent="tertiary"
+                          size="large"
+                          prefixIconName="Vault"
+                          prefixIconClassName="mr-3"
+                          href={EXTERNAL_LINK.VAULT}
+                          asLink
+                        >
+                          Vault
+                        </Button>
+                      </li>
+                      <li>
+                        <Button
+                          className="w-full justify-start px-3 py-1 font-normal text-neutral-900"
+                          intent="tertiary"
+                          size="large"
+                          prefixIconName="ChartPie"
+                          prefixIconClassName="mr-3"
+                          href={TOKENOMICS_DOCS_LINK}
+                          asLink
+                        >
+                          Tokenomics
+                        </Button>
+                      </li>
+                      <li>
+                        <Button
+                          className="w-full justify-start px-3 py-1 font-normal text-neutral-900"
+                          intent="tertiary"
+                          size="large"
+                          prefixIconName="CoinmarketcapOutlined"
+                          prefixIconClassName="mr-3"
+                          href={COINMARKETCAP_LINK}
+                          isExternal
+                          asLink
+                        >
+                          Coinmarketcap
+                        </Button>
+                      </li>
+                    </ul>
+                  </Dropdown>
                 </div>
                 <div className="self-stretch text-center opacity-70">
                   <span
