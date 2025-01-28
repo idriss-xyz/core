@@ -1,1 +1,1 @@
-export { GradientBorder } from './gradient-border';
+export { GradientBorder, RadialGradientBorder } from './gradient-border';
