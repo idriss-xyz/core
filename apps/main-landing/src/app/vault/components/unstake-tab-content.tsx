@@ -176,18 +176,14 @@ export const UnstakeTabContent = () => {
         const claimedEventsData =
           (await claimedEvents.json()) as ClaimedEventsResponse;
 
-        const filteredEvents = claimedEventsData.events.filter((event) => {
+        const claimedEvent = claimedEventsData.events.find((event) => {
           return event.to === walletClient.account.address && event.bonus;
         });
-
-        const balance = filteredEvents.reduce((sum, event) => {
-          return sum + Number(event.total);
-        }, 0);
 
         const formattedBalance = new Intl.NumberFormat('en-US', {
           minimumFractionDigits: 0,
           maximumFractionDigits: 0,
-        }).format(balance);
+        }).format(Number(claimedEvent?.total) ?? 0);
 
         setBlockedAmount(formattedBalance);
       } catch (error) {
