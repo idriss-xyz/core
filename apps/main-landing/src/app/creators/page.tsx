@@ -50,7 +50,7 @@ const TOKENS_ORDER: Record<TokenSymbol, number> = {
   YGG: 7,
   PDT: 8,
   DEGEN: 9,
-  PENGU: 10
+  PENGU: 10,
 };
 
 // ts-unused-exports:disable-next-line
