@@ -107,7 +107,7 @@ export const TOKEN = {
     symbol: 'PRIME',
     logo: ECHELON_PRIME_LOGO,
   },
-  PENGU: { name: 'Pengu', symbol: 'PENGU', logo: PENGU_LOGO },
+  PENGU: { name: 'Pudgy Penguins', symbol: 'PENGU', logo: PENGU_LOGO },
   AAVEGOTCHI: {
     name: 'Aavegotchi',
     symbol: 'GHST',
@@ -142,7 +142,7 @@ export const CHAIN_ID_TO_TOKENS = {
     {
       ...TOKEN.PENGU,
       decimals: 18,
-      address: '0x9eBe3A824Ca958e4b3Da772D2065518F009CBa62s',
+      address: '0x9eBe3A824Ca958e4b3Da772D2065518F009CBa62',
     },
   ],
   [CHAIN.ALEPH.id]: [

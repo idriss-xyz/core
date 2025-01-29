@@ -180,7 +180,7 @@ export const TOKEN = {
   DEGEN: { name: 'Degen', symbol: 'DEGEN', logo: DEGEN_LOGO },
   IDRISS: { name: 'IDRISS', symbol: 'IDRISS', logo: IDRISS_LOGO },
   AZERO: { name: 'Aleph Zero', symbol: 'AZERO', logo: ALEPH_LOGO },
-  PENGU: { name: 'Pengu', symbol: 'PENGU', logo: PENGU_LOGO },
+  PENGU: { name: 'Pudgy Penguins', symbol: 'PENGU', logo: PENGU_LOGO },
   HIGHER: { name: 'Higher', symbol: 'HIGHER', logo: HIGHER_LOGO },
   MOXIE: { name: 'Moxie', symbol: 'MOXIE', logo: MOXIE_LOGO },
 } satisfies Record<string, Token>;
@@ -200,7 +200,7 @@ export const CHAIN_ID_TO_TOKENS = {
     {
       ...TOKEN.PENGU,
       decimals: 18,
-      address: '0x9eBe3A824Ca958e4b3Da772D2065518F009CBa62s',
+      address: '0x9eBe3A824Ca958e4b3Da772D2065518F009CBa62',
     },
   ],
   [CHAIN.ALEPH.id]: [
