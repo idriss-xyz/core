@@ -11,9 +11,353 @@ export const CLAIM_CONTENT = {
 export type ClaimPageContent =
   (typeof CLAIM_CONTENT)[keyof typeof CLAIM_CONTENT];
 
-export const ALEPH_LOGO =
-  'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iMjAiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0yNy44NTM3IDIxLjEyOTlIMzEuNjU3MUMzMS43MDIyIDIxLjEzIDMxLjc0NjggMjEuMTIxMiAzMS43ODg1IDIxLjEwNEMzMS44MzAxIDIxLjA4NjggMzEuODY3OSAyMS4wNjE2IDMxLjg5OTggMjEuMDI5N0MzMS45MzE3IDIwLjk5NzkgMzEuOTU2OSAyMC45NiAzMS45NzQxIDIwLjkxODRDMzEuOTkxMyAyMC44NzY3IDMyLjAwMDEgMjAuODMyMSAzMiAyMC43ODdWMTguMDQ0MkMzMiAxNy45NTMzIDMxLjk2MzkgMTcuODY2MSAzMS44OTk2IDE3LjgwMThDMzEuODM1MyAxNy43Mzc1IDMxLjc0ODEgMTcuNzAxMyAzMS42NTcxIDE3LjcwMTNIMjYuMzI3NkwyMi4xMjg4IDguMjcxMjRDMjIuMDkzIDguMTkwOTggMjIuMDM1IDguMTIyNzIgMjEuOTYxNCA4LjA3NDYyQzIxLjg4NzkgOC4wMjY1MSAyMS44MDIxIDguMDAwNjEgMjEuNzE0MyA4SDE4LjI4NTdDMTguMTk3NCA4LjAwMDAyIDE4LjExMDkgOC4wMjU2NSAxOC4wMzY4IDguMDczNzlDMTcuOTYyNyA4LjEyMTkzIDE3LjkwNDEgOC4xOTA1MSAxNy44NjgyIDguMjcxMjRMMTMuNjcyNCAxNy43MDEzSDguMzQyODZDOC4yNTE5MyAxNy43MDEzIDguMTY0NzIgMTcuNzM3NSA4LjEwMDQyIDE3LjgwMThDOC4wMzYxMiAxNy44NjYxIDggMTcuOTUzMyA4IDE4LjA0NDJWMjAuNzg3QzcuOTk5OSAyMC44MzIxIDguMDA4NyAyMC44NzY3IDguMDI1ODkgMjAuOTE4NEM4LjA0MzA5IDIwLjk2IDguMDY4MzQgMjAuOTk3OSA4LjEwMDIgMjEuMDI5N0M4LjEzMjA1IDIxLjA2MTYgOC4xNjk4OSAyMS4wODY4IDguMjExNTMgMjEuMTA0QzguMjUzMTggMjEuMTIxMiA4LjI5NzgxIDIxLjEzIDguMzQyODYgMjEuMTI5OUgxMi4xNDYzTDguMDMyIDMwLjM3NDlDOC4wMDg4MiAzMC40MjY5IDcuOTk4OTkgMzAuNDg0IDguMDAzNCAzMC41NDA4QzguMDA3OCAzMC41OTc2IDguMDI2MzEgMzAuNjUyNSA4LjA1NzI1IDMwLjcwMDRDOC4wODgxOSAzMC43NDgyIDguMTMwNTcgMzAuNzg3NiA4LjE4MDU4IDMwLjgxNUM4LjIzMDU4IDMwLjg0MjQgOC4yODY2MiAzMC44NTY5IDguMzQzNjIgMzAuODU3MUgxMS40MDQyQzExLjQ5MjYgMzAuODU3MSAxMS41NzkgMzAuODMxNSAxMS42NTMxIDMwLjc4MzNDMTEuNzI3MiAzMC43MzUyIDExLjc4NTggMzAuNjY2NiAxMS44MjE3IDMwLjU4NTlMMjAgMTIuMjE3MUwyOC4xNzgzIDMwLjU4NTlDMjguMjE0MiAzMC42NjY2IDI4LjI3MjggMzAuNzM1MiAyOC4zNDY5IDMwLjc4MzNDMjguNDIxIDMwLjgzMTUgMjguNTA3NCAzMC44NTcxIDI4LjU5NTggMzAuODU3MUgzMS42NTY0QzMxLjcxMzYgMzAuODU3MyAzMS43Njk5IDMwLjg0MzEgMzEuODIwMiAzMC44MTU4QzMxLjg3MDUgMzAuNzg4NiAzMS45MTMyIDMwLjc0OTMgMzEuOTQ0NCAzMC43MDEzQzMxLjk3NTYgMzAuNjUzNCAzMS45OTQzIDMwLjU5ODQgMzEuOTk4OCAzMC41NDE0QzMyLjAwMzQgMzAuNDg0NCAzMS45OTM1IDMwLjQyNzEgMzEuOTcwMyAzMC4zNzQ5TDI3Ljg1MzcgMjEuMTI5OVoiIGZpbGw9IiMwQTBBMEEiLz4KPC9zdmc+Cg==';
+export const CLAIM_ABI = [
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_token',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: '_owner',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+  },
+  {
+    inputs: [],
+    name: 'AlreadyInitialized',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'NewOwnerIsZeroAddress',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'NoHandoverRequest',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'Unauthorized',
+    type: 'error',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'by',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'token',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'to',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'total',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256[]',
+        name: 'claimIndices',
+        type: 'uint256[]',
+      },
+      {
+        indexed: false,
+        internalType: 'bytes',
+        name: 'memo',
+        type: 'bytes',
+      },
+      {
+        indexed: false,
+        internalType: 'bool',
+        name: 'bonus',
+        type: 'bool',
+      },
+    ],
+    name: 'Claimed',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'pendingOwner',
+        type: 'address',
+      },
+    ],
+    name: 'OwnershipHandoverCanceled',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'pendingOwner',
+        type: 'address',
+      },
+    ],
+    name: 'OwnershipHandoverRequested',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'oldOwner',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'newOwner',
+        type: 'address',
+      },
+    ],
+    name: 'OwnershipTransferred',
+    type: 'event',
+  },
+  {
+    inputs: [],
+    name: 'cancelOwnershipHandover',
+    outputs: [],
+    stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'to',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'total',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256[]',
+        name: 'claimIndices',
+        type: 'uint256[]',
+      },
+      {
+        internalType: 'bytes',
+        name: 'signature',
+        type: 'bytes',
+      },
+      {
+        internalType: 'uint256',
+        name: 'expiry',
+        type: 'uint256',
+      },
+      {
+        internalType: 'bytes',
+        name: 'memo',
+        type: 'bytes',
+      },
+    ],
+    name: 'claim',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'claimSigner',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'to',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'total',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256[]',
+        name: 'claimIndices',
+        type: 'uint256[]',
+      },
+      {
+        internalType: 'bytes',
+        name: 'signature',
+        type: 'bytes',
+      },
+      {
+        internalType: 'uint256',
+        name: 'expiry',
+        type: 'uint256',
+      },
+      {
+        internalType: 'bytes',
+        name: 'memo',
+        type: 'bytes',
+      },
+    ],
+    name: 'claimWithBonus',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'pendingOwner',
+        type: 'address',
+      },
+    ],
+    name: 'completeOwnershipHandover',
+    outputs: [],
+    stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'claimIndex',
+        type: 'uint256',
+      },
+    ],
+    name: 'isClaimed',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'owner',
+    outputs: [
+      {
+        internalType: 'address',
+        name: 'result',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'pendingOwner',
+        type: 'address',
+      },
+    ],
+    name: 'ownershipHandoverExpiresAt',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'result',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'renounceOwnership',
+    outputs: [],
+    stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'requestOwnershipHandover',
+    outputs: [],
+    stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'newClaimSigner',
+        type: 'address',
+      },
+    ],
+    name: 'setClaimSigner',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'token',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'newOwner',
+        type: 'address',
+      },
+    ],
+    name: 'transferOwnership',
+    outputs: [],
+    stateMutability: 'payable',
+    type: 'function',
+  },
+];
 
+export const CLAIMER_ADDRESS = '0xfD76c3a2A4534D815c9C5127119e6ea738A28837';
 export const claimSteps = [
   {
     step: '01',
