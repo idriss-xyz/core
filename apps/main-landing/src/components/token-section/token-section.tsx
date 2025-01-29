@@ -76,7 +76,7 @@ export const TokenSection = () => {
               )}
             >
               IDRISS is the utility token powering{'\u00A0'}the IDRISS{'\u00A0'}
-              DAO, giving you access{'\u00A0'}to
+              DAO, giving you access{'\u00A0'}to{'\u00A0'}
               <br className="hidden lg:block" />
               decentralized{'\u00A0'}revenue sharing, governance rights, and
               more.
