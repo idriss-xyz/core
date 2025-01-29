@@ -80,15 +80,23 @@ export const StakingContent = () => {
                     locked tokens
                   </span>
                 </div>
-                <div className="flex gap-1 lg:gap-2">
-                  <Icon name="Gem" size={24} className="text-gray-300" />
+                <div className="flex gap-1.5 lg:gap-2.5">
+                  <Icon
+                    name="Gem"
+                    size={24}
+                    className="ml-[3px] text-gray-300 lg:ml-[2px] lg:size-[38px]"
+                  />
                   <span className="text-body4 text-neutralGreen-700 lg:text-body3">
                     Lock <span className="gradient-text">10,000 $IDRISS</span>{' '}
                     or more to access premium features
                   </span>
                 </div>
-                <div className="flex gap-1 lg:gap-2">
-                  <Icon name="PieChart" size={24} className="text-gray-300" />
+                <div className="flex gap-1.5 lg:gap-2.5">
+                  <Icon
+                    name="PieChart"
+                    size={24}
+                    className="ml-[3px] text-gray-300 lg:size-[36px]"
+                  />
                   <span className="text-body4 text-neutralGreen-700 lg:text-body3">
                     Tap into decentralized revenue sharing from IDRISS apps
                   </span>
