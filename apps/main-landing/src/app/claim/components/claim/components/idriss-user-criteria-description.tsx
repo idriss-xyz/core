@@ -7,9 +7,9 @@ type Properties = {
   liBaseClassName: string;
 };
 
-const formatNumber = (value: number | undefined, digits = 0) => {
+export const formatNumber = (value: number | undefined, digits = 0) => {
   return new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: digits,
+    minimumFractionDigits: value && value % 1 !== 0 ? digits : 0,
     maximumFractionDigits: digits,
   }).format(value ?? 0);
 };
@@ -61,8 +61,8 @@ export const IdrissUserCriteriaDescription = ({
         )}
       >
         <span>
-          You made transfers on 2 unique days with the
-          {'\u00A0'}browser extension
+          You made transfers on 2 unique days with{'\u00A0'}the{'\u00A0'}browser
+          extension
         </span>
         <span>{formatNumber(eligibilityData.allocation_extension)}</span>
       </li>

@@ -1,5 +1,6 @@
 import { ReactNode, createContext, useState } from 'react';
 import { createContextHook } from '@idriss-xyz/ui/utils';
+import { Hex } from 'viem';
 
 import { CLAIM_CONTENT, ClaimPageContent } from './constants';
 import { EligibilityCheckResponse } from './types';
@@ -10,13 +11,15 @@ type Properties = {
 
 type ClaimPageContextValues = {
   currentContent: ClaimPageContent;
-  walletAddress: string | undefined;
+  walletAddress: Hex | undefined;
   vestingPlan: VestingPlan | undefined;
   eligibilityData: EligibilityCheckResponse | undefined;
+  hasAlreadyClaimed: boolean;
   setCurrentContent: (currentContent: ClaimPageContent) => void;
-  setWalletAddress: (walletAddress: string) => void;
+  setWalletAddress: (walletAddress: Hex) => void;
   setVestingPlan: (vestingPlan: VestingPlan) => void;
   setEligibilityData: (eligibilityData: EligibilityCheckResponse) => void;
+  setHasAlreadyClaimed: (hasAlreadyClaimed: boolean) => void;
 };
 
 export type VestingPlan = 'claim_50' | 'claim_and_stake_100';
@@ -31,7 +34,8 @@ export const ClaimPageProvider = ({ children }: Properties) => {
   const [vestingPlan, setVestingPlan] = useState<VestingPlan>();
   const [eligibilityData, setEligibilityData] =
     useState<EligibilityCheckResponse>();
-  const [walletAddress, setWalletAddress] = useState<string>();
+  const [walletAddress, setWalletAddress] = useState<Hex>();
+  const [hasAlreadyClaimed, setHasAlreadyClaimed] = useState(false);
 
   return (
     <ClaimPageContext.Provider
@@ -40,10 +44,12 @@ export const ClaimPageProvider = ({ children }: Properties) => {
         walletAddress,
         currentContent,
         eligibilityData,
+        hasAlreadyClaimed,
         setVestingPlan,
         setWalletAddress,
         setCurrentContent,
         setEligibilityData,
+        setHasAlreadyClaimed,
       }}
     >
       {children}

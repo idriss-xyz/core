@@ -6,6 +6,7 @@ import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { classes } from '@idriss-xyz/ui/utils';
 import { AIRDROP_DOCS_LINK, COINMARKETCAP_LINK } from '@idriss-xyz/constants';
 import { Icon } from '@idriss-xyz/ui/icon';
+import { Link } from '@idriss-xyz/ui/link';
 
 import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 
@@ -25,13 +26,13 @@ export const ClaimContent = () => {
     EligibilityCriteriaTitle | undefined
   >('IDRISS USER');
 
+  const liBaseClassName =
+    "relative flex justify-between pr-1 before:absolute before:-left-4 before:text-red-500 before:content-['•']";
+
   if (!eligibilityData) {
     setCurrentContent('check-eligibility');
     return;
   }
-
-  const liBaseClassName =
-    "relative flex justify-between pr-1 before:absolute before:-left-4 before:text-red-500 before:content-['•']";
 
   return (
     <div className="relative z-[5] flex w-[1000px] flex-row rounded-[25px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">
@@ -42,7 +43,7 @@ export const ClaimContent = () => {
       />
       <div className="flex w-[459px] flex-col">
         <div className="flex flex-col items-start gap-10">
-          <span className="text-heading3">YOU’RE ELIGIBLE</span>
+          <span className="text-heading3">YOU ARE ELIGIBLE!</span>
           <span className="text-body3 text-neutralGreen-700">
             TOKENS TO CLAIM
           </span>
@@ -68,7 +69,7 @@ export const ClaimContent = () => {
               <Icon
                 name="BaseLogo"
                 size={24}
-                className="absolute bottom-0 right-0 translate-x-1"
+                className="absolute bottom-0 right-0 translate-x-2.5 rounded-full border-[2.5px] border-white"
               />
             </div>
           </div>
@@ -100,6 +101,19 @@ export const ClaimContent = () => {
             </Button>
           }
         />
+        <div className="mt-5 flex w-full items-center justify-center">
+          <span className="text-body5 text-neutralGreen-900">
+            <Link
+              size="medium"
+              className="cursor-pointer text-body5 lg:text-body5"
+              onClick={() => {
+                setCurrentContent('check-eligibility');
+              }}
+            >
+              Check another wallet
+            </Link>
+          </span>
+        </div>
       </div>
       <div className="mx-10 h-[434px] w-px bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] opacity-50" />
       <div className="flex w-[389px] flex-col">
@@ -152,8 +166,8 @@ export const ClaimContent = () => {
                   eligibilityData.allocation_gitcoin && 'before:text-mint-600',
                 )}
               >
-                You donated a total of ${eligibilityData.gitcoin} to open source
-                rounds between GR15 and GG20
+                You donated a total of $20 to open source rounds{'\u00A0'}
+                between GR15 and GG20
               </li>
             }
             positive={!!eligibilityData.allocation_gitcoin}
@@ -182,8 +196,8 @@ export const ClaimContent = () => {
                   eligibilityData.allocation_ido && 'before:text-mint-600',
                 )}
               >
-                You purchased IDRISS within the first 12{'\u00A0'}hours of the
-                sale and held it for 2 weeks
+                You purchased IDRISS within the first 12{'\u00A0'}hours of
+                {'\u00A0'}the{'\u00A0'}sale and held it for 2 weeks
               </li>
             }
             positive={!!eligibilityData.allocation_ido}

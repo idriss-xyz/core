@@ -3,8 +3,8 @@
 import { Button } from '@idriss-xyz/ui/button';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { Controller, useForm } from 'react-hook-form';
-import { createPublicClient, http, isAddress } from 'viem';
-import { mainnet } from 'viem/chains';
+import { createPublicClient, Hex, http, isAddress } from 'viem';
+import { base, mainnet } from 'viem/chains';
 import { normalize } from 'viem/ens';
 import { Form } from '@idriss-xyz/ui/form';
 import { useMutation } from '@tanstack/react-query';
@@ -17,6 +17,7 @@ import { GeoConditionalButton } from '@/components/token-section/components/geo-
 import idrissCoin from '../../assets/IDRISS_COIN 1.png';
 import { useClaimPage } from '../../claim-page-context';
 import { EligibilityCheckResponse } from '../../types';
+import { CLAIM_ABI, CLAIMER_ADDRESS } from '../../constants';
 
 type FormPayload = {
   address: string;
@@ -28,9 +29,18 @@ const ethereumClient = createPublicClient({
   transport: http('https://eth.llamarpc.com'),
 });
 
+const baseClient = createPublicClient({
+  chain: base,
+  transport: http(),
+});
+
 export const CheckEligibilityContent = () => {
-  const { setCurrentContent, setWalletAddress, setEligibilityData } =
-    useClaimPage();
+  const {
+    setCurrentContent,
+    setWalletAddress,
+    setEligibilityData,
+    setHasAlreadyClaimed,
+  } = useClaimPage();
   const { data: walletClient } = useWalletClient();
   const formMethods = useForm<FormPayload>({
     defaultValues: {
@@ -58,10 +68,28 @@ export const CheckEligibilityContent = () => {
     },
   });
 
-  const storeDataAndNavigate = async (walletAddress: string) => {
+  const storeDataAndNavigate = async (walletAddress: Hex) => {
     const eligibility = await eligibilityMutation.mutateAsync(walletAddress);
     setEligibilityData(eligibility);
     setWalletAddress(walletAddress);
+
+    if (!eligibility.claimData && eligibility.allocation === 0) {
+      setCurrentContent('not-eligible');
+      return;
+    }
+
+    const isClaimed = await baseClient.readContract({
+      address: CLAIMER_ADDRESS,
+      abi: CLAIM_ABI,
+      functionName: 'isClaimed',
+      args: [eligibility.claimData.claimIndices[0]],
+    });
+
+    if (isClaimed) {
+      setCurrentContent('claim-successful');
+      setHasAlreadyClaimed(true);
+      return;
+    }
     setCurrentContent(eligibility.allocation ? 'claim' : 'not-eligible');
   };
 
@@ -73,9 +101,9 @@ export const CheckEligibilityContent = () => {
 
     const { address, resolvedEnsAddress } = formMethods.getValues();
     if (address.includes('.') && resolvedEnsAddress) {
-      void storeDataAndNavigate(resolvedEnsAddress);
+      void storeDataAndNavigate(resolvedEnsAddress as Hex);
     } else if (address) {
-      void storeDataAndNavigate(address);
+      void storeDataAndNavigate(address as Hex);
     }
   };
 

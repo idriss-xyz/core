@@ -1,10 +1,19 @@
 import { Button } from '@idriss-xyz/ui/button';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
+import { Link } from '@idriss-xyz/ui/link';
+import {
+  ANNOUNCEMENT_LINK,
+  SNAPSHOT_IDRISS_LINK,
+  TOKENOMICS_DOCS_LINK,
+} from '@idriss-xyz/constants';
+
+import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 
 import { useClaimPage } from '../../claim-page-context';
 
 import geoist_avatar from './assets/geoist_avatar.png';
 import levertz_avatar from './assets/levertz_avatar.png';
+import you_avatar from './assets/you_avatar.png';
 
 export const LetterContent = () => {
   const { setCurrentContent } = useClaimPage();
@@ -15,7 +24,7 @@ export const LetterContent = () => {
         gradientStopColor="rgba(145, 206, 154, 0.50)"
         borderWidth={1}
       />
-      <div className="relative flex w-full flex-col items-center gap-2 rounded-[25px] bg-[rgba(255,255,255,0.2)] px-10 py-8">
+      <div className="relative flex w-full flex-col items-center gap-2 rounded-[25px] bg-[rgba(255,255,255,0.8)] px-10 py-8">
         <GradientBorder
           gradientDirection="toBottom"
           gradientStopColor="rgba(145, 206, 154)"
@@ -23,24 +32,49 @@ export const LetterContent = () => {
           borderWidth={2}
         />
         <div className="flex flex-col gap-6 text-body5 text-neutralGreen-700">
-          <span>GM anon,</span>
+          <span>GM and congrats, everyone.</span>
           <span>
-            Thank you for believing in IDRISS and joining us on this journey.
+            We’ve come this far together as a purely community-owned project.
           </span>
-          <span>
-            Lorem ipsum dolor sit amet consectetur. At duis arcu ultricies risus
-            aliquam. At consequat faucibus eget ultrices. Aliquet duis aliquam
-            sagittis vel eget praesent. Enim orci elit nullam sit arcu ornare
-            donec quis semper.
+          <span className="whitespace-pre">
+            But now, back to building apps that solve problems with crypto and
+            AI.
           </span>
-          <span>Onwards!</span>
-          <span>Founding contributors of IDRISS DAO</span>
+          <span className="text-balance">
+            <Link
+              isExternal
+              size="s"
+              href={TOKENOMICS_DOCS_LINK}
+              className="border-none px-0 text-body5 lg:text-body5"
+            >
+              $IDRISS
+            </Link>{' '}
+            is your tool to govern{' '}
+            <Link
+              isExternal
+              size="s"
+              href={SNAPSHOT_IDRISS_LINK}
+              className="border-none px-0 text-body5 lg:text-body5"
+            >
+              IDRISS DAO
+            </Link>{' '}
+            and access decentralized revenue sharing from IDRISS apps. With our
+            recent{' '}
+            <Link
+              isExternal
+              size="s"
+              href={ANNOUNCEMENT_LINK.REBRANDING}
+              className="border-none px-0 text-body5 lg:text-body5"
+            >
+              rebrand
+            </Link>{' '}
+            (learn more in the next step), we’re doubling down on the mission.
+            Want to see more impactful crypto apps? Keep building with us.
+          </span>
+          <span>We’re just getting started.</span>
+          <span>Contributors of IDRISS DAO</span>
         </div>
-        <div className="absolute bottom-[-20px] right-[70px] inline-flex rotate-[-7.71deg] flex-col items-center gap-2 rounded-lg border border-neutral-300 bg-white p-2 shadow-lg">
-          <img src={geoist_avatar.src} className="h-[70px] rounded-md" alt="" />
-          <span className="text-label5 text-neutral-900">Geoist</span>
-        </div>
-        <div className="absolute bottom-[-8px] right-[-17px] inline-flex rotate-[9.718deg] flex-col items-center gap-2 rounded-lg border border-neutral-300 bg-white p-2 shadow-lg">
+        <div className="absolute bottom-[-14px] right-[-17px] inline-flex rotate-[13.922deg] flex-col items-center gap-2 rounded-lg bg-white p-[6px] shadow-lg">
           <img
             src={levertz_avatar.src}
             className="h-[70px] rounded-md"
@@ -48,18 +82,31 @@ export const LetterContent = () => {
           />
           <span className="text-label5 text-neutral-900">Levertz</span>
         </div>
+
+        <div className="absolute bottom-[-4px] right-[62px] inline-flex rotate-[-4.24deg] flex-col items-center gap-2 rounded-lg bg-white p-[6px] shadow-lg">
+          <img src={geoist_avatar.src} className="h-[70px] rounded-md" alt="" />
+          <span className="text-label5 text-neutral-900">Geoist</span>
+        </div>
+        <div className="absolute bottom-[-13px] right-[142px] inline-flex rotate-[-13.603deg] flex-col items-center gap-2 rounded-lg bg-white p-[6px] shadow-lg">
+          <img src={you_avatar.src} className="h-[70px] rounded-md" alt="" />
+          <span className="text-label5 text-neutral-900">You</span>
+        </div>
       </div>
-      <Button
-        intent="primary"
-        size="large"
-        suffixIconName="ArrowRight"
-        className="w-56"
-        onClick={() => {
-          setCurrentContent('about-idriss');
-        }}
-      >
-        Next
-      </Button>
+      <GeoConditionalButton
+        defaultButton={
+          <Button
+            intent="primary"
+            size="large"
+            suffixIconName="ArrowRight"
+            className="w-56"
+            onClick={() => {
+              setCurrentContent('about-idriss');
+            }}
+          >
+            Next
+          </Button>
+        }
+      />
     </div>
   );
 };

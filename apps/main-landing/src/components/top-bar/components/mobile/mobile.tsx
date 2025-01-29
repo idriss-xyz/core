@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { NavigationMenu } from '@idriss-xyz/ui/navigation-menu';
 import { DOCUMENTATION_LINK } from '@idriss-xyz/constants';
 
-import { INTERNAL_LINK } from '@/constants';
+import { EXTERNAL_LINK, INTERNAL_LINK } from '@/constants';
 
 import { APPS_SECTION_NAVIGATION_ITEMS } from '../../constants';
 import { Section } from '../section';
@@ -81,6 +81,25 @@ export const Mobile = () => {
                             asLink
                           >
                             TOKEN
+                          </Button>
+                        </Link>
+                      </span>
+                    </NavigationMenu.Link>
+
+                    <NavigationMenu.Link asChild>
+                      <span>
+                        <Link
+                          href={EXTERNAL_LINK.VAULT}
+                          passHref
+                          legacyBehavior
+                        >
+                          <Button
+                            intent="tertiary"
+                            size="large"
+                            onClick={close}
+                            asLink
+                          >
+                            VAULT
                           </Button>
                         </Link>
                       </span>

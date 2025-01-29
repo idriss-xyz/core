@@ -158,6 +158,13 @@ const nextConfig: NextConfig = {
         basePath: false,
         permanent: false,
       },
+      {
+        source: '/retroactive-distribution',
+        destination:
+          'https://docs.idriss.xyz/idriss-token/retroactive-distribution',
+        basePath: false,
+        permanent: false,
+      },
       ...LEGACY_URLS.map((url) => {
         return {
           source: url,
@@ -183,6 +190,7 @@ const nextConfig: NextConfig = {
   },
   env: {
     DEV_LOGIN_PASSWORD: process.env.DEV_LOGIN_PASSWORD || '',
+    PUBLIC_ACCESS_ENABLED: process.env.PUBLIC_ACCESS_ENABLED || '',
     RAILWAY_PUBLIC_DOMAIN: process.env.RAILWAY_PUBLIC_DOMAIN || '',
   },
 };

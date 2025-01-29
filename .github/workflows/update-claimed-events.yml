@@ -1,0 +1,15 @@
+name: Update Claimed Events
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+jobs:
+  update-claimed-events:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Fetch and update claimed events
+        run: |
+          curl -X GET https://idriss.xyz/api/claimed-events
