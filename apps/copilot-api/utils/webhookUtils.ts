@@ -219,7 +219,19 @@ export async function handleIncomingEvent(
 }
 
 export async function handleIncomingSolanaEvent(webhookEvent: ComplexHeliusWebhookEvent): Promise<void> {
-  // TODO: Verify data of webhook event and add it to event cache, where scheduler.ts will take care of extracting swap data after.
-  // For now just print the event
+  const transactions = webhookEvent.tokenTransfers;
+  if (!transactions || transactions.length === 0) {
+    console.error('No transactions found in the webhook event.');
+    return;
+  }
+  const txHash = webhookEvent.signature;
+  if (!eventCache[txHash]) {
+    eventCache[txHash] = {
+      data: webhookEvent,
+      timestamp: Date.now(),
+      type: 'helius',
+    };
+  }
+  // TODO: Remove for production
   console.log('Received event from solana webhook', webhookEvent);
 }
