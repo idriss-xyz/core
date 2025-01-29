@@ -6,29 +6,27 @@ import { extractAlchemySwapData, extractHeliusSwapData } from "../utils/webhookU
 export class AlchemyEventHandler implements WebhookEventHandler {
   formatForCache(event: AlchemyWebhookEvent): CachedTransaction {
     return {
-      activities: event.event.activity,
+      data: event.event.activity,
       timestamp: Date.now(),
       type: 'alchemy'
     };
   }
 
-  extractSwapData(txHash: string, activities: any[]): Promise<SwapData> {
-    // Existing Alchemy swap data extraction logic
-    return extractAlchemySwapData(txHash, activities);
+  extractSwapData(txHash: string, data: any): Promise<SwapData> {
+    return extractAlchemySwapData(txHash, data);
   }
 }
 
 export class HeliusEventHandler implements WebhookEventHandler {
   formatForCache(event: ComplexHeliusWebhookEvent): CachedTransaction {
     return {
-      activities: event.tokenTransfers,
+      data: event,
       timestamp: Date.now(),
       type: 'helius'
     };
   }
 
-  extractSwapData(txHash: string, solanaActivities: any[]): Promise<SwapData> {
-    // New Solana-specific swap data extraction logic
-    return extractHeliusSwapData(txHash, solanaActivities);
+  extractSwapData(txHash: string, data: any): Promise<SwapData> {
+    return extractHeliusSwapData(txHash, data);
   }
 }

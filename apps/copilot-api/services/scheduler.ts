@@ -20,7 +20,7 @@ setInterval(async () => {
 
   for (const [txHash, cachedTransaction] of cacheEntries) {
     const handler = eventHandlers[cachedTransaction.type];
-    const swapData = await handler.extractSwapData(txHash, cachedTransaction.activities);
+    const swapData = await handler.extractSwapData(txHash, cachedTransaction.data);
 
     if (swapData.isComplete) {
       // Complete swap

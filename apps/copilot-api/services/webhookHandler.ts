@@ -18,10 +18,10 @@ export function webhookHandler() {
 
 export const heliusWebhookHandler = () => {
   return async (req: Request, res: Response): Promise<void> => {
-    const { accountData, events, slot } = req.body as ComplexHeliusWebhookEvent;
+    const webhookEvent = req.body as ComplexHeliusWebhookEvent;
 
-    await handleIncomingSolanaEvent(events);
+    await handleIncomingSolanaEvent(webhookEvent);
 
-    res.status(200).json({ received: true });
+    res.send('Solana Event received');
   };
 };

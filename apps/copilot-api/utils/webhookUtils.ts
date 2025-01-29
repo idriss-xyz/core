@@ -208,19 +208,18 @@ export async function handleIncomingEvent(
     const txHash = activity.hash;
     if (!eventCache[txHash]) {
       eventCache[txHash] = {
-        activities: [],
+        data: [],
         timestamp: Date.now(),
+        type: 'alchemy',
       };
     }
     activity.network = webhookEvent.event.network?.replace('_MAINNET', '');
-    eventCache[txHash].activities.push(activity);
+    eventCache[txHash].data.push(activity);
   }
 }
 
-export async function handleIncomingSolanaEvent(webhookEvents: {
-  [eventName: string]: ComplexHeliusWebhookEvent;
-}): Promise<void> {
-  // TODO: Verify activity of webhook event and add it to activities cache, where scheduler.ts will take care of extracting swap data after.
+export async function handleIncomingSolanaEvent(webhookEvent: ComplexHeliusWebhookEvent): Promise<void> {
+  // TODO: Verify data of webhook event and add it to event cache, where scheduler.ts will take care of extracting swap data after.
   // For now just print the event
-  console.log('Received event from solana webhook', webhookEvents);
+  console.log('Received event from solana webhook', webhookEvent);
 }
