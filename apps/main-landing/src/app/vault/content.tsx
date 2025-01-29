@@ -51,7 +51,7 @@ export const StakingContent = () => {
       />
 
       <div className="mt-16 flex flex-col lg:mt-0">
-        <div className="z-[5] mt-[40px] inline-flex flex-col items-center gap-[78px] overflow-hidden px-4 pb-3 lg:mt-[120px] lg:[@media(max-height:800px)]:mt-[60px]">
+        <div className="z-[5] mt-[40px] inline-flex flex-col items-center gap-[78px] overflow-hidden px-4 pb-3 lg:mt-[100px] lg:[@media(max-height:800px)]:mt-[60px]">
           <img
             className="hidden size-[137px] lg:block"
             src={idrissCoin.src}
@@ -80,15 +80,23 @@ export const StakingContent = () => {
                     locked tokens
                   </span>
                 </div>
-                <div className="flex gap-1 lg:gap-2">
-                  <Icon name="Gem" size={24} className="text-gray-300" />
+                <div className="flex gap-1.5 lg:gap-2.5">
+                  <Icon
+                    name="Gem"
+                    size={24}
+                    className="ml-[3px] text-gray-300 lg:ml-[2px] lg:size-[38px]"
+                  />
                   <span className="text-body4 text-neutralGreen-700 lg:text-body3">
                     Lock <span className="gradient-text">10,000 $IDRISS</span>{' '}
                     or more to access premium features
                   </span>
                 </div>
-                <div className="flex gap-1 lg:gap-2">
-                  <Icon name="PieChart" size={24} className="text-gray-300" />
+                <div className="flex gap-1.5 lg:gap-2.5">
+                  <Icon
+                    name="PieChart"
+                    size={24}
+                    className="ml-[3px] text-gray-300 lg:size-[36px]"
+                  />
                   <span className="text-body4 text-neutralGreen-700 lg:text-body3">
                     Tap into decentralized revenue sharing from IDRISS apps
                   </span>

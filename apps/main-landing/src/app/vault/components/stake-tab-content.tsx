@@ -42,7 +42,7 @@ type FormPayload = {
 const txLoadingHeading = (amount: number) => {
   return (
     <>
-      Locking <span className="text-mint-600">{amount.toLocaleString()}</span>{' '}
+      Locking <span className="text-mint-600">{amount?.toLocaleString()}</span>{' '}
       IDRISS
     </>
   );
@@ -124,9 +124,6 @@ export const StakeTabContent = () => {
   });
 
   const { handleSubmit, control, watch } = useForm<FormPayload>({
-    defaultValues: {
-      amount: 1,
-    },
     mode: 'onSubmit',
   });
 
@@ -230,7 +227,7 @@ export const StakeTabContent = () => {
               <Form.Field
                 {...field}
                 className="mt-4 lg:mt-6"
-                value={field.value.toString()}
+                value={field.value?.toString()}
                 onChange={(value) => {
                   field.onChange(Number(value));
                 }}
@@ -260,6 +257,7 @@ export const StakeTabContent = () => {
                   </div>
                 }
                 numeric
+                decimalScale={18}
                 prefixIconName="IdrissCircled"
                 suffixElement={
                   <span className="text-body4 text-neutral-500">IDRISS</span>

@@ -1,4 +1,4 @@
-name: Update Claimed Events
+name: Update Staked and Withdrawn Events
 
 on:
   schedule:
@@ -6,10 +6,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  update-claimed-events:
+  update-staked-withdrawn-events:
     runs-on: ubuntu-latest
 
     steps:
       - name: Fetch and update claimed events
         run: |
-          curl -X GET https://idriss.xyz/api/claimed-events
+          curl -X GET https://idriss.xyz/api/staked-events
