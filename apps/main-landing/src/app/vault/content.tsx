@@ -38,7 +38,7 @@ export const StakingContent = () => {
   }, []);
 
   return (
-    <main className="relative flex min-h-screen grow flex-col items-center justify-around overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] lg:flex-row lg:items-start lg:justify-center lg:px-0">
+    <main className="relative min-h-screen items-center justify-around overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] lg:flex-row lg:items-start lg:justify-center lg:px-0">
       <img
         src={idrissSceneStream.src}
         className="pointer-events-none absolute left-[-310px] top-[-20px] z-1 h-[1440px] w-[2306.px] min-w-[120vw] max-w-none rotate-[25.903deg] lg:block"
@@ -50,7 +50,7 @@ export const StakingContent = () => {
         alt=""
       />
 
-      <div className="flex flex-col">
+      <div className="flex flex-col mt-16 lg:mt-0 ">
         <div className="z-[5] mt-[40px] inline-flex flex-col items-center gap-[78px] overflow-hidden px-4 pb-3 lg:mt-[120px] lg:[@media(max-height:800px)]:mt-[60px]">
           <img
             className="hidden size-[137px] lg:block"

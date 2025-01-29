@@ -197,44 +197,44 @@ export const UnstakeTabContent = () => {
   return (
     <>
       <TxLoadingModal show={isLoading} heading={txLoadingHeading(amount)} />
-      <div className="relative mt-4 lg:mt-6">
-        <RadialGradientBorder />
-        <div className="flex flex-col gap-y-2 rounded-2xl bg-white/20 p-6">
-          <div className="flex flex-row items-center justify-between">
-            <p className="text-body4 text-neutralGreen-500">Total locked</p>
-            {totalLockedAmount ? (
-              <p className="text-label3 text-neutralGreen-700">
-                {totalLockedAmount} IDRISS
+      <Form className="w-full" onSubmit={handleSubmit(handleUnstake)}>
+        <div className="relative mt-4 lg:mt-6">
+          <RadialGradientBorder />
+          <div className="flex flex-col gap-y-2 rounded-2xl bg-white/20 p-6">
+            <div className="flex flex-row items-center justify-between">
+              <p className="text-body4 text-neutralGreen-500">Total locked</p>
+              {totalLockedAmount ? (
+                <p className="text-label3 text-neutralGreen-700">
+                  {totalLockedAmount} IDRISS
+                </p>
+              ) : (
+                <p className="text-label3 text-neutralGreen-700">0 IDRISS</p>
+              )}
+            </div>
+            <div className="flex flex-row items-center justify-between">
+              <p className="text-body4 text-neutralGreen-500">Unlockable</p>
+              {stakedAmount ? (
+                <p className="text-label3 text-neutralGreen-700">
+                  {stakedAmount} IDRISS
+                </p>
+              ) : (
+                <p className="text-label3 text-neutralGreen-700">0 IDRISS</p>
+              )}
+            </div>
+            <div className="flex flex-row items-center justify-between">
+              <p className="text-body4 text-neutralGreen-500">
+                Unlockable from July 6
               </p>
-            ) : (
-              <p className="text-label3 text-neutralGreen-700">0 IDRISS</p>
-            )}
-          </div>
-          <div className="flex flex-row items-center justify-between">
-            <p className="text-body4 text-neutralGreen-500">Unlockable</p>
-            {stakedAmount ? (
-              <p className="text-label3 text-neutralGreen-700">
-                {stakedAmount} IDRISS
-              </p>
-            ) : (
-              <p className="text-label3 text-neutralGreen-700">0 IDRISS</p>
-            )}
-          </div>
-          <div className="flex flex-row items-center justify-between">
-            <p className="text-body4 text-neutralGreen-500">
-              Unlockable from July 6
-            </p>
-            {blockedAmount ? (
-              <p className="text-label3 text-neutralGreen-700">
-                {blockedAmount} IDRISS
-              </p>
-            ) : (
-              <p className="text-label3 text-neutralGreen-700">0 IDRISS</p>
-            )}
+              {blockedAmount ? (
+                <p className="text-label3 text-neutralGreen-700">
+                  {blockedAmount} IDRISS
+                </p>
+              ) : (
+                <p className="text-label3 text-neutralGreen-700">0 IDRISS</p>
+              )}
+            </div>
           </div>
         </div>
-      </div>
-      <Form className="w-full" onSubmit={handleSubmit(handleUnstake)}>
         <Controller
           control={control}
           name="amount"
