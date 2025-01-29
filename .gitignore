@@ -16,3 +16,6 @@ architecture/*
 out
 .vercel
 .turbo
+
+# generated files
+apps/main-landing/data/claimed-events.json
