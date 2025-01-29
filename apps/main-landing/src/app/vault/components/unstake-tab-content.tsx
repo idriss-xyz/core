@@ -37,8 +37,8 @@ type FormPayload = {
 const txLoadingHeading = (amount: number) => {
   return (
     <>
-      Unlocking <span className="text-mint-600">{amount.toLocaleString()}</span>{' '}
-      IDRISS
+      Unlocking{' '}
+      <span className="text-mint-600">{amount?.toLocaleString()}</span> IDRISS
     </>
   );
 };
@@ -60,9 +60,6 @@ export const UnstakeTabContent = () => {
     transport: http(),
   });
   const { handleSubmit, control, watch } = useForm<FormPayload>({
-    defaultValues: {
-      amount: 1,
-    },
     mode: 'onSubmit',
   });
 
@@ -243,7 +240,7 @@ export const UnstakeTabContent = () => {
               <Form.Field
                 {...field}
                 className="mt-4 lg:mt-6"
-                value={field.value.toString()}
+                value={field.value?.toString()}
                 onChange={(value) => {
                   field.onChange(Number(value.replaceAll(',', '')));
                 }}
