@@ -275,15 +275,23 @@ export const VestingPlanContent = () => {
                 tokens
               </span>
             </div>
-            <div className="flex gap-2">
-              <Icon name="Gem" size={24} className="text-gray-300" />
+            <div className="flex gap-2.5">
+              <Icon
+                name="Gem"
+                size={24}
+                className="ml-[2px] size-[38px] text-gray-300"
+              />
               <span className="text-body3 text-neutralGreen-700">
                 Lock <span className="gradient-text">10,000 $IDRISS</span> or
                 more to access premium features
               </span>
             </div>
-            <div className="flex gap-2">
-              <Icon name="PieChart" size={24} className="text-gray-300" />
+            <div className="flex gap-2.5">
+              <Icon
+                name="PieChart"
+                size={24}
+                className="ml-[3px] size-[36px] text-gray-300"
+              />
               <span className="text-body3 text-neutralGreen-700">
                 Tap into decentralized revenue sharing from IDRISS apps
               </span>
