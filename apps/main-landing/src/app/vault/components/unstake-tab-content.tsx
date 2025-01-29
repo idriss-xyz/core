@@ -26,6 +26,7 @@ import { RadialGradientBorder } from '@idriss-xyz/ui/gradient-border';
 
 import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 import { TxLoadingModal } from '@/app/claim/components/tx-loading-modal/tx-loading-modal';
+import { formatNumber } from '@/app/claim/components/claim/components/idriss-user-criteria-description';
 
 import { StakingABI, STAKER_ADDRESS } from '../constants';
 import { ClaimedEventsResponse } from '../types';
@@ -37,16 +38,20 @@ type FormPayload = {
 const txLoadingHeading = (amount: number) => {
   return (
     <>
-      Unlocking <span className="text-mint-600">{amount.toLocaleString()}</span>{' '}
-      IDRISS
+      Unlocking{' '}
+      <span className="text-mint-600">{amount?.toLocaleString()}</span> IDRISS
     </>
   );
 };
 
 export const UnstakeTabContent = () => {
   const [stakedAmount, setStakedAmount] = useState<string>();
+  const [stakedDisplayAmount, setStakedDisplayAmount] = useState<string>();
   const [blockedAmount, setBlockedAmount] = useState<string>();
-  const [totalLockedAmount, setTotalLockedAmount] = useState<string>();
+  const [stakedDisplayBlockedAmount, setStakedDisplayBlockedAmount] =
+    useState<string>();
+  const [totalLockedDisplayAmount, setTotalLockedDisplayAmount] =
+    useState<string>();
   const [termsChecked, setTermsChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { data: walletClient } = useWalletClient();
@@ -60,9 +65,6 @@ export const UnstakeTabContent = () => {
     transport: http(),
   });
   const { handleSubmit, control, watch } = useForm<FormPayload>({
-    defaultValues: {
-      amount: 1,
-    },
     mode: 'onSubmit',
   });
 
@@ -143,9 +145,11 @@ export const UnstakeTabContent = () => {
           maximumFractionDigits: 0,
         }).format(Number(formatEther(stakedBalance as bigint)) ?? 0);
 
-        setStakedAmount(formattedStakedAmount);
+        setStakedAmount(formatEther(stakedBalance as bigint) ?? '0');
+        setStakedDisplayAmount(formattedStakedAmount);
       } catch (error) {
         setStakedAmount('0');
+        setStakedDisplayAmount('0');
         console.error('Error fetching staked balance:', error);
       }
 
@@ -166,9 +170,11 @@ export const UnstakeTabContent = () => {
 
         console.log(claimedEvent?.total);
 
-        setBlockedAmount(formattedBlockedAmount);
+        setBlockedAmount(claimedEvent?.total ?? '0');
+        setStakedDisplayBlockedAmount(formattedBlockedAmount);
       } catch (error) {
         setBlockedAmount('0');
+        setStakedDisplayBlockedAmount('0');
         console.error('Error fetching blocked amount:', error);
       }
     })();
@@ -178,17 +184,16 @@ export const UnstakeTabContent = () => {
     if (stakedAmount && blockedAmount) {
       try {
         const totalLocked =
-          (Number(stakedAmount.replaceAll(',', '')) || 0) +
-          (Number(blockedAmount.replaceAll(',', '')) || 0);
+          parseEther(stakedAmount) + parseEther(blockedAmount);
 
-        setTotalLockedAmount(
+        setTotalLockedDisplayAmount(
           new Intl.NumberFormat('en-US', {
             minimumFractionDigits: 0,
             maximumFractionDigits: 0,
-          }).format(totalLocked),
+          }).format(Number(formatEther(totalLocked) ?? 0)),
         );
       } catch (error) {
-        setTotalLockedAmount('0');
+        setTotalLockedDisplayAmount('0');
         console.error('Error calculating total locked amount:', error);
       }
     }
@@ -202,34 +207,34 @@ export const UnstakeTabContent = () => {
         <div className="flex flex-col gap-y-2 rounded-2xl bg-white/20 p-6">
           <div className="flex flex-row items-center justify-between">
             <p className="text-body4 text-neutralGreen-500">Total locked</p>
-            {totalLockedAmount ? (
+            {totalLockedDisplayAmount ? (
               <p className="text-label3 text-neutralGreen-700">
-                {totalLockedAmount} IDRISS
+                {totalLockedDisplayAmount} IDRISS
               </p>
             ) : (
-              <p className="text-label3 text-neutralGreen-700">0 IDRISS</p>
+              <p className="text-label3 text-neutralGreen-700">— IDRISS</p>
             )}
           </div>
           <div className="flex flex-row items-center justify-between">
             <p className="text-body4 text-neutralGreen-500">Unlockable</p>
-            {stakedAmount ? (
+            {stakedDisplayAmount ? (
               <p className="text-label3 text-neutralGreen-700">
-                {stakedAmount} IDRISS
+                {stakedDisplayAmount} IDRISS
               </p>
             ) : (
-              <p className="text-label3 text-neutralGreen-700">0 IDRISS</p>
+              <p className="text-label3 text-neutralGreen-700">— IDRISS</p>
             )}
           </div>
           <div className="flex flex-row items-center justify-between">
             <p className="text-body4 text-neutralGreen-500">
               Unlockable from July 6
             </p>
-            {blockedAmount ? (
+            {stakedDisplayBlockedAmount ? (
               <p className="text-label3 text-neutralGreen-700">
-                {blockedAmount} IDRISS
+                {stakedDisplayBlockedAmount} IDRISS
               </p>
             ) : (
-              <p className="text-label3 text-neutralGreen-700">0 IDRISS</p>
+              <p className="text-label3 text-neutralGreen-700">— IDRISS</p>
             )}
           </div>
         </div>
@@ -243,7 +248,7 @@ export const UnstakeTabContent = () => {
               <Form.Field
                 {...field}
                 className="mt-4 lg:mt-6"
-                value={field.value.toString()}
+                value={field.value?.toString()}
                 onChange={(value) => {
                   field.onChange(Number(value));
                 }}
@@ -261,7 +266,9 @@ export const UnstakeTabContent = () => {
                       >
                         Available:{' '}
                         <span className="mx-1 flex justify-center">
-                          {stakedAmount ?? <Spinner className="size-3" />}
+                          {formatNumber(Number(stakedAmount), 2) ?? (
+                            <Spinner className="size-3" />
+                          )}
                         </span>{' '}
                         IDRISS
                       </div>
