@@ -245,7 +245,7 @@ export const UnstakeTabContent = () => {
                 className="mt-4 lg:mt-6"
                 value={field.value.toString()}
                 onChange={(value) => {
-                  field.onChange(Number(value));
+                  field.onChange(Number(value.replaceAll(',', '')));
                 }}
                 label={
                   <div className="flex justify-between">
@@ -256,7 +256,7 @@ export const UnstakeTabContent = () => {
                       <div
                         className="flex text-label6 text-neutral-800 hover:cursor-pointer"
                         onClick={() => {
-                          field.onChange(stakedAmount);
+                          field.onChange(stakedAmount?.replaceAll(',', ''));
                         }}
                       >
                         Available:{' '}

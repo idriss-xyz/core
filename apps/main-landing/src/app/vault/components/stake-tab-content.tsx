@@ -141,6 +141,7 @@ export const StakeTabContent = () => {
     } else {
       try {
         setIsLoading(true);
+
         if (!walletClient) {
           console.error('Wallet not connected');
           return;
