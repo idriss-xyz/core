@@ -1,0 +1,15 @@
+name: Update Staked and Withdrawn Events
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  update-staked-withdrawn-events:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Fetch and update claimed events
+        run: |
+          curl -X GET https://idriss.xyz/api/staked-events
