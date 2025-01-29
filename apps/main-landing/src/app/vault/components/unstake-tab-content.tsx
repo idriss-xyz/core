@@ -278,6 +278,7 @@ export const UnstakeTabContent = () => {
                   </div>
                 }
                 numeric
+                decimalScale={18}
                 prefixIconName="IdrissCircled"
                 suffixElement={
                   <span className="text-body4 text-neutral-500">IDRISS</span>

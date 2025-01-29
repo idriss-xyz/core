@@ -18,6 +18,7 @@ type Properties = InputUnion & {
   label?: ReactNode;
   helperText?: string;
   numeric?: boolean;
+  decimalScale?: number;
   onChange: (value: string) => void;
 };
 
@@ -29,6 +30,7 @@ export const Field = forwardRef(
       helperText,
       className,
       numeric,
+      decimalScale,
       onChange,
       ...inputProperties // Spread all Input props here
     }: Properties,
@@ -45,6 +47,7 @@ export const Field = forwardRef(
           {numeric ? (
             <NumericInput
               {...inputProperties} // Pass all Input props
+              decimalScale={decimalScale}
               onChange={(value) => {
                 onChange(value);
               }}
