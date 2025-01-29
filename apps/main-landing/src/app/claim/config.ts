@@ -2,7 +2,7 @@ import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { defineChain } from 'viem';
 import { mainnet, polygon, optimism, mantle, base } from 'wagmi/chains';
 
-import { ALEPH_LOGO } from './constants';
+import { ALEPH_LOGO, ABSTRACT_LOGO } from './constants';
 
 const alephzero = defineChain({
   id: 41_455,
@@ -22,9 +22,27 @@ const alephzero = defineChain({
   },
 });
 
+const abstract = defineChain({
+  id: 2741,
+  name: 'Abstract',
+  logo: ABSTRACT_LOGO,
+  nativeCurrency: {
+    name: 'Ethereum',
+    symbol: 'ETH',
+    decimals: 18,
+  },
+  rpcUrls: { default: { http: ['https://api.mainnet.abs.xyz'] } },
+  blockExplorers: {
+    default: {
+      name: 'Evm Explorer',
+      url: 'https://abscan.org/',
+    },
+  },
+});
+
 export const wagmiconfig = getDefaultConfig({
   appName: 'IDRISS Creators Login',
   projectId: 'c68a9fb876e8a1c0a99f89debcfeb2bf',
-  chains: [mainnet, polygon, optimism, mantle, base, alephzero],
+  chains: [mainnet, polygon, optimism, mantle, base, alephzero, abstract],
   ssr: true,
 });

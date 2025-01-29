@@ -13,6 +13,8 @@ import {
   POLYGON_LOGO,
   USDC_LOGO,
   ALEPH_LOGO,
+  ABSTRACT_LOGO,
+  PENGU_LOGO,
   YGG_LOGO,
   PDT_LOGO,
 } from './logos';
@@ -21,6 +23,24 @@ import { Chain, Token, ChainToken } from './types';
 export const NATIVE_COIN_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 
 export const CHAIN = {
+  ABSTRACT: {
+    id: 2741,
+    name: 'Abstract',
+    shortName: 'Abstract',
+    logo: ABSTRACT_LOGO,
+    nativeCurrency: {
+      name: 'Ethereum',
+      symbol: 'ETH',
+      decimals: 18,
+    },
+    rpcUrls: { default: { http: ['https://api.mainnet.abs.xyz'] } },
+    blockExplorers: {
+      default: {
+        name: 'Evm Explorer',
+        url: 'https://abscan.org/',
+      },
+    },
+  },
   ALEPH: {
     id: 41_455,
     name: 'Aleph Zero EVM',
@@ -87,6 +107,7 @@ export const TOKEN = {
     symbol: 'PRIME',
     logo: ECHELON_PRIME_LOGO,
   },
+  PENGU: { name: 'Pengu', symbol: 'PENGU', logo: PENGU_LOGO },
   AAVEGOTCHI: {
     name: 'Aavegotchi',
     symbol: 'GHST',
@@ -107,6 +128,23 @@ export const TOKEN = {
 } as const satisfies Record<string, Token>;
 
 export const CHAIN_ID_TO_TOKENS = {
+  [CHAIN.ABSTRACT.id]: [
+    {
+      ...TOKEN.ETHEREUM,
+      decimals: 18,
+      address: NATIVE_COIN_ADDRESS,
+    },
+    {
+      ...TOKEN.USDC,
+      decimals: 6,
+      address: '0x84a71ccd554cc1b02749b35d22f684cc8ec987e1',
+    },
+    {
+      ...TOKEN.PENGU,
+      decimals: 18,
+      address: '0x9eBe3A824Ca958e4b3Da772D2065518F009CBa62s',
+    },
+  ],
   [CHAIN.ALEPH.id]: [
     {
       ...TOKEN.USDC,
@@ -243,6 +281,7 @@ export const CHAIN_ID_TO_TOKENS = {
 } satisfies Record<string, ChainToken[]>;
 
 export const DEFAULT_ALLOWED_CHAINS_IDS = [
+  CHAIN.ABSTRACT.id,
   CHAIN.ALEPH.id,
   CHAIN.BASE.id,
   CHAIN.ETHEREUM.id,
@@ -923,6 +962,7 @@ export const CHAIN_TO_IDRISS_TIPPING_ADDRESS = {
   [CHAIN.BASE.id]: '0x324Ad1738B9308D5AF5E81eDd6389BFa082a8968',
   [CHAIN.MANTLE.id]: '0x324Ad1738B9308D5AF5E81eDd6389BFa082a8968',
   [CHAIN.ALEPH.id]: '0xcA6742d2d6B9dBFFD841DF25C15cFf45FBbB98f4',
+  [CHAIN.ABSTRACT.id]: '0xEeFA4f7F4e9104D16673D0C2fE3D0bF4c45A7804',
 } as const;
 
 export const EMPTY_HEX = '0x';
