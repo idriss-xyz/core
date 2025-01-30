@@ -109,7 +109,7 @@ export const StakingContent = () => {
                 isExternal
                 asLink
                 className="mb-4 mt-6 w-full lg:mt-8"
-                suffixIconName="ArrowRight"
+                suffixIconName="IdrissArrowRight"
                 href={VAULT_DOCS_LINK}
               >
                 LEARN MORE

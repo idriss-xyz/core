@@ -304,7 +304,7 @@ export const VestingPlanContent = () => {
             isExternal
             asLink
             className="mt-8 w-full"
-            suffixIconName="ArrowRight"
+            suffixIconName="IdrissArrowRight"
             href={VAULT_DOCS_LINK}
           >
             LEARN MORE
