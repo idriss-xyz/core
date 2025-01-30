@@ -44,6 +44,7 @@ export interface ComplexHeliusWebhookEvent {
   events: { [eventName: string]: Record<string, unknown> };
   fee: number;
   feePayer: string;
+  instructions: any[];
   nativeTransfers: {
     amount: number;
     fromUserAccount: string;

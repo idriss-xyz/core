@@ -174,17 +174,28 @@ export async function extractAlchemySwapData(
 }
 
 export async function extractHeliusSwapData(txHash: string,
-  activities: any[],
+  data: any,
 ): Promise<SwapData>
 {
-  // TODO: Implement Helius swap data extraction according to Trello comment
-  console.log('To be implemented');
+  const eventData = data as ComplexHeliusWebhookEvent
   return {
-    transactionHash: txHash,
-    from: null,
-    to: null,
-    tokenIn: null,
-    tokenOut: null,
+    transactionHash: eventData.signature,
+    from: eventData.accountData[0]?.account,
+    to: eventData.instructions[0].innerInstructions.programId,
+    tokenIn: {
+      address: eventData.tokenTransfers[0].mint,
+      symbol: 'NO SYMBOL',
+      amount: eventData.tokenTransfers[0].tokenAmount,
+      decimals: 18,
+      network: 'SOLANA',
+    },
+    tokenOut: {
+      address: eventData.tokenTransfers[3].mint,
+      symbol: 'NO SYMBOL',
+      amount: eventData.tokenTransfers[3].tokenAmount,
+      decimals: 18,
+      network: 'SOLANA',
+    },
     timestamp: new Date().toISOString(),
     isComplete: false,
   };
@@ -219,6 +230,7 @@ export async function handleIncomingEvent(
 }
 
 export async function handleIncomingSolanaEvent(webhookEvent: ComplexHeliusWebhookEvent): Promise<void> {
+  console.log("Handling solana webhook for event: ", webhookEvent);
   const transactions = webhookEvent.tokenTransfers;
   if (!transactions || transactions.length === 0) {
     console.error('No transactions found in the webhook event.');
