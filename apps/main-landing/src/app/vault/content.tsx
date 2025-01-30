@@ -51,7 +51,7 @@ export const StakingContent = () => {
       />
 
       <div className="mt-16 flex flex-col lg:mt-0">
-        <div className="z-[5] mt-[40px] inline-flex flex-col items-center gap-[78px] overflow-hidden px-4 pb-3 lg:mt-[100px] lg:[@media(max-height:800px)]:mt-[60px]">
+        <div className="z-[5] mt-[40px] inline-flex flex-col items-center gap-[40px] overflow-hidden px-4 pb-3 lg:mt-[100px] lg:[@media(max-height:800px)]:mt-[60px]">
           <img
             className="hidden size-[137px] lg:block"
             src={idrissCoin.src}
