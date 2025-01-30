@@ -39,11 +39,7 @@ export const COMMAND_MAP = {
   [GetEnsStakedBonusBalanceCommand.name]: GetEnsStakedBonusBalanceCommand,
 };
 
-export {
-  IDRISS_CONTRACT,
-  PREMIUM_THRESHOLD,
-  FREE_SUBSCRIPTIONS,
-} from './constants';
+export { PREMIUM_THRESHOLD, FREE_SUBSCRIPTIONS } from './constants';
 export { AddTradingCopilotSubscriptionCommand } from './add-trading-copilot-subscription';
 export { GetTradingCopilotSubscriptionsCommand } from './get-trading-copilot-subscriptions';
 export { RemoveTradingCopilotSubscriptionCommand } from './remove-trading-copilot-subscription';
