@@ -1,4 +1,4 @@
-import { createPublicClient, formatEther, http, parseAbi } from 'viem';
+import { createPublicClient, formatEther, http } from 'viem';
 import { base } from 'viem/chains';
 
 import { Hex } from 'shared/web3';
@@ -9,17 +9,16 @@ import {
   OkResult,
 } from 'shared/messaging';
 
-import { ERC_20_ABI } from './constants';
+import { STAKER_ADDRESS, StakingABI } from './constants';
 
 type Payload = {
-  address: Hex;
-  args: readonly [Hex];
+  args: Hex;
 };
 
 type Response = string | null;
 
-export class GetEnsBalanceOfCommand extends Command<Payload, Response> {
-  public readonly name = 'GetEnsBalanceOfCommand' as const;
+export class GetEnsStakedBalanceCommand extends Command<Payload, Response> {
+  public readonly name = 'GetEnsStakedBalanceCommand' as const;
 
   constructor(public payload: Payload) {
     super();
@@ -33,13 +32,13 @@ export class GetEnsBalanceOfCommand extends Command<Payload, Response> {
       });
 
       const balance = await client.readContract({
-        functionName: 'balanceOf',
-        abi: parseAbi(ERC_20_ABI),
-        args: this.payload.args,
-        address: this.payload.address,
+        abi: StakingABI,
+        address: STAKER_ADDRESS,
+        functionName: 'getStakedBalance',
+        args: [this.payload.args],
       });
 
-      const balanceAsNumber = formatEther(balance);
+      const balanceAsNumber = formatEther(balance as bigint);
 
       return new OkResult(balanceAsNumber);
     } catch (error) {

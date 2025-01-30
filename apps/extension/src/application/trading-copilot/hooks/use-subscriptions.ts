@@ -10,11 +10,11 @@ import { Wallet } from 'shared/web3';
 import { useTradingCopilot } from 'shared/extension';
 
 import {
-  GetEnsBalanceOfCommand,
+  GetEnsStakedBalanceCommand,
+  GetEnsStakedBonusBalanceCommand,
   AddTradingCopilotSubscriptionCommand,
   GetTradingCopilotSubscriptionsCommand,
   RemoveTradingCopilotSubscriptionCommand,
-  IDRISS_CONTRACT,
   PREMIUM_THRESHOLD,
   FREE_SUBSCRIPTIONS,
 } from '../commands';
@@ -44,15 +44,24 @@ export const useSubscriptions = ({ wallet, addTabListener }: Properties) => {
     }),
     staleTime: Number.POSITIVE_INFINITY,
   });
-  const tokenBalanceQuery = useCommandQuery({
-    command: new GetEnsBalanceOfCommand({
-      address: IDRISS_CONTRACT,
-      args: [wallet?.account],
+  const stakedBalanceQuery = useCommandQuery({
+    command: new GetEnsStakedBalanceCommand({
+      args: wallet?.account,
     }),
     staleTime: Number.POSITIVE_INFINITY,
+    retryDelay: 5000,
   });
+  const stakedBonusBalanceQuery = useCommandQuery({
+    command: new GetEnsStakedBonusBalanceCommand({
+      address: wallet?.account,
+    }),
+    staleTime: Number.POSITIVE_INFINITY,
+    retryDelay: 5000,
+  });
+  const stakedBalanceSum =
+    Number(stakedBalanceQuery.data) + Number(stakedBonusBalanceQuery.data);
 
-  const isPremiumUser = Number(tokenBalanceQuery.data) >= PREMIUM_THRESHOLD;
+  const isPremiumUser = stakedBalanceSum >= PREMIUM_THRESHOLD;
   const canSubscribe =
     isPremiumUser ||
     Number(subscriptionsQuery.data?.details.length) < FREE_SUBSCRIPTIONS;
