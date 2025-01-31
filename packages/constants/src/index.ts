@@ -22,6 +22,8 @@ export {
   TOKENOMICS_DOCS_LINK,
 } from './links';
 
-export { StakingABI, STAKER_ADDRESS } from './constants';
+export { StakingABI } from './abis';
+
+export { STAKER_ADDRESS } from './constants';
 
 export type { ClaimedEventsResponse } from './types';

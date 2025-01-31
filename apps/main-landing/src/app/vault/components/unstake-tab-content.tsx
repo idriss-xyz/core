@@ -4,10 +4,10 @@ import { Spinner } from '@idriss-xyz/ui/spinner';
 import { Checkbox } from '@idriss-xyz/ui/checkbox';
 import { Link } from '@idriss-xyz/ui/link';
 import {
-  TOKEN_TERMS_AND_CONDITIONS_LINK,
   StakingABI,
   STAKER_ADDRESS,
   ClaimedEventsResponse,
+  TOKEN_TERMS_AND_CONDITIONS_LINK,
 } from '@idriss-xyz/constants';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';

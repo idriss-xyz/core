@@ -26,9 +26,9 @@ import { Spinner } from '@idriss-xyz/ui/spinner';
 import { Checkbox } from '@idriss-xyz/ui/checkbox';
 import { Link } from '@idriss-xyz/ui/link';
 import {
-  TOKEN_TERMS_AND_CONDITIONS_LINK,
   StakingABI,
   STAKER_ADDRESS,
+  TOKEN_TERMS_AND_CONDITIONS_LINK,
 } from '@idriss-xyz/constants';
 
 import { ERC20_ABI } from '@/app/creators/donate/constants';
