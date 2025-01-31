@@ -185,7 +185,7 @@ export const CheckEligibilityContent = () => {
           <Button
             intent="primary"
             size="large"
-            suffixIconName="ArrowRight"
+            suffixIconName="IdrissArrowRight"
             onClick={verifyEligibility}
             loading={
               resolveEnsAddressMutation.isPending ||

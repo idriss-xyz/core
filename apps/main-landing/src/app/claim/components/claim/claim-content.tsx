@@ -236,7 +236,7 @@ export const ClaimContent = () => {
           isExternal
           asLink
           className="mt-8 w-full"
-          suffixIconName="ArrowRight"
+          suffixIconName="IdrissArrowRight"
           href={AIRDROP_DOCS_LINK}
         >
           LEARN MORE

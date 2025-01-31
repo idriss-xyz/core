@@ -97,7 +97,7 @@ export const LetterContent = () => {
           <Button
             intent="primary"
             size="large"
-            suffixIconName="ArrowRight"
+            suffixIconName="IdrissArrowRight"
             className="w-56"
             onClick={() => {
               setCurrentContent('about-idriss');
