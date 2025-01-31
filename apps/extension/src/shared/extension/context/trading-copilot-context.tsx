@@ -79,7 +79,8 @@ export const TradingCopilotContextProvider = ({
 
       if (
         getSubscriptionsMutation.isSuccess ||
-        getSubscriptionsMutation.isPending
+        getSubscriptionsMutation.isPending ||
+        getSubscriptionsMutation.isError
       ) {
         return;
       }
