@@ -3,8 +3,14 @@ import * as crypto from 'crypto';
 import { SwapData } from '../types';
 import { isSubscribedAddress } from '../services/subscriptionManager';
 import { NULL_ADDRESS } from '../constants';
-import { AlchemyWebhookEvent, ComplexHeliusWebhookEvent } from '../interfaces';
+import { AlchemyWebhookEvent, ComplexHeliusWebhookEvent, HeliusWebhookEventData } from '../interfaces';
 import { eventCache } from '../services/scheduler';
+import { AlchemyEventHandler, HeliusEventHandler } from '../services/eventHandlers';
+
+const eventHandlers = {
+  alchemy: new AlchemyEventHandler(),
+  helius: new HeliusEventHandler()
+};
 
 export function validateAlchemySignature(
   getSigningKey: (internalWebhookId: string) => Promise<string | undefined>,
@@ -177,9 +183,45 @@ export async function extractHeliusSwapData(txHash: string,
   data: any,
 ): Promise<SwapData>
 {
-  const eventData = data as ComplexHeliusWebhookEvent
+  const eventData = data as HeliusWebhookEventData;
+  const swap = eventData.events?.swap;
+  if (swap) {
+    return {
+      transactionHash: txHash,
+      from: eventData.accountData[0]?.account,
+      to: eventData.instructions[0].innerInstructions.programId,
+      tokenIn: swap.nativeInput ? {
+        address: "So11111111111111111111111111111111111111112",
+        symbol: 'SOL',
+        amount: swap.nativeInput.amount,
+        decimals: 9,
+        network: 'SOLANA',
+      } : {
+        address: swap.tokenInputs[0].mint,
+        symbol: 'NO SYMBOL',
+        amount: swap.tokenInputs[0].rawTokenAmount.tokenAmount,
+        decimals: swap.tokenInputs[0].rawTokenAmount.decimals,
+        network: 'SOLANA',
+      },
+      tokenOut: swap.nativeOutput? {
+        address: "So11111111111111111111111111111111111111112",
+        symbol: 'SOL',
+        amount: swap.nativeOutput.amount,
+        decimals: 9,
+        network: 'SOLANA',
+      } : {
+        address: swap.tokenOutputs[0].mint,
+        symbol: 'NO SYMBOL',
+        amount: swap.tokenOutputs[0].rawTokenAmount.tokenAmount,
+        decimals: swap.tokenOutputs[0].rawTokenAmount.decimals,
+        network: 'SOLANA',
+      },
+      timestamp: new Date().toISOString(),
+      isComplete: false,
+    }
+  }
   return {
-    transactionHash: eventData.signature,
+    transactionHash: txHash,
     from: eventData.accountData[0]?.account,
     to: eventData.instructions[0].innerInstructions.programId,
     tokenIn: {
@@ -190,9 +232,9 @@ export async function extractHeliusSwapData(txHash: string,
       network: 'SOLANA',
     },
     tokenOut: {
-      address: eventData.tokenTransfers[3].mint,
+      address: eventData.tokenTransfers[eventData.tokenTransfers.length-1].mint,
       symbol: 'NO SYMBOL',
-      amount: eventData.tokenTransfers[3].tokenAmount,
+      amount: eventData.tokenTransfers[eventData.tokenTransfers.length-1].tokenAmount,
       decimals: 18,
       network: 'SOLANA',
     },
@@ -230,20 +272,9 @@ export async function handleIncomingEvent(
 }
 
 export async function handleIncomingSolanaEvent(webhookEvent: ComplexHeliusWebhookEvent): Promise<void> {
-  console.log("Handling solana webhook for event: ", webhookEvent);
-  const transactions = webhookEvent.tokenTransfers;
-  if (!transactions || transactions.length === 0) {
-    console.error('No transactions found in the webhook event.');
-    return;
-  }
   const txHash = webhookEvent.signature;
+
   if (!eventCache[txHash]) {
-    eventCache[txHash] = {
-      data: webhookEvent,
-      timestamp: Date.now(),
-      type: 'helius',
-    };
+    eventCache[txHash] = eventHandlers['helius'].formatForCache(webhookEvent)
   }
-  // TODO: Remove for production
-  console.log('Received event from solana webhook', webhookEvent);
 }

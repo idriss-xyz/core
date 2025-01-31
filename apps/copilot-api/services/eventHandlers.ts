@@ -20,7 +20,13 @@ export class AlchemyEventHandler implements WebhookEventHandler {
 export class HeliusEventHandler implements WebhookEventHandler {
   formatForCache(event: ComplexHeliusWebhookEvent): CachedTransaction {
     return {
-      data: event,
+      data: {
+        signature: event.signature,
+        accountData: event.accountData,
+        instructions: event.instructions,
+        tokenTransfers: event.tokenTransfers,
+        events: event.events,
+      },
       timestamp: Date.now(),
       type: 'helius'
     };

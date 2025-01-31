@@ -18,14 +18,34 @@ export interface AlchemyWebhookEvent {
   };
 }
 
-// TODO: Use one or the other (ComplexHeliusWebhookEvent or HeliusWebhookEvent)
-export interface HeliusWebhookEvent {
-  accountData: any;
-  events: { [eventName: string]: Record<string, unknown> };
-  slot: number;
+export interface HeliusWebhookEventData {
+  signature: string;
+  accountData: {
+    account: string;
+    nativeBalanceChange: number;
+    tokenBalanceChanges: {
+      mint: string;
+      rawTokenAmount: {
+        decimals: number;
+        tokenAmount: string;
+      };
+      tokenAccount: string;
+      userAccount: string;
+    }[];
+  }[];
+  instructions: any[];
+  tokenTransfers: {
+    fromTokenAccount: string;
+    fromUserAccount: string;
+    mint: string;
+    toTokenAccount: string;
+    toUserAccount: string;
+    tokenAmount: number;
+    tokenStandard: string;
+  }[];
+  events: { [eventName: string]: Record<string, any> };
 }
 
-// TODO: Use one or the other (ComplexHeliusWebhookEvent or HeliusWebhookEvent)
 export interface ComplexHeliusWebhookEvent {
   accountData: {
     account: string;
@@ -70,7 +90,7 @@ export interface ComplexHeliusWebhookEvent {
 export interface CachedTransaction {
   data: any; // Necessary data from event to extract swap data
   timestamp: number; // Time when the transaction was first added to the cache
-  type: 'alchemy' | 'helius';
+  type: 'alchemy' | 'helius'; // Type of the event
 }
 
 export interface Webhook {
