@@ -6,8 +6,12 @@ export function middleware(request: NextRequest) {
   const url = request.nextUrl;
   const password = request.cookies.get('password')?.value;
 
+  if (process.env.PUBLIC_ACCESS_ENABLED === 'true') {
+    return NextResponse.next();
+  }
+
   if (
-    ['/staking', '/claim'].includes(url.pathname) &&
+    ['/vault', '/claim'].includes(url.pathname) &&
     (password !== process.env.DEV_LOGIN_PASSWORD ||
       !process.env.DEV_LOGIN_PASSWORD)
   ) {
@@ -21,5 +25,5 @@ export function middleware(request: NextRequest) {
 
 // ts-unused-exports:disable-next-line
 export const config = {
-  matcher: ['/staking', '/claim'],
+  matcher: ['/vault', '/claim'],
 };

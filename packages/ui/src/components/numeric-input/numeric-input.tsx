@@ -18,7 +18,7 @@ export const NumericInput = forwardRef(
       <NumericFormat
         getInputRef={reference}
         allowNegative={false}
-        decimalScale={3}
+        decimalScale={inputProperties.decimalScale ?? 3}
         thousandSeparator=","
         customInput={Input}
         {...inputProperties}

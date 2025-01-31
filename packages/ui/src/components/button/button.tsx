@@ -30,7 +30,9 @@ type ButtonOrAnchorProperties =
 type Properties = ButtonOrAnchorProperties &
   ButtonVariants & {
     prefixIconName?: IconName;
+    prefixIconClassName?: string;
     suffixIconName?: IconName;
+    suffixIconClassName?: string;
   };
 
 export const Button = forwardRef(
@@ -42,6 +44,8 @@ export const Button = forwardRef(
       size,
       prefixIconName,
       suffixIconName,
+      prefixIconClassName,
+      suffixIconClassName,
       ...properties
     }: Properties,
     reference,
@@ -64,7 +68,11 @@ export const Button = forwardRef(
           <Icon
             name={prefixIconName}
             size={BUTTON_SIZE_TO_ICON_SIZE[size]}
-            className={classes('mr-2', isLoading && 'opacity-0')}
+            className={classes(
+              'mr-2',
+              isLoading && 'opacity-0',
+              prefixIconClassName,
+            )}
           />
         )}
         <span className={classes(isLoading && 'opacity-0')}>{children}</span>
@@ -72,7 +80,11 @@ export const Button = forwardRef(
           <Icon
             name={suffixIconName}
             size={BUTTON_SIZE_TO_ICON_SIZE[size]}
-            className={classes('ml-2', isLoading && 'opacity-0')}
+            className={classes(
+              'ml-2',
+              isLoading && 'opacity-0',
+              suffixIconClassName,
+            )}
           />
         )}
         <Glow intent={intent} size={size} loading={isLoading} />
