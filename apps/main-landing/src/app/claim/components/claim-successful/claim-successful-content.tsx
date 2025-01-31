@@ -78,18 +78,16 @@ export const ClaimSuccessfulContent = () => {
             </span>
             <div className="z-10 flex items-center justify-center gap-3 rounded-[12px] border-[0.683px] border-[rgba(85,235,60,0.30)] bg-[radial-gradient(50%_50%_at_50%_50%,_rgba(252,255,242,0.00)_0%,_rgba(23,255,74,0.18)_100%)] px-10 py-5.5">
               <span className="text-heading3 gradient-text">
-                +
-                {new Intl.NumberFormat('en-US', {
+                {`+${new Intl.NumberFormat('en-US', {
                   minimumFractionDigits: 0,
                   maximumFractionDigits: 0,
                 }).format(
                   Number(
                     vestingPlan === 'claim_50'
-                      ? (eligibilityData.allocation ?? 0) / 2
-                      : (eligibilityData.allocation ?? 0),
+                      ? (eligibilityData?.allocation ?? 0) / 2
+                      : (eligibilityData?.allocation ?? 0),
                   ),
-                )}{' '}
-                $IDRISS
+                )} $IDRISS`}
               </span>
               <div className="relative">
                 <Icon name="IdrissCircled" size={40} />
