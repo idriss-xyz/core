@@ -58,7 +58,11 @@ export async function calculateDollar(
 
     const data = await response.json();
 
-    if (data.price === undefined || data.price === null || isNaN(data.price)) {
+    if (
+      data.price === undefined ||
+      data.price === null ||
+      Number.isNaN(data.price)
+    ) {
       console.warn('Invalid price data received:', data);
       return '';
     }
@@ -67,7 +71,9 @@ export async function calculateDollar(
 
     const value = Number(amount) / 10 ** decimals / amountPerDollar;
 
-    return isNaN(value) || value === undefined ? '' : Number(value.toFixed(2)).toString();
+    return Number.isNaN(value) || value === undefined
+      ? ''
+      : Number(value.toFixed(2)).toString();
   } catch (error) {
     console.error('Error in calculateDollar:', error);
     return '0';
