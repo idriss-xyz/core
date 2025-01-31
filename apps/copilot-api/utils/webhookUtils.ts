@@ -198,12 +198,12 @@ export async function extractHeliusSwapData(txHash: string,
         network: 'SOLANA',
       } : {
         address: swap.tokenInputs[0].mint,
-        symbol: 'NO SYMBOL',
+        symbol: 'SYMBOL-1', // TODO: get symbol from description
         amount: swap.tokenInputs[0].rawTokenAmount.tokenAmount,
         decimals: swap.tokenInputs[0].rawTokenAmount.decimals,
         network: 'SOLANA',
       },
-      tokenOut: swap.nativeOutput? {
+      tokenOut: swap.nativeOutput ? {
         address: "So11111111111111111111111111111111111111112",
         symbol: 'SOL',
         amount: swap.nativeOutput.amount,
@@ -211,13 +211,13 @@ export async function extractHeliusSwapData(txHash: string,
         network: 'SOLANA',
       } : {
         address: swap.tokenOutputs[0].mint,
-        symbol: 'NO SYMBOL',
+        symbol: 'SYMBOL-2', // TODO: get symbol from description
         amount: swap.tokenOutputs[0].rawTokenAmount.tokenAmount,
         decimals: swap.tokenOutputs[0].rawTokenAmount.decimals,
         network: 'SOLANA',
       },
       timestamp: new Date().toISOString(),
-      isComplete: false,
+      isComplete: true,
     }
   }
   return {
@@ -225,21 +225,21 @@ export async function extractHeliusSwapData(txHash: string,
     from: eventData.accountData[0]?.account,
     to: eventData.instructions[0].innerInstructions.programId,
     tokenIn: {
-      address: eventData.tokenTransfers[0].mint,
-      symbol: 'NO SYMBOL',
-      amount: eventData.tokenTransfers[0].tokenAmount,
-      decimals: 18,
+      address: eventData.tokenTransfers[2].mint,
+      symbol: 'SYMBOL-1', // TODO: fetch symbol from a token list
+      amount: eventData.tokenTransfers[2].tokenAmount,
+      decimals: 9,
       network: 'SOLANA',
     },
     tokenOut: {
-      address: eventData.tokenTransfers[eventData.tokenTransfers.length-1].mint,
-      symbol: 'NO SYMBOL',
-      amount: eventData.tokenTransfers[eventData.tokenTransfers.length-1].tokenAmount,
-      decimals: 18,
+      address: eventData.tokenTransfers[1].mint,
+      symbol: 'SYMBOL-2', // TODO: fetch symbol from a token list
+      amount: eventData.tokenTransfers[1].tokenAmount,
+      decimals: 9,
       network: 'SOLANA',
     },
     timestamp: new Date().toISOString(),
-    isComplete: false,
+    isComplete: true,
   };
 }
 

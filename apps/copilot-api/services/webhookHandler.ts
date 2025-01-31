@@ -18,7 +18,7 @@ export function webhookHandler() {
 
 export const heliusWebhookHandler = () => {
   return async (req: Request, res: Response): Promise<void> => {
-    const webhookEvent = req.body as ComplexHeliusWebhookEvent;
+    const webhookEvent = req.body[0] as ComplexHeliusWebhookEvent;
 
     await handleIncomingSolanaEvent(webhookEvent);
 
