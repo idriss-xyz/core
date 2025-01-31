@@ -5,6 +5,6 @@ export interface FormValues {
 }
 
 export interface Properties {
-  subscriptionsAmount?: number;
+  canSubscribe: boolean;
   onSubmit: (payload: SubscribePayload) => void;
 }

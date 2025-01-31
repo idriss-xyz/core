@@ -10,9 +10,13 @@ import { Wallet } from 'shared/web3';
 import { useTradingCopilot } from 'shared/extension';
 
 import {
+  GetStakedBalanceCommand,
+  GetStakedBonusBalanceCommand,
   AddTradingCopilotSubscriptionCommand,
   GetTradingCopilotSubscriptionsCommand,
   RemoveTradingCopilotSubscriptionCommand,
+  PREMIUM_THRESHOLD,
+  FREE_SUBSCRIPTIONS,
 } from '../commands';
 import { SubscribePayload, UnsubscribePayload } from '../types';
 
@@ -40,6 +44,27 @@ export const useSubscriptions = ({ wallet, addTabListener }: Properties) => {
     }),
     staleTime: Number.POSITIVE_INFINITY,
   });
+  const stakedBalanceQuery = useCommandQuery({
+    command: new GetStakedBalanceCommand({
+      args: wallet?.account,
+    }),
+    staleTime: Number.POSITIVE_INFINITY,
+    retryDelay: 5000,
+  });
+  const stakedBonusBalanceQuery = useCommandQuery({
+    command: new GetStakedBonusBalanceCommand({
+      address: wallet?.account,
+    }),
+    staleTime: Number.POSITIVE_INFINITY,
+    retryDelay: 5000,
+  });
+  const stakedBalanceSum =
+    Number(stakedBalanceQuery.data) + Number(stakedBonusBalanceQuery.data);
+
+  const isPremiumUser = stakedBalanceSum >= PREMIUM_THRESHOLD;
+  const canSubscribe =
+    isPremiumUser ||
+    Number(subscriptionsQuery.data?.details.length) < FREE_SUBSCRIPTIONS;
 
   useEffect(() => {
     if (subscriptionsQuery.isSuccess) {
@@ -150,6 +175,7 @@ export const useSubscriptions = ({ wallet, addTabListener }: Properties) => {
   return {
     subscribe,
     unsubscribe,
+    canSubscribe,
     subscriptions,
   };
 };
