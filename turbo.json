@@ -99,6 +99,7 @@
         "PORT",
         "HOST",
         "ALCHEMY_API_KEY",
+        "API_SECRET",
         "WEBHOOK_URL",
         "VIEM_TRANSPORTER_URL"
       ]
