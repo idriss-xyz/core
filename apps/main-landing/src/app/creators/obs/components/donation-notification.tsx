@@ -64,7 +64,7 @@ const DonationNotification = ({
         <div className="flex items-center gap-x-2">
           <p className="text-label3 text-neutral-900">
             {`${donor} `}
-            <span className="text-body3 text-neutral-600">{`sent $${amount}`}</span>
+            <span className="text-body3 text-neutral-600">{`${amount ? `sent $${amount}` : ''}`}</span>
           </p>
         </div>
         {message && <p className="text-body5 text-neutral-600">{message}</p>}
