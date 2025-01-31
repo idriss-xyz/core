@@ -13,8 +13,8 @@ import { VerifySiweSignatureCommand } from './verify-siwe-signature';
 import { GetTokensListCommand } from './get-tokens-list';
 import { GetTokensImageCommand } from './get-tokens-image';
 import { VerifyTokenCommand } from './verify-token';
-import { GetEnsStakedBalanceCommand } from './get-ens-staked-balance';
-import { GetEnsStakedBonusBalanceCommand } from './get-ens-staked-bonus-balance';
+import { GetStakedBalanceCommand } from './get-staked-balance';
+import { GetStakedBonusBalanceCommand } from './get-staked-bonus-balance';
 
 export const COMMAND_MAP = {
   [AddTradingCopilotSubscriptionCommand.name]:
@@ -35,8 +35,8 @@ export const COMMAND_MAP = {
   [GetTokensListCommand.name]: GetTokensListCommand,
   [GetTokensImageCommand.name]: GetTokensImageCommand,
   [VerifyTokenCommand.name]: VerifyTokenCommand,
-  [GetEnsStakedBalanceCommand.name]: GetEnsStakedBalanceCommand,
-  [GetEnsStakedBonusBalanceCommand.name]: GetEnsStakedBonusBalanceCommand,
+  [GetStakedBalanceCommand.name]: GetStakedBalanceCommand,
+  [GetStakedBonusBalanceCommand.name]: GetStakedBonusBalanceCommand,
 };
 
 export { PREMIUM_THRESHOLD, FREE_SUBSCRIPTIONS } from './constants';
@@ -55,5 +55,5 @@ export { GetQuoteCommand } from './get-quote';
 export { GetTokensListCommand } from './get-tokens-list';
 export { GetTokensImageCommand } from './get-tokens-image';
 export { VerifyTokenCommand } from './verify-token';
-export { GetEnsStakedBalanceCommand } from './get-ens-staked-balance';
-export { GetEnsStakedBonusBalanceCommand } from './get-ens-staked-bonus-balance';
+export { GetStakedBalanceCommand } from './get-staked-balance';
+export { GetStakedBonusBalanceCommand } from './get-staked-bonus-balance';

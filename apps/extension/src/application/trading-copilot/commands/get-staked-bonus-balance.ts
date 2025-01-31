@@ -1,3 +1,5 @@
+import { ClaimedEventsResponse } from '@idriss-xyz/constants';
+
 import {
   Command,
   FailureResult,
@@ -7,8 +9,6 @@ import {
 } from 'shared/messaging';
 import { Hex } from 'shared/web3';
 
-import { ClaimedEventsResponse } from '../types';
-
 import { MAIN_API_URL } from './constants';
 
 type Payload = {
@@ -17,11 +17,8 @@ type Payload = {
 
 type Response = string | null;
 
-export class GetEnsStakedBonusBalanceCommand extends Command<
-  Payload,
-  Response
-> {
-  public readonly name = 'GetEnsStakedBonusBalanceCommand' as const;
+export class GetStakedBonusBalanceCommand extends Command<Payload, Response> {
+  public readonly name = 'GetStakedBonusBalanceCommand' as const;
 
   constructor(public payload: Payload) {
     super();

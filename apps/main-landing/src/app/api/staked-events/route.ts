@@ -3,12 +3,9 @@ import fs from 'node:fs';
 import { createPublicClient, formatEther, Hex, http, parseAbiItem } from 'viem';
 import { base } from 'viem/chains';
 import { NextResponse } from 'next/server';
+import { STAKER_ADDRESS } from '@idriss-xyz/constants';
 
-import {
-  STAKER_ADDRESS,
-  STAKED_EVENT,
-  WITHDRAWN_EVENT,
-} from '@/app/vault/constants';
+import { STAKED_EVENT, WITHDRAWN_EVENT } from '@/app/vault/constants';
 
 interface StakeEvent {
   user: Hex | undefined;

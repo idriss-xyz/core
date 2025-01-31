@@ -1,5 +1,6 @@
 import { createPublicClient, formatEther, http } from 'viem';
 import { base } from 'viem/chains';
+import { STAKER_ADDRESS, StakingABI } from '@idriss-xyz/constants';
 
 import { Hex } from 'shared/web3';
 import {
@@ -9,16 +10,14 @@ import {
   OkResult,
 } from 'shared/messaging';
 
-import { STAKER_ADDRESS, StakingABI } from './constants';
-
 type Payload = {
   args: Hex;
 };
 
 type Response = string | null;
 
-export class GetEnsStakedBalanceCommand extends Command<Payload, Response> {
-  public readonly name = 'GetEnsStakedBalanceCommand' as const;
+export class GetStakedBalanceCommand extends Command<Payload, Response> {
+  public readonly name = 'GetStakedBalanceCommand' as const;
 
   constructor(public payload: Payload) {
     super();

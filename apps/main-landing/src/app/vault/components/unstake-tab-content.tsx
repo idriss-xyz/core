@@ -3,7 +3,12 @@ import { Form } from '@idriss-xyz/ui/form';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import { Checkbox } from '@idriss-xyz/ui/checkbox';
 import { Link } from '@idriss-xyz/ui/link';
-import { TOKEN_TERMS_AND_CONDITIONS_LINK } from '@idriss-xyz/constants';
+import {
+  TOKEN_TERMS_AND_CONDITIONS_LINK,
+  StakingABI,
+  STAKER_ADDRESS,
+  ClaimedEventsResponse,
+} from '@idriss-xyz/constants';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import {
@@ -27,9 +32,6 @@ import { RadialGradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 import { TxLoadingModal } from '@/app/claim/components/tx-loading-modal/tx-loading-modal';
 import { formatNumber } from '@/app/claim/components/claim/components/idriss-user-criteria-description';
-
-import { StakingABI, STAKER_ADDRESS } from '../constants';
-import { ClaimedEventsResponse } from '../types';
 
 type FormPayload = {
   amount: number;

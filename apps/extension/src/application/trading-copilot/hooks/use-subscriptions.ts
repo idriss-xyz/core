@@ -10,8 +10,8 @@ import { Wallet } from 'shared/web3';
 import { useTradingCopilot } from 'shared/extension';
 
 import {
-  GetEnsStakedBalanceCommand,
-  GetEnsStakedBonusBalanceCommand,
+  GetStakedBalanceCommand,
+  GetStakedBonusBalanceCommand,
   AddTradingCopilotSubscriptionCommand,
   GetTradingCopilotSubscriptionsCommand,
   RemoveTradingCopilotSubscriptionCommand,
@@ -45,14 +45,14 @@ export const useSubscriptions = ({ wallet, addTabListener }: Properties) => {
     staleTime: Number.POSITIVE_INFINITY,
   });
   const stakedBalanceQuery = useCommandQuery({
-    command: new GetEnsStakedBalanceCommand({
+    command: new GetStakedBalanceCommand({
       args: wallet?.account,
     }),
     staleTime: Number.POSITIVE_INFINITY,
     retryDelay: 5000,
   });
   const stakedBonusBalanceQuery = useCommandQuery({
-    command: new GetEnsStakedBonusBalanceCommand({
+    command: new GetStakedBonusBalanceCommand({
       address: wallet?.account,
     }),
     staleTime: Number.POSITIVE_INFINITY,
