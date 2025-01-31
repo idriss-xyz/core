@@ -59,7 +59,7 @@ const DonationNotification = ({
       </div>
       <div>
         <p id="baseInfo" className="text-gray-900 ml-3 text-xl font-bold">
-          {`${donor} sent $${amount}`}
+          {`${donor} ${amount ? `sent $${amount}` : ''}`}
         </p>
         {message && (
           <p id="message" className="text-gray-900 ml-3 text-lg font-medium">
