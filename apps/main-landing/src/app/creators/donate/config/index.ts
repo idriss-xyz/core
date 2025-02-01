@@ -35,7 +35,7 @@ const abstract = defineChain({
   blockExplorers: {
     default: {
       name: 'Evm Explorer',
-      url: 'https://abscan.org/',
+      url: 'https://abscan.org',
     },
   },
 });

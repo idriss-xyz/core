@@ -74,7 +74,7 @@ export const CHAIN = {
     blockExplorers: {
       default: {
         name: 'Evm Explorer',
-        url: 'https://abscan.org/',
+        url: 'https://abscan.org',
       },
     },
   },
