@@ -139,7 +139,13 @@ const addAddressToWebhook = async (address: string, chainType: string) => {
       webhooks_webhook_id: webhook_id,
       webhooks_internal_id: internal_id,
     } = res;
-    await updateWebhookAddresses(webhook_id, [address], []);
+    if (chainType === WEBHOOK_NETWORK_TYPES.EVM) {
+      await updateWebhookAddresses(webhook_id, [address], []);
+    }
+    else if (chainType === WEBHOOK_NETWORK_TYPES.SOLANA) {
+      // TODO: Use res to get current addresses and add address to array [...currentAddresses, address]
+      await updateSolanaWebhookAddresses(internal_id, [address]);
+    }
     await addressMapWebhooksRepo.save({
       address,
       webhook_internal_id: internal_id,
@@ -288,6 +294,28 @@ const updateWebhookAddresses = async (
     );
   } catch (err) {
     console.error('Error updating webhook: ', err);
+  }
+};
+
+const updateSolanaWebhookAddresses = async (
+  webhookId: string,
+  newAddresses: string[],
+): Promise<void> => {
+  try {
+    await axios.put(
+      `${HELIUS_API_BASE_URL}/v0/webhooks/${webhookId}?api-key=${HELIUS_API_KEY}`,
+      {
+        accountAddresses: newAddresses,
+      },
+      {
+        headers: {
+          'accept': 'application/json',
+          'content-type': 'application/json',
+        },
+      },
+    );
+  } catch (err) {
+    console.error('Error updating Solana webhook: ', err);
   }
 };
 
