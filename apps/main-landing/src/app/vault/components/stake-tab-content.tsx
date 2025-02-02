@@ -10,18 +10,15 @@ import {
 } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import {
-  createPublicClient,
   decodeFunctionResult,
   encodeFunctionData,
-  http,
   parseEther,
   WalletClient,
-  formatEther,
 } from 'viem';
 import { call, estimateGas, waitForTransactionReceipt } from 'viem/actions';
 import { base } from 'viem/chains';
 import { WriteContractMutateAsync } from 'wagmi/query';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import { Checkbox } from '@idriss-xyz/ui/checkbox';
 import { Link } from '@idriss-xyz/ui/link';
@@ -31,7 +28,7 @@ import { ERC20_ABI } from '@/app/creators/donate/constants';
 import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 import { TxLoadingModal } from '@/app/claim/components/tx-loading-modal/tx-loading-modal';
 import { IDRISS_TOKEN_ADDRESS } from '@/components/token-section/constants';
-import { formatNumber } from '@/app/claim/components/claim/components/idriss-user-criteria-description';
+import { useStaking } from '@/app/vault/hooks/use-staking';
 
 import { StakingABI, STAKER_ADDRESS } from '../constants';
 
@@ -56,6 +53,7 @@ const approveTokens = async (
   if (!walletClient.account) {
     return;
   }
+
   const allowanceData = {
     abi: ERC20_ABI,
     functionName: 'allowance',
@@ -112,16 +110,16 @@ const approveTokens = async (
 };
 
 export const StakeTabContent = () => {
-  const [availableAmount, setAvailableAmount] = useState<string>('0');
+  const { data: walletClient } = useWalletClient();
+  const { unStakedBalance } = useStaking({
+    address: walletClient?.account.address ?? '0x',
+  });
+
   const [termsChecked, setTermsChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
   const { switchChainAsync } = useSwitchChain();
-  const publicClient = createPublicClient({
-    chain: base,
-    transport: http(),
-  });
 
   const { handleSubmit, control, watch } = useForm<FormPayload>({
     mode: 'onSubmit',
@@ -129,7 +127,6 @@ export const StakeTabContent = () => {
 
   const amount = watch('amount');
 
-  const { data: walletClient } = useWalletClient();
   const { writeContractAsync } = useWriteContract();
 
   const handleStake = async (data: FormPayload) => {
@@ -193,28 +190,6 @@ export const StakeTabContent = () => {
     }
   };
 
-  useEffect(() => {
-    void (async () => {
-      if (!walletClient) {
-        return;
-      }
-
-      try {
-        const balance = await publicClient?.readContract({
-          abi: ERC20_ABI,
-          address: IDRISS_TOKEN_ADDRESS,
-          functionName: 'balanceOf',
-          args: [walletClient.account.address],
-        });
-
-        setAvailableAmount(formatEther(balance) ?? '0');
-      } catch (error) {
-        console.error(error);
-        setAvailableAmount('0');
-      }
-    })();
-  }, [walletClient, publicClient]);
-
   return (
     <>
       <TxLoadingModal show={isLoading} heading={txLoadingHeading(amount)} />
@@ -240,12 +215,12 @@ export const StakeTabContent = () => {
                       <div
                         className="flex text-label6 text-neutral-800 hover:cursor-pointer"
                         onClick={() => {
-                          field.onChange(availableAmount);
+                          field.onChange(unStakedBalance.amount);
                         }}
                       >
                         Available:{' '}
                         <span className="mx-1 flex justify-center">
-                          {formatNumber(Number(availableAmount), 2) ?? (
+                          {unStakedBalance.formattedAmount ?? (
                             <Spinner className="size-3" />
                           )}
                         </span>{' '}
