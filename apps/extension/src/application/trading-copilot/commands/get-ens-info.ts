@@ -14,7 +14,9 @@ type Payload = {
   infoKey: 'com.discord' | 'email' | 'com.github' | 'com.twitter' | 'avatar';
 };
 
-export class GetEnsInfoCommand extends Command<Payload, string | null> {
+type Response = string | null;
+
+export class GetEnsInfoCommand extends Command<Payload, Response> {
   public readonly name = 'GetEnsInfoCommand' as const;
 
   constructor(public payload: Payload) {
@@ -25,7 +27,7 @@ export class GetEnsInfoCommand extends Command<Payload, string | null> {
     try {
       const client = createPublicClient({
         chain: { ...mainnet },
-        transport: http(),
+        transport: http('https://eth.llamarpc.com'),
       });
 
       const result = await client.getEnsText({

@@ -40,7 +40,6 @@ const optionsFrom = (tokens: Token[]) => {
       label: token.name,
       value: token.symbol,
       prefix: (
-        // eslint-disable-next-line @next/next/no-img-element
         <img
           src={token.logo}
           className="size-6 rounded-full"

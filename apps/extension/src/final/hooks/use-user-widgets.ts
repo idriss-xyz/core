@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import { useGitcoinDonationWidgetsData } from 'application/gitcoin';
 import { useIdrissSendWidgetsData } from 'application/idriss-send';
 import { useExtensionSettings } from 'shared/extension';
@@ -16,7 +18,9 @@ export const useUserWidgets = () => {
   const isFarcaster = isSupercast || isWarpcast;
   const { extensionSettings } = useExtensionSettings();
 
-  const { users } = useScraping();
+  const { users: scrapedUsers } = useScraping();
+
+  const users = _.uniqBy(scrapedUsers, 'nodeId');
 
   const idrissSendEnabled =
     applicationsStatus.idrissSend && extensionSettings['idriss-send-enabled'];

@@ -5,3 +5,7 @@
 *::selection {
   background-color: #BBD7FA;
 }
+
+.custom-transition {
+  transition: width 400ms ease-in-out 200ms, opacity 100ms ease-in-out 500ms;
+}

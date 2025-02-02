@@ -36,6 +36,8 @@ import {
   WETH_LOGO,
   ZYNK_SYNC_ERA_LOGO,
   ALEPH_LOGO,
+  ABSTRACT_LOGO,
+  PENGU_LOGO,
 } from './logos';
 import { Chain, Token, ChainToken } from './types';
 
@@ -56,6 +58,23 @@ export const CHAIN = {
       default: {
         name: 'Evm Explorer',
         url: 'https://evm-explorer.alephzero.org',
+      },
+    },
+  },
+  ABSTRACT: {
+    id: 2741,
+    name: 'Abstract',
+    logo: ABSTRACT_LOGO,
+    nativeCurrency: {
+      name: 'Ethereum',
+      symbol: 'ETH',
+      decimals: 18,
+    },
+    rpcUrls: { default: { http: ['https://api.mainnet.abs.xyz'] } },
+    blockExplorers: {
+      default: {
+        name: 'Evm Explorer',
+        url: 'https://abscan.org',
       },
     },
   },
@@ -127,11 +146,6 @@ export const TOKEN = {
     symbol: 'DAI',
     logo: DAI_LOGO,
   },
-  // TETHER: {
-  //   name: 'Tether',
-  //   symbol: 'USDT',
-  //   logo: TETHER_LOGO,
-  // },
   ECHELON_PRIME: {
     name: 'Echelon Prime',
     symbol: 'PRIME',
@@ -166,11 +180,29 @@ export const TOKEN = {
   DEGEN: { name: 'Degen', symbol: 'DEGEN', logo: DEGEN_LOGO },
   IDRISS: { name: 'IDRISS', symbol: 'IDRISS', logo: IDRISS_LOGO },
   AZERO: { name: 'Aleph Zero', symbol: 'AZERO', logo: ALEPH_LOGO },
+  PENGU: { name: 'Pudgy Penguins', symbol: 'PENGU', logo: PENGU_LOGO },
   HIGHER: { name: 'Higher', symbol: 'HIGHER', logo: HIGHER_LOGO },
   MOXIE: { name: 'Moxie', symbol: 'MOXIE', logo: MOXIE_LOGO },
 } satisfies Record<string, Token>;
 
 export const CHAIN_ID_TO_TOKENS = {
+  [CHAIN.ABSTRACT.id]: [
+    {
+      ...TOKEN.ETHEREUM,
+      decimals: 18,
+      address: NATIVE_COIN_ADDRESS,
+    },
+    {
+      ...TOKEN.USDC,
+      decimals: 6,
+      address: '0x84a71ccd554cc1b02749b35d22f684cc8ec987e1',
+    },
+    {
+      ...TOKEN.PENGU,
+      decimals: 18,
+      address: '0x9eBe3A824Ca958e4b3Da772D2065518F009CBa62',
+    },
+  ],
   [CHAIN.ALEPH.id]: [
     {
       ...TOKEN.AZERO,

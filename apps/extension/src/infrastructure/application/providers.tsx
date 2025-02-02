@@ -1,7 +1,6 @@
 import NiceModal from '@ebay/nice-modal-react';
 import { ReactNode, StrictMode } from 'react';
 import { WithPortal } from '@idriss-xyz/ui/providers/with-portal';
-import { WalletContextProvider } from '@idriss-xyz/wallet-connect';
 
 import { SupercastScrapingContextProvider } from 'host/supercast';
 import { WarpcastScrapingContextProvider } from 'host/warpcast';
@@ -20,10 +19,17 @@ import {
 } from 'shared/ui';
 import { TwitterScrapingContextProvider } from 'host/twitter';
 import {
+  TradingCopilotContextProvider,
   ExtensionPopupProvider,
   ExtensionSettingsProvider,
+  WalletContextProvider,
 } from 'shared/extension';
-import { WalletStorage } from 'shared/web3';
+import {
+  AuthTokenStorage,
+  WalletStorage,
+  ToastSoundStateStorage,
+  SubscriptionsAmountStorage,
+} from 'shared/web3';
 
 type Properties = {
   children: ReactNode;
@@ -46,26 +52,44 @@ export const Providers = ({
                     <TailwindProvider>
                       <QueryProvider>
                         <NiceModal.Provider>
-                          <NotificationsProvider>
-                            <WalletContextProvider
-                              disabledWalletsRdns={disabledWalletRdns}
-                              onGetWallet={WalletStorage.get}
-                              onClearWallet={WalletStorage.clear}
-                              onSaveWallet={WalletStorage.save}
-                            >
-                              <ExtensionPopupProvider>
-                                <ExtensionSettingsProvider>
-                                  <TwitterScrapingContextProvider>
-                                    <WarpcastScrapingContextProvider>
-                                      <SupercastScrapingContextProvider>
-                                        {children}
-                                      </SupercastScrapingContextProvider>
-                                    </WarpcastScrapingContextProvider>
-                                  </TwitterScrapingContextProvider>
-                                </ExtensionSettingsProvider>
-                              </ExtensionPopupProvider>
-                            </WalletContextProvider>
-                          </NotificationsProvider>
+                          <TradingCopilotContextProvider
+                            onGetAuthToken={AuthTokenStorage.get}
+                            onClearAuthToken={AuthTokenStorage.clear}
+                            onSaveAuthToken={AuthTokenStorage.save}
+                            onClearToastSoundState={
+                              ToastSoundStateStorage.clear
+                            }
+                            onGetToastSoundState={ToastSoundStateStorage.get}
+                            onSaveToastSoundState={ToastSoundStateStorage.save}
+                            onGetWallet={WalletStorage.get}
+                            onSaveSubscriptionsAmount={
+                              SubscriptionsAmountStorage.save
+                            }
+                            onClearSubscriptionsAmount={
+                              SubscriptionsAmountStorage.clear
+                            }
+                          >
+                            <NotificationsProvider>
+                              <WalletContextProvider
+                                disabledWalletsRdns={disabledWalletRdns}
+                                onGetWallet={WalletStorage.get}
+                                onClearWallet={WalletStorage.clear}
+                                onSaveWallet={WalletStorage.save}
+                              >
+                                <ExtensionPopupProvider>
+                                  <ExtensionSettingsProvider>
+                                    <TwitterScrapingContextProvider>
+                                      <WarpcastScrapingContextProvider>
+                                        <SupercastScrapingContextProvider>
+                                          {children}
+                                        </SupercastScrapingContextProvider>
+                                      </WarpcastScrapingContextProvider>
+                                    </TwitterScrapingContextProvider>
+                                  </ExtensionSettingsProvider>
+                                </ExtensionPopupProvider>
+                              </WalletContextProvider>
+                            </NotificationsProvider>
+                          </TradingCopilotContextProvider>
                         </NiceModal.Provider>
                       </QueryProvider>
                     </TailwindProvider>
