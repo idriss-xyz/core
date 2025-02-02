@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
-import { useWallet } from '@idriss-xyz/wallet-connect';
 import { Button } from '@idriss-xyz/ui/button';
 
+import { useWallet } from 'shared/extension';
 import { IdrissSend } from 'shared/idriss';
 import {
   EMPTY_HEX,

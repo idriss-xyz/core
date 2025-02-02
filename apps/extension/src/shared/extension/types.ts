@@ -18,3 +18,9 @@ export interface StoredWallet {
   account: Hex;
   providerRdns: string;
 }
+
+export type StoredAuthToken = string | undefined;
+
+export type StoredToastSoundState = boolean | undefined;
+
+export type StoredSubscriptionsAmount = number | undefined;

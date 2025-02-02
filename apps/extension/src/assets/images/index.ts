@@ -6,4 +6,5 @@ export { default as SNAPSHOT_LOGO } from './snapshot-logo.png';
 export { default as TALLY_LOGO } from './tally-logo.png';
 export { default as POLYMARKET_LOGO } from './polymarket-logo.png';
 export { default as LINES } from './lines.png';
+export { default as LINES2 } from './lines2.png';
 export { default as IDRISS_ICON_CIRCLE } from './idriss-icon-circle.png';

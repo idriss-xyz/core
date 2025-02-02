@@ -17,6 +17,8 @@ type BaseProperties = {
   className?: string;
   error?: boolean;
   success?: boolean;
+  asTextArea?: boolean;
+  placeholder?: string;
 };
 
 type Properties =
@@ -37,8 +39,15 @@ export const Input = forwardRef(
     const prefixReference = useRef<HTMLDivElement>(null);
     const suffixReference = useRef<HTMLDivElement>(null);
 
-    const { value, onChange, className, success, error, asTextArea } =
-      properties;
+    const {
+      value,
+      onChange,
+      className,
+      success,
+      error,
+      asTextArea,
+      placeholder,
+    } = properties;
     const inputProperties = {
       className: classes(
         'min-h-11 w-full resize-none rounded-xl border border-neutral-200 bg-white px-3 py-2 text-body5 text-neutralGreen-900 caret-neutralGreen-900 shadow-input placeholder:text-neutral-600 lg:text-body4',
@@ -49,6 +58,7 @@ export const Input = forwardRef(
       ),
       value,
       onChange,
+      placeholder,
     };
 
     if (asTextArea) {

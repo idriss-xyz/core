@@ -16,7 +16,11 @@ export const UserWidgets = () => {
           );
         }
 
-        return <IdrissSendWidget key={widget.nodeId} widgetData={widget} />;
+        return (
+          <div key={widget.nodeId}>
+            <IdrissSendWidget widgetData={widget} />
+          </div>
+        );
       })}
     </ErrorBoundary>
   );

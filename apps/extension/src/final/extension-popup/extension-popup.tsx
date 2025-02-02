@@ -2,19 +2,22 @@ import { Route, Routes } from 'react-router';
 
 import { Closable } from 'shared/ui';
 import { POPUP_ROUTE, useExtensionPopup } from 'shared/extension';
+import { SubscriptionsManagement } from 'application/trading-copilot';
+import { LINES, LINES2 } from 'assets/images';
 
-import {
-  TopBar,
-  Footer,
-  PopupContentLayout,
-  SettingsLayout,
-} from './components';
 import {
   GovernanceSettings,
   MainSettings,
   OtherSettings,
   Products,
 } from './views';
+import {
+  TopBar,
+  Footer,
+  PopupContentLayout,
+  SettingsLayout,
+  TradingCopilotLayout,
+} from './components';
 
 export const ExtensionPopup = () => {
   const extensionPopup = useExtensionPopup();
@@ -22,6 +25,7 @@ export const ExtensionPopup = () => {
   if (!extensionPopup.isVisible) {
     return null;
   }
+
   return (
     <Closable
       closeButtonClassName="hidden"
@@ -32,9 +36,10 @@ export const ExtensionPopup = () => {
       <TopBar className="rounded-t-xl" />
 
       <Routes>
-        <Route element={<PopupContentLayout />}>
+        <Route element={<PopupContentLayout backgroundImage={LINES} />}>
           <Route path={POPUP_ROUTE.PRODUCTS} element={<Products />} />
-
+        </Route>
+        <Route element={<PopupContentLayout backgroundImage={LINES2} />}>
           <Route element={<SettingsLayout />}>
             <Route path={POPUP_ROUTE.SETTINGS} element={<MainSettings />} />
             <Route
@@ -44,6 +49,13 @@ export const ExtensionPopup = () => {
             <Route
               path={POPUP_ROUTE.OTHER_SETTINGS}
               element={<OtherSettings />}
+            />
+          </Route>
+
+          <Route element={<TradingCopilotLayout />}>
+            <Route
+              path={POPUP_ROUTE.TRADING_COPILOT}
+              element={<SubscriptionsManagement />}
             />
           </Route>
         </Route>

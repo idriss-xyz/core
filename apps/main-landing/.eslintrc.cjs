@@ -17,6 +17,7 @@ module.exports = {
         '**/.*.mjs',
         '**/*.d.ts',
         'src/app/**/*',
+        'src/components/**/*',
       ],
       rules: {
         'import/no-default-export': 'off',

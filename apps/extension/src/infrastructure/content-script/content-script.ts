@@ -3,16 +3,22 @@ import {
   COMMAND_BUS_RESPONSE_MESSAGE,
   CommandResponse,
   POPUP_TO_WEBPAGE_MESSAGE,
+  SWAP_EVENT,
+  TAB_CHANGED,
   SerializedCommand,
   TOGGLE_EXTENSION_POPUP_VISIBILITY,
   onWindowMessage,
 } from 'shared/messaging';
 import {
+  TradingCopilotManager,
   ExtensionSettingsManager,
   GET_EXTENSION_SETTINGS_REQUEST,
   GET_EXTENSION_SETTINGS_RESPONSE,
   EXTENSION_BUTTON_CLICKED,
   ACTIVE_TAB_CHANGED,
+  StoredAuthToken,
+  StoredToastSoundState,
+  StoredSubscriptionsAmount,
 } from 'shared/extension';
 import { Hex } from 'shared/web3';
 
@@ -26,7 +32,9 @@ export class ContentScript {
 
     contentScript.subscribeToExtensionSettings();
     contentScript.subscribeToWallet();
+    contentScript.subscribeToTradingCopilot();
     contentScript.subscribeToDeviceId();
+    contentScript.blockGithubShortcuts();
   }
 
   static canRun() {
@@ -101,6 +109,23 @@ export class ContentScript {
         return;
       }
 
+      if (request.type === SWAP_EVENT) {
+        const message = {
+          type: SWAP_EVENT,
+          detail: request.detail,
+        };
+        window.postMessage(message);
+        return;
+      }
+
+      if (request.type === TAB_CHANGED) {
+        const message = {
+          type: TAB_CHANGED,
+        };
+        window.postMessage(message);
+        return;
+      }
+
       if (request.type === ACTIVE_TAB_CHANGED) {
         const detail = await ExtensionSettingsManager.getAllSettings();
 
@@ -152,6 +177,59 @@ export class ContentScript {
   }
 
   // TODO: move these message names to constants in shared/web3
+  subscribeToTradingCopilot() {
+    onWindowMessage('GET_AUTH_TOKEN', async () => {
+      const maybeAuthToken = await TradingCopilotManager.getAuthToken();
+
+      const message = {
+        type: 'GET_AUTH_TOKEN_RESPONSE',
+        detail: maybeAuthToken,
+      };
+
+      window.postMessage(message);
+    });
+
+    onWindowMessage('CLEAR_AUTH_TOKEN', () => {
+      void TradingCopilotManager.clearAuthToken();
+    });
+
+    onWindowMessage<StoredAuthToken>('SAVE_AUTH_TOKEN', (v) => {
+      void TradingCopilotManager.saveAuthToken(v);
+    });
+
+    onWindowMessage('GET_TOAST_SOUND_STATE', async () => {
+      const maybeToastSoundState =
+        await TradingCopilotManager.getToastSoundState();
+
+      const message = {
+        type: 'GET_TOAST_SOUND_STATE_RESPONSE',
+        detail: maybeToastSoundState,
+      };
+
+      window.postMessage(message);
+    });
+
+    onWindowMessage('CLEAR_TOAST_SOUND_STATE', () => {
+      void TradingCopilotManager.clearToastSoundState();
+    });
+
+    onWindowMessage<StoredToastSoundState>('SAVE_TOAST_SOUND_STATE', (v) => {
+      void TradingCopilotManager.saveToastSoundState(v);
+    });
+
+    onWindowMessage('CLEAR_SUBSCRIPTIONS_AMOUNT', () => {
+      void TradingCopilotManager.clearSubscriptionsAmount();
+    });
+
+    onWindowMessage<StoredSubscriptionsAmount>(
+      'SAVE_SUBSCRIPTIONS_AMOUNT',
+      (v) => {
+        void TradingCopilotManager.saveSubscriptionsAmount(v);
+      },
+    );
+  }
+
+  // TODO: move these message names to constants in shared/web3
   subscribeToDeviceId() {
     onWindowMessage('GET_DEVICE_ID', async () => {
       const maybeDeviceId = await ExtensionSettingsManager.getDeviceId();
@@ -167,5 +245,22 @@ export class ContentScript {
     onWindowMessage<string>('SET_DEVICE_ID', (v) => {
       void ExtensionSettingsManager.setDeviceId(v);
     });
+  }
+
+  blockGithubShortcuts() {
+    document.addEventListener(
+      'keydown',
+      (event) => {
+        const activeElement = document.activeElement;
+
+        if (
+          activeElement?.classList.contains('idriss-root') &&
+          window.location.hostname === 'github.com'
+        ) {
+          event.stopPropagation();
+        }
+      },
+      true,
+    );
   }
 }

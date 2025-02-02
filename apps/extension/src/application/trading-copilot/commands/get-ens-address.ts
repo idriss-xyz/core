@@ -14,7 +14,9 @@ type Payload = {
   ensName: string;
 };
 
-export class GetEnsAddressCommand extends Command<Payload, Hex | null> {
+type Response = Hex | null;
+
+export class GetEnsAddressCommand extends Command<Payload, Response> {
   public readonly name = 'GetEnsAddressCommand' as const;
 
   constructor(public payload: Payload) {
@@ -25,7 +27,7 @@ export class GetEnsAddressCommand extends Command<Payload, Hex | null> {
     try {
       const client = createPublicClient({
         chain: { ...mainnet },
-        transport: http(),
+        transport: http('https://eth.llamarpc.com'),
       });
       const response = await client.getEnsAddress({
         name: normalize(this.payload.ensName),

@@ -123,6 +123,7 @@ export default {
         1: '1',
         topBar: '10',
         dialog: '20',
+        notification: '99999',
         extensionPopup: '100000',
         portal: '100001',
         scrollbar: '100010',
@@ -267,10 +268,6 @@ export default {
           '0.625rem',
           { lineHeight: '0.75rem', letterSpacing: '0', fontWeight: '500' },
         ],
-        body5: [
-          '0.875rem',
-          { lineHeight: '1.25em', letterSpacing: '0', fontWeight: '400' },
-        ],
         button1: [
           '1rem',
           { lineHeight: '1.25em', letterSpacing: '0.05em', fontWeight: '500' },
@@ -278,14 +275,6 @@ export default {
         button2: [
           '0.875rem',
           { lineHeight: '1rem', letterSpacing: '0.05em', fontWeight: '500' },
-        ],
-        display1: [
-          '7.25rem',
-          { lineHeight: '1em', letterSpacing: '0', fontWeight: '400' },
-        ],
-        display4: [
-          '2.375rem',
-          { lineHeight: '1em', letterSpacing: '0', fontWeight: '400' },
         ],
       },
       animation: {
