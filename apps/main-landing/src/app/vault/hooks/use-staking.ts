@@ -30,7 +30,7 @@ export const useStaking = () => {
   const stakedBalanceQuery = useGetStakedBalance({
     address: walletClient?.account.address ?? '0x',
   });
-  const unStakedBalanceQuery = useGetUnstakedBalance({
+  const unstakedBalanceQuery = useGetUnstakedBalance({
     address: walletClient?.account.address ?? '0x',
   });
   const stakedBonusBalanceQuery = useGetBonusStakedBalance({
@@ -115,12 +115,12 @@ export const useStaking = () => {
             return;
           }
 
+          setStakeIsPending(true);
+          setStakePendingAmount(payload.amount);
+
           const parsedAmount = parseEther(payload.amount.toString());
 
           await switchChainAsync({ chainId: base.id });
-
-          setStakeIsPending(true);
-          setStakePendingAmount(payload.amount);
 
           await approveTokensCallback({
             walletClient,
@@ -154,8 +154,10 @@ export const useStaking = () => {
             hash,
           });
 
+          await stakedBalanceQuery.refetch();
+          await unstakedBalanceQuery.refetch();
+
           setStakeIsPending(false);
-          void unStakedBalanceQuery.refetch();
 
           if (status === 'reverted') {
             throw new Error('Claim transaction reverted');
@@ -164,7 +166,6 @@ export const useStaking = () => {
           setStakeIsPending(false);
           setStakePendingAmount(0);
 
-          console.error('Error locking:', error);
           throw error;
         }
       }
@@ -173,8 +174,9 @@ export const useStaking = () => {
       approveTokensCallback,
       isConnected,
       openConnectModal,
+      stakedBalanceQuery,
       switchChainAsync,
-      unStakedBalanceQuery,
+      unstakedBalanceQuery,
       walletClient,
       writeContractAsync,
     ],
@@ -190,24 +192,24 @@ export const useStaking = () => {
             return;
           }
 
+          setUnstakeIsPending(true);
+          setUnstakePendingAmount(payload.amount);
+
           const parsedAmount = parseEther(payload.amount.toString());
 
           await switchChainAsync({ chainId: base.id });
 
-          setUnstakeIsPending(true);
-          setUnstakePendingAmount(payload.amount);
-
-          const stakeData = {
+          const unstakeData = {
             abi: StakingABI,
-            functionName: 'stake',
+            functionName: 'withdraw',
             args: [parsedAmount],
           };
 
-          const encodedStakeData = encodeFunctionData(stakeData);
+          const encodedUnstakeData = encodeFunctionData(unstakeData);
 
           const gas = await estimateGas(walletClient, {
             to: STAKER_ADDRESS,
-            data: encodedStakeData,
+            data: encodedUnstakeData,
           }).catch((error) => {
             throw error;
           });
@@ -215,7 +217,7 @@ export const useStaking = () => {
           const hash = await writeContractAsync({
             address: STAKER_ADDRESS,
             chain: base,
-            ...stakeData,
+            ...unstakeData,
             gas,
           });
 
@@ -223,8 +225,10 @@ export const useStaking = () => {
             hash,
           });
 
+          await stakedBalanceQuery.refetch();
+          await unstakedBalanceQuery.refetch();
+
           setUnstakeIsPending(false);
-          void unStakedBalanceQuery.refetch();
 
           if (status === 'reverted') {
             throw new Error('Claim transaction reverted');
@@ -233,7 +237,6 @@ export const useStaking = () => {
           setUnstakeIsPending(false);
           setUnstakePendingAmount(0);
 
-          console.error('Error locking:', error);
           throw error;
         }
       }
@@ -241,8 +244,9 @@ export const useStaking = () => {
     [
       isConnected,
       openConnectModal,
+      stakedBalanceQuery,
       switchChainAsync,
-      unStakedBalanceQuery,
+      unstakedBalanceQuery,
       walletClient,
       writeContractAsync,
     ],
@@ -269,7 +273,7 @@ export const useStaking = () => {
   };
 
   const stakedBalance = {
-    amount: stakedBalanceQuery.data ?? 0,
+    amount: stakedBalanceQuery.data ?? '0',
     refetch: stakedBalanceQuery.refetch,
     isError: stakedBalanceQuery.isError,
     isPending: stakedBalanceQuery.isPending,
@@ -279,19 +283,19 @@ export const useStaking = () => {
       : '—',
   };
 
-  const unStakedBalance = {
-    amount: unStakedBalanceQuery.data ?? 0,
-    refetch: unStakedBalanceQuery.refetch,
-    isError: unStakedBalanceQuery.isError,
-    isPending: unStakedBalanceQuery.isPending,
-    isSuccess: unStakedBalanceQuery.isSuccess,
-    formattedAmount: unStakedBalanceQuery.data
-      ? formatNumber(Number(unStakedBalanceQuery.data), 2)
+  const unstakedBalance = {
+    amount: unstakedBalanceQuery.data ?? '0',
+    refetch: unstakedBalanceQuery.refetch,
+    isError: unstakedBalanceQuery.isError,
+    isPending: unstakedBalanceQuery.isPending,
+    isSuccess: unstakedBalanceQuery.isSuccess,
+    formattedAmount: unstakedBalanceQuery.data
+      ? formatNumber(Number(unstakedBalanceQuery.data), 2)
       : '—',
   };
 
   const stakedBonusBalance = {
-    amount: stakedBonusBalanceQuery.data ?? 0,
+    amount: stakedBonusBalanceQuery.data ?? '0',
     refetch: stakedBonusBalanceQuery.refetch,
     isError: stakedBonusBalanceQuery.isError,
     isPending: stakedBonusBalanceQuery.isPending,
@@ -301,17 +305,11 @@ export const useStaking = () => {
       : '—',
   };
 
-  // TODO: use this number function?
-  // setTotalLockedDisplayAmount(
-  //   new Intl.NumberFormat('en-US', {
-  //     minimumFractionDigits: 0,
-  //     maximumFractionDigits: 0,
-  //   }).format(Number(formatEther(totalLocked) ?? 0)),
-  // );
   const totalStakedBalance = {
-    amount:
+    amount: `${
       Number(stakedBalanceQuery.data ?? 0) +
-      Number(stakedBonusBalanceQuery.data ?? 0),
+      Number(stakedBonusBalanceQuery.data ?? 0)
+    }`,
     formattedAmount:
       stakedBalanceQuery.isSuccess && stakedBonusBalanceQuery.isSuccess
         ? formatNumber(
@@ -328,7 +326,7 @@ export const useStaking = () => {
     unstake,
     walletClient,
     stakedBalance,
-    unStakedBalance,
+    unstakedBalance,
     stakedBonusBalance,
     totalStakedBalance,
   };

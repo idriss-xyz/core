@@ -22,7 +22,7 @@ const getStakedBalance = async (payload: Payload) => {
     args: [payload.address],
   });
 
-  return Number(formatEther((balance ?? 0) as bigint));
+  return formatEther(balance as bigint) ?? '0';
 };
 
 export const useGetStakedBalance = (payload: Payload) => {

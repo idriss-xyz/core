@@ -18,7 +18,7 @@ type FormPayload = {
 };
 
 export const StakeTabContent = () => {
-  const { stake, unStakedBalance, account } = useStaking();
+  const { stake, unstakedBalance, account } = useStaking();
 
   const { handleSubmit, control, watch } = useForm<FormPayload>();
 
@@ -54,12 +54,12 @@ export const StakeTabContent = () => {
                       <div
                         className="flex text-label6 text-neutral-800 hover:cursor-pointer"
                         onClick={() => {
-                          field.onChange(unStakedBalance.amount);
+                          field.onChange(unstakedBalance.amount);
                         }}
                       >
                         Available:{' '}
                         <span className="mx-1 flex justify-center">
-                          {unStakedBalance.formattedAmount ?? (
+                          {unstakedBalance.formattedAmount ?? (
                             <Spinner className="size-3" />
                           )}
                         </span>{' '}
@@ -115,9 +115,11 @@ export const StakeTabContent = () => {
                 className="mt-4 w-full lg:mt-6"
                 type="submit"
                 disabled={
-                  !watch('termsChecked') &&
-                  watch('amount') <= 0 &&
-                  watch('amount') > Number(unStakedBalance.amount)
+                  !watch('termsChecked') ||
+                  ((Number(watch('amount')) <= 0 ||
+                    watch('amount') === undefined ||
+                    Number(watch('amount')) > Number(unstakedBalance.amount)) &&
+                    account.isConnected)
                 }
               >
                 {account.isConnected ? 'LOCK' : 'LOG IN'}

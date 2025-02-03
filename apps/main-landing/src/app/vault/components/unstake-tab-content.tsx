@@ -146,9 +146,11 @@ export const UnstakeTabContent = () => {
                 className="mt-4 w-full lg:mt-6"
                 type="submit"
                 disabled={
-                  !watch('termsChecked') &&
-                  watch('amount') <= 0 &&
-                  watch('amount') > Number(stakedBalance.amount)
+                  !watch('termsChecked') ||
+                  ((Number(watch('amount')) <= 0 ||
+                    watch('amount') === undefined ||
+                    Number(watch('amount')) > Number(stakedBalance.amount)) &&
+                    account.isConnected)
                 }
               >
                 {account.isConnected ? 'UNLOCK' : 'LOG IN'}

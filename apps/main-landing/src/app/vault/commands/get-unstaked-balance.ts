@@ -23,12 +23,12 @@ const getUnstakedBalance = async (payload: Payload) => {
     args: [payload.address],
   });
 
-  return Number(formatEther(balance ?? 0));
+  return formatEther(balance) ?? '0';
 };
 
 export const useGetUnstakedBalance = (payload: Payload) => {
   return useQuery({
-    queryKey: ['unStakedBalance', payload.address],
+    queryKey: ['unstakedBalance', payload.address],
     queryFn: () => {
       return getUnstakedBalance({ address: payload.address });
     },

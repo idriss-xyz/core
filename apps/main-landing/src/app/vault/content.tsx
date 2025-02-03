@@ -15,15 +15,6 @@ export const VaultContent = () => {
   const tabItems: TabItem[] = useMemo(() => {
     return [
       {
-        key: 'unstake',
-        label: (
-          <span className="text-label4 text-neutralGreen-700 lg:text-label3">
-            UNLOCK
-          </span>
-        ),
-        children: <UnstakeTabContent />,
-      },
-      {
         key: 'stake',
         label: (
           <span className="text-label4 text-neutralGreen-700 lg:text-label3">
@@ -31,6 +22,15 @@ export const VaultContent = () => {
           </span>
         ),
         children: <StakeTabContent />,
+      },
+      {
+        key: 'unstake',
+        label: (
+          <span className="text-label4 text-neutralGreen-700 lg:text-label3">
+            UNLOCK
+          </span>
+        ),
+        children: <UnstakeTabContent />,
       },
     ];
   }, []);
