@@ -8,14 +8,14 @@ export const hexSchema = z
 
 const MIN_SEND_AMOUNT = 0.001;
 
-const createSendPayloadSchema = (allowedChainIds: number[]) => {
+const _createSendPayloadSchema = (allowedChainIds: number[]) => {
   return z.object({
     amount: z
       .number()
       .gte(MIN_SEND_AMOUNT, `Value must be at least $${MIN_SEND_AMOUNT}`),
     tokenAddress: hexSchema,
     chainId: z.union(createPossibleChainIdsSchema(allowedChainIds)),
-    message: z.string().max(70),
+    message: z.string().max(90),
   });
 };
 
@@ -26,7 +26,7 @@ export const createFormPayloadSchema = (allowedChainIds: number[]) => {
       .gte(MIN_SEND_AMOUNT, `Value must be at least $${MIN_SEND_AMOUNT}`),
     tokenSymbol: z.string(),
     chainId: z.union(createPossibleChainIdsSchema(allowedChainIds)),
-    message: z.string().max(70),
+    message: z.string().max(90),
   });
 };
 
@@ -36,5 +36,5 @@ const createPossibleChainIdsSchema = (chainIds: number[]) => {
   }) as [z.ZodLiteral<number>, z.ZodLiteral<number>, ...z.ZodLiteral<number>[]];
 };
 
-export type SendPayload = z.infer<ReturnType<typeof createSendPayloadSchema>>;
+export type SendPayload = z.infer<ReturnType<typeof _createSendPayloadSchema>>;
 export type FormPayload = z.infer<ReturnType<typeof createFormPayloadSchema>>;

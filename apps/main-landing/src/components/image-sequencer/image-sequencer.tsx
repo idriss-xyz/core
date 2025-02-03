@@ -1,5 +1,4 @@
 'use client';
-
 import { classes } from '@idriss-xyz/ui/utils';
 import { useEffect, useRef, useState } from 'react';
 

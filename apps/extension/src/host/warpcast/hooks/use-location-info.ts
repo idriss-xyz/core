@@ -17,10 +17,16 @@ export const useLocationInfo = (): LocationInfo => {
   const isHomePage = isHomePathname(location.pathname ?? '');
   const username = extractUsernameFromPathname(location.pathname ?? '');
 
+  const isConversation =
+    location?.pathname && username
+      ? !location.pathname.endsWith(username)
+      : false;
+
   return {
     isHost,
     isUserPage,
     isHomePage,
     username,
+    isConversation,
   };
 };

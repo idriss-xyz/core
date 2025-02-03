@@ -4,7 +4,11 @@ import { Button } from '@idriss-xyz/ui/button';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import { Checkbox } from '@idriss-xyz/ui/checkbox';
 import { Link } from '@idriss-xyz/ui/link';
-import { TOKEN_TERMS_AND_CONDITIONS_LINK } from '@idriss-xyz/constants';
+import {
+  StakingABI,
+  STAKER_ADDRESS,
+  TOKEN_TERMS_AND_CONDITIONS_LINK,
+} from '@idriss-xyz/constants';
 
 import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 import { TxLoadingModal } from '@/app/claim/components/tx-loading-modal/tx-loading-modal';

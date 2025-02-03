@@ -132,8 +132,8 @@ export const useCommandQuery = <
 >({
   command,
   select,
-  retry,
-  retryDelay = 1000,
+  retry = 3,
+  retryDelay = 3000,
   staleTime,
   refetchInterval,
   placeholderData,

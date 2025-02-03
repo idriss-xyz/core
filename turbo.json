@@ -72,6 +72,38 @@
         "build"
       ]
     },
+    "@idriss-xyz/copilot-api#dev": {
+      "cache": false,
+      "persistent": true,
+      "env": [
+        "TOP_ADDRESSES_SECRET",
+        "JWT_SECRET",
+        "DATABASE_HOST",
+        "DATABASE_PORT",
+        "DATABASE_USER",
+        "DATABASE_PASS",
+        "DATABASE_DB_NAME"
+      ]
+    },
+    "@idriss-xyz/copilot-api#prod": {
+      "cache": true,
+      "persistent": true,
+      "env": [
+        "TOP_ADDRESSES_SECRET",
+        "JWT_SECRET",
+        "DATABASE_HOST",
+        "DATABASE_PORT",
+        "DATABASE_USER",
+        "DATABASE_PASS",
+        "DATABASE_DB_NAME",
+        "PORT",
+        "HOST",
+        "ALCHEMY_API_KEY",
+        "API_SECRET",
+        "WEBHOOK_URL",
+        "VIEM_TRANSPORTER_URL"
+      ]
+    },
     "lint": {
       "inputs": [
         "$TURBO_DEFAULT$",

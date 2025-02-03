@@ -22,6 +22,11 @@ const clientAleph = createPublicClient({
   transport: http(),
 });
 
+const clientAbstract = createPublicClient({
+  chain: CHAIN.ABSTRACT,
+  transport: http(),
+});
+
 const clientMantle = createPublicClient({
   chain: CHAIN.MANTLE,
   transport: http(),
@@ -57,6 +62,11 @@ export const clients = [
     chain: CHAIN.ALEPH.id,
     client: clientAleph,
     name: CHAIN.ALEPH.shortName.toLowerCase(),
+  },
+  {
+    chain: CHAIN.ABSTRACT.id,
+    client: clientAbstract,
+    name: CHAIN.ABSTRACT.shortName.toLowerCase(),
   },
   {
     chain: CHAIN.MANTLE.id,
