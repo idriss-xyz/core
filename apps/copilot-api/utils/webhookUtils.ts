@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import * as crypto from 'crypto';
 import { SwapData } from '../types';
 import { isSubscribedAddress } from '../services/subscriptionManager';
-import { NULL_ADDRESS } from '../constants';
+import { NULL_ADDRESS, WEBHOOK_NETWORK_TYPES } from '../constants';
 import { AlchemyWebhookEvent, ComplexHeliusWebhookEvent, HeliusWebhookEventData } from '../interfaces';
 import { eventCache } from '../services/scheduler';
 import { AlchemyEventHandler, HeliusEventHandler } from '../services/eventHandlers';
@@ -109,7 +109,7 @@ export async function extractAlchemySwapData(
       const isEthTransfer = activity.asset === 'ETH' && activity.value > 0;
       if (isEthTransfer) {
         if (
-          (await isSubscribedAddress(activity.fromAddress)) &&
+          (await isSubscribedAddress(activity.fromAddress, WEBHOOK_NETWORK_TYPES.EVM)) &&
           !swapData.tokenOut
         ) {
           // User sent ETH (tokenOut)
@@ -133,7 +133,7 @@ export async function extractAlchemySwapData(
         network: activity.network,
       };
       if (
-        (await isSubscribedAddress(activity.toAddress)) &&
+        (await isSubscribedAddress(activity.toAddress, WEBHOOK_NETWORK_TYPES.EVM)) &&
         !swapData.tokenIn
       ) {
         // User received token (tokenIn)
@@ -141,7 +141,7 @@ export async function extractAlchemySwapData(
         swapData.from = activity.toAddress;
         swapData.to = activity.fromAddress;
       } else if (
-        (await isSubscribedAddress(activity.fromAddress)) &&
+        (await isSubscribedAddress(activity.fromAddress, WEBHOOK_NETWORK_TYPES.EVM)) &&
         !swapData.tokenOut
       ) {
         // User sent token (tokenOut)
@@ -154,7 +154,7 @@ export async function extractAlchemySwapData(
       const isEthTransfer = activity.asset === 'ETH' && activity.value > 0;
       if (isEthTransfer) {
         if (
-          (await isSubscribedAddress(activity.toAddress)) &&
+          (await isSubscribedAddress(activity.toAddress, WEBHOOK_NETWORK_TYPES.EVM)) &&
           !swapData.tokenIn
         ) {
           // User received ETH (tokenIn)

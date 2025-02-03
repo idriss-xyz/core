@@ -10,6 +10,7 @@ import dotenv from 'dotenv';
 import { join } from 'path';
 import { WEBHOOK_NETWORK_TYPES, WEBHOOK_NETWORKS } from '../constants';
 import { mode } from '../utils/mode';
+import { isAddress } from 'viem';
 
 dotenv.config(
   mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
@@ -34,10 +35,12 @@ const webhooksRepo = dataSource.getRepository(WebhookEntity);
 export const subscribeAddress = async (
   subscriber_id: string,
   address: string,
-  chainType: string,
+  chainType: WEBHOOK_NETWORK_TYPES,
   fid?: number,
 ) => {
-  address = address.toLowerCase(); // TODO: pending check not working for Helius
+  if (chainType === WEBHOOK_NETWORK_TYPES.EVM) {
+    address = address.toLowerCase();
+  }
 
   await addressRepo.save({ address });
   await subscriptionsRepo.save({
@@ -380,8 +383,11 @@ export const getSubscriptionsDetails = async (
 
 export const isSubscribedAddress = async (
   address: string,
+  chainType: WEBHOOK_NETWORK_TYPES,
 ): Promise<boolean> => {
-  address = address.toLowerCase();
+  if (chainType === WEBHOOK_NETWORK_TYPES.EVM) {
+    address = address.toLowerCase();
+  }
   const res = await subscriptionsRepo.count({ where: { address } });
   return parseInt(res.toString(), 10) > 0;
 };
@@ -389,7 +395,9 @@ export const isSubscribedAddress = async (
 export const getSubscribersByAddress = async (
   address: string,
 ): Promise<string[]> => {
-  address = address.toLowerCase();
+  if (isAddress(address)) {
+    address = address.toLowerCase();
+  }
   const res = await subscriptionsRepo.find({ where: { address } });
   return res.map(
     (subscription: SubscriptionsEntity) => subscription.subscriber_id,
