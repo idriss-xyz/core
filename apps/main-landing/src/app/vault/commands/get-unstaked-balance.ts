@@ -10,7 +10,7 @@ type Payload = {
   address: Hex;
 };
 
-const getUnStakedBalance = async (payload: Payload) => {
+const getUnstakedBalance = async (payload: Payload) => {
   const client = createPublicClient({
     chain: base,
     transport: http(),
@@ -23,14 +23,14 @@ const getUnStakedBalance = async (payload: Payload) => {
     args: [payload.address],
   });
 
-  return formatEther(balance);
+  return Number(formatEther(balance ?? 0));
 };
 
-export const useGetUnStakedBalance = (payload: Payload) => {
+export const useGetUnstakedBalance = (payload: Payload) => {
   return useQuery({
     queryKey: ['unStakedBalance', payload.address],
     queryFn: () => {
-      return getUnStakedBalance({ address: payload.address });
+      return getUnstakedBalance({ address: payload.address });
     },
   });
 };

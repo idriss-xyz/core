@@ -15,15 +15,6 @@ export const VaultContent = () => {
   const tabItems: TabItem[] = useMemo(() => {
     return [
       {
-        key: 'stake',
-        label: (
-          <span className="text-label4 text-neutralGreen-700 lg:text-label3">
-            LOCK
-          </span>
-        ),
-        children: <StakeTabContent />,
-      },
-      {
         key: 'unstake',
         label: (
           <span className="text-label4 text-neutralGreen-700 lg:text-label3">
@@ -31,6 +22,15 @@ export const VaultContent = () => {
           </span>
         ),
         children: <UnstakeTabContent />,
+      },
+      {
+        key: 'stake',
+        label: (
+          <span className="text-label4 text-neutralGreen-700 lg:text-label3">
+            LOCK
+          </span>
+        ),
+        children: <StakeTabContent />,
       },
     ];
   }, []);
@@ -65,7 +65,7 @@ export const VaultContent = () => {
             <div className="lg:w-[368px]">
               <Tabs items={tabItems} />
             </div>
-            <div className="my-4 h-px w-full bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] opacity-50 lg:mx-10 lg:my-0 lg:mt-6 lg:h-auto lg:w-px" />
+            <span className="my-4 block h-px w-full bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] opacity-50 lg:mx-10 lg:my-0 lg:mt-6 lg:h-auto lg:w-px" />
             <div className="flex flex-col lg:w-[292px]">
               <div className="flex flex-col gap-2">
                 <span className="pb-4 text-label4 text-neutralGreen-700 lg:text-label3">

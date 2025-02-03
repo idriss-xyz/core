@@ -17,7 +17,7 @@ const getBonusStakedBalance = async (payload: Payload) => {
     return event.to === payload.address && event.bonus;
   });
 
-  return claimedEvent?.total ?? '0';
+  return Number(claimedEvent?.total ?? 0);
 };
 
 export const useGetBonusStakedBalance = (payload: Payload) => {
