@@ -37,7 +37,7 @@ export const subscribeAddress = async (
   chainType: string,
   fid?: number,
 ) => {
-  address = address.toLowerCase();
+  address = address.toLowerCase(); // TODO: pending check not working for Helius
 
   await addressRepo.save({ address });
   await subscriptionsRepo.save({
@@ -143,8 +143,7 @@ const addAddressToWebhook = async (address: string, chainType: string) => {
       await updateWebhookAddresses(webhook_id, [address], []);
     }
     else if (chainType === WEBHOOK_NETWORK_TYPES.SOLANA) {
-      // TODO: Use res to get current addresses and add address to array [...currentAddresses, address]
-      await updateSolanaWebhookAddresses(internal_id, [address]);
+      await updateSolanaWebhookAddresses(webhook_id, [address]);
     }
     await addressMapWebhooksRepo.save({
       address,
@@ -241,7 +240,7 @@ const createNewSolanaWebhook = async (address: string) => {
       `${HELIUS_API_BASE_URL}/v0/webhooks?api-key=${HELIUS_API_KEY}`,
       {
         webhookURL: webhookUrl,
-        transactionTypes: ['Any'],
+        transactionTypes: ['SWAP', 'UNKNOWN'],
         accountAddresses: [address],
         webhookType: 'enhanced',
       },
@@ -299,12 +298,24 @@ const updateWebhookAddresses = async (
 
 const updateSolanaWebhookAddresses = async (
   webhookId: string,
-  newAddresses: string[],
+  addressesToAdd: string[],
 ): Promise<void> => {
   try {
+    const webhookData = await fetchHeliusWebhookData(webhookId);
+
+    if (!webhookData) {
+      return;
+    }
+
+    const previousAddresses = webhookData.accountAddresses;
+    const newAddresses = [...previousAddresses, ...addressesToAdd];
+
     await axios.put(
       `${HELIUS_API_BASE_URL}/v0/webhooks/${webhookId}?api-key=${HELIUS_API_KEY}`,
       {
+        webhookURL: webhookData.webhookURL,
+        transactionTypes: webhookData.transactionTypes,
+        webhookType: webhookData.webhookType,
         accountAddresses: newAddresses,
       },
       {
@@ -318,6 +329,25 @@ const updateSolanaWebhookAddresses = async (
     console.error('Error updating Solana webhook: ', err);
   }
 };
+
+const fetchHeliusWebhookData = async (webhookId: string) => {
+  try {
+    const response = await fetch(
+      `https://api.helius.xyz/v0/webhooks/${webhookId}?api-key=${HELIUS_API_KEY}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      }
+    );
+    const data = response.json();
+    return data;
+  } catch (err) {
+    console.error('Error fetching current Solana webhook: ', err);
+    return null;
+  }
+}
 
 async function deleteWebhook(webhookId: string): Promise<void> {
   try {
