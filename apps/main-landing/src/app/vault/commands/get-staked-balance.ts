@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { createPublicClient, formatEther, http } from 'viem';
 import { base } from 'viem/chains';
+import { STAKER_ADDRESS, StakingABI } from '@idriss-xyz/constants';
 
 import { Hex } from '@/app/creators/donate/types';
-import { STAKER_ADDRESS, StakingABI } from '@/app/vault/constants';
 
 type Payload = {
   address: Hex;

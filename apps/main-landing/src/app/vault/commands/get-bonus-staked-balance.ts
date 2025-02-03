@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
+import { ClaimedEventsResponse } from '@idriss-xyz/constants';
 
 import { Hex } from '@/app/creators/donate/types';
-import { ClaimedEventsResponse } from '@/app/vault/types';
 
 type Payload = {
   address: Hex;
