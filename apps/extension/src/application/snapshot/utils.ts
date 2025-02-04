@@ -26,7 +26,7 @@ export const generateGetProposalsQuery = () => {
 };
 
 export const getProposalUrl = (snapshotName: string, proposalId: string) => {
-  return `${SNAPSHOT_WEBSITE_URL}/#/${snapshotName}/proposal/${proposalId}`;
+  return `${SNAPSHOT_WEBSITE_URL}/#/s:${snapshotName}/proposal/${proposalId}`;
 };
 
 export const getUserUrl = (userId: string) => {

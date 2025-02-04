@@ -1,6 +1,6 @@
 import { createLookup } from 'shared/utils';
 
-export const SNAPSHOT_WEBSITE_URL = 'https://snapshot.org';
+export const SNAPSHOT_WEBSITE_URL = 'https://snapshot.box';
 export const SNAPSHOT_GRAPHQL_API_URL = 'https://hub.snapshot.org/graphql?';
 
 export const FARCASTER_HANDLE_TO_SNAPSHOT: Record<string, string> = {
