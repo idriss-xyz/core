@@ -60,8 +60,11 @@ export const subscribeAddress = async (
 export const unsubscribeAddress = async (
   subscriberId: string,
   address: string,
+  chainType: WEBHOOK_NETWORK_TYPES,
 ): Promise<void> => {
-  address = address.toLowerCase();
+  if (chainType === WEBHOOK_NETWORK_TYPES.EVM) {
+    address = address.toLowerCase();
+  }
   try {
     await subscriptionsRepo.delete({ subscriber_id: subscriberId, address });
 
@@ -80,7 +83,7 @@ export const unsubscribeAddress = async (
 
     if (parseInt(addressRes.toString(), 10) === 0) {
       // No more subscribers, remove address from webhook and addresses table
-      await removeAddressFromWebhook(address);
+      await removeAddressFromWebhook(address, chainType);
 
       // Remove address from addresses table
       await addressRepo.delete({ address });
@@ -146,7 +149,7 @@ const addAddressToWebhook = async (address: string, chainType: string) => {
       await updateWebhookAddresses(webhook_id, [address], []);
     }
     else if (chainType === WEBHOOK_NETWORK_TYPES.SOLANA) {
-      await updateSolanaWebhookAddresses(webhook_id, [address]);
+      await updateSolanaWebhookAddresses(webhook_id, [address], []);
     }
     await addressMapWebhooksRepo.save({
       address,
@@ -155,7 +158,7 @@ const addAddressToWebhook = async (address: string, chainType: string) => {
   }
 };
 
-async function removeAddressFromWebhook(address: string): Promise<void> {
+async function removeAddressFromWebhook(address: string, chainType: WEBHOOK_NETWORK_TYPES): Promise<void> {
   // Get the webhook associated with the address
   const res = await addressMapWebhooksRepo.findOne({ where: { address } });
 
@@ -178,8 +181,13 @@ async function removeAddressFromWebhook(address: string): Promise<void> {
 
   const { webhook_id } = webhookData;
 
-  // Update the webhook via Alchemy's API
-  await updateWebhookAddresses(webhook_id, [], [address]);
+  // Update the webhook via webhook proovider API
+  if (chainType === WEBHOOK_NETWORK_TYPES.EVM) {
+    await updateWebhookAddresses(webhook_id, [], [address]);
+  }
+  else if (chainType === WEBHOOK_NETWORK_TYPES.SOLANA) {
+    await updateSolanaWebhookAddresses(webhook_id, [], [address]);
+  }
 
   // Remove address from address_webhook_map
   await addressMapWebhooksRepo.delete({ address });
@@ -190,8 +198,14 @@ async function removeAddressFromWebhook(address: string): Promise<void> {
   });
 
   if (parseInt(countRes.toString(), 10) === 0) {
-    // Delete webhook from Alchemy and database
-    await deleteWebhook(webhook_id);
+    // Delete webhook from webhook provider and database
+    if (chainType === WEBHOOK_NETWORK_TYPES.EVM) {
+      await deleteAlchemyWebhook(webhook_id);
+    }
+    else if (chainType === WEBHOOK_NETWORK_TYPES.SOLANA) {
+      await deleteHeliusWebhook(webhook_id);
+    }
+
     await webhooksRepo.delete({ internal_id: webhook_internal_id });
   }
 }
@@ -302,6 +316,7 @@ const updateWebhookAddresses = async (
 const updateSolanaWebhookAddresses = async (
   webhookId: string,
   addressesToAdd: string[],
+  addressesToRemove: string[],
 ): Promise<void> => {
   try {
     const webhookData = await fetchHeliusWebhookData(webhookId);
@@ -311,7 +326,9 @@ const updateSolanaWebhookAddresses = async (
     }
 
     const previousAddresses = webhookData.accountAddresses;
-    const newAddresses = [...previousAddresses, ...addressesToAdd];
+    const filteredAddresses = previousAddresses.filter((address: string) => !addressesToRemove.includes(address));
+
+    const newAddresses = [...filteredAddresses, ...addressesToAdd];
 
     await axios.put(
       `${HELIUS_API_BASE_URL}/v0/webhooks/${webhookId}?api-key=${HELIUS_API_KEY}`,
@@ -352,7 +369,7 @@ const fetchHeliusWebhookData = async (webhookId: string) => {
   }
 }
 
-async function deleteWebhook(webhookId: string): Promise<void> {
+async function deleteAlchemyWebhook(webhookId: string): Promise<void> {
   try {
     await axios.delete(
       `${ALCHEMY_API_BASE_URL}/api/delete-webhook?webhook_id=${webhookId}`,
@@ -360,6 +377,23 @@ async function deleteWebhook(webhookId: string): Promise<void> {
         headers: {
           'accept': 'application/json',
           'X-Alchemy-Token': ALCHEMY_API_KEY,
+        },
+      },
+    );
+    return;
+  } catch (err) {
+    console.error('Error deleting webhook: ', err);
+  }
+}
+
+async function deleteHeliusWebhook(webhookId: string): Promise<void> {
+  try {
+    await axios.delete(
+      `${HELIUS_API_BASE_URL}/v0/webhooks/${webhookId}?api-key=${HELIUS_API_KEY}`,
+      {
+        headers: {
+          'accept': 'application/json',
+          'content-type': 'application/json',
         },
       },
     );

@@ -2,6 +2,7 @@ import { Button } from '@idriss-xyz/ui/button';
 import { useEffect } from 'react';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
+import { isAddress as isSolanaAddress } from "@solana/web3.js";
 
 import { useWallet, useAuthToken } from 'shared/extension';
 import {
@@ -145,8 +146,13 @@ const SubscriptionsManagementContent = ({
 
     const authToken = await getAuthToken();
 
+    let chainType: "SOLANA" | "EVM" = 'EVM';
+    if (isSolanaAddress(address)) {
+      chainType = 'SOLANA';
+    }
+
     await unsubscribe.mutateAsync({
-      subscription: { address, subscriberId },
+      subscription: { address, subscriberId, chainType },
       authToken: authToken ?? '',
     });
     void subscriptionsQuery.refetch();

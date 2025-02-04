@@ -40,7 +40,7 @@ router.post('/subscribe', verifyToken(), async (req, res) => {
 });
 
 router.post('/unsubscribe', verifyToken(), async (req, res) => {
-  const { address } = req.body;
+  const { address, chainType } = req.body;
 
   const { id: subscriberId } = req.user;
 
@@ -50,7 +50,7 @@ router.post('/unsubscribe', verifyToken(), async (req, res) => {
   }
 
   try {
-    await unsubscribeAddress(subscriberId, address);
+    await unsubscribeAddress(subscriberId, address, chainType);
 
     res
       .status(200)
