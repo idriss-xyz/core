@@ -94,12 +94,13 @@ export const unsubscribeAddress = async (
   }
 };
 
-const saveWebhookToDb = async (address: string, webhook: { webhookId: any, internalWebhookId: string, signingKey: string } | null) => {
+const saveWebhookToDb = async (address: string, webhook: { webhookId: any, internalWebhookId: string, chainType: string, signingKey: string } | null) => {
   if (webhook == null) return;
-  const { webhookId, internalWebhookId, signingKey } = webhook;
+  const { webhookId, internalWebhookId, chainType, signingKey } = webhook;
   await webhooksRepo.save({
     internal_id: internalWebhookId,
     webhook_id: webhookId,
+    chainType: chainType,
     signing_key: signingKey,
   });
   await addressMapWebhooksRepo.save({
@@ -112,7 +113,8 @@ const addAddressToWebhook = async (address: string, chainType: string) => {
   const res = await webhooksRepo
     .createQueryBuilder('webhooks')
     .select(['webhooks.internal_id', 'webhooks.webhook_id'])
-    .where((qb) => {
+    .where('webhooks.chainType = :chainType', { chainType })
+    .andWhere((qb) => {
       const subQuery = qb
         .subQuery()
         .select('address_webhook_map.webhook_internal_id')
@@ -239,7 +241,7 @@ const createNewWebhook = async (address: string) => {
       const webhookId = data.data.id;
       const signingKey = data.data.signing_key;
 
-      webhooks.push({ webhookId, internalWebhookId, signingKey });
+      webhooks.push({ webhookId, internalWebhookId, chainType: 'EVM', signingKey });
     }
     return webhooks;
   } catch (err) {
@@ -275,7 +277,7 @@ const createNewSolanaWebhook = async (address: string) => {
 
     const webhookId = data.webhookID;
     // No signing key for Helius webhooks
-    return ({ webhookId, internalWebhookId, signingKey: '' });
+    return ({ webhookId, internalWebhookId, chainType: 'SOLANA', signingKey: '' });
 
   }
 
