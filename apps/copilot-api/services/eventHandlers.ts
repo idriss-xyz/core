@@ -33,6 +33,6 @@ export class HeliusEventHandler implements WebhookEventHandler {
   }
 
   extractSwapData(txHash: string, data: any): Promise<SwapData> {
-    return extractHeliusSwapData(txHash, data);
+    return extractHeliusSwapData(data);
   }
 }

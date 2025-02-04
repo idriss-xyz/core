@@ -18,34 +18,6 @@ export interface AlchemyWebhookEvent {
   };
 }
 
-export interface HeliusWebhookEventData {
-  signature: string;
-  accountData: {
-    account: string;
-    nativeBalanceChange: number;
-    tokenBalanceChanges: {
-      mint: string;
-      rawTokenAmount: {
-        decimals: number;
-        tokenAmount: string;
-      };
-      tokenAccount: string;
-      userAccount: string;
-    }[];
-  }[];
-  instructions: any[];
-  tokenTransfers: {
-    fromTokenAccount: string;
-    fromUserAccount: string;
-    mint: string;
-    toTokenAccount: string;
-    toUserAccount: string;
-    tokenAmount: number;
-    tokenStandard: string;
-  }[];
-  events: { [eventName: string]: Record<string, any> };
-}
-
 export interface ComplexHeliusWebhookEvent {
   accountData: {
     account: string;
@@ -61,7 +33,7 @@ export interface ComplexHeliusWebhookEvent {
     }[];
   }[];
   description: string;
-  events: { [eventName: string]: Record<string, unknown> };
+  events: { [eventName: string]: Record<string, any> };
   fee: number;
   feePayer: string;
   instructions: any[];
@@ -84,6 +56,7 @@ export interface ComplexHeliusWebhookEvent {
     tokenStandard: string;
   }[];
   type: string;
+  transactionError: string | null;
 }
 [];
 

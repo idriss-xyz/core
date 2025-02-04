@@ -18,9 +18,16 @@ export function webhookHandler() {
 
 export const heliusWebhookHandler = () => {
   return async (req: Request, res: Response): Promise<void> => {
-    const webhookEvent = req.body[0] as ComplexHeliusWebhookEvent;
+    const webhookEvents = req.body as ComplexHeliusWebhookEvent[];
 
-    await handleIncomingSolanaEvent(webhookEvent);
+    if (webhookEvents.length === 0) {
+      console.error("No transactions found in event response.");
+      return;
+    }
+
+    const event = webhookEvents[0]; // Get first event
+
+    await handleIncomingSolanaEvent(event);
 
     res.send('Solana Event received');
   };

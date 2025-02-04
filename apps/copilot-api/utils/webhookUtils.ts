@@ -3,9 +3,11 @@ import * as crypto from 'crypto';
 import { SwapData } from '../types';
 import { isSubscribedAddress } from '../services/subscriptionManager';
 import { NULL_ADDRESS, WEBHOOK_NETWORK_TYPES } from '../constants';
-import { AlchemyWebhookEvent, ComplexHeliusWebhookEvent, HeliusWebhookEventData } from '../interfaces';
+import { AlchemyWebhookEvent, ComplexHeliusWebhookEvent } from '../interfaces';
 import { eventCache } from '../services/scheduler';
 import { AlchemyEventHandler, HeliusEventHandler } from '../services/eventHandlers';
+import { parseJupiterSwap, parseSwapFromHelius } from './swapDataParsers';
+import { error } from 'console';
 
 const eventHandlers = {
   alchemy: new AlchemyEventHandler(),
@@ -179,68 +181,21 @@ export async function extractAlchemySwapData(
   return swapData;
 }
 
-export async function extractHeliusSwapData(txHash: string,
+export async function extractHeliusSwapData(
   data: any,
 ): Promise<SwapData>
 {
-  const eventData = data as HeliusWebhookEventData;
-  const swap = eventData.events?.swap;
-  if (swap) {
-    return {
-      transactionHash: txHash,
-      from: eventData.accountData[0]?.account,
-      to: eventData.instructions[0].innerInstructions.programId,
-      tokenIn: swap.nativeInput ? {
-        address: "So11111111111111111111111111111111111111112",
-        symbol: 'SOL',
-        amount: swap.nativeInput.amount,
-        decimals: 9,
-        network: 'SOLANA',
-      } : {
-        address: swap.tokenInputs[0].mint,
-        symbol: 'SYMBOL-1', // TODO: get symbol from description
-        amount: swap.tokenInputs[0].rawTokenAmount.tokenAmount,
-        decimals: swap.tokenInputs[0].rawTokenAmount.decimals,
-        network: 'SOLANA',
-      },
-      tokenOut: swap.nativeOutput ? {
-        address: "So11111111111111111111111111111111111111112",
-        symbol: 'SOL',
-        amount: swap.nativeOutput.amount,
-        decimals: 9,
-        network: 'SOLANA',
-      } : {
-        address: swap.tokenOutputs[0].mint,
-        symbol: 'SYMBOL-2', // TODO: get symbol from description
-        amount: swap.tokenOutputs[0].rawTokenAmount.tokenAmount,
-        decimals: swap.tokenOutputs[0].rawTokenAmount.decimals,
-        network: 'SOLANA',
-      },
-      timestamp: new Date().toISOString(),
-      isComplete: true,
-    }
+  const eventData = data as ComplexHeliusWebhookEvent;
+
+  const isJupiterSwap = eventData.source === "JUPITER";
+  const result = isJupiterSwap ? await parseJupiterSwap(eventData) : await parseSwapFromHelius(eventData);
+
+  if (result == null) {
+    console.error('Failed to parse swap data from Helius event.');
+    throw error;
   }
-  return {
-    transactionHash: txHash,
-    from: eventData.accountData[0]?.account,
-    to: eventData.instructions[0].innerInstructions.programId,
-    tokenIn: {
-      address: eventData.tokenTransfers[2].mint,
-      symbol: 'SYMBOL-1', // TODO: fetch symbol from a token list
-      amount: eventData.tokenTransfers[2].tokenAmount,
-      decimals: 9,
-      network: 'SOLANA',
-    },
-    tokenOut: {
-      address: eventData.tokenTransfers[1].mint,
-      symbol: 'SYMBOL-2', // TODO: fetch symbol from a token list
-      amount: eventData.tokenTransfers[1].tokenAmount,
-      decimals: 9,
-      network: 'SOLANA',
-    },
-    timestamp: new Date().toISOString(),
-    isComplete: true,
-  };
+  return result;
+
 }
 
 // Handle incoming events and add them to the cache
