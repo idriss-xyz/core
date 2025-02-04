@@ -6,10 +6,10 @@ import { EligibilityCriteriaTitle } from '../constants';
 
 type Properties = {
   open: boolean;
-  title: EligibilityCriteriaTitle;
   subTitle: string;
   positive: boolean;
   description: ReactNode;
+  title: EligibilityCriteriaTitle;
   onOpenChange: (open: boolean) => void;
 };
 
@@ -34,16 +34,16 @@ export const ExpandableInfo = ({
             <Icon name="X" size={24} className="mr-2 text-red-500" />
           )}
           <div className="flex w-full items-center justify-between">
-            <span className="text-body4 text-neutralGreen-700">{title}</span>
-            <span className="text-body5 text-neutralGreen-500">{subTitle}</span>
+            <h3 className="text-body4 text-neutralGreen-700">{title}</h3>
+            <p className="text-body5 text-neutralGreen-500">{subTitle}</p>
           </div>
         </div>
       }
       content={
         <div className="flex flex-row">
-          <span className="mt-3 pl-9 text-body5 text-neutralGreen-500">
+          <p className="mt-3 pl-9 text-body5 text-neutralGreen-500">
             {description}
-          </span>
+          </p>
         </div>
       }
     />

@@ -15,11 +15,11 @@ import { formatTime } from './utils';
 export const AboutIdrissContent = () => {
   const { setCurrentContent } = useClaimPage();
   const videoReference = useRef<HTMLVideoElement>(null);
-  const [remainingTime, setRemainingTime] = useState<number>();
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [shouldShowTooltip, setShouldShowTooltip] = useState(false);
-  const [showPlayOverlay, setShowPlayOverlay] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [showPlayOverlay, setShowPlayOverlay] = useState(true);
+  const [shouldShowTooltip, setShouldShowTooltip] = useState(false);
+  const [remainingTime, setRemainingTime] = useState<number>();
 
   const updateTime = () => {
     if (videoReference.current) {
@@ -31,6 +31,7 @@ export const AboutIdrissContent = () => {
 
   const handleVideoEnd = () => {
     setIsSuccess(true);
+
     if (videoReference.current) {
       videoReference.current.pause();
     }
@@ -43,6 +44,7 @@ export const AboutIdrissContent = () => {
   const toggleMute = () => {
     if (videoReference.current) {
       videoReference.current.muted = !videoReference.current.muted;
+
       setIsMuted(videoReference.current.muted);
     }
   };
@@ -61,6 +63,7 @@ export const AboutIdrissContent = () => {
     };
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
+
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
@@ -73,22 +76,24 @@ export const AboutIdrissContent = () => {
         gradientStopColor="rgba(145, 206, 154, 0.50)"
         borderWidth={1}
       />
+
       <div className="relative flex h-[405px] w-[720px] flex-col items-center gap-2 rounded-3xl bg-neutral-900">
         <GradientBorder
+          borderWidth={2}
+          borderRadius={24}
           gradientDirection="toBottom"
           gradientStopColor="rgba(145, 206, 154)"
           gradientStartColor="rgba(255, 255, 255, 0.1)"
-          borderWidth={2}
-          borderRadius={24}
         />
+
         <video
-          ref={videoReference}
+          loop={false}
           muted={isMuted}
-          onTimeUpdate={updateTime}
+          ref={videoReference}
           onEnded={handleVideoEnd}
           onPlay={handleVideoPlay}
+          onTimeUpdate={updateTime}
           className="pointer-events-none w-full rounded-3xl"
-          loop={false}
           onClick={(event) => {
             event.preventDefault();
           }}
@@ -99,21 +104,21 @@ export const AboutIdrissContent = () => {
 
         {showPlayOverlay && (
           <div
-            className="absolute inset-0 flex cursor-pointer items-center justify-center rounded-3xl bg-black/50"
             onClick={() => {
               void videoReference.current?.play();
             }}
+            className="absolute inset-0 flex cursor-pointer items-center justify-center rounded-3xl bg-black/50"
           >
             <svg
-              xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               fill="currentColor"
               className="size-16 text-white"
+              xmlns="http://www.w3.org/2000/svg"
             >
               <path
                 fillRule="evenodd"
-                d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z"
                 clipRule="evenodd"
+                d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z"
               />
             </svg>
           </div>
@@ -130,24 +135,24 @@ export const AboutIdrissContent = () => {
             </div>
 
             <button
-              className="absolute bottom-2 right-3 flex size-6 items-center justify-center rounded-md bg-black/30 p-1"
               onClick={toggleMute}
+              className="absolute bottom-2 right-3 flex size-6 items-center justify-center rounded-md bg-black/30 p-1"
             >
               {isMuted ? (
                 <svg
-                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   fill="currentColor"
                   className="size-4 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
                   <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 001.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06zM17.78 9.22a.75.75 0 10-1.06 1.06L18.44 12l-1.72 1.72a.75.75 0 001.06 1.06l1.72-1.72 1.72 1.72a.75.75 0 101.06-1.06L20.56 12l1.72-1.72a.75.75 0 00-1.06-1.06l-1.72 1.72-1.72-1.72z" />
                 </svg>
               ) : (
                 <svg
-                  xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   fill="currentColor"
                   className="size-4 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
                   <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 001.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06zM18.584 5.106a.75.75 0 011.06 0c3.808 3.807 3.808 9.98 0 13.788a.75.75 0 11-1.06-1.06 8.25 8.25 0 000-11.668.75.75 0 010-1.06z" />
                   <path d="M15.932 7.757a.75.75 0 011.061 0 6 6 0 010 8.486.75.75 0 01-1.06-1.061 4.5 4.5 0 000-6.364.75.75 0 010-1.06z" />
@@ -170,19 +175,20 @@ export const AboutIdrissContent = () => {
               }}
             >
               <Button
-                intent="primary"
                 size="large"
-                suffixIconName="IdrissArrowRight"
+                intent="primary"
                 className="w-56"
+                disabled={!isSuccess}
+                suffixIconName="IdrissArrowRight"
                 onClick={() => {
                   setCurrentContent('check-eligibility');
                 }}
-                disabled={!isSuccess}
               >
                 Next
               </Button>
             </div>
           </TooltipTrigger>
+
           <TooltipContent className="w-fit bg-black text-white">
             <span>Watch the video to continue</span>
           </TooltipContent>

@@ -36,7 +36,7 @@ export const IdrissUserCriteriaDescription = ({
             'before:text-mint-600',
         )}
       >
-        <span>
+        <p>
           You registered
           {eligibilityData.paid
             ? ` ${eligibilityData.paid} paid account${eligibilityData.paid > 1 ? 's' : ''}`
@@ -46,13 +46,13 @@ export const IdrissUserCriteriaDescription = ({
             ? ` ${eligibilityData.free} free account${eligibilityData.free > 1 ? 's' : ''}`
             : ''}
           {!eligibilityData.paid && !eligibilityData.free && 'an account'}
-        </span>
-        <span>
+        </p>
+        <p>
           {formatNumber(
             Number(eligibilityData.allocation_paid ?? 0) +
               Number(eligibilityData.allocation_free ?? 0),
           )}
-        </span>
+        </p>
       </li>
       <li
         className={classes(
@@ -60,11 +60,11 @@ export const IdrissUserCriteriaDescription = ({
           eligibilityData.allocation_extension && 'before:text-mint-600',
         )}
       >
-        <span>
+        <p>
           You made transfers on 2 unique days with{'\u00A0'}the{'\u00A0'}browser
           extension
-        </span>
-        <span>{formatNumber(eligibilityData.allocation_extension)}</span>
+        </p>
+        <p>{formatNumber(eligibilityData.allocation_extension)}</p>
       </li>
       <li
         className={classes(
@@ -72,15 +72,15 @@ export const IdrissUserCriteriaDescription = ({
           eligibilityData.time_multiplier > 1 && 'before:text-mint-600',
         )}
       >
-        <span>
+        <p>
           Early user multiplier
           {eligibilityData.time_multiplier > 1 &&
             `: you registered the account\u00A0on ${formatDate(eligibilityData.registration)}`}
-        </span>
-        <span>
+        </p>
+        <p>
           x{'\u00A0'}
           {formatNumber(eligibilityData.time_multiplier, 2)}
-        </span>
+        </p>
       </li>
       <li
         className={classes(
@@ -88,15 +88,15 @@ export const IdrissUserCriteriaDescription = ({
           eligibilityData.invite_multiplier > 1 && 'before:text-mint-600',
         )}
       >
-        <span>
+        <p>
           Referral multiplier{' '}
           {eligibilityData.invite_multiplier > 1 &&
             `: you invited ${eligibilityData.invites} users`}
-        </span>
-        <span>
+        </p>
+        <p>
           x{'\u00A0'}
           {formatNumber(eligibilityData.invite_multiplier, 2)}
-        </span>
+        </p>
       </li>
     </ul>
   );

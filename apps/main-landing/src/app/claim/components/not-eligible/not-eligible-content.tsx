@@ -10,48 +10,51 @@ export const NotEligibleContent = () => {
   return (
     <div className="relative z-[5] m-auto flex w-[600px] flex-col items-center gap-10 rounded-[25px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">
       <GradientBorder
+        borderWidth={1}
         gradientDirection="toTop"
         gradientStopColor="rgba(145, 206, 154, 0.50)"
-        borderWidth={1}
       />
+
       <div className="flex flex-col gap-4">
-        <span className="text-heading3 text-neutral-900">NOT ELIGIBLE</span>
-        <span className="text-body4 text-neutral-700">
+        <h1 className="text-heading3 text-neutral-900">NOT ELIGIBLE</h1>
+        <p className="text-body4 text-neutral-700">
           While you do not qualify for the claim, you can still join IDRISS DAO
           by{'\u00A0'}purchasing IDRISS on decentralized exchanges.
-        </span>
+        </p>
       </div>
+
       <div className="flex w-full flex-col gap-4">
         <GeoConditionalButton
           defaultButton={[
             <Button
+              asLink
+              isExternal
+              size="large"
               key="uniswap"
               intent="primary"
-              size="large"
-              prefixIconName="Uniswap"
-              asLink
-              href="https://app.uniswap.org/swap?inputCurrency=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913&outputCurrency=0x000096630066820566162C94874A776532705231"
-              isExternal
               className="w-full"
+              prefixIconName="Uniswap"
+              href="https://app.uniswap.org/swap?inputCurrency=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913&outputCurrency=0x000096630066820566162C94874A776532705231"
             >
               BUY ON UNISWAP
             </Button>,
             <Button
-              key="jumper"
-              intent="primary"
-              size="large"
-              prefixIconName="Jumper"
               asLink
-              href="https://jumper.exchange/?fromChain=8453&fromToken=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913&toChain=8453&toToken=0x000096630066820566162C94874A776532705231"
               isExternal
+              key="jumper"
+              size="large"
+              intent="primary"
               className="w-full"
+              prefixIconName="Jumper"
+              href="https://jumper.exchange/?fromChain=8453&fromToken=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913&toChain=8453&toToken=0x000096630066820566162C94874A776532705231"
             >
               BUY ON JUMPER
             </Button>,
           ]}
         />
+
         <div className="flex w-full items-center justify-center opacity-70">
-          <span
+          <p
             className={classes(
               'text-body5 text-neutralGreen-900',
               'md:text-body5',
@@ -59,19 +62,19 @@ export const NotEligibleContent = () => {
           >
             By purchasing, you agree to the{' '}
             <Link
-              size="medium"
-              href={TOKEN_TERMS_AND_CONDITIONS_LINK}
               isExternal
+              size="medium"
               className={classes(
                 'text-body5',
                 'md:text-body5',
                 //lg here is intentional to override the Link variant style
                 'lg:text-body5',
               )}
+              href={TOKEN_TERMS_AND_CONDITIONS_LINK}
             >
               Terms{'\u00A0'}and{'\u00A0'}conditions
             </Link>
-          </span>
+          </p>
         </div>
       </div>
     </div>

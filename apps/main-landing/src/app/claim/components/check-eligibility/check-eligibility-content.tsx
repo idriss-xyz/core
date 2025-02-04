@@ -3,108 +3,48 @@
 import { Button } from '@idriss-xyz/ui/button';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { Controller, useForm } from 'react-hook-form';
-import { createPublicClient, Hex, http, isAddress } from 'viem';
-import { base, mainnet } from 'viem/chains';
-import { normalize } from 'viem/ens';
+import { isAddress } from 'viem';
 import { Form } from '@idriss-xyz/ui/form';
-import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
 import { useWalletClient } from 'wagmi';
-import { useEffect } from 'react';
+import { FormEvent, useEffect } from 'react';
 
 import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
+import { IDRISS_COIN } from '@/assets';
+import { useClaim } from '@/app/claim/hooks/use-claim';
 
-import idrissCoin from '../../assets/IDRISS_COIN 1.png';
-import { useClaimPage } from '../../claim-page-context';
-import { EligibilityCheckResponse } from '../../types';
-import { CLAIM_ABI, CLAIMER_ADDRESS } from '../../constants';
-
-type FormPayload = {
+type FormValues = {
   address: string;
   resolvedEnsAddress?: string;
 };
 
-const ethereumClient = createPublicClient({
-  chain: mainnet,
-  transport: http('https://eth.llamarpc.com'),
-});
-
-const baseClient = createPublicClient({
-  chain: base,
-  transport: http(),
-});
+const EMPTY_FORM: FormValues = {
+  address: '',
+  resolvedEnsAddress: undefined,
+};
 
 export const CheckEligibilityContent = () => {
-  const {
-    setCurrentContent,
-    setWalletAddress,
-    setEligibilityData,
-    setHasAlreadyClaimed,
-  } = useClaimPage();
   const { data: walletClient } = useWalletClient();
-  const formMethods = useForm<FormPayload>({
-    defaultValues: {
-      address: '',
-      resolvedEnsAddress: undefined,
-    },
-    mode: 'onSubmit',
+  const { verifyEligibility, resolveEnsAddress } = useClaim();
+
+  const formMethods = useForm<FormValues>({
+    defaultValues: EMPTY_FORM,
   });
 
-  const eligibilityMutation = useMutation({
-    mutationFn: async (walletAddress: string) => {
-      const { data } = await axios.get<EligibilityCheckResponse>(
-        `https://api.idriss.xyz/check-eligibility/${walletAddress}`,
-      );
-      return data;
-    },
-  });
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
 
-  const resolveEnsAddressMutation = useMutation({
-    mutationFn: async (ens: string) => {
-      const resolvedAddress = await ethereumClient?.getEnsAddress({
-        name: normalize(ens),
-      });
-      return resolvedAddress;
-    },
-  });
-
-  const storeDataAndNavigate = async (walletAddress: Hex) => {
-    const eligibility = await eligibilityMutation.mutateAsync(walletAddress);
-    setEligibilityData(eligibility);
-    setWalletAddress(walletAddress);
-
-    if (!eligibility.claimData && eligibility.allocation === 0) {
-      setCurrentContent('not-eligible');
-      return;
-    }
-
-    const isClaimed = await baseClient.readContract({
-      address: CLAIMER_ADDRESS,
-      abi: CLAIM_ABI,
-      functionName: 'isClaimed',
-      args: [eligibility.claimData.claimIndices[0]],
-    });
-
-    if (isClaimed) {
-      setCurrentContent('claim-successful');
-      setHasAlreadyClaimed(true);
-      return;
-    }
-    setCurrentContent(eligibility.allocation ? 'claim' : 'not-eligible');
-  };
-
-  const verifyEligibility = async () => {
     const isValid = await formMethods.trigger();
+
     if (!isValid) {
       return;
     }
 
     const { address, resolvedEnsAddress } = formMethods.getValues();
-    if (address.includes('.') && resolvedEnsAddress) {
-      void storeDataAndNavigate(resolvedEnsAddress as Hex);
-    } else if (address) {
-      void storeDataAndNavigate(address as Hex);
-    }
+
+    verifyEligibility.use({
+      address,
+      resolvedEnsAddress,
+    });
   };
 
   useEffect(() => {
@@ -116,52 +56,53 @@ export const CheckEligibilityContent = () => {
   return (
     <div className="relative z-[5] flex w-[800px] flex-col items-center gap-10 rounded-[25px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">
       <GradientBorder
+        borderWidth={1}
         gradientDirection="toTop"
         gradientStopColor="rgba(145, 206, 154, 0.50)"
-        borderWidth={1}
       />
-      <img className="size-[136px]" src={idrissCoin.src} alt="" />
+
+      <img className="size-[136px]" src={IDRISS_COIN.src} alt="" />
+
       <div className="relative flex w-full flex-col items-center gap-2 rounded-[25px] bg-[rgba(255,255,255,0.2)] px-10 py-8">
         <GradientBorder
-          gradientDirection="toBottom"
-          gradientStopColor="rgba(145, 206, 154)"
-          gradientStartColor="#ffffff"
           borderWidth={1}
+          gradientDirection="toBottom"
+          gradientStartColor="#ffffff"
+          gradientStopColor="rgba(145, 206, 154)"
         />
+
         <span className="text-heading3 gradient-text">CLAIM YOUR $IDRISS</span>
-        <Form
-          className="w-full"
-          onSubmit={(event) => {
-            event.preventDefault();
-            void verifyEligibility();
-          }}
-        >
+
+        <Form className="w-full" onSubmit={handleSubmit}>
           <Controller
-            control={formMethods.control}
             name="address"
+            control={formMethods.control}
             rules={{
               required: 'Address is required',
               validate: async (value) => {
                 try {
                   if (value.includes('.') && !value.endsWith('.')) {
-                    const resolvedAddress =
-                      await resolveEnsAddressMutation.mutateAsync(value);
+                    const resolvedAddress = await resolveEnsAddress.use({
+                      name: value,
+                    });
+
                     if (resolvedAddress) {
                       formMethods.setValue(
                         'resolvedEnsAddress',
                         resolvedAddress,
                         { shouldValidate: false },
                       );
+
                       return true;
                     }
 
                     return 'This address doesn’t exist.';
                   }
+
                   return isAddress(value)
                     ? true
                     : 'This address doesn’t exist.';
-                } catch (error) {
-                  console.error(error);
+                } catch {
                   return 'An unexpected error occurred. Try again.';
                 }
               },
@@ -169,28 +110,26 @@ export const CheckEligibilityContent = () => {
             render={({ field, fieldState }) => {
               return (
                 <Form.Field
+                  {...field}
                   label="Wallet address"
                   className="mt-6 w-full"
                   helperText={fieldState.error?.message}
                   error={Boolean(fieldState.error?.message)}
-                  {...field}
                 />
               );
             }}
           />
         </Form>
       </div>
+
       <GeoConditionalButton
         defaultButton={
           <Button
-            intent="primary"
             size="large"
+            intent="primary"
+            onClick={handleSubmit}
             suffixIconName="IdrissArrowRight"
-            onClick={verifyEligibility}
-            loading={
-              resolveEnsAddressMutation.isPending ||
-              eligibilityMutation.isPending
-            }
+            loading={resolveEnsAddress.isPending || verifyEligibility.isPending}
           >
             CHECK ELIGIBILITY
           </Button>
