@@ -16,6 +16,7 @@ if (!fs.existsSync(DATA_FILE_PATH)) {
   }
 }
 
+// ts-unused-exports:disable-next-line
 export async function POST(request: NextRequest) {
   const origin =
     request.headers.get('origin') ?? request.headers.get('referer');
@@ -56,6 +57,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
+// ts-unused-exports:disable-next-line
 export function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const secret = searchParams.get('secret');
