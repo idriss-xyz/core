@@ -252,8 +252,8 @@ const createNewWebhook = async (address: string) => {
 
 const createNewSolanaWebhook = async (address: string) => {
   try {
-    const webhookUrl = `${WEBHOOK_URL}/webhook/solana/${address}`;
     const internalWebhookId = uuidv4();
+    const webhookUrl = `${WEBHOOK_URL}/webhook/solana/${internalWebhookId}`;
 
     const response = await axios.post(
       `${HELIUS_API_BASE_URL}/v0/webhooks?api-key=${HELIUS_API_KEY}`,
