@@ -34,6 +34,8 @@ const DONATION_DISPLAY_DURATION = 11_000;
 const BLOCK_LOOKBACK_RANGE = 5n;
 const FETCH_INTERVAL = 5000;
 
+const latestCheckedBlocks = new Map();
+
 // ts-unused-exports:disable-next-line
 export default function Obs() {
   const router = useRouter();
@@ -115,6 +117,10 @@ export default function Obs() {
     for (const { chain, client, name } of clients) {
       try {
         const latestBlock = await client.getBlockNumber();
+        const lastCheckedBlock =
+          latestCheckedBlocks.get(chain) || latestBlock - BLOCK_LOOKBACK_RANGE;
+
+        if (latestBlock <= lastCheckedBlock) continue;
 
         const eventSignature = TIP_MESSAGE_EVENT_ABI[name];
 
@@ -128,12 +134,11 @@ export default function Obs() {
         const tipMessageLogs = await client.getLogs({
           address: CHAIN_TO_IDRISS_TIPPING_ADDRESS[chain],
           event: parsedEvent,
-          args: {
-            recipientAddress: resolvedAddress,
-          },
-          fromBlock: latestBlock - BLOCK_LOOKBACK_RANGE,
+          fromBlock: lastCheckedBlock + 1n,
           toBlock: latestBlock,
         });
+
+        latestCheckedBlocks.set(chain, latestBlock);
 
         if (tipMessageLogs.length === 0) {
           continue;
@@ -145,7 +150,7 @@ export default function Obs() {
           }
 
           const txn = await client.getTransaction({
-            hash: log.transactionHash,
+            hash: log.transactionHash!,
           });
 
           const decoded = decodeFunctionData({
@@ -165,6 +170,9 @@ export default function Obs() {
           if (!recipient || !tokenAmount) {
             continue;
           }
+
+          if (recipient.toLowerCase() !== resolvedAddress.toLowerCase())
+            continue;
 
           const resolved = await resolveEnsName(txn.from);
 
@@ -187,7 +195,7 @@ export default function Obs() {
           );
 
           addDonation({
-            txnHash: log.transactionHash,
+            txnHash: log.transactionHash!,
             donor: senderIdentifier,
             amount: amountInDollar,
             message: message ?? '',
