@@ -8,12 +8,12 @@ type Payload = {
 };
 
 const resolveEnsAddress = async (payload: Payload) => {
-  const ethereumClient = createPublicClient({
+  const client = createPublicClient({
     chain: mainnet,
     transport: http('https://eth.llamarpc.com'),
   });
 
-  return await ethereumClient?.getEnsAddress({
+  return await client.getEnsAddress({
     name: normalize(payload.name),
   });
 };
