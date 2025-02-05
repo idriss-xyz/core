@@ -108,11 +108,10 @@ export async function GET(
 ): Promise<NextResponse<ApiResponse>> {
   try {
     const url = new URL(request.url);
-    const snapshotParam = url.searchParams.get('snapshot');
+    const snapshotParameter = url.searchParams.get('snapshot');
     const addressesFormat = url.searchParams.get('addresses');
-    const snapshotFormat = snapshotParam && addressesFormat;
-    console.log(snapshotFormat)
-
+    const snapshotFormat = snapshotParameter && addressesFormat;
+    console.log(snapshotFormat);
 
     const { events: existingEvents, lastProcessedBlock } = loadExistingEvents();
     const latestBlock = await publicClient.getBlockNumber();
