@@ -9,8 +9,7 @@ import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
 import { TOKEN_TERMS_AND_CONDITIONS_LINK } from '@idriss-xyz/constants';
-
-import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
+import { GeoConditionalButton } from '@idriss-xyz/ui/geo-conditional-button';
 
 import { useClaimPage } from '../../claim-page-context';
 

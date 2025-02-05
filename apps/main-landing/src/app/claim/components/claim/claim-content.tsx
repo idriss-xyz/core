@@ -7,8 +7,7 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { AIRDROP_DOCS_LINK, COINMARKETCAP_LINK } from '@idriss-xyz/constants';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { Link } from '@idriss-xyz/ui/link';
-
-import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
+import { GeoConditionalButton } from '@idriss-xyz/ui/geo-conditional-button';
 
 import { useClaimPage } from '../../claim-page-context';
 

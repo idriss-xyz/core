@@ -1,4 +1,5 @@
 import { TOKEN_TERMS_AND_CONDITIONS_LINK } from '@idriss-xyz/constants';
+
 import { Button } from '@idriss-xyz/ui/button';
 import {
   Tooltip,

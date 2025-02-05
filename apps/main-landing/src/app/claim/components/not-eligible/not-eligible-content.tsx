@@ -3,8 +3,7 @@ import { Button } from '@idriss-xyz/ui/button';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { Link } from '@idriss-xyz/ui/link';
 import { classes } from '@idriss-xyz/ui/utils';
-
-import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
+import { GeoConditionalButton } from '@idriss-xyz/ui/geo-conditional-button';
 
 export const NotEligibleContent = () => {
   return (

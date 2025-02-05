@@ -7,8 +7,8 @@ import { isAddress } from 'viem';
 import { Form } from '@idriss-xyz/ui/form';
 import { useWalletClient } from 'wagmi';
 import { FormEvent, useEffect } from 'react';
+import { GeoConditionalButton } from '@idriss-xyz/ui/geo-conditional-button';
 
-import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 import { IDRISS_COIN } from '@/assets';
 import { useClaim } from '@/app/claim/hooks/use-claim';
 

@@ -6,8 +6,7 @@ import {
   SNAPSHOT_IDRISS_LINK,
   TOKENOMICS_DOCS_LINK,
 } from '@idriss-xyz/constants';
-
-import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
+import { GeoConditionalButton } from '@idriss-xyz/ui/geo-conditional-button';
 
 import { useClaimPage } from '../../claim-page-context';
 

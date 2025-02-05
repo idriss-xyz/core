@@ -15,8 +15,8 @@ import {
   TOKEN_TERMS_AND_CONDITIONS_LINK,
   VAULT_DOCS_LINK,
 } from '@idriss-xyz/constants';
+import { GeoConditionalButton } from '@idriss-xyz/ui/geo-conditional-button';
 
-import { GeoConditionalButton } from '@/components/token-section/components/geo-conditional-button';
 import { useClaim } from '@/app/claim/hooks/use-claim';
 
 import { useClaimPage } from '../../claim-page-context';
