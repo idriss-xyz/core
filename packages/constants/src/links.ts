@@ -1,4 +1,5 @@
 export const MAIN_LANDING_LINK = 'https://www.idriss.xyz';
+export const VAULT_LINK = 'https://www.idriss.xyz/vault';
 
 export const SOCIAL_LINK = {
   X: 'https://x.com/idriss_xyz',

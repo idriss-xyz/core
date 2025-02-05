@@ -1,6 +1,8 @@
 import { useCallback, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { isAddress } from 'viem';
+import { Link } from '@idriss-xyz/ui/link';
+import { VAULT_LINK } from '@idriss-xyz/constants';
 
 import { useCommandMutation } from 'shared/messaging';
 import { ErrorMessage } from 'shared/ui';
@@ -114,8 +116,16 @@ export const SubscriptionForm = ({ onSubmit, canSubscribe }: Properties) => {
       />
       {showError && (
         <ErrorMessage className="mt-1">
-          Maximum subscriptions reached. Lock $IDRISS to access premium features
-          (coming soon).
+          Maximum subscriptions reached.{' '}
+          <Link
+            size="s"
+            isExternal
+            href={VAULT_LINK}
+            className="border-none px-0 text-sm text-[#ef4444] underline lg:text-sm"
+          >
+            Lock $IDRISS
+          </Link>{' '}
+          to access premium.
         </ErrorMessage>
       )}
     </form>
