@@ -116,14 +116,14 @@ export const SubscriptionForm = ({ onSubmit, canSubscribe }: Properties) => {
       />
       {showError && (
         <ErrorMessage className="mt-1">
-          Maximum subscriptions reached. Lock{' '}
+          Maximum subscriptions reached.{' '}
           <Link
             size="s"
             isExternal
             href={VAULT_LINK}
             className="border-none px-0 text-sm text-[#ef4444] underline lg:text-sm"
           >
-            $IDRISS
+            Lock $IDRISS
           </Link>{' '}
           to access premium.
         </ErrorMessage>
