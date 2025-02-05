@@ -4,7 +4,7 @@ import { Wallet } from 'shared/web3';
 export interface Properties {
   dialog: SwapData;
   closeDialog: () => void;
-  tokenData: SwapDataToken;
+  tokenData: SwapDataToken | null;
   tokenImage: string;
 }
 

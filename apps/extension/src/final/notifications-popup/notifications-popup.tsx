@@ -59,7 +59,7 @@ const NotificationsPopupContent = ({
     useRef(null);
   const lastPlayedTimestampReference: MutableRefObject<number | null> =
     useRef(null);
-  const selectedToken = useRef<SwapDataToken>();
+  const selectedToken: MutableRefObject<SwapDataToken | null> = useRef<SwapDataToken>(null);
   const selectedTokenImage = useRef<string>('');
   const notification = useNotification();
   const ensNameMutation = useCommandMutation(GetEnsNameCommand);
@@ -99,7 +99,9 @@ const NotificationsPopupContent = ({
             address: tokenAddress,
             symbol: '',
             decimals: 18,
-          } as SwapDataToken
+            amount: data.tokenIn.amount,
+            network: data.tokenIn.network,
+          }
           : data.tokenIn;
 
         selectedToken.current = tokenData;

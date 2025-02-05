@@ -3,7 +3,7 @@ import { SwapDataToken } from 'application/trading-copilot';
 import { useEffect, useState } from 'react';
 
 interface TokenIconProperties {
-  tokenData: SwapDataToken;
+  tokenData: SwapDataToken | null;
   tokenImage: string;
 }
 
