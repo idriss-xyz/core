@@ -176,6 +176,7 @@ export const useSubscriptions = ({ wallet, addTabListener }: Properties) => {
     subscribe,
     unsubscribe,
     canSubscribe,
+    isPremiumUser,
     subscriptions,
   };
 };
