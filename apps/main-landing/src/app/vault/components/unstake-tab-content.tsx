@@ -38,8 +38,10 @@ export const UnstakeTabContent = () => {
         show={unstake.isPending}
         heading={<TxLoadingHeading amount={unstake.pendingAmount} />}
       />
+
       <div className="relative mt-4 lg:mt-6">
         <RadialGradientBorder />
+
         <div className="flex flex-col gap-y-2 rounded-2xl bg-white/20 p-6">
           <div className="flex flex-row items-center justify-between">
             <p className="text-body4 text-neutralGreen-500">Total locked</p>
@@ -47,12 +49,14 @@ export const UnstakeTabContent = () => {
               {totalStakedBalance.formattedAmount} IDRISS
             </p>
           </div>
+
           <div className="flex flex-row items-center justify-between">
             <p className="text-body4 text-neutralGreen-500">Unlockable</p>
             <p className="text-label3 text-neutralGreen-700">
               {stakedBalance.formattedAmount} IDRISS
             </p>
           </div>
+
           <div className="flex flex-row items-center justify-between">
             <p className="text-body4 text-neutralGreen-500">
               Unlockable from July 6
@@ -63,6 +67,7 @@ export const UnstakeTabContent = () => {
           </div>
         </div>
       </div>
+
       <Form className="w-full" onSubmit={handleSubmit(handleUnstake)}>
         <Controller
           control={control}
@@ -81,6 +86,7 @@ export const UnstakeTabContent = () => {
                     <span className="text-label4 text-neutralGreen-700">
                       Amount to unlock
                     </span>
+
                     {account.isConnected ? (
                       <div
                         className="flex text-label6 text-neutral-800 hover:cursor-pointer"
@@ -111,7 +117,9 @@ export const UnstakeTabContent = () => {
             );
           }}
         />
+
         <span className="my-4 block h-px bg-mint-200 opacity-50 lg:mb-4 lg:mt-6" />
+
         <Controller
           name="termsChecked"
           control={control}
@@ -137,6 +145,7 @@ export const UnstakeTabContent = () => {
             );
           }}
         />
+
         <div className="relative">
           <GeoConditionalButton
             defaultButton={

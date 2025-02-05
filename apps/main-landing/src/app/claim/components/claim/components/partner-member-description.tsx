@@ -61,38 +61,38 @@ export const PartnerMemberDescription = ({
     switch (communities.length) {
       case 0: {
         return (
-          <p>
+          <span>
             of{'\u00A0'}a{'\u00A0'}partner{'\u00A0'}community
-          </p>
+          </span>
         );
       }
 
       case 1: {
         return (
-          <p>
+          <span>
             of{'\u00A0'}the {communities[0]?.communityName}
             {'\u00A0'}community
-          </p>
+          </span>
         );
       }
 
       case 2: {
         return (
-          <p>
+          <span>
             of{'\u00A0'}the {communities[0]?.communityName}
             {'\u00A0'}and{'\u00A0'}
             {communities[1]?.communityName} communities
-          </p>
+          </span>
         );
       }
 
       case 3: {
         return (
-          <p>
+          <span>
             of{'\u00A0'}the {communities[0]?.communityName},{'\u00A0'}
             {communities[1]?.communityName}, and {communities[2]?.communityName}{' '}
             communities
-          </p>
+          </span>
         );
       }
 
@@ -102,10 +102,10 @@ export const PartnerMemberDescription = ({
         });
         const lastCommunity = communities.at(-1)?.communityName;
         return (
-          <p>
+          <span>
             of{'\u00A0'}the {firstCommunities.join(', ')}, and {lastCommunity}{' '}
             communities
-          </p>
+          </span>
         );
       }
     }
@@ -118,7 +118,7 @@ export const PartnerMemberDescription = ({
         eligibilityData.allocation_partner && 'before:text-mint-600',
       )}
     >
-      <p>You are a highly engaged member {activeCommunitiesList}</p>
+      <span>You are a highly engaged member {activeCommunitiesList}</span>
     </li>
   );
 };

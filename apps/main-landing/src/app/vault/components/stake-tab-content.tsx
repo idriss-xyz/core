@@ -32,6 +32,7 @@ export const StakeTabContent = () => {
         show={stake.isPending}
         heading={<TxLoadingHeading amount={stake.pendingAmount} />}
       />
+
       <Form className="w-full" onSubmit={handleSubmit(handleStake)}>
         <Controller
           control={control}
@@ -50,6 +51,7 @@ export const StakeTabContent = () => {
                     <span className="text-label4 text-neutralGreen-700">
                       Amount
                     </span>
+
                     {account.isConnected ? (
                       <div
                         className="flex text-label6 text-neutral-800 hover:cursor-pointer"
@@ -80,7 +82,9 @@ export const StakeTabContent = () => {
             );
           }}
         />
+
         <span className="my-4 block h-px bg-mint-200 opacity-50 lg:mb-4 lg:mt-6" />
+
         <Controller
           name="termsChecked"
           control={control}
@@ -106,6 +110,7 @@ export const StakeTabContent = () => {
             );
           }}
         />
+
         <div className="relative">
           <GeoConditionalButton
             defaultButton={
