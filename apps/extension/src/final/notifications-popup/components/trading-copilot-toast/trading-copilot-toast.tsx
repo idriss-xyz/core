@@ -1,5 +1,6 @@
 import { Button } from '@idriss-xyz/ui/button';
 import { isAddress } from 'viem';
+import { isAddress as isSolanaAddress } from "@solana/web3.js";
 
 import { Icon, PreloadedImage } from 'shared/ui';
 import { getShortWalletHex, TimeDifferenceCounter } from 'shared/utils';
@@ -35,7 +36,7 @@ export const TradingCopilotToast = ({
       />
       <div className="flex w-full flex-col gap-y-1">
         <p className="break-all text-label3 text-neutral-900">
-          {isAddress(userName) ? getShortWalletHex(userName) : userName}{' '}
+          {(isAddress(userName) || isSolanaAddress(userName)) ? getShortWalletHex(userName) : userName}{' '}
           <span className="inline-flex items-center gap-x-1 text-body3 text-neutral-600">
             got{' '}
             <span className="inline-flex items-center justify-center gap-x-1">
