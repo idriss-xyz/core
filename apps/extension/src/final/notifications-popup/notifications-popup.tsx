@@ -12,12 +12,14 @@ import {
   GetTokensImageCommand,
   GetTokensListCommand,
   SwapData,
+  SwapDataToken,
 } from 'application/trading-copilot';
 import { GetImageCommand } from 'shared/utils';
 import { CHAIN } from 'shared/web3';
 
 import { TradingCopilotToast, TradingCopilotDialog } from './components';
 import { Properties, ContentProperties } from './notifications-popup.types';
+import { isAddress } from 'viem';
 
 const IDRISS_TOKEN_ADDRESS = '0x000096630066820566162c94874a776532705231';
 
@@ -57,7 +59,7 @@ const NotificationsPopupContent = ({
     useRef(null);
   const lastPlayedTimestampReference: MutableRefObject<number | null> =
     useRef(null);
-  const selectedToken = useRef<Record<string, string>>({});
+  const selectedToken = useRef<SwapDataToken>();
   const selectedTokenImage = useRef<string>('');
   const notification = useNotification();
   const ensNameMutation = useCommandMutation(GetEnsNameCommand);
@@ -69,18 +71,19 @@ const NotificationsPopupContent = ({
   useEffect(() => {
     if (!isSwapEventListenerAdded.current) {
       const handleSwapEvent = async (data: SwapData) => {
-        const ensName = await ensNameMutation.mutateAsync({
+        const isEVMAddress = isAddress(data.from);
+        const ensName = isEVMAddress ? await ensNameMutation.mutateAsync({
           address: data.from,
-        });
+        }) : null;
 
-        const ensAvatarUrl = await ensInfoMutation.mutateAsync({
+        const ensAvatarUrl = isEVMAddress ? await ensInfoMutation.mutateAsync({
           ensName: ensName ?? '',
           infoKey: 'avatar',
-        });
+        }): null;
 
-        const avatarImage = await imageMutation.mutateAsync({
+        const avatarImage = isEVMAddress ? await imageMutation.mutateAsync({
           src: ensAvatarUrl ?? '',
-        });
+        }): null;
 
         const tokensList = await tokenListMutation.mutateAsync();
 
@@ -88,16 +91,20 @@ const NotificationsPopupContent = ({
 
         // Filter token list by chain (Base)
         const tokens = tokensList?.tokens?.[CHAIN.BASE.id] ?? [];
-
         const tokenData =
+        isEVMAddress ?
           tokens.find((t) => {
             return t?.address?.toLowerCase() === tokenAddress.toLowerCase();
-          }) ?? {};
+          }) ?? {
+            address: tokenAddress,
+            symbol: '',
+            decimals: 18,
+          } as SwapDataToken
+          : data.tokenIn;
 
         selectedToken.current = tokenData;
-
         const tokenImage =
-          tokenAddress.toLowerCase() === IDRISS_TOKEN_ADDRESS
+          tokenData.address.toLowerCase() === IDRISS_TOKEN_ADDRESS
             ? 'IdrissToken'
             : ((await tokenIconMutation.mutateAsync({
                 tokeURI: tokenData?.logoURI ?? '',

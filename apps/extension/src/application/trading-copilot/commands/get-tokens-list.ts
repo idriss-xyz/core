@@ -5,9 +5,10 @@ import {
   HandlerResponseError,
   OkResult,
 } from 'shared/messaging';
+import { SwapDataToken } from '../types';
 
 type Response = {
-  tokens: Record<string, Record<string, string>[]>;
+  tokens: Record<string, SwapDataToken[]>;
 };
 
 export class GetTokensListCommand extends Command<void, Response> {

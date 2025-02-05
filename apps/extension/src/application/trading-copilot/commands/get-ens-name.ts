@@ -1,4 +1,4 @@
-import { createPublicClient, http } from 'viem';
+import { createPublicClient, http, isAddress } from 'viem';
 import { mainnet } from 'viem/chains';
 
 import { Hex } from 'shared/web3';
@@ -22,6 +22,9 @@ export class GetEnsNameCommand extends Command<Payload, string | null> {
 
   async handle() {
     try {
+      if (!isAddress(this.payload.address)){
+        return new FailureResult('Not an EVM address');
+      }
       const client = createPublicClient({
         chain: { ...mainnet },
         transport: http('https://eth.llamarpc.com'),

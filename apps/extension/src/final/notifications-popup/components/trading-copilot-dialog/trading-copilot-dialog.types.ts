@@ -1,10 +1,10 @@
-import { SwapData } from 'application/trading-copilot';
+import { SwapData, SwapDataToken } from 'application/trading-copilot';
 import { Wallet } from 'shared/web3';
 
 export interface Properties {
   dialog: SwapData;
   closeDialog: () => void;
-  tokenData: Record<string, string>;
+  tokenData: SwapDataToken;
   tokenImage: string;
 }
 

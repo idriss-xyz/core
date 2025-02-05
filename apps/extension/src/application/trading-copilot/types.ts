@@ -77,12 +77,16 @@ export type FarcasterUserResponse = {
   };
 };
 
-type SwapDataToken = {
-  address: Hex;
+export type SwapDataToken = {
+  address: Hex | string;
   symbol: string;
   amount: number;
   decimals: number;
-  network: keyof typeof CHAIN;
+  network: keyof typeof CHAIN | 'SOLANA';
+  name?: string;
+  logoURI?: string;
+  priceUSD?: string;
+  coinKey?: string;
 };
 
 export type SwapData = {

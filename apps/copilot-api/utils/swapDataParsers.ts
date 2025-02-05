@@ -71,7 +71,7 @@ export async function parseSwapFromHelius(event: ComplexHeliusWebhookEvent): Pro
     return null;
   }
 
-  if (!fromAddress || fromAddress === toAddress) {
+  if (!fromAddress) {
     fromAddress = feePayer;
   }
 
