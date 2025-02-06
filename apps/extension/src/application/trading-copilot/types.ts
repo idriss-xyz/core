@@ -31,6 +31,7 @@ export type FarcasterAddressRequest = {
 export type FarcasterAddressResponse = {
   fid: number;
   address: string;
+  addressSolana: string;
 } | null;
 
 export type FarcasterTransferResponse = {

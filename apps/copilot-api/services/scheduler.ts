@@ -10,7 +10,7 @@ export const eventCache: { [txHash: string]: CachedTransaction } = {};
 
 const eventHandlers = {
   alchemy: new AlchemyEventHandler(),
-  helius: new HeliusEventHandler()
+  helius: new HeliusEventHandler(),
 };
 
 // Scheduler to process the cache every 2 seconds
@@ -20,7 +20,10 @@ setInterval(async () => {
 
   for (const [txHash, cachedTransaction] of cacheEntries) {
     const handler = eventHandlers[cachedTransaction.type];
-    const swapData = await handler.extractSwapData(txHash, cachedTransaction.data);
+    const swapData = await handler.extractSwapData(
+      txHash,
+      cachedTransaction.data,
+    );
 
     if (swapData.isComplete) {
       // Complete swap

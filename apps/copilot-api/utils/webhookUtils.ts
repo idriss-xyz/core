@@ -5,13 +5,16 @@ import { isSubscribedAddress } from '../services/subscriptionManager';
 import { NULL_ADDRESS, WEBHOOK_NETWORK_TYPES } from '../constants';
 import { AlchemyWebhookEvent, ComplexHeliusWebhookEvent } from '../interfaces';
 import { eventCache } from '../services/scheduler';
-import { AlchemyEventHandler, HeliusEventHandler } from '../services/eventHandlers';
+import {
+  AlchemyEventHandler,
+  HeliusEventHandler,
+} from '../services/eventHandlers';
 import { parseJupiterSwap, parseSwapFromHelius } from './swapDataParsers';
 import { error } from 'console';
 
 const eventHandlers = {
   alchemy: new AlchemyEventHandler(),
-  helius: new HeliusEventHandler()
+  helius: new HeliusEventHandler(),
 };
 
 export function validateAlchemySignature(
@@ -111,7 +114,10 @@ export async function extractAlchemySwapData(
       const isEthTransfer = activity.asset === 'ETH' && activity.value > 0;
       if (isEthTransfer) {
         if (
-          (await isSubscribedAddress(activity.fromAddress, WEBHOOK_NETWORK_TYPES.EVM)) &&
+          (await isSubscribedAddress(
+            activity.fromAddress,
+            WEBHOOK_NETWORK_TYPES.EVM,
+          )) &&
           !swapData.tokenOut
         ) {
           // User sent ETH (tokenOut)
@@ -135,7 +141,10 @@ export async function extractAlchemySwapData(
         network: activity.network,
       };
       if (
-        (await isSubscribedAddress(activity.toAddress, WEBHOOK_NETWORK_TYPES.EVM)) &&
+        (await isSubscribedAddress(
+          activity.toAddress,
+          WEBHOOK_NETWORK_TYPES.EVM,
+        )) &&
         !swapData.tokenIn
       ) {
         // User received token (tokenIn)
@@ -143,7 +152,10 @@ export async function extractAlchemySwapData(
         swapData.from = activity.toAddress;
         swapData.to = activity.fromAddress;
       } else if (
-        (await isSubscribedAddress(activity.fromAddress, WEBHOOK_NETWORK_TYPES.EVM)) &&
+        (await isSubscribedAddress(
+          activity.fromAddress,
+          WEBHOOK_NETWORK_TYPES.EVM,
+        )) &&
         !swapData.tokenOut
       ) {
         // User sent token (tokenOut)
@@ -156,7 +168,10 @@ export async function extractAlchemySwapData(
       const isEthTransfer = activity.asset === 'ETH' && activity.value > 0;
       if (isEthTransfer) {
         if (
-          (await isSubscribedAddress(activity.toAddress, WEBHOOK_NETWORK_TYPES.EVM)) &&
+          (await isSubscribedAddress(
+            activity.toAddress,
+            WEBHOOK_NETWORK_TYPES.EVM,
+          )) &&
           !swapData.tokenIn
         ) {
           // User received ETH (tokenIn)
@@ -181,21 +196,19 @@ export async function extractAlchemySwapData(
   return swapData;
 }
 
-export async function extractHeliusSwapData(
-  data: any,
-): Promise<SwapData>
-{
+export async function extractHeliusSwapData(data: any): Promise<SwapData> {
   const eventData = data as ComplexHeliusWebhookEvent;
 
-  const isJupiterSwap = eventData.source === "JUPITER";
-  const result = isJupiterSwap ? await parseJupiterSwap(eventData) : await parseSwapFromHelius(eventData);
+  const isJupiterSwap = eventData.source === 'JUPITER';
+  const result = isJupiterSwap
+    ? await parseJupiterSwap(eventData)
+    : await parseSwapFromHelius(eventData);
 
   if (result == null) {
     console.error('Failed to parse swap data from Helius event.');
     throw error;
   }
   return result;
-
 }
 
 // Handle incoming events and add them to the cache
@@ -226,10 +239,12 @@ export async function handleIncomingEvent(
   }
 }
 
-export async function handleIncomingSolanaEvent(webhookEvent: ComplexHeliusWebhookEvent): Promise<void> {
+export async function handleIncomingSolanaEvent(
+  webhookEvent: ComplexHeliusWebhookEvent,
+): Promise<void> {
   const txHash = webhookEvent.signature;
 
   if (!eventCache[txHash]) {
-    eventCache[txHash] = eventHandlers['helius'].formatForCache(webhookEvent)
+    eventCache[txHash] = eventHandlers['helius'].formatForCache(webhookEvent);
   }
 }

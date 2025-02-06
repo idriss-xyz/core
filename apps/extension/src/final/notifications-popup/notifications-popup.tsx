@@ -1,4 +1,5 @@
 import { type MutableRefObject, useRef, useEffect, useState } from 'react';
+import { isAddress } from 'viem';
 
 import { useNotification } from 'shared/ui';
 import {
@@ -19,7 +20,6 @@ import { CHAIN } from 'shared/web3';
 
 import { TradingCopilotToast, TradingCopilotDialog } from './components';
 import { Properties, ContentProperties } from './notifications-popup.types';
-import { isAddress } from 'viem';
 
 const IDRISS_TOKEN_ADDRESS = '0x000096630066820566162c94874a776532705231';
 
@@ -59,7 +59,8 @@ const NotificationsPopupContent = ({
     useRef(null);
   const lastPlayedTimestampReference: MutableRefObject<number | null> =
     useRef(null);
-  const selectedToken: MutableRefObject<SwapDataToken | null> = useRef<SwapDataToken>(null);
+  const selectedToken: MutableRefObject<SwapDataToken | null> =
+    useRef<SwapDataToken>(null);
   const selectedTokenImage = useRef<string>('');
   const notification = useNotification();
   const ensNameMutation = useCommandMutation(GetEnsNameCommand);
@@ -72,18 +73,24 @@ const NotificationsPopupContent = ({
     if (!isSwapEventListenerAdded.current) {
       const handleSwapEvent = async (data: SwapData) => {
         const isEVMAddress = isAddress(data.from);
-        const ensName = isEVMAddress ? await ensNameMutation.mutateAsync({
-          address: data.from,
-        }) : null;
+        const ensName = isEVMAddress
+          ? await ensNameMutation.mutateAsync({
+              address: data.from,
+            })
+          : null;
 
-        const ensAvatarUrl = isEVMAddress ? await ensInfoMutation.mutateAsync({
-          ensName: ensName ?? '',
-          infoKey: 'avatar',
-        }): null;
+        const ensAvatarUrl = isEVMAddress
+          ? await ensInfoMutation.mutateAsync({
+              ensName: ensName ?? '',
+              infoKey: 'avatar',
+            })
+          : null;
 
-        const avatarImage = isEVMAddress ? await imageMutation.mutateAsync({
-          src: ensAvatarUrl ?? '',
-        }): null;
+        const avatarImage = isEVMAddress
+          ? await imageMutation.mutateAsync({
+              src: ensAvatarUrl ?? '',
+            })
+          : null;
 
         const tokensList = await tokenListMutation.mutateAsync();
 
@@ -91,17 +98,16 @@ const NotificationsPopupContent = ({
 
         // Filter token list by chain (Base)
         const tokens = tokensList?.tokens?.[CHAIN.BASE.id] ?? [];
-        const tokenData =
-        isEVMAddress ?
-          tokens.find((t) => {
-            return t?.address?.toLowerCase() === tokenAddress.toLowerCase();
-          }) ?? {
-            address: tokenAddress,
-            symbol: '',
-            decimals: data.tokenIn.decimals,
-            amount: data.tokenIn.amount,
-            network: data.tokenIn.network,
-          }
+        const tokenData = isEVMAddress
+          ? (tokens.find((t) => {
+              return t?.address?.toLowerCase() === tokenAddress.toLowerCase();
+            }) ?? {
+              address: tokenAddress,
+              symbol: '',
+              decimals: data.tokenIn.decimals,
+              amount: data.tokenIn.amount,
+              network: data.tokenIn.network,
+            })
           : data.tokenIn;
 
         selectedToken.current = tokenData;

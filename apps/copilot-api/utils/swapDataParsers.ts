@@ -1,5 +1,5 @@
-import { ComplexHeliusWebhookEvent } from "../interfaces";
-import { SwapData } from "../types";
+import { ComplexHeliusWebhookEvent } from '../interfaces';
+import { SwapData } from '../types';
 
 // Fetch Token Metadata using Metaplex Token Metadata
 const getTokenMetadata = async (mintAddress: string) => {
@@ -22,21 +22,25 @@ const getTokenMetadata = async (mintAddress: string) => {
 
   const { result } = await response.json();
   return {
-      symbol: result?.content.metadata.symbol || 'UNKNOWN',
-      name: result?.content.metadata.name || 'Unknown Token',
-      logoURI: result?.content.links.image || null,
+    symbol: result?.content.metadata.symbol || 'UNKNOWN',
+    name: result?.content.metadata.name || 'Unknown Token',
+    logoURI: result?.content.links.image || null,
   };
 };
 
 // Parse Raydium Swaps
-export async function parseSwapFromHelius(event: ComplexHeliusWebhookEvent): Promise<SwapData | null> {
+export async function parseSwapFromHelius(
+  event: ComplexHeliusWebhookEvent,
+): Promise<SwapData | null> {
   if (!event.tokenTransfers || event.tokenTransfers.length === 0) {
-    console.error("No token transfers found in event.");
+    console.error('No token transfers found in event.');
     return null;
   }
 
-  let tokenIn = null, tokenOut = null;
-  let fromAddress = null, toAddress = null;
+  let tokenIn = null,
+    tokenOut = null;
+  let fromAddress = null,
+    toAddress = null;
   const feePayer = event.feePayer;
 
   for (const transfer of event.tokenTransfers) {
@@ -44,11 +48,11 @@ export async function parseSwapFromHelius(event: ComplexHeliusWebhookEvent): Pro
       tokenOut = {
         address: transfer.mint,
         amount: Math.abs(transfer.tokenAmount),
-        decimals: transfer.tokenStandard === "Fungible" ? 9 : 0,
+        decimals: transfer.tokenStandard === 'Fungible' ? 9 : 0,
         symbol: null,
         name: null,
         logoURI: null,
-        network: "SOLANA"
+        network: 'SOLANA',
       };
       fromAddress = transfer.fromUserAccount;
     }
@@ -56,18 +60,18 @@ export async function parseSwapFromHelius(event: ComplexHeliusWebhookEvent): Pro
       tokenIn = {
         address: transfer.mint,
         amount: transfer.tokenAmount,
-        decimals: transfer.tokenStandard === "Fungible" ? 9 : 0,
+        decimals: transfer.tokenStandard === 'Fungible' ? 9 : 0,
         symbol: null,
         name: null,
         logoURI: null,
-        network: "SOLANA"
+        network: 'SOLANA',
       };
       toAddress = transfer.toUserAccount;
     }
   }
 
   if (!tokenIn || !tokenOut) {
-    console.error("Incomplete token transfer data.");
+    console.error('Incomplete token transfer data.');
     return null;
   }
 
@@ -101,17 +105,23 @@ export async function parseSwapFromHelius(event: ComplexHeliusWebhookEvent): Pro
 }
 
 // Parse Jupiter Swaps
-export async function parseJupiterSwap(event: ComplexHeliusWebhookEvent): Promise<SwapData | null> {
+export async function parseJupiterSwap(
+  event: ComplexHeliusWebhookEvent,
+): Promise<SwapData | null> {
   if (!event.events || !event.events.swap) {
-    console.error("No Jupiter swap event found.");
+    console.error('No Jupiter swap event found.');
     return null;
   }
 
   const swapEvent = event.events.swap;
   const firstSwap = swapEvent.innerSwaps?.[0]; // First inner swap (if exists)
 
-  if (!firstSwap || !firstSwap.tokenInputs.length || !firstSwap.tokenOutputs.length) {
-    console.error("No token inputs/outputs found in Jupiter swap.");
+  if (
+    !firstSwap ||
+    !firstSwap.tokenInputs.length ||
+    !firstSwap.tokenOutputs.length
+  ) {
+    console.error('No token inputs/outputs found in Jupiter swap.');
     return null;
   }
 
@@ -127,7 +137,7 @@ export async function parseJupiterSwap(event: ComplexHeliusWebhookEvent): Promis
     symbol: null,
     name: null,
     logoURI: null,
-    network: "SOLANA",
+    network: 'SOLANA',
   };
 
   const tokenOut = {
@@ -137,7 +147,7 @@ export async function parseJupiterSwap(event: ComplexHeliusWebhookEvent): Promis
     symbol: null,
     name: null,
     logoURI: null,
-    network: "SOLANA",
+    network: 'SOLANA',
   };
 
   // Fetch metadata for tokenIn and tokenOut

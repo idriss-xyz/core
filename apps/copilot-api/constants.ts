@@ -7,6 +7,6 @@ export const BLOCK_LIST = ['ETH', 'USDC', 'USDT', 'DAI'];
 
 export const WEBHOOK_NETWORKS = ['BASE_MAINNET'];
 export enum WEBHOOK_NETWORK_TYPES {
-    EVM = 'EVM',
-    SOLANA = 'SOLANA'
+  EVM = 'EVM',
+  SOLANA = 'SOLANA',
 }
