@@ -1,5 +1,5 @@
-import { CachedTransaction } from "../interfaces";
-import { SwapData } from "../types";
+import { CachedTransaction } from '../interfaces';
+import { SwapData } from '../types';
 
 // TODO: Correctly type event (no any) and data (no any)
 export interface WebhookEventHandler {

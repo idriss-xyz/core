@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { isAddress } from 'viem';
-import { isAddress as isSolanaAddress } from "@solana/web3.js";
+import { isAddress as isSolanaAddress } from '@solana/web3.js';
 
 import { useWallet } from 'shared/extension';
 import { useCommandMutation } from 'shared/messaging';
@@ -58,20 +58,20 @@ export const SubscriptionForm = ({
       if (!wallet) {
         return;
       }
-      let chainType: 'EVM' | 'SOLANA' = 'EVM'
+      let chainType: 'EVM' | 'SOLANA' = 'EVM';
 
       if (isHex) {
-        if (!isAddress(data.subscriptionDetails)){
-            // TODO: Move validation to input error message
-            console.error('Not an address');
-            return;
+        if (!isAddress(data.subscriptionDetails)) {
+          // TODO: Move validation to input error message
+          console.error('Not an address');
+          return;
         }
         onSubmit(data.subscriptionDetails, undefined, chainType);
         form.reset(EMPTY_FORM);
         return;
       }
-      if (isSolanaAddress(data.subscriptionDetails)){
-        chainType = 'SOLANA'
+      if (isSolanaAddress(data.subscriptionDetails)) {
+        chainType = 'SOLANA';
         onSubmit(data.subscriptionDetails, undefined, chainType);
         form.reset(EMPTY_FORM);
         return;
@@ -86,7 +86,14 @@ export const SubscriptionForm = ({
           return;
         }
 
-        onSubmit(farcasterDetails.address, farcasterDetails.fid);
+        if (farcasterDetails.addressSolana) {
+          onSubmit(farcasterDetails.addressSolana, farcasterDetails.fid);
+        }
+
+        if (farcasterDetails.address) {
+          onSubmit(farcasterDetails.address, farcasterDetails.fid);
+        }
+
         form.reset(EMPTY_FORM);
         return;
       }
@@ -94,7 +101,6 @@ export const SubscriptionForm = ({
       const address = await getEnsAddressMutation.mutateAsync({
         ensName: data.subscriptionDetails,
       });
-
 
       if (!address) {
         return;

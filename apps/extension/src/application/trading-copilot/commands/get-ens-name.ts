@@ -22,7 +22,7 @@ export class GetEnsNameCommand extends Command<Payload, string | null> {
 
   async handle() {
     try {
-      if (!isAddress(this.payload.address)){
+      if (!isAddress(this.payload.address)) {
         return new FailureResult('Not an EVM address');
       }
       const client = createPublicClient({

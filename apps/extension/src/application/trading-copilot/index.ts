@@ -10,6 +10,11 @@ export {
   GetTradingCopilotSubscriptionsCommand,
   RemoveTradingCopilotSubscriptionCommand,
 } from './commands';
-export type { SwapData, SwapDataToken, FormValues, SubscriptionRequest } from './types';
+export type {
+  SwapData,
+  SwapDataToken,
+  FormValues,
+  SubscriptionRequest,
+} from './types';
 export { SubscriptionsManagement } from './subscriptions-management';
 export { useExchanger, useLoginViaSiwe } from './hooks';

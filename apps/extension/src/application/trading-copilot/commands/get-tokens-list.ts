@@ -5,6 +5,7 @@ import {
   HandlerResponseError,
   OkResult,
 } from 'shared/messaging';
+
 import { SwapDataToken } from '../types';
 
 type Response = {
