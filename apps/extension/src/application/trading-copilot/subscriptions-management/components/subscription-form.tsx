@@ -85,8 +85,7 @@ export const SubscriptionForm = ({
         if (!farcasterDetails) {
           return;
         }
-
-        onSubmit(farcasterDetails.address, farcasterDetails.fid);
+        onSubmit(farcasterDetails.address, farcasterDetails.fid, chainType);
         form.reset(EMPTY_FORM);
         return;
       }
@@ -99,8 +98,7 @@ export const SubscriptionForm = ({
       if (!address) {
         return;
       }
-
-      onSubmit(address);
+      onSubmit(address, undefined, chainType);
       form.reset(EMPTY_FORM);
     },
     [
