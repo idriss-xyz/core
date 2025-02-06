@@ -14,6 +14,7 @@
         "ENVIRONMENT",
         "RAILWAY_PUBLIC_DOMAIN",
         "DEV_LOGIN_PASSWORD",
+        "ZAPPER_API_KEY",
         "PUBLIC_ACCESS_ENABLED",
         "CI"
       ]
@@ -26,6 +27,7 @@
         "ENVIRONMENT",
         "RAILWAY_PUBLIC_DOMAIN",
         "DEV_LOGIN_PASSWORD",
+        "ZAPPER_API_KEY",
         "PUBLIC_ACCESS_ENABLED",
         "CI"
       ]
@@ -37,6 +39,7 @@
         "ENVIRONMENT",
         "RAILWAY_PUBLIC_DOMAIN",
         "DEV_LOGIN_PASSWORD",
+        "ZAPPER_API_KEY",
         "PUBLIC_ACCESS_ENABLED",
         "CI"
       ]
