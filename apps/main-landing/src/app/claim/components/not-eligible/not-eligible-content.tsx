@@ -7,7 +7,7 @@ import { GeoConditionalButton } from '@idriss-xyz/ui/geo-conditional-button';
 
 export const NotEligibleContent = () => {
   return (
-    <div className="relative z-[5] m-auto flex w-[600px] flex-col items-center gap-10 rounded-[25px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">
+    <div className="relative z-[5] m-auto flex w-[600px] flex-col items-center gap-10 rounded-[24px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">
       <GradientBorder
         borderWidth={1}
         gradientDirection="toTop"

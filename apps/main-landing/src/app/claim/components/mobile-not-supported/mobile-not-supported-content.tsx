@@ -11,14 +11,14 @@ export const MobileNotSupportedContent = () => {
         className="pointer-events-none absolute left-[-310px] top-[120px] z-1 h-[770px] w-[1233.px] min-w-[120vw] max-w-none rotate-[25.903deg]"
       />
 
-      <div className="relative z-[5] m-auto flex flex-col items-center gap-10 rounded-[25px] bg-[rgba(255,255,255,0.5)] p-4 backdrop-blur-[45px]">
+      <div className="relative z-[5] m-auto flex flex-col items-center gap-10 rounded-[24px] bg-[rgba(255,255,255,0.5)] p-4 backdrop-blur-[45px]">
         <GradientBorder
           borderWidth={1}
           gradientDirection="toTop"
           gradientStopColor="rgba(145, 206, 154, 0.50)"
         />
 
-        <div className="relative flex w-full flex-col items-center rounded-[25px] bg-[rgba(255,255,255,0.8)] px-4 py-11">
+        <div className="relative flex w-full flex-col items-center rounded-[24px] bg-[rgba(255,255,255,0.8)] px-4 py-11">
           <GradientBorder
             borderWidth={2}
             gradientDirection="toBottom"

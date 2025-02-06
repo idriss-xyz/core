@@ -54,7 +54,7 @@ export const CheckEligibilityContent = () => {
   }, [walletClient?.account.address, formMethods]);
 
   return (
-    <div className="relative z-[5] flex w-[800px] flex-col items-center gap-10 rounded-[25px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">
+    <div className="relative z-[5] flex w-[800px] flex-col items-center gap-10 rounded-[24px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">
       <GradientBorder
         borderWidth={1}
         gradientDirection="toTop"
@@ -63,7 +63,7 @@ export const CheckEligibilityContent = () => {
 
       <img className="size-[136px]" src={IDRISS_COIN.src} alt="" />
 
-      <div className="relative flex w-full flex-col items-center gap-2 rounded-[25px] bg-[rgba(255,255,255,0.2)] px-10 py-8">
+      <div className="relative flex w-full flex-col items-center gap-2 rounded-[24px] bg-[rgba(255,255,255,0.2)] px-10 py-8">
         <GradientBorder
           borderWidth={1}
           gradientDirection="toBottom"

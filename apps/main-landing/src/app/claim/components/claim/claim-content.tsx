@@ -35,7 +35,7 @@ export const ClaimContent = () => {
   }
 
   return (
-    <div className="relative z-[5] flex w-[1000px] flex-row rounded-[25px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">
+    <div className="relative z-[5] flex w-[1000px] flex-row rounded-[24px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">
       <GradientBorder
         borderWidth={1}
         gradientDirection="toTop"
@@ -48,7 +48,7 @@ export const ClaimContent = () => {
           <h2 className="text-body3 text-neutralGreen-700">TOKENS TO CLAIM</h2>
         </div>
 
-        <div className="relative mb-10 mt-2 flex w-full flex-col items-start gap-4 self-stretch rounded-[25px] bg-[rgba(255,255,255,0.2)] p-6">
+        <div className="relative mb-10 mt-2 flex w-full flex-col items-start gap-4 self-stretch rounded-[24px] bg-[rgba(255,255,255,0.2)] p-6">
           <GradientBorder
             borderWidth={1}
             gradientDirection="toBottom"

@@ -71,7 +71,7 @@ export const AboutIdrissContent = () => {
   }, [isSuccess, showPlayOverlay]);
 
   return (
-    <div className="relative z-[5] flex w-[800px] flex-col items-center gap-10 rounded-[25px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">
+    <div className="relative z-[5] flex w-[800px] flex-col items-center gap-10 rounded-[24px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">
       <GradientBorder
         gradientDirection="toTop"
         gradientStopColor="rgba(145, 206, 154, 0.50)"

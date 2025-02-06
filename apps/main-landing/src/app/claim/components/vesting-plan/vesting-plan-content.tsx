@@ -111,7 +111,7 @@ export const VestingPlanContent = () => {
         }
       />
 
-      <div className="relative z-[5] mb-6 flex w-[800px] flex-row rounded-[25px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">
+      <div className="relative z-[5] mb-6 flex w-[800px] flex-row rounded-[24px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">
         <GradientBorder
           borderWidth={1}
           gradientDirection="toTop"

@@ -27,7 +27,7 @@ export const ClaimSuccessfulContent = () => {
   }
 
   return (
-    <div className="relative z-[5] m-auto flex w-[560px] flex-col items-center gap-6 rounded-[25px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">
+    <div className="relative z-[5] m-auto flex w-[560px] flex-col items-center gap-6 rounded-[24px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">
       <GradientBorder
         borderWidth={1}
         gradientDirection="toTop"
