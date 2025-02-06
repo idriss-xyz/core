@@ -28,7 +28,7 @@ const ClaimPageContext = createContext<ClaimPageContextValues | undefined>(
 
 export const ClaimPageProvider = ({ children }: Properties) => {
   const [currentContent, setCurrentContent] = useState<ClaimPageContent>(
-    CLAIM_CONTENT.CLAIM,
+    CLAIM_CONTENT.LETTER,
   );
   const [vestingPlan, setVestingPlan] = useState<VestingPlan>();
   const [eligibilityData, setEligibilityData] =
