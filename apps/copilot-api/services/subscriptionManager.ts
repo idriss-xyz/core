@@ -332,6 +332,11 @@ const updateSolanaWebhookAddresses = async (
 
     const newAddresses = [...filteredAddresses, ...addressesToAdd];
 
+    if (newAddresses.length === 0) {
+      // If no addresses left, do not edit and continue to deletion
+      return;
+    }
+
     await axios.put(
       `${HELIUS_API_BASE_URL}/v0/webhooks/${webhookId}?api-key=${HELIUS_API_KEY}`,
       {
