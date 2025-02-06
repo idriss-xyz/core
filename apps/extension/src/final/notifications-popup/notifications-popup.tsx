@@ -98,7 +98,7 @@ const NotificationsPopupContent = ({
           }) ?? {
             address: tokenAddress,
             symbol: '',
-            decimals: 18,
+            decimals: data.tokenIn.decimals,
             amount: data.tokenIn.amount,
             network: data.tokenIn.network,
           }
