@@ -87,11 +87,11 @@ export const SubscriptionForm = ({
         }
 
         if (farcasterDetails.addressSolana) {
-          onSubmit(farcasterDetails.addressSolana, farcasterDetails.fid, chainType);
+          onSubmit(farcasterDetails.addressSolana, farcasterDetails.fid, 'SOLANA');
         }
 
         if (farcasterDetails.address) {
-          onSubmit(farcasterDetails.address, farcasterDetails.fid, chainType);
+          onSubmit(farcasterDetails.address, farcasterDetails.fid, 'EVM');
         }
 
         form.reset(EMPTY_FORM);
