@@ -20,6 +20,7 @@ export {
   VAULT_DOCS_LINK,
   SNAPSHOT_IDRISS_LINK,
   TOKENOMICS_DOCS_LINK,
+  VAULT_LINK,
 } from './links';
 
 export { StakingABI } from './abis';

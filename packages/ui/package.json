@@ -32,6 +32,7 @@
     "./tabs": "./src/components/tabs/index.ts",
     "./steps": "./src/components/steps/index.ts",
     "./geo-conditional-button": "./src/components/geo-conditional-button/index.ts"
+    "./badge": "./src/components/badge/index.ts"
   },
   "scripts": {
     "format": "prettier --check --config ../../prettier.config.mjs --ignore-path .prettierignore .",
