@@ -3,7 +3,7 @@ export type AlchemyWebhookType = 'ADDRESS_ACTIVITY';
 export type Token = {
   address: string;
   amount: number;
-  decimals: number;
+  decimals: number | null;
   network: string;
   symbol: string | null;
   name?: string | null;
