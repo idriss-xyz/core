@@ -30,8 +30,8 @@ export type FarcasterAddressRequest = {
 
 export type FarcasterAddressResponse = {
   fid: number;
-  address: string;
-  addressSolana: string;
+  address: string | undefined;
+  addressSolana: string | undefined;
 } | null;
 
 export type FarcasterTransferResponse = {

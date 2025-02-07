@@ -87,10 +87,12 @@ export const SubscriptionForm = ({
         }
 
         if (farcasterDetails.addressSolana) {
+          chainType = 'SOLANA';
           onSubmit(farcasterDetails.addressSolana, farcasterDetails.fid, chainType);
         }
 
         if (farcasterDetails.address) {
+          chainType = 'EVM';
           onSubmit(farcasterDetails.address, farcasterDetails.fid, chainType);
         }
 
