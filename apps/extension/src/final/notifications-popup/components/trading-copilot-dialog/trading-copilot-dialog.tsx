@@ -3,10 +3,11 @@ import { Controller, useForm } from 'react-hook-form';
 import { Icon as IdrissIcon } from '@idriss-xyz/ui/icon';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { NumericInput } from '@idriss-xyz/ui/numeric-input';
-import { formatEther, isAddress, parseEther } from 'viem';
+import { formatEther, isAddress } from 'viem';
 import { useCallback } from 'react';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
+import { isAddress as isSolanaAddress } from '@solana/web3.js';
 
 import { useWallet } from 'shared/extension';
 import { Closable, ErrorMessage, Icon, LazyImage } from 'shared/ui';
@@ -41,6 +42,25 @@ import {
 
 const EMPTY_FORM: FormValues = {
   amount: '',
+};
+
+const getChainId = (network: keyof typeof CHAIN | 'SOLANA') => {
+  return network === 'SOLANA' ? 1151111081099710 : CHAIN[network].id;
+};
+
+const getDestinationToken = (network: keyof typeof CHAIN | 'SOLANA') => {
+  return network === 'SOLANA'
+    ? '11111111111111111111111111111111'
+    : '0x0000000000000000000000000000000000000000';
+};
+
+const getNativeValue = (
+  network: keyof typeof CHAIN | 'SOLANA',
+  amount: bigint,
+) => {
+  return network === 'SOLANA'
+    ? getWholeNumber((Number(amount) / 1e9).toString()) + ' SOL'
+    : getWholeNumber(Number(formatEther(amount)).toString()) + ' ETH';
 };
 
 export const TradingCopilotDialog = ({
@@ -251,7 +271,7 @@ const TradingCopilotDialogContent = ({
         />
         <div className="flex w-full flex-col">
           <p className="break-all text-label3 text-neutral-900">
-            {isAddress(userName) ? (
+            {isAddress(userName) || isSolanaAddress(userName) ? (
               <TradingCopilotTooltip content={userName}>
                 {getShortWalletHex(userName)}
               </TradingCopilotTooltip>
@@ -414,16 +434,16 @@ const TradingCopilotWalletBalance = ({ wallet }: WalletBalanceProperties) => {
 };
 
 const TradingCopilotTradeValue = ({ wallet, dialog }: TradeValueProperties) => {
-  const amountInEth = dialog.tokenIn.amount.toString();
-  const amountInWei = parseEther(amountInEth).toString();
-
   const quotePayload = {
-    amount: amountInWei,
-    destinationChain: CHAIN[dialog.tokenOut.network].id,
-    fromAddress: wallet.account,
+    amount: (
+      dialog.tokenIn.amount *
+      10 ** (dialog.tokenIn.decimals ?? 9)
+    ).toString(),
+    destinationChain: getChainId(dialog.tokenOut.network),
+    fromAddress: dialog.from,
     originToken: dialog.tokenIn.address,
-    originChain: CHAIN[dialog.tokenIn.network].id,
-    destinationToken: '0x0000000000000000000000000000000000000000',
+    originChain: getChainId(dialog.tokenIn.network),
+    destinationToken: getDestinationToken(dialog.tokenOut.network),
   };
 
   const quoteQuery = useCommandQuery({
@@ -436,7 +456,6 @@ const TradingCopilotTradeValue = ({ wallet, dialog }: TradeValueProperties) => {
   }
 
   const tradeValueInWei = BigInt(quoteQuery.data.estimate.toAmount);
-  const tradeValueInEth = Number(formatEther(tradeValueInWei));
 
-  return <span>{getWholeNumber(tradeValueInEth.toString())} ETH</span>;
+  return <span>{getNativeValue(dialog.tokenIn.network, tradeValueInWei)}</span>;
 };
