@@ -79,7 +79,7 @@ export type FarcasterUserResponse = {
 };
 
 export type SwapDataToken = {
-  address: Hex | string;
+  address: string;
   symbol: string;
   amount: number;
   decimals: number;

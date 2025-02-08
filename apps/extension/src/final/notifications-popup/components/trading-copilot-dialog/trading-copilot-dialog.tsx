@@ -45,7 +45,7 @@ const EMPTY_FORM: FormValues = {
 };
 
 const getChainId = (network: keyof typeof CHAIN | 'SOLANA') => {
-  return network === 'SOLANA' ? 1151111081099710 : CHAIN[network].id;
+  return network === 'SOLANA' ? Number('1151111081099710') : CHAIN[network].id;
 };
 
 const getDestinationToken = (network: keyof typeof CHAIN | 'SOLANA') => {
@@ -440,7 +440,7 @@ const TradingCopilotTradeValue = ({ wallet, dialog }: TradeValueProperties) => {
       10 ** (dialog.tokenIn.decimals ?? 9)
     ).toString(),
     destinationChain: getChainId(dialog.tokenOut.network),
-    fromAddress: dialog.from,
+    fromAddress: dialog.from ?? wallet?.account,
     originToken: dialog.tokenIn.address,
     originChain: getChainId(dialog.tokenIn.network),
     destinationToken: getDestinationToken(dialog.tokenOut.network),

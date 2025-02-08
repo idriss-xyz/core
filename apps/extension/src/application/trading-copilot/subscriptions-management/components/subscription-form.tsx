@@ -88,7 +88,11 @@ export const SubscriptionForm = ({
 
         if (farcasterDetails.addressSolana) {
           chainType = 'SOLANA';
-          onSubmit(farcasterDetails.addressSolana, farcasterDetails.fid, chainType);
+          onSubmit(
+            farcasterDetails.addressSolana,
+            farcasterDetails.fid,
+            chainType,
+          );
         }
 
         if (farcasterDetails.address) {
