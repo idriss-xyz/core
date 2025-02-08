@@ -23,6 +23,7 @@ const getTokenMetadata = async (mintAddress: string) => {
   const { result } = await response.json();
   return {
     symbol: result?.content.metadata.symbol || 'UNKNOWN',
+    decimals: result?.token_info.decimals || null,
     name: result?.content.metadata.name || 'Unknown Token',
     logoURI: result?.content.links.image || null,
   };
@@ -48,7 +49,7 @@ export async function parseSwapFromHelius(
       tokenOut = {
         address: transfer.mint,
         amount: Math.abs(transfer.tokenAmount),
-        decimals: transfer.tokenStandard === 'Fungible' ? 9 : 0,
+        decimals: null,
         symbol: null,
         name: null,
         logoURI: null,
@@ -60,7 +61,7 @@ export async function parseSwapFromHelius(
       tokenIn = {
         address: transfer.mint,
         amount: transfer.tokenAmount,
-        decimals: transfer.tokenStandard === 'Fungible' ? 9 : 0,
+        decimals: null,
         symbol: null,
         name: null,
         logoURI: null,
@@ -86,10 +87,12 @@ export async function parseSwapFromHelius(
   ]);
 
   tokenIn.symbol = tokenInMetadata.symbol;
+  tokenIn.decimals = tokenInMetadata.decimals;
   tokenIn.name = tokenInMetadata.name;
   tokenIn.logoURI = tokenInMetadata.logoURI;
 
   tokenOut.symbol = tokenOutMetadata.symbol;
+  tokenOut.decimals = tokenOutMetadata.decimals;
   tokenOut.name = tokenOutMetadata.name;
   tokenOut.logoURI = tokenOutMetadata.logoURI;
 
@@ -133,7 +136,7 @@ export async function parseJupiterSwap(
   const tokenIn = {
     address: tokenInData.mint,
     amount: tokenInData.tokenAmount,
-    decimals: 9,
+    decimals: tokenInData.decimals,
     symbol: null,
     name: null,
     logoURI: null,
@@ -143,7 +146,7 @@ export async function parseJupiterSwap(
   const tokenOut = {
     address: tokenOutData.mint,
     amount: tokenOutData.tokenAmount,
-    decimals: 9,
+    decimals: tokenOutData.decimals,
     symbol: null,
     name: null,
     logoURI: null,

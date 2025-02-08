@@ -149,8 +149,7 @@ router.post('/get-quote', async (req, res) => {
 
     res.status(200).json(quoteResult);
   } catch (err) {
-    console.error('Error getting quote: ' + err);
-    res.status(429).json({ error: 'You reach Lifi limit' });
+    res.status(500).json({ error: err });
   }
 });
 
