@@ -19,6 +19,10 @@ interface CallbackProperties {
   dialog: SwapData;
 }
 
+const getChainId = (network: keyof typeof CHAIN | 'SOLANA') => {
+  return network === 'SOLANA' ? Number('1151111081099710') : CHAIN[network].id;
+};
+
 export const useExchanger = ({ wallet }: Properties) => {
   const { setWalletInfo } = useWallet();
   const switchChain = useSwitchChain();
@@ -40,10 +44,10 @@ export const useExchanger = ({ wallet }: Properties) => {
 
       const quotePayload = {
         amount: amountInWei,
-        destinationChain: CHAIN[dialog.tokenOut.network].id,
+        destinationChain: getChainId(dialog.tokenOut.network),
         fromAddress: wallet.account,
         destinationToken: dialog.tokenIn.address,
-        originChain: CHAIN[dialog.tokenIn.network].id,
+        originChain: getChainId(dialog.tokenIn.network),
         originToken: '0x0000000000000000000000000000000000000000',
       };
 
