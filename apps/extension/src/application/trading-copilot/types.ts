@@ -30,7 +30,8 @@ export type FarcasterAddressRequest = {
 
 export type FarcasterAddressResponse = {
   fid: number;
-  address: string;
+  address: string | undefined;
+  addressSolana: string | undefined;
 } | null;
 
 export type FarcasterTransferResponse = {
@@ -78,7 +79,7 @@ export type FarcasterUserResponse = {
 };
 
 export type SwapDataToken = {
-  address: Hex | string;
+  address: string;
   symbol: string;
   amount: number;
   decimals: number;

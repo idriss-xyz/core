@@ -94,7 +94,15 @@ export const unsubscribeAddress = async (
   }
 };
 
-const saveWebhookToDb = async (address: string, webhook: { webhookId: any, internalWebhookId: string, chainType: string, signingKey: string } | null) => {
+const saveWebhookToDb = async (
+  address: string,
+  webhook: {
+    webhookId: any;
+    internalWebhookId: string;
+    chainType: string;
+    signingKey: string;
+  } | null,
+) => {
   if (webhook == null) return;
   const { webhookId, internalWebhookId, chainType, signingKey } = webhook;
   await webhooksRepo.save({
@@ -136,8 +144,7 @@ const addAddressToWebhook = async (address: string, chainType: string) => {
         console.log('Creating normal webhook: ', address);
         await saveWebhookToDb(address, webhook);
       }
-    }
-    else if (chainType === WEBHOOK_NETWORK_TYPES.SOLANA) {
+    } else if (chainType === WEBHOOK_NETWORK_TYPES.SOLANA) {
       console.log('Creating new solana webhook for: ', address);
       const webhook = await createNewSolanaWebhook(address);
       await saveWebhookToDb(address, webhook);
@@ -149,8 +156,7 @@ const addAddressToWebhook = async (address: string, chainType: string) => {
     } = res;
     if (chainType === WEBHOOK_NETWORK_TYPES.EVM) {
       await updateWebhookAddresses(webhook_id, [address], []);
-    }
-    else if (chainType === WEBHOOK_NETWORK_TYPES.SOLANA) {
+    } else if (chainType === WEBHOOK_NETWORK_TYPES.SOLANA) {
       await updateSolanaWebhookAddresses(webhook_id, [address], []);
     }
     await addressMapWebhooksRepo.save({
@@ -160,7 +166,10 @@ const addAddressToWebhook = async (address: string, chainType: string) => {
   }
 };
 
-async function removeAddressFromWebhook(address: string, chainType: WEBHOOK_NETWORK_TYPES): Promise<void> {
+async function removeAddressFromWebhook(
+  address: string,
+  chainType: WEBHOOK_NETWORK_TYPES,
+): Promise<void> {
   // Get the webhook associated with the address
   const res = await addressMapWebhooksRepo.findOne({ where: { address } });
 
@@ -186,8 +195,7 @@ async function removeAddressFromWebhook(address: string, chainType: WEBHOOK_NETW
   // Update the webhook via webhook proovider API
   if (chainType === WEBHOOK_NETWORK_TYPES.EVM) {
     await updateWebhookAddresses(webhook_id, [], [address]);
-  }
-  else if (chainType === WEBHOOK_NETWORK_TYPES.SOLANA) {
+  } else if (chainType === WEBHOOK_NETWORK_TYPES.SOLANA) {
     await updateSolanaWebhookAddresses(webhook_id, [], [address]);
   }
 
@@ -203,8 +211,7 @@ async function removeAddressFromWebhook(address: string, chainType: WEBHOOK_NETW
     // Delete webhook from webhook provider and database
     if (chainType === WEBHOOK_NETWORK_TYPES.EVM) {
       await deleteAlchemyWebhook(webhook_id);
-    }
-    else if (chainType === WEBHOOK_NETWORK_TYPES.SOLANA) {
+    } else if (chainType === WEBHOOK_NETWORK_TYPES.SOLANA) {
       await deleteHeliusWebhook(webhook_id);
     }
 
@@ -241,7 +248,12 @@ const createNewWebhook = async (address: string) => {
       const webhookId = data.data.id;
       const signingKey = data.data.signing_key;
 
-      webhooks.push({ webhookId, internalWebhookId, chainType: 'EVM', signingKey });
+      webhooks.push({
+        webhookId,
+        internalWebhookId,
+        chainType: 'EVM',
+        signingKey,
+      });
     }
     return webhooks;
   } catch (err) {
@@ -273,21 +285,21 @@ const createNewSolanaWebhook = async (address: string) => {
 
     const data = response.data;
 
-    console.log("Received data from hook creation: ", data);
+    console.log('Received data from hook creation: ', data);
 
     const webhookId = data.webhookID;
     // No signing key for Helius webhooks
-    return ({ webhookId, internalWebhookId, chainType: 'SOLANA', signingKey: '' });
-
-  }
-
-
-  catch (err) {
+    return {
+      webhookId,
+      internalWebhookId,
+      chainType: 'SOLANA',
+      signingKey: '',
+    };
+  } catch (err) {
     console.error('Error creating Solana webhook: ', err);
     return null;
   }
-
-}
+};
 
 const updateWebhookAddresses = async (
   webhookId: string,
@@ -328,7 +340,9 @@ const updateSolanaWebhookAddresses = async (
     }
 
     const previousAddresses = webhookData.accountAddresses;
-    const filteredAddresses = previousAddresses.filter((address: string) => !addressesToRemove.includes(address));
+    const filteredAddresses = previousAddresses.filter(
+      (address: string) => !addressesToRemove.includes(address),
+    );
 
     const newAddresses = [...filteredAddresses, ...addressesToAdd];
 
@@ -365,8 +379,8 @@ const fetchHeliusWebhookData = async (webhookId: string) => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-        }
-      }
+        },
+      },
     );
     const data = response.json();
     return data;
@@ -374,7 +388,7 @@ const fetchHeliusWebhookData = async (webhookId: string) => {
     console.error('Error fetching current Solana webhook: ', err);
     return null;
   }
-}
+};
 
 async function deleteAlchemyWebhook(webhookId: string): Promise<void> {
   try {

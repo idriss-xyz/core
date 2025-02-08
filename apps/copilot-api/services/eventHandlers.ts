@@ -1,14 +1,21 @@
-import { AlchemyWebhookEvent, CachedTransaction, ComplexHeliusWebhookEvent } from "../interfaces";
-import { WebhookEventHandler } from "../interfaces/WebhookEvent";
-import { SwapData } from "../types";
-import { extractAlchemySwapData, extractHeliusSwapData } from "../utils/webhookUtils";
+import {
+  AlchemyWebhookEvent,
+  CachedTransaction,
+  ComplexHeliusWebhookEvent,
+} from '../interfaces';
+import { WebhookEventHandler } from '../interfaces/WebhookEvent';
+import { SwapData } from '../types';
+import {
+  extractAlchemySwapData,
+  extractHeliusSwapData,
+} from '../utils/webhookUtils';
 
 export class AlchemyEventHandler implements WebhookEventHandler {
   formatForCache(event: AlchemyWebhookEvent): CachedTransaction {
     return {
       data: event.event.activity,
       timestamp: Date.now(),
-      type: 'alchemy'
+      type: 'alchemy',
     };
   }
 
@@ -28,7 +35,7 @@ export class HeliusEventHandler implements WebhookEventHandler {
         events: event.events,
       },
       timestamp: Date.now(),
-      type: 'helius'
+      type: 'helius',
     };
   }
 

@@ -21,7 +21,7 @@ export const heliusWebhookHandler = () => {
     const webhookEvents = req.body as ComplexHeliusWebhookEvent[];
 
     if (webhookEvents.length === 0) {
-      console.error("No transactions found in event response.");
+      console.error('No transactions found in event response.');
       return;
     }
 
