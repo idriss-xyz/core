@@ -39,7 +39,7 @@ export async function parseSwapFromHelius(
   event: ComplexHeliusWebhookEvent,
 ): Promise<SwapData | null> {
   if (!event.tokenTransfers || event.tokenTransfers.length === 0) {
-    console.error("No token transfers found.");
+    console.error('No token transfers found.');
     return null;
   }
 
@@ -69,21 +69,25 @@ export async function parseSwapFromHelius(
     }
   }
 
-  let tokenIn = receivedTokens.find((t) => sentMap.get(t.mint) === undefined) as any;
-  let tokenOut = sentTokens.find((t) => receivedMap.get(t.mint) === undefined) as any;
+  let tokenIn = receivedTokens.find(
+    (t) => sentMap.get(t.mint) === undefined,
+  ) as any;
+  let tokenOut = sentTokens.find(
+    (t) => receivedMap.get(t.mint) === undefined,
+  ) as any;
 
   if (!tokenIn || !tokenOut) {
-    console.error("Failed to determine tokenIn or tokenOut.");
+    console.error('Failed to determine tokenIn or tokenOut.');
     return null;
   }
 
   tokenIn.decimals = getDecimalsFromBalanceChanges(
     tokenIn.mint,
-    tokenBalanceChanges
+    tokenBalanceChanges,
   );
   tokenOut.decimals = getDecimalsFromBalanceChanges(
     tokenOut.mint,
-    tokenBalanceChanges
+    tokenBalanceChanges,
   );
 
   const [tokenInMetadata, tokenOutMetadata] = await Promise.all([
@@ -102,7 +106,7 @@ export async function parseSwapFromHelius(
   return {
     transactionHash,
     from: feePayer,
-    to: "Raydium",
+    to: 'Raydium',
     tokenIn: {
       address: tokenIn.mint,
       amount: tokenIn.tokenAmount,
@@ -110,7 +114,7 @@ export async function parseSwapFromHelius(
       symbol: tokenIn.symbol,
       name: tokenIn.name,
       logoURI: tokenIn.logoURI,
-      network: "SOLANA",
+      network: 'SOLANA',
     },
     tokenOut: {
       address: tokenOut.mint,
@@ -119,7 +123,7 @@ export async function parseSwapFromHelius(
       symbol: tokenOut.symbol,
       name: tokenOut.name,
       logoURI: tokenOut.logoURI,
-      network: "SOLANA",
+      network: 'SOLANA',
     },
     timestamp,
     isComplete: event.transactionError === null,
@@ -131,7 +135,7 @@ export async function parseJupiterSwap(
   event: ComplexHeliusWebhookEvent,
 ): Promise<SwapData | null> {
   if (!event.events || !event.events.swap) {
-    console.error("No swap event found.");
+    console.error('No swap event found.');
     return null;
   }
 
@@ -141,14 +145,18 @@ export async function parseJupiterSwap(
 
   const tokenTransfers = event.tokenTransfers || [];
   const nativeTransfers = event.nativeTransfers || [];
-  const tokenBalanceChanges = event.accountData?.flatMap(a => a.tokenBalanceChanges || []) || [];
+  const tokenBalanceChanges =
+    event.accountData?.flatMap((a) => a.tokenBalanceChanges || []) || [];
 
   let tokenIn = null;
   let tokenOut = null;
   let swapContract = null;
 
   for (const transfer of tokenTransfers) {
-    const decimals = getDecimalsFromBalanceChanges(transfer.mint, tokenBalanceChanges);
+    const decimals = getDecimalsFromBalanceChanges(
+      transfer.mint,
+      tokenBalanceChanges,
+    );
 
     if (transfer.fromUserAccount === feePayer) {
       tokenOut = {
@@ -158,7 +166,7 @@ export async function parseJupiterSwap(
         symbol: null,
         name: null,
         logoURI: null,
-        network: "SOLANA",
+        network: 'SOLANA',
       };
     }
     if (transfer.toUserAccount === feePayer) {
@@ -169,7 +177,7 @@ export async function parseJupiterSwap(
         symbol: null,
         name: null,
         logoURI: null,
-        network: "SOLANA",
+        network: 'SOLANA',
       };
     }
   }
@@ -177,19 +185,19 @@ export async function parseJupiterSwap(
   for (const transfer of nativeTransfers) {
     if (transfer.fromUserAccount === feePayer && !tokenOut) {
       tokenOut = {
-        address: "So11111111111111111111111111111111111111112",
+        address: 'So11111111111111111111111111111111111111112',
         amount: transfer.amount / 1e9,
         decimals: 9,
-        symbol: "SOL",
-        name: "Solana",
+        symbol: 'SOL',
+        name: 'Solana',
         logoURI: null,
-        network: "SOLANA",
+        network: 'SOLANA',
       };
     }
   }
 
   if (!tokenIn || !tokenOut) {
-    console.error("Failed to determine tokenIn or tokenOut.");
+    console.error('Failed to determine tokenIn or tokenOut.');
     return null;
   }
 
