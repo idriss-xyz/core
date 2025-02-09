@@ -75,7 +75,7 @@ export function GET(request: NextRequest) {
       }),
     ).size;
 
-    return NextResponse.json({ links: fileData, uniqueCount: uniqueLinks });
+    return NextResponse.json({ uniqueCount: uniqueLinks, links: fileData });
   } catch {
     return NextResponse.json(
       { error: 'Failed to fetch links' },
