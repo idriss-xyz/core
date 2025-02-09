@@ -1,22 +1,18 @@
 import express from 'express';
+import rateLimit from 'express-rate-limit';
+import { testSwapData } from '../constants';
+import { verifyToken } from '../middleware/auth.middleware';
 import { throwInternalError } from '../middleware/error.middleware';
+import { getQuoteData, getTopAddresses } from '../services';
+import { connectedClients } from '../services/scheduler';
 import {
   subscribeAddress,
   unsubscribeAddress,
 } from '../services/subscriptionManager';
-import { verifyToken } from '../middleware/auth.middleware';
-import { connectedClients } from '../services/scheduler';
-import { dataSource } from '../db';
-import { SubscriptionsEntity } from '../entities/subscribtions.entity';
-import rateLimit from 'express-rate-limit';
-import { getQuoteData, getTopAddresses } from '../services';
 import {
   GetQuoteDataResponseInterface,
   TopAddressesResponseInterface,
 } from '../types';
-import { testSwapData } from '../constants';
-
-const subscriptionsRepo = dataSource.getRepository(SubscriptionsEntity);
 
 const requestLimitation = rateLimit({
   windowMs: 60 * 1000,

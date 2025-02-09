@@ -1,27 +1,27 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
-import { Form } from '@idriss-xyz/ui/form';
-import { Button } from '@idriss-xyz/ui/button';
-import { Controller, useForm } from 'react-hook-form';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { classes } from '@idriss-xyz/ui/utils';
-import { Multiselect, MultiselectOption } from '@idriss-xyz/ui/multiselect';
 import { ANNOUNCEMENT_LINK, CREATORS_LINK } from '@idriss-xyz/constants';
+import { Button } from '@idriss-xyz/ui/button';
+import { Form } from '@idriss-xyz/ui/form';
 import { Link } from '@idriss-xyz/ui/link';
+import { Multiselect, MultiselectOption } from '@idriss-xyz/ui/multiselect';
+import { classes } from '@idriss-xyz/ui/utils';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { isAddress } from 'viem';
 import { normalize } from 'viem/ens';
 
 import { backgroundLines2, backgroundLines3 } from '@/assets';
 import { TopBar } from '@/components';
 
+import { ethereumClient } from './donate/config';
 import {
   CHAIN,
   CHAIN_ID_TO_TOKENS,
   DEFAULT_ALLOWED_CHAINS_IDS,
 } from './donate/constants';
-import { Providers } from './providers';
 import { ChainToken, TokenSymbol } from './donate/types';
-import { ethereumClient } from './donate/config';
+import { Providers } from './providers';
 
 type FormPayload = {
   name: string;
@@ -184,9 +184,18 @@ export default function Donors() {
       }, [] as string[])
       .filter(Boolean);
 
-    await navigator.clipboard.writeText(
-      `https://www.idriss.xyz/creators/donate?address=${address}&token=${tokensSymbols.join(',')}&network=${chainsShortNames.join(',')}&creatorName=${creatorName}`,
-    );
+    const donationURL = `https://www.idriss.xyz/creators/donate?address=${address}&token=${tokensSymbols.join(',')}&network=${chainsShortNames.join(',')}&creatorName=${creatorName}`;
+
+    await navigator.clipboard.writeText(donationURL);
+    try {
+      await fetch('/api/creator-links', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ donationURL }),
+      });
+    } catch {
+      console.warn('Error saving creator link.');
+    }
 
     setCopiedDonationLink(true);
     setCopiedObsLink(false);
