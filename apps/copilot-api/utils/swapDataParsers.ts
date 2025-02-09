@@ -1,6 +1,11 @@
 import { ComplexHeliusWebhookEvent } from '../interfaces';
 import { SwapData } from '../types';
 
+const getDecimalsFromBalanceChanges = (mint: string, balanceChanges: any[]) => {
+  const match = balanceChanges.find((b) => b.mint === mint);
+  return match?.rawTokenAmount?.decimals ?? 9;
+};
+
 // Fetch Token Metadata using Metaplex Token Metadata
 const getTokenMetadata = async (mintAddress: string) => {
   const url = `https://rpc.helius.xyz/?api-key=${process.env.HELIUS_API_KEY}`;
@@ -34,76 +39,90 @@ export async function parseSwapFromHelius(
   event: ComplexHeliusWebhookEvent,
 ): Promise<SwapData | null> {
   if (!event.tokenTransfers || event.tokenTransfers.length === 0) {
-    console.error('No token transfers found in event.');
+    console.error("No token transfers found.");
     return null;
   }
 
-  let tokenIn = null,
-    tokenOut = null;
-  let fromAddress = null,
-    toAddress = null;
   const feePayer = event.feePayer;
+  const transactionHash = event.signature;
+  const timestamp = new Date(event.timestamp * 1000).toISOString();
 
-  for (const transfer of event.tokenTransfers) {
-    if (!tokenOut || transfer.tokenAmount < 0) {
-      tokenOut = {
-        address: transfer.mint,
-        amount: Math.abs(transfer.tokenAmount),
-        decimals: null,
-        symbol: null,
-        name: null,
-        logoURI: null,
-        network: 'SOLANA',
-      };
-      fromAddress = transfer.fromUserAccount;
+  const tokenTransfers = event.tokenTransfers;
+  const tokenBalanceChanges =
+    event.accountData?.flatMap((a) => a.tokenBalanceChanges || []) || [];
+
+  let sentTokens = [];
+  let receivedTokens = [];
+  let receivedMap = new Map();
+  let sentMap = new Map();
+
+  for (const transfer of tokenTransfers) {
+    const { fromUserAccount, toUserAccount, mint, tokenAmount } = transfer;
+
+    if (fromUserAccount === feePayer) {
+      sentTokens.push(transfer);
+      sentMap.set(mint, (sentMap.get(mint) || 0) + tokenAmount);
     }
-    if (!tokenIn || transfer.tokenAmount > 0) {
-      tokenIn = {
-        address: transfer.mint,
-        amount: transfer.tokenAmount,
-        decimals: null,
-        symbol: null,
-        name: null,
-        logoURI: null,
-        network: 'SOLANA',
-      };
-      toAddress = transfer.toUserAccount;
+    if (toUserAccount === feePayer) {
+      receivedTokens.push(transfer);
+      receivedMap.set(mint, (receivedMap.get(mint) || 0) + tokenAmount);
     }
   }
+
+  let tokenIn = receivedTokens.find((t) => sentMap.get(t.mint) === undefined) as any;
+  let tokenOut = sentTokens.find((t) => receivedMap.get(t.mint) === undefined) as any;
 
   if (!tokenIn || !tokenOut) {
-    console.error('Incomplete token transfer data.');
+    console.error("Failed to determine tokenIn or tokenOut.");
     return null;
   }
 
-  if (!fromAddress) {
-    fromAddress = feePayer;
-  }
+  tokenIn.decimals = getDecimalsFromBalanceChanges(
+    tokenIn.mint,
+    tokenBalanceChanges
+  );
+  tokenOut.decimals = getDecimalsFromBalanceChanges(
+    tokenOut.mint,
+    tokenBalanceChanges
+  );
 
-  // Fetch metadata for tokenIn and tokenOut
   const [tokenInMetadata, tokenOutMetadata] = await Promise.all([
-    getTokenMetadata(tokenIn.address),
-    getTokenMetadata(tokenOut.address),
+    getTokenMetadata(tokenIn.mint),
+    getTokenMetadata(tokenOut.mint),
   ]);
 
   tokenIn.symbol = tokenInMetadata.symbol;
-  tokenIn.decimals = tokenInMetadata.decimals;
   tokenIn.name = tokenInMetadata.name;
   tokenIn.logoURI = tokenInMetadata.logoURI;
 
   tokenOut.symbol = tokenOutMetadata.symbol;
-  tokenOut.decimals = tokenOutMetadata.decimals;
   tokenOut.name = tokenOutMetadata.name;
   tokenOut.logoURI = tokenOutMetadata.logoURI;
 
   return {
-    transactionHash: event.signature,
-    from: fromAddress,
-    to: toAddress,
-    tokenIn,
-    tokenOut,
-    timestamp: new Date().toISOString(),
-    isComplete: true,
+    transactionHash,
+    from: feePayer,
+    to: "Raydium",
+    tokenIn: {
+      address: tokenIn.mint,
+      amount: tokenIn.tokenAmount,
+      decimals: tokenIn.decimals,
+      symbol: tokenIn.symbol,
+      name: tokenIn.name,
+      logoURI: tokenIn.logoURI,
+      network: "SOLANA",
+    },
+    tokenOut: {
+      address: tokenOut.mint,
+      amount: tokenOut.tokenAmount,
+      decimals: tokenOut.decimals,
+      symbol: tokenOut.symbol,
+      name: tokenOut.name,
+      logoURI: tokenOut.logoURI,
+      network: "SOLANA",
+    },
+    timestamp,
+    isComplete: event.transactionError === null,
   };
 }
 
@@ -112,48 +131,68 @@ export async function parseJupiterSwap(
   event: ComplexHeliusWebhookEvent,
 ): Promise<SwapData | null> {
   if (!event.events || !event.events.swap) {
-    console.error('No Jupiter swap event found.');
+    console.error("No swap event found.");
     return null;
   }
 
-  const swapEvent = event.events.swap;
-  const firstSwap = swapEvent.innerSwaps?.[0]; // First inner swap (if exists)
+  const feePayer = event.feePayer;
+  const transactionHash = event.signature;
+  const timestamp = new Date(event.timestamp * 1000).toISOString();
 
-  if (
-    !firstSwap ||
-    !firstSwap.tokenInputs.length ||
-    !firstSwap.tokenOutputs.length
-  ) {
-    console.error('No token inputs/outputs found in Jupiter swap.');
+  const tokenTransfers = event.tokenTransfers || [];
+  const nativeTransfers = event.nativeTransfers || [];
+  const tokenBalanceChanges = event.accountData?.flatMap(a => a.tokenBalanceChanges || []) || [];
+
+  let tokenIn = null;
+  let tokenOut = null;
+  let swapContract = null;
+
+  for (const transfer of tokenTransfers) {
+    const decimals = getDecimalsFromBalanceChanges(transfer.mint, tokenBalanceChanges);
+
+    if (transfer.fromUserAccount === feePayer) {
+      tokenOut = {
+        address: transfer.mint,
+        amount: Math.abs(transfer.tokenAmount),
+        decimals,
+        symbol: null,
+        name: null,
+        logoURI: null,
+        network: "SOLANA",
+      };
+    }
+    if (transfer.toUserAccount === feePayer) {
+      tokenIn = {
+        address: transfer.mint,
+        amount: transfer.tokenAmount,
+        decimals,
+        symbol: null,
+        name: null,
+        logoURI: null,
+        network: "SOLANA",
+      };
+    }
+  }
+
+  for (const transfer of nativeTransfers) {
+    if (transfer.fromUserAccount === feePayer && !tokenOut) {
+      tokenOut = {
+        address: "So11111111111111111111111111111111111111112",
+        amount: transfer.amount / 1e9,
+        decimals: 9,
+        symbol: "SOL",
+        name: "Solana",
+        logoURI: null,
+        network: "SOLANA",
+      };
+    }
+  }
+
+  if (!tokenIn || !tokenOut) {
+    console.error("Failed to determine tokenIn or tokenOut.");
     return null;
   }
 
-  // Jupiter's tokenInputs[] are actually spent (should be tokenOut)
-  // Jupiter's tokenOutputs[] are actually received (should be tokenIn)
-  const tokenOutData = firstSwap.tokenInputs[0]; // Token user spent
-  const tokenInData = firstSwap.tokenOutputs[0]; // Token user received
-
-  const tokenIn = {
-    address: tokenInData.mint,
-    amount: tokenInData.tokenAmount,
-    decimals: tokenInData.decimals,
-    symbol: null,
-    name: null,
-    logoURI: null,
-    network: 'SOLANA',
-  };
-
-  const tokenOut = {
-    address: tokenOutData.mint,
-    amount: tokenOutData.tokenAmount,
-    decimals: tokenOutData.decimals,
-    symbol: null,
-    name: null,
-    logoURI: null,
-    network: 'SOLANA',
-  };
-
-  // Fetch metadata for tokenIn and tokenOut
   const [tokenInMetadata, tokenOutMetadata] = await Promise.all([
     getTokenMetadata(tokenIn.address),
     getTokenMetadata(tokenOut.address),
@@ -168,12 +207,12 @@ export async function parseJupiterSwap(
   tokenOut.logoURI = tokenOutMetadata.logoURI;
 
   return {
-    transactionHash: event.signature,
-    from: tokenOutData.fromUserAccount, // The actual sender of tokenOut
-    to: tokenInData.toUserAccount, // The final receiver of tokenIn
+    transactionHash,
+    from: feePayer,
+    to: swapContract,
     tokenIn,
     tokenOut,
-    timestamp: new Date().toISOString(),
-    isComplete: true,
+    timestamp,
+    isComplete: event.transactionError === null,
   };
 }
