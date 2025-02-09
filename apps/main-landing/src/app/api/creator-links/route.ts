@@ -66,8 +66,16 @@ export function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
   try {
-    const fileData = JSON.parse(fs.readFileSync(DATA_FILE_PATH, 'utf8'));
-    return NextResponse.json(fileData);
+    const fileData: { link: string }[] = JSON.parse(
+      fs.readFileSync(DATA_FILE_PATH, 'utf8'),
+    );
+    const uniqueLinks = new Set(
+      fileData.map((entry) => {
+        return entry.link;
+      }),
+    ).size;
+
+    return NextResponse.json({ links: fileData, uniqueCount: uniqueLinks });
   } catch {
     return NextResponse.json(
       { error: 'Failed to fetch links' },
