@@ -4,6 +4,7 @@ import {
   createWalletClient,
   getChainById,
   Hex,
+  SolanaWallet,
   TransactionRevertedError,
   Wallet,
 } from 'shared/web3';
@@ -18,7 +19,7 @@ interface SwapProperties {
 }
 
 interface Properties {
-  wallet: Wallet;
+  wallet: Wallet | SolanaWallet;
   transactionData: SwapProperties;
 }
 
@@ -27,6 +28,7 @@ export const useCopilotTransaction = () => {
 
   return useMutation({
     mutationFn: async ({ wallet, transactionData }: Properties) => {
+      // todo: Send solana transaction
       const walletClient = createWalletClient(wallet);
       const { chain: chainId, ...rest } = transactionData;
 

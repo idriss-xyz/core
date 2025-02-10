@@ -9,7 +9,7 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
 import { isAddress as isSolanaAddress } from '@solana/web3.js';
 
-import { useWallet } from 'shared/extension';
+import { useWallet, useSolanaWallet } from 'shared/extension';
 import { Closable, ErrorMessage, Icon, LazyImage } from 'shared/ui';
 import { useCommandQuery } from 'shared/messaging';
 import {
@@ -19,6 +19,7 @@ import {
   GetEnsNameCommand,
   GetQuoteCommand,
   useExchanger,
+  useSolanaExchanger,
   useLoginViaSiwe,
 } from 'application/trading-copilot';
 import { getShortWalletHex, TimeDifferenceCounter } from 'shared/utils';
@@ -130,8 +131,18 @@ const TradingCopilotDialogContent = ({
   tokenData,
   tokenImage,
 }: ContentProperties) => {
-  const { wallet, isConnectionModalOpened, openConnectionModal } = useWallet();
-  const exchanger = useExchanger({ wallet });
+  const { wallet: evmWallet, isConnectionModalOpened, openConnectionModal } = useWallet();
+  const { wallet: solanaWallet, isConnectionModalOpened: isSolanaConnectionModalOpened, openConnectionModal: openSolanaConnectionModal  } = useSolanaWallet();
+
+  const isSolanaTrade = dialog.tokenIn.network === 'SOLANA';
+  const isActiveModal = isSolanaTrade ? isSolanaConnectionModalOpened : isConnectionModalOpened;
+  const openModal = isSolanaTrade ? openSolanaConnectionModal : openConnectionModal;
+  const activeWallet = isSolanaTrade ? solanaWallet : evmWallet;
+  const evmExchanger = useExchanger({ wallet: evmWallet });
+  const solanaExchanger = useSolanaExchanger({ wallet: solanaWallet });
+
+  const exchanger = isSolanaTrade ? solanaExchanger : evmExchanger;
+
   const siwe = useLoginViaSiwe();
 
   const avatarQuery = useCommandQuery({
@@ -144,7 +155,7 @@ const TradingCopilotDialogContent = ({
 
   const balanceQuery = useCommandQuery({
     command: new GetEnsBalanceCommand({
-      address: wallet?.account ?? '0x',
+      address: evmWallet?.account ?? '0x',
       blockTag: 'safe',
     }),
     staleTime: Number.POSITIVE_INFINITY,
@@ -156,7 +167,7 @@ const TradingCopilotDialogContent = ({
 
   const onSubmit = useCallback(
     async (formValues: FormValues) => {
-      if (!wallet) {
+      if (!activeWallet) {
         return;
       }
 
@@ -165,7 +176,7 @@ const TradingCopilotDialogContent = ({
         dialog: dialog,
       });
     },
-    [dialog, exchanger, wallet],
+    [dialog, exchanger, activeWallet],
   );
 
   if (exchanger.isSending && exchanger.quoteData?.includedSteps[0]) {
@@ -287,9 +298,9 @@ const TradingCopilotDialogContent = ({
                       getWholeNumber(dialog.tokenIn.amount.toString()),
                     )}{' '}
                     ~{' '}
-                    {wallet ? (
+                    {activeWallet ? (
                       <TradingCopilotTradeValue
-                        wallet={wallet}
+                        wallet={evmWallet!}
                         dialog={dialog}
                       />
                     ) : null}
@@ -329,7 +340,7 @@ const TradingCopilotDialogContent = ({
           >
             Amount
           </label>
-          {wallet ? <TradingCopilotWalletBalance wallet={wallet} /> : null}
+          {activeWallet ? <TradingCopilotWalletBalance wallet={evmWallet!} /> : null}
         </div>
         <Controller
           control={control}
@@ -358,7 +369,7 @@ const TradingCopilotDialogContent = ({
           }}
         />
         <div className="mt-5">
-          {wallet ? (
+          {activeWallet ? (
             <>
               <Button
                 intent="primary"
@@ -367,7 +378,7 @@ const TradingCopilotDialogContent = ({
                 type="submit"
                 loading={siwe.isSending || exchanger.isSending}
                 disabled={
-                  Number(watch('amount')) > Number(balanceQuery.data) ||
+                  // Number(watch('amount')) > Number(balanceQuery.data) || TODO: Check solana balance if solana
                   Number(watch('amount')) <= 0
                 }
               >
@@ -383,9 +394,9 @@ const TradingCopilotDialogContent = ({
             <Button
               intent="primary"
               size="medium"
-              onClick={openConnectionModal}
+              onClick={openModal}
               className="w-full"
-              loading={isConnectionModalOpened}
+              loading={isActiveModal}
             >
               LOG IN
             </Button>

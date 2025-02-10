@@ -17,4 +17,4 @@ export type {
   SubscriptionRequest,
 } from './types';
 export { SubscriptionsManagement } from './subscriptions-management';
-export { useExchanger, useLoginViaSiwe } from './hooks';
+export { useExchanger, useSolanaExchanger, useLoginViaSiwe } from './hooks';
