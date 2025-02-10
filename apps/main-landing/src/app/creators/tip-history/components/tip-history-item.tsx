@@ -1,4 +1,4 @@
-import { formatEther, Hex } from 'viem';
+import { formatEther } from 'viem';
 import { Link } from '@idriss-xyz/ui/link';
 
 import { IDRISS_ICON_CIRCLE } from '@/assets';
@@ -138,7 +138,7 @@ export default function TipHistoryItem({ tip }: Properties) {
   const tipperAddress = tip.transaction.fromUser.address;
 
   const ensNameQuery = useGetEnsName({
-    address: tipperAddress as Hex,
+    address: tipperAddress,
   });
 
   const ensAvatarQuery = useGetEnsAvatar(
@@ -150,7 +150,7 @@ export default function TipHistoryItem({ tip }: Properties) {
     },
   );
 
-  if (!tipDetails.amountRaw || !tip.network) {
+  if (!tipDetails?.amountRaw) {
     return;
   }
 
@@ -166,7 +166,7 @@ export default function TipHistoryItem({ tip }: Properties) {
 
   const transactionUrl = getTransactionUrl({
     chainId: CHAIN[removeMainnetSuffix(tip.network) as keyof typeof CHAIN].id,
-    transactionHash: tip.transaction.hash as Hex,
+    transactionHash: tip.transaction.hash,
   });
 
   return (
@@ -197,11 +197,13 @@ export default function TipHistoryItem({ tip }: Properties) {
 
           <p className="align-middle text-body5 text-neutral-600">
             Tipped{' '}
-            <img
-              alt=""
-              className="inline-block size-6"
-              src={tipDetails.tokenV2.imageUrl}
-            />{' '}
+            {tipDetails.tokenV2.imageUrlV2 ? (
+              <img
+                alt=""
+                className="inline-block size-6"
+                src={tipDetails.tokenV2.imageUrlV2}
+              />
+            ) : null}{' '}
             {zerosIndex ? (
               <>
                 0.0

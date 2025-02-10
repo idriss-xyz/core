@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export const TipHistoryQuery = gql`
-  query TimelineForAppQuery($slug: String!, $after: String) {
-    timelineForApp(slug: $slug, first: 100, after: $after) {
+  query TimelineForAppQuery($slug: String!) {
+    timelineForApp(slug: $slug) {
       edges {
         node {
           timestamp
@@ -14,18 +14,13 @@ export const TipHistoryQuery = gql`
             }
           }
           interpretation {
-            processedDescription
             descriptionDisplayItems {
               ... on TokenDisplayItem {
-                type
                 network
-                tokenAddress
                 amountRaw
                 tokenV2 {
                   symbol
-                  decimals
-                  name
-                  imageUrl
+                  imageUrlV2
                   marketData {
                     price
                   }
@@ -38,16 +33,13 @@ export const TipHistoryQuery = gql`
               }
               ... on StringDisplayItem {
                 stringValue
-                type
               }
             }
           }
         }
       }
       pageInfo {
-        startCursor
         hasNextPage
-        hasPreviousPage
         endCursor
       }
     }

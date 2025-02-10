@@ -1,48 +1,43 @@
+import { Hex } from 'viem';
+
 interface TokenV2 {
   symbol: string;
-  decimals: number;
-  name: string;
-  imageUrl: string;
+  imageUrlV2?: string;
   marketData: {
     price: number;
   };
 }
 
 export interface TokenDisplayItem {
-  type: string;
   network: string;
-  tokenAddress: string;
   amountRaw: string;
   tokenV2: TokenV2;
 }
 
 interface ActorDisplayItem {
   account: {
-    address: string;
+    address: Hex;
   };
 }
 
-type StringDisplayItem =
-  | {
-      stringValue: string;
-    }
-  | undefined;
+type StringDisplayItem = {
+  stringValue: string;
+};
 
 export interface Node {
   timestamp: number;
   network: string;
   transaction: {
-    hash: string;
+    hash: Hex;
     fromUser: {
-      address: string;
+      address: Hex;
     };
   };
   interpretation: {
-    processedDescription: string;
     descriptionDisplayItems: [
-      TokenDisplayItem,
-      ActorDisplayItem,
-      StringDisplayItem,
+      TokenDisplayItem | undefined,
+      ActorDisplayItem | undefined,
+      StringDisplayItem | undefined,
     ];
   };
 }
@@ -52,9 +47,7 @@ interface TimelineForApp {
     node: Node;
   }[];
   pageInfo: {
-    startCursor: string;
     hasNextPage: boolean;
-    hasPreviousPage: boolean;
     endCursor: string;
   };
 }
