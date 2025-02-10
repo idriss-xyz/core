@@ -96,10 +96,12 @@ export async function parseSwapFromHelius(
   ]);
 
   tokenIn.symbol = tokenInMetadata.symbol;
+  tokenIn.decimals = tokenInMetadata.decimals;
   tokenIn.name = tokenInMetadata.name;
   tokenIn.logoURI = tokenInMetadata.logoURI;
 
   tokenOut.symbol = tokenOutMetadata.symbol;
+  tokenOut.decimals = tokenOutMetadata.decimals;
   tokenOut.name = tokenOutMetadata.name;
   tokenOut.logoURI = tokenOutMetadata.logoURI;
 
