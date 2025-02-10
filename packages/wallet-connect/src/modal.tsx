@@ -5,7 +5,7 @@ import { useCallback, useMemo, useState, useSyncExternalStore } from 'react';
 import { getAddress, hexToNumber } from 'viem';
 
 import { Wallet } from './types';
-import { BROWSER_PROVIDER_LOGO } from './constants';
+import { BROWSER_PROVIDER_LOGO, PHANTOM_LOGO } from './constants';
 
 type Properties = {
   disabledWalletsRdns: string[];
@@ -128,3 +128,70 @@ export const WalletConnectModal = createModal(
     );
   },
 );
+
+type SolanaWallet = {
+  account: string;
+  provider: any;
+};
+
+export const SolanaWalletConnectModal = createModal(() => {
+  const modal = useModal();
+  const [isConnecting, setIsConnecting] = useState(false);
+
+  const resolveWallet = useCallback(
+    async (wallet: SolanaWallet) => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 1000);
+      });
+      modal.resolve(wallet);
+      modal.remove();
+    },
+    [modal],
+  );
+
+  const connect = useCallback(async () => {
+    setIsConnecting(true);
+    try {
+      const provider = window.solana;
+
+      if (!provider) {
+        setIsConnecting(false);
+        return;
+      }
+
+      const response = await provider.connect();
+      await new Promise((resolve) => {
+        setTimeout(resolve, 500);
+      });
+
+      void resolveWallet({
+        account: response.publicKey.toString(),
+        provider,
+      });
+    } catch {
+      setIsConnecting(false);
+    }
+  }, [resolveWallet]);
+
+  const closeModalWithoutFinishing = useCallback(() => {
+    modal.reject();
+    modal.remove();
+  }, [modal]);
+
+  const phantomProvider = {
+    uuid: 'phantom',
+    rdns: 'app.phantom',
+    icon: PHANTOM_LOGO,
+    name: 'Phantom Wallet'
+  };
+
+  return (
+    <DesignSystemWalletConnectModal
+      onClose={closeModalWithoutFinishing}
+      isOpened={modal.visible}
+      walletProviders={[phantomProvider]}
+      onConnect={() => connect()}
+      isConnecting={isConnecting}
+    />
+  );
+});
