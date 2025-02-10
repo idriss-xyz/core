@@ -21,6 +21,7 @@ import {
   GlobeIcon,
   Vault,
   ChartPie,
+  CalendarClock,
 } from 'lucide-react';
 
 import * as customIcons from './custom';
@@ -48,5 +49,6 @@ export const ICON = {
   GlobeIcon,
   Vault,
   ChartPie,
+  CalendarClock,
   ...customIcons,
 };
