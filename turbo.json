@@ -16,7 +16,8 @@
         "DEV_LOGIN_PASSWORD",
         "ZAPPER_API_KEY",
         "PUBLIC_ACCESS_ENABLED",
-        "CI"
+        "CI",
+        "CREATOR_LINKS_SECRET"
       ]
     },
     "@idriss-xyz/main-landing#start": {
@@ -29,7 +30,8 @@
         "DEV_LOGIN_PASSWORD",
         "ZAPPER_API_KEY",
         "PUBLIC_ACCESS_ENABLED",
-        "CI"
+        "CI",
+        "CREATOR_LINKS_SECRET"
       ]
     },
     "@idriss-xyz/main-landing#dev": {
@@ -41,7 +43,8 @@
         "DEV_LOGIN_PASSWORD",
         "ZAPPER_API_KEY",
         "PUBLIC_ACCESS_ENABLED",
-        "CI"
+        "CI",
+        "CREATOR_LINKS_SECRET"
       ]
     },
     "@idriss-xyz/extension#dev": {

@@ -1,10 +1,10 @@
 import path from 'node:path';
 import * as url from 'node:url';
 
-import type { NextConfig } from 'next';
-import withBundleAnalyzer from '@next/bundle-analyzer';
 import { BRAND_GUIDELINE_LINK } from '@idriss-xyz/constants';
+import withBundleAnalyzer from '@next/bundle-analyzer';
 import { config } from 'dotenv-safe';
+import type { NextConfig } from 'next';
 
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
