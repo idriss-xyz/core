@@ -22,6 +22,7 @@ import {
   AuthTokenContextProvider,
   ExtensionPopupProvider,
   ExtensionSettingsProvider,
+  SolanaWalletContextProvider,
   WalletContextProvider,
 } from 'shared/extension';
 import { AuthTokenStorage, WalletStorage } from 'shared/web3';
@@ -53,24 +54,26 @@ export const Providers = ({
                             onSaveAuthToken={AuthTokenStorage.save}
                           >
                             <NotificationsProvider>
-                              <WalletContextProvider
-                                disabledWalletsRdns={disabledWalletRdns}
-                                onGetWallet={WalletStorage.get}
-                                onClearWallet={WalletStorage.clear}
-                                onSaveWallet={WalletStorage.save}
-                              >
-                                <ExtensionPopupProvider>
-                                  <ExtensionSettingsProvider>
-                                    <TwitterScrapingContextProvider>
-                                      <WarpcastScrapingContextProvider>
-                                        <SupercastScrapingContextProvider>
-                                          {children}
-                                        </SupercastScrapingContextProvider>
-                                      </WarpcastScrapingContextProvider>
-                                    </TwitterScrapingContextProvider>
-                                  </ExtensionSettingsProvider>
-                                </ExtensionPopupProvider>
-                              </WalletContextProvider>
+                              <SolanaWalletContextProvider>
+                                <WalletContextProvider
+                                  disabledWalletsRdns={disabledWalletRdns}
+                                  onGetWallet={WalletStorage.get}
+                                  onClearWallet={WalletStorage.clear}
+                                  onSaveWallet={WalletStorage.save}
+                                >
+                                  <ExtensionPopupProvider>
+                                    <ExtensionSettingsProvider>
+                                      <TwitterScrapingContextProvider>
+                                        <WarpcastScrapingContextProvider>
+                                          <SupercastScrapingContextProvider>
+                                            {children}
+                                          </SupercastScrapingContextProvider>
+                                        </WarpcastScrapingContextProvider>
+                                      </TwitterScrapingContextProvider>
+                                    </ExtensionSettingsProvider>
+                                  </ExtensionPopupProvider>
+                                </WalletContextProvider>
+                              </SolanaWalletContextProvider>
                             </NotificationsProvider>
                           </AuthTokenContextProvider>
                         </NiceModal.Provider>

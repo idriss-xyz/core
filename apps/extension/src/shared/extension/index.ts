@@ -16,6 +16,8 @@ export {
   ExtensionPopupProvider,
   useExtensionPopup,
   WalletContextProvider,
+  SolanaWalletContextProvider,
+  useSolanaWallet,
   useWallet,
 } from './context';
 export {

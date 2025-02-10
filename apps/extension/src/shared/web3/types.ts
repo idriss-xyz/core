@@ -21,3 +21,8 @@ export interface Wallet {
   chainId: number;
   providerRdns: string;
 }
+
+export interface SolanaWallet {
+  publicKey: string;
+  providerName: string;
+};
