@@ -170,8 +170,6 @@ export const UnstakeTabContent = () => {
           maximumFractionDigits: 0,
         }).format(Number(claimedEvent?.total ?? 0));
 
-        console.log(claimedEvent?.total);
-
         setBlockedAmount(claimedEvent?.total ?? '0');
         setStakedDisplayBlockedAmount(formattedBlockedAmount);
       } catch (error) {
