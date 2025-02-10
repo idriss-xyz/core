@@ -62,7 +62,7 @@ export function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const secret = searchParams.get('secret');
 
-  if (secret !== process.env.TOP_ADDRESSES_SECRET) {
+  if (secret !== process.env.CREATOR_LINKS_SECRET) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
   try {
