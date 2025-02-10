@@ -14,12 +14,6 @@ export interface TokenDisplayItem {
   tokenV2: TokenV2;
 }
 
-interface ActorDisplayItem {
-  account: {
-    address: Hex;
-  };
-}
-
 type StringDisplayItem = {
   stringValue: string;
 };
@@ -32,26 +26,24 @@ export interface Node {
     fromUser: {
       address: Hex;
     };
+    toUser: {
+      address: Hex;
+    };
   };
   interpretation: {
     descriptionDisplayItems: [
       TokenDisplayItem | undefined,
-      ActorDisplayItem | undefined,
       StringDisplayItem | undefined,
     ];
   };
 }
 
-interface TimelineForApp {
+interface AccountsTimeline {
   edges: {
     node: Node;
   }[];
-  pageInfo: {
-    hasNextPage: boolean;
-    endCursor: string;
-  };
 }
 
 export interface TipHistoryResponse {
-  timelineForApp: TimelineForApp;
+  accountsTimeline: AccountsTimeline;
 }

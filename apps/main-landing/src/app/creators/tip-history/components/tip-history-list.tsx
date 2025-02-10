@@ -15,31 +15,27 @@ type Properties = {
 };
 
 export default function TipHistoryList({ address }: Properties) {
-  const displayAllTips = address === 'all';
-
   const { data: tips } = useQuery<TipHistoryResponse>(TipHistoryQuery, {
     variables: {
-      slug: 'idriss',
+      addresses: [address],
+      isSigner: false,
     },
   });
 
-  const ensNameQuery = useGetEnsName(
-    {
-      address: address as Hex,
-    },
-    {
-      enabled: !displayAllTips,
-    },
-  );
+  const ensNameQuery = useGetEnsName({
+    address: address as Hex,
+  });
 
-  const filteredTips = displayAllTips
-    ? tips?.timelineForApp.edges
-    : tips?.timelineForApp.edges.filter((tip) => {
-        return (
-          tip.node.interpretation.descriptionDisplayItems[1]?.account
-            .address === address
-        );
-      });
+  const filteredTips = tips?.accountsTimeline.edges;
+
+  console.log(filteredTips);
+
+  // tips?.accountsTimeline.edges.filter((tip) => {
+  //     return (
+  //       tip.node.interpretation.descriptionDisplayItems[1]?.account
+  //         .address === address
+  //     );
+  //   });
 
   return (
     <main className="relative flex min-h-screen grow flex-col items-center justify-around gap-4 overflow-hidden bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#b5d8ae_100%)] px-2 pb-1 pt-[56px] lg:flex-row lg:items-start lg:justify-center lg:px-0">
@@ -67,9 +63,7 @@ export default function TipHistoryList({ address }: Properties) {
             iconName="ArrowLeft"
           />
           <h1 className="my-auto self-start text-balance text-heading4">
-            {displayAllTips
-              ? 'History of all tips'
-              : `History of tips received by ${ensNameQuery.data ?? address}`}
+            History of tips received by {ensNameQuery.data ?? address}
           </h1>
         </div>
 

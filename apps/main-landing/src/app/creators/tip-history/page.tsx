@@ -25,7 +25,7 @@ function TipHistoryContent() {
   const searchParameters = useSearchParams();
   const address = searchParameters.get('address');
 
-  if ((!address || !isAddress(address)) && address !== 'all') {
+  if (!address || !isAddress(address)) {
     router.push('/creators');
     return;
   }

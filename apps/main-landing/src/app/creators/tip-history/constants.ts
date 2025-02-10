@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export const TipHistoryQuery = gql`
-  query TimelineForAppQuery($slug: String!) {
-    timelineForApp(slug: $slug) {
+  query ($addresses: [Address!], $isSigner: Boolean) {
+    accountsTimeline(addresses: $addresses, isSigner: $isSigner, first: 10) {
       edges {
         node {
           timestamp
@@ -10,6 +10,9 @@ export const TipHistoryQuery = gql`
           transaction {
             hash
             fromUser {
+              address
+            }
+            toUser {
               address
             }
           }
@@ -24,11 +27,6 @@ export const TipHistoryQuery = gql`
                   marketData {
                     price
                   }
-                }
-              }
-              ... on ActorDisplayItem {
-                account {
-                  address
                 }
               }
               ... on StringDisplayItem {

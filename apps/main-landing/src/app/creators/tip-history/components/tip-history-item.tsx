@@ -134,11 +134,12 @@ type Properties = {
 
 export default function TipHistoryItem({ tip }: Properties) {
   const tipDetails = tip.interpretation.descriptionDisplayItems[0];
-  const tipComment = tip.interpretation.descriptionDisplayItems[2];
-  const tipperAddress = tip.transaction.fromUser.address;
+  const tipComment = tip.interpretation.descriptionDisplayItems[1];
+  const tipperFromAddress = tip.transaction.fromUser.address;
+  // const tipperToAddress = tip.transaction.fromUser.address;
 
   const ensNameQuery = useGetEnsName({
-    address: tipperAddress,
+    address: tipperFromAddress,
   });
 
   const ensAvatarQuery = useGetEnsAvatar(
@@ -150,7 +151,7 @@ export default function TipHistoryItem({ tip }: Properties) {
     },
   );
 
-  if (!tipDetails?.amountRaw) {
+  if (!tipDetails?.amountRaw || !tipDetails.tokenV2.marketData?.price) {
     return;
   }
 
@@ -185,7 +186,7 @@ export default function TipHistoryItem({ tip }: Properties) {
         <div className="flex flex-col justify-center gap-y-1">
           <div className="flex items-center gap-x-2">
             <p className="text-label3 text-neutral-900">
-              {ensNameQuery.data ?? tipperAddress}{' '}
+              {ensNameQuery.data ?? tipperFromAddress}{' '}
               <span className="text-body3 text-neutral-600">
                 sent $
                 {tradeValue >= 0.01
