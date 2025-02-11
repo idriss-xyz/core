@@ -1,14 +1,14 @@
 import { TopBar } from '@/components';
 
 import { Providers } from './providers';
-import { StakingContent } from './content';
+import { VaultContent } from './content';
 
 // ts-unused-exports:disable-next-line
-export default function Staking() {
+export default function Vault() {
   return (
     <Providers>
       <TopBar />
-      <StakingContent />
+      <VaultContent />
     </Providers>
   );
 }

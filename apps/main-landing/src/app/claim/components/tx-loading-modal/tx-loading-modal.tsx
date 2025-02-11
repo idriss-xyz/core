@@ -11,6 +11,7 @@ interface Properties {
 
 export const TxLoadingModal = ({ show, heading, className }: Properties) => {
   if (!show) return null;
+
   return createPortal(
     <div className="absolute inset-0 z-[15] bg-black/50">
       <div
