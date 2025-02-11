@@ -2,8 +2,9 @@
 
 import { Spinner } from '@idriss-xyz/ui/spinner';
 
+import { BlockedButton } from '../blocked-button';
+
 import { useGeoLocation } from './hooks/use-geo-location';
-import { BlockedButton } from './blocked-button';
 import { restrictedCountries } from './constants';
 
 type GeoConditionalButtonProperties = {

@@ -1,4 +1,3 @@
-import { Button } from '@idriss-xyz/ui/button';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { Link } from '@idriss-xyz/ui/link';
 import {
@@ -6,17 +5,13 @@ import {
   SNAPSHOT_IDRISS_LINK,
   TOKENOMICS_DOCS_LINK,
 } from '@idriss-xyz/constants';
-import { GeoConditionalButton } from '@idriss-xyz/ui/geo-conditional-button';
-
-import { useClaimPage } from '../../claim-page-context';
+import { BlockedButton } from '@idriss-xyz/ui/blocked-button';
 
 import geoist_avatar from './assets/geoist_avatar.png';
 import levertz_avatar from './assets/levertz_avatar.png';
 import user_avatar from './assets/user_avatar.png';
 
 export const LetterContent = () => {
-  const { setCurrentContent } = useClaimPage();
-
   return (
     <div className="relative z-[5] m-auto flex w-[600px] flex-col items-center gap-10 rounded-[24px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">
       <GradientBorder
@@ -97,21 +92,14 @@ export const LetterContent = () => {
         </div>
       </div>
 
-      <GeoConditionalButton
-        defaultButton={
-          <Button
-            size="large"
-            intent="primary"
-            className="w-56"
-            suffixIconName="IdrissArrowRight"
-            onClick={() => {
-              setCurrentContent('about-idriss');
-            }}
-          >
-            Next
-          </Button>
-        }
-      />
+      <BlockedButton
+        buttonClasses="pl-5"
+        tooltipClasses="w-max"
+        iconName="CalendarClock"
+        buttonText="Claim ended"
+      >
+        <span>Claiming ended at 11:59 PM UTC, February 10.</span>
+      </BlockedButton>
     </div>
   );
 };
