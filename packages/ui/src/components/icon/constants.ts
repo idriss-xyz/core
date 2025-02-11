@@ -22,6 +22,7 @@ import {
   Vault,
   ChartPie,
   ArrowDownWideNarrow,
+  CalendarClock,
 } from 'lucide-react';
 
 import * as customIcons from './custom';
@@ -50,5 +51,6 @@ export const ICON = {
   Vault,
   ChartPie,
   ArrowDownWideNarrow,
+  CalendarClock,
   ...customIcons,
 };
