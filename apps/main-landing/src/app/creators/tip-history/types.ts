@@ -8,7 +8,7 @@ interface TokenV2 {
   };
 }
 
-export interface TokenDisplayItem {
+interface TokenDisplayItem {
   network: string;
   amountRaw: string;
   tokenV2: TokenV2;
@@ -33,8 +33,12 @@ export interface Node {
   interpretation: {
     descriptionDisplayItems: [
       TokenDisplayItem | undefined,
+      undefined,
       StringDisplayItem | undefined,
     ];
+  };
+  app?: {
+    slug: string;
   };
 }
 

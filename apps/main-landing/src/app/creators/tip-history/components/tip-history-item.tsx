@@ -54,7 +54,7 @@ function extractSignificantNumber(number: string) {
   };
 }
 
-export const roundToSignificantFiguresForCopilotTrading = (
+const roundToSignificantFiguresForCopilotTrading = (
   number: number,
   significantFigures: number,
 ): { value: number | string; index: number | null } => {
@@ -134,9 +134,8 @@ type Properties = {
 
 export default function TipHistoryItem({ tip }: Properties) {
   const tipDetails = tip.interpretation.descriptionDisplayItems[0];
-  const tipComment = tip.interpretation.descriptionDisplayItems[1];
+  const tipComment = tip.interpretation.descriptionDisplayItems[2];
   const tipperFromAddress = tip.transaction.fromUser.address;
-  // const tipperToAddress = tip.transaction.fromUser.address;
 
   const ensNameQuery = useGetEnsName({
     address: tipperFromAddress,
