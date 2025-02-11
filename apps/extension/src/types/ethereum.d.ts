@@ -6,6 +6,7 @@ interface SolanaProvider {
   connect(): Promise<{ publicKey: string }>;
   disconnect(): Promise<void>;
   signTransaction(transaction: any): Promise<any>;
+  signAndSendTransaction(transaction: any, connection: any, options?: any): Promise<string>;
   signMessage(message: Uint8Array): Promise<any>;
   publicKey?: string;
   on(event: SolanaEvent, handler: (publicKey?: string) => void): void

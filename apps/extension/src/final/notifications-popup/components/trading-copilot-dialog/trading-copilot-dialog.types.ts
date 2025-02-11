@@ -1,5 +1,5 @@
 import { SwapData, SwapDataToken } from 'application/trading-copilot';
-import { Wallet } from 'shared/web3';
+import { SolanaWallet, Wallet } from 'shared/web3';
 
 export interface Properties {
   dialog: SwapData;
@@ -13,7 +13,8 @@ export interface ContentProperties extends Properties {
 }
 
 export interface WalletBalanceProperties {
-  wallet: Wallet;
+  wallet: Wallet | SolanaWallet; // TODO: Extract SolanaWallet to separate properties
+  isSolanaTrade: boolean;
 }
 
 export interface TradeValueProperties {

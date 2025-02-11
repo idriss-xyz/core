@@ -1,4 +1,5 @@
 import { EIP1193Provider } from 'mipd';
+import { SolanaProvider } from 'src/types/ethereum';
 import { Chain as ViemChain } from 'viem';
 
 export type Hex = `0x${string}`;
@@ -23,6 +24,6 @@ export interface Wallet {
 }
 
 export interface SolanaWallet {
-  publicKey: string;
-  providerName: string;
+  account: string;
+  provider: SolanaProvider
 };

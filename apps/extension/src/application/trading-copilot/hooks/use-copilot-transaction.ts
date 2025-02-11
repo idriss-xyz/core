@@ -19,7 +19,12 @@ interface SwapProperties {
 }
 
 interface Properties {
-  wallet: Wallet | SolanaWallet;
+  wallet: Wallet;
+  transactionData: SwapProperties;
+}
+
+interface SolanaProperties {
+  wallet: SolanaWallet;
   transactionData: SwapProperties;
 }
 
@@ -28,7 +33,6 @@ export const useCopilotTransaction = () => {
 
   return useMutation({
     mutationFn: async ({ wallet, transactionData }: Properties) => {
-      // todo: Send solana transaction
       const walletClient = createWalletClient(wallet);
       const { chain: chainId, ...rest } = transactionData;
 
@@ -51,3 +55,26 @@ export const useCopilotTransaction = () => {
     },
   });
 };
+
+export const useCopilotSolanaTransaction = () => {
+  const observabilityScope = useObservabilityScope();
+  return useMutation({
+    mutationFn: async ({ wallet, transactionData }: SolanaProperties) => {
+
+      if (!wallet) {
+        console.error("Wallet not connected");
+        return;
+      }
+
+      const transactionHash = await wallet.provider.signAndSendTransaction(transactionData.data, wallet); // TODO: Refactor for connection
+
+      if (!transactionHash) {
+        const error = new TransactionRevertedError({ transactionHash });
+        observabilityScope.captureException(error);
+        throw error;
+      }
+
+      return { transactionHash };
+    },
+  });
+}

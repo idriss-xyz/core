@@ -164,13 +164,12 @@ export const useSolanaExchanger= ({ wallet }: SolanaProperties) => {
         return await getQuoteMutation.mutateAsync(payload);
       };
 
-      const amountInEth = formValues.amount;
-      const amountInWei = parseEther(amountInEth).toString();
+      const amountInLamports = BigInt(Math.round(parseFloat(formValues.amount) * 1e9));
 
       const quotePayload = {
-        amount: amountInWei,
+        amount: amountInLamports.toString(),
         destinationChain: getChainId(dialog.tokenOut.network),
-        fromAddress: wallet.publicKey,
+        fromAddress: wallet.account,
         destinationToken: dialog.tokenIn.address,
         originChain: getChainId(dialog.tokenIn.network),
         originToken: '11111111111111111111111111111111',
@@ -184,15 +183,15 @@ export const useSolanaExchanger= ({ wallet }: SolanaProperties) => {
           : undefined,
         data: quoteData.transactionData.data,
         chain: quoteData.transactionData.chainId,
-        value: parseEther(amountInEth),
+        value: amountInLamports,
         to: quoteData.transactionData.to,
       };
 
       setWalletInfo({
-        publicKey: wallet.publicKey,
-        providerName: wallet.providerName,
+        account: wallet.account,
+        provider: wallet.provider,
       });
-
+      // TODO: Use solanaCopilot from useSolanaCopilotTransaction() is SolanaTrade
       copilotTransaction.mutate({
         wallet: wallet,
         transactionData,

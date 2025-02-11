@@ -12,14 +12,15 @@ import { createContextHook } from '@idriss-xyz/ui/utils';
 import { SolanaWalletConnectModal } from '@idriss-xyz/wallet-connect';
 
 import { useAuthToken } from './auth-token-context';
+import { SolanaProvider } from 'src/types/ethereum';
 
 type SolanaWallet = {
-  publicKey: string;
-  providerName: string;
+  account: string;
+  provider: SolanaProvider
 };
 
 type StoredSolanaWallet = {
-  publicKey: string;
+  account: string;
   providerName: string;
 };
 
@@ -52,33 +53,32 @@ export const SolanaWalletContextProvider = (properties: {
 
   const onAccountChange = useCallback(async () => {
     const newPublicKey = window.solana?.publicKey;
-    if (newPublicKey && newPublicKey !== wallet?.publicKey) {
+    if (newPublicKey && newPublicKey !== wallet?.account) {
       removeWalletInfo();
     }
   }, [wallet]);
 
   const setWalletInfo = useCallback((wallet: SolanaWallet) => {
+    console.log("Set wallet info", wallet);
     setWallet(wallet);
     onSaveWallet?.({
-      publicKey: wallet.publicKey.toString(),
-      providerName: wallet.providerName,
+      account: wallet.account,
+      providerName: wallet.provider.isPhantom? 'Phantom' : 'Other',
     });
   }, [onSaveWallet]);
 
   useEffect(() => {
     const initializeStoredWallet = async () => {
       const storedWallet = await onGetWallet?.();
+      console.log("Init storted wallet", storedWallet);
       if (storedWallet) {
         try {
           const provider = window.solana;
           if (provider) {
             await provider.connect();
             const wallet: SolanaWallet = {
-              publicKey: storedWallet.publicKey,
-              providerName: storedWallet.providerName,
-              signTransaction: provider.signTransaction,
-              signMessage: provider.signMessage,
-              disconnect: provider.disconnect,
+              account: storedWallet.account,
+              provider
             };
             setWallet(wallet);
           }
@@ -108,6 +108,7 @@ export const SolanaWalletContextProvider = (properties: {
   const openConnectionModal = useCallback(async () => {
     try {
       const resolvedWallet = (await walletConnectModal.show()) as SolanaWallet;
+      console.log("Resolved wallet after modal open", resolvedWallet);
       setWalletInfo(resolvedWallet);
       return resolvedWallet;
     } catch (error) {

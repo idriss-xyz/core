@@ -133,9 +133,8 @@ const TradingCopilotDialogContent = ({
 }: ContentProperties) => {
   const { wallet: evmWallet, isConnectionModalOpened, openConnectionModal } = useWallet();
   const { wallet: solanaWallet, isConnectionModalOpened: isSolanaConnectionModalOpened, openConnectionModal: openSolanaConnectionModal  } = useSolanaWallet();
-
   const isSolanaTrade = dialog.tokenIn.network === 'SOLANA';
-  const isActiveModal = isSolanaTrade ? isSolanaConnectionModalOpened : isConnectionModalOpened;
+  const isModalOpened = isSolanaTrade ? isSolanaConnectionModalOpened : isConnectionModalOpened;
   const openModal = isSolanaTrade ? openSolanaConnectionModal : openConnectionModal;
   const activeWallet = isSolanaTrade ? solanaWallet : evmWallet;
   const evmExchanger = useExchanger({ wallet: evmWallet });
@@ -145,6 +144,7 @@ const TradingCopilotDialogContent = ({
 
   const siwe = useLoginViaSiwe();
 
+  // TODO: Avoid all these queries if it's a solana trade
   const avatarQuery = useCommandQuery({
     command: new GetEnsInfoCommand({
       ensName: userName,
@@ -340,7 +340,7 @@ const TradingCopilotDialogContent = ({
           >
             Amount
           </label>
-          {activeWallet ? <TradingCopilotWalletBalance wallet={evmWallet!} /> : null}
+          {activeWallet ? <TradingCopilotWalletBalance wallet={activeWallet!} isSolanaTrade={isSolanaTrade}/> : null}
         </div>
         <Controller
           control={control}
@@ -396,7 +396,7 @@ const TradingCopilotDialogContent = ({
               size="medium"
               onClick={openModal}
               className="w-full"
-              loading={isActiveModal}
+              loading={isModalOpened}
             >
               LOG IN
             </Button>
@@ -407,7 +407,8 @@ const TradingCopilotDialogContent = ({
   );
 };
 
-const TradingCopilotWalletBalance = ({ wallet }: WalletBalanceProperties) => {
+const TradingCopilotWalletBalance = ({ wallet, isSolanaTrade }: WalletBalanceProperties) => {
+  // TODO: create new command query GetSolBalanceCommand and use it here if wallet is SolanaWallet
   const balanceQuery = useCommandQuery({
     command: new GetEnsBalanceCommand({
       address: wallet?.account ?? '',
@@ -439,7 +440,7 @@ const TradingCopilotWalletBalance = ({ wallet }: WalletBalanceProperties) => {
           roundedNumber
         )}
       </TradingCopilotTooltip>{' '}
-      ETH
+      {isSolanaTrade ? 'SOL' : 'ETH'}
     </p>
   );
 };
