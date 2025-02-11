@@ -14,6 +14,7 @@
     "unused-exports": "./node_modules/.bin/ts-unused-exports ./tsconfig.unused-exports.json"
   },
   "dependencies": {
+    "@apollo/client": "^3.12.9",
     "@ebay/nice-modal-react": "^1.2.13",
     "@hookform/resolvers": "^3.9.0",
     "@idriss-xyz/constants": "workspace:*",
@@ -29,6 +30,7 @@
     "js-cookie": "^3.0.5",
     "mipd": "^0.0.7",
     "next": "15.0.1",
+    "pino-pretty": "^13.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.53.1",
