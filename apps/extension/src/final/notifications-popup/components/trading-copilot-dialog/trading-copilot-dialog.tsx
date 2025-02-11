@@ -7,7 +7,6 @@ import { formatEther, isAddress } from 'viem';
 import { useCallback } from 'react';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
-import { isAddress as isSolanaAddress } from '@solana/web3.js';
 
 import { useWallet } from 'shared/extension';
 import { Closable, ErrorMessage, Icon, LazyImage } from 'shared/ui';
@@ -21,7 +20,7 @@ import {
   useExchanger,
   useLoginViaSiwe,
 } from 'application/trading-copilot';
-import { getShortWalletHex, TimeDifferenceCounter } from 'shared/utils';
+import { getShortWalletHex, isSolanaAddress, TimeDifferenceCounter } from 'shared/utils';
 import {
   CHAIN,
   formatBigNumber,

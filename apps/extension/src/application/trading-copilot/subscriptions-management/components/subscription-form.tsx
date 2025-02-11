@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { isAddress } from 'viem';
-import { isAddress as isSolanaAddress } from '@solana/web3.js';
 
 import { useWallet } from 'shared/extension';
 import { useCommandMutation } from 'shared/messaging';
@@ -13,6 +12,7 @@ import {
 } from '../../commands';
 
 import { Properties, FormValues } from './subscription-form.types';
+import { isSolanaAddress } from 'shared/utils';
 
 const EMPTY_FORM: FormValues = {
   subscriptionDetails: '',

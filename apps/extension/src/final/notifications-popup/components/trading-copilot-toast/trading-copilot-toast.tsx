@@ -1,9 +1,8 @@
 import { Button } from '@idriss-xyz/ui/button';
 import { isAddress } from 'viem';
-import { isAddress as isSolanaAddress } from '@solana/web3.js';
 
 import { Icon, PreloadedImage } from 'shared/ui';
-import { getShortWalletHex, TimeDifferenceCounter } from 'shared/utils';
+import { getShortWalletHex, TimeDifferenceCounter, isSolanaAddress } from 'shared/utils';
 import { roundToSignificantFiguresForCopilotTrading } from 'shared/web3';
 
 import { TokenIcon } from '../../utils';
