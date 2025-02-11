@@ -1,10 +1,15 @@
-type ClaimData = {
+import { Hex } from 'viem';
+
+export type VestingPlan = 'claim_50' | 'claim_and_stake_100';
+
+export type ClaimData = {
   amount: string;
   claimIndices: number[];
   expiry: number;
   memo: string;
   signature: string;
 };
+
 export type EligibilityCheckResponse = {
   aavegotchi: number;
   across: number;
@@ -38,4 +43,26 @@ export type EligibilityCheckResponse = {
   snapshot: number;
   tally: number;
   time_multiplier: number;
+};
+
+export type VerifyEligibilityPayload = {
+  address: string;
+  resolvedEnsAddress?: string;
+};
+
+export type StoreDataAndNavigatePayload = {
+  address: Hex;
+};
+
+export type ResolveEnsAddressPayload = {
+  name: string;
+};
+
+export type ClaimTokensPayload = {
+  vestingPlan: VestingPlan;
+};
+
+export type TxLoadingHeadingParameters = {
+  amount: string;
+  vestingPlan: VestingPlan;
 };

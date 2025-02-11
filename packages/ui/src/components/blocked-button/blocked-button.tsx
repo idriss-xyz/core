@@ -1,4 +1,6 @@
 import { TOKEN_TERMS_AND_CONDITIONS_LINK } from '@idriss-xyz/constants';
+import { ReactNode } from 'react';
+
 import { Button } from '@idriss-xyz/ui/button';
 import {
   Tooltip,
@@ -6,7 +8,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
-import { ReactNode } from 'react';
 import { IconName } from '@idriss-xyz/ui/icon';
 import { classes } from '@idriss-xyz/ui/utils';
 

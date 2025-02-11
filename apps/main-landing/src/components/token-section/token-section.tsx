@@ -10,12 +10,12 @@ import {
   TOKENOMICS_DOCS_LINK,
 } from '@idriss-xyz/constants';
 import { Dropdown } from '@idriss-xyz/ui/dropdown';
+import { GeoConditionalButton } from '@idriss-xyz/ui/geo-conditional-button';
 
 import { EXTERNAL_LINK } from '@/constants';
 
 import idrissCoin from './assets/IDRISS_COIN 1.png';
 import background from './background.png';
-import { GeoConditionalButton } from './components/geo-conditional-button';
 
 export const TokenSection = () => {
   return (

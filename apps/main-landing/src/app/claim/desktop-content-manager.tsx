@@ -5,8 +5,8 @@ import { useMemo, useState } from 'react';
 import { Steps } from '@idriss-xyz/ui/steps';
 
 import '@rainbow-me/rainbowkit/styles.css';
-import idrissSceneStream from './assets/IDRISS_SCENE_STREAM_4_2 1.png';
-import idrissCoinFalling from './assets/ID-Coin falling 2.png';
+import { IDRISS_FALING_COINS, IDRISS_SCENE_STREAM } from '@/assets';
+
 import { useClaimPage } from './claim-page-context';
 import { CheckEligibilityContent } from './components/check-eligibility/check-eligibility-content';
 import { ClaimContent } from './components/claim/claim-content';
@@ -66,16 +66,16 @@ export const DesktopContentManager = () => {
       {currentContent === 'claim-successful' ? (
         videoError ? (
           <img
-            src={idrissCoinFalling.src}
-            className="fixed inset-0 size-auto min-h-full min-w-full object-cover"
-            alt="Falling coins animation fallback"
             loading="lazy"
+            src={IDRISS_FALING_COINS.src}
+            alt="Falling coins animation fallback"
+            className="fixed inset-0 size-auto min-h-full min-w-full object-cover"
           />
         ) : (
           <video
-            autoPlay
-            muted
             loop
+            muted
+            autoPlay
             playsInline
             className="fixed inset-0 size-auto min-h-full min-w-full object-cover"
             onError={() => {
@@ -88,12 +88,13 @@ export const DesktopContentManager = () => {
       ) : (
         <>
           <img
-            src={idrissSceneStream.src}
+            src={IDRISS_SCENE_STREAM.src}
             className="pointer-events-none absolute left-[-310px] top-[-20px] z-1 h-[1440px] w-[2306.px] min-w-[120vw] max-w-none rotate-[25.903deg] lg:block"
             alt=""
           />
         </>
       )}
+
       <div className="flex flex-col lg:mt-32 lg:[@media(max-height:800px)]:mt-[60px]">
         {currentContent !== 'claim-successful' && (
           <Steps
@@ -102,6 +103,7 @@ export const DesktopContentManager = () => {
             className="m-auto mb-[60px] w-[800px]"
           />
         )}
+
         <div className="hidden lg:block">{currentContentComponent}</div>
       </div>
     </main>
