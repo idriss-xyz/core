@@ -128,3 +128,60 @@ export const WalletConnectModal = createModal(
     );
   },
 );
+
+type SolanaWallet = {
+  account: string;
+  provider: any;
+};
+
+export const SolanaWalletConnectModal = createModal(() => {
+  const modal = useModal();
+  const [isConnecting, setIsConnecting] = useState(false);
+
+  const resolveWallet = useCallback(
+    async (wallet: SolanaWallet) => {
+      modal.resolve(wallet);
+      modal.remove();
+    },
+    [modal],
+  );
+  // Make connect receive providerInfo
+  const connect = useCallback(async () => {
+    setIsConnecting(true);
+    try {
+      const provider = window.solana;
+      if (!provider) {
+        setIsConnecting(false);
+        return;
+      }
+      const response = await provider.connect();
+      void resolveWallet({
+        account: response.publicKey,
+        provider,
+      });
+    } catch {
+      setIsConnecting(false);
+    }
+  }, [resolveWallet]);
+
+  const closeModalWithoutFinishing = useCallback(() => {
+    modal.reject();
+    modal.remove();
+  }, [modal]);
+
+  const injectedProvider = {
+    uuid: 'browser.solana',
+    rdns: 'browser.solana',
+    icon: BROWSER_PROVIDER_LOGO,
+    name: 'Browser Solana Wallet'
+  };
+  return (
+    <DesignSystemWalletConnectModal
+      onClose={closeModalWithoutFinishing}
+      isOpened={modal.visible}
+      walletProviders={[injectedProvider]}
+      onConnect={() => connect()}
+      isConnecting={isConnecting}
+    />
+  );
+});
