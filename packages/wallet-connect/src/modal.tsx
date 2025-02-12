@@ -4,7 +4,7 @@ import { createStore, EIP6963ProviderInfo } from 'mipd';
 import { useCallback, useMemo, useState, useSyncExternalStore } from 'react';
 import { getAddress, hexToNumber } from 'viem';
 
-import { Wallet } from './types';
+import { Wallet, SolanaWallet, SolanaProviderInfo } from './types';
 import { BROWSER_PROVIDER_LOGO } from './constants';
 
 type Properties = {
@@ -129,13 +129,32 @@ export const WalletConnectModal = createModal(
   },
 );
 
-type SolanaWallet = {
-  account: string;
-  provider: any;
+interface SolAdapter {
+  name: string;
+  icon: string;
+}
+
+interface SolWallet {
+  adapter: SolAdapter;
+  readyState: any;
+}
+
+type SolanaProperties = {
+  connectWallet: () => Promise<void>;
+  selectWallet: (walletName: any) => void;
+  wallets: SolWallet[];
 };
 
-export const SolanaWalletConnectModal = createModal(() => {
+export const SolanaWalletConnectModal = createModal(
+  ({ connectWallet, selectWallet, wallets }: SolanaProperties) => {
   const modal = useModal();
+  const solanaWalletProviders = wallets.map((wallet) => ({
+    uuid: wallet.adapter.name,
+    rdns: wallet.adapter.name,
+    icon: `data:image/${wallet.adapter.icon}`,
+    name: wallet.adapter.name
+  }));
+
   const [isConnecting, setIsConnecting] = useState(false);
 
   const resolveWallet = useCallback(
@@ -145,23 +164,30 @@ export const SolanaWalletConnectModal = createModal(() => {
     },
     [modal],
   );
-  // Make connect receive providerInfo
-  const connect = useCallback(async () => {
-    setIsConnecting(true);
-    try {
-      const provider = window.solana;
-      if (!provider) {
+  // TODO: Check not correctly connecting
+  const connect = useCallback(async (providerInfo: SolanaProviderInfo) => {
+    if (providerInfo.name === 'browser.solana') {
+      setIsConnecting(true);
+      try {
+        const provider = window.solana;
+        if (!provider) {
+          setIsConnecting(false);
+          return;
+        }
+        const response = await provider.connect();
+        void resolveWallet({
+          account: response.publicKey,
+          provider,
+        });
+      } catch {
         setIsConnecting(false);
-        return;
       }
-      const response = await provider.connect();
-      void resolveWallet({
-        account: response.publicKey,
-        provider,
-      });
-    } catch {
-      setIsConnecting(false);
     }
+    else {
+      selectWallet(providerInfo.name); // TODO: check here
+      await connectWallet();
+    }
+
   }, [resolveWallet]);
 
   const closeModalWithoutFinishing = useCallback(() => {
@@ -179,8 +205,8 @@ export const SolanaWalletConnectModal = createModal(() => {
     <DesignSystemWalletConnectModal
       onClose={closeModalWithoutFinishing}
       isOpened={modal.visible}
-      walletProviders={[injectedProvider]}
-      onConnect={() => connect()}
+      walletProviders={[injectedProvider, ...solanaWalletProviders]}
+      onConnect={connect}
       isConnecting={isConnecting}
     />
   );

@@ -20,7 +20,11 @@ import {
   useExchanger,
   useLoginViaSiwe,
 } from 'application/trading-copilot';
-import { getShortWalletHex, isSolanaAddress, TimeDifferenceCounter } from 'shared/utils';
+import {
+  getShortWalletHex,
+  isSolanaAddress,
+  TimeDifferenceCounter,
+} from 'shared/utils';
 import {
   CHAIN,
   formatBigNumber,
@@ -39,7 +43,8 @@ import {
   TradeValueProperties,
 } from './trading-copilot-dialog.types';
 import { useWallet as useSolanaWallet } from '@solana/wallet-adapter-react';
-import { PhantomWalletName } from '@solana/wallet-adapter-wallets';
+import { useModal } from '@ebay/nice-modal-react';
+import { SolanaWalletConnectModal } from '@idriss-xyz/wallet-connect';
 
 const EMPTY_FORM: FormValues = {
   amount: '',
@@ -133,19 +138,24 @@ const TradingCopilotDialogContent = ({
 }: ContentProperties) => {
   const { wallet, isConnectionModalOpened, openConnectionModal } = useWallet();
   const isSolanaTrade = dialog.tokenIn.network === 'SOLANA';
-  const { connect, connecting, connected, select, wallet: solanaWallet } = useSolanaWallet();
+  const {
+    connect,
+    connecting,
+    connected,
+    select,
+    wallet: solanaWallet,
+    wallets,
+  } = useSolanaWallet();
+  const { show } = useModal(SolanaWalletConnectModal, {
+    connectWallet: connect,
+    selectWallet: select,
+    wallets,
+  });
 
-  const handleConnect = async () => {
-    if (!solanaWallet) {
-      select(PhantomWalletName);
-    }
-    try {
-      await connect();
-    } catch (error) {
-      console.error("Wallet connection error:", error);
-    }
-  };
-  const isWalletConnected = isSolanaTrade ? connected : wallet
+  const isWalletConnected = isSolanaTrade ? connected : wallet;
+  console.log('isWalletConnected', isWalletConnected);
+  console.log('solanaWallet', solanaWallet);
+  console.log('wallet', wallet);
   const exchanger = useExchanger({ wallet });
   const siwe = useLoginViaSiwe();
 
@@ -373,7 +383,7 @@ const TradingCopilotDialogContent = ({
           }}
         />
         <div className="mt-5">
-          { isWalletConnected ? (
+          {isWalletConnected ? (
             <>
               <Button
                 intent="primary"
@@ -398,7 +408,7 @@ const TradingCopilotDialogContent = ({
             <Button
               intent="primary"
               size="medium"
-              onClick={isSolanaTrade ? handleConnect : openConnectionModal}
+              onClick={isSolanaTrade ? () => show() : openConnectionModal}
               className="w-full"
               loading={isSolanaTrade ? connecting : isConnectionModalOpened}
             >

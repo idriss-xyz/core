@@ -8,3 +8,12 @@ export type Wallet = {
   chainId: number;
   providerRdns: string;
 };
+
+export type SolanaWallet = {
+  account: string;
+  provider: any;
+};
+
+export type SolanaProviderInfo = {
+  name: string;
+}
