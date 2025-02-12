@@ -12,6 +12,7 @@ import { TipHistoryQuery } from './constants';
 const ZAPPER_API_URL = 'https://public.zapper.xyz/graphql';
 const ZAPPER_API_KEY = process.env.ZAPPER_API_KEY;
 
+// ts-unused-exports:disable-next-line
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
