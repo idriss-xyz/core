@@ -3,6 +3,9 @@ import {
   ConnectionProvider,
   WalletProvider,
 } from "@solana/wallet-adapter-react";
+import {
+  WalletModalProvider,
+} from "@solana/wallet-adapter-react-ui";
 import { clusterApiUrl } from "@solana/web3.js";
 
 export const SolanaContextProviders = ({ children }: { children: ReactNode }) => {
@@ -12,7 +15,9 @@ export const SolanaContextProviders = ({ children }: { children: ReactNode }) =>
   return (
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets}>
-        { children }
+        <WalletModalProvider>
+          { children }
+        </WalletModalProvider>
       </WalletProvider>
     </ConnectionProvider>
   );

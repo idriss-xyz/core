@@ -38,6 +38,7 @@ import {
   WalletBalanceProperties,
   TradeValueProperties,
 } from './trading-copilot-dialog.types';
+import { WalletConnectButton } from '@solana/wallet-adapter-react-ui';
 
 const EMPTY_FORM: FormValues = {
   amount: '',
@@ -130,6 +131,7 @@ const TradingCopilotDialogContent = ({
   tokenImage,
 }: ContentProperties) => {
   const { wallet, isConnectionModalOpened, openConnectionModal } = useWallet();
+  const isSolanaTrade = dialog.tokenIn.network === 'SOLANA';
   const exchanger = useExchanger({ wallet });
   const siwe = useLoginViaSiwe();
 
@@ -357,7 +359,7 @@ const TradingCopilotDialogContent = ({
           }}
         />
         <div className="mt-5">
-          {wallet ? (
+          {isSolanaTrade ? <WalletConnectButton /> : (wallet ? (
             <>
               <Button
                 intent="primary"
@@ -388,7 +390,7 @@ const TradingCopilotDialogContent = ({
             >
               LOG IN
             </Button>
-          )}
+          ))}
         </div>
       </form>
     </>
