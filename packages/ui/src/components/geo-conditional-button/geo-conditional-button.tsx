@@ -2,11 +2,10 @@
 
 import { Spinner } from '@idriss-xyz/ui/spinner';
 
-import { restrictedCountries } from '@/constants';
+import { BlockedButton } from '../blocked-button';
 
-import { useGeoLocation } from '../hooks/use-geo-location';
-
-import { BlockedButton } from './blocked-button';
+import { useGeoLocation } from './hooks/use-geo-location';
+import { restrictedCountries } from './constants';
 
 type GeoConditionalButtonProperties = {
   defaultButton: React.ReactNode | React.ReactNode[]; // Support single or multiple buttons

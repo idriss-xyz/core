@@ -3,7 +3,7 @@ import { createContextHook } from '@idriss-xyz/ui/utils';
 import { Hex } from 'viem';
 
 import { CLAIM_CONTENT, ClaimPageContent } from './constants';
-import { EligibilityCheckResponse } from './types';
+import { EligibilityCheckResponse, VestingPlan } from './types';
 
 type Properties = {
   children: ReactNode;
@@ -22,7 +22,6 @@ type ClaimPageContextValues = {
   setHasAlreadyClaimed: (hasAlreadyClaimed: boolean) => void;
 };
 
-export type VestingPlan = 'claim_50' | 'claim_and_stake_100';
 const ClaimPageContext = createContext<ClaimPageContextValues | undefined>(
   undefined,
 );
