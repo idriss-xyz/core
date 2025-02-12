@@ -1,13 +1,12 @@
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { formatEther, Hex } from 'viem';
 import { Spinner } from '@idriss-xyz/ui/spinner';
-import { useQuery } from '@apollo/client';
 import { useState } from 'react';
 
 import { backgroundLines2, backgroundLines3 } from '@/assets';
 import { useGetEnsName } from '@/app/creators/tip-history/commands/get-ens-name';
-import { TipHistoryResponse } from '@/app/creators/tip-history/types';
-import { TipHistoryQuery } from '@/app/creators/tip-history/constants';
+import { useGetTipHistory } from '@/app/creators/tip-history/commands/get-tip-history';
+import { Node } from '@/app/creators/tip-history/types';
 
 import TipHistoryItem from './tip-history-item';
 import TipHistoryRankingItem from './tip-history-ranking-item';
@@ -19,18 +18,15 @@ type Properties = {
 export default function TipHistoryList({ address }: Properties) {
   const [filterDescending, setFilterDescending] = useState(false);
 
-  const { data: tips } = useQuery<TipHistoryResponse>(TipHistoryQuery, {
-    variables: {
-      addresses: [address],
-      isSigner: false,
-    },
+  const tips = useGetTipHistory({
+    address: address as Hex,
   });
 
   const ensNameQuery = useGetEnsName({
     address: address as Hex,
   });
 
-  const filteredTips = tips?.accountsTimeline.edges.filter((tip) => {
+  const filteredTips = tips.data?.accountsTimeline.edges.filter((tip) => {
     return tip.node.app?.slug === 'idriss';
   });
 
@@ -62,7 +58,7 @@ export default function TipHistoryList({ address }: Properties) {
 
       return accumulator;
     },
-    {} as Record<string, { tipsSum: number; tips: typeof filteredTips }>,
+    {} as Record<string, { tipsSum: number; tips: { node: Node }[] }>,
   );
 
   const sortedGroupedTips = groupedTips

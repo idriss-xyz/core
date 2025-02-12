@@ -5,22 +5,11 @@ import { isAddress } from 'viem';
 
 import { TopBar } from '@/components';
 import { Providers } from '@/app/creators/providers';
-import { TipHistoryProviders } from '@/app/creators/tip-history/providers';
 
 import TipHistoryList from './components/tip-history-list';
 
 // ts-unused-exports:disable-next-line
 export default function TipHistory() {
-  return (
-    <Providers>
-      <TipHistoryProviders>
-        <TipHistoryContent />
-      </TipHistoryProviders>
-    </Providers>
-  );
-}
-
-function TipHistoryContent() {
   const router = useRouter();
   const searchParameters = useSearchParams();
   const address = searchParameters.get('address');
@@ -31,9 +20,9 @@ function TipHistoryContent() {
   }
 
   return (
-    <>
+    <Providers>
       <TopBar />
       <TipHistoryList address={address} />
-    </>
+    </Providers>
   );
 }
