@@ -1,5 +1,5 @@
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
-import { mainnet, polygon, optimism, mantle, base } from 'wagmi/chains';
+import { mainnet, polygon, optimism, mantle, base, ronin } from 'wagmi/chains';
 import { defineChain, createPublicClient, http } from 'viem';
 
 import { ALEPH_LOGO, ABSTRACT_LOGO } from '../logos';
@@ -43,7 +43,16 @@ const abstract = defineChain({
 export const wagmiconfig = getDefaultConfig({
   appName: 'IDRISS Creators Login',
   projectId: 'c68a9fb876e8a1c0a99f89debcfeb2bf',
-  chains: [mainnet, polygon, optimism, mantle, base, alephzero, abstract],
+  chains: [
+    mainnet,
+    polygon,
+    optimism,
+    mantle,
+    base,
+    alephzero,
+    abstract,
+    ronin,
+  ],
   ssr: true,
 });
 

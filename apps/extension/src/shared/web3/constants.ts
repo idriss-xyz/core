@@ -36,8 +36,14 @@ import {
   WETH_LOGO,
   ZYNK_SYNC_ERA_LOGO,
   ALEPH_LOGO,
+  RONIN_LOGO,
+  RON_LOGO,
   ABSTRACT_LOGO,
   PENGU_LOGO,
+  YGG_LOGO,
+  AXIE_LOGO,
+  // PIXELS_LOGO,
+  PDT_LOGO,
 } from './logos';
 import { Chain, Token, ChainToken } from './types';
 
@@ -75,6 +81,23 @@ export const CHAIN = {
       default: {
         name: 'Evm Explorer',
         url: 'https://abscan.org',
+      },
+    },
+  },
+  RONIN: {
+    id: 2020,
+    name: 'Ronin',
+    logo: RONIN_LOGO,
+    nativeCurrency: {
+      name: 'Ronin',
+      symbol: 'RON',
+      decimals: 18,
+    },
+    rpcUrls: { default: { http: ['https://api.roninchain.com/rpc'] } },
+    blockExplorers: {
+      default: {
+        name: 'Evm Explorer',
+        url: 'https://app.roninchain.com',
       },
     },
   },
@@ -183,6 +206,31 @@ export const TOKEN = {
   PENGU: { name: 'Pudgy Penguins', symbol: 'PENGU', logo: PENGU_LOGO },
   HIGHER: { name: 'Higher', symbol: 'HIGHER', logo: HIGHER_LOGO },
   MOXIE: { name: 'Moxie', symbol: 'MOXIE', logo: MOXIE_LOGO },
+  YGG: {
+    name: 'Yield Guild Games',
+    symbol: 'YGG',
+    logo: YGG_LOGO,
+  },
+  AXIE: {
+    name: 'Axie Infinity',
+    symbol: 'AXS',
+    logo: AXIE_LOGO,
+  },
+  // PIXEL: {
+  //   name: 'Pixels',
+  //   symbol: 'PIXEL',
+  //   logo: PIXELS_LOGO,
+  // },
+  PDT: {
+    name: 'ParagonsDAO',
+    symbol: 'PDT',
+    logo: PDT_LOGO,
+  },
+  RONIN: {
+    name: 'Ronin',
+    symbol: 'RON',
+    logo: RON_LOGO,
+  },
 } satisfies Record<string, Token>;
 
 export const CHAIN_ID_TO_TOKENS = {
@@ -238,15 +286,25 @@ export const CHAIN_ID_TO_TOKENS = {
       decimals: 18,
       address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
     },
-    // {
-    //   ...TOKEN.TETHER,
-    //   decimals: 6,
-    //   address: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
-    // },
     {
       ...TOKEN.ECHELON_PRIME,
       decimals: 18,
       address: '0xb23d80f5FefcDDaa212212F028021B41DEd428CF',
+    },
+    {
+      ...TOKEN.AAVEGOTCHI,
+      decimals: 18,
+      address: '0x3F382DbD960E3a9bbCeaE22651E88158d2791550',
+    },
+    {
+      ...TOKEN.YGG,
+      decimals: 18,
+      address: '0x25f8087ead173b73d6e8b84329989a8eea16cf73',
+    },
+    {
+      ...TOKEN.PDT,
+      decimals: 18,
+      address: '0x375abb85c329753b1ba849a601438ae77eec9893',
     },
     {
       ...TOKEN.CULT_DAO,
@@ -257,11 +315,6 @@ export const CHAIN_ID_TO_TOKENS = {
       ...TOKEN.BANKLESS_DAO,
       decimals: 18,
       address: '0x2d94aa3e47d9d5024503ca8491fce9a2fb4da198',
-    },
-    {
-      ...TOKEN.AAVEGOTCHI,
-      decimals: 18,
-      address: '0x3F382DbD960E3a9bbCeaE22651E88158d2791550',
     },
   ],
   [CHAIN.OPTIMISM.id]: [
@@ -284,6 +337,49 @@ export const CHAIN_ID_TO_TOKENS = {
       ...TOKEN.OPTIMISM,
       decimals: 18,
       address: '0x4200000000000000000000000000000000000042',
+    },
+  ],
+  [CHAIN.POLYGON.id]: [
+    {
+      ...TOKEN.POLYGON,
+      decimals: 18,
+      address: NATIVE_COIN_ADDRESS,
+    },
+    {
+      ...TOKEN.USDC,
+      decimals: 6,
+      address: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
+    },
+    {
+      ...TOKEN.DAI,
+      decimals: 18,
+      address: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063',
+    },
+    {
+      ...TOKEN.WETH,
+      decimals: 18,
+      name: 'ETH on Polygon',
+      address: '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
+    },
+    {
+      ...TOKEN.AAVEGOTCHI,
+      decimals: 18,
+      address: '0x385eeac5cb85a38a9a07a70c73e0a3271cfb54a7',
+    },
+    {
+      ...TOKEN.YGG,
+      decimals: 18,
+      address: '0x82617aa52dddf5ed9bb7b370ed777b3182a30fd1',
+    },
+    {
+      ...TOKEN.REVOLT2EARN,
+      decimals: 18,
+      address: '0xf0f9D895aCa5c8678f706FB8216fa22957685A13',
+    },
+    {
+      ...TOKEN.BANKLESS_DAO,
+      decimals: 18,
+      address: '0xdb7cb471dd0b49b29cab4a1c14d070f27216a0ab',
     },
   ],
   [CHAIN.BNB_CHAIN.id]: [
@@ -314,48 +410,37 @@ export const CHAIN_ID_TO_TOKENS = {
       address: '0xbA2aE424d960c26247Dd6c32edC70B295c744C43',
     },
   ],
-  [CHAIN.POLYGON.id]: [
+  [CHAIN.RONIN.id]: [
     {
-      ...TOKEN.POLYGON,
+      ...TOKEN.RONIN,
       decimals: 18,
       address: NATIVE_COIN_ADDRESS,
     },
     {
+      ...TOKEN.ETHEREUM,
+      decimals: 18,
+      address: '0xc99a6a985ed2cac1ef41640596c5a5f9f4e19ef5',
+    },
+    {
       ...TOKEN.USDC,
       decimals: 6,
-      address: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
+      address: '0x0b7007c13325c48911f73a2dad5fa5dcbf808adc',
     },
     {
-      ...TOKEN.DAI,
+      ...TOKEN.YGG,
       decimals: 18,
-      address: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063',
+      address: '0x1c306872bc82525d72bf3562e8f0aa3f8f26e857',
+    },
+    {
+      ...TOKEN.AXIE,
+      decimals: 18,
+      address: '0x97a9107c1793bc407d6f527b77e7fff4d812bece',
     },
     // {
-    //   ...TOKEN.TETHER,
-    //   decimals: 6,
-    //   address: '0xc2132d05d31c914a87c6611c10748aeb04b58e8f',
+    //   ...TOKEN.PIXEL,
+    //   decimals: 18,
+    //   address: '0x7eae20d11ef8c779433eb24503def900b9d28ad7',
     // },
-    {
-      ...TOKEN.WETH,
-      decimals: 18,
-      name: 'ETH on Polygon',
-      address: '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
-    },
-    {
-      ...TOKEN.REVOLT2EARN,
-      decimals: 18,
-      address: '0xf0f9D895aCa5c8678f706FB8216fa22957685A13',
-    },
-    {
-      ...TOKEN.BANKLESS_DAO,
-      decimals: 18,
-      address: '0xdb7cb471dd0b49b29cab4a1c14d070f27216a0ab',
-    },
-    {
-      ...TOKEN.AAVEGOTCHI,
-      decimals: 18,
-      address: '0x385eeac5cb85a38a9a07a70c73e0a3271cfb54a7',
-    },
   ],
   [CHAIN.ZK_SYNC_ERA.id]: [
     {
@@ -406,6 +491,16 @@ export const CHAIN_ID_TO_TOKENS = {
       ...TOKEN.ECHELON_PRIME,
       decimals: 18,
       address: '0xfA980cEd6895AC314E7dE34Ef1bFAE90a5AdD21b',
+    },
+    {
+      ...TOKEN.PDT,
+      decimals: 18,
+      address: '0xeff2a458e464b07088bdb441c21a42ab4b61e07e',
+    },
+    {
+      ...TOKEN.YGG,
+      decimals: 18,
+      address: '0x25f8087ead173b73d6e8b84329989a8eea16cf73',
     },
     {
       ...TOKEN.DEGEN,

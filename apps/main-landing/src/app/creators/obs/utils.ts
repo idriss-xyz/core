@@ -12,6 +12,8 @@ const SELL_TOKEN_BY_NETWORK: Record<string, string> = {
     '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
   [CHAIN.ALEPH.shortName.toLowerCase()]:
     '0x4ca4b85ead5ea49892d3a81dbfae2f5c2f75d53d',
+  [CHAIN.RONIN.shortName.toLowerCase()]:
+    '0x0b7007c13325c48911f73a2dad5fa5dcbf808adc',
   [CHAIN.ABSTRACT.shortName.toLowerCase()]:
     '0x84a71ccd554cc1b02749b35d22f684cc8ec987e1',
   [CHAIN.MANTLE.name.toLowerCase()]:
@@ -129,6 +131,8 @@ export const TIP_MESSAGE_EVENT_ABI: Record<string, string> = {
   optimism:
     'event TipMessage(address recipientAddress, string message, address sender, address tokenAddress, uint256 fee)',
   aleph:
+    'event TipMessage(address recipientAddress, string message, address sender, address tokenAddress, uint256 amount, uint256 fee)',
+  ronin:
     'event TipMessage(address recipientAddress, string message, address sender, address tokenAddress, uint256 amount, uint256 fee)',
   abstract:
     'event TipMessage(address recipientAddress, string message, address sender, address tokenAddress)',
