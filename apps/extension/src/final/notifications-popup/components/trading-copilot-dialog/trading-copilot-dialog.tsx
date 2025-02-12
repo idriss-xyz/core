@@ -38,7 +38,8 @@ import {
   WalletBalanceProperties,
   TradeValueProperties,
 } from './trading-copilot-dialog.types';
-import { WalletConnectButton } from '@solana/wallet-adapter-react-ui';
+import { useWallet as useSolanaWallet } from '@solana/wallet-adapter-react';
+import { PhantomWalletName } from '@solana/wallet-adapter-wallets';
 
 const EMPTY_FORM: FormValues = {
   amount: '',
@@ -132,6 +133,19 @@ const TradingCopilotDialogContent = ({
 }: ContentProperties) => {
   const { wallet, isConnectionModalOpened, openConnectionModal } = useWallet();
   const isSolanaTrade = dialog.tokenIn.network === 'SOLANA';
+  const { connect, connecting, connected, select, wallet: solanaWallet } = useSolanaWallet();
+
+  const handleConnect = async () => {
+    if (!solanaWallet) {
+      select(PhantomWalletName);
+    }
+    try {
+      await connect();
+    } catch (error) {
+      console.error("Wallet connection error:", error);
+    }
+  };
+  const isWalletConnected = isSolanaTrade ? connected : wallet
   const exchanger = useExchanger({ wallet });
   const siwe = useLoginViaSiwe();
 
@@ -359,7 +373,7 @@ const TradingCopilotDialogContent = ({
           }}
         />
         <div className="mt-5">
-          {isSolanaTrade ? <WalletConnectButton /> : (wallet ? (
+          { isWalletConnected ? (
             <>
               <Button
                 intent="primary"
@@ -384,13 +398,13 @@ const TradingCopilotDialogContent = ({
             <Button
               intent="primary"
               size="medium"
-              onClick={openConnectionModal}
+              onClick={isSolanaTrade ? handleConnect : openConnectionModal}
               className="w-full"
-              loading={isConnectionModalOpened}
+              loading={isSolanaTrade ? connecting : isConnectionModalOpened}
             >
               LOG IN
             </Button>
-          ))}
+          )}
         </div>
       </form>
     </>
