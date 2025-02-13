@@ -37,6 +37,11 @@ const clientOptimism = createPublicClient({
   transport: http(),
 });
 
+const clientRonin = createPublicClient({
+  chain: CHAIN.RONIN,
+  transport: http(),
+});
+
 export const clients = [
   {
     chain: CHAIN.BASE.id,
@@ -62,6 +67,11 @@ export const clients = [
     chain: CHAIN.ALEPH.id,
     client: clientAleph,
     name: CHAIN.ALEPH.shortName.toLowerCase(),
+  },
+  {
+    chain: CHAIN.RONIN.id,
+    client: clientRonin,
+    name: CHAIN.RONIN.shortName.toLowerCase(),
   },
   {
     chain: CHAIN.ABSTRACT.id,

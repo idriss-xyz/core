@@ -48,9 +48,11 @@ const TOKENS_ORDER: Record<TokenSymbol, number> = {
   GHST: 5,
   PRIME: 6,
   YGG: 7,
-  PDT: 8,
-  DEGEN: 9,
-  PENGU: 10,
+  RON: 8,
+  AXS: 9,
+  PDT: 10,
+  DEGEN: 11,
+  PENGU: 12,
 };
 
 // ts-unused-exports:disable-next-line
