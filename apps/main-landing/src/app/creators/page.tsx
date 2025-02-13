@@ -190,7 +190,7 @@ export default function Donors() {
 
     await navigator.clipboard.writeText(donationURL);
     try {
-      await fetch('/api/creator-links', {
+      await fetch('https://api.idriss.xyz/creators/links', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ donationURL }),
