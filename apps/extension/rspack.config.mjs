@@ -125,6 +125,19 @@ export default (_env, argv) => {
           type: 'asset/source',
         },
         {
+          test: /\.css$/,
+          exclude: /tailwind\.build\.css$/,
+          use: [
+            'style-loader',
+            {
+              loader: 'css-loader',
+              options: {
+                modules: false,
+              },
+            },
+          ],
+        },
+        {
           test: /\.scss$/,
           use: [
             'css-loader', // translates CSS into CommonJS
