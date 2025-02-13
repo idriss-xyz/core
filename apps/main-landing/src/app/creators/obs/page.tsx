@@ -31,12 +31,7 @@ import {
 } from './utils';
 
 const DONATION_DISPLAY_DURATION = 11_000;
-const BLOCK_LOOKBACK_RANGE = 5n;
-const FETCH_INTERVAL = 5000;
 
-const latestCheckedBlocks = new Map();
-
-// ts-unused-exports:disable-next-line
 export default function Obs() {
   const router = useRouter();
   const searchParameters = useSearchParams();
@@ -86,21 +81,20 @@ export default function Obs() {
 
   const displayNextDonation = useCallback(() => {
     setIsDisplayingDonation(true);
-
     setTimeout(() => {
       setDonationsQueue((previous) => {
         return previous.slice(1);
       });
       setIsDisplayingDonation(false);
     }, DONATION_DISPLAY_DURATION);
-  }, [setDonationsQueue]);
+  }, []);
 
   const addDonation = useCallback(
     (donation: DonationNotificationProperties) => {
       setDonationsQueue((previous) => {
         if (
-          previous.some((existingDonation) => {
-            return existingDonation.txnHash === donation.txnHash;
+          previous.some((d) => {
+            return d.txnHash === donation.txnHash;
           })
         ) {
           return previous;
@@ -111,111 +105,80 @@ export default function Obs() {
     [],
   );
 
-  const fetchTipMessageLogs = useCallback(async () => {
-    if (!resolvedAddress) return;
-
-    for (const { chain, client, name } of clients) {
-      try {
-        const latestBlock = await client.getBlockNumber();
-        const lastCheckedBlock =
-          latestCheckedBlocks.get(chain) || latestBlock - BLOCK_LOOKBACK_RANGE;
-
-        if (latestBlock <= lastCheckedBlock) continue;
-
-        const eventSignature = TIP_MESSAGE_EVENT_ABI[name];
-
-        if (!eventSignature) {
-          console.warn(`Unsupported event signature for chain: ${name}`);
-          continue;
-        }
-
-        const parsedEvent = parseAbiItem(eventSignature) as AbiEvent;
-
-        const tipMessageLogs = await client.getLogs({
-          address: CHAIN_TO_IDRISS_TIPPING_ADDRESS[chain],
-          event: parsedEvent,
-          fromBlock: lastCheckedBlock + 1n,
-          toBlock: latestBlock,
-        });
-
-        latestCheckedBlocks.set(chain, latestBlock);
-
-        if (tipMessageLogs.length === 0) {
-          continue;
-        }
-
-        for (const log of tipMessageLogs) {
-          if (!log.topics) {
-            continue;
-          }
-
-          const txn = await client.getTransaction({
-            hash: log.transactionHash!,
-          });
-
-          const decoded = decodeFunctionData({
-            abi: TIPPING_ABI,
-            data: txn.input,
-          });
-
-          let recipient, tokenAmount, tokenAddress, message;
-
-          if (decoded.functionName === 'sendTo') {
-            [recipient, tokenAmount, message] = decoded.args;
-            tokenAddress = NATIVE_COIN_ADDRESS;
-          } else if (decoded.functionName === 'sendTokenTo') {
-            [recipient, tokenAmount, tokenAddress, message] = decoded.args;
-          }
-
-          if (!recipient || !tokenAmount) {
-            continue;
-          }
-
-          if (recipient.toLowerCase() !== resolvedAddress.toLowerCase())
-            continue;
-
-          const resolved = await resolveEnsName(txn.from);
-
-          const senderIdentifier =
-            resolved ?? `${txn.from.slice(0, 4)}...${txn.from.slice(-2)}`;
-
-          const donorAvatar = resolved
-            ? await getEnsAvatar(ethereumClient, {
-                name: normalize(resolved),
-              })
-            : null;
-
-          const avatarUrl = donorAvatar ?? undefined;
-
-          const amountInDollar = await calculateDollar(
-            tokenAddress as Hex,
-            tokenAmount,
-            chain,
-            name,
-          );
-
-          addDonation({
-            txnHash: log.transactionHash!,
-            donor: senderIdentifier,
-            amount: amountInDollar,
-            message: message ?? '',
-            avatarUrl,
-          });
-        }
-      } catch (error) {
-        console.error('Error fetching tip message log:', error);
-      }
-    }
-  }, [resolvedAddress, addDonation]);
-
   useEffect(() => {
     if (!resolvedAddress) return;
+    const unwatchers: (() => void)[] = [];
 
-    const intervalId = setInterval(fetchTipMessageLogs, FETCH_INTERVAL);
+    for (const { chain, client, name } of clients) {
+      const eventSignature = TIP_MESSAGE_EVENT_ABI[name];
+      if (!eventSignature) {
+        console.warn(`Unsupported event signature for chain: ${name}`);
+        continue;
+      }
+      const parsedEvent = parseAbiItem(eventSignature) as AbiEvent;
+
+      const unwatch = client.watchEvent({
+        address: CHAIN_TO_IDRISS_TIPPING_ADDRESS[chain],
+        event: parsedEvent,
+        onLogs: async (logs) => {
+          for (const log of logs) {
+            if (!log.topics) continue;
+            try {
+              const txn = await client.getTransaction({
+                hash: log.transactionHash,
+              });
+              const decoded = decodeFunctionData({
+                abi: TIPPING_ABI,
+                data: txn.input,
+              });
+              let recipient, tokenAmount, tokenAddress, message;
+              if (decoded.functionName === 'sendTo') {
+                [recipient, tokenAmount, message] = decoded.args;
+                tokenAddress = NATIVE_COIN_ADDRESS;
+              } else if (decoded.functionName === 'sendTokenTo') {
+                [recipient, tokenAmount, tokenAddress, message] = decoded.args;
+              }
+              if (!recipient || !tokenAmount) continue;
+              if (recipient.toLowerCase() !== resolvedAddress.toLowerCase())
+                continue;
+              const resolved = await resolveEnsName(txn.from);
+              const senderIdentifier =
+                resolved ?? `${txn.from.slice(0, 4)}...${txn.from.slice(-2)}`;
+              const donorAvatar = resolved
+                ? await getEnsAvatar(ethereumClient, {
+                    name: normalize(resolved),
+                  })
+                : null;
+              const avatarUrl = donorAvatar ?? undefined;
+              const amountInDollar = await calculateDollar(
+                tokenAddress as Hex,
+                tokenAmount,
+                chain,
+                name,
+              );
+              addDonation({
+                txnHash: log.transactionHash,
+                donor: senderIdentifier,
+                amount: amountInDollar,
+                message: message ?? '',
+                avatarUrl,
+              });
+            } catch (error) {
+              console.error(
+                'Error processing websocket donation event:',
+                error,
+              );
+            }
+          }
+        },
+      });
+      unwatchers.push(unwatch);
+    }
+
     return () => {
-      return clearInterval(intervalId);
+      for (const unwatch of unwatchers) unwatch();
     };
-  }, [resolvedAddress, fetchTipMessageLogs]);
+  }, [resolvedAddress, addDonation]);
 
   useEffect(() => {
     if (!isDisplayingDonation && donationsQueue.length > 0) {

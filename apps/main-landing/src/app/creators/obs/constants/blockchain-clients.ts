@@ -1,45 +1,49 @@
-import { createPublicClient, http } from 'viem';
+import { createPublicClient, webSocket } from 'viem';
 
 import { CHAIN } from '../../donate/constants';
 
+const WEBSOCKET_OPTIONS = {
+  timeout: 5000,
+};
+
 const clientBase = createPublicClient({
   chain: CHAIN.BASE,
-  transport: http(),
+  transport: webSocket('', WEBSOCKET_OPTIONS),
 });
 
 export const clientEthereum = createPublicClient({
   chain: CHAIN.ETHEREUM,
-  transport: http('https://eth.llamarpc.com'),
+  transport: webSocket('', WEBSOCKET_OPTIONS),
 });
 
 const clientPolygon = createPublicClient({
   chain: CHAIN.POLYGON,
-  transport: http('https://polygon-rpc.com/'),
+  transport: webSocket('', WEBSOCKET_OPTIONS),
 });
 
 const clientAleph = createPublicClient({
   chain: CHAIN.ALEPH,
-  transport: http(),
+  transport: webSocket('', WEBSOCKET_OPTIONS),
 });
 
 const clientAbstract = createPublicClient({
   chain: CHAIN.ABSTRACT,
-  transport: http(),
+  transport: webSocket('', WEBSOCKET_OPTIONS),
 });
 
 const clientMantle = createPublicClient({
   chain: CHAIN.MANTLE,
-  transport: http(),
+  transport: webSocket('', WEBSOCKET_OPTIONS),
 });
 
 const clientOptimism = createPublicClient({
   chain: CHAIN.OPTIMISM,
-  transport: http(),
+  transport: webSocket('', WEBSOCKET_OPTIONS),
 });
 
 const clientRonin = createPublicClient({
   chain: CHAIN.RONIN,
-  transport: http(),
+  transport: webSocket('', WEBSOCKET_OPTIONS),
 });
 
 export const clients = [
