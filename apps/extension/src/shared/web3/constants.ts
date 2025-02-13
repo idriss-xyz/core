@@ -499,7 +499,7 @@ export const CHAIN_ID_TO_TOKENS = {
     {
       ...TOKEN.YGG,
       decimals: 18,
-      address: '0x25f8087ead173b73d6e8b84329989a8eea16cf73',
+      address: '0xaac78d1219c08aecc8e37e03858fe885f5ef1799',
     },
     {
       ...TOKEN.DEGEN,
