@@ -19,6 +19,7 @@ import {
   GetQuoteCommand,
   useExchanger,
   useLoginViaSiwe,
+  useSolanaExchanger,
 } from 'application/trading-copilot';
 import {
   getShortWalletHex,
@@ -142,6 +143,7 @@ const TradingCopilotDialogContent = ({
     connecting,
     connected,
     wallet: solanaWallet,
+    publicKey,
     wallets,
     select,
     connect,
@@ -154,7 +156,9 @@ const TradingCopilotDialogContent = ({
   });
 
   const isWalletConnected = isSolanaTrade ? connected : wallet;
-  const exchanger = useExchanger({ wallet });
+  const evmExchanger = useExchanger({ wallet });
+  const solanaExchanger = useSolanaExchanger({ publicKey: publicKey?.toString() });
+  const exchanger = isSolanaTrade ? solanaExchanger : evmExchanger;
   const siwe = useLoginViaSiwe();
 
   const avatarQuery = useCommandQuery({

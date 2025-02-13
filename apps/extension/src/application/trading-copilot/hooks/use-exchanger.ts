@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { formatEther, getAddress, hexToNumber, parseEther } from 'viem';
 
 import { useWallet } from 'shared/extension';
-import { Wallet, CHAIN, useSwitchChain } from 'shared/web3';
+import { Wallet, SolanaWallet, CHAIN, useSwitchChain } from 'shared/web3';
 import { useCommandMutation } from 'shared/messaging';
 
 import { SwapData, FormValues, QuotePayload } from '../types';
@@ -144,3 +144,100 @@ export const useExchanger = ({ wallet }: Properties) => {
     details,
   };
 };
+
+interface SolanaProperties {
+  publicKey?: string;
+}
+
+export const useSolanaExchanger= ({ publicKey }: SolanaProperties) => {
+  const copilotTransaction = useCopilotTransaction();
+  const getQuoteMutation = useCommandMutation(GetQuoteCommand);
+
+  const exchange = useCallback(
+    async ({ formValues, dialog }: CallbackProperties) => {
+      if (!publicKey || Number(formValues.amount) === 0) {
+        return;
+      }
+
+      const handleGetQuoteMutation = async (payload: QuotePayload) => {
+        return await getQuoteMutation.mutateAsync(payload);
+      };
+
+      const amountInLamports = BigInt(Math.round(parseFloat(formValues.amount) * 1e9))
+
+      const quotePayload = {
+        amount: amountInLamports.toString(),
+        destinationChain: getChainId(dialog.tokenOut.network),
+        fromAddress: publicKey,
+        destinationToken: dialog.tokenIn.address,
+        originChain: getChainId(dialog.tokenIn.network),
+        originToken: '11111111111111111111111111111111',
+      };
+
+      const quoteData = await handleGetQuoteMutation(quotePayload);
+
+      const transactionData = {
+        gas: quoteData.estimate.gasCosts[0]
+          ? BigInt(quoteData.estimate.gasCosts[0].estimate)
+          : undefined,
+        data: quoteData.transactionData.data,
+        chain: quoteData.transactionData.chainId,
+        value: amountInLamports,
+        to: quoteData.transactionData.to,
+      };
+
+      console.log("quoteData", quoteData)
+      console.log("transactionData", transactionData)
+      // copilotTransaction.mutate({
+      //   wallet: wallet,
+      //   transactionData,
+      // });
+    },
+    [publicKey, copilotTransaction, getQuoteMutation],
+  );
+
+  const isSending = getQuoteMutation.isPending || copilotTransaction.isPending;
+
+  const isError = getQuoteMutation.isError || copilotTransaction.isError;
+
+  const isSuccess = getQuoteMutation.isSuccess && copilotTransaction.isSuccess;
+
+  const quoteData = getQuoteMutation.data;
+
+  const transactionData = copilotTransaction.data;
+
+  const isIdle = !isSending && !isError && !isSuccess;
+
+  // TODO: Correctly format numbers here
+  const details = {
+    from: {
+      amount: Number(
+        formatEther(BigInt(getQuoteMutation.data?.estimate.fromAmount ?? 0)),
+      ),
+      symbol: getQuoteMutation.data?.includedSteps[0]?.action.fromToken.symbol,
+    },
+    to: {
+      amount: Number(
+        formatEther(BigInt(getQuoteMutation.data?.estimate.toAmount ?? 0)),
+      ),
+      symbol: getQuoteMutation.data?.includedSteps[0]?.action.toToken.symbol,
+    },
+  };
+
+  const reset = useCallback(() => {
+    getQuoteMutation.reset();
+    copilotTransaction.reset();
+  }, [copilotTransaction, getQuoteMutation]);
+
+  return {
+    exchange,
+    isSending,
+    isError,
+    isSuccess,
+    isIdle,
+    quoteData,
+    transactionData,
+    reset,
+    details,
+  };
+}
