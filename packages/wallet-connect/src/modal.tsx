@@ -132,6 +132,7 @@ export const WalletConnectModal = createModal(
 interface SolAdapter {
   name: string;
   icon: string;
+  publicKey?: string;
 }
 
 interface SolWallet {
@@ -143,15 +144,16 @@ type SolanaProperties = {
   connectWallet: () => Promise<void>;
   selectWallet: (walletName: any) => void;
   wallets: SolWallet[];
+  wallet: SolWallet | null;
 };
 
 export const SolanaWalletConnectModal = createModal(
-  ({ connectWallet, selectWallet, wallets }: SolanaProperties) => {
+  ({ connectWallet, selectWallet, wallets, wallet }: SolanaProperties) => {
   const modal = useModal();
   const solanaWalletProviders = wallets.map((wallet) => ({
     uuid: wallet.adapter.name,
     rdns: wallet.adapter.name,
-    icon: `data:image/${wallet.adapter.icon}`,
+    icon: wallet.adapter.icon as `data:image/${string}`,
     name: wallet.adapter.name
   }));
 
@@ -166,8 +168,8 @@ export const SolanaWalletConnectModal = createModal(
   );
   // TODO: Check not correctly connecting
   const connect = useCallback(async (providerInfo: SolanaProviderInfo) => {
-    if (providerInfo.name === 'browser.solana') {
-      setIsConnecting(true);
+    setIsConnecting(true);
+    if (providerInfo.name === 'Solana Wallet') {
       try {
         const provider = window.solana;
         if (!provider) {
@@ -184,8 +186,24 @@ export const SolanaWalletConnectModal = createModal(
       }
     }
     else {
-      selectWallet(providerInfo.name); // TODO: check here
-      await connectWallet();
+      try {
+        selectWallet(providerInfo.name);
+        await connectWallet();
+
+        if (!wallet || !wallet.adapter.publicKey) {
+          console.error("Wallet was not connected");
+          setIsConnecting(false);
+          return;
+        }
+
+        resolveWallet({
+          account: wallet.adapter.publicKey,
+          provider: wallet.adapter,
+        })
+      }
+      catch (e) {
+        console.error("Error connecting wallet: ", e);
+      }
     }
 
   }, [resolveWallet]);
@@ -196,10 +214,10 @@ export const SolanaWalletConnectModal = createModal(
   }, [modal]);
 
   const injectedProvider = {
-    uuid: 'browser.solana',
-    rdns: 'browser.solana',
+    uuid: 'SolanaWallet',
+    rdns: 'SolanaWallet',
     icon: BROWSER_PROVIDER_LOGO,
-    name: 'Browser Solana Wallet'
+    name: 'Solana Wallet'
   };
   return (
     <DesignSystemWalletConnectModal

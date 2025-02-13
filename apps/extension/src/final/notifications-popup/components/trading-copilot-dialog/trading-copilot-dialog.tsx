@@ -150,12 +150,10 @@ const TradingCopilotDialogContent = ({
     connectWallet: connect,
     selectWallet: select,
     wallets,
+    wallet: solanaWallet,
   });
 
   const isWalletConnected = isSolanaTrade ? connected : wallet;
-  console.log('isWalletConnected', isWalletConnected);
-  console.log('solanaWallet', solanaWallet);
-  console.log('wallet', wallet);
   const exchanger = useExchanger({ wallet });
   const siwe = useLoginViaSiwe();
 
@@ -392,7 +390,8 @@ const TradingCopilotDialogContent = ({
                 type="submit"
                 loading={siwe.isSending || exchanger.isSending}
                 disabled={
-                  Number(watch('amount')) > Number(balanceQuery.data) ||
+                  // TODO: Uncomment this when we have a way to get the balance for Solana too
+                  // Number(watch('amount')) > Number(balanceQuery.data) ||
                   Number(watch('amount')) <= 0
                 }
               >
@@ -408,7 +407,7 @@ const TradingCopilotDialogContent = ({
             <Button
               intent="primary"
               size="medium"
-              onClick={isSolanaTrade ? () => show() : openConnectionModal}
+              onClick={isSolanaTrade ? show : openConnectionModal}
               className="w-full"
               loading={isSolanaTrade ? connecting : isConnectionModalOpened}
             >
