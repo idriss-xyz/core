@@ -4,6 +4,10 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const allowedOrigins = ['https://idriss.xyz', 'https://www.idriss.xyz'];
 
+type StoredLinkEntry =
+  | { link: string; createdAt: string }
+  | { donationURL: string; createdAt: string };
+
 const DATA_DIRECTORY_PATH = './data';
 const DATA_FILE_PATH = `${DATA_DIRECTORY_PATH}/creator-links.json`;
 const DATA_TEMPLATE_PATH = `${DATA_DIRECTORY_PATH}/creator-init-links.json`;
@@ -44,10 +48,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const fileData: { donationURL: string; createdAt: string }[] = JSON.parse(
+    const fileData: StoredLinkEntry[] = JSON.parse(
       fs.readFileSync(DATA_FILE_PATH, 'utf8'),
     );
-    fileData.push({ donationURL, createdAt: new Date().toISOString() });
+    fileData.push({ link: donationURL, createdAt: new Date().toISOString() });
 
     fs.writeFileSync(DATA_FILE_PATH, JSON.stringify(fileData, null, 2));
 
@@ -66,16 +70,25 @@ export function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
   try {
-    const fileData: { link: string }[] = JSON.parse(
+    const fileData: StoredLinkEntry[] = JSON.parse(
       fs.readFileSync(DATA_FILE_PATH, 'utf8'),
     );
+    const normalizedData = fileData.map((entry) => {
+      return {
+        link: 'link' in entry ? entry.link : entry.donationURL,
+        createdAt: entry.createdAt,
+      };
+    });
     const uniqueLinks = new Set(
-      fileData.map((entry) => {
+      normalizedData.map((entry) => {
         return entry.link;
       }),
     ).size;
 
-    return NextResponse.json({ uniqueCount: uniqueLinks, links: fileData });
+    return NextResponse.json({
+      uniqueCount: uniqueLinks,
+      links: normalizedData,
+    });
   } catch {
     return NextResponse.json(
       { error: 'Failed to fetch links' },
