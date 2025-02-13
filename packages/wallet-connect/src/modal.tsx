@@ -169,41 +169,23 @@ export const SolanaWalletConnectModal = createModal(
   // TODO: Check not correctly connecting
   const connect = useCallback(async (providerInfo: SolanaProviderInfo) => {
     setIsConnecting(true);
-    if (providerInfo.name === 'Solana Wallet') {
-      try {
-        const provider = window.solana;
-        if (!provider) {
-          setIsConnecting(false);
-          return;
-        }
-        const response = await provider.connect();
-        void resolveWallet({
-          account: response.publicKey,
-          provider,
-        });
-      } catch {
+    try {
+      selectWallet(providerInfo.name);
+      await connectWallet();
+
+      if (!wallet || !wallet.adapter.publicKey) {
+        console.error("Wallet was not connected");
         setIsConnecting(false);
+        return;
       }
+
+      resolveWallet({
+        account: wallet.adapter.publicKey,
+        provider: wallet.adapter,
+      })
     }
-    else {
-      try {
-        selectWallet(providerInfo.name);
-        await connectWallet();
-
-        if (!wallet || !wallet.adapter.publicKey) {
-          console.error("Wallet was not connected");
-          setIsConnecting(false);
-          return;
-        }
-
-        resolveWallet({
-          account: wallet.adapter.publicKey,
-          provider: wallet.adapter,
-        })
-      }
-      catch (e) {
-        console.error("Error connecting wallet: ", e);
-      }
+    catch (e) {
+      console.error("Error connecting wallet: ", e);
     }
 
   }, [resolveWallet]);
@@ -213,17 +195,11 @@ export const SolanaWalletConnectModal = createModal(
     modal.remove();
   }, [modal]);
 
-  const injectedProvider = {
-    uuid: 'SolanaWallet',
-    rdns: 'SolanaWallet',
-    icon: BROWSER_PROVIDER_LOGO,
-    name: 'Solana Wallet'
-  };
   return (
     <DesignSystemWalletConnectModal
       onClose={closeModalWithoutFinishing}
       isOpened={modal.visible}
-      walletProviders={[injectedProvider, ...solanaWalletProviders]}
+      walletProviders={solanaWalletProviders}
       onConnect={connect}
       isConnecting={isConnecting}
     />

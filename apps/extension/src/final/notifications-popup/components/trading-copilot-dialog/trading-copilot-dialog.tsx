@@ -139,12 +139,12 @@ const TradingCopilotDialogContent = ({
   const { wallet, isConnectionModalOpened, openConnectionModal } = useWallet();
   const isSolanaTrade = dialog.tokenIn.network === 'SOLANA';
   const {
-    connect,
     connecting,
     connected,
-    select,
     wallet: solanaWallet,
     wallets,
+    select,
+    connect,
   } = useSolanaWallet();
   const { show } = useModal(SolanaWalletConnectModal, {
     connectWallet: connect,
