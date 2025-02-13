@@ -14,7 +14,6 @@ import {
   USDC_LOGO,
   ALEPH_LOGO,
   RONIN_LOGO,
-  RON_LOGO,
   // PIXELS_LOGO,
   AXIE_LOGO,
   ABSTRACT_LOGO,
@@ -155,7 +154,7 @@ export const TOKEN = {
   RONIN: {
     name: 'Ronin',
     symbol: 'RON',
-    logo: RON_LOGO,
+    logo: RONIN_LOGO,
   },
   PDT: {
     name: 'ParagonsDAO',
@@ -283,14 +282,14 @@ export const CHAIN_ID_TO_TOKENS = {
       address: '0x0b7007c13325c48911f73a2dad5fa5dcbf808adc',
     },
     {
-      ...TOKEN.YGG,
-      decimals: 18,
-      address: '0x1c306872bc82525d72bf3562e8f0aa3f8f26e857',
-    },
-    {
       ...TOKEN.AXIE,
       decimals: 18,
       address: '0x97a9107c1793bc407d6f527b77e7fff4d812bece',
+    },
+    {
+      ...TOKEN.YGG,
+      decimals: 18,
+      address: '0x1c306872bc82525d72bf3562e8f0aa3f8f26e857',
     },
     // {
     //   ...TOKEN.PIXEL,
