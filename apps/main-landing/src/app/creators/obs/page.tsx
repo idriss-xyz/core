@@ -191,7 +191,6 @@ export default function Obs() {
             tokenAddress as Hex,
             tokenAmount,
             chain,
-            name,
           );
 
           addDonation({
