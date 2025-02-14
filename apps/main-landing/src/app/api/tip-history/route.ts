@@ -1,18 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import {
-  ApolloClient,
-  ApolloLink,
-  createHttpLink,
-  InMemoryCache,
-} from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
 
 import { TipHistoryQuery } from './constants';
 
 const ZAPPER_API_URL = 'https://public.zapper.xyz/graphql';
 const ZAPPER_API_KEY = process.env.ZAPPER_API_KEY;
 
-// ts-unused-exports:disable-next-line
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -25,38 +17,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const httpLink = createHttpLink({
-      uri: ZAPPER_API_URL,
-    });
+    const variables = {
+      addresses: [address],
+      isSigner: false,
+    };
 
-    const encodedKey = btoa(ZAPPER_API_KEY);
+    const encodedKey = Buffer.from(ZAPPER_API_KEY ?? '').toString('base64');
 
-    const authLink = setContext((_, { headers }) => {
-      return {
-        headers: {
-          ...headers,
-          authorization: `Basic ${encodedKey}`,
-        },
-      };
-    });
-
-    const client = new ApolloClient({
-      link: ApolloLink.from([authLink, httpLink]),
-      cache: new InMemoryCache(),
-    });
-
-    const { data } = await client.query({
-      query: TipHistoryQuery,
-      variables: {
-        addresses: [address],
-        isSigner: false,
+    const response = await fetch(ZAPPER_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Basic ${encodedKey}`,
       },
+      body: JSON.stringify({
+        query: TipHistoryQuery,
+        variables,
+      }),
     });
+    console.log(response);
+
+    const data = await response.json();
+    console.log(data);
 
     return NextResponse.json(data);
   } catch (error) {
     console.error(error);
-
     return NextResponse.json(
       { error: 'Failed to fetch tip history' },
       { status: 500 },

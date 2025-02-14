@@ -31,7 +31,8 @@
         "ZAPPER_API_KEY",
         "PUBLIC_ACCESS_ENABLED",
         "CI",
-        "CREATOR_LINKS_SECRET"
+        "CREATOR_LINKS_SECRET",
+        "ZAPPER_API_KEY"
       ]
     },
     "@idriss-xyz/main-landing#dev": {
@@ -44,7 +45,8 @@
         "ZAPPER_API_KEY",
         "PUBLIC_ACCESS_ENABLED",
         "CI",
-        "CREATOR_LINKS_SECRET"
+        "CREATOR_LINKS_SECRET",
+        "ZAPPER_API_KEY"
       ]
     },
     "@idriss-xyz/extension#dev": {

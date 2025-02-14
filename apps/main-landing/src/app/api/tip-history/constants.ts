@@ -1,6 +1,4 @@
-import { gql } from '@apollo/client';
-
-export const TipHistoryQuery = gql`
+export const TipHistoryQuery = `
   query ($addresses: [Address!], $isSigner: Boolean) {
     accountsTimeline(addresses: $addresses, isSigner: $isSigner, first: 20) {
       edges {

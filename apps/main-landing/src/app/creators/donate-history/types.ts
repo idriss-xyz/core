@@ -49,5 +49,5 @@ interface AccountsTimeline {
 }
 
 export interface TipHistoryResponse {
-  accountsTimeline: AccountsTimeline;
+  data: { accountsTimeline: AccountsTimeline };
 }

@@ -53,7 +53,7 @@ export const TopDonors = ({ className }: Properties) => {
   );
 
   const filteredTips = tips.isSuccess
-    ? tips.data?.accountsTimeline.edges.filter((tip) => {
+    ? tips.data?.data.accountsTimeline.edges.filter((tip) => {
         return tip.node.app?.slug === 'idriss';
       })
     : undefined;

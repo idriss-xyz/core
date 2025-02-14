@@ -15,7 +15,7 @@ export default function DonateHistoryList({ address }: Properties) {
     address: address as Hex,
   });
 
-  const filteredTips = tips.data?.accountsTimeline.edges.filter((tip) => {
+  const filteredTips = tips.data?.data.accountsTimeline.edges.filter((tip) => {
     return tip.node.app?.slug === 'idriss';
   });
 
