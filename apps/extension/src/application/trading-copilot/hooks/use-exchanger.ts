@@ -2,13 +2,14 @@ import { useCallback } from 'react';
 import { formatEther, getAddress, hexToNumber, parseEther } from 'viem';
 
 import { useWallet } from 'shared/extension';
-import { Wallet, SolanaWallet, CHAIN, useSwitchChain } from 'shared/web3';
+import { Wallet, CHAIN, useSwitchChain } from 'shared/web3';
 import { useCommandMutation } from 'shared/messaging';
 
 import { SwapData, FormValues, QuotePayload } from '../types';
 import { GetQuoteCommand } from '../commands/get-quote';
 
 import { useCopilotTransaction } from './use-copilot-transaction';
+import { Connection, Transaction, VersionedTransaction } from '@solana/web3.js';
 
 interface Properties {
   wallet?: Wallet;
@@ -145,11 +146,13 @@ export const useExchanger = ({ wallet }: Properties) => {
   };
 };
 
-interface SolanaProperties {
+interface SolanaExchangerProperties {
   publicKey?: string;
+  connection: Connection;
+  signTransaction?: (<T extends VersionedTransaction | Transaction>(transaction: T) => Promise<T>) | undefined;
 }
 
-export const useSolanaExchanger= ({ publicKey }: SolanaProperties) => {
+export const useSolanaExchanger= ({ publicKey, connection, signTransaction }: SolanaExchangerProperties) => {
   const copilotTransaction = useCopilotTransaction();
   const getQuoteMutation = useCommandMutation(GetQuoteCommand);
 
@@ -184,14 +187,28 @@ export const useSolanaExchanger= ({ publicKey }: SolanaProperties) => {
         chain: quoteData.transactionData.chainId,
         value: amountInLamports,
         to: quoteData.transactionData.to,
+        routeOptions: {
+          slippage: "0.02",
+        }
       };
 
-      console.log("quoteData", quoteData)
-      console.log("transactionData", transactionData)
-      // copilotTransaction.mutate({
-      //   wallet: wallet,
-      //   transactionData,
-      // });
+      try {
+        const decodedTx = Buffer.from(transactionData.data.toString(), 'base64');
+        const deserializedTx = VersionedTransaction.deserialize(new Uint8Array(decodedTx));
+        const signedTransaction = await signTransaction?.(deserializedTx);
+        const serializedTx = signedTransaction?.serialize();
+
+        if (!serializedTx) {
+          throw new Error('Failed to sign transaction');
+        }
+
+        const txHash = await connection.sendRawTransaction(serializedTx);
+        // TODO: implement useSolanaCopilotTransaction
+      }
+      catch (error) {
+        console.log(error)
+      }
+
     },
     [publicKey, copilotTransaction, getQuoteMutation],
   );

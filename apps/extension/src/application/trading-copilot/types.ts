@@ -108,6 +108,9 @@ export interface QuotePayload {
   fromAddress: string;
   destinationToken: string;
   destinationChain: number;
+  routeOptions?: {
+    slippage?: number;
+  }
 }
 
 export type QuoteResponse = {

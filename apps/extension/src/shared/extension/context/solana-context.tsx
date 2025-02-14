@@ -3,10 +3,9 @@ import {
   ConnectionProvider,
   WalletProvider,
 } from "@solana/wallet-adapter-react";
-import { clusterApiUrl } from "@solana/web3.js";
 
 export const SolanaContextProviders = ({ children }: { children: ReactNode }) => {
-  const endpoint = clusterApiUrl("devnet");
+  const endpoint = `https://mainnet.helius-rpc.com/?api-key=${process.env.HELIUS_API_KEY}`;
   const wallets = useMemo(() => [], []);
 
   return (
