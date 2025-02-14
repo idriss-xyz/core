@@ -1,6 +1,6 @@
 export const TipHistoryQuery = `
   query ($addresses: [Address!], $isSigner: Boolean) {
-    accountsTimeline(addresses: $addresses, isSigner: $isSigner, first: 20) {
+    accountsTimeline(addresses: $addresses, isSigner: $isSigner, first: 75) {
       edges {
         node {
           timestamp
@@ -22,7 +22,7 @@ export const TipHistoryQuery = `
                 tokenV2 {
                   symbol
                   imageUrlV2
-                  marketData {
+                  onchainMarketData {
                     price
                   }
                 }
@@ -44,3 +44,5 @@ export const TipHistoryQuery = `
     }
   }
 `;
+
+export const OLDEST_TRANSACTION_TIMESTAMP = 1_734_497_616_000;

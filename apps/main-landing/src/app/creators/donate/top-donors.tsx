@@ -1,3 +1,4 @@
+// File: /src/app/creators/donate-history/components/top-donors.tsx
 'use client';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
@@ -43,6 +44,7 @@ export const TopDonors = ({ className }: Properties) => {
 
   const addressValidationResult = hexSchema.safeParse(validatedAddress);
 
+  // Now the API returns only the relevant edges (already filtered).
   const tips = useGetTipHistory(
     {
       address: (validatedAddress as Hex) ?? '0x',
@@ -52,13 +54,10 @@ export const TopDonors = ({ className }: Properties) => {
     },
   );
 
-  const filteredTips = tips.isSuccess
-    ? tips.data?.data.accountsTimeline.edges.filter((tip) => {
-        return tip.node.app?.slug === 'idriss';
-      })
-    : undefined;
+  // Use the returned array directly
+  const tipEdges = tips.isSuccess ? tips.data?.data : undefined;
 
-  const groupedTips = filteredTips?.reduce(
+  const groupedTips = tipEdges?.reduce(
     (accumulator, tip) => {
       const userAddress = tip.node.transaction.fromUser.address;
       const amountRaw =
@@ -76,7 +75,7 @@ export const TopDonors = ({ className }: Properties) => {
 
       if (!accumulator[userAddress]) {
         accumulator[userAddress] = {
-          tips: [],
+          tips: [] as { node: Node }[],
           tipsSum: 0,
           address: userAddress,
         };
@@ -116,10 +115,7 @@ export const TopDonors = ({ className }: Properties) => {
         {sortedGroupedTips ? (
           <ul>
             {sortedGroupedTips.map((groupedTip, index) => {
-              if (!groupedTip.tips[0] || index > 5) {
-                return;
-              }
-
+              if (!groupedTip.tips[0] || index > 5) return null;
               return (
                 <DonorItem
                   donorRank={index}

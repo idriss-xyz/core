@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { TipHistoryQuery } from './constants';
+import {
+  Node,
+  ZapperResponse,
+  TipHistoryVariables,
+} from '@/app/creators/donate-history/types';
+
+import { OLDEST_TRANSACTION_TIMESTAMP, TipHistoryQuery } from './constants';
 
 const ZAPPER_API_URL = 'https://public.zapper.xyz/graphql';
 const ZAPPER_API_KEY = process.env.ZAPPER_API_KEY;
@@ -17,30 +23,58 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const variables = {
-      addresses: [address],
-      isSigner: false,
-    };
+    let allRelevantEdges: {
+      node: Node;
+    }[] = [];
+    let cursor: string | null = null;
+    let hasNextPage = true;
 
-    const encodedKey = Buffer.from(ZAPPER_API_KEY ?? '').toString('base64');
+    while (hasNextPage) {
+      const variables: TipHistoryVariables = {
+        addresses: [address],
+        isSigner: false,
+        after: cursor,
+      };
 
-    const response = await fetch(ZAPPER_API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Basic ${encodedKey}`,
-      },
-      body: JSON.stringify({
-        query: TipHistoryQuery,
-        variables,
-      }),
-    });
-    console.log(response);
+      const encodedKey = Buffer.from(ZAPPER_API_KEY ?? '').toString('base64');
 
-    const data = await response.json();
-    console.log(data);
+      const response = await fetch(ZAPPER_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Basic ${encodedKey}`,
+        },
+        body: JSON.stringify({
+          query: TipHistoryQuery,
+          variables,
+        }),
+      });
 
-    return NextResponse.json(data);
+      const data: ZapperResponse = await response.json();
+      const accountsTimeline = data.data?.accountsTimeline;
+      if (!accountsTimeline) break;
+
+      const currentEdges = accountsTimeline.edges || [];
+      const relevantEdges = (accountsTimeline.edges || []).filter((tip) => {
+        return tip.node.app?.slug === 'idriss';
+      });
+
+      allRelevantEdges = [...allRelevantEdges, ...relevantEdges];
+
+      if (currentEdges.length === 0) break;
+
+      const lastEdge = currentEdges.at(-1);
+      if (lastEdge && lastEdge.node.timestamp < OLDEST_TRANSACTION_TIMESTAMP)
+        break;
+
+      hasNextPage = accountsTimeline.pageInfo?.hasNextPage;
+      cursor = accountsTimeline.pageInfo?.endCursor ?? null;
+    }
+
+    // Uncomment to store data in your DB
+    // await storeToDatabase(allRelevantEdges);
+
+    return NextResponse.json({ data: allRelevantEdges });
   } catch (error) {
     console.error(error);
     return NextResponse.json(

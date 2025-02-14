@@ -42,12 +42,25 @@ export interface Node {
   };
 }
 
+export interface TipHistoryVariables {
+  addresses: string[];
+  isSigner: boolean;
+  after?: string | null;
+}
+
 interface AccountsTimeline {
   edges: {
     node: Node;
   }[];
+  pageInfo: { hasNextPage: boolean; endCursor: string | null };
+}
+
+export interface ZapperResponse {
+  data: { accountsTimeline: AccountsTimeline };
 }
 
 export interface TipHistoryResponse {
-  data: { accountsTimeline: AccountsTimeline };
+  data: {
+    node: Node;
+  }[];
 }
