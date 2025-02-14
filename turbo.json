@@ -15,8 +15,7 @@
         "RAILWAY_PUBLIC_DOMAIN",
         "DEV_LOGIN_PASSWORD",
         "PUBLIC_ACCESS_ENABLED",
-        "CI",
-        "CREATOR_LINKS_SECRET"
+        "CI"
       ]
     },
     "@idriss-xyz/main-landing#start": {
@@ -28,8 +27,7 @@
         "RAILWAY_PUBLIC_DOMAIN",
         "DEV_LOGIN_PASSWORD",
         "PUBLIC_ACCESS_ENABLED",
-        "CI",
-        "CREATOR_LINKS_SECRET"
+        "CI"
       ]
     },
     "@idriss-xyz/main-landing#dev": {
@@ -40,8 +38,7 @@
         "RAILWAY_PUBLIC_DOMAIN",
         "DEV_LOGIN_PASSWORD",
         "PUBLIC_ACCESS_ENABLED",
-        "CI",
-        "CREATOR_LINKS_SECRET"
+        "CI"
       ]
     },
     "@idriss-xyz/extension#dev": {
