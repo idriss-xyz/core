@@ -1,38 +1,19 @@
 import { formatEther } from 'viem';
-import { Link } from '@idriss-xyz/ui/link';
+import { IconButton } from '@idriss-xyz/ui/icon-button';
+import { Badge } from '@idriss-xyz/ui/badge';
+import { useEffect, useState } from 'react';
 
 import { IDRISS_ICON_CIRCLE } from '@/assets';
-import { useGetEnsName } from '@/app/creators/tip-history/commands/get-ens-name';
-import { useGetEnsAvatar } from '@/app/creators/tip-history/commands/get-ens-avatar';
-import { Node } from '@/app/creators/tip-history/types';
 import { getTransactionUrl } from '@/app/creators/donate/utils';
 import { CHAIN } from '@/app/creators/donate/constants';
 
-// TODO: use function from shared after moving it from extension to packages
-const roundToSignificantFigures = (
-  number: number,
-  significantFigures: number,
-): number | string => {
-  if (number === 0) {
-    return 0;
-  }
+import { Node } from '../types';
+import { useGetEnsAvatar } from '../commands/get-ens-avatar';
+import { useGetEnsName } from '../commands/get-ens-name';
 
-  if (number >= 1_000_000_000) {
-    return `${(number / 1_000_000_000).toFixed(significantFigures)}B`;
-  }
-  if (number >= 1_000_000) {
-    return `${(number / 1_000_000).toFixed(significantFigures)}M`;
-  }
-  if (number >= 1000) {
-    return `${(number / 1000).toFixed(significantFigures)}K`;
-  }
-
-  const multiplier = Math.pow(
-    10,
-    significantFigures - Math.floor(Math.log10(Math.abs(number))) - 1,
-  );
-
-  return Math.round(number * multiplier) / multiplier;
+// TODO: IMPORTANT - those functions should be moved to packages/constants
+export const getShortWalletHex = (wallet: string) => {
+  return `${wallet.slice(0, 4)}...${wallet.slice(-4)}`;
 };
 
 function extractSignificantNumber(number: string) {
@@ -120,6 +101,62 @@ const roundToSignificantFiguresForCopilotTrading = (
   };
 };
 
+const getFormattedTimeDifference = (isoTimestamp: number) => {
+  const currentDate = new Date();
+  const targetDate = new Date(isoTimestamp);
+  const differenceInMs = targetDate.getTime() - currentDate.getTime();
+
+  const totalSeconds = Math.abs(Math.floor(differenceInMs / 1000));
+  const days = Math.floor(totalSeconds / (60 * 60 * 24));
+  const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
+  const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+  const seconds = totalSeconds % 60;
+
+  let result = '';
+
+  if (days > 0) {
+    result += `${days} ${days > 1 ? 'days' : 'day'} `;
+  }
+
+  if (hours > 0 || days > 0) {
+    result += `${hours} hrs `;
+  }
+
+  if (minutes > 0 || days > 0) {
+    result += `${minutes} ${minutes > 1 ? 'mins' : 'min'}`;
+  }
+
+  if (minutes < 1 && hours < 1 && days < 1) {
+    result += `${seconds} ${seconds > 1 ? 'secs' : 'sec'}`;
+  }
+
+  return result.trim();
+};
+
+export const TimeDifferenceCounter = ({
+  timestamp,
+  text,
+}: {
+  timestamp: number;
+  text: string;
+}) => {
+  const [timeDifference, setTimeDifference] = useState(
+    getFormattedTimeDifference(timestamp),
+  );
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeDifference(getFormattedTimeDifference(timestamp));
+    }, 1000);
+
+    return () => {
+      return clearInterval(interval);
+    };
+  }, [timestamp]);
+
+  return text ? `${timeDifference} ${text}` : timeDifference;
+};
+
 function removeMainnetSuffix(text: string) {
   const suffix = '_MAINNET';
   if (text.endsWith(suffix)) {
@@ -132,7 +169,7 @@ type Properties = {
   tip: Node;
 };
 
-export default function TipHistoryItem({ tip }: Properties) {
+export default function DonateHistoryItem({ tip }: Properties) {
   const tipDetails = tip.interpretation.descriptionDisplayItems[0];
   const tipComment = tip.interpretation.descriptionDisplayItems[2];
   const tipperFromAddress = tip.transaction.fromUser.address;
@@ -169,89 +206,68 @@ export default function TipHistoryItem({ tip }: Properties) {
     transactionHash: tip.transaction.hash,
   });
 
+  console.log(transactionUrl);
+
   return (
-    <div className="grid w-full grid-cols-[6fr,3fr] items-center gap-x-6">
-      <div className="z-1 flex w-full items-start gap-x-2 rounded-xl bg-white p-4 shadow-lg">
-        <div className="flex shrink-0 items-center justify-center">
-          <img
-            className={`size-12 rounded-full ${
-              ensAvatarQuery.data ? 'border border-neutral-400' : ''
-            }`}
-            src={ensAvatarQuery.data ?? IDRISS_ICON_CIRCLE.src}
-            alt={ensAvatarQuery.data ? 'Donor avatar' : 'IDRISS logo'}
-          />
-        </div>
+    <div className="grid w-full grid-cols-[1fr,32px] items-start gap-x-2">
+      <div className="grid w-full grid-cols-[40px,1fr] items-start gap-x-2">
+        <img
+          className={`size-10 rounded-full ${
+            ensAvatarQuery.data ? 'border border-neutral-400' : ''
+          }`}
+          src={ensAvatarQuery.data ?? IDRISS_ICON_CIRCLE.src}
+          alt={ensAvatarQuery.data ? 'Donor avatar' : 'IDRISS logo'}
+        />
 
         <div className="flex flex-col justify-center gap-y-1">
           <div className="flex items-center gap-x-2">
-            <p className="text-label3 text-neutral-900">
-              {ensNameQuery.data ?? tipperFromAddress}{' '}
-              <span className="text-body3 text-neutral-600">
-                sent $
+            <p className="text-body3 text-neutral-900">
+              <span className="align-middle">
+                {ensNameQuery.data ?? getShortWalletHex(tipperFromAddress)}
+              </span>{' '}
+              <span className="align-middle text-body3 text-neutral-600">
+                sent{' '}
+                {zerosIndex ? (
+                  <>
+                    0.0
+                    <span className="inline-block translate-y-1 px-px text-xs">
+                      {zerosIndex}
+                    </span>
+                    {roundedNumber}
+                  </>
+                ) : (
+                  roundedNumber
+                )}{' '}
+                {tipDetails.tokenV2.symbol}
+              </span>{' '}
+              <Badge type="success" variant="subtle" className="align-middle">
+                $
                 {tradeValue >= 0.01
-                  ? roundToSignificantFigures(tradeValue, 2)
+                  ? new Intl.NumberFormat('en-US', {
+                      minimumFractionDigits: tradeValue % 1 === 0 ? 0 : 2,
+                      maximumFractionDigits: 2,
+                    }).format(Number(tradeValue ?? 0))
                   : '<0.01'}
-              </span>
+              </Badge>
             </p>
           </div>
 
           <p className="align-middle text-body5 text-neutral-600">
-            Tipped{' '}
-            {tipDetails.tokenV2.imageUrlV2 ? (
-              <img
-                alt=""
-                className="inline-block size-6"
-                src={tipDetails.tokenV2.imageUrlV2}
-              />
-            ) : null}{' '}
-            {zerosIndex ? (
-              <>
-                0.0
-                <span className="inline-block translate-y-1 px-px text-xs">
-                  {zerosIndex}
-                </span>
-                {roundedNumber}
-              </>
-            ) : (
-              roundedNumber
-            )}
-            {tipDetails.tokenV2.symbol}
             {tipComment
               ? tipComment.stringValue !== 'N/A' &&
                 tipComment.stringValue !== ' '
-                ? ` with comment: ${tipComment.stringValue}`
+                ? tipComment.stringValue
                 : null
               : null}
+          </p>
+
+          <p className="text-body6 text-mint-700">
+            <TimeDifferenceCounter timestamp={tip.timestamp} text="ago" />
           </p>
         </div>
       </div>
 
-      <div className="flex w-full flex-col items-start gap-y-2 text-body5">
-        <span>
-          {new Date(tip.timestamp).toLocaleString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false,
-          })}
-        </span>
-
-        <span>
-          {formatEther(BigInt(tipDetails.amountRaw))}{' '}
-          {tipDetails.tokenV2.symbol}
-        </span>
-
-        <Link
-          size="medium"
-          href={transactionUrl}
-          isExternal
-          className="text-body5 lg:text-body5"
-        >
-          View on explorer
-        </Link>
-      </div>
+      <IconButton size="small" intent="tertiary" iconName="EllipsisVertical" />
     </div>
   );
 }

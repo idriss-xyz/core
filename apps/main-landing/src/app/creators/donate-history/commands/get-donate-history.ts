@@ -1,13 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { Hex } from '@/app/creators/donate/types';
-import { TipHistoryResponse } from '@/app/creators/tip-history/types';
+
+import { TipHistoryResponse } from '../types';
 
 type Payload = {
   address: Hex;
 };
 
-const getTipHistory = async (payload: Payload) => {
+type Options = {
+  enabled?: boolean;
+};
+
+const getDonateHistory = async (payload: Payload) => {
   const tipHistory = await fetch('/api/tip-history', {
     method: 'POST',
     body: JSON.stringify(payload),
@@ -16,11 +21,12 @@ const getTipHistory = async (payload: Payload) => {
   return (await tipHistory.json()) as TipHistoryResponse;
 };
 
-export const useGetTipHistory = (payload: Payload) => {
+export const useGetTipHistory = (payload: Payload, options?: Options) => {
   return useQuery({
     queryKey: ['tipHistory', payload.address],
     queryFn: () => {
-      return getTipHistory({ address: payload.address });
+      return getDonateHistory({ address: payload.address });
     },
+    ...options,
   });
 };

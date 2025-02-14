@@ -56,6 +56,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(data);
   } catch (error) {
     console.error(error);
+
     return NextResponse.json(
       { error: 'Failed to fetch tip history' },
       { status: 500 },

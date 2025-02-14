@@ -23,6 +23,7 @@ import {
   ChartPie,
   ArrowDownWideNarrow,
   CalendarClock,
+  EllipsisVertical,
 } from 'lucide-react';
 
 import * as customIcons from './custom';
@@ -52,5 +53,6 @@ export const ICON = {
   ChartPie,
   ArrowDownWideNarrow,
   CalendarClock,
+  EllipsisVertical,
   ...customIcons,
 };
