@@ -8,7 +8,7 @@ import { useCommandMutation } from 'shared/messaging';
 import { SwapData, FormValues, QuotePayload } from '../types';
 import { GetQuoteCommand } from '../commands/get-quote';
 
-import { useCopilotTransaction } from './use-copilot-transaction';
+import { useCopilotSolanaTransaction, useCopilotTransaction } from './use-copilot-transaction';
 import { Connection, Transaction, VersionedTransaction } from '@solana/web3.js';
 
 interface Properties {
@@ -153,7 +153,7 @@ interface SolanaExchangerProperties {
 }
 
 export const useSolanaExchanger= ({ publicKey, connection, signTransaction }: SolanaExchangerProperties) => {
-  const copilotTransaction = useCopilotTransaction();
+  const copilotTransaction = useCopilotSolanaTransaction();
   const getQuoteMutation = useCommandMutation(GetQuoteCommand);
 
   const exchange = useCallback(
@@ -188,26 +188,15 @@ export const useSolanaExchanger= ({ publicKey, connection, signTransaction }: So
         value: amountInLamports,
         to: quoteData.transactionData.to,
         routeOptions: {
-          slippage: "0.02",
+          slippage: "0.02", // TODO: Get slippage from form (optionally)
         }
       };
 
-      try {
-        const decodedTx = Buffer.from(transactionData.data.toString(), 'base64');
-        const deserializedTx = VersionedTransaction.deserialize(new Uint8Array(decodedTx));
-        const signedTransaction = await signTransaction?.(deserializedTx);
-        const serializedTx = signedTransaction?.serialize();
-
-        if (!serializedTx) {
-          throw new Error('Failed to sign transaction');
-        }
-
-        const txHash = await connection.sendRawTransaction(serializedTx);
-        // TODO: implement useSolanaCopilotTransaction
-      }
-      catch (error) {
-        console.log(error)
-      }
+      copilotTransaction.mutate({
+        transactionData,
+        connection,
+        signTransaction,
+      });
 
     },
     [publicKey, copilotTransaction, getQuoteMutation],
