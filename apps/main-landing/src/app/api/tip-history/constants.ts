@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 
 export const TipHistoryQuery = gql`
   query ($addresses: [Address!], $isSigner: Boolean) {
-    accountsTimeline(addresses: $addresses, isSigner: $isSigner, first: 100) {
+    accountsTimeline(addresses: $addresses, isSigner: $isSigner, first: 20) {
       edges {
         node {
           timestamp
