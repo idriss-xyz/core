@@ -38,3 +38,5 @@ export { PieChart } from './pie-chart';
 export { Github } from './github';
 export { Coinmarketcap, CoinmarketcapOutlined } from './coinmarketcap';
 export { Play } from './play';
+export { Etherscan } from './etherscan';
+export { Blockscout } from './blockscout';

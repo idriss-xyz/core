@@ -44,7 +44,6 @@ export const TopDonors = ({ className }: Properties) => {
 
   const addressValidationResult = hexSchema.safeParse(validatedAddress);
 
-  // Now the API returns only the relevant edges (already filtered).
   const tips = useGetTipHistory(
     {
       address: (validatedAddress as Hex) ?? '0x',
@@ -54,7 +53,6 @@ export const TopDonors = ({ className }: Properties) => {
     },
   );
 
-  // Use the returned array directly
   const tipEdges = tips.isSuccess ? tips.data?.data : undefined;
 
   const groupedTips = tipEdges?.reduce(
@@ -63,8 +61,8 @@ export const TopDonors = ({ className }: Properties) => {
       const amountRaw =
         tip.node.interpretation.descriptionDisplayItems[0]?.amountRaw;
       const price =
-        tip.node.interpretation.descriptionDisplayItems[0]?.tokenV2.marketData
-          ?.price;
+        tip.node.interpretation.descriptionDisplayItems[0]?.tokenV2
+          ?.onchainMarketData?.price;
 
       if (!amountRaw || !price) {
         return accumulator;

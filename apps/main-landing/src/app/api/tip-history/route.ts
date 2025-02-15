@@ -51,6 +51,7 @@ export async function POST(request: NextRequest) {
       });
 
       const data: ZapperResponse = await response.json();
+
       const accountsTimeline = data.data?.accountsTimeline;
       if (!accountsTimeline) break;
 

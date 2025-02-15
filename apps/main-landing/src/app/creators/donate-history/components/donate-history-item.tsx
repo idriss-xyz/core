@@ -2,6 +2,8 @@ import { formatEther } from 'viem';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { Badge } from '@idriss-xyz/ui/badge';
 import { useEffect, useState } from 'react';
+import { Button } from '@idriss-xyz/ui/button';
+import { Dropdown } from '@idriss-xyz/ui/dropdown';
 
 import { IDRISS_ICON_CIRCLE } from '@/assets';
 import { getTransactionUrl } from '@/app/creators/donate/utils';
@@ -187,13 +189,13 @@ export default function DonateHistoryItem({ tip }: Properties) {
     },
   );
 
-  if (!tipDetails?.amountRaw || !tipDetails.tokenV2.marketData?.price) {
+  if (!tipDetails?.amountRaw || !tipDetails.tokenV2?.onchainMarketData?.price) {
     return;
   }
 
   const tradeValue =
     Number.parseFloat(formatEther(BigInt(tipDetails.amountRaw))) *
-    tipDetails.tokenV2.marketData.price;
+    tipDetails.tokenV2.onchainMarketData.price;
 
   const { value: roundedNumber, index: zerosIndex } =
     roundToSignificantFiguresForCopilotTrading(
@@ -205,8 +207,6 @@ export default function DonateHistoryItem({ tip }: Properties) {
     chainId: CHAIN[removeMainnetSuffix(tip.network) as keyof typeof CHAIN].id,
     transactionHash: tip.transaction.hash,
   });
-
-  console.log(transactionUrl);
 
   return (
     <div className="grid w-full grid-cols-[1fr,32px] items-start gap-x-2">
@@ -238,7 +238,12 @@ export default function DonateHistoryItem({ tip }: Properties) {
                 ) : (
                   roundedNumber
                 )}{' '}
-                {tipDetails.tokenV2.symbol}
+                {tipDetails.tokenV2.symbol}{' '}
+                <img
+                  className="inline-block size-6 rounded-full"
+                  src={tipDetails.tokenV2.imageUrlV2}
+                  alt=""
+                />
               </span>{' '}
               <Badge type="success" variant="subtle" className="align-middle">
                 $
@@ -267,7 +272,54 @@ export default function DonateHistoryItem({ tip }: Properties) {
         </div>
       </div>
 
-      <IconButton size="small" intent="tertiary" iconName="EllipsisVertical" />
+      <Dropdown
+        className="z-extensionPopup rounded-xl border border-neutral-300 bg-white py-2 shadow-lg"
+        contentAlign="end"
+        trigger={() => {
+          return (
+            <IconButton
+              size="small"
+              intent="tertiary"
+              iconName="EllipsisVertical"
+            />
+          );
+        }}
+      >
+        {() => {
+          return (
+            <ul className="flex flex-col gap-y-1">
+              <li>
+                <Button
+                  className="w-full justify-start px-3 py-1 font-normal text-neutral-900"
+                  intent="tertiary"
+                  size="large"
+                  prefixIconName="Etherscan"
+                  prefixIconClassName="mr-3"
+                  href={transactionUrl}
+                  isExternal
+                  asLink
+                >
+                  View on Etherscan
+                </Button>
+              </li>
+              <li>
+                <Button
+                  className="w-full justify-start px-3 py-1 font-normal text-neutral-900"
+                  intent="tertiary"
+                  size="large"
+                  prefixIconName="Blockscout"
+                  prefixIconClassName="mr-3"
+                  href={transactionUrl}
+                  isExternal
+                  asLink
+                >
+                  View on Blockscout
+                </Button>
+              </li>
+            </ul>
+          );
+        }}
+      </Dropdown>
     </div>
   );
 }

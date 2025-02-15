@@ -23,7 +23,7 @@ export default function Donors() {
           alt=""
         />
 
-        <div className="grid grid-cols-1 gap-x-10 lg:grid-cols-2">
+        <div className="grid grid-cols-1 items-start gap-x-10 lg:grid-cols-2">
           <Content className="container mt-8 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]" />
           <TopDonors className="container mt-8 px-0 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]" />
         </div>

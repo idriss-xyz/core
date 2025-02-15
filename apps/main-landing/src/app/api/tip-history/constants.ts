@@ -1,6 +1,6 @@
 export const TipHistoryQuery = `
-  query ($addresses: [Address!], $isSigner: Boolean) {
-    accountsTimeline(addresses: $addresses, isSigner: $isSigner, first: 75) {
+  query ($addresses: [Address!], $isSigner: Boolean, $after: String) {
+    accountsTimeline(addresses: $addresses, isSigner: $isSigner, first: 25, after: $after) {
       edges {
         node {
           timestamp

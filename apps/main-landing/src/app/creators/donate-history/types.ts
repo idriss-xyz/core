@@ -3,7 +3,7 @@ import { Hex } from 'viem';
 interface TokenV2 {
   symbol: string;
   imageUrlV2?: string;
-  marketData: {
+  onchainMarketData: {
     price: number;
   };
 }
@@ -48,7 +48,7 @@ export interface TipHistoryVariables {
   after?: string | null;
 }
 
-interface AccountsTimeline {
+export interface AccountsTimeline {
   edges: {
     node: Node;
   }[];
