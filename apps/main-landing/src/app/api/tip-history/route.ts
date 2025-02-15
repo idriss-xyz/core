@@ -12,7 +12,11 @@ import { OLDEST_TRANSACTION_TIMESTAMP, TipHistoryQuery } from './constants';
 const ZAPPER_API_URL = 'https://public.zapper.xyz/graphql';
 const ZAPPER_API_KEY = process.env.ZAPPER_API_KEY;
 
-const app_addresses = Object.values(CHAIN_TO_IDRISS_TIPPING_ADDRESS);
+const app_addresses = Object.values(CHAIN_TO_IDRISS_TIPPING_ADDRESS).map(
+  (address) => {
+    return address.toLowerCase();
+  },
+);
 
 // ts-unused-exports:disable-next-line
 export async function POST(request: NextRequest) {
