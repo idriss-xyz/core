@@ -144,7 +144,7 @@ export const TopDonors = ({ className }: Properties) => {
       <div className="flex min-h-[80px] w-full items-center justify-center">
         <Link
           size="xs"
-          href={`donate-history?address=${validatedAddress}`}
+          href={`donate-history?${searchParameters.toString()}`}
           className={`mx-6 my-3 ${sortedGroupedTips?.length === 0 ? 'invisible' : ''}`}
         >
           See full donation history
