@@ -2,14 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import {
   Node,
-  ZapperResponse,
   TipHistoryVariables,
+  ZapperResponse,
 } from '@/app/creators/donate-history/types';
+import { CHAIN_TO_IDRISS_TIPPING_ADDRESS } from '@/app/creators/donate/constants';
 
 import { OLDEST_TRANSACTION_TIMESTAMP, TipHistoryQuery } from './constants';
 
 const ZAPPER_API_URL = 'https://public.zapper.xyz/graphql';
 const ZAPPER_API_KEY = process.env.ZAPPER_API_KEY;
+
+const app_addresses = Object.values(CHAIN_TO_IDRISS_TIPPING_ADDRESS);
 
 export async function POST(request: NextRequest) {
   try {
@@ -32,6 +35,7 @@ export async function POST(request: NextRequest) {
     while (hasNextPage) {
       const variables: TipHistoryVariables = {
         addresses: [address],
+        toAddresses: app_addresses,
         isSigner: false,
         after: cursor,
       };
