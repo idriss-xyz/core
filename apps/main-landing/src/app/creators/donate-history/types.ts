@@ -49,7 +49,7 @@ export interface TipHistoryVariables {
   after?: string | null;
 }
 
-export interface AccountsTimeline {
+interface AccountsTimeline {
   edges: {
     node: Node;
   }[];

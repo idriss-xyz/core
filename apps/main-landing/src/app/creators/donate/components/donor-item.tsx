@@ -7,7 +7,7 @@ import { default as RANK_2 } from '../assets/rank-2.png';
 import { default as RANK_3 } from '../assets/rank-3.png';
 
 // TODO: IMPORTANT - those functions should be moved to packages/constants
-export const getShortWalletHex = (wallet: string) => {
+const getShortWalletHex = (wallet: string) => {
   return `${wallet.slice(0, 4)}...${wallet.slice(-4)}`;
 };
 

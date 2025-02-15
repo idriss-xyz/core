@@ -14,6 +14,7 @@ const ZAPPER_API_KEY = process.env.ZAPPER_API_KEY;
 
 const app_addresses = Object.values(CHAIN_TO_IDRISS_TIPPING_ADDRESS);
 
+// ts-unused-exports:disable-next-line
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();

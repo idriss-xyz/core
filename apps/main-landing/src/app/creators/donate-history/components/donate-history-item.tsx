@@ -14,7 +14,7 @@ import { useGetEnsAvatar } from '../commands/get-ens-avatar';
 import { useGetEnsName } from '../commands/get-ens-name';
 
 // TODO: IMPORTANT - those functions should be moved to packages/constants
-export const getShortWalletHex = (wallet: string) => {
+const getShortWalletHex = (wallet: string) => {
   return `${wallet.slice(0, 4)}...${wallet.slice(-4)}`;
 };
 
@@ -135,7 +135,7 @@ const getFormattedTimeDifference = (isoTimestamp: number) => {
   return result.trim();
 };
 
-export const TimeDifferenceCounter = ({
+const TimeDifferenceCounter = ({
   timestamp,
   text,
 }: {
