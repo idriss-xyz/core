@@ -1,6 +1,6 @@
 export const TipHistoryQuery = `
-  query ($addresses: [Address!], $isSigner: Boolean, $after: String) {
-    accountsTimeline(addresses: $addresses, isSigner: $isSigner, first: 25, after: $after) {
+  query ($addresses: [Address!], $isSigner: Boolean, $toAddresses: [String!], $after: String) {
+    accountsTimeline(addresses: $addresses, toAddresses: $toAddresses, isSigner: $isSigner, first: 25, after: $after) {
       edges {
         node {
           timestamp
@@ -45,4 +45,4 @@ export const TipHistoryQuery = `
   }
 `;
 
-export const OLDEST_TRANSACTION_TIMESTAMP = 1_734_497_616_000;
+export const OLDEST_TRANSACTION_TIMESTAMP = 0;

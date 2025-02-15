@@ -44,6 +44,7 @@ export interface Node {
 
 export interface TipHistoryVariables {
   addresses: string[];
+  toAddresses: string[];
   isSigner: boolean;
   after?: string | null;
 }
