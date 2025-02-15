@@ -2,15 +2,14 @@ import { useMutation } from '@tanstack/react-query';
 import {
   encodeAbiParameters,
   encodeFunctionData,
+  Hex,
   parseAbiParameters,
 } from 'viem';
+import { getChainById, EMPTY_HEX } from '@idriss-xyz/constants';
 
 import {
   createWalletClient,
-  EMPTY_HEX,
   GetAcrossChainFeeCommand,
-  getChainById,
-  Hex,
   TransactionRevertedError,
   Wallet,
 } from 'shared/web3';

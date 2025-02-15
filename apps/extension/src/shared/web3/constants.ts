@@ -553,5 +553,3 @@ export const CHAIN_ID_TO_TOKENS = {
     },
   ],
 } satisfies Record<string, ChainToken[]>;
-
-export const EMPTY_HEX = '0x';

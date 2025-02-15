@@ -1,6 +1,7 @@
 import { z } from 'zod';
+import { Hex } from 'viem';
 
-import { Hex, Wallet } from 'shared/web3';
+import { Wallet } from 'shared/web3';
 
 import { getApiKeyResponseSchema, marketFormSchema } from './schema';
 

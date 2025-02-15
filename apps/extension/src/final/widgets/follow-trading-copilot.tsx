@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Icon } from '@idriss-xyz/ui/icon';
+import { Hex } from 'viem';
 
 import { Button, classes, PortalWithTailwind, usePooling } from 'shared/ui';
 import {
@@ -7,7 +8,7 @@ import {
   UnsubscribePayload,
   useSubscriptions,
 } from 'application/trading-copilot';
-import { Hex, Wallet } from 'shared/web3';
+import { Wallet } from 'shared/web3';
 import { useWallet } from 'shared/extension';
 import { GetFarcasterVerifiedAddressCommand } from 'shared/farcaster';
 import { useCommandQuery } from 'shared/messaging';

@@ -1,11 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
-import { encodeFunctionData } from 'viem';
+import { encodeFunctionData, Hex } from 'viem';
+import { getChainById, EMPTY_HEX } from '@idriss-xyz/constants';
 
 import {
   createWalletClient,
-  EMPTY_HEX,
-  getChainById,
-  Hex,
   TransactionRevertedError,
   Wallet,
 } from 'shared/web3';

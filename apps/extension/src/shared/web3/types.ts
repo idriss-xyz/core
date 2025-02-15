@@ -1,9 +1,8 @@
 import { EIP1193Provider } from 'mipd';
-import { Chain as ViemChain } from 'viem';
-
-export type Hex = `0x${string}`;
+import { Chain as ViemChain, Hex } from 'viem';
 
 export type Chain = ViemChain & { logo: string };
+
 export interface Token {
   name: string;
   logo: string;

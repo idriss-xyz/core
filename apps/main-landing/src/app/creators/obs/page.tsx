@@ -11,10 +11,10 @@ import {
 } from 'viem';
 import { getEnsAvatar } from 'viem/actions';
 import { normalize } from 'viem/ens';
+import { NATIVE_COIN_ADDRESS } from '@idriss-xyz/constants';
 
 import {
   CHAIN_TO_IDRISS_TIPPING_ADDRESS,
-  NATIVE_COIN_ADDRESS,
   TIPPING_ABI,
 } from '../donate/constants';
 import { ethereumClient } from '../donate/config';

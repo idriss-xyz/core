@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-
-import { Hex } from '@/app/creators/donate/types';
+import { Hex } from 'viem';
 
 import { TipHistoryResponse } from '../types';
 

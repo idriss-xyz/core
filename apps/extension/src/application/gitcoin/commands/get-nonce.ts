@@ -1,10 +1,11 @@
+import { Hex } from 'viem';
+
 import {
   Command,
   FailureResult,
   HandlerError,
   OkResult,
 } from 'shared/messaging';
-import { Hex } from 'shared/web3';
 
 import { getNonce } from '../utils';
 

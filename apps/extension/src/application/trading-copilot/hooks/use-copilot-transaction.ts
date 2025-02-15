@@ -1,9 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
+import { Hex } from 'viem';
+import { getChainById } from '@idriss-xyz/constants';
 
 import {
   createWalletClient,
-  getChainById,
-  Hex,
   TransactionRevertedError,
   Wallet,
 } from 'shared/web3';

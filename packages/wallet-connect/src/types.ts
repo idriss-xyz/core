@@ -1,10 +1,14 @@
 import { EIP1193Provider } from 'mipd';
-
-export type Hex = `0x${string}`;
+import { Hex } from 'viem';
 
 export type Wallet = {
   provider: EIP1193Provider;
   account: Hex;
   chainId: number;
+  providerRdns: string;
+};
+
+export type StoredWallet = {
+  account: Hex;
   providerRdns: string;
 };

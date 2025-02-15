@@ -6,10 +6,10 @@ import { formatEther, Hex } from 'viem';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Spinner } from '@idriss-xyz/ui/spinner';
+import { EMPTY_HEX, hexSchema } from '@idriss-xyz/constants';
 
 import { IDRISS_SCENE_STREAM_2 } from '@/assets';
 import { validateAddressOrENS } from '@/app/creators/donate/utils';
-import { hexSchema } from '@/app/creators/donate/schema';
 import DonorItem from '@/app/creators/donate/components/donor-item';
 import { useGetTipHistory } from '@/app/creators/donate-history/commands/get-donate-history';
 import { Node } from '@/app/creators/donate-history/types';
@@ -46,7 +46,7 @@ export const TopDonors = ({ className }: Properties) => {
 
   const tips = useGetTipHistory(
     {
-      address: (validatedAddress as Hex) ?? '0x',
+      address: (validatedAddress as Hex) ?? EMPTY_HEX,
     },
     {
       enabled: addressValidationResult.success,

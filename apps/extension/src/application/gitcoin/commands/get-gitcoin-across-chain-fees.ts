@@ -1,9 +1,10 @@
+import { Hex } from 'viem';
+
 import { Command, FailureResult, HandlerError } from 'shared/messaging';
 import {
   GetAcrossChainFeesCommand,
   GetAcrossChainFeesPayload,
   GetAcrossChainFeesResponse,
-  Hex,
 } from 'shared/web3';
 
 import { generateAcrossMessage } from '../utils';

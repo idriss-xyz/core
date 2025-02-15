@@ -11,8 +11,13 @@ import {
 import { createStore } from 'mipd';
 import { useModal } from '@ebay/nice-modal-react';
 import { createContextHook } from '@idriss-xyz/ui/utils';
-import { getAddress, hexToNumber } from 'viem';
-import { Hex, Wallet, WalletConnectModal } from '@idriss-xyz/wallet-connect';
+import { getAddress, Hex, hexToNumber } from 'viem';
+import {
+  StoredWallet,
+  Wallet,
+  WalletConnectModal,
+} from '@idriss-xyz/wallet-connect';
+import { EMPTY_HEX } from '@idriss-xyz/constants';
 
 import { onWindowMessage } from '../../messaging';
 
@@ -24,11 +29,6 @@ type WalletContextValue = {
   openConnectionModal: () => Promise<Wallet>;
   removeWalletInfo: () => void;
   verifyWalletProvider: (wallet: Wallet) => Promise<boolean>;
-};
-
-type StoredWallet = {
-  account: Hex;
-  providerRdns: string;
 };
 
 const WalletContext = createContext<WalletContextValue | undefined>(undefined);
@@ -129,9 +129,9 @@ export const WalletContextProvider = (properties: {
 
       const chainId = await provider.request({ method: 'eth_chainId' });
 
-      const loggedInToCurrentWallet = getAddress(accounts[0] ?? '0x').includes(
-        wallet.account,
-      );
+      const loggedInToCurrentWallet = getAddress(
+        accounts[0] ?? EMPTY_HEX,
+      ).includes(wallet.account);
 
       if (loggedInToCurrentWallet && accounts[0]) {
         setWalletInfo({

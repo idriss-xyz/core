@@ -1,10 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
+import { getChainById, isUnrecognizedChainError } from '@idriss-xyz/constants';
 
-import {
-  createWalletClient,
-  getChainById,
-  isUnrecognizedChainError,
-} from './utils';
+import { createWalletClient } from './utils';
 import { Wallet } from './types';
 
 interface SwitchChainArguments {

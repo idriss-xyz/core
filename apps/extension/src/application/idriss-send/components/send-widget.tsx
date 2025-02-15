@@ -1,16 +1,15 @@
 import { useCallback, useMemo } from 'react';
 import { Button } from '@idriss-xyz/ui/button';
+import {
+  applyDecimalsToNumericString,
+  roundToSignificantFigures,
+  isNativeTokenAddress,
+  EMPTY_HEX,
+} from '@idriss-xyz/constants';
 
 import { useWallet } from 'shared/extension';
 import { IdrissSend } from 'shared/idriss';
-import {
-  CHAIN_ID_TO_TOKENS,
-  EMPTY_HEX,
-  applyDecimalsToNumericString,
-  isNativeTokenAddress,
-  roundToSignificantFigures,
-  toAddressWithValidChecksum,
-} from 'shared/web3';
+import { CHAIN_ID_TO_TOKENS, toAddressWithValidChecksum } from 'shared/web3';
 import { ErrorMessage } from 'shared/ui';
 import { IDRISS_ICON_CIRCLE } from 'assets/images';
 
@@ -111,7 +110,7 @@ export const SendWidget = ({ widgetData }: Properties) => {
               recipient={username}
             >
               {getLoadingMessage(
-                isNativeTokenAddress(selectedToken?.address ?? '0x'),
+                isNativeTokenAddress(selectedToken?.address ?? EMPTY_HEX),
               )}
             </IdrissSend.Loading>
           );

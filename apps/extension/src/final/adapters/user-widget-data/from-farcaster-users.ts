@@ -1,5 +1,6 @@
+import { Hex } from 'viem';
+
 import { UserScrapingResult } from 'shared/scraping';
-import { Hex } from 'shared/web3';
 
 import { UserWidgetData } from '../../types';
 

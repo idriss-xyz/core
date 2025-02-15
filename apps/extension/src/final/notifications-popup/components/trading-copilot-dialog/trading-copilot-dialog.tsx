@@ -7,6 +7,11 @@ import { formatEther, isAddress, parseEther } from 'viem';
 import { useCallback } from 'react';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
+import {
+  EMPTY_HEX,
+  formatBigNumber,
+  roundToSignificantFiguresForCopilotTrading,
+} from '@idriss-xyz/constants';
 
 import { useWallet } from 'shared/extension';
 import { Closable, ErrorMessage, Icon, LazyImage } from 'shared/ui';
@@ -21,12 +26,7 @@ import {
   useLoginViaSiwe,
 } from 'application/trading-copilot';
 import { getShortWalletHex, TimeDifferenceCounter } from 'shared/utils';
-import {
-  CHAIN,
-  formatBigNumber,
-  getWholeNumber,
-  roundToSignificantFiguresForCopilotTrading,
-} from 'shared/web3';
+import { CHAIN, getWholeNumber } from 'shared/web3';
 import { IdrissSend } from 'shared/idriss';
 
 import { TokenIcon } from '../../utils';
@@ -124,7 +124,7 @@ const TradingCopilotDialogContent = ({
 
   const balanceQuery = useCommandQuery({
     command: new GetEnsBalanceCommand({
-      address: wallet?.account ?? '0x',
+      address: wallet?.account ?? EMPTY_HEX,
       blockTag: 'safe',
     }),
     staleTime: Number.POSITIVE_INFINITY,
@@ -154,6 +154,7 @@ const TradingCopilotDialogContent = ({
         exchanger.details.from.amount,
         2,
       );
+
     const { value: toRoundedNumber, index: toZerosIndex } =
       roundToSignificantFiguresForCopilotTrading(
         exchanger.details.to.amount,

@@ -1,8 +1,7 @@
-import { createPublicClient, http } from 'viem';
+import { createPublicClient, Hex, http } from 'viem';
 import { mainnet } from 'viem/chains';
 import { normalize } from 'viem/ens';
 
-import { Hex } from 'shared/web3';
 import {
   Command,
   FailureResult,

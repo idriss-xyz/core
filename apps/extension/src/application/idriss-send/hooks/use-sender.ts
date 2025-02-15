@@ -1,17 +1,16 @@
 import { useCallback } from 'react';
+import { getSafeNumber, isNativeTokenAddress } from '@idriss-xyz/constants';
+import { Hex } from 'viem';
 
 import {
   CHAIN_ID_TO_TOKENS,
   GetTokenPriceCommand,
-  Hex,
   Wallet,
-  isNativeTokenAddress,
   useSwitchChain,
 } from 'shared/web3';
 import { useCommandMutation } from 'shared/messaging';
 
 import { SendPayload } from '../schema';
-import { getSafeNumber } from '../utils';
 
 import { useNativeTransaction } from './use-native-transaction';
 import { useErc20Transaction } from './use-erc20-transaction';

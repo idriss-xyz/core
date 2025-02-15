@@ -1,3 +1,3 @@
 export { WalletContextProvider, useWallet } from './context';
-export type { Wallet, Hex } from './types';
+export type { Wallet, StoredWallet } from './types';
 export { WalletConnectModal } from './modal';
