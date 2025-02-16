@@ -17,7 +17,8 @@
         "ZAPPER_API_KEY",
         "PUBLIC_ACCESS_ENABLED",
         "CI",
-        "CREATOR_LINKS_SECRET"
+        "CREATOR_LINKS_SECRET",
+        "DATABASE_URL"
       ]
     },
     "@idriss-xyz/main-landing#start": {
@@ -32,7 +33,8 @@
         "PUBLIC_ACCESS_ENABLED",
         "CI",
         "CREATOR_LINKS_SECRET",
-        "ZAPPER_API_KEY"
+        "ZAPPER_API_KEY",
+        "DATABASE_URL"
       ]
     },
     "@idriss-xyz/main-landing#dev": {
@@ -46,7 +48,8 @@
         "PUBLIC_ACCESS_ENABLED",
         "CI",
         "CREATOR_LINKS_SECRET",
-        "ZAPPER_API_KEY"
+        "ZAPPER_API_KEY",
+        "DATABASE_URL"
       ]
     },
     "@idriss-xyz/extension#dev": {

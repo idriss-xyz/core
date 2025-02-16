@@ -15,7 +15,7 @@ import {
   DonorItemPlaceholder,
 } from '@/app/creators/donate/components/donor-item';
 import { useGetTipHistory } from '@/app/creators/donate-history/commands/get-donate-history';
-import { Node } from '@/app/creators/donate-history/types';
+import { ZapperNode } from '@/app/creators/donate-history/types';
 
 import { SEARCH_PARAMETER } from './content';
 
@@ -76,7 +76,7 @@ export const TopDonors = ({ className }: Properties) => {
 
       if (!accumulator[userAddress]) {
         accumulator[userAddress] = {
-          tips: [] as { node: Node }[],
+          tips: [] as { node: ZapperNode }[],
           tipsSum: 0,
           address: userAddress,
         };
@@ -89,7 +89,7 @@ export const TopDonors = ({ className }: Properties) => {
     },
     {} as Record<
       string,
-      { tipsSum: number; address: Hex; tips: { node: Node }[] }
+      { tipsSum: number; address: Hex; tips: { node: ZapperNode }[] }
     >,
   );
 

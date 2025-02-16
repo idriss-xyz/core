@@ -18,7 +18,7 @@ type StringDisplayItem = {
   stringValue: string;
 };
 
-export interface Node {
+export interface ZapperNode {
   timestamp: number;
   network: string;
   transaction: {
@@ -51,7 +51,7 @@ export interface TipHistoryVariables {
 
 interface AccountsTimeline {
   edges: {
-    node: Node;
+    node: ZapperNode;
   }[];
   pageInfo: { hasNextPage: boolean; endCursor: string | null };
 }
@@ -62,6 +62,6 @@ export interface ZapperResponse {
 
 export interface TipHistoryResponse {
   data: {
-    node: Node;
+    node: ZapperNode;
   }[];
 }

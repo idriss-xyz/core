@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import {
-  Node,
+  ZapperNode,
   TipHistoryVariables,
   ZapperResponse,
 } from '@/app/creators/donate-history/types';
 import { CHAIN_TO_IDRISS_TIPPING_ADDRESS } from '@/app/creators/donate/constants';
+import { fetchDonationsByToAddress } from '@/db/fetch-known-donations';
+import { storeToDatabase } from '@/db/store-new-donation';
 
 import { OLDEST_TRANSACTION_TIMESTAMP, TipHistoryQuery } from './constants';
 
@@ -31,9 +33,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    let allRelevantEdges: {
-      node: Node;
-    }[] = [];
+    // Fetch known donations for all tipping addresses
+    const knownDonationsArray = await Promise.all(
+      app_addresses.map((toAddress) => {
+        return fetchDonationsByToAddress(toAddress);
+      }),
+    );
+    const knownDonations = knownDonationsArray.flat();
+    const knownHashes = new Set(
+      knownDonations.map((d) => {
+        return d.transactionHash;
+      }),
+    );
+
+    const allRelevantEdges: { node: ZapperNode }[] = [];
+    const newEdges: { node: ZapperNode }[] = [];
     let cursor: string | null = null;
     let hasNextPage = true;
 
@@ -46,7 +60,6 @@ export async function POST(request: NextRequest) {
       };
 
       const encodedKey = Buffer.from(ZAPPER_API_KEY ?? '').toString('base64');
-
       const response = await fetch(ZAPPER_API_URL, {
         method: 'POST',
         headers: {
@@ -60,16 +73,28 @@ export async function POST(request: NextRequest) {
       });
 
       const data: ZapperResponse = await response.json();
-
       const accountsTimeline = data.data?.accountsTimeline;
       if (!accountsTimeline) break;
 
       const currentEdges = accountsTimeline.edges || [];
-      const relevantEdges = (accountsTimeline.edges || []).filter((tip) => {
-        return tip.node.app?.slug === 'idriss';
+      const relevantEdges = currentEdges.filter((edge) => {
+        return edge.node.app?.slug === 'idriss';
       });
 
-      allRelevantEdges = [...allRelevantEdges, ...relevantEdges];
+      // Collect only new transactions
+      const newPageEdges = relevantEdges.filter((edge) => {
+        return !knownHashes.has(edge.node.transaction.hash);
+      });
+      newEdges.push(...newPageEdges);
+      allRelevantEdges.push(...relevantEdges);
+
+      // Stop if any known transaction is found in this page
+      if (
+        relevantEdges.some((edge) => {
+          return knownHashes.has(edge.node.transaction.hash);
+        })
+      )
+        break;
 
       if (currentEdges.length === 0) break;
 
@@ -81,10 +106,14 @@ export async function POST(request: NextRequest) {
       cursor = accountsTimeline.pageInfo?.endCursor ?? null;
     }
 
-    // Uncomment to store data in your DB
-    // await storeToDatabase(allRelevantEdges);
+    // Store new transactions in the DB
+    if (newEdges.length > 0) {
+      await storeToDatabase(newEdges);
+    }
 
-    return NextResponse.json({ data: allRelevantEdges });
+    return NextResponse.json({
+      data: allRelevantEdges,
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json(

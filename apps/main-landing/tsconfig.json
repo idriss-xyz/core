@@ -12,7 +12,9 @@
       "@/*": [
         "./src/*"
       ]
-    }
+    },
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
   },
   "include": [
     "next-env.d.ts",
