@@ -6,14 +6,14 @@ interface TokenV2 {
   onchainMarketData: {
     price: number;
   };
+  address: Hex;
+  decimals: number;
 }
 
 interface TokenDisplayItem {
   network: string;
   amountRaw: string;
   tokenV2: TokenV2;
-  address: Hex;
-  decimals: number;
 }
 
 type StringDisplayItem = {
