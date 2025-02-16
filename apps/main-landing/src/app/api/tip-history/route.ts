@@ -108,7 +108,7 @@ export async function POST(request: NextRequest) {
 
     // Store new transactions in the DB
     if (newEdges.length > 0) {
-      await storeToDatabase(newEdges);
+      await storeToDatabase(address, newEdges);
     }
 
     return NextResponse.json({

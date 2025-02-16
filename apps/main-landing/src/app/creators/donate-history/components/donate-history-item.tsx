@@ -9,7 +9,7 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { getTransactionUrl } from '@/app/creators/donate/utils';
 import { CHAIN } from '@/app/creators/donate/constants';
 
-import { Node } from '../types';
+import { ZapperNode } from '../types';
 import { useGetEnsAvatar } from '../commands/get-ens-avatar';
 import { useGetEnsName } from '../commands/get-ens-name';
 
@@ -168,7 +168,7 @@ function removeMainnetSuffix(text: string) {
 }
 
 type Properties = {
-  tip: Node;
+  tip: ZapperNode;
 };
 
 export default function DonateHistoryItem({ tip }: Properties) {

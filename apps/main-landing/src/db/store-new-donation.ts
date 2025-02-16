@@ -5,7 +5,10 @@ import { ZapperNode } from '@/app/creators/donate-history/types';
 import { AppDataSource } from './database';
 import { Donation } from './entities/donations.entity';
 
-export async function storeToDatabase(edges: { node: ZapperNode }[]) {
+export async function storeToDatabase(
+  address: string,
+  edges: { node: ZapperNode }[],
+) {
   if (!AppDataSource.isInitialized) {
     await AppDataSource.initialize();
   }
@@ -40,7 +43,7 @@ export async function storeToDatabase(edges: { node: ZapperNode }[]) {
     return donationRepo.create({
       transactionHash: node.transaction.hash,
       fromAddress: node.transaction.fromUser.address,
-      toAddress: node.transaction.toUser.address,
+      toAddress: address,
       // storing timestamp as a separate column if you added it in your entity
       timestamp: node.timestamp,
       // store the full node object in the data column
