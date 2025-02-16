@@ -1,10 +1,13 @@
 import { Button } from '@idriss-xyz/ui/button';
 import { isAddress } from 'viem';
 import { MutableRefObject, useRef } from 'react';
-import { roundToSignificantFiguresForCopilotTrading } from '@idriss-xyz/constants';
+import {
+  getShortWalletHex,
+  roundToSignificantFiguresForCopilotTrading,
+} from '@idriss-xyz/constants';
 
 import { Icon, PreloadedImage } from 'shared/ui';
-import { getShortWalletHex, TimeDifferenceCounter } from 'shared/utils';
+import { TimeDifferenceCounter } from 'shared/utils';
 import { useTradingCopilot } from 'shared/extension';
 
 import { TokenIcon } from '../../utils';

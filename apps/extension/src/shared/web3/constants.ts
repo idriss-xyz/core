@@ -1,30 +1,12 @@
+import { arbitrum, linea, scroll, zksync } from 'viem/chains';
 import {
-  arbitrum,
-  base,
-  linea,
-  mainnet,
-  mantle,
-  optimism,
-  polygon,
-  scroll,
-  zksync,
-} from 'viem/chains';
-
-import {
-  AAVEGOTCHI_LOGO,
   ARBITRUM_LOGO,
   BANKLESS_DAO_LOGO,
-  BASE_LOGO,
   BNB_LOGO,
   BNB_TOKEN_LOGO,
   CULT_DAO_LOGO,
-  DAI_LOGO,
-  DEGEN_LOGO,
   DOGECOIN_LOGO,
-  ECHELON_PRIME_LOGO,
-  ETHEREUM_LOGO,
   HIGHER_LOGO,
-  IDRISS_LOGO,
   LINEA_LOGO,
   MANTLE_LOGO,
   MOXIE_LOGO,
@@ -32,109 +14,44 @@ import {
   POLYGON_LOGO,
   RVLT_LOGO,
   SCROLL_LOGO,
-  USDC_LOGO,
   WETH_LOGO,
   ZYNK_SYNC_ERA_LOGO,
   ALEPH_LOGO,
-  RONIN_LOGO,
-  ABSTRACT_LOGO,
-  PENGU_LOGO,
-  YGG_LOGO,
-  AXIE_LOGO,
   // PIXELS_LOGO,
-  PDT_LOGO,
-} from './logos';
-import { Chain, Token, ChainToken } from './types';
+  NATIVE_COIN_ADDRESS,
+  CHAIN as SHARED_CHAIN,
+  TOKEN as SHARED_TOKEN,
+  Chain,
+  Token,
+  ChainToken,
+} from '@idriss-xyz/constants';
 
-export const NATIVE_COIN_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
-
-export const CHAIN = {
-  ALEPH: {
-    id: 41_455,
-    name: 'Aleph Zero EVM',
-    logo: ALEPH_LOGO,
-    nativeCurrency: {
-      name: 'AZERO',
-      symbol: 'AZERO',
-      decimals: 18,
-    },
-    rpcUrls: { default: { http: ['https://rpc.alephzero.raas.gelato.cloud'] } },
-    blockExplorers: {
-      default: {
-        name: 'Evm Explorer',
-        url: 'https://evm-explorer.alephzero.org',
-      },
-    },
-  },
-  ABSTRACT: {
-    id: 2741,
-    name: 'Abstract',
-    logo: ABSTRACT_LOGO,
-    nativeCurrency: {
-      name: 'Ethereum',
-      symbol: 'ETH',
-      decimals: 18,
-    },
-    rpcUrls: { default: { http: ['https://api.mainnet.abs.xyz'] } },
-    blockExplorers: {
-      default: {
-        name: 'Evm Explorer',
-        url: 'https://abscan.org',
-      },
-    },
-  },
-  RONIN: {
-    id: 2020,
-    name: 'Ronin',
-    logo: RONIN_LOGO,
-    nativeCurrency: {
-      name: 'Ronin',
-      symbol: 'RON',
-      decimals: 18,
-    },
-    rpcUrls: { default: { http: ['https://api.roninchain.com/rpc'] } },
-    blockExplorers: {
-      default: {
-        name: 'Evm Explorer',
-        url: 'https://app.roninchain.com',
-      },
-    },
-  },
-  POLYGON: {
-    ...polygon,
-    logo: POLYGON_LOGO,
-  },
+// TODO: IMPORTANT CHECK SHORTNAMES
+export const CHAIN = Object.assign(SHARED_CHAIN, {
   ARBITRUM_ONE: {
     ...arbitrum,
+    shortName: 'Arbitrum',
     logo: ARBITRUM_LOGO,
-  },
-  OPTIMISM: {
-    ...optimism,
-    logo: OPTIMISM_LOGO,
-  },
-  BASE: {
-    ...base,
-    logo: BASE_LOGO,
   },
   LINEA: {
     ...linea,
+    shortName: 'Linea',
     logo: LINEA_LOGO,
   },
   ZK_SYNC_ERA: {
     ...zksync,
+    shortName: 'ZkSync',
     logo: ZYNK_SYNC_ERA_LOGO,
-  },
-  MANTLE: {
-    ...mantle,
-    logo: MANTLE_LOGO,
   },
   SCROLL: {
     ...scroll,
+    shortName: 'Scroll',
     logo: SCROLL_LOGO,
   },
   BNB_CHAIN: {
     id: 56,
     name: 'BNB Chain',
+    shortName: 'BNB',
     logo: BNB_LOGO,
     nativeCurrency: {
       name: 'BNB',
@@ -146,33 +63,9 @@ export const CHAIN = {
       default: { name: 'BS Scan', url: 'https://bscscan.com' },
     },
   },
-  ETHEREUM: {
-    ...mainnet,
-    logo: ETHEREUM_LOGO,
-  },
-} satisfies Record<string, Chain>;
+}) satisfies Record<string, Chain>;
 
-export const TOKEN = {
-  ETHEREUM: {
-    name: 'Ethereum',
-    symbol: 'ETH',
-    logo: ETHEREUM_LOGO,
-  },
-  USDC: {
-    name: 'USDC',
-    symbol: 'USDC',
-    logo: USDC_LOGO,
-  },
-  DAI: {
-    name: 'Dai',
-    symbol: 'DAI',
-    logo: DAI_LOGO,
-  },
-  ECHELON_PRIME: {
-    name: 'Echelon Prime',
-    symbol: 'PRIME',
-    logo: ECHELON_PRIME_LOGO,
-  },
+export const TOKEN = Object.assign(SHARED_TOKEN, {
   CULT_DAO: {
     name: 'Cult DAO',
     symbol: 'CULT',
@@ -182,11 +75,6 @@ export const TOKEN = {
     name: 'Bankless DAO',
     symbol: 'BANK',
     logo: BANKLESS_DAO_LOGO,
-  },
-  AAVEGOTCHI: {
-    name: 'Aavegotchi',
-    symbol: 'GHST',
-    logo: AAVEGOTCHI_LOGO,
   },
   OPTIMISM: { name: 'Optimism', symbol: 'OP', logo: OPTIMISM_LOGO },
   BNB: { name: 'BNB', symbol: 'BNB', logo: BNB_TOKEN_LOGO },
@@ -199,38 +87,15 @@ export const TOKEN = {
   },
   REVOLT2EARN: { name: 'Revolt 2 Earn', symbol: 'RVLT', logo: RVLT_LOGO },
   MANTLE: { name: 'Mantle', symbol: 'MNT', logo: MANTLE_LOGO },
-  DEGEN: { name: 'Degen', symbol: 'DEGEN', logo: DEGEN_LOGO },
-  IDRISS: { name: 'IDRISS', symbol: 'IDRISS', logo: IDRISS_LOGO },
   AZERO: { name: 'Aleph Zero', symbol: 'AZERO', logo: ALEPH_LOGO },
-  PENGU: { name: 'Pudgy Penguins', symbol: 'PENGU', logo: PENGU_LOGO },
   HIGHER: { name: 'Higher', symbol: 'HIGHER', logo: HIGHER_LOGO },
-  MOXIE: { name: 'Moxie', symbol: 'MOXIE', logo: MOXIE_LOGO },
-  AXIE: {
-    name: 'Axie Infinity',
-    symbol: 'AXS',
-    logo: AXIE_LOGO,
-  },
-  YGG: {
-    name: 'Yield Guild Games',
-    symbol: 'YGG',
-    logo: YGG_LOGO,
-  },
   // PIXEL: {
   //   name: 'Pixels',
   //   symbol: 'PIXEL',
   //   logo: PIXELS_LOGO,
   // },
-  PDT: {
-    name: 'ParagonsDAO',
-    symbol: 'PDT',
-    logo: PDT_LOGO,
-  },
-  RONIN: {
-    name: 'Ronin',
-    symbol: 'RON',
-    logo: RONIN_LOGO,
-  },
-} satisfies Record<string, Token>;
+  MOXIE: { name: 'Moxie', symbol: 'MOXIE', logo: MOXIE_LOGO },
+}) satisfies Record<string, Token>;
 
 export const CHAIN_ID_TO_TOKENS = {
   [CHAIN.ABSTRACT.id]: [

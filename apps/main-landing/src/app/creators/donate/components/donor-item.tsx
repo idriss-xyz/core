@@ -1,15 +1,11 @@
 import { Hex } from 'viem';
+import { getShortWalletHex } from '@idriss-xyz/constants';
 
 import { useGetEnsName } from '@/app/creators/donate-history/commands/get-ens-name';
 
 import { default as RANK_1 } from '../assets/rank-1.png';
 import { default as RANK_2 } from '../assets/rank-2.png';
 import { default as RANK_3 } from '../assets/rank-3.png';
-
-// TODO: IMPORTANT - those functions should be moved to packages/constants
-const getShortWalletHex = (wallet: string) => {
-  return `${wallet.slice(0, 4)}...${wallet.slice(-4)}`;
-};
 
 type Properties = {
   donorAddress: Hex;

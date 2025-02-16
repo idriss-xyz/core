@@ -54,6 +54,7 @@ export {
   formatBigNumber,
   getBlockExplorerUrl,
   getSafeNumber,
+  getShortWalletHex,
 } from './utils';
 
 export * from './logos';

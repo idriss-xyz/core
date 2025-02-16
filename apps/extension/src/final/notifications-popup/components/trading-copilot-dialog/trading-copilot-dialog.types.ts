@@ -1,5 +1,6 @@
+import { Wallet } from '@idriss-xyz/wallet-connect';
+
 import { SwapData } from 'application/trading-copilot';
-import { Wallet } from 'shared/web3';
 
 export interface Properties {
   dialog: SwapData;

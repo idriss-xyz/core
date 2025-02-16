@@ -17,6 +17,8 @@ import {
   PENGU_LOGO,
   YGG_LOGO,
   PDT_LOGO,
+  RONIN_LOGO,
+  AXIE_LOGO,
 } from './logos';
 import { Chain, Token, ChainToken } from './types';
 
@@ -58,6 +60,24 @@ export const CHAIN = {
       default: {
         name: 'Evm Explorer',
         url: 'https://evm-explorer.alephzero.org',
+      },
+    },
+  },
+  RONIN: {
+    id: 2020,
+    name: 'Ronin',
+    shortName: 'Ronin',
+    logo: RONIN_LOGO,
+    nativeCurrency: {
+      name: 'Ronin',
+      symbol: 'RON',
+      decimals: 18,
+    },
+    rpcUrls: { default: { http: ['https://api.roninchain.com/rpc'] } },
+    blockExplorers: {
+      default: {
+        name: 'Evm Explorer',
+        url: 'https://app.roninchain.com',
       },
     },
   },
@@ -121,6 +141,21 @@ export const TOKEN = {
     name: 'Yield Guild Games',
     symbol: 'YGG',
     logo: YGG_LOGO,
+  },
+  AXIE: {
+    name: 'Axie Infinity',
+    symbol: 'AXS',
+    logo: AXIE_LOGO,
+  },
+  // PIXEL: {
+  //   name: 'Pixels',
+  //   symbol: 'PIXEL',
+  //   logo: PIXELS_LOGO,
+  // },
+  RONIN: {
+    name: 'Ronin',
+    symbol: 'RON',
+    logo: RONIN_LOGO,
   },
   PDT: {
     name: 'ParagonsDAO',
@@ -231,6 +266,38 @@ export const CHAIN_ID_TO_TOKENS = {
       address: '0x82617aa52dddf5ed9bb7b370ed777b3182a30fd1',
     },
   ],
+  [CHAIN.RONIN.id]: [
+    {
+      ...TOKEN.RONIN,
+      decimals: 18,
+      address: NATIVE_COIN_ADDRESS,
+    },
+    {
+      ...TOKEN.ETHEREUM,
+      decimals: 18,
+      address: '0xc99a6a985ed2cac1ef41640596c5a5f9f4e19ef5',
+    },
+    {
+      ...TOKEN.USDC,
+      decimals: 6,
+      address: '0x0b7007c13325c48911f73a2dad5fa5dcbf808adc',
+    },
+    {
+      ...TOKEN.AXIE,
+      decimals: 18,
+      address: '0x97a9107c1793bc407d6f527b77e7fff4d812bece',
+    },
+    {
+      ...TOKEN.YGG,
+      decimals: 18,
+      address: '0x1c306872bc82525d72bf3562e8f0aa3f8f26e857',
+    },
+    // {
+    //   ...TOKEN.PIXEL,
+    //   decimals: 18,
+    //   address: '0x7eae20d11ef8c779433eb24503def900b9d28ad7',
+    // },
+  ],
   [CHAIN.MANTLE.id]: [
     {
       ...TOKEN.USDC,
@@ -267,7 +334,7 @@ export const CHAIN_ID_TO_TOKENS = {
     {
       ...TOKEN.YGG,
       decimals: 18,
-      address: '0x25f8087ead173b73d6e8b84329989a8eea16cf73',
+      address: '0xaac78d1219c08aecc8e37e03858fe885f5ef1799',
     },
     {
       ...TOKEN.DEGEN,
@@ -290,6 +357,7 @@ export const DEFAULT_ALLOWED_CHAINS_IDS = [
   CHAIN.MANTLE.id,
   CHAIN.OPTIMISM.id,
   CHAIN.POLYGON.id,
+  CHAIN.RONIN.id,
 ];
 
 export const EMPTY_HEX = '0x';

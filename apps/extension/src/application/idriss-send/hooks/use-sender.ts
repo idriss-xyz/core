@@ -1,11 +1,11 @@
 import { useCallback } from 'react';
 import { getSafeNumber, isNativeTokenAddress } from '@idriss-xyz/constants';
 import { Hex } from 'viem';
+import { Wallet } from '@idriss-xyz/wallet-connect';
 
 import {
   CHAIN_ID_TO_TOKENS,
   GetTokenPriceCommand,
-  Wallet,
   useSwitchChain,
 } from 'shared/web3';
 import { useCommandMutation } from 'shared/messaging';

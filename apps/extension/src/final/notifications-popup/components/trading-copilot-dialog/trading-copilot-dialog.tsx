@@ -10,6 +10,7 @@ import { Link } from '@idriss-xyz/ui/link';
 import {
   EMPTY_HEX,
   formatBigNumber,
+  getShortWalletHex,
   roundToSignificantFiguresForCopilotTrading,
 } from '@idriss-xyz/constants';
 
@@ -25,7 +26,7 @@ import {
   useExchanger,
   useLoginViaSiwe,
 } from 'application/trading-copilot';
-import { getShortWalletHex, TimeDifferenceCounter } from 'shared/utils';
+import { TimeDifferenceCounter } from 'shared/utils';
 import { CHAIN, getWholeNumber } from 'shared/web3';
 import { IdrissSend } from 'shared/idriss';
 

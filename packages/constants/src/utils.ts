@@ -210,3 +210,7 @@ export const getSafeNumber = (
     return { value, decimals: 0 };
   }
 };
+
+export const getShortWalletHex = (walletAddress: string) => {
+  return `${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}`;
+};

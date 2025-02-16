@@ -4,105 +4,20 @@ import { Badge } from '@idriss-xyz/ui/badge';
 import { useEffect, useState } from 'react';
 import { Button } from '@idriss-xyz/ui/button';
 import { Dropdown } from '@idriss-xyz/ui/dropdown';
+import {
+  CHAIN,
+  getShortWalletHex,
+  getTransactionUrl,
+  roundToSignificantFiguresForCopilotTrading,
+} from '@idriss-xyz/constants';
 
 import { IDRISS_ICON_CIRCLE } from '@/assets';
-import { getTransactionUrl } from '@/app/creators/donate/utils';
-import { CHAIN } from '@/app/creators/donate/constants';
 
 import { Node } from '../types';
 import { useGetEnsAvatar } from '../commands/get-ens-avatar';
 import { useGetEnsName } from '../commands/get-ens-name';
 
 // TODO: IMPORTANT - those functions should be moved to packages/constants
-const getShortWalletHex = (wallet: string) => {
-  return `${wallet.slice(0, 4)}...${wallet.slice(-4)}`;
-};
-
-function extractSignificantNumber(number: string) {
-  const decimal = number.split('.')[1] ?? '';
-
-  const significantPart = decimal.replace(/0+$/, '');
-  const leadingZeros = /^0+/.exec(significantPart)?.[0] ?? '';
-
-  if (!leadingZeros || leadingZeros.length < 3) {
-    return { value: number, zeros: 0 };
-  }
-
-  const firstNonZero = /[1-9]/.exec(significantPart);
-  const numberPart = significantPart.slice(firstNonZero?.index) ?? 0;
-
-  return {
-    value: Math.round(Number(numberPart.slice(0, 2))),
-    zeros: leadingZeros.length - 1,
-  };
-}
-
-const roundToSignificantFiguresForCopilotTrading = (
-  number: number,
-  significantFigures: number,
-): { value: number | string; index: number | null } => {
-  if (number === 0) {
-    return {
-      value: 0,
-      index: null,
-    };
-  }
-
-  if (number >= 1_000_000_000) {
-    return {
-      value: `${(number / 1_000_000_000).toFixed(significantFigures)}B`,
-      index: null,
-    };
-  }
-  if (number >= 1_000_000) {
-    return {
-      value: `${(number / 1_000_000).toFixed(significantFigures)}M`,
-      index: null,
-    };
-  }
-  if (number >= 1000) {
-    return {
-      value: `${(number / 1000).toFixed(significantFigures)}K`,
-      index: null,
-    };
-  }
-
-  if (number.toString().includes('e')) {
-    const scienceNumberArray = number.toString().split('e-');
-    const decimals = scienceNumberArray?.[1] ?? '2';
-    const startingDecimals =
-      scienceNumberArray?.[0]?.split('.')?.[1]?.length ?? 0;
-    const { value: significantNumber, zeros: indexZeros } =
-      extractSignificantNumber(
-        Number(number).toFixed(Number(decimals) + Number(startingDecimals)),
-      ) || {};
-
-    return {
-      value: significantNumber,
-      index: indexZeros,
-    };
-  }
-
-  const { value, zeros } = extractSignificantNumber(number.toString());
-
-  if (zeros >= 2 && number < 1) {
-    return {
-      value,
-      index: zeros,
-    };
-  }
-
-  const offset = 0.000_000_001;
-  const multiplier = Math.pow(10, significantFigures);
-  const rounded_number =
-    Math.round((number + offset) * multiplier) / multiplier;
-
-  return {
-    value: rounded_number,
-    index: null,
-  };
-};
-
 const getFormattedTimeDifference = (isoTimestamp: number) => {
   const currentDate = new Date();
   const targetDate = new Date(isoTimestamp);

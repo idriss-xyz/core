@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
+import { Wallet } from '@idriss-xyz/wallet-connect';
 
 import {
   onWindowMessage,
@@ -6,7 +7,6 @@ import {
   useCommandMutation,
   useCommandQuery,
 } from 'shared/messaging';
-import { Wallet } from 'shared/web3';
 import { useTradingCopilot } from 'shared/extension';
 
 import {

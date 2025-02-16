@@ -6,12 +6,12 @@ import {
   parseAbiParameters,
 } from 'viem';
 import { getChainById, EMPTY_HEX } from '@idriss-xyz/constants';
+import { Wallet } from '@idriss-xyz/wallet-connect';
 
 import {
   createWalletClient,
   GetAcrossChainFeeCommand,
   TransactionRevertedError,
-  Wallet,
 } from 'shared/web3';
 import { useCommandMutation } from 'shared/messaging';
 import { useObservabilityScope } from 'shared/observability';

@@ -1,5 +1,4 @@
 export { CHAIN, TOKEN, CHAIN_ID_TO_TOKENS } from './constants';
-export type { Wallet, ChainToken } from './types';
 export {
   resolveAddress,
   getWholeNumber,
@@ -21,9 +20,6 @@ export {
   GetAcrossChainFeesCommand,
   GetAcrossChainFeeCommand,
 } from './commands';
-export { AGORA_LOGO } from './logos';
-export { SNAPSHOT_LOGO } from './logos';
-export { TALLY_LOGO } from './logos';
 export { TransactionRevertedError } from './errors';
 export {
   WalletStorage,

@@ -1,4 +1,3 @@
-// File: /src/app/creators/donate-history/components/top-donors.tsx
 'use client';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
