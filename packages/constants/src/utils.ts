@@ -214,3 +214,59 @@ export const getSafeNumber = (
 export const getShortWalletHex = (walletAddress: string) => {
   return `${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}`;
 };
+
+/**
+ * Returns the difference between the given ISO timestamp and the current time
+ * in a compact format:
+ * - For days: "1 day 20 hrs 30 mins"
+ * - For hours: "20 hrs 30 mins"
+ * - For minutes: "30 mins"
+ * - For seconds (only if under 1 min): "30 secs"
+ */
+const getFormattedTimeDifference = (isoTimestamp: string | number) => {
+  const currentDate = new Date();
+  const targetDate = new Date(isoTimestamp);
+  const differenceInMs = targetDate.getTime() - currentDate.getTime();
+
+  const totalSeconds = Math.abs(Math.floor(differenceInMs / 1000));
+  const days = Math.floor(totalSeconds / (60 * 60 * 24));
+  const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
+  const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+  const seconds = totalSeconds % 60;
+
+  let result = '';
+
+  if (days > 0) {
+    result += `${days} ${days > 1 ? 'days' : 'day'} `;
+  }
+
+  if (hours > 0 || days > 0) {
+    result += `${hours} ${hours > 1 ? 'hrs' : 'hr'} `;
+  }
+
+  if (minutes > 0 || days > 0) {
+    result += `${minutes} ${minutes > 1 ? 'mins' : 'min'}`;
+  }
+
+  if (minutes < 1 && hours < 1 && days < 1) {
+    result += `${seconds} ${seconds > 1 ? 'secs' : 'sec'}`;
+  }
+
+  return result.trim();
+};
+
+export const getTimeDifferenceString = ({
+  timestamp,
+  text,
+}: {
+  timestamp: string | number;
+  text: string;
+}) => {
+  let timeDifference = getFormattedTimeDifference(timestamp);
+
+  setInterval(() => {
+    timeDifference = getFormattedTimeDifference(timestamp);
+  }, 1000);
+
+  return text ? `${timeDifference} ${text}` : timeDifference;
+};

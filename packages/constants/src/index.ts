@@ -55,6 +55,7 @@ export {
   getBlockExplorerUrl,
   getSafeNumber,
   getShortWalletHex,
+  getTimeDifferenceString,
 } from './utils';
 
 export * from './logos';

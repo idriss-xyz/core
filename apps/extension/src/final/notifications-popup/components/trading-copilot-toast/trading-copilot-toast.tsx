@@ -3,11 +3,11 @@ import { isAddress } from 'viem';
 import { MutableRefObject, useRef } from 'react';
 import {
   getShortWalletHex,
+  getTimeDifferenceString,
   roundToSignificantFiguresForCopilotTrading,
 } from '@idriss-xyz/constants';
 
 import { Icon, PreloadedImage } from 'shared/ui';
-import { TimeDifferenceCounter } from 'shared/utils';
 import { useTradingCopilot } from 'shared/extension';
 
 import { TokenIcon } from '../../utils';
@@ -83,7 +83,10 @@ export const TradingCopilotToast = ({
         </p>
         <div className="flex w-full justify-between">
           <p className="text-body6 text-mint-700">
-            <TimeDifferenceCounter timestamp={toast.timestamp} text="ago" />
+            {getTimeDifferenceString({
+              timestamp: toast.timestamp,
+              text: 'ago',
+            })}
           </p>
           <Button
             intent="primary"

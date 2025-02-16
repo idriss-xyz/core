@@ -1,12 +1,12 @@
 import { formatEther } from 'viem';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { Badge } from '@idriss-xyz/ui/badge';
-import { useEffect, useState } from 'react';
 import { Button } from '@idriss-xyz/ui/button';
 import { Dropdown } from '@idriss-xyz/ui/dropdown';
 import {
   CHAIN,
   getShortWalletHex,
+  getTimeDifferenceString,
   getTransactionUrl,
   roundToSignificantFiguresForCopilotTrading,
 } from '@idriss-xyz/constants';
@@ -16,63 +16,6 @@ import { IDRISS_ICON_CIRCLE } from '@/assets';
 import { Node } from '../types';
 import { useGetEnsAvatar } from '../commands/get-ens-avatar';
 import { useGetEnsName } from '../commands/get-ens-name';
-
-// TODO: IMPORTANT - those functions should be moved to packages/constants
-const getFormattedTimeDifference = (isoTimestamp: number) => {
-  const currentDate = new Date();
-  const targetDate = new Date(isoTimestamp);
-  const differenceInMs = targetDate.getTime() - currentDate.getTime();
-
-  const totalSeconds = Math.abs(Math.floor(differenceInMs / 1000));
-  const days = Math.floor(totalSeconds / (60 * 60 * 24));
-  const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
-  const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
-  const seconds = totalSeconds % 60;
-
-  let result = '';
-
-  if (days > 0) {
-    result += `${days} ${days > 1 ? 'days' : 'day'} `;
-  }
-
-  if (hours > 0 || days > 0) {
-    result += `${hours} hrs `;
-  }
-
-  if (minutes > 0 || days > 0) {
-    result += `${minutes} ${minutes > 1 ? 'mins' : 'min'}`;
-  }
-
-  if (minutes < 1 && hours < 1 && days < 1) {
-    result += `${seconds} ${seconds > 1 ? 'secs' : 'sec'}`;
-  }
-
-  return result.trim();
-};
-
-const TimeDifferenceCounter = ({
-  timestamp,
-  text,
-}: {
-  timestamp: number;
-  text: string;
-}) => {
-  const [timeDifference, setTimeDifference] = useState(
-    getFormattedTimeDifference(timestamp),
-  );
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeDifference(getFormattedTimeDifference(timestamp));
-    }, 1000);
-
-    return () => {
-      return clearInterval(interval);
-    };
-  }, [timestamp]);
-
-  return text ? `${timeDifference} ${text}` : timeDifference;
-};
 
 function removeMainnetSuffix(text: string) {
   const suffix = '_MAINNET';
@@ -182,7 +125,7 @@ export default function DonateHistoryItem({ tip }: Properties) {
           </p>
 
           <p className="text-body6 text-mint-700">
-            <TimeDifferenceCounter timestamp={tip.timestamp} text="ago" />
+            {getTimeDifferenceString({ timestamp: tip.timestamp, text: 'ago' })}
           </p>
         </div>
       </div>

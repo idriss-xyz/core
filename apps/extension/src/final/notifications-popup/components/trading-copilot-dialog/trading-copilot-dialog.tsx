@@ -11,6 +11,7 @@ import {
   EMPTY_HEX,
   formatBigNumber,
   getShortWalletHex,
+  getTimeDifferenceString,
   roundToSignificantFiguresForCopilotTrading,
 } from '@idriss-xyz/constants';
 
@@ -26,7 +27,6 @@ import {
   useExchanger,
   useLoginViaSiwe,
 } from 'application/trading-copilot';
-import { TimeDifferenceCounter } from 'shared/utils';
 import { CHAIN, getWholeNumber } from 'shared/web3';
 import { IdrissSend } from 'shared/idriss';
 
@@ -299,7 +299,10 @@ const TradingCopilotDialogContent = ({
             </span>
           </p>
           <p className="text-body6 text-mint-700">
-            <TimeDifferenceCounter timestamp={dialog.timestamp} text="ago" />
+            {getTimeDifferenceString({
+              timestamp: dialog.timestamp,
+              text: 'ago',
+            })}
           </p>
         </div>
       </div>
