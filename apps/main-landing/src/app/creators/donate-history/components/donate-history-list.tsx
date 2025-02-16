@@ -2,6 +2,7 @@ import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { Hex } from 'viem';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
+import { useSearchParams } from 'next/navigation';
 
 import DonateHistoryItem from '@/app/creators/donate-history/components/donate-history-item';
 
@@ -12,6 +13,7 @@ type Properties = {
 };
 
 export default function DonateHistoryList({ address }: Properties) {
+  const searchParameters = useSearchParams();
   const tips = useGetTipHistory({ address: address as Hex });
   const tipEdges = tips.data?.data ?? [];
 
@@ -21,7 +23,7 @@ export default function DonateHistoryList({ address }: Properties) {
         <IconButton
           asLink
           size="medium"
-          href="/creators"
+          href={`donate?${searchParameters.toString()}`}
           intent="tertiary"
           iconName="ArrowLeft"
         />

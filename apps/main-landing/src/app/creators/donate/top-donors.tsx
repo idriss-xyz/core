@@ -9,7 +9,8 @@ import { EMPTY_HEX, hexSchema } from '@idriss-xyz/constants';
 
 import { IDRISS_SCENE_STREAM_2 } from '@/assets';
 import { validateAddressOrENS } from '@/app/creators/donate/utils';
-import DonorItem from '@/app/creators/donate/components/donor-item';
+import {default as DonorItem,
+  DonorItemPlaceholder} from '@/app/creators/donate/components/donor-item';
 import { useGetTipHistory } from '@/app/creators/donate-history/commands/get-donate-history';
 import { Node } from '@/app/creators/donate-history/types';
 
@@ -113,6 +114,7 @@ export const TopDonors = ({ className }: Properties) => {
           <ul>
             {sortedGroupedTips.map((groupedTip, index) => {
               if (!groupedTip.tips[0] || index > 5) return null;
+
               return (
                 <DonorItem
                   donorRank={index}
@@ -122,6 +124,13 @@ export const TopDonors = ({ className }: Properties) => {
                 />
               );
             })}
+
+            {sortedGroupedTips.length <= 5 ? (
+              <DonorItemPlaceholder
+                donorRank={sortedGroupedTips.length}
+                previousDonateAmount={sortedGroupedTips.at(-1)?.tipsSum ?? 1234}
+              />
+            ) : null}
           </ul>
         ) : (
           <span className="flex w-full items-center justify-center px-5.5 py-4.5">
@@ -132,8 +141,8 @@ export const TopDonors = ({ className }: Properties) => {
       <div className="flex min-h-[80px] w-full items-center justify-center">
         <Link
           size="xs"
-          href={`donate-history?address=${validatedAddress}`}
-          className="mx-6 my-3"
+          href={`donate-history?${searchParameters.toString()}`}
+          className={`mx-6 my-3 ${sortedGroupedTips?.length === 0 ? 'invisible' : ''}`}
         >
           See full donation history
         </Link>
