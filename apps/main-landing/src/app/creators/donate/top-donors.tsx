@@ -9,8 +9,10 @@ import { EMPTY_HEX, hexSchema } from '@idriss-xyz/constants';
 
 import { IDRISS_SCENE_STREAM_2 } from '@/assets';
 import { validateAddressOrENS } from '@/app/creators/donate/utils';
-import {default as DonorItem,
-  DonorItemPlaceholder} from '@/app/creators/donate/components/donor-item';
+import {
+  default as DonorItem,
+  DonorItemPlaceholder,
+} from '@/app/creators/donate/components/donor-item';
 import { useGetTipHistory } from '@/app/creators/donate-history/commands/get-donate-history';
 import { Node } from '@/app/creators/donate-history/types';
 
