@@ -3,18 +3,26 @@ import { Hex } from 'viem';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { useSearchParams } from 'next/navigation';
+import { Icon } from '@idriss-xyz/ui/icon';
 
 import DonateHistoryItem from '@/app/creators/donate-history/components/donate-history-item';
 
 import { useGetTipHistory } from '../commands/get-donate-history';
 
 type Properties = {
-  address: string;
+  address: string | null | undefined;
+  isInvalidAddress: boolean;
 };
 
-export default function DonateHistoryList({ address }: Properties) {
+export default function DonateHistoryList({
+  address,
+  isInvalidAddress,
+}: Properties) {
   const searchParameters = useSearchParams();
-  const tips = useGetTipHistory({ address: address as Hex });
+  const tips = useGetTipHistory(
+    { address: address as Hex },
+    { enabled: !!address },
+  );
   const tipEdges = tips.data?.data ?? [];
 
   return (
@@ -34,22 +42,28 @@ export default function DonateHistoryList({ address }: Properties) {
         rootClassName="w-full max-h-[500px]"
         className="size-full max-h-[500px] overflow-y-auto transition-all duration-500"
       >
-        <div className="flex w-full flex-col gap-y-3 pr-2">
-          {tips.isLoading ? (
-            <Spinner className="mx-auto my-4 size-16" />
-          ) : tipEdges.length > 0 ? (
-            tipEdges.map((tip) => {
-              return (
-                <DonateHistoryItem
-                  tip={tip.node}
-                  key={tip.node.transaction.hash}
-                />
-              );
-            })
-          ) : (
-            <p>This address has not received any tips</p>
-          )}
-        </div>
+        {isInvalidAddress ? (
+          <p className="flex items-center justify-center gap-2 text-center text-heading4 text-red-500">
+            <Icon name="AlertCircle" size={40} /> <span>Wrong address</span>
+          </p>
+        ) : (
+          <div className="flex w-full flex-col gap-y-3 pr-2">
+            {tips.isLoading || !address ? (
+              <Spinner className="mx-auto my-4 size-16" />
+            ) : tipEdges.length > 0 ? (
+              tipEdges.map((tip) => {
+                return (
+                  <DonateHistoryItem
+                    tip={tip.node}
+                    key={tip.node.transaction.hash}
+                  />
+                );
+              })
+            ) : (
+              <p>This address has not received any tips</p>
+            )}
+          </div>
+        )}
       </ScrollArea>
     </div>
   );

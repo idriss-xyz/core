@@ -25,10 +25,17 @@ export const TipHistoryQuery = `
                   onchainMarketData {
                     price
                   }
+                  address
+                  decimals
                 }
               }
               ... on StringDisplayItem {
                 stringValue
+              }
+              ... on ActorDisplayItem {
+                account {
+                  address
+                }
               }
             }
           }
@@ -44,5 +51,18 @@ export const TipHistoryQuery = `
     }
   }
 `;
+
+export const PriceHistoryQuery = `
+query ($address: Address!, $network: Network!, $currency: Currency!, $timeFrame: TimeFrame!) {
+  fungibleToken(address: $address, network: $network) {
+    onchainMarketData {
+      price
+      priceTicks(currency: $currency, timeFrame: $timeFrame) {
+        timestamp
+        median
+      }
+    }
+  }
+}`;
 
 export const OLDEST_TRANSACTION_TIMESTAMP = 1_734_497_616_000;

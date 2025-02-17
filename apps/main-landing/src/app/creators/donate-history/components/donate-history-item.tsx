@@ -10,10 +10,9 @@ import {
   getTransactionUrl,
   roundToSignificantFiguresForCopilotTrading,
 } from '@idriss-xyz/constants';
+import { Icon } from '@idriss-xyz/ui/icon';
 
-import { IDRISS_ICON_CIRCLE } from '@/assets';
-
-import { Node } from '../types';
+import { ZapperNode } from '../types';
 import { useGetEnsAvatar } from '../commands/get-ens-avatar';
 import { useGetEnsName } from '../commands/get-ens-name';
 
@@ -26,7 +25,7 @@ function removeMainnetSuffix(text: string) {
 }
 
 type Properties = {
-  tip: Node;
+  tip: ZapperNode;
 };
 
 export default function DonateHistoryItem({ tip }: Properties) {
@@ -69,13 +68,17 @@ export default function DonateHistoryItem({ tip }: Properties) {
   return (
     <div className="grid w-full grid-cols-[1fr,32px] items-start gap-x-2">
       <div className="grid w-full grid-cols-[40px,1fr] items-start gap-x-2">
-        <img
-          className={`size-10 rounded-full ${
-            ensAvatarQuery.data ? 'border border-neutral-400' : ''
-          }`}
-          src={ensAvatarQuery.data ?? IDRISS_ICON_CIRCLE.src}
-          alt={ensAvatarQuery.data ? 'Donor avatar' : 'IDRISS logo'}
-        />
+        {ensAvatarQuery.data ? (
+          <img
+            className="size-10 rounded-full border border-neutral-400"
+            src={ensAvatarQuery.data}
+            alt="Donor avatar"
+          />
+        ) : (
+          <div className="flex size-10 items-center justify-center rounded-full border border-neutral-300 bg-neutral-200">
+            <Icon size={25} name="UserRound" className="text-neutral-500" />
+          </div>
+        )}
 
         <div className="flex flex-col justify-center gap-y-1">
           <div className="flex items-center gap-x-2">

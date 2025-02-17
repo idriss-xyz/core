@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import { EMPTY_HEX, hexSchema } from '@idriss-xyz/constants';
+import { Icon } from '@idriss-xyz/ui/icon';
 
 import { IDRISS_SCENE_STREAM_2 } from '@/assets';
 import { validateAddressOrENS } from '@/app/creators/donate/utils';
@@ -14,7 +15,7 @@ import {
   DonorItemPlaceholder,
 } from '@/app/creators/donate/components/donor-item';
 import { useGetTipHistory } from '@/app/creators/donate-history/commands/get-donate-history';
-import { Node } from '@/app/creators/donate-history/types';
+import { ZapperNode } from '@/app/creators/donate-history/types';
 
 import { SEARCH_PARAMETER } from './content';
 
@@ -75,7 +76,7 @@ export const TopDonors = ({ className }: Properties) => {
 
       if (!accumulator[userAddress]) {
         accumulator[userAddress] = {
-          tips: [] as { node: Node }[],
+          tips: [] as { node: ZapperNode }[],
           tipsSum: 0,
           address: userAddress,
         };
@@ -88,7 +89,7 @@ export const TopDonors = ({ className }: Properties) => {
     },
     {} as Record<
       string,
-      { tipsSum: number; address: Hex; tips: { node: Node }[] }
+      { tipsSum: number; address: Hex; tips: { node: ZapperNode }[] }
     >,
   );
 
@@ -97,6 +98,16 @@ export const TopDonors = ({ className }: Properties) => {
         return b.tipsSum - a.tipsSum;
       })
     : undefined;
+
+  if (validatedAddress !== undefined && addressValidationResult.error) {
+    return (
+      <div className={classes(baseClassName, className, 'px-4 pb-9 pt-6')}>
+        <p className="flex items-center justify-center gap-2 text-center text-heading4 text-red-500">
+          <Icon name="AlertCircle" size={40} /> <span>Wrong address</span>
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className={classes(className, baseClassName)}>
