@@ -135,20 +135,6 @@ export class ContentScript {
         return;
       }
 
-      if (request.type === "proxySolanaRequest") {
-        chrome.runtime.sendMessage(
-          {
-            type: "proxySolanaRequest",
-            data: request.data
-          },
-          (response) => {
-            window.postMessage({
-              type: "SOLANA_RPC_RESPONSE",
-              detail: response
-            });
-          }
-        );
-      }
     });
   }
 
