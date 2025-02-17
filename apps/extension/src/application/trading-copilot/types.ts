@@ -237,3 +237,12 @@ export type VerifySiweSignatureResponse = {
 export type VerifyAuthTokenPayload = {
   token: string;
 };
+
+// TODO: Correcly type this
+export type SendSolanaTxPayload = {
+  serializedTx: Uint8Array<ArrayBufferLike>;
+}
+
+export type SendSolanaTxResponse = {
+  transactionHash: string;
+}

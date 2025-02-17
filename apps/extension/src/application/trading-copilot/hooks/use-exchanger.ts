@@ -9,7 +9,7 @@ import { SwapData, FormValues, QuotePayload } from '../types';
 import { GetQuoteCommand } from '../commands/get-quote';
 
 import { useCopilotSolanaTransaction, useCopilotTransaction } from './use-copilot-transaction';
-import { Connection, Transaction, VersionedTransaction } from '@solana/web3.js';
+import { Transaction, VersionedTransaction } from '@solana/web3.js';
 
 interface Properties {
   wallet?: Wallet;
@@ -148,11 +148,10 @@ export const useExchanger = ({ wallet }: Properties) => {
 
 interface SolanaExchangerProperties {
   publicKey?: string;
-  connection: Connection;
   signTransaction?: (<T extends VersionedTransaction | Transaction>(transaction: T) => Promise<T>) | undefined;
 }
 
-export const useSolanaExchanger= ({ publicKey, connection, signTransaction }: SolanaExchangerProperties) => {
+export const useSolanaExchanger= ({ publicKey, signTransaction }: SolanaExchangerProperties) => {
   const copilotTransaction = useCopilotSolanaTransaction();
   const getQuoteMutation = useCommandMutation(GetQuoteCommand);
 
@@ -194,7 +193,6 @@ export const useSolanaExchanger= ({ publicKey, connection, signTransaction }: So
 
       copilotTransaction.mutate({
         transactionData,
-        connection,
         signTransaction,
       });
 

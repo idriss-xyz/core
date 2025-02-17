@@ -43,7 +43,7 @@ import {
   WalletBalanceProperties,
   TradeValueProperties,
 } from './trading-copilot-dialog.types';
-import { useConnection, useWallet as useSolanaWallet } from '@solana/wallet-adapter-react';
+import { useWallet as useSolanaWallet } from '@solana/wallet-adapter-react';
 import { useModal } from '@ebay/nice-modal-react';
 import { SolanaWalletConnectModal } from '@idriss-xyz/wallet-connect';
 
@@ -155,10 +155,9 @@ const TradingCopilotDialogContent = ({
     wallets,
     wallet: solanaWallet,
   });
-  const { connection } = useConnection();
   const isWalletConnected = isSolanaTrade ? connected : wallet;
   const evmExchanger = useExchanger({ wallet });
-  const solanaExchanger = useSolanaExchanger({ publicKey: publicKey?.toString(), connection, signTransaction });
+  const solanaExchanger = useSolanaExchanger({ publicKey: publicKey?.toString(), signTransaction });
   const exchanger = isSolanaTrade ? solanaExchanger : evmExchanger;
   const siwe = useLoginViaSiwe();
 
