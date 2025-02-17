@@ -27,6 +27,16 @@ export interface ZapperNode {
     hash: Hex;
     fromUser: {
       address: Hex;
+      displayName: {
+        value: string;
+        source: string;
+      };
+      avatar: {
+        value: {
+          url: string | undefined;
+        };
+        source: string | undefined;
+      };
     };
     toUser: {
       address: Hex;

@@ -9,6 +9,17 @@ export const TipHistoryQuery = `
             hash
             fromUser {
               address
+              displayName {
+                value
+              }
+              avatar {
+                value {
+                  ... on AvatarUrl {
+                    url
+                  }
+                }
+                source
+              }
             }
             toUser {
               address

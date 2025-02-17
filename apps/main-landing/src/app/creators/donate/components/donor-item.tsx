@@ -15,6 +15,7 @@ type Properties = {
   donorAddress: Hex;
   donorRank: number;
   donateAmount: number;
+  displayName: string;
 };
 
 const rankImages = [RANK_1.src, RANK_2.src, RANK_3.src];
@@ -24,10 +25,8 @@ export default function DonorItem({
   donorAddress,
   donorRank,
   donateAmount,
+  displayName
 }: Properties) {
-  const ensNameQuery = useGetEnsName({
-    address: donorAddress,
-  });
 
   const rankImage =
     donorRank <= 2 ? (
@@ -41,7 +40,7 @@ export default function DonorItem({
       <span className="text-neutral-600">{donorRank + 1}</span>
       <span className="flex items-center gap-x-1.5 text-neutral-900">
         {rankImage}
-        {ensNameQuery.data ?? getShortWalletHex(donorAddress)}
+        {displayName ?? getShortWalletHex(donorAddress)}
       </span>
       <span className="text-right text-neutral-900">
         $

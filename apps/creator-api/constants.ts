@@ -11,6 +11,18 @@ export const TipHistoryQuery = `
             hash
             fromUser {
               address
+              displayName {
+                value
+                source
+              }
+              avatar {
+                value {
+                  ... on AvatarUrl {
+                    url
+                  }
+                }
+                source
+              }
             }
             toUser {
               address
@@ -80,3 +92,9 @@ export const CHAIN_TO_IDRISS_TIPPING_ADDRESS = {
   2020: '0x74BD1b29B997ec081eb7AF06F2fd67CbfC74D26e',
   2741: '0xEeFA4f7F4e9104D16673D0C2fE3D0bF4c45A7804',
 } as const;
+
+export const ALLOWED_ORIGINS = [
+  'http://localhost:3000',
+  'https://idriss.xyz',
+  'https://www.idriss.xyz',
+];
