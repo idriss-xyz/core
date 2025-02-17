@@ -318,11 +318,17 @@ const TradingCopilotDialogContent = ({
 
               <TooltipContent className="z-portal w-fit bg-black text-white">
                 <p className="text-body6">
-                  {getTimeDifferenceString({
-                    text: 'ago',
-                    variant: 'long',
-                    timestamp: dialog.timestamp,
-                  })}
+                  {new Intl.DateTimeFormat('en-US', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false,
+                  })
+                    .format(new Date(dialog.timestamp))
+                    .replaceAll('/', '-')}
                 </p>
               </TooltipContent>
             </Tooltip>
