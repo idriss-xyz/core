@@ -171,6 +171,9 @@ export default function Obs() {
             }
           }
         },
+        onError: (error) => {
+          console.error(`WebSocket disconnected on chain ${name}:`, error);
+        },
       });
       unwatchers.push(unwatch);
     }

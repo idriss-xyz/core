@@ -1,8 +1,7 @@
 import { type Hex } from 'viem';
 
 import { CHAIN } from '../donate/constants';
-
-import { clientEthereum } from './constants/blockchain-clients';
+import { ethereumClient } from '../donate/config';
 
 const SELL_TOKEN_BY_NETWORK: Record<string, string> = {
   [CHAIN.BASE.name.toLowerCase()]: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',
@@ -86,7 +85,7 @@ export async function calculateDollar(
 
 export const resolveEnsName = async (address: Hex): Promise<string | null> => {
   try {
-    let resolved = await clientEthereum.getEnsName({ address });
+    let resolved = await ethereumClient.getEnsName({ address });
     if (resolved) return resolved;
 
     const response = await fetch(
@@ -110,7 +109,7 @@ export const resolveEnsName = async (address: Hex): Promise<string | null> => {
 
 export const resolveEnsToHex = async (ensName: string): Promise<Hex | null> => {
   try {
-    const resolvedAddress = await clientEthereum.getEnsAddress({
+    const resolvedAddress = await ethereumClient.getEnsAddress({
       name: ensName,
     });
     if (resolvedAddress) return resolvedAddress;
