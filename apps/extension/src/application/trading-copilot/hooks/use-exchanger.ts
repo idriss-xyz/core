@@ -1,8 +1,9 @@
 import { useCallback } from 'react';
 import { formatEther, parseEther } from 'viem';
+import { Wallet } from '@idriss-xyz/wallet-connect';
 
 import { useWallet } from 'shared/extension';
-import { Wallet, CHAIN, useSwitchChain } from 'shared/web3';
+import { CHAIN, useSwitchChain } from 'shared/web3';
 import { useCommandMutation } from 'shared/messaging';
 
 import { SwapData, FormValues, QuotePayload } from '../types';

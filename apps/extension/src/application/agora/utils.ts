@@ -1,4 +1,6 @@
-import { CHAIN, getBlockExplorerUrl } from 'shared/web3';
+import { getBlockExplorerUrl } from '@idriss-xyz/constants';
+
+import { CHAIN } from 'shared/web3';
 
 import { AGORA_WEBSITE_URL } from './constants';
 

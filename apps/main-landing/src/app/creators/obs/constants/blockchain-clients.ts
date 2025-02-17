@@ -1,6 +1,5 @@
 import { createPublicClient, http } from 'viem';
-
-import { CHAIN } from '../../donate/constants';
+import { CHAIN } from '@idriss-xyz/constants';
 
 const clientBase = createPublicClient({
   chain: CHAIN.BASE,

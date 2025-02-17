@@ -1,8 +1,7 @@
-import { createPublicClient, formatEther, http } from 'viem';
+import { createPublicClient, formatEther, Hex, http } from 'viem';
 import { base } from 'viem/chains';
 import { STAKER_ADDRESS, StakingABI } from '@idriss-xyz/constants';
 
-import { Hex } from 'shared/web3';
 import {
   Command,
   FailureResult,

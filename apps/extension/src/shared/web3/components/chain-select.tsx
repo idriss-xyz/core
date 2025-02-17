@@ -1,8 +1,8 @@
 import { ReactNode, useMemo } from 'react';
+import { Chain } from '@idriss-xyz/constants';
 
 import { Select, Option } from 'shared/ui';
 
-import { Chain } from '../types';
 import { CHAIN } from '../constants';
 
 interface Properties {

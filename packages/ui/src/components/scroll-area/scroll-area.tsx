@@ -7,6 +7,7 @@ import { classes } from '../../utils';
 interface ScrollAreaProperties extends RadixScrollArea.ScrollAreaProps {
   children: ReactNode;
   className?: string;
+  rootClassName?: string;
   scrollBarClassName?: string;
   customScrollEventName?: string;
 }
@@ -26,12 +27,16 @@ const handleScroll = (
 export const ScrollArea = ({
   children,
   className,
+  rootClassName,
   scrollBarClassName,
   customScrollEventName,
   ...properties
 }: ScrollAreaProperties) => {
   return (
-    <RadixScrollArea.Root className="h-full overflow-hidden" {...properties}>
+    <RadixScrollArea.Root
+      className={classes('h-full overflow-hidden', rootClassName)}
+      {...properties}
+    >
       <RadixScrollArea.Viewport
         onScroll={(event) => {
           if (customScrollEventName) {

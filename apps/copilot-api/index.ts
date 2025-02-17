@@ -1,18 +1,18 @@
-import express, { Request, Response } from 'express';
-import { validateAlchemySignature } from './utils/webhookUtils';
-import { webhookHandler } from './services/webhookHandler';
-import dotenv from 'dotenv';
-import { dataSource } from './db';
-import http from 'http';
-import { Server as SocketIOServer, Socket } from 'socket.io';
-import authRoutes from './routes/auth';
-import defaultRoutes from './routes';
-import subscriptionsRoutes from './routes/subscribtions';
-import { getSigningKey } from './services/subscriptionManager';
-import { join } from 'path';
-import { mode } from './utils/mode';
 import { createConfig } from '@lifi/sdk';
+import dotenv from 'dotenv';
+import express, { Request, Response } from 'express';
+import http from 'http';
+import { join } from 'path';
+import { Server as SocketIOServer } from 'socket.io';
+import { dataSource } from './db';
+import defaultRoutes from './routes';
+import authRoutes from './routes/auth';
+import subscriptionsRoutes from './routes/subscribtions';
 import { connectedClients } from './services/scheduler';
+import { getSigningKey } from './services/subscriptionManager';
+import { webhookHandler } from './services/webhookHandler';
+import { mode } from './utils/mode';
+import { validateAlchemySignature } from './utils/webhookUtils';
 
 dotenv.config(
   mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },

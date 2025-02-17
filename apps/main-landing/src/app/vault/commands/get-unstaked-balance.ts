@@ -1,10 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import { createPublicClient, formatEther, http } from 'viem';
+import { createPublicClient, formatEther, Hex, http } from 'viem';
 import { base } from 'viem/chains';
 
 import { ERC20_ABI } from '@/app/creators/donate/constants';
 import { IDRISS_TOKEN_ADDRESS } from '@/components/token-section/constants';
-import { Hex } from '@/app/creators/donate/types';
 
 type Payload = {
   address: Hex;

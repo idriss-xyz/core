@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Hex } from 'viem';
 
 import { useCommandQuery } from 'shared/messaging';
 import {
   GetDigestToWalletAddressCommand,
   GetHandleToTwitterIdCommand,
 } from 'shared/idriss';
-import { Hex } from 'shared/web3';
 import { reverseObject } from 'shared/utils';
 import { UserScrapingResult } from 'shared/scraping';
 import { getNodeToInjectToUser, isHandleNode } from 'host/twitter';

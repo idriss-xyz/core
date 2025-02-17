@@ -1,8 +1,7 @@
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { mainnet, polygon, optimism, mantle, base, ronin } from 'wagmi/chains';
 import { defineChain, createPublicClient, http } from 'viem';
-
-import { ALEPH_LOGO, ABSTRACT_LOGO } from '../logos';
+import { ABSTRACT_LOGO, ALEPH_LOGO } from '@idriss-xyz/constants';
 
 const alephzero = defineChain({
   id: 41_455,

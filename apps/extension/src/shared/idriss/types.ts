@@ -1,4 +1,4 @@
-import { Hex } from 'shared/web3';
+import { Hex } from 'viem';
 
 export interface SendFormValues {
   chainId: number;

@@ -1,6 +1,5 @@
 import { CustomError } from 'ts-custom-error';
-
-import { Hex } from './types';
+import { Hex } from 'viem';
 
 type Properties = {
   transactionHash: Hex;

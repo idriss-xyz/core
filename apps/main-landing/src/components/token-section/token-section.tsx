@@ -127,8 +127,8 @@ export const TokenSection = () => {
                         </Button>
                       );
                     }}
-                    // eslint-disable-next-line react/no-children-prop
-                    children={() => {
+                  >
+                    {() => {
                       return (
                         <ul className="flex flex-col gap-y-1">
                           <li>
@@ -174,7 +174,7 @@ export const TokenSection = () => {
                         </ul>
                       );
                     }}
-                  />
+                  </Dropdown>
                 </div>
                 <div className="self-stretch text-center opacity-70">
                   <span
