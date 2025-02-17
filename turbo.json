@@ -115,6 +115,26 @@
         "VIEM_TRANSPORTER_URL"
       ]
     },
+    "@idriss-xyz/creator-api#dev": {
+      "cache": false,
+      "persistent": true,
+      "env": [
+        "PORT",
+        "HOST",
+        "ZAPPER_API_KEY",
+        "DATABASE_URL"
+      ]
+    },
+    "@idriss-xyz/creator-api#prod": {
+      "cache": true,
+      "persistent": true,
+      "env": [
+        "PORT",
+        "HOST",
+        "ZAPPER_API_KEY",
+        "DATABASE_URL"
+      ]
+    },
     "lint": {
       "inputs": [
         "$TURBO_DEFAULT$",
