@@ -82,6 +82,7 @@ export class ServiceWorker {
     serviceWorker.watchWorkerError();
     serviceWorker.watchWorkerInactivity();
     serviceWorker.watchTabChanges();
+    serviceWorker.watchSolanaRPCRequests();
   }
 
   initializeSocketEvents() {
@@ -542,4 +543,24 @@ export class ServiceWorker {
         !tab.url?.startsWith('about'),
     );
   };
+
+  watchSolanaRPCRequests() {
+    this.environment.runtime.onMessage.addListener((message, _, sendResponse) => {
+      if (message.type === "proxySolanaRequest") {
+        fetch("https://mainnet.helius-rpc.com/?api-key=" + message.apiKey, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(message.body)
+        })
+          .then(response => response.json())
+          .then(data => sendResponse({ success: true, data }))
+          .catch((error: any) => sendResponse({ success: false, error: error.message }));
+
+        return true; // Keeps the message channel open for async response
+      }
+      return false; // Return false to indicate that the response is synchronous
+    });
+  }
 }
