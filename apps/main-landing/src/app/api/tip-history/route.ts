@@ -24,7 +24,7 @@ const app_addresses = Object.values(CHAIN_TO_IDRISS_TIPPING_ADDRESS).map(
   },
 );
 
-export async function enrichNodesWithHistoricalPrice(
+async function enrichNodesWithHistoricalPrice(
   edges: { node: ZapperNode }[],
 ): Promise<void> {
   const today = new Date();
