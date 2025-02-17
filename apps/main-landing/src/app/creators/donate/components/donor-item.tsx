@@ -1,7 +1,5 @@
 import { Hex } from 'viem';
 
-import { useGetEnsName } from '@/app/creators/donate-history/commands/get-ens-name';
-
 import { default as RANK_1 } from '../assets/rank-1.png';
 import { default as RANK_2 } from '../assets/rank-2.png';
 import { default as RANK_3 } from '../assets/rank-3.png';
