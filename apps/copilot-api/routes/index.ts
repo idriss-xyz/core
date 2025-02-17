@@ -1,11 +1,12 @@
 import express from 'express';
+import { getQuote } from '@lifi/sdk';
+import { Connection } from '@solana/web3.js';
 import { throwInternalError } from '../middleware/error.middleware';
 import {
   subscribeAddress,
   unsubscribeAddress,
 } from '../services/subscriptionManager';
 import { verifyToken } from '../middleware/auth.middleware';
-import { getQuote } from '@lifi/sdk';
 import { connectedClients } from '../services/scheduler';
 import { dataSource } from '../db';
 import { SubscriptionsEntity } from '../entities/subscribtions.entity';
@@ -169,4 +170,31 @@ router.get('/top-addresses', async (req, res) => {
     .getRawMany();
   res.status(200).json(data);
 });
+
+router.post('/send-solana-tx', async (req, res) => {
+  try {
+    const connection = new Connection(`https://mainnet.helius-rpc.com/?api-key=${process.env.HELIUS_API_KEY}`);
+    const { serializedTx } = req.body;
+    const transactionHash = await connection.sendRawTransaction(serializedTx);
+    const latestBlockhash = await connection.getLatestBlockhash();
+
+    const receipt = await connection.confirmTransaction(
+        {
+            signature: transactionHash,
+            blockhash: latestBlockhash.blockhash,
+            lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+        },
+        "finalized"
+    );
+
+    if (receipt.value.err) {
+      res.status(500).json({ error: receipt.value.err });
+    }
+
+    res.status(200).json(transactionHash);
+  } catch (err) {
+    res.status(500).json({ error: err });
+  }
+});
+
 export default router;
