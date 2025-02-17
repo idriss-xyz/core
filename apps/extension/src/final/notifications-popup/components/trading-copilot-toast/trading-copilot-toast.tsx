@@ -6,6 +6,12 @@ import {
   getTimeDifferenceString,
   roundToSignificantFiguresForCopilotTrading,
 } from '@idriss-xyz/constants';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@idriss-xyz/ui/tooltip';
 
 import { Icon, PreloadedImage } from 'shared/ui';
 import { useTradingCopilot } from 'shared/extension';
@@ -82,12 +88,29 @@ export const TradingCopilotToast = ({
           </span>
         </p>
         <div className="flex w-full justify-between">
-          <p className="text-body6 text-mint-700">
-            {getTimeDifferenceString({
-              timestamp: toast.timestamp,
-              text: 'ago',
-            })}
-          </p>
+          <TooltipProvider delayDuration={400}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <p className="w-fit text-body6 text-mint-700">
+                  {getTimeDifferenceString({
+                    text: 'ago',
+                    variant: 'short',
+                    timestamp: toast.timestamp,
+                  })}
+                </p>
+              </TooltipTrigger>
+
+              <TooltipContent className="z-notification w-fit bg-black text-white">
+                <p className="text-body6">
+                  {getTimeDifferenceString({
+                    text: 'ago',
+                    variant: 'long',
+                    timestamp: toast.timestamp,
+                  })}
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           <Button
             intent="primary"
             size="small"

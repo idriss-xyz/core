@@ -215,15 +215,10 @@ export const getShortWalletHex = (walletAddress: string) => {
   return `${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}`;
 };
 
-/**
- * Returns the difference between the given ISO timestamp and the current time
- * in a compact format:
- * - For days: "1 day 20 hrs 30 mins"
- * - For hours: "20 hrs 30 mins"
- * - For minutes: "30 mins"
- * - For seconds (only if under 1 min): "30 secs"
- */
-const getFormattedTimeDifference = (isoTimestamp: string | number) => {
+const getFormattedTimeDifference = (
+  isoTimestamp: string | number,
+  variant: 'long' | 'short',
+) => {
   const currentDate = new Date();
   const targetDate = new Date(isoTimestamp);
   const differenceInMs = targetDate.getTime() - currentDate.getTime();
@@ -236,20 +231,32 @@ const getFormattedTimeDifference = (isoTimestamp: string | number) => {
 
   let result = '';
 
-  if (days > 0) {
-    result += `${days} ${days > 1 ? 'days' : 'day'} `;
-  }
+  if (variant === 'long') {
+    if (days > 0) {
+      result += `${days} ${days > 1 ? 'days' : 'day'} `;
+    }
 
-  if (hours > 0 || days > 0) {
-    result += `${hours} ${hours > 1 ? 'hrs' : 'hr'} `;
-  }
+    if (hours > 0 || days > 0) {
+      result += `${hours} ${hours > 1 ? 'hrs' : 'hr'} `;
+    }
 
-  if (minutes > 0 || days > 0) {
-    result += `${minutes} ${minutes > 1 ? 'mins' : 'min'}`;
-  }
+    if (minutes > 0 || days > 0 || hours > 0) {
+      result += `${minutes} ${minutes > 1 ? 'mins' : 'min'} `;
+    }
 
-  if (minutes < 1 && hours < 1 && days < 1) {
-    result += `${seconds} ${seconds > 1 ? 'secs' : 'sec'}`;
+    if (minutes < 1 && hours < 1 && days < 1) {
+      result += `${seconds} ${seconds > 1 ? 'secs' : 'sec'}`;
+    }
+  } else if (variant === 'short') {
+    if (days > 0) {
+      result = `${days} ${days > 1 ? 'days' : 'day'}`;
+    } else if (hours > 0) {
+      result = `${hours} ${hours > 1 ? 'hrs' : 'hr'}`;
+    } else if (minutes > 0) {
+      result = `${minutes} ${minutes > 1 ? 'mins' : 'min'}`;
+    } else if (seconds > 0) {
+      result = `${seconds} ${seconds > 1 ? 'secs' : 'sec'}`;
+    }
   }
 
   return result.trim();
@@ -258,14 +265,16 @@ const getFormattedTimeDifference = (isoTimestamp: string | number) => {
 export const getTimeDifferenceString = ({
   timestamp,
   text,
+  variant,
 }: {
   timestamp: string | number;
   text: string;
+  variant: 'long' | 'short';
 }) => {
-  let timeDifference = getFormattedTimeDifference(timestamp);
+  let timeDifference = getFormattedTimeDifference(timestamp, variant);
 
   setInterval(() => {
-    timeDifference = getFormattedTimeDifference(timestamp);
+    timeDifference = getFormattedTimeDifference(timestamp, variant);
   }, 1000);
 
   return text ? `${timeDifference} ${text}` : timeDifference;

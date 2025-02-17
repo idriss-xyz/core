@@ -11,6 +11,12 @@ import {
   roundToSignificantFiguresForCopilotTrading,
 } from '@idriss-xyz/constants';
 import { Icon } from '@idriss-xyz/ui/icon';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@idriss-xyz/ui/tooltip';
 
 import { ZapperNode } from '../types';
 import { useGetEnsAvatar } from '../commands/get-ens-avatar';
@@ -127,9 +133,29 @@ export default function DonateHistoryItem({ tip }: Properties) {
               : null}
           </p>
 
-          <p className="text-body6 text-mint-700">
-            {getTimeDifferenceString({ timestamp: tip.timestamp, text: 'ago' })}
-          </p>
+          <TooltipProvider delayDuration={400}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <p className="w-fit text-body6 text-mint-700">
+                  {getTimeDifferenceString({
+                    text: 'ago',
+                    variant: 'short',
+                    timestamp: tip.timestamp,
+                  })}
+                </p>
+              </TooltipTrigger>
+
+              <TooltipContent className="w-fit bg-black text-white">
+                <p className="text-body6">
+                  {getTimeDifferenceString({
+                    text: 'ago',
+                    variant: 'long',
+                    timestamp: tip.timestamp,
+                  })}
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
 

@@ -3,12 +3,12 @@
 import { useSearchParams } from 'next/navigation';
 import { isAddress } from 'viem';
 import { useEffect, useState } from 'react';
+import { hexSchema } from '@idriss-xyz/constants';
 
 import { TopBar } from '@/components';
 import { Providers } from '@/app/creators/providers';
 import { backgroundLines2 } from '@/assets';
 import { validateAddressOrENS } from '@/app/creators/donate/utils';
-import { hexSchema } from '@/app/creators/donate/schema';
 
 import DonateHistoryList from './components/donate-history-list';
 

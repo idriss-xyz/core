@@ -14,6 +14,12 @@ import {
   getTimeDifferenceString,
   roundToSignificantFiguresForCopilotTrading,
 } from '@idriss-xyz/constants';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@idriss-xyz/ui/tooltip';
 
 import { useWallet } from 'shared/extension';
 import { Closable, ErrorMessage, Icon, LazyImage } from 'shared/ui';
@@ -298,12 +304,29 @@ const TradingCopilotDialogContent = ({
               </span>
             </span>
           </p>
-          <p className="text-body6 text-mint-700">
-            {getTimeDifferenceString({
-              timestamp: dialog.timestamp,
-              text: 'ago',
-            })}
-          </p>
+          <TooltipProvider delayDuration={400}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <p className="w-fit text-body6 text-mint-700">
+                  {getTimeDifferenceString({
+                    text: 'ago',
+                    variant: 'short',
+                    timestamp: dialog.timestamp,
+                  })}
+                </p>
+              </TooltipTrigger>
+
+              <TooltipContent className="z-portal w-fit bg-black text-white">
+                <p className="text-body6">
+                  {getTimeDifferenceString({
+                    text: 'ago',
+                    variant: 'long',
+                    timestamp: dialog.timestamp,
+                  })}
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
       <form className="mt-1" onSubmit={handleSubmit(onSubmit)}>
