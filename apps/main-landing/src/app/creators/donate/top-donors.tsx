@@ -6,6 +6,7 @@ import { formatEther, Hex } from 'viem';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Spinner } from '@idriss-xyz/ui/spinner';
+import { Icon } from '@idriss-xyz/ui/icon';
 
 import { IDRISS_SCENE_STREAM_2 } from '@/assets';
 import { validateAddressOrENS } from '@/app/creators/donate/utils';
@@ -98,6 +99,16 @@ export const TopDonors = ({ className }: Properties) => {
         return b.tipsSum - a.tipsSum;
       })
     : undefined;
+
+  if (validatedAddress !== undefined && addressValidationResult.error) {
+    return (
+      <div className={classes(baseClassName, className, 'px-4 pb-9 pt-6')}>
+        <p className="flex items-center justify-center gap-2 text-center text-heading4 text-red-500">
+          <Icon name="AlertCircle" size={40} /> <span>Wrong address</span>
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className={classes(className, baseClassName)}>

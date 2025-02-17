@@ -1,24 +1,44 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { isAddress } from 'viem';
+import { useEffect, useState } from 'react';
 
 import { TopBar } from '@/components';
 import { Providers } from '@/app/creators/providers';
 import { backgroundLines2 } from '@/assets';
+import { validateAddressOrENS } from '@/app/creators/donate/utils';
+import { hexSchema } from '@/app/creators/donate/schema';
 
 import DonateHistoryList from './components/donate-history-list';
 
 // ts-unused-exports:disable-next-line
 export default function DonateHistory() {
-  const router = useRouter();
-  const searchParameters = useSearchParams();
-  const address = searchParameters.get('address');
+  const [validatedAddress, setValidatedAddress] = useState<
+    string | null | undefined
+  >();
 
-  if (!address || !isAddress(address)) {
-    router.push('/creators');
-    return;
-  }
+  const searchParameters = useSearchParams();
+  const addressFromParameters =
+    searchParameters.get('address') ?? searchParameters.get('streamerAddress');
+
+  useEffect(() => {
+    const validateAddress = async () => {
+      const address = await validateAddressOrENS(addressFromParameters);
+
+      setValidatedAddress(address);
+    };
+    void validateAddress();
+  }, [addressFromParameters]);
+
+  const addressValidationResult = hexSchema.safeParse(validatedAddress);
+
+  const isInvalidAddress =
+    !addressFromParameters ||
+    (!!addressFromParameters && validatedAddress === null) ||
+    (!!addressFromParameters &&
+      !!validatedAddress &&
+      (!addressValidationResult.success || !isAddress(validatedAddress)));
 
   return (
     <Providers>
@@ -31,7 +51,10 @@ export default function DonateHistory() {
           alt=""
         />
 
-        <DonateHistoryList address={address} />
+        <DonateHistoryList
+          address={validatedAddress}
+          isInvalidAddress={isInvalidAddress}
+        />
       </main>
     </Providers>
   );
