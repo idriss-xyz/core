@@ -1,7 +1,7 @@
 import { Icon } from '@idriss-xyz/ui/icon';
 
-import { FromUser } from '@/app/creators/donate-history/types';
-import { useGetEnsAvatar } from '@/app/creators/donate-history/commands/get-ens-avatar';
+import { FromUser } from '@/app/creators/donate/types';
+import { useGetEnsAvatar } from '@/app/creators/donate/commands/get-ens-avatar';
 
 // TODO: IMPORTANT - those functions should be moved to packages/constants
 const getShortWalletHex = (wallet: string) => {

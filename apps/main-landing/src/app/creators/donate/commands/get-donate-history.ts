@@ -1,9 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { Hex } from '@/app/creators/donate/types';
+import { Hex, TipHistoryResponse } from '@/app/creators/donate/types';
 
-import { TipHistoryResponse } from '../types';
-import { CREATOR_API_URL } from '../../donate/constants';
+import { CREATOR_API_URL } from '../constants';
 
 type Payload = {
   address: Hex;

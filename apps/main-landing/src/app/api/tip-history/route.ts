@@ -4,7 +4,7 @@ import {
   ZapperNode,
   TipHistoryVariables,
   ZapperResponse,
-} from '@/app/creators/donate-history/types';
+} from '@/app/creators/donate/types';
 import { CHAIN_TO_IDRISS_TIPPING_ADDRESS } from '@/app/creators/donate/constants';
 import { fetchDonationsByToAddress } from '@/db/fetch-known-donations';
 import { storeToDatabase } from '@/db/store-new-donation';
