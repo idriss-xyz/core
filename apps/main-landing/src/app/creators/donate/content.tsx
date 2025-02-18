@@ -216,6 +216,18 @@ export const Content = ({ className }: Properties) => {
           sendPayload,
           recipientAddress: validAddress,
         });
+        try {
+          await fetch(
+            'https://core-production-a116.up.railway.app/push-donation',
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ address: validAddress }),
+            },
+          );
+        } catch {
+          console.warn('Error sending websocket event.');
+        }
       } catch (error) {
         console.error('Unknown error sending transaction.', error);
       }
