@@ -133,7 +133,7 @@ export function DonorItemPlaceholder({
         </li>
         <span
           style={{ height: `${(5 - donorRank) * 69}px` }}
-          className="gradient-text-2 flex items-center justify-center border-b border-b-neutral-300 px-5.5 py-4.5 text-center text-label4"
+          className="flex items-center justify-center border-b border-b-neutral-300 px-5.5 py-4.5 text-center text-label4 gradient-text-2"
         >
           Donate now and claim {rankPlaces[donorRank]} place
         </span>
