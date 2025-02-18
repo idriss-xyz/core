@@ -77,3 +77,8 @@ export interface TipHistoryResponse {
     node: ZapperNode;
   }[];
 }
+
+export interface PriceTick {
+  timestamp: number;
+  median: number;
+}

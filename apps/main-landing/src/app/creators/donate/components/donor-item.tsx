@@ -1,7 +1,6 @@
 import { Hex } from 'viem';
 import { Icon } from '@idriss-xyz/ui/icon';
 
-import { useGetEnsName } from '@/app/creators/donate-history/commands/get-ens-name';
 import { useGetEnsAvatar } from '@/app/creators/donate-history/commands/get-ens-avatar';
 
 // TODO: IMPORTANT - those functions should be moved to packages/constants
@@ -13,6 +12,7 @@ type Properties = {
   donorAddress: Hex;
   donorRank: number;
   donateAmount: number;
+  displayName: string;
 };
 
 const rankBorders = [
@@ -27,19 +27,11 @@ export default function DonorItem({
   donorAddress,
   donorRank,
   donateAmount,
+  displayName,
 }: Properties) {
-  const ensNameQuery = useGetEnsName({
-    address: donorAddress,
+  const ensAvatarQuery = useGetEnsAvatar({
+    name: displayName,
   });
-
-  const ensAvatarQuery = useGetEnsAvatar(
-    {
-      name: ensNameQuery.data ?? '',
-    },
-    {
-      enabled: !!ensNameQuery.data,
-    },
-  );
 
   const avatarImage = (
     <div className="relative w-max">
@@ -71,7 +63,7 @@ export default function DonorItem({
       <span className="text-neutral-600">{donorRank + 1}</span>
       <span className="flex items-center gap-x-1.5 text-neutral-900">
         {avatarImage}
-        {ensNameQuery.data ?? getShortWalletHex(donorAddress)}
+        {displayName ?? getShortWalletHex(donorAddress)}
       </span>
       <span className="text-right text-neutral-900">
         $
@@ -133,7 +125,7 @@ export function DonorItemPlaceholder({
         </li>
         <span
           style={{ height: `${(5 - donorRank) * 69}px` }}
-          className="flex items-center justify-center border-b border-b-neutral-300 px-5.5 py-4.5 text-center text-label4 gradient-text-2"
+          className="gradient-text-2 flex items-center justify-center border-b border-b-neutral-300 px-5.5 py-4.5 text-center text-label4"
         >
           Donate now and claim {rankPlaces[donorRank]} place
         </span>

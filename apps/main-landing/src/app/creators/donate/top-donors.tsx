@@ -62,6 +62,7 @@ export const TopDonors = ({ className }: Properties) => {
   const groupedTips = tipEdges?.reduce(
     (accumulator, tip) => {
       const userAddress = tip.node.transaction.fromUser.address;
+      const userDisplayName = tip.node.transaction.fromUser.displayName.value;
       const amountRaw =
         tip.node.interpretation.descriptionDisplayItems[0]?.amountRaw;
       const price =
@@ -80,6 +81,7 @@ export const TopDonors = ({ className }: Properties) => {
           tips: [] as { node: ZapperNode }[],
           tipsSum: 0,
           address: userAddress,
+          displayName: userDisplayName
         };
       }
 
@@ -90,7 +92,7 @@ export const TopDonors = ({ className }: Properties) => {
     },
     {} as Record<
       string,
-      { tipsSum: number; address: Hex; tips: { node: ZapperNode }[] }
+      { tipsSum: number; address: Hex; displayName: string; tips: { node: ZapperNode }[] }
     >,
   );
 
@@ -134,6 +136,7 @@ export const TopDonors = ({ className }: Properties) => {
                   donorRank={index}
                   donateAmount={groupedTip.tipsSum}
                   donorAddress={groupedTip.address}
+                  displayName={groupedTip.displayName}
                   key={`${groupedTip.tipsSum}${groupedTip.tips[0].node.transaction.hash}`}
                 />
               );

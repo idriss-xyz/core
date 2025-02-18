@@ -17,7 +17,6 @@ import { CHAIN } from '@/app/creators/donate/constants';
 
 import { ZapperNode } from '../types';
 import { useGetEnsAvatar } from '../commands/get-ens-avatar';
-import { useGetEnsName } from '../commands/get-ens-name';
 
 // TODO: IMPORTANT - those functions should be moved to packages/constants
 const getShortWalletHex = (wallet: string) => {
@@ -197,18 +196,21 @@ export default function DonateHistoryItem({ tip }: Properties) {
   const tipComment = tip.interpretation.descriptionDisplayItems[2];
   const tipperFromAddress = tip.transaction.fromUser.address;
 
-  const ensNameQuery = useGetEnsName({
-    address: tipperFromAddress,
-  });
+  const displayName = tip.transaction.fromUser.displayName?.value;
+  const nameSource = tip.transaction.fromUser.displayName?.source;
 
   const ensAvatarQuery = useGetEnsAvatar(
-    {
-      name: ensNameQuery.data ?? '',
-    },
-    {
-      enabled: !!ensNameQuery.data,
-    },
+    { name: displayName ?? '' },
+    { enabled: nameSource === 'ENS' && !!displayName }
   );
+  
+  const farcasterAvatarUrl =
+    nameSource === 'FARCASTER'
+      ? tip.transaction.fromUser.avatar?.value?.url
+      : null;
+
+  const avatarSource = ensAvatarQuery.data ?? farcasterAvatarUrl;
+
 
   if (!tipDetails?.amountRaw || !tipDetails.tokenV2?.onchainMarketData?.price) {
     return;
@@ -232,10 +234,10 @@ export default function DonateHistoryItem({ tip }: Properties) {
   return (
     <div className="grid w-full grid-cols-[1fr,32px] items-start gap-x-2">
       <div className="grid w-full grid-cols-[40px,1fr] items-start gap-x-2">
-        {ensAvatarQuery.data ? (
+        {avatarSource ? (
           <img
             className="size-10 rounded-full border border-neutral-400"
-            src={ensAvatarQuery.data}
+            src={avatarSource}
             alt="Donor avatar"
           />
         ) : (
@@ -252,7 +254,7 @@ export default function DonateHistoryItem({ tip }: Properties) {
           <div className="flex items-center gap-x-2">
             <p className="text-body3 text-neutral-900">
               <span className="align-middle">
-                {ensNameQuery.data ?? getShortWalletHex(tipperFromAddress)}
+                {displayName ?? getShortWalletHex(tipperFromAddress)}
               </span>{' '}
               <span className="align-middle text-body3 text-neutral-600">
                 sent{' '}

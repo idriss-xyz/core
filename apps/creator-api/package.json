@@ -1,0 +1,32 @@
+{
+  "name": "@idriss-xyz/creator-api",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "scripts": {
+    "prod": "ts-node index.ts --mode=production",
+    "dev": "ts-node index.ts --mode=development",
+    "format": "prettier --check --config ./prettier.config.mjs --ignore-path .prettierignore .",
+    "format:fix": "prettier --write --config ./prettier.config.mjs --ignore-path .prettierignore .",
+    "lint": "eslint --max-warnings=0",
+    "lint:fix": "eslint --max-warnings=0 --fix",
+    "circular-dependencies": "depcruise --config .dependency-cruiser.cjs .",
+    "type-check": "tsc --noEmit",
+    "unused-exports": "./node_modules/.bin/ts-unused-exports ./tsconfig.json --ignoreFiles=.stories"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "socket.io": "^4.8.1",
+    "typeorm": "^0.3.20",
+    "viem": "^2.23.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/socket.io": "^3.0.2",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.6.3"
+  }
+}
