@@ -45,8 +45,9 @@ const LEGACY_URLS = [
 ];
 
 const nextConfig: NextConfig = {
-  generateBuildId: () =>
-    process.env.RAILWAY_GIT_COMMIT_SHA || `build-${Date.now()}`,
+  generateBuildId: () => {
+    return process.env.RAILWAY_GIT_COMMIT_SHA || `build-${Date.now()}`;
+  },
 
   productionBrowserSourceMaps: true,
   // eslint-disable-next-line @typescript-eslint/require-await
@@ -192,7 +193,6 @@ const nextConfig: NextConfig = {
     DEV_LOGIN_PASSWORD: process.env.DEV_LOGIN_PASSWORD || '',
     PUBLIC_ACCESS_ENABLED: process.env.PUBLIC_ACCESS_ENABLED || '',
     RAILWAY_PUBLIC_DOMAIN: process.env.RAILWAY_PUBLIC_DOMAIN || '',
-    ZAPPER_API_KEY: process.env.ZAPPER_API_KEY || '',
   },
 };
 

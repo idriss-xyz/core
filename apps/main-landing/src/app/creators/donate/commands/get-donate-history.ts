@@ -21,7 +21,9 @@ const getDonateHistory = async (payload: Payload) => {
     body: JSON.stringify(payload),
   });
 
-  return (await tipHistory.json()) as TipHistoryResponse;
+  const result = await tipHistory.json();
+
+  return result as TipHistoryResponse;
 };
 
 export const useGetTipHistory = (payload: Payload, options?: Options) => {
