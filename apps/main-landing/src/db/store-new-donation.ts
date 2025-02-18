@@ -1,6 +1,6 @@
 import { In } from 'typeorm';
 
-import { ZapperNode } from '@/app/creators/donate-history/types';
+import { ZapperNode } from '@/app/creators/donate/types';
 
 import { AppDataSource } from './database';
 import { Donation } from './entities/donations.entity';

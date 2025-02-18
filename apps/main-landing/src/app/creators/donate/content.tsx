@@ -5,12 +5,12 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { Button } from '@idriss-xyz/ui/button';
 import { Link } from '@idriss-xyz/ui/link';
 import { CREATORS_USER_GUIDE_LINK } from '@idriss-xyz/constants';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSearchParams } from 'next/navigation';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { classes } from '@idriss-xyz/ui/utils';
-import { getAddress } from 'viem';
+import { getAddress, Hex } from 'viem';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useAccount, useWalletClient } from 'wagmi';
@@ -35,12 +35,11 @@ import {
   getSendFormDefaultValues,
   getTransactionUrl,
   roundToSignificantFigures,
-  validateAddressOrENS,
 } from './utils';
-import { Hex, Token } from './types';
+import { Token } from './types';
 import { useSender } from './hooks';
 
-export const SEARCH_PARAMETER = {
+const SEARCH_PARAMETER = {
   CREATOR_NAME: 'creatorName',
   ADDRESS: 'address',
   LEGACY_ADDRESS: 'streamerAddress',
@@ -50,31 +49,18 @@ export const SEARCH_PARAMETER = {
 
 type Properties = {
   className?: string;
+  validatedAddress?: string | null;
 };
 
 const baseClassName =
   'z-1 w-[440px] max-w-full rounded-xl bg-white px-4 pb-9 pt-6 flex flex-col items-center relative';
 
-export const Content = ({ className }: Properties) => {
+export const Content = ({ className, validatedAddress }: Properties) => {
   const { isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
   const { connectModalOpen, openConnectModal } = useConnectModal();
-  const [validatedAddress, setValidatedAddress] = useState<
-    string | null | undefined
-  >();
 
   const searchParameters = useSearchParams();
-  const addressFromParameters =
-    searchParameters.get(SEARCH_PARAMETER.ADDRESS) ??
-    searchParameters.get(SEARCH_PARAMETER.LEGACY_ADDRESS);
-
-  useEffect(() => {
-    const validateAddress = async () => {
-      const address = await validateAddressOrENS(addressFromParameters);
-      setValidatedAddress(address);
-    };
-    void validateAddress();
-  }, [addressFromParameters]);
 
   const addressValidationResult = hexSchema.safeParse(validatedAddress);
 
