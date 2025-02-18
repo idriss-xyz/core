@@ -342,7 +342,7 @@ export default function DonateHistoryItem({ tip }: Properties) {
           return transactionUrls ? (
             <ul className="flex flex-col items-start gap-y-1">
               {transactionUrls.map((transactionUrl) => {
-                const iconName =
+                const explorer =
                   transactionUrl.blockExplorer === 'Blockscout'
                     ? 'Blockscout'
                     : 'Etherscan';
@@ -356,10 +356,10 @@ export default function DonateHistoryItem({ tip }: Properties) {
                       intent="tertiary"
                       href={transactionUrl.url}
                       prefixIconClassName="mr-3"
-                      prefixIconName={iconName}
+                      prefixIconName={explorer}
                       className="w-full items-center px-3 py-1 font-normal text-neutral-900"
                     >
-                      View on {transactionUrl.blockExplorer}
+                      View on {explorer}
                     </Button>
                   </li>
                 );
