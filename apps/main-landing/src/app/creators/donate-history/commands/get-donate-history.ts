@@ -13,7 +13,7 @@ type Options = {
 };
 
 const getDonateHistory = async (payload: Payload) => {
-  const tipHistory = await fetch('http://0.0.0.0:4000/tip-history', {
+  const tipHistory = await fetch('/api/tip-history', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
