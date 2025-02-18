@@ -5,6 +5,7 @@ declare global {
       DEV_LOGIN_PASSWORD: string;
       PUBLIC_ACCESS_ENABLED: string;
       RAILWAY_PUBLIC_DOMAIN: string;
+      ZAPPER_API_KEY: string;
       ENVIRONMENT: 'production' | 'development';
       CI: string;
     }

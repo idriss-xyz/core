@@ -40,7 +40,7 @@ import {
 import { Hex, Token } from './types';
 import { useSender } from './hooks';
 
-const SEARCH_PARAMETER = {
+export const SEARCH_PARAMETER = {
   CREATOR_NAME: 'creatorName',
   ADDRESS: 'address',
   LEGACY_ADDRESS: 'streamerAddress',

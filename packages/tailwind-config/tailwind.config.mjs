@@ -364,6 +364,24 @@ export default {
               'linear-gradient(160deg, theme(colors.mint.700) 0%, theme(colors.mint.700) 20%, theme(colors.neutralGreen.900) 45%, theme(colors.mint.700) 60%, theme(colors.mint.700) 100%)',
           },
         },
+        '.gradient-text-2': {
+          'background-image':
+            'linear-gradient(205.71deg, #022B1E 18.92%, #079165 78.9%)',
+          'background-clip': 'text',
+          'color': 'transparent',
+          'position': 'relative',
+        },
+        '.gradient-text-2::after': {
+          'display': 'block',
+          'content': "''",
+          'background': 'radial-gradient(65.65% 168.51% at 47.77% 27.64%, #000A05 0%, #176410 100%)',
+          'width': '100%',
+          'height': '100%',
+          'mix-blend-mode': 'color',
+          'position': 'absolute',
+          'top': '0',
+          'left': '0',
+        },
         '.side-blur': {
           'mask-image':
             'linear-gradient(to right, transparent, black 60px, black calc(100% - 60px), transparent)',

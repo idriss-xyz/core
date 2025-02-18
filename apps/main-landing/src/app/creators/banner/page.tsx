@@ -66,7 +66,7 @@ export default function Banner() {
         <link rel="preload" as="image" href={backgroundLines2.src} />
         <img
           src={backgroundLines2.src}
-          className="pointer-events-none absolute top-0 hidden h-full opacity-40 lg:block"
+          className="pointer-events-none absolute top-0 hidden size-full opacity-40 lg:block"
           alt=""
         />
 
@@ -74,7 +74,7 @@ export default function Banner() {
           <link rel="preload" as="image" href={backgroundLines3.src} />
           <img
             src={backgroundLines3.src}
-            className="pointer-events-none absolute top-0 hidden h-full opacity-40 lg:block"
+            className="pointer-events-none absolute top-0 hidden size-full opacity-40 lg:block"
             alt=""
           />
           <div className="mb-6 flex w-full items-center">
