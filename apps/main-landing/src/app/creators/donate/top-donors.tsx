@@ -16,7 +16,7 @@ import {
   DonorItemPlaceholder,
 } from '@/app/creators/donate/components/donor-item';
 import { useGetTipHistory } from '@/app/creators/donate-history/commands/get-donate-history';
-import { ZapperNode } from '@/app/creators/donate-history/types';
+import { FromUser, ZapperNode } from '@/app/creators/donate-history/types';
 
 import { SEARCH_PARAMETER } from './content';
 
@@ -62,7 +62,7 @@ export const TopDonors = ({ className }: Properties) => {
   const groupedTips = tipEdges?.reduce(
     (accumulator, tip) => {
       const userAddress = tip.node.transaction.fromUser.address;
-      const userDisplayName = tip.node.transaction.fromUser.displayName.value;
+      const user = tip.node.transaction.fromUser;
       const amountRaw =
         tip.node.interpretation.descriptionDisplayItems[0]?.amountRaw;
       const price =
@@ -80,8 +80,7 @@ export const TopDonors = ({ className }: Properties) => {
         accumulator[userAddress] = {
           tips: [] as { node: ZapperNode }[],
           tipsSum: 0,
-          address: userAddress,
-          displayName: userDisplayName,
+          user: user,
         };
       }
 
@@ -94,8 +93,7 @@ export const TopDonors = ({ className }: Properties) => {
       string,
       {
         tipsSum: number;
-        address: Hex;
-        displayName: string;
+        user: FromUser;
         tips: { node: ZapperNode }[];
       }
     >,
@@ -140,8 +138,7 @@ export const TopDonors = ({ className }: Properties) => {
                 <DonorItem
                   donorRank={index}
                   donateAmount={groupedTip.tipsSum}
-                  donorAddress={groupedTip.address}
-                  displayName={groupedTip.displayName}
+                  donorDetails={groupedTip.user}
                   key={`${groupedTip.tipsSum}${groupedTip.tips[0].node.transaction.hash}`}
                 />
               );

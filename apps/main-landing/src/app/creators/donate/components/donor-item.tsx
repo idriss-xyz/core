@@ -1,18 +1,11 @@
-import { Hex } from 'viem';
 import { Icon } from '@idriss-xyz/ui/icon';
 
+import { FromUser } from '@/app/creators/donate-history/types';
 import { useGetEnsAvatar } from '@/app/creators/donate-history/commands/get-ens-avatar';
 
 // TODO: IMPORTANT - those functions should be moved to packages/constants
 const getShortWalletHex = (wallet: string) => {
   return `${wallet.slice(0, 4)}...${wallet.slice(-4)}`;
-};
-
-type Properties = {
-  donorAddress: Hex;
-  donorRank: number;
-  donateAmount: number;
-  displayName: string;
 };
 
 const rankBorders = [
@@ -23,21 +16,35 @@ const rankBorders = [
 const rankColors = ['text-[#FAC928]', 'text-[#979797]', 'text-[#934F0A]'];
 const rankPlaces = ['1st', '2nd', '3rd'];
 
+type Properties = {
+  donorRank: number;
+  donateAmount: number;
+  donorDetails: FromUser;
+};
+
 export default function DonorItem({
-  donorAddress,
   donorRank,
   donateAmount,
-  displayName,
+  donorDetails,
 }: Properties) {
-  const ensAvatarQuery = useGetEnsAvatar({
-    name: displayName,
-  });
+  const displayName = donorDetails.displayName?.value;
+  const nameSource = donorDetails.displayName?.source;
+
+  const ensAvatarQuery = useGetEnsAvatar(
+    { name: displayName ?? '' },
+    { enabled: nameSource === 'ENS' && !!displayName },
+  );
+
+  const farcasterAvatarUrl =
+    nameSource === 'FARCASTER' ? donorDetails.avatar?.value?.url : null;
+
+  const avatarSource = ensAvatarQuery.data ?? farcasterAvatarUrl;
 
   const avatarImage = (
     <div className="relative w-max">
-      {ensAvatarQuery.data ? (
+      {avatarSource ? (
         <img
-          src={ensAvatarQuery.data}
+          src={avatarSource}
           alt={`Rank ${donorRank + 1}`}
           className={`size-8 rounded-full bg-neutral-200 ${donorRank <= 2 ? `border-2 ${rankBorders[donorRank]}` : 'border border-neutral-400'}`}
         />
@@ -63,7 +70,7 @@ export default function DonorItem({
       <span className="text-neutral-600">{donorRank + 1}</span>
       <span className="flex items-center gap-x-1.5 text-neutral-900">
         {avatarImage}
-        {displayName ?? getShortWalletHex(donorAddress)}
+        {displayName ?? getShortWalletHex(donorDetails.address)}
       </span>
       <span className="text-right text-neutral-900">
         $

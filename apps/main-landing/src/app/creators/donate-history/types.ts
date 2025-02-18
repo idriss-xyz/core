@@ -20,24 +20,26 @@ type StringDisplayItem = {
   stringValue: string;
 };
 
+export type FromUser = {
+  address: Hex;
+  displayName: {
+    value: string;
+    source: string;
+  };
+  avatar: {
+    value: {
+      url: string | undefined;
+    };
+    source: string | undefined;
+  };
+};
+
 export interface ZapperNode {
   timestamp: number;
   network: string;
   transaction: {
     hash: Hex;
-    fromUser: {
-      address: Hex;
-      displayName: {
-        value: string;
-        source: string;
-      };
-      avatar: {
-        value: {
-          url: string | undefined;
-        };
-        source: string | undefined;
-      };
-    };
+    fromUser: FromUser;
     toUser: {
       address: Hex;
     };
