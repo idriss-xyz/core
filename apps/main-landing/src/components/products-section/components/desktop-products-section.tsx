@@ -240,7 +240,7 @@ export const DesktopProductsSection = ({
   }, []);
 
   useEffect(() => {
-    let timeoutRef: NodeJS.Timeout;
+    let timeoutReference: NodeJS.Timeout;
     const mainViewport = document.querySelector(
       '#landing-page-scroll > [data-radix-scroll-area-viewport]',
     ) as HTMLElement | undefined;
@@ -256,15 +256,15 @@ export const DesktopProductsSection = ({
       ) as HTMLElement | undefined;
       if (mainViewport) {
         mainViewport.style.overflow = 'hidden';
-        timeoutRef = setTimeout(() => {
+        timeoutReference = setTimeout(() => {
           mainViewport.style.overflow = 'scroll';
         }, 1700);
       }
     }
 
     return () => {
-      if (timeoutRef) {
-        clearTimeout(timeoutRef);
+      if (timeoutReference) {
+        clearTimeout(timeoutReference);
       }
     };
   }, [currentSectionIndex, previousSectionIndex, isContainerFillingScreen]);
