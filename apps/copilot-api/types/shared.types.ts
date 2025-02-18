@@ -33,3 +33,11 @@ export interface Webhook {
   id: string;
   addresses: Set<string>;
 }
+
+export interface StatsResponseInterface {
+  uniqueSubscribers: number;
+  uniqueAddresses: number;
+  dailyNewSubscribers: number;
+  weeklyNewSubscribers: number;
+  monthlyNewSubscribers: number;
+}

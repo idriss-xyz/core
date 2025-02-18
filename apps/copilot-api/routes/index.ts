@@ -3,7 +3,7 @@ import rateLimit from 'express-rate-limit';
 import { testSwapData } from '../constants';
 import { verifyToken } from '../middleware/auth.middleware';
 import { throwInternalError } from '../middleware/error.middleware';
-import { getQuoteData, getTopAddresses } from '../services';
+import { getQuoteData, getStats, getTopAddresses } from '../services';
 import { connectedClients } from '../services/scheduler';
 import {
   subscribeAddress,
@@ -11,6 +11,7 @@ import {
 } from '../services/subscriptionManager';
 import {
   GetQuoteDataResponseInterface,
+  StatsResponseInterface,
   TopAddressesResponseInterface,
 } from '../types';
 
@@ -145,6 +146,8 @@ router.get('/top-addresses', async (req, res) => {
   }
 
   const data: TopAddressesResponseInterface[] = await getTopAddresses();
-  res.status(200).json(data);
+  const stats: StatsResponseInterface = await getStats();
+  res.status(200).json({ stats, 'top-subscribed-addresses': data });
 });
+
 export default router;
