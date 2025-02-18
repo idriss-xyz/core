@@ -82,26 +82,61 @@ export const CHAIN = {
   },
   BASE: {
     ...base,
+    blockExplorers: {
+      ...base.blockExplorers,
+      blockscout: {
+        name: 'Blockscout',
+        url: 'https://base.blockscout.com',
+      },
+    },
     shortName: 'Base',
     logo: BASE_LOGO,
   },
   ETHEREUM: {
     ...mainnet,
+    blockExplorers: {
+      ...mainnet.blockExplorers,
+      blockscout: {
+        name: 'Blockscout',
+        url: 'https://eth.blockscout.com',
+      },
+    },
     shortName: 'Ethereum',
     logo: ETHEREUM_LOGO,
   },
   MANTLE: {
     ...mantle,
+    blockExplorers: {
+      ...mantle.blockExplorers,
+      blockscout: {
+        name: 'Blockscout',
+        url: 'https://explorer.mantle.xyz/',
+      },
+    },
     shortName: 'Mantle',
     logo: MANTLE_LOGO,
   },
   OPTIMISM: {
     ...optimism,
+    blockExplorers: {
+      ...optimism.blockExplorers,
+      blockscout: {
+        name: 'Blockscout',
+        url: 'https://optimism.blockscout.com',
+      },
+    },
     shortName: 'Optimism',
     logo: OPTIMISM_LOGO,
   },
   POLYGON: {
     ...polygon,
+    blockExplorers: {
+      ...polygon.blockExplorers,
+      blockscout: {
+        name: 'Blockscout',
+        url: 'https://polygon.blockscout.com',
+      },
+    },
     shortName: 'Polygon',
     logo: POLYGON_LOGO,
   },
