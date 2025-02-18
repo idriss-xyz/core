@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Hex } from '@/app/creators/donate/types';
 
 import { TipHistoryResponse } from '../types';
+import { CREATOR_API_URL } from '../../donate/constants';
 
 type Payload = {
   address: Hex;
@@ -13,7 +14,7 @@ type Options = {
 };
 
 const getDonateHistory = async (payload: Payload) => {
-  const tipHistory = await fetch('/api/tip-history', {
+  const tipHistory = await fetch(`${CREATOR_API_URL}/tip-history`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

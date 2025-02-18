@@ -198,6 +198,7 @@ export default function DonateHistoryItem({ tip }: Properties) {
 
   const displayName = tip.transaction.fromUser.displayName?.value;
   const nameSource = tip.transaction.fromUser.displayName?.source;
+  const imageSource = tip.transaction.fromUser.avatar?.source;
 
   const ensAvatarQuery = useGetEnsAvatar(
     { name: displayName ?? '' },
@@ -205,7 +206,7 @@ export default function DonateHistoryItem({ tip }: Properties) {
   );
 
   const farcasterAvatarUrl =
-    nameSource === 'FARCASTER'
+    imageSource === 'FARCASTER'
       ? tip.transaction.fromUser.avatar?.value?.url
       : null;
 
