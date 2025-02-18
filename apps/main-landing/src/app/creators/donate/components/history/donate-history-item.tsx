@@ -1,4 +1,4 @@
-import { formatEther } from 'viem';
+import { formatUnits } from 'viem';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { Badge } from '@idriss-xyz/ui/badge';
 import { useEffect, useState } from 'react';
@@ -217,12 +217,15 @@ export default function DonateHistoryItem({ tip }: Properties) {
   }
 
   const tradeValue =
-    Number.parseFloat(formatEther(BigInt(tipDetails.amountRaw))) *
-    tipDetails.tokenV2.onchainMarketData.price;
+    Number.parseFloat(
+      formatUnits(BigInt(tipDetails.amountRaw), tipDetails.tokenV2.decimals),
+    ) * tipDetails.tokenV2.onchainMarketData.price;
 
   const { value: roundedNumber, index: zerosIndex } =
     roundToSignificantFiguresForCopilotTrading(
-      Number.parseFloat(formatEther(BigInt(tipDetails.amountRaw))),
+      Number.parseFloat(
+        formatUnits(BigInt(tipDetails.amountRaw), tipDetails.tokenV2.decimals),
+      ),
       2,
     );
 

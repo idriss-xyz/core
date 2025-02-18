@@ -1,6 +1,6 @@
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
-import { formatEther } from 'viem';
+import { formatUnits } from 'viem';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import { Icon } from '@idriss-xyz/ui/icon';
 
@@ -41,13 +41,16 @@ export const TopDonors = ({
       const price =
         tip.node.interpretation.descriptionDisplayItems[0]?.tokenV2
           ?.onchainMarketData?.price;
+      const decimals =
+        tip.node.interpretation.descriptionDisplayItems[0]?.tokenV2.decimals ??
+        18;
 
       if (!amountRaw || !price) {
         return accumulator;
       }
 
       const tradeValue =
-        Number.parseFloat(formatEther(BigInt(amountRaw))) * price || 0;
+        Number.parseFloat(formatUnits(BigInt(amountRaw), decimals)) * price;
 
       if (!accumulator[userAddress]) {
         accumulator[userAddress] = {
