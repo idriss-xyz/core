@@ -29,6 +29,7 @@ export default function DonorItem({
 }: Properties) {
   const displayName = donorDetails.displayName?.value;
   const nameSource = donorDetails.displayName?.source;
+  const imageSource = donorDetails.avatar?.source;
 
   const ensAvatarQuery = useGetEnsAvatar(
     { name: displayName ?? '' },
@@ -36,7 +37,7 @@ export default function DonorItem({
   );
 
   const farcasterAvatarUrl =
-    nameSource === 'FARCASTER' ? donorDetails.avatar?.value?.url : null;
+    imageSource === 'FARCASTER' ? donorDetails.avatar?.value?.url : null;
 
   const avatarSource = ensAvatarQuery.data ?? farcasterAvatarUrl;
 
