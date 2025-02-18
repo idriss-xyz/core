@@ -1,39 +1,39 @@
 import { IconButton } from '@idriss-xyz/ui/icon-button';
-import { Hex } from 'viem';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
-import { useSearchParams } from 'next/navigation';
 import { Icon } from '@idriss-xyz/ui/icon';
 
-import DonateHistoryItem from '@/app/creators/donate-history/components/donate-history-item';
+import DonateHistoryItem from '@/app/creators/donate/components/history/donate-history-item';
 
-import { useGetTipHistory } from '../commands/get-donate-history';
+import { ZapperNode } from '../../types';
 
 type Properties = {
-  address: string | null | undefined;
+  tipsLoading: boolean;
   isInvalidAddress: boolean;
+  tipEdges: { node: ZapperNode }[];
+  address: string | null | undefined;
+  updateCurrentContent: (content: 'tip' | 'history') => void;
 };
 
 export default function DonateHistoryList({
   address,
+  tipEdges,
+  tipsLoading,
   isInvalidAddress,
+  updateCurrentContent,
 }: Properties) {
-  const searchParameters = useSearchParams();
-  const tips = useGetTipHistory(
-    { address: address as Hex },
-    { enabled: !!address },
-  );
-  const tipEdges = tips.data?.data ?? [];
-
   return (
     <div className="container relative mt-8 flex w-[600px] max-w-full flex-col items-center gap-y-6 rounded-xl bg-white pb-4 pl-4 pt-2 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]">
       <div className="flex w-full items-center gap-x-2">
         <IconButton
           asLink
           size="medium"
-          href={`donate?${searchParameters.toString()}`}
           intent="tertiary"
           iconName="ArrowLeft"
+          className="cursor-pointer"
+          onClick={() => {
+            updateCurrentContent('tip');
+          }}
         />
         <h1 className="text-heading4">Donation history</h1>
       </div>
@@ -48,7 +48,7 @@ export default function DonateHistoryList({
           </p>
         ) : (
           <div className="flex w-full flex-col gap-y-3 pr-5">
-            {tips.isLoading || !address ? (
+            {tipsLoading || !address ? (
               <Spinner className="mx-auto my-4 size-16 text-mint-600" />
             ) : tipEdges.length > 0 ? (
               tipEdges.map((tip) => {

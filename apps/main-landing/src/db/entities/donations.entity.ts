@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
-import type { ZapperNode } from '@/app/creators/donate-history/types';
+import type { ZapperNode } from '@/app/creators/donate/types';
 
 @Entity('creator_donations')
 export class Donation {

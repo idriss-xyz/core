@@ -15,8 +15,8 @@ import {
 import { getTransactionUrl } from '@/app/creators/donate/utils';
 import { CHAIN } from '@/app/creators/donate/constants';
 
-import { ZapperNode } from '../types';
-import { useGetEnsAvatar } from '../commands/get-ens-avatar';
+import { ZapperNode } from '../../types';
+import { useGetEnsAvatar } from '../../commands/get-ens-avatar';
 
 // TODO: IMPORTANT - those functions should be moved to packages/constants
 const getShortWalletHex = (wallet: string) => {
