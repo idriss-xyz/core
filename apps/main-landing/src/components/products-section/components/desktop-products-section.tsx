@@ -56,7 +56,8 @@ export const DesktopProductsSection = ({
   const [isTopOfContainerFullyVisible, setIsTopOfContainerFullyVisible] =
     useState(false);
   const [isContainerVisible, setIsContainerVisible] = useState(false);
-  const [isContainerFillingScreen, setIsContainerFillingScreen] = useState(false);
+  const [isContainerFillingScreen, setIsContainerFillingScreen] =
+    useState(false);
   const windowHash =
     typeof window === 'undefined' ? '' : window.location.hash.slice(1);
   const [currentSectionIndex, setCurrentSectionIndex] = useState(
@@ -150,7 +151,7 @@ export const DesktopProductsSection = ({
     const containerObserver = new IntersectionObserver(
       ([entry]) => {
         setIsContainerVisible((entry?.intersectionRatio ?? 0) > 0.25);
-        setIsContainerFillingScreen((entry?.intersectionRatio ?? 0) > 0.32)
+        setIsContainerFillingScreen((entry?.intersectionRatio ?? 0) > 0.32);
       },
       {
         threshold: Array.from({ length: 101 }, (_, index) => {
@@ -247,7 +248,7 @@ export const DesktopProductsSection = ({
 
     if (!isContainerFillingScreen && mainViewport) {
       mainViewport.style.overflow = 'scroll';
-      return
+      return;
     }
 
     if (currentSectionIndex !== previousSectionIndex) {
