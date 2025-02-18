@@ -23,7 +23,7 @@ export default function DonateHistoryList({
   updateCurrentContent,
 }: Properties) {
   return (
-    <div className="container relative mt-8 flex w-[600px] max-w-full flex-col items-center gap-y-6 rounded-xl bg-white pb-4 pl-4 pt-2 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]">
+    <div className="container relative mt-8 flex w-[600px] max-w-full flex-col items-center gap-y-5 rounded-xl bg-white pb-4 pl-4 pt-2 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]">
       <div className="flex w-full items-center gap-x-2">
         <IconButton
           asLink
@@ -47,7 +47,7 @@ export default function DonateHistoryList({
             <Icon name="AlertCircle" size={40} /> <span>Wrong address</span>
           </p>
         ) : (
-          <div className="flex w-full flex-col gap-y-3 pr-5">
+          <div className="flex w-full flex-col gap-y-3 pr-5 pt-1">
             {tipsLoading || !address ? (
               <Spinner className="mx-auto my-4 size-16 text-mint-600" />
             ) : tipEdges.length > 0 ? (

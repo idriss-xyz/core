@@ -334,7 +334,6 @@ export default function DonateHistoryItem({ tip }: Properties) {
               size="small"
               intent="tertiary"
               iconName="EllipsisVertical"
-              className="mt-1"
             />
           );
         }}
