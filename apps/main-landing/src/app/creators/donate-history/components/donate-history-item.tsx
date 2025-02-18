@@ -201,16 +201,15 @@ export default function DonateHistoryItem({ tip }: Properties) {
 
   const ensAvatarQuery = useGetEnsAvatar(
     { name: displayName ?? '' },
-    { enabled: nameSource === 'ENS' && !!displayName }
+    { enabled: nameSource === 'ENS' && !!displayName },
   );
-  
+
   const farcasterAvatarUrl =
     nameSource === 'FARCASTER'
       ? tip.transaction.fromUser.avatar?.value?.url
       : null;
 
   const avatarSource = ensAvatarQuery.data ?? farcasterAvatarUrl;
-
 
   if (!tipDetails?.amountRaw || !tipDetails.tokenV2?.onchainMarketData?.price) {
     return;

@@ -81,7 +81,7 @@ export const TopDonors = ({ className }: Properties) => {
           tips: [] as { node: ZapperNode }[],
           tipsSum: 0,
           address: userAddress,
-          displayName: userDisplayName
+          displayName: userDisplayName,
         };
       }
 
@@ -92,7 +92,12 @@ export const TopDonors = ({ className }: Properties) => {
     },
     {} as Record<
       string,
-      { tipsSum: number; address: Hex; displayName: string; tips: { node: ZapperNode }[] }
+      {
+        tipsSum: number;
+        address: Hex;
+        displayName: string;
+        tips: { node: ZapperNode }[];
+      }
     >,
   );
 
