@@ -174,7 +174,8 @@ router.get('/top-addresses', async (req, res) => {
 router.post('/send-solana-tx', async (req, res) => {
   try {
     const connection = new Connection(`https://mainnet.helius-rpc.com/?api-key=${process.env.HELIUS_API_KEY}`);
-    const { serializedTx } = req.body;
+    const { base64SerializedTx } = req.body;
+    const serializedTx = new Uint8Array(Buffer.from(base64SerializedTx, 'base64'));
     const transactionHash = await connection.sendRawTransaction(serializedTx);
     const latestBlockhash = await connection.getLatestBlockhash();
 
@@ -190,8 +191,9 @@ router.post('/send-solana-tx', async (req, res) => {
     if (receipt.value.err) {
       res.status(500).json({ error: receipt.value.err });
     }
-
-    res.status(200).json(transactionHash);
+    else {
+      res.status(200).json(transactionHash);
+    }
   } catch (err) {
     res.status(500).json({ error: err });
   }

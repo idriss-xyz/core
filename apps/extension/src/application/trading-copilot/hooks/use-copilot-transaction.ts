@@ -59,7 +59,9 @@ interface SolanaCopilotProperties {
 }
 
 export const useCopilotSolanaTransaction = () => {
+  const sendTxMutation = useCommandMutation(SendSolanaTransactionCommand);
   const observabilityScope = useObservabilityScope();
+
   return useMutation({
     mutationFn: async ({ transactionData, signTransaction }: SolanaCopilotProperties) => {
 
@@ -73,13 +75,14 @@ export const useCopilotSolanaTransaction = () => {
           throw new Error('Failed to sign transaction');
         }
 
-        const sendTxMutation = useCommandMutation(SendSolanaTransactionCommand);
-        const res = await sendTxMutation.mutateAsync({serializedTx});
+        const base64SerializedTx = Buffer.from(serializedTx).toString('base64');
+        const res = await sendTxMutation.mutateAsync({base64SerializedTx: base64SerializedTx});
         const transactionHash = res.transactionHash;
 
         return { transactionHash };
       }
       catch (error) {
+          console.error('Error: ', error);
           observabilityScope.captureException(error);
           throw error;
       }

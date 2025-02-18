@@ -240,7 +240,7 @@ export type VerifyAuthTokenPayload = {
 
 // TODO: Correcly type this
 export type SendSolanaTxPayload = {
-  serializedTx: Uint8Array<ArrayBufferLike>;
+  base64SerializedTx: string;
 }
 
 export type SendSolanaTxResponse = {
