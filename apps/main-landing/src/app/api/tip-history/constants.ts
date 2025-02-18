@@ -11,6 +11,7 @@ export const TipHistoryQuery = `
               address
               displayName {
                 value
+                source
               }
               avatar {
                 value {
