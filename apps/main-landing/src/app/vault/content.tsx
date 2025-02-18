@@ -44,7 +44,7 @@ export const VaultContent = () => {
       />
       <img
         src={backgroundLines2.src}
-        className="pointer-events-none absolute top-0 hidden h-full opacity-40 lg:block"
+        className="pointer-events-none absolute top-0 hidden size-full opacity-40 lg:block"
         alt=""
       />
 

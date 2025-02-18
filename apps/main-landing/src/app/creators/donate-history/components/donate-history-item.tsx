@@ -5,6 +5,12 @@ import { useEffect, useState } from 'react';
 import { Button } from '@idriss-xyz/ui/button';
 import { Dropdown } from '@idriss-xyz/ui/dropdown';
 import { Icon } from '@idriss-xyz/ui/icon';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@idriss-xyz/ui/tooltip';
 
 import { getTransactionUrl } from '@/app/creators/donate/utils';
 import { CHAIN } from '@/app/creators/donate/constants';
@@ -103,7 +109,10 @@ const roundToSignificantFiguresForCopilotTrading = (
   };
 };
 
-const getFormattedTimeDifference = (isoTimestamp: number) => {
+const getFormattedTimeDifference = (
+  isoTimestamp: string | number,
+  variant: 'long' | 'short',
+) => {
   const currentDate = new Date();
   const targetDate = new Date(isoTimestamp);
   const differenceInMs = targetDate.getTime() - currentDate.getTime();
@@ -116,20 +125,32 @@ const getFormattedTimeDifference = (isoTimestamp: number) => {
 
   let result = '';
 
-  if (days > 0) {
-    result += `${days} ${days > 1 ? 'days' : 'day'} `;
-  }
+  if (variant === 'long') {
+    if (days > 0) {
+      result += `${days} ${days > 1 ? 'days' : 'day'} `;
+    }
 
-  if (hours > 0 || days > 0) {
-    result += `${hours} hrs `;
-  }
+    if (hours > 0 || days > 0) {
+      result += `${hours} ${hours > 1 ? 'hrs' : 'hr'} `;
+    }
 
-  if (minutes > 0 || days > 0) {
-    result += `${minutes} ${minutes > 1 ? 'mins' : 'min'}`;
-  }
+    if (minutes > 0 || days > 0 || hours > 0) {
+      result += `${minutes} ${minutes > 1 ? 'mins' : 'min'} `;
+    }
 
-  if (minutes < 1 && hours < 1 && days < 1) {
-    result += `${seconds} ${seconds > 1 ? 'secs' : 'sec'}`;
+    if (minutes < 1 && hours < 1 && days < 1) {
+      result += `${seconds} ${seconds > 1 ? 'secs' : 'sec'}`;
+    }
+  } else if (variant === 'short') {
+    if (days > 0) {
+      result = `${days} ${days > 1 ? 'days' : 'day'}`;
+    } else if (hours > 0) {
+      result = `${hours} ${hours > 1 ? 'hrs' : 'hr'}`;
+    } else if (minutes > 0) {
+      result = `${minutes} ${minutes > 1 ? 'mins' : 'min'}`;
+    } else if (seconds > 0) {
+      result = `${seconds} ${seconds > 1 ? 'secs' : 'sec'}`;
+    }
   }
 
   return result.trim();
@@ -143,12 +164,12 @@ const TimeDifferenceCounter = ({
   text: string;
 }) => {
   const [timeDifference, setTimeDifference] = useState(
-    getFormattedTimeDifference(timestamp),
+    getFormattedTimeDifference(timestamp, 'short'),
   );
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTimeDifference(getFormattedTimeDifference(timestamp));
+      setTimeDifference(getFormattedTimeDifference(timestamp, 'short'));
     }, 1000);
 
     return () => {
@@ -219,7 +240,11 @@ export default function DonateHistoryItem({ tip }: Properties) {
           />
         ) : (
           <div className="flex size-10 items-center justify-center rounded-full border border-neutral-300 bg-neutral-200">
-            <Icon size={25} name="UserRound" className="text-neutral-500" />
+            <Icon
+              size={25}
+              name="CircleUserRound"
+              className="text-neutral-500"
+            />
           </div>
         )}
 
@@ -270,9 +295,31 @@ export default function DonateHistoryItem({ tip }: Properties) {
               : null}
           </p>
 
-          <p className="text-body6 text-mint-700">
-            <TimeDifferenceCounter timestamp={tip.timestamp} text="ago" />
-          </p>
+          <TooltipProvider delayDuration={400}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <p className="w-fit text-body6 text-mint-700">
+                  <TimeDifferenceCounter timestamp={tip.timestamp} text="ago" />
+                </p>
+              </TooltipTrigger>
+
+              <TooltipContent className="w-fit bg-black text-white">
+                <p className="text-body6">
+                  {new Intl.DateTimeFormat('en-US', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false,
+                  })
+                    .format(new Date(tip.timestamp))
+                    .replaceAll('/', '-')}
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
 

@@ -19,13 +19,13 @@ export default function Donors() {
         <link rel="preload" as="image" href={backgroundLines2.src} />
         <img
           src={backgroundLines2.src}
-          className="pointer-events-none absolute top-0 hidden h-full opacity-40 lg:block"
+          className="pointer-events-none absolute top-0 hidden size-full opacity-40 lg:block"
           alt=""
         />
 
         <div className="grid grid-cols-1 items-start gap-x-10 lg:grid-cols-2">
-          <Content className="container mt-8 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]" />
-          <TopDonors className="container mt-8 px-0 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]" />
+          <Content className="container mt-8 overflow-hidden lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]" />
+          <TopDonors className="container mt-8 overflow-hidden px-0 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]" />
         </div>
 
         <Button

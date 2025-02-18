@@ -147,8 +147,8 @@ export const TopDonors = ({ className }: Properties) => {
             ) : null}
           </ul>
         ) : (
-          <span className="flex w-full items-center justify-center px-5.5 py-4.5">
-            <Spinner className="size-16" />
+          <span className="flex w-full items-center justify-center border-b border-b-neutral-300 px-5.5 py-4.5">
+            <Spinner className="size-16 text-mint-600" />
           </span>
         )}
       </div>
