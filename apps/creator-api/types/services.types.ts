@@ -71,14 +71,3 @@ interface AccountsTimeline {
 export interface ZapperResponse {
   data: { accountsTimeline: AccountsTimeline };
 }
-
-export interface TipHistoryResponse {
-  data: {
-    node: ZapperNode;
-  }[];
-}
-
-export interface PriceTick {
-  timestamp: number;
-  median: number;
-}

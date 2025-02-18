@@ -25,7 +25,9 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/socket.io": "^3.0.2",
+    "dependency-cruiser": "^16.4.2",
     "ts-node": "^10.9.2",
+    "ts-unused-exports": "^10.1.0",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.6.3"
   }
