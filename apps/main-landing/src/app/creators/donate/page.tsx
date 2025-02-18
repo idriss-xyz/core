@@ -7,7 +7,7 @@ import { backgroundLines2 } from '@/assets';
 
 import { RainbowKitProviders } from './providers';
 import { Content } from './content';
-
+import { TopDonors } from './top-donors';
 import '@rainbow-me/rainbowkit/styles.css';
 
 // ts-unused-exports:disable-next-line
@@ -19,11 +19,15 @@ export default function Donors() {
         <link rel="preload" as="image" href={backgroundLines2.src} />
         <img
           src={backgroundLines2.src}
-          className="pointer-events-none absolute top-0 hidden h-full opacity-40 lg:block"
+          className="pointer-events-none absolute top-0 hidden size-full opacity-40 lg:block"
           alt=""
         />
 
-        <Content className="container mt-8 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]" />
+        <div className="grid grid-cols-1 items-start gap-x-10 lg:grid-cols-2">
+          <Content className="container mt-8 overflow-hidden lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]" />
+          <TopDonors className="container mt-8 overflow-hidden px-0 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]" />
+        </div>
+
         <Button
           className="px-5 py-3.5 lg:absolute lg:bottom-6 lg:right-7 lg:translate-x-0"
           intent="secondary"

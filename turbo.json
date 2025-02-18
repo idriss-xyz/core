@@ -14,8 +14,11 @@
         "ENVIRONMENT",
         "RAILWAY_PUBLIC_DOMAIN",
         "DEV_LOGIN_PASSWORD",
+        "ZAPPER_API_KEY",
         "PUBLIC_ACCESS_ENABLED",
-        "CI"
+        "CI",
+        "CREATOR_LINKS_SECRET",
+        "DATABASE_URL"
       ]
     },
     "@idriss-xyz/main-landing#start": {
@@ -26,8 +29,12 @@
         "ENVIRONMENT",
         "RAILWAY_PUBLIC_DOMAIN",
         "DEV_LOGIN_PASSWORD",
+        "ZAPPER_API_KEY",
         "PUBLIC_ACCESS_ENABLED",
-        "CI"
+        "CI",
+        "CREATOR_LINKS_SECRET",
+        "ZAPPER_API_KEY",
+        "DATABASE_URL"
       ]
     },
     "@idriss-xyz/main-landing#dev": {
@@ -37,8 +44,12 @@
         "ENVIRONMENT",
         "RAILWAY_PUBLIC_DOMAIN",
         "DEV_LOGIN_PASSWORD",
+        "ZAPPER_API_KEY",
         "PUBLIC_ACCESS_ENABLED",
-        "CI"
+        "CI",
+        "CREATOR_LINKS_SECRET",
+        "ZAPPER_API_KEY",
+        "DATABASE_URL"
       ]
     },
     "@idriss-xyz/extension#dev": {
@@ -102,6 +113,26 @@
         "API_SECRET",
         "WEBHOOK_URL",
         "VIEM_TRANSPORTER_URL"
+      ]
+    },
+    "@idriss-xyz/creator-api#dev": {
+      "cache": false,
+      "persistent": true,
+      "env": [
+        "PORT",
+        "HOST",
+        "ZAPPER_API_KEY",
+        "DATABASE_URL"
+      ]
+    },
+    "@idriss-xyz/creator-api#prod": {
+      "cache": true,
+      "persistent": true,
+      "env": [
+        "PORT",
+        "HOST",
+        "ZAPPER_API_KEY",
+        "DATABASE_URL"
       ]
     },
     "lint": {
