@@ -74,24 +74,6 @@ export interface ZapperNode {
   };
 }
 
-export interface TipHistoryVariables {
-  addresses: string[];
-  toAddresses: string[];
-  isSigner: boolean;
-  after?: string | null;
-}
-
-interface AccountsTimeline {
-  edges: {
-    node: ZapperNode;
-  }[];
-  pageInfo: { hasNextPage: boolean; endCursor: string | null };
-}
-
-export interface ZapperResponse {
-  data: { accountsTimeline: AccountsTimeline };
-}
-
 export interface TipHistoryResponse {
   data: {
     node: ZapperNode;
