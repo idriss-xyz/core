@@ -39,7 +39,7 @@ import {
 import { Token } from './types';
 import { useSender } from './hooks';
 
-export const SEARCH_PARAMETER = {
+const SEARCH_PARAMETER = {
   CREATOR_NAME: 'creatorName',
   ADDRESS: 'address',
   LEGACY_ADDRESS: 'streamerAddress',
