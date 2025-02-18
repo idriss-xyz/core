@@ -13,6 +13,7 @@ import { VerifySiweSignatureCommand } from './verify-siwe-signature';
 import { GetTokensListCommand } from './get-tokens-list';
 import { GetTokensImageCommand } from './get-tokens-image';
 import { VerifyTokenCommand } from './verify-token';
+import { SendSolanaTransactionCommand } from './send-solana-transaction';
 
 export const COMMAND_MAP = {
   [AddTradingCopilotSubscriptionCommand.name]:
@@ -33,6 +34,7 @@ export const COMMAND_MAP = {
   [GetTokensListCommand.name]: GetTokensListCommand,
   [GetTokensImageCommand.name]: GetTokensImageCommand,
   [VerifyTokenCommand.name]: VerifyTokenCommand,
+  [SendSolanaTransactionCommand.name]: SendSolanaTransactionCommand,
 };
 
 export { AddTradingCopilotSubscriptionCommand } from './add-trading-copilot-subscription';
@@ -50,3 +52,4 @@ export { GetQuoteCommand } from './get-quote';
 export { GetTokensListCommand } from './get-tokens-list';
 export { GetTokensImageCommand } from './get-tokens-image';
 export { VerifyTokenCommand } from './verify-token';
+export { SendSolanaTransactionCommand } from './send-solana-transaction';
