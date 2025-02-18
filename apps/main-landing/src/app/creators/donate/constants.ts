@@ -1036,3 +1036,5 @@ export const CHAIN_TO_IDRISS_TIPPING_ADDRESS = {
 } as const;
 
 export const EMPTY_HEX = '0x';
+
+export const CREATOR_API_URL = 'https://core-production-a116.up.railway.app';
