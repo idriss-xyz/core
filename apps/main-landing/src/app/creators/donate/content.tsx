@@ -44,31 +44,18 @@ export const SEARCH_PARAMETER = {
 
 type Properties = {
   className?: string;
+  validatedAddress?: string | null;
 };
 
 const baseClassName =
   'z-1 w-[440px] max-w-full rounded-xl bg-white px-4 pb-9 pt-6 flex flex-col items-center relative';
 
-export const Content = ({ className }: Properties) => {
+export const Content = ({ className, validatedAddress }: Properties) => {
   const { isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
   const { connectModalOpen, openConnectModal } = useConnectModal();
-  const [validatedAddress, setValidatedAddress] = useState<
-    string | null | undefined
-  >();
 
   const searchParameters = useSearchParams();
-  const addressFromParameters =
-    searchParameters.get(SEARCH_PARAMETER.ADDRESS) ??
-    searchParameters.get(SEARCH_PARAMETER.LEGACY_ADDRESS);
-
-  useEffect(() => {
-    const validateAddress = async () => {
-      const address = await validateAddressOrENS(addressFromParameters);
-      setValidatedAddress(address);
-    };
-    void validateAddress();
-  }, [addressFromParameters]);
 
   const addressValidationResult = hexSchema.safeParse(validatedAddress);
 
@@ -210,6 +197,18 @@ export const Content = ({ className }: Properties) => {
           sendPayload,
           recipientAddress: validAddress,
         });
+        try {
+          await fetch(
+            'https://core-production-a116.up.railway.app/push-donation',
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ address: validAddress }),
+            },
+          );
+        } catch {
+          console.warn('Error sending websocket event.');
+        }
       } catch (error) {
         console.error('Unknown error sending transaction.', error);
       }

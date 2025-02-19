@@ -675,3 +675,5 @@ export const CHAIN_TO_IDRISS_TIPPING_ADDRESS = {
   [CHAIN.RONIN.id]: '0x74BD1b29B997ec081eb7AF06F2fd67CbfC74D26e',
   [CHAIN.ABSTRACT.id]: '0xEeFA4f7F4e9104D16673D0C2fE3D0bF4c45A7804',
 } as const;
+
+export const CREATOR_API_URL = 'https://core-production-a116.up.railway.app';

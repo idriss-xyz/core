@@ -45,8 +45,9 @@ const LEGACY_URLS = [
 ];
 
 const nextConfig: NextConfig = {
-  generateBuildId: () =>
-    process.env.RAILWAY_GIT_COMMIT_SHA || `build-${Date.now()}`,
+  generateBuildId: () => {
+    return process.env.RAILWAY_GIT_COMMIT_SHA || `build-${Date.now()}`;
+  },
 
   productionBrowserSourceMaps: true,
   // eslint-disable-next-line @typescript-eslint/require-await

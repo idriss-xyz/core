@@ -1,43 +1,73 @@
-import { Hex } from 'viem';
+import { Icon } from '@idriss-xyz/ui/icon';
 import { getShortWalletHex } from '@idriss-xyz/constants';
 
-import { useGetEnsName } from '@/app/creators/donate-history/commands/get-ens-name';
+import { FromUser } from '@/app/creators/donate/types';
+import { useGetEnsAvatar } from '@/app/creators/donate/commands/get-ens-avatar';
 
-import { default as RANK_1 } from '../assets/rank-1.png';
-import { default as RANK_2 } from '../assets/rank-2.png';
-import { default as RANK_3 } from '../assets/rank-3.png';
-
-type Properties = {
-  donorAddress: Hex;
-  donorRank: number;
-  donateAmount: number;
-};
-
-const rankImages = [RANK_1.src, RANK_2.src, RANK_3.src];
+const rankBorders = [
+  'border-[#FAC928]',
+  'border-[#979797]',
+  'border-[#934F0A]',
+];
+const rankColors = ['text-[#FAC928]', 'text-[#979797]', 'text-[#934F0A]'];
 const rankPlaces = ['1st', '2nd', '3rd'];
 
+type Properties = {
+  donorRank: number;
+  donateAmount: number;
+  donorDetails: FromUser;
+};
+
 export default function DonorItem({
-  donorAddress,
   donorRank,
   donateAmount,
+  donorDetails,
 }: Properties) {
-  const ensNameQuery = useGetEnsName({
-    address: donorAddress,
-  });
+  const displayName = donorDetails.displayName?.value;
+  const nameSource = donorDetails.displayName?.source;
+  const imageSource = donorDetails.avatar?.source;
 
-  const rankImage =
-    donorRank <= 2 ? (
-      <img src={rankImages[donorRank]} alt={`Rank ${donorRank + 1}`} />
-    ) : (
-      <span className="h-[32px] w-[29px]" />
-    );
+  const ensAvatarQuery = useGetEnsAvatar(
+    { name: displayName ?? '' },
+    { enabled: nameSource === 'ENS' && !!displayName },
+  );
+
+  const farcasterAvatarUrl =
+    imageSource === 'FARCASTER' ? donorDetails.avatar?.value?.url : null;
+
+  const avatarSource = ensAvatarQuery.data ?? farcasterAvatarUrl;
+
+  const avatarImage = (
+    <div className="relative w-max">
+      {avatarSource ? (
+        <img
+          src={avatarSource}
+          alt={`Rank ${donorRank + 1}`}
+          className={`size-8 rounded-full bg-neutral-200 ${donorRank <= 2 ? `border-2 ${rankBorders[donorRank]}` : 'border border-neutral-400'}`}
+        />
+      ) : (
+        <div
+          className={`flex size-8 items-center justify-center rounded-full ${donorRank <= 2 ? `border-2 ${rankBorders[donorRank]}` : 'border border-neutral-300'} bg-neutral-200`}
+        >
+          <Icon size={20} name="CircleUserRound" className="text-neutral-500" />
+        </div>
+      )}
+      {donorRank <= 2 ? (
+        <Icon
+          size={13}
+          name="CrownCircled"
+          className={`absolute bottom-0 right-0 ${rankColors[donorRank]}`}
+        />
+      ) : null}
+    </div>
+  );
 
   return (
     <li className="grid grid-cols-[10px,1fr,70px] items-center gap-x-3.5 border-b border-b-neutral-300 px-5.5 py-4.5 text-body5 md:grid-cols-[10px,1fr,100px]">
       <span className="text-neutral-600">{donorRank + 1}</span>
       <span className="flex items-center gap-x-1.5 text-neutral-900">
-        {rankImage}
-        {ensNameQuery.data ?? getShortWalletHex(donorAddress)}
+        {avatarImage}
+        {displayName ?? getShortWalletHex(donorDetails.address)}
       </span>
       <span className="text-right text-neutral-900">
         $
@@ -61,12 +91,20 @@ export function DonorItemPlaceholder({
   donorRank,
   previousDonateAmount,
 }: PlaceholderProperties) {
-  const rankImage =
-    donorRank <= 2 ? (
-      <img src={rankImages[donorRank]} alt={`Rank ${donorRank + 1}`} />
-    ) : (
-      <span className="h-[32px] w-[29px]" />
-    );
+  const avatarPlaceholder = (
+    <div className="relative w-max">
+      <div
+        className={`flex size-8 items-center justify-center rounded-full border-2 ${rankBorders[donorRank]} bg-neutral-200`}
+      >
+        <Icon size={20} name="CircleUserRound" className="text-neutral-500" />
+      </div>
+      <Icon
+        size={13}
+        name="CrownCircled"
+        className={`absolute bottom-0 right-0 ${rankColors[donorRank]}`}
+      />
+    </div>
+  );
 
   const donateAmount = previousDonateAmount * 0.8;
 
@@ -76,7 +114,7 @@ export function DonorItemPlaceholder({
         <li className="grid grid-cols-[10px,1fr,70px] items-center gap-x-3.5 border-b border-b-neutral-300 px-5.5 py-4.5 text-body5 md:grid-cols-[10px,1fr,100px]">
           <span className="text-neutral-600">{donorRank + 1}</span>
           <span className="flex items-center gap-x-1.5 text-neutral-900">
-            {rankImage}
+            {avatarPlaceholder}
             <span className="blur-sm">user.eth</span>
           </span>
           <span className="text-right text-neutral-900 blur-sm">
@@ -91,9 +129,9 @@ export function DonorItemPlaceholder({
         </li>
         <span
           style={{ height: `${(5 - donorRank) * 69}px` }}
-          className="flex items-center justify-center border-b border-b-neutral-300 px-5.5 py-4.5 text-center text-label5 text-neutral-500"
+          className="flex items-center justify-center border-b border-b-neutral-300 px-5.5 py-4.5 text-center text-label4 gradient-text-2"
         >
-          Donate now and claim {rankPlaces[donorRank]} place!
+          Donate now and claim {rankPlaces[donorRank]} place
         </span>
       </>
     );

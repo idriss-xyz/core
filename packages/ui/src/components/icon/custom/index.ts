@@ -40,3 +40,4 @@ export { Coinmarketcap, CoinmarketcapOutlined } from './coinmarketcap';
 export { Play } from './play';
 export { Etherscan } from './etherscan';
 export { Blockscout } from './blockscout';
+export { CrownCircled } from './crown-circled';

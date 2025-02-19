@@ -1,84 +1,62 @@
-'use client';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
-import { formatEther, Hex } from 'viem';
-import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { formatUnits } from 'viem';
 import { Spinner } from '@idriss-xyz/ui/spinner';
-import { EMPTY_HEX, hexSchema } from '@idriss-xyz/constants';
+import { hexSchema } from '@idriss-xyz/constants';
 import { Icon } from '@idriss-xyz/ui/icon';
 
 import { IDRISS_SCENE_STREAM_2 } from '@/assets';
-import { validateAddressOrENS } from '@/app/creators/donate/utils';
 import {
   default as DonorItem,
   DonorItemPlaceholder,
 } from '@/app/creators/donate/components/donor-item';
-import { useGetTipHistory } from '@/app/creators/donate-history/commands/get-donate-history';
-import { ZapperNode } from '@/app/creators/donate-history/types';
-
-import { SEARCH_PARAMETER } from './content';
+import { FromUser, ZapperNode } from '@/app/creators/donate/types';
 
 type Properties = {
   className?: string;
+  tipsLoading: boolean;
+  validatedAddress?: string | null;
+  tipEdges: { node: ZapperNode }[];
+  updateCurrentContent: (content: 'tip' | 'history') => void;
 };
 
 const baseClassName =
   'z-1 w-[440px] max-w-full rounded-xl bg-white flex flex-col items-center relative overflow-hidden';
 
-export const TopDonors = ({ className }: Properties) => {
-  const [validatedAddress, setValidatedAddress] = useState<
-    string | null | undefined
-  >();
-
-  const searchParameters = useSearchParams();
-  const addressFromParameters =
-    searchParameters.get(SEARCH_PARAMETER.ADDRESS) ??
-    searchParameters.get(SEARCH_PARAMETER.LEGACY_ADDRESS);
-
-  useEffect(() => {
-    const validateAddress = async () => {
-      const address = await validateAddressOrENS(addressFromParameters);
-      setValidatedAddress(address);
-    };
-
-    void validateAddress();
-  }, [addressFromParameters]);
-
+export const TopDonors = ({
+  tipEdges,
+  className,
+  tipsLoading,
+  validatedAddress,
+  updateCurrentContent,
+}: Properties) => {
   const addressValidationResult = hexSchema.safeParse(validatedAddress);
-
-  const tips = useGetTipHistory(
-    {
-      address: (validatedAddress as Hex) ?? EMPTY_HEX,
-    },
-    {
-      enabled: addressValidationResult.success,
-    },
-  );
-
-  const tipEdges = tips.isSuccess ? tips.data?.data : undefined;
 
   const groupedTips = tipEdges?.reduce(
     (accumulator, tip) => {
       const userAddress = tip.node.transaction.fromUser.address;
+      const user = tip.node.transaction.fromUser;
       const amountRaw =
         tip.node.interpretation.descriptionDisplayItems[0]?.amountRaw;
       const price =
         tip.node.interpretation.descriptionDisplayItems[0]?.tokenV2
           ?.onchainMarketData?.price;
+      const decimals =
+        tip.node.interpretation.descriptionDisplayItems[0]?.tokenV2.decimals ??
+        18;
 
       if (!amountRaw || !price) {
         return accumulator;
       }
 
       const tradeValue =
-        Number.parseFloat(formatEther(BigInt(amountRaw))) * price || 0;
+        Number.parseFloat(formatUnits(BigInt(amountRaw), decimals)) * price;
 
       if (!accumulator[userAddress]) {
         accumulator[userAddress] = {
           tips: [] as { node: ZapperNode }[],
           tipsSum: 0,
-          address: userAddress,
+          user: user,
         };
       }
 
@@ -89,7 +67,11 @@ export const TopDonors = ({ className }: Properties) => {
     },
     {} as Record<
       string,
-      { tipsSum: number; address: Hex; tips: { node: ZapperNode }[] }
+      {
+        tipsSum: number;
+        user: FromUser;
+        tips: { node: ZapperNode }[];
+      }
     >,
   );
 
@@ -123,7 +105,11 @@ export const TopDonors = ({ className }: Properties) => {
         </h1>
       </div>
       <div className="flex w-full flex-col">
-        {sortedGroupedTips ? (
+        {tipsLoading || !validatedAddress || !sortedGroupedTips ? (
+          <span className="flex w-full items-center justify-center border-b border-b-neutral-300 px-5.5 py-4.5">
+            <Spinner className="size-16 text-mint-600" />
+          </span>
+        ) : (
           <ul>
             {sortedGroupedTips.map((groupedTip, index) => {
               if (!groupedTip.tips[0] || index > 5) return null;
@@ -132,7 +118,7 @@ export const TopDonors = ({ className }: Properties) => {
                 <DonorItem
                   donorRank={index}
                   donateAmount={groupedTip.tipsSum}
-                  donorAddress={groupedTip.address}
+                  donorDetails={groupedTip.user}
                   key={`${groupedTip.tipsSum}${groupedTip.tips[0].node.transaction.hash}`}
                 />
               );
@@ -154,8 +140,10 @@ export const TopDonors = ({ className }: Properties) => {
       <div className="flex min-h-[80px] w-full items-center justify-center">
         <Link
           size="xs"
-          href={`donate-history?${searchParameters.toString()}`}
-          className={`mx-6 my-3 ${sortedGroupedTips?.length === 0 ? 'invisible' : ''}`}
+          onClick={() => {
+            updateCurrentContent('history');
+          }}
+          className={`mx-6 my-3 cursor-pointer ${sortedGroupedTips?.length === 0 ? 'invisible' : ''}`}
         >
           See full donation history
         </Link>
