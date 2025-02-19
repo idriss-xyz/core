@@ -1,7 +1,5 @@
 import { ReactNode, useMemo } from 'react';
-
-import { Chain } from '../types';
-import { CHAIN } from '../constants';
+import { CHAIN, Chain } from '@idriss-xyz/constants';
 
 import { Select, Option } from './select';
 

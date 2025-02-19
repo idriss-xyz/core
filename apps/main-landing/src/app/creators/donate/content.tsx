@@ -4,7 +4,19 @@ import { Form } from '@idriss-xyz/ui/form';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { Button } from '@idriss-xyz/ui/button';
 import { Link } from '@idriss-xyz/ui/link';
-import { CREATORS_USER_GUIDE_LINK } from '@idriss-xyz/constants';
+import {
+  applyDecimalsToNumericString,
+  CHAIN,
+  CHAIN_ID_TO_TOKENS,
+  CREATORS_USER_GUIDE_LINK,
+  getTransactionUrl,
+  roundToSignificantFigures,
+  TOKEN,
+  DEFAULT_ALLOWED_CHAINS_IDS,
+  Token,
+  hexSchema,
+  EMPTY_HEX,
+} from '@idriss-xyz/constants';
 import { useCallback, useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSearchParams } from 'next/navigation';
@@ -18,31 +30,12 @@ import { useAccount, useWalletClient } from 'wagmi';
 import { backgroundLines3 } from '@/assets';
 
 import { ChainSelect, TokenSelect } from './components';
-import {
-  CHAIN,
-  CHAIN_ID_TO_TOKENS,
-  DEFAULT_ALLOWED_CHAINS_IDS,
-  TOKEN,
-} from './constants';
-import {
-  createFormPayloadSchema,
-  FormPayload,
-  hexSchema,
-  SendPayload,
-} from './schema';
-import {
-  applyDecimalsToNumericString,
-  getSendFormDefaultValues,
-  getTransactionUrl,
-  roundToSignificantFigures,
-} from './utils';
-import { Token } from './types';
+import { createFormPayloadSchema, FormPayload, SendPayload } from './schema';
+import { getSendFormDefaultValues } from './utils';
 import { useSender } from './hooks';
 
 const SEARCH_PARAMETER = {
   CREATOR_NAME: 'creatorName',
-  ADDRESS: 'address',
-  LEGACY_ADDRESS: 'streamerAddress',
   NETWORK: 'network',
   TOKEN: 'token',
 };
@@ -189,7 +182,7 @@ export const Content = ({ className, validatedAddress }: Properties) => {
       const address: Hex =
         CHAIN_ID_TO_TOKENS[chainId]?.find((token: Token) => {
           return token.symbol === tokenSymbol;
-        })?.address ?? '0x';
+        })?.address ?? EMPTY_HEX;
       const sendPayload: SendPayload = {
         ...rest,
         chainId,
@@ -260,7 +253,7 @@ export const Content = ({ className, validatedAddress }: Properties) => {
   if (sender.isSuccess) {
     const transactionUrl = getTransactionUrl({
       chainId,
-      transactionHash: sender.data?.transactionHash ?? '0x',
+      transactionHash: sender.data?.transactionHash ?? EMPTY_HEX,
     });
 
     return (

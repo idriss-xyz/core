@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
+import { Wallet } from '@idriss-xyz/wallet-connect';
 
-import { Wallet, dollarToWei, useSwitchChain } from 'shared/web3';
+import { dollarToWei, useSwitchChain } from 'shared/web3';
 
 import { Application, DonationPayload } from '../types';
 

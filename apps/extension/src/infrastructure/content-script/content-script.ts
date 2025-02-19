@@ -1,3 +1,5 @@
+import { Hex } from 'viem';
+
 import {
   COMMAND_BUS_REQUEST_MESSAGE,
   COMMAND_BUS_RESPONSE_MESSAGE,
@@ -20,7 +22,6 @@ import {
   StoredToastSoundState,
   StoredSubscriptionsAmount,
 } from 'shared/extension';
-import { Hex } from 'shared/web3';
 
 export class ContentScript {
   private constructor(private environment: typeof chrome) {}

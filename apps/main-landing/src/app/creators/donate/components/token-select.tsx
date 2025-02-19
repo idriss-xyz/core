@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
-
-import { Token } from '../types';
+import { Token } from '@idriss-xyz/constants';
 
 import { Select } from './select';
 

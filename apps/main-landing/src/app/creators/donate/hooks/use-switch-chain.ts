@@ -1,7 +1,6 @@
+import { getChainById, isUnrecognizedChainError } from '@idriss-xyz/constants';
 import { useMutation } from '@tanstack/react-query';
 import { WalletClient } from 'viem';
-
-import { getChainById, isUnrecognizedChainError } from '../utils';
 
 interface SwitchChainArguments {
   walletClient?: WalletClient;

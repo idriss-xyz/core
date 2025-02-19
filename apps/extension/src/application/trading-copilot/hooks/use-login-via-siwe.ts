@@ -1,8 +1,9 @@
 import { useCallback } from 'react';
+import { Wallet } from '@idriss-xyz/wallet-connect';
 
 import { useTradingCopilot, useWallet } from 'shared/extension';
 import { useCommandMutation } from 'shared/messaging';
-import { createWalletClient, Wallet } from 'shared/web3';
+import { createWalletClient } from 'shared/web3';
 
 import {
   GetSiweMessageCommand,

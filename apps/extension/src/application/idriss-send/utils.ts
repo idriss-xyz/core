@@ -1,7 +1,8 @@
 import { sha256 } from '@noble/hashes/sha256';
 import { bytesToHex } from '@noble/hashes/utils';
+import { EMPTY_HEX } from '@idriss-xyz/constants';
 
-import { CHAIN_ID_TO_TOKENS, EMPTY_HEX } from 'shared/web3';
+import { CHAIN_ID_TO_TOKENS } from 'shared/web3';
 
 import { SendPayload } from './schema';
 import { WALLET_TAGS } from './constants';
@@ -18,25 +19,6 @@ export const getDefaultTokenForChainId = (chainId: number) => {
   }
 
   return defaultChainToken;
-};
-
-export const getSafeNumber = (
-  number: number,
-): { value: number; decimals: number } => {
-  // Convert the number to a string and split by the decimal point
-  const numberString = number.toString();
-
-  // Check if there is a decimal point in the number
-  if (numberString.includes('.')) {
-    const parts = numberString.split('.');
-    const decimals = parts[1]?.length ?? 0;
-    const value = number * 10 ** decimals;
-    return { value: Math.floor(value), decimals };
-  } else {
-    // If no decimal point, the number is an integer
-    const value = Number.parseInt(numberString, 10);
-    return { value, decimals: 0 };
-  }
 };
 
 const digestMessage = (input: string) => {

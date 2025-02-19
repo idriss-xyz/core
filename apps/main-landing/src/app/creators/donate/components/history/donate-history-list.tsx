@@ -2,15 +2,14 @@ import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { Icon } from '@idriss-xyz/ui/icon';
+import { TipHistoryNode } from '@idriss-xyz/constants';
 
 import DonateHistoryItem from '@/app/creators/donate/components/history/donate-history-item';
-
-import { ZapperNode } from '../../types';
 
 type Properties = {
   tipsLoading: boolean;
   isInvalidAddress: boolean;
-  tipEdges: { node: ZapperNode }[];
+  tipEdges: { node: TipHistoryNode }[];
   address: string | null | undefined;
   updateCurrentContent: (content: 'tip' | 'history') => void;
 };

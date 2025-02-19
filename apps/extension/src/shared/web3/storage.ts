@@ -1,11 +1,6 @@
+import { StoredWallet } from '@idriss-xyz/wallet-connect';
+
 import { onWindowMessage } from 'shared/messaging';
-
-import { Hex } from './types';
-
-interface StoredWallet {
-  account: Hex;
-  providerRdns: string;
-}
 
 type StoredAuthToken = string | undefined;
 

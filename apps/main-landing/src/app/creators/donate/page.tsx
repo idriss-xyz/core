@@ -1,22 +1,27 @@
 'use client';
 /* eslint-disable @next/next/no-img-element */
 import { Button } from '@idriss-xyz/ui/button';
-import { CREATORS_LINK } from '@idriss-xyz/constants';
+import { CREATORS_LINK, hexSchema } from '@idriss-xyz/constants';
 import { Hex, isAddress } from 'viem';
 import '@rainbow-me/rainbowkit/styles.css';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import io from 'socket.io-client';
 
 import { backgroundLines2 } from '@/assets';
 import { TopBar } from '@/components';
 import { validateAddressOrENS } from '@/app/creators/donate/utils';
-import { hexSchema } from '@/app/creators/donate/schema';
 import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
 import DonateHistoryList from '@/app/creators/donate/components/history/donate-history-list';
 
 import { TopDonors } from './top-donors';
 import { Content } from './content';
 import { RainbowKitProviders } from './providers';
+
+const SEARCH_PARAMETER = {
+  ADDRESS: 'address',
+  LEGACY_ADDRESS: 'streamerAddress',
+};
 
 // ts-unused-exports:disable-next-line
 export default function Donors() {
@@ -37,7 +42,8 @@ function DonorsContent() {
 
   const searchParameters = useSearchParams();
   const addressFromParameters =
-    searchParameters.get('address') ?? searchParameters.get('streamerAddress');
+    searchParameters.get(SEARCH_PARAMETER.ADDRESS) ??
+    searchParameters.get(SEARCH_PARAMETER.LEGACY_ADDRESS);
 
   useEffect(() => {
     const validateAddress = async () => {
@@ -108,6 +114,39 @@ function DonorsContent() {
     tips.isLoading,
     validatedAddress,
   ]);
+
+  const SOCKET_URL = 'http://localhost:4000';
+
+  const [donations, setDonations] = useState([]);
+
+  useEffect(() => {
+    // Connect to the socket server.
+    const socket = io(SOCKET_URL);
+
+    socket.on('connect', () => {
+      console.log('Socket connected:', socket.id);
+      // Subscribe using your address.
+      socket.emit('register', validatedAddress);
+    });
+
+    // Listen for new donation events.
+    socket.on('newDonation', (donation) => {
+      console.log('New donation received:', donation);
+      // @ts-expect-error TODO: development
+      setDonations((previous) => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        return [...previous, donation];
+      });
+    });
+
+    // Cleanup on unmount.
+    return () => {
+      socket.disconnect();
+      console.log('Socket disconnected:', socket.id);
+    };
+  }, [validatedAddress]);
+
+  console.log(donations);
 
   return (
     <>

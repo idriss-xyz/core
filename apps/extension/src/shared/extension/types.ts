@@ -1,5 +1,3 @@
-import { Hex } from 'shared/web3';
-
 export type ExtensionSettings = Record<ExtensionSettingName, boolean>;
 
 export type ExtensionSettingName =
@@ -13,11 +11,6 @@ export type ExtensionSettingName =
   | 'gitcoin-enabled'
   | 'trading-copilot-latest-transactions-enabled'
   | 'trading-copilot-notifications-enabled';
-
-export interface StoredWallet {
-  account: Hex;
-  providerRdns: string;
-}
 
 export type StoredAuthToken = string | undefined;
 

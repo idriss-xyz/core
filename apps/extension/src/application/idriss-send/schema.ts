@@ -1,6 +1,6 @@
 import { z } from 'zod';
-
-import { Hex, hexSchema } from 'shared/web3';
+import { Hex } from 'viem';
+import { hexSchema } from '@idriss-xyz/constants';
 
 const MIN_SEND_AMOUNT = 0.001;
 

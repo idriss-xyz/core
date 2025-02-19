@@ -2,8 +2,8 @@ import { Button } from '@idriss-xyz/ui/button';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { Link } from '@idriss-xyz/ui/link';
 import { classes } from '@idriss-xyz/ui/utils';
-
-import { getTransactionUrl, Hex } from 'shared/web3';
+import { Hex } from 'viem';
+import { getTransactionUrl } from '@idriss-xyz/constants';
 
 interface Properties {
   chainId: number;

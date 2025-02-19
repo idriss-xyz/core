@@ -1,4 +1,5 @@
 import { ClaimedEventsResponse } from '@idriss-xyz/constants';
+import { Hex } from 'viem';
 
 import {
   Command,
@@ -7,7 +8,6 @@ import {
   HandlerResponseError,
   OkResult,
 } from 'shared/messaging';
-import { Hex } from 'shared/web3';
 
 import { MAIN_API_URL } from './constants';
 

@@ -2,21 +2,24 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
 import { formatUnits } from 'viem';
 import { Spinner } from '@idriss-xyz/ui/spinner';
+import {
+  hexSchema,
+  TipHistoryFromUser,
+  TipHistoryNode,
+} from '@idriss-xyz/constants';
 import { Icon } from '@idriss-xyz/ui/icon';
 
 import { IDRISS_SCENE_STREAM_2 } from '@/assets';
-import { hexSchema } from '@/app/creators/donate/schema';
 import {
   default as DonorItem,
   DonorItemPlaceholder,
 } from '@/app/creators/donate/components/donor-item';
-import { FromUser, ZapperNode } from '@/app/creators/donate/types';
 
 type Properties = {
   className?: string;
   tipsLoading: boolean;
   validatedAddress?: string | null;
-  tipEdges: { node: ZapperNode }[];
+  tipEdges: { node: TipHistoryNode }[];
   updateCurrentContent: (content: 'tip' | 'history') => void;
 };
 
@@ -54,7 +57,7 @@ export const TopDonors = ({
 
       if (!accumulator[userAddress]) {
         accumulator[userAddress] = {
-          tips: [] as { node: ZapperNode }[],
+          tips: [] as { node: TipHistoryNode }[],
           tipsSum: 0,
           user: user,
         };
@@ -69,8 +72,8 @@ export const TopDonors = ({
       string,
       {
         tipsSum: number;
-        user: FromUser;
-        tips: { node: ZapperNode }[];
+        user: TipHistoryFromUser;
+        tips: { node: TipHistoryNode }[];
       }
     >,
   );
