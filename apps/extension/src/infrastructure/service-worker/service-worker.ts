@@ -57,7 +57,8 @@ const COMMAND_MAP = {
   ...TRADING_COPILOT_COMMAND_MAP,
 };
 
-const SERVER_URL = 'https://copilot-api.idriss.xyz/';
+const SERVER_URL =
+  'https://copilot-staging.up.railway.app/';
 
 export class ServiceWorker {
   private observabilityScope: ObservabilityScope =
@@ -542,5 +543,4 @@ export class ServiceWorker {
         !tab.url?.startsWith('about'),
     );
   };
-
 }

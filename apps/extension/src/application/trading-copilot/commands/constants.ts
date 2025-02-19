@@ -1,1 +1,1 @@
-export const COPILOT_API_URL = 'https://copilot-api.idriss.xyz';
+export const COPILOT_API_URL = 'https://copilot-staging.up.railway.app';
