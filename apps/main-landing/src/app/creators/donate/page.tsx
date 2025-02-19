@@ -7,6 +7,7 @@ import '@rainbow-me/rainbowkit/styles.css';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import io from 'socket.io-client';
+import _ from 'lodash';
 
 import { backgroundLines2 } from '@/assets';
 import { TopBar } from '@/components';
@@ -122,29 +123,28 @@ function DonorsContent() {
   useEffect(() => {
     if (validatedAddress && !socketInitialized) {
       const socket = io(SOCKET_URL);
+      setSocketInitialized(true);
+      console.log('WS initialized');
 
-      if (socket) {
-        setSocketInitialized(true);
-        console.log('WS initialized');
+      if (socket && !socketConnected) {
+        socket.on('connect', () => {
+          socket.emit('register', validatedAddress);
 
-        if (!socketConnected) {
-          socket.on('connect', () => {
-            socket.emit('register', validatedAddress);
+          if (socket.connected) {
+            setSocketConnected(true);
+            console.log('WS connected');
+          }
+        });
 
-            if (socket.connected) {
-              setSocketConnected(true);
-              console.log('WS connected');
-            }
-          });
+        socket.on('newDonation', (node: ZapperNode) => {
+          console.log('WS new donation:', node);
 
-          socket.on('newDonation', (node: ZapperNode) => {
-            console.log('WS new donation:', node);
-
-            setTipEdges((previousState) => {
-              return [...previousState, { node }];
+          setTipEdges((previousState) => {
+            return _.uniqBy(previousState, (item) => {
+              return _.get(item, 'node.transaction.hash');
             });
           });
-        }
+        });
       }
 
       return () => {
