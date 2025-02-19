@@ -6,6 +6,7 @@ import { getAddress, hexToNumber } from 'viem';
 
 import { Wallet, SolanaWallet, SolanaProviderInfo } from './types';
 import { BROWSER_PROVIDER_LOGO } from './constants';
+import { SolanaProvider } from './ethereum';
 
 type Properties = {
   disabledWalletsRdns: string[];
@@ -129,7 +130,7 @@ export const WalletConnectModal = createModal(
   },
 );
 
-interface SolAdapter {
+interface SolAdapter extends SolanaProvider {
   name: string;
   icon: string;
   publicKey?: string;
@@ -181,7 +182,6 @@ export const SolanaWalletConnectModal = createModal(
             setIsConnecting(false);
             return;
           }
-
           resolveWallet({
             account: wallet.adapter.publicKey,
             provider: wallet.adapter,
