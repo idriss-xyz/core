@@ -41,6 +41,9 @@ export type {
   ChainToken,
   TokenSymbol,
   Token,
+  TipHistoryResponse,
+  TipHistoryFromUser,
+  TipHistoryNode,
 } from './types';
 
 export {
@@ -52,7 +55,8 @@ export {
   getChainById,
   isUnrecognizedChainError,
   formatBigNumber,
-  getBlockExplorerUrl,
+  getDefaultBlockExplorerUrl,
+  getTransactionUrls,
   getSafeNumber,
   getShortWalletHex,
   getTimeDifferenceString,

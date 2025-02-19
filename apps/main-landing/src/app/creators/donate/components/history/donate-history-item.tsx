@@ -11,11 +11,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
+import {
+  CHAIN,
+  getTransactionUrls,
+  TipHistoryNode,
+} from '@idriss-xyz/constants';
 
-import { getTransactionUrl } from '@/app/creators/donate/utils';
-import { CHAIN } from '@/app/creators/donate/constants';
-
-import { ZapperNode } from '../../types';
 import { useGetEnsAvatar } from '../../commands/get-ens-avatar';
 
 // TODO: IMPORTANT - those functions should be moved to packages/constants
@@ -188,7 +189,7 @@ function removeMainnetSuffix(text: string) {
 }
 
 type Properties = {
-  tip: ZapperNode;
+  tip: TipHistoryNode;
 };
 
 export default function DonateHistoryItem({ tip }: Properties) {
@@ -229,7 +230,7 @@ export default function DonateHistoryItem({ tip }: Properties) {
       2,
     );
 
-  const transactionUrl = getTransactionUrl({
+  const transactionUrls = getTransactionUrls({
     chainId: CHAIN[removeMainnetSuffix(tip.network) as keyof typeof CHAIN].id,
     transactionHash: tip.transaction.hash,
   });
@@ -342,38 +343,33 @@ export default function DonateHistoryItem({ tip }: Properties) {
         }}
       >
         {() => {
-          return (
-            <ul className="flex flex-col gap-y-1">
-              <li>
-                <Button
-                  className="w-full justify-start px-3 py-1 font-normal text-neutral-900"
-                  intent="tertiary"
-                  size="large"
-                  prefixIconName="Etherscan"
-                  prefixIconClassName="mr-3"
-                  href={transactionUrl}
-                  isExternal
-                  asLink
-                >
-                  View on Etherscan
-                </Button>
-              </li>
-              <li>
-                <Button
-                  className="w-full justify-start px-3 py-1 font-normal text-neutral-900"
-                  intent="tertiary"
-                  size="large"
-                  prefixIconName="Blockscout"
-                  prefixIconClassName="mr-3"
-                  href={transactionUrl}
-                  isExternal
-                  asLink
-                >
-                  View on Blockscout
-                </Button>
-              </li>
+          return transactionUrls ? (
+            <ul className="flex flex-col items-start gap-y-1">
+              {transactionUrls.map((transactionUrl) => {
+                const explorer =
+                  transactionUrl.blockExplorer === 'Blockscout'
+                    ? 'Blockscout'
+                    : 'Etherscan';
+
+                return (
+                  <li key={transactionUrl.url}>
+                    <Button
+                      asLink
+                      isExternal
+                      size="large"
+                      intent="tertiary"
+                      href={transactionUrl.url}
+                      prefixIconClassName="mr-3"
+                      prefixIconName={explorer}
+                      className="w-full items-center px-3 py-1 font-normal text-neutral-900"
+                    >
+                      View on {explorer}
+                    </Button>
+                  </li>
+                );
+              })}
             </ul>
-          );
+          ) : null;
         }}
       </Dropdown>
     </div>

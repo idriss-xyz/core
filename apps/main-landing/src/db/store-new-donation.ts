@@ -1,13 +1,12 @@
 import { In } from 'typeorm';
-
-import { ZapperNode } from '@/app/creators/donate-history/types';
+import { TipHistoryNode } from '@idriss-xyz/constants';
 
 import { AppDataSource } from './database';
 import { Donation } from './entities/donations.entity';
 
 export async function storeToDatabase(
   address: string,
-  edges: { node: ZapperNode }[],
+  edges: { node: TipHistoryNode }[],
 ) {
   if (!AppDataSource.isInitialized) {
     await AppDataSource.initialize();

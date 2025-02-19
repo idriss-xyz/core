@@ -28,3 +28,65 @@ export interface ChainToken extends Token {
 }
 
 export type TokenSymbol = (typeof TOKEN)[keyof typeof TOKEN]['symbol'];
+
+interface TokenV2 {
+  symbol: string;
+  imageUrlV2?: string;
+  onchainMarketData: {
+    price: number;
+  };
+  address: Hex;
+  decimals: number;
+}
+
+interface TokenDisplayItem {
+  network: string;
+  amountRaw: string;
+  tokenV2: TokenV2;
+}
+
+type StringDisplayItem = {
+  stringValue: string;
+};
+
+export type TipHistoryFromUser = {
+  address: Hex;
+  displayName: {
+    value: string;
+    source: string;
+  };
+  avatar: {
+    value: {
+      url: string | undefined;
+    };
+    source: string | undefined;
+  };
+};
+
+export interface TipHistoryNode {
+  timestamp: number;
+  network: string;
+  transaction: {
+    hash: Hex;
+    fromUser: TipHistoryFromUser;
+    toUser: {
+      address: Hex;
+    };
+  };
+  interpretation: {
+    descriptionDisplayItems: [
+      TokenDisplayItem | undefined,
+      undefined,
+      StringDisplayItem | undefined,
+    ];
+  };
+  app?: {
+    slug: string;
+  };
+}
+
+export interface TipHistoryResponse {
+  data: {
+    node: TipHistoryNode;
+  }[];
+}

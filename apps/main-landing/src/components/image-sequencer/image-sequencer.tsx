@@ -1,6 +1,6 @@
 'use client';
 import { classes } from '@idriss-xyz/ui/utils';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 
 type Properties = {
   images: string[];
@@ -9,23 +9,107 @@ type Properties = {
   infinite?: boolean;
   startIndex?: number;
   endIndex?: number;
+  width?: number;
+  height?: number;
+  fps?: number;
+  onError?: (error: Error) => void;
+  onLoad?: () => void;
 };
 
-const preloadImages = async (images: string[]) => {
-  return await Promise.all(
-    images.map((source) => {
-      return new Promise<HTMLImageElement>((resolve, reject) => {
+const useImageLoader = (images: string[], onError?: (error: Error) => void) => {
+  const [loadedImages, setLoadedImages] = useState<
+    Map<number, HTMLImageElement>
+  >(new Map());
+  const [isLoading, setIsLoading] = useState(true);
+  const mountedReference = useRef(true);
+
+  useEffect(() => {
+    mountedReference.current = true;
+    const imageMap = new Map<number, HTMLImageElement>();
+
+    const loadImage = async (source: string, index: number) => {
+      try {
         const img = new Image();
         img.src = source;
-        img.addEventListener('load', () => {
-          return resolve(img);
+
+        await new Promise((resolve, reject) => {
+          img.addEventListener('load', resolve);
+          img.addEventListener('error', () => {
+            return reject(new Error(`Failed to load image: ${source}`));
+          });
         });
-        img.addEventListener('error', () => {
-          return reject(new Error('cannot preload image'));
-        });
-      });
-    }),
+
+        if (mountedReference.current) {
+          imageMap.set(index, img);
+          setLoadedImages(new Map(imageMap));
+        }
+      } catch (error) {
+        if (mountedReference.current) {
+          onError?.(error as Error);
+        }
+      }
+    };
+
+    const loadAllImages = async () => {
+      setIsLoading(true);
+      try {
+        await Promise.all(
+          images.map((source, index) => {
+            return loadImage(source, index);
+          }),
+        );
+      } finally {
+        if (mountedReference.current) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    void loadAllImages();
+
+    return () => {
+      mountedReference.current = false;
+      imageMap.clear();
+    };
+  }, [images, onError]);
+
+  return { loadedImages, isLoading };
+};
+
+const useAnimationFrame = (
+  callback: () => void,
+  fps: number,
+  isEnabled: boolean,
+) => {
+  const requestReference = useRef<number>();
+  const previousTimeReference = useRef<number>();
+  const interval = 1000 / fps;
+
+  const animate = useCallback(
+    (time: number) => {
+      if (!previousTimeReference.current) previousTimeReference.current = time;
+
+      const delta = time - previousTimeReference.current;
+      if (delta >= interval) {
+        callback();
+        previousTimeReference.current = time - (delta % interval);
+      }
+
+      requestReference.current = requestAnimationFrame(animate);
+    },
+    [callback, interval],
   );
+
+  useEffect(() => {
+    if (isEnabled) {
+      requestReference.current = requestAnimationFrame(animate);
+    }
+    return () => {
+      if (requestReference.current) {
+        cancelAnimationFrame(requestReference.current);
+      }
+    };
+  }, [animate, isEnabled]);
 };
 
 export const ImageSequencer = ({
@@ -35,83 +119,114 @@ export const ImageSequencer = ({
   infinite = true,
   startIndex = 0,
   endIndex = images.length - 1,
+  width = 2000,
+  height = 2000,
+  fps = 30,
+  onError,
+  onLoad,
 }: Properties) => {
-  const [currentIndex, setCurrentIndex] = useState(startIndex);
-  const [loadedImages, setLoadedImages] = useState<HTMLImageElement[]>([]);
-  const hasFirstImage = loadedImages.length > 0;
-  const isLoaded = loadedImages.length === images.length;
-  const intervalReference = useRef<NodeJS.Timeout | null>(null);
+  const canvasReference = useRef<HTMLCanvasElement>(null);
+  const contextReference = useRef<CanvasRenderingContext2D | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(() => {
+    return Math.max(0, Math.min(startIndex, images.length - 1));
+  });
+  const { loadedImages, isLoading } = useImageLoader(images, onError);
 
+  // Canvas context initialization
   useEffect(() => {
-    const run = async () => {
-      const [firstImage] = images;
-      const v = await preloadImages([firstImage!]);
-      setLoadedImages(v);
-    };
-    void run();
-  }, [images, direction]);
-
-  useEffect(() => {
-    if (isLoaded || !hasFirstImage) {
-      return;
+    if (canvasReference.current) {
+      contextReference.current = canvasReference.current.getContext('2d');
+      if (!contextReference.current) {
+        onError?.(new Error('Failed to get canvas context'));
+      }
     }
+  }, []);
 
-    const run = async () => {
-      const [_firstImage, ...restImages] = images;
-      const v = await preloadImages(restImages);
-      setLoadedImages((previous) => {
-        return [...previous, ...v];
-      });
-    };
+  const drawFrame = useCallback(() => {
+    const context = contextReference.current;
+    const currentImage = loadedImages.get(currentIndex);
+    if (!context || !canvasReference.current || !currentImage) return;
 
-    void run();
-  }, [hasFirstImage, images, isLoaded]);
+    try {
+      context.clearRect(
+        0,
+        0,
+        canvasReference.current.width,
+        canvasReference.current.height,
+      );
 
-  useEffect(() => {
-    if (!isLoaded) {
-      return;
+      // Calculate scaling while preserving aspect ratio
+      const scale = Math.min(
+        canvasReference.current.width / currentImage.naturalWidth,
+        canvasReference.current.height / currentImage.naturalHeight,
+      );
+
+      const x =
+        (canvasReference.current.width - currentImage.naturalWidth * scale) / 2;
+      const y =
+        (canvasReference.current.height - currentImage.naturalHeight * scale) /
+        2;
+
+      context.drawImage(
+        currentImage,
+        x,
+        y,
+        currentImage.naturalWidth * scale,
+        currentImage.naturalHeight * scale,
+      );
+    } catch (error) {
+      onError?.(
+        new Error(
+          `Failed to draw frame: ${error instanceof Error ? error.message : String(error)}`,
+        ),
+      );
     }
+  }, [currentIndex, loadedImages, onError]);
 
-    const frameInterval = 1000 / 30; // 30 FPS
-
-    intervalReference.current = setInterval(() => {
+  const updateFrame = useCallback(() => {
+    setCurrentIndex((previous) => {
       if (infinite) {
-        setCurrentIndex((previousIndex) => {
-          if (direction === 'forward') {
-            return (previousIndex + 1) % images.length;
-          } else {
-            return previousIndex > 0 ? previousIndex - 1 : images.length - 1;
-          }
-        });
-      } else {
-        setCurrentIndex((previousIndex) => {
-          if (direction === 'forward') {
-            return previousIndex < endIndex ? previousIndex + 1 : previousIndex;
-          } else {
-            return previousIndex > startIndex
-              ? previousIndex - 1
-              : previousIndex;
-          }
-        });
+        return direction === 'forward'
+          ? (previous + 1) % images.length
+          : previous > 0
+            ? previous - 1
+            : images.length - 1;
       }
-    }, frameInterval);
+      return direction === 'forward'
+        ? Math.min(previous + 1, endIndex)
+        : Math.max(previous - 1, startIndex);
+    });
+  }, [direction, endIndex, infinite, images.length, startIndex]);
 
-    return () => {
-      if (intervalReference.current) {
-        clearInterval(intervalReference.current);
-      }
+  // Initial draw and resize handling
+  useEffect(() => {
+    drawFrame();
+    const handleResize = () => {
+      return drawFrame();
     };
-  }, [images.length, isLoaded, direction, endIndex, infinite, startIndex]);
+    window.addEventListener('resize', handleResize);
+    return () => {
+      return window.removeEventListener('resize', handleResize);
+    };
+  }, [drawFrame]);
 
-  if (!hasFirstImage) {
-    return null;
-  }
+  // Loading state handling
+  useEffect(() => {
+    if (!isLoading && onLoad) {
+      onLoad();
+    }
+  }, [isLoading, onLoad]);
+
+  useAnimationFrame(updateFrame, fps, !isLoading && images.length > 0);
+
+  if (images.length === 0) return null;
 
   return (
-    <img
-      src={isLoaded ? loadedImages[currentIndex]!.src : loadedImages[0]!.src}
-      className={classes('pointer-events-none', className)}
-      alt="Animated Sequence"
+    <canvas
+      ref={canvasReference}
+      width={width}
+      height={height}
+      className={classes('pointer-events-none', 'bg-transparent', className)}
     />
   );
 };

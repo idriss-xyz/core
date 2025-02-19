@@ -1,4 +1,4 @@
-import { getBlockExplorerUrl } from '@idriss-xyz/constants';
+import { getDefaultBlockExplorerUrl } from '@idriss-xyz/constants';
 
 import { CHAIN } from 'shared/web3';
 
@@ -9,7 +9,7 @@ export const getProposalUrl = (proposalId: string) => {
 };
 
 export const getProposerUrl = (proposerAddress: string) => {
-  const blockExplorerUrl = getBlockExplorerUrl(CHAIN.OPTIMISM.id);
+  const blockExplorerUrl = getDefaultBlockExplorerUrl(CHAIN.OPTIMISM.id);
   if (!blockExplorerUrl) {
     return '#';
   }

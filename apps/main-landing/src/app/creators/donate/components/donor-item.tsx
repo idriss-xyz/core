@@ -1,7 +1,6 @@
 import { Icon } from '@idriss-xyz/ui/icon';
-import { getShortWalletHex } from '@idriss-xyz/constants';
+import { getShortWalletHex, TipHistoryFromUser } from '@idriss-xyz/constants';
 
-import { FromUser } from '@/app/creators/donate/types';
 import { useGetEnsAvatar } from '@/app/creators/donate/commands/get-ens-avatar';
 
 const rankBorders = [
@@ -15,7 +14,7 @@ const rankPlaces = ['1st', '2nd', '3rd'];
 type Properties = {
   donorRank: number;
   donateAmount: number;
-  donorDetails: FromUser;
+  donorDetails: TipHistoryFromUser;
 };
 
 export default function DonorItem({

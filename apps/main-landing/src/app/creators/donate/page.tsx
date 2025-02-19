@@ -1,7 +1,7 @@
 'use client';
 /* eslint-disable @next/next/no-img-element */
 import { Button } from '@idriss-xyz/ui/button';
-import { CREATORS_LINK } from '@idriss-xyz/constants';
+import { CREATORS_LINK, hexSchema } from '@idriss-xyz/constants';
 import { Hex, isAddress } from 'viem';
 import '@rainbow-me/rainbowkit/styles.css';
 import { useEffect, useMemo, useState } from 'react';
@@ -11,7 +11,6 @@ import io from 'socket.io-client';
 import { backgroundLines2 } from '@/assets';
 import { TopBar } from '@/components';
 import { validateAddressOrENS } from '@/app/creators/donate/utils';
-import { hexSchema } from '@/app/creators/donate/schema';
 import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
 import DonateHistoryList from '@/app/creators/donate/components/history/donate-history-list';
 

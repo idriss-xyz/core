@@ -17,7 +17,7 @@ import {
   hexSchema,
   EMPTY_HEX,
 } from '@idriss-xyz/constants';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSearchParams } from 'next/navigation';
 import { Icon } from '@idriss-xyz/ui/icon';
@@ -31,7 +31,7 @@ import { backgroundLines3 } from '@/assets';
 
 import { ChainSelect, TokenSelect } from './components';
 import { createFormPayloadSchema, FormPayload, SendPayload } from './schema';
-import { getSendFormDefaultValues, validateAddressOrENS } from './utils';
+import { getSendFormDefaultValues } from './utils';
 import { useSender } from './hooks';
 
 export const SEARCH_PARAMETER = {
