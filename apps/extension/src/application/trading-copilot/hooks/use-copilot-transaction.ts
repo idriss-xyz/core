@@ -10,7 +10,7 @@ import {
 import { useObservabilityScope } from 'shared/observability';
 import { Transaction, VersionedTransaction } from '@solana/web3.js';
 import { useCommandMutation } from 'shared/messaging';
-import { SendSolanaTransactionCommand } from '../commands/send-solana-transaction';
+import { SendSolanaTransactionCommand } from '../commands/';
 
 interface SwapProperties {
   to: `0x${string}`;
