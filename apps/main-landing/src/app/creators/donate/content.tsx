@@ -34,10 +34,8 @@ import { createFormPayloadSchema, FormPayload, SendPayload } from './schema';
 import { getSendFormDefaultValues } from './utils';
 import { useSender } from './hooks';
 
-export const SEARCH_PARAMETER = {
+const SEARCH_PARAMETER = {
   CREATOR_NAME: 'creatorName',
-  ADDRESS: 'address',
-  LEGACY_ADDRESS: 'streamerAddress',
   NETWORK: 'network',
   TOKEN: 'token',
 };

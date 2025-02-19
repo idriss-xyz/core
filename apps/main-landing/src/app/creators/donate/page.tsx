@@ -18,6 +18,11 @@ import { TopDonors } from './top-donors';
 import { Content } from './content';
 import { RainbowKitProviders } from './providers';
 
+const SEARCH_PARAMETER = {
+  ADDRESS: 'address',
+  LEGACY_ADDRESS: 'streamerAddress',
+};
+
 // ts-unused-exports:disable-next-line
 export default function Donors() {
   return (
@@ -37,7 +42,8 @@ function DonorsContent() {
 
   const searchParameters = useSearchParams();
   const addressFromParameters =
-    searchParameters.get('address') ?? searchParameters.get('streamerAddress');
+    searchParameters.get(SEARCH_PARAMETER.ADDRESS) ??
+    searchParameters.get(SEARCH_PARAMETER.LEGACY_ADDRESS);
 
   useEffect(() => {
     const validateAddress = async () => {
