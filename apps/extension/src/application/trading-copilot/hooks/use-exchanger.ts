@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { formatEther, getAddress, hexToNumber, parseEther } from 'viem';
+import { Transaction, VersionedTransaction } from '@solana/web3.js';
 
 import { useWallet } from 'shared/extension';
 import { Wallet, CHAIN, useSwitchChain } from 'shared/web3';
@@ -12,7 +13,6 @@ import {
   useCopilotSolanaTransaction,
   useCopilotTransaction,
 } from './use-copilot-transaction';
-import { Transaction, VersionedTransaction } from '@solana/web3.js';
 
 interface Properties {
   wallet?: Wallet;
@@ -176,7 +176,7 @@ export const useSolanaExchanger = ({
       };
 
       const amountInLamports = BigInt(
-        Math.round(parseFloat(formValues.amount) * 1e9),
+        Math.round(Number.parseFloat(formValues.amount) * 1e9),
       );
 
       const quotePayload = {
@@ -208,7 +208,7 @@ export const useSolanaExchanger = ({
         signTransaction,
       });
     },
-    [publicKey, copilotTransaction, getQuoteMutation],
+    [publicKey, copilotTransaction, getQuoteMutation, signTransaction],
   );
 
   const isSending = getQuoteMutation.isPending || copilotTransaction.isPending;

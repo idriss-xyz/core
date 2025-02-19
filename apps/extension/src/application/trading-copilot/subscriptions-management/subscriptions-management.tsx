@@ -11,6 +11,7 @@ import {
   useCommandQuery,
 } from 'shared/messaging';
 import { Empty } from 'shared/ui';
+import { isSolanaAddress } from 'shared/utils';
 
 import { useLoginViaSiwe } from '../hooks';
 import {
@@ -25,7 +26,6 @@ import {
   Properties,
   ContentProperties,
 } from './subscriptions-management.types';
-import { isSolanaAddress } from 'shared/utils';
 
 export const SubscriptionsManagement = ({
   isTabChangedListenerAdded,

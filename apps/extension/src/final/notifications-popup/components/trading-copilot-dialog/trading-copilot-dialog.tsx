@@ -7,6 +7,9 @@ import { formatEther, isAddress } from 'viem';
 import { useCallback } from 'react';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
+import { useWallet as useSolanaWallet } from '@solana/wallet-adapter-react';
+import { useModal } from '@ebay/nice-modal-react';
+import { SolanaWalletConnectModal } from '@idriss-xyz/wallet-connect';
 
 import { useWallet } from 'shared/extension';
 import { Closable, ErrorMessage, Icon, LazyImage } from 'shared/ui';
@@ -43,9 +46,6 @@ import {
   WalletBalanceProperties,
   TradeValueProperties,
 } from './trading-copilot-dialog.types';
-import { useWallet as useSolanaWallet } from '@solana/wallet-adapter-react';
-import { useModal } from '@ebay/nice-modal-react';
-import { SolanaWalletConnectModal } from '@idriss-xyz/wallet-connect';
 
 const EMPTY_FORM: FormValues = {
   amount: '',

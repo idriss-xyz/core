@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
+import { Transaction, VersionedTransaction } from '@solana/web3.js';
 
 import {
   createWalletClient,
@@ -8,8 +9,8 @@ import {
   Wallet,
 } from 'shared/web3';
 import { useObservabilityScope } from 'shared/observability';
-import { Transaction, VersionedTransaction } from '@solana/web3.js';
 import { useCommandMutation } from 'shared/messaging';
+
 import { SendSolanaTransactionCommand } from '../commands/';
 
 interface SwapProperties {
@@ -87,14 +88,14 @@ export const useCopilotSolanaTransaction = () => {
         }
 
         const base64SerializedTx = Buffer.from(serializedTx).toString('base64');
-        const res = await sendTxMutation.mutateAsync({
+        const response = await sendTxMutation.mutateAsync({
           base64SerializedTx: base64SerializedTx,
         });
-        const transactionHash = res.transactionHash;
+        const transactionHash = response.transactionHash;
 
         return { transactionHash };
       } catch (error) {
-        console.error('Error: ', error);
+        console.error('Error:', error);
         observabilityScope.captureException(error);
         throw error;
       }

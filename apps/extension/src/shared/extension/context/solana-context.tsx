@@ -6,7 +6,7 @@ export const SolanaContextProviders = ({
 }: {
   children: ReactNode;
 }) => {
-  const wallets = useMemo(() => [], []);
+  const wallets = useMemo(() => {return []}, []);
 
   return <WalletProvider wallets={wallets}>{children}</WalletProvider>;
 };

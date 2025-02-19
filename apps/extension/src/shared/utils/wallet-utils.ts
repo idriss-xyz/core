@@ -15,7 +15,7 @@ export const isSolanaAddress = (address: string): boolean => {
   try {
     new PublicKey(address);
     return true; // If no error is thrown, it's a valid address
-  } catch (e) {
+  } catch {
     return false; // If an error occurs, it's not a valid address
   }
 };

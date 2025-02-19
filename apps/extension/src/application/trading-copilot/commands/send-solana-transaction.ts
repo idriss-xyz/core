@@ -5,10 +5,12 @@ import {
   HandlerResponseError,
   OkResult,
 } from 'shared/messaging';
+
 import {
   SendSolanaTxResponse as Response,
   SendSolanaTxPayload as Payload,
 } from '../types';
+
 import { COPILOT_API_URL } from './constants';
 
 export class SendSolanaTransactionCommand extends Command<Payload, Response> {

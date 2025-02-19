@@ -5,6 +5,7 @@ import { isAddress } from 'viem';
 import { useWallet } from 'shared/extension';
 import { useCommandMutation } from 'shared/messaging';
 import { ErrorMessage } from 'shared/ui';
+import { isSolanaAddress } from 'shared/utils';
 
 import {
   GetEnsAddressCommand,
@@ -12,7 +13,6 @@ import {
 } from '../../commands';
 
 import { Properties, FormValues } from './subscription-form.types';
-import { isSolanaAddress } from 'shared/utils';
 
 const EMPTY_FORM: FormValues = {
   subscriptionDetails: '',

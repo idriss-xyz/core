@@ -137,12 +137,12 @@ interface SolAdapter {
 
 interface SolWallet {
   adapter: SolAdapter;
-  readyState: any;
+  readyState: string;
 }
 
 type SolanaProperties = {
   connectWallet: () => Promise<void>;
-  selectWallet: (walletName: any) => void;
+  selectWallet: (walletName: string) => void;
   wallets: SolWallet[];
   wallet: SolWallet | null;
 };
@@ -162,7 +162,7 @@ export const SolanaWalletConnectModal = createModal(
     const [isConnecting, setIsConnecting] = useState(false);
 
     const resolveWallet = useCallback(
-      async (wallet: SolanaWallet) => {
+      (wallet: SolanaWallet) => {
         modal.resolve(wallet);
         modal.remove();
       },
@@ -190,7 +190,7 @@ export const SolanaWalletConnectModal = createModal(
           console.error('Error connecting wallet:', error);
         }
       },
-      [resolveWallet],
+      [resolveWallet, connectWallet, selectWallet, wallet],
     );
 
     const closeModalWithoutFinishing = useCallback(() => {
