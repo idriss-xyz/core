@@ -18,6 +18,7 @@ import DonateHistoryList from '@/app/creators/donate/components/history/donate-h
 import { TopDonors } from './top-donors';
 import { Content } from './content';
 import { RainbowKitProviders } from './providers';
+import { ZapperNode } from './types';
 
 // ts-unused-exports:disable-next-line
 export default function Donors() {
@@ -29,6 +30,7 @@ export default function Donors() {
 }
 
 function DonorsContent() {
+  const [tipEdges, setTipEdges] = useState<{ node: ZapperNode }[]>([]);
   const [currentContent, setCurrentContent] = useState<'tip' | 'history'>(
     'tip',
   );
@@ -63,9 +65,11 @@ function DonorsContent() {
     { enabled: !!validatedAddress },
   );
 
-  const tipEdges = useMemo(() => {
-    return tips.data?.data ?? [];
-  }, [tips.data?.data]);
+  useEffect(() => {
+    if (tips.data) {
+      setTipEdges(tips.data.data);
+    }
+  }, [tips.data]);
 
   const updateCurrentContent = (content: 'tip' | 'history') => {
     setCurrentContent(content);
@@ -112,34 +116,48 @@ function DonorsContent() {
 
   const SOCKET_URL = 'http://localhost:4000';
 
-  const [donations, setDonations] = useState([]);
+  const [socketInitialized, setSocketInitialized] = useState(false);
+  const [socketConnected, setSocketConnected] = useState(false);
 
   useEffect(() => {
-    // Connect to the socket server.
-    const socket = io(SOCKET_URL);
+    if (validatedAddress && !socketInitialized) {
+      const socket = io(SOCKET_URL);
 
-    socket.on('connect', () => {
-      console.log('Socket connected:', socket.id);
-      // Subscribe using your address.
-      socket.emit('register', validatedAddress);
-    });
+      if (socket) {
+        setSocketInitialized(true);
+        console.log('WS initialized');
 
-    // Listen for new donation events.
-    socket.on('newDonation', (donation) => {
-      console.log('New donation received:', donation);
-      setDonations((previous) => {
-        return [...previous, donation];
-      });
-    });
+        if (!socketConnected) {
+          socket.on('connect', () => {
+            socket.emit('register', validatedAddress);
 
-    // Cleanup on unmount.
-    return () => {
-      socket.disconnect();
-      console.log('Socket disconnected:', socket.id);
-    };
-  }, [validatedAddress]);
+            if (socket.connected) {
+              setSocketConnected(true);
+              console.log('WS connected');
+            }
+          });
 
-  console.log("Donations", donations);
+          socket.on('newDonation', (node: ZapperNode) => {
+            console.log('WS new donation:', node);
+
+            setTipEdges((previousState) => {
+              return [...previousState, { node }];
+            });
+          });
+        }
+      }
+
+      return () => {
+        if (socket.connected) {
+          socket.disconnect();
+          setSocketConnected(false);
+          console.log('WS disconnected');
+        }
+      };
+    }
+
+    return;
+  }, [socketConnected, socketInitialized, validatedAddress]);
 
   return (
     <>

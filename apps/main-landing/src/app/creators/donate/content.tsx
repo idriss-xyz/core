@@ -5,7 +5,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { Button } from '@idriss-xyz/ui/button';
 import { Link } from '@idriss-xyz/ui/link';
 import { CREATORS_USER_GUIDE_LINK } from '@idriss-xyz/constants';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSearchParams } from 'next/navigation';
 import { Icon } from '@idriss-xyz/ui/icon';
@@ -63,7 +63,6 @@ export const Content = ({ className, validatedAddress }: Properties) => {
   const searchParameters = useSearchParams();
 
   const addressValidationResult = hexSchema.safeParse(validatedAddress);
-  console.log("validatedAddress", validatedAddress, addressValidationResult)
 
   const [selectedTokenSymbol, setSelectedTokenSymbol] = useState<string>('ETH');
 
@@ -216,6 +215,20 @@ export const Content = ({ className, validatedAddress }: Properties) => {
     ],
   );
 
+  useEffect(() => {
+    if (sender.isSuccess) {
+      try {
+        void fetch('http://localhost:4000/push-donation', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ address: validatedAddress }),
+        });
+      } catch {
+        console.log('Error while sending information to WS');
+      }
+    }
+  }, [sender.isSuccess, validatedAddress]);
+
   if (validatedAddress !== undefined && addressValidationResult.error) {
     return (
       <div className={classes(baseClassName, className)}>
@@ -251,19 +264,6 @@ export const Content = ({ className, validatedAddress }: Properties) => {
       chainId,
       transactionHash: sender.data?.transactionHash ?? '0x',
     });
-
-    try {
-      void fetch(
-        'http://localhost:4000/push-donation',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ address: validatedAddress}),
-        },
-      );
-    } catch {
-      console.warn('Error sending websocket event.');
-    }
 
     return (
       <div className={classes(baseClassName, className)}>
