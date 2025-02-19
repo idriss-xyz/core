@@ -139,7 +139,7 @@ function DonorsContent() {
     };
   }, [validatedAddress]);
 
-  console.log(donations);
+  console.log("Donations", donations);
 
   return (
     <>

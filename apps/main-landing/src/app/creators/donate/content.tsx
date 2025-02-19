@@ -63,6 +63,7 @@ export const Content = ({ className, validatedAddress }: Properties) => {
   const searchParameters = useSearchParams();
 
   const addressValidationResult = hexSchema.safeParse(validatedAddress);
+  console.log("validatedAddress", validatedAddress, addressValidationResult)
 
   const [selectedTokenSymbol, setSelectedTokenSymbol] = useState<string>('ETH');
 
@@ -202,18 +203,6 @@ export const Content = ({ className, validatedAddress }: Properties) => {
           sendPayload,
           recipientAddress: validAddress,
         });
-        try {
-          await fetch(
-            'https://core-production-a116.up.railway.app/push-donation',
-            {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ address: validAddress }),
-            },
-          );
-        } catch {
-          console.warn('Error sending websocket event.');
-        }
       } catch (error) {
         console.error('Unknown error sending transaction.', error);
       }
@@ -262,6 +251,19 @@ export const Content = ({ className, validatedAddress }: Properties) => {
       chainId,
       transactionHash: sender.data?.transactionHash ?? '0x',
     });
+
+    try {
+      void fetch(
+        'http://localhost:4000/push-donation',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ address: validatedAddress}),
+        },
+      );
+    } catch {
+      console.warn('Error sending websocket event.');
+    }
 
     return (
       <div className={classes(baseClassName, className)}>

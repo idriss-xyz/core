@@ -30,6 +30,7 @@ export async function processNewDonations(
   const knownHashes = new Set(
     knownDonations.map((d) => d.transactionHash.toLowerCase()),
   );
+  console.log('Known hashaes:', knownDonations.length);
 
   const newEdges: { node: ZapperNode }[] = [];
   let cursor: string | null = null;
@@ -53,6 +54,7 @@ export async function processNewDonations(
       body: JSON.stringify({ query: TipHistoryQuery, variables }),
     });
     const data: ZapperResponse = await response.json();
+    console.log('DATA FROM ZAPPER: ', data);
     const accountsTimeline = data.data?.accountsTimeline;
     if (!accountsTimeline) break;
 
