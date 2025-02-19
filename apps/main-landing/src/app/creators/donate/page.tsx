@@ -140,7 +140,7 @@ function DonorsContent() {
           console.log('WS new donation:', node);
 
           setTipEdges((previousState) => {
-            return _.uniqBy(previousState, (item) => {
+            return _.uniqBy([...previousState, { node }], (item) => {
               return _.get(item, 'node.transaction.hash');
             });
           });
