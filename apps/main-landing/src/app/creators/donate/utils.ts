@@ -99,13 +99,13 @@ export const roundToSignificantFigures = (
   return Math.round(number * multiplier) / multiplier;
 };
 
-const getBlockExplorer = (chainId: number) => {
+const getBlockExplorers = (chainId: number) => {
   const chain = getChainById(chainId);
-  return chain?.blockExplorers.default;
+  return chain?.blockExplorers;
 };
 
-const getBlockExplorerUrl = (chainId: number) => {
-  return getBlockExplorer(chainId)?.url;
+const getDefaultBlockExplorerUrl = (chainId: number) => {
+  return getBlockExplorers(chainId)?.default.url;
 };
 
 export const getTransactionUrl = (properties: {
@@ -113,11 +113,35 @@ export const getTransactionUrl = (properties: {
   transactionHash: Hex;
 }) => {
   const { chainId, transactionHash } = properties;
-  const baseUrl = getBlockExplorerUrl(chainId);
+  const baseUrl = getDefaultBlockExplorerUrl(chainId);
   if (!baseUrl) {
     return '#';
   }
   return `${baseUrl}/tx/${transactionHash}`;
+};
+
+export const getTransactionUrls = ({
+  chainId,
+  transactionHash,
+}: {
+  chainId: number;
+  transactionHash: string;
+}) => {
+  const blockExplorers = getBlockExplorers(chainId);
+
+  if (!blockExplorers) {
+    return [];
+  }
+
+  return Object.keys(blockExplorers).map((key) => {
+    const explorer = blockExplorers[key as keyof typeof blockExplorers];
+    const url = explorer.url;
+
+    return {
+      blockExplorer: explorer.name,
+      url: `${url}/tx/${transactionHash}`,
+    };
+  });
 };
 
 export const validateAddressOrENS = async (addressOrENS: string | null) => {
