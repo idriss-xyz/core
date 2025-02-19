@@ -6,6 +6,7 @@ import { Hex, isAddress } from 'viem';
 import '@rainbow-me/rainbowkit/styles.css';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import io from 'socket.io-client';
 
 import { backgroundLines2 } from '@/assets';
 import { TopBar } from '@/components';
@@ -108,6 +109,37 @@ function DonorsContent() {
     tips.isLoading,
     validatedAddress,
   ]);
+
+  const SOCKET_URL = 'http://localhost:4000';
+
+  const [donations, setDonations] = useState([]);
+
+  useEffect(() => {
+    // Connect to the socket server.
+    const socket = io(SOCKET_URL);
+
+    socket.on('connect', () => {
+      console.log('Socket connected:', socket.id);
+      // Subscribe using your address.
+      socket.emit('register', validatedAddress);
+    });
+
+    // Listen for new donation events.
+    socket.on('newDonation', (donation) => {
+      console.log('New donation received:', donation);
+      setDonations((previous) => {
+        return [...previous, donation];
+      });
+    });
+
+    // Cleanup on unmount.
+    return () => {
+      socket.disconnect();
+      console.log('Socket disconnected:', socket.id);
+    };
+  }, [validatedAddress]);
+
+  console.log(donations);
 
   return (
     <>
