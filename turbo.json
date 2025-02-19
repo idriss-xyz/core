@@ -33,7 +33,6 @@
         "PUBLIC_ACCESS_ENABLED",
         "CI",
         "CREATOR_LINKS_SECRET",
-        "ZAPPER_API_KEY",
         "DATABASE_URL"
       ]
     },
@@ -48,7 +47,6 @@
         "PUBLIC_ACCESS_ENABLED",
         "CI",
         "CREATOR_LINKS_SECRET",
-        "ZAPPER_API_KEY",
         "DATABASE_URL"
       ]
     },

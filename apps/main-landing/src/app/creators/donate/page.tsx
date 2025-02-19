@@ -126,7 +126,9 @@ function DonorsContent() {
     // Listen for new donation events.
     socket.on('newDonation', (donation) => {
       console.log('New donation received:', donation);
+      // @ts-expect-error TODO: development
       setDonations((previous) => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return [...previous, donation];
       });
     });
