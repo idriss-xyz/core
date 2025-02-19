@@ -157,7 +157,10 @@ const TradingCopilotDialogContent = ({
   });
   const isWalletConnected = isSolanaTrade ? connected : wallet;
   const evmExchanger = useExchanger({ wallet });
-  const solanaExchanger = useSolanaExchanger({ publicKey: publicKey?.toString(), signTransaction });
+  const solanaExchanger = useSolanaExchanger({
+    publicKey: publicKey?.toString(),
+    signTransaction,
+  });
   const exchanger = isSolanaTrade ? solanaExchanger : evmExchanger;
   const siwe = useLoginViaSiwe();
 

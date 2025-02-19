@@ -134,7 +134,6 @@ export class ContentScript {
         window.postMessage(message);
         return;
       }
-
     });
   }
 

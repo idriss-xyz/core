@@ -1,6 +1,15 @@
-import { Command, FailureResult, HandlerError, HandlerResponseError, OkResult } from "shared/messaging";
-import { SendSolanaTxResponse as Response, SendSolanaTxPayload as Payload } from '../types';
-import { COPILOT_API_URL } from "./constants";
+import {
+  Command,
+  FailureResult,
+  HandlerError,
+  HandlerResponseError,
+  OkResult,
+} from 'shared/messaging';
+import {
+  SendSolanaTxResponse as Response,
+  SendSolanaTxPayload as Payload,
+} from '../types';
+import { COPILOT_API_URL } from './constants';
 
 export class SendSolanaTransactionCommand extends Command<Payload, Response> {
   public readonly name = 'SendSolanaTransactionCommand' as const;
@@ -33,11 +42,11 @@ export class SendSolanaTransactionCommand extends Command<Payload, Response> {
       return new OkResult(json);
     } catch (error) {
       this.captureException(error);
-        if (error instanceof HandlerError) {
-          return new FailureResult(error.message);
-        }
+      if (error instanceof HandlerError) {
+        return new FailureResult(error.message);
+      }
 
-        return new FailureResult();
+      return new FailureResult();
     }
   }
 }

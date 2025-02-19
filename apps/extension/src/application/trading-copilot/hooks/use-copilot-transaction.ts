@@ -55,7 +55,11 @@ export const useCopilotTransaction = () => {
 
 interface SolanaCopilotProperties {
   transactionData: SwapProperties;
-  signTransaction?: (<T extends VersionedTransaction | Transaction>(transaction: T) => Promise<T>) | undefined;
+  signTransaction?:
+    | (<T extends VersionedTransaction | Transaction>(
+        transaction: T,
+      ) => Promise<T>)
+    | undefined;
 }
 
 export const useCopilotSolanaTransaction = () => {
@@ -63,11 +67,18 @@ export const useCopilotSolanaTransaction = () => {
   const observabilityScope = useObservabilityScope();
 
   return useMutation({
-    mutationFn: async ({ transactionData, signTransaction }: SolanaCopilotProperties) => {
-
+    mutationFn: async ({
+      transactionData,
+      signTransaction,
+    }: SolanaCopilotProperties) => {
       try {
-        const decodedTx = Buffer.from(transactionData.data.toString(), 'base64');
-        const deserializedTx = VersionedTransaction.deserialize(new Uint8Array(decodedTx));
+        const decodedTx = Buffer.from(
+          transactionData.data.toString(),
+          'base64',
+        );
+        const deserializedTx = VersionedTransaction.deserialize(
+          new Uint8Array(decodedTx),
+        );
         const signedTransaction = await signTransaction?.(deserializedTx);
         const serializedTx = signedTransaction?.serialize();
 
@@ -76,17 +87,17 @@ export const useCopilotSolanaTransaction = () => {
         }
 
         const base64SerializedTx = Buffer.from(serializedTx).toString('base64');
-        const res = await sendTxMutation.mutateAsync({base64SerializedTx: base64SerializedTx});
+        const res = await sendTxMutation.mutateAsync({
+          base64SerializedTx: base64SerializedTx,
+        });
         const transactionHash = res.transactionHash;
 
         return { transactionHash };
+      } catch (error) {
+        console.error('Error: ', error);
+        observabilityScope.captureException(error);
+        throw error;
       }
-      catch (error) {
-          console.error('Error: ', error);
-          observabilityScope.captureException(error);
-          throw error;
-      }
-
     },
   });
-}
+};

@@ -16,4 +16,4 @@ export type SolanaWallet = {
 
 export type SolanaProviderInfo = {
   name: string;
-}
+};

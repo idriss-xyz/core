@@ -8,7 +8,10 @@ import { useCommandMutation } from 'shared/messaging';
 import { SwapData, FormValues, QuotePayload } from '../types';
 import { GetQuoteCommand } from '../commands/get-quote';
 
-import { useCopilotSolanaTransaction, useCopilotTransaction } from './use-copilot-transaction';
+import {
+  useCopilotSolanaTransaction,
+  useCopilotTransaction,
+} from './use-copilot-transaction';
 import { Transaction, VersionedTransaction } from '@solana/web3.js';
 
 interface Properties {
@@ -148,10 +151,17 @@ export const useExchanger = ({ wallet }: Properties) => {
 
 interface SolanaExchangerProperties {
   publicKey?: string;
-  signTransaction?: (<T extends VersionedTransaction | Transaction>(transaction: T) => Promise<T>) | undefined;
+  signTransaction?:
+    | (<T extends VersionedTransaction | Transaction>(
+        transaction: T,
+      ) => Promise<T>)
+    | undefined;
 }
 
-export const useSolanaExchanger= ({ publicKey, signTransaction }: SolanaExchangerProperties) => {
+export const useSolanaExchanger = ({
+  publicKey,
+  signTransaction,
+}: SolanaExchangerProperties) => {
   const copilotTransaction = useCopilotSolanaTransaction();
   const getQuoteMutation = useCommandMutation(GetQuoteCommand);
 
@@ -165,7 +175,9 @@ export const useSolanaExchanger= ({ publicKey, signTransaction }: SolanaExchange
         return await getQuoteMutation.mutateAsync(payload);
       };
 
-      const amountInLamports = BigInt(Math.round(parseFloat(formValues.amount) * 1e9))
+      const amountInLamports = BigInt(
+        Math.round(parseFloat(formValues.amount) * 1e9),
+      );
 
       const quotePayload = {
         amount: amountInLamports.toString(),
@@ -187,15 +199,14 @@ export const useSolanaExchanger= ({ publicKey, signTransaction }: SolanaExchange
         value: amountInLamports,
         to: quoteData.transactionData.to,
         routeOptions: {
-          slippage: "0.02", // TODO: Get slippage from form (optionally)
-        }
+          slippage: '0.02', // TODO: Get slippage from form (optionally)
+        },
       };
 
       copilotTransaction.mutate({
         transactionData,
         signTransaction,
       });
-
     },
     [publicKey, copilotTransaction, getQuoteMutation],
   );
@@ -244,4 +255,4 @@ export const useSolanaExchanger= ({ publicKey, signTransaction }: SolanaExchange
     reset,
     details,
   };
-}
+};

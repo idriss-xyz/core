@@ -1,4 +1,4 @@
-import { PublicKey } from "@solana/web3.js";
+import { PublicKey } from '@solana/web3.js';
 
 /**
  * Returns the short name of the wallet address
@@ -18,4 +18,4 @@ export const isSolanaAddress = (address: string): boolean => {
   } catch (e) {
     return false; // If an error occurs, it's not a valid address
   }
-}
+};

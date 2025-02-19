@@ -2,7 +2,11 @@ import { Button } from '@idriss-xyz/ui/button';
 import { isAddress } from 'viem';
 
 import { Icon, PreloadedImage } from 'shared/ui';
-import { getShortWalletHex, TimeDifferenceCounter, isSolanaAddress } from 'shared/utils';
+import {
+  getShortWalletHex,
+  TimeDifferenceCounter,
+  isSolanaAddress,
+} from 'shared/utils';
 import { roundToSignificantFiguresForCopilotTrading } from 'shared/web3';
 
 import { TokenIcon } from '../../utils';
