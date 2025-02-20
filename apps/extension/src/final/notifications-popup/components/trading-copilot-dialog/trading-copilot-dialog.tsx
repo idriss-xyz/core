@@ -66,8 +66,12 @@ const getNativeValue = (
   amount: bigint,
 ) => {
   return network === 'SOLANA'
-    ? getWholeNumber((Number(amount) / 1e9).toString()) + ' SOL'
-    : getWholeNumber(Number(formatEther(amount)).toString()) + ' ETH';
+    ? getWholeNumber((Number(amount) / 1e9).toString())
+    : getWholeNumber(Number(formatEther(amount)).toString());
+};
+
+const getNativeCurrencySymbol = (network: keyof typeof CHAIN | 'SOLANA') => {
+  return network === 'SOLANA' ? 'SOL' : 'ETH';
 };
 
 export const TradingCopilotDialog = ({
@@ -359,7 +363,12 @@ const TradingCopilotDialogContent = ({
           >
             Amount
           </label>
-          {wallet ? <TradingCopilotWalletBalance wallet={wallet} /> : null}
+          {wallet ? (
+            <TradingCopilotWalletBalance
+              wallet={wallet}
+              network={dialog.tokenIn.network}
+            />
+          ) : null}
         </div>
         <Controller
           control={control}
@@ -369,7 +378,7 @@ const TradingCopilotDialogContent = ({
               <span className="relative mt-2 flex">
                 <NumericInput
                   value={value}
-                  placeholder="ETH"
+                  placeholder={getNativeCurrencySymbol(dialog.tokenIn.network)}
                   onChange={onChange}
                   decimalScale={5}
                   className="ps-[60px] text-right"
@@ -427,7 +436,10 @@ const TradingCopilotDialogContent = ({
   );
 };
 
-const TradingCopilotWalletBalance = ({ wallet }: WalletBalanceProperties) => {
+const TradingCopilotWalletBalance = ({
+  wallet,
+  network,
+}: WalletBalanceProperties) => {
   const balanceQuery = useCommandQuery({
     command: new GetEnsBalanceCommand({
       address: wallet?.account ?? '',
@@ -459,7 +471,7 @@ const TradingCopilotWalletBalance = ({ wallet }: WalletBalanceProperties) => {
           roundedNumber
         )}
       </TradingCopilotTooltip>{' '}
-      ETH
+      {getNativeCurrencySymbol(network)}
     </p>
   );
 };
@@ -488,5 +500,10 @@ const TradingCopilotTradeValue = ({ wallet, dialog }: TradeValueProperties) => {
 
   const tradeValueInWei = BigInt(quoteQuery.data.estimate.toAmount);
 
-  return <span>{getNativeValue(dialog.tokenIn.network, tradeValueInWei)}</span>;
+  return (
+    <span>
+      {getNativeValue(dialog.tokenIn.network, tradeValueInWei)}{' '}
+      {getNativeCurrencySymbol(dialog.tokenIn.network)}
+    </span>
+  );
 };
