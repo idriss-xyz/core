@@ -27,6 +27,11 @@ const getChainId = (network: keyof typeof CHAIN | 'SOLANA') => {
   return network === 'SOLANA' ? Number('1151111081099710') : CHAIN[network].id;
 };
 
+const formatSol = (amount: string, decimals?: number) => {
+  if (!decimals) decimals = 9;
+  return Number(amount) / 10 ** decimals
+};
+
 export const useExchanger = ({ wallet }: Properties) => {
   const { setWalletInfo } = useWallet();
   const switchChain = useSwitchChain();
@@ -227,13 +232,13 @@ export const useSolanaExchanger = ({
   const details = {
     from: {
       amount: Number(
-        formatEther(BigInt(getQuoteMutation.data?.estimate.fromAmount ?? 0)),
+        formatSol(getQuoteMutation.data?.estimate.fromAmount ?? '0'),
       ),
       symbol: getQuoteMutation.data?.includedSteps[0]?.action.fromToken.symbol,
     },
     to: {
       amount: Number(
-        formatEther(BigInt(getQuoteMutation.data?.estimate.toAmount ?? 0)),
+        formatSol(getQuoteMutation.data?.estimate.toAmount ?? '0', getQuoteMutation.data?.includedSteps[0]?.action.toToken.decimals),
       ),
       symbol: getQuoteMutation.data?.includedSteps[0]?.action.toToken.symbol,
     },
