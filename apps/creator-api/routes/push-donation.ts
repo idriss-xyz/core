@@ -1,11 +1,14 @@
 import { Request, Response } from 'express';
-
 import express from 'express';
 import { processNewDonations } from '../services/zapper/process-donations';
 import { connectedClients } from '../services/socket-server';
+import { ZapperNode } from '../types';
 
 const router = express.Router();
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const MAX_RETRIES = 6;
+const RETRY_INTERVAL = 5000;
 
 router.post('/', async (req: Request, res: Response) => {
   try {
@@ -16,23 +19,43 @@ router.post('/', async (req: Request, res: Response) => {
       return;
     }
 
-    await delay(10000);
+    let retries = 0;
+    let newEdges = <{ node: ZapperNode }[]>[];
 
-    const { newEdges } = await processNewDonations(address);
+    await delay(RETRY_INTERVAL);
 
-    console.log('NEW EDGE', newEdges);
+    while (retries < MAX_RETRIES) {
+      const result = await processNewDonations(address);
+      newEdges = result.newEdges;
 
-    const clients = connectedClients.get(address);
-    if (clients) {
-      for (const edge of newEdges) {
-        for (const socket of clients) {
-          console.log('Emitting new edge to', socket);
-          socket.emit('newDonation', edge.node);
-        }
+      if (newEdges.length > 0) {
+        console.log('Found new edge');
+        break;
       }
+
+      retries++;
+      console.log(
+        `No new edges found, retrying... (${retries}/${MAX_RETRIES})`,
+      );
+
+      await delay(RETRY_INTERVAL);
     }
 
-    res.json({ data: newEdges });
+    if (newEdges.length > 0) {
+      const clients = connectedClients.get(address);
+      if (clients) {
+        for (const edge of newEdges) {
+          for (const socket of clients) {
+            console.log('Emitting new edge to', socket.id);
+            socket.emit('newDonation', edge.node);
+          }
+        }
+      }
+
+      res.json({ data: newEdges });
+    } else {
+      res.status(200).json({ message: 'No new donations found after retries' });
+    }
   } catch (error) {
     console.error('Donation update error:', error);
     res.status(500).json({ error: 'Failed to update donation data' });
