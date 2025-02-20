@@ -108,6 +108,9 @@ export interface QuotePayload {
   fromAddress: string;
   destinationToken: string;
   destinationChain: number;
+  routeOptions?: {
+    slippage?: number;
+  };
 }
 
 export type QuoteResponse = {
@@ -233,4 +236,13 @@ export type VerifySiweSignatureResponse = {
 
 export type VerifyAuthTokenPayload = {
   token: string;
+};
+
+// TODO: Correcly type this
+export type SendSolanaTxPayload = {
+  base64SerializedTx: string;
+};
+
+export type SendSolanaTxResponse = {
+  transactionHash: string;
 };

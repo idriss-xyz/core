@@ -7,7 +7,9 @@ import { formatEther, isAddress } from 'viem';
 import { useCallback } from 'react';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
-import { isAddress as isSolanaAddress } from '@solana/web3.js';
+import { useWallet as useSolanaWallet } from '@solana/wallet-adapter-react';
+import { useModal } from '@ebay/nice-modal-react';
+import { SolanaWalletConnectModal } from '@idriss-xyz/wallet-connect';
 
 import { useWallet } from 'shared/extension';
 import { Closable, ErrorMessage, Icon, LazyImage } from 'shared/ui';
@@ -20,8 +22,13 @@ import {
   GetQuoteCommand,
   useExchanger,
   useLoginViaSiwe,
+  useSolanaExchanger,
 } from 'application/trading-copilot';
-import { getShortWalletHex, TimeDifferenceCounter } from 'shared/utils';
+import {
+  getShortWalletHex,
+  isSolanaAddress,
+  TimeDifferenceCounter,
+} from 'shared/utils';
 import {
   CHAIN,
   formatBigNumber,
@@ -131,7 +138,30 @@ const TradingCopilotDialogContent = ({
   tokenImage,
 }: ContentProperties) => {
   const { wallet, isConnectionModalOpened, openConnectionModal } = useWallet();
-  const exchanger = useExchanger({ wallet });
+  const isSolanaTrade = dialog.tokenIn.network === 'SOLANA';
+  const {
+    connecting,
+    connected,
+    wallet: solanaWallet,
+    publicKey,
+    wallets,
+    select,
+    connect,
+    signTransaction,
+  } = useSolanaWallet();
+  const { show } = useModal(SolanaWalletConnectModal, {
+    connectWallet: connect,
+    selectWallet: select,
+    wallets,
+    wallet: solanaWallet,
+  });
+  const isWalletConnected = isSolanaTrade ? connected : wallet;
+  const evmExchanger = useExchanger({ wallet });
+  const solanaExchanger = useSolanaExchanger({
+    publicKey: publicKey?.toString(),
+    signTransaction,
+  });
+  const exchanger = isSolanaTrade ? solanaExchanger : evmExchanger;
   const siwe = useLoginViaSiwe();
 
   const avatarQuery = useCommandQuery({
@@ -358,7 +388,7 @@ const TradingCopilotDialogContent = ({
           }}
         />
         <div className="mt-5">
-          {wallet ? (
+          {isWalletConnected ? (
             <>
               <Button
                 intent="primary"
@@ -367,7 +397,8 @@ const TradingCopilotDialogContent = ({
                 type="submit"
                 loading={siwe.isSending || exchanger.isSending}
                 disabled={
-                  Number(watch('amount')) > Number(balanceQuery.data) ||
+                  // TODO: Uncomment this when we have a way to get the balance for Solana too
+                  // Number(watch('amount')) > Number(balanceQuery.data) ||
                   Number(watch('amount')) <= 0
                 }
               >
@@ -383,9 +414,9 @@ const TradingCopilotDialogContent = ({
             <Button
               intent="primary"
               size="medium"
-              onClick={openConnectionModal}
+              onClick={isSolanaTrade ? show : openConnectionModal}
               className="w-full"
-              loading={isConnectionModalOpened}
+              loading={isSolanaTrade ? connecting : isConnectionModalOpened}
             >
               LOG IN
             </Button>

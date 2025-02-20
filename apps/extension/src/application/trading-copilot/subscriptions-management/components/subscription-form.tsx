@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { isAddress } from 'viem';
-import { isAddress as isSolanaAddress } from '@solana/web3.js';
 
 import { useWallet } from 'shared/extension';
 import { useCommandMutation } from 'shared/messaging';
 import { ErrorMessage } from 'shared/ui';
+import { isSolanaAddress } from 'shared/utils';
 
 import {
   GetEnsAddressCommand,
