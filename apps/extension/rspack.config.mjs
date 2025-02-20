@@ -62,7 +62,6 @@ export default (_env, argv) => {
           SENTRY_DSN: process.env.SENTRY_DSN,
           AMPLITUDE_API_KEY: process.env.AMPLITUDE_API_KEY,
           ENVIRONMENT: process.env.ENVIRONMENT,
-          HELIUS_API_KEY: process.env.HELIUS_API_KEY,
         }),
       }),
       sentryWebpackPlugin({
