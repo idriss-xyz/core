@@ -3,7 +3,9 @@ import dotenv from 'dotenv';
 import { join } from 'path';
 import { mode } from './utils/mode';
 
-dotenv.config({ path: join(__dirname, `.env.${mode}`) });
+dotenv.config(
+  mode === 'development' ? {} : { path: join(__dirname, `.env.${mode}`) },
+);
 
 export const dataSource = new DataSource({
   type: 'postgres',

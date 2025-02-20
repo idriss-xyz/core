@@ -176,13 +176,13 @@ const TradingCopilotDialogContent = ({
     staleTime: Number.POSITIVE_INFINITY,
   });
 
-  const balanceQuery = useCommandQuery({
-    command: new GetEnsBalanceCommand({
-      address: wallet?.account ?? '0x',
-      blockTag: 'safe',
-    }),
-    staleTime: Number.POSITIVE_INFINITY,
-  });
+  // const balanceQuery = useCommandQuery({
+  //   command: new GetEnsBalanceCommand({
+  //     address: wallet?.account ?? '0x',
+  //     blockTag: 'safe',
+  //   }),
+  //   staleTime: Number.POSITIVE_INFINITY,
+  // });
 
   const { handleSubmit, control, watch } = useForm<FormValues>({
     defaultValues: EMPTY_FORM,
