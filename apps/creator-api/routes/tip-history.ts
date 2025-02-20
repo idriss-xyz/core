@@ -26,6 +26,7 @@ const app_addresses = Object.values(CHAIN_TO_IDRISS_TIPPING_ADDRESS).map(
 router.post('/', async (req: Request, res: Response) => {
   try {
     const { address } = req.body;
+
     if (!address || typeof address !== 'string') {
       res.status(400).json({ error: 'Invalid or missing address' });
       return;

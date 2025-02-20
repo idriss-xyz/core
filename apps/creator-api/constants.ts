@@ -2,7 +2,7 @@ export const ZAPPER_API_URL = 'https://public.zapper.xyz/graphql';
 
 export const TipHistoryQuery = `
   query ($addresses: [Address!], $toAddresses: [String!], $isSigner: Boolean, $after: String) {
-    accountsTimeline(addresses: $addresses, toAddresses: $toAddresses, isSigner: $isSigner, after: $after, first: 50) {
+    accountsTimeline(addresses: $addresses, toAddresses: $toAddresses, isSigner: $isSigner, after: $after, first: 25) {
       edges {
         node {
           timestamp
