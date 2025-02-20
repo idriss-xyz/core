@@ -12,9 +12,7 @@ import { WEBHOOK_NETWORK_TYPES, WEBHOOK_NETWORKS } from '../constants';
 import { mode } from '../utils/mode';
 import { isAddress } from 'viem';
 
-dotenv.config(
-  { path: join(__dirname, `.env.${mode}`) },
-);
+dotenv.config({ path: join(__dirname, `.env.${mode}`) });
 
 const ALCHEMY_API_BASE_URL = 'https://dashboard.alchemyapi.io';
 const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY!;

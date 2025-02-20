@@ -17,9 +17,7 @@ import { mode } from './utils/mode';
 import { createConfig } from '@lifi/sdk';
 import { connectedClients } from './services/scheduler';
 
-dotenv.config(
-  { path: join(__dirname, `.env.${mode}`) },
-);
+dotenv.config({ path: join(__dirname, `.env.${mode}`) });
 
 dataSource
   .initialize()
