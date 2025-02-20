@@ -13,7 +13,7 @@ import { mode } from '../utils/mode';
 import { isAddress } from 'viem';
 
 dotenv.config(
-  mode === 'development' ? {} : { path: join(__dirname, `.env.${mode}`) },
+  { path: join(__dirname, `.env.${mode}`) },
 );
 
 const ALCHEMY_API_BASE_URL = 'https://dashboard.alchemyapi.io';

@@ -13,7 +13,7 @@ import { ExpiringMap } from '../utils/nonceMap';
 import { SubscribersEntity } from '../entities/subscribers.entity';
 
 dotenv.config(
-  mode === 'development' ? {} : { path: join(__dirname, `.env.${mode}`) },
+  { path: join(__dirname, `.env.${mode}`) },
 );
 
 const expiryTime = 5 * 60 * 1000;
