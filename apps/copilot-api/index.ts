@@ -105,7 +105,7 @@ app.use(express.json());
 
 app.use('/auth', authRoutes);
 app.use('/subscriptions', subscriptionsRoutes);
-app.use('/solana', solanaRoutes)
+app.use('/solana', solanaRoutes);
 app.use('/', defaultRoutes);
 
 // Initialize LiFi SDK
