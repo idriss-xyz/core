@@ -224,7 +224,7 @@ export const Content = ({ className, validatedAddress }: Properties) => {
           body: JSON.stringify({ address: validatedAddress }),
         });
       } catch {
-        console.log('Error while sending information to WS');
+        //
       }
     }
   }, [sender.isSuccess, validatedAddress]);

@@ -6,7 +6,7 @@ import { Hex, isAddress } from 'viem';
 import '@rainbow-me/rainbowkit/styles.css';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import io from 'socket.io-client';
+import { default as io } from 'socket.io-client';
 import _ from 'lodash';
 
 import { backgroundLines2 } from '@/assets';
@@ -20,6 +20,8 @@ import { TopDonors } from './top-donors';
 import { Content } from './content';
 import { RainbowKitProviders } from './providers';
 import { ZapperNode } from './types';
+
+const SOCKET_URL = 'http://localhost:4000';
 
 // ts-unused-exports:disable-next-line
 export default function Donors() {
@@ -38,6 +40,8 @@ function DonorsContent() {
   const [validatedAddress, setValidatedAddress] = useState<
     string | null | undefined
   >();
+  const [socketInitialized, setSocketInitialized] = useState(false);
+  const [socketConnected, setSocketConnected] = useState(false);
 
   const searchParameters = useSearchParams();
   const addressFromParameters =
@@ -115,16 +119,10 @@ function DonorsContent() {
     validatedAddress,
   ]);
 
-  const SOCKET_URL = 'http://localhost:4000';
-
-  const [socketInitialized, setSocketInitialized] = useState(false);
-  const [socketConnected, setSocketConnected] = useState(false);
-
   useEffect(() => {
     if (validatedAddress && !socketInitialized) {
       const socket = io(SOCKET_URL);
       setSocketInitialized(true);
-      console.log('WS initialized');
 
       if (socket && !socketConnected) {
         socket.on('connect', () => {
@@ -132,13 +130,10 @@ function DonorsContent() {
 
           if (socket.connected) {
             setSocketConnected(true);
-            console.log('WS connected');
           }
         });
 
         socket.on('newDonation', (node: ZapperNode) => {
-          console.log('WS new donation:', node);
-
           setTipEdges((previousState) => {
             return _.uniqBy([{ node }, ...previousState], (item) => {
               return _.get(item, 'node.transaction.hash');
@@ -151,7 +146,6 @@ function DonorsContent() {
         if (socket.connected) {
           socket.disconnect();
           setSocketConnected(false);
-          console.log('WS disconnected');
         }
       };
     }
