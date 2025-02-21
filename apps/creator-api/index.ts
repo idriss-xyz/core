@@ -47,14 +47,13 @@ const io = new SocketIOServer(server, {
 
 // Socket.IO connection handler (mirroring your copilot-api)
 io.on('connection', (socket: Socket) => {
-  console.log('Client connected', socket.id);
+  console.log('Client connected');
 
   socket.on('register', (userId: string) => {
     const clients = connectedClients.get(userId) || new Set<Socket>();
     clients.add(socket);
     connectedClients.set(userId, clients);
     socket.data.userId = userId;
-    console.log(`Socket ${socket.id} registered for user ${userId}`);
   });
 
   socket.on('disconnect', () => {
@@ -67,9 +66,6 @@ io.on('connection', (socket: Socket) => {
           connectedClients.delete(userId);
         }
       }
-      console.log(`Socket ${socket.id} disconnected for user ${userId}`);
-    } else {
-      console.log(`Socket ${socket.id} disconnected`);
     }
   });
 });

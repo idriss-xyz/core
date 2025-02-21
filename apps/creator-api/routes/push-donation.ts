@@ -13,7 +13,6 @@ const RETRY_INTERVAL = 5000;
 router.post('/', async (req: Request, res: Response) => {
   try {
     const { address } = req.body;
-    console.log('Address in push donation', address);
     if (!address || typeof address !== 'string') {
       res.status(400).json({ error: 'Invalid or missing address' });
       return;
@@ -29,14 +28,10 @@ router.post('/', async (req: Request, res: Response) => {
       newEdges = result.newEdges;
 
       if (newEdges.length > 0) {
-        console.log('Found new edge');
         break;
       }
 
       retries++;
-      console.log(
-        `No new edges found, retrying... (${retries}/${MAX_RETRIES})`,
-      );
 
       await delay(RETRY_INTERVAL);
     }
@@ -46,7 +41,6 @@ router.post('/', async (req: Request, res: Response) => {
       if (clients) {
         for (const edge of newEdges) {
           for (const socket of clients) {
-            console.log('Emitting new edge to', socket.id);
             socket.emit('newDonation', edge.node);
           }
         }
