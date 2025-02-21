@@ -218,11 +218,14 @@ export const Content = ({ className, validatedAddress }: Properties) => {
   useEffect(() => {
     if (sender.isSuccess) {
       try {
-        void fetch('http://localhost:4000/push-donation', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ address: validatedAddress }),
-        });
+        void fetch(
+          'https://core-production-a116.up.railway.app/push-donation',
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ address: validatedAddress }),
+          },
+        );
       } catch {
         //
       }

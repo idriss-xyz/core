@@ -21,7 +21,7 @@ import { Content } from './content';
 import { RainbowKitProviders } from './providers';
 import { ZapperNode } from './types';
 
-const SOCKET_URL = 'http://localhost:4000';
+const SOCKET_URL = 'https://core-production-a116.up.railway.app';
 
 // ts-unused-exports:disable-next-line
 export default function Donors() {
