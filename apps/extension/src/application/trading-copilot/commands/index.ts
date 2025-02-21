@@ -8,6 +8,7 @@ import { GetFarcasterAddressCommand } from './get-farcaster-address';
 import { GetFarcasterUserCommand } from './get-farcaster-user';
 import { GetQuoteCommand } from './get-quote';
 import { GetEnsBalanceCommand } from './get-ens-balance';
+import { GetSolanaBalanceCommand } from './get-sol-balance';
 import { GetSiweMessageCommand } from './get-siwe-message';
 import { VerifySiweSignatureCommand } from './verify-siwe-signature';
 import { GetTokensListCommand } from './get-tokens-list';
@@ -29,6 +30,7 @@ export const COMMAND_MAP = {
   [GetEnsAddressCommand.name]: GetEnsAddressCommand,
   [GetQuoteCommand.name]: GetQuoteCommand,
   [GetEnsBalanceCommand.name]: GetEnsBalanceCommand,
+  [GetSolanaBalanceCommand.name]: GetSolanaBalanceCommand,
   [GetSiweMessageCommand.name]: GetSiweMessageCommand,
   [VerifySiweSignatureCommand.name]: VerifySiweSignatureCommand,
   [GetTokensListCommand.name]: GetTokensListCommand,
@@ -48,6 +50,7 @@ export { GetFarcasterUserCommand } from './get-farcaster-user';
 export { GetSiweMessageCommand } from './get-siwe-message';
 export { VerifySiweSignatureCommand } from './verify-siwe-signature';
 export { GetEnsBalanceCommand } from './get-ens-balance';
+export { GetSolanaBalanceCommand } from './get-sol-balance';
 export { GetQuoteCommand } from './get-quote';
 export { GetTokensListCommand } from './get-tokens-list';
 export { GetTokensImageCommand } from './get-tokens-image';

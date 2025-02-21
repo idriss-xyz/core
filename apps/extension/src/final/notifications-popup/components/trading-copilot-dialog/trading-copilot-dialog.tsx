@@ -3,11 +3,12 @@ import { Controller, useForm } from 'react-hook-form';
 import { Icon as IdrissIcon } from '@idriss-xyz/ui/icon';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { NumericInput } from '@idriss-xyz/ui/numeric-input';
-import { formatEther, isAddress } from 'viem';
+import { formatEther, Hex, isAddress } from 'viem';
 import { useCallback } from 'react';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
 import { useWallet as useSolanaWallet } from '@solana/wallet-adapter-react';
+import { Wallet as SolanaWallet } from '@solana/wallet-adapter-react';
 import { useModal } from '@ebay/nice-modal-react';
 import { SolanaWalletConnectModal } from '@idriss-xyz/wallet-connect';
 
@@ -17,6 +18,7 @@ import { useCommandQuery } from 'shared/messaging';
 import {
   FormValues,
   GetEnsBalanceCommand,
+  GetSolanaBalanceCommand,
   GetEnsInfoCommand,
   GetEnsNameCommand,
   GetQuoteCommand,
@@ -34,6 +36,7 @@ import {
   formatBigNumber,
   getWholeNumber,
   roundToSignificantFiguresForCopilotTrading,
+  Wallet,
 } from 'shared/web3';
 import { IdrissSend } from 'shared/idriss';
 
@@ -176,13 +179,9 @@ const TradingCopilotDialogContent = ({
     staleTime: Number.POSITIVE_INFINITY,
   });
 
-  const balanceQuery = useCommandQuery({
-    command: new GetEnsBalanceCommand({
-      address: wallet?.account ?? '0x',
-      blockTag: 'safe',
-    }),
-    staleTime: Number.POSITIVE_INFINITY,
-  });
+  const balance = isSolanaTrade
+    ? getSolanaAccountBalance(solanaWallet)
+    : getEnsAccountBalance(wallet);
 
   const { handleSubmit, control, watch } = useForm<FormValues>({
     defaultValues: EMPTY_FORM,
@@ -365,8 +364,8 @@ const TradingCopilotDialogContent = ({
           </label>
           {wallet ? (
             <TradingCopilotWalletBalance
-              wallet={wallet}
               network={dialog.tokenIn.network}
+              balance={balance}
             />
           ) : null}
         </div>
@@ -407,7 +406,7 @@ const TradingCopilotDialogContent = ({
                 loading={siwe.isSending || exchanger.isSending}
                 disabled={
                   // TODO: Uncomment this when we have a way to get the balance for Solana too
-                  // Number(watch('amount')) > Number(balanceQuery.data) ||
+                  Number(watch('amount')) > Number(balance) ||
                   Number(watch('amount')) <= 0
                 }
               >
@@ -437,28 +436,20 @@ const TradingCopilotDialogContent = ({
 };
 
 const TradingCopilotWalletBalance = ({
-  wallet,
   network,
+  balance,
 }: WalletBalanceProperties) => {
-  const balanceQuery = useCommandQuery({
-    command: new GetEnsBalanceCommand({
-      address: wallet?.account ?? '',
-      blockTag: 'safe',
-    }),
-    staleTime: Number.POSITIVE_INFINITY,
-  });
-
-  if (!balanceQuery.data) {
+  if (!balance) {
     return;
   }
 
   const { value: roundedNumber, index: zerosIndex } =
-    roundToSignificantFiguresForCopilotTrading(Number(balanceQuery.data), 2);
+    roundToSignificantFiguresForCopilotTrading(Number(balance), 2);
 
   return (
     <p className="text-body6 text-neutral-500">
       Balance:{' '}
-      <TradingCopilotTooltip content={getWholeNumber(balanceQuery.data)}>
+      <TradingCopilotTooltip content={getWholeNumber(balance)}>
         {zerosIndex ? (
           <>
             0.0
@@ -506,4 +497,38 @@ const TradingCopilotTradeValue = ({ wallet, dialog }: TradeValueProperties) => {
       {getNativeCurrencySymbol(dialog.tokenIn.network)}
     </span>
   );
+};
+
+const getEnsAccountBalance = (wallet: Wallet | null | undefined) => {
+  if (!wallet) {
+    return;
+  }
+
+  const command = new GetEnsBalanceCommand({
+    address: (wallet.account as Hex) ?? '',
+    blockTag: 'safe',
+  });
+
+  const balanceQuery = useCommandQuery({
+    command,
+    staleTime: Number.POSITIVE_INFINITY,
+  });
+
+  return balanceQuery.data;
+};
+
+const getSolanaAccountBalance = (wallet: SolanaWallet | null | undefined) => {
+  if (!wallet) {
+    return;
+  }
+  const command = new GetSolanaBalanceCommand({
+    address: wallet.adapter.publicKey?.toString() ?? '',
+  });
+
+  const balanceQuery = useCommandQuery({
+    command,
+    staleTime: Number.POSITIVE_INFINITY,
+  });
+
+  return balanceQuery.data;
 };

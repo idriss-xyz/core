@@ -13,8 +13,8 @@ export interface ContentProperties extends Properties {
 }
 
 export interface WalletBalanceProperties {
-  wallet: Wallet;
   network: keyof typeof CHAIN | 'SOLANA';
+  balance: string | null | undefined;
 }
 
 export interface TradeValueProperties {
