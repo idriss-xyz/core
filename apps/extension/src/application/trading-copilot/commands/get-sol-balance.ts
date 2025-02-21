@@ -1,4 +1,4 @@
-import { Connection, PublicKey } from '@solana/web3.js';
+import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
 
 import {
   Command,
@@ -20,9 +20,7 @@ export class GetSolanaBalanceCommand extends Command<Payload, string | null> {
 
   async handle() {
     try {
-      const connection = new Connection(
-        `https://mainnet.helius-rpc.com/?api-key=${process.env.HELIUS_API_KEY}`,
-      );
+      const connection = new Connection(clusterApiUrl('mainnet-beta'));
 
       const result = await connection.getBalance(
         new PublicKey(this.payload.address),
