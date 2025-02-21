@@ -385,7 +385,7 @@ const TradingCopilotDialogContent = ({
                   <span className="flex size-6 items-center justify-center rounded-full bg-neutral-200">
                     <IdrissIcon
                       size={18}
-                      name="Eth"
+                      name={isSolanaTrade ? 'Sol' : 'Eth'}
                       className="text-neutral-700"
                     />
                   </span>
