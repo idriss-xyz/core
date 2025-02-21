@@ -26,6 +26,7 @@ const app_addresses = Object.values(CHAIN_TO_IDRISS_TIPPING_ADDRESS).map(
 router.post('/', async (req: Request, res: Response) => {
   try {
     const { address } = req.body;
+
     if (!address || typeof address !== 'string') {
       res.status(400).json({ error: 'Invalid or missing address' });
       return;
@@ -113,7 +114,18 @@ router.post('/', async (req: Request, res: Response) => {
       }
     }
 
-    res.json({ data: [...allRelevantEdges] });
+    const allDonations = [
+      ...allRelevantEdges,
+      ...Array.from(knownDonationMap.values()).filter(
+        (node) =>
+          !allRelevantEdges.some(
+            (edge) =>
+              edge.node.transaction.hash.toLowerCase() ===
+              node.transaction.hash.toLowerCase(),
+          ),
+      ),
+    ];
+    res.json({ data: allDonations });
   } catch (error) {
     console.error('Tip history error:', error);
     res.status(500).json({ error: 'Failed to fetch tip history' });

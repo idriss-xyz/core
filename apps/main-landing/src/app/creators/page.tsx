@@ -288,8 +288,7 @@ export default function Donors() {
                         return isAddress(value)
                           ? true
                           : 'This address doesn’t exist.';
-                      } catch (error) {
-                        console.log(error);
+                      } catch {
                         return 'An unexpected error occurred. Try again.';
                       }
                     },

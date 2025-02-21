@@ -45,7 +45,7 @@ export const TopDonors = ({
         tip.node.interpretation.descriptionDisplayItems[0]?.tokenV2
           ?.onchainMarketData?.price;
       const decimals =
-        tip.node.interpretation.descriptionDisplayItems[0]?.tokenV2.decimals ??
+        tip.node.interpretation.descriptionDisplayItems[0]?.tokenV2?.decimals ??
         18;
 
       if (!amountRaw || !price) {

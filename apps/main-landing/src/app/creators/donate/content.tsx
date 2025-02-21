@@ -17,12 +17,12 @@ import {
   hexSchema,
   EMPTY_HEX,
 } from '@idriss-xyz/constants';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSearchParams } from 'next/navigation';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { classes } from '@idriss-xyz/ui/utils';
-import { getAddress, Hex } from 'viem';
+import { getAddress } from 'viem';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useAccount, useWalletClient } from 'wagmi';
@@ -179,7 +179,7 @@ export const Content = ({ className, validatedAddress }: Properties) => {
       }
       const { chainId, tokenSymbol, ...rest } = payload;
       rest.message = ' ' + rest.message;
-      const address: Hex =
+      const address =
         CHAIN_ID_TO_TOKENS[chainId]?.find((token: Token) => {
           return token.symbol === tokenSymbol;
         })?.address ?? EMPTY_HEX;
@@ -195,18 +195,6 @@ export const Content = ({ className, validatedAddress }: Properties) => {
           sendPayload,
           recipientAddress: validAddress,
         });
-        try {
-          await fetch(
-            'https://core-production-a116.up.railway.app/push-donation',
-            {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ address: validAddress }),
-            },
-          );
-        } catch {
-          console.warn('Error sending websocket event.');
-        }
       } catch (error) {
         console.error('Unknown error sending transaction.', error);
       }
@@ -219,6 +207,23 @@ export const Content = ({ className, validatedAddress }: Properties) => {
       walletClient,
     ],
   );
+
+  useEffect(() => {
+    if (sender.isSuccess) {
+      try {
+        void fetch(
+          'https://core-production-a116.up.railway.app/push-donation',
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ address: validatedAddress }),
+          },
+        );
+      } catch {
+        //
+      }
+    }
+  }, [sender.isSuccess, validatedAddress]);
 
   if (validatedAddress !== undefined && addressValidationResult.error) {
     return (

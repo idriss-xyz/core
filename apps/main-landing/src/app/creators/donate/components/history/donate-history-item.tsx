@@ -60,13 +60,13 @@ export default function DonateHistoryItem({ tip }: Properties) {
 
   const tradeValue =
     Number.parseFloat(
-      formatUnits(BigInt(tipDetails.amountRaw), tipDetails.tokenV2.decimals),
+      formatUnits(BigInt(tipDetails.amountRaw), tipDetails.tokenV2?.decimals),
     ) * tipDetails.tokenV2.onchainMarketData.price;
 
   const { value: roundedNumber, index: zerosIndex } =
     roundToSignificantFiguresForCopilotTrading(
       Number.parseFloat(
-        formatUnits(BigInt(tipDetails.amountRaw), tipDetails.tokenV2.decimals),
+        formatUnits(BigInt(tipDetails.amountRaw), tipDetails.tokenV2?.decimals),
       ),
       2,
     );

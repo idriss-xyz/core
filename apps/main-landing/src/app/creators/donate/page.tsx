@@ -1,12 +1,17 @@
 'use client';
 /* eslint-disable @next/next/no-img-element */
 import { Button } from '@idriss-xyz/ui/button';
-import { CREATORS_LINK, hexSchema } from '@idriss-xyz/constants';
+import {
+  CREATORS_LINK,
+  hexSchema,
+  TipHistoryNode,
+} from '@idriss-xyz/constants';
 import { Hex, isAddress } from 'viem';
 import '@rainbow-me/rainbowkit/styles.css';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import io from 'socket.io-client';
+import { default as io } from 'socket.io-client';
+import _ from 'lodash';
 
 import { backgroundLines2 } from '@/assets';
 import { TopBar } from '@/components';
@@ -17,6 +22,8 @@ import DonateHistoryList from '@/app/creators/donate/components/history/donate-h
 import { TopDonors } from './top-donors';
 import { Content } from './content';
 import { RainbowKitProviders } from './providers';
+
+const SOCKET_URL = 'https://core-production-a116.up.railway.app';
 
 const SEARCH_PARAMETER = {
   ADDRESS: 'address',
@@ -33,12 +40,15 @@ export default function Donors() {
 }
 
 function DonorsContent() {
+  const [tipEdges, setTipEdges] = useState<{ node: TipHistoryNode }[]>([]);
   const [currentContent, setCurrentContent] = useState<'tip' | 'history'>(
     'tip',
   );
   const [validatedAddress, setValidatedAddress] = useState<
     string | null | undefined
   >();
+  const [socketInitialized, setSocketInitialized] = useState(false);
+  const [socketConnected, setSocketConnected] = useState(false);
 
   const searchParameters = useSearchParams();
   const addressFromParameters =
@@ -68,9 +78,11 @@ function DonorsContent() {
     { enabled: !!validatedAddress },
   );
 
-  const tipEdges = useMemo(() => {
-    return tips.data?.data ?? [];
-  }, [tips.data?.data]);
+  useEffect(() => {
+    if (tips.data) {
+      setTipEdges(tips.data.data);
+    }
+  }, [tips.data]);
 
   const updateCurrentContent = (content: 'tip' | 'history') => {
     setCurrentContent(content);
@@ -115,38 +127,39 @@ function DonorsContent() {
     validatedAddress,
   ]);
 
-  const SOCKET_URL = 'http://localhost:4000';
-
-  const [donations, setDonations] = useState([]);
-
   useEffect(() => {
-    // Connect to the socket server.
-    const socket = io(SOCKET_URL);
+    if (validatedAddress && !socketInitialized) {
+      const socket = io(SOCKET_URL);
+      setSocketInitialized(true);
 
-    socket.on('connect', () => {
-      console.log('Socket connected:', socket.id);
-      // Subscribe using your address.
-      socket.emit('register', validatedAddress);
-    });
+      if (socket && !socketConnected) {
+        socket.on('connect', () => {
+          socket.emit('register', validatedAddress);
 
-    // Listen for new donation events.
-    socket.on('newDonation', (donation) => {
-      console.log('New donation received:', donation);
-      // @ts-expect-error TODO: development
-      setDonations((previous) => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        return [...previous, donation];
-      });
-    });
+          if (socket.connected) {
+            setSocketConnected(true);
+          }
+        });
 
-    // Cleanup on unmount.
-    return () => {
-      socket.disconnect();
-      console.log('Socket disconnected:', socket.id);
-    };
-  }, [validatedAddress]);
+        socket.on('newDonation', (node: TipHistoryNode) => {
+          setTipEdges((previousState) => {
+            return _.uniqBy([{ node }, ...previousState], (item) => {
+              return _.get(item, 'node.transaction.hash');
+            });
+          });
+        });
+      }
 
-  console.log(donations);
+      return () => {
+        if (socket.connected) {
+          socket.disconnect();
+          setSocketConnected(false);
+        }
+      };
+    }
+
+    return;
+  }, [socketConnected, socketInitialized, validatedAddress]);
 
   return (
     <>
