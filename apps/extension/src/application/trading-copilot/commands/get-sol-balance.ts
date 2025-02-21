@@ -27,7 +27,7 @@ export class GetSolanaBalanceCommand extends Command<Payload, string | null> {
       const result = await connection.getBalance(
         new PublicKey(this.payload.address),
       );
-      const balanceAsSol = (result / 1000000000).toString(); // Convert lamports to SOL
+      const balanceAsSol = (result / 1_000_000_000).toString();
 
       return new OkResult(balanceAsSol);
     } catch (error) {

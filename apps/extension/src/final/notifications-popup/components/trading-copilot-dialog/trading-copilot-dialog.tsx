@@ -7,8 +7,7 @@ import { formatEther, Hex, isAddress } from 'viem';
 import { useCallback } from 'react';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
-import { useWallet as useSolanaWallet } from '@solana/wallet-adapter-react';
-import { Wallet as SolanaWallet } from '@solana/wallet-adapter-react';
+import { useWallet as useSolanaWallet , Wallet as SolanaWallet } from '@solana/wallet-adapter-react';
 import { useModal } from '@ebay/nice-modal-react';
 import { SolanaWalletConnectModal } from '@idriss-xyz/wallet-connect';
 
