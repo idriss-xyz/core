@@ -9,7 +9,6 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
 import {
   useWallet as useSolanaWallet,
-  Wallet as SolanaWallet,
 } from '@solana/wallet-adapter-react';
 import { NiceModalHocProps, useModal } from '@ebay/nice-modal-react';
 import {
@@ -22,8 +21,6 @@ import { Closable, ErrorMessage, Icon, LazyImage } from 'shared/ui';
 import { useCommandQuery } from 'shared/messaging';
 import {
   FormValues,
-  GetEnsBalanceCommand,
-  GetSolanaBalanceCommand,
   GetEnsInfoCommand,
   GetEnsNameCommand,
   GetQuoteCommand,
@@ -41,12 +38,12 @@ import {
   formatBigNumber,
   getWholeNumber,
   roundToSignificantFiguresForCopilotTrading,
-  Wallet,
 } from 'shared/web3';
 import { IdrissSend } from 'shared/idriss';
 
 import { TokenIcon } from '../../utils';
 import { TradingCopilotTooltip } from '../trading-copilot-tooltip';
+import { useAccountBalance } from '../../hooks';
 
 import {
   Properties,
@@ -149,7 +146,7 @@ const TradingCopilotDialogContent = ({
   tokenData,
   tokenImage,
 }: ContentProperties) => {
-  const { wallet, isConnectionModalOpened, openConnectionModal } = useWallet();
+  const { wallet: ensWallet, isConnectionModalOpened, openConnectionModal } = useWallet();
   const isSolanaTrade = dialog.tokenIn.network === 'SOLANA';
   const {
     connecting,
@@ -161,7 +158,7 @@ const TradingCopilotDialogContent = ({
     connect,
     signTransaction,
   } = useSolanaWallet();
-  const { show } = useModal<SolanaProperties & NiceModalHocProps, {}>(
+  const { show } = useModal<SolanaProperties & NiceModalHocProps, Record<string, unknown>>(
     SolanaWalletConnectModal,
     {
       connectWallet: connect,
@@ -170,13 +167,14 @@ const TradingCopilotDialogContent = ({
       wallet: solanaWallet,
     },
   );
-  const isWalletConnected = isSolanaTrade ? connected : wallet;
-  const evmExchanger = useExchanger({ wallet });
+  const isWalletConnected = isSolanaTrade ? connected : ensWallet;
+  const evmExchanger = useExchanger({ wallet: ensWallet });
   const solanaExchanger = useSolanaExchanger({
     publicKey: publicKey?.toString(),
     signTransaction,
   });
   const exchanger = isSolanaTrade ? solanaExchanger : evmExchanger;
+  const wallet =  isSolanaTrade ? solanaWallet : ensWallet;
   const siwe = useLoginViaSiwe();
 
   const avatarQuery = useCommandQuery({
@@ -187,9 +185,7 @@ const TradingCopilotDialogContent = ({
     staleTime: Number.POSITIVE_INFINITY,
   });
 
-  const balance = isSolanaTrade
-    ? getSolanaAccountBalance(solanaWallet)
-    : getEnsAccountBalance(wallet);
+  const balance = useAccountBalance(wallet!); // TODO: Check if wallet is null
 
   const { handleSubmit, control, watch } = useForm<FormValues>({
     defaultValues: EMPTY_FORM,
@@ -430,7 +426,7 @@ const TradingCopilotDialogContent = ({
             <Button
               intent="primary"
               size="medium"
-              onClick={isSolanaTrade ? () => show() : openConnectionModal}
+              onClick={isSolanaTrade ? () => {return show()} : openConnectionModal}
               className="w-full"
               loading={isSolanaTrade ? connecting : isConnectionModalOpened}
             >
@@ -476,13 +472,14 @@ const TradingCopilotWalletBalance = ({
 };
 
 const TradingCopilotTradeValue = ({ wallet, dialog }: TradeValueProperties) => {
+  const address = 'adapter' in wallet ? wallet.adapter.publicKey?.toString() : wallet.account
   const quotePayload = {
     amount: (
       dialog.tokenIn.amount *
       10 ** (dialog.tokenIn.decimals ?? 9)
     ).toString(),
     destinationChain: getChainId(dialog.tokenOut.network),
-    fromAddress: dialog.from ?? wallet?.account,
+    fromAddress: dialog.from ?? address,
     originToken: dialog.tokenIn.address,
     originChain: getChainId(dialog.tokenIn.network),
     destinationToken: getDestinationToken(dialog.tokenOut.network),
@@ -505,38 +502,4 @@ const TradingCopilotTradeValue = ({ wallet, dialog }: TradeValueProperties) => {
       {getNativeCurrencySymbol(dialog.tokenIn.network)}
     </span>
   );
-};
-
-const getEnsAccountBalance = (wallet: Wallet | null | undefined) => {
-  if (!wallet) {
-    return;
-  }
-
-  const command = new GetEnsBalanceCommand({
-    address: (wallet.account as Hex) ?? '',
-    blockTag: 'safe',
-  });
-
-  const balanceQuery = useCommandQuery({
-    command,
-    staleTime: Number.POSITIVE_INFINITY,
-  });
-
-  return balanceQuery.data;
-};
-
-const getSolanaAccountBalance = (wallet: SolanaWallet | null | undefined) => {
-  if (!wallet) {
-    return;
-  }
-  const command = new GetSolanaBalanceCommand({
-    address: wallet.adapter.publicKey?.toString() ?? '',
-  });
-
-  const balanceQuery = useCommandQuery({
-    command,
-    staleTime: Number.POSITIVE_INFINITY,
-  });
-
-  return balanceQuery.data;
 };

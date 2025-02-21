@@ -1,3 +1,5 @@
+import { Wallet as SolanaWallet } from '@solana/wallet-adapter-react';
+
 import { SwapData, SwapDataToken } from 'application/trading-copilot';
 import { CHAIN, Wallet } from 'shared/web3';
 
@@ -18,6 +20,6 @@ export interface WalletBalanceProperties {
 }
 
 export interface TradeValueProperties {
-  wallet: Wallet;
+  wallet: Wallet | SolanaWallet;
   dialog: SwapData;
 }
