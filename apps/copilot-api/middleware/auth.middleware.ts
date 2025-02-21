@@ -7,7 +7,7 @@ import { mode } from '../utils/mode';
 import { SubscribersEntity } from '../entities/subscribers.entity';
 
 dotenv.config(
-  { path: join(__dirname, `.env.${mode}`) },
+  mode === 'development' ? {} : { path: join(__dirname, `.env.${mode}`) },
 );
 
 export const verifyToken = () => {

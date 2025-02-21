@@ -29,7 +29,7 @@ const getChainId = (network: keyof typeof CHAIN | 'SOLANA') => {
 
 const formatSol = (amount: string, decimals?: number) => {
   if (!decimals) decimals = 9;
-  return Number(amount) / 10 ** decimals
+  return Number(amount) / 10 ** decimals;
 };
 
 export const useExchanger = ({ wallet }: Properties) => {
@@ -238,7 +238,10 @@ export const useSolanaExchanger = ({
     },
     to: {
       amount: Number(
-        formatSol(getQuoteMutation.data?.estimate.toAmount ?? '0', getQuoteMutation.data?.includedSteps[0]?.action.toToken.decimals),
+        formatSol(
+          getQuoteMutation.data?.estimate.toAmount ?? '0',
+          getQuoteMutation.data?.includedSteps[0]?.action.toToken.decimals,
+        ),
       ),
       symbol: getQuoteMutation.data?.includedSteps[0]?.action.toToken.symbol,
     },
