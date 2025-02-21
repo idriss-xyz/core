@@ -114,7 +114,18 @@ router.post('/', async (req: Request, res: Response) => {
       }
     }
 
-    res.json({ data: [...allRelevantEdges] });
+    const allDonations = [
+      ...allRelevantEdges,
+      ...Array.from(knownDonationMap.values()).filter(
+        (node) =>
+          !allRelevantEdges.some(
+            (edge) =>
+              edge.node.transaction.hash.toLowerCase() ===
+              node.transaction.hash.toLowerCase(),
+          ),
+      ),
+    ];
+    res.json({ data: allDonations });
   } catch (error) {
     console.error('Tip history error:', error);
     res.status(500).json({ error: 'Failed to fetch tip history' });
