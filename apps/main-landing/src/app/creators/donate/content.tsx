@@ -5,7 +5,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { Button } from '@idriss-xyz/ui/button';
 import { Link } from '@idriss-xyz/ui/link';
 import { CREATORS_USER_GUIDE_LINK } from '@idriss-xyz/constants';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSearchParams } from 'next/navigation';
 import { Icon } from '@idriss-xyz/ui/icon';
@@ -202,18 +202,6 @@ export const Content = ({ className, validatedAddress }: Properties) => {
           sendPayload,
           recipientAddress: validAddress,
         });
-        try {
-          await fetch(
-            'https://core-production-a116.up.railway.app/push-donation',
-            {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ address: validAddress }),
-            },
-          );
-        } catch {
-          console.warn('Error sending websocket event.');
-        }
       } catch (error) {
         console.error('Unknown error sending transaction.', error);
       }
@@ -226,6 +214,23 @@ export const Content = ({ className, validatedAddress }: Properties) => {
       walletClient,
     ],
   );
+
+  useEffect(() => {
+    if (sender.isSuccess) {
+      try {
+        void fetch(
+          'https://core-production-a116.up.railway.app/push-donation',
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ address: validatedAddress }),
+          },
+        );
+      } catch {
+        //
+      }
+    }
+  }, [sender.isSuccess, validatedAddress]);
 
   if (validatedAddress !== undefined && addressValidationResult.error) {
     return (

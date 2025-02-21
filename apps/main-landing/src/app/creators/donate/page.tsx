@@ -6,6 +6,8 @@ import { Hex, isAddress } from 'viem';
 import '@rainbow-me/rainbowkit/styles.css';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { default as io } from 'socket.io-client';
+import _ from 'lodash';
 
 import { backgroundLines2 } from '@/assets';
 import { TopBar } from '@/components';
@@ -17,6 +19,9 @@ import DonateHistoryList from '@/app/creators/donate/components/history/donate-h
 import { TopDonors } from './top-donors';
 import { Content } from './content';
 import { RainbowKitProviders } from './providers';
+import { ZapperNode } from './types';
+
+const SOCKET_URL = 'https://core-production-a116.up.railway.app';
 
 // ts-unused-exports:disable-next-line
 export default function Donors() {
@@ -28,12 +33,15 @@ export default function Donors() {
 }
 
 function DonorsContent() {
+  const [tipEdges, setTipEdges] = useState<{ node: ZapperNode }[]>([]);
   const [currentContent, setCurrentContent] = useState<'tip' | 'history'>(
     'tip',
   );
   const [validatedAddress, setValidatedAddress] = useState<
     string | null | undefined
   >();
+  const [socketInitialized, setSocketInitialized] = useState(false);
+  const [socketConnected, setSocketConnected] = useState(false);
 
   const searchParameters = useSearchParams();
   const addressFromParameters =
@@ -62,9 +70,11 @@ function DonorsContent() {
     { enabled: !!validatedAddress },
   );
 
-  const tipEdges = useMemo(() => {
-    return tips.data?.data ?? [];
-  }, [tips.data?.data]);
+  useEffect(() => {
+    if (tips.data) {
+      setTipEdges(tips.data.data);
+    }
+  }, [tips.data]);
 
   const updateCurrentContent = (content: 'tip' | 'history') => {
     setCurrentContent(content);
@@ -108,6 +118,40 @@ function DonorsContent() {
     tips.isLoading,
     validatedAddress,
   ]);
+
+  useEffect(() => {
+    if (validatedAddress && !socketInitialized) {
+      const socket = io(SOCKET_URL);
+      setSocketInitialized(true);
+
+      if (socket && !socketConnected) {
+        socket.on('connect', () => {
+          socket.emit('register', validatedAddress);
+
+          if (socket.connected) {
+            setSocketConnected(true);
+          }
+        });
+
+        socket.on('newDonation', (node: ZapperNode) => {
+          setTipEdges((previousState) => {
+            return _.uniqBy([{ node }, ...previousState], (item) => {
+              return _.get(item, 'node.transaction.hash');
+            });
+          });
+        });
+      }
+
+      return () => {
+        if (socket.connected) {
+          socket.disconnect();
+          setSocketConnected(false);
+        }
+      };
+    }
+
+    return;
+  }, [socketConnected, socketInitialized, validatedAddress]);
 
   return (
     <>
