@@ -22,7 +22,7 @@ export class SendSolanaTransactionCommand extends Command<Payload, Response> {
 
   async handle() {
     try {
-      const response = await fetch(`${COPILOT_API_URL}/send-solana-tx`, {
+      const response = await fetch(`${COPILOT_API_URL}/solana/send`, {
         method: 'POST',
         body: JSON.stringify(this.payload),
         headers: {

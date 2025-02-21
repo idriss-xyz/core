@@ -11,6 +11,7 @@ import { Server as SocketIOServer, Socket } from 'socket.io';
 import authRoutes from './routes/auth';
 import defaultRoutes from './routes';
 import subscriptionsRoutes from './routes/subscribtions';
+import solanaRoutes from './routes/solana';
 import { getSigningKey } from './services/subscriptionManager';
 import { join } from 'path';
 import { mode } from './utils/mode';
@@ -104,6 +105,7 @@ app.use(express.json());
 
 app.use('/auth', authRoutes);
 app.use('/subscriptions', subscriptionsRoutes);
+app.use('/solana', solanaRoutes)
 app.use('/', defaultRoutes);
 
 // Initialize LiFi SDK
