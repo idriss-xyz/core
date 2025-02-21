@@ -17,7 +17,7 @@ export interface ChainToken extends Token {
 
 export interface Wallet {
   provider: EIP1193Provider;
-  account: string;
+  account: Hex;
   chainId: number;
   providerRdns: string;
 }

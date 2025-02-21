@@ -141,7 +141,7 @@ interface SolWallet {
   readyState: string;
 }
 
-type SolanaProperties = {
+export type SolanaProperties = {
   connectWallet: () => Promise<void>;
   selectWallet: (walletName: string) => void;
   wallets: SolWallet[];

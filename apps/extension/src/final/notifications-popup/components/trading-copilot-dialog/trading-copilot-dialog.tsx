@@ -7,9 +7,15 @@ import { formatEther, Hex, isAddress } from 'viem';
 import { useCallback } from 'react';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
-import { useWallet as useSolanaWallet , Wallet as SolanaWallet } from '@solana/wallet-adapter-react';
-import { useModal } from '@ebay/nice-modal-react';
-import { SolanaWalletConnectModal } from '@idriss-xyz/wallet-connect';
+import {
+  useWallet as useSolanaWallet,
+  Wallet as SolanaWallet,
+} from '@solana/wallet-adapter-react';
+import { NiceModalHocProps, useModal } from '@ebay/nice-modal-react';
+import {
+  SolanaWalletConnectModal,
+  SolanaProperties,
+} from '@idriss-xyz/wallet-connect';
 
 import { useWallet } from 'shared/extension';
 import { Closable, ErrorMessage, Icon, LazyImage } from 'shared/ui';
@@ -155,12 +161,15 @@ const TradingCopilotDialogContent = ({
     connect,
     signTransaction,
   } = useSolanaWallet();
-  const { show } = useModal(SolanaWalletConnectModal, {
-    connectWallet: connect,
-    selectWallet: select,
-    wallets,
-    wallet: solanaWallet,
-  });
+  const { show } = useModal<SolanaProperties & NiceModalHocProps, {}>(
+    SolanaWalletConnectModal,
+    {
+      connectWallet: connect,
+      selectWallet: select,
+      wallets,
+      wallet: solanaWallet,
+    },
+  );
   const isWalletConnected = isSolanaTrade ? connected : wallet;
   const evmExchanger = useExchanger({ wallet });
   const solanaExchanger = useSolanaExchanger({
@@ -271,7 +280,7 @@ const TradingCopilotDialogContent = ({
         heading="Swap completed"
         onConfirm={closeDialog}
         chainId={exchanger.quoteData.transactionData.chainId}
-        transactionHash={exchanger.transactionData.transactionHash}
+        transactionHash={exchanger.transactionData.transactionHash as Hex}
       />
     );
   }
@@ -421,7 +430,7 @@ const TradingCopilotDialogContent = ({
             <Button
               intent="primary"
               size="medium"
-              onClick={isSolanaTrade ? show : openConnectionModal}
+              onClick={isSolanaTrade ? () => show() : openConnectionModal}
               className="w-full"
               loading={isSolanaTrade ? connecting : isConnectionModalOpened}
             >
