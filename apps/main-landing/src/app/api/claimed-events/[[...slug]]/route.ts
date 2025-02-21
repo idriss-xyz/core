@@ -112,7 +112,6 @@ export async function GET(
     const snapshotParameter = url.searchParams.get('snapshot');
     const addressesFormat = url.searchParams.get('addresses');
     const snapshotFormat = snapshotParameter && addressesFormat;
-    console.log(snapshotFormat);
 
     const { events: existingEvents, lastProcessedBlock } = loadExistingEvents();
     const latestBlock = await publicClient.getBlockNumber();
