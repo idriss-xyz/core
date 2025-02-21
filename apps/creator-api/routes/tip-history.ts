@@ -116,14 +116,16 @@ router.post('/', async (req: Request, res: Response) => {
 
     const allDonations = [
       ...allRelevantEdges,
-      ...Array.from(knownDonationMap.values()).filter(
-        (node) =>
-          !allRelevantEdges.some(
-            (edge) =>
-              edge.node.transaction.hash.toLowerCase() ===
-              node.transaction.hash.toLowerCase(),
-          ),
-      ),
+      ...Array.from(knownDonationMap.values())
+        .filter(
+          (node) =>
+            !allRelevantEdges.some(
+              (edge) =>
+                edge.node.transaction.hash.toLowerCase() ===
+                node.transaction.hash.toLowerCase(),
+            ),
+        )
+        .map((node) => ({ node })),
     ];
     res.json({ data: allDonations });
   } catch (error) {
