@@ -44,6 +44,7 @@ const circleImages = [...Array.from({ length: CIRCLE_IMAGES_COUNT }).keys()]
   })
   .reverse();
 
+const EXTENSION_CIRCLE_PLACEHOLDER = CIRCLE_IMAGES_BASE_NAME + '0150.webp';
 export const DesktopProductsSection = ({
   className,
   isFirstRender,
@@ -90,6 +91,13 @@ export const DesktopProductsSection = ({
     }
 
     return previousSectionIndex < currentSectionIndex ? 'forward' : 'backward';
+  }, [currentSectionIndex, previousSectionIndex]);
+
+  const animationFps = useMemo(() => {
+    return previousSectionIndex !== undefined &&
+      Math.abs(currentSectionIndex - previousSectionIndex) > 1
+      ? 45
+      : 30;
   }, [currentSectionIndex, previousSectionIndex]);
 
   const animationStartIndex = useMemo(() => {
@@ -294,6 +302,8 @@ export const DesktopProductsSection = ({
             animationStartIndex={animationStartIndex}
             animationEndIndex={animationEndIndex}
             animationImages={circleImages}
+            animationFps={animationFps}
+            placeholderImage={EXTENSION_CIRCLE_PLACEHOLDER}
           />
         </div>
         <div className="w-[0.5px]">
