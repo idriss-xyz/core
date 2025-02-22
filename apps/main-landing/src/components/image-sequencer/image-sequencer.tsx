@@ -38,7 +38,9 @@ export const ImageSequencer = ({
   const [glInitialized, setGlInitialized] = useState(false);
 
   useEffect(() => {
-    if (!canvasReference.current) return;
+    if (!canvasReference.current) {
+      return;
+    }
     try {
       glReference.current = initWebGL(canvasReference.current);
       setGlInitialized(true);
@@ -91,7 +93,9 @@ export const ImageSequencer = ({
 
   const drawFrame = useCallback(() => {
     const gl = glReference.current?.gl;
-    if (!gl) return;
+    if (!gl) {
+      return;
+    }
 
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT);
@@ -99,7 +103,9 @@ export const ImageSequencer = ({
     const textureData = isLoading
       ? placeholderTexture
       : textures.get(currentIndexReference.current);
-    if (!textureData) return;
+    if (!textureData) {
+      return;
+    }
 
     updateQuadVertices(textureData);
     gl.bindTexture(gl.TEXTURE_2D, textureData.texture);
@@ -107,7 +113,9 @@ export const ImageSequencer = ({
   }, [textures, isLoading, placeholderTexture, updateQuadVertices]);
 
   const updateIndex = useCallback(() => {
-    if (isLoading) return;
+    if (isLoading) {
+      return;
+    }
     const current = currentIndexReference.current;
     let next = current;
     if (infinite) {
@@ -125,10 +133,14 @@ export const ImageSequencer = ({
   }, [direction, images.length, infinite, startIndex, endIndex, isLoading]);
 
   useEffect(() => {
-    if (!glInitialized || !placeholderTexture) return;
+    if (!glInitialized || !placeholderTexture) {
+      return;
+    }
 
     const animate = (time: number) => {
-      if (!previousTimeReference.current) previousTimeReference.current = time;
+      if (!previousTimeReference.current) {
+        previousTimeReference.current = time;
+      }
       const delta = time - previousTimeReference.current;
       if (delta >= frameInterval) {
         updateIndex();
@@ -153,7 +165,9 @@ export const ImageSequencer = ({
   useEffect(() => {
     const gl = glReference.current?.gl;
     const canvas = canvasReference.current;
-    if (!gl || !canvas) return;
+    if (!gl || !canvas) {
+      return;
+    }
     const handleResize = () => {
       canvas.width = width;
       canvas.height = height;
@@ -168,10 +182,14 @@ export const ImageSequencer = ({
   }, [width, height, drawFrame]);
 
   useEffect(() => {
-    if (!isLoading && onLoad) onLoad();
+    if (!isLoading && onLoad) {
+      onLoad();
+    }
   }, [isLoading, onLoad]);
 
-  if (images.length === 0) return null;
+  if (images.length === 0) {
+    return null;
+  }
 
   return (
     <canvas

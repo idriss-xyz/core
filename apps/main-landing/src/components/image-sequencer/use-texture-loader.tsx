@@ -10,7 +10,9 @@ const createTextureFromImage = async (
 ): Promise<TextureData> => {
   const imageSource = await loadImage(imageUrl);
   const texture = gl.createTexture();
-  if (!texture) throw new Error('Unable to create texture');
+  if (!texture) {
+    throw new Error('Unable to create texture');
+  }
 
   configureTexture(gl, texture, imageSource);
   const { width, height } = getImageDimensions(imageSource);
@@ -31,7 +33,9 @@ const loadImagesWithConcurrency = async (
     while (index < images.length) {
       const currentIndex = index++;
       try {
-        if (!images[currentIndex]) continue;
+        if (!images[currentIndex]) {
+          continue;
+        }
         const textureData = await createTextureFromImage(
           gl,
           images[currentIndex],
@@ -69,7 +73,9 @@ export const useTextureLoader = (
 
   // Load placeholder image
   useEffect(() => {
-    if (!gl) return;
+    if (!gl) {
+      return;
+    }
 
     const loadPlaceholder = async () => {
       try {
@@ -85,7 +91,9 @@ export const useTextureLoader = (
 
   // Load all other images
   useEffect(() => {
-    if (!gl || !placeholderTexture) return;
+    if (!gl || !placeholderTexture) {
+      return;
+    }
     let cancelled = false;
 
     const loadImages = async () => {

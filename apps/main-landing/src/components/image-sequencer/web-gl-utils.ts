@@ -6,7 +6,9 @@ const createShader = (
   source: string,
 ): WebGLShader => {
   const shader = gl.createShader(type);
-  if (!shader) throw new Error('Unable to create shader');
+  if (!shader) {
+    throw new Error('Unable to create shader');
+  }
   gl.shaderSource(shader, source);
   gl.compileShader(shader);
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
@@ -23,7 +25,9 @@ const createProgram = (
   fragmentShader: WebGLShader,
 ): WebGLProgram => {
   const program = gl.createProgram();
-  if (!program) throw new Error('Unable to create program');
+  if (!program) {
+    throw new Error('Unable to create program');
+  }
   gl.attachShader(program, vertexShader);
   gl.attachShader(program, fragmentShader);
   gl.linkProgram(program);
@@ -52,8 +56,9 @@ export const initWebGL = (canvas: HTMLCanvasElement) => {
       preserveDrawingBuffer: false,
     });
   }
-  if (!gl) throw new Error('WebGL is not supported in this browser.');
-
+  if (!gl) {
+    throw new Error('WebGL is not supported in this browser.');
+  }
   const vertexShader = createShader(gl, gl.VERTEX_SHADER, VERTEX_SHADER_SOURCE);
   const fragmentShader = createShader(
     gl,
@@ -66,7 +71,9 @@ export const initWebGL = (canvas: HTMLCanvasElement) => {
 
   // Create position and texture coordinate buffers
   const posBuffer = gl.createBuffer();
-  if (!posBuffer) throw new Error('Unable to create position buffer');
+  if (!posBuffer) {
+    throw new Error('Unable to create position buffer');
+  }
   gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
   gl.bufferData(
     gl.ARRAY_BUFFER,
@@ -75,7 +82,9 @@ export const initWebGL = (canvas: HTMLCanvasElement) => {
   );
 
   const texBuffer = gl.createBuffer();
-  if (!texBuffer) throw new Error('Unable to create texture buffer');
+  if (!texBuffer) {
+    throw new Error('Unable to create texture buffer');
+  }
   gl.bindBuffer(gl.ARRAY_BUFFER, texBuffer);
   gl.bufferData(
     gl.ARRAY_BUFFER,
