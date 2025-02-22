@@ -1,6 +1,6 @@
-export async function loadImage(
+export const loadImage = async (
   url: string,
-): Promise<ImageBitmap | HTMLImageElement> {
+): Promise<ImageBitmap | HTMLImageElement> => {
   if ('createImageBitmap' in window) {
     const response = await fetch(url);
     const blob = await response.blob();
@@ -18,4 +18,4 @@ export async function loadImage(
       img.src = url;
     });
   }
-}
+};

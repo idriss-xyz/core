@@ -1,10 +1,10 @@
 import { VERTEX_SHADER_SOURCE, FRAGMENT_SHADER_SOURCE } from './shaders';
 
-export function createShader(
+const createShader = (
   gl: WebGLRenderingContext | WebGL2RenderingContext,
   type: number,
   source: string,
-): WebGLShader {
+): WebGLShader => {
   const shader = gl.createShader(type);
   if (!shader) throw new Error('Unable to create shader');
   gl.shaderSource(shader, source);
@@ -15,13 +15,13 @@ export function createShader(
     throw new Error('Could not compile shader: ' + info);
   }
   return shader;
-}
+};
 
-export function createProgram(
+const createProgram = (
   gl: WebGLRenderingContext | WebGL2RenderingContext,
   vertexShader: WebGLShader,
   fragmentShader: WebGLShader,
-): WebGLProgram {
+): WebGLProgram => {
   const program = gl.createProgram();
   if (!program) throw new Error('Unable to create program');
   gl.attachShader(program, vertexShader);
@@ -33,9 +33,9 @@ export function createProgram(
     throw new Error('Could not link program: ' + info);
   }
   return program;
-}
+};
 
-export function initWebGL(canvas: HTMLCanvasElement) {
+export const initWebGL = (canvas: HTMLCanvasElement) => {
   let gl: WebGLRenderingContext | WebGL2RenderingContext | null = null;
   try {
     gl = canvas.getContext('webgl2', {
@@ -94,4 +94,4 @@ export function initWebGL(canvas: HTMLCanvasElement) {
   gl.vertexAttribPointer(texLoc, 2, gl.FLOAT, false, 0, 0);
 
   return { gl, program, posBuffer };
-}
+};

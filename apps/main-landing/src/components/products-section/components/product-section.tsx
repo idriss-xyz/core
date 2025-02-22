@@ -32,8 +32,8 @@ type ProductSectionProperties = {
       animationEndIndex: number;
       animationDirection: 'forward' | 'backward';
       animationImages: string[];
-      animationFps?: number
-      placeholderImage: string
+      animationFps?: number;
+      placeholderImage: string;
     }
   | {
       animated: false;
