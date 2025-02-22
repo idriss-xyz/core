@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+
 import { TextureData } from './types';
 import { loadImage } from './image-loader';
 
@@ -40,7 +41,9 @@ export const useTextureLoader = (
         if (imageSource instanceof ImageBitmap) {
           width = imageSource.width;
           height = imageSource.height;
-          imageSource.close && imageSource.close();
+          if (imageSource.close) {
+            imageSource.close();
+          }
         } else {
           width = imageSource.naturalWidth;
           height = imageSource.naturalHeight;
@@ -50,7 +53,7 @@ export const useTextureLoader = (
         onError?.(error as Error);
       }
     };
-    loadPlaceholder();
+    void loadPlaceholder();
   }, [gl, placeholderImage, onError]);
 
   // Load all other images.
@@ -59,10 +62,10 @@ export const useTextureLoader = (
     let cancelled = false;
     const textureMap = new Map<number, TextureData>();
 
-    const loadImageTexture = async (i: number) => {
+    const loadImageTexture = async (index: number) => {
       try {
-        if (!images[i]) return;
-        const imageSource = await loadImage(images[i]);
+        if (!images[index]) return;
+        const imageSource = await loadImage(images[index]);
         const texture = gl.createTexture();
         if (!texture) throw new Error('Unable to create texture');
 
@@ -84,12 +87,14 @@ export const useTextureLoader = (
         if (imageSource instanceof ImageBitmap) {
           width = imageSource.width;
           height = imageSource.height;
-          imageSource.close && imageSource.close();
+          if (imageSource.close) {
+            imageSource.close();
+          }
         } else {
           width = imageSource.naturalWidth;
           height = imageSource.naturalHeight;
         }
-        textureMap.set(i, { texture, width, height });
+        textureMap.set(index, { texture, width, height });
       } catch (error) {
         onError?.(error as Error);
       }
@@ -103,12 +108,14 @@ export const useTextureLoader = (
         while (index < images.length) {
           const currentIndex = index++;
           await loadImageTexture(currentIndex);
-          await new Promise((resolve) => setTimeout(resolve, 0));
+          await new Promise((resolve) => {
+            return setTimeout(resolve, 0);
+          });
         }
       };
 
       const loaders = [];
-      for (let i = 0; i < CONCURRENCY_LIMIT; i++) {
+      for (let index_ = 0; index_ < CONCURRENCY_LIMIT; index_++) {
         loaders.push(loadNext());
       }
 
@@ -119,11 +126,13 @@ export const useTextureLoader = (
       }
     };
 
-    loadAllImages();
+    void loadAllImages();
 
     return () => {
       cancelled = true;
-      textureMap.forEach((data) => gl.deleteTexture(data.texture));
+      for (const data of textureMap.values()) {
+        gl.deleteTexture(data.texture);
+      }
       textureMap.clear();
     };
   }, [gl, images, onError, placeholderTexture]);

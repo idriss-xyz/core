@@ -1,4 +1,4 @@
-export type SequencerProps = {
+export type SequencerProperties = {
   images: string[];
   placeholderImage: string;
   width?: number;

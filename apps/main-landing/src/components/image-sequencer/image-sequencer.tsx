@@ -1,7 +1,11 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { SequencerProps, TextureData } from './types';
+
+import {
+  SequencerProperties as SequencerProperties,
+  TextureData,
+} from './types';
 import { initWebGL } from './web-gl-utils';
 import { useTextureLoader } from './use-texture-loader';
 
@@ -18,25 +22,25 @@ export const ImageSequencer = ({
   className = '',
   onLoad,
   onError,
-}: SequencerProps) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const glRef = useRef<{
+}: SequencerProperties) => {
+  const canvasReference = useRef<HTMLCanvasElement>(null);
+  const glReference = useRef<{
     gl: WebGLRenderingContext | WebGL2RenderingContext;
     program: WebGLProgram;
     posBuffer: WebGLBuffer;
   } | null>(null);
-  const currentIndexRef = useRef<number>(
+  const currentIndexReference = useRef<number>(
     Math.max(0, Math.min(startIndex, images.length - 1)),
   );
-  const animationFrameRef = useRef<number>(0);
-  const previousTimeRef = useRef<number>(0);
+  const animationFrameReference = useRef<number>(0);
+  const previousTimeReference = useRef<number>(0);
   const frameInterval = 1000 / fps;
   const [glInitialized, setGlInitialized] = useState(false);
 
   useEffect(() => {
-    if (!canvasRef.current) return;
+    if (!canvasReference.current) return;
     try {
-      glRef.current = initWebGL(canvasRef.current);
+      glReference.current = initWebGL(canvasReference.current);
       setGlInitialized(true);
     } catch (error) {
       onError?.(error as Error);
@@ -44,16 +48,16 @@ export const ImageSequencer = ({
   }, [onError]);
 
   const { textures, placeholderTexture, isLoading } = useTextureLoader(
-    glRef.current?.gl || null,
+    glReference.current?.gl ?? null,
     images,
     placeholderImage,
     onError,
   );
 
   const updateQuadVertices = useCallback((textureData: TextureData) => {
-    const gl = glRef.current?.gl;
-    const posBuffer = glRef.current?.posBuffer;
-    const canvas = canvasRef.current;
+    const gl = glReference.current?.gl;
+    const posBuffer = glReference.current?.posBuffer;
+    const canvas = canvasReference.current;
     if (!gl || !posBuffer || !canvas) return;
 
     const cw = canvas.width;
@@ -86,7 +90,7 @@ export const ImageSequencer = ({
   }, []);
 
   const drawFrame = useCallback(() => {
-    const gl = glRef.current?.gl;
+    const gl = glReference.current?.gl;
     if (!gl) return;
 
     gl.clearColor(0, 0, 0, 0);
@@ -94,7 +98,7 @@ export const ImageSequencer = ({
 
     const textureData = isLoading
       ? placeholderTexture
-      : textures.get(currentIndexRef.current);
+      : textures.get(currentIndexReference.current);
     if (!textureData) return;
 
     updateQuadVertices(textureData);
@@ -104,7 +108,7 @@ export const ImageSequencer = ({
 
   const updateIndex = useCallback(() => {
     if (isLoading) return;
-    const current = currentIndexRef.current;
+    const current = currentIndexReference.current;
     let next = current;
     if (infinite) {
       next =
@@ -117,25 +121,27 @@ export const ImageSequencer = ({
           ? Math.min(current + 1, endIndex)
           : Math.max(current - 1, startIndex);
     }
-    currentIndexRef.current = next;
+    currentIndexReference.current = next;
   }, [direction, images.length, infinite, startIndex, endIndex, isLoading]);
 
   useEffect(() => {
     if (!glInitialized || !placeholderTexture) return;
 
     const animate = (time: number) => {
-      if (!previousTimeRef.current) previousTimeRef.current = time;
-      const delta = time - previousTimeRef.current;
+      if (!previousTimeReference.current) previousTimeReference.current = time;
+      const delta = time - previousTimeReference.current;
       if (delta >= frameInterval) {
         updateIndex();
         drawFrame();
-        previousTimeRef.current = time - (delta % frameInterval);
+        previousTimeReference.current = time - (delta % frameInterval);
       }
-      animationFrameRef.current = requestAnimationFrame(animate);
+      animationFrameReference.current = requestAnimationFrame(animate);
     };
 
-    animationFrameRef.current = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animationFrameRef.current);
+    animationFrameReference.current = requestAnimationFrame(animate);
+    return () => {
+      return cancelAnimationFrame(animationFrameReference.current);
+    };
   }, [
     glInitialized,
     placeholderTexture,
@@ -145,8 +151,8 @@ export const ImageSequencer = ({
   ]);
 
   useEffect(() => {
-    const gl = glRef.current?.gl;
-    const canvas = canvasRef.current;
+    const gl = glReference.current?.gl;
+    const canvas = canvasReference.current;
     if (!gl || !canvas) return;
     const handleResize = () => {
       canvas.width = width;
@@ -156,7 +162,9 @@ export const ImageSequencer = ({
     };
     handleResize();
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {
+      return window.removeEventListener('resize', handleResize);
+    };
   }, [width, height, drawFrame]);
 
   useEffect(() => {
@@ -167,7 +175,7 @@ export const ImageSequencer = ({
 
   return (
     <canvas
-      ref={canvasRef}
+      ref={canvasReference}
       width={width}
       height={height}
       className={className}

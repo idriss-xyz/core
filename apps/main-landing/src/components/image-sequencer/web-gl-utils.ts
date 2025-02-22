@@ -43,7 +43,7 @@ export function initWebGL(canvas: HTMLCanvasElement) {
       preserveDrawingBuffer: false,
       powerPreference: 'high-performance',
     });
-  } catch (e) {
+  } catch {
     // ignore errors here
   }
   if (!gl) {
