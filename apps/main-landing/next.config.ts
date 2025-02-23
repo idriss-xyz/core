@@ -193,7 +193,6 @@ const nextConfig: NextConfig = {
     DEV_LOGIN_PASSWORD: process.env.DEV_LOGIN_PASSWORD || '',
     PUBLIC_ACCESS_ENABLED: process.env.PUBLIC_ACCESS_ENABLED || '',
     RAILWAY_PUBLIC_DOMAIN: process.env.RAILWAY_PUBLIC_DOMAIN || '',
-    ZAPPER_API_KEY: process.env.ZAPPER_API_KEY || '',
   },
 };
 
