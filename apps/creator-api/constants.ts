@@ -79,7 +79,7 @@ query ($address: Address!, $network: Network!, $currency: Currency!, $timeFrame:
   }
 }`;
 
-export const OLDEST_TRANSACTION_TIMESTAMP = 1_734_497_616_000;
+export const OLDEST_TRANSACTION_TIMESTAMP = 1_700_929_698;
 
 // Todo: Add import from package once refactor is done
 export const CHAIN_TO_IDRISS_TIPPING_ADDRESS = {
