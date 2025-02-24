@@ -1,4 +1,4 @@
-import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
+import { Connection, PublicKey } from '@solana/web3.js';
 
 import {
   Command,
@@ -20,7 +20,7 @@ export class GetSolanaBalanceCommand extends Command<Payload, string | null> {
 
   async handle() {
     try {
-      const connection = new Connection(clusterApiUrl('mainnet-beta'));
+      const connection = new Connection('https://solana-rpc.publicnode.com');
 
       const result = await connection.getBalance(
         new PublicKey(this.payload.address),
