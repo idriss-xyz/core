@@ -41,8 +41,6 @@ import { useSender } from './hooks';
 
 const SEARCH_PARAMETER = {
   CREATOR_NAME: 'creatorName',
-  ADDRESS: 'address',
-  LEGACY_ADDRESS: 'streamerAddress',
   NETWORK: 'network',
   TOKEN: 'token',
 };

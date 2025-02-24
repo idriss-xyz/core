@@ -14,6 +14,10 @@ import { FromUser, ZapperNode } from '@/app/creators/donate/types';
 
 type Properties = {
   className?: string;
+  dateRange?: {
+    description: string;
+    timestamp: number;
+  };
   tipsLoading: boolean;
   validatedAddress?: string | null;
   tipEdges: { node: ZapperNode }[];
@@ -26,6 +30,7 @@ const baseClassName =
 export const TopDonors = ({
   tipEdges,
   className,
+  dateRange,
   tipsLoading,
   validatedAddress,
   updateCurrentContent,
@@ -101,7 +106,7 @@ export const TopDonors = ({
         />
         <span className="absolute left-0 top-0 size-full bg-black/20" />
         <h1 className="relative z-1 mx-12 my-6 text-center text-heading4 uppercase text-white">
-          Top donors
+          {dateRange ? `Top donors (${dateRange.description})` : 'Top donors'}
         </h1>
       </div>
       <div className="flex w-full flex-col">
