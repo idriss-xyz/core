@@ -3,25 +3,34 @@ import { Controller, useForm } from 'react-hook-form';
 import { Icon as IdrissIcon } from '@idriss-xyz/ui/icon';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { NumericInput } from '@idriss-xyz/ui/numeric-input';
-import { formatEther, isAddress } from 'viem';
+import { formatEther, Hex, isAddress } from 'viem';
 import { useCallback } from 'react';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
-import { isAddress as isSolanaAddress } from '@solana/web3.js';
+import { useWallet as useSolanaWallet } from '@solana/wallet-adapter-react';
+import { NiceModalHocProps, useModal } from '@ebay/nice-modal-react';
+import {
+  SolanaWalletConnectModal,
+  SolanaProperties,
+} from '@idriss-xyz/wallet-connect';
 
 import { useWallet } from 'shared/extension';
 import { Closable, ErrorMessage, Icon, LazyImage } from 'shared/ui';
 import { useCommandQuery } from 'shared/messaging';
 import {
   FormValues,
-  GetEnsBalanceCommand,
   GetEnsInfoCommand,
   GetEnsNameCommand,
   GetQuoteCommand,
   useExchanger,
   useLoginViaSiwe,
+  useSolanaExchanger,
 } from 'application/trading-copilot';
-import { getShortWalletHex, TimeDifferenceCounter } from 'shared/utils';
+import {
+  getShortWalletHex,
+  isSolanaAddress,
+  TimeDifferenceCounter,
+} from 'shared/utils';
 import {
   CHAIN,
   formatBigNumber,
@@ -32,6 +41,7 @@ import { IdrissSend } from 'shared/idriss';
 
 import { TokenIcon } from '../../utils';
 import { TradingCopilotTooltip } from '../trading-copilot-tooltip';
+import { useAccountBalance } from '../../hooks';
 
 import {
   Properties,
@@ -59,8 +69,12 @@ const getNativeValue = (
   amount: bigint,
 ) => {
   return network === 'SOLANA'
-    ? getWholeNumber((Number(amount) / 1e9).toString()) + ' SOL'
-    : getWholeNumber(Number(formatEther(amount)).toString()) + ' ETH';
+    ? getWholeNumber((Number(amount) / 1e9).toString())
+    : getWholeNumber(Number(formatEther(amount)).toString());
+};
+
+const getNativeCurrencySymbol = (network: keyof typeof CHAIN | 'SOLANA') => {
+  return network === 'SOLANA' ? 'SOL' : 'ETH';
 };
 
 export const TradingCopilotDialog = ({
@@ -130,8 +144,39 @@ const TradingCopilotDialogContent = ({
   tokenData,
   tokenImage,
 }: ContentProperties) => {
-  const { wallet, isConnectionModalOpened, openConnectionModal } = useWallet();
-  const exchanger = useExchanger({ wallet });
+  const {
+    wallet: ensWallet,
+    isConnectionModalOpened,
+    openConnectionModal,
+  } = useWallet();
+  const isSolanaTrade = dialog.tokenIn.network === 'SOLANA';
+  const {
+    connecting,
+    connected,
+    wallet: solanaWallet,
+    publicKey,
+    wallets,
+    select,
+    connect,
+    signTransaction,
+  } = useSolanaWallet();
+  const { show } = useModal<
+    SolanaProperties & NiceModalHocProps,
+    Record<string, unknown>
+  >(SolanaWalletConnectModal, {
+    connectWallet: connect,
+    selectWallet: select,
+    wallets,
+    wallet: solanaWallet,
+  });
+  const isWalletConnected = isSolanaTrade ? connected : ensWallet;
+  const evmExchanger = useExchanger({ wallet: ensWallet });
+  const solanaExchanger = useSolanaExchanger({
+    publicKey: publicKey?.toString(),
+    signTransaction,
+  });
+  const exchanger = isSolanaTrade ? solanaExchanger : evmExchanger;
+  const wallet = isSolanaTrade ? solanaWallet : ensWallet;
   const siwe = useLoginViaSiwe();
 
   const avatarQuery = useCommandQuery({
@@ -142,13 +187,7 @@ const TradingCopilotDialogContent = ({
     staleTime: Number.POSITIVE_INFINITY,
   });
 
-  const balanceQuery = useCommandQuery({
-    command: new GetEnsBalanceCommand({
-      address: wallet?.account ?? '0x',
-      blockTag: 'safe',
-    }),
-    staleTime: Number.POSITIVE_INFINITY,
-  });
+  const balance = useAccountBalance(wallet);
 
   const { handleSubmit, control, watch } = useForm<FormValues>({
     defaultValues: EMPTY_FORM,
@@ -239,7 +278,7 @@ const TradingCopilotDialogContent = ({
         heading="Swap completed"
         onConfirm={closeDialog}
         chainId={exchanger.quoteData.transactionData.chainId}
-        transactionHash={exchanger.transactionData.transactionHash}
+        transactionHash={exchanger.transactionData.transactionHash as Hex}
       />
     );
   }
@@ -329,7 +368,12 @@ const TradingCopilotDialogContent = ({
           >
             Amount
           </label>
-          {wallet ? <TradingCopilotWalletBalance wallet={wallet} /> : null}
+          {wallet ? (
+            <TradingCopilotWalletBalance
+              network={dialog.tokenIn.network}
+              balance={balance}
+            />
+          ) : null}
         </div>
         <Controller
           control={control}
@@ -339,7 +383,7 @@ const TradingCopilotDialogContent = ({
               <span className="relative mt-2 flex">
                 <NumericInput
                   value={value}
-                  placeholder="ETH"
+                  placeholder={getNativeCurrencySymbol(dialog.tokenIn.network)}
                   onChange={onChange}
                   decimalScale={5}
                   className="ps-[60px] text-right"
@@ -348,7 +392,7 @@ const TradingCopilotDialogContent = ({
                   <span className="flex size-6 items-center justify-center rounded-full bg-neutral-200">
                     <IdrissIcon
                       size={18}
-                      name="Eth"
+                      name={isSolanaTrade ? 'Sol' : 'Eth'}
                       className="text-neutral-700"
                     />
                   </span>
@@ -358,7 +402,7 @@ const TradingCopilotDialogContent = ({
           }}
         />
         <div className="mt-5">
-          {wallet ? (
+          {isWalletConnected ? (
             <>
               <Button
                 intent="primary"
@@ -367,7 +411,8 @@ const TradingCopilotDialogContent = ({
                 type="submit"
                 loading={siwe.isSending || exchanger.isSending}
                 disabled={
-                  Number(watch('amount')) > Number(balanceQuery.data) ||
+                  // TODO: Uncomment this when we have a way to get the balance for Solana too
+                  Number(watch('amount')) > Number(balance) ||
                   Number(watch('amount')) <= 0
                 }
               >
@@ -383,9 +428,15 @@ const TradingCopilotDialogContent = ({
             <Button
               intent="primary"
               size="medium"
-              onClick={openConnectionModal}
+              onClick={
+                isSolanaTrade
+                  ? () => {
+                      return show();
+                    }
+                  : openConnectionModal
+              }
               className="w-full"
-              loading={isConnectionModalOpened}
+              loading={isSolanaTrade ? connecting : isConnectionModalOpened}
             >
               LOG IN
             </Button>
@@ -396,26 +447,21 @@ const TradingCopilotDialogContent = ({
   );
 };
 
-const TradingCopilotWalletBalance = ({ wallet }: WalletBalanceProperties) => {
-  const balanceQuery = useCommandQuery({
-    command: new GetEnsBalanceCommand({
-      address: wallet?.account ?? '',
-      blockTag: 'safe',
-    }),
-    staleTime: Number.POSITIVE_INFINITY,
-  });
-
-  if (!balanceQuery.data) {
+const TradingCopilotWalletBalance = ({
+  network,
+  balance,
+}: WalletBalanceProperties) => {
+  if (!balance) {
     return;
   }
 
   const { value: roundedNumber, index: zerosIndex } =
-    roundToSignificantFiguresForCopilotTrading(Number(balanceQuery.data), 2);
+    roundToSignificantFiguresForCopilotTrading(Number(balance), 2);
 
   return (
     <p className="text-body6 text-neutral-500">
       Balance:{' '}
-      <TradingCopilotTooltip content={getWholeNumber(balanceQuery.data)}>
+      <TradingCopilotTooltip content={getWholeNumber(balance)}>
         {zerosIndex ? (
           <>
             0.0
@@ -428,19 +474,21 @@ const TradingCopilotWalletBalance = ({ wallet }: WalletBalanceProperties) => {
           roundedNumber
         )}
       </TradingCopilotTooltip>{' '}
-      ETH
+      {getNativeCurrencySymbol(network)}
     </p>
   );
 };
 
 const TradingCopilotTradeValue = ({ wallet, dialog }: TradeValueProperties) => {
+  const address =
+    'adapter' in wallet ? wallet.adapter.publicKey?.toString() : wallet.account;
   const quotePayload = {
     amount: (
       dialog.tokenIn.amount *
       10 ** (dialog.tokenIn.decimals ?? 9)
     ).toString(),
     destinationChain: getChainId(dialog.tokenOut.network),
-    fromAddress: dialog.from ?? wallet?.account,
+    fromAddress: dialog.from ?? address,
     originToken: dialog.tokenIn.address,
     originChain: getChainId(dialog.tokenIn.network),
     destinationToken: getDestinationToken(dialog.tokenOut.network),
@@ -457,5 +505,10 @@ const TradingCopilotTradeValue = ({ wallet, dialog }: TradeValueProperties) => {
 
   const tradeValueInWei = BigInt(quoteQuery.data.estimate.toAmount);
 
-  return <span>{getNativeValue(dialog.tokenIn.network, tradeValueInWei)}</span>;
+  return (
+    <span>
+      {getNativeValue(dialog.tokenIn.network, tradeValueInWei)}{' '}
+      {getNativeCurrencySymbol(dialog.tokenIn.network)}
+    </span>
+  );
 };

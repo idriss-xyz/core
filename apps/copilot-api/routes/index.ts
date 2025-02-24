@@ -1,11 +1,12 @@
 import express from 'express';
+import { getQuote } from '@lifi/sdk';
+import { Connection } from '@solana/web3.js';
 import { throwInternalError } from '../middleware/error.middleware';
 import {
   subscribeAddress,
   unsubscribeAddress,
 } from '../services/subscriptionManager';
 import { verifyToken } from '../middleware/auth.middleware';
-import { getQuote } from '@lifi/sdk';
 import { connectedClients } from '../services/scheduler';
 import { dataSource } from '../db';
 import { SubscriptionsEntity } from '../entities/subscribtions.entity';
@@ -169,4 +170,5 @@ router.get('/top-addresses', async (req, res) => {
     .getRawMany();
   res.status(200).json(data);
 });
+
 export default router;

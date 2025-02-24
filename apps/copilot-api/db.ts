@@ -4,7 +4,7 @@ import { join } from 'path';
 import { mode } from './utils/mode';
 
 dotenv.config(
-  mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
+  mode === 'development' ? {} : { path: join(__dirname, `.env.${mode}`) },
 );
 
 export const dataSource = new DataSource({

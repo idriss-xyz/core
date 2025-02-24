@@ -1,5 +1,5 @@
 import { createPublicClient, formatEther, http } from 'viem';
-import { mainnet } from 'viem/chains';
+import { base } from 'viem/chains';
 
 import { Hex } from 'shared/web3';
 import {
@@ -24,7 +24,7 @@ export class GetEnsBalanceCommand extends Command<Payload, string | null> {
   async handle() {
     try {
       const client = createPublicClient({
-        chain: { ...mainnet },
+        chain: { ...base },
         transport: http('https://base.llamarpc.com/'),
       });
 

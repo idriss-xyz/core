@@ -2,7 +2,6 @@ import { Button } from '@idriss-xyz/ui/button';
 import { useEffect } from 'react';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
-import { isAddress as isSolanaAddress } from '@solana/web3.js';
 
 import { useWallet, useAuthToken } from 'shared/extension';
 import {
@@ -12,6 +11,7 @@ import {
   useCommandQuery,
 } from 'shared/messaging';
 import { Empty } from 'shared/ui';
+import { isSolanaAddress } from 'shared/utils';
 
 import { useLoginViaSiwe } from '../hooks';
 import {

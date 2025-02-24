@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
+import { Transaction, VersionedTransaction } from '@solana/web3.js';
 
 import {
   createWalletClient,
@@ -8,6 +9,9 @@ import {
   Wallet,
 } from 'shared/web3';
 import { useObservabilityScope } from 'shared/observability';
+import { useCommandMutation } from 'shared/messaging';
+
+import { SendSolanaTransactionCommand } from '../commands/';
 
 interface SwapProperties {
   to: `0x${string}`;
@@ -46,6 +50,55 @@ export const useCopilotTransaction = () => {
       }
 
       return { transactionHash };
+    },
+  });
+};
+
+interface SolanaCopilotProperties {
+  transactionData: SwapProperties;
+  signTransaction?:
+    | (<T extends VersionedTransaction | Transaction>(
+        transaction: T,
+      ) => Promise<T>)
+    | undefined;
+}
+
+export const useCopilotSolanaTransaction = () => {
+  const sendTxMutation = useCommandMutation(SendSolanaTransactionCommand);
+  const observabilityScope = useObservabilityScope();
+
+  return useMutation({
+    mutationFn: async ({
+      transactionData,
+      signTransaction,
+    }: SolanaCopilotProperties) => {
+      try {
+        const decodedTx = Buffer.from(
+          transactionData.data.toString(),
+          'base64',
+        );
+        const deserializedTx = VersionedTransaction.deserialize(
+          new Uint8Array(decodedTx),
+        );
+        const signedTransaction = await signTransaction?.(deserializedTx);
+        const serializedTx = signedTransaction?.serialize();
+
+        if (!serializedTx) {
+          throw new Error('Failed to sign transaction');
+        }
+
+        const base64SerializedTx = Buffer.from(serializedTx).toString('base64');
+        const response = await sendTxMutation.mutateAsync({
+          base64SerializedTx: base64SerializedTx,
+        });
+        const transactionHash = response.transactionHash;
+
+        return { transactionHash };
+      } catch (error) {
+        console.error('Error:', error);
+        observabilityScope.captureException(error);
+        throw error;
+      }
     },
   });
 };
