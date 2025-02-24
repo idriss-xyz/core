@@ -15,9 +15,10 @@ import { FromUser, ZapperNode } from '@/app/creators/donate/types';
 type Properties = {
   className?: string;
   tipsLoading: boolean;
+  isStandalone?: boolean;
   validatedAddress?: string | null;
   tipEdges: { node: ZapperNode }[];
-  updateCurrentContent: (content: 'tip' | 'history') => void;
+  updateCurrentContent?: (content: 'tip' | 'history') => void;
 };
 
 const baseClassName =
@@ -27,6 +28,7 @@ export const TopDonors = ({
   tipEdges,
   className,
   tipsLoading,
+  isStandalone,
   validatedAddress,
   updateCurrentContent,
 }: Properties) => {
@@ -93,7 +95,9 @@ export const TopDonors = ({
 
   return (
     <div className={classes(className, baseClassName)}>
-      <div className="relative flex min-h-[100px] w-full items-center justify-center overflow-hidden">
+      <div
+        className={`relative flex w-full items-center justify-center overflow-hidden ${isStandalone ? 'h-[87px]' : 'min-h-[100px]'}`}
+      >
         <img
           src={IDRISS_SCENE_STREAM_2.src}
           alt=""
@@ -106,7 +110,9 @@ export const TopDonors = ({
       </div>
       <div className="flex w-full flex-col">
         {tipsLoading || !validatedAddress || !sortedGroupedTips ? (
-          <span className="flex w-full items-center justify-center border-b border-b-neutral-300 px-5.5 py-4.5">
+          <span
+            className={`flex w-full items-center justify-center border-b-neutral-300 px-5.5 py-4.5 ${isStandalone ? 'h-[413px]' : 'border-b'}`}
+          >
             <Spinner className="size-16 text-mint-600" />
           </span>
         ) : (
@@ -117,8 +123,11 @@ export const TopDonors = ({
               return (
                 <DonorItem
                   donorRank={index}
-                  donateAmount={groupedTip.tipsSum}
                   donorDetails={groupedTip.user}
+                  donateAmount={groupedTip.tipsSum}
+                  hideBorder={
+                    (isStandalone ?? !updateCurrentContent) && index === 5
+                  }
                   key={`${groupedTip.tipsSum}${groupedTip.tips[0].node.transaction.hash}`}
                 />
               );
@@ -127,23 +136,26 @@ export const TopDonors = ({
             {sortedGroupedTips.length <= 5 ? (
               <DonorItemPlaceholder
                 donorRank={sortedGroupedTips.length}
+                hideBorder={isStandalone ?? !updateCurrentContent}
                 previousDonateAmount={sortedGroupedTips.at(-1)?.tipsSum ?? 1234}
               />
             ) : null}
           </ul>
         )}
       </div>
-      <div className="flex min-h-[80px] w-full items-center justify-center">
-        <Link
-          size="xs"
-          onClick={() => {
-            updateCurrentContent('history');
-          }}
-          className={`mx-6 my-3 cursor-pointer ${sortedGroupedTips?.length === 0 ? 'invisible' : ''}`}
-        >
-          See full donation history
-        </Link>
-      </div>
+      {updateCurrentContent ? (
+        <div className="flex min-h-[80px] w-full items-center justify-center">
+          <Link
+            size="xs"
+            onClick={() => {
+              updateCurrentContent('history');
+            }}
+            className={`mx-6 my-3 cursor-pointer ${sortedGroupedTips?.length === 0 ? 'invisible' : ''}`}
+          >
+            See full donation history
+          </Link>
+        </div>
+      ) : null}
     </div>
   );
 };
