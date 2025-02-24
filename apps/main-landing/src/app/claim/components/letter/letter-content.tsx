@@ -6,12 +6,19 @@ import {
   TOKENOMICS_DOCS_LINK,
 } from '@idriss-xyz/constants';
 import { BlockedButton } from '@idriss-xyz/ui/blocked-button';
+import { Button } from '@idriss-xyz/ui/button';
+import { GeoConditionalButton } from '@idriss-xyz/ui/geo-conditional-button';
+
+import { useClaimPage } from '../../claim-page-context';
 
 import geoist_avatar from './assets/geoist_avatar.png';
 import levertz_avatar from './assets/levertz_avatar.png';
 import user_avatar from './assets/user_avatar.png';
 
 export const LetterContent = () => {
+  const airdropEnabled = true;
+  const { setCurrentContent } = useClaimPage();
+
   return (
     <div className="relative z-[5] m-auto flex w-[600px] flex-col items-center gap-10 rounded-[24px] bg-[rgba(255,255,255,0.5)] p-10 backdrop-blur-[45px]">
       <GradientBorder
@@ -92,14 +99,32 @@ export const LetterContent = () => {
         </div>
       </div>
 
-      <BlockedButton
-        buttonClasses="pl-5"
-        tooltipClasses="w-max"
-        iconName="CalendarClock"
-        buttonText="Claim ended"
-      >
-        <span>Claiming ended at 11:59 PM UTC, February 10.</span>
-      </BlockedButton>
+      {airdropEnabled ? (
+        <GeoConditionalButton
+          defaultButton={
+            <Button
+              intent="primary"
+              size="large"
+              suffixIconName="IdrissArrowRight"
+              className="w-56"
+              onClick={() => {
+                setCurrentContent('about-idriss');
+              }}
+            >
+              Next
+            </Button>
+          }
+        />
+      ) : (
+        <BlockedButton
+          buttonClasses="pl-5"
+          tooltipClasses="w-max"
+          iconName="CalendarClock"
+          buttonText="Claim ended"
+        >
+          <span>Claiming ended at 11:59 PM UTC, February 10.</span>
+        </BlockedButton>
+      )}
     </div>
   );
 };
