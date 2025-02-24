@@ -4,7 +4,7 @@ import { Form } from '@idriss-xyz/ui/form';
 import { Controller, useForm } from 'react-hook-form';
 import { Button } from '@idriss-xyz/ui/button';
 import { useEffect, useState } from 'react';
-import { Hex } from 'viem'; // You can modify this depending on how you're handling addresses.
+import { Hex } from 'viem';
 import Script from 'next/script';
 
 import { backgroundLines2, backgroundLines3 } from '@/assets';
