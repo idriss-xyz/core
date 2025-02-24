@@ -10,14 +10,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
+import { CHAIN, TipHistoryNode } from '@idriss-xyz/constants';
 import {
-  CHAIN,
   getShortWalletHex,
   getTimeDifferenceString,
   getTransactionUrls,
   roundToSignificantFiguresForCopilotTrading,
-  TipHistoryNode,
-} from '@idriss-xyz/constants';
+} from '@idriss-xyz/utils';
 
 import { useGetEnsAvatar } from '../../commands/get-ens-avatar';
 

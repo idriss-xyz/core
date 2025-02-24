@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import { Button } from '@idriss-xyz/ui/button';
-import { roundToSignificantFigures, EMPTY_HEX } from '@idriss-xyz/constants';
+import { roundToSignificantFigures } from '@idriss-xyz/utils';
+import { EMPTY_HEX } from '@idriss-xyz/constants';
 import { formatEther } from 'viem';
 
 import { useWallet } from 'shared/extension';

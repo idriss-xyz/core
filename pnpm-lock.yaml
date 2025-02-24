@@ -166,6 +166,9 @@ importers:
       '@idriss-xyz/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@idriss-xyz/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       '@idriss-xyz/wallet-connect':
         specifier: workspace:*
         version: link:../../packages/wallet-connect
@@ -395,6 +398,9 @@ importers:
       '@idriss-xyz/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@idriss-xyz/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       '@idriss-xyz/wallet-connect':
         specifier: workspace:*
         version: link:../../packages/wallet-connect
@@ -708,6 +714,10 @@ importers:
         version: 5.6.3
 
   packages/utils:
+    dependencies:
+      viem:
+        specifier: 2.21.33
+        version: 2.21.33(bufferutil@4.0.9)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.23.8)
     devDependencies:
       '@idriss-xyz/eslint-config':
         specifier: workspace:*

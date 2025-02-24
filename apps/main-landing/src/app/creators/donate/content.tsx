@@ -6,11 +6,13 @@ import { Button } from '@idriss-xyz/ui/button';
 import { Link } from '@idriss-xyz/ui/link';
 import {
   applyDecimalsToNumericString,
+  getTransactionUrl,
+  roundToSignificantFigures,
+} from '@idriss-xyz/utils';
+import {
   CHAIN,
   CHAIN_ID_TO_TOKENS,
   CREATORS_USER_GUIDE_LINK,
-  getTransactionUrl,
-  roundToSignificantFigures,
   TOKEN,
   DEFAULT_ALLOWED_CHAINS_IDS,
   Token,

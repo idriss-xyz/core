@@ -1,5 +1,6 @@
 import { Icon } from '@idriss-xyz/ui/icon';
-import { getShortWalletHex, TipHistoryFromUser } from '@idriss-xyz/constants';
+import { TipHistoryFromUser } from '@idriss-xyz/constants';
+import { getShortWalletHex } from '@idriss-xyz/utils';
 
 import { useGetEnsAvatar } from '@/app/creators/donate/commands/get-ens-avatar';
 

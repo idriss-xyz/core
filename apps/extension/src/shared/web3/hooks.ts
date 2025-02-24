@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { getChainById, isUnrecognizedChainError } from '@idriss-xyz/constants';
+import { getChainById, isUnrecognizedChainError } from '@idriss-xyz/utils';
 import { Wallet } from '@idriss-xyz/wallet-connect';
 
 import { createWalletClient } from './utils';

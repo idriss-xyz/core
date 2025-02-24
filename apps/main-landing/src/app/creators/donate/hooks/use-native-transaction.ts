@@ -1,7 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
 import { encodeFunctionData, Hex, WalletClient } from 'viem';
 import { estimateGas, waitForTransactionReceipt } from 'viem/actions';
-import { getChainById, EMPTY_HEX } from '@idriss-xyz/constants';
+import { EMPTY_HEX } from '@idriss-xyz/constants';
+import { getChainById } from '@idriss-xyz/utils';
 
 import { CHAIN_TO_IDRISS_TIPPING_ADDRESS, TIPPING_ABI } from '../constants';
 

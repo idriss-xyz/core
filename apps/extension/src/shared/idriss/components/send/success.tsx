@@ -3,7 +3,7 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { Link } from '@idriss-xyz/ui/link';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Hex } from 'viem';
-import { getTransactionUrl } from '@idriss-xyz/constants';
+import { getTransactionUrl } from '@idriss-xyz/utils';
 
 interface Properties {
   chainId: number;

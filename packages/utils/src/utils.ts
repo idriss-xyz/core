@@ -1,6 +1,6 @@
 import { Hex } from 'viem';
 
-import { CHAIN, NATIVE_COIN_ADDRESS } from './constants';
+import { CHAIN, NATIVE_COIN_ADDRESS } from '../../constants/src';
 
 export const formatBigNumber = (number: number | string): string => {
   if (Number(number) < 1000) {

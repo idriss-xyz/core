@@ -7,7 +7,7 @@ import {
   publicActions,
 } from 'viem';
 import { IdrissCrypto } from 'idriss-crypto/lib/browser';
-import { getChainById } from '@idriss-xyz/constants';
+import { getChainById } from '@idriss-xyz/utils';
 import { Wallet } from '@idriss-xyz/wallet-connect';
 
 export const resolveAddress = async (address: string) => {

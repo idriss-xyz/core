@@ -46,22 +46,6 @@ export type {
   TipHistoryNode,
 } from './types';
 
-export {
-  roundToSignificantFiguresForCopilotTrading,
-  roundToSignificantFigures,
-  applyDecimalsToNumericString,
-  getTransactionUrl,
-  isNativeTokenAddress,
-  getChainById,
-  isUnrecognizedChainError,
-  formatBigNumber,
-  getDefaultBlockExplorerUrl,
-  getTransactionUrls,
-  getSafeNumber,
-  getShortWalletHex,
-  getTimeDifferenceString,
-} from './utils';
-
 export * from './logos';
 
 export { hexSchema } from './schema';

@@ -1,4 +1,4 @@
-import { getChainById, isUnrecognizedChainError } from '@idriss-xyz/constants';
+import { getChainById, isUnrecognizedChainError } from '@idriss-xyz/utils';
 import { useMutation } from '@tanstack/react-query';
 import { WalletClient } from 'viem';
 

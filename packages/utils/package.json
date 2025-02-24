@@ -19,5 +19,8 @@
     "dependency-cruiser": "^16.4.2",
     "ts-unused-exports": "^10.1.0",
     "typescript": "^5.6.2"
+  },
+  "dependencies": {
+    "viem": "2.21.33"
   }
 }

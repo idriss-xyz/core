@@ -5,7 +5,7 @@ import {
   getShortWalletHex,
   getTimeDifferenceString,
   roundToSignificantFiguresForCopilotTrading,
-} from '@idriss-xyz/constants';
+} from '@idriss-xyz/utils';
 import {
   Tooltip,
   TooltipContent,

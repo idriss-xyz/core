@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { getSafeNumber, isNativeTokenAddress } from '@idriss-xyz/constants';
+import { getSafeNumber, isNativeTokenAddress } from '@idriss-xyz/utils';
 import { Hex } from 'viem';
 import { Wallet } from '@idriss-xyz/wallet-connect';
 

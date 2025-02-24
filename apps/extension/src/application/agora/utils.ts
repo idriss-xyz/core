@@ -1,4 +1,4 @@
-import { getDefaultBlockExplorerUrl } from '@idriss-xyz/constants';
+import { getDefaultBlockExplorerUrl } from '@idriss-xyz/utils';
 
 import { CHAIN } from 'shared/web3';
 

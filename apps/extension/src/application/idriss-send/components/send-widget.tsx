@@ -4,8 +4,8 @@ import {
   applyDecimalsToNumericString,
   roundToSignificantFigures,
   isNativeTokenAddress,
-  EMPTY_HEX,
-} from '@idriss-xyz/constants';
+} from '@idriss-xyz/utils';
+import { EMPTY_HEX } from '@idriss-xyz/constants';
 
 import { useWallet } from 'shared/extension';
 import { IdrissSend } from 'shared/idriss';

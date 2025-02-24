@@ -8,12 +8,12 @@ import { useCallback } from 'react';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
 import {
-  EMPTY_HEX,
   formatBigNumber,
   getShortWalletHex,
   getTimeDifferenceString,
   roundToSignificantFiguresForCopilotTrading,
-} from '@idriss-xyz/constants';
+} from '@idriss-xyz/utils';
+import { EMPTY_HEX } from '@idriss-xyz/constants';
 import {
   Tooltip,
   TooltipContent,
