@@ -114,9 +114,17 @@ function DonorsContent() {
 
   useEffect(() => {
     if (tips.data) {
-      setTipEdges(tips.data.data);
+      setTipEdges(
+        tips.data.data.filter((tip) => {
+          if (dateRange) {
+            return tip.node.timestamp >= dateRange.timestamp;
+          }
+
+          return true;
+        }),
+      );
     }
-  }, [tips.data]);
+  }, [dateRange, tips.data]);
 
   const updateCurrentContent = (content: 'tip' | 'history') => {
     setCurrentContent(content);
@@ -178,6 +186,10 @@ function DonorsContent() {
         });
 
         socket.on('newDonation', (node: ZapperNode) => {
+          if (dateRange && node.timestamp < dateRange.timestamp) {
+            return;
+          }
+
           setTipEdges((previousState) => {
             return _.uniqBy([{ node }, ...previousState], (item) => {
               return _.get(item, 'node.transaction.hash');
@@ -195,7 +207,7 @@ function DonorsContent() {
     }
 
     return;
-  }, [socketConnected, socketInitialized, validatedAddress]);
+  }, [dateRange, socketConnected, socketInitialized, validatedAddress]);
 
   return (
     <>

@@ -49,9 +49,8 @@ export const TopDonors = ({
       const decimals =
         tip.node.interpretation.descriptionDisplayItems[0]?.tokenV2?.decimals ??
         18;
-      const tipToOld = !!dateRange && tip.node.timestamp < dateRange.timestamp;
 
-      if (!amountRaw || !price || tipToOld) {
+      if (!amountRaw || !price) {
         return accumulator;
       }
 
