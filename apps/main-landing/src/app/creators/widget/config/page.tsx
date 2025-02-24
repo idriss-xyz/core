@@ -4,7 +4,7 @@ import { Form } from '@idriss-xyz/ui/form';
 import { Controller, useForm } from 'react-hook-form';
 import { Button } from '@idriss-xyz/ui/button';
 import { useEffect, useState } from 'react';
-import { Hex } from 'viem';
+import { Hex } from 'viem'; // You can modify this depending on how you're handling addresses.
 import Script from 'next/script';
 
 import { backgroundLines2, backgroundLines3 } from '@/assets';
@@ -19,35 +19,40 @@ export default function Config() {
     defaultValues: EMPTY_CONFIG_FORM_VALUES,
   });
 
+  // Handle the form submission
   const onSubmit = (payload: typeof EMPTY_CONFIG_FORM_VALUES) => {
-    window.Twitch.ext.onAuthorized(() => {
-      window.Twitch.ext.configuration.set(
-        'broadcaster',
-        '1',
-        JSON.stringify({
-          address: payload.address,
-        }),
-      );
+    if (window.Twitch?.ext) {
+      window.Twitch.ext.onAuthorized(() => {
+        window.Twitch.ext.configuration.set(
+          'broadcaster',
+          '1',
+          JSON.stringify({ address: payload.address }),
+        );
 
-      alert('Address saved successfully!');
-    });
+        alert('Address saved successfully!');
+      });
+    } else {
+      console.error('Twitch extension is not available.');
+    }
   };
 
   useEffect(() => {
-    window.Twitch.ext.onAuthorized((auth) => {
-      if (auth.channelId) {
-        const storedConfig =
-          window.Twitch.ext.configuration.broadcaster.content;
+    if (window.Twitch?.ext) {
+      window.Twitch.ext.onAuthorized((auth) => {
+        if (auth.channelId) {
+          const storedConfig =
+            window.Twitch.ext.configuration.broadcaster.content;
 
-        if (storedConfig) {
-          const parsedConfig = JSON.parse(storedConfig);
+          if (storedConfig) {
+            const parsedConfig = JSON.parse(storedConfig);
 
-          if (parsedConfig.address) {
-            setAddress(parsedConfig.address);
+            if (parsedConfig.address) {
+              setAddress(parsedConfig.address);
+            }
           }
         }
-      }
-    });
+      });
+    }
   }, []);
 
   return (
