@@ -23,6 +23,12 @@ import { ZapperNode } from './types';
 
 const SOCKET_URL = 'https://core-production-a116.up.railway.app';
 
+const SEARCH_PARAMETER = {
+  ADDRESS: 'address',
+  DATE_RANGE: 'dateRange',
+  LEGACY_ADDRESS: 'streamerAddress',
+};
+
 // ts-unused-exports:disable-next-line
 export default function Donors() {
   return (
@@ -45,7 +51,43 @@ function DonorsContent() {
 
   const searchParameters = useSearchParams();
   const addressFromParameters =
-    searchParameters.get('address') ?? searchParameters.get('streamerAddress');
+    searchParameters.get(SEARCH_PARAMETER.ADDRESS) ??
+    searchParameters.get(SEARCH_PARAMETER.LEGACY_ADDRESS);
+  const dateRangeFromParameters = searchParameters.get(
+    SEARCH_PARAMETER.DATE_RANGE,
+  );
+
+  const dateRange = useMemo(() => {
+    const currentTimestamp = Date.now();
+
+    const timestampInPast = (days: number) => {
+      return currentTimestamp - days * 1440 * 60_000;
+    };
+
+    switch (dateRangeFromParameters) {
+      case '24h': {
+        return {
+          description: '24h',
+          timestamp: timestampInPast(1),
+        };
+      }
+      case '7d': {
+        return {
+          description: '7d',
+          timestamp: timestampInPast(7),
+        };
+      }
+      case '31d': {
+        return {
+          description: '31d',
+          timestamp: timestampInPast(31),
+        };
+      }
+      default: {
+        return;
+      }
+    }
+  }, [dateRangeFromParameters]);
 
   useEffect(() => {
     const validateAddress = async () => {
@@ -91,6 +133,7 @@ function DonorsContent() {
             />
             <TopDonors
               tipEdges={tipEdges}
+              dateRange={dateRange}
               tipsLoading={tips.isLoading}
               validatedAddress={validatedAddress}
               updateCurrentContent={updateCurrentContent}
@@ -113,6 +156,7 @@ function DonorsContent() {
     }
   }, [
     currentContent,
+    dateRange,
     isInvalidAddress,
     tipEdges,
     tips.isLoading,
