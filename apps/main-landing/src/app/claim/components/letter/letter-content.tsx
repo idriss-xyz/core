@@ -15,8 +15,9 @@ import geoist_avatar from './assets/geoist_avatar.png';
 import levertz_avatar from './assets/levertz_avatar.png';
 import user_avatar from './assets/user_avatar.png';
 
+const AIRDROP_ENABLED = true;
+
 export const LetterContent = () => {
-  const airdropEnabled = true;
   const { setCurrentContent } = useClaimPage();
 
   return (
@@ -99,7 +100,7 @@ export const LetterContent = () => {
         </div>
       </div>
 
-      {airdropEnabled ? (
+      {AIRDROP_ENABLED ? (
         <GeoConditionalButton
           defaultButton={
             <Button
