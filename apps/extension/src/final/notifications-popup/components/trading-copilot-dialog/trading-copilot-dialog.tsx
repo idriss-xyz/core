@@ -149,7 +149,11 @@ const TradingCopilotDialogContent = ({
   tokenData,
   tokenImage,
 }: ContentProperties) => {
-  const { wallet: ensWallet, isConnectionModalOpened, openConnectionModal } = useWallet();
+  const {
+    wallet: ensWallet,
+    isConnectionModalOpened,
+    openConnectionModal,
+  } = useWallet();
   const isSolanaTrade = dialog.tokenIn.network === 'SOLANA';
   const {
     connecting,
@@ -161,15 +165,15 @@ const TradingCopilotDialogContent = ({
     connect,
     signTransaction,
   } = useSolanaWallet();
-  const { show } = useModal<SolanaProperties & NiceModalHocProps, Record<string, unknown>>(
-    SolanaWalletConnectModal,
-    {
-      connectWallet: connect,
-      selectWallet: select,
-      wallets,
-      wallet: solanaWallet,
-    },
-  );
+  const { show } = useModal<
+    SolanaProperties & NiceModalHocProps,
+    Record<string, unknown>
+  >(SolanaWalletConnectModal, {
+    connectWallet: connect,
+    selectWallet: select,
+    wallets,
+    wallet: solanaWallet,
+  });
   const isWalletConnected = isSolanaTrade ? connected : ensWallet;
   const evmExchanger = useExchanger({ wallet: ensWallet });
   const solanaExchanger = useSolanaExchanger({
@@ -177,7 +181,7 @@ const TradingCopilotDialogContent = ({
     signTransaction,
   });
   const exchanger = isSolanaTrade ? solanaExchanger : evmExchanger;
-  const wallet =  isSolanaTrade ? solanaWallet : ensWallet;
+  const wallet = isSolanaTrade ? solanaWallet : ensWallet;
   const siwe = useLoginViaSiwe();
 
   const avatarQuery = useCommandQuery({
@@ -431,7 +435,13 @@ const TradingCopilotDialogContent = ({
             <Button
               intent="primary"
               size="medium"
-              onClick={isSolanaTrade ? () => {return show()} : openConnectionModal}
+              onClick={
+                isSolanaTrade
+                  ? () => {
+                      return show();
+                    }
+                  : openConnectionModal
+              }
               className="w-full"
               loading={isSolanaTrade ? connecting : isConnectionModalOpened}
             >
@@ -477,7 +487,8 @@ const TradingCopilotWalletBalance = ({
 };
 
 const TradingCopilotTradeValue = ({ wallet, dialog }: TradeValueProperties) => {
-  const address = 'adapter' in wallet ? wallet.adapter.publicKey?.toString() : wallet.account
+  const address =
+    'adapter' in wallet ? wallet.adapter.publicKey?.toString() : wallet.account;
   const quotePayload = {
     amount: (
       dialog.tokenIn.amount *
@@ -515,7 +526,7 @@ const useEnsAccountBalance = (wallet: Wallet | null | undefined) => {
   }
 
   const command = new GetEnsBalanceCommand({
-    address: (wallet.account) ?? '',
+    address: wallet.account ?? '',
     blockTag: 'safe',
   });
 
