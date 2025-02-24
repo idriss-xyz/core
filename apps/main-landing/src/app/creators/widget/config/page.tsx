@@ -15,11 +15,15 @@ const EMPTY_CONFIG_FORM_VALUES = {
 
 export default function Config() {
   const [address, setAddress] = useState<Hex | null>(null);
+  const [isClient, setIsClient] = useState(false);
   const { control, handleSubmit } = useForm({
     defaultValues: EMPTY_CONFIG_FORM_VALUES,
   });
 
-  // Handle the form submission
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const onSubmit = (payload: typeof EMPTY_CONFIG_FORM_VALUES) => {
     if (window.Twitch?.ext) {
       window.Twitch.ext.onAuthorized(() => {
@@ -28,7 +32,6 @@ export default function Config() {
           '1',
           JSON.stringify({ address: payload.address }),
         );
-
         alert('Address saved successfully!');
       });
     } else {
@@ -37,15 +40,13 @@ export default function Config() {
   };
 
   useEffect(() => {
-    if (window.Twitch?.ext) {
+    if (isClient && window.Twitch?.ext) {
       window.Twitch.ext.onAuthorized((auth) => {
         if (auth.channelId) {
           const storedConfig =
             window.Twitch.ext.configuration.broadcaster.content;
-
           if (storedConfig) {
             const parsedConfig = JSON.parse(storedConfig);
-
             if (parsedConfig.address) {
               setAddress(parsedConfig.address);
             }
@@ -53,7 +54,11 @@ export default function Config() {
         }
       });
     }
-  }, []);
+  }, [isClient]);
+
+  if (!isClient) {
+    return null;
+  }
 
   return (
     <>
@@ -75,7 +80,6 @@ export default function Config() {
 
           <h1 className="self-start text-heading4">Setup your panel</h1>
 
-          {/* The form to submit the wallet address */}
           <Form onSubmit={handleSubmit(onSubmit)} className="w-full">
             <Controller
               control={control}
