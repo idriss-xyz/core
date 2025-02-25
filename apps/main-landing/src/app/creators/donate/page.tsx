@@ -15,13 +15,20 @@ import { validateAddressOrENS } from '@/app/creators/donate/utils';
 import { hexSchema } from '@/app/creators/donate/schema';
 import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
 import DonateHistoryList from '@/app/creators/donate/components/history/donate-history-list';
+import UserHistoryList from '@/app/creators/donate/components/user-history/user-history-list';
 
 import { TopDonors } from './top-donors';
 import { Content } from './content';
 import { RainbowKitProviders } from './providers';
-import { ZapperNode } from './types';
+import { FromUser, ZapperNode } from './types';
 
 const SOCKET_URL = 'https://core-production-a116.up.railway.app';
+
+export type contentValues = {
+  userDetails?: FromUser;
+  name: 'tip' | 'history' | 'userHistory';
+  backTo?: 'tip' | 'history' | 'userHistory';
+};
 
 // ts-unused-exports:disable-next-line
 export default function Donors() {
@@ -34,9 +41,9 @@ export default function Donors() {
 
 function DonorsContent() {
   const [tipEdges, setTipEdges] = useState<{ node: ZapperNode }[]>([]);
-  const [currentContent, setCurrentContent] = useState<'tip' | 'history'>(
-    'tip',
-  );
+  const [currentContent, setCurrentContent] = useState<contentValues>({
+    name: 'tip',
+  });
   const [validatedAddress, setValidatedAddress] = useState<
     string | null | undefined
   >();
@@ -76,12 +83,12 @@ function DonorsContent() {
     }
   }, [tips.data]);
 
-  const updateCurrentContent = (content: 'tip' | 'history') => {
+  const updateCurrentContent = (content: contentValues) => {
     setCurrentContent(content);
   };
 
   const currentContentComponent = useMemo(() => {
-    switch (currentContent) {
+    switch (currentContent.name) {
       case 'tip': {
         return (
           <div className="grid grid-cols-1 items-start gap-x-10 lg:grid-cols-2">
@@ -106,6 +113,15 @@ function DonorsContent() {
             address={validatedAddress}
             tipsLoading={tips.isLoading}
             isInvalidAddress={isInvalidAddress}
+            updateCurrentContent={updateCurrentContent}
+          />
+        );
+      }
+      case 'userHistory': {
+        return (
+          <UserHistoryList
+            backTo={currentContent.backTo}
+            userDetails={currentContent.userDetails}
             updateCurrentContent={updateCurrentContent}
           />
         );

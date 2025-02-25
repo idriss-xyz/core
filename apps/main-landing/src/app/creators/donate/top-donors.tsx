@@ -11,13 +11,14 @@ import {
   DonorItemPlaceholder,
 } from '@/app/creators/donate/components/donor-item';
 import { FromUser, ZapperNode } from '@/app/creators/donate/types';
+import { contentValues } from '@/app/creators/donate/page';
 
 type Properties = {
   className?: string;
   tipsLoading: boolean;
   validatedAddress?: string | null;
   tipEdges: { node: ZapperNode }[];
-  updateCurrentContent: (content: 'tip' | 'history') => void;
+  updateCurrentContent: (content: contentValues) => void;
 };
 
 const baseClassName =
@@ -117,8 +118,9 @@ export const TopDonors = ({
               return (
                 <DonorItem
                   donorRank={index}
-                  donateAmount={groupedTip.tipsSum}
                   donorDetails={groupedTip.user}
+                  donateAmount={groupedTip.tipsSum}
+                  updateCurrentContent={updateCurrentContent}
                   key={`${groupedTip.tipsSum}${groupedTip.tips[0].node.transaction.hash}`}
                 />
               );
@@ -137,7 +139,7 @@ export const TopDonors = ({
         <Link
           size="xs"
           onClick={() => {
-            updateCurrentContent('history');
+            updateCurrentContent({ name: 'history' });
           }}
           className={`mx-6 my-3 cursor-pointer ${sortedGroupedTips?.length === 0 ? 'invisible' : ''}`}
         >
