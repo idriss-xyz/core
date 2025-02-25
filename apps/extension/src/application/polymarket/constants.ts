@@ -25,7 +25,7 @@ export const EMPTY_MARKET_FORM = {
   selectedTokenId: '',
 } as const;
 
-export const EVENT_URL_REGEX = /https:\/\/polymarket\.com\/event\/[^\s"']+/g;
+export const EVENT_URL_REGEX = /https:\/\/poly\.market(?:\.com)?\/[^\s"']+/g;
 
 export const ROUNDING_CONFIG: Record<TickSize, RoundConfig> = {
   '0.1': {
