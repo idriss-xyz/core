@@ -25,8 +25,11 @@ import {
   WalletContextProvider,
   SolanaContextProviders,
 } from 'shared/extension';
-import { AuthTokenStorage, WalletStorage } from 'shared/web3';
-import { SolanaWalletStorage } from 'shared/web3/storage';
+import {
+  AuthTokenStorage,
+  WalletStorage,
+  SolanaWalletStorage,
+} from 'shared/web3';
 
 type Properties = {
   children: ReactNode;

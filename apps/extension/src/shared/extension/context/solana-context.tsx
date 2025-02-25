@@ -9,10 +9,10 @@ import {
 } from 'react';
 import { useModal } from '@ebay/nice-modal-react';
 import {
+  createSolanaWalletStore,
   SolanaWallet,
   SolanaWalletConnectModal,
 } from '@idriss-xyz/wallet-connect';
-import { Wallet as SolanaWalletWeb3js } from '@solana/wallet-adapter-react';
 import { createContextHook } from '@idriss-xyz/ui/utils';
 
 import { onWindowMessage } from '../../messaging';
@@ -34,32 +34,10 @@ const SolanaWalletContext = createContext<SolanaWalletContextValue | undefined>(
   undefined,
 );
 
-// Simple store implementation
-function createSolanaWalletStore() {
-  let wallets: SolanaWalletWeb3js[] = [];
-  const listeners = new Set<() => void>();
-
-  return {
-    subscribe(listener: () => void) {
-      listeners.add(listener);
-      return () => {return listeners.delete(listener)};
-    },
-    getProviders() {
-      return wallets;
-    },
-    addProvider(provider: SolanaWalletWeb3js) {
-      wallets.push(provider);
-      for (const listener of listeners) listener();
-    },
-    clear() {
-      wallets = [];
-      for (const listener of listeners) listener();
-    },
-  };
-}
-// Server-side snapshot
 const SERVER_SIDE_SNAPSHOT: [] = [];
-const getProvidersServerSnapshot = () => {return SERVER_SIDE_SNAPSHOT};
+const getProvidersServerSnapshot = () => {
+  return SERVER_SIDE_SNAPSHOT;
+};
 
 export const SolanaContextProvider = (properties: {
   children: ReactNode;
@@ -93,10 +71,9 @@ export const SolanaContextProvider = (properties: {
     [onSaveWallet],
   );
 
-  const solanaWalletProvidersStore = useMemo(
-    () => {return createSolanaWalletStore()},
-    [],
-  );
+  const solanaWalletProvidersStore = useMemo(() => {
+    return createSolanaWalletStore();
+  }, []);
 
   const availableWalletProviders = useSyncExternalStore(
     solanaWalletProvidersStore.subscribe,
