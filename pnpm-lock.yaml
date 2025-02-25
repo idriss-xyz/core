@@ -635,6 +635,9 @@ importers:
       '@idriss-xyz/ui':
         specifier: workspace:*
         version: link:../ui
+      '@solana/web3.js':
+        specifier: ^1.98.0
+        version: 1.98.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       mipd:
         specifier: ^0.0.7
         version: 0.0.7(typescript@5.6.3)

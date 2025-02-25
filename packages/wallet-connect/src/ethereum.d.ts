@@ -1,4 +1,5 @@
 import { EIP1193Provider } from 'mipd';
+import { PublicKey } from '@solana/web3.js';
 
 interface SolanaProvider {
   name: string;

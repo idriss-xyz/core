@@ -37,29 +37,29 @@ const SolanaWalletContext = createContext<SolanaWalletContextValue | undefined>(
 // Simple store implementation
 function createSolanaWalletStore() {
   let wallets: SolanaWalletWeb3js[] = [];
-  let listeners = new Set<() => void>();
+  const listeners = new Set<() => void>();
 
   return {
     subscribe(listener: () => void) {
       listeners.add(listener);
-      return () => listeners.delete(listener);
+      return () => {return listeners.delete(listener)};
     },
     getProviders() {
       return wallets;
     },
     addProvider(provider: SolanaWalletWeb3js) {
       wallets.push(provider);
-      listeners.forEach((listener) => listener());
+      for (const listener of listeners) listener();
     },
     clear() {
       wallets = [];
-      listeners.forEach((listener) => listener());
+      for (const listener of listeners) listener();
     },
   };
 }
 // Server-side snapshot
 const SERVER_SIDE_SNAPSHOT: [] = [];
-const getProvidersServerSnapshot = () => SERVER_SIDE_SNAPSHOT;
+const getProvidersServerSnapshot = () => {return SERVER_SIDE_SNAPSHOT};
 
 export const SolanaContextProvider = (properties: {
   children: ReactNode;
@@ -94,7 +94,7 @@ export const SolanaContextProvider = (properties: {
   );
 
   const solanaWalletProvidersStore = useMemo(
-    () => createSolanaWalletStore(),
+    () => {return createSolanaWalletStore()},
     [],
   );
 
@@ -163,7 +163,7 @@ export const SolanaContextProvider = (properties: {
 
   useEffect(() => {
     wallet?.provider.on('accountsChanged', (accounts) => {
-      if (accounts && accounts[0]) {
+      if (accounts?.[0]) {
         const loggedInToCurrentWallet = accounts[0].includes(wallet.account);
 
         if (!loggedInToCurrentWallet) {
