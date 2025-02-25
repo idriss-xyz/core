@@ -174,6 +174,30 @@ export class ContentScript {
     );
   }
 
+  subscribeToSolanaWallet() {
+    onWindowMessage('GET_SOLANA_WALLET', async () => {
+      const maybeWallet = await ExtensionSettingsManager.getSolanaWallet();
+
+      const message = {
+        type: 'GET_SOLANA_WALLET_RESPONSE',
+        detail: maybeWallet,
+      };
+
+      window.postMessage(message);
+    });
+
+    onWindowMessage('CLEAR_SOLANA_WALLET', () => {
+      void ExtensionSettingsManager.clearSolanaWallet();
+    });
+
+    onWindowMessage<{ account: string; providerName: string }>(
+      'SAVE_SOLANA_WALLET',
+      (v) => {
+        void ExtensionSettingsManager.saveSolanaWallet(v);
+      },
+    );
+  }
+
   // TODO: move these message names to constants in shared/web3
   subscribeToAuthToken() {
     onWindowMessage('GET_AUTH_TOKEN', async () => {

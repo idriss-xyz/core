@@ -1,5 +1,5 @@
 import { DEFAULT_EXTENSION_SETTINGS, SETTINGS_STORAGE_KEY } from './constants';
-import { ExtensionSettings, StoredWallet } from './types';
+import { ExtensionSettings, StoredWallet, StoredSolanaWallet } from './types';
 
 export const ExtensionSettingsManager = {
   getAllSettings(): Promise<ExtensionSettings> {
@@ -49,6 +49,37 @@ export const ExtensionSettingsManager = {
     });
   },
 
+  saveSolanaWallet(wallet: StoredSolanaWallet) {
+    return chrome.storage.local.set({
+      'idriss-solana-wallet': JSON.stringify(wallet),
+    });
+  },
+
+  clearSolanaWallet() {
+    return chrome.storage.local.remove('idriss-solana-wallet');
+  },
+
+  getSolanaWallet(): Promise<StoredSolanaWallet | undefined> {
+    return new Promise((resolve) => {
+      void chrome.storage.local.get('idriss-solana-wallet').then((storedWalletRaw) => {
+        const storedWallet = storedWalletRaw['idriss-solana-wallet']
+          ? (JSON.parse(storedWalletRaw['idriss-solana-wallet']) as StoredSolanaWallet)
+          : undefined;
+        return resolve(storedWallet);
+      });
+    });
+  },
+
+  onSolanaWalletChange(callback: (newWallet: StoredSolanaWallet | undefined) => void) {
+    chrome.storage.onChanged.addListener((changes, namespace) => {
+      if (namespace === 'local' && changes['idriss-solana-wallet']) {
+        const newWallet = changes['idriss-solana-wallet'].newValue
+          ? (JSON.parse(changes['idriss-solana-wallet'].newValue) as StoredSolanaWallet)
+          : undefined;
+        callback(newWallet);
+      }
+    });
+  },
   // TODO: move the device-id to a separate manager
   setDeviceId(id: string) {
     return chrome.storage.local.set({

@@ -7,6 +7,11 @@ interface StoredWallet {
   providerRdns: string;
 }
 
+interface StoredSolanaWallet {
+  account: string;
+  providerName: string;
+}
+
 type StoredAuthToken = string | undefined;
 
 export class WalletStorage {
@@ -26,6 +31,36 @@ export class WalletStorage {
   }
 
   public static save(payload: StoredWallet) {
+    window.postMessage({
+      type: 'SAVE_WALLET',
+      detail: payload,
+    });
+  }
+
+  public static clear() {
+    window.postMessage({
+      type: 'CLEAR_WALLET',
+    });
+  }
+}
+
+export class SolanaWalletStorage {
+  public static get(): Promise<StoredSolanaWallet | undefined> {
+    return new Promise((resolve) => {
+      window.postMessage({
+        type: 'GET_WALLET',
+      });
+
+      onWindowMessage<StoredSolanaWallet | undefined>(
+        'GET_WALLET_RESPONSE',
+        (maybeWallet) => {
+          resolve(maybeWallet);
+        },
+      );
+    });
+  }
+
+  public static save(payload: StoredSolanaWallet) {
     window.postMessage({
       type: 'SAVE_WALLET',
       detail: payload,
