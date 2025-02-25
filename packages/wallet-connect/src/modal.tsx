@@ -133,7 +133,7 @@ export const WalletConnectModal = createModal(
 interface SolAdapter extends SolanaProvider {
   name: string;
   icon: string;
-  publicKey?: string;
+  publicKey: string;
 }
 
 interface SolWallet {
