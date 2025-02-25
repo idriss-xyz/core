@@ -61,20 +61,28 @@ export const ExtensionSettingsManager = {
 
   getSolanaWallet(): Promise<StoredSolanaWallet | undefined> {
     return new Promise((resolve) => {
-      void chrome.storage.local.get('idriss-solana-wallet').then((storedWalletRaw) => {
-        const storedWallet = storedWalletRaw['idriss-solana-wallet']
-          ? (JSON.parse(storedWalletRaw['idriss-solana-wallet']) as StoredSolanaWallet)
-          : undefined;
-        return resolve(storedWallet);
-      });
+      void chrome.storage.local
+        .get('idriss-solana-wallet')
+        .then((storedWalletRaw) => {
+          const storedWallet = storedWalletRaw['idriss-solana-wallet']
+            ? (JSON.parse(
+                storedWalletRaw['idriss-solana-wallet'],
+              ) as StoredSolanaWallet)
+            : undefined;
+          return resolve(storedWallet);
+        });
     });
   },
 
-  onSolanaWalletChange(callback: (newWallet: StoredSolanaWallet | undefined) => void) {
+  onSolanaWalletChange(
+    callback: (newWallet: StoredSolanaWallet | undefined) => void,
+  ) {
     chrome.storage.onChanged.addListener((changes, namespace) => {
       if (namespace === 'local' && changes['idriss-solana-wallet']) {
         const newWallet = changes['idriss-solana-wallet'].newValue
-          ? (JSON.parse(changes['idriss-solana-wallet'].newValue) as StoredSolanaWallet)
+          ? (JSON.parse(
+              changes['idriss-solana-wallet'].newValue,
+            ) as StoredSolanaWallet)
           : undefined;
         callback(newWallet);
       }

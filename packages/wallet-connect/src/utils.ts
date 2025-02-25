@@ -9,7 +9,9 @@ export function createSolanaWalletStore() {
   return {
     subscribe(listener: () => void) {
       listeners.add(listener);
-      return () => {return listeners.delete(listener)};
+      return () => {
+        return listeners.delete(listener);
+      };
     },
     getProviders() {
       return wallets;
