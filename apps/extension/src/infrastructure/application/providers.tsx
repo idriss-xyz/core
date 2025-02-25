@@ -26,6 +26,7 @@ import {
   SolanaContextProviders,
 } from 'shared/extension';
 import { AuthTokenStorage, WalletStorage } from 'shared/web3';
+import { SolanaWalletStorage } from 'shared/web3/storage';
 
 type Properties = {
   children: ReactNode;
@@ -54,7 +55,11 @@ export const Providers = ({
                             onSaveAuthToken={AuthTokenStorage.save}
                           >
                             <NotificationsProvider>
-                              <SolanaContextProviders>
+                              <SolanaContextProviders
+                                onGetWallet={SolanaWalletStorage.get}
+                                onClearWallet={SolanaWalletStorage.clear}
+                                onSaveWallet={SolanaWalletStorage.save}
+                              >
                                 <WalletContextProvider
                                   disabledWalletsRdns={disabledWalletRdns}
                                   onGetWallet={WalletStorage.get}
