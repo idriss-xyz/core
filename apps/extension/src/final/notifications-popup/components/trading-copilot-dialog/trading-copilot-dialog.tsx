@@ -7,14 +7,8 @@ import { formatEther, Hex, isAddress } from 'viem';
 import { useCallback } from 'react';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
-import { useWallet as useSolanaWallet } from '@solana/wallet-adapter-react';
-import { NiceModalHocProps, useModal } from '@ebay/nice-modal-react';
-import {
-  SolanaWalletConnectModal,
-  SolanaProperties,
-} from '@idriss-xyz/wallet-connect';
 
-import { useWallet } from 'shared/extension';
+import { useWallet, useSolanaWallet } from 'shared/extension';
 import { Closable, ErrorMessage, Icon, LazyImage } from 'shared/ui';
 import { useCommandQuery } from 'shared/messaging';
 import {
@@ -151,30 +145,13 @@ const TradingCopilotDialogContent = ({
   } = useWallet();
   const isSolanaTrade = dialog.tokenIn.network === 'SOLANA';
   const {
-    connecting,
-    connected,
     wallet: solanaWallet,
-    publicKey,
-    wallets,
-    select,
-    connect,
-    signTransaction,
+    isConnectionModalOpened: isSolanaConnectionModalOpened,
+    openConnectionModal: openSolanaConnectionModal,
   } = useSolanaWallet();
-  const { show } = useModal<
-    SolanaProperties & NiceModalHocProps,
-    Record<string, unknown>
-  >(SolanaWalletConnectModal, {
-    connectWallet: connect,
-    selectWallet: select,
-    wallets,
-    wallet: solanaWallet,
-  });
-  const isWalletConnected = isSolanaTrade ? connected : ensWallet;
+  const isWalletConnected = isSolanaTrade ? solanaWallet : ensWallet;
   const evmExchanger = useExchanger({ wallet: ensWallet });
-  const solanaExchanger = useSolanaExchanger({
-    publicKey: publicKey?.toString(),
-    signTransaction,
-  });
+  const solanaExchanger = useSolanaExchanger({ wallet: solanaWallet });
   const exchanger = isSolanaTrade ? solanaExchanger : evmExchanger;
   const wallet = isSolanaTrade ? solanaWallet : ensWallet;
   const siwe = useLoginViaSiwe();
@@ -431,12 +408,16 @@ const TradingCopilotDialogContent = ({
               onClick={
                 isSolanaTrade
                   ? () => {
-                      return show();
+                      return openSolanaConnectionModal;
                     }
                   : openConnectionModal
               }
               className="w-full"
-              loading={isSolanaTrade ? connecting : isConnectionModalOpened}
+              loading={
+                isSolanaTrade
+                  ? isSolanaConnectionModalOpened
+                  : isConnectionModalOpened
+              }
             >
               LOG IN
             </Button>
@@ -480,8 +461,7 @@ const TradingCopilotWalletBalance = ({
 };
 
 const TradingCopilotTradeValue = ({ wallet, dialog }: TradeValueProperties) => {
-  const address =
-    'adapter' in wallet ? wallet.adapter.publicKey?.toString() : wallet.account;
+  const address = wallet.account;
   const quotePayload = {
     amount: (
       dialog.tokenIn.amount *

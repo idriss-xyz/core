@@ -5,4 +5,4 @@ export {
 } from './extension-popup-context';
 export { useAuthToken, AuthTokenContextProvider } from './auth-token-context';
 export { WalletContextProvider, useWallet } from './wallet-context';
-export { SolanaContextProvider } from './solana-context';
+export { SolanaContextProvider, useSolanaWallet } from './solana-context';

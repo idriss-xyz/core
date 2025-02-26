@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { formatEther, getAddress, hexToNumber, parseEther } from 'viem';
-import { Transaction, VersionedTransaction } from '@solana/web3.js';
+import { SolanaWallet } from '@idriss-xyz/wallet-connect';
 
 import { useWallet } from 'shared/extension';
 import { Wallet, CHAIN, useSwitchChain } from 'shared/web3';
@@ -155,24 +155,16 @@ export const useExchanger = ({ wallet }: Properties) => {
 };
 
 interface SolanaExchangerProperties {
-  publicKey?: string;
-  signTransaction?:
-    | (<T extends VersionedTransaction | Transaction>(
-        transaction: T,
-      ) => Promise<T>)
-    | undefined;
+  wallet?: SolanaWallet;
 }
 
-export const useSolanaExchanger = ({
-  publicKey,
-  signTransaction,
-}: SolanaExchangerProperties) => {
+export const useSolanaExchanger = ({ wallet }: SolanaExchangerProperties) => {
   const copilotTransaction = useCopilotSolanaTransaction();
   const getQuoteMutation = useCommandMutation(GetQuoteCommand);
 
   const exchange = useCallback(
     async ({ formValues, dialog }: CallbackProperties) => {
-      if (!publicKey || Number(formValues.amount) === 0) {
+      if (!wallet || Number(formValues.amount) === 0) {
         return;
       }
 
@@ -187,7 +179,7 @@ export const useSolanaExchanger = ({
       const quotePayload = {
         amount: amountInLamports.toString(),
         destinationChain: getChainId(dialog.tokenOut.network),
-        fromAddress: publicKey,
+        fromAddress: wallet.account,
         destinationToken: dialog.tokenIn.address,
         originChain: getChainId(dialog.tokenIn.network),
         originToken: '11111111111111111111111111111111',
@@ -210,10 +202,10 @@ export const useSolanaExchanger = ({
 
       copilotTransaction.mutate({
         transactionData,
-        signTransaction,
+        signTransaction: wallet.provider.signTransaction,
       });
     },
-    [publicKey, copilotTransaction, getQuoteMutation, signTransaction],
+    [copilotTransaction, getQuoteMutation, wallet],
   );
 
   const isSending = getQuoteMutation.isPending || copilotTransaction.isPending;

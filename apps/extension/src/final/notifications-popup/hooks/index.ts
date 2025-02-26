@@ -1,5 +1,5 @@
-import { Wallet as SolanaWallet } from '@solana/wallet-adapter-react';
 import { Hex } from 'viem';
+import { SolanaWallet } from '@idriss-xyz/wallet-connect';
 
 import {
   GetEnsBalanceCommand,
@@ -12,13 +12,13 @@ export const useAccountBalance = (
   wallet: Wallet | SolanaWallet | null | undefined,
 ) => {
   const command = wallet
-    ? 'adapter' in wallet
-      ? new GetSolanaBalanceCommand({
-          address: wallet.adapter.publicKey?.toString() ?? '',
-        })
-      : new GetEnsBalanceCommand({
+    ? 'chainId' in wallet
+      ? new GetEnsBalanceCommand({
           address: wallet.account ?? '',
           blockTag: 'safe',
+        })
+      : new GetSolanaBalanceCommand({
+          address: wallet.account ?? '',
         })
     : new GetEnsBalanceCommand({
         address: '' as Hex,

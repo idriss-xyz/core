@@ -56,11 +56,9 @@ export const useCopilotTransaction = () => {
 
 interface SolanaCopilotProperties {
   transactionData: SwapProperties;
-  signTransaction?:
-    | (<T extends VersionedTransaction | Transaction>(
-        transaction: T,
-      ) => Promise<T>)
-    | undefined;
+  signTransaction?: <T extends VersionedTransaction | Transaction>(
+    transaction: T,
+  ) => Promise<T>;
 }
 
 export const useCopilotSolanaTransaction = () => {

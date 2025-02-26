@@ -1,5 +1,5 @@
 import { EIP1193Provider } from 'mipd';
-import { PublicKey } from '@solana/web3.js';
+import { PublicKey, VersionedTransaction, Transaction } from '@solana/web3.js';
 
 interface SolanaProvider {
   name: string;
@@ -13,6 +13,9 @@ interface SolanaProvider {
     event: SolanaEvent,
     handler: (publicKey?: string) => void,
   ): void; // Optional to prevent runtime errors
+  signTransaction?<T extends VersionedTransaction | Transaction>(
+    transaction: T,
+  ): Promise<T>;
 }
 
 declare global {
