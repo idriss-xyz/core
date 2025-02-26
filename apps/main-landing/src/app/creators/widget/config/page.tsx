@@ -13,6 +13,7 @@ const FORM_VALUES = {
   address: '0x',
 };
 
+// ts-unused-exports:disable-next-line
 export default function Config() {
   const [address, setAddress] = useState<Hex | null>(null);
   const { control, handleSubmit, reset } = useForm<FormValues>({
