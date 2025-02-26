@@ -3,6 +3,7 @@ import { PublicKey, VersionedTransaction, Transaction } from '@solana/web3.js';
 
 interface SolanaProvider {
   name: string;
+  connected: boolean;
   isPhantom?: boolean;
   isSolflare?: boolean;
   connect(): Promise<void>;

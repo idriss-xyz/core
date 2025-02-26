@@ -135,7 +135,10 @@ export const SolanaWalletConnectModal = createModal(() => {
   const [isConnecting, setIsConnecting] = useState(false);
 
   const resolveWallet = useCallback(
-    (wallet: SolanaWallet) => {
+    async (wallet: SolanaWallet) => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 1000);
+      });
       modal.resolve(wallet);
       modal.remove();
     },
@@ -211,6 +214,10 @@ export const SolanaWalletConnectModal = createModal(() => {
         }
         const { provider } = foundProviderObject;
         await provider.connect();
+        await new Promise((resolve) => {
+          setTimeout(resolve, 500);
+        });
+
         const publicKey = provider.publicKey?.toString();
         void resolveWallet({
           account: publicKey ?? '',

@@ -202,7 +202,7 @@ export const useSolanaExchanger = ({ wallet }: SolanaExchangerProperties) => {
 
       copilotTransaction.mutate({
         transactionData,
-        signTransaction: wallet.provider.signTransaction,
+        wallet,
       });
     },
     [copilotTransaction, getQuoteMutation, wallet],
