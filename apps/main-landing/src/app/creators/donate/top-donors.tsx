@@ -85,9 +85,16 @@ export const TopDonors = ({
 
   if (validatedAddress !== undefined && addressValidationResult.error) {
     return (
-      <div className={classes(baseClassName, className, 'px-4 pb-9 pt-6')}>
+      <div
+        className={classes(
+          baseClassName,
+          className,
+          'min-h-[500px] items-center justify-center px-4 pb-9 pt-6',
+        )}
+      >
         <p className="flex items-center justify-center gap-2 text-center text-heading4 text-red-500">
-          <Icon name="AlertCircle" size={40} /> <span>Wrong address</span>
+          <Icon name="AlertCircle" size={40} />
+          <span>Wrong address</span>
         </p>
       </div>
     );
@@ -96,7 +103,7 @@ export const TopDonors = ({
   return (
     <div className={classes(className, baseClassName)}>
       <div
-        className={`relative flex w-full items-center justify-center overflow-hidden ${isStandalone ? 'h-[87px]' : 'min-h-[100px]'}`}
+        className={`relative flex w-full items-center justify-center overflow-hidden ${isStandalone ? 'h-[86px]' : 'min-h-[100px]'}`}
       >
         <img
           src={IDRISS_SCENE_STREAM_2.src}

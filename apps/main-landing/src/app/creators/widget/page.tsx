@@ -2,12 +2,11 @@
 import { Hex } from 'viem';
 import '@rainbow-me/rainbowkit/styles.css';
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
 import { default as io } from 'socket.io-client';
 import _ from 'lodash';
 
-import { validateAddressOrENS } from '@/app/creators/donate/utils';
 import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
+import { FormValues } from '@/app/creators/widget/types';
 
 import { TopDonors } from '../donate/top-donors';
 import { RainbowKitProviders } from '../donate/providers';
@@ -19,35 +18,38 @@ const SOCKET_URL = 'https://core-production-a116.up.railway.app';
 export default function Widget() {
   return (
     <RainbowKitProviders>
-      <DonorsContent />
+      <WidgetContent />
     </RainbowKitProviders>
   );
 }
 
-function DonorsContent() {
-  const [tipEdges, setTipEdges] = useState<{ node: ZapperNode }[]>([]);
-  const [validatedAddress, setValidatedAddress] = useState<
-    string | null | undefined
-  >();
-  const [socketInitialized, setSocketInitialized] = useState(false);
+function WidgetContent() {
   const [socketConnected, setSocketConnected] = useState(false);
-
-  const searchParameters = useSearchParams();
-  const addressFromParameters =
-    searchParameters.get('address') ?? searchParameters.get('streamerAddress');
+  const [socketInitialized, setSocketInitialized] = useState(false);
+  const [tipEdges, setTipEdges] = useState<{ node: ZapperNode }[]>([]);
+  const [address, setAddress] = useState<Hex | null | undefined>();
 
   useEffect(() => {
-    const validateAddress = async () => {
-      const address = await validateAddressOrENS(addressFromParameters);
+    if (!window.Twitch?.ext) {
+      return;
+    }
 
-      setValidatedAddress(address);
-    };
-    void validateAddress();
-  }, [addressFromParameters]);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    window.Twitch.ext.onAuthorized(() => {
+      const storedConfig = window.Twitch.ext.configuration.broadcaster?.content;
+
+      if (storedConfig) {
+        const parsedConfig: FormValues = JSON.parse(storedConfig);
+        setAddress(parsedConfig.address as Hex);
+      } else {
+        setAddress(null);
+      }
+    });
+  }, []);
 
   const tips = useGetTipHistory(
-    { address: validatedAddress as Hex },
-    { enabled: !!validatedAddress },
+    { address: address ?? '0x' },
+    { enabled: !!address },
   );
 
   useEffect(() => {
@@ -57,13 +59,13 @@ function DonorsContent() {
   }, [tips.data]);
 
   useEffect(() => {
-    if (validatedAddress && !socketInitialized) {
+    if (address && !socketInitialized) {
       const socket = io(SOCKET_URL);
       setSocketInitialized(true);
 
       if (socket && !socketConnected) {
         socket.on('connect', () => {
-          socket.emit('register', validatedAddress);
+          socket.emit('register', address);
 
           if (socket.connected) {
             setSocketConnected(true);
@@ -88,15 +90,20 @@ function DonorsContent() {
     }
 
     return;
-  }, [socketConnected, socketInitialized, validatedAddress]);
+  }, [address, socketConnected, socketInitialized]);
 
   return (
-    <TopDonors
-      isStandalone
-      tipEdges={tipEdges}
-      tipsLoading={tips.isLoading}
-      validatedAddress={validatedAddress}
-      className="overflow-hidden px-0"
-    />
+    <>
+      <TopDonors
+        isStandalone
+        tipEdges={tipEdges}
+        tipsLoading={tips.isLoading}
+        validatedAddress={address}
+        className="overflow-hidden px-0"
+      />
+
+      {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+      <script src="https://extension-files.twitch.tv/helper/v1/twitch-ext.min.js" />
+    </>
   );
 }

@@ -4,61 +4,54 @@ import { Form } from '@idriss-xyz/ui/form';
 import { Controller, useForm } from 'react-hook-form';
 import { Button } from '@idriss-xyz/ui/button';
 import { useEffect, useState } from 'react';
-import { Hex } from 'viem';
-import Script from 'next/script';
+import { Hex, isAddress } from 'viem';
 
 import { backgroundLines2, backgroundLines3 } from '@/assets';
+import { FormValues } from '@/app/creators/widget/types';
 
-const EMPTY_CONFIG_FORM_VALUES = {
+const FORM_VALUES = {
   address: '0x',
 };
 
 export default function Config() {
   const [address, setAddress] = useState<Hex | null>(null);
-  const [isClient, setIsClient] = useState(false);
-  const { control, handleSubmit } = useForm({
-    defaultValues: EMPTY_CONFIG_FORM_VALUES,
+  const { control, handleSubmit, reset } = useForm<FormValues>({
+    defaultValues: FORM_VALUES,
   });
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  const onSubmit = (payload: typeof EMPTY_CONFIG_FORM_VALUES) => {
-    if (window.Twitch?.ext) {
-      window.Twitch.ext.onAuthorized(() => {
-        window.Twitch.ext.configuration.set(
-          'broadcaster',
-          '1',
-          JSON.stringify({ address: payload.address }),
-        );
-        alert('Address saved successfully!');
-      });
-    } else {
-      console.error('Twitch extension is not available.');
+  const onSubmit = (payload: FormValues) => {
+    if (!window.Twitch?.ext || !isAddress(payload.address)) {
+      return;
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    window.Twitch.ext.configuration.set(
+      'broadcaster',
+      '1',
+      JSON.stringify(payload),
+    );
+
+    reset(FORM_VALUES);
+    setAddress(payload.address);
   };
 
   useEffect(() => {
-    if (isClient && window.Twitch?.ext) {
-      window.Twitch.ext.onAuthorized((auth) => {
-        if (auth.channelId) {
-          const storedConfig =
-            window.Twitch.ext.configuration.broadcaster.content;
-          if (storedConfig) {
-            const parsedConfig = JSON.parse(storedConfig);
-            if (parsedConfig.address) {
-              setAddress(parsedConfig.address);
-            }
-          }
-        }
-      });
+    if (!window.Twitch?.ext) {
+      return;
     }
-  }, [isClient]);
 
-  if (!isClient) {
-    return null;
-  }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    window.Twitch.ext.onAuthorized(() => {
+      const storedConfig = window.Twitch.ext.configuration.broadcaster?.content;
+
+      if (!storedConfig) {
+        return;
+      }
+
+      const parsedConfig: FormValues = JSON.parse(storedConfig);
+      setAddress(parsedConfig.address as Hex);
+    });
+  }, []);
 
   return (
     <>
@@ -78,7 +71,7 @@ export default function Config() {
             alt=""
           />
 
-          <h1 className="self-start text-heading4">Setup your panel</h1>
+          <h1 className="self-start text-heading4">Setup your extension</h1>
 
           <Form onSubmit={handleSubmit(onSubmit)} className="w-full">
             <Controller
@@ -86,15 +79,20 @@ export default function Config() {
               name="address"
               render={({ field }) => {
                 return (
-                  <Form.Field
-                    {...field}
-                    className="mt-6"
-                    value={field.value}
-                    label="Wallet address"
-                    onChange={(value) => {
-                      field.onChange(value);
-                    }}
-                  />
+                  <>
+                    <Form.Field
+                      {...field}
+                      className="mt-6"
+                      value={field.value}
+                      label="Wallet address"
+                      onChange={(value) => {
+                        field.onChange(value);
+                      }}
+                    />
+                    <span className="text-label7 text-neutralGreen-700">
+                      Saved: {address}
+                    </span>
+                  </>
                 );
               }}
             />
@@ -108,17 +106,11 @@ export default function Config() {
               SAVE
             </Button>
           </Form>
-
-          <div className="mt-4">
-            <p>Current saved address:</p>
-            <p>{address ?? 'No address set'}</p>
-          </div>
         </div>
       </main>
-      <Script
-        src="https://extension-files.twitch.tv/helper/v1/twitch-ext.min.js"
-        strategy="beforeInteractive"
-      />
+
+      {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+      <script src="https://extension-files.twitch.tv/helper/v1/twitch-ext.min.js" />
     </>
   );
 }
