@@ -151,14 +151,14 @@ export const SolanaWalletConnectModal = createModal(() => {
     walletProvidersStore.getProviders,
   );
 
-  const solanaWalletProviders = announcedProviders.map((wallet) => {
+  const solanaWalletProviders = announcedProviders.map((wallet, index) => {
     return {
       provider: wallet.adapter,
       info: {
-        uuid: wallet.adapter.name,
-        rdns: wallet.adapter.name,
-        icon: wallet.adapter.icon as `data:image/${string}`,
-        name: wallet.adapter.name,
+        uuid: index,
+        rdns: wallet.adapter.name || "Unknown",
+        icon: wallet.adapter.icon as `data:image/${string}` ?? "",
+        name: wallet.adapter.name || "Unknown",
       },
     };
   });

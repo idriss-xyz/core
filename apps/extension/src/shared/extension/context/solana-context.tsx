@@ -49,8 +49,7 @@ export const SolanaContextProvider = (properties: {
   const [tabChangedListenerInitialized, setTabChangedListenerInitialized] =
     useState(false);
   const [wallet, setWallet] = useState<SolanaWallet>();
-  // TODO: Refactor SolanaWalletConnectModal and add properties here
-  const walletConnectModal = useModal(SolanaWalletConnectModal, {});
+  const walletConnectModal = useModal(SolanaWalletConnectModal);
 
   const removeWalletInfo = useCallback(() => {
     onClearWallet?.();
