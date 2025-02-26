@@ -23,7 +23,7 @@ import {
   ExtensionPopupProvider,
   ExtensionSettingsProvider,
   WalletContextProvider,
-  SolanaContextProviders,
+  SolanaContextProvider,
 } from 'shared/extension';
 import {
   AuthTokenStorage,
@@ -58,7 +58,7 @@ export const Providers = ({
                             onSaveAuthToken={AuthTokenStorage.save}
                           >
                             <NotificationsProvider>
-                              <SolanaContextProviders
+                              <SolanaContextProvider
                                 onGetWallet={SolanaWalletStorage.get}
                                 onClearWallet={SolanaWalletStorage.clear}
                                 onSaveWallet={SolanaWalletStorage.save}
@@ -81,7 +81,7 @@ export const Providers = ({
                                     </ExtensionSettingsProvider>
                                   </ExtensionPopupProvider>
                                 </WalletContextProvider>
-                              </SolanaContextProviders>
+                              </SolanaContextProvider>
                             </NotificationsProvider>
                           </AuthTokenContextProvider>
                         </NiceModal.Provider>
