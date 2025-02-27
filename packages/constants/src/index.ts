@@ -25,6 +25,27 @@ export {
 
 export { StakingABI } from './abis';
 
-export { STAKER_ADDRESS } from './constants';
+export {
+  STAKER_ADDRESS,
+  CHAIN,
+  CHAIN_ID_TO_TOKENS,
+  TOKEN,
+  NATIVE_COIN_ADDRESS,
+  DEFAULT_ALLOWED_CHAINS_IDS,
+  EMPTY_HEX,
+} from './constants';
 
-export type { ClaimedEventsResponse } from './types';
+export type {
+  ClaimedEventsResponse,
+  Chain,
+  ChainToken,
+  TokenSymbol,
+  Token,
+  TipHistoryResponse,
+  TipHistoryFromUser,
+  TipHistoryNode,
+} from './types';
+
+export * from './logos';
+
+export { hexSchema } from './schema';

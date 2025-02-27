@@ -23,6 +23,7 @@
     "@ebay/nice-modal-react": "^1.2.13",
     "@hookform/resolvers": "^3.9.0",
     "@idriss-xyz/constants": "workspace:*",
+    "@idriss-xyz/utils": "workspace:*",
     "@idriss-xyz/ui": "workspace:*",
     "@idriss-xyz/wallet-connect": "workspace:*",
     "@lifi/sdk": "^3.4.2",

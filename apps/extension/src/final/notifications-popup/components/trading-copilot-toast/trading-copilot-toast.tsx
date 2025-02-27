@@ -1,10 +1,19 @@
 import { Button } from '@idriss-xyz/ui/button';
 import { isAddress } from 'viem';
 import { MutableRefObject, useRef } from 'react';
+import {
+  getShortWalletHex,
+  getTimeDifferenceString,
+  roundToSignificantFiguresForCopilotTrading,
+} from '@idriss-xyz/utils';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@idriss-xyz/ui/tooltip';
 
 import { Icon, PreloadedImage } from 'shared/ui';
-import { getShortWalletHex, TimeDifferenceCounter } from 'shared/utils';
-import { roundToSignificantFiguresForCopilotTrading } from 'shared/web3';
 import { useTradingCopilot } from 'shared/extension';
 
 import { TokenIcon } from '../../utils';
@@ -79,9 +88,35 @@ export const TradingCopilotToast = ({
           </span>
         </p>
         <div className="flex w-full justify-between">
-          <p className="text-body6 text-mint-700">
-            <TimeDifferenceCounter timestamp={toast.timestamp} text="ago" />
-          </p>
+          <TooltipProvider delayDuration={400}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <p className="w-fit text-body6 text-mint-700">
+                  {getTimeDifferenceString({
+                    text: 'ago',
+                    variant: 'short',
+                    timestamp: toast.timestamp,
+                  })}
+                </p>
+              </TooltipTrigger>
+
+              <TooltipContent className="z-notification w-fit bg-black text-white">
+                <p className="text-body6">
+                  {new Intl.DateTimeFormat('en-US', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false,
+                  })
+                    .format(new Date(toast.timestamp))
+                    .replaceAll('/', '-')}
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           <Button
             intent="primary"
             size="small"

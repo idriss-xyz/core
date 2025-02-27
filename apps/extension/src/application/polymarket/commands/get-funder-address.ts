@@ -1,3 +1,6 @@
+import { Hex } from 'viem';
+import { hexSchema } from '@idriss-xyz/constants';
+
 import {
   Command,
   FailureResult,
@@ -5,7 +8,6 @@ import {
   HandlerResponseError,
   OkResult,
 } from 'shared/messaging';
-import { Hex, hexSchema } from 'shared/web3';
 
 type Payload = {
   address: Hex;

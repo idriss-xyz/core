@@ -2,17 +2,17 @@ import { useMutation } from '@tanstack/react-query';
 import {
   encodeAbiParameters,
   encodeFunctionData,
+  Hex,
   parseAbiParameters,
 } from 'viem';
+import { getChainById } from '@idriss-xyz/utils';
+import { EMPTY_HEX } from '@idriss-xyz/constants';
+import { Wallet } from '@idriss-xyz/wallet-connect';
 
 import {
   createWalletClient,
-  EMPTY_HEX,
   GetAcrossChainFeeCommand,
-  getChainById,
-  Hex,
   TransactionRevertedError,
-  Wallet,
 } from 'shared/web3';
 import { useCommandMutation } from 'shared/messaging';
 import { useObservabilityScope } from 'shared/observability';

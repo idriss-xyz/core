@@ -4,11 +4,6 @@ export {
   GetImageCommand,
 } from './commands';
 
-export {
-  getDifferenceInDays,
-  TimeDifferenceCounter,
-  getEndsInLabel,
-} from './date-utils';
-export { getShortWalletHex } from './wallet-utils';
+export { getDifferenceInDays, getEndsInLabel } from './date-utils';
 export { isFarcasterName } from './subscription-utils';
 export { reverseObject, createLookup } from './objects';

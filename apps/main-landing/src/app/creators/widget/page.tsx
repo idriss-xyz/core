@@ -5,13 +5,13 @@ import { useEffect, useState } from 'react';
 import { default as io } from 'socket.io-client';
 import _ from 'lodash';
 import { useSearchParams } from 'next/navigation';
+import { TipHistoryNode } from '@idriss-xyz/constants';
 
 import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
 import { FormValues, WidgetVariants } from '@/app/creators/widget/types';
 
 import { TopDonors } from '../donate/top-donors';
 import { RainbowKitProviders } from '../donate/providers';
-import { ZapperNode } from '../donate/types';
 
 const SOCKET_URL = 'https://core-production-a116.up.railway.app';
 
@@ -27,7 +27,7 @@ export default function Widget() {
 function WidgetContent() {
   const [socketConnected, setSocketConnected] = useState(false);
   const [socketInitialized, setSocketInitialized] = useState(false);
-  const [tipEdges, setTipEdges] = useState<{ node: ZapperNode }[]>([]);
+  const [tipEdges, setTipEdges] = useState<{ node: TipHistoryNode }[]>([]);
   const [address, setAddress] = useState<Hex | null | undefined>();
 
   const searchParameters = useSearchParams();
@@ -85,7 +85,7 @@ function WidgetContent() {
           }
         });
 
-        socket.on('newDonation', (node: ZapperNode) => {
+        socket.on('newDonation', (node: TipHistoryNode) => {
           setTipEdges((previousState) => {
             return _.uniqBy([{ node }, ...previousState], (item) => {
               return _.get(item, 'node.transaction.hash');

@@ -1,8 +1,8 @@
 import { hmac } from '@noble/hashes/hmac';
 import { sha256 } from '@noble/hashes/sha256';
-import { parseUnits } from 'viem';
+import { Hex, parseUnits } from 'viem';
 
-import { CHAIN, Hex } from 'shared/web3';
+import { CHAIN } from 'shared/web3';
 
 import {
   COLLATERAL_TOKEN_DECIMALS,

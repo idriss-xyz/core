@@ -166,6 +166,9 @@ importers:
       '@idriss-xyz/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@idriss-xyz/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       '@idriss-xyz/wallet-connect':
         specifier: workspace:*
         version: link:../../packages/wallet-connect
@@ -395,6 +398,9 @@ importers:
       '@idriss-xyz/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@idriss-xyz/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       '@idriss-xyz/wallet-connect':
         specifier: workspace:*
         version: link:../../packages/wallet-connect
@@ -518,6 +524,16 @@ importers:
         version: 5.6.3
 
   packages/constants:
+    dependencies:
+      '@swc/helpers':
+        specifier: ^0.5.13
+        version: 0.5.15
+      viem:
+        specifier: 2.21.33
+        version: 2.21.33(bufferutil@4.0.9)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.23.8)
+      zod:
+        specifier: 3.23.8
+        version: 3.23.8
     devDependencies:
       '@idriss-xyz/eslint-config':
         specifier: workspace:*
@@ -698,6 +714,13 @@ importers:
         version: 5.6.3
 
   packages/utils:
+    dependencies:
+      '@swc/helpers':
+        specifier: ^0.5.13
+        version: 0.5.15
+      viem:
+        specifier: 2.21.33
+        version: 2.21.33(bufferutil@4.0.9)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.23.8)
     devDependencies:
       '@idriss-xyz/eslint-config':
         specifier: workspace:*
@@ -3223,9 +3246,6 @@ packages:
 
   '@scure/base@1.1.9':
     resolution: {integrity: sha512-8YKhl8GHiNI/pU2VMaofa2Tor7PJRAjwQLBBuilkJ9L5+13yVbC7JO/wS7piioAvPSwR3JKM1IJ/u4xQzbcXKg==}
-
-  '@scure/base@1.2.1':
-    resolution: {integrity: sha512-DGmGtC8Tt63J5GfHgfl5CuAXh96VF/LD8K9Hr/Gv0J2lAoRGlPOMpqMpMbCTOoOJMZCk2Xt+DskdDyn6dEFdzQ==}
 
   '@scure/base@1.2.4':
     resolution: {integrity: sha512-5Yy9czTO47mqz+/J8GM6GIId4umdCk1wc1q8rKERQulIoc8VP9pzDcghv10Tl2E7R96ZUx/PhND3ESYUQX8NuQ==}
@@ -11612,7 +11632,7 @@ snapshots:
       bech32: 2.0.0
       bitcoinjs-lib: 7.0.0-rc.0(typescript@5.6.3)
       bs58: 6.0.0
-      viem: 2.21.55(bufferutil@4.0.9)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.23.8)
+      viem: 2.23.2(bufferutil@4.0.9)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.23.8)
     transitivePeerDependencies:
       - bufferutil
       - typescript
@@ -12484,7 +12504,7 @@ snapshots:
       '@ethereumjs/tx': 4.2.0
       '@metamask/superstruct': 3.1.0
       '@noble/hashes': 1.7.1
-      '@scure/base': 1.2.1
+      '@scure/base': 1.2.4
       '@types/debug': 4.1.12
       debug: 4.4.0
       pony-cause: 2.1.11
@@ -12498,7 +12518,7 @@ snapshots:
       '@ethereumjs/tx': 4.2.0
       '@metamask/superstruct': 3.1.0
       '@noble/hashes': 1.7.1
-      '@scure/base': 1.2.1
+      '@scure/base': 1.2.4
       '@types/debug': 4.1.12
       debug: 4.4.0
       pony-cause: 2.1.11
@@ -13586,7 +13606,7 @@ snapshots:
   '@safe-global/safe-apps-sdk@9.1.0(bufferutil@4.0.9)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.23.8)':
     dependencies:
       '@safe-global/safe-gateway-typescript-sdk': 3.22.4
-      viem: 2.21.55(bufferutil@4.0.9)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.23.8)
+      viem: 2.23.2(bufferutil@4.0.9)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.23.8)
     transitivePeerDependencies:
       - bufferutil
       - typescript
@@ -13603,8 +13623,6 @@ snapshots:
     optional: true
 
   '@scure/base@1.1.9': {}
-
-  '@scure/base@1.2.1': {}
 
   '@scure/base@1.2.4': {}
 
@@ -13624,7 +13642,7 @@ snapshots:
     dependencies:
       '@noble/curves': 1.7.0
       '@noble/hashes': 1.6.1
-      '@scure/base': 1.2.1
+      '@scure/base': 1.2.4
 
   '@scure/bip32@1.6.2':
     dependencies:
@@ -13645,7 +13663,7 @@ snapshots:
   '@scure/bip39@1.5.0':
     dependencies:
       '@noble/hashes': 1.6.1
-      '@scure/base': 1.2.1
+      '@scure/base': 1.2.4
 
   '@scure/bip39@1.5.4':
     dependencies:
@@ -19683,9 +19701,9 @@ snapshots:
       '@adraffy/ens-normalize': 1.11.0
       '@noble/curves': 1.8.1
       '@noble/hashes': 1.7.1
-      '@scure/bip32': 1.6.0
-      '@scure/bip39': 1.5.0
-      abitype: 1.0.7(typescript@5.6.3)(zod@3.23.8)
+      '@scure/bip32': 1.6.2
+      '@scure/bip39': 1.5.4
+      abitype: 1.0.8(typescript@5.6.3)(zod@3.23.8)
       eventemitter3: 5.0.1
     optionalDependencies:
       typescript: 5.6.3
