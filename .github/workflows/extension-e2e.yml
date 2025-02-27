@@ -1,0 +1,103 @@
+name: Extension Playwright Tests
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'apps/extension/**'
+  schedule:
+    - cron: '0 12 * * *'
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Setup Node.js with pnpm cache
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        working-directory: apps/extension 
+        run: pnpm install
+
+      - name: Create fake .env.production file
+        working-directory: apps/extension
+        run: |
+          echo "SENTRY_AUTH_TOKEN=test_token" >> .env.production
+          echo "SENTRY_ENVIRONMENT=test_production" >> .env.production
+          echo "SENTRY_DSN=test_dns" >> .env.production
+          echo "SENTRY_ORGANISATION=test_organisation" >> .env.production
+          echo "SENTRY_PROJECT=test_project" >> .env.production
+          echo "AMPLITUDE_API_KEY=test_api_key" >> .env.production
+
+      - name: Build Extension
+        working-directory: apps/extension
+        run: pnpm run build
+
+      - name: Install Playwright Browsers
+        working-directory: apps/extension
+        run: npx playwright install chromium
+
+      - name: Run Playwright tests with xvfb
+        id: run_tests
+        working-directory: apps/extension
+        run: xvfb-run npx playwright test
+          
+      - name: Upload Playwright Artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-artifacts
+          path: |
+              apps/extension/test-results/test-output/**/trace.zip
+              apps/extension/test-results/html-report/
+          retention-days: 7
+
+      - name: Send Discord Notification on Failure
+        if: failure()
+        run: |
+          ARTIFACT_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d '{
+                "username": "Injection Tester",
+                "avatar_url": "https://cdn-icons-png.flaticon.com/512/5968/5968896.png",
+                "embeds": [
+                  {
+                    "title": "🚨 Injection Tests Failed!",
+                    "description": "Injection tests **failed** in the GitHub Actions workflow.",
+                    "color": 15158332,
+                    "fields": [
+                      {
+                        "name": "🗂 Repository",
+                        "value": "`${{ github.repository }}`",
+                        "inline": true
+                      },
+                      {
+                        "name": "🌿 Branch",
+                        "value": "`${{ github.ref }}`",
+                        "inline": true
+                      },
+                      {
+                        "name": "📂 Test Artifacts",
+                        "value": "[Download Playwright Artifacts]('"$ARTIFACT_URL"')\n\nExtract the files, open a terminal in the extracted folder, and run:\n```sh\nnpx playwright show-report html-report\n```"
+                      }
+                    ],
+                    "footer": {
+                      "text": "Triggered by GitHub Actions",
+                      "icon_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+                    }
+                  }
+                ]
+              }' \
+               ${{ secrets.DISCORD_WEBHOOK_URL }}

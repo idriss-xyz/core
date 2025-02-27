@@ -3,6 +3,7 @@ import { useWindowSize } from 'react-use';
 import { Modal } from '@idriss-xyz/ui/modal';
 
 import { PortalWithTailwind } from 'shared/ui';
+import { TEST_IDS } from 'tests/e2e';
 
 import { WIDGET_WIDTH } from '../../constants';
 
@@ -115,6 +116,7 @@ export const Container = memo(
         )}
         <PortalWithTailwind container={portal}>
           <img
+            data-testid={TEST_IDS.sendButton}
             src={iconSrc}
             width={iconSize}
             height={iconSize}
