@@ -101,12 +101,20 @@ export class ServiceWorker {
     });
 
     ExtensionSettingsManager.onWalletChange((wallet) => {
-      if (this.socket.connected) {
-        this.socket.disconnect();
-      }
+      console.log(
+        '%c[WebSocket] Wallet changed.',
+        'color: #FF9900;',
+      );
 
-      if (wallet?.account) {
-        this.socket.connect();
+      // Solana wallets should not trigger reconnect
+      if (wallet && "providerRdns" in wallet ){
+        if (this.socket.connected) {
+          this.socket.disconnect();
+        }
+
+        if (wallet?.account) {
+          this.socket.connect();
+        }
       }
     });
 
