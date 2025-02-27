@@ -18,14 +18,12 @@ const rankPlaces = ['1st', '2nd', '3rd'];
 
 type Properties = {
   donorRank: number;
-  hideBorder?: boolean;
   donateAmount: number;
   donorDetails: FromUser;
 };
 
 export default function DonorItem({
   donorRank,
-  hideBorder,
   donateAmount,
   donorDetails,
 }: Properties) {
@@ -69,9 +67,7 @@ export default function DonorItem({
   );
 
   return (
-    <li
-      className={`grid grid-cols-[10px,1fr,70px] items-center gap-x-3.5 border-b-neutral-300 px-5.5 py-4.5 text-body5 md:grid-cols-[10px,1fr,100px] ${hideBorder ? '' : 'border-b'}`}
-    >
+    <li className="grid grid-cols-[10px,1fr,70px] items-center gap-x-3.5 border-b border-b-neutral-300 px-5.5 py-4.5 text-body5 md:grid-cols-[10px,1fr,100px]">
       <span className="text-neutral-600">{donorRank + 1}</span>
       <span className="flex items-center gap-x-1.5 text-neutral-900">
         {avatarImage}
@@ -92,13 +88,15 @@ export default function DonorItem({
 
 type PlaceholderProperties = {
   donorRank: number;
-  hideBorder?: boolean;
+  amountToDisplay: number;
+  hideEncouragement?: boolean;
   previousDonateAmount: number;
 };
 
 export function DonorItemPlaceholder({
   donorRank,
-  hideBorder,
+  hideEncouragement,
+  amountToDisplay,
   previousDonateAmount,
 }: PlaceholderProperties) {
   const avatarPlaceholder = (
@@ -137,11 +135,14 @@ export function DonorItemPlaceholder({
               : '<0.01'}
           </span>
         </li>
+
         <span
-          style={{ height: `${(5 - donorRank) * 69}px` }}
-          className={`flex items-center justify-center border-b-neutral-300 px-5.5 py-4.5 text-center text-label4 gradient-text-2 ${hideBorder ? '' : 'border-b'}`}
+          style={{ height: `${(amountToDisplay - 1 - donorRank) * 69}px` }}
+          className="flex items-center justify-center border-b border-b-neutral-300 px-5.5 py-4.5 text-center text-label4 gradient-text-2"
         >
-          Donate now and claim {rankPlaces[donorRank]} place
+          {hideEncouragement
+            ? null
+            : `Donate now and claim ${rankPlaces[donorRank]} place`}
         </span>
       </>
     );
@@ -149,8 +150,8 @@ export function DonorItemPlaceholder({
 
   return (
     <span
-      style={{ height: `${(6 - donorRank) * 69}px` }}
-      className={`flex items-center justify-center border-b-neutral-300 ${hideBorder ? '' : 'border-b'}`}
+      style={{ height: `${(amountToDisplay - donorRank) * 69}px` }}
+      className="flex items-center justify-center border-b border-b-neutral-300"
     />
   );
 }

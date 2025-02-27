@@ -28,17 +28,15 @@ function WidgetContent() {
   const [socketConnected, setSocketConnected] = useState(false);
   const [socketInitialized, setSocketInitialized] = useState(false);
   const [tipEdges, setTipEdges] = useState<{ node: ZapperNode }[]>([]);
-  const [address, setAddress] = useState<Hex | null | undefined>(
-    '0x42d4cb836571e60ffc84a6cdbeaa2f0d2240c2bd',
-  );
+  const [address, setAddress] = useState<Hex | null | undefined>();
 
   const searchParameters = useSearchParams();
   const variant = searchParameters.get('variant');
   const widgetVariant: WidgetVariants = [
+    null,
     'panel',
     'videoOverlay',
     'videoComponent',
-    null,
   ].includes(variant)
     ? (variant as WidgetVariants)
     : null;
@@ -57,7 +55,7 @@ function WidgetContent() {
         const parsedConfig: FormValues = JSON.parse(storedConfig);
         setAddress(parsedConfig.address as Hex);
       } else {
-        // setAddress(null);
+        setAddress(null);
       }
     });
   }, []);
@@ -116,7 +114,7 @@ function WidgetContent() {
             variant={widgetVariant}
             validatedAddress={address}
             tipsLoading={tips.isLoading}
-            className="absolute right-0 top-0 scale-75 overflow-hidden px-0"
+            className="relative right-0 top-0 origin-top-right scale-[.85]"
           />
         </div>
       ) : (
@@ -125,7 +123,6 @@ function WidgetContent() {
           variant={widgetVariant}
           validatedAddress={address}
           tipsLoading={tips.isLoading}
-          className="overflow-hidden px-0"
         />
       )}
 

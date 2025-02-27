@@ -3,6 +3,7 @@ import { Link } from '@idriss-xyz/ui/link';
 import { formatUnits } from 'viem';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import { Icon } from '@idriss-xyz/ui/icon';
+import { Button } from '@idriss-xyz/ui/button';
 
 import { IDRISS_SCENE_STREAM_2 } from '@/assets';
 import { hexSchema } from '@/app/creators/donate/schema';
@@ -33,11 +34,13 @@ export const TopDonors = ({
   validatedAddress,
   updateCurrentContent,
 }: Properties) => {
+  const donationURL = `https://www.idriss.xyz/creators/donate?address=${validatedAddress}`;
   const addressValidationResult = hexSchema.safeParse(validatedAddress);
 
-  const fixedSize = variant === 'panel' || variant === 'videoComponent';
-  const isVideoOverlay = variant === 'videoOverlay';
-  const hideBorder = variant !== null;
+  const isTwitchExtension = variant !== null && variant !== undefined;
+  const isTwitchPanel = variant === 'panel';
+  const isTwitchOverlay = variant === 'videoOverlay';
+  const isTwitchComponent = variant === 'videoComponent';
 
   const groupedTips = tipEdges?.reduce(
     (accumulator, tip) => {
@@ -110,13 +113,13 @@ export const TopDonors = ({
       className={classes(
         baseClassName,
         className,
-        isVideoOverlay ? 'w-[330px]' : '',
+        isTwitchExtension ? 'w-[360px]' : '',
       )}
     >
       <div
         className={classes(
-          'relative flex w-full items-center justify-center overflow-hidden',
-          fixedSize || isVideoOverlay ? 'h-[86px]' : 'min-h-[100px]',
+          'relative flex min-h-[100px] w-full items-center justify-center overflow-hidden',
+          isTwitchPanel ? 'min-h-[83px]' : '',
         )}
       >
         <img
@@ -133,39 +136,119 @@ export const TopDonors = ({
         {tipsLoading || !validatedAddress || !sortedGroupedTips ? (
           <span
             className={classes(
-              'flex w-full items-center justify-center border-b-neutral-300 px-5.5 py-4.5',
-              fixedSize ? 'h-[414px]' : 'border-b',
+              'flex min-h-[207px] w-full items-center justify-center border-b-neutral-300 px-5.5 py-4.5',
+              isTwitchPanel ? 'min-h-[345px]' : '',
             )}
           >
             <Spinner className="size-16 text-mint-600" />
           </span>
         ) : (
-          <ul>
-            {sortedGroupedTips.map((groupedTip, index) => {
-              if (!groupedTip.tips[0] || index > 5) return null;
+          <ul className={isTwitchPanel ? 'min-h-[345px]' : ''}>
+            {isTwitchPanel && (
+              <>
+                {sortedGroupedTips.map((groupedTip, index) => {
+                  if (!groupedTip.tips[0] || index > 4) return null;
 
-              return (
-                <DonorItem
-                  donorRank={index}
-                  donorDetails={groupedTip.user}
-                  donateAmount={groupedTip.tipsSum}
-                  hideBorder={hideBorder && index === 5}
-                  key={`${groupedTip.tipsSum}${groupedTip.tips[0].node.transaction.hash}`}
-                />
-              );
-            })}
+                  return (
+                    <DonorItem
+                      donorRank={index}
+                      donorDetails={groupedTip.user}
+                      donateAmount={groupedTip.tipsSum}
+                      key={`${groupedTip.tipsSum}${groupedTip.tips[0].node.transaction.hash}`}
+                    />
+                  );
+                })}
+                {sortedGroupedTips.length <= 5 ? (
+                  <DonorItemPlaceholder
+                    amountToDisplay={5}
+                    donorRank={sortedGroupedTips.length}
+                    previousDonateAmount={
+                      sortedGroupedTips.at(-1)?.tipsSum ?? 1234
+                    }
+                  />
+                ) : null}
+              </>
+            )}
 
-            {(!isVideoOverlay && sortedGroupedTips.length <= 5) ||
-            (isVideoOverlay && sortedGroupedTips.length <= 2) ? (
-              <DonorItemPlaceholder
-                hideBorder={hideBorder}
-                donorRank={sortedGroupedTips.length}
-                previousDonateAmount={sortedGroupedTips.at(-1)?.tipsSum ?? 1234}
-              />
+            {isTwitchComponent || isTwitchOverlay ? (
+              <>
+                {sortedGroupedTips.map((groupedTip, index) => {
+                  if (!groupedTip.tips[0] || index > 2) return null;
+
+                  return (
+                    <DonorItem
+                      donorRank={index}
+                      donorDetails={groupedTip.user}
+                      donateAmount={groupedTip.tipsSum}
+                      key={`${groupedTip.tipsSum}${groupedTip.tips[0].node.transaction.hash}`}
+                    />
+                  );
+                })}
+                {sortedGroupedTips.length <= 3 ? (
+                  <DonorItemPlaceholder
+                    hideEncouragement
+                    amountToDisplay={3}
+                    donorRank={sortedGroupedTips.length}
+                    previousDonateAmount={
+                      sortedGroupedTips.at(-1)?.tipsSum ?? 1234
+                    }
+                  />
+                ) : null}
+              </>
             ) : null}
+
+            {isTwitchExtension ? null : (
+              <>
+                {sortedGroupedTips.map((groupedTip, index) => {
+                  if (!groupedTip.tips[0] || index > 5) return null;
+
+                  return (
+                    <DonorItem
+                      donorRank={index}
+                      donorDetails={groupedTip.user}
+                      donateAmount={groupedTip.tipsSum}
+                      key={`${groupedTip.tipsSum}${groupedTip.tips[0].node.transaction.hash}`}
+                    />
+                  );
+                })}
+                {sortedGroupedTips.length <= 6 ? (
+                  <DonorItemPlaceholder
+                    amountToDisplay={6}
+                    donorRank={sortedGroupedTips.length}
+                    previousDonateAmount={
+                      sortedGroupedTips.at(-1)?.tipsSum ?? 1234
+                    }
+                  />
+                ) : null}
+              </>
+            )}
           </ul>
         )}
       </div>
+      {isTwitchExtension ? (
+        <div
+          className={classes(
+            'flex min-h-[92px] w-full items-center justify-center px-5 py-3.5',
+            isTwitchPanel ? 'min-h-[72px]' : '',
+          )}
+        >
+          <Button
+            asLink
+            isExternal
+            size="medium"
+            intent="primary"
+            className="w-full"
+            href={donationURL}
+          >
+            {!tipsLoading &&
+            !!validatedAddress &&
+            sortedGroupedTips &&
+            sortedGroupedTips.length < 3
+              ? 'Claim a spot'
+              : 'Donate'}
+          </Button>
+        </div>
+      ) : null}
       {updateCurrentContent ? (
         <div className="flex min-h-[80px] w-full items-center justify-center">
           <Link
