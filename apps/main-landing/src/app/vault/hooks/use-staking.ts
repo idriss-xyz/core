@@ -9,7 +9,7 @@ import {
   useWriteContract,
 } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { STAKER_ADDRESS, StakingABI } from '@idriss-xyz/constants';
+import { EMPTY_HEX, STAKER_ADDRESS, StakingABI } from '@idriss-xyz/constants';
 
 import { useGetStakedBalance } from '@/app/vault/commands/get-staked-balance';
 import { useGetBonusStakedBalance } from '@/app/vault/commands/get-bonus-staked-balance';
@@ -28,13 +28,13 @@ export const useStaking = () => {
   const { writeContractAsync } = useWriteContract();
 
   const stakedBalanceQuery = useGetStakedBalance({
-    address: walletClient?.account.address ?? '0x',
+    address: walletClient?.account.address ?? EMPTY_HEX,
   });
   const unstakedBalanceQuery = useGetUnstakedBalance({
-    address: walletClient?.account.address ?? '0x',
+    address: walletClient?.account.address ?? EMPTY_HEX,
   });
   const stakedBonusBalanceQuery = useGetBonusStakedBalance({
-    address: walletClient?.account.address ?? '0x',
+    address: walletClient?.account.address ?? EMPTY_HEX,
   });
 
   const [stakeIsPending, setStakeIsPending] = useState<boolean>(false);

@@ -1,4 +1,6 @@
-import { CHAIN, getBlockExplorerUrl } from 'shared/web3';
+import { getDefaultBlockExplorerUrl } from '@idriss-xyz/utils';
+
+import { CHAIN } from 'shared/web3';
 
 import { AGORA_WEBSITE_URL } from './constants';
 
@@ -7,7 +9,7 @@ export const getProposalUrl = (proposalId: string) => {
 };
 
 export const getProposerUrl = (proposerAddress: string) => {
-  const blockExplorerUrl = getBlockExplorerUrl(CHAIN.OPTIMISM.id);
+  const blockExplorerUrl = getDefaultBlockExplorerUrl(CHAIN.OPTIMISM.id);
   if (!blockExplorerUrl) {
     return '#';
   }

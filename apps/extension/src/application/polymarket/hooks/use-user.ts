@@ -1,7 +1,8 @@
 import { useCallback } from 'react';
+import { Wallet } from '@idriss-xyz/wallet-connect';
 
 import { useWallet } from 'shared/extension';
-import { CHAIN, useSwitchChain, Wallet } from 'shared/web3';
+import { CHAIN, useSwitchChain } from 'shared/web3';
 
 import { PolymarketUser } from '../types';
 

@@ -1,7 +1,6 @@
 import { formatUnits } from 'viem';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { Badge } from '@idriss-xyz/ui/badge';
-import { useEffect, useState } from 'react';
 import { Button } from '@idriss-xyz/ui/button';
 import { Dropdown } from '@idriss-xyz/ui/dropdown';
 import { Icon } from '@idriss-xyz/ui/icon';
@@ -11,173 +10,15 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
+import { CHAIN, TipHistoryNode } from '@idriss-xyz/constants';
+import {
+  getShortWalletHex,
+  getTimeDifferenceString,
+  getTransactionUrls,
+  roundToSignificantFiguresForCopilotTrading,
+} from '@idriss-xyz/utils';
 
-import { getTransactionUrls } from '@/app/creators/donate/utils';
-import { CHAIN } from '@/app/creators/donate/constants';
-
-import { ZapperNode } from '../../types';
 import { useGetEnsAvatar } from '../../commands/get-ens-avatar';
-
-// TODO: IMPORTANT - those functions should be moved to packages/constants
-const getShortWalletHex = (wallet: string) => {
-  return `${wallet.slice(0, 4)}...${wallet.slice(-4)}`;
-};
-
-function extractSignificantNumber(number: string) {
-  const decimal = number.split('.')[1] ?? '';
-
-  const significantPart = decimal.replace(/0+$/, '');
-  const leadingZeros = /^0+/.exec(significantPart)?.[0] ?? '';
-
-  if (!leadingZeros || leadingZeros.length < 3) {
-    return { value: number, zeros: 0 };
-  }
-
-  const firstNonZero = /[1-9]/.exec(significantPart);
-  const numberPart = significantPart.slice(firstNonZero?.index) ?? 0;
-
-  return {
-    value: Math.round(Number(numberPart.slice(0, 2))),
-    zeros: leadingZeros.length - 1,
-  };
-}
-
-const roundToSignificantFiguresForCopilotTrading = (
-  number: number,
-  significantFigures: number,
-): { value: number | string; index: number | null } => {
-  if (number === 0) {
-    return {
-      value: 0,
-      index: null,
-    };
-  }
-
-  if (number >= 1_000_000_000) {
-    return {
-      value: `${(number / 1_000_000_000).toFixed(significantFigures)}B`,
-      index: null,
-    };
-  }
-  if (number >= 1_000_000) {
-    return {
-      value: `${(number / 1_000_000).toFixed(significantFigures)}M`,
-      index: null,
-    };
-  }
-  if (number >= 1000) {
-    return {
-      value: `${(number / 1000).toFixed(significantFigures)}K`,
-      index: null,
-    };
-  }
-
-  if (number.toString().includes('e')) {
-    const scienceNumberArray = number.toString().split('e-');
-    const decimals = scienceNumberArray?.[1] ?? '2';
-    const startingDecimals =
-      scienceNumberArray?.[0]?.split('.')?.[1]?.length ?? 0;
-    const { value: significantNumber, zeros: indexZeros } =
-      extractSignificantNumber(
-        Number(number).toFixed(Number(decimals) + Number(startingDecimals)),
-      ) || {};
-
-    return {
-      value: significantNumber,
-      index: indexZeros,
-    };
-  }
-
-  const { value, zeros } = extractSignificantNumber(number.toString());
-
-  if (zeros >= 2 && number < 1) {
-    return {
-      value,
-      index: zeros,
-    };
-  }
-
-  const offset = 0.000_000_001;
-  const multiplier = Math.pow(10, significantFigures);
-  const rounded_number =
-    Math.round((number + offset) * multiplier) / multiplier;
-
-  return {
-    value: rounded_number,
-    index: null,
-  };
-};
-
-const getFormattedTimeDifference = (
-  isoTimestamp: string | number,
-  variant: 'long' | 'short',
-) => {
-  const currentDate = new Date();
-  const targetDate = new Date(isoTimestamp);
-  const differenceInMs = targetDate.getTime() - currentDate.getTime();
-
-  const totalSeconds = Math.abs(Math.floor(differenceInMs / 1000));
-  const days = Math.floor(totalSeconds / (60 * 60 * 24));
-  const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
-  const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
-  const seconds = totalSeconds % 60;
-
-  let result = '';
-
-  if (variant === 'long') {
-    if (days > 0) {
-      result += `${days} ${days > 1 ? 'days' : 'day'} `;
-    }
-
-    if (hours > 0 || days > 0) {
-      result += `${hours} ${hours > 1 ? 'hrs' : 'hr'} `;
-    }
-
-    if (minutes > 0 || days > 0 || hours > 0) {
-      result += `${minutes} ${minutes > 1 ? 'mins' : 'min'} `;
-    }
-
-    if (minutes < 1 && hours < 1 && days < 1) {
-      result += `${seconds} ${seconds > 1 ? 'secs' : 'sec'}`;
-    }
-  } else if (variant === 'short') {
-    if (days > 0) {
-      result = `${days} ${days > 1 ? 'days' : 'day'}`;
-    } else if (hours > 0) {
-      result = `${hours} ${hours > 1 ? 'hrs' : 'hr'}`;
-    } else if (minutes > 0) {
-      result = `${minutes} ${minutes > 1 ? 'mins' : 'min'}`;
-    } else if (seconds > 0) {
-      result = `${seconds} ${seconds > 1 ? 'secs' : 'sec'}`;
-    }
-  }
-
-  return result.trim();
-};
-
-const TimeDifferenceCounter = ({
-  timestamp,
-  text,
-}: {
-  timestamp: number;
-  text: string;
-}) => {
-  const [timeDifference, setTimeDifference] = useState(
-    getFormattedTimeDifference(timestamp, 'short'),
-  );
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeDifference(getFormattedTimeDifference(timestamp, 'short'));
-    }, 1000);
-
-    return () => {
-      return clearInterval(interval);
-    };
-  }, [timestamp]);
-
-  return text ? `${timeDifference} ${text}` : timeDifference;
-};
 
 function removeMainnetSuffix(text: string) {
   const suffix = '_MAINNET';
@@ -188,7 +29,7 @@ function removeMainnetSuffix(text: string) {
 }
 
 type Properties = {
-  tip: ZapperNode;
+  tip: TipHistoryNode;
 };
 
 export default function DonateHistoryItem({ tip }: Properties) {
@@ -304,7 +145,11 @@ export default function DonateHistoryItem({ tip }: Properties) {
             <Tooltip>
               <TooltipTrigger asChild>
                 <p className="w-fit text-body6 text-mint-700">
-                  <TimeDifferenceCounter timestamp={tip.timestamp} text="ago" />
+                  {getTimeDifferenceString({
+                    text: 'ago',
+                    variant: 'short',
+                    timestamp: tip.timestamp,
+                  })}
                 </p>
               </TooltipTrigger>
 

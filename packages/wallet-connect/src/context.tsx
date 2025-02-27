@@ -11,11 +11,11 @@ import {
 import { createStore } from 'mipd';
 import { useModal } from '@ebay/nice-modal-react';
 import { createContextHook } from '@idriss-xyz/ui/utils';
-import { getAddress, hexToNumber } from 'viem';
+import { getAddress, Hex, hexToNumber } from 'viem';
 
 import { onWindowMessage } from '../../../apps/extension/src/shared/messaging';
 
-import { Hex, Wallet } from './types';
+import { StoredWallet, Wallet } from './types';
 import { WalletConnectModal } from './modal';
 
 type WalletContextValue = {
@@ -24,11 +24,6 @@ type WalletContextValue = {
   openConnectionModal: () => Promise<Wallet>;
   removeWalletInfo: () => void;
   setWalletInfo: (wallet: Wallet) => void;
-};
-
-type StoredWallet = {
-  account: Hex;
-  providerRdns: string;
 };
 
 const WalletContext = createContext<WalletContextValue | undefined>(undefined);

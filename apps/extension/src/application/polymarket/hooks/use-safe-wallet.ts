@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { parseAbi } from 'viem';
+import { Wallet } from '@idriss-xyz/wallet-connect';
 
 import { useWallet } from 'shared/extension';
-import { CHAIN, Wallet, createWalletClient } from 'shared/web3';
+import { CHAIN, createWalletClient } from 'shared/web3';
 import { useCommandMutation } from 'shared/messaging';
 
 import { GetFunderAddresCommand } from '../commands';

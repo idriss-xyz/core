@@ -1,4 +1,4 @@
-import { Wallet } from 'shared/web3';
+import { Wallet } from '@idriss-xyz/wallet-connect';
 
 export interface ContentProperties {
   wallet: Wallet;

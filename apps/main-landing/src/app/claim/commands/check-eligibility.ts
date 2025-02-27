@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
+import { Hex } from 'viem';
 
-import { Hex } from '@/app/creators/donate/types';
 import { EligibilityCheckResponse } from '@/app/claim/types';
 
 type Payload = {
