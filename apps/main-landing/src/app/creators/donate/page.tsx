@@ -24,7 +24,6 @@ import { Content } from './content';
 import { RainbowKitProviders } from './providers';
 import { CREATOR_API_URL } from './constants';
 
-
 const SEARCH_PARAMETER = {
   ADDRESS: 'address',
   LEGACY_ADDRESS: 'streamerAddress',
