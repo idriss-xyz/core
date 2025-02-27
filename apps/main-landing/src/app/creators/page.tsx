@@ -1,6 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
-import { ANNOUNCEMENT_LINK, CREATORS_LINK } from '@idriss-xyz/constants';
+import {
+  ANNOUNCEMENT_LINK,
+  CHAIN,
+  CHAIN_ID_TO_TOKENS,
+  CREATORS_LINK,
+  DEFAULT_ALLOWED_CHAINS_IDS,
+  ChainToken,
+  TokenSymbol,
+} from '@idriss-xyz/constants';
 import { Button } from '@idriss-xyz/ui/button';
 import { Form } from '@idriss-xyz/ui/form';
 import { Link } from '@idriss-xyz/ui/link';
@@ -15,12 +23,6 @@ import { backgroundLines2, backgroundLines3 } from '@/assets';
 import { TopBar } from '@/components';
 
 import { ethereumClient } from './donate/config';
-import {
-  CHAIN,
-  CHAIN_ID_TO_TOKENS,
-  DEFAULT_ALLOWED_CHAINS_IDS,
-} from './donate/constants';
-import { ChainToken, TokenSymbol } from './donate/types';
 import { Providers } from './providers';
 
 type FormPayload = {

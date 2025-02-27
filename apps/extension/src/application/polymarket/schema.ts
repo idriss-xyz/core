@@ -1,6 +1,5 @@
+import { hexSchema } from '@idriss-xyz/constants';
 import { z } from 'zod';
-
-import { hexSchema } from 'shared/web3';
 
 export const getApiKeyResponseSchema = z.object({
   apiKey: z.string(),

@@ -1,3 +1,5 @@
+import { Hex } from 'viem';
+
 import {
   Command,
   FailureResult,
@@ -5,7 +7,6 @@ import {
   HandlerResponseError,
   OkResult,
 } from 'shared/messaging';
-import { Hex } from 'shared/web3';
 
 type Payload = {
   name: string;

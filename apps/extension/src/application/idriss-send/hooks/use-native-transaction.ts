@@ -1,14 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
-import { encodeFunctionData } from 'viem';
+import { encodeFunctionData, Hex } from 'viem';
+import { getChainById } from '@idriss-xyz/utils';
+import { EMPTY_HEX } from '@idriss-xyz/constants';
+import { Wallet } from '@idriss-xyz/wallet-connect';
 
-import {
-  createWalletClient,
-  EMPTY_HEX,
-  getChainById,
-  Hex,
-  TransactionRevertedError,
-  Wallet,
-} from 'shared/web3';
+import { createWalletClient, TransactionRevertedError } from 'shared/web3';
 import { useObservabilityScope } from 'shared/observability';
 
 import { CHAIN_TO_IDRISS_TIPPING_ADDRESS, TIPPING_ABI } from '../constants';

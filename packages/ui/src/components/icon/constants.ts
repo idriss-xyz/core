@@ -24,6 +24,7 @@ import {
   ArrowDownWideNarrow,
   CalendarClock,
   EllipsisVertical,
+  UserRound,
 } from 'lucide-react';
 
 import * as customIcons from './custom';
@@ -54,5 +55,6 @@ export const ICON = {
   ArrowDownWideNarrow,
   CalendarClock,
   EllipsisVertical,
+  UserRound,
   ...customIcons,
 };

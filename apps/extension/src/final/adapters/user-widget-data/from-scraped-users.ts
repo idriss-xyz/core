@@ -1,5 +1,6 @@
+import { EMPTY_HEX } from '@idriss-xyz/constants';
+
 import { UserScrapingResult } from 'shared/scraping';
-import { EMPTY_HEX } from 'shared/web3';
 
 import { UserWidgetData } from '../../types';
 

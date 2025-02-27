@@ -1,12 +1,14 @@
 import {
   createPublicClient,
   encodeAbiParameters,
+  Hex,
   http,
   parseAbiParameters,
 } from 'viem';
 import { generatePrivateKey, privateKeyToAccount } from 'viem/accounts';
+import { EMPTY_HEX } from '@idriss-xyz/constants';
 
-import { EMPTY_HEX, Hex, getRpcUrl } from 'shared/web3';
+import { getRpcUrl } from 'shared/web3';
 
 import {
   OSS_ROUNDS,

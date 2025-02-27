@@ -1,14 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
-import { encodeFunctionData, WalletClient } from 'viem';
-import { Hex } from '@idriss-xyz/wallet-connect';
+import { encodeFunctionData, Hex, WalletClient } from 'viem';
 import { estimateGas, waitForTransactionReceipt } from 'viem/actions';
+import { EMPTY_HEX } from '@idriss-xyz/constants';
+import { getChainById } from '@idriss-xyz/utils';
 
-import {
-  CHAIN_TO_IDRISS_TIPPING_ADDRESS,
-  EMPTY_HEX,
-  TIPPING_ABI,
-} from '../constants';
-import { getChainById } from '../utils';
+import { CHAIN_TO_IDRISS_TIPPING_ADDRESS, TIPPING_ABI } from '../constants';
 
 interface Properties {
   recipientAddress: Hex;

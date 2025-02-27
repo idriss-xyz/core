@@ -8,6 +8,7 @@ import {
   useMemo,
   useState,
 } from 'react';
+import { StoredWallet } from '@idriss-xyz/wallet-connect';
 
 import { createContextHook } from 'shared/ui';
 import { onWindowMessage, useCommandMutation } from 'shared/messaging';
@@ -20,7 +21,6 @@ import {
   StoredAuthToken,
   StoredSubscriptionsAmount,
   StoredToastSoundState,
-  StoredWallet,
 } from '../types';
 
 type TradingCopilotContextValue = {

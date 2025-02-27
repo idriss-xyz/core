@@ -14,11 +14,9 @@
         "ENVIRONMENT",
         "RAILWAY_PUBLIC_DOMAIN",
         "DEV_LOGIN_PASSWORD",
-        "ZAPPER_API_KEY",
         "PUBLIC_ACCESS_ENABLED",
         "CI",
-        "CREATOR_LINKS_SECRET",
-        "DATABASE_URL"
+        "CREATOR_LINKS_SECRET"
       ]
     },
     "@idriss-xyz/main-landing#start": {
