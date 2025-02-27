@@ -132,22 +132,28 @@ export function DonorItemPlaceholder({
           </span>
         </li>
 
-        <span
-          style={{ height: `${(amountToDisplay - 1 - donorRank) * 69}px` }}
-          className="flex items-center justify-center border-b border-b-neutral-300 px-5.5 py-4.5 text-center text-label4 gradient-text-2"
-        >
-          {hideEncouragement
-            ? null
-            : `Donate now and claim ${rankPlaces[donorRank]} place`}
-        </span>
+        {amountToDisplay - 1 - donorRank ? (
+          <span
+            style={{ height: `${(amountToDisplay - 1 - donorRank) * 69}px` }}
+            className="flex items-center justify-center border-b border-b-neutral-300 px-5.5 py-4.5 text-center text-label4 gradient-text-2"
+          >
+            {hideEncouragement
+              ? null
+              : `Donate now and claim ${rankPlaces[donorRank]} place`}
+          </span>
+        ) : null}
       </>
     );
   }
 
   return (
-    <span
-      style={{ height: `${(amountToDisplay - donorRank) * 69}px` }}
-      className="flex items-center justify-center border-b border-b-neutral-300"
-    />
+    <>
+      {amountToDisplay - donorRank ? (
+        <span
+          style={{ height: `${(amountToDisplay - donorRank) * 69}px` }}
+          className="flex items-center justify-center border-b border-b-neutral-300"
+        />
+      ) : null}
+    </>
   );
 }
