@@ -35,6 +35,7 @@ import { ChainSelect, TokenSelect } from './components';
 import { createFormPayloadSchema, FormPayload, SendPayload } from './schema';
 import { getSendFormDefaultValues } from './utils';
 import { useSender } from './hooks';
+import { CREATOR_API_URL } from './constants';
 
 const SEARCH_PARAMETER = {
   CREATOR_NAME: 'creatorName',
@@ -214,7 +215,7 @@ export const Content = ({ className, validatedAddress }: Properties) => {
     if (sender.isSuccess) {
       try {
         void fetch(
-          'https://core-production-a116.up.railway.app/push-donation',
+          `${CREATOR_API_URL}/push-donation`,
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

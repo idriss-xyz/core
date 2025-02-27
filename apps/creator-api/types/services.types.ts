@@ -1,6 +1,6 @@
 import { Hex } from 'viem';
 
-interface TokenV2 {
+export interface TokenV2 {
   symbol: string;
   imageUrlV2?: string;
   onchainMarketData: {
@@ -10,7 +10,17 @@ interface TokenV2 {
   decimals: number;
 }
 
-interface TokenDisplayItem {
+export interface DonationStats {
+  totalDonationsCount: number;
+  totalDonationAmount: number;
+  mostDonatedToAddress: string;
+  biggestDonationAmount: number;
+  favoriteDonationToken: string;
+  favoriteTokenMetadata: Omit<TokenV2, 'onchainMarketData'> | null;
+  donorDisplayName: string | null;
+}
+
+export interface TokenDisplayItem {
   network: string;
   amountRaw: string;
   tokenV2: TokenV2;

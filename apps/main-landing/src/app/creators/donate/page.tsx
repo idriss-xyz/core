@@ -22,8 +22,8 @@ import DonateHistoryList from '@/app/creators/donate/components/history/donate-h
 import { TopDonors } from './top-donors';
 import { Content } from './content';
 import { RainbowKitProviders } from './providers';
+import { CREATOR_API_URL } from './constants';
 
-const SOCKET_URL = 'https://core-production-a116.up.railway.app';
 
 const SEARCH_PARAMETER = {
   ADDRESS: 'address',
@@ -129,7 +129,7 @@ function DonorsContent() {
 
   useEffect(() => {
     if (validatedAddress && !socketInitialized) {
-      const socket = io(SOCKET_URL);
+      const socket = io(CREATOR_API_URL);
       setSocketInitialized(true);
 
       if (socket && !socketConnected) {
