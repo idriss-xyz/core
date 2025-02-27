@@ -1,10 +1,17 @@
 import { Wallet as SolanaWalletWeb3js } from '@solana/wallet-adapter-react';
-import { isWalletAdapterCompatibleWallet, StandardWalletAdapter } from '@solana/wallet-standard-wallet-adapter-base';
+import {
+  isWalletAdapterCompatibleWallet,
+  StandardWalletAdapter,
+} from '@solana/wallet-standard-wallet-adapter-base';
 import { DEPRECATED_getWallets } from '@wallet-standard/app';
 import type { Wallet } from '@wallet-standard/base';
 
-function wrapWalletsWithAdapters(wallets: readonly Wallet[]): readonly StandardWalletAdapter[] {
-  return wallets.filter(isWalletAdapterCompatibleWallet).map((wallet) => new StandardWalletAdapter({ wallet }));
+function wrapWalletsWithAdapters(
+  wallets: readonly Wallet[],
+): readonly StandardWalletAdapter[] {
+  return wallets
+    .filter(isWalletAdapterCompatibleWallet)
+    .map((wallet) => new StandardWalletAdapter({ wallet }));
 }
 
 // Function to detect browser-installed Solana wallets
@@ -13,7 +20,9 @@ function detectSolanaWallets(): SolanaWalletWeb3js[] {
   if (typeof window !== 'undefined') {
     const { get } = DEPRECATED_getWallets();
     const wallets = wrapWalletsWithAdapters(get());
-    const potentialWallets = wallets.filter((wallet) => wallet && typeof wallet === 'object');
+    const potentialWallets = wallets.filter(
+      (wallet) => wallet && typeof wallet === 'object',
+    );
 
     const mappedWallets = potentialWallets.map((adapter) => ({
       adapter,
@@ -26,7 +35,6 @@ function detectSolanaWallets(): SolanaWalletWeb3js[] {
   console.log('Detected Solana Wallets:', detectedWallets);
 
   return detectedWallets;
-
 }
 
 // Function to create a provider store for Solana wallets

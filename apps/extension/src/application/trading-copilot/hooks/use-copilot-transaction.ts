@@ -67,10 +67,10 @@ export const useCopilotSolanaTransaction = () => {
   return useMutation({
     mutationFn: async ({
       transactionData,
-      wallet
+      wallet,
     }: SolanaCopilotProperties) => {
       try {
-        if (!wallet.provider.connected){
+        if (!wallet.provider.connected) {
           await wallet.provider.connect();
         }
 
@@ -81,7 +81,8 @@ export const useCopilotSolanaTransaction = () => {
         const deserializedTx = VersionedTransaction.deserialize(
           new Uint8Array(decodedTx),
         );
-        const signedTransaction = await wallet.provider.signTransaction?.(deserializedTx);
+        const signedTransaction =
+          await wallet.provider.signTransaction?.(deserializedTx);
         const serializedTx = signedTransaction?.serialize();
 
         if (!serializedTx) {

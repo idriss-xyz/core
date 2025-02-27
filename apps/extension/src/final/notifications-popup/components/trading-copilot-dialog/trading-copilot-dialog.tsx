@@ -406,9 +406,7 @@ const TradingCopilotDialogContent = ({
               intent="primary"
               size="medium"
               onClick={
-                isSolanaTrade
-                  ? openSolanaConnectionModal
-                  : openConnectionModal
+                isSolanaTrade ? openSolanaConnectionModal : openConnectionModal
               }
               className="w-full"
               loading={
