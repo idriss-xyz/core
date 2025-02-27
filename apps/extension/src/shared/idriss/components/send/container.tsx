@@ -116,7 +116,7 @@ export const Container = memo(
         )}
         <PortalWithTailwind container={portal}>
           <img
-            data-testid={TEST_IDS.sendButton}
+            data-testid={TEST_IDS.idrissSendButton}
             src={iconSrc}
             width={iconSize}
             height={iconSize}

@@ -8,6 +8,7 @@ import { getWarpcastUserLink } from 'host/warpcast';
 import { FARCASTER_LOGO } from 'assets/images';
 import { useEventsLogger } from 'shared/observability';
 import { createLookup } from 'shared/utils';
+import { TEST_IDS } from 'tests/e2e';
 
 import { useLocationInfo } from '../hooks';
 import { TradingCopilotTooltip } from '../notifications-popup/components/trading-copilot-tooltip';
@@ -124,6 +125,7 @@ export const FollowOnFarcaster = () => {
           onClick={goToUserPage}
         >
           <img
+            data-testid={TEST_IDS.followOnFarcasterButton}
             src={FARCASTER_LOGO}
             alt=""
             width={iconHeight}
