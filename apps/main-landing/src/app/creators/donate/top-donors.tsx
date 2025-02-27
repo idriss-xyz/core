@@ -11,11 +11,12 @@ import {
   DonorItemPlaceholder,
 } from '@/app/creators/donate/components/donor-item';
 import { FromUser, ZapperNode } from '@/app/creators/donate/types';
+import { WidgetVariants } from '@/app/creators/widget/types';
 
 type Properties = {
   className?: string;
   tipsLoading: boolean;
-  isStandalone?: boolean;
+  variant?: WidgetVariants;
   validatedAddress?: string | null;
   tipEdges: { node: ZapperNode }[];
   updateCurrentContent?: (content: 'tip' | 'history') => void;
@@ -25,14 +26,18 @@ const baseClassName =
   'z-1 w-[440px] max-w-full rounded-xl bg-white flex flex-col items-center relative overflow-hidden';
 
 export const TopDonors = ({
+  variant,
   tipEdges,
   className,
   tipsLoading,
-  isStandalone,
   validatedAddress,
   updateCurrentContent,
 }: Properties) => {
   const addressValidationResult = hexSchema.safeParse(validatedAddress);
+
+  const fixedSize = variant === 'panel' || variant === 'videoComponent';
+  const isVideoOverlay = variant === 'videoOverlay';
+  const hideBorder = variant !== null;
 
   const groupedTips = tipEdges?.reduce(
     (accumulator, tip) => {
@@ -101,9 +106,18 @@ export const TopDonors = ({
   }
 
   return (
-    <div className={classes(className, baseClassName)}>
+    <div
+      className={classes(
+        baseClassName,
+        className,
+        isVideoOverlay ? 'w-[330px]' : '',
+      )}
+    >
       <div
-        className={`relative flex w-full items-center justify-center overflow-hidden ${isStandalone ? 'h-[86px]' : 'min-h-[100px]'}`}
+        className={classes(
+          'relative flex w-full items-center justify-center overflow-hidden',
+          fixedSize || isVideoOverlay ? 'h-[86px]' : 'min-h-[100px]',
+        )}
       >
         <img
           src={IDRISS_SCENE_STREAM_2.src}
@@ -118,7 +132,10 @@ export const TopDonors = ({
       <div className="flex w-full flex-col">
         {tipsLoading || !validatedAddress || !sortedGroupedTips ? (
           <span
-            className={`flex w-full items-center justify-center border-b-neutral-300 px-5.5 py-4.5 ${isStandalone ? 'h-[413px]' : 'border-b'}`}
+            className={classes(
+              'flex w-full items-center justify-center border-b-neutral-300 px-5.5 py-4.5',
+              fixedSize ? 'h-[414px]' : 'border-b',
+            )}
           >
             <Spinner className="size-16 text-mint-600" />
           </span>
@@ -132,18 +149,17 @@ export const TopDonors = ({
                   donorRank={index}
                   donorDetails={groupedTip.user}
                   donateAmount={groupedTip.tipsSum}
-                  hideBorder={
-                    (isStandalone ?? !updateCurrentContent) && index === 5
-                  }
+                  hideBorder={hideBorder && index === 5}
                   key={`${groupedTip.tipsSum}${groupedTip.tips[0].node.transaction.hash}`}
                 />
               );
             })}
 
-            {sortedGroupedTips.length <= 5 ? (
+            {(!isVideoOverlay && sortedGroupedTips.length <= 5) ||
+            (isVideoOverlay && sortedGroupedTips.length <= 2) ? (
               <DonorItemPlaceholder
+                hideBorder={hideBorder}
                 donorRank={sortedGroupedTips.length}
-                hideBorder={isStandalone ?? !updateCurrentContent}
                 previousDonateAmount={sortedGroupedTips.at(-1)?.tipsSum ?? 1234}
               />
             ) : null}
@@ -157,7 +173,10 @@ export const TopDonors = ({
             onClick={() => {
               updateCurrentContent('history');
             }}
-            className={`mx-6 my-3 cursor-pointer ${sortedGroupedTips?.length === 0 ? 'invisible' : ''}`}
+            className={classes(
+              'mx-6 my-3 cursor-pointer',
+              sortedGroupedTips?.length === 0 ? 'invisible' : '',
+            )}
           >
             See full donation history
           </Link>

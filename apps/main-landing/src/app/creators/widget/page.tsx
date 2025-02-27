@@ -4,9 +4,10 @@ import '@rainbow-me/rainbowkit/styles.css';
 import { useEffect, useState } from 'react';
 import { default as io } from 'socket.io-client';
 import _ from 'lodash';
+import { useSearchParams } from 'next/navigation';
 
 import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
-import { FormValues } from '@/app/creators/widget/types';
+import { FormValues, WidgetVariants } from '@/app/creators/widget/types';
 
 import { TopDonors } from '../donate/top-donors';
 import { RainbowKitProviders } from '../donate/providers';
@@ -27,7 +28,21 @@ function WidgetContent() {
   const [socketConnected, setSocketConnected] = useState(false);
   const [socketInitialized, setSocketInitialized] = useState(false);
   const [tipEdges, setTipEdges] = useState<{ node: ZapperNode }[]>([]);
-  const [address, setAddress] = useState<Hex | null | undefined>();
+  const [address, setAddress] = useState<Hex | null | undefined>(
+    '0x42d4cb836571e60ffc84a6cdbeaa2f0d2240c2bd',
+  );
+
+  const searchParameters = useSearchParams();
+  const variant = searchParameters.get('variant');
+  const widgetVariant: WidgetVariants = [
+    'panel',
+    'videoOverlay',
+    'videoComponent',
+    null,
+  ].includes(variant)
+    ? (variant as WidgetVariants)
+    : null;
+  const isVideoOverlay = widgetVariant === 'videoOverlay';
 
   useEffect(() => {
     if (!window.Twitch?.ext) {
@@ -42,7 +57,7 @@ function WidgetContent() {
         const parsedConfig: FormValues = JSON.parse(storedConfig);
         setAddress(parsedConfig.address as Hex);
       } else {
-        setAddress(null);
+        // setAddress(null);
       }
     });
   }, []);
@@ -94,13 +109,25 @@ function WidgetContent() {
 
   return (
     <>
-      <TopDonors
-        isStandalone
-        tipEdges={tipEdges}
-        tipsLoading={tips.isLoading}
-        validatedAddress={address}
-        className="overflow-hidden px-0"
-      />
+      {isVideoOverlay ? (
+        <div className="relative flex size-full items-start justify-end pr-28 pt-20">
+          <TopDonors
+            tipEdges={tipEdges}
+            variant={widgetVariant}
+            validatedAddress={address}
+            tipsLoading={tips.isLoading}
+            className="absolute right-0 top-0 scale-75 overflow-hidden px-0"
+          />
+        </div>
+      ) : (
+        <TopDonors
+          tipEdges={tipEdges}
+          variant={widgetVariant}
+          validatedAddress={address}
+          tipsLoading={tips.isLoading}
+          className="overflow-hidden px-0"
+        />
+      )}
 
       {/* eslint-disable-next-line @next/next/no-sync-scripts */}
       <script src="https://extension-files.twitch.tv/helper/v1/twitch-ext.min.js" />
