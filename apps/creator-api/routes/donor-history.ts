@@ -24,6 +24,8 @@ const app_addresses = Object.values(CHAIN_TO_IDRISS_TIPPING_ADDRESS).map(
   (address) => address.toLowerCase(),
 );
 
+// Instead of fetching here with zapper again, trust that the
+// donations db is complete and simply calculate the stats
 router.post('/', async (req: Request, res: Response) => {
   try {
     const { address } = req.body;
