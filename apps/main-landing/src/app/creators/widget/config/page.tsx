@@ -1,5 +1,4 @@
 'use client';
-import '@rainbow-me/rainbowkit/styles.css';
 import { Form } from '@idriss-xyz/ui/form';
 import { Controller, useForm } from 'react-hook-form';
 import { Button } from '@idriss-xyz/ui/button';
