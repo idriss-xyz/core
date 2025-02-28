@@ -90,11 +90,10 @@ export async function calculateGlobalDonorLeaderboard(): Promise<
 > {
   const groupedDonations = await fetchDonations();
 
-  // ai! add donoarMetadata to each leaderboard entry. you can find the metadata
-  // by checking donation.data.transaction.fromUser
   const leaderboard = Object.entries(groupedDonations).map(
     ([address, donations]) => ({
       address,
+      donorMetadata: donations[0].data.transaction.fromUser,
       totalAmount: donations.reduce((sum, donation) => {
         const tokenDisplayItem = donation.data.interpretation
           .descriptionDisplayItems[0] as TokenDisplayItem;
