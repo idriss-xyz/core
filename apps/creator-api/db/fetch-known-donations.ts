@@ -17,6 +17,7 @@ export async function fetchDonationsByToAddress(
   return donations;
 }
 
+// ai! Can you make it so that fromAddress can be fromAddress or fromAddress.toLowerCase()
 export async function fetchDonationsByFromAddress(
   fromAddress: string,
 ): Promise<Donation[]> {
