@@ -23,6 +23,70 @@ const app_addresses = Object.values(CHAIN_TO_IDRISS_TIPPING_ADDRESS).map(
   (addr) => addr.toLowerCase(),
 );
 
+export async function processAllDonations(options: {
+  addresses: string[];
+  toAddresses?: string[];
+  oldestTransactionTimestamp?: number;
+}): Promise<{ newEdges: { node: ZapperNode }[] }> {
+  const {
+    addresses,
+    toAddresses = app_addresses,
+    oldestTransactionTimestamp = OLDEST_TRANSACTION_TIMESTAMP,
+  } = options;
+
+  const address = addresses[0]; // Adjust if handling multiple addresses
+
+  const newEdges: { node: ZapperNode }[] = [];
+  let cursor: string | null = null;
+  let hasNextPage = true;
+
+  while (hasNextPage) {
+    const variables: TipHistoryVariables = {
+      addresses,
+      toAddresses,
+      isSigner: false,
+      after: cursor,
+    };
+
+    const encodedKey = Buffer.from(ZAPPER_API_KEY ?? '').toString('base64');
+    const response = await fetch(ZAPPER_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Basic ${encodedKey}`,
+      },
+      body: JSON.stringify({ query: TipHistoryQuery, variables }),
+    });
+
+    const data: ZapperResponse = await response.json();
+    const accountsTimeline = data.data?.accountsTimeline;
+    if (!accountsTimeline) break;
+
+    const currentEdges = accountsTimeline.edges || [];
+    const relevantEdges = currentEdges.filter(
+      (edge) => edge.node.app?.slug === 'idriss',
+    );
+
+    for (const edge of relevantEdges) {
+      newEdges.push(edge);
+    }
+
+    if (currentEdges.length === 0) break;
+    const lastEdge = currentEdges[currentEdges.length - 1];
+    if (lastEdge && lastEdge.node.timestamp < oldestTransactionTimestamp) break;
+
+    hasNextPage = accountsTimeline.pageInfo?.hasNextPage;
+    cursor = accountsTimeline.pageInfo?.endCursor ?? null;
+  }
+
+  if (newEdges.length > 0) {
+    await enrichNodesWithHistoricalPrice(newEdges);
+    await storeToDatabase(address, newEdges);
+  }
+
+  return { newEdges };
+}
+
 export async function processNewDonations(
   address: string,
 ): Promise<{ newEdges: { node: ZapperNode }[] }> {
