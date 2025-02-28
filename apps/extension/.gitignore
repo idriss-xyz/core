@@ -1,2 +1,3 @@
 .last-run.json
 test-results
+!.env.e2e.example

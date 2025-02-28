@@ -353,6 +353,9 @@ importers:
       dependency-cruiser:
         specifier: ^16.4.2
         version: 16.4.2
+      dotenv:
+        specifier: ^16.4.5
+        version: 16.4.5
       dotenv-safe:
         specifier: ^9.1.0
         version: 9.1.0(dotenv@16.4.5)
