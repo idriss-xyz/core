@@ -24,13 +24,17 @@ router.post('/', async (req: Request, res: Response) => {
       return;
     }
 
-    // ai! calculate the position of address in the leaderboard andreturn it as part of stats
     const knownDonations = await fetchDonationsByFromAddress(address);
     const stats = calculateStatsForDonorAddress(knownDonations);
 
     const leaderboard = await calculateGlobalDonorLeaderboard();
+    const donorPosition = leaderboard.findIndex((entry) => entry.address.toLowerCase() === address.toLowerCase()) + 1;
 
-    res.json({ stats, leaderboard });
+    res.json({ 
+      stats, 
+      leaderboard,
+      donorPosition: donorPosition || null
+    });
   } catch (error) {
     console.error('Tip history error:', error);
     res.status(500).json({ error: 'Failed to fetch tip history' });
