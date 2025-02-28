@@ -32,3 +32,16 @@ export async function fetchDonationsByFromAddress(
 
   return donations;
 }
+
+// ai! make it so this function groups the return by fromAddress, so I can calculate the donationn stats for every address that ever donated
+export async function fetchDonations(): Promise<Donation[]> {
+  if (!AppDataSource.isInitialized) {
+    await AppDataSource.initialize();
+  }
+
+  const donationRepo = AppDataSource.getRepository(Donation);
+
+  const donations = await donationRepo.find({});
+
+  return donations;
+}
