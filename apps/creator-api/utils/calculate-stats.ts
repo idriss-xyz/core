@@ -4,7 +4,6 @@ import {
   TokenDisplayItem,
   DonationStats,
   TokenV2,
-  ActorDisplayItem,
   LeaderboardStats,
 } from '../types';
 import { formatUnits } from 'viem';
@@ -23,9 +22,7 @@ export function calculateStatsForDonorAddress(
   let donorDisplayName: string | null = null;
 
   donations.forEach((donation) => {
-    const actorDisplayItem = donation.data.interpretation
-      .descriptionDisplayItems[1] as ActorDisplayItem;
-    let toAddress = donation.toAddress;
+    const toAddress = donation.toAddress;
     const tokenDisplayItem = donation.data.interpretation
       .descriptionDisplayItems[0] as TokenDisplayItem;
 
@@ -44,8 +41,6 @@ export function calculateStatsForDonorAddress(
       Number.parseFloat(formatUnits(BigInt(amountRaw), decimals)) * price;
 
     totalDonationAmount += tradeValue;
-
-    toAddress = actorDisplayItem.account.address;
 
     addressFrequency[toAddress] = (addressFrequency[toAddress] || 0) + 1;
     if (
@@ -95,13 +90,14 @@ export async function calculateGlobalDonorLeaderboard(): Promise<
 > {
   const groupedDonations = await fetchDonations();
 
-
+  // ai! add donoarMetadata to each leaderboard entry. you can find the metadata
+  // by checking donation.data.transaction.fromUser
   const leaderboard = Object.entries(groupedDonations).map(
     ([address, donations]) => ({
       address,
-      totalDonations: donations.length,
       totalAmount: donations.reduce((sum, donation) => {
-        const tokenDisplayItem = donation.data.interpretation.descriptionDisplayItems[0] as TokenDisplayItem;
+        const tokenDisplayItem = donation.data.interpretation
+          .descriptionDisplayItems[0] as TokenDisplayItem;
 
         const amountRaw = tokenDisplayItem?.amountRaw;
         const price = tokenDisplayItem?.tokenV2?.onchainMarketData?.price;
@@ -111,7 +107,8 @@ export async function calculateGlobalDonorLeaderboard(): Promise<
           amountRaw === undefined ||
           price === undefined ||
           decimals === undefined
-        ) return sum;
+        )
+          return sum;
 
         const tradeValue =
           Number.parseFloat(formatUnits(BigInt(amountRaw), decimals)) * price;
@@ -121,7 +118,6 @@ export async function calculateGlobalDonorLeaderboard(): Promise<
     }),
   );
 
-  // Sort the leaderboard by totalAmount in descending order
   leaderboard.sort((a, b) => b.totalAmount - a.totalAmount);
 
   return leaderboard;
