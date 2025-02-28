@@ -17,7 +17,6 @@ export async function fetchDonationsByToAddress(
   return donations;
 }
 
-// ai! Can you make it so that fromAddress can be fromAddress or fromAddress.toLowerCase()
 export async function fetchDonationsByFromAddress(
   fromAddress: string,
 ): Promise<Donation[]> {
@@ -28,7 +27,10 @@ export async function fetchDonationsByFromAddress(
   const donationRepo = AppDataSource.getRepository(Donation);
 
   const donations = await donationRepo.find({
-    where: { fromAddress },
+    where: [
+      { fromAddress },
+      { fromAddress: fromAddress.toLowerCase() },
+    ],
   });
 
   return donations;
