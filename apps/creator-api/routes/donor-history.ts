@@ -22,6 +22,7 @@ router.post('/', async (req: Request, res: Response) => {
 
     const knownDonations = await fetchDonationsByFromAddress(address);
 
+    // ai! Add a function called calculateGlobalDonorLeaderboard(address) that calls fetchDonations() to get the grouped donations by fromAddress.
     const stats = calculateStatsForDonorAddress(knownDonations);
 
     res.json({ stats });
