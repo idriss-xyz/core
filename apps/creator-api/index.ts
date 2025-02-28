@@ -8,6 +8,7 @@ import { connectedClients } from './services/socket-server';
 import tipHistoryRouter from './routes/tip-history';
 import donorHistoryRouter from './routes/donor-history';
 import pushDonationRouter from './routes/push-donation';
+import overwriteDonationRouter from './routes/overwrite-donation';
 import cors from 'cors';
 import { AppDataSource } from './db/database';
 import { ALLOWED_ORIGINS } from './constants';
@@ -32,6 +33,7 @@ const server = http.createServer(app);
 app.use('/tip-history', tipHistoryRouter);
 app.use('/donor-history', donorHistoryRouter);
 app.use('/push-donation', pushDonationRouter);
+app.use('/overwrite-donation', overwriteDonationRouter);
 
 const HOST = process.env.HOST;
 const PORT = Number(process.env.PORT) || 4000;
