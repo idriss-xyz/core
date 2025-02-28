@@ -1,10 +1,16 @@
-import { ZapperNode, TokenDisplayItem, DonationStats, TokenV2 } from '../types';
+import { Donation } from '../db/entities/donations.entity';
+import {
+  TokenDisplayItem,
+  DonationStats,
+  TokenV2,
+  ActorDisplayItem,
+} from '../types';
 import { formatUnits } from 'viem';
 
 export function calculateStatsForDonorAddress(
-  zapperNodes: ZapperNode[],
+  donations: Donation[],
 ): DonationStats {
-  const totalDonationsCount = zapperNodes.length;
+  let totalDonationsCount = 0;
   let totalDonationAmount = 0;
   const addressFrequency: Record<string, number> = {};
   const tokenFrequency: Record<string, number> = {};
@@ -14,19 +20,30 @@ export function calculateStatsForDonorAddress(
   let favoriteTokenMetadata: Omit<TokenV2, 'onchainMarketData'> | null = null;
   let donorDisplayName: string | null = null;
 
-  zapperNodes.forEach((zapperNode) => {
-    const toAddress = zapperNode.transaction.toUser.address;
-    const tokenDisplayItem = zapperNode.interpretation
+  donations.forEach((donation) => {
+    const actorDisplayItem = donation.data.interpretation
+      .descriptionDisplayItems[1] as ActorDisplayItem;
+    let toAddress = donation.toAddress;
+    const tokenDisplayItem = donation.data.interpretation
       .descriptionDisplayItems[0] as TokenDisplayItem;
 
     const amountRaw = tokenDisplayItem?.amountRaw;
     const price = tokenDisplayItem?.tokenV2?.onchainMarketData?.price;
     const decimals = tokenDisplayItem?.tokenV2?.decimals ?? 18;
 
+    if (
+      amountRaw === undefined ||
+      price === undefined ||
+      decimals === undefined
+    )
+      return;
+
     const tradeValue =
       Number.parseFloat(formatUnits(BigInt(amountRaw), decimals)) * price;
 
     totalDonationAmount += tradeValue;
+
+    toAddress = actorDisplayItem.account.address;
 
     addressFrequency[toAddress] = (addressFrequency[toAddress] || 0) + 1;
     if (
@@ -55,8 +72,9 @@ export function calculateStatsForDonorAddress(
     }
 
     if (!donorDisplayName) {
-      donorDisplayName = zapperNode.transaction.fromUser.displayName.value;
+      donorDisplayName = donation.data.transaction.fromUser.displayName.value;
     }
+    totalDonationsCount += 1;
   });
 
   return {

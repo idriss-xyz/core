@@ -20,6 +20,12 @@ export interface DonationStats {
   donorDisplayName: string | null;
 }
 
+export interface ActorDisplayItem {
+  account: {
+    address: Hex;
+  };
+}
+
 export interface TokenDisplayItem {
   network: string;
   amountRaw: string;
@@ -55,7 +61,7 @@ export interface ZapperNode {
   interpretation: {
     descriptionDisplayItems: [
       TokenDisplayItem | undefined,
-      undefined,
+      ActorDisplayItem | undefined,
       StringDisplayItem | undefined,
     ];
   };

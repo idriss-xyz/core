@@ -6,6 +6,7 @@ import { Server as SocketIOServer, Socket } from 'socket.io';
 import { mode } from './utils/mode';
 import { connectedClients } from './services/socket-server';
 import tipHistoryRouter from './routes/tip-history';
+import donorHistoryRouter from './routes/donor-history';
 import pushDonationRouter from './routes/push-donation';
 import cors from 'cors';
 import { AppDataSource } from './db/database';
@@ -29,6 +30,7 @@ app.use(
 
 const server = http.createServer(app);
 app.use('/tip-history', tipHistoryRouter);
+app.use('/donor-history', donorHistoryRouter);
 app.use('/push-donation', pushDonationRouter);
 
 const HOST = process.env.HOST;

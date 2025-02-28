@@ -11,7 +11,7 @@ export async function fetchDonationsByToAddress(
   const donationRepo = AppDataSource.getRepository(Donation);
 
   const donations = await donationRepo.find({
-    where: { toAddress },
+    where: [{ toAddress }, { toAddress: toAddress.toLowerCase() }],
   });
 
   return donations;
@@ -27,10 +27,7 @@ export async function fetchDonationsByFromAddress(
   const donationRepo = AppDataSource.getRepository(Donation);
 
   const donations = await donationRepo.find({
-    where: [
-      { fromAddress },
-      { fromAddress: fromAddress.toLowerCase() },
-    ],
+    where: [{ fromAddress }, { fromAddress: fromAddress.toLowerCase() }],
   });
 
   return donations;
