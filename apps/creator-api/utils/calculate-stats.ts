@@ -95,32 +95,29 @@ export async function calculateGlobalDonorLeaderboard(): Promise<
 > {
   const groupedDonations = await fetchDonations();
 
-  // ai! the totalAmount actually need to be calculated using this approach that we also use above
-  //   const tokenDisplayItem = donation.data.interpretation
-  //   .descriptionDisplayItems[0] as TokenDisplayItem;
-
-  // const amountRaw = tokenDisplayItem?.amountRaw;
-  // const price = tokenDisplayItem?.tokenV2?.onchainMarketData?.price;
-  // const decimals = tokenDisplayItem?.tokenV2?.decimals ?? 18;
-
-  // if (
-  //   amountRaw === undefined ||
-  //   price === undefined ||
-  //   decimals === undefined
-  // )
-  //   return;
-
-  // const tradeValue =
-  //   Number.parseFloat(formatUnits(BigInt(amountRaw), decimals)) * price;
 
   const leaderboard = Object.entries(groupedDonations).map(
     ([address, donations]) => ({
       address,
       totalDonations: donations.length,
-      totalAmount: donations.reduce(
-        (sum, donation) => sum + parseFloat(donation.amount),
-        0,
-      ),
+      totalAmount: donations.reduce((sum, donation) => {
+        const tokenDisplayItem = donation.data.interpretation.descriptionDisplayItems[0] as TokenDisplayItem;
+
+        const amountRaw = tokenDisplayItem?.amountRaw;
+        const price = tokenDisplayItem?.tokenV2?.onchainMarketData?.price;
+        const decimals = tokenDisplayItem?.tokenV2?.decimals ?? 18;
+
+        if (
+          amountRaw === undefined ||
+          price === undefined ||
+          decimals === undefined
+        ) return sum;
+
+        const tradeValue =
+          Number.parseFloat(formatUnits(BigInt(amountRaw), decimals)) * price;
+
+        return sum + tradeValue;
+      }, 0),
     }),
   );
 
