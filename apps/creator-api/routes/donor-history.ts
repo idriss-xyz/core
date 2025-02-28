@@ -21,7 +21,6 @@ router.post('/', async (req: Request, res: Response) => {
     }
 
     const knownDonations = await fetchDonationsByFromAddress(address);
-    console.log('KNOWN DONATIONS', knownDonations);
 
     const stats = calculateStatsForDonorAddress(knownDonations);
 
