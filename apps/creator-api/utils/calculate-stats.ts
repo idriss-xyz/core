@@ -1,9 +1,11 @@
 import { Donation } from '../db/entities/donations.entity';
+import { fetchDonations } from '../db/fetch-known-donations';
 import {
   TokenDisplayItem,
   DonationStats,
   TokenV2,
   ActorDisplayItem,
+  LeaderboardStats,
 } from '../types';
 import { formatUnits } from 'viem';
 
@@ -86,4 +88,44 @@ export function calculateStatsForDonorAddress(
     favoriteTokenMetadata,
     donorDisplayName,
   };
+}
+
+export async function calculateGlobalDonorLeaderboard(): Promise<
+  LeaderboardStats[]
+> {
+  const groupedDonations = await fetchDonations();
+
+  // ai! the totalAmount actually need to be calculated using this approach that we also use above
+  //   const tokenDisplayItem = donation.data.interpretation
+  //   .descriptionDisplayItems[0] as TokenDisplayItem;
+
+  // const amountRaw = tokenDisplayItem?.amountRaw;
+  // const price = tokenDisplayItem?.tokenV2?.onchainMarketData?.price;
+  // const decimals = tokenDisplayItem?.tokenV2?.decimals ?? 18;
+
+  // if (
+  //   amountRaw === undefined ||
+  //   price === undefined ||
+  //   decimals === undefined
+  // )
+  //   return;
+
+  // const tradeValue =
+  //   Number.parseFloat(formatUnits(BigInt(amountRaw), decimals)) * price;
+
+  const leaderboard = Object.entries(groupedDonations).map(
+    ([address, donations]) => ({
+      address,
+      totalDonations: donations.length,
+      totalAmount: donations.reduce(
+        (sum, donation) => sum + parseFloat(donation.amount),
+        0,
+      ),
+    }),
+  );
+
+  // Sort the leaderboard by totalAmount in descending order
+  leaderboard.sort((a, b) => b.totalAmount - a.totalAmount);
+
+  return leaderboard;
 }
