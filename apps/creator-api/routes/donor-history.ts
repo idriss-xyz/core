@@ -1,27 +1,10 @@
 import { Router, Request, Response } from 'express';
 
-interface LeaderboardStats {
-  address: string;
-  totalDonations: number;
-  totalAmount: number;
-}
-
-async function calculateGlobalDonorLeaderboard(): Promise<LeaderboardStats[]> {
-  const groupedDonations = await fetchDonations();
-
-  const leaderboard = Object.entries(groupedDonations).map(([address, donations]) => ({
-    address,
-    totalDonations: donations.length,
-    totalAmount: donations.reduce((sum, donation) => sum + parseFloat(donation.amount), 0),
-  }));
-
-  // Sort the leaderboard by totalAmount in descending order
-  leaderboard.sort((a, b) => b.totalAmount - a.totalAmount);
-
-  return leaderboard;
-}
 import { fetchDonationsByFromAddress } from '../db/fetch-known-donations';
-import { calculateStatsForDonorAddress } from '../utils/calculate-stats';
+import {
+  calculateGlobalDonorLeaderboard,
+  calculateStatsForDonorAddress,
+} from '../utils/calculate-stats';
 import dotenv from 'dotenv';
 import { mode } from '../utils/mode';
 import { join } from 'path';
@@ -41,9 +24,11 @@ router.post('/', async (req: Request, res: Response) => {
       return;
     }
 
+    // ai! calculate the position of address in the leaderboard andreturn it as part of stats
     const knownDonations = await fetchDonationsByFromAddress(address);
-    const leaderboard = await calculateGlobalDonorLeaderboard();
     const stats = calculateStatsForDonorAddress(knownDonations);
+
+    const leaderboard = await calculateGlobalDonorLeaderboard();
 
     res.json({ stats, leaderboard });
   } catch (error) {
