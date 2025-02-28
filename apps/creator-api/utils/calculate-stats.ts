@@ -20,6 +20,7 @@ export function calculateStatsForDonorAddress(
   let favoriteDonationToken = '';
   let favoriteTokenMetadata: Omit<TokenV2, 'onchainMarketData'> | null = null;
   let donorDisplayName: string | null = null;
+  let positionInLeaderboard = null;
 
   donations.forEach((donation) => {
     const toAddress = donation.toAddress;
@@ -82,6 +83,7 @@ export function calculateStatsForDonorAddress(
     favoriteDonationToken,
     favoriteTokenMetadata,
     donorDisplayName,
+    positionInLeaderboard,
   };
 }
 

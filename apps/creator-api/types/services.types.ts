@@ -18,12 +18,19 @@ export interface DonationStats {
   favoriteDonationToken: string;
   favoriteTokenMetadata: Omit<TokenV2, 'onchainMarketData'> | null;
   donorDisplayName: string | null;
+  positionInLeaderboard: number | null;
 }
 
-export interface ActorDisplayItem {
+interface ActorDisplayItem {
   account: {
     address: Hex;
   };
+}
+
+export interface LeaderboardStats {
+  address: string;
+  donorMetadata: FromUser;
+  totalAmount: number;
 }
 
 export interface TokenDisplayItem {
@@ -36,24 +43,26 @@ type StringDisplayItem = {
   stringValue: string;
 };
 
+type FromUser = {
+  address: Hex;
+  displayName: {
+    value: string;
+    source: string;
+  };
+  avatar: {
+    value: {
+      url: string | undefined;
+    };
+    source: string | undefined;
+  };
+};
+
 export interface ZapperNode {
   timestamp: number;
   network: string;
   transaction: {
     hash: Hex;
-    fromUser: {
-      address: Hex;
-      displayName: {
-        value: string;
-        source: string;
-      };
-      avatar: {
-        value: {
-          url: string | undefined;
-        };
-        source: string | undefined;
-      };
-    };
+    fromUser: FromUser;
     toUser: {
       address: Hex;
     };

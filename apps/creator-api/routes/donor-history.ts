@@ -28,12 +28,15 @@ router.post('/', async (req: Request, res: Response) => {
     const stats = calculateStatsForDonorAddress(knownDonations);
 
     const leaderboard = await calculateGlobalDonorLeaderboard();
-    const donorPosition = leaderboard.findIndex((entry) => entry.address.toLowerCase() === address.toLowerCase()) + 1;
+    const donorPosition = leaderboard.findIndex(
+      (entry) => entry.address.toLowerCase() === address.toLowerCase(),
+    );
+    stats.positionInLeaderboard =
+      donorPosition !== -1 ? donorPosition + 1 : null;
 
-    res.json({ 
-      stats, 
+    res.json({
+      stats,
       leaderboard,
-      donorPosition: donorPosition || null
     });
   } catch (error) {
     console.error('Tip history error:', error);

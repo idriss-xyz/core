@@ -42,14 +42,17 @@ export async function fetchDonations(): Promise<Record<string, Donation[]>> {
 
   const donations = await donationRepo.find({});
 
-  const groupedDonations = donations.reduce((acc, donation) => {
-    const key = donation.fromAddress.toLowerCase();
-    if (!acc[key]) {
-      acc[key] = [];
-    }
-    acc[key].push(donation);
-    return acc;
-  }, {} as Record<string, Donation[]>);
+  const groupedDonations = donations.reduce(
+    (acc, donation) => {
+      const key = donation.fromAddress.toLowerCase();
+      if (!acc[key]) {
+        acc[key] = [];
+      }
+      acc[key].push(donation);
+      return acc;
+    },
+    {} as Record<string, Donation[]>,
+  );
 
   return groupedDonations;
 }
