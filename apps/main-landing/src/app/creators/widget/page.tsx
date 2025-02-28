@@ -1,26 +1,25 @@
 'use client';
 import { Hex } from 'viem';
-import '@rainbow-me/rainbowkit/styles.css';
 import { useEffect, useState } from 'react';
 import { default as io } from 'socket.io-client';
 import _ from 'lodash';
 import { useSearchParams } from 'next/navigation';
-import { TipHistoryNode } from '@idriss-xyz/constants';
+import { EMPTY_HEX, TipHistoryNode } from '@idriss-xyz/constants';
 
 import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
 import { FormValues, WidgetVariants } from '@/app/creators/widget/types';
+import { Providers } from '@/app/creators/widget/providers';
 
 import { TopDonors } from '../donate/top-donors';
-import { RainbowKitProviders } from '../donate/providers';
 
-const SOCKET_URL = 'https://core-production-a116.up.railway.app';
+import { CREATOR_API_URL } from './constants';
 
 // ts-unused-exports:disable-next-line
 export default function Widget() {
   return (
-    <RainbowKitProviders>
+    <Providers>
       <WidgetContent />
-    </RainbowKitProviders>
+    </Providers>
   );
 }
 
@@ -61,7 +60,7 @@ function WidgetContent() {
   }, []);
 
   const tips = useGetTipHistory(
-    { address: address ?? '0x' },
+    { address: address ?? EMPTY_HEX },
     { enabled: !!address },
   );
 
@@ -73,7 +72,7 @@ function WidgetContent() {
 
   useEffect(() => {
     if (address && !socketInitialized) {
-      const socket = io(SOCKET_URL);
+      const socket = io(CREATOR_API_URL);
       setSocketInitialized(true);
 
       if (socket && !socketConnected) {

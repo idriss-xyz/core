@@ -3,6 +3,7 @@ import { Link } from '@idriss-xyz/ui/link';
 import { formatUnits } from 'viem';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import {
+  CREATORS_DONATE_LINK,
   hexSchema,
   TipHistoryFromUser,
   TipHistoryNode,
@@ -37,7 +38,7 @@ export const TopDonors = ({
   validatedAddress,
   updateCurrentContent,
 }: Properties) => {
-  const donationURL = `https://www.idriss.xyz/creators/donate?address=${validatedAddress}`;
+  const donationURL = `${CREATORS_DONATE_LINK}?address=${validatedAddress}`;
   const addressValidationResult = hexSchema.safeParse(validatedAddress);
 
   const isTwitchExtension = variant !== null && variant !== undefined;
@@ -99,8 +100,8 @@ export const TopDonors = ({
       <div
         className={classes(
           baseClassName,
+          'min-h-[500px] w-auto items-center justify-center px-4 pb-9 pt-6',
           className,
-          'min-h-[500px] items-center justify-center px-4 pb-9 pt-6',
         )}
       >
         <p className="flex items-center justify-center gap-2 text-center text-heading4 text-red-500">
@@ -115,38 +116,40 @@ export const TopDonors = ({
     <div
       className={classes(
         baseClassName,
+        isTwitchExtension && 'w-[360px]',
         className,
-        isTwitchExtension ? 'w-[360px]' : '',
       )}
     >
       <div
         className={classes(
           'relative flex min-h-[100px] w-full items-center justify-center overflow-hidden',
-          isTwitchPanel ? 'min-h-[83px]' : '',
+          isTwitchPanel && 'min-h-[83px]',
         )}
       >
         <img
-          src={IDRISS_SCENE_STREAM_2.src}
           alt=""
+          src={IDRISS_SCENE_STREAM_2.src}
           className="absolute -left-5 -top-1 h-[110px] w-[640px] max-w-none object-cover"
         />
         <span className="absolute left-0 top-0 size-full bg-black/20" />
+
         <h1 className="relative z-1 mx-12 my-6 text-center text-heading4 uppercase text-white">
           Top donors
         </h1>
       </div>
+
       <div className="flex w-full flex-col">
         {tipsLoading || !validatedAddress || !sortedGroupedTips ? (
           <span
             className={classes(
               'flex min-h-[207px] w-full items-center justify-center border-b-neutral-300 px-5.5 py-4.5',
-              isTwitchPanel ? 'min-h-[345px]' : '',
+              isTwitchPanel && 'min-h-[345px]',
             )}
           >
             <Spinner className="size-16 text-mint-600" />
           </span>
         ) : (
-          <ul className={isTwitchPanel ? 'min-h-[345px]' : ''}>
+          <ul className={classes(isTwitchPanel && 'min-h-[345px]')}>
             {isTwitchPanel && (
               <>
                 {sortedGroupedTips.map((groupedTip, index) => {
@@ -161,7 +164,8 @@ export const TopDonors = ({
                     />
                   );
                 })}
-                {sortedGroupedTips.length <= 5 ? (
+
+                {sortedGroupedTips.length <= 5 && (
                   <DonorItemPlaceholder
                     amountToDisplay={5}
                     donorRank={sortedGroupedTips.length}
@@ -169,11 +173,11 @@ export const TopDonors = ({
                       sortedGroupedTips.at(-1)?.tipsSum ?? 1234
                     }
                   />
-                ) : null}
+                )}
               </>
             )}
 
-            {isTwitchComponent || isTwitchOverlay ? (
+            {(isTwitchComponent || isTwitchOverlay) && (
               <>
                 {sortedGroupedTips.map((groupedTip, index) => {
                   if (!groupedTip.tips[0] || index > 2) return null;
@@ -187,7 +191,8 @@ export const TopDonors = ({
                     />
                   );
                 })}
-                {sortedGroupedTips.length <= 3 ? (
+
+                {sortedGroupedTips.length <= 3 && (
                   <DonorItemPlaceholder
                     hideEncouragement
                     amountToDisplay={3}
@@ -196,11 +201,11 @@ export const TopDonors = ({
                       sortedGroupedTips.at(-1)?.tipsSum ?? 1234
                     }
                   />
-                ) : null}
+                )}
               </>
-            ) : null}
+            )}
 
-            {isTwitchExtension ? null : (
+            {!isTwitchExtension && (
               <>
                 {sortedGroupedTips.map((groupedTip, index) => {
                   if (!groupedTip.tips[0] || index > 5) return null;
@@ -214,7 +219,8 @@ export const TopDonors = ({
                     />
                   );
                 })}
-                {sortedGroupedTips.length <= 6 ? (
+
+                {sortedGroupedTips.length <= 6 && (
                   <DonorItemPlaceholder
                     amountToDisplay={6}
                     donorRank={sortedGroupedTips.length}
@@ -222,17 +228,18 @@ export const TopDonors = ({
                       sortedGroupedTips.at(-1)?.tipsSum ?? 1234
                     }
                   />
-                ) : null}
+                )}
               </>
             )}
           </ul>
         )}
       </div>
-      {isTwitchExtension ? (
+
+      {isTwitchExtension && (
         <div
           className={classes(
             'flex min-h-[92px] w-full items-center justify-center px-5 py-3.5',
-            isTwitchPanel ? 'min-h-[72px]' : '',
+            isTwitchPanel && 'min-h-[72px]',
           )}
         >
           <Button
@@ -251,8 +258,9 @@ export const TopDonors = ({
               : 'Donate'}
           </Button>
         </div>
-      ) : null}
-      {updateCurrentContent ? (
+      )}
+
+      {updateCurrentContent && (
         <div className="flex min-h-[80px] w-full items-center justify-center">
           <Link
             size="xs"
@@ -267,7 +275,7 @@ export const TopDonors = ({
             See full donation history
           </Link>
         </div>
-      ) : null}
+      )}
     </div>
   );
 };
