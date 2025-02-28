@@ -24,17 +24,15 @@ const app_addresses = Object.values(CHAIN_TO_IDRISS_TIPPING_ADDRESS).map(
 );
 
 export async function processAllDonations(options: {
-  addresses: string[];
+  address: string;
   toAddresses?: string[];
   oldestTransactionTimestamp?: number;
 }): Promise<{ newEdges: { node: ZapperNode }[] }> {
   const {
-    addresses,
+    address,
     toAddresses = app_addresses,
     oldestTransactionTimestamp = OLDEST_TRANSACTION_TIMESTAMP,
   } = options;
-
-  const address = addresses[0]; // Adjust if handling multiple addresses
 
   const newEdges: { node: ZapperNode }[] = [];
   let cursor: string | null = null;
@@ -42,7 +40,7 @@ export async function processAllDonations(options: {
 
   while (hasNextPage) {
     const variables: TipHistoryVariables = {
-      addresses,
+      addresses: [address],
       toAddresses,
       isSigner: false,
       after: cursor,
