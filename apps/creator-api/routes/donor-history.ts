@@ -1,4 +1,25 @@
 import { Router, Request, Response } from 'express';
+
+interface LeaderboardStats {
+  address: string;
+  totalDonations: number;
+  totalAmount: number;
+}
+
+async function calculateGlobalDonorLeaderboard(): Promise<LeaderboardStats[]> {
+  const groupedDonations = await fetchDonations();
+
+  const leaderboard = Object.entries(groupedDonations).map(([address, donations]) => ({
+    address,
+    totalDonations: donations.length,
+    totalAmount: donations.reduce((sum, donation) => sum + parseFloat(donation.amount), 0),
+  }));
+
+  // Sort the leaderboard by totalAmount in descending order
+  leaderboard.sort((a, b) => b.totalAmount - a.totalAmount);
+
+  return leaderboard;
+}
 import { fetchDonationsByFromAddress } from '../db/fetch-known-donations';
 import { calculateStatsForDonorAddress } from '../utils/calculate-stats';
 import dotenv from 'dotenv';
@@ -21,11 +42,10 @@ router.post('/', async (req: Request, res: Response) => {
     }
 
     const knownDonations = await fetchDonationsByFromAddress(address);
-
-    // ai! Add a function called calculateGlobalDonorLeaderboard(address) that calls fetchDonations() to get the grouped donations by fromAddress.
+    const leaderboard = await calculateGlobalDonorLeaderboard();
     const stats = calculateStatsForDonorAddress(knownDonations);
 
-    res.json({ stats });
+    res.json({ stats, leaderboard });
   } catch (error) {
     console.error('Tip history error:', error);
     res.status(500).json({ error: 'Failed to fetch tip history' });
