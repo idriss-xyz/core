@@ -13,6 +13,10 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env: 
+      E2E_TWITTER_TEST_EMAIL: ${{ secrets.E2E_TWITTER_TEST_EMAIL }}
+      E2E_TWITTER_TEST_USERNAME: ${{ secrets.E2E_TWITTER_TEST_USERNAME }}
+      E2E_TWITTER_TEST_PASSWORD: ${{ secrets.E2E_TWITTER_TEST_PASSWORD }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3

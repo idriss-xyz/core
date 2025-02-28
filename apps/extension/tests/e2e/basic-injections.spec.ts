@@ -57,7 +57,8 @@ test.describe('Basic Injections Test', () => {
       await page.close();
     });
 
-    test('injects follow on farcaster button on twitter profile', async () => {
+    // Twitter login loginOnTestAccount needs to be adjusted in order to run this test
+    test.skip('injects follow on farcaster button on twitter profile', async () => {
       const page = await context.newPage();
 
       await loginOnTestAccount(page);

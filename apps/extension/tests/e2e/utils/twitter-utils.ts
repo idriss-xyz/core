@@ -16,7 +16,13 @@ export const loginOnTestAccount = async (page: Page) => {
 
   const unusualActivityInput = page.getByTestId('ocfEnterTextTextInput');
 
-  if (unusualActivityInput) {
+  const isUnusualActivityVisible = await unusualActivityInput
+    .isVisible()
+    .catch(() => {
+      return false;
+    });
+
+  if (isUnusualActivityVisible) {
     await unusualActivityInput.fill(process.env.E2E_TWITTER_TEST_USERNAME);
 
     await page.click('text=Next');
