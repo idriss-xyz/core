@@ -33,8 +33,7 @@ export async function fetchDonationsByFromAddress(
   return donations;
 }
 
-// ai! make it so this function groups the return by fromAddress, so I can calculate the donationn stats for every address that ever donated
-export async function fetchDonations(): Promise<Donation[]> {
+export async function fetchDonations(): Promise<Record<string, Donation[]>> {
   if (!AppDataSource.isInitialized) {
     await AppDataSource.initialize();
   }
@@ -43,5 +42,14 @@ export async function fetchDonations(): Promise<Donation[]> {
 
   const donations = await donationRepo.find({});
 
-  return donations;
+  const groupedDonations = donations.reduce((acc, donation) => {
+    const key = donation.fromAddress.toLowerCase();
+    if (!acc[key]) {
+      acc[key] = [];
+    }
+    acc[key].push(donation);
+    return acc;
+  }, {} as Record<string, Donation[]>);
+
+  return groupedDonations;
 }
