@@ -2,12 +2,12 @@
 import { Form } from '@idriss-xyz/ui/form';
 import { Controller, useForm } from 'react-hook-form';
 import { Button } from '@idriss-xyz/ui/button';
-import { useEffect, useState } from 'react';
-import { Hex, isAddress } from 'viem';
+import { useState } from 'react';
+import { isAddress } from 'viem';
 import { EMPTY_HEX } from '@idriss-xyz/constants';
 
 import { backgroundLines2, backgroundLines3 } from '@/assets';
-import { FormValues } from '@/app/creators/widget/types';
+import { ConfigSubmitStatus, FormValues } from '@/app/creators/widget/types';
 
 const FORM_VALUES = {
   address: EMPTY_HEX,
@@ -15,13 +15,17 @@ const FORM_VALUES = {
 
 // ts-unused-exports:disable-next-line
 export default function Config() {
-  const [address, setAddress] = useState<Hex | null>(null);
+  const [submitStatus, setSubmitStatus] = useState<ConfigSubmitStatus>();
   const { control, handleSubmit, reset } = useForm<FormValues>({
     defaultValues: FORM_VALUES,
   });
 
   const onSubmit = (payload: FormValues) => {
+    setSubmitStatus(undefined);
+
     if (!window.Twitch?.ext || !isAddress(payload.address)) {
+      setSubmitStatus('error');
+
       return;
     }
 
@@ -33,30 +37,12 @@ export default function Config() {
     );
 
     reset(FORM_VALUES);
-    setAddress(payload.address);
+    setSubmitStatus('success');
   };
-
-  useEffect(() => {
-    if (!window.Twitch?.ext) {
-      return;
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    window.Twitch.ext.onAuthorized(() => {
-      const storedConfig = window.Twitch.ext.configuration.broadcaster?.content;
-
-      if (!storedConfig) {
-        return;
-      }
-
-      const parsedConfig: FormValues = JSON.parse(storedConfig);
-      setAddress(parsedConfig.address as Hex);
-    });
-  }, []);
 
   return (
     <>
-      <main className="relative flex min-h-screen grow flex-col items-center justify-around gap-4 overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] px-2 pb-1 pt-[56px] lg:flex-row lg:items-start lg:justify-center lg:px-0">
+      <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] p-2">
         <link rel="preload" as="image" href={backgroundLines2.src} />
         <img
           alt=""
@@ -64,7 +50,7 @@ export default function Config() {
           className="pointer-events-none absolute top-0 hidden size-full opacity-40 lg:block"
         />
 
-        <div className="relative z-1 flex w-[440px] max-w-full flex-col items-center rounded-xl bg-white px-4 pb-9 pt-6">
+        <div className="relative z-1 flex w-[440px] max-w-full flex-col items-center rounded-xl bg-white">
           <link rel="preload" as="image" href={backgroundLines3.src} />
           <img
             alt=""
@@ -72,9 +58,11 @@ export default function Config() {
             className="pointer-events-none absolute top-0 hidden h-full opacity-100 lg:block"
           />
 
-          <h1 className="self-start text-heading4">Setup your extension</h1>
+          <h1 className="self-start px-6 pb-2.5 pt-5.5 text-heading4">
+            Set up your extension
+          </h1>
 
-          <Form onSubmit={handleSubmit(onSubmit)} className="w-full">
+          <Form onSubmit={handleSubmit(onSubmit)} className="w-full px-6 py-3">
             <Controller
               name="address"
               control={control}
@@ -83,14 +71,22 @@ export default function Config() {
                   <>
                     <Form.Field
                       {...field}
-                      className="mt-6"
                       value={field.value}
                       label="Wallet address"
                     />
 
-                    <span className="text-label7 text-neutralGreen-700">
-                      Saved: {address}
-                    </span>
+                    {submitStatus === 'success' && (
+                      <span className="text-sm text-mint-500">
+                        Address saved successfully.
+                      </span>
+                    )}
+
+                    {submitStatus === 'error' && (
+                      <span className="text-sm text-red-500">
+                        Failed to save the address. Check if the address entered
+                        is correct.
+                      </span>
+                    )}
                   </>
                 );
               }}
@@ -100,7 +96,7 @@ export default function Config() {
               type="submit"
               size="medium"
               intent="primary"
-              className="mt-6 w-full"
+              className="mt-3 w-full"
             >
               SAVE
             </Button>
