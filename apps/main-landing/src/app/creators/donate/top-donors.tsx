@@ -253,6 +253,7 @@ export const TopDonors = ({
             {!tipsLoading &&
             !!validatedAddress &&
             sortedGroupedTips &&
+            !isTwitchPanel &&
             sortedGroupedTips.length < 3
               ? 'Claim a spot'
               : 'Donate'}
