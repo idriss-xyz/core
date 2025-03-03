@@ -16,7 +16,6 @@ type Properties = {
 export const Alert = forwardRef(
   (
     {
-      children,
       type,
       className,
       heading,
@@ -61,7 +60,6 @@ export const Alert = forwardRef(
             className="-right-2 -top-2 text-neutral-500"
           />
         </div>
-        {children}
       </Component>
     );
   },
