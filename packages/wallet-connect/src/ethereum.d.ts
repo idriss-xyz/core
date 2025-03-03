@@ -4,6 +4,7 @@ import { PublicKey, VersionedTransaction, Transaction } from '@solana/web3.js';
 interface SolanaProvider {
   name: string;
   connected: boolean;
+  icon?: `data:image/${string}`; 
   isPhantom?: boolean;
   isSolflare?: boolean;
   connect(): Promise<void>;
