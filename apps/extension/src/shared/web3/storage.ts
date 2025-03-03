@@ -48,11 +48,11 @@ export class SolanaWalletStorage {
   public static get(): Promise<StoredSolanaWallet | undefined> {
     return new Promise((resolve) => {
       window.postMessage({
-        type: 'GET_WALLET',
+        type: 'GET_SOLANA_WALLET',
       });
 
       onWindowMessage<StoredSolanaWallet | undefined>(
-        'GET_WALLET_RESPONSE',
+        'GET_SOLANA_WALLET_RESPONSE',
         (maybeWallet) => {
           resolve(maybeWallet);
         },
@@ -62,14 +62,14 @@ export class SolanaWalletStorage {
 
   public static save(payload: StoredSolanaWallet) {
     window.postMessage({
-      type: 'SAVE_WALLET',
+      type: 'SAVE_SOLANA_WALLET',
       detail: payload,
     });
   }
 
   public static clear() {
     window.postMessage({
-      type: 'CLEAR_WALLET',
+      type: 'CLEAR_SOLANA_WALLET',
     });
   }
 }

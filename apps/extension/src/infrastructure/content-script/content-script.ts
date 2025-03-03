@@ -30,6 +30,7 @@ export class ContentScript {
 
     contentScript.subscribeToExtensionSettings();
     contentScript.subscribeToWallet();
+    contentScript.subscribeToSolanaWallet();
     contentScript.subscribeToAuthToken();
     contentScript.subscribeToDeviceId();
     contentScript.blockGithubShortcuts();
