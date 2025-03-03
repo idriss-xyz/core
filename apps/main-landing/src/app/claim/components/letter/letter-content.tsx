@@ -123,7 +123,7 @@ export const LetterContent = () => {
           iconName="CalendarClock"
           buttonText="Claim ended"
         >
-          <span>Claiming ended at 11:59 PM UTC, February 10.</span>
+          <span>Claiming ended at 11:59 PM UTC, March 7.</span>
         </BlockedButton>
       )}
     </div>
