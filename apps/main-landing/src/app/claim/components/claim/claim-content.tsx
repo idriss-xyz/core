@@ -26,7 +26,7 @@ export const ClaimContent = () => {
   >('IDRISS USER');
 
   const liBaseClassName =
-    "relative flex justify-between pr-1 before:absolute before:-left-4 before:text-red-500 before:content-['•']";
+    "relative flex justify-between pr-1 before:absolute before:-left-4 before:text-red-500 before:content-['•'] gap-x-4";
 
   if (!eligibilityData) {
     setCurrentContent('check-eligibility');
@@ -134,8 +134,10 @@ export const ClaimContent = () => {
               minimumFractionDigits: 0,
               maximumFractionDigits: 0,
             }).format(Number(eligibilityData.allocation_usage ?? 0))}`}
+            descriptionHasWrapper
             description={
               <IdrissUserCriteriaDescription
+                className="mt-3 pl-9 text-body5 text-neutralGreen-500"
                 eligibilityData={eligibilityData}
                 liBaseClassName={liBaseClassName}
               />
