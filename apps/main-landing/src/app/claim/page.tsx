@@ -12,23 +12,25 @@ import { MobileNotSupportedContent } from './components/mobile-not-supported/mob
 export default function Claim() {
   return (
     <Providers>
-      <Alert
-        type="default"
-        className="z-alert absolute inset-x-0 top-2 mx-auto w-full max-w-[1200px] px-2"
-        heading="Claim open for appeal participants only"
-        description="The regular claim ended on Feb 10. This claim is open only for those with a successful appeal."
-        actionButtons={(close) => {
-          return (
-            <Link
-              size="m"
-              onClick={close}
-              className="cursor-pointer border-none text-neutral-900"
-            >
-              Dismiss
-            </Link>
-          );
-        }}
-      />
+      <div className="z-alert absolute inset-x-0 top-2 mx-auto w-full max-w-[1200px] px-2">
+        <Alert
+          type="default"
+          className="w-full"
+          heading="Claim open for appeal participants only"
+          description="The regular claim ended on Feb 10. This claim is open only for those with a successful appeal."
+          actionButtons={(close) => {
+            return (
+              <Link
+                size="m"
+                onClick={close}
+                className="cursor-pointer border-none text-neutral-900"
+              >
+                Dismiss
+              </Link>
+            );
+          }}
+        />
+      </div>
       <TopBar />
       <DesktopContentManager />
       <MobileNotSupportedContent />
