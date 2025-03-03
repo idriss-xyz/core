@@ -2,7 +2,7 @@ import { FullyRequired } from '@idriss-xyz/utils';
 import { cva } from 'class-variance-authority';
 
 export const alert = cva(
-  'grid grid-cols-[40px,1fr] items-start gap-x-4 rounded-xl border border-neutral-300 bg-white p-4 shadow-sm',
+  'grid max-h-max grid-cols-[40px,1fr] items-start gap-x-4 rounded-xl border border-neutral-300 bg-white p-4 shadow-sm',
   {
     variants: {
       type: {
