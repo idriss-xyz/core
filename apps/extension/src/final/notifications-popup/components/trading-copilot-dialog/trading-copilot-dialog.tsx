@@ -254,7 +254,9 @@ const TradingCopilotDialogContent = ({
         className="p-5"
         heading="Swap completed"
         onConfirm={closeDialog}
-        chainId={exchanger.quoteData.transactionData.chainId ?? getChainId('SOLANA')}
+        chainId={
+          exchanger.quoteData.transactionData.chainId ?? getChainId('SOLANA')
+        }
         transactionHash={exchanger.transactionData.transactionHash as Hex}
       />
     );
