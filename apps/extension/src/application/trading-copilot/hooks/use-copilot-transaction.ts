@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { VersionedTransaction } from '@solana/web3.js';
+import { SolanaWallet } from '@idriss-xyz/wallet-connect';
 
 import {
   createWalletClient,
@@ -12,7 +13,6 @@ import { useObservabilityScope } from 'shared/observability';
 import { useCommandMutation } from 'shared/messaging';
 
 import { SendSolanaTransactionCommand } from '../commands/';
-import { SolanaWallet } from '@idriss-xyz/wallet-connect';
 
 interface SwapProperties {
   to: `0x${string}`;
