@@ -10,8 +10,12 @@ function wrapWalletsWithAdapters(
   wallets: readonly Wallet[],
 ): readonly StandardWalletAdapter[] {
   return wallets
-    .filter((wallet) => {return isWalletAdapterCompatibleWallet(wallet)})
-    .map((wallet) => {return new StandardWalletAdapter({ wallet })});
+    .filter((wallet) => {
+      return isWalletAdapterCompatibleWallet(wallet);
+    })
+    .map((wallet) => {
+      return new StandardWalletAdapter({ wallet });
+    });
 }
 
 // Function to detect browser-installed Solana wallets
@@ -20,14 +24,16 @@ function detectSolanaWallets(): SolanaWalletWeb3js[] {
   if (typeof window !== 'undefined') {
     const { get } = DEPRECATED_getWallets();
     const wallets = wrapWalletsWithAdapters(get());
-    const potentialWallets = wallets.filter(
-      (wallet) => {return wallet && typeof wallet === 'object'},
-    );
+    const potentialWallets = wallets.filter((wallet) => {
+      return wallet && typeof wallet === 'object';
+    });
 
-    const mappedWallets = potentialWallets.map((adapter) => {return {
-      adapter,
-      readyState: adapter.readyState || 'Unknown', // Fallback if readyState is not available
-    }});
+    const mappedWallets = potentialWallets.map((adapter) => {
+      return {
+        adapter,
+        readyState: adapter.readyState || 'Unknown', // Fallback if readyState is not available
+      };
+    });
 
     detectedWallets.push(...mappedWallets);
   }
