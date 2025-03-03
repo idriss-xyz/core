@@ -15,7 +15,7 @@ export default function Claim() {
       <div className="relative h-screen">
         <Alert
           type="default"
-          className="absolute inset-x-0 top-2 z-10 mx-auto h-fit w-full max-w-[1200px]"
+          className="z-alert absolute inset-x-0 top-2 mx-auto h-fit w-full max-w-[1200px]"
           heading="Claim open for appeal participants only"
           description="The regular claim ended on Feb 10. This claim is open only for those with a successful appeal."
           actionButtons={(close) => {
