@@ -123,6 +123,7 @@ export default {
         1: '1',
         topBar: '10',
         dialog: '20',
+        alert: '99999',
         notification: '99999',
         extensionPopup: '100000',
         portal: '100001',
