@@ -159,9 +159,9 @@ export const SolanaWalletConnectModal = createModal(() => {
       provider: wallet.adapter,
       info: {
         uuid: index,
-        rdns: wallet.adapter.name || 'Unknown',
-        icon: (wallet.adapter.icon as `data:image/${string}`) ?? '',
-        name: wallet.adapter.name || 'Unknown',
+        rdns: wallet.adapter.name ?? 'Unknown',
+        icon: wallet.adapter.icon ?? '' as `data:image/${string}`,
+        name: wallet.adapter.name ?? 'Unknown',
       },
     };
   });
