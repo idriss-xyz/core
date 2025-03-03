@@ -26,7 +26,7 @@ export const ClaimContent = () => {
   >('IDRISS USER');
 
   const liBaseClassName =
-    "relative flex justify-between pr-1 before:absolute before:-left-4 before:text-red-500 before:content-['•']";
+    "relative flex justify-between pr-1 before:absolute before:-left-4 before:text-red-500 before:content-['•'] gap-x-4";
 
   if (!eligibilityData) {
     setCurrentContent('check-eligibility');

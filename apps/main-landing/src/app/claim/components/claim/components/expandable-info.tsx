@@ -35,7 +35,7 @@ export const ExpandableInfo = ({
           ) : (
             <Icon name="X" size={24} className="mr-2 text-red-500" />
           )}
-          <div className="flex w-full items-center justify-between">
+          <div className="flex w-full items-center justify-between gap-x-4">
             <h3 className="text-body4 text-neutralGreen-700">{title}</h3>
             <p className="text-body5 text-neutralGreen-500">{subTitle}</p>
           </div>
