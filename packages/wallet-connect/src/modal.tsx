@@ -160,7 +160,7 @@ export const SolanaWalletConnectModal = createModal(() => {
       info: {
         uuid: index,
         rdns: wallet.adapter.name ?? 'Unknown',
-        icon: wallet.adapter.icon ?? '' as `data:image/${string}`,
+        icon: wallet.adapter.icon ?? ('' as `data:image/${string}`),
         name: wallet.adapter.name ?? 'Unknown',
       },
     };
