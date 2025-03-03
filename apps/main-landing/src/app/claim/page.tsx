@@ -1,3 +1,7 @@
+'use client';
+import { Link } from '@idriss-xyz/ui/link';
+import { Alert } from '@idriss-xyz/ui/alert';
+
 import { TopBar } from '@/components';
 
 import { Providers } from './providers';
@@ -8,9 +12,28 @@ import { MobileNotSupportedContent } from './components/mobile-not-supported/mob
 export default function Claim() {
   return (
     <Providers>
-      <TopBar />
-      <DesktopContentManager />
-      <MobileNotSupportedContent />
+      <div className="relative h-screen">
+        <Alert
+          type="default"
+          className="absolute inset-x-0 top-2 z-10 mx-auto h-fit w-full max-w-[1200px]"
+          heading="Claim open for appeal participants only"
+          description="The regular claim ended on Feb 10. This claim is open only for those with a successful appeal."
+          actionButtons={(close) => {
+            return (
+              <Link
+                size="m"
+                onClick={close}
+                className="cursor-pointer border-none text-neutral-900"
+              >
+                Dismiss
+              </Link>
+            );
+          }}
+        />
+        <TopBar />
+        <DesktopContentManager />
+        <MobileNotSupportedContent />
+      </div>
     </Providers>
   );
 }

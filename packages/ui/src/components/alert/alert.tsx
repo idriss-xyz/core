@@ -1,4 +1,10 @@
-import { ForwardedRef, forwardRef, HTMLProps, useState } from 'react';
+import {
+  ForwardedRef,
+  forwardRef,
+  HTMLProps,
+  ReactNode,
+  useState,
+} from 'react';
 
 import { classes } from '../../utils';
 import { Icon } from '../icon';
@@ -10,6 +16,7 @@ type Properties = {
   heading: string;
   description: string;
   onClose?: () => void;
+  actionButtons?: (close: () => void) => ReactNode;
 } & AlertVariants &
   HTMLProps<HTMLSpanElement>;
 
@@ -21,6 +28,7 @@ export const Alert = forwardRef(
       heading,
       description,
       onClose,
+      actionButtons,
       ...properties
     }: Properties,
     reference: ForwardedRef<HTMLSpanElement>,
@@ -50,6 +58,12 @@ export const Alert = forwardRef(
           <div className="flex flex-col items-start gap-y-1">
             <p className="text-label3 text-neutral-900">{heading}</p>
             <p className="text-body4 text-neutral-600">{description}</p>
+
+            {actionButtons && (
+              <div className="mt-2 flex flex-row flex-wrap items-center gap-x-4 gap-y-2">
+                {actionButtons(handleClose)}
+              </div>
+            )}
           </div>
 
           <IconButton
