@@ -10,6 +10,7 @@ type Properties = {
   positive: boolean;
   description: ReactNode;
   title: EligibilityCriteriaTitle;
+  descriptionHasWrapper?: boolean;
   onOpenChange: (open: boolean) => void;
 };
 
@@ -20,6 +21,7 @@ export const ExpandableInfo = ({
   positive,
   description,
   onOpenChange,
+  descriptionHasWrapper,
 }: Properties) => {
   return (
     <Collapsible
@@ -41,9 +43,13 @@ export const ExpandableInfo = ({
       }
       content={
         <div className="flex flex-row">
-          <p className="mt-3 pl-9 text-body5 text-neutralGreen-500">
-            {description}
-          </p>
+          {descriptionHasWrapper ? (
+            description
+          ) : (
+            <ul className="mt-3 pl-9 text-body5 text-neutralGreen-500">
+              {description}
+            </ul>
+          )}
         </div>
       }
     />
