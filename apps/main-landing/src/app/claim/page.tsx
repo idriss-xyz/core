@@ -12,7 +12,7 @@ import { MobileNotSupportedContent } from './components/mobile-not-supported/mob
 export default function Claim() {
   return (
     <Providers>
-      <div className="absolute inset-x-0 top-2 z-alert mx-auto w-full max-w-[1200px] px-2">
+      <div className="absolute inset-x-0 top-2 z-alert mx-auto hidden w-full max-w-[1200px] px-2 lg:block">
         <Alert
           type="default"
           className="w-full"
