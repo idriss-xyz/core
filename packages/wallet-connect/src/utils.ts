@@ -1,10 +1,16 @@
-import { Wallet as SolanaWalletWeb3js } from '@solana/wallet-adapter-react';
 import {
   isWalletAdapterCompatibleWallet,
   StandardWalletAdapter,
 } from '@solana/wallet-standard-wallet-adapter-base';
 import { DEPRECATED_getWallets } from '@wallet-standard/app';
 import type { Wallet } from '@wallet-standard/base';
+
+import { SolanaProvider } from './ethereum';
+
+type SolanaWalletWeb3js = {
+  adapter: SolanaProvider;
+  readyState: string;
+};
 
 function wrapWalletsWithAdapters(
   wallets: readonly Wallet[],
