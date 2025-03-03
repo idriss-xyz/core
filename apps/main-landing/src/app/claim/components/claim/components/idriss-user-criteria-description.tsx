@@ -5,6 +5,7 @@ import { EligibilityCheckResponse } from '@/app/claim/types';
 type Properties = {
   eligibilityData: EligibilityCheckResponse;
   liBaseClassName: string;
+  className?: string;
 };
 
 export const formatNumber = (value: number | undefined, digits = 0) => {
@@ -25,9 +26,10 @@ const formatDate = (date: string | undefined) => {
 export const IdrissUserCriteriaDescription = ({
   eligibilityData,
   liBaseClassName,
+  className,
 }: Properties) => {
   return (
-    <ul className="flex list-none flex-col gap-3 pl-5">
+    <ul className={classes('flex list-none flex-col gap-3 pl-5', className)}>
       <li
         className={classes(
           liBaseClassName,
