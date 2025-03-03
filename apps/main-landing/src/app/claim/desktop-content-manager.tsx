@@ -63,7 +63,7 @@ export const DesktopContentManager = () => {
   }, [currentContent]);
 
   return (
-    <main className="relative hidden min-h-full grow flex-col items-center justify-around overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] lg:flex lg:flex-row lg:items-start lg:justify-center lg:px-0">
+    <main className="relative hidden min-h-screen grow flex-col items-center justify-around overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] lg:flex lg:flex-row lg:items-start lg:justify-center lg:px-0">
       {currentContent === 'claim-successful' ? (
         videoError ? (
           <img
