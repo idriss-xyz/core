@@ -5,6 +5,8 @@ import { Button } from '@idriss-xyz/ui/button';
 import { useState } from 'react';
 import { isAddress } from 'viem';
 import { EMPTY_HEX } from '@idriss-xyz/constants';
+import { classes } from '@idriss-xyz/ui/utils';
+import { Icon } from '@idriss-xyz/ui/icon';
 
 import { backgroundLines2, backgroundLines3 } from '@/assets';
 import { ConfigSubmitStatus, FormValues } from '@/app/creators/widget/types';
@@ -58,11 +60,14 @@ export default function Config() {
             className="pointer-events-none absolute top-0 hidden h-full opacity-100 lg:block"
           />
 
-          <h1 className="self-start px-6 pb-2.5 pt-5.5 text-heading4">
+          <h1 className="self-start px-5 pt-5 text-heading4">
             Set up your extension
           </h1>
 
-          <Form onSubmit={handleSubmit(onSubmit)} className="w-full px-6 py-3">
+          <Form
+            onSubmit={handleSubmit(onSubmit)}
+            className="w-full px-5 pb-5 pt-6"
+          >
             <Controller
               name="address"
               control={control}
@@ -76,15 +81,23 @@ export default function Config() {
                     />
 
                     {submitStatus === 'success' && (
-                      <span className="text-sm text-mint-500">
+                      <span
+                        className={classes(
+                          'flex items-center pt-1 text-label7 text-mint-500 lg:text-label6',
+                        )}
+                      >
                         Address saved successfully.
                       </span>
                     )}
 
                     {submitStatus === 'error' && (
-                      <span className="text-sm text-red-500">
-                        Failed to save the address. Check if the address entered
-                        is correct.
+                      <span
+                        className={classes(
+                          'flex items-center space-x-1 pt-1 text-label7 text-red-500 lg:text-label6',
+                        )}
+                      >
+                        <Icon name="AlertCircle" size={12} className="p-0.5" />
+                        This address doesn’t exist.
                       </span>
                     )}
                   </>
@@ -96,7 +109,7 @@ export default function Config() {
               type="submit"
               size="medium"
               intent="primary"
-              className="mt-3 w-full"
+              className="mt-6 w-full"
             >
               SAVE
             </Button>
