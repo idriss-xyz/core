@@ -1,16 +1,12 @@
 import { useCallback, useState } from 'react';
 import { Button } from '@idriss-xyz/ui/button';
+import { roundToSignificantFigures } from '@idriss-xyz/utils';
+import { EMPTY_HEX } from '@idriss-xyz/constants';
+import { formatEther } from 'viem';
 
 import { useWallet } from 'shared/extension';
 import { IdrissSend } from 'shared/idriss';
-import {
-  EMPTY_HEX,
-  GetTokenPriceCommand,
-  TOKEN,
-  ethToDollars,
-  roundToSignificantFigures,
-  weiToEth,
-} from 'shared/web3';
+import { ethToDollars, GetTokenPriceCommand, TOKEN } from 'shared/web3';
 import { ErrorMessage, GasIcon, Spinner } from 'shared/ui';
 import { useCommandQuery } from 'shared/messaging';
 
@@ -22,7 +18,7 @@ import {
 } from '../constants';
 import { getLoadingMessage } from '../utils';
 import { SomethingWentWrongMessage } from '../components';
-import { useDonationMaker, useFees, useDonationForm } from '../hooks';
+import { useDonationForm, useDonationMaker, useFees } from '../hooks';
 
 type Properties = {
   widgetData: WidgetData;
@@ -81,10 +77,9 @@ export const DonationWidget = ({ widgetData }: Properties) => {
       const feeInWei = feesQuery.data[chainId]?.totalRelayFee.total
         ? Number(feesQuery.data[chainId]?.totalRelayFee.total)
         : 0;
-      const feeInEth = weiToEth(feeInWei);
-      const feeInDollars = ethToDollars(feeInEth, ethPerDollar);
+      const feeInEth = Number(formatEther(BigInt(feeInWei)));
 
-      return feeInDollars;
+      return ethToDollars(feeInEth, ethPerDollar);
     },
     [ethPerDollar, feesQuery.data],
   );

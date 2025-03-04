@@ -1,7 +1,12 @@
 'use client';
 /* eslint-disable @next/next/no-img-element */
 import { Button } from '@idriss-xyz/ui/button';
-import { CREATORS_LINK } from '@idriss-xyz/constants';
+import {
+  CREATORS_LINK,
+  hexSchema,
+  TipHistoryNode,
+  TipHistoryFromUser,
+} from '@idriss-xyz/constants';
 import { Hex, isAddress } from 'viem';
 import '@rainbow-me/rainbowkit/styles.css';
 import { useEffect, useMemo, useState } from 'react';
@@ -12,7 +17,6 @@ import _ from 'lodash';
 import { backgroundLines2 } from '@/assets';
 import { TopBar } from '@/components';
 import { validateAddressOrENS } from '@/app/creators/donate/utils';
-import { hexSchema } from '@/app/creators/donate/schema';
 import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
 import DonateHistoryList from '@/app/creators/donate/components/history/donate-history-list';
 import UserHistoryList from '@/app/creators/donate/components/user-history/user-history-list';
@@ -20,12 +24,16 @@ import UserHistoryList from '@/app/creators/donate/components/user-history/user-
 import { TopDonors } from './top-donors';
 import { Content } from './content';
 import { RainbowKitProviders } from './providers';
-import { FromUser, ZapperNode } from './types';
 
 const SOCKET_URL = 'https://core-production-a116.up.railway.app';
 
+const SEARCH_PARAMETER = {
+  ADDRESS: 'address',
+  LEGACY_ADDRESS: 'streamerAddress',
+};
+
 export type contentValues = {
-  userDetails?: FromUser;
+  userDetails?: TipHistoryFromUser;
   name: 'tip' | 'history' | 'userHistory';
   backTo?: 'tip' | 'history' | 'userHistory';
 };
@@ -40,7 +48,7 @@ export default function Donors() {
 }
 
 function DonorsContent() {
-  const [tipEdges, setTipEdges] = useState<{ node: ZapperNode }[]>([]);
+  const [tipEdges, setTipEdges] = useState<{ node: TipHistoryNode }[]>([]);
   const [currentContent, setCurrentContent] = useState<contentValues>({
     name: 'tip',
   });
@@ -52,7 +60,8 @@ function DonorsContent() {
 
   const searchParameters = useSearchParams();
   const addressFromParameters =
-    searchParameters.get('address') ?? searchParameters.get('streamerAddress');
+    searchParameters.get(SEARCH_PARAMETER.ADDRESS) ??
+    searchParameters.get(SEARCH_PARAMETER.LEGACY_ADDRESS);
 
   useEffect(() => {
     const validateAddress = async () => {
@@ -149,7 +158,7 @@ function DonorsContent() {
           }
         });
 
-        socket.on('newDonation', (node: ZapperNode) => {
+        socket.on('newDonation', (node: TipHistoryNode) => {
           setTipEdges((previousState) => {
             return _.uniqBy([{ node }, ...previousState], (item) => {
               return _.get(item, 'node.transaction.hash');

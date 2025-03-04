@@ -1,8 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
 import { useCallback } from 'react';
+import { Wallet } from '@idriss-xyz/wallet-connect';
 
 import { useCommandMutation } from 'shared/messaging';
-import { createWalletClient, Wallet } from 'shared/web3';
+import { createWalletClient } from 'shared/web3';
 
 import { GetApiKeyCommand } from '../commands';
 import { buildL1SignaturePayload } from '../utils';

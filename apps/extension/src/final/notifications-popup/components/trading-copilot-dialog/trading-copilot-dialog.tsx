@@ -7,6 +7,19 @@ import { formatEther, isAddress, parseEther } from 'viem';
 import { useCallback } from 'react';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
+import {
+  formatBigNumber,
+  getShortWalletHex,
+  getTimeDifferenceString,
+  roundToSignificantFiguresForCopilotTrading,
+} from '@idriss-xyz/utils';
+import { EMPTY_HEX } from '@idriss-xyz/constants';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@idriss-xyz/ui/tooltip';
 
 import { useWallet } from 'shared/extension';
 import { Closable, ErrorMessage, Icon, LazyImage } from 'shared/ui';
@@ -20,13 +33,7 @@ import {
   useExchanger,
   useLoginViaSiwe,
 } from 'application/trading-copilot';
-import { getShortWalletHex, TimeDifferenceCounter } from 'shared/utils';
-import {
-  CHAIN,
-  formatBigNumber,
-  getWholeNumber,
-  roundToSignificantFiguresForCopilotTrading,
-} from 'shared/web3';
+import { CHAIN, getWholeNumber } from 'shared/web3';
 import { IdrissSend } from 'shared/idriss';
 
 import { TokenIcon } from '../../utils';
@@ -124,7 +131,7 @@ const TradingCopilotDialogContent = ({
 
   const balanceQuery = useCommandQuery({
     command: new GetEnsBalanceCommand({
-      address: wallet?.account ?? '0x',
+      address: wallet?.account ?? EMPTY_HEX,
       blockTag: 'safe',
     }),
     staleTime: Number.POSITIVE_INFINITY,
@@ -154,6 +161,7 @@ const TradingCopilotDialogContent = ({
         exchanger.details.from.amount,
         2,
       );
+
     const { value: toRoundedNumber, index: toZerosIndex } =
       roundToSignificantFiguresForCopilotTrading(
         exchanger.details.to.amount,
@@ -296,9 +304,35 @@ const TradingCopilotDialogContent = ({
               </span>
             </span>
           </p>
-          <p className="text-body6 text-mint-700">
-            <TimeDifferenceCounter timestamp={dialog.timestamp} text="ago" />
-          </p>
+          <TooltipProvider delayDuration={400}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <p className="w-fit text-body6 text-mint-700">
+                  {getTimeDifferenceString({
+                    text: 'ago',
+                    variant: 'short',
+                    timestamp: dialog.timestamp,
+                  })}
+                </p>
+              </TooltipTrigger>
+
+              <TooltipContent className="z-portal w-fit bg-black text-white">
+                <p className="text-body6">
+                  {new Intl.DateTimeFormat('en-US', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false,
+                  })
+                    .format(new Date(dialog.timestamp))
+                    .replaceAll('/', '-')}
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
       <form className="mt-1" onSubmit={handleSubmit(onSubmit)}>

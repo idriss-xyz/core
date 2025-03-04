@@ -1,14 +1,10 @@
 import { Icon } from '@idriss-xyz/ui/icon';
 import { Link } from '@idriss-xyz/ui/link';
+import { TipHistoryFromUser } from '@idriss-xyz/constants';
+import { getShortWalletHex } from '@idriss-xyz/utils';
 
-import { FromUser } from '@/app/creators/donate/types';
-import { useGetEnsAvatar } from '@/app/creators/donate/commands/get-ens-avatar';
-import { contentValues } from '@/app/creators/donate/page';
-
-// TODO: IMPORTANT - those functions should be moved to packages/constants
-const getShortWalletHex = (wallet: string) => {
-  return `${wallet.slice(0, 4)}...${wallet.slice(-4)}`;
-};
+import { useGetEnsAvatar } from '../commands/get-ens-avatar';
+import { contentValues } from '../page';
 
 const rankBorders = [
   'border-[#FAC928]',
@@ -21,7 +17,7 @@ const rankPlaces = ['1st', '2nd', '3rd'];
 type Properties = {
   donorRank: number;
   donateAmount: number;
-  donorDetails: FromUser;
+  donorDetails: TipHistoryFromUser;
   updateCurrentContent: (content: contentValues) => void;
 };
 

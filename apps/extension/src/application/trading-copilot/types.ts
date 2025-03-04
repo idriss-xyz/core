@@ -1,4 +1,6 @@
-import { CHAIN, Hex } from 'shared/web3';
+import { Hex } from 'viem';
+
+import { CHAIN } from 'shared/web3';
 
 export interface SubscribePayload {
   fid?: number;

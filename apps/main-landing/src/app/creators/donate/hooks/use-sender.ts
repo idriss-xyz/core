@@ -1,10 +1,9 @@
 import { useCallback } from 'react';
-import { WalletClient } from 'viem';
+import { Hex, WalletClient } from 'viem';
+import { getSafeNumber, isNativeTokenAddress } from '@idriss-xyz/utils';
+import { CHAIN_ID_TO_TOKENS } from '@idriss-xyz/constants';
 
-import { Hex } from '../types';
 import { SendPayload } from '../schema';
-import { CHAIN_ID_TO_TOKENS } from '../constants';
-import { getSafeNumber, isNativeTokenAddress } from '../utils';
 
 import { useSwitchChain } from './use-switch-chain';
 import { useGetTokenPerDollar } from './use-get-token-per-dollar';

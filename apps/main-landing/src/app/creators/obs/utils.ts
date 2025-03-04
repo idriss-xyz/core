@@ -1,6 +1,5 @@
 import { type Hex } from 'viem';
-
-import { CHAIN } from '../donate/constants';
+import { CHAIN } from '@idriss-xyz/constants';
 
 import { clientEthereum } from './constants/blockchain-clients';
 

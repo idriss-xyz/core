@@ -2,13 +2,12 @@ import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { isAddress } from 'viem';
+import { hexSchema, TipHistoryFromUser } from '@idriss-xyz/constants';
 
-import { contentValues } from '@/app/creators/donate/page';
-import { hexSchema } from '@/app/creators/donate/schema';
-import { FromUser } from '@/app/creators/donate/types';
+import { contentValues } from '../../page';
 
 type Properties = {
-  userDetails?: FromUser;
+  userDetails?: TipHistoryFromUser;
   backTo?: 'tip' | 'history' | 'userHistory';
   updateCurrentContent: (content: contentValues) => void;
 };

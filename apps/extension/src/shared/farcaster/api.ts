@@ -1,4 +1,4 @@
-import { Hex } from 'shared/web3';
+import { Hex } from 'viem';
 
 export const getFollowers = async () => {
   const response = await fetch('https://api.idriss.xyz/get-links');
