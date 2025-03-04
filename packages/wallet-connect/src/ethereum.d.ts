@@ -1,16 +1,23 @@
 import { EIP1193Provider } from 'mipd';
+import { PublicKey, VersionedTransaction, Transaction } from '@solana/web3.js';
 
 interface SolanaProvider {
+  name: string;
+  connected: boolean;
+  icon?: `data:image/${string}`;
   isPhantom?: boolean;
   isSolflare?: boolean;
-  connect(): Promise<{ publicKey: string }>;
+  connect(): Promise<void>;
   disconnect(): Promise<void>;
-  publicKey?: string;
+  publicKey: PublicKey | null; // TODO: Check if it's string instead
   on(event: SolanaEvent, handler: (publicKey?: string) => void): void;
   removeListener(
-    event: 'connect' | 'disconnect' | 'accountChanged',
+    event: SolanaEvent,
     handler: (publicKey?: string) => void,
-  ): void;
+  ): void; // Optional to prevent runtime errors
+  signTransaction?<T extends VersionedTransaction | Transaction>(
+    transaction: T,
+  ): Promise<T>;
 }
 
 declare global {

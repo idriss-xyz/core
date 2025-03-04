@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
-import { Transaction, VersionedTransaction } from '@solana/web3.js';
+import { VersionedTransaction } from '@solana/web3.js';
+import { SolanaWallet } from '@idriss-xyz/wallet-connect';
 
 import {
   createWalletClient,
@@ -56,11 +57,7 @@ export const useCopilotTransaction = () => {
 
 interface SolanaCopilotProperties {
   transactionData: SwapProperties;
-  signTransaction?:
-    | (<T extends VersionedTransaction | Transaction>(
-        transaction: T,
-      ) => Promise<T>)
-    | undefined;
+  wallet: SolanaWallet;
 }
 
 export const useCopilotSolanaTransaction = () => {
@@ -70,9 +67,13 @@ export const useCopilotSolanaTransaction = () => {
   return useMutation({
     mutationFn: async ({
       transactionData,
-      signTransaction,
+      wallet,
     }: SolanaCopilotProperties) => {
       try {
+        if (!wallet.provider.connected) {
+          await wallet.provider.connect();
+        }
+
         const decodedTx = Buffer.from(
           transactionData.data.toString(),
           'base64',
@@ -80,7 +81,8 @@ export const useCopilotSolanaTransaction = () => {
         const deserializedTx = VersionedTransaction.deserialize(
           new Uint8Array(decodedTx),
         );
-        const signedTransaction = await signTransaction?.(deserializedTx);
+        const signedTransaction =
+          await wallet.provider.signTransaction?.(deserializedTx);
         const serializedTx = signedTransaction?.serialize();
 
         if (!serializedTx) {

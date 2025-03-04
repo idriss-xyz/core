@@ -16,8 +16,9 @@ export {
   ExtensionPopupProvider,
   useExtensionPopup,
   WalletContextProvider,
-  SolanaContextProviders,
+  SolanaContextProvider,
   useWallet,
+  useSolanaWallet,
 } from './context';
 export {
   COMMAND_MAP as EXTENSION_COMMAND_MAP,

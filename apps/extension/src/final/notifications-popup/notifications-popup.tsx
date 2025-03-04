@@ -114,10 +114,18 @@ const NotificationsPopupContent = ({
         const tokenImage =
           tokenData.address.toLowerCase() === IDRISS_TOKEN_ADDRESS
             ? 'IdrissToken'
-            : ((await tokenIconMutation.mutateAsync({
-                tokeURI: tokenData?.logoURI ?? '',
-              })) ?? '');
-        selectedTokenImage.current = tokenImage;
+            : await (async () => {
+                try {
+                  return (
+                    (await tokenIconMutation.mutateAsync({
+                      tokenURI: tokenData?.logoURI ?? '',
+                    })) ?? ''
+                  );
+                } catch {
+                  return '';
+                }
+              })();
+        selectedTokenImage.current = '';
 
         notification.show(
           <TradingCopilotToast

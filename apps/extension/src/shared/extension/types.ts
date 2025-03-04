@@ -19,4 +19,9 @@ export interface StoredWallet {
   providerRdns: string;
 }
 
+export interface StoredSolanaWallet {
+  account: string;
+  providerName: string;
+}
+
 export type StoredAuthToken = string | undefined;

@@ -32,9 +32,13 @@ export class HeliusEventHandler implements WebhookEventHandler {
         accountData: event.accountData,
         instructions: event.instructions,
         tokenTransfers: event.tokenTransfers,
+        nativeTransfers: event.nativeTransfers,
         events: event.events,
+        feePayer: event.feePayer,
+        timestamp: event.timestamp,
+        transactionError: event.transactionError,
       },
-      timestamp: Date.now(),
+      timestamp: event.timestamp,
       type: 'helius',
     };
   }

@@ -229,6 +229,9 @@ const getBlockExplorer = (chainId: number) => {
 };
 
 export const getBlockExplorerUrl = (chainId: number) => {
+  if (chainId === Number('1151111081099710')) {
+    return 'https://solscan.io/';
+  }
   return getBlockExplorer(chainId)?.url;
 };
 

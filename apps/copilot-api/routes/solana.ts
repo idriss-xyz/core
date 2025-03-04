@@ -30,7 +30,7 @@ router.post('/send', async (req, res) => {
     if (receipt.value.err) {
       res.status(500).json({ error: receipt.value.err, transactionHash });
     } else {
-      res.status(200).json(transactionHash);
+      res.status(200).json({ transactionHash });
     }
   } catch (err) {
     res.status(500).json({ error: err });

@@ -30,6 +30,7 @@ export class ContentScript {
 
     contentScript.subscribeToExtensionSettings();
     contentScript.subscribeToWallet();
+    contentScript.subscribeToSolanaWallet();
     contentScript.subscribeToAuthToken();
     contentScript.subscribeToDeviceId();
     contentScript.blockGithubShortcuts();
@@ -170,6 +171,30 @@ export class ContentScript {
       'SAVE_WALLET',
       (v) => {
         void ExtensionSettingsManager.saveWallet(v);
+      },
+    );
+  }
+
+  subscribeToSolanaWallet() {
+    onWindowMessage('GET_SOLANA_WALLET', async () => {
+      const maybeWallet = await ExtensionSettingsManager.getSolanaWallet();
+
+      const message = {
+        type: 'GET_SOLANA_WALLET_RESPONSE',
+        detail: maybeWallet,
+      };
+
+      window.postMessage(message);
+    });
+
+    onWindowMessage('CLEAR_SOLANA_WALLET', () => {
+      void ExtensionSettingsManager.clearSolanaWallet();
+    });
+
+    onWindowMessage<{ account: string; providerName: string }>(
+      'SAVE_SOLANA_WALLET',
+      (v) => {
+        void ExtensionSettingsManager.saveSolanaWallet(v);
       },
     );
   }

@@ -1,4 +1,4 @@
-import { Wallet as SolanaWallet } from '@solana/wallet-adapter-react';
+import { SolanaWallet } from '@idriss-xyz/wallet-connect';
 
 import { SwapData, SwapDataToken } from 'application/trading-copilot';
 import { CHAIN, Wallet } from 'shared/web3';
