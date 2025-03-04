@@ -148,21 +148,24 @@ export const SolanaContextProvider = (properties: {
   }, [properties, removeWalletInfo, wallet?.account, wallet?.provider]);
 
   useEffect(() => {
-      wallet?.provider.on('connect', (publicKey) => {
-        if (wallet?.account && publicKey && publicKey.toString() !== wallet.account) {
-          removeWalletInfo();
-          setWalletInfo({
-            account: publicKey.toString(),
-            provider: wallet.provider,
-          });
-        }
-      });
+    wallet?.provider.on('connect', (publicKey) => {
+      if (
+        wallet?.account &&
+        publicKey &&
+        publicKey.toString() !== wallet.account
+      ) {
+        removeWalletInfo();
+        setWalletInfo({
+          account: publicKey.toString(),
+          provider: wallet.provider,
+        });
+      }
+    });
 
-      return () => {
-        wallet?.provider.removeListener('connect', removeWalletInfo);
-      };
-    }, [wallet?.provider, wallet?.account, removeWalletInfo]);
-
+    return () => {
+      wallet?.provider.removeListener('connect', removeWalletInfo);
+    };
+  }, [wallet?.provider, wallet?.account, removeWalletInfo, setWalletInfo]);
 
   const openConnectionModal = useCallback(async () => {
     try {
