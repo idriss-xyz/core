@@ -138,22 +138,31 @@ export const SolanaContextProvider = (properties: {
   ]);
 
   useEffect(() => {
-    wallet?.provider.on('accountsChanged', (accounts) => {
-      if (accounts?.[0]) {
-        const loggedInToCurrentWallet = accounts[0].includes(wallet.account);
-
-        if (!loggedInToCurrentWallet) {
-          removeWalletInfo();
-        }
-      } else {
-        removeWalletInfo();
-      }
+    wallet?.provider.on('disconnect', () => {
+      removeWalletInfo();
     });
 
     return () => {
-      wallet?.provider.removeListener('accountsChanged', removeWalletInfo);
+      wallet?.provider.removeListener('disconnect', removeWalletInfo);
     };
   }, [properties, removeWalletInfo, wallet?.account, wallet?.provider]);
+
+  useEffect(() => {
+      wallet?.provider.on('connect', (publicKey) => {
+        if (wallet?.account && publicKey && publicKey.toString() !== wallet.account) {
+          removeWalletInfo();
+          setWalletInfo({
+            account: publicKey.toString(),
+            provider: wallet.provider,
+          });
+        }
+      });
+
+      return () => {
+        wallet?.provider.removeListener('connect', removeWalletInfo);
+      };
+    }, [wallet?.provider, wallet?.account, removeWalletInfo]);
+
 
   const openConnectionModal = useCallback(async () => {
     try {
