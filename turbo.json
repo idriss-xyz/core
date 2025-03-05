@@ -97,7 +97,8 @@
         "HOST",
         "ALCHEMY_API_KEY",
         "WEBHOOK_URL",
-        "VIEM_TRANSPORTER_URL"
+        "VIEM_TRANSPORTER_URL",
+        "HELIUS_API_KEY"
       ]
     },
     "lint": {
