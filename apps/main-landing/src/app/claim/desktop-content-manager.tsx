@@ -3,8 +3,8 @@
 
 import { useMemo, useState } from 'react';
 import { Steps } from '@idriss-xyz/ui/steps';
-
 import '@rainbow-me/rainbowkit/styles.css';
+
 import { IDRISS_FALING_COINS, IDRISS_SCENE_STREAM } from '@/assets';
 
 import { useClaimPage } from './claim-page-context';

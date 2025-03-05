@@ -4,14 +4,16 @@ import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { TipHistoryNode } from '@idriss-xyz/constants';
 
-import DonateHistoryItem from '@/app/creators/donate/components/history/donate-history-item';
+import { contentValues } from '../../page';
+
+import DonateHistoryItem from './donate-history-item';
 
 type Properties = {
   tipsLoading: boolean;
   isInvalidAddress: boolean;
   tipEdges: { node: TipHistoryNode }[];
   address: string | null | undefined;
-  updateCurrentContent: (content: 'tip' | 'history') => void;
+  updateCurrentContent: (content: contentValues) => void;
 };
 
 export default function DonateHistoryList({
@@ -31,7 +33,7 @@ export default function DonateHistoryList({
           iconName="ArrowLeft"
           className="cursor-pointer"
           onClick={() => {
-            updateCurrentContent('tip');
+            updateCurrentContent({ name: 'tip' });
           }}
         />
         <h1 className="text-heading4">Donation history</h1>
@@ -55,6 +57,7 @@ export default function DonateHistoryList({
                   <DonateHistoryItem
                     tip={tip.node}
                     key={tip.node.transaction.hash}
+                    updateCurrentContent={updateCurrentContent}
                   />
                 );
               })

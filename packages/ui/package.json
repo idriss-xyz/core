@@ -33,7 +33,8 @@
     "./steps": "./src/components/steps/index.ts",
     "./geo-conditional-button": "./src/components/geo-conditional-button/index.ts",
     "./badge": "./src/components/badge/index.ts",
-    "./blocked-button": "./src/components/blocked-button/index.ts"
+    "./blocked-button": "./src/components/blocked-button/index.ts",
+    "./alert": "./src/components/alert/index.ts"
   },
   "scripts": {
     "format": "prettier --check --config ../../prettier.config.mjs --ignore-path .prettierignore .",

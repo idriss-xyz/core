@@ -17,7 +17,9 @@ import {
   getTransactionUrls,
   roundToSignificantFiguresForCopilotTrading,
 } from '@idriss-xyz/utils';
+import { Link } from '@idriss-xyz/ui/link';
 
+import { contentValues } from '../../page';
 import { useGetEnsAvatar } from '../../commands/get-ens-avatar';
 
 function removeMainnetSuffix(text: string) {
@@ -30,9 +32,13 @@ function removeMainnetSuffix(text: string) {
 
 type Properties = {
   tip: TipHistoryNode;
+  updateCurrentContent: (content: contentValues) => void;
 };
 
-export default function DonateHistoryItem({ tip }: Properties) {
+export default function DonateHistoryItem({
+  tip,
+  updateCurrentContent,
+}: Properties) {
   const tipDetails = tip.interpretation.descriptionDisplayItems[0];
   const tipComment = tip.interpretation.descriptionDisplayItems[2];
   const tipperFromAddress = tip.transaction.fromUser.address;
@@ -97,9 +103,19 @@ export default function DonateHistoryItem({ tip }: Properties) {
         <div className="flex flex-col justify-center gap-y-1">
           <div className="flex items-center gap-x-2">
             <p className="text-body3 text-neutral-900">
-              <span className="align-middle">
+              <Link
+                size="xs"
+                onClick={() => {
+                  updateCurrentContent({
+                    name: 'userHistory',
+                    backTo: 'history',
+                    userDetails: tip.transaction.fromUser,
+                  });
+                }}
+                className="cursor-pointer border-0 align-middle text-label3 text-neutral-900 no-underline lg:text-label3"
+              >
                 {displayName ?? getShortWalletHex(tipperFromAddress)}
-              </span>{' '}
+              </Link>{' '}
               <span className="align-middle text-body3 text-neutral-600">
                 sent{' '}
                 {zerosIndex ? (

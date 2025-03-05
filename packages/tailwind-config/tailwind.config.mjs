@@ -2,7 +2,7 @@ import plugin from 'tailwindcss/plugin';
 import path from 'path';
 import * as url from 'url';
 
-const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
+const __dirme = url.fileURLToPath(new URL('.', import.meta.url));
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -123,6 +123,7 @@ export default {
         1: '1',
         topBar: '10',
         dialog: '20',
+        alert: '99999',
         notification: '99999',
         extensionPopup: '100000',
         portal: '100001',

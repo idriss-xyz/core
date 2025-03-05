@@ -14,13 +14,15 @@ import {
   default as DonorItem,
   DonorItemPlaceholder,
 } from '@/app/creators/donate/components/donor-item';
+import { contentValues } from '@/app/creators/donate/page';
+import { DonorHistoryResponse } from '@/app/creators/donate/types';
 
 type Properties = {
   className?: string;
   tipsLoading: boolean;
   validatedAddress?: string | null;
   tipEdges: { node: TipHistoryNode }[];
-  updateCurrentContent: (content: 'tip' | 'history') => void;
+  updateCurrentContent: (content: contentValues) => void;
 };
 
 const baseClassName =
@@ -95,7 +97,7 @@ export const TopDonors = ({
   }
 
   return (
-    <div className={classes(className, baseClassName)}>
+    <div className={classes(baseClassName, className)}>
       <div className="relative flex min-h-[100px] w-full items-center justify-center overflow-hidden">
         <img
           src={IDRISS_SCENE_STREAM_2.src}
@@ -120,8 +122,9 @@ export const TopDonors = ({
               return (
                 <DonorItem
                   donorRank={index}
-                  donateAmount={groupedTip.tipsSum}
                   donorDetails={groupedTip.user}
+                  donateAmount={groupedTip.tipsSum}
+                  updateCurrentContent={updateCurrentContent}
                   key={`${groupedTip.tipsSum}${groupedTip.tips[0].node.transaction.hash}`}
                 />
               );
@@ -140,12 +143,84 @@ export const TopDonors = ({
         <Link
           size="xs"
           onClick={() => {
-            updateCurrentContent('history');
+            updateCurrentContent({ name: 'history' });
           }}
           className={`mx-6 my-3 cursor-pointer ${sortedGroupedTips?.length === 0 ? 'invisible' : ''}`}
         >
           See full donation history
         </Link>
+      </div>
+    </div>
+  );
+};
+
+type FilteredProperties = {
+  className?: string;
+  leaderboardError: boolean;
+  leaderboardLoading: boolean;
+  leaderboard: DonorHistoryResponse['leaderboard'];
+  updateCurrentContent: (content: contentValues) => void;
+};
+
+export const FilteredTopDonors = ({
+  className,
+  leaderboard,
+  leaderboardLoading,
+  leaderboardError,
+  updateCurrentContent,
+}: FilteredProperties) => {
+  if (leaderboardError) {
+    return (
+      <div className={classes(baseClassName, className, 'px-4 pb-9 pt-6')}>
+        <p className="flex items-center justify-center gap-2 text-center text-heading4 text-red-500">
+          <Icon name="AlertCircle" size={40} /> <span>Wrong address</span>
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className={classes(baseClassName, className)}>
+      <div className="relative flex min-h-[100px] w-full items-center justify-center overflow-hidden">
+        <img
+          src={IDRISS_SCENE_STREAM_2.src}
+          alt=""
+          className="absolute -left-5 -top-1 h-[110px] w-[640px] max-w-none object-cover"
+        />
+        <span className="absolute left-0 top-0 size-full bg-black/20" />
+        <h1 className="relative z-1 mx-12 my-6 text-center text-heading4 uppercase text-white">
+          Top donors
+        </h1>
+      </div>
+      <div className="flex w-full flex-col">
+        {leaderboardLoading ? (
+          <span className="flex w-full items-center justify-center border-b border-b-neutral-300 px-5.5 py-4.5">
+            <Spinner className="size-16 text-mint-600" />
+          </span>
+        ) : (
+          <ul>
+            {leaderboard.map((leaderboardItem, index) => {
+              if (!leaderboardItem || index > 5) return null;
+
+              return (
+                <DonorItem
+                  donorRank={index}
+                  donorDetails={leaderboardItem.donorMetadata}
+                  donateAmount={leaderboardItem.totalAmount}
+                  updateCurrentContent={updateCurrentContent}
+                  key={`${leaderboardItem.address}${leaderboardItem.totalAmount}`}
+                />
+              );
+            })}
+
+            {leaderboard.length <= 5 ? (
+              <DonorItemPlaceholder
+                donorRank={leaderboard.length}
+                previousDonateAmount={leaderboard.at(-1)?.totalAmount ?? 1234}
+              />
+            ) : null}
+          </ul>
+        )}
       </div>
     </div>
   );

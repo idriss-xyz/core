@@ -1,8 +1,10 @@
 import { Icon } from '@idriss-xyz/ui/icon';
+import { Link } from '@idriss-xyz/ui/link';
 import { TipHistoryFromUser } from '@idriss-xyz/constants';
 import { getShortWalletHex } from '@idriss-xyz/utils';
 
-import { useGetEnsAvatar } from '@/app/creators/donate/commands/get-ens-avatar';
+import { useGetEnsAvatar } from '../commands/get-ens-avatar';
+import { contentValues } from '../page';
 
 const rankBorders = [
   'border-[#FAC928]',
@@ -16,12 +18,14 @@ type Properties = {
   donorRank: number;
   donateAmount: number;
   donorDetails: TipHistoryFromUser;
+  updateCurrentContent: (content: contentValues) => void;
 };
 
 export default function DonorItem({
   donorRank,
   donateAmount,
   donorDetails,
+  updateCurrentContent,
 }: Properties) {
   const displayName = donorDetails.displayName?.value;
   const nameSource = donorDetails.displayName?.source;
@@ -67,7 +71,18 @@ export default function DonorItem({
       <span className="text-neutral-600">{donorRank + 1}</span>
       <span className="flex items-center gap-x-1.5 text-neutral-900">
         {avatarImage}
-        {displayName ?? getShortWalletHex(donorDetails.address)}
+        <Link
+          size="xs"
+          onClick={() => {
+            updateCurrentContent({
+              name: 'userHistory',
+              userDetails: donorDetails,
+            });
+          }}
+          className="cursor-pointer border-0 text-body5 text-neutral-900 no-underline lg:text-body5"
+        >
+          {displayName ?? getShortWalletHex(donorDetails.address)}
+        </Link>
       </span>
       <span className="text-right text-neutral-900">
         $

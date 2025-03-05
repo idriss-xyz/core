@@ -320,7 +320,7 @@ export const buildPolyHmacSignature = (
 
   const base64Secret = Buffer.from(secret, 'base64');
 
-  const sigBytes = hmac(sha256, base64Secret, message);
+  const sigBytes = hmac(sha256, new Uint8Array(base64Secret), message);
 
   const sig = Buffer.from(sigBytes).toString('base64');
 
