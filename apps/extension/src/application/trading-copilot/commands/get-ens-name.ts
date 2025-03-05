@@ -8,6 +8,7 @@ import {
   HandlerError,
   OkResult,
 } from 'shared/messaging';
+import { isSolanaAddress } from 'shared/utils';
 
 type Payload = {
   address: Hex;
@@ -22,6 +23,9 @@ export class GetEnsNameCommand extends Command<Payload, string | null> {
 
   async handle() {
     try {
+      if (isSolanaAddress(this.payload.address)) {
+        return new OkResult(this.payload.address);
+      }
       if (!isAddress(this.payload.address)) {
         return new FailureResult('Not an EVM address');
       }
