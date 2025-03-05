@@ -69,6 +69,7 @@ export function calculateStatsForDonorAddress(
       biggestDonationAmount = tradeValue;
     }
 
+    // ai! in some cases, fromUser.displayName is undefiend. make it so this doenst throw error 500, but siply continued and leaves donorDisplayName undefined/null
     if (!donorDisplayName) {
       donorDisplayName = donation.data.transaction.fromUser.displayName.value;
     }
