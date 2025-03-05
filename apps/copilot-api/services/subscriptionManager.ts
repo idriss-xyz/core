@@ -141,11 +141,9 @@ const addAddressToWebhook = async (address: string, chainType: string) => {
     if (chainType === WEBHOOK_NETWORK_TYPES.EVM) {
       const webhooks = await createNewWebhook(address);
       for (const webhook of webhooks) {
-        console.log('Creating normal webhook: ', address);
         await saveWebhookToDb(address, webhook);
       }
     } else if (chainType === WEBHOOK_NETWORK_TYPES.SOLANA) {
-      console.log('Creating new solana webhook for: ', address);
       const webhook = await createNewSolanaWebhook(address);
       await saveWebhookToDb(address, webhook);
     }
@@ -285,11 +283,7 @@ const createNewSolanaWebhook = async (address: string) => {
       },
     );
 
-    const data = response.data;
-
-    console.log('Received data from hook creation: ', data);
-
-    const webhookId = data.webhookID;
+    const webhookId = response.data.webhookID;
 
     return {
       webhookId,

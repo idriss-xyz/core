@@ -44,8 +44,6 @@ function detectSolanaWallets(): SolanaWalletWeb3js[] {
     detectedWallets.push(...mappedWallets);
   }
 
-  console.log('Detected Solana Wallets:', detectedWallets);
-
   return detectedWallets;
 }
 
