@@ -70,7 +70,8 @@ export function calculateStatsForDonorAddress(
     }
 
     if (!donorDisplayName) {
-      donorDisplayName = donation.data.transaction.fromUser.displayName?.value ?? null;
+      donorDisplayName =
+        donation.data.transaction.fromUser.displayName?.value ?? null;
     }
     totalDonationsCount += 1;
   });
