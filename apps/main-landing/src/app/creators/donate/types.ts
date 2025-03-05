@@ -1,6 +1,6 @@
 import { TipHistoryFromUser, TipHistoryTokenV2 } from '@idriss-xyz/constants';
 
-export interface DonorHistoryStats {
+interface DonorHistoryStats {
   totalDonationsCount: number;
   totalDonationAmount: number;
   mostDonatedToAddress: string;
@@ -11,7 +11,7 @@ export interface DonorHistoryStats {
   favoriteTokenMetadata: Omit<TipHistoryTokenV2, 'onchainMarketData'> | null;
 }
 
-export interface DonorLeaderboardStats {
+interface DonorLeaderboardStats {
   address: string;
   totalAmount: number;
   donorMetadata: TipHistoryFromUser;
