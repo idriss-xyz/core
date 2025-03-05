@@ -265,6 +265,7 @@ const createNewWebhook = async (address: string) => {
 const createNewSolanaWebhook = async (address: string) => {
   try {
     const internalWebhookId = uuidv4();
+    const webhookSecret = uuidv4();
     const webhookUrl = `${WEBHOOK_URL}/webhook/solana/${internalWebhookId}`;
 
     const response = await axios.post(
@@ -274,6 +275,7 @@ const createNewSolanaWebhook = async (address: string) => {
         transactionTypes: ['SWAP', 'UNKNOWN'],
         accountAddresses: [address],
         webhookType: 'enhanced',
+        authHeader: webhookSecret,
       },
       {
         headers: {
@@ -288,12 +290,12 @@ const createNewSolanaWebhook = async (address: string) => {
     console.log('Received data from hook creation: ', data);
 
     const webhookId = data.webhookID;
-    // No signing key for Helius webhooks
+
     return {
       webhookId,
       internalWebhookId,
       chainType: 'SOLANA',
-      signingKey: '',
+      signingKey: webhookSecret,
     };
   } catch (err) {
     console.error('Error creating Solana webhook: ', err);

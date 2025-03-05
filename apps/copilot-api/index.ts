@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { validateAlchemySignature } from './utils/webhookUtils';
+import { validateWebhookSignature } from './utils/webhookUtils';
 import {
   heliusWebhookHandler,
   webhookHandler,
@@ -7,7 +7,7 @@ import {
 import dotenv from 'dotenv';
 import { dataSource } from './db';
 import http from 'http';
-import { Server as SocketIOServer, Socket } from 'socket.io';
+import { Server as SocketIOServer } from 'socket.io';
 import authRoutes from './routes/auth';
 import defaultRoutes from './routes';
 import subscriptionsRoutes from './routes/subscribtions';
@@ -80,7 +80,7 @@ app.post(
       (req as any).signature = req.headers['x-alchemy-signature'];
     },
   }),
-  validateAlchemySignature(getSigningKey),
+  validateWebhookSignature(getSigningKey),
   webhookHandler(),
 );
 
@@ -95,9 +95,10 @@ app.post(
     ) => {
       const rawBody = buf.toString(encoding);
       (req as any).rawBody = rawBody;
+      (req as any).signature = req.headers['authorization'];
     },
   }),
-  // TODO: Implement some form of validateSignature for Helius (ex: using authHeader)
+  validateWebhookSignature(getSigningKey),
   heliusWebhookHandler(),
 );
 
