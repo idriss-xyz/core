@@ -21,3 +21,9 @@ export interface DonorHistoryResponse {
   stats: DonorHistoryStats;
   leaderboard: DonorLeaderboardStats[];
 }
+
+export type donateContentValues = {
+  userDetails?: TipHistoryFromUser;
+  name: 'tip' | 'history' | 'userHistory';
+  backTo?: 'tip' | 'history' | 'userHistory';
+};

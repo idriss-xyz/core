@@ -14,15 +14,17 @@ import {
   default as DonorItem,
   DonorItemPlaceholder,
 } from '@/app/creators/donate/components/donor-item';
-import { contentValues } from '@/app/creators/donate/page';
-import { DonorHistoryResponse } from '@/app/creators/donate/types';
+import {
+  donateContentValues,
+  DonorHistoryResponse,
+} from '@/app/creators/donate/types';
 
 type Properties = {
   className?: string;
   tipsLoading: boolean;
   validatedAddress?: string | null;
   tipEdges: { node: TipHistoryNode }[];
-  updateCurrentContent: (content: contentValues) => void;
+  updateCurrentContent: (content: donateContentValues) => void;
 };
 
 const baseClassName =
@@ -100,21 +102,25 @@ export const TopDonors = ({
     <div className={classes(baseClassName, className)}>
       <div className="relative flex min-h-[100px] w-full items-center justify-center overflow-hidden">
         <img
-          src={IDRISS_SCENE_STREAM_2.src}
           alt=""
+          src={IDRISS_SCENE_STREAM_2.src}
           className="absolute -left-5 -top-1 h-[110px] w-[640px] max-w-none object-cover"
         />
         <span className="absolute left-0 top-0 size-full bg-black/20" />
+
         <h1 className="relative z-1 mx-12 my-6 text-center text-heading4 uppercase text-white">
           Top donors
         </h1>
       </div>
+
       <div className="flex w-full flex-col">
-        {tipsLoading || !validatedAddress || !sortedGroupedTips ? (
+        {(tipsLoading || !validatedAddress || !sortedGroupedTips) && (
           <span className="flex w-full items-center justify-center border-b border-b-neutral-300 px-5.5 py-4.5">
             <Spinner className="size-16 text-mint-600" />
           </span>
-        ) : (
+        )}
+
+        {!tipsLoading && validatedAddress && sortedGroupedTips && (
           <ul>
             {sortedGroupedTips.map((groupedTip, index) => {
               if (!groupedTip.tips[0] || index > 5) return null;
@@ -139,6 +145,7 @@ export const TopDonors = ({
           </ul>
         )}
       </div>
+
       <div className="flex min-h-[80px] w-full items-center justify-center">
         <Link
           size="xs"
@@ -159,45 +166,46 @@ type FilteredProperties = {
   leaderboardError: boolean;
   leaderboardLoading: boolean;
   leaderboard: DonorHistoryResponse['leaderboard'];
-  updateCurrentContent: (content: contentValues) => void;
+  updateCurrentContent: (content: donateContentValues) => void;
 };
 
-export const FilteredTopDonors = ({
+export const LeaderboardTopDonors = ({
   className,
   leaderboard,
-  leaderboardLoading,
   leaderboardError,
+  leaderboardLoading,
   updateCurrentContent,
 }: FilteredProperties) => {
-  if (leaderboardError) {
-    return (
-      <div className={classes(baseClassName, className, 'px-4 pb-9 pt-6')}>
-        <p className="flex items-center justify-center gap-2 text-center text-heading4 text-red-500">
-          <Icon name="AlertCircle" size={40} /> <span>Wrong address</span>
-        </p>
-      </div>
-    );
-  }
-
   return (
     <div className={classes(baseClassName, className)}>
       <div className="relative flex min-h-[100px] w-full items-center justify-center overflow-hidden">
         <img
-          src={IDRISS_SCENE_STREAM_2.src}
           alt=""
+          src={IDRISS_SCENE_STREAM_2.src}
           className="absolute -left-5 -top-1 h-[110px] w-[640px] max-w-none object-cover"
         />
         <span className="absolute left-0 top-0 size-full bg-black/20" />
+
         <h1 className="relative z-1 mx-12 my-6 text-center text-heading4 uppercase text-white">
           Top donors
         </h1>
       </div>
+
       <div className="flex w-full flex-col">
-        {leaderboardLoading ? (
-          <span className="flex w-full items-center justify-center border-b border-b-neutral-300 px-5.5 py-4.5">
+        {leaderboardLoading && (
+          <span className="flex w-full items-center justify-center px-5.5 py-4.5">
             <Spinner className="size-16 text-mint-600" />
           </span>
-        ) : (
+        )}
+
+        {leaderboardError && (
+          <p className="flex items-center justify-center gap-2 px-5.5 py-[30px] text-center text-heading4 text-red-500">
+            <Icon name="AlertCircle" size={40} />{' '}
+            <span>Cannot get leaderboard</span>
+          </p>
+        )}
+
+        {leaderboard && !leaderboardLoading && !leaderboardError && (
           <ul>
             {leaderboard.map((leaderboardItem, index) => {
               if (!leaderboardItem || index > 5) return null;
@@ -205,9 +213,10 @@ export const FilteredTopDonors = ({
               return (
                 <DonorItem
                   donorRank={index}
-                  donorDetails={leaderboardItem.donorMetadata}
+                  className="py-[23.5px]"
                   donateAmount={leaderboardItem.totalAmount}
                   updateCurrentContent={updateCurrentContent}
+                  donorDetails={leaderboardItem.donorMetadata}
                   key={`${leaderboardItem.address}${leaderboardItem.totalAmount}`}
                 />
               );
@@ -215,6 +224,7 @@ export const FilteredTopDonors = ({
 
             {leaderboard.length <= 5 ? (
               <DonorItemPlaceholder
+                itemHeight={79}
                 donorRank={leaderboard.length}
                 previousDonateAmount={leaderboard.at(-1)?.totalAmount ?? 1234}
               />

@@ -4,7 +4,7 @@ import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { TipHistoryNode } from '@idriss-xyz/constants';
 
-import { contentValues } from '../../page';
+import { donateContentValues } from '@/app/creators/donate/types';
 
 import DonateHistoryItem from './donate-history-item';
 
@@ -13,7 +13,7 @@ type Properties = {
   isInvalidAddress: boolean;
   tipEdges: { node: TipHistoryNode }[];
   address: string | null | undefined;
-  updateCurrentContent: (content: contentValues) => void;
+  updateCurrentContent: (content: donateContentValues) => void;
 };
 
 export default function DonateHistoryList({

@@ -2,9 +2,11 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { Link } from '@idriss-xyz/ui/link';
 import { TipHistoryFromUser } from '@idriss-xyz/constants';
 import { getShortWalletHex } from '@idriss-xyz/utils';
+import { classes } from '@idriss-xyz/ui/utils';
+
+import { donateContentValues } from '@/app/creators/donate/types';
 
 import { useGetEnsAvatar } from '../commands/get-ens-avatar';
-import { contentValues } from '../page';
 
 const rankBorders = [
   'border-[#FAC928]',
@@ -16,13 +18,15 @@ const rankPlaces = ['1st', '2nd', '3rd'];
 
 type Properties = {
   donorRank: number;
+  className?: string;
   donateAmount: number;
   donorDetails: TipHistoryFromUser;
-  updateCurrentContent: (content: contentValues) => void;
+  updateCurrentContent: (content: donateContentValues) => void;
 };
 
 export default function DonorItem({
   donorRank,
+  className,
   donateAmount,
   donorDetails,
   updateCurrentContent,
@@ -67,7 +71,12 @@ export default function DonorItem({
   );
 
   return (
-    <li className="grid grid-cols-[10px,1fr,70px] items-center gap-x-3.5 border-b border-b-neutral-300 px-5.5 py-4.5 text-body5 md:grid-cols-[10px,1fr,100px]">
+    <li
+      className={classes(
+        'grid grid-cols-[10px,1fr,70px] items-center gap-x-3.5 border-b border-b-neutral-300 px-5.5 py-4.5 text-body5 md:grid-cols-[10px,1fr,100px]',
+        className,
+      )}
+    >
       <span className="text-neutral-600">{donorRank + 1}</span>
       <span className="flex items-center gap-x-1.5 text-neutral-900">
         {avatarImage}
@@ -99,13 +108,17 @@ export default function DonorItem({
 
 type PlaceholderProperties = {
   donorRank: number;
+  itemHeight?: number;
   previousDonateAmount: number;
 };
 
 export function DonorItemPlaceholder({
   donorRank,
+  itemHeight,
   previousDonateAmount,
 }: PlaceholderProperties) {
+  const placeholderHeight = itemHeight ?? 69;
+
   const avatarPlaceholder = (
     <div className="relative w-max">
       <div
@@ -143,7 +156,7 @@ export function DonorItemPlaceholder({
           </span>
         </li>
         <span
-          style={{ height: `${(5 - donorRank) * 69}px` }}
+          style={{ height: `${(5 - donorRank) * placeholderHeight}px` }}
           className="flex items-center justify-center border-b border-b-neutral-300 px-5.5 py-4.5 text-center text-label4 gradient-text-2"
         >
           Donate now and claim {rankPlaces[donorRank]} place
@@ -154,7 +167,7 @@ export function DonorItemPlaceholder({
 
   return (
     <span
-      style={{ height: `${(6 - donorRank) * 69}px` }}
+      style={{ height: `${(6 - donorRank) * placeholderHeight}px` }}
       className="flex items-center justify-center border-b border-b-neutral-300"
     />
   );

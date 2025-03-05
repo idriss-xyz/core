@@ -5,7 +5,6 @@ import {
   CREATORS_LINK,
   hexSchema,
   TipHistoryNode,
-  TipHistoryFromUser,
 } from '@idriss-xyz/constants';
 import { Hex, isAddress } from 'viem';
 import '@rainbow-me/rainbowkit/styles.css';
@@ -20,6 +19,7 @@ import { validateAddressOrENS } from '@/app/creators/donate/utils';
 import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
 import DonateHistoryList from '@/app/creators/donate/components/history/donate-history-list';
 import UserHistoryList from '@/app/creators/donate/components/user-history/user-history-list';
+import { donateContentValues } from '@/app/creators/donate/types';
 
 import { TopDonors } from './top-donors';
 import { Content } from './content';
@@ -29,12 +29,6 @@ import { CREATOR_API_URL } from './constants';
 const SEARCH_PARAMETER = {
   ADDRESS: 'address',
   LEGACY_ADDRESS: 'streamerAddress',
-};
-
-export type contentValues = {
-  userDetails?: TipHistoryFromUser;
-  name: 'tip' | 'history' | 'userHistory';
-  backTo?: 'tip' | 'history' | 'userHistory';
 };
 
 // ts-unused-exports:disable-next-line
@@ -48,7 +42,7 @@ export default function Donors() {
 
 function DonorsContent() {
   const [tipEdges, setTipEdges] = useState<{ node: TipHistoryNode }[]>([]);
-  const [currentContent, setCurrentContent] = useState<contentValues>({
+  const [currentContent, setCurrentContent] = useState<donateContentValues>({
     name: 'tip',
   });
   const [validatedAddress, setValidatedAddress] = useState<
@@ -91,7 +85,7 @@ function DonorsContent() {
     }
   }, [tips.data]);
 
-  const updateCurrentContent = (content: contentValues) => {
+  const updateCurrentContent = (content: donateContentValues) => {
     setCurrentContent(content);
   };
 

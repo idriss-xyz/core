@@ -7,12 +7,11 @@ import { getShortWalletHex } from '@idriss-xyz/utils';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 
 import { useGetDonorHistory } from '@/app/creators/donate/commands/get-donor-history';
-import { FilteredTopDonors } from '@/app/creators/donate/top-donors';
+import { LeaderboardTopDonors } from '@/app/creators/donate/top-donors';
 import { backgroundLines4 } from '@/assets';
 import { useGetEnsAvatar } from '@/app/creators/donate/commands/get-ens-avatar';
 import { useGetEnsName } from '@/app/creators/donate/commands/get-ens-name';
-
-import { contentValues } from '../../page';
+import { donateContentValues } from '@/app/creators/donate/types';
 
 const baseClassName =
   'z-1 w-[440px] max-w-full rounded-xl bg-mint-100 px-4 pb-9 pt-9 flex flex-col items-center relative container mt-8 overflow-hidden lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]';
@@ -20,7 +19,7 @@ const baseClassName =
 type Properties = {
   userDetails?: TipHistoryFromUser;
   backTo?: 'tip' | 'history' | 'userHistory';
-  updateCurrentContent: (content: contentValues) => void;
+  updateCurrentContent: (content: donateContentValues) => void;
 };
 
 export default function UserHistoryList({
@@ -33,20 +32,21 @@ export default function UserHistoryList({
     { enabled: !!userDetails },
   );
 
-  const ensNameQuery = useGetEnsName(
+  const mostDonatedTo = donorHistory.data?.stats?.mostDonatedToAddress as Hex;
+
+  const mostDonatedToEnsNameQuery = useGetEnsName(
     {
-      address:
-        (donorHistory.data?.stats?.mostDonatedToAddress as Hex) ?? EMPTY_HEX,
+      address: mostDonatedTo ?? EMPTY_HEX,
     },
-    { enabled: !!donorHistory.data?.stats?.mostDonatedToAddress },
+    { enabled: !!mostDonatedTo },
   );
 
-  const ensAvatarQuery = useGetEnsAvatar(
-    { name: ensNameQuery.data ?? '' },
-    { enabled: !!ensNameQuery.data },
+  const mostDonatedToEnsAvatarQuery = useGetEnsAvatar(
+    { name: mostDonatedToEnsNameQuery.data ?? '' },
+    { enabled: !!mostDonatedToEnsNameQuery.data },
   );
 
-  if ((!donorHistory.isLoading && !donorHistory.data) || !userDetails) {
+  if (!userDetails || (!donorHistory.isLoading && !donorHistory.data)) {
     if (backTo) {
       updateCurrentContent({ name: backTo });
     } else {
@@ -64,9 +64,9 @@ export default function UserHistoryList({
       <div className={classes(baseClassName)}>
         <link rel="preload" as="image" href={backgroundLines4.src} />
         <img
+          alt=""
           src={backgroundLines4.src}
           className="pointer-events-none absolute top-0 hidden size-full opacity-100 lg:block"
-          alt=""
         />
 
         <h1 className="self-start text-heading4 text-neutralGreen-900">
@@ -74,19 +74,33 @@ export default function UserHistoryList({
           {stats?.donorDisplayName ?? userDetails.displayName.value}
         </h1>
 
-        {donorHistory.isLoading ? (
+        {donorHistory.isLoading && (
           <Spinner className="mx-auto mt-9 size-16 text-mint-600" />
-        ) : stats ? (
+        )}
+
+        {donorHistory.isError && (
+          <div className="mx-auto mt-9">
+            <p className="flex items-center justify-center gap-2 px-5.5 py-3 text-center text-heading4 text-red-500">
+              <Icon name="AlertCircle" size={40} />{' '}
+              <span>Cannot get donation stats</span>
+            </p>
+          </div>
+        )}
+
+        {stats && !donorHistory.isLoading && !donorHistory.isError && (
           <>
-            <div className="relative z-0 mt-9 grid w-full grid-cols-1 gap-3 lg:grid-cols-2">
+            <div className="relative z-0 mb-[3px] mt-9 grid w-full grid-cols-1 gap-3 lg:grid-cols-2">
               <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white p-8 shadow-md">
                 <p className="text-label5 text-neutral-600">Donations</p>
+
                 <p className="text-heading4 text-neutral-800">
                   {stats.totalDonationsCount}
                 </p>
               </div>
+
               <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white p-8 shadow-md">
                 <p className="text-label5 text-neutral-600">Total volume</p>
+
                 <p className="text-heading4 text-neutral-800">
                   $
                   {new Intl.NumberFormat('en-US', {
@@ -96,8 +110,10 @@ export default function UserHistoryList({
                   }).format(Number(stats.totalDonationAmount))}
                 </p>
               </div>
+
               <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white p-8 shadow-md">
                 <p className="text-label5 text-neutral-600">Largest donation</p>
+
                 <p className="text-heading4 text-neutral-800">
                   $
                   {new Intl.NumberFormat('en-US', {
@@ -107,9 +123,11 @@ export default function UserHistoryList({
                   }).format(Number(stats.biggestDonationAmount))}
                 </p>
               </div>
+
               {stats.favoriteTokenMetadata && (
                 <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white p-8 shadow-md">
                   <p className="text-label5 text-neutral-600">Favorite token</p>
+
                   <p className="text-heading4 text-neutral-800">
                     {stats.favoriteDonationToken}{' '}
                     <img
@@ -120,15 +138,17 @@ export default function UserHistoryList({
                   </p>
                 </div>
               )}
+
               {stats.mostDonatedToAddress !== '' && (
-                <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white p-8 shadow-md">
+                <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-8 py-7 shadow-md">
                   <p className="text-label5 text-neutral-600">Top recipient</p>
+
                   <div className="flex flex-row items-center gap-x-1">
-                    {ensAvatarQuery.data ? (
+                    {mostDonatedToEnsAvatarQuery.data ? (
                       <img
-                        className="size-10 rounded-full border border-neutral-400"
-                        src={ensAvatarQuery.data}
                         alt="Donor avatar"
+                        src={mostDonatedToEnsAvatarQuery.data}
+                        className="size-10 rounded-full border border-neutral-400"
                       />
                     ) : (
                       <div className="flex size-10 items-center justify-center rounded-full border border-neutral-300 bg-neutral-200">
@@ -139,18 +159,21 @@ export default function UserHistoryList({
                         />
                       </div>
                     )}
+
                     <p className="text-label3 text-neutral-800">
-                      {ensNameQuery.data ??
+                      {mostDonatedToEnsNameQuery.data ??
                         getShortWalletHex(stats.mostDonatedToAddress)}
                     </p>
                   </div>
                 </div>
               )}
+
               {stats.positionInLeaderboard && (
                 <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white p-8 shadow-md">
                   <p className="text-label5 text-neutral-600">
                     Leaderboard rank
                   </p>
+
                   <p className="text-heading4 text-neutral-800">
                     #{stats.positionInLeaderboard}
                   </p>
@@ -170,17 +193,10 @@ export default function UserHistoryList({
               </Link>
             </div>
           </>
-        ) : (
-          <div className="mx-auto mt-9">
-            <p className="flex items-center justify-center gap-2 text-center text-heading4 text-red-500">
-              <Icon name="AlertCircle" size={40} />{' '}
-              <span>Cannot get donation stats</span>
-            </p>
-          </div>
         )}
       </div>
 
-      <FilteredTopDonors
+      <LeaderboardTopDonors
         leaderboard={leaderboard ?? []}
         leaderboardError={donorHistory.isError}
         leaderboardLoading={donorHistory.isLoading}
