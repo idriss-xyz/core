@@ -44,6 +44,7 @@ export type {
   TipHistoryResponse,
   TipHistoryFromUser,
   TipHistoryNode,
+  TipHistoryTokenV2,
 } from './types';
 
 export * from './logos';

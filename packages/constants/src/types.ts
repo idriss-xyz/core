@@ -29,7 +29,7 @@ export interface ChainToken extends Token {
 
 export type TokenSymbol = (typeof TOKEN)[keyof typeof TOKEN]['symbol'];
 
-interface TokenV2 {
+export interface TipHistoryTokenV2 {
   symbol: string;
   imageUrlV2?: string;
   onchainMarketData: {
@@ -42,7 +42,7 @@ interface TokenV2 {
 interface TokenDisplayItem {
   network: string;
   amountRaw: string;
-  tokenV2: TokenV2;
+  tokenV2: TipHistoryTokenV2;
 }
 
 type StringDisplayItem = {

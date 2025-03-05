@@ -114,7 +114,8 @@
         "PORT",
         "HOST",
         "ZAPPER_API_KEY",
-        "DATABASE_URL"
+        "DATABASE_URL",
+        "SECRET_PASSWORD"
       ]
     },
     "@idriss-xyz/creator-api#prod": {
@@ -124,7 +125,8 @@
         "PORT",
         "HOST",
         "ZAPPER_API_KEY",
-        "DATABASE_URL"
+        "DATABASE_URL",
+        "SECRET_PASSWORD"
       ]
     },
     "lint": {
