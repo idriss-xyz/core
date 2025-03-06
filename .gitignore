@@ -21,3 +21,6 @@ out
 apps/main-landing/data/claimed-events.json
 apps/main-landing/data/staked-withdrawn-events.json
 apps/main-landing/data/creator-links.json
+.aider*
+.env
+LLM.txt
