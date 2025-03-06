@@ -133,11 +133,11 @@ export const Content = ({ className, validatedAddress }: Properties) => {
     resolver: zodResolver(createFormPayloadSchema(allowedChainsIds)),
   });
 
+  const { reset } = formMethods;
+
   useEffect(() => {
-    formMethods.reset(
-      getSendFormDefaultValues(defaultChainId, selectedTokenSymbol),
-    );
-  }, [defaultChainId, selectedTokenSymbol, formMethods]);
+    reset(getSendFormDefaultValues(defaultChainId, selectedTokenSymbol));
+  }, [defaultChainId, selectedTokenSymbol, reset]);
 
   const [chainId, tokenSymbol, amount] = formMethods.watch([
     'chainId',
