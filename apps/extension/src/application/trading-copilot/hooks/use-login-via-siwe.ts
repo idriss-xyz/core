@@ -10,7 +10,6 @@ import {
   VerifySiweSignatureCommand,
   VerifyTokenCommand,
 } from '../commands';
-import { SiweMessageRequest, VerifySiweSignatureRequest } from '../types';
 
 export const useLoginViaSiwe = () => {
   const { setWalletInfo } = useWallet();
@@ -24,21 +23,9 @@ export const useLoginViaSiwe = () => {
       if (!wallet) {
         return;
       }
-
-      const handleGetSiweMessage = async (payload: SiweMessageRequest) => {
-        return await getSiweMessage.mutateAsync(payload);
-      };
-
-      const handleVerifySiweSignature = async (
-        payload: VerifySiweSignatureRequest,
-      ) => {
-        return await verifySiweSignature.mutateAsync(payload);
-      };
-
       const provider = wallet.provider;
-      const providerRdns = wallet.providerRdns;
 
-      const accounts = await provider.request({
+      const accounts = await wallet.provider.request({
         method: 'eth_requestAccounts',
       });
 
@@ -53,7 +40,7 @@ export const useLoginViaSiwe = () => {
           account: getAddress(accounts[0]),
           provider,
           chainId: hexToNumber(chainId),
-          providerRdns: providerRdns,
+          providerRdns: wallet.providerRdns,
         });
       } else {
         return;
@@ -61,24 +48,30 @@ export const useLoginViaSiwe = () => {
 
       const walletClient = createWalletClient(wallet);
 
-      const siweMessage = await handleGetSiweMessage({
+      const siweMessage = await getSiweMessage.mutateAsync({
         walletAddress: wallet.account,
         chainId: wallet.chainId,
         domain: window.location.hostname,
       });
 
-      const siweSignature = await walletClient.signMessage({
-        account: wallet.account,
-        message: siweMessage.message,
-      });
+      try {
+        const siweSignature = await walletClient.signMessage({
+          account: wallet.account,
+          message: siweMessage.message,
+        });
 
-      const verifiedSiweSignature = await handleVerifySiweSignature({
-        walletAddress: wallet.account,
-        message: siweMessage.message,
-        signature: siweSignature,
-      });
+        const verifiedSiweSignature = await verifySiweSignature.mutateAsync({
+          walletAddress: wallet.account,
+          message: siweMessage.message,
+          signature: siweSignature,
+        });
+        saveAuthToken(verifiedSiweSignature.token);
+      }
+      catch (error: any) {
+        console.error('Error signing in with wallet. ', error);
+        return;
+      }
 
-      saveAuthToken(verifiedSiweSignature.token);
     },
     [getSiweMessage, saveAuthToken, setWalletInfo, verifySiweSignature],
   );
@@ -95,13 +88,13 @@ export const useLoginViaSiwe = () => {
     });
   }, [getAuthToken, verifyAuthTokenMutation]);
 
-  const isSending = getSiweMessage.isPending || verifySiweSignature.isPending;
+  const isPending = getSiweMessage.isPending || verifySiweSignature.isPending || isSigning;
 
-  const isError = getSiweMessage.isError || verifySiweSignature.isError;
+  const isError = getSiweMessage.isError || verifySiweSignature.isError || error !== '';
 
   const isSuccess = getSiweMessage.isSuccess && verifySiweSignature.isSuccess;
 
-  const isIdle = !isSending && !isError && !isSuccess;
+  const isIdle = !isPending && !isError && !isSuccess;
 
   const reset = useCallback(() => {
     getSiweMessage.reset();
@@ -111,7 +104,7 @@ export const useLoginViaSiwe = () => {
   return {
     login,
     loggedIn,
-    isSending,
+    isPending,
     isError,
     isSuccess,
     isIdle,

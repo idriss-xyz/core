@@ -388,7 +388,7 @@ const TradingCopilotDialogContent = ({
                 size="medium"
                 className="mt-2 w-full"
                 type="submit"
-                loading={siwe.isSending || exchanger.isSending}
+                loading={siwe.isPending || exchanger.isSending}
                 disabled={
                   // TODO: Uncomment this when we have a way to get the balance for Solana too
                   Number(watch('amount')) > Number(balance) ||
