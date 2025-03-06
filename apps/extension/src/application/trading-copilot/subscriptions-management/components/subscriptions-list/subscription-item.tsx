@@ -87,7 +87,7 @@ const SubscriptionItemContent = ({
       return;
     }
 
-    onRemove(subscription.address);
+    onRemove(subscription.address, subscription.fid);
   }, [onRemove, subscription, wallet]);
 
   const emailQuery = useCommandQuery({

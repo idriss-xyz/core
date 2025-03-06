@@ -12,7 +12,7 @@ export type SubscriptionRequest = {
 
 export type SubscriptionResponse = {
   address: Hex;
-  fid: number | null;
+  fid?: number;
 };
 
 export type SubscriptionsRequest = {

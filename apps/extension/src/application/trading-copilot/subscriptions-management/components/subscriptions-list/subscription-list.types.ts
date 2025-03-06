@@ -10,12 +10,18 @@ export interface ListProperties {
   subscriptionsLoading: boolean;
   subscriptionsUpdatePending: boolean;
   subscriptions: SubscriptionsResponse | undefined;
-  onRemove: (address: SubscriptionRequest['subscription']['address']) => void;
+  onRemove: (
+    address: SubscriptionRequest['subscription']['address'],
+    fid: SubscriptionRequest['subscription']['fid'],
+  ) => void;
 }
 
 export interface ItemProperties {
   subscription: SubscriptionResponse;
-  onRemove: (address: SubscriptionRequest['subscription']['address']) => void;
+  onRemove: (
+    address: SubscriptionRequest['subscription']['address'],
+    fid: SubscriptionRequest['subscription']['fid'],
+  ) => void;
 }
 
 export interface ItemContentProperties extends ItemProperties {
