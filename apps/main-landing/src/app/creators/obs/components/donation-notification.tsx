@@ -53,7 +53,7 @@ const DonationNotification = ({
   const { value: roundedNumber, index: zerosIndex } =
     roundToSignificantFiguresForCopilotTrading(
       Number.parseFloat(
-        formatUnits(BigInt(token.amount), token.details?.decimals ?? 18),
+        formatUnits(token.amount, Number(token.details?.decimals)),
       ),
       2,
     );
