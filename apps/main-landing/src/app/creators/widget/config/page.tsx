@@ -83,7 +83,7 @@ export default function Config() {
                     {submitStatus === 'success' && (
                       <span
                         className={classes(
-                          'flex items-center pt-1 text-label7 text-mint-500 lg:text-label6',
+                          'flex items-center gap-x-1 pt-1 text-label7 text-mint-500 lg:text-label6',
                         )}
                       >
                         Address saved successfully.
@@ -93,10 +93,10 @@ export default function Config() {
                     {submitStatus === 'error' && (
                       <span
                         className={classes(
-                          'flex items-center space-x-1 pt-1 text-label7 text-red-500 lg:text-label6',
+                          'flex items-center gap-x-1 pt-1 text-label7 text-red-500 lg:text-label6',
                         )}
                       >
-                        <Icon name="AlertCircle" size={12} className="p-0.5" />
+                        <Icon name="AlertCircle" size={12} className="p-px" />
                         This address doesn’t exist.
                       </span>
                     )}
