@@ -81,13 +81,14 @@ const DonationNotification = ({
       <div className="flex flex-col justify-center gap-y-1">
         <div className="flex items-center gap-x-2">
           <p className="text-label3 text-neutral-900">
-            {`${donor} `}
+            <span className="align-middle">{`${donor} `}</span>
+
             {!token.details && (
-              <span className="text-body3 text-neutral-600">{`${amount ? `sent $${amount}` : ''}`}</span>
+              <span className="align-middle text-body3 text-neutral-600">{`${amount ? `sent $${amount}` : ''}`}</span>
             )}
 
             {token.details && (
-              <span className="text-body3 text-neutral-600">
+              <span className="align-middle text-body3 text-neutral-600">
                 <span className="align-middle text-body3 text-neutral-600">
                   sent{' '}
                   {zerosIndex ? (
@@ -102,12 +103,12 @@ const DonationNotification = ({
                     roundedNumber
                   )}{' '}
                   {token.details?.symbol}{' '}
-                  <img
-                    className="inline-block size-6 rounded-full"
-                    src={token.details?.logo}
-                    alt=""
-                  />
-                </span>{' '}
+                </span>
+                <img
+                  className="inline-block size-6 rounded-full align-middle"
+                  src={token.details?.logo}
+                  alt=""
+                />{' '}
                 <Badge type="success" variant="subtle" className="align-middle">
                   $
                   {Number(amount) >= 0.01
