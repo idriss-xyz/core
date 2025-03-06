@@ -66,12 +66,10 @@ export const useLoginViaSiwe = () => {
           signature: siweSignature,
         });
         saveAuthToken(verifiedSiweSignature.token);
-      }
-      catch (error: any) {
-        console.error('Error signing in with wallet. ', error);
+      } catch (error) {
+        console.error('Error signing in with wallet.', error);
         return;
       }
-
     },
     [getSiweMessage, saveAuthToken, setWalletInfo, verifySiweSignature],
   );
@@ -88,9 +86,9 @@ export const useLoginViaSiwe = () => {
     });
   }, [getAuthToken, verifyAuthTokenMutation]);
 
-  const isPending = getSiweMessage.isPending || verifySiweSignature.isPending || isSigning;
+  const isPending = getSiweMessage.isPending || verifySiweSignature.isPending;
 
-  const isError = getSiweMessage.isError || verifySiweSignature.isError || error !== '';
+  const isError = getSiweMessage.isError || verifySiweSignature.isError;
 
   const isSuccess = getSiweMessage.isSuccess && verifySiweSignature.isSuccess;
 
