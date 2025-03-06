@@ -88,21 +88,23 @@ const DonationNotification = ({
             )}
 
             {token.details && (
-              <span className="align-middle text-body3 text-neutral-600">
+              <>
                 <span className="align-middle text-body3 text-neutral-600">
-                  sent{' '}
-                  {zerosIndex ? (
-                    <>
-                      0.0
-                      <span className="inline-block translate-y-1 px-px text-xs">
-                        {zerosIndex}
-                      </span>
-                      {roundedNumber}
-                    </>
-                  ) : (
-                    roundedNumber
-                  )}{' '}
-                  {token.details?.symbol}{' '}
+                  <span className="align-middle text-body3 text-neutral-600">
+                    sent{' '}
+                    {zerosIndex ? (
+                      <>
+                        0.0
+                        <span className="inline-block translate-y-1 px-px text-xs">
+                          {zerosIndex}
+                        </span>
+                        {roundedNumber}
+                      </>
+                    ) : (
+                      roundedNumber
+                    )}{' '}
+                    {token.details?.symbol}{' '}
+                  </span>
                 </span>
                 <img
                   className="inline-block size-6 rounded-full align-middle"
@@ -118,7 +120,7 @@ const DonationNotification = ({
                       }).format(Number(amount))
                     : '<0.01'}
                 </Badge>
-              </span>
+              </>
             )}
           </p>
         </div>
