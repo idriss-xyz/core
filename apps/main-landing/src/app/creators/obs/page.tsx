@@ -11,7 +11,7 @@ import {
 } from 'viem';
 import { getEnsAvatar } from 'viem/actions';
 import { normalize } from 'viem/ens';
-import { NATIVE_COIN_ADDRESS } from '@idriss-xyz/constants';
+import { CHAIN_ID_TO_TOKENS, NATIVE_COIN_ADDRESS } from '@idriss-xyz/constants';
 
 import {
   CHAIN_TO_IDRISS_TIPPING_ADDRESS,
@@ -167,7 +167,7 @@ export default function Obs() {
             [recipient, tokenAmount, tokenAddress, message] = decoded.args;
           }
 
-          if (!recipient || !tokenAmount) {
+          if (!recipient || !tokenAmount || !tokenAddress) {
             continue;
           }
 
@@ -193,11 +193,22 @@ export default function Obs() {
             chain,
           );
 
+          const tokenDetails = CHAIN_ID_TO_TOKENS[chain]?.find((token) => {
+            return (
+              token.address.toLowerCase() ===
+              (tokenAddress as Hex).toLowerCase()
+            );
+          });
+
           addDonation({
             txnHash: log.transactionHash!,
             donor: senderIdentifier,
             amount: amountInDollar,
             message: message ?? '',
+            token: {
+              amount: tokenAmount,
+              details: tokenDetails,
+            },
             avatarUrl,
           });
         }
