@@ -137,6 +137,7 @@ const SubscriptionsManagementContent = ({
 
   const handleUnsubscribe = async (
     address: SubscriptionRequest['subscription']['address'],
+    fid: SubscriptionRequest['subscription']['fid'],
   ) => {
     const siweLoggedIn = await siwe.loggedIn();
 
@@ -151,10 +152,37 @@ const SubscriptionsManagementContent = ({
       chainType = 'SOLANA';
     }
 
-    await unsubscribe.mutateAsync({
-      subscription: { address, subscriberId, chainType },
-      authToken: authToken ?? '',
-    });
+    if (fid !== null && fid !== undefined) {
+      const subscriptionsToRemove = subscriptionsQuery.data?.details.filter(
+        (s) => {
+          return s.fid === fid;
+        },
+      );
+
+      if (subscriptionsToRemove && subscriptionsToRemove.length > 0) {
+        await Promise.all(
+          subscriptionsToRemove.map((s) => {
+            const chainTypeForS: 'SOLANA' | 'EVM' = isSolanaAddress(s.address)
+              ? 'SOLANA'
+              : 'EVM';
+            return unsubscribe.mutateAsync({
+              subscription: {
+                address: s.address,
+                subscriberId,
+                chainType: chainTypeForS,
+              },
+              authToken: authToken ?? '',
+            });
+          }),
+        );
+      }
+    } else {
+      await unsubscribe.mutateAsync({
+        subscription: { address, subscriberId, chainType },
+        authToken: authToken ?? '',
+      });
+    }
+
     void subscriptionsQuery.refetch();
   };
 

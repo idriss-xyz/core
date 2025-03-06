@@ -85,7 +85,7 @@ export const SubscriptionForm = ({
         if (!farcasterDetails) {
           return;
         }
-      
+
         if (farcasterDetails.addressSolana) {
           chainType = 'SOLANA';
           await onSubmit(
@@ -97,7 +97,11 @@ export const SubscriptionForm = ({
 
         if (farcasterDetails.address) {
           chainType = 'EVM';
-          await onSubmit(farcasterDetails.address, farcasterDetails.fid, chainType);
+          await onSubmit(
+            farcasterDetails.address,
+            farcasterDetails.fid,
+            chainType,
+          );
         }
 
         form.reset(EMPTY_FORM);
