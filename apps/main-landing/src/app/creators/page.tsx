@@ -388,12 +388,8 @@ export default function Donors() {
                 </div>
               </Form>
             </div>
-            <Link
-              size="s"
-              href="creators/banner"
-              className="mb-4 mt-[38px] border-none text-neutral-900 hover:text-mint-600"
-            >
-              DOWNLOAD A BANNER FOR YOUR BIO
+            <Link size="xs" href="creators/banner" className="mb-4 mt-[38px]">
+              Download a banner for your bio
             </Link>
           </div>
         </div>
