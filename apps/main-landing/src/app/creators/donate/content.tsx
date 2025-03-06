@@ -133,6 +133,12 @@ export const Content = ({ className, validatedAddress }: Properties) => {
     resolver: zodResolver(createFormPayloadSchema(allowedChainsIds)),
   });
 
+  useEffect(() => {
+    formMethods.reset(
+      getSendFormDefaultValues(defaultChainId, selectedTokenSymbol),
+    );
+  }, [defaultChainId, selectedTokenSymbol, formMethods]);
+
   const [chainId, tokenSymbol, amount] = formMethods.watch([
     'chainId',
     'tokenSymbol',
@@ -295,7 +301,6 @@ export const Content = ({ className, validatedAddress }: Properties) => {
       </div>
     );
   }
-
   return (
     <div className={classes(baseClassName, className)}>
       <link rel="preload" as="image" href={backgroundLines3.src} />
@@ -325,7 +330,6 @@ export const Content = ({ className, validatedAddress }: Properties) => {
             );
           }}
         />
-
         <Controller
           control={formMethods.control}
           name="chainId"
