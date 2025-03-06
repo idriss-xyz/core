@@ -66,13 +66,13 @@ export const SubscriptionForm = ({
           console.error('Not an address');
           return;
         }
-        onSubmit(data.subscriptionDetails, undefined, chainType);
+        await onSubmit(data.subscriptionDetails, undefined, chainType);
         form.reset(EMPTY_FORM);
         return;
       }
       if (isSolanaAddress(data.subscriptionDetails)) {
         chainType = 'SOLANA';
-        onSubmit(data.subscriptionDetails, undefined, chainType);
+        await onSubmit(data.subscriptionDetails, undefined, chainType);
         form.reset(EMPTY_FORM);
         return;
       }
@@ -85,10 +85,10 @@ export const SubscriptionForm = ({
         if (!farcasterDetails) {
           return;
         }
-
+      
         if (farcasterDetails.addressSolana) {
           chainType = 'SOLANA';
-          onSubmit(
+          await onSubmit(
             farcasterDetails.addressSolana,
             farcasterDetails.fid,
             chainType,
@@ -97,7 +97,7 @@ export const SubscriptionForm = ({
 
         if (farcasterDetails.address) {
           chainType = 'EVM';
-          onSubmit(farcasterDetails.address, farcasterDetails.fid, chainType);
+          await onSubmit(farcasterDetails.address, farcasterDetails.fid, chainType);
         }
 
         form.reset(EMPTY_FORM);
@@ -111,7 +111,7 @@ export const SubscriptionForm = ({
       if (!address) {
         return;
       }
-      onSubmit(address, undefined, chainType);
+      await onSubmit(address, undefined, chainType);
       form.reset(EMPTY_FORM);
     },
     [

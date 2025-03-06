@@ -5,7 +5,7 @@ export interface Properties {
     address: SubscriptionRequest['subscription']['address'],
     fid?: SubscriptionRequest['subscription']['fid'],
     chainType?: 'EVM' | 'SOLANA',
-  ) => void;
+  ) => Promise<void>;
   subscriptionsAmount: number | undefined;
 }
 
