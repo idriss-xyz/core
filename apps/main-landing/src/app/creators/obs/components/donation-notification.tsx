@@ -105,7 +105,7 @@ const DonationNotification = ({
                   {token.details?.symbol}{' '}
                 </span>
                 <img
-                  className="size-6 rounded-full align-middle"
+                  className="size-6 rounded-full"
                   src={token.details?.logo}
                   alt=""
                 />{' '}
