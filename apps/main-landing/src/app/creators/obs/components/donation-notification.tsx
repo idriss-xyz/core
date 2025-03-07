@@ -80,38 +80,36 @@ const DonationNotification = ({
 
       <div className="flex flex-col justify-center gap-y-1">
         <div className="flex items-center gap-x-2">
-          <p className="text-label3 text-neutral-900">
-            <span className="align-middle">{`${donor} `}</span>
+          <p className="flex flex-row flex-wrap items-center gap-x-1 text-label3 text-neutral-900">
+            {`${donor} `}
 
             {!token.details && (
-              <span className="align-middle text-body3 text-neutral-600">{`${amount ? `sent $${amount}` : ''}`}</span>
+              <span className="text-body3 text-neutral-600">{`${amount ? `sent $${amount}` : ''}`}</span>
             )}
 
             {token.details && (
               <>
-                <span className="align-middle text-body3 text-neutral-600">
-                  <span className="align-middle text-body3 text-neutral-600">
-                    sent{' '}
-                    {zerosIndex ? (
-                      <>
-                        0.0
-                        <span className="inline-block translate-y-1 px-px text-xs">
-                          {zerosIndex}
-                        </span>
-                        {roundedNumber}
-                      </>
-                    ) : (
-                      roundedNumber
-                    )}{' '}
-                    {token.details?.symbol}{' '}
-                  </span>
+                <span className="text-body3 text-neutral-600">
+                  sent{' '}
+                  {zerosIndex ? (
+                    <>
+                      0.0
+                      <span className="inline-block translate-y-1 px-px text-xs">
+                        {zerosIndex}
+                      </span>
+                      {roundedNumber}
+                    </>
+                  ) : (
+                    roundedNumber
+                  )}{' '}
+                  {token.details?.symbol}{' '}
                 </span>
                 <img
-                  className="inline-block size-6 rounded-full align-middle"
+                  className="size-6 rounded-full align-middle"
                   src={token.details?.logo}
                   alt=""
                 />{' '}
-                <Badge type="success" variant="subtle" className="align-middle">
+                <Badge type="success" variant="subtle">
                   $
                   {Number(amount) >= 0.01
                     ? new Intl.NumberFormat('en-US', {

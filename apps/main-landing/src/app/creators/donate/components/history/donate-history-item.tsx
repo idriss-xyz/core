@@ -96,11 +96,9 @@ export default function DonateHistoryItem({ tip }: Properties) {
 
         <div className="flex flex-col justify-center gap-y-1">
           <div className="flex items-center gap-x-2">
-            <p className="text-body3 text-neutral-900">
-              <span className="align-middle">
-                {displayName ?? getShortWalletHex(tipperFromAddress)}
-              </span>{' '}
-              <span className="align-middle text-body3 text-neutral-600">
+            <p className="flex flex-row flex-wrap items-center gap-x-1 text-body3 text-neutral-900">
+              {displayName ?? getShortWalletHex(tipperFromAddress)}{' '}
+              <span className="text-body3 text-neutral-600">
                 sent{' '}
                 {zerosIndex ? (
                   <>
@@ -116,11 +114,11 @@ export default function DonateHistoryItem({ tip }: Properties) {
                 {tipDetails.tokenV2.symbol}{' '}
               </span>
               <img
-                className="inline-block size-6 rounded-full align-middle"
+                className="size-6 rounded-full"
                 src={tipDetails.tokenV2.imageUrlV2}
                 alt=""
               />{' '}
-              <Badge type="success" variant="subtle" className="align-middle">
+              <Badge type="success" variant="subtle">
                 $
                 {tradeValue >= 0.01
                   ? new Intl.NumberFormat('en-US', {
