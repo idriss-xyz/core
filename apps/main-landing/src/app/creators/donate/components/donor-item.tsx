@@ -2,7 +2,7 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { TipHistoryFromUser } from '@idriss-xyz/constants';
 import { getShortWalletHex } from '@idriss-xyz/utils';
 
-import { useGetEnsAvatar } from '@/app/creators/donate/commands/get-ens-avatar';
+import { useGetEnsAvatar } from '../commands/get-ens-avatar';
 
 const rankBorders = [
   'border-[#FAC928]',
@@ -84,11 +84,15 @@ export default function DonorItem({
 
 type PlaceholderProperties = {
   donorRank: number;
+  amountToDisplay: number;
+  hideEncouragement?: boolean;
   previousDonateAmount: number;
 };
 
 export function DonorItemPlaceholder({
   donorRank,
+  hideEncouragement,
+  amountToDisplay,
   previousDonateAmount,
 }: PlaceholderProperties) {
   const avatarPlaceholder = (
@@ -127,20 +131,29 @@ export function DonorItemPlaceholder({
               : '<0.01'}
           </span>
         </li>
-        <span
-          style={{ height: `${(5 - donorRank) * 69}px` }}
-          className="flex items-center justify-center border-b border-b-neutral-300 px-5.5 py-4.5 text-center text-label4 gradient-text-2"
-        >
-          Donate now and claim {rankPlaces[donorRank]} place
-        </span>
+
+        {amountToDisplay - 1 - donorRank ? (
+          <span
+            style={{ height: `${(amountToDisplay - 1 - donorRank) * 69}px` }}
+            className="flex items-center justify-center border-b border-b-neutral-300 px-5.5 py-4.5 text-center text-label4 gradient-text-2"
+          >
+            {hideEncouragement
+              ? null
+              : `Donate now and claim ${rankPlaces[donorRank]} place`}
+          </span>
+        ) : null}
       </>
     );
   }
 
   return (
-    <span
-      style={{ height: `${(6 - donorRank) * 69}px` }}
-      className="flex items-center justify-center border-b border-b-neutral-300"
-    />
+    <>
+      {amountToDisplay - donorRank ? (
+        <span
+          style={{ height: `${(amountToDisplay - donorRank) * 69}px` }}
+          className="flex items-center justify-center border-b border-b-neutral-300"
+        />
+      ) : null}
+    </>
   );
 }
