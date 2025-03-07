@@ -15,7 +15,7 @@ import geoist_avatar from './assets/geoist_avatar.png';
 import levertz_avatar from './assets/levertz_avatar.png';
 import user_avatar from './assets/user_avatar.png';
 
-const AIRDROP_ENABLED = true;
+const AIRDROP_ENABLED = false;
 
 export const LetterContent = () => {
   const { setCurrentContent } = useClaimPage();
