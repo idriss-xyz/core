@@ -2,7 +2,7 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { TipHistoryFromUser } from '@idriss-xyz/constants';
 import { getShortWalletHex } from '@idriss-xyz/utils';
 
-import { useGetEnsAvatar } from '@/app/creators/donate/commands/get-ens-avatar';
+import { useGetEnsAvatar } from '../commands/get-ens-avatar';
 
 const rankBorders = [
   'border-[#FAC928]',

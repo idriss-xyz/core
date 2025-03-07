@@ -11,12 +11,13 @@ import {
 import { Icon } from '@idriss-xyz/ui/icon';
 import { Button } from '@idriss-xyz/ui/button';
 
-import { IDRISS_SCENE_STREAM_2 } from '@/assets';
+import { default as IDRISS_SCENE_STREAM_2 } from '../../../assets/idriss-scene-stream-2.png';
+import { WidgetVariants } from '../widget/types';
+
 import {
   default as DonorItem,
   DonorItemPlaceholder,
-} from '@/app/creators/donate/components/donor-item';
-import { WidgetVariants } from '@/app/creators/widget/types';
+} from './components/donor-item';
 
 type Properties = {
   className?: string;
