@@ -114,12 +114,12 @@ export default function DonateHistoryItem({ tip }: Properties) {
                   roundedNumber
                 )}{' '}
                 {tipDetails.tokenV2.symbol}{' '}
-                <img
-                  className="inline-block size-6 rounded-full"
-                  src={tipDetails.tokenV2.imageUrlV2}
-                  alt=""
-                />
-              </span>{' '}
+              </span>
+              <img
+                className="inline-block size-6 rounded-full align-middle"
+                src={tipDetails.tokenV2.imageUrlV2}
+                alt=""
+              />{' '}
               <Badge type="success" variant="subtle" className="align-middle">
                 $
                 {tradeValue >= 0.01
