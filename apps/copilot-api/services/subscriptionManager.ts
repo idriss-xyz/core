@@ -120,7 +120,7 @@ const saveWebhookToDb = async (
 const addAddressToWebhook = async (address: string, chainType: string) => {
   const res = await webhooksRepo
     .createQueryBuilder('webhooks')
-    .select(['webhooks.internal_id', 'webhooks.webhook_id'])
+    .select(['webhooks.internal_id', 'webhooks.webhook_id', 'webhooks.signing_key'])
     .where('webhooks.chainType = :chainType', { chainType })
     .andWhere((qb) => {
       const subQuery = qb
@@ -151,11 +151,12 @@ const addAddressToWebhook = async (address: string, chainType: string) => {
     const {
       webhooks_webhook_id: webhook_id,
       webhooks_internal_id: internal_id,
+      webhooks_signing_key: signingKey
     } = res;
     if (chainType === WEBHOOK_NETWORK_TYPES.EVM) {
       await updateWebhookAddresses(webhook_id, [address], []);
     } else if (chainType === WEBHOOK_NETWORK_TYPES.SOLANA) {
-      await updateSolanaWebhookAddresses(webhook_id, [address], []);
+      await updateSolanaWebhookAddresses(webhook_id, signingKey, [address], []);
     }
     await addressMapWebhooksRepo.save({
       address,
@@ -188,13 +189,13 @@ async function removeAddressFromWebhook(
     return;
   }
 
-  const { webhook_id } = webhookData;
+  const { webhook_id, signing_key } = webhookData;
 
   // Update the webhook via webhook proovider API
   if (chainType === WEBHOOK_NETWORK_TYPES.EVM) {
     await updateWebhookAddresses(webhook_id, [], [address]);
   } else if (chainType === WEBHOOK_NETWORK_TYPES.SOLANA) {
-    await updateSolanaWebhookAddresses(webhook_id, [], [address]);
+    await updateSolanaWebhookAddresses(webhook_id, signing_key, [], [address]);
   }
 
   // Remove address from address_webhook_map
@@ -329,6 +330,7 @@ const updateWebhookAddresses = async (
 
 const updateSolanaWebhookAddresses = async (
   webhookId: string,
+  signingKey: string,
   addressesToAdd: string[],
   addressesToRemove: string[],
 ): Promise<void> => {
@@ -358,6 +360,7 @@ const updateSolanaWebhookAddresses = async (
         transactionTypes: webhookData.transactionTypes,
         webhookType: webhookData.webhookType,
         accountAddresses: newAddresses,
+        authHeader: signingKey,
       },
       {
         headers: {
