@@ -119,7 +119,7 @@ export const PredictionMarketsSectionActions = () => {
             )}
           >
             <Icon name="AlertCircle" size={12} className="p-px" />
-            We couldn&#39;t add you to the waitlist. Try again later.
+            Failed to join waitlist. Please try again later.
           </span>
         )}
       </div>
