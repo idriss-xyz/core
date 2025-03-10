@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig",
+  "include": [
+    "src",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.cjs",
+    "**/*.mjs",
+    "**/.*.cjs",
+    "**/.*.mjs",
+    "vite.config.ts",
+    "next.config.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

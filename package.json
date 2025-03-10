@@ -9,6 +9,8 @@
     "copilot-api:prod": "turbo prod --filter=@idriss-xyz/copilot-api",
     "creator-api:dev": "turbo dev --filter=@idriss-xyz/creator-api",
     "creator-api:prod": "turbo prod --filter=@idriss-xyz/creator-api",
+    "twitch-extension:dev": "turbo watch dev --filter=@idriss-xyz/twitch-extension",
+    "twitch-extension:prod": "turbo run build --filter=@idriss-xyz/twitch-extension",
     "dev": "turbo dev",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix",
