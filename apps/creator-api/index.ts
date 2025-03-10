@@ -9,7 +9,6 @@ import tipHistoryRouter from './routes/tip-history';
 import pushDonationRouter from './routes/push-donation';
 import cors from 'cors';
 import { AppDataSource } from './db/database';
-import { ALLOWED_ORIGINS } from './constants';
 
 dotenv.config(
   mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
@@ -23,7 +22,7 @@ const app: Application = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: ALLOWED_ORIGINS,
+    origin: '*',
   }),
 );
 
@@ -40,7 +39,7 @@ if (!HOST || !PORT) {
 
 const io = new SocketIOServer(server, {
   cors: {
-    origin: ALLOWED_ORIGINS,
+    origin: '*',
     methods: ['GET', 'POST'],
   },
 });
