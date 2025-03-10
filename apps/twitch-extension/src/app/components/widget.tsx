@@ -37,13 +37,16 @@ function WidgetContent({ variant }: ContentProperties) {
   const isVideoOverlay = variant === 'videoOverlay';
 
   useEffect(() => {
-    if (!window.Twitch?.ext) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const twitch = (window as any).Twitch;
+
+    if (!twitch?.ext) {
       return;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    window.Twitch.ext.onAuthorized(() => {
-      const storedConfig = window.Twitch.ext.configuration.broadcaster?.content;
+    twitch.ext.onAuthorized(() => {
+      const storedConfig = twitch.ext.configuration.broadcaster?.content;
 
       if (storedConfig) {
         const parsedConfig: FormValues = JSON.parse(storedConfig);

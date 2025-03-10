@@ -26,19 +26,17 @@ export default function Config() {
 
   const onSubmit = (payload: FormValues) => {
     setSubmitStatus(undefined);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const twitch = (window as any).Twitch;
 
-    if (!window.Twitch?.ext || !isAddress(payload.address)) {
+    if (!twitch?.ext || !isAddress(payload.address)) {
       setSubmitStatus('error');
 
       return;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    window.Twitch.ext.configuration.set(
-      'broadcaster',
-      '1',
-      JSON.stringify(payload),
-    );
+    twitch.ext.configuration.set('broadcaster', '1', JSON.stringify(payload));
 
     reset(FORM_VALUES);
     setSubmitStatus('success');
