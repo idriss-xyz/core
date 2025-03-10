@@ -1,6 +1,7 @@
 import { Controller, SubmitHandler, UseFormReturn } from 'react-hook-form';
 
 import { IconButton, Spinner } from 'shared/ui';
+import { TEST_IDS } from 'tests/e2e';
 
 import { LookupFormValues } from '../types';
 
@@ -35,6 +36,7 @@ export const LookupForm = ({
               return (
                 <>
                   <input
+                    data-testid={TEST_IDS.lookupWalletAddressInput}
                     {...field}
                     autoFocus
                     id="identifier"
