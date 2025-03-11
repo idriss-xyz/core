@@ -131,13 +131,13 @@ export default function DonateHistoryItem({
                   roundedNumber
                 )}{' '}
                 {tipDetails.tokenV2.symbol}{' '}
-                <img
-                  className="inline-block size-6 rounded-full"
-                  src={tipDetails.tokenV2.imageUrlV2}
-                  alt=""
-                />
-              </span>{' '}
-              <Badge type="success" variant="subtle" className="align-middle">
+              </span>
+              <img
+                className="size-6 rounded-full"
+                src={tipDetails.tokenV2.imageUrlV2}
+                alt=""
+              />{' '}
+              <Badge type="success" variant="subtle">
                 $
                 {tradeValue >= 0.01
                   ? new Intl.NumberFormat('en-US', {

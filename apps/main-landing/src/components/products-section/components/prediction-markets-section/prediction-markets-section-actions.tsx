@@ -1,4 +1,5 @@
 import { Button } from '@idriss-xyz/ui/button';
+import { Icon } from '@idriss-xyz/ui/icon';
 import { classes } from '@idriss-xyz/ui/utils';
 import { useMutation } from '@tanstack/react-query';
 import { Controller, useForm } from 'react-hook-form';
@@ -45,7 +46,7 @@ export const PredictionMarketsSectionActions = () => {
   };
 
   return (
-    <div className="flex w-full flex-col gap-2">
+    <div className="flex w-full flex-col gap-1">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col items-center gap-3 transition-transform duration-1000 md:flex-row lg:flex-row lg:gap-2"
@@ -89,20 +90,36 @@ export const PredictionMarketsSectionActions = () => {
           GET EARLY ACCESS
         </Button>
       </form>
-      <div className="flex flex-col gap-1 pl-1">
+      <div className="flex flex-col">
         {mutation.isSuccess && (
-          <span className="text-sm text-mint-500">
-            {`You're on the list. Stay tuned for updates.`}
+          <span
+            className={classes(
+              'flex items-center gap-x-1 pt-1 text-label7 text-mint-500 lg:text-label6',
+            )}
+          >
+            You&#39;re on the list. Stay tuned for updates.
           </span>
         )}
 
         {errors.email && (
-          <span className="text-sm text-red-500">{errors.email.message}</span>
+          <span
+            className={classes(
+              'flex items-center gap-x-1 pt-1 text-label7 text-red-500 lg:text-label6',
+            )}
+          >
+            <Icon name="AlertCircle" size={12} className="p-px" />
+            {errors.email.message}
+          </span>
         )}
 
         {mutation.isError && (
-          <span className="text-sm text-red-500">
-            Failed to join waitlist. Please try again later.
+          <span
+            className={classes(
+              'flex items-center gap-x-1 pt-1 text-label7 text-red-500 lg:text-label6',
+            )}
+          >
+            <Icon name="AlertCircle" size={12} className="p-px" />
+            We couldn&#39;t add you to the waitlist. Try again later.
           </span>
         )}
       </div>
