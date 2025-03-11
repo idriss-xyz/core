@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, MutableRefObject } from 'react';
 
 import { useNotification } from 'shared/ui';
 import {
@@ -52,7 +52,7 @@ const NotificationsPopupContent = ({
   activeDialog,
   isSwapEventListenerAdded,
 }: ContentProperties) => {
-  const selectedToken = useRef<SwapDataToken>();
+  const selectedToken: MutableRefObject<SwapDataToken | null> = useRef<SwapDataToken>(null);
   const selectedTokenImage = useRef<string>('');
   const notification = useNotification();
   const ensNameMutation = useCommandMutation(GetEnsNameCommand);

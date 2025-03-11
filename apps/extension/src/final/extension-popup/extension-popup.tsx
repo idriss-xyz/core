@@ -1,6 +1,4 @@
 import { Route, Routes } from 'react-router';
-import { useRef } from 'react';
-
 import { Closable } from 'shared/ui';
 import { POPUP_ROUTE, useExtensionPopup } from 'shared/extension';
 import { SubscriptionsManagement } from 'application/trading-copilot';

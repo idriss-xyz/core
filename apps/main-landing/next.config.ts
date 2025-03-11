@@ -166,10 +166,6 @@ const nextConfig: NextConfig = {
         permanent: false,
       },
       {
-        source: '/sale-faq',
-        destination: 'https://docs.idriss.xyz/idriss-token/token-sale#faq',
-      },
-      {
         source: '/retroactive-distribution',
         destination:
           'https://docs.idriss.xyz/idriss-token/retroactive-distribution',

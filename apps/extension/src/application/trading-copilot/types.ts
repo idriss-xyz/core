@@ -49,8 +49,8 @@ export type FarcasterAddressPayload = {
 
 export type FarcasterAddressResponse = {
   fid: number;
-  address: string;
-  addressSolana: string;
+  address?: string;
+  addressSolana?: string;
 } | null;
 
 export type FarcasterTransferResponse = {
@@ -121,6 +121,14 @@ export type SwapData = {
   isComplete: boolean;
   soundFile?: string;
 };
+
+export type SwapProperties = {
+  data: Hex;
+  gas?: bigint;
+  chain: number;
+  value: bigint;
+  to: `0x${string}`;
+}
 
 export interface QuotePayload {
   amount: string;

@@ -6,7 +6,7 @@ import {
   GetSolanaBalanceCommand,
 } from 'application/trading-copilot';
 import { useCommandQuery } from 'shared/messaging';
-import { Wallet } from 'shared/web3';
+import { Wallet } from '@idriss-xyz/wallet-connect';
 
 export const useAccountBalance = (
   wallet: Wallet | SolanaWallet | null | undefined,

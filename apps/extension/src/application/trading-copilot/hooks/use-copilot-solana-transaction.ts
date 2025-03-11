@@ -6,6 +6,7 @@ import { useCommandMutation } from 'shared/messaging';
 import { SendSolanaTransactionCommand } from '../commands/';
 import { useObservabilityScope } from 'shared/observability';
 import { useMutation } from '@tanstack/react-query';
+import { SwapProperties } from '../types';
 
 interface SolanaCopilotProperties {
   transactionData: SwapProperties;

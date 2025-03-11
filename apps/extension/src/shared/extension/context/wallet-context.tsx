@@ -29,6 +29,7 @@ type WalletContextValue = {
   openConnectionModal: () => Promise<Wallet>;
   removeWalletInfo: () => void;
   setWalletInfo: (wallet: Wallet) => void;
+  verifyWalletProvider: (wallet: Wallet) => Promise<boolean>;
 };
 
 const WalletContext = createContext<WalletContextValue | undefined>(undefined);
@@ -236,6 +237,7 @@ export const WalletContextProvider = (properties: {
   const contextValue: WalletContextValue = useMemo(() => {
     return {
       wallet,
+      setWalletInfo,
       removeWalletInfo,
       openConnectionModal,
       verifyWalletProvider,

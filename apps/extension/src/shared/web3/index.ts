@@ -1,8 +1,6 @@
 export { CHAIN, TOKEN, CHAIN_ID_TO_TOKENS } from './constants';
 export {
   resolveAddress,
-  formatBigNumber,
-  roundToSignificantFiguresForCopilotTrading,
   getWholeNumber,
   dollarToWei,
   ethToDollars,
@@ -25,6 +23,7 @@ export {
 export { TransactionRevertedError } from './errors';
 export {
   WalletStorage,
+  SolanaWalletStorage,
   AuthTokenStorage,
   ToastSoundStateStorage,
   SubscriptionsAmountStorage,
