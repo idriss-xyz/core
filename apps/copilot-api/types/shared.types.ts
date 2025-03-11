@@ -48,18 +48,18 @@ interface NativeTransfer {
 }
 
 interface AccountData {
-    account: string;
-    nativeBalanceChange: number;
-    tokenBalanceChanges: {
-      mint: string;
-      rawTokenAmount: {
-        decimals: number;
-        tokenAmount: string;
-      };
-      tokenAccount: string;
-      userAccount: string;
-    }[];
-  }
+  account: string;
+  nativeBalanceChange: number;
+  tokenBalanceChanges: {
+    mint: string;
+    rawTokenAmount: {
+      decimals: number;
+      tokenAmount: string;
+    };
+    tokenAccount: string;
+    userAccount: string;
+  }[];
+}
 
 export interface HeliusWebhookEvent {
   accountData: AccountData[];

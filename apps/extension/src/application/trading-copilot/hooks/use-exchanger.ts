@@ -30,7 +30,6 @@ const formatSol = (amount: string, decimals?: number) => {
   return Number(amount) / 10 ** decimals;
 };
 
-
 export const useExchanger = ({ wallet }: Properties) => {
   const { verifyWalletProvider } = useWallet();
   const switchChain = useSwitchChain();

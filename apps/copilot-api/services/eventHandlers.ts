@@ -2,13 +2,10 @@ import {
   AlchemyWebhookEvent,
   CachedTransaction,
   HeliusWebhookEvent,
-  WebhookEventHandler
+  WebhookEventHandler,
 } from '../types';
 import { SwapData } from '../types';
-import {
-  extractAlchemySwapData,
-  extractHeliusSwapData
-} from './webhook';
+import { extractAlchemySwapData, extractHeliusSwapData } from './webhook';
 
 export class AlchemyEventHandler implements WebhookEventHandler {
   formatForCache(event: AlchemyWebhookEvent): CachedTransaction {

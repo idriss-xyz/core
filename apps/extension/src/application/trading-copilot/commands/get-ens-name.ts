@@ -1,5 +1,6 @@
 import { createPublicClient, Hex, http, isAddress } from 'viem';
 import { mainnet } from 'viem/chains';
+import { isSolanaAddress } from '@idriss-xyz/utils';
 
 import {
   Command,
@@ -7,7 +8,6 @@ import {
   HandlerError,
   OkResult,
 } from 'shared/messaging';
-import { isSolanaAddress } from '@idriss-xyz/utils';
 
 type Payload = {
   address: Hex;

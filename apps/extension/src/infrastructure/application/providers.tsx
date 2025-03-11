@@ -23,7 +23,7 @@ import {
   ExtensionPopupProvider,
   ExtensionSettingsProvider,
   WalletContextProvider,
-  SolanaContextProvider
+  SolanaContextProvider,
 } from 'shared/extension';
 import {
   AuthTokenStorage,
@@ -73,9 +73,9 @@ export const Providers = ({
                           >
                             <NotificationsProvider>
                               <SolanaContextProvider
-                                  onGetWallet={SolanaWalletStorage.get}
-                                  onClearWallet={SolanaWalletStorage.clear}
-                                  onSaveWallet={SolanaWalletStorage.save}
+                                onGetWallet={SolanaWalletStorage.get}
+                                onClearWallet={SolanaWalletStorage.clear}
+                                onSaveWallet={SolanaWalletStorage.save}
                               >
                                 <WalletContextProvider
                                   disabledWalletsRdns={disabledWalletRdns}

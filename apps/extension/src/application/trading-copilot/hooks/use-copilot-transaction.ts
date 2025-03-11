@@ -4,6 +4,7 @@ import { Wallet } from '@idriss-xyz/wallet-connect';
 
 import { createWalletClient, TransactionRevertedError } from 'shared/web3';
 import { useObservabilityScope } from 'shared/observability';
+
 import { SwapProperties } from '../types';
 
 interface Properties {

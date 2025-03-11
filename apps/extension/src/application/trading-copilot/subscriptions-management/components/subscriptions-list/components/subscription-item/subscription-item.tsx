@@ -69,7 +69,11 @@ const SubscriptionItemContent = ({
   const isFarcasterSubscription = !!farcasterDetails;
 
   const removeSubscription = useCallback(() => {
-    onRemove({ address: subscription.address, fid: subscription.fid, chainType: isSolanaAddress(subscription.address) ? 'SOLANA' : 'EVM' });
+    onRemove({
+      address: subscription.address,
+      fid: subscription.fid,
+      chainType: isSolanaAddress(subscription.address) ? 'SOLANA' : 'EVM',
+    });
   }, [onRemove, subscription]);
 
   const emailQuery = useCommandQuery({

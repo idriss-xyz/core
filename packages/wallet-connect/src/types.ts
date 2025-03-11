@@ -17,7 +17,7 @@ export type SolanaWallet = {
 
 export type SolanaProviderInfo = {
   name: string;
-}
+};
 
 export type StoredWallet = {
   account: Hex;

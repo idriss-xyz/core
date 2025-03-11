@@ -128,7 +128,7 @@ export type SwapProperties = {
   chain: number;
   value: bigint;
   to: `0x${string}`;
-}
+};
 
 export interface QuotePayload {
   amount: string;

@@ -1,5 +1,4 @@
 import { PublicKey } from '@solana/web3.js';
-
 import { Hex } from 'viem';
 
 import { CHAIN, NATIVE_COIN_ADDRESS } from '../../constants/src';

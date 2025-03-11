@@ -1,11 +1,11 @@
 import { VersionedTransaction } from '@solana/web3.js';
 import { SolanaWallet } from '@idriss-xyz/wallet-connect';
+import { useMutation } from '@tanstack/react-query';
 
 import { useCommandMutation } from 'shared/messaging';
+import { useObservabilityScope } from 'shared/observability';
 
 import { SendSolanaTransactionCommand } from '../commands/';
-import { useObservabilityScope } from 'shared/observability';
-import { useMutation } from '@tanstack/react-query';
 import { SwapProperties } from '../types';
 
 interface SolanaCopilotProperties {

@@ -1,12 +1,11 @@
 import { Hex } from 'viem';
-import { SolanaWallet } from '@idriss-xyz/wallet-connect';
+import { SolanaWallet, Wallet } from '@idriss-xyz/wallet-connect';
 
 import {
   GetEnsBalanceCommand,
   GetSolanaBalanceCommand,
 } from 'application/trading-copilot';
 import { useCommandQuery } from 'shared/messaging';
-import { Wallet } from '@idriss-xyz/wallet-connect';
 
 export const useAccountBalance = (
   wallet: Wallet | SolanaWallet | null | undefined,

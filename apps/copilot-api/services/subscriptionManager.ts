@@ -8,7 +8,11 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import dotenv from 'dotenv';
 import { join } from 'path';
-import { WEBHOOK_NETWORKS, MAX_ADDRESSES_PER_WEBHOOK, WEBHOOK_NETWORK_TYPES } from '../constants';
+import {
+  WEBHOOK_NETWORKS,
+  MAX_ADDRESSES_PER_WEBHOOK,
+  WEBHOOK_NETWORK_TYPES,
+} from '../constants';
 import { mode } from '../utils/mode';
 import { SubscriptionsDetailsInterface, WebhookDataInterface } from '../types';
 import { isAddress } from 'viem';
@@ -121,7 +125,11 @@ const saveWebhookToDb = async (
 const addAddressToWebhook = async (address: string, chainType: string) => {
   const res = await webhooksRepo
     .createQueryBuilder('webhooks')
-    .select(['webhooks.internal_id', 'webhooks.webhook_id', 'webhooks.signing_key'])
+    .select([
+      'webhooks.internal_id',
+      'webhooks.webhook_id',
+      'webhooks.signing_key',
+    ])
     .where('webhooks.chainType = :chainType', { chainType })
     .andWhere((qb) => {
       const subQuery = qb
@@ -152,7 +160,7 @@ const addAddressToWebhook = async (address: string, chainType: string) => {
     const {
       webhooks_webhook_id: webhook_id,
       webhooks_internal_id: internal_id,
-      webhooks_signing_key: signingKey
+      webhooks_signing_key: signingKey,
     } = res;
     if (chainType === WEBHOOK_NETWORK_TYPES.EVM) {
       await updateWebhookAddresses(webhook_id, [address], []);
@@ -166,7 +174,7 @@ const addAddressToWebhook = async (address: string, chainType: string) => {
   }
 };
 
-async function removeAddressFromWebhook (
+async function removeAddressFromWebhook(
   address: string,
   chainType: WEBHOOK_NETWORK_TYPES,
 ): Promise<void> {
@@ -220,8 +228,8 @@ async function removeAddressFromWebhook (
 }
 
 const createNewWebhook = async (
-  address: string
-): Promise<WebhookDataInterface[]>  => {
+  address: string,
+): Promise<WebhookDataInterface[]> => {
   try {
     const webhooks: WebhookDataInterface[] = [];
     for (const NETWORK of WEBHOOK_NETWORKS) {

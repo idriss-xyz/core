@@ -1,9 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import * as crypto from 'crypto';
-import {
-  AlchemyEventHandler,
-  HeliusEventHandler,
-} from '../services/eventHandlers';
 
 export function validateWebhookSignature(
   getSigningKey: (internalWebhookId: string) => Promise<string | undefined>,
@@ -52,4 +48,3 @@ function isValidSignatureForStringBody(
   const digest = hmac.digest('hex');
   return signature === digest;
 }
-

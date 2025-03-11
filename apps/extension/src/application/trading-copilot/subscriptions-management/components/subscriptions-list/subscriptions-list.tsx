@@ -41,14 +41,14 @@ export const SubscriptionsList = ({
                 );
               })
               .map((subscription) => {
-              return (
-                <SubscriptionItem
-                  onRemove={onRemove}
-                  key={subscription.address}
-                  subscription={subscription}
-                />
-              );
-            })}
+                return (
+                  <SubscriptionItem
+                    onRemove={onRemove}
+                    key={subscription.address}
+                    subscription={subscription}
+                  />
+                );
+              })}
           </ul>
         </ScrollArea>
       </div>

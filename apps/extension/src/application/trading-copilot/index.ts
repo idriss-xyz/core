@@ -16,4 +16,9 @@ export type {
   UnsubscribePayload,
 } from './types';
 export { SubscriptionsManagement } from './subscriptions-management';
-export { useExchanger, useSolanaExchanger, useLoginViaSiwe, useSubscriptions } from './hooks';
+export {
+  useExchanger,
+  useSolanaExchanger,
+  useLoginViaSiwe,
+  useSubscriptions,
+} from './hooks';

@@ -2,7 +2,10 @@
 import { HeliusWebhookEvent, SwapData } from '../types';
 import { NULL_ADDRESS, WEBHOOK_NETWORK_TYPES } from '../constants';
 import { isSubscribedAddress } from './subscriptionManager';
-import { parseJupiterSwap, parseSwapFromHelius } from '../utils/swapDataParsers';
+import {
+  parseJupiterSwap,
+  parseSwapFromHelius,
+} from '../utils/swapDataParsers';
 import { error } from 'console';
 
 // Function to determine if the swap is complete
@@ -154,7 +157,7 @@ export async function extractHeliusSwapData(data: any): Promise<SwapData> {
 
   if (result == null) {
     console.error('Failed to parse swap data from Helius event.');
-    throw error
+    throw error;
   }
   return result;
 }

@@ -3,11 +3,11 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { isAddress } from 'viem';
 import { Link } from '@idriss-xyz/ui/link';
 import { VAULT_LINK } from '@idriss-xyz/constants';
+import { isSolanaAddress } from '@idriss-xyz/utils';
 
 import { useCommandMutation } from 'shared/messaging';
 import { ErrorMessage } from 'shared/ui';
 import { isFarcasterName } from 'shared/utils';
-import { isSolanaAddress } from '@idriss-xyz/utils';
 
 import {
   GetEnsAddressCommand,
