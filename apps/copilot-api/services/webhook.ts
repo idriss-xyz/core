@@ -1,7 +1,9 @@
 // Extract swap data from activities
-import { SwapData } from '../types';
-import { NULL_ADDRESS } from '../constants';
+import { HeliusWebhookEvent, SwapData } from '../types';
+import { NULL_ADDRESS, WEBHOOK_NETWORK_TYPES } from '../constants';
 import { isSubscribedAddress } from './subscriptionManager';
+import { parseJupiterSwap, parseSwapFromHelius } from '../utils/swapDataParsers';
+import { error } from 'console';
 
 // Function to determine if the swap is complete
 function isCompleteSwap(swapData: SwapData): boolean {
@@ -37,7 +39,8 @@ function isCompleteSwap(swapData: SwapData): boolean {
   );
 }
 
-export async function extractSwapData(
+// Extract swap data from activities
+export async function extractAlchemySwapData(
   txHash: string,
   activities: any[],
 ): Promise<SwapData> {
@@ -59,7 +62,10 @@ export async function extractSwapData(
       const isEthTransfer = activity.asset === 'ETH' && activity.value > 0;
       if (isEthTransfer) {
         if (
-          (await isSubscribedAddress(activity.fromAddress)) &&
+          (await isSubscribedAddress(
+            activity.fromAddress,
+            WEBHOOK_NETWORK_TYPES.EVM,
+          )) &&
           !swapData.tokenOut
         ) {
           // User sent ETH (tokenOut)
@@ -83,7 +89,10 @@ export async function extractSwapData(
         network: activity.network,
       };
       if (
-        (await isSubscribedAddress(activity.toAddress)) &&
+        (await isSubscribedAddress(
+          activity.toAddress,
+          WEBHOOK_NETWORK_TYPES.EVM,
+        )) &&
         !swapData.tokenIn
       ) {
         // User received token (tokenIn)
@@ -91,7 +100,10 @@ export async function extractSwapData(
         swapData.from = activity.toAddress;
         swapData.to = activity.fromAddress;
       } else if (
-        (await isSubscribedAddress(activity.fromAddress)) &&
+        (await isSubscribedAddress(
+          activity.fromAddress,
+          WEBHOOK_NETWORK_TYPES.EVM,
+        )) &&
         !swapData.tokenOut
       ) {
         // User sent token (tokenOut)
@@ -104,7 +116,10 @@ export async function extractSwapData(
       const isEthTransfer = activity.asset === 'ETH' && activity.value > 0;
       if (isEthTransfer) {
         if (
-          (await isSubscribedAddress(activity.toAddress)) &&
+          (await isSubscribedAddress(
+            activity.toAddress,
+            WEBHOOK_NETWORK_TYPES.EVM,
+          )) &&
           !swapData.tokenIn
         ) {
           // User received ETH (tokenIn)
@@ -127,4 +142,19 @@ export async function extractSwapData(
   swapData.isComplete = isCompleteSwap(swapData);
 
   return swapData;
+}
+
+export async function extractHeliusSwapData(data: any): Promise<SwapData> {
+  const eventData = data as HeliusWebhookEvent;
+
+  const isJupiterSwap = eventData.source === 'JUPITER';
+  const result = isJupiterSwap
+    ? await parseJupiterSwap(eventData)
+    : await parseSwapFromHelius(eventData);
+
+  if (result == null) {
+    console.error('Failed to parse swap data from Helius event.');
+    throw error
+  }
+  return result;
 }

@@ -2,12 +2,12 @@ type AlchemyWebhookType = 'ADDRESS_ACTIVITY';
 
 type Token = {
   address: string;
-  symbol: string;
   amount: number;
   decimals: number;
   network: string;
-  name?: string;
-  logoURI?: string;
+  name?: string | null;
+  logoURI?: string | null;
+  symbol?: string | null;
 };
 
 export type SwapData = {
