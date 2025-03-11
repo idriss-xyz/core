@@ -21,8 +21,6 @@ export interface CachedTransaction {
   type: 'alchemy' | 'helius';
 }
 
-export type CachedEventsInterface = Record<string, CachedTransaction>;
-
 export interface GetQuoteDataResponseInterface {
   success: boolean;
   estimate: Estimate;

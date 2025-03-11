@@ -37,7 +37,7 @@ export const heliusWebhookHandler = () => {
 };
 
 // Handle incoming events and add them to the cache
-export async function handleIncomingEvent(
+async function handleIncomingEvent(
   webhookEvent: AlchemyWebhookEvent,
 ): Promise<void> {
   const activities = webhookEvent.event.activity;
@@ -64,7 +64,7 @@ export async function handleIncomingEvent(
   }
 }
 
-export async function handleIncomingSolanaEvent(
+async function handleIncomingSolanaEvent(
   webhookEvent: HeliusWebhookEvent,
 ): Promise<void> {
   const txHash = webhookEvent.signature;
