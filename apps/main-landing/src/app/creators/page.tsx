@@ -161,6 +161,20 @@ export default function Donors() {
     );
   }, [formMethods, tokensSymbols, selectedChainsTokens]);
 
+  useEffect(() => {
+    const currentTokensSymbols = formMethods.getValues('tokensSymbols');
+    const updatedTokens = currentTokensSymbols.filter((symbol) => {
+      return chainsIds.some((chainId) => {
+        return CHAIN_ID_TO_TOKENS[chainId]?.some((token) => {
+          return token.symbol === symbol;
+        });
+      });
+    });
+    if (updatedTokens.length !== currentTokensSymbols.length) {
+      formMethods.setValue('tokensSymbols', updatedTokens);
+    }
+  }, [chainsIds, formMethods]);
+
   const validateAndCopy = async (copyFunction: () => Promise<void>) => {
     const isValid = await formMethods.trigger();
     if (isValid) {
