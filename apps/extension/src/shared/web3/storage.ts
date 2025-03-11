@@ -1,11 +1,10 @@
+import { StoredWallet } from '@idriss-xyz/wallet-connect';
+
 import { onWindowMessage } from 'shared/messaging';
 
-import { Hex } from './types';
+type StoredToastSoundState = boolean | undefined;
 
-interface StoredWallet {
-  account: Hex;
-  providerRdns: string;
-}
+type StoredSubscriptionsAmount = number | undefined;
 
 interface StoredSolanaWallet {
   account: string;
@@ -100,6 +99,51 @@ export class AuthTokenStorage {
   public static clear() {
     window.postMessage({
       type: 'CLEAR_AUTH_TOKEN',
+    });
+  }
+}
+
+export class ToastSoundStateStorage {
+  public static get(): Promise<StoredToastSoundState> {
+    return new Promise((resolve) => {
+      window.postMessage({
+        type: 'GET_TOAST_SOUND_STATE',
+      });
+
+      onWindowMessage<StoredToastSoundState>(
+        'GET_TOAST_SOUND_STATE_RESPONSE',
+        (maybeToastSoundState) => {
+          resolve(maybeToastSoundState);
+        },
+      );
+    });
+  }
+
+  public static save(payload: StoredToastSoundState) {
+    window.postMessage({
+      type: 'SAVE_TOAST_SOUND_STATE',
+      detail: payload,
+    });
+  }
+
+  public static clear() {
+    window.postMessage({
+      type: 'CLEAR_TOAST_SOUND_STATE',
+    });
+  }
+}
+
+export class SubscriptionsAmountStorage {
+  public static save(payload: StoredSubscriptionsAmount) {
+    window.postMessage({
+      type: 'SAVE_SUBSCRIPTIONS_AMOUNT',
+      detail: payload,
+    });
+  }
+
+  public static clear() {
+    window.postMessage({
+      type: 'CLEAR_SUBSCRIPTIONS_AMOUNT',
     });
   }
 }

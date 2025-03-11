@@ -1,22 +1,22 @@
+import { createConfig } from '@lifi/sdk';
+import dotenv from 'dotenv';
 import express, { Request, Response } from 'express';
-import { validateWebhookSignature } from './utils/webhookUtils';
+import http from 'http';
+import { join } from 'path';
+import { Server as SocketIOServer } from 'socket.io';
+import { dataSource } from './db';
+import defaultRoutes from './routes';
+import authRoutes from './routes/auth';
+import subscriptionsRoutes from './routes/subscribtions';
+import solanaRoutes from './routes/solana';
+import { connectedClients } from './services/scheduler';
+import { getSigningKey } from './services/subscriptionManager';
 import {
   heliusWebhookHandler,
   webhookHandler,
 } from './services/webhookHandler';
-import dotenv from 'dotenv';
-import { dataSource } from './db';
-import http from 'http';
-import { Server as SocketIOServer } from 'socket.io';
-import authRoutes from './routes/auth';
-import defaultRoutes from './routes';
-import subscriptionsRoutes from './routes/subscribtions';
-import solanaRoutes from './routes/solana';
-import { getSigningKey } from './services/subscriptionManager';
-import { join } from 'path';
 import { mode } from './utils/mode';
-import { createConfig } from '@lifi/sdk';
-import { connectedClients } from './services/scheduler';
+import { validateWebhookSignature } from './utils/webhookUtils';
 
 dotenv.config(
   mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },

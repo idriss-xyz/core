@@ -32,6 +32,8 @@ type ProductSectionProperties = {
       animationEndIndex: number;
       animationDirection: 'forward' | 'backward';
       animationImages: string[];
+      animationFps?: number;
+      placeholderImage: string;
     }
   | {
       animated: false;
@@ -174,9 +176,11 @@ export const ProductSection = ({
               <ImageSequencer
                 infinite={false}
                 images={properties.animationImages}
+                fps={properties.animationFps}
                 direction={properties.animationDirection}
                 startIndex={properties.animationStartIndex}
                 endIndex={properties.animationEndIndex}
+                placeholderImage={properties.placeholderImage}
                 className={classes(
                   'bottom-0 right-0 top-1/2 z-0',
                   'lg:absolute lg:top-[10px] lg:max-w-[45%]',

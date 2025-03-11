@@ -3,8 +3,9 @@ import { Form as DesignSystemForm } from '@idriss-xyz/ui/form';
 import { ReactNode, useCallback, useRef } from 'react';
 import { Button } from '@idriss-xyz/ui/button';
 import { classes } from '@idriss-xyz/ui/utils';
+import { ChainToken } from '@idriss-xyz/constants';
 
-import { ChainSelect, ChainToken, TokenSelect } from 'shared/web3';
+import { ChainSelect, TokenSelect } from 'shared/web3';
 
 import { SendFormValues } from '../../types';
 

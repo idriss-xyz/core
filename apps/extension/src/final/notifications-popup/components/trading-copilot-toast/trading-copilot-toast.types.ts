@@ -1,4 +1,4 @@
-import { SwapData, SwapDataToken } from 'application/trading-copilot';
+import { SwapData,SwapDataToken } from 'application/trading-copilot';
 
 export interface Properties {
   toast: SwapData;

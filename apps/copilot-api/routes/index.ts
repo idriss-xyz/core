@@ -1,17 +1,27 @@
 import express from 'express';
-import { getQuote } from '@lifi/sdk';
-import { Connection } from '@solana/web3.js';
+import rateLimit from 'express-rate-limit';
+import { testSwapData } from '../constants';
+import { verifyToken } from '../middleware/auth.middleware';
 import { throwInternalError } from '../middleware/error.middleware';
+import { getQuoteData, getStats, getTopAddresses } from '../services';
+import { connectedClients } from '../services/scheduler';
 import {
   subscribeAddress,
   unsubscribeAddress,
 } from '../services/subscriptionManager';
-import { verifyToken } from '../middleware/auth.middleware';
-import { connectedClients } from '../services/scheduler';
-import { dataSource } from '../db';
-import { SubscriptionsEntity } from '../entities/subscribtions.entity';
+import {
+  GetQuoteDataResponseInterface,
+  StatsResponseInterface,
+  TopAddressesResponseInterface,
+} from '../types';
 
-const subscriptionsRepo = dataSource.getRepository(SubscriptionsEntity);
+const requestLimitation = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 10,
+  message: 'Too many requests, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 const router = express.Router();
 
@@ -62,33 +72,16 @@ router.post('/unsubscribe', verifyToken(), async (req, res) => {
 });
 
 router.get('/test-swap/:subscriberId', async (req, res) => {
-  const { subscriberId } = req.params || {};
+  const { subscriberId } = req.params;
+  const { secret } = req.query;
 
-  const swapData = {
-    transactionHash:
-      '0xcbe526713e8c2095369191287c1fd4c1832716a55abe0b58db7ee91bebe21542',
-    from: '0x4a3755eb99ae8b22aafb8f16f0c51cf68eb60b85',
-    to: '0x1231deb6f5749ef6ce6943a275a1d3e7486f4eae',
-    tokenIn: {
-      address: '0x4ed4e862860bed51a9570b96d89af5e1b0efefed',
-      symbol: 'DEGEN',
-      amount: 357.09,
-      decimals: 18,
-      network: 'BASE',
-    },
-    tokenOut: {
-      address: '0x4200000000000000000000000000000000000006',
-      symbol: 'WETH',
-      amount: 0.001,
-      decimals: 18,
-      network: 'BASE',
-    },
-    timestamp: '2024-10-28T16:13:17.698Z',
-    isComplete: true,
-  };
+  if (secret !== process.env.API_SECRET) {
+    res.status(401).json({ error: 'Unauthorized' });
+    return;
+  }
 
   // Validate swapData here if necessary
-  if (!swapData || !swapData.isComplete) {
+  if (!testSwapData || !testSwapData.isComplete) {
     res.status(400).json({ error: 'Invalid swap data' });
     return;
   }
@@ -96,7 +89,7 @@ router.get('/test-swap/:subscriberId', async (req, res) => {
   try {
     const clientSocket = connectedClients.get(subscriberId);
     if (clientSocket) {
-      clientSocket.emit('swapEvent', swapData);
+      clientSocket.emit('swapEvent', testSwapData);
     }
 
     res.status(200).json({ message: `Swap event sent to ${subscriberId}` });
@@ -105,7 +98,7 @@ router.get('/test-swap/:subscriberId', async (req, res) => {
   }
 });
 
-router.post('/get-quote', async (req, res) => {
+router.post('/get-quote', requestLimitation, async (req, res) => {
   const {
     fromAddress,
     originChain,
@@ -130,24 +123,14 @@ router.post('/get-quote', async (req, res) => {
   }
 
   try {
-    const quote = await getQuote({
+    const quoteResult: GetQuoteDataResponseInterface = await getQuoteData({
+      amount,
       fromAddress,
-      fromChain: originChain,
-      toChain: destinationChain,
-      fromToken: originToken,
-      toToken: destinationToken,
-      fromAmount: amount,
+      destinationChain,
+      destinationToken,
+      originChain,
+      originToken,
     });
-
-    const quoteResult = {
-      success: true,
-      estimate: quote.estimate,
-      type: quote.type, // for debugging purposes
-      tool: quote.tool, // for debugging purposes
-      includedSteps: quote.includedSteps, // for debugging purposes
-      transactionData: quote.transactionRequest,
-    };
-
     res.status(200).json(quoteResult);
   } catch (err) {
     res.status(500).json({ error: err });
@@ -161,14 +144,9 @@ router.get('/top-addresses', async (req, res) => {
     return;
   }
 
-  const data = await subscriptionsRepo
-    .createQueryBuilder()
-    .select(['address', 'CAST(COUNT(subscriber_id) AS INTEGER) as count'])
-    .groupBy('address')
-    .orderBy('count', 'DESC')
-    .limit(10)
-    .getRawMany();
-  res.status(200).json(data);
+  const data: TopAddressesResponseInterface[] = await getTopAddresses();
+  const stats: StatsResponseInterface = await getStats();
+  res.status(200).json({ stats, 'top-subscribed-addresses': data });
 });
 
 export default router;

@@ -1,11 +1,13 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { isAddress } from 'viem';
+import { Link } from '@idriss-xyz/ui/link';
+import { VAULT_LINK } from '@idriss-xyz/constants';
 
-import { useWallet } from 'shared/extension';
 import { useCommandMutation } from 'shared/messaging';
 import { ErrorMessage } from 'shared/ui';
-import { isSolanaAddress } from 'shared/utils';
+import { isFarcasterName } from 'shared/utils';
+import { isSolanaAddress } from '@idriss-xyz/utils';
 
 import {
   GetEnsAddressCommand,
@@ -15,71 +17,52 @@ import {
 import { Properties, FormValues } from './subscription-form.types';
 
 const EMPTY_FORM: FormValues = {
-  subscriptionDetails: '',
+  subscription: '',
 };
 
-export const SubscriptionForm = ({
-  onSubmit,
-  subscriptionsAmount,
-}: Properties) => {
-  const { wallet } = useWallet();
-
-  const [showError, setShowError] = useState(false);
-
-  const form = useForm<FormValues>({
-    defaultValues: EMPTY_FORM,
-  });
-
-  const subscriptionLimit = 10;
+export const SubscriptionForm = ({ onSubmit, canSubscribe }: Properties) => {
+  const [showError, setShowError] = useState<boolean>();
 
   const getEnsAddressMutation = useCommandMutation(GetEnsAddressCommand);
   const getFarcasterAddressMutation = useCommandMutation(
     GetFarcasterAddressCommand,
   );
 
-  useEffect(() => {
-    setTimeout(() => {
-      setShowError(false);
-    }, 3500);
-  }, [showError]);
+  const form = useForm<FormValues>({
+    defaultValues: EMPTY_FORM,
+  });
 
   const addSubscriber: SubmitHandler<FormValues> = useCallback(
     async (data) => {
-      if (Number(subscriptionsAmount) >= subscriptionLimit) {
-        form.reset(EMPTY_FORM);
+      if (!canSubscribe) {
         setShowError(true);
-        return;
-      }
-      const hexPattern = /^0x[\dA-Fa-f]+$/;
-      const farcasterPattern = /^[^.]+$/;
-      const isHex = hexPattern.test(data.subscriptionDetails);
-      const isFarcasterName = farcasterPattern.test(data.subscriptionDetails);
 
-      if (!wallet) {
-        return;
-      }
-      let chainType: 'EVM' | 'SOLANA' = 'EVM';
-
-      if (isHex) {
-        if (!isAddress(data.subscriptionDetails)) {
-          // TODO: Move validation to input error message
-          console.error('Not an address');
-          return;
-        }
-        await onSubmit(data.subscriptionDetails, undefined, chainType);
         form.reset(EMPTY_FORM);
-        return;
-      }
-      if (isSolanaAddress(data.subscriptionDetails)) {
-        chainType = 'SOLANA';
-        await onSubmit(data.subscriptionDetails, undefined, chainType);
-        form.reset(EMPTY_FORM);
+
+        setTimeout(() => {
+          setShowError(false);
+        }, 7000);
+
         return;
       }
 
-      if (isFarcasterName) {
+      if (isSolanaAddress(data.subscription)) {
+        await onSubmit({ address: data.subscription, chainType: 'SOLANA' });
+        form.reset(EMPTY_FORM);
+
+        return;
+      }
+
+      if (isAddress(data.subscription)) {
+        await onSubmit({ address: data.subscription, chainType: 'EVM' });
+        form.reset(EMPTY_FORM);
+
+        return;
+      }
+
+      if (isFarcasterName(data.subscription)) {
         const farcasterDetails = await getFarcasterAddressMutation.mutateAsync({
-          name: data.subscriptionDetails,
+          name: data.subscription,
         });
 
         if (!farcasterDetails) {
@@ -87,74 +70,82 @@ export const SubscriptionForm = ({
         }
 
         if (farcasterDetails.addressSolana) {
-          chainType = 'SOLANA';
-          await onSubmit(
-            farcasterDetails.addressSolana,
-            farcasterDetails.fid,
-            chainType,
-          );
+          await onSubmit({
+            address: farcasterDetails.addressSolana,
+            fid: farcasterDetails.fid,
+            chainType: 'SOLANA',
+          });
         }
 
         if (farcasterDetails.address) {
-          chainType = 'EVM';
-          await onSubmit(
-            farcasterDetails.address,
-            farcasterDetails.fid,
-            chainType,
-          );
+          await onSubmit({
+            address: farcasterDetails.address,
+            fid: farcasterDetails.fid,
+            chainType: 'EVM',
+          });
         }
 
         form.reset(EMPTY_FORM);
+
         return;
       }
 
-      const address = await getEnsAddressMutation.mutateAsync({
-        ensName: data.subscriptionDetails,
+      const ensAddress = await getEnsAddressMutation.mutateAsync({
+        ensName: data.subscription,
       });
 
-      if (!address) {
+      if (!ensAddress) {
         return;
       }
-      await onSubmit(address, undefined, chainType);
+
+      await onSubmit({ address: ensAddress, chainType: 'EVM' });
       form.reset(EMPTY_FORM);
     },
     [
       form,
+      onSubmit,
+      canSubscribe,
       getEnsAddressMutation,
       getFarcasterAddressMutation,
-      onSubmit,
-      wallet,
-      subscriptionsAmount,
     ],
   );
 
   return (
     <form className="pr-4" onSubmit={form.handleSubmit(addSubscriber)}>
       <label
-        htmlFor="subscriptionDetails"
+        htmlFor="subscription"
         className="block text-label4 text-neutralGreen-700"
       >
         Subscribe to wallet
       </label>
       <Controller
+        name="subscription"
         control={form.control}
-        name="subscriptionDetails"
         render={({ field }) => {
           return (
             <input
               {...field}
               type="text"
-              id="subscriptionDetails"
-              className="mt-1 block w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-black shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+              id="subscription"
+              disabled={showError}
               placeholder="e.g., vitalik.eth"
+              className="mt-1 block w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-black shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
             />
           );
         }}
       />
       {showError && (
         <ErrorMessage className="mt-1">
-          Maximum 10 subscriptions reached. Lock $IDRISS to access premium
-          features (coming soon).
+          Maximum subscriptions reached.{' '}
+          <Link
+            size="s"
+            isExternal
+            href={VAULT_LINK}
+            className="border-none px-0 text-sm text-[#ef4444] underline lg:text-sm"
+          >
+            Lock $IDRISS
+          </Link>{' '}
+          to access premium.
         </ErrorMessage>
       )}
     </form>

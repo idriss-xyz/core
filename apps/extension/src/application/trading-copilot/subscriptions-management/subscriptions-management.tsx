@@ -1,45 +1,23 @@
 import { Button } from '@idriss-xyz/ui/button';
-import { useEffect } from 'react';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
 
-import { useWallet, useAuthToken } from 'shared/extension';
-import {
-  onWindowMessage,
-  TAB_CHANGED,
-  useCommandMutation,
-  useCommandQuery,
-} from 'shared/messaging';
+import { useWallet } from 'shared/extension';
 import { Empty } from 'shared/ui';
-import { isSolanaAddress } from 'shared/utils';
 
-import { useLoginViaSiwe } from '../hooks';
-import {
-  AddTradingCopilotSubscriptionCommand,
-  GetTradingCopilotSubscriptionsCommand,
-  RemoveTradingCopilotSubscriptionCommand,
-} from '../commands';
-import { SubscriptionRequest } from '../types';
+import { SubscribePayload, UnsubscribePayload } from '../types';
+import { useSubscriptions } from '../hooks';
 
 import { SubscriptionForm, SubscriptionsList } from './components';
-import {
-  Properties,
-  ContentProperties,
-} from './subscriptions-management.types';
+import { ContentProperties } from './subscriptions-management.types';
 
-export const SubscriptionsManagement = ({
-  isTabChangedListenerAdded,
-}: Properties) => {
+export const SubscriptionsManagement = () => {
   const { wallet, isConnectionModalOpened, openConnectionModal } = useWallet();
 
   return (
     <>
       {wallet ? (
-        <SubscriptionsManagementContent
-          wallet={wallet}
-          subscriberId={wallet.account}
-          isTabChangedListenerAdded={isTabChangedListenerAdded}
-        />
+        <SubscriptionsManagementContent wallet={wallet} />
       ) : (
         <>
           <Empty
@@ -47,10 +25,10 @@ export const SubscriptionsManagement = ({
             className="mt-10"
           />
           <Button
-            intent="primary"
             size="medium"
-            onClick={openConnectionModal}
+            intent="primary"
             className="mx-auto mt-10"
+            onClick={openConnectionModal}
             loading={isConnectionModalOpened}
           >
             LOG IN
@@ -84,124 +62,33 @@ export const SubscriptionsManagement = ({
   );
 };
 
-const SubscriptionsManagementContent = ({
-  subscriberId,
-  isTabChangedListenerAdded,
-  wallet,
-}: ContentProperties) => {
-  const siwe = useLoginViaSiwe();
-  const { getAuthToken } = useAuthToken();
-
-  const subscriptionsQuery = useCommandQuery({
-    command: new GetTradingCopilotSubscriptionsCommand({
-      subscriberId,
-    }),
-    staleTime: Number.POSITIVE_INFINITY,
-  });
-
-  const subscribe = useCommandMutation(AddTradingCopilotSubscriptionCommand);
-  const unsubscribe = useCommandMutation(
-    RemoveTradingCopilotSubscriptionCommand,
-  );
-
-  useEffect(() => {
-    if (!isTabChangedListenerAdded.current) {
-      const handleTabChange = async () => {
-        await subscriptionsQuery.refetch();
-      };
-
-      onWindowMessage(TAB_CHANGED, handleTabChange);
-      isTabChangedListenerAdded.current = true;
-    }
-  }, [isTabChangedListenerAdded, subscriptionsQuery]);
-
-  const handleSubscribe = async (
-    address: SubscriptionRequest['subscription']['address'],
-    fid: SubscriptionRequest['subscription']['fid'],
-    chainType?: 'EVM' | 'SOLANA',
-  ) => {
-    const siweLoggedIn = await siwe.loggedIn();
-
-    if (!siweLoggedIn) {
-      await siwe.login(wallet);
-    }
-
-    const authToken = await getAuthToken();
-
-    await subscribe.mutateAsync({
-      subscription: { address, fid, subscriberId, chainType },
-      authToken: authToken ?? '',
+const SubscriptionsManagementContent = ({ wallet }: ContentProperties) => {
+  const { subscriptions, subscribe, unsubscribe, canSubscribe } =
+    useSubscriptions({
+      wallet,
+      addTabListener: true,
     });
-    void subscriptionsQuery.refetch();
+
+  const handleUnsubscribe = (payload: UnsubscribePayload) => {
+    return unsubscribe.use(payload);
   };
 
-  const handleUnsubscribe = async (
-    address: SubscriptionRequest['subscription']['address'],
-    fid: SubscriptionRequest['subscription']['fid'],
-  ) => {
-    const siweLoggedIn = await siwe.loggedIn();
-
-    if (!siweLoggedIn) {
-      await siwe.login(wallet);
-    }
-
-    const authToken = await getAuthToken();
-
-    let chainType: 'SOLANA' | 'EVM' = 'EVM';
-    if (isSolanaAddress(address)) {
-      chainType = 'SOLANA';
-    }
-
-    if (fid !== null && fid !== undefined) {
-      const subscriptionsToRemove = subscriptionsQuery.data?.details.filter(
-        (s) => {
-          return s.fid === fid;
-        },
-      );
-
-      if (subscriptionsToRemove && subscriptionsToRemove.length > 0) {
-        await Promise.all(
-          subscriptionsToRemove.map((s) => {
-            const chainTypeForS: 'SOLANA' | 'EVM' = isSolanaAddress(s.address)
-              ? 'SOLANA'
-              : 'EVM';
-            return unsubscribe.mutateAsync({
-              subscription: {
-                address: s.address,
-                subscriberId,
-                chainType: chainTypeForS,
-              },
-              authToken: authToken ?? '',
-            });
-          }),
-        );
-      }
-    } else {
-      await unsubscribe.mutateAsync({
-        subscription: { address, subscriberId, chainType },
-        authToken: authToken ?? '',
-      });
-    }
-
-    void subscriptionsQuery.refetch();
+  const handleSubscribe = (payload: SubscribePayload) => {
+    return subscribe.use(payload);
   };
 
   return (
     <>
       <SubscriptionForm
         onSubmit={handleSubscribe}
-        subscriptionsAmount={subscriptionsQuery?.data?.details.length}
+        canSubscribe={canSubscribe}
       />
       <SubscriptionsList
-        className="mt-6 flex h-full flex-col overflow-hidden"
-        subscriptions={subscriptionsQuery.data}
-        subscriptionsLoading={subscriptionsQuery.isLoading}
-        subscriptionsUpdatePending={
-          subscribe.isPending ||
-          unsubscribe.isPending ||
-          subscriptionsQuery.isRefetching
-        }
         onRemove={handleUnsubscribe}
+        subscriptions={subscriptions.data}
+        subscriptionsAmount={subscriptions.amount}
+        subscriptionsLoading={subscriptions.isSending}
+        className="mt-6 flex h-full flex-col overflow-hidden"
       />
     </>
   );

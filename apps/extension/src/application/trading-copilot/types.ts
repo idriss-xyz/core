@@ -1,22 +1,41 @@
-import { CHAIN, Hex } from 'shared/web3';
+import { Hex } from 'viem';
 
-export type SubscriptionRequest = {
+import { CHAIN } from 'shared/web3';
+
+export interface SubscribePayload {
+  address: string;
+  chainType: 'EVM' | 'SOLANA';
+  fid?: number;
+}
+
+export type SubscribeCommandPayload = {
   subscription: {
     subscriberId: string;
-    fid?: number;
-    address: string;
-    chainType?: 'EVM' | 'SOLANA';
-  };
+  } & SubscribePayload;
   authToken: string;
+};
+
+export type UnsubscribePayload = {
+  address: string;
+  chainType: 'EVM' | 'SOLANA';
+  fid?: number;
+};
+
+export type UnsubscribeCommandPayload = {
+  subscription: {
+    subscriberId: string;
+  } & UnsubscribePayload;
+  authToken: string;
+};
+
+export type SubscriptionsPayload = {
+  subscriberId: string;
 };
 
 export type SubscriptionResponse = {
   address: Hex;
+  createdAt: number;
   fid?: number;
-};
-
-export type SubscriptionsRequest = {
-  subscriberId: string;
 };
 
 export type SubscriptionsResponse = {
@@ -24,14 +43,14 @@ export type SubscriptionsResponse = {
   details: SubscriptionResponse[];
 };
 
-export type FarcasterAddressRequest = {
+export type FarcasterAddressPayload = {
   name: string;
 };
 
 export type FarcasterAddressResponse = {
   fid: number;
-  address: string | undefined;
-  addressSolana: string | undefined;
+  address: string;
+  addressSolana: string;
 } | null;
 
 export type FarcasterTransferResponse = {
@@ -61,25 +80,27 @@ export type FarcasterConnectedAddressesResponse = {
   };
 };
 
-export type FarcasterUserRequest = {
+export type FarcasterUserPayload = {
   id: number;
+};
+
+export type FarcasterUserDetails = {
+  fid: number;
+  displayName: string;
+  pfp: {
+    url: string;
+  };
 };
 
 // We can expand those types, currently we added only used ones
 export type FarcasterUserResponse = {
   result: {
-    user: {
-      fid: number;
-      displayName: string;
-      pfp: {
-        url: string;
-      };
-    };
+    user: FarcasterUserDetails;
   };
 };
 
 export type SwapDataToken = {
-  address: string;
+  address: Hex;
   symbol: string;
   amount: number;
   decimals: number;
@@ -213,7 +234,7 @@ export interface FormValues {
   amount: string;
 }
 
-export type SiweMessageRequest = {
+export type SiweMessagePayload = {
   walletAddress: Hex;
   chainId: number;
   domain: string;
@@ -224,7 +245,7 @@ export type SiweMessageResponse = {
   message: string;
 };
 
-export type VerifySiweSignatureRequest = {
+export type VerifySiweSignaturePayload = {
   walletAddress: Hex;
   message: string;
   signature: Hex;
@@ -234,11 +255,6 @@ export type VerifySiweSignatureResponse = {
   token: string;
 };
 
-export type VerifyAuthTokenPayload = {
-  token: string;
-};
-
-// TODO: Correcly type this
 export type SendSolanaTxPayload = {
   base64SerializedTx: string;
 };

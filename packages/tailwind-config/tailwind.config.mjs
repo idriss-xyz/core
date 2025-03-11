@@ -123,10 +123,11 @@ export default {
         1: '1',
         topBar: '10',
         dialog: '20',
+        alert: '99999',
         notification: '99999',
         extensionPopup: '100000',
         portal: '100001',
-        scrollbar: '100010'
+        scrollbar: '100010',
       },
       fontFamily: {
         sans: ['var(--font-aeonikpro)'],
@@ -278,8 +279,10 @@ export default {
         ],
       },
       animation: {
-        marquee: 'marquee 35s linear infinite',
-        marquee2: 'marquee2 35s linear infinite',
+        'collapsible-slide-down': 'collapsibleSlideDown 200ms ease-out',
+        'collapsible-slide-up': 'collapsibleSlideUp 200ms ease-out',
+        'marquee': 'marquee 35s linear infinite',
+        'marquee2': 'marquee2 35s linear infinite',
         'fade-in': 'fade-in 200ms ease-out',
         'fade-out': 'fade-out 200ms ease-in',
         'slide-in-from-top': 'slide-in-from-top 200ms ease-out',
@@ -288,28 +291,60 @@ export default {
         'slide-in-from-right': 'slide-in-from-right 200ms ease-out',
       },
       keyframes: {
-        marquee: {
+        'collapsibleSlideDown': {
+          '0%': { height: 0, opacity: 0 },
+          '90%': {
+            opacity: 0.7,
+          },
+          '100%': {
+            height: 'var(--radix-collapsible-content-height)',
+            opacity: 1,
+          },
+        },
+        'collapsibleSlideUp': {
+          '0%': {
+            height: 'var(--radix-collapsible-content-height)',
+            opacity: 1,
+          },
+          '10%': {
+            opacity: 0.5,
+          },
+          '100%': { height: 0, opacity: 0 },
+        },
+        'marquee': {
           '0%': { transform: 'translateX(0)' },
           '100%': { transform: 'translateX(-100%)' },
         },
-        marquee2: {
+        'marquee2': {
           '0%': { transform: 'translateX(100%)' },
           '100%': { transform: 'translateX(0%)' },
         },
-        swipeRight: {
+        'swipeRight': {
           '0%': { translate: '0 0' },
           '100%': { translate: '100% 0' },
         },
-        swipeLeft: {
+        'swipeLeft': {
           '0%': { translate: '100% 0' },
           '100%': { translate: '0 0' },
         },
         'fade-in': { '0%': { opacity: 0 }, '100%': { opacity: 1 } },
         'fade-out': { '0%': { opacity: 1 }, '100%': { opacity: 0 } },
-        'slide-in-from-top': { '0%': { transform: 'translateY(-4px)' }, '100%': { transform: 'translateY(0)' } },
-        'slide-in-from-bottom': { '0%': { transform: 'translateY(4px)' }, '100%': { transform: 'translateY(0)' } },
-        'slide-in-from-left': { '0%': { transform: 'translateX(-4px)' }, '100%': { transform: 'translateX(0)' } },
-        'slide-in-from-right': { '0%': { transform: 'translateX(4px)' }, '100%': { transform: 'translateX(0)' } },
+        'slide-in-from-top': {
+          '0%': { transform: 'translateY(-4px)' },
+          '100%': { transform: 'translateY(0)' },
+        },
+        'slide-in-from-bottom': {
+          '0%': { transform: 'translateY(4px)' },
+          '100%': { transform: 'translateY(0)' },
+        },
+        'slide-in-from-left': {
+          '0%': { transform: 'translateX(-4px)' },
+          '100%': { transform: 'translateX(0)' },
+        },
+        'slide-in-from-right': {
+          '0%': { transform: 'translateX(4px)' },
+          '100%': { transform: 'translateX(0)' },
+        },
       },
     },
   },
@@ -329,6 +364,24 @@ export default {
             'background-image':
               'linear-gradient(160deg, theme(colors.mint.700) 0%, theme(colors.mint.700) 20%, theme(colors.neutralGreen.900) 45%, theme(colors.mint.700) 60%, theme(colors.mint.700) 100%)',
           },
+        },
+        '.gradient-text-2': {
+          'background-image':
+            'linear-gradient(205.71deg, #022B1E 18.92%, #079165 78.9%)',
+          'background-clip': 'text',
+          'color': 'transparent',
+          'position': 'relative',
+        },
+        '.gradient-text-2::after': {
+          'display': 'block',
+          'content': "''",
+          'background': 'radial-gradient(65.65% 168.51% at 47.77% 27.64%, #000A05 0%, #176410 100%)',
+          'width': '100%',
+          'height': '100%',
+          'mix-blend-mode': 'color',
+          'position': 'absolute',
+          'top': '0',
+          'left': '0',
         },
         '.side-blur': {
           'mask-image':

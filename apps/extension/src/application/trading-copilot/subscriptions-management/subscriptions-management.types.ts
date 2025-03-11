@@ -1,12 +1,5 @@
-import { MutableRefObject } from 'react';
+import { Wallet } from '@idriss-xyz/wallet-connect';
 
-import { Wallet } from 'shared/web3';
-
-export interface Properties {
-  isTabChangedListenerAdded: MutableRefObject<boolean>;
-}
-
-export interface ContentProperties extends Properties {
-  subscriberId: string;
+export interface ContentProperties {
   wallet: Wallet;
 }

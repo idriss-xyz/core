@@ -1,5 +1,7 @@
+import { StoredWallet, StoredSolanaWallet } from '@idriss-xyz/wallet-connect';
+
 import { DEFAULT_EXTENSION_SETTINGS, SETTINGS_STORAGE_KEY } from './constants';
-import { ExtensionSettings, StoredWallet, StoredSolanaWallet } from './types';
+import { ExtensionSettings } from './types';
 
 export const ExtensionSettingsManager = {
   getAllSettings(): Promise<ExtensionSettings> {

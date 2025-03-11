@@ -1,16 +1,24 @@
 import * as RadixForm from '@radix-ui/react-form';
-import { ComponentProps, ForwardedRef, forwardRef } from 'react';
+import { ComponentProps, ForwardedRef, forwardRef, ReactNode } from 'react';
 
 import { classes } from '../../utils';
 import { Icon } from '../icon';
 import { Input } from '../input';
 import { NumericInput } from '../numeric-input';
 
-type Properties = Omit<ComponentProps<typeof Input>, 'onChange'> & {
+type InputProperties = ComponentProps<typeof Input>;
+type InputUnion = InputProperties extends infer T
+  ? T extends never
+    ? never
+    : Omit<T, 'onChange'>
+  : never;
+
+type Properties = InputUnion & {
   name: string;
-  label?: string;
+  label?: ReactNode;
   helperText?: string;
   numeric?: boolean;
+  decimalScale?: number;
   onChange: (value: string) => void;
 };
 
@@ -22,8 +30,9 @@ export const Field = forwardRef(
       helperText,
       className,
       numeric,
+      decimalScale,
       onChange,
-      ...inputProperties
+      ...inputProperties // Spread all Input props here
     }: Properties,
     reference: ForwardedRef<HTMLDivElement>,
   ) => {
@@ -37,14 +46,15 @@ export const Field = forwardRef(
         <RadixForm.Control asChild>
           {numeric ? (
             <NumericInput
-              {...inputProperties}
+              {...inputProperties} // Pass all Input props
+              decimalScale={decimalScale}
               onChange={(value) => {
                 onChange(value);
               }}
             />
           ) : (
             <Input
-              {...inputProperties}
+              {...inputProperties} // Pass all Input props
               onChange={(event) => {
                 onChange(event.target.value);
               }}

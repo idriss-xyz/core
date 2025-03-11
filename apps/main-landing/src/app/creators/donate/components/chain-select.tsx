@@ -1,7 +1,5 @@
 import { ReactNode, useMemo } from 'react';
-
-import { Chain } from '../types';
-import { CHAIN } from '../constants';
+import { CHAIN, Chain } from '@idriss-xyz/constants';
 
 import { Select, Option } from './select';
 
@@ -47,7 +45,6 @@ const optionsFrom = (
   return {
     label: chain.name,
     value: chain.id,
-    // eslint-disable-next-line @next/next/no-img-element
     prefix: <img src={chain.logo} className="size-6 rounded-full" alt="" />,
     suffix: renderSuffix?.(chain.id),
   };

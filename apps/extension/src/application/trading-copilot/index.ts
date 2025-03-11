@@ -7,15 +7,13 @@ export {
   GetSolanaBalanceCommand,
   GetTokensImageCommand,
   GetTokensListCommand,
-  AddTradingCopilotSubscriptionCommand,
-  GetTradingCopilotSubscriptionsCommand,
-  RemoveTradingCopilotSubscriptionCommand,
 } from './commands';
 export type {
   SwapData,
   SwapDataToken,
   FormValues,
-  SubscriptionRequest,
+  SubscribePayload,
+  UnsubscribePayload,
 } from './types';
 export { SubscriptionsManagement } from './subscriptions-management';
-export { useExchanger, useSolanaExchanger, useLoginViaSiwe } from './hooks';
+export { useExchanger, useSolanaExchanger, useLoginViaSiwe, useSubscriptions } from './hooks';

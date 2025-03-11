@@ -1,13 +1,21 @@
 import { Button } from '@idriss-xyz/ui/button';
 import { isAddress } from 'viem';
-
-import { Icon, PreloadedImage } from 'shared/ui';
+import { MutableRefObject, useRef } from 'react';
 import {
   getShortWalletHex,
-  TimeDifferenceCounter,
+  getTimeDifferenceString,
+  roundToSignificantFiguresForCopilotTrading,
   isSolanaAddress,
-} from 'shared/utils';
-import { roundToSignificantFiguresForCopilotTrading } from 'shared/web3';
+} from '@idriss-xyz/utils';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@idriss-xyz/ui/tooltip';
+
+import { Icon, PreloadedImage } from 'shared/ui';
+import { useTradingCopilot } from 'shared/extension';
 
 import { TokenIcon } from '../../utils';
 
@@ -21,6 +29,25 @@ export const TradingCopilotToast = ({
   tokenImage,
   tokenData,
 }: Properties) => {
+  const { toastSoundEnabled } = useTradingCopilot();
+  const playedTransactionHashes: MutableRefObject<Set<string>> = useRef(
+    new Set(),
+  );
+  const audioInstanceReference: MutableRefObject<HTMLAudioElement | null> =
+    useRef(null);
+  const lastPlayedTimestampReference: MutableRefObject<number | null> =
+    useRef(null);
+
+  if (toastSoundEnabled && toast.soundFile) {
+    playNotificationSound(
+      toast.transactionHash,
+      playedTransactionHashes,
+      audioInstanceReference,
+      lastPlayedTimestampReference,
+      toast.soundFile,
+    );
+  }
+
   const userName = ensName ?? toast.from;
 
   const { value: roundedNumber, index: zerosIndex } =
@@ -64,9 +91,35 @@ export const TradingCopilotToast = ({
           </span>
         </p>
         <div className="flex w-full justify-between">
-          <p className="text-body6 text-mint-700">
-            <TimeDifferenceCounter timestamp={toast.timestamp} text="ago" />
-          </p>
+          <TooltipProvider delayDuration={400}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <p className="w-fit text-body6 text-mint-700">
+                  {getTimeDifferenceString({
+                    text: 'ago',
+                    variant: 'short',
+                    timestamp: toast.timestamp,
+                  })}
+                </p>
+              </TooltipTrigger>
+
+              <TooltipContent className="z-notification w-fit bg-black text-white">
+                <p className="text-body6">
+                  {new Intl.DateTimeFormat('en-US', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false,
+                  })
+                    .format(new Date(toast.timestamp))
+                    .replaceAll('/', '-')}
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           <Button
             intent="primary"
             size="small"
@@ -81,4 +134,49 @@ export const TradingCopilotToast = ({
       </div>
     </div>
   );
+};
+
+const playNotificationSound = (
+  transactionHash: string,
+  playedTransactionHashes: MutableRefObject<Set<string>>,
+  audioInstanceReference: MutableRefObject<HTMLAudioElement | null>,
+  lastPlayedTimestampReference: MutableRefObject<number | null>,
+  soundFile?: string,
+) => {
+  try {
+    if (playedTransactionHashes.current.has(transactionHash)) {
+      return;
+    }
+
+    const now = Date.now();
+
+    if (
+      lastPlayedTimestampReference.current &&
+      now - lastPlayedTimestampReference.current < 1000
+    ) {
+      return;
+    }
+
+    if (
+      !audioInstanceReference.current ||
+      audioInstanceReference.current.ended ||
+      audioInstanceReference.current.paused
+    ) {
+      audioInstanceReference.current = new Audio(soundFile);
+      audioInstanceReference.current.addEventListener('ended', () => {
+        audioInstanceReference.current = null;
+      });
+    }
+
+    if (audioInstanceReference.current?.paused) {
+      audioInstanceReference.current.play().catch((error) => {
+        console.error('Failed to play notification sound:', error);
+      });
+    }
+
+    playedTransactionHashes.current.add(transactionHash);
+    lastPlayedTimestampReference.current = now;
+  } catch (error) {
+    console.error('Error while trying to play notification sound:', error);
+  }
 };

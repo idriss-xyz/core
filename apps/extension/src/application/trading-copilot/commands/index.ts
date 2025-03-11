@@ -15,6 +15,8 @@ import { GetTokensListCommand } from './get-tokens-list';
 import { GetTokensImageCommand } from './get-tokens-image';
 import { VerifyTokenCommand } from './verify-token';
 import { SendSolanaTransactionCommand } from './send-solana-transaction';
+import { GetStakedBalanceCommand } from './get-staked-balance';
+import { GetStakedBonusBalanceCommand } from './get-staked-bonus-balance';
 
 export const COMMAND_MAP = {
   [AddTradingCopilotSubscriptionCommand.name]:
@@ -37,8 +39,11 @@ export const COMMAND_MAP = {
   [GetTokensImageCommand.name]: GetTokensImageCommand,
   [VerifyTokenCommand.name]: VerifyTokenCommand,
   [SendSolanaTransactionCommand.name]: SendSolanaTransactionCommand,
+  [GetStakedBalanceCommand.name]: GetStakedBalanceCommand,
+  [GetStakedBonusBalanceCommand.name]: GetStakedBonusBalanceCommand,
 };
 
+export { PREMIUM_THRESHOLD, FREE_SUBSCRIPTIONS } from './constants';
 export { AddTradingCopilotSubscriptionCommand } from './add-trading-copilot-subscription';
 export { GetTradingCopilotSubscriptionsCommand } from './get-trading-copilot-subscriptions';
 export { RemoveTradingCopilotSubscriptionCommand } from './remove-trading-copilot-subscription';
@@ -56,3 +61,5 @@ export { GetTokensListCommand } from './get-tokens-list';
 export { GetTokensImageCommand } from './get-tokens-image';
 export { VerifyTokenCommand } from './verify-token';
 export { SendSolanaTransactionCommand } from './send-solana-transaction';
+export { GetStakedBalanceCommand } from './get-staked-balance';
+export { GetStakedBonusBalanceCommand } from './get-staked-bonus-balance';

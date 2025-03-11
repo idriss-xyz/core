@@ -1,8 +1,7 @@
-import { createPublicClient, http } from 'viem';
+import { createPublicClient, Hex, http } from 'viem';
 import { mainnet } from 'viem/chains';
 import { normalize } from 'viem/ens';
 
-import { Hex } from 'shared/web3';
 import {
   Command,
   FailureResult,
@@ -14,7 +13,9 @@ type Payload = {
   ensName: string;
 };
 
-export class GetEnsAddressCommand extends Command<Payload, Hex | null> {
+type Response = Hex | null;
+
+export class GetEnsAddressCommand extends Command<Payload, Response> {
   public readonly name = 'GetEnsAddressCommand' as const;
 
   constructor(public payload: Payload) {

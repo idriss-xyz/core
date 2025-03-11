@@ -22,7 +22,6 @@ import {
 
 export const ExtensionPopup = () => {
   const extensionPopup = useExtensionPopup();
-  const isTabChangedListenerAdded = useRef(false);
 
   if (!extensionPopup.isVisible) {
     return null;
@@ -57,11 +56,7 @@ export const ExtensionPopup = () => {
           <Route element={<TradingCopilotLayout />}>
             <Route
               path={POPUP_ROUTE.TRADING_COPILOT}
-              element={
-                <SubscriptionsManagement
-                  isTabChangedListenerAdded={isTabChangedListenerAdded}
-                />
-              }
+              element={<SubscriptionsManagement />}
             />
           </Route>
         </Route>

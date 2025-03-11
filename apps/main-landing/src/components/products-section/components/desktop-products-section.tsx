@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { useDebounce } from 'react-use';
+import { useDebounce, usePrevious } from 'react-use';
 import { classes } from '@idriss-xyz/ui/utils';
 
 import { ProductSection } from './product-section';
@@ -44,6 +44,7 @@ const circleImages = [...Array.from({ length: CIRCLE_IMAGES_COUNT }).keys()]
   })
   .reverse();
 
+const EXTENSION_CIRCLE_PLACEHOLDER = CIRCLE_IMAGES_BASE_NAME + '0150.webp';
 export const DesktopProductsSection = ({
   className,
   isFirstRender,
@@ -56,15 +57,17 @@ export const DesktopProductsSection = ({
   const [isTopOfContainerFullyVisible, setIsTopOfContainerFullyVisible] =
     useState(false);
   const [isContainerVisible, setIsContainerVisible] = useState(false);
+  const [isContainerFillingScreen, setIsContainerFillingScreen] =
+    useState(false);
   const windowHash =
     typeof window === 'undefined' ? '' : window.location.hash.slice(1);
   const [currentSectionIndex, setCurrentSectionIndex] = useState(
     (isFirstRender && getSectionNumberByName(windowHash)) ?? 0,
   );
-  const previousSectionIndex = useRef<number>(0);
 
   const [debouncedCurrentSectionIndex, setDebouncedCurrentSectionIndex] =
     useState(0);
+  const previousSectionIndex = usePrevious(debouncedCurrentSectionIndex);
 
   const [_] = useDebounce(
     () => {
@@ -83,20 +86,25 @@ export const DesktopProductsSection = ({
   }, []);
 
   const animationDirection = useMemo(() => {
-    if (previousSectionIndex.current === undefined) {
+    if (previousSectionIndex === undefined) {
       return 'forward';
     }
 
-    return previousSectionIndex.current < currentSectionIndex
-      ? 'forward'
-      : 'backward';
+    return previousSectionIndex < currentSectionIndex ? 'forward' : 'backward';
+  }, [currentSectionIndex, previousSectionIndex]);
+
+  const animationFps = useMemo(() => {
+    return previousSectionIndex !== undefined &&
+      Math.abs(currentSectionIndex - previousSectionIndex) > 1
+      ? 45
+      : 30;
   }, [currentSectionIndex, previousSectionIndex]);
 
   const animationStartIndex = useMemo(() => {
     const sectionIndex =
-      previousSectionIndex.current === undefined
+      previousSectionIndex === undefined
         ? 0
-        : Math.min(previousSectionIndex.current, currentSectionIndex);
+        : Math.min(previousSectionIndex, currentSectionIndex);
 
     switch (sectionIndex) {
       case 0: {
@@ -116,9 +124,9 @@ export const DesktopProductsSection = ({
 
   const animationEndIndex = useMemo(() => {
     const sectionIndex =
-      previousSectionIndex.current === undefined
+      previousSectionIndex === undefined
         ? currentSectionIndex
-        : Math.max(previousSectionIndex.current, currentSectionIndex);
+        : Math.max(previousSectionIndex, currentSectionIndex);
 
     switch (sectionIndex) {
       case 0: {
@@ -151,6 +159,7 @@ export const DesktopProductsSection = ({
     const containerObserver = new IntersectionObserver(
       ([entry]) => {
         setIsContainerVisible((entry?.intersectionRatio ?? 0) > 0.25);
+        setIsContainerFillingScreen((entry?.intersectionRatio ?? 0) > 0.32);
       },
       {
         threshold: Array.from({ length: 101 }, (_, index) => {
@@ -240,10 +249,34 @@ export const DesktopProductsSection = ({
   }, []);
 
   useEffect(() => {
-    if (currentSectionIndex !== previousSectionIndex.current) {
-      previousSectionIndex.current = currentSectionIndex;
+    let timeoutReference: NodeJS.Timeout;
+    const mainViewport = document.querySelector(
+      '#landing-page-scroll > [data-radix-scroll-area-viewport]',
+    ) as HTMLElement | undefined;
+
+    if (!isContainerFillingScreen && mainViewport) {
+      mainViewport.style.overflow = 'scroll';
+      return;
     }
-  }, [currentSectionIndex]);
+
+    if (currentSectionIndex !== previousSectionIndex) {
+      const mainViewport = document.querySelector(
+        '#landing-page-scroll > [data-radix-scroll-area-viewport]',
+      ) as HTMLElement | undefined;
+      if (mainViewport) {
+        mainViewport.style.overflow = 'hidden';
+        timeoutReference = setTimeout(() => {
+          mainViewport.style.overflow = 'scroll';
+        }, 1700);
+      }
+    }
+
+    return () => {
+      if (timeoutReference) {
+        clearTimeout(timeoutReference);
+      }
+    };
+  }, [currentSectionIndex, previousSectionIndex, isContainerFillingScreen]);
 
   return (
     <section>
@@ -269,6 +302,8 @@ export const DesktopProductsSection = ({
             animationStartIndex={animationStartIndex}
             animationEndIndex={animationEndIndex}
             animationImages={circleImages}
+            animationFps={animationFps}
+            placeholderImage={EXTENSION_CIRCLE_PLACEHOLDER}
           />
         </div>
         <div className="w-[0.5px]">

@@ -1,5 +1,3 @@
-import { Hex } from 'shared/web3';
-
 export type ExtensionSettings = Record<ExtensionSettingName, boolean>;
 
 export type ExtensionSettingName =
@@ -14,14 +12,8 @@ export type ExtensionSettingName =
   | 'trading-copilot-latest-transactions-enabled'
   | 'trading-copilot-notifications-enabled';
 
-export interface StoredWallet {
-  account: Hex;
-  providerRdns: string;
-}
-
-export interface StoredSolanaWallet {
-  account: string;
-  providerName: string;
-}
-
 export type StoredAuthToken = string | undefined;
+
+export type StoredToastSoundState = boolean | undefined;
+
+export type StoredSubscriptionsAmount = number | undefined;

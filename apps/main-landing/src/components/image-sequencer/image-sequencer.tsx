@@ -1,119 +1,203 @@
 'use client';
 /* eslint-disable @next/next/no-img-element */
 
-import { classes } from '@idriss-xyz/ui/utils';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-type Properties = {
-  images: string[];
-  className?: string;
-  direction?: 'forward' | 'backward';
-  infinite?: boolean;
-  startIndex?: number;
-  endIndex?: number;
-};
-
-const preloadImages = async (images: string[]) => {
-  return await Promise.all(
-    images.map((source) => {
-      return new Promise<HTMLImageElement>((resolve, reject) => {
-        const img = new Image();
-        img.src = source;
-        img.addEventListener('load', () => {
-          return resolve(img);
-        });
-        img.addEventListener('error', () => {
-          return reject(new Error('cannot preload image'));
-        });
-      });
-    }),
-  );
-};
+import {
+  SequencerProperties as SequencerProperties,
+  TextureData,
+} from './types';
+import { initWebGL } from './web-gl-utils';
+import { useTextureLoader } from './use-texture-loader';
 
 export const ImageSequencer = ({
   images,
-  className,
+  placeholderImage,
+  width = 2000,
+  height = 2000,
+  fps = 30,
   direction = 'forward',
   infinite = true,
   startIndex = 0,
   endIndex = images.length - 1,
-}: Properties) => {
-  const [currentIndex, setCurrentIndex] = useState(startIndex);
-  const [loadedImages, setLoadedImages] = useState<HTMLImageElement[]>([]);
-  const hasFirstImage = loadedImages.length > 0;
-  const isLoaded = loadedImages.length === images.length;
-  const intervalReference = useRef<NodeJS.Timeout | null>(null);
+  className = '',
+  onLoad,
+  onError,
+}: SequencerProperties) => {
+  const canvasReference = useRef<HTMLCanvasElement>(null);
+  const glReference = useRef<{
+    gl: WebGLRenderingContext | WebGL2RenderingContext;
+    program: WebGLProgram;
+    posBuffer: WebGLBuffer;
+  } | null>(null);
+  const currentIndexReference = useRef<number>(
+    Math.max(0, Math.min(startIndex, images.length - 1)),
+  );
+  const animationFrameReference = useRef<number>(0);
+  const previousTimeReference = useRef<number>(0);
+  const frameInterval = 1000 / fps;
+  const [glInitialized, setGlInitialized] = useState(false);
 
   useEffect(() => {
-    const run = async () => {
-      const [firstImage] = images;
-      const v = await preloadImages([firstImage!]);
-      setLoadedImages(v);
-    };
-    void run();
-  }, [images, direction]);
+    if (!canvasReference.current) {
+      return;
+    }
+    try {
+      glReference.current = initWebGL(canvasReference.current);
+      setGlInitialized(true);
+    } catch (error) {
+      onError?.(error as Error);
+    }
+  }, [onError]);
 
-  useEffect(() => {
-    if (isLoaded || !hasFirstImage) {
+  const { textures, placeholderTexture, isLoading } = useTextureLoader(
+    glReference.current?.gl ?? null,
+    images,
+    placeholderImage,
+    onError,
+  );
+
+  const updateQuadVertices = useCallback((textureData: TextureData) => {
+    const gl = glReference.current?.gl;
+    const posBuffer = glReference.current?.posBuffer;
+    const canvas = canvasReference.current;
+    if (!gl || !posBuffer || !canvas) return;
+
+    const cw = canvas.width;
+    const ch = canvas.height;
+    const iw = textureData.width;
+    const ih = textureData.height;
+    const scale = Math.min(cw / iw, ch / ih);
+    const drawW = iw * scale;
+    const drawH = ih * scale;
+    const offsetX = (cw - drawW) / 2;
+    const offsetY = (ch - drawH) / 2;
+
+    const left = (offsetX / cw) * 2 - 1;
+    const right = ((offsetX + drawW) / cw) * 2 - 1;
+    const top = 1 - (offsetY / ch) * 2;
+    const bottom = 1 - ((offsetY + drawH) / ch) * 2;
+
+    const vertices = new Float32Array([
+      left,
+      bottom,
+      right,
+      bottom,
+      left,
+      top,
+      right,
+      top,
+    ]);
+    gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
+    gl.bufferSubData(gl.ARRAY_BUFFER, 0, vertices);
+  }, []);
+
+  const drawFrame = useCallback(() => {
+    const gl = glReference.current?.gl;
+    if (!gl) {
       return;
     }
 
-    const run = async () => {
-      const [_firstImage, ...restImages] = images;
-      const v = await preloadImages(restImages);
-      setLoadedImages((previous) => {
-        return [...previous, ...v];
-      });
-    };
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
 
-    void run();
-  }, [hasFirstImage, images, isLoaded]);
-
-  useEffect(() => {
-    if (!isLoaded) {
+    const textureData = isLoading
+      ? placeholderTexture
+      : textures.get(currentIndexReference.current);
+    if (!textureData) {
       return;
     }
 
-    const frameInterval = 1000 / 30; // 30 FPS
+    updateQuadVertices(textureData);
+    gl.bindTexture(gl.TEXTURE_2D, textureData.texture);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+  }, [textures, isLoading, placeholderTexture, updateQuadVertices]);
 
-    intervalReference.current = setInterval(() => {
-      if (infinite) {
-        setCurrentIndex((previousIndex) => {
-          if (direction === 'forward') {
-            return (previousIndex + 1) % images.length;
-          } else {
-            return previousIndex > 0 ? previousIndex - 1 : images.length - 1;
-          }
-        });
-      } else {
-        setCurrentIndex((previousIndex) => {
-          if (direction === 'forward') {
-            return previousIndex < endIndex ? previousIndex + 1 : previousIndex;
-          } else {
-            return previousIndex > startIndex
-              ? previousIndex - 1
-              : previousIndex;
-          }
-        });
+  const updateIndex = useCallback(() => {
+    if (isLoading) {
+      return;
+    }
+    const current = currentIndexReference.current;
+    let next = current;
+    if (infinite) {
+      next =
+        direction === 'forward'
+          ? (current + 1) % images.length
+          : (current - 1 + images.length) % images.length;
+    } else {
+      next =
+        direction === 'forward'
+          ? Math.min(current + 1, endIndex)
+          : Math.max(current - 1, startIndex);
+    }
+    currentIndexReference.current = next;
+  }, [direction, images.length, infinite, startIndex, endIndex, isLoading]);
+
+  useEffect(() => {
+    if (!glInitialized || !placeholderTexture) {
+      return;
+    }
+
+    const animate = (time: number) => {
+      if (!previousTimeReference.current) {
+        previousTimeReference.current = time;
       }
-    }, frameInterval);
+      const delta = time - previousTimeReference.current;
+      if (delta >= frameInterval) {
+        updateIndex();
+        drawFrame();
+        previousTimeReference.current = time - (delta % frameInterval);
+      }
+      animationFrameReference.current = requestAnimationFrame(animate);
+    };
 
+    animationFrameReference.current = requestAnimationFrame(animate);
     return () => {
-      if (intervalReference.current) {
-        clearInterval(intervalReference.current);
-      }
+      return cancelAnimationFrame(animationFrameReference.current);
     };
-  }, [images.length, isLoaded, direction, endIndex, infinite, startIndex]);
+  }, [
+    glInitialized,
+    placeholderTexture,
+    frameInterval,
+    updateIndex,
+    drawFrame,
+  ]);
 
-  if (!hasFirstImage) {
+  useEffect(() => {
+    const gl = glReference.current?.gl;
+    const canvas = canvasReference.current;
+    if (!gl || !canvas) {
+      return;
+    }
+    const handleResize = () => {
+      canvas.width = width;
+      canvas.height = height;
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      drawFrame();
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => {
+      return window.removeEventListener('resize', handleResize);
+    };
+  }, [width, height, drawFrame]);
+
+  useEffect(() => {
+    if (!isLoading && onLoad) {
+      onLoad();
+    }
+  }, [isLoading, onLoad]);
+
+  if (images.length === 0) {
     return null;
   }
 
   return (
-    <img
-      src={isLoaded ? loadedImages[currentIndex]!.src : loadedImages[0]!.src}
-      className={classes('pointer-events-none', className)}
-      alt="Animated Sequence"
+    <canvas
+      ref={canvasReference}
+      width={width}
+      height={height}
+      className={className}
     />
   );
 };

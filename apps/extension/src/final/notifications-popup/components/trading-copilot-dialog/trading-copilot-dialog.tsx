@@ -7,6 +7,19 @@ import { formatEther, Hex, isAddress } from 'viem';
 import { useCallback } from 'react';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
+import {
+  formatBigNumber,
+  getShortWalletHex,
+  getTimeDifferenceString,
+  roundToSignificantFiguresForCopilotTrading,
+  isSolanaAddress,
+} from '@idriss-xyz/utils';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@idriss-xyz/ui/tooltip';
 
 import { useWallet, useSolanaWallet } from 'shared/extension';
 import { Closable, ErrorMessage, Icon, LazyImage } from 'shared/ui';
@@ -17,20 +30,10 @@ import {
   GetEnsNameCommand,
   GetQuoteCommand,
   useExchanger,
-  useLoginViaSiwe,
   useSolanaExchanger,
+  useLoginViaSiwe,
 } from 'application/trading-copilot';
-import {
-  getShortWalletHex,
-  isSolanaAddress,
-  TimeDifferenceCounter,
-} from 'shared/utils';
-import {
-  CHAIN,
-  formatBigNumber,
-  getWholeNumber,
-  roundToSignificantFiguresForCopilotTrading,
-} from 'shared/web3';
+import { CHAIN, getWholeNumber } from 'shared/web3';
 import { IdrissSend } from 'shared/idriss';
 
 import { TokenIcon } from '../../utils';
@@ -334,9 +337,35 @@ const TradingCopilotDialogContent = ({
               </span>
             </span>
           </p>
-          <p className="text-body6 text-mint-700">
-            <TimeDifferenceCounter timestamp={dialog.timestamp} text="ago" />
-          </p>
+          <TooltipProvider delayDuration={400}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <p className="w-fit text-body6 text-mint-700">
+                  {getTimeDifferenceString({
+                    text: 'ago',
+                    variant: 'short',
+                    timestamp: dialog.timestamp,
+                  })}
+                </p>
+              </TooltipTrigger>
+
+              <TooltipContent className="z-portal w-fit bg-black text-white">
+                <p className="text-body6">
+                  {new Intl.DateTimeFormat('en-US', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false,
+                  })
+                    .format(new Date(dialog.timestamp))
+                    .replaceAll('/', '-')}
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
       <form className="mt-1" onSubmit={handleSubmit(onSubmit)}>
@@ -365,7 +394,7 @@ const TradingCopilotDialogContent = ({
                   placeholder={getNativeCurrencySymbol(dialog.tokenIn.network)}
                   onChange={onChange}
                   decimalScale={5}
-                  className="ps-[60px] text-right"
+                  className="w-[358px] ps-[60px] text-right"
                 />
                 <div className="pointer-events-none absolute start-0 top-1/2 flex h-full w-12 -translate-y-1/2 items-center justify-center after:absolute after:right-0 after:top-1.5 after:h-[calc(100%_-_12px)] after:w-px after:bg-neutral-200">
                   <span className="flex size-6 items-center justify-center rounded-full bg-neutral-200">
@@ -390,7 +419,6 @@ const TradingCopilotDialogContent = ({
                 type="submit"
                 loading={siwe.isPending || exchanger.isSending}
                 disabled={
-                  // TODO: Uncomment this when we have a way to get the balance for Solana too
                   Number(watch('amount')) > Number(balance) ||
                   Number(watch('amount')) <= 0
                 }

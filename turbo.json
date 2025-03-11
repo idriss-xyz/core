@@ -11,10 +11,12 @@
         "!.next/cache/**"
       ],
       "env": [
-        "BASIC_AUTH_USER",
-        "BASIC_AUTH_PASSWORD",
         "ENVIRONMENT",
-        "RAILWAY_PUBLIC_DOMAIN"
+        "RAILWAY_PUBLIC_DOMAIN",
+        "DEV_LOGIN_PASSWORD",
+        "PUBLIC_ACCESS_ENABLED",
+        "CI",
+        "CREATOR_LINKS_SECRET"
       ]
     },
     "@idriss-xyz/main-landing#start": {
@@ -22,20 +24,24 @@
         "@idriss-xyz/main-landing#build"
       ],
       "env": [
-        "BASIC_AUTH_USER",
-        "BASIC_AUTH_PASSWORD",
         "ENVIRONMENT",
-        "RAILWAY_PUBLIC_DOMAIN"
+        "RAILWAY_PUBLIC_DOMAIN",
+        "DEV_LOGIN_PASSWORD",
+        "PUBLIC_ACCESS_ENABLED",
+        "CI",
+        "CREATOR_LINKS_SECRET"
       ]
     },
     "@idriss-xyz/main-landing#dev": {
       "cache": false,
       "persistent": true,
       "env": [
-        "BASIC_AUTH_USER",
-        "BASIC_AUTH_PASSWORD",
         "ENVIRONMENT",
-        "RAILWAY_PUBLIC_DOMAIN"
+        "RAILWAY_PUBLIC_DOMAIN",
+        "DEV_LOGIN_PASSWORD",
+        "PUBLIC_ACCESS_ENABLED",
+        "CI",
+        "CREATOR_LINKS_SECRET"
       ]
     },
     "@idriss-xyz/extension#dev": {
@@ -96,9 +102,30 @@
         "PORT",
         "HOST",
         "ALCHEMY_API_KEY",
+        "API_SECRET",
         "WEBHOOK_URL",
         "VIEM_TRANSPORTER_URL",
         "HELIUS_API_KEY"
+      ]
+    },
+    "@idriss-xyz/creator-api#dev": {
+      "cache": false,
+      "persistent": true,
+      "env": [
+        "PORT",
+        "HOST",
+        "ZAPPER_API_KEY",
+        "DATABASE_URL"
+      ]
+    },
+    "@idriss-xyz/creator-api#prod": {
+      "cache": true,
+      "persistent": true,
+      "env": [
+        "PORT",
+        "HOST",
+        "ZAPPER_API_KEY",
+        "DATABASE_URL"
       ]
     },
     "lint": {

@@ -8,7 +8,10 @@
     "format": "prettier --check --config ./prettier.config.mjs --ignore-path .prettierignore .",
     "format:fix": "prettier --write --config ./prettier.config.mjs --ignore-path .prettierignore .",
     "lint": "eslint --max-warnings=0",
-    "lint:fix": "eslint --max-warnings=0 --fix"
+    "lint:fix": "eslint --max-warnings=0 --fix",
+    "circular-dependencies": "depcruise --config .dependency-cruiser.cjs .",
+    "type-check": "tsc --noEmit",
+    "unused-exports": "./node_modules/.bin/ts-unused-exports ./tsconfig.json --ignoreFiles=.stories"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +23,7 @@
     "axios": "^1.7.7",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
+    "express-rate-limit": "^7.5.0",
     "jsonwebtoken": "^9.0.2",
     "knex": "^3.1.0",
     "pg": "^8.13.1",
@@ -36,9 +40,11 @@
     "@types/node": "^22.7.5",
     "@types/pg": "^8.11.10",
     "@types/uuid": "^10.0.0",
+    "dependency-cruiser": "^16.4.2",
     "eslint": "^8.57.0",
     "globals": "^15.14.0",
     "ts-node": "^10.9.2",
+    "ts-unused-exports": "^10.1.0",
     "typescript": "^5.6.3",
     "typescript-eslint": "^8.19.0"
   }

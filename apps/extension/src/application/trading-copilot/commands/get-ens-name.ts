@@ -1,20 +1,21 @@
-import { createPublicClient, http, isAddress } from 'viem';
+import { createPublicClient, Hex, http, isAddress } from 'viem';
 import { mainnet } from 'viem/chains';
 
-import { Hex } from 'shared/web3';
 import {
   Command,
   FailureResult,
   HandlerError,
   OkResult,
 } from 'shared/messaging';
-import { isSolanaAddress } from 'shared/utils';
+import { isSolanaAddress } from '@idriss-xyz/utils';
 
 type Payload = {
   address: Hex;
 };
 
-export class GetEnsNameCommand extends Command<Payload, string | null> {
+type Response = string | null;
+
+export class GetEnsNameCommand extends Command<Payload, Response> {
   public readonly name = 'GetEnsNameCommand' as const;
 
   constructor(public payload: Payload) {
@@ -23,6 +24,7 @@ export class GetEnsNameCommand extends Command<Payload, string | null> {
 
   async handle() {
     try {
+      // We son't resolve for solana names
       if (isSolanaAddress(this.payload.address)) {
         return new OkResult(this.payload.address);
       }

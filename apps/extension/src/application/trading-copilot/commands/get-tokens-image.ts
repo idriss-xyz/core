@@ -10,7 +10,9 @@ type Payload = {
   tokenURI: string;
 };
 
-export class GetTokensImageCommand extends Command<Payload, string> {
+type Response = string;
+
+export class GetTokensImageCommand extends Command<Payload, Response> {
   public readonly name = 'GetTokensImageCommand' as const;
 
   constructor(public payload: Payload) {
@@ -19,7 +21,7 @@ export class GetTokensImageCommand extends Command<Payload, string> {
 
   async handle() {
     try {
-      // Improvement: Add a timeout for long fetches "{ signal: AbortSignal.timeout(5000) }""
+      // TODO: Improvement: Add a timeout for long fetches "{ signal: AbortSignal.timeout(5000) }""
       const response = await fetch(this.payload.tokenURI);
 
       if (!response.ok) {

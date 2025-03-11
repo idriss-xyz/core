@@ -19,6 +19,12 @@ import {
   CircleUserRound,
   Trash2,
   GlobeIcon,
+  Vault,
+  ChartPie,
+  ArrowDownWideNarrow,
+  CalendarClock,
+  EllipsisVertical,
+  UserRound,
 } from 'lucide-react';
 
 import * as customIcons from './custom';
@@ -44,5 +50,11 @@ export const ICON = {
   CheckCircle2,
   CircleUserRound,
   GlobeIcon,
+  Vault,
+  ChartPie,
+  ArrowDownWideNarrow,
+  CalendarClock,
+  EllipsisVertical,
+  UserRound,
   ...customIcons,
 };

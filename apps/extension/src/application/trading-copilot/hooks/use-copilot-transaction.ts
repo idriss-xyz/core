@@ -1,25 +1,17 @@
 import { useMutation } from '@tanstack/react-query';
-import { VersionedTransaction } from '@solana/web3.js';
-import { SolanaWallet } from '@idriss-xyz/wallet-connect';
+import { Hex } from 'viem';
+import { getChainById } from '@idriss-xyz/utils';
+import { Wallet } from '@idriss-xyz/wallet-connect';
 
-import {
-  createWalletClient,
-  getChainById,
-  Hex,
-  TransactionRevertedError,
-  Wallet,
-} from 'shared/web3';
+import { createWalletClient, TransactionRevertedError } from 'shared/web3';
 import { useObservabilityScope } from 'shared/observability';
-import { useCommandMutation } from 'shared/messaging';
-
-import { SendSolanaTransactionCommand } from '../commands/';
 
 interface SwapProperties {
-  to: `0x${string}`;
+  data: Hex;
+  gas?: bigint;
   chain: number;
   value: bigint;
-  gas?: bigint;
-  data: Hex;
+  to: `0x${string}`;
 }
 
 interface Properties {
@@ -51,56 +43,6 @@ export const useCopilotTransaction = () => {
       }
 
       return { transactionHash };
-    },
-  });
-};
-
-interface SolanaCopilotProperties {
-  transactionData: SwapProperties;
-  wallet: SolanaWallet;
-}
-
-export const useCopilotSolanaTransaction = () => {
-  const sendTxMutation = useCommandMutation(SendSolanaTransactionCommand);
-  const observabilityScope = useObservabilityScope();
-
-  return useMutation({
-    mutationFn: async ({
-      transactionData,
-      wallet,
-    }: SolanaCopilotProperties) => {
-      try {
-        if (!wallet.provider.connected) {
-          await wallet.provider.connect();
-        }
-
-        const decodedTx = Buffer.from(
-          transactionData.data.toString(),
-          'base64',
-        );
-        const deserializedTx = VersionedTransaction.deserialize(
-          new Uint8Array(decodedTx),
-        );
-        const signedTransaction =
-          await wallet.provider.signTransaction?.(deserializedTx);
-        const serializedTx = signedTransaction?.serialize();
-
-        if (!serializedTx) {
-          throw new Error('Failed to sign transaction');
-        }
-
-        const base64SerializedTx = Buffer.from(serializedTx).toString('base64');
-        const response = await sendTxMutation.mutateAsync({
-          base64SerializedTx: base64SerializedTx,
-        });
-        const transactionHash = response.transactionHash;
-
-        return { transactionHash };
-      } catch (error) {
-        console.error('Error:', error);
-        observabilityScope.captureException(error);
-        throw error;
-      }
     },
   });
 };

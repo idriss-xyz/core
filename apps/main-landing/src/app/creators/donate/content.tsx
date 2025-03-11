@@ -4,7 +4,21 @@ import { Form } from '@idriss-xyz/ui/form';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { Button } from '@idriss-xyz/ui/button';
 import { Link } from '@idriss-xyz/ui/link';
-import { CREATORS_USER_GUIDE_LINK } from '@idriss-xyz/constants';
+import {
+  applyDecimalsToNumericString,
+  getTransactionUrl,
+  roundToSignificantFigures,
+} from '@idriss-xyz/utils';
+import {
+  CHAIN,
+  CHAIN_ID_TO_TOKENS,
+  CREATORS_USER_GUIDE_LINK,
+  TOKEN,
+  DEFAULT_ALLOWED_CHAINS_IDS,
+  Token,
+  hexSchema,
+  EMPTY_HEX,
+} from '@idriss-xyz/constants';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSearchParams } from 'next/navigation';
@@ -18,63 +32,30 @@ import { useAccount, useWalletClient } from 'wagmi';
 import { backgroundLines3 } from '@/assets';
 
 import { ChainSelect, TokenSelect } from './components';
-import {
-  CHAIN,
-  CHAIN_ID_TO_TOKENS,
-  DEFAULT_ALLOWED_CHAINS_IDS,
-  TOKEN,
-} from './constants';
-import {
-  createFormPayloadSchema,
-  FormPayload,
-  hexSchema,
-  SendPayload,
-} from './schema';
-import {
-  applyDecimalsToNumericString,
-  getSendFormDefaultValues,
-  getTransactionUrl,
-  roundToSignificantFigures,
-  validateAddressOrENS,
-} from './utils';
-import { Hex, Token } from './types';
+import { createFormPayloadSchema, FormPayload, SendPayload } from './schema';
+import { getSendFormDefaultValues } from './utils';
 import { useSender } from './hooks';
 
 const SEARCH_PARAMETER = {
   CREATOR_NAME: 'creatorName',
-  ADDRESS: 'address',
-  LEGACY_ADDRESS: 'streamerAddress',
   NETWORK: 'network',
   TOKEN: 'token',
 };
 
 type Properties = {
   className?: string;
+  validatedAddress?: string | null;
 };
 
 const baseClassName =
   'z-1 w-[440px] max-w-full rounded-xl bg-white px-4 pb-9 pt-6 flex flex-col items-center relative';
 
-export const Content = ({ className }: Properties) => {
+export const Content = ({ className, validatedAddress }: Properties) => {
   const { isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
   const { connectModalOpen, openConnectModal } = useConnectModal();
-  const [validatedAddress, setValidatedAddress] = useState<
-    string | null | undefined
-  >();
 
   const searchParameters = useSearchParams();
-  const addressFromParameters =
-    searchParameters.get(SEARCH_PARAMETER.ADDRESS) ??
-    searchParameters.get(SEARCH_PARAMETER.LEGACY_ADDRESS);
-
-  useEffect(() => {
-    const validateAddress = async () => {
-      const address = await validateAddressOrENS(addressFromParameters);
-      setValidatedAddress(address);
-    };
-    void validateAddress();
-  }, [addressFromParameters]);
 
   const addressValidationResult = hexSchema.safeParse(validatedAddress);
 
@@ -152,6 +133,12 @@ export const Content = ({ className }: Properties) => {
     resolver: zodResolver(createFormPayloadSchema(allowedChainsIds)),
   });
 
+  const { reset } = formMethods;
+
+  useEffect(() => {
+    reset(getSendFormDefaultValues(defaultChainId, selectedTokenSymbol));
+  }, [defaultChainId, selectedTokenSymbol, reset]);
+
   const [chainId, tokenSymbol, amount] = formMethods.watch([
     'chainId',
     'tokenSymbol',
@@ -200,10 +187,10 @@ export const Content = ({ className }: Properties) => {
       }
       const { chainId, tokenSymbol, ...rest } = payload;
       rest.message = ' ' + rest.message;
-      const address: Hex =
+      const address =
         CHAIN_ID_TO_TOKENS[chainId]?.find((token: Token) => {
           return token.symbol === tokenSymbol;
-        })?.address ?? '0x';
+        })?.address ?? EMPTY_HEX;
       const sendPayload: SendPayload = {
         ...rest,
         chainId,
@@ -228,6 +215,23 @@ export const Content = ({ className }: Properties) => {
       walletClient,
     ],
   );
+
+  useEffect(() => {
+    if (sender.isSuccess) {
+      try {
+        void fetch(
+          'https://core-production-a116.up.railway.app/push-donation',
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ address: validatedAddress }),
+          },
+        );
+      } catch {
+        //
+      }
+    }
+  }, [sender.isSuccess, validatedAddress]);
 
   if (validatedAddress !== undefined && addressValidationResult.error) {
     return (
@@ -262,7 +266,7 @@ export const Content = ({ className }: Properties) => {
   if (sender.isSuccess) {
     const transactionUrl = getTransactionUrl({
       chainId,
-      transactionHash: sender.data?.transactionHash ?? '0x',
+      transactionHash: sender.data?.transactionHash ?? EMPTY_HEX,
     });
 
     return (
@@ -297,7 +301,6 @@ export const Content = ({ className }: Properties) => {
       </div>
     );
   }
-
   return (
     <div className={classes(baseClassName, className)}>
       <link rel="preload" as="image" href={backgroundLines3.src} />
@@ -327,7 +330,6 @@ export const Content = ({ className }: Properties) => {
             );
           }}
         />
-
         <Controller
           control={formMethods.control}
           name="chainId"

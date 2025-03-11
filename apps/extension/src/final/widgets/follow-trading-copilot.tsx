@@ -1,36 +1,36 @@
 import { useEffect, useState } from 'react';
 import { Icon } from '@idriss-xyz/ui/icon';
+import { Hex } from 'viem';
+import { Wallet } from '@idriss-xyz/wallet-connect';
 
-import { useCommandMutation, useCommandQuery } from 'shared/messaging';
 import { Button, classes, PortalWithTailwind, usePooling } from 'shared/ui';
 import {
-  AddTradingCopilotSubscriptionCommand,
-  GetTradingCopilotSubscriptionsCommand,
-  RemoveTradingCopilotSubscriptionCommand,
-  SubscriptionRequest,
-  useLoginViaSiwe,
+  SubscribePayload,
+  UnsubscribePayload,
+  useSubscriptions,
 } from 'application/trading-copilot';
-import { Hex, Wallet } from 'shared/web3';
-import { useAuthToken, useWallet } from 'shared/extension';
+import { useWallet } from 'shared/extension';
+import { GetFarcasterVerifiedAddressCommand } from 'shared/farcaster';
+import { useCommandQuery } from 'shared/messaging';
 
-import { useUserWidgets, useLocationInfo } from '../hooks';
+import { useLocationInfo } from '../hooks';
 import { TradingCopilotTooltip } from '../notifications-popup/components/trading-copilot-tooltip';
 
 export const FollowTradingCopilot = () => {
   const { wallet } = useWallet();
-  const { widgets } = useUserWidgets();
   const { isTwitter, isUserPage, username, isWarpcast, isConversation } =
     useLocationInfo();
   const [portal, setPortal] = useState<HTMLDivElement>();
 
-  const widgetsWithMatchingUsername = widgets.filter((widget) => {
-    return widget.username === username;
+  const getFarcasterAddressQuery = useCommandQuery({
+    command: new GetFarcasterVerifiedAddressCommand({
+      name: username ?? '',
+    }),
+    staleTime: Number.POSITIVE_INFINITY,
+    enabled: !!username,
   });
 
-  const userId =
-    widgetsWithMatchingUsername.find((widget) => {
-      return widget.type === 'idrissSend';
-    })?.walletAddress ?? '';
+  const userId = getFarcasterAddressQuery.data?.address;
 
   const enabledForTwitter =
     isTwitter && isUserPage && Boolean(username) && Boolean(userId);
@@ -127,7 +127,6 @@ export const FollowTradingCopilot = () => {
   return (
     <FollowTradingCopilotContent
       userId={userId}
-      subscriberId={wallet.account}
       iconHeight={iconHeight}
       portal={portal}
       wallet={wallet}
@@ -138,89 +137,49 @@ export const FollowTradingCopilot = () => {
 
 type ContentProperties = {
   userId: Hex;
-  subscriberId: Hex;
-  iconHeight: number;
-  portal: HTMLDivElement;
-  className?: string;
   wallet: Wallet;
+  iconHeight: number;
+  className?: string;
+  portal: HTMLDivElement;
 };
 
 const FollowTradingCopilotContent = ({
-  portal,
-  iconHeight,
-  subscriberId,
   userId,
-  className,
   wallet,
+  portal,
+  className,
+  iconHeight,
 }: ContentProperties) => {
-  const siwe = useLoginViaSiwe();
-  const { getAuthToken } = useAuthToken();
+  const { subscriptions, subscribe, unsubscribe, canSubscribe } =
+    useSubscriptions({
+      wallet,
+    });
 
-  const subscriptionsQuery = useCommandQuery({
-    command: new GetTradingCopilotSubscriptionsCommand({
-      subscriberId,
-    }),
-    staleTime: Number.POSITIVE_INFINITY,
-  });
+  const handleUnsubscribe = (payload: UnsubscribePayload) => {
+    return unsubscribe.use(payload);
+  };
 
-  const isSubscribed = subscriptionsQuery?.data?.details.some((detail) => {
+  const handleSubscribe = (payload: SubscribePayload) => {
+    return subscribe.use(payload);
+  };
+
+  const isSubscribed = subscriptions.data?.details.some((detail) => {
     return detail.address.toLowerCase() === userId.toLowerCase();
   });
 
-  const subscribe = useCommandMutation(AddTradingCopilotSubscriptionCommand);
-  const unsubscribe = useCommandMutation(
-    RemoveTradingCopilotSubscriptionCommand,
-  );
-
-  const handleSubscribe = async (
-    address: SubscriptionRequest['subscription']['address'],
-  ) => {
-    const siweLoggedIn = await siwe.loggedIn();
-
-    if (!siweLoggedIn) {
-      await siwe.login(wallet);
-    }
-
-    const authToken = await getAuthToken();
-
-    if (!authToken) {
-      return;
-    }
-
-    await subscribe.mutateAsync({
-      subscription: { address, subscriberId },
-      authToken: authToken ?? '',
-    });
-    void subscriptionsQuery.refetch();
-  };
-
-  const handleUnsubscribe = async (
-    address: SubscriptionRequest['subscription']['address'],
-  ) => {
-    const siweLoggedIn = await siwe.loggedIn();
-
-    if (!siweLoggedIn) {
-      await siwe.login(wallet);
-    }
-
-    const authToken = await getAuthToken();
-
-    if (!authToken) {
-      return;
-    }
-
-    await unsubscribe.mutateAsync({
-      subscription: { address, subscriberId },
-      authToken: authToken ?? '',
-    });
-    void subscriptionsQuery.refetch();
-  };
+  const isButtonDisabled = !isSubscribed && !canSubscribe;
 
   const onClickHandler = async () => {
-    await (isSubscribed ? handleUnsubscribe(userId) : handleSubscribe(userId));
+    await (isSubscribed
+      ? handleUnsubscribe({ address: userId, chainType: 'EVM' })
+      : handleSubscribe({ address: userId, chainType: 'EVM' }));
   };
 
-  const tooltipContent = (
+  const tooltipContent = isButtonDisabled ? (
+    <span className="relative opacity-100 transition delay-200 duration-500">
+      Maximum subscriptions reached.
+    </span>
+  ) : (
     <>
       <span
         className={`absolute opacity-0 transition duration-500 ${isSubscribed ? 'opacity-100 delay-200' : 'opacity-0 delay-0'}`}
@@ -244,10 +203,14 @@ const FollowTradingCopilotContent = ({
         <Button
           onClick={onClickHandler}
           className={classes(
-            'relative flex cursor-pointer overflow-hidden rounded-full outline-none transition delay-300 duration-300',
+            'relative flex overflow-hidden rounded-full outline-none transition delay-300 duration-300',
             'border border-[#cfd9de] bg-white hover:bg-[##0f14191a]',
+            isButtonDisabled
+              ? 'cursor-not-allowed border-[#808080]'
+              : 'cursor-pointer',
             className,
           )}
+          disabled={isButtonDisabled}
         >
           <Icon
             name="Rocket"

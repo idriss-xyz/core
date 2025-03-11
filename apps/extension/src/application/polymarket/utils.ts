@@ -1,8 +1,8 @@
 import { hmac } from '@noble/hashes/hmac';
 import { sha256 } from '@noble/hashes/sha256';
-import { parseUnits } from 'viem';
+import { Hex, parseUnits } from 'viem';
 
-import { CHAIN, Hex } from 'shared/web3';
+import { CHAIN } from 'shared/web3';
 
 import {
   COLLATERAL_TOKEN_DECIMALS,
@@ -320,7 +320,7 @@ export const buildPolyHmacSignature = (
 
   const base64Secret = Buffer.from(secret, 'base64');
 
-  const sigBytes = hmac(sha256, base64Secret, message);
+  const sigBytes = hmac(sha256, new Uint8Array(base64Secret), message);
 
   const sig = Buffer.from(sigBytes).toString('base64');
 

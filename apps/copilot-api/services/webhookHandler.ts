@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { AlchemyWebhookEvent, ComplexHeliusWebhookEvent } from '../interfaces';
+import { AlchemyWebhookEvent, HeliusWebhookEvent } from '../types';
 import {
   handleIncomingEvent,
   handleIncomingSolanaEvent,
@@ -18,7 +18,7 @@ export function webhookHandler() {
 
 export const heliusWebhookHandler = () => {
   return async (req: Request, res: Response): Promise<void> => {
-    const webhookEvents = req.body as ComplexHeliusWebhookEvent[];
+    const webhookEvents = req.body as HeliusWebhookEvent[];
 
     if (webhookEvents.length === 0) {
       console.error('No transactions found in event response.');

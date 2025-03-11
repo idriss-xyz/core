@@ -1,6 +1,37 @@
-import type { NextConfig } from 'next';
-import withBundleAnalyzer from '@next/bundle-analyzer';
+import path from 'node:path';
+import * as url from 'node:url';
+
 import { BRAND_GUIDELINE_LINK } from '@idriss-xyz/constants';
+import withBundleAnalyzer from '@next/bundle-analyzer';
+import { config } from 'dotenv-safe';
+import type { NextConfig } from 'next';
+
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
+
+const loadEnvironmentConfig = () => {
+  // Skip dotenv-safe in CI environment
+  if (process.env.CI) {
+    return;
+  }
+
+  const environment = process.env.ENVIRONMENT || 'production';
+  const environmentFile = {
+    production: '.env.production',
+    development: '.env.development',
+  };
+
+  try {
+    config({
+      path: path.resolve(__dirname, environmentFile[environment]),
+      allowEmptyValues: true,
+      example: path.resolve(__dirname, '.env.example'),
+    });
+  } catch (error) {
+    console.warn('Error loading environment config:', error);
+  }
+};
+
+loadEnvironmentConfig();
 
 const LEGACY_URLS = [
   '/partner-whitelist',
@@ -14,6 +45,10 @@ const LEGACY_URLS = [
 ];
 
 const nextConfig: NextConfig = {
+  generateBuildId: () => {
+    return process.env.RAILWAY_GIT_COMMIT_SHA || `build-${Date.now()}`;
+  },
+
   productionBrowserSourceMaps: true,
   // eslint-disable-next-line @typescript-eslint/require-await
   async headers() {
@@ -51,12 +86,6 @@ const nextConfig: NextConfig = {
         source: '/buy',
         destination: '/#token',
         permanent: true,
-      },
-      {
-        source: '/streamers/obs',
-        destination: 'https://api.idriss.xyz/creators/obs',
-        basePath: false,
-        permanent: false,
       },
       {
         source: '/prediction-markets',
@@ -139,6 +168,11 @@ const nextConfig: NextConfig = {
       {
         source: '/sale-faq',
         destination: 'https://docs.idriss.xyz/idriss-token/token-sale#faq',
+      },
+      {
+        source: '/retroactive-distribution',
+        destination:
+          'https://docs.idriss.xyz/idriss-token/retroactive-distribution',
         basePath: false,
         permanent: false,
       },
@@ -165,7 +199,11 @@ const nextConfig: NextConfig = {
   images: {
     domains: ['localhost'],
   },
+  env: {
+    DEV_LOGIN_PASSWORD: process.env.DEV_LOGIN_PASSWORD || '',
+    PUBLIC_ACCESS_ENABLED: process.env.PUBLIC_ACCESS_ENABLED || '',
+    RAILWAY_PUBLIC_DOMAIN: process.env.RAILWAY_PUBLIC_DOMAIN || '',
+  },
 };
 
-// eslint-disable-next-line import/no-default-export
 export default withBundleAnalyzer({ enabled: false })(nextConfig);

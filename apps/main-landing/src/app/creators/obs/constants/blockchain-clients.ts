@@ -1,6 +1,5 @@
 import { createPublicClient, http } from 'viem';
-
-import { CHAIN } from '../../donate/constants';
+import { CHAIN } from '@idriss-xyz/constants';
 
 const clientBase = createPublicClient({
   chain: CHAIN.BASE,
@@ -22,6 +21,11 @@ const clientAleph = createPublicClient({
   transport: http(),
 });
 
+const clientAbstract = createPublicClient({
+  chain: CHAIN.ABSTRACT,
+  transport: http(),
+});
+
 const clientMantle = createPublicClient({
   chain: CHAIN.MANTLE,
   transport: http(),
@@ -29,6 +33,11 @@ const clientMantle = createPublicClient({
 
 const clientOptimism = createPublicClient({
   chain: CHAIN.OPTIMISM,
+  transport: http(),
+});
+
+const clientRonin = createPublicClient({
+  chain: CHAIN.RONIN,
   transport: http(),
 });
 
@@ -57,6 +66,16 @@ export const clients = [
     chain: CHAIN.ALEPH.id,
     client: clientAleph,
     name: CHAIN.ALEPH.shortName.toLowerCase(),
+  },
+  {
+    chain: CHAIN.RONIN.id,
+    client: clientRonin,
+    name: CHAIN.RONIN.shortName.toLowerCase(),
+  },
+  {
+    chain: CHAIN.ABSTRACT.id,
+    client: clientAbstract,
+    name: CHAIN.ABSTRACT.shortName.toLowerCase(),
   },
   {
     chain: CHAIN.MANTLE.id,

@@ -1,4 +1,4 @@
-import { ComplexHeliusWebhookEvent } from '../interfaces';
+import { HeliusWebhookEvent } from '../types';
 import { SwapData } from '../types';
 
 const getDecimalsFromBalanceChanges = (mint: string, balanceChanges: any[]) => {
@@ -36,7 +36,7 @@ const getTokenMetadata = async (mintAddress: string) => {
 
 // Parse Raydium Swaps
 export async function parseSwapFromHelius(
-  event: ComplexHeliusWebhookEvent,
+  event: HeliusWebhookEvent,
 ): Promise<SwapData | null> {
   if (!event.tokenTransfers || event.tokenTransfers.length === 0) {
     console.error('No token transfers found.');
@@ -134,7 +134,7 @@ export async function parseSwapFromHelius(
 
 // Parse Jupiter Swaps
 export async function parseJupiterSwap(
-  event: ComplexHeliusWebhookEvent,
+  event: HeliusWebhookEvent,
 ): Promise<SwapData | null> {
   if (!event.events || !event.events.swap) {
     console.error('No swap event found.');

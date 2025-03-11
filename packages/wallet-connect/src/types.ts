@@ -1,8 +1,7 @@
 import { EIP1193Provider } from 'mipd';
+import { Hex } from 'viem';
 
 import { SolanaProvider } from './ethereum';
-
-export type Hex = `0x${string}`;
 
 export type Wallet = {
   provider: EIP1193Provider;
@@ -18,4 +17,14 @@ export type SolanaWallet = {
 
 export type SolanaProviderInfo = {
   name: string;
+}
+
+export type StoredWallet = {
+  account: Hex;
+  providerRdns: string;
 };
+
+export interface StoredSolanaWallet {
+  account: string;
+  providerName: string;
+}

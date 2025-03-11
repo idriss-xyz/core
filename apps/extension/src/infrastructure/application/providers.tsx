@@ -19,16 +19,18 @@ import {
 } from 'shared/ui';
 import { TwitterScrapingContextProvider } from 'host/twitter';
 import {
-  AuthTokenContextProvider,
+  TradingCopilotContextProvider,
   ExtensionPopupProvider,
   ExtensionSettingsProvider,
   WalletContextProvider,
-  SolanaContextProvider,
+  SolanaContextProvider
 } from 'shared/extension';
 import {
   AuthTokenStorage,
   WalletStorage,
   SolanaWalletStorage,
+  ToastSoundStateStorage,
+  SubscriptionsAmountStorage,
 } from 'shared/web3';
 
 type Properties = {
@@ -52,16 +54,28 @@ export const Providers = ({
                     <TailwindProvider>
                       <QueryProvider>
                         <NiceModal.Provider>
-                          <AuthTokenContextProvider
+                          <TradingCopilotContextProvider
                             onGetAuthToken={AuthTokenStorage.get}
                             onClearAuthToken={AuthTokenStorage.clear}
                             onSaveAuthToken={AuthTokenStorage.save}
+                            onClearToastSoundState={
+                              ToastSoundStateStorage.clear
+                            }
+                            onGetToastSoundState={ToastSoundStateStorage.get}
+                            onSaveToastSoundState={ToastSoundStateStorage.save}
+                            onGetWallet={WalletStorage.get}
+                            onSaveSubscriptionsAmount={
+                              SubscriptionsAmountStorage.save
+                            }
+                            onClearSubscriptionsAmount={
+                              SubscriptionsAmountStorage.clear
+                            }
                           >
                             <NotificationsProvider>
                               <SolanaContextProvider
-                                onGetWallet={SolanaWalletStorage.get}
-                                onClearWallet={SolanaWalletStorage.clear}
-                                onSaveWallet={SolanaWalletStorage.save}
+                                  onGetWallet={SolanaWalletStorage.get}
+                                  onClearWallet={SolanaWalletStorage.clear}
+                                  onSaveWallet={SolanaWalletStorage.save}
                               >
                                 <WalletContextProvider
                                   disabledWalletsRdns={disabledWalletRdns}
@@ -83,7 +97,7 @@ export const Providers = ({
                                 </WalletContextProvider>
                               </SolanaContextProvider>
                             </NotificationsProvider>
-                          </AuthTokenContextProvider>
+                          </TradingCopilotContextProvider>
                         </NiceModal.Provider>
                       </QueryProvider>
                     </TailwindProvider>

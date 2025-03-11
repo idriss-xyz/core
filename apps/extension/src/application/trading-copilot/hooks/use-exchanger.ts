@@ -1,26 +1,24 @@
 import { useCallback } from 'react';
-import { formatEther, getAddress, hexToNumber, parseEther } from 'viem';
-import { SolanaWallet } from '@idriss-xyz/wallet-connect';
+import { formatEther, parseEther } from 'viem';
+import { Wallet, SolanaWallet } from '@idriss-xyz/wallet-connect';
 
 import { useWallet } from 'shared/extension';
-import { Wallet, CHAIN, useSwitchChain } from 'shared/web3';
+import { CHAIN, useSwitchChain } from 'shared/web3';
 import { useCommandMutation } from 'shared/messaging';
 
 import { SwapData, FormValues, QuotePayload } from '../types';
 import { GetQuoteCommand } from '../commands/get-quote';
 
-import {
-  useCopilotSolanaTransaction,
-  useCopilotTransaction,
-} from './use-copilot-transaction';
+import { useCopilotTransaction } from './use-copilot-transaction';
+import { useCopilotSolanaTransaction } from './use-copilot-solana-transaction';
 
 interface Properties {
   wallet?: Wallet;
 }
 
 interface CallbackProperties {
-  formValues: FormValues;
   dialog: SwapData;
+  formValues: FormValues;
 }
 
 const getChainId = (network: keyof typeof CHAIN | 'SOLANA') => {
@@ -32,8 +30,9 @@ const formatSol = (amount: string, decimals?: number) => {
   return Number(amount) / 10 ** decimals;
 };
 
+
 export const useExchanger = ({ wallet }: Properties) => {
-  const { setWalletInfo } = useWallet();
+  const { verifyWalletProvider } = useWallet();
   const switchChain = useSwitchChain();
   const copilotTransaction = useCopilotTransaction();
   const getQuoteMutation = useCommandMutation(GetQuoteCommand);
@@ -41,6 +40,12 @@ export const useExchanger = ({ wallet }: Properties) => {
   const exchange = useCallback(
     async ({ formValues, dialog }: CallbackProperties) => {
       if (!wallet || Number(formValues.amount) === 0) {
+        return;
+      }
+
+      const isWalletProviderValid = await verifyWalletProvider(wallet);
+
+      if (!isWalletProviderValid) {
         return;
       }
 
@@ -72,30 +77,6 @@ export const useExchanger = ({ wallet }: Properties) => {
         to: quoteData.transactionData.to,
       };
 
-      const provider = wallet.provider;
-      const providerRdns = wallet.providerRdns;
-
-      const accounts = await provider.request({
-        method: 'eth_requestAccounts',
-      });
-
-      const chainId = await provider.request({ method: 'eth_chainId' });
-
-      const loggedInToCurrentWallet = getAddress(accounts[0] ?? '0x').includes(
-        wallet.account,
-      );
-
-      if (loggedInToCurrentWallet && accounts[0]) {
-        setWalletInfo({
-          account: getAddress(accounts[0]),
-          provider,
-          chainId: hexToNumber(chainId),
-          providerRdns: providerRdns,
-        });
-      } else {
-        return;
-      }
-
       await switchChain.mutateAsync({
         chainId: quoteData.transactionData.chainId,
         wallet,
@@ -106,7 +87,13 @@ export const useExchanger = ({ wallet }: Properties) => {
         transactionData,
       });
     },
-    [wallet, switchChain, copilotTransaction, getQuoteMutation, setWalletInfo],
+    [
+      wallet,
+      verifyWalletProvider,
+      switchChain,
+      copilotTransaction,
+      getQuoteMutation,
+    ],
   );
 
   const isSending = getQuoteMutation.isPending || copilotTransaction.isPending;

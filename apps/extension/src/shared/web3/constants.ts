@@ -1,30 +1,12 @@
+import { arbitrum, linea, scroll, zksync } from 'viem/chains';
 import {
-  arbitrum,
-  base,
-  linea,
-  mainnet,
-  mantle,
-  optimism,
-  polygon,
-  scroll,
-  zksync,
-} from 'viem/chains';
-
-import {
-  AAVEGOTCHI_LOGO,
   ARBITRUM_LOGO,
   BANKLESS_DAO_LOGO,
-  BASE_LOGO,
   BNB_LOGO,
   BNB_TOKEN_LOGO,
   CULT_DAO_LOGO,
-  DAI_LOGO,
-  DEGEN_LOGO,
   DOGECOIN_LOGO,
-  ECHELON_PRIME_LOGO,
-  ETHEREUM_LOGO,
   HIGHER_LOGO,
-  IDRISS_LOGO,
   LINEA_LOGO,
   MANTLE_LOGO,
   MOXIE_LOGO,
@@ -32,68 +14,44 @@ import {
   POLYGON_LOGO,
   RVLT_LOGO,
   SCROLL_LOGO,
-  USDC_LOGO,
   WETH_LOGO,
   ZYNK_SYNC_ERA_LOGO,
   ALEPH_LOGO,
-} from './logos';
-import { Chain, Token, ChainToken } from './types';
+  // PIXELS_LOGO,
+  NATIVE_COIN_ADDRESS,
+  CHAIN as SHARED_CHAIN,
+  TOKEN as SHARED_TOKEN,
+  Chain,
+  Token,
+  ChainToken,
+} from '@idriss-xyz/constants';
 
-export const NATIVE_COIN_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
-
-export const CHAIN = {
-  ALEPH: {
-    id: 41_455,
-    name: 'Aleph Zero EVM',
-    logo: ALEPH_LOGO,
-    nativeCurrency: {
-      name: 'AZERO',
-      symbol: 'AZERO',
-      decimals: 18,
-    },
-    rpcUrls: { default: { http: ['https://rpc.alephzero.raas.gelato.cloud'] } },
-    blockExplorers: {
-      default: {
-        name: 'Evm Explorer',
-        url: 'https://evm-explorer.alephzero.org',
-      },
-    },
-  },
-  POLYGON: {
-    ...polygon,
-    logo: POLYGON_LOGO,
-  },
+// TODO: IMPORTANT CHECK SHORTNAMES
+export const CHAIN = Object.assign(SHARED_CHAIN, {
   ARBITRUM_ONE: {
     ...arbitrum,
+    shortName: 'Arbitrum',
     logo: ARBITRUM_LOGO,
-  },
-  OPTIMISM: {
-    ...optimism,
-    logo: OPTIMISM_LOGO,
-  },
-  BASE: {
-    ...base,
-    logo: BASE_LOGO,
   },
   LINEA: {
     ...linea,
+    shortName: 'Linea',
     logo: LINEA_LOGO,
   },
   ZK_SYNC_ERA: {
     ...zksync,
+    shortName: 'ZkSync',
     logo: ZYNK_SYNC_ERA_LOGO,
-  },
-  MANTLE: {
-    ...mantle,
-    logo: MANTLE_LOGO,
   },
   SCROLL: {
     ...scroll,
+    shortName: 'Scroll',
     logo: SCROLL_LOGO,
   },
   BNB_CHAIN: {
     id: 56,
     name: 'BNB Chain',
+    shortName: 'BNB',
     logo: BNB_LOGO,
     nativeCurrency: {
       name: 'BNB',
@@ -105,38 +63,9 @@ export const CHAIN = {
       default: { name: 'BS Scan', url: 'https://bscscan.com' },
     },
   },
-  ETHEREUM: {
-    ...mainnet,
-    logo: ETHEREUM_LOGO,
-  },
-} satisfies Record<string, Chain>;
+}) satisfies Record<string, Chain>;
 
-export const TOKEN = {
-  ETHEREUM: {
-    name: 'Ethereum',
-    symbol: 'ETH',
-    logo: ETHEREUM_LOGO,
-  },
-  USDC: {
-    name: 'USDC',
-    symbol: 'USDC',
-    logo: USDC_LOGO,
-  },
-  DAI: {
-    name: 'Dai',
-    symbol: 'DAI',
-    logo: DAI_LOGO,
-  },
-  // TETHER: {
-  //   name: 'Tether',
-  //   symbol: 'USDT',
-  //   logo: TETHER_LOGO,
-  // },
-  ECHELON_PRIME: {
-    name: 'Echelon Prime',
-    symbol: 'PRIME',
-    logo: ECHELON_PRIME_LOGO,
-  },
+export const TOKEN = Object.assign(SHARED_TOKEN, {
   CULT_DAO: {
     name: 'Cult DAO',
     symbol: 'CULT',
@@ -146,11 +75,6 @@ export const TOKEN = {
     name: 'Bankless DAO',
     symbol: 'BANK',
     logo: BANKLESS_DAO_LOGO,
-  },
-  AAVEGOTCHI: {
-    name: 'Aavegotchi',
-    symbol: 'GHST',
-    logo: AAVEGOTCHI_LOGO,
   },
   OPTIMISM: { name: 'Optimism', symbol: 'OP', logo: OPTIMISM_LOGO },
   BNB: { name: 'BNB', symbol: 'BNB', logo: BNB_TOKEN_LOGO },
@@ -163,14 +87,34 @@ export const TOKEN = {
   },
   REVOLT2EARN: { name: 'Revolt 2 Earn', symbol: 'RVLT', logo: RVLT_LOGO },
   MANTLE: { name: 'Mantle', symbol: 'MNT', logo: MANTLE_LOGO },
-  DEGEN: { name: 'Degen', symbol: 'DEGEN', logo: DEGEN_LOGO },
-  IDRISS: { name: 'IDRISS', symbol: 'IDRISS', logo: IDRISS_LOGO },
   AZERO: { name: 'Aleph Zero', symbol: 'AZERO', logo: ALEPH_LOGO },
   HIGHER: { name: 'Higher', symbol: 'HIGHER', logo: HIGHER_LOGO },
+  // PIXEL: {
+  //   name: 'Pixels',
+  //   symbol: 'PIXEL',
+  //   logo: PIXELS_LOGO,
+  // },
   MOXIE: { name: 'Moxie', symbol: 'MOXIE', logo: MOXIE_LOGO },
-} satisfies Record<string, Token>;
+}) satisfies Record<string, Token>;
 
 export const CHAIN_ID_TO_TOKENS = {
+  [CHAIN.ABSTRACT.id]: [
+    {
+      ...TOKEN.ETHEREUM,
+      decimals: 18,
+      address: NATIVE_COIN_ADDRESS,
+    },
+    {
+      ...TOKEN.USDC,
+      decimals: 6,
+      address: '0x84a71ccd554cc1b02749b35d22f684cc8ec987e1',
+    },
+    {
+      ...TOKEN.PENGU,
+      decimals: 18,
+      address: '0x9eBe3A824Ca958e4b3Da772D2065518F009CBa62',
+    },
+  ],
   [CHAIN.ALEPH.id]: [
     {
       ...TOKEN.AZERO,
@@ -206,15 +150,25 @@ export const CHAIN_ID_TO_TOKENS = {
       decimals: 18,
       address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
     },
-    // {
-    //   ...TOKEN.TETHER,
-    //   decimals: 6,
-    //   address: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
-    // },
     {
       ...TOKEN.ECHELON_PRIME,
       decimals: 18,
       address: '0xb23d80f5FefcDDaa212212F028021B41DEd428CF',
+    },
+    {
+      ...TOKEN.AAVEGOTCHI,
+      decimals: 18,
+      address: '0x3F382DbD960E3a9bbCeaE22651E88158d2791550',
+    },
+    {
+      ...TOKEN.YGG,
+      decimals: 18,
+      address: '0x25f8087ead173b73d6e8b84329989a8eea16cf73',
+    },
+    {
+      ...TOKEN.PDT,
+      decimals: 18,
+      address: '0x375abb85c329753b1ba849a601438ae77eec9893',
     },
     {
       ...TOKEN.CULT_DAO,
@@ -225,11 +179,6 @@ export const CHAIN_ID_TO_TOKENS = {
       ...TOKEN.BANKLESS_DAO,
       decimals: 18,
       address: '0x2d94aa3e47d9d5024503ca8491fce9a2fb4da198',
-    },
-    {
-      ...TOKEN.AAVEGOTCHI,
-      decimals: 18,
-      address: '0x3F382DbD960E3a9bbCeaE22651E88158d2791550',
     },
   ],
   [CHAIN.OPTIMISM.id]: [
@@ -252,6 +201,49 @@ export const CHAIN_ID_TO_TOKENS = {
       ...TOKEN.OPTIMISM,
       decimals: 18,
       address: '0x4200000000000000000000000000000000000042',
+    },
+  ],
+  [CHAIN.POLYGON.id]: [
+    {
+      ...TOKEN.POLYGON,
+      decimals: 18,
+      address: NATIVE_COIN_ADDRESS,
+    },
+    {
+      ...TOKEN.USDC,
+      decimals: 6,
+      address: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
+    },
+    {
+      ...TOKEN.DAI,
+      decimals: 18,
+      address: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063',
+    },
+    {
+      ...TOKEN.WETH,
+      decimals: 18,
+      name: 'ETH on Polygon',
+      address: '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
+    },
+    {
+      ...TOKEN.AAVEGOTCHI,
+      decimals: 18,
+      address: '0x385eeac5cb85a38a9a07a70c73e0a3271cfb54a7',
+    },
+    {
+      ...TOKEN.YGG,
+      decimals: 18,
+      address: '0x82617aa52dddf5ed9bb7b370ed777b3182a30fd1',
+    },
+    {
+      ...TOKEN.REVOLT2EARN,
+      decimals: 18,
+      address: '0xf0f9D895aCa5c8678f706FB8216fa22957685A13',
+    },
+    {
+      ...TOKEN.BANKLESS_DAO,
+      decimals: 18,
+      address: '0xdb7cb471dd0b49b29cab4a1c14d070f27216a0ab',
     },
   ],
   [CHAIN.BNB_CHAIN.id]: [
@@ -282,48 +274,37 @@ export const CHAIN_ID_TO_TOKENS = {
       address: '0xbA2aE424d960c26247Dd6c32edC70B295c744C43',
     },
   ],
-  [CHAIN.POLYGON.id]: [
+  [CHAIN.RONIN.id]: [
     {
-      ...TOKEN.POLYGON,
+      ...TOKEN.RONIN,
       decimals: 18,
       address: NATIVE_COIN_ADDRESS,
     },
     {
+      ...TOKEN.ETHEREUM,
+      decimals: 18,
+      address: '0xc99a6a985ed2cac1ef41640596c5a5f9f4e19ef5',
+    },
+    {
       ...TOKEN.USDC,
       decimals: 6,
-      address: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
+      address: '0x0b7007c13325c48911f73a2dad5fa5dcbf808adc',
     },
     {
-      ...TOKEN.DAI,
+      ...TOKEN.AXIE,
       decimals: 18,
-      address: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063',
+      address: '0x97a9107c1793bc407d6f527b77e7fff4d812bece',
+    },
+    {
+      ...TOKEN.YGG,
+      decimals: 18,
+      address: '0x1c306872bc82525d72bf3562e8f0aa3f8f26e857',
     },
     // {
-    //   ...TOKEN.TETHER,
-    //   decimals: 6,
-    //   address: '0xc2132d05d31c914a87c6611c10748aeb04b58e8f',
+    //   ...TOKEN.PIXEL,
+    //   decimals: 18,
+    //   address: '0x7eae20d11ef8c779433eb24503def900b9d28ad7',
     // },
-    {
-      ...TOKEN.WETH,
-      decimals: 18,
-      name: 'ETH on Polygon',
-      address: '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
-    },
-    {
-      ...TOKEN.REVOLT2EARN,
-      decimals: 18,
-      address: '0xf0f9D895aCa5c8678f706FB8216fa22957685A13',
-    },
-    {
-      ...TOKEN.BANKLESS_DAO,
-      decimals: 18,
-      address: '0xdb7cb471dd0b49b29cab4a1c14d070f27216a0ab',
-    },
-    {
-      ...TOKEN.AAVEGOTCHI,
-      decimals: 18,
-      address: '0x385eeac5cb85a38a9a07a70c73e0a3271cfb54a7',
-    },
   ],
   [CHAIN.ZK_SYNC_ERA.id]: [
     {
@@ -374,6 +355,16 @@ export const CHAIN_ID_TO_TOKENS = {
       ...TOKEN.ECHELON_PRIME,
       decimals: 18,
       address: '0xfA980cEd6895AC314E7dE34Ef1bFAE90a5AdD21b',
+    },
+    {
+      ...TOKEN.PDT,
+      decimals: 18,
+      address: '0xeff2a458e464b07088bdb441c21a42ab4b61e07e',
+    },
+    {
+      ...TOKEN.YGG,
+      decimals: 18,
+      address: '0xaac78d1219c08aecc8e37e03858fe885f5ef1799',
     },
     {
       ...TOKEN.DEGEN,
@@ -427,5 +418,3 @@ export const CHAIN_ID_TO_TOKENS = {
     },
   ],
 } satisfies Record<string, ChainToken[]>;
-
-export const EMPTY_HEX = '0x';

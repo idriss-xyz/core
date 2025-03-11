@@ -27,7 +27,14 @@
     "./progress-bar": "./src/components/progress-bar/index.ts",
     "./providers/with-portal": "./src/providers/with-portal.tsx",
     "./utils": "./src/utils/index.ts",
-    "./collapsible": "./src/components/collapsible/index.tsx"
+    "./radio-group": "./src/components/radio-group/index.ts",
+    "./collapsible": "./src/components/collapsible/index.ts",
+    "./tabs": "./src/components/tabs/index.ts",
+    "./steps": "./src/components/steps/index.ts",
+    "./geo-conditional-button": "./src/components/geo-conditional-button/index.ts",
+    "./badge": "./src/components/badge/index.ts",
+    "./blocked-button": "./src/components/blocked-button/index.ts",
+    "./alert": "./src/components/alert/index.ts"
   },
   "scripts": {
     "format": "prettier --check --config ../../prettier.config.mjs --ignore-path .prettierignore .",
@@ -60,8 +67,10 @@
     "@radix-ui/react-navigation-menu": "^1.2.1",
     "@radix-ui/react-portal": "^1.1.2",
     "@radix-ui/react-progress": "^1.1.0",
+    "@radix-ui/react-radio-group": "^1.2.2",
     "@radix-ui/react-scroll-area": "^1.2.0",
     "@radix-ui/react-switch": "^1.1.1",
+    "@radix-ui/react-tabs": "^1.1.1",
     "@radix-ui/react-tooltip": "^1.1.6",
     "@radix-ui/react-visually-hidden": "^1.1.0",
     "class-variance-authority": "^0.7.0",

@@ -1,27 +1,29 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
-import { Form } from '@idriss-xyz/ui/form';
+import {
+  ANNOUNCEMENT_LINK,
+  CHAIN,
+  CHAIN_ID_TO_TOKENS,
+  CREATORS_LINK,
+  DEFAULT_ALLOWED_CHAINS_IDS,
+  ChainToken,
+  TokenSymbol,
+} from '@idriss-xyz/constants';
 import { Button } from '@idriss-xyz/ui/button';
-import { Controller, useForm } from 'react-hook-form';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { classes } from '@idriss-xyz/ui/utils';
-import { Multiselect, MultiselectOption } from '@idriss-xyz/ui/multiselect';
-import { ANNOUNCEMENT_LINK, CREATORS_LINK } from '@idriss-xyz/constants';
+import { Form } from '@idriss-xyz/ui/form';
 import { Link } from '@idriss-xyz/ui/link';
+import { Multiselect, MultiselectOption } from '@idriss-xyz/ui/multiselect';
+import { classes } from '@idriss-xyz/ui/utils';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { isAddress } from 'viem';
 import { normalize } from 'viem/ens';
 
 import { backgroundLines2, backgroundLines3 } from '@/assets';
 import { TopBar } from '@/components';
 
-import {
-  CHAIN,
-  CHAIN_ID_TO_TOKENS,
-  DEFAULT_ALLOWED_CHAINS_IDS,
-} from './donate/constants';
-import { Providers } from './providers';
-import { ChainToken, TokenSymbol } from './donate/types';
 import { ethereumClient } from './donate/config';
+import { Providers } from './providers';
 
 type FormPayload = {
   name: string;
@@ -48,8 +50,11 @@ const TOKENS_ORDER: Record<TokenSymbol, number> = {
   GHST: 5,
   PRIME: 6,
   YGG: 7,
-  PDT: 8,
-  DEGEN: 9,
+  RON: 8,
+  AXS: 9,
+  PDT: 10,
+  DEGEN: 11,
+  PENGU: 12,
 };
 
 // ts-unused-exports:disable-next-line
@@ -183,9 +188,18 @@ export default function Donors() {
       }, [] as string[])
       .filter(Boolean);
 
-    await navigator.clipboard.writeText(
-      `https://www.idriss.xyz/creators/donate?address=${address}&token=${tokensSymbols.join(',')}&network=${chainsShortNames.join(',')}&creatorName=${creatorName}`,
-    );
+    const donationURL = `https://www.idriss.xyz/creators/donate?address=${address}&token=${tokensSymbols.join(',')}&network=${chainsShortNames.join(',')}&creatorName=${creatorName}`;
+
+    await navigator.clipboard.writeText(donationURL);
+    try {
+      await fetch('https://api.idriss.xyz/creators/links', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ donationURL }),
+      });
+    } catch {
+      console.warn('Error saving creator link.');
+    }
 
     setCopiedDonationLink(true);
     setCopiedObsLink(false);
@@ -216,7 +230,7 @@ export default function Donors() {
         <link rel="preload" as="image" href={backgroundLines2.src} />
         <img
           src={backgroundLines2.src}
-          className="pointer-events-none absolute top-0 hidden h-full opacity-40 lg:block"
+          className="pointer-events-none absolute top-0 hidden size-full opacity-40 lg:block"
           alt=""
         />
 
@@ -225,7 +239,7 @@ export default function Donors() {
             <link rel="preload" as="image" href={backgroundLines3.src} />
             <img
               src={backgroundLines3.src}
-              className="pointer-events-none absolute top-0 hidden h-full opacity-40 lg:block"
+              className="pointer-events-none absolute top-0 hidden size-full opacity-40 lg:block"
               alt=""
             />
             <h1 className="self-start text-heading4">
@@ -274,8 +288,7 @@ export default function Donors() {
                         return isAddress(value)
                           ? true
                           : 'This address doesn’t exist.';
-                      } catch (error) {
-                        console.log(error);
+                      } catch {
                         return 'An unexpected error occurred. Try again.';
                       }
                     },
@@ -375,12 +388,8 @@ export default function Donors() {
                 </div>
               </Form>
             </div>
-            <Link
-              size="s"
-              href="creators/banner"
-              className="mb-4 mt-[38px] border-none text-neutral-900 hover:text-mint-600"
-            >
-              DOWNLOAD A BANNER FOR YOUR BIO
+            <Link size="xs" href="creators/banner" className="mb-4 mt-[38px]">
+              Download a banner for your bio
             </Link>
           </div>
         </div>

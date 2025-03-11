@@ -1,6 +1,13 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+} from 'typeorm';
 import { SubscribersEntity } from './subscribers.entity';
-import { AddressesEntity } from './addreesses.entity';
+import { AddressesEntity } from './addresses.entity';
 
 @Entity('subscriptions')
 export class SubscriptionsEntity {
@@ -12,6 +19,9 @@ export class SubscriptionsEntity {
 
   @Column({ type: 'integer', name: 'fid', nullable: true })
   readonly fid!: number;
+
+  @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
+  readonly created_at!: Date;
 
   @ManyToOne(() => SubscribersEntity)
   @JoinColumn({ name: 'subscriber_id' })

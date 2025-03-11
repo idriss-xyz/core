@@ -1,7 +1,6 @@
-import { createPublicClient, formatEther, http } from 'viem';
+import { createPublicClient, formatEther, Hex, http } from 'viem';
 import { base } from 'viem/chains';
 
-import { Hex } from 'shared/web3';
 import {
   Command,
   FailureResult,
@@ -14,7 +13,9 @@ type Payload = {
   blockTag: 'latest' | 'earliest' | 'pending' | 'safe' | 'finalized';
 };
 
-export class GetEnsBalanceCommand extends Command<Payload, string | null> {
+type Response = string | null;
+
+export class GetEnsBalanceCommand extends Command<Payload, Response> {
   public readonly name = 'GetEnsBalanceCommand' as const;
 
   constructor(public payload: Payload) {

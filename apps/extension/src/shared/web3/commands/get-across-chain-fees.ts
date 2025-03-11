@@ -1,3 +1,5 @@
+import { Hex } from 'viem';
+
 import {
   Command,
   FailureResult,
@@ -5,8 +7,6 @@ import {
   HandlerResponseError,
   OkResult,
 } from 'shared/messaging';
-
-import { Hex } from '../types';
 
 export type Payload = {
   chains: { id: number; wrappedEthAddress: string }[];

@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
-
-import { Token } from '../types';
+import { Token } from '@idriss-xyz/constants';
 
 import { Select } from './select';
 
@@ -40,7 +39,6 @@ const optionsFrom = (tokens: Token[]) => {
       label: token.name,
       value: token.symbol,
       prefix: (
-        // eslint-disable-next-line @next/next/no-img-element
         <img
           src={token.logo}
           className="size-6 rounded-full"

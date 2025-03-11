@@ -1,15 +1,16 @@
 import { dataSource } from '../db';
 import { WebhookEntity } from '../entities/webhook.entity';
 import { SubscribersEntity } from '../entities/subscribers.entity';
-import { AddressesEntity } from '../entities/addreesses.entity';
+import { AddressesEntity } from '../entities/addresses.entity';
 import { SubscriptionsEntity } from '../entities/subscribtions.entity';
 import { AddressWebhookMapEntity } from '../entities/addressWebhookMap.entity';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import dotenv from 'dotenv';
 import { join } from 'path';
-import { WEBHOOK_NETWORK_TYPES, WEBHOOK_NETWORKS } from '../constants';
+import { WEBHOOK_NETWORKS, MAX_ADDRESSES_PER_WEBHOOK, WEBHOOK_NETWORK_TYPES } from '../constants';
 import { mode } from '../utils/mode';
+import { SubscriptionsDetailsInterface, WebhookDataInterface } from '../types';
 import { isAddress } from 'viem';
 
 dotenv.config(
@@ -21,8 +22,6 @@ const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY!;
 const HELIUS_API_BASE_URL = 'https://api.helius.xyz';
 const HELIUS_API_KEY = process.env.HELIUS_API_KEY!;
 const WEBHOOK_URL = process.env.WEBHOOK_URL!;
-const MAX_ADDRESSES_PER_WEBHOOK =
-  Number(process.env.MAX_ADDRESSES_PER_WEBHOOK) || 100;
 
 const subscribersRepo = dataSource.getRepository(SubscribersEntity);
 const addressRepo = dataSource.getRepository(AddressesEntity);
@@ -167,7 +166,7 @@ const addAddressToWebhook = async (address: string, chainType: string) => {
   }
 };
 
-async function removeAddressFromWebhook(
+async function removeAddressFromWebhook (
   address: string,
   chainType: WEBHOOK_NETWORK_TYPES,
 ): Promise<void> {
@@ -220,9 +219,11 @@ async function removeAddressFromWebhook(
   }
 }
 
-const createNewWebhook = async (address: string) => {
+const createNewWebhook = async (
+  address: string
+): Promise<WebhookDataInterface[]>  => {
   try {
-    const webhooks = [];
+    const webhooks: WebhookDataInterface[] = [];
     for (const NETWORK of WEBHOOK_NETWORKS) {
       const internalWebhookId = uuidv4();
       const webhookUrl = `${WEBHOOK_URL}/webhook/${internalWebhookId}`;
@@ -427,13 +428,14 @@ async function deleteHeliusWebhook(webhookId: string): Promise<void> {
 
 export const getSubscriptionsDetails = async (
   subscriberId: string,
-): Promise<{ address: string; fid: number | null }[]> => {
+): Promise<SubscriptionsDetailsInterface[]> => {
   const res = await subscriptionsRepo.find({
     where: { subscriber_id: subscriberId },
   });
   return res.map((subscription: SubscriptionsEntity) => ({
     address: subscription.address,
     fid: subscription.fid,
+    createdAt: subscription.created_at.getTime(),
   }));
 };
 

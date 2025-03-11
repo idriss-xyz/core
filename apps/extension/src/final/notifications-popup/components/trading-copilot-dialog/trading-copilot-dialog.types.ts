@@ -1,7 +1,6 @@
-import { SolanaWallet } from '@idriss-xyz/wallet-connect';
-
+import { Wallet, SolanaWallet } from '@idriss-xyz/wallet-connect';
 import { SwapData, SwapDataToken } from 'application/trading-copilot';
-import { CHAIN, Wallet } from 'shared/web3';
+import { CHAIN } from 'shared/web3';
 
 export interface Properties {
   dialog: SwapData;

@@ -1,4 +1,5 @@
 export const MAIN_LANDING_LINK = 'https://www.idriss.xyz';
+export const VAULT_LINK = 'https://www.idriss.xyz/vault';
 
 export const SOCIAL_LINK = {
   X: 'https://x.com/idriss_xyz',
@@ -21,6 +22,7 @@ export const ANNOUNCEMENT_LINK = {
   TIPPING: 'https://x.com/idriss_xyz/status/1857374373688078528',
   CREATORS_DONATIONS: 'https://x.com/idriss_xyz/status/1864316262811357450',
   METAMASK: 'https://x.com/idriss_xyz/status/1848069254609858813',
+  REBRANDING: 'https://x.com/idriss_xyz/status/1856125024593403942',
 };
 
 /**
@@ -42,11 +44,19 @@ export const BRAND_KIT_LINK =
   'https://docs.idriss.xyz/contributor-guides/brand-resources';
 export const BRAND_GUIDELINE_LINK =
   'https://docs.idriss.xyz/resources/brand-guidelines';
-
 export const PRIVACY_POLICY_LINK =
   'https://docs.idriss.xyz/resources/privacy-policy';
 export const TERMS_OF_SERVICE_LINK =
   'https://docs.idriss.xyz/resources/terms-of-service';
+export const AIRDROP_DOCS_LINK =
+  'https://docs.idriss.xyz/idriss-token/retroactive-distribution';
+export const VAULT_DOCS_LINK =
+  'https://docs.idriss.xyz/idriss-token/retroactive-distribution#vault';
+export const TOKENOMICS_DOCS_LINK =
+  'https://docs.idriss.xyz/idriss-token/tokenomics';
+
+export const SNAPSHOT_IDRISS_LINK = 'https://snapshot.box/#/s:idrissxyz.eth';
+
 export const CREATORS_LINK = 'https://www.idriss.xyz/creators';
 
 export const CHROME_EXTENSION_LINK =
@@ -57,3 +67,5 @@ export const CREATORS_USER_GUIDE_LINK =
 
 export const TOKEN_TERMS_AND_CONDITIONS_LINK =
   'https://docs.idriss.xyz/idriss-token/terms-and-conditions';
+
+export const COINMARKETCAP_LINK = 'https://coinmarketcap.com/currencies/idriss';

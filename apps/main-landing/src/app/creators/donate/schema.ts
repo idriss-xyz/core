@@ -1,10 +1,5 @@
+import { hexSchema } from '@idriss-xyz/constants';
 import { z } from 'zod';
-
-import { Hex } from './types';
-
-export const hexSchema = z
-  .string()
-  .regex(/^0x/) as unknown as z.ZodLiteral<Hex>;
 
 const MIN_SEND_AMOUNT = 0.001;
 
@@ -15,7 +10,7 @@ const _createSendPayloadSchema = (allowedChainIds: number[]) => {
       .gte(MIN_SEND_AMOUNT, `Value must be at least $${MIN_SEND_AMOUNT}`),
     tokenAddress: hexSchema,
     chainId: z.union(createPossibleChainIdsSchema(allowedChainIds)),
-    message: z.string().max(70),
+    message: z.string().max(90),
   });
 };
 
@@ -26,7 +21,7 @@ export const createFormPayloadSchema = (allowedChainIds: number[]) => {
       .gte(MIN_SEND_AMOUNT, `Value must be at least $${MIN_SEND_AMOUNT}`),
     tokenSymbol: z.string(),
     chainId: z.union(createPossibleChainIdsSchema(allowedChainIds)),
-    message: z.string().max(70),
+    message: z.string().max(90),
   });
 };
 

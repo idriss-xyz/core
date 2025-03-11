@@ -1,8 +1,7 @@
 import { useMemo } from 'react';
+import { ChainToken } from '@idriss-xyz/constants';
 
 import { Select } from 'shared/ui';
-
-import { ChainToken } from '../types';
 
 interface Properties {
   value: string;

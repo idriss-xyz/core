@@ -20,6 +20,7 @@ import {
   EXTENSION_BUTTON_CLICKED,
   EXTENSION_COMMAND_MAP,
   ExtensionSettingsManager,
+  TradingCopilotManager,
 } from 'shared/extension';
 import {
   createObservabilityScope,
@@ -91,9 +92,19 @@ export class ServiceWorker {
         'color: #FF9900;',
       );
       const wallet = await ExtensionSettingsManager.getWallet();
+      const subscriptionsAmount =
+        await TradingCopilotManager.getSubscriptionsAmount();
 
       if (wallet?.account) {
-        this.registerWithServer(wallet.account);
+        if (subscriptionsAmount) {
+          this.registerWithServer(wallet.account);
+        } else {
+          console.log(
+            '%c[WebSocket] User dont have any subscriptions.',
+            'color: red;',
+          );
+          this.socket.disconnect();
+        }
       } else {
         console.log('%c[WebSocket] User not found.', 'color: red;');
         this.socket.disconnect();
@@ -103,7 +114,6 @@ export class ServiceWorker {
     ExtensionSettingsManager.onWalletChange((wallet) => {
       console.log('%c[WebSocket] Wallet changed.', 'color: #FF9900;');
 
-      // Solana wallets should not trigger reconnect
       if (wallet && 'providerRdns' in wallet) {
         if (this.socket.connected) {
           this.socket.disconnect();
@@ -112,6 +122,16 @@ export class ServiceWorker {
         if (wallet?.account) {
           this.socket.connect();
         }
+      }
+    });
+
+    TradingCopilotManager.onSubscriptionsAmountChange((subscriptionAmount) => {
+      if (this.socket.connected && !subscriptionAmount) {
+        this.socket.disconnect();
+      }
+
+      if (!this.socket.connected && subscriptionAmount) {
+        this.socket.connect();
       }
     });
 

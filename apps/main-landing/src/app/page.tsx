@@ -14,6 +14,7 @@ export default function Home() {
   return (
     <div className="relative flex h-screen">
       <ScrollArea
+        id="landing-page-scroll"
         type="always"
         customScrollEventName="landingPageScroll"
         className="[&_[data-radix-scroll-area-content]]:w-screen [&_[data-radix-scroll-area-content]]:min-w-[unset_!important]"

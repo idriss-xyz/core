@@ -3,7 +3,7 @@ import * as crypto from 'crypto';
 import { SwapData } from '../types';
 import { isSubscribedAddress } from '../services/subscriptionManager';
 import { NULL_ADDRESS, WEBHOOK_NETWORK_TYPES } from '../constants';
-import { AlchemyWebhookEvent, ComplexHeliusWebhookEvent } from '../interfaces';
+import { AlchemyWebhookEvent, HeliusWebhookEvent } from '../types';
 import { eventCache } from '../services/scheduler';
 import {
   AlchemyEventHandler,
@@ -50,7 +50,7 @@ export function validateWebhookSignature(
   };
 }
 
-export function isValidHeliusSignature(signature: string, signingKey: string) {
+function isValidHeliusSignature(signature: string, signingKey: string) {
   return signature === signingKey;
 }
 
@@ -205,7 +205,7 @@ export async function extractAlchemySwapData(
 }
 
 export async function extractHeliusSwapData(data: any): Promise<SwapData> {
-  const eventData = data as ComplexHeliusWebhookEvent;
+  const eventData = data as HeliusWebhookEvent;
 
   const isJupiterSwap = eventData.source === 'JUPITER';
   const result = isJupiterSwap
@@ -248,7 +248,7 @@ export async function handleIncomingEvent(
 }
 
 export async function handleIncomingSolanaEvent(
-  webhookEvent: ComplexHeliusWebhookEvent,
+  webhookEvent: HeliusWebhookEvent,
 ): Promise<void> {
   const txHash = webhookEvent.signature;
 

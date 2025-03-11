@@ -1,6 +1,6 @@
 import { Socket } from 'socket.io';
 import { BLOCK_LIST } from '../constants';
-import { CachedTransaction } from '../interfaces';
+import { CachedTransaction } from '../types';
 import { getSubscribersByAddress } from './subscriptionManager';
 import { AlchemyEventHandler, HeliusEventHandler } from './eventHandlers';
 
@@ -20,10 +20,8 @@ setInterval(async () => {
 
   for (const [txHash, cachedTransaction] of cacheEntries) {
     const handler = eventHandlers[cachedTransaction.type];
-    const swapData = await handler.extractSwapData(
-      txHash,
-      cachedTransaction.data,
-    );
+    const { data, timestamp } = cachedTransaction;
+    const swapData = await handler.extractSwapData(txHash, data);
 
     if (swapData.isComplete) {
       // Complete swap
@@ -49,7 +47,7 @@ setInterval(async () => {
       delete eventCache[txHash];
     } else {
       // Check if the transaction has been in the cache for more than 2 seconds
-      if (now - parseInt(swapData.timestamp) >= 5000) {
+      if (now - timestamp >= 5000) {
         // Incomplete swap, time expired
         // Remove from cache
         delete eventCache[txHash];
