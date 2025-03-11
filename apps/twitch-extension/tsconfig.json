@@ -9,6 +9,7 @@
       }
     ],
     "paths": {
+      "@idriss-xyz/main-landing/*": ["../main-landing/src/*"],
       "@/*": [
         "./src/*"
       ]

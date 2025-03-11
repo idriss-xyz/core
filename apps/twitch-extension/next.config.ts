@@ -1,9 +1,10 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  transpilePackages: ['@idriss-xyz/main-landing'],
   output: 'export',
   distDir: 'dist',
-  assetPrefix: './',
+  assetPrefix: '/',
   experimental: {
     optimizePackageImports: ['@idriss-xyz/ui'],
   },
