@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState, MutableRefObject } from 'react';
+import { isAddress } from 'viem';
 
 import { useNotification } from 'shared/ui';
 import {
@@ -12,14 +13,13 @@ import {
   GetTokensImageCommand,
   GetTokensListCommand,
   SwapData,
+  SwapDataToken,
 } from 'application/trading-copilot';
 import { GetImageCommand } from 'shared/utils';
 import { CHAIN } from 'shared/web3';
 
 import { TradingCopilotToast, TradingCopilotDialog } from './components';
 import { Properties, ContentProperties } from './notifications-popup.types';
-import { SwapDataToken } from 'application/trading-copilot/types';
-import { isAddress } from 'viem';
 
 const IDRISS_TOKEN_ADDRESS = '0x000096630066820566162c94874a776532705231';
 
@@ -52,7 +52,8 @@ const NotificationsPopupContent = ({
   activeDialog,
   isSwapEventListenerAdded,
 }: ContentProperties) => {
-  const selectedToken: MutableRefObject<SwapDataToken | null> = useRef<SwapDataToken>(null);
+  const selectedToken: MutableRefObject<SwapDataToken | null> =
+    useRef<SwapDataToken>(null);
   const selectedTokenImage = useRef<string>('');
   const notification = useNotification();
   const ensNameMutation = useCommandMutation(GetEnsNameCommand);

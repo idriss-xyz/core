@@ -245,6 +245,7 @@ export const WalletContextProvider = (properties: {
     };
   }, [
     wallet,
+    setWalletInfo,
     removeWalletInfo,
     openConnectionModal,
     verifyWalletProvider,
