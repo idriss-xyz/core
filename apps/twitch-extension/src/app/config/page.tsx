@@ -10,7 +10,8 @@ import { Icon } from '@idriss-xyz/ui/icon';
 
 import { ConfigSubmitStatus, FormValues } from '@/app/types';
 
-import { backgroundLines2, backgroundLines3 } from '../../../assets';
+import { default as backgroundLines2 } from '../../../assets/background-lines-2.png';
+import { default as backgroundLines3 } from '../../../assets/background-lines-3.png';
 
 const FORM_VALUES = {
   address: EMPTY_HEX,

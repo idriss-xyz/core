@@ -4,13 +4,12 @@ import { useEffect, useState } from 'react';
 import { default as io } from 'socket.io-client';
 import _ from 'lodash';
 import { EMPTY_HEX, TipHistoryNode } from '@idriss-xyz/constants';
+import { useGetTipHistory } from '@idriss-xyz/main-landing/app/creators/donate/commands/get-donate-history';
+import { TopDonors } from '@idriss-xyz/main-landing/app/creators/donate/top-donors';
+import { QueryProvider } from '@idriss-xyz/main-landing/providers';
 
-import { FormValues, WidgetVariants } from '@/app/types';
 import { CREATOR_API_URL } from '@/app/constants';
-
-import { useGetTipHistory } from '../../../../main-landing/src/app/creators/donate/commands/get-donate-history';
-import { TopDonors } from '../../../../main-landing/src/app/creators/donate/top-donors';
-import { QueryProvider } from '../../../../main-landing/src/providers';
+import { FormValues, WidgetVariants } from '@/app/types';
 
 type Properties = {
   variant: WidgetVariants;
