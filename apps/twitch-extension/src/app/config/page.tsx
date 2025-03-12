@@ -7,10 +7,10 @@ import { isAddress } from 'viem';
 import { EMPTY_HEX } from '@idriss-xyz/constants';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Icon } from '@idriss-xyz/ui/icon';
-import backgroundLines2 from '@idriss-xyz/main-landing/assets/background-lines-2.png';
-import backgroundLines3 from '@idriss-xyz/main-landing/assets/background-lines-3.png';
 
 import { ConfigSubmitStatus, FormValues } from '@/app/types';
+
+import { backgroundLines2, backgroundLines3 } from '../../../assets';
 
 const FORM_VALUES = {
   address: EMPTY_HEX,

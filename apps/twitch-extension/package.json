@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "postbuild": "node ./scripts/remove-inline-scripts.js",
+    "postbuild": "node ./scripts/prepare-for-upload.js",
     "format": "prettier --check --config ../../prettier.config.mjs --ignore-path .prettierignore .",
     "format:fix": "prettier --write --config ../../prettier.config.mjs --ignore-path .prettierignore .",
     "lint": "next lint",
