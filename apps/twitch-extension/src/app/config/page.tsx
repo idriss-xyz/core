@@ -4,37 +4,73 @@ import { Controller, useForm } from 'react-hook-form';
 import { Button } from '@idriss-xyz/ui/button';
 import { useState } from 'react';
 import { isAddress } from 'viem';
-import { EMPTY_HEX } from '@idriss-xyz/constants';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Icon } from '@idriss-xyz/ui/icon';
+import { QueryProvider } from '@idriss-xyz/main-landing/providers';
 
 import { ConfigSubmitStatus, FormValues } from '@/app/types';
 import { backgroundLines2, backgroundLines3 } from '@/assets';
+import { useGetEnsAddress } from '@/app/commands/get-ens-address';
 
 const FORM_VALUES = {
-  address: EMPTY_HEX,
+  address: '',
 };
 
 // ts-unused-exports:disable-next-line
 export default function Config() {
+  return (
+    <QueryProvider>
+      <ConfigContent />
+    </QueryProvider>
+  );
+}
+
+// ts-unused-exports:disable-next-line
+function ConfigContent() {
   const [submitStatus, setSubmitStatus] = useState<ConfigSubmitStatus>();
   const { control, handleSubmit, reset } = useForm<FormValues>({
     defaultValues: FORM_VALUES,
   });
 
-  const onSubmit = (payload: FormValues) => {
+  const resolveEnsAddressMutation = useGetEnsAddress();
+
+  const onSubmit = async (payload: FormValues) => {
     setSubmitStatus(undefined);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const twitch = (window as any).Twitch;
 
-    if (!twitch?.ext || !isAddress(payload.address)) {
+    if (!twitch?.ext) {
+      setSubmitStatus('error');
+
+      return;
+    }
+
+    if (isAddress(payload.address)) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      twitch.ext.configuration.set('broadcaster', '1', JSON.stringify(payload));
+
+      reset(FORM_VALUES);
+      setSubmitStatus('success');
+
+      return;
+    }
+
+    const ensAddress = await resolveEnsAddressMutation.mutateAsync({
+      ensName: payload.address,
+    });
+
+    if (!ensAddress) {
       setSubmitStatus('error');
 
       return;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    twitch.ext.configuration.set('broadcaster', '1', JSON.stringify(payload));
+    twitch.ext.configuration.set(
+      'broadcaster',
+      '1',
+      JSON.stringify({ address: ensAddress }),
+    );
 
     reset(FORM_VALUES);
     setSubmitStatus('success');
