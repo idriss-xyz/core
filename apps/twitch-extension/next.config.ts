@@ -12,6 +12,16 @@ const nextConfig: NextConfig = {
     domains: ['localhost'],
     unoptimized: true,
   },
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.(png|jpe?g|gif|svg)$/i,
+      type: 'asset/resource',
+      generator: {
+        filename: 'static/images/[name].[hash][ext]',
+      },
+    });
+    return config;
+  },
 };
 
 export default nextConfig;
