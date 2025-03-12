@@ -3,6 +3,7 @@ import { TipHistoryFromUser } from '@idriss-xyz/constants';
 import { getShortWalletHex } from '@idriss-xyz/utils';
 
 import { useGetEnsAvatar } from '../commands/get-ens-avatar';
+import { useGetAvatarImage } from '../commands/get-avatar-image';
 
 const rankBorders = [
   'border-[#FAC928]',
@@ -37,11 +38,16 @@ export default function DonorItem({
 
   const avatarSource = ensAvatarQuery.data ?? farcasterAvatarUrl;
 
+  const avatarSourceQuery = useGetAvatarImage(
+    { url: avatarSource ?? '' },
+    { enabled: !!avatarSource },
+  );
+
   const avatarImage = (
     <div className="relative w-max">
-      {avatarSource ? (
+      {avatarSourceQuery.data ? (
         <img
-          src={avatarSource}
+          src={avatarSourceQuery.data}
           alt={`Rank ${donorRank + 1}`}
           className={`size-8 rounded-full bg-neutral-200 ${donorRank <= 2 ? `border-2 ${rankBorders[donorRank]}` : 'border border-neutral-400'}`}
         />
