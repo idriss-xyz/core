@@ -147,3 +147,24 @@ export class SubscriptionsAmountStorage {
     });
   }
 }
+
+export class SubscriptionsStorage {
+  public static get(): Promise<any[]> {
+    return new Promise((resolve) => {
+      window.postMessage({
+        type: 'GET_SUBSCRIPTIONS',
+      });
+
+      onWindowMessage<any[]>('GET_SUBSCRIPTIONS_RESPONSE', (subscriptions) => {
+        resolve(subscriptions || []);
+      });
+    });
+  }
+
+  public static save(payload: any[]) {
+    window.postMessage({
+      type: 'SAVE_SUBSCRIPTIONS',
+      detail: payload,
+    });
+  }
+}
