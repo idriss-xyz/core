@@ -23,7 +23,8 @@
     ".next/types/**/*.ts",
     "next-env.d.ts",
     "src/audio.d.ts",
-    "dist/types/**/*.ts"
+    "dist/types/**/*.ts",
+    "src/global.d.ts"
   ],
   "exclude": [
     "node_modules"
