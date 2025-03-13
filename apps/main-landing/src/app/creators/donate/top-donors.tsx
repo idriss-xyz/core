@@ -23,6 +23,7 @@ type Properties = {
   className?: string;
   tipsLoading: boolean;
   variant?: WidgetVariants;
+  donationUrl?: string | null;
   validatedAddress?: string | null;
   tipEdges: { node: TipHistoryNode }[];
   updateCurrentContent?: (content: 'tip' | 'history') => void;
@@ -36,10 +37,12 @@ export const TopDonors = ({
   tipEdges,
   className,
   tipsLoading,
+  donationUrl,
   validatedAddress,
   updateCurrentContent,
 }: Properties) => {
-  const donationURL = `${CREATORS_DONATE_LINK}?address=${validatedAddress}`;
+  const donationURL =
+    donationUrl ?? `${CREATORS_DONATE_LINK}?address=${validatedAddress}`;
   const addressValidationResult = hexSchema.safeParse(validatedAddress);
 
   const isTwitchExtension = variant !== null && variant !== undefined;

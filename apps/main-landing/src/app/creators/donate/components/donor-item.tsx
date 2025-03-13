@@ -2,8 +2,9 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { TipHistoryFromUser } from '@idriss-xyz/constants';
 import { getShortWalletHex } from '@idriss-xyz/utils';
 
-import { useGetEnsAvatar } from '../commands/get-ens-avatar';
+import { allowedImageDomains } from '../../donate/constants';
 import { useGetAvatarImage } from '../commands/get-avatar-image';
+import { useGetEnsAvatarFromApi } from '../commands/get-ens-avatar-from-api';
 
 const rankBorders = [
   'border-[#FAC928]',
@@ -21,14 +22,14 @@ type Properties = {
 
 export default function DonorItem({
   donorRank,
-  donateAmount,
   donorDetails,
+  donateAmount,
 }: Properties) {
   const displayName = donorDetails.displayName?.value;
   const nameSource = donorDetails.displayName?.source;
   const imageSource = donorDetails.avatar?.source;
 
-  const ensAvatarQuery = useGetEnsAvatar(
+  const ensAvatarFromApiUrlQuery = useGetEnsAvatarFromApi(
     { name: displayName ?? '' },
     { enabled: nameSource === 'ENS' && !!displayName },
   );
@@ -36,28 +37,38 @@ export default function DonorItem({
   const farcasterAvatarUrl =
     imageSource === 'FARCASTER' ? donorDetails.avatar?.value?.url : null;
 
-  const avatarSource = ensAvatarQuery.data ?? farcasterAvatarUrl;
+  const avatarSourceUrl = ensAvatarFromApiUrlQuery.data ?? farcasterAvatarUrl;
 
-  const avatarSourceQuery = useGetAvatarImage(
-    { url: avatarSource ?? '' },
-    { enabled: !!avatarSource },
+  const isAllowedUrl = avatarSourceUrl
+    ? allowedImageDomains.some((domain) => {
+        return avatarSourceUrl.startsWith(domain);
+      })
+    : false;
+
+  const avatarDataQuery = useGetAvatarImage(
+    { url: avatarSourceUrl ?? '' },
+    { enabled: !!avatarSourceUrl && !isAllowedUrl },
   );
 
   const avatarImage = (
     <div className="relative w-max">
-      {avatarSourceQuery.data ? (
+      {(avatarSourceUrl ??
+        (avatarSourceUrl && !isAllowedUrl && avatarDataQuery.data)) && (
         <img
-          src={avatarSourceQuery.data}
+          src={isAllowedUrl ? avatarSourceUrl : avatarDataQuery.data}
           alt={`Rank ${donorRank + 1}`}
           className={`size-8 rounded-full bg-neutral-200 ${donorRank <= 2 ? `border-2 ${rankBorders[donorRank]}` : 'border border-neutral-400'}`}
         />
-      ) : (
+      )}
+
+      {(!avatarSourceUrl || (!isAllowedUrl && !avatarDataQuery.data)) && (
         <div
           className={`flex size-8 items-center justify-center rounded-full ${donorRank <= 2 ? `border-2 ${rankBorders[donorRank]}` : 'border border-neutral-300'} bg-neutral-200`}
         >
           <Icon size={20} name="CircleUserRound" className="text-neutral-500" />
         </div>
       )}
+
       {donorRank <= 2 ? (
         <Icon
           size={13}

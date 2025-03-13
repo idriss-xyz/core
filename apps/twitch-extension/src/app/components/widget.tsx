@@ -9,7 +9,7 @@ import { TopDonors } from '@idriss-xyz/main-landing/app/creators/donate/top-dono
 import { QueryProvider } from '@idriss-xyz/main-landing/providers';
 
 import { CREATOR_API_URL } from '@/app/constants';
-import { FormValues, WidgetVariants } from '@/app/types';
+import { ConfigValues, WidgetVariants } from '@/app/types';
 
 type Properties = {
   variant: WidgetVariants;
@@ -32,6 +32,7 @@ function WidgetContent({ variant }: ContentProperties) {
   const [socketInitialized, setSocketInitialized] = useState(false);
   const [tipEdges, setTipEdges] = useState<{ node: TipHistoryNode }[]>([]);
   const [address, setAddress] = useState<Hex | null | undefined>();
+  const [donationUrl, setDonationUrl] = useState<string | null | undefined>();
 
   const isVideoOverlay = variant === 'videoOverlay';
 
@@ -48,8 +49,9 @@ function WidgetContent({ variant }: ContentProperties) {
       const storedConfig = twitch.ext.configuration.broadcaster?.content;
 
       if (storedConfig) {
-        const parsedConfig: FormValues = JSON.parse(storedConfig);
+        const parsedConfig: ConfigValues = JSON.parse(storedConfig);
         setAddress(parsedConfig.address as Hex);
+        setDonationUrl(parsedConfig.donationLink);
       } else {
         setAddress(null);
       }
@@ -106,8 +108,9 @@ function WidgetContent({ variant }: ContentProperties) {
       {isVideoOverlay ? (
         <div className="relative flex size-full items-start justify-end pr-28 pt-20">
           <TopDonors
-            tipEdges={tipEdges}
             variant={variant}
+            tipEdges={tipEdges}
+            donationUrl={donationUrl}
             validatedAddress={address}
             tipsLoading={tips.isLoading}
             className="relative right-0 top-0 origin-top-right scale-[.85]"
@@ -115,8 +118,9 @@ function WidgetContent({ variant }: ContentProperties) {
         </div>
       ) : (
         <TopDonors
-          tipEdges={tipEdges}
           variant={variant}
+          tipEdges={tipEdges}
+          donationUrl={donationUrl}
           validatedAddress={address}
           tipsLoading={tips.isLoading}
         />

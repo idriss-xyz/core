@@ -1,4 +1,9 @@
 export type FormValues = {
+  donationLink: string;
+};
+
+export type ConfigValues = {
+  donationLink: string;
   address: string;
 };
 
