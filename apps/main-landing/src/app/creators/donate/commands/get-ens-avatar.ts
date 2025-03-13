@@ -1,5 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { IDRISS_API_URL } from '../constants';
+
 type Payload = {
   name: string;
 };
@@ -13,9 +15,8 @@ interface EnsAvatarResponse {
 }
 
 const getEnsAvatar = async (payload: Payload): Promise<string> => {
-  // ToDo: change localhost to https://idriss.xyz
   const response = await fetch(
-    `http://localhost:3000/api/ens-avatar?ens=${payload.name}`,
+    `${IDRISS_API_URL}/ens-avatar?ens=${payload.name}`,
   );
   if (!response.ok) {
     throw new Error('Failed to fetch ENS avatar');

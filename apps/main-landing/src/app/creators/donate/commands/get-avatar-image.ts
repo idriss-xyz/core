@@ -1,5 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { IDRISS_LEGACY_API_URL, WHITELISTED_URLS } from '../constants';
+
 type Payload = {
   url: string;
 };
@@ -7,13 +9,6 @@ type Payload = {
 type Options = {
   enabled?: boolean;
 };
-
-const WHITELISTED_URLS = [
-  'https://imagedelivery.net/',
-  'https://i.imgur.com/',
-  'https://ik.imagekit.io/',
-  'https://euc.li/',
-];
 
 const getAvatarImage = async (payload: Payload): Promise<string> => {
   // Check if the URL is in the whitelist
@@ -24,7 +19,7 @@ const getAvatarImage = async (payload: Payload): Promise<string> => {
     return payload.url;
   }
   const response = await fetch(
-    `https://api.idriss.xyz/fetch-image?url=${payload.url}`,
+    `${IDRISS_LEGACY_API_URL}/fetch-image?url=${payload.url}`,
   );
   if (!response.ok) {
     throw new Error('Failed to fetch avatar image');

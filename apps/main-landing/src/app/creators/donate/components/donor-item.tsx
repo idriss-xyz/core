@@ -2,7 +2,7 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { TipHistoryFromUser } from '@idriss-xyz/constants';
 import { getShortWalletHex } from '@idriss-xyz/utils';
 
-import { allowedImageDomains } from '../../donate/constants';
+import { WHITELISTED_URLS } from '../../donate/constants';
 import { useGetAvatarImage } from '../commands/get-avatar-image';
 import { useGetEnsAvatarFromApi } from '../commands/get-ens-avatar-from-api';
 
@@ -40,7 +40,7 @@ export default function DonorItem({
   const avatarSourceUrl = ensAvatarFromApiUrlQuery.data ?? farcasterAvatarUrl;
 
   const isAllowedUrl = avatarSourceUrl
-    ? allowedImageDomains.some((domain) => {
+    ? WHITELISTED_URLS.some((domain) => {
         return avatarSourceUrl.startsWith(domain);
       })
     : false;
