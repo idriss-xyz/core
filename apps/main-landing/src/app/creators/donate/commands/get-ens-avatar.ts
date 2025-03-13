@@ -1,7 +1,4 @@
-import { normalize } from 'viem/ens';
 import { useQuery } from '@tanstack/react-query';
-import { createPublicClient, http } from 'viem';
-import { mainnet } from 'viem/chains';
 
 type Payload = {
   name: string;
@@ -11,15 +8,20 @@ type Options = {
   enabled?: boolean;
 };
 
-const getEnsAvatar = async (payload: Payload) => {
-  const client = createPublicClient({
-    chain: mainnet,
-    transport: http('https://eth.llamarpc.com'),
-  });
+interface EnsAvatarResponse {
+  image: string;
+}
 
-  return await client.getEnsAvatar({
-    name: normalize(payload.name),
-  });
+const getEnsAvatar = async (payload: Payload): Promise<string> => {
+  // ToDo: change localhost to https://idriss.xyz
+  const response = await fetch(
+    `http://localhost:3000/api/ens-avatar?ens=${payload.name}`,
+  );
+  if (!response.ok) {
+    throw new Error('Failed to fetch ENS avatar');
+  }
+  const data: EnsAvatarResponse = await response.json();
+  return data.image;
 };
 
 export const useGetEnsAvatar = (payload: Payload, options?: Options) => {
