@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 import fs from 'node:fs';
 
 import { NextResponse } from 'next/server';
@@ -37,7 +38,6 @@ const loadExistingEvents = (): {
 };
 
 // ts-unused-exports:disable-next-line
-// eslint-disable-next-line @typescript-eslint/require-await
 export async function GET(
   request: Request,
 ): Promise<NextResponse<ApiResponse>> {
