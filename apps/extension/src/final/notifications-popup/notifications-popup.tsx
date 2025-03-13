@@ -10,6 +10,7 @@ import {
 import {
   GetEnsInfoCommand,
   GetEnsNameCommand,
+  GetFarcasterUserCommand,
   GetTokensImageCommand,
   GetTokensListCommand,
   SwapData,
@@ -20,6 +21,7 @@ import { CHAIN } from 'shared/web3';
 
 import { TradingCopilotToast, TradingCopilotDialog } from './components';
 import { Properties, ContentProperties } from './notifications-popup.types';
+import { SubscriptionsStorage } from 'shared/web3/storage';
 
 const IDRISS_TOKEN_ADDRESS = '0x000096630066820566162c94874a776532705231';
 
@@ -59,38 +61,67 @@ const NotificationsPopupContent = ({
   const ensNameMutation = useCommandMutation(GetEnsNameCommand);
   const ensInfoMutation = useCommandMutation(GetEnsInfoCommand);
   const imageMutation = useCommandMutation(GetImageCommand);
+  const farcasterUserMutation = useCommandMutation(
+    GetFarcasterUserCommand,
+  );
   const tokenListMutation = useCommandMutation(GetTokensListCommand);
   const tokenIconMutation = useCommandMutation(GetTokensImageCommand);
 
+
   useEffect(() => {
+
     if (!isSwapEventListenerAdded.current) {
       const handleSwapEvent = async (data: SwapData) => {
+        let ensName: string | null = null;
+        let avatarImage: string | null = null;
+        const subscriptions = await SubscriptionsStorage.get();
+        const matchingSubscription = subscriptions?.find(
+          (sub) => sub.address === data.from,
+        );
         const isEVMAddress = isAddress(data.from);
-        const ensName = isEVMAddress
-          ? await ensNameMutation.mutateAsync({
-              address: data.from,
-            })
-          : null;
 
-        const ensAvatarUrl = isEVMAddress
-          ? await ensInfoMutation.mutateAsync({
-              ensName: ensName ?? '',
-              infoKey: 'avatar',
-            })
-          : null;
+        const getFarcasterDetails = async () => {
+          if (!matchingSubscription?.fid) return null;
+          const response = await farcasterUserMutation.mutateAsync({
+            id: matchingSubscription.fid,
+          });
+          if (!response) return null;
+          return {
+            name: response.user.displayName,
+            avatar: response.user.pfp.url,
+          };
+        };
 
-        const avatarImage = isEVMAddress
-          ? await imageMutation.mutateAsync({
-              src: ensAvatarUrl ?? '',
-            })
-          : null;
+        const getEnsDetails = async () => {
+          const ensNameResponse = await ensNameMutation.mutateAsync({
+            address: data.from,
+          });
+          if (!ensNameResponse) return null;
+          const ensAvatarUrl = await ensInfoMutation.mutateAsync({
+            ensName: ensNameResponse,
+            infoKey: 'avatar',
+          });
+          return {
+            name: ensNameResponse,
+            avatar: ensAvatarUrl,
+          };
+        };
+
+        const userDetails = isEVMAddress
+          ? (await getEnsDetails()) ?? (await getFarcasterDetails())
+          : await getFarcasterDetails();
+
+        if (userDetails) {
+          ensName = userDetails.name;
+          avatarImage = await imageMutation.mutateAsync({
+            src: userDetails.avatar ?? '',
+          });
+        }
 
         const tokensList = await tokenListMutation.mutateAsync();
-
         const tokenAddress = data.tokenIn.address;
-
-        // Filter token list by chain (Base)
         const tokens = tokensList?.tokens?.[CHAIN.BASE.id] ?? [];
+
         const tokenData = isEVMAddress
           ? (tokens.find((t) => {
               return t?.address?.toLowerCase() === tokenAddress.toLowerCase();

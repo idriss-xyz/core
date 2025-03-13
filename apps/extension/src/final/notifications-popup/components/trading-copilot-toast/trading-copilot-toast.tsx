@@ -20,7 +20,6 @@ import { useTradingCopilot } from 'shared/extension';
 import { TokenIcon } from '../../utils';
 
 import { Properties } from './trading-copilot-toast.types';
-import { useFarcasterName } from 'application/trading-copilot';
 
 export const TradingCopilotToast = ({
   toast,
@@ -30,8 +29,7 @@ export const TradingCopilotToast = ({
   tokenImage,
   tokenData,
 }: Properties) => {
-  const userFarcasterName = useFarcasterName(toast.from);
-  const userName = userFarcasterName ?? ensName ?? toast.from;
+  const userName = ensName ?? toast.from;
   const { toastSoundEnabled } = useTradingCopilot();
   const playedTransactionHashes: MutableRefObject<Set<string>> = useRef(
     new Set(),

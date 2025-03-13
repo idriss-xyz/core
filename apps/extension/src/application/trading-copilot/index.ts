@@ -2,6 +2,7 @@ export {
   COMMAND_MAP as TRADING_COPILOT_COMMAND_MAP,
   GetEnsInfoCommand,
   GetEnsNameCommand,
+  GetFarcasterUserCommand,
   GetQuoteCommand,
   GetEnsBalanceCommand,
   GetSolanaBalanceCommand,
@@ -22,5 +23,4 @@ export {
   useLoginViaSiwe,
   useSubscriptions,
   useAccountBalance,
-  useFarcasterName,
 } from './hooks';
