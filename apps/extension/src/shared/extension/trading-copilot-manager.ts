@@ -102,7 +102,7 @@ export const TradingCopilotManager = {
 
   saveSubscriptions(payload: StoredSubscriptions) {
     return chrome.storage.local.set({
-      'subscriptions': JSON.stringify(payload),
+      subscriptions: JSON.stringify(payload),
     });
   },
 
@@ -119,5 +119,5 @@ export const TradingCopilotManager = {
           return resolve(StoredSubscriptions);
         });
     });
-  }
+  },
 };

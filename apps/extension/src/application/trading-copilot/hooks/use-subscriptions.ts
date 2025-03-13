@@ -76,8 +76,7 @@ export const useSubscriptions = ({ wallet, addTabListener }: Properties) => {
         if (freshData.data?.details) {
           SubscriptionsStorage.save(freshData.data.details);
         }
-      }
-      else if (subscriptionsQuery.isSuccess) {
+      } else if (subscriptionsQuery.isSuccess) {
         saveSubscriptionsAmount(subscriptionsQuery.data?.details.length);
         SubscriptionsStorage.save(subscriptionsQuery.data?.details);
       }

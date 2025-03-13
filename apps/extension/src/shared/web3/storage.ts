@@ -156,9 +156,12 @@ export class SubscriptionsStorage {
         type: 'GET_SUBSCRIPTIONS',
       });
 
-      onWindowMessage<StoredSubscriptions>('GET_SUBSCRIPTIONS_RESPONSE', (subscriptions) => {
-        resolve(subscriptions ??[]);
-      });
+      onWindowMessage<StoredSubscriptions>(
+        'GET_SUBSCRIPTIONS_RESPONSE',
+        (subscriptions) => {
+          resolve(subscriptions ?? []);
+        },
+      );
     });
   }
 

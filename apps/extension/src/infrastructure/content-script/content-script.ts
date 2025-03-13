@@ -282,15 +282,14 @@ export class ContentScript {
     });
 
     onWindowMessage('GET_SUBSCRIPTIONS', async () => {
-      const maybeSubscriptions =
-        await TradingCopilotManager.getSubscriptions();
+      const maybeSubscriptions = await TradingCopilotManager.getSubscriptions();
 
-        const message = {
-          type: 'GET_SUBSCRIPTIONS_RESPONSE',
-          detail: maybeSubscriptions,
-        };
+      const message = {
+        type: 'GET_SUBSCRIPTIONS_RESPONSE',
+        detail: maybeSubscriptions,
+      };
 
-        window.postMessage(message);
+      window.postMessage(message);
     });
   }
 

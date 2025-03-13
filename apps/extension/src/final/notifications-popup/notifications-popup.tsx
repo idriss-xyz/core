@@ -60,23 +60,19 @@ const NotificationsPopupContent = ({
   const ensNameMutation = useCommandMutation(GetEnsNameCommand);
   const ensInfoMutation = useCommandMutation(GetEnsInfoCommand);
   const imageMutation = useCommandMutation(GetImageCommand);
-  const farcasterUserMutation = useCommandMutation(
-    GetFarcasterUserCommand,
-  );
+  const farcasterUserMutation = useCommandMutation(GetFarcasterUserCommand);
   const tokenListMutation = useCommandMutation(GetTokensListCommand);
   const tokenIconMutation = useCommandMutation(GetTokensImageCommand);
 
-
   useEffect(() => {
-
     if (!isSwapEventListenerAdded.current) {
       const handleSwapEvent = async (data: SwapData) => {
         let ensName: string | null = null;
         let avatarImage: string | null = null;
         const subscriptions = await SubscriptionsStorage.get();
-        const matchingSubscription = subscriptions?.find(
-          (sub) => {return sub.address === data.from},
-        );
+        const matchingSubscription = subscriptions?.find((sub) => {
+          return sub.address === data.from;
+        });
         const isEVMAddress = isAddress(data.from);
 
         const getFarcasterDetails = async () => {
@@ -107,7 +103,7 @@ const NotificationsPopupContent = ({
         };
 
         const userDetails = isEVMAddress
-          ? (await getEnsDetails()) ?? (await getFarcasterDetails())
+          ? ((await getEnsDetails()) ?? (await getFarcasterDetails()))
           : await getFarcasterDetails();
 
         if (userDetails) {
