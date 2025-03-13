@@ -29,6 +29,7 @@ export const TradingCopilotToast = ({
   tokenImage,
   tokenData,
 }: Properties) => {
+  const userName = ensName ?? toast.from;
   const { toastSoundEnabled } = useTradingCopilot();
   const playedTransactionHashes: MutableRefObject<Set<string>> = useRef(
     new Set(),
@@ -47,8 +48,6 @@ export const TradingCopilotToast = ({
       toast.soundFile,
     );
   }
-
-  const userName = ensName ?? toast.from;
 
   const { value: roundedNumber, index: zerosIndex } =
     roundToSignificantFiguresForCopilotTrading(toast.tokenIn.amount, 2);

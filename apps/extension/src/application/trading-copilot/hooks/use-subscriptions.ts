@@ -9,6 +9,7 @@ import {
   useCommandQuery,
 } from 'shared/messaging';
 import { useTradingCopilot } from 'shared/extension';
+import { SubscriptionsStorage } from 'shared/web3';
 
 import {
   GetStakedBalanceCommand,
@@ -68,13 +69,25 @@ export const useSubscriptions = ({ wallet, addTabListener }: Properties) => {
     Number(subscriptionsQuery.data?.details.length) < FREE_SUBSCRIPTIONS;
 
   useEffect(() => {
-    if (subscriptionsQuery.isSuccess) {
-      saveSubscriptionsAmount(subscriptionsQuery.data?.details.length);
-    }
+    const initializeSubscriptions = async () => {
+      const storedSubscriptions = await SubscriptionsStorage.get();
+      if (!storedSubscriptions?.length) {
+        const freshData = await subscriptionsQuery.refetch();
+        if (freshData.data?.details) {
+          SubscriptionsStorage.save(freshData.data.details);
+        }
+      } else if (subscriptionsQuery.isSuccess) {
+        saveSubscriptionsAmount(subscriptionsQuery.data?.details.length);
+        SubscriptionsStorage.save(subscriptionsQuery.data?.details);
+      }
+    };
+
+    void initializeSubscriptions();
   }, [
     saveSubscriptionsAmount,
+    subscriptionsQuery,
     subscriptionsQuery.isSuccess,
-    subscriptionsQuery.data?.details.length,
+    subscriptionsQuery.data?.details,
   ]);
 
   useEffect(() => {

@@ -32,13 +32,13 @@ import {
   useExchanger,
   useSolanaExchanger,
   useLoginViaSiwe,
+  useAccountBalance,
 } from 'application/trading-copilot';
 import { CHAIN, getWholeNumber } from 'shared/web3';
 import { IdrissSend } from 'shared/idriss';
 
 import { TokenIcon } from '../../utils';
 import { TradingCopilotTooltip } from '../trading-copilot-tooltip';
-import { useAccountBalance } from '../../hooks';
 
 import {
   Properties,

@@ -29,6 +29,7 @@ export type {
   StoredAuthToken,
   StoredToastSoundState,
   StoredSubscriptionsAmount,
+  StoredSubscriptions,
 } from './types';
 export { ExtensionSettingsManager } from './extension-settings-manager';
 export { TradingCopilotManager } from './trading-copilot-manager';

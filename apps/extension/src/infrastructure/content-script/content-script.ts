@@ -21,6 +21,7 @@ import {
   StoredAuthToken,
   StoredToastSoundState,
   StoredSubscriptionsAmount,
+  StoredSubscriptions,
 } from 'shared/extension';
 
 export class ContentScript {
@@ -275,6 +276,21 @@ export class ContentScript {
         void TradingCopilotManager.saveSubscriptionsAmount(v);
       },
     );
+
+    onWindowMessage<StoredSubscriptions>('SAVE_SUBSCRIPTIONS', (v) => {
+      void TradingCopilotManager.saveSubscriptions(v);
+    });
+
+    onWindowMessage('GET_SUBSCRIPTIONS', async () => {
+      const maybeSubscriptions = await TradingCopilotManager.getSubscriptions();
+
+      const message = {
+        type: 'GET_SUBSCRIPTIONS_RESPONSE',
+        detail: maybeSubscriptions,
+      };
+
+      window.postMessage(message);
+    });
   }
 
   // TODO: move these message names to constants in shared/web3
