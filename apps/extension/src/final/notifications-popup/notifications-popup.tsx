@@ -17,11 +17,10 @@ import {
   SwapDataToken,
 } from 'application/trading-copilot';
 import { GetImageCommand } from 'shared/utils';
-import { CHAIN } from 'shared/web3';
+import { CHAIN, SubscriptionsStorage } from 'shared/web3';
 
 import { TradingCopilotToast, TradingCopilotDialog } from './components';
 import { Properties, ContentProperties } from './notifications-popup.types';
-import { SubscriptionsStorage } from 'shared/web3/storage';
 
 const IDRISS_TOKEN_ADDRESS = '0x000096630066820566162c94874a776532705231';
 
@@ -76,7 +75,7 @@ const NotificationsPopupContent = ({
         let avatarImage: string | null = null;
         const subscriptions = await SubscriptionsStorage.get();
         const matchingSubscription = subscriptions?.find(
-          (sub) => sub.address === data.from,
+          (sub) => {return sub.address === data.from},
         );
         const isEVMAddress = isAddress(data.from);
 
@@ -176,6 +175,7 @@ const NotificationsPopupContent = ({
     ensInfoMutation,
     ensNameMutation,
     imageMutation,
+    farcasterUserMutation,
     isSwapEventListenerAdded,
     notification,
     openDialog,

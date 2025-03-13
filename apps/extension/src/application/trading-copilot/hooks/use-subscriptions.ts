@@ -9,7 +9,7 @@ import {
   useCommandQuery,
 } from 'shared/messaging';
 import { useTradingCopilot } from 'shared/extension';
-import { SubscriptionsStorage } from 'shared/web3/storage';
+import { SubscriptionsStorage } from 'shared/web3';
 
 import {
   GetStakedBalanceCommand,
@@ -83,9 +83,10 @@ export const useSubscriptions = ({ wallet, addTabListener }: Properties) => {
       }
     };
 
-    initializeSubscriptions();
+    void initializeSubscriptions();
   }, [
     saveSubscriptionsAmount,
+    subscriptionsQuery,
     subscriptionsQuery.isSuccess,
     subscriptionsQuery.data?.details,
   ]);

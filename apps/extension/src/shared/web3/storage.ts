@@ -1,5 +1,6 @@
 import { StoredWallet } from '@idriss-xyz/wallet-connect';
 
+import { StoredSubscriptions } from 'shared/extension';
 import { onWindowMessage } from 'shared/messaging';
 
 type StoredToastSoundState = boolean | undefined;
@@ -149,19 +150,19 @@ export class SubscriptionsAmountStorage {
 }
 
 export class SubscriptionsStorage {
-  public static get(): Promise<any[]> {
+  public static get(): Promise<StoredSubscriptions> {
     return new Promise((resolve) => {
       window.postMessage({
         type: 'GET_SUBSCRIPTIONS',
       });
 
-      onWindowMessage<any[]>('GET_SUBSCRIPTIONS_RESPONSE', (subscriptions) => {
-        resolve(subscriptions || []);
+      onWindowMessage<StoredSubscriptions>('GET_SUBSCRIPTIONS_RESPONSE', (subscriptions) => {
+        resolve(subscriptions ??[]);
       });
     });
   }
 
-  public static save(payload: any[]) {
+  public static save(payload: StoredSubscriptions) {
     window.postMessage({
       type: 'SAVE_SUBSCRIPTIONS',
       detail: payload,

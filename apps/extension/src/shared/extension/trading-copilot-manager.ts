@@ -111,11 +111,9 @@ export const TradingCopilotManager = {
       void chrome.storage.local
         .get('subscriptions')
         .then((StoredSubscriptionsRaw) => {
-          const StoredSubscriptions = StoredSubscriptionsRaw[
-            'subscriptions'
-          ]
+          const StoredSubscriptions = StoredSubscriptionsRaw.subscriptions
             ? (JSON.parse(
-                StoredSubscriptionsRaw['subscriptions'],
+                StoredSubscriptionsRaw.subscriptions,
               ) as StoredSubscriptions)
             : undefined;
           return resolve(StoredSubscriptions);
