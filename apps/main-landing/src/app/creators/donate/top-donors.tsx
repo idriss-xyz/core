@@ -12,7 +12,7 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { Button } from '@idriss-xyz/ui/button';
 
 import { default as IDRISS_SCENE_STREAM_2 } from '../../../assets/idriss-scene-stream-2.png';
-import { WidgetVariants } from '../widget/types';
+import { WidgetVariants } from '../../../../../twitch-extension/src/app/types';
 
 import {
   default as DonorItem,
