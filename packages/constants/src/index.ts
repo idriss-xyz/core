@@ -21,7 +21,6 @@ export {
   SNAPSHOT_IDRISS_LINK,
   TOKENOMICS_DOCS_LINK,
   VAULT_LINK,
-  CREATORS_DONATE_LINK,
 } from './links';
 
 export { StakingABI } from './abis';
