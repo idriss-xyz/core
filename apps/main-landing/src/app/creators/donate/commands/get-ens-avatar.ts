@@ -18,9 +18,12 @@ const getEnsAvatar = async (payload: Payload): Promise<string> => {
     window.location.origin === 'https://idriss.yz'
       ? ''
       : 'https://idriss.xyz';
-  const response = await fetch(`${apiBaseUrl}/ens-avatar?ens=${payload.name}`, {
-    method: 'GET',
-  });
+  const response = await fetch(
+    `${apiBaseUrl}/api/ens-avatar?ens=${payload.name}`,
+    {
+      method: 'GET',
+    },
+  );
   if (!response.ok) {
     throw new Error('Failed to fetch ENS avatar');
   }
