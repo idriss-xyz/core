@@ -21,4 +21,6 @@ export {
   useSolanaExchanger,
   useLoginViaSiwe,
   useSubscriptions,
+  useAccountBalance,
+  useFarcasterName,
 } from './hooks';
