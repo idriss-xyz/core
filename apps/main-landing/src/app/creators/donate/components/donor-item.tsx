@@ -2,7 +2,9 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { TipHistoryFromUser } from '@idriss-xyz/constants';
 import { getShortWalletHex } from '@idriss-xyz/utils';
 
-import { useGetEnsAvatar } from '@/app/creators/donate/commands/get-ens-avatar';
+import { WHITELISTED_URLS } from '../../donate/constants';
+import { useGetAvatarImage } from '../commands/get-avatar-image';
+import { useGetEnsAvatarFromApi } from '../commands/get-ens-avatar-from-api';
 
 const rankBorders = [
   'border-[#FAC928]',
@@ -20,14 +22,14 @@ type Properties = {
 
 export default function DonorItem({
   donorRank,
-  donateAmount,
   donorDetails,
+  donateAmount,
 }: Properties) {
   const displayName = donorDetails.displayName?.value;
   const nameSource = donorDetails.displayName?.source;
   const imageSource = donorDetails.avatar?.source;
 
-  const ensAvatarQuery = useGetEnsAvatar(
+  const ensAvatarFromApiUrlQuery = useGetEnsAvatarFromApi(
     { name: displayName ?? '' },
     { enabled: nameSource === 'ENS' && !!displayName },
   );
@@ -35,23 +37,38 @@ export default function DonorItem({
   const farcasterAvatarUrl =
     imageSource === 'FARCASTER' ? donorDetails.avatar?.value?.url : null;
 
-  const avatarSource = ensAvatarQuery.data ?? farcasterAvatarUrl;
+  const avatarSourceUrl = ensAvatarFromApiUrlQuery.data ?? farcasterAvatarUrl;
+
+  const isAllowedUrl = avatarSourceUrl
+    ? WHITELISTED_URLS.some((domain) => {
+        return avatarSourceUrl.startsWith(domain);
+      })
+    : false;
+
+  const avatarDataQuery = useGetAvatarImage(
+    { url: avatarSourceUrl ?? '' },
+    { enabled: !!avatarSourceUrl && !isAllowedUrl },
+  );
 
   const avatarImage = (
     <div className="relative w-max">
-      {avatarSource ? (
+      {(avatarSourceUrl ??
+        (avatarSourceUrl && !isAllowedUrl && avatarDataQuery.data)) && (
         <img
-          src={avatarSource}
+          src={isAllowedUrl ? avatarSourceUrl : avatarDataQuery.data}
           alt={`Rank ${donorRank + 1}`}
           className={`size-8 rounded-full bg-neutral-200 ${donorRank <= 2 ? `border-2 ${rankBorders[donorRank]}` : 'border border-neutral-400'}`}
         />
-      ) : (
+      )}
+
+      {(!avatarSourceUrl || (!isAllowedUrl && !avatarDataQuery.data)) && (
         <div
           className={`flex size-8 items-center justify-center rounded-full ${donorRank <= 2 ? `border-2 ${rankBorders[donorRank]}` : 'border border-neutral-300'} bg-neutral-200`}
         >
           <Icon size={20} name="CircleUserRound" className="text-neutral-500" />
         </div>
       )}
+
       {donorRank <= 2 ? (
         <Icon
           size={13}
@@ -84,11 +101,15 @@ export default function DonorItem({
 
 type PlaceholderProperties = {
   donorRank: number;
+  amountToDisplay: number;
+  hideEncouragement?: boolean;
   previousDonateAmount: number;
 };
 
 export function DonorItemPlaceholder({
   donorRank,
+  hideEncouragement,
+  amountToDisplay,
   previousDonateAmount,
 }: PlaceholderProperties) {
   const avatarPlaceholder = (
@@ -127,20 +148,29 @@ export function DonorItemPlaceholder({
               : '<0.01'}
           </span>
         </li>
-        <span
-          style={{ height: `${(5 - donorRank) * 69}px` }}
-          className="flex items-center justify-center border-b border-b-neutral-300 px-5.5 py-4.5 text-center text-label4 gradient-text-2"
-        >
-          Donate now and claim {rankPlaces[donorRank]} place
-        </span>
+
+        {amountToDisplay - 1 - donorRank ? (
+          <span
+            style={{ height: `${(amountToDisplay - 1 - donorRank) * 69}px` }}
+            className="flex items-center justify-center border-b border-b-neutral-300 px-5.5 py-4.5 text-center text-label4 gradient-text-2"
+          >
+            {hideEncouragement
+              ? null
+              : `Donate now and claim ${rankPlaces[donorRank]} place`}
+          </span>
+        ) : null}
       </>
     );
   }
 
   return (
-    <span
-      style={{ height: `${(6 - donorRank) * 69}px` }}
-      className="flex items-center justify-center border-b border-b-neutral-300"
-    />
+    <>
+      {amountToDisplay - donorRank ? (
+        <span
+          style={{ height: `${(amountToDisplay - donorRank) * 69}px` }}
+          className="flex items-center justify-center border-b border-b-neutral-300"
+        />
+      ) : null}
+    </>
   );
 }

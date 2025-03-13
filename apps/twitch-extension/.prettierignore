@@ -1,0 +1,15 @@
+node_modules
+dist
+build
+*.js
+*.json
+*.css
+*.scss
+*.html
+*.md
+*.yaml
+*.yml
+.eslintignore
+.next
+*.cjs
+
