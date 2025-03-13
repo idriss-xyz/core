@@ -18,12 +18,11 @@ import { TopBar } from '@/components';
 import { validateAddressOrENS } from '@/app/creators/donate/utils';
 import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
 import DonateHistoryList from '@/app/creators/donate/components/history/donate-history-list';
+import { CREATOR_API_URL } from '@/app/creators/donate/constants';
 
 import { TopDonors } from './top-donors';
 import { Content } from './content';
 import { RainbowKitProviders } from './providers';
-
-const SOCKET_URL = 'https://core-production-a116.up.railway.app';
 
 const SEARCH_PARAMETER = {
   ADDRESS: 'address',
@@ -129,7 +128,7 @@ function DonorsContent() {
 
   useEffect(() => {
     if (validatedAddress && !socketInitialized) {
-      const socket = io(SOCKET_URL);
+      const socket = io(CREATOR_API_URL);
       setSocketInitialized(true);
 
       if (socket && !socketConnected) {
