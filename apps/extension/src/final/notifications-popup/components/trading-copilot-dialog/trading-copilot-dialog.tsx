@@ -22,7 +22,7 @@ import {
 } from '@idriss-xyz/ui/tooltip';
 
 import { useWallet, useSolanaWallet } from 'shared/extension';
-import { Closable, ErrorMessage, Icon, LazyImage } from 'shared/ui';
+import { Closable, ErrorMessage, Icon, LazyImage, TradingCopilotTooltip } from 'shared/ui';
 import { useCommandQuery } from 'shared/messaging';
 import {
   FormValues,
@@ -38,7 +38,6 @@ import { CHAIN, getWholeNumber } from 'shared/web3';
 import { IdrissSend } from 'shared/idriss';
 
 import { TokenIcon } from '../../utils';
-import { TradingCopilotTooltip } from '../trading-copilot-tooltip';
 
 import {
   Properties,
