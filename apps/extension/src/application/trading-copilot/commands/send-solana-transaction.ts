@@ -6,23 +6,25 @@ import {
   OkResult,
 } from 'shared/messaging';
 
-import { SwapDataToken } from '../types';
+import {
+  SendSolanaTxResponse as Response,
+  SendSolanaTxPayload as Payload,
+} from '../types';
 
-type Response = {
-  tokens: Record<string, SwapDataToken[]>;
-};
+import { COPILOT_API_URL } from './constants';
 
-export class GetTokensListCommand extends Command<void, Response> {
-  public readonly name = 'GetTokensListCommand' as const;
-  public readonly payload = undefined;
+export class SendSolanaTransactionCommand extends Command<Payload, Response> {
+  public readonly name = 'SendSolanaTransactionCommand' as const;
 
-  constructor() {
+  constructor(public payload: Payload) {
     super();
   }
 
   async handle() {
     try {
-      const response = await fetch('https://li.quest/v1/tokens?chains=bas', {
+      const response = await fetch(`${COPILOT_API_URL}/solana/send`, {
+        method: 'POST',
+        body: JSON.stringify(this.payload),
         headers: {
           'Content-Type': 'application/json',
         },

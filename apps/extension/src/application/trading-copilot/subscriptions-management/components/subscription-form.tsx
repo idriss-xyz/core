@@ -3,6 +3,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { isAddress } from 'viem';
 import { Link } from '@idriss-xyz/ui/link';
 import { VAULT_LINK } from '@idriss-xyz/constants';
+import { isSolanaAddress } from '@idriss-xyz/utils';
 
 import { useCommandMutation } from 'shared/messaging';
 import { ErrorMessage } from 'shared/ui';
@@ -45,8 +46,15 @@ export const SubscriptionForm = ({ onSubmit, canSubscribe }: Properties) => {
         return;
       }
 
+      if (isSolanaAddress(data.subscription)) {
+        await onSubmit({ address: data.subscription, chainType: 'SOLANA' });
+        form.reset(EMPTY_FORM);
+
+        return;
+      }
+
       if (isAddress(data.subscription)) {
-        onSubmit({ address: data.subscription });
+        await onSubmit({ address: data.subscription, chainType: 'EVM' });
         form.reset(EMPTY_FORM);
 
         return;
@@ -61,10 +69,22 @@ export const SubscriptionForm = ({ onSubmit, canSubscribe }: Properties) => {
           return;
         }
 
-        onSubmit({
-          address: farcasterDetails.address,
-          fid: farcasterDetails.fid,
-        });
+        if (farcasterDetails.addressSolana) {
+          await onSubmit({
+            address: farcasterDetails.addressSolana,
+            fid: farcasterDetails.fid,
+            chainType: 'SOLANA',
+          });
+        }
+
+        if (farcasterDetails.address) {
+          await onSubmit({
+            address: farcasterDetails.address,
+            fid: farcasterDetails.fid,
+            chainType: 'EVM',
+          });
+        }
+
         form.reset(EMPTY_FORM);
 
         return;
@@ -78,7 +98,7 @@ export const SubscriptionForm = ({ onSubmit, canSubscribe }: Properties) => {
         return;
       }
 
-      onSubmit({ address: ensAddress });
+      await onSubmit({ address: ensAddress, chainType: 'EVM' });
       form.reset(EMPTY_FORM);
     },
     [

@@ -6,6 +6,10 @@ export const MAX_ADDRESSES_PER_WEBHOOK = 10000; // Adjust based on Alchemy's lim
 export const BLOCK_LIST = ['ETH', 'USDC', 'USDT', 'DAI'];
 
 export const WEBHOOK_NETWORKS = ['BASE_MAINNET'];
+export enum WEBHOOK_NETWORK_TYPES {
+  EVM = 'EVM',
+  SOLANA = 'SOLANA',
+}
 
 export const expiryTime = 5 * 60 * 1000;
 

@@ -1,3 +1,4 @@
+import { PublicKey } from '@solana/web3.js';
 import { Hex } from 'viem';
 
 import { CHAIN, NATIVE_COIN_ADDRESS } from '../../constants/src';
@@ -168,6 +169,9 @@ const getBlockExplorers = (chainId: number) => {
 };
 
 export const getDefaultBlockExplorerUrl = (chainId: number) => {
+  if (chainId === Number('1151111081099710')) {
+    return 'https://solscan.io/';
+  }
   return getBlockExplorers(chainId)?.default.url;
 };
 
@@ -302,4 +306,13 @@ export const getTimeDifferenceString = ({
   }, 1000);
 
   return text ? `${timeDifference} ${text}` : timeDifference;
+};
+
+export const isSolanaAddress = (address: string): boolean => {
+  try {
+    new PublicKey(address);
+    return true;
+  } catch {
+    return false;
+  }
 };

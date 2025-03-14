@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
-import { AddressesEntity } from './addresses.entity';
+import { AddressesEntity } from './addreesses.entity';
 import { WebhookEntity } from './webhook.entity';
 import { webhooks } from '../constants';
 

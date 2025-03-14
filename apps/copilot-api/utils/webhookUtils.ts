@@ -1,10 +1,7 @@
-import { NextFunction } from 'express';
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import * as crypto from 'crypto';
-import { AlchemyWebhookEvent } from '../types';
-import { eventCache } from '../services/scheduler';
 
-export function validateAlchemySignature(
+export function validateWebhookSignature(
   getSigningKey: (internalWebhookId: string) => Promise<string | undefined>,
 ) {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -13,7 +10,7 @@ export function validateAlchemySignature(
     const internalWebhookId = req.params.internalWebhookId;
 
     if (!signature) {
-      res.status(400).send('Invalid request: missing raw body or signature');
+      res.status(400).send('Invalid request: missing signature');
       return;
     }
 
@@ -25,12 +22,20 @@ export function validateAlchemySignature(
       return;
     }
 
-    if (!isValidSignatureForStringBody(rawBody, signature, signingKey)) {
+    // Check if its neither a valid Alchemy nor Helius signature
+    if (
+      !isValidSignatureForStringBody(rawBody, signature, signingKey) &&
+      !isValidHeliusSignature(signature, signingKey)
+    ) {
       res.status(403).send('Signature validation failed, unauthorized!');
     } else {
       next();
     }
   };
+}
+
+function isValidHeliusSignature(signature: string, signingKey: string) {
+  return signature === signingKey;
 }
 
 function isValidSignatureForStringBody(
@@ -42,31 +47,4 @@ function isValidSignatureForStringBody(
   hmac.update(body, 'utf8');
   const digest = hmac.digest('hex');
   return signature === digest;
-}
-
-// Handle incoming events and add them to the cache
-export async function handleIncomingEvent(
-  webhookEvent: AlchemyWebhookEvent,
-): Promise<void> {
-  const activities = webhookEvent.event.activity;
-  if (!activities || activities.length === 0) {
-    console.error('No activity found in the webhook event.');
-    return;
-  }
-
-  for (const activity of activities) {
-    if (!activity.hash) {
-      console.error('Transaction hash is missing in an activity.', activity);
-      continue;
-    }
-    const txHash = activity.hash;
-    if (!eventCache[txHash]) {
-      eventCache[txHash] = {
-        activities: [],
-        timestamp: Date.now(),
-      };
-    }
-    activity.network = webhookEvent.event.network?.replace('_MAINNET', '');
-    eventCache[txHash].activities.push(activity);
-  }
 }

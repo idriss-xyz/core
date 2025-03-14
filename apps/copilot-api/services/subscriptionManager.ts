@@ -8,9 +8,14 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import dotenv from 'dotenv';
 import { join } from 'path';
-import { WEBHOOK_NETWORKS, MAX_ADDRESSES_PER_WEBHOOK } from '../constants';
+import {
+  WEBHOOK_NETWORKS,
+  MAX_ADDRESSES_PER_WEBHOOK,
+  WEBHOOK_NETWORK_TYPES,
+} from '../constants';
 import { mode } from '../utils/mode';
 import { SubscriptionsDetailsInterface, WebhookDataInterface } from '../types';
+import { isAddress } from 'viem';
 
 dotenv.config(
   mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
@@ -18,6 +23,8 @@ dotenv.config(
 
 const ALCHEMY_API_BASE_URL = 'https://dashboard.alchemyapi.io';
 const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY!;
+const HELIUS_API_BASE_URL = 'https://api.helius.xyz';
+const HELIUS_API_KEY = process.env.HELIUS_API_KEY!;
 const WEBHOOK_URL = process.env.WEBHOOK_URL!;
 
 const subscribersRepo = dataSource.getRepository(SubscribersEntity);
@@ -31,9 +38,12 @@ const webhooksRepo = dataSource.getRepository(WebhookEntity);
 export const subscribeAddress = async (
   subscriber_id: string,
   address: string,
+  chainType: WEBHOOK_NETWORK_TYPES,
   fid?: number,
 ) => {
-  address = address.toLowerCase();
+  if (chainType === WEBHOOK_NETWORK_TYPES.EVM) {
+    address = address.toLowerCase();
+  }
 
   await addressRepo.save({ address });
   await subscriptionsRepo.save({
@@ -46,15 +56,18 @@ export const subscribeAddress = async (
     where: { address },
   });
   if (!addressWebhookMap) {
-    await addAddressToWebhook(address);
+    await addAddressToWebhook(address, chainType);
   }
 };
 
 export const unsubscribeAddress = async (
   subscriberId: string,
   address: string,
+  chainType: WEBHOOK_NETWORK_TYPES,
 ): Promise<void> => {
-  address = address.toLowerCase();
+  if (chainType === WEBHOOK_NETWORK_TYPES.EVM) {
+    address = address.toLowerCase();
+  }
   try {
     await subscriptionsRepo.delete({ subscriber_id: subscriberId, address });
 
@@ -63,6 +76,8 @@ export const unsubscribeAddress = async (
       where: { subscriber_id: subscriberId },
     });
 
+    // TODO: Check remove. This causes extension to prompt for SIWE on emptying subscription
+    // list and trying to subscribe again.
     if (parseInt(subscriberRes.toString(), 10) === 0) {
       // Subscriber has no more subscriptions, remove from subscribers table
       await subscribersRepo.delete({ subscriber_id: subscriberId });
@@ -73,7 +88,7 @@ export const unsubscribeAddress = async (
 
     if (parseInt(addressRes.toString(), 10) === 0) {
       // No more subscribers, remove address from webhook and addresses table
-      await removeAddressFromWebhook(address);
+      await removeAddressFromWebhook(address, chainType);
 
       // Remove address from addresses table
       await addressRepo.delete({ address });
@@ -84,11 +99,39 @@ export const unsubscribeAddress = async (
   }
 };
 
-const addAddressToWebhook = async (address: string) => {
+const saveWebhookToDb = async (
+  address: string,
+  webhook: {
+    webhookId: any;
+    internalWebhookId: string;
+    chainType: string;
+    signingKey: string;
+  } | null,
+) => {
+  if (webhook == null) return;
+  const { webhookId, internalWebhookId, chainType, signingKey } = webhook;
+  await webhooksRepo.save({
+    internal_id: internalWebhookId,
+    webhook_id: webhookId,
+    chainType: chainType,
+    signing_key: signingKey,
+  });
+  await addressMapWebhooksRepo.save({
+    address,
+    webhook_internal_id: internalWebhookId,
+  });
+};
+
+const addAddressToWebhook = async (address: string, chainType: string) => {
   const res = await webhooksRepo
     .createQueryBuilder('webhooks')
-    .select(['webhooks.internal_id', 'webhooks.webhook_id'])
-    .where((qb) => {
+    .select([
+      'webhooks.internal_id',
+      'webhooks.webhook_id',
+      'webhooks.signing_key',
+    ])
+    .where('webhooks.chainType = :chainType', { chainType })
+    .andWhere((qb) => {
       const subQuery = qb
         .subQuery()
         .select('address_webhook_map.webhook_internal_id')
@@ -104,25 +147,26 @@ const addAddressToWebhook = async (address: string) => {
     .getRawOne();
 
   if (!res) {
-    const webhooks = await createNewWebhook(address);
-    for (const webhook of webhooks) {
-      const { webhookId, internalWebhookId, signingKey } = webhook;
-      await webhooksRepo.save({
-        internal_id: internalWebhookId,
-        webhook_id: webhookId,
-        signing_key: signingKey,
-      });
-      await addressMapWebhooksRepo.save({
-        address,
-        webhook_internal_id: internalWebhookId,
-      });
+    if (chainType === WEBHOOK_NETWORK_TYPES.EVM) {
+      const webhooks = await createNewWebhook(address);
+      for (const webhook of webhooks) {
+        await saveWebhookToDb(address, webhook);
+      }
+    } else if (chainType === WEBHOOK_NETWORK_TYPES.SOLANA) {
+      const webhook = await createNewSolanaWebhook(address);
+      await saveWebhookToDb(address, webhook);
     }
   } else {
     const {
       webhooks_webhook_id: webhook_id,
       webhooks_internal_id: internal_id,
+      webhooks_signing_key: signingKey,
     } = res;
-    await updateWebhookAddresses(webhook_id, [address], []);
+    if (chainType === WEBHOOK_NETWORK_TYPES.EVM) {
+      await updateWebhookAddresses(webhook_id, [address], []);
+    } else if (chainType === WEBHOOK_NETWORK_TYPES.SOLANA) {
+      await updateSolanaWebhookAddresses(webhook_id, signingKey, [address], []);
+    }
     await addressMapWebhooksRepo.save({
       address,
       webhook_internal_id: internal_id,
@@ -130,7 +174,10 @@ const addAddressToWebhook = async (address: string) => {
   }
 };
 
-async function removeAddressFromWebhook(address: string): Promise<void> {
+async function removeAddressFromWebhook(
+  address: string,
+  chainType: WEBHOOK_NETWORK_TYPES,
+): Promise<void> {
   // Get the webhook associated with the address
   const res = await addressMapWebhooksRepo.findOne({ where: { address } });
 
@@ -151,10 +198,14 @@ async function removeAddressFromWebhook(address: string): Promise<void> {
     return;
   }
 
-  const { webhook_id } = webhookData;
+  const { webhook_id, signing_key } = webhookData;
 
-  // Update the webhook via Alchemy's API
-  await updateWebhookAddresses(webhook_id, [], [address]);
+  // Update the webhook via webhook proovider API
+  if (chainType === WEBHOOK_NETWORK_TYPES.EVM) {
+    await updateWebhookAddresses(webhook_id, [], [address]);
+  } else if (chainType === WEBHOOK_NETWORK_TYPES.SOLANA) {
+    await updateSolanaWebhookAddresses(webhook_id, signing_key, [], [address]);
+  }
 
   // Remove address from address_webhook_map
   await addressMapWebhooksRepo.delete({ address });
@@ -165,8 +216,13 @@ async function removeAddressFromWebhook(address: string): Promise<void> {
   });
 
   if (parseInt(countRes.toString(), 10) === 0) {
-    // Delete webhook from Alchemy and database
-    await deleteWebhook(webhook_id);
+    // Delete webhook from webhook provider and database
+    if (chainType === WEBHOOK_NETWORK_TYPES.EVM) {
+      await deleteAlchemyWebhook(webhook_id);
+    } else if (chainType === WEBHOOK_NETWORK_TYPES.SOLANA) {
+      await deleteHeliusWebhook(webhook_id);
+    }
+
     await webhooksRepo.delete({ internal_id: webhook_internal_id });
   }
 }
@@ -202,12 +258,54 @@ const createNewWebhook = async (
       const webhookId = data.data.id;
       const signingKey = data.data.signing_key;
 
-      webhooks.push({ webhookId, internalWebhookId, signingKey });
+      webhooks.push({
+        webhookId,
+        internalWebhookId,
+        chainType: 'EVM',
+        signingKey,
+      });
     }
     return webhooks;
   } catch (err) {
     console.error('Error creating webhook: ', err);
     return [];
+  }
+};
+
+const createNewSolanaWebhook = async (address: string) => {
+  try {
+    const internalWebhookId = uuidv4();
+    const webhookSecret = uuidv4();
+    const webhookUrl = `${WEBHOOK_URL}/webhook/solana/${internalWebhookId}`;
+
+    const response = await axios.post(
+      `${HELIUS_API_BASE_URL}/v0/webhooks?api-key=${HELIUS_API_KEY}`,
+      {
+        webhookURL: webhookUrl,
+        transactionTypes: ['SWAP', 'UNKNOWN'],
+        accountAddresses: [address],
+        webhookType: 'enhanced',
+        authHeader: webhookSecret,
+      },
+      {
+        headers: {
+          'accept': 'application/json',
+          'content-type': 'application/json',
+        },
+      },
+    );
+
+    const webhookId = response.data.webhookID;
+
+    return {
+      webhookId,
+      internalWebhookId,
+      chainType: 'SOLANA',
+      signingKey: webhookSecret,
+    };
+  } catch (err) {
+    console.error('Error creating Solana webhook: ', err);
+    return null;
   }
 };
 
@@ -237,7 +335,72 @@ const updateWebhookAddresses = async (
   }
 };
 
-async function deleteWebhook(webhookId: string): Promise<void> {
+const updateSolanaWebhookAddresses = async (
+  webhookId: string,
+  signingKey: string,
+  addressesToAdd: string[],
+  addressesToRemove: string[],
+): Promise<void> => {
+  try {
+    const webhookData = await fetchHeliusWebhookData(webhookId);
+
+    if (!webhookData) {
+      return;
+    }
+
+    const previousAddresses = webhookData.accountAddresses;
+    const filteredAddresses = previousAddresses.filter(
+      (address: string) => !addressesToRemove.includes(address),
+    );
+
+    const newAddresses = [...filteredAddresses, ...addressesToAdd];
+
+    if (newAddresses.length === 0) {
+      // If no addresses left, do not edit and continue to deletion
+      return;
+    }
+
+    await axios.put(
+      `${HELIUS_API_BASE_URL}/v0/webhooks/${webhookId}?api-key=${HELIUS_API_KEY}`,
+      {
+        webhookURL: webhookData.webhookURL,
+        transactionTypes: webhookData.transactionTypes,
+        webhookType: webhookData.webhookType,
+        accountAddresses: newAddresses,
+        authHeader: signingKey,
+      },
+      {
+        headers: {
+          'accept': 'application/json',
+          'content-type': 'application/json',
+        },
+      },
+    );
+  } catch (err) {
+    console.error('Error updating Solana webhook: ', err);
+  }
+};
+
+const fetchHeliusWebhookData = async (webhookId: string) => {
+  try {
+    const response = await fetch(
+      `https://api.helius.xyz/v0/webhooks/${webhookId}?api-key=${HELIUS_API_KEY}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+    const data = response.json();
+    return data;
+  } catch (err) {
+    console.error('Error fetching current Solana webhook: ', err);
+    return null;
+  }
+};
+
+async function deleteAlchemyWebhook(webhookId: string): Promise<void> {
   try {
     await axios.delete(
       `${ALCHEMY_API_BASE_URL}/api/delete-webhook?webhook_id=${webhookId}`,
@@ -245,6 +408,23 @@ async function deleteWebhook(webhookId: string): Promise<void> {
         headers: {
           'accept': 'application/json',
           'X-Alchemy-Token': ALCHEMY_API_KEY,
+        },
+      },
+    );
+    return;
+  } catch (err) {
+    console.error('Error deleting webhook: ', err);
+  }
+}
+
+async function deleteHeliusWebhook(webhookId: string): Promise<void> {
+  try {
+    await axios.delete(
+      `${HELIUS_API_BASE_URL}/v0/webhooks/${webhookId}?api-key=${HELIUS_API_KEY}`,
+      {
+        headers: {
+          'accept': 'application/json',
+          'content-type': 'application/json',
         },
       },
     );
@@ -269,8 +449,11 @@ export const getSubscriptionsDetails = async (
 
 export const isSubscribedAddress = async (
   address: string,
+  chainType: WEBHOOK_NETWORK_TYPES,
 ): Promise<boolean> => {
-  address = address.toLowerCase();
+  if (chainType === WEBHOOK_NETWORK_TYPES.EVM) {
+    address = address.toLowerCase();
+  }
   const res = await subscriptionsRepo.count({ where: { address } });
   return parseInt(res.toString(), 10) > 0;
 };
@@ -278,7 +461,9 @@ export const isSubscribedAddress = async (
 export const getSubscribersByAddress = async (
   address: string,
 ): Promise<string[]> => {
-  address = address.toLowerCase();
+  if (isAddress(address)) {
+    address = address.toLowerCase();
+  }
   const res = await subscriptionsRepo.find({ where: { address } });
   return res.map(
     (subscription: SubscriptionsEntity) => subscription.subscriber_id,

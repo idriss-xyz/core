@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { Wallet } from '@idriss-xyz/wallet-connect';
+import { isSolanaAddress } from '@idriss-xyz/utils';
 
 import {
   onWindowMessage,
@@ -8,6 +9,7 @@ import {
   useCommandQuery,
 } from 'shared/messaging';
 import { useTradingCopilot } from 'shared/extension';
+import { SubscriptionsStorage } from 'shared/web3';
 
 import {
   GetStakedBalanceCommand,
@@ -67,13 +69,25 @@ export const useSubscriptions = ({ wallet, addTabListener }: Properties) => {
     Number(subscriptionsQuery.data?.details.length) < FREE_SUBSCRIPTIONS;
 
   useEffect(() => {
-    if (subscriptionsQuery.isSuccess) {
-      saveSubscriptionsAmount(subscriptionsQuery.data?.details.length);
-    }
+    const initializeSubscriptions = async () => {
+      const storedSubscriptions = await SubscriptionsStorage.get();
+      if (!storedSubscriptions?.length) {
+        const freshData = await subscriptionsQuery.refetch();
+        if (freshData.data?.details) {
+          SubscriptionsStorage.save(freshData.data.details);
+        }
+      } else if (subscriptionsQuery.isSuccess) {
+        saveSubscriptionsAmount(subscriptionsQuery.data?.details.length);
+        SubscriptionsStorage.save(subscriptionsQuery.data?.details);
+      }
+    };
+
+    void initializeSubscriptions();
   }, [
     saveSubscriptionsAmount,
+    subscriptionsQuery,
     subscriptionsQuery.isSuccess,
-    subscriptionsQuery.data?.details.length,
+    subscriptionsQuery.data?.details,
   ]);
 
   useEffect(() => {
@@ -129,10 +143,36 @@ export const useSubscriptions = ({ wallet, addTabListener }: Properties) => {
       await verifySiweStatus();
       const authToken = await getAuthToken();
 
-      await unsubscribeMutation.mutateAsync({
-        subscription: { ...payload, subscriberId: wallet.account },
-        authToken: authToken ?? '',
-      });
+      if (payload.fid !== null && payload.fid !== undefined) {
+        const subscriptionsToRemove = subscriptionsQuery.data?.details.filter(
+          (s) => {
+            return s.fid === payload.fid;
+          },
+        );
+
+        if (subscriptionsToRemove && subscriptionsToRemove.length > 0) {
+          await Promise.all(
+            subscriptionsToRemove.map((s) => {
+              const chainTypeForS: 'SOLANA' | 'EVM' = isSolanaAddress(s.address)
+                ? 'SOLANA'
+                : 'EVM';
+              return unsubscribeMutation.mutateAsync({
+                subscription: {
+                  address: s.address,
+                  subscriberId: wallet.account,
+                  chainType: chainTypeForS,
+                },
+                authToken: authToken ?? '',
+              });
+            }),
+          );
+        }
+      } else {
+        await unsubscribeMutation.mutateAsync({
+          subscription: { ...payload, subscriberId: wallet.account },
+          authToken: authToken ?? '',
+        });
+      }
 
       void subscriptionsQuery.refetch();
     },

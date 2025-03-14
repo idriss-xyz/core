@@ -30,7 +30,7 @@ router.get('/', (_, res) => {
 });
 
 router.post('/subscribe', verifyToken(), async (req, res) => {
-  const { fid, address } = req.body;
+  const { fid, address, chainType } = req.body;
 
   const { id: subscriberId } = req.user;
 
@@ -40,7 +40,7 @@ router.post('/subscribe', verifyToken(), async (req, res) => {
   }
 
   try {
-    await subscribeAddress(subscriberId, address, fid);
+    await subscribeAddress(subscriberId, address, chainType, fid);
 
     res
       .status(200)
@@ -51,7 +51,7 @@ router.post('/subscribe', verifyToken(), async (req, res) => {
 });
 
 router.post('/unsubscribe', verifyToken(), async (req, res) => {
-  const { address } = req.body;
+  const { address, chainType } = req.body;
 
   const { id: subscriberId } = req.user;
 
@@ -61,7 +61,7 @@ router.post('/unsubscribe', verifyToken(), async (req, res) => {
   }
 
   try {
-    await unsubscribeAddress(subscriberId, address);
+    await unsubscribeAddress(subscriberId, address, chainType);
 
     res
       .status(200)
@@ -133,8 +133,7 @@ router.post('/get-quote', requestLimitation, async (req, res) => {
     });
     res.status(200).json(quoteResult);
   } catch (err) {
-    console.error('Error getting quote: ' + err);
-    res.status(429).json({ error: 'You reach Lifi limit' });
+    res.status(500).json({ error: err });
   }
 });
 

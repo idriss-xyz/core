@@ -5,6 +5,7 @@ import {
   getShortWalletHex,
   getTimeDifferenceString,
   roundToSignificantFiguresForCopilotTrading,
+  isSolanaAddress,
 } from '@idriss-xyz/utils';
 import {
   Tooltip,
@@ -28,6 +29,7 @@ export const TradingCopilotToast = ({
   tokenImage,
   tokenData,
 }: Properties) => {
+  const userName = ensName ?? toast.from;
   const { toastSoundEnabled } = useTradingCopilot();
   const playedTransactionHashes: MutableRefObject<Set<string>> = useRef(
     new Set(),
@@ -47,8 +49,6 @@ export const TradingCopilotToast = ({
     );
   }
 
-  const userName = ensName ?? toast.from;
-
   const { value: roundedNumber, index: zerosIndex } =
     roundToSignificantFiguresForCopilotTrading(toast.tokenIn.amount, 2);
 
@@ -65,7 +65,9 @@ export const TradingCopilotToast = ({
       />
       <div className="flex w-full flex-col gap-y-1">
         <p className="break-all text-label3 text-neutral-900">
-          {isAddress(userName) ? getShortWalletHex(userName) : userName}{' '}
+          {isAddress(userName) || isSolanaAddress(userName)
+            ? getShortWalletHex(userName)
+            : userName}{' '}
           <span className="inline-flex items-center gap-x-1 text-body3 text-neutral-600">
             got{' '}
             <span className="inline-flex items-center justify-center gap-x-1">

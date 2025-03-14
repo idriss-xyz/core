@@ -58,7 +58,7 @@ const COMMAND_MAP = {
   ...TRADING_COPILOT_COMMAND_MAP,
 };
 
-const SERVER_URL = 'https://copilot-api.idriss.xyz/';
+const SERVER_URL = 'https://copilot-staging.up.railway.app/';
 
 export class ServiceWorker {
   private observabilityScope: ObservabilityScope =
@@ -112,12 +112,16 @@ export class ServiceWorker {
     });
 
     ExtensionSettingsManager.onWalletChange((wallet) => {
-      if (this.socket.connected) {
-        this.socket.disconnect();
-      }
+      console.log('%c[WebSocket] Wallet changed.', 'color: #FF9900;');
 
-      if (wallet?.account) {
-        this.socket.connect();
+      if (wallet && 'providerRdns' in wallet) {
+        if (this.socket.connected) {
+          this.socket.disconnect();
+        }
+
+        if (wallet?.account) {
+          this.socket.connect();
+        }
       }
     });
 

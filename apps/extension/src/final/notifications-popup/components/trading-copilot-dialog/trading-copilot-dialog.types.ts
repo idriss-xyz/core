@@ -1,11 +1,12 @@
-import { Wallet } from '@idriss-xyz/wallet-connect';
+import { Wallet, SolanaWallet } from '@idriss-xyz/wallet-connect';
 
-import { SwapData } from 'application/trading-copilot';
+import { SwapData, SwapDataToken } from 'application/trading-copilot';
+import { CHAIN } from 'shared/web3';
 
 export interface Properties {
   dialog: SwapData;
   closeDialog: () => void;
-  tokenData: Record<string, string>;
+  tokenData: SwapDataToken | null;
   tokenImage: string;
 }
 
@@ -14,10 +15,11 @@ export interface ContentProperties extends Properties {
 }
 
 export interface WalletBalanceProperties {
-  wallet: Wallet;
+  network: keyof typeof CHAIN | 'SOLANA';
+  balance: string | null | undefined;
 }
 
 export interface TradeValueProperties {
-  wallet: Wallet;
+  wallet: Wallet | SolanaWallet;
   dialog: SwapData;
 }

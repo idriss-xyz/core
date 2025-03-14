@@ -1,8 +1,10 @@
 import { Icon } from '@idriss-xyz/ui/icon';
 import { useEffect, useState } from 'react';
 
+import { SwapDataToken } from 'application/trading-copilot';
+
 interface TokenIconProperties {
-  tokenData: Record<string, string>;
+  tokenData: SwapDataToken | null;
   tokenImage: string;
 }
 

@@ -2,16 +2,25 @@ export {
   COMMAND_MAP as TRADING_COPILOT_COMMAND_MAP,
   GetEnsInfoCommand,
   GetEnsNameCommand,
+  GetFarcasterUserCommand,
   GetQuoteCommand,
   GetEnsBalanceCommand,
+  GetSolanaBalanceCommand,
   GetTokensImageCommand,
   GetTokensListCommand,
 } from './commands';
 export type {
   SwapData,
+  SwapDataToken,
   FormValues,
   SubscribePayload,
   UnsubscribePayload,
 } from './types';
 export { SubscriptionsManagement } from './subscriptions-management';
-export { useExchanger, useLoginViaSiwe, useSubscriptions } from './hooks';
+export {
+  useExchanger,
+  useSolanaExchanger,
+  useLoginViaSiwe,
+  useSubscriptions,
+  useAccountBalance,
+} from './hooks';

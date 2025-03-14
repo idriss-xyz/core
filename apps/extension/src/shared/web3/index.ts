@@ -23,7 +23,9 @@ export {
 export { TransactionRevertedError } from './errors';
 export {
   WalletStorage,
+  SolanaWalletStorage,
   AuthTokenStorage,
   ToastSoundStateStorage,
   SubscriptionsAmountStorage,
+  SubscriptionsStorage,
 } from './storage';
