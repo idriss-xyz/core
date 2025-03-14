@@ -39,6 +39,7 @@ router.post('/', async (req: Request, res: Response) => {
     res.json({
       stats,
       leaderboard,
+      knownDonations,
     });
   } catch (error) {
     console.error('Tip history error:', error);

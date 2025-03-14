@@ -8,6 +8,7 @@ import { Hex } from 'viem';
 export async function storeToDatabase(
   address: Hex,
   edges: { node: ZapperNode }[],
+  overwrite: boolean = false,
 ) {
   if (!AppDataSource.isInitialized) {
     await AppDataSource.initialize();
@@ -31,20 +32,34 @@ export async function storeToDatabase(
     }),
   );
 
-  const newNodes = nodes.filter((node) => {
-    return !existingHashes.has(node.transaction.hash);
-  });
-  if (newNodes.length === 0) return;
+  let donationsToSave: Donation[];
 
-  const newDonations = newNodes.map((node) => {
-    return donationRepo.create({
-      transactionHash: node.transaction.hash,
-      fromAddress: node.transaction.fromUser.address,
-      toAddress: address,
-      timestamp: node.timestamp,
-      data: node,
+  if (overwrite) {
+    donationsToSave = nodes.map((node) => {
+      return donationRepo.create({
+        transactionHash: node.transaction.hash,
+        fromAddress: node.transaction.fromUser.address,
+        toAddress: address,
+        timestamp: node.timestamp,
+        data: node,
+      });
     });
-  });
+  } else {
+    const newNodes = nodes.filter((node) => {
+      return !existingHashes.has(node.transaction.hash);
+    });
+    if (newNodes.length === 0) return;
 
-  await donationRepo.save(newDonations);
+    donationsToSave = newNodes.map((node) => {
+      return donationRepo.create({
+        transactionHash: node.transaction.hash,
+        fromAddress: node.transaction.fromUser.address,
+        toAddress: address,
+        timestamp: node.timestamp,
+        data: node,
+      });
+    });
+  }
+
+  await donationRepo.save(donationsToSave);
 }

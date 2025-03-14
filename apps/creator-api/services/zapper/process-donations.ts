@@ -25,15 +25,19 @@ const app_addresses = Object.values(CHAIN_TO_IDRISS_TIPPING_ADDRESS).map(
 );
 
 export async function processAllDonations(options: {
-  address: Hex;
+  address: Hex | Hex[];
   toAddresses?: Hex[];
   oldestTransactionTimestamp?: number;
+  overwrite: boolean;
 }): Promise<{ newEdges: { node: ZapperNode }[] }> {
   const {
     address,
     toAddresses = app_addresses,
     oldestTransactionTimestamp = OLDEST_TRANSACTION_TIMESTAMP,
+    overwrite,
   } = options;
+
+  const addressesArray = Array.isArray(address) ? address : [address];
 
   const newEdges: { node: ZapperNode }[] = [];
   let cursor: string | null = null;
@@ -41,7 +45,7 @@ export async function processAllDonations(options: {
 
   while (hasNextPage) {
     const variables: TipHistoryVariables = {
-      addresses: [address],
+      addresses: addressesArray,
       toAddresses,
       isSigner: false,
       after: cursor,
@@ -80,7 +84,26 @@ export async function processAllDonations(options: {
 
   if (newEdges.length > 0) {
     await enrichNodesWithHistoricalPrice(newEdges);
-    await storeToDatabase(address, newEdges);
+    const groupedByToAddress: Record<Hex, ZapperNode[]> = newEdges.reduce(
+      (acc, edge) => {
+        const toAddress = edge.node.interpretation.descriptionDisplayItems[1]!
+          .account.address as Hex;
+        if (!acc[toAddress]) {
+          acc[toAddress] = [];
+        }
+        acc[toAddress].push(edge.node);
+        return acc;
+      },
+      {} as Record<Hex, ZapperNode[]>,
+    );
+
+    for (const [toAddress, edges] of Object.entries(groupedByToAddress)) {
+      await storeToDatabase(
+        toAddress as Hex,
+        edges.map((edge) => ({ node: edge })),
+        overwrite,
+      );
+    }
   }
 
   return { newEdges };
