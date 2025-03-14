@@ -38,8 +38,8 @@ export async function storeToDatabase(
     donationsToSave = nodes.map((node) => {
       return donationRepo.create({
         transactionHash: node.transaction.hash,
-        fromAddress: node.transaction.fromUser.address,
-        toAddress: address,
+        fromAddress: node.transaction.fromUser.address.toLowerCase() as Hex,
+        toAddress: address.toLowerCase() as Hex,
         timestamp: node.timestamp,
         data: node,
       });
@@ -53,8 +53,8 @@ export async function storeToDatabase(
     donationsToSave = newNodes.map((node) => {
       return donationRepo.create({
         transactionHash: node.transaction.hash,
-        fromAddress: node.transaction.fromUser.address,
-        toAddress: address,
+        fromAddress: node.transaction.fromUser.address.toLowerCase() as Hex,
+        toAddress: address.toLowerCase() as Hex,
         timestamp: node.timestamp,
         data: node,
       });

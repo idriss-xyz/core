@@ -62,6 +62,7 @@ router.post('/', validationRules, async (req: Request, res: Response) => {
       oldestTransactionTimestamp,
       overwrite,
     });
+    // ai! add a simple return for this success case mentioning how many transactions have been updated
   } catch (error) {
     console.error('Overwrite donation error:', error);
     res.status(500).json({ error: 'Failed to process donation data' });
