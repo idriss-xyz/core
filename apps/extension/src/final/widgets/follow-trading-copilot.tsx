@@ -3,7 +3,13 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { Hex } from 'viem';
 import { Wallet } from '@idriss-xyz/wallet-connect';
 
-import { Button, classes, PortalWithTailwind, usePooling, TradingCopilotTooltip } from 'shared/ui';
+import {
+  Button,
+  classes,
+  PortalWithTailwind,
+  usePooling,
+  TradingCopilotTooltip,
+} from 'shared/ui';
 import {
   SubscribePayload,
   UnsubscribePayload,

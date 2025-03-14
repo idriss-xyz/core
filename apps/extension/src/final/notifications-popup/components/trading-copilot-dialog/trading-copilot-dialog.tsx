@@ -22,7 +22,13 @@ import {
 } from '@idriss-xyz/ui/tooltip';
 
 import { useWallet, useSolanaWallet } from 'shared/extension';
-import { Closable, ErrorMessage, Icon, LazyImage, TradingCopilotTooltip } from 'shared/ui';
+import {
+  Closable,
+  ErrorMessage,
+  Icon,
+  LazyImage,
+  TradingCopilotTooltip,
+} from 'shared/ui';
 import { useCommandQuery } from 'shared/messaging';
 import {
   FormValues,

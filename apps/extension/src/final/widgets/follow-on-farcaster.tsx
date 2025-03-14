@@ -3,7 +3,12 @@ import { useLocation } from 'react-use';
 
 import { FarcasterButton, GetFollowersCommand } from 'shared/farcaster';
 import { useCommandQuery } from 'shared/messaging';
-import { classes, PortalWithTailwind, usePooling, TradingCopilotTooltip } from 'shared/ui';
+import {
+  classes,
+  PortalWithTailwind,
+  usePooling,
+  TradingCopilotTooltip,
+} from 'shared/ui';
 import { getWarpcastUserLink } from 'host/warpcast';
 import { FARCASTER_LOGO } from 'assets/images';
 import { useEventsLogger } from 'shared/observability';

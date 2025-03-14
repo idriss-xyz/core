@@ -6,7 +6,12 @@ import { isSolanaAddress, getShortWalletHex } from '@idriss-xyz/utils';
 import { isAddress } from 'viem';
 
 import { useCommandQuery } from 'shared/messaging';
-import { Icon, LazyImage, getGithubUserLink, TradingCopilotTooltip } from 'shared/ui';
+import {
+  Icon,
+  LazyImage,
+  getGithubUserLink,
+  TradingCopilotTooltip,
+} from 'shared/ui';
 import { getTwitterUserLink } from 'host/twitter';
 
 import {
