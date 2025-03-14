@@ -1,18 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import { Hex } from 'viem';
 import { TipHistoryResponse } from '@idriss-xyz/constants';
 
 import { CREATOR_API_URL } from '../constants';
 
-type Payload = {
-  address: Hex;
-};
-
-type Options = {
-  enabled?: boolean;
-};
-
-const getReceivedHistory = async (payload: Payload) => {
+const getReceivedHistory = async () => {
   // const receivedHistory = await fetch(`${CREATOR_API_URL}/received-history`, {
   // TODO: change url to new endpoint
   const receivedHistory = await fetch(`${CREATOR_API_URL}/tip-history`, {
@@ -20,7 +11,10 @@ const getReceivedHistory = async (payload: Payload) => {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(payload),
+    // TODO: update body to match new endpoint payload
+    body: JSON.stringify({
+      address: '0x42d4cb836571e60ffc84a6cdbeaa2f0d2240c2bd',
+    }),
   });
 
   const result = await receivedHistory.json();
@@ -28,12 +22,11 @@ const getReceivedHistory = async (payload: Payload) => {
   return result as TipHistoryResponse;
 };
 
-export const useGetReceivedHistory = (payload: Payload, options?: Options) => {
+export const useGetReceivedHistory = () => {
   return useQuery({
-    queryKey: ['receivedHistory', payload.address],
+    queryKey: ['receivedHistory'],
     queryFn: () => {
-      return getReceivedHistory({ address: payload.address });
+      return getReceivedHistory();
     },
-    ...options,
   });
 };
