@@ -12,6 +12,7 @@ import { storeToDatabase } from '../db/store-new-donation';
 import dotenv from 'dotenv';
 import { mode } from '../utils/mode';
 import { join } from 'path';
+import { Hex } from 'viem';
 
 const router = Router();
 
@@ -20,7 +21,7 @@ dotenv.config(
 );
 
 const app_addresses = Object.values(CHAIN_TO_IDRISS_TIPPING_ADDRESS).map(
-  (address) => address.toLowerCase(),
+  (address) => address.toLowerCase() as Hex,
 );
 
 router.post('/', async (req: Request, res: Response) => {
@@ -31,8 +32,9 @@ router.post('/', async (req: Request, res: Response) => {
       res.status(400).json({ error: 'Invalid or missing address' });
       return;
     }
+    const hexAddress = address as Hex;
 
-    const knownDonations = await fetchDonationsByToAddress(address);
+    const knownDonations = await fetchDonationsByToAddress(hexAddress);
     const knownDonationMap = new Map<string, ZapperNode>();
     for (const donation of knownDonations) {
       if (donation.transactionHash && donation.data) {
@@ -51,7 +53,7 @@ router.post('/', async (req: Request, res: Response) => {
 
     while (hasNextPage) {
       const variables: TipHistoryVariables = {
-        addresses: [address],
+        addresses: [hexAddress],
         toAddresses: app_addresses,
         isSigner: false,
         after: cursor,
@@ -105,7 +107,7 @@ router.post('/', async (req: Request, res: Response) => {
 
     if (newEdges.length > 0) {
       await enrichNodesWithHistoricalPrice(newEdges);
-      await storeToDatabase(address, newEdges);
+      await storeToDatabase(hexAddress, newEdges);
       for (const edge of newEdges) {
         knownDonationMap.set(
           edge.node.transaction.hash.toLowerCase(),

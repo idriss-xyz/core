@@ -49,6 +49,18 @@ export const TipHistoryQuery = `
               ... on ActorDisplayItem {
                 account {
                   address
+                  displayName {
+                    source
+                    value
+                  }
+                  avatar {
+                    value {
+                      ... on AvatarUrl {
+                        url
+                      }
+                    }
+                    source
+                  }
                 }
               }
             }

@@ -3,6 +3,7 @@ import express from 'express';
 import { processNewDonations } from '../services/zapper/process-donations';
 import { connectedClients } from '../services/socket-server';
 import { ZapperNode } from '../types';
+import { Hex } from 'viem';
 
 const router = express.Router();
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -18,13 +19,15 @@ router.post('/', async (req: Request, res: Response) => {
       return;
     }
 
+    const hexAddress = address as Hex;
+
     let retries = 0;
     let newEdges = <{ node: ZapperNode }[]>[];
 
     await delay(RETRY_INTERVAL);
 
     while (retries < MAX_RETRIES) {
-      const result = await processNewDonations(address);
+      const result = await processNewDonations(hexAddress);
       newEdges = result.newEdges;
 
       if (newEdges.length > 0) {
