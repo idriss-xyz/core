@@ -1,12 +1,16 @@
 import { Donation } from '../db/entities/donations.entity';
-import { fetchDonations } from '../db/fetch-known-donations';
+import {
+  fetchDonations,
+  fetchDonationRecipients,
+} from '../db/fetch-known-donations';
 import {
   TokenDisplayItem,
   DonationStats,
   TokenV2,
   LeaderboardStats,
+  UserData,
 } from '../types';
-import { formatUnits } from 'viem';
+import { formatUnits, Hex } from 'viem';
 
 export function calculateStatsForDonorAddress(
   donations: Donation[],
@@ -16,7 +20,7 @@ export function calculateStatsForDonorAddress(
   const addressFrequency: Record<string, number> = {};
   const tokenFrequency: Record<string, number> = {};
   let biggestDonationAmount = 0;
-  let mostDonatedToAddress = '';
+  let mostDonatedToAddress = '0x' as Hex;
   let favoriteDonationToken = '';
   let favoriteTokenMetadata: Omit<TokenV2, 'onchainMarketData'> | null = null;
   let donorDisplayName: string | null = null;
@@ -48,7 +52,7 @@ export function calculateStatsForDonorAddress(
       addressFrequency[toAddress] >
       (addressFrequency[mostDonatedToAddress] || 0)
     ) {
-      mostDonatedToAddress = toAddress;
+      mostDonatedToAddress = toAddress as Hex;
     }
 
     const tokenSymbol = tokenDisplayItem.tokenV2.symbol;
@@ -94,31 +98,91 @@ export async function calculateGlobalDonorLeaderboard(): Promise<
   const groupedDonations = await fetchDonations();
 
   const leaderboard = Object.entries(groupedDonations).map(
-    ([address, donations]) => ({
-      address,
-      donorMetadata: donations[0].data.transaction.fromUser,
-      totalAmount: donations.reduce((sum, donation) => {
-        const tokenDisplayItem = donation.data.interpretation
-          .descriptionDisplayItems[0] as TokenDisplayItem;
+    ([address, donations]) => {
+      const hexAddress = address as Hex;
+      return {
+        address: hexAddress,
+        donorMetadata: donations[0].data.transaction.fromUser,
+        totalAmount: donations.reduce((sum, donation) => {
+          const tokenDisplayItem = donation.data.interpretation
+            .descriptionDisplayItems[0] as TokenDisplayItem;
 
-        const amountRaw = tokenDisplayItem?.amountRaw;
-        const price = tokenDisplayItem?.tokenV2?.onchainMarketData?.price;
-        const decimals = tokenDisplayItem?.tokenV2?.decimals ?? 18;
+          const amountRaw = tokenDisplayItem?.amountRaw;
+          const price = tokenDisplayItem?.tokenV2?.onchainMarketData?.price;
+          const decimals = tokenDisplayItem?.tokenV2?.decimals ?? 18;
 
-        if (
-          amountRaw === undefined ||
-          price === undefined ||
-          decimals === undefined
-        )
-          return sum;
+          if (
+            amountRaw === undefined ||
+            price === undefined ||
+            decimals === undefined
+          )
+            return sum;
 
-        const tradeValue =
-          Number.parseFloat(formatUnits(BigInt(amountRaw), decimals)) * price;
+          const tradeValue =
+            Number.parseFloat(formatUnits(BigInt(amountRaw), decimals)) * price;
 
-        return sum + tradeValue;
-      }, 0),
-    }),
+          return sum + tradeValue;
+        }, 0),
+      };
+    },
   );
+
+  leaderboard.sort((a, b) => b.totalAmount - a.totalAmount);
+
+  return leaderboard;
+}
+
+export async function calculateGlobalStreamerLeaderboard(): Promise<
+  LeaderboardStats[]
+> {
+  const groupedDonations = await fetchDonationRecipients();
+
+  const leaderboard = Object.entries(groupedDonations)
+    .filter(([address, donations]) => {
+      const displayItem =
+        donations[0].data.interpretation.descriptionDisplayItems[1];
+      return (
+        displayItem &&
+        displayItem.account &&
+        typeof displayItem.account.address === 'string' &&
+        /^0x[a-fA-F0-9]{40}$/.test(displayItem.account.address) &&
+        typeof displayItem.account.displayName === 'object' &&
+        typeof displayItem.account.displayName.value === 'string' &&
+        typeof displayItem.account.displayName.source === 'string' &&
+        typeof displayItem.account.avatar === 'object' &&
+        typeof displayItem.account.avatar.value === 'object' &&
+        (typeof displayItem.account.avatar.value.url === 'string' ||
+          typeof displayItem.account.avatar.value.url === 'undefined')
+      );
+    })
+    .map(([address, donations]) => {
+      const hexAddress = address as Hex;
+      return {
+        address: hexAddress,
+        donorMetadata: donations[0].data.interpretation
+          .descriptionDisplayItems[1]!.account as UserData,
+        totalAmount: donations.reduce((sum, donation) => {
+          const tokenDisplayItem = donation.data.interpretation
+            .descriptionDisplayItems[0] as TokenDisplayItem;
+
+          const amountRaw = tokenDisplayItem?.amountRaw;
+          const price = tokenDisplayItem?.tokenV2?.onchainMarketData?.price;
+          const decimals = tokenDisplayItem?.tokenV2?.decimals ?? 18;
+
+          if (
+            amountRaw === undefined ||
+            price === undefined ||
+            decimals === undefined
+          )
+            return sum;
+
+          const tradeValue =
+            Number.parseFloat(formatUnits(BigInt(amountRaw), decimals)) * price;
+
+          return sum + tradeValue;
+        }, 0),
+      };
+    });
 
   leaderboard.sort((a, b) => b.totalAmount - a.totalAmount);
 

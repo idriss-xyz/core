@@ -7,6 +7,7 @@ import { mode } from './utils/mode';
 import { connectedClients } from './services/socket-server';
 import tipHistoryRouter from './routes/tip-history';
 import donorHistoryRouter from './routes/donor-history';
+import streamerStatsRouter from './routes/streamer-stats';
 import pushDonationRouter from './routes/push-donation';
 import overwriteDonationRouter from './routes/overwrite-donation';
 import cors from 'cors';
@@ -31,6 +32,7 @@ app.use(
 const server = http.createServer(app);
 app.use('/tip-history', tipHistoryRouter);
 app.use('/donor-history', donorHistoryRouter);
+app.use('/streamer-stats', streamerStatsRouter);
 app.use('/push-donation', pushDonationRouter);
 app.use('/overwrite-donation', overwriteDonationRouter);
 

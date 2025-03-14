@@ -1,10 +1,7 @@
 import { Router, Request, Response } from 'express';
 
-import { fetchDonationsByFromAddress } from '../db/fetch-known-donations';
-import {
-  calculateGlobalDonorLeaderboard,
-  calculateStatsForDonorAddress,
-} from '../utils/calculate-stats';
+import { fetchDonationsByToAddress } from '../db/fetch-known-donations';
+import { calculateGlobalStreamerLeaderboard } from '../utils/calculate-stats';
 import dotenv from 'dotenv';
 import { mode } from '../utils/mode';
 import { join } from 'path';
@@ -24,20 +21,10 @@ router.post('/', async (req: Request, res: Response) => {
       res.status(400).json({ error: 'Invalid or missing address' });
       return;
     }
-    const hexAddress = address as Hex;
 
-    const knownDonations = await fetchDonationsByFromAddress(hexAddress);
-    const stats = calculateStatsForDonorAddress(knownDonations);
-
-    const leaderboard = await calculateGlobalDonorLeaderboard();
-    const donorPosition = leaderboard.findIndex(
-      (entry) => entry.address.toLowerCase() === address.toLowerCase(),
-    );
-    stats.positionInLeaderboard =
-      donorPosition !== -1 ? donorPosition + 1 : null;
+    const leaderboard = await calculateGlobalStreamerLeaderboard();
 
     res.json({
-      stats,
       leaderboard,
     });
   } catch (error) {

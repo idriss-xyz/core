@@ -3,9 +3,10 @@ import { In } from 'typeorm';
 import { AppDataSource } from './database';
 import { Donation } from './entities/donations.entity';
 import { ZapperNode } from '../types';
+import { Hex } from 'viem';
 
 export async function storeToDatabase(
-  address: string,
+  address: Hex,
   edges: { node: ZapperNode }[],
 ) {
   if (!AppDataSource.isInitialized) {

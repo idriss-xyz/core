@@ -13,7 +13,7 @@ export interface TokenV2 {
 export interface DonationStats {
   totalDonationsCount: number;
   totalDonationAmount: number;
-  mostDonatedToAddress: string;
+  mostDonatedToAddress: Hex;
   biggestDonationAmount: number;
   favoriteDonationToken: string;
   favoriteTokenMetadata: Omit<TokenV2, 'onchainMarketData'> | null;
@@ -22,14 +22,12 @@ export interface DonationStats {
 }
 
 interface ActorDisplayItem {
-  account: {
-    address: Hex;
-  };
+  account: UserData;
 }
 
 export interface LeaderboardStats {
-  address: string;
-  donorMetadata: FromUser;
+  address: Hex;
+  donorMetadata: UserData;
   totalAmount: number;
 }
 
@@ -43,7 +41,7 @@ type StringDisplayItem = {
   stringValue: string;
 };
 
-type FromUser = {
+export type UserData = {
   address: Hex;
   displayName: {
     value: string;
@@ -62,7 +60,7 @@ export interface ZapperNode {
   network: string;
   transaction: {
     hash: Hex;
-    fromUser: FromUser;
+    fromUser: UserData;
     toUser: {
       address: Hex;
     };
@@ -80,8 +78,8 @@ export interface ZapperNode {
 }
 
 export interface TipHistoryVariables {
-  addresses: string[];
-  toAddresses: string[];
+  addresses: Hex[];
+  toAddresses: Hex[];
   isSigner: boolean;
   after?: string | null;
 }

@@ -13,6 +13,7 @@ import dotenv from 'dotenv';
 import { join } from 'path';
 
 import { mode } from '../../utils/mode';
+import { Hex } from 'viem';
 
 dotenv.config(
   mode === 'production' ? {} : { path: join(__dirname, `../../.env.${mode}`) },
@@ -20,12 +21,12 @@ dotenv.config(
 
 const ZAPPER_API_KEY = process.env.ZAPPER_API_KEY;
 const app_addresses = Object.values(CHAIN_TO_IDRISS_TIPPING_ADDRESS).map(
-  (addr) => addr.toLowerCase(),
+  (addr) => addr.toLowerCase() as Hex,
 );
 
 export async function processAllDonations(options: {
-  address: string;
-  toAddresses?: string[];
+  address: Hex;
+  toAddresses?: Hex[];
   oldestTransactionTimestamp?: number;
 }): Promise<{ newEdges: { node: ZapperNode }[] }> {
   const {
@@ -86,7 +87,7 @@ export async function processAllDonations(options: {
 }
 
 export async function processNewDonations(
-  address: string,
+  address: Hex,
 ): Promise<{ newEdges: { node: ZapperNode }[] }> {
   const knownDonations = await fetchDonationsByToAddress(address);
   const knownHashes = new Set(
