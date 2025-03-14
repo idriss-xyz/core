@@ -18,8 +18,9 @@ import { TopBar } from '@/components';
 import { validateAddressOrENS } from '@/app/creators/donate/utils';
 import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
 import DonateHistoryList from '@/app/creators/donate/components/history/donate-history-list';
+import { useGetReceivedHistory } from '@/app/creators/donate/commands/get-received-history';
 
-import { TopDonors } from './top-donors';
+import { DonateRanking } from './donate-ranking';
 import { Content } from './content';
 import { RainbowKitProviders } from './providers';
 
@@ -41,9 +42,12 @@ export default function Donors() {
 
 function DonorsContent() {
   const [tipEdges, setTipEdges] = useState<{ node: TipHistoryNode }[]>([]);
-  const [currentContent, setCurrentContent] = useState<'tip' | 'history'>(
-    'tip',
-  );
+  const [receivedTipEdges, setReceivedTipEdges] = useState<
+    { node: TipHistoryNode }[]
+  >([]);
+  const [currentContent, setCurrentContent] = useState<
+    'tip' | 'history' | 'received-history'
+  >('tip');
   const [validatedAddress, setValidatedAddress] = useState<
     string | null | undefined
   >();
@@ -78,13 +82,26 @@ function DonorsContent() {
     { enabled: !!validatedAddress },
   );
 
+  const receivedTips = useGetReceivedHistory(
+    { address: validatedAddress as Hex },
+    { enabled: !!validatedAddress },
+  );
+
   useEffect(() => {
     if (tips.data) {
       setTipEdges(tips.data.data);
     }
   }, [tips.data]);
 
-  const updateCurrentContent = (content: 'tip' | 'history') => {
+  useEffect(() => {
+    if (receivedTips.data) {
+      setReceivedTipEdges(receivedTips.data.data);
+    }
+  }, [receivedTips.data]);
+
+  const updateCurrentContent = (
+    content: 'tip' | 'history' | 'received-history',
+  ) => {
     setCurrentContent(content);
   };
 
@@ -92,15 +109,25 @@ function DonorsContent() {
     switch (currentContent) {
       case 'tip': {
         return (
-          <div className="grid grid-cols-1 items-start gap-x-10 lg:grid-cols-2">
+          <div className="grid grid-cols-1 items-start gap-x-10 lg:grid-cols-2 2xl:grid-cols-3">
             <Content
               validatedAddress={validatedAddress}
               className="container mt-8 overflow-hidden lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]"
             />
-            <TopDonors
+            <DonateRanking
               tipEdges={tipEdges}
+              heading="Top donors"
               tipsLoading={tips.isLoading}
               validatedAddress={validatedAddress}
+              updateCurrentContent={updateCurrentContent}
+              className="container mt-8 overflow-hidden px-0 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]"
+            />
+            <DonateRanking
+              heading="Top streamers"
+              tipEdges={receivedTipEdges}
+              historyTabName="received-history"
+              validatedAddress={validatedAddress}
+              tipsLoading={receivedTips.isLoading}
               updateCurrentContent={updateCurrentContent}
               className="container mt-8 overflow-hidden px-0 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]"
             />
@@ -118,10 +145,23 @@ function DonorsContent() {
           />
         );
       }
+      case 'received-history': {
+        return (
+          <DonateHistoryList
+            address={validatedAddress}
+            tipEdges={receivedTipEdges}
+            tipsLoading={tips.isLoading}
+            isInvalidAddress={isInvalidAddress}
+            updateCurrentContent={updateCurrentContent}
+          />
+        );
+      }
     }
   }, [
     currentContent,
     isInvalidAddress,
+    receivedTipEdges,
+    receivedTips.isLoading,
     tipEdges,
     tips.isLoading,
     validatedAddress,

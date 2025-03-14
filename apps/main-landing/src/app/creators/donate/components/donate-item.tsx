@@ -18,7 +18,7 @@ type Properties = {
   donorDetails: TipHistoryFromUser;
 };
 
-export default function DonorItem({
+export default function DonateItem({
   donorRank,
   donateAmount,
   donorDetails,
