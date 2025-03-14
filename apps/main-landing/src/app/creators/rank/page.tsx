@@ -1,12 +1,7 @@
 'use client';
 /* eslint-disable @next/next/no-img-element */
-import { Button } from '@idriss-xyz/ui/button';
-import {
-  CREATORS_LINK,
-  hexSchema,
-  TipHistoryNode,
-} from '@idriss-xyz/constants';
-import { Hex, isAddress } from 'viem';
+import { hexSchema, TipHistoryNode } from '@idriss-xyz/constants';
+import { isAddress } from 'viem';
 import '@rainbow-me/rainbowkit/styles.css';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -16,12 +11,11 @@ import _ from 'lodash';
 import { backgroundLines2 } from '@/assets';
 import { TopBar } from '@/components';
 import { validateAddressOrENS } from '@/app/creators/donate/utils';
-import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
 import DonateHistoryList from '@/app/creators/donate/components/history/donate-history-list';
+import { useGetReceivedHistory } from '@/app/creators/donate/commands/get-received-history';
 
-import { DonateRanking } from './donate-ranking';
-import { Content } from './content';
-import { RainbowKitProviders } from './providers';
+import { DonateRanking } from '../donate/donate-ranking';
+import { RainbowKitProviders } from '../donate/providers';
 
 const SOCKET_URL = 'https://core-production-a116.up.railway.app';
 
@@ -31,16 +25,18 @@ const SEARCH_PARAMETER = {
 };
 
 // ts-unused-exports:disable-next-line
-export default function Donors() {
+export default function Rank() {
   return (
     <RainbowKitProviders>
-      <DonorsContent />
+      <RankContent />
     </RainbowKitProviders>
   );
 }
 
-function DonorsContent() {
-  const [tipEdges, setTipEdges] = useState<{ node: TipHistoryNode }[]>([]);
+function RankContent() {
+  const [receivedTipEdges, setReceivedTipEdges] = useState<
+    { node: TipHistoryNode }[]
+  >([]);
   const [currentContent, setCurrentContent] = useState<
     'tip' | 'history' | 'received-history'
   >('tip');
@@ -73,16 +69,13 @@ function DonorsContent() {
       !!validatedAddress &&
       (!addressValidationResult.success || !isAddress(validatedAddress)));
 
-  const tips = useGetTipHistory(
-    { address: validatedAddress as Hex },
-    { enabled: !!validatedAddress },
-  );
+  const receivedTips = useGetReceivedHistory();
 
   useEffect(() => {
-    if (tips.data) {
-      setTipEdges(tips.data.data);
+    if (receivedTips.data) {
+      setReceivedTipEdges(receivedTips.data.data);
     }
-  }, [tips.data]);
+  }, [receivedTips.data]);
 
   const updateCurrentContent = (
     content: 'tip' | 'history' | 'received-history',
@@ -94,16 +87,13 @@ function DonorsContent() {
     switch (currentContent) {
       case 'tip': {
         return (
-          <div className="grid grid-cols-1 items-start gap-x-10 lg:grid-cols-2">
-            <Content
-              validatedAddress={validatedAddress}
-              className="container mt-8 overflow-hidden lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]"
-            />
+          <div className="grid grid-cols-1 items-start gap-x-10">
             <DonateRanking
-              tipEdges={tipEdges}
-              heading="Top donors"
-              tipsLoading={tips.isLoading}
+              heading="Top streamers"
+              tipEdges={receivedTipEdges}
+              historyTabName="received-history"
               validatedAddress={validatedAddress}
+              tipsLoading={receivedTips.isLoading}
               updateCurrentContent={updateCurrentContent}
               className="container mt-8 overflow-hidden px-0 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]"
             />
@@ -111,25 +101,25 @@ function DonorsContent() {
         );
       }
       case 'history': {
+        return <></>;
+      }
+      case 'received-history': {
         return (
           <DonateHistoryList
-            tipEdges={tipEdges}
             address={validatedAddress}
-            tipsLoading={tips.isLoading}
+            tipEdges={receivedTipEdges}
             isInvalidAddress={isInvalidAddress}
+            tipsLoading={receivedTips.isLoading}
             updateCurrentContent={updateCurrentContent}
           />
         );
-      }
-      case 'received-history': {
-        return <></>;
       }
     }
   }, [
     currentContent,
     isInvalidAddress,
-    tipEdges,
-    tips.isLoading,
+    receivedTipEdges,
+    receivedTips.isLoading,
     validatedAddress,
   ]);
 
@@ -148,7 +138,7 @@ function DonorsContent() {
         });
 
         socket.on('newDonation', (node: TipHistoryNode) => {
-          setTipEdges((previousState) => {
+          setReceivedTipEdges((previousState) => {
             return _.uniqBy([{ node }, ...previousState], (item) => {
               return _.get(item, 'node.transaction.hash');
             });
@@ -179,17 +169,6 @@ function DonorsContent() {
         />
 
         {currentContentComponent}
-
-        <Button
-          className="px-5 py-3.5 lg:absolute lg:bottom-6 lg:right-7 lg:translate-x-0"
-          intent="secondary"
-          size="small"
-          href={CREATORS_LINK}
-          isExternal
-          asLink
-        >
-          CREATE YOUR LINK
-        </Button>
       </main>
     </>
   );

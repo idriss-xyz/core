@@ -13,23 +13,29 @@ import { IDRISS_SCENE_STREAM_2 } from '@/assets';
 import {
   default as DonorItem,
   DonorItemPlaceholder,
-} from '@/app/creators/donate/components/donor-item';
+} from '@/app/creators/donate/components/donate-item';
 
 type Properties = {
+  heading?: string;
   className?: string;
   tipsLoading: boolean;
   validatedAddress?: string | null;
   tipEdges: { node: TipHistoryNode }[];
-  updateCurrentContent: (content: 'tip' | 'history') => void;
+  updateCurrentContent: (
+    content: 'tip' | 'history' | 'received-history',
+  ) => void;
+  historyTabName?: 'tip' | 'history' | 'received-history';
 };
 
 const baseClassName =
   'z-1 w-[440px] max-w-full rounded-xl bg-white flex flex-col items-center relative overflow-hidden';
 
-export const TopDonors = ({
+export const DonateRanking = ({
+  heading,
   tipEdges,
   className,
   tipsLoading,
+  historyTabName,
   validatedAddress,
   updateCurrentContent,
 }: Properties) => {
@@ -104,7 +110,7 @@ export const TopDonors = ({
         />
         <span className="absolute left-0 top-0 size-full bg-black/20" />
         <h1 className="relative z-1 mx-12 my-6 text-center text-heading4 uppercase text-white">
-          Top donors
+          {heading ?? 'Top donors'}
         </h1>
       </div>
       <div className="flex w-full flex-col">
@@ -140,7 +146,7 @@ export const TopDonors = ({
         <Link
           size="xs"
           onClick={() => {
-            updateCurrentContent('history');
+            updateCurrentContent(historyTabName ?? 'history');
           }}
           className={`mx-6 my-3 cursor-pointer ${sortedGroupedTips?.length === 0 ? 'invisible' : ''}`}
         >

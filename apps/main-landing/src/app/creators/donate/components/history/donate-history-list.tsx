@@ -11,7 +11,9 @@ type Properties = {
   isInvalidAddress: boolean;
   tipEdges: { node: TipHistoryNode }[];
   address: string | null | undefined;
-  updateCurrentContent: (content: 'tip' | 'history') => void;
+  updateCurrentContent: (
+    content: 'tip' | 'history' | 'received-history',
+  ) => void;
 };
 
 export default function DonateHistoryList({
