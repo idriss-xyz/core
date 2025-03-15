@@ -62,9 +62,11 @@ router.post('/', validationRules, async (req: Request, res: Response) => {
       oldestTransactionTimestamp,
       overwrite,
     });
-    
+
     const updatedCount = result.newEdges.length;
-    res.status(200).json({ message: `Successfully updated ${updatedCount} transactions.` });
+    res
+      .status(200)
+      .json({ message: `Successfully updated ${updatedCount} transactions.` });
   } catch (error) {
     console.error('Overwrite donation error:', error);
     res.status(500).json({ error: 'Failed to process donation data' });

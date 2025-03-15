@@ -2,7 +2,7 @@ import plugin from 'tailwindcss/plugin';
 import path from 'path';
 import * as url from 'url';
 
-const __dirme = url.fileURLToPath(new URL('.', import.meta.url));
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -375,7 +375,8 @@ export default {
         '.gradient-text-2::after': {
           'display': 'block',
           'content': "''",
-          'background': 'radial-gradient(65.65% 168.51% at 47.77% 27.64%, #000A05 0%, #176410 100%)',
+          'background':
+            'radial-gradient(65.65% 168.51% at 47.77% 27.64%, #000A05 0%, #176410 100%)',
           'width': '100%',
           'height': '100%',
           'mix-blend-mode': 'color',
