@@ -103,7 +103,7 @@ export default function DonateHistoryItem({
 
         <div className="flex flex-col justify-center gap-y-1">
           <div className="flex items-center gap-x-2">
-            <p className="text-body3 text-neutral-900">
+            <p className="flex flex-row flex-wrap items-center gap-x-1 text-body3 text-neutral-900">
               <Link
                 size="xs"
                 onClick={() => {
