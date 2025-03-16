@@ -2,9 +2,9 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { TipHistoryFromUser } from '@idriss-xyz/constants';
 import { getShortWalletHex } from '@idriss-xyz/utils';
 
-import { WHITELISTED_URLS } from '../../donate/constants';
+import { IDRISS_BASE_URL, WHITELISTED_URLS } from '../../donate/constants';
 import { useGetAvatarImage } from '../commands/get-avatar-image';
-import { useGetEnsAvatarFromApi } from '../commands/get-ens-avatar-from-api';
+import { useGetEnsAvatar } from '../commands/get-ens-avatar';
 
 const rankBorders = [
   'border-[#FAC928]',
@@ -29,7 +29,7 @@ export default function DonorItem({
   const nameSource = donorDetails.displayName?.source;
   const imageSource = donorDetails.avatar?.source;
 
-  const ensAvatarFromApiUrlQuery = useGetEnsAvatarFromApi(
+  const ensAvatarQuery = useGetEnsAvatar(
     { name: displayName ?? '' },
     { enabled: nameSource === 'ENS' && !!displayName },
   );
@@ -37,11 +37,14 @@ export default function DonorItem({
   const farcasterAvatarUrl =
     imageSource === 'FARCASTER' ? donorDetails.avatar?.value?.url : null;
 
-  const avatarSourceUrl = ensAvatarFromApiUrlQuery.data ?? farcasterAvatarUrl;
+  const avatarSourceUrl = ensAvatarQuery.data ?? farcasterAvatarUrl;
 
   const isAllowedUrl = avatarSourceUrl
     ? WHITELISTED_URLS.some((domain) => {
-        return avatarSourceUrl.startsWith(domain);
+        return (
+          window.location.hostname === IDRISS_BASE_URL ||
+          avatarSourceUrl.startsWith(domain)
+        );
       })
     : false;
 

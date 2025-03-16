@@ -1,6 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
+import { createPublicClient, http } from 'viem';
+import { mainnet } from 'viem/chains';
+import { normalize } from 'viem/ens';
 
-import { IDRISS_API_URL } from '../constants';
+import { IDRISS_BASE_URL } from '../constants';
 
 type Payload = {
   name: string;
@@ -10,19 +13,25 @@ type Options = {
   enabled?: boolean;
 };
 
-interface EnsAvatarResponse {
-  image: string;
-}
+const getEnsAvatar = async (payload: Payload) => {
+  if (window.location.hostname === IDRISS_BASE_URL) {
+    const client = createPublicClient({
+      chain: mainnet,
+      transport: http('https://eth.llamarpc.com'),
+    });
 
-const getEnsAvatar = async (payload: Payload): Promise<string> => {
-  const response = await fetch(
-    `${IDRISS_API_URL}/ens-avatar?ens=${payload.name}`,
-  );
-  if (!response.ok) {
-    throw new Error('Failed to fetch ENS avatar');
+    return await client.getEnsAvatar({
+      name: normalize(payload.name),
+    });
+  } else {
+    const response = await fetch(
+      `${IDRISS_BASE_URL}/api/ens-avatar?ens=${payload.name}`,
+    );
+
+    const avatarImage = await response.json();
+
+    return avatarImage.image as string;
   }
-  const data: EnsAvatarResponse = await response.json();
-  return data.image;
 };
 
 export const useGetEnsAvatar = (payload: Payload, options?: Options) => {
