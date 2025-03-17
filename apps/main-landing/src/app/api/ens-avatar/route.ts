@@ -30,13 +30,16 @@ export async function GET(request: Request) {
     const avatar_url = await client.getEnsAvatar({
       name: normalize(ensDomain),
     });
-    return NextResponse.json({ image: avatar_url }, { status: 200, headers: DEFAULT_HEADERS, });
+    return NextResponse.json(
+      { image: avatar_url },
+      { status: 200, headers: DEFAULT_HEADERS },
+    );
   } catch (error) {
     console.error('[ERROR] Failed fetching or saving stake events:', error);
 
     return NextResponse.json(
       { error: 'Failed to fetch events' },
-      { status: 500 ,  headers: DEFAULT_HEADERS,},
+      { status: 500, headers: DEFAULT_HEADERS },
     );
   }
 }
