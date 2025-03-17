@@ -16,7 +16,7 @@ import {
   SwapData,
   SwapDataToken,
 } from 'application/trading-copilot';
-import { GetImageCommand } from 'shared/utils';
+import { GetImageCommand, isCorrectImageString } from 'shared/utils';
 import { CHAIN, SubscriptionsStorage } from 'shared/web3';
 
 import { TradingCopilotToast, TradingCopilotDialog } from './components';
@@ -114,6 +114,9 @@ const NotificationsPopupContent = ({
             (await imageMutation.mutateAsync({
               src: userDetails.avatar ?? '',
             })) ?? '';
+          if (!isCorrectImageString(avatarImage)) {
+            avatarImage = null;
+          }
           setName(userDetails.name);
           setAvatar(avatarImage);
         } else {
