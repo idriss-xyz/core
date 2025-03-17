@@ -8,10 +8,8 @@ export interface Properties {
   closeDialog: () => void;
   tokenData: SwapDataToken | null;
   tokenImage: string;
-}
-
-export interface ContentProperties extends Properties {
   userName: string;
+  userAvatar: string | null;
 }
 
 export interface WalletBalanceProperties {

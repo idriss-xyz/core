@@ -63,6 +63,8 @@ const NotificationsPopupContent = ({
   const farcasterUserMutation = useCommandMutation(GetFarcasterUserCommand);
   const tokenListMutation = useCommandMutation(GetTokensListCommand);
   const tokenIconMutation = useCommandMutation(GetTokensImageCommand);
+  const [name, setName] = useState<string | null>(null);
+  const [avatar, setAvatar] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isSwapEventListenerAdded.current) {
@@ -108,9 +110,15 @@ const NotificationsPopupContent = ({
 
         if (userDetails) {
           ensName = userDetails.name;
-          avatarImage = await imageMutation.mutateAsync({
-            src: userDetails.avatar ?? '',
-          });
+          avatarImage =
+            (await imageMutation.mutateAsync({
+              src: userDetails.avatar ?? '',
+            })) ?? '';
+          setName(userDetails.name);
+          setAvatar(avatarImage);
+        } else {
+          setName(null);
+          setAvatar(null);
         }
 
         const tokensList = await tokenListMutation.mutateAsync();
@@ -185,6 +193,8 @@ const NotificationsPopupContent = ({
     <TradingCopilotDialog
       tokenData={selectedToken.current}
       tokenImage={selectedTokenImage.current}
+      userName={name ?? activeDialog.from}
+      userAvatar={avatar}
       dialog={activeDialog}
       closeDialog={closeDialog}
     />
