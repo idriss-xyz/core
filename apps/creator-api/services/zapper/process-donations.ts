@@ -86,8 +86,11 @@ export async function processAllDonations(options: {
     await enrichNodesWithHistoricalPrice(newEdges);
     const groupedByToAddress: Record<Hex, ZapperNode[]> = newEdges.reduce(
       (acc, edge) => {
-        const toAddress = edge.node.interpretation.descriptionDisplayItems[1]!
-          .account.address as Hex;
+        const descriptionItems = edge.node.interpretation.descriptionDisplayItems;
+        if (descriptionItems.length <= 1 || !descriptionItems[1]?.account?.address) {
+          return acc;
+        }
+        const toAddress = descriptionItems[1].account.address as Hex;
         if (!acc[toAddress]) {
           acc[toAddress] = [];
         }
