@@ -3,6 +3,10 @@ import { mainnet } from 'viem/chains';
 import { NextResponse } from 'next/server';
 import { normalize } from 'viem/ens';
 
+const DEFAULT_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+};
+
 interface ApiResponse {
   error?: string;
   image?: GetEnsAvatarReturnType;
@@ -13,10 +17,7 @@ const client = createPublicClient({
   transport: http('https://eth.llamarpc.com'),
 });
 
-const DEFAULT_HEADERS = {
-  'Access-Control-Allow-Origin': '*',
-};
-
+// ts-unused-exports:disable-next-line
 export async function GET(
   request: Request,
 ): Promise<NextResponse<ApiResponse>> {
