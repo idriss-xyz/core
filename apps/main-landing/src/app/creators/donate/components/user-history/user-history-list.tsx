@@ -128,14 +128,16 @@ export default function UserHistoryList({
                 <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white p-8 shadow-md">
                   <p className="text-label5 text-neutral-600">Favorite token</p>
 
-                  <p className="text-heading4 text-neutral-800">
-                    {stats.favoriteDonationToken}{' '}
+                  <span className="flex items-center justify-center gap-x-1">
+                    <p className="text-heading4 text-neutral-800">
+                      {stats.favoriteDonationToken}{' '}
+                    </p>
                     <img
                       className="inline-block size-6 rounded-full"
                       src={stats.favoriteTokenMetadata.imageUrlV2}
                       alt=""
                     />
-                  </p>
+                  </span>
                 </div>
               )}
 
