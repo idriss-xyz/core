@@ -61,7 +61,7 @@ export function createMessage(
     chainId,
     domain,
     nonce,
-    uri: `https://${domain}`, // TODO: Change for production
+    uri: `https://${domain}`,
     version: '1',
     issuedAt: timestamp,
     expirationTime: new Date(
