@@ -6,7 +6,11 @@ import { Server as SocketIOServer, Socket } from 'socket.io';
 import { mode } from './utils/mode';
 import { connectedClients } from './services/socket-server';
 import tipHistoryRouter from './routes/tip-history';
+import donorHistoryRouter from './routes/donor-history';
+import streamerStatsRouter from './routes/streamer-stats';
 import pushDonationRouter from './routes/push-donation';
+import overwriteDonationRouter from './routes/overwrite-donation';
+import refetchDonationRouter from './routes/refetch-donations';
 import cors from 'cors';
 import { AppDataSource } from './db/database';
 
@@ -28,7 +32,11 @@ app.use(
 
 const server = http.createServer(app);
 app.use('/tip-history', tipHistoryRouter);
+app.use('/donor-history', donorHistoryRouter);
+app.use('/streamer-stats', streamerStatsRouter);
 app.use('/push-donation', pushDonationRouter);
+app.use('/overwrite-donation', overwriteDonationRouter);
+app.use('/refetch-donations', refetchDonationRouter);
 
 const HOST = process.env.HOST;
 const PORT = Number(process.env.PORT) || 4000;
