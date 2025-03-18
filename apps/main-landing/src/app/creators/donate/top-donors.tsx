@@ -31,7 +31,7 @@ type Properties = {
 };
 
 const baseClassName =
-  'z-1 w-[440px] max-w-full rounded-xl bg-white flex flex-col items-center relative overflow-hidden';
+  'z-1 w-[360px] max-w-full rounded-xl bg-white flex flex-col items-center relative overflow-hidden';
 
 export const TopDonors = ({
   variant,
@@ -266,15 +266,15 @@ export const TopDonors = ({
       )}
 
       {updateCurrentContent && (
-        <div className="flex min-h-[80px] w-full items-center justify-center">
+        <div className="flex min-h-[74px] w-full items-center justify-center">
           <Link
             size="xs"
             onClick={() => {
               updateCurrentContent({ name: 'history' });
             }}
             className={classes(
-              'mx-6 my-3 cursor-pointer',
-              sortedGroupedTips?.length === 0 ? 'invisible' : '',
+              'mx-6 my-3 cursor-pointer lg:text-label7',
+              sortedGroupedTips?.length === 0 && 'invisible',
             )}
           >
             See full donation history

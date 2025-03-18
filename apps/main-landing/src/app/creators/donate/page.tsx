@@ -93,7 +93,7 @@ function DonorsContent() {
     switch (currentContent.name) {
       case 'tip': {
         return (
-          <div className="grid grid-cols-1 items-start gap-x-10 lg:grid-cols-2">
+          <div className="grid grid-cols-1 items-start gap-x-10 lg:grid-cols-[1fr,auto]">
             <Content
               validatedAddress={validatedAddress}
               className="container mt-8 overflow-hidden lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]"
