@@ -65,6 +65,7 @@ export default function DonorItem({
 
   const avatarImage = (
     <div className="relative w-max">
+      {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
       {((avatarSourceUrl && isAllowedUrl) ||
         (avatarSourceUrl && !isAllowedUrl && !!avatarDataQuery.data)) && (
         <img
@@ -112,7 +113,10 @@ export default function DonorItem({
               });
             }
           }}
-          className="cursor-pointer border-0 text-body5 text-neutral-900 no-underline lg:text-body5"
+          className={classes(
+            'border-0 text-body5 text-neutral-900 no-underline lg:text-body5',
+            updateCurrentContent ?? 'cursor-pointer',
+          )}
         >
           {displayName ?? getShortWalletHex(donorDetails.address)}
         </Link>
