@@ -11,10 +11,19 @@ type Payload = {
 
 type Options = {
   enabled?: boolean;
+  isTwitchExtension?: boolean;
 };
 
-const getEnsAvatar = async (payload: Payload) => {
-  if (window.location.hostname === IDRISS_BASE_URL) {
+const getEnsAvatar = async (payload: Payload, isTwitchExtension?: boolean) => {
+  if (isTwitchExtension) {
+    const response = await fetch(
+      `${IDRISS_BASE_URL}/api/ens-avatar?ens=${payload.name}`,
+    );
+
+    const avatarImage = await response.json();
+
+    return avatarImage.image as string;
+  } else {
     const client = createPublicClient({
       chain: mainnet,
       transport: http('https://eth.llamarpc.com'),
@@ -23,23 +32,17 @@ const getEnsAvatar = async (payload: Payload) => {
     return await client.getEnsAvatar({
       name: normalize(payload.name),
     });
-  } else {
-    const response = await fetch(
-      `${IDRISS_BASE_URL}/api/ens-avatar?ens=${payload.name}`,
-    );
-
-    const avatarImage = await response.json();
-
-    return avatarImage.image as string;
   }
 };
 
 export const useGetEnsAvatar = (payload: Payload, options?: Options) => {
+  const { isTwitchExtension, ...queryOptions } = options ?? {};
+
   return useQuery({
     queryKey: ['ensAvatar', payload.name],
     queryFn: () => {
-      return getEnsAvatar({ name: payload.name });
+      return getEnsAvatar({ name: payload.name }, isTwitchExtension);
     },
-    ...options,
+    ...queryOptions,
   });
 };

@@ -5,7 +5,7 @@ import { getShortWalletHex } from '@idriss-xyz/utils';
 import { classes } from '@idriss-xyz/ui/utils';
 
 import { donateContentValues } from '../types';
-import { IDRISS_BASE_URL, WHITELISTED_URLS } from '../../donate/constants';
+import { WHITELISTED_URLS } from '../../donate/constants';
 import { useGetAvatarImage } from '../commands/get-avatar-image';
 import { useGetEnsAvatar } from '../commands/get-ens-avatar';
 
@@ -40,7 +40,10 @@ export default function DonorItem({
 
   const ensAvatarQuery = useGetEnsAvatar(
     { name: displayName ?? '' },
-    { enabled: nameSource === 'ENS' && !!displayName },
+    {
+      isTwitchExtension: isTwitchExtension,
+      enabled: nameSource === 'ENS' && !!displayName,
+    },
   );
 
   const farcasterAvatarUrl =
@@ -50,14 +53,10 @@ export default function DonorItem({
 
   const isAllowedUrl =
     !isTwitchExtension ||
-    (avatarSourceUrl
-      ? WHITELISTED_URLS.some((domain) => {
-          return (
-            window.location.hostname === IDRISS_BASE_URL ||
-            avatarSourceUrl.startsWith(domain)
-          );
-        })
-      : false);
+    (avatarSourceUrl &&
+      WHITELISTED_URLS.some((domain) => {
+        return avatarSourceUrl.startsWith(domain);
+      }));
 
   const avatarDataQuery = useGetAvatarImage(
     { url: avatarSourceUrl ?? '' },
