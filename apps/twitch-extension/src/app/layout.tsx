@@ -30,31 +30,6 @@ export const metadata: Metadata = {
   title: 'IDRISS',
   description:
     'Our apps bring the power of crypto and AI to your browsing experience, empower creators through digital ownership, and help find what’s true on the internet.',
-  icons: [
-    {
-      rel: 'apple-touch-icon',
-      sizes: '180x180',
-      url: './apple-touch-icon.png',
-    },
-    {
-      rel: 'icon',
-      sizes: '32x32',
-      type: 'image/png',
-      url: './favicon-32x32.png',
-    },
-    {
-      rel: 'icon',
-      sizes: '16x16',
-      type: 'image/png',
-      url: './favicon-16x16.png',
-    },
-  ],
-  openGraph: {
-    type: 'website',
-    title: 'Superpowers for your internet',
-    description:
-      'Our apps bring the power of crypto and AI to your browsing experience, empower creators through digital ownership, and help find what’s true on the internet.',
-  },
 };
 
 // ts-unused-exports:disable-next-line
