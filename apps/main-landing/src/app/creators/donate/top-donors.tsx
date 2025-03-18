@@ -260,13 +260,7 @@ export const TopDonors = ({
             className="w-full"
             href={donationURL}
           >
-            {!tipsLoading &&
-            !!validatedAddress &&
-            sortedGroupedTips &&
-            !isTwitchPanel &&
-            sortedGroupedTips.length < 3
-              ? 'Claim a spot'
-              : 'Donate'}
+            {isTwitchPanel ? 'Donate' : 'Claim a spot'}
           </Button>
         </div>
       )}
