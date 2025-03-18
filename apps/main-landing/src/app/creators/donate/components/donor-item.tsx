@@ -21,6 +21,7 @@ type Properties = {
   donorRank: number;
   className?: string;
   donateAmount: number;
+  isTwitchExtension?: boolean;
   donorDetails: TipHistoryFromUser;
   updateCurrentContent?: (content: donateContentValues) => void;
 };
@@ -28,8 +29,9 @@ type Properties = {
 export default function DonorItem({
   donorRank,
   className,
-  donateAmount,
   donorDetails,
+  donateAmount,
+  isTwitchExtension,
   updateCurrentContent,
 }: Properties) {
   const displayName = donorDetails.displayName?.value;
@@ -46,14 +48,16 @@ export default function DonorItem({
 
   const avatarSourceUrl = ensAvatarQuery.data ?? farcasterAvatarUrl;
 
-  const isAllowedUrl = avatarSourceUrl
-    ? WHITELISTED_URLS.some((domain) => {
-        return (
-          window.location.hostname === IDRISS_BASE_URL ||
-          avatarSourceUrl.startsWith(domain)
-        );
-      })
-    : false;
+  const isAllowedUrl =
+    !isTwitchExtension ||
+    (avatarSourceUrl
+      ? WHITELISTED_URLS.some((domain) => {
+          return (
+            window.location.hostname === IDRISS_BASE_URL ||
+            avatarSourceUrl.startsWith(domain)
+          );
+        })
+      : false);
 
   const avatarDataQuery = useGetAvatarImage(
     { url: avatarSourceUrl ?? '' },

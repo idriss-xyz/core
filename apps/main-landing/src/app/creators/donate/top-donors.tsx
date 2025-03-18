@@ -169,6 +169,7 @@ export const TopDonors = ({
                       donorRank={index}
                       donorDetails={groupedTip.user}
                       donateAmount={groupedTip.tipsSum}
+                      isTwitchExtension={isTwitchExtension}
                       updateCurrentContent={updateCurrentContent}
                       key={`${groupedTip.tipsSum}${groupedTip.tips[0].node.transaction.hash}`}
                     />
@@ -197,6 +198,7 @@ export const TopDonors = ({
                       donorRank={index}
                       donorDetails={groupedTip.user}
                       donateAmount={groupedTip.tipsSum}
+                      isTwitchExtension={isTwitchExtension}
                       updateCurrentContent={updateCurrentContent}
                       key={`${groupedTip.tipsSum}${groupedTip.tips[0].node.transaction.hash}`}
                     />
@@ -307,7 +309,7 @@ export const TopDonors = ({
   );
 };
 
-type FilteredProperties = {
+type LeaderboardProperties = {
   className?: string;
   leaderboardError: boolean;
   leaderboardLoading: boolean;
@@ -321,7 +323,7 @@ export const LeaderboardTopDonors = ({
   leaderboardError,
   leaderboardLoading,
   updateCurrentContent,
-}: FilteredProperties) => {
+}: LeaderboardProperties) => {
   return (
     <div className={classes(baseClassName, className)}>
       <div className="relative flex min-h-[100px] w-full items-center justify-center overflow-hidden">
