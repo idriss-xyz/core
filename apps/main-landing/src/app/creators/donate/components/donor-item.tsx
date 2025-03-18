@@ -53,10 +53,12 @@ export default function DonorItem({
 
   const isAllowedUrl =
     !isTwitchExtension ||
-    (avatarSourceUrl &&
+    !!(
+      avatarSourceUrl &&
       WHITELISTED_URLS.some((domain) => {
         return avatarSourceUrl.startsWith(domain);
-      }));
+      })
+    );
 
   const avatarDataQuery = useGetAvatarImage(
     { url: avatarSourceUrl ?? '' },
@@ -115,7 +117,7 @@ export default function DonorItem({
           }}
           className={classes(
             'border-0 text-body5 text-neutral-900 no-underline lg:text-body5',
-            updateCurrentContent ?? 'cursor-pointer',
+            updateCurrentContent && 'cursor-pointer',
           )}
         >
           {displayName ?? getShortWalletHex(donorDetails.address)}
