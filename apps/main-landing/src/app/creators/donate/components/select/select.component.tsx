@@ -41,7 +41,7 @@ export const Select = <T,>({
       ) : null}
       <DropdownMenu.Root modal={false}>
         <DropdownMenu.Trigger asChild>
-          <button className="w-full">
+          <button className="block w-full">
             <SelectOptionContainer className="overflow-hidden border border-neutral-200 bg-white text-neutralGreen-900 shadow-input focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
               <SelectOption option={pickedOption} selected />
             </SelectOptionContainer>

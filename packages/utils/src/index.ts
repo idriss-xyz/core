@@ -14,4 +14,5 @@ export {
   getSafeNumber,
   getShortWalletHex,
   getTimeDifferenceString,
+  removeEthSuffix,
 } from './utils';

@@ -3,8 +3,14 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { Hex } from 'viem';
-import { getShortWalletHex } from '@idriss-xyz/utils';
+import { getShortWalletHex, removeEthSuffix } from '@idriss-xyz/utils';
 import { Spinner } from '@idriss-xyz/ui/spinner';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@idriss-xyz/ui/tooltip';
 
 import { useGetDonorHistory } from '@/app/creators/donate/commands/get-donor-history';
 import { LeaderboardTopDonors } from '@/app/creators/donate/top-donors';
@@ -90,7 +96,7 @@ export default function UserHistoryList({
         {stats && !donorHistory.isLoading && !donorHistory.isError && (
           <>
             <div className="relative z-0 mb-[3px] mt-9 grid w-full grid-cols-1 gap-3 lg:grid-cols-2">
-              <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white p-8 shadow-md">
+              <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-8 shadow-md">
                 <p className="text-label5 text-neutral-600">Donations</p>
 
                 <p className="text-heading4 text-neutral-800">
@@ -98,7 +104,7 @@ export default function UserHistoryList({
                 </p>
               </div>
 
-              <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white p-8 shadow-md">
+              <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-8 shadow-md">
                 <p className="text-label5 text-neutral-600">Total volume</p>
 
                 <p className="text-heading4 text-neutral-800">
@@ -111,7 +117,7 @@ export default function UserHistoryList({
                 </p>
               </div>
 
-              <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white p-8 shadow-md">
+              <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-8 shadow-md">
                 <p className="text-label5 text-neutral-600">Largest donation</p>
 
                 <p className="text-heading4 text-neutral-800">
@@ -125,7 +131,7 @@ export default function UserHistoryList({
               </div>
 
               {stats.favoriteTokenMetadata && (
-                <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white p-8 shadow-md">
+                <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-8 shadow-md">
                   <p className="text-label5 text-neutral-600">Favorite token</p>
 
                   <span className="flex items-center justify-center gap-x-1">
@@ -142,7 +148,7 @@ export default function UserHistoryList({
               )}
 
               {stats.mostDonatedToAddress !== '' && (
-                <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-8 py-7 shadow-md">
+                <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-7 shadow-md">
                   <p className="text-label5 text-neutral-600">Top recipient</p>
 
                   <div className="flex flex-row items-center gap-x-1">
@@ -162,16 +168,30 @@ export default function UserHistoryList({
                       </div>
                     )}
 
-                    <p className="text-label3 text-neutral-800">
-                      {mostDonatedToEnsNameQuery.data ??
-                        getShortWalletHex(stats.mostDonatedToAddress)}
-                    </p>
+                    <TooltipProvider delayDuration={400}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <p className="cursor-default truncate text-label3 text-neutral-800">
+                            {mostDonatedToEnsNameQuery.data
+                              ? removeEthSuffix(mostDonatedToEnsNameQuery.data)
+                              : getShortWalletHex(stats.mostDonatedToAddress)}
+                          </p>
+                        </TooltipTrigger>
+
+                        <TooltipContent className="w-fit bg-black text-white">
+                          <p>
+                            {mostDonatedToEnsNameQuery.data ??
+                              stats.mostDonatedToAddress}
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   </div>
                 </div>
               )}
 
               {stats.positionInLeaderboard && (
-                <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white p-8 shadow-md">
+                <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-8 shadow-md">
                   <p className="text-label5 text-neutral-600">
                     Leaderboard rank
                   </p>
