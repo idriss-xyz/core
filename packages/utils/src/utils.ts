@@ -303,3 +303,11 @@ export const getTimeDifferenceString = ({
 
   return text ? `${timeDifference} ${text}` : timeDifference;
 };
+
+export const removeEthSuffix = (name: string) => {
+  if (name.endsWith('.eth')) {
+    return name.slice(0, -4);
+  }
+
+  return name;
+};

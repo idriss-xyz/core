@@ -73,7 +73,7 @@ export default function DonorItem({
   return (
     <li
       className={classes(
-        'grid grid-cols-[10px,1fr,70px] items-center gap-x-3.5 border-b border-b-neutral-300 px-5.5 py-4.5 text-body5 md:grid-cols-[10px,1fr,100px]',
+        'grid grid-cols-[10px,1fr,70px] items-center gap-x-3.5 border-b border-b-neutral-300 px-5.5 py-[17.25px] text-body5 md:grid-cols-[10px,1fr,100px]',
         className,
       )}
     >
