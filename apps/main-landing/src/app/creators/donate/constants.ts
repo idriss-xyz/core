@@ -677,3 +677,12 @@ export const CHAIN_TO_IDRISS_TIPPING_ADDRESS = {
 } as const;
 
 export const CREATOR_API_URL = 'https://core-production-a116.up.railway.app';
+export const IDRISS_LEGACY_API_URL = 'https://api.idriss.xyz';
+export const IDRISS_BASE_URL = 'https://idriss.xyz';
+
+export const WHITELISTED_URLS = [
+  'https://ik.imagekit.io/lens/media-snapshot',
+  'https://imagedelivery.net',
+  'https://i.imgur.com',
+  'https://euc.li',
+];
