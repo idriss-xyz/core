@@ -144,20 +144,16 @@ export const TopDonors = ({
       </div>
 
       <div className="flex w-full flex-col">
-        {tipsLoading ||
-          !validatedAddress ||
-          (!sortedGroupedTips && (
-            <span
-              className={classes(
-                'flex min-h-[207px] w-full items-center justify-center border-b-neutral-300 px-5.5 py-4.5',
-                isTwitchPanel && 'min-h-[345px]',
-              )}
-            >
-              <Spinner className="size-16 text-mint-600" />
-            </span>
-          ))}
-
-        {!tipsLoading && validatedAddress && sortedGroupedTips && (
+        {tipsLoading || !validatedAddress || !sortedGroupedTips ? (
+          <span
+            className={classes(
+              'flex min-h-[207px] w-full items-center justify-center border-b-neutral-300 px-5.5 py-4.5',
+              isTwitchPanel && 'min-h-[345px]',
+            )}
+          >
+            <Spinner className="size-16 text-mint-600" />
+          </span>
+        ) : (
           <ul className={classes(isTwitchPanel && 'min-h-[345px]')}>
             {isTwitchPanel && (
               <>
@@ -247,20 +243,6 @@ export const TopDonors = ({
             )}
           </ul>
         )}
-      </div>
-
-      <div className="flex min-h-[80px] w-full items-center justify-center">
-        <Link
-          size="xs"
-          onClick={() => {
-            if (updateCurrentContent) {
-              updateCurrentContent({ name: 'history' });
-            }
-          }}
-          className={`mx-6 my-3 cursor-pointer ${sortedGroupedTips?.length === 0 ? 'invisible' : ''}`}
-        >
-          See full donation history
-        </Link>
       </div>
 
       {isTwitchExtension && (

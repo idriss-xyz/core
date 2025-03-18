@@ -65,8 +65,8 @@ export default function DonorItem({
 
   const avatarImage = (
     <div className="relative w-max">
-      {((avatarSourceUrl && isAllowedUrl) ??
-        (avatarSourceUrl && !isAllowedUrl && avatarDataQuery.data)) && (
+      {((avatarSourceUrl && isAllowedUrl) ||
+        (avatarSourceUrl && !isAllowedUrl && !!avatarDataQuery.data)) && (
         <img
           src={isAllowedUrl ? avatarSourceUrl : avatarDataQuery.data}
           alt={`Rank ${donorRank + 1}`}
