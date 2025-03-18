@@ -1,7 +1,10 @@
 import { Icon } from '@idriss-xyz/ui/icon';
+import { Link } from '@idriss-xyz/ui/link';
 import { TipHistoryFromUser } from '@idriss-xyz/constants';
 import { getShortWalletHex } from '@idriss-xyz/utils';
+import { classes } from '@idriss-xyz/ui/utils';
 
+import { donateContentValues } from '../types';
 import { IDRISS_BASE_URL, WHITELISTED_URLS } from '../../donate/constants';
 import { useGetAvatarImage } from '../commands/get-avatar-image';
 import { useGetEnsAvatar } from '../commands/get-ens-avatar';
@@ -16,14 +19,18 @@ const rankPlaces = ['1st', '2nd', '3rd'];
 
 type Properties = {
   donorRank: number;
+  className?: string;
   donateAmount: number;
   donorDetails: TipHistoryFromUser;
+  updateCurrentContent?: (content: donateContentValues) => void;
 };
 
 export default function DonorItem({
   donorRank,
-  donorDetails,
+  className,
   donateAmount,
+  donorDetails,
+  updateCurrentContent,
 }: Properties) {
   const displayName = donorDetails.displayName?.value;
   const nameSource = donorDetails.displayName?.source;
@@ -83,11 +90,29 @@ export default function DonorItem({
   );
 
   return (
-    <li className="grid grid-cols-[10px,1fr,70px] items-center gap-x-3.5 border-b border-b-neutral-300 px-5.5 py-4.5 text-body5 md:grid-cols-[10px,1fr,100px]">
+    <li
+      className={classes(
+        'grid grid-cols-[10px,1fr,70px] items-center gap-x-3.5 border-b border-b-neutral-300 px-5.5 py-4.5 text-body5 md:grid-cols-[10px,1fr,100px]',
+        className,
+      )}
+    >
       <span className="text-neutral-600">{donorRank + 1}</span>
       <span className="flex items-center gap-x-1.5 text-neutral-900">
         {avatarImage}
-        {displayName ?? getShortWalletHex(donorDetails.address)}
+        <Link
+          size="xs"
+          onClick={() => {
+            if (updateCurrentContent) {
+              updateCurrentContent({
+                name: 'userHistory',
+                userDetails: donorDetails,
+              });
+            }
+          }}
+          className="cursor-pointer border-0 text-body5 text-neutral-900 no-underline lg:text-body5"
+        >
+          {displayName ?? getShortWalletHex(donorDetails.address)}
+        </Link>
       </span>
       <span className="text-right text-neutral-900">
         $
@@ -104,6 +129,7 @@ export default function DonorItem({
 
 type PlaceholderProperties = {
   donorRank: number;
+  itemHeight?: number;
   amountToDisplay: number;
   hideEncouragement?: boolean;
   previousDonateAmount: number;
@@ -111,10 +137,13 @@ type PlaceholderProperties = {
 
 export function DonorItemPlaceholder({
   donorRank,
-  hideEncouragement,
+  itemHeight,
   amountToDisplay,
+  hideEncouragement,
   previousDonateAmount,
 }: PlaceholderProperties) {
+  const placeholderHeight = itemHeight ?? 69;
+
   const avatarPlaceholder = (
     <div className="relative w-max">
       <div
@@ -154,7 +183,9 @@ export function DonorItemPlaceholder({
 
         {amountToDisplay - 1 - donorRank ? (
           <span
-            style={{ height: `${(amountToDisplay - 1 - donorRank) * 69}px` }}
+            style={{
+              height: `${(amountToDisplay - 1 - donorRank) * placeholderHeight}px`,
+            }}
             className="flex items-center justify-center border-b border-b-neutral-300 px-5.5 py-4.5 text-center text-label4 gradient-text-2"
           >
             {hideEncouragement
@@ -170,7 +201,9 @@ export function DonorItemPlaceholder({
     <>
       {amountToDisplay - donorRank ? (
         <span
-          style={{ height: `${(amountToDisplay - donorRank) * 69}px` }}
+          style={{
+            height: `${(amountToDisplay - donorRank) * placeholderHeight}px`,
+          }}
           className="flex items-center justify-center border-b border-b-neutral-300"
         />
       ) : null}

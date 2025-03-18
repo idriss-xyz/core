@@ -123,6 +123,7 @@ export default {
         1: '1',
         topBar: '10',
         dialog: '20',
+        alert: '99999',
         notification: '99999',
         extensionPopup: '100000',
         portal: '100001',
@@ -374,7 +375,8 @@ export default {
         '.gradient-text-2::after': {
           'display': 'block',
           'content': "''",
-          'background': 'radial-gradient(65.65% 168.51% at 47.77% 27.64%, #000A05 0%, #176410 100%)',
+          'background':
+            'radial-gradient(65.65% 168.51% at 47.77% 27.64%, #000A05 0%, #176410 100%)',
           'width': '100%',
           'height': '100%',
           'mix-blend-mode': 'color',

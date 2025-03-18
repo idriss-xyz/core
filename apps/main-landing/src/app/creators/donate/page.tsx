@@ -18,11 +18,13 @@ import { TopBar } from '@/components';
 import { validateAddressOrENS } from '@/app/creators/donate/utils';
 import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
 import DonateHistoryList from '@/app/creators/donate/components/history/donate-history-list';
-import { CREATOR_API_URL } from '@/app/creators/donate/constants';
+import UserHistoryList from '@/app/creators/donate/components/user-history/user-history-list';
+import { donateContentValues } from '@/app/creators/donate/types';
 
 import { TopDonors } from './top-donors';
 import { Content } from './content';
 import { RainbowKitProviders } from './providers';
+import { CREATOR_API_URL } from './constants';
 
 const SEARCH_PARAMETER = {
   ADDRESS: 'address',
@@ -40,9 +42,9 @@ export default function Donors() {
 
 function DonorsContent() {
   const [tipEdges, setTipEdges] = useState<{ node: TipHistoryNode }[]>([]);
-  const [currentContent, setCurrentContent] = useState<'tip' | 'history'>(
-    'tip',
-  );
+  const [currentContent, setCurrentContent] = useState<donateContentValues>({
+    name: 'tip',
+  });
   const [validatedAddress, setValidatedAddress] = useState<
     string | null | undefined
   >();
@@ -83,12 +85,12 @@ function DonorsContent() {
     }
   }, [tips.data]);
 
-  const updateCurrentContent = (content: 'tip' | 'history') => {
+  const updateCurrentContent = (content: donateContentValues) => {
     setCurrentContent(content);
   };
 
   const currentContentComponent = useMemo(() => {
-    switch (currentContent) {
+    switch (currentContent.name) {
       case 'tip': {
         return (
           <div className="grid grid-cols-1 items-start gap-x-10 lg:grid-cols-2">
@@ -113,6 +115,15 @@ function DonorsContent() {
             address={validatedAddress}
             tipsLoading={tips.isLoading}
             isInvalidAddress={isInvalidAddress}
+            updateCurrentContent={updateCurrentContent}
+          />
+        );
+      }
+      case 'userHistory': {
+        return (
+          <UserHistoryList
+            backTo={currentContent.backTo}
+            userDetails={currentContent.userDetails}
             updateCurrentContent={updateCurrentContent}
           />
         );

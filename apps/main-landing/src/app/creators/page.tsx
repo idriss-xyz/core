@@ -161,6 +161,20 @@ export default function Donors() {
     );
   }, [formMethods, tokensSymbols, selectedChainsTokens]);
 
+  useEffect(() => {
+    const currentTokensSymbols = formMethods.getValues('tokensSymbols');
+    const updatedTokens = currentTokensSymbols.filter((symbol) => {
+      return chainsIds.some((chainId) => {
+        return CHAIN_ID_TO_TOKENS[chainId]?.some((token) => {
+          return token.symbol === symbol;
+        });
+      });
+    });
+    if (updatedTokens.length !== currentTokensSymbols.length) {
+      formMethods.setValue('tokensSymbols', updatedTokens);
+    }
+  }, [chainsIds, formMethods]);
+
   const validateAndCopy = async (copyFunction: () => Promise<void>) => {
     const isValid = await formMethods.trigger();
     if (isValid) {
@@ -388,12 +402,8 @@ export default function Donors() {
                 </div>
               </Form>
             </div>
-            <Link
-              size="s"
-              href="creators/banner"
-              className="mb-4 mt-[38px] border-none text-neutral-900 hover:text-mint-600"
-            >
-              DOWNLOAD A BANNER FOR YOUR BIO
+            <Link size="xs" href="creators/banner" className="mb-4 mt-[38px]">
+              Download a banner for your bio
             </Link>
           </div>
         </div>

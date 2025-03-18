@@ -14,6 +14,7 @@ import { Button } from '@idriss-xyz/ui/button';
 import { default as IDRISS_SCENE_STREAM_2 } from '../../../assets/idriss-scene-stream-2.png';
 import { WidgetVariants } from '../../../../../twitch-extension/src/app/types';
 
+import { donateContentValues, DonorHistoryResponse } from './types';
 import {
   default as DonorItem,
   DonorItemPlaceholder,
@@ -26,7 +27,7 @@ type Properties = {
   donationUrl?: string | null;
   validatedAddress?: string | null;
   tipEdges: { node: TipHistoryNode }[];
-  updateCurrentContent?: (content: 'tip' | 'history') => void;
+  updateCurrentContent?: (content: donateContentValues) => void;
 };
 
 const baseClassName =
@@ -143,16 +144,20 @@ export const TopDonors = ({
       </div>
 
       <div className="flex w-full flex-col">
-        {tipsLoading || !validatedAddress || !sortedGroupedTips ? (
-          <span
-            className={classes(
-              'flex min-h-[207px] w-full items-center justify-center border-b-neutral-300 px-5.5 py-4.5',
-              isTwitchPanel && 'min-h-[345px]',
-            )}
-          >
-            <Spinner className="size-16 text-mint-600" />
-          </span>
-        ) : (
+        {tipsLoading ||
+          !validatedAddress ||
+          (!sortedGroupedTips && (
+            <span
+              className={classes(
+                'flex min-h-[207px] w-full items-center justify-center border-b-neutral-300 px-5.5 py-4.5',
+                isTwitchPanel && 'min-h-[345px]',
+              )}
+            >
+              <Spinner className="size-16 text-mint-600" />
+            </span>
+          ))}
+
+        {!tipsLoading && validatedAddress && sortedGroupedTips && (
           <ul className={classes(isTwitchPanel && 'min-h-[345px]')}>
             {isTwitchPanel && (
               <>
@@ -164,6 +169,7 @@ export const TopDonors = ({
                       donorRank={index}
                       donorDetails={groupedTip.user}
                       donateAmount={groupedTip.tipsSum}
+                      updateCurrentContent={updateCurrentContent}
                       key={`${groupedTip.tipsSum}${groupedTip.tips[0].node.transaction.hash}`}
                     />
                   );
@@ -191,6 +197,7 @@ export const TopDonors = ({
                       donorRank={index}
                       donorDetails={groupedTip.user}
                       donateAmount={groupedTip.tipsSum}
+                      updateCurrentContent={updateCurrentContent}
                       key={`${groupedTip.tipsSum}${groupedTip.tips[0].node.transaction.hash}`}
                     />
                   );
@@ -219,6 +226,7 @@ export const TopDonors = ({
                       donorRank={index}
                       donorDetails={groupedTip.user}
                       donateAmount={groupedTip.tipsSum}
+                      updateCurrentContent={updateCurrentContent}
                       key={`${groupedTip.tipsSum}${groupedTip.tips[0].node.transaction.hash}`}
                     />
                   );
@@ -237,6 +245,20 @@ export const TopDonors = ({
             )}
           </ul>
         )}
+      </div>
+
+      <div className="flex min-h-[80px] w-full items-center justify-center">
+        <Link
+          size="xs"
+          onClick={() => {
+            if (updateCurrentContent) {
+              updateCurrentContent({ name: 'history' });
+            }
+          }}
+          className={`mx-6 my-3 cursor-pointer ${sortedGroupedTips?.length === 0 ? 'invisible' : ''}`}
+        >
+          See full donation history
+        </Link>
       </div>
 
       {isTwitchExtension && (
@@ -270,7 +292,7 @@ export const TopDonors = ({
           <Link
             size="xs"
             onClick={() => {
-              updateCurrentContent('history');
+              updateCurrentContent({ name: 'history' });
             }}
             className={classes(
               'mx-6 my-3 cursor-pointer',
@@ -281,6 +303,82 @@ export const TopDonors = ({
           </Link>
         </div>
       )}
+    </div>
+  );
+};
+
+type FilteredProperties = {
+  className?: string;
+  leaderboardError: boolean;
+  leaderboardLoading: boolean;
+  leaderboard: DonorHistoryResponse['leaderboard'];
+  updateCurrentContent: (content: donateContentValues) => void;
+};
+
+export const LeaderboardTopDonors = ({
+  className,
+  leaderboard,
+  leaderboardError,
+  leaderboardLoading,
+  updateCurrentContent,
+}: FilteredProperties) => {
+  return (
+    <div className={classes(baseClassName, className)}>
+      <div className="relative flex min-h-[100px] w-full items-center justify-center overflow-hidden">
+        <img
+          alt=""
+          src={IDRISS_SCENE_STREAM_2.src}
+          className="absolute -left-5 -top-1 h-[110px] w-[640px] max-w-none object-cover"
+        />
+        <span className="absolute left-0 top-0 size-full bg-black/20" />
+
+        <h1 className="relative z-1 mx-12 my-6 text-center text-heading4 uppercase text-white">
+          Top donors
+        </h1>
+      </div>
+
+      <div className="flex w-full flex-col">
+        {leaderboardLoading && (
+          <span className="flex w-full items-center justify-center px-5.5 py-4.5">
+            <Spinner className="size-16 text-mint-600" />
+          </span>
+        )}
+
+        {leaderboardError && (
+          <p className="flex items-center justify-center gap-2 px-5.5 py-[30px] text-center text-heading4 text-red-500">
+            <Icon name="AlertCircle" size={40} />{' '}
+            <span>Cannot get leaderboard</span>
+          </p>
+        )}
+
+        {leaderboard && !leaderboardLoading && !leaderboardError && (
+          <ul>
+            {leaderboard.map((leaderboardItem, index) => {
+              if (!leaderboardItem || index > 5) return null;
+
+              return (
+                <DonorItem
+                  donorRank={index}
+                  className="py-[23.5px]"
+                  donateAmount={leaderboardItem.totalAmount}
+                  updateCurrentContent={updateCurrentContent}
+                  donorDetails={leaderboardItem.donorMetadata}
+                  key={`${leaderboardItem.address}${leaderboardItem.totalAmount}`}
+                />
+              );
+            })}
+
+            {leaderboard.length <= 5 ? (
+              <DonorItemPlaceholder
+                itemHeight={79}
+                amountToDisplay={5}
+                donorRank={leaderboard.length}
+                previousDonateAmount={leaderboard.at(-1)?.totalAmount ?? 1234}
+              />
+            ) : null}
+          </ul>
+        )}
+      </div>
     </div>
   );
 };
