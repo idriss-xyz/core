@@ -1,4 +1,4 @@
-import { EMPTY_HEX, TipHistoryFromUser } from '@idriss-xyz/constants';
+import { EMPTY_HEX, hexSchema } from '@idriss-xyz/constants';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
 import { Icon } from '@idriss-xyz/ui/icon';
@@ -11,25 +11,37 @@ import { LeaderboardTopDonors } from '@/app/creators/donate/top-donors';
 import { backgroundLines4 } from '@/assets';
 import { useGetEnsAvatar } from '@/app/creators/donate/commands/get-ens-avatar';
 import { useGetEnsName } from '@/app/creators/donate/commands/get-ens-name';
-import { donateContentValues } from '@/app/creators/donate/types';
+import {
+  DonateContentUserDetails,
+  DonateContentValues,
+} from '@/app/creators/donate/types';
 
 const baseClassName =
   'z-1 w-[440px] max-w-full rounded-xl bg-mint-100 px-4 pb-9 pt-9 flex flex-col items-center relative container mt-8 overflow-hidden lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]';
 
 type Properties = {
-  userDetails?: TipHistoryFromUser;
+  isStandalone?: boolean;
+  validatedAddress?: string | null;
+  userDetails?: DonateContentUserDetails;
   backTo?: 'tip' | 'history' | 'userHistory';
-  updateCurrentContent: (content: donateContentValues) => void;
+  updateCurrentContent?: (content: DonateContentValues) => void;
 };
 
 export default function UserHistoryList({
   backTo,
   userDetails,
+  isStandalone,
+  validatedAddress,
   updateCurrentContent,
 }: Properties) {
+  const addressValidationResult = hexSchema.safeParse(validatedAddress);
+  const userAddress = addressValidationResult
+    ? (validatedAddress as Hex)
+    : userDetails?.address;
+
   const donorHistory = useGetDonorHistory(
-    { address: userDetails?.address ?? EMPTY_HEX },
-    { enabled: !!userDetails },
+    { address: userAddress ?? EMPTY_HEX },
+    { enabled: !!userAddress },
   );
 
   const mostDonatedTo = donorHistory.data?.stats?.mostDonatedToAddress as Hex;
@@ -46,11 +58,19 @@ export default function UserHistoryList({
     { enabled: !!mostDonatedToEnsNameQuery.data },
   );
 
-  if (!userDetails || (!donorHistory.isLoading && !donorHistory.data)) {
-    if (backTo) {
-      updateCurrentContent({ name: backTo });
-    } else {
-      updateCurrentContent({ name: 'tip' });
+  console.log(!userAddress);
+  console.log(donorHistory.data);
+
+  if (
+    (!userDetails && !isStandalone) ||
+    (!isStandalone && !donorHistory.isLoading && !donorHistory.data)
+  ) {
+    if (updateCurrentContent) {
+      if (backTo) {
+        updateCurrentContent({ name: backTo });
+      } else {
+        updateCurrentContent({ name: 'tip' });
+      }
     }
 
     return;
@@ -70,15 +90,18 @@ export default function UserHistoryList({
         />
 
         <h1 className="self-start text-heading4 text-neutralGreen-900">
-          Donation stats of{' '}
-          {stats?.donorDisplayName ?? userDetails.displayName.value}
+          Donation stats{' '}
+          {(stats?.donorDisplayName ?? userAddress) &&
+            ` of ${stats?.donorDisplayName ?? getShortWalletHex(userAddress ?? '')}`}
         </h1>
 
-        {donorHistory.isLoading && (
+        {(donorHistory.isLoading || !validatedAddress) && (
           <Spinner className="mx-auto mt-9 size-16 text-mint-600" />
         )}
 
-        {donorHistory.isError && (
+        {(donorHistory.isError ||
+          (validatedAddress !== undefined &&
+            addressValidationResult.error)) && (
           <div className="mx-auto mt-9">
             <p className="flex items-center justify-center gap-2 px-5.5 py-3 text-center text-heading4 text-red-500">
               <Icon name="AlertCircle" size={40} />{' '}
@@ -187,7 +210,9 @@ export default function UserHistoryList({
               <Link
                 size="xs"
                 onClick={() => {
-                  updateCurrentContent({ name: 'history' });
+                  if (updateCurrentContent) {
+                    updateCurrentContent({ name: 'history' });
+                  }
                 }}
                 className="cursor-pointer"
               >
@@ -200,9 +225,12 @@ export default function UserHistoryList({
 
       <LeaderboardTopDonors
         leaderboard={leaderboard ?? []}
-        leaderboardError={donorHistory.isError}
-        leaderboardLoading={donorHistory.isLoading}
         updateCurrentContent={updateCurrentContent}
+        leaderboardError={
+          donorHistory.isError ||
+          (validatedAddress !== undefined && !!addressValidationResult.error)
+        }
+        leaderboardLoading={donorHistory.isLoading || !validatedAddress}
         className="container mt-8 w-[360px] max-w-full overflow-hidden px-0 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]"
       />
     </div>

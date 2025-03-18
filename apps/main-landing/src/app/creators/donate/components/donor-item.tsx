@@ -4,7 +4,7 @@ import { TipHistoryFromUser } from '@idriss-xyz/constants';
 import { getShortWalletHex } from '@idriss-xyz/utils';
 import { classes } from '@idriss-xyz/ui/utils';
 
-import { donateContentValues } from '@/app/creators/donate/types';
+import { DonateContentValues } from '@/app/creators/donate/types';
 
 import { useGetEnsAvatar } from '../commands/get-ens-avatar';
 
@@ -21,7 +21,7 @@ type Properties = {
   className?: string;
   donateAmount: number;
   donorDetails: TipHistoryFromUser;
-  updateCurrentContent: (content: donateContentValues) => void;
+  updateCurrentContent?: (content: DonateContentValues) => void;
 };
 
 export default function DonorItem({
@@ -83,10 +83,12 @@ export default function DonorItem({
         <Link
           size="xs"
           onClick={() => {
-            updateCurrentContent({
-              name: 'userHistory',
-              userDetails: donorDetails,
-            });
+            if (updateCurrentContent) {
+              updateCurrentContent({
+                name: 'userHistory',
+                userDetails: donorDetails,
+              });
+            }
           }}
           className="cursor-pointer border-0 text-body5 text-neutral-900 no-underline lg:text-body5"
         >

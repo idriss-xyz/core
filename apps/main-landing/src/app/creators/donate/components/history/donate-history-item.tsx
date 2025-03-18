@@ -19,7 +19,7 @@ import {
 } from '@idriss-xyz/utils';
 import { Link } from '@idriss-xyz/ui/link';
 
-import { donateContentValues } from '@/app/creators/donate/types';
+import { DonateContentValues } from '@/app/creators/donate/types';
 
 import { useGetEnsAvatar } from '../../commands/get-ens-avatar';
 
@@ -33,7 +33,7 @@ function removeMainnetSuffix(text: string) {
 
 type Properties = {
   tip: TipHistoryNode;
-  updateCurrentContent: (content: donateContentValues) => void;
+  updateCurrentContent: (content: DonateContentValues) => void;
 };
 
 export default function DonateHistoryItem({

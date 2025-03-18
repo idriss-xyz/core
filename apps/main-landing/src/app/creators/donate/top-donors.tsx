@@ -15,7 +15,7 @@ import {
   DonorItemPlaceholder,
 } from '@/app/creators/donate/components/donor-item';
 import {
-  donateContentValues,
+  DonateContentValues,
   DonorHistoryResponse,
 } from '@/app/creators/donate/types';
 
@@ -24,7 +24,7 @@ type Properties = {
   tipsLoading: boolean;
   validatedAddress?: string | null;
   tipEdges: { node: TipHistoryNode }[];
-  updateCurrentContent: (content: donateContentValues) => void;
+  updateCurrentContent: (content: DonateContentValues) => void;
 };
 
 const baseClassName =
@@ -166,7 +166,7 @@ type FilteredProperties = {
   leaderboardError: boolean;
   leaderboardLoading: boolean;
   leaderboard: DonorHistoryResponse['leaderboard'];
-  updateCurrentContent: (content: donateContentValues) => void;
+  updateCurrentContent?: (content: DonateContentValues) => void;
 };
 
 export const LeaderboardTopDonors = ({

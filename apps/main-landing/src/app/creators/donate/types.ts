@@ -1,4 +1,5 @@
 import { TipHistoryFromUser, TipHistoryTokenV2 } from '@idriss-xyz/constants';
+import { Hex } from 'viem';
 
 interface DonorHistoryStats {
   totalDonationsCount: number;
@@ -22,8 +23,12 @@ export interface DonorHistoryResponse {
   leaderboard: DonorLeaderboardStats[];
 }
 
-export type donateContentValues = {
-  userDetails?: TipHistoryFromUser;
+export type DonateContentUserDetails = {
+  address: Hex;
+};
+
+export type DonateContentValues = {
+  userDetails?: DonateContentUserDetails;
   name: 'tip' | 'history' | 'userHistory';
   backTo?: 'tip' | 'history' | 'userHistory';
 };

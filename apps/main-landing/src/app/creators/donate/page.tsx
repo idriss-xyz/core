@@ -19,7 +19,7 @@ import { validateAddressOrENS } from '@/app/creators/donate/utils';
 import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
 import DonateHistoryList from '@/app/creators/donate/components/history/donate-history-list';
 import UserHistoryList from '@/app/creators/donate/components/user-history/user-history-list';
-import { donateContentValues } from '@/app/creators/donate/types';
+import { DonateContentValues } from '@/app/creators/donate/types';
 
 import { TopDonors } from './top-donors';
 import { Content } from './content';
@@ -29,6 +29,7 @@ import { CREATOR_API_URL } from './constants';
 const SEARCH_PARAMETER = {
   ADDRESS: 'address',
   LEGACY_ADDRESS: 'streamerAddress',
+  VIEW: 'pageContent',
 };
 
 // ts-unused-exports:disable-next-line
@@ -42,7 +43,7 @@ export default function Donors() {
 
 function DonorsContent() {
   const [tipEdges, setTipEdges] = useState<{ node: TipHistoryNode }[]>([]);
-  const [currentContent, setCurrentContent] = useState<donateContentValues>({
+  const [currentContent, setCurrentContent] = useState<DonateContentValues>({
     name: 'tip',
   });
   const [validatedAddress, setValidatedAddress] = useState<
@@ -56,14 +57,26 @@ function DonorsContent() {
     searchParameters.get(SEARCH_PARAMETER.ADDRESS) ??
     searchParameters.get(SEARCH_PARAMETER.LEGACY_ADDRESS);
 
+  const pageContentParameter = searchParameters.get(SEARCH_PARAMETER.VIEW);
+
   useEffect(() => {
     const validateAddress = async () => {
       const address = await validateAddressOrENS(addressFromParameters);
-
       setValidatedAddress(address);
     };
     void validateAddress();
   }, [addressFromParameters]);
+
+  useEffect(() => {
+    if (pageContentParameter === 'userHistory' && !!validatedAddress) {
+      setCurrentContent({
+        name: pageContentParameter,
+        userDetails: {
+          address: validatedAddress as Hex,
+        },
+      });
+    }
+  }, [pageContentParameter, tipEdges, validatedAddress]);
 
   const addressValidationResult = hexSchema.safeParse(validatedAddress);
 
@@ -85,12 +98,12 @@ function DonorsContent() {
     }
   }, [tips.data]);
 
-  const updateCurrentContent = (content: donateContentValues) => {
+  const updateCurrentContent = (content: DonateContentValues) => {
     setCurrentContent(content);
   };
 
   const currentContentComponent = useMemo(() => {
-    switch (currentContent.name) {
+    switch (currentContent?.name) {
       case 'tip': {
         return (
           <div className="grid grid-cols-1 items-start gap-x-10 lg:grid-cols-2">
@@ -127,6 +140,9 @@ function DonorsContent() {
             updateCurrentContent={updateCurrentContent}
           />
         );
+      }
+      default: {
+        return;
       }
     }
   }, [
