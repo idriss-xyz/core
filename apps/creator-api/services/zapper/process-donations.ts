@@ -28,12 +28,14 @@ export async function processAllDonations(options: {
   address: Hex | Hex[];
   toAddresses?: Hex[];
   oldestTransactionTimestamp?: number;
+  isSigner?: boolean;
   overwrite: boolean;
 }): Promise<{ newEdges: { node: ZapperNode }[] }> {
   const {
     address,
     toAddresses = app_addresses,
     oldestTransactionTimestamp = OLDEST_TRANSACTION_TIMESTAMP,
+    isSigner = false,
     overwrite,
   } = options;
 
@@ -47,7 +49,7 @@ export async function processAllDonations(options: {
     const variables: TipHistoryVariables = {
       addresses: addressesArray,
       toAddresses,
-      isSigner: false,
+      isSigner,
       after: cursor,
     };
 

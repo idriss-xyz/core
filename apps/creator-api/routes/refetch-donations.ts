@@ -32,7 +32,8 @@ router.post('/', validationRules, async (req: Request, res: Response) => {
     return;
   }
   try {
-    const { secret, addresses, oldestTransactionTimestamp } = req.body;
+    const { secret, addresses, oldestTransactionTimestamp, isSigner } =
+      req.body;
 
     if (secret !== SECRET_PASSWORD) {
       res.status(401).json({ error: 'Unauthorized: Invalid secret password' });
@@ -60,6 +61,7 @@ router.post('/', validationRules, async (req: Request, res: Response) => {
       address: addressesArray,
       toAddresses: app_addresses,
       oldestTransactionTimestamp,
+      isSigner,
       overwrite,
     });
 
