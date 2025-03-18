@@ -129,6 +129,19 @@
         "SECRET_PASSWORD"
       ]
     },
+    "@idriss-xyz/twitch-extension#build": {
+      "inputs": [
+        "$TURBO_DEFAULT$"
+      ],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**"
+      ]
+    },
+    "@idriss-xyz/twitch-extension#dev": {
+      "cache": false,
+      "persistent": true
+    },
     "lint": {
       "inputs": [
         "$TURBO_DEFAULT$",

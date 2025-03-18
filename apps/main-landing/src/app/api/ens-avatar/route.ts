@@ -11,6 +11,7 @@ const client = createPublicClient({
   chain: mainnet,
   transport: http('https://eth.llamarpc.com'),
 });
+
 // ts-unused-exports:disable-next-line
 export async function GET(request: Request) {
   const url = new URL(request.url);
