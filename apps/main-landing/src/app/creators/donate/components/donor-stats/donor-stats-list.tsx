@@ -25,6 +25,7 @@ const baseClassName =
 
 type Properties = {
   isStandalone?: boolean;
+  isInvalidAddress?: boolean;
   validatedAddress?: string | null;
   currentContent: DonateContentValues;
   updateCurrentContent?: (content: DonateContentValues) => void;
@@ -33,6 +34,7 @@ type Properties = {
 export default function DonorStatsList({
   isStandalone,
   currentContent,
+  isInvalidAddress,
   validatedAddress,
   updateCurrentContent,
 }: Properties) {
@@ -61,9 +63,6 @@ export default function DonorStatsList({
     { name: mostDonatedToEnsNameQuery.data ?? '' },
     { enabled: !!mostDonatedToEnsNameQuery.data },
   );
-
-  console.log(!userAddress);
-  console.log(donorHistory.data);
 
   if (
     (!userDetails && !isStandalone) ||
@@ -113,13 +112,15 @@ export default function DonorStatsList({
           <h1 className="text-heading4 text-neutralGreen-900">
             Donation stats{' '}
             {(stats?.donorDisplayName ?? userAddress) &&
+              !isInvalidAddress &&
               ` of ${stats?.donorDisplayName ?? getShortWalletHex(userAddress ?? '')}`}
           </h1>
         </div>
 
-        {(donorHistory.isLoading || (!validatedAddress && !!isStandalone)) && (
-          <Spinner className="mx-auto mt-9 size-16 text-mint-600" />
-        )}
+        {!isInvalidAddress &&
+          (donorHistory.isLoading || (!validatedAddress && !!isStandalone)) && (
+            <Spinner className="mx-auto mt-9 size-16 text-mint-600" />
+          )}
 
         {(donorHistory.isError ||
           (validatedAddress !== undefined &&
@@ -132,136 +133,156 @@ export default function DonorStatsList({
           </div>
         )}
 
-        {stats && !donorHistory.isLoading && !donorHistory.isError && (
-          <>
-            <div className="relative z-0 mb-[3px] mt-9 grid w-full grid-cols-1 gap-3 lg:grid-cols-2">
-              <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-8 shadow-md">
-                <p className="text-label5 text-neutral-600">Donations</p>
+        {isInvalidAddress && (
+          <div className="mx-auto mt-9">
+            <p className="flex items-center justify-center gap-2 text-center text-heading4 text-red-500">
+              <Icon name="AlertCircle" size={40} />
+              <span>Wrong address</span>
+            </p>
+          </div>
+        )}
 
-                <p className="text-heading4 text-neutral-800">
-                  {stats.totalDonationsCount}
-                </p>
-              </div>
-
-              <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-8 shadow-md">
-                <p className="text-label5 text-neutral-600">Total volume</p>
-
-                <p className="text-heading4 text-neutral-800">
-                  $
-                  {new Intl.NumberFormat('en-US', {
-                    minimumFractionDigits:
-                      stats.totalDonationAmount % 1 === 0 ? 0 : 2,
-                    maximumFractionDigits: 2,
-                  }).format(Number(stats.totalDonationAmount))}
-                </p>
-              </div>
-
-              <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-8 shadow-md">
-                <p className="text-label5 text-neutral-600">Largest donation</p>
-
-                <p className="text-heading4 text-neutral-800">
-                  $
-                  {new Intl.NumberFormat('en-US', {
-                    minimumFractionDigits:
-                      stats.biggestDonationAmount % 1 === 0 ? 0 : 2,
-                    maximumFractionDigits: 2,
-                  }).format(Number(stats.biggestDonationAmount))}
-                </p>
-              </div>
-
-              {stats.favoriteTokenMetadata && (
+        {stats &&
+          !donorHistory.isLoading &&
+          !donorHistory.isError &&
+          !isInvalidAddress && (
+            <>
+              <div className="relative z-0 mb-[3px] mt-9 grid w-full grid-cols-1 gap-3 lg:grid-cols-2">
                 <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-8 shadow-md">
-                  <p className="text-label5 text-neutral-600">Favorite token</p>
+                  <p className="text-label5 text-neutral-600">Donations</p>
 
-                  <span className="flex items-center justify-center gap-x-1">
-                    <p className="text-heading4 text-neutral-800">
-                      {stats.favoriteDonationToken}{' '}
-                    </p>
-                    <img
-                      className="inline-block size-6 rounded-full"
-                      src={stats.favoriteTokenMetadata.imageUrlV2}
-                      alt=""
-                    />
-                  </span>
+                  <p className="text-heading4 text-neutral-800">
+                    {stats.totalDonationsCount}
+                  </p>
                 </div>
-              )}
 
-              {stats.mostDonatedToAddress !== '' && (
-                <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-7 shadow-md">
-                  <p className="text-label5 text-neutral-600">Top recipient</p>
+                <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-8 shadow-md">
+                  <p className="text-label5 text-neutral-600">Total volume</p>
 
-                  <div className="flex flex-row items-center gap-x-1">
-                    {mostDonatedToEnsAvatarQuery.data ? (
-                      <img
-                        alt="Donor avatar"
-                        src={mostDonatedToEnsAvatarQuery.data}
-                        className="size-10 rounded-full border border-neutral-400"
-                      />
-                    ) : (
-                      <div className="flex size-10 items-center justify-center rounded-full border border-neutral-300 bg-neutral-200">
-                        <Icon
-                          size={25}
-                          name="CircleUserRound"
-                          className="text-neutral-500"
-                        />
-                      </div>
-                    )}
-
-                    <TooltipProvider delayDuration={400}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <p className="cursor-default truncate text-label3 text-neutral-800">
-                            {mostDonatedToEnsNameQuery.data
-                              ? removeEthSuffix(mostDonatedToEnsNameQuery.data)
-                              : getShortWalletHex(stats.mostDonatedToAddress)}
-                          </p>
-                        </TooltipTrigger>
-
-                        <TooltipContent className="w-fit bg-black text-white">
-                          <p>
-                            {mostDonatedToEnsNameQuery.data ??
-                              stats.mostDonatedToAddress}
-                          </p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
+                  <p className="text-heading4 text-neutral-800">
+                    $
+                    {new Intl.NumberFormat('en-US', {
+                      minimumFractionDigits:
+                        stats.totalDonationAmount % 1 === 0 ? 0 : 2,
+                      maximumFractionDigits: 2,
+                    }).format(Number(stats.totalDonationAmount))}
+                  </p>
                 </div>
-              )}
 
-              {stats.positionInLeaderboard && (
                 <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-8 shadow-md">
                   <p className="text-label5 text-neutral-600">
-                    Leaderboard rank
+                    Largest donation
                   </p>
 
                   <p className="text-heading4 text-neutral-800">
-                    #{stats.positionInLeaderboard}
+                    $
+                    {new Intl.NumberFormat('en-US', {
+                      minimumFractionDigits:
+                        stats.biggestDonationAmount % 1 === 0 ? 0 : 2,
+                      maximumFractionDigits: 2,
+                    }).format(Number(stats.biggestDonationAmount))}
                   </p>
                 </div>
-              )}
-            </div>
 
-            {userAddress && (
-              <div className="mt-12 flex justify-center">
-                <Link
-                  size="xs"
-                  onClick={() => {
-                    if (updateCurrentContent) {
-                      updateCurrentContent({
-                        name: 'donor-history',
-                        userDetails: { address: userAddress },
-                      });
-                    }
-                  }}
-                  className="cursor-pointer"
-                >
-                  See full donation history
-                </Link>
+                {stats.favoriteTokenMetadata && (
+                  <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-8 shadow-md">
+                    <p className="text-label5 text-neutral-600">
+                      Favorite token
+                    </p>
+
+                    <span className="flex items-center justify-center gap-x-1">
+                      <p className="text-heading4 text-neutral-800">
+                        {stats.favoriteDonationToken}{' '}
+                      </p>
+                      <img
+                        className="inline-block size-6 rounded-full"
+                        src={stats.favoriteTokenMetadata.imageUrlV2}
+                        alt=""
+                      />
+                    </span>
+                  </div>
+                )}
+
+                {stats.mostDonatedToAddress !== '' && (
+                  <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-7 shadow-md">
+                    <p className="text-label5 text-neutral-600">
+                      Top recipient
+                    </p>
+
+                    <div className="flex flex-row items-center gap-x-1">
+                      {mostDonatedToEnsAvatarQuery.data ? (
+                        <img
+                          alt="Donor avatar"
+                          src={mostDonatedToEnsAvatarQuery.data}
+                          className="size-10 rounded-full border border-neutral-400"
+                        />
+                      ) : (
+                        <div className="flex size-10 items-center justify-center rounded-full border border-neutral-300 bg-neutral-200">
+                          <Icon
+                            size={25}
+                            name="CircleUserRound"
+                            className="text-neutral-500"
+                          />
+                        </div>
+                      )}
+
+                      <TooltipProvider delayDuration={400}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <p className="cursor-default truncate text-label3 text-neutral-800">
+                              {mostDonatedToEnsNameQuery.data
+                                ? removeEthSuffix(
+                                    mostDonatedToEnsNameQuery.data,
+                                  )
+                                : getShortWalletHex(stats.mostDonatedToAddress)}
+                            </p>
+                          </TooltipTrigger>
+
+                          <TooltipContent className="w-fit bg-black text-white">
+                            <p>
+                              {mostDonatedToEnsNameQuery.data ??
+                                stats.mostDonatedToAddress}
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                  </div>
+                )}
+
+                {stats.positionInLeaderboard && (
+                  <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-8 shadow-md">
+                    <p className="text-label5 text-neutral-600">
+                      Leaderboard rank
+                    </p>
+
+                    <p className="text-heading4 text-neutral-800">
+                      #{stats.positionInLeaderboard}
+                    </p>
+                  </div>
+                )}
               </div>
-            )}
-          </>
-        )}
+
+              {userAddress && (
+                <div className="mt-12 flex justify-center">
+                  <Link
+                    size="xs"
+                    onClick={() => {
+                      if (updateCurrentContent) {
+                        updateCurrentContent({
+                          name: 'donor-history',
+                          userDetails: { address: userAddress },
+                        });
+                      }
+                    }}
+                    className="cursor-pointer"
+                  >
+                    See full donation history
+                  </Link>
+                </div>
+              )}
+            </>
+          )}
       </div>
 
       <LeaderboardTopDonors

@@ -66,7 +66,6 @@ function DonorContent() {
   const updateCurrentContent = useCallback(
     (content: DonateContentValues) => {
       const userAddress = content.userDetails?.address;
-      console.log(content);
 
       if (userAddress) {
         router.push(`?${SEARCH_PARAMETER.ADDRESS}=${userAddress}`);
@@ -93,6 +92,7 @@ function DonorContent() {
           <DonorStatsList
             isStandalone
             currentContent={currentContent}
+            isInvalidAddress={isInvalidAddress}
             validatedAddress={validatedAddress}
             updateCurrentContent={updateCurrentContent}
           />
