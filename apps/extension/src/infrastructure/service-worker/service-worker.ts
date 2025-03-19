@@ -92,19 +92,9 @@ export class ServiceWorker {
         'color: #FF9900;',
       );
       const wallet = await ExtensionSettingsManager.getWallet();
-      const subscriptionsAmount =
-        await TradingCopilotManager.getSubscriptionsAmount();
 
       if (wallet?.account) {
-        if (subscriptionsAmount) {
-          this.registerWithServer(wallet.account);
-        } else {
-          console.log(
-            '%c[WebSocket] User dont have any subscriptions.',
-            'color: red;',
-          );
-          this.socket.disconnect();
-        }
+        this.registerWithServer(wallet.account);
       } else {
         console.log('%c[WebSocket] User not found.', 'color: red;');
         this.socket.disconnect();
