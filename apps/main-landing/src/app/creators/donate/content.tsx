@@ -319,7 +319,7 @@ export const Content = ({ className, validatedAddress }: Properties) => {
           render={({ field }) => {
             return (
               <TokenSelect
-                className="mt-4 w-full"
+                className="mt-6 w-full"
                 label="Token"
                 tokens={possibleTokens}
                 onChange={field.onChange}
@@ -334,7 +334,7 @@ export const Content = ({ className, validatedAddress }: Properties) => {
           render={({ field }) => {
             return (
               <ChainSelect
-                className="mt-6 w-full"
+                className="mt-4 w-full"
                 label="Network"
                 allowedChainsIds={allowedChainsIds}
                 onChange={field.onChange}
@@ -370,7 +370,7 @@ export const Content = ({ className, validatedAddress }: Properties) => {
             return (
               <Form.Field
                 {...field}
-                className="mt-6"
+                className="mt-4"
                 label="Message"
                 helperText={fieldState.error?.message}
                 error={Boolean(fieldState.error?.message)}
@@ -402,8 +402,13 @@ export const Content = ({ className, validatedAddress }: Properties) => {
         )}
       </Form>
 
-      <div className="mt-6 flex justify-center">
-        <Link size="xs" href={CREATORS_USER_GUIDE_LINK} isExternal>
+      <div className="mt-[23px] flex justify-center">
+        <Link
+          size="xs"
+          href={CREATORS_USER_GUIDE_LINK}
+          isExternal
+          className="lg:text-label7"
+        >
           1% supplies IDRISS’s treasury
         </Link>
       </div>

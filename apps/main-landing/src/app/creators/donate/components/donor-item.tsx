@@ -4,8 +4,9 @@ import { TipHistoryFromUser } from '@idriss-xyz/constants';
 import { getShortWalletHex } from '@idriss-xyz/utils';
 import { classes } from '@idriss-xyz/ui/utils';
 
-import { DonateContentValues } from '@/app/creators/donate/types';
-
+import { DonateContentValues } from '../../donate/types';
+import { WHITELISTED_URLS } from '../../donate/constants';
+import { useGetAvatarImage } from '../commands/get-avatar-image';
 import { useGetEnsAvatar } from '../commands/get-ens-avatar';
 
 const rankBorders = [
@@ -20,6 +21,7 @@ type Properties = {
   donorRank: number;
   className?: string;
   donateAmount: number;
+  isTwitchExtension?: boolean;
   donorDetails: TipHistoryFromUser;
   updateCurrentContent?: (content: DonateContentValues) => void;
 };
@@ -27,8 +29,9 @@ type Properties = {
 export default function DonorItem({
   donorRank,
   className,
-  donateAmount,
   donorDetails,
+  donateAmount,
+  isTwitchExtension,
   updateCurrentContent,
 }: Properties) {
   const displayName = donorDetails.displayName?.value;
@@ -37,29 +40,51 @@ export default function DonorItem({
 
   const ensAvatarQuery = useGetEnsAvatar(
     { name: displayName ?? '' },
-    { enabled: nameSource === 'ENS' && !!displayName },
+    {
+      isTwitchExtension: isTwitchExtension,
+      enabled: nameSource === 'ENS' && !!displayName,
+    },
   );
 
   const farcasterAvatarUrl =
     imageSource === 'FARCASTER' ? donorDetails.avatar?.value?.url : null;
 
-  const avatarSource = ensAvatarQuery.data ?? farcasterAvatarUrl;
+  const avatarSourceUrl = ensAvatarQuery.data ?? farcasterAvatarUrl;
+
+  const isAllowedUrl =
+    !isTwitchExtension ||
+    !!(
+      avatarSourceUrl &&
+      WHITELISTED_URLS.some((domain) => {
+        return avatarSourceUrl.startsWith(domain);
+      })
+    );
+
+  const avatarDataQuery = useGetAvatarImage(
+    { url: avatarSourceUrl ?? '' },
+    { enabled: !!avatarSourceUrl && !isAllowedUrl },
+  );
 
   const avatarImage = (
     <div className="relative w-max">
-      {avatarSource ? (
+      {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
+      {((avatarSourceUrl && isAllowedUrl) ||
+        (avatarSourceUrl && !isAllowedUrl && !!avatarDataQuery.data)) && (
         <img
-          src={avatarSource}
+          src={isAllowedUrl ? avatarSourceUrl : avatarDataQuery.data}
           alt={`Rank ${donorRank + 1}`}
           className={`size-8 rounded-full bg-neutral-200 ${donorRank <= 2 ? `border-2 ${rankBorders[donorRank]}` : 'border border-neutral-400'}`}
         />
-      ) : (
+      )}
+
+      {(!avatarSourceUrl || (!isAllowedUrl && !avatarDataQuery.data)) && (
         <div
           className={`flex size-8 items-center justify-center rounded-full ${donorRank <= 2 ? `border-2 ${rankBorders[donorRank]}` : 'border border-neutral-300'} bg-neutral-200`}
         >
           <Icon size={20} name="CircleUserRound" className="text-neutral-500" />
         </div>
       )}
+
       {donorRank <= 2 ? (
         <Icon
           size={13}
@@ -73,7 +98,7 @@ export default function DonorItem({
   return (
     <li
       className={classes(
-        'grid grid-cols-[10px,1fr,70px] items-center gap-x-3.5 border-b border-b-neutral-300 px-5.5 py-4.5 text-body5 md:grid-cols-[10px,1fr,100px]',
+        'grid grid-cols-[10px,1fr,70px] items-center gap-x-3.5 border-b border-b-neutral-300 px-5.5 py-[17.25px] text-body5 md:grid-cols-[10px,1fr,100px]',
         className,
       )}
     >
@@ -92,7 +117,10 @@ export default function DonorItem({
               });
             }
           }}
-          className="cursor-pointer border-0 text-body5 text-neutral-900 no-underline lg:text-body5"
+          className={classes(
+            'border-0 text-body5 text-neutral-900 no-underline lg:text-body5',
+            updateCurrentContent && 'cursor-pointer',
+          )}
         >
           {displayName ?? getShortWalletHex(donorDetails.address)}
         </Link>
@@ -113,12 +141,16 @@ export default function DonorItem({
 type PlaceholderProperties = {
   donorRank: number;
   itemHeight?: number;
+  amountToDisplay: number;
+  hideEncouragement?: boolean;
   previousDonateAmount: number;
 };
 
 export function DonorItemPlaceholder({
   donorRank,
   itemHeight,
+  amountToDisplay,
+  hideEncouragement,
   previousDonateAmount,
 }: PlaceholderProperties) {
   const placeholderHeight = itemHeight ?? 69;
@@ -159,20 +191,33 @@ export function DonorItemPlaceholder({
               : '<0.01'}
           </span>
         </li>
-        <span
-          style={{ height: `${(5 - donorRank) * placeholderHeight}px` }}
-          className="flex items-center justify-center border-b border-b-neutral-300 px-5.5 py-4.5 text-center text-label4 gradient-text-2"
-        >
-          Donate now and claim {rankPlaces[donorRank]} place
-        </span>
+
+        {amountToDisplay - 1 - donorRank ? (
+          <span
+            style={{
+              height: `${(amountToDisplay - 1 - donorRank) * placeholderHeight}px`,
+            }}
+            className="flex items-center justify-center border-b border-b-neutral-300 px-5.5 py-4.5 text-center text-label4 gradient-text-2"
+          >
+            {hideEncouragement
+              ? null
+              : `Donate now and claim ${rankPlaces[donorRank]} place`}
+          </span>
+        ) : null}
       </>
     );
   }
 
   return (
-    <span
-      style={{ height: `${(6 - donorRank) * placeholderHeight}px` }}
-      className="flex items-center justify-center border-b border-b-neutral-300"
-    />
+    <>
+      {amountToDisplay - donorRank ? (
+        <span
+          style={{
+            height: `${(amountToDisplay - donorRank) * placeholderHeight}px`,
+          }}
+          className="flex items-center justify-center border-b border-b-neutral-300"
+        />
+      ) : null}
+    </>
   );
 }
