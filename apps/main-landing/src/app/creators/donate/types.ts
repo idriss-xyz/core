@@ -34,17 +34,17 @@ export interface DonorHistoryResponse {
   leaderboard: DonorLeaderboardStats[];
 }
 
-export type DonateContentUserDetails = {
+type DonateContentUserDetails = {
   address: Hex;
 };
 
-export type DonateContentNames =
+type DonateContentNames =
   | 'user-tip'
   | 'user-history'
   | 'donor-stats'
   | 'donor-history';
 
-export interface DonateContentValue {
+interface DonateContentValue {
   userDetails?: DonateContentUserDetails;
   name: DonateContentNames;
 }
