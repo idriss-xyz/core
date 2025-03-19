@@ -85,8 +85,10 @@ export default function DonorItem({
           onClick={() => {
             if (updateCurrentContent) {
               updateCurrentContent({
-                name: 'userHistory',
-                userDetails: donorDetails,
+                name: 'donor-stats',
+                userDetails: {
+                  address: donorDetails.address,
+                },
               });
             }
           }}

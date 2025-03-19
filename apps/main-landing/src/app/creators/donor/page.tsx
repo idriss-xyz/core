@@ -1,14 +1,20 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
-import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { EMPTY_HEX, hexSchema } from '@idriss-xyz/constants';
+import { Hex, isAddress } from 'viem';
 
 import { validateAddressOrENS } from '@/app/creators/donate/utils';
 import { RainbowKitProviders } from '@/app/creators/donate/providers';
-import UserHistoryList from '@/app/creators/donate/components/user-history/user-history-list';
 import { TopBar } from '@/components';
 import { backgroundLines2 } from '@/assets';
+import { DonateContentValues } from '@/app/creators/donate/types';
+import { useGetDonorHistory } from '@/app/creators/donate/commands/get-donor-history';
+
+import DonateHistoryList from '../donate/components/history/donate-history-list';
+import DonorStatsList from '../donate/components/donor-stats/donor-stats-list';
 
 const SEARCH_PARAMETER = {
   ADDRESS: 'address',
@@ -17,9 +23,32 @@ const SEARCH_PARAMETER = {
 
 // ts-unused-exports:disable-next-line
 export default function Donor() {
+  return (
+    <RainbowKitProviders>
+      <DonorContent />
+    </RainbowKitProviders>
+  );
+}
+
+function DonorContent() {
+  const router = useRouter();
+  const [currentContent, setCurrentContent] = useState<DonateContentValues>({
+    name: 'donor-stats',
+  });
   const [validatedAddress, setValidatedAddress] = useState<
     string | null | undefined
   >();
+
+  const addressValidationResult = hexSchema.safeParse(validatedAddress);
+
+  const userAddress = addressValidationResult
+    ? (validatedAddress as Hex)
+    : null;
+
+  const donorHistory = useGetDonorHistory(
+    { address: userAddress ?? EMPTY_HEX },
+    { enabled: !!userAddress },
+  );
 
   const searchParameters = useSearchParams();
   const addressFromParameters =
@@ -34,6 +63,70 @@ export default function Donor() {
     void validateAddress();
   }, [addressFromParameters]);
 
+  const updateCurrentContent = useCallback(
+    (content: DonateContentValues) => {
+      const userAddress = content.userDetails?.address;
+      console.log(content);
+
+      if (userAddress) {
+        router.push(`?${SEARCH_PARAMETER.ADDRESS}=${userAddress}`);
+      }
+
+      setCurrentContent((previous) => {
+        return { previous, ...content };
+      });
+    },
+    [router, setCurrentContent],
+  );
+
+  const isInvalidAddress =
+    !addressFromParameters ||
+    (!!addressFromParameters && validatedAddress === null) ||
+    (!!addressFromParameters &&
+      !!validatedAddress &&
+      (!addressValidationResult.success || !isAddress(validatedAddress)));
+
+  const currentContentComponent = useMemo(() => {
+    switch (currentContent?.name) {
+      case 'donor-stats': {
+        return (
+          <DonorStatsList
+            isStandalone
+            currentContent={currentContent}
+            validatedAddress={validatedAddress}
+            updateCurrentContent={updateCurrentContent}
+          />
+        );
+      }
+      case 'donor-history': {
+        return (
+          <DonateHistoryList
+            tipEdges={
+              donorHistory.data?.knownDonations.map((donation) => {
+                return { node: donation.data };
+              }) ?? []
+            }
+            address={validatedAddress}
+            currentContent={currentContent}
+            tipsLoading={donorHistory.isLoading}
+            isInvalidAddress={isInvalidAddress}
+            updateCurrentContent={updateCurrentContent}
+          />
+        );
+      }
+      default: {
+        return;
+      }
+    }
+  }, [
+    currentContent,
+    donorHistory.data?.knownDonations,
+    donorHistory.isLoading,
+    isInvalidAddress,
+    updateCurrentContent,
+    validatedAddress,
+  ]);
+
   return (
     <>
       <TopBar />
@@ -45,12 +138,7 @@ export default function Donor() {
           alt=""
         />
 
-        <RainbowKitProviders>
-          <UserHistoryList
-            isStandalone={true}
-            validatedAddress={validatedAddress}
-          />
-        </RainbowKitProviders>
+        {currentContentComponent}
       </main>
     </>
   );

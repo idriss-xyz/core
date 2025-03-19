@@ -108,9 +108,10 @@ export default function DonateHistoryItem({
                 size="xs"
                 onClick={() => {
                   updateCurrentContent({
-                    name: 'userHistory',
-                    backTo: 'history',
-                    userDetails: tip.transaction.fromUser,
+                    name: 'donor-stats',
+                    userDetails: {
+                      address: tipperFromAddress,
+                    },
                   });
                 }}
                 className="cursor-pointer border-0 align-middle text-label3 text-neutral-900 no-underline lg:text-label3"

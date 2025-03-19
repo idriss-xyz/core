@@ -11,8 +11,9 @@ import DonateHistoryItem from './donate-history-item';
 type Properties = {
   tipsLoading: boolean;
   isInvalidAddress: boolean;
-  tipEdges: { node: TipHistoryNode }[];
   address: string | null | undefined;
+  currentContent: DonateContentValues;
+  tipEdges: { node: TipHistoryNode }[];
   updateCurrentContent: (content: DonateContentValues) => void;
 };
 
@@ -20,6 +21,7 @@ export default function DonateHistoryList({
   address,
   tipEdges,
   tipsLoading,
+  currentContent,
   isInvalidAddress,
   updateCurrentContent,
 }: Properties) {
@@ -33,7 +35,9 @@ export default function DonateHistoryList({
           iconName="ArrowLeft"
           className="cursor-pointer"
           onClick={() => {
-            updateCurrentContent({ name: 'tip' });
+            updateCurrentContent(
+              currentContent.previous ?? { name: 'user-tip' },
+            );
           }}
         />
         <h1 className="text-heading4">Donation history</h1>

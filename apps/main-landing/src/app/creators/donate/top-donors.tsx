@@ -150,7 +150,9 @@ export const TopDonors = ({
         <Link
           size="xs"
           onClick={() => {
-            updateCurrentContent({ name: 'history' });
+            updateCurrentContent({
+              name: 'user-history',
+            });
           }}
           className={`mx-6 my-3 cursor-pointer ${sortedGroupedTips?.length === 0 ? 'invisible' : ''}`}
         >

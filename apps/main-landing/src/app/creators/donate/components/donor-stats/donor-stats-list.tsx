@@ -5,16 +5,14 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { Hex } from 'viem';
 import { getShortWalletHex } from '@idriss-xyz/utils';
 import { Spinner } from '@idriss-xyz/ui/spinner';
+import { IconButton } from '@idriss-xyz/ui/icon-button';
 
 import { useGetDonorHistory } from '@/app/creators/donate/commands/get-donor-history';
 import { LeaderboardTopDonors } from '@/app/creators/donate/top-donors';
 import { backgroundLines4 } from '@/assets';
 import { useGetEnsAvatar } from '@/app/creators/donate/commands/get-ens-avatar';
 import { useGetEnsName } from '@/app/creators/donate/commands/get-ens-name';
-import {
-  DonateContentUserDetails,
-  DonateContentValues,
-} from '@/app/creators/donate/types';
+import { DonateContentValues } from '@/app/creators/donate/types';
 
 const baseClassName =
   'z-1 w-[440px] max-w-full rounded-xl bg-mint-100 px-4 pb-9 pt-9 flex flex-col items-center relative container mt-8 overflow-hidden lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]';
@@ -22,20 +20,20 @@ const baseClassName =
 type Properties = {
   isStandalone?: boolean;
   validatedAddress?: string | null;
-  userDetails?: DonateContentUserDetails;
-  backTo?: 'tip' | 'history' | 'userHistory';
+  currentContent: DonateContentValues;
   updateCurrentContent?: (content: DonateContentValues) => void;
 };
 
-export default function UserHistoryList({
-  backTo,
-  userDetails,
+export default function DonorStatsList({
   isStandalone,
+  currentContent,
   validatedAddress,
   updateCurrentContent,
 }: Properties) {
+  const userDetails = currentContent.userDetails;
+
   const addressValidationResult = hexSchema.safeParse(validatedAddress);
-  const userAddress = addressValidationResult
+  const userAddress = addressValidationResult.success
     ? (validatedAddress as Hex)
     : userDetails?.address;
 
@@ -66,10 +64,10 @@ export default function UserHistoryList({
     (!isStandalone && !donorHistory.isLoading && !donorHistory.data)
   ) {
     if (updateCurrentContent) {
-      if (backTo) {
-        updateCurrentContent({ name: backTo });
+      if (currentContent.previous) {
+        updateCurrentContent(currentContent.previous);
       } else {
-        updateCurrentContent({ name: 'tip' });
+        updateCurrentContent({ name: 'user-tip' });
       }
     }
 
@@ -89,13 +87,31 @@ export default function UserHistoryList({
           className="pointer-events-none absolute top-0 hidden size-full opacity-100 lg:block"
         />
 
-        <h1 className="self-start text-heading4 text-neutralGreen-900">
-          Donation stats{' '}
-          {(stats?.donorDisplayName ?? userAddress) &&
-            ` of ${stats?.donorDisplayName ?? getShortWalletHex(userAddress ?? '')}`}
-        </h1>
+        <div className="flex w-full items-center gap-x-2">
+          {!isStandalone && (
+            <IconButton
+              asLink
+              size="small"
+              intent="tertiary"
+              iconName="ArrowLeft"
+              className="cursor-pointer"
+              onClick={() => {
+                if (updateCurrentContent) {
+                  updateCurrentContent(
+                    currentContent.previous ?? { name: 'user-tip' },
+                  );
+                }
+              }}
+            />
+          )}
+          <h1 className="text-heading4 text-neutralGreen-900">
+            Donation stats{' '}
+            {(stats?.donorDisplayName ?? userAddress) &&
+              ` of ${stats?.donorDisplayName ?? getShortWalletHex(userAddress ?? '')}`}
+          </h1>
+        </div>
 
-        {(donorHistory.isLoading || !validatedAddress) && (
+        {(donorHistory.isLoading || (!validatedAddress && !!isStandalone)) && (
           <Spinner className="mx-auto mt-9 size-16 text-mint-600" />
         )}
 
@@ -206,19 +222,24 @@ export default function UserHistoryList({
               )}
             </div>
 
-            <div className="mt-12 flex justify-center">
-              <Link
-                size="xs"
-                onClick={() => {
-                  if (updateCurrentContent) {
-                    updateCurrentContent({ name: 'history' });
-                  }
-                }}
-                className="cursor-pointer"
-              >
-                See full donation history
-              </Link>
-            </div>
+            {userAddress && (
+              <div className="mt-12 flex justify-center">
+                <Link
+                  size="xs"
+                  onClick={() => {
+                    if (updateCurrentContent) {
+                      updateCurrentContent({
+                        name: 'donor-history',
+                        userDetails: { address: userAddress },
+                      });
+                    }
+                  }}
+                  className="cursor-pointer"
+                >
+                  See full donation history
+                </Link>
+              </div>
+            )}
           </>
         )}
       </div>
@@ -230,7 +251,9 @@ export default function UserHistoryList({
           donorHistory.isError ||
           (validatedAddress !== undefined && !!addressValidationResult.error)
         }
-        leaderboardLoading={donorHistory.isLoading || !validatedAddress}
+        leaderboardLoading={
+          donorHistory.isLoading || (!validatedAddress && !!isStandalone)
+        }
         className="container mt-8 w-[360px] max-w-full overflow-hidden px-0 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]"
       />
     </div>
