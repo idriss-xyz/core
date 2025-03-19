@@ -12,25 +12,6 @@ export const formatBigNumber = (number: number | string): string => {
   });
 };
 
-function extractSignificantNumber(number: string) {
-  const decimal = number.split('.')[1] ?? '';
-
-  const significantPart = decimal.replace(/0+$/, '');
-  const leadingZeros = /^0+/.exec(significantPart)?.[0] ?? '';
-
-  if (!leadingZeros || leadingZeros.length <= 2) {
-    return { value: number, zeros: 0 };
-  }
-
-  const firstNonZero = /[1-9]/.exec(significantPart);
-  const numberPart = significantPart.slice(firstNonZero?.index) ?? 0;
-
-  return {
-    value: Math.round(Number(numberPart.slice(0, 2))),
-    zeros: leadingZeros.length - 1,
-  };
-}
-
 export const roundToSignificantFiguresForCopilotTrading = (
   number: number,
   significantFigures: number,
@@ -44,55 +25,54 @@ export const roundToSignificantFiguresForCopilotTrading = (
 
   if (number >= 1_000_000_000) {
     return {
-      value: `${(number / 1_000_000_000).toFixed(significantFigures)}B`,
+      value: `${(number / 1_000_000_000).toPrecision(significantFigures)}B`,
       index: null,
     };
   }
   if (number >= 1_000_000) {
     return {
-      value: `${(number / 1_000_000).toFixed(significantFigures)}M`,
+      value: `${(number / 1_000_000).toPrecision(significantFigures)}M`,
       index: null,
     };
   }
   if (number >= 1000) {
     return {
-      value: `${(number / 1000).toFixed(significantFigures)}K`,
+      value: `${(number / 1000).toPrecision(significantFigures)}K`,
       index: null,
     };
   }
 
-  if (number.toString().includes('e')) {
-    const scienceNumberArray = number.toString().split('e-');
-    const decimals = scienceNumberArray?.[1] ?? '2';
-    const startingDecimals =
-      scienceNumberArray?.[0]?.split('.')?.[1]?.length ?? 0;
-    const { value: significantNumber, zeros: indexZeros } =
-      extractSignificantNumber(
-        Number(number).toFixed(Number(decimals) + Number(startingDecimals)),
-      ) || {};
+  if (number < 1 && number > 0) {
+    const decimalString = number.toString().split('.')[1] ?? '';
+    const leadingZerosMatch = /^0+/.exec(decimalString);
+    const leadingZeros = leadingZerosMatch?.[0]?.length ?? 0;
 
-    return {
-      value: significantNumber,
-      index: indexZeros,
-    };
+    if (leadingZeros >= 1) {
+      const significantPart = decimalString.slice(leadingZeros);
+      const trimmedPart = significantPart.slice(0, significantFigures);
+
+      return {
+        value: Number(trimmedPart),
+        index: leadingZeros,
+      };
+    }
   }
 
-  const { value, zeros } = extractSignificantNumber(number.toString());
+  if (number.toString().includes('e-')) {
+    const fixedString = number.toFixed(50);
+    const decimalString = fixedString.split('.')[1] ?? '';
+    const leadingZeros = /^0+/.exec(decimalString)?.[0]?.length ?? 0;
+    const significantPart = decimalString.slice(leadingZeros);
+    const trimmedPart = significantPart.slice(0, significantFigures);
 
-  if (zeros >= 2 && number < 1) {
     return {
-      value,
-      index: zeros,
+      value: Number(trimmedPart),
+      index: leadingZeros,
     };
   }
-
-  const offset = 0.000_000_001;
-  const multiplier = Math.pow(10, significantFigures);
-  const rounded_number =
-    Math.round((number + offset) * multiplier) / multiplier;
 
   return {
-    value: rounded_number,
+    value: Number(number.toPrecision(significantFigures)),
     index: null,
   };
 };
