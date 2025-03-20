@@ -10,7 +10,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
-import { CHAIN, TipHistoryNode } from '@idriss-xyz/constants';
+import { CHAIN, EMPTY_HEX, TipHistoryNode } from '@idriss-xyz/constants';
 import {
   getShortWalletHex,
   getTimeDifferenceString,
@@ -46,7 +46,7 @@ export default function DonateHistoryItem({
   const tipReceiver = tip.interpretation.descriptionDisplayItems[1]?.account;
   const tipComment = tip.interpretation.descriptionDisplayItems[2];
   const tipperFromAddress = tip.transaction.fromUser.address;
-  const receiverAddress = tip.transaction.toUser.address;
+  const receiverAddress = tipReceiver?.address;
 
   const displayName = showReceiver
     ? tipReceiver?.displayName?.value
@@ -120,14 +120,15 @@ export default function DonateHistoryItem({
                   updateCurrentContent({
                     name: 'donor-stats',
                     userDetails: {
-                      address: tipperFromAddress,
+                      address: receiverAddress ?? tipperFromAddress,
                     },
                   });
                 }}
                 className="cursor-pointer border-0 align-middle text-label3 text-neutral-900 no-underline lg:text-label3"
               >
                 {showReceiver
-                  ? (displayName ?? getShortWalletHex(receiverAddress))
+                  ? (displayName ??
+                    getShortWalletHex(receiverAddress ?? EMPTY_HEX))
                   : (displayName ?? getShortWalletHex(tipperFromAddress))}
               </Link>{' '}
               <span className="align-middle text-body3 text-neutral-600">

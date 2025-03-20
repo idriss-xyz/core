@@ -203,7 +203,7 @@ export default function DonorStatsList({
                   </div>
                 )}
 
-                {stats.mostDonatedToAddress !== '' && (
+                {stats.mostDonatedToAddress !== EMPTY_HEX && (
                   <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-7 shadow-md">
                     <p className="text-label5 text-neutral-600">
                       Top recipient

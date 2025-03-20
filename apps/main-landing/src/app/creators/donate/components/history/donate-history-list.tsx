@@ -72,7 +72,11 @@ export default function DonateHistoryList({
                 );
               })
             ) : (
-              <p>This address has not received any tips</p>
+              <p>
+                {showReceiver
+                  ? 'No tips were sent from this address'
+                  : 'This address has not received any tips'}
+              </p>
             )}
           </div>
         )}
