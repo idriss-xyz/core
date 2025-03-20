@@ -105,7 +105,7 @@ export const SubscriptionForm = ({ onSubmit, canSubscribe }: Properties) => {
         form.reset(EMPTY_FORM);
         setError('');
       } catch {
-        setError('We couldn\'t subscribe to this address. Try again.');
+        setError("We couldn't subscribe to this address. Try again.");
       }
     },
     [

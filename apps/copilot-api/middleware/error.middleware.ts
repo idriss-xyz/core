@@ -10,10 +10,6 @@ export const throwInternalError = (
   res.status(500).json({ error: 'Internal server error', message: msg });
 };
 
-
-export const throwExternalError = (
-  res: AxiosResponse,
-  msg: string,
-)  => {
+export const throwExternalError = (res: AxiosResponse, msg: string) => {
   throw new Error(`[${res.status}] ${msg}: ${res.statusText}`);
 };
