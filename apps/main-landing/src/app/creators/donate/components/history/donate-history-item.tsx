@@ -19,7 +19,7 @@ import {
 } from '@idriss-xyz/utils';
 import { Link } from '@idriss-xyz/ui/link';
 
-import { donateContentValues } from '@/app/creators/donate/types';
+import { DonateContentValues } from '@/app/creators/donate/types';
 
 import { useGetEnsAvatar } from '../../commands/get-ens-avatar';
 
@@ -33,7 +33,7 @@ function removeMainnetSuffix(text: string) {
 
 type Properties = {
   tip: TipHistoryNode;
-  updateCurrentContent: (content: donateContentValues) => void;
+  updateCurrentContent: (content: DonateContentValues) => void;
 };
 
 export default function DonateHistoryItem({
@@ -108,9 +108,10 @@ export default function DonateHistoryItem({
                 size="xs"
                 onClick={() => {
                   updateCurrentContent({
-                    name: 'userHistory',
-                    backTo: 'history',
-                    userDetails: tip.transaction.fromUser,
+                    name: 'donor-stats',
+                    userDetails: {
+                      address: tipperFromAddress,
+                    },
                   });
                 }}
                 className="cursor-pointer border-0 align-middle text-label3 text-neutral-900 no-underline lg:text-label3"

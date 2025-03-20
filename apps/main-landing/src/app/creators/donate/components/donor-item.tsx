@@ -4,7 +4,7 @@ import { TipHistoryFromUser } from '@idriss-xyz/constants';
 import { getShortWalletHex } from '@idriss-xyz/utils';
 import { classes } from '@idriss-xyz/ui/utils';
 
-import { donateContentValues } from '../types';
+import { DonateContentValues } from '../../donate/types';
 import { WHITELISTED_URLS } from '../../donate/constants';
 import { useGetAvatarImage } from '../commands/get-avatar-image';
 import { useGetEnsAvatar } from '../commands/get-ens-avatar';
@@ -23,7 +23,7 @@ type Properties = {
   donateAmount: number;
   isTwitchExtension?: boolean;
   donorDetails: TipHistoryFromUser;
-  updateCurrentContent?: (content: donateContentValues) => void;
+  updateCurrentContent?: (content: DonateContentValues) => void;
 };
 
 export default function DonorItem({
@@ -110,8 +110,10 @@ export default function DonorItem({
           onClick={() => {
             if (updateCurrentContent) {
               updateCurrentContent({
-                name: 'userHistory',
-                userDetails: donorDetails,
+                name: 'donor-stats',
+                userDetails: {
+                  address: donorDetails.address,
+                },
               });
             }
           }}

@@ -14,7 +14,7 @@ import { Button } from '@idriss-xyz/ui/button';
 import { default as IDRISS_SCENE_STREAM_2 } from '../../../assets/idriss-scene-stream-2.png';
 import { WidgetVariants } from '../../../../../twitch-extension/src/app/types';
 
-import { donateContentValues, DonorHistoryResponse } from './types';
+import { DonateContentValues, DonorHistoryResponse } from './types';
 import {
   default as DonorItem,
   DonorItemPlaceholder,
@@ -27,7 +27,7 @@ type Properties = {
   donationUrl?: string | null;
   validatedAddress?: string | null;
   tipEdges: { node: TipHistoryNode }[];
-  updateCurrentContent?: (content: donateContentValues) => void;
+  updateCurrentContent?: (content: DonateContentValues) => void;
 };
 
 const baseClassName =
@@ -270,7 +270,9 @@ export const TopDonors = ({
           <Link
             size="xs"
             onClick={() => {
-              updateCurrentContent({ name: 'history' });
+              updateCurrentContent({
+                name: 'user-history',
+              });
             }}
             className={classes(
               'mx-6 my-3 cursor-pointer lg:text-label7',
@@ -290,7 +292,7 @@ type LeaderboardProperties = {
   leaderboardError: boolean;
   leaderboardLoading: boolean;
   leaderboard: DonorHistoryResponse['leaderboard'];
-  updateCurrentContent: (content: donateContentValues) => void;
+  updateCurrentContent?: (content: DonateContentValues) => void;
 };
 
 export const LeaderboardTopDonors = ({

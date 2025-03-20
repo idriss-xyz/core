@@ -1,4 +1,9 @@
-import { TipHistoryFromUser, TipHistoryTokenV2 } from '@idriss-xyz/constants';
+import {
+  TipHistoryFromUser,
+  TipHistoryNode,
+  TipHistoryTokenV2,
+} from '@idriss-xyz/constants';
+import { Hex } from 'viem';
 
 interface DonorHistoryStats {
   totalDonationsCount: number;
@@ -18,12 +23,32 @@ interface DonorLeaderboardStats {
 }
 
 export interface DonorHistoryResponse {
+  knownDonations: {
+    toAddress: Hex;
+    fromAddress: Hex;
+    timestamp: number;
+    transactionHash: Hex;
+    data: TipHistoryNode;
+  }[];
   stats: DonorHistoryStats;
   leaderboard: DonorLeaderboardStats[];
 }
 
-export type donateContentValues = {
-  userDetails?: TipHistoryFromUser;
-  name: 'tip' | 'history' | 'userHistory';
-  backTo?: 'tip' | 'history' | 'userHistory';
+type DonateContentUserDetails = {
+  address: Hex;
 };
+
+type DonateContentNames =
+  | 'user-tip'
+  | 'user-history'
+  | 'donor-stats'
+  | 'donor-history';
+
+interface DonateContentValue {
+  userDetails?: DonateContentUserDetails;
+  name: DonateContentNames;
+}
+
+export interface DonateContentValues extends DonateContentValue {
+  previous?: DonateContentValue;
+}

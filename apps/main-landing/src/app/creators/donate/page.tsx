@@ -3,12 +3,13 @@
 import { Button } from '@idriss-xyz/ui/button';
 import {
   CREATORS_LINK,
+  EMPTY_HEX,
   hexSchema,
   TipHistoryNode,
 } from '@idriss-xyz/constants';
 import { Hex, isAddress } from 'viem';
 import '@rainbow-me/rainbowkit/styles.css';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { default as io } from 'socket.io-client';
 import _ from 'lodash';
@@ -18,13 +19,14 @@ import { TopBar } from '@/components';
 import { validateAddressOrENS } from '@/app/creators/donate/utils';
 import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
 import DonateHistoryList from '@/app/creators/donate/components/history/donate-history-list';
-import UserHistoryList from '@/app/creators/donate/components/user-history/user-history-list';
-import { donateContentValues } from '@/app/creators/donate/types';
+import { DonateContentValues } from '@/app/creators/donate/types';
+import { useGetDonorHistory } from '@/app/creators/donate/commands/get-donor-history';
 
 import { TopDonors } from './top-donors';
 import { Content } from './content';
 import { RainbowKitProviders } from './providers';
 import { CREATOR_API_URL } from './constants';
+import DonorStatsList from './components/donor-stats/donor-stats-list';
 
 const SEARCH_PARAMETER = {
   ADDRESS: 'address',
@@ -42,8 +44,8 @@ export default function Donors() {
 
 function DonorsContent() {
   const [tipEdges, setTipEdges] = useState<{ node: TipHistoryNode }[]>([]);
-  const [currentContent, setCurrentContent] = useState<donateContentValues>({
-    name: 'tip',
+  const [currentContent, setCurrentContent] = useState<DonateContentValues>({
+    name: 'user-tip',
   });
   const [validatedAddress, setValidatedAddress] = useState<
     string | null | undefined
@@ -59,9 +61,9 @@ function DonorsContent() {
   useEffect(() => {
     const validateAddress = async () => {
       const address = await validateAddressOrENS(addressFromParameters);
-
       setValidatedAddress(address);
     };
+
     void validateAddress();
   }, [addressFromParameters]);
 
@@ -85,19 +87,27 @@ function DonorsContent() {
     }
   }, [tips.data]);
 
-  const updateCurrentContent = (content: donateContentValues) => {
-    setCurrentContent(content);
-  };
+  const donorHistory = useGetDonorHistory(
+    { address: currentContent.userDetails?.address ?? EMPTY_HEX },
+    { enabled: !!currentContent.userDetails?.address },
+  );
+
+  const updateCurrentContent = useCallback((content: DonateContentValues) => {
+    setCurrentContent((previous) => {
+      return { previous, ...content };
+    });
+  }, []);
 
   const currentContentComponent = useMemo(() => {
-    switch (currentContent.name) {
-      case 'tip': {
+    switch (currentContent?.name) {
+      case 'user-tip': {
         return (
           <div className="grid grid-cols-1 items-start gap-x-10 lg:grid-cols-[1fr,auto]">
             <Content
               validatedAddress={validatedAddress}
               className="container mt-8 overflow-hidden lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]"
             />
+
             <TopDonors
               tipEdges={tipEdges}
               tipsLoading={tips.isLoading}
@@ -108,32 +118,54 @@ function DonorsContent() {
           </div>
         );
       }
-      case 'history': {
+      case 'user-history': {
         return (
           <DonateHistoryList
             tipEdges={tipEdges}
             address={validatedAddress}
             tipsLoading={tips.isLoading}
+            currentContent={currentContent}
             isInvalidAddress={isInvalidAddress}
             updateCurrentContent={updateCurrentContent}
           />
         );
       }
-      case 'userHistory': {
+      case 'donor-stats': {
         return (
-          <UserHistoryList
-            backTo={currentContent.backTo}
-            userDetails={currentContent.userDetails}
+          <DonorStatsList
+            currentContent={currentContent}
             updateCurrentContent={updateCurrentContent}
           />
         );
       }
+      case 'donor-history': {
+        return (
+          <DonateHistoryList
+            tipEdges={
+              donorHistory.data?.knownDonations.map((donation) => {
+                return { node: donation.data };
+              }) ?? []
+            }
+            currentContent={currentContent}
+            isInvalidAddress={isInvalidAddress}
+            tipsLoading={donorHistory.isLoading}
+            address={currentContent.userDetails?.address}
+            updateCurrentContent={updateCurrentContent}
+          />
+        );
+      }
+      default: {
+        return;
+      }
     }
   }, [
     currentContent,
+    donorHistory.data?.knownDonations,
+    donorHistory.isLoading,
     isInvalidAddress,
     tipEdges,
     tips.isLoading,
+    updateCurrentContent,
     validatedAddress,
   ]);
 
