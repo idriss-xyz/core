@@ -121,7 +121,7 @@ export default function DonateHistoryItem({
                     name: 'donor-stats',
                     userDetails: {
                       address: showReceiver
-                        ? receiverAddress
+                        ? receiverAddress!
                         : tipperFromAddress,
                     },
                   });
