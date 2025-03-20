@@ -11,7 +11,7 @@ dotenv.config(
   mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
 );
 
-router.post('/', async (req: Request, res: Response) => {
+router.get('/', async (req: Request, res: Response) => {
   try {
     const leaderboard = await calculateGlobalStreamerLeaderboard();
 
