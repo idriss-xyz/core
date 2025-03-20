@@ -123,15 +123,16 @@ const SubscriptionItemContent = ({
   });
 
   useEffect(() => {
-      if (showError) {
-        const timer = setTimeout(() => {
-          setShowError(false);
-        }, 2000);
-        return () => {return clearTimeout(timer)};
-      }
-      return undefined;
-    }, [showError]);
-
+    if (showError) {
+      const timer = setTimeout(() => {
+        setShowError(false);
+      }, 3000);
+      return () => {
+        return clearTimeout(timer);
+      };
+    }
+    return undefined;
+  }, [showError]);
 
   const shortenedName =
     isAddress(name) || isSolanaAddress(name) ? getShortWalletHex(name) : name;
@@ -166,6 +167,7 @@ const SubscriptionItemContent = ({
               {shortenedName}
             </TradingCopilotTooltip>
           )}
+          {showError && <span className="ml-2 text-red-500">Try again.</span>}
           {twitterQuery.data && (
             <ExternalLink href={getTwitterUserLink(twitterQuery.data)}>
               <IdrissIcon
@@ -204,22 +206,14 @@ const SubscriptionItemContent = ({
           )}
         </p>
       </div>
-      {showError ? (
-        <IconButton
-          size="small"
-          iconName="AlertCircle"
-          intent="tertiary"
-          className="text-neutral-400"
-        />
-      ) : (
-        <IconButton
-          size="small"
-          iconName="X"
-          intent="tertiary"
-          className="text-red-500"
-          onClick={removeSubscription}
-        />
-      )}
+      <IconButton
+        size="small"
+        iconName="X"
+        intent="tertiary"
+        className="text-red-500"
+        onClick={removeSubscription}
+        disabled={showError}
+      />
     </li>
   );
 };
