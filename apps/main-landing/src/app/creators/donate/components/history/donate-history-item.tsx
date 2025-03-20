@@ -120,7 +120,9 @@ export default function DonateHistoryItem({
                   updateCurrentContent({
                     name: 'donor-stats',
                     userDetails: {
-                      address: receiverAddress ?? tipperFromAddress,
+                      address: showReceiver
+                        ? receiverAddress
+                        : tipperFromAddress,
                     },
                   });
                 }}
