@@ -109,7 +109,9 @@ const saveWebhookToDb = async (
 };
 
 const addAddressToWebhook = async (address: string) => {
-  const chainType = isAddress(address) ? WEBHOOK_NETWORK_TYPES.EVM : WEBHOOK_NETWORK_TYPES.SOLANA;
+  const chainType = isAddress(address)
+    ? WEBHOOK_NETWORK_TYPES.EVM
+    : WEBHOOK_NETWORK_TYPES.SOLANA;
   const res = await webhooksRepo
     .createQueryBuilder('webhooks')
     .select([
@@ -161,9 +163,7 @@ const addAddressToWebhook = async (address: string) => {
   }
 };
 
-async function removeAddressFromWebhook(
-  address: string,
-): Promise<void> {
+async function removeAddressFromWebhook(address: string): Promise<void> {
   // Get the webhook associated with the address
   const res = await addressMapWebhooksRepo.findOne({ where: { address } });
 
@@ -186,7 +186,9 @@ async function removeAddressFromWebhook(
 
   const { webhook_id, signing_key } = webhookData;
 
-  const chainType = isAddress(address) ? WEBHOOK_NETWORK_TYPES.EVM : WEBHOOK_NETWORK_TYPES.SOLANA;
+  const chainType = isAddress(address)
+    ? WEBHOOK_NETWORK_TYPES.EVM
+    : WEBHOOK_NETWORK_TYPES.SOLANA;
 
   // Update the webhook via webhook proovider API
   if (chainType === WEBHOOK_NETWORK_TYPES.EVM) {
