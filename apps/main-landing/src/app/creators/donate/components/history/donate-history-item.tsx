@@ -33,20 +33,30 @@ function removeMainnetSuffix(text: string) {
 
 type Properties = {
   tip: TipHistoryNode;
+  showReceiver?: boolean;
   updateCurrentContent: (content: DonateContentValues) => void;
 };
 
 export default function DonateHistoryItem({
   tip,
+  showReceiver,
   updateCurrentContent,
 }: Properties) {
   const tipDetails = tip.interpretation.descriptionDisplayItems[0];
+  const tipReceiver = tip.interpretation.descriptionDisplayItems[1]?.account;
   const tipComment = tip.interpretation.descriptionDisplayItems[2];
   const tipperFromAddress = tip.transaction.fromUser.address;
+  const receiverAddress = tip.transaction.toUser.address;
 
-  const displayName = tip.transaction.fromUser.displayName?.value;
-  const nameSource = tip.transaction.fromUser.displayName?.source;
-  const imageSource = tip.transaction.fromUser.avatar?.source;
+  const displayName = showReceiver
+    ? tipReceiver?.displayName?.value
+    : tip.transaction.fromUser.displayName?.value;
+  const nameSource = showReceiver
+    ? tipReceiver?.displayName?.source
+    : tip.transaction.fromUser.displayName?.source;
+  const imageSource = showReceiver
+    ? tipReceiver?.avatar?.source
+    : tip.transaction.fromUser.avatar?.source;
 
   const ensAvatarQuery = useGetEnsAvatar(
     { name: displayName ?? '' },
@@ -116,10 +126,12 @@ export default function DonateHistoryItem({
                 }}
                 className="cursor-pointer border-0 align-middle text-label3 text-neutral-900 no-underline lg:text-label3"
               >
-                {displayName ?? getShortWalletHex(tipperFromAddress)}
+                {showReceiver
+                  ? (displayName ?? getShortWalletHex(receiverAddress))
+                  : (displayName ?? getShortWalletHex(tipperFromAddress))}
               </Link>{' '}
               <span className="align-middle text-body3 text-neutral-600">
-                sent{' '}
+                {showReceiver ? 'received' : 'sent'}{' '}
                 {zerosIndex ? (
                   <>
                     0.0
