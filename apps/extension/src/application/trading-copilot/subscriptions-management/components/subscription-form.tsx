@@ -104,7 +104,7 @@ export const SubscriptionForm = ({ onSubmit, canSubscribe }: Properties) => {
         await onSubmit({ address: ensAddress, chainType: 'EVM' });
         form.reset(EMPTY_FORM);
         setError('');
-      } catch (error) {
+      } catch {
         setError('We couldn\'t subscribe to this address. Try again.');
       }
     },
