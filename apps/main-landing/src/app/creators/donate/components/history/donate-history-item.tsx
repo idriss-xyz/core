@@ -33,16 +33,19 @@ function removeMainnetSuffix(text: string) {
 
 type Properties = {
   tip: TipHistoryNode;
+  showReceiver?: boolean;
   updateCurrentContent: (content: DonateContentValues) => void;
 };
 
 export default function DonateHistoryItem({
   tip,
+  showReceiver,
   updateCurrentContent,
 }: Properties) {
   const tipDetails = tip.interpretation.descriptionDisplayItems[0];
   const tipComment = tip.interpretation.descriptionDisplayItems[2];
   const tipperFromAddress = tip.transaction.fromUser.address;
+  const receiverAddress = tip.transaction.toUser.address;
 
   const displayName = tip.transaction.fromUser.displayName?.value;
   const nameSource = tip.transaction.fromUser.displayName?.source;
@@ -116,10 +119,12 @@ export default function DonateHistoryItem({
                 }}
                 className="cursor-pointer border-0 align-middle text-label3 text-neutral-900 no-underline lg:text-label3"
               >
-                {displayName ?? getShortWalletHex(tipperFromAddress)}
+                {showReceiver
+                  ? getShortWalletHex(receiverAddress)
+                  : (displayName ?? getShortWalletHex(tipperFromAddress))}
               </Link>{' '}
               <span className="align-middle text-body3 text-neutral-600">
-                sent{' '}
+                {showReceiver ? 'received' : 'sent'}{' '}
                 {zerosIndex ? (
                   <>
                     0.0
