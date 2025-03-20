@@ -20,8 +20,10 @@ const EMPTY_FORM: FormValues = {
   subscription: '',
 };
 
+const MAX_SUBS_MESSAGE = 'Maximum subscriptions reached.';
+
 export const SubscriptionForm = ({ onSubmit, canSubscribe }: Properties) => {
-  const [showError, setShowError] = useState<boolean>();
+  const [error, setError] = useState('');
 
   const getEnsAddressMutation = useCommandMutation(GetEnsAddressCommand);
   const getFarcasterAddressMutation = useCommandMutation(
@@ -35,71 +37,76 @@ export const SubscriptionForm = ({ onSubmit, canSubscribe }: Properties) => {
   const addSubscriber: SubmitHandler<FormValues> = useCallback(
     async (data) => {
       if (!canSubscribe) {
-        setShowError(true);
+        setError(MAX_SUBS_MESSAGE);
 
         form.reset(EMPTY_FORM);
 
         setTimeout(() => {
-          setShowError(false);
-        }, 7000);
+          setError('');
+        }, 5000);
 
         return;
       }
+      try {
+        if (isSolanaAddress(data.subscription)) {
+          await onSubmit({ address: data.subscription, chainType: 'SOLANA' });
+          form.reset(EMPTY_FORM);
 
-      if (isSolanaAddress(data.subscription)) {
-        await onSubmit({ address: data.subscription, chainType: 'SOLANA' });
-        form.reset(EMPTY_FORM);
-
-        return;
-      }
-
-      if (isAddress(data.subscription)) {
-        await onSubmit({ address: data.subscription, chainType: 'EVM' });
-        form.reset(EMPTY_FORM);
-
-        return;
-      }
-
-      if (isFarcasterName(data.subscription)) {
-        const farcasterDetails = await getFarcasterAddressMutation.mutateAsync({
-          name: data.subscription,
-        });
-
-        if (!farcasterDetails) {
           return;
         }
 
-        if (farcasterDetails.addressSolana) {
-          await onSubmit({
-            address: farcasterDetails.addressSolana,
-            fid: farcasterDetails.fid,
-            chainType: 'SOLANA',
-          });
+        if (isAddress(data.subscription)) {
+          await onSubmit({ address: data.subscription, chainType: 'EVM' });
+          form.reset(EMPTY_FORM);
+
+          return;
         }
 
-        if (farcasterDetails.address) {
-          await onSubmit({
-            address: farcasterDetails.address,
-            fid: farcasterDetails.fid,
-            chainType: 'EVM',
-          });
+        if (isFarcasterName(data.subscription)) {
+          const farcasterDetails =
+            await getFarcasterAddressMutation.mutateAsync({
+              name: data.subscription,
+            });
+
+          if (!farcasterDetails) {
+            return;
+          }
+
+          if (farcasterDetails.addressSolana) {
+            await onSubmit({
+              address: farcasterDetails.addressSolana,
+              fid: farcasterDetails.fid,
+              chainType: 'SOLANA',
+            });
+          }
+
+          if (farcasterDetails.address) {
+            await onSubmit({
+              address: farcasterDetails.address,
+              fid: farcasterDetails.fid,
+              chainType: 'EVM',
+            });
+          }
+
+          form.reset(EMPTY_FORM);
+
+          return;
         }
 
+        const ensAddress = await getEnsAddressMutation.mutateAsync({
+          ensName: data.subscription,
+        });
+
+        if (!ensAddress) {
+          return;
+        }
+
+        await onSubmit({ address: ensAddress, chainType: 'EVM' });
         form.reset(EMPTY_FORM);
-
-        return;
+        setError('');
+      } catch (error) {
+        setError('We couldn\'t subscribe to this address. Try again.');
       }
-
-      const ensAddress = await getEnsAddressMutation.mutateAsync({
-        ensName: data.subscription,
-      });
-
-      if (!ensAddress) {
-        return;
-      }
-
-      await onSubmit({ address: ensAddress, chainType: 'EVM' });
-      form.reset(EMPTY_FORM);
     },
     [
       form,
@@ -127,25 +134,32 @@ export const SubscriptionForm = ({ onSubmit, canSubscribe }: Properties) => {
               {...field}
               type="text"
               id="subscription"
-              disabled={showError}
+              disabled={error !== ''}
               placeholder="e.g., vitalik.eth"
               className="mt-1 block w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-black shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
             />
           );
         }}
       />
-      {showError && (
+
+      {error !== '' && (
         <ErrorMessage className="mt-1">
-          Maximum subscriptions reached.{' '}
-          <Link
-            size="s"
-            isExternal
-            href={VAULT_LINK}
-            className="border-none px-0 text-sm text-[#ef4444] underline lg:text-sm"
-          >
-            Lock $IDRISS
-          </Link>{' '}
-          to access premium.
+          {error === MAX_SUBS_MESSAGE ? (
+            <>
+              {error}{' '}
+              <Link
+                size="s"
+                isExternal
+                href={VAULT_LINK}
+                className="border-none px-0 text-sm text-[#ef4444] underline lg:text-sm"
+              >
+                Lock $IDRISS
+              </Link>{' '}
+              to access premium.
+            </>
+          ) : (
+            error
+          )}
         </ErrorMessage>
       )}
     </form>
