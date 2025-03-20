@@ -75,9 +75,34 @@ router.post('/', async (req: Request, res: Response) => {
       if (!accountsTimeline) break;
 
       const currentEdges = accountsTimeline.edges || [];
-      const relevantEdges = currentEdges.filter(
-        (edge) => edge.node.app?.slug === 'idriss',
-      );
+
+      const relevantEdges = currentEdges.filter((edge) => {
+        if (edge.node.app?.slug !== 'idriss') return false;
+
+        const descriptionItems =
+          edge.node.interpretation?.descriptionDisplayItems;
+
+        // stringValue is undefined
+        if (!descriptionItems?.[2]?.stringValue) return false;
+
+        // stringValue is "N/A"
+        if (descriptionItems[2].stringValue === 'N/A') return false;
+
+        // Check if last element of data exists and has value
+        const data = edge.node.transaction.decodedInputV2.data;
+        if (data.length === 0 || data[data.length - 1].value.length === 0) {
+          return false;
+        }
+
+        // string value is amountRaw (old tagging)
+        if (
+          descriptionItems[2].stringValue === descriptionItems[0]?.amountRaw
+        ) {
+          console.log('returning false');
+          return false;
+        }
+        return true;
+      });
 
       for (const edge of relevantEdges) {
         const txHash = edge.node.transaction.hash.toLowerCase();
@@ -98,6 +123,7 @@ router.post('/', async (req: Request, res: Response) => {
         break;
       if (currentEdges.length === 0) break;
       const lastEdge = currentEdges.at(-1);
+
       if (lastEdge && lastEdge.node.timestamp < OLDEST_TRANSACTION_TIMESTAMP)
         break;
 
@@ -129,7 +155,11 @@ router.post('/', async (req: Request, res: Response) => {
         )
         .map((node) => ({ node })),
     ];
-    res.json({ data: allDonations });
+    const filteredDonations = allDonations.filter(
+      (edge) => edge.node.timestamp >= OLDEST_TRANSACTION_TIMESTAMP,
+    );
+
+    res.json({ data: filteredDonations });
   } catch (error) {
     console.error('Tip history error:', error);
     res.status(500).json({ error: 'Failed to fetch tip history' });

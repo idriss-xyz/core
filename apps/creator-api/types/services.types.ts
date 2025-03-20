@@ -64,6 +64,12 @@ export interface ZapperNode {
     toUser: {
       address: Hex;
     };
+    decodedInputV2: {
+      data: {
+        value: string;
+        name: string;
+      }[];
+    };
   };
   interpretation: {
     descriptionDisplayItems: [
