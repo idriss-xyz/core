@@ -110,6 +110,7 @@ function DonorsContent() {
 
             <TopDonors
               tipEdges={tipEdges}
+              heading="Top donors"
               tipsLoading={tips.isLoading}
               validatedAddress={validatedAddress}
               updateCurrentContent={updateCurrentContent}

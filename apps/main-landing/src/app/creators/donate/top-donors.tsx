@@ -21,6 +21,7 @@ import {
 } from './components/donor-item';
 
 type Properties = {
+  heading?: string;
   className?: string;
   tipsLoading: boolean;
   variant?: WidgetVariants;
@@ -288,6 +289,7 @@ export const TopDonors = ({
 };
 
 type LeaderboardProperties = {
+  heading?: string;
   className?: string;
   leaderboardError: boolean;
   leaderboardLoading: boolean;
@@ -296,6 +298,7 @@ type LeaderboardProperties = {
 };
 
 export const LeaderboardTopDonors = ({
+  heading,
   className,
   leaderboard,
   leaderboardError,
@@ -313,7 +316,7 @@ export const LeaderboardTopDonors = ({
         <span className="absolute left-0 top-0 size-full bg-black/20" />
 
         <h1 className="relative z-1 mx-12 my-6 text-center text-heading4 uppercase text-white">
-          Top donors
+          {heading ?? 'Top donors'}
         </h1>
       </div>
 
