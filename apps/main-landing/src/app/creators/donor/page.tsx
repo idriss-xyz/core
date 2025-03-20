@@ -106,7 +106,6 @@ function DonorContent() {
                 return { node: donation.data };
               }) ?? []
             }
-            showReceiver
             address={validatedAddress}
             currentContent={currentContent}
             tipsLoading={donorHistory.isLoading}

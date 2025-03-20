@@ -10,7 +10,6 @@ import DonateHistoryItem from './donate-history-item';
 
 type Properties = {
   tipsLoading: boolean;
-  showReceiver?: boolean;
   isInvalidAddress: boolean;
   address: string | null | undefined;
   currentContent: DonateContentValues;
@@ -22,7 +21,6 @@ export default function DonateHistoryList({
   address,
   tipEdges,
   tipsLoading,
-  showReceiver,
   currentContent,
   isInvalidAddress,
   updateCurrentContent,
@@ -62,7 +60,6 @@ export default function DonateHistoryList({
                 return (
                   <DonateHistoryItem
                     tip={tip.node}
-                    showReceiver={showReceiver}
                     key={tip.node.transaction.hash}
                     updateCurrentContent={updateCurrentContent}
                   />
