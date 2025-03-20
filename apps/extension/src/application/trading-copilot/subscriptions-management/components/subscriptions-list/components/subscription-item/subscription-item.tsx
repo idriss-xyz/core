@@ -77,7 +77,6 @@ const SubscriptionItemContent = ({
     onRemove({
       address: subscription.address,
       fid: subscription.fid,
-      chainType: isSolanaAddress(subscription.address) ? 'SOLANA' : 'EVM',
     });
   }, [onRemove, subscription]);
 
