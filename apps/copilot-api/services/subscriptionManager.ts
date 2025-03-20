@@ -38,10 +38,9 @@ const webhooksRepo = dataSource.getRepository(WebhookEntity);
 export const subscribeAddress = async (
   subscriber_id: string,
   address: string,
-  chainType: WEBHOOK_NETWORK_TYPES,
   fid?: number,
 ) => {
-  if (chainType === WEBHOOK_NETWORK_TYPES.EVM) {
+  if (isAddress(address)) {
     address = address.toLowerCase();
   }
 
@@ -56,16 +55,15 @@ export const subscribeAddress = async (
     where: { address },
   });
   if (!addressWebhookMap) {
-    await addAddressToWebhook(address, chainType);
+    await addAddressToWebhook(address);
   }
 };
 
 export const unsubscribeAddress = async (
   subscriberId: string,
   address: string,
-  chainType: WEBHOOK_NETWORK_TYPES,
 ): Promise<void> => {
-  if (chainType === WEBHOOK_NETWORK_TYPES.EVM) {
+  if (isAddress(address)) {
     address = address.toLowerCase();
   }
   try {
@@ -76,7 +74,7 @@ export const unsubscribeAddress = async (
 
     if (parseInt(addressRes.toString(), 10) === 0) {
       // No more subscribers, remove address from webhook and addresses table
-      await removeAddressFromWebhook(address, chainType);
+      await removeAddressFromWebhook(address);
 
       // Remove address from addresses table
       await addressRepo.delete({ address });
@@ -110,7 +108,8 @@ const saveWebhookToDb = async (
   });
 };
 
-const addAddressToWebhook = async (address: string, chainType: string) => {
+const addAddressToWebhook = async (address: string) => {
+  const chainType = isAddress(address) ? WEBHOOK_NETWORK_TYPES.EVM : WEBHOOK_NETWORK_TYPES.SOLANA;
   const res = await webhooksRepo
     .createQueryBuilder('webhooks')
     .select([
@@ -164,7 +163,6 @@ const addAddressToWebhook = async (address: string, chainType: string) => {
 
 async function removeAddressFromWebhook(
   address: string,
-  chainType: WEBHOOK_NETWORK_TYPES,
 ): Promise<void> {
   // Get the webhook associated with the address
   const res = await addressMapWebhooksRepo.findOne({ where: { address } });
@@ -187,6 +185,8 @@ async function removeAddressFromWebhook(
   }
 
   const { webhook_id, signing_key } = webhookData;
+
+  const chainType = isAddress(address) ? WEBHOOK_NETWORK_TYPES.EVM : WEBHOOK_NETWORK_TYPES.SOLANA;
 
   // Update the webhook via webhook proovider API
   if (chainType === WEBHOOK_NETWORK_TYPES.EVM) {
