@@ -1,28 +1,16 @@
 'use client';
 /* eslint-disable @next/next/no-img-element */
-import { hexSchema, TipHistoryNode } from '@idriss-xyz/constants';
-import { isAddress } from 'viem';
+import { TipHistoryNode } from '@idriss-xyz/constants';
 import '@rainbow-me/rainbowkit/styles.css';
-import { useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { default as io } from 'socket.io-client';
-import _ from 'lodash';
+import { useMemo, useState } from 'react';
 
 import { backgroundLines2 } from '@/assets';
 import { TopBar } from '@/components';
-import { validateAddressOrENS } from '@/app/creators/donate/utils';
 import DonateHistoryList from '@/app/creators/donate/components/history/donate-history-list';
 import { useGetReceivedHistory } from '@/app/creators/donate/commands/get-received-history';
+import { LeaderboardTopDonors } from '@/app/creators/donate/top-donors';
 
-import { DonateRanking } from '../donate/donate-ranking';
 import { RainbowKitProviders } from '../donate/providers';
-
-const SOCKET_URL = 'https://core-production-a116.up.railway.app';
-
-const SEARCH_PARAMETER = {
-  ADDRESS: 'address',
-  LEGACY_ADDRESS: 'streamerAddress',
-};
 
 // ts-unused-exports:disable-next-line
 export default function Rank() {
@@ -40,42 +28,8 @@ function RankContent() {
   const [currentContent, setCurrentContent] = useState<
     'tip' | 'history' | 'received-history'
   >('tip');
-  const [validatedAddress, setValidatedAddress] = useState<
-    string | null | undefined
-  >();
-  const [socketInitialized, setSocketInitialized] = useState(false);
-  const [socketConnected, setSocketConnected] = useState(false);
-
-  const searchParameters = useSearchParams();
-  const addressFromParameters =
-    searchParameters.get(SEARCH_PARAMETER.ADDRESS) ??
-    searchParameters.get(SEARCH_PARAMETER.LEGACY_ADDRESS);
-
-  useEffect(() => {
-    const validateAddress = async () => {
-      const address = await validateAddressOrENS(addressFromParameters);
-
-      setValidatedAddress(address);
-    };
-    void validateAddress();
-  }, [addressFromParameters]);
-
-  const addressValidationResult = hexSchema.safeParse(validatedAddress);
-
-  const isInvalidAddress =
-    !addressFromParameters ||
-    (!!addressFromParameters && validatedAddress === null) ||
-    (!!addressFromParameters &&
-      !!validatedAddress &&
-      (!addressValidationResult.success || !isAddress(validatedAddress)));
 
   const receivedTips = useGetReceivedHistory();
-
-  useEffect(() => {
-    if (receivedTips.data) {
-      setReceivedTipEdges(receivedTips.data.data);
-    }
-  }, [receivedTips.data]);
 
   const updateCurrentContent = (
     content: 'tip' | 'history' | 'received-history',
@@ -88,14 +42,12 @@ function RankContent() {
       case 'tip': {
         return (
           <div className="grid grid-cols-1 items-start gap-x-10">
-            <DonateRanking
-              heading="Top streamers"
-              tipEdges={receivedTipEdges}
-              historyTabName="received-history"
-              validatedAddress={validatedAddress}
-              tipsLoading={receivedTips.isLoading}
+            <LeaderboardTopDonors
+              leaderboard={receivedTips.data ?? []}
+              leaderboardError={receivedTips.isError}
+              leaderboardLoading={receivedTips.isLoading}
               updateCurrentContent={updateCurrentContent}
-              className="container mt-8 overflow-hidden px-0 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]"
+              className="container mt-8 w-[360px] max-w-full overflow-hidden px-0 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]"
             />
           </div>
         );
@@ -115,47 +67,7 @@ function RankContent() {
         );
       }
     }
-  }, [
-    currentContent,
-    isInvalidAddress,
-    receivedTipEdges,
-    receivedTips.isLoading,
-    validatedAddress,
-  ]);
-
-  useEffect(() => {
-    if (validatedAddress && !socketInitialized) {
-      const socket = io(SOCKET_URL);
-      setSocketInitialized(true);
-
-      if (socket && !socketConnected) {
-        socket.on('connect', () => {
-          socket.emit('register', validatedAddress);
-
-          if (socket.connected) {
-            setSocketConnected(true);
-          }
-        });
-
-        socket.on('newDonation', (node: TipHistoryNode) => {
-          setReceivedTipEdges((previousState) => {
-            return _.uniqBy([{ node }, ...previousState], (item) => {
-              return _.get(item, 'node.transaction.hash');
-            });
-          });
-        });
-      }
-
-      return () => {
-        if (socket.connected) {
-          socket.disconnect();
-          setSocketConnected(false);
-        }
-      };
-    }
-
-    return;
-  }, [socketConnected, socketInitialized, validatedAddress]);
+  }, [currentContent, receivedTipEdges, receivedTips.isLoading]);
 
   return (
     <>

@@ -114,7 +114,8 @@
         "PORT",
         "HOST",
         "ZAPPER_API_KEY",
-        "DATABASE_URL"
+        "DATABASE_URL",
+        "SECRET_PASSWORD"
       ]
     },
     "@idriss-xyz/creator-api#prod": {
@@ -124,8 +125,22 @@
         "PORT",
         "HOST",
         "ZAPPER_API_KEY",
-        "DATABASE_URL"
+        "DATABASE_URL",
+        "SECRET_PASSWORD"
       ]
+    },
+    "@idriss-xyz/twitch-extension#build": {
+      "inputs": [
+        "$TURBO_DEFAULT$"
+      ],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**"
+      ]
+    },
+    "@idriss-xyz/twitch-extension#dev": {
+      "cache": false,
+      "persistent": true
     },
     "lint": {
       "inputs": [

@@ -35,6 +35,7 @@ import { ChainSelect, TokenSelect } from './components';
 import { createFormPayloadSchema, FormPayload, SendPayload } from './schema';
 import { getSendFormDefaultValues } from './utils';
 import { useSender } from './hooks';
+import { CREATOR_API_URL } from './constants';
 
 const SEARCH_PARAMETER = {
   CREATOR_NAME: 'creatorName',
@@ -219,14 +220,11 @@ export const Content = ({ className, validatedAddress }: Properties) => {
   useEffect(() => {
     if (sender.isSuccess) {
       try {
-        void fetch(
-          'https://core-production-a116.up.railway.app/push-donation',
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ address: validatedAddress }),
-          },
-        );
+        void fetch(`${CREATOR_API_URL}/push-donation`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ address: validatedAddress }),
+        });
       } catch {
         //
       }
@@ -321,7 +319,7 @@ export const Content = ({ className, validatedAddress }: Properties) => {
           render={({ field }) => {
             return (
               <TokenSelect
-                className="mt-4 w-full"
+                className="mt-6 w-full"
                 label="Token"
                 tokens={possibleTokens}
                 onChange={field.onChange}
@@ -336,7 +334,7 @@ export const Content = ({ className, validatedAddress }: Properties) => {
           render={({ field }) => {
             return (
               <ChainSelect
-                className="mt-6 w-full"
+                className="mt-4 w-full"
                 label="Network"
                 allowedChainsIds={allowedChainsIds}
                 onChange={field.onChange}
@@ -372,7 +370,7 @@ export const Content = ({ className, validatedAddress }: Properties) => {
             return (
               <Form.Field
                 {...field}
-                className="mt-6"
+                className="mt-4"
                 label="Message"
                 helperText={fieldState.error?.message}
                 error={Boolean(fieldState.error?.message)}
@@ -404,8 +402,13 @@ export const Content = ({ className, validatedAddress }: Properties) => {
         )}
       </Form>
 
-      <div className="mt-6 flex justify-center">
-        <Link size="xs" href={CREATORS_USER_GUIDE_LINK} isExternal>
+      <div className="mt-[23px] flex justify-center">
+        <Link
+          size="xs"
+          href={CREATORS_USER_GUIDE_LINK}
+          isExternal
+          className="lg:text-label7"
+        >
           1% supplies IDRISS’s treasury
         </Link>
       </div>

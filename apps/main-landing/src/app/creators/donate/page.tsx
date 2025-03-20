@@ -18,12 +18,13 @@ import { TopBar } from '@/components';
 import { validateAddressOrENS } from '@/app/creators/donate/utils';
 import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
 import DonateHistoryList from '@/app/creators/donate/components/history/donate-history-list';
+import UserHistoryList from '@/app/creators/donate/components/user-history/user-history-list';
+import { donateContentValues } from '@/app/creators/donate/types';
+import { TopDonors } from '@/app/creators/donate/top-donors';
 
-import { DonateRanking } from './donate-ranking';
 import { Content } from './content';
 import { RainbowKitProviders } from './providers';
-
-const SOCKET_URL = 'https://core-production-a116.up.railway.app';
+import { CREATOR_API_URL } from './constants';
 
 const SEARCH_PARAMETER = {
   ADDRESS: 'address',
@@ -41,9 +42,9 @@ export default function Donors() {
 
 function DonorsContent() {
   const [tipEdges, setTipEdges] = useState<{ node: TipHistoryNode }[]>([]);
-  const [currentContent, setCurrentContent] = useState<
-    'tip' | 'history' | 'received-history'
-  >('tip');
+  const [currentContent, setCurrentContent] = useState<donateContentValues>({
+    name: 'tip',
+  });
   const [validatedAddress, setValidatedAddress] = useState<
     string | null | undefined
   >();
@@ -84,22 +85,20 @@ function DonorsContent() {
     }
   }, [tips.data]);
 
-  const updateCurrentContent = (
-    content: 'tip' | 'history' | 'received-history',
-  ) => {
+  const updateCurrentContent = (content: donateContentValues) => {
     setCurrentContent(content);
   };
 
   const currentContentComponent = useMemo(() => {
-    switch (currentContent) {
+    switch (currentContent.name) {
       case 'tip': {
         return (
-          <div className="grid grid-cols-1 items-start gap-x-10 lg:grid-cols-2">
+          <div className="grid grid-cols-1 items-start gap-x-10 lg:grid-cols-[1fr,auto]">
             <Content
               validatedAddress={validatedAddress}
               className="container mt-8 overflow-hidden lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]"
             />
-            <DonateRanking
+            <TopDonors
               tipEdges={tipEdges}
               heading="Top donors"
               tipsLoading={tips.isLoading}
@@ -121,8 +120,17 @@ function DonorsContent() {
           />
         );
       }
-      case 'received-history': {
-        return <></>;
+      case 'userHistory': {
+        return (
+          <UserHistoryList
+            backTo={currentContent.backTo}
+            userDetails={currentContent.userDetails}
+            updateCurrentContent={updateCurrentContent}
+          />
+        );
+      }
+      default: {
+        return;
       }
     }
   }, [
@@ -135,7 +143,7 @@ function DonorsContent() {
 
   useEffect(() => {
     if (validatedAddress && !socketInitialized) {
-      const socket = io(SOCKET_URL);
+      const socket = io(CREATOR_API_URL);
       setSocketInitialized(true);
 
       if (socket && !socketConnected) {
