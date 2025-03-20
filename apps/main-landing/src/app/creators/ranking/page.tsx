@@ -4,7 +4,7 @@ import '@rainbow-me/rainbowkit/styles.css';
 
 import { backgroundLines2 } from '@/assets';
 import { TopBar } from '@/components';
-import { useGetDonorRanking } from '@/app/creators/donate/commands/get-donor-ranking';
+import { useGetStreamerRanking } from '@/app/creators/donate/commands/get-streamer-ranking';
 import { LeaderboardTopDonors } from '@/app/creators/donate/top-donors';
 
 import { RainbowKitProviders } from '../donate/providers';
@@ -19,7 +19,7 @@ export default function Ranking() {
 }
 
 function RankingContent() {
-  const donorRanking = useGetDonorRanking();
+  const streamerRanking = useGetStreamerRanking();
 
   return (
     <>
@@ -35,9 +35,9 @@ function RankingContent() {
         <div className="grid grid-cols-1 items-start gap-x-10">
           <LeaderboardTopDonors
             heading="Top streamers"
-            leaderboard={donorRanking.data ?? []}
-            leaderboardError={donorRanking.isError}
-            leaderboardLoading={donorRanking.isLoading}
+            leaderboard={streamerRanking.data ?? []}
+            leaderboardError={streamerRanking.isError}
+            leaderboardLoading={streamerRanking.isLoading}
             className="container mt-8 w-[360px] max-w-full overflow-hidden px-0 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]"
           />
         </div>
