@@ -34,6 +34,7 @@ function RankingContent() {
 
         <div className="grid grid-cols-1 items-start gap-x-10">
           <LeaderboardTopDonors
+            heading="Top streamers"
             leaderboard={donorRanking.data ?? []}
             leaderboardError={donorRanking.isError}
             leaderboardLoading={donorRanking.isLoading}
