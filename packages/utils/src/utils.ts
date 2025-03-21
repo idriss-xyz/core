@@ -169,9 +169,6 @@ const getBlockExplorers = (chainId: number) => {
 };
 
 export const getDefaultBlockExplorerUrl = (chainId: number) => {
-  if (chainId === Number('1151111081099710')) {
-    return 'https://solscan.io/';
-  }
   return getBlockExplorers(chainId)?.default.url;
 };
 

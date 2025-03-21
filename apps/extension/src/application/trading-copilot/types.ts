@@ -102,7 +102,7 @@ export type SwapDataToken = {
   symbol: string;
   amount: number;
   decimals: number;
-  network: keyof typeof CHAIN | 'SOLANA';
+  network: keyof typeof CHAIN;
   name?: string;
   logoURI?: string;
   priceUSD?: string;

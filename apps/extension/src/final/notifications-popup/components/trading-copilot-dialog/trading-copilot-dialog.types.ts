@@ -13,7 +13,7 @@ export interface Properties {
 }
 
 export interface WalletBalanceProperties {
-  network: keyof typeof CHAIN | 'SOLANA';
+  network: keyof typeof CHAIN;
   balance: string | null | undefined;
 }
 

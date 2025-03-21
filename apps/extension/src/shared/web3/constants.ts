@@ -17,6 +17,7 @@ import {
   WETH_LOGO,
   ZYNK_SYNC_ERA_LOGO,
   ALEPH_LOGO,
+  SOLANA_LOGO,
   // PIXELS_LOGO,
   NATIVE_COIN_ADDRESS,
   CHAIN as SHARED_CHAIN,
@@ -25,6 +26,9 @@ import {
   Token,
   ChainToken,
 } from '@idriss-xyz/constants';
+
+export const NATIVE_ETH_ADDRESS = '0x0000000000000000000000000000000000000000';
+export const NATIVE_SOL_ADDRESS = '11111111111111111111111111111111';
 
 // TODO: IMPORTANT CHECK SHORTNAMES
 export const CHAIN = Object.assign(SHARED_CHAIN, {
@@ -63,6 +67,24 @@ export const CHAIN = Object.assign(SHARED_CHAIN, {
       default: { name: 'BS Scan', url: 'https://bscscan.com' },
     },
   },
+  SOLANA: {
+    id: 1151111081099710,
+    name: 'Solana',
+    shortName: 'Solana',
+    logo: SOLANA_LOGO,
+    nativeCurrency: {
+      name: 'Solana',
+      symbol: 'SOL',
+      decimals: 9,
+    },
+    rpcUrls: { default: { http: ['https://api.mainnet-beta.solana.com'] } },
+    blockExplorers: {
+      default: {
+        name: 'Solana Explorer',
+        url: 'https://solscan.io',
+      },
+    },
+  }
 }) satisfies Record<string, Chain>;
 
 export const TOKEN = Object.assign(SHARED_TOKEN, {
