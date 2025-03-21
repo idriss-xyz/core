@@ -39,7 +39,6 @@ export default function DonorStatsList({
   updateCurrentContent,
 }: Properties) {
   const userDetails = currentContent.userDetails;
-
   const addressValidationResult = hexSchema.safeParse(validatedAddress);
   const userAddress = addressValidationResult.success
     ? (validatedAddress as Hex)
@@ -109,6 +108,7 @@ export default function DonorStatsList({
               }}
             />
           )}
+
           <h1 className="text-heading4 text-neutralGreen-900">
             Donation stats{' '}
             {(stats?.donorDisplayName ?? userAddress) &&
@@ -203,7 +203,7 @@ export default function DonorStatsList({
                   </div>
                 )}
 
-                {stats.mostDonatedToAddress !== '' && (
+                {stats.mostDonatedToAddress !== EMPTY_HEX && (
                   <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-7 shadow-md">
                     <p className="text-label5 text-neutral-600">
                       Top recipient

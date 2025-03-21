@@ -45,6 +45,10 @@ interface TokenDisplayItem {
   tokenV2: TipHistoryTokenV2;
 }
 
+type ReceiverDisplayItem = {
+  account: TipHistoryFromUser;
+};
+
 type StringDisplayItem = {
   stringValue: string;
 };
@@ -76,7 +80,7 @@ export interface TipHistoryNode {
   interpretation: {
     descriptionDisplayItems: [
       TokenDisplayItem | undefined,
-      undefined,
+      ReceiverDisplayItem | undefined,
       StringDisplayItem | undefined,
     ];
   };

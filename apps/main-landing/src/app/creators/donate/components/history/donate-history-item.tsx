@@ -10,7 +10,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
-import { CHAIN, TipHistoryNode } from '@idriss-xyz/constants';
+import { CHAIN, EMPTY_HEX, TipHistoryNode } from '@idriss-xyz/constants';
 import {
   getShortWalletHex,
   getTimeDifferenceString,
@@ -33,20 +33,30 @@ function removeMainnetSuffix(text: string) {
 
 type Properties = {
   tip: TipHistoryNode;
+  showReceiver?: boolean;
   updateCurrentContent: (content: DonateContentValues) => void;
 };
 
 export default function DonateHistoryItem({
   tip,
+  showReceiver,
   updateCurrentContent,
 }: Properties) {
   const tipDetails = tip.interpretation.descriptionDisplayItems[0];
+  const tipReceiver = tip.interpretation.descriptionDisplayItems[1]?.account;
   const tipComment = tip.interpretation.descriptionDisplayItems[2];
   const tipperFromAddress = tip.transaction.fromUser.address;
+  const receiverAddress = tipReceiver?.address;
 
-  const displayName = tip.transaction.fromUser.displayName?.value;
-  const nameSource = tip.transaction.fromUser.displayName?.source;
-  const imageSource = tip.transaction.fromUser.avatar?.source;
+  const displayName = showReceiver
+    ? tipReceiver?.displayName?.value
+    : tip.transaction.fromUser.displayName?.value;
+  const nameSource = showReceiver
+    ? tipReceiver?.displayName?.source
+    : tip.transaction.fromUser.displayName?.source;
+  const imageSource = showReceiver
+    ? tipReceiver?.avatar?.source
+    : tip.transaction.fromUser.avatar?.source;
 
   const ensAvatarQuery = useGetEnsAvatar(
     { name: displayName ?? '' },
@@ -110,16 +120,21 @@ export default function DonateHistoryItem({
                   updateCurrentContent({
                     name: 'donor-stats',
                     userDetails: {
-                      address: tipperFromAddress,
+                      address: showReceiver
+                        ? (receiverAddress ?? EMPTY_HEX)
+                        : tipperFromAddress,
                     },
                   });
                 }}
                 className="cursor-pointer border-0 align-middle text-label3 text-neutral-900 no-underline lg:text-label3"
               >
-                {displayName ?? getShortWalletHex(tipperFromAddress)}
+                {showReceiver
+                  ? (displayName ??
+                    getShortWalletHex(receiverAddress ?? EMPTY_HEX))
+                  : (displayName ?? getShortWalletHex(tipperFromAddress))}
               </Link>{' '}
               <span className="align-middle text-body3 text-neutral-600">
-                sent{' '}
+                {showReceiver ? 'received' : 'sent'}{' '}
                 {zerosIndex ? (
                   <>
                     0.0
@@ -221,8 +236,8 @@ export default function DonateHistoryItem({
                       size="large"
                       intent="tertiary"
                       href={transactionUrl.url}
-                      prefixIconClassName="mr-3"
                       prefixIconName={explorer}
+                      prefixIconClassName="mr-3"
                       className="w-full items-center px-3 py-1 font-normal text-neutral-900"
                     >
                       View on {explorer}
