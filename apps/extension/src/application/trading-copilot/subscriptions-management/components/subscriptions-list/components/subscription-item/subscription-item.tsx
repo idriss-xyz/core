@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ExternalLink } from '@idriss-xyz/ui/external-link';
 import { Icon as IdrissIcon } from '@idriss-xyz/ui/icon';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
@@ -72,13 +72,18 @@ const SubscriptionItemContent = ({
 }: ContentProperties) => {
   const ensNameNotFound = isAddress(name);
   const isFarcasterSubscription = !!farcasterDetails;
+  const [showError, setShowError] = useState(false);
 
-  const removeSubscription = useCallback(() => {
-    onRemove({
-      address: subscription.address,
-      fid: subscription.fid,
-      chainType: isSolanaAddress(subscription.address) ? 'SOLANA' : 'EVM',
-    });
+  const removeSubscription = useCallback(async () => {
+    try {
+      await onRemove({
+        address: subscription.address,
+        fid: subscription.fid,
+        chainType: isSolanaAddress(subscription.address) ? 'SOLANA' : 'EVM',
+      });
+    } catch {
+      setShowError(true);
+    }
   }, [onRemove, subscription]);
 
   const emailQuery = useCommandQuery({
@@ -117,6 +122,18 @@ const SubscriptionItemContent = ({
     enabled: !ensNameNotFound,
   });
 
+  useEffect(() => {
+    if (showError) {
+      const timer = setTimeout(() => {
+        setShowError(false);
+      }, 3000);
+      return () => {
+        return clearTimeout(timer);
+      };
+    }
+    return;
+  }, [showError]);
+
   const shortenedName =
     isAddress(name) || isSolanaAddress(name) ? getShortWalletHex(name) : name;
 
@@ -150,6 +167,7 @@ const SubscriptionItemContent = ({
               {shortenedName}
             </TradingCopilotTooltip>
           )}
+          {showError && <span className="ml-2 text-red-500">Try again.</span>}
           {twitterQuery.data && (
             <ExternalLink href={getTwitterUserLink(twitterQuery.data)}>
               <IdrissIcon
@@ -194,6 +212,7 @@ const SubscriptionItemContent = ({
         intent="tertiary"
         className="text-red-500"
         onClick={removeSubscription}
+        disabled={showError}
       />
     </li>
   );

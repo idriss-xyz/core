@@ -8,5 +8,5 @@ export interface Properties {
   subscriptionsAmount?: number;
   subscriptionsLoading: boolean;
   subscriptions?: SubscriptionsResponse;
-  onRemove: (payload: UnsubscribePayload) => void;
+  onRemove: (payload: UnsubscribePayload) => Promise<void>;
 }
