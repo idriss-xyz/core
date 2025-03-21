@@ -131,7 +131,7 @@ const SubscriptionItemContent = ({
         return clearTimeout(timer);
       };
     }
-    return undefined;
+    return;
   }, [showError]);
 
   const shortenedName =
