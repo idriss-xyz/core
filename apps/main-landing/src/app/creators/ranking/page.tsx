@@ -2,10 +2,14 @@
 /* eslint-disable @next/next/no-img-element */
 import '@rainbow-me/rainbowkit/styles.css';
 
+import { useCallback } from 'react';
+import { useRouter } from 'next/navigation';
+
 import { backgroundLines2 } from '@/assets';
 import { TopBar } from '@/components';
 import { useGetStreamerRanking } from '@/app/creators/donate/commands/get-streamer-ranking';
 import { LeaderboardTopDonors } from '@/app/creators/donate/top-donors';
+import { DonateContentValues } from '@/app/creators/donate/types';
 
 import { RainbowKitProviders } from '../donate/providers';
 
@@ -19,7 +23,19 @@ export default function Ranking() {
 }
 
 function RankingContent() {
+  const router = useRouter();
   const streamerRanking = useGetStreamerRanking();
+
+  const updateCurrentContent = useCallback(
+    (content: DonateContentValues) => {
+      const userAddress = content.userDetails?.address;
+
+      if (userAddress) {
+        router.push(`donate?address=${userAddress}`);
+      }
+    },
+    [router],
+  );
 
   return (
     <>
@@ -37,6 +53,7 @@ function RankingContent() {
             heading="Top streamers"
             leaderboard={streamerRanking.data ?? []}
             leaderboardError={streamerRanking.isError}
+            updateCurrentContent={updateCurrentContent}
             leaderboardLoading={streamerRanking.isLoading}
             className="container mt-8 w-[360px] max-w-full overflow-hidden px-0 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]"
           />
