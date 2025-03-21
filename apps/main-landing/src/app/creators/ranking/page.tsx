@@ -50,7 +50,7 @@ function RankingContent() {
 
         <div className="grid grid-cols-1 items-start gap-x-10">
           <LeaderboardTopDonors
-            heading="Top streamers"
+            heading="Top creators"
             leaderboard={streamerRanking.data ?? []}
             leaderboardError={streamerRanking.isError}
             updateCurrentContent={updateCurrentContent}

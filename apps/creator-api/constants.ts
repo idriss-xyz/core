@@ -27,6 +27,12 @@ export const TipHistoryQuery = `
             toUser {
               address
             }
+            decodedInputV2 {
+              data {
+                value
+                name
+              }
+            }
           }
           interpretation {
             descriptionDisplayItems {
@@ -91,7 +97,7 @@ query ($address: Address!, $network: Network!, $currency: Currency!, $timeFrame:
   }
 }`;
 
-export const OLDEST_TRANSACTION_TIMESTAMP = 1_700_929_698;
+export const OLDEST_TRANSACTION_TIMESTAMP = 1_702_339_200;
 
 // Todo: Add import from package once refactor is done
 export const CHAIN_TO_IDRISS_TIPPING_ADDRESS = {
@@ -104,6 +110,7 @@ export const CHAIN_TO_IDRISS_TIPPING_ADDRESS = {
   2020: '0x74BD1b29B997ec081eb7AF06F2fd67CbfC74D26e',
   2741: '0xEeFA4f7F4e9104D16673D0C2fE3D0bF4c45A7804',
 } as const;
+
 
 export const CREATOR_LINKS: Record<string, string> = {
   '0xc4607e7ab9200f955ec617698b2a4ee0c66f3fb4':
@@ -135,3 +142,26 @@ export const CREATOR_LINKS: Record<string, string> = {
   '0x0519861371532dbcdba321ddc0e3108885f6e2ff':
     'https://www.idriss.xyz/creators/donate?address=0x0519861371532dBcDBA321DdC0E3108885f6E2FF&token=ETH,USDC,DAI,PRIME,GHST,YGG,PDT,RON,AXS,PENGU,DEGEN,IDRISS&network=Abstract,Aleph,Ronin,Base,Ethereum,Mantle,Optimism,Polygon&creatorName=Dur4zn1ll0',
 };
+
+export const NETWORK_TO_ALCHEMY = {
+  BASE_MAINNET: 'base-mainnet',
+  ABSTRACT_MAINNET: 'abstract-mainnet',
+  ETHEREUM_MAINNET: 'eth-mainnet',
+  POLYGON_MAINNET: 'polygon-mainnet',
+  OPTIMISM_MAINNET: 'op-mainnet',
+  MANTLE_MAINNET: 'mantle-mainnet',
+  RONIN_MAINNET: 'ronin-mainnet',
+} as const;
+
+export const ALCHEMY_NATIVE_TOKENS = {
+  ETHEREUM_MAINNET: 'ETH',
+  ABSTRACT_MAINNET: 'ETH',
+  BASE_MAINNET: 'ETH',
+  MANTLE_MAINNET: 'MNT',
+  OPTIMISM_MAINNET: 'ETH',
+  POLYGON_MAINNET: 'MATIC',
+  RONIN_MAINNET: 'RON',
+} as const;
+
+export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
+
