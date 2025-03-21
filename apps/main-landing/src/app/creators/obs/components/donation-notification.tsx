@@ -64,7 +64,7 @@ const DonationNotification = ({
       aria-live="polite"
       nonce={txnHash}
       style={style}
-      className={`absolute left-0 top-0 m-3 flex w-[430px] items-start gap-x-2 rounded-xl p-4 shadow-lg transition-opacity duration-1000 ${bgColor} ${
+      className={`absolute left-0 top-0 m-3 flex w-max min-w-[400px] max-w-[430px] items-start gap-x-2 rounded-xl p-4 shadow-lg transition-opacity duration-1000 ${bgColor} ${
         showNotification ? 'opacity-100' : 'opacity-0'
       }`}
     >
