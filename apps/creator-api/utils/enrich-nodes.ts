@@ -2,7 +2,11 @@ import { ZapperNode } from '../types';
 import dotenv from 'dotenv';
 import { join } from 'path';
 import { mode } from '../utils/mode';
-import { getZapperPrice, getAlchemyPrice } from './price-fetchers';
+import {
+  getZapperPrice,
+  getAlchemyPrice,
+  getOldestZapperPrice,
+} from './price-fetchers';
 
 dotenv.config(
   mode === 'production' ? {} : { path: join(__dirname, `../.env.${mode}`) },
@@ -55,6 +59,15 @@ export async function enrichNodesWithHistoricalPrice(
     if (alchemyPrice !== null) {
       priceCache[cacheKey] = alchemyPrice;
       tokenItem.tokenV2.onchainMarketData.price = alchemyPrice;
+    } else {
+      const fallbackPrice = getOldestZapperPrice(
+        tokenItem.tokenV2.address,
+        tokenItem.network,
+      );
+      if (fallbackPrice) {
+        priceCache[cacheKey] = fallbackPrice;
+        tokenItem.tokenV2.onchainMarketData.price = fallbackPrice;
+      }
     }
   }
 }

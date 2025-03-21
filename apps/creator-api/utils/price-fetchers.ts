@@ -35,9 +35,7 @@ export function getOldestZapperPrice(
   const priceTicks = zapperHistoryCache[zapperCacheKey];
 
   if (priceTicks?.length > 0) {
-    // Get the oldest price (last item in the array)
     const oldestTick = priceTicks[priceTicks.length - 1];
-    console.log('Using oldest Zapper price as fallback:', oldestTick.median);
     return oldestTick.median;
   }
 
@@ -146,25 +144,14 @@ export async function getAlchemyPrice(
         }),
       };
 
-      // console.log(
-      //   'Fetching from alchemy',
-      //   txDate,
-      //   startTime,
-      //   endTime,
-      //   tokenAddress,
-      //   alchemyNetwork,
-      // );
-
       const response = await fetch(
         `https://api.g.alchemy.com/prices/v1/${process.env.ALCHEMY_API_KEY}/tokens/historical`,
         options,
       );
 
       const data = await response.json();
-      console.log('Alchemy response:', data);
       if (data.data?.[0]?.value) {
         const price = Number(data.data[0].value);
-        console.log('Got price from Alchemy:', txDate, price);
         return price;
       }
       return null;

@@ -98,7 +98,6 @@ router.post('/', async (req: Request, res: Response) => {
         if (
           descriptionItems[2].stringValue === descriptionItems[0]?.amountRaw
         ) {
-          console.log('returning false');
           return false;
         }
         return true;
