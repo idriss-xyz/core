@@ -111,7 +111,6 @@ export const CHAIN_TO_IDRISS_TIPPING_ADDRESS = {
   2741: '0xEeFA4f7F4e9104D16673D0C2fE3D0bF4c45A7804',
 } as const;
 
-
 export const CREATOR_LINKS: Record<string, string> = {
   '0xc4607e7ab9200f955ec617698b2a4ee0c66f3fb4':
     'https://www.idriss.xyz/creators/donate?address=exile-esports.eth&token=ETH,USDC,PRIME&network=Base,Ethereum&creatorName=Exile%20Esports',
@@ -164,4 +163,3 @@ export const ALCHEMY_NATIVE_TOKENS = {
 } as const;
 
 export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
-
