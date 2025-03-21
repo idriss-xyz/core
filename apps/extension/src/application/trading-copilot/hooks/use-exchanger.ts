@@ -3,7 +3,13 @@ import { formatEther, parseEther } from 'viem';
 import { Wallet, SolanaWallet } from '@idriss-xyz/wallet-connect';
 
 import { useWallet } from 'shared/extension';
-import { CHAIN, formatSol, NATIVE_ETH_ADDRESS, NATIVE_SOL_ADDRESS, useSwitchChain } from 'shared/web3';
+import {
+  CHAIN,
+  formatSol,
+  NATIVE_ETH_ADDRESS,
+  NATIVE_SOL_ADDRESS,
+  useSwitchChain,
+} from 'shared/web3';
 import { useCommandMutation } from 'shared/messaging';
 
 import { SwapData, FormValues, QuotePayload } from '../types';

@@ -38,7 +38,13 @@ import {
   useLoginViaSiwe,
   useAccountBalance,
 } from 'application/trading-copilot';
-import { CHAIN, formatSol, getWholeNumber, NATIVE_ETH_ADDRESS, NATIVE_SOL_ADDRESS } from 'shared/web3';
+import {
+  CHAIN,
+  formatSol,
+  getWholeNumber,
+  NATIVE_ETH_ADDRESS,
+  NATIVE_SOL_ADDRESS,
+} from 'shared/web3';
 import { IdrissSend } from 'shared/idriss';
 
 import { TokenIcon } from '../../utils';
@@ -56,22 +62,17 @@ const EMPTY_FORM: FormValues = {
 const SOLANA_CHAIN_KEY = 'SOLANA' as const;
 
 const getDestinationToken = (network: keyof typeof CHAIN) => {
-  return network === SOLANA_CHAIN_KEY
-    ? NATIVE_SOL_ADDRESS
-    : NATIVE_ETH_ADDRESS;
+  return network === SOLANA_CHAIN_KEY ? NATIVE_SOL_ADDRESS : NATIVE_ETH_ADDRESS;
 };
 
-const getNativeValue = (
-  network: keyof typeof CHAIN,
-  amount: bigint,
-) => {
+const getNativeValue = (network: keyof typeof CHAIN, amount: bigint) => {
   return network === SOLANA_CHAIN_KEY
     ? getWholeNumber(formatSol(amount.toString()))
     : getWholeNumber(formatEther(amount));
 };
 
 const getNativeCurrencySymbol = (network: keyof typeof CHAIN) => {
-  return CHAIN[network].nativeCurrency.symbol
+  return CHAIN[network].nativeCurrency.symbol;
 };
 
 export const TradingCopilotDialog = ({
@@ -242,9 +243,7 @@ const TradingCopilotDialogContent = ({
         className="p-5"
         heading="Swap completed"
         onConfirm={closeDialog}
-        chainId={
-          exchanger.quoteData.transactionData.chainId ?? CHAIN.SOLANA.id
-        }
+        chainId={exchanger.quoteData.transactionData.chainId ?? CHAIN.SOLANA.id}
         transactionHash={exchanger.transactionData.transactionHash as Hex}
       />
     );

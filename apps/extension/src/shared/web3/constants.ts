@@ -84,7 +84,7 @@ export const CHAIN = Object.assign(SHARED_CHAIN, {
         url: 'https://solscan.io',
       },
     },
-  }
+  },
 }) satisfies Record<string, Chain>;
 
 export const TOKEN = Object.assign(SHARED_TOKEN, {
