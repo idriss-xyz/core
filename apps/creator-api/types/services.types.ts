@@ -29,6 +29,7 @@ export interface LeaderboardStats {
   address: Hex;
   donorMetadata: UserData;
   totalAmount: number;
+  donateLink?: string;
 }
 
 export interface TokenDisplayItem {
