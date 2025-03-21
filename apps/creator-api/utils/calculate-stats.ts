@@ -1,3 +1,4 @@
+import { CREATOR_LINKS } from '../constants';
 import { Donation } from '../db/entities/donations.entity';
 import {
   fetchDonations,
@@ -186,5 +187,9 @@ export async function calculateGlobalStreamerLeaderboard(): Promise<
 
   leaderboard.sort((a, b) => b.totalAmount - a.totalAmount);
 
-  return leaderboard;
+  // Enrich leaderboard with hardcoded links
+  return leaderboard.map((entry) => ({
+    ...entry,
+    donateLink: CREATOR_LINKS[entry.address.toLowerCase()],
+  }));
 }
