@@ -116,7 +116,7 @@ export const NETWORK_TO_ALCHEMY = {
   ABSTRACT_MAINNET: 'abstract-mainnet',
   ETHEREUM_MAINNET: 'eth-mainnet',
   POLYGON_MAINNET: 'polygon-mainnet',
-  OPTIMISM_MAINNET: 'op-mainnet',
+  OPTIMISM_MAINNET: 'optimism-mainnet',
   MANTLE_MAINNET: 'mantle-mainnet',
   RONIN_MAINNET: 'ronin-mainnet',
 } as const;
