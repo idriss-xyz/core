@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { Wallet } from '@idriss-xyz/wallet-connect';
+
 import {
   onWindowMessage,
   TAB_CHANGED,
