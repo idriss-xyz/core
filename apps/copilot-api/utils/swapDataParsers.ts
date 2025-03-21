@@ -1,3 +1,4 @@
+import { WEBHOOK_NETWORK_TYPES } from '../constants';
 import { HeliusWebhookEvent } from '../types';
 import { SwapData } from '../types';
 
@@ -116,7 +117,7 @@ export async function parseSwapFromHelius(
       symbol: tokenIn.symbol,
       name: tokenIn.name,
       logoURI: tokenIn.logoURI,
-      network: 'SOLANA',
+      network: WEBHOOK_NETWORK_TYPES.SOLANA,
     },
     tokenOut: {
       address: tokenOut.mint,
@@ -125,7 +126,7 @@ export async function parseSwapFromHelius(
       symbol: tokenOut.symbol,
       name: tokenOut.name,
       logoURI: tokenOut.logoURI,
-      network: 'SOLANA',
+      network: WEBHOOK_NETWORK_TYPES.SOLANA,
     },
     timestamp,
     isComplete: event.transactionError === null,
@@ -168,7 +169,7 @@ export async function parseJupiterSwap(
         symbol: null,
         name: null,
         logoURI: null,
-        network: 'SOLANA',
+        network: WEBHOOK_NETWORK_TYPES.SOLANA,
       };
     }
     if (transfer.toUserAccount === feePayer) {
@@ -179,7 +180,7 @@ export async function parseJupiterSwap(
         symbol: null,
         name: null,
         logoURI: null,
-        network: 'SOLANA',
+        network: WEBHOOK_NETWORK_TYPES.SOLANA,
       };
     }
   }
@@ -191,9 +192,9 @@ export async function parseJupiterSwap(
         amount: transfer.amount / 1e9,
         decimals: 9,
         symbol: 'SOL',
-        name: 'Solana',
+        name: WEBHOOK_NETWORK_TYPES.SOLANA,
         logoURI: null,
-        network: 'SOLANA',
+        network: WEBHOOK_NETWORK_TYPES.SOLANA,
       };
     }
   }

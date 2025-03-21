@@ -290,7 +290,7 @@ const createNewSolanaWebhook = async (address: string) => {
     return {
       webhookId,
       internalWebhookId,
-      chainType: 'SOLANA',
+      chainType: WEBHOOK_NETWORK_TYPES.SOLANA,
       signingKey: webhookSecret,
     };
   } catch (err) {
