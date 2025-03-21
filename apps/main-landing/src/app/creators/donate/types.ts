@@ -19,6 +19,7 @@ interface DonorHistoryStats {
 interface DonorLeaderboardStats {
   address: string;
   totalAmount: number;
+  donateLink: string | undefined;
   donorMetadata: TipHistoryFromUser;
 }
 
