@@ -121,7 +121,7 @@ export default function DonateHistoryItem({
                     name: 'donor-stats',
                     userDetails: {
                       address: showReceiver
-                        ? receiverAddress!
+                        ? (receiverAddress ?? EMPTY_HEX)
                         : tipperFromAddress,
                     },
                   });
@@ -236,8 +236,8 @@ export default function DonateHistoryItem({
                       size="large"
                       intent="tertiary"
                       href={transactionUrl.url}
-                      prefixIconClassName="mr-3"
                       prefixIconName={explorer}
+                      prefixIconClassName="mr-3"
                       className="w-full items-center px-3 py-1 font-normal text-neutral-900"
                     >
                       View on {explorer}

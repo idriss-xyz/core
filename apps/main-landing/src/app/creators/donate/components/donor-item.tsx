@@ -103,6 +103,7 @@ export default function DonorItem({
       )}
     >
       <span className="text-neutral-600">{donorRank + 1}</span>
+
       <span className="flex items-center gap-x-1.5 text-neutral-900">
         {avatarImage}
         <Link
@@ -125,6 +126,7 @@ export default function DonorItem({
           {displayName ?? getShortWalletHex(donorDetails.address)}
         </Link>
       </span>
+
       <span className="text-right text-neutral-900">
         $
         {donateAmount >= 0.01
@@ -162,6 +164,7 @@ export function DonorItemPlaceholder({
       >
         <Icon size={20} name="CircleUserRound" className="text-neutral-500" />
       </div>
+
       <Icon
         size={13}
         name="CrownCircled"
@@ -177,10 +180,12 @@ export function DonorItemPlaceholder({
       <>
         <li className="grid grid-cols-[10px,1fr,70px] items-center gap-x-3.5 border-b border-b-neutral-300 px-5.5 py-4.5 text-body5 md:grid-cols-[10px,1fr,100px]">
           <span className="text-neutral-600">{donorRank + 1}</span>
+
           <span className="flex items-center gap-x-1.5 text-neutral-900">
             {avatarPlaceholder}
             <span className="blur-sm">user.eth</span>
           </span>
+
           <span className="text-right text-neutral-900 blur-sm">
             $
             {donateAmount >= 0.01

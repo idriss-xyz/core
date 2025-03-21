@@ -31,13 +31,28 @@ export default function Donor() {
 }
 
 function DonorContent() {
-  const router = useRouter();
   const [currentContent, setCurrentContent] = useState<DonateContentValues>({
     name: 'donor-stats',
   });
   const [validatedAddress, setValidatedAddress] = useState<
     string | null | undefined
   >();
+  const router = useRouter();
+
+  const searchParameters = useSearchParams();
+  const addressFromParameters =
+    searchParameters.get(SEARCH_PARAMETER.ADDRESS) ??
+    searchParameters.get(SEARCH_PARAMETER.LEGACY_ADDRESS);
+
+  useEffect(() => {
+    const validateAddress = async () => {
+      const address = await validateAddressOrENS(addressFromParameters);
+
+      setValidatedAddress(address);
+    };
+
+    void validateAddress();
+  }, [addressFromParameters]);
 
   const addressValidationResult = hexSchema.safeParse(validatedAddress);
 
@@ -49,19 +64,6 @@ function DonorContent() {
     { address: userAddress ?? EMPTY_HEX },
     { enabled: !!userAddress },
   );
-
-  const searchParameters = useSearchParams();
-  const addressFromParameters =
-    searchParameters.get(SEARCH_PARAMETER.ADDRESS) ??
-    searchParameters.get(SEARCH_PARAMETER.LEGACY_ADDRESS);
-
-  useEffect(() => {
-    const validateAddress = async () => {
-      const address = await validateAddressOrENS(addressFromParameters);
-      setValidatedAddress(address);
-    };
-    void validateAddress();
-  }, [addressFromParameters]);
 
   const updateCurrentContent = useCallback(
     (content: DonateContentValues) => {
@@ -109,8 +111,8 @@ function DonorContent() {
             showReceiver
             address={validatedAddress}
             currentContent={currentContent}
-            tipsLoading={donorHistory.isLoading}
             isInvalidAddress={isInvalidAddress}
+            tipsLoading={donorHistory.isLoading}
             updateCurrentContent={updateCurrentContent}
           />
         );
