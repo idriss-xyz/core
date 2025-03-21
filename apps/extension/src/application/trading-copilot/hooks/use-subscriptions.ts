@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { Wallet } from '@idriss-xyz/wallet-connect';
-import { isSolanaAddress } from '@idriss-xyz/utils';
-
 import {
   onWindowMessage,
   TAB_CHANGED,

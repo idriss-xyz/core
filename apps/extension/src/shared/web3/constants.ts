@@ -68,7 +68,7 @@ export const CHAIN = Object.assign(SHARED_CHAIN, {
     },
   },
   SOLANA: {
-    id: 1151111081099710,
+    id: 1_151_111_081_099_710,
     name: 'Solana',
     shortName: 'Solana',
     logo: SOLANA_LOGO,

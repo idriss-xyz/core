@@ -59,7 +59,7 @@ const EMPTY_FORM: FormValues = {
   amount: '',
 };
 
-const SOLANA_CHAIN_KEY = 'SOLANA' as const;
+const SOLANA_CHAIN_KEY = 'SOLANA';
 
 const getDestinationToken = (network: keyof typeof CHAIN) => {
   return network === SOLANA_CHAIN_KEY ? NATIVE_SOL_ADDRESS : NATIVE_ETH_ADDRESS;
