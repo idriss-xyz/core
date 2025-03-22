@@ -3,7 +3,6 @@
 import '@rainbow-me/rainbowkit/styles.css';
 
 import { useCallback } from 'react';
-import { useRouter } from 'next/navigation';
 
 import { backgroundLines2 } from '@/assets';
 import { TopBar } from '@/components';
@@ -23,7 +22,6 @@ export default function Ranking() {
 }
 
 function RankingContent() {
-  const router = useRouter();
   const streamerRanking = useGetStreamerRanking();
 
   const updateCurrentContent = useCallback(
@@ -42,12 +40,12 @@ function RankingContent() {
         const url = new URL(donateLink);
         const parameters = new URLSearchParams(url.search);
 
-        router.push(`/creators/donate?${parameters.toString()}`);
+        window.open(`/creators/donate?${parameters.toString()}`, '_blank');
       } else {
-        router.push(`/creators/donate?address=${userAddress}`);
+        window.open(`/creators/donate?address=${userAddress}`, '_blank');
       }
     },
-    [router, streamerRanking.data],
+    [streamerRanking.data],
   );
 
   return (
