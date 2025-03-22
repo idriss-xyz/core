@@ -8,6 +8,7 @@ import { DonateContentValues } from '../../donate/types';
 import { WHITELISTED_URLS } from '../../donate/constants';
 import { useGetAvatarImage } from '../commands/get-avatar-image';
 import { useGetEnsAvatar } from '../commands/get-ens-avatar';
+import { useGetEnsName } from '../commands/get-ens-name';
 
 const rankBorders = [
   'border-[#FAC928]',
@@ -34,9 +35,18 @@ export default function DonorItem({
   isTwitchExtension,
   updateCurrentContent,
 }: Properties) {
-  const displayName = donorDetails.displayName?.value;
-  const nameSource = donorDetails.displayName?.source;
   const imageSource = donorDetails.avatar?.source;
+  const potentialENS = useGetEnsName(
+    { address: donorDetails.address },
+    { enabled: donorDetails.displayName?.source === 'ADDRESS' }
+  );
+
+  const displayName = potentialENS.isSuccess && potentialENS.data 
+    ? potentialENS.data 
+    : donorDetails.displayName?.value;
+  const nameSource = potentialENS.isSuccess && potentialENS.data 
+    ? 'ENS' 
+    : donorDetails.displayName?.source;
 
   const ensAvatarQuery = useGetEnsAvatar(
     { name: displayName ?? '' },
