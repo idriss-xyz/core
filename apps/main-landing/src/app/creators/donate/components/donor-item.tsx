@@ -38,15 +38,17 @@ export default function DonorItem({
   const imageSource = donorDetails.avatar?.source;
   const potentialENS = useGetEnsName(
     { address: donorDetails.address },
-    { enabled: donorDetails.displayName?.source === 'ADDRESS' }
+    { enabled: donorDetails.displayName?.source === 'ADDRESS' },
   );
 
-  const displayName = potentialENS.isSuccess && potentialENS.data 
-    ? potentialENS.data 
-    : donorDetails.displayName?.value;
-  const nameSource = potentialENS.isSuccess && potentialENS.data 
-    ? 'ENS' 
-    : donorDetails.displayName?.source;
+  const displayName =
+    potentialENS.isSuccess && potentialENS.data
+      ? potentialENS.data
+      : donorDetails.displayName?.value;
+  const nameSource =
+    potentialENS.isSuccess && potentialENS.data
+      ? 'ENS'
+      : donorDetails.displayName?.source;
 
   const ensAvatarQuery = useGetEnsAvatar(
     { name: displayName ?? '' },
