@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { Wallet } from '@idriss-xyz/wallet-connect';
-import { isSolanaAddress } from '@idriss-xyz/utils';
 
 import {
   onWindowMessage,
@@ -153,14 +152,10 @@ export const useSubscriptions = ({ wallet, addTabListener }: Properties) => {
         if (subscriptionsToRemove && subscriptionsToRemove.length > 0) {
           await Promise.all(
             subscriptionsToRemove.map((s) => {
-              const chainTypeForS: 'SOLANA' | 'EVM' = isSolanaAddress(s.address)
-                ? 'SOLANA'
-                : 'EVM';
               return unsubscribeMutation.mutateAsync({
                 subscription: {
                   address: s.address,
                   subscriberId: wallet.account,
-                  chainType: chainTypeForS,
                 },
                 authToken: authToken ?? '',
               });

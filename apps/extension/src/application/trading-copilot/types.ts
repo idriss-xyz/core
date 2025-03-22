@@ -4,7 +4,6 @@ import { CHAIN } from 'shared/web3';
 
 export interface SubscribePayload {
   address: string;
-  chainType: 'EVM' | 'SOLANA';
   fid?: number;
 }
 
@@ -17,7 +16,6 @@ export type SubscribeCommandPayload = {
 
 export type UnsubscribePayload = {
   address: string;
-  chainType: 'EVM' | 'SOLANA';
   fid?: number;
 };
 
@@ -104,7 +102,7 @@ export type SwapDataToken = {
   symbol: string;
   amount: number;
   decimals: number;
-  network: keyof typeof CHAIN | 'SOLANA';
+  network: keyof typeof CHAIN;
   name?: string;
   logoURI?: string;
   priceUSD?: string;

@@ -46,17 +46,9 @@ export const SubscriptionForm = ({ onSubmit, canSubscribe }: Properties) => {
         return;
       }
 
-      if (isSolanaAddress(data.subscription)) {
-        await onSubmit({ address: data.subscription, chainType: 'SOLANA' });
+      if (isAddress(data.subscription) || isSolanaAddress(data.subscription)) {
+        await onSubmit({ address: data.subscription });
         form.reset(EMPTY_FORM);
-
-        return;
-      }
-
-      if (isAddress(data.subscription)) {
-        await onSubmit({ address: data.subscription, chainType: 'EVM' });
-        form.reset(EMPTY_FORM);
-
         return;
       }
 
@@ -73,7 +65,6 @@ export const SubscriptionForm = ({ onSubmit, canSubscribe }: Properties) => {
           await onSubmit({
             address: farcasterDetails.addressSolana,
             fid: farcasterDetails.fid,
-            chainType: 'SOLANA',
           });
         }
 
@@ -81,7 +72,6 @@ export const SubscriptionForm = ({ onSubmit, canSubscribe }: Properties) => {
           await onSubmit({
             address: farcasterDetails.address,
             fid: farcasterDetails.fid,
-            chainType: 'EVM',
           });
         }
 
@@ -98,7 +88,7 @@ export const SubscriptionForm = ({ onSubmit, canSubscribe }: Properties) => {
         return;
       }
 
-      await onSubmit({ address: ensAddress, chainType: 'EVM' });
+      await onSubmit({ address: ensAddress });
       form.reset(EMPTY_FORM);
     },
     [

@@ -38,7 +38,13 @@ import {
   useLoginViaSiwe,
   useAccountBalance,
 } from 'application/trading-copilot';
-import { CHAIN, getWholeNumber } from 'shared/web3';
+import {
+  CHAIN,
+  formatSol,
+  getWholeNumber,
+  NATIVE_ETH_ADDRESS,
+  NATIVE_SOL_ADDRESS,
+} from 'shared/web3';
 import { IdrissSend } from 'shared/idriss';
 
 import { TokenIcon } from '../../utils';
@@ -53,27 +59,20 @@ const EMPTY_FORM: FormValues = {
   amount: '',
 };
 
-const getChainId = (network: keyof typeof CHAIN | 'SOLANA') => {
-  return network === 'SOLANA' ? Number('1151111081099710') : CHAIN[network].id;
+const SOLANA_CHAIN_KEY = 'SOLANA';
+
+const getDestinationToken = (network: keyof typeof CHAIN) => {
+  return network === SOLANA_CHAIN_KEY ? NATIVE_SOL_ADDRESS : NATIVE_ETH_ADDRESS;
 };
 
-const getDestinationToken = (network: keyof typeof CHAIN | 'SOLANA') => {
-  return network === 'SOLANA'
-    ? '11111111111111111111111111111111'
-    : '0x0000000000000000000000000000000000000000';
+const getNativeValue = (network: keyof typeof CHAIN, amount: bigint) => {
+  return network === SOLANA_CHAIN_KEY
+    ? getWholeNumber(formatSol(amount.toString()))
+    : getWholeNumber(formatEther(amount));
 };
 
-const getNativeValue = (
-  network: keyof typeof CHAIN | 'SOLANA',
-  amount: bigint,
-) => {
-  return network === 'SOLANA'
-    ? getWholeNumber((Number(amount) / 1e9).toString())
-    : getWholeNumber(Number(formatEther(amount)).toString());
-};
-
-const getNativeCurrencySymbol = (network: keyof typeof CHAIN | 'SOLANA') => {
-  return network === 'SOLANA' ? 'SOL' : 'ETH';
+const getNativeCurrencySymbol = (network: keyof typeof CHAIN) => {
+  return CHAIN[network].nativeCurrency.symbol;
 };
 
 export const TradingCopilotDialog = ({
@@ -141,7 +140,7 @@ const TradingCopilotDialogContent = ({
     isConnectionModalOpened,
     openConnectionModal,
   } = useWallet();
-  const isSolanaTrade = dialog.tokenIn.network === 'SOLANA';
+  const isSolanaTrade = dialog.tokenIn.network === SOLANA_CHAIN_KEY;
   const {
     wallet: solanaWallet,
     isConnectionModalOpened: isSolanaConnectionModalOpened,
@@ -244,9 +243,7 @@ const TradingCopilotDialogContent = ({
         className="p-5"
         heading="Swap completed"
         onConfirm={closeDialog}
-        chainId={
-          exchanger.quoteData.transactionData.chainId ?? getChainId('SOLANA')
-        }
+        chainId={exchanger.quoteData.transactionData.chainId ?? CHAIN.SOLANA.id}
         transactionHash={exchanger.transactionData.transactionHash as Hex}
       />
     );
@@ -480,10 +477,10 @@ const TradingCopilotTradeValue = ({ wallet, dialog }: TradeValueProperties) => {
       dialog.tokenIn.amount *
       10 ** (dialog.tokenIn.decimals ?? 9)
     ).toString(),
-    destinationChain: getChainId(dialog.tokenOut.network),
+    destinationChain: CHAIN[dialog.tokenOut.network].id,
     fromAddress: dialog.from ?? address,
     originToken: dialog.tokenIn.address,
-    originChain: getChainId(dialog.tokenIn.network),
+    originChain: CHAIN[dialog.tokenIn.network].id,
     destinationToken: getDestinationToken(dialog.tokenOut.network),
   };
 
@@ -496,11 +493,11 @@ const TradingCopilotTradeValue = ({ wallet, dialog }: TradeValueProperties) => {
     return null;
   }
 
-  const tradeValueInWei = BigInt(quoteQuery.data.estimate.toAmount);
+  const tradeValueInSmallestUnit = BigInt(quoteQuery.data.estimate.toAmount);
 
   return (
     <span>
-      {getNativeValue(dialog.tokenIn.network, tradeValueInWei)}{' '}
+      {getNativeValue(dialog.tokenIn.network, tradeValueInSmallestUnit)}{' '}
       {getNativeCurrencySymbol(dialog.tokenIn.network)}
     </span>
   );

@@ -30,7 +30,7 @@ router.get('/', (_, res) => {
 });
 
 router.post('/subscribe', verifyToken(), async (req, res) => {
-  const { fid, address, chainType } = req.body;
+  const { fid, address } = req.body;
 
   const { id: subscriberId } = req.user;
 
@@ -40,7 +40,7 @@ router.post('/subscribe', verifyToken(), async (req, res) => {
   }
 
   try {
-    await subscribeAddress(subscriberId, address, chainType, fid);
+    await subscribeAddress(subscriberId, address, fid);
 
     res
       .status(200)
@@ -51,7 +51,7 @@ router.post('/subscribe', verifyToken(), async (req, res) => {
 });
 
 router.post('/unsubscribe', verifyToken(), async (req, res) => {
-  const { address, chainType } = req.body;
+  const { address } = req.body;
 
   const { id: subscriberId } = req.user;
 
@@ -61,7 +61,7 @@ router.post('/unsubscribe', verifyToken(), async (req, res) => {
   }
 
   try {
-    await unsubscribeAddress(subscriberId, address, chainType);
+    await unsubscribeAddress(subscriberId, address);
 
     res
       .status(200)
