@@ -32,8 +32,6 @@ import {
 import { useCommandQuery } from 'shared/messaging';
 import {
   FormValues,
-  GetEnsInfoCommand,
-  GetEnsNameCommand,
   GetQuoteCommand,
   useExchanger,
   useSolanaExchanger,
@@ -47,7 +45,6 @@ import { TokenIcon } from '../../utils';
 
 import {
   Properties,
-  ContentProperties,
   WalletBalanceProperties,
   TradeValueProperties,
 } from './trading-copilot-dialog.types';
@@ -84,18 +81,9 @@ export const TradingCopilotDialog = ({
   closeDialog,
   tokenData,
   tokenImage,
+  userName,
+  userAvatar,
 }: Properties) => {
-  const ensNameQuery = useCommandQuery({
-    command: new GetEnsNameCommand({
-      address: dialog.from,
-    }),
-    staleTime: Number.POSITIVE_INFINITY,
-  });
-
-  if (ensNameQuery.isFetching) {
-    return;
-  }
-
   return (
     <Closable
       className="fixed left-0 top-0 z-portal size-full bg-black/50"
@@ -106,9 +94,10 @@ export const TradingCopilotDialog = ({
           <TradingCopilotDialogContent
             tokenData={tokenData}
             tokenImage={tokenImage}
+            userName={userName}
+            userAvatar={userAvatar}
             dialog={dialog}
             closeDialog={closeDialog}
-            userName={ensNameQuery.data ?? dialog.from}
           />
           <div className="self-stretch text-center opacity-70">
             <span
@@ -142,10 +131,11 @@ export const TradingCopilotDialog = ({
 const TradingCopilotDialogContent = ({
   dialog,
   userName,
+  userAvatar,
   closeDialog,
   tokenData,
   tokenImage,
-}: ContentProperties) => {
+}: Properties) => {
   const {
     wallet: ensWallet,
     isConnectionModalOpened,
@@ -163,14 +153,6 @@ const TradingCopilotDialogContent = ({
   const exchanger = isSolanaTrade ? solanaExchanger : evmExchanger;
   const wallet = isSolanaTrade ? solanaWallet : ensWallet;
   const siwe = useLoginViaSiwe();
-
-  const avatarQuery = useCommandQuery({
-    command: new GetEnsInfoCommand({
-      ensName: userName,
-      infoKey: 'avatar',
-    }),
-    staleTime: Number.POSITIVE_INFINITY,
-  });
 
   const balance = useAccountBalance(wallet);
 
@@ -287,7 +269,7 @@ const TradingCopilotDialogContent = ({
       </div>
       <div className="grid grid-cols-[48px,1fr] gap-2 py-2">
         <LazyImage
-          src={avatarQuery.data}
+          src={userAvatar}
           className="size-12 rounded-full border border-neutral-400 bg-neutral-200"
           fallbackComponent={
             <div className="flex size-12 items-center justify-center rounded-full border border-neutral-300 bg-neutral-200">

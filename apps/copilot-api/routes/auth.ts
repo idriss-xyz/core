@@ -52,9 +52,6 @@ router.post('/wallet-address', async (req, res) => {
   }
 });
 
-// TODO: On empty list of subscriptions on extension, callying this will
-// return 401, since the subscriber is removed from the database on /unsubscribe
-// last address.
 router.post('/verify-token', async (req, res) => {
   const { token } = req.body;
 

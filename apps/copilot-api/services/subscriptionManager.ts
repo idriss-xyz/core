@@ -71,18 +71,6 @@ export const unsubscribeAddress = async (
   try {
     await subscriptionsRepo.delete({ subscriber_id: subscriberId, address });
 
-    // Check if the subscriber has any other subscriptions
-    const subscriberRes = await subscriptionsRepo.count({
-      where: { subscriber_id: subscriberId },
-    });
-
-    // TODO: Check remove. This causes extension to prompt for SIWE on emptying subscription
-    // list and trying to subscribe again.
-    if (parseInt(subscriberRes.toString(), 10) === 0) {
-      // Subscriber has no more subscriptions, remove from subscribers table
-      await subscribersRepo.delete({ subscriber_id: subscriberId });
-    }
-
     // Check if the address has any other subscribers
     const addressRes = await subscriptionsRepo.count({ where: { address } });
 
