@@ -26,15 +26,23 @@ function RankingContent() {
 
   const updateCurrentContent = useCallback(
     (content: DonateContentValues) => {
-      const userAddress = content.userDetails?.address;
+      const userAddress = content.userDetails?.address?.toLowerCase();
+
+      if (!userAddress) {
+        return;
+      }
+
       const donateLink = streamerRanking.data?.find((stats) => {
-        return stats.address.toLowerCase() === userAddress?.toLowerCase();
+        return stats.address.toLowerCase() === userAddress.toLowerCase();
       })?.donateLink;
 
       if (donateLink) {
-        window.open(donateLink, '_blank');
-      } else if (userAddress) {
-        window.open(`donate?address=${userAddress}`, '_blank');
+        const url = new URL(donateLink);
+        const parameters = new URLSearchParams(url.search);
+
+        window.open(`/creators/donate?${parameters.toString()}`, '_blank');
+      } else {
+        window.open(`/creators/donate?address=${userAddress}`, '_blank');
       }
     },
     [streamerRanking.data],
