@@ -339,7 +339,7 @@ export const LeaderboardTopDonors = ({
           <ScrollArea className="max-h-[480px] overflow-y-auto transition-all duration-500">
             <ul className="flex flex-col pr-4">
               {leaderboard.map((leaderboardItem, index) => {
-                if (!leaderboardItem || index > 19) return null;
+                if (!leaderboardItem || index > 9) return null;
 
                 return (
                   <DonorItem
