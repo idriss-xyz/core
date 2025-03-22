@@ -65,7 +65,9 @@ export default function DonateHistoryItem({
 
   const farcasterAvatarUrl =
     imageSource === 'FARCASTER'
-      ? tip.transaction.fromUser.avatar?.value?.url
+      ? showReceiver
+        ? tipReceiver?.avatar.value?.url
+        : tip.transaction.fromUser.avatar?.value?.url
       : null;
 
   const avatarSource = ensAvatarQuery.data ?? farcasterAvatarUrl;

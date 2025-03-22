@@ -10,6 +10,7 @@ import {
 } from '@idriss-xyz/constants';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { Button } from '@idriss-xyz/ui/button';
+import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 
 import { default as IDRISS_SCENE_STREAM_2 } from '../../../assets/idriss-scene-stream-2.png';
 import { WidgetVariants } from '../../../../../twitch-extension/src/app/types';
@@ -335,31 +336,33 @@ export const LeaderboardTopDonors = ({
         )}
 
         {leaderboard && !leaderboardLoading && !leaderboardError && (
-          <ul>
-            {leaderboard.map((leaderboardItem, index) => {
-              if (!leaderboardItem || index > 5) return null;
+          <ScrollArea className="max-h-[480px] overflow-y-auto transition-all duration-500">
+            <ul className="flex flex-col pr-4">
+              {leaderboard.map((leaderboardItem, index) => {
+                if (!leaderboardItem || index > 9) return null;
 
-              return (
-                <DonorItem
-                  donorRank={index}
-                  className="py-[23.5px]"
-                  donateAmount={leaderboardItem.totalAmount}
-                  updateCurrentContent={updateCurrentContent}
-                  donorDetails={leaderboardItem.donorMetadata}
-                  key={`${leaderboardItem.address}${leaderboardItem.totalAmount}`}
+                return (
+                  <DonorItem
+                    donorRank={index}
+                    className="max-w-[344px] py-[23.5px]"
+                    donateAmount={leaderboardItem.totalAmount}
+                    updateCurrentContent={updateCurrentContent}
+                    donorDetails={leaderboardItem.donorMetadata}
+                    key={`${leaderboardItem.address}${leaderboardItem.totalAmount}`}
+                  />
+                );
+              })}
+
+              {leaderboard.length <= 5 ? (
+                <DonorItemPlaceholder
+                  itemHeight={79}
+                  amountToDisplay={5}
+                  donorRank={leaderboard.length}
+                  previousDonateAmount={leaderboard.at(-1)?.totalAmount ?? 1234}
                 />
-              );
-            })}
-
-            {leaderboard.length <= 5 ? (
-              <DonorItemPlaceholder
-                itemHeight={79}
-                amountToDisplay={5}
-                donorRank={leaderboard.length}
-                previousDonateAmount={leaderboard.at(-1)?.totalAmount ?? 1234}
-              />
-            ) : null}
-          </ul>
+              ) : null}
+            </ul>
+          </ScrollArea>
         )}
       </div>
     </div>
