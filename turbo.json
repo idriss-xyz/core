@@ -29,7 +29,8 @@
         "DEV_LOGIN_PASSWORD",
         "PUBLIC_ACCESS_ENABLED",
         "CI",
-        "CREATOR_LINKS_SECRET"
+        "CREATOR_LINKS_SECRET",
+        "RAILWAY_GIT_COMMIT_SHA"
       ]
     },
     "@idriss-xyz/main-landing#dev": {
