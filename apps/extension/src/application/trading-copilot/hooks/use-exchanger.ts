@@ -3,7 +3,13 @@ import { formatEther, parseEther } from 'viem';
 import { Wallet, SolanaWallet } from '@idriss-xyz/wallet-connect';
 
 import { useWallet } from 'shared/extension';
-import { CHAIN, useSwitchChain } from 'shared/web3';
+import {
+  CHAIN,
+  formatSol,
+  NATIVE_ETH_ADDRESS,
+  NATIVE_SOL_ADDRESS,
+  useSwitchChain,
+} from 'shared/web3';
 import { useCommandMutation } from 'shared/messaging';
 
 import { SwapData, FormValues, QuotePayload } from '../types';
@@ -20,15 +26,6 @@ interface CallbackProperties {
   dialog: SwapData;
   formValues: FormValues;
 }
-
-const getChainId = (network: keyof typeof CHAIN | 'SOLANA') => {
-  return network === 'SOLANA' ? Number('1151111081099710') : CHAIN[network].id;
-};
-
-const formatSol = (amount: string, decimals?: number) => {
-  if (!decimals) decimals = 9;
-  return Number(amount) / 10 ** decimals;
-};
 
 export const useExchanger = ({ wallet }: Properties) => {
   const { verifyWalletProvider } = useWallet();
@@ -57,11 +54,11 @@ export const useExchanger = ({ wallet }: Properties) => {
 
       const quotePayload = {
         amount: amountInWei,
-        destinationChain: getChainId(dialog.tokenOut.network),
+        destinationChain: CHAIN[dialog.tokenOut.network].id,
         fromAddress: wallet.account,
         destinationToken: dialog.tokenIn.address,
-        originChain: getChainId(dialog.tokenIn.network),
-        originToken: '0x0000000000000000000000000000000000000000',
+        originChain: CHAIN[dialog.tokenIn.network].id,
+        originToken: NATIVE_ETH_ADDRESS,
       };
 
       const quoteData = await handleGetQuoteMutation(quotePayload);
@@ -164,11 +161,11 @@ export const useSolanaExchanger = ({ wallet }: SolanaExchangerProperties) => {
 
       const quotePayload = {
         amount: amountInLamports.toString(),
-        destinationChain: getChainId(dialog.tokenOut.network),
+        destinationChain: CHAIN[dialog.tokenOut.network].id,
         fromAddress: wallet.account,
         destinationToken: dialog.tokenIn.address,
-        originChain: getChainId(dialog.tokenIn.network),
-        originToken: '11111111111111111111111111111111',
+        originChain: CHAIN[dialog.tokenIn.network].id,
+        originToken: NATIVE_SOL_ADDRESS,
       };
 
       const quoteData = await handleGetQuoteMutation(quotePayload);
@@ -206,7 +203,6 @@ export const useSolanaExchanger = ({ wallet }: SolanaExchangerProperties) => {
 
   const isIdle = !isSending && !isError && !isSuccess;
 
-  // TODO: Correctly format numbers here
   const details = {
     from: {
       amount: Number(

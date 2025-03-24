@@ -34,10 +34,9 @@ const webhooksRepo = dataSource.getRepository(WebhookEntity);
 export const subscribeAddress = async (
   subscriber_id: string,
   address: string,
-  chainType: WEBHOOK_NETWORK_TYPES,
   fid?: number,
 ) => {
-  if (chainType === WEBHOOK_NETWORK_TYPES.EVM) {
+  if (isAddress(address)) {
     address = address.toLowerCase();
   }
 
@@ -56,17 +55,17 @@ export const subscribeAddress = async (
       },
     );
     if (!addressWebhookMap) {
-      await addAddressToWebhook(address, transaction, chainType);
+      await addAddressToWebhook(address, transaction);
     }
   });
+
 };
 
 export const unsubscribeAddress = async (
   subscriberId: string,
   address: string,
-  chainType: WEBHOOK_NETWORK_TYPES,
 ): Promise<void> => {
-  if (chainType === WEBHOOK_NETWORK_TYPES.EVM) {
+  if (isAddress(address)) {
     address = address.toLowerCase();
   }
   await dataSource.transaction(async (transaction) => {
@@ -81,8 +80,8 @@ export const unsubscribeAddress = async (
     });
 
     if (parseInt(addressRes.toString(), 10) === 0) {
-      // No more subscribers, remove address from webhook
-      await removeAddressFromWebhook(address, chainType, transaction);
+      // No more subscribers, remove address from webhook and addresses table
+      await removeAddressFromWebhook(address, transaction);
 
       // Remove address from addresses table
       await transaction.delete(AddressesEntity, { address });
@@ -114,13 +113,11 @@ const saveWebhookToDb = async (
   });
 };
 
-const addAddressToWebhook = async (
-  address: string,
-  transaction: EntityManager,
-  chainType: string,
-) => {
-  const res = await transaction
-    .getRepository(WebhookEntity)
+const addAddressToWebhook = async (address: string, transaction: EntityManager) => {
+  const chainType = isAddress(address)
+    ? WEBHOOK_NETWORK_TYPES.EVM
+    : WEBHOOK_NETWORK_TYPES.SOLANA;
+  const res = await webhooksRepo
     .createQueryBuilder('webhooks')
     .select([
       'webhooks.internal_id',
@@ -171,11 +168,7 @@ const addAddressToWebhook = async (
   }
 };
 
-async function removeAddressFromWebhook(
-  address: string,
-  chainType: WEBHOOK_NETWORK_TYPES,
-  transaction: EntityManager,
-): Promise<void> {
+async function removeAddressFromWebhook(address: string, transaction: EntityManager,): Promise<void> {
   // Get the webhook associated with the address
   const res = await transaction.findOne(AddressWebhookMapEntity, {
     where: { address },
@@ -199,6 +192,10 @@ async function removeAddressFromWebhook(
   }
 
   const { webhook_id, signing_key } = webhookData;
+
+  const chainType = isAddress(address)
+    ? WEBHOOK_NETWORK_TYPES.EVM
+    : WEBHOOK_NETWORK_TYPES.SOLANA;
 
   // Update the webhook via webhook proovider API
   if (chainType === WEBHOOK_NETWORK_TYPES.EVM) {
@@ -309,7 +306,7 @@ const createNewSolanaWebhook = async (address: string) => {
     return {
       webhookId,
       internalWebhookId,
-      chainType: 'SOLANA',
+      chainType: WEBHOOK_NETWORK_TYPES.SOLANA,
       signingKey: webhookSecret,
     };
   } catch (err) {

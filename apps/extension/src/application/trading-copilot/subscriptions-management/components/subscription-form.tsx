@@ -48,66 +48,57 @@ export const SubscriptionForm = ({ onSubmit, canSubscribe }: Properties) => {
         return;
       }
       try {
-        if (isSolanaAddress(data.subscription)) {
-          await onSubmit({ address: data.subscription, chainType: 'SOLANA' });
-          form.reset(EMPTY_FORM);
 
-          return;
-        }
+      if (isAddress(data.subscription) || isSolanaAddress(data.subscription)) {
+        await onSubmit({ address: data.subscription });
+        form.reset(EMPTY_FORM);
+        return;
+      }
 
-        if (isAddress(data.subscription)) {
-          await onSubmit({ address: data.subscription, chainType: 'EVM' });
-          form.reset(EMPTY_FORM);
-
-          return;
-        }
-
-        if (isFarcasterName(data.subscription)) {
-          const farcasterDetails =
-            await getFarcasterAddressMutation.mutateAsync({
-              name: data.subscription,
-            });
-
-          if (!farcasterDetails) {
-            return;
-          }
-
-          if (farcasterDetails.addressSolana) {
-            await onSubmit({
-              address: farcasterDetails.addressSolana,
-              fid: farcasterDetails.fid,
-              chainType: 'SOLANA',
-            });
-          }
-
-          if (farcasterDetails.address) {
-            await onSubmit({
-              address: farcasterDetails.address,
-              fid: farcasterDetails.fid,
-              chainType: 'EVM',
-            });
-          }
-
-          form.reset(EMPTY_FORM);
-
-          return;
-        }
-
-        const ensAddress = await getEnsAddressMutation.mutateAsync({
-          ensName: data.subscription,
+      if (isFarcasterName(data.subscription)) {
+        const farcasterDetails = await getFarcasterAddressMutation.mutateAsync({
+          name: data.subscription,
         });
 
-        if (!ensAddress) {
+        if (!farcasterDetails) {
           return;
         }
 
-        await onSubmit({ address: ensAddress, chainType: 'EVM' });
+        if (farcasterDetails.addressSolana) {
+          await onSubmit({
+            address: farcasterDetails.addressSolana,
+            fid: farcasterDetails.fid,
+          });
+        }
+
+        if (farcasterDetails.address) {
+          await onSubmit({
+            address: farcasterDetails.address,
+            fid: farcasterDetails.fid,
+          });
+        }
+
         form.reset(EMPTY_FORM);
-        setError('');
-      } catch {
-        setError("We couldn't subscribe to this address. Try again.");
+        return;
       }
+
+      const ensAddress = await getEnsAddressMutation.mutateAsync({
+        ensName: data.subscription,
+      });
+
+      if (!ensAddress) {
+        return;
+      }
+
+      await onSubmit({ address: ensAddress });
+      form.reset(EMPTY_FORM);
+      setError('');
+    } catch {
+      setError("We couldn't subscribe to this address. Try again.");
+    }
+
     },
+
     [
       form,
       onSubmit,

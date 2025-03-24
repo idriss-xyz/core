@@ -76,14 +76,13 @@ const SubscriptionItemContent = ({
 
   const removeSubscription = useCallback(async () => {
     try {
-      await onRemove({
-        address: subscription.address,
-        fid: subscription.fid,
-        chainType: isSolanaAddress(subscription.address) ? 'SOLANA' : 'EVM',
-      });
-    } catch {
-      setShowError(true);
-    }
+    await onRemove({
+      address: subscription.address,
+      fid: subscription.fid,
+    });
+  } catch {
+    setShowError(true);
+  }
   }, [onRemove, subscription]);
 
   const emailQuery = useCommandQuery({

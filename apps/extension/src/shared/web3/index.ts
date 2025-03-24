@@ -1,4 +1,10 @@
-export { CHAIN, TOKEN, CHAIN_ID_TO_TOKENS } from './constants';
+export {
+  CHAIN,
+  TOKEN,
+  CHAIN_ID_TO_TOKENS,
+  NATIVE_ETH_ADDRESS,
+  NATIVE_SOL_ADDRESS,
+} from './constants';
 export {
   resolveAddress,
   getWholeNumber,
@@ -7,6 +13,7 @@ export {
   toAddressWithValidChecksum,
   createWalletClient,
   getRpcUrl,
+  formatSol,
 } from './utils';
 export { useSwitchChain } from './hooks';
 export { ChainSelect, TokenSelect } from './components';

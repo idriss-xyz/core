@@ -176,8 +176,8 @@ const FollowTradingCopilotContent = ({
 
   const onClickHandler = async () => {
     await (isSubscribed
-      ? handleUnsubscribe({ address: userId, chainType: 'EVM' })
-      : handleSubscribe({ address: userId, chainType: 'EVM' }));
+      ? handleUnsubscribe({ address: userId })
+      : handleSubscribe({ address: userId }));
   };
 
   const tooltipContent = isButtonDisabled ? (
