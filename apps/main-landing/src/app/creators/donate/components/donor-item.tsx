@@ -110,13 +110,13 @@ export default function DonorItem({
   return (
     <li
       className={classes(
-        'grid grid-cols-[10px,1fr,70px] items-center gap-x-3.5 border-b border-b-neutral-300 px-5.5 py-[17.25px] text-body5 md:grid-cols-[10px,1fr,100px]',
+        'grid grid-cols-[16px,1fr,64px] items-center gap-x-3.5 border-b border-b-neutral-300 px-5.5 py-[17.25px] text-body5',
         className,
       )}
     >
       <span className="text-neutral-600">{donorRank + 1}</span>
 
-      <span className="flex items-center gap-x-1.5 text-neutral-900">
+      <span className="flex items-center gap-x-1.5 overflow-hidden text-neutral-900">
         {avatarImage}
         <Link
           size="xs"
@@ -131,7 +131,7 @@ export default function DonorItem({
             }
           }}
           className={classes(
-            'border-0 text-body5 text-neutral-900 no-underline lg:text-body5',
+            'overflow-hidden text-ellipsis border-0 text-body5 text-neutral-900 no-underline lg:text-body5',
             updateCurrentContent && 'cursor-pointer',
           )}
         >
@@ -190,15 +190,15 @@ export function DonorItemPlaceholder({
   if (donorRank <= 2) {
     return (
       <>
-        <li className="grid grid-cols-[10px,1fr,70px] items-center gap-x-3.5 border-b border-b-neutral-300 px-5.5 py-4.5 text-body5 md:grid-cols-[10px,1fr,100px]">
+        <li className="grid grid-cols-[16px,1fr,64px] items-center gap-x-3.5 border-b border-b-neutral-300 px-5.5 py-4.5 text-body5">
           <span className="text-neutral-600">{donorRank + 1}</span>
 
-          <span className="flex items-center gap-x-1.5 text-neutral-900">
+          <span className="flex items-center gap-x-1.5 overflow-hidden text-neutral-900">
             {avatarPlaceholder}
-            <span className="blur-sm">user.eth</span>
+            <span className="select-none blur-sm">user.eth</span>
           </span>
 
-          <span className="text-right text-neutral-900 blur-sm">
+          <span className="select-none text-right text-neutral-900 blur-sm">
             $
             {donateAmount >= 0.01
               ? new Intl.NumberFormat('en-US', {
