@@ -58,7 +58,6 @@ export const subscribeAddress = async (
       await addAddressToWebhook(address, transaction);
     }
   });
-
 };
 
 export const unsubscribeAddress = async (
@@ -113,7 +112,10 @@ const saveWebhookToDb = async (
   });
 };
 
-const addAddressToWebhook = async (address: string, transaction: EntityManager) => {
+const addAddressToWebhook = async (
+  address: string,
+  transaction: EntityManager,
+) => {
   const chainType = isAddress(address)
     ? WEBHOOK_NETWORK_TYPES.EVM
     : WEBHOOK_NETWORK_TYPES.SOLANA;
@@ -168,7 +170,10 @@ const addAddressToWebhook = async (address: string, transaction: EntityManager) 
   }
 };
 
-async function removeAddressFromWebhook(address: string, transaction: EntityManager,): Promise<void> {
+async function removeAddressFromWebhook(
+  address: string,
+  transaction: EntityManager,
+): Promise<void> {
   // Get the webhook associated with the address
   const res = await transaction.findOne(AddressWebhookMapEntity, {
     where: { address },

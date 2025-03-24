@@ -48,55 +48,57 @@ export const SubscriptionForm = ({ onSubmit, canSubscribe }: Properties) => {
         return;
       }
       try {
-
-      if (isAddress(data.subscription) || isSolanaAddress(data.subscription)) {
-        await onSubmit({ address: data.subscription });
-        form.reset(EMPTY_FORM);
-        return;
-      }
-
-      if (isFarcasterName(data.subscription)) {
-        const farcasterDetails = await getFarcasterAddressMutation.mutateAsync({
-          name: data.subscription,
-        });
-
-        if (!farcasterDetails) {
+        if (
+          isAddress(data.subscription) ||
+          isSolanaAddress(data.subscription)
+        ) {
+          await onSubmit({ address: data.subscription });
+          form.reset(EMPTY_FORM);
           return;
         }
 
-        if (farcasterDetails.addressSolana) {
-          await onSubmit({
-            address: farcasterDetails.addressSolana,
-            fid: farcasterDetails.fid,
-          });
+        if (isFarcasterName(data.subscription)) {
+          const farcasterDetails =
+            await getFarcasterAddressMutation.mutateAsync({
+              name: data.subscription,
+            });
+
+          if (!farcasterDetails) {
+            return;
+          }
+
+          if (farcasterDetails.addressSolana) {
+            await onSubmit({
+              address: farcasterDetails.addressSolana,
+              fid: farcasterDetails.fid,
+            });
+          }
+
+          if (farcasterDetails.address) {
+            await onSubmit({
+              address: farcasterDetails.address,
+              fid: farcasterDetails.fid,
+            });
+          }
+
+          form.reset(EMPTY_FORM);
+          return;
         }
 
-        if (farcasterDetails.address) {
-          await onSubmit({
-            address: farcasterDetails.address,
-            fid: farcasterDetails.fid,
-          });
+        const ensAddress = await getEnsAddressMutation.mutateAsync({
+          ensName: data.subscription,
+        });
+
+        if (!ensAddress) {
+          return;
         }
 
+        await onSubmit({ address: ensAddress });
         form.reset(EMPTY_FORM);
-        return;
+        setError('');
+      } catch {
+        setError("We couldn't subscribe to this address. Try again.");
       }
-
-      const ensAddress = await getEnsAddressMutation.mutateAsync({
-        ensName: data.subscription,
-      });
-
-      if (!ensAddress) {
-        return;
-      }
-
-      await onSubmit({ address: ensAddress });
-      form.reset(EMPTY_FORM);
-      setError('');
-    } catch {
-      setError("We couldn't subscribe to this address. Try again.");
-    }
-
     },
 
     [
