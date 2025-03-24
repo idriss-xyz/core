@@ -1,5 +1,6 @@
 import path from 'node:path';
 import * as url from 'node:url';
+import { execSync } from 'node:child_process';
 
 import { BRAND_GUIDELINE_LINK } from '@idriss-xyz/constants';
 import withBundleAnalyzer from '@next/bundle-analyzer';
@@ -31,6 +32,17 @@ const loadEnvironmentConfig = () => {
   }
 };
 
+const getCommitHash = () => {
+  try {
+    // Ensure the repository isn't a shallow clone!
+    return execSync('git rev-parse HEAD').toString().trim();
+  } catch {
+    throw new Error(
+      'Commit hash unavailable. Check that your build has full git history.',
+    );
+  }
+};
+
 loadEnvironmentConfig();
 
 const LEGACY_URLS = [
@@ -46,7 +58,7 @@ const LEGACY_URLS = [
 
 const nextConfig: NextConfig = {
   generateBuildId: () => {
-    console.log('Railway Commit SHA:', process.env.RAILWAY_GIT_COMMIT_SHA);
+    console.log('Railway Commit SHA:', getCommitHash());
     return process.env.RAILWAY_GIT_COMMIT_SHA || `build-${Date.now()}`;
   },
 
