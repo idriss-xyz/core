@@ -1,6 +1,5 @@
 import path from 'node:path';
 import * as url from 'node:url';
-import { execSync } from 'node:child_process';
 
 import { BRAND_GUIDELINE_LINK } from '@idriss-xyz/constants';
 import withBundleAnalyzer from '@next/bundle-analyzer';
