@@ -1,6 +1,5 @@
 import { dataSource } from '../db';
 import { WebhookEntity } from '../entities/webhook.entity';
-import { SubscribersEntity } from '../entities/subscribers.entity';
 import { AddressesEntity } from '../entities/addresses.entity';
 import { SubscriptionsEntity } from '../entities/subscribtions.entity';
 import { AddressWebhookMapEntity } from '../entities/addressWebhookMap.entity';
@@ -16,6 +15,8 @@ import {
 import { mode } from '../utils/mode';
 import { SubscriptionsDetailsInterface, WebhookDataInterface } from '../types';
 import { isAddress } from 'viem';
+import { throwExternalError } from '../middleware/error.middleware';
+import { EntityManager } from 'typeorm';
 
 dotenv.config(
   mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
@@ -27,12 +28,7 @@ const HELIUS_API_BASE_URL = 'https://api.helius.xyz';
 const HELIUS_API_KEY = process.env.HELIUS_API_KEY!;
 const WEBHOOK_URL = process.env.WEBHOOK_URL!;
 
-const subscribersRepo = dataSource.getRepository(SubscribersEntity);
-const addressRepo = dataSource.getRepository(AddressesEntity);
 const subscriptionsRepo = dataSource.getRepository(SubscriptionsEntity);
-const addressMapWebhooksRepo = dataSource.getRepository(
-  AddressWebhookMapEntity,
-);
 const webhooksRepo = dataSource.getRepository(WebhookEntity);
 
 export const subscribeAddress = async (
@@ -44,19 +40,24 @@ export const subscribeAddress = async (
     address = address.toLowerCase();
   }
 
-  await addressRepo.save({ address });
-  await subscriptionsRepo.save({
-    subscriber_id,
-    address,
-    fid,
-  });
+  await dataSource.transaction(async (transaction) => {
+    await transaction.save(AddressesEntity, { address });
+    await transaction.save(SubscriptionsEntity, {
+      subscriber_id,
+      address,
+      fid,
+    });
 
-  const addressWebhookMap = await addressMapWebhooksRepo.findOne({
-    where: { address },
+    const addressWebhookMap = await transaction.findOne(
+      AddressWebhookMapEntity,
+      {
+        where: { address },
+      },
+    );
+    if (!addressWebhookMap) {
+      await addAddressToWebhook(address, transaction);
+    }
   });
-  if (!addressWebhookMap) {
-    await addAddressToWebhook(address);
-  }
 };
 
 export const unsubscribeAddress = async (
@@ -66,23 +67,25 @@ export const unsubscribeAddress = async (
   if (isAddress(address)) {
     address = address.toLowerCase();
   }
-  try {
-    await subscriptionsRepo.delete({ subscriber_id: subscriberId, address });
+  await dataSource.transaction(async (transaction) => {
+    await transaction.delete(SubscriptionsEntity, {
+      subscriber_id: subscriberId,
+      address,
+    });
 
     // Check if the address has any other subscribers
-    const addressRes = await subscriptionsRepo.count({ where: { address } });
+    const addressRes = await transaction.count(SubscriptionsEntity, {
+      where: { address },
+    });
 
     if (parseInt(addressRes.toString(), 10) === 0) {
       // No more subscribers, remove address from webhook and addresses table
-      await removeAddressFromWebhook(address);
+      await removeAddressFromWebhook(address, transaction);
 
       // Remove address from addresses table
-      await addressRepo.delete({ address });
+      await transaction.delete(AddressesEntity, { address });
     }
-  } catch (error) {
-    console.error('Error unsubscribing address:', error);
-    throw error;
-  }
+  });
 };
 
 const saveWebhookToDb = async (
@@ -93,22 +96,26 @@ const saveWebhookToDb = async (
     chainType: string;
     signingKey: string;
   } | null,
+  transaction: EntityManager,
 ) => {
   if (webhook == null) return;
   const { webhookId, internalWebhookId, chainType, signingKey } = webhook;
-  await webhooksRepo.save({
+  await transaction.save(WebhookEntity, {
     internal_id: internalWebhookId,
     webhook_id: webhookId,
     chainType: chainType,
     signing_key: signingKey,
   });
-  await addressMapWebhooksRepo.save({
+  await transaction.save(AddressesEntity, {
     address,
     webhook_internal_id: internalWebhookId,
   });
 };
 
-const addAddressToWebhook = async (address: string) => {
+const addAddressToWebhook = async (
+  address: string,
+  transaction: EntityManager,
+) => {
   const chainType = isAddress(address)
     ? WEBHOOK_NETWORK_TYPES.EVM
     : WEBHOOK_NETWORK_TYPES.SOLANA;
@@ -139,11 +146,11 @@ const addAddressToWebhook = async (address: string) => {
     if (chainType === WEBHOOK_NETWORK_TYPES.EVM) {
       const webhooks = await createNewWebhook(address);
       for (const webhook of webhooks) {
-        await saveWebhookToDb(address, webhook);
+        await saveWebhookToDb(address, webhook, transaction);
       }
     } else if (chainType === WEBHOOK_NETWORK_TYPES.SOLANA) {
       const webhook = await createNewSolanaWebhook(address);
-      await saveWebhookToDb(address, webhook);
+      await saveWebhookToDb(address, webhook, transaction);
     }
   } else {
     const {
@@ -156,16 +163,21 @@ const addAddressToWebhook = async (address: string) => {
     } else if (chainType === WEBHOOK_NETWORK_TYPES.SOLANA) {
       await updateSolanaWebhookAddresses(webhook_id, signingKey, [address], []);
     }
-    await addressMapWebhooksRepo.save({
+    await transaction.save(AddressWebhookMapEntity, {
       address,
       webhook_internal_id: internal_id,
     });
   }
 };
 
-async function removeAddressFromWebhook(address: string): Promise<void> {
+async function removeAddressFromWebhook(
+  address: string,
+  transaction: EntityManager,
+): Promise<void> {
   // Get the webhook associated with the address
-  const res = await addressMapWebhooksRepo.findOne({ where: { address } });
+  const res = await transaction.findOne(AddressWebhookMapEntity, {
+    where: { address },
+  });
 
   if (!res) {
     // Address is not associated with any webhook
@@ -175,7 +187,7 @@ async function removeAddressFromWebhook(address: string): Promise<void> {
   const { webhook_internal_id } = res;
 
   // Get webhook ID and signing key
-  const webhookData = await webhooksRepo.findOne({
+  const webhookData = await transaction.findOne(WebhookEntity, {
     where: { internal_id: webhook_internal_id },
   });
 
@@ -198,10 +210,10 @@ async function removeAddressFromWebhook(address: string): Promise<void> {
   }
 
   // Remove address from address_webhook_map
-  await addressMapWebhooksRepo.delete({ address });
+  await transaction.delete(AddressWebhookMapEntity, { address });
 
   // Check if webhook has any other addresses
-  const countRes = await addressMapWebhooksRepo.count({
+  const countRes = await transaction.count(AddressWebhookMapEntity, {
     where: { webhook_internal_id },
   });
 
@@ -213,7 +225,9 @@ async function removeAddressFromWebhook(address: string): Promise<void> {
       await deleteHeliusWebhook(webhook_id);
     }
 
-    await webhooksRepo.delete({ internal_id: webhook_internal_id });
+    await transaction.delete(WebhookEntity, {
+      internal_id: webhook_internal_id,
+    });
   }
 }
 
@@ -243,6 +257,10 @@ const createNewWebhook = async (
         },
       );
 
+      if (response.status !== 200) {
+        throwExternalError(response, 'Could not create webhook');
+      }
+
       const data = response.data;
 
       const webhookId = data.data.id;
@@ -257,8 +275,7 @@ const createNewWebhook = async (
     }
     return webhooks;
   } catch (err) {
-    console.error('Error creating webhook: ', err);
-    return [];
+    throw new Error(`Error creating webhook: ${err}`);
   }
 };
 
@@ -285,6 +302,10 @@ const createNewSolanaWebhook = async (address: string) => {
       },
     );
 
+    if (response.status !== 200) {
+      throwExternalError(response, 'Could not create Solana webhook');
+    }
+
     const webhookId = response.data.webhookID;
 
     return {
@@ -294,8 +315,7 @@ const createNewSolanaWebhook = async (address: string) => {
       signingKey: webhookSecret,
     };
   } catch (err) {
-    console.error('Error creating Solana webhook: ', err);
-    return null;
+    throw new Error(`Error creating Solana webhook: ${err}`);
   }
 };
 
@@ -304,24 +324,24 @@ const updateWebhookAddresses = async (
   addressesToAdd: string[],
   addressesToRemove: string[],
 ): Promise<void> => {
-  try {
-    await axios.patch(
-      `${ALCHEMY_API_BASE_URL}/api/update-webhook-addresses`,
-      {
-        webhook_id: webhookId,
-        addresses_to_add: addressesToAdd,
-        addresses_to_remove: addressesToRemove,
+  const response = await axios.patch(
+    `${ALCHEMY_API_BASE_URL}/api/update-webhook-addresses`,
+    {
+      webhook_id: webhookId,
+      addresses_to_add: addressesToAdd,
+      addresses_to_remove: addressesToRemove,
+    },
+    {
+      headers: {
+        'accept': 'application/json',
+        'content-type': 'application/json',
+        'X-Alchemy-Token': ALCHEMY_API_KEY,
       },
-      {
-        headers: {
-          'accept': 'application/json',
-          'content-type': 'application/json',
-          'X-Alchemy-Token': ALCHEMY_API_KEY,
-        },
-      },
-    );
-  } catch (err) {
-    console.error('Error updating webhook: ', err);
+    },
+  );
+
+  if (response.status !== 200) {
+    throwExternalError(response, 'Error updating webhook addresses');
   }
 };
 
@@ -331,63 +351,58 @@ const updateSolanaWebhookAddresses = async (
   addressesToAdd: string[],
   addressesToRemove: string[],
 ): Promise<void> => {
-  try {
-    const webhookData = await fetchHeliusWebhookData(webhookId);
+  const webhookData = await fetchHeliusWebhookData(webhookId);
 
-    if (!webhookData) {
-      return;
-    }
+  if (!webhookData || webhookData.error) {
+    throw new Error('Webhook not found');
+  }
+  const previousAddresses = webhookData.accountAddresses;
+  const filteredAddresses = previousAddresses.filter(
+    (address: string) => !addressesToRemove.includes(address),
+  );
 
-    const previousAddresses = webhookData.accountAddresses;
-    const filteredAddresses = previousAddresses.filter(
-      (address: string) => !addressesToRemove.includes(address),
-    );
+  const newAddresses = [...filteredAddresses, ...addressesToAdd];
 
-    const newAddresses = [...filteredAddresses, ...addressesToAdd];
+  if (newAddresses.length === 0) {
+    // If no addresses left, do not edit and continue to deletion
+    return;
+  }
 
-    if (newAddresses.length === 0) {
-      // If no addresses left, do not edit and continue to deletion
-      return;
-    }
-
-    await axios.put(
-      `${HELIUS_API_BASE_URL}/v0/webhooks/${webhookId}?api-key=${HELIUS_API_KEY}`,
-      {
-        webhookURL: webhookData.webhookURL,
-        transactionTypes: webhookData.transactionTypes,
-        webhookType: webhookData.webhookType,
-        accountAddresses: newAddresses,
-        authHeader: signingKey,
+  const response = await axios.put(
+    `${HELIUS_API_BASE_URL}/v0/webhooks/${webhookId}?api-key=${HELIUS_API_KEY}`,
+    {
+      webhookURL: webhookData.webhookURL,
+      transactionTypes: webhookData.transactionTypes,
+      webhookType: webhookData.webhookType,
+      accountAddresses: newAddresses,
+      authHeader: signingKey,
+    },
+    {
+      headers: {
+        'accept': 'application/json',
+        'content-type': 'application/json',
       },
-      {
-        headers: {
-          'accept': 'application/json',
-          'content-type': 'application/json',
-        },
-      },
-    );
-  } catch (err) {
-    console.error('Error updating Solana webhook: ', err);
+    },
+  );
+  if (response.status !== 200) {
+    throwExternalError(response, 'Error updating Solana webhook addresses');
   }
 };
 
 const fetchHeliusWebhookData = async (webhookId: string) => {
-  try {
-    const response = await fetch(
-      `https://api.helius.xyz/v0/webhooks/${webhookId}?api-key=${HELIUS_API_KEY}`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+  const response = await axios.get(
+    `${HELIUS_API_BASE_URL}/v0/webhooks/${webhookId}?api-key=${HELIUS_API_KEY}`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
       },
-    );
-    const data = response.json();
-    return data;
-  } catch (err) {
-    console.error('Error fetching current Solana webhook: ', err);
-    return null;
+    },
+  );
+  if (response.status !== 200) {
+    throwExternalError(response, 'Error fetching webhook data');
   }
+  const data = response.data;
+  return data;
 };
 
 async function deleteAlchemyWebhook(webhookId: string): Promise<void> {
