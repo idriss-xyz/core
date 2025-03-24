@@ -34,11 +34,12 @@ const loadEnvironmentConfig = () => {
 
 const getCommitHash = () => {
   try {
-    // Ensure the repository isn't a shallow clone!
-    return execSync('git rev-parse HEAD').toString().trim();
+    // Adjust the path to your monorepo root
+    const repoRoot = path.resolve(__dirname, '../../');
+    return execSync('git rev-parse HEAD', { cwd: repoRoot }).toString().trim();
   } catch {
     throw new Error(
-      'Commit hash unavailable. Check that your build has full git history.',
+      'Commit hash unavailable. Ensure full git history is fetched.',
     );
   }
 };
