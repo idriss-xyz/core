@@ -65,7 +65,7 @@ const getOptions = (
       return chain.id === chainId;
     });
     if (!foundChain) {
-      throw new Error(`${chainId} not found`);
+      throw new Error(`${chainId} undefined`);
     }
     return optionsFrom(foundChain, renderSuffix);
   });
