@@ -46,6 +46,7 @@ const LEGACY_URLS = [
 
 const nextConfig: NextConfig = {
   generateBuildId: () => {
+    console.log('Railway Commit SHA:', process.env.RAILWAY_GIT_COMMIT_SHA);
     return process.env.RAILWAY_GIT_COMMIT_SHA || `build-${Date.now()}`;
   },
 
