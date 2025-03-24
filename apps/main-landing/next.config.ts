@@ -32,18 +32,6 @@ const loadEnvironmentConfig = () => {
   }
 };
 
-const getCommitHash = () => {
-  try {
-    // Adjust the path to your monorepo root
-    const repoRoot = path.resolve(__dirname, '../../');
-    return execSync('git rev-parse HEAD', { cwd: repoRoot }).toString().trim();
-  } catch {
-    throw new Error(
-      'Commit hash unavailable. Ensure full git history is fetched.',
-    );
-  }
-};
-
 loadEnvironmentConfig();
 
 const LEGACY_URLS = [
@@ -59,7 +47,6 @@ const LEGACY_URLS = [
 
 const nextConfig: NextConfig = {
   generateBuildId: () => {
-    console.log('Railway Commit SHA:', getCommitHash());
     return process.env.RAILWAY_GIT_COMMIT_SHA || `build-${Date.now()}`;
   },
 
