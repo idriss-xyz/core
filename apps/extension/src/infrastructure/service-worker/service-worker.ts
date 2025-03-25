@@ -37,6 +37,7 @@ import {
   TRADING_COPILOT_COMMAND_MAP,
   SwapData,
 } from 'application/trading-copilot';
+import { KAITO_COMMAND_MAP } from 'application/kaito';
 
 import { SbtResolver } from '../../common/resolvers/SbtResolver';
 import { AddressResolver } from '../../common/resolvers/AddressResolver';
@@ -56,6 +57,7 @@ const COMMAND_MAP = {
   ...TALLY_COMMAND_MAP,
   ...FARCASTER_COMMAND_MAP,
   ...TRADING_COPILOT_COMMAND_MAP,
+  ...KAITO_COMMAND_MAP,
 };
 
 const SERVER_URL = 'https://copilot-api.idriss.xyz/';

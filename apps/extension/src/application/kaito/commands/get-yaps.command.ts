@@ -14,7 +14,7 @@ type Payload = {
 };
 
 export class GetYapsCommand extends Command<Payload, YapResponse> {
-  public readonly name = 'GetYapsProposalsCommand' as const;
+  public readonly name = 'GetYapsCommand' as const;
 
   constructor(public payload: Payload) {
     super();
