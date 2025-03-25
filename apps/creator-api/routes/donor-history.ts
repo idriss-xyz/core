@@ -36,6 +36,7 @@ router.post('/', async (req: Request, res: Response) => {
     stats.positionInLeaderboard =
       donorPosition !== -1 ? donorPosition + 1 : null;
 
+    // Todo: remove leaderboard
     res.json({
       stats,
       leaderboard,
