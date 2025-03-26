@@ -27,13 +27,12 @@ export const FollowTradingCopilot = () => {
       name: username ?? '',
     }),
     staleTime: Number.POSITIVE_INFINITY,
-    enabled: !!username,
+    enabled: !!username && isWarpcast,
   });
 
   const userId = getFarcasterAddressQuery.data?.address;
 
-  const enabledForTwitter =
-    isTwitter && isUserPage && Boolean(username) && Boolean(userId);
+  const enabledForTwitter = isTwitter && isUserPage && Boolean(username);
 
   const enabledForWarpcast =
     isWarpcast &&
@@ -110,8 +109,7 @@ export const FollowTradingCopilot = () => {
       !childOfContainerForInjectionOnWarpcast) ||
     !wallet ||
     (!enabledForTwitter && !enabledForWarpcast) ||
-    (enabledForWarpcast && isOwnProfile) ||
-    !userId
+    (enabledForWarpcast && isOwnProfile)
   ) {
     return;
   }
@@ -136,7 +134,7 @@ export const FollowTradingCopilot = () => {
 };
 
 type ContentProperties = {
-  userId: Hex;
+  userId?: Hex;
   wallet: Wallet;
   iconHeight: number;
   className?: string;
@@ -155,6 +153,8 @@ const FollowTradingCopilotContent = ({
       wallet,
     });
 
+  const userAddress = userId ?? wallet.account;
+
   const handleUnsubscribe = (payload: UnsubscribePayload) => {
     return unsubscribe.use(payload);
   };
@@ -164,15 +164,15 @@ const FollowTradingCopilotContent = ({
   };
 
   const isSubscribed = subscriptions.data?.details.some((detail) => {
-    return detail.address.toLowerCase() === userId.toLowerCase();
+    return detail.address.toLowerCase() === userAddress.toLowerCase();
   });
 
   const isButtonDisabled = !isSubscribed && !canSubscribe;
 
   const onClickHandler = async () => {
     await (isSubscribed
-      ? handleUnsubscribe({ address: userId })
-      : handleSubscribe({ address: userId }));
+      ? handleUnsubscribe({ address: userAddress })
+      : handleSubscribe({ address: userAddress }));
   };
 
   const tooltipContent = isButtonDisabled ? (
