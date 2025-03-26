@@ -1,7 +1,8 @@
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 
-import { TopBar, Footer } from '@/components';
+import { Footer } from '@/components';
 
+import { TopBar } from './components/top-bar';
 import { SupportSection } from './components/support-section';
 import { HeroSection } from './components/hero-section';
 import { ProsSection } from './components/pros-section';

@@ -8,13 +8,13 @@ import { Hex, isAddress } from 'viem';
 
 import { validateAddressOrENS } from '@/app/creators/donate/utils';
 import { RainbowKitProviders } from '@/app/creators/donate/providers';
-import { TopBar } from '@/components';
 import { backgroundLines2 } from '@/assets';
 import { DonateContentValues } from '@/app/creators/donate/types';
 import { useGetDonorHistory } from '@/app/creators/donate/commands/get-donor-history';
 
 import DonateHistoryList from '../donate/components/history/donate-history-list';
 import DonorStatsList from '../donate/components/donor-stats/donor-stats-list';
+import { TopBar } from '../landing/components/top-bar';
 
 const SEARCH_PARAMETER = {
   ADDRESS: 'address',

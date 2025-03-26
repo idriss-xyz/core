@@ -5,12 +5,12 @@ import '@rainbow-me/rainbowkit/styles.css';
 import { useCallback } from 'react';
 
 import { backgroundLines2 } from '@/assets';
-import { TopBar } from '@/components';
 import { useGetStreamerRanking } from '@/app/creators/donate/commands/get-streamer-ranking';
 import { LeaderboardTopDonors } from '@/app/creators/donate/top-donors';
 import { DonateContentValues } from '@/app/creators/donate/types';
 
 import { RainbowKitProviders } from '../donate/providers';
+import { TopBar } from '../landing/components/top-bar';
 
 // ts-unused-exports:disable-next-line
 export default function Ranking() {
