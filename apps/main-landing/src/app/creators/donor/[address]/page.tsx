@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { EMPTY_HEX, hexSchema } from '@idriss-xyz/constants';
 import { Hex, isAddress } from 'viem';
@@ -12,14 +12,9 @@ import { backgroundLines2 } from '@/assets';
 import { DonateContentValues } from '@/app/creators/donate/types';
 import { useGetDonorHistory } from '@/app/creators/donate/commands/get-donor-history';
 
-import DonateHistoryList from '../donate/components/history/donate-history-list';
-import DonorStatsList from '../donate/components/donor-stats/donor-stats-list';
-import { TopBar } from '../landing/components/top-bar';
-
-const SEARCH_PARAMETER = {
-  ADDRESS: 'address',
-  LEGACY_ADDRESS: 'streamerAddress',
-};
+import DonateHistoryList from '../../donate/components/history/donate-history-list';
+import DonorStatsList from '../../donate/components/donor-stats/donor-stats-list';
+import { TopBar } from '../../landing/components/top-bar';
 
 // ts-unused-exports:disable-next-line
 export default function Donor() {
@@ -38,11 +33,10 @@ function DonorContent() {
     string | null | undefined
   >();
   const router = useRouter();
+  const urlParameters = useParams();
 
-  const searchParameters = useSearchParams();
   const addressFromParameters =
-    searchParameters.get(SEARCH_PARAMETER.ADDRESS) ??
-    searchParameters.get(SEARCH_PARAMETER.LEGACY_ADDRESS);
+    typeof urlParameters.address === 'string' ? urlParameters.address : null;
 
   useEffect(() => {
     const validateAddress = async () => {
@@ -70,7 +64,7 @@ function DonorContent() {
       const userAddress = content.userDetails?.address;
 
       if (userAddress) {
-        router.push(`?${SEARCH_PARAMETER.ADDRESS}=${userAddress}`);
+        router.push(`/creators/donor/${userAddress}`);
       }
 
       setCurrentContent((previous) => {
