@@ -14,7 +14,6 @@ import {
 } from '@idriss-xyz/ui/tooltip';
 
 import { useGetDonorHistory } from '@/app/creators/donate/commands/get-donor-history';
-import { LeaderboardTopDonors } from '@/app/creators/donate/top-donors';
 import { backgroundLines4 } from '@/assets';
 import { useGetEnsAvatar } from '@/app/creators/donate/commands/get-ens-avatar';
 import { useGetEnsName } from '@/app/creators/donate/commands/get-ens-name';
@@ -79,7 +78,6 @@ export default function DonorStatsList({
   }
 
   const stats = donorHistory.data?.stats;
-  const leaderboard = donorHistory.data?.leaderboard;
 
   return (
     <div className="grid grid-cols-1 items-start gap-x-10 lg:grid-cols-[1fr,auto]">
@@ -251,7 +249,16 @@ export default function DonorStatsList({
                 )}
 
                 {stats.positionInLeaderboard && (
-                  <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-8 shadow-md">
+                  <div
+                    className="flex cursor-pointer flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-8 shadow-md"
+                    onClick={() => {
+                      if (updateCurrentContent) {
+                        updateCurrentContent({
+                          name: 'donor-ranking',
+                        });
+                      }
+                    }}
+                  >
                     <p className="text-label5 text-neutral-600">
                       Leaderboard rank
                     </p>
@@ -284,19 +291,6 @@ export default function DonorStatsList({
             </>
           )}
       </div>
-
-      <LeaderboardTopDonors
-        leaderboard={leaderboard ?? []}
-        updateCurrentContent={updateCurrentContent}
-        leaderboardError={
-          donorHistory.isError ||
-          (validatedAddress !== undefined && !!addressValidationResult.error)
-        }
-        leaderboardLoading={
-          donorHistory.isLoading || (!validatedAddress && !!isStandalone)
-        }
-        className="container mt-8 w-[360px] max-w-full overflow-hidden px-0 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]"
-      />
     </div>
   );
 }

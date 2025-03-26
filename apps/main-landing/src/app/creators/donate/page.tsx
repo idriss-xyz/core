@@ -21,8 +21,9 @@ import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-hist
 import DonateHistoryList from '@/app/creators/donate/components/history/donate-history-list';
 import { DonateContentValues } from '@/app/creators/donate/types';
 import { useGetDonorHistory } from '@/app/creators/donate/commands/get-donor-history';
+import { useGetDonorRanking } from '@/app/creators/donate/commands/get-donor-ranking';
 
-import { TopDonors } from './top-donors';
+import { LeaderboardTopDonors, TopDonors } from './top-donors';
 import { Content } from './content';
 import { RainbowKitProviders } from './providers';
 import { CREATOR_API_URL } from './constants';
@@ -92,6 +93,8 @@ function DonorsContent() {
     { enabled: !!currentContent.userDetails?.address },
   );
 
+  const donorRanking = useGetDonorRanking();
+
   const updateCurrentContent = useCallback((content: DonateContentValues) => {
     setCurrentContent((previous) => {
       return { previous, ...content };
@@ -156,6 +159,18 @@ function DonorsContent() {
           />
         );
       }
+      case 'donor-ranking': {
+        return (
+          <LeaderboardTopDonors
+            heading="Top donors"
+            leaderboard={donorRanking.data ?? []}
+            leaderboardError={donorRanking.isError}
+            updateCurrentContent={updateCurrentContent}
+            leaderboardLoading={donorRanking.isLoading}
+            className="container mt-8 w-[360px] max-w-full overflow-hidden px-0 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]"
+          />
+        );
+      }
       default: {
         return;
       }
@@ -164,6 +179,9 @@ function DonorsContent() {
     currentContent,
     donorHistory.data?.knownDonations,
     donorHistory.isLoading,
+    donorRanking.data,
+    donorRanking.isError,
+    donorRanking.isLoading,
     isInvalidAddress,
     tipEdges,
     tips.isLoading,

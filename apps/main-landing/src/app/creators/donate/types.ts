@@ -43,7 +43,8 @@ type DonateContentNames =
   | 'user-tip'
   | 'user-history'
   | 'donor-stats'
-  | 'donor-history';
+  | 'donor-history'
+  | 'donor-ranking';
 
 interface DonateContentValue {
   userDetails?: DonateContentUserDetails;
