@@ -6,7 +6,7 @@ import { useCallback } from 'react';
 
 import { backgroundLines2 } from '@/assets';
 import { TopBar } from '@/components';
-import { useGetCreatorRanking } from '@/app/creators/donate/commands/get-streamer-ranking';
+import { useGetCreatorRanking } from '@/app/creators/donate/commands/get-creator-ranking';
 import { LeaderboardTopDonors } from '@/app/creators/donate/top-donors';
 import { DonateContentValues } from '@/app/creators/donate/types';
 
