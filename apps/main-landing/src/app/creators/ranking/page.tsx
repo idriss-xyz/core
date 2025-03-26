@@ -2,13 +2,13 @@
 /* eslint-disable @next/next/no-img-element */
 import '@rainbow-me/rainbowkit/styles.css';
 
-import { useCallback } from 'react';
+import { Hex } from 'viem';
+import { useRouter } from 'next/navigation';
 
 import { backgroundLines2 } from '@/assets';
 import { TopBar } from '@/components';
 import { useGetCreatorRanking } from '@/app/creators/donate/commands/get-creator-ranking';
 import { LeaderboardTopDonors } from '@/app/creators/donate/top-donors';
-import { DonateContentValues } from '@/app/creators/donate/types';
 
 import { RainbowKitProviders } from '../donate/providers';
 
@@ -22,31 +22,23 @@ export default function Ranking() {
 }
 
 function RankingContent() {
+  const router = useRouter();
   const creatorRanking = useGetCreatorRanking();
 
-  const updateCurrentContent = useCallback(
-    (content: DonateContentValues) => {
-      const userAddress = content.userDetails?.address?.toLowerCase();
+  const onDonorClick = (address: Hex) => {
+    const donateLink = creatorRanking.data?.find((stats) => {
+      return stats.address.toLowerCase() === address.toLowerCase();
+    })?.donateLink;
 
-      if (!userAddress) {
-        return;
-      }
+    if (donateLink) {
+      const url = new URL(donateLink);
+      const parameters = new URLSearchParams(url.search);
 
-      const donateLink = creatorRanking.data?.find((stats) => {
-        return stats.address.toLowerCase() === userAddress.toLowerCase();
-      })?.donateLink;
-
-      if (donateLink) {
-        const url = new URL(donateLink);
-        const parameters = new URLSearchParams(url.search);
-
-        window.open(`/creators/donate?${parameters.toString()}`, '_blank');
-      } else {
-        window.open(`/creators/donate?address=${userAddress}`, '_blank');
-      }
-    },
-    [creatorRanking.data],
-  );
+      router.push(`/creators/donate?${parameters.toString()}`);
+    } else {
+      router.push(`/creators/donate?address=${address}`);
+    }
+  };
 
   return (
     <>
@@ -62,9 +54,9 @@ function RankingContent() {
         <div className="grid grid-cols-1 items-start gap-x-10">
           <LeaderboardTopDonors
             heading="Top creators"
+            onDonorClick={onDonorClick}
             leaderboard={creatorRanking.data ?? []}
             leaderboardError={creatorRanking.isError}
-            updateCurrentContent={updateCurrentContent}
             leaderboardLoading={creatorRanking.isLoading}
             className="container mt-8 w-[360px] max-w-full overflow-hidden px-0 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]"
           />

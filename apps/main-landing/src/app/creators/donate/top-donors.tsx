@@ -1,6 +1,6 @@
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
-import { formatUnits } from 'viem';
+import { formatUnits, Hex } from 'viem';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import {
   CREATORS_DONATE_LINK,
@@ -29,6 +29,7 @@ type Properties = {
   donationUrl?: string | null;
   validatedAddress?: string | null;
   tipEdges: { node: TipHistoryNode }[];
+  onDonorClick?: (address: Hex) => void;
   updateCurrentContent?: (content: DonateContentValues) => void;
 };
 
@@ -41,6 +42,7 @@ export const TopDonors = ({
   className,
   tipsLoading,
   donationUrl,
+  onDonorClick,
   validatedAddress,
   updateCurrentContent,
 }: Properties) => {
@@ -165,10 +167,10 @@ export const TopDonors = ({
                   return (
                     <DonorItem
                       donorRank={index}
+                      onDonorClick={onDonorClick}
                       donorDetails={groupedTip.user}
                       donateAmount={groupedTip.tipsSum}
                       isTwitchExtension={isTwitchExtension}
-                      updateCurrentContent={updateCurrentContent}
                       key={`${groupedTip.tipsSum}${groupedTip.tips[0].node.transaction.hash}`}
                     />
                   );
@@ -194,10 +196,10 @@ export const TopDonors = ({
                   return (
                     <DonorItem
                       donorRank={index}
+                      onDonorClick={onDonorClick}
                       donorDetails={groupedTip.user}
                       donateAmount={groupedTip.tipsSum}
                       isTwitchExtension={isTwitchExtension}
-                      updateCurrentContent={updateCurrentContent}
                       key={`${groupedTip.tipsSum}${groupedTip.tips[0].node.transaction.hash}`}
                     />
                   );
@@ -224,9 +226,9 @@ export const TopDonors = ({
                   return (
                     <DonorItem
                       donorRank={index}
+                      onDonorClick={onDonorClick}
                       donorDetails={groupedTip.user}
                       donateAmount={groupedTip.tipsSum}
-                      updateCurrentContent={updateCurrentContent}
                       key={`${groupedTip.tipsSum}${groupedTip.tips[0].node.transaction.hash}`}
                     />
                   );
@@ -294,17 +296,17 @@ type LeaderboardProperties = {
   className?: string;
   leaderboardError: boolean;
   leaderboardLoading: boolean;
+  onDonorClick: (address: Hex) => void;
   leaderboard: DonorHistoryResponse['leaderboard'];
-  updateCurrentContent?: (content: DonateContentValues) => void;
 };
 
 export const LeaderboardTopDonors = ({
   heading,
   className,
   leaderboard,
+  onDonorClick,
   leaderboardError,
   leaderboardLoading,
-  updateCurrentContent,
 }: LeaderboardProperties) => {
   return (
     <div className={classes(baseClassName, className)}>
@@ -344,9 +346,9 @@ export const LeaderboardTopDonors = ({
                 return (
                   <DonorItem
                     donorRank={index}
+                    onDonorClick={onDonorClick}
                     className="max-w-[344px] py-[23.5px]"
                     donateAmount={leaderboardItem.totalAmount}
-                    updateCurrentContent={updateCurrentContent}
                     donorDetails={leaderboardItem.donorMetadata}
                     key={`${leaderboardItem.address}${leaderboardItem.totalAmount}`}
                   />
