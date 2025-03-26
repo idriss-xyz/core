@@ -4,19 +4,19 @@ import { DonorHistoryResponse } from '@/app/creators/donate/types';
 
 import { CREATOR_API_URL } from '../constants';
 
-const getCreatorRanking = async () => {
-  const receivedHistory = await fetch(`${CREATOR_API_URL}/creator-leaderboard`);
+const getDonorRanking = async () => {
+  const response = await fetch(`${CREATOR_API_URL}/donor-leaderboard`);
 
-  const result = await receivedHistory.json();
+  const result = await response.json();
 
   return result.leaderboard as DonorHistoryResponse['leaderboard'];
 };
 
-export const useGetCreatorRanking = () => {
+export const useGetDonorRanking = () => {
   return useQuery({
-    queryKey: ['creatorRanking'],
+    queryKey: ['donorRanking'],
     queryFn: () => {
-      return getCreatorRanking();
+      return getDonorRanking();
     },
   });
 };

@@ -6,11 +6,11 @@ import { useCallback } from 'react';
 
 import { backgroundLines2 } from '@/assets';
 import { TopBar } from '@/components';
-import { useGetCreatorRanking } from '@/app/creators/donate/commands/get-streamer-ranking';
 import { LeaderboardTopDonors } from '@/app/creators/donate/top-donors';
 import { DonateContentValues } from '@/app/creators/donate/types';
 
-import { RainbowKitProviders } from '../donate/providers';
+import { RainbowKitProviders } from '../../donate/providers';
+import { useGetDonorRanking } from '../../donate/commands/get-donor-ranking';
 
 // ts-unused-exports:disable-next-line
 export default function Ranking() {
@@ -22,7 +22,7 @@ export default function Ranking() {
 }
 
 function RankingContent() {
-  const creatorRanking = useGetCreatorRanking();
+  const donorRanking = useGetDonorRanking();
 
   const updateCurrentContent = useCallback(
     (content: DonateContentValues) => {
@@ -32,7 +32,7 @@ function RankingContent() {
         return;
       }
 
-      const donateLink = creatorRanking.data?.find((stats) => {
+      const donateLink = donorRanking.data?.find((stats) => {
         return stats.address.toLowerCase() === userAddress.toLowerCase();
       })?.donateLink;
 
@@ -45,7 +45,7 @@ function RankingContent() {
         window.open(`/creators/donate?address=${userAddress}`, '_blank');
       }
     },
-    [creatorRanking.data],
+    [donorRanking.data],
   );
 
   return (
@@ -61,11 +61,11 @@ function RankingContent() {
 
         <div className="grid grid-cols-1 items-start gap-x-10">
           <LeaderboardTopDonors
-            heading="Top creators"
-            leaderboard={creatorRanking.data ?? []}
-            leaderboardError={creatorRanking.isError}
+            heading="Top donors"
+            leaderboard={donorRanking.data ?? []}
+            leaderboardError={donorRanking.isError}
             updateCurrentContent={updateCurrentContent}
-            leaderboardLoading={creatorRanking.isLoading}
+            leaderboardLoading={donorRanking.isLoading}
             className="container mt-8 w-[360px] max-w-full overflow-hidden px-0 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]"
           />
         </div>
