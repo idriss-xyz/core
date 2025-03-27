@@ -6,7 +6,6 @@ import {
   parseJupiterSwap,
   parseSwapFromHelius,
 } from '../utils/swapDataParsers';
-import { error } from 'console';
 
 // Function to determine if the swap is complete
 function isCompleteSwap(swapData: SwapData): boolean {
@@ -147,7 +146,7 @@ export async function extractAlchemySwapData(
   return swapData;
 }
 
-export async function extractHeliusSwapData(data: any): Promise<SwapData> {
+export async function extractHeliusSwapData(txHash: string, data: any): Promise<SwapData> {
   const eventData = data as HeliusWebhookEvent;
 
   const isJupiterSwap = eventData.source === 'JUPITER';
@@ -156,8 +155,16 @@ export async function extractHeliusSwapData(data: any): Promise<SwapData> {
     : await parseSwapFromHelius(eventData);
 
   if (result == null) {
-    console.error('Failed to parse swap data from Helius event.');
-    throw error;
+    console.error(`Failed to parse swap data from ${eventData.source}`);
+    return {
+      transactionHash: txHash,
+      from: null,
+      to: null,
+      tokenIn: null,
+      tokenOut: null,
+      timestamp: new Date().toISOString(),
+      isComplete: false,
+    };
   }
   return result;
 }

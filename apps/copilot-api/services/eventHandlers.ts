@@ -34,6 +34,8 @@ export class HeliusEventHandler implements WebhookEventHandler {
         feePayer: event.feePayer,
         timestamp: event.timestamp,
         transactionError: event.transactionError,
+        type: event.type,
+        source: event.source,
       },
       timestamp: event.timestamp,
       type: 'helius',
@@ -41,6 +43,6 @@ export class HeliusEventHandler implements WebhookEventHandler {
   }
 
   extractSwapData(txHash: string, data: any): Promise<SwapData> {
-    return extractHeliusSwapData(data);
+    return extractHeliusSwapData(txHash, data);
   }
 }

@@ -289,7 +289,7 @@ const createNewSolanaWebhook = async (address: string) => {
       `${HELIUS_API_BASE_URL}/v0/webhooks?api-key=${HELIUS_API_KEY}`,
       {
         webhookURL: webhookUrl,
-        transactionTypes: ['SWAP', 'UNKNOWN'],
+        transactionTypes: ['SWAP', 'UNKNOWN', 'TRANSFER'],
         accountAddresses: [address],
         webhookType: 'enhanced',
         authHeader: webhookSecret,
