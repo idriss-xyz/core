@@ -14,11 +14,12 @@ import { default as io } from 'socket.io-client';
 import _ from 'lodash';
 
 import { backgroundLines2 } from '@/assets';
-import { TopBar } from '@/components';
 import { validateAddressOrENS } from '@/app/creators/donate/utils';
 import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
 import DonateHistoryList from '@/app/creators/donate/components/history/donate-history-list';
 import { DonateContentValues } from '@/app/creators/donate/types';
+
+import { TopBar } from '../landing/components/top-bar';
 
 import { TopDonors } from './top-donors';
 import { Content } from './content';

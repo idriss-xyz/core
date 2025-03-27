@@ -6,11 +6,11 @@ import { Hex } from 'viem';
 import { useRouter } from 'next/navigation';
 
 import { backgroundLines2 } from '@/assets';
-import { TopBar } from '@/components';
 import { LeaderboardTopDonors } from '@/app/creators/donate/top-donors';
 
 import { RainbowKitProviders } from '../../donate/providers';
 import { useGetDonorRanking } from '../../donate/commands/get-donor-ranking';
+import { TopBar } from '../../landing/components/top-bar';
 
 // ts-unused-exports:disable-next-line
 export default function Ranking() {
