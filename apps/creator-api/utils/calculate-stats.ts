@@ -49,8 +49,7 @@ export function calculateStatsForDonorAddress(
     totalDonationAmount += tradeValue;
     donationAmounts[toAddress] = (donationAmounts[toAddress] || 0) + tradeValue;
     if (
-      donationAmounts[toAddress] >
-      (donationAmounts[mostDonatedToAddress] || 0)
+      donationAmounts[toAddress] > (donationAmounts[mostDonatedToAddress] || 0)
     ) {
       mostDonatedToAddress = toAddress as Hex;
     }
