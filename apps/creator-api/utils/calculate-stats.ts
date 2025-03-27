@@ -18,7 +18,7 @@ export function calculateStatsForDonorAddress(
 ): DonationStats {
   let totalDonationsCount = 0;
   let totalDonationAmount = 0;
-  const addressFrequency: Record<string, number> = {};
+  const donationAmounts: Record<string, number> = {};
   const tokenFrequency: Record<string, number> = {};
   let biggestDonationAmount = 0;
   let mostDonatedToAddress = '0x' as Hex;
@@ -47,11 +47,10 @@ export function calculateStatsForDonorAddress(
       Number.parseFloat(formatUnits(BigInt(amountRaw), decimals)) * price;
 
     totalDonationAmount += tradeValue;
-
-    addressFrequency[toAddress] = (addressFrequency[toAddress] || 0) + 1;
+    donationAmounts[toAddress] = (donationAmounts[toAddress] || 0) + tradeValue;
     if (
-      addressFrequency[toAddress] >
-      (addressFrequency[mostDonatedToAddress] || 0)
+      donationAmounts[toAddress] >
+      (donationAmounts[mostDonatedToAddress] || 0)
     ) {
       mostDonatedToAddress = toAddress as Hex;
     }
