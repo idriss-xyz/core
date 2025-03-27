@@ -21,6 +21,7 @@ const rankPlaces = ['1st', '2nd', '3rd'];
 type Properties = {
   donorRank: number;
   className?: string;
+  isLastItem?: boolean;
   donateAmount: number;
   isTwitchExtension?: boolean;
   donorDetails: TipHistoryFromUser;
@@ -30,6 +31,7 @@ type Properties = {
 export default function DonorItem({
   donorRank,
   className,
+  isLastItem,
   donorDetails,
   onDonorClick,
   donateAmount,
@@ -110,7 +112,8 @@ export default function DonorItem({
   return (
     <li
       className={classes(
-        'grid grid-cols-[16px,1fr,64px] items-center gap-x-3.5 border-b border-b-neutral-300 px-5.5 py-[17.25px] text-body5',
+        'grid grid-cols-[16px,1fr,64px] items-center gap-x-3.5 border-b px-5.5 py-[17.25px] text-body5',
+        isLastItem ? 'border-b-transparent' : 'border-b-neutral-300',
         className,
       )}
     >
