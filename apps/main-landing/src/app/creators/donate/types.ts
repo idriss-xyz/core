@@ -35,10 +35,6 @@ export interface DonorHistoryResponse {
   leaderboard: DonorLeaderboardStats[];
 }
 
-type DonateContentUserDetails = {
-  address: Hex;
-};
-
 type DonateContentNames =
   | 'user-tip'
   | 'user-history'
@@ -46,7 +42,6 @@ type DonateContentNames =
   | 'donor-history';
 
 interface DonateContentValue {
-  userDetails?: DonateContentUserDetails;
   name: DonateContentNames;
 }
 

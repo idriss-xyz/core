@@ -3,30 +3,28 @@
 import { Button } from '@idriss-xyz/ui/button';
 import {
   CREATORS_LINK,
-  EMPTY_HEX,
   hexSchema,
   TipHistoryNode,
 } from '@idriss-xyz/constants';
 import { Hex, isAddress } from 'viem';
 import '@rainbow-me/rainbowkit/styles.css';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { default as io } from 'socket.io-client';
 import _ from 'lodash';
 
 import { backgroundLines2 } from '@/assets';
-import { TopBar } from '@/components';
 import { validateAddressOrENS } from '@/app/creators/donate/utils';
 import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
 import DonateHistoryList from '@/app/creators/donate/components/history/donate-history-list';
 import { DonateContentValues } from '@/app/creators/donate/types';
-import { useGetDonorHistory } from '@/app/creators/donate/commands/get-donor-history';
+
+import { TopBar } from '../landing/components/top-bar';
 
 import { TopDonors } from './top-donors';
 import { Content } from './content';
 import { RainbowKitProviders } from './providers';
 import { CREATOR_API_URL } from './constants';
-import DonorStatsList from './components/donor-stats/donor-stats-list';
 
 const SEARCH_PARAMETER = {
   ADDRESS: 'address',
@@ -43,6 +41,7 @@ export default function Donors() {
 }
 
 function DonorsContent() {
+  const router = useRouter();
   const [tipEdges, setTipEdges] = useState<{ node: TipHistoryNode }[]>([]);
   const [currentContent, setCurrentContent] = useState<DonateContentValues>({
     name: 'user-tip',
@@ -87,16 +86,18 @@ function DonorsContent() {
     }
   }, [tips.data]);
 
-  const donorHistory = useGetDonorHistory(
-    { address: currentContent.userDetails?.address ?? EMPTY_HEX },
-    { enabled: !!currentContent.userDetails?.address },
-  );
-
   const updateCurrentContent = useCallback((content: DonateContentValues) => {
     setCurrentContent((previous) => {
       return { previous, ...content };
     });
   }, []);
+
+  const onDonorClick = useCallback(
+    (address: Hex) => {
+      router.push(`/creators/donor/${address}`);
+    },
+    [router],
+  );
 
   const currentContentComponent = useMemo(() => {
     switch (currentContent?.name) {
@@ -111,6 +112,7 @@ function DonorsContent() {
             <TopDonors
               tipEdges={tipEdges}
               heading="Top donors"
+              onDonorClick={onDonorClick}
               tipsLoading={tips.isLoading}
               validatedAddress={validatedAddress}
               updateCurrentContent={updateCurrentContent}
@@ -131,40 +133,14 @@ function DonorsContent() {
           />
         );
       }
-      case 'donor-stats': {
-        return (
-          <DonorStatsList
-            currentContent={currentContent}
-            updateCurrentContent={updateCurrentContent}
-          />
-        );
-      }
-      case 'donor-history': {
-        return (
-          <DonateHistoryList
-            tipEdges={
-              donorHistory.data?.knownDonations.map((donation) => {
-                return { node: donation.data };
-              }) ?? []
-            }
-            showReceiver
-            currentContent={currentContent}
-            isInvalidAddress={isInvalidAddress}
-            tipsLoading={donorHistory.isLoading}
-            address={currentContent.userDetails?.address}
-            updateCurrentContent={updateCurrentContent}
-          />
-        );
-      }
       default: {
         return;
       }
     }
   }, [
     currentContent,
-    donorHistory.data?.knownDonations,
-    donorHistory.isLoading,
     isInvalidAddress,
+    onDonorClick,
     tipEdges,
     tips.isLoading,
     updateCurrentContent,
