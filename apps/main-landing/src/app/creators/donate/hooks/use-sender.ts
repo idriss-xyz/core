@@ -1,9 +1,10 @@
-import { useCallback } from 'react';
-import { Hex, WalletClient } from 'viem';
+import { useCallback, useState } from 'react';
+import { createPublicClient, Hex, http, WalletClient } from 'viem';
 import { getSafeNumber, isNativeTokenAddress } from '@idriss-xyz/utils';
-import { CHAIN_ID_TO_TOKENS } from '@idriss-xyz/constants';
+import { CHAIN, CHAIN_ID_TO_TOKENS, EMPTY_HEX } from '@idriss-xyz/constants';
 
 import { SendPayload } from '../schema';
+import { ERC20_ABI } from '../constants';
 
 import { useSwitchChain } from './use-switch-chain';
 import { useGetTokenPerDollar } from './use-get-token-per-dollar';
@@ -15,6 +16,7 @@ type Properties = {
 };
 
 export const useSender = ({ walletClient }: Properties) => {
+  const [haveEnoughBalance, setHaveEnoughBalance] = useState<boolean>(true);
   const switchChain = useSwitchChain();
 
   const getTokenPerDollarMutation = useGetTokenPerDollar();
@@ -29,7 +31,7 @@ export const useSender = ({ walletClient }: Properties) => {
       recipientAddress: Hex;
       sendPayload: SendPayload;
     }) => {
-      if (!walletClient) {
+      if (!walletClient?.account) {
         console.error('walletClient not defined');
         return;
       }
@@ -62,6 +64,28 @@ export const useSender = ({ walletClient }: Properties) => {
       const tokensToSend =
         (valueAsBigNumber * BigInt(10) ** BigInt(tokenToSend?.decimals ?? 0)) /
         BigInt(10) ** BigInt(decimals);
+
+      const publicClient = createPublicClient({
+        chain: Object.values(CHAIN).find((chain) => {
+          return chain.id === sendPayload.chainId;
+        }),
+        transport: http(),
+      });
+
+      const userBalance = await publicClient.readContract({
+        abi: ERC20_ABI,
+        functionName: 'balanceOf',
+        args: [walletClient.account.address],
+        address: tokenToSend?.address ?? EMPTY_HEX,
+      });
+
+      if (tokensToSend > userBalance) {
+        setHaveEnoughBalance(false);
+
+        return;
+      } else {
+        setHaveEnoughBalance(true);
+      }
 
       await switchChain.mutateAsync({
         chainId: sendPayload.chainId,
@@ -99,8 +123,7 @@ export const useSender = ({ walletClient }: Properties) => {
   const isSending =
     switchChain.isPending ||
     nativeTransaction.isPending ||
-    erc20Transaction.isPending ||
-    getTokenPerDollarMutation.isPending;
+    erc20Transaction.isPending;
 
   const isError =
     switchChain.isError ||
@@ -125,12 +148,17 @@ export const useSender = ({ walletClient }: Properties) => {
     nativeTransaction.reset();
     erc20Transaction.reset();
     switchChain.reset();
+    setHaveEnoughBalance(true);
   }, [
     erc20Transaction,
     getTokenPerDollarMutation,
     nativeTransaction,
     switchChain,
   ]);
+
+  const resetBalance = useCallback(() => {
+    setHaveEnoughBalance(true);
+  }, []);
 
   return {
     send,
@@ -141,5 +169,7 @@ export const useSender = ({ walletClient }: Properties) => {
     data,
     tokensToSend,
     reset,
+    haveEnoughBalance,
+    resetBalance,
   };
 };
