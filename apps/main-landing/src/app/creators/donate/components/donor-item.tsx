@@ -3,8 +3,8 @@ import { Link } from '@idriss-xyz/ui/link';
 import { TipHistoryFromUser } from '@idriss-xyz/constants';
 import { getShortWalletHex } from '@idriss-xyz/utils';
 import { classes } from '@idriss-xyz/ui/utils';
+import { Hex } from 'viem';
 
-import { DonateContentValues } from '../../donate/types';
 import { WHITELISTED_URLS } from '../../donate/constants';
 import { useGetAvatarImage } from '../commands/get-avatar-image';
 import { useGetEnsAvatar } from '../commands/get-ens-avatar';
@@ -24,16 +24,16 @@ type Properties = {
   donateAmount: number;
   isTwitchExtension?: boolean;
   donorDetails: TipHistoryFromUser;
-  updateCurrentContent?: (content: DonateContentValues) => void;
+  onDonorClick?: (address: Hex) => void;
 };
 
 export default function DonorItem({
   donorRank,
   className,
   donorDetails,
+  onDonorClick,
   donateAmount,
   isTwitchExtension,
-  updateCurrentContent,
 }: Properties) {
   const imageSource = donorDetails.avatar?.source;
   const potentialENS = useGetEnsName(
@@ -121,18 +121,13 @@ export default function DonorItem({
         <Link
           size="xs"
           onClick={() => {
-            if (updateCurrentContent) {
-              updateCurrentContent({
-                name: 'donor-stats',
-                userDetails: {
-                  address: donorDetails.address,
-                },
-              });
+            if (onDonorClick) {
+              onDonorClick(donorDetails.address);
             }
           }}
           className={classes(
             'overflow-hidden text-ellipsis border-0 text-body5 text-neutral-900 no-underline lg:text-body5',
-            updateCurrentContent && 'cursor-pointer',
+            onDonorClick && 'cursor-pointer',
           )}
         >
           {displayName ?? getShortWalletHex(donorDetails.address)}

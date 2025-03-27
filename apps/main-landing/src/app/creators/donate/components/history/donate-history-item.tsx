@@ -18,8 +18,7 @@ import {
   roundToSignificantFiguresForCopilotTrading,
 } from '@idriss-xyz/utils';
 import { Link } from '@idriss-xyz/ui/link';
-
-import { DonateContentValues } from '@/app/creators/donate/types';
+import { useRouter } from 'next/navigation';
 
 import { useGetEnsAvatar } from '../../commands/get-ens-avatar';
 
@@ -34,14 +33,10 @@ function removeMainnetSuffix(text: string) {
 type Properties = {
   tip: TipHistoryNode;
   showReceiver?: boolean;
-  updateCurrentContent: (content: DonateContentValues) => void;
 };
 
-export default function DonateHistoryItem({
-  tip,
-  showReceiver,
-  updateCurrentContent,
-}: Properties) {
+export default function DonateHistoryItem({ tip, showReceiver }: Properties) {
+  const router = useRouter();
   const tipDetails = tip.interpretation.descriptionDisplayItems[0];
   const tipReceiver = tip.interpretation.descriptionDisplayItems[1]?.account;
   const tipComment = tip.interpretation.descriptionDisplayItems[2];
@@ -119,14 +114,11 @@ export default function DonateHistoryItem({
               <Link
                 size="xs"
                 onClick={() => {
-                  updateCurrentContent({
-                    name: 'donor-stats',
-                    userDetails: {
-                      address: showReceiver
-                        ? (receiverAddress ?? EMPTY_HEX)
-                        : tipperFromAddress,
-                    },
-                  });
+                  if (showReceiver && receiverAddress) {
+                    router.push(`/creators/donor/${receiverAddress}`);
+                  } else {
+                    router.push(`/creators/donor/${tipperFromAddress}`);
+                  }
                 }}
                 className="cursor-pointer border-0 align-middle text-label3 text-neutral-900 no-underline lg:text-label3"
               >

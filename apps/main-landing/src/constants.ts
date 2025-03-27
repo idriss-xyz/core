@@ -8,4 +8,6 @@ export const INTERNAL_LINK = {
 
 export const EXTERNAL_LINK = {
   VAULT: '/vault',
+  TOP_CREATORS: '/creators/ranking',
+  TOP_DONORS: '/creators/donor/ranking',
 };

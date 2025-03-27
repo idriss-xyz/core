@@ -20,10 +20,10 @@ import { isAddress } from 'viem';
 import { normalize } from 'viem/ens';
 
 import { backgroundLines2, backgroundLines3 } from '@/assets';
-import { TopBar } from '@/components';
 
 import { ethereumClient } from './donate/config';
 import { Providers } from './providers';
+import { TopBar } from './landing/components/top-bar';
 
 type FormPayload = {
   name: string;

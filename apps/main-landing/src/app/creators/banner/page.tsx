@@ -8,10 +8,10 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { ANNOUNCEMENT_LINK } from '@idriss-xyz/constants';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 
-import { TopBar } from '@/components';
 import { backgroundLines2, backgroundLines3 } from '@/assets';
 
 import { Providers } from '../providers';
+import { TopBar } from '../landing/components/top-bar';
 
 import {
   banner1,

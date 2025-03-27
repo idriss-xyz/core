@@ -6,11 +6,11 @@ import { Hex } from 'viem';
 import { useRouter } from 'next/navigation';
 
 import { backgroundLines2 } from '@/assets';
-import { useGetCreatorRanking } from '@/app/creators/donate/commands/get-creator-ranking';
 import { LeaderboardTopDonors } from '@/app/creators/donate/top-donors';
 
-import { RainbowKitProviders } from '../donate/providers';
-import { TopBar } from '../landing/components/top-bar';
+import { RainbowKitProviders } from '../../donate/providers';
+import { useGetDonorRanking } from '../../donate/commands/get-donor-ranking';
+import { TopBar } from '../../landing/components/top-bar';
 
 // ts-unused-exports:disable-next-line
 export default function Ranking() {
@@ -23,21 +23,10 @@ export default function Ranking() {
 
 function RankingContent() {
   const router = useRouter();
-  const creatorRanking = useGetCreatorRanking();
+  const donorRanking = useGetDonorRanking();
 
   const onDonorClick = (address: Hex) => {
-    const donateLink = creatorRanking.data?.find((stats) => {
-      return stats.address.toLowerCase() === address.toLowerCase();
-    })?.donateLink;
-
-    if (donateLink) {
-      const url = new URL(donateLink);
-      const parameters = new URLSearchParams(url.search);
-
-      router.push(`/creators/donate?${parameters.toString()}`);
-    } else {
-      router.push(`/creators/donate?address=${address}`);
-    }
+    router.push(`/creators/donor/${address}`);
   };
 
   return (
@@ -53,11 +42,11 @@ function RankingContent() {
 
         <div className="grid grid-cols-1 items-start gap-x-10">
           <LeaderboardTopDonors
-            heading="Top creators"
+            heading="Top donors"
             onDonorClick={onDonorClick}
-            leaderboard={creatorRanking.data ?? []}
-            leaderboardError={creatorRanking.isError}
-            leaderboardLoading={creatorRanking.isLoading}
+            leaderboard={donorRanking.data ?? []}
+            leaderboardError={donorRanking.isError}
+            leaderboardLoading={donorRanking.isLoading}
             className="container mt-8 w-[360px] max-w-full overflow-hidden px-0 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]"
           />
         </div>
