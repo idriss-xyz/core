@@ -374,7 +374,8 @@ export const Content = ({ className, validatedAddress }: Properties) => {
                     )}
                   >
                     <Icon name="AlertCircle" size={12} className="p-px" />
-                    You dont have that much {selectedTokenSymbol}
+                    Not enough {selectedTokenSymbol} in your wallet. Add funds
+                    to continue.
                   </span>
                 )}
               </>
