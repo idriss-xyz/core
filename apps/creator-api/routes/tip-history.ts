@@ -5,14 +5,25 @@ import {
   TipHistoryQuery,
   ZAPPER_API_URL,
 } from '../constants';
+
 import { fetchDonationsByToAddress } from '../db/fetch-known-donations';
-import { TipHistoryVariables, ZapperNode, ZapperResponse } from '../types';
+import {
+  DonationData,
+  TipHistoryResponse,
+  TipHistoryVariables,
+  ZapperNode,
+  ZapperResponse,
+} from '../types';
 import { enrichNodesWithHistoricalPrice } from '../utils/enrich-nodes';
 import { storeToDatabase } from '../db/store-new-donation';
 import dotenv from 'dotenv';
 import { mode } from '../utils/mode';
 import { join } from 'path';
 import { Hex } from 'viem';
+import {
+  calculateGlobalDonorLeaderboard,
+  calculateStatsForDonorAddress,
+} from '../utils/calculate-stats';
 
 const router = Router();
 
@@ -33,20 +44,14 @@ router.post('/', async (req: Request, res: Response) => {
       return;
     }
     const hexAddress = address as Hex;
-
-    const knownDonations = await fetchDonationsByToAddress(hexAddress);
-    const knownDonationMap = new Map<string, ZapperNode>();
+    const knownDonations: DonationData[] =
+      await fetchDonationsByToAddress(hexAddress);
+    const knownDonationMap = new Map<string, DonationData>();
     for (const donation of knownDonations) {
-      if (donation.transactionHash && donation.data) {
-        knownDonationMap.set(
-          donation.transactionHash.toLowerCase(),
-          donation.data,
-        );
-      }
+      knownDonationMap.set(donation.transactionHash.toLowerCase(), donation);
     }
     const knownHashes = new Set(knownDonationMap.keys());
 
-    const allRelevantEdges: { node: ZapperNode }[] = [];
     const newEdges: { node: ZapperNode }[] = [];
     let cursor: string | null = null;
     let hasNextPage = true;
@@ -105,12 +110,8 @@ router.post('/', async (req: Request, res: Response) => {
 
       for (const edge of relevantEdges) {
         const txHash = edge.node.transaction.hash.toLowerCase();
-        if (knownHashes.has(txHash)) {
-          const enriched = knownDonationMap.get(txHash);
-          allRelevantEdges.push({ node: enriched ? enriched : edge.node });
-        } else {
+        if (!knownHashes.has(txHash)) {
           newEdges.push(edge);
-          allRelevantEdges.push(edge);
         }
       }
 
@@ -132,33 +133,26 @@ router.post('/', async (req: Request, res: Response) => {
 
     if (newEdges.length > 0) {
       await enrichNodesWithHistoricalPrice(newEdges);
-      await storeToDatabase(hexAddress, newEdges);
-      for (const edge of newEdges) {
-        knownDonationMap.set(
-          edge.node.transaction.hash.toLowerCase(),
-          edge.node,
-        );
+      const storedDonations = await storeToDatabase(hexAddress, newEdges);
+      for (const donation of storedDonations) {
+        knownDonationMap.set(donation.transactionHash.toLowerCase(), donation);
       }
     }
 
-    const allDonations = [
-      ...allRelevantEdges,
-      ...Array.from(knownDonationMap.values())
-        .filter(
-          (node) =>
-            !allRelevantEdges.some(
-              (edge) =>
-                edge.node.transaction.hash.toLowerCase() ===
-                node.transaction.hash.toLowerCase(),
-            ),
-        )
-        .map((node) => ({ node })),
-    ];
-    const filteredDonations = allDonations.filter(
-      (edge) => edge.node.timestamp >= OLDEST_TRANSACTION_TIMESTAMP,
-    );
+    // Calculate stats directly from knownDonations (already in correct format)
+    const stats = calculateStatsForDonorAddress(knownDonations);
 
-    res.json({ data: filteredDonations });
+    // Get leaderboard data
+    const leaderboard = await calculateGlobalDonorLeaderboard();
+
+    // Return the structured response
+    const response: TipHistoryResponse = {
+      donations: knownDonations,
+      stats,
+      leaderboard,
+    };
+
+    res.json(response);
   } catch (error) {
     console.error('Tip history error:', error);
     res.status(500).json({ error: 'Failed to fetch tip history' });

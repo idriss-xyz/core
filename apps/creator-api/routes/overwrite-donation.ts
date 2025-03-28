@@ -53,17 +53,17 @@ router.post('/', validationRules, async (req: Request, res: Response) => {
       overwrite,
     });
 
-    if (result.newEdges.length > 0) {
+    if (result.donations.length > 0) {
       // Notify connected clients
       const clients = connectedClients.get(address);
       if (clients) {
-        for (const edge of result.newEdges) {
+        for (const donation of result.donations) {
           for (const socket of clients) {
-            socket.emit('newDonation', edge.node);
+            socket.emit('newDonation', donation);
           }
         }
       }
-      res.json({ data: result.newEdges });
+      res.json({ data: result.donations });
     } else {
       res.json({ message: 'No new donations found' });
     }

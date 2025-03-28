@@ -6,7 +6,12 @@ import {
 } from '../../constants';
 import { fetchDonationsByToAddress } from '../../db/fetch-known-donations';
 import { storeToDatabase } from '../../db/store-new-donation';
-import { TipHistoryVariables, ZapperNode, ZapperResponse } from '../../types';
+import {
+  DonationData,
+  TipHistoryVariables,
+  ZapperNode,
+  ZapperResponse,
+} from '../../types';
 import { enrichNodesWithHistoricalPrice } from '../../utils/enrich-nodes';
 
 import dotenv from 'dotenv';
@@ -30,7 +35,7 @@ export async function processAllDonations(options: {
   oldestTransactionTimestamp?: number;
   isSigner?: boolean;
   overwrite: boolean;
-}): Promise<{ newEdges: { node: ZapperNode }[] }> {
+}): Promise<{ donations: DonationData[] }> {
   const {
     address,
     toAddresses = app_addresses,
@@ -105,6 +110,7 @@ export async function processAllDonations(options: {
     cursor = accountsTimeline.pageInfo?.endCursor ?? null;
   }
 
+  let allDonations: DonationData[] = [];
   if (newEdges.length > 0) {
     await enrichNodesWithHistoricalPrice(newEdges);
     const groupedByToAddress: Record<Hex, ZapperNode[]> = newEdges.reduce(
@@ -128,20 +134,21 @@ export async function processAllDonations(options: {
     );
 
     for (const [toAddress, edges] of Object.entries(groupedByToAddress)) {
-      await storeToDatabase(
+      const donations = await storeToDatabase(
         toAddress as Hex,
         edges.map((edge) => ({ node: edge })),
         overwrite,
       );
+      allDonations = allDonations.concat(donations);
     }
   }
 
-  return { newEdges };
+  return { donations: allDonations };
 }
 
 export async function processNewDonations(
   address: Hex,
-): Promise<{ newEdges: { node: ZapperNode }[] }> {
+): Promise<{ storedDonations: DonationData[] }> {
   const knownDonations = await fetchDonationsByToAddress(address);
   const knownHashes = new Set(
     knownDonations.map((d) => d.transactionHash.toLowerCase()),
@@ -220,9 +227,10 @@ export async function processNewDonations(
     cursor = accountsTimeline.pageInfo?.endCursor ?? null;
   }
 
+  let storedDonations: DonationData[] = [];
   if (newEdges.length > 0) {
     await enrichNodesWithHistoricalPrice(newEdges);
-    await storeToDatabase(address, newEdges);
+    storedDonations = await storeToDatabase(address, newEdges);
   }
-  return { newEdges };
+  return { storedDonations };
 }

@@ -13,13 +13,13 @@ import pushDonationRouter from './routes/push-donation';
 import overwriteDonationRouter from './routes/overwrite-donation';
 import refetchDonationRouter from './routes/refetch-donations';
 import cors from 'cors';
-import { AppDataSource } from './db/database';
+import { initializeDatabase } from './db/database';
 
 dotenv.config(
   mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
 );
 
-AppDataSource.initialize()
+initializeDatabase()
   .then(() => console.log('DB connected...'))
   .catch((err) => console.error('Error during DB initialization:', err));
 

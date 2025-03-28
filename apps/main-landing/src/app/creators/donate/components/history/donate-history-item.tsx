@@ -10,7 +10,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
-import { CHAIN, EMPTY_HEX, TipHistoryNode } from '@idriss-xyz/constants';
+import { CHAIN, EMPTY_HEX } from '@idriss-xyz/constants';
 import {
   getShortWalletHex,
   getTimeDifferenceString,
@@ -20,7 +20,7 @@ import {
 import { Link } from '@idriss-xyz/ui/link';
 import { useRouter } from 'next/navigation';
 
-import { useGetEnsAvatar } from '../../commands/get-ens-avatar';
+import { DonationData } from '@/app/creators/donate/types';
 
 function removeMainnetSuffix(text: string) {
   const suffix = '_MAINNET';
@@ -31,62 +31,38 @@ function removeMainnetSuffix(text: string) {
 }
 
 type Properties = {
-  tip: TipHistoryNode;
+  tip: DonationData;
   showReceiver?: boolean;
 };
 
 export default function DonateHistoryItem({ tip, showReceiver }: Properties) {
   const router = useRouter();
-  const tipDetails = tip.interpretation.descriptionDisplayItems[0];
-  const tipReceiver = tip.interpretation.descriptionDisplayItems[1]?.account;
-  const tipComment = tip.interpretation.descriptionDisplayItems[2];
-  const tipperFromAddress = tip.transaction.fromUser.address;
-  const receiverAddress = tipReceiver?.address;
+  const tokenSymbol = tip.token.symbol;
+  const tokenImage = tip.token.imageUrl;
+  const tipReceiver = tip.toUser;
+  const tipComment = tip.comment;
+  const tipperFromAddress = tip.fromAddress;
+  const receiverAddress = tipReceiver.address;
 
   const displayName = showReceiver
-    ? tipReceiver?.displayName?.value
-    : tip.transaction.fromUser.displayName?.value;
-  const nameSource = showReceiver
-    ? tipReceiver?.displayName?.source
-    : tip.transaction.fromUser.displayName?.source;
-  const imageSource = showReceiver
-    ? tipReceiver?.avatar?.source
-    : tip.transaction.fromUser.avatar?.source;
+    ? tipReceiver?.displayName
+    : tip.fromUser.address;
 
-  const ensAvatarQuery = useGetEnsAvatar(
-    { name: displayName ?? '' },
-    { enabled: nameSource === 'ENS' && !!displayName },
-  );
+  const avatarSource = showReceiver
+    ? tipReceiver.avatarUrl
+    : tip.toUser.avatarUrl;
 
-  const farcasterAvatarUrl =
-    imageSource === 'FARCASTER'
-      ? showReceiver
-        ? tipReceiver?.avatar.value?.url
-        : tip.transaction.fromUser.avatar?.value?.url
-      : null;
-
-  const avatarSource = ensAvatarQuery.data ?? farcasterAvatarUrl;
-
-  if (!tipDetails?.amountRaw || !tipDetails.tokenV2?.onchainMarketData?.price) {
-    return;
-  }
-
-  const tradeValue =
-    Number.parseFloat(
-      formatUnits(BigInt(tipDetails.amountRaw), tipDetails.tokenV2?.decimals),
-    ) * tipDetails.tokenV2.onchainMarketData.price;
+  const tradeValue = tip.tradeValue;
 
   const { value: roundedNumber, index: zerosIndex } =
     roundToSignificantFiguresForCopilotTrading(
-      Number.parseFloat(
-        formatUnits(BigInt(tipDetails.amountRaw), tipDetails.tokenV2?.decimals),
-      ),
+      Number.parseFloat(formatUnits(BigInt(tip.amountRaw), tip.token.decimals)),
       2,
     );
 
   const transactionUrls = getTransactionUrls({
     chainId: CHAIN[removeMainnetSuffix(tip.network) as keyof typeof CHAIN].id,
-    transactionHash: tip.transaction.hash,
+    transactionHash: tip.transactionHash,
   });
 
   return (
@@ -140,13 +116,9 @@ export default function DonateHistoryItem({ tip, showReceiver }: Properties) {
                 ) : (
                   roundedNumber
                 )}{' '}
-                {tipDetails.tokenV2.symbol}{' '}
+                {tokenSymbol}{' '}
               </span>
-              <img
-                className="size-6 rounded-full"
-                src={tipDetails.tokenV2.imageUrlV2}
-                alt=""
-              />{' '}
+              <img className="size-6 rounded-full" src={tokenImage} alt="" />{' '}
               <Badge type="success" variant="subtle">
                 $
                 {tradeValue >= 0.01
@@ -161,9 +133,8 @@ export default function DonateHistoryItem({ tip, showReceiver }: Properties) {
 
           <p className="align-middle text-body5 text-neutral-600">
             {tipComment
-              ? tipComment.stringValue !== 'N/A' &&
-                tipComment.stringValue !== ' '
-                ? tipComment.stringValue
+              ? tipComment !== 'N/A' && tipComment !== ' '
+                ? tipComment
                 : null
               : null}
           </p>

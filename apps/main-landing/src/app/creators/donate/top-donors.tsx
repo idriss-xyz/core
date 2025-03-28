@@ -1,13 +1,8 @@
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
-import { formatUnits, Hex } from 'viem';
+import { Hex } from 'viem';
 import { Spinner } from '@idriss-xyz/ui/spinner';
-import {
-  CREATORS_DONATE_LINK,
-  hexSchema,
-  TipHistoryFromUser,
-  TipHistoryNode,
-} from '@idriss-xyz/constants';
+import { CREATORS_DONATE_LINK, hexSchema } from '@idriss-xyz/constants';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { Button } from '@idriss-xyz/ui/button';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
@@ -15,7 +10,12 @@ import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { default as IDRISS_SCENE_STREAM_2 } from '../../../assets/idriss-scene-stream-2.png';
 import { WidgetVariants } from '../../../../../twitch-extension/src/app/types';
 
-import { DonateContentValues, DonorHistoryResponse } from './types';
+import {
+  DonateContentValues,
+  DonationData,
+  DonationUser,
+  DonorHistoryResponse,
+} from './types';
 import {
   default as DonorItem,
   DonorItemPlaceholder,
@@ -28,9 +28,9 @@ type Properties = {
   variant?: WidgetVariants;
   donationUrl?: string | null;
   validatedAddress?: string | null;
-  tipEdges: { node: TipHistoryNode }[];
-  onDonorClick?: (address: Hex) => void;
+  tipEdges: DonationData[];
   updateCurrentContent?: (content: DonateContentValues) => void;
+  onDonorClick?: (address: Hex) => void;
 };
 
 const baseClassName =
@@ -56,34 +56,23 @@ export const TopDonors = ({
   const isTwitchComponent = variant === 'videoComponent';
 
   const groupedTips = tipEdges?.reduce(
-    (accumulator, tip) => {
-      const userAddress = tip.node.transaction.fromUser.address;
-      const user = tip.node.transaction.fromUser;
-      const amountRaw =
-        tip.node.interpretation.descriptionDisplayItems[0]?.amountRaw;
-      const price =
-        tip.node.interpretation.descriptionDisplayItems[0]?.tokenV2
-          ?.onchainMarketData?.price;
-      const decimals =
-        tip.node.interpretation.descriptionDisplayItems[0]?.tokenV2?.decimals ??
-        18;
+    (accumulator, donation) => {
+      const userAddress = donation.fromAddress;
+      const tradeValue = donation.tradeValue;
 
-      if (!amountRaw || !price) {
+      if (!tradeValue) {
         return accumulator;
       }
 
-      const tradeValue =
-        Number.parseFloat(formatUnits(BigInt(amountRaw), decimals)) * price;
-
       if (!accumulator[userAddress]) {
         accumulator[userAddress] = {
-          tips: [] as { node: TipHistoryNode }[],
+          tips: [] as DonationData[],
           tipsSum: 0,
-          user: user,
+          user: donation.fromUser,
         };
       }
 
-      accumulator[userAddress].tips.push(tip);
+      accumulator[userAddress].tips.push(donation);
       accumulator[userAddress].tipsSum += tradeValue;
 
       return accumulator;
@@ -92,8 +81,8 @@ export const TopDonors = ({
       string,
       {
         tipsSum: number;
-        user: TipHistoryFromUser;
-        tips: { node: TipHistoryNode }[];
+        user: DonationUser;
+        tips: DonationData[];
       }
     >,
   );
@@ -171,7 +160,7 @@ export const TopDonors = ({
                       donorDetails={groupedTip.user}
                       donateAmount={groupedTip.tipsSum}
                       isTwitchExtension={isTwitchExtension}
-                      key={`${groupedTip.tipsSum}${groupedTip.tips[0].node.transaction.hash}`}
+                      key={`${groupedTip.tipsSum}${groupedTip.tips[0].transactionHash}`}
                     />
                   );
                 })}
@@ -200,7 +189,7 @@ export const TopDonors = ({
                       donorDetails={groupedTip.user}
                       donateAmount={groupedTip.tipsSum}
                       isTwitchExtension={isTwitchExtension}
-                      key={`${groupedTip.tipsSum}${groupedTip.tips[0].node.transaction.hash}`}
+                      key={`${groupedTip.tipsSum}${groupedTip.tips[0].transactionHash}`}
                     />
                   );
                 })}
@@ -229,7 +218,7 @@ export const TopDonors = ({
                       onDonorClick={onDonorClick}
                       donorDetails={groupedTip.user}
                       donateAmount={groupedTip.tipsSum}
-                      key={`${groupedTip.tipsSum}${groupedTip.tips[0].node.transaction.hash}`}
+                      key={`${groupedTip.tipsSum}${groupedTip.tips[0].transactionHash}`}
                     />
                   );
                 })}
