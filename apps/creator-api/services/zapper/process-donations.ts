@@ -71,11 +71,13 @@ export async function processAllDonations(options: {
     const relevantEdges = currentEdges.filter((edge) => {
       if (edge.node.app?.slug !== 'idriss') return false;
 
-      const descriptionItems = edge.node.interpretation?.descriptionDisplayItems;
+      const descriptionItems =
+        edge.node.interpretation?.descriptionDisplayItems;
       const data = edge.node.transaction.decodedInputV2.data;
 
       // Check if last element of data exists and has value
-      const hasValidData = data.length > 0 && data[data.length - 1].value.length > 0;
+      const hasValidData =
+        data.length > 0 && data[data.length - 1].value.length > 0;
       if (!hasValidData) return false;
 
       // If we have a message (descriptionItems[2]), validate it
@@ -84,7 +86,9 @@ export async function processAllDonations(options: {
         if (descriptionItems[2].stringValue === 'N/A') return false;
 
         // string value is amountRaw (old tagging)
-        if (descriptionItems[2].stringValue === descriptionItems[0]?.amountRaw) {
+        if (
+          descriptionItems[2].stringValue === descriptionItems[0]?.amountRaw
+        ) {
           return false;
         }
       }
@@ -175,11 +179,13 @@ export async function processNewDonations(
     const relevantEdges = currentEdges.filter((edge) => {
       if (edge.node.app?.slug !== 'idriss') return false;
 
-      const descriptionItems = edge.node.interpretation?.descriptionDisplayItems;
+      const descriptionItems =
+        edge.node.interpretation?.descriptionDisplayItems;
       const data = edge.node.transaction.decodedInputV2.data;
 
       // Check if last element of data exists and has value
-      const hasValidData = data.length > 0 && data[data.length - 1].value.length > 0;
+      const hasValidData =
+        data.length > 0 && data[data.length - 1].value.length > 0;
       if (!hasValidData) return false;
 
       // If we have a message (descriptionItems[2]), validate it
@@ -188,7 +194,9 @@ export async function processNewDonations(
         if (descriptionItems[2].stringValue === 'N/A') return false;
 
         // string value is amountRaw (old tagging)
-        if (descriptionItems[2].stringValue === descriptionItems[0]?.amountRaw) {
+        if (
+          descriptionItems[2].stringValue === descriptionItems[0]?.amountRaw
+        ) {
           return false;
         }
       }
