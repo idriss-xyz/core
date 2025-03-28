@@ -10,7 +10,7 @@ import { ProsItem } from './pros-section/pros-item';
 export const ProsSection = () => {
   return (
     <section className="relative">
-      <div className="bg-[linear-gradient(114deg,_#022B1E_34.81%,_#079165_123.57%)] py-10 px-safe lg:py-[80px]">
+      <div className="bg-[linear-gradient(114deg,_#022B1E_34.81%,_#079165_123.57%)] py-10 px-safe lg:py-20">
         <div className="container relative">
           <div className="mb-10 flex w-full flex-col items-center gap-2 lg:mb-20">
             <h2
@@ -35,16 +35,12 @@ export const ProsSection = () => {
             </p>
           </div>
 
-          <div className="mb-10 flex flex-col gap-6 lg:mb-20">
+          <div className="flex flex-col gap-6">
             <div className="relative grid items-center gap-6 rounded-[24px] p-8 lg:grid-cols-[1fr,1fr]">
               <ProsItem
                 iconName="SwitchCamera"
                 heading="More revenue, less fees"
-                description="Traditional payment systems take a significant portion of your
-                  earnings in transaction fees, platform cuts, and currency
-                  conversion charges. With crypto donations via IDRISS, you keep
-                  more of what you earn while providing your supporters with a
-                  seamless, borderless way to contribute."
+                description="Stop losing a significant portion of your earnings to transaction fees and platform cuts. With IDRISS, you keep more of what you earn and offer your supporters a smooth, borderless way to contribute."
                 className="items-start"
                 headingClassName="max-w-[500px] text-heading4 md:text-heading3 lg:text-heading2"
                 descriptionClassName="max-w-[500px]"
@@ -66,9 +62,7 @@ export const ProsSection = () => {
                 <ProsItem
                   iconName="Repeat2"
                   heading="More ways to donate"
-                  description="Let your supporters contribute in the way that suits them
-                    best. Accept payments in various cryptocurrencies without
-                    limitations."
+                  description="Let your supporters contribute in the way that suits them best. Accept payments in a variety of top cryptocurrencies."
                   className="items-start"
                   headingClassName="max-w-[500px] text-heading4 md:text-heading3 lg:text-heading2"
                   descriptionClassName="max-w-[500px]"
@@ -88,9 +82,8 @@ export const ProsSection = () => {
               <div className="relative flex flex-col items-start gap-6 rounded-[24px] p-8">
                 <ProsItem
                   iconName="HandCoins"
-                  heading="A donor leaderboard"
-                  description="Engage your audience with a ranking system that rewards top
-                    supporters and encourages more contributions."
+                  heading="More fun and recognition"
+                  description="Give your fans a reason to show up and give more. With donation alerts and leaderboards you engage and recognize your loyal supporters."
                   className="items-start"
                   headingClassName="max-w-[500px] text-heading4 md:text-heading3 lg:text-heading2"
                   descriptionClassName="max-w-[500px]"
@@ -98,7 +91,7 @@ export const ProsSection = () => {
 
                 <img
                   src={DONORS_LEADERBOARD.src}
-                  className="mx-auto -mb-8 mt-8 w-full max-w-[300px]"
+                  className="mx-auto -mb-8 mt-10 w-full max-w-[300px]"
                   alt=""
                 />
 
@@ -113,28 +106,29 @@ export const ProsSection = () => {
             </div>
           </div>
 
-          <div className="mx-auto grid w-max max-w-full gap-[70px] lg:grid-cols-[auto,auto,auto]">
-            <ProsItem
-              iconName="Governance"
-              heading="Personalization"
-              description="Let your supporters contribute in the way that suits them best.
-                Accept payments in various"
-            />
+          {/* TODO: remove? */}
+          {/*<div className="mx-auto grid w-max max-w-full gap-[70px] lg:grid-cols-[auto,auto,auto]">*/}
+          {/*  <ProsItem*/}
+          {/*    iconName="Governance"*/}
+          {/*    heading="Personalization"*/}
+          {/*    description="Let your supporters contribute in the way that suits them best.*/}
+          {/*      Accept payments in various"*/}
+          {/*  />*/}
 
-            <ProsItem
-              iconName="GlobeIcon"
-              heading="Borderless & instant transactions"
-              description="Receive donations from anywhere in the world without banking
-                restrictions, chargebacks"
-            />
+          {/*  <ProsItem*/}
+          {/*    iconName="GlobeIcon"*/}
+          {/*    heading="Borderless & instant transactions"*/}
+          {/*    description="Receive donations from anywhere in the world without banking*/}
+          {/*      restrictions, chargebacks"*/}
+          {/*  />*/}
 
-            <ProsItem
-              iconName="DollarSign"
-              heading="Full ownership & decentralization"
-              description="No more relying on third-party platforms that can restrict or
-                ban your earnings."
-            />
-          </div>
+          {/*  <ProsItem*/}
+          {/*    iconName="DollarSign"*/}
+          {/*    heading="Full ownership & decentralization"*/}
+          {/*    description="No more relying on third-party platforms that can restrict or*/}
+          {/*      ban your earnings."*/}
+          {/*  />*/}
+          {/*</div>*/}
         </div>
       </div>
     </section>

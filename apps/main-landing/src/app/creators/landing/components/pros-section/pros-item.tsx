@@ -24,8 +24,8 @@ export const ProsItem = ({
   return (
     <div className={classes('flex w-full flex-col', className)}>
       <Icon
-        name={iconName}
         size={32}
+        name={iconName}
         className="size-6 text-mint-400 md:size-8"
       />
 

@@ -91,8 +91,12 @@ export const VideoPlayer = () => {
         >
           <span className="absolute size-full bg-[linear-gradient(113.57deg,_#022B1E_34.81%,_#079165_123.57%)] opacity-75" />
 
-          <span className="block overflow-hidden rounded-full border border-white/25 bg-white/50 p-9 backdrop-blur-[100px]">
-            <Icon size={64} name="Play" className="text-white" />
+          <span className="block overflow-hidden rounded-full border border-white/25 bg-white/50 p-4.5 backdrop-blur-[100px] md:p-9">
+            <Icon
+              size={64}
+              name="Play"
+              className="size-8 text-white md:size-16"
+            />
           </span>
         </div>
       )}

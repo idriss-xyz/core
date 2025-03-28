@@ -21,19 +21,19 @@ export const SupportSection = () => {
                   'lg:text-display3',
                 )}
               >
-                Compatible & Supportive
+                Get Paid Anywhere You Create
               </h2>
 
               <p
                 className={classes(
-                  'text-balance text-center text-body3 text-neutralGreen-900 opacity-70 lg:text-left',
+                  'text-balance text-center text-body4 text-neutralGreen-900 opacity-70 lg:text-left',
+                  'md:text-body3',
                   'lg:text-body2',
-                  '4xl:text-body1',
                 )}
               >
-                Our platform seamlessly integrates with popular streaming
-                services, always staying in line with their guidelines. No
-                matter where you stream, we&#39;re here to support your growth.
+                Stream on Twitch, post on YouTube, create on Kick, or go live on
+                Facebook and other platforms. If you can drop a link, you can
+                start earning with IDRISS.
               </p>
             </div>
 

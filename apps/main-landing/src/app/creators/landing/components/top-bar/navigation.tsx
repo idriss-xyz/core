@@ -1,11 +1,15 @@
 import { Desktop } from './desktop';
 import { Mobile } from './mobile';
 
-export const Navigation = () => {
+type Properties = {
+  hideNavigation?: boolean;
+};
+
+export const Navigation = ({ hideNavigation }: Properties) => {
   return (
     <>
-      <Mobile />
-      <Desktop />
+      <Mobile hideNavigation={hideNavigation} />
+      <Desktop hideNavigation={hideNavigation} />
     </>
   );
 };
