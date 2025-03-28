@@ -71,24 +71,23 @@ export async function processAllDonations(options: {
     const relevantEdges = currentEdges.filter((edge) => {
       if (edge.node.app?.slug !== 'idriss') return false;
 
-      const descriptionItems =
-        edge.node.interpretation?.descriptionDisplayItems;
-
-      // stringValue is undefined
-      if (!descriptionItems?.[2]?.stringValue) return false;
-
-      // stringValue is "N/A"
-      if (descriptionItems[2].stringValue === 'N/A') return false;
+      const descriptionItems = edge.node.interpretation?.descriptionDisplayItems;
+      const data = edge.node.transaction.decodedInputV2.data;
 
       // Check if last element of data exists and has value
-      const data = edge.node.transaction.decodedInputV2.data;
-      if (data.length === 0 || data[data.length - 1].value.length === 0) {
-        return false;
-      }
+      const hasValidData = data.length > 0 && data[data.length - 1].value.length > 0;
+      if (!hasValidData) return false;
 
-      // string value is amountRaw (old tagging)
-      if (descriptionItems[2].stringValue === descriptionItems[0]?.amountRaw)
-        return false;
+      // If we have a message (descriptionItems[2]), validate it
+      if (descriptionItems?.[2]?.stringValue) {
+        // stringValue is "N/A"
+        if (descriptionItems[2].stringValue === 'N/A') return false;
+
+        // string value is amountRaw (old tagging)
+        if (descriptionItems[2].stringValue === descriptionItems[0]?.amountRaw) {
+          return false;
+        }
+      }
 
       return true;
     });
@@ -176,24 +175,23 @@ export async function processNewDonations(
     const relevantEdges = currentEdges.filter((edge) => {
       if (edge.node.app?.slug !== 'idriss') return false;
 
-      const descriptionItems =
-        edge.node.interpretation?.descriptionDisplayItems;
-
-      // stringValue is undefined
-      if (!descriptionItems?.[2]?.stringValue) return false;
-
-      // stringValue is "N/A"
-      if (descriptionItems[2].stringValue === 'N/A') return false;
+      const descriptionItems = edge.node.interpretation?.descriptionDisplayItems;
+      const data = edge.node.transaction.decodedInputV2.data;
 
       // Check if last element of data exists and has value
-      const data = edge.node.transaction.decodedInputV2.data;
-      if (data.length === 0 || data[data.length - 1].value.length === 0) {
-        return false;
-      }
+      const hasValidData = data.length > 0 && data[data.length - 1].value.length > 0;
+      if (!hasValidData) return false;
 
-      // string value is amountRaw (old tagging)
-      if (descriptionItems[2].stringValue === descriptionItems[0]?.amountRaw)
-        return false;
+      // If we have a message (descriptionItems[2]), validate it
+      if (descriptionItems?.[2]?.stringValue) {
+        // stringValue is "N/A"
+        if (descriptionItems[2].stringValue === 'N/A') return false;
+
+        // string value is amountRaw (old tagging)
+        if (descriptionItems[2].stringValue === descriptionItems[0]?.amountRaw) {
+          return false;
+        }
+      }
 
       return true;
     });
