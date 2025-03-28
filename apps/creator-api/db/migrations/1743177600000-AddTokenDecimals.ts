@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class AddTokenDecimals1234567891234 implements MigrationInterface {
+export class AddTokenDecimals1743177600000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     // Add decimals column if it doesn't exist
     await queryRunner.query(`

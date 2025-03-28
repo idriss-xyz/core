@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class AddAmountRaw1234567892345 implements MigrationInterface {
+export class AddAmountRaw1743181200000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     // Add amountRaw column
     await queryRunner.query(`

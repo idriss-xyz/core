@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 import { formatUnits } from 'viem';
 
-export class RestructureDonations1234567890123 implements MigrationInterface {
+export class RestructureDonations1743174000000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
       CREATE TABLE IF NOT EXISTS "users" (
