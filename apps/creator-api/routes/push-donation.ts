@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import express from 'express';
 import { processNewDonations } from '../services/zapper/process-donations';
 import { connectedClients } from '../services/socket-server';
-import { ZapperNode } from '../types';
+import { DonationData } from '../types';
 import { Hex } from 'viem';
 
 const router = express.Router();
@@ -22,15 +22,14 @@ router.post('/', async (req: Request, res: Response) => {
     const hexAddress = address as Hex;
 
     let retries = 0;
-    let newEdges = <{ node: ZapperNode }[]>[];
-
-    await delay(RETRY_INTERVAL);
+    let result = <{ storedDonations: DonationData[] }>(
+      await delay(RETRY_INTERVAL)
+    );
 
     while (retries < MAX_RETRIES) {
-      const result = await processNewDonations(hexAddress);
-      newEdges = result.newEdges;
+      result = await processNewDonations(hexAddress);
 
-      if (newEdges.length > 0) {
+      if (result.storedDonations.length > 0) {
         break;
       }
 
@@ -39,17 +38,17 @@ router.post('/', async (req: Request, res: Response) => {
       await delay(RETRY_INTERVAL);
     }
 
-    if (newEdges.length > 0) {
+    if (result.storedDonations.length > 0) {
       const clients = connectedClients.get(address);
       if (clients) {
-        for (const edge of newEdges) {
+        for (const donation of result.storedDonations) {
           for (const socket of clients) {
-            socket.emit('newDonation', edge.node);
+            socket.emit('newDonation', donation);
           }
         }
       }
 
-      res.json({ data: newEdges });
+      res.json({ data: result.storedDonations });
     } else {
       res.status(200).json({ message: 'No new donations found after retries' });
     }

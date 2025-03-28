@@ -1,5 +1,49 @@
 import { Hex } from 'viem';
 
+interface TokenDisplayItem {
+  network: string;
+  amountRaw: string;
+  tokenV2: TokenV2;
+}
+
+interface DonationUser {
+  address: Hex;
+  displayName?: string;
+  displayNameSource?: string;
+  avatarUrl?: string;
+  avatarSource?: string;
+}
+
+interface DonationToken {
+  address: Hex;
+  symbol: string;
+  imageUrl?: string;
+  network: string;
+  decimals: number;
+}
+
+type StringDisplayItem = {
+  stringValue: string;
+};
+
+interface ActorDisplayItem {
+  account: UserData;
+}
+
+type UserData = {
+  address: Hex;
+  displayName: {
+    value: string;
+    source: string;
+  };
+  avatar: {
+    value: {
+      url: string | undefined;
+    };
+    source: string | undefined;
+  };
+};
+
 export interface TokenV2 {
   symbol: string;
   imageUrlV2?: string;
@@ -21,40 +65,13 @@ export interface DonationStats {
   positionInLeaderboard: number | null;
 }
 
-interface ActorDisplayItem {
-  account: UserData;
-}
-
 export interface LeaderboardStats {
   address: Hex;
-  donorMetadata: UserData;
+  avatarUrl: string;
+  displayName: string;
   totalAmount: number;
   donateLink?: string;
 }
-
-export interface TokenDisplayItem {
-  network: string;
-  amountRaw: string;
-  tokenV2: TokenV2;
-}
-
-type StringDisplayItem = {
-  stringValue: string;
-};
-
-export type UserData = {
-  address: Hex;
-  displayName: {
-    value: string;
-    source: string;
-  };
-  avatar: {
-    value: {
-      url: string | undefined;
-    };
-    source: string | undefined;
-  };
-};
 
 export interface ZapperNode {
   timestamp: number;
@@ -100,4 +117,25 @@ interface AccountsTimeline {
 
 export interface ZapperResponse {
   data: { accountsTimeline: AccountsTimeline };
+}
+
+export interface TipHistoryResponse {
+  donations: DonationData[];
+  stats: DonationStats;
+  leaderboard: LeaderboardStats[];
+}
+
+export interface DonationData {
+  transactionHash: Hex;
+  fromAddress: Hex;
+  toAddress: Hex;
+  timestamp: number;
+  comment?: string;
+  tradeValue: number;
+  tokenAddress: Hex;
+  network: string;
+  fromUser: DonationUser;
+  toUser: DonationUser;
+  token: DonationToken;
+  amountRaw: string;
 }

@@ -65,7 +65,7 @@ router.post('/', validationRules, async (req: Request, res: Response) => {
       overwrite,
     });
 
-    const updatedCount = result.newEdges.length;
+    const updatedCount = result.donations.length;
     res
       .status(200)
       .json({ message: `Successfully updated ${updatedCount} transactions.` });

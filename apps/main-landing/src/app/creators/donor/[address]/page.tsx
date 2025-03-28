@@ -88,11 +88,7 @@ function DonorContent() {
       case 'donor-history': {
         return (
           <DonateHistoryList
-            tipEdges={
-              donorHistory.data?.knownDonations.map((donation) => {
-                return { node: donation.data };
-              }) ?? []
-            }
+            donations={donorHistory.data?.donations ?? []}
             showReceiver
             address={validatedAddress}
             currentContent={currentContent}
@@ -108,7 +104,7 @@ function DonorContent() {
     }
   }, [
     currentContent,
-    donorHistory.data?.knownDonations,
+    donorHistory.data?.donations,
     donorHistory.isLoading,
     isInvalidAddress,
     updateCurrentContent,

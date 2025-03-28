@@ -45,7 +45,7 @@ export default function DonorStatsList({
     { enabled: !!userAddress },
   );
 
-  const mostDonatedTo = donorHistory.data?.stats?.mostDonatedToAddress as Hex;
+  const mostDonatedTo = donorHistory.data?.stats.mostDonatedToAddress;
 
   const mostDonatedToEnsNameQuery = useGetEnsName(
     {
@@ -157,7 +157,7 @@ export default function DonorStatsList({
                       </p>
                       <img
                         className="inline-block size-6 rounded-full"
-                        src={stats.favoriteTokenMetadata.imageUrlV2}
+                        src={stats.favoriteTokenMetadata?.imageUrl}
                         alt=""
                       />
                     </span>

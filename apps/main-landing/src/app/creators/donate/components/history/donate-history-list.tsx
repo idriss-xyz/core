@@ -2,9 +2,8 @@ import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { Icon } from '@idriss-xyz/ui/icon';
-import { TipHistoryNode } from '@idriss-xyz/constants';
 
-import { DonateContentValues } from '@/app/creators/donate/types';
+import { DonateContentValues, DonationData } from '@/app/creators/donate/types';
 
 import DonateHistoryItem from './donate-history-item';
 
@@ -14,20 +13,20 @@ type Properties = {
   isInvalidAddress: boolean;
   address: string | null | undefined;
   currentContent: DonateContentValues;
-  tipEdges: { node: TipHistoryNode }[];
+  donations: DonationData[];
   updateCurrentContent: (content: DonateContentValues) => void;
 };
 export default function DonateHistoryList({
   address,
-  tipEdges,
+  donations,
   tipsLoading,
   showReceiver,
   currentContent,
   isInvalidAddress,
   updateCurrentContent,
 }: Properties) {
-  const sortedTipEdges = [...tipEdges].sort((a, b) => {
-    return b.node.timestamp - a.node.timestamp;
+  const sortedTipEdges = [...donations].sort((a, b) => {
+    return b.timestamp - a.timestamp;
   });
 
   return (
@@ -64,9 +63,9 @@ export default function DonateHistoryList({
               sortedTipEdges.map((tip) => {
                 return (
                   <DonateHistoryItem
-                    tip={tip.node}
+                    tip={tip}
                     showReceiver={showReceiver}
-                    key={tip.node.transaction.hash}
+                    key={tip.transactionHash}
                   />
                 );
               })

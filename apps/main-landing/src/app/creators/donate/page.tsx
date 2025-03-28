@@ -1,11 +1,7 @@
 'use client';
 /* eslint-disable @next/next/no-img-element */
 import { Button } from '@idriss-xyz/ui/button';
-import {
-  CREATORS_LINK,
-  hexSchema,
-  TipHistoryNode,
-} from '@idriss-xyz/constants';
+import { CREATORS_LINK, hexSchema } from '@idriss-xyz/constants';
 import { Hex, isAddress } from 'viem';
 import '@rainbow-me/rainbowkit/styles.css';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -17,7 +13,7 @@ import { backgroundLines2 } from '@/assets';
 import { validateAddressOrENS } from '@/app/creators/donate/utils';
 import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
 import DonateHistoryList from '@/app/creators/donate/components/history/donate-history-list';
-import { DonateContentValues } from '@/app/creators/donate/types';
+import { DonateContentValues, DonationData } from '@/app/creators/donate/types';
 
 import { TopBar } from '../landing/components/top-bar';
 
@@ -42,7 +38,7 @@ export default function Donors() {
 
 function DonorsContent() {
   const router = useRouter();
-  const [tipEdges, setTipEdges] = useState<{ node: TipHistoryNode }[]>([]);
+  const [tipEdges, setTipEdges] = useState<DonationData[]>([]);
   const [currentContent, setCurrentContent] = useState<DonateContentValues>({
     name: 'user-tip',
   });
@@ -82,7 +78,7 @@ function DonorsContent() {
 
   useEffect(() => {
     if (tips.data) {
-      setTipEdges(tips.data.data);
+      setTipEdges(tips.data.donations);
     }
   }, [tips.data]);
 
@@ -124,7 +120,7 @@ function DonorsContent() {
       case 'user-history': {
         return (
           <DonateHistoryList
-            tipEdges={tipEdges}
+            donations={tipEdges}
             address={validatedAddress}
             tipsLoading={tips.isLoading}
             currentContent={currentContent}
@@ -160,12 +156,9 @@ function DonorsContent() {
             setSocketConnected(true);
           }
         });
-
-        socket.on('newDonation', (node: TipHistoryNode) => {
+        socket.on('newDonation', (donation: DonationData) => {
           setTipEdges((previousState) => {
-            return _.uniqBy([{ node }, ...previousState], (item) => {
-              return _.get(item, 'node.transaction.hash');
-            });
+            return _.uniqBy([donation, ...previousState], 'transactionHash');
           });
         });
       }
