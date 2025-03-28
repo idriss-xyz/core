@@ -13,6 +13,7 @@ export {
   getTransactionUrls,
   getSafeNumber,
   getShortWalletHex,
+  getFormattedTimeDifference,
   getTimeDifferenceString,
   isSolanaAddress,
 } from './utils';

@@ -3,7 +3,6 @@ import { isAddress } from 'viem';
 import { MutableRefObject, useRef } from 'react';
 import {
   getShortWalletHex,
-  getTimeDifferenceString,
   roundToSignificantFiguresForCopilotTrading,
   isSolanaAddress,
 } from '@idriss-xyz/utils';
@@ -20,6 +19,7 @@ import { useTradingCopilot } from 'shared/extension';
 import { TokenIcon } from '../../utils';
 
 import { Properties } from './trading-copilot-toast.types';
+import { TimeDifferenceCounter } from '../time-difference-counter';
 
 export const TradingCopilotToast = ({
   toast,
@@ -94,11 +94,11 @@ export const TradingCopilotToast = ({
             <Tooltip>
               <TooltipTrigger asChild>
                 <p className="w-fit text-body6 text-mint-700">
-                  {getTimeDifferenceString({
-                    text: 'ago',
-                    variant: 'short',
-                    timestamp: toast.timestamp,
-                  })}
+                  <TimeDifferenceCounter
+                    timestamp={toast.timestamp}
+                    text="ago"
+                    variant="short"
+                  />
                 </p>
               </TooltipTrigger>
 

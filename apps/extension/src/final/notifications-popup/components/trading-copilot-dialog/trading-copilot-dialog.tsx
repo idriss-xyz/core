@@ -10,7 +10,6 @@ import { Link } from '@idriss-xyz/ui/link';
 import {
   formatBigNumber,
   getShortWalletHex,
-  getTimeDifferenceString,
   roundToSignificantFiguresForCopilotTrading,
   isSolanaAddress,
 } from '@idriss-xyz/utils';
@@ -54,6 +53,7 @@ import {
   WalletBalanceProperties,
   TradeValueProperties,
 } from './trading-copilot-dialog.types';
+import { TimeDifferenceCounter } from '../time-difference-counter';
 
 const EMPTY_FORM: FormValues = {
   amount: '',
@@ -325,11 +325,11 @@ const TradingCopilotDialogContent = ({
             <Tooltip>
               <TooltipTrigger asChild>
                 <p className="w-fit text-body6 text-mint-700">
-                  {getTimeDifferenceString({
-                    text: 'ago',
-                    variant: 'short',
-                    timestamp: dialog.timestamp,
-                  })}
+                  <TimeDifferenceCounter
+                    timestamp={dialog.timestamp}
+                    variant="short"
+                    text="ago"
+                  />
                 </p>
               </TooltipTrigger>
 

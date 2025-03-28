@@ -240,7 +240,7 @@ export const getShortWalletHex = (walletAddress: string) => {
   return `${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}`;
 };
 
-const getFormattedTimeDifference = (
+export const getFormattedTimeDifference = (
   isoTimestamp: string | number,
   variant: 'long' | 'short',
 ) => {
