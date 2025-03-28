@@ -1,7 +1,9 @@
 import { useCallback, useState } from 'react';
-import { createPublicClient, Hex, http, WalletClient } from 'viem';
+import { Hex, WalletClient } from 'viem';
 import { getSafeNumber, isNativeTokenAddress } from '@idriss-xyz/utils';
-import { CHAIN, CHAIN_ID_TO_TOKENS, EMPTY_HEX } from '@idriss-xyz/constants';
+import { CHAIN_ID_TO_TOKENS, EMPTY_HEX } from '@idriss-xyz/constants';
+
+import { clients } from '@/app/creators/obs/constants/blockchain-clients';
 
 import { SendPayload } from '../schema';
 import { ERC20_ABI } from '../constants';
@@ -31,7 +33,7 @@ export const useSender = ({ walletClient }: Properties) => {
       recipientAddress: Hex;
       sendPayload: SendPayload;
     }) => {
-      if (!walletClient?.account) {
+      if (!walletClient?.account?.address) {
         console.error('walletClient not defined');
         return;
       }
@@ -65,32 +67,51 @@ export const useSender = ({ walletClient }: Properties) => {
         (valueAsBigNumber * BigInt(10) ** BigInt(tokenToSend?.decimals ?? 0)) /
         BigInt(10) ** BigInt(decimals);
 
-      const publicClient = createPublicClient({
-        chain: Object.values(CHAIN).find((chain) => {
-          return chain.id === sendPayload.chainId;
-        }),
-        transport: http(),
-      });
-
-      const userBalance = await publicClient.readContract({
-        abi: ERC20_ABI,
-        functionName: 'balanceOf',
-        args: [walletClient.account.address],
-        address: tokenToSend?.address ?? EMPTY_HEX,
-      });
-
-      if (tokensToSend > userBalance) {
-        setHaveEnoughBalance(false);
-
-        return;
-      } else {
-        setHaveEnoughBalance(true);
-      }
+      const isNativeToken = isNativeTokenAddress(sendPayload.tokenAddress);
 
       await switchChain.mutateAsync({
         chainId: sendPayload.chainId,
         walletClient,
       });
+
+      const getUserBalance = async (userAddress: Hex) => {
+        const clientDetails = clients.find((client) => {
+          return client.chain === sendPayload.chainId;
+        });
+
+        if (!clientDetails) {
+          return;
+        }
+
+        const { client } = clientDetails;
+
+        if (isNativeToken) {
+          const userBalance = await client.getBalance({
+            address: userAddress,
+          });
+
+          return userBalance;
+        } else {
+          const userBalance = await client.readContract({
+            abi: ERC20_ABI,
+            functionName: 'balanceOf',
+            args: [userAddress],
+            address: tokenToSend?.address ?? EMPTY_HEX,
+          });
+
+          return userBalance;
+        }
+      };
+
+      const userBalance = await getUserBalance(walletClient.account.address);
+
+      if (userBalance && tokensToSend <= userBalance) {
+        setHaveEnoughBalance(true);
+      } else {
+        setHaveEnoughBalance(false);
+
+        return;
+      }
 
       if (isNativeTokenAddress(sendPayload.tokenAddress)) {
         nativeTransaction.mutate({
@@ -120,10 +141,7 @@ export const useSender = ({ walletClient }: Properties) => {
     ],
   );
 
-  const isSending =
-    switchChain.isPending ||
-    nativeTransaction.isPending ||
-    erc20Transaction.isPending;
+  const isSending = nativeTransaction.isPending || erc20Transaction.isPending;
 
   const isError =
     switchChain.isError ||

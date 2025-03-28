@@ -141,6 +141,8 @@ export const Content = ({ className, validatedAddress }: Properties) => {
     reset(getSendFormDefaultValues(defaultChainId, selectedTokenSymbol));
 
     sender.resetBalance();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defaultChainId, selectedTokenSymbol, reset]);
 
   const [chainId, tokenSymbol, amount] = formMethods.watch([
