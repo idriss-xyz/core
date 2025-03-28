@@ -67,7 +67,6 @@ export default function DonateHistoryList({
                     tip={tip.node}
                     showReceiver={showReceiver}
                     key={tip.node.transaction.hash}
-                    updateCurrentContent={updateCurrentContent}
                   />
                 );
               })

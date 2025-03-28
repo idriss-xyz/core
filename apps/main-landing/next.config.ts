@@ -56,6 +56,11 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: '/donors/ranking',
+        destination: '/creators/donor/ranking',
+        permanent: true,
+      },
+      {
         source: '/streamers',
         destination: '/creators',
         permanent: true,

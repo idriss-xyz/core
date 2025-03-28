@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { EMPTY_HEX, hexSchema } from '@idriss-xyz/constants';
 import { Hex, isAddress } from 'viem';
@@ -9,11 +9,11 @@ import { Hex, isAddress } from 'viem';
 import { validateAddressOrENS } from '@/app/creators/donate/utils';
 import { RainbowKitProviders } from '@/app/creators/donate/providers';
 import { backgroundLines2 } from '@/assets';
-import { DonateContentValues } from '@/app/creators/donate/types';
 import { useGetDonorHistory } from '@/app/creators/donate/commands/get-donor-history';
 
 import DonateHistoryList from '../../donate/components/history/donate-history-list';
 import DonorStatsList from '../../donate/components/donor-stats/donor-stats-list';
+import { DonateContentValues } from '../../donate/types';
 import { TopBar } from '../../landing/components/top-bar';
 
 // ts-unused-exports:disable-next-line
@@ -32,7 +32,6 @@ function DonorContent() {
   const [validatedAddress, setValidatedAddress] = useState<
     string | null | undefined
   >();
-  const router = useRouter();
   const urlParameters = useParams();
 
   const addressFromParameters =
@@ -61,17 +60,11 @@ function DonorContent() {
 
   const updateCurrentContent = useCallback(
     (content: DonateContentValues) => {
-      const userAddress = content.userDetails?.address;
-
-      if (userAddress) {
-        router.push(`/creators/donor/${userAddress}`);
-      }
-
       setCurrentContent((previous) => {
         return { previous, ...content };
       });
     },
-    [router, setCurrentContent],
+    [setCurrentContent],
   );
 
   const isInvalidAddress =
@@ -86,8 +79,6 @@ function DonorContent() {
       case 'donor-stats': {
         return (
           <DonorStatsList
-            isStandalone
-            currentContent={currentContent}
             isInvalidAddress={isInvalidAddress}
             validatedAddress={validatedAddress}
             updateCurrentContent={updateCurrentContent}

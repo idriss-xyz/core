@@ -5,44 +5,40 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { Hex } from 'viem';
 import { getShortWalletHex, removeEthSuffix } from '@idriss-xyz/utils';
 import { Spinner } from '@idriss-xyz/ui/spinner';
-import { IconButton } from '@idriss-xyz/ui/icon-button';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
+import { useRouter } from 'next/navigation';
 
 import { useGetDonorHistory } from '@/app/creators/donate/commands/get-donor-history';
-import { LeaderboardTopDonors } from '@/app/creators/donate/top-donors';
 import { backgroundLines4 } from '@/assets';
 import { useGetEnsAvatar } from '@/app/creators/donate/commands/get-ens-avatar';
 import { useGetEnsName } from '@/app/creators/donate/commands/get-ens-name';
-import { DonateContentValues } from '@/app/creators/donate/types';
+
+import { DonateContentValues } from '../../types';
 
 const baseClassName =
   'z-1 w-[440px] max-w-full rounded-xl bg-mint-100 px-4 pb-9 pt-9 flex flex-col items-center relative container mt-8 overflow-hidden lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]';
 
 type Properties = {
-  isStandalone?: boolean;
   isInvalidAddress?: boolean;
   validatedAddress?: string | null;
-  currentContent: DonateContentValues;
   updateCurrentContent?: (content: DonateContentValues) => void;
 };
 
 export default function DonorStatsList({
-  isStandalone,
-  currentContent,
   isInvalidAddress,
   validatedAddress,
   updateCurrentContent,
 }: Properties) {
-  const userDetails = currentContent.userDetails;
+  const router = useRouter();
   const addressValidationResult = hexSchema.safeParse(validatedAddress);
   const userAddress = addressValidationResult.success
     ? (validatedAddress as Hex)
-    : userDetails?.address;
+    : null;
 
   const donorHistory = useGetDonorHistory(
     { address: userAddress ?? EMPTY_HEX },
@@ -63,23 +59,7 @@ export default function DonorStatsList({
     { enabled: !!mostDonatedToEnsNameQuery.data },
   );
 
-  if (
-    (!userDetails && !isStandalone) ||
-    (!isStandalone && !donorHistory.isLoading && !donorHistory.data)
-  ) {
-    if (updateCurrentContent) {
-      if (currentContent.previous) {
-        updateCurrentContent(currentContent.previous);
-      } else {
-        updateCurrentContent({ name: 'user-tip' });
-      }
-    }
-
-    return;
-  }
-
   const stats = donorHistory.data?.stats;
-  const leaderboard = donorHistory.data?.leaderboard;
 
   return (
     <div className="grid grid-cols-1 items-start gap-x-10 lg:grid-cols-[1fr,auto]">
@@ -91,36 +71,17 @@ export default function DonorStatsList({
           className="pointer-events-none absolute top-0 hidden size-full opacity-100 lg:block"
         />
 
-        <div className="flex w-full items-center gap-x-2">
-          {!isStandalone && (
-            <IconButton
-              asLink
-              size="small"
-              intent="tertiary"
-              iconName="ArrowLeft"
-              className="cursor-pointer"
-              onClick={() => {
-                if (updateCurrentContent) {
-                  updateCurrentContent(
-                    currentContent.previous ?? { name: 'user-tip' },
-                  );
-                }
-              }}
-            />
-          )}
+        <h1 className="self-start text-heading4 text-neutralGreen-900">
+          Donation stats{' '}
+          {(stats?.donorDisplayName ?? userAddress) &&
+            !isInvalidAddress &&
+            ` of ${stats?.donorDisplayName ?? getShortWalletHex(userAddress ?? '')}`}
+        </h1>
 
-          <h1 className="text-heading4 text-neutralGreen-900">
-            Donation stats{' '}
-            {(stats?.donorDisplayName ?? userAddress) &&
-              !isInvalidAddress &&
-              ` of ${stats?.donorDisplayName ?? getShortWalletHex(userAddress ?? '')}`}
-          </h1>
-        </div>
-
-        {!isInvalidAddress &&
-          (donorHistory.isLoading || (!validatedAddress && !!isStandalone)) && (
-            <Spinner className="mx-auto mt-9 size-16 text-mint-600" />
-          )}
+        {(validatedAddress === undefined ||
+          (!isInvalidAddress && donorHistory.isLoading)) && (
+          <Spinner className="mx-auto mt-9 size-16 text-mint-600" />
+        )}
 
         {(donorHistory.isError ||
           (validatedAddress !== undefined &&
@@ -251,7 +212,12 @@ export default function DonorStatsList({
                 )}
 
                 {stats.positionInLeaderboard && (
-                  <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-8 shadow-md">
+                  <div
+                    className="flex cursor-pointer flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-8 shadow-md"
+                    onClick={() => {
+                      router.push('/creators/donor/ranking');
+                    }}
+                  >
                     <p className="text-label5 text-neutral-600">
                       Leaderboard rank
                     </p>
@@ -271,7 +237,6 @@ export default function DonorStatsList({
                       if (updateCurrentContent) {
                         updateCurrentContent({
                           name: 'donor-history',
-                          userDetails: { address: userAddress },
                         });
                       }
                     }}
@@ -284,19 +249,6 @@ export default function DonorStatsList({
             </>
           )}
       </div>
-
-      <LeaderboardTopDonors
-        leaderboard={leaderboard ?? []}
-        updateCurrentContent={updateCurrentContent}
-        leaderboardError={
-          donorHistory.isError ||
-          (validatedAddress !== undefined && !!addressValidationResult.error)
-        }
-        leaderboardLoading={
-          donorHistory.isLoading || (!validatedAddress && !!isStandalone)
-        }
-        className="container mt-8 w-[360px] max-w-full overflow-hidden px-0 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]"
-      />
     </div>
   );
 }
