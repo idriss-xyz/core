@@ -17,7 +17,7 @@ export { YoutubeOutlined } from './youtube-outlined';
 export { Users } from './users';
 export { Verifying } from './verifying';
 export { Head } from './head';
-export { Eth } from './eth';
+export { Eth, EthCircled } from './eth';
 export { Lens } from './lens';
 export { Facebook } from './facebook';
 export { More } from './more';

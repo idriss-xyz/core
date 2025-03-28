@@ -1,11 +1,14 @@
-import { Socials } from '@/components/top-bar/components/desktop/socials';
-
 import { Menu } from './menu';
+import { Socials } from './socials';
 
-export const Desktop = () => {
+type Properties = {
+  hideNavigation?: boolean;
+};
+
+export const Desktop = ({ hideNavigation }: Properties) => {
   return (
     <>
-      <Menu className="hidden md:flex" />
+      {!hideNavigation && <Menu className="hidden md:flex" />}
       <Socials className="hidden md:flex" />
     </>
   );
