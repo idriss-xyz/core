@@ -71,7 +71,6 @@ export const TopDonors = ({
           user: donation.fromUser,
         };
       }
-
       accumulator[userAddress].tips.push(donation);
       accumulator[userAddress].tipsSum += tradeValue;
 

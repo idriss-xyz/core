@@ -15,13 +15,28 @@ export class Donation {
   @Column({ type: 'text', name: 'to_address' })
   toAddress!: Hex;
 
-  @Column({ type: 'bigint' })
+  @Column({
+    type: 'bigint',
+    transformer: {
+      from: (value: string) => Number(value),
+      to: (value: number) => value,
+    },
+  })
   timestamp!: number;
 
   @Column({ type: 'text', nullable: true })
   comment?: string;
 
-  @Column({ type: 'decimal', precision: 36, scale: 18 })
+  @Column({
+    type: 'decimal',
+    name: 'trade_value',
+    precision: 36,
+    scale: 18,
+    transformer: {
+      from: (value: string) => Number(value),
+      to: (value: number) => value,
+    },
+  })
   tradeValue!: number;
 
   @ManyToOne(() => User)

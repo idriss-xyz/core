@@ -9,7 +9,7 @@ export class Token {
   @Column({ type: 'text' })
   symbol!: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text', name: 'image_url', nullable: true })
   imageUrl?: string;
 
   @Column({ type: 'text' })
