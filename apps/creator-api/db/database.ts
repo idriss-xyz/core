@@ -7,9 +7,9 @@ import { DataSource } from 'typeorm';
 import { Donation } from './entities/donations.entity';
 import { User } from './entities/user.entity';
 import { Token } from './entities/token.entity';
-import { RestructureDonations } from './migrations/1-RestructureDonations';
-import { AddTokenDecimals } from './migrations/2-AddTokenDecimals';
-import { AddAmountRaw } from './migrations/3-AddAmountRaw';
+import { RestructureDonations1234567890123 } from './migrations/1-RestructureDonations';
+import { AddTokenDecimals1234567891234 } from './migrations/2-AddTokenDecimals';
+import { AddAmountRaw1234567892345 } from './migrations/3-AddAmountRaw';
 
 dotenv.config(
   mode === 'production' ? {} : { path: join(__dirname, `../.env.${mode}`) },
@@ -20,7 +20,11 @@ export const AppDataSource = new DataSource({
   url: process.env.DATABASE_URL,
   entities: [Donation, Token, User],
   synchronize: false,
-  migrations: [RestructureDonations, AddTokenDecimals, AddAmountRaw],
+  migrations: [
+    RestructureDonations1234567890123,
+    AddTokenDecimals1234567891234,
+    AddAmountRaw1234567892345,
+  ],
 });
 
 export async function initializeDatabase() {
