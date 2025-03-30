@@ -42,6 +42,7 @@ export const CoinmarketcapOutlined = ({ size, className }: Properties) => {
       width={size}
       height={size}
       fill="none"
+      viewBox="0 0 18.5 18.5"
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
