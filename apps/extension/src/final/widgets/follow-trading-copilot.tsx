@@ -13,13 +13,14 @@ import { useWallet } from 'shared/extension';
 import { GetFarcasterVerifiedAddressCommand } from 'shared/farcaster';
 import { useCommandQuery } from 'shared/messaging';
 
-import { useLocationInfo } from '../hooks';
+import { useLocationInfo, useUserWidgets } from '../hooks';
 import { TradingCopilotTooltip } from '../notifications-popup/components/trading-copilot-tooltip';
 
 export const FollowTradingCopilot = () => {
   const { wallet } = useWallet();
   const { isTwitter, isUserPage, username, isWarpcast, isConversation } =
     useLocationInfo();
+  const { widgets } = useUserWidgets();
   const [portal, setPortal] = useState<HTMLDivElement>();
 
   const getFarcasterAddressQuery = useCommandQuery({
@@ -30,7 +31,15 @@ export const FollowTradingCopilot = () => {
     enabled: !!username && isWarpcast,
   });
 
-  const userId = getFarcasterAddressQuery.data?.address;
+  const sendWidgets = widgets.filter((widget) => {
+    return widget.type === 'idrissSend';
+  });
+
+  const twitterUserId = sendWidgets.find((widget) => {
+    return widget.username === username;
+  })?.walletAddress;
+
+  const userId = getFarcasterAddressQuery.data?.address ?? twitterUserId;
 
   const enabledForTwitter = isTwitter && isUserPage && Boolean(username);
 
@@ -109,7 +118,8 @@ export const FollowTradingCopilot = () => {
       !childOfContainerForInjectionOnWarpcast) ||
     !wallet ||
     (!enabledForTwitter && !enabledForWarpcast) ||
-    (enabledForWarpcast && isOwnProfile)
+    (enabledForWarpcast && isOwnProfile) ||
+    !userId
   ) {
     return;
   }
@@ -134,7 +144,7 @@ export const FollowTradingCopilot = () => {
 };
 
 type ContentProperties = {
-  userId?: Hex;
+  userId: Hex;
   wallet: Wallet;
   iconHeight: number;
   className?: string;
@@ -153,8 +163,6 @@ const FollowTradingCopilotContent = ({
       wallet,
     });
 
-  const userAddress = userId ?? wallet.account;
-
   const handleUnsubscribe = (payload: UnsubscribePayload) => {
     return unsubscribe.use(payload);
   };
@@ -164,15 +172,15 @@ const FollowTradingCopilotContent = ({
   };
 
   const isSubscribed = subscriptions.data?.details.some((detail) => {
-    return detail.address.toLowerCase() === userAddress.toLowerCase();
+    return detail.address.toLowerCase() === userId.toLowerCase();
   });
 
   const isButtonDisabled = !isSubscribed && !canSubscribe;
 
   const onClickHandler = async () => {
     await (isSubscribed
-      ? handleUnsubscribe({ address: userAddress })
-      : handleSubscribe({ address: userAddress }));
+      ? handleUnsubscribe({ address: userId })
+      : handleSubscribe({ address: userId }));
   };
 
   const tooltipContent = isButtonDisabled ? (
