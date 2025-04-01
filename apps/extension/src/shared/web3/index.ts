@@ -6,6 +6,13 @@ export {
   NATIVE_SOL_ADDRESS,
 } from './constants';
 export {
+  WalletWindowMessages,
+  SolanaWalletWindowMessages,
+  AuthTokenWindowMessages,
+  TradingCopilotWindowMessages,
+  DeviceIdWindowMessages,
+} from './messages';
+export {
   resolveAddress,
   getWholeNumber,
   dollarToWei,
