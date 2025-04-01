@@ -1,4 +1,4 @@
-import { Connection, PublicKey } from '@solana/web3.js';
+import { Connection, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 
 import {
   Command,
@@ -25,7 +25,7 @@ export class GetSolanaBalanceCommand extends Command<Payload, string | null> {
       const result = await connection.getBalance(
         new PublicKey(this.payload.address),
       );
-      const balanceAsSol = (result / 1_000_000_000).toString();
+      const balanceAsSol = (result / LAMPORTS_PER_SOL).toString();
 
       return new OkResult(balanceAsSol);
     } catch (error) {
