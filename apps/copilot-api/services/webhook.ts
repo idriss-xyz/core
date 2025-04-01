@@ -146,7 +146,10 @@ export async function extractAlchemySwapData(
   return swapData;
 }
 
-export async function extractHeliusSwapData(txHash: string, data: any): Promise<SwapData> {
+export async function extractHeliusSwapData(
+  txHash: string,
+  data: any,
+): Promise<SwapData> {
   const eventData = data as HeliusWebhookEvent;
 
   const isJupiterSwap = eventData.source === 'JUPITER';

@@ -292,7 +292,7 @@ export const isSolanaAddress = (address: string): boolean => {
   } catch {
     return false;
   }
-}
+};
 
 export const removeEthSuffix = (name: string) => {
   if (name.endsWith('.eth')) {
