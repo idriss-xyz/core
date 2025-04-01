@@ -17,9 +17,9 @@ import { Icon, PreloadedImage } from 'shared/ui';
 import { useTradingCopilot } from 'shared/extension';
 
 import { TokenIcon } from '../../utils';
+import { TimeDifferenceCounter } from '../time-difference-counter';
 
 import { Properties } from './trading-copilot-toast.types';
-import { TimeDifferenceCounter } from '../time-difference-counter';
 
 export const TradingCopilotToast = ({
   toast,

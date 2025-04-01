@@ -22,7 +22,7 @@ export const TimeDifferenceCounter = ({
     return () => {
       return clearInterval(interval);
     };
-  }, [timestamp]);
+  }, [timestamp, variant]);
 
   return text ? `${timeDifference} ${text}` : timeDifference;
 };

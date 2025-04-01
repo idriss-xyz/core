@@ -47,13 +47,13 @@ import {
 import { IdrissSend } from 'shared/idriss';
 
 import { TokenIcon } from '../../utils';
+import { TimeDifferenceCounter } from '../time-difference-counter';
 
 import {
   Properties,
   WalletBalanceProperties,
   TradeValueProperties,
 } from './trading-copilot-dialog.types';
-import { TimeDifferenceCounter } from '../time-difference-counter';
 
 const EMPTY_FORM: FormValues = {
   amount: '',
