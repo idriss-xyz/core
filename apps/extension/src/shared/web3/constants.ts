@@ -67,6 +67,8 @@ export const CHAIN = Object.assign(SHARED_CHAIN, {
       default: { name: 'BS Scan', url: 'https://bscscan.com' },
     },
   },
+  // The following chain object is what Li.Fi uses to get quotes for Solana trades.
+  // Not to be used on other parts of the app as it's not a real EVM chain.
   SOLANA: {
     id: 1_151_111_081_099_710,
     name: 'Solana',

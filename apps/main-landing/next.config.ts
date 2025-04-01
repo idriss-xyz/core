@@ -154,7 +154,7 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/tokenomics',
-        destination: 'https://docs.idriss.xyz/idriss-token',
+        destination: 'https://docs.idriss.xyz/idriss-token/tokenomics',
         basePath: false,
         permanent: false,
       },
