@@ -11,7 +11,7 @@ import {
   SubscriptionsResponse as Response,
 } from '../types';
 
-import { COPILOT_API_URL } from './constants';
+import { COPILOT_API_URL } from '@idriss-xyz/constants';
 
 export class GetTradingCopilotSubscriptionsCommand extends Command<
   Payload,

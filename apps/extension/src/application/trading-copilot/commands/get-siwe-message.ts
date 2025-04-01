@@ -11,7 +11,7 @@ import {
   SiweMessageResponse as Response,
 } from '../types';
 
-import { COPILOT_API_URL } from './constants';
+import { COPILOT_API_URL } from '@idriss-xyz/constants';
 
 export class GetSiweMessageCommand extends Command<Payload, Response> {
   public readonly name = 'GetSiweMessageCommand' as const;

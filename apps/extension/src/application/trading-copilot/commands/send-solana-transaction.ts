@@ -11,7 +11,7 @@ import {
   SendSolanaTxPayload as Payload,
 } from '../types';
 
-import { COPILOT_API_URL } from './constants';
+import { COPILOT_API_URL } from '@idriss-xyz/constants';
 
 export class SendSolanaTransactionCommand extends Command<Payload, Response> {
   public readonly name = 'SendSolanaTransactionCommand' as const;

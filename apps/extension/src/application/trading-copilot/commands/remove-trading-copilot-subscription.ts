@@ -8,7 +8,7 @@ import {
 
 import { UnsubscribeCommandPayload as Payload } from '../types';
 
-import { COPILOT_API_URL } from './constants';
+import { COPILOT_API_URL } from '@idriss-xyz/constants';
 
 type Response = boolean;
 

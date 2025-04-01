@@ -41,6 +41,8 @@ import {
 import { SbtResolver } from '../../common/resolvers/SbtResolver';
 import { AddressResolver } from '../../common/resolvers/AddressResolver';
 
+import { COPILOT_API_URL } from '@idriss-xyz/constants';
+
 const COMMAND_MAP = {
   ...WEB3_COMMAND_MAP,
   ...OBESRVABILITY_COMMAND_MAP,
@@ -58,8 +60,6 @@ const COMMAND_MAP = {
   ...TRADING_COPILOT_COMMAND_MAP,
 };
 
-const SERVER_URL = 'https://copilot-staging.up.railway.app/';
-
 export class ServiceWorker {
   private observabilityScope: ObservabilityScope =
     createObservabilityScope('service-worker');
@@ -67,7 +67,7 @@ export class ServiceWorker {
   private socket: ReturnType<typeof io>;
 
   private constructor(private environment: typeof chrome) {
-    this.socket = io(SERVER_URL, { transports: ['websocket'] });
+    this.socket = io(COPILOT_API_URL, { transports: ['websocket'] });
     console.log('%c[WebSocket] Creating socket connection', 'color: #FF9900;');
     void this.initializeSocketEvents();
   }
