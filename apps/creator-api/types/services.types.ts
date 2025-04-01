@@ -58,6 +58,7 @@ export interface DonationStats {
   totalDonationsCount: number;
   totalDonationAmount: number;
   mostDonatedToAddress: Hex;
+  mostDonatedToUser: DonationUser;
   biggestDonationAmount: number;
   favoriteDonationToken: string;
   favoriteTokenMetadata: Omit<TokenV2, 'onchainMarketData'> | null;

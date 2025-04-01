@@ -4,6 +4,7 @@ interface DonorHistoryStats {
   totalDonationsCount: number;
   totalDonationAmount: number;
   mostDonatedToAddress: Hex;
+  mostDonatedToUser: DonationUser;
   biggestDonationAmount: number;
   favoriteDonationToken: string;
   donorDisplayName: string | null;

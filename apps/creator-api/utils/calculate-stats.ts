@@ -20,6 +20,13 @@ export function calculateStatsForDonorAddress(
   const tokenFrequency: Record<string, number> = {};
   let biggestDonationAmount = 0;
   let mostDonatedToAddress = '0x' as Hex;
+  let mostDonatedToUser: DonationData['toUser'] = {
+    address: '0x' as Hex,
+    displayName: undefined,
+    displayNameSource: undefined,
+    avatarUrl: undefined,
+    avatarSource: undefined,
+  };
   let favoriteDonationToken = '';
   let favoriteTokenMetadata: Omit<TokenV2, 'onchainMarketData'> | null = null;
   let donorDisplayName: string | null = null;
@@ -35,6 +42,7 @@ export function calculateStatsForDonorAddress(
       donationAmounts[toAddress] > (donationAmounts[mostDonatedToAddress] || 0)
     ) {
       mostDonatedToAddress = toAddress as Hex;
+      mostDonatedToUser = donation.toUser;
     }
 
     const tokenSymbol = donation.token.symbol;
@@ -65,6 +73,7 @@ export function calculateStatsForDonorAddress(
     totalDonationsCount,
     totalDonationAmount,
     mostDonatedToAddress,
+    mostDonatedToUser,
     biggestDonationAmount,
     favoriteDonationToken,
     favoriteTokenMetadata,

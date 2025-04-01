@@ -678,7 +678,6 @@ export const CHAIN_TO_IDRISS_TIPPING_ADDRESS = {
 
 export const CREATOR_API_URL = 'http://localhost:4000';
 export const IDRISS_LEGACY_API_URL = 'https://api.idriss.xyz';
-export const IDRISS_BASE_URL = 'https://idriss.xyz';
 
 export const WHITELISTED_URLS = [
   'https://ik.imagekit.io/lens/media-snapshot',
