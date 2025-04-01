@@ -55,7 +55,7 @@ export class GetConditionIdCommand extends Command<Payload, string> {
 
       if (!apiEventQuery) {
         throw new HandlerError(
-          'Could not find copilot-api event query in page properties',
+          'Could not find api event query in page properties',
         );
       }
 
