@@ -2,7 +2,6 @@ import { COPILOT_API_URL } from '@idriss-xyz/constants';
 
 import { Command, OkResult } from 'shared/messaging';
 
-
 type Payload = {
   token: string;
 };
