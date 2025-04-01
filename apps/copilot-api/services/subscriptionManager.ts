@@ -106,7 +106,7 @@ const saveWebhookToDb = async (
     chainType: chainType,
     signing_key: signingKey,
   });
-  await transaction.save(AddressesEntity, {
+  await transaction.save(AddressWebhookMapEntity, {
     address,
     webhook_internal_id: internalWebhookId,
   });
@@ -119,8 +119,8 @@ const addAddressToWebhook = async (
   const chainType = isAddress(address)
     ? WEBHOOK_NETWORK_TYPES.EVM
     : WEBHOOK_NETWORK_TYPES.SOLANA;
-  const res = await webhooksRepo
-    .createQueryBuilder('webhooks')
+  const res = await transaction
+    .createQueryBuilder(WebhookEntity, 'webhooks')
     .select([
       'webhooks.internal_id',
       'webhooks.webhook_id',
@@ -141,7 +141,8 @@ const addAddressToWebhook = async (
     })
     .limit(1)
     .getRawOne();
-
+    console.log('Res is:')
+    console.log(res);
   if (!res) {
     if (chainType === WEBHOOK_NETWORK_TYPES.EVM) {
       const webhooks = await createNewWebhook(address);
