@@ -141,8 +141,7 @@ const addAddressToWebhook = async (
     })
     .limit(1)
     .getRawOne();
-    console.log('Res is:')
-    console.log(res);
+
   if (!res) {
     if (chainType === WEBHOOK_NETWORK_TYPES.EVM) {
       const webhooks = await createNewWebhook(address);
