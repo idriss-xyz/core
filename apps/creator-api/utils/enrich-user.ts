@@ -13,6 +13,10 @@ export async function enrichUserWithEns(userData: {
   avatarUrl?: string;
   avatarSource?: string;
 }) {
+  if (userData.avatarSource && userData.avatarSource === 'OPEPENS') {
+    userData.avatarUrl = undefined;
+  }
+
   if (userData.displayNameSource === 'ADDRESS') {
     try {
       const ensName = await publicClient.getEnsName({

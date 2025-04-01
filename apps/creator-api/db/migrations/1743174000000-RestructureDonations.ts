@@ -1,8 +1,24 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
-import { formatUnits } from 'viem';
+
+import { formatUnits, createPublicClient, http, Hex } from 'viem';
+import { mainnet } from 'viem/chains';
 
 export class RestructureDonations1743174000000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
+    const client = createPublicClient({
+      chain: mainnet,
+      transport: http(),
+    });
+    const userLatestData = new Map<
+      string,
+      {
+        displayName?: string;
+        displayNameSource?: string;
+        avatarUrl?: string;
+        avatarSource?: string;
+        timestamp: number;
+      }
+    >();
     await queryRunner.query(`
       CREATE TABLE IF NOT EXISTS "users" (
         "address" text PRIMARY KEY,
@@ -42,9 +58,95 @@ export class RestructureDonations1743174000000 implements MigrationInterface {
     `);
 
     const donations = await queryRunner.query(
-      `SELECT * FROM "creator_donations"`,
+      `SELECT * FROM "creator_donations" ORDER BY data->>'timestamp' DESC`,
     );
 
+    const processUser = async (user: any, timestamp: number) => {
+      if (!user?.address) return;
+
+      const address = user.address.toLowerCase();
+
+      // Only update if this is the most recent transaction for this user
+      const existing = userLatestData.get(address);
+      if (existing && existing.timestamp > timestamp) return;
+
+      let displayName = user.displayName?.value;
+      let displayNameSource = user.displayName?.source;
+      let avatarUrl = user.avatar?.value?.url;
+      let avatarSource = user.avatar?.source;
+
+      if (avatarSource === 'OPEPENS') {
+        avatarUrl = undefined;
+      }
+
+      // If display name source is 'ADDRESS', try ENS resolution
+      if (displayNameSource === 'ADDRESS') {
+        try {
+          const ensName = await client.getEnsName({
+            address: address as `0x${string}`,
+          });
+
+          if (ensName) {
+            displayName = ensName;
+            displayNameSource = 'ENS';
+          }
+        } catch (error) {
+          console.error(`ENS resolution failed for ${address}:`, error);
+        }
+      }
+      if (displayNameSource === 'ENS') {
+        // Try to get ENS avatar
+        const avatarUri = await client.getEnsAvatar({ name: displayName });
+        if (avatarUri) {
+          avatarUrl = avatarUri;
+          avatarSource = 'ENS';
+        }
+      }
+
+      userLatestData.set(address, {
+        displayName,
+        displayNameSource,
+        avatarUrl,
+        avatarSource,
+        timestamp,
+      });
+    };
+
+    // First pass: Process all users
+    for (const donation of donations) {
+      const data = donation.data;
+      if (!data) continue;
+
+      const fromUser = data.transaction?.fromUser;
+      const toUser = data.interpretation?.descriptionDisplayItems?.[1]?.account;
+
+      await processUser(fromUser, data.timestamp);
+      await processUser(toUser, data.timestamp);
+    }
+
+    // Insert all users before handling donations
+    for (const [address, userData] of userLatestData.entries()) {
+      await queryRunner.query(
+        `
+        INSERT INTO "users" (address, display_name, display_name_source, avatar_url, avatar_source)
+        VALUES ($1, $2, $3, $4, $5)
+        ON CONFLICT (address) DO UPDATE
+        SET display_name = EXCLUDED.display_name,
+            display_name_source = EXCLUDED.display_name_source,
+            avatar_url = EXCLUDED.avatar_url,
+            avatar_source = EXCLUDED.avatar_source
+        `,
+        [
+          address,
+          userData.displayName,
+          userData.displayNameSource,
+          userData.avatarUrl,
+          userData.avatarSource,
+        ],
+      );
+    }
+
+    // Second pass: Process tokens and donations
     for (const donation of donations) {
       const data = donation.data;
       if (!data) continue;
@@ -52,48 +154,6 @@ export class RestructureDonations1743174000000 implements MigrationInterface {
       const fromUser = data.transaction?.fromUser;
       const toUser = data.interpretation?.descriptionDisplayItems?.[1]?.account;
       const token = data.interpretation?.descriptionDisplayItems?.[0]?.tokenV2;
-
-      if (fromUser?.address) {
-        await queryRunner.query(
-          `
-          INSERT INTO "users" (address, display_name, display_name_source, avatar_url, avatar_source)
-          VALUES ($1, $2, $3, $4, $5)
-          ON CONFLICT (address) DO UPDATE
-          SET display_name = EXCLUDED.display_name,
-              display_name_source = EXCLUDED.display_name_source,
-              avatar_url = EXCLUDED.avatar_url,
-              avatar_source = EXCLUDED.avatar_source
-        `,
-          [
-            fromUser.address.toLowerCase(),
-            fromUser.displayName?.value,
-            fromUser.displayName?.source,
-            fromUser.avatar?.value?.url,
-            fromUser.avatar?.source,
-          ],
-        );
-      }
-
-      if (toUser?.address) {
-        await queryRunner.query(
-          `
-          INSERT INTO "users" (address, display_name, display_name_source, avatar_url, avatar_source)
-          VALUES ($1, $2, $3, $4, $5)
-          ON CONFLICT (address) DO UPDATE
-          SET display_name = EXCLUDED.display_name,
-              display_name_source = EXCLUDED.display_name_source,
-              avatar_url = EXCLUDED.avatar_url,
-              avatar_source = EXCLUDED.avatar_source
-        `,
-          [
-            toUser.address.toLowerCase(),
-            toUser.displayName?.value,
-            toUser.displayName?.source,
-            toUser.avatar?.value?.url,
-            toUser.avatar?.source,
-          ],
-        );
-      }
 
       if (token?.address) {
         await queryRunner.query(
@@ -168,7 +228,6 @@ export class RestructureDonations1743174000000 implements MigrationInterface {
       DROP CONSTRAINT IF EXISTS "fk_token"
     `);
 
-    await queryRunner.query(`DROP TABLE IF EXISTS "creator_donations"`);
     await queryRunner.query(`DROP TABLE IF EXISTS "tokens"`);
     await queryRunner.query(`DROP TABLE IF EXISTS "users"`);
   }

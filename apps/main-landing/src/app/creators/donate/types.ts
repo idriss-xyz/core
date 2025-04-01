@@ -16,11 +16,15 @@ interface DonorHistoryStats {
   } | null;
 }
 
-interface DonorLeaderboardStats {
-  address: Hex;
+export interface LeaderboardStats extends DonationUser {
   totalAmount: number;
   donateLink?: string;
-  donorMetadata: DonationUser;
+}
+
+export interface DonationUser {
+  address: Hex;
+  displayName?: string;
+  avatarUrl?: string;
 }
 
 type DonateContentNames =
@@ -44,19 +48,10 @@ interface DonationToken {
 export interface DonorHistoryResponse {
   donations: DonationData[];
   stats: DonorHistoryStats;
-  leaderboard: DonorLeaderboardStats[];
 }
 
 export interface DonateContentValues extends DonateContentValue {
   previous?: DonateContentValue;
-}
-
-export interface DonationUser {
-  address: Hex;
-  displayName?: string;
-  displayNameSource?: string;
-  avatarUrl?: string;
-  avatarSource?: string;
 }
 
 export interface DonationData {

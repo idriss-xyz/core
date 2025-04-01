@@ -46,11 +46,11 @@ export default function DonateHistoryItem({ tip, showReceiver }: Properties) {
 
   const displayName = showReceiver
     ? tipReceiver?.displayName
-    : tip.fromUser.address;
+    : tip.fromUser.displayName;
 
   const avatarSource = showReceiver
     ? tipReceiver.avatarUrl
-    : tip.toUser.avatarUrl;
+    : tip.fromUser.avatarUrl;
 
   const tradeValue = tip.tradeValue;
 

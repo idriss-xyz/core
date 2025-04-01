@@ -11,10 +11,10 @@ import { default as IDRISS_SCENE_STREAM_2 } from '../../../assets/idriss-scene-s
 import { WidgetVariants } from '../../../../../twitch-extension/src/app/types';
 
 import {
+  LeaderboardStats,
   DonateContentValues,
   DonationData,
   DonationUser,
-  DonorHistoryResponse,
 } from './types';
 import {
   default as DonorItem,
@@ -285,7 +285,7 @@ type LeaderboardProperties = {
   leaderboardError: boolean;
   leaderboardLoading: boolean;
   onDonorClick: (address: Hex) => void;
-  leaderboard: DonorHistoryResponse['leaderboard'];
+  leaderboard: LeaderboardStats[];
 };
 
 export const LeaderboardTopDonors = ({
@@ -330,14 +330,17 @@ export const LeaderboardTopDonors = ({
             <ul className="flex flex-col pr-4">
               {leaderboard.map((leaderboardItem, index) => {
                 if (!leaderboardItem || index > 9) return null;
-
                 return (
                   <DonorItem
                     donorRank={index}
                     onDonorClick={onDonorClick}
                     className="max-w-[344px] py-[23.5px]"
                     donateAmount={leaderboardItem.totalAmount}
-                    donorDetails={leaderboardItem.donorMetadata}
+                    donorDetails={{
+                      address: leaderboardItem.address,
+                      displayName: leaderboardItem.displayName,
+                      avatarUrl: leaderboardItem.avatarUrl,
+                    }}
                     key={`${leaderboardItem.address}${leaderboardItem.totalAmount}`}
                   />
                 );
