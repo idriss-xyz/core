@@ -7,7 +7,7 @@ import {
   AuthTokenWindowMessages,
   SolanaWalletWindowMessages,
   TradingCopilotWindowMessages,
-  WalletWindowMessages
+  WalletWindowMessages,
 } from './messages';
 
 type StoredToastSoundState = boolean | undefined;

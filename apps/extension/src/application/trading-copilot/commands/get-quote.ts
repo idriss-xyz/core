@@ -10,7 +10,6 @@ import {
 
 import { QuoteResponse as Response, QuotePayload as Payload } from '../types';
 
-
 export class GetQuoteCommand extends Command<Payload, Response> {
   public readonly name = 'GetQuoteCommand' as const;
 

@@ -10,7 +10,6 @@ import {
 
 import { SubscribeCommandPayload as Payload } from '../types';
 
-
 type Response = boolean;
 
 export class AddTradingCopilotSubscriptionCommand extends Command<

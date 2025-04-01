@@ -13,7 +13,6 @@ import {
   SendSolanaTxPayload as Payload,
 } from '../types';
 
-
 export class SendSolanaTransactionCommand extends Command<Payload, Response> {
   public readonly name = 'SendSolanaTransactionCommand' as const;
 

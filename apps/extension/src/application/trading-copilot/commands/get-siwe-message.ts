@@ -13,7 +13,6 @@ import {
   SiweMessageResponse as Response,
 } from '../types';
 
-
 export class GetSiweMessageCommand extends Command<Payload, Response> {
   public readonly name = 'GetSiweMessageCommand' as const;
 

@@ -10,7 +10,6 @@ import {
 
 import { UnsubscribeCommandPayload as Payload } from '../types';
 
-
 type Response = boolean;
 
 export class RemoveTradingCopilotSubscriptionCommand extends Command<

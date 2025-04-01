@@ -13,7 +13,6 @@ import {
   VerifySiweSignatureResponse as Response,
 } from '../types';
 
-
 export class VerifySiweSignatureCommand extends Command<Payload, Response> {
   public readonly name = 'VerifySiweSignatureCommand' as const;
 

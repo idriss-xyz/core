@@ -13,7 +13,6 @@ import {
   SubscriptionsResponse as Response,
 } from '../types';
 
-
 export class GetTradingCopilotSubscriptionsCommand extends Command<
   Payload,
   Response

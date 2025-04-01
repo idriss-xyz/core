@@ -42,7 +42,6 @@ import {
 import { SbtResolver } from '../../common/resolvers/SbtResolver';
 import { AddressResolver } from '../../common/resolvers/AddressResolver';
 
-
 const COMMAND_MAP = {
   ...WEB3_COMMAND_MAP,
   ...OBESRVABILITY_COMMAND_MAP,

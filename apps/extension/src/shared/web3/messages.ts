@@ -1,4 +1,3 @@
-
 export enum WalletWindowMessages {
   GET_WALLET = 'GET_WALLET',
   GET_WALLET_RESPONSE = 'GET_WALLET_RESPONSE',

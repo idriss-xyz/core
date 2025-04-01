@@ -28,7 +28,7 @@ import {
   DeviceIdWindowMessages,
   SolanaWalletWindowMessages,
   TradingCopilotWindowMessages,
-  WalletWindowMessages
+  WalletWindowMessages,
 } from 'shared/web3';
 
 export class ContentScript {
@@ -225,9 +225,12 @@ export class ContentScript {
       void TradingCopilotManager.clearAuthToken();
     });
 
-    onWindowMessage<StoredAuthToken>(AuthTokenWindowMessages.SAVE_AUTH_TOKEN, (v) => {
-      void TradingCopilotManager.saveAuthToken(v);
-    });
+    onWindowMessage<StoredAuthToken>(
+      AuthTokenWindowMessages.SAVE_AUTH_TOKEN,
+      (v) => {
+        void TradingCopilotManager.saveAuthToken(v);
+      },
+    );
   }
 
   subscribeToTradingCopilot() {
@@ -246,33 +249,48 @@ export class ContentScript {
       void TradingCopilotManager.clearAuthToken();
     });
 
-    onWindowMessage<StoredAuthToken>(AuthTokenWindowMessages.SAVE_AUTH_TOKEN, (v) => {
-      void TradingCopilotManager.saveAuthToken(v);
-    });
+    onWindowMessage<StoredAuthToken>(
+      AuthTokenWindowMessages.SAVE_AUTH_TOKEN,
+      (v) => {
+        void TradingCopilotManager.saveAuthToken(v);
+      },
+    );
 
-    onWindowMessage(TradingCopilotWindowMessages.GET_TOAST_SOUND_STATE, async () => {
-      const maybeToastSoundState =
-        await TradingCopilotManager.getToastSoundState();
+    onWindowMessage(
+      TradingCopilotWindowMessages.GET_TOAST_SOUND_STATE,
+      async () => {
+        const maybeToastSoundState =
+          await TradingCopilotManager.getToastSoundState();
 
-      const message = {
-        type: TradingCopilotWindowMessages.GET_TOAST_SOUND_STATE_RESPONSE,
-        detail: maybeToastSoundState,
-      };
+        const message = {
+          type: TradingCopilotWindowMessages.GET_TOAST_SOUND_STATE_RESPONSE,
+          detail: maybeToastSoundState,
+        };
 
-      window.postMessage(message);
-    });
+        window.postMessage(message);
+      },
+    );
 
-    onWindowMessage(TradingCopilotWindowMessages.CLEAR_TOAST_SOUND_STATE, () => {
-      void TradingCopilotManager.clearToastSoundState();
-    });
+    onWindowMessage(
+      TradingCopilotWindowMessages.CLEAR_TOAST_SOUND_STATE,
+      () => {
+        void TradingCopilotManager.clearToastSoundState();
+      },
+    );
 
-    onWindowMessage<StoredToastSoundState>(TradingCopilotWindowMessages.SAVE_TOAST_SOUND_STATE, (v) => {
-      void TradingCopilotManager.saveToastSoundState(v);
-    });
+    onWindowMessage<StoredToastSoundState>(
+      TradingCopilotWindowMessages.SAVE_TOAST_SOUND_STATE,
+      (v) => {
+        void TradingCopilotManager.saveToastSoundState(v);
+      },
+    );
 
-    onWindowMessage(TradingCopilotWindowMessages.CLEAR_SUBSCRIPTIONS_AMOUNT, () => {
-      void TradingCopilotManager.clearSubscriptionsAmount();
-    });
+    onWindowMessage(
+      TradingCopilotWindowMessages.CLEAR_SUBSCRIPTIONS_AMOUNT,
+      () => {
+        void TradingCopilotManager.clearSubscriptionsAmount();
+      },
+    );
 
     onWindowMessage<StoredSubscriptionsAmount>(
       TradingCopilotWindowMessages.SAVE_SUBSCRIPTIONS_AMOUNT,
@@ -281,20 +299,27 @@ export class ContentScript {
       },
     );
 
-    onWindowMessage<StoredSubscriptions>(TradingCopilotWindowMessages.SAVE_SUBSCRIPTIONS, (v) => {
-      void TradingCopilotManager.saveSubscriptions(v);
-    });
+    onWindowMessage<StoredSubscriptions>(
+      TradingCopilotWindowMessages.SAVE_SUBSCRIPTIONS,
+      (v) => {
+        void TradingCopilotManager.saveSubscriptions(v);
+      },
+    );
 
-    onWindowMessage(TradingCopilotWindowMessages.GET_SUBSCRIPTIONS, async () => {
-      const maybeSubscriptions = await TradingCopilotManager.getSubscriptions();
+    onWindowMessage(
+      TradingCopilotWindowMessages.GET_SUBSCRIPTIONS,
+      async () => {
+        const maybeSubscriptions =
+          await TradingCopilotManager.getSubscriptions();
 
-      const message = {
-        type: TradingCopilotWindowMessages.GET_SUBSCRIPTIONS_RESPONSE,
-        detail: maybeSubscriptions,
-      };
+        const message = {
+          type: TradingCopilotWindowMessages.GET_SUBSCRIPTIONS_RESPONSE,
+          detail: maybeSubscriptions,
+        };
 
-      window.postMessage(message);
-    });
+        window.postMessage(message);
+      },
+    );
   }
 
   subscribeToDeviceId() {
