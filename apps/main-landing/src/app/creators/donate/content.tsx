@@ -35,6 +35,7 @@ import { ChainSelect, TokenSelect } from './components';
 import { createFormPayloadSchema, FormPayload, SendPayload } from './schema';
 import { getSendFormDefaultValues } from './utils';
 import { useSender } from './hooks';
+import { CREATOR_API_URL } from './constants';
 
 const SEARCH_PARAMETER = {
   CREATOR_NAME: 'creatorName',
@@ -134,9 +135,14 @@ export const Content = ({ className, validatedAddress }: Properties) => {
   });
 
   const { reset } = formMethods;
+  const sender = useSender({ walletClient });
 
   useEffect(() => {
     reset(getSendFormDefaultValues(defaultChainId, selectedTokenSymbol));
+
+    sender.resetBalance();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defaultChainId, selectedTokenSymbol, reset]);
 
   const [chainId, tokenSymbol, amount] = formMethods.watch([
@@ -145,13 +151,12 @@ export const Content = ({ className, validatedAddress }: Properties) => {
     'amount',
   ]);
 
-  const sender = useSender({ walletClient });
-
   const selectedToken = useMemo(() => {
     const token = possibleTokens?.find((token) => {
       return token.symbol === tokenSymbol;
     });
     setSelectedTokenSymbol(token?.symbol ?? '');
+
     return token;
   }, [possibleTokens, tokenSymbol]);
 
@@ -185,12 +190,16 @@ export const Content = ({ className, validatedAddress }: Properties) => {
       if (!addressValidationResult.success || !validatedAddress) {
         return;
       }
+
       const { chainId, tokenSymbol, ...rest } = payload;
+
       rest.message = ' ' + rest.message;
+
       const address =
         CHAIN_ID_TO_TOKENS[chainId]?.find((token: Token) => {
           return token.symbol === tokenSymbol;
         })?.address ?? EMPTY_HEX;
+
       const sendPayload: SendPayload = {
         ...rest,
         chainId,
@@ -219,14 +228,11 @@ export const Content = ({ className, validatedAddress }: Properties) => {
   useEffect(() => {
     if (sender.isSuccess) {
       try {
-        void fetch(
-          'https://core-production-a116.up.railway.app/push-donation',
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ address: validatedAddress }),
-          },
-        );
+        void fetch(`${CREATOR_API_URL}/push-donation`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ address: validatedAddress }),
+        });
       } catch {
         //
       }
@@ -321,7 +327,7 @@ export const Content = ({ className, validatedAddress }: Properties) => {
           render={({ field }) => {
             return (
               <TokenSelect
-                className="mt-4 w-full"
+                className="mt-6 w-full"
                 label="Token"
                 tokens={possibleTokens}
                 onChange={field.onChange}
@@ -336,7 +342,7 @@ export const Content = ({ className, validatedAddress }: Properties) => {
           render={({ field }) => {
             return (
               <ChainSelect
-                className="mt-6 w-full"
+                className="mt-4 w-full"
                 label="Network"
                 allowedChainsIds={allowedChainsIds}
                 onChange={field.onChange}
@@ -351,16 +357,30 @@ export const Content = ({ className, validatedAddress }: Properties) => {
           name="amount"
           render={({ field }) => {
             return (
-              <Form.Field
-                {...field}
-                className="mt-6"
-                value={field.value.toString()}
-                onChange={(value) => {
-                  field.onChange(Number(value));
-                }}
-                label="Amount ($)"
-                numeric
-              />
+              <>
+                <Form.Field
+                  {...field}
+                  className="mt-6"
+                  value={field.value.toString()}
+                  onChange={(value) => {
+                    field.onChange(Number(value));
+                  }}
+                  label="Amount ($)"
+                  numeric
+                />
+
+                {!sender.haveEnoughBalance && (
+                  <span
+                    className={classes(
+                      'flex items-center gap-x-1 pt-1 text-label7 text-red-500 lg:text-label6',
+                    )}
+                  >
+                    <Icon name="AlertCircle" size={12} className="p-px" />
+                    Not enough {selectedTokenSymbol} in your wallet. Add funds
+                    to continue.
+                  </span>
+                )}
+              </>
             );
           }}
         />
@@ -372,7 +392,7 @@ export const Content = ({ className, validatedAddress }: Properties) => {
             return (
               <Form.Field
                 {...field}
-                className="mt-6"
+                className="mt-4"
                 label="Message"
                 helperText={fieldState.error?.message}
                 error={Boolean(fieldState.error?.message)}
@@ -404,8 +424,13 @@ export const Content = ({ className, validatedAddress }: Properties) => {
         )}
       </Form>
 
-      <div className="mt-6 flex justify-center">
-        <Link size="xs" href={CREATORS_USER_GUIDE_LINK} isExternal>
+      <div className="mt-[23px] flex justify-center">
+        <Link
+          size="xs"
+          href={CREATORS_USER_GUIDE_LINK}
+          isExternal
+          className="lg:text-label7"
+        >
           1% supplies IDRISS’s treasury
         </Link>
       </div>

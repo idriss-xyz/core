@@ -1,9 +1,12 @@
-import { PriceHistoryQuery, ZAPPER_API_URL } from '../constants';
 import { ZapperNode } from '../types';
 import dotenv from 'dotenv';
 import { join } from 'path';
-
 import { mode } from '../utils/mode';
+import {
+  getZapperPrice,
+  getAlchemyPrice,
+  getOldestZapperPrice,
+} from './price-fetchers';
 
 dotenv.config(
   mode === 'production' ? {} : { path: join(__dirname, `../.env.${mode}`) },
@@ -12,68 +15,59 @@ dotenv.config(
 export async function enrichNodesWithHistoricalPrice(
   edges: { node: ZapperNode }[],
 ): Promise<void> {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const todayTimestamp = today.getTime();
-
-  const priceCache: Record<string, { timestamp: number; median: number }[]> =
-    {};
+  const priceCache: Record<string, number> = {};
 
   for (const edge of edges) {
     const node = edge.node;
-    if (node.timestamp >= todayTimestamp) continue;
-
     const tokenItem = node.interpretation.descriptionDisplayItems[0];
     if (!tokenItem?.tokenV2) continue;
 
-    const tokenAddress = tokenItem.tokenV2.address;
-    const network = tokenItem.network;
-    const cacheKey = `${tokenAddress}_${network}`;
+    const txDate = new Date(node.timestamp);
+    const today = new Date();
+    const isToday = txDate.toDateString() === today.toDateString();
 
-    let priceTicks = priceCache[cacheKey];
-    if (!priceTicks) {
-      const variables = {
-        address: tokenAddress,
-        network,
-        currency: 'USD',
-        timeFrame: 'YEAR',
-      };
-
-      const encodedKey = Buffer.from(process.env.ZAPPER_API_KEY ?? '').toString(
-        'base64',
-      );
-      const response = await fetch(ZAPPER_API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Basic ${encodedKey}`,
-        },
-        body: JSON.stringify({
-          query: PriceHistoryQuery,
-          variables,
-        }),
-      });
-
-      const json = await response.json();
-
-      const fetchedTicks: { timestamp: number; median: number }[] =
-        json.data?.fungibleToken?.onchainMarketData?.priceTicks ?? [];
-      if (fetchedTicks.length === 0) continue;
-      priceCache[cacheKey] = fetchedTicks;
-      priceTicks = fetchedTicks;
+    if (isToday && tokenItem.tokenV2.onchainMarketData?.price) {
+      continue;
     }
 
-    let closestTick = priceTicks[0];
-    let minDiff = Math.abs(node.timestamp - closestTick!.timestamp);
-    for (const tick of priceTicks) {
-      const diff = Math.abs(node.timestamp - tick.timestamp);
-      if (diff < minDiff) {
-        minDiff = diff;
-        closestTick = tick;
-      } else if (diff > minDiff) {
-        break;
+    const dateStr = txDate.toISOString().split('T')[0];
+    const cacheKey = `${tokenItem.network}_${tokenItem.tokenV2.address}_${dateStr}`;
+
+    if (priceCache[cacheKey] !== undefined) {
+      tokenItem.tokenV2.onchainMarketData.price = priceCache[cacheKey];
+      continue;
+    }
+
+    const zapperPrice = await getZapperPrice(
+      tokenItem.tokenV2.address,
+      tokenItem.network,
+      txDate,
+    );
+
+    if (zapperPrice !== null) {
+      priceCache[cacheKey] = zapperPrice;
+      tokenItem.tokenV2.onchainMarketData.price = zapperPrice;
+      continue;
+    }
+
+    const alchemyPrice = await getAlchemyPrice(
+      tokenItem.tokenV2.address,
+      tokenItem.network,
+      txDate,
+    );
+
+    if (alchemyPrice !== null) {
+      priceCache[cacheKey] = alchemyPrice;
+      tokenItem.tokenV2.onchainMarketData.price = alchemyPrice;
+    } else {
+      const fallbackPrice = getOldestZapperPrice(
+        tokenItem.tokenV2.address,
+        tokenItem.network,
+      );
+      if (fallbackPrice) {
+        priceCache[cacheKey] = fallbackPrice;
+        tokenItem.tokenV2.onchainMarketData.price = fallbackPrice;
       }
     }
-    tokenItem.tokenV2.onchainMarketData.price = closestTick!.median;
   }
 }

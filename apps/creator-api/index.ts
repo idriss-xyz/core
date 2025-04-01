@@ -6,10 +6,14 @@ import { Server as SocketIOServer, Socket } from 'socket.io';
 import { mode } from './utils/mode';
 import { connectedClients } from './services/socket-server';
 import tipHistoryRouter from './routes/tip-history';
+import donorHistoryRouter from './routes/donor-history';
+import creatorLeaderboardRouter from './routes/creator-leaderboard';
+import donorLeaderboardRouter from './routes/donor-leaderboard';
 import pushDonationRouter from './routes/push-donation';
+import overwriteDonationRouter from './routes/overwrite-donation';
+import refetchDonationRouter from './routes/refetch-donations';
 import cors from 'cors';
 import { AppDataSource } from './db/database';
-import { ALLOWED_ORIGINS } from './constants';
 
 dotenv.config(
   mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
@@ -23,13 +27,18 @@ const app: Application = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: ALLOWED_ORIGINS,
+    origin: '*',
   }),
 );
 
 const server = http.createServer(app);
 app.use('/tip-history', tipHistoryRouter);
+app.use('/donor-history', donorHistoryRouter);
+app.use('/creator-leaderboard', creatorLeaderboardRouter);
+app.use('/donor-leaderboard', donorLeaderboardRouter);
 app.use('/push-donation', pushDonationRouter);
+app.use('/overwrite-donation', overwriteDonationRouter);
+app.use('/refetch-donations', refetchDonationRouter);
 
 const HOST = process.env.HOST;
 const PORT = Number(process.env.PORT) || 4000;
@@ -40,7 +49,7 @@ if (!HOST || !PORT) {
 
 const io = new SocketIOServer(server, {
   cors: {
-    origin: ALLOWED_ORIGINS,
+    origin: '*',
     methods: ['GET', 'POST'],
   },
 });

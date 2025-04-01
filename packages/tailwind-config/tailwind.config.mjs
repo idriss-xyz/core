@@ -11,6 +11,7 @@ export default {
     path.resolve(__dirname, '../wallet-connect/src/**/*.{ts,tsx}'),
     path.resolve(__dirname, '../../apps/extension/src/**/*.{ts,tsx}'),
     path.resolve(__dirname, '../../apps/main-landing/src/**/*.{ts,tsx}'),
+    path.resolve(__dirname, '../../apps/twitch-extension/src/**/*.{ts,tsx}'),
   ],
   theme: {
     colors: {
@@ -375,7 +376,8 @@ export default {
         '.gradient-text-2::after': {
           'display': 'block',
           'content': "''",
-          'background': 'radial-gradient(65.65% 168.51% at 47.77% 27.64%, #000A05 0%, #176410 100%)',
+          'background':
+            'radial-gradient(65.65% 168.51% at 47.77% 27.64%, #000A05 0%, #176410 100%)',
           'width': '100%',
           'height': '100%',
           'mix-blend-mode': 'color',

@@ -104,6 +104,7 @@ export default async function RootLayout({
         className={`${aeonikPro.variable} flex min-h-screen flex-col font-sans antialiased`}
       >
         {children}
+
         <GoogleAnalytics gaId="G-YM1B80KWY4" />
       </body>
     </html>

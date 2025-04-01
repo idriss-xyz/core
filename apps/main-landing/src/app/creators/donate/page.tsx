@@ -8,22 +8,23 @@ import {
 } from '@idriss-xyz/constants';
 import { Hex, isAddress } from 'viem';
 import '@rainbow-me/rainbowkit/styles.css';
-import { useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { default as io } from 'socket.io-client';
 import _ from 'lodash';
 
 import { backgroundLines2 } from '@/assets';
-import { TopBar } from '@/components';
 import { validateAddressOrENS } from '@/app/creators/donate/utils';
 import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
 import DonateHistoryList from '@/app/creators/donate/components/history/donate-history-list';
+import { DonateContentValues } from '@/app/creators/donate/types';
+
+import { TopBar } from '../landing/components/top-bar';
 
 import { TopDonors } from './top-donors';
 import { Content } from './content';
 import { RainbowKitProviders } from './providers';
-
-const SOCKET_URL = 'https://core-production-a116.up.railway.app';
+import { CREATOR_API_URL } from './constants';
 
 const SEARCH_PARAMETER = {
   ADDRESS: 'address',
@@ -40,10 +41,11 @@ export default function Donors() {
 }
 
 function DonorsContent() {
+  const router = useRouter();
   const [tipEdges, setTipEdges] = useState<{ node: TipHistoryNode }[]>([]);
-  const [currentContent, setCurrentContent] = useState<'tip' | 'history'>(
-    'tip',
-  );
+  const [currentContent, setCurrentContent] = useState<DonateContentValues>({
+    name: 'user-tip',
+  });
   const [validatedAddress, setValidatedAddress] = useState<
     string | null | undefined
   >();
@@ -58,9 +60,9 @@ function DonorsContent() {
   useEffect(() => {
     const validateAddress = async () => {
       const address = await validateAddressOrENS(addressFromParameters);
-
       setValidatedAddress(address);
     };
+
     void validateAddress();
   }, [addressFromParameters]);
 
@@ -84,21 +86,33 @@ function DonorsContent() {
     }
   }, [tips.data]);
 
-  const updateCurrentContent = (content: 'tip' | 'history') => {
-    setCurrentContent(content);
-  };
+  const updateCurrentContent = useCallback((content: DonateContentValues) => {
+    setCurrentContent((previous) => {
+      return { previous, ...content };
+    });
+  }, []);
+
+  const onDonorClick = useCallback(
+    (address: Hex) => {
+      router.push(`/creators/donor/${address}`);
+    },
+    [router],
+  );
 
   const currentContentComponent = useMemo(() => {
-    switch (currentContent) {
-      case 'tip': {
+    switch (currentContent?.name) {
+      case 'user-tip': {
         return (
-          <div className="grid grid-cols-1 items-start gap-x-10 lg:grid-cols-2">
+          <div className="grid grid-cols-1 items-start gap-x-10 lg:grid-cols-[1fr,auto]">
             <Content
               validatedAddress={validatedAddress}
               className="container mt-8 overflow-hidden lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]"
             />
+
             <TopDonors
               tipEdges={tipEdges}
+              heading="Top donors"
+              onDonorClick={onDonorClick}
               tipsLoading={tips.isLoading}
               validatedAddress={validatedAddress}
               updateCurrentContent={updateCurrentContent}
@@ -107,29 +121,35 @@ function DonorsContent() {
           </div>
         );
       }
-      case 'history': {
+      case 'user-history': {
         return (
           <DonateHistoryList
             tipEdges={tipEdges}
             address={validatedAddress}
             tipsLoading={tips.isLoading}
+            currentContent={currentContent}
             isInvalidAddress={isInvalidAddress}
             updateCurrentContent={updateCurrentContent}
           />
         );
       }
+      default: {
+        return;
+      }
     }
   }, [
     currentContent,
     isInvalidAddress,
+    onDonorClick,
     tipEdges,
     tips.isLoading,
+    updateCurrentContent,
     validatedAddress,
   ]);
 
   useEffect(() => {
     if (validatedAddress && !socketInitialized) {
-      const socket = io(SOCKET_URL);
+      const socket = io(CREATOR_API_URL);
       setSocketInitialized(true);
 
       if (socket && !socketConnected) {

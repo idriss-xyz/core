@@ -4,23 +4,32 @@ import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { TipHistoryNode } from '@idriss-xyz/constants';
 
-import DonateHistoryItem from '@/app/creators/donate/components/history/donate-history-item';
+import { DonateContentValues } from '@/app/creators/donate/types';
+
+import DonateHistoryItem from './donate-history-item';
 
 type Properties = {
   tipsLoading: boolean;
+  showReceiver?: boolean;
   isInvalidAddress: boolean;
-  tipEdges: { node: TipHistoryNode }[];
   address: string | null | undefined;
-  updateCurrentContent: (content: 'tip' | 'history') => void;
+  currentContent: DonateContentValues;
+  tipEdges: { node: TipHistoryNode }[];
+  updateCurrentContent: (content: DonateContentValues) => void;
 };
-
 export default function DonateHistoryList({
   address,
   tipEdges,
   tipsLoading,
+  showReceiver,
+  currentContent,
   isInvalidAddress,
   updateCurrentContent,
 }: Properties) {
+  const sortedTipEdges = [...tipEdges].sort((a, b) => {
+    return b.node.timestamp - a.node.timestamp;
+  });
+
   return (
     <div className="container relative mt-8 flex w-[600px] max-w-full flex-col items-center gap-y-5 rounded-xl bg-white pb-4 pl-4 pt-2 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]">
       <div className="flex w-full items-center gap-x-2">
@@ -31,7 +40,9 @@ export default function DonateHistoryList({
           iconName="ArrowLeft"
           className="cursor-pointer"
           onClick={() => {
-            updateCurrentContent('tip');
+            updateCurrentContent(
+              currentContent.previous ?? { name: 'user-tip' },
+            );
           }}
         />
         <h1 className="text-heading4">Donation history</h1>
@@ -49,17 +60,22 @@ export default function DonateHistoryList({
           <div className="flex w-full flex-col gap-y-3 pr-5 pt-1">
             {tipsLoading || !address ? (
               <Spinner className="mx-auto my-4 size-16 text-mint-600" />
-            ) : tipEdges.length > 0 ? (
-              tipEdges.map((tip) => {
+            ) : sortedTipEdges.length > 0 ? (
+              sortedTipEdges.map((tip) => {
                 return (
                   <DonateHistoryItem
                     tip={tip.node}
+                    showReceiver={showReceiver}
                     key={tip.node.transaction.hash}
                   />
                 );
               })
             ) : (
-              <p>This address has not received any tips</p>
+              <p>
+                {showReceiver
+                  ? 'No tips were sent from this address'
+                  : 'This address has not received any tips'}
+              </p>
             )}
           </div>
         )}

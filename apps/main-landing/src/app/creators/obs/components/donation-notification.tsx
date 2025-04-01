@@ -64,7 +64,7 @@ const DonationNotification = ({
       aria-live="polite"
       nonce={txnHash}
       style={style}
-      className={`absolute left-0 top-0 m-3 flex w-[400px] items-start gap-x-2 rounded-xl p-4 shadow-lg transition-opacity duration-1000 ${bgColor} ${
+      className={`absolute left-0 top-0 m-3 flex w-max min-w-[400px] max-w-[430px] items-start gap-x-2 rounded-xl p-4 shadow-lg transition-opacity duration-1000 ${bgColor} ${
         showNotification ? 'opacity-100' : 'opacity-0'
       }`}
     >
@@ -80,38 +80,36 @@ const DonationNotification = ({
 
       <div className="flex flex-col justify-center gap-y-1">
         <div className="flex items-center gap-x-2">
-          <p className="text-label3 text-neutral-900">
-            <span className="align-middle">{`${donor} `}</span>
+          <p className="flex flex-row flex-wrap items-center gap-x-1 text-label3 text-neutral-900">
+            {`${donor} `}
 
             {!token.details && (
-              <span className="align-middle text-body3 text-neutral-600">{`${amount ? `sent $${amount}` : ''}`}</span>
+              <span className="text-body3 text-neutral-600">{`${amount ? `sent $${amount}` : ''}`}</span>
             )}
 
             {token.details && (
               <>
-                <span className="align-middle text-body3 text-neutral-600">
-                  <span className="align-middle text-body3 text-neutral-600">
-                    sent{' '}
-                    {zerosIndex ? (
-                      <>
-                        0.0
-                        <span className="inline-block translate-y-1 px-px text-xs">
-                          {zerosIndex}
-                        </span>
-                        {roundedNumber}
-                      </>
-                    ) : (
-                      roundedNumber
-                    )}{' '}
-                    {token.details?.symbol}{' '}
-                  </span>
+                <span className="text-body3 text-neutral-600">
+                  sent{' '}
+                  {zerosIndex ? (
+                    <>
+                      0.0
+                      <span className="inline-block translate-y-1 px-px text-xs">
+                        {zerosIndex}
+                      </span>
+                      {roundedNumber}
+                    </>
+                  ) : (
+                    roundedNumber
+                  )}{' '}
+                  {token.details?.symbol}{' '}
                 </span>
                 <img
-                  className="inline-block size-6 rounded-full align-middle"
+                  className="size-6 rounded-full"
                   src={token.details?.logo}
                   alt=""
                 />{' '}
-                <Badge type="success" variant="subtle" className="align-middle">
+                <Badge type="success" variant="subtle">
                   $
                   {Number(amount) >= 0.01
                     ? new Intl.NumberFormat('en-US', {

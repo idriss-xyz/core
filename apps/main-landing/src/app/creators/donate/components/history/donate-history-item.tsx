@@ -10,13 +10,15 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
-import { CHAIN, TipHistoryNode } from '@idriss-xyz/constants';
+import { CHAIN, EMPTY_HEX, TipHistoryNode } from '@idriss-xyz/constants';
 import {
   getShortWalletHex,
   getTimeDifferenceString,
   getTransactionUrls,
   roundToSignificantFiguresForCopilotTrading,
 } from '@idriss-xyz/utils';
+import { Link } from '@idriss-xyz/ui/link';
+import { useRouter } from 'next/navigation';
 
 import { useGetEnsAvatar } from '../../commands/get-ens-avatar';
 
@@ -30,16 +32,26 @@ function removeMainnetSuffix(text: string) {
 
 type Properties = {
   tip: TipHistoryNode;
+  showReceiver?: boolean;
 };
 
-export default function DonateHistoryItem({ tip }: Properties) {
+export default function DonateHistoryItem({ tip, showReceiver }: Properties) {
+  const router = useRouter();
   const tipDetails = tip.interpretation.descriptionDisplayItems[0];
+  const tipReceiver = tip.interpretation.descriptionDisplayItems[1]?.account;
   const tipComment = tip.interpretation.descriptionDisplayItems[2];
   const tipperFromAddress = tip.transaction.fromUser.address;
+  const receiverAddress = tipReceiver?.address;
 
-  const displayName = tip.transaction.fromUser.displayName?.value;
-  const nameSource = tip.transaction.fromUser.displayName?.source;
-  const imageSource = tip.transaction.fromUser.avatar?.source;
+  const displayName = showReceiver
+    ? tipReceiver?.displayName?.value
+    : tip.transaction.fromUser.displayName?.value;
+  const nameSource = showReceiver
+    ? tipReceiver?.displayName?.source
+    : tip.transaction.fromUser.displayName?.source;
+  const imageSource = showReceiver
+    ? tipReceiver?.avatar?.source
+    : tip.transaction.fromUser.avatar?.source;
 
   const ensAvatarQuery = useGetEnsAvatar(
     { name: displayName ?? '' },
@@ -48,7 +60,9 @@ export default function DonateHistoryItem({ tip }: Properties) {
 
   const farcasterAvatarUrl =
     imageSource === 'FARCASTER'
-      ? tip.transaction.fromUser.avatar?.value?.url
+      ? showReceiver
+        ? tipReceiver?.avatar.value?.url
+        : tip.transaction.fromUser.avatar?.value?.url
       : null;
 
   const avatarSource = ensAvatarQuery.data ?? farcasterAvatarUrl;
@@ -96,12 +110,25 @@ export default function DonateHistoryItem({ tip }: Properties) {
 
         <div className="flex flex-col justify-center gap-y-1">
           <div className="flex items-center gap-x-2">
-            <p className="text-body3 text-neutral-900">
-              <span className="align-middle">
-                {displayName ?? getShortWalletHex(tipperFromAddress)}
-              </span>{' '}
+            <p className="flex flex-row flex-wrap items-center gap-x-1 text-body3 text-neutral-900">
+              <Link
+                size="xs"
+                onClick={() => {
+                  if (showReceiver && receiverAddress) {
+                    router.push(`/creators/donor/${receiverAddress}`);
+                  } else {
+                    router.push(`/creators/donor/${tipperFromAddress}`);
+                  }
+                }}
+                className="cursor-pointer border-0 align-middle text-label3 text-neutral-900 no-underline lg:text-label3"
+              >
+                {showReceiver
+                  ? (displayName ??
+                    getShortWalletHex(receiverAddress ?? EMPTY_HEX))
+                  : (displayName ?? getShortWalletHex(tipperFromAddress))}
+              </Link>{' '}
               <span className="align-middle text-body3 text-neutral-600">
-                sent{' '}
+                {showReceiver ? 'received' : 'sent'}{' '}
                 {zerosIndex ? (
                   <>
                     0.0
@@ -114,13 +141,13 @@ export default function DonateHistoryItem({ tip }: Properties) {
                   roundedNumber
                 )}{' '}
                 {tipDetails.tokenV2.symbol}{' '}
-                <img
-                  className="inline-block size-6 rounded-full"
-                  src={tipDetails.tokenV2.imageUrlV2}
-                  alt=""
-                />
-              </span>{' '}
-              <Badge type="success" variant="subtle" className="align-middle">
+              </span>
+              <img
+                className="size-6 rounded-full"
+                src={tipDetails.tokenV2.imageUrlV2}
+                alt=""
+              />{' '}
+              <Badge type="success" variant="subtle">
                 $
                 {tradeValue >= 0.01
                   ? new Intl.NumberFormat('en-US', {
@@ -203,8 +230,8 @@ export default function DonateHistoryItem({ tip }: Properties) {
                       size="large"
                       intent="tertiary"
                       href={transactionUrl.url}
-                      prefixIconClassName="mr-3"
                       prefixIconName={explorer}
+                      prefixIconClassName="mr-3"
                       className="w-full items-center px-3 py-1 font-normal text-neutral-900"
                     >
                       View on {explorer}

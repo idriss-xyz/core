@@ -49,24 +49,17 @@ const nextConfig: NextConfig = {
     return process.env.RAILWAY_GIT_COMMIT_SHA || `build-${Date.now()}`;
   },
 
-  productionBrowserSourceMaps: true,
-  // eslint-disable-next-line @typescript-eslint/require-await
-  async headers() {
-    return [
-      {
-        source: '/_next/static/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'no-cache, no-store, must-revalidate',
-          },
-        ],
-      },
-    ];
+  experimental: {
+    optimizePackageImports: ['@idriss-xyz/ui'],
   },
   // eslint-disable-next-line @typescript-eslint/require-await
   async redirects() {
     return [
+      {
+        source: '/donors/ranking',
+        destination: '/creators/donor/ranking',
+        permanent: true,
+      },
       {
         source: '/streamers',
         destination: '/creators',
@@ -188,9 +181,6 @@ const nextConfig: NextConfig = {
     });
 
     return config;
-  },
-  experimental: {
-    optimizePackageImports: ['@idriss-xyz/ui'],
   },
   images: {
     domains: ['localhost'],

@@ -18,7 +18,7 @@ export const SelectOption = forwardRef(
       <div
         ref={reference}
         className={classes(
-          'flex w-full cursor-pointer items-center space-x-3 border-none py-2 ps-3 text-left',
+          'flex w-full cursor-pointer items-center space-x-3 border-none py-[9px] ps-3 text-left',
           'hover:bg-black/10 focus:bg-black/50',
           className,
         )}

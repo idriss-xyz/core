@@ -16,4 +16,5 @@ export {
   getFormattedTimeDifference,
   getTimeDifferenceString,
   isSolanaAddress,
+  removeEthSuffix,
 } from './utils';

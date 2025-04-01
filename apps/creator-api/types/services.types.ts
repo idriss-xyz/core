@@ -1,6 +1,6 @@
 import { Hex } from 'viem';
 
-interface TokenV2 {
+export interface TokenV2 {
   symbol: string;
   imageUrlV2?: string;
   onchainMarketData: {
@@ -10,7 +10,29 @@ interface TokenV2 {
   decimals: number;
 }
 
-interface TokenDisplayItem {
+export interface DonationStats {
+  totalDonationsCount: number;
+  totalDonationAmount: number;
+  mostDonatedToAddress: Hex;
+  biggestDonationAmount: number;
+  favoriteDonationToken: string;
+  favoriteTokenMetadata: Omit<TokenV2, 'onchainMarketData'> | null;
+  donorDisplayName: string | null;
+  positionInLeaderboard: number | null;
+}
+
+interface ActorDisplayItem {
+  account: UserData;
+}
+
+export interface LeaderboardStats {
+  address: Hex;
+  donorMetadata: UserData;
+  totalAmount: number;
+  donateLink?: string;
+}
+
+export interface TokenDisplayItem {
   network: string;
   amountRaw: string;
   tokenV2: TokenV2;
@@ -20,32 +42,40 @@ type StringDisplayItem = {
   stringValue: string;
 };
 
+export type UserData = {
+  address: Hex;
+  displayName: {
+    value: string;
+    source: string;
+  };
+  avatar: {
+    value: {
+      url: string | undefined;
+    };
+    source: string | undefined;
+  };
+};
+
 export interface ZapperNode {
   timestamp: number;
   network: string;
   transaction: {
     hash: Hex;
-    fromUser: {
-      address: Hex;
-      displayName: {
-        value: string;
-        source: string;
-      };
-      avatar: {
-        value: {
-          url: string | undefined;
-        };
-        source: string | undefined;
-      };
-    };
+    fromUser: UserData;
     toUser: {
       address: Hex;
+    };
+    decodedInputV2: {
+      data: {
+        value: string;
+        name: string;
+      }[];
     };
   };
   interpretation: {
     descriptionDisplayItems: [
       TokenDisplayItem | undefined,
-      undefined,
+      ActorDisplayItem | undefined,
       StringDisplayItem | undefined,
     ];
   };
@@ -55,8 +85,8 @@ export interface ZapperNode {
 }
 
 export interface TipHistoryVariables {
-  addresses: string[];
-  toAddresses: string[];
+  addresses: Hex[];
+  toAddresses: Hex[];
   isSigner: boolean;
   after?: string | null;
 }
