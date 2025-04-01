@@ -2,7 +2,7 @@ import { Hex } from 'viem';
 import { SolanaWallet, Wallet } from '@idriss-xyz/wallet-connect';
 
 import {
-  GetEnsBalanceCommand,
+  GetEthBalanceCommand,
   GetSolanaBalanceCommand,
 } from 'application/trading-copilot';
 import { useCommandQuery } from 'shared/messaging';
@@ -12,14 +12,14 @@ export const useAccountBalance = (
 ) => {
   const command = wallet
     ? 'chainId' in wallet
-      ? new GetEnsBalanceCommand({
+      ? new GetEthBalanceCommand({
           address: wallet.account ?? '',
           blockTag: 'safe',
         })
       : new GetSolanaBalanceCommand({
           address: wallet.account ?? '',
         })
-    : new GetEnsBalanceCommand({
+    : new GetEthBalanceCommand({
         address: '' as Hex,
         blockTag: 'safe',
       });
