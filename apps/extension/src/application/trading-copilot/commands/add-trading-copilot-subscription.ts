@@ -1,3 +1,5 @@
+import { COPILOT_API_URL } from '@idriss-xyz/constants';
+
 import {
   Command,
   FailureResult,
@@ -8,7 +10,6 @@ import {
 
 import { SubscribeCommandPayload as Payload } from '../types';
 
-import { COPILOT_API_URL } from '@idriss-xyz/constants';
 
 type Response = boolean;
 

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { io } from 'socket.io-client';
+import { COPILOT_API_URL } from '@idriss-xyz/constants';
 
 import { TWITTER_COMMAND_MAP } from 'host/twitter';
 import {
@@ -41,7 +42,6 @@ import {
 import { SbtResolver } from '../../common/resolvers/SbtResolver';
 import { AddressResolver } from '../../common/resolvers/AddressResolver';
 
-import { COPILOT_API_URL } from '@idriss-xyz/constants';
 
 const COMMAND_MAP = {
   ...WEB3_COMMAND_MAP,

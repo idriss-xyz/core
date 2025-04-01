@@ -2,6 +2,7 @@ import { StoredWallet } from '@idriss-xyz/wallet-connect';
 
 import { StoredSubscriptions } from 'shared/extension';
 import { onWindowMessage } from 'shared/messaging';
+
 import {
   AuthTokenWindowMessages,
   SolanaWalletWindowMessages,

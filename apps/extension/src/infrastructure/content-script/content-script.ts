@@ -270,7 +270,7 @@ export class ContentScript {
       void TradingCopilotManager.saveToastSoundState(v);
     });
 
-    onWindowMessage(TradingCopilotWindowMessages.CLEAR_SUBSCRIPTIONS_AMOUNT, async () => {
+    onWindowMessage(TradingCopilotWindowMessages.CLEAR_SUBSCRIPTIONS_AMOUNT, () => {
       void TradingCopilotManager.clearSubscriptionsAmount();
     });
 
