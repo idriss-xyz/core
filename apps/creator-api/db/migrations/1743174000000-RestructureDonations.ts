@@ -1,6 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-import { formatUnits, createPublicClient, http, Hex } from 'viem';
+import { formatUnits, createPublicClient, http } from 'viem';
+import { normalize } from 'viem/ens';
 import { mainnet } from 'viem/chains';
 
 export class RestructureDonations1743174000000 implements MigrationInterface {
@@ -96,7 +97,9 @@ export class RestructureDonations1743174000000 implements MigrationInterface {
       }
       if (displayNameSource === 'ENS') {
         // Try to get ENS avatar
-        const avatarUri = await client.getEnsAvatar({ name: displayName });
+        const avatarUri = await client.getEnsAvatar({
+          name: normalize(displayName),
+        });
         if (avatarUri) {
           avatarUrl = avatarUri;
           avatarSource = 'ENS';

@@ -44,8 +44,7 @@ router.post('/', async (req: Request, res: Response) => {
       return;
     }
     const hexAddress = address as Hex;
-    const knownDonations: DonationData[] =
-      await fetchDonationsByToAddress(hexAddress);
+    const knownDonations = await fetchDonationsByToAddress(hexAddress);
     const knownDonationMap = new Map<string, DonationData>();
     for (const donation of knownDonations) {
       knownDonationMap.set(donation.transactionHash.toLowerCase(), donation);
@@ -138,16 +137,17 @@ router.post('/', async (req: Request, res: Response) => {
         knownDonationMap.set(donation.transactionHash.toLowerCase(), donation);
       }
     }
-
     // Calculate stats directly from knownDonations (already in correct format)
-    const stats = calculateStatsForDonorAddress(knownDonations);
+    const stats = calculateStatsForDonorAddress(
+      Array.from(knownDonationMap.values()),
+    );
 
     // Get leaderboard data
     const leaderboard = await calculateGlobalDonorLeaderboard();
 
     // Return the structured response
     const response: TipHistoryResponse = {
-      donations: knownDonations,
+      donations: Array.from(knownDonationMap.values()),
       stats,
       leaderboard,
     };

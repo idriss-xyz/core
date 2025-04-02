@@ -1,4 +1,5 @@
 import { createPublicClient, Hex, http } from 'viem';
+import { normalize } from 'viem/ens';
 import { mainnet } from 'viem/chains';
 
 const publicClient = createPublicClient({
@@ -26,24 +27,16 @@ export async function enrichUserWithEns(userData: {
       if (ensName) {
         userData.displayName = ensName;
         userData.displayNameSource = 'ENS';
-
-        try {
-          const avatarUrl = await publicClient.getEnsAvatar({ name: ensName });
-          if (avatarUrl) {
-            userData.avatarUrl = avatarUrl;
-            userData.avatarSource = 'ENS';
-          }
-        } catch (error) {
-          console.error('Failed to fetch ENS avatar:', error);
-        }
       }
     } catch (error) {
       console.error('Failed to resolve ENS name:', error);
     }
-  } else if (userData.displayNameSource === 'ENS' && userData.displayName) {
+  }
+
+  if (userData.displayName && userData.displayNameSource === 'ENS') {
     try {
       const avatarUrl = await publicClient.getEnsAvatar({
-        name: userData.displayName,
+        name: normalize(userData.displayName),
       });
       if (avatarUrl) {
         userData.avatarUrl = avatarUrl;
