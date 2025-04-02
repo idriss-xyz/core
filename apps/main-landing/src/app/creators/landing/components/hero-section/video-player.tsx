@@ -1,5 +1,8 @@
-import { Icon } from '@idriss-xyz/ui/icon';
+'use client';
+
 import { useRef, useState } from 'react';
+
+import { AudioVisualizer } from './audio-visualizer';
 
 export const VideoPlayer = () => {
   const videoReference = useRef<HTMLVideoElement>(null);
@@ -8,7 +11,6 @@ export const VideoPlayer = () => {
   const toggleMute = () => {
     if (videoReference.current) {
       videoReference.current.muted = !videoReference.current.muted;
-
       setIsMuted(videoReference.current.muted);
     }
   };
@@ -32,11 +34,7 @@ export const VideoPlayer = () => {
         onClick={toggleMute}
         className="absolute bottom-4 right-4 flex size-10 items-center justify-center rounded-full bg-white/10 p-2"
       >
-        <Icon
-          size={16}
-          className="text-mint-400"
-          name={isMuted ? 'SoundDisabledFilled' : 'SoundEnabledFilled'}
-        />
+        <AudioVisualizer isMuted={isMuted} />
       </button>
     </>
   );
