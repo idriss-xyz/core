@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class WebhookChainType1743608322000 implements MigrationInterface {
+class WebhookChainType1743608322000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     // Add the column as nullable first
     await queryRunner.query(
