@@ -1,20 +1,57 @@
-/* eslint-disable @next/next/no-img-element */
+'use client';
+import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
+import { classes } from '@idriss-xyz/ui/utils';
 
 import { Navigation } from './top-bar/navigation';
 
+const STICKY_CLASSES = 'bg-mint-200 border-b border-mint-300';
+
 type Properties = {
+  displayCTA?: boolean;
   hideNavigation?: boolean;
 };
 
-export const TopBar = ({ hideNavigation }: Properties) => {
+export const TopBar = ({ hideNavigation, displayCTA }: Properties) => {
+  const [isSticky, setIsSticky] = useState(false);
+  const topBarReference = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handleScroll = (event: Event) => {
+      const customEvent = event as CustomEvent<{ scrollTop: number }>;
+
+      if (topBarReference.current) {
+        const navbarHeight = topBarReference.current.offsetHeight;
+
+        if (customEvent.detail.scrollTop > navbarHeight) {
+          setIsSticky(true);
+        } else {
+          setIsSticky(false);
+        }
+      }
+    };
+
+    window.addEventListener('creatorsLandingPageScroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('creatorsLandingPageScroll', handleScroll);
+    };
+  }, []);
+
   return (
-    <div className="absolute inset-x-0 top-0 z-topBar w-full px-safe">
+    <div
+      ref={topBarReference}
+      className={classes(
+        'sticky inset-x-0 top-0 z-topBar mb-[-64px] w-full transition-all duration-300 px-safe lg:-mb-20',
+        isSticky && STICKY_CLASSES,
+      )}
+    >
       <div className="container flex items-center justify-between py-1 lg:py-3">
         <Link href="/">
           <img src="/idriss-dark-logo.svg" height={24} width={98} alt="" />
         </Link>
-        <Navigation hideNavigation={hideNavigation} />
+
+        <Navigation hideNavigation={hideNavigation} displayCTA={displayCTA} />
       </div>
     </div>
   );

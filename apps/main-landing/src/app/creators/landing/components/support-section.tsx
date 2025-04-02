@@ -31,9 +31,9 @@ export const SupportSection = () => {
                   'lg:text-body2',
                 )}
               >
-                Stream on Twitch, post on YouTube, create on Kick, or go live on
-                Facebook and other platforms. If you can drop a link, you can
-                start earning with IDRISS.
+                Whether you&#39;re on Twitch, YouTube, Kick, Facebook or
+                anywhere else, you can start earning with IDRISS. All it takes
+                is sharing a link with your audience.
               </p>
             </div>
 

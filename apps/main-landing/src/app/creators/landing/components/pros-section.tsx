@@ -20,7 +20,7 @@ export const ProsSection = () => {
                 'lg:text-display3',
               )}
             >
-              Why idriss creators
+              WHY CREATORS CHOOSE IDRISS
             </h2>
 
             <p
@@ -30,20 +30,17 @@ export const ProsSection = () => {
                 'lg:text-body3',
               )}
             >
-              Get instant donations of your favorite cryptos directly to your
-              wallet on Twitch, YouTube, and more
+              More earnings, more ways to get paid, and more reasons for your
+              fans to keep coming back.
             </p>
           </div>
 
           <div className="flex flex-col gap-6">
             <div className="relative grid items-center gap-6 rounded-[24px] p-8 lg:grid-cols-[1fr,1fr]">
               <ProsItem
-                iconName="SwitchCamera"
+                iconName="TrendingUp"
                 heading="More revenue, less fees"
                 description="Stop losing a significant portion of your earnings to transaction fees and platform cuts. With IDRISS, you keep more of what you earn and offer your supporters a smooth, borderless way to contribute."
-                className="items-start"
-                headingClassName="max-w-[500px] text-heading4 md:text-heading3 lg:text-heading2"
-                descriptionClassName="max-w-[500px]"
               />
 
               <img src={FEE_CHARTS.src} className="w-full" alt="" />
@@ -60,12 +57,9 @@ export const ProsSection = () => {
             <div className="flex flex-col gap-6 lg:grid lg:grid-cols-2">
               <div className="relative flex flex-col items-start gap-6 rounded-[24px] p-8">
                 <ProsItem
-                  iconName="Repeat2"
+                  iconName="HandCoins"
                   heading="More ways to donate"
                   description="Let your supporters contribute in the way that suits them best. Accept payments in a variety of top cryptocurrencies."
-                  className="items-start"
-                  headingClassName="max-w-[500px] text-heading4 md:text-heading3 lg:text-heading2"
-                  descriptionClassName="max-w-[500px]"
                 >
                   <TokensShowcase className="mt-16" />
                 </ProsItem>
@@ -81,12 +75,9 @@ export const ProsSection = () => {
 
               <div className="relative flex flex-col items-start gap-6 rounded-[24px] p-8">
                 <ProsItem
-                  iconName="HandCoins"
+                  iconName="Trophy"
                   heading="More fun and recognition"
                   description="Give your fans a reason to show up and give more. With donation alerts and leaderboards you engage and recognize your loyal supporters."
-                  className="items-start"
-                  headingClassName="max-w-[500px] text-heading4 md:text-heading3 lg:text-heading2"
-                  descriptionClassName="max-w-[500px]"
                 />
 
                 <img
@@ -105,30 +96,6 @@ export const ProsSection = () => {
               </div>
             </div>
           </div>
-
-          {/* TODO: remove? */}
-          {/*<div className="mx-auto grid w-max max-w-full gap-[70px] lg:grid-cols-[auto,auto,auto]">*/}
-          {/*  <ProsItem*/}
-          {/*    iconName="Governance"*/}
-          {/*    heading="Personalization"*/}
-          {/*    description="Let your supporters contribute in the way that suits them best.*/}
-          {/*      Accept payments in various"*/}
-          {/*  />*/}
-
-          {/*  <ProsItem*/}
-          {/*    iconName="GlobeIcon"*/}
-          {/*    heading="Borderless & instant transactions"*/}
-          {/*    description="Receive donations from anywhere in the world without banking*/}
-          {/*      restrictions, chargebacks"*/}
-          {/*  />*/}
-
-          {/*  <ProsItem*/}
-          {/*    iconName="DollarSign"*/}
-          {/*    heading="Full ownership & decentralization"*/}
-          {/*    description="No more relying on third-party platforms that can restrict or*/}
-          {/*      ban your earnings."*/}
-          {/*  />*/}
-          {/*</div>*/}
         </div>
       </div>
     </section>

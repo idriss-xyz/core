@@ -26,14 +26,14 @@ export const Socials = ({ className }: Properties) => {
       {SOCIALS.map((social, index) => {
         return (
           <IconButton
+            asLink
+            isExternal
             key={index}
             size="large"
             intent="tertiary"
-            iconName={social.iconName}
             href={social.link}
             aria-label={social.label}
-            isExternal
-            asLink
+            iconName={social.iconName}
           />
         );
       })}

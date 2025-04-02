@@ -13,15 +13,18 @@ export default function Landing() {
     <div className="relative flex h-screen">
       <ScrollArea
         type="always"
+        customScrollEventName="creatorsLandingPageScroll"
         className="[&_[data-radix-scroll-area-content]]:w-screen [&_[data-radix-scroll-area-content]]:min-w-[unset_!important]"
       >
         <div className="relative">
-          <TopBar hideNavigation />
+          <TopBar hideNavigation displayCTA />
+
           <main>
             <HeroSection />
             <SupportSection />
             <ProsSection />
           </main>
+
           <Footer />
         </div>
       </ScrollArea>

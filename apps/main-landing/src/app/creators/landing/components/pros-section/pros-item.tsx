@@ -8,8 +8,6 @@ type Properties = {
   className?: string;
   description: string;
   children?: ReactNode;
-  headingClassName?: string;
-  descriptionClassName?: string;
 };
 
 export const ProsItem = ({
@@ -18,11 +16,9 @@ export const ProsItem = ({
   children,
   className,
   description,
-  headingClassName,
-  descriptionClassName,
 }: Properties) => {
   return (
-    <div className={classes('flex w-full flex-col', className)}>
+    <div className={classes('flex w-full flex-col items-start', className)}>
       <Icon
         size={32}
         name={iconName}
@@ -31,10 +27,9 @@ export const ProsItem = ({
 
       <h3
         className={classes(
-          'mt-4 text-heading6 text-midnightGreen-100',
-          'md:text-heading5',
-          'lg:text-heading4',
-          headingClassName,
+          'mt-4 max-w-[500px] text-heading4 text-midnightGreen-100',
+          'md:text-heading3',
+          'lg:text-heading2',
         )}
       >
         {heading}
@@ -42,10 +37,9 @@ export const ProsItem = ({
 
       <p
         className={classes(
-          'mt-2 text-balance text-body6 text-midnightGreen-200',
+          'mt-2 max-w-[500px] text-balance text-body6 text-midnightGreen-200',
           'md:text-body5',
           'lg:text-body4',
-          descriptionClassName,
         )}
       >
         {description}

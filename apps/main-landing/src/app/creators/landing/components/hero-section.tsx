@@ -40,7 +40,7 @@ export const HeroSection = () => {
               'lg:text-left lg:text-display2',
             )}
           >
-            Make More, Grow Faster, TAKE CONTROL
+            Make More Grow Faster TAKE CONTROL
           </h1>
 
           <p
@@ -55,7 +55,7 @@ export const HeroSection = () => {
           </p>
 
           <Button
-            aria-label="Get started"
+            aria-label="Start earning now"
             intent="primary"
             size="large"
             className="z-1"
@@ -69,7 +69,7 @@ export const HeroSection = () => {
 
         <div
           className={classes(
-            'relative flex aspect-[115/76] w-full max-w-[1000px] flex-col items-center gap-2 overflow-hidden rounded-[40px] border border-mint-500 bg-neutral-900 px-safe',
+            'relative flex aspect-[115/76] w-full max-w-[1000px] flex-col items-center gap-2 overflow-hidden rounded-2xl border border-mint-500 bg-neutral-900 px-safe',
           )}
         >
           <VideoPlayer />

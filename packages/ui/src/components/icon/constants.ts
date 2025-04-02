@@ -29,6 +29,8 @@ import {
   SwitchCamera,
   Repeat2,
   HandCoins,
+  TrendingUp,
+  Trophy,
 } from 'lucide-react';
 
 import * as customIcons from './custom';
@@ -64,5 +66,7 @@ export const ICON = {
   SwitchCamera,
   Repeat2,
   HandCoins,
+  TrendingUp,
+  Trophy,
   ...customIcons,
 };
