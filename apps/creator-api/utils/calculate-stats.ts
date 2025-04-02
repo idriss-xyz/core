@@ -5,9 +5,9 @@ import {
 } from '../db/fetch-known-donations';
 import {
   DonationStats,
-  TokenV2,
   LeaderboardStats,
   DonationData,
+  DonationToken,
 } from '../types';
 import { Hex } from 'viem';
 
@@ -28,7 +28,7 @@ export function calculateStatsForDonorAddress(
     avatarSource: undefined,
   };
   let favoriteDonationToken = '';
-  let favoriteTokenMetadata: Omit<TokenV2, 'onchainMarketData'> | null = null;
+  let favoriteTokenMetadata: DonationToken | null = null;
   let donorDisplayName: string | null = null;
   let positionInLeaderboard = null;
 
@@ -52,9 +52,10 @@ export function calculateStatsForDonorAddress(
       favoriteDonationToken = tokenSymbol;
       favoriteTokenMetadata = {
         symbol: donation.token.symbol,
-        imageUrlV2: donation.token.imageUrl,
+        imageUrl: donation.token.imageUrl,
         address: donation.token.address,
         decimals: donation.token.decimals,
+        network: donation.network,
       };
     }
 

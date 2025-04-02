@@ -63,7 +63,7 @@ export async function enrichUserData(userData: {
       userData.avatarUrl = userData.farcasterUserData.metadata.imageUrl;
       userData.avatarSource = 'FARCASTER';
     }
-    if (!userData.displayName) {
+    if (userData.displayNameSource === 'ADDRESS') {
       userData.displayName = userData.farcasterUserData.metadata.displayName;
       userData.displayNameSource = 'FARCASTER';
     }

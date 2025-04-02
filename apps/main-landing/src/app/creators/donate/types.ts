@@ -9,12 +9,7 @@ interface DonorHistoryStats {
   favoriteDonationToken: string;
   donorDisplayName: string | null;
   positionInLeaderboard: number | null;
-  favoriteTokenMetadata: {
-    symbol: string;
-    imageUrl?: string;
-    address: Hex;
-    decimals: number;
-  } | null;
+  favoriteTokenMetadata: DonationToken | null;
 }
 
 export interface LeaderboardStats extends DonationUser {

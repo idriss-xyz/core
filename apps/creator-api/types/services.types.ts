@@ -14,7 +14,7 @@ interface DonationUser {
   avatarSource?: string;
 }
 
-interface DonationToken {
+export interface DonationToken {
   address: Hex;
   symbol: string;
   imageUrl?: string;
@@ -53,7 +53,7 @@ type UserData = {
   farcasterProfile: FarcasterUserData | undefined;
 };
 
-export interface TokenV2 {
+interface TokenV2 {
   symbol: string;
   imageUrlV2?: string;
   onchainMarketData: {
@@ -70,7 +70,7 @@ export interface DonationStats {
   mostDonatedToUser: DonationUser;
   biggestDonationAmount: number;
   favoriteDonationToken: string;
-  favoriteTokenMetadata: Omit<TokenV2, 'onchainMarketData'> | null;
+  favoriteTokenMetadata: DonationToken | null;
   donorDisplayName: string | null;
   positionInLeaderboard: number | null;
 }
