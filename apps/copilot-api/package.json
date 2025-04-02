@@ -25,7 +25,6 @@
     "express": "^4.21.1",
     "express-rate-limit": "^7.5.0",
     "jsonwebtoken": "^9.0.2",
-    "knex": "^3.1.0",
     "pg": "^8.13.1",
     "reflect-metadata": "^0.2.2",
     "socket.io": "^4.8.0",
