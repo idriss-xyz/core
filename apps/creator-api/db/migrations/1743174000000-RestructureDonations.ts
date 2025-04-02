@@ -95,7 +95,7 @@ export class RestructureDonations1743174000000 implements MigrationInterface {
           console.error(`ENS resolution failed for ${address}:`, error);
         }
       }
-      if (displayNameSource === 'ENS') {
+      if (displayNameSource === 'ENS' || displayNameSource === 'BASENAME') {
         // Try to get ENS avatar
         const avatarUri = await client.getEnsAvatar({
           name: normalize(displayName),

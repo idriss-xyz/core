@@ -6,7 +6,7 @@ import { Donation } from './entities/donations.entity';
 import { User } from './entities/user.entity';
 import { Token } from './entities/token.entity';
 import { DonationData, ZapperNode } from '../types';
-import { enrichUserWithEns } from '../utils/enrich-user';
+import { enrichUserData } from '../utils/enrich-user';
 
 export async function storeToDatabase(
   address: Hex,
@@ -30,18 +30,23 @@ export async function storeToDatabase(
   );
 
   for (const node of nodes) {
+    let enrichedToUser: typeof enrichedFromUser | undefined;
+
     if (!overwrite && existingHashes.has(node.transaction.hash)) {
       continue;
     }
     const fromUser = node.transaction.fromUser;
 
-    const enrichedFromUser = await enrichUserWithEns({
+    const enrichedFromUser = await enrichUserData({
       address: fromUser.address.toLowerCase() as Hex,
       displayName: fromUser.displayName?.value,
       displayNameSource: fromUser.displayName?.source,
       avatarUrl: fromUser.avatar?.value?.url,
       avatarSource: fromUser.avatar?.source,
+      farcasterUserData: fromUser.farcasterProfile,
     });
+
+    console.log('Storing enriched user: ', enrichedFromUser);
 
     await userRepo.upsert(enrichedFromUser, {
       conflictPaths: ['address'],
@@ -50,13 +55,16 @@ export async function storeToDatabase(
 
     const toUser = node.interpretation.descriptionDisplayItems[1]?.account;
     if (toUser) {
-      const enrichedToUser = await enrichUserWithEns({
+      enrichedToUser = await enrichUserData({
         address: toUser.address.toLowerCase() as Hex,
         displayName: toUser.displayName?.value,
         displayNameSource: toUser.displayName?.source,
         avatarUrl: toUser.avatar?.value?.url,
         avatarSource: toUser.avatar?.source,
+        farcasterUserData: toUser.farcasterProfile,
       });
+
+      console.log('Storing enriched user: ', enrichedToUser);
 
       await userRepo.upsert(enrichedToUser, {
         conflictPaths: ['address'],
@@ -85,6 +93,7 @@ export async function storeToDatabase(
         ? Number(formatUnits(BigInt(amountRaw), tokenData.decimals)) *
           tokenData.onchainMarketData.price
         : 0;
+
       const savedDonation = await donationRepo.save({
         transactionHash: node.transaction.hash,
         fromAddress: fromUser.address.toLowerCase() as Hex,
@@ -96,9 +105,19 @@ export async function storeToDatabase(
         network: node.network,
         data: node,
         amountRaw,
+        fromUser: enrichedFromUser,
+        toUser: enrichedToUser,
+        token: {
+          address: tokenData.address.toLowerCase() as Hex,
+          symbol: tokenData.symbol,
+          imageUrl: tokenData.imageUrlV2,
+          network: node.network,
+          decimals: tokenData.decimals,
+        },
       });
       savedDonations.push(savedDonation);
     }
   }
+  console.log('savedDonations', savedDonations);
   return savedDonations;
 }

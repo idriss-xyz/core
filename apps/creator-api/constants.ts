@@ -23,6 +23,13 @@ export const TipHistoryQuery = `
                 }
                 source
               }
+              farcasterProfile {
+                username
+                metadata {
+                  displayName
+                  imageUrl
+                }
+              }
             }
             toUser {
               address
@@ -66,6 +73,13 @@ export const TipHistoryQuery = `
                       }
                     }
                     source
+                  }
+                  farcasterProfile {
+                    username
+                    metadata {
+                      displayName
+                      imageUrl
+                    }
                   }
                 }
               }

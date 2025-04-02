@@ -30,6 +30,14 @@ interface ActorDisplayItem {
   account: UserData;
 }
 
+export interface FarcasterUserData {
+  username: string;
+  metadata: {
+    displayName: string;
+    imageUrl: string | undefined;
+  };
+}
+
 type UserData = {
   address: Hex;
   displayName: {
@@ -42,6 +50,7 @@ type UserData = {
     };
     source: string | undefined;
   };
+  farcasterProfile: FarcasterUserData | undefined;
 };
 
 export interface TokenV2 {

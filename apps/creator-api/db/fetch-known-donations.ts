@@ -14,11 +14,7 @@ export async function fetchDonationsByToAddress(
 
   const donations = await donationRepo.find({
     where: [{ toAddress }, { toAddress: toAddress.toLowerCase() as Hex }],
-    relations: {
-      fromUser: true,
-      toUser: true,
-      token: true,
-    },
+    relations: ['fromUser', 'toUser', 'token'],
   });
 
   return donations as DonationData[];
@@ -35,12 +31,10 @@ export async function fetchDonationsByFromAddress(
 
   const donations = await donationRepo.find({
     where: [{ fromAddress }, { fromAddress: fromAddress.toLowerCase() as Hex }],
-    relations: {
-      fromUser: true,
-      toUser: true,
-      token: true,
-    },
+    relations: ['fromUser', 'toUser', 'token'],
   });
+
+  console.log(donations);
 
   return donations as DonationData[];
 }
@@ -53,11 +47,7 @@ export async function fetchDonations(): Promise<Record<Hex, DonationData[]>> {
   const donationRepo = AppDataSource.getRepository(Donation);
 
   const donations = await donationRepo.find({
-    relations: {
-      fromUser: true,
-      toUser: true,
-      token: true,
-    },
+    relations: ['fromUser', 'toUser', 'token'],
   });
 
   const groupedDonations = donations.reduce(
@@ -85,11 +75,7 @@ export async function fetchDonationRecipients(): Promise<
   const donationRepo = AppDataSource.getRepository(Donation);
 
   const donations = await donationRepo.find({
-    relations: {
-      fromUser: true,
-      toUser: true,
-      token: true,
-    },
+    relations: ['fromUser', 'toUser', 'token'],
   });
 
   const groupedDonations = donations.reduce(
