@@ -35,7 +35,6 @@ export function calculateStatsForDonorAddress(
   donations.forEach((donation) => {
     const toAddress = donation.toAddress;
     const tradeValue = donation.tradeValue;
-    console.log('calculate stats for donation', donation);
 
     totalDonationAmount += tradeValue;
     donationAmounts[toAddress] = (donationAmounts[toAddress] || 0) + tradeValue;
@@ -45,7 +44,6 @@ export function calculateStatsForDonorAddress(
       mostDonatedToAddress = toAddress as Hex;
       mostDonatedToUser = donation.toUser;
     }
-    console.log('getting data for token', donation.token);
     const tokenSymbol = donation.token.symbol;
     tokenFrequency[tokenSymbol] = (tokenFrequency[tokenSymbol] || 0) + 1;
     if (

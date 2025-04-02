@@ -28,48 +28,51 @@ export async function storeToDatabase(
   const existingHashes = new Set(
     existingDonations.map((d) => d.transactionHash),
   );
+  const enrichedUserCache = new Map<Hex, any>();
 
   for (const node of nodes) {
-    let enrichedToUser: typeof enrichedFromUser | undefined;
-
     if (!overwrite && existingHashes.has(node.transaction.hash)) {
       continue;
     }
     const fromUser = node.transaction.fromUser;
-
-    const enrichedFromUser = await enrichUserData({
-      address: fromUser.address.toLowerCase() as Hex,
-      displayName: fromUser.displayName?.value,
-      displayNameSource: fromUser.displayName?.source,
-      avatarUrl: fromUser.avatar?.value?.url,
-      avatarSource: fromUser.avatar?.source,
-      farcasterUserData: fromUser.farcasterProfile,
-    });
-
-    console.log('Storing enriched user: ', enrichedFromUser);
-
-    await userRepo.upsert(enrichedFromUser, {
-      conflictPaths: ['address'],
-      skipUpdateIfNoValuesChanged: true,
-    });
-
-    const toUser = node.interpretation.descriptionDisplayItems[1]?.account;
-    if (toUser) {
-      enrichedToUser = await enrichUserData({
-        address: toUser.address.toLowerCase() as Hex,
-        displayName: toUser.displayName?.value,
-        displayNameSource: toUser.displayName?.source,
-        avatarUrl: toUser.avatar?.value?.url,
-        avatarSource: toUser.avatar?.source,
-        farcasterUserData: toUser.farcasterProfile,
+    const fromAddress = fromUser.address.toLowerCase() as Hex;
+    let enrichedFromUser = enrichedUserCache.get(fromAddress);
+    if (!enrichedFromUser) {
+      enrichedFromUser = await enrichUserData({
+        address: fromAddress,
+        displayName: fromUser.displayName?.value,
+        displayNameSource: fromUser.displayName?.source,
+        avatarUrl: fromUser.avatar?.value?.url,
+        avatarSource: fromUser.avatar?.source,
+        farcasterUserData: fromUser.farcasterProfile,
       });
-
-      console.log('Storing enriched user: ', enrichedToUser);
-
-      await userRepo.upsert(enrichedToUser, {
+      enrichedUserCache.set(fromAddress, enrichedFromUser);
+      await userRepo.upsert(enrichedFromUser, {
         conflictPaths: ['address'],
         skipUpdateIfNoValuesChanged: true,
       });
+    }
+
+    const toUser = node.interpretation.descriptionDisplayItems[1]?.account;
+    let enrichedToUser: typeof enrichedFromUser | undefined;
+    if (toUser) {
+      const toAddress = toUser.address.toLowerCase() as Hex;
+      enrichedToUser = enrichedUserCache.get(toAddress);
+      if (!enrichedToUser) {
+        enrichedToUser = await enrichUserData({
+          address: toAddress,
+          displayName: toUser.displayName?.value,
+          displayNameSource: toUser.displayName?.source,
+          avatarUrl: toUser.avatar?.value?.url,
+          avatarSource: toUser.avatar?.source,
+          farcasterUserData: toUser.farcasterProfile,
+        });
+        enrichedUserCache.set(toAddress, enrichedToUser);
+        await userRepo.upsert(enrichedToUser, {
+          conflictPaths: ['address'],
+          skipUpdateIfNoValuesChanged: true,
+        });
+      }
     }
 
     const tokenData = node.interpretation.descriptionDisplayItems[0]?.tokenV2;
@@ -118,6 +121,11 @@ export async function storeToDatabase(
       savedDonations.push(savedDonation);
     }
   }
-  console.log('savedDonations', savedDonations);
+  console.log(
+    'saved donations is: ',
+    savedDonations[0],
+    savedDonations[1],
+    savedDonations[2],
+  );
   return savedDonations;
 }
