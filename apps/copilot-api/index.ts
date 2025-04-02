@@ -4,7 +4,6 @@ import express, { Request, Response } from 'express';
 import http from 'http';
 import { join } from 'path';
 import { Server as SocketIOServer } from 'socket.io';
-import { dataSource } from './db';
 import defaultRoutes from './routes';
 import authRoutes from './routes/auth';
 import subscriptionsRoutes from './routes/subscribtions';
@@ -17,13 +16,13 @@ import {
 } from './services/webhookHandler';
 import { mode } from './utils/mode';
 import { validateWebhookSignature } from './utils/webhookUtils';
+import { initializeDatabase } from './db';
 
 dotenv.config(
   mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
 );
 
-dataSource
-  .initialize()
+initializeDatabase()
   .then(() => console.log('DB connected...'))
   .catch((err) => console.error('Error during DB initialization: ', err));
 
