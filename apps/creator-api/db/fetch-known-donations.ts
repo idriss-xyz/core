@@ -34,8 +34,6 @@ export async function fetchDonationsByFromAddress(
     relations: ['fromUser', 'toUser', 'token'],
   });
 
-  console.log(donations);
-
   return donations as DonationData[];
 }
 
