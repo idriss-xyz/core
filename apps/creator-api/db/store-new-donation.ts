@@ -121,11 +121,5 @@ export async function storeToDatabase(
       savedDonations.push(savedDonation);
     }
   }
-  console.log(
-    'saved donations is: ',
-    savedDonations[0],
-    savedDonations[1],
-    savedDonations[2],
-  );
   return savedDonations;
 }
