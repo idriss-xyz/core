@@ -131,13 +131,11 @@ export default function DonateHistoryItem({ tip, showReceiver }: Properties) {
             </p>
           </div>
 
-          <p className="align-middle text-body5 text-neutral-600">
-            {tipComment
-              ? tipComment !== 'N/A' && tipComment !== ' '
-                ? tipComment
-                : null
-              : null}
-          </p>
+          {tipComment && (                                                                 
+            <p className="align-middle text-body5 text-neutral-600">                       
+              {tipComment}                                                                 
+            </p>                                                                           
+          )} 
 
           <TooltipProvider delayDuration={400}>
             <Tooltip>
