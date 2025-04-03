@@ -37,7 +37,7 @@ export const ProsItem = ({
 
       <p
         className={classes(
-          'mt-2 max-w-[500px] text-balance text-body6 text-midnightGreen-200',
+          'mt-2 max-w-[510px] text-balance text-body6 text-midnightGreen-200',
           'md:text-body5',
           'lg:text-body4',
         )}
