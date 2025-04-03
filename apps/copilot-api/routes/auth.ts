@@ -3,6 +3,7 @@ import type { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import { throwInternalError } from '../middleware/error.middleware';
 import { isAddress } from 'viem';
+import { isSolanaAddress } from '@idriss-xyz/utils';
 import { join } from 'path';
 import { mode } from '../utils/mode';
 import {
@@ -15,13 +16,16 @@ import {
 dotenv.config(
   mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
 );
-
+1
 const router = express.Router();
 
 router.post('/login', async (req: Request, res: Response) => {
   const { signature, walletAddress, message } = req.body;
 
-  if (!isAddress(walletAddress)) {
+  const isEvmAddress = isAddress(walletAddress);
+  const isSolAddress = isSolanaAddress(walletAddress);
+
+  if (!isEvmAddress && !isSolAddress) {
     res.status(403).json({ error: 'Invalid wallet address' });
     return;
   }

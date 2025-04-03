@@ -7,6 +7,10 @@ import { publicClient } from '../config/publicClient';
 import type { Request } from 'express';
 import { Hex } from 'viem';
 import { expiryTime } from '../constants';
+import { PublicKey } from '@solana/web3.js';
+import { SolanaSignInInput } from "@solana/wallet-standard-features";
+import bs58 from 'bs58';
+import nacl from 'tweetnacl';
 
 const subscribersRepo = dataSource.getRepository(SubscribersEntity);
 
@@ -46,6 +50,32 @@ export async function validateMessage(
   });
 }
 
+export async function validateSolanaMessage(
+  walletAddress: string,
+  message: string,
+  signature: string,
+) {
+  try {
+    const currentNonce = expiringMap.get(walletAddress);
+    if (!currentNonce || !message.includes(currentNonce)) {
+      return false;
+    }
+
+    const publicKey = new PublicKey(walletAddress);
+    const signatureUint8 = bs58.decode(signature);
+    const messageUint8 = new TextEncoder().encode(message);
+
+    return nacl.sign.detached.verify(
+      messageUint8,
+      signatureUint8,
+      publicKey.toBytes()
+    );
+  } catch (error) {
+    console.error("Solana signature validation error:", error);
+    return false;
+  }
+}
+
 export function createMessage(
   walletAddress: Hex,
   chainId: number,
@@ -68,6 +98,33 @@ export function createMessage(
       timestamp.setTime(timestamp.getTime() + 10 * 60 * 1000),
     ),
   });
+}
+
+// Add Solana message creation
+export function createSolanaMessage(
+  walletAddress: string,
+  domain: string,
+) {
+  const nonce = generateSiweNonce();
+  expiringMap.set(walletAddress, nonce);
+
+  const timestamp = new Date();
+  const expirationTime = new Date(timestamp.getTime() + 10 * 60 * 1000);
+
+  const signInData: SolanaSignInInput = {
+    address: walletAddress,
+    domain,
+    statement:
+      "Log in to the IDRISS extension",
+    uri: `https://${domain}`,
+    version: "1",
+    nonce,
+    chainId: "mainnet",
+    issuedAt: timestamp.toISOString(),
+    expirationTime: expirationTime.toISOString(),
+  };
+
+  return signInData;
 }
 
 export async function validateToken(
