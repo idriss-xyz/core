@@ -59,7 +59,7 @@ export default function DonorStatsList({
           className="pointer-events-none absolute top-0 hidden size-full opacity-100 lg:block"
         />
 
-        <h1 className="text-heading4 text-neutralGreen-900">
+        <h1 className="self-start text-heading4 text-neutralGreen-900">
           Donation stats{' '}
           {(stats?.donorDisplayName ?? userAddress) &&
             !isInvalidAddress &&

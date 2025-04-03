@@ -330,11 +330,14 @@ export const LeaderboardTopDonors = ({
             <ul className="flex flex-col pr-4">
               {leaderboard.map((leaderboardItem, index) => {
                 if (!leaderboardItem || index > 9) return null;
+                const isLastItem =
+                  index === leaderboard.length - 1 || index === 9;
                 return (
                   <DonorItem
                     donorRank={index}
+                    isLastItem={isLastItem}
                     onDonorClick={onDonorClick}
-                    className="max-w-[344px] py-[23.5px]"
+                    className="max-w-[344px] py-[23.75px]"
                     donateAmount={leaderboardItem.totalAmount}
                     donorDetails={{
                       address: leaderboardItem.address,

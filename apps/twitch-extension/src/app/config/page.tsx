@@ -3,10 +3,12 @@ import { Form } from '@idriss-xyz/ui/form';
 import { Controller, useForm } from 'react-hook-form';
 import { Button } from '@idriss-xyz/ui/button';
 import { useState } from 'react';
-import { isAddress } from 'viem';
+import { createPublicClient, http, isAddress } from 'viem';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { QueryProvider } from '@idriss-xyz/main-landing/providers';
+import { normalize } from 'viem/ens';
+import { mainnet } from 'viem/chains';
 
 import { ConfigSubmitStatus, FormValues } from '@/app/types';
 import { backgroundLines2, backgroundLines3 } from '@/assets';
@@ -14,6 +16,11 @@ import { backgroundLines2, backgroundLines3 } from '@/assets';
 const FORM_VALUES = {
   donationLink: '',
 };
+
+const publicClient = createPublicClient({
+  chain: mainnet,
+  transport: http('https://eth.llamarpc.com'),
+});
 
 // ts-unused-exports:disable-next-line
 export default function Config() {
@@ -31,7 +38,7 @@ function ConfigContent() {
     defaultValues: FORM_VALUES,
   });
 
-  const onSubmit = (payload: FormValues) => {
+  const onSubmit = async (payload: FormValues) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const twitch = (window as any).Twitch;
     setSubmitStatus(undefined);
@@ -41,15 +48,39 @@ function ConfigContent() {
       return;
     }
 
-    const addressMatch = /address=0x[\dA-Fa-f]{40}/.exec(payload.donationLink);
-    const address = addressMatch ? addressMatch[0].split('=')[1] : null;
-
-    if (!address || !isAddress(address)) {
+    let input: string | null = null;
+    try {
+      const url = new URL(payload.donationLink);
+      input = url.searchParams.get('address');
+    } catch {
       setSubmitStatus('error');
-
       return;
     }
 
+    if (!input) {
+      setSubmitStatus('error');
+      return;
+    }
+
+    let address: string | null = null;
+    if (isAddress(input)) {
+      address = input;
+    } else {
+      try {
+        const resolved = await publicClient.getEnsAddress({
+          name: normalize(input),
+        });
+        if (resolved) {
+          address = resolved;
+        } else {
+          setSubmitStatus('error');
+          return;
+        }
+      } catch {
+        setSubmitStatus('error');
+        return;
+      }
+    }
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     twitch.ext.configuration.set(
       'broadcaster',
