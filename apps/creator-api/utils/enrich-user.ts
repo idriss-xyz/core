@@ -15,15 +15,11 @@ export async function enrichUserData(userData: {
   avatarSource?: string;
   farcasterUserData?: FarcasterUserData;
 }) {
-  console.log('enriching user: ', userData);
-
   if (userData.avatarSource === 'OPEPENS') {
-    console.log('deleting avatar url');
     userData.avatarUrl = undefined;
   }
 
   if (userData.displayNameSource === 'ADDRESS') {
-    console.log('is address');
     try {
       const ensName = await publicClient.getEnsName({
         address: userData.address,
@@ -43,12 +39,10 @@ export async function enrichUserData(userData: {
     userData.displayNameSource &&
     ['ENS', 'BASENAME'].includes(userData.displayNameSource)
   ) {
-    console.log('is ens');
     try {
       const avatarUrl = await publicClient.getEnsAvatar({
         name: normalize(userData.displayName),
       });
-      console.log('Got avatar url', avatarUrl);
       if (avatarUrl) {
         userData.avatarUrl = avatarUrl;
         userData.avatarSource = 'ENS';
