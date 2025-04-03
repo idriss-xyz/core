@@ -15,8 +15,6 @@ import { useRouter } from 'next/navigation';
 
 import { useGetDonorHistory } from '@/app/creators/donate/commands/get-donor-history';
 import { backgroundLines4 } from '@/assets';
-import { useGetEnsAvatar } from '@/app/creators/donate/commands/get-ens-avatar';
-import { useGetEnsName } from '@/app/creators/donate/commands/get-ens-name';
 
 import { DonateContentValues } from '../../types';
 
@@ -45,19 +43,9 @@ export default function DonorStatsList({
     { enabled: !!userAddress },
   );
 
-  const mostDonatedTo = donorHistory.data?.stats?.mostDonatedToAddress as Hex;
-
-  const mostDonatedToEnsNameQuery = useGetEnsName(
-    {
-      address: mostDonatedTo ?? EMPTY_HEX,
-    },
-    { enabled: !!mostDonatedTo },
-  );
-
-  const mostDonatedToEnsAvatarQuery = useGetEnsAvatar(
-    { name: mostDonatedToEnsNameQuery.data ?? '' },
-    { enabled: !!mostDonatedToEnsNameQuery.data },
-  );
+  const mostDonatedTo = donorHistory.data?.stats.mostDonatedToUser;
+  const mostDonatedToDisplayName = mostDonatedTo?.displayName;
+  const mostDonatedToAvatarUrl = mostDonatedTo?.avatarUrl;
 
   const stats = donorHistory.data?.stats;
 
@@ -157,7 +145,7 @@ export default function DonorStatsList({
                       </p>
                       <img
                         className="inline-block size-6 rounded-full"
-                        src={stats.favoriteTokenMetadata.imageUrlV2}
+                        src={stats.favoriteTokenMetadata?.imageUrl}
                         alt=""
                       />
                     </span>
@@ -171,10 +159,10 @@ export default function DonorStatsList({
                     </p>
 
                     <div className="flex flex-row items-center gap-x-1">
-                      {mostDonatedToEnsAvatarQuery.data ? (
+                      {mostDonatedToAvatarUrl ? (
                         <img
                           alt="Donor avatar"
-                          src={mostDonatedToEnsAvatarQuery.data}
+                          src={mostDonatedToAvatarUrl}
                           className="size-10 rounded-full border border-neutral-400"
                         />
                       ) : (
@@ -191,17 +179,15 @@ export default function DonorStatsList({
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <p className="cursor-default truncate text-label3 text-neutral-800">
-                              {mostDonatedToEnsNameQuery.data
-                                ? removeEthSuffix(
-                                    mostDonatedToEnsNameQuery.data,
-                                  )
+                              {mostDonatedToDisplayName
+                                ? removeEthSuffix(mostDonatedToDisplayName)
                                 : getShortWalletHex(stats.mostDonatedToAddress)}
                             </p>
                           </TooltipTrigger>
 
                           <TooltipContent className="w-fit bg-black text-white">
                             <p>
-                              {mostDonatedToEnsNameQuery.data ??
+                              {mostDonatedToDisplayName ??
                                 stats.mostDonatedToAddress}
                             </p>
                           </TooltipContent>

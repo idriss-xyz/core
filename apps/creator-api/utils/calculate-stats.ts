@@ -1,20 +1,18 @@
 import { CREATOR_LINKS } from '../constants';
-import { Donation } from '../db/entities/donations.entity';
 import {
   fetchDonations,
   fetchDonationRecipients,
 } from '../db/fetch-known-donations';
 import {
-  TokenDisplayItem,
   DonationStats,
-  TokenV2,
   LeaderboardStats,
-  UserData,
+  DonationData,
+  DonationToken,
 } from '../types';
-import { formatUnits, Hex } from 'viem';
+import { Hex } from 'viem';
 
 export function calculateStatsForDonorAddress(
-  donations: Donation[],
+  donations: DonationData[],
 ): DonationStats {
   let totalDonationsCount = 0;
   let totalDonationAmount = 0;
@@ -22,29 +20,21 @@ export function calculateStatsForDonorAddress(
   const tokenFrequency: Record<string, number> = {};
   let biggestDonationAmount = 0;
   let mostDonatedToAddress = '0x' as Hex;
+  let mostDonatedToUser: DonationData['toUser'] = {
+    address: '0x' as Hex,
+    displayName: undefined,
+    displayNameSource: undefined,
+    avatarUrl: undefined,
+    avatarSource: undefined,
+  };
   let favoriteDonationToken = '';
-  let favoriteTokenMetadata: Omit<TokenV2, 'onchainMarketData'> | null = null;
+  let favoriteTokenMetadata: DonationToken | null = null;
   let donorDisplayName: string | null = null;
   let positionInLeaderboard = null;
 
   donations.forEach((donation) => {
     const toAddress = donation.toAddress;
-    const tokenDisplayItem = donation.data.interpretation
-      .descriptionDisplayItems[0] as TokenDisplayItem;
-
-    const amountRaw = tokenDisplayItem?.amountRaw;
-    const price = tokenDisplayItem?.tokenV2?.onchainMarketData?.price;
-    const decimals = tokenDisplayItem?.tokenV2?.decimals ?? 18;
-
-    if (
-      amountRaw === undefined ||
-      price === undefined ||
-      decimals === undefined
-    )
-      return;
-
-    const tradeValue =
-      Number.parseFloat(formatUnits(BigInt(amountRaw), decimals)) * price;
+    const tradeValue = donation.tradeValue;
 
     totalDonationAmount += tradeValue;
     donationAmounts[toAddress] = (donationAmounts[toAddress] || 0) + tradeValue;
@@ -52,19 +42,20 @@ export function calculateStatsForDonorAddress(
       donationAmounts[toAddress] > (donationAmounts[mostDonatedToAddress] || 0)
     ) {
       mostDonatedToAddress = toAddress as Hex;
+      mostDonatedToUser = donation.toUser;
     }
-
-    const tokenSymbol = tokenDisplayItem.tokenV2.symbol;
+    const tokenSymbol = donation.token.symbol;
     tokenFrequency[tokenSymbol] = (tokenFrequency[tokenSymbol] || 0) + 1;
     if (
       tokenFrequency[tokenSymbol] > (tokenFrequency[favoriteDonationToken] || 0)
     ) {
       favoriteDonationToken = tokenSymbol;
       favoriteTokenMetadata = {
-        symbol: tokenDisplayItem.tokenV2.symbol,
-        imageUrlV2: tokenDisplayItem.tokenV2.imageUrlV2,
-        address: tokenDisplayItem.tokenV2.address,
-        decimals: tokenDisplayItem.tokenV2.decimals,
+        symbol: donation.token.symbol,
+        imageUrl: donation.token.imageUrl,
+        address: donation.token.address,
+        decimals: donation.token.decimals,
+        network: donation.network,
       };
     }
 
@@ -73,8 +64,7 @@ export function calculateStatsForDonorAddress(
     }
 
     if (!donorDisplayName) {
-      donorDisplayName =
-        donation.data.transaction.fromUser.displayName?.value ?? null;
+      donorDisplayName = donation.fromUser.displayName ?? null;
     }
     totalDonationsCount += 1;
   });
@@ -83,6 +73,7 @@ export function calculateStatsForDonorAddress(
     totalDonationsCount,
     totalDonationAmount,
     mostDonatedToAddress,
+    mostDonatedToUser,
     biggestDonationAmount,
     favoriteDonationToken,
     favoriteTokenMetadata,
@@ -101,26 +92,11 @@ export async function calculateGlobalDonorLeaderboard(): Promise<
       const hexAddress = address as Hex;
       return {
         address: hexAddress,
-        donorMetadata: donations[0].data.transaction.fromUser,
+        donorMetadata: donations[0].fromUser,
+        displayName: donations[0].fromUser.displayName!,
+        avatarUrl: donations[0].fromUser.avatarUrl!,
         totalAmount: donations.reduce((sum, donation) => {
-          const tokenDisplayItem = donation.data.interpretation
-            .descriptionDisplayItems[0] as TokenDisplayItem;
-
-          const amountRaw = tokenDisplayItem?.amountRaw;
-          const price = tokenDisplayItem?.tokenV2?.onchainMarketData?.price;
-          const decimals = tokenDisplayItem?.tokenV2?.decimals ?? 18;
-
-          if (
-            amountRaw === undefined ||
-            price === undefined ||
-            decimals === undefined
-          )
-            return sum;
-
-          const tradeValue =
-            Number.parseFloat(formatUnits(BigInt(amountRaw), decimals)) * price;
-
-          return sum + tradeValue;
+          return sum + donation.tradeValue;
         }, 0),
       };
     },
@@ -138,47 +114,25 @@ export async function calculateGlobalStreamerLeaderboard(): Promise<
 
   const leaderboard = Object.entries(groupedDonations)
     .filter(([address, donations]) => {
-      const displayItem =
-        donations[0].data.interpretation.descriptionDisplayItems[1];
+      const toUser = donations[0].toUser;
       return (
-        displayItem &&
-        displayItem.account &&
-        typeof displayItem.account.address === 'string' &&
-        /^0x[a-fA-F0-9]{40}$/.test(displayItem.account.address) &&
-        typeof displayItem.account.displayName === 'object' &&
-        typeof displayItem.account.displayName.value === 'string' &&
-        typeof displayItem.account.displayName.source === 'string' &&
-        typeof displayItem.account.avatar === 'object' &&
-        typeof displayItem.account.avatar.value === 'object' &&
-        (typeof displayItem.account.avatar.value.url === 'string' ||
-          typeof displayItem.account.avatar.value.url === 'undefined')
+        toUser &&
+        toUser.address &&
+        /^0x[a-fA-F0-9]{40}$/.test(toUser.address) &&
+        toUser.displayName &&
+        toUser.displayNameSource &&
+        toUser.avatarUrl !== undefined
       );
     })
     .map(([address, donations]) => {
       const hexAddress = address as Hex;
       return {
         address: hexAddress,
-        donorMetadata: donations[0].data.interpretation
-          .descriptionDisplayItems[1]!.account as UserData,
+        donorMetadata: donations[0].toUser,
+        displayName: donations[0].toUser.displayName!,
+        avatarUrl: donations[0].toUser.avatarUrl!,
         totalAmount: donations.reduce((sum, donation) => {
-          const tokenDisplayItem = donation.data.interpretation
-            .descriptionDisplayItems[0] as TokenDisplayItem;
-
-          const amountRaw = tokenDisplayItem?.amountRaw;
-          const price = tokenDisplayItem?.tokenV2?.onchainMarketData?.price;
-          const decimals = tokenDisplayItem?.tokenV2?.decimals ?? 18;
-
-          if (
-            amountRaw === undefined ||
-            price === undefined ||
-            decimals === undefined
-          )
-            return sum;
-
-          const tradeValue =
-            Number.parseFloat(formatUnits(BigInt(amountRaw), decimals)) * price;
-
-          return sum + tradeValue;
+          return sum + donation.tradeValue;
         }, 0),
       };
     });
