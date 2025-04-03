@@ -1,11 +1,16 @@
 import { Desktop } from './desktop';
 import { Mobile } from './mobile';
 
-export const Navigation = () => {
+type Properties = {
+  displayCTA?: boolean;
+  hideNavigation?: boolean;
+};
+
+export const Navigation = ({ hideNavigation, displayCTA }: Properties) => {
   return (
     <>
-      <Mobile />
-      <Desktop />
+      <Mobile hideNavigation={hideNavigation} />
+      <Desktop hideNavigation={hideNavigation} displayCTA={displayCTA} />
     </>
   );
 };

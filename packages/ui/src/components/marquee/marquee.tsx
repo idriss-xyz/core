@@ -7,12 +7,14 @@ type Properties = {
   items: ReactNode[];
   pauseOnHover?: boolean;
   className?: string;
+  sliderClassName?: string;
 };
 
 export const Marquee = ({
   items,
   pauseOnHover = true,
   className,
+  sliderClassName,
 }: Properties) => {
   const [isRendered, setIsRendered] = useState(false);
 
@@ -36,6 +38,7 @@ export const Marquee = ({
           isRendered && 'animate-marquee',
           pauseOnHover &&
             'group-focus-within:paused-animation group-hover:paused-animation',
+          sliderClassName,
         )}
       >
         {items.map((item, index) => {
@@ -57,6 +60,7 @@ export const Marquee = ({
           isRendered && 'animate-marquee2',
           pauseOnHover &&
             'group-focus-within:paused-animation group-hover:paused-animation',
+          sliderClassName,
         )}
       >
         {items.map((item, index) => {

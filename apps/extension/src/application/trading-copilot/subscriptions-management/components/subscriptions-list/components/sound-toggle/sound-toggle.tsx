@@ -14,6 +14,7 @@ export const SoundToggle = () => {
       <Icon
         size={24}
         name={toastSoundEnabled ? 'SoundEnabled' : 'SoundDisabled'}
+        className={toastSoundEnabled ? 'text-mint-500' : 'text-gray-300'}
       />
     </span>
   );

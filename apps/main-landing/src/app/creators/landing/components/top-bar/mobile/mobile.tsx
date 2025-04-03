@@ -9,7 +9,11 @@ import { NavigationMenu } from '@idriss-xyz/ui/navigation-menu';
 import { EXTERNAL_LINK, INTERNAL_LINK } from '@/constants';
 import { Socials } from '@/components/top-bar/components/mobile/socials';
 
-export const Mobile = () => {
+type Properties = {
+  hideNavigation?: boolean;
+};
+
+export const Mobile = ({ hideNavigation }: Properties) => {
   return (
     <Dialog
       className="fixed inset-x-4 bottom-3 top-[76px] px-safe" // top-[76px] is 64px height of navbar + 12px spacing, ideally it should be ref attached to nav to read component height in case it changes in future
@@ -37,49 +41,53 @@ export const Mobile = () => {
             <div className="flex size-full flex-col overflow-auto rounded-[36px] border border-[#5FEB3C] bg-white/50 px-4 py-6 text-neutralGreen-900 backdrop-blur-[45px]">
               <NavigationMenu.Root className="grid h-full">
                 <NavigationMenu.List className="flex h-full flex-col justify-between">
-                  <div className="space-y-6">
-                    <NavigationMenu.Link asChild>
-                      <span>
-                        <Link
-                          passHref
-                          legacyBehavior
-                          href={EXTERNAL_LINK.TOP_CREATORS}
-                        >
-                          <Button intent="tertiary" size="large" asLink>
-                            TOP CREATORS
-                          </Button>
-                        </Link>
-                      </span>
-                    </NavigationMenu.Link>
+                  {hideNavigation ? (
+                    <span />
+                  ) : (
+                    <div className="space-y-6">
+                      <NavigationMenu.Link asChild>
+                        <span>
+                          <Link
+                            passHref
+                            legacyBehavior
+                            href={EXTERNAL_LINK.TOP_CREATORS}
+                          >
+                            <Button intent="tertiary" size="large" asLink>
+                              TOP CREATORS
+                            </Button>
+                          </Link>
+                        </span>
+                      </NavigationMenu.Link>
 
-                    <NavigationMenu.Link asChild>
-                      <span>
-                        <Link
-                          passHref
-                          legacyBehavior
-                          href={EXTERNAL_LINK.TOP_DONORS}
-                        >
-                          <Button intent="tertiary" size="large" asLink>
-                            TOP DONORS
-                          </Button>
-                        </Link>
-                      </span>
-                    </NavigationMenu.Link>
+                      <NavigationMenu.Link asChild>
+                        <span>
+                          <Link
+                            passHref
+                            legacyBehavior
+                            href={EXTERNAL_LINK.TOP_DONORS}
+                          >
+                            <Button intent="tertiary" size="large" asLink>
+                              TOP DONORS
+                            </Button>
+                          </Link>
+                        </span>
+                      </NavigationMenu.Link>
 
-                    <NavigationMenu.Link asChild>
-                      <span>
-                        <Link
-                          passHref
-                          legacyBehavior
-                          href={INTERNAL_LINK.TOKEN}
-                        >
-                          <Button intent="tertiary" size="large" asLink>
-                            TOKEN
-                          </Button>
-                        </Link>
-                      </span>
-                    </NavigationMenu.Link>
-                  </div>
+                      <NavigationMenu.Link asChild>
+                        <span>
+                          <Link
+                            passHref
+                            legacyBehavior
+                            href={INTERNAL_LINK.TOKEN}
+                          >
+                            <Button intent="tertiary" size="large" asLink>
+                              TOKEN
+                            </Button>
+                          </Link>
+                        </span>
+                      </NavigationMenu.Link>
+                    </div>
+                  )}
 
                   <Socials className="mt-auto" />
                 </NavigationMenu.List>
