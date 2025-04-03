@@ -1,14 +1,12 @@
 import { Icon } from '@idriss-xyz/ui/icon';
 import { Link } from '@idriss-xyz/ui/link';
-import { TipHistoryFromUser } from '@idriss-xyz/constants';
 import { getShortWalletHex } from '@idriss-xyz/utils';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Hex } from 'viem';
 
+import { DonationUser } from '../../donate/types';
 import { WHITELISTED_URLS } from '../../donate/constants';
 import { useGetAvatarImage } from '../commands/get-avatar-image';
-import { useGetEnsAvatar } from '../commands/get-ens-avatar';
-import { useGetEnsName } from '../commands/get-ens-name';
 
 const rankBorders = [
   'border-[#FAC928]',
@@ -24,7 +22,7 @@ type Properties = {
   isLastItem?: boolean;
   donateAmount: number;
   isTwitchExtension?: boolean;
-  donorDetails: TipHistoryFromUser;
+  donorDetails: DonationUser;
   onDonorClick?: (address: Hex) => void;
 };
 
@@ -37,33 +35,8 @@ export default function DonorItem({
   donateAmount,
   isTwitchExtension,
 }: Properties) {
-  const imageSource = donorDetails.avatar?.source;
-  const potentialENS = useGetEnsName(
-    { address: donorDetails.address },
-    { enabled: donorDetails.displayName?.source === 'ADDRESS' },
-  );
-
-  const displayName =
-    potentialENS.isSuccess && potentialENS.data
-      ? potentialENS.data
-      : donorDetails.displayName?.value;
-  const nameSource =
-    potentialENS.isSuccess && potentialENS.data
-      ? 'ENS'
-      : donorDetails.displayName?.source;
-
-  const ensAvatarQuery = useGetEnsAvatar(
-    { name: displayName ?? '' },
-    {
-      isTwitchExtension: isTwitchExtension,
-      enabled: nameSource === 'ENS' && !!displayName,
-    },
-  );
-
-  const farcasterAvatarUrl =
-    imageSource === 'FARCASTER' ? donorDetails.avatar?.value?.url : null;
-
-  const avatarSourceUrl = ensAvatarQuery.data ?? farcasterAvatarUrl;
+  const displayName = donorDetails.displayName;
+  const avatarSourceUrl = donorDetails.avatarUrl;
 
   const isAllowedUrl =
     !isTwitchExtension ||

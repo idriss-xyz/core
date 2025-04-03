@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { DonorHistoryResponse } from '@/app/creators/donate/types';
+import { LeaderboardStats } from '@/app/creators/donate/types';
 
 import { CREATOR_API_URL } from '../constants';
 
@@ -9,7 +9,7 @@ const getDonorRanking = async () => {
 
   const result = await response.json();
 
-  return result.leaderboard as DonorHistoryResponse['leaderboard'];
+  return result.leaderboard as LeaderboardStats[];
 };
 
 export const useGetDonorRanking = () => {

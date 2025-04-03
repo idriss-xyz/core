@@ -26,8 +26,8 @@ router.post('/', async (req: Request, res: Response) => {
     }
     const hexAddress = address as Hex;
 
-    const knownDonations = await fetchDonationsByFromAddress(hexAddress);
-    const stats = calculateStatsForDonorAddress(knownDonations);
+    const donations = await fetchDonationsByFromAddress(hexAddress);
+    const stats = calculateStatsForDonorAddress(donations);
 
     const leaderboard = await calculateGlobalDonorLeaderboard();
     const donorPosition = leaderboard.findIndex(
@@ -36,11 +36,9 @@ router.post('/', async (req: Request, res: Response) => {
     stats.positionInLeaderboard =
       donorPosition !== -1 ? donorPosition + 1 : null;
 
-    // Todo: remove leaderboard
     res.json({
       stats,
-      leaderboard,
-      knownDonations,
+      donations,
     });
   } catch (error) {
     console.error('Tip history error:', error);

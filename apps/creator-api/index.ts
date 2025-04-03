@@ -12,14 +12,15 @@ import donorLeaderboardRouter from './routes/donor-leaderboard';
 import pushDonationRouter from './routes/push-donation';
 import overwriteDonationRouter from './routes/overwrite-donation';
 import refetchDonationRouter from './routes/refetch-donations';
+import refetchENSRouter from './routes/force-refresh-ens';
 import cors from 'cors';
-import { AppDataSource } from './db/database';
+import { initializeDatabase } from './db/database';
 
 dotenv.config(
   mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
 );
 
-AppDataSource.initialize()
+initializeDatabase()
   .then(() => console.log('DB connected...'))
   .catch((err) => console.error('Error during DB initialization:', err));
 
@@ -39,6 +40,7 @@ app.use('/donor-leaderboard', donorLeaderboardRouter);
 app.use('/push-donation', pushDonationRouter);
 app.use('/overwrite-donation', overwriteDonationRouter);
 app.use('/refetch-donations', refetchDonationRouter);
+app.use('/force-refresh-ens', refetchENSRouter);
 
 const HOST = process.env.HOST;
 const PORT = Number(process.env.PORT) || 4000;

@@ -3,10 +3,11 @@ import { Hex } from 'viem';
 import { useEffect, useState } from 'react';
 import { default as io } from 'socket.io-client';
 import _ from 'lodash';
-import { EMPTY_HEX, TipHistoryNode } from '@idriss-xyz/constants';
+import { EMPTY_HEX } from '@idriss-xyz/constants';
 import { useGetTipHistory } from '@idriss-xyz/main-landing/app/creators/donate/commands/get-donate-history';
 import { TopDonors } from '@idriss-xyz/main-landing/app/creators/donate/top-donors';
 import { QueryProvider } from '@idriss-xyz/main-landing/providers';
+import { DonationData } from '@idriss-xyz/main-landing/app/creators/donate/types';
 
 import { CREATOR_API_URL } from '@/app/constants';
 import { ConfigValues, WidgetVariants } from '@/app/types';
@@ -30,7 +31,7 @@ type ContentProperties = {
 function WidgetContent({ variant }: ContentProperties) {
   const [socketConnected, setSocketConnected] = useState(false);
   const [socketInitialized, setSocketInitialized] = useState(false);
-  const [tipEdges, setTipEdges] = useState<{ node: TipHistoryNode }[]>([]);
+  const [tipEdges, setTipEdges] = useState<DonationData[]>([]);
   const [address, setAddress] = useState<Hex | null | undefined>();
   const [donationUrl, setDonationUrl] = useState<string | null | undefined>();
 
@@ -65,7 +66,7 @@ function WidgetContent({ variant }: ContentProperties) {
 
   useEffect(() => {
     if (tips.data) {
-      setTipEdges(tips.data.data);
+      setTipEdges(tips.data.donations);
     }
   }, [tips.data]);
 
@@ -82,11 +83,10 @@ function WidgetContent({ variant }: ContentProperties) {
             setSocketConnected(true);
           }
         });
-
-        socket.on('newDonation', (node: TipHistoryNode) => {
+        socket.on('newDonation', (donation: DonationData) => {
           setTipEdges((previousState) => {
-            return _.uniqBy([{ node }, ...previousState], (item) => {
-              return _.get(item, 'node.transaction.hash');
+            return _.uniqBy([donation, ...previousState], (item) => {
+              return item.transactionHash;
             });
           });
         });
