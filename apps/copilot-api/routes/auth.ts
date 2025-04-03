@@ -8,15 +8,17 @@ import { join } from 'path';
 import { mode } from '../utils/mode';
 import {
   createMessage,
+  createSolanaMessage,
   login,
   validateMessage,
+  validateSolanaMessage,
   validateToken,
 } from '../services/auth';
 
 dotenv.config(
   mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
 );
-1
+
 const router = express.Router();
 
 router.post('/login', async (req: Request, res: Response) => {
@@ -31,7 +33,9 @@ router.post('/login', async (req: Request, res: Response) => {
   }
 
   try {
-    const valid = await validateMessage(walletAddress, message, signature);
+    const valid = isEvmAddress 
+      ? await validateMessage(walletAddress, message, signature)
+      : await validateSolanaMessage(walletAddress, message, signature);
 
     if (!valid) {
       res.status(403).json({ error: 'Invalid signature' });
@@ -48,7 +52,17 @@ router.post('/wallet-address', async (req, res) => {
   try {
     const { walletAddress, chainId, domain } = req.body;
 
-    const message = createMessage(walletAddress, chainId, domain);
+    const isEvmAddress = isAddress(walletAddress);
+    const isSolAddress = isSolanaAddress(walletAddress);
+
+    if (!isEvmAddress && !isSolAddress) {
+      res.status(403).json({ error: 'Invalid wallet address' });
+      return;
+    }
+
+    const message = isEvmAddress
+      ? createMessage(walletAddress, chainId, domain)
+      : createSolanaMessage(walletAddress, domain);
 
     res.status(200).json({ message });
   } catch (err) {
