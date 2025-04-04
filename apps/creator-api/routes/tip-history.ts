@@ -135,7 +135,7 @@ router.post('/', async (req: Request, res: Response) => {
         knownDonationMap.set(donation.transactionHash.toLowerCase(), donation);
       }
     }
-    
+
     // Get leaderboard data
     const leaderboard = await calculateDonationLeaderboard(
       Array.from(knownDonationMap.values()),

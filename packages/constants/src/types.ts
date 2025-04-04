@@ -39,16 +39,6 @@ export interface TipHistoryTokenV2 {
   decimals: number;
 }
 
-interface TokenV2 {
-  symbol: string;
-  imageUrlV2?: string;
-  onchainMarketData: {
-    price: number;
-  };
-  address: Hex;
-  decimals: number;
-}
-
 interface TokenDisplayItem {
   network: string;
   amountRaw: string;

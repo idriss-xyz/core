@@ -19,7 +19,6 @@ import {
   LeaderboardStats,
 } from '@/app/creators/donate/types';
 
-
 import { TopBar } from '../landing/components/top-bar';
 
 import { TopDonors } from './top-donors';

@@ -15,7 +15,6 @@ export async function enrichUserData(userData: {
   avatarSource?: string;
   farcasterUserData?: FarcasterUserData;
 }) {
-
   if (userData.avatarSource === 'OPEPENS') {
     userData.avatarUrl = undefined;
   }
