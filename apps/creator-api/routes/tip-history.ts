@@ -5,6 +5,7 @@ import {
   TipHistoryQuery,
   ZAPPER_API_URL,
 } from '../constants';
+import { tipHistoryCache, TIP_HISTORY_TTL_MS } from '../cache/tipHistoryCache';
 
 import { fetchDonationsByToAddress } from '../db/fetch-known-donations';
 import {
@@ -41,13 +42,29 @@ router.post('/', async (req: Request, res: Response) => {
       return;
     }
     const hexAddress = address as Hex;
+    const lastUpdate = tipHistoryCache.get(hexAddress);
+    const shouldRefetch =
+      !lastUpdate || Date.now() - lastUpdate > TIP_HISTORY_TTL_MS;
+
     const knownDonations = await fetchDonationsByToAddress(hexAddress);
     const knownDonationMap = new Map<string, DonationData>();
     for (const donation of knownDonations) {
       knownDonationMap.set(donation.transactionHash.toLowerCase(), donation);
     }
-    const knownHashes = new Set(knownDonationMap.keys());
 
+    if (!shouldRefetch) {
+      const leaderboard = calculateDonationLeaderboard(
+        Array.from(knownDonationMap.values()),
+      );
+      const response: TipHistoryResponse = {
+        donations: Array.from(knownDonationMap.values()),
+        leaderboard,
+      };
+      res.json(response);
+      return;
+    }
+
+    const knownHashes = new Set(knownDonationMap.keys());
     const newEdges: { node: ZapperNode }[] = [];
     let cursor: string | null = null;
     let hasNextPage = true;
@@ -136,8 +153,11 @@ router.post('/', async (req: Request, res: Response) => {
       }
     }
 
+    // Update cache timestamp after successful fetch
+    tipHistoryCache.set(hexAddress, Date.now());
+
     // Get leaderboard data
-    const leaderboard = await calculateDonationLeaderboard(
+    const leaderboard = calculateDonationLeaderboard(
       Array.from(knownDonationMap.values()),
     );
 

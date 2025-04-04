@@ -3,6 +3,7 @@ import express from 'express';
 import { processNewDonations } from '../services/zapper/process-donations';
 import { connectedClients } from '../services/socket-server';
 import { DonationData } from '../types';
+import { tipHistoryCache } from '../cache/tipHistoryCache';
 import { Hex } from 'viem';
 
 const router = express.Router();
@@ -48,6 +49,7 @@ router.post('/', async (req: Request, res: Response) => {
         }
       }
 
+      tipHistoryCache.set(hexAddress.toLowerCase(), Date.now());
       res.json({ data: result.storedDonations });
     } else {
       res.status(200).json({ message: 'No new donations found after retries' });
