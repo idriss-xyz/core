@@ -2,16 +2,20 @@ import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { Icon } from '@idriss-xyz/ui/icon';
+import { Hex } from 'viem';
 
 import { DonateContentValues, DonationData } from '@/app/creators/donate/types';
 
 import DonateHistoryItem from './donate-history-item';
 
 type Properties = {
+  address: {
+    isValid: boolean;
+    data: Hex | null;
+    isFetching: boolean;
+  };
   tipsLoading: boolean;
   showReceiver?: boolean;
-  isInvalidAddress: boolean;
-  address: string | null | undefined;
   currentContent: DonateContentValues;
   donations: DonationData[];
   updateCurrentContent: (content: DonateContentValues) => void;
@@ -22,7 +26,6 @@ export default function DonateHistoryList({
   tipsLoading,
   showReceiver,
   currentContent,
-  isInvalidAddress,
   updateCurrentContent,
 }: Properties) {
   const sortedTipEdges = [...donations].sort((a, b) => {
@@ -51,7 +54,7 @@ export default function DonateHistoryList({
         rootClassName="w-full max-h-[500px]"
         className="size-full max-h-[500px] overflow-y-auto transition-all duration-500"
       >
-        {isInvalidAddress ? (
+        {address.isValid ? (
           <p className="flex items-center justify-center gap-2 text-center text-heading4 text-red-500">
             <Icon name="AlertCircle" size={40} /> <span>Wrong address</span>
           </p>
