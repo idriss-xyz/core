@@ -20,10 +20,7 @@ import dotenv from 'dotenv';
 import { mode } from '../utils/mode';
 import { join } from 'path';
 import { Hex } from 'viem';
-import {
-  calculateGlobalDonorLeaderboard,
-  calculateStatsForDonorAddress,
-} from '../utils/calculate-stats';
+import { calculateDonationLeaderboard } from '../utils/calculate-stats';
 
 const router = Router();
 
@@ -137,18 +134,15 @@ router.post('/', async (req: Request, res: Response) => {
         knownDonationMap.set(donation.transactionHash.toLowerCase(), donation);
       }
     }
-    // Calculate stats directly from knownDonations (already in correct format)
-    const stats = calculateStatsForDonorAddress(
-      Array.from(knownDonationMap.values()),
-    );
 
     // Get leaderboard data
-    const leaderboard = await calculateGlobalDonorLeaderboard();
+    const leaderboard = await calculateDonationLeaderboard(
+      Array.from(knownDonationMap.values()),
+    );
 
     // Return the structured response
     const response: TipHistoryResponse = {
       donations: Array.from(knownDonationMap.values()),
-      stats,
       leaderboard,
     };
 

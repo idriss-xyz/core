@@ -39,16 +39,6 @@ export interface TipHistoryTokenV2 {
   decimals: number;
 }
 
-interface TokenV2 {
-  symbol: string;
-  imageUrlV2?: string;
-  onchainMarketData: {
-    price: number;
-  };
-  address: Hex;
-  decimals: number;
-}
-
 interface TokenDisplayItem {
   network: string;
   amountRaw: string;
@@ -101,7 +91,6 @@ export interface TipHistoryNode {
 
 export interface TipHistoryResponse {
   donations: DonationData[];
-  stats: DonationStats;
   leaderboard: LeaderboardStats[];
 }
 
@@ -118,17 +107,6 @@ interface DonationData {
   toUser: DonationUser;
   token: DonationToken;
   amountRaw: string;
-}
-
-interface DonationStats {
-  totalDonationsCount: number;
-  totalDonationAmount: number;
-  mostDonatedToAddress: Hex;
-  biggestDonationAmount: number;
-  favoriteDonationToken: string;
-  favoriteTokenMetadata: Omit<TokenV2, 'onchainMarketData'> | null;
-  donorDisplayName: string | null;
-  positionInLeaderboard: number | null;
 }
 
 interface LeaderboardStats {
