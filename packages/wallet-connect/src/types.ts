@@ -13,6 +13,7 @@ export type Wallet = {
 export type SolanaWallet = {
   account: string;
   provider: SolanaProvider;
+  providerRdns: string;
 };
 
 export type SolanaProviderInfo = {

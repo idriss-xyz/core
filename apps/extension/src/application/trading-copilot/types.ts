@@ -242,8 +242,8 @@ export interface FormValues {
 
 export type SiweMessagePayload = {
   walletAddress: Hex;
-  chainId: number;
   domain: string;
+  chainId?: number;
 };
 
 export type SiweMessageResponse = {

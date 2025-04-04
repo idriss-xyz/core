@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
-import { Wallet } from '@idriss-xyz/wallet-connect';
+import { SolanaWallet, Wallet } from '@idriss-xyz/wallet-connect';
 
 import {
   onWindowMessage,
@@ -24,7 +24,7 @@ import { SubscribePayload, UnsubscribePayload } from '../types';
 import { useLoginViaSiwe } from './use-login-via-siwe';
 
 interface Properties {
-  wallet: Wallet;
+  wallet: Wallet | SolanaWallet;
   addTabListener?: boolean;
 }
 

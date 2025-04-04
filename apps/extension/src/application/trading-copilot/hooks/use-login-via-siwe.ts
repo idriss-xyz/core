@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { Wallet } from '@idriss-xyz/wallet-connect';
+import { SolanaWallet, Wallet } from '@idriss-xyz/wallet-connect';
 
 import { useTradingCopilot, useWallet } from 'shared/extension';
 import { useCommandMutation } from 'shared/messaging';
@@ -11,6 +11,8 @@ import {
   VerifyTokenCommand,
 } from '../commands';
 import { SiweMessagePayload, VerifySiweSignaturePayload } from '../types';
+import { isAddress } from 'viem';
+import { SolanaProvider } from 'node_modules/@idriss-xyz/wallet-connect/src/ethereum';
 
 export const useLoginViaSiwe = () => {
   const { verifyWalletProvider } = useWallet();
@@ -20,10 +22,12 @@ export const useLoginViaSiwe = () => {
   const verifyAuthTokenMutation = useCommandMutation(VerifyTokenCommand);
 
   const login = useCallback(
-    async (wallet: Wallet) => {
+    async (wallet: Wallet | SolanaWallet) => {
       if (!wallet) {
         return;
       }
+
+      const isEvmWallet = isAddress(wallet.account) && 'chainId' in wallet;
 
       const handleGetSiweMessage = async (payload: SiweMessagePayload) => {
         return await getSiweMessage.mutateAsync(payload);
@@ -41,18 +45,29 @@ export const useLoginViaSiwe = () => {
         return;
       }
 
-      const walletClient = createWalletClient(wallet);
+      const walletClient = isEvmWallet ? createWalletClient(wallet): null;
 
-      const siweMessage = await handleGetSiweMessage({
-        walletAddress: wallet.account,
-        chainId: wallet.chainId,
-        domain: window.location.hostname,
-      });
+      const siweMessage = isEvmWallet
+        ? await handleGetSiweMessage({
+          walletAddress: wallet.account,
+          chainId: wallet.chainId,
+          domain: window.location.hostname,
+        })
+        : await handleGetSiweMessage({
+          walletAddress: wallet.account,
+          domain: window.location.hostname,
+        });
 
-      const siweSignature = await walletClient.signMessage({
-        account: wallet.account,
-        message: siweMessage.message,
-      });
+      const siweSignature = isEvmWallet
+        ? await walletClient?.signMessage({
+          account: wallet.account,
+          message: siweMessage.message,
+        })
+        : await (wallet.provider as SolanaProvider).signMessage?.(siweMessage.message);
+
+      if (!siweSignature) {
+        return;
+      }
 
       const verifiedSiweSignature = await handleVerifySiweSignature({
         walletAddress: wallet.account,

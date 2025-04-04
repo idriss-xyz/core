@@ -50,7 +50,7 @@ router.post('/login', async (req: Request, res: Response) => {
 
 router.post('/wallet-address', async (req, res) => {
   try {
-    const { walletAddress, chainId, domain } = req.body;
+    const { walletAddress, chainId = 8453, domain } = req.body;
 
     const isEvmAddress = isAddress(walletAddress);
     const isSolAddress = isSolanaAddress(walletAddress);

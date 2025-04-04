@@ -18,6 +18,7 @@ interface SolanaProvider {
   signTransaction?<T extends VersionedTransaction | Transaction>(
     transaction: T,
   ): Promise<T>;
+  signMessage?(message: string): Promise<string>;
 }
 
 declare global {

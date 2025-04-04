@@ -13,6 +13,7 @@ import { useModal } from '@ebay/nice-modal-react';
 import { createContextHook } from '@idriss-xyz/ui/utils';
 import { getAddress, Hex, hexToNumber } from 'viem';
 import {
+  SolanaWallet,
   StoredWallet,
   Wallet,
   WalletConnectModal,
@@ -22,14 +23,15 @@ import { EMPTY_HEX } from '@idriss-xyz/constants';
 import { onWindowMessage } from '../../messaging';
 
 import { useTradingCopilot } from './trading-copilot-context';
+import { SolanaProvider } from 'node_modules/@idriss-xyz/wallet-connect/src/ethereum'; // TODO: export
 
 type WalletContextValue = {
-  wallet?: Wallet;
+  wallet?: Wallet | SolanaWallet;
   isConnectionModalOpened: boolean;
-  openConnectionModal: () => Promise<Wallet>;
+  openConnectionModal: () => Promise<Wallet | SolanaWallet>;
   removeWalletInfo: () => void;
-  setWalletInfo: (wallet: Wallet) => void;
-  verifyWalletProvider: (wallet: Wallet) => Promise<boolean>;
+  setWalletInfo: (wallet: Wallet | SolanaWallet) => void;
+  verifyWalletProvider: (wallet: Wallet | SolanaWallet) => Promise<boolean>;
 };
 
 const WalletContext = createContext<WalletContextValue | undefined>(undefined);
@@ -51,7 +53,7 @@ export const WalletContextProvider = (properties: {
   const [tabChangedListenerInitialized, setTabChangedListenerInitialized] =
     useState(false);
   const { clearAuthToken, clearSubscriptionsAmount } = useTradingCopilot();
-  const [wallet, setWallet] = useState<Wallet>();
+  const [wallet, setWallet] = useState<Wallet | SolanaWallet>();
   const walletConnectModal = useModal(WalletConnectModal, {
     disabledWalletsRdns: disabledWalletsRdns ?? [],
   });
@@ -64,7 +66,7 @@ export const WalletContextProvider = (properties: {
   }, [clearAuthToken, clearSubscriptionsAmount, onClearWallet]);
 
   const setWalletInfo = useCallback(
-    (wallet: Wallet) => {
+    (wallet: Wallet | SolanaWallet) => {
       setWallet(wallet);
       onSaveWallet?.({
         account: wallet.account,
@@ -121,29 +123,39 @@ export const WalletContextProvider = (properties: {
   }, [availableWalletProviders, onGetWallet]);
 
   const verifyWalletProvider = useCallback(
-    async (wallet: Wallet) => {
+    async (wallet: Wallet | SolanaWallet) => {
       const provider = wallet.provider;
-
-      const accounts = await provider.request({
-        method: 'eth_requestAccounts',
-      });
-
-      const chainId = await provider.request({ method: 'eth_chainId' });
-
-      const loggedInToCurrentWallet = getAddress(
-        accounts[0] ?? EMPTY_HEX,
-      ).includes(wallet.account);
-
-      if (loggedInToCurrentWallet && accounts[0]) {
+      if ('request' in provider) {
+        const accounts = await provider.request({
+          method: 'eth_requestAccounts',
+        });
+  
+        const chainId = await provider.request({ method: 'eth_chainId' });
+  
+        const loggedInToCurrentWallet = getAddress(
+          accounts[0] ?? EMPTY_HEX,
+        ).includes(wallet.account);
+  
+        if (loggedInToCurrentWallet && accounts[0]) {
+          setWalletInfo({
+            provider,
+            chainId: hexToNumber(chainId),
+            account: getAddress(accounts[0]),
+            providerRdns: wallet.providerRdns,
+          });
+          return true;
+        } else {
+          return false;
+        }
+      }
+      else {
+        // TODO: Implement solana wallet verification here
         setWalletInfo({
-          provider,
-          chainId: hexToNumber(chainId),
-          account: getAddress(accounts[0]),
+          provider: wallet.provider as SolanaProvider,
+          account: wallet.account,
           providerRdns: wallet.providerRdns,
         });
         return true;
-      } else {
-        return false;
       }
     },
     [setWalletInfo],
