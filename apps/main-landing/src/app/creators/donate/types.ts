@@ -1,6 +1,6 @@
 import { Hex } from 'viem';
 
-interface DonorHistoryStats {
+export interface DonorHistoryStats {
   totalDonationsCount: number;
   totalDonationAmount: number;
   mostDonatedToAddress: Hex;

@@ -20,12 +20,12 @@ import { DonateContentValues } from '@/app/creators/donate/types';
 import { useGetDonorHistory } from '@/app/creators/donate/commands/get-donor-history';
 
 import { useCreators } from '../hooks/use-creators';
+import DonorStatsList from '../donor/components/donor-stats-list';
 
 import { TopDonors } from './top-donors';
 import { Content } from './content';
 import { RainbowKitProviders } from './providers';
 import { CREATOR_API_URL } from './constants';
-import DonorStatsList from './components/donor-stats/donor-stats-list';
 
 // ts-unused-exports:disable-next-line
 export default function Donors() {
@@ -46,7 +46,7 @@ function DonorsContent() {
   const [socketConnected, setSocketConnected] = useState(false);
 
   const tips = useGetTipHistory(
-    { address: searchParams.address.data as Hex },
+    { address: searchParams.address.data! },
     { enabled: !!searchParams.address.data },
   );
 
@@ -102,39 +102,12 @@ function DonorsContent() {
           />
         );
       }
-      case 'donor-stats': {
-        return (
-          <DonorStatsList
-            currentContent={currentContent}
-            updateCurrentContent={updateCurrentContent}
-          />
-        );
-      }
-      case 'donor-history': {
-        return (
-          <DonateHistoryList
-            tipEdges={
-              donorHistory.data?.knownDonations.map((donation) => {
-                return { node: donation.data };
-              }) ?? []
-            }
-            showReceiver
-            currentContent={currentContent}
-            tipsLoading={donorHistory.isLoading}
-            updateCurrentContent={updateCurrentContent}
-            address={currentContent.userDetails?.address}
-            isInvalidAddress={searchParams.address.validationError}
-          />
-        );
-      }
       default: {
         return;
       }
     }
   }, [
     currentContent,
-    donorHistory.data?.knownDonations,
-    donorHistory.isLoading,
     searchParams.address.data,
     searchParams.address.validationError,
     tipEdges,

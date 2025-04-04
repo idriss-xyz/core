@@ -5,7 +5,6 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { Hex } from 'viem';
 import { getShortWalletHex, removeEthSuffix } from '@idriss-xyz/utils';
 import { Spinner } from '@idriss-xyz/ui/spinner';
-import { IconButton } from '@idriss-xyz/ui/icon-button';
 import {
   Tooltip,
   TooltipContent,
@@ -13,11 +12,11 @@ import {
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
 
-import { useGetDonorHistory } from '@/app/creators/donate/commands/get-donor-history';
-import { LeaderboardTopDonors } from '@/app/creators/donate/top-donors';
 import { backgroundLines4 } from '@/assets';
-import { useGetEnsName } from '@/app/creators/donate/commands/get-ens-name';
-import { DonateContentValues } from '@/app/creators/donate/types';
+import {
+  DonateContentValues,
+  DonorHistoryStats,
+} from '@/app/creators/donate/types';
 
 const baseClassName =
   'z-1 w-[440px] max-w-full rounded-xl bg-mint-100 px-4 pb-9 pt-9 flex flex-col items-center relative container mt-8 overflow-hidden lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]';
@@ -28,58 +27,22 @@ type Properties = {
     data: Hex | null;
     isFetching: boolean;
   };
-  isStandalone?: boolean;
-  currentContent: DonateContentValues;
+  statsError: boolean;
+  statsLoading: boolean;
+  stats?: DonorHistoryStats;
   updateCurrentContent?: (content: DonateContentValues) => void;
 };
 
 export default function DonorStatsList({
+  stats,
   address,
-  isStandalone,
-  currentContent,
+  statsError,
+  statsLoading,
   updateCurrentContent,
 }: Properties) {
-  const userDetails = currentContent.userDetails;
-  const userAddress = address.data ?? userDetails?.address;
-
-  console.log(address);
-
-  const donorHistory = useGetDonorHistory(
-    { address: userAddress ?? EMPTY_HEX },
-    { enabled: !!userAddress },
-  );
-
-  const mostDonatedTo = donorHistory.data?.stats?.mostDonatedToAddress as Hex;
-
-  const mostDonatedToEnsNameQuery = useGetEnsName(
-    {
-      address: mostDonatedTo ?? EMPTY_HEX,
-    },
-    { enabled: !!mostDonatedTo },
-  );
-
-  const mostDonatedToEnsAvatarQuery = useGetEnsAvatar(
-    { name: mostDonatedToEnsNameQuery.data ?? '' },
-    { enabled: !!mostDonatedToEnsNameQuery.data },
-  );
-
-  if (
-    (!userDetails && !isStandalone) ||
-    (!isStandalone && !donorHistory.isLoading && !donorHistory.data)
-  ) {
-    if (updateCurrentContent) {
-      if (currentContent.previous) {
-        updateCurrentContent(currentContent.previous);
-      } else {
-        updateCurrentContent({ name: 'user-tip' });
-      }
-    }
-
-    return;
-  }
-
-  const stats = donorHistory.data?.stats;
-  const leaderboard = donorHistory.data?.leaderboard;
+  const mostDonatedTo = stats?.mostDonatedToUser;
+  const mostDonatedToAvatarUrl = mostDonatedTo?.avatarUrl;
+  const mostDonatedToDisplayName = mostDonatedTo?.displayName;
 
   return (
     <div className="grid grid-cols-1 items-start gap-x-10 lg:grid-cols-[1fr,auto]">
@@ -91,38 +54,18 @@ export default function DonorStatsList({
           className="pointer-events-none absolute top-0 hidden size-full opacity-100 lg:block"
         />
 
-        <div className="flex w-full items-center gap-x-2">
-          {!isStandalone && (
-            <IconButton
-              asLink
-              size="small"
-              intent="tertiary"
-              iconName="ArrowLeft"
-              className="cursor-pointer"
-              onClick={() => {
-                if (updateCurrentContent) {
-                  updateCurrentContent(
-                    currentContent.previous ?? { name: 'user-tip' },
-                  );
-                }
-              }}
-            />
-          )}
+        <h1 className="self-start text-heading4 text-neutralGreen-900">
+          Donation stats{' '}
+          {(stats?.donorDisplayName ?? address.data) &&
+            address.isValid &&
+            ` of ${stats?.donorDisplayName ?? getShortWalletHex(address.data ?? EMPTY_HEX)}`}
+        </h1>
 
-          <h1 className="text-heading4 text-neutralGreen-900">
-            Donation stats{' '}
-            {address.isValid &&
-              (stats?.donorDisplayName ?? userAddress) &&
-              ` of ${stats?.donorDisplayName ?? getShortWalletHex(userAddress ?? '')}`}
-          </h1>
-        </div>
-
-        {(address.isFetching ||
-          (address.isValid && donorHistory.isLoading)) && (
+        {(address.isFetching || (address.isValid && statsLoading)) && (
           <Spinner className="mx-auto mt-9 size-16 text-mint-600" />
         )}
 
-        {address.isValid && donorHistory.isError && (
+        {address.isValid && statsError && (
           <div className="mx-auto mt-9">
             <p className="flex items-center justify-center gap-2 px-5.5 py-3 text-center text-heading4 text-red-500">
               <Icon name="AlertCircle" size={40} />{' '}
@@ -177,7 +120,7 @@ export default function DonorStatsList({
                 </p>
               </div>
 
-              {stats.favoriteTokenMetadata && (
+              {stats.favoriteDonationToken && (
                 <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-8 shadow-md">
                   <p className="text-label5 text-neutral-600">Favorite token</p>
 
@@ -185,11 +128,14 @@ export default function DonorStatsList({
                     <p className="text-heading4 text-neutral-800">
                       {stats.favoriteDonationToken}{' '}
                     </p>
-                    <img
-                      className="inline-block size-6 rounded-full"
-                      src={stats.favoriteTokenMetadata.imageUrlV2}
-                      alt=""
-                    />
+
+                    {stats.favoriteTokenMetadata && (
+                      <img
+                        alt=""
+                        src={stats.favoriteTokenMetadata.imageUrl}
+                        className="inline-block size-6 rounded-full"
+                      />
+                    )}
                   </span>
                 </div>
               )}
@@ -199,10 +145,10 @@ export default function DonorStatsList({
                   <p className="text-label5 text-neutral-600">Top recipient</p>
 
                   <div className="flex flex-row items-center gap-x-1">
-                    {mostDonatedToEnsAvatarQuery.data ? (
+                    {mostDonatedToAvatarUrl ? (
                       <img
                         alt="Donor avatar"
-                        src={mostDonatedToEnsAvatarQuery.data}
+                        src={mostDonatedToAvatarUrl}
                         className="size-10 rounded-full border border-neutral-400"
                       />
                     ) : (
@@ -219,15 +165,15 @@ export default function DonorStatsList({
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <p className="cursor-default truncate text-label3 text-neutral-800">
-                            {mostDonatedToEnsNameQuery.data
-                              ? removeEthSuffix(mostDonatedToEnsNameQuery.data)
+                            {mostDonatedToDisplayName
+                              ? removeEthSuffix(mostDonatedToDisplayName)
                               : getShortWalletHex(stats.mostDonatedToAddress)}
                           </p>
                         </TooltipTrigger>
 
                         <TooltipContent className="w-fit bg-black text-white">
                           <p>
-                            {mostDonatedToEnsNameQuery.data ??
+                            {mostDonatedToDisplayName ??
                               stats.mostDonatedToAddress}
                           </p>
                         </TooltipContent>
@@ -250,19 +196,18 @@ export default function DonorStatsList({
               )}
             </div>
 
-            {userAddress && (
+            {!!stats.totalDonationsCount && (
               <div className="mt-12 flex justify-center">
                 <Link
                   size="xs"
+                  className="cursor-pointer"
                   onClick={() => {
                     if (updateCurrentContent) {
                       updateCurrentContent({
                         name: 'donor-history',
-                        userDetails: { address: userAddress },
                       });
                     }
                   }}
-                  className="cursor-pointer"
                 >
                   See full donation history
                 </Link>
@@ -271,15 +216,6 @@ export default function DonorStatsList({
           </>
         )}
       </div>
-
-      <LeaderboardTopDonors
-        address={address}
-        leaderboard={leaderboard ?? []}
-        updateCurrentContent={updateCurrentContent}
-        leaderboardError={donorHistory.isError}
-        leaderboardLoading={donorHistory.isLoading}
-        className="container mt-8 w-[360px] max-w-full overflow-hidden px-0 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]"
-      />
     </div>
   );
 }

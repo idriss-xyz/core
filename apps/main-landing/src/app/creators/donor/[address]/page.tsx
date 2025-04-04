@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useCallback, useMemo, useState } from 'react';
 import { EMPTY_HEX } from '@idriss-xyz/constants';
 
@@ -12,7 +11,7 @@ import { DonateContentValues } from '@/app/creators/donate/types';
 import { useGetDonorHistory } from '@/app/creators/donate/commands/get-donor-history';
 
 import DonateHistoryList from '../../donate/components/history/donate-history-list';
-import DonorStatsList from '../../donate/components/donor-stats/donor-stats-list';
+import DonorStatsList from '../components/donor-stats-list';
 import { useCreators } from '../../hooks/use-creators';
 
 // ts-unused-exports:disable-next-line
@@ -26,39 +25,33 @@ export default function Donor() {
 
 function DonorContent() {
   const { urlParams } = useCreators();
-  const router = useRouter();
   const [currentContent, setCurrentContent] = useState<DonateContentValues>({
     name: 'donor-stats',
   });
 
   const donorHistory = useGetDonorHistory(
     { address: urlParams.address.data ?? EMPTY_HEX },
-    { enabled: !!urlParams.address.data },
+    { enabled: urlParams.address.isValid },
   );
 
-  const updateCurrentContent = useCallback(
-    (content: DonateContentValues) => {
-      const userAddress = content.userDetails?.address;
+  const donorStats = donorHistory.data?.stats;
+  const donorDonations = donorHistory.data?.donations;
 
-      if (userAddress) {
-        router.push(`/creators/donor/${userAddress}`);
-      }
-
-      setCurrentContent((previous) => {
-        return { previous, ...content };
-      });
-    },
-    [router],
-  );
+  const updateCurrentContent = useCallback((content: DonateContentValues) => {
+    setCurrentContent((previous) => {
+      return { previous, ...content };
+    });
+  }, []);
 
   const currentContentComponent = useMemo(() => {
     switch (currentContent?.name) {
       case 'donor-stats': {
         return (
           <DonorStatsList
-            isStandalone
+            stats={donorStats}
             address={urlParams.address}
-            currentContent={currentContent}
+            statsError={donorHistory.isError}
+            statsLoading={donorHistory.isLoading}
             updateCurrentContent={updateCurrentContent}
           />
         );
@@ -70,13 +63,10 @@ function DonorContent() {
             showReceiver
             address={urlParams.address}
             currentContent={currentContent}
-            tipsLoading={donorHistory.isLoading}
+            donations={donorDonations ?? []}
+            donationsError={donorHistory.isError}
+            donationsLoading={donorHistory.isLoading}
             updateCurrentContent={updateCurrentContent}
-            tipEdges={
-              donorHistory.data?.knownDonations.map((donation) => {
-                return { node: donation.data };
-              }) ?? []
-            }
           />
         );
       }
@@ -86,10 +76,12 @@ function DonorContent() {
       }
     }
   }, [
+    donorStats,
+    donorDonations,
     currentContent,
     urlParams.address,
+    donorHistory.isError,
     updateCurrentContent,
-    donorHistory.data?.knownDonations,
     donorHistory.isLoading,
   ]);
 

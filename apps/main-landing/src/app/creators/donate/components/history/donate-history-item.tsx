@@ -31,38 +31,44 @@ function removeMainnetSuffix(text: string) {
 }
 
 type Properties = {
-  tip: DonationData;
+  donation: DonationData;
   showReceiver?: boolean;
 };
 
-export default function DonateHistoryItem({ tip, showReceiver }: Properties) {
+export default function DonateHistoryItem({
+  donation,
+  showReceiver,
+}: Properties) {
   const router = useRouter();
-  const tokenSymbol = tip.token.symbol;
-  const tokenImage = tip.token.imageUrl;
-  const tipReceiver = tip.toUser;
-  const tipComment = tip.comment;
-  const tipperFromAddress = tip.fromAddress;
+  const tokenSymbol = donation.token.symbol;
+  const tokenImage = donation.token.imageUrl;
+  const tipReceiver = donation.toUser;
+  const tipComment = donation.comment;
+  const tipperFromAddress = donation.fromAddress;
   const receiverAddress = tipReceiver.address;
 
   const displayName = showReceiver
     ? tipReceiver?.displayName
-    : tip.fromUser.displayName;
+    : donation.fromUser.displayName;
 
   const avatarSource = showReceiver
     ? tipReceiver.avatarUrl
-    : tip.fromUser.avatarUrl;
+    : donation.fromUser.avatarUrl;
 
-  const tradeValue = tip.tradeValue;
+  const tradeValue = donation.tradeValue;
 
   const { value: roundedNumber, index: zerosIndex } =
     roundToSignificantFiguresForCopilotTrading(
-      Number.parseFloat(formatUnits(BigInt(tip.amountRaw), tip.token.decimals)),
+      Number.parseFloat(
+        formatUnits(BigInt(donation.amountRaw), donation.token.decimals),
+      ),
       2,
     );
 
   const transactionUrls = getTransactionUrls({
-    chainId: CHAIN[removeMainnetSuffix(tip.network) as keyof typeof CHAIN].id,
-    transactionHash: tip.transactionHash,
+    chainId:
+      CHAIN[removeMainnetSuffix(donation.network) as keyof typeof CHAIN].id,
+    transactionHash: donation.transactionHash,
   });
 
   return (
@@ -144,7 +150,7 @@ export default function DonateHistoryItem({ tip, showReceiver }: Properties) {
                   {getTimeDifferenceString({
                     text: 'ago',
                     variant: 'short',
-                    timestamp: tip.timestamp,
+                    timestamp: donation.timestamp,
                   })}
                 </p>
               </TooltipTrigger>
@@ -160,7 +166,7 @@ export default function DonateHistoryItem({ tip, showReceiver }: Properties) {
                     second: '2-digit',
                     hour12: false,
                   })
-                    .format(new Date(tip.timestamp))
+                    .format(new Date(donation.timestamp))
                     .replaceAll('/', '-')}
                 </p>
               </TooltipContent>
