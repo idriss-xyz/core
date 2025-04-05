@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { default as io } from 'socket.io-client';
 import { EMPTY_HEX, hexSchema } from '@idriss-xyz/constants';
 import { useGetTipHistory } from '@idriss-xyz/main-landing/app/creators/donate/commands/get-donate-history';
-import { Leaderboard } from '@idriss-xyz/main-landing/app/creators/donate/components/leaderboard/leaderboard';
+import { Leaderboard } from '@idriss-xyz/main-landing/app/creators/donate/components/leaderboard';
 import { QueryProvider } from '@idriss-xyz/main-landing/providers';
 import {
   DonationData,

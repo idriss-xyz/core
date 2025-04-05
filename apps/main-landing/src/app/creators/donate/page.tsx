@@ -21,8 +21,8 @@ import {
 
 import { useCreators } from '../hooks/use-creators';
 
-import { Leaderboard } from './components/leaderboard/leaderboard';
-import { DonateForm } from './components/donate-form/donate-form';
+import { Leaderboard } from './components/leaderboard';
+import { DonateForm } from './components/donate-form';
 import { RainbowKitProviders } from './providers';
 import { CREATOR_API_URL } from './constants';
 

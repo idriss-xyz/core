@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import {
   type AbiEvent,
   decodeFunctionData,
@@ -41,7 +41,6 @@ export default function Obs() {
     searchParams: { address },
   } = useCreators();
   const router = useRouter();
-  const searchParameters = useSearchParams();
   const [isDisplayingDonation, setIsDisplayingDonation] = useState(false);
   const [donationsQueue, setDonationsQueue] = useState<
     DonationNotificationProperties[]
@@ -53,7 +52,7 @@ export default function Obs() {
 
       return;
     }
-  }, [router, searchParameters, address.isValid, address.isFetching]);
+  }, [router, address.isValid, address.isFetching]);
 
   const displayNextDonation = useCallback(() => {
     setIsDisplayingDonation(true);
