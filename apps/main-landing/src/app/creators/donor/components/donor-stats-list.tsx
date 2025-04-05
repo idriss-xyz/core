@@ -11,12 +11,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
+import { useRouter } from 'next/navigation';
 
 import { backgroundLines4 } from '@/assets';
-import {
-  DonateContentValues,
-  DonorHistoryStats,
-} from '@/app/creators/donate/types';
+import { DonateContentValues } from '@/app/creators/donate/types';
+
+import { DonorHistoryStats } from '../types';
 
 const baseClassName =
   'z-1 w-[440px] max-w-full rounded-xl bg-mint-100 px-4 pb-9 pt-9 flex flex-col items-center relative container mt-8 overflow-hidden lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]';
@@ -40,6 +40,8 @@ export default function DonorStatsList({
   statsLoading,
   updateCurrentContent,
 }: Properties) {
+  const router = useRouter();
+
   const mostDonatedTo = stats?.mostDonatedToUser;
   const mostDonatedToAvatarUrl = mostDonatedTo?.avatarUrl;
   const mostDonatedToDisplayName = mostDonatedTo?.displayName;
@@ -184,7 +186,12 @@ export default function DonorStatsList({
               )}
 
               {stats.positionInLeaderboard && (
-                <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-8 shadow-md">
+                <div
+                  className="flex cursor-pointer flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-8 shadow-md"
+                  onClick={() => {
+                    router.push('/creators/donor/ranking');
+                  }}
+                >
                   <p className="text-label5 text-neutral-600">
                     Leaderboard rank
                   </p>

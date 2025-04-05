@@ -21,9 +21,13 @@ const getDonateHistory = async (payload: Payload) => {
     body: JSON.stringify(payload),
   });
 
-  const result = await tipHistory.json();
+  if (!tipHistory.ok) {
+    throw new Error('Failed to fetch tip history');
+  }
 
-  return result as TipHistoryResponse;
+  const history = await tipHistory.json();
+
+  return history as TipHistoryResponse;
 };
 
 export const useGetTipHistory = (payload: Payload, options?: Options) => {

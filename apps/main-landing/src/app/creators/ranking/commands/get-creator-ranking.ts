@@ -2,14 +2,18 @@ import { useQuery } from '@tanstack/react-query';
 
 import { LeaderboardStats } from '@/app/creators/donate/types';
 
-import { CREATOR_API_URL } from '../constants';
+import { CREATOR_API_URL } from '../../donate/constants';
 
 const getCreatorRanking = async () => {
-  const receivedHistory = await fetch(`${CREATOR_API_URL}/creator-leaderboard`);
+  const creatorRanking = await fetch(`${CREATOR_API_URL}/creator-leaderboard`);
 
-  const result = await receivedHistory.json();
+  if (!creatorRanking.ok) {
+    throw new Error('Failed to fetch creator ranking');
+  }
 
-  return result.leaderboard as LeaderboardStats[];
+  const ranking = await creatorRanking.json();
+
+  return ranking.leaderboard as LeaderboardStats[];
 };
 
 export const useGetCreatorRanking = () => {

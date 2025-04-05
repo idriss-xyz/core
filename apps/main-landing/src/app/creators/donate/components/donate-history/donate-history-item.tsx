@@ -7,49 +7,43 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
+  TooltipProvider,
 } from '@idriss-xyz/ui/tooltip';
-import { CHAIN, EMPTY_HEX } from '@idriss-xyz/constants';
+import { CHAIN } from '@idriss-xyz/constants';
 import {
   getShortWalletHex,
-  getTimeDifferenceString,
   getTransactionUrls,
+  getTimeDifferenceString,
   roundToSignificantFiguresForCopilotTrading,
 } from '@idriss-xyz/utils';
 import { Link } from '@idriss-xyz/ui/link';
 import { useRouter } from 'next/navigation';
 
 import { DonationData } from '@/app/creators/donate/types';
-
-function removeMainnetSuffix(text: string) {
-  const suffix = '_MAINNET';
-  if (text.endsWith(suffix)) {
-    return text.slice(0, -suffix.length);
-  }
-  return text;
-}
+import { removeMainnetSuffix } from '@/app/creators/donate/utils';
 
 type Properties = {
   donation: DonationData;
   showReceiver?: boolean;
 };
 
-export default function DonateHistoryItem({
-  donation,
-  showReceiver,
-}: Properties) {
+export const DonateHistoryItem = ({ donation, showReceiver }: Properties) => {
   const router = useRouter();
   const tokenSymbol = donation.token.symbol;
-  const tokenImage = donation.token.imageUrl;
   const tipReceiver = donation.toUser;
   const tipComment = donation.comment;
+  const tokenImage = donation.token.imageUrl;
   const tipperFromAddress = donation.fromAddress;
   const receiverAddress = tipReceiver.address;
 
   const displayName = showReceiver
     ? tipReceiver?.displayName
     : donation.fromUser.displayName;
+
+  const redirectUrl = showReceiver
+    ? `/creators/donor/${receiverAddress}`
+    : `/creators/donor/${tipperFromAddress}`;
 
   const avatarSource = showReceiver
     ? tipReceiver.avatarUrl
@@ -76,9 +70,9 @@ export default function DonateHistoryItem({
       <div className="grid w-full grid-cols-[40px,1fr] items-start gap-x-2">
         {avatarSource ? (
           <img
-            className="size-10 rounded-full border border-neutral-400"
             src={avatarSource}
             alt="Donor avatar"
+            className="size-10 rounded-full border border-neutral-400"
           />
         ) : (
           <div className="flex size-10 items-center justify-center rounded-full border border-neutral-300 bg-neutral-200">
@@ -96,18 +90,13 @@ export default function DonateHistoryItem({
               <Link
                 size="xs"
                 onClick={() => {
-                  if (showReceiver && receiverAddress) {
-                    router.push(`/creators/donor/${receiverAddress}`);
-                  } else {
-                    router.push(`/creators/donor/${tipperFromAddress}`);
-                  }
+                  router.push(redirectUrl);
                 }}
                 className="cursor-pointer border-0 align-middle text-label3 text-neutral-900 no-underline lg:text-label3"
               >
-                {showReceiver
-                  ? (displayName ??
-                    getShortWalletHex(receiverAddress ?? EMPTY_HEX))
-                  : (displayName ?? getShortWalletHex(tipperFromAddress))}
+                {(displayName ?? showReceiver)
+                  ? getShortWalletHex(receiverAddress)
+                  : getShortWalletHex(tipperFromAddress)}
               </Link>{' '}
               <span className="align-middle text-body3 text-neutral-600">
                 {showReceiver ? 'received' : 'sent'}{' '}
@@ -176,7 +165,6 @@ export default function DonateHistoryItem({
       </div>
 
       <Dropdown
-        className="z-extensionPopup rounded-xl border border-neutral-300 bg-white py-2 shadow-lg"
         contentAlign="end"
         trigger={() => {
           return (
@@ -187,6 +175,7 @@ export default function DonateHistoryItem({
             />
           );
         }}
+        className="z-extensionPopup rounded-xl border border-neutral-300 bg-white py-2 shadow-lg"
       >
         {() => {
           return transactionUrls ? (
@@ -220,4 +209,4 @@ export default function DonateHistoryItem({
       </Dropdown>
     </div>
   );
-}
+};

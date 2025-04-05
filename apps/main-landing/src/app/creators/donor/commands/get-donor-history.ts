@@ -1,9 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { Hex } from 'viem';
 
-import { DonorHistoryResponse } from '@/app/creators/donate/types';
-
-import { CREATOR_API_URL } from '../constants';
+import { CREATOR_API_URL } from '../../donate/constants';
+import { DonorHistoryResponse } from '../types';
 
 type Payload = {
   address: Hex;
@@ -14,7 +13,7 @@ type Options = {
 };
 
 const getDonorHistory = async (payload: Payload) => {
-  const response = await fetch(`${CREATOR_API_URL}/donor-history`, {
+  const donorHistory = await fetch(`${CREATOR_API_URL}/donor-history`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -22,13 +21,13 @@ const getDonorHistory = async (payload: Payload) => {
     body: JSON.stringify(payload),
   });
 
-  if (!response.ok) {
-    return null;
+  if (!donorHistory.ok) {
+    throw new Error('Failed to fetch donor history');
   }
 
-  const result = await response.json();
+  const history = await donorHistory.json();
 
-  return result as DonorHistoryResponse;
+  return history as DonorHistoryResponse;
 };
 
 export const useGetDonorHistory = (payload: Payload, options?: Options) => {

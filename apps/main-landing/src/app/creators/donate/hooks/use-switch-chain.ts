@@ -3,8 +3,8 @@ import { useMutation } from '@tanstack/react-query';
 import { WalletClient } from 'viem';
 
 interface SwitchChainArguments {
-  walletClient?: WalletClient;
   chainId: number;
+  walletClient?: WalletClient;
 }
 
 export const useSwitchChain = () => {
@@ -15,6 +15,7 @@ export const useSwitchChain = () => {
       }
 
       const currentChainId = await walletClient.getChainId();
+
       if (chainId === currentChainId) {
         return;
       }

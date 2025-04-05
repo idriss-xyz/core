@@ -6,10 +6,10 @@ import { Hex } from 'viem';
 import { useRouter } from 'next/navigation';
 
 import { backgroundLines2 } from '@/assets';
-import { LeaderboardTopDonors } from '@/app/creators/donate/top-donors';
+import { LeaderboardStandalone } from '@/app/creators/donate/components/leaderboard';
+import { RainbowKitProviders } from '@/app/creators/donate/providers';
 
-import { RainbowKitProviders } from '../../donate/providers';
-import { useGetDonorRanking } from '../../donate/commands/get-donor-ranking';
+import { useGetDonorRanking } from '../commands/get-donor-ranking';
 import { TopBar } from '../../landing/components/top-bar';
 
 // ts-unused-exports:disable-next-line
@@ -42,7 +42,7 @@ function RankingContent() {
         />
 
         <div className="grid grid-cols-1 items-start gap-x-10">
-          <LeaderboardTopDonors
+          <LeaderboardStandalone
             heading="Top donors"
             onDonorClick={onDonorClick}
             leaderboard={donorRanking.data ?? []}

@@ -1,15 +1,9 @@
 import { Hex } from 'viem';
 
-export interface DonorHistoryStats {
-  totalDonationsCount: number;
-  totalDonationAmount: number;
-  mostDonatedToAddress: Hex;
-  mostDonatedToUser: DonationUser;
-  biggestDonationAmount: number;
-  favoriteDonationToken: string;
-  donorDisplayName: string | null;
-  positionInLeaderboard: number | null;
-  favoriteTokenMetadata: DonationToken | null;
+export interface DonationUser {
+  address: Hex;
+  avatarUrl?: string;
+  displayName?: string;
 }
 
 export interface LeaderboardStats extends DonationUser {
@@ -17,10 +11,27 @@ export interface LeaderboardStats extends DonationUser {
   donateLink?: string;
 }
 
-export interface DonationUser {
+export interface DonationToken {
   address: Hex;
-  displayName?: string;
-  avatarUrl?: string;
+  symbol: string;
+  network: string;
+  decimals: number;
+  imageUrl?: string;
+}
+
+export interface DonationData {
+  toAddress: Hex;
+  network: string;
+  comment?: string;
+  fromAddress: Hex;
+  timestamp: number;
+  amountRaw: string;
+  tokenAddress: Hex;
+  tradeValue: number;
+  token: DonationToken;
+  toUser: DonationUser;
+  transactionHash: Hex;
+  fromUser: DonationUser;
 }
 
 type DonateContentNames =
@@ -33,34 +44,6 @@ interface DonateContentValue {
   name: DonateContentNames;
 }
 
-interface DonationToken {
-  address: Hex;
-  symbol: string;
-  imageUrl?: string;
-  network: string;
-  decimals: number;
-}
-
-export interface DonorHistoryResponse {
-  donations: DonationData[];
-  stats: DonorHistoryStats;
-}
-
 export interface DonateContentValues extends DonateContentValue {
   previous?: DonateContentValue;
-}
-
-export interface DonationData {
-  transactionHash: Hex;
-  fromAddress: Hex;
-  toAddress: Hex;
-  timestamp: number;
-  comment?: string;
-  tradeValue: number;
-  tokenAddress: Hex;
-  network: string;
-  fromUser: DonationUser;
-  toUser: DonationUser;
-  token: DonationToken;
-  amountRaw: string;
 }

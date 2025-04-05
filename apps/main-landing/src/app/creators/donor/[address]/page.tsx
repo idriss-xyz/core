@@ -8,9 +8,9 @@ import { RainbowKitProviders } from '@/app/creators/donate/providers';
 import { TopBar } from '@/components';
 import { backgroundLines2 } from '@/assets';
 import { DonateContentValues } from '@/app/creators/donate/types';
-import { useGetDonorHistory } from '@/app/creators/donate/commands/get-donor-history';
+import { useGetDonorHistory } from '@/app/creators/donor/commands/get-donor-history';
+import { DonateHistory } from '@/app/creators/donate/components/donate-history';
 
-import DonateHistoryList from '../../donate/components/history/donate-history-list';
 import DonorStatsList from '../components/donor-stats-list';
 import { useCreators } from '../../hooks/use-creators';
 
@@ -59,7 +59,7 @@ function DonorContent() {
 
       case 'donor-history': {
         return (
-          <DonateHistoryList
+          <DonateHistory
             showReceiver
             address={urlParams.address}
             currentContent={currentContent}

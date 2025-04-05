@@ -6,10 +6,10 @@ import { Select, Option } from './select';
 interface Properties {
   value: number;
   label?: string;
-  renderLabel?: () => ReactNode;
   className?: string;
-  onChange: (value: number) => void;
   allowedChainsIds?: number[];
+  renderLabel?: () => ReactNode;
+  onChange: (value: number) => void;
   renderSuffix?: (chainId: number) => ReactNode;
 }
 
@@ -18,9 +18,9 @@ export const ChainSelect = ({
   label,
   onChange,
   className,
-  allowedChainsIds,
-  renderSuffix,
   renderLabel,
+  renderSuffix,
+  allowedChainsIds,
 }: Properties) => {
   const options = useMemo(() => {
     return getOptions(allowedChainsIds, renderSuffix);
@@ -28,12 +28,12 @@ export const ChainSelect = ({
 
   return (
     <Select
-      className={className}
       label={label}
-      renderLabel={renderLabel}
+      value={value}
       options={options}
       onChange={onChange}
-      value={value}
+      className={className}
+      renderLabel={renderLabel}
     />
   );
 };
@@ -43,10 +43,10 @@ const optionsFrom = (
   renderSuffix?: (chainId: number) => ReactNode,
 ): Option<number> => {
   return {
-    label: chain.name,
     value: chain.id,
-    prefix: <img src={chain.logo} className="size-6 rounded-full" alt="" />,
+    label: chain.name,
     suffix: renderSuffix?.(chain.id),
+    prefix: <img src={chain.logo} className="size-6 rounded-full" alt="" />,
   };
 };
 
@@ -64,9 +64,11 @@ const getOptions = (
     const foundChain = Object.values(CHAIN).find((chain) => {
       return chain.id === chainId;
     });
+
     if (!foundChain) {
       throw new Error(`${chainId} not found`);
     }
+
     return optionsFrom(foundChain, renderSuffix);
   });
 };

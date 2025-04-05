@@ -1,11 +1,10 @@
 'use client';
-import { Hex } from 'viem';
+import { Hex, isAddress } from 'viem';
 import { useEffect, useState } from 'react';
 import { default as io } from 'socket.io-client';
-import _ from 'lodash';
-import { EMPTY_HEX } from '@idriss-xyz/constants';
+import { EMPTY_HEX, hexSchema } from '@idriss-xyz/constants';
 import { useGetTipHistory } from '@idriss-xyz/main-landing/app/creators/donate/commands/get-donate-history';
-import { TopDonors } from '@idriss-xyz/main-landing/app/creators/donate/top-donors';
+import { Leaderboard } from '@idriss-xyz/main-landing/app/creators/donate/components/leaderboard/leaderboard';
 import { QueryProvider } from '@idriss-xyz/main-landing/providers';
 import {
   DonationData,
@@ -34,11 +33,22 @@ type ContentProperties = {
 function WidgetContent({ variant }: ContentProperties) {
   const [socketConnected, setSocketConnected] = useState(false);
   const [socketInitialized, setSocketInitialized] = useState(false);
-  const [tipLeaderboard, setLeaderboard] = useState<LeaderboardStats[]>([]);
+  const [leaderboard, setLeaderboard] = useState<LeaderboardStats[]>([]);
   const [address, setAddress] = useState<Hex | null | undefined>();
   const [donationUrl, setDonationUrl] = useState<string | null | undefined>();
 
   const isVideoOverlay = variant === 'videoOverlay';
+
+  const addressValidationResult = hexSchema.safeParse(address);
+
+  const isAddressValid =
+    !!address && isAddress(address) && addressValidationResult.success;
+
+  const addressDetails = {
+    data: address ?? null,
+    isValid: isAddressValid,
+    isFetching: address === undefined,
+  };
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -62,16 +72,16 @@ function WidgetContent({ variant }: ContentProperties) {
     });
   }, []);
 
-  const tips = useGetTipHistory(
+  const donationsHistory = useGetTipHistory(
     { address: address ?? EMPTY_HEX },
     { enabled: !!address },
   );
 
   useEffect(() => {
-    if (tips.data) {
-      setLeaderboard(tips.data.leaderboard);
+    if (donationsHistory.data) {
+      setLeaderboard(donationsHistory.data.leaderboard);
     }
-  }, [tips.data]);
+  }, [donationsHistory.data]);
 
   useEffect(() => {
     if (address && !socketInitialized) {
@@ -86,26 +96,38 @@ function WidgetContent({ variant }: ContentProperties) {
             setSocketConnected(true);
           }
         });
+
+        // TODO: VERIFY IF TYPES ARE CORRECT FOR DONATION
         socket.on('newDonation', (donation: DonationData) => {
-          setLeaderboard((previousLeaderboard) => {
-            const updatedLeaderboard = [...previousLeaderboard];
-            const donorIndex = updatedLeaderboard.findIndex((item) => {
+          setLeaderboard((previousState) => {
+            const leaderboard = [...previousState];
+
+            const donorIndex = leaderboard.findIndex((item) => {
               return (
                 item.address.toLowerCase() ===
                 donation.fromAddress.toLowerCase()
               );
             });
-            const donorEntry = updatedLeaderboard[donorIndex];
-            if (donorEntry) {
-              updatedLeaderboard[donorIndex] = {
-                ...donorEntry,
-                totalAmount: donorEntry.totalAmount + donation.tradeValue,
+
+            const donor = leaderboard[donorIndex];
+
+            if (donor) {
+              leaderboard[donorIndex] = {
+                ...donor,
+                totalAmount: donor.totalAmount + donation.tradeValue,
               };
             }
-            updatedLeaderboard.sort((a, b) => {
+
+            leaderboard.push({
+              ...donation.fromUser,
+              totalAmount: donation.tradeValue,
+            });
+
+            leaderboard.sort((a, b) => {
               return b.totalAmount - a.totalAmount;
             });
-            return updatedLeaderboard;
+
+            return leaderboard;
           });
         });
       }
@@ -119,28 +141,30 @@ function WidgetContent({ variant }: ContentProperties) {
     }
 
     return;
-  }, [address, socketConnected, socketInitialized]);
+  }, [socketConnected, socketInitialized, address]);
 
   return (
     <>
       {isVideoOverlay ? (
         <div className="relative flex size-full items-start justify-end pr-28 pt-20">
-          <TopDonors
+          <Leaderboard
             variant={variant}
-            leaderboard={tipLeaderboard}
+            address={addressDetails}
+            leaderboard={leaderboard}
             donationUrl={donationUrl}
-            validatedAddress={address}
-            tipsLoading={tips.isLoading}
+            leaderboardError={donationsHistory.isError}
+            leaderboardLoading={donationsHistory.isLoading}
             className="relative right-0 top-0 origin-top-right scale-[.85]"
           />
         </div>
       ) : (
-        <TopDonors
+        <Leaderboard
           variant={variant}
-          leaderboard={tipLeaderboard}
+          address={addressDetails}
+          leaderboard={leaderboard}
           donationUrl={donationUrl}
-          validatedAddress={address}
-          tipsLoading={tips.isLoading}
+          leaderboardError={donationsHistory.isError}
+          leaderboardLoading={donationsHistory.isLoading}
         />
       )}
 

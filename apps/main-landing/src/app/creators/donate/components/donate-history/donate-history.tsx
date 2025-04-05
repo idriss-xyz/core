@@ -6,7 +6,7 @@ import { Hex } from 'viem';
 
 import { DonateContentValues, DonationData } from '@/app/creators/donate/types';
 
-import DonateHistoryItem from './donate-history-item';
+import { DonateHistoryItem } from './donate-history-item';
 
 type Properties = {
   address: {
@@ -21,7 +21,7 @@ type Properties = {
   currentContent: DonateContentValues;
   updateCurrentContent: (content: DonateContentValues) => void;
 };
-export default function DonateHistoryList({
+export const DonateHistory = ({
   address,
   donations,
   showReceiver,
@@ -29,7 +29,7 @@ export default function DonateHistoryList({
   currentContent,
   donationsLoading,
   updateCurrentContent,
-}: Properties) {
+}: Properties) => {
   const sortedDonations = [...donations].sort((a, b) => {
     return b.timestamp - a.timestamp;
   });
@@ -55,7 +55,7 @@ export default function DonateHistoryList({
 
       <ScrollArea
         rootClassName="w-full max-h-[500px]"
-        className="size-full max-h-[500px] overflow-y-auto pr-2 transition-all duration-500"
+        className="size-full max-h-[500px] overflow-y-auto transition-all duration-500"
       >
         {(address.isFetching || (address.isValid && donationsLoading)) && (
           <Spinner className="mx-auto my-4 size-16 text-mint-600" />
@@ -74,27 +74,28 @@ export default function DonateHistoryList({
           </p>
         )}
 
-        {address.isValid &&
-          !donationsError &&
-          !donationsLoading &&
-          (sortedDonations.length > 0 ? (
-            sortedDonations.map((donation) => {
-              return (
-                <DonateHistoryItem
-                  donation={donation}
-                  showReceiver={showReceiver}
-                  key={donation.transactionHash}
-                />
-              );
-            })
-          ) : (
-            <p>
-              {showReceiver
-                ? 'No donations were sent from this address'
-                : 'This address has not received any donations'}
-            </p>
-          ))}
+        {address.isValid && !donationsError && !donationsLoading && (
+          <div className="flex w-full flex-col gap-y-3 pr-5 pt-1">
+            {sortedDonations.length > 0 ? (
+              sortedDonations.map((donation) => {
+                return (
+                  <DonateHistoryItem
+                    donation={donation}
+                    showReceiver={showReceiver}
+                    key={donation.transactionHash}
+                  />
+                );
+              })
+            ) : (
+              <p>
+                {showReceiver
+                  ? 'No donations were sent from this address'
+                  : 'This address has not received any donations'}
+              </p>
+            )}
+          </div>
+        )}
       </ScrollArea>
     </div>
   );
-}
+};

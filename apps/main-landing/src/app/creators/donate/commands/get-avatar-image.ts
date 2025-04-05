@@ -15,17 +15,22 @@ const getAvatarImage = async (payload: Payload): Promise<string> => {
   const isWhitelisted = WHITELISTED_URLS.some((baseUrl) => {
     return payload.url.startsWith(baseUrl);
   });
+
   if (isWhitelisted) {
     return payload.url;
   }
-  const response = await fetch(
+
+  const avatarImage = await fetch(
     `${IDRISS_LEGACY_API_URL}/fetch-image?url=${payload.url}`,
   );
-  if (!response.ok) {
+
+  if (!avatarImage.ok) {
     throw new Error('Failed to fetch avatar image');
   }
-  const avatarImage = await response.json();
-  return avatarImage.image as string;
+
+  const avatar = await avatarImage.json();
+
+  return avatar.image as string;
 };
 
 export const useGetAvatarImage = (payload: Payload, options?: Options) => {
