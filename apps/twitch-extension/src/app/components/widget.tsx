@@ -7,7 +7,10 @@ import { EMPTY_HEX } from '@idriss-xyz/constants';
 import { useGetTipHistory } from '@idriss-xyz/main-landing/app/creators/donate/commands/get-donate-history';
 import { TopDonors } from '@idriss-xyz/main-landing/app/creators/donate/top-donors';
 import { QueryProvider } from '@idriss-xyz/main-landing/providers';
-import { DonationData } from '@idriss-xyz/main-landing/app/creators/donate/types';
+import {
+  DonationData,
+  LeaderboardStats,
+} from '@idriss-xyz/main-landing/app/creators/donate/types';
 
 import { CREATOR_API_URL } from '@/app/constants';
 import { ConfigValues, WidgetVariants } from '@/app/types';
@@ -31,7 +34,7 @@ type ContentProperties = {
 function WidgetContent({ variant }: ContentProperties) {
   const [socketConnected, setSocketConnected] = useState(false);
   const [socketInitialized, setSocketInitialized] = useState(false);
-  const [tipEdges, setTipEdges] = useState<DonationData[]>([]);
+  const [tipLeaderboard, setLeaderboard] = useState<LeaderboardStats[]>([]);
   const [address, setAddress] = useState<Hex | null | undefined>();
   const [donationUrl, setDonationUrl] = useState<string | null | undefined>();
 
@@ -66,7 +69,7 @@ function WidgetContent({ variant }: ContentProperties) {
 
   useEffect(() => {
     if (tips.data) {
-      setTipEdges(tips.data.donations);
+      setLeaderboard(tips.data.leaderboard);
     }
   }, [tips.data]);
 
@@ -84,10 +87,25 @@ function WidgetContent({ variant }: ContentProperties) {
           }
         });
         socket.on('newDonation', (donation: DonationData) => {
-          setTipEdges((previousState) => {
-            return _.uniqBy([donation, ...previousState], (item) => {
-              return item.transactionHash;
+          setLeaderboard((previousLeaderboard) => {
+            const updatedLeaderboard = [...previousLeaderboard];
+            const donorIndex = updatedLeaderboard.findIndex((item) => {
+              return (
+                item.address.toLowerCase() ===
+                donation.fromAddress.toLowerCase()
+              );
             });
+            const donorEntry = updatedLeaderboard[donorIndex];
+            if (donorEntry) {
+              updatedLeaderboard[donorIndex] = {
+                ...donorEntry,
+                totalAmount: donorEntry.totalAmount + donation.tradeValue,
+              };
+            }
+            updatedLeaderboard.sort((a, b) => {
+              return b.totalAmount - a.totalAmount;
+            });
+            return updatedLeaderboard;
           });
         });
       }
@@ -109,7 +127,7 @@ function WidgetContent({ variant }: ContentProperties) {
         <div className="relative flex size-full items-start justify-end pr-28 pt-20">
           <TopDonors
             variant={variant}
-            tipEdges={tipEdges}
+            leaderboard={tipLeaderboard}
             donationUrl={donationUrl}
             validatedAddress={address}
             tipsLoading={tips.isLoading}
@@ -119,7 +137,7 @@ function WidgetContent({ variant }: ContentProperties) {
       ) : (
         <TopDonors
           variant={variant}
-          tipEdges={tipEdges}
+          leaderboard={tipLeaderboard}
           donationUrl={donationUrl}
           validatedAddress={address}
           tipsLoading={tips.isLoading}

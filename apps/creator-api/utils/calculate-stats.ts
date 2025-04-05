@@ -11,6 +11,52 @@ import {
 } from '../types';
 import { Hex } from 'viem';
 
+export function calculateDonationLeaderboard(
+  donations: DonationData[],
+): LeaderboardStats[] {
+  // Group donations by sender address
+  const groupedDonations = donations.reduce(
+    (acc, donation) => {
+      const fromAddress = donation.fromAddress;
+      // Initialize the group if it doesn't exist
+      if (!acc[fromAddress]) {
+        acc[fromAddress] = {
+          totalAmount: 0,
+          donorMetadata: donation.fromUser,
+          displayName: donation.fromUser.displayName!,
+          avatarUrl: donation.fromUser.avatarUrl!,
+        };
+      }
+      acc[fromAddress].totalAmount += donation.tradeValue;
+      return acc;
+    },
+    {} as Record<
+      string,
+      {
+        totalAmount: number;
+        donorMetadata: DonationData['fromUser'];
+        displayName: string;
+        avatarUrl: string;
+      }
+    >,
+  );
+
+  // Create leaderboard array from grouped data
+  const leaderboard: LeaderboardStats[] = Object.entries(groupedDonations).map(
+    ([address, group]) => ({
+      address: address as Hex,
+      donorMetadata: group.donorMetadata,
+      displayName: group.displayName,
+      avatarUrl: group.avatarUrl,
+      totalAmount: group.totalAmount,
+    }),
+  );
+
+  // Sort descending by donation total
+  leaderboard.sort((a, b) => b.totalAmount - a.totalAmount);
+  return leaderboard;
+}
+
 export function calculateStatsForDonorAddress(
   donations: DonationData[],
 ): DonationStats {

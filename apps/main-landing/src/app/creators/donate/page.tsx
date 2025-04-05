@@ -16,7 +16,11 @@ import { backgroundLines2 } from '@/assets';
 import { TopBar } from '@/components';
 import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
 import DonateHistoryList from '@/app/creators/donate/components/history/donate-history-list';
-import { DonateContentValues } from '@/app/creators/donate/types';
+import {
+  DonateContentValues,
+  DonationData,
+  LeaderboardStats,
+} from '@/app/creators/donate/types';
 import { useGetDonorHistory } from '@/app/creators/donate/commands/get-donor-history';
 
 import { useCreators } from '../hooks/use-creators';
@@ -37,8 +41,9 @@ export default function Donors() {
 }
 
 function DonorsContent() {
-  const { searchParams } = useCreators();
-  const [tipEdges, setTipEdges] = useState<{ node: TipHistoryNode }[]>([]);
+  const router = useRouter();
+  const [tipEdges, setTipEdges] = useState<DonationData[]>([]);
+  const [tipLeaderboard, setLeaderboard] = useState<LeaderboardStats[]>([]);
   const [currentContent, setCurrentContent] = useState<DonateContentValues>({
     name: 'user-tip',
   });
@@ -52,7 +57,8 @@ function DonorsContent() {
 
   useEffect(() => {
     if (tips.data) {
-      setTipEdges(tips.data.data);
+      setTipEdges(tips.data.donations);
+      setLeaderboard(tips.data.leaderboard);
     }
   }, [tips.data]);
 
@@ -80,7 +86,7 @@ function DonorsContent() {
             />
 
             <TopDonors
-              tipEdges={tipEdges}
+              leaderboard={tipLeaderboard}
               heading="Top donors"
               tipsLoading={tips.isLoading}
               updateCurrentContent={updateCurrentContent}
@@ -111,6 +117,7 @@ function DonorsContent() {
     searchParams.address.data,
     searchParams.address.validationError,
     tipEdges,
+    tipLeaderboard,
     tips.isLoading,
     updateCurrentContent,
   ]);
