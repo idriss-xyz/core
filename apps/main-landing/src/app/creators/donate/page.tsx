@@ -1,16 +1,19 @@
 'use client';
 /* eslint-disable @next/next/no-img-element */
 import { Button } from '@idriss-xyz/ui/button';
-import { CREATORS_LINK, hexSchema } from '@idriss-xyz/constants';
-import { Hex, isAddress } from 'viem';
+import {
+  CREATORS_LINK,
+  EMPTY_HEX,
+  TipHistoryNode,
+} from '@idriss-xyz/constants';
+import { Hex } from 'viem';
 import '@rainbow-me/rainbowkit/styles.css';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { default as io } from 'socket.io-client';
 import _ from 'lodash';
 
 import { backgroundLines2 } from '@/assets';
-import { validateAddressOrENS } from '@/app/creators/donate/utils';
+import { TopBar } from '@/components';
 import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
 import DonateHistoryList from '@/app/creators/donate/components/history/donate-history-list';
 import {
@@ -18,18 +21,15 @@ import {
   DonationData,
   LeaderboardStats,
 } from '@/app/creators/donate/types';
+import { useGetDonorHistory } from '@/app/creators/donate/commands/get-donor-history';
 
-import { TopBar } from '../landing/components/top-bar';
+import { useCreators } from '../hooks/use-creators';
+import DonorStatsList from '../donor/components/donor-stats-list';
 
 import { TopDonors } from './top-donors';
 import { Content } from './content';
 import { RainbowKitProviders } from './providers';
 import { CREATOR_API_URL } from './constants';
-
-const SEARCH_PARAMETER = {
-  ADDRESS: 'address',
-  LEGACY_ADDRESS: 'streamerAddress',
-};
 
 // ts-unused-exports:disable-next-line
 export default function Donors() {
@@ -47,38 +47,12 @@ function DonorsContent() {
   const [currentContent, setCurrentContent] = useState<DonateContentValues>({
     name: 'user-tip',
   });
-  const [validatedAddress, setValidatedAddress] = useState<
-    string | null | undefined
-  >();
   const [socketInitialized, setSocketInitialized] = useState(false);
   const [socketConnected, setSocketConnected] = useState(false);
 
-  const searchParameters = useSearchParams();
-  const addressFromParameters =
-    searchParameters.get(SEARCH_PARAMETER.ADDRESS) ??
-    searchParameters.get(SEARCH_PARAMETER.LEGACY_ADDRESS);
-
-  useEffect(() => {
-    const validateAddress = async () => {
-      const address = await validateAddressOrENS(addressFromParameters);
-      setValidatedAddress(address);
-    };
-
-    void validateAddress();
-  }, [addressFromParameters]);
-
-  const addressValidationResult = hexSchema.safeParse(validatedAddress);
-
-  const isInvalidAddress =
-    !addressFromParameters ||
-    (!!addressFromParameters && validatedAddress === null) ||
-    (!!addressFromParameters &&
-      !!validatedAddress &&
-      (!addressValidationResult.success || !isAddress(validatedAddress)));
-
   const tips = useGetTipHistory(
-    { address: validatedAddress as Hex },
-    { enabled: !!validatedAddress },
+    { address: searchParams.address.data! },
+    { enabled: !!searchParams.address.data },
   );
 
   useEffect(() => {
@@ -88,18 +62,18 @@ function DonorsContent() {
     }
   }, [tips.data]);
 
+  const donorHistory = useGetDonorHistory(
+    { address: currentContent.userDetails?.address ?? EMPTY_HEX },
+    { enabled: !!currentContent.userDetails?.address },
+  );
+
+  console.log(searchParams);
+
   const updateCurrentContent = useCallback((content: DonateContentValues) => {
     setCurrentContent((previous) => {
       return { previous, ...content };
     });
   }, []);
-
-  const onDonorClick = useCallback(
-    (address: Hex) => {
-      router.push(`/creators/donor/${address}`);
-    },
-    [router],
-  );
 
   const currentContentComponent = useMemo(() => {
     switch (currentContent?.name) {
@@ -107,17 +81,16 @@ function DonorsContent() {
         return (
           <div className="grid grid-cols-1 items-start gap-x-10 lg:grid-cols-[1fr,auto]">
             <Content
-              validatedAddress={validatedAddress}
+              validatedAddress={searchParams.address.data}
               className="container mt-8 overflow-hidden lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]"
             />
 
             <TopDonors
               leaderboard={tipLeaderboard}
               heading="Top donors"
-              onDonorClick={onDonorClick}
               tipsLoading={tips.isLoading}
-              validatedAddress={validatedAddress}
               updateCurrentContent={updateCurrentContent}
+              validatedAddress={searchParams.address.data}
               className="container mt-8 overflow-hidden px-0 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]"
             />
           </div>
@@ -126,12 +99,12 @@ function DonorsContent() {
       case 'user-history': {
         return (
           <DonateHistoryList
-            donations={tipEdges}
-            address={validatedAddress}
+            tipEdges={tipEdges}
             tipsLoading={tips.isLoading}
             currentContent={currentContent}
-            isInvalidAddress={isInvalidAddress}
+            address={searchParams.address.data}
             updateCurrentContent={updateCurrentContent}
+            isInvalidAddress={searchParams.address.validationError}
           />
         );
       }
@@ -141,31 +114,33 @@ function DonorsContent() {
     }
   }, [
     currentContent,
-    isInvalidAddress,
-    onDonorClick,
+    searchParams.address.data,
+    searchParams.address.validationError,
     tipEdges,
     tipLeaderboard,
     tips.isLoading,
     updateCurrentContent,
-    validatedAddress,
   ]);
 
   useEffect(() => {
-    if (validatedAddress && !socketInitialized) {
+    if (searchParams.address.data && !socketInitialized) {
       const socket = io(CREATOR_API_URL);
       setSocketInitialized(true);
 
       if (socket && !socketConnected) {
         socket.on('connect', () => {
-          socket.emit('register', validatedAddress);
+          socket.emit('register', searchParams.address.data);
 
           if (socket.connected) {
             setSocketConnected(true);
           }
         });
-        socket.on('newDonation', (donation: DonationData) => {
+
+        socket.on('newDonation', (node: TipHistoryNode) => {
           setTipEdges((previousState) => {
-            return _.uniqBy([donation, ...previousState], 'transactionHash');
+            return _.uniqBy([{ node }, ...previousState], (item) => {
+              return _.get(item, 'node.transaction.hash');
+            });
           });
         });
       }
@@ -179,7 +154,7 @@ function DonorsContent() {
     }
 
     return;
-  }, [socketConnected, socketInitialized, validatedAddress]);
+  }, [socketConnected, socketInitialized, searchParams.address.data]);
 
   return (
     <>

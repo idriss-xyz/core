@@ -6,7 +6,6 @@ import {
   type AbiEvent,
   decodeFunctionData,
   type Hex,
-  isAddress,
   parseAbiItem,
 } from 'viem';
 import { getEnsAvatar } from 'viem/actions';
@@ -18,6 +17,7 @@ import {
   TIPPING_ABI,
 } from '../donate/constants';
 import { ethereumClient } from '../donate/config';
+import { useCreators } from '../hooks/use-creators';
 
 import DonationNotification, {
   type DonationNotificationProperties,
@@ -26,63 +26,34 @@ import { clients } from './constants/blockchain-clients';
 import {
   calculateDollar,
   resolveEnsName,
-  resolveEnsToHex,
   TIP_MESSAGE_EVENT_ABI,
 } from './utils';
 
-const DONATION_DISPLAY_DURATION = 11_000;
-const BLOCK_LOOKBACK_RANGE = 5n;
 const FETCH_INTERVAL = 5000;
+const BLOCK_LOOKBACK_RANGE = 5n;
+const DONATION_DISPLAY_DURATION = 11_000;
 
 const latestCheckedBlocks = new Map();
 
 // ts-unused-exports:disable-next-line
 export default function Obs() {
+  const {
+    searchParams: { address },
+  } = useCreators();
   const router = useRouter();
   const searchParameters = useSearchParams();
-  const [resolvedAddress, setResolvedAddress] = useState<Hex | null>(null);
+  const [isDisplayingDonation, setIsDisplayingDonation] = useState(false);
   const [donationsQueue, setDonationsQueue] = useState<
     DonationNotificationProperties[]
   >([]);
-  const [isDisplayingDonation, setIsDisplayingDonation] = useState(false);
 
   useEffect(() => {
-    const resolveAddress = async () => {
-      let address = searchParameters.get('streamerAddress');
-      const newStreamerAddress = searchParameters.get('address');
-
-      if (newStreamerAddress) {
-        address = newStreamerAddress;
-      }
-
-      if (!address) {
-        router.push('/creators');
-        return;
-      }
-
-      if (isAddress(address)) {
-        setResolvedAddress(address);
-      } else {
-        try {
-          const resolved = await resolveEnsToHex(address);
-          if (resolved && isAddress(resolved)) {
-            setResolvedAddress(resolved);
-          } else {
-            console.error('Invalid ENS name or address provided:', address);
-            router.push('/creators');
-          }
-        } catch (error) {
-          console.error('Error resolving ENS or address:', error);
-          router.push('/creators');
-        }
-      }
-    };
-
-    resolveAddress().catch((error) => {
-      console.error('Unexpected error resolving address:', error);
+    if (!address.isFetching && !address.isValid) {
       router.push('/creators');
-    });
-  }, [searchParameters, router]);
+
+      return;
+    }
+  }, [router, searchParameters, address.isValid, address.isFetching]);
 
   const displayNextDonation = useCallback(() => {
     setIsDisplayingDonation(true);
@@ -91,6 +62,7 @@ export default function Obs() {
       setDonationsQueue((previous) => {
         return previous.slice(1);
       });
+
       setIsDisplayingDonation(false);
     }, DONATION_DISPLAY_DURATION);
   }, [setDonationsQueue]);
@@ -105,6 +77,7 @@ export default function Obs() {
         ) {
           return previous;
         }
+
         return [...previous, donation];
       });
     },
@@ -112,7 +85,7 @@ export default function Obs() {
   );
 
   const fetchTipMessageLogs = useCallback(async () => {
-    if (!resolvedAddress) return;
+    if (!address.data) return;
 
     for (const { chain, client, name } of clients) {
       try {
@@ -171,8 +144,7 @@ export default function Obs() {
             continue;
           }
 
-          if (recipient.toLowerCase() !== resolvedAddress.toLowerCase())
-            continue;
+          if (recipient.toLowerCase() !== address.data.toLowerCase()) continue;
 
           const resolved = await resolveEnsName(txn.from);
 
@@ -201,31 +173,32 @@ export default function Obs() {
           });
 
           addDonation({
-            txnHash: log.transactionHash!,
-            donor: senderIdentifier,
-            amount: amountInDollar,
+            avatarUrl: avatarUrl,
             message: message ?? '',
+            amount: amountInDollar,
+            donor: senderIdentifier,
+            txnHash: log.transactionHash!,
             token: {
               amount: tokenAmount,
               details: tokenDetails,
             },
-            avatarUrl,
           });
         }
       } catch (error) {
         console.error('Error fetching tip message log:', error);
       }
     }
-  }, [resolvedAddress, addDonation]);
+  }, [address.data, addDonation]);
 
   useEffect(() => {
-    if (!resolvedAddress) return;
+    if (!address.isValid) return;
 
     const intervalId = setInterval(fetchTipMessageLogs, FETCH_INTERVAL);
+
     return () => {
       return clearInterval(intervalId);
     };
-  }, [resolvedAddress, fetchTipMessageLogs]);
+  }, [fetchTipMessageLogs, address.isValid]);
 
   useEffect(() => {
     if (!isDisplayingDonation && donationsQueue.length > 0) {
@@ -240,8 +213,8 @@ export default function Obs() {
     <div className="h-screen w-full bg-transparent">
       {shouldDisplayDonation && (
         <DonationNotification
-          key={currentDonation.txnHash}
           {...currentDonation}
+          key={currentDonation.txnHash}
         />
       )}
     </div>

@@ -21,7 +21,6 @@ import {
 } from '@idriss-xyz/constants';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSearchParams } from 'next/navigation';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { classes } from '@idriss-xyz/ui/utils';
 import { getAddress } from 'viem';
@@ -31,17 +30,13 @@ import { useAccount, useWalletClient } from 'wagmi';
 
 import { backgroundLines3 } from '@/assets';
 
+import { useCreators } from '../hooks/use-creators';
+
 import { ChainSelect, TokenSelect } from './components';
 import { createFormPayloadSchema, FormPayload, SendPayload } from './schema';
 import { getSendFormDefaultValues } from './utils';
 import { useSender } from './hooks';
 import { CREATOR_API_URL } from './constants';
-
-const SEARCH_PARAMETER = {
-  CREATOR_NAME: 'creatorName',
-  NETWORK: 'network',
-  TOKEN: 'token',
-};
 
 type Properties = {
   className?: string;
@@ -52,24 +47,17 @@ const baseClassName =
   'z-1 w-[440px] max-w-full rounded-xl bg-white px-4 pb-9 pt-6 flex flex-col items-center relative';
 
 export const Content = ({ className, validatedAddress }: Properties) => {
+  const { searchParams } = useCreators();
   const { isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
   const { connectModalOpen, openConnectModal } = useConnectModal();
-
-  const searchParameters = useSearchParams();
 
   const addressValidationResult = hexSchema.safeParse(validatedAddress);
 
   const [selectedTokenSymbol, setSelectedTokenSymbol] = useState<string>('ETH');
 
-  const networkParameter = searchParameters.get(SEARCH_PARAMETER.NETWORK);
-  const tokenParameter = searchParameters.get(SEARCH_PARAMETER.TOKEN);
-  const creatorNameParameter = searchParameters.get(
-    SEARCH_PARAMETER.CREATOR_NAME,
-  );
-
   const possibleTokens: Token[] = useMemo(() => {
-    const tokensSymbols = (tokenParameter ?? '').toLowerCase().split(',');
+    const tokensSymbols = (searchParams.token ?? '').toLowerCase().split(',');
     const allPossibleTokens = Object.values(TOKEN);
     const tokens = allPossibleTokens.filter((token) => {
       return tokensSymbols.includes(token.symbol.toLowerCase());
@@ -81,11 +69,11 @@ export const Content = ({ className, validatedAddress }: Properties) => {
     }
 
     return tokens;
-  }, [tokenParameter]);
+  }, [searchParams.token]);
 
   const allowedChainsIds = useMemo(() => {
     const networksShortNames =
-      networkParameter?.toLowerCase().split(',') ??
+      searchParams.network?.toLowerCase().split(',') ??
       Object.values(CHAIN).map((chain) => {
         return chain.shortName.toLowerCase();
       });
@@ -110,7 +98,7 @@ export const Content = ({ className, validatedAddress }: Properties) => {
     return chains.map((chain) => {
       return chain.id;
     });
-  }, [networkParameter, selectedTokenSymbol]);
+  }, [searchParams.network, selectedTokenSymbol]);
 
   const defaultChainId = allowedChainsIds[0] ?? 0;
 
@@ -316,8 +304,8 @@ export const Content = ({ className, validatedAddress }: Properties) => {
         alt=""
       />
       <h1 className="self-start text-heading4">
-        {creatorNameParameter
-          ? `Donate to ${creatorNameParameter}`
+        {searchParams.creatorName
+          ? `Donate to ${searchParams.creatorName}`
           : 'Select your donation details'}
       </h1>
       <Form onSubmit={formMethods.handleSubmit(onSubmit)} className="w-full">
