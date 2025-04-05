@@ -5,6 +5,7 @@ export const DEFAULT_ALLOWED_CHAINS_IDS = [
   CHAIN.ALEPH.id,
   CHAIN.ABSTRACT.id,
   CHAIN.BNB_CHAIN.id,
+  CHAIN.CELO.id,
   CHAIN.ETHEREUM.id,
   CHAIN.LINEA.id,
   CHAIN.MANTLE.id,
@@ -13,7 +14,6 @@ export const DEFAULT_ALLOWED_CHAINS_IDS = [
   CHAIN.RONIN.id,
   CHAIN.SCROLL.id,
   CHAIN.ZK_SYNC_ERA.id,
-  CHAIN.CELO.id,
 ];
 
 export const ERC20_ABI = [
