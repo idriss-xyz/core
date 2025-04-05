@@ -104,7 +104,8 @@
         "ALCHEMY_API_KEY",
         "API_SECRET",
         "WEBHOOK_URL",
-        "VIEM_TRANSPORTER_URL"
+        "VIEM_TRANSPORTER_URL",
+        "HELIUS_API_KEY"
       ]
     },
     "@idriss-xyz/creator-api#dev": {

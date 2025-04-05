@@ -3,8 +3,8 @@ import { Hex } from 'viem';
 import { CHAIN } from 'shared/web3';
 
 export interface SubscribePayload {
-  fid?: number;
   address: string;
+  fid?: number;
 }
 
 export type SubscribeCommandPayload = {
@@ -16,6 +16,7 @@ export type SubscribeCommandPayload = {
 
 export type UnsubscribePayload = {
   address: string;
+  fid?: number;
 };
 
 export type UnsubscribeCommandPayload = {
@@ -31,8 +32,8 @@ export type SubscriptionsPayload = {
 
 export type SubscriptionResponse = {
   address: Hex;
-  fid?: number | null;
   createdAt: number;
+  fid: number;
 };
 
 export type SubscriptionsResponse = {
@@ -46,7 +47,8 @@ export type FarcasterAddressPayload = {
 
 export type FarcasterAddressResponse = {
   fid: number;
-  address: string;
+  address?: string;
+  addressSolana?: string;
 } | null;
 
 export type FarcasterTransferResponse = {
@@ -95,12 +97,16 @@ export type FarcasterUserResponse = {
   };
 };
 
-type SwapDataToken = {
+export type SwapDataToken = {
   address: Hex;
   symbol: string;
   amount: number;
   decimals: number;
   network: keyof typeof CHAIN;
+  name?: string;
+  logoURI?: string;
+  priceUSD?: string;
+  coinKey?: string;
 };
 
 export type SwapData = {
@@ -114,6 +120,14 @@ export type SwapData = {
   soundFile?: string;
 };
 
+export type SwapProperties = {
+  data: Hex;
+  gas?: bigint;
+  chain: number;
+  value: bigint;
+  to: `0x${string}`;
+};
+
 export interface QuotePayload {
   amount: string;
   originChain: number;
@@ -121,6 +135,9 @@ export interface QuotePayload {
   fromAddress: string;
   destinationToken: string;
   destinationChain: number;
+  routeOptions?: {
+    slippage?: number;
+  };
 }
 
 export type QuoteResponse = {
@@ -242,4 +259,12 @@ export type VerifySiweSignaturePayload = {
 
 export type VerifySiweSignatureResponse = {
   token: string;
+};
+
+export type SendSolanaTxPayload = {
+  base64SerializedTx: string;
+};
+
+export type SendSolanaTxResponse = {
+  transactionHash: string;
 };

@@ -23,10 +23,12 @@ import {
   ExtensionPopupProvider,
   ExtensionSettingsProvider,
   WalletContextProvider,
+  SolanaContextProvider,
 } from 'shared/extension';
 import {
   AuthTokenStorage,
   WalletStorage,
+  SolanaWalletStorage,
   ToastSoundStateStorage,
   SubscriptionsAmountStorage,
 } from 'shared/web3';
@@ -70,24 +72,30 @@ export const Providers = ({
                             }
                           >
                             <NotificationsProvider>
-                              <WalletContextProvider
-                                disabledWalletsRdns={disabledWalletRdns}
-                                onGetWallet={WalletStorage.get}
-                                onClearWallet={WalletStorage.clear}
-                                onSaveWallet={WalletStorage.save}
+                              <SolanaContextProvider
+                                onGetWallet={SolanaWalletStorage.get}
+                                onClearWallet={SolanaWalletStorage.clear}
+                                onSaveWallet={SolanaWalletStorage.save}
                               >
-                                <ExtensionPopupProvider>
-                                  <ExtensionSettingsProvider>
-                                    <TwitterScrapingContextProvider>
-                                      <WarpcastScrapingContextProvider>
-                                        <SupercastScrapingContextProvider>
-                                          {children}
-                                        </SupercastScrapingContextProvider>
-                                      </WarpcastScrapingContextProvider>
-                                    </TwitterScrapingContextProvider>
-                                  </ExtensionSettingsProvider>
-                                </ExtensionPopupProvider>
-                              </WalletContextProvider>
+                                <WalletContextProvider
+                                  disabledWalletsRdns={disabledWalletRdns}
+                                  onGetWallet={WalletStorage.get}
+                                  onClearWallet={WalletStorage.clear}
+                                  onSaveWallet={WalletStorage.save}
+                                >
+                                  <ExtensionPopupProvider>
+                                    <ExtensionSettingsProvider>
+                                      <TwitterScrapingContextProvider>
+                                        <WarpcastScrapingContextProvider>
+                                          <SupercastScrapingContextProvider>
+                                            {children}
+                                          </SupercastScrapingContextProvider>
+                                        </WarpcastScrapingContextProvider>
+                                      </TwitterScrapingContextProvider>
+                                    </ExtensionSettingsProvider>
+                                  </ExtensionPopupProvider>
+                                </WalletContextProvider>
+                              </SolanaContextProvider>
                             </NotificationsProvider>
                           </TradingCopilotContextProvider>
                         </NiceModal.Provider>

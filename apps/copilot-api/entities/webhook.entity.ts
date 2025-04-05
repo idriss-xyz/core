@@ -8,6 +8,9 @@ export class WebhookEntity {
   @Column({ type: 'text', name: 'webhook_id' })
   readonly webhook_id!: string;
 
+  @Column({ type: 'text', name: 'chainType' })
+  readonly chainType!: string;
+
   @Column({ type: 'text', name: 'signing_key' })
   readonly signing_key!: string;
 }

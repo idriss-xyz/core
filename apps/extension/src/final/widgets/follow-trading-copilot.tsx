@@ -3,7 +3,13 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { Hex } from 'viem';
 import { Wallet } from '@idriss-xyz/wallet-connect';
 
-import { Button, classes, PortalWithTailwind, usePooling } from 'shared/ui';
+import {
+  Button,
+  classes,
+  PortalWithTailwind,
+  usePooling,
+  TradingCopilotTooltip,
+} from 'shared/ui';
 import {
   SubscribePayload,
   UnsubscribePayload,
@@ -14,7 +20,6 @@ import { GetFarcasterVerifiedAddressCommand } from 'shared/farcaster';
 import { useCommandQuery } from 'shared/messaging';
 
 import { useLocationInfo, useUserWidgets } from '../hooks';
-import { TradingCopilotTooltip } from '../notifications-popup/components/trading-copilot-tooltip';
 
 export const FollowTradingCopilot = () => {
   const { wallet } = useWallet();

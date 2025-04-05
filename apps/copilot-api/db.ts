@@ -14,7 +14,24 @@ export const dataSource = new DataSource({
   username: process.env.DATABASE_USER,
   password: String(process.env.DATABASE_PASS),
   database: process.env.DATABASE_DB_NAME,
-  synchronize: true,
-  migrations: [__dirname, '/migrations/*.js'],
+  synchronize: false,
+  migrations: [__dirname + '/migrations/*.{ts,js}'],
   entities: [__dirname + '/entities/*.entity.{ts,js}'],
 });
+
+export async function initializeDatabase() {
+  if (!dataSource.isInitialized) {
+    await dataSource.initialize();
+
+    const pendingMigrations = await dataSource.showMigrations();
+    console.log('Pending migrations:', pendingMigrations);
+
+    try {
+      await dataSource.runMigrations();
+      console.log('Migrations completed');
+    } catch (error) {
+      console.error('Migration failed:', error);
+    }
+  }
+  return dataSource;
+}

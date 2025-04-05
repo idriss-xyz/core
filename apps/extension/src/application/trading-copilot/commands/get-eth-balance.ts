@@ -1,5 +1,5 @@
 import { createPublicClient, formatEther, Hex, http } from 'viem';
-import { mainnet } from 'viem/chains';
+import { base } from 'viem/chains';
 
 import {
   Command,
@@ -15,8 +15,8 @@ type Payload = {
 
 type Response = string | null;
 
-export class GetEnsBalanceCommand extends Command<Payload, Response> {
-  public readonly name = 'GetEnsBalanceCommand' as const;
+export class GetEthBalanceCommand extends Command<Payload, Response> {
+  public readonly name = 'GetEthBalanceCommand' as const;
 
   constructor(public payload: Payload) {
     super();
@@ -25,7 +25,7 @@ export class GetEnsBalanceCommand extends Command<Payload, Response> {
   async handle() {
     try {
       const client = createPublicClient({
-        chain: { ...mainnet },
+        chain: { ...base },
         transport: http('https://base.llamarpc.com/'),
       });
 

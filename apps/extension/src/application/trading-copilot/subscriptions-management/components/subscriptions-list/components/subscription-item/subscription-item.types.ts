@@ -6,7 +6,7 @@ import {
 
 export interface Properties {
   subscription: SubscriptionResponse;
-  onRemove: (payload: UnsubscribePayload) => void;
+  onRemove: (payload: UnsubscribePayload) => Promise<void>;
 }
 
 export interface ContentProperties extends Properties {

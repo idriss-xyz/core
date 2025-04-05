@@ -153,6 +153,12 @@ const nextConfig: NextConfig = {
         permanent: false,
       },
       {
+        source: '/tokenomics',
+        destination: 'https://docs.idriss.xyz/idriss-token/tokenomics',
+        basePath: false,
+        permanent: false,
+      },
+      {
         source: '/retroactive-distribution',
         destination:
           'https://docs.idriss.xyz/idriss-token/retroactive-distribution',

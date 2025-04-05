@@ -7,7 +7,7 @@ import {
 } from 'shared/messaging';
 
 type Payload = {
-  tokeURI: string;
+  tokenURI: string;
 };
 
 type Response = string;
@@ -21,7 +21,8 @@ export class GetTokensImageCommand extends Command<Payload, Response> {
 
   async handle() {
     try {
-      const response = await fetch(this.payload.tokeURI);
+      // TODO: Improvement: Add a timeout for long fetches "{ signal: AbortSignal.timeout(5000) }""
+      const response = await fetch(this.payload.tokenURI);
 
       if (!response.ok) {
         const responseText = await response.text();

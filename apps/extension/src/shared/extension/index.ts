@@ -16,7 +16,9 @@ export {
   ExtensionPopupProvider,
   useExtensionPopup,
   WalletContextProvider,
+  SolanaContextProvider,
   useWallet,
+  useSolanaWallet,
 } from './context';
 export {
   COMMAND_MAP as EXTENSION_COMMAND_MAP,
@@ -27,6 +29,7 @@ export type {
   StoredAuthToken,
   StoredToastSoundState,
   StoredSubscriptionsAmount,
+  StoredSubscriptions,
 } from './types';
 export { ExtensionSettingsManager } from './extension-settings-manager';
 export { TradingCopilotManager } from './trading-copilot-manager';

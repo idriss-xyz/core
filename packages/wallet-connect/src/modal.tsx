@@ -4,8 +4,9 @@ import { createStore, EIP6963ProviderInfo } from 'mipd';
 import { useCallback, useMemo, useState, useSyncExternalStore } from 'react';
 import { getAddress, hexToNumber } from 'viem';
 
-import { Wallet } from './types';
+import { Wallet, SolanaWallet, SolanaProviderInfo } from './types';
 import { BROWSER_PROVIDER_LOGO } from './constants';
+import { createSolanaWalletStore } from './utils';
 
 type Properties = {
   disabledWalletsRdns: string[];
@@ -128,3 +129,128 @@ export const WalletConnectModal = createModal(
     );
   },
 );
+
+export const SolanaWalletConnectModal = createModal(() => {
+  const modal = useModal();
+  const [isConnecting, setIsConnecting] = useState(false);
+
+  const resolveWallet = useCallback(
+    async (wallet: SolanaWallet) => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 1000);
+      });
+      modal.resolve(wallet);
+      modal.remove();
+    },
+    [modal],
+  );
+
+  const walletProvidersStore = useMemo(() => {
+    return createSolanaWalletStore();
+  }, []);
+
+  const announcedProviders = useSyncExternalStore(
+    walletProvidersStore.subscribe,
+    walletProvidersStore.getProviders,
+  );
+
+  const solanaWalletProviders = announcedProviders.map((wallet, index) => {
+    return {
+      provider: wallet.adapter,
+      info: {
+        uuid: index,
+        rdns: wallet.adapter.name ?? 'Unknown',
+        icon: wallet.adapter.icon ?? ('' as `data:image/${string}`),
+        name: wallet.adapter.name ?? 'Unknown',
+      },
+    };
+  });
+
+  const availableProviders = useMemo(() => {
+    if (!window.solana) {
+      return solanaWalletProviders;
+    }
+
+    const providers = window.solana
+      ? [
+          ...solanaWalletProviders,
+          {
+            provider: window.solana,
+            info: {
+              uuid: 'browser',
+              rdns: 'browser',
+              icon: BROWSER_PROVIDER_LOGO,
+              name: 'Browser Wallet',
+            },
+          },
+        ]
+      : solanaWalletProviders;
+
+    return providers;
+  }, [solanaWalletProviders]);
+
+  const connect = useCallback(
+    async (providerInfo: SolanaProviderInfo) => {
+      setIsConnecting(true);
+      try {
+        const foundProviderObject =
+          providerInfo.name === 'browser'
+            ? {
+                provider: window.solana,
+                info: {
+                  uuid: 'browser',
+                  rdns: 'browser',
+                  icon: BROWSER_PROVIDER_LOGO,
+                  name: 'Browser Wallet',
+                },
+              }
+            : availableProviders.find((provider) => {
+                return provider.info.name === providerInfo.name;
+              });
+
+        if (!foundProviderObject?.provider) {
+          setIsConnecting(false);
+          return;
+        }
+        const { provider } = foundProviderObject;
+        await provider.connect();
+        await new Promise((resolve) => {
+          setTimeout(resolve, 500);
+        });
+
+        const publicKey = provider.publicKey?.toString();
+        void resolveWallet({
+          account: publicKey ?? '',
+          provider,
+        });
+      } catch {
+        setIsConnecting(false);
+      }
+    },
+    [availableProviders, resolveWallet],
+  );
+
+  const mappedProviders = availableProviders.map((wallet) => {
+    return {
+      uuid: wallet.info.name,
+      rdns: wallet.info.name,
+      icon: wallet.info.icon,
+      name: wallet.info.name,
+    };
+  });
+
+  const closeModalWithoutFinishing = useCallback(() => {
+    modal.reject();
+    modal.remove();
+  }, [modal]);
+
+  return (
+    <DesignSystemWalletConnectModal
+      onClose={closeModalWithoutFinishing}
+      isOpened={modal.visible}
+      walletProviders={mappedProviders}
+      onConnect={connect}
+      isConnecting={isConnecting}
+    />
+  );
+});
