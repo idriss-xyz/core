@@ -131,7 +131,6 @@ export interface ZapperResponse {
 
 export interface TipHistoryResponse {
   donations: DonationData[];
-  stats: DonationStats;
   leaderboard: LeaderboardStats[];
 }
 
