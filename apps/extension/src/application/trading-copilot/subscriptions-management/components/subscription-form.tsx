@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { isAddress } from 'viem';
 import { Link } from '@idriss-xyz/ui/link';
@@ -24,11 +24,24 @@ const MAX_SUBS_MESSAGE = 'Maximum subscriptions reached.';
 
 export const SubscriptionForm = ({ onSubmit, canSubscribe }: Properties) => {
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const getEnsAddressMutation = useCommandMutation(GetEnsAddressCommand);
   const getFarcasterAddressMutation = useCommandMutation(
     GetFarcasterAddressCommand,
   );
+
+  useEffect(() => {
+    if (error) {
+      const timeout = setTimeout(() => {
+        setError('');
+      }, 5000);
+
+      return () => clearTimeout(timeout);
+    }
+    return;
+  }, [error]);
+  
 
   const form = useForm<FormValues>({
     defaultValues: EMPTY_FORM,
@@ -38,22 +51,17 @@ export const SubscriptionForm = ({ onSubmit, canSubscribe }: Properties) => {
     async (data) => {
       if (!canSubscribe) {
         setError(MAX_SUBS_MESSAGE);
-
-        form.reset(EMPTY_FORM);
-
-        setTimeout(() => {
-          setError('');
-        }, 5000);
-
         return;
       }
       try {
+        setIsLoading(true);
         if (
           isAddress(data.subscription) ||
           isSolanaAddress(data.subscription)
         ) {
           await onSubmit({ address: data.subscription });
           form.reset(EMPTY_FORM);
+          setIsLoading(false);
           return;
         }
 
@@ -82,6 +90,7 @@ export const SubscriptionForm = ({ onSubmit, canSubscribe }: Properties) => {
           }
 
           form.reset(EMPTY_FORM);
+          setIsLoading(false);
           return;
         }
 
@@ -95,10 +104,13 @@ export const SubscriptionForm = ({ onSubmit, canSubscribe }: Properties) => {
 
         await onSubmit({ address: ensAddress });
         form.reset(EMPTY_FORM);
+        setIsLoading(false);
         setError('');
       } catch {
         setError("We couldn't subscribe to this address. Try again.");
+        setIsLoading(false);
       }
+      setIsLoading(false);
     },
 
     [
@@ -127,14 +139,13 @@ export const SubscriptionForm = ({ onSubmit, canSubscribe }: Properties) => {
               {...field}
               type="text"
               id="subscription"
-              disabled={error !== ''}
+              disabled={isLoading}
               placeholder="e.g., vitalik.eth"
               className="mt-1 block w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-black shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
             />
           );
         }}
       />
-
       {error !== '' && (
         <ErrorMessage className="mt-1">
           {error === MAX_SUBS_MESSAGE ? (
