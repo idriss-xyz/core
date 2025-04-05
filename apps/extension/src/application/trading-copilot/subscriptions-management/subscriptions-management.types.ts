@@ -1,5 +1,5 @@
-import { Wallet } from '@idriss-xyz/wallet-connect';
+import { SolanaWallet, Wallet } from '@idriss-xyz/wallet-connect';
 
 export interface ContentProperties {
-  wallet: Wallet;
+  wallet: Wallet | SolanaWallet;
 }

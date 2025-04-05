@@ -18,7 +18,7 @@ interface SolanaProvider {
   signTransaction?<T extends VersionedTransaction | Transaction>(
     transaction: T,
   ): Promise<T>;
-  signMessage?(message: string): Promise<string>;
+  signMessage?(message: Uint8Array<ArrayBufferLike>): Promise<Uint8Array<ArrayBufferLike>>;
 }
 
 declare global {

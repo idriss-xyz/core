@@ -222,6 +222,7 @@ export const SolanaWalletConnectModal = createModal(() => {
         void resolveWallet({
           account: publicKey ?? '',
           provider,
+          providerRdns: provider.name,
         });
       } catch {
         setIsConnecting(false);

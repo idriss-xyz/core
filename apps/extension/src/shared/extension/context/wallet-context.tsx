@@ -14,6 +14,7 @@ import { createContextHook } from '@idriss-xyz/ui/utils';
 import { getAddress, Hex, hexToNumber } from 'viem';
 import {
   SolanaWallet,
+  SolanaWalletConnectModal,
   StoredWallet,
   Wallet,
   WalletConnectModal,
@@ -57,6 +58,7 @@ export const WalletContextProvider = (properties: {
   const walletConnectModal = useModal(WalletConnectModal, {
     disabledWalletsRdns: disabledWalletsRdns ?? [],
   });
+  const solWalletConnectModal = useModal(SolanaWalletConnectModal);
 
   const removeWalletInfo = useCallback(() => {
     onClearWallet?.();
@@ -229,10 +231,13 @@ export const WalletContextProvider = (properties: {
   }, [properties, wallet?.provider]);
 
   const openConnectionModal = useCallback(async () => {
+    const userSelectedNetwork: 'SOLANA' | 'EVM' = 'SOLANA' // TODO: replace for actual selector ui component
     try {
-      const resolvedWallet = (await walletConnectModal.show({
-        disabledWalletsRdns: disabledWalletsRdns ?? [],
-      })) as Wallet;
+      const resolvedWallet = userSelectedNetwork === 'EVM' 
+        ? (await walletConnectModal.show({
+          disabledWalletsRdns: disabledWalletsRdns ?? [],
+        })) as Wallet
+        : (await solWalletConnectModal.show()) as SolanaWallet;
       setWalletInfo(resolvedWallet);
       return resolvedWallet;
     } catch (error) {

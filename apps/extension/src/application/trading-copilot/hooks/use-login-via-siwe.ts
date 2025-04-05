@@ -63,7 +63,8 @@ export const useLoginViaSiwe = () => {
           account: wallet.account,
           message: siweMessage.message,
         })
-        : await (wallet.provider as SolanaProvider).signMessage?.(siweMessage.message);
+        : new TextDecoder().decode(await (wallet.provider as SolanaProvider).signMessage?.(
+          new TextEncoder().encode(siweMessage.message)));
 
       if (!siweSignature) {
         return;
