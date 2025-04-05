@@ -13,7 +13,11 @@ import { backgroundLines2 } from '@/assets';
 import { validateAddressOrENS } from '@/app/creators/donate/utils';
 import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
 import DonateHistoryList from '@/app/creators/donate/components/history/donate-history-list';
-import { DonateContentValues, DonationData } from '@/app/creators/donate/types';
+import {
+  DonateContentValues,
+  DonationData,
+  LeaderboardStats,
+} from '@/app/creators/donate/types';
 
 import { TopBar } from '../landing/components/top-bar';
 
@@ -39,6 +43,7 @@ export default function Donors() {
 function DonorsContent() {
   const router = useRouter();
   const [tipEdges, setTipEdges] = useState<DonationData[]>([]);
+  const [tipLeaderboard, setLeaderboard] = useState<LeaderboardStats[]>([]);
   const [currentContent, setCurrentContent] = useState<DonateContentValues>({
     name: 'user-tip',
   });
@@ -79,6 +84,7 @@ function DonorsContent() {
   useEffect(() => {
     if (tips.data) {
       setTipEdges(tips.data.donations);
+      setLeaderboard(tips.data.leaderboard);
     }
   }, [tips.data]);
 
@@ -106,7 +112,7 @@ function DonorsContent() {
             />
 
             <TopDonors
-              tipEdges={tipEdges}
+              leaderboard={tipLeaderboard}
               heading="Top donors"
               onDonorClick={onDonorClick}
               tipsLoading={tips.isLoading}
@@ -138,6 +144,7 @@ function DonorsContent() {
     isInvalidAddress,
     onDonorClick,
     tipEdges,
+    tipLeaderboard,
     tips.isLoading,
     updateCurrentContent,
     validatedAddress,

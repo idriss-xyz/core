@@ -10,12 +10,7 @@ import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { default as IDRISS_SCENE_STREAM_2 } from '../../../assets/idriss-scene-stream-2.png';
 import { WidgetVariants } from '../../../../../twitch-extension/src/app/types';
 
-import {
-  LeaderboardStats,
-  DonateContentValues,
-  DonationData,
-  DonationUser,
-} from './types';
+import { LeaderboardStats, DonateContentValues } from './types';
 import {
   default as DonorItem,
   DonorItemPlaceholder,
@@ -28,7 +23,7 @@ type Properties = {
   variant?: WidgetVariants;
   donationUrl?: string | null;
   validatedAddress?: string | null;
-  tipEdges: DonationData[];
+  leaderboard: LeaderboardStats[];
   updateCurrentContent?: (content: DonateContentValues) => void;
   onDonorClick?: (address: Hex) => void;
 };
@@ -38,7 +33,7 @@ const baseClassName =
 
 export const TopDonors = ({
   variant,
-  tipEdges,
+  leaderboard,
   className,
   tipsLoading,
   donationUrl,
@@ -54,43 +49,6 @@ export const TopDonors = ({
   const isTwitchPanel = variant === 'panel';
   const isTwitchOverlay = variant === 'videoOverlay';
   const isTwitchComponent = variant === 'videoComponent';
-
-  const groupedTips = tipEdges?.reduce(
-    (accumulator, donation) => {
-      const userAddress = donation.fromAddress;
-      const tradeValue = donation.tradeValue;
-
-      if (!tradeValue) {
-        return accumulator;
-      }
-
-      if (!accumulator[userAddress]) {
-        accumulator[userAddress] = {
-          tips: [] as DonationData[],
-          tipsSum: 0,
-          user: donation.fromUser,
-        };
-      }
-      accumulator[userAddress].tips.push(donation);
-      accumulator[userAddress].tipsSum += tradeValue;
-
-      return accumulator;
-    },
-    {} as Record<
-      string,
-      {
-        tipsSum: number;
-        user: DonationUser;
-        tips: DonationData[];
-      }
-    >,
-  );
-
-  const sortedGroupedTips = groupedTips
-    ? Object.values(groupedTips).sort((a, b) => {
-        return b.tipsSum - a.tipsSum;
-      })
-    : undefined;
 
   if (validatedAddress !== undefined && addressValidationResult.error) {
     return (
@@ -136,7 +94,7 @@ export const TopDonors = ({
       </div>
 
       <div className="flex w-full flex-col">
-        {tipsLoading || !validatedAddress || !sortedGroupedTips ? (
+        {tipsLoading || !validatedAddress || !leaderboard ? (
           <span
             className={classes(
               'flex min-h-[207px] w-full items-center justify-center border-b-neutral-300 px-5.5 py-4.5',
@@ -149,27 +107,30 @@ export const TopDonors = ({
           <ul className={classes(isTwitchPanel && 'min-h-[345px]')}>
             {isTwitchPanel && (
               <>
-                {sortedGroupedTips.map((groupedTip, index) => {
-                  if (!groupedTip.tips[0] || index > 4) return null;
-
+                {leaderboard.map((item, index) => {
+                  if (index > 4) return null;
                   return (
                     <DonorItem
                       donorRank={index}
                       onDonorClick={onDonorClick}
-                      donorDetails={groupedTip.user}
-                      donateAmount={groupedTip.tipsSum}
+                      donorDetails={{
+                        address: item.address,
+                        displayName: item.displayName,
+                        avatarUrl: item.avatarUrl,
+                      }}
+                      donateAmount={item.totalAmount}
                       isTwitchExtension={isTwitchExtension}
-                      key={`${groupedTip.tipsSum}${groupedTip.tips[0].transactionHash}`}
+                      key={`${item.totalAmount}${item.address}`}
                     />
                   );
                 })}
 
-                {sortedGroupedTips.length <= 5 && (
+                {leaderboard.length <= 5 && (
                   <DonorItemPlaceholder
                     amountToDisplay={5}
-                    donorRank={sortedGroupedTips.length}
+                    donorRank={leaderboard.length}
                     previousDonateAmount={
-                      sortedGroupedTips.at(-1)?.tipsSum ?? 1234
+                      leaderboard.at(-1)?.totalAmount ?? 1234
                     }
                   />
                 )}
@@ -178,28 +139,31 @@ export const TopDonors = ({
 
             {(isTwitchComponent || isTwitchOverlay) && (
               <>
-                {sortedGroupedTips.map((groupedTip, index) => {
-                  if (!groupedTip.tips[0] || index > 2) return null;
-
+                {leaderboard.map((item, index) => {
+                  if (index > 2) return null;
                   return (
                     <DonorItem
                       donorRank={index}
                       onDonorClick={onDonorClick}
-                      donorDetails={groupedTip.user}
-                      donateAmount={groupedTip.tipsSum}
+                      donorDetails={{
+                        address: item.address,
+                        displayName: item.displayName,
+                        avatarUrl: item.avatarUrl,
+                      }}
+                      donateAmount={item.totalAmount}
                       isTwitchExtension={isTwitchExtension}
-                      key={`${groupedTip.tipsSum}${groupedTip.tips[0].transactionHash}`}
+                      key={`${item.totalAmount}${item.address}`}
                     />
                   );
                 })}
 
-                {sortedGroupedTips.length <= 3 && (
+                {leaderboard.length <= 3 && (
                   <DonorItemPlaceholder
                     hideEncouragement
                     amountToDisplay={3}
-                    donorRank={sortedGroupedTips.length}
+                    donorRank={leaderboard.length}
                     previousDonateAmount={
-                      sortedGroupedTips.at(-1)?.tipsSum ?? 1234
+                      leaderboard.at(-1)?.totalAmount ?? 1234
                     }
                   />
                 )}
@@ -208,26 +172,29 @@ export const TopDonors = ({
 
             {!isTwitchExtension && (
               <>
-                {sortedGroupedTips.map((groupedTip, index) => {
-                  if (!groupedTip.tips[0] || index > 5) return null;
-
+                {leaderboard.map((item, index) => {
+                  if (index > 5) return null;
                   return (
                     <DonorItem
                       donorRank={index}
                       onDonorClick={onDonorClick}
-                      donorDetails={groupedTip.user}
-                      donateAmount={groupedTip.tipsSum}
-                      key={`${groupedTip.tipsSum}${groupedTip.tips[0].transactionHash}`}
+                      donorDetails={{
+                        address: item.address,
+                        displayName: item.displayName,
+                        avatarUrl: item.avatarUrl,
+                      }}
+                      donateAmount={item.totalAmount}
+                      key={`${item.totalAmount}${item.address}`}
                     />
                   );
                 })}
 
-                {sortedGroupedTips.length <= 6 && (
+                {leaderboard.length <= 6 && (
                   <DonorItemPlaceholder
                     amountToDisplay={6}
-                    donorRank={sortedGroupedTips.length}
+                    donorRank={leaderboard.length}
                     previousDonateAmount={
-                      sortedGroupedTips.at(-1)?.tipsSum ?? 1234
+                      leaderboard.at(-1)?.totalAmount ?? 1234
                     }
                   />
                 )}
@@ -268,7 +235,7 @@ export const TopDonors = ({
             }}
             className={classes(
               'mx-6 my-3 cursor-pointer lg:text-label7',
-              sortedGroupedTips?.length === 0 && 'invisible',
+              leaderboard?.length === 0 && 'invisible',
             )}
           >
             See full donation history
