@@ -1,4 +1,4 @@
-import { arbitrum, linea, scroll, zksync } from 'viem/chains';
+import { arbitrum, linea, scroll, zksync, celo } from 'viem/chains';
 import {
   ARBITRUM_LOGO,
   BANKLESS_DAO_LOGO,
@@ -24,6 +24,8 @@ import {
   Chain,
   Token,
   ChainToken,
+  CELO_LOGO,
+  CUSD_LOGO,
 } from '@idriss-xyz/constants';
 
 // TODO: IMPORTANT CHECK SHORTNAMES
@@ -48,6 +50,11 @@ export const CHAIN = Object.assign(SHARED_CHAIN, {
     shortName: 'Scroll',
     logo: SCROLL_LOGO,
   },
+  CELO: {
+    ...celo,
+    shortName: 'Celo',
+    logo: CELO_LOGO,
+  },
   BNB_CHAIN: {
     id: 56,
     name: 'BNB Chain',
@@ -66,6 +73,16 @@ export const CHAIN = Object.assign(SHARED_CHAIN, {
 }) satisfies Record<string, Chain>;
 
 export const TOKEN = Object.assign(SHARED_TOKEN, {
+  CELO: {
+    name: 'Celo',
+    symbol: 'CELO',
+    logo: CELO_LOGO,
+  },
+  CUSD: {
+    name: 'Celo Dollar',
+    symbol: 'CUSD',
+    logo: CUSD_LOGO,
+  },
   CULT_DAO: {
     name: 'Cult DAO',
     symbol: 'CULT',
@@ -132,6 +149,23 @@ export const CHAIN_ID_TO_TOKENS = {
       name: 'USDC',
       decimals: 6,
       address: '0x4Ca4B85Ead5EA49892d3a81DbfAE2f5c2F75d53D',
+    },
+  ],
+  [CHAIN.CELO.id]: [
+    {
+      ...TOKEN.CELO,
+      decimals: 18,
+      address: NATIVE_COIN_ADDRESS,
+    },
+    {
+      ...TOKEN.USDC,
+      decimals: 6,
+      address: '0xef4229c8c3250C675F21BCefa42f58EfbfF6002a',
+    },
+    {
+      ...TOKEN.CUSD,
+      decimals: 18,
+      address: '0x765de816845861e75a25fca122bb6898b8b1282a',
     },
   ],
   [CHAIN.ETHEREUM.id]: [
