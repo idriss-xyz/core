@@ -135,14 +135,21 @@ export const SubscriptionForm = ({ onSubmit, canSubscribe }: Properties) => {
         control={form.control}
         render={({ field }) => {
           return (
-            <input
-              {...field}
-              type="text"
-              id="subscription"
-              disabled={isLoading}
-              placeholder="e.g., vitalik.eth"
-              className="mt-1 block w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-black shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-            />
+            <div className="relative">
+              <input
+                {...field}
+                type="text"
+                id="subscription"
+                disabled={isLoading}
+                placeholder="e.g., vitalik.eth"
+                className="mt-1 block w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-black shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+              />
+              {isLoading && (
+                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-t-neutral-500"></div>
+                </div>
+              )}
+            </div>
           );
         }}
       />
