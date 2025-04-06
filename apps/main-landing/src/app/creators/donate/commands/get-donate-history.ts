@@ -22,7 +22,7 @@ const getDonateHistory = async (payload: Payload) => {
   });
 
   if (!response.ok) {
-    throw new Error('Failed to fetch tip history');
+    throw new Error('Failed to fetch donate history');
   }
 
   const donateHistory = await response.json();
