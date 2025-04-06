@@ -32,10 +32,11 @@ export const DonateHistoryItem = ({ donation, showReceiver }: Properties) => {
   const router = useRouter();
   const tokenSymbol = donation.token.symbol;
   const tipReceiver = donation.toUser;
+  const tradeValue = donation.tradeValue;
   const tipComment = donation.comment;
   const tokenImage = donation.token.imageUrl;
-  const tipperFromAddress = donation.fromAddress;
   const receiverAddress = tipReceiver.address;
+  const tipperFromAddress = donation.fromAddress;
 
   const displayName = showReceiver
     ? tipReceiver?.displayName
@@ -48,8 +49,6 @@ export const DonateHistoryItem = ({ donation, showReceiver }: Properties) => {
   const avatarSource = showReceiver
     ? tipReceiver.avatarUrl
     : donation.fromUser.avatarUrl;
-
-  const tradeValue = donation.tradeValue;
 
   const { value: roundedNumber, index: zerosIndex } =
     roundToSignificantFiguresForCopilotTrading(
@@ -94,9 +93,10 @@ export const DonateHistoryItem = ({ donation, showReceiver }: Properties) => {
                 }}
                 className="cursor-pointer border-0 align-middle text-label3 text-neutral-900 no-underline lg:text-label3"
               >
-                {(displayName ?? showReceiver)
-                  ? getShortWalletHex(receiverAddress)
-                  : getShortWalletHex(tipperFromAddress)}
+                {displayName ??
+                  (showReceiver
+                    ? getShortWalletHex(receiverAddress)
+                    : getShortWalletHex(tipperFromAddress))}
               </Link>{' '}
               <span className="align-middle text-body3 text-neutral-600">
                 {showReceiver ? 'received' : 'sent'}{' '}

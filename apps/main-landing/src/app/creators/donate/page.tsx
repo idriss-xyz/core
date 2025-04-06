@@ -72,7 +72,6 @@ function DonateContent() {
           }
         });
 
-        // TODO: VERIFY IF TYPES ARE CORRECT FOR DONATION
         socket.on('newDonation', (donation: DonationData) => {
           setDonations((previousState) => {
             return _.uniqBy([donation, ...previousState], (item) => {

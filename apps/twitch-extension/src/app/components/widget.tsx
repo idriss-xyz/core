@@ -97,7 +97,6 @@ function WidgetContent({ variant }: ContentProperties) {
           }
         });
 
-        // TODO: VERIFY IF TYPES ARE CORRECT FOR DONATION
         socket.on('newDonation', (donation: DonationData) => {
           setLeaderboard((previousState) => {
             const leaderboard = [...previousState];
