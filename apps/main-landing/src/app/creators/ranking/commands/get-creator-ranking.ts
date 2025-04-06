@@ -5,15 +5,15 @@ import { LeaderboardStats } from '@/app/creators/donate/types';
 import { CREATOR_API_URL } from '../../donate/constants';
 
 const getCreatorRanking = async () => {
-  const creatorRanking = await fetch(`${CREATOR_API_URL}/creator-leaderboard`);
+  const response = await fetch(`${CREATOR_API_URL}/creator-leaderboard`);
 
-  if (!creatorRanking.ok) {
+  if (!response.ok) {
     throw new Error('Failed to fetch creator ranking');
   }
 
-  const ranking = await creatorRanking.json();
+  const creatorRanking = await response.json();
 
-  return ranking.leaderboard as LeaderboardStats[];
+  return creatorRanking.leaderboard as LeaderboardStats[];
 };
 
 export const useGetCreatorRanking = () => {

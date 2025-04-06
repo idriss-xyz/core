@@ -13,7 +13,7 @@ type Options = {
 };
 
 const getDonorHistory = async (payload: Payload) => {
-  const donorHistory = await fetch(`${CREATOR_API_URL}/donor-history`, {
+  const response = await fetch(`${CREATOR_API_URL}/donor-history`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -21,13 +21,13 @@ const getDonorHistory = async (payload: Payload) => {
     body: JSON.stringify(payload),
   });
 
-  if (!donorHistory.ok) {
+  if (!response.ok) {
     throw new Error('Failed to fetch donor history');
   }
 
-  const history = await donorHistory.json();
+  const donorHistory = await response.json();
 
-  return history as DonorHistoryResponse;
+  return donorHistory as DonorHistoryResponse;
 };
 
 export const useGetDonorHistory = (payload: Payload, options?: Options) => {

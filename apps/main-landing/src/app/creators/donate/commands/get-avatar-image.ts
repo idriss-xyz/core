@@ -20,17 +20,17 @@ const getAvatarImage = async (payload: Payload): Promise<string> => {
     return payload.url;
   }
 
-  const avatarImage = await fetch(
+  const response = await fetch(
     `${IDRISS_LEGACY_API_URL}/fetch-image?url=${payload.url}`,
   );
 
-  if (!avatarImage.ok) {
+  if (!response.ok) {
     throw new Error('Failed to fetch avatar image');
   }
 
-  const avatar = await avatarImage.json();
+  const avatarImage = await response.json();
 
-  return avatar.image as string;
+  return avatarImage.image as string;
 };
 
 export const useGetAvatarImage = (payload: Payload, options?: Options) => {
