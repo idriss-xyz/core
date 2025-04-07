@@ -37,11 +37,12 @@ export const SubscriptionForm = ({ onSubmit, canSubscribe }: Properties) => {
         setError('');
       }, 5000);
 
-      return () => {return clearTimeout(timeout)};
+      return () => {
+        return clearTimeout(timeout);
+      };
     }
     return;
   }, [error]);
-  
 
   const form = useForm<FormValues>({
     defaultValues: EMPTY_FORM,
