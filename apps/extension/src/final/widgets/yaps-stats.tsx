@@ -13,15 +13,7 @@ import { useLocationInfo } from '../hooks';
 const EVENT = createLookup(['YAPS_STATS_HOVER']);
 
 export const YapsStats = () => {
-  const { isTwitter, isUserPage, username } = useLocationInfo();
-  const [isHovered, setIsHovered] = useState(false);
-
-  const enabled = isTwitter && isUserPage && Boolean(username) && isHovered;
-
-  const yapsQuery = useCommandQuery({
-    command: new GetYapsCommand({ username: username ?? '' }),
-    enabled,
-  });
+  const { isTwitter } = useLocationInfo();
 
   const isOrganization = !!usePooling({
     callback: () => {
@@ -41,31 +33,42 @@ export const YapsStats = () => {
   const containersForInjection = usePooling<Element[] | null>({
     callback: () => {
       return [
-        ...document.querySelectorAll(
-          `[data-testid='UserAvatar-Container-${username}']`,
-        ),
+        ...document.querySelectorAll(`[data-testid^='UserAvatar-Container-']`),
       ];
     },
     interval: 1000,
+    enabled: isTwitter,
     defaultValue: null,
-    enabled: isTwitter && isUserPage && Boolean(username),
   });
-
-  const updateIsHovered = (value: boolean) => {
-    setIsHovered(value);
-  };
 
   let lookingForFirstNonHoverCardElement = true;
 
   return (
     <>
       {containersForInjection?.map((containerForInjection, index) => {
+        const isAccountSwitcherElement =
+          containerForInjection?.parentElement?.parentElement?.getAttribute(
+            'data-testid',
+          ) === 'SideNav_AccountSwitcher_Button';
+
+        const isTweetElement =
+          containerForInjection?.parentElement?.parentElement?.parentElement?.getAttribute(
+            'data-testid',
+          ) === 'Tweet-User-Avatar';
+
+        if (isAccountSwitcherElement) {
+          return;
+        }
+
         const isPopupElement =
           containerForInjection?.parentElement?.parentElement?.parentElement?.parentElement?.getAttribute(
             'data-testid',
           ) === 'HoverCard';
+
         const isMainElement =
-          !isPopupElement && lookingForFirstNonHoverCardElement;
+          !isPopupElement &&
+          !isTweetElement &&
+          lookingForFirstNonHoverCardElement;
 
         lookingForFirstNonHoverCardElement = isPopupElement;
 
@@ -74,9 +77,6 @@ export const YapsStats = () => {
             isMainElement={isMainElement}
             isPopupElement={isPopupElement}
             isOrganization={isOrganization}
-            updateIsHovered={updateIsHovered}
-            yapsLoading={yapsQuery.isLoading}
-            yapsAmount={yapsQuery.data?.yaps_all}
             key={`containersForInjection${index}`}
             containerForInjection={containerForInjection}
           />
@@ -87,27 +87,33 @@ export const YapsStats = () => {
 };
 
 type ElementProperties = {
-  yapsAmount?: number;
-  yapsLoading: boolean;
   isMainElement: boolean;
   isOrganization: boolean;
   isPopupElement: boolean;
   containerForInjection: Element;
-  updateIsHovered: (value: boolean) => void;
 };
 
 const YapsStatsElement = ({
-  yapsAmount,
-  yapsLoading,
   isMainElement,
   isOrganization,
   isPopupElement,
-  updateIsHovered,
   containerForInjection,
 }: ElementProperties) => {
+  const { isTwitter } = useLocationInfo();
   const eventsLogger = useEventsLogger();
   const enableFunctionalities = isMainElement || isPopupElement;
   const [portal, setPortal] = useState<HTMLDivElement>();
+  const [isHovered, setIsHovered] = useState(false);
+
+  const testId = (containerForInjection as HTMLElement).dataset.testid;
+  const username = testId?.replace('UserAvatar-Container-', '');
+
+  const enabled = isTwitter && Boolean(username) && isHovered;
+
+  const yapsQuery = useCommandQuery({
+    command: new GetYapsCommand({ username: username ?? '' }),
+    enabled,
+  });
 
   useEffect(() => {
     const cleanup = () => {
@@ -121,9 +127,7 @@ const YapsStatsElement = ({
     }
 
     if (enableFunctionalities && containerForInjection instanceof HTMLElement) {
-      containerForInjection.style.marginBottom = isMainElement
-        ? '24px'
-        : '12px';
+      containerForInjection.style.marginBottom = isMainElement ? '24px' : '8px';
     }
 
     if (containerForInjection.parentElement instanceof HTMLElement) {
@@ -143,10 +147,10 @@ const YapsStatsElement = ({
   }, [containerForInjection, enableFunctionalities, isMainElement]);
 
   const onHover = useCallback(() => {
-    updateIsHovered(true);
+    setIsHovered(true);
 
     void eventsLogger.track(EVENT.YAPS_STATS_HOVER);
-  }, [eventsLogger, updateIsHovered]);
+  }, [eventsLogger, setIsHovered]);
 
   if (!portal || !containerForInjection || isOrganization) {
     return null;
@@ -165,11 +169,11 @@ const YapsStatsElement = ({
         )}
         content={
           <div className="flex flex-col gap-1">
-            {yapsLoading ? (
+            {yapsQuery.isLoading ? (
               <span>Loading...</span>
-            ) : yapsAmount ? (
+            ) : yapsQuery.data?.yaps_all ? (
               <>
-                <span>Total Yaps: {Math.round(yapsAmount)}</span>
+                <span>Total Yaps: {Math.round(yapsQuery.data.yaps_all)}</span>
                 <span>Smart followers: {Math.round(Math.random() * 100)}</span>
               </>
             ) : (
@@ -182,7 +186,10 @@ const YapsStatsElement = ({
           <img
             alt=""
             src={KAITO_LOGO}
-            className="absolute -bottom-4 left-1/2 z-1 size-8 -translate-x-1/2"
+            className={classes(
+              'absolute -bottom-4 left-1/2 z-1 size-8 -translate-x-1/2',
+              isPopupElement && '-bottom-3 size-6',
+            )}
           />
         )}
         <span className="absolute right-0 top-0 size-full rounded-full border-2 border-[#32ffdc]" />
