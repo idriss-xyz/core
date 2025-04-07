@@ -8,3 +8,4 @@ export { default as POLYMARKET_LOGO } from './polymarket-logo.png';
 export { default as LINES } from './lines.png';
 export { default as LINES2 } from './lines2.png';
 export { default as IDRISS_ICON_CIRCLE } from './idriss-icon-circle.png';
+export { default as KAITO_LOGO } from './kaito-logo.png';
