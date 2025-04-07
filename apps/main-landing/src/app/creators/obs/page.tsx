@@ -22,7 +22,7 @@ import { ethereumClient } from '../donate/config';
 import DonationNotification, {
   type DonationNotificationProperties,
 } from './components/donation-notification';
-import { clients } from './constants/blockchain-clients';
+import { clients } from '@idriss-xyz/blockchain-clients';
 import {
   calculateDollar,
   resolveEnsName,
