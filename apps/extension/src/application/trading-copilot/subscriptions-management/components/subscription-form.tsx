@@ -37,7 +37,7 @@ export const SubscriptionForm = ({ onSubmit, canSubscribe }: Properties) => {
         setError('');
       }, 5000);
 
-      return () => clearTimeout(timeout);
+      return () => {return clearTimeout(timeout)};
     }
     return;
   }, [error]);
@@ -146,7 +146,7 @@ export const SubscriptionForm = ({ onSubmit, canSubscribe }: Properties) => {
               />
               {isLoading && (
                 <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-t-neutral-500"></div>
+                  <div className="size-4 animate-spin rounded-full border-2 border-t-neutral-500" />
                 </div>
               )}
             </div>
