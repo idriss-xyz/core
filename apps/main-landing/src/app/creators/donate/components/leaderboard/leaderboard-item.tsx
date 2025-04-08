@@ -22,6 +22,7 @@ type Properties = {
   isLastItem?: boolean;
   donateAmount: number;
   donorDetails: DonationUser;
+  hideBottomBorder?: boolean;
   isTwitchExtension?: boolean;
   onDonorClick?: (address: Hex) => void;
 };
@@ -128,6 +129,7 @@ type PlaceholderProperties = {
   donorRank: number;
   itemHeight?: number;
   amountToDisplay: number;
+  hideBottomBorder?: boolean;
   hideEncouragement?: boolean;
   previousDonateAmount: number;
 };
@@ -136,6 +138,7 @@ export function LeaderboardItemPlaceholder({
   donorRank,
   itemHeight,
   amountToDisplay,
+  hideBottomBorder,
   hideEncouragement,
   previousDonateAmount,
 }: PlaceholderProperties) {
@@ -196,13 +199,18 @@ export function LeaderboardItemPlaceholder({
   }
 
   return (
-    amountToDisplay - donorRank && (
-      <span
-        style={{
-          height: `${(amountToDisplay - donorRank) * placeholderHeight}px`,
-        }}
-        className="flex items-center justify-center border-b border-b-neutral-300"
-      />
-    )
+    <>
+      {amountToDisplay - donorRank && (
+        <span
+          style={{
+            height: `${(amountToDisplay - donorRank) * placeholderHeight}px`,
+          }}
+          className={classes(
+            'flex items-center justify-center border-b',
+            hideBottomBorder ? 'border-b-transparent' : 'border-b-neutral-300',
+          )}
+        />
+      )}
+    </>
   );
 }

@@ -35,9 +35,6 @@ function WidgetContent({ variant }: ContentProperties) {
   const [socketInitialized, setSocketInitialized] = useState(false);
   const [leaderboard, setLeaderboard] = useState<LeaderboardStats[]>([]);
   const [address, setAddress] = useState<Hex | null | undefined>();
-  const [donationUrl, setDonationUrl] = useState<string | null | undefined>();
-
-  const isVideoOverlay = variant === 'videoOverlay';
 
   const addressValidationResult = hexSchema.safeParse(address);
 
@@ -64,8 +61,8 @@ function WidgetContent({ variant }: ContentProperties) {
 
       if (storedConfig) {
         const parsedConfig: ConfigValues = JSON.parse(storedConfig);
+
         setAddress(parsedConfig.address as Hex);
-        setDonationUrl(parsedConfig.donationLink);
       } else {
         setAddress(null);
       }
@@ -144,13 +141,12 @@ function WidgetContent({ variant }: ContentProperties) {
 
   return (
     <>
-      {isVideoOverlay ? (
+      {variant === 'videoOverlay' ? (
         <div className="relative flex size-full items-start justify-end pr-28 pt-20">
           <Leaderboard
             variant={variant}
             address={addressDetails}
             leaderboard={leaderboard}
-            donationUrl={donationUrl}
             leaderboardError={donationsHistory.isError}
             leaderboardLoading={donationsHistory.isLoading}
             className="relative right-0 top-0 origin-top-right scale-[.85]"
@@ -161,7 +157,6 @@ function WidgetContent({ variant }: ContentProperties) {
           variant={variant}
           address={addressDetails}
           leaderboard={leaderboard}
-          donationUrl={donationUrl}
           leaderboardError={donationsHistory.isError}
           leaderboardLoading={donationsHistory.isLoading}
         />
