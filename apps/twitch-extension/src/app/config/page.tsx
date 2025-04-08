@@ -3,7 +3,7 @@ import { Form } from '@idriss-xyz/ui/form';
 import { Controller, useForm } from 'react-hook-form';
 import { Button } from '@idriss-xyz/ui/button';
 import { useState } from 'react';
-import { createPublicClient, http, isAddress } from 'viem';
+import { createPublicClient, Hex, http, isAddress } from 'viem';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { QueryProvider } from '@idriss-xyz/main-landing/providers';
@@ -14,7 +14,7 @@ import { ConfigSubmitStatus, FormValues } from '@/app/types';
 import { backgroundLines2, backgroundLines3 } from '@/assets';
 
 const FORM_VALUES = {
-  donationLink: '',
+  address: '',
 };
 
 const publicClient = createPublicClient({
@@ -48,44 +48,35 @@ function ConfigContent() {
       return;
     }
 
-    let input: string | null = null;
-    try {
-      const url = new URL(payload.donationLink);
-      input = url.searchParams.get('address');
-    } catch {
-      setSubmitStatus('error');
-      return;
-    }
+    let address: Hex;
 
-    if (!input) {
-      setSubmitStatus('error');
-      return;
-    }
-
-    let address: string | null = null;
-    if (isAddress(input)) {
-      address = input;
+    if (isAddress(payload.address)) {
+      address = payload.address;
     } else {
       try {
         const resolved = await publicClient.getEnsAddress({
-          name: normalize(input),
+          name: normalize(payload.address),
         });
+
         if (resolved) {
           address = resolved;
         } else {
           setSubmitStatus('error');
+
           return;
         }
       } catch {
         setSubmitStatus('error');
+
         return;
       }
     }
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     twitch.ext.configuration.set(
       'broadcaster',
       '1',
-      JSON.stringify({ donationLink: payload.donationLink, address }),
+      JSON.stringify({ address }),
     );
 
     reset(FORM_VALUES);
@@ -119,15 +110,15 @@ function ConfigContent() {
             className="w-full px-5 pb-5 pt-6"
           >
             <Controller
+              name="address"
               control={control}
-              name="donationLink"
               render={({ field }) => {
                 return (
                   <>
                     <Form.Field
                       {...field}
                       value={field.value}
-                      label="Donation link"
+                      label="Wallet address"
                     />
 
                     {submitStatus === 'success' && (
@@ -136,7 +127,7 @@ function ConfigContent() {
                           'flex items-center gap-x-1 pt-1 text-label7 text-mint-500 lg:text-label6',
                         )}
                       >
-                        Donation link saved successfully.
+                        Address saved successfully.
                       </span>
                     )}
 
@@ -147,7 +138,7 @@ function ConfigContent() {
                         )}
                       >
                         <Icon name="AlertCircle" size={12} className="p-px" />
-                        This donation link doesn’t exist.
+                        This address doesn’t exist.
                       </span>
                     )}
                   </>
