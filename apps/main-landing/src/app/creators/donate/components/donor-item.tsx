@@ -21,8 +21,9 @@ type Properties = {
   className?: string;
   isLastItem?: boolean;
   donateAmount: number;
-  isTwitchExtension?: boolean;
   donorDetails: DonationUser;
+  hideBottomBorder?: boolean;
+  isTwitchExtension?: boolean;
   onDonorClick?: (address: Hex) => void;
 };
 
@@ -127,6 +128,7 @@ type PlaceholderProperties = {
   donorRank: number;
   itemHeight?: number;
   amountToDisplay: number;
+  hideBottomBorder?: boolean;
   hideEncouragement?: boolean;
   previousDonateAmount: number;
 };
@@ -135,6 +137,7 @@ export function DonorItemPlaceholder({
   donorRank,
   itemHeight,
   amountToDisplay,
+  hideBottomBorder,
   hideEncouragement,
   previousDonateAmount,
 }: PlaceholderProperties) {
@@ -203,7 +206,10 @@ export function DonorItemPlaceholder({
           style={{
             height: `${(amountToDisplay - donorRank) * placeholderHeight}px`,
           }}
-          className="flex items-center justify-center border-b border-b-neutral-300"
+          className={classes(
+            'flex items-center justify-center border-b',
+            hideBottomBorder ? 'border-b-transparent' : 'border-b-neutral-300',
+          )}
         />
       ) : null}
     </>
