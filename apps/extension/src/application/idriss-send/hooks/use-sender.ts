@@ -139,13 +139,17 @@ export const useSender = ({ wallet }: Properties) => {
     switchChain.isPending ||
     nativeTransaction.isPending ||
     erc20Transaction.isPending ||
-    getTokenPerDollarMutation.isPending;
+    getTokenPerDollarMutation.isPending ||
+    getEnsBalanceMutation.isPending ||
+    getTokenBalanceMutation.isPending;
 
   const isError =
     switchChain.isError ||
     getTokenPerDollarMutation.isError ||
     nativeTransaction.isError ||
-    erc20Transaction.isError;
+    erc20Transaction.isError ||
+    getEnsBalanceMutation.isError ||
+    getTokenBalanceMutation.isError;
 
   const isSuccess = nativeTransaction.isSuccess || erc20Transaction.isSuccess;
 
