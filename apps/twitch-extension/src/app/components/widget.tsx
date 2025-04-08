@@ -2,7 +2,6 @@
 import { Hex } from 'viem';
 import { useEffect, useState } from 'react';
 import { default as io } from 'socket.io-client';
-import _ from 'lodash';
 import { EMPTY_HEX } from '@idriss-xyz/constants';
 import { useGetTipHistory } from '@idriss-xyz/main-landing/app/creators/donate/commands/get-donate-history';
 import { TopDonors } from '@idriss-xyz/main-landing/app/creators/donate/top-donors';
@@ -36,9 +35,6 @@ function WidgetContent({ variant }: ContentProperties) {
   const [socketInitialized, setSocketInitialized] = useState(false);
   const [tipLeaderboard, setLeaderboard] = useState<LeaderboardStats[]>([]);
   const [address, setAddress] = useState<Hex | null | undefined>();
-  const [donationUrl, setDonationUrl] = useState<string | null | undefined>();
-
-  const isVideoOverlay = variant === 'videoOverlay';
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -54,8 +50,8 @@ function WidgetContent({ variant }: ContentProperties) {
 
       if (storedConfig) {
         const parsedConfig: ConfigValues = JSON.parse(storedConfig);
+
         setAddress(parsedConfig.address as Hex);
-        setDonationUrl(parsedConfig.donationLink);
       } else {
         setAddress(null);
       }
@@ -123,13 +119,12 @@ function WidgetContent({ variant }: ContentProperties) {
 
   return (
     <>
-      {isVideoOverlay ? (
+      {variant === 'videoOverlay' ? (
         <div className="relative flex size-full items-start justify-end pr-28 pt-20">
           <TopDonors
             variant={variant}
-            leaderboard={tipLeaderboard}
-            donationUrl={donationUrl}
             validatedAddress={address}
+            leaderboard={tipLeaderboard}
             tipsLoading={tips.isLoading}
             className="relative right-0 top-0 origin-top-right scale-[.85]"
           />
@@ -137,9 +132,8 @@ function WidgetContent({ variant }: ContentProperties) {
       ) : (
         <TopDonors
           variant={variant}
-          leaderboard={tipLeaderboard}
-          donationUrl={donationUrl}
           validatedAddress={address}
+          leaderboard={tipLeaderboard}
           tipsLoading={tips.isLoading}
         />
       )}

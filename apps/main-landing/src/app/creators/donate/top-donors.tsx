@@ -2,9 +2,8 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
 import { Hex } from 'viem';
 import { Spinner } from '@idriss-xyz/ui/spinner';
-import { CREATORS_DONATE_LINK, hexSchema } from '@idriss-xyz/constants';
+import { hexSchema } from '@idriss-xyz/constants';
 import { Icon } from '@idriss-xyz/ui/icon';
-import { Button } from '@idriss-xyz/ui/button';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 
 import { default as IDRISS_SCENE_STREAM_2 } from '../../../assets/idriss-scene-stream-2.png';
@@ -21,11 +20,10 @@ type Properties = {
   className?: string;
   tipsLoading: boolean;
   variant?: WidgetVariants;
-  donationUrl?: string | null;
-  validatedAddress?: string | null;
   leaderboard: LeaderboardStats[];
-  updateCurrentContent?: (content: DonateContentValues) => void;
+  validatedAddress?: string | null;
   onDonorClick?: (address: Hex) => void;
+  updateCurrentContent?: (content: DonateContentValues) => void;
 };
 
 const baseClassName =
@@ -36,13 +34,10 @@ export const TopDonors = ({
   leaderboard,
   className,
   tipsLoading,
-  donationUrl,
   onDonorClick,
   validatedAddress,
   updateCurrentContent,
 }: Properties) => {
-  const donationURL =
-    donationUrl ?? `${CREATORS_DONATE_LINK}?address=${validatedAddress}`;
   const addressValidationResult = hexSchema.safeParse(validatedAddress);
 
   const isTwitchExtension = variant !== null && variant !== undefined;
@@ -55,7 +50,7 @@ export const TopDonors = ({
       <div
         className={classes(
           baseClassName,
-          'min-h-[500px] w-auto items-center justify-center px-4 pb-9 pt-6',
+          'min-h-[430px] w-auto items-center justify-center px-4 pb-9 pt-6',
           className,
         )}
       >
@@ -78,7 +73,7 @@ export const TopDonors = ({
       <div
         className={classes(
           'relative flex min-h-[100px] w-full items-center justify-center overflow-hidden',
-          isTwitchPanel && 'min-h-[83px]',
+          isTwitchExtension && 'min-h-[85px]',
         )}
       >
         <img
@@ -109,9 +104,12 @@ export const TopDonors = ({
               <>
                 {leaderboard.map((item, index) => {
                   if (index > 4) return null;
+
                   return (
                     <DonorItem
                       donorRank={index}
+                      className="py-4.5"
+                      isLastItem={index === 4}
                       onDonorClick={onDonorClick}
                       donorDetails={{
                         address: item.address,
@@ -127,6 +125,7 @@ export const TopDonors = ({
 
                 {leaderboard.length <= 5 && (
                   <DonorItemPlaceholder
+                    hideBottomBorder
                     amountToDisplay={5}
                     donorRank={leaderboard.length}
                     previousDonateAmount={
@@ -141,9 +140,12 @@ export const TopDonors = ({
               <>
                 {leaderboard.map((item, index) => {
                   if (index > 2) return null;
+
                   return (
                     <DonorItem
                       donorRank={index}
+                      className="py-4.5"
+                      isLastItem={index === 3}
                       onDonorClick={onDonorClick}
                       donorDetails={{
                         address: item.address,
@@ -159,6 +161,7 @@ export const TopDonors = ({
 
                 {leaderboard.length <= 3 && (
                   <DonorItemPlaceholder
+                    hideBottomBorder
                     hideEncouragement
                     amountToDisplay={3}
                     donorRank={leaderboard.length}
@@ -203,26 +206,6 @@ export const TopDonors = ({
           </ul>
         )}
       </div>
-
-      {isTwitchExtension && (
-        <div
-          className={classes(
-            'flex min-h-[92px] w-full items-center justify-center px-5 py-3.5',
-            isTwitchPanel && 'min-h-[72px]',
-          )}
-        >
-          <Button
-            asLink
-            isExternal
-            size="medium"
-            intent="primary"
-            className="w-full"
-            href={donationURL}
-          >
-            {isTwitchPanel ? 'Donate' : 'Claim a spot'}
-          </Button>
-        </div>
-      )}
 
       {updateCurrentContent && (
         <div className="flex min-h-[74px] w-full items-center justify-center">
