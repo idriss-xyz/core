@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { getSafeNumber, isNativeTokenAddress } from '@idriss-xyz/utils';
 import { Hex } from 'viem';
 import { Wallet } from '@idriss-xyz/wallet-connect';
@@ -8,18 +8,21 @@ import {
   GetTokenPriceCommand,
   useSwitchChain,
 } from 'shared/web3';
-import { useCommandMutation } from 'shared/messaging';
+
+import { useCommandMutation, useCommandQuery } from 'shared/messaging';
 
 import { SendPayload } from '../schema';
 
 import { useNativeTransaction } from './use-native-transaction';
 import { useErc20Transaction } from './use-erc20-transaction';
+import { GetEnsBalanceCommand, GetTokenBalanceCommand } from 'application/trading-copilot';
 
 interface Properties {
   wallet?: Wallet;
 }
 
 export const useSender = ({ wallet }: Properties) => {
+  const [haveEnoughBalance, setHaveEnoughBalance] = useState<boolean>(true);
   const switchChain = useSwitchChain();
   const getTokenPerDollarMutation = useCommandMutation(GetTokenPriceCommand);
   const nativeTransaction = useNativeTransaction();
@@ -36,6 +39,23 @@ export const useSender = ({ wallet }: Properties) => {
       if (!wallet) {
         return;
       }
+      const balanceQuery = useCommandQuery({
+        command: new GetEnsBalanceCommand({
+          address: wallet.account,
+          blockTag: 'safe',
+          chainId: sendPayload.chainId,
+        }),
+        staleTime: Number.POSITIVE_INFINITY,
+      });
+
+      const tokenBalanceQuery = useCommandQuery({
+        command: new GetTokenBalanceCommand({
+          userAddress: wallet.account,
+          tokenAddress: sendPayload.tokenAddress,
+          chainId: sendPayload.chainId,
+        })
+      })
+
 
       const usdcToken = CHAIN_ID_TO_TOKENS[sendPayload.chainId]?.find(
         (token) => {
@@ -67,10 +87,33 @@ export const useSender = ({ wallet }: Properties) => {
           BigInt((10 ** (tokenToSend?.decimals ?? 0)).toString())) /
         BigInt((10 ** decimals).toString());
 
+      const isNativeToken = isNativeTokenAddress(sendPayload.tokenAddress);
+
       await switchChain.mutateAsync({
         chainId: sendPayload.chainId,
         wallet,
       });
+
+      const getUserBalance = () => {
+        if (isNativeToken) {
+          const userBalance = balanceQuery.data;
+          return userBalance;
+        } else {
+          // TODO: Use get-token-balance command
+          const userBalance = tokenBalanceQuery.data;
+
+          return userBalance;
+        }
+      };
+
+      const userBalance = getUserBalance();
+
+      if (userBalance && tokensToSend <= BigInt(userBalance)) {
+        setHaveEnoughBalance(true);
+      } else {
+        setHaveEnoughBalance(false);
+        return;
+      }
 
       if (isNativeTokenAddress(sendPayload.tokenAddress)) {
         nativeTransaction.mutate({
@@ -143,5 +186,6 @@ export const useSender = ({ wallet }: Properties) => {
     data,
     tokensToSend,
     reset,
+    haveEnoughBalance,
   };
 };

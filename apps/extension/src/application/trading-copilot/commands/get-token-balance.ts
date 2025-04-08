@@ -1,5 +1,4 @@
 import { formatEther, Hex } from 'viem';
-import { clients } from '@idriss-xyz/blockchain-clients';
 
 import {
   Command,
@@ -7,17 +6,19 @@ import {
   HandlerError,
   OkResult,
 } from 'shared/messaging';
+import { clients } from '@idriss-xyz/blockchain-clients';
+import { ERC20_ABI } from 'application/idriss-send/constants';
 
 type Payload = {
-  address: Hex;
+  userAddress: Hex;
+  tokenAddress: Hex;
   chainId: number;
-  blockTag: 'latest' | 'earliest' | 'pending' | 'safe' | 'finalized';
 };
 
 type Response = string | null;
 
-export class GetEnsBalanceCommand extends Command<Payload, Response> {
-  public readonly name = 'GetEnsBalanceCommand' as const;
+export class GetTokenBalanceCommand extends Command<Payload, Response> {
+  public readonly name = 'GetTokenBalanceCommand' as const;
 
   constructor(public payload: Payload) {
     super();
@@ -35,10 +36,16 @@ export class GetEnsBalanceCommand extends Command<Payload, Response> {
 
       const { client } = clientDetails;
 
-      const result = await client.getBalance(this.payload);
-      const balanceAsEth = formatEther(result);
+      const result = await client.readContract({
+        abi: ERC20_ABI,
+        functionName: 'balanceOf',
+        args: [this.payload.userAddress],
+        address: this.payload.tokenAddress,
+      });
+      const balanceAsEth = formatEther(result); // TODO: format with decimals (fetch decimals from token contract)
 
       return new OkResult(balanceAsEth);
+
     } catch (error) {
       this.captureException(error);
       if (error instanceof HandlerError) {

@@ -4,6 +4,7 @@ export {
   GetEnsNameCommand,
   GetQuoteCommand,
   GetEnsBalanceCommand,
+  GetTokenBalanceCommand,
   GetTokensImageCommand,
   GetTokensListCommand,
 } from './commands';
