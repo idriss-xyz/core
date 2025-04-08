@@ -122,7 +122,7 @@ function ConfigContent() {
               control={control}
               name="donationLink"
               rules={{
-                required: 'Donation link is required',
+                required: 'Donation link is required.',
                 validate: (value) => {
                   try {
                     const url = new URL(value);
@@ -136,12 +136,12 @@ function ConfigContent() {
                       url.pathname.startsWith('/creators/donate');
 
                     if (!isValidHost || !isValidPath) {
-                      return 'Donation link must be from idriss.xyz/creators/donate';
+                      return 'Donation link must be from the idriss.xyz domain.';
                     }
 
                     return true;
                   } catch {
-                    return 'Invalid URL format';
+                    return 'Invalid URL format.';
                   }
                 },
               }}
