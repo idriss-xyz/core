@@ -12,6 +12,7 @@ import {
 import { getEnsAvatar } from 'viem/actions';
 import { normalize } from 'viem/ens';
 import { CHAIN_ID_TO_TOKENS, NATIVE_COIN_ADDRESS } from '@idriss-xyz/constants';
+import { clients } from '@idriss-xyz/blockchain-clients';
 
 import {
   CHAIN_TO_IDRISS_TIPPING_ADDRESS,
@@ -22,7 +23,6 @@ import { ethereumClient } from '../donate/config';
 import DonationNotification, {
   type DonationNotificationProperties,
 } from './components/donation-notification';
-import { clients } from '@idriss-xyz/blockchain-clients';
 import {
   calculateDollar,
   resolveEnsName,

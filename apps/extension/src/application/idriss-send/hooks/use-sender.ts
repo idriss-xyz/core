@@ -5,17 +5,17 @@ import { Wallet } from '@idriss-xyz/wallet-connect';
 
 import {
   CHAIN_ID_TO_TOKENS,
+  GetEnsBalanceCommand,
+  GetTokenBalanceCommand,
   GetTokenPriceCommand,
   useSwitchChain,
 } from 'shared/web3';
-
 import { useCommandMutation } from 'shared/messaging';
 
 import { SendPayload } from '../schema';
 
 import { useNativeTransaction } from './use-native-transaction';
 import { useErc20Transaction } from './use-erc20-transaction';
-import { GetEnsBalanceCommand, GetTokenBalanceCommand } from 'application/trading-copilot';
 
 interface Properties {
   wallet?: Wallet;
@@ -129,6 +129,8 @@ export const useSender = ({ wallet }: Properties) => {
     [
       erc20Transaction,
       getTokenPerDollarMutation,
+      getEnsBalanceMutation,
+      getTokenBalanceMutation,
       nativeTransaction,
       switchChain,
       wallet,

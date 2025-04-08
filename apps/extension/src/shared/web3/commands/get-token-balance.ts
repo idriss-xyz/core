@@ -1,4 +1,5 @@
 import { formatEther, Hex } from 'viem';
+import { clients } from '@idriss-xyz/blockchain-clients';
 
 import {
   Command,
@@ -6,8 +7,8 @@ import {
   HandlerError,
   OkResult,
 } from 'shared/messaging';
-import { clients } from '@idriss-xyz/blockchain-clients';
-import { ERC20_ABI } from 'application/idriss-send/constants';
+
+import { ERC20_ABI } from '../constants';
 
 type Payload = {
   userAddress: Hex;
