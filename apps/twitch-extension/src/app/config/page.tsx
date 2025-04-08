@@ -121,7 +121,31 @@ function ConfigContent() {
             <Controller
               control={control}
               name="donationLink"
-              render={({ field }) => {
+              rules={{
+                required: 'Donation link is required',
+                validate: (value) => {
+                  try {
+                    const url = new URL(value);
+
+                    const isValidHost = [
+                      'idriss.xyz',
+                      'www.idriss.xyz',
+                    ].includes(url.hostname);
+
+                    const isValidPath =
+                      url.pathname.startsWith('/creators/donate');
+
+                    if (!isValidHost || !isValidPath) {
+                      return 'Donation link must be from idriss.xyz/creators/donate';
+                    }
+
+                    return true;
+                  } catch {
+                    return 'Invalid URL format';
+                  }
+                },
+              }}
+              render={({ field, fieldState }) => {
                 return (
                   <>
                     <Form.Field
@@ -148,6 +172,17 @@ function ConfigContent() {
                       >
                         <Icon name="AlertCircle" size={12} className="p-px" />
                         This donation link doesn’t exist.
+                      </span>
+                    )}
+
+                    {fieldState.error && (
+                      <span
+                        className={classes(
+                          'flex items-center gap-x-1 pt-1 text-label7 text-red-500 lg:text-label6',
+                        )}
+                      >
+                        <Icon name="AlertCircle" size={12} className="p-px" />
+                        {fieldState.error.message}
                       </span>
                     )}
                   </>
