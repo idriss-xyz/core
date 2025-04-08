@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { getSafeNumber, isNativeTokenAddress } from '@idriss-xyz/utils';
-import { Hex } from 'viem';
+import { Hex, parseEther } from 'viem';
 import { Wallet } from '@idriss-xyz/wallet-connect';
 
 import {
@@ -9,7 +9,7 @@ import {
   useSwitchChain,
 } from 'shared/web3';
 
-import { useCommandMutation, useCommandQuery } from 'shared/messaging';
+import { useCommandMutation } from 'shared/messaging';
 
 import { SendPayload } from '../schema';
 
@@ -25,6 +25,8 @@ export const useSender = ({ wallet }: Properties) => {
   const [haveEnoughBalance, setHaveEnoughBalance] = useState<boolean>(true);
   const switchChain = useSwitchChain();
   const getTokenPerDollarMutation = useCommandMutation(GetTokenPriceCommand);
+  const getEnsBalanceMutation = useCommandMutation(GetEnsBalanceCommand);
+  const getTokenBalanceMutation = useCommandMutation(GetTokenBalanceCommand);
   const nativeTransaction = useNativeTransaction();
   const erc20Transaction = useErc20Transaction();
 
@@ -39,23 +41,6 @@ export const useSender = ({ wallet }: Properties) => {
       if (!wallet) {
         return;
       }
-      const balanceQuery = useCommandQuery({
-        command: new GetEnsBalanceCommand({
-          address: wallet.account,
-          blockTag: 'safe',
-          chainId: sendPayload.chainId,
-        }),
-        staleTime: Number.POSITIVE_INFINITY,
-      });
-
-      const tokenBalanceQuery = useCommandQuery({
-        command: new GetTokenBalanceCommand({
-          userAddress: wallet.account,
-          tokenAddress: sendPayload.tokenAddress,
-          chainId: sendPayload.chainId,
-        })
-      })
-
 
       const usdcToken = CHAIN_ID_TO_TOKENS[sendPayload.chainId]?.find(
         (token) => {
@@ -94,21 +79,28 @@ export const useSender = ({ wallet }: Properties) => {
         wallet,
       });
 
-      const getUserBalance = () => {
+      const getUserBalance = async () => {
         if (isNativeToken) {
-          const userBalance = balanceQuery.data;
+          const userBalance = await getEnsBalanceMutation.mutateAsync({
+            address: wallet.account,
+            blockTag: 'safe',
+            chainId: sendPayload.chainId,
+          });
           return userBalance;
         } else {
-          // TODO: Use get-token-balance command
-          const userBalance = tokenBalanceQuery.data;
+          const userBalance = await getTokenBalanceMutation.mutateAsync({
+            userAddress: wallet.account,
+            tokenAddress: sendPayload.tokenAddress,
+            chainId: sendPayload.chainId,
+          });
 
           return userBalance;
         }
       };
 
-      const userBalance = getUserBalance();
+      const userBalance = await getUserBalance();
 
-      if (userBalance && tokensToSend <= BigInt(userBalance)) {
+      if (userBalance && tokensToSend <= parseEther(userBalance)) {
         setHaveEnoughBalance(true);
       } else {
         setHaveEnoughBalance(false);
