@@ -132,6 +132,7 @@ const TradingCopilotDialogContent = ({
     command: new GetEnsBalanceCommand({
       address: wallet?.account ?? EMPTY_HEX,
       blockTag: 'safe',
+      chainId: wallet?.chainId ?? 1,
     }),
     staleTime: Number.POSITIVE_INFINITY,
   });
