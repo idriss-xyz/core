@@ -104,6 +104,8 @@ export const useSender = ({ wallet }: Properties) => {
         setHaveEnoughBalance(true);
       } else {
         setHaveEnoughBalance(false);
+        nativeTransaction.reset();
+        erc20Transaction.reset();
         return;
       }
 
@@ -162,6 +164,7 @@ export const useSender = ({ wallet }: Properties) => {
     nativeTransaction.reset();
     erc20Transaction.reset();
     switchChain.reset();
+    setHaveEnoughBalance(true);
   }, [
     erc20Transaction,
     getTokenPerDollarMutation,
