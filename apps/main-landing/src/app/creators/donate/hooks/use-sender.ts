@@ -12,7 +12,6 @@ import { useGetTokenPerDollar } from './use-get-token-per-dollar';
 import { useNativeTransaction } from './use-native-transaction';
 import { useErc20Transaction } from './use-erc20-transaction';
 
-
 type Properties = {
   walletClient?: WalletClient;
 };

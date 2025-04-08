@@ -156,17 +156,18 @@ export const SendWidget = ({ widgetData }: Properties) => {
                     Log in
                   </Button>
                 )}
-                {sender.haveEnoughBalance ? sender.isError && (
-                  <ErrorMessage className="mt-4">
-                    Something went wrong.
-                  </ErrorMessage>
+                {sender.haveEnoughBalance ? (
+                  sender.isError && (
+                    <ErrorMessage className="mt-4">
+                      Something went wrong.
+                    </ErrorMessage>
+                  )
                 ) : (
                   <ErrorMessage className="mt-4">
-                   Not enough {selectedToken?.symbol ?? 'tokens'} in your wallet. Add funds
-                   to continue.
+                    Not enough {selectedToken?.symbol ?? 'tokens'} in your
+                    wallet. Add funds to continue.
                   </ErrorMessage>
                 )}
-
               </>
             }
           />

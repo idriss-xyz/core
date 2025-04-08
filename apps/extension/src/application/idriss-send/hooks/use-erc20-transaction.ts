@@ -4,13 +4,14 @@ import { getChainById } from '@idriss-xyz/utils';
 import { EMPTY_HEX } from '@idriss-xyz/constants';
 import { Wallet } from '@idriss-xyz/wallet-connect';
 
-import { createWalletClient, ERC20_ABI, TransactionRevertedError } from 'shared/web3';
+import {
+  createWalletClient,
+  ERC20_ABI,
+  TransactionRevertedError,
+} from 'shared/web3';
 import { useObservabilityScope } from 'shared/observability';
 
-import {
-  CHAIN_TO_IDRISS_TIPPING_ADDRESS,
-  TIPPING_ABI,
-} from '../constants';
+import { CHAIN_TO_IDRISS_TIPPING_ADDRESS, TIPPING_ABI } from '../constants';
 
 interface Properties {
   tokenAddress: Hex;

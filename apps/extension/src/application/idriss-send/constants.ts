@@ -16,7 +16,6 @@ export const DEFAULT_ALLOWED_CHAINS_IDS = [
   CHAIN.ZK_SYNC_ERA.id,
 ];
 
-
 export const TIPPING_ABI = [
   {
     inputs: [

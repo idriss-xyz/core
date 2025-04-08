@@ -46,7 +46,6 @@ export class GetTokenBalanceCommand extends Command<Payload, Response> {
       const balanceAsEth = formatEther(result); // TODO: format with decimals (fetch decimals from token contract)
 
       return new OkResult(balanceAsEth);
-
     } catch (error) {
       this.captureException(error);
       if (error instanceof HandlerError) {
