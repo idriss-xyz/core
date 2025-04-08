@@ -110,6 +110,18 @@ const nextConfig: NextConfig = {
         permanent: false,
       },
       {
+        source: '/tiktok',
+        destination: 'https://www.tiktok.com/@idriss_xyz_',
+        basePath: false,
+        permanent: false,
+      },
+      {
+        source: '/instagram',
+        destination: 'https://www.instagram.com/idriss_xyz_',
+        basePath: false,
+        permanent: false,
+      },
+      {
         source: '/extension',
         destination:
           'https://chromewebstore.google.com/detail/idriss/fghhpjoffbgecjikiipbkpdakfmkbmig',
