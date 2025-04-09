@@ -12,3 +12,10 @@ export const yapSchema = z.object({
   yaps_l6m: z.number(),
   yaps_l12m: z.number(),
 });
+
+export const smartFollowersSchema = z.object({
+  mode: z.string(),
+  date: z.string(),
+  user_id: z.string(),
+  num_of_smart_followers: z.string(),
+});

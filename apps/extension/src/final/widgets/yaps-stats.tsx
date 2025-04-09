@@ -4,7 +4,11 @@ import { useCommandQuery } from 'shared/messaging';
 import { classes, PortalWithTailwind, usePooling } from 'shared/ui';
 import { useEventsLogger } from 'shared/observability';
 import { createLookup } from 'shared/utils';
-import { GetYapsCommand } from 'application/kaito';
+import {
+  GetYapsCommand,
+  GetSmartFollowersCommand,
+  checkForOrganizationBadge,
+} from 'application/kaito';
 import { KAITO_LOGO } from 'assets/images';
 
 import { TradingCopilotTooltip } from '../notifications-popup/components/trading-copilot-tooltip';
@@ -15,13 +19,65 @@ const EVENT = createLookup(['YAPS_STATS_HOVER']);
 export const YapsStats = () => {
   const { isTwitter } = useLocationInfo();
 
-  const isOrganization = !!usePooling({
+  const profileContainersForInjection = usePooling<Element[] | null>({
     callback: () => {
-      const expectedPath =
-        'M6.233 11.423l3.429 3.428 5.65-6.17.038-.033-.005 1.398-5.683 6.206-3.429-3.429-.003-1.405.005.003z';
+      const placesToDisplay = [
+        ...document.querySelectorAll(`[data-testid="UserName"]`),
+      ]
+        .map((selector) => {
+          return selector.parentElement;
+        })
+        .filter(Boolean);
 
+      return placesToDisplay.flatMap((place) => {
+        return [
+          ...place.querySelectorAll(`[data-testid^='UserAvatar-Container-']`),
+        ];
+      });
+    },
+    interval: 1000,
+    enabled: isTwitter,
+    defaultValue: null,
+  });
+
+  const tweetContainersForInjection = usePooling<Element[] | null>({
+    callback: () => {
+      const placesToDisplay = [
+        ...document.querySelectorAll(`[data-testid="tweet"]`),
+      ];
+
+      return placesToDisplay.flatMap((place) => {
+        return [
+          ...place.querySelectorAll(`[data-testid^='UserAvatar-Container-']`),
+        ];
+      });
+    },
+    interval: 1000,
+    enabled: isTwitter,
+    defaultValue: null,
+  });
+
+  const hoverCardContainersForInjection = usePooling<Element[] | null>({
+    callback: () => {
+      const placesToDisplay = [
+        ...document.querySelectorAll(`[data-testid="HoverCard"]`),
+      ];
+
+      return placesToDisplay.flatMap((place) => {
+        return [
+          ...place.querySelectorAll(`[data-testid^='UserAvatar-Container-']`),
+        ];
+      });
+    },
+    interval: 1000,
+    enabled: isTwitter,
+    defaultValue: null,
+  });
+
+  const isProfilePage = !!usePooling({
+    callback: () => {
       const path = document.querySelector(
-        `[data-testid="UserName"] [data-testid="icon-verified"] path[d="${expectedPath}"]`,
+        `[data-testid="UserProfileHeader_Items"]`,
       );
 
       return path;
@@ -30,55 +86,37 @@ export const YapsStats = () => {
     interval: 1000,
   });
 
-  const containersForInjection = usePooling<Element[] | null>({
-    callback: () => {
-      return [
-        ...document.querySelectorAll(`[data-testid^='UserAvatar-Container-']`),
-      ];
-    },
-    interval: 1000,
-    enabled: isTwitter,
-    defaultValue: null,
-  });
-
-  let lookingForFirstNonHoverCardElement = true;
-
   return (
     <>
-      {containersForInjection?.map((containerForInjection, index) => {
-        const isAccountSwitcherElement =
-          containerForInjection?.parentElement?.parentElement?.getAttribute(
-            'data-testid',
-          ) === 'SideNav_AccountSwitcher_Button';
-
-        const isTweetElement =
-          containerForInjection?.parentElement?.parentElement?.parentElement?.getAttribute(
-            'data-testid',
-          ) === 'Tweet-User-Avatar';
-
-        if (isAccountSwitcherElement) {
-          return;
-        }
-
-        const isPopupElement =
-          containerForInjection?.parentElement?.parentElement?.parentElement?.parentElement?.getAttribute(
-            'data-testid',
-          ) === 'HoverCard';
-
-        const isMainElement =
-          !isPopupElement &&
-          !isTweetElement &&
-          lookingForFirstNonHoverCardElement;
-
-        lookingForFirstNonHoverCardElement = isPopupElement;
-
+      {profileContainersForInjection?.map((containerForInjection, index) => {
         return (
           <YapsStatsElement
-            isMainElement={isMainElement}
-            isPopupElement={isPopupElement}
-            isOrganization={isOrganization}
-            key={`containersForInjection${index}`}
+            isMainElement
+            isProfilePage={isProfilePage}
+            key={`profileContainersForInjection${index}`}
             containerForInjection={containerForInjection}
+          />
+        );
+      })}
+
+      {tweetContainersForInjection?.map((containerForInjection, index) => {
+        return (
+          <YapsStatsElement
+            isTweetElement
+            isProfilePage={isProfilePage}
+            key={`tweetContainersForInjection${index}`}
+            containerForInjection={containerForInjection}
+          />
+        );
+      })}
+
+      {hoverCardContainersForInjection?.map((containerForInjection, index) => {
+        return (
+          <YapsStatsElement
+            isPopupElement
+            isProfilePage={isProfilePage}
+            containerForInjection={containerForInjection}
+            key={`hoverCardContainersForInjection${index}`}
           />
         );
       })}
@@ -87,33 +125,54 @@ export const YapsStats = () => {
 };
 
 type ElementProperties = {
-  isMainElement: boolean;
-  isOrganization: boolean;
-  isPopupElement: boolean;
+  isProfilePage: boolean;
+  isMainElement?: boolean;
+  isPopupElement?: boolean;
+  isTweetElement?: boolean;
   containerForInjection: Element;
 };
 
 const YapsStatsElement = ({
   isMainElement,
-  isOrganization,
+  isProfilePage,
   isPopupElement,
+  isTweetElement,
   containerForInjection,
 }: ElementProperties) => {
-  const { isTwitter } = useLocationInfo();
   const eventsLogger = useEventsLogger();
-  const enableFunctionalities = isMainElement || isPopupElement;
-  const [portal, setPortal] = useState<HTMLDivElement>();
+  const displayIcon = isMainElement ?? isPopupElement;
   const [isHovered, setIsHovered] = useState(false);
+  const [portal, setPortal] = useState<HTMLDivElement>();
 
-  const testId = (containerForInjection as HTMLElement).dataset.testid;
-  const username = testId?.replace('UserAvatar-Container-', '');
+  const containerUsername = (
+    containerForInjection as HTMLElement
+  ).dataset.testid?.replace('UserAvatar-Container-', '');
+  const username =
+    containerUsername === 'unknown' ? undefined : containerUsername;
 
-  const enabled = isTwitter && Boolean(username) && isHovered;
+  const isOrganizationElement = checkForOrganizationBadge(
+    containerForInjection,
+  );
+
+  const enabled =
+    isProfilePage || !!isPopupElement || (isHovered && !!username);
 
   const yapsQuery = useCommandQuery({
     command: new GetYapsCommand({ username: username ?? '' }),
     enabled,
   });
+
+  const smartFollowersQuery = useCommandQuery({
+    command: new GetSmartFollowersCommand({ username: username ?? '' }),
+    enabled,
+  });
+
+  const noYaps =
+    yapsQuery.isLoading ||
+    yapsQuery.isError ||
+    !!(yapsQuery.data && yapsQuery.data.yaps_all < 0);
+
+  const displayBorder = yapsQuery.data && yapsQuery.data.yaps_all > 0;
 
   useEffect(() => {
     const cleanup = () => {
@@ -126,7 +185,12 @@ const YapsStatsElement = ({
       return;
     }
 
-    if (enableFunctionalities && containerForInjection instanceof HTMLElement) {
+    if (
+      !noYaps &&
+      displayIcon &&
+      !isOrganizationElement &&
+      containerForInjection instanceof HTMLElement
+    ) {
       containerForInjection.style.marginBottom = isMainElement ? '24px' : '8px';
     }
 
@@ -144,7 +208,13 @@ const YapsStatsElement = ({
     setPortal(newPortal);
 
     return cleanup;
-  }, [containerForInjection, enableFunctionalities, isMainElement]);
+  }, [
+    noYaps,
+    displayIcon,
+    isMainElement,
+    isOrganizationElement,
+    containerForInjection,
+  ]);
 
   const onHover = useCallback(() => {
     setIsHovered(true);
@@ -152,7 +222,13 @@ const YapsStatsElement = ({
     void eventsLogger.track(EVENT.YAPS_STATS_HOVER);
   }, [eventsLogger, setIsHovered]);
 
-  if (!portal || !containerForInjection || isOrganization) {
+  if (
+    noYaps ||
+    !portal ||
+    !username ||
+    isOrganizationElement ||
+    !containerForInjection
+  ) {
     return null;
   }
 
@@ -160,39 +236,55 @@ const YapsStatsElement = ({
     <PortalWithTailwind container={portal}>
       <TradingCopilotTooltip
         onMouseEnter={onHover}
+        disableTooltip={!displayIcon}
         triggerClassName="block size-full"
         wrapperClassName="block size-full"
-        disableTooltip={!enableFunctionalities}
         className={classes(
           'top-full translate-y-4 select-none bg-black px-3 py-2',
           isPopupElement && 'left-0 translate-x-0',
         )}
         content={
           <div className="flex flex-col gap-1">
-            {yapsQuery.isLoading ? (
-              <span>Loading...</span>
-            ) : yapsQuery.data?.yaps_all ? (
-              <>
-                <span>Total Yaps: {Math.round(yapsQuery.data.yaps_all)}</span>
-                <span>Smart followers: {Math.round(Math.random() * 100)}</span>
-              </>
-            ) : (
-              <span>No data available</span>
-            )}
+            <>
+              {!yapsQuery.isError && (
+                <span>
+                  Total Yaps:{' '}
+                  {(yapsQuery.isLoading && 'Loading...') ||
+                    (yapsQuery.data && Math.round(yapsQuery.data.yaps_all))}
+                </span>
+              )}
+
+              {!smartFollowersQuery.isError && (
+                <span>
+                  Smart followers:{' '}
+                  {(smartFollowersQuery.isLoading && 'Loading...') ||
+                    smartFollowersQuery.data?.num_of_smart_followers}
+                </span>
+              )}
+
+              {yapsQuery.isError && smartFollowersQuery.isError && (
+                <span>no data available</span>
+              )}
+            </>
           </div>
         }
       >
-        {enableFunctionalities && (
-          <img
-            alt=""
-            src={KAITO_LOGO}
-            className={classes(
-              'absolute -bottom-4 left-1/2 z-1 size-8 -translate-x-1/2',
-              isPopupElement && '-bottom-3 size-6',
-            )}
-          />
-        )}
-        <span className="absolute right-0 top-0 size-full rounded-full border-2 border-[#32ffdc]" />
+        <>
+          {displayIcon && (
+            <img
+              alt=""
+              src={KAITO_LOGO}
+              className={classes(
+                'absolute -bottom-4 left-1/2 z-1 size-8 -translate-x-1/2',
+                isPopupElement && '-bottom-3 size-6',
+              )}
+            />
+          )}
+
+          {(!isTweetElement || displayBorder) && (
+            <span className="absolute right-0 top-0 size-full rounded-full border-2 border-[#32ffdc]" />
+          )}
+        </>
       </TradingCopilotTooltip>
     </PortalWithTailwind>
   );
