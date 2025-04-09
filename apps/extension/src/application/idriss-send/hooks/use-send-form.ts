@@ -31,7 +31,7 @@ export const useSendForm = ({ allowedChainsIds, resetErrors }: Properties) => {
       });
       resetErrors();
     },
-    [formMethods],
+    [formMethods, resetErrors],
   );
 
   const selectedToken = useMemo(() => {
@@ -39,7 +39,7 @@ export const useSendForm = ({ allowedChainsIds, resetErrors }: Properties) => {
     return CHAIN_ID_TO_TOKENS[chainId]?.find((token) => {
       return token.address === tokenAddress;
     });
-  }, [chainId, tokenAddress]);
+  }, [chainId, tokenAddress, resetErrors]);
 
   return { formMethods, chainId, amount, selectedToken, onChangeChainId };
 };
