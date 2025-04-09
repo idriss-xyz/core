@@ -139,31 +139,24 @@ function WidgetContent({ variant }: ContentProperties) {
     return;
   }, [socketConnected, socketInitialized, address]);
 
-  return (
-    <>
-      {variant === 'videoOverlay' ? (
-        <div className="relative flex size-full items-start justify-end pr-28 pt-20">
-          <Leaderboard
-            variant={variant}
-            address={addressDetails}
-            leaderboard={leaderboard}
-            leaderboardError={donationsHistory.isError}
-            leaderboardLoading={donationsHistory.isLoading}
-            className="relative right-0 top-0 origin-top-right scale-[.85]"
-          />
-        </div>
-      ) : (
-        <Leaderboard
-          variant={variant}
-          address={addressDetails}
-          leaderboard={leaderboard}
-          leaderboardError={donationsHistory.isError}
-          leaderboardLoading={donationsHistory.isLoading}
-        />
-      )}
-
-      {/* eslint-disable-next-line @next/next/no-sync-scripts */}
-      <script src="https://extension-files.twitch.tv/helper/v1/twitch-ext.min.js" />
-    </>
+  return variant === 'videoOverlay' ? (
+    <div className="relative flex size-full items-start justify-end pr-28 pt-20">
+      <Leaderboard
+        variant={variant}
+        address={addressDetails}
+        leaderboard={leaderboard}
+        leaderboardError={donationsHistory.isError}
+        leaderboardLoading={donationsHistory.isLoading}
+        className="relative right-0 top-0 origin-top-right scale-[.85]"
+      />
+    </div>
+  ) : (
+    <Leaderboard
+      variant={variant}
+      address={addressDetails}
+      leaderboard={leaderboard}
+      leaderboardError={donationsHistory.isError}
+      leaderboardLoading={donationsHistory.isLoading}
+    />
   );
 }
