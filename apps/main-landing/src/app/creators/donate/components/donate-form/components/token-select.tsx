@@ -6,16 +6,16 @@ import { Select } from './select';
 interface Properties {
   value: string;
   label?: string;
-  className?: string;
   tokens: Token[];
+  className?: string;
   onChange: (value: string) => void;
 }
 
 export const TokenSelect = ({
   value,
   label,
-  onChange,
   tokens,
+  onChange,
   className,
 }: Properties) => {
   const options = useMemo(() => {
@@ -24,11 +24,11 @@ export const TokenSelect = ({
 
   return (
     <Select
-      className={className}
       label={label}
+      value={value}
       options={options}
       onChange={onChange}
-      value={value}
+      className={className}
     />
   );
 };
@@ -41,8 +41,8 @@ const optionsFrom = (tokens: Token[]) => {
       prefix: (
         <img
           src={token.logo}
-          className="size-6 rounded-full"
           alt={token.symbol}
+          className="size-6 rounded-full"
         />
       ),
     };

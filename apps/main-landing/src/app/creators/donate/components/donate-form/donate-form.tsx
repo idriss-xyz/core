@@ -5,71 +5,57 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { Button } from '@idriss-xyz/ui/button';
 import { Link } from '@idriss-xyz/ui/link';
 import {
-  applyDecimalsToNumericString,
   getTransactionUrl,
   roundToSignificantFigures,
+  applyDecimalsToNumericString,
 } from '@idriss-xyz/utils';
 import {
   CHAIN,
+  TOKEN,
+  Token,
+  EMPTY_HEX,
   CHAIN_ID_TO_TOKENS,
   CREATORS_USER_GUIDE_LINK,
-  TOKEN,
   DEFAULT_ALLOWED_CHAINS_IDS,
-  Token,
-  hexSchema,
-  EMPTY_HEX,
 } from '@idriss-xyz/constants';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSearchParams } from 'next/navigation';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { classes } from '@idriss-xyz/ui/utils';
-import { getAddress } from 'viem';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useAccount, useWalletClient } from 'wagmi';
 
 import { backgroundLines3 } from '@/assets';
 
-import { ChainSelect, TokenSelect } from './components';
-import { createFormPayloadSchema, FormPayload, SendPayload } from './schema';
-import { getSendFormDefaultValues } from './utils';
-import { useSender } from './hooks';
-import { CREATOR_API_URL } from './constants';
+import { useCreators } from '../../../hooks/use-creators';
+import {
+  FormPayload,
+  SendPayload,
+  createFormPayloadSchema,
+} from '../../schema';
+import { getSendFormDefaultValues } from '../../utils';
+import { useSender } from '../../hooks';
+import { CREATOR_API_URL } from '../../constants';
 
-const SEARCH_PARAMETER = {
-  CREATOR_NAME: 'creatorName',
-  NETWORK: 'network',
-  TOKEN: 'token',
-};
+import { ChainSelect, TokenSelect } from './components';
 
 type Properties = {
   className?: string;
-  validatedAddress?: string | null;
 };
 
 const baseClassName =
   'z-1 w-[440px] max-w-full rounded-xl bg-white px-4 pb-9 pt-6 flex flex-col items-center relative';
 
-export const Content = ({ className, validatedAddress }: Properties) => {
+export const DonateForm = ({ className }: Properties) => {
+  const { searchParams } = useCreators();
   const { isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
   const { connectModalOpen, openConnectModal } = useConnectModal();
-
-  const searchParameters = useSearchParams();
-
-  const addressValidationResult = hexSchema.safeParse(validatedAddress);
-
   const [selectedTokenSymbol, setSelectedTokenSymbol] = useState<string>('ETH');
 
-  const networkParameter = searchParameters.get(SEARCH_PARAMETER.NETWORK);
-  const tokenParameter = searchParameters.get(SEARCH_PARAMETER.TOKEN);
-  const creatorNameParameter = searchParameters.get(
-    SEARCH_PARAMETER.CREATOR_NAME,
-  );
-
   const possibleTokens: Token[] = useMemo(() => {
-    const tokensSymbols = (tokenParameter ?? '').toLowerCase().split(',');
+    const tokensSymbols = (searchParams.token ?? '').toLowerCase().split(',');
     const allPossibleTokens = Object.values(TOKEN);
     const tokens = allPossibleTokens.filter((token) => {
       return tokensSymbols.includes(token.symbol.toLowerCase());
@@ -81,11 +67,11 @@ export const Content = ({ className, validatedAddress }: Properties) => {
     }
 
     return tokens;
-  }, [tokenParameter]);
+  }, [searchParams.token]);
 
   const allowedChainsIds = useMemo(() => {
     const networksShortNames =
-      networkParameter?.toLowerCase().split(',') ??
+      searchParams.network?.toLowerCase().split(',') ??
       Object.values(CHAIN).map((chain) => {
         return chain.shortName.toLowerCase();
       });
@@ -110,7 +96,7 @@ export const Content = ({ className, validatedAddress }: Properties) => {
     return chains.map((chain) => {
       return chain.id;
     });
-  }, [networkParameter, selectedTokenSymbol]);
+  }, [searchParams.network, selectedTokenSymbol]);
 
   const defaultChainId = allowedChainsIds[0] ?? 0;
 
@@ -141,7 +127,6 @@ export const Content = ({ className, validatedAddress }: Properties) => {
     reset(getSendFormDefaultValues(defaultChainId, selectedTokenSymbol));
 
     sender.resetBalance();
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defaultChainId, selectedTokenSymbol, reset]);
 
@@ -175,19 +160,19 @@ export const Content = ({ className, validatedAddress }: Properties) => {
       decimals,
     );
   }, [
-    selectedTokenSymbol,
     chainId,
+    selectedTokenSymbol,
     sender.tokensToSend,
     selectedToken?.symbol,
   ]);
 
   const onSubmit: SubmitHandler<FormPayload> = useCallback(
     async (payload) => {
-      if (!walletClient) {
-        return;
-      }
-
-      if (!addressValidationResult.success || !validatedAddress) {
+      if (
+        !walletClient ||
+        !searchParams.address.data ||
+        !searchParams.address.isValid
+      ) {
         return;
       }
 
@@ -205,41 +190,35 @@ export const Content = ({ className, validatedAddress }: Properties) => {
         chainId,
         tokenAddress: address,
       };
-      const validAddress = getAddress(addressValidationResult.data);
 
       try {
         await sender.send({
           sendPayload,
-          recipientAddress: validAddress,
+          recipientAddress: searchParams.address.data,
         });
       } catch (error) {
         console.error('Unknown error sending transaction.', error);
       }
     },
     [
-      addressValidationResult.data,
-      addressValidationResult.success,
       sender,
-      validatedAddress,
       walletClient,
+      searchParams.address.data,
+      searchParams.address.isValid,
     ],
   );
 
   useEffect(() => {
     if (sender.isSuccess) {
-      try {
-        void fetch(`${CREATOR_API_URL}/push-donation`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ address: validatedAddress }),
-        });
-      } catch {
-        //
-      }
+      void fetch(`${CREATOR_API_URL}/push-donation`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ address: searchParams.address.data }),
+      });
     }
-  }, [sender.isSuccess, validatedAddress]);
+  }, [searchParams.address.data, sender.isSuccess]);
 
-  if (validatedAddress !== undefined && addressValidationResult.error) {
+  if (!searchParams.address.isValid && !searchParams.address.isFetching) {
     return (
       <div className={classes(baseClassName, className)}>
         <h1 className="flex items-center justify-center gap-2 text-center text-heading4 text-red-500">
@@ -253,15 +232,18 @@ export const Content = ({ className, validatedAddress }: Properties) => {
     return (
       <div className={classes(baseClassName, className)}>
         <Spinner className="size-16 text-mint-600" />
+
         <p className="mt-6 text-heading5 text-neutral-900 lg:text-heading4">
           Waiting for confirmation
         </p>
+
         <p className="mt-3 flex flex-wrap justify-center gap-1 text-body5 text-neutral-600 lg:text-body4">
           Sending <span className="text-mint-600">${amount}</span>{' '}
           {amountInSelectedToken
             ? `(${roundToSignificantFigures(Number(amountInSelectedToken), 2)} ${selectedToken?.symbol})`
             : null}
         </p>
+
         <p className="mt-1 text-body5 text-neutral-600 lg:text-body4">
           Confirm transfer in your wallet
         </p>
@@ -279,24 +261,27 @@ export const Content = ({ className, validatedAddress }: Properties) => {
       <div className={classes(baseClassName, className)}>
         <div className="rounded-[100%] bg-mint-200 p-4">
           <Icon
+            size={48}
             name="CheckCircle2"
             className="stroke-1 text-mint-600"
-            size={48}
           />
         </div>
+
         <p className="text-heading4 text-neutral-900">Transfer completed</p>
+
         <Link
+          isExternal
           size="medium"
           href={transactionUrl}
           className="mt-2 flex items-center"
-          isExternal
         >
           View on explorer
         </Link>
+
         <Button
-          className="mt-6 w-full"
-          intent="negative"
           size="medium"
+          intent="negative"
+          className="mt-6 w-full"
           onClick={() => {
             sender.reset();
             formMethods.reset();
@@ -311,62 +296,65 @@ export const Content = ({ className, validatedAddress }: Properties) => {
     <div className={classes(baseClassName, className)}>
       <link rel="preload" as="image" href={backgroundLines3.src} />
       <img
+        alt=""
         src={backgroundLines3.src}
         className="pointer-events-none absolute top-0 hidden h-full opacity-100 lg:block"
-        alt=""
       />
+
       <h1 className="self-start text-heading4">
-        {creatorNameParameter
-          ? `Donate to ${creatorNameParameter}`
+        {searchParams.creatorName
+          ? `Donate to ${searchParams.creatorName}`
           : 'Select your donation details'}
       </h1>
+
       <Form onSubmit={formMethods.handleSubmit(onSubmit)} className="w-full">
         <Controller
-          control={formMethods.control}
           name="tokenSymbol"
+          control={formMethods.control}
           render={({ field }) => {
             return (
               <TokenSelect
-                className="mt-6 w-full"
                 label="Token"
+                value={field.value}
+                className="mt-6 w-full"
                 tokens={possibleTokens}
                 onChange={field.onChange}
-                value={field.value}
-              />
-            );
-          }}
-        />
-        <Controller
-          control={formMethods.control}
-          name="chainId"
-          render={({ field }) => {
-            return (
-              <ChainSelect
-                className="mt-4 w-full"
-                label="Network"
-                allowedChainsIds={allowedChainsIds}
-                onChange={field.onChange}
-                value={field.value}
               />
             );
           }}
         />
 
         <Controller
+          name="chainId"
           control={formMethods.control}
+          render={({ field }) => {
+            return (
+              <ChainSelect
+                label="Network"
+                value={field.value}
+                className="mt-4 w-full"
+                onChange={field.onChange}
+                allowedChainsIds={allowedChainsIds}
+              />
+            );
+          }}
+        />
+
+        <Controller
           name="amount"
+          control={formMethods.control}
           render={({ field }) => {
             return (
               <>
                 <Form.Field
+                  numeric
                   {...field}
                   className="mt-6"
+                  label="Amount ($)"
                   value={field.value.toString()}
                   onChange={(value) => {
                     field.onChange(Number(value));
                   }}
-                  label="Amount ($)"
-                  numeric
                 />
 
                 {!sender.haveEnoughBalance && (
@@ -386,17 +374,17 @@ export const Content = ({ className, validatedAddress }: Properties) => {
         />
 
         <Controller
-          control={formMethods.control}
           name="message"
+          control={formMethods.control}
           render={({ field, fieldState }) => {
             return (
               <Form.Field
                 {...field}
-                className="mt-4"
+                asTextArea
                 label="Message"
+                className="mt-4"
                 helperText={fieldState.error?.message}
                 error={Boolean(fieldState.error?.message)}
-                asTextArea
               />
             );
           }}
@@ -404,17 +392,17 @@ export const Content = ({ className, validatedAddress }: Properties) => {
 
         {isConnected ? (
           <Button
+            size="medium"
             type="submit"
             intent="primary"
-            size="medium"
             className="mt-6 w-full"
           >
             SEND
           </Button>
         ) : (
           <Button
-            intent="primary"
             size="medium"
+            intent="primary"
             className="mt-6 w-full"
             onClick={openConnectModal}
             loading={connectModalOpen}
@@ -427,9 +415,9 @@ export const Content = ({ className, validatedAddress }: Properties) => {
       <div className="mt-[23px] flex justify-center">
         <Link
           size="xs"
-          href={CREATORS_USER_GUIDE_LINK}
           isExternal
           className="lg:text-label7"
+          href={CREATORS_USER_GUIDE_LINK}
         >
           1% supplies IDRISS’s treasury
         </Link>

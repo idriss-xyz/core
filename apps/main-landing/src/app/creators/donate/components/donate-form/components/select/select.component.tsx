@@ -10,14 +10,15 @@ import { SelectOptionContainer } from './select-option-container.component';
 
 export const Select = <T,>({
   label,
-  options,
   value,
-  className,
-  optionsContainerClassName,
-  renderLabel,
+  options,
   onChange,
+  className,
+  renderLabel,
+  optionsContainerClassName,
 }: SelectProperties<T>) => {
   const { portal } = usePortal();
+
   const pickedOption = useMemo(() => {
     return (
       options.find((option) => {
@@ -39,6 +40,7 @@ export const Select = <T,>({
           {label}
         </p>
       ) : null}
+
       <DropdownMenu.Root modal={false}>
         <DropdownMenu.Trigger asChild>
           <button className="block w-full">
@@ -47,6 +49,7 @@ export const Select = <T,>({
             </SelectOptionContainer>
           </button>
         </DropdownMenu.Trigger>
+
         <DropdownMenu.Portal container={portal}>
           <DropdownMenu.Content sideOffset={2} asChild>
             <SelectOptionContainer>
@@ -60,10 +63,10 @@ export const Select = <T,>({
                   return (
                     <DropdownMenu.Item
                       key={option.label}
+                      className="outline-none"
                       onSelect={() => {
                         onChange(option.value);
                       }}
-                      className="outline-none"
                     >
                       <SelectOption
                         option={option}
