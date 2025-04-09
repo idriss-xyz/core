@@ -1,8 +1,6 @@
 import { type Hex } from 'viem';
 import { CHAIN } from '@idriss-xyz/constants';
-
-import { clientEthereum } from './constants/blockchain-clients';
-
+import { clientEthereum } from '@idriss-xyz/blockchain-clients';
 const SELL_TOKEN_BY_NETWORK: Record<number, string> = {
   [CHAIN.BASE.id]: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',
   [CHAIN.ETHEREUM.id]: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
@@ -99,20 +97,6 @@ export const resolveEnsName = async (address: Hex): Promise<string | null> => {
     return resolved;
   } catch (error) {
     console.error('Error resolving ENS name from address:', error);
-    return null;
-  }
-};
-
-export const resolveEnsToHex = async (ensName: string): Promise<Hex | null> => {
-  try {
-    const resolvedAddress = await clientEthereum.getEnsAddress({
-      name: ensName,
-    });
-    if (resolvedAddress) return resolvedAddress;
-    console.error(`Unable to resolve ENS name to an address: ${ensName}`);
-    return null;
-  } catch (error) {
-    console.error('Error resolving ENS name to hex address:', error);
     return null;
   }
 };

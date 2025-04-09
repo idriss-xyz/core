@@ -6,10 +6,10 @@ import { Hex } from 'viem';
 import { useRouter } from 'next/navigation';
 
 import { backgroundLines2 } from '@/assets';
-import { LeaderboardTopDonors } from '@/app/creators/donate/top-donors';
+import { LeaderboardStandalone } from '@/app/creators/donate/components/leaderboard';
+import { RainbowKitProviders } from '@/app/creators/donate/providers';
 
-import { RainbowKitProviders } from '../../donate/providers';
-import { useGetDonorRanking } from '../../donate/commands/get-donor-ranking';
+import { useGetDonorRanking } from '../commands/get-donor-ranking';
 import { TopBar } from '../../landing/components/top-bar';
 
 // ts-unused-exports:disable-next-line
@@ -32,16 +32,17 @@ function RankingContent() {
   return (
     <>
       <TopBar />
+
       <main className="relative flex min-h-screen grow flex-col items-center justify-around gap-4 overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] px-2 pb-1 pt-[56px] lg:flex-row lg:items-start lg:justify-center lg:px-0">
         <link rel="preload" as="image" href={backgroundLines2.src} />
         <img
+          alt=""
           src={backgroundLines2.src}
           className="pointer-events-none absolute top-0 hidden size-full opacity-40 lg:block"
-          alt=""
         />
 
         <div className="grid grid-cols-1 items-start gap-x-10">
-          <LeaderboardTopDonors
+          <LeaderboardStandalone
             heading="Top donors"
             onDonorClick={onDonorClick}
             leaderboard={donorRanking.data ?? []}

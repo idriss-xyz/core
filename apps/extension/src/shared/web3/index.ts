@@ -4,6 +4,7 @@ export {
   CHAIN_ID_TO_TOKENS,
   NATIVE_ETH_ADDRESS,
   NATIVE_SOL_ADDRESS,
+  ERC20_ABI,
 } from './constants';
 export {
   WalletWindowMessages,
@@ -31,6 +32,8 @@ export type {
 export {
   COMMAND_MAP as WEB3_COMMAND_MAP,
   GetTokenPriceCommand,
+  GetEthBalanceCommand,
+  GetTokenBalanceCommand,
   GetAcrossChainFeesCommand,
   GetAcrossChainFeeCommand,
 } from './commands';

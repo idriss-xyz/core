@@ -277,7 +277,6 @@ export const getTimeDifferenceString = ({
   variant: 'long' | 'short';
 }) => {
   let timeDifference = getFormattedTimeDifference(timestamp, variant);
-
   setInterval(() => {
     timeDifference = getFormattedTimeDifference(timestamp, variant);
   }, 1000);

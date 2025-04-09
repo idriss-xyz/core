@@ -1,4 +1,4 @@
-import { arbitrum, linea, scroll, zksync } from 'viem/chains';
+import { arbitrum, linea, scroll, zksync, celo } from 'viem/chains';
 import {
   ARBITRUM_LOGO,
   BANKLESS_DAO_LOGO,
@@ -25,6 +25,8 @@ import {
   Chain,
   Token,
   ChainToken,
+  CELO_LOGO,
+  CUSD_LOGO,
 } from '@idriss-xyz/constants';
 
 export const NATIVE_ETH_ADDRESS = '0x0000000000000000000000000000000000000000';
@@ -51,6 +53,11 @@ export const CHAIN = Object.assign(SHARED_CHAIN, {
     ...scroll,
     shortName: 'Scroll',
     logo: SCROLL_LOGO,
+  },
+  CELO: {
+    ...celo,
+    shortName: 'Celo',
+    logo: CELO_LOGO,
   },
   BNB_CHAIN: {
     id: 56,
@@ -90,6 +97,16 @@ export const CHAIN = Object.assign(SHARED_CHAIN, {
 }) satisfies Record<string, Chain>;
 
 export const TOKEN = Object.assign(SHARED_TOKEN, {
+  CELO: {
+    name: 'Celo',
+    symbol: 'CELO',
+    logo: CELO_LOGO,
+  },
+  CUSD: {
+    name: 'Celo Dollar',
+    symbol: 'CUSD',
+    logo: CUSD_LOGO,
+  },
   CULT_DAO: {
     name: 'Cult DAO',
     symbol: 'CULT',
@@ -156,6 +173,23 @@ export const CHAIN_ID_TO_TOKENS = {
       name: 'USDC',
       decimals: 6,
       address: '0x4Ca4B85Ead5EA49892d3a81DbfAE2f5c2F75d53D',
+    },
+  ],
+  [CHAIN.CELO.id]: [
+    {
+      ...TOKEN.CELO,
+      decimals: 18,
+      address: NATIVE_COIN_ADDRESS,
+    },
+    {
+      ...TOKEN.USDC,
+      decimals: 6,
+      address: '0xcebA9300f2b948710d2653dD7B07f33A8B32118C',
+    },
+    {
+      ...TOKEN.CUSD,
+      decimals: 18,
+      address: '0x765de816845861e75a25fca122bb6898b8b1282a',
     },
   ],
   [CHAIN.ETHEREUM.id]: [
@@ -442,3 +476,189 @@ export const CHAIN_ID_TO_TOKENS = {
     },
   ],
 } satisfies Record<string, ChainToken[]>;
+
+export const ERC20_ABI = [
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'owner',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'spender',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'value',
+        type: 'uint256',
+      },
+    ],
+    name: 'Approval',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'from',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'to',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'value',
+        type: 'uint256',
+      },
+    ],
+    name: 'Transfer',
+    type: 'event',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'owner',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: 'spender',
+        type: 'address',
+      },
+    ],
+    name: 'allowance',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'spender',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'approve',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+    ],
+    name: 'balanceOf',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'totalSupply',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'to',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'transfer',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'from',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: 'to',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'transferFrom',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+] as const;

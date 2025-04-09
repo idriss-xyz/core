@@ -163,6 +163,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.9.0
         version: 3.9.0(react-hook-form@7.53.1(react@18.3.1))
+      '@idriss-xyz/blockchain-clients':
+        specifier: workspace:*
+        version: link:../../packages/blockchain-clients
       '@idriss-xyz/constants':
         specifier: workspace:*
         version: link:../../packages/constants
@@ -398,6 +401,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.9.0
         version: 3.9.0(react-hook-form@7.53.1(react@18.3.1))
+      '@idriss-xyz/blockchain-clients':
+        specifier: workspace:*
+        version: link:../../packages/blockchain-clients
       '@idriss-xyz/constants':
         specifier: workspace:*
         version: link:../../packages/constants
@@ -521,7 +527,7 @@ importers:
         version: 15.0.1(eslint@8.57.1)(typescript@5.6.3)
       eslint-import-resolver-typescript:
         specifier: ^3.6.3
-        version: 3.6.3(eslint-plugin-import@2.31.0)(eslint@8.57.1)
+        version: 3.6.3(@typescript-eslint/parser@8.19.1(eslint@8.57.1)(typescript@5.6.3))(eslint-plugin-import@2.31.0)(eslint@8.57.1)
       ts-unused-exports:
         specifier: ^10.1.0
         version: 10.1.0(typescript@5.6.3)
@@ -588,6 +594,31 @@ importers:
         version: 10.1.0(typescript@5.6.3)
       typescript:
         specifier: ^5.6.3
+        version: 5.6.3
+
+  packages/blockchain-clients:
+    dependencies:
+      '@idriss-xyz/constants':
+        specifier: workspace:*
+        version: link:../constants
+      viem:
+        specifier: 2.21.33
+        version: 2.21.33(bufferutil@4.0.9)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.23.8)
+    devDependencies:
+      '@idriss-xyz/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@idriss-xyz/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      dependency-cruiser:
+        specifier: ^16.4.2
+        version: 16.4.2
+      ts-unused-exports:
+        specifier: ^10.1.0
+        version: 10.1.0(typescript@5.6.3)
+      typescript:
+        specifier: ^5.6.2
         version: 5.6.3
 
   packages/constants:
@@ -10540,6 +10571,7 @@ packages:
   yaeti@0.0.6:
     resolution: {integrity: sha512-MvQa//+KcZCUkBTIC9blM+CU9J2GzuTytsOUwf2lidtvkx/6gnEp1QvJv34t9vdjhFmha/mUiNDbN0D0mJWdug==}
     engines: {node: '>=0.10.32'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   yallist@3.1.1:
     resolution: {integrity: sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==}
@@ -17019,6 +17051,17 @@ snapshots:
       eslint: 8.57.1
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.6.3(@typescript-eslint/parser@8.19.1(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0)(eslint@8.57.1)
+    transitivePeerDependencies:
+      - supports-color
+
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.19.1(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@8.19.1(eslint@8.57.1)(typescript@5.6.3))(eslint-plugin-import@2.31.0)(eslint@8.57.1))(eslint@8.57.1):
+    dependencies:
+      debug: 3.2.7
+    optionalDependencies:
+      '@typescript-eslint/parser': 8.19.1(eslint@8.57.1)(typescript@5.6.3)
+      eslint: 8.57.1
+      eslint-import-resolver-node: 0.3.9
+      eslint-import-resolver-typescript: 3.6.3(@typescript-eslint/parser@8.19.1(eslint@8.57.1)(typescript@5.6.3))(eslint-plugin-import@2.31.0)(eslint@8.57.1)
     transitivePeerDependencies:
       - supports-color
 

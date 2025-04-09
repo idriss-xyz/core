@@ -4,7 +4,6 @@ export {
   GetEnsNameCommand,
   GetFarcasterUserCommand,
   GetQuoteCommand,
-  GetEthBalanceCommand,
   GetSolanaBalanceCommand,
   GetTokensImageCommand,
   GetTokensListCommand,

@@ -42,6 +42,7 @@ export const SendWidget = ({ widgetData }: Properties) => {
   const { formMethods, chainId, amount, selectedToken, onChangeChainId } =
     useSendForm({
       allowedChainsIds,
+      resetErrors: sender.reset,
     });
 
   const tokens = useMemo(() => {
@@ -156,11 +157,18 @@ export const SendWidget = ({ widgetData }: Properties) => {
                     Log in
                   </Button>
                 )}
-                {sender.isError ? (
+                {sender.haveEnoughBalance ? (
+                  sender.isError && (
+                    <ErrorMessage className="mt-4">
+                      Something went wrong.
+                    </ErrorMessage>
+                  )
+                ) : (
                   <ErrorMessage className="mt-4">
-                    Something went wrong.
+                    Not enough {selectedToken?.symbol ?? 'tokens'} in your
+                    wallet. Add funds to continue.
                   </ErrorMessage>
-                ) : null}
+                )}
               </>
             }
           />
