@@ -42,6 +42,7 @@ export const SendWidget = ({ widgetData }: Properties) => {
   const { formMethods, chainId, amount, selectedToken, onChangeChainId } =
     useSendForm({
       allowedChainsIds,
+      resetErrors: sender.reset,
     });
 
   const tokens = useMemo(() => {

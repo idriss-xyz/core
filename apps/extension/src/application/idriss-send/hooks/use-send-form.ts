@@ -9,9 +9,10 @@ import { getDefaultTokenForChainId, getSendFormDefaultValues } from '../utils';
 
 interface Properties {
   allowedChainsIds: number[];
+  resetErrors: () => void;
 }
 
-export const useSendForm = ({ allowedChainsIds }: Properties) => {
+export const useSendForm = ({ allowedChainsIds, resetErrors }: Properties) => {
   const formMethods = useForm<SendPayload>({
     defaultValues: getSendFormDefaultValues(allowedChainsIds),
     resolver: zodResolver(createSendPayloadSchema(allowedChainsIds)),
@@ -28,11 +29,13 @@ export const useSendForm = ({ allowedChainsIds }: Properties) => {
       formMethods.resetField('tokenAddress', {
         defaultValue: getDefaultTokenForChainId(chainId).address,
       });
+      resetErrors();
     },
     [formMethods],
   );
 
   const selectedToken = useMemo(() => {
+    resetErrors();
     return CHAIN_ID_TO_TOKENS[chainId]?.find((token) => {
       return token.address === tokenAddress;
     });
