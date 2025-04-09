@@ -1,5 +1,5 @@
-import { createPublicClient, formatEther, Hex, http } from 'viem';
-import { mainnet } from 'viem/chains';
+import { formatEther, Hex } from 'viem';
+import { clients } from '@idriss-xyz/blockchain-clients';
 
 import {
   Command,
@@ -10,6 +10,7 @@ import {
 
 type Payload = {
   address: Hex;
+  chainId: number;
   blockTag: 'latest' | 'earliest' | 'pending' | 'safe' | 'finalized';
 };
 
@@ -24,10 +25,15 @@ export class GetEnsBalanceCommand extends Command<Payload, Response> {
 
   async handle() {
     try {
-      const client = createPublicClient({
-        chain: { ...mainnet },
-        transport: http('https://base.llamarpc.com/'),
+      const clientDetails = clients.find((client) => {
+        return client.chain === this.payload.chainId;
       });
+
+      if (!clientDetails) {
+        return new FailureResult('Chain not supported');
+      }
+
+      const { client } = clientDetails;
 
       const result = await client.getBalance(this.payload);
       const balanceAsEth = formatEther(result);

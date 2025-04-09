@@ -1,10 +1,12 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { getSafeNumber, isNativeTokenAddress } from '@idriss-xyz/utils';
-import { Hex } from 'viem';
+import { Hex, parseEther } from 'viem';
 import { Wallet } from '@idriss-xyz/wallet-connect';
 
 import {
   CHAIN_ID_TO_TOKENS,
+  GetEnsBalanceCommand,
+  GetTokenBalanceCommand,
   GetTokenPriceCommand,
   useSwitchChain,
 } from 'shared/web3';
@@ -20,8 +22,11 @@ interface Properties {
 }
 
 export const useSender = ({ wallet }: Properties) => {
+  const [haveEnoughBalance, setHaveEnoughBalance] = useState<boolean>(true);
   const switchChain = useSwitchChain();
   const getTokenPerDollarMutation = useCommandMutation(GetTokenPriceCommand);
+  const getEnsBalanceMutation = useCommandMutation(GetEnsBalanceCommand);
+  const getTokenBalanceMutation = useCommandMutation(GetTokenBalanceCommand);
   const nativeTransaction = useNativeTransaction();
   const erc20Transaction = useErc20Transaction();
 
@@ -67,10 +72,42 @@ export const useSender = ({ wallet }: Properties) => {
           BigInt((10 ** (tokenToSend?.decimals ?? 0)).toString())) /
         BigInt((10 ** decimals).toString());
 
+      const isNativeToken = isNativeTokenAddress(sendPayload.tokenAddress);
+
       await switchChain.mutateAsync({
         chainId: sendPayload.chainId,
         wallet,
       });
+
+      const getUserBalance = async () => {
+        if (isNativeToken) {
+          const userBalance = await getEnsBalanceMutation.mutateAsync({
+            address: wallet.account,
+            blockTag: 'safe',
+            chainId: sendPayload.chainId,
+          });
+          return userBalance;
+        } else {
+          const userBalance = await getTokenBalanceMutation.mutateAsync({
+            userAddress: wallet.account,
+            tokenAddress: sendPayload.tokenAddress,
+            chainId: sendPayload.chainId,
+          });
+
+          return userBalance;
+        }
+      };
+
+      const userBalance = await getUserBalance();
+
+      if (userBalance && tokensToSend <= parseEther(userBalance)) {
+        setHaveEnoughBalance(true);
+      } else {
+        setHaveEnoughBalance(false);
+        nativeTransaction.reset();
+        erc20Transaction.reset();
+        return;
+      }
 
       if (isNativeTokenAddress(sendPayload.tokenAddress)) {
         nativeTransaction.mutate({
@@ -92,6 +129,8 @@ export const useSender = ({ wallet }: Properties) => {
     [
       erc20Transaction,
       getTokenPerDollarMutation,
+      getEnsBalanceMutation,
+      getTokenBalanceMutation,
       nativeTransaction,
       switchChain,
       wallet,
@@ -102,13 +141,17 @@ export const useSender = ({ wallet }: Properties) => {
     switchChain.isPending ||
     nativeTransaction.isPending ||
     erc20Transaction.isPending ||
-    getTokenPerDollarMutation.isPending;
+    getTokenPerDollarMutation.isPending ||
+    getEnsBalanceMutation.isPending ||
+    getTokenBalanceMutation.isPending;
 
   const isError =
     switchChain.isError ||
     getTokenPerDollarMutation.isError ||
     nativeTransaction.isError ||
-    erc20Transaction.isError;
+    erc20Transaction.isError ||
+    getEnsBalanceMutation.isError ||
+    getTokenBalanceMutation.isError;
 
   const isSuccess = nativeTransaction.isSuccess || erc20Transaction.isSuccess;
 
@@ -127,6 +170,7 @@ export const useSender = ({ wallet }: Properties) => {
     nativeTransaction.reset();
     erc20Transaction.reset();
     switchChain.reset();
+    setHaveEnoughBalance(true);
   }, [
     erc20Transaction,
     getTokenPerDollarMutation,
@@ -143,5 +187,6 @@ export const useSender = ({ wallet }: Properties) => {
     data,
     tokensToSend,
     reset,
+    haveEnoughBalance,
   };
 };

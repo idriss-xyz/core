@@ -1,4 +1,4 @@
-export { CHAIN, TOKEN, CHAIN_ID_TO_TOKENS } from './constants';
+export { CHAIN, TOKEN, CHAIN_ID_TO_TOKENS, ERC20_ABI } from './constants';
 export {
   resolveAddress,
   getWholeNumber,
@@ -17,6 +17,8 @@ export type {
 export {
   COMMAND_MAP as WEB3_COMMAND_MAP,
   GetTokenPriceCommand,
+  GetEnsBalanceCommand,
+  GetTokenBalanceCommand,
   GetAcrossChainFeesCommand,
   GetAcrossChainFeeCommand,
 } from './commands';
