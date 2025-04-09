@@ -6,6 +6,7 @@ import { TopBar } from './components/top-bar';
 import { SupportSection } from './components/support-section';
 import { HeroSection } from './components/hero-section';
 import { ProsSection } from './components/pros-section';
+import { SetUp } from './components/set-up';
 
 // ts-unused-exports:disable-next-line
 export default function Landing() {
@@ -23,6 +24,7 @@ export default function Landing() {
             <HeroSection />
             <SupportSection />
             <ProsSection />
+            <SetUp />
           </main>
 
           <Footer />
