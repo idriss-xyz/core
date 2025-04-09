@@ -172,8 +172,6 @@ const YapsStatsElement = ({
     yapsQuery.isError ||
     !!(yapsQuery.data && yapsQuery.data.yaps_all < 0);
 
-  const displayBorder = yapsQuery.data && yapsQuery.data.yaps_all > 0;
-
   useEffect(() => {
     const cleanup = () => {
       newPortal?.remove();
@@ -281,7 +279,7 @@ const YapsStatsElement = ({
             />
           )}
 
-          {(!isTweetElement || displayBorder) && (
+          {!isTweetElement && (
             <span className="absolute right-0 top-0 size-full rounded-full border-2 border-[#32ffdc]" />
           )}
         </>
