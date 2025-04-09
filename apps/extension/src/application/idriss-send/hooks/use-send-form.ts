@@ -35,11 +35,10 @@ export const useSendForm = ({ allowedChainsIds, resetErrors }: Properties) => {
   );
 
   const selectedToken = useMemo(() => {
-    resetErrors();
     return CHAIN_ID_TO_TOKENS[chainId]?.find((token) => {
       return token.address === tokenAddress;
     });
-  }, [chainId, tokenAddress, resetErrors]);
+  }, [chainId, tokenAddress]);
 
   return { formMethods, chainId, amount, selectedToken, onChangeChainId };
 };
