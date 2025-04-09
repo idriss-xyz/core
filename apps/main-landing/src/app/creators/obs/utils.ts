@@ -103,20 +103,6 @@ export const resolveEnsName = async (address: Hex): Promise<string | null> => {
   }
 };
 
-export const resolveEnsToHex = async (ensName: string): Promise<Hex | null> => {
-  try {
-    const resolvedAddress = await clientEthereum.getEnsAddress({
-      name: ensName,
-    });
-    if (resolvedAddress) return resolvedAddress;
-    console.error(`Unable to resolve ENS name to an address: ${ensName}`);
-    return null;
-  } catch (error) {
-    console.error('Error resolving ENS name to hex address:', error);
-    return null;
-  }
-};
-
 export const TIP_MESSAGE_EVENT_ABI: Record<string, string> = {
   base: 'event TipMessage(address indexed recipientAddress, string message, address indexed sender, address indexed tokenAddress, uint256 amount, uint256 fee)',
   ethereum:

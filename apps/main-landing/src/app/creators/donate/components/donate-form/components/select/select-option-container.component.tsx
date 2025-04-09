@@ -10,12 +10,12 @@ export const SelectOptionContainer = forwardRef(
   ): ReactNode => {
     return (
       <div
+        ref={reference}
         {...restProperties}
         className={classes(
           'w-full rounded-xl bg-white shadow-input focus:outline-none',
           className,
         )}
-        ref={reference}
       />
     );
   },

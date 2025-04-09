@@ -18,12 +18,11 @@ type Properties = {
 };
 
 export const useSender = ({ walletClient }: Properties) => {
-  const [haveEnoughBalance, setHaveEnoughBalance] = useState<boolean>(true);
   const switchChain = useSwitchChain();
-
-  const getTokenPerDollarMutation = useGetTokenPerDollar();
-  const nativeTransaction = useNativeTransaction();
   const erc20Transaction = useErc20Transaction();
+  const nativeTransaction = useNativeTransaction();
+  const getTokenPerDollarMutation = useGetTokenPerDollar();
+  const [haveEnoughBalance, setHaveEnoughBalance] = useState<boolean>(true);
 
   const send = useCallback(
     async ({
@@ -46,10 +45,11 @@ export const useSender = ({ walletClient }: Properties) => {
 
       const tokenPerDollar = await getTokenPerDollarMutation.mutateAsync({
         chainId: sendPayload.chainId,
-        amount: 10 ** (usdcToken?.decimals ?? 0),
         buyToken: sendPayload.tokenAddress,
         sellToken: usdcToken?.address ?? '',
+        amount: 10 ** (usdcToken?.decimals ?? 0),
       });
+
       const tokenPerDollarNormalised = Number(tokenPerDollar.price);
 
       const tokenToSend = CHAIN_ID_TO_TOKENS[sendPayload.chainId]?.find(
@@ -61,6 +61,7 @@ export const useSender = ({ walletClient }: Properties) => {
       const { decimals, value } = getSafeNumber(
         tokenPerDollarNormalised * sendPayload.amount,
       );
+
       const valueAsBigNumber = BigInt(value.toString());
 
       const tokensToSend =
@@ -70,8 +71,8 @@ export const useSender = ({ walletClient }: Properties) => {
       const isNativeToken = isNativeTokenAddress(sendPayload.tokenAddress);
 
       await switchChain.mutateAsync({
-        chainId: sendPayload.chainId,
         walletClient,
+        chainId: sendPayload.chainId,
       });
 
       const getUserBalance = async (userAddress: Hex) => {
@@ -94,8 +95,8 @@ export const useSender = ({ walletClient }: Properties) => {
         } else {
           const userBalance = await client.readContract({
             abi: ERC20_ABI,
-            functionName: 'balanceOf',
             args: [userAddress],
+            functionName: 'balanceOf',
             address: tokenToSend?.address ?? EMPTY_HEX,
           });
 
@@ -115,29 +116,29 @@ export const useSender = ({ walletClient }: Properties) => {
 
       if (isNativeTokenAddress(sendPayload.tokenAddress)) {
         nativeTransaction.mutate({
+          walletClient,
           tokensToSend,
           recipientAddress,
-          walletClient,
-          chainId: sendPayload.chainId,
           message: sendPayload.message,
+          chainId: sendPayload.chainId,
         });
       } else {
         erc20Transaction.mutate({
-          recipientAddress,
-          tokenAddress: sendPayload.tokenAddress,
           walletClient,
           tokensToSend,
-          chainId: sendPayload.chainId,
+          recipientAddress,
           message: sendPayload.message,
+          chainId: sendPayload.chainId,
+          tokenAddress: sendPayload.tokenAddress,
         });
       }
     },
     [
-      erc20Transaction,
-      getTokenPerDollarMutation,
-      nativeTransaction,
       switchChain,
       walletClient,
+      erc20Transaction,
+      nativeTransaction,
+      getTokenPerDollarMutation,
     ],
   );
 
@@ -145,9 +146,9 @@ export const useSender = ({ walletClient }: Properties) => {
 
   const isError =
     switchChain.isError ||
-    getTokenPerDollarMutation.isError ||
+    erc20Transaction.isError ||
     nativeTransaction.isError ||
-    erc20Transaction.isError;
+    getTokenPerDollarMutation.isError;
 
   const isSuccess = nativeTransaction.isSuccess || erc20Transaction.isSuccess;
 
@@ -162,16 +163,17 @@ export const useSender = ({ walletClient }: Properties) => {
   const isIdle = !isSending && !isError && !isSuccess;
 
   const reset = useCallback(() => {
-    getTokenPerDollarMutation.reset();
-    nativeTransaction.reset();
-    erc20Transaction.reset();
     switchChain.reset();
+    erc20Transaction.reset();
+    nativeTransaction.reset();
+    getTokenPerDollarMutation.reset();
+
     setHaveEnoughBalance(true);
   }, [
-    erc20Transaction,
-    getTokenPerDollarMutation,
-    nativeTransaction,
     switchChain,
+    erc20Transaction,
+    nativeTransaction,
+    getTokenPerDollarMutation,
   ]);
 
   const resetBalance = useCallback(() => {
@@ -180,14 +182,14 @@ export const useSender = ({ walletClient }: Properties) => {
 
   return {
     send,
-    isSending,
-    isError,
-    isSuccess,
-    isIdle,
     data,
-    tokensToSend,
     reset,
-    haveEnoughBalance,
+    isIdle,
+    isError,
+    isSending,
+    isSuccess,
     resetBalance,
+    tokensToSend,
+    haveEnoughBalance,
   };
 };

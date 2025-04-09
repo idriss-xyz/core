@@ -2,26 +2,29 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
 import { Hex } from 'viem';
 import { Spinner } from '@idriss-xyz/ui/spinner';
-import { hexSchema } from '@idriss-xyz/constants';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 
-import { default as IDRISS_SCENE_STREAM_2 } from '../../../assets/idriss-scene-stream-2.png';
-import { WidgetVariants } from '../../../../../twitch-extension/src/app/types';
+import { default as IDRISS_SCENE_STREAM_2 } from '../../../../../assets/idriss-scene-stream-2.png';
+import { WidgetVariants } from '../../../../../../../twitch-extension/src/app/types';
+import { LeaderboardStats, DonateContentValues } from '../../types';
 
-import { LeaderboardStats, DonateContentValues } from './types';
 import {
-  default as DonorItem,
-  DonorItemPlaceholder,
-} from './components/donor-item';
+  LeaderboardItem,
+  LeaderboardItemPlaceholder,
+} from './leaderboard-item';
 
 type Properties = {
-  heading?: string;
   className?: string;
-  tipsLoading: boolean;
+  address: {
+    isValid: boolean;
+    data: Hex | null;
+    isFetching: boolean;
+  };
   variant?: WidgetVariants;
+  leaderboardError: boolean;
+  leaderboardLoading: boolean;
   leaderboard: LeaderboardStats[];
-  validatedAddress?: string | null;
   onDonorClick?: (address: Hex) => void;
   updateCurrentContent?: (content: DonateContentValues) => void;
 };
@@ -29,34 +32,52 @@ type Properties = {
 const baseClassName =
   'z-1 w-[360px] max-w-full rounded-xl bg-white flex flex-col items-center relative overflow-hidden';
 
-export const TopDonors = ({
+export const Leaderboard = ({
   variant,
-  leaderboard,
+  address,
   className,
-  tipsLoading,
+  leaderboard,
   onDonorClick,
-  validatedAddress,
+  leaderboardError,
+  leaderboardLoading,
   updateCurrentContent,
 }: Properties) => {
-  const addressValidationResult = hexSchema.safeParse(validatedAddress);
-
-  const isTwitchExtension = variant !== null && variant !== undefined;
+  const isTwitchExtension = !!variant;
   const isTwitchPanel = variant === 'panel';
   const isTwitchOverlay = variant === 'videoOverlay';
   const isTwitchComponent = variant === 'videoComponent';
 
-  if (validatedAddress !== undefined && addressValidationResult.error) {
+  if (!address.isFetching && !address.isValid) {
     return (
       <div
         className={classes(
           baseClassName,
           'min-h-[430px] w-auto items-center justify-center px-4 pb-9 pt-6',
           className,
+          'px-4',
         )}
       >
         <p className="flex items-center justify-center gap-2 text-center text-heading4 text-red-500">
           <Icon name="AlertCircle" size={40} />
           <span>Wrong address</span>
+        </p>
+      </div>
+    );
+  }
+
+  if (leaderboardError) {
+    return (
+      <div
+        className={classes(
+          baseClassName,
+          'min-h-[500px] w-auto items-center justify-center pb-9 pt-6',
+          className,
+          'px-4',
+        )}
+      >
+        <p className="flex items-center justify-center gap-2 text-center text-heading4 text-red-500">
+          <Icon name="AlertCircle" size={40} />
+          <span>Cannot get leaderboard</span>
         </p>
       </div>
     );
@@ -89,7 +110,7 @@ export const TopDonors = ({
       </div>
 
       <div className="flex w-full flex-col">
-        {tipsLoading || !validatedAddress || !leaderboard ? (
+        {leaderboardLoading || address.isFetching ? (
           <span
             className={classes(
               'flex min-h-[207px] w-full items-center justify-center border-b-neutral-300 px-5.5 py-4.5',
@@ -106,15 +127,15 @@ export const TopDonors = ({
                   if (index > 4) return null;
 
                   return (
-                    <DonorItem
+                    <LeaderboardItem
                       donorRank={index}
                       className="py-4.5"
                       isLastItem={index === 4}
                       onDonorClick={onDonorClick}
                       donorDetails={{
                         address: item.address,
-                        displayName: item.displayName,
                         avatarUrl: item.avatarUrl,
+                        displayName: item.displayName,
                       }}
                       donateAmount={item.totalAmount}
                       isTwitchExtension={isTwitchExtension}
@@ -124,7 +145,7 @@ export const TopDonors = ({
                 })}
 
                 {leaderboard.length <= 5 && (
-                  <DonorItemPlaceholder
+                  <LeaderboardItemPlaceholder
                     hideBottomBorder
                     amountToDisplay={5}
                     donorRank={leaderboard.length}
@@ -142,15 +163,15 @@ export const TopDonors = ({
                   if (index > 2) return null;
 
                   return (
-                    <DonorItem
+                    <LeaderboardItem
                       donorRank={index}
                       className="py-4.5"
                       isLastItem={index === 3}
                       onDonorClick={onDonorClick}
                       donorDetails={{
                         address: item.address,
-                        displayName: item.displayName,
                         avatarUrl: item.avatarUrl,
+                        displayName: item.displayName,
                       }}
                       donateAmount={item.totalAmount}
                       isTwitchExtension={isTwitchExtension}
@@ -160,7 +181,7 @@ export const TopDonors = ({
                 })}
 
                 {leaderboard.length <= 3 && (
-                  <DonorItemPlaceholder
+                  <LeaderboardItemPlaceholder
                     hideBottomBorder
                     hideEncouragement
                     amountToDisplay={3}
@@ -177,14 +198,15 @@ export const TopDonors = ({
               <>
                 {leaderboard.map((item, index) => {
                   if (index > 5) return null;
+
                   return (
-                    <DonorItem
+                    <LeaderboardItem
                       donorRank={index}
                       onDonorClick={onDonorClick}
                       donorDetails={{
                         address: item.address,
-                        displayName: item.displayName,
                         avatarUrl: item.avatarUrl,
+                        displayName: item.displayName,
                       }}
                       donateAmount={item.totalAmount}
                       key={`${item.totalAmount}${item.address}`}
@@ -193,7 +215,7 @@ export const TopDonors = ({
                 })}
 
                 {leaderboard.length <= 6 && (
-                  <DonorItemPlaceholder
+                  <LeaderboardItemPlaceholder
                     amountToDisplay={6}
                     donorRank={leaderboard.length}
                     previousDonateAmount={
@@ -229,23 +251,23 @@ export const TopDonors = ({
   );
 };
 
-type LeaderboardProperties = {
+type StandaloneProperties = {
   heading?: string;
   className?: string;
   leaderboardError: boolean;
   leaderboardLoading: boolean;
-  onDonorClick: (address: Hex) => void;
   leaderboard: LeaderboardStats[];
+  onDonorClick: (address: Hex) => void;
 };
 
-export const LeaderboardTopDonors = ({
+export const LeaderboardStandalone = ({
   heading,
   className,
   leaderboard,
   onDonorClick,
   leaderboardError,
   leaderboardLoading,
-}: LeaderboardProperties) => {
+}: StandaloneProperties) => {
   return (
     <div className={classes(baseClassName, className)}>
       <div className="relative flex min-h-[100px] w-full items-center justify-center overflow-hidden">
@@ -257,7 +279,7 @@ export const LeaderboardTopDonors = ({
         <span className="absolute left-0 top-0 size-full bg-black/20" />
 
         <h1 className="relative z-1 mx-12 my-6 text-center text-heading4 uppercase text-white">
-          {heading ?? 'Top donors'}
+          {heading ?? 'Leaderboard'}
         </h1>
       </div>
 
@@ -280,10 +302,12 @@ export const LeaderboardTopDonors = ({
             <ul className="flex flex-col pr-4">
               {leaderboard.map((leaderboardItem, index) => {
                 if (!leaderboardItem || index > 9) return null;
+
                 const isLastItem =
                   index === leaderboard.length - 1 || index === 9;
+
                 return (
-                  <DonorItem
+                  <LeaderboardItem
                     donorRank={index}
                     isLastItem={isLastItem}
                     onDonorClick={onDonorClick}
@@ -291,22 +315,22 @@ export const LeaderboardTopDonors = ({
                     donateAmount={leaderboardItem.totalAmount}
                     donorDetails={{
                       address: leaderboardItem.address,
-                      displayName: leaderboardItem.displayName,
                       avatarUrl: leaderboardItem.avatarUrl,
+                      displayName: leaderboardItem.displayName,
                     }}
                     key={`${leaderboardItem.address}${leaderboardItem.totalAmount}`}
                   />
                 );
               })}
 
-              {leaderboard.length <= 5 ? (
-                <DonorItemPlaceholder
+              {leaderboard.length <= 5 && (
+                <LeaderboardItemPlaceholder
                   itemHeight={79}
                   amountToDisplay={5}
                   donorRank={leaderboard.length}
                   previousDonateAmount={leaderboard.at(-1)?.totalAmount ?? 1234}
                 />
-              ) : null}
+              )}
             </ul>
           </ScrollArea>
         )}

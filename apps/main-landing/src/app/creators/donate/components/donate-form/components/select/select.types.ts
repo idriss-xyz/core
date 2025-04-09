@@ -1,9 +1,9 @@
 import { ReactNode } from 'react';
 
 export type Option<T> = {
-  prefix?: ReactNode;
-  label: string;
   value: T;
+  label: string;
+  prefix?: ReactNode;
   suffix?: ReactNode;
 };
 
@@ -14,13 +14,13 @@ export type SelectOptionProperties<T> = {
 };
 
 export type SelectProperties<T> = {
-  className?: string;
-  optionsContainerClassName?: string;
   value: T;
   label?: string;
-  renderLabel?: () => ReactNode;
+  className?: string;
   options: Option<T>[];
   onChange: (value: T) => void;
+  renderLabel?: () => ReactNode;
+  optionsContainerClassName?: string;
 };
 
 export type SelectOptionContainerProperties = {
