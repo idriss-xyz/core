@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { Hex } from 'viem';
 
 import { CHAIN_ID_TO_TOKENS } from 'shared/web3';
 
@@ -23,6 +24,19 @@ export const useSendForm = ({ allowedChainsIds, resetErrors }: Properties) => {
     'amount',
     'tokenAddress',
   ]);
+
+  const previousTokenAddressReference = useRef<Hex | null>(null);
+
+  // Check if token has changed and reset errors if needed
+  useEffect(() => {
+    if (
+      previousTokenAddressReference.current &&
+      previousTokenAddressReference.current !== tokenAddress
+    ) {
+      resetErrors();
+    }
+    previousTokenAddressReference.current = tokenAddress;
+  }, [tokenAddress, resetErrors]);
 
   const onChangeChainId = useCallback(
     (chainId: number) => {
