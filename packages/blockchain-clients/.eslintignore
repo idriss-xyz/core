@@ -1,0 +1,12 @@
+node_modules
+.eslintrc.cjs
+*.config.mjs
+*.js
+*.json
+*.css
+*.scss
+*.html
+*.md
+.babelrc
+*.yaml
+*.yml

@@ -2,8 +2,7 @@ import { useCallback, useState } from 'react';
 import { Hex, WalletClient } from 'viem';
 import { getSafeNumber, isNativeTokenAddress } from '@idriss-xyz/utils';
 import { CHAIN_ID_TO_TOKENS, EMPTY_HEX } from '@idriss-xyz/constants';
-
-import { clients } from '@/app/creators/obs/constants/blockchain-clients';
+import { clients } from '@idriss-xyz/blockchain-clients';
 
 import { SendPayload } from '../schema';
 import { ERC20_ABI } from '../constants';

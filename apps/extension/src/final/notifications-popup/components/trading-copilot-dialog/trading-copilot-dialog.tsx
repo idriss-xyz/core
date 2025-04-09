@@ -26,14 +26,13 @@ import { Closable, ErrorMessage, Icon, LazyImage } from 'shared/ui';
 import { useCommandQuery } from 'shared/messaging';
 import {
   FormValues,
-  GetEnsBalanceCommand,
   GetEnsInfoCommand,
   GetEnsNameCommand,
   GetQuoteCommand,
   useExchanger,
   useLoginViaSiwe,
 } from 'application/trading-copilot';
-import { CHAIN, getWholeNumber } from 'shared/web3';
+import { CHAIN, GetEnsBalanceCommand, getWholeNumber } from 'shared/web3';
 import { IdrissSend } from 'shared/idriss';
 
 import { TokenIcon } from '../../utils';
@@ -133,6 +132,7 @@ const TradingCopilotDialogContent = ({
     command: new GetEnsBalanceCommand({
       address: wallet?.account ?? EMPTY_HEX,
       blockTag: 'safe',
+      chainId: wallet?.chainId ?? 1,
     }),
     staleTime: Number.POSITIVE_INFINITY,
   });
@@ -415,6 +415,7 @@ const TradingCopilotWalletBalance = ({ wallet }: WalletBalanceProperties) => {
     command: new GetEnsBalanceCommand({
       address: wallet?.account ?? '',
       blockTag: 'safe',
+      chainId: wallet?.chainId ?? 1,
     }),
     staleTime: Number.POSITIVE_INFINITY,
   });
