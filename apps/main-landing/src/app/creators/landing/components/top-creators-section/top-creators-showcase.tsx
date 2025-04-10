@@ -55,7 +55,7 @@ export const TopCreatorsShowcase = () => {
               className="z-1 block aspect-[4/5] size-full min-h-full max-w-[400px] object-cover"
             />
 
-            <div className="shadow-card absolute bottom-6 left-6 flex w-[calc(100%-3rem)] flex-col items-start gap-y-2 rounded-3xl bg-white/40 p-4">
+            <div className="absolute bottom-6 left-6 flex w-[calc(100%-3rem)] flex-col items-start gap-y-2 rounded-3xl bg-white/40 p-4 shadow-card">
               <GradientBorder
                 borderWidth={1}
                 gradientDirection="toBottom"

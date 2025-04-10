@@ -1,12 +1,15 @@
 'use client';
-import { Hex } from 'viem';
+import { Hex, isAddress } from 'viem';
 import { useEffect, useState } from 'react';
 import { default as io } from 'socket.io-client';
-import _ from 'lodash';
-import { EMPTY_HEX, TipHistoryNode } from '@idriss-xyz/constants';
+import { EMPTY_HEX, hexSchema } from '@idriss-xyz/constants';
 import { useGetTipHistory } from '@idriss-xyz/main-landing/app/creators/donate/commands/get-donate-history';
-import { TopDonors } from '@idriss-xyz/main-landing/app/creators/donate/top-donors';
+import { Leaderboard } from '@idriss-xyz/main-landing/app/creators/donate/components/leaderboard';
 import { QueryProvider } from '@idriss-xyz/main-landing/providers';
+import {
+  DonationData,
+  LeaderboardStats,
+} from '@idriss-xyz/main-landing/app/creators/donate/types';
 
 import { CREATOR_API_URL } from '@/app/constants';
 import { ConfigValues, WidgetVariants } from '@/app/types';
@@ -30,11 +33,19 @@ type ContentProperties = {
 function WidgetContent({ variant }: ContentProperties) {
   const [socketConnected, setSocketConnected] = useState(false);
   const [socketInitialized, setSocketInitialized] = useState(false);
-  const [tipEdges, setTipEdges] = useState<{ node: TipHistoryNode }[]>([]);
+  const [leaderboard, setLeaderboard] = useState<LeaderboardStats[]>([]);
   const [address, setAddress] = useState<Hex | null | undefined>();
-  const [donationUrl, setDonationUrl] = useState<string | null | undefined>();
 
-  const isVideoOverlay = variant === 'videoOverlay';
+  const addressValidationResult = hexSchema.safeParse(address);
+
+  const isAddressValid =
+    !!address && isAddress(address) && addressValidationResult.success;
+
+  const addressDetails = {
+    data: address ?? null,
+    isValid: isAddressValid,
+    isFetching: address === undefined,
+  };
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -50,24 +61,24 @@ function WidgetContent({ variant }: ContentProperties) {
 
       if (storedConfig) {
         const parsedConfig: ConfigValues = JSON.parse(storedConfig);
+
         setAddress(parsedConfig.address as Hex);
-        setDonationUrl(parsedConfig.donationLink);
       } else {
         setAddress(null);
       }
     });
   }, []);
 
-  const tips = useGetTipHistory(
+  const donationsHistory = useGetTipHistory(
     { address: address ?? EMPTY_HEX },
     { enabled: !!address },
   );
 
   useEffect(() => {
-    if (tips.data) {
-      setTipEdges(tips.data.data);
+    if (donationsHistory.data) {
+      setLeaderboard(donationsHistory.data.leaderboard);
     }
-  }, [tips.data]);
+  }, [donationsHistory.data]);
 
   useEffect(() => {
     if (address && !socketInitialized) {
@@ -83,11 +94,36 @@ function WidgetContent({ variant }: ContentProperties) {
           }
         });
 
-        socket.on('newDonation', (node: TipHistoryNode) => {
-          setTipEdges((previousState) => {
-            return _.uniqBy([{ node }, ...previousState], (item) => {
-              return _.get(item, 'node.transaction.hash');
+        socket.on('newDonation', (donation: DonationData) => {
+          setLeaderboard((previousState) => {
+            const leaderboard = [...previousState];
+
+            const donorIndex = leaderboard.findIndex((item) => {
+              return (
+                item.address.toLowerCase() ===
+                donation.fromAddress.toLowerCase()
+              );
             });
+
+            const donor = leaderboard[donorIndex];
+
+            if (donor) {
+              leaderboard[donorIndex] = {
+                ...donor,
+                totalAmount: donor.totalAmount + donation.tradeValue,
+              };
+            }
+
+            leaderboard.push({
+              ...donation.fromUser,
+              totalAmount: donation.tradeValue,
+            });
+
+            leaderboard.sort((a, b) => {
+              return b.totalAmount - a.totalAmount;
+            });
+
+            return leaderboard;
           });
         });
       }
@@ -101,33 +137,26 @@ function WidgetContent({ variant }: ContentProperties) {
     }
 
     return;
-  }, [address, socketConnected, socketInitialized]);
+  }, [socketConnected, socketInitialized, address]);
 
-  return (
-    <>
-      {isVideoOverlay ? (
-        <div className="relative flex size-full items-start justify-end pr-28 pt-20">
-          <TopDonors
-            variant={variant}
-            tipEdges={tipEdges}
-            donationUrl={donationUrl}
-            validatedAddress={address}
-            tipsLoading={tips.isLoading}
-            className="relative right-0 top-0 origin-top-right scale-[.85]"
-          />
-        </div>
-      ) : (
-        <TopDonors
-          variant={variant}
-          tipEdges={tipEdges}
-          donationUrl={donationUrl}
-          validatedAddress={address}
-          tipsLoading={tips.isLoading}
-        />
-      )}
-
-      {/* eslint-disable-next-line @next/next/no-sync-scripts */}
-      <script src="https://extension-files.twitch.tv/helper/v1/twitch-ext.min.js" />
-    </>
+  return variant === 'videoOverlay' ? (
+    <div className="relative flex size-full items-start justify-end pr-28 pt-20">
+      <Leaderboard
+        variant={variant}
+        address={addressDetails}
+        leaderboard={leaderboard}
+        leaderboardError={donationsHistory.isError}
+        leaderboardLoading={donationsHistory.isLoading}
+        className="relative right-0 top-0 origin-top-right scale-[.85]"
+      />
+    </div>
+  ) : (
+    <Leaderboard
+      variant={variant}
+      address={addressDetails}
+      leaderboard={leaderboard}
+      leaderboardError={donationsHistory.isError}
+      leaderboardLoading={donationsHistory.isLoading}
+    />
   );
 }

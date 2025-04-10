@@ -47,6 +47,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        <script src="https://extension-files.twitch.tv/helper/v1/twitch-ext.min.js" />
+      </head>
       <body
         className={`${aeonikPro.variable} flex min-h-screen flex-col font-sans antialiased`}
       >

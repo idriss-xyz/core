@@ -12,6 +12,7 @@ const client = createPublicClient({
   transport: http('https://eth.llamarpc.com'),
 });
 
+// CURRENTLY NOT USED ENDPOINT
 // ts-unused-exports:disable-next-line
 export async function GET(request: Request) {
   const url = new URL(request.url);

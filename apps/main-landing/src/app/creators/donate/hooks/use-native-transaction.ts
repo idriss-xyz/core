@@ -7,21 +7,21 @@ import { getChainById } from '@idriss-xyz/utils';
 import { CHAIN_TO_IDRISS_TIPPING_ADDRESS, TIPPING_ABI } from '../constants';
 
 interface Properties {
-  recipientAddress: Hex;
-  tokensToSend: bigint;
-  walletClient: WalletClient;
   chainId: number;
   message: string;
+  tokensToSend: bigint;
+  recipientAddress: Hex;
+  walletClient: WalletClient;
 }
 
 export const useNativeTransaction = () => {
   return useMutation({
     mutationFn: async ({
-      recipientAddress,
-      tokensToSend,
-      walletClient,
       chainId,
       message,
+      tokensToSend,
+      walletClient,
+      recipientAddress,
     }: Properties) => {
       const [account] = await walletClient.getAddresses();
 
@@ -41,10 +41,10 @@ export const useNativeTransaction = () => {
       const encodedData = encodeFunctionData(sendToData);
 
       const gas = await estimateGas(walletClient, {
-        to: idrissTippingAddress,
         account,
-        value: tokensToSend,
         data: encodedData,
+        value: tokensToSend,
+        to: idrissTippingAddress,
       }).catch((error) => {
         console.error('Error estimating gas:', error.message);
         throw error;
@@ -52,12 +52,12 @@ export const useNativeTransaction = () => {
 
       const transactionHash = await walletClient
         .sendTransaction({
+          gas,
           account,
-          chain: getChainById(chainId),
           data: encodedData,
           value: tokensToSend,
           to: idrissTippingAddress,
-          gas,
+          chain: getChainById(chainId),
         })
         .catch((error) => {
           console.error('Error sending transaction:', error.message);

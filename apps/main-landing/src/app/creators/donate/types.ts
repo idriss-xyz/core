@@ -1,38 +1,37 @@
-import {
-  TipHistoryFromUser,
-  TipHistoryNode,
-  TipHistoryTokenV2,
-} from '@idriss-xyz/constants';
 import { Hex } from 'viem';
 
-interface DonorHistoryStats {
-  totalDonationsCount: number;
-  totalDonationAmount: number;
-  mostDonatedToAddress: string;
-  biggestDonationAmount: number;
-  favoriteDonationToken: string;
-  donorDisplayName: string | null;
-  positionInLeaderboard: number | null;
-  favoriteTokenMetadata: Omit<TipHistoryTokenV2, 'onchainMarketData'> | null;
+export interface DonationUser {
+  address: Hex;
+  avatarUrl?: string;
+  displayName?: string;
 }
 
-interface DonorLeaderboardStats {
-  address: string;
+export interface LeaderboardStats extends DonationUser {
   totalAmount: number;
-  donateLink: string | undefined;
-  donorMetadata: TipHistoryFromUser;
+  donateLink?: string;
 }
 
-export interface DonorHistoryResponse {
-  knownDonations: {
-    toAddress: Hex;
-    fromAddress: Hex;
-    timestamp: number;
-    transactionHash: Hex;
-    data: TipHistoryNode;
-  }[];
-  stats: DonorHistoryStats;
-  leaderboard: DonorLeaderboardStats[];
+export interface DonationToken {
+  address: Hex;
+  symbol: string;
+  network: string;
+  decimals: number;
+  imageUrl?: string;
+}
+
+export interface DonationData {
+  toAddress: Hex;
+  network: string;
+  comment?: string;
+  fromAddress: Hex;
+  timestamp: number;
+  amountRaw: string;
+  tokenAddress: Hex;
+  tradeValue: number;
+  token: DonationToken;
+  toUser: DonationUser;
+  transactionHash: Hex;
+  fromUser: DonationUser;
 }
 
 type DonateContentNames =

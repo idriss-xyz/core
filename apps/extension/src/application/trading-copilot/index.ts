@@ -3,7 +3,6 @@ export {
   GetEnsInfoCommand,
   GetEnsNameCommand,
   GetQuoteCommand,
-  GetEnsBalanceCommand,
   GetTokensImageCommand,
   GetTokensListCommand,
 } from './commands';

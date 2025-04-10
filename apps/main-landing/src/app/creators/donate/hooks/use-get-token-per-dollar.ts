@@ -1,10 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
 
 type Payload = {
+  amount: number;
+  chainId: number;
   buyToken: string;
   sellToken: string;
-  chainId: number;
-  amount: number;
 };
 
 type Response = {
@@ -20,10 +20,10 @@ export const useGetTokenPerDollar = () => {
 
       const response = await fetch(
         `https://api.idriss.xyz/token-price?${new URLSearchParams({
-          sellToken: payload.sellToken,
           buyToken: payload.buyToken,
-          sellAmount: payload.amount.toString(),
+          sellToken: payload.sellToken,
           network: payload.chainId.toString(),
+          sellAmount: payload.amount.toString(),
         }).toString()}`,
       );
 

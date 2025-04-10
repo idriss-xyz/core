@@ -16,6 +16,7 @@
   "dependencies": {
     "@ebay/nice-modal-react": "^1.2.13",
     "@hookform/resolvers": "^3.9.0",
+    "@idriss-xyz/blockchain-clients": "workspace:*",
     "@idriss-xyz/constants": "workspace:*",
     "@idriss-xyz/ui": "workspace:*",
     "@idriss-xyz/utils": "workspace:*",
