@@ -9,7 +9,7 @@ import { IDRISS_SCENE_STREAM } from '@/assets';
 
 export const SetUp = () => {
   return (
-    <div className="relative z-40 overflow-visible px-safe">
+    <div className="relative z-1 overflow-visible px-safe">
       <div
         className={classes(
           'container flex flex-col items-center justify-center py-10',

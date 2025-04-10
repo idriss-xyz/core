@@ -116,6 +116,7 @@ export default {
         '2xl': '0px 24px 48px -12px #1018282E',
         '3xl': '0px 32px 64px -12px #1018283D',
         'input': '0px 0px 0px 4px #F2F2F224',
+        'card': '0px 0px 0px 6px #FFFFFF14',
       },
       blur: {
         md: '10px',

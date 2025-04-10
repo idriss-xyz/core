@@ -1,14 +1,16 @@
 type Properties = {
+  size?: number;
   className?: string;
 };
-export const TwitchOutlined = ({ className }: Properties) => {
+
+export const TwitchOutlined = ({ className, size = 64 }: Properties) => {
   return (
     <svg
-      className={className}
-      width="64"
-      height="64"
-      viewBox="0 0 64 64"
       fill="none"
+      width={size}
+      height={size}
+      viewBox="0 0 64 64"
+      className={className}
       xmlns="http://www.w3.org/2000/svg"
     >
       <g id="Group">
@@ -49,6 +51,34 @@ export const TwitchOutlined = ({ className }: Properties) => {
           />
         </g>
       </g>
+    </svg>
+  );
+};
+
+export const TwitchOutlinedBold = ({ className, size = 64 }: Properties) => {
+  return (
+    <svg
+      fill="none"
+      width={size}
+      height={size}
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M21.333 9.334v4M21.333 9.334v4M16 9.334v4"
+        stroke="#E7FED8"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        clipRule="evenodd"
+        d="m26.276 17.724-4.552 4.552c-.25.25-.59.39-.943.39H16L10.667 28v-5.333h-4a1.334 1.334 0 0 1-1.334-1.334V9.885c0-.353.14-.693.39-.942l4.553-4.552c.25-.251.59-.391.943-.391h14.114c.736 0 1.334.597 1.334 1.333v11.448c0 .354-.14.692-.391.943Z"
+        stroke="#E7FED8"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 };

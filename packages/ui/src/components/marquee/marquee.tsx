@@ -4,6 +4,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import { classes } from '../../utils';
 
 type Properties = {
+  gap?: 'md' | 'lg';
   items: ReactNode[];
   pauseOnHover?: boolean;
   className?: string;
@@ -11,6 +12,7 @@ type Properties = {
 };
 
 export const Marquee = ({
+  gap,
   items,
   pauseOnHover = true,
   className,
@@ -18,7 +20,10 @@ export const Marquee = ({
 }: Properties) => {
   const [isRendered, setIsRendered] = useState(false);
 
-  const spaceClassName = 'space-x-10 lg:space-x-[60px]';
+  const listGapClassName = gap === 'md' ? 'pl-6 lg:pl-8' : 'pl-10 lg:pl-[60px]';
+
+  const spaceClassName =
+    gap === 'md' ? 'space-x-6 lg:space-x-8' : 'space-x-10 lg:space-x-[60px]';
 
   useEffect(() => {
     setIsRendered(true);
@@ -33,7 +38,8 @@ export const Marquee = ({
     >
       <ul
         className={classes(
-          'flex list-none whitespace-nowrap pl-10 will-change-[transform] lg:pl-[60px]',
+          'flex list-none whitespace-nowrap will-change-[transform]',
+          listGapClassName,
           spaceClassName,
           isRendered && 'animate-marquee',
           pauseOnHover &&
@@ -55,7 +61,8 @@ export const Marquee = ({
 
       <ul
         className={classes(
-          'absolute flex list-none whitespace-nowrap pl-10 will-change-[transform] lg:pl-[60px]',
+          'absolute flex list-none whitespace-nowrap will-change-[transform]',
+          listGapClassName,
           spaceClassName,
           isRendered && 'animate-marquee2',
           pauseOnHover &&
