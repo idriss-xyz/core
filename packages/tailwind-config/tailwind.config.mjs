@@ -2,7 +2,7 @@ import plugin from 'tailwindcss/plugin';
 import path from 'path';
 import * as url from 'url';
 
-const __dixrname = url.fileURLToPath(new URL('.', import.meta.url));
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 /** @type {import('tailwindcss').Config} */
 export default {
