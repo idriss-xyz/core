@@ -10,7 +10,6 @@ import { Hex } from 'viem';
 import { useRouter } from 'next/navigation';
 
 import { backgroundLines2 } from '@/assets';
-import { TopBar } from '@/components';
 import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
 import { DonateHistory } from '@/app/creators/donate/components/donate-history';
 import {
@@ -20,6 +19,7 @@ import {
 } from '@/app/creators/donate/types';
 
 import { useCreators } from '../hooks/use-creators';
+import { TopBar } from '../landing/components/top-bar';
 
 import { Leaderboard } from './components/leaderboard';
 import { DonateForm } from './components/donate-form';

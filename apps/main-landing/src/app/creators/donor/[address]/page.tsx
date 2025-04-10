@@ -5,7 +5,6 @@ import { useCallback, useMemo, useState } from 'react';
 import { EMPTY_HEX } from '@idriss-xyz/constants';
 
 import { RainbowKitProviders } from '@/app/creators/donate/providers';
-import { TopBar } from '@/components';
 import { backgroundLines2 } from '@/assets';
 import { DonateContentValues } from '@/app/creators/donate/types';
 import { useGetDonorHistory } from '@/app/creators/donor/commands/get-donor-history';
@@ -13,6 +12,7 @@ import { DonateHistory } from '@/app/creators/donate/components/donate-history';
 
 import DonorStatsList from '../components/donor-stats-list';
 import { useCreators } from '../../hooks/use-creators';
+import { TopBar } from '../../landing/components/top-bar';
 
 // ts-unused-exports:disable-next-line
 export default function Donor() {
