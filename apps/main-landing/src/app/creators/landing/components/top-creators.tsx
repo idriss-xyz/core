@@ -28,7 +28,7 @@ export const TopCreators = () => {
 
           <p
             className={classes(
-              'text-balance text-center text-body4 text-neutralGreen-900',
+              'text-balance text-center text-body4 text-neutralGreen-900/70',
               'md:text-body3',
               'lg:text-body2',
             )}

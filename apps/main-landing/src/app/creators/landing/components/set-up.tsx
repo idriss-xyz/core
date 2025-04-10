@@ -79,6 +79,7 @@ export const SetUp = () => {
                   size="large"
                   href="/creators"
                   intent="secondary"
+                  suffixIconName="IdrissArrowRight"
                 >
                   LEARN MORE
                 </Button>
@@ -87,7 +88,7 @@ export const SetUp = () => {
 
             <div
               className={classes(
-                'relative size-full px-4',
+                'size-full px-4',
                 'md:px-8',
                 'lg:py-11 lg:pr-12',
                 'xl:py-12 xl:pr-[56px]',
@@ -102,7 +103,7 @@ export const SetUp = () => {
               <img
                 alt=""
                 src={CREATORS_LINES.src}
-                className="absolute right-0 top-0 block h-full object-fill"
+                className="absolute right-0 top-0 block h-full object-contain"
               />
             </div>
           </div>

@@ -12,7 +12,7 @@ export const SupportSection = () => {
 
       <div className="relative overflow-hidden">
         <div className="z-1 py-10 pt-20 px-safe lg:py-[60px]">
-          <div className="container relative grid items-center gap-6 lg:grid-cols-[5fr,6fr]">
+          <div className="container relative grid items-center gap-6 lg:grid-cols-[1fr,1fr]">
             <div className="flex w-full flex-col items-center gap-4 lg:items-start">
               <h2
                 className={classes(

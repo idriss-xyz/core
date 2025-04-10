@@ -50,7 +50,7 @@ export const HeroSection = () => {
               'lg:text-left lg:text-body2',
             )}
           >
-            The creator monetization app that helps you earn more with instant
+            Creator monetization app that helps you earn more with instant
             payouts and near-zero platform cuts.
           </p>
 

@@ -3,7 +3,7 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 
 import { TokensShowcase } from '@/app/creators/landing/components/pros-section/tokens-showcase';
-import { DONORS_LEADERBOARD, FEE_CHARTS } from '@/app/creators/landing/assets';
+import { DONORS_LEADERBOARD, FEE_CHART } from '@/app/creators/landing/assets';
 
 import { ProsItem } from './pros-section/pros-item';
 
@@ -43,7 +43,7 @@ export const ProsSection = () => {
                 description="Stop losing a significant portion of your earnings to transaction fees and platform cuts. With IDRISS, you keep more of what you earn and offer your supporters a smooth, borderless way to contribute."
               />
 
-              <img src={FEE_CHARTS.src} className="w-full" alt="" />
+              <img src={FEE_CHART.src} className="w-full" alt="" />
 
               <GradientBorder
                 borderWidth={1}
