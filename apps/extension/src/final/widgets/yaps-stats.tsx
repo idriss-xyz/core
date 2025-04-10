@@ -140,7 +140,8 @@ const YapsStatsElement = ({
   containerForInjection,
 }: ElementProperties) => {
   const eventsLogger = useEventsLogger();
-  const displayIcon = isMainElement ?? isPopupElement;
+  const displayTooltip = isMainElement ?? isPopupElement;
+  const { username: locationUsername } = useLocationInfo();
   const [isHovered, setIsHovered] = useState(false);
   const [portal, setPortal] = useState<HTMLDivElement>();
 
@@ -155,7 +156,8 @@ const YapsStatsElement = ({
   );
 
   const enabled =
-    isProfilePage || !!isPopupElement || (isHovered && !!username);
+    (isProfilePage && username === locationUsername) ||
+    (isHovered && !!username);
 
   const yapsQuery = useCommandQuery({
     command: new GetYapsCommand({ username: username ?? '' }),
@@ -185,11 +187,11 @@ const YapsStatsElement = ({
 
     if (
       !noYaps &&
-      displayIcon &&
+      isMainElement &&
       !isOrganizationElement &&
       containerForInjection instanceof HTMLElement
     ) {
-      containerForInjection.style.marginBottom = isMainElement ? '24px' : '8px';
+      containerForInjection.style.marginBottom = '24px';
     }
 
     if (containerForInjection.parentElement instanceof HTMLElement) {
@@ -206,13 +208,7 @@ const YapsStatsElement = ({
     setPortal(newPortal);
 
     return cleanup;
-  }, [
-    noYaps,
-    displayIcon,
-    isMainElement,
-    isOrganizationElement,
-    containerForInjection,
-  ]);
+  }, [noYaps, isMainElement, isOrganizationElement, containerForInjection]);
 
   const onHover = useCallback(() => {
     setIsHovered(true);
@@ -220,13 +216,7 @@ const YapsStatsElement = ({
     void eventsLogger.track(EVENT.YAPS_STATS_HOVER);
   }, [eventsLogger, setIsHovered]);
 
-  if (
-    noYaps ||
-    !portal ||
-    !username ||
-    isOrganizationElement ||
-    !containerForInjection
-  ) {
+  if (!portal || !username || isOrganizationElement || !containerForInjection) {
     return null;
   }
 
@@ -234,7 +224,7 @@ const YapsStatsElement = ({
     <PortalWithTailwind container={portal}>
       <TradingCopilotTooltip
         onMouseEnter={onHover}
-        disableTooltip={!displayIcon}
+        disableTooltip={!displayTooltip}
         triggerClassName="block size-full"
         wrapperClassName="block size-full"
         className={classes(
@@ -261,25 +251,22 @@ const YapsStatsElement = ({
               )}
 
               {yapsQuery.isError && smartFollowersQuery.isError && (
-                <span>no data available</span>
+                <span>No data available</span>
               )}
             </>
           </div>
         }
       >
         <>
-          {displayIcon && (
+          {isMainElement && !noYaps && (
             <img
               alt=""
               src={KAITO_LOGO}
-              className={classes(
-                'absolute -bottom-4 left-1/2 z-1 size-8 -translate-x-1/2',
-                isPopupElement && '-bottom-3 size-6',
-              )}
+              className="absolute -bottom-4 left-1/2 z-1 size-8 -translate-x-1/2"
             />
           )}
 
-          {!isTweetElement && (
+          {!isTweetElement && !isPopupElement && !noYaps && (
             <span className="absolute right-0 top-0 size-full rounded-full border-2 border-[#32ffdc]" />
           )}
         </>
