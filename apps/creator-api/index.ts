@@ -13,6 +13,7 @@ import pushDonationRouter from './routes/push-donation';
 import overwriteDonationRouter from './routes/overwrite-donation';
 import refetchDonationRouter from './routes/refetch-donations';
 import refetchENSRouter from './routes/force-refresh-ens';
+import textToSpeechRouter from './routes/text-to-speech';
 import cors from 'cors';
 import { initializeDatabase } from './db/database';
 
@@ -26,10 +27,23 @@ initializeDatabase()
 
 const app: Application = express();
 app.use(express.json());
+
+const allowedOrigins = [
+  'https://www.idriss.xyz/creators/',
+  'https://idriss.xyz/creators/',
+  'http://localhost:3000',
+];
+
 app.use(
   cors({
-    origin: '*',
-  }),
+    origin: (origin, callback) => {
+      if (!origin) return callback(new Error('No origin not allowed by CORS'));
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error('Not allowed by CORS'));
+    }
+  })
 );
 
 const server = http.createServer(app);
@@ -41,6 +55,7 @@ app.use('/push-donation', pushDonationRouter);
 app.use('/overwrite-donation', overwriteDonationRouter);
 app.use('/refetch-donations', refetchDonationRouter);
 app.use('/force-refresh-ens', refetchENSRouter);
+app.use('/text-to-speech', textToSpeechRouter);
 
 const HOST = process.env.HOST;
 const PORT = Number(process.env.PORT) || 4000;
