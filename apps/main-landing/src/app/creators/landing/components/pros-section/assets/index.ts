@@ -1,0 +1,12 @@
+export { default as AAVEGOTCHI } from './aavegotchi.png';
+export { default as AXIE } from './axie.png';
+export { default as DAI } from './dai.png';
+export { default as DEGEN } from './degen.png';
+export { default as ETH } from './eth.png';
+export { default as IDRISS } from './idriss.png';
+export { default as PARAGONS } from './paragons.png';
+export { default as PENGU } from './pengu.png';
+export { default as PRIME } from './prime.png';
+export { default as RONIN } from './ronin.png';
+export { default as USDC } from './usdc.png';
+export { default as YIELD } from './yield.png';

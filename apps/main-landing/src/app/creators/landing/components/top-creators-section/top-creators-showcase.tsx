@@ -7,6 +7,7 @@ import {
   MarocosCard,
   OutstarCard,
   SmayroCard,
+  RubiusCard,
 } from '@/app/creators/landing/components/top-creators-section/assets';
 
 const creators = [
@@ -34,25 +35,48 @@ const creators = [
       <Icon name="TwitchOutlinedBold" size={32} className="text-mint-200" />
     ),
   },
+  {
+    name: 'Rubius',
+    followers: '90.2K',
+    image: RubiusCard.src,
+    platform: (
+      <Icon name="TwitchOutlinedBold" size={32} className="text-mint-200" />
+    ),
+  },
 ];
 
-export const TopCreatorsShowcase = () => {
+type Properties = {
+  reverse?: boolean;
+  className?: string;
+  sliderClassName?: string;
+};
+
+export const TopCreatorsShowcase = ({
+  reverse,
+  className,
+  sliderClassName,
+}: Properties) => {
+  const creatorsToMap = reverse ? creators.reverse() : creators;
+
   return (
     <Marquee
-      gap="md"
-      className="container"
-      items={creators.map((creator, index) => {
+      gap="sm"
+      reverse={reverse}
+      displaySideBlur={false}
+      sliderClassName={sliderClassName}
+      className={classes('w-full', className)}
+      items={creatorsToMap.map((creator, index) => {
         return (
           <div
             key={`top-creators-slide-${index}`}
-            className="relative size-full min-w-[350px] overflow-hidden rounded-[36px]"
+            className="relative size-full min-w-[250px] overflow-hidden rounded-[36px] lg:min-w-[350px]"
           >
             <span className="absolute right-0 top-0 z-0 size-full bg-[linear-gradient(180deg,_rgba(255,255,255,0)_47.96%,_rgba(5,171,19,0.5)_80.74%)]" />
 
             <img
               alt=""
               src={creator.image}
-              className="z-1 block aspect-[4/5] size-full min-h-full max-w-[400px] object-cover"
+              className="z-1 block aspect-[4/5] size-full min-h-full max-w-[250px] object-cover lg:max-w-[400px]"
             />
 
             <div className="absolute bottom-6 left-6 flex w-[calc(100%-3rem)] flex-col items-start gap-y-2 rounded-3xl bg-white/40 p-4 shadow-card">

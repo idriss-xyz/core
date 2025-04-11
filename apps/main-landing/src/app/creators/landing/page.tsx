@@ -1,13 +1,12 @@
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 
-import { Footer } from '@/components';
-
 import { TopBar } from './components/top-bar';
-import { SupportSection } from './components/support-section';
+import { PlatformsSection } from './components/platforms-section';
 import { HeroSection } from './components/hero-section';
 import { ProsSection } from './components/pros-section';
 import { SetUp } from './components/set-up';
 import { TopCreators } from './components/top-creators';
+import { Footer } from './components/footer';
 
 // ts-unused-exports:disable-next-line
 export default function Landing() {
@@ -23,7 +22,7 @@ export default function Landing() {
 
           <main>
             <HeroSection />
-            <SupportSection />
+            <PlatformsSection />
             <ProsSection />
             <SetUp />
             <TopCreators />

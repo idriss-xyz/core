@@ -31,6 +31,7 @@ import {
   HandCoins,
   TrendingUp,
   Trophy,
+  BadgeDollarSign,
 } from 'lucide-react';
 
 import * as customIcons from './custom';
@@ -68,5 +69,6 @@ export const ICON = {
   HandCoins,
   TrendingUp,
   Trophy,
+  BadgeDollarSign,
   ...customIcons,
 };

@@ -1,6 +1,20 @@
-import { Icon } from '@idriss-xyz/ui/icon';
 import { Marquee } from '@idriss-xyz/ui/marquee';
 import { classes } from '@idriss-xyz/ui/utils';
+
+import {
+  AAVEGOTCHI,
+  AXIE,
+  DAI,
+  DEGEN,
+  ETH,
+  IDRISS,
+  PARAGONS,
+  PENGU,
+  PRIME,
+  RONIN,
+  USDC,
+  YIELD,
+} from './assets';
 
 type Properties = {
   className?: string;
@@ -8,47 +22,55 @@ type Properties = {
 
 const tokens = [
   {
-    name: 'Solana',
-    icon: <Icon name="EthCircled" size={60} />,
+    name: 'Idriss',
+    image: IDRISS.src,
   },
   {
-    name: 'Shiba',
-    icon: <Icon name="EthCircled" size={60} />,
+    name: 'Eth',
+    image: ETH.src,
   },
   {
-    name: 'Bitcoin',
-    icon: <Icon name="EthCircled" size={60} />,
+    name: 'Usdc',
+    image: USDC.src,
   },
   {
-    name: 'USD',
-    icon: <Icon name="EthCircled" size={60} />,
+    name: 'Dai',
+    image: DAI.src,
   },
   {
-    name: 'Polkadot',
-    icon: <Icon name="EthCircled" size={60} />,
+    name: 'Aavegotchi',
+    image: AAVEGOTCHI.src,
+  },
+  {
+    name: 'Prime',
+    image: PRIME.src,
   },
 ];
 
 const tokens2 = [
   {
-    name: 'Solana',
-    icon: <Icon name="EthCircled" size={60} />,
+    name: 'Yield Guild Games',
+    image: YIELD.src,
   },
   {
-    name: 'Shiba',
-    icon: <Icon name="EthCircled" size={60} />,
+    name: 'Ronin',
+    image: RONIN.src,
   },
   {
-    name: 'Bitcoin',
-    icon: <Icon name="EthCircled" size={60} />,
+    name: 'Axie',
+    image: AXIE.src,
   },
   {
-    name: 'USD',
-    icon: <Icon name="EthCircled" size={60} />,
+    name: 'ParagonsDAO',
+    image: PARAGONS.src,
   },
   {
-    name: 'Polkadot',
-    icon: <Icon name="EthCircled" size={60} />,
+    name: 'Degen',
+    image: DEGEN.src,
+  },
+  {
+    name: 'Pengu',
+    image: PENGU.src,
   },
 ];
 
@@ -61,17 +83,33 @@ export const TokensShowcase = ({ className }: Properties) => {
       )}
     >
       <Marquee
+        gap="md"
         className="container"
-        items={tokens.map((token) => {
-          return token.icon;
+        items={tokens.map((token, index) => {
+          return (
+            <img
+              alt=""
+              src={token.image}
+              className="block size-[60px] min-w-max"
+              key={`token-showcase-${token.name}-${index}`}
+            />
+          );
         })}
       />
 
       <Marquee
+        gap="md"
         className="container"
         sliderClassName="ml-[60px]"
-        items={tokens2.map((token) => {
-          return token.icon;
+        items={tokens2.map((token, index) => {
+          return (
+            <img
+              alt=""
+              src={token.image}
+              className="block size-[60px] min-w-max"
+              key={`token-showcase-${token.name}-${index}`}
+            />
+          );
         })}
       />
     </div>

@@ -11,8 +11,8 @@ export const ProsSection = () => {
   return (
     <section className="relative">
       <div className="bg-[linear-gradient(114deg,_#022B1E_34.81%,_#079165_123.57%)] py-10 px-safe lg:py-20">
-        <div className="container relative">
-          <div className="mb-10 flex w-full flex-col items-center gap-2 lg:mb-20">
+        <div className="container relative flex flex-col items-start gap-y-10 lg:gap-y-20">
+          <div className="flex w-full flex-col items-center gap-2">
             <h2
               className={classes(
                 'text-center text-display5 uppercase text-midnightGreen-100',
@@ -25,9 +25,7 @@ export const ProsSection = () => {
 
             <p
               className={classes(
-                'text-balance text-center text-body5 text-midnightGreen-200',
-                'md:text-body4',
-                'lg:text-body3',
+                'text-center text-body3 text-midnightGreen-200 lg:text-balance',
               )}
             >
               More earnings, more ways to get paid, and more reasons for your
@@ -35,15 +33,19 @@ export const ProsSection = () => {
             </p>
           </div>
 
-          <div className="flex flex-col gap-6">
-            <div className="relative grid items-center gap-6 rounded-[24px] p-8 lg:grid-cols-[1fr,1fr]">
+          <div className="flex w-full flex-col gap-4 lg:gap-6">
+            <div className="relative grid items-center gap-x-8 gap-y-4 overflow-hidden rounded-[24px] p-4 py-8 pb-0 lg:grid-cols-[1fr,1fr] lg:p-8">
               <ProsItem
                 iconName="TrendingUp"
                 heading="More revenue, less fees"
                 description="Stop losing a significant portion of your earnings to transaction fees and platform cuts. With IDRISS, you keep more of what you earn and offer your supporters a smooth, borderless way to contribute."
               />
 
-              <img src={FEE_CHART.src} className="w-full" alt="" />
+              <img
+                alt=""
+                src={FEE_CHART.src}
+                className="ml-[calc((100%-680px)/2)] w-[600px] max-w-fit object-contain sm:mx-auto sm:w-full"
+              />
 
               <GradientBorder
                 borderWidth={1}
@@ -54,14 +56,14 @@ export const ProsSection = () => {
               />
             </div>
 
-            <div className="flex flex-col gap-6 lg:grid lg:grid-cols-2">
-              <div className="relative flex flex-col items-start gap-6 rounded-[24px] p-8">
+            <div className="flex w-full flex-col gap-4 lg:grid lg:grid-cols-2 lg:gap-6">
+              <div className="relative flex flex-col items-start rounded-[24px] p-4 py-8 lg:p-8">
                 <ProsItem
                   iconName="HandCoins"
                   heading="More ways to donate"
                   description="Let your supporters contribute in the way that suits them best. Accept payments in a variety of top cryptocurrencies."
                 >
-                  <TokensShowcase className="mt-16" />
+                  <TokensShowcase className="my-16" />
                 </ProsItem>
 
                 <GradientBorder
@@ -73,7 +75,7 @@ export const ProsSection = () => {
                 />
               </div>
 
-              <div className="relative flex flex-col items-start gap-6 rounded-[24px] p-8">
+              <div className="relative flex flex-col items-start gap-y-10 rounded-[24px] p-4 py-8 lg:gap-y-8 lg:p-8">
                 <ProsItem
                   iconName="Trophy"
                   heading="More fun and recognition"
@@ -81,9 +83,9 @@ export const ProsSection = () => {
                 />
 
                 <img
-                  src={DONORS_LEADERBOARD.src}
-                  className="mx-auto -mb-8 mt-10 w-full max-w-[300px]"
                   alt=""
+                  src={DONORS_LEADERBOARD.src}
+                  className="mx-auto -mb-8 mt-auto w-full max-w-[300px]"
                 />
 
                 <GradientBorder

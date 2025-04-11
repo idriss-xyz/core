@@ -18,7 +18,9 @@ export const ProsItem = ({
   description,
 }: Properties) => {
   return (
-    <div className={classes('flex w-full flex-col items-start', className)}>
+    <div
+      className={classes('flex w-full flex-col items-start gap-y-2', className)}
+    >
       <Icon
         size={32}
         name={iconName}
@@ -27,7 +29,7 @@ export const ProsItem = ({
 
       <h3
         className={classes(
-          'mt-4 max-w-[500px] text-heading4 text-midnightGreen-100',
+          'max-w-[500px] text-heading4 text-midnightGreen-100',
           'md:text-heading3',
           'lg:text-heading2',
         )}
@@ -37,9 +39,7 @@ export const ProsItem = ({
 
       <p
         className={classes(
-          'mt-2 max-w-[510px] text-balance text-body6 text-midnightGreen-200',
-          'md:text-body5',
-          'lg:text-body4',
+          'max-w-[510px] text-body4 text-midnightGreen-200 lg:text-balance',
         )}
       >
         {description}

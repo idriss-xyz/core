@@ -4,7 +4,11 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { Button } from '@idriss-xyz/ui/button';
 import { Icon } from '@idriss-xyz/ui/icon';
 
-import { CREATORS_FORM, CREATORS_LINES } from '@/app/creators/landing/assets';
+import {
+  CREATORS_FORM,
+  CREATORS_LINES,
+  CREATORS_LINES_MOBILE,
+} from '@/app/creators/landing/assets';
 import { IDRISS_SCENE_STREAM } from '@/assets';
 
 export const SetUp = () => {
@@ -12,19 +16,16 @@ export const SetUp = () => {
     <div className="relative z-1 overflow-visible px-safe">
       <div
         className={classes(
-          'container flex flex-col items-center justify-center py-10',
-          'md:py-[60px]',
-          'lg:py-[116px]',
-          '4xl:py-[128px]',
+          'flex flex-col items-center justify-center lg:container',
+          'lg:pt-20',
         )}
       >
         <div className="flex w-full flex-col items-center">
-          <div className="relative grid w-full gap-12 rounded-[40px] bg-[linear-gradient(113.57deg,_#022B1E_34.81%,_#079165_123.57%)] py-8 md:py-10 lg:grid-cols-[6fr,4fr] lg:gap-14 lg:py-0 xl:gap-16">
+          <div className="relative grid w-full gap-x-12 gap-y-10 bg-[linear-gradient(113.57deg,_#022B1E_34.81%,_#079165_123.57%)] pt-8 md:pt-10 lg:grid-cols-[5.5fr,4.5fr] lg:gap-14 lg:rounded-[40px] lg:py-0 xl:gap-16">
             <div
               className={classes(
-                'flex flex-col items-start justify-center gap-10 px-4',
-                'md:px-8',
-                'lg:py-11 lg:pl-12',
+                'flex flex-col items-start justify-center gap-y-8 px-4',
+                'lg:py-11 lg:pl-12 lg:pr-0',
                 'xl:py-12 xl:pl-[56px]',
               )}
             >
@@ -36,38 +37,39 @@ export const SetUp = () => {
                 3-minute setup
               </span>
 
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-y-6">
                 <h2
                   className={classes(
-                    'text-display5 uppercase text-white',
+                    'whitespace-pre-wrap text-display5 uppercase text-midnightGreen-100',
                     'md:text-display4',
                     'lg:text-display3',
                   )}
                 >
-                  SET UP IN JUST A FEW CLICKS
+                  SET UP IN JUST{'\n'}
+                  A&nbsp;FEW CLICKS
                 </h2>
 
-                <ul className="flex flex-col gap-6 text-neutralGreen-700">
-                  <li className="flex flex-row items-center gap-4">
+                <ul className="flex flex-col gap-y-6">
+                  <li className="flex flex-row items-center gap-x-4">
                     <Icon size={22} name="Hexagon" className="text-mint-400" />
 
-                    <p className="text-body5 text-midnightGreen-200 md:text-body4 lg:text-body3">
+                    <p className="text-body3 text-midnightGreen-200">
                       Create your donation link
                     </p>
                   </li>
 
-                  <li className="flex flex-row items-center gap-4">
+                  <li className="flex flex-row items-center gap-x-4">
                     <Icon size={22} name="Hexagon" className="text-mint-400" />
 
-                    <p className="text-body5 text-midnightGreen-200 md:text-body4 lg:text-body3">
+                    <p className="text-body3 text-midnightGreen-200">
                       Add donation alerts to your OBS
                     </p>
                   </li>
 
-                  <li className="flex flex-row items-center gap-4">
+                  <li className="flex flex-row items-center gap-x-4">
                     <Icon size={22} name="Hexagon" className="text-mint-400" />
 
-                    <p className="text-body5 text-midnightGreen-200 md:text-body4 lg:text-body3">
+                    <p className="text-body3 text-midnightGreen-200">
                       Boost visibility with a banner for your bio
                     </p>
                   </li>
@@ -88,22 +90,27 @@ export const SetUp = () => {
 
             <div
               className={classes(
-                'size-full px-4',
-                'md:px-8',
+                'size-full pb-8 pt-[168px] md:pb-10',
                 'lg:py-11 lg:pr-12',
-                'xl:py-12 xl:pr-[56px]',
+                'relative xl:py-12 xl:pr-[56px]',
               )}
             >
               <img
                 alt=""
                 src={CREATORS_FORM.src}
-                className="relative z-1 block h-full max-h-[450px] object-contain md:max-h-[550px] lg:ml-auto lg:max-h-none"
+                className="relative z-1 block h-full max-h-[550px] object-contain px-4 lg:ml-auto lg:max-h-none lg:px-0"
+              />
+
+              <img
+                alt=""
+                src={CREATORS_LINES_MOBILE.src}
+                className="absolute inset-x-0 top-0 block w-full max-w-[450px] object-contain lg:hidden"
               />
 
               <img
                 alt=""
                 src={CREATORS_LINES.src}
-                className="absolute right-0 top-0 block h-full object-contain"
+                className="absolute right-0 top-0 hidden h-full object-contain lg:block"
               />
             </div>
           </div>
@@ -111,7 +118,7 @@ export const SetUp = () => {
           <img
             alt=""
             src={IDRISS_SCENE_STREAM.src}
-            className="pointer-events-none absolute left-0 top-0 -z-10 size-full overflow-visible object-cover"
+            className="pointer-events-none absolute left-0 top-0 -z-10 hidden size-full overflow-visible object-cover lg:block"
           />
         </div>
       </div>

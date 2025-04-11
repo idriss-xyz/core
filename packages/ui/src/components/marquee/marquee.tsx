@@ -4,26 +4,40 @@ import { ReactNode, useEffect, useState } from 'react';
 import { classes } from '../../utils';
 
 type Properties = {
-  gap?: 'md' | 'lg';
+  reverse?: boolean;
   items: ReactNode[];
-  pauseOnHover?: boolean;
   className?: string;
+  pauseOnHover?: boolean;
   sliderClassName?: string;
+  gap?: 'sm' | 'md' | 'lg';
+  displaySideBlur?: boolean;
 };
 
 export const Marquee = ({
-  gap,
   items,
-  pauseOnHover = true,
   className,
+  gap = 'lg',
   sliderClassName,
+  reverse = false,
+  pauseOnHover = true,
+  displaySideBlur = true,
 }: Properties) => {
   const [isRendered, setIsRendered] = useState(false);
 
-  const listGapClassName = gap === 'md' ? 'pl-6 lg:pl-8' : 'pl-10 lg:pl-[60px]';
+  const gapClassMap: Record<string, string> = {
+    sm: 'pl-2 lg:pl-8',
+    md: 'pl-8 lg:pl-10',
+    lg: 'pl-10 lg:pl-[60px]',
+  };
 
-  const spaceClassName =
-    gap === 'md' ? 'space-x-6 lg:space-x-8' : 'space-x-10 lg:space-x-[60px]';
+  const spaceClassMap: Record<string, string> = {
+    sm: 'space-x-2 lg:space-x-8',
+    md: 'space-x-8 lg:space-x-10',
+    lg: 'space-x-10 lg:space-x-[60px]',
+  };
+
+  const listGapClassName = gapClassMap[gap];
+  const spaceClassName = spaceClassMap[gap];
 
   useEffect(() => {
     setIsRendered(true);
@@ -32,7 +46,8 @@ export const Marquee = ({
   return (
     <div
       className={classes(
-        'group relative flex items-center justify-start overflow-clip side-blur',
+        'group relative flex items-center justify-start overflow-clip',
+        displaySideBlur && 'side-blur',
         className,
       )}
     >
@@ -41,7 +56,8 @@ export const Marquee = ({
           'flex list-none whitespace-nowrap will-change-[transform]',
           listGapClassName,
           spaceClassName,
-          isRendered && 'animate-marquee',
+          isRendered &&
+            (reverse ? 'animate-marquee-reverse' : 'animate-marquee'),
           pauseOnHover &&
             'group-focus-within:paused-animation group-hover:paused-animation',
           sliderClassName,
@@ -51,7 +67,7 @@ export const Marquee = ({
           return (
             <li
               key={index}
-              className="flex cursor-pointer items-center space-x-2"
+              className="flex min-w-max cursor-pointer items-center space-x-2"
             >
               {item}
             </li>
@@ -64,7 +80,8 @@ export const Marquee = ({
           'absolute flex list-none whitespace-nowrap will-change-[transform]',
           listGapClassName,
           spaceClassName,
-          isRendered && 'animate-marquee2',
+          isRendered &&
+            (reverse ? 'animate-marquee2-reverse' : 'animate-marquee2'),
           pauseOnHover &&
             'group-focus-within:paused-animation group-hover:paused-animation',
           sliderClassName,
@@ -74,7 +91,7 @@ export const Marquee = ({
           return (
             <li
               key={index}
-              className="flex cursor-pointer items-center space-x-2"
+              className="flex min-w-max cursor-pointer items-center space-x-2"
             >
               {item}
             </li>

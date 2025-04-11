@@ -1,7 +1,5 @@
 import { Button } from '@idriss-xyz/ui/button';
 
-import { INTERNAL_LINK } from '@/constants';
-
 import { Menu } from './menu';
 import { Socials } from './socials';
 
@@ -23,8 +21,8 @@ export const Desktop = ({ hideNavigation, displayCTA }: Properties) => {
             asLink
             size="medium"
             intent="primary"
+            href="/creators"
             aria-label="Start earning"
-            href={INTERNAL_LINK.SUPERPOWERS}
             suffixIconName="IdrissArrowRight"
           >
             START EARNING

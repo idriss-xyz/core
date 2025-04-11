@@ -102,6 +102,7 @@ export default {
     },
     extend: {
       screens: {
+        'sm': '576px',
         'md': '768px',
         '2xl': '1440px',
         '3xl': '1536px',
@@ -285,6 +286,8 @@ export default {
         'collapsible-slide-up': 'collapsibleSlideUp 200ms ease-out',
         'marquee': 'marquee 35s linear infinite',
         'marquee2': 'marquee2 35s linear infinite',
+        'marquee-reverse': 'marquee-reverse 35s linear infinite',
+        'marquee2-reverse': 'marquee2-reverse 35s linear infinite',
         'fade-in': 'fade-in 200ms ease-out',
         'fade-out': 'fade-out 200ms ease-in',
         'slide-in-from-top': 'slide-in-from-top 200ms ease-out',
@@ -319,6 +322,14 @@ export default {
         },
         'marquee2': {
           '0%': { transform: 'translateX(100%)' },
+          '100%': { transform: 'translateX(0%)' },
+        },
+        'marquee-reverse': {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(100%)' },
+        },
+        'marquee2-reverse': {
+          '0%': { transform: 'translateX(-100%)' },
           '100%': { transform: 'translateX(0%)' },
         },
         'swipeRight': {
