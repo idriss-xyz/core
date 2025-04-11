@@ -2,6 +2,7 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { Marquee } from '@idriss-xyz/ui/marquee';
 import { classes } from '@idriss-xyz/ui/utils';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
+import { Link } from '@idriss-xyz/ui/link';
 
 import {
   MarocosCard,
@@ -15,33 +16,45 @@ const creators = [
     name: 'Marocos231',
     followers: '232.9K',
     image: MarocosCard.src,
-    platform: (
-      <Icon name="TwitchOutlinedBold" size={32} className="text-mint-200" />
-    ),
+    platform: {
+      url: 'https://twitch.tv',
+      icon: (
+        <Icon name="TwitchOutlinedBold" size={32} className="text-mint-200" />
+      ),
+    },
   },
   {
     name: 'Smayro',
     followers: '100.9K',
     image: SmayroCard.src,
-    platform: (
-      <Icon name="TwitchOutlinedBold" size={32} className="text-mint-200" />
-    ),
+    platform: {
+      url: 'https://twitch.tv',
+      icon: (
+        <Icon name="TwitchOutlinedBold" size={32} className="text-mint-200" />
+      ),
+    },
   },
   {
     name: 'Outstar',
     followers: '65.6K',
     image: OutstarCard.src,
-    platform: (
-      <Icon name="TwitchOutlinedBold" size={32} className="text-mint-200" />
-    ),
+    platform: {
+      url: 'https://twitch.tv',
+      icon: (
+        <Icon name="TwitchOutlinedBold" size={32} className="text-mint-200" />
+      ),
+    },
   },
   {
     name: 'Rubius',
     followers: '90.2K',
     image: RubiusCard.src,
-    platform: (
-      <Icon name="TwitchOutlinedBold" size={32} className="text-mint-200" />
-    ),
+    platform: {
+      url: 'https://twitch.tv',
+      icon: (
+        <Icon name="TwitchOutlinedBold" size={32} className="text-mint-200" />
+      ),
+    },
   },
 ];
 
@@ -107,7 +120,15 @@ export const TopCreatorsShowcase = ({
                 >
                   {creator.name}
                 </span>
-                {creator.platform}
+
+                <Link
+                  isExternal
+                  size="medium"
+                  className="border-none p-0"
+                  href={creator.platform.url}
+                >
+                  {creator.platform.icon}
+                </Link>
               </div>
             </div>
           </div>

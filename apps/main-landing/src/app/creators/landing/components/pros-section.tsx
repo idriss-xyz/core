@@ -1,13 +1,35 @@
+'use client';
 /* eslint-disable @next/next/no-img-element */
 import { classes } from '@idriss-xyz/ui/utils';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
 
 import { TokensShowcase } from '@/app/creators/landing/components/pros-section/tokens-showcase';
-import { DONORS_LEADERBOARD, FEE_CHART } from '@/app/creators/landing/assets';
+import {
+  CREATORS_DONATE_1,
+  CREATORS_DONATE_2,
+  DONORS_LEADERBOARD,
+  FEE_CHART,
+} from '@/app/creators/landing/assets';
 
 import { ProsItem } from './pros-section/pros-item';
 
 export const ProsSection = () => {
+  const [activeWrapper, setActiveWrapper] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveWrapper((previous) => {
+        return previous === 0 ? 1 : 0;
+      });
+    }, 5000);
+
+    return () => {
+      return clearInterval(interval);
+    };
+  }, []);
+
   return (
     <section className="relative">
       <div className="bg-[linear-gradient(114deg,_#022B1E_34.81%,_#079165_123.57%)] py-10 px-safe lg:py-20">
@@ -75,18 +97,59 @@ export const ProsSection = () => {
                 />
               </div>
 
-              <div className="relative flex flex-col items-start gap-y-10 rounded-[24px] p-4 py-8 lg:gap-y-8 lg:p-8">
+              <div className="relative flex flex-col items-start gap-y-10 overflow-hidden rounded-[24px] p-4 py-8 lg:gap-y-8 lg:p-8">
                 <ProsItem
                   iconName="Trophy"
                   heading="More fun and recognition"
                   description="Give your fans a reason to show up and give more. With donation alerts and leaderboards you engage and recognize your loyal supporters."
                 />
 
-                <img
-                  alt=""
-                  src={DONORS_LEADERBOARD.src}
-                  className="mx-auto -mb-8 mt-auto w-full max-w-[300px]"
-                />
+                <AnimatePresence initial={false} mode="wait">
+                  {activeWrapper === 0 ? (
+                    <motion.div
+                      animate={{ x: 0 }}
+                      exit={{ x: '-100%' }}
+                      initial={{ x: '100%' }}
+                      transition={{
+                        damping: 30,
+                        type: 'spring',
+                        stiffness: 300,
+                      }}
+                      className="-mb-8 mt-auto flex w-full"
+                    >
+                      <img
+                        alt=""
+                        src={DONORS_LEADERBOARD.src}
+                        className="mx-auto w-full max-w-[300px]"
+                      />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="wrapper2"
+                      animate={{ x: 0 }}
+                      exit={{ x: '-100%' }}
+                      initial={{ x: '100%' }}
+                      transition={{
+                        damping: 30,
+                        type: 'spring',
+                        stiffness: 300,
+                      }}
+                      className="mt-auto flex w-full flex-col items-center gap-y-5"
+                    >
+                      <img
+                        alt=""
+                        src={CREATORS_DONATE_1.src}
+                        className="ml-5 w-max max-w-full sm:ml-auto sm:max-w-[430px]"
+                      />
+
+                      <img
+                        alt=""
+                        src={CREATORS_DONATE_2.src}
+                        className="mr-5 w-max max-w-full sm:mr-auto sm:max-w-[430px]"
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
                 <GradientBorder
                   borderWidth={1}
