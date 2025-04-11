@@ -101,6 +101,34 @@ export const resolveEnsName = async (address: Hex): Promise<string | null> => {
   }
 };
 
+export const getTextToSpeech = async (text: string) => {
+  try {
+    const response = await fetch(
+      `https://api.idriss.xyz/v1/text-to-speech`, // TODO: Check if correct url for creator-api
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text }),
+      }
+    );
+    if (!response.ok) {
+      console.error(
+        `Idriss API error: ${response.status} ${response.statusText}`,
+      );
+      return null;
+    }
+    const data = await response.json();
+    console.log("getTextToSpeech data", data)
+    return data;
+  } catch (error) {
+    console.error('Error in getTextToSpeech:', error);
+    return null;
+  }
+
+}
+
 export const TIP_MESSAGE_EVENT_ABI: Record<string, string> = {
   base: 'event TipMessage(address indexed recipientAddress, string message, address indexed sender, address indexed tokenAddress, uint256 amount, uint256 fee)',
   ethereum:
