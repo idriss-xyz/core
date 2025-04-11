@@ -34,11 +34,9 @@ router.post('/', validationRules, async (req: Request, res: Response) => {
       body: JSON.stringify({ text }),
     });
 
-    console.log('Response from 11labs: ', response);
-
     res
       .status(200)
-      .json({ speech: response });
+      .json({ speech: response.body });
   }
   catch (error) {
     console.error('Text to speech error: ', error);
