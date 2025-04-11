@@ -28,21 +28,9 @@ initializeDatabase()
 const app: Application = express();
 app.use(express.json());
 
-const allowedOrigins = [
-  'https://www.idriss.xyz/creators/',
-  'https://idriss.xyz/creators/',
-  'http://localhost:3000',
-];
-
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (!origin) return callback(new Error('No origin not allowed by CORS'));
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-      return callback(new Error('Not allowed by CORS'));
-    }
+    origin: '*',
   })
 );
 
