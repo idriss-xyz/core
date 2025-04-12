@@ -3,7 +3,7 @@ import { CHAIN } from '@idriss-xyz/constants';
 
 const clientBase = createPublicClient({
   chain: CHAIN.BASE,
-  transport: http(),
+  transport: http('https://1rpc.io/base'),
 });
 
 export const clientEthereum = createPublicClient({
