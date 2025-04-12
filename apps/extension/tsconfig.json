@@ -12,6 +12,6 @@
       "assets/*": ["src/assets/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "tests"],
   "exclude": ["node_modules"]
 }

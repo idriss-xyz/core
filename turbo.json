@@ -75,6 +75,18 @@
         "build"
       ]
     },
+    "@idriss-xyz/extension#e2e": {
+      "cache": false,
+      "env": [
+        "E2E_TWITTER_TEST_EMAIL",
+        "E2E_TWITTER_TEST_USERNAME",
+        "E2E_TWITTER_TEST_PASSWORD"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env.e2e"
+      ]
+    },
     "@idriss-xyz/copilot-api#dev": {
       "cache": false,
       "persistent": true,
