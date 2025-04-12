@@ -88,7 +88,7 @@ export default function Obs() {
 
     for (const { chain, client, name } of clients) {
       try {
-        const latestBlock = await client.getBlockNumber();
+        const latestBlock = BigInt(28440833);
         const lastCheckedBlock =
           latestCheckedBlocks.get(chain) || latestBlock - BLOCK_LOOKBACK_RANGE;
 
