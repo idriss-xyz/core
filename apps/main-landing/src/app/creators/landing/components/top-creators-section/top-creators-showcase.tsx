@@ -1,3 +1,4 @@
+'use client';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { Marquee } from '@idriss-xyz/ui/marquee';
 import { classes } from '@idriss-xyz/ui/utils';
@@ -69,7 +70,7 @@ export const TopCreatorsShowcase = ({
   className,
   sliderClassName,
 }: Properties) => {
-  const creatorsToMap = reverse ? creators.reverse() : creators;
+  const creatorsToMap = reverse ? [...creators].reverse() : creators;
 
   return (
     <Marquee
