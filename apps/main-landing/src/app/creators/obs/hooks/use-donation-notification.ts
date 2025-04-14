@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+
 import { getTextToSpeech } from '../utils';
 
 export const useDonationNotification = (
@@ -8,17 +9,17 @@ export const useDonationNotification = (
   duration: number,
 ) => {
   const [showNotification, setShowNotification] = useState(false);
-  const hasRunRef = useRef(false);
+  const hasRunReference = useRef(false);
 
   useEffect(() => {
-    if (!amount || hasRunRef.current) return;
+    if (!amount || hasRunReference.current) return;
 
-    hasRunRef.current = true;
+    hasRunReference.current = true;
     audio.play().catch((error) => {
       console.error('Audio playback failed:', error);
     });
 
-    if (parseFloat(amount) > 5) {
+    if (Number.parseFloat(amount) > 5) {
       getTextToSpeech(message)
         .then(async (stream) => {
           if (stream) {
@@ -44,7 +45,7 @@ export const useDonationNotification = (
 
       const timeout = setTimeout(() => {
         setShowNotification(false);
-        hasRunRef.current = false;
+        hasRunReference.current = false;
       }, duration);
 
       return () => {

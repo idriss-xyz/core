@@ -88,8 +88,13 @@ export default function Obs() {
 
     for (const { chain, client, name } of clients) {
       try {
-        const latestBlock = chain===8453 ? BigInt(28_451_533): await client.getBlockNumber();
-        const lastCheckedBlock = chain===8453 ? BigInt(28_450_733) : latestCheckedBlocks.get(chain) || latestBlock - BLOCK_LOOKBACK_RANGE;
+        const latestBlock =
+          chain === 8453 ? BigInt(28_451_533) : await client.getBlockNumber();
+        const lastCheckedBlock =
+          chain === 8453
+            ? BigInt(28_450_733)
+            : latestCheckedBlocks.get(chain) ||
+              latestBlock - BLOCK_LOOKBACK_RANGE;
 
         if (latestBlock <= lastCheckedBlock) continue;
 
