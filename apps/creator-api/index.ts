@@ -31,7 +31,7 @@ app.use(express.json());
 app.use(
   cors({
     origin: '*',
-  })
+  }),
 );
 
 const server = http.createServer(app);

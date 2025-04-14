@@ -1,6 +1,8 @@
 import { type Hex } from 'viem';
 import { CHAIN } from '@idriss-xyz/constants';
 import { clientEthereum } from '@idriss-xyz/blockchain-clients';
+import { CREATOR_API_URL } from '../donate/constants';
+
 const SELL_TOKEN_BY_NETWORK: Record<number, string> = {
   [CHAIN.BASE.id]: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',
   [CHAIN.ETHEREUM.id]: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
@@ -104,30 +106,27 @@ export const resolveEnsName = async (address: Hex): Promise<string | null> => {
 export const getTextToSpeech = async (text: string) => {
   try {
     const response = await fetch(
-      `https://api.idriss.xyz/v1/text-to-speech`, // TODO: Check if correct url for creator-api
+      `${CREATOR_API_URL}/text-to-speech`, // TODO: Check if correct url for creator-api
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ text }),
-      }
+      },
     );
     if (!response.ok) {
       console.error(
-        `Idriss API error: ${response.status} ${response.statusText}`,
+        `Creator API error: ${response.status} ${response.statusText}`,
       );
       return null;
     }
-    const data = await response.json();
-    console.log("getTextToSpeech data", data)
-    return data;
+    return response;
   } catch (error) {
-    console.error('Error in getTextToSpeech:', error);
+    console.error('Error fetching text-to-speech:', error);
     return null;
   }
-
-}
+};
 
 export const TIP_MESSAGE_EVENT_ABI: Record<string, string> = {
   base: 'event TipMessage(address indexed recipientAddress, string message, address indexed sender, address indexed tokenAddress, uint256 amount, uint256 fee)',
