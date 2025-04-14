@@ -4,12 +4,13 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { Button } from '@idriss-xyz/ui/button';
 import { Icon } from '@idriss-xyz/ui/icon';
 
+import { IDRISS_SCENE_STREAM } from '@/assets';
+
 import {
   CREATORS_FORM,
   CREATORS_LINES,
   CREATORS_LINES_MOBILE,
-} from '@/app/creators/landing/assets';
-import { IDRISS_SCENE_STREAM } from '@/assets';
+} from '../assets';
 
 export const SetUp = () => {
   return (

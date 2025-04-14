@@ -6,7 +6,8 @@ import {
   IDRISS_SCENE_STREAM_SHORT,
   IDRISS_SCENE_STREAM_SHORT_2,
 } from '@/assets';
-import { TopCreatorsShowcase } from '@/app/creators/landing/components/top-creators-section/top-creators-showcase';
+
+import { TopCreatorsShowcase } from './top-creators-section/top-creators-showcase';
 
 export const TopCreators = () => {
   return (

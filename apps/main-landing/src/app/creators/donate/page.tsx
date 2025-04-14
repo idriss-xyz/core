@@ -19,7 +19,7 @@ import {
 } from '@/app/creators/donate/types';
 
 import { useCreators } from '../hooks/use-creators';
-import { TopBar } from '../landing/components/top-bar';
+import { TopBar } from '../components/top-bar';
 
 import { Leaderboard } from './components/leaderboard';
 import { DonateForm } from './components/donate-form';

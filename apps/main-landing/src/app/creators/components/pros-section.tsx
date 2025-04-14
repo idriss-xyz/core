@@ -5,14 +5,14 @@ import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 
-import { TokensShowcase } from '@/app/creators/landing/components/pros-section/tokens-showcase';
 import {
   CREATORS_DONATE_1,
   CREATORS_DONATE_2,
   DONORS_LEADERBOARD,
   FEE_CHART,
-} from '@/app/creators/landing/assets';
+} from '../assets';
 
+import { TokensShowcase } from './pros-section/tokens-showcase';
 import { ProsItem } from './pros-section/pros-item';
 
 export const ProsSection = () => {

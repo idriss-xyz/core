@@ -5,12 +5,7 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { Link } from '@idriss-xyz/ui/link';
 
-import {
-  MarocosCard,
-  OutstarCard,
-  SmayroCard,
-  RubiusCard,
-} from '@/app/creators/landing/components/top-creators-section/assets';
+import { MarocosCard, OutstarCard, SmayroCard, RubiusCard } from './assets';
 
 const creators = [
   {

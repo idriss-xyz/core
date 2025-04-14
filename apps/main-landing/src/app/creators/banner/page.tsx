@@ -11,7 +11,7 @@ import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { backgroundLines2, backgroundLines3 } from '@/assets';
 
 import { Providers } from '../providers';
-import { TopBar } from '../landing/components/top-bar';
+import { TopBar } from '../components/top-bar';
 
 import {
   banner1,

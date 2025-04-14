@@ -3,7 +3,8 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 
 import { TopWave } from '@/components/superpowers-section/components/top-wave';
-import { IDRISS_ICON_STREAMING } from '@/app/creators/landing/assets';
+
+import { IDRISS_ICON_STREAMING } from '../assets';
 
 export const PlatformsSection = () => {
   return (
