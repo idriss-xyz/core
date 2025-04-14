@@ -17,12 +17,13 @@ export const PlatformsSection = () => {
             <div className="flex w-full flex-col items-center gap-4 lg:items-start">
               <h2
                 className={classes(
-                  'text-display5 uppercase gradient-text',
+                  'whitespace-pre-wrap text-display5 uppercase gradient-text',
                   'md:text-display4',
                   'lg:text-display3',
                 )}
               >
-                Get Paid Anywhere You Create
+                Get Paid Anywhere
+                {'\n'}You Create
               </h2>
 
               <p
