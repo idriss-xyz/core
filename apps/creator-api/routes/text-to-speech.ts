@@ -25,14 +25,14 @@ router.post('/', validationRules, async (req: Request, res: Response) => {
     const { text } = req.body;
 
     const response = await fetch(
-      `https://api.elevenlabs.io/v1/text-to-speech/21m00Tcm4TlvDq8ikWAM`,
+      `https://api.elevenlabs.io/v1/text-to-speech/TX3LPaxmHKxFdv7VOQHJ`,
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'xi-api-key': `${ELEVENLABS_API_KEY}`,
         },
-        body: JSON.stringify({ text }),
+        body: JSON.stringify({ text, model_id: 'eleven_multilingual_v2' }),
       },
     );
 

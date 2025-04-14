@@ -1,6 +1,7 @@
 import { type Hex } from 'viem';
 import { CHAIN } from '@idriss-xyz/constants';
 import { clientEthereum } from '@idriss-xyz/blockchain-clients';
+
 import { CREATOR_API_URL } from '../donate/constants';
 
 const SELL_TOKEN_BY_NETWORK: Record<number, string> = {
@@ -105,16 +106,13 @@ export const resolveEnsName = async (address: Hex): Promise<string | null> => {
 
 export const getTextToSpeech = async (text: string) => {
   try {
-    const response = await fetch(
-      `${CREATOR_API_URL}/text-to-speech`, // TODO: Check if correct url for creator-api
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ text }),
+    const response = await fetch(`${CREATOR_API_URL}/text-to-speech`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-    );
+      body: JSON.stringify({ text }),
+    });
     if (!response.ok) {
       console.error(
         `Creator API error: ${response.status} ${response.statusText}`,
