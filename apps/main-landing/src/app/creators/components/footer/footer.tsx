@@ -5,6 +5,7 @@ import { Button } from '@idriss-xyz/ui/button';
 import {
   PRIVACY_POLICY_LINK,
   TERMS_OF_SERVICE_LINK,
+  CREATORS_FORM_LINK,
 } from '@idriss-xyz/constants';
 import { classes } from '@idriss-xyz/ui/utils';
 
@@ -49,7 +50,7 @@ export const Footer = () => {
               size="medium"
               prefixIconName="BadgeDollarSign"
               className="mt-6 lg:mt-10"
-              href="/creators"
+              href={CREATORS_FORM_LINK}
               isExternal
               asLink
             >

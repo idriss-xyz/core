@@ -422,7 +422,7 @@ export default function Donors() {
               </Form>
             </div>
 
-            <Link size="xs" href="creators/banner" className="mb-4 mt-[38px]">
+            <Link size="xs" href="/creators/banner" className="mb-4 mt-[38px]">
               Download a banner for your bio
             </Link>
           </div>

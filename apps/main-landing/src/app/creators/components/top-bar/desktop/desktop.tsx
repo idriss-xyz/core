@@ -1,4 +1,5 @@
 import { Button } from '@idriss-xyz/ui/button';
+import { CREATORS_FORM_LINK } from '@idriss-xyz/constants';
 
 import { Menu } from './menu';
 import { Socials } from './socials';
@@ -21,7 +22,7 @@ export const Desktop = ({ hideNavigation, displayCTA }: Properties) => {
             asLink
             size="medium"
             intent="primary"
-            href="/creators"
+            href={CREATORS_FORM_LINK}
             aria-label="Start earning"
             suffixIconName="IdrissArrowRight"
           >

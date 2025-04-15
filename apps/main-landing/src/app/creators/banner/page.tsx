@@ -5,7 +5,7 @@ import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { useState } from 'react';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { classes } from '@idriss-xyz/ui/utils';
-import { ANNOUNCEMENT_LINK } from '@idriss-xyz/constants';
+import { ANNOUNCEMENT_LINK, CREATORS_FORM_LINK } from '@idriss-xyz/constants';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 
 import { backgroundLines2, backgroundLines3 } from '@/assets';
@@ -84,9 +84,9 @@ export default function Banner() {
             <IconButton
               asLink
               size="medium"
-              href="/creators"
               intent="tertiary"
               iconName="ArrowLeft"
+              href={CREATORS_FORM_LINK}
             />
             <h1 className="my-auto self-start text-balance text-heading4">
               Download a banner

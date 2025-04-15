@@ -3,6 +3,7 @@
 import { classes } from '@idriss-xyz/ui/utils';
 import { Button } from '@idriss-xyz/ui/button';
 import { Icon } from '@idriss-xyz/ui/icon';
+import { CREATORS_FORM_LINK } from '@idriss-xyz/constants';
 
 import { IDRISS_SCENE_STREAM } from '@/assets';
 
@@ -80,8 +81,8 @@ export const SetUp = () => {
                   asLink
                   isExternal
                   size="large"
-                  href="/creators"
                   intent="secondary"
+                  href={CREATORS_FORM_LINK}
                   suffixIconName="IdrissArrowRight"
                 >
                   LEARN MORE

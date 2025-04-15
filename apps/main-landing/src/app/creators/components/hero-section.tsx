@@ -2,6 +2,7 @@
 'use client';
 import { Button } from '@idriss-xyz/ui/button';
 import { classes } from '@idriss-xyz/ui/utils';
+import { CREATORS_FORM_LINK } from '@idriss-xyz/constants';
 
 import { backgroundLines } from '@/assets';
 
@@ -59,7 +60,7 @@ export const HeroSection = () => {
             size="large"
             className="z-1"
             intent="primary"
-            href="/creators"
+            href={CREATORS_FORM_LINK}
             aria-label="Start earning now"
             suffixIconName="IdrissArrowRight"
           >
