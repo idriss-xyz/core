@@ -179,7 +179,7 @@ export const useSolanaExchanger = ({ wallet }: SolanaExchangerProperties) => {
         value: amountInLamports,
         to: quoteData.transactionData.to,
         routeOptions: {
-          slippage: '0.02', // TODO: Get slippage from form (optionally)
+          slippage: '0.04', // Set as 4% in reference to Jupiter's slippage
         },
       };
 
