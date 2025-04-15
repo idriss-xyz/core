@@ -13,13 +13,14 @@ dotenv.config(
 
 const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
 const ELEVENLABS_VOICE_ID = 'TX3LPaxmHKxFdv7VOQHJ';
+const MAX_REQUESTS_PER_MINUTE = 3;
 const router = express.Router();
 
 const validationRules = [body('text').isString().notEmpty()];
 
 const requestLimitation = rateLimit({
   windowMs: 60 * 1000,
-  limit: 2,
+  limit: MAX_REQUESTS_PER_MINUTE,
   message: 'Too many requests, please try again later.',
   standardHeaders: true,
   legacyHeaders: false,
