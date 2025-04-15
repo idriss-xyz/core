@@ -1,3 +1,5 @@
+import { parseAbi } from 'viem';
+
 export const INTERNAL_LINK = {
   SUPERPOWERS: '/#apps',
   EXTENSION: '/#extension',
@@ -21,3 +23,15 @@ export const TEAM_TREASURY_ADDRESS =
   '0xECAe5326474144FeAc16c7Fc574107B0623ED3d6';
 export const AIRDROP_TREASURY_ADDRESS =
   '0xADCFcC97cC9152f775197c3aD864E7A559C3BdB5';
+export const POSITION_MANAGER = '0x03a520b32C04BF3bEEf7BEb72E919cf822Ed34f1';
+export const POOL_ADDRESS = '0x6f9d09253f99d2b6843b5ec62c23496c37327216';
+
+export const DAO_LIQUIDITY_ID = 1_722_849n;
+
+export const UNISWAP_MINIMIZED_ABI = parseAbi([
+  'function positions(uint256) view returns (uint96 nonce, address operator, address token0, address token1, uint24 fee, int24 tickLower, int24 tickUpper, uint128 liquidity, uint256 feeGrowthInside0LastX128, uint256 feeGrowthInside1LastX128, uint128 tokensOwed0, uint128 tokensOwed1)',
+]);
+
+export const POOL_ABI = parseAbi([
+  'function slot0() view returns (uint160 sqrtPriceX96, int24 tick, uint16, uint16, uint16, uint8, bool)',
+]);
