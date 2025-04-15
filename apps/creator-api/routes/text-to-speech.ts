@@ -24,6 +24,7 @@ router.post('/', validationRules, async (req: Request, res: Response) => {
   }
   try {
     const { text } = req.body;
+    const trimmedText = text.length > 70 ? text.slice(0, 70) : text;
 
     const response = await fetch(
       `https://api.elevenlabs.io/v1/text-to-speech/${ELEVENLABS_VOICE_ID}`,
@@ -33,7 +34,7 @@ router.post('/', validationRules, async (req: Request, res: Response) => {
           'Content-Type': 'application/json',
           'xi-api-key': `${ELEVENLABS_API_KEY}`,
         },
-        body: JSON.stringify({ text, model_id: 'eleven_multilingual_v2' }),
+        body: JSON.stringify({ trimmedText, model_id: 'eleven_multilingual_v2' }),
       },
     );
 
