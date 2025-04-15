@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { getTextToSpeech } from '../utils';
 
 const DONATION_TTS_MIN_AMOUNT = 5;
-const DONATION_TTS_DELAY = 2_000;
+const DONATION_TTS_DELAY = 2000;
 
 export const useDonationNotification = (
   audio: HTMLAudioElement,
@@ -59,7 +59,7 @@ export const useDonationNotification = (
     return () => {
       setShowNotification(false);
     };
-  }, [amount, audio, duration]);
+  }, [amount, audio, duration, message]);
 
   return { showNotification };
 };
