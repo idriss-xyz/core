@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import express from 'express';
+import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 import { join } from 'path';
 import { mode } from '../utils/mode';
@@ -16,7 +17,15 @@ const router = express.Router();
 
 const validationRules = [body('text').isString().notEmpty()];
 
-router.post('/', validationRules, async (req: Request, res: Response) => {
+const requestLimitation = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 2,
+  message: 'Too many requests, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+router.post('/', requestLimitation, validationRules, async (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     res.status(400).json({ errors: errors.array() });
@@ -34,7 +43,7 @@ router.post('/', validationRules, async (req: Request, res: Response) => {
           'Content-Type': 'application/json',
           'xi-api-key': `${ELEVENLABS_API_KEY}`,
         },
-        body: JSON.stringify({ trimmedText, model_id: 'eleven_multilingual_v2' }),
+        body: JSON.stringify({ text: trimmedText, model_id: 'eleven_multilingual_v2' }),
       },
     );
 
