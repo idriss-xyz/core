@@ -2,6 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 
 import { getTextToSpeech } from '../utils';
 
+const DONATION_TTS_MIN_AMOUNT = 5;
+const DONATION_TTS_DELAY = 2_000;
+
 export const useDonationNotification = (
   audio: HTMLAudioElement,
   amount: string,
@@ -19,7 +22,7 @@ export const useDonationNotification = (
       console.error('Audio playback failed:', error);
     });
 
-    if (Number.parseFloat(amount) > 5) {
+    if (Number.parseFloat(amount) > DONATION_TTS_MIN_AMOUNT) {
       getTextToSpeech(message)
         .then(async (stream) => {
           if (stream) {
@@ -32,7 +35,7 @@ export const useDonationNotification = (
               speech.play().catch((error) => {
                 console.error('Audio playback failed:', error);
               });
-            }, 2000);
+            }, DONATION_TTS_DELAY);
           } else {
             throw new Error('Audio stream from api is null');
           }

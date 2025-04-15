@@ -11,6 +11,7 @@ dotenv.config(
 );
 
 const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
+const ELEVENLABS_VOICE_ID = 'TX3LPaxmHKxFdv7VOQHJ';
 const router = express.Router();
 
 const validationRules = [body('text').isString().notEmpty()];
@@ -25,7 +26,7 @@ router.post('/', validationRules, async (req: Request, res: Response) => {
     const { text } = req.body;
 
     const response = await fetch(
-      `https://api.elevenlabs.io/v1/text-to-speech/TX3LPaxmHKxFdv7VOQHJ`,
+      `https://api.elevenlabs.io/v1/text-to-speech/${ELEVENLABS_VOICE_ID}`,
       {
         method: 'POST',
         headers: {
