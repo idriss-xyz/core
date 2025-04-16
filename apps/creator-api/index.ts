@@ -1,7 +1,5 @@
-import dotenv from 'dotenv';
 import express, { Application, Request, Response } from 'express';
 import http from 'http';
-import { join } from 'path';
 import { Server as SocketIOServer, Socket } from 'socket.io';
 import { mode } from './utils/mode';
 import { connectedClients } from './services/socket-server';
@@ -16,10 +14,9 @@ import refetchENSRouter from './routes/force-refresh-ens';
 import textToSpeechRouter from './routes/text-to-speech';
 import cors from 'cors';
 import { initializeDatabase } from './db/database';
+import { configureEnv } from './config/environment';
 
-dotenv.config(
-  mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
-);
+configureEnv(mode, __dirname);
 
 initializeDatabase()
   .then(() => console.log('DB connected...'))
