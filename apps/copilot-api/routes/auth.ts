@@ -1,20 +1,13 @@
 import express from 'express';
 import type { Request, Response } from 'express';
-import dotenv from 'dotenv';
 import { throwInternalError } from '../middleware/error.middleware';
 import { isAddress } from 'viem';
-import { join } from 'path';
-import { mode } from '../utils/mode';
 import {
   createMessage,
   login,
   validateMessage,
   validateToken,
 } from '../services/auth';
-
-dotenv.config(
-  mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
-);
 
 const router = express.Router();
 

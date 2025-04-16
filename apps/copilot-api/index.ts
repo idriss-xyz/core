@@ -1,8 +1,6 @@
 import { createConfig } from '@lifi/sdk';
-import dotenv from 'dotenv';
 import express, { Request, Response } from 'express';
 import http from 'http';
-import { join } from 'path';
 import { Server as SocketIOServer } from 'socket.io';
 import { dataSource } from './db';
 import defaultRoutes from './routes';
@@ -13,10 +11,9 @@ import { getSigningKey } from './services/subscriptionManager';
 import { webhookHandler } from './services/webhookHandler';
 import { mode } from './utils/mode';
 import { validateAlchemySignature } from './utils/webhookUtils';
+import { configureEnv } from './config/environment';
 
-dotenv.config(
-  mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
-);
+configureEnv(mode, __dirname);
 
 dataSource
   .initialize()
