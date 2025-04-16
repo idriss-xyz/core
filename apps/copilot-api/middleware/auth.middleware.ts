@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 import { dataSource } from '../db';
 import { SubscribersEntity } from '../entities/subscribers.entity';
 
-
 export const verifyToken = () => {
   return async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization?.split(' ')?.[1];

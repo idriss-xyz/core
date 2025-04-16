@@ -7,9 +7,5 @@ import { join } from 'path';
  * @param dirname - The directory path (__dirname) from where the function is called
  */
 export function configureEnv(mode: string, dirname: string): void {
-  config(
-    mode === 'production'
-      ? {}
-      : { path: join(dirname, `.env.${mode}`) }
-  );
+  config(mode === 'production' ? {} : { path: join(dirname, `.env.${mode}`) });
 }
