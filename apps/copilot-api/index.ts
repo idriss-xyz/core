@@ -1,3 +1,8 @@
+import { mode } from './utils/mode';
+import { configureEnv } from './config/environment';
+
+configureEnv(mode, __dirname);
+
 import { createConfig } from '@lifi/sdk';
 import express, { Request, Response } from 'express';
 import http from 'http';
@@ -12,10 +17,8 @@ import {
   heliusWebhookHandler,
   webhookHandler,
 } from './services/webhookHandler';
-import { mode } from './utils/mode';
 import { validateWebhookSignature } from './utils/webhookUtils';
 import { initializeDatabase } from './db';
-import { configureEnv } from './config/environment';
 
 configureEnv(mode, __dirname);
 
