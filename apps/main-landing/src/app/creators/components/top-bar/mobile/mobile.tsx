@@ -21,7 +21,7 @@ type Properties = {
 export const Mobile = ({ hideNavigation, isLanding, isSticky }: Properties) => {
   if (isLanding) {
     return (
-      <div className="flex flex-row items-center gap-x-2 md:hidden">
+      <div className="flex flex-row flex-wrap items-center justify-end gap-2 md:hidden">
         <Button
           asLink
           size="small"

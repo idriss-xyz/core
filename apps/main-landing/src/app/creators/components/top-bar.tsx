@@ -51,9 +51,15 @@ export const TopBar = ({
         isSticky && STICKY_CLASSES,
       )}
     >
-      <div className="container flex items-center justify-between py-1 lg:py-3">
+      <div className="container flex items-center justify-between gap-x-2 py-1 lg:py-3">
         <Link href="/">
-          <img src="/idriss-dark-logo.svg" height={24} width={98} alt="" />
+          <img
+            alt=""
+            width={98}
+            height={24}
+            className="min-w-20"
+            src="/idriss-dark-logo.svg"
+          />
         </Link>
 
         <Navigation
