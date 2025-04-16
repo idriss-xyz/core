@@ -4,12 +4,9 @@ import { useCommandQuery } from 'shared/messaging';
 import { classes, PortalWithTailwind, usePooling } from 'shared/ui';
 import { useEventsLogger } from 'shared/observability';
 import { createLookup } from 'shared/utils';
-import {
-  GetYapsCommand,
-  GetSmartFollowersCommand,
-  checkForOrganizationBadge,
-} from 'application/kaito';
+import { GetYapsCommand, checkForOrganizationBadge } from 'application/kaito';
 import { KAITO_LOGO } from 'assets/images';
+import { useExtensionSettings } from 'shared/extension';
 
 import { TradingCopilotTooltip } from '../notifications-popup/components/trading-copilot-tooltip';
 import { useLocationInfo } from '../hooks';
@@ -18,6 +15,9 @@ const EVENT = createLookup(['YAPS_STATS_HOVER']);
 
 export const YapsStats = () => {
   const { isTwitter } = useLocationInfo();
+  const { extensionSettings } = useExtensionSettings();
+
+  const isEnabled = isTwitter && extensionSettings['kaito-enabled'];
 
   const profileContainersForInjection = usePooling<Element[] | null>({
     callback: () => {
@@ -36,7 +36,7 @@ export const YapsStats = () => {
       });
     },
     interval: 1000,
-    enabled: isTwitter,
+    enabled: isEnabled,
     defaultValue: null,
   });
 
@@ -53,7 +53,7 @@ export const YapsStats = () => {
       });
     },
     interval: 1000,
-    enabled: isTwitter,
+    enabled: isEnabled,
     defaultValue: null,
   });
 
@@ -70,7 +70,7 @@ export const YapsStats = () => {
       });
     },
     interval: 1000,
-    enabled: isTwitter,
+    enabled: isEnabled,
     defaultValue: null,
   });
 
@@ -164,10 +164,10 @@ const YapsStatsElement = ({
     enabled,
   });
 
-  const smartFollowersQuery = useCommandQuery({
-    command: new GetSmartFollowersCommand({ username: username ?? '' }),
-    enabled,
-  });
+  // const smartFollowersQuery = useCommandQuery({
+  //   command: new GetSmartFollowersCommand({ username: username ?? '' }),
+  //   enabled,
+  // });
 
   const noYaps =
     yapsQuery.isLoading ||
@@ -242,17 +242,15 @@ const YapsStatsElement = ({
                 </span>
               )}
 
-              {!smartFollowersQuery.isError && (
-                <span>
-                  Smart followers:{' '}
-                  {(smartFollowersQuery.isLoading && 'Loading...') ||
-                    smartFollowersQuery.data?.num_of_smart_followers}
-                </span>
-              )}
+              {/*{!smartFollowersQuery.isError && (*/}
+              {/*  <span>*/}
+              {/*    Smart followers:{' '}*/}
+              {/*    {(smartFollowersQuery.isLoading && 'Loading...') ||*/}
+              {/*      smartFollowersQuery.data?.num_of_smart_followers}*/}
+              {/*  </span>*/}
+              {/*)}*/}
 
-              {yapsQuery.isError && smartFollowersQuery.isError && (
-                <span>No data available</span>
-              )}
+              {yapsQuery.isError && <span>No data available</span>}
             </>
           </div>
         }
