@@ -1,16 +1,9 @@
 import { ZapperNode } from '../types';
-import dotenv from 'dotenv';
-import { join } from 'path';
-import { mode } from '../utils/mode';
 import {
   getZapperPrice,
   getAlchemyPrice,
   getOldestZapperPrice,
 } from './price-fetchers';
-
-dotenv.config(
-  mode === 'production' ? {} : { path: join(__dirname, `../.env.${mode}`) },
-);
 
 export async function enrichNodesWithHistoricalPrice(
   edges: { node: ZapperNode }[],
