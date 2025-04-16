@@ -8,11 +8,16 @@ import { Navigation } from './top-bar/navigation';
 const STICKY_CLASSES = 'bg-mint-200 border-b border-mint-300';
 
 type Properties = {
+  isLanding?: boolean;
   displayCTA?: boolean;
   hideNavigation?: boolean;
 };
 
-export const TopBar = ({ hideNavigation, displayCTA }: Properties) => {
+export const TopBar = ({
+  isLanding,
+  displayCTA,
+  hideNavigation,
+}: Properties) => {
   const [isSticky, setIsSticky] = useState(false);
   const topBarReference = useRef<HTMLDivElement | null>(null);
 
@@ -51,7 +56,12 @@ export const TopBar = ({ hideNavigation, displayCTA }: Properties) => {
           <img src="/idriss-dark-logo.svg" height={24} width={98} alt="" />
         </Link>
 
-        <Navigation hideNavigation={hideNavigation} displayCTA={displayCTA} />
+        <Navigation
+          isSticky={isSticky}
+          isLanding={isLanding}
+          displayCTA={displayCTA}
+          hideNavigation={hideNavigation}
+        />
       </div>
     </div>
   );

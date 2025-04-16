@@ -70,7 +70,7 @@ export const HeroSection = () => {
 
         <div
           className={classes(
-            'relative flex aspect-[2/3] max-h-[600px] w-full max-w-[1000px] flex-col items-center gap-2 overflow-hidden rounded-2xl border border-mint-500 bg-neutral-900 object-center px-safe lg:aspect-[115/76] lg:max-h-none',
+            'relative flex aspect-[17/10] max-h-[600px] w-full max-w-[1000px] flex-col items-center overflow-hidden rounded-2xl border border-mint-500 bg-neutral-900 object-center px-safe lg:aspect-[115/76] lg:max-h-none',
           )}
         >
           <VideoPlayer />

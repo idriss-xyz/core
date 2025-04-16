@@ -5,15 +5,46 @@ import { VisuallyHidden } from '@idriss-xyz/ui/visually-hidden';
 import { Button } from '@idriss-xyz/ui/button';
 import Link from 'next/link';
 import { NavigationMenu } from '@idriss-xyz/ui/navigation-menu';
+import { CREATORS_FORM_LINK } from '@idriss-xyz/constants';
+import { classes } from '@idriss-xyz/ui/utils';
 
 import { EXTERNAL_LINK, INTERNAL_LINK } from '@/constants';
 import { Socials } from '@/components/top-bar/components/mobile/socials';
+import { Socials as DesktopSocials } from '@/components/top-bar/components/desktop/socials';
 
 type Properties = {
+  isSticky?: boolean;
+  isLanding?: boolean;
   hideNavigation?: boolean;
 };
 
-export const Mobile = ({ hideNavigation }: Properties) => {
+export const Mobile = ({ hideNavigation, isLanding, isSticky }: Properties) => {
+  if (isLanding) {
+    return (
+      <div className="flex flex-row items-center gap-x-2 md:hidden">
+        <Button
+          asLink
+          size="small"
+          intent="primary"
+          href={CREATORS_FORM_LINK}
+          aria-label="Start earning"
+          suffixIconName="IdrissArrowRight"
+          className={classes(
+            'invisible opacity-0',
+            isSticky && 'opacity-1 visible',
+          )}
+        >
+          START EARNING
+        </Button>
+
+        <DesktopSocials
+          enlargeIcon={!isSticky}
+          iconClassName={classes(isSticky && 'px-2')}
+        />
+      </div>
+    );
+  }
+
   return (
     <Dialog
       className="fixed inset-x-4 bottom-3 top-[76px] px-safe" // top-[76px] is 64px height of navbar + 12px spacing, ideally it should be ref attached to nav to read component height in case it changes in future

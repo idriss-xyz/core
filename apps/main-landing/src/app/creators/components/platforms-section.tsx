@@ -17,7 +17,7 @@ export const PlatformsSection = () => {
             <div className="flex w-full flex-col items-center gap-4 lg:items-start">
               <h2
                 className={classes(
-                  'whitespace-pre-wrap text-display5 uppercase gradient-text',
+                  'w-full whitespace-pre-wrap text-display5 uppercase gradient-text',
                   'md:text-display4',
                   'lg:text-display3',
                 )}

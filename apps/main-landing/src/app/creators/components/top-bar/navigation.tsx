@@ -2,14 +2,25 @@ import { Desktop } from './desktop';
 import { Mobile } from './mobile';
 
 type Properties = {
+  isSticky?: boolean;
+  isLanding?: boolean;
   displayCTA?: boolean;
   hideNavigation?: boolean;
 };
 
-export const Navigation = ({ hideNavigation, displayCTA }: Properties) => {
+export const Navigation = ({
+  isSticky,
+  isLanding,
+  displayCTA,
+  hideNavigation,
+}: Properties) => {
   return (
     <>
-      <Mobile hideNavigation={hideNavigation} />
+      <Mobile
+        isSticky={isSticky}
+        isLanding={isLanding}
+        hideNavigation={hideNavigation}
+      />
       <Desktop hideNavigation={hideNavigation} displayCTA={displayCTA} />
     </>
   );
