@@ -1,3 +1,8 @@
+import { mode } from './utils/mode';
+import { configureEnv } from './config/environment';
+
+configureEnv(mode, __dirname);
+
 import { createConfig } from '@lifi/sdk';
 import express, { Request, Response } from 'express';
 import http from 'http';
@@ -9,11 +14,7 @@ import subscriptionsRoutes from './routes/subscribtions';
 import { connectedClients } from './services/scheduler';
 import { getSigningKey } from './services/subscriptionManager';
 import { webhookHandler } from './services/webhookHandler';
-import { mode } from './utils/mode';
 import { validateAlchemySignature } from './utils/webhookUtils';
-import { configureEnv } from './config/environment';
-
-configureEnv(mode, __dirname);
 
 dataSource
   .initialize()

@@ -1,7 +1,11 @@
+import { mode } from './utils/mode';
+import { configureEnv } from './config/environment';
+
+configureEnv(mode, __dirname);
+
 import express, { Application, Request, Response } from 'express';
 import http from 'http';
 import { Server as SocketIOServer, Socket } from 'socket.io';
-import { mode } from './utils/mode';
 import { connectedClients } from './services/socket-server';
 import tipHistoryRouter from './routes/tip-history';
 import donorHistoryRouter from './routes/donor-history';
@@ -13,9 +17,6 @@ import refetchDonationRouter from './routes/refetch-donations';
 import refetchENSRouter from './routes/force-refresh-ens';
 import cors from 'cors';
 import { initializeDatabase } from './db/database';
-import { configureEnv } from './config/environment';
-
-configureEnv(mode, __dirname);
 
 initializeDatabase()
   .then(() => console.log('DB connected...'))
