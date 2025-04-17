@@ -144,6 +144,7 @@ export function LeaderboardItemPlaceholder({
 }: PlaceholderProperties) {
   const placeholderHeight = itemHeight ?? 69;
   const donateAmount = previousDonateAmount * 0.8;
+  const placeholderPlaces = amountToDisplay - donorRank;
 
   const avatarPlaceholder = (
     <div className="relative w-max">
@@ -200,10 +201,10 @@ export function LeaderboardItemPlaceholder({
 
   return (
     <>
-      {amountToDisplay - donorRank && (
+      {!!placeholderPlaces && (
         <span
           style={{
-            height: `${(amountToDisplay - donorRank) * placeholderHeight}px`,
+            height: `${placeholderPlaces * placeholderHeight}px`,
           }}
           className={classes(
             'flex items-center justify-center border-b',
