@@ -77,13 +77,13 @@ export const useLoginViaSiwe = () => {
     });
   }, [getAuthToken, verifyAuthTokenMutation]);
 
-  const isSending = getSiweMessage.isPending || verifySiweSignature.isPending;
+  const isPending = getSiweMessage.isPending || verifySiweSignature.isPending;
 
   const isError = getSiweMessage.isError || verifySiweSignature.isError;
 
   const isSuccess = getSiweMessage.isSuccess && verifySiweSignature.isSuccess;
 
-  const isIdle = !isSending && !isError && !isSuccess;
+  const isIdle = !isPending && !isError && !isSuccess;
 
   const reset = useCallback(() => {
     getSiweMessage.reset();
@@ -93,7 +93,7 @@ export const useLoginViaSiwe = () => {
   return {
     login,
     loggedIn,
-    isSending,
+    isPending,
     isError,
     isSuccess,
     isIdle,

@@ -34,6 +34,7 @@ export {
   NATIVE_COIN_ADDRESS,
   DEFAULT_ALLOWED_CHAINS_IDS,
   EMPTY_HEX,
+  COPILOT_API_URL,
 } from './constants';
 
 export type {

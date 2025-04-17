@@ -1,15 +1,22 @@
 import { useCallback } from 'react';
 import { formatEther, parseEther } from 'viem';
-import { Wallet } from '@idriss-xyz/wallet-connect';
+import { Wallet, SolanaWallet } from '@idriss-xyz/wallet-connect';
 
 import { useWallet } from 'shared/extension';
-import { CHAIN, useSwitchChain } from 'shared/web3';
+import {
+  CHAIN,
+  formatSol,
+  NATIVE_ETH_ADDRESS,
+  NATIVE_SOL_ADDRESS,
+  useSwitchChain,
+} from 'shared/web3';
 import { useCommandMutation } from 'shared/messaging';
 
 import { SwapData, FormValues, QuotePayload } from '../types';
 import { GetQuoteCommand } from '../commands/get-quote';
 
 import { useCopilotTransaction } from './use-copilot-transaction';
+import { useCopilotSolanaTransaction } from './use-copilot-solana-transaction';
 
 interface Properties {
   wallet?: Wallet;
@@ -51,7 +58,7 @@ export const useExchanger = ({ wallet }: Properties) => {
         fromAddress: wallet.account,
         destinationToken: dialog.tokenIn.address,
         originChain: CHAIN[dialog.tokenIn.network].id,
-        originToken: '0x0000000000000000000000000000000000000000',
+        originToken: NATIVE_ETH_ADDRESS,
       };
 
       const quoteData = await handleGetQuoteMutation(quotePayload);
@@ -107,6 +114,108 @@ export const useExchanger = ({ wallet }: Properties) => {
     to: {
       amount: Number(
         formatEther(BigInt(getQuoteMutation.data?.estimate.toAmount ?? 0)),
+      ),
+      symbol: getQuoteMutation.data?.includedSteps[0]?.action.toToken.symbol,
+    },
+  };
+
+  const reset = useCallback(() => {
+    getQuoteMutation.reset();
+    copilotTransaction.reset();
+  }, [copilotTransaction, getQuoteMutation]);
+
+  return {
+    exchange,
+    isSending,
+    isError,
+    isSuccess,
+    isIdle,
+    quoteData,
+    transactionData,
+    reset,
+    details,
+  };
+};
+
+interface SolanaExchangerProperties {
+  wallet?: SolanaWallet;
+}
+
+export const useSolanaExchanger = ({ wallet }: SolanaExchangerProperties) => {
+  const copilotTransaction = useCopilotSolanaTransaction();
+  const getQuoteMutation = useCommandMutation(GetQuoteCommand);
+
+  const exchange = useCallback(
+    async ({ formValues, dialog }: CallbackProperties) => {
+      if (!wallet || Number(formValues.amount) === 0) {
+        return;
+      }
+
+      const handleGetQuoteMutation = async (payload: QuotePayload) => {
+        return await getQuoteMutation.mutateAsync(payload);
+      };
+
+      const amountInLamports = BigInt(
+        Math.round(Number.parseFloat(formValues.amount) * 1e9),
+      );
+
+      const quotePayload = {
+        amount: amountInLamports.toString(),
+        destinationChain: CHAIN[dialog.tokenOut.network].id,
+        fromAddress: wallet.account,
+        destinationToken: dialog.tokenIn.address,
+        originChain: CHAIN[dialog.tokenIn.network].id,
+        originToken: NATIVE_SOL_ADDRESS,
+      };
+
+      const quoteData = await handleGetQuoteMutation(quotePayload);
+
+      const transactionData = {
+        gas: quoteData.estimate.gasCosts[0]
+          ? BigInt(quoteData.estimate.gasCosts[0].estimate)
+          : undefined,
+        data: quoteData.transactionData.data,
+        chain: quoteData.transactionData.chainId,
+        value: amountInLamports,
+        to: quoteData.transactionData.to,
+        routeOptions: {
+          slippage: '0.04', // Set as 4% in reference to Jupiter's slippage
+        },
+      };
+
+      copilotTransaction.mutate({
+        transactionData,
+        wallet,
+      });
+    },
+    [copilotTransaction, getQuoteMutation, wallet],
+  );
+
+  const isSending = getQuoteMutation.isPending || copilotTransaction.isPending;
+
+  const isError = getQuoteMutation.isError || copilotTransaction.isError;
+
+  const isSuccess = getQuoteMutation.isSuccess && copilotTransaction.isSuccess;
+
+  const quoteData = getQuoteMutation.data;
+
+  const transactionData = copilotTransaction.data;
+
+  const isIdle = !isSending && !isError && !isSuccess;
+
+  const details = {
+    from: {
+      amount: Number(
+        formatSol(getQuoteMutation.data?.estimate.fromAmount ?? '0'),
+      ),
+      symbol: getQuoteMutation.data?.includedSteps[0]?.action.fromToken.symbol,
+    },
+    to: {
+      amount: Number(
+        formatSol(
+          getQuoteMutation.data?.estimate.toAmount ?? '0',
+          getQuoteMutation.data?.includedSteps[0]?.action.toToken.decimals,
+        ),
       ),
       symbol: getQuoteMutation.data?.includedSteps[0]?.action.toToken.symbol,
     },

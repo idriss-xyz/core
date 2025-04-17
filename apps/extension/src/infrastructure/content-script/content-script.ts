@@ -21,7 +21,15 @@ import {
   StoredAuthToken,
   StoredToastSoundState,
   StoredSubscriptionsAmount,
+  StoredSubscriptions,
 } from 'shared/extension';
+import {
+  AuthTokenWindowMessages,
+  DeviceIdWindowMessages,
+  SolanaWalletWindowMessages,
+  TradingCopilotWindowMessages,
+  WalletWindowMessages,
+} from 'shared/web3';
 
 export class ContentScript {
   private constructor(private environment: typeof chrome) {}
@@ -34,6 +42,7 @@ export class ContentScript {
     contentScript.subscribeToExtensionSettings();
     contentScript.subscribeToWallet();
     contentScript.subscribeToTradingCopilot();
+    contentScript.subscribeToSolanaWallet();
     contentScript.subscribeToDeviceId();
     contentScript.blockGithubShortcuts();
   }
@@ -152,34 +161,56 @@ export class ContentScript {
     });
   }
 
-  // TODO: move these message names to constants in shared/web3
   subscribeToWallet() {
-    onWindowMessage('GET_WALLET', async () => {
+    onWindowMessage(WalletWindowMessages.GET_WALLET, async () => {
       const maybeWallet = await ExtensionSettingsManager.getWallet();
 
       const message = {
-        type: 'GET_WALLET_RESPONSE',
+        type: WalletWindowMessages.GET_WALLET_RESPONSE,
         detail: maybeWallet,
       };
 
       window.postMessage(message);
     });
 
-    onWindowMessage('CLEAR_WALLET', () => {
+    onWindowMessage(WalletWindowMessages.CLEAR_WALLET, () => {
       void ExtensionSettingsManager.clearWallet();
     });
 
     onWindowMessage<{ account: Hex; providerRdns: string }>(
-      'SAVE_WALLET',
+      WalletWindowMessages.SAVE_WALLET,
       (v) => {
         void ExtensionSettingsManager.saveWallet(v);
       },
     );
   }
 
-  // TODO: move these message names to constants in shared/web3
-  subscribeToTradingCopilot() {
-    onWindowMessage('GET_AUTH_TOKEN', async () => {
+  subscribeToSolanaWallet() {
+    onWindowMessage(SolanaWalletWindowMessages.GET_SOLANA_WALLET, async () => {
+      const maybeWallet = await ExtensionSettingsManager.getSolanaWallet();
+
+      const message = {
+        type: SolanaWalletWindowMessages.GET_SOLANA_WALLET_RESPONSE,
+        detail: maybeWallet,
+      };
+
+      window.postMessage(message);
+    });
+
+    onWindowMessage(SolanaWalletWindowMessages.CLEAR_SOLANA_WALLET, () => {
+      void ExtensionSettingsManager.clearSolanaWallet();
+    });
+
+    onWindowMessage<{ account: string; providerName: string }>(
+      SolanaWalletWindowMessages.SAVE_SOLANA_WALLET,
+      (v) => {
+        void ExtensionSettingsManager.saveSolanaWallet(v);
+      },
+    );
+  }
+
+  subscribeToAuthToken() {
+    onWindowMessage(AuthTokenWindowMessages.GET_AUTH_TOKEN, async () => {
       const maybeAuthToken = await TradingCopilotManager.getAuthToken();
 
       const message = {
@@ -190,60 +221,120 @@ export class ContentScript {
       window.postMessage(message);
     });
 
-    onWindowMessage('CLEAR_AUTH_TOKEN', () => {
+    onWindowMessage(AuthTokenWindowMessages.CLEAR_AUTH_TOKEN, () => {
       void TradingCopilotManager.clearAuthToken();
     });
 
-    onWindowMessage<StoredAuthToken>('SAVE_AUTH_TOKEN', (v) => {
-      void TradingCopilotManager.saveAuthToken(v);
-    });
+    onWindowMessage<StoredAuthToken>(
+      AuthTokenWindowMessages.SAVE_AUTH_TOKEN,
+      (v) => {
+        void TradingCopilotManager.saveAuthToken(v);
+      },
+    );
+  }
 
-    onWindowMessage('GET_TOAST_SOUND_STATE', async () => {
-      const maybeToastSoundState =
-        await TradingCopilotManager.getToastSoundState();
+  subscribeToTradingCopilot() {
+    onWindowMessage(AuthTokenWindowMessages.GET_AUTH_TOKEN, async () => {
+      const maybeAuthToken = await TradingCopilotManager.getAuthToken();
 
       const message = {
-        type: 'GET_TOAST_SOUND_STATE_RESPONSE',
-        detail: maybeToastSoundState,
+        type: AuthTokenWindowMessages.GET_AUTH_TOKEN_RESPONSE,
+        detail: maybeAuthToken,
       };
 
       window.postMessage(message);
     });
 
-    onWindowMessage('CLEAR_TOAST_SOUND_STATE', () => {
-      void TradingCopilotManager.clearToastSoundState();
+    onWindowMessage(AuthTokenWindowMessages.CLEAR_AUTH_TOKEN, () => {
+      void TradingCopilotManager.clearAuthToken();
     });
 
-    onWindowMessage<StoredToastSoundState>('SAVE_TOAST_SOUND_STATE', (v) => {
-      void TradingCopilotManager.saveToastSoundState(v);
-    });
+    onWindowMessage<StoredAuthToken>(
+      AuthTokenWindowMessages.SAVE_AUTH_TOKEN,
+      (v) => {
+        void TradingCopilotManager.saveAuthToken(v);
+      },
+    );
 
-    onWindowMessage('CLEAR_SUBSCRIPTIONS_AMOUNT', () => {
-      void TradingCopilotManager.clearSubscriptionsAmount();
-    });
+    onWindowMessage(
+      TradingCopilotWindowMessages.GET_TOAST_SOUND_STATE,
+      async () => {
+        const maybeToastSoundState =
+          await TradingCopilotManager.getToastSoundState();
+
+        const message = {
+          type: TradingCopilotWindowMessages.GET_TOAST_SOUND_STATE_RESPONSE,
+          detail: maybeToastSoundState,
+        };
+
+        window.postMessage(message);
+      },
+    );
+
+    onWindowMessage(
+      TradingCopilotWindowMessages.CLEAR_TOAST_SOUND_STATE,
+      () => {
+        void TradingCopilotManager.clearToastSoundState();
+      },
+    );
+
+    onWindowMessage<StoredToastSoundState>(
+      TradingCopilotWindowMessages.SAVE_TOAST_SOUND_STATE,
+      (v) => {
+        void TradingCopilotManager.saveToastSoundState(v);
+      },
+    );
+
+    onWindowMessage(
+      TradingCopilotWindowMessages.CLEAR_SUBSCRIPTIONS_AMOUNT,
+      () => {
+        void TradingCopilotManager.clearSubscriptionsAmount();
+      },
+    );
 
     onWindowMessage<StoredSubscriptionsAmount>(
-      'SAVE_SUBSCRIPTIONS_AMOUNT',
+      TradingCopilotWindowMessages.SAVE_SUBSCRIPTIONS_AMOUNT,
       (v) => {
         void TradingCopilotManager.saveSubscriptionsAmount(v);
       },
     );
+
+    onWindowMessage<StoredSubscriptions>(
+      TradingCopilotWindowMessages.SAVE_SUBSCRIPTIONS,
+      (v) => {
+        void TradingCopilotManager.saveSubscriptions(v);
+      },
+    );
+
+    onWindowMessage(
+      TradingCopilotWindowMessages.GET_SUBSCRIPTIONS,
+      async () => {
+        const maybeSubscriptions =
+          await TradingCopilotManager.getSubscriptions();
+
+        const message = {
+          type: TradingCopilotWindowMessages.GET_SUBSCRIPTIONS_RESPONSE,
+          detail: maybeSubscriptions,
+        };
+
+        window.postMessage(message);
+      },
+    );
   }
 
-  // TODO: move these message names to constants in shared/web3
   subscribeToDeviceId() {
-    onWindowMessage('GET_DEVICE_ID', async () => {
+    onWindowMessage(DeviceIdWindowMessages.GET_DEVICE_ID, async () => {
       const maybeDeviceId = await ExtensionSettingsManager.getDeviceId();
 
       const message = {
-        type: 'GET_DEVICE_ID_RESPONSE',
+        type: DeviceIdWindowMessages.GET_DEVICE_ID_RESPONSE,
         detail: maybeDeviceId,
       };
 
       window.postMessage(message);
     });
 
-    onWindowMessage<string>('SET_DEVICE_ID', (v) => {
+    onWindowMessage<string>(DeviceIdWindowMessages.SET_DEVICE_ID, (v) => {
       void ExtensionSettingsManager.setDeviceId(v);
     });
   }

@@ -30,15 +30,25 @@ export const SubscriptionsList = ({
       <div className="relative mt-2 h-full overflow-hidden">
         <ScrollArea className="size-full overflow-y-auto transition-all duration-500">
           <ul className="flex flex-col gap-y-3 pr-4">
-            {subscriptions.details.map((subscription) => {
-              return (
-                <SubscriptionItem
-                  onRemove={onRemove}
-                  key={subscription.address}
-                  subscription={subscription}
-                />
-              );
-            })}
+            {subscriptions.details
+              .filter((subscription, index, self) => {
+                if (subscription.fid === null) return true;
+                return (
+                  index ===
+                  self.findIndex((s) => {
+                    return s.fid === subscription.fid;
+                  })
+                );
+              })
+              .map((subscription) => {
+                return (
+                  <SubscriptionItem
+                    onRemove={onRemove}
+                    key={subscription.address}
+                    subscription={subscription}
+                  />
+                );
+              })}
           </ul>
         </ScrollArea>
       </div>

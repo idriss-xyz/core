@@ -1,3 +1,4 @@
+import { PublicKey } from '@solana/web3.js';
 import { Hex } from 'viem';
 
 import { CHAIN, NATIVE_COIN_ADDRESS } from '../../constants/src';
@@ -219,7 +220,7 @@ export const getShortWalletHex = (walletAddress: string) => {
   return `${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}`;
 };
 
-const getFormattedTimeDifference = (
+export const getFormattedTimeDifference = (
   isoTimestamp: string | number,
   variant: 'long' | 'short',
 ) => {
@@ -281,6 +282,15 @@ export const getTimeDifferenceString = ({
   }, 1000);
 
   return text ? `${timeDifference} ${text}` : timeDifference;
+};
+
+export const isSolanaAddress = (address: string): boolean => {
+  try {
+    new PublicKey(address);
+    return true;
+  } catch {
+    return false;
+  }
 };
 
 export const removeEthSuffix = (name: string) => {
