@@ -2,6 +2,14 @@ import { DataSource } from 'typeorm';
 import dotenv from 'dotenv';
 import { join } from 'path';
 import { mode } from './utils/mode';
+import {
+  AddressesEntity,
+  AddressWebhookMapEntity,
+  SubscribersEntity,
+  SubscriptionsEntity,
+  WebhookEntity,
+} from './entities';
+import { WebhookChainType1743608322000 } from './migrations';
 
 dotenv.config(
   mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
@@ -15,8 +23,14 @@ export const dataSource = new DataSource({
   password: String(process.env.DATABASE_PASS),
   database: process.env.DATABASE_DB_NAME,
   synchronize: false,
-  migrations: [__dirname + '/migrations/*.{ts,js}'],
-  entities: [__dirname + '/entities/*.entity.{ts,js}'],
+  migrations: [WebhookChainType1743608322000],
+  entities: [
+    AddressesEntity,
+    AddressWebhookMapEntity,
+    SubscribersEntity,
+    SubscriptionsEntity,
+    WebhookEntity,
+  ],
 });
 
 export async function initializeDatabase() {
