@@ -1,12 +1,17 @@
 import { Socket } from 'socket.io';
 import { BLOCK_LIST } from '../constants';
-import { CachedEventsInterface } from '../types';
-import { extractSwapData } from './webhook';
+import { CachedTransaction } from '../types';
 import { getSubscribersByAddress } from './subscriptionManager';
+import { AlchemyEventHandler, HeliusEventHandler } from './eventHandlers';
 
 // Map to store userId to socket mappings
 export const connectedClients = new Map<string, Socket>();
-export const eventCache: CachedEventsInterface = {};
+export const eventCache: { [txHash: string]: CachedTransaction } = {};
+
+const eventHandlers = {
+  alchemy: new AlchemyEventHandler(),
+  helius: new HeliusEventHandler(),
+};
 
 // Scheduler to process the cache every 2 seconds
 setInterval(async () => {
@@ -14,8 +19,9 @@ setInterval(async () => {
   const cacheEntries = Object.entries(eventCache);
 
   for (const [txHash, cachedTransaction] of cacheEntries) {
-    const { activities, timestamp } = cachedTransaction;
-    const swapData = await extractSwapData(txHash, activities);
+    const handler = eventHandlers[cachedTransaction.type];
+    const { data, timestamp } = cachedTransaction;
+    const swapData = await handler.extractSwapData(txHash, data);
 
     if (swapData.isComplete) {
       // Complete swap

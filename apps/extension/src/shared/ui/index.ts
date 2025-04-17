@@ -17,6 +17,7 @@ export {
   PreloadedImage,
   PulsingLoadingBar,
   PortalWithTailwind,
+  TradingCopilotTooltip,
   PaginationComponent,
 } from './components';
 export {

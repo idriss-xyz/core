@@ -5,7 +5,7 @@ import { Wallet } from '@idriss-xyz/wallet-connect';
 
 import {
   CHAIN_ID_TO_TOKENS,
-  GetEnsBalanceCommand,
+  GetEthBalanceCommand,
   GetTokenBalanceCommand,
   GetTokenPriceCommand,
   useSwitchChain,
@@ -25,7 +25,7 @@ export const useSender = ({ wallet }: Properties) => {
   const [haveEnoughBalance, setHaveEnoughBalance] = useState<boolean>(true);
   const switchChain = useSwitchChain();
   const getTokenPerDollarMutation = useCommandMutation(GetTokenPriceCommand);
-  const getEnsBalanceMutation = useCommandMutation(GetEnsBalanceCommand);
+  const getEthBalaceMutation = useCommandMutation(GetEthBalanceCommand);
   const getTokenBalanceMutation = useCommandMutation(GetTokenBalanceCommand);
   const nativeTransaction = useNativeTransaction();
   const erc20Transaction = useErc20Transaction();
@@ -81,7 +81,7 @@ export const useSender = ({ wallet }: Properties) => {
 
       const getUserBalance = async () => {
         if (isNativeToken) {
-          const userBalance = await getEnsBalanceMutation.mutateAsync({
+          const userBalance = await getEthBalaceMutation.mutateAsync({
             address: wallet.account,
             blockTag: 'safe',
             chainId: sendPayload.chainId,
@@ -129,7 +129,7 @@ export const useSender = ({ wallet }: Properties) => {
     [
       erc20Transaction,
       getTokenPerDollarMutation,
-      getEnsBalanceMutation,
+      getEthBalaceMutation,
       getTokenBalanceMutation,
       nativeTransaction,
       switchChain,
@@ -142,7 +142,7 @@ export const useSender = ({ wallet }: Properties) => {
     nativeTransaction.isPending ||
     erc20Transaction.isPending ||
     getTokenPerDollarMutation.isPending ||
-    getEnsBalanceMutation.isPending ||
+    getEthBalaceMutation.isPending ||
     getTokenBalanceMutation.isPending;
 
   const isError =
@@ -150,7 +150,7 @@ export const useSender = ({ wallet }: Properties) => {
     getTokenPerDollarMutation.isError ||
     nativeTransaction.isError ||
     erc20Transaction.isError ||
-    getEnsBalanceMutation.isError ||
+    getEthBalaceMutation.isError ||
     getTokenBalanceMutation.isError;
 
   const isSuccess = nativeTransaction.isSuccess || erc20Transaction.isSuccess;

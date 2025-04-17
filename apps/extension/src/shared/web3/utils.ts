@@ -60,3 +60,8 @@ export const getRpcUrl = (chainId: number) => {
   const chain = getChainById(chainId);
   return chain?.rpcUrls.default.http[0] ?? '#';
 };
+
+export const formatSol = (amount: string, decimals?: number) => {
+  if (!decimals) decimals = 9;
+  return (Number(amount) / 10 ** decimals).toString();
+};

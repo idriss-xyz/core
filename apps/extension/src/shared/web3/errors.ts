@@ -1,8 +1,7 @@
 import { CustomError } from 'ts-custom-error';
-import { Hex } from 'viem';
 
 type Properties = {
-  transactionHash: Hex;
+  transactionHash: string;
 };
 
 export class TransactionRevertedError extends CustomError {

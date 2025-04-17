@@ -16,8 +16,8 @@ type Payload = {
 
 type Response = string | null;
 
-export class GetEnsBalanceCommand extends Command<Payload, Response> {
-  public readonly name = 'GetEnsBalanceCommand' as const;
+export class GetEthBalanceCommand extends Command<Payload, Response> {
+  public readonly name = 'GetEthBalanceCommand' as const;
 
   constructor(public payload: Payload) {
     super();
