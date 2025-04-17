@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { createPublicClient, formatEther, http } from 'viem';
-import { base } from 'viem/chains';
+import { formatEther } from 'viem';
+import { clientBase } from '@idriss-xyz/blockchain-clients';
 
 import { IDRISS_TOKEN_ADDRESS } from '@/components/token-section/constants';
 import { ERC20_ABI } from '@/app/creators/donate/constants';
@@ -16,33 +16,28 @@ const DEFAULT_HEADERS = {
   'Access-Control-Allow-Origin': '*',
 };
 
-const client = createPublicClient({
-  chain: base,
-  transport: http(),
-});
-
 // ts-unused-exports:disable-next-line
 export async function GET() {
   try {
-    const vestedBalance = await client.readContract({
+    const vestedBalance = await clientBase.readContract({
       abi: ERC20_ABI,
       functionName: 'balanceOf',
       args: [VESTING_CONTRACT_ADDRESS],
       address: IDRISS_TOKEN_ADDRESS,
     });
-    const daoBalance = await client.readContract({
+    const daoBalance = await clientBase.readContract({
       abi: ERC20_ABI,
       functionName: 'balanceOf',
       args: [DAO_TREASURY_ADDRESS],
       address: IDRISS_TOKEN_ADDRESS,
     });
-    const teamBalance = await client.readContract({
+    const teamBalance = await clientBase.readContract({
       abi: ERC20_ABI,
       functionName: 'balanceOf',
       args: [TEAM_TREASURY_ADDRESS],
       address: IDRISS_TOKEN_ADDRESS,
     });
-    const airdropBalance = await client.readContract({
+    const airdropBalance = await clientBase.readContract({
       abi: ERC20_ABI,
       functionName: 'balanceOf',
       args: [AIRDROP_TREASURY_ADDRESS],
