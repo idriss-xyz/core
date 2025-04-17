@@ -1,1 +1,1 @@
-export { clientEthereum, clients } from './blockchain-clients';
+export { clientBase, clientEthereum, clients } from './blockchain-clients';
