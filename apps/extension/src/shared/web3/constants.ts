@@ -17,6 +17,7 @@ import {
   WETH_LOGO,
   ZYNK_SYNC_ERA_LOGO,
   ALEPH_LOGO,
+  SOLANA_LOGO,
   // PIXELS_LOGO,
   NATIVE_COIN_ADDRESS,
   CHAIN as SHARED_CHAIN,
@@ -27,6 +28,9 @@ import {
   CELO_LOGO,
   CUSD_LOGO,
 } from '@idriss-xyz/constants';
+
+export const NATIVE_ETH_ADDRESS = '0x0000000000000000000000000000000000000000';
+export const NATIVE_SOL_ADDRESS = '11111111111111111111111111111111';
 
 // TODO: IMPORTANT CHECK SHORTNAMES
 export const CHAIN = Object.assign(SHARED_CHAIN, {
@@ -68,6 +72,26 @@ export const CHAIN = Object.assign(SHARED_CHAIN, {
     rpcUrls: { default: { http: ['https://bsc-dataseed.binance.org'] } },
     blockExplorers: {
       default: { name: 'BS Scan', url: 'https://bscscan.com' },
+    },
+  },
+  // The following chain object is what Li.Fi uses to get quotes for Solana trades.
+  // Not to be used on other parts of the app as it's not a real EVM chain.
+  SOLANA: {
+    id: 1_151_111_081_099_710,
+    name: 'Solana',
+    shortName: 'Solana',
+    logo: SOLANA_LOGO,
+    nativeCurrency: {
+      name: 'Solana',
+      symbol: 'SOL',
+      decimals: 9,
+    },
+    rpcUrls: { default: { http: ['https://api.mainnet-beta.solana.com'] } },
+    blockExplorers: {
+      default: {
+        name: 'Solana Explorer',
+        url: 'https://solscan.io',
+      },
     },
   },
 }) satisfies Record<string, Chain>;

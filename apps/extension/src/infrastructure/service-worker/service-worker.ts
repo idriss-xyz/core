@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { io } from 'socket.io-client';
+import { COPILOT_API_URL } from '@idriss-xyz/constants';
 
 import { TWITTER_COMMAND_MAP } from 'host/twitter';
 import {
@@ -60,8 +61,6 @@ const COMMAND_MAP = {
   ...KAITO_COMMAND_MAP,
 };
 
-const SERVER_URL = 'https://copilot-api.idriss.xyz/';
-
 export class ServiceWorker {
   private observabilityScope: ObservabilityScope =
     createObservabilityScope('service-worker');
@@ -69,7 +68,7 @@ export class ServiceWorker {
   private socket: ReturnType<typeof io>;
 
   private constructor(private environment: typeof chrome) {
-    this.socket = io(SERVER_URL, { transports: ['websocket'] });
+    this.socket = io(COPILOT_API_URL, { transports: ['websocket'] });
     console.log('%c[WebSocket] Creating socket connection', 'color: #FF9900;');
     void this.initializeSocketEvents();
   }
@@ -94,19 +93,9 @@ export class ServiceWorker {
         'color: #FF9900;',
       );
       const wallet = await ExtensionSettingsManager.getWallet();
-      const subscriptionsAmount =
-        await TradingCopilotManager.getSubscriptionsAmount();
 
       if (wallet?.account) {
-        if (subscriptionsAmount) {
-          this.registerWithServer(wallet.account);
-        } else {
-          console.log(
-            '%c[WebSocket] User dont have any subscriptions.',
-            'color: red;',
-          );
-          this.socket.disconnect();
-        }
+        this.registerWithServer(wallet.account);
       } else {
         console.log('%c[WebSocket] User not found.', 'color: red;');
         this.socket.disconnect();
@@ -114,12 +103,16 @@ export class ServiceWorker {
     });
 
     ExtensionSettingsManager.onWalletChange((wallet) => {
-      if (this.socket.connected) {
-        this.socket.disconnect();
-      }
+      console.log('%c[WebSocket] Wallet changed.', 'color: #FF9900;');
 
-      if (wallet?.account) {
-        this.socket.connect();
+      if (wallet && 'providerRdns' in wallet) {
+        if (this.socket.connected) {
+          this.socket.disconnect();
+        }
+
+        if (wallet?.account) {
+          this.socket.connect();
+        }
       }
     });
 

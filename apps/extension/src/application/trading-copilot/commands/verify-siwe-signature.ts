@@ -1,3 +1,5 @@
+import { COPILOT_API_URL } from '@idriss-xyz/constants';
+
 import {
   Command,
   FailureResult,
@@ -10,8 +12,6 @@ import {
   VerifySiweSignaturePayload as Payload,
   VerifySiweSignatureResponse as Response,
 } from '../types';
-
-import { COPILOT_API_URL } from './constants';
 
 export class VerifySiweSignatureCommand extends Command<Payload, Response> {
   public readonly name = 'VerifySiweSignatureCommand' as const;
