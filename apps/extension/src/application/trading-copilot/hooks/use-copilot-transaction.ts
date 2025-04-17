@@ -1,18 +1,11 @@
 import { useMutation } from '@tanstack/react-query';
-import { Hex } from 'viem';
 import { getChainById } from '@idriss-xyz/utils';
 import { Wallet } from '@idriss-xyz/wallet-connect';
 
 import { createWalletClient, TransactionRevertedError } from 'shared/web3';
 import { useObservabilityScope } from 'shared/observability';
 
-interface SwapProperties {
-  data: Hex;
-  gas?: bigint;
-  chain: number;
-  value: bigint;
-  to: `0x${string}`;
-}
+import { SwapProperties } from '../types';
 
 interface Properties {
   wallet: Wallet;

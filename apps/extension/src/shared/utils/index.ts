@@ -7,3 +7,7 @@ export {
 export { getDifferenceInDays, getEndsInLabel } from './date-utils';
 export { isFarcasterName } from './subscription-utils';
 export { reverseObject, createLookup } from './objects';
+
+export const isCorrectImageString = (image: string) => {
+  return image.startsWith('data:image');
+};

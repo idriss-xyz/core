@@ -4,12 +4,12 @@ import { join } from 'path';
 import { mode } from '../utils/mode';
 
 import { DataSource } from 'typeorm';
-import { Donation } from './entities/donations.entity';
-import { User } from './entities/user.entity';
-import { Token } from './entities/token.entity';
-import { RestructureDonations1743174000000 } from './migrations/1743174000000-RestructureDonations';
-import { AddTokenDecimals1743177600000 } from './migrations/1743177600000-AddTokenDecimals';
-import { AddAmountRaw1743181200000 } from './migrations/1743181200000-AddAmountRaw';
+import { Donation, Token, User } from './entities';
+import {
+  AddAmountRaw1743181200000,
+  AddTokenDecimals1743177600000,
+  RestructureDonations1743174000000,
+} from './migrations';
 
 dotenv.config(
   mode === 'production' ? {} : { path: join(__dirname, `../.env.${mode}`) },

@@ -1,11 +1,12 @@
 import fs from 'node:fs';
 
-import { createPublicClient, formatEther, Hex, http, parseAbiItem } from 'viem';
-import { base } from 'viem/chains';
+import { formatEther, Hex, parseAbiItem } from 'viem';
 import { NextResponse } from 'next/server';
 import { STAKER_ADDRESS } from '@idriss-xyz/constants';
+import { clientBase } from '@idriss-xyz/blockchain-clients';
 
 import { STAKED_EVENT, WITHDRAWN_EVENT } from '@/app/vault/constants';
+import { STAKED_EVENTS_FILE_PATH } from '@/constants';
 
 interface StakeEvent {
   user: Hex | undefined;
@@ -20,13 +21,6 @@ interface ApiResponse {
   events?: StakeEvent[];
 }
 
-const publicClient = createPublicClient({
-  chain: base,
-  transport: http('https://base-rpc.publicnode.com'),
-});
-
-const DATA_DIRECTORY_PATH = './data';
-const DATA_FILE_PATH = `${DATA_DIRECTORY_PATH}/staked-withdrawn-events.json`;
 const BLOCK_RANGE = 5000n;
 const STARTING_BLOCK = 25_614_733n;
 
@@ -40,7 +34,7 @@ const fetchStakeEvents = async (
     const endBlock =
       fromBlock + BLOCK_RANGE > toBlock ? toBlock : fromBlock + BLOCK_RANGE;
 
-    const stakedLogs = await publicClient.getLogs({
+    const stakedLogs = await clientBase.getLogs({
       address: STAKER_ADDRESS,
       event: parseAbiItem(STAKED_EVENT),
       fromBlock,
@@ -56,7 +50,7 @@ const fetchStakeEvents = async (
           continue;
         }
 
-        const block = await publicClient.getBlock({ blockNumber });
+        const block = await clientBase.getBlock({ blockNumber });
         const timestamp = Number(block.timestamp);
 
         events.push({
@@ -69,7 +63,7 @@ const fetchStakeEvents = async (
       }
     }
 
-    const withdrawnLogs = await publicClient.getLogs({
+    const withdrawnLogs = await clientBase.getLogs({
       address: STAKER_ADDRESS,
       event: parseAbiItem(WITHDRAWN_EVENT),
       fromBlock,
@@ -85,7 +79,7 @@ const fetchStakeEvents = async (
           continue;
         }
 
-        const block = await publicClient.getBlock({ blockNumber });
+        const block = await clientBase.getBlock({ blockNumber });
         const timestamp = Number(block.timestamp);
 
         events.push({
@@ -108,8 +102,8 @@ const loadExistingEvents = (): {
   events: StakeEvent[];
   lastProcessedBlock: bigint;
 } => {
-  if (fs.existsSync(DATA_FILE_PATH)) {
-    const data = JSON.parse(fs.readFileSync(DATA_FILE_PATH, 'utf8'));
+  if (fs.existsSync(STAKED_EVENTS_FILE_PATH)) {
+    const data = JSON.parse(fs.readFileSync(STAKED_EVENTS_FILE_PATH, 'utf8'));
     return {
       events: data.events ?? [],
       lastProcessedBlock: data.lastProcessedBlock
@@ -121,8 +115,8 @@ const loadExistingEvents = (): {
 };
 
 const saveEventsToFile = (events: StakeEvent[], lastProcessedBlock: bigint) => {
-  if (!fs.existsSync(DATA_DIRECTORY_PATH)) {
-    fs.mkdirSync(DATA_DIRECTORY_PATH, { recursive: true });
+  if (!fs.existsSync(STAKED_EVENTS_FILE_PATH)) {
+    fs.mkdirSync(STAKED_EVENTS_FILE_PATH, { recursive: true });
   }
 
   const data = {
@@ -130,7 +124,11 @@ const saveEventsToFile = (events: StakeEvent[], lastProcessedBlock: bigint) => {
     lastProcessedBlock: lastProcessedBlock.toString(),
   };
 
-  fs.writeFileSync(DATA_FILE_PATH, JSON.stringify(data, null, 2), 'utf8');
+  fs.writeFileSync(
+    STAKED_EVENTS_FILE_PATH,
+    JSON.stringify(data, null, 2),
+    'utf8',
+  );
 };
 
 // ts-unused-exports:disable-next-line
@@ -138,7 +136,7 @@ export async function GET(): Promise<NextResponse<ApiResponse>> {
   try {
     const { events: existingEvents, lastProcessedBlock } = loadExistingEvents();
 
-    const latestBlock = await publicClient.getBlockNumber();
+    const latestBlock = await clientBase.getBlockNumber();
     if (lastProcessedBlock >= latestBlock) {
       return NextResponse.json({ events: existingEvents });
     }

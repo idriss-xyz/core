@@ -65,10 +65,16 @@ export class GetFarcasterAddressCommand extends Command<Payload, Response> {
           return address.protocol === 'ethereum';
         });
 
-      return verifiedAddress
+      const verifiedAddressSolana =
+        connectedAddressesData.result?.verifications?.find((address) => {
+          return address.protocol === 'solana';
+        });
+
+      return verifiedAddress || verifiedAddressSolana
         ? new OkResult({
             fid: transferData.transfer.to,
-            address: verifiedAddress.address,
+            address: verifiedAddress?.address,
+            addressSolana: verifiedAddressSolana?.address,
           })
         : new OkResult(null);
     } catch (error) {
