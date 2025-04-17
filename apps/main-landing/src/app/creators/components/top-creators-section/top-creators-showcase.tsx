@@ -71,7 +71,6 @@ export const TopCreatorsShowcase = ({
     <Marquee
       gap="sm"
       reverse={reverse}
-      displaySideBlur={false}
       sliderClassName={sliderClassName}
       className={classes('w-full', className)}
       items={creatorsToMap.map((creator, index) => {
