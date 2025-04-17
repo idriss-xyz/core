@@ -16,7 +16,8 @@
         "DEV_LOGIN_PASSWORD",
         "PUBLIC_ACCESS_ENABLED",
         "CI",
-        "CREATOR_LINKS_SECRET"
+        "CREATOR_LINKS_SECRET",
+        "DYNAMIC_ENVIRONMENT_ID"
       ]
     },
     "@idriss-xyz/main-landing#start": {
@@ -29,7 +30,8 @@
         "DEV_LOGIN_PASSWORD",
         "PUBLIC_ACCESS_ENABLED",
         "CI",
-        "CREATOR_LINKS_SECRET"
+        "CREATOR_LINKS_SECRET",
+        "DYNAMIC_ENVIRONMENT_ID"
       ]
     },
     "@idriss-xyz/main-landing#dev": {
@@ -41,7 +43,8 @@
         "DEV_LOGIN_PASSWORD",
         "PUBLIC_ACCESS_ENABLED",
         "CI",
-        "CREATOR_LINKS_SECRET"
+        "CREATOR_LINKS_SECRET",
+        "DYNAMIC_ENVIRONMENT_ID"
       ]
     },
     "@idriss-xyz/extension#dev": {
