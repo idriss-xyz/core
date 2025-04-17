@@ -5,15 +5,15 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { Link } from '@idriss-xyz/ui/link';
 
-import { MarocosCard, OutstarCard, SmayroCard, RubiusCard } from './assets';
+import { DafaqtorCard, OutstarCard, SmayroCard, RubiusCard } from './assets';
 
 const creators = [
   {
-    name: 'Marocos231',
-    followers: '232.9K',
-    image: MarocosCard.src,
+    name: 'dafaqtor',
+    followers: '3.7K',
+    image: DafaqtorCard.src,
     platform: {
-      url: 'https://twitch.tv',
+      url: 'https://www.twitch.tv/dafaqtor',
       icon: (
         <Icon name="TwitchOutlinedBold" size={32} className="text-mint-200" />
       ),
