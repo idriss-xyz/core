@@ -164,11 +164,6 @@ const YapsStatsElement = ({
     enabled,
   });
 
-  // const smartFollowersQuery = useCommandQuery({
-  //   command: new GetSmartFollowersCommand({ username: username ?? '' }),
-  //   enabled,
-  // });
-
   const noYaps =
     yapsQuery.isLoading ||
     yapsQuery.isError ||
@@ -241,14 +236,6 @@ const YapsStatsElement = ({
                     (yapsQuery.data && Math.round(yapsQuery.data.yaps_all))}
                 </span>
               )}
-
-              {/*{!smartFollowersQuery.isError && (*/}
-              {/*  <span>*/}
-              {/*    Smart followers:{' '}*/}
-              {/*    {(smartFollowersQuery.isLoading && 'Loading...') ||*/}
-              {/*      smartFollowersQuery.data?.num_of_smart_followers}*/}
-              {/*  </span>*/}
-              {/*)}*/}
 
               {yapsQuery.isError && <span>No data available</span>}
             </>
