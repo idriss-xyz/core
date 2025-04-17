@@ -1,14 +1,18 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import { useCommandQuery } from 'shared/messaging';
-import { classes, PortalWithTailwind, usePooling } from 'shared/ui';
+import {
+  classes,
+  PortalWithTailwind,
+  TradingCopilotTooltip,
+  usePooling,
+} from 'shared/ui';
 import { useEventsLogger } from 'shared/observability';
 import { createLookup } from 'shared/utils';
 import { GetYapsCommand, checkForOrganizationBadge } from 'application/kaito';
 import { KAITO_LOGO } from 'assets/images';
 import { useExtensionSettings } from 'shared/extension';
 
-import { TradingCopilotTooltip } from '../notifications-popup/components/trading-copilot-tooltip';
 import { useLocationInfo } from '../hooks';
 
 const EVENT = createLookup(['YAPS_STATS_HOVER']);
