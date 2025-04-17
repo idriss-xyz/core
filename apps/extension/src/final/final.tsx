@@ -7,6 +7,7 @@ import {
   UserWidgets,
   PolymarketMarkets,
   FollowOnFarcaster,
+  YapsStats,
 } from './widgets';
 import { FollowTradingCopilot } from './widgets/follow-trading-copilot';
 
@@ -25,6 +26,7 @@ export const Final = () => {
       <Proposals />
       <FollowOnFarcaster />
       <FollowTradingCopilot />
+      <YapsStats />
     </ErrorBoundary>
   );
 };
