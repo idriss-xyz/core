@@ -1,4 +1,7 @@
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
+import { Metadata } from 'next';
+
+import { metadata as landingMetadata } from '@/app/layout';
 
 import { TopBar } from './components/top-bar';
 import { PlatformsSection } from './components/platforms-section';
@@ -7,6 +10,17 @@ import { ProsSection } from './components/pros-section';
 import { SetUp } from './components/set-up';
 import { TopCreators } from './components/top-creators';
 import { Footer } from './components/footer';
+
+// ts-unused-exports:disable-next-line
+export const metadata: Metadata = {
+  ...landingMetadata,
+  description:
+    'Creator monetization app that helps you earn more with instant payouts and near-zero platform cuts.',
+  openGraph: {
+    description:
+      'Creator monetization app that helps you earn more with instant payouts and near-zero platform cuts.',
+  },
+};
 
 // ts-unused-exports:disable-next-line
 export default function Landing() {
