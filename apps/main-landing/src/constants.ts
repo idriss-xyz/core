@@ -1,4 +1,4 @@
-import { parseAbi } from 'viem';
+import { Hex, parseAbi } from 'viem';
 
 export const INTERNAL_LINK = {
   SUPERPOWERS: '/#apps',
@@ -35,3 +35,15 @@ export const UNISWAP_MINIMIZED_ABI = parseAbi([
 export const POOL_ABI = parseAbi([
   'function slot0() view returns (uint160 sqrtPriceX96, int24 tick, uint16, uint16, uint16, uint8, bool)',
 ]);
+
+const DATA_DIRECTORY_PATH = './data';
+export const CLAIMED_EVENTS_FILE_PATH = `${DATA_DIRECTORY_PATH}/claimed-events.json`;
+export const STAKED_EVENTS_FILE_PATH = `${DATA_DIRECTORY_PATH}/staked-withdrawn-events.json`;
+export const STARTING_BLOCK_CLAIMED = 25_614_734n;
+
+export interface ClaimEvent {
+  to: Hex | undefined;
+  total: string | undefined;
+  bonus: boolean | undefined;
+  transactionHash: Hex | undefined;
+}

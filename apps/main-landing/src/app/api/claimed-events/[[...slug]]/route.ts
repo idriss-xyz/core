@@ -1,40 +1,14 @@
-import fs from 'node:fs';
-
 import { NextResponse } from 'next/server';
-import { Hex, parseEther } from 'viem';
+import { parseEther } from 'viem';
 
-interface ClaimEvent {
-  to: Hex | undefined;
-  total: string | undefined;
-  bonus: boolean | undefined;
-  transactionHash: Hex | undefined;
-}
+import { loadExistingEvents } from '@/utils';
+import { ClaimEvent } from '@/constants';
 
 interface ApiResponse {
   error?: string;
   events?: ClaimEvent[];
   score?: { address: string; score: string }[];
 }
-
-const DATA_DIRECTORY_PATH = './data';
-const DATA_FILE_PATH = `${DATA_DIRECTORY_PATH}/claimed-events.json`;
-const STARTING_BLOCK = 25_614_734n;
-
-const loadExistingEvents = (): {
-  events: ClaimEvent[];
-  lastProcessedBlock: bigint;
-} => {
-  if (fs.existsSync(DATA_FILE_PATH)) {
-    const data = JSON.parse(fs.readFileSync(DATA_FILE_PATH, 'utf8'));
-    return {
-      events: data.events ?? [],
-      lastProcessedBlock: data.lastProcessedBlock
-        ? BigInt(data.lastProcessedBlock)
-        : STARTING_BLOCK,
-    };
-  }
-  return { events: [], lastProcessedBlock: STARTING_BLOCK };
-};
 
 // ts-unused-exports:disable-next-line
 export function GET(request: Request): NextResponse<ApiResponse> {
@@ -44,8 +18,7 @@ export function GET(request: Request): NextResponse<ApiResponse> {
     const addressesFormat = url.searchParams.get('addresses');
     const snapshotFormat = snapshotParameter && addressesFormat;
 
-    const { events: existingEvents } = loadExistingEvents();
-    const events = existingEvents;
+    const { events } = loadExistingEvents();
 
     if (snapshotFormat) {
       const score = events
