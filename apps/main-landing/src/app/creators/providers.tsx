@@ -3,13 +3,10 @@ import NiceModal from '@ebay/nice-modal-react';
 import { WithPortal } from '@idriss-xyz/ui/providers/with-portal';
 import { ReactNode } from 'react';
 import dynamic from 'next/dynamic';
+import { DynamicContextProvider } from '@dynamic-labs/sdk-react-core';
+import { EthereumWalletConnectors } from '@dynamic-labs/ethereum';
 
 import { QueryProvider } from '@/providers';
-
-import {
-  DynamicContextProvider,
-} from "@dynamic-labs/sdk-react-core";
-import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
 
 type Properties = {
   children: ReactNode;
