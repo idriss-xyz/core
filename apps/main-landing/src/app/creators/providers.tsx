@@ -6,6 +6,11 @@ import dynamic from 'next/dynamic';
 
 import { QueryProvider } from '@/providers';
 
+import {
+  DynamicContextProvider,
+} from "@dynamic-labs/sdk-react-core";
+import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
+
 type Properties = {
   children: ReactNode;
 };
@@ -24,9 +29,16 @@ export const Providers = ({ children }: Properties) => {
     <QueryProvider>
       <WithPortal>
         <NiceModal.Provider>
-          <WalletContextProvider>
-            <>{children}</>
-          </WalletContextProvider>
+          <DynamicContextProvider
+            settings={{
+              environmentId: process.env.DYNAMIC_ENVIRONMENT_ID ?? '',
+              walletConnectors: [EthereumWalletConnectors],
+            }}
+          >
+            <WalletContextProvider>
+              <>{children}</>
+            </WalletContextProvider>
+          </DynamicContextProvider>
         </NiceModal.Provider>
       </WithPortal>
     </QueryProvider>
