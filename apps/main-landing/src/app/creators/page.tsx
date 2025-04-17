@@ -1,45 +1,47 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 import {
-  ANNOUNCEMENT_LINK,
   CHAIN,
-  CHAIN_ID_TO_TOKENS,
-  CREATORS_LINK,
-  DEFAULT_ALLOWED_CHAINS_IDS,
   ChainToken,
   TokenSymbol,
+  CREATORS_LINK,
+  ANNOUNCEMENT_LINK,
+  CHAIN_ID_TO_TOKENS,
+  DEFAULT_ALLOWED_CHAINS_IDS,
 } from '@idriss-xyz/constants';
-import { Button } from '@idriss-xyz/ui/button';
-import { Form } from '@idriss-xyz/ui/form';
-import { Link } from '@idriss-xyz/ui/link';
-import { Multiselect, MultiselectOption } from '@idriss-xyz/ui/multiselect';
-import { classes } from '@idriss-xyz/ui/utils';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
 import { isAddress } from 'viem';
 import { normalize } from 'viem/ens';
+import { Form } from '@idriss-xyz/ui/form';
+import { Link } from '@idriss-xyz/ui/link';
+import { Button } from '@idriss-xyz/ui/button';
+import { classes } from '@idriss-xyz/ui/utils';
+import { Controller, useForm } from 'react-hook-form';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Multiselect, MultiselectOption } from '@idriss-xyz/ui/multiselect';
 
 import { backgroundLines2, backgroundLines3 } from '@/assets';
-import { TopBar } from '@/components';
 
-import { ethereumClient } from './donate/config';
 import { Providers } from './providers';
+import { ethereumClient } from './donate/config';
+import { TopBar } from './landing/components/top-bar';
 
 type FormPayload = {
   name: string;
   address: string;
-  tokensSymbols: string[];
   chainsIds: number[];
+  tokensSymbols: string[];
 };
 
 const ALL_CHAIN_IDS = Object.values(CHAIN).map((chain) => {
   return chain.id;
 });
+
 const ALL_TOKEN_SYMBOLS = Object.values(CHAIN_ID_TO_TOKENS)
   .flat()
   .map((token) => {
     return token.symbol;
   });
+
 const UNIQUE_ALL_TOKEN_SYMBOLS = [...new Set(ALL_TOKEN_SYMBOLS)];
 
 const TOKENS_ORDER: Record<TokenSymbol, number> = {
@@ -59,8 +61,8 @@ const TOKENS_ORDER: Record<TokenSymbol, number> = {
 
 // ts-unused-exports:disable-next-line
 export default function Donors() {
-  const [copiedDonationLink, setCopiedDonationLink] = useState(false);
   const [copiedObsLink, setCopiedObsLink] = useState(false);
+  const [copiedDonationLink, setCopiedDonationLink] = useState(false);
 
   const formMethods = useForm<FormPayload>({
     defaultValues: {
@@ -98,7 +100,9 @@ export default function Donors() {
       if (uniqueSymbols.has(token.symbol)) {
         return false;
       }
+
       uniqueSymbols.add(token.symbol);
+
       return true;
     });
 
@@ -131,9 +135,11 @@ export default function Donors() {
       const foundChain = Object.values(CHAIN).find((chain) => {
         return chain.id === chainId;
       });
+
       if (!foundChain) {
         throw new Error(`${chainId} not found`);
       }
+
       return {
         label: foundChain.name,
         value: foundChain.id,
@@ -163,6 +169,7 @@ export default function Donors() {
 
   useEffect(() => {
     const currentTokensSymbols = formMethods.getValues('tokensSymbols');
+
     const updatedTokens = currentTokensSymbols.filter((symbol) => {
       return chainsIds.some((chainId) => {
         return CHAIN_ID_TO_TOKENS[chainId]?.some((token) => {
@@ -170,6 +177,7 @@ export default function Donors() {
         });
       });
     });
+
     if (updatedTokens.length !== currentTokensSymbols.length) {
       formMethods.setValue('tokensSymbols', updatedTokens);
     }
@@ -177,6 +185,7 @@ export default function Donors() {
 
   const validateAndCopy = async (copyFunction: () => Promise<void>) => {
     const isValid = await formMethods.trigger();
+
     if (isValid) {
       // iOS is strict about gestures, and will throw NotAllowedError with async validation (e.g. API calls)
       // setTimeout works here because it executes code in a subsequent event loop tick.
@@ -205,11 +214,12 @@ export default function Donors() {
     const donationURL = `https://www.idriss.xyz/creators/donate?address=${address}&token=${tokensSymbols.join(',')}&network=${chainsShortNames.join(',')}&creatorName=${creatorName}`;
 
     await navigator.clipboard.writeText(donationURL);
+
     try {
       await fetch('https://api.idriss.xyz/creators/links', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ donationURL }),
+        headers: { 'Content-Type': 'application/json' },
       });
     } catch {
       console.warn('Error saving creator link.');
@@ -218,6 +228,7 @@ export default function Donors() {
     setCopiedDonationLink(true);
     setCopiedObsLink(false);
   };
+
   // eslint-disable-next-line unicorn/consistent-function-scoping
   const copyObsLink = async () => {
     await navigator.clipboard.writeText(
@@ -240,30 +251,33 @@ export default function Donors() {
   return (
     <Providers>
       <TopBar />
+
       <main className="relative flex min-h-screen grow flex-col items-center justify-around gap-4 overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] px-2 pb-1 pt-[56px] lg:flex-row lg:items-start lg:justify-center lg:px-0">
         <link rel="preload" as="image" href={backgroundLines2.src} />
         <img
+          alt=""
           src={backgroundLines2.src}
           className="pointer-events-none absolute top-0 hidden size-full opacity-40 lg:block"
-          alt=""
         />
 
         <div className="mt-8 w-[440px] max-w-full overflow-hidden px-safe lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]">
           <div className="container relative flex w-full flex-col items-center rounded-xl bg-white px-4 pb-3 pt-6">
             <link rel="preload" as="image" href={backgroundLines3.src} />
             <img
+              alt=""
               src={backgroundLines3.src}
               className="pointer-events-none absolute top-0 hidden size-full opacity-40 lg:block"
-              alt=""
             />
+
             <h1 className="self-start text-heading4">
               Create your donation link
             </h1>
+
             <div className="w-full">
               <Form className="w-full">
                 <Controller
-                  control={formMethods.control}
                   name="name"
+                  control={formMethods.control}
                   rules={{
                     required: 'Name is required',
                     maxLength: {
@@ -283,9 +297,10 @@ export default function Donors() {
                     );
                   }}
                 />
+
                 <Controller
-                  control={formMethods.control}
                   name="address"
+                  control={formMethods.control}
                   rules={{
                     required: 'Address is required',
                     validate: async (value) => {
@@ -295,10 +310,12 @@ export default function Donors() {
                             await ethereumClient?.getEnsAddress({
                               name: normalize(value),
                             });
+
                           return resolvedAddress
                             ? true
                             : 'This address doesn’t exist.';
                         }
+
                         return isAddress(value)
                           ? true
                           : 'This address doesn’t exist.';
@@ -319,9 +336,10 @@ export default function Donors() {
                     );
                   }}
                 />
+
                 <Controller
-                  control={formMethods.control}
                   name="chainsIds"
+                  control={formMethods.control}
                   rules={{
                     required: 'Select at least one network',
                   }}
@@ -329,16 +347,16 @@ export default function Donors() {
                     return (
                       <>
                         <Multiselect<number>
-                          inputClassName="mt-6 w-full"
                           label="Network"
+                          value={field.value}
+                          inputClassName="mt-6 w-full"
                           options={allowedChainOptions}
+                          helperText={fieldState.error?.message}
+                          error={Boolean(fieldState.error?.message)}
                           onChange={(value) => {
                             onChangeChainId();
                             field.onChange(value);
                           }}
-                          value={field.value}
-                          helperText={fieldState.error?.message}
-                          error={Boolean(fieldState.error?.message)}
                         />
                       </>
                     );
@@ -346,29 +364,33 @@ export default function Donors() {
                 />
 
                 <Controller
-                  control={formMethods.control}
                   name="tokensSymbols"
+                  control={formMethods.control}
                   rules={{
                     required: 'Select at least one token',
                   }}
                   render={({ field, fieldState }) => {
                     return (
                       <Multiselect<string>
-                        inputClassName="mt-6 w-full"
                         label="Token"
-                        options={uniqueTokenOptions}
-                        onChange={field.onChange}
                         value={field.value}
+                        onChange={field.onChange}
+                        inputClassName="mt-6 w-full"
+                        options={uniqueTokenOptions}
                         helperText={fieldState.error?.message}
                         error={Boolean(fieldState.error?.message)}
                       />
                     );
                   }}
                 />
+
                 <div className="mt-6 grid grid-cols-2 gap-2 lg:gap-4">
                   <Button
-                    intent="primary"
                     size="medium"
+                    intent="primary"
+                    onClick={() => {
+                      return validateAndCopy(copyDonationLink);
+                    }}
                     prefixIconName={
                       copiedDonationLink ? 'CheckCircle2' : undefined
                     }
@@ -377,44 +399,43 @@ export default function Donors() {
                       copiedDonationLink &&
                         'bg-mint-600 hover:bg-mint-600 [&>div]:hidden',
                     )}
-                    onClick={() => {
-                      return validateAndCopy(copyDonationLink);
-                    }}
                   >
                     {copiedDonationLink ? 'COPIED' : 'DONATION LINK'}
                   </Button>
 
                   <Button
-                    intent="secondary"
                     size="medium"
+                    intent="secondary"
                     prefixIconName={copiedObsLink ? 'CheckCircle2' : undefined}
+                    onClick={() => {
+                      return validateAndCopy(copyObsLink);
+                    }}
                     className={classes(
                       'w-full',
                       copiedObsLink &&
                         'border-mint-600 bg-mint-300 hover:bg-mint-300',
                     )}
-                    onClick={() => {
-                      return validateAndCopy(copyObsLink);
-                    }}
                   >
                     {copiedObsLink ? 'COPIED' : 'OBS LINK'}
                   </Button>
                 </div>
               </Form>
             </div>
+
             <Link size="xs" href="creators/banner" className="mb-4 mt-[38px]">
               Download a banner for your bio
             </Link>
           </div>
         </div>
+
         <Button
-          className="px-5 py-3.5 lg:absolute lg:bottom-6 lg:right-7 lg:translate-x-0"
-          intent="secondary"
+          asLink
+          isExternal
           size="small"
+          intent="secondary"
           prefixIconName="InfoCircle"
           href={ANNOUNCEMENT_LINK.CREATORS_DONATIONS}
-          isExternal
-          asLink
+          className="px-5 py-3.5 lg:absolute lg:bottom-6 lg:right-7 lg:translate-x-0"
         >
           STEP-BY-STEP GUIDE
         </Button>

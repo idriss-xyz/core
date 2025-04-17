@@ -90,7 +90,45 @@ export interface TipHistoryNode {
 }
 
 export interface TipHistoryResponse {
-  data: {
-    node: TipHistoryNode;
-  }[];
+  donations: DonationData[];
+  leaderboard: LeaderboardStats[];
+}
+
+interface DonationData {
+  transactionHash: Hex;
+  fromAddress: Hex;
+  toAddress: Hex;
+  timestamp: number;
+  comment?: string;
+  tradeValue: number;
+  tokenAddress: Hex;
+  network: string;
+  fromUser: DonationUser;
+  toUser: DonationUser;
+  token: DonationToken;
+  amountRaw: string;
+}
+
+interface LeaderboardStats {
+  address: Hex;
+  avatarUrl: string;
+  displayName: string;
+  totalAmount: number;
+  donateLink?: string;
+}
+
+interface DonationUser {
+  address: Hex;
+  displayName?: string;
+  displayNameSource?: string;
+  avatarUrl?: string;
+  avatarSource?: string;
+}
+
+interface DonationToken {
+  address: Hex;
+  symbol: string;
+  imageUrl?: string;
+  network: string;
+  decimals: number;
 }

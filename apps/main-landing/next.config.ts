@@ -56,6 +56,11 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: '/donors/ranking',
+        destination: '/creators/donor/ranking',
+        permanent: true,
+      },
+      {
         source: '/streamers',
         destination: '/creators',
         permanent: true,
@@ -101,6 +106,18 @@ const nextConfig: NextConfig = {
       {
         source: '/github',
         destination: 'https://www.github.com/idriss-xyz',
+        basePath: false,
+        permanent: false,
+      },
+      {
+        source: '/tiktok',
+        destination: 'https://www.tiktok.com/@idriss_xyz_',
+        basePath: false,
+        permanent: false,
+      },
+      {
+        source: '/instagram',
+        destination: 'https://www.instagram.com/idriss_xyz_',
         basePath: false,
         permanent: false,
       },

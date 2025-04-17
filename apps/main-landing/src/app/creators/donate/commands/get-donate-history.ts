@@ -13,7 +13,7 @@ type Options = {
 };
 
 const getDonateHistory = async (payload: Payload) => {
-  const tipHistory = await fetch(`${CREATOR_API_URL}/tip-history`, {
+  const response = await fetch(`${CREATOR_API_URL}/tip-history`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -21,9 +21,13 @@ const getDonateHistory = async (payload: Payload) => {
     body: JSON.stringify(payload),
   });
 
-  const result = await tipHistory.json();
+  if (!response.ok) {
+    throw new Error('Failed to fetch donate history');
+  }
 
-  return result as TipHistoryResponse;
+  const donateHistory = await response.json();
+
+  return donateHistory as TipHistoryResponse;
 };
 
 export const useGetTipHistory = (payload: Payload, options?: Options) => {
