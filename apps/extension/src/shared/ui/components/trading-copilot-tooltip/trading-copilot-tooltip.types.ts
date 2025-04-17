@@ -1,7 +1,11 @@
 import { ReactNode } from 'react';
 
 export interface TradingCopilotTooltipProperties {
-  children: ReactNode;
   content: ReactNode;
   className?: string;
+  children: ReactNode;
+  disableTooltip?: boolean;
+  onMouseEnter?: () => void;
+  triggerClassName?: string;
+  wrapperClassName?: string;
 }

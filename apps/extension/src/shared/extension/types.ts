@@ -9,6 +9,7 @@ export type ExtensionSettingName =
   | 'agora-enabled'
   | 'polymarket-enabled'
   | 'gitcoin-enabled'
+  | 'kaito-enabled'
   | 'trading-copilot-latest-transactions-enabled'
   | 'trading-copilot-notifications-enabled';
 
