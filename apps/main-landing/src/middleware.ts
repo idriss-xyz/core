@@ -23,6 +23,7 @@ export function middleware(request: NextRequest) {
   return response;
 }
 
+// ts-unused-exports:disable-next-line
 export const config = {
   matcher: '/:path*',
 };
