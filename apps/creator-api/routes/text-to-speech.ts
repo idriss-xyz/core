@@ -39,7 +39,8 @@ router.post(
     try {
       const { text } = req.body;
       const trimmedText = text.trim();
-      const finalText = trimmedText.length > 70 ? trimmedText.slice(0, 70) : trimmedText;
+      const finalText =
+        trimmedText.length > 70 ? trimmedText.slice(0, 70) : trimmedText;
 
       const response = await fetch(
         `https://api.elevenlabs.io/v1/text-to-speech/${ELEVENLABS_VOICE_ID}`,
