@@ -23,17 +23,16 @@ export const Mobile = ({ hideNavigation, isLanding, isSticky }: Properties) => {
     return (
       <div className="flex flex-row flex-wrap items-center justify-end gap-2 md:hidden">
         {isSticky && (
-
-        <Button
-          asLink
-          size="small"
-          intent="primary"
-          href={CREATORS_FORM_LINK}
-          aria-label="Start earning"
-          suffixIconName="IdrissArrowRight"
-        >
-          START EARNING
-        </Button>
+          <Button
+            asLink
+            size="small"
+            intent="primary"
+            href={CREATORS_FORM_LINK}
+            aria-label="Start earning"
+            suffixIconName="IdrissArrowRight"
+          >
+            START EARNING
+          </Button>
         )}
 
         <DesktopSocials
