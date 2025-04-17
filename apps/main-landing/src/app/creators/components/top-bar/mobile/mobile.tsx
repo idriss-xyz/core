@@ -22,6 +22,8 @@ export const Mobile = ({ hideNavigation, isLanding, isSticky }: Properties) => {
   if (isLanding) {
     return (
       <div className="flex flex-row flex-wrap items-center justify-end gap-2 md:hidden">
+        {isSticky && (
+
         <Button
           asLink
           size="small"
@@ -29,13 +31,10 @@ export const Mobile = ({ hideNavigation, isLanding, isSticky }: Properties) => {
           href={CREATORS_FORM_LINK}
           aria-label="Start earning"
           suffixIconName="IdrissArrowRight"
-          className={classes(
-            'invisible opacity-0',
-            isSticky && 'opacity-1 visible',
-          )}
         >
           START EARNING
         </Button>
+        )}
 
         <DesktopSocials
           enlargeIcon={!isSticky}
