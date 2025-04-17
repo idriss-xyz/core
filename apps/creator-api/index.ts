@@ -13,6 +13,7 @@ import pushDonationRouter from './routes/push-donation';
 import overwriteDonationRouter from './routes/overwrite-donation';
 import refetchDonationRouter from './routes/refetch-donations';
 import refetchENSRouter from './routes/force-refresh-ens';
+import textToSpeechRouter from './routes/text-to-speech';
 import cors from 'cors';
 import { initializeDatabase } from './db/database';
 
@@ -26,6 +27,7 @@ initializeDatabase()
 
 const app: Application = express();
 app.use(express.json());
+
 app.use(
   cors({
     origin: '*',
@@ -41,6 +43,7 @@ app.use('/push-donation', pushDonationRouter);
 app.use('/overwrite-donation', overwriteDonationRouter);
 app.use('/refetch-donations', refetchDonationRouter);
 app.use('/force-refresh-ens', refetchENSRouter);
+app.use('/text-to-speech', textToSpeechRouter);
 
 const HOST = process.env.HOST;
 const PORT = Number(process.env.PORT) || 4000;
