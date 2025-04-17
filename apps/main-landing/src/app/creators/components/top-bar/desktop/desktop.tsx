@@ -26,7 +26,7 @@ export const Desktop = ({ hideNavigation, displayCTA }: Properties) => {
             aria-label="Start earning"
             suffixIconName="IdrissArrowRight"
           >
-            START EARNING
+            Start earning
           </Button>
         </div>
       ) : (

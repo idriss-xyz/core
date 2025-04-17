@@ -40,9 +40,9 @@ export const HeroSection = () => {
               'lg:text-left xl:text-display2',
             )}
           >
-            Make More
-            {'\n'}Grow Faster
-            {'\n'}TAKE CONTROL
+            Make more
+            {'\n'}Grow faster
+            {'\n'}Take control
           </h1>
 
           <p
@@ -64,7 +64,7 @@ export const HeroSection = () => {
             aria-label="Start earning now"
             suffixIconName="IdrissArrowRight"
           >
-            START EARNING NOW
+            Start earning now
           </Button>
         </div>
 

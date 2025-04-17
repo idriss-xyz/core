@@ -16,8 +16,13 @@ export const Menu = ({ className }: Properties) => {
           <NavigationMenu.Link asChild>
             <span>
               <Link href={EXTERNAL_LINK.TOP_CREATORS} passHref legacyBehavior>
-                <Button intent="tertiary" size="large" asLink>
-                  TOP CREATORS
+                <Button
+                  intent="tertiary"
+                  size="large"
+                  asLink
+                  className="uppercase"
+                >
+                  Top creators
                 </Button>
               </Link>
             </span>
@@ -28,8 +33,13 @@ export const Menu = ({ className }: Properties) => {
           <NavigationMenu.Link asChild>
             <span>
               <Link href={EXTERNAL_LINK.TOP_DONORS} passHref legacyBehavior>
-                <Button intent="tertiary" size="large" asLink>
-                  TOP DONORS
+                <Button
+                  intent="tertiary"
+                  size="large"
+                  asLink
+                  className="uppercase"
+                >
+                  Top donors
                 </Button>
               </Link>
             </span>
@@ -40,8 +50,13 @@ export const Menu = ({ className }: Properties) => {
           <NavigationMenu.Link asChild>
             <span>
               <Link href={INTERNAL_LINK.TOKEN} passHref legacyBehavior>
-                <Button intent="tertiary" size="large" asLink>
-                  TOKEN
+                <Button
+                  intent="tertiary"
+                  size="large"
+                  asLink
+                  className="uppercase"
+                >
+                  Token
                 </Button>
               </Link>
             </span>

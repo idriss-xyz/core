@@ -42,7 +42,7 @@ export const ProsSection = () => {
                 'lg:text-display3',
               )}
             >
-              WHY CREATORS CHOOSE IDRISS
+              Why creators choose Idriss
             </h2>
 
             <p

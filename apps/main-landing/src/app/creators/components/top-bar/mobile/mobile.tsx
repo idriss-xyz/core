@@ -31,7 +31,7 @@ export const Mobile = ({ hideNavigation, isLanding, isSticky }: Properties) => {
             aria-label="Start earning"
             suffixIconName="IdrissArrowRight"
           >
-            START EARNING
+            Start earning
           </Button>
         )}
 
@@ -81,8 +81,13 @@ export const Mobile = ({ hideNavigation, isLanding, isSticky }: Properties) => {
                             legacyBehavior
                             href={EXTERNAL_LINK.TOP_CREATORS}
                           >
-                            <Button intent="tertiary" size="large" asLink>
-                              TOP CREATORS
+                            <Button
+                              intent="tertiary"
+                              size="large"
+                              asLink
+                              className="uppercase"
+                            >
+                              Top creators
                             </Button>
                           </Link>
                         </span>
@@ -95,8 +100,13 @@ export const Mobile = ({ hideNavigation, isLanding, isSticky }: Properties) => {
                             legacyBehavior
                             href={EXTERNAL_LINK.TOP_DONORS}
                           >
-                            <Button intent="tertiary" size="large" asLink>
-                              TOP DONORS
+                            <Button
+                              intent="tertiary"
+                              size="large"
+                              asLink
+                              className="uppercase"
+                            >
+                              Top donors
                             </Button>
                           </Link>
                         </span>
@@ -109,8 +119,13 @@ export const Mobile = ({ hideNavigation, isLanding, isSticky }: Properties) => {
                             legacyBehavior
                             href={INTERNAL_LINK.TOKEN}
                           >
-                            <Button intent="tertiary" size="large" asLink>
-                              TOKEN
+                            <Button
+                              intent="tertiary"
+                              size="large"
+                              asLink
+                              className="uppercase"
+                            >
+                              Token
                             </Button>
                           </Link>
                         </span>

@@ -44,20 +44,20 @@ export const Footer = () => {
                 'lg:text-display3',
               )}
             >
-              Make More
-              {'\n'}Grow Faster
-              {'\n'}TAKE CONTROL
+              Make more
+              {'\n'}Grow faster
+              {'\n'}Take control
             </h2>
             <Button
               intent="negative"
               size="medium"
               prefixIconName="BadgeDollarSign"
-              className="mt-6 lg:mt-10"
+              className="mt-6 uppercase lg:mt-10"
               href={CREATORS_FORM_LINK}
               isExternal
               asLink
             >
-              START EARNING NOW
+              Start earning now
             </Button>
           </div>
 

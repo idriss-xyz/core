@@ -47,8 +47,8 @@ export const SetUp = () => {
                     'lg:text-display3',
                   )}
                 >
-                  SET UP IN JUST{'\n'}
-                  A&nbsp;FEW CLICKS
+                  Set up in just{'\n'}
+                  a&nbsp;few clicks
                 </h2>
 
                 <ul className="flex flex-col gap-y-6">
@@ -84,8 +84,9 @@ export const SetUp = () => {
                   intent="secondary"
                   href={CREATORS_USER_GUIDE_LINK}
                   suffixIconName="IdrissArrowRight"
+                  className="uppercase"
                 >
-                  LEARN MORE
+                  Learn more
                 </Button>
               </div>
             </div>

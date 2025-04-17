@@ -22,8 +22,8 @@ export const PlatformsSection = () => {
                   'lg:text-display3',
                 )}
               >
-                Get Paid Anywhere
-                {'\n'}You Create
+                Get paid anywhere
+                {'\n'}you create
               </h2>
 
               <p
