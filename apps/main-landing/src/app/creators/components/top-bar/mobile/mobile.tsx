@@ -15,14 +15,20 @@ import { Socials as DesktopSocials } from '@/components/top-bar/components/deskt
 type Properties = {
   isSticky?: boolean;
   isLanding?: boolean;
+  displayCTA?: boolean;
   hideNavigation?: boolean;
 };
 
-export const Mobile = ({ hideNavigation, isLanding, isSticky }: Properties) => {
+export const Mobile = ({
+  isSticky,
+  isLanding,
+  displayCTA,
+  hideNavigation,
+}: Properties) => {
   if (isLanding) {
     return (
       <div className="flex flex-row flex-wrap items-center justify-end gap-2 md:hidden">
-        {isSticky && (
+        {displayCTA && (
           <Button
             asLink
             size="small"

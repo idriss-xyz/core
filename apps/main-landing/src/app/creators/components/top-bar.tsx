@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, RefObject } from 'react';
 import Link from 'next/link';
 import { classes } from '@idriss-xyz/ui/utils';
 
@@ -11,13 +11,16 @@ type Properties = {
   isLanding?: boolean;
   displayCTA?: boolean;
   hideNavigation?: boolean;
+  heroButtonReference?: RefObject<HTMLButtonElement>;
 };
 
 export const TopBar = ({
   isLanding,
   displayCTA,
   hideNavigation,
+  heroButtonReference,
 }: Properties) => {
+  const [displayCTAButton, setDisplayCTAButton] = useState<boolean>(false);
   const [isSticky, setIsSticky] = useState(false);
   const topBarReference = useRef<HTMLDivElement | null>(null);
 
@@ -25,14 +28,27 @@ export const TopBar = ({
     const handleScroll = (event: Event) => {
       const customEvent = event as CustomEvent<{ scrollTop: number }>;
 
+      const scrollTop = customEvent.detail.scrollTop;
+
       if (topBarReference.current) {
         const navbarHeight = topBarReference.current.offsetHeight;
 
-        if (customEvent.detail.scrollTop > navbarHeight) {
-          setIsSticky(true);
-        } else {
-          setIsSticky(false);
+        setIsSticky(scrollTop > navbarHeight);
+      }
+
+      if (heroButtonReference && displayCTA) {
+        const navbarBounding = topBarReference.current?.getBoundingClientRect();
+        const buttonBounding =
+          heroButtonReference.current?.getBoundingClientRect();
+
+        if (!navbarBounding || !buttonBounding) {
+          return;
         }
+
+        const isScrolledPastHeroButton =
+          buttonBounding.top + buttonBounding.height - navbarBounding.height;
+
+        setDisplayCTAButton(isScrolledPastHeroButton <= 0);
       }
     };
 
@@ -41,7 +57,7 @@ export const TopBar = ({
     return () => {
       window.removeEventListener('creatorsLandingPageScroll', handleScroll);
     };
-  }, []);
+  }, [displayCTA, heroButtonReference]);
 
   return (
     <div
@@ -65,7 +81,7 @@ export const TopBar = ({
         <Navigation
           isSticky={isSticky}
           isLanding={isLanding}
-          displayCTA={displayCTA}
+          displayCTA={displayCTAButton}
           hideNavigation={hideNavigation}
         />
       </div>

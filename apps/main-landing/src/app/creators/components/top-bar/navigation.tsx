@@ -19,6 +19,7 @@ export const Navigation = ({
       <Mobile
         isSticky={isSticky}
         isLanding={isLanding}
+        displayCTA={displayCTA}
         hideNavigation={hideNavigation}
       />
       <Desktop hideNavigation={hideNavigation} displayCTA={displayCTA} />
