@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
-import Script from 'next/script';
 import './globals.css';
 import { ReactNode } from 'react';
 
@@ -49,10 +48,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <Script
-          src="https://extension-files.twitch.tv/helper/v1/twitch-ext.min.js"
-          strategy="beforeInteractive"
-        />
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        <script src="https://extension-files.twitch.tv/helper/v1/twitch-ext.min.js" />
       </head>
       <body
         className={`${aeonikPro.variable} flex min-h-screen flex-col font-sans antialiased`}

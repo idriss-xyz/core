@@ -2,12 +2,29 @@ const { resolve, dirname, basename, join } = require('path');
 const { readFileSync, writeFileSync, mkdirSync } = require('fs');
 const { globSync } = require('glob');
 
+// point at this app's dist folder
 const baseDir = resolve('dist');
 const htmlFiles = globSync(`${baseDir}/**/*.html`);
 if (!htmlFiles.length) process.exit(0);
 
 htmlFiles.forEach((file) => {
   let contents = readFileSync(file, 'utf8'), scripts = [], scriptCounter = 1;
+
+  // ───────────────────────────────────────────────────────────────
+  // Inject Twitch Extension Helper as the very first script in <head>
+  // ───────────────────────────────────────────────────────────────
+  contents = contents
+    // remove any existing helper tags
+    .replace(
+      /<script\s+src="https:\/\/extension-files\.twitch\.tv\/helper\/v1\/twitch-ext\.min\.js"><\/script>\s*/g,
+      ''
+    )
+    // inject the helper immediately after <head>
+    .replace(
+      /<head>/,
+      `<head>
+  <script src="https://extension-files.twitch.tv/helper/v1/twitch-ext.min.js"></script>`
+    );
   const pageName = basename(file, '.html');
   const pageDir = join(dirname(file), pageName);
   mkdirSync(pageDir, { recursive: true });
