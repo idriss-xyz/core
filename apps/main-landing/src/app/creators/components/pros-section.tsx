@@ -111,16 +111,14 @@ export const ProsSection = () => {
                       exit={{ x: '-100%' }}
                       initial={{ x: '100%' }}
                       transition={{
-                        damping: 30,
-                        type: 'spring',
-                        stiffness: 300,
+                        type: 'keyframes',
                       }}
                       className="-mb-8 mt-auto flex w-full"
                     >
                       <img
                         alt=""
                         src={DONORS_LEADERBOARD.src}
-                        className="mx-auto w-full max-w-[300px]"
+                        className="mx-auto w-full max-w-[297px]"
                       />
                     </motion.div>
                   ) : (
@@ -130,11 +128,9 @@ export const ProsSection = () => {
                       exit={{ x: '-100%' }}
                       initial={{ x: '100%' }}
                       transition={{
-                        damping: 30,
-                        type: 'spring',
-                        stiffness: 300,
+                        type: 'keyframes',
                       }}
-                      className="mt-auto flex w-full flex-col items-center gap-y-5"
+                      className="mt-auto flex min-h-[247.33px] w-full flex-col items-center justify-center gap-y-5"
                     >
                       <img
                         alt=""
