@@ -61,6 +61,7 @@ export const TwitchOutlinedBold = ({ className, size = 64 }: Properties) => {
       fill="none"
       width={size}
       height={size}
+      viewBox="0 0 32 32"
       className={className}
       xmlns="http://www.w3.org/2000/svg"
     >

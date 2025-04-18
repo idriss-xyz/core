@@ -92,6 +92,7 @@ export default {
       center: true,
       padding: {
         'DEFAULT': '1rem',
+        'xs': '1rem',
         'sm': 0,
         'lg': 0,
         'xl': 0,
@@ -425,6 +426,9 @@ export default {
         '.container': {
           '@screen xs': {
             maxWidth: 'none',
+          },
+          '@screen sm': {
+            maxWidth: '544px',
           },
           '@screen md': {
             maxWidth: '704px',

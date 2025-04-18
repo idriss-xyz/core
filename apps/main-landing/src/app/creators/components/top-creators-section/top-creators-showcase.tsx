@@ -5,7 +5,7 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { Link } from '@idriss-xyz/ui/link';
 
-import { DafaqtorCard, OutstarCard, SmayroCard, RubiusCard } from './assets';
+import { DafaqtorCard, ExcelsorphCard, DmoneyCard } from './assets';
 
 const creators = [
   {
@@ -15,40 +15,41 @@ const creators = [
     platform: {
       url: 'https://www.twitch.tv/dafaqtor',
       icon: (
-        <Icon name="TwitchOutlinedBold" size={32} className="text-mint-200" />
+        <Icon
+          name="TwitchOutlinedBold"
+          size={32}
+          className="size-6 text-mint-200 lg:size-8"
+        />
       ),
     },
   },
   {
-    name: 'Smayro',
-    followers: '100.9K',
-    image: SmayroCard.src,
+    name: 'ExcelSorPH',
+    followers: '2.8K',
+    image: ExcelsorphCard.src,
     platform: {
-      url: 'https://twitch.tv',
+      url: 'https://www.twitch.tv/excelsorph',
       icon: (
-        <Icon name="TwitchOutlinedBold" size={32} className="text-mint-200" />
+        <Icon
+          name="TwitchOutlinedBold"
+          size={32}
+          className="size-6 text-mint-200 lg:size-8"
+        />
       ),
     },
   },
   {
-    name: 'Outstar',
-    followers: '65.6K',
-    image: OutstarCard.src,
+    name: 'Dmoney',
+    followers: '18.3K',
+    image: DmoneyCard.src,
     platform: {
-      url: 'https://twitch.tv',
+      url: 'https://www.twitch.tv/dmoney',
       icon: (
-        <Icon name="TwitchOutlinedBold" size={32} className="text-mint-200" />
-      ),
-    },
-  },
-  {
-    name: 'Rubius',
-    followers: '90.2K',
-    image: RubiusCard.src,
-    platform: {
-      url: 'https://twitch.tv',
-      icon: (
-        <Icon name="TwitchOutlinedBold" size={32} className="text-mint-200" />
+        <Icon
+          name="TwitchOutlinedBold"
+          size={32}
+          className="size-6 text-mint-200 lg:size-8"
+        />
       ),
     },
   },
@@ -85,7 +86,7 @@ export const TopCreatorsShowcase = ({
             <img
               alt=""
               src={creator.image}
-              className="z-1 block aspect-[4/5] size-full min-h-full max-w-[250px] object-cover lg:max-w-[400px]"
+              className="lg:max-w-screen-xs z-1 block aspect-[4/5] size-full min-h-full max-w-[250px] object-cover"
             />
 
             <div className="absolute bottom-6 left-6 flex w-[calc(100%-3rem)] flex-col items-start gap-y-2 rounded-3xl bg-white/40 p-4 shadow-card">
@@ -106,7 +107,7 @@ export const TopCreatorsShowcase = ({
                 {creator.followers} followers
               </span>
 
-              <div className="flex flex-row items-center gap-x-2">
+              <div className="flex w-full flex-row items-center justify-between gap-x-2 lg:justify-start">
                 <span
                   className={classes(
                     'text-heading6 text-midnightGreen-900',

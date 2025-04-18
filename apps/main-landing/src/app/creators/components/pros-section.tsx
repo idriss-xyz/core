@@ -61,12 +61,13 @@ export const ProsSection = () => {
           <div className="flex w-full flex-col items-center gap-2">
             <h2
               className={classes(
-                'text-center text-display5 uppercase text-midnightGreen-100',
-                'md:text-display4',
+                'whitespace-pre-wrap text-center text-display5 uppercase text-midnightGreen-100',
+                'sm:whitespace-nowrap md:text-display4',
                 'lg:text-display3',
               )}
             >
-              Why creators choose Idriss
+              Why creators
+              {'\n'}choose Idriss
             </h2>
 
             <p

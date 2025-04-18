@@ -25,7 +25,7 @@ export const SetUp = () => {
         )}
       >
         <div className="flex w-full flex-col items-center">
-          <div className="relative grid w-full gap-x-12 gap-y-10 bg-[linear-gradient(113.57deg,_#022B1E_34.81%,_#079165_123.57%)] pt-8 md:pt-10 lg:grid-cols-[5.5fr,4.5fr] lg:gap-14 lg:rounded-[40px] lg:py-0 xl:gap-16">
+          <div className="relative grid w-full gap-x-12 gap-y-10 overflow-hidden bg-[linear-gradient(113.57deg,_#022B1E_34.81%,_#079165_123.57%)] pt-8 md:pt-10 lg:grid-cols-[5.5fr,4.5fr] lg:gap-14 lg:rounded-[40px] lg:py-0 xl:gap-16">
             <div
               className={classes(
                 'flex flex-col items-start justify-center gap-y-8 px-4',
