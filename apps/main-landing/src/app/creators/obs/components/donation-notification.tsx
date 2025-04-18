@@ -48,6 +48,7 @@ export default function DonationNotification({
   const { showNotification } = useDonationNotification(
     audio,
     amount,
+    message,
     NOTIFICATION_DISPLAY_DURATION,
   );
 

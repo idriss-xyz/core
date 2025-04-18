@@ -1,4 +1,5 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, MutableRefObject } from 'react';
+import { isAddress } from 'viem';
 
 import { useNotification } from 'shared/ui';
 import {
@@ -9,12 +10,14 @@ import {
 import {
   GetEnsInfoCommand,
   GetEnsNameCommand,
+  GetFarcasterUserCommand,
   GetTokensImageCommand,
   GetTokensListCommand,
   SwapData,
+  SwapDataToken,
 } from 'application/trading-copilot';
-import { GetImageCommand } from 'shared/utils';
-import { CHAIN } from 'shared/web3';
+import { GetImageCommand, isCorrectImageString } from 'shared/utils';
+import { CHAIN, SubscriptionsStorage } from 'shared/web3';
 
 import { TradingCopilotToast, TradingCopilotDialog } from './components';
 import { Properties, ContentProperties } from './notifications-popup.types';
@@ -50,52 +53,109 @@ const NotificationsPopupContent = ({
   activeDialog,
   isSwapEventListenerAdded,
 }: ContentProperties) => {
-  const selectedToken = useRef<Record<string, string>>({});
+  const selectedToken: MutableRefObject<SwapDataToken | null> =
+    useRef<SwapDataToken>(null);
   const selectedTokenImage = useRef<string>('');
   const notification = useNotification();
   const ensNameMutation = useCommandMutation(GetEnsNameCommand);
   const ensInfoMutation = useCommandMutation(GetEnsInfoCommand);
   const imageMutation = useCommandMutation(GetImageCommand);
+  const farcasterUserMutation = useCommandMutation(GetFarcasterUserCommand);
   const tokenListMutation = useCommandMutation(GetTokensListCommand);
   const tokenIconMutation = useCommandMutation(GetTokensImageCommand);
+  const [name, setName] = useState<string | null>(null);
+  const [avatar, setAvatar] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isSwapEventListenerAdded.current) {
       const handleSwapEvent = async (data: SwapData) => {
-        const ensName = await ensNameMutation.mutateAsync({
-          address: data.from,
+        let ensName: string | null = null;
+        let avatarImage: string | null = null;
+        const subscriptions = await SubscriptionsStorage.get();
+        const matchingSubscription = subscriptions?.find((sub) => {
+          return sub.address === data.from;
         });
+        const isEVMAddress = isAddress(data.from);
 
-        const ensAvatarUrl = await ensInfoMutation.mutateAsync({
-          ensName: ensName ?? '',
-          infoKey: 'avatar',
-        });
+        const getFarcasterDetails = async () => {
+          if (!matchingSubscription?.fid) return null;
+          const response = await farcasterUserMutation.mutateAsync({
+            id: matchingSubscription.fid,
+          });
+          if (!response) return null;
+          return {
+            name: response.user.displayName,
+            avatar: response.user.pfp.url,
+          };
+        };
 
-        const avatarImage = await imageMutation.mutateAsync({
-          src: ensAvatarUrl ?? '',
-        });
+        const getEnsDetails = async () => {
+          const ensNameResponse = await ensNameMutation.mutateAsync({
+            address: data.from,
+          });
+          if (!ensNameResponse) return null;
+          const ensAvatarUrl = await ensInfoMutation.mutateAsync({
+            ensName: ensNameResponse,
+            infoKey: 'avatar',
+          });
+          return {
+            name: ensNameResponse,
+            avatar: ensAvatarUrl,
+          };
+        };
+
+        const userDetails = isEVMAddress
+          ? ((await getEnsDetails()) ?? (await getFarcasterDetails()))
+          : await getFarcasterDetails();
+
+        if (userDetails) {
+          ensName = userDetails.name;
+          avatarImage =
+            (await imageMutation.mutateAsync({
+              src: userDetails.avatar ?? '',
+            })) ?? '';
+          if (!isCorrectImageString(avatarImage)) {
+            avatarImage = null;
+          }
+          setName(userDetails.name);
+          setAvatar(avatarImage);
+        } else {
+          setName(null);
+          setAvatar(null);
+        }
 
         const tokensList = await tokenListMutation.mutateAsync();
-
         const tokenAddress = data.tokenIn.address;
-
-        // Filter token list by chain (Base)
         const tokens = tokensList?.tokens?.[CHAIN.BASE.id] ?? [];
 
-        const tokenData =
-          tokens.find((t) => {
-            return t?.address?.toLowerCase() === tokenAddress.toLowerCase();
-          }) ?? {};
+        const tokenData = isEVMAddress
+          ? (tokens.find((t) => {
+              return t?.address?.toLowerCase() === tokenAddress.toLowerCase();
+            }) ?? {
+              address: tokenAddress,
+              symbol: '',
+              decimals: data.tokenIn.decimals,
+              amount: data.tokenIn.amount,
+              network: data.tokenIn.network,
+            })
+          : data.tokenIn;
 
         selectedToken.current = tokenData;
-
         const tokenImage =
-          tokenAddress.toLowerCase() === IDRISS_TOKEN_ADDRESS
+          tokenData.address.toLowerCase() === IDRISS_TOKEN_ADDRESS
             ? 'IdrissToken'
-            : ((await tokenIconMutation.mutateAsync({
-                tokeURI: tokenData?.logoURI ?? '',
-              })) ?? '');
-        selectedTokenImage.current = tokenImage;
+            : await (async () => {
+                try {
+                  return (
+                    (await tokenIconMutation.mutateAsync({
+                      tokenURI: tokenData?.logoURI ?? '',
+                    })) ?? ''
+                  );
+                } catch {
+                  return '';
+                }
+              })();
+        selectedTokenImage.current = '';
 
         notification.show(
           <TradingCopilotToast
@@ -122,6 +182,7 @@ const NotificationsPopupContent = ({
     ensInfoMutation,
     ensNameMutation,
     imageMutation,
+    farcasterUserMutation,
     isSwapEventListenerAdded,
     notification,
     openDialog,
@@ -135,6 +196,8 @@ const NotificationsPopupContent = ({
     <TradingCopilotDialog
       tokenData={selectedToken.current}
       tokenImage={selectedTokenImage.current}
+      userName={name ?? activeDialog.from}
+      userAvatar={avatar}
       dialog={activeDialog}
       closeDialog={closeDialog}
     />

@@ -1,11 +1,17 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ExternalLink } from '@idriss-xyz/ui/external-link';
 import { Icon as IdrissIcon } from '@idriss-xyz/ui/icon';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
+import { isSolanaAddress, getShortWalletHex } from '@idriss-xyz/utils';
 import { isAddress } from 'viem';
 
 import { useCommandQuery } from 'shared/messaging';
-import { Icon, LazyImage, getGithubUserLink } from 'shared/ui';
+import {
+  Icon,
+  LazyImage,
+  getGithubUserLink,
+  TradingCopilotTooltip,
+} from 'shared/ui';
 import { getTwitterUserLink } from 'host/twitter';
 
 import {
@@ -66,9 +72,17 @@ const SubscriptionItemContent = ({
 }: ContentProperties) => {
   const ensNameNotFound = isAddress(name);
   const isFarcasterSubscription = !!farcasterDetails;
+  const [showError, setShowError] = useState(false);
 
-  const removeSubscription = useCallback(() => {
-    onRemove({ address: subscription.address });
+  const removeSubscription = useCallback(async () => {
+    try {
+      await onRemove({
+        address: subscription.address,
+        fid: subscription.fid,
+      });
+    } catch {
+      setShowError(true);
+    }
   }, [onRemove, subscription]);
 
   const emailQuery = useCommandQuery({
@@ -107,6 +121,21 @@ const SubscriptionItemContent = ({
     enabled: !ensNameNotFound,
   });
 
+  useEffect(() => {
+    if (showError) {
+      const timer = setTimeout(() => {
+        setShowError(false);
+      }, 3000);
+      return () => {
+        return clearTimeout(timer);
+      };
+    }
+    return;
+  }, [showError]);
+
+  const shortenedName =
+    isAddress(name) || isSolanaAddress(name) ? getShortWalletHex(name) : name;
+
   return (
     <li className="flex items-center justify-between">
       <div className="flex items-center">
@@ -127,7 +156,17 @@ const SubscriptionItemContent = ({
           }
         />
         <p className="ml-1.5 flex items-center gap-1.5 text-label5 text-neutral-600">
-          {isFarcasterSubscription ? farcasterDetails.displayName : name}
+          {isFarcasterSubscription ? (
+            farcasterDetails.displayName
+          ) : (
+            <TradingCopilotTooltip
+              content={name}
+              className="absolute start-0 translate-x-0"
+            >
+              {shortenedName}
+            </TradingCopilotTooltip>
+          )}
+          {showError && <span className="ml-2 text-red-500">Try again.</span>}
           {twitterQuery.data && (
             <ExternalLink href={getTwitterUserLink(twitterQuery.data)}>
               <IdrissIcon
@@ -172,6 +211,7 @@ const SubscriptionItemContent = ({
         intent="tertiary"
         className="text-red-500"
         onClick={removeSubscription}
+        disabled={showError}
       />
     </li>
   );

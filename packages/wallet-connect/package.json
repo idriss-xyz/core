@@ -28,6 +28,10 @@
   "dependencies": {
     "@ebay/nice-modal-react": "^1.2.13",
     "@idriss-xyz/ui": "workspace:*",
+    "@solana/wallet-standard-wallet-adapter-base": "^1.1.4",
+    "@solana/web3.js": "^1.98.0",
+    "@wallet-standard/app": "^1.1.0",
+    "@wallet-standard/base": "^1.1.0",
     "mipd": "^0.0.7",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

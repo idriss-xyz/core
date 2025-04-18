@@ -1,8 +1,11 @@
 import { Icon } from '@idriss-xyz/ui/icon';
 import { useEffect, useState } from 'react';
 
+import { SwapDataToken } from 'application/trading-copilot';
+import { isCorrectImageString } from 'shared/utils';
+
 interface TokenIconProperties {
-  tokenData: Record<string, string>;
+  tokenData: SwapDataToken | null;
   tokenImage: string;
 }
 
@@ -12,9 +15,6 @@ export const TokenIcon: React.FC<TokenIconProperties> = ({
 }) => {
   const [icon, setIcon] = useState<JSX.Element | null>(null);
 
-  const tokenImageArray = tokenImage.split('/');
-  const isCorrectImage = tokenImageArray[0] === 'data:image';
-
   useEffect(() => {
     const loadIcon = () => {
       if (tokenImage === 'IdrissToken') {
@@ -22,7 +22,7 @@ export const TokenIcon: React.FC<TokenIconProperties> = ({
           <Icon name="IdrissToken" size={24} className="size-6 rounded-full" />,
         );
       } else {
-        if (tokenData && isCorrectImage) {
+        if (tokenData && isCorrectImageString(tokenImage)) {
           setIcon(
             <img
               src={tokenImage}

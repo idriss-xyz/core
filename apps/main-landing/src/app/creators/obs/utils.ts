@@ -1,6 +1,9 @@
 import { type Hex } from 'viem';
 import { CHAIN } from '@idriss-xyz/constants';
 import { clientEthereum } from '@idriss-xyz/blockchain-clients';
+
+import { CREATOR_API_URL } from '../donate/constants';
+
 const SELL_TOKEN_BY_NETWORK: Record<number, string> = {
   [CHAIN.BASE.id]: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',
   [CHAIN.ETHEREUM.id]: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
@@ -97,6 +100,28 @@ export const resolveEnsName = async (address: Hex): Promise<string | null> => {
     return resolved;
   } catch (error) {
     console.error('Error resolving ENS name from address:', error);
+    return null;
+  }
+};
+
+export const getTextToSpeech = async (text: string) => {
+  try {
+    const response = await fetch(`${CREATOR_API_URL}/text-to-speech`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ text }),
+    });
+    if (!response.ok) {
+      console.error(
+        `Creator API error: ${response.status} ${response.statusText}`,
+      );
+      return null;
+    }
+    return response;
+  } catch (error) {
+    console.error('Error fetching text-to-speech:', error);
     return null;
   }
 };

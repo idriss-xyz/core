@@ -3,14 +3,18 @@ import { useLocation } from 'react-use';
 
 import { FarcasterButton, GetFollowersCommand } from 'shared/farcaster';
 import { useCommandQuery } from 'shared/messaging';
-import { classes, PortalWithTailwind, usePooling } from 'shared/ui';
+import {
+  classes,
+  PortalWithTailwind,
+  usePooling,
+  TradingCopilotTooltip,
+} from 'shared/ui';
 import { getWarpcastUserLink } from 'host/warpcast';
 import { FARCASTER_LOGO } from 'assets/images';
 import { useEventsLogger } from 'shared/observability';
 import { createLookup } from 'shared/utils';
 
 import { useLocationInfo } from '../hooks';
-import { TradingCopilotTooltip } from '../notifications-popup/components/trading-copilot-tooltip';
 
 const EVENT = createLookup(['FOLLOW_ON_FC_CLICKED']);
 

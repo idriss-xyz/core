@@ -104,7 +104,8 @@
         "ALCHEMY_API_KEY",
         "API_SECRET",
         "WEBHOOK_URL",
-        "VIEM_TRANSPORTER_URL"
+        "VIEM_TRANSPORTER_URL",
+        "HELIUS_API_KEY"
       ]
     },
     "@idriss-xyz/creator-api#dev": {
@@ -116,7 +117,8 @@
         "ZAPPER_API_KEY",
         "DATABASE_URL",
         "SECRET_PASSWORD",
-        "ALCHEMY_API_KEY"
+        "ALCHEMY_API_KEY",
+        "ELEVENLABS_API_KEY"
       ]
     },
     "@idriss-xyz/creator-api#prod": {
@@ -128,7 +130,8 @@
         "ZAPPER_API_KEY",
         "DATABASE_URL",
         "SECRET_PASSWORD",
-        "ALCHEMY_API_KEY"
+        "ALCHEMY_API_KEY",
+        "ELEVENLABS_API_KEY"
       ]
     },
     "@idriss-xyz/twitch-extension#build": {

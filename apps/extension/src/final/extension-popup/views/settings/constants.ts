@@ -7,6 +7,7 @@ export const SETTING_NAME_TO_LABEL: Record<ExtensionSettingName, string> = {
   'tally-enabled': 'Tally',
   'snapshot-enabled': 'Snapshot',
   'gitcoin-enabled': 'Gitcoin donations on X',
+  'kaito-enabled': 'Kaito Yaps on X',
   'wallet-lookup-enabled': 'X labels on block explorers',
   'entire-extension-enabled': '',
   'trading-copilot-notifications-enabled': '',

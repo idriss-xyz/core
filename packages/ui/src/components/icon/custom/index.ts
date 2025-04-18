@@ -18,6 +18,7 @@ export { Users } from './users';
 export { Verifying } from './verifying';
 export { Head } from './head';
 export { Eth, EthCircled } from './eth';
+export { Sol } from './sol';
 export { Lens } from './lens';
 export { Facebook } from './facebook';
 export { More } from './more';

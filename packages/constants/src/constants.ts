@@ -396,3 +396,5 @@ export const DEFAULT_ALLOWED_CHAINS_IDS = [
 ];
 
 export const EMPTY_HEX = '0x';
+
+export const COPILOT_API_URL = 'https://copilot-api.idriss.xyz';
