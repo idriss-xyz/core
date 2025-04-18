@@ -84,7 +84,8 @@ export const TokensShowcase = ({ className }: Properties) => {
     >
       <Marquee
         gap="md"
-        className="container"
+        sideBlurVariant="side-blur-2"
+        className="container w-full lg:side-blur"
         items={tokens.map((token, index) => {
           return (
             <img
@@ -99,8 +100,9 @@ export const TokensShowcase = ({ className }: Properties) => {
 
       <Marquee
         gap="md"
-        className="container"
         sliderClassName="ml-[60px]"
+        sideBlurVariant="side-blur-2"
+        className="container w-full lg:side-blur"
         items={tokens2.map((token, index) => {
           return (
             <img

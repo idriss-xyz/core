@@ -11,6 +11,7 @@ type Properties = {
   sliderClassName?: string;
   gap?: 'sm' | 'md' | 'lg';
   displaySideBlur?: boolean;
+  sideBlurVariant?: 'side-blur' | 'side-blur-2';
 };
 
 export const Marquee = ({
@@ -21,6 +22,7 @@ export const Marquee = ({
   reverse = false,
   pauseOnHover = true,
   displaySideBlur = true,
+  sideBlurVariant = 'side-blur',
 }: Properties) => {
   const [isRendered, setIsRendered] = useState(false);
 
@@ -47,7 +49,7 @@ export const Marquee = ({
     <div
       className={classes(
         'group relative flex items-center justify-start overflow-clip',
-        displaySideBlur && 'side-blur',
+        displaySideBlur && sideBlurVariant,
         className,
       )}
     >

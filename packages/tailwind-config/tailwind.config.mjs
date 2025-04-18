@@ -403,6 +403,10 @@ export default {
           'mask-image':
             'linear-gradient(to right, transparent, black 60px, black calc(100% - 60px), transparent)',
         },
+        '.side-blur-2': {
+          'mask-image':
+            'linear-gradient(to right, rgba(2, 43, 30, 0), rgba(2, 44, 31, 0.6) 80px, #056244 calc(100% - 80px), rgba(3, 75, 52, 0))',
+        },
         '.paused-animation': {
           'animation-play-state': 'paused',
         },
