@@ -102,6 +102,7 @@ export default {
     },
     extend: {
       screens: {
+        'xs': '400px',
         'sm': '576px',
         'md': '768px',
         '2xl': '1440px',
@@ -422,6 +423,9 @@ export default {
       addUtilities(newUtilities);
       addComponents({
         '.container': {
+          '@screen xs': {
+            maxWidth: 'none',
+          },
           '@screen md': {
             maxWidth: '704px',
           },

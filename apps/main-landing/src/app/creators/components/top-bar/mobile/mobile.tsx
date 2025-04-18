@@ -27,7 +27,7 @@ export const Mobile = ({
 }: Properties) => {
   if (isLanding) {
     return (
-      <div className="flex flex-row flex-wrap items-center justify-end gap-2 md:hidden">
+      <div className="xs:gap-2 flex flex-row flex-wrap items-center justify-end gap-x-1 md:hidden">
         {displayCTA && (
           <Button
             asLink
@@ -43,7 +43,8 @@ export const Mobile = ({
 
         <DesktopSocials
           enlargeIcon={!isSticky}
-          iconClassName={classes(isSticky && 'px-2')}
+          className={classes(isSticky && 'xs:space-x-2 space-x-1')}
+          iconClassName={classes(isSticky && 'xs:px-2 px-1')}
         />
       </div>
     );
