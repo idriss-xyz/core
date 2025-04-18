@@ -9,8 +9,10 @@ import { IDRISS_SCENE_STREAM } from '@/assets';
 
 import {
   CREATORS_FORM,
+  CREATORS_FORM_MOBILE,
   CREATORS_LINES,
   CREATORS_LINES_MOBILE,
+  CREATORS_LINES_TABLET,
 } from '../assets';
 
 export const SetUp = () => {
@@ -27,7 +29,8 @@ export const SetUp = () => {
             <div
               className={classes(
                 'flex flex-col items-start justify-center gap-y-8 px-4',
-                'lg:py-11 lg:pl-12 lg:pr-0',
+                'sm:items-center',
+                'lg:items-start lg:py-11 lg:pl-12 lg:pr-0',
                 'xl:py-12 xl:pl-[56px]',
               )}
             >
@@ -39,20 +42,33 @@ export const SetUp = () => {
                 3-minute setup
               </span>
 
-              <div className="flex flex-col gap-y-6">
+              <div
+                className={classes(
+                  'flex flex-col gap-y-6',
+                  'sm:items-center',
+                  'lg:items-start',
+                )}
+              >
                 <h2
                   className={classes(
                     'whitespace-pre-wrap text-display5 uppercase text-midnightGreen-100',
+                    'sm:whitespace-nowrap',
                     'md:text-display4',
-                    'lg:text-display3',
+                    'lg:whitespace-pre-wrap lg:text-display3',
                   )}
                 >
                   Set up in just{'\n'}
                   a&nbsp;few clicks
                 </h2>
 
-                <ul className="flex flex-col gap-y-6">
-                  <li className="flex flex-row items-center gap-x-4">
+                <ul
+                  className={classes(
+                    'flex flex-col flex-wrap gap-x-3 gap-y-6',
+                    'sm:flex-row sm:justify-center',
+                    'lg:flex-col lg:justify-start',
+                  )}
+                >
+                  <li className="flex flex-row items-center gap-x-4 sm:gap-x-2 lg:gap-x-4">
                     <Icon size={22} name="Hexagon" className="text-mint-400" />
 
                     <p className="text-body3 text-midnightGreen-200">
@@ -60,7 +76,7 @@ export const SetUp = () => {
                     </p>
                   </li>
 
-                  <li className="flex flex-row items-center gap-x-4">
+                  <li className="flex flex-row items-center gap-x-4 sm:gap-x-2 lg:gap-x-4">
                     <Icon size={22} name="Hexagon" className="text-mint-400" />
 
                     <p className="text-body3 text-midnightGreen-200">
@@ -68,7 +84,7 @@ export const SetUp = () => {
                     </p>
                   </li>
 
-                  <li className="flex flex-row items-center gap-x-4">
+                  <li className="flex flex-row items-center gap-x-4 sm:gap-x-2 lg:gap-x-4">
                     <Icon size={22} name="Hexagon" className="text-mint-400" />
 
                     <p className="text-body3 text-midnightGreen-200">
@@ -101,13 +117,25 @@ export const SetUp = () => {
               <img
                 alt=""
                 src={CREATORS_FORM.src}
-                className="relative z-1 block h-full max-h-[550px] object-contain px-4 lg:ml-auto lg:max-h-none lg:px-0"
+                className="relative z-1 ml-auto hidden h-full object-contain lg:block"
+              />
+
+              <img
+                alt=""
+                src={CREATORS_FORM_MOBILE.src}
+                className="relative z-1 mx-auto block h-full max-h-[550px] object-contain px-4 lg:hidden"
               />
 
               <img
                 alt=""
                 src={CREATORS_LINES_MOBILE.src}
-                className="absolute inset-x-0 top-0 block w-full max-w-[450px] object-contain lg:hidden"
+                className="absolute inset-x-0 top-0 block w-full object-contain sm:hidden"
+              />
+
+              <img
+                alt=""
+                src={CREATORS_LINES_TABLET.src}
+                className="absolute inset-x-0 top-0 hidden w-full object-contain sm:block lg:hidden"
               />
 
               <img
