@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   description:
     'Creator monetization app that helps you earn more with instant payouts and near-zero platform cuts.',
   openGraph: {
+    title: 'Make more, grow faster, take control',
     description:
       'Creator monetization app that helps you earn more with instant payouts and near-zero platform cuts.',
   },
