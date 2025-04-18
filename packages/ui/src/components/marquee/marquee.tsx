@@ -55,7 +55,7 @@ export const Marquee = ({
     >
       <ul
         className={classes(
-          'flex list-none whitespace-nowrap will-change-[transform]',
+          'flex min-w-max list-none whitespace-nowrap will-change-[transform]',
           listGapClassName,
           spaceClassName,
           isRendered &&
@@ -79,7 +79,7 @@ export const Marquee = ({
 
       <ul
         className={classes(
-          'absolute flex list-none whitespace-nowrap will-change-[transform]',
+          'absolute flex min-w-max list-none whitespace-nowrap will-change-[transform]',
           listGapClassName,
           spaceClassName,
           isRendered &&
