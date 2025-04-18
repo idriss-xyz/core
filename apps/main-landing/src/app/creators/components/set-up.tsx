@@ -123,7 +123,7 @@ export const SetUp = () => {
               <img
                 alt=""
                 src={CREATORS_FORM_MOBILE.src}
-                className="relative z-1 mx-auto block h-full max-h-[550px] object-contain px-4 lg:hidden"
+                className="relative z-1 mx-auto block h-full max-h-[600px] object-contain px-4 lg:hidden"
               />
 
               <img
