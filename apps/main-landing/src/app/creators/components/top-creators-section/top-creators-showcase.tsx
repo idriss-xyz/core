@@ -1,9 +1,9 @@
 'use client';
 import { Icon } from '@idriss-xyz/ui/icon';
-import { Marquee } from '@idriss-xyz/ui/marquee';
-import { classes } from '@idriss-xyz/ui/utils';
-import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { Link } from '@idriss-xyz/ui/link';
+import { classes } from '@idriss-xyz/ui/utils';
+import { Marquee } from '@idriss-xyz/ui/marquee';
+import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 
 import { DafaqtorCard, ExcelsorphCard, DmoneyCard } from './assets';
 
