@@ -18,8 +18,8 @@ export const PlatformsSection = () => {
               <h2
                 className={classes(
                   'w-full whitespace-pre-wrap text-display5 uppercase gradient-text',
-                  'sm:whitespace-nowrap md:text-display4',
-                  'lg:whitespace-pre-wrap lg:text-display3',
+                  'sm:whitespace-nowrap sm:text-center md:text-display4',
+                  'lg:whitespace-pre-wrap lg:text-left lg:text-display3',
                 )}
               >
                 Get paid anywhere

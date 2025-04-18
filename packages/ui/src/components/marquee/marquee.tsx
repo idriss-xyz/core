@@ -27,13 +27,13 @@ export const Marquee = ({
   const [isRendered, setIsRendered] = useState(false);
 
   const gapClassMap: Record<string, string> = {
-    sm: 'pl-2 lg:pl-8',
+    sm: 'pl-2 md:pl-8',
     md: 'pl-8 lg:pl-10',
     lg: 'pl-10 lg:pl-[60px]',
   };
 
   const spaceClassMap: Record<string, string> = {
-    sm: 'space-x-2 lg:space-x-8',
+    sm: 'space-x-2 md:space-x-8',
     md: 'space-x-8 lg:space-x-10',
     lg: 'space-x-10 lg:space-x-[60px]',
   };

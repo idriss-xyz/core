@@ -24,7 +24,7 @@ const creators = [
         <Icon
           name="TwitchOutlinedBold"
           size={32}
-          className="size-6 text-mint-200 lg:size-8"
+          className="size-6 text-mint-200 md:size-8"
         />
       ),
     },
@@ -39,7 +39,7 @@ const creators = [
         <Icon
           name="TwitchOutlinedBold"
           size={32}
-          className="size-6 text-mint-200 lg:size-8"
+          className="size-6 text-mint-200 md:size-8"
         />
       ),
     },
@@ -54,7 +54,7 @@ const creators = [
         <Icon
           name="TwitchOutlinedBold"
           size={32}
-          className="size-6 text-mint-200 lg:size-8"
+          className="size-6 text-mint-200 md:size-8"
         />
       ),
     },
@@ -69,7 +69,7 @@ const creators = [
         <Icon
           name="TwitchOutlinedBold"
           size={32}
-          className="size-6 text-mint-200 lg:size-8"
+          className="size-6 text-mint-200 md:size-8"
         />
       ),
     },
@@ -84,7 +84,7 @@ const creators = [
         <Icon
           name="TwitchOutlinedBold"
           size={32}
-          className="size-6 text-mint-200 lg:size-8"
+          className="size-6 text-mint-200 md:size-8"
         />
       ),
     },
@@ -115,14 +115,14 @@ export const TopCreatorsShowcase = ({
         return (
           <div
             key={`top-creators-slide-${index}`}
-            className="relative size-full min-w-[250px] overflow-hidden rounded-[36px] lg:min-w-[350px]"
+            className="relative size-full min-w-[250px] overflow-hidden rounded-[36px] md:min-w-[350px]"
           >
             <span className="absolute right-0 top-0 z-0 size-full bg-[linear-gradient(180deg,_rgba(255,255,255,0)_47.96%,_rgba(5,171,19,0.5)_80.74%)]" />
 
             <img
               alt=""
               src={creator.image}
-              className="z-1 block aspect-[4/5] size-full min-h-full max-w-[250px] object-cover lg:max-w-screen-xs"
+              className="z-1 block aspect-[4/5] size-full min-h-full max-w-[250px] object-cover md:max-w-screen-xs"
             />
 
             <div className="absolute bottom-6 left-6 flex w-[calc(100%-3rem)] flex-col items-start gap-y-2 rounded-3xl bg-white/40 p-4 shadow-card">
@@ -143,7 +143,7 @@ export const TopCreatorsShowcase = ({
                 {creator.followers} followers
               </span>
 
-              <div className="flex w-full flex-row items-center justify-between gap-x-2 lg:justify-start">
+              <div className="flex w-full flex-row items-center justify-between gap-x-2 md:justify-start">
                 <span
                   className={classes(
                     'text-heading6 text-midnightGreen-900',

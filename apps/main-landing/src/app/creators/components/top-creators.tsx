@@ -42,7 +42,7 @@ export const TopCreators = () => {
 
         <TopCreatorsShowcase />
 
-        <TopCreatorsShowcase reverse className="lg:hidden" />
+        <TopCreatorsShowcase reverse className="md:hidden" />
 
         <img
           alt=""
