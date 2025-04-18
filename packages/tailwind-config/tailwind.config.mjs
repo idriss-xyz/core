@@ -133,6 +133,7 @@ export default {
         extensionPopup: '100000',
         portal: '100001',
         scrollbar: '100010',
+        stickyNavbar: '100011',
       },
       fontFamily: {
         sans: ['var(--font-aeonikpro)'],

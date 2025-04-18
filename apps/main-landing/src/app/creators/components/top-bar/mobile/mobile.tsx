@@ -27,7 +27,7 @@ export const Mobile = ({
 }: Properties) => {
   if (isLanding) {
     return (
-      <div className="flex flex-row flex-wrap items-center justify-end gap-x-1 xs:gap-2 md:hidden">
+      <div className="flex flex-row flex-wrap items-center justify-end gap-x-1 xs:gap-2 sm:hidden">
         {displayCTA && (
           <Button
             asLink
@@ -56,7 +56,7 @@ export const Mobile = ({
       trigger={({ isOpened }) => {
         return (
           <IconButton
-            className="md:hidden"
+            className="sm:hidden"
             aria-label={
               isOpened ? 'Hide navigation menu' : 'Open navigation menu'
             }

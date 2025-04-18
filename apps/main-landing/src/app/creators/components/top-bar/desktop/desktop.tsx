@@ -12,10 +12,10 @@ type Properties = {
 export const Desktop = ({ hideNavigation, displayCTA }: Properties) => {
   return (
     <>
-      {!hideNavigation && <Menu className="hidden md:flex" />}
+      {!hideNavigation && <Menu className="hidden sm:flex" />}
 
       {displayCTA ? (
-        <div className="hidden items-center gap-x-9 md:flex">
+        <div className="hidden items-center gap-x-9 sm:flex">
           <Socials />
 
           <Button
@@ -30,7 +30,7 @@ export const Desktop = ({ hideNavigation, displayCTA }: Properties) => {
           </Button>
         </div>
       ) : (
-        <Socials className="hidden md:flex" />
+        <Socials className="hidden sm:flex" />
       )}
     </>
   );

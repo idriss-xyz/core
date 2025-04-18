@@ -6,6 +6,7 @@ type Properties = {
   isLanding?: boolean;
   displayCTA?: boolean;
   hideNavigation?: boolean;
+  displayMobileCTA?: boolean;
 };
 
 export const Navigation = ({
@@ -13,13 +14,14 @@ export const Navigation = ({
   isLanding,
   displayCTA,
   hideNavigation,
+  displayMobileCTA,
 }: Properties) => {
   return (
     <>
       <Mobile
         isSticky={isSticky}
         isLanding={isLanding}
-        displayCTA={displayCTA}
+        displayCTA={displayMobileCTA}
         hideNavigation={hideNavigation}
       />
       <Desktop hideNavigation={hideNavigation} displayCTA={displayCTA} />

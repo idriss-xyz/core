@@ -5,7 +5,13 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { Marquee } from '@idriss-xyz/ui/marquee';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 
-import { DafaqtorCard, ExcelsorphCard, DmoneyCard } from './assets';
+import {
+  DafaqtorCard,
+  ExcelsorphCard,
+  DmoneyCard,
+  Qflux888Card,
+  LambyseriestvCard,
+} from './assets';
 
 const creators = [
   {
@@ -44,6 +50,36 @@ const creators = [
     image: DmoneyCard.src,
     platform: {
       url: 'https://www.twitch.tv/dmoney',
+      icon: (
+        <Icon
+          name="TwitchOutlinedBold"
+          size={32}
+          className="size-6 text-mint-200 lg:size-8"
+        />
+      ),
+    },
+  },
+  {
+    name: 'qFlux888',
+    followers: '3.4K',
+    image: Qflux888Card.src,
+    platform: {
+      url: 'https://www.twitch.tv/qflux888',
+      icon: (
+        <Icon
+          name="TwitchOutlinedBold"
+          size={32}
+          className="size-6 text-mint-200 lg:size-8"
+        />
+      ),
+    },
+  },
+  {
+    name: 'lambyseriestv',
+    followers: '32.1K',
+    image: LambyseriestvCard.src,
+    platform: {
+      url: 'https://www.twitch.tv/lambyseriestv',
       icon: (
         <Icon
           name="TwitchOutlinedBold"

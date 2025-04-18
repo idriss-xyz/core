@@ -20,7 +20,7 @@ export const TopBar = ({
   hideNavigation,
   heroButtonReference,
 }: Properties) => {
-  const [displayCTAButton, setDisplayCTAButton] = useState<boolean>(false);
+  const [displayMobileCTA, setDisplayMobileCTA] = useState<boolean>(false);
   const [isSticky, setIsSticky] = useState(false);
   const topBarReference = useRef<HTMLDivElement | null>(null);
 
@@ -48,7 +48,7 @@ export const TopBar = ({
         const isScrolledPastHeroButton =
           buttonBounding.top + buttonBounding.height - navbarBounding.height;
 
-        setDisplayCTAButton(isScrolledPastHeroButton <= 0);
+        setDisplayMobileCTA(isScrolledPastHeroButton <= 0);
       }
     };
 
@@ -63,7 +63,8 @@ export const TopBar = ({
     <div
       ref={topBarReference}
       className={classes(
-        'sticky inset-x-0 top-0 z-topBar mb-[-64px] w-full transition-all duration-300 px-safe lg:-mb-20',
+        'sticky inset-x-0 top-0 mb-[-64px] w-full transition-colors duration-300 px-safe lg:-mb-20',
+        isSticky ? 'z-stickyNavbar' : 'z-topBar',
         isSticky && STICKY_CLASSES,
       )}
     >
@@ -84,8 +85,9 @@ export const TopBar = ({
         <Navigation
           isSticky={isSticky}
           isLanding={isLanding}
-          displayCTA={displayCTAButton}
+          displayCTA={displayCTA}
           hideNavigation={hideNavigation}
+          displayMobileCTA={displayMobileCTA}
         />
       </div>
     </div>
