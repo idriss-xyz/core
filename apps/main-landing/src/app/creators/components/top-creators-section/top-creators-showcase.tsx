@@ -86,7 +86,7 @@ export const TopCreatorsShowcase = ({
             <img
               alt=""
               src={creator.image}
-              className="lg:max-w-screen-xs z-1 block aspect-[4/5] size-full min-h-full max-w-[250px] object-cover"
+              className="z-1 block aspect-[4/5] size-full min-h-full max-w-[250px] object-cover lg:max-w-screen-xs"
             />
 
             <div className="absolute bottom-6 left-6 flex w-[calc(100%-3rem)] flex-col items-start gap-y-2 rounded-3xl bg-white/40 p-4 shadow-card">

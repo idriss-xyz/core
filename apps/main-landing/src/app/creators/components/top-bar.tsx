@@ -67,7 +67,7 @@ export const TopBar = ({
         isSticky && STICKY_CLASSES,
       )}
     >
-      <div className="xs:gap-x-2 container flex items-center justify-between gap-x-1 py-1 lg:py-3">
+      <div className="container flex items-center justify-between gap-x-1 py-1 xs:gap-x-2 lg:py-3">
         <Link href="/">
           <img
             alt=""
@@ -75,7 +75,7 @@ export const TopBar = ({
             height={24}
             className={classes(
               'min-w-20',
-              isSticky && 'xs:min-w-20 xs:max-w-none min-w-[unset] max-w-14',
+              isSticky && 'min-w-[unset] max-w-14 xs:min-w-20 xs:max-w-none',
             )}
             src="/idriss-dark-logo.svg"
           />
