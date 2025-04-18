@@ -16,19 +16,43 @@ import { TokensShowcase } from './pros-section/tokens-showcase';
 import { ProsItem } from './pros-section/pros-item';
 
 export const ProsSection = () => {
+  const [direction, setDirection] = useState(1);
   const [activeWrapper, setActiveWrapper] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveWrapper((previous) => {
-        return previous === 0 ? 1 : 0;
+        const next = previous === 0 ? 1 : 0;
+
+        setDirection(next > previous ? 1 : -1);
+
+        return next;
       });
-    }, 5000);
+    }, 6000);
 
     return () => {
       return clearInterval(interval);
     };
   }, []);
+
+  const slideVariants = {
+    enter: (direction: number) => {
+      return {
+        x: direction > 0 ? '100%' : '-100%',
+        opacity: 0,
+      };
+    },
+    center: {
+      x: 0,
+      opacity: 1,
+    },
+    exit: (direction: number) => {
+      return {
+        x: direction > 0 ? '-100%' : '100%',
+        opacity: 0,
+      };
+    },
+  };
 
   return (
     <section className="relative">
@@ -104,48 +128,55 @@ export const ProsSection = () => {
                   description="Give your fans a reason to show up and give more. With donation alerts and leaderboards you engage and recognize your loyal supporters."
                 />
 
-                <AnimatePresence initial={false} mode="wait">
-                  {activeWrapper === 0 ? (
-                    <motion.div
-                      animate={{ x: 0 }}
-                      exit={{ x: '-100%' }}
-                      initial={{ x: '100%' }}
-                      transition={{
-                        type: 'keyframes',
-                      }}
-                      className="-mb-8 mt-auto flex w-full"
-                    >
-                      <img
-                        alt=""
-                        src={DONORS_LEADERBOARD.src}
-                        className="mx-auto w-full max-w-[297px]"
-                      />
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key="wrapper2"
-                      animate={{ x: 0 }}
-                      exit={{ x: '-100%' }}
-                      initial={{ x: '100%' }}
-                      transition={{
-                        type: 'keyframes',
-                      }}
-                      className="mt-auto flex min-h-[247.33px] w-full flex-col items-center justify-center gap-y-5"
-                    >
-                      <img
-                        alt=""
-                        src={CREATORS_DONATE_1.src}
-                        className="ml-5 w-max max-w-full sm:ml-auto sm:max-w-[430px]"
-                      />
+                <div className="mt-auto min-h-[248.33px] w-full">
+                  <AnimatePresence
+                    custom={direction}
+                    initial={false}
+                    mode="wait"
+                  >
+                    {activeWrapper === 0 ? (
+                      <motion.div
+                        exit="exit"
+                        key="wrapper1"
+                        initial="enter"
+                        animate="center"
+                        custom={direction}
+                        variants={slideVariants}
+                        style={{ willChange: 'transform' }}
+                        className="-mb-8 mt-auto flex w-full"
+                      >
+                        <img
+                          alt=""
+                          src={DONORS_LEADERBOARD.src}
+                          className="mx-auto w-full max-w-[297px]"
+                        />
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        exit="exit"
+                        key="wrapper2"
+                        initial="enter"
+                        animate="center"
+                        custom={direction}
+                        variants={slideVariants}
+                        style={{ willChange: 'transform' }}
+                        className="mt-auto flex min-h-[248.33px] w-full flex-col items-center justify-center gap-y-5"
+                      >
+                        <img
+                          alt=""
+                          src={CREATORS_DONATE_1.src}
+                          className="ml-5 w-max max-w-full sm:ml-auto sm:max-w-[430px]"
+                        />
 
-                      <img
-                        alt=""
-                        src={CREATORS_DONATE_2.src}
-                        className="mr-5 w-max max-w-full sm:mr-auto sm:max-w-[430px]"
-                      />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                        <img
+                          alt=""
+                          src={CREATORS_DONATE_2.src}
+                          className="mr-5 w-max max-w-full sm:mr-auto sm:max-w-[430px]"
+                        />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
 
                 <GradientBorder
                   borderWidth={1}
