@@ -2,15 +2,8 @@ import { Request, Response } from 'express';
 import express from 'express';
 import { processAllDonations } from '../services/zapper/process-donations';
 import { body, validationResult } from 'express-validator';
-import dotenv from 'dotenv';
-import { join } from 'path';
-import { mode } from '../utils/mode';
 import { CHAIN_TO_IDRISS_TIPPING_ADDRESS } from '../constants';
 import { Hex } from 'viem';
-
-dotenv.config(
-  mode === 'production' ? {} : { path: join(__dirname, `../../.env.${mode}`) },
-);
 
 const SECRET_PASSWORD = process.env.SECRET_PASSWORD;
 const router = express.Router();

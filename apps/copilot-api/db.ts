@@ -1,7 +1,4 @@
 import { DataSource } from 'typeorm';
-import dotenv from 'dotenv';
-import { join } from 'path';
-import { mode } from './utils/mode';
 import {
   AddressesEntity,
   AddressWebhookMapEntity,
@@ -10,10 +7,6 @@ import {
   WebhookEntity,
 } from './entities';
 import { WebhookChainType1743608322000 } from './migrations';
-
-dotenv.config(
-  mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
-);
 
 export const dataSource = new DataSource({
   type: 'postgres',

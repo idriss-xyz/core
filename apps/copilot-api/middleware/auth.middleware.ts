@@ -1,14 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
-import { join } from 'path';
 import { dataSource } from '../db';
-import { mode } from '../utils/mode';
 import { SubscribersEntity } from '../entities/subscribers.entity';
-
-dotenv.config(
-  mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
-);
 
 export const verifyToken = () => {
   return async (req: Request, res: Response, next: NextFunction) => {

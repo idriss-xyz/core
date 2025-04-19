@@ -5,22 +5,15 @@ import { SubscriptionsEntity } from '../entities/subscribtions.entity';
 import { AddressWebhookMapEntity } from '../entities/addressWebhookMap.entity';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
-import dotenv from 'dotenv';
-import { join } from 'path';
 import {
   WEBHOOK_NETWORKS,
   MAX_ADDRESSES_PER_WEBHOOK,
   WEBHOOK_NETWORK_TYPES,
 } from '../constants';
-import { mode } from '../utils/mode';
 import { SubscriptionsDetailsInterface, WebhookDataInterface } from '../types';
 import { isAddress } from 'viem';
 import { throwExternalError } from '../middleware/error.middleware';
 import { EntityManager } from 'typeorm';
-
-dotenv.config(
-  mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
-);
 
 const ALCHEMY_API_BASE_URL = 'https://dashboard.alchemyapi.io';
 const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY!;

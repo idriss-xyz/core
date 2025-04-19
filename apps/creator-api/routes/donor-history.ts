@@ -5,16 +5,9 @@ import {
   calculateGlobalDonorLeaderboard,
   calculateStatsForDonorAddress,
 } from '../utils/calculate-stats';
-import dotenv from 'dotenv';
-import { mode } from '../utils/mode';
-import { join } from 'path';
 import { Hex } from 'viem';
 
 const router = Router();
-
-dotenv.config(
-  mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
-);
 
 router.post('/', async (req: Request, res: Response) => {
   try {
