@@ -13,7 +13,8 @@ import {
   IDRISS,
   PARAGONS,
   PENGU,
-  PRIME,
+  PRIME_PNG,
+  PRIME_SVG,
   RONIN,
   USDC,
   YIELD,
@@ -46,7 +47,10 @@ const tokens = [
   },
   {
     name: 'Prime',
-    image: PRIME.src,
+    image: browserBasedSource({
+      svgSrc: PRIME_SVG.src,
+      pngSrc: PRIME_PNG.src,
+    }),
   },
 ];
 
