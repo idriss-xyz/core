@@ -5,15 +5,19 @@ import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 
-import {
-  CREATORS_DONATE_1,
-  CREATORS_DONATE_2,
-  DONORS_LEADERBOARD,
-  FEE_CHART,
-} from '../assets';
+import { browserBasedSource } from '@/app/creators/utils';
 
 import { TokensShowcase } from './pros-section/tokens-showcase';
 import { ProsItem } from './pros-section/pros-item';
+import {
+  CREATORS_DONATE_1_PNG,
+  CREATORS_DONATE_1_SVG,
+  CREATORS_DONATE_2_PNG,
+  CREATORS_DONATE_2_SVG,
+  DONORS_LEADERBOARD_PNG,
+  DONORS_LEADERBOARD_SVG,
+  FEE_CHART,
+} from './pros-section/assets';
 
 export const ProsSection = () => {
   const [direction, setDirection] = useState(1);
@@ -148,7 +152,10 @@ export const ProsSection = () => {
                       >
                         <img
                           alt=""
-                          src={DONORS_LEADERBOARD.src}
+                          src={browserBasedSource({
+                            svgSrc: DONORS_LEADERBOARD_SVG.src,
+                            pngSrc: DONORS_LEADERBOARD_PNG.src,
+                          })}
                           className="mx-auto w-full max-w-[297px]"
                         />
                       </motion.div>
@@ -165,13 +172,19 @@ export const ProsSection = () => {
                       >
                         <img
                           alt=""
-                          src={CREATORS_DONATE_1.src}
+                          src={browserBasedSource({
+                            svgSrc: CREATORS_DONATE_1_SVG.src,
+                            pngSrc: CREATORS_DONATE_1_PNG.src,
+                          })}
                           className="ml-5 w-max max-w-full sm:ml-auto sm:max-w-[430px]"
                         />
 
                         <img
                           alt=""
-                          src={CREATORS_DONATE_2.src}
+                          src={browserBasedSource({
+                            svgSrc: CREATORS_DONATE_2_SVG.src,
+                            pngSrc: CREATORS_DONATE_2_PNG.src,
+                          })}
                           className="mr-5 w-max max-w-full sm:mr-auto sm:max-w-[430px]"
                         />
                       </motion.div>

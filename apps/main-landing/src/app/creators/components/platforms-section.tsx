@@ -3,8 +3,12 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 
 import { TopWave } from '@/components/superpowers-section/components/top-wave';
+import { browserBasedSource } from '@/app/creators/utils';
 
-import { IDRISS_ICON_STREAMING } from '../assets';
+import {
+  IDRISS_ICON_STREAMING_PNG,
+  IDRISS_ICON_STREAMING_SVG,
+} from './platforms-section/assets';
 
 export const PlatformsSection = () => {
   return (
@@ -40,7 +44,14 @@ export const PlatformsSection = () => {
             <div className="relative mx-auto mb-px max-w-[600px] rounded-[24px] px-2 py-10 lg:max-w-none lg:p-6">
               <GradientBorder gradientDirection="toTop" borderRadius={24} />
 
-              <img src={IDRISS_ICON_STREAMING.src} className="w-full" alt="" />
+              <img
+                alt=""
+                className="w-full"
+                src={browserBasedSource({
+                  svgSrc: IDRISS_ICON_STREAMING_SVG.src,
+                  pngSrc: IDRISS_ICON_STREAMING_PNG.src,
+                })}
+              />
             </div>
           </div>
         </div>

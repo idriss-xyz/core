@@ -1,11 +1,14 @@
 import { Marquee } from '@idriss-xyz/ui/marquee';
 import { classes } from '@idriss-xyz/ui/utils';
 
+import { browserBasedSource } from '@/app/creators/utils';
+
 import {
   AAVEGOTCHI,
   AXIE,
   DAI,
-  DEGEN,
+  DEGEN_PNG,
+  DEGEN_SVG,
   ETH,
   IDRISS,
   PARAGONS,
@@ -66,7 +69,10 @@ const tokens2 = [
   },
   {
     name: 'Degen',
-    image: DEGEN.src,
+    image: browserBasedSource({
+      svgSrc: DEGEN_SVG.src,
+      pngSrc: DEGEN_PNG.src,
+    }),
   },
   {
     name: 'Pengu',
@@ -91,7 +97,7 @@ export const TokensShowcase = ({ className }: Properties) => {
             <img
               alt=""
               src={token.image}
-              className="block size-[60px] min-w-max"
+              className="block size-[60px]"
               key={`token-showcase-${token.name}-${index}`}
             />
           );
@@ -108,7 +114,7 @@ export const TokensShowcase = ({ className }: Properties) => {
             <img
               alt=""
               src={token.image}
-              className="block size-[60px] min-w-max"
+              className="block size-[60px]"
               key={`token-showcase-${token.name}-${index}`}
             />
           );
