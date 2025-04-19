@@ -1,9 +1,9 @@
 <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
 <circle cx="30" cy="30" r="30" fill="#D9D9D9" fill-opacity="0.1"/>
-<mask id="mask0_3789_6249" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="60" height="60">
+<mask id="mask0_3865_6108" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="60" height="60">
 <circle cx="30" cy="30" r="30" fill="#D9D9D9"/>
 </mask>
-<g mask="url(#mask0_3789_6249)">
+<g mask="url(#mask0_3865_6108)">
 <path d="M2 53.5L38.5 17H50.5H56.5H59.5" stroke="white" stroke-width="5"/>
 <path d="M12.5 55L15 52.5L24.25 43.25L42.5 25H54.5H60.5" stroke="white" stroke-width="5"/>
 <path d="M19.125 60.375L28.25 51.25L46.5 33H58.5H64.5" stroke="white" stroke-width="5"/>

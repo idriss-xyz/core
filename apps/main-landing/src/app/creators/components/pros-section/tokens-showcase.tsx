@@ -1,20 +1,16 @@
 import { Marquee } from '@idriss-xyz/ui/marquee';
 import { classes } from '@idriss-xyz/ui/utils';
 
-import { browserBasedSource } from '@/app/creators/utils';
-
 import {
   AAVEGOTCHI,
   AXIE,
   DAI,
-  DEGEN_PNG,
-  DEGEN_SVG,
+  DEGEN,
   ETH,
   IDRISS,
   PARAGONS,
   PENGU,
-  PRIME_PNG,
-  PRIME_SVG,
+  PRIME,
   RONIN,
   USDC,
   YIELD,
@@ -47,10 +43,7 @@ const tokens = [
   },
   {
     name: 'Prime',
-    image: browserBasedSource({
-      svgSrc: PRIME_SVG.src,
-      pngSrc: PRIME_PNG.src,
-    }),
+    image: PRIME.src,
   },
 ];
 
@@ -73,10 +66,7 @@ const tokens2 = [
   },
   {
     name: 'Degen',
-    image: browserBasedSource({
-      svgSrc: DEGEN_SVG.src,
-      pngSrc: DEGEN_PNG.src,
-    }),
+    image: DEGEN.src,
   },
   {
     name: 'Pengu',
