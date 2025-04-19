@@ -244,6 +244,16 @@ export const Creators = () => {
     resetCopyState();
   }, [address, tokensSymbols, chainsIds, resetCopyState]);
 
+  useEffect(() => {
+    if (user) {
+      user.verifiedCredentials.find((credential) => {
+        if(credential.format === 'blockchain' && credential.address){
+          formMethods.setValue('address', credential.address)
+        }
+      })
+    }
+  }, [user])
+
   return (
     <>
       {user ? (
