@@ -3,13 +3,6 @@ import express from 'express';
 import { processAllDonations } from '../services/zapper/process-donations';
 import { body, validationResult } from 'express-validator';
 import { connectedClients } from '../services/socket-server';
-import dotenv from 'dotenv';
-import { join } from 'path';
-import { mode } from '../utils/mode';
-
-dotenv.config(
-  mode === 'production' ? {} : { path: join(__dirname, `../../.env.${mode}`) },
-);
 
 const SECRET_PASSWORD = process.env.SECRET_PASSWORD;
 const router = express.Router();
