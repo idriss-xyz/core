@@ -1,15 +1,8 @@
 import { Request, Response } from 'express';
 import express from 'express';
 import rateLimit from 'express-rate-limit';
-import dotenv from 'dotenv';
-import { join } from 'path';
-import { mode } from '../utils/mode';
 import { body, validationResult } from 'express-validator';
 import { Readable } from 'stream';
-
-dotenv.config(
-  mode === 'production' ? {} : { path: join(__dirname, `../../.env.${mode}`) },
-);
 
 const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
 const ELEVENLABS_VOICE_ID = 'TX3LPaxmHKxFdv7VOQHJ';

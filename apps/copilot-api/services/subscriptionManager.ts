@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import {
   WEBHOOK_NETWORKS,
   MAX_ADDRESSES_PER_WEBHOOK,
-  WEBHOOK_NETWORK_TYPES
+  WEBHOOK_NETWORK_TYPES,
 } from '../constants';
 import { SubscriptionsDetailsInterface, WebhookDataInterface } from '../types';
 import { isAddress } from 'viem';

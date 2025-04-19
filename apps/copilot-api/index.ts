@@ -20,8 +20,6 @@ import {
 import { validateWebhookSignature } from './utils/webhookUtils';
 import { initializeDatabase } from './db';
 
-configureEnv(mode, __dirname);
-
 initializeDatabase()
   .then(() => console.log('DB connected...'))
   .catch((err) => console.error('Error during DB initialization: ', err));
