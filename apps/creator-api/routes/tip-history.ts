@@ -16,17 +16,10 @@ import {
 } from '../types';
 import { enrichNodesWithHistoricalPrice } from '../utils/enrich-nodes';
 import { storeToDatabase } from '../db/store-new-donation';
-import dotenv from 'dotenv';
-import { mode } from '../utils/mode';
-import { join } from 'path';
 import { Hex } from 'viem';
 import { calculateDonationLeaderboard } from '../utils/calculate-stats';
 
 const router = Router();
-
-dotenv.config(
-  mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
-);
 
 const app_addresses = Object.values(CHAIN_TO_IDRISS_TIPPING_ADDRESS).map(
   (address) => address.toLowerCase() as Hex,

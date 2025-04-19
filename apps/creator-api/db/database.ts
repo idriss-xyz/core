@@ -1,8 +1,3 @@
-import dotenv from 'dotenv';
-import { join } from 'path';
-
-import { mode } from '../utils/mode';
-
 import { DataSource } from 'typeorm';
 import { Donation, Token, User } from './entities';
 import {
@@ -10,10 +5,6 @@ import {
   AddTokenDecimals1743177600000,
   RestructureDonations1743174000000,
 } from './migrations';
-
-dotenv.config(
-  mode === 'production' ? {} : { path: join(__dirname, `../.env.${mode}`) },
-);
 
 export const AppDataSource = new DataSource({
   type: 'postgres',

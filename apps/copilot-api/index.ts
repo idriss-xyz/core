@@ -1,8 +1,11 @@
+import { mode } from './utils/mode';
+import { configureEnv } from './config/environment';
+
+configureEnv(mode, __dirname);
+
 import { createConfig } from '@lifi/sdk';
-import dotenv from 'dotenv';
 import express, { Request, Response } from 'express';
 import http from 'http';
-import { join } from 'path';
 import { Server as SocketIOServer } from 'socket.io';
 import defaultRoutes from './routes';
 import authRoutes from './routes/auth';
@@ -14,13 +17,8 @@ import {
   heliusWebhookHandler,
   webhookHandler,
 } from './services/webhookHandler';
-import { mode } from './utils/mode';
 import { validateWebhookSignature } from './utils/webhookUtils';
 import { initializeDatabase } from './db';
-
-dotenv.config(
-  mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
-);
 
 initializeDatabase()
   .then(() => console.log('DB connected...'))
