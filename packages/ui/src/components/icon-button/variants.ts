@@ -7,6 +7,7 @@ export const iconButton = cva([], {
       small: ['p-2'],
       medium: ['p-3'],
       large: ['p-4.5'],
+      extra: ['p-4'],
     },
   },
 });

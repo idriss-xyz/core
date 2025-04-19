@@ -14,6 +14,9 @@ import { Section } from './components';
 import { EXTERNAL_RESOURCES, INTERNAL_LINKS, SOCIALS } from './constants';
 
 export const Footer = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+
   return (
     <footer
       className={classes(
@@ -97,7 +100,7 @@ export const Footer = () => {
               'lg:mb-0 lg:text-center lg:text-body4',
             )}
           >
-            Copyright © 2024 IDRISS. All rights reserved.
+            Copyright © {year} IDRISS. All rights reserved.
           </p>
           <div className={classes('lg:flex lg:gap-x-8', 'xl:gap-x-0')}>
             <div className="ml-auto flex items-center space-x-2 lg:col-span-2 lg:col-start-2">

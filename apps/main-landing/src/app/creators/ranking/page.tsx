@@ -9,7 +9,7 @@ import { backgroundLines2 } from '@/assets';
 import { LeaderboardStandalone } from '@/app/creators/donate/components/leaderboard';
 import { RainbowKitProviders } from '@/app/creators/donate/providers';
 
-import { TopBar } from '../landing/components/top-bar';
+import { TopBar } from '../components/top-bar';
 
 import { useGetCreatorRanking } from './commands/get-creator-ranking';
 

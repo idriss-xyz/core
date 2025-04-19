@@ -1,1 +1,0 @@
-export { Mobile } from './mobile';

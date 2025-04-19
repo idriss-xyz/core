@@ -10,7 +10,7 @@ import { LeaderboardStandalone } from '@/app/creators/donate/components/leaderbo
 import { RainbowKitProviders } from '@/app/creators/donate/providers';
 
 import { useGetDonorRanking } from '../commands/get-donor-ranking';
-import { TopBar } from '../../landing/components/top-bar';
+import { TopBar } from '../../components/top-bar';
 
 // ts-unused-exports:disable-next-line
 export default function Ranking() {
