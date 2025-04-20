@@ -6,8 +6,8 @@ import { TopWave } from '@/components/superpowers-section/components/top-wave';
 import { browserBasedSource } from '@/app/creators/utils';
 
 import {
-  IDRISS_ICON_STREAMING_PNG,
-  IDRISS_ICON_STREAMING_SVG,
+  PLATFORMS_TOKEN_SVG,
+  PLATFORMS_TOKEN_PNG,
 } from './platforms-section/assets';
 
 export const PlatformsSection = () => {
@@ -48,8 +48,8 @@ export const PlatformsSection = () => {
                 alt=""
                 className="w-full"
                 src={browserBasedSource({
-                  svgSrc: IDRISS_ICON_STREAMING_SVG.src,
-                  pngSrc: IDRISS_ICON_STREAMING_PNG.src,
+                  svgSrc: PLATFORMS_TOKEN_SVG.src,
+                  pngSrc: PLATFORMS_TOKEN_PNG.src,
                 })}
               />
             </div>

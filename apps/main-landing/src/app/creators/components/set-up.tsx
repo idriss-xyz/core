@@ -6,13 +6,16 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { CREATORS_USER_GUIDE_LINK } from '@idriss-xyz/constants';
 
 import { IDRISS_SCENE_STREAM } from '@/assets';
+import { browserBasedSource } from '@/app/creators/utils';
 
 import {
   CREATORS_LINES,
   CREATORS_LINES_MOBILE,
   CREATORS_LINES_TABLET,
-  CRETORS_FORM,
-  CRETORS_FORM_MOBILE,
+  CRETORS_FORM_MOBILE_PNG,
+  CRETORS_FORM_MOBILE_SVG,
+  CRETORS_FORM_PNG,
+  CRETORS_FORM_SVG,
 } from './set-up-section/assets';
 
 export const SetUp = () => {
@@ -116,13 +119,19 @@ export const SetUp = () => {
             >
               <img
                 alt=""
-                src={CRETORS_FORM.src}
+                src={browserBasedSource({
+                  svgSrc: CRETORS_FORM_SVG.src,
+                  pngSrc: CRETORS_FORM_PNG.src,
+                })}
                 className="relative z-1 ml-auto hidden h-full max-h-[600px] object-contain lg:block"
               />
 
               <img
                 alt=""
-                src={CRETORS_FORM_MOBILE.src}
+                src={browserBasedSource({
+                  svgSrc: CRETORS_FORM_MOBILE_SVG.src,
+                  pngSrc: CRETORS_FORM_MOBILE_PNG.src,
+                })}
                 className="relative z-1 mx-auto block h-full max-h-[600px] object-contain px-4 lg:hidden"
               />
 

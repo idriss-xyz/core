@@ -1,2 +1,2 @@
-export { default as IDRISS_ICON_STREAMING_SVG } from './idriss-icon-streaming.svg';
-export { default as IDRISS_ICON_STREAMING_PNG } from './idriss-icon-streaming.png';
+export { default as PLATFORMS_TOKEN_SVG } from './platforms-token.svg';
+export { default as PLATFORMS_TOKEN_PNG } from './platforms-token.png';
