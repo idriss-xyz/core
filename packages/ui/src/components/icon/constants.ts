@@ -25,6 +25,13 @@ import {
   CalendarClock,
   EllipsisVertical,
   UserRound,
+  DollarSign,
+  SwitchCamera,
+  Repeat2,
+  HandCoins,
+  TrendingUp,
+  Trophy,
+  BadgeDollarSign,
 } from 'lucide-react';
 
 import * as customIcons from './custom';
@@ -56,5 +63,12 @@ export const ICON = {
   CalendarClock,
   EllipsisVertical,
   UserRound,
+  DollarSign,
+  SwitchCamera,
+  Repeat2,
+  HandCoins,
+  TrendingUp,
+  Trophy,
+  BadgeDollarSign,
   ...customIcons,
 };

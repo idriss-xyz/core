@@ -10,7 +10,11 @@ import {
 } from 'viem';
 import { getEnsAvatar } from 'viem/actions';
 import { normalize } from 'viem/ens';
-import { CHAIN_ID_TO_TOKENS, NATIVE_COIN_ADDRESS } from '@idriss-xyz/constants';
+import {
+  CHAIN_ID_TO_TOKENS,
+  CREATORS_LINK,
+  NATIVE_COIN_ADDRESS,
+} from '@idriss-xyz/constants';
 import { clients } from '@idriss-xyz/blockchain-clients';
 
 import {
@@ -48,7 +52,7 @@ export default function Obs() {
 
   useEffect(() => {
     if (!address.isFetching && !address.isValid) {
-      router.push('/creators');
+      router.push(CREATORS_LINK);
 
       return;
     }

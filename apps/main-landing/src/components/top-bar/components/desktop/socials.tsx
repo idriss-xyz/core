@@ -18,16 +18,23 @@ const SOCIALS: { label: string; iconName: IconName; link: string }[] = [
 
 type Properties = {
   className?: string;
+  enlargeIcon?: boolean;
+  iconClassName?: string;
 };
 
-export const Socials = ({ className }: Properties) => {
+export const Socials = ({
+  className,
+  enlargeIcon,
+  iconClassName,
+}: Properties) => {
   return (
     <div className={classes('flex items-center space-x-2', className)}>
       {SOCIALS.map((social, index) => {
         return (
           <IconButton
             key={index}
-            size="large"
+            className={iconClassName}
+            size={enlargeIcon ? 'extra' : 'large'}
             intent="tertiary"
             iconName={social.iconName}
             href={social.link}

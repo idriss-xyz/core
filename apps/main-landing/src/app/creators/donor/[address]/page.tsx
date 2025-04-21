@@ -12,7 +12,7 @@ import { DonateHistory } from '@/app/creators/donate/components/donate-history';
 
 import DonorStatsList from '../components/donor-stats-list';
 import { useCreators } from '../../hooks/use-creators';
-import { TopBar } from '../../landing/components/top-bar';
+import { TopBar } from '../../components/top-bar';
 
 // ts-unused-exports:disable-next-line
 export default function Donor() {
