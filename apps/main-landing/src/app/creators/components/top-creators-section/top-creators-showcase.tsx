@@ -147,14 +147,19 @@ type Properties = {
   reverse?: boolean;
   className?: string;
   sliderClassName?: string;
+  offset?: number;
 };
 
 export const TopCreatorsShowcase = ({
   reverse,
   className,
+  offset,
   sliderClassName,
 }: Properties) => {
   const creatorsToMap = reverse ? [...creators].reverse() : creators;
+  const offsetCreators = offset
+    ? [...creatorsToMap.slice(offset), ...creatorsToMap.slice(0, offset)]
+    : creatorsToMap;
 
   return (
     <Marquee
@@ -163,7 +168,7 @@ export const TopCreatorsShowcase = ({
       displaySideBlur={false}
       sliderClassName={sliderClassName}
       className={classes('w-full', className)}
-      items={creatorsToMap.map((creator, index) => {
+      items={offsetCreators.map((creator, index) => {
         return (
           <div
             key={`top-creators-slide-${index}`}
