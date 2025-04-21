@@ -23,7 +23,9 @@ export const ProsItem = ({
     <div
       className={classes('flex w-full flex-col items-start gap-y-2', className)}
     >
-      <div className={classes('max-w-[510px] flex flex-col gap-3', innerClassName)}>
+      <div
+        className={classes('flex max-w-[510px] flex-col gap-3', innerClassName)}
+      >
         <Icon
           size={32}
           name={iconName}
@@ -41,9 +43,7 @@ export const ProsItem = ({
         </h3>
 
         <p
-          className={classes(
-            'text-body4 text-midnightGreen-200 lg:text-wrap',
-          )}
+          className={classes('text-body4 text-midnightGreen-200 lg:text-wrap')}
         >
           {description}
         </p>
