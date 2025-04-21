@@ -11,6 +11,8 @@ import {
   DmoneyCard,
   Qflux888Card,
   LambyseriestvCard,
+  ViperCard,
+  YoJurmyCard,
 } from './assets';
 
 const creators = [
@@ -80,6 +82,36 @@ const creators = [
     image: LambyseriestvCard.src,
     platform: {
       url: 'https://www.twitch.tv/lambyseriestv',
+      icon: (
+        <Icon
+          name="TwitchOutlinedBold"
+          size={32}
+          className="size-6 text-mint-200 md:size-8"
+        />
+      ),
+    },
+  },
+  {
+    name: 'viper_9337',
+    followers: '19K',
+    image: ViperCard.src,
+    platform: {
+      url: 'https://www.twitch.tv/viper_9337',
+      icon: (
+        <Icon
+          name="TwitchOutlinedBold"
+          size={32}
+          className="size-6 text-mint-200 md:size-8"
+        />
+      ),
+    },
+  },
+  {
+    name: 'YoJurmy',
+    followers: '675',
+    image: YoJurmyCard.src,
+    platform: {
+      url: 'https://www.twitch.tv/yojurmy',
       icon: (
         <Icon
           name="TwitchOutlinedBold"
