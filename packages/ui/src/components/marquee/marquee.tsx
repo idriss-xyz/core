@@ -88,10 +88,7 @@ export const Marquee = ({
       >
         {items.map((item, index) => {
           return (
-            <li
-              key={index}
-              className="flex min-w-max cursor-pointer items-center space-x-2"
-            >
+            <li key={index} className="flex min-w-max items-center space-x-2">
               {item}
             </li>
           );
