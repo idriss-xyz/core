@@ -20,6 +20,7 @@ export const VideoPlayer = () => {
       <video
         loop
         autoPlay
+        playsInline
         muted={isMuted}
         ref={videoReference}
         className="size-full cursor-pointer object-cover"
