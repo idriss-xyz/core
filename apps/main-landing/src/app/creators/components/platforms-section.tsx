@@ -32,7 +32,7 @@ export const PlatformsSection = () => {
 
               <p
                 className={classes(
-                  'text-body2 text-neutralGreen-900 opacity-70 lg:text-balance',
+                  'text-body2 text-neutralGreen-900 opacity-70 lg:text-balance sm:text-center lg:text-left',
                 )}
               >
                 Whether you&#39;re on Twitch, YouTube, Kick, Facebook or

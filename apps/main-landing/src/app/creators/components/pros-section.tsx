@@ -79,8 +79,8 @@ export const ProsSection = () => {
                 'text-center text-body3 text-midnightGreen-200 lg:text-balance',
               )}
             >
-              More earnings, more ways to get paid, and more reasons for your
-              fans to keep coming back.
+              More earnings, more ways to get paid, more reasons for your fans
+              to keep coming back.
             </p>
           </div>
 
