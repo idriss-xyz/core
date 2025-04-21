@@ -1,6 +1,5 @@
 'use client';
-import { Icon } from '@idriss-xyz/ui/icon';
-import { Link } from '@idriss-xyz/ui/link';
+import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Marquee } from '@idriss-xyz/ui/marquee';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
@@ -21,12 +20,15 @@ const creators = [
     followers: '3.7K',
     image: DafaqtorCard.src,
     platform: {
-      url: 'https://www.twitch.tv/dafaqtor',
       icon: (
-        <Icon
-          name="TwitchOutlinedBold"
-          size={32}
-          className="size-6 text-mint-200 md:size-8"
+        <IconButton
+          asLink
+          isExternal
+          href="https://www.twitch.tv/dafaqtor"
+          iconName="TwitchOutlinedBold"
+          size="extra"
+          intent="tertiary"
+          className="size-6 text-mint-200 md:size-8 hover:text-black"
         />
       ),
     },
@@ -36,12 +38,15 @@ const creators = [
     followers: '2.8K',
     image: ExcelsorphCard.src,
     platform: {
-      url: 'https://www.twitch.tv/excelsorph',
       icon: (
-        <Icon
-          name="TwitchOutlinedBold"
-          size={32}
-          className="size-6 text-mint-200 md:size-8"
+        <IconButton
+          asLink
+          isExternal
+          href="https://www.twitch.tv/excelsorph"
+          iconName="TwitchOutlinedBold"
+          size="extra"
+          intent="tertiary"
+          className="size-6 text-mint-200 md:size-8 hover:text-black"
         />
       ),
     },
@@ -51,12 +56,15 @@ const creators = [
     followers: '18.3K',
     image: DmoneyCard.src,
     platform: {
-      url: 'https://www.twitch.tv/dmoney',
       icon: (
-        <Icon
-          name="TwitchOutlinedBold"
-          size={32}
-          className="size-6 text-mint-200 md:size-8"
+        <IconButton
+          asLink
+          isExternal
+          href="https://www.twitch.tv/dmoney"
+          iconName="TwitchOutlinedBold"
+          size="extra"
+          intent="tertiary"
+          className="size-6 text-mint-200 md:size-8 hover:text-black"
         />
       ),
     },
@@ -66,12 +74,15 @@ const creators = [
     followers: '3.4K',
     image: Qflux888Card.src,
     platform: {
-      url: 'https://www.twitch.tv/qflux888',
       icon: (
-        <Icon
-          name="TwitchOutlinedBold"
-          size={32}
-          className="size-6 text-mint-200 md:size-8"
+        <IconButton
+          asLink
+          isExternal
+          href="https://www.twitch.tv/qflux888"
+          iconName="TwitchOutlinedBold"
+          size="extra"
+          intent="tertiary"
+          className="size-6 text-mint-200 md:size-8 hover:text-black"
         />
       ),
     },
@@ -81,12 +92,15 @@ const creators = [
     followers: '32.1K',
     image: LambyseriestvCard.src,
     platform: {
-      url: 'https://www.twitch.tv/lambyseriestv',
       icon: (
-        <Icon
-          name="TwitchOutlinedBold"
-          size={32}
-          className="size-6 text-mint-200 md:size-8"
+        <IconButton
+          asLink
+          isExternal
+          href="https://www.twitch.tv/lambyseriestv"
+          iconName="TwitchOutlinedBold"
+          size="extra"
+          intent="tertiary"
+          className="size-6 text-mint-200 md:size-8 hover:text-black"
         />
       ),
     },
@@ -96,12 +110,15 @@ const creators = [
     followers: '19K',
     image: ViperCard.src,
     platform: {
-      url: 'https://www.twitch.tv/viper_9337',
       icon: (
-        <Icon
-          name="TwitchOutlinedBold"
-          size={32}
-          className="size-6 text-mint-200 md:size-8"
+        <IconButton
+          asLink
+          isExternal
+          href="https://www.twitch.tv/viper_9337"
+          iconName="TwitchOutlinedBold"
+          size="extra"
+          intent="tertiary"
+          className="size-6 text-mint-200 md:size-8 hover:text-black"
         />
       ),
     },
@@ -111,12 +128,15 @@ const creators = [
     followers: '675',
     image: YoJurmyCard.src,
     platform: {
-      url: 'https://www.twitch.tv/yojurmy',
       icon: (
-        <Icon
-          name="TwitchOutlinedBold"
-          size={32}
-          className="size-6 text-mint-200 md:size-8"
+        <IconButton
+          asLink
+          isExternal
+          href="https://www.twitch.tv/yojurmy"
+          iconName="TwitchOutlinedBold"
+          size="extra"
+          intent="tertiary"
+          className="size-6 text-mint-200 md:size-8 hover:text-black"
         />
       ),
     },
@@ -186,14 +206,7 @@ export const TopCreatorsShowcase = ({
                   {creator.name}
                 </span>
 
-                <Link
-                  isExternal
-                  size="medium"
-                  className="border-none p-0"
-                  href={creator.platform.url}
-                >
-                  {creator.platform.icon}
-                </Link>
+                {creator.platform.icon}
               </div>
             </div>
           </div>
