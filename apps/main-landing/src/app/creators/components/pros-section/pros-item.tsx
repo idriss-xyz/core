@@ -6,6 +6,7 @@ type Properties = {
   heading: string;
   iconName: IconName;
   className?: string;
+  innerClassName?: string;
   description: string;
   children?: ReactNode;
 };
@@ -16,12 +17,13 @@ export const ProsItem = ({
   children,
   className,
   description,
+  innerClassName,
 }: Properties) => {
   return (
     <div
       className={classes('flex w-full flex-col items-start gap-y-2', className)}
     >
-      <div className='max-w-[510px] flex flex-col gap-3'>
+      <div className={classes('max-w-[510px] flex flex-col gap-3', innerClassName)}>
         <Icon
           size={32}
           name={iconName}

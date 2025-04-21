@@ -113,6 +113,7 @@ export const ProsSection = () => {
                   iconName="HandCoins"
                   heading="More ways to donate"
                   description="Let your supporters contribute in the way that suits them best. Accept payments in a variety of top cryptocurrencies."
+                  innerClassName='max-w-[490px]'
                 >
                   <TokensShowcase className="my-16" />
                 </ProsItem>
