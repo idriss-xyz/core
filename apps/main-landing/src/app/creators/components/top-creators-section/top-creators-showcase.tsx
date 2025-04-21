@@ -28,7 +28,7 @@ const creators = [
           iconName="TwitchOutlinedBold"
           size="extra"
           intent="tertiary"
-          className="size-6 text-mint-200 md:size-8 hover:text-black"
+          className="size-6 text-mint-200 md:size-8"
         />
       ),
     },
@@ -46,7 +46,7 @@ const creators = [
           iconName="TwitchOutlinedBold"
           size="extra"
           intent="tertiary"
-          className="size-6 text-mint-200 md:size-8 hover:text-black"
+          className="size-6 text-mint-200 md:size-8"
         />
       ),
     },
@@ -64,7 +64,7 @@ const creators = [
           iconName="TwitchOutlinedBold"
           size="extra"
           intent="tertiary"
-          className="size-6 text-mint-200 md:size-8 hover:text-black"
+          className="size-6 text-mint-200 md:size-8"
         />
       ),
     },
@@ -82,7 +82,7 @@ const creators = [
           iconName="TwitchOutlinedBold"
           size="extra"
           intent="tertiary"
-          className="size-6 text-mint-200 md:size-8 hover:text-black"
+          className="size-6 text-mint-200 md:size-8"
         />
       ),
     },
@@ -100,7 +100,7 @@ const creators = [
           iconName="TwitchOutlinedBold"
           size="extra"
           intent="tertiary"
-          className="size-6 text-mint-200 md:size-8 hover:text-black"
+          className="size-6 text-mint-200 md:size-8"
         />
       ),
     },
@@ -118,7 +118,7 @@ const creators = [
           iconName="TwitchOutlinedBold"
           size="extra"
           intent="tertiary"
-          className="size-6 text-mint-200 md:size-8 hover:text-black"
+          className="size-6 text-mint-200 md:size-8"
         />
       ),
     },
@@ -136,7 +136,7 @@ const creators = [
           iconName="TwitchOutlinedBold"
           size="extra"
           intent="tertiary"
-          className="size-6 text-mint-200 md:size-8 hover:text-black"
+          className="size-6 text-mint-200 md:size-8"
         />
       ),
     },
