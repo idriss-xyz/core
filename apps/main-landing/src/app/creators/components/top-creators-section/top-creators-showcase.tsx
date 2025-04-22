@@ -68,7 +68,7 @@ const creators = [
           className="size-6 text-mint-200 md:size-8"
         />
       ),
-    }
+    },
   },
   {
     name: 'Dmoney',
@@ -177,8 +177,8 @@ export const TopCreatorsShowcase = ({
 }: Properties) => {
   const creatorsToMap = reverse ? [...creators].reverse() : creators;
   const offsetCreators = offset
-  ? [...creatorsToMap.slice(offset), ...creatorsToMap.slice(0, offset)]
-  : creatorsToMap;
+    ? [...creatorsToMap.slice(offset), ...creatorsToMap.slice(0, offset)]
+    : creatorsToMap;
 
   return (
     <Marquee
