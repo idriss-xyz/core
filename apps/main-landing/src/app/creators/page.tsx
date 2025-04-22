@@ -16,7 +16,7 @@ export const metadata: Metadata = {
       'Creator monetization app that helps you earn more with instant payouts and near-zero platform cuts.',
     images: [
       {
-        url: '/og.png',
+        url: '/og-creators.png',
       },
     ],
   },
