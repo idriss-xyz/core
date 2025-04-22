@@ -7,6 +7,7 @@ import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import {
   DafaqtorCard,
   ExcelsorphCard,
+  BabyBearHS,
   DmoneyCard,
   Qflux888Card,
   LambyseriestvCard,
@@ -43,6 +44,24 @@ const creators = [
           asLink
           isExternal
           href="https://www.twitch.tv/excelsorph"
+          iconName="TwitchOutlinedBold"
+          size="extra"
+          intent="tertiary"
+          className="size-6 text-mint-200 md:size-8"
+        />
+      ),
+    },
+  },
+  {
+    name: 'BabyBearHS',
+    followers: '8.2K',
+    image: BabyBearHS.src,
+    platform: {
+      icon: (
+        <IconButton
+          asLink
+          isExternal
+          href="https://twitch.tv/BabybearHS"
           iconName="TwitchOutlinedBold"
           size="extra"
           intent="tertiary"
@@ -147,14 +166,19 @@ type Properties = {
   reverse?: boolean;
   className?: string;
   sliderClassName?: string;
+  offset?: number;
 };
 
 export const TopCreatorsShowcase = ({
   reverse,
   className,
   sliderClassName,
+  offset,
 }: Properties) => {
   const creatorsToMap = reverse ? [...creators].reverse() : creators;
+  const offsetCreators = offset
+    ? [...creatorsToMap.slice(offset), ...creatorsToMap.slice(0, offset)]
+    : creatorsToMap;
 
   return (
     <Marquee
@@ -163,7 +187,7 @@ export const TopCreatorsShowcase = ({
       displaySideBlur={false}
       sliderClassName={sliderClassName}
       className={classes('w-full', className)}
-      items={creatorsToMap.map((creator, index) => {
+      items={offsetCreators.map((creator, index) => {
         return (
           <div
             key={`top-creators-slide-${index}`}

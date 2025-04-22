@@ -67,7 +67,7 @@ export const TwitchOutlinedBold = ({ className, size = 64 }: Properties) => {
     >
       <path
         d="M21.333 9.334v4M21.333 9.334v4M16 9.334v4"
-        stroke="#E7FED8"
+        stroke="currentColor"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -75,7 +75,7 @@ export const TwitchOutlinedBold = ({ className, size = 64 }: Properties) => {
       <path
         clipRule="evenodd"
         d="m26.276 17.724-4.552 4.552c-.25.25-.59.39-.943.39H16L10.667 28v-5.333h-4a1.334 1.334 0 0 1-1.334-1.334V9.885c0-.353.14-.693.39-.942l4.553-4.552c.25-.251.59-.391.943-.391h14.114c.736 0 1.334.597 1.334 1.333v11.448c0 .354-.14.692-.391.943Z"
-        stroke="#E7FED8"
+        stroke="currentColor"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
