@@ -14,6 +14,11 @@ export const metadata: Metadata = {
     title: 'Make more, grow faster, take control',
     description:
       'Creator monetization app that helps you earn more with instant payouts and near-zero platform cuts.',
+    images: [
+      {
+        url: '/og.png',
+      },
+    ],
   },
 };
 
