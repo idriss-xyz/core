@@ -5,3 +5,4 @@ export { default as Qflux888Card } from './qflux888-card.svg';
 export { default as LambyseriestvCard } from './lambyseriestv-card.svg';
 export { default as ViperCard } from './viper-card.jpg';
 export { default as YoJurmyCard } from './yojurmy-card.webp';
+export { default as BabyBearHS } from './babybearhs-card.jpg';
