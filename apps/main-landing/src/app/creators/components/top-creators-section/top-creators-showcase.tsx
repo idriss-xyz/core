@@ -145,6 +145,24 @@ const creators = [
     },
   },
   {
+    name: 'Pandapple',
+    followers: '5.5K',
+    image: Pandapple.src,
+    platform: {
+      icon: (
+        <IconButton
+          asLink
+          isExternal
+          href="https://www.twitch.tv/pandapple"
+          iconName="TwitchOutlinedBold"
+          size="extra"
+          intent="tertiary"
+          className="size-6 text-mint-200 md:size-8"
+        />
+      ),
+    },
+  },
+  {
     name: 'viper_9337',
     followers: '19K',
     image: ViperCard.src,
@@ -172,24 +190,6 @@ const creators = [
           asLink
           isExternal
           href="https://www.twitch.tv/yojurmy"
-          iconName="TwitchOutlinedBold"
-          size="extra"
-          intent="tertiary"
-          className="size-6 text-mint-200 md:size-8"
-        />
-      ),
-    },
-  },
-  {
-    name: 'Pandapple',
-    followers: '5.5K',
-    image: Pandapple.src,
-    platform: {
-      icon: (
-        <IconButton
-          asLink
-          isExternal
-          href="https://www.twitch.tv/pandapple"
           iconName="TwitchOutlinedBold"
           size="extra"
           intent="tertiary"
