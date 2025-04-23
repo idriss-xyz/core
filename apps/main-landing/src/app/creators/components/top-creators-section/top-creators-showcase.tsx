@@ -13,6 +13,7 @@ import {
   LambyseriestvCard,
   ViperCard,
   YoJurmyCard,
+  Alliestrasza,
 } from './assets';
 
 const creators = [
@@ -80,6 +81,24 @@ const creators = [
           asLink
           isExternal
           href="https://www.twitch.tv/dmoney"
+          iconName="TwitchOutlinedBold"
+          size="extra"
+          intent="tertiary"
+          className="size-6 text-mint-200 md:size-8"
+        />
+      ),
+    },
+  },
+  {
+    name: 'Alliestrasza',
+    followers: '233K',
+    image: Alliestrasza.src,
+    platform: {
+      icon: (
+        <IconButton
+          asLink
+          isExternal
+          href="https://www.twitch.tv/alliestrasza"
           iconName="TwitchOutlinedBold"
           size="extra"
           intent="tertiary"
