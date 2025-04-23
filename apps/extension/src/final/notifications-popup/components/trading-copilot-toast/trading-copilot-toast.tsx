@@ -64,42 +64,41 @@ export const TradingCopilotToast = ({
         }
       />
       <div className="flex w-full flex-col gap-y-1">
-        <p className="break-all text-label3 text-neutral-900">
-          {isAddress(userName) || isSolanaAddress(userName)
-            ? getShortWalletHex(userName)
-            : userName}{' '}
-          <span className="inline-flex items-center gap-x-1 text-body3 text-neutral-600">
-            got{' '}
-            <span className="inline-flex items-center justify-center gap-x-1">
-              <TokenIcon tokenImage={tokenImage} tokenData={tokenData} />
-              <span>
-                {zerosIndex ? (
-                  <>
-                    0.0
-                    <span className="inline-block translate-y-1 px-px text-xs">
-                      {zerosIndex}
-                    </span>
-                    {roundedNumber}
-                  </>
-                ) : (
-                  roundedNumber
-                )}{' '}
-                <TooltipProvider delayDuration={400}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <p className='truncate'>
-                        {toast.tokenIn.symbol}
-                      </p>
-                    </TooltipTrigger>
-                    <TooltipContent className="z-notification w-fit bg-black text-white">
-                      {toast.tokenIn.symbol}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </span>
-            </span>
+        <div className="flex flex-row gap-x-1 items-center text-neutral-900">
+          <span className='text-label3'>
+            {isAddress(userName) || isSolanaAddress(userName)
+              ? getShortWalletHex(userName)
+              : userName}{' '}
           </span>
-        </p>
+          <div className="text-body3 text-neutral-600 flex gap-x-1">
+            got{' '}
+
+          <TokenIcon tokenImage={tokenImage} tokenData={tokenData} />
+          {zerosIndex ? (
+            <>
+              0.0
+              <span className="inline-block translate-y-1 px-px text-xs">
+                {zerosIndex}
+              </span>
+              {roundedNumber}
+            </>
+          ) : (
+            roundedNumber
+          )}{' '}
+          <TooltipProvider delayDuration={400}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <p className='w-[100px] truncate'>
+                  {toast.tokenIn.symbol}
+                </p>
+              </TooltipTrigger>
+              <TooltipContent className="z-notification w-fit bg-black text-white">
+                {toast.tokenIn.symbol}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          </div>
+        </div>
         <div className="flex w-full justify-between">
           <TooltipProvider delayDuration={400}>
             <Tooltip>
