@@ -7,3 +7,4 @@ export { default as ViperCard } from './viper-card.jpg';
 export { default as YoJurmyCard } from './yojurmy-card.webp';
 export { default as BabyBearHS } from './babybearhs-card.jpg';
 export { default as Alliestrasza } from './alliestrasza-card.jpg';
+export { default as Pandapple } from './pandapple-card.jpg';
