@@ -84,7 +84,18 @@ export const TradingCopilotToast = ({
                 ) : (
                   roundedNumber
                 )}{' '}
-                {toast.tokenIn.symbol}
+                <TooltipProvider delayDuration={400}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <p className='truncate'>
+                        {toast.tokenIn.symbol}
+                      </p>
+                    </TooltipTrigger>
+                    <TooltipContent className="z-notification w-fit bg-black text-white">
+                      {toast.tokenIn.symbol}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </span>
             </span>
           </span>
