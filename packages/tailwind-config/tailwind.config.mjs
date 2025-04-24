@@ -451,7 +451,7 @@ export default {
             maxWidth: '1312px',
           },
           '@screen 4xl': {
-            maxWidth: '1696px',
+            maxWidth: '1600px',
           },
         },
       });
