@@ -166,7 +166,7 @@ const YapsStatsElement = ({
   const yapsQuery = useCommandQuery({
     command: new GetYapsCommand({ username: username ?? '' }),
     staleTime: Number.POSITIVE_INFINITY,
-    retryDelay: 10000,
+    retryDelay: 10_000,
     enabled,
   });
 
