@@ -161,7 +161,7 @@ const YapsStatsElement = ({
 
   const enabled =
     (isProfilePage && username === locationUsername) ||
-    (isHovered && !!username);
+    ((isHovered || isPopupElement) && !!username);
 
   const yapsQuery = useCommandQuery({
     command: new GetYapsCommand({ username: username ?? '' }),
@@ -173,7 +173,7 @@ const YapsStatsElement = ({
   const noYaps =
     yapsQuery.isLoading ||
     yapsQuery.isError ||
-    !!(yapsQuery.data && yapsQuery.data.yaps_all < 0) ||
+    !!(yapsQuery.data && yapsQuery.data.yaps_all <= 0) ||
     (isPopupElement && !yapsQuery.isSuccess);
 
   useEffect(() => {
@@ -232,7 +232,7 @@ const YapsStatsElement = ({
     <PortalWithTailwind container={portal}>
       <TradingCopilotTooltip
         onMouseEnter={onHover}
-        disableTooltip={!displayTooltip}
+        disableTooltip={!displayTooltip || noYaps}
         triggerClassName="block size-full"
         wrapperClassName="block size-full"
         className={classes(
