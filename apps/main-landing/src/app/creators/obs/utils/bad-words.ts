@@ -458,5 +458,7 @@ export function containsBadWords(message: string): boolean {
 
   const normalizedMessage = normalizeForComparison(message);
 
-  return BAD_WORDS.some((word) => {return normalizedMessage.includes(word)});
+  return BAD_WORDS.some((word) => {
+    return normalizedMessage.includes(word);
+  });
 }
