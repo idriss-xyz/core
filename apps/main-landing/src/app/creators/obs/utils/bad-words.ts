@@ -444,13 +444,13 @@ const BAD_WORDS: string[] = [
 function normalizeForComparison(text: string): string {
   return text
     .toLowerCase()
-    .replace(/[@4]/g, 'a')
-    .replace(/[!1|i]/g, 'i')
-    .replace(/[$5]/g, 's')
-    .replace(/[3]/g, 'e')
-    .replace(/[0]/g, 'o')
-    .replace(/[7]/g, 't')
-    .replace(/[^a-z]/g, ''); // remove non-alphabetic chars
+    .replaceAll(/[4@]/g, 'a')
+    .replaceAll(/[!1i|]/g, 'i')
+    .replaceAll(/[$5]/g, 's')
+    .replaceAll('3', 'e')
+    .replaceAll('0', 'o')
+    .replaceAll('7', 't')
+    .replaceAll(/[^a-z]/g, ''); // remove non-alphabetic char
 }
 
 export function containsBadWords(message: string): boolean {
@@ -458,5 +458,5 @@ export function containsBadWords(message: string): boolean {
 
   const normalizedMessage = normalizeForComparison(message);
 
-  return BAD_WORDS.some((word) => normalizedMessage.includes(word));
+  return BAD_WORDS.some((word) => {return normalizedMessage.includes(word)});
 }
