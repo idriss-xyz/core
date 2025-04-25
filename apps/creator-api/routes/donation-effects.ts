@@ -7,13 +7,17 @@ const donationEffectsMap = new Map<string, string>();
 router.post('/', (req: Request, res: Response) => {
   const { txHash, sfxMessage } = req.body;
 
-  if (!txHash || typeof txHash !== 'string' || !sfxMessage || typeof sfxMessage !== 'string') {
+  if (
+    !txHash ||
+    typeof txHash !== 'string' ||
+    !sfxMessage ||
+    typeof sfxMessage !== 'string'
+  ) {
     res.status(400).json({ error: 'Invalid txHash or sfxMessage' });
   }
 
   donationEffectsMap.set(txHash.toLowerCase(), sfxMessage);
   res.json({ message: 'Stored donation effect successfully' });
-
 });
 
 router.get('/:txHash', (req: Request, res: Response) => {

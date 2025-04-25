@@ -130,10 +130,11 @@ export const DonateForm = ({ className }: Properties) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defaultChainId, selectedTokenSymbol, reset]);
 
-  const [chainId, tokenSymbol, amount] = formMethods.watch([
+  const [chainId, tokenSymbol, amount, sfx] = formMethods.watch([
     'chainId',
     'tokenSymbol',
     'amount',
+    'sfx',
   ]);
 
   const selectedToken = useMemo(() => {
@@ -208,15 +209,37 @@ export const DonateForm = ({ className }: Properties) => {
     ],
   );
 
+  const sendDonation = useCallback(async () => {
+    if (!searchParams.address.data || !searchParams.address.isValid) {
+      return;
+    }
+    void fetch(`${CREATOR_API_URL}/push-donation`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ address: searchParams.address.data }),
+    });
+  }, [searchParams.address.data, searchParams.address.isValid]);
+
+  const sendDonationEffects = useCallback(async () => {
+    if (!sfx || !sender.data?.transactionHash) {
+      return;
+    }
+    void fetch(`${CREATOR_API_URL}/donation-effects`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sfxMessage: sfx,
+        txHash: sender.data?.transactionHash,
+      }),
+    });
+  }, [sfx, sender.data]);
+
   useEffect(() => {
     if (sender.isSuccess) {
-      void fetch(`${CREATOR_API_URL}/push-donation`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ address: searchParams.address.data }),
-      });
+      sendDonation();
+      sendDonationEffects();
     }
-  }, [searchParams.address.data, sender.isSuccess]);
+  }, [sender.isSuccess]);
 
   if (!searchParams.address.isValid && !searchParams.address.isFetching) {
     return (
@@ -382,6 +405,22 @@ export const DonateForm = ({ className }: Properties) => {
                 {...field}
                 asTextArea
                 label="Message"
+                className="mt-4"
+                helperText={fieldState.error?.message}
+                error={Boolean(fieldState.error?.message)}
+              />
+            );
+          }}
+        />
+
+        <Controller
+          name="sfx"
+          control={formMethods.control}
+          render={({ field, fieldState }) => {
+            return (
+              <Form.Field
+                {...field}
+                label="Sound effect"
                 className="mt-4"
                 helperText={fieldState.error?.message}
                 error={Boolean(fieldState.error?.message)}
