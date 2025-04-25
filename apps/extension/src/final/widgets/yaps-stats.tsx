@@ -161,7 +161,7 @@ const YapsStatsElement = ({
 
   const enabled =
     (isProfilePage && username === locationUsername) ||
-    (isHovered && !!username);
+    ((isHovered || isPopupElement) && !!username);
 
   const yapsQuery = useCommandQuery({
     command: new GetYapsCommand({ username: username ?? '' }),
@@ -173,7 +173,8 @@ const YapsStatsElement = ({
   const noYaps =
     yapsQuery.isLoading ||
     yapsQuery.isError ||
-    !!(yapsQuery.data && yapsQuery.data.yaps_all < 0);
+    !!(yapsQuery.data && yapsQuery.data.yaps_all <= 0) ||
+    (isPopupElement && !yapsQuery.isSuccess);
 
   useEffect(() => {
     const cleanup = () => {
@@ -188,11 +189,11 @@ const YapsStatsElement = ({
 
     if (
       !noYaps &&
-      isMainElement &&
+      displayTooltip &&
       !isOrganizationElement &&
       containerForInjection instanceof HTMLElement
     ) {
-      containerForInjection.style.marginBottom = '24px';
+      containerForInjection.style.marginBottom = isMainElement ? '24px' : '8px';
     }
 
     if (containerForInjection.parentElement instanceof HTMLElement) {
@@ -209,7 +210,13 @@ const YapsStatsElement = ({
     setPortal(newPortal);
 
     return cleanup;
-  }, [noYaps, isMainElement, isOrganizationElement, containerForInjection]);
+  }, [
+    noYaps,
+    isMainElement,
+    displayTooltip,
+    isOrganizationElement,
+    containerForInjection,
+  ]);
 
   const onHover = useCallback(() => {
     setIsHovered(true);
@@ -225,7 +232,7 @@ const YapsStatsElement = ({
     <PortalWithTailwind container={portal}>
       <TradingCopilotTooltip
         onMouseEnter={onHover}
-        disableTooltip={!displayTooltip}
+        disableTooltip={!displayTooltip || noYaps}
         triggerClassName="block size-full"
         wrapperClassName="block size-full"
         className={classes(
@@ -249,15 +256,17 @@ const YapsStatsElement = ({
         }
       >
         <>
-          {isMainElement && !noYaps && (
+          {displayTooltip && !noYaps && (
             <img
               alt=""
               src={KAITO_LOGO}
-              className="absolute -bottom-4 left-1/2 z-1 size-8 -translate-x-1/2"
+              className={classes(
+                'absolute -bottom-4 left-1/2 z-1 size-8 -translate-x-1/2',
+                isPopupElement && '-bottom-3 size-6',
+              )}
             />
           )}
-
-          {!isTweetElement && !isPopupElement && !noYaps && (
+          {!isTweetElement && !noYaps && (
             <span className="absolute right-0 top-0 size-full rounded-full border-2 border-[#32ffdc]" />
           )}
         </>
