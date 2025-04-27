@@ -32,6 +32,7 @@ import {
   resolveEnsName,
   TIP_MESSAGE_EVENT_ABI,
 } from './utils';
+import { containsBadWords } from './utils/bad-words';
 
 const FETCH_INTERVAL = 5000;
 const BLOCK_LOOKBACK_RANGE = 5n;
@@ -148,6 +149,12 @@ export default function Obs() {
           }
 
           if (recipient.toLowerCase() !== address.data.toLowerCase()) continue;
+
+          // Check if the message contains any bad words, if so skip this donation
+          if (message && containsBadWords(message)) {
+            console.log('Filtered donation with inappropriate message');
+            continue;
+          }
 
           const resolved = await resolveEnsName(txn.from);
 
