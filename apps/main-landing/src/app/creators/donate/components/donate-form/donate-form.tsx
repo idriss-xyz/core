@@ -384,12 +384,15 @@ export const DonateForm = ({ className }: Properties) => {
                   {...field}
                   asTextArea
                   label={
-                    <>
-                      <label className="mr-2">Message</label>
+                    <div className="flex items-center gap-2">
+                      <label>Message</label>
                       <Badge type="info" variant="subtle">
-                        TTS over $5
+                        Alert $1+
                       </Badge>
-                    </>
+                      <Badge type="info" variant="subtle">
+                        TTS $5+
+                      </Badge>
+                    </div>
                   }
                   className="mt-4"
                   helperText={fieldState.error?.message}
