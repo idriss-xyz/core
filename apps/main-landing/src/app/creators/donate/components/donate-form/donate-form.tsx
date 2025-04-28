@@ -385,7 +385,7 @@ export const DonateForm = ({ className }: Properties) => {
                   asTextArea
                   label={
                     <>
-                      <label className='mr-2'>Message</label>
+                      <label className="mr-2">Message</label>
                       <Badge type="info" variant="subtle">
                         TTS over $5
                       </Badge>
