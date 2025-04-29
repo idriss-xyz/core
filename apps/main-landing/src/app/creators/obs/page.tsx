@@ -88,16 +88,21 @@ export default function Obs() {
     [],
   );
 
-  const fetchDonationSfxText= async (txHash: string) => {
+  const fetchDonationSfxText = async (txHash: string) => {
     try {
-      const response = await fetch(`${CREATOR_API_URL}/donation-effects/${txHash}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${CREATOR_API_URL}/donation-effects/${txHash}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
         },
-      });
+      );
       if (!response.ok) {
-        console.error(`Error fetching donation effect: ${response.status} ${response.statusText}`);
+        console.error(
+          `Error fetching donation effect: ${response.status} ${response.statusText}`,
+        );
         return;
       }
 
