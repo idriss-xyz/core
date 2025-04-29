@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { getTextToSfx, getTextToSpeech } from '../utils';
 
 const DONATION_TTS_MIN_AMOUNT = 4.75; // $5 minus 5% margin for price drops
+const DONATION_SFX_MIN_AMOUNT = 4.75; // TODO: define amount
 const DONATION_TTS_DELAY = 2000;
 
 export const useDonationNotification = (
@@ -19,68 +20,70 @@ export const useDonationNotification = (
     if (!amount || hasRunReference.current) return;
 
     hasRunReference.current = true;
-    sfxText
-    ? getTextToSfx(sfxText)
-        .then(async (stream) => {
-          if (stream) {
-            const arrayBuffer = await stream.arrayBuffer();
-            const blob = new Blob([arrayBuffer], { type: 'audio/mpeg' });
-            const audioUrl = URL.createObjectURL(blob);
 
-            const speech = new Audio(audioUrl);
-            speech.play().catch((error) => {
-              console.error('Sfx audio playback failed:', error);
-            });
-          } else {
-            throw new Error('Audio stream from api is null');
-          }
-        })
-        .catch((error) => {
-          console.error('Error fetching tts sound stream:', error);
-        })
-    :
-    audio.play().catch((error) => {
-      console.error('Alert audio playback failed:', error);
-    });
+    const playAudio = async () => {
+      try {
+        let alertAudio = null;
+        let speechAudio = null;
 
-    if (Number.parseFloat(amount) > DONATION_TTS_MIN_AMOUNT) {
-      getTextToSpeech(message)
-        .then(async (stream) => {
-          if (stream) {
-            const arrayBuffer = await stream.arrayBuffer();
-            const blob = new Blob([arrayBuffer], { type: 'audio/mpeg' });
-            const audioUrl = URL.createObjectURL(blob);
+        if (sfxText && Number.parseFloat(amount) > DONATION_SFX_MIN_AMOUNT) {
+          const sfxStream = await getTextToSfx(sfxText);
+          if (!sfxStream) throw new Error('SFX audio stream from api is null');
 
-            const speech = new Audio(audioUrl);
-            setTimeout(() => {
-              speech.play().catch((error) => {
-                console.error('TTS audio playback failed:', error);
-              });
-            }, DONATION_TTS_DELAY);
-          } else {
-            throw new Error('Audio stream from api is null');
-          }
-        })
-        .catch((error) => {
-          console.error('Error fetching tts sound stream:', error);
-        });
+          const arrayBuffer = await sfxStream.arrayBuffer();
+          const sfxBlob = new Blob([arrayBuffer], { type: 'audio/mpeg' });
+          const sfxAudioUrl = URL.createObjectURL(sfxBlob);
 
-      setShowNotification(true);
+          const sfxSpeech = new Audio(sfxAudioUrl);
+          alertAudio = sfxSpeech;
+        } else {
+          alertAudio = audio;
+        }
 
-      const timeout = setTimeout(() => {
+
+        if (Number.parseFloat(amount) > DONATION_TTS_MIN_AMOUNT) {
+          const ttsStream = await getTextToSpeech(message);
+          if (!ttsStream) throw new Error('TTS audio stream from api is null');
+
+          const ttsArrayBuffer = await ttsStream.arrayBuffer();
+          const ttsBlob = new Blob([ttsArrayBuffer], { type: 'audio/mpeg' });
+          const ttsAudioUrl = URL.createObjectURL(ttsBlob);
+
+          const ttsSpeech = new Audio(ttsAudioUrl);
+          speechAudio = ttsSpeech;
+        }
+        setShowNotification(true);
+
+        // Play audio streams
+        alertAudio?.play();
+        await new Promise((resolve) => setTimeout(resolve, DONATION_TTS_DELAY));
+        if (speechAudio) {
+          speechAudio.play();
+          // Wait for speech audio to complete before starting the notification timeout
+          await new Promise((resolve) => {
+            speechAudio.addEventListener('ended', resolve);
+          });
+        }
+
+        const timeout = setTimeout(() => {
+          setShowNotification(false);
+          hasRunReference.current = false;
+        }, duration);
+
+        return () => clearTimeout(timeout);
+      } catch (error) {
+        console.error('Audio playback failed:', error);
         setShowNotification(false);
         hasRunReference.current = false;
-      }, duration);
+        return;
+      }
+    };
 
-      return () => {
-        return clearTimeout(timeout);
-      };
-    }
+    playAudio();
 
     return () => {
       setShowNotification(false);
     };
-  }, [amount, audio, duration, message]);
-
+  }, [amount, audio, duration, message, sfxText]);
   return { showNotification };
 };
