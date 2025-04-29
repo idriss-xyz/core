@@ -19,6 +19,7 @@ import { clients } from '@idriss-xyz/blockchain-clients';
 
 import {
   CHAIN_TO_IDRISS_TIPPING_ADDRESS,
+  CREATOR_API_URL,
   TIPPING_ABI,
 } from '../donate/constants';
 import { ethereumClient } from '../donate/config';
@@ -86,6 +87,27 @@ export default function Obs() {
     },
     [],
   );
+
+  const fetchDonationSfxText= async (txHash: string) => {
+    try {
+      const response = await fetch(`${CREATOR_API_URL}/donation-effects/${txHash}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        console.error(`Error fetching donation effect: ${response.status} ${response.statusText}`);
+        return;
+      }
+
+      const data = await response.json();
+      return data.sfxMessage as string;
+    } catch (error) {
+      console.error('Error fetching donation effect text:', error);
+      return;
+    }
+  };
 
   const fetchTipMessageLogs = useCallback(async () => {
     if (!address.data) return;
@@ -175,9 +197,12 @@ export default function Obs() {
             );
           });
 
+          const sfxText = await fetchDonationSfxText(log.transactionHash!);
+
           addDonation({
             avatarUrl: avatarUrl,
             message: message ?? '',
+            sfxText,
             amount: amountInDollar,
             donor: senderIdentifier,
             txnHash: log.transactionHash!,
