@@ -14,6 +14,7 @@ router.post('/', (req: Request, res: Response) => {
     typeof sfxMessage !== 'string'
   ) {
     res.status(400).json({ error: 'Invalid txHash or sfxMessage' });
+    return;
   }
 
   donationEffectsMap.set(txHash.toLowerCase(), sfxMessage);
@@ -25,11 +26,13 @@ router.get('/:txHash', (req: Request, res: Response) => {
 
   if (!txHash || typeof txHash !== 'string') {
     res.status(400).json({ error: 'Invalid txHash parameter' });
+    return;
   }
 
   const sfxMessage = donationEffectsMap.get(txHash.toLowerCase());
   if (!sfxMessage) {
     res.status(404).json({ error: 'No sfxMessage found for this txHash' });
+    return;
   }
 
   res.json({ sfxMessage });
