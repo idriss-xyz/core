@@ -89,19 +89,18 @@ function DonateContent() {
               );
             });
 
-            const donor = leaderboard[donorIndex];
-
-            if (donor) {
+            if (donorIndex === -1) {
+              leaderboard.push({
+                ...donation.fromUser,
+                totalAmount: donation.tradeValue,
+              });
+            } else {
+              const donor = leaderboard[donorIndex]!;
               leaderboard[donorIndex] = {
                 ...donor,
                 totalAmount: donor.totalAmount + donation.tradeValue,
               };
             }
-
-            leaderboard.push({
-              ...donation.fromUser,
-              totalAmount: donation.tradeValue,
-            });
 
             leaderboard.sort((a, b) => {
               return b.totalAmount - a.totalAmount;
