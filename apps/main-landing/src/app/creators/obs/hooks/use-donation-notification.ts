@@ -40,7 +40,6 @@ export const useDonationNotification = (
           alertAudio = audio;
         }
 
-
         if (Number.parseFloat(amount) > DONATION_TTS_MIN_AMOUNT) {
           const ttsStream = await getTextToSpeech(message);
           if (!ttsStream) throw new Error('TTS audio stream from api is null');
@@ -55,10 +54,12 @@ export const useDonationNotification = (
         setShowNotification(true);
 
         // Play audio streams
-        alertAudio?.play();
-        await new Promise((resolve) => setTimeout(resolve, DONATION_TTS_DELAY));
+        await alertAudio?.play();
+        await new Promise((resolve) => {
+          return setTimeout(resolve, DONATION_TTS_DELAY);
+        });
         if (speechAudio) {
-          speechAudio.play();
+          await speechAudio.play();
           // Wait for speech audio to complete before starting the notification timeout
           await new Promise((resolve) => {
             speechAudio.addEventListener('ended', resolve);
@@ -70,7 +71,9 @@ export const useDonationNotification = (
           hasRunReference.current = false;
         }, duration);
 
-        return () => clearTimeout(timeout);
+        return () => {
+          return clearTimeout(timeout);
+        };
       } catch (error) {
         console.error('Audio playback failed:', error);
         setShowNotification(false);
@@ -79,7 +82,7 @@ export const useDonationNotification = (
       }
     };
 
-    playAudio();
+    void playAudio();
 
     return () => {
       setShowNotification(false);

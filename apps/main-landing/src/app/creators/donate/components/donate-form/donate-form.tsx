@@ -213,7 +213,7 @@ export const DonateForm = ({ className }: Properties) => {
     if (!searchParams.address.data || !searchParams.address.isValid) {
       return;
     }
-    void fetch(`${CREATOR_API_URL}/push-donation`, {
+    await fetch(`${CREATOR_API_URL}/push-donation`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ address: searchParams.address.data }),
@@ -224,7 +224,7 @@ export const DonateForm = ({ className }: Properties) => {
     if (!sfx || !sender.data?.transactionHash) {
       return;
     }
-    void fetch(`${CREATOR_API_URL}/donation-effects`, {
+    await fetch(`${CREATOR_API_URL}/donation-effects`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -236,10 +236,10 @@ export const DonateForm = ({ className }: Properties) => {
 
   useEffect(() => {
     if (sender.isSuccess) {
-      sendDonation();
-      sendDonationEffects();
+      void sendDonation();
+      void sendDonationEffects();
     }
-  }, [sender.isSuccess]);
+  }, [sender.isSuccess, sendDonation, sendDonationEffects]);
 
   if (!searchParams.address.isValid && !searchParams.address.isFetching) {
     return (
