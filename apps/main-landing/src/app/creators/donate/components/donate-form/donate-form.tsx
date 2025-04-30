@@ -39,6 +39,12 @@ import { useSender } from '../../hooks';
 import { CREATOR_API_URL } from '../../constants';
 
 import { ChainSelect, TokenSelect } from './components';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@idriss-xyz/ui/tooltip';
 
 type Properties = {
   className?: string;
@@ -422,7 +428,19 @@ export const DonateForm = ({ className }: Properties) => {
                 label={
                   <div className="flex items-center gap-x-1">
                     <label htmlFor="sfx">AI sound effect</label>
-                    <Icon name="HelpCircle" size={15} />
+                    <TooltipProvider delayDuration={400}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Icon name="HelpCircle" size={15} />
+                        </TooltipTrigger>
+                        <TooltipContent className="w-fit bg-black text-white">
+                          <p className="text-label6">
+                            Write what you want to hear. AI will turn it into a
+                            sound effect and replace the default trumpet.
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   </div>
                 }
                 className="mt-4"
