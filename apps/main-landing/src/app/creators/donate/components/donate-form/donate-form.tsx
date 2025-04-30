@@ -36,7 +36,7 @@ import {
 } from '../../schema';
 import { getSendFormDefaultValues } from '../../utils';
 import { useSender } from '../../hooks';
-import { CREATOR_API_URL } from '../../constants';
+import { CREATOR_API_URL, DONATION_MIN_SFX_AMOUNT } from '../../constants';
 
 import { ChainSelect, TokenSelect } from './components';
 import {
@@ -422,6 +422,13 @@ export const DonateForm = ({ className }: Properties) => {
           name="sfx"
           control={formMethods.control}
           render={({ field, fieldState }) => {
+            // Reset sfx value when amount is less than DONATION_MIN_SFX_AMOUNT
+            useEffect(() => {
+              if (amount < DONATION_MIN_SFX_AMOUNT && field.value) {
+                field.onChange('');
+              }
+            }, [amount, field]);
+
             return (
               <Form.Field
                 {...field}
@@ -433,7 +440,7 @@ export const DonateForm = ({ className }: Properties) => {
                         <TooltipTrigger asChild>
                           <Icon name="HelpCircle" size={15} />
                         </TooltipTrigger>
-                        <TooltipContent className="w-fit bg-black text-white">
+                        <TooltipContent className="w-[300px] bg-black text-center text-white">
                           <p className="text-label6">
                             Write what you want to hear. AI will turn it into a
                             sound effect and replace the default trumpet.
@@ -447,7 +454,7 @@ export const DonateForm = ({ className }: Properties) => {
                 helperText={fieldState.error?.message}
                 error={Boolean(fieldState.error?.message)}
                 placeholder="🔒 Unlock at $10"
-                disabled={amount < 10}
+                disabled={amount < DONATION_MIN_SFX_AMOUNT}
               />
             );
           }}
