@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { getTextToSfx, getTextToSpeech } from '../utils';
 
 const DONATION_TTS_MIN_AMOUNT = 4.75; // $5 minus 5% margin for price drops
-const DONATION_SFX_MIN_AMOUNT = 4.75; // TODO: define amount
+const DONATION_SFX_MIN_AMOUNT = 9.5; // $10 minus 5% margin for price drops
 const DONATION_TTS_DELAY = 2000;
 
 export const useDonationNotification = (

@@ -403,7 +403,6 @@ export const DonateForm = ({ className }: Properties) => {
             return (
               <Form.Field
                 {...field}
-                asTextArea
                 label="Message"
                 className="mt-4"
                 helperText={fieldState.error?.message}
@@ -420,10 +419,17 @@ export const DonateForm = ({ className }: Properties) => {
             return (
               <Form.Field
                 {...field}
-                label="Sound effect"
+                label={
+                  <div className="flex items-center gap-x-1">
+                    <label htmlFor="sfx">AI sound effect</label>
+                    <Icon name="HelpCircle" size={15} />
+                  </div>
+                }
                 className="mt-4"
                 helperText={fieldState.error?.message}
                 error={Boolean(fieldState.error?.message)}
+                placeholder="🔒 Unlock at $10"
+                disabled={amount < 10}
               />
             );
           }}
