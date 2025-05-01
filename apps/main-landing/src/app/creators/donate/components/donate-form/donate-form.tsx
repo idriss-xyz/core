@@ -413,7 +413,6 @@ export const DonateForm = ({ className }: Properties) => {
               <>
                 <Form.Field
                   {...field}
-                  asTextArea
                   label={
                     <div className="flex items-center gap-2">
                       <label>Message</label>
