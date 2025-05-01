@@ -7,6 +7,16 @@ const DONATION_SFX_MIN_AMOUNT = 9.5; // $10 minus 5% margin for price drops
 const DONATION_ALERT_MIN_AMOUNT = 0.95; // $1 minus 5% margin for price drops
 const DONATION_TTS_DELAY = 2000;
 
+const toAudioElement = async (stream: Response): Promise<HTMLAudioElement> => {
+  const arrayBuffer = await stream.arrayBuffer();
+  const blob = new Blob([arrayBuffer], {
+    type: 'audio/mpeg',
+  });
+  const audioUrl = URL.createObjectURL(blob);
+
+  return new Audio(audioUrl);
+};
+
 export const useDonationNotification = (
   audio: HTMLAudioElement,
   amount: string,
@@ -31,14 +41,7 @@ export const useDonationNotification = (
             const sfxStream = await getTextToSfx(sfxText);
             if (!sfxStream)
               throw new Error('SFX audio stream from api is null');
-
-            const arrayBuffer = await sfxStream.arrayBuffer();
-            const sfxBlob = new Blob([arrayBuffer], {
-              type: 'audio/mpeg',
-            });
-            const sfxAudioUrl = URL.createObjectURL(sfxBlob);
-
-            const sfxSpeech = new Audio(sfxAudioUrl);
+            const sfxSpeech = await toAudioElement(sfxStream);
             alertAudio = sfxSpeech;
           } else {
             alertAudio = audio;
@@ -48,14 +51,7 @@ export const useDonationNotification = (
             const ttsStream = await getTextToSpeech(message);
             if (!ttsStream)
               throw new Error('TTS audio stream from api is null');
-
-            const ttsArrayBuffer = await ttsStream.arrayBuffer();
-            const ttsBlob = new Blob([ttsArrayBuffer], {
-              type: 'audio/mpeg',
-            });
-            const ttsAudioUrl = URL.createObjectURL(ttsBlob);
-
-            const ttsSpeech = new Audio(ttsAudioUrl);
+            const ttsSpeech = await toAudioElement(ttsStream);
             speechAudio = ttsSpeech;
           }
           setShowNotification(true);
