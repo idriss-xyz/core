@@ -44,6 +44,7 @@ router.post(
           },
           body: JSON.stringify({
             text: finalText,
+            duration_seconds: 4,
           }),
         },
       );
