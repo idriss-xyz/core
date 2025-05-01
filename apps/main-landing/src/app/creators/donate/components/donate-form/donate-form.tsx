@@ -2,6 +2,7 @@
 'use client';
 import { Form } from '@idriss-xyz/ui/form';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { Badge } from '@idriss-xyz/ui/badge';
 import { Button } from '@idriss-xyz/ui/button';
 import { Link } from '@idriss-xyz/ui/link';
 import {
@@ -408,13 +409,26 @@ export const DonateForm = ({ className }: Properties) => {
           control={formMethods.control}
           render={({ field, fieldState }) => {
             return (
-              <Form.Field
-                {...field}
-                label="Message"
-                className="mt-4"
-                helperText={fieldState.error?.message}
-                error={Boolean(fieldState.error?.message)}
-              />
+              <>
+                <Form.Field
+                  {...field}
+                  asTextArea
+                  label={
+                    <div className="flex items-center gap-2">
+                      <label>Message</label>
+                      <Badge type="info" variant="subtle">
+                        Alert $1+
+                      </Badge>
+                      <Badge type="info" variant="subtle">
+                        TTS $5+
+                      </Badge>
+                    </div>
+                  }
+                  className="mt-4"
+                  helperText={fieldState.error?.message}
+                  error={Boolean(fieldState.error?.message)}
+                />
+              </>
             );
           }}
         />
