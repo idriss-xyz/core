@@ -1,6 +1,7 @@
-import { Column, Entity, ManyToMany, PrimaryColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, ManyToOne, PrimaryColumn } from 'typeorm';
 import { Hex } from 'viem';
 import { Creator } from './creator.entity';
+import { Network } from './network.entity';
 
 @Entity('tokens')
 export class Token {
@@ -21,4 +22,7 @@ export class Token {
 
   @ManyToMany(() => Creator, (creator) => creator.networks)
   creators!: Creator[];
+
+  @ManyToOne(() => Creator, (creator) => creator.networks)
+  netwwork!: Network;
 }

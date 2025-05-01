@@ -1,8 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from "typeorm";
-import { Creator } from "./creator.entity";
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm';
+import { Creator } from './creator.entity';
 
 @Entity('donation-parameters')
-export class Token {
+export class DonationParameters {
   @PrimaryGeneratedColumn()
   id!: number;
 
