@@ -51,8 +51,7 @@ export const useDonationNotification = (
             const ttsStream = await getTextToSpeech(message);
             if (!ttsStream)
               throw new Error('TTS audio stream from api is null');
-            const ttsSpeech = await toAudioElement(ttsStream);
-            speechAudio = ttsSpeech;
+            speechAudio = await toAudioElement(ttsStream);
           }
           setShowNotification(true);
 
@@ -91,6 +90,7 @@ export const useDonationNotification = (
         setShowNotification(false);
       };
     }
+    return;
   }, [amount, audio, duration, message, sfxText]);
   return { showNotification };
 };

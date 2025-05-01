@@ -26,6 +26,12 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useAccount, useWalletClient } from 'wagmi';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@idriss-xyz/ui/tooltip';
 
 import { backgroundLines3 } from '@/assets';
 
@@ -40,12 +46,6 @@ import { useSender } from '../../hooks';
 import { CREATOR_API_URL, DONATION_MIN_SFX_AMOUNT } from '../../constants';
 
 import { ChainSelect, TokenSelect } from './components';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@idriss-xyz/ui/tooltip';
 
 type Properties = {
   className?: string;
