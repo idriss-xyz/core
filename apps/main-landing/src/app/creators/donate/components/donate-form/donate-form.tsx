@@ -242,8 +242,9 @@ export const DonateForm = ({ className }: Properties) => {
   }, [sfx, sender.data]);
 
   useEffect(() => {
-    if (sender.data?.transactionHash)
+    if (sender.data?.transactionHash) {
       void sendDonationEffects();
+    }
     if (sender.isSuccess) {
       void sendDonation();
     }
