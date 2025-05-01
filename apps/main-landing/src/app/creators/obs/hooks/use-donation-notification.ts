@@ -21,6 +21,7 @@ export const useDonationNotification = (
     hasRunReference.current = true;
     if (Number.parseFloat(amount) > DONATION_ALERT_MIN_AMOUNT) {
       setShowNotification(true);
+      audio.volume = 0.75;
       audio.play().catch((error) => {
         console.error('Audio playback failed:', error);
       });
