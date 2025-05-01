@@ -241,12 +241,12 @@ export const DonateForm = ({ className }: Properties) => {
   }, [sfx, sender.data]);
 
   useEffect(() => {
-    if (sender.isSending)
+    if (sender.data?.transactionHash)
       void sendDonationEffects();
     if (sender.isSuccess) {
       void sendDonation();
     }
-  }, [sender.isSuccess, sender.isSending, sendDonation, sendDonationEffects]);
+  }, [sender.isSuccess, sender.data, sendDonation, sendDonationEffects]);
 
   if (!searchParams.address.isValid && !searchParams.address.isFetching) {
     return (
