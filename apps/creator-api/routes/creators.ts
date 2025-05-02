@@ -15,6 +15,37 @@ const newCreatorValidationRules = [
   body('obsUrl').optional().isString(),
 ];
 
+// Get creator by name
+router.get(
+  '/:name',
+  [param('name').isString().notEmpty()],
+  async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({ errors: errors.array() });
+      return;
+    }
+
+    try {
+      const creatorRepository = AppDataSource.getRepository(Creator);
+      const creator = await creatorRepository.findOne({
+        where: { name: req.params.name as Hex },
+      });
+
+      if (!creator) {
+        res.status(404).json({ error: 'Creator not found' });
+        return;
+      }
+
+      res.json(creator);
+    } catch (error) {
+      console.error('Error fetching creator by name:', error);
+      res.status(500).json({ error: 'Failed to fetch creator' });
+    }
+  },
+);
+
+
 // Create a new creator profile
 router.post(
   '/',
@@ -69,7 +100,7 @@ const editCreatorValidationRules = [
 ];
 
 // Update creator profile by id
-router.post(
+router.put(
   '/:id',
   editCreatorValidationRules,
   async (req: Request, res: Response) => {
