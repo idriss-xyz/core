@@ -45,30 +45,6 @@ export class CreatorProfileView {
   obsUrl!: string | null;
 
   @ViewColumn()
-  networkId!: number;
-
-  @ViewColumn()
-  networkName!: string;
-
-  @ViewColumn()
-  networkImageUrl!: string | null;
-
-  @ViewColumn()
-  tokenAddress!: string;
-
-  @ViewColumn()
-  tokenSymbol!: string;
-
-  @ViewColumn()
-  tokenImageUrl!: string | null;
-
-  @ViewColumn()
-  tokenNetwork!: string;
-
-  @ViewColumn()
-  tokenDecimals!: number;
-
-  @ViewColumn()
   minimumAlertAmount!: number;
 
   @ViewColumn()
