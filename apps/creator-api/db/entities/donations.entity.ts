@@ -50,7 +50,6 @@ export class Donation {
   @ManyToOne(() => Token)
   @JoinColumn([
     { name: 'token_address', referencedColumnName: 'address' },
-    { name: 'network', referencedColumnName: 'network' },
   ])
   token!: Token;
 
