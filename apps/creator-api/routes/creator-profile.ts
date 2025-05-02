@@ -1,10 +1,9 @@
-import { Request, Response } from 'express';
-import express from 'express';
+import { Router, Request, Response } from 'express';
 import { param, validationResult } from 'express-validator';
 import { CreatorProfileView } from '../db/views/creator-profile.view';
 import { AppDataSource } from '../db/database';
 
-const router = express.Router();
+const router = Router();
 
 // Get creator profile by ID
 router.get(
