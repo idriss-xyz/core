@@ -1,7 +1,7 @@
 import { ViewEntity, ViewColumn, DataSource } from 'typeorm';
 import { Token } from '../entities';
 import { Creator } from '../entities/creator.entity';
-import { DonationParameters } from '../entities/donation-parameters';
+import { DonationParameters } from '../entities/donation-parameters.entity';
 
 @ViewEntity({
   expression: (dataSource: DataSource) =>

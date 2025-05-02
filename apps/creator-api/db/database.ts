@@ -1,5 +1,12 @@
 import { DataSource } from 'typeorm';
-import { Donation, Token, User } from './entities';
+import {
+  Creator,
+  Donation,
+  DonationParameters,
+  Network,
+  Token,
+  User,
+} from './entities';
 import {
   AddAmountRaw1743181200000,
   AddTokenDecimals1743177600000,
@@ -9,7 +16,7 @@ import {
 export const AppDataSource = new DataSource({
   type: 'postgres',
   url: process.env.DATABASE_URL,
-  entities: [Donation, Token, User],
+  entities: [Donation, Token, User, Creator, Network, DonationParameters],
   synchronize: false,
   migrations: [
     RestructureDonations1743174000000,
