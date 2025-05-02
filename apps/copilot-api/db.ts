@@ -1,11 +1,12 @@
 import { DataSource } from 'typeorm';
-import dotenv from 'dotenv';
-import { join } from 'path';
-import { mode } from './utils/mode';
-
-dotenv.config(
-  mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
-);
+import {
+  AddressesEntity,
+  AddressWebhookMapEntity,
+  SubscribersEntity,
+  SubscriptionsEntity,
+  WebhookEntity,
+} from './entities';
+import { WebhookChainType1743608322000 } from './migrations';
 
 export const dataSource = new DataSource({
   type: 'postgres',
@@ -14,7 +15,30 @@ export const dataSource = new DataSource({
   username: process.env.DATABASE_USER,
   password: String(process.env.DATABASE_PASS),
   database: process.env.DATABASE_DB_NAME,
-  synchronize: true,
-  migrations: [__dirname, '/migrations/*.js'],
-  entities: [__dirname + '/entities/*.entity.{ts,js}'],
+  synchronize: false,
+  migrations: [WebhookChainType1743608322000],
+  entities: [
+    AddressesEntity,
+    AddressWebhookMapEntity,
+    SubscribersEntity,
+    SubscriptionsEntity,
+    WebhookEntity,
+  ],
 });
+
+export async function initializeDatabase() {
+  if (!dataSource.isInitialized) {
+    await dataSource.initialize();
+
+    const pendingMigrations = await dataSource.showMigrations();
+    console.log('Pending migrations:', pendingMigrations);
+
+    try {
+      await dataSource.runMigrations();
+      console.log('Migrations completed');
+    } catch (error) {
+      console.error('Migration failed:', error);
+    }
+  }
+  return dataSource;
+}

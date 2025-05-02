@@ -4,13 +4,13 @@ const DEFAULT_HEADERS = {
   'Access-Control-Allow-Origin': '*',
 };
 
-const TOTAL_SUPPLY = 1_000_000_000n * 10n ** 18n;
+const TOTAL_SUPPLY = 1_000_000_000n;
 
 // ts-unused-exports:disable-next-line
 export function GET() {
   try {
     return NextResponse.json(
-      { result: TOTAL_SUPPLY },
+      { result: TOTAL_SUPPLY.toString() },
       { status: 200, headers: DEFAULT_HEADERS },
     );
   } catch (error) {

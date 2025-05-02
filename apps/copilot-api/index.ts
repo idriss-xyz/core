@@ -1,25 +1,26 @@
+import { mode } from './utils/mode';
+import { configureEnv } from './config/environment';
+
+configureEnv(mode, __dirname);
+
 import { createConfig } from '@lifi/sdk';
-import dotenv from 'dotenv';
 import express, { Request, Response } from 'express';
 import http from 'http';
-import { join } from 'path';
 import { Server as SocketIOServer } from 'socket.io';
-import { dataSource } from './db';
 import defaultRoutes from './routes';
 import authRoutes from './routes/auth';
 import subscriptionsRoutes from './routes/subscribtions';
+import solanaRoutes from './routes/solana';
 import { connectedClients } from './services/scheduler';
 import { getSigningKey } from './services/subscriptionManager';
-import { webhookHandler } from './services/webhookHandler';
-import { mode } from './utils/mode';
-import { validateAlchemySignature } from './utils/webhookUtils';
+import {
+  heliusWebhookHandler,
+  webhookHandler,
+} from './services/webhookHandler';
+import { validateWebhookSignature } from './utils/webhookUtils';
+import { initializeDatabase } from './db';
 
-dotenv.config(
-  mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
-);
-
-dataSource
-  .initialize()
+initializeDatabase()
   .then(() => console.log('DB connected...'))
   .catch((err) => console.error('Error during DB initialization: ', err));
 
@@ -76,14 +77,33 @@ app.post(
       (req as any).signature = req.headers['x-alchemy-signature'];
     },
   }),
-  validateAlchemySignature(getSigningKey),
+  validateWebhookSignature(getSigningKey),
   webhookHandler(),
+);
+
+app.post(
+  '/webhook/solana/:internalWebhookId',
+  express.json({
+    verify: (
+      req: Request,
+      res: Response,
+      buf: Buffer,
+      encoding: BufferEncoding,
+    ) => {
+      const rawBody = buf.toString(encoding);
+      (req as any).rawBody = rawBody;
+      (req as any).signature = req.headers['authorization'];
+    },
+  }),
+  validateWebhookSignature(getSigningKey),
+  heliusWebhookHandler(),
 );
 
 app.use(express.json());
 
 app.use('/auth', authRoutes);
 app.use('/subscriptions', subscriptionsRoutes);
+app.use('/solana', solanaRoutes);
 app.use('/', defaultRoutes);
 
 // Initialize LiFi SDK

@@ -1,6 +1,7 @@
 import {
   StoredAuthToken,
   StoredSubscriptionsAmount,
+  StoredSubscriptions,
   StoredToastSoundState,
 } from './types';
 
@@ -96,6 +97,27 @@ export const TradingCopilotManager = {
           : undefined;
         callback(newSubscriptionsAmount);
       }
+    });
+  },
+
+  saveSubscriptions(payload: StoredSubscriptions) {
+    return chrome.storage.local.set({
+      subscriptions: JSON.stringify(payload),
+    });
+  },
+
+  getSubscriptions(): Promise<StoredSubscriptions> {
+    return new Promise((resolve) => {
+      void chrome.storage.local
+        .get('subscriptions')
+        .then((StoredSubscriptionsRaw) => {
+          const StoredSubscriptions = StoredSubscriptionsRaw.subscriptions
+            ? (JSON.parse(
+                StoredSubscriptionsRaw.subscriptions,
+              ) as StoredSubscriptions)
+            : undefined;
+          return resolve(StoredSubscriptions);
+        });
     });
   },
 };

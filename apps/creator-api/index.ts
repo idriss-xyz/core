@@ -1,9 +1,11 @@
-import dotenv from 'dotenv';
+import { mode } from './utils/mode';
+import { configureEnv } from './config/environment';
+
+configureEnv(mode, __dirname);
+
 import express, { Application, Request, Response } from 'express';
 import http from 'http';
-import { join } from 'path';
 import { Server as SocketIOServer, Socket } from 'socket.io';
-import { mode } from './utils/mode';
 import { connectedClients } from './services/socket-server';
 import tipHistoryRouter from './routes/tip-history';
 import donorHistoryRouter from './routes/donor-history';
@@ -13,12 +15,11 @@ import pushDonationRouter from './routes/push-donation';
 import overwriteDonationRouter from './routes/overwrite-donation';
 import refetchDonationRouter from './routes/refetch-donations';
 import refetchENSRouter from './routes/force-refresh-ens';
+import textToSpeechRouter from './routes/text-to-speech';
+import creatorsRouter from './routes/creators';
+import creatorProfileRouter from './routes/creator-profile';
 import cors from 'cors';
 import { initializeDatabase } from './db/database';
-
-dotenv.config(
-  mode === 'production' ? {} : { path: join(__dirname, `.env.${mode}`) },
-);
 
 initializeDatabase()
   .then(() => console.log('DB connected...'))
@@ -26,6 +27,7 @@ initializeDatabase()
 
 const app: Application = express();
 app.use(express.json());
+
 app.use(
   cors({
     origin: '*',
@@ -41,6 +43,9 @@ app.use('/push-donation', pushDonationRouter);
 app.use('/overwrite-donation', overwriteDonationRouter);
 app.use('/refetch-donations', refetchDonationRouter);
 app.use('/force-refresh-ens', refetchENSRouter);
+app.use('/text-to-speech', textToSpeechRouter);
+app.use('/creators', creatorsRouter);
+app.use('/creator-profile', creatorProfileRouter);
 
 const HOST = process.env.HOST;
 const PORT = Number(process.env.PORT) || 4000;

@@ -1,9 +1,9 @@
 import { createPublicClient, http } from 'viem';
 import { CHAIN } from '@idriss-xyz/constants';
 
-const clientBase = createPublicClient({
+export const clientBase = createPublicClient({
   chain: CHAIN.BASE,
-  transport: http(),
+  transport: http('https://base-rpc.publicnode.com'),
 });
 
 export const clientEthereum = createPublicClient({

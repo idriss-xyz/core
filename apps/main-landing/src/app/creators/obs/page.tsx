@@ -10,7 +10,11 @@ import {
 } from 'viem';
 import { getEnsAvatar } from 'viem/actions';
 import { normalize } from 'viem/ens';
-import { CHAIN_ID_TO_TOKENS, NATIVE_COIN_ADDRESS } from '@idriss-xyz/constants';
+import {
+  CHAIN_ID_TO_TOKENS,
+  CREATORS_LINK,
+  NATIVE_COIN_ADDRESS,
+} from '@idriss-xyz/constants';
 import { clients } from '@idriss-xyz/blockchain-clients';
 
 import {
@@ -28,6 +32,7 @@ import {
   resolveEnsName,
   TIP_MESSAGE_EVENT_ABI,
 } from './utils';
+import { containsBadWords } from './utils/bad-words';
 
 const FETCH_INTERVAL = 5000;
 const BLOCK_LOOKBACK_RANGE = 5n;
@@ -48,7 +53,7 @@ export default function Obs() {
 
   useEffect(() => {
     if (!address.isFetching && !address.isValid) {
-      router.push('/creators');
+      router.push(CREATORS_LINK);
 
       return;
     }
@@ -144,6 +149,12 @@ export default function Obs() {
           }
 
           if (recipient.toLowerCase() !== address.data.toLowerCase()) continue;
+
+          // Check if the message contains any bad words, if so skip this donation
+          if (message && containsBadWords(message)) {
+            console.log('Filtered donation with inappropriate message');
+            continue;
+          }
 
           const resolved = await resolveEnsName(txn.from);
 

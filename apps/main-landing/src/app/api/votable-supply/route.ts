@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
-import { createPublicClient, formatEther, http } from 'viem';
-import { base } from 'viem/chains';
+import { formatEther, parseEther } from 'viem';
+import { clientBase } from '@idriss-xyz/blockchain-clients';
 
+import { loadExistingEvents } from '@/utils';
 import { IDRISS_TOKEN_ADDRESS } from '@/components/token-section/constants';
 import { ERC20_ABI } from '@/app/creators/donate/constants';
 import {
@@ -20,11 +21,6 @@ import {
 const DEFAULT_HEADERS = {
   'Access-Control-Allow-Origin': '*',
 };
-
-const client = createPublicClient({
-  chain: base,
-  transport: http('https://base-rpc.publicnode.com'),
-});
 
 const Q96 = 2n ** 96n;
 const mulDiv = (a: bigint, b: bigint, denom: bigint) => {
@@ -68,25 +64,25 @@ function tickToSqrtPriceX96(tick: number): bigint {
 // ts-unused-exports:disable-next-line
 export async function GET() {
   try {
-    const vestedBalance = await client.readContract({
+    const vestedBalance = await clientBase.readContract({
       abi: ERC20_ABI,
       functionName: 'balanceOf',
       args: [VESTING_CONTRACT_ADDRESS],
       address: IDRISS_TOKEN_ADDRESS,
     });
-    const daoBalance = await client.readContract({
+    const daoBalance = await clientBase.readContract({
       abi: ERC20_ABI,
       functionName: 'balanceOf',
       args: [DAO_TREASURY_ADDRESS],
       address: IDRISS_TOKEN_ADDRESS,
     });
-    const teamBalance = await client.readContract({
+    const teamBalance = await clientBase.readContract({
       abi: ERC20_ABI,
       functionName: 'balanceOf',
       args: [TEAM_TREASURY_ADDRESS],
       address: IDRISS_TOKEN_ADDRESS,
     });
-    const airdropBalance = await client.readContract({
+    const airdropBalance = await clientBase.readContract({
       abi: ERC20_ABI,
       functionName: 'balanceOf',
       args: [AIRDROP_TREASURY_ADDRESS],
@@ -105,14 +101,14 @@ export async function GET() {
       _feeGrowthInside1,
       _tokensOwed0,
       _tokensOwed1,
-    ] = await client.readContract({
+    ] = await clientBase.readContract({
       address: POSITION_MANAGER,
       abi: UNISWAP_MINIMIZED_ABI,
       functionName: 'positions',
       args: [DAO_LIQUIDITY_ID],
     });
 
-    const [sqrtPriceX96] = await client.readContract({
+    const [sqrtPriceX96] = await clientBase.readContract({
       address: POOL_ADDRESS,
       abi: POOL_ABI,
       functionName: 'slot0',
@@ -135,7 +131,19 @@ export async function GET() {
       teamBalance -
       airdropBalance -
       amount0;
-    const formattedBalance = formatEther(totalCirculatingSupply);
+
+    const { events } = loadExistingEvents();
+    const bonusClaimTotal = events
+      .filter((event) => {
+        return event.bonus;
+      })
+      .reduce((accumulator, event) => {
+        return accumulator + parseEther(event.total ?? '0');
+      }, 0n);
+
+    const totalCirculatingSupplyAdjusted =
+      totalCirculatingSupply + bonusClaimTotal;
+    const formattedBalance = formatEther(totalCirculatingSupplyAdjusted);
     return NextResponse.json(
       { result: formattedBalance },
       { status: 200, headers: DEFAULT_HEADERS },

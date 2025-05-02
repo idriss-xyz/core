@@ -14,8 +14,8 @@ export const SoundDisabled = ({ className }: Properties) => {
     >
       <path
         d="M22 9L16 15M16 9L22 15M11 5L6 9H2V15H6L11 19V5Z"
-        stroke="#757575"
         strokeWidth="2"
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
       />

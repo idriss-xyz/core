@@ -92,6 +92,7 @@ export default {
       center: true,
       padding: {
         'DEFAULT': '1rem',
+        'xs': '1rem',
         'sm': 0,
         'lg': 0,
         'xl': 0,
@@ -102,6 +103,8 @@ export default {
     },
     extend: {
       screens: {
+        'xs': '400px',
+        'sm': '576px',
         'md': '768px',
         '2xl': '1440px',
         '3xl': '1536px',
@@ -116,6 +119,7 @@ export default {
         '2xl': '0px 24px 48px -12px #1018282E',
         '3xl': '0px 32px 64px -12px #1018283D',
         'input': '0px 0px 0px 4px #F2F2F224',
+        'card': '0px 0px 0px 6px #FFFFFF14',
       },
       blur: {
         md: '10px',
@@ -129,6 +133,7 @@ export default {
         extensionPopup: '100000',
         portal: '100001',
         scrollbar: '100010',
+        stickyNavbar: '100011',
       },
       fontFamily: {
         sans: ['var(--font-aeonikpro)'],
@@ -284,6 +289,8 @@ export default {
         'collapsible-slide-up': 'collapsibleSlideUp 200ms ease-out',
         'marquee': 'marquee 35s linear infinite',
         'marquee2': 'marquee2 35s linear infinite',
+        'marquee-reverse': 'marquee-reverse 35s linear infinite',
+        'marquee2-reverse': 'marquee2-reverse 35s linear infinite',
         'fade-in': 'fade-in 200ms ease-out',
         'fade-out': 'fade-out 200ms ease-in',
         'slide-in-from-top': 'slide-in-from-top 200ms ease-out',
@@ -318,6 +325,14 @@ export default {
         },
         'marquee2': {
           '0%': { transform: 'translateX(100%)' },
+          '100%': { transform: 'translateX(0%)' },
+        },
+        'marquee-reverse': {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(100%)' },
+        },
+        'marquee2-reverse': {
+          '0%': { transform: 'translateX(-100%)' },
           '100%': { transform: 'translateX(0%)' },
         },
         'swipeRight': {
@@ -389,6 +404,10 @@ export default {
           'mask-image':
             'linear-gradient(to right, transparent, black 60px, black calc(100% - 60px), transparent)',
         },
+        '.side-blur-2': {
+          'mask-image':
+            'linear-gradient(to right, rgba(2, 43, 30, 0), rgba(2, 44, 31, 0.6) 80px, #056244 calc(100% - 80px), rgba(3, 75, 52, 0))',
+        },
         '.paused-animation': {
           'animation-play-state': 'paused',
         },
@@ -410,6 +429,12 @@ export default {
       addUtilities(newUtilities);
       addComponents({
         '.container': {
+          '@screen xs': {
+            maxWidth: 'none',
+          },
+          '@screen sm': {
+            maxWidth: '544px',
+          },
           '@screen md': {
             maxWidth: '704px',
           },
@@ -426,7 +451,7 @@ export default {
             maxWidth: '1312px',
           },
           '@screen 4xl': {
-            maxWidth: '1696px',
+            maxWidth: '1600px',
           },
         },
       });
