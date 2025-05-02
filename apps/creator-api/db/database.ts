@@ -12,11 +12,20 @@ import {
   AddTokenDecimals1743177600000,
   RestructureDonations1743174000000,
 } from './migrations';
+import { CreatorProfileView } from './views/creator-profile.view';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
   url: process.env.DATABASE_URL,
-  entities: [Donation, Token, User, Creator, Network, DonationParameters],
+  entities: [
+    Donation,
+    Token,
+    User,
+    Creator,
+    Network,
+    DonationParameters,
+    CreatorProfileView,
+  ],
   synchronize: false,
   migrations: [
     RestructureDonations1743174000000,

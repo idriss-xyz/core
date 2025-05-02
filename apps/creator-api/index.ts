@@ -45,7 +45,7 @@ app.use('/refetch-donations', refetchDonationRouter);
 app.use('/force-refresh-ens', refetchENSRouter);
 app.use('/text-to-speech', textToSpeechRouter);
 app.use('/creators', creatorsRouter);
-app.use('./creator-profile', creatorProfileRouter);
+app.use('/creator-profile', creatorProfileRouter);
 
 const HOST = process.env.HOST;
 const PORT = Number(process.env.PORT) || 4000;
