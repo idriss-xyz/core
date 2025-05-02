@@ -16,6 +16,7 @@ import overwriteDonationRouter from './routes/overwrite-donation';
 import refetchDonationRouter from './routes/refetch-donations';
 import refetchENSRouter from './routes/force-refresh-ens';
 import textToSpeechRouter from './routes/text-to-speech';
+import creatorsRouter from './routes/creators';
 import creatorProfileRouter from './routes/creator-profile';
 import cors from 'cors';
 import { initializeDatabase } from './db/database';
@@ -43,6 +44,7 @@ app.use('/overwrite-donation', overwriteDonationRouter);
 app.use('/refetch-donations', refetchDonationRouter);
 app.use('/force-refresh-ens', refetchENSRouter);
 app.use('/text-to-speech', textToSpeechRouter);
+app.use('/creators', creatorsRouter);
 app.use('./creator-profile', creatorProfileRouter);
 
 const HOST = process.env.HOST;
