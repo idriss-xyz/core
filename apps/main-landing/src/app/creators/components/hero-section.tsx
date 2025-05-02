@@ -3,7 +3,8 @@
 import { Button } from '@idriss-xyz/ui/button';
 import { classes } from '@idriss-xyz/ui/utils';
 import { CREATORS_FORM_LINK } from '@idriss-xyz/constants';
-import { RefObject } from 'react';
+import { RefObject, useCallback } from 'react';
+import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
 
 import { backgroundLines } from '@/assets';
 
@@ -14,6 +15,23 @@ type Properties = {
 };
 
 export const HeroSection = ({ heroButtonReference }: Properties) => {
+  const { setShowAuthFlow, user } = useDynamicContext();
+
+  const handleStartEarningClick = useCallback(async (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    // If user is not logged in, show the Dynamic login modal
+    if (!user) {
+      setShowAuthFlow(true);
+      return;
+    }
+
+    // If user is logged in, redirect to the form with wallet address prefilled
+    const walletAddress = user.verifiedCredentials?.[0]?.address || '';
+    const formUrlWithAddress = `${CREATORS_FORM_LINK}${walletAddress ? `?wallet=${walletAddress}` : ''}`;
+    window.open(formUrlWithAddress, '_blank');
+  }, [setShowAuthFlow, user]);
+
   return (
     <header
       className={classes(
@@ -61,14 +79,13 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
           </p>
 
           <Button
-            asLink
             size="large"
             className="z-1"
             intent="primary"
-            href={CREATORS_FORM_LINK}
             ref={heroButtonReference}
             aria-label="Start earning now"
             suffixIconName="IdrissArrowRight"
+            onClick={handleStartEarningClick}
           >
             Start earning now
           </Button>
