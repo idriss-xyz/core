@@ -9,6 +9,7 @@ import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
 import { backgroundLines } from '@/assets';
 
 import { VideoPlayer } from './hero-section/video-player';
+import { CREATOR_API_URL } from '../donate/constants';
 
 type Properties = {
   heroButtonReference?: RefObject<HTMLButtonElement>;
@@ -27,6 +28,33 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
     }
 
     // If user is logged in, redirect to the form with wallet address prefilled
+    try {
+      const walletAddress = user.verifiedCredentials?.[0]?.address;
+      if (!walletAddress) {
+        throw new Error('No wallet address found');
+      }
+
+      const twitchName = user.verifiedCredentials.find((credential) => credential.oauthProvider === 'twitch')?.oauthDisplayName;
+
+      const response = await fetch(`${CREATOR_API_URL}/creators`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          address: walletAddress,
+          primaryAddress: walletAddress,
+          name: twitchName,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to register creator');
+      }
+    } catch (error) {
+      console.error('Error registering creator:', error);
+    }
+
     const walletAddress = user.verifiedCredentials?.[0]?.address || '';
     const formUrlWithAddress = `${CREATORS_FORM_LINK}${walletAddress ? `?wallet=${walletAddress}` : ''}`;
     window.open(formUrlWithAddress, '_blank');
