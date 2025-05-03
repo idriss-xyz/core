@@ -29,7 +29,7 @@ router.get(
     try {
       const creatorRepository = AppDataSource.getRepository(Creator);
       const creator = await creatorRepository.findOne({
-        where: { name: req.params.name as Hex },
+        where: { name: req.params.name },
       });
 
       if (!creator) {

@@ -14,7 +14,7 @@ export class Creator {
   primaryAddress!: Hex;
 
   @Column({ type: 'text' })
-  name!: Hex;
+  name!: string;
 
   @Column({ type: 'text', name: 'profile_picture_url', nullable: true })
   profilePictureUrl!: string;
