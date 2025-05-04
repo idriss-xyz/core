@@ -40,15 +40,17 @@ export const Providers = ({ children }: Properties) => {
               events: {
                 onAuthSuccess: (arguments_) => {
                   const twitchName = arguments_.user.verifiedCredentials.find(
-                    (credential) => {return credential.oauthProvider === 'twitch'},
+                    (credential) => {
+                      return credential.oauthProvider === 'twitch';
+                    },
                   )?.oauthDisplayName;
                   const creator = getCreator(twitchName);
-                  if (creator !== undefined) {
-                    router.push(`/creators/${twitchName}`);
+                  if (creator === undefined) {
+                    const walletAddress = arguments_.user
+                      .verifiedCredentials?.[0]?.address as Hex;
+                    void saveCreator(walletAddress, twitchName);
                   } else {
-                    const walletAddress = arguments_.user.verifiedCredentials?.[0]
-                      ?.address as Hex;
-                    saveCreator(walletAddress, twitchName);
+                    router.push(`/creators/${twitchName}`);
                   }
                 },
               },

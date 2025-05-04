@@ -45,7 +45,6 @@ router.get(
   },
 );
 
-
 // Create a new creator profile
 router.post(
   '/',

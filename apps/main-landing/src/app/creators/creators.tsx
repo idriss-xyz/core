@@ -247,12 +247,12 @@ export const Creators = () => {
   useEffect(() => {
     if (user) {
       user.verifiedCredentials.find((credential) => {
-        if(credential.format === 'blockchain' && credential.address){
-          formMethods.setValue('address', credential.address)
+        if (credential.format === 'blockchain' && credential.address) {
+          formMethods.setValue('address', credential.address);
         }
-      })
+      });
     }
-  }, [user])
+  }, [user, formMethods]);
 
   return (
     <>

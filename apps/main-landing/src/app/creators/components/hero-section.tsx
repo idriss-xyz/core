@@ -18,23 +18,18 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
   const { setShowAuthFlow, user } = useDynamicContext();
   const router = useRouter();
 
-  const handleStartEarningClick = useCallback(
-    async (e: React.MouseEvent) => {
-      e.preventDefault();
-
-      // If user is not logged in, show the Dynamic login modal
-      if (!user) {
-        const twitchName = user.verifiedCredentials.find(
-          (credential) => {return credential.oauthProvider === 'twitch'},
-        )?.oauthDisplayName;
-        router.push(`/creators/${twitchName}`);
-      } else {
-        setShowAuthFlow(true);
-        return;
-      }
-    },
-    [setShowAuthFlow, user],
-  );
+  const handleStartEarningClick = useCallback(() => {
+    // If user is not logged in, show the Dynamic login modal
+    if (user) {
+      const twitchName = user.verifiedCredentials.find((credential) => {
+        return credential.oauthProvider === 'twitch';
+      })?.oauthDisplayName;
+      router.push(`/creators/${twitchName}`);
+    } else {
+      setShowAuthFlow(true);
+      return;
+    }
+  }, [setShowAuthFlow, user, router]);
 
   return (
     <header

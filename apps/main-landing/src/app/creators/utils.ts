@@ -39,11 +39,12 @@ type Creator = {
   profilePictureUrl: string;
   donationUrl: string;
   obsUrl: string;
-  networks: any[];
 };
 
 // TODO: Check location of all following functions
-export const getCreator = async (name?: string | null): Promise<Creator | undefined> => {
+export const getCreator = async (
+  name?: string | null,
+): Promise<Creator | undefined> => {
   if (!name) {
     console.error('No name to get creator');
     return;
@@ -53,7 +54,7 @@ export const getCreator = async (name?: string | null): Promise<Creator | undefi
   if (!response.ok) {
     return;
   }
-  const data = await response.json();
+  const data = (await response.json()) as Creator;
   return data;
 };
 
