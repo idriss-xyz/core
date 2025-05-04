@@ -144,6 +144,13 @@ export const DonateForm = ({ className }: Properties) => {
     'sfx',
   ]);
 
+  // Reset SFX when amount falls below the minimum
+  useEffect(() => {
+    if (amount < DONATION_MIN_SFX_AMOUNT && sfx) {
+      formMethods.setValue('sfx', '');
+    }
+  }, [amount, sfx, formMethods]);
+
   const selectedToken = useMemo(() => {
     const token = possibleTokens?.find((token) => {
       return token.symbol === tokenSymbol;
@@ -437,13 +444,6 @@ export const DonateForm = ({ className }: Properties) => {
           name="sfx"
           control={formMethods.control}
           render={({ field, fieldState }) => {
-            // Reset sfx value when amount is less than DONATION_MIN_SFX_AMOUNT
-            useEffect(() => {
-              if (amount < DONATION_MIN_SFX_AMOUNT && field.value) {
-                field.onChange('');
-              }
-            }, [amount, field]);
-
             return (
               <Form.Field
                 {...field}

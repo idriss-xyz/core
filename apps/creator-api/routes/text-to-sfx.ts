@@ -32,7 +32,7 @@ router.post(
       const { text } = req.body;
       const finalText = text.length > 30 ? text.slice(0, 30) : text; // TODO: Check limit
 
-      console.log("Getting sfx for text: ", finalText);
+      console.log('Getting sfx for text: ', finalText);
 
       const response = await fetch(
         `https://api.elevenlabs.io/v1/sound-generation`,
