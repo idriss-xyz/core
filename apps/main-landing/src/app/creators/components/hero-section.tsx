@@ -2,14 +2,13 @@
 'use client';
 import { Button } from '@idriss-xyz/ui/button';
 import { classes } from '@idriss-xyz/ui/utils';
-import { CREATORS_FORM_LINK } from '@idriss-xyz/constants';
 import { RefObject, useCallback } from 'react';
 import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
+import { useRouter } from 'next/navigation';
 
 import { backgroundLines } from '@/assets';
 
 import { VideoPlayer } from './hero-section/video-player';
-import { CREATOR_API_URL } from '../donate/constants';
 
 type Properties = {
   heroButtonReference?: RefObject<HTMLButtonElement>;
@@ -17,48 +16,25 @@ type Properties = {
 
 export const HeroSection = ({ heroButtonReference }: Properties) => {
   const { setShowAuthFlow, user } = useDynamicContext();
+  const router = useRouter();
 
-  const handleStartEarningClick = useCallback(async (e: React.MouseEvent) => {
-    e.preventDefault();
+  const handleStartEarningClick = useCallback(
+    async (e: React.MouseEvent) => {
+      e.preventDefault();
 
-    // If user is not logged in, show the Dynamic login modal
-    if (!user) {
-      setShowAuthFlow(true);
-      return;
-    }
-
-    // If user is logged in, redirect to the form with wallet address prefilled
-    try {
-      const walletAddress = user.verifiedCredentials?.[0]?.address;
-      if (!walletAddress) {
-        throw new Error('No wallet address found');
+      // If user is not logged in, show the Dynamic login modal
+      if (!user) {
+        const twitchName = user.verifiedCredentials.find(
+          (credential) => {return credential.oauthProvider === 'twitch'},
+        )?.oauthDisplayName;
+        router.push(`/creators/${twitchName}`);
+      } else {
+        setShowAuthFlow(true);
+        return;
       }
-
-      const twitchName = user.verifiedCredentials.find((credential) => credential.oauthProvider === 'twitch')?.oauthDisplayName;
-
-      const response = await fetch(`${CREATOR_API_URL}/creators`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          address: walletAddress,
-          primaryAddress: walletAddress,
-          name: twitchName,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to register creator');
-      }
-    } catch (error) {
-      console.error('Error registering creator:', error);
-    }
-
-    const walletAddress = user.verifiedCredentials?.[0]?.address || '';
-    const formUrlWithAddress = `${CREATORS_FORM_LINK}${walletAddress ? `?wallet=${walletAddress}` : ''}`;
-    window.open(formUrlWithAddress, '_blank');
-  }, [setShowAuthFlow, user]);
+    },
+    [setShowAuthFlow, user],
+  );
 
   return (
     <header
