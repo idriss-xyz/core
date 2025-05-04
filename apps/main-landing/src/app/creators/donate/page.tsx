@@ -64,7 +64,7 @@ function DonateContent() {
       setSocketInitialized(true);
 
       if (socket && !socketConnected) {
-        socket.on('connect', () => {
+        socket.on('connect', async () => {
           socket.emit('register', searchParams.address.data);
 
           if (socket.connected) {
