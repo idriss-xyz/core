@@ -130,7 +130,7 @@ router.patch(
         if (donationParams) {
           await donationParamsRepository.update(
             { id: donationParams.id },
-            req.body.donationParameters
+            req.body.donationParameters,
           );
         }
         // If donation parameters don't exist, create a new one

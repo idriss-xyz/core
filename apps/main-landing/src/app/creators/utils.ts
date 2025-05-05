@@ -91,3 +91,39 @@ export const saveCreator = async (
     console.error('Error registering creator:', error);
   }
 };
+
+export const saveDonationParameters = async (
+  address: Hex,
+  minimumAlertAmount: number,
+  minimumTTSAmount: number,
+  minimumSfxAmount: number,
+): Promise<void> => {
+  try {
+    if (
+      !address ||
+      !minimumAlertAmount ||
+      !minimumTTSAmount ||
+      !minimumSfxAmount
+    ) {
+      console.error('Missing donation parameters');
+    }
+    const response = await fetch(`${CREATOR_API_URL}/donation-parameters`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        address: address,
+        minimumAlertAmount,
+        minimumTTSAmount,
+        minimumSfxAmount,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to register donation parameters');
+    }
+  } catch (error) {
+    console.error('Error registering donation parameters: ', error);
+  }
+};
