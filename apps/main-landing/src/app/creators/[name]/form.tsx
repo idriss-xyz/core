@@ -24,6 +24,7 @@ import { backgroundLines2, backgroundLines3 } from '@/assets';
 import { Providers } from '../providers';
 import { ethereumClient } from '../donate/config';
 import { TopBar } from '../components/top-bar';
+import { getCreator } from '../utils';
 
 type FormPayload = {
   name: string;
@@ -64,11 +65,7 @@ const TOKENS_ORDER: Record<TokenSymbol, number> = {
   PENGU: 12,
 };
 
-export function CreatorProfileForm({
-  initialName,
-}: {
-  initialName: string
-}) {
+export function CreatorProfileForm({ initialName }: { initialName: string }) {
   const [copiedObsLink, setCopiedObsLink] = useState(false);
   const [copiedDonationLink, setCopiedDonationLink] = useState(false);
 
@@ -258,6 +255,20 @@ export function CreatorProfileForm({
   useEffect(() => {
     resetCopyState();
   }, [address, tokensSymbols, chainsIds, resetCopyState]);
+
+  useEffect(() => {
+    const fetchCreatorProfile = async () => {
+      if (!initialName) {
+        return;
+      }
+      const creatorProfile = await getCreator(initialName);
+      if (!creatorProfile) {
+        return;
+      }
+      formMethods.setValue('address', creatorProfile.primaryAddress);
+    };
+    void fetchCreatorProfile();
+  }, [initialName]);
 
   return (
     <Providers>

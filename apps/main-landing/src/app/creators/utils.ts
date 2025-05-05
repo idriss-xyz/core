@@ -50,7 +50,7 @@ export const getCreator = async (
     return;
   }
 
-  const response = await fetch(`${CREATOR_API_URL}/creator/${name}`);
+  const response = await fetch(`${CREATOR_API_URL}/creators/${name}`);
   if (!response.ok) {
     return;
   }

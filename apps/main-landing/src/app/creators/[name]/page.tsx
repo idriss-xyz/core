@@ -3,7 +3,7 @@ import { CreatorProfileForm } from './form';
 export default async function CreatorProfile({
   params,
 }: {
-  params: Promise<{ name: string }>
+  params: Promise<{ name: string }>;
 }) {
   // You can use async/await here for server-side data fetching
   const { name } = await params;

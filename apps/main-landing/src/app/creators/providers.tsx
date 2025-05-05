@@ -38,13 +38,13 @@ export const Providers = ({ children }: Properties) => {
                 process.env.NEXT_PUBLIC_DYNAMIC_ENVIRONMENT_ID ?? '',
               walletConnectors: [EthereumWalletConnectors],
               events: {
-                onAuthSuccess: (arguments_) => {
+                onAuthSuccess: async (arguments_) => {
                   const twitchName = arguments_.user.verifiedCredentials.find(
                     (credential) => {
                       return credential.oauthProvider === 'twitch';
                     },
-                  )?.oauthDisplayName;
-                  const creator = getCreator(twitchName);
+                  )?.oauthUsername;
+                  const creator = await getCreator(twitchName);
                   if (creator === undefined) {
                     const walletAddress = arguments_.user
                       .verifiedCredentials?.[0]?.address as Hex;
