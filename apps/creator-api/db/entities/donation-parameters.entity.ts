@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
 import { Creator } from './creator.entity';
 
 @Entity('donation-parameters')
@@ -21,6 +27,7 @@ export class DonationParameters {
   @Column({ type: 'boolean', name: 'voice_muted' })
   voiceMuted!: boolean;
 
-  @OneToOne(() => Creator, (creator) => creator.networks)
+  @OneToOne(() => Creator)
+  @JoinColumn({ name: 'creator_id' })
   creator!: Creator;
 }

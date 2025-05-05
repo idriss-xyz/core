@@ -20,7 +20,7 @@ import { DonationParameters } from '../entities/donation-parameters.entity';
       .addSelect('dp.voice_id', 'voiceId')
       .addSelect('dp.voice_muted', 'voiceMuted')
       .from(Creator, 'c')
-      .leftJoin(DonationParameters, 'dp', 'dp.id = c.id'),
+      .leftJoin(DonationParameters, 'dp', 'dp.creator_id = c.id'),
 })
 export class CreatorProfileView {
   @ViewColumn()
