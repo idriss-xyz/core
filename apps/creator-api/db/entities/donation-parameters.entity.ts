@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { Creator } from './creator.entity';
 
-@Entity('donation-parameters')
+@Entity('donation_parameters')
 export class DonationParameters {
   @PrimaryGeneratedColumn()
   id!: number;
