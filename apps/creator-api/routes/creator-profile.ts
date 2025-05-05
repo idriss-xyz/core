@@ -5,6 +5,35 @@ import { AppDataSource } from '../db/database';
 
 const router = Router();
 
+// Get creator profile by name
+router.get(
+  '/:name',
+  [param('name').isString().notEmpty()],
+  async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({ errors: errors.array() });
+      return;
+    }
+
+    try {
+      const name = req.params.name;
+      const repository = AppDataSource.getRepository(CreatorProfileView);
+      const profile = await repository.findOne({ where: { name } });
+
+      if (!profile) {
+        res.status(404).json({ error: 'Creator profile not found' });
+        return;
+      }
+
+      res.json(profile);
+    } catch (error) {
+      console.error('Error fetching creator profile by name:', error);
+      res.status(500).json({ error: 'Failed to fetch creator profile' });
+    }
+  },
+);
+
 // Get creator profile by ID
 router.get(
   '/id/:id',

@@ -10,7 +10,7 @@ import { Hex } from 'viem';
 
 import { QueryProvider } from '@/providers';
 
-import { getCreator, saveCreator } from './utils';
+import { getCreatorProfile, saveCreator } from './utils';
 
 type Properties = {
   children: ReactNode;
@@ -44,7 +44,7 @@ export const Providers = ({ children }: Properties) => {
                       return credential.oauthProvider === 'twitch';
                     },
                   )?.oauthUsername;
-                  const creator = await getCreator(twitchName);
+                  const creator = await getCreatorProfile(twitchName);
                   if (creator === undefined) {
                     const walletAddress = arguments_.user
                       .verifiedCredentials?.[0]?.address as Hex;

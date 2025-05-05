@@ -24,7 +24,7 @@ import { backgroundLines2, backgroundLines3 } from '@/assets';
 import { Providers } from '../providers';
 import { ethereumClient } from '../donate/config';
 import { TopBar } from '../components/top-bar';
-import { getCreator } from '../utils';
+import { getCreatorProfile } from '../utils';
 
 type FormPayload = {
   name: string;
@@ -261,14 +261,18 @@ export function CreatorProfileForm({ initialName }: { initialName: string }) {
       if (!initialName) {
         return;
       }
-      const creatorProfile = await getCreator(initialName);
+      const creatorProfile = await getCreatorProfile(initialName);
       if (!creatorProfile) {
         return;
       }
+      formMethods.setValue('name', creatorProfile.name);
       formMethods.setValue('address', creatorProfile.primaryAddress);
+      formMethods.setValue('minAlertAmount', creatorProfile.minimumAlertAmount);
+      formMethods.setValue('minTtsAmount', creatorProfile.minimumTTSAmount);
+      formMethods.setValue('minSfxAmount', creatorProfile.minimumSfxAmount);
     };
     void fetchCreatorProfile();
-  }, [initialName]);
+  }, [initialName, formMethods]);
 
   return (
     <Providers>

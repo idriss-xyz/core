@@ -31,7 +31,7 @@ export const browserBasedSource = ({
 };
 
 // TODO: check location and use zod
-type Creator = {
+type CreatorProfile = {
   id: number;
   address: Hex;
   primaryAddress: Hex;
@@ -39,22 +39,27 @@ type Creator = {
   profilePictureUrl: string;
   donationUrl: string;
   obsUrl: string;
+  minimumAlertAmount: number;
+  minimumTTSAmount: number;
+  minimumSfxAmount: number;
+  voiceId: number;
+  voiceMuted: boolean;
 };
 
 // TODO: Check location of all following functions
-export const getCreator = async (
+export const getCreatorProfile = async (
   name?: string | null,
-): Promise<Creator | undefined> => {
+): Promise<CreatorProfile | undefined> => {
   if (!name) {
     console.error('No name to get creator');
     return;
   }
 
-  const response = await fetch(`${CREATOR_API_URL}/creators/${name}`);
+  const response = await fetch(`${CREATOR_API_URL}/creator-profile/${name}`);
   if (!response.ok) {
     return;
   }
-  const data = (await response.json()) as Creator;
+  const data = (await response.json()) as CreatorProfile;
   return data;
 };
 
