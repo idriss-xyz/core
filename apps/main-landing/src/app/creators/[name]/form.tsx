@@ -31,9 +31,9 @@ type FormPayload = {
   address: string;
   chainsIds: number[];
   tokensSymbols: string[];
-  minAlertAmount: number;
-  minTtsAmount: number;
-  minSfxAmount: number;
+  minimumAlertAmount: number;
+  minimumTTSAmount: number;
+  minimumSfxAmount: number;
   voice_id: string;
   voice_muted: boolean;
 };
@@ -75,9 +75,9 @@ export function CreatorProfileForm({ initialName }: { initialName: string }) {
       address: '',
       chainsIds: ALL_CHAIN_IDS,
       tokensSymbols: UNIQUE_ALL_TOKEN_SYMBOLS,
-      minAlertAmount: 0,
-      minTtsAmount: 0,
-      minSfxAmount: 0,
+      minimumAlertAmount: 0,
+      minimumTTSAmount: 0,
+      minimumSfxAmount: 0,
     },
     mode: 'onSubmit',
   });
@@ -267,9 +267,9 @@ export function CreatorProfileForm({ initialName }: { initialName: string }) {
       }
       formMethods.setValue('name', creatorProfile.name);
       formMethods.setValue('address', creatorProfile.primaryAddress);
-      formMethods.setValue('minAlertAmount', creatorProfile.minimumAlertAmount);
-      formMethods.setValue('minTtsAmount', creatorProfile.minimumTTSAmount);
-      formMethods.setValue('minSfxAmount', creatorProfile.minimumSfxAmount);
+      formMethods.setValue('minimumAlertAmount', creatorProfile.minimumAlertAmount);
+      formMethods.setValue('minimumTTSAmount', creatorProfile.minimumTTSAmount);
+      formMethods.setValue('minimumSfxAmount', creatorProfile.minimumSfxAmount);
     };
     void fetchCreatorProfile();
   }, [initialName, formMethods]);
@@ -411,7 +411,7 @@ export function CreatorProfileForm({ initialName }: { initialName: string }) {
                 />
 
                 <Controller
-                  name="minAlertAmount"
+                  name="minimumAlertAmount"
                   control={formMethods.control}
                   render={({ field, fieldState }) => {
                     return (
@@ -428,7 +428,7 @@ export function CreatorProfileForm({ initialName }: { initialName: string }) {
                   }}
                 />
                 <Controller
-                  name="minTtsAmount"
+                  name="minimumTTSAmount"
                   control={formMethods.control}
                   render={({ field, fieldState }) => {
                     return (
@@ -446,7 +446,7 @@ export function CreatorProfileForm({ initialName }: { initialName: string }) {
                 />
 
                 <Controller
-                  name="minSfxAmount"
+                  name="minimumSfxAmount"
                   control={formMethods.control}
                   render={({ field, fieldState }) => {
                     return (
