@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, PrimaryColumn } from 'typeorm';
 import { Hex } from 'viem';
+import { Creator } from './creator.entity';
 
 @Entity('tokens')
 export class Token {
@@ -17,4 +18,7 @@ export class Token {
 
   @Column({ type: 'integer' })
   decimals!: number;
+
+  @ManyToMany(() => Creator, (creator) => creator.networks)
+  creators!: Creator[];
 }
