@@ -21,11 +21,11 @@ export class DonationParameters {
   @Column({ type: 'integer', name: 'minimum_sfx_amount' })
   minimumSfxAmount!: number;
 
-  @Column({ type: 'text', name: 'voice_id' })
-  voiceId!: string;
+  @Column({ type: 'text', name: 'voice_id', nullable: true })
+  voiceId?: string;
 
-  @Column({ type: 'boolean', name: 'voice_muted' })
-  voiceMuted!: boolean;
+  @Column({ type: 'boolean', name: 'voice_muted', nullable: true })
+  voiceMuted?: boolean;
 
   @OneToOne(() => Creator)
   @JoinColumn({ name: 'creator_id' })

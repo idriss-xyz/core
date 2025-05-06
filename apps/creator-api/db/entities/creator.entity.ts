@@ -17,13 +17,13 @@ export class Creator {
   name!: string;
 
   @Column({ type: 'text', name: 'profile_picture_url', nullable: true })
-  profilePictureUrl!: string;
+  profilePictureUrl?: string;
 
   @Column({ type: 'text', name: 'donation_url', nullable: true })
-  donationUrl!: string;
+  donationUrl?: string;
 
   @Column({ type: 'text', name: 'obs_url', nullable: true })
-  obsUrl!: string;
+  obsUrl?: string;
 
   @ManyToMany(() => Network, (network) => network.creators)
   networks!: Network[];
