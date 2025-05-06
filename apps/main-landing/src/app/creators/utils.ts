@@ -63,7 +63,7 @@ export const getCreatorProfile = async (
   return data;
 };
 
-export const saveCreator = async (
+export const saveCreatorProfile = async (
   address: Hex,
   name?: string | null,
 ): Promise<void> => {
@@ -72,7 +72,7 @@ export const saveCreator = async (
       console.error('No wallet address or name to create creator');
     }
 
-    const response = await fetch(`${CREATOR_API_URL}/creators`, {
+    const response = await fetch(`${CREATOR_API_URL}/creator-profile`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

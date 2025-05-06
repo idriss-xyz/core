@@ -10,7 +10,7 @@ import { Hex } from 'viem';
 
 import { QueryProvider } from '@/providers';
 
-import { getCreatorProfile, saveCreator } from './utils';
+import { getCreatorProfile, saveCreatorProfile } from './utils';
 
 type Properties = {
   children: ReactNode;
@@ -48,10 +48,9 @@ export const Providers = ({ children }: Properties) => {
                   if (creator === undefined) {
                     const walletAddress = arguments_.user
                       .verifiedCredentials?.[0]?.address as Hex;
-                    void saveCreator(walletAddress, twitchName);
-                  } else {
-                    router.push(`/creators/${twitchName}`);
+                    await saveCreatorProfile(walletAddress, twitchName);
                   }
+                  router.push(`/creators/${twitchName}`);
                 },
               },
             }}
