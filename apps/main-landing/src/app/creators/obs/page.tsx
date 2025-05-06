@@ -185,6 +185,11 @@ export default function Obs() {
 
           const sfxText = await fetchDonationSfxText(log.transactionHash!);
 
+          if (sfxText && containsBadWords(sfxText)) {
+            console.log('Filtered donation with inappropriate sfx text');
+            continue;
+          }
+
           addDonation({
             avatarUrl: avatarUrl,
             message: message ?? '',
