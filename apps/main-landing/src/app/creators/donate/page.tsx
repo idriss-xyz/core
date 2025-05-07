@@ -140,7 +140,7 @@ function DonateContent() {
       case 'user-tip': {
         return (
           <div className="grid grid-cols-1 items-start gap-x-10 lg:grid-cols-[1fr,auto]">
-            <DonateForm className="container mt-8 overflow-hidden lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]" />
+            <DonateForm className="container mt-8 overflow-hidden lg:mt-[90px] lg:[@media(max-height:800px)]:mt-[40px]" />
 
             <Leaderboard
               leaderboard={leaderboard}
@@ -149,7 +149,7 @@ function DonateContent() {
               updateCurrentContent={updateCurrentContent}
               leaderboardError={donationsHistory.isError}
               leaderboardLoading={donationsHistory.isLoading}
-              className="container mt-8 overflow-hidden px-0 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]"
+              className="container mt-8 overflow-hidden px-0 lg:mt-[90px] lg:[@media(max-height:800px)]:mt-[40px]"
             />
           </div>
         );

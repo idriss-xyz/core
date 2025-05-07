@@ -170,6 +170,7 @@ const BAD_WORDS: string[] = [
   'footjob',
   'frotting',
   'fuck',
+  'fucker',
   'fuck buttons',
   'fuckin',
   'fucking',

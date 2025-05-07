@@ -26,6 +26,12 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useAccount, useWalletClient } from 'wagmi';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@idriss-xyz/ui/tooltip';
 
 import { backgroundLines3 } from '@/assets';
 
@@ -37,7 +43,7 @@ import {
 } from '../../schema';
 import { getSendFormDefaultValues } from '../../utils';
 import { useSender } from '../../hooks';
-import { CREATOR_API_URL } from '../../constants';
+import { CREATOR_API_URL, DONATION_MIN_SFX_AMOUNT } from '../../constants';
 
 import { ChainSelect, TokenSelect } from './components';
 
@@ -131,11 +137,19 @@ export const DonateForm = ({ className }: Properties) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defaultChainId, selectedTokenSymbol, reset]);
 
-  const [chainId, tokenSymbol, amount] = formMethods.watch([
+  const [chainId, tokenSymbol, amount, sfx] = formMethods.watch([
     'chainId',
     'tokenSymbol',
     'amount',
+    'sfx',
   ]);
+
+  // Reset SFX when amount falls below the minimum
+  useEffect(() => {
+    if (amount < DONATION_MIN_SFX_AMOUNT && sfx) {
+      formMethods.setValue('sfx', '');
+    }
+  }, [amount, sfx, formMethods]);
 
   const selectedToken = useMemo(() => {
     const token = possibleTokens?.find((token) => {
@@ -209,15 +223,39 @@ export const DonateForm = ({ className }: Properties) => {
     ],
   );
 
-  useEffect(() => {
-    if (sender.isSuccess) {
-      void fetch(`${CREATOR_API_URL}/push-donation`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ address: searchParams.address.data }),
-      });
+  const sendDonation = useCallback(async () => {
+    if (!searchParams.address.data || !searchParams.address.isValid) {
+      return;
     }
-  }, [searchParams.address.data, sender.isSuccess]);
+    await fetch(`${CREATOR_API_URL}/push-donation`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ address: searchParams.address.data }),
+    });
+  }, [searchParams.address.data, searchParams.address.isValid]);
+
+  const sendDonationEffects = useCallback(async () => {
+    if (!sfx || !sender.data?.transactionHash) {
+      return;
+    }
+    await fetch(`${CREATOR_API_URL}/donation-effects`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sfxMessage: sfx,
+        txHash: sender.data?.transactionHash,
+      }),
+    });
+  }, [sfx, sender.data]);
+
+  useEffect(() => {
+    if (sender.data?.transactionHash) {
+      void sendDonationEffects();
+    }
+    if (sender.isSuccess) {
+      void sendDonation();
+    }
+  }, [sender.isSuccess, sender.data, sendDonation, sendDonationEffects]);
 
   if (!searchParams.address.isValid && !searchParams.address.isFetching) {
     return (
@@ -382,7 +420,6 @@ export const DonateForm = ({ className }: Properties) => {
               <>
                 <Form.Field
                   {...field}
-                  asTextArea
                   label={
                     <div className="flex items-center gap-2">
                       <label>Message</label>
@@ -399,6 +436,41 @@ export const DonateForm = ({ className }: Properties) => {
                   error={Boolean(fieldState.error?.message)}
                 />
               </>
+            );
+          }}
+        />
+
+        <Controller
+          name="sfx"
+          control={formMethods.control}
+          render={({ field, fieldState }) => {
+            return (
+              <Form.Field
+                {...field}
+                label={
+                  <div className="flex items-center gap-x-1">
+                    <label htmlFor="sfx">AI sound effect</label>
+                    <TooltipProvider delayDuration={400}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Icon name="HelpCircle" size={15} />
+                        </TooltipTrigger>
+                        <TooltipContent className="w-[300px] bg-black text-center text-white">
+                          <p className="text-label6">
+                            Write what you want to hear. AI will turn it into a
+                            sound effect and replace the default trumpet.
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                }
+                className="mt-4"
+                helperText={fieldState.error?.message}
+                error={Boolean(fieldState.error?.message)}
+                placeholder="🔒 Unlock at $10"
+                disabled={amount < DONATION_MIN_SFX_AMOUNT}
+              />
             );
           }}
         />
