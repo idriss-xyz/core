@@ -1,4 +1,5 @@
-import { CreatorProfileForm } from './form';
+import { Providers } from '../providers';
+import { DonateForm } from './donate-form';
 
 export default async function CreatorProfile({
   params,
@@ -9,5 +10,9 @@ export default async function CreatorProfile({
   const { name } = await params;
 
   // Pass the name to the client component
-  return <CreatorProfileForm initialName={name} />;
+  return (
+    <Providers>
+      <DonateForm initialName={name} />
+    </Providers>
+  );
 }

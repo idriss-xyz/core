@@ -5,26 +5,22 @@ import {
   ChainToken,
   TokenSymbol,
   CREATORS_LINK,
-  ANNOUNCEMENT_LINK,
   CHAIN_ID_TO_TOKENS,
   DEFAULT_ALLOWED_CHAINS_IDS,
 } from '@idriss-xyz/constants';
 import { Hex, isAddress } from 'viem';
 import { normalize } from 'viem/ens';
 import { Form } from '@idriss-xyz/ui/form';
-import { Link } from '@idriss-xyz/ui/link';
 import { Button } from '@idriss-xyz/ui/button';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Controller, useForm } from 'react-hook-form';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Multiselect, MultiselectOption } from '@idriss-xyz/ui/multiselect';
 
-import { backgroundLines2, backgroundLines3 } from '@/assets';
 
-import { Providers } from '../providers';
 import { ethereumClient } from '../donate/config';
-import { TopBar } from '../components/top-bar';
 import { getCreatorProfile, editCreatorProfile } from '../utils';
+import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
 
 type FormPayload = {
   name: string;
@@ -65,11 +61,13 @@ const TOKENS_ORDER: Record<TokenSymbol, number> = {
   PENGU: 12,
 };
 
-export function CreatorProfileForm({ initialName }: { initialName: string }) {
+export function CreatorProfileForm() {
   const [copiedObsLink, setCopiedObsLink] = useState(false);
   const [copiedDonationLink, setCopiedDonationLink] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const { user } = useDynamicContext();
+  const initialName = user?.verifiedCredentials.find((credential) => credential.oauthProvider === 'twitch')?.oauthDisplayName;
 
   const formMethods = useForm<FormPayload>({
     defaultValues: {
@@ -221,7 +219,7 @@ export function CreatorProfileForm({ initialName }: { initialName: string }) {
       }, [] as string[])
       .filter(Boolean);
 
-    const donationURL = `https://www.idriss.xyz/creators/donate?address=${address}&token=${tokensSymbols.join(',')}&network=${chainsShortNames.join(',')}&creatorName=${creatorName}`;
+    const donationURL = `https://www.idrissxyz./creators/${creatorName}`;
 
     await navigator.clipboard.writeText(donationURL);
 
@@ -305,31 +303,8 @@ export function CreatorProfileForm({ initialName }: { initialName: string }) {
   };
 
   return (
-    <Providers>
-      <TopBar />
 
-      <main className="relative flex min-h-screen grow flex-col items-center justify-around gap-4 overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] px-2 pb-1 pt-[56px] lg:flex-row lg:items-start lg:justify-center lg:px-0">
-        <link rel="preload" as="image" href={backgroundLines2.src} />
-        <img
-          alt=""
-          src={backgroundLines2.src}
-          className="pointer-events-none absolute top-0 hidden size-full opacity-40 lg:block"
-        />
 
-        <div className="mt-8 w-[440px] max-w-full overflow-hidden px-safe lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]">
-          <div className="container relative flex w-full flex-col items-center rounded-xl bg-white px-4 pb-3 pt-6">
-            <link rel="preload" as="image" href={backgroundLines3.src} />
-            <img
-              alt=""
-              src={backgroundLines3.src}
-              className="pointer-events-none absolute top-0 hidden size-full opacity-40 lg:block"
-            />
-
-            <h1 className="self-start text-heading4">
-              Create your donation link
-            </h1>
-
-            <div className="w-full">
               <Form
                 className="w-full"
                 onSubmit={formMethods.handleSubmit(onSubmit)}
@@ -550,26 +525,5 @@ export function CreatorProfileForm({ initialName }: { initialName: string }) {
                   )}
                 </div>
               </Form>
-            </div>
-
-            <Link size="xs" href="/creators/banner" className="mb-4 mt-[38px]">
-              Download a banner for your bio
-            </Link>
-          </div>
-        </div>
-
-        <Button
-          asLink
-          isExternal
-          size="small"
-          intent="secondary"
-          prefixIconName="InfoCircle"
-          href={ANNOUNCEMENT_LINK.CREATORS_DONATIONS}
-          className="px-5 py-3.5 lg:absolute lg:bottom-6 lg:right-7 lg:translate-x-0"
-        >
-          STEP-BY-STEP GUIDE
-        </Button>
-      </main>
-    </Providers>
   );
 }

@@ -21,10 +21,7 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
   const handleStartEarningClick = useCallback(() => {
     // If user is not logged in, show the Dynamic login modal
     if (user) {
-      const twitchName = user.verifiedCredentials.find((credential) => {
-        return credential.oauthProvider === 'twitch';
-      })?.oauthDisplayName;
-      router.push(`/creators/${twitchName}`);
+      router.push('/creators/app');
     } else {
       setShowAuthFlow(true);
       return;
