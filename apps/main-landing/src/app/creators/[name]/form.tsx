@@ -9,7 +9,7 @@ import {
   CHAIN_ID_TO_TOKENS,
   DEFAULT_ALLOWED_CHAINS_IDS,
 } from '@idriss-xyz/constants';
-import { isAddress } from 'viem';
+import { Hex, isAddress } from 'viem';
 import { normalize } from 'viem/ens';
 import { Form } from '@idriss-xyz/ui/form';
 import { Link } from '@idriss-xyz/ui/link';
@@ -24,7 +24,7 @@ import { backgroundLines2, backgroundLines3 } from '@/assets';
 import { Providers } from '../providers';
 import { ethereumClient } from '../donate/config';
 import { TopBar } from '../components/top-bar';
-import { getCreatorProfile } from '../utils';
+import { getCreatorProfile, editCreatorProfile } from '../utils';
 
 type FormPayload = {
   name: string;
@@ -68,6 +68,8 @@ const TOKENS_ORDER: Record<TokenSymbol, number> = {
 export function CreatorProfileForm({ initialName }: { initialName: string }) {
   const [copiedObsLink, setCopiedObsLink] = useState(false);
   const [copiedDonationLink, setCopiedDonationLink] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
 
   const formMethods = useForm<FormPayload>({
     defaultValues: {
@@ -267,12 +269,40 @@ export function CreatorProfileForm({ initialName }: { initialName: string }) {
       }
       formMethods.setValue('name', creatorProfile.name);
       formMethods.setValue('address', creatorProfile.primaryAddress);
-      formMethods.setValue('minimumAlertAmount', creatorProfile.minimumAlertAmount);
+      formMethods.setValue(
+        'minimumAlertAmount',
+        creatorProfile.minimumAlertAmount,
+      );
       formMethods.setValue('minimumTTSAmount', creatorProfile.minimumTTSAmount);
       formMethods.setValue('minimumSfxAmount', creatorProfile.minimumSfxAmount);
     };
     void fetchCreatorProfile();
   }, [initialName, formMethods]);
+
+  const onSubmit = async (data: FormPayload) => {
+    setIsSaving(true);
+    setSaveSuccess(false);
+
+    try {
+      await editCreatorProfile(data.name, {
+        primaryAddress: data.address as Hex,
+        minimumAlertAmount: data.minimumAlertAmount,
+        minimumTTSAmount: data.minimumTTSAmount,
+        minimumSfxAmount: data.minimumSfxAmount,
+      });
+
+      setSaveSuccess(true);
+
+      // Reset success message after 3 seconds
+      setTimeout(() => {
+        setSaveSuccess(false);
+      }, 3000);
+    } catch (error) {
+      console.error('Error saving profile:', error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
     <Providers>
@@ -300,7 +330,10 @@ export function CreatorProfileForm({ initialName }: { initialName: string }) {
             </h1>
 
             <div className="w-full">
-              <Form className="w-full">
+              <Form
+                className="w-full"
+                onSubmit={formMethods.handleSubmit(onSubmit)}
+              >
                 <Controller
                   name="name"
                   control={formMethods.control}
@@ -497,6 +530,24 @@ export function CreatorProfileForm({ initialName }: { initialName: string }) {
                   >
                     {copiedObsLink ? 'COPIED' : 'OBS LINK'}
                   </Button>
+
+                  <Button
+                    size="medium"
+                    intent="primary"
+                    className="mt-4 w-full"
+                    onClick={formMethods.handleSubmit(onSubmit)}
+                  >
+                    SAVE
+                  </Button>
+
+                  {/* TODO: Display modal on save success */}
+                  {saveSuccess && (
+                    <div className="mt-4 flex items-center gap-2">
+                      <span className="text-mint-600">
+                        Changes saved successfully!
+                      </span>
+                    </div>
+                  )}
                 </div>
               </Form>
             </div>

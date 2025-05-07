@@ -95,48 +95,55 @@ router.get(
 );
 
 // Create new creator profile with donation parameters
-router.post(
-  '/',
-  async (req: Request, res: Response) => {
-    try {
-      const { minimumAlertAmount = 1, minimumTTSAmount = 5, minimumSfxAmount = 10, voiceId, voiceMuted, ...creatorData } = req.body;
+router.post('/', async (req: Request, res: Response) => {
+  try {
+    const {
+      minimumAlertAmount = 1,
+      minimumTTSAmount = 5,
+      minimumSfxAmount = 10,
+      voiceId,
+      voiceMuted,
+      ...creatorData
+    } = req.body;
 
-      const donationParameters = new DonationParameters();
-      donationParameters.minimumAlertAmount = minimumAlertAmount;
-      donationParameters.minimumTTSAmount= minimumTTSAmount;
-      donationParameters.minimumSfxAmount= minimumSfxAmount;
-      donationParameters.voiceId = voiceId;
-      donationParameters.voiceMuted = voiceMuted;
+    const donationParameters = new DonationParameters();
+    donationParameters.minimumAlertAmount = minimumAlertAmount;
+    donationParameters.minimumTTSAmount = minimumTTSAmount;
+    donationParameters.minimumSfxAmount = minimumSfxAmount;
+    donationParameters.voiceId = voiceId;
+    donationParameters.voiceMuted = voiceMuted;
 
-      const creatorRepository = AppDataSource.getRepository(Creator);
-      const donationParamsRepository = AppDataSource.getRepository(DonationParameters);
+    const creatorRepository = AppDataSource.getRepository(Creator);
+    const donationParamsRepository =
+      AppDataSource.getRepository(DonationParameters);
 
-      const creator = new Creator();
-      creator.address = creatorData.address as Hex;
-      creator.primaryAddress = creatorData.primaryAddress as Hex ?? creatorData.address as Hex;
-      creator.name = creatorData.name as Hex;
-      creator.profilePictureUrl = creatorData.profilePictureUrl;
-      creator.donationUrl = creatorData.donationUrl;
-      creator.obsUrl = creatorData.obsUrl;
+    const creator = new Creator();
+    creator.address = creatorData.address as Hex;
+    creator.primaryAddress =
+      (creatorData.primaryAddress as Hex) ?? (creatorData.address as Hex);
+    creator.name = creatorData.name as Hex;
+    creator.profilePictureUrl = creatorData.profilePictureUrl;
+    creator.donationUrl = creatorData.donationUrl;
+    creator.obsUrl = creatorData.obsUrl;
 
-      // Create and save new creator
-      const savedCreator = await creatorRepository.save(creator);
+    // Create and save new creator
+    const savedCreator = await creatorRepository.save(creator);
 
-      donationParameters.creator = savedCreator;
+    donationParameters.creator = savedCreator;
 
-      // Create and save donation parameters with creator reference
-      const savedDonationParameters = await donationParamsRepository.save(donationParameters);
+    // Create and save donation parameters with creator reference
+    const savedDonationParameters =
+      await donationParamsRepository.save(donationParameters);
 
-      res.status(201).json({
-        creator: savedCreator,
-        donationParameters: savedDonationParameters,
-      });
-    } catch (error) {
-      console.error('Error creating creator profile:', error);
-      res.status(500).json({ error: 'Failed to create creator profile' });
-    }
-  },);
-
+    res.status(201).json({
+      creator: savedCreator,
+      donationParameters: savedDonationParameters,
+    });
+  } catch (error) {
+    console.error('Error creating creator profile:', error);
+    res.status(500).json({ error: 'Failed to create creator profile' });
+  }
+});
 
 router.patch(
   '/:name',
@@ -163,11 +170,25 @@ router.patch(
         return;
       }
 
-      const { donationParameters, ...creatorData } = req.body;
+      const {
+        minimumAlertAmount,
+        minimumTTSAmount,
+        minimumSfxAmount,
+        voiceId,
+        voiceMuted,
+        ...creatorData
+      } = req.body;
+
       // Update creator with provided fields
       await creatorRepository.update({ id: creator.id }, creatorData);
       // Update donation parameters if they exist and are provided
-      if (req.body.donationParameters) {
+      if (
+        minimumAlertAmount ||
+        minimumTTSAmount ||
+        minimumSfxAmount ||
+        voiceId ||
+        voiceMuted
+      ) {
         const donationParams = await donationParamsRepository.findOne({
           where: { creator: { id: creator.id } },
         });
@@ -175,14 +196,24 @@ router.patch(
         if (donationParams) {
           await donationParamsRepository.update(
             { id: donationParams.id },
-            req.body.donationParameters,
+            {
+              minimumAlertAmount,
+              minimumTTSAmount,
+              minimumSfxAmount,
+              voiceId,
+              voiceMuted,
+            },
           );
         }
         // If donation parameters don't exist, create a new one
         else {
           const newDonationParams = donationParamsRepository.create({
             creator,
-            ...req.body.donationParameters,
+            minimumAlertAmount,
+            minimumTTSAmount,
+            minimumSfxAmount,
+            voiceId,
+            voiceMuted,
           });
           await donationParamsRepository.save(newDonationParams);
         }

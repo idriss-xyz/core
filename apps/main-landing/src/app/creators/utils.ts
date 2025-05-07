@@ -92,6 +92,34 @@ export const saveCreatorProfile = async (
   }
 };
 
+export const editCreatorProfile = async (
+  name: string,
+  profile: Partial<CreatorProfile>,
+): Promise<void> => {
+  try {
+    if (!name) {
+      console.error('No name provided to edit creator profile');
+      return;
+    }
+
+    const response = await fetch(`${CREATOR_API_URL}/creator-profile/${name}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ...profile,
+      }),
+    });
+
+    if (!response.ok) {
+      return;
+    }
+  } catch (error) {
+    console.error('Error updating creator profile:', error);
+  }
+};
+
 export const saveDonationParameters = async (
   address: Hex,
   minimumAlertAmount: number,
