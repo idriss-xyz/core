@@ -6,6 +6,8 @@ import { Readable } from 'stream';
 
 const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
 const MAX_REQUESTS_PER_MINUTE = 3;
+const MAX_SOUND_DURATION = 4;
+
 const router = express.Router();
 
 const validationRules = [body('text').isString().notEmpty()];
@@ -30,9 +32,7 @@ router.post(
     }
     try {
       const { text } = req.body;
-      const finalText = text.length > 30 ? text.slice(0, 30) : text; // TODO: Check limit
-
-      console.log('Getting sfx for text: ', finalText);
+      const finalText = text.length > 30 ? text.slice(0, 30) : text;
 
       const response = await fetch(
         `https://api.elevenlabs.io/v1/sound-generation`,
@@ -44,7 +44,7 @@ router.post(
           },
           body: JSON.stringify({
             text: finalText,
-            duration_seconds: 4,
+            duration_seconds: MAX_SOUND_DURATION,
           }),
         },
       );
