@@ -126,6 +126,57 @@ export const getTextToSpeech = async (text: string) => {
   }
 };
 
+export const getTextToSfx = async (text: string | undefined) => {
+  if (!text) {
+    return null;
+  }
+  try {
+    const response = await fetch(`${CREATOR_API_URL}/text-to-sfx`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ text }),
+    });
+    if (!response.ok) {
+      console.error(
+        `Creator API error: ${response.status} ${response.statusText}`,
+      );
+      return null;
+    }
+    return response;
+  } catch (error) {
+    console.error('Error fetching text-to-sfx:', error);
+    return null;
+  }
+};
+
+export const fetchDonationSfxText = async (txHash: string) => {
+  try {
+    const response = await fetch(
+      `${CREATOR_API_URL}/donation-effects/${txHash}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+    if (!response.ok) {
+      console.error(
+        `Error fetching donation effect: ${response.status} ${response.statusText}`,
+      );
+      return;
+    }
+
+    const data = await response.json();
+    return data.sfxMessage as string;
+  } catch (error) {
+    console.error('Error fetching donation effect text:', error);
+    return;
+  }
+};
+
 export const TIP_MESSAGE_EVENT_ABI: Record<string, string> = {
   base: 'event TipMessage(address indexed recipientAddress, string message, address indexed sender, address indexed tokenAddress, uint256 amount, uint256 fee)',
   ethereum:

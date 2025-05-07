@@ -10,6 +10,7 @@ export const getSendFormDefaultValues = (
   return {
     amount: 1,
     message: '',
+    sfx: '',
     chainId: defaultChainId,
     tokenSymbol: defaultTokenSymbol,
   };

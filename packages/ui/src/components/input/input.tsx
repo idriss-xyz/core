@@ -19,6 +19,7 @@ type BaseProperties = {
   success?: boolean;
   asTextArea?: boolean;
   placeholder?: string;
+  disabled?: boolean;
 };
 
 type Properties =
@@ -47,6 +48,7 @@ export const Input = forwardRef(
       error,
       asTextArea,
       placeholder,
+      disabled,
     } = properties;
     const inputProperties = {
       className: classes(
@@ -54,11 +56,13 @@ export const Input = forwardRef(
         'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500',
         success && 'border-mint-400 focus-visible:border-mint-400',
         error && 'border-red-400 focus-visible:border-red-400',
+        disabled && 'cursor-not-allowed opacity-50',
         className,
       ),
       value,
       onChange,
       placeholder,
+      disabled,
     };
 
     if (asTextArea) {

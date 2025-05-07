@@ -17,6 +17,7 @@ export type DonationNotificationProperties = {
   donor: string;
   amount: string;
   message: string;
+  sfxText?: string;
   txnHash: string;
   bgColor?: string;
   avatarUrl?: string;
@@ -35,6 +36,7 @@ export default function DonationNotification({
   amount,
   txnHash,
   message,
+  sfxText,
   avatarUrl,
   style = {},
   bgColor = 'bg-white',
@@ -50,6 +52,7 @@ export default function DonationNotification({
     amount,
     message,
     NOTIFICATION_DISPLAY_DURATION,
+    sfxText,
   );
 
   const { value: roundedNumber, index: zerosIndex } =

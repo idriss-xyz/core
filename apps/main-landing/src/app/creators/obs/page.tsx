@@ -29,6 +29,7 @@ import DonationNotification, {
 } from './components/donation-notification';
 import {
   calculateDollar,
+  fetchDonationSfxText,
   resolveEnsName,
   TIP_MESSAGE_EVENT_ABI,
 } from './utils';
@@ -182,9 +183,17 @@ export default function Obs() {
             );
           });
 
+          const sfxText = await fetchDonationSfxText(log.transactionHash!);
+
+          if (sfxText && containsBadWords(sfxText)) {
+            console.log('Filtered donation with inappropriate sfx text');
+            continue;
+          }
+
           addDonation({
             avatarUrl: avatarUrl,
             message: message ?? '',
+            sfxText,
             amount: amountInDollar,
             donor: senderIdentifier,
             txnHash: log.transactionHash!,

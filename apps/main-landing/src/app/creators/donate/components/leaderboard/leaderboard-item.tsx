@@ -142,7 +142,7 @@ export function LeaderboardItemPlaceholder({
   hideEncouragement,
   previousDonateAmount,
 }: PlaceholderProperties) {
-  const placeholderHeight = itemHeight ?? 69;
+  const placeholderHeight = itemHeight ?? 67;
   const donateAmount = previousDonateAmount * 0.8;
   const placeholderPlaces = amountToDisplay - donorRank;
 
