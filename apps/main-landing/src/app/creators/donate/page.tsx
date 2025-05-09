@@ -52,12 +52,10 @@ function DonateContent({creatorName}: Properties) {
   });
   const [creatorInfo, setCreatorInfo] = useState<any | null>(null); //TODO: correctly type
 
-  const parametersNotPresent = searchParams.address.data == null;
-
   useEffect(() => {
     if (creatorInfoSetRef.current) return;
 
-    if (parametersNotPresent && creatorName) {
+    if (searchParams.address.data == null && creatorName) {
       getCreatorProfile(creatorName).then((profile) => {
         if (profile) {
           setCreatorInfo({
@@ -76,18 +74,20 @@ function DonateContent({creatorName}: Properties) {
       });
     }
     else {
-      setCreatorInfo({
-        address:
-          {
-            data: searchParams.address.data,
-            isValid: searchParams.address.isValid,
-            isFetching: searchParams.address.isFetching
-          },
-        name: searchParams.creatorName,
-        network: searchParams.network,
-        token: searchParams.token,
-      })
-      creatorInfoSetRef.current = true;
+      if(!searchParams.address.isFetching){
+        setCreatorInfo({
+          address:
+            {
+              data: searchParams.address.data,
+              isValid: searchParams.address.isValid,
+              isFetching: searchParams.address.isFetching
+            },
+          name: searchParams.creatorName,
+          network: searchParams.network,
+          token: searchParams.token,
+        })
+        creatorInfoSetRef.current = true;
+      }
     }
   }, [searchParams.address, searchParams.creatorName, searchParams.network, searchParams.token, creatorName]);
 
@@ -98,10 +98,17 @@ function DonateContent({creatorName}: Properties) {
 
   useEffect(() => {
     if (donationsHistory.data) {
+      // TODO: Debug if this takes works after fixing db /tip-history
       setDonations(donationsHistory.data.donations);
       setLeaderboard(donationsHistory.data.leaderboard);
     }
   }, [donationsHistory.data]);
+
+  useEffect(() => {
+    if (creatorInfo?.address.isValid) {
+      donationsHistory.refetch(); // refetch to get history after creatorInfo is done setting
+    }
+  }, [creatorInfo]);
 
   useEffect(() => {
     if (creatorInfo?.address.data && !socketInitialized) {
