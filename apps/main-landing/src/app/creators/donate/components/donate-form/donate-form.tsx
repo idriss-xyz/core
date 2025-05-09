@@ -43,20 +43,20 @@ import { ChainSelect, TokenSelect } from './components';
 
 type Properties = {
   className?: string;
+  creatorInfo: any; // TODO: correctly type
 };
 
 const baseClassName =
   'z-1 w-[440px] max-w-full rounded-xl bg-white px-4 pb-9 pt-6 flex flex-col items-center relative';
 
-export const DonateForm = ({ className }: Properties) => {
-  const { searchParams } = useCreators();
+export const DonateForm = ({ className, creatorInfo }: Properties) => {
   const { isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
   const { connectModalOpen, openConnectModal } = useConnectModal();
   const [selectedTokenSymbol, setSelectedTokenSymbol] = useState<string>('ETH');
 
   const possibleTokens: Token[] = useMemo(() => {
-    const tokensSymbols = (searchParams.token ?? '').toLowerCase().split(',');
+    const tokensSymbols = (creatorInfo.token ?? '').toLowerCase().split(',');
     const allPossibleTokens = Object.values(TOKEN);
     const tokens = allPossibleTokens.filter((token) => {
       return tokensSymbols.includes(token.symbol.toLowerCase());
@@ -68,11 +68,11 @@ export const DonateForm = ({ className }: Properties) => {
     }
 
     return tokens;
-  }, [searchParams.token]);
+  }, [creatorInfo.token]);
 
   const allowedChainsIds = useMemo(() => {
     const networksShortNames =
-      searchParams.network?.toLowerCase().split(',') ??
+      creatorInfo.network?.toLowerCase().split(',') ??
       Object.values(CHAIN).map((chain) => {
         return chain.shortName.toLowerCase();
       });
@@ -97,7 +97,7 @@ export const DonateForm = ({ className }: Properties) => {
     return chains.map((chain) => {
       return chain.id;
     });
-  }, [searchParams.network, selectedTokenSymbol]);
+  }, [creatorInfo.network, selectedTokenSymbol]);
 
   const defaultChainId = allowedChainsIds[0] ?? 0;
 
@@ -171,8 +171,8 @@ export const DonateForm = ({ className }: Properties) => {
     async (payload) => {
       if (
         !walletClient ||
-        !searchParams.address.data ||
-        !searchParams.address.isValid
+        !creatorInfo.address.data ||
+        !creatorInfo.address.isValid
       ) {
         return;
       }
@@ -195,7 +195,7 @@ export const DonateForm = ({ className }: Properties) => {
       try {
         await sender.send({
           sendPayload,
-          recipientAddress: searchParams.address.data,
+          recipientAddress: creatorInfo.address.data,
         });
       } catch (error) {
         console.error('Unknown error sending transaction.', error);
@@ -204,8 +204,8 @@ export const DonateForm = ({ className }: Properties) => {
     [
       sender,
       walletClient,
-      searchParams.address.data,
-      searchParams.address.isValid,
+      creatorInfo.address.data,
+      creatorInfo.address.isValid,
     ],
   );
 
@@ -214,12 +214,12 @@ export const DonateForm = ({ className }: Properties) => {
       void fetch(`${CREATOR_API_URL}/push-donation`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ address: searchParams.address.data }),
+        body: JSON.stringify({ address: creatorInfo.address.data }),
       });
     }
-  }, [searchParams.address.data, sender.isSuccess]);
+  }, [creatorInfo.address.data, sender.isSuccess]);
 
-  if (!searchParams.address.isValid && !searchParams.address.isFetching) {
+  if (!creatorInfo.address.isValid && !creatorInfo.address.isFetching) {
     return (
       <div className={classes(baseClassName, className)}>
         <h1 className="flex items-center justify-center gap-2 text-center text-heading4 text-red-500">
@@ -303,8 +303,8 @@ export const DonateForm = ({ className }: Properties) => {
       />
 
       <h1 className="self-start text-heading4">
-        {searchParams.creatorName
-          ? `Donate to ${searchParams.creatorName}`
+        {creatorInfo.name
+          ? `Donate to ${creatorInfo.name}`
           : 'Select your donation details'}
       </h1>
 
