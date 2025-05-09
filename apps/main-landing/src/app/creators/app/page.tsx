@@ -1,9 +1,11 @@
 import { TopBar } from '@/components';
-import { Providers } from '../providers';
-import { CreatorProfileForm } from './form';
 import { backgroundLines2, backgroundLines3 } from '@/assets';
 
-export default async function CreatorProfile() {
+import { Providers } from '../providers';
+
+import { CreatorProfileForm } from './form';
+
+export default function CreatorProfile() {
   return (
     <Providers>
       <TopBar />

@@ -16,11 +16,10 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { Controller, useForm } from 'react-hook-form';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Multiselect, MultiselectOption } from '@idriss-xyz/ui/multiselect';
-
+import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
 
 import { ethereumClient } from '../donate/config';
 import { getCreatorProfile, editCreatorProfile } from '../utils';
-import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
 
 type FormPayload = {
   name: string;
@@ -67,11 +66,11 @@ export function CreatorProfileForm() {
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const { user } = useDynamicContext();
-  const initialName = user?.verifiedCredentials.find((credential) => credential.oauthProvider === 'twitch')?.oauthDisplayName;
+  const initialName = user?.verifiedCredentials.find((credential) => {return credential.oauthProvider === 'twitch'})?.oauthDisplayName;
 
   const formMethods = useForm<FormPayload>({
     defaultValues: {
-      name: initialName || '',
+      name: initialName ?? '',
       address: '',
       chainsIds: ALL_CHAIN_IDS,
       tokensSymbols: UNIQUE_ALL_TOKEN_SYMBOLS,

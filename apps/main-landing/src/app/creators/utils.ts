@@ -152,6 +152,6 @@ export const saveDonationParameters = async (
       throw new Error('Failed to register donation parameters');
     }
   } catch (error) {
-    console.error('Error registering donation parameters: ', error);
+    console.error('Error registering donation parameters:', error);
   }
 };

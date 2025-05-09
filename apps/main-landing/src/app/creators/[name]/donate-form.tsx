@@ -26,6 +26,8 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useAccount, useWalletClient } from 'wagmi';
+import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
+import { Hex } from 'viem';
 
 import { backgroundLines3 } from '@/assets';
 
@@ -34,8 +36,6 @@ import { CREATOR_API_URL } from '../donate/constants';
 import { getSendFormDefaultValues } from '../donate/utils';
 import { useSender } from '../donate/hooks';
 import { FormPayload, createFormPayloadSchema, SendPayload } from '../donate/schema';
-import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
-import { Hex } from 'viem';
 
 type Properties = {
   className?: string;
@@ -50,6 +50,7 @@ export const DonateForm = ({ className, initialName }: Properties) => {
   const { data: walletClient } = useWalletClient();
   const { connectModalOpen, openConnectModal } = useConnectModal();
   const [selectedTokenSymbol, setSelectedTokenSymbol] = useState<string>('ETH');
+  // TODO: [IMPORTANT] FETCH CREATOR PROFILE AND USE ADDRESS FROM IT HERE (REMOVE DYNAMIC CONTEXT)
   const { user } = useDynamicContext();
   const creatorName = initialName;
   const creatorAddress = user?.verifiedCredentials.find(
@@ -83,12 +84,12 @@ export const DonateForm = ({ className, initialName }: Properties) => {
   const allowedChainsIds = useMemo(() => {
     const networksShortNames =
       // networksFromDb ?? // TODO: Uncomment when we have the network list for creator on db
-      Object.values(CHAIN).map((chain) => {
+      new Set(Object.values(CHAIN).map((chain) => {
         return chain.shortName.toLowerCase();
-      });
+      }));
 
     const chains = Object.values(CHAIN).filter((chain) => {
-      if (!networksShortNames.includes(chain.shortName.toLowerCase())) {
+      if (!networksShortNames.has(chain.shortName.toLowerCase())) {
         return false;
       }
 
@@ -213,6 +214,7 @@ export const DonateForm = ({ className, initialName }: Properties) => {
     [
       sender,
       walletClient,
+      creatorAddress,
     ],
   );
 
@@ -224,7 +226,7 @@ export const DonateForm = ({ className, initialName }: Properties) => {
         body: JSON.stringify({ address: creatorAddress }),
       });
     }
-  }, [sender.isSuccess]);
+  }, [sender.isSuccess, creatorAddress]);
 
   if (!creatorName) {
     return (
