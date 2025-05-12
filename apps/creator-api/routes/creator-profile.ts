@@ -2,7 +2,12 @@ import { Router, Request, Response } from 'express';
 import { param, validationResult } from 'express-validator';
 import { CreatorProfileView } from '../db/views/creator-profile.view';
 import { AppDataSource } from '../db/database';
-import { Creator, DonationParameters } from '../db/entities';
+import {
+  Creator,
+  DonationParameters,
+  CreatorToken,
+  CreatorNetwork,
+} from '../db/entities';
 import { Hex } from 'viem';
 
 const router = Router();
@@ -103,6 +108,8 @@ router.post('/', async (req: Request, res: Response) => {
       minimumSfxAmount = 10,
       voiceId,
       voiceMuted,
+      tokens = [],
+      networks = [],
       ...creatorData
     } = req.body;
 
@@ -116,6 +123,8 @@ router.post('/', async (req: Request, res: Response) => {
     const creatorRepository = AppDataSource.getRepository(Creator);
     const donationParamsRepository =
       AppDataSource.getRepository(DonationParameters);
+    const tokenRepository = AppDataSource.getRepository(CreatorToken);
+    const networkRepository = AppDataSource.getRepository(CreatorNetwork);
 
     const creator = new Creator();
     creator.address = creatorData.address as Hex;
@@ -135,9 +144,32 @@ router.post('/', async (req: Request, res: Response) => {
     const savedDonationParameters =
       await donationParamsRepository.save(donationParameters);
 
+    // Create token records
+    const tokenEntities = tokens.map((tokenAddress: Hex) => {
+      const token = new CreatorToken();
+      token.tokenAddress = tokenAddress;
+      token.creator = savedCreator;
+      return token;
+    });
+    await tokenRepository.save(tokenEntities);
+
+    // Create network records
+    const networkEntities = networks.map((chainId: number) => {
+      const network = new CreatorNetwork();
+      network.chainId = chainId;
+      network.creator = savedCreator;
+      return network;
+    });
+    await networkRepository.save(networkEntities);
+
+    // TODO: Remove token and network linked creator (redundant in response)
     res.status(201).json({
-      creator: savedCreator,
-      donationParameters: savedDonationParameters,
+      creator: {
+        ...savedCreator,
+        donationParameters: savedDonationParameters,
+        tokens: tokenEntities,
+        networks: networkEntities,
+      },
     });
   } catch (error) {
     console.error('Error creating creator profile:', error);
@@ -160,6 +192,8 @@ router.patch(
       const creatorRepository = AppDataSource.getRepository(Creator);
       const donationParamsRepository =
         AppDataSource.getRepository(DonationParameters);
+      const tokenRepository = AppDataSource.getRepository(CreatorToken);
+      const networkRepository = AppDataSource.getRepository(CreatorNetwork);
 
       const creator = await creatorRepository.findOne({
         where: { name },
@@ -176,11 +210,16 @@ router.patch(
         minimumSfxAmount,
         voiceId,
         voiceMuted,
+        tokens = [],
+        networks = [],
         ...creatorData
       } = req.body;
 
-      // Update creator with provided fields
-      await creatorRepository.update({ id: creator.id }, creatorData);
+      // Update creator with provided fields if present
+      if (Object.keys(creatorData).length > 0) {
+        await creatorRepository.update({ id: creator.id }, creatorData);
+      }
+
       // Update donation parameters if they exist and are provided
       if (
         minimumAlertAmount ||
@@ -204,9 +243,7 @@ router.patch(
               voiceMuted,
             },
           );
-        }
-        // If donation parameters don't exist, create a new one
-        else {
+        } else {
           const newDonationParams = donationParamsRepository.create({
             creator,
             minimumAlertAmount,
@@ -219,6 +256,56 @@ router.patch(
         }
       }
 
+      // Handle tokens
+      const existingTokens = await tokenRepository.find({
+        where: { creator: { id: creator.id } },
+      });
+
+      // Remove tokens that are no longer in the params
+      for (const existingToken of existingTokens) {
+        if (!tokens.includes(existingToken.tokenAddress)) {
+          await tokenRepository.remove(existingToken);
+        }
+      }
+
+      // Add new tokens
+      for (const tokenAddress of tokens) {
+        const existingToken = existingTokens.find(
+          (t) => t.tokenAddress === tokenAddress,
+        );
+        if (!existingToken) {
+          const newToken = new CreatorToken();
+          newToken.tokenAddress = tokenAddress;
+          newToken.creator = creator;
+          await tokenRepository.save(newToken);
+        }
+      }
+
+      // Handle networks
+      const existingNetworks = await networkRepository.find({
+        where: { creator: { id: creator.id } },
+      });
+
+      // Remove networks that are no longer in the params
+      for (const existingNetwork of existingNetworks) {
+        if (!networks.includes(existingNetwork.chainId)) {
+          await networkRepository.remove(existingNetwork);
+        }
+      }
+
+      // Add new networks
+      for (const chainId of networks) {
+        const existingNetwork = existingNetworks.find(
+          (n) => n.chainId === chainId,
+        );
+        if (!existingNetwork) {
+          const newNetwork = new CreatorNetwork();
+          newNetwork.chainId = chainId;
+          newNetwork.creator = creator;
+          await networkRepository.save(newNetwork);
+        }
+      }
+
       const updatedCreator = await creatorRepository.findOne({
         where: { name: req.body.name || name },
       });
@@ -227,10 +314,22 @@ router.patch(
         where: { creator: { id: creator.id } },
       });
 
+      const updatedTokenEntities = await tokenRepository.find({
+        where: { creator: { id: creator.id } },
+      });
+
+      const updatedNetworkEntities = await networkRepository.find({
+        where: { creator: { id: creator.id } },
+      });
+
       res.json({
         message: 'Creator profile updated successfully',
-        creator: updatedCreator,
-        donationParameters: updatedDonationParams,
+        creator: {
+          ...updatedCreator,
+          donationParameters: updatedDonationParams,
+          tokens: updatedTokenEntities,
+          networks: updatedNetworkEntities,
+        },
       });
     } catch (error) {
       console.error('Error updating creator profile:', error);

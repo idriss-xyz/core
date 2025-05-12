@@ -15,6 +15,18 @@ const newCreatorValidationRules = [
   body('obsUrl').optional().isString(),
 ];
 
+//Get all creators
+router.get('/', async (req: Request, res: Response) => {
+  try {
+    const creatorRepository = AppDataSource.getRepository(Creator);
+    const creators = await creatorRepository.find({});
+    res.status(200).json(creators);
+  } catch (error) {
+    console.error('Error fetching creators:', error);
+    res.status(500).json({ error: 'Failed to fetch creators' });
+  }
+});
+
 // Get creator by name
 router.get(
   '/:name',
