@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, ManyToOne, Column, JoinColumn } from 'typeorm';
 import { Creator } from './creator.entity';
 
 @Entity('creator_tokens')
@@ -7,8 +7,9 @@ export class CreatorToken {
   id!: number;
 
   @Column()
-  chainId!: number;
+  tokenAddress!: string;
 
   @ManyToOne(() => Creator, (creator) => creator.tokens)
+  @JoinColumn({ name: 'creator_id' })
   creator!: Creator;
 }

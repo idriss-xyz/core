@@ -1,7 +1,6 @@
 import { ViewEntity, ViewColumn, DataSource } from 'typeorm';
-import { Token } from '../entities';
 import { Creator } from '../entities/creator.entity';
-import { DonationParameters } from '../entities/donation-parameters.entity';
+import { CreatorNetwork, CreatorToken, DonationParameters } from '../entities';
 
 @ViewEntity({
   expression: (dataSource: DataSource) =>
@@ -19,9 +18,26 @@ import { DonationParameters } from '../entities/donation-parameters.entity';
       .addSelect('dp.minimum_sfx_amount', 'minimumSfxAmount')
       .addSelect('dp.voice_id', 'voiceId')
       .addSelect('dp.voice_muted', 'voiceMuted')
+      .addSelect('COALESCE(ARRAY_REMOVE(ARRAY_AGG(DISTINCT ct.tokenAddress), NULL), ARRAY[]::text[])', 'tokens')
+      .addSelect('COALESCE(ARRAY_REMOVE(ARRAY_AGG(DISTINCT cn.chainId), NULL), ARRAY[]::int[])', 'networks')
       .from(Creator, 'c')
-      .leftJoin(DonationParameters, 'dp', 'dp.creator_id = c.id'),
+      .leftJoin(DonationParameters, 'dp', 'dp.creator_id = c.id')
+      .leftJoin(CreatorToken, 'ct', 'ct.creator_id = c.id')
+      .leftJoin(CreatorNetwork, 'cn', 'cn.creator_id = c.id')
+      .groupBy('c.id')
+      .addGroupBy('c.address')
+      .addGroupBy('c.primary_address')
+      .addGroupBy('c.name')
+      .addGroupBy('c.profile_picture_url')
+      .addGroupBy('c.donation_url')
+      .addGroupBy('c.obs_url')
+      .addGroupBy('dp.minimum_alert_amount')
+      .addGroupBy('dp.minimum_tts_amount')
+      .addGroupBy('dp.minimum_sfx_amount')
+      .addGroupBy('dp.voice_id')
+      .addGroupBy('dp.voice_muted'),
 })
+
 export class CreatorProfileView {
   @ViewColumn()
   id!: number;
@@ -58,4 +74,10 @@ export class CreatorProfileView {
 
   @ViewColumn()
   voiceMuted!: boolean;
+
+  @ViewColumn()
+  tokens!: string[];
+
+  @ViewColumn()
+  networks!: number[];
 }
