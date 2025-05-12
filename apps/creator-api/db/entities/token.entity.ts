@@ -3,7 +3,7 @@ import { Hex } from 'viem';
 import { Creator } from './creator.entity';
 
 @Entity('tokens')
-@Index(['address', 'network'], { unique: true })  // Add this line
+@Index(['address', 'network'], { unique: true })
 export class Token {
   @PrimaryColumn({ type: 'text' })
   address!: Hex;

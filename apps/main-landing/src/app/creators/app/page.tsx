@@ -32,7 +32,7 @@ export default function CreatorProfile() {
             </h1>
 
             <div className="w-full">
-              <CreatorProfileForm/>
+              <CreatorProfileForm />
             </div>
           </div>
         </div>

@@ -31,11 +31,18 @@ import { Hex } from 'viem';
 
 import { backgroundLines3 } from '@/assets';
 
-import { ChainSelect, TokenSelect } from '../donate/components/donate-form/components';
+import {
+  ChainSelect,
+  TokenSelect,
+} from '../donate/components/donate-form/components';
 import { CREATOR_API_URL } from '../donate/constants';
 import { getSendFormDefaultValues } from '../donate/utils';
 import { useSender } from '../donate/hooks';
-import { FormPayload, createFormPayloadSchema, SendPayload } from '../donate/schema';
+import {
+  FormPayload,
+  createFormPayloadSchema,
+  SendPayload,
+} from '../donate/schema';
 
 type Properties = {
   className?: string;
@@ -53,11 +60,9 @@ export const DonateForm = ({ className, initialName }: Properties) => {
   // TODO: [IMPORTANT] FETCH CREATOR PROFILE AND USE ADDRESS FROM IT HERE (REMOVE DYNAMIC CONTEXT)
   const { user } = useDynamicContext();
   const creatorName = initialName;
-  const creatorAddress = user?.verifiedCredentials.find(
-    (credential) => {
-      return credential.format === 'blockchain';
-    },
-  )?.address;
+  const creatorAddress = user?.verifiedCredentials.find((credential) => {
+    return credential.format === 'blockchain';
+  })?.address;
 
   const possibleTokens: Token[] = useMemo(() => {
     /* TODO: Uncomment when we have the token list for creator on db
@@ -65,7 +70,7 @@ export const DonateForm = ({ className, initialName }: Properties) => {
     */
     const allPossibleTokens = Object.values(TOKEN);
 
-    const tokens = allPossibleTokens
+    const tokens = allPossibleTokens;
 
     /* TODO: Uncomment when we have the token list for creator on db
     const tokens = allPossibleTokens.filter((token) => {
@@ -84,9 +89,11 @@ export const DonateForm = ({ className, initialName }: Properties) => {
   const allowedChainsIds = useMemo(() => {
     const networksShortNames =
       // networksFromDb ?? // TODO: Uncomment when we have the network list for creator on db
-      new Set(Object.values(CHAIN).map((chain) => {
-        return chain.shortName.toLowerCase();
-      }));
+      new Set(
+        Object.values(CHAIN).map((chain) => {
+          return chain.shortName.toLowerCase();
+        }),
+      );
 
     const chains = Object.values(CHAIN).filter((chain) => {
       if (!networksShortNames.has(chain.shortName.toLowerCase())) {
@@ -180,10 +187,7 @@ export const DonateForm = ({ className, initialName }: Properties) => {
 
   const onSubmit: SubmitHandler<FormPayload> = useCallback(
     async (payload) => {
-      if (
-        !walletClient ||
-        !creatorAddress
-      ) {
+      if (!walletClient || !creatorAddress) {
         return;
       }
 
@@ -211,11 +215,7 @@ export const DonateForm = ({ className, initialName }: Properties) => {
         console.error('Unknown error sending transaction.', error);
       }
     },
-    [
-      sender,
-      walletClient,
-      creatorAddress,
-    ],
+    [sender, walletClient, creatorAddress],
   );
 
   useEffect(() => {

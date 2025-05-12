@@ -66,7 +66,9 @@ export function CreatorProfileForm() {
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const { user } = useDynamicContext();
-  const initialName = user?.verifiedCredentials.find((credential) => {return credential.oauthProvider === 'twitch'})?.oauthDisplayName;
+  const initialName = user?.verifiedCredentials.find((credential) => {
+    return credential.oauthProvider === 'twitch';
+  })?.oauthDisplayName;
 
   const formMethods = useForm<FormPayload>({
     defaultValues: {
@@ -302,227 +304,212 @@ export function CreatorProfileForm() {
   };
 
   return (
+    <Form className="w-full" onSubmit={formMethods.handleSubmit(onSubmit)}>
+      <Controller
+        name="name"
+        control={formMethods.control}
+        rules={{
+          required: 'Name is required',
+          maxLength: {
+            value: 20,
+            message: 'Name cannot be longer than 20 characters',
+          },
+        }}
+        render={({ field, fieldState }) => {
+          return (
+            <Form.Field
+              label="Name"
+              className="mt-6 w-full"
+              helperText={fieldState.error?.message}
+              error={Boolean(fieldState.error?.message)}
+              {...field}
+            />
+          );
+        }}
+      />
 
+      <Controller
+        name="address"
+        control={formMethods.control}
+        rules={{
+          required: 'Address is required',
+          validate: async (value) => {
+            try {
+              if (value.includes('.') && !value.endsWith('.')) {
+                const resolvedAddress = await ethereumClient?.getEnsAddress({
+                  name: normalize(value),
+                });
 
-              <Form
-                className="w-full"
-                onSubmit={formMethods.handleSubmit(onSubmit)}
-              >
-                <Controller
-                  name="name"
-                  control={formMethods.control}
-                  rules={{
-                    required: 'Name is required',
-                    maxLength: {
-                      value: 20,
-                      message: 'Name cannot be longer than 20 characters',
-                    },
-                  }}
-                  render={({ field, fieldState }) => {
-                    return (
-                      <Form.Field
-                        label="Name"
-                        className="mt-6 w-full"
-                        helperText={fieldState.error?.message}
-                        error={Boolean(fieldState.error?.message)}
-                        {...field}
-                      />
-                    );
-                  }}
-                />
+                return resolvedAddress ? true : 'This address doesn’t exist.';
+              }
 
-                <Controller
-                  name="address"
-                  control={formMethods.control}
-                  rules={{
-                    required: 'Address is required',
-                    validate: async (value) => {
-                      try {
-                        if (value.includes('.') && !value.endsWith('.')) {
-                          const resolvedAddress =
-                            await ethereumClient?.getEnsAddress({
-                              name: normalize(value),
-                            });
+              return isAddress(value) ? true : 'This address doesn’t exist.';
+            } catch {
+              return 'An unexpected error occurred. Try again.';
+            }
+          },
+        }}
+        render={({ field, fieldState }) => {
+          return (
+            <Form.Field
+              label="Wallet address"
+              className="mt-6 w-full"
+              helperText={fieldState.error?.message}
+              error={Boolean(fieldState.error?.message)}
+              {...field}
+            />
+          );
+        }}
+      />
 
-                          return resolvedAddress
-                            ? true
-                            : 'This address doesn’t exist.';
-                        }
+      <Controller
+        name="chainsIds"
+        control={formMethods.control}
+        rules={{
+          required: 'Select at least one network',
+        }}
+        render={({ field, fieldState }) => {
+          return (
+            <>
+              <Multiselect<number>
+                label="Network"
+                value={field.value}
+                inputClassName="mt-6 w-full"
+                options={allowedChainOptions}
+                helperText={fieldState.error?.message}
+                error={Boolean(fieldState.error?.message)}
+                onChange={(value) => {
+                  onChangeChainId();
+                  field.onChange(value);
+                }}
+              />
+            </>
+          );
+        }}
+      />
 
-                        return isAddress(value)
-                          ? true
-                          : 'This address doesn’t exist.';
-                      } catch {
-                        return 'An unexpected error occurred. Try again.';
-                      }
-                    },
-                  }}
-                  render={({ field, fieldState }) => {
-                    return (
-                      <Form.Field
-                        label="Wallet address"
-                        className="mt-6 w-full"
-                        helperText={fieldState.error?.message}
-                        error={Boolean(fieldState.error?.message)}
-                        {...field}
-                      />
-                    );
-                  }}
-                />
+      <Controller
+        name="tokensSymbols"
+        control={formMethods.control}
+        rules={{
+          required: 'Select at least one token',
+        }}
+        render={({ field, fieldState }) => {
+          return (
+            <Multiselect<string>
+              label="Token"
+              value={field.value}
+              onChange={field.onChange}
+              inputClassName="mt-6 w-full"
+              options={uniqueTokenOptions}
+              helperText={fieldState.error?.message}
+              error={Boolean(fieldState.error?.message)}
+            />
+          );
+        }}
+      />
 
-                <Controller
-                  name="chainsIds"
-                  control={formMethods.control}
-                  rules={{
-                    required: 'Select at least one network',
-                  }}
-                  render={({ field, fieldState }) => {
-                    return (
-                      <>
-                        <Multiselect<number>
-                          label="Network"
-                          value={field.value}
-                          inputClassName="mt-6 w-full"
-                          options={allowedChainOptions}
-                          helperText={fieldState.error?.message}
-                          error={Boolean(fieldState.error?.message)}
-                          onChange={(value) => {
-                            onChangeChainId();
-                            field.onChange(value);
-                          }}
-                        />
-                      </>
-                    );
-                  }}
-                />
+      <Controller
+        name="minimumAlertAmount"
+        control={formMethods.control}
+        render={({ field, fieldState }) => {
+          return (
+            <Form.Field
+              numeric
+              label="Minimum alert amount ($)"
+              className="mt-6 w-full"
+              helperText={fieldState.error?.message}
+              error={Boolean(fieldState.error?.message)}
+              {...field}
+              value={field.value?.toString()}
+            />
+          );
+        }}
+      />
+      <Controller
+        name="minimumTTSAmount"
+        control={formMethods.control}
+        render={({ field, fieldState }) => {
+          return (
+            <Form.Field
+              numeric
+              label="Minimum TTS amount ($)"
+              className="mt-6 w-full"
+              helperText={fieldState.error?.message}
+              error={Boolean(fieldState.error?.message)}
+              {...field}
+              value={field.value?.toString()}
+            />
+          );
+        }}
+      />
 
-                <Controller
-                  name="tokensSymbols"
-                  control={formMethods.control}
-                  rules={{
-                    required: 'Select at least one token',
-                  }}
-                  render={({ field, fieldState }) => {
-                    return (
-                      <Multiselect<string>
-                        label="Token"
-                        value={field.value}
-                        onChange={field.onChange}
-                        inputClassName="mt-6 w-full"
-                        options={uniqueTokenOptions}
-                        helperText={fieldState.error?.message}
-                        error={Boolean(fieldState.error?.message)}
-                      />
-                    );
-                  }}
-                />
+      <Controller
+        name="minimumSfxAmount"
+        control={formMethods.control}
+        render={({ field, fieldState }) => {
+          return (
+            <Form.Field
+              numeric
+              label="Minimum Sfx amount ($)"
+              className="mt-6 w-full"
+              helperText={fieldState.error?.message}
+              error={Boolean(fieldState.error?.message)}
+              {...field}
+              value={field.value?.toString()}
+            />
+          );
+        }}
+      />
 
-                <Controller
-                  name="minimumAlertAmount"
-                  control={formMethods.control}
-                  render={({ field, fieldState }) => {
-                    return (
-                      <Form.Field
-                        numeric
-                        label="Minimum alert amount ($)"
-                        className="mt-6 w-full"
-                        helperText={fieldState.error?.message}
-                        error={Boolean(fieldState.error?.message)}
-                        {...field}
-                        value={field.value?.toString()}
-                      />
-                    );
-                  }}
-                />
-                <Controller
-                  name="minimumTTSAmount"
-                  control={formMethods.control}
-                  render={({ field, fieldState }) => {
-                    return (
-                      <Form.Field
-                        numeric
-                        label="Minimum TTS amount ($)"
-                        className="mt-6 w-full"
-                        helperText={fieldState.error?.message}
-                        error={Boolean(fieldState.error?.message)}
-                        {...field}
-                        value={field.value?.toString()}
-                      />
-                    );
-                  }}
-                />
+      <div className="mt-6 grid grid-cols-2 gap-2 lg:gap-4">
+        <Button
+          size="medium"
+          intent="primary"
+          onClick={() => {
+            return validateAndCopy(copyDonationLink);
+          }}
+          prefixIconName={copiedDonationLink ? 'CheckCircle2' : undefined}
+          className={classes(
+            'w-full',
+            copiedDonationLink &&
+              'bg-mint-600 hover:bg-mint-600 [&>div]:hidden',
+          )}
+        >
+          {copiedDonationLink ? 'COPIED' : 'DONATION LINK'}
+        </Button>
 
-                <Controller
-                  name="minimumSfxAmount"
-                  control={formMethods.control}
-                  render={({ field, fieldState }) => {
-                    return (
-                      <Form.Field
-                        numeric
-                        label="Minimum Sfx amount ($)"
-                        className="mt-6 w-full"
-                        helperText={fieldState.error?.message}
-                        error={Boolean(fieldState.error?.message)}
-                        {...field}
-                        value={field.value?.toString()}
-                      />
-                    );
-                  }}
-                />
+        <Button
+          size="medium"
+          intent="secondary"
+          prefixIconName={copiedObsLink ? 'CheckCircle2' : undefined}
+          onClick={() => {
+            return validateAndCopy(copyObsLink);
+          }}
+          className={classes(
+            'w-full',
+            copiedObsLink && 'border-mint-600 bg-mint-300 hover:bg-mint-300',
+          )}
+        >
+          {copiedObsLink ? 'COPIED' : 'OBS LINK'}
+        </Button>
 
-                <div className="mt-6 grid grid-cols-2 gap-2 lg:gap-4">
-                  <Button
-                    size="medium"
-                    intent="primary"
-                    onClick={() => {
-                      return validateAndCopy(copyDonationLink);
-                    }}
-                    prefixIconName={
-                      copiedDonationLink ? 'CheckCircle2' : undefined
-                    }
-                    className={classes(
-                      'w-full',
-                      copiedDonationLink &&
-                        'bg-mint-600 hover:bg-mint-600 [&>div]:hidden',
-                    )}
-                  >
-                    {copiedDonationLink ? 'COPIED' : 'DONATION LINK'}
-                  </Button>
+        <Button
+          size="medium"
+          intent="primary"
+          className="mt-4 w-full"
+          onClick={formMethods.handleSubmit(onSubmit)}
+        >
+          SAVE
+        </Button>
 
-                  <Button
-                    size="medium"
-                    intent="secondary"
-                    prefixIconName={copiedObsLink ? 'CheckCircle2' : undefined}
-                    onClick={() => {
-                      return validateAndCopy(copyObsLink);
-                    }}
-                    className={classes(
-                      'w-full',
-                      copiedObsLink &&
-                        'border-mint-600 bg-mint-300 hover:bg-mint-300',
-                    )}
-                  >
-                    {copiedObsLink ? 'COPIED' : 'OBS LINK'}
-                  </Button>
-
-                  <Button
-                    size="medium"
-                    intent="primary"
-                    className="mt-4 w-full"
-                    onClick={formMethods.handleSubmit(onSubmit)}
-                  >
-                    SAVE
-                  </Button>
-
-                  {/* TODO: Display modal on save success */}
-                  {saveSuccess && (
-                    <div className="mt-4 flex items-center gap-2">
-                      <span className="text-mint-600">
-                        Changes saved successfully!
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </Form>
+        {/* TODO: Display modal on save success */}
+        {saveSuccess && (
+          <div className="mt-4 flex items-center gap-2">
+            <span className="text-mint-600">Changes saved successfully!</span>
+          </div>
+        )}
+      </div>
+    </Form>
   );
 }

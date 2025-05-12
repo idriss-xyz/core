@@ -1,4 +1,9 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  OneToMany,
+} from 'typeorm';
 import { Hex } from 'viem';
 import { CreatorNetwork } from './creator-network.entity';
 import { CreatorToken } from './creator-token.entity';
@@ -14,7 +19,7 @@ export class Creator {
   @Column({ type: 'text', name: 'primary_address', unique: true })
   primaryAddress!: Hex;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', unique: true })
   name!: string;
 
   @Column({ type: 'text', name: 'profile_picture_url', nullable: true })

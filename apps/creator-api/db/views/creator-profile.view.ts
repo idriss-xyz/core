@@ -18,8 +18,14 @@ import { CreatorNetwork, CreatorToken, DonationParameters } from '../entities';
       .addSelect('dp.minimum_sfx_amount', 'minimumSfxAmount')
       .addSelect('dp.voice_id', 'voiceId')
       .addSelect('dp.voice_muted', 'voiceMuted')
-      .addSelect('COALESCE(ARRAY_REMOVE(ARRAY_AGG(DISTINCT ct.tokenAddress), NULL), ARRAY[]::text[])', 'tokens')
-      .addSelect('COALESCE(ARRAY_REMOVE(ARRAY_AGG(DISTINCT cn.chainId), NULL), ARRAY[]::int[])', 'networks')
+      .addSelect(
+        'COALESCE(ARRAY_REMOVE(ARRAY_AGG(DISTINCT ct.tokenAddress), NULL), ARRAY[]::text[])',
+        'tokens',
+      )
+      .addSelect(
+        'COALESCE(ARRAY_REMOVE(ARRAY_AGG(DISTINCT cn.chainId), NULL), ARRAY[]::int[])',
+        'networks',
+      )
       .from(Creator, 'c')
       .leftJoin(DonationParameters, 'dp', 'dp.creator_id = c.id')
       .leftJoin(CreatorToken, 'ct', 'ct.creator_id = c.id')
@@ -37,7 +43,6 @@ import { CreatorNetwork, CreatorToken, DonationParameters } from '../entities';
       .addGroupBy('dp.voice_id')
       .addGroupBy('dp.voice_muted'),
 })
-
 export class CreatorProfileView {
   @ViewColumn()
   id!: number;

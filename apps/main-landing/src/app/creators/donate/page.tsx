@@ -31,7 +31,7 @@ interface Properties {
   creatorName?: string;
 }
 // ts-unused-exports:disable-next-line
-export default function Donate({creatorName}: Properties) {
+export default function Donate({ creatorName }: Properties) {
   return (
     <RainbowKitProviders>
       <DonateContent creatorName={creatorName} />
@@ -39,7 +39,7 @@ export default function Donate({creatorName}: Properties) {
   );
 }
 
-function DonateContent({creatorName}: Properties) {
+function DonateContent({ creatorName }: Properties) {
   const router = useRouter();
   const { searchParams } = useCreators();
   const creatorInfoSetRef = useRef(false);
@@ -56,40 +56,45 @@ function DonateContent({creatorName}: Properties) {
     if (creatorInfoSetRef.current) return;
 
     if (searchParams.address.data == null && creatorName) {
-      getCreatorProfile(creatorName).then((profile) => {
-        if (profile) {
-          setCreatorInfo({
-            address:
-              {
+      getCreatorProfile(creatorName)
+        .then((profile) => {
+          if (profile) {
+            setCreatorInfo({
+              address: {
                 data: profile.address,
                 isValid: isAddress(profile.address),
                 isFetching: false,
               },
-            name: profile.name,
-          })
-          creatorInfoSetRef.current = true;
-        }
-      }).catch(error => {
-        console.error(error);
-      });
-    }
-    else {
-      if(!searchParams.address.isFetching){
+              name: profile.name,
+            });
+            creatorInfoSetRef.current = true;
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else {
+      if (!searchParams.address.isFetching) {
         setCreatorInfo({
-          address:
-            {
-              data: searchParams.address.data,
-              isValid: searchParams.address.isValid,
-              isFetching: searchParams.address.isFetching
-            },
+          address: {
+            data: searchParams.address.data,
+            isValid: searchParams.address.isValid,
+            isFetching: searchParams.address.isFetching,
+          },
           name: searchParams.creatorName,
           network: searchParams.network,
           token: searchParams.token,
-        })
+        });
         creatorInfoSetRef.current = true;
       }
     }
-  }, [searchParams.address, searchParams.creatorName, searchParams.network, searchParams.token, creatorName]);
+  }, [
+    searchParams.address,
+    searchParams.creatorName,
+    searchParams.network,
+    searchParams.token,
+    creatorName,
+  ]);
 
   const donationsHistory = useGetTipHistory(
     { address: creatorInfo?.address.data ?? EMPTY_HEX },
@@ -192,11 +197,12 @@ function DonateContent({creatorName}: Properties) {
       case 'user-tip': {
         return (
           <div className="grid grid-cols-1 items-start gap-x-10 lg:grid-cols-[1fr,auto]">
-            {creatorInfo &&
+            {creatorInfo && (
               <>
                 <DonateForm
                   className="container mt-8 overflow-hidden lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]"
-                  creatorInfo={creatorInfo}/>
+                  creatorInfo={creatorInfo}
+                />
 
                 <Leaderboard
                   leaderboard={leaderboard}
@@ -208,7 +214,7 @@ function DonateContent({creatorName}: Properties) {
                   className="container mt-8 overflow-hidden px-0 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]"
                 />
               </>
-            }
+            )}
           </div>
         );
       }

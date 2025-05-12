@@ -9,7 +9,5 @@ export default async function CreatorProfile({
   const { name } = await params;
 
   // Pass the name to the client component
-  return (
-    <Donate creatorName={name} />
-  );
+  return <Donate creatorName={name} />;
 }
