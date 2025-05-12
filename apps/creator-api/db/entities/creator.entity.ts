@@ -1,6 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, OneToMany } from 'typeorm';
 import { Hex } from 'viem';
-import { Network } from './network.entity';
+import { CreatorNetwork } from './creator-network.entity';
+import { CreatorToken } from './creator-token.entity';
 
 @Entity('creator')
 export class Creator {
@@ -25,6 +26,9 @@ export class Creator {
   @Column({ type: 'text', name: 'obs_url', nullable: true })
   obsUrl?: string;
 
-  @ManyToMany(() => Network, (network) => network.creators)
-  networks!: Network[];
+  @OneToMany(() => CreatorNetwork, (network) => network.creator)
+  networks!: CreatorNetwork[];
+
+  @OneToMany(() => CreatorToken, (token) => token.creator)
+  tokens!: CreatorToken[];
 }

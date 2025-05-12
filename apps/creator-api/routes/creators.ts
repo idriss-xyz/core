@@ -30,6 +30,7 @@ router.get(
       const creatorRepository = AppDataSource.getRepository(Creator);
       const creator = await creatorRepository.findOne({
         where: { name: req.params.name },
+        relations: ['networks', 'tokens'],
       });
 
       if (!creator) {
