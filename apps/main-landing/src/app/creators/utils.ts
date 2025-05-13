@@ -44,6 +44,8 @@ type CreatorProfile = {
   minimumSfxAmount: number;
   voiceId: number;
   voiceMuted: boolean;
+  networks: number[];
+  tokens: string[];
 };
 
 // TODO: Check location of all following functions

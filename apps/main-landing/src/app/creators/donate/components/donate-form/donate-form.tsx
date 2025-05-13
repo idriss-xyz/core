@@ -29,7 +29,6 @@ import { useAccount, useWalletClient } from 'wagmi';
 
 import { backgroundLines3 } from '@/assets';
 
-import { useCreators } from '../../../hooks/use-creators';
 import {
   FormPayload,
   SendPayload,

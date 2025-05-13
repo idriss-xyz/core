@@ -66,6 +66,8 @@ function DonateContent({ creatorName }: Properties) {
                 isFetching: false,
               },
               name: profile.name,
+              network: profile.networks.join(','),
+              token: profile.tokens.join(','),
             });
             creatorInfoSetRef.current = true;
           }
@@ -103,7 +105,8 @@ function DonateContent({ creatorName }: Properties) {
 
   useEffect(() => {
     if (donationsHistory.data) {
-      // TODO: Debug if this takes works after fixing db /tip-history
+      // TODO: Debug if this works after fixing db /tip-history
+      console.log('setting donations history');
       setDonations(donationsHistory.data.donations);
       setLeaderboard(donationsHistory.data.leaderboard);
     }
