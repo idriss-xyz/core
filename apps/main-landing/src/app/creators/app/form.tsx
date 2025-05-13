@@ -19,7 +19,12 @@ import { Multiselect, MultiselectOption } from '@idriss-xyz/ui/multiselect';
 import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
 
 import { ethereumClient } from '../donate/config';
-import { getCreatorProfile, editCreatorProfile } from '../utils';
+import {
+  getCreatorProfile,
+  editCreatorProfile,
+  getChainIdsFromShortNames,
+  getChainShortNamesFromIds,
+} from '../utils';
 
 type FormPayload = {
   name: string;
@@ -78,9 +83,9 @@ export function CreatorProfileForm() {
       address: '',
       chainsIds: ALL_CHAIN_IDS,
       tokensSymbols: UNIQUE_ALL_TOKEN_SYMBOLS,
-      minimumAlertAmount: 0,
-      minimumTTSAmount: 0,
-      minimumSfxAmount: 0,
+      minimumAlertAmount: 1,
+      minimumTTSAmount: 5,
+      minimumSfxAmount: 10,
     },
     mode: 'onSubmit',
   });
@@ -264,6 +269,11 @@ export function CreatorProfileForm() {
       );
       formMethods.setValue('minimumTTSAmount', creatorProfile.minimumTTSAmount);
       formMethods.setValue('minimumSfxAmount', creatorProfile.minimumSfxAmount);
+      formMethods.setValue('tokensSymbols', creatorProfile.tokens);
+      formMethods.setValue(
+        'chainsIds',
+        getChainIdsFromShortNames(creatorProfile.networks),
+      );
     };
     void fetchCreatorProfile();
   }, [initialName, formMethods]);
@@ -272,12 +282,16 @@ export function CreatorProfileForm() {
     setIsSaving(true);
     setSaveSuccess(false);
 
+    const chainsShortNames = getChainShortNamesFromIds(data.chainsIds);
+
     try {
       await editCreatorProfile(data.name, {
         primaryAddress: data.address as Hex,
         minimumAlertAmount: data.minimumAlertAmount,
         minimumTTSAmount: data.minimumTTSAmount,
         minimumSfxAmount: data.minimumSfxAmount,
+        networks: chainsShortNames,
+        tokens: data.tokensSymbols,
       });
 
       setSaveSuccess(true);

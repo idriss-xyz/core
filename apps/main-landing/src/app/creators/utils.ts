@@ -1,4 +1,5 @@
 import { Hex } from 'viem';
+import { CHAIN } from '@idriss-xyz/constants';
 
 import { CREATOR_API_URL } from './donate/constants';
 
@@ -44,7 +45,7 @@ type CreatorProfile = {
   minimumSfxAmount: number;
   voiceId: number;
   voiceMuted: boolean;
-  networks: number[];
+  networks: string[];
   tokens: string[];
 };
 
@@ -156,4 +157,27 @@ export const saveDonationParameters = async (
   } catch (error) {
     console.error('Error registering donation parameters:', error);
   }
+};
+
+export const getChainShortNamesFromIds = (chainsIds: number[]) => {
+  //eslint-disable-next-line unicorn/no-array-reduce
+  return chainsIds
+    .reduce((previous, chainId) => {
+      return [
+        ...previous,
+        Object.values(CHAIN).find((chain) => {
+          return chain.id === chainId;
+        })?.shortName ?? '',
+      ];
+    }, [] as string[])
+    .filter(Boolean);
+};
+
+export const getChainIdsFromShortNames = (shortNames: string[]) => {
+  return shortNames.map((shortName) => {
+    return (
+      Object.values(CHAIN).find((chain) => {return chain.shortName === shortName})?.id ??
+      0
+    );
+  });
 };
