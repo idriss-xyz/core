@@ -67,6 +67,8 @@ export function CreatorProfileForm() {
   const [saveSuccess, setSaveSuccess] = useState(false);
   const { user } = useDynamicContext();
   const initialName = user?.verifiedCredentials.find((credential) => {
+    // Ignore due to missing direct enum type export from @dynamic-labs/sdk-react-core
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
     return credential.oauthProvider === 'twitch';
   })?.oauthDisplayName;
 
@@ -208,18 +210,6 @@ export function CreatorProfileForm() {
 
   // eslint-disable-next-line unicorn/consistent-function-scoping
   const copyDonationLink = async () => {
-    const chainsShortNames = chainsIds
-      //eslint-disable-next-line unicorn/no-array-reduce
-      .reduce((previous, chainId) => {
-        return [
-          ...previous,
-          Object.values(CHAIN).find((chain) => {
-            return chain.id === chainId;
-          })?.shortName ?? '',
-        ];
-      }, [] as string[])
-      .filter(Boolean);
-
     const donationURL = `https://www.idrissxyz./creators/${creatorName}`;
 
     await navigator.clipboard.writeText(donationURL);
@@ -503,7 +493,10 @@ export function CreatorProfileForm() {
           SAVE
         </Button>
 
-        {/* TODO: Display modal on save success */}
+        {/* TODO: Display modal on save loading and success */}
+        {isSaving && (
+          <div className="mt-4 flex items-center gap-2">Saving...</div>
+        )}
         {saveSuccess && (
           <div className="mt-4 flex items-center gap-2">
             <span className="text-mint-600">Changes saved successfully!</span>

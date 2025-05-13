@@ -37,12 +37,13 @@ import {
 import { getSendFormDefaultValues } from '../../utils';
 import { useSender } from '../../hooks';
 import { CREATOR_API_URL } from '../../constants';
+import { CreatorProfile } from '../../types';
 
 import { ChainSelect, TokenSelect } from './components';
 
 type Properties = {
   className?: string;
-  creatorInfo: any; // TODO: correctly type
+  creatorInfo: CreatorProfile;
 };
 
 const baseClassName =

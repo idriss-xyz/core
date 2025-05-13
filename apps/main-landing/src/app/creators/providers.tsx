@@ -41,6 +41,8 @@ export const Providers = ({ children }: Properties) => {
                 onAuthSuccess: async (arguments_) => {
                   const twitchName = arguments_.user.verifiedCredentials.find(
                     (credential) => {
+                      // Ignore due to missing direct enum type export from @dynamic-labs/sdk-react-core
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
                       return credential.oauthProvider === 'twitch';
                     },
                   )?.oauthUsername;

@@ -13,6 +13,7 @@ import { backgroundLines2 } from '@/assets';
 import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
 import { DonateHistory } from '@/app/creators/donate/components/donate-history';
 import {
+  CreatorProfile,
   DonateContentValues,
   DonationData,
   LeaderboardStats,
@@ -30,6 +31,7 @@ import { CREATOR_API_URL } from './constants';
 interface Properties {
   creatorName?: string;
 }
+
 // ts-unused-exports:disable-next-line
 export default function Donate({ creatorName }: Properties) {
   return (
@@ -42,7 +44,7 @@ export default function Donate({ creatorName }: Properties) {
 function DonateContent({ creatorName }: Properties) {
   const router = useRouter();
   const { searchParams } = useCreators();
-  const creatorInfoSetRef = useRef(false);
+  const creatorInfoSetReference = useRef(false);
   const [socketConnected, setSocketConnected] = useState(false);
   const [socketInitialized, setSocketInitialized] = useState(false);
   const [donations, setDonations] = useState<DonationData[]>([]);
@@ -50,10 +52,10 @@ function DonateContent({ creatorName }: Properties) {
   const [currentContent, setCurrentContent] = useState<DonateContentValues>({
     name: 'user-tip',
   });
-  const [creatorInfo, setCreatorInfo] = useState<any | null>(null); //TODO: correctly type
+  const [creatorInfo, setCreatorInfo] = useState<CreatorProfile | null>(null);
 
   useEffect(() => {
-    if (creatorInfoSetRef.current) return;
+    if (creatorInfoSetReference.current) return;
 
     if (searchParams.address.data == null && creatorName) {
       getCreatorProfile(creatorName)
@@ -69,7 +71,7 @@ function DonateContent({ creatorName }: Properties) {
               network: profile.networks.join(','),
               token: profile.tokens.join(','),
             });
-            creatorInfoSetRef.current = true;
+            creatorInfoSetReference.current = true;
           }
         })
         .catch((error) => {
@@ -87,7 +89,7 @@ function DonateContent({ creatorName }: Properties) {
           network: searchParams.network,
           token: searchParams.token,
         });
-        creatorInfoSetRef.current = true;
+        creatorInfoSetReference.current = true;
       }
     }
   }, [
@@ -114,9 +116,9 @@ function DonateContent({ creatorName }: Properties) {
 
   useEffect(() => {
     if (creatorInfo?.address.isValid) {
-      donationsHistory.refetch(); // refetch to get history after creatorInfo is done setting
+      void donationsHistory.refetch(); // refetch to get history after creatorInfo is done setting
     }
-  }, [creatorInfo]);
+  }, [creatorInfo, donationsHistory.refetch]);
 
   useEffect(() => {
     if (creatorInfo?.address.data && !socketInitialized) {
@@ -244,7 +246,7 @@ function DonateContent({ creatorName }: Properties) {
     leaderboard,
     onDonorClick,
     currentContent,
-    creatorInfo?.address,
+    creatorInfo,
     updateCurrentContent,
     donationsHistory.isError,
     donationsHistory.isLoading,

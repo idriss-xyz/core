@@ -47,3 +47,14 @@ interface DonateContentValue {
 export interface DonateContentValues extends DonateContentValue {
   previous?: DonateContentValue;
 }
+
+export type CreatorProfile = {
+  name: string | null;
+  address: {
+    data: Hex | null;
+    isValid: boolean;
+    isFetching: boolean;
+  };
+  network: string | null;
+  token: string | null;
+};
