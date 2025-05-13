@@ -130,10 +130,10 @@ router.post('/', async (req: Request, res: Response) => {
     creator.address = creatorData.address as Hex;
     creator.primaryAddress =
       (creatorData.primaryAddress as Hex) ?? (creatorData.address as Hex);
-    creator.name = creatorData.name as Hex;
+    creator.name = creatorData.name;
     creator.profilePictureUrl = creatorData.profilePictureUrl;
-    creator.donationUrl = creatorData.donationUrl;
-    creator.obsUrl = creatorData.obsUrl;
+    creator.donationUrl = `https://idriss.xyz/creators/${creatorData.name}`;
+    creator.obsUrl = `https://idriss.xyz/creators/obs?address=${(creatorData.primaryAddress) ?? (creatorData.address)}`;
 
     // Create and save new creator
     const savedCreator = await creatorRepository.save(creator);
