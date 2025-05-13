@@ -133,7 +133,7 @@ router.post('/', async (req: Request, res: Response) => {
     creator.name = creatorData.name;
     creator.profilePictureUrl = creatorData.profilePictureUrl;
     creator.donationUrl = `https://idriss.xyz/creators/${creatorData.name}`;
-    creator.obsUrl = `https://idriss.xyz/creators/obs?address=${(creatorData.primaryAddress) ?? (creatorData.address)}`;
+    creator.obsUrl = `https://idriss.xyz/creators/obs?address=${creatorData.primaryAddress ?? creatorData.address}`;
 
     // Create and save new creator
     const savedCreator = await creatorRepository.save(creator);
@@ -145,18 +145,18 @@ router.post('/', async (req: Request, res: Response) => {
       await donationParamsRepository.save(donationParameters);
 
     // Create token records
-    const tokenEntities = tokens.map((tokenAddress: Hex) => {
+    const tokenEntities = tokens.map((tokenSymbol: string) => {
       const token = new CreatorToken();
-      token.tokenAddress = tokenAddress;
+      token.tokenSymbol = tokenSymbol;
       token.creator = savedCreator;
       return token;
     });
     await tokenRepository.save(tokenEntities);
 
     // Create network records
-    const networkEntities = networks.map((chainId: number) => {
+    const networkEntities = networks.map((chainName: string) => {
       const network = new CreatorNetwork();
-      network.chainId = chainId;
+      network.chainName = chainName;
       network.creator = savedCreator;
       return network;
     });
@@ -263,19 +263,19 @@ router.patch(
 
       // Remove tokens that are no longer in the params
       for (const existingToken of existingTokens) {
-        if (!tokens.includes(existingToken.tokenAddress)) {
+        if (!tokens.includes(existingToken.tokenSymbol)) {
           await tokenRepository.remove(existingToken);
         }
       }
 
       // Add new tokens
-      for (const tokenAddress of tokens) {
+      for (const tokenSymbol of tokens) {
         const existingToken = existingTokens.find(
-          (t) => t.tokenAddress === tokenAddress,
+          (t) => t.tokenSymbol === tokenSymbol,
         );
         if (!existingToken) {
           const newToken = new CreatorToken();
-          newToken.tokenAddress = tokenAddress;
+          newToken.tokenSymbol = tokenSymbol;
           newToken.creator = creator;
           await tokenRepository.save(newToken);
         }
@@ -288,19 +288,19 @@ router.patch(
 
       // Remove networks that are no longer in the params
       for (const existingNetwork of existingNetworks) {
-        if (!networks.includes(existingNetwork.chainId)) {
+        if (!networks.includes(existingNetwork.chainName)) {
           await networkRepository.remove(existingNetwork);
         }
       }
 
       // Add new networks
-      for (const chainId of networks) {
+      for (const chainName of networks) {
         const existingNetwork = existingNetworks.find(
-          (n) => n.chainId === chainId,
+          (n) => n.chainName === chainName,
         );
         if (!existingNetwork) {
           const newNetwork = new CreatorNetwork();
-          newNetwork.chainId = chainId;
+          newNetwork.chainName = chainName;
           newNetwork.creator = creator;
           await networkRepository.save(newNetwork);
         }

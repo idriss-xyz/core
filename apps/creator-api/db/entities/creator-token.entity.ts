@@ -13,7 +13,7 @@ export class CreatorToken {
   id!: number;
 
   @Column()
-  tokenAddress!: string;
+  tokenSymbol!: string;
 
   @ManyToOne(() => Creator, (creator) => creator.tokens)
   @JoinColumn({ name: 'creator_id' })

@@ -13,7 +13,7 @@ export class CreatorNetwork {
   id!: number;
 
   @Column()
-  chainId!: number;
+  chainName!: string;
 
   @ManyToOne(() => Creator, (creator) => creator.networks)
   @JoinColumn({ name: 'creator_id' })

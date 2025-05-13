@@ -19,11 +19,11 @@ import { CreatorNetwork, CreatorToken, DonationParameters } from '../entities';
       .addSelect('dp.voice_id', 'voiceId')
       .addSelect('dp.voice_muted', 'voiceMuted')
       .addSelect(
-        'COALESCE(ARRAY_REMOVE(ARRAY_AGG(DISTINCT ct.tokenAddress), NULL), ARRAY[]::text[])',
+        'COALESCE(ARRAY_REMOVE(ARRAY_AGG(DISTINCT ct.tokenSymbol), NULL), ARRAY[]::text[])',
         'tokens',
       )
       .addSelect(
-        'COALESCE(ARRAY_REMOVE(ARRAY_AGG(DISTINCT cn.chainId), NULL), ARRAY[]::int[])',
+        'COALESCE(ARRAY_REMOVE(ARRAY_AGG(DISTINCT cn.chainName), NULL), ARRAY[]::text[])',
         'networks',
       )
       .from(Creator, 'c')
@@ -84,5 +84,5 @@ export class CreatorProfileView {
   tokens!: string[];
 
   @ViewColumn()
-  networks!: number[];
+  networks!: string[];
 }
