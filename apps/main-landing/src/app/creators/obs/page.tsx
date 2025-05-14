@@ -1,11 +1,12 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   type AbiEvent,
   decodeFunctionData,
   type Hex,
+  isAddress,
   parseAbiItem,
 } from 'viem';
 import { getEnsAvatar } from 'viem/actions';
@@ -33,6 +34,8 @@ import {
   TIP_MESSAGE_EVENT_ABI,
 } from './utils';
 import { containsBadWords } from './utils/bad-words';
+import { getCreatorProfile } from '../utils';
+import { Address } from '../donate/types';
 
 const FETCH_INTERVAL = 5000;
 const BLOCK_LOOKBACK_RANGE = 5n;
@@ -40,11 +43,18 @@ const DONATION_DISPLAY_DURATION = 11_000;
 
 const latestCheckedBlocks = new Map();
 
+interface Properties {
+  creatorName?: string;
+}
+
 // ts-unused-exports:disable-next-line
-export default function Obs() {
+export default function Obs({ creatorName }: Properties) {
   const {
-    searchParams: { address },
+    searchParams: { address: addressParam },
   } = useCreators();
+  const addressSetReference = useRef(false);
+  const [address, setAddress] = useState<Address | null>(null);
+
   const router = useRouter();
   const [isDisplayingDonation, setIsDisplayingDonation] = useState(false);
   const [donationsQueue, setDonationsQueue] = useState<
@@ -52,12 +62,31 @@ export default function Obs() {
   >([]);
 
   useEffect(() => {
-    if (!address.isFetching && !address.isValid) {
-      router.push(CREATORS_LINK);
+    if (addressSetReference.current) return;
 
+    if (!addressParam.isFetching && addressParam.data == null && creatorName) {
+      getCreatorProfile(creatorName)
+        .then((profile) => {
+          if (profile) {
+            setAddress({
+              data: profile.primaryAddress,
+              isValid: isAddress(profile.primaryAddress),
+              isFetching: false,
+            });
+            addressSetReference.current = true;
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else if (!addressParam.isFetching && addressParam.data) {
+      setAddress(addressParam);
+      addressSetReference.current = true;
+    } else if (!addressParam.isFetching && !addressParam.data && !creatorName) {
+      router.push(CREATORS_LINK);
       return;
     }
-  }, [router, address.isValid, address.isFetching]);
+  }, [router, addressParam, creatorName]);
 
   const displayNextDonation = useCallback(() => {
     setIsDisplayingDonation(true);
@@ -89,7 +118,7 @@ export default function Obs() {
   );
 
   const fetchTipMessageLogs = useCallback(async () => {
-    if (!address.data) return;
+    if (!address?.data) return;
 
     for (const { chain, client, name } of clients) {
       try {
@@ -148,7 +177,7 @@ export default function Obs() {
             continue;
           }
 
-          if (recipient.toLowerCase() !== address.data.toLowerCase()) continue;
+          if (recipient.toLowerCase() !== address?.data.toLowerCase()) continue;
 
           // Check if the message contains any bad words, if so skip this donation
           if (message && containsBadWords(message)) {
@@ -177,7 +206,7 @@ export default function Obs() {
 
           const tokenDetails = CHAIN_ID_TO_TOKENS[chain]?.find((token) => {
             return (
-              token.address.toLowerCase() ===
+              token.address?.toLowerCase() ===
               (tokenAddress as Hex).toLowerCase()
             );
           });
@@ -198,17 +227,17 @@ export default function Obs() {
         console.error('Error fetching tip message log:', error);
       }
     }
-  }, [address.data, addDonation]);
+  }, [address, address?.data, addDonation]);
 
   useEffect(() => {
-    if (!address.isValid) return;
+    if (!address?.isValid) return;
 
     const intervalId = setInterval(fetchTipMessageLogs, FETCH_INTERVAL);
 
     return () => {
       return clearInterval(intervalId);
     };
-  }, [fetchTipMessageLogs, address.isValid]);
+  }, [fetchTipMessageLogs, address, address?.isValid]);
 
   useEffect(() => {
     if (!isDisplayingDonation && donationsQueue.length > 0) {

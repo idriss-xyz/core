@@ -48,13 +48,15 @@ export interface DonateContentValues extends DonateContentValue {
   previous?: DonateContentValue;
 }
 
+export type Address = {
+  data: Hex | null;
+  isValid: boolean;
+  isFetching: boolean;
+};
+
 export type CreatorProfile = {
   name: string | null;
-  address: {
-    data: Hex | null;
-    isValid: boolean;
-    isFetching: boolean;
-  };
+  address: Address;
   network: string | null;
   token: string | null;
 };
