@@ -59,4 +59,12 @@ export type CreatorProfile = {
   address: Address;
   network: string | null;
   token: string | null;
+  profilePictureUrl?: string;
+  donationUrl?: string;
+  obsUrl?: string;
+  minimumAlertAmount: number;
+  minimumTTSAmount: number;
+  minimumSfxAmount: number;
+  voiceId?: number;
+  voiceMuted?: boolean;
 };

@@ -70,6 +70,14 @@ function DonateContent({ creatorName }: Properties) {
               name: profile.name,
               network: profile.networks.join(','),
               token: profile.tokens.join(','),
+              profilePictureUrl: profile.profilePictureUrl,
+              donationUrl: profile.donationUrl,
+              obsUrl: profile.obsUrl,
+              minimumAlertAmount: profile.minimumAlertAmount,
+              minimumTTSAmount: profile.minimumTTSAmount,
+              minimumSfxAmount: profile.minimumSfxAmount,
+              voiceId: profile.voiceId,
+              voiceMuted: profile.voiceMuted,
             });
             creatorInfoSetReference.current = true;
           }
@@ -88,6 +96,9 @@ function DonateContent({ creatorName }: Properties) {
           name: searchParams.creatorName,
           network: searchParams.network,
           token: searchParams.token,
+          minimumAlertAmount: 1,
+          minimumTTSAmount: 5,
+          minimumSfxAmount: 10,
         });
         creatorInfoSetReference.current = true;
       }

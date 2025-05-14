@@ -60,6 +60,7 @@ export const DonateForm = ({ className, creatorInfo }: Properties) => {
   const { data: walletClient } = useWalletClient();
   const { connectModalOpen, openConnectModal } = useConnectModal();
   const [selectedTokenSymbol, setSelectedTokenSymbol] = useState<string>('ETH');
+  const minimumSfxAmount = creatorInfo.minimumSfxAmount ?? DONATION_MIN_SFX_AMOUNT;
 
   const possibleTokens: Token[] = useMemo(() => {
     const tokensSymbols = (creatorInfo.token ?? '').toLowerCase().split(',');
@@ -146,7 +147,7 @@ export const DonateForm = ({ className, creatorInfo }: Properties) => {
 
   // Reset SFX when amount falls below the minimum
   useEffect(() => {
-    if (amount < DONATION_MIN_SFX_AMOUNT && sfx) {
+    if (amount < minimumSfxAmount && sfx) {
       formMethods.setValue('sfx', '');
     }
   }, [amount, sfx, formMethods]);
@@ -424,10 +425,10 @@ export const DonateForm = ({ className, creatorInfo }: Properties) => {
                     <div className="flex items-center gap-2">
                       <label>Message</label>
                       <Badge type="info" variant="subtle">
-                        Alert $1+
+                        Alert ${creatorInfo.minimumAlertAmount}+
                       </Badge>
                       <Badge type="info" variant="subtle">
-                        TTS $5+
+                        TTS ${creatorInfo.minimumTTSAmount}+
                       </Badge>
                     </div>
                   }
@@ -468,8 +469,8 @@ export const DonateForm = ({ className, creatorInfo }: Properties) => {
                 className="mt-4"
                 helperText={fieldState.error?.message}
                 error={Boolean(fieldState.error?.message)}
-                placeholder="🔒 Unlock at $10"
-                disabled={amount < DONATION_MIN_SFX_AMOUNT}
+                placeholder={`🔒 Unlock at $${minimumSfxAmount}`}
+                disabled={amount < minimumSfxAmount}
               />
             );
           }}
