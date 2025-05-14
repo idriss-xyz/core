@@ -118,7 +118,7 @@ function DonateContent({ creatorName }: Properties) {
     if (creatorInfo?.address.isValid) {
       void donationsHistory.refetch(); // refetch to get history after creatorInfo is done setting
     }
-  }, [creatorInfo, donationsHistory.refetch]);
+  }, [creatorInfo, donationsHistory]);
 
   useEffect(() => {
     if (creatorInfo?.address.data && !socketInitialized) {

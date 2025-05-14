@@ -24,6 +24,8 @@ import {
 } from '../donate/constants';
 import { ethereumClient } from '../donate/config';
 import { useCreators } from '../hooks/use-creators';
+import { getCreatorProfile } from '../utils';
+import { Address } from '../donate/types';
 
 import DonationNotification, {
   type DonationNotificationProperties,
@@ -34,8 +36,6 @@ import {
   TIP_MESSAGE_EVENT_ABI,
 } from './utils';
 import { containsBadWords } from './utils/bad-words';
-import { getCreatorProfile } from '../utils';
-import { Address } from '../donate/types';
 
 const FETCH_INTERVAL = 5000;
 const BLOCK_LOOKBACK_RANGE = 5n;
@@ -50,7 +50,7 @@ interface Properties {
 // ts-unused-exports:disable-next-line
 export default function Obs({ creatorName }: Properties) {
   const {
-    searchParams: { address: addressParam },
+    searchParams: { address: addressParameter },
   } = useCreators();
   const addressSetReference = useRef(false);
   const [address, setAddress] = useState<Address | null>(null);
@@ -64,7 +64,11 @@ export default function Obs({ creatorName }: Properties) {
   useEffect(() => {
     if (addressSetReference.current) return;
 
-    if (!addressParam.isFetching && addressParam.data == null && creatorName) {
+    if (
+      !addressParameter.isFetching &&
+      addressParameter.data == null &&
+      creatorName
+    ) {
       getCreatorProfile(creatorName)
         .then((profile) => {
           if (profile) {
@@ -79,14 +83,18 @@ export default function Obs({ creatorName }: Properties) {
         .catch((error) => {
           console.error(error);
         });
-    } else if (!addressParam.isFetching && addressParam.data) {
-      setAddress(addressParam);
+    } else if (!addressParameter.isFetching && addressParameter.data) {
+      setAddress(addressParameter);
       addressSetReference.current = true;
-    } else if (!addressParam.isFetching && !addressParam.data && !creatorName) {
+    } else if (
+      !addressParameter.isFetching &&
+      !addressParameter.data &&
+      !creatorName
+    ) {
       router.push(CREATORS_LINK);
       return;
     }
-  }, [router, addressParam, creatorName]);
+  }, [router, addressParameter, creatorName]);
 
   const displayNextDonation = useCallback(() => {
     setIsDisplayingDonation(true);
@@ -227,7 +235,7 @@ export default function Obs({ creatorName }: Properties) {
         console.error('Error fetching tip message log:', error);
       }
     }
-  }, [address, address?.data, addDonation]);
+  }, [address, addDonation]);
 
   useEffect(() => {
     if (!address?.isValid) return;
