@@ -6,11 +6,12 @@ const MIN_SEND_AMOUNT = 0.001;
 const _createSendPayloadSchema = (allowedChainIds: number[]) => {
   return z.object({
     tokenAddress: hexSchema,
-    message: z.string().max(90),
+    message: z.string().max(90, 'Max 90 characters allowed.'),
     chainId: z.union(createPossibleChainIdsSchema(allowedChainIds)),
     amount: z
       .number()
       .gte(MIN_SEND_AMOUNT, `Value must be at least $${MIN_SEND_AMOUNT}`),
+    sfx: z.string().max(30, 'Max 30 characters allowed.'),
   });
 };
 
@@ -19,11 +20,12 @@ export type SendPayload = z.infer<ReturnType<typeof _createSendPayloadSchema>>;
 export const createFormPayloadSchema = (allowedChainIds: number[]) => {
   return z.object({
     tokenSymbol: z.string(),
-    message: z.string().max(90),
+    message: z.string().max(90, 'Max 90 characters allowed.'),
     chainId: z.union(createPossibleChainIdsSchema(allowedChainIds)),
     amount: z
       .number()
       .gte(MIN_SEND_AMOUNT, `Value must be at least $${MIN_SEND_AMOUNT}`),
+    sfx: z.string().max(30, 'Max 30 characters allowed.'),
   });
 };
 

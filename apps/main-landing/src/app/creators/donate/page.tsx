@@ -205,7 +205,7 @@ function DonateContent({ creatorName }: Properties) {
             {creatorInfo && (
               <>
                 <DonateForm
-                  className="container mt-8 overflow-hidden lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]"
+                  className="container mt-8 overflow-hidden lg:mt-[90px] lg:[@media(max-height:800px)]:mt-[40px]"
                   creatorInfo={creatorInfo}
                 />
 
@@ -216,7 +216,7 @@ function DonateContent({ creatorName }: Properties) {
                   updateCurrentContent={updateCurrentContent}
                   leaderboardError={donationsHistory.isError}
                   leaderboardLoading={donationsHistory.isLoading}
-                  className="container mt-8 overflow-hidden px-0 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]"
+                  className="container mt-8 overflow-hidden px-0 lg:mt-[90px] lg:[@media(max-height:800px)]:mt-[40px]"
                 />
               </>
             )}
@@ -226,14 +226,16 @@ function DonateContent({ creatorName }: Properties) {
 
       case 'user-history': {
         return (
-          <DonateHistory
-            donations={donations}
-            address={creatorInfo?.address}
-            currentContent={currentContent}
-            donationsError={donationsHistory.isError}
-            updateCurrentContent={updateCurrentContent}
-            donationsLoading={donationsHistory.isLoading}
-          />
+          creatorInfo && (
+            <DonateHistory
+              donations={donations}
+              address={creatorInfo?.address}
+              currentContent={currentContent}
+              donationsError={donationsHistory.isError}
+              updateCurrentContent={updateCurrentContent}
+              donationsLoading={donationsHistory.isLoading}
+            />
+          )
         );
       }
 

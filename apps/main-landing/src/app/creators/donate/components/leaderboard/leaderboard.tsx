@@ -14,6 +14,8 @@ import {
   LeaderboardItemPlaceholder,
 } from './leaderboard-item';
 
+const MAX_DISPLAYED_ITEMS = 6;
+
 type Properties = {
   className?: string;
   address: {
@@ -130,7 +132,7 @@ export const Leaderboard = ({
                     <LeaderboardItem
                       donorRank={index}
                       className="py-4.5"
-                      isLastItem={index === 4}
+                      isLastItem={index === MAX_DISPLAYED_ITEMS - 1}
                       onDonorClick={onDonorClick}
                       donorDetails={{
                         address: item.address,
@@ -144,10 +146,10 @@ export const Leaderboard = ({
                   );
                 })}
 
-                {leaderboard.length <= 5 && (
+                {leaderboard.length <= MAX_DISPLAYED_ITEMS && (
                   <LeaderboardItemPlaceholder
                     hideBottomBorder
-                    amountToDisplay={5}
+                    amountToDisplay={MAX_DISPLAYED_ITEMS}
                     donorRank={leaderboard.length}
                     previousDonateAmount={
                       leaderboard.at(-1)?.totalAmount ?? 1234
@@ -197,7 +199,7 @@ export const Leaderboard = ({
             {!isTwitchExtension && (
               <>
                 {leaderboard.map((item, index) => {
-                  if (index > 5) return null;
+                  if (index > MAX_DISPLAYED_ITEMS) return null;
 
                   return (
                     <LeaderboardItem
@@ -214,9 +216,9 @@ export const Leaderboard = ({
                   );
                 })}
 
-                {leaderboard.length <= 6 && (
+                {leaderboard.length <= MAX_DISPLAYED_ITEMS + 1 && (
                   <LeaderboardItemPlaceholder
-                    amountToDisplay={6}
+                    amountToDisplay={MAX_DISPLAYED_ITEMS + 1}
                     donorRank={leaderboard.length}
                     previousDonateAmount={
                       leaderboard.at(-1)?.totalAmount ?? 1234
@@ -230,7 +232,7 @@ export const Leaderboard = ({
       </div>
 
       {updateCurrentContent && (
-        <div className="flex min-h-[74px] w-full items-center justify-center">
+        <div className="flex min-h-[68px] w-full items-center justify-center">
           <Link
             size="xs"
             onClick={() => {
@@ -323,10 +325,10 @@ export const LeaderboardStandalone = ({
                 );
               })}
 
-              {leaderboard.length <= 5 && (
+              {leaderboard.length <= MAX_DISPLAYED_ITEMS && (
                 <LeaderboardItemPlaceholder
                   itemHeight={79}
-                  amountToDisplay={5}
+                  amountToDisplay={MAX_DISPLAYED_ITEMS}
                   donorRank={leaderboard.length}
                   previousDonateAmount={leaderboard.at(-1)?.totalAmount ?? 1234}
                 />
