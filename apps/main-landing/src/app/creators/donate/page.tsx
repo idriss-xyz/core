@@ -1,7 +1,11 @@
 'use client';
 /* eslint-disable @next/next/no-img-element */
 import { Button } from '@idriss-xyz/ui/button';
-import { CREATORS_LINK, EMPTY_HEX } from '@idriss-xyz/constants';
+import { CREATORS_LINK, EMPTY_HEX ,
+  DONATION_MIN_ALERT_AMOUNT,
+  DONATION_MIN_SFX_AMOUNT,
+  DONATION_MIN_TTS_AMOUNT,
+} from '@idriss-xyz/constants';
 import '@rainbow-me/rainbowkit/styles.css';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { default as io } from 'socket.io-client';
@@ -54,6 +58,7 @@ function DonateContent({ creatorName }: Properties) {
   });
   const [creatorInfo, setCreatorInfo] = useState<CreatorProfile | null>(null);
 
+  // TODO: clean code
   useEffect(() => {
     if (creatorInfoSetReference.current) return;
 
@@ -87,20 +92,44 @@ function DonateContent({ creatorName }: Properties) {
         });
     } else {
       if (!searchParams.address.isFetching) {
-        setCreatorInfo({
-          address: {
-            data: searchParams.address.data,
-            isValid: searchParams.address.isValid,
-            isFetching: searchParams.address.isFetching,
-          },
-          name: searchParams.creatorName,
-          network: searchParams.network,
-          token: searchParams.token,
-          minimumAlertAmount: 1,
-          minimumTTSAmount: 5,
-          minimumSfxAmount: 10,
-        });
-        creatorInfoSetReference.current = true;
+        getCreatorProfile(null, searchParams.address.data).then((profile) => {
+          if (profile) {
+            setCreatorInfo({
+              address: {
+                data: searchParams.address.data,
+                isValid: searchParams.address.isValid,
+                isFetching: searchParams.address.isFetching,
+              },
+              name: searchParams.creatorName,
+              network: profile.networks
+                ? profile.networks.join(',')
+                : searchParams.network,
+              token: profile.tokens
+                ? profile.tokens.join(',')
+                : searchParams.token,
+              minimumAlertAmount: profile.minimumAlertAmount,
+              minimumTTSAmount: profile.minimumTTSAmount,
+              minimumSfxAmount: profile.minimumSfxAmount,
+            });
+          } else {
+            setCreatorInfo({
+              address: {
+                data: searchParams.address.data,
+                isValid: searchParams.address.isValid,
+                isFetching: searchParams.address.isFetching,
+              },
+              name: searchParams.creatorName,
+              network: searchParams.network,
+              token: searchParams.token,
+              minimumAlertAmount: DONATION_MIN_ALERT_AMOUNT,
+              minimumTTSAmount: DONATION_MIN_TTS_AMOUNT,
+              minimumSfxAmount: DONATION_MIN_SFX_AMOUNT,
+            });
+          }
+          creatorInfoSetReference.current = true;
+        }).catch((error) => {
+          console.error(error);
+        });;
       }
     }
   }, [

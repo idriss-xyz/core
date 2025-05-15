@@ -49,16 +49,20 @@ type CreatorProfile = {
   tokens: string[];
 };
 
-// TODO: Check location of all following functions
 export const getCreatorProfile = async (
   name?: string | null,
+  address?: Hex | null,
 ): Promise<CreatorProfile | undefined> => {
-  if (!name) {
-    console.error('No name to get creator');
+  if (!name && !address) {
+    console.error('No name or address to get creator');
     return;
   }
 
-  const response = await fetch(`${CREATOR_API_URL}/creator-profile/${name}`);
+  const lookPath = address ? `address/${address}` : `${name}`;
+
+  const response = await fetch(
+    `${CREATOR_API_URL}/creator-profile/${lookPath}`,
+  );
   if (!response.ok) {
     return;
   }

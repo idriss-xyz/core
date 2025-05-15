@@ -18,6 +18,7 @@ import {
   CHAIN_ID_TO_TOKENS,
   CREATORS_USER_GUIDE_LINK,
   DEFAULT_ALLOWED_CHAINS_IDS,
+  DONATION_MIN_SFX_AMOUNT,
 } from '@idriss-xyz/constants';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -42,7 +43,7 @@ import {
 } from '../../schema';
 import { getSendFormDefaultValues } from '../../utils';
 import { useSender } from '../../hooks';
-import { CREATOR_API_URL, DONATION_MIN_SFX_AMOUNT } from '../../constants';
+import { CREATOR_API_URL } from '../../constants';
 import { CreatorProfile } from '../../types';
 
 import { ChainSelect, TokenSelect } from './components';
@@ -60,7 +61,8 @@ export const DonateForm = ({ className, creatorInfo }: Properties) => {
   const { data: walletClient } = useWalletClient();
   const { connectModalOpen, openConnectModal } = useConnectModal();
   const [selectedTokenSymbol, setSelectedTokenSymbol] = useState<string>('ETH');
-  const minimumSfxAmount = creatorInfo.minimumSfxAmount ?? DONATION_MIN_SFX_AMOUNT;
+  const minimumSfxAmount =
+    creatorInfo.minimumSfxAmount ?? DONATION_MIN_SFX_AMOUNT;
 
   const possibleTokens: Token[] = useMemo(() => {
     const tokensSymbols = (creatorInfo.token ?? '').toLowerCase().split(',');
@@ -150,7 +152,7 @@ export const DonateForm = ({ className, creatorInfo }: Properties) => {
     if (amount < minimumSfxAmount && sfx) {
       formMethods.setValue('sfx', '');
     }
-  }, [amount, sfx, formMethods]);
+  }, [amount, sfx, formMethods, minimumSfxAmount]);
 
   const selectedToken = useMemo(() => {
     const token = possibleTokens?.find((token) => {

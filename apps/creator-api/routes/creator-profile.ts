@@ -10,6 +10,11 @@ import {
 } from '../db/entities';
 import { Hex } from 'viem';
 
+// TODO: import from @idriss-xyz/constants
+const DONATION_MIN_ALERT_AMOUNT = 1;
+const DONATION_MIN_TTS_AMOUNT = 5;
+const DONATION_MIN_SFX_AMOUNT = 10;
+
 const router = Router();
 
 // Get creator profile by name
@@ -103,9 +108,9 @@ router.get(
 router.post('/', async (req: Request, res: Response) => {
   try {
     const {
-      minimumAlertAmount = 1,
-      minimumTTSAmount = 5,
-      minimumSfxAmount = 10,
+      minimumAlertAmount = DONATION_MIN_ALERT_AMOUNT,
+      minimumTTSAmount = DONATION_MIN_TTS_AMOUNT,
+      minimumSfxAmount = DONATION_MIN_SFX_AMOUNT,
       voiceId,
       voiceMuted,
       tokens = [],
