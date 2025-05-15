@@ -1,11 +1,12 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   type AbiEvent,
   decodeFunctionData,
   type Hex,
+  isAddress,
   parseAbiItem,
 } from 'viem';
 import { getEnsAvatar } from 'viem/actions';
@@ -13,6 +14,9 @@ import { normalize } from 'viem/ens';
 import {
   CHAIN_ID_TO_TOKENS,
   CREATORS_LINK,
+  DONATION_MIN_ALERT_AMOUNT,
+  DONATION_MIN_SFX_AMOUNT,
+  DONATION_MIN_TTS_AMOUNT,
   NATIVE_COIN_ADDRESS,
 } from '@idriss-xyz/constants';
 import { clients } from '@idriss-xyz/blockchain-clients';
@@ -23,6 +27,8 @@ import {
 } from '../donate/constants';
 import { ethereumClient } from '../donate/config';
 import { useCreators } from '../hooks/use-creators';
+import { getCreatorProfile } from '../utils';
+import { Address } from '../donate/types';
 
 import DonationNotification, {
   type DonationNotificationProperties,
@@ -41,11 +47,29 @@ const DONATION_DISPLAY_DURATION = 11_000;
 
 const latestCheckedBlocks = new Map();
 
+interface Properties {
+  creatorName?: string;
+}
+
+export type MinimumAmounts = {
+  minimumAlertAmount: number;
+  minimumSfxAmount: number;
+  minimumTTSAmount: number;
+};
+
 // ts-unused-exports:disable-next-line
-export default function Obs() {
+export default function Obs({ creatorName }: Properties) {
   const {
-    searchParams: { address },
+    searchParams: { address: addressParameter },
   } = useCreators();
+  const addressSetReference = useRef(false);
+  const [address, setAddress] = useState<Address | null>(null);
+  const [minimumAmounts, setMinimumAmounts] = useState<MinimumAmounts>({
+    minimumAlertAmount: DONATION_MIN_ALERT_AMOUNT,
+    minimumSfxAmount: DONATION_MIN_SFX_AMOUNT,
+    minimumTTSAmount: DONATION_MIN_TTS_AMOUNT,
+  });
+
   const router = useRouter();
   const [isDisplayingDonation, setIsDisplayingDonation] = useState(false);
   const [donationsQueue, setDonationsQueue] = useState<
@@ -53,12 +77,44 @@ export default function Obs() {
   >([]);
 
   useEffect(() => {
-    if (!address.isFetching && !address.isValid) {
-      router.push(CREATORS_LINK);
+    if (addressSetReference.current) return;
 
+    if (
+      !addressParameter.isFetching &&
+      addressParameter.data == null &&
+      creatorName
+    ) {
+      getCreatorProfile(creatorName)
+        .then((profile) => {
+          if (profile) {
+            setAddress({
+              data: profile.primaryAddress,
+              isValid: isAddress(profile.primaryAddress),
+              isFetching: false,
+            });
+            addressSetReference.current = true;
+            setMinimumAmounts({
+              minimumAlertAmount: profile.minimumAlertAmount,
+              minimumTTSAmount: profile.minimumTTSAmount,
+              minimumSfxAmount: profile.minimumSfxAmount,
+            });
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else if (!addressParameter.isFetching && addressParameter.data) {
+      setAddress(addressParameter);
+      addressSetReference.current = true;
+    } else if (
+      !addressParameter.isFetching &&
+      !addressParameter.data &&
+      !creatorName
+    ) {
+      router.push(CREATORS_LINK);
       return;
     }
-  }, [router, address.isValid, address.isFetching]);
+  }, [router, addressParameter, creatorName]);
 
   const displayNextDonation = useCallback(() => {
     setIsDisplayingDonation(true);
@@ -90,7 +146,7 @@ export default function Obs() {
   );
 
   const fetchTipMessageLogs = useCallback(async () => {
-    if (!address.data) return;
+    if (!address?.data) return;
 
     for (const { chain, client, name } of clients) {
       try {
@@ -149,7 +205,7 @@ export default function Obs() {
             continue;
           }
 
-          if (recipient.toLowerCase() !== address.data.toLowerCase()) continue;
+          if (recipient.toLowerCase() !== address?.data.toLowerCase()) continue;
 
           // Check if the message contains any bad words, if so skip this donation
           if (message && containsBadWords(message)) {
@@ -178,7 +234,7 @@ export default function Obs() {
 
           const tokenDetails = CHAIN_ID_TO_TOKENS[chain]?.find((token) => {
             return (
-              token.address.toLowerCase() ===
+              token.address?.toLowerCase() ===
               (tokenAddress as Hex).toLowerCase()
             );
           });
@@ -201,23 +257,24 @@ export default function Obs() {
               amount: tokenAmount,
               details: tokenDetails,
             },
+            minimumAmounts,
           });
         }
       } catch (error) {
         console.error('Error fetching tip message log:', error);
       }
     }
-  }, [address.data, addDonation]);
+  }, [address, addDonation]);
 
   useEffect(() => {
-    if (!address.isValid) return;
+    if (!address?.isValid) return;
 
     const intervalId = setInterval(fetchTipMessageLogs, FETCH_INTERVAL);
 
     return () => {
       return clearInterval(intervalId);
     };
-  }, [fetchTipMessageLogs, address.isValid]);
+  }, [fetchTipMessageLogs, address, address?.isValid]);
 
   useEffect(() => {
     if (!isDisplayingDonation && donationsQueue.length > 0) {
@@ -233,6 +290,7 @@ export default function Obs() {
       {shouldDisplayDonation && (
         <DonationNotification
           {...currentDonation}
+          minimumAmounts={minimumAmounts}
           key={currentDonation.txnHash}
         />
       )}

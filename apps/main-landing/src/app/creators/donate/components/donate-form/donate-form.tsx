@@ -18,6 +18,7 @@ import {
   CHAIN_ID_TO_TOKENS,
   CREATORS_USER_GUIDE_LINK,
   DEFAULT_ALLOWED_CHAINS_IDS,
+  DONATION_MIN_SFX_AMOUNT,
 } from '@idriss-xyz/constants';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -35,7 +36,6 @@ import {
 
 import { backgroundLines3 } from '@/assets';
 
-import { useCreators } from '../../../hooks/use-creators';
 import {
   FormPayload,
   SendPayload,
@@ -43,26 +43,29 @@ import {
 } from '../../schema';
 import { getSendFormDefaultValues } from '../../utils';
 import { useSender } from '../../hooks';
-import { CREATOR_API_URL, DONATION_MIN_SFX_AMOUNT } from '../../constants';
+import { CREATOR_API_URL } from '../../constants';
+import { CreatorProfile } from '../../types';
 
 import { ChainSelect, TokenSelect } from './components';
 
 type Properties = {
   className?: string;
+  creatorInfo: CreatorProfile;
 };
 
 const baseClassName =
   'z-1 w-[440px] max-w-full rounded-xl bg-white px-4 pb-9 pt-6 flex flex-col items-center relative';
 
-export const DonateForm = ({ className }: Properties) => {
-  const { searchParams } = useCreators();
+export const DonateForm = ({ className, creatorInfo }: Properties) => {
   const { isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
   const { connectModalOpen, openConnectModal } = useConnectModal();
   const [selectedTokenSymbol, setSelectedTokenSymbol] = useState<string>('ETH');
+  const minimumSfxAmount =
+    creatorInfo.minimumSfxAmount ?? DONATION_MIN_SFX_AMOUNT;
 
   const possibleTokens: Token[] = useMemo(() => {
-    const tokensSymbols = (searchParams.token ?? '').toLowerCase().split(',');
+    const tokensSymbols = (creatorInfo.token ?? '').toLowerCase().split(',');
     const allPossibleTokens = Object.values(TOKEN);
     const tokens = allPossibleTokens.filter((token) => {
       return tokensSymbols.includes(token.symbol.toLowerCase());
@@ -74,11 +77,11 @@ export const DonateForm = ({ className }: Properties) => {
     }
 
     return tokens;
-  }, [searchParams.token]);
+  }, [creatorInfo.token]);
 
   const allowedChainsIds = useMemo(() => {
     const networksShortNames =
-      searchParams.network?.toLowerCase().split(',') ??
+      creatorInfo.network?.toLowerCase().split(',') ??
       Object.values(CHAIN).map((chain) => {
         return chain.shortName.toLowerCase();
       });
@@ -103,7 +106,7 @@ export const DonateForm = ({ className }: Properties) => {
     return chains.map((chain) => {
       return chain.id;
     });
-  }, [searchParams.network, selectedTokenSymbol]);
+  }, [creatorInfo.network, selectedTokenSymbol]);
 
   const defaultChainId = allowedChainsIds[0] ?? 0;
 
@@ -146,10 +149,10 @@ export const DonateForm = ({ className }: Properties) => {
 
   // Reset SFX when amount falls below the minimum
   useEffect(() => {
-    if (amount < DONATION_MIN_SFX_AMOUNT && sfx) {
+    if (amount < minimumSfxAmount && sfx) {
       formMethods.setValue('sfx', '');
     }
-  }, [amount, sfx, formMethods]);
+  }, [amount, sfx, formMethods, minimumSfxAmount]);
 
   const selectedToken = useMemo(() => {
     const token = possibleTokens?.find((token) => {
@@ -185,8 +188,8 @@ export const DonateForm = ({ className }: Properties) => {
     async (payload) => {
       if (
         !walletClient ||
-        !searchParams.address.data ||
-        !searchParams.address.isValid
+        !creatorInfo.address.data ||
+        !creatorInfo.address.isValid
       ) {
         return;
       }
@@ -209,7 +212,7 @@ export const DonateForm = ({ className }: Properties) => {
       try {
         await sender.send({
           sendPayload,
-          recipientAddress: searchParams.address.data,
+          recipientAddress: creatorInfo.address.data,
         });
       } catch (error) {
         console.error('Unknown error sending transaction.', error);
@@ -218,21 +221,21 @@ export const DonateForm = ({ className }: Properties) => {
     [
       sender,
       walletClient,
-      searchParams.address.data,
-      searchParams.address.isValid,
+      creatorInfo.address.data,
+      creatorInfo.address.isValid,
     ],
   );
 
   const sendDonation = useCallback(async () => {
-    if (!searchParams.address.data || !searchParams.address.isValid) {
+    if (!creatorInfo.address.data || !creatorInfo.address.isValid) {
       return;
     }
     await fetch(`${CREATOR_API_URL}/push-donation`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ address: searchParams.address.data }),
+      body: JSON.stringify({ address: creatorInfo.address.data }),
     });
-  }, [searchParams.address.data, searchParams.address.isValid]);
+  }, [creatorInfo.address.data, creatorInfo.address.isValid]);
 
   const sendDonationEffects = useCallback(async () => {
     if (!sfx || !sender.data?.transactionHash) {
@@ -257,7 +260,7 @@ export const DonateForm = ({ className }: Properties) => {
     }
   }, [sender.isSuccess, sender.data, sendDonation, sendDonationEffects]);
 
-  if (!searchParams.address.isValid && !searchParams.address.isFetching) {
+  if (!creatorInfo.address.isValid && !creatorInfo.address.isFetching) {
     return (
       <div className={classes(baseClassName, className)}>
         <h1 className="flex items-center justify-center gap-2 text-center text-heading4 text-red-500">
@@ -341,8 +344,8 @@ export const DonateForm = ({ className }: Properties) => {
       />
 
       <h1 className="self-start text-heading4">
-        {searchParams.creatorName
-          ? `Donate to ${searchParams.creatorName}`
+        {creatorInfo.name
+          ? `Donate to ${creatorInfo.name}`
           : 'Select your donation details'}
       </h1>
 
@@ -424,10 +427,10 @@ export const DonateForm = ({ className }: Properties) => {
                     <div className="flex items-center gap-2">
                       <label>Message</label>
                       <Badge type="info" variant="subtle">
-                        Alert $1+
+                        Alert ${creatorInfo.minimumAlertAmount}+
                       </Badge>
                       <Badge type="info" variant="subtle">
-                        TTS $5+
+                        TTS ${creatorInfo.minimumTTSAmount}+
                       </Badge>
                     </div>
                   }
@@ -468,8 +471,8 @@ export const DonateForm = ({ className }: Properties) => {
                 className="mt-4"
                 helperText={fieldState.error?.message}
                 error={Boolean(fieldState.error?.message)}
-                placeholder="🔒 Unlock at $10"
-                disabled={amount < DONATION_MIN_SFX_AMOUNT}
+                placeholder={`🔒 Unlock at $${minimumSfxAmount}`}
+                disabled={amount < minimumSfxAmount}
               />
             );
           }}

@@ -1,18 +1,25 @@
 'use client';
 /* eslint-disable @next/next/no-img-element */
 import { Button } from '@idriss-xyz/ui/button';
-import { CREATORS_LINK, EMPTY_HEX } from '@idriss-xyz/constants';
+import {
+  CREATORS_LINK,
+  EMPTY_HEX,
+  DONATION_MIN_ALERT_AMOUNT,
+  DONATION_MIN_SFX_AMOUNT,
+  DONATION_MIN_TTS_AMOUNT,
+} from '@idriss-xyz/constants';
 import '@rainbow-me/rainbowkit/styles.css';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { default as io } from 'socket.io-client';
 import _ from 'lodash';
-import { Hex } from 'viem';
+import { Hex, isAddress } from 'viem';
 import { useRouter } from 'next/navigation';
 
 import { backgroundLines2 } from '@/assets';
 import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
 import { DonateHistory } from '@/app/creators/donate/components/donate-history';
 import {
+  CreatorProfile,
   DonateContentValues,
   DonationData,
   LeaderboardStats,
@@ -20,24 +27,30 @@ import {
 
 import { useCreators } from '../hooks/use-creators';
 import { TopBar } from '../components/top-bar';
+import { getCreatorProfile } from '../utils';
 
 import { Leaderboard } from './components/leaderboard';
 import { DonateForm } from './components/donate-form';
 import { RainbowKitProviders } from './providers';
 import { CREATOR_API_URL } from './constants';
 
+interface Properties {
+  creatorName?: string;
+}
+
 // ts-unused-exports:disable-next-line
-export default function Donate() {
+export default function Donate({ creatorName }: Properties) {
   return (
     <RainbowKitProviders>
-      <DonateContent />
+      <DonateContent creatorName={creatorName} />
     </RainbowKitProviders>
   );
 }
 
-function DonateContent() {
+function DonateContent({ creatorName }: Properties) {
   const router = useRouter();
   const { searchParams } = useCreators();
+  const creatorInfoSetReference = useRef(false);
   const [socketConnected, setSocketConnected] = useState(false);
   const [socketInitialized, setSocketInitialized] = useState(false);
   const [donations, setDonations] = useState<DonationData[]>([]);
@@ -45,10 +58,69 @@ function DonateContent() {
   const [currentContent, setCurrentContent] = useState<DonateContentValues>({
     name: 'user-tip',
   });
+  const [creatorInfo, setCreatorInfo] = useState<CreatorProfile | null>(null);
+
+  // TODO: clean code
+  useEffect(() => {
+    if (creatorInfoSetReference.current) return;
+
+    if (searchParams.address.data == null && creatorName) {
+      getCreatorProfile(creatorName)
+        .then((profile) => {
+          if (profile) {
+            setCreatorInfo({
+              address: {
+                data: profile.address,
+                isValid: isAddress(profile.address),
+                isFetching: false,
+              },
+              name: profile.name,
+              network: profile.networks.join(','),
+              token: profile.tokens.join(','),
+              profilePictureUrl: profile.profilePictureUrl,
+              donationUrl: profile.donationUrl,
+              obsUrl: profile.obsUrl,
+              minimumAlertAmount: profile.minimumAlertAmount,
+              minimumTTSAmount: profile.minimumTTSAmount,
+              minimumSfxAmount: profile.minimumSfxAmount,
+              voiceId: profile.voiceId,
+              voiceMuted: profile.voiceMuted,
+            });
+            creatorInfoSetReference.current = true;
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else {
+      if (!searchParams.address.isFetching) {
+        setCreatorInfo({
+          address: {
+            data: searchParams.address.data,
+            isValid: searchParams.address.isValid,
+            isFetching: searchParams.address.isFetching,
+          },
+          name: searchParams.creatorName,
+          network: searchParams.network,
+          token: searchParams.token,
+          minimumAlertAmount: DONATION_MIN_ALERT_AMOUNT,
+          minimumTTSAmount: DONATION_MIN_TTS_AMOUNT,
+          minimumSfxAmount: DONATION_MIN_SFX_AMOUNT,
+        });
+        creatorInfoSetReference.current = true;
+      }
+    }
+  }, [
+    searchParams.address,
+    searchParams.creatorName,
+    searchParams.network,
+    searchParams.token,
+    creatorName,
+  ]);
 
   const donationsHistory = useGetTipHistory(
-    { address: searchParams.address.data ?? EMPTY_HEX },
-    { enabled: searchParams.address.isValid },
+    { address: creatorInfo?.address.data ?? EMPTY_HEX },
+    { enabled: creatorInfo?.address.isValid },
   );
 
   useEffect(() => {
@@ -59,13 +131,19 @@ function DonateContent() {
   }, [donationsHistory.data]);
 
   useEffect(() => {
-    if (searchParams.address.data && !socketInitialized) {
+    if (creatorInfo?.address.isValid) {
+      void donationsHistory.refetch(); // refetch to get history after creatorInfo is done setting
+    }
+  }, [creatorInfo, donationsHistory]);
+
+  useEffect(() => {
+    if (creatorInfo?.address.data && !socketInitialized) {
       const socket = io(CREATOR_API_URL);
       setSocketInitialized(true);
 
       if (socket && !socketConnected) {
         socket.on('connect', () => {
-          socket.emit('register', searchParams.address.data);
+          socket.emit('register', creatorInfo?.address.data);
 
           if (socket.connected) {
             setSocketConnected(true);
@@ -120,7 +198,7 @@ function DonateContent() {
     }
 
     return;
-  }, [socketConnected, socketInitialized, searchParams.address.data]);
+  }, [socketConnected, socketInitialized, creatorInfo?.address.data]);
 
   const updateCurrentContent = useCallback((content: DonateContentValues) => {
     setCurrentContent((previous) => {
@@ -140,31 +218,40 @@ function DonateContent() {
       case 'user-tip': {
         return (
           <div className="grid grid-cols-1 items-start gap-x-10 lg:grid-cols-[1fr,auto]">
-            <DonateForm className="container mt-8 overflow-hidden lg:mt-[90px] lg:[@media(max-height:800px)]:mt-[40px]" />
+            {creatorInfo && (
+              <>
+                <DonateForm
+                  className="container mt-8 overflow-hidden lg:mt-[90px] lg:[@media(max-height:800px)]:mt-[40px]"
+                  creatorInfo={creatorInfo}
+                />
 
-            <Leaderboard
-              leaderboard={leaderboard}
-              onDonorClick={onDonorClick}
-              address={searchParams.address}
-              updateCurrentContent={updateCurrentContent}
-              leaderboardError={donationsHistory.isError}
-              leaderboardLoading={donationsHistory.isLoading}
-              className="container mt-8 overflow-hidden px-0 lg:mt-[90px] lg:[@media(max-height:800px)]:mt-[40px]"
-            />
+                <Leaderboard
+                  leaderboard={leaderboard}
+                  onDonorClick={onDonorClick}
+                  address={creatorInfo.address}
+                  updateCurrentContent={updateCurrentContent}
+                  leaderboardError={donationsHistory.isError}
+                  leaderboardLoading={donationsHistory.isLoading}
+                  className="container mt-8 overflow-hidden px-0 lg:mt-[90px] lg:[@media(max-height:800px)]:mt-[40px]"
+                />
+              </>
+            )}
           </div>
         );
       }
 
       case 'user-history': {
         return (
-          <DonateHistory
-            donations={donations}
-            address={searchParams.address}
-            currentContent={currentContent}
-            donationsError={donationsHistory.isError}
-            updateCurrentContent={updateCurrentContent}
-            donationsLoading={donationsHistory.isLoading}
-          />
+          creatorInfo && (
+            <DonateHistory
+              donations={donations}
+              address={creatorInfo?.address}
+              currentContent={currentContent}
+              donationsError={donationsHistory.isError}
+              updateCurrentContent={updateCurrentContent}
+              donationsLoading={donationsHistory.isLoading}
+            />
+          )
         );
       }
 
@@ -177,7 +264,7 @@ function DonateContent() {
     leaderboard,
     onDonorClick,
     currentContent,
-    searchParams.address,
+    creatorInfo,
     updateCurrentContent,
     donationsHistory.isError,
     donationsHistory.isLoading,
