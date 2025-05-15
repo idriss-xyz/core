@@ -1,13 +1,12 @@
 import Donate from '../donate/page';
 
+// ts-unused-exports:disable-next-line
 export default async function CreatorProfile({
   params,
 }: {
   params: Promise<{ name: string }>;
 }) {
-  // You can use async/await here for server-side data fetching
   const { name } = await params;
 
-  // Pass the name to the client component
   return <Donate creatorName={name} />;
 }

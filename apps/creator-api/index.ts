@@ -18,6 +18,7 @@ import refetchENSRouter from './routes/force-refresh-ens';
 import textToSpeechRouter from './routes/text-to-speech';
 import creatorsRouter from './routes/creators';
 import creatorProfileRouter from './routes/creator-profile';
+import donationParametersRouter from './routes/donation-parameters';
 import textToSfxRouter from './routes/text-to-sfx';
 import donationEffectsRouter from './routes/donation-effects';
 import cors from 'cors';
@@ -48,6 +49,7 @@ app.use('/force-refresh-ens', refetchENSRouter);
 app.use('/text-to-speech', textToSpeechRouter);
 app.use('/creators', creatorsRouter);
 app.use('/creator-profile', creatorProfileRouter);
+app.use('/donation-parameters', donationParametersRouter);
 app.use('/donation-effects', donationEffectsRouter);
 app.use('/text-to-sfx', textToSfxRouter);
 

@@ -37,4 +37,4 @@ router.post('/', validationRules, async (req: Request, res: Response) => {
   }
 });
 
-export { router as donationParametersRouter };
+export default router;
