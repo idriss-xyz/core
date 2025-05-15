@@ -41,6 +41,11 @@ const clientRonin = createPublicClient({
   transport: http(),
 });
 
+const clientCelo = createPublicClient({
+  chain: CHAIN.CELO,
+  transport: http(),
+});
+
 export const clients = [
   {
     chain: CHAIN.BASE.id,

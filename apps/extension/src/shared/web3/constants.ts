@@ -20,7 +20,7 @@ import {
   SOLANA_LOGO,
   // PIXELS_LOGO,
   NATIVE_COIN_ADDRESS,
-  CHAIN as SHARED_CHAIN,
+  CHAIN as SHARED_CHAIN, //TODO: fix
   TOKEN as SHARED_TOKEN,
   Chain,
   Token,

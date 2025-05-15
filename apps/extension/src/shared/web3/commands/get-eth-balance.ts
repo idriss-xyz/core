@@ -26,6 +26,7 @@ export class GetEthBalanceCommand extends Command<Payload, Response> {
   async handle() {
     try {
       const clientDetails = clients.find((client) => {
+        console.log(client.chain, this.payload.chainId);
         return client.chain === this.payload.chainId;
       });
 
