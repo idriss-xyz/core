@@ -14,6 +14,9 @@ import { normalize } from 'viem/ens';
 import {
   CHAIN_ID_TO_TOKENS,
   CREATORS_LINK,
+  DONATION_MIN_ALERT_AMOUNT,
+  DONATION_MIN_SFX_AMOUNT,
+  DONATION_MIN_TTS_AMOUNT,
   NATIVE_COIN_ADDRESS,
 } from '@idriss-xyz/constants';
 import { clients } from '@idriss-xyz/blockchain-clients';
@@ -48,6 +51,12 @@ interface Properties {
   creatorName?: string;
 }
 
+export type MinimumAmounts = {
+  minimumAlertAmount: number;
+  minimumSfxAmount: number;
+  minimumTTSAmount: number;
+};
+
 // ts-unused-exports:disable-next-line
 export default function Obs({ creatorName }: Properties) {
   const {
@@ -55,6 +64,11 @@ export default function Obs({ creatorName }: Properties) {
   } = useCreators();
   const addressSetReference = useRef(false);
   const [address, setAddress] = useState<Address | null>(null);
+  const [minimumAmounts, setMinimumAmounts] = useState<MinimumAmounts>({
+    minimumAlertAmount: DONATION_MIN_ALERT_AMOUNT,
+    minimumSfxAmount: DONATION_MIN_SFX_AMOUNT,
+    minimumTTSAmount: DONATION_MIN_TTS_AMOUNT,
+  });
 
   const router = useRouter();
   const [isDisplayingDonation, setIsDisplayingDonation] = useState(false);
@@ -79,6 +93,11 @@ export default function Obs({ creatorName }: Properties) {
               isFetching: false,
             });
             addressSetReference.current = true;
+            setMinimumAmounts({
+              minimumAlertAmount: profile.minimumAlertAmount,
+              minimumTTSAmount: profile.minimumTTSAmount,
+              minimumSfxAmount: profile.minimumSfxAmount,
+            });
           }
         })
         .catch((error) => {
@@ -238,6 +257,7 @@ export default function Obs({ creatorName }: Properties) {
               amount: tokenAmount,
               details: tokenDetails,
             },
+            minimumAmounts,
           });
         }
       } catch (error) {
@@ -270,6 +290,7 @@ export default function Obs({ creatorName }: Properties) {
       {shouldDisplayDonation && (
         <DonationNotification
           {...currentDonation}
+          minimumAmounts={minimumAmounts}
           key={currentDonation.txnHash}
         />
       )}

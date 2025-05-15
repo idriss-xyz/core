@@ -1,10 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 
 import { getTextToSfx, getTextToSpeech } from '../utils';
+import { MinimumAmounts } from '../page';
 
-const DONATION_TTS_MIN_AMOUNT = 4.75; // $5 minus 5% margin for price drops
-const DONATION_SFX_MIN_AMOUNT = 9.5; // $10 minus 5% margin for price drops
-const DONATION_ALERT_MIN_AMOUNT = 0.95; // $1 minus 5% margin for price drops
+const PRICE_DROP_RANGE = 0.05;
 const DONATION_TTS_DELAY = 2000;
 
 const toAudioElement = async (stream: Response): Promise<HTMLAudioElement> => {
@@ -17,27 +16,40 @@ const toAudioElement = async (stream: Response): Promise<HTMLAudioElement> => {
   return new Audio(audioUrl);
 };
 
+const priceDropCalculatedAmount = (amount: number) => {
+  return amount - amount * PRICE_DROP_RANGE;
+};
+
 export const useDonationNotification = (
   audio: HTMLAudioElement,
   amount: string,
+  minimumAmounts: MinimumAmounts,
   message: string,
   duration: number,
   sfxText?: string,
 ) => {
   const [showNotification, setShowNotification] = useState(false);
   const hasRunReference = useRef(false);
+  const { minimumAlertAmount, minimumTTSAmount, minimumSfxAmount } =
+    minimumAmounts;
 
   useEffect(() => {
     if (!amount || hasRunReference.current) return;
 
     hasRunReference.current = true;
-    if (Number.parseFloat(amount) > DONATION_ALERT_MIN_AMOUNT) {
+    if (
+      Number.parseFloat(amount) > priceDropCalculatedAmount(minimumAlertAmount)
+    ) {
       const playAudio = async () => {
         try {
           let alertAudio = null;
           let speechAudio = null;
 
-          if (sfxText && Number.parseFloat(amount) > DONATION_SFX_MIN_AMOUNT) {
+          if (
+            sfxText &&
+            Number.parseFloat(amount) >
+              priceDropCalculatedAmount(minimumSfxAmount)
+          ) {
             const sfxStream = await getTextToSfx(sfxText);
             if (!sfxStream)
               throw new Error('SFX audio stream from api is null');
@@ -47,7 +59,10 @@ export const useDonationNotification = (
             alertAudio = audio;
           }
 
-          if (Number.parseFloat(amount) > DONATION_TTS_MIN_AMOUNT) {
+          if (
+            Number.parseFloat(amount) >
+            priceDropCalculatedAmount(minimumTTSAmount)
+          ) {
             const ttsStream = await getTextToSpeech(message);
             if (!ttsStream)
               throw new Error('TTS audio stream from api is null');
