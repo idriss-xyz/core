@@ -1,4 +1,15 @@
-import { base, mainnet, mantle, optimism, polygon } from 'viem/chains';
+import {
+  arbitrum,
+  base,
+  linea,
+  mainnet,
+  mantle,
+  optimism,
+  polygon,
+  zksync,
+  scroll,
+  celo,
+} from 'viem/chains';
 
 import {
   AAVEGOTCHI_LOGO,
@@ -19,6 +30,12 @@ import {
   PDT_LOGO,
   RONIN_LOGO,
   AXIE_LOGO,
+  ARBITRUM_LOGO,
+  LINEA_LOGO,
+  ZYNK_SYNC_ERA_LOGO,
+  SCROLL_LOGO,
+  CELO_LOGO,
+  BNB_LOGO,
 } from './logos';
 import { Chain, Token, ChainToken } from './types';
 
@@ -142,6 +159,49 @@ export const CREATOR_CHAIN = {
     logo: POLYGON_LOGO,
   },
 } satisfies Record<string, Chain>;
+
+export const CHAIN = Object.assign(CREATOR_CHAIN, {
+  ARBITRUM_ONE: {
+    ...arbitrum,
+    shortName: 'Arbitrum',
+    logo: ARBITRUM_LOGO,
+  },
+  LINEA: {
+    ...linea,
+    shortName: 'Linea',
+    logo: LINEA_LOGO,
+  },
+  ZK_SYNC_ERA: {
+    ...zksync,
+    shortName: 'ZkSync',
+    logo: ZYNK_SYNC_ERA_LOGO,
+  },
+  SCROLL: {
+    ...scroll,
+    shortName: 'Scroll',
+    logo: SCROLL_LOGO,
+  },
+  CELO: {
+    ...celo,
+    shortName: 'Celo',
+    logo: CELO_LOGO,
+  },
+  BNB_CHAIN: {
+    id: 56,
+    name: 'BNB Chain',
+    shortName: 'BNB',
+    logo: BNB_LOGO,
+    nativeCurrency: {
+      name: 'BNB',
+      symbol: 'BNB',
+      decimals: 18,
+    },
+    rpcUrls: { default: { http: ['https://bsc-dataseed.binance.org'] } },
+    blockExplorers: {
+      default: { name: 'BS Scan', url: 'https://bscscan.com' },
+    },
+  },
+}) satisfies Record<string, Chain>;
 
 export const TOKEN = {
   ETHEREUM: {
