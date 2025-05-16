@@ -45,7 +45,11 @@ export const useDonationNotification = (
   const sfxAudioElementReference = useRef<HTMLAudioElement | null>(null);
   const ttsAudioElementReference = useRef<HTMLAudioElement | null>(null);
 
+  const didRunReference = useRef(false);
+
   useEffect(() => {
+    if (didRunReference.current) return;
+    didRunReference.current = true;
     // --- Start of Effect Cleanup (from previous run or on unmount) ---
     notificationVisibleStartTimeReference.current = null; // Reset on new effect run
 
