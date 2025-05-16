@@ -37,7 +37,7 @@ import { containsBadWords } from './utils/bad-words';
 
 const FETCH_INTERVAL = 5000;
 const BLOCK_LOOKBACK_RANGE = 5n;
-const DONATION_MIN_OVERALL_VISIBLE_DURATION = 11_000; // Renamed for clarity
+const DONATION_MIN_OVERALL_VISIBLE_DURATION = 11_000;
 
 const latestCheckedBlocks = new Map();
 

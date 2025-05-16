@@ -442,7 +442,7 @@ const BAD_WORDS = new Set<string>([
   'zoophilia',
 ]);
 
-export function normalizeForComparison(text: string): string {
+function normalizeForComparison(text: string): string {
   return text
     .toLowerCase()
     .replaceAll(/[4@]/g, 'a')
@@ -461,14 +461,14 @@ export function containsBadWords(message: string): boolean {
   if (!message) return false;
   const normalized = normalizeForComparison(message);
 
-  // 1) check multi-word phrases
+  // Check multi-word phrases
   for (const bad of BAD_WORDS) {
     if (bad.includes(' ') && normalized.includes(bad)) {
       return true;
     }
   }
 
-  // 2) then check single words
+  // Check single words
   const tokens = normalized.split(/\s+/);
   return tokens.some((token) => {
     return BAD_WORDS.has(token);

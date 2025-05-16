@@ -11,7 +11,7 @@ import { IDRISS_ICON_CIRCLE, NOTIFICATION_SOUND } from '@/assets';
 
 import { useDonationNotification } from '../hooks/use-donation-notification';
 
-const NOTIFICATION_DISPLAY_DURATION = 10_000; // This is post-audio display duration
+const NOTIFICATION_DISPLAY_DURATION = 10_000;
 
 export type DonationNotificationProperties = {
   donor: string;
@@ -28,8 +28,8 @@ export type DonationNotificationProperties = {
     amount: bigint;
     details?: ChainToken;
   };
-  minOverallVisibleDuration: number; // New prop: Minimum total time the notification should be visible
-  onFullyComplete?: () => void; // New prop: Callback when the notification lifecycle is complete
+  minOverallVisibleDuration: number; // Minimum total time the notification should be visible
+  onFullyComplete?: () => void; // Callback when the notification lifecycle is complete
 };
 
 export default function DonationNotification({
@@ -55,7 +55,7 @@ export default function DonationNotification({
     audio,
     amount,
     message,
-    NOTIFICATION_DISPLAY_DURATION, // This is the postAudioDisplayDuration
+    NOTIFICATION_DISPLAY_DURATION,
     sfxText,
     minOverallVisibleDuration, // Pass new prop
     onFullyComplete, // Pass new prop

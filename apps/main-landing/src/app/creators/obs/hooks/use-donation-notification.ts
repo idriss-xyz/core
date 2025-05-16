@@ -29,7 +29,7 @@ const toAudioElement = async (stream: Response): Promise<HTMLAudioElement> => {
 };
 
 export const useDonationNotification = (
-  audio: HTMLAudioElement, // This is the default notification sound element
+  audio: HTMLAudioElement,
   amount: string,
   message: string,
   postAudioDisplayDuration: number, // How long the notification stays visible AFTER all audio finishes
