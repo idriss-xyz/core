@@ -114,16 +114,15 @@ export const useSender = ({ walletClient }: Properties) => {
       }
 
       if (isNativeTokenAddress(sendPayload.tokenAddress)) {
-        const { transactionHash } = await nativeTransaction.mutateAsync({
+        nativeTransaction.mutate({
           walletClient,
           tokensToSend,
           recipientAddress,
           message: sendPayload.message,
           chainId: sendPayload.chainId,
         });
-        return transactionHash;
       } else {
-        const { transactionHash } = await erc20Transaction.mutateAsync({
+        erc20Transaction.mutate({
           walletClient,
           tokensToSend,
           recipientAddress,
@@ -131,7 +130,6 @@ export const useSender = ({ walletClient }: Properties) => {
           chainId: sendPayload.chainId,
           tokenAddress: sendPayload.tokenAddress,
         });
-        return transactionHash;
       }
     },
     [
@@ -181,22 +179,8 @@ export const useSender = ({ walletClient }: Properties) => {
     setHaveEnoughBalance(true);
   }, []);
 
-  const waitForReceipt = useCallback(
-    async (hash: Hex) => {
-      if (!walletClient) return;
-      const chainId = await walletClient.getChainId();
-      const clientDetails = clients.find((c) => {
-        return c.chain === chainId;
-      });
-      if (!clientDetails) return;
-      return await clientDetails.client.waitForTransactionReceipt({ hash });
-    },
-    [walletClient],
-  );
-
   return {
     send,
-    waitForReceipt,
     data,
     reset,
     isIdle,
