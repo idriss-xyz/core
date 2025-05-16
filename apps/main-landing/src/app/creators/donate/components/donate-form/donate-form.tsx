@@ -235,7 +235,13 @@ export const DonateForm = ({ className }: Properties) => {
         console.error('Unknown error sending transaction.', error);
       }
     },
-    [sender, sfx, searchParams.address.data, searchParams.address.isValid, walletClient],
+    [
+      sender,
+      sfx,
+      searchParams.address.data,
+      searchParams.address.isValid,
+      walletClient,
+    ],
   );
 
   if (!searchParams.address.isValid && !searchParams.address.isFetching) {
