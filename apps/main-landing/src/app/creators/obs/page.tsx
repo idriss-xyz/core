@@ -63,7 +63,9 @@ export default function Obs() {
   }, [router, address.isValid, address.isFetching]);
 
   const handleDonationFullyComplete = useCallback(() => {
-    setDonationsQueue((previous) => {return previous.slice(1)});
+    setDonationsQueue((previous) => {
+      return previous.slice(1);
+    });
     setIsDisplayingDonation(false);
   }, []);
 
@@ -76,10 +78,9 @@ export default function Obs() {
   const addDonation = useCallback((donation: QueuedDonation) => {
     setDonationsQueue((previous) => {
       if (
-        previous.some(
-          (existingDonation) =>
-            {return existingDonation.txnHash === donation.txnHash},
-        )
+        previous.some((existingDonation) => {
+          return existingDonation.txnHash === donation.txnHash;
+        })
       ) {
         return previous;
       }
