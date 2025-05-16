@@ -457,11 +457,15 @@ function normalizeForComparison(text: string): string {
 export function containsBadWords(message: string): boolean {
   if (!message) return false;
 
-  const words = message.split(/(\s+)/).filter(word => (word.length > 0 && word !== ' '));
+  const words = message.split(/(\s+)/).filter((word) => {
+    return word.length > 0 && word !== ' ';
+  });
   console.log('words', words);
 
   const is = BAD_WORDS.some((badWord) => {
-    return words.some((word) => normalizeForComparison(word) === badWord);
+    return words.some((word) => {
+      return normalizeForComparison(word) === badWord;
+    });
   });
 
   return is;
