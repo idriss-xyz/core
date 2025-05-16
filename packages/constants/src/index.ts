@@ -29,8 +29,9 @@ export { StakingABI } from './abis';
 
 export {
   STAKER_ADDRESS,
-  CHAIN,
   CHAIN_ID_TO_TOKENS,
+  CREATOR_CHAIN,
+  CHAIN,
   TOKEN,
   NATIVE_COIN_ADDRESS,
   DEFAULT_ALLOWED_CHAINS_IDS,

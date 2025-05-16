@@ -1,5 +1,5 @@
 import { ReactNode, useMemo } from 'react';
-import { CHAIN, Chain } from '@idriss-xyz/constants';
+import { CREATOR_CHAIN, Chain } from '@idriss-xyz/constants';
 
 import { Select, Option } from './select';
 
@@ -55,13 +55,13 @@ const getOptions = (
   renderSuffix?: (chainId: number) => ReactNode,
 ) => {
   if (!allowedChainsIds) {
-    return Object.values(CHAIN).map((chain) => {
+    return Object.values(CREATOR_CHAIN).map((chain) => {
       return optionsFrom(chain, renderSuffix);
     });
   }
 
   return allowedChainsIds.map((chainId) => {
-    const foundChain = Object.values(CHAIN).find((chain) => {
+    const foundChain = Object.values(CREATOR_CHAIN).find((chain) => {
       return chain.id === chainId;
     });
 

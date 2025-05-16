@@ -10,7 +10,7 @@ import {
   TooltipTrigger,
   TooltipProvider,
 } from '@idriss-xyz/ui/tooltip';
-import { CHAIN } from '@idriss-xyz/constants';
+import { CREATOR_CHAIN } from '@idriss-xyz/constants';
 import {
   getShortWalletHex,
   getTransactionUrls,
@@ -60,7 +60,9 @@ export const DonateHistoryItem = ({ donation, showReceiver }: Properties) => {
 
   const transactionUrls = getTransactionUrls({
     chainId:
-      CHAIN[removeMainnetSuffix(donation.network) as keyof typeof CHAIN].id,
+      CREATOR_CHAIN[
+        removeMainnetSuffix(donation.network) as keyof typeof CREATOR_CHAIN
+      ].id,
     transactionHash: donation.transactionHash,
   });
 

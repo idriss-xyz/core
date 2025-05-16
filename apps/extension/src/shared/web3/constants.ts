@@ -1,21 +1,15 @@
-import { arbitrum, linea, scroll, zksync, celo } from 'viem/chains';
 import {
-  ARBITRUM_LOGO,
   BANKLESS_DAO_LOGO,
-  BNB_LOGO,
   BNB_TOKEN_LOGO,
   CULT_DAO_LOGO,
   DOGECOIN_LOGO,
   HIGHER_LOGO,
-  LINEA_LOGO,
   MANTLE_LOGO,
   MOXIE_LOGO,
   OPTIMISM_LOGO,
   POLYGON_LOGO,
   RVLT_LOGO,
-  SCROLL_LOGO,
   WETH_LOGO,
-  ZYNK_SYNC_ERA_LOGO,
   ALEPH_LOGO,
   SOLANA_LOGO,
   // PIXELS_LOGO,
@@ -34,46 +28,6 @@ export const NATIVE_SOL_ADDRESS = '11111111111111111111111111111111';
 
 // TODO: IMPORTANT CHECK SHORTNAMES
 export const CHAIN = Object.assign(SHARED_CHAIN, {
-  ARBITRUM_ONE: {
-    ...arbitrum,
-    shortName: 'Arbitrum',
-    logo: ARBITRUM_LOGO,
-  },
-  LINEA: {
-    ...linea,
-    shortName: 'Linea',
-    logo: LINEA_LOGO,
-  },
-  ZK_SYNC_ERA: {
-    ...zksync,
-    shortName: 'ZkSync',
-    logo: ZYNK_SYNC_ERA_LOGO,
-  },
-  SCROLL: {
-    ...scroll,
-    shortName: 'Scroll',
-    logo: SCROLL_LOGO,
-  },
-  CELO: {
-    ...celo,
-    shortName: 'Celo',
-    logo: CELO_LOGO,
-  },
-  BNB_CHAIN: {
-    id: 56,
-    name: 'BNB Chain',
-    shortName: 'BNB',
-    logo: BNB_LOGO,
-    nativeCurrency: {
-      name: 'BNB',
-      symbol: 'BNB',
-      decimals: 18,
-    },
-    rpcUrls: { default: { http: ['https://bsc-dataseed.binance.org'] } },
-    blockExplorers: {
-      default: { name: 'BS Scan', url: 'https://bscscan.com' },
-    },
-  },
   // The following chain object is what Li.Fi uses to get quotes for Solana trades.
   // Not to be used on other parts of the app as it's not a real EVM chain.
   SOLANA: {
