@@ -207,55 +207,36 @@ export const DonateForm = ({ className }: Properties) => {
       };
 
       try {
-        await sender.send({
+        const txResponse = await sender.send({
           sendPayload,
           recipientAddress: searchParams.address.data,
+        });
+        if (!txResponse) return;
+
+        if (sfx) {
+          void fetch(`${CREATOR_API_URL}/donation-effects`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              sfxMessage: sfx,
+              txHash: txResponse,
+            }),
+          });
+        }
+
+        await sender.waitForReceipt(txResponse);
+
+        await fetch(`${CREATOR_API_URL}/push-donation`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ address: searchParams.address.data }),
         });
       } catch (error) {
         console.error('Unknown error sending transaction.', error);
       }
     },
-    [
-      sender,
-      walletClient,
-      searchParams.address.data,
-      searchParams.address.isValid,
-    ],
+    [sender, sfx, searchParams.address.data, searchParams.address.isValid, walletClient],
   );
-
-  const sendDonation = useCallback(async () => {
-    if (!searchParams.address.data || !searchParams.address.isValid) {
-      return;
-    }
-    await fetch(`${CREATOR_API_URL}/push-donation`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ address: searchParams.address.data }),
-    });
-  }, [searchParams.address.data, searchParams.address.isValid]);
-
-  const sendDonationEffects = useCallback(async () => {
-    if (!sfx || !sender.data?.transactionHash) {
-      return;
-    }
-    await fetch(`${CREATOR_API_URL}/donation-effects`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        sfxMessage: sfx,
-        txHash: sender.data?.transactionHash,
-      }),
-    });
-  }, [sfx, sender.data]);
-
-  useEffect(() => {
-    if (sender.data?.transactionHash) {
-      void sendDonationEffects();
-    }
-    if (sender.isSuccess) {
-      void sendDonation();
-    }
-  }, [sender.isSuccess, sender.data, sendDonation, sendDonationEffects]);
 
   if (!searchParams.address.isValid && !searchParams.address.isFetching) {
     return (
