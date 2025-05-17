@@ -1,7 +1,7 @@
 /**
  * List of words that should be filtered from donation messages
  */
-const BAD_WORDS: string[] = [
+const BAD_WORDS = new Set<string>([
   '2g1c',
   '2 girls 1 cup',
   'acrotomophilia',
@@ -440,26 +440,37 @@ const BAD_WORDS: string[] = [
   'yellow showers',
   'yiffy',
   'zoophilia',
-];
+]);
 
 function normalizeForComparison(text: string): string {
   return text
     .toLowerCase()
     .replaceAll(/[4@]/g, 'a')
-    .replaceAll(/[!1i|]/g, 'i')
+    .replaceAll(/(?<=\w)!(?=\w)/g, 'i')
+    .replaceAll(/[1i|]/g, 'i')
     .replaceAll(/[$5]/g, 's')
     .replaceAll('3', 'e')
     .replaceAll('0', 'o')
     .replaceAll('7', 't')
-    .replaceAll(/[^a-z]/g, ''); // remove non-alphabetic char
+    .replaceAll(/[^\sa-z]/g, ' ')
+    .replaceAll(/\s+/g, ' ')
+    .trim();
 }
 
 export function containsBadWords(message: string): boolean {
   if (!message) return false;
+  const normalized = normalizeForComparison(message);
 
-  const normalizedMessage = normalizeForComparison(message);
+  // Check multi-word phrases
+  for (const bad of BAD_WORDS) {
+    if (bad.includes(' ') && normalized.includes(bad)) {
+      return true;
+    }
+  }
 
-  return BAD_WORDS.some((word) => {
-    return normalizedMessage.includes(word);
+  // Check single words
+  const tokens = normalized.split(/\s+/);
+  return tokens.some((token) => {
+    return BAD_WORDS.has(token);
   });
 }
