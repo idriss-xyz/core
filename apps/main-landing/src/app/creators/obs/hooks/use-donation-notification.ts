@@ -32,10 +32,10 @@ export const useDonationNotification = (
   audio: HTMLAudioElement,
   amount: string,
   message: string,
-  postAudioDisplayDuration: number, // How long the notification stays visible AFTER all audio finishes
+  postAudioDisplayDuration: number, // How long the notification stays visible after all audio finishes
   sfxText: string | undefined,
   minOverallVisibleDuration: number, // Minimum total time the notification should be visible
-  onFullyComplete?: () => void, // Callback when the notification lifecycle is complete
+  onFullyComplete: () => void, // Callback when the notification lifecycle is complete
 ) => {
   const [showNotification, setShowNotification] = useState(false);
   const hideTimeoutIdReference = useRef<NodeJS.Timeout | null>(null);
@@ -58,6 +58,7 @@ export const useDonationNotification = (
       hideTimeoutIdReference.current = null;
     }
 
+    // Stop all audio and clear memory
     if (sfxAudioElementReference.current) {
       sfxAudioElementReference.current.pause();
       if (sfxAudioElementReference.current.src.startsWith('blob:')) {
@@ -76,17 +77,14 @@ export const useDonationNotification = (
 
     if (!amount || Number.parseFloat(amount) <= DONATION_ALERT_MIN_AMOUNT) {
       setShowNotification(false);
-      if (onFullyComplete) {
-        onFullyComplete();
-      }
+      onFullyComplete();
       return;
     }
 
     const processDonationAsync = async () => {
       const useSfx =
         sfxText && Number.parseFloat(amount) > DONATION_SFX_MIN_AMOUNT;
-      const useTts =
-        Number.parseFloat(amount) > DONATION_TTS_MIN_AMOUNT && message;
+      const useTts = Number.parseFloat(amount) > DONATION_TTS_MIN_AMOUNT;
 
       let sfxAudioForPlayback: HTMLAudioElement | null = null;
       let ttsAudioForPlayback: HTMLAudioElement | null = null;
@@ -193,9 +191,7 @@ export const useDonationNotification = (
         hideTimeoutIdReference.current = setTimeout(() => {
           setShowNotification(false);
           hideTimeoutIdReference.current = null;
-          if (onFullyComplete) {
-            onFullyComplete();
-          }
+          onFullyComplete();
         }, actualPostAudioTimeoutDuration);
       } catch (error) {
         console.error('Donation notification processing failed:', error);
@@ -219,9 +215,7 @@ export const useDonationNotification = (
           clearTimeout(hideTimeoutIdReference.current);
           hideTimeoutIdReference.current = null;
         }
-        if (onFullyComplete) {
-          onFullyComplete();
-        }
+        onFullyComplete();
       }
     };
 

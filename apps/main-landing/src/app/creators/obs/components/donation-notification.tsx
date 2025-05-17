@@ -29,7 +29,7 @@ export type DonationNotificationProperties = {
     details?: ChainToken;
   };
   minOverallVisibleDuration: number; // Minimum total time the notification should be visible
-  onFullyComplete?: () => void; // Callback when the notification lifecycle is complete
+  onFullyComplete: () => void; // Callback when the notification lifecycle is complete
 };
 
 export default function DonationNotification({
@@ -44,8 +44,8 @@ export default function DonationNotification({
   bgColor = 'bg-white',
   customIcon = IDRISS_ICON_CIRCLE.src,
   notificationSound = NOTIFICATION_SOUND,
-  minOverallVisibleDuration, // Destructure new prop
-  onFullyComplete, // Destructure new prop
+  minOverallVisibleDuration,
+  onFullyComplete,
 }: DonationNotificationProperties) {
   const audio = useMemo(() => {
     return new Audio(notificationSound);
@@ -57,8 +57,8 @@ export default function DonationNotification({
     message,
     NOTIFICATION_DISPLAY_DURATION,
     sfxText,
-    minOverallVisibleDuration, // Pass new prop
-    onFullyComplete, // Pass new prop
+    minOverallVisibleDuration,
+    onFullyComplete,
   );
 
   const { value: roundedNumber, index: zerosIndex } =
