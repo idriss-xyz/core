@@ -182,7 +182,7 @@ export default function Obs() {
           });
 
           await new Promise((resolve) => {
-            return setTimeout(resolve, 3000);
+            return setTimeout(resolve, 5000);
           });
 
           const sfxText = await fetchDonationSfxText(log.transactionHash!);
