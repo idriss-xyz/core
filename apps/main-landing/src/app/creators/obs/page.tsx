@@ -37,9 +37,14 @@ import { containsBadWords } from './utils/bad-words';
 
 const FETCH_INTERVAL = 5000;
 const BLOCK_LOOKBACK_RANGE = 5n;
-const DONATION_DISPLAY_DURATION = 11_000;
+const DONATION_MIN_OVERALL_VISIBLE_DURATION = 11_000;
 
 const latestCheckedBlocks = new Map();
+
+type QueuedDonation = Omit<
+  DonationNotificationProperties,
+  'minOverallVisibleDuration' | 'onFullyComplete'
+>;
 
 // ts-unused-exports:disable-next-line
 export default function Obs() {
@@ -48,46 +53,40 @@ export default function Obs() {
   } = useCreators();
   const router = useRouter();
   const [isDisplayingDonation, setIsDisplayingDonation] = useState(false);
-  const [donationsQueue, setDonationsQueue] = useState<
-    DonationNotificationProperties[]
-  >([]);
+  const [donationsQueue, setDonationsQueue] = useState<QueuedDonation[]>([]);
 
   useEffect(() => {
     if (!address.isFetching && !address.isValid) {
       router.push(CREATORS_LINK);
-
       return;
     }
   }, [router, address.isValid, address.isFetching]);
 
+  const handleDonationFullyComplete = useCallback(() => {
+    setDonationsQueue((previous) => {
+      return previous.slice(1);
+    });
+    setIsDisplayingDonation(false);
+  }, []);
+
   const displayNextDonation = useCallback(() => {
-    setIsDisplayingDonation(true);
+    if (donationsQueue.length > 0 && !isDisplayingDonation) {
+      setIsDisplayingDonation(true);
+    }
+  }, [donationsQueue, isDisplayingDonation]);
 
-    setTimeout(() => {
-      setDonationsQueue((previous) => {
-        return previous.slice(1);
-      });
-
-      setIsDisplayingDonation(false);
-    }, DONATION_DISPLAY_DURATION);
-  }, [setDonationsQueue]);
-
-  const addDonation = useCallback(
-    (donation: DonationNotificationProperties) => {
-      setDonationsQueue((previous) => {
-        if (
-          previous.some((existingDonation) => {
-            return existingDonation.txnHash === donation.txnHash;
-          })
-        ) {
-          return previous;
-        }
-
-        return [...previous, donation];
-      });
-    },
-    [],
-  );
+  const addDonation = useCallback((donation: QueuedDonation) => {
+    setDonationsQueue((previous) => {
+      if (
+        previous.some((existingDonation) => {
+          return existingDonation.txnHash === donation.txnHash;
+        })
+      ) {
+        return previous;
+      }
+      return [...previous, donation];
+    });
+  }, []);
 
   const fetchTipMessageLogs = useCallback(async () => {
     if (!address.data) return;
@@ -151,7 +150,6 @@ export default function Obs() {
 
           if (recipient.toLowerCase() !== address.data.toLowerCase()) continue;
 
-          // Check if the message contains any bad words, if so skip this donation
           if (message && containsBadWords(message)) {
             console.log('Filtered donation with inappropriate message');
             continue;
@@ -181,6 +179,10 @@ export default function Obs() {
               token.address.toLowerCase() ===
               (tokenAddress as Hex).toLowerCase()
             );
+          });
+
+          await new Promise((resolve) => {
+            return setTimeout(resolve, 5000);
           });
 
           const sfxText = await fetchDonationSfxText(log.transactionHash!);
@@ -225,15 +227,17 @@ export default function Obs() {
     }
   }, [donationsQueue, isDisplayingDonation, displayNextDonation]);
 
-  const currentDonation = donationsQueue[0];
-  const shouldDisplayDonation = isDisplayingDonation && currentDonation;
+  const currentDonationData = donationsQueue[0];
+  const shouldDisplayDonation = isDisplayingDonation && currentDonationData;
 
   return (
     <div className="h-screen w-full bg-transparent">
       {shouldDisplayDonation && (
         <DonationNotification
-          {...currentDonation}
-          key={currentDonation.txnHash}
+          {...currentDonationData}
+          key={currentDonationData.txnHash}
+          minOverallVisibleDuration={DONATION_MIN_OVERALL_VISIBLE_DURATION}
+          onFullyComplete={handleDonationFullyComplete}
         />
       )}
     </div>
