@@ -143,21 +143,27 @@ export const DonateForm = ({ className }: Properties) => {
     'sfx',
   ]);
 
-  const sendDonationEffects = useCallback(async (txHash: string) => {
-    if (!sfx || !txHash) {
-      return;
-    }
-    await fetch(`${CREATOR_API_URL}/donation-effects`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        sfxMessage: sfx,
-        txHash: txHash,
-      }),
-    });
-  }, [sfx]);
+  const sendDonationEffects = useCallback(
+    async (txHash: string) => {
+      if (!sfx || !txHash) {
+        return;
+      }
+      await fetch(`${CREATOR_API_URL}/donation-effects`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sfxMessage: sfx,
+          txHash: txHash,
+        }),
+      });
+    },
+    [sfx],
+  );
 
-  const sender = useSender({ walletClient, callbackOnSend: sendDonationEffects });
+  const sender = useSender({
+    walletClient,
+    callbackOnSend: sendDonationEffects,
+  });
 
   // Reset SFX when amount falls below the minimum
   useEffect(() => {
