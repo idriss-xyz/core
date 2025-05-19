@@ -18,15 +18,13 @@
     "format:fix": "turbo run format:fix",
     "type-check": "turbo run type-check",
     "unused-exports": "turbo run unused-exports",
-    "circular-dependencies": "turbo run circular-dependencies",
-    "prepare": "husky install"
+    "circular-dependencies": "turbo run circular-dependencies"
   },
   "devDependencies": {
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.8",
     "turbo": "^2.2.2",
-    "typescript": "^5.6.2",
-    "husky": "^8.0.0"
+    "typescript": "^5.6.2"
   },
   "packageManager": "pnpm@9.1.0",
   "engines": {
