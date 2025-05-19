@@ -43,9 +43,9 @@ export const Providers = ({ children }: Properties) => {
 
                   const findCredentialByFormat = (format: string) =>
                     // Ignore due to missing direct enum type export from @dynamic-labs/sdk-react-core
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
                     {
                       return credentials.find((c) => {
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
                         return c.format === format;
                       });
                     };
