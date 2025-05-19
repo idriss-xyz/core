@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 import {
-  CHAIN,
+  CREATOR_CHAIN,
   ChainToken,
   TokenSymbol,
   CREATORS_LINK,
@@ -32,7 +32,7 @@ type FormPayload = {
   tokensSymbols: string[];
 };
 
-const ALL_CHAIN_IDS = Object.values(CHAIN).map((chain) => {
+const ALL_CHAIN_IDS = Object.values(CREATOR_CHAIN).map((chain) => {
   return chain.id;
 });
 
@@ -132,7 +132,7 @@ export default function Donors() {
 
   const allowedChainOptions: MultiselectOption<number>[] = useMemo(() => {
     return DEFAULT_ALLOWED_CHAINS_IDS.map((chainId) => {
-      const foundChain = Object.values(CHAIN).find((chain) => {
+      const foundChain = Object.values(CREATOR_CHAIN).find((chain) => {
         return chain.id === chainId;
       });
 
@@ -204,7 +204,7 @@ export default function Donors() {
       .reduce((previous, chainId) => {
         return [
           ...previous,
-          Object.values(CHAIN).find((chain) => {
+          Object.values(CREATOR_CHAIN).find((chain) => {
             return chain.id === chainId;
           })?.shortName ?? '',
         ];
