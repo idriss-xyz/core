@@ -75,7 +75,7 @@ export function CreatorProfileForm() {
     // Ignore due to missing direct enum type export from @dynamic-labs/sdk-react-core
     // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
     return credential.oauthProvider === 'twitch';
-  })?.oauthDisplayName;
+  })?.oauthUsername;
 
   const formMethods = useForm<FormPayload>({
     defaultValues: {

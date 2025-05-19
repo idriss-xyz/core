@@ -39,21 +39,44 @@ export const Providers = ({ children }: Properties) => {
               walletConnectors: [EthereumWalletConnectors],
               events: {
                 onAuthSuccess: async (arguments_) => {
-                  const twitchName = arguments_.user.verifiedCredentials.find(
-                    (credential) => {
-                      // Ignore due to missing direct enum type export from @dynamic-labs/sdk-react-core
-                      // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
-                      return credential.oauthProvider === 'twitch';
-                    },
-                  )?.oauthUsername;
-                  const creator = await getCreatorProfile(twitchName);
-                  if (creator === undefined) {
-                    const walletAddress = arguments_.user
-                      .verifiedCredentials?.[0]?.address as Hex;
-                    await saveCreatorProfile(walletAddress, twitchName);
+                  const credentials = arguments_.user.verifiedCredentials;
+
+                  const findCredentialByFormat = (format: string) =>
+                    credentials.find((c) => c.format === format);
+
+                  const blockchainCredential = findCredentialByFormat('blockchain');
+                  const oauthCredential = findCredentialByFormat('oauth');
+                  const emailCredential = findCredentialByFormat('email');
+
+                  // Ignore due to missing direct enum type export from @dynamic-labs/sdk-react-core
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
+                  if (oauthCredential?.oauthProvider === 'twitch') {
+                    const twitchUsername = oauthCredential.oauthUsername;
+                    if (!twitchUsername) return;
+
+                    const creator = await getCreatorProfile(twitchUsername);
+                    if (!creator && blockchainCredential?.address) {
+                      await saveCreatorProfile(blockchainCredential.address as Hex, twitchUsername);
+                    }
+                    return router.push('/creators/app');
                   }
-                  router.push(`/creators/app`);
+
+                  // Handle email login
+                  else if (emailCredential?.email) {
+                    const emailName = emailCredential.email.split('@')[0];
+                    const creator = await getCreatorProfile(emailName);
+
+                    if (!creator && blockchainCredential?.address) {
+                      await saveCreatorProfile(blockchainCredential.address as Hex, emailName); // TODO: add slug to name
+                    }
+                    // TODO:test
+                  }
+
+                  else {
+                    // TODO: handle wallet login
+                  }
                 },
+
               },
             }}
           >
