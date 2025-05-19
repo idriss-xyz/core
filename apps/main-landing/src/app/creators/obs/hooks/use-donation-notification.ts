@@ -106,6 +106,15 @@ export const useDonationNotification = (
       };
     }
     return;
-  }, [amount, audio, duration, message, sfxText]);
+  }, [
+    amount,
+    audio,
+    duration,
+    message,
+    sfxText,
+    minimumAlertAmount,
+    minimumSfxAmount,
+    minimumTTSAmount,
+  ]);
   return { showNotification };
 };

@@ -42,9 +42,15 @@ export const Providers = ({ children }: Properties) => {
                   const credentials = arguments_.user.verifiedCredentials;
 
                   const findCredentialByFormat = (format: string) =>
-                    credentials.find((c) => c.format === format);
-
-                  const blockchainCredential = findCredentialByFormat('blockchain');
+                    // Ignore due to missing direct enum type export from @dynamic-labs/sdk-react-core
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
+                    {
+                      return credentials.find((c) => {
+                        return c.format === format;
+                      });
+                    };
+                  const blockchainCredential =
+                    findCredentialByFormat('blockchain');
                   const oauthCredential = findCredentialByFormat('oauth');
                   const emailCredential = findCredentialByFormat('email');
 
@@ -56,7 +62,10 @@ export const Providers = ({ children }: Properties) => {
 
                     const creator = await getCreatorProfile(twitchUsername);
                     if (!creator && blockchainCredential?.address) {
-                      await saveCreatorProfile(blockchainCredential.address as Hex, twitchUsername);
+                      await saveCreatorProfile(
+                        blockchainCredential.address as Hex,
+                        twitchUsername,
+                      );
                     }
                     return router.push('/creators/app');
                   }
@@ -67,16 +76,16 @@ export const Providers = ({ children }: Properties) => {
                     const creator = await getCreatorProfile(emailName);
 
                     if (!creator && blockchainCredential?.address) {
-                      await saveCreatorProfile(blockchainCredential.address as Hex, emailName); // TODO: add slug to name
+                      await saveCreatorProfile(
+                        blockchainCredential.address as Hex,
+                        emailName,
+                      ); // TODO: add slug to name
                     }
                     // TODO:test
-                  }
-
-                  else {
+                  } else {
                     // TODO: handle wallet login
                   }
                 },
-
               },
             }}
           >
