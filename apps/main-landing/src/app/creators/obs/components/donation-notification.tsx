@@ -11,8 +11,6 @@ import { IDRISS_ICON_CIRCLE, NOTIFICATION_SOUND } from '@/assets';
 
 import { useDonationNotification } from '../hooks/use-donation-notification';
 
-const NOTIFICATION_DISPLAY_DURATION = 10_000;
-
 export type DonationNotificationProperties = {
   donor: string;
   amount: string;
@@ -55,7 +53,6 @@ export default function DonationNotification({
     audio,
     amount,
     message,
-    NOTIFICATION_DISPLAY_DURATION,
     sfxText,
     minOverallVisibleDuration,
     onFullyComplete,
