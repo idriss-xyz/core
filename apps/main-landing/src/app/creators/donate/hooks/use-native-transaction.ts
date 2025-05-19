@@ -12,6 +12,7 @@ interface Properties {
   tokensToSend: bigint;
   recipientAddress: Hex;
   walletClient: WalletClient;
+  callbackOnSend?: (txHash: string) => void;
 }
 
 export const useNativeTransaction = () => {
@@ -22,6 +23,7 @@ export const useNativeTransaction = () => {
       tokensToSend,
       walletClient,
       recipientAddress,
+      callbackOnSend,
     }: Properties) => {
       const [account] = await walletClient.getAddresses();
 
@@ -63,6 +65,8 @@ export const useNativeTransaction = () => {
           console.error('Error sending transaction:', error.message);
           throw error;
         });
+
+      callbackOnSend?.(transactionHash);
 
       const receipt = await waitForTransactionReceipt(walletClient, {
         hash: transactionHash,
