@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-. "$(dirname "$0")/_/husky.sh"
-
-pnpm lint:fix
-pnpm format:fix
