@@ -1,0 +1,13 @@
+import { Entity, Column, PrimaryColumn } from 'typeorm';
+
+@Entity('donation_effects')
+export class DonationEffect {
+  @PrimaryColumn({ type: 'varchar', length: 66 })
+  txHash!: string;
+
+  @Column({ type: 'text' })
+  sfxMessage!: string;
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt!: Date;
+}
