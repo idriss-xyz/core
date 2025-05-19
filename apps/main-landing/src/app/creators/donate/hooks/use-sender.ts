@@ -141,6 +141,7 @@ export const useSender = ({ walletClient, callbackOnSend }: Properties) => {
       erc20Transaction,
       nativeTransaction,
       getTokenPerDollarMutation,
+      callbackOnSend,
     ],
   );
 
