@@ -93,18 +93,16 @@ export default function Obs() {
 
     for (const { chain, client, name } of clients) {
       try {
+        const eventSignature = TIP_MESSAGE_EVENT_ABI[name];
+        if (!eventSignature) {
+          continue;
+        }
+
         const latestBlock = await client.getBlockNumber();
         const lastCheckedBlock =
           latestCheckedBlocks.get(chain) || latestBlock - BLOCK_LOOKBACK_RANGE;
 
         if (latestBlock <= lastCheckedBlock) continue;
-
-        const eventSignature = TIP_MESSAGE_EVENT_ABI[name];
-
-        if (!eventSignature) {
-          console.warn(`Unsupported event signature for chain: ${name}`);
-          continue;
-        }
 
         const parsedEvent = parseAbiItem(eventSignature) as AbiEvent;
 
