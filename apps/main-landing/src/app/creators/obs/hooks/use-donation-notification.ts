@@ -119,7 +119,9 @@ export const useDonationNotification = (
           return requestAnimationFrame(resolve);
         });
 
-        const playAndWait = async (audioElement: HTMLAudioElement | null): Promise<boolean> => {
+        const playAndWait = async (
+          audioElement: HTMLAudioElement | null,
+        ): Promise<boolean> => {
           if (!audioElement) return false;
           return new Promise<boolean>((resolvePromise) => {
             const onEnded = () => {
