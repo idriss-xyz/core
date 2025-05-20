@@ -119,11 +119,11 @@ export const useDonationNotification = (
           return requestAnimationFrame(resolve);
         });
 
-        const playAndWait = async (audioElement: HTMLAudioElement | null) => {
-          if (!audioElement) return;
-          return new Promise<void>((resolvePromise) => {
+        const playAndWait = async (audioElement: HTMLAudioElement | null): Promise<boolean> => {
+          if (!audioElement) return false;
+          return new Promise<boolean>((resolvePromise) => {
             const onEnded = () => {
-              cleanupAndResolve();
+              cleanupAndResolve(true);
             };
             const onError = (event: Event | string) => {
               console.error(
@@ -132,12 +132,12 @@ export const useDonationNotification = (
                   ? (event.target as HTMLAudioElement)?.error
                   : event,
               );
-              cleanupAndResolve();
+              cleanupAndResolve(false);
             };
-            const cleanupAndResolve = () => {
+            const cleanupAndResolve = (success: boolean) => {
               audioElement.removeEventListener('ended', onEnded);
               audioElement.removeEventListener('error', onError);
-              resolvePromise();
+              resolvePromise(success);
             };
 
             audioElement.addEventListener('ended', onEnded);
@@ -145,18 +145,18 @@ export const useDonationNotification = (
 
             audioElement.play().catch((playError) => {
               console.error('Audio element .play() call failed:', playError);
-              cleanupAndResolve();
+              cleanupAndResolve(false);
             });
           });
         };
 
         let alertSoundPlayed = false;
         if (sfxAudioForPlayback) {
-          await playAndWait(sfxAudioForPlayback);
-          alertSoundPlayed = true;
-        } else {
-          await playAndWait(audio);
-          alertSoundPlayed = true;
+          alertSoundPlayed = await playAndWait(sfxAudioForPlayback);
+        }
+
+        if (!alertSoundPlayed) {
+          alertSoundPlayed = await playAndWait(audio);
         }
 
         if (ttsAudioForPlayback) {
