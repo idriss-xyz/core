@@ -8,7 +8,7 @@ export const clientBase = createPublicClient({
 
 export const clientEthereum = createPublicClient({
   chain: CHAIN.ETHEREUM,
-  transport: http('https://eth.llamarpc.com'),
+  transport: http('https://ethereum-rpc.publicnode.com'),
 });
 
 const clientPolygon = createPublicClient({
