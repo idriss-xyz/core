@@ -152,6 +152,7 @@ export default function Obs() {
             console.log('Filtered donation with inappropriate message');
             continue;
           }
+          console.log('Found donation:', txn.hash);
 
           const resolved = await resolveEnsName(txn.from);
 
