@@ -11,7 +11,7 @@ import {
   applyDecimalsToNumericString,
 } from '@idriss-xyz/utils';
 import {
-  CHAIN,
+  CREATOR_CHAIN,
   TOKEN,
   Token,
   EMPTY_HEX,
@@ -79,11 +79,11 @@ export const DonateForm = ({ className }: Properties) => {
   const allowedChainsIds = useMemo(() => {
     const networksShortNames =
       searchParams.network?.toLowerCase().split(',') ??
-      Object.values(CHAIN).map((chain) => {
+      Object.values(CREATOR_CHAIN).map((chain) => {
         return chain.shortName.toLowerCase();
       });
 
-    const chains = Object.values(CHAIN).filter((chain) => {
+    const chains = Object.values(CREATOR_CHAIN).filter((chain) => {
       if (!networksShortNames.includes(chain.shortName.toLowerCase())) {
         return false;
       }
@@ -461,8 +461,8 @@ export const DonateForm = ({ className }: Properties) => {
                         </TooltipTrigger>
                         <TooltipContent className="w-[300px] bg-black text-center text-white">
                           <p className="text-label6">
-                            Write what you want to hear. AI will turn it into a
-                            sound effect and replace the default trumpet.
+                            Type what you want to hear. AI will turn it into a
+                            sound effect and replace the default sound.
                           </p>
                         </TooltipContent>
                       </Tooltip>

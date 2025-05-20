@@ -7,7 +7,7 @@ export class AddDonationEffects1747686797772 implements MigrationInterface {
                 "id" SERIAL PRIMARY KEY,
                 "txHash" character varying NOT NULL,
                 "sfxMessage" character varying(30) NOT NULL,
-                "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
+                "createdAt" TIMESTAMP NOT NULL DEFAULT now()
             )
         `);
 
