@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryColumn } from 'typeorm';
 
-@Entity('donation_effects')
+@Entity('donation_effect')
 export class DonationEffect {
   @PrimaryColumn({ type: 'varchar', length: 66 })
   txHash!: string;
