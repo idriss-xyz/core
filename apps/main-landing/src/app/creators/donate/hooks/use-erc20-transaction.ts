@@ -22,6 +22,7 @@ interface Properties {
   tokensToSend: bigint;
   recipientAddress: Hex;
   walletClient: WalletClient;
+  callbackOnSend?: (txHash: string) => void;
 }
 
 export const useErc20Transaction = () => {
@@ -33,6 +34,7 @@ export const useErc20Transaction = () => {
       walletClient,
       tokensToSend,
       recipientAddress,
+      callbackOnSend,
     }: Properties) => {
       const [account] = await walletClient.getAddresses();
 
@@ -92,6 +94,8 @@ export const useErc20Transaction = () => {
           data: encodedData,
           chain: getChainById(chainId),
         });
+
+        callbackOnSend?.(transactionHash);
 
         const receipt = await waitForTransactionReceipt(walletClient, {
           hash: transactionHash,

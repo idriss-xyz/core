@@ -32,7 +32,6 @@ export const useDonationNotification = (
   audio: HTMLAudioElement,
   amount: string,
   message: string,
-  postAudioDisplayDuration: number, // How long the notification stays visible after all audio finishes
   sfxText: string | undefined,
   minOverallVisibleDuration: number, // Minimum total time the notification should be visible
   onFullyComplete: () => void, // Callback when the notification lifecycle is complete
@@ -180,10 +179,7 @@ export const useDonationNotification = (
           0,
           minOverallVisibleDuration - timeVisibleDuringAudio,
         );
-        const actualPostAudioTimeoutDuration = Math.max(
-          postAudioDisplayDuration,
-          remainingVisibleTimeForOverall,
-        );
+        const actualPostAudioTimeoutDuration = remainingVisibleTimeForOverall;
 
         if (hideTimeoutIdReference.current) {
           clearTimeout(hideTimeoutIdReference.current);
@@ -246,7 +242,6 @@ export const useDonationNotification = (
     message,
     sfxText,
     audio,
-    postAudioDisplayDuration,
     minOverallVisibleDuration,
     onFullyComplete,
   ]);
