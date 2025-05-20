@@ -10,7 +10,7 @@ type Payload = {
 const resolveEnsAddress = async (payload: Payload) => {
   const client = createPublicClient({
     chain: mainnet,
-    transport: http('https://eth.llamarpc.com'),
+    transport: http('https://1rpc.io/eth'),
   });
 
   return await client.getEnsAddress({
