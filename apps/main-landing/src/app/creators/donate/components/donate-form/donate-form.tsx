@@ -461,8 +461,8 @@ export const DonateForm = ({ className }: Properties) => {
                         </TooltipTrigger>
                         <TooltipContent className="w-[300px] bg-black text-center text-white">
                           <p className="text-label6">
-                            Write what you want to hear. AI will turn it into a
-                            sound effect and replace the default trumpet.
+                            Type what you want to hear. AI will turn it into a
+                            sound effect and replace the default sound.
                           </p>
                         </TooltipContent>
                       </Tooltip>
