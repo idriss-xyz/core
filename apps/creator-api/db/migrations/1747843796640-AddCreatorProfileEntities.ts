@@ -74,8 +74,8 @@ export class AddCreatorProfileEntities1747843796640 implements MigrationInterfac
                 dp.minimum_sfx_amount as "minimumSfxAmount",
                 dp.voice_id as "voiceId",
                 dp.voice_muted as "voiceMuted",
-                COALESCE(ARRAY_REMOVE(ARRAY_AGG(DISTINCT ct.tokenSymbol), NULL), ARRAY[]::text[]) as tokens,
-                COALESCE(ARRAY_REMOVE(ARRAY_AGG(DISTINCT cn.chainName), NULL), ARRAY[]::text[]) as networks
+                COALESCE(ARRAY_REMOVE(ARRAY_AGG(DISTINCT ct."tokenSymbol"), NULL), ARRAY[]::text[]) as tokens,
+                COALESCE(ARRAY_REMOVE(ARRAY_AGG(DISTINCT cn."chainName"), NULL), ARRAY[]::text[]) as networks
             FROM creator c
             LEFT JOIN donation_parameters dp ON dp.creator_id = c.id
             LEFT JOIN creator_tokens ct ON ct.creator_id = c.id
