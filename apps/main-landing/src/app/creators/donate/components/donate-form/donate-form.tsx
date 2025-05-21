@@ -11,7 +11,7 @@ import {
   applyDecimalsToNumericString,
 } from '@idriss-xyz/utils';
 import {
-  CHAIN,
+  CREATOR_CHAIN,
   TOKEN,
   Token,
   EMPTY_HEX,
@@ -82,11 +82,11 @@ export const DonateForm = ({ className, creatorInfo }: Properties) => {
   const allowedChainsIds = useMemo(() => {
     const networksShortNames =
       creatorInfo.network?.toLowerCase().split(',') ??
-      Object.values(CHAIN).map((chain) => {
+      Object.values(CREATOR_CHAIN).map((chain) => {
         return chain.shortName.toLowerCase();
       });
 
-    const chains = Object.values(CHAIN).filter((chain) => {
+    const chains = Object.values(CREATOR_CHAIN).filter((chain) => {
       if (!networksShortNames.includes(chain.shortName.toLowerCase())) {
         return false;
       }
@@ -131,7 +131,6 @@ export const DonateForm = ({ className, creatorInfo }: Properties) => {
   });
 
   const { reset } = formMethods;
-  const sender = useSender({ walletClient });
 
   useEffect(() => {
     reset(getSendFormDefaultValues(defaultChainId, selectedTokenSymbol));
@@ -146,6 +145,28 @@ export const DonateForm = ({ className, creatorInfo }: Properties) => {
     'amount',
     'sfx',
   ]);
+
+  const sendDonationEffects = useCallback(
+    async (txHash: string) => {
+      if (!sfx || !txHash) {
+        return;
+      }
+      await fetch(`${CREATOR_API_URL}/donation-effects`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sfxMessage: sfx,
+          txHash: txHash,
+        }),
+      });
+    },
+    [sfx],
+  );
+
+  const sender = useSender({
+    walletClient,
+    callbackOnSend: sendDonationEffects,
+  });
 
   // Reset SFX when amount falls below the minimum
   useEffect(() => {
@@ -237,28 +258,11 @@ export const DonateForm = ({ className, creatorInfo }: Properties) => {
     });
   }, [creatorInfo.address.data, creatorInfo.address.isValid]);
 
-  const sendDonationEffects = useCallback(async () => {
-    if (!sfx || !sender.data?.transactionHash) {
-      return;
-    }
-    await fetch(`${CREATOR_API_URL}/donation-effects`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        sfxMessage: sfx,
-        txHash: sender.data?.transactionHash,
-      }),
-    });
-  }, [sfx, sender.data]);
-
   useEffect(() => {
-    if (sender.data?.transactionHash) {
-      void sendDonationEffects();
-    }
     if (sender.isSuccess) {
       void sendDonation();
     }
-  }, [sender.isSuccess, sender.data, sendDonation, sendDonationEffects]);
+  }, [sender.isSuccess, sender.data, sendDonation]);
 
   if (!creatorInfo.address.isValid && !creatorInfo.address.isFetching) {
     return (
@@ -460,8 +464,8 @@ export const DonateForm = ({ className, creatorInfo }: Properties) => {
                         </TooltipTrigger>
                         <TooltipContent className="w-[300px] bg-black text-center text-white">
                           <p className="text-label6">
-                            Write what you want to hear. AI will turn it into a
-                            sound effect and replace the default trumpet.
+                            Type what you want to hear. AI will turn it into a
+                            sound effect and replace the default sound.
                           </p>
                         </TooltipContent>
                       </Tooltip>

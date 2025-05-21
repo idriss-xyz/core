@@ -43,7 +43,7 @@ import { containsBadWords } from './utils/bad-words';
 
 const FETCH_INTERVAL = 5000;
 const BLOCK_LOOKBACK_RANGE = 5n;
-const DONATION_DISPLAY_DURATION = 11_000;
+const DONATION_MIN_OVERALL_VISIBLE_DURATION = 11_000;
 
 const latestCheckedBlocks = new Map();
 
@@ -56,6 +56,10 @@ export type MinimumAmounts = {
   minimumSfxAmount: number;
   minimumTTSAmount: number;
 };
+type QueuedDonation = Omit<
+  DonationNotificationProperties,
+  'minOverallVisibleDuration' | 'onFullyComplete'
+>;
 
 // ts-unused-exports:disable-next-line
 export default function Obs({ creatorName }: Properties) {
@@ -72,9 +76,7 @@ export default function Obs({ creatorName }: Properties) {
 
   const router = useRouter();
   const [isDisplayingDonation, setIsDisplayingDonation] = useState(false);
-  const [donationsQueue, setDonationsQueue] = useState<
-    DonationNotificationProperties[]
-  >([]);
+  const [donationsQueue, setDonationsQueue] = useState<QueuedDonation[]>([]);
 
   useEffect(() => {
     if (addressSetReference.current) return;
@@ -116,52 +118,47 @@ export default function Obs({ creatorName }: Properties) {
     }
   }, [router, addressParameter, creatorName]);
 
+  const handleDonationFullyComplete = useCallback(() => {
+    setDonationsQueue((previous) => {
+      return previous.slice(1);
+    });
+    setIsDisplayingDonation(false);
+  }, []);
+
   const displayNextDonation = useCallback(() => {
-    setIsDisplayingDonation(true);
+    if (donationsQueue.length > 0 && !isDisplayingDonation) {
+      setIsDisplayingDonation(true);
+    }
+  }, [donationsQueue, isDisplayingDonation]);
 
-    setTimeout(() => {
-      setDonationsQueue((previous) => {
-        return previous.slice(1);
-      });
-
-      setIsDisplayingDonation(false);
-    }, DONATION_DISPLAY_DURATION);
-  }, [setDonationsQueue]);
-
-  const addDonation = useCallback(
-    (donation: DonationNotificationProperties) => {
-      setDonationsQueue((previous) => {
-        if (
-          previous.some((existingDonation) => {
-            return existingDonation.txnHash === donation.txnHash;
-          })
-        ) {
-          return previous;
-        }
-
-        return [...previous, donation];
-      });
-    },
-    [],
-  );
+  const addDonation = useCallback((donation: QueuedDonation) => {
+    setDonationsQueue((previous) => {
+      if (
+        previous.some((existingDonation) => {
+          return existingDonation.txnHash === donation.txnHash;
+        })
+      ) {
+        return previous;
+      }
+      return [...previous, donation];
+    });
+  }, []);
 
   const fetchTipMessageLogs = useCallback(async () => {
     if (!address?.data) return;
 
     for (const { chain, client, name } of clients) {
       try {
+        const eventSignature = TIP_MESSAGE_EVENT_ABI[name];
+        if (!eventSignature) {
+          continue;
+        }
+
         const latestBlock = await client.getBlockNumber();
         const lastCheckedBlock =
           latestCheckedBlocks.get(chain) || latestBlock - BLOCK_LOOKBACK_RANGE;
 
         if (latestBlock <= lastCheckedBlock) continue;
-
-        const eventSignature = TIP_MESSAGE_EVENT_ABI[name];
-
-        if (!eventSignature) {
-          console.warn(`Unsupported event signature for chain: ${name}`);
-          continue;
-        }
 
         const parsedEvent = parseAbiItem(eventSignature) as AbiEvent;
 
@@ -207,11 +204,11 @@ export default function Obs({ creatorName }: Properties) {
 
           if (recipient.toLowerCase() !== address?.data.toLowerCase()) continue;
 
-          // Check if the message contains any bad words, if so skip this donation
           if (message && containsBadWords(message)) {
             console.log('Filtered donation with inappropriate message');
             continue;
           }
+          console.log('Found donation:', txn.hash);
 
           const resolved = await resolveEnsName(txn.from);
 
@@ -237,6 +234,10 @@ export default function Obs({ creatorName }: Properties) {
               token.address?.toLowerCase() ===
               (tokenAddress as Hex).toLowerCase()
             );
+          });
+
+          await new Promise((resolve) => {
+            return setTimeout(resolve, 2500);
           });
 
           const sfxText = await fetchDonationSfxText(log.transactionHash!);
@@ -282,16 +283,18 @@ export default function Obs({ creatorName }: Properties) {
     }
   }, [donationsQueue, isDisplayingDonation, displayNextDonation]);
 
-  const currentDonation = donationsQueue[0];
-  const shouldDisplayDonation = isDisplayingDonation && currentDonation;
+  const currentDonationData = donationsQueue[0];
+  const shouldDisplayDonation = isDisplayingDonation && currentDonationData;
 
   return (
     <div className="h-screen w-full bg-transparent">
       {shouldDisplayDonation && (
         <DonationNotification
-          {...currentDonation}
+          {...currentDonationData}
+          key={currentDonationData.txnHash}
+          minOverallVisibleDuration={DONATION_MIN_OVERALL_VISIBLE_DURATION}
+          onFullyComplete={handleDonationFullyComplete}
           minimumAmounts={minimumAmounts}
-          key={currentDonation.txnHash}
         />
       )}
     </div>

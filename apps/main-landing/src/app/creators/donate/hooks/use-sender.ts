@@ -14,9 +14,10 @@ import { useErc20Transaction } from './use-erc20-transaction';
 
 type Properties = {
   walletClient?: WalletClient;
+  callbackOnSend?: (txHash: string) => void;
 };
 
-export const useSender = ({ walletClient }: Properties) => {
+export const useSender = ({ walletClient, callbackOnSend }: Properties) => {
   const switchChain = useSwitchChain();
   const erc20Transaction = useErc20Transaction();
   const nativeTransaction = useNativeTransaction();
@@ -120,6 +121,7 @@ export const useSender = ({ walletClient }: Properties) => {
           recipientAddress,
           message: sendPayload.message,
           chainId: sendPayload.chainId,
+          callbackOnSend,
         });
       } else {
         erc20Transaction.mutate({
@@ -129,6 +131,7 @@ export const useSender = ({ walletClient }: Properties) => {
           message: sendPayload.message,
           chainId: sendPayload.chainId,
           tokenAddress: sendPayload.tokenAddress,
+          callbackOnSend,
         });
       }
     },
@@ -138,6 +141,7 @@ export const useSender = ({ walletClient }: Properties) => {
       erc20Transaction,
       nativeTransaction,
       getTokenPerDollarMutation,
+      callbackOnSend,
     ],
   );
 

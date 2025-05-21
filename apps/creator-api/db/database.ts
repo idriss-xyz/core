@@ -2,6 +2,7 @@ import { DataSource } from 'typeorm';
 import {
   Creator,
   Donation,
+  DonationEffect,
   DonationParameters,
   CreatorNetwork,
   CreatorToken,
@@ -10,6 +11,7 @@ import {
 } from './entities';
 import {
   AddAmountRaw1743181200000,
+  AddDonationEffects1747686797772,
   AddTokenDecimals1743177600000,
   RestructureDonations1743174000000,
 } from './migrations';
@@ -20,6 +22,7 @@ export const AppDataSource = new DataSource({
   url: process.env.DATABASE_URL,
   entities: [
     Donation,
+    DonationEffect,
     Token,
     User,
     Creator,
@@ -33,6 +36,7 @@ export const AppDataSource = new DataSource({
     RestructureDonations1743174000000,
     AddTokenDecimals1743177600000,
     AddAmountRaw1743181200000,
+    AddDonationEffects1747686797772,
   ],
 });
 

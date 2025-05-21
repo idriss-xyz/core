@@ -1,4 +1,15 @@
-import { base, mainnet, mantle, optimism, polygon } from 'viem/chains';
+import {
+  arbitrum,
+  base,
+  linea,
+  mainnet,
+  mantle,
+  optimism,
+  polygon,
+  zksync,
+  scroll,
+  celo,
+} from 'viem/chains';
 
 import {
   AAVEGOTCHI_LOGO,
@@ -19,6 +30,12 @@ import {
   PDT_LOGO,
   RONIN_LOGO,
   AXIE_LOGO,
+  ARBITRUM_LOGO,
+  LINEA_LOGO,
+  ZYNK_SYNC_ERA_LOGO,
+  SCROLL_LOGO,
+  CELO_LOGO,
+  BNB_LOGO,
 } from './logos';
 import { Chain, Token, ChainToken } from './types';
 
@@ -26,7 +43,7 @@ export const STAKER_ADDRESS = '0x085e2DC1b05dcdbE011B5ad377C9f2fcD69B7057';
 
 export const NATIVE_COIN_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 
-export const CHAIN = {
+export const CREATOR_CHAIN = {
   ABSTRACT: {
     id: 2741,
     name: 'Abstract',
@@ -143,6 +160,49 @@ export const CHAIN = {
   },
 } satisfies Record<string, Chain>;
 
+export const CHAIN = Object.assign(CREATOR_CHAIN, {
+  ARBITRUM_ONE: {
+    ...arbitrum,
+    shortName: 'Arbitrum',
+    logo: ARBITRUM_LOGO,
+  },
+  LINEA: {
+    ...linea,
+    shortName: 'Linea',
+    logo: LINEA_LOGO,
+  },
+  ZK_SYNC_ERA: {
+    ...zksync,
+    shortName: 'ZkSync',
+    logo: ZYNK_SYNC_ERA_LOGO,
+  },
+  SCROLL: {
+    ...scroll,
+    shortName: 'Scroll',
+    logo: SCROLL_LOGO,
+  },
+  CELO: {
+    ...celo,
+    shortName: 'Celo',
+    logo: CELO_LOGO,
+  },
+  BNB_CHAIN: {
+    id: 56,
+    name: 'BNB Chain',
+    shortName: 'BNB',
+    logo: BNB_LOGO,
+    nativeCurrency: {
+      name: 'BNB',
+      symbol: 'BNB',
+      decimals: 18,
+    },
+    rpcUrls: { default: { http: ['https://bsc-dataseed.binance.org'] } },
+    blockExplorers: {
+      default: { name: 'BS Scan', url: 'https://bscscan.com' },
+    },
+  },
+}) satisfies Record<string, Chain>;
+
 export const TOKEN = {
   ETHEREUM: {
     name: 'Ethereum',
@@ -200,7 +260,7 @@ export const TOKEN = {
 } as const satisfies Record<string, Token>;
 
 export const CHAIN_ID_TO_TOKENS = {
-  [CHAIN.ABSTRACT.id]: [
+  [CREATOR_CHAIN.ABSTRACT.id]: [
     {
       ...TOKEN.ETHEREUM,
       decimals: 18,
@@ -217,7 +277,7 @@ export const CHAIN_ID_TO_TOKENS = {
       address: '0x9eBe3A824Ca958e4b3Da772D2065518F009CBa62',
     },
   ],
-  [CHAIN.ALEPH.id]: [
+  [CREATOR_CHAIN.ALEPH.id]: [
     {
       ...TOKEN.USDC,
       name: 'USDC',
@@ -225,7 +285,7 @@ export const CHAIN_ID_TO_TOKENS = {
       address: '0x4Ca4B85Ead5EA49892d3a81DbfAE2f5c2F75d53D',
     },
   ],
-  [CHAIN.ETHEREUM.id]: [
+  [CREATOR_CHAIN.ETHEREUM.id]: [
     {
       ...TOKEN.ETHEREUM,
       decimals: 18,
@@ -262,7 +322,7 @@ export const CHAIN_ID_TO_TOKENS = {
       address: '0x375abb85c329753b1ba849a601438ae77eec9893',
     },
   ],
-  [CHAIN.OPTIMISM.id]: [
+  [CREATOR_CHAIN.OPTIMISM.id]: [
     {
       ...TOKEN.ETHEREUM,
       decimals: 18,
@@ -279,7 +339,7 @@ export const CHAIN_ID_TO_TOKENS = {
       address: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
     },
   ],
-  [CHAIN.POLYGON.id]: [
+  [CREATOR_CHAIN.POLYGON.id]: [
     {
       ...TOKEN.USDC,
       decimals: 6,
@@ -301,7 +361,7 @@ export const CHAIN_ID_TO_TOKENS = {
       address: '0x82617aa52dddf5ed9bb7b370ed777b3182a30fd1',
     },
   ],
-  [CHAIN.RONIN.id]: [
+  [CREATOR_CHAIN.RONIN.id]: [
     {
       ...TOKEN.RONIN,
       decimals: 18,
@@ -333,14 +393,14 @@ export const CHAIN_ID_TO_TOKENS = {
     //   address: '0x7eae20d11ef8c779433eb24503def900b9d28ad7',
     // },
   ],
-  [CHAIN.MANTLE.id]: [
+  [CREATOR_CHAIN.MANTLE.id]: [
     {
       ...TOKEN.USDC,
       decimals: 6,
       address: '0x09Bc4E0D864854c6aFB6eB9A9cdF58aC190D0dF9',
     },
   ],
-  [CHAIN.BASE.id]: [
+  [CREATOR_CHAIN.BASE.id]: [
     {
       ...TOKEN.ETHEREUM,
       decimals: 18,
@@ -385,14 +445,14 @@ export const CHAIN_ID_TO_TOKENS = {
 } satisfies Record<string, ChainToken[]>;
 
 export const DEFAULT_ALLOWED_CHAINS_IDS = [
-  CHAIN.ABSTRACT.id,
-  CHAIN.ALEPH.id,
-  CHAIN.BASE.id,
-  CHAIN.ETHEREUM.id,
-  CHAIN.MANTLE.id,
-  CHAIN.OPTIMISM.id,
-  CHAIN.POLYGON.id,
-  CHAIN.RONIN.id,
+  CREATOR_CHAIN.ABSTRACT.id,
+  CREATOR_CHAIN.ALEPH.id,
+  CREATOR_CHAIN.BASE.id,
+  CREATOR_CHAIN.ETHEREUM.id,
+  CREATOR_CHAIN.MANTLE.id,
+  CREATOR_CHAIN.OPTIMISM.id,
+  CREATOR_CHAIN.POLYGON.id,
+  CREATOR_CHAIN.RONIN.id,
 ];
 
 export const EMPTY_HEX = '0x';

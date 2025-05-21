@@ -12,8 +12,6 @@ import { IDRISS_ICON_CIRCLE, NOTIFICATION_SOUND } from '@/assets';
 import { useDonationNotification } from '../hooks/use-donation-notification';
 import { MinimumAmounts } from '../page';
 
-const NOTIFICATION_DISPLAY_DURATION = 10_000;
-
 export type DonationNotificationProperties = {
   donor: string;
   amount: string;
@@ -30,6 +28,8 @@ export type DonationNotificationProperties = {
     amount: bigint;
     details?: ChainToken;
   };
+  minOverallVisibleDuration: number; // Minimum total time the notification should be visible
+  onFullyComplete: () => void; // Callback when the notification lifecycle is complete
 };
 
 export default function DonationNotification({
@@ -45,6 +45,8 @@ export default function DonationNotification({
   bgColor = 'bg-white',
   customIcon = IDRISS_ICON_CIRCLE.src,
   notificationSound = NOTIFICATION_SOUND,
+  minOverallVisibleDuration,
+  onFullyComplete,
 }: DonationNotificationProperties) {
   const audio = useMemo(() => {
     return new Audio(notificationSound);
@@ -55,8 +57,9 @@ export default function DonationNotification({
     amount,
     minimumAmounts,
     message,
-    NOTIFICATION_DISPLAY_DURATION,
     sfxText,
+    minOverallVisibleDuration,
+    onFullyComplete,
   );
 
   const { value: roundedNumber, index: zerosIndex } =
