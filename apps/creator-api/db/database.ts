@@ -13,6 +13,7 @@ import {
   AddAmountRaw1743181200000,
   AddDonationEffects1747686797772,
   AddTokenDecimals1743177600000,
+  InitialMigration1743173000000,
   RestructureDonations1743174000000,
   AddCreatorProfileEntities1747843796640
 } from './migrations';
@@ -34,6 +35,7 @@ export const AppDataSource = new DataSource({
   ],
   synchronize: false,
   migrations: [
+    InitialMigration1743173000000,
     RestructureDonations1743174000000,
     AddTokenDecimals1743177600000,
     AddAmountRaw1743181200000,
