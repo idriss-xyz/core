@@ -1,10 +1,11 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class AddCreatorProfileEntities1747843796640 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        // Create creator table
-        await queryRunner.query(`
+export class AddCreatorProfileEntities1747843796640
+  implements MigrationInterface
+{
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    // Create creator table
+    await queryRunner.query(`
             CREATE TABLE "creator" (
                 "id" SERIAL NOT NULL,
                 "address" text NOT NULL,
@@ -20,8 +21,8 @@ export class AddCreatorProfileEntities1747843796640 implements MigrationInterfac
             )
         `);
 
-        // Create creator_networks table
-        await queryRunner.query(`
+    // Create creator_networks table
+    await queryRunner.query(`
             CREATE TABLE "creator_networks" (
                 "id" SERIAL NOT NULL,
                 "chainName" text NOT NULL,
@@ -31,8 +32,8 @@ export class AddCreatorProfileEntities1747843796640 implements MigrationInterfac
             )
         `);
 
-        // Create creator_tokens table
-        await queryRunner.query(`
+    // Create creator_tokens table
+    await queryRunner.query(`
             CREATE TABLE "creator_tokens" (
                 "id" SERIAL NOT NULL,
                 "tokenSymbol" text NOT NULL,
@@ -42,8 +43,8 @@ export class AddCreatorProfileEntities1747843796640 implements MigrationInterfac
             )
         `);
 
-        // Create donation_parameters table
-        await queryRunner.query(`
+    // Create donation_parameters table
+    await queryRunner.query(`
             CREATE TABLE "donation_parameters" (
                 "id" SERIAL NOT NULL,
                 "minimum_alert_amount" text NOT NULL,
@@ -58,8 +59,8 @@ export class AddCreatorProfileEntities1747843796640 implements MigrationInterfac
             )
         `);
 
-        // Create creator_profile view
-        await queryRunner.query(`
+    // Create creator_profile view
+    await queryRunner.query(`
             CREATE VIEW "creator_profile_view" AS
             SELECT
                 c.id as id,
@@ -94,16 +95,16 @@ export class AddCreatorProfileEntities1747843796640 implements MigrationInterfac
                 dp.voice_id,
                 dp.voice_muted
         `);
-    }
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-        // Drop view first
-        await queryRunner.query(`DROP VIEW IF EXISTS "creator_profile_view"`);
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    // Drop view first
+    await queryRunner.query(`DROP VIEW IF EXISTS "creator_profile_view"`);
 
-        // Drop tables in reverse order to avoid foreign key constraints
-        await queryRunner.query(`DROP TABLE IF EXISTS "donation_parameters"`);
-        await queryRunner.query(`DROP TABLE IF EXISTS "creator_tokens"`);
-        await queryRunner.query(`DROP TABLE IF EXISTS "creator_networks"`);
-        await queryRunner.query(`DROP TABLE IF EXISTS "creator"`);
-    }
+    // Drop tables in reverse order to avoid foreign key constraints
+    await queryRunner.query(`DROP TABLE IF EXISTS "donation_parameters"`);
+    await queryRunner.query(`DROP TABLE IF EXISTS "creator_tokens"`);
+    await queryRunner.query(`DROP TABLE IF EXISTS "creator_networks"`);
+    await queryRunner.query(`DROP TABLE IF EXISTS "creator"`);
+  }
 }

@@ -15,7 +15,7 @@ import {
   AddTokenDecimals1743177600000,
   InitialMigration1743173000000,
   RestructureDonations1743174000000,
-  AddCreatorProfileEntities1747843796640
+  AddCreatorProfileEntities1747843796640,
 } from './migrations';
 import { CreatorProfileView } from './views/creator-profile.view';
 
