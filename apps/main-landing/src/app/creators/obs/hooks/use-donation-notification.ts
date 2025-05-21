@@ -80,7 +80,10 @@ export const useDonationNotification = (
     }
     // --- End of Effect Cleanup ---
 
-    if (!amount || Number.parseFloat(amount) <= priceDropCalculatedAmount(minimumAlertAmount)) {
+    if (
+      !amount ||
+      Number.parseFloat(amount) <= priceDropCalculatedAmount(minimumAlertAmount)
+    ) {
       setShowNotification(false);
       onFullyComplete();
       return;
@@ -88,8 +91,10 @@ export const useDonationNotification = (
 
     const processDonationAsync = async () => {
       const useSfx =
-        sfxText && Number.parseFloat(amount) > priceDropCalculatedAmount(minimumSfxAmount);
-      const useTts = Number.parseFloat(amount) > priceDropCalculatedAmount(minimumTTSAmount);
+        sfxText &&
+        Number.parseFloat(amount) > priceDropCalculatedAmount(minimumSfxAmount);
+      const useTts =
+        Number.parseFloat(amount) > priceDropCalculatedAmount(minimumTTSAmount);
 
       let sfxAudioForPlayback: HTMLAudioElement | null = null;
       let ttsAudioForPlayback: HTMLAudioElement | null = null;
