@@ -71,11 +71,21 @@ export function CreatorProfileForm() {
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const { user } = useDynamicContext();
-  const initialName = user?.verifiedCredentials.find((credential) => {
+  const twitchName = user?.verifiedCredentials.find((credential) => {
     // Ignore due to missing direct enum type export from @dynamic-labs/sdk-react-core
     // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
     return credential.oauthProvider === 'twitch';
   })?.oauthUsername;
+
+  const emailName = twitchName ?? `u-${user?.userId?.slice(0, 4)}`;
+
+  const initialName =
+    emailName ??
+    user?.verifiedCredentials.find((credential) => {
+      // Ignore due to missing direct enum type export from @dynamic-labs/sdk-react-core
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
+      return credential.format === 'blockchain';
+    })?.address;
 
   const formMethods = useForm<FormPayload>({
     defaultValues: {

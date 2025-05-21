@@ -67,24 +67,23 @@ export const Providers = ({ children }: Properties) => {
                         twitchUsername,
                       );
                     }
-                    return router.push('/creators/app');
                   }
 
                   // Handle email login
                   else if (emailCredential?.email) {
-                    const emailName = emailCredential.email.split('@')[0];
-                    const creator = await getCreatorProfile(emailName);
+                    const name = `u-${arguments_.user.userId?.slice(0, 4)}`;
+                    const creator = await getCreatorProfile(name);
 
                     if (!creator && blockchainCredential?.address) {
                       await saveCreatorProfile(
                         blockchainCredential.address as Hex,
-                        emailName,
-                      ); // TODO: add slug to name
+                        name,
+                      );
                     }
-                    // TODO:test
                   } else {
                     // TODO: handle wallet login
                   }
+                  return router.push('/creators/app');
                 },
               },
             }}
