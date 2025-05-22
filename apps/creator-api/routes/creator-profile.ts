@@ -10,10 +10,12 @@ import {
 } from '../db/entities';
 import { Hex } from 'viem';
 
-// TODO: import from @idriss-xyz/constants
-const DONATION_MIN_ALERT_AMOUNT = 1;
-const DONATION_MIN_TTS_AMOUNT = 5;
-const DONATION_MIN_SFX_AMOUNT = 10;
+import {
+  DONATION_MIN_ALERT_AMOUNT,
+  DONATION_MIN_TTS_AMOUNT,
+  DONATION_MIN_SFX_AMOUNT,
+  CREATORS_LINK
+} from "@idriss-xyz/constants";
 
 const router = Router();
 
@@ -137,8 +139,8 @@ router.post('/', async (req: Request, res: Response) => {
       (creatorData.primaryAddress as Hex) ?? (creatorData.address as Hex);
     creator.name = creatorData.name;
     creator.profilePictureUrl = creatorData.profilePictureUrl;
-    creator.donationUrl = `https://idriss.xyz/creators/${creatorData.name}`;
-    creator.obsUrl = `https://idriss.xyz/creators/obs?address=${creatorData.primaryAddress ?? creatorData.address}`;
+    creator.donationUrl = `${CREATORS_LINK}/${creatorData.name}`;
+    creator.obsUrl = `${CREATORS_LINK}/obs?address=${creatorData.primaryAddress ?? creatorData.address}`;
 
     // Create and save new creator
     const savedCreator = await creatorRepository.save(creator);
