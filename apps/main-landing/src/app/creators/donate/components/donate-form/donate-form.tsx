@@ -18,7 +18,7 @@ import {
   CHAIN_ID_TO_TOKENS,
   CREATORS_USER_GUIDE_LINK,
   DEFAULT_ALLOWED_CHAINS_IDS,
-  DONATION_MIN_SFX_AMOUNT,
+  DEFAULT_DONATION_MIN_SFX_AMOUNT,
 } from '@idriss-xyz/constants';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -62,7 +62,7 @@ export const DonateForm = ({ className, creatorInfo }: Properties) => {
   const { connectModalOpen, openConnectModal } = useConnectModal();
   const [selectedTokenSymbol, setSelectedTokenSymbol] = useState<string>('ETH');
   const minimumSfxAmount =
-    creatorInfo.minimumSfxAmount ?? DONATION_MIN_SFX_AMOUNT;
+    creatorInfo.minimumSfxAmount ?? DEFAULT_DONATION_MIN_SFX_AMOUNT;
 
   const possibleTokens: Token[] = useMemo(() => {
     const tokensSymbols = (creatorInfo.token ?? '').toLowerCase().split(',');
