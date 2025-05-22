@@ -255,6 +255,9 @@ export const useDonationNotification = (
     audio,
     minOverallVisibleDuration,
     onFullyComplete,
+    minimumAlertAmount,
+    minimumSfxAmount,
+    minimumTTSAmount,
   ]);
 
   return { showNotification };

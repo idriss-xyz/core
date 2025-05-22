@@ -265,7 +265,7 @@ export default function Obs({ creatorName }: Properties) {
         console.error('Error fetching tip message log:', error);
       }
     }
-  }, [address, addDonation]);
+  }, [address, addDonation, minimumAmounts]);
 
   useEffect(() => {
     if (!address?.isValid) return;
