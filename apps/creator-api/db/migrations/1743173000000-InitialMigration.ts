@@ -26,7 +26,6 @@ export class InitialMigration1743173000000 implements MigrationInterface {
           "data" json
         );
       `);
-      console.log('Created creator_donations table');
     }
   }
 

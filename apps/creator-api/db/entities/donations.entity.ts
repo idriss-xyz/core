@@ -48,7 +48,10 @@ export class Donation {
   toUser!: User;
 
   @ManyToOne(() => Token)
-  @JoinColumn([{ name: 'token_address', referencedColumnName: 'address' }])
+  @JoinColumn([
+    { name: 'token_address', referencedColumnName: 'address' },
+    { name: 'network', referencedColumnName: 'network' },
+  ])
   token!: Token;
 
   @Column({ type: 'text', name: 'token_address' })
