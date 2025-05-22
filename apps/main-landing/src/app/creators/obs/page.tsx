@@ -14,9 +14,9 @@ import { normalize } from 'viem/ens';
 import {
   CHAIN_ID_TO_TOKENS,
   CREATORS_LINK,
-  DONATION_MIN_ALERT_AMOUNT,
-  DONATION_MIN_SFX_AMOUNT,
-  DONATION_MIN_TTS_AMOUNT,
+  DEFAULT_DONATION_MIN_ALERT_AMOUNT,
+  DEFAULT_DONATION_MIN_SFX_AMOUNT,
+  DEFAULT_DONATION_MIN_TTS_AMOUNT,
   NATIVE_COIN_ADDRESS,
 } from '@idriss-xyz/constants';
 import { clients } from '@idriss-xyz/blockchain-clients';
@@ -69,9 +69,9 @@ export default function Obs({ creatorName }: Properties) {
   const addressSetReference = useRef(false);
   const [address, setAddress] = useState<Address | null>(null);
   const [minimumAmounts, setMinimumAmounts] = useState<MinimumAmounts>({
-    minimumAlertAmount: DONATION_MIN_ALERT_AMOUNT,
-    minimumSfxAmount: DONATION_MIN_SFX_AMOUNT,
-    minimumTTSAmount: DONATION_MIN_TTS_AMOUNT,
+    minimumAlertAmount: DEFAULT_DONATION_MIN_ALERT_AMOUNT,
+    minimumSfxAmount: DEFAULT_DONATION_MIN_SFX_AMOUNT,
+    minimumTTSAmount: DEFAULT_DONATION_MIN_TTS_AMOUNT,
   });
 
   const router = useRouter();

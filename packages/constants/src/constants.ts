@@ -459,6 +459,6 @@ export const EMPTY_HEX = '0x';
 
 export const COPILOT_API_URL = 'https://copilot-api.idriss.xyz';
 
-export const DONATION_MIN_ALERT_AMOUNT = 1;
-export const DONATION_MIN_TTS_AMOUNT = 5;
-export const DONATION_MIN_SFX_AMOUNT = 10;
+export const DEFAULT_DONATION_MIN_ALERT_AMOUNT = 1;
+export const DEFAULT_DONATION_MIN_TTS_AMOUNT = 5;
+export const DEFAULT_DONATION_MIN_SFX_AMOUNT = 10;

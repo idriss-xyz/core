@@ -4,9 +4,9 @@ import { Button } from '@idriss-xyz/ui/button';
 import {
   CREATORS_LINK,
   EMPTY_HEX,
-  DONATION_MIN_ALERT_AMOUNT,
-  DONATION_MIN_SFX_AMOUNT,
-  DONATION_MIN_TTS_AMOUNT,
+  DEFAULT_DONATION_MIN_ALERT_AMOUNT,
+  DEFAULT_DONATION_MIN_SFX_AMOUNT,
+  DEFAULT_DONATION_MIN_TTS_AMOUNT,
 } from '@idriss-xyz/constants';
 import '@rainbow-me/rainbowkit/styles.css';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -103,9 +103,9 @@ function DonateContent({ creatorName }: Properties) {
           name: searchParams.creatorName,
           network: searchParams.network,
           token: searchParams.token,
-          minimumAlertAmount: DONATION_MIN_ALERT_AMOUNT,
-          minimumTTSAmount: DONATION_MIN_TTS_AMOUNT,
-          minimumSfxAmount: DONATION_MIN_SFX_AMOUNT,
+          minimumAlertAmount: DEFAULT_DONATION_MIN_ALERT_AMOUNT,
+          minimumTTSAmount: DEFAULT_DONATION_MIN_TTS_AMOUNT,
+          minimumSfxAmount: DEFAULT_DONATION_MIN_SFX_AMOUNT,
         });
         creatorInfoSetReference.current = true;
       }
