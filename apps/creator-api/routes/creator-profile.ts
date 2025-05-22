@@ -14,8 +14,8 @@ import {
   DEFAULT_DONATION_MIN_ALERT_AMOUNT,
   DEFAULT_DONATION_MIN_TTS_AMOUNT,
   DEFAULT_DONATION_MIN_SFX_AMOUNT,
-  CREATORS_LINK
-} from "@idriss-xyz/constants";
+  CREATORS_LINK,
+} from '@idriss-xyz/constants';
 
 const router = Router();
 
