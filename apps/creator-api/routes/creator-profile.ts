@@ -140,7 +140,7 @@ router.post('/', async (req: Request, res: Response) => {
     creator.name = creatorData.name;
     creator.profilePictureUrl = creatorData.profilePictureUrl;
     creator.donationUrl = `${CREATORS_LINK}/${creatorData.name}`;
-    creator.obsUrl = `${CREATORS_LINK}/obs?address=${creatorData.primaryAddress ?? creatorData.address}`;
+    creator.obsUrl = `${CREATORS_LINK}/obs/${creatorData.name}`;
 
     // Create and save new creator
     const savedCreator = await creatorRepository.save(creator);

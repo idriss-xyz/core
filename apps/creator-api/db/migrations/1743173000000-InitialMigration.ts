@@ -19,7 +19,7 @@ export class InitialMigration1743173000000 implements MigrationInterface {
       await queryRunner.hasTable('creator_donations');
     if (!creatorDonationsExists) {
       await queryRunner.query(`
-        CREATE TABLE "creator_donations" (
+        CREATE TABLE IF NOT EXISTS "creator_donations" (
           "transaction_hash" text PRIMARY KEY,
           "from_address" text,
           "to_address" text,
