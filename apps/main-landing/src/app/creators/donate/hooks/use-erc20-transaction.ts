@@ -95,8 +95,6 @@ export const useErc20Transaction = () => {
           chain: getChainById(chainId),
         });
 
-        callbackOnSend?.(transactionHash);
-
         const receipt = await waitForTransactionReceipt(walletClient, {
           hash: transactionHash,
         });
@@ -127,6 +125,8 @@ export const useErc20Transaction = () => {
         to: idrissTippingAddress,
         chain: getChainById(chainId),
       });
+
+      callbackOnSend?.(transactionHash);
 
       const receipt = await waitForTransactionReceipt(walletClient, {
         hash: transactionHash,
