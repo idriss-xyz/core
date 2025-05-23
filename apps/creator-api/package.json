@@ -21,7 +21,8 @@
     "express-validator": "^7.2.1",
     "socket.io": "^4.8.1",
     "typeorm": "^0.3.20",
-    "viem": "^2.23.2"
+    "viem": "^2.23.2",
+    "@idriss-xyz/constants": "workspace:*"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

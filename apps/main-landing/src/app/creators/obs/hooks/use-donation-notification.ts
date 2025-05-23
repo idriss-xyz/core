@@ -1,10 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 
 import { getTextToSfx, getTextToSpeech } from '../utils';
+import { MinimumAmounts } from '../page';
 
-const DONATION_TTS_MIN_AMOUNT = 4.75; // $5 minus 5% margin for price drops
-const DONATION_SFX_MIN_AMOUNT = 9.5; // $10 minus 5% margin for price drops
-const DONATION_ALERT_MIN_AMOUNT = 0.95; // $1 minus 5% margin for price drops
+const PRICE_DROP_RANGE = 0.05;
 const DONATION_TTS_DELAY = 2000;
 
 const toAudioElement = async (stream: Response): Promise<HTMLAudioElement> => {
@@ -28,9 +27,14 @@ const toAudioElement = async (stream: Response): Promise<HTMLAudioElement> => {
   return audioElement;
 };
 
+const priceDropCalculatedAmount = (amount: number) => {
+  return amount - amount * PRICE_DROP_RANGE;
+};
+
 export const useDonationNotification = (
   audio: HTMLAudioElement,
   amount: string,
+  minimumAmounts: MinimumAmounts,
   message: string,
   sfxText: string | undefined,
   minOverallVisibleDuration: number, // Minimum total time the notification should be visible
@@ -45,6 +49,8 @@ export const useDonationNotification = (
   const ttsAudioElementReference = useRef<HTMLAudioElement | null>(null);
 
   const didRunReference = useRef(false);
+  const { minimumAlertAmount, minimumTTSAmount, minimumSfxAmount } =
+    minimumAmounts;
 
   useEffect(() => {
     if (didRunReference.current) return;
@@ -74,7 +80,10 @@ export const useDonationNotification = (
     }
     // --- End of Effect Cleanup ---
 
-    if (!amount || Number.parseFloat(amount) <= DONATION_ALERT_MIN_AMOUNT) {
+    if (
+      !amount ||
+      Number.parseFloat(amount) <= priceDropCalculatedAmount(minimumAlertAmount)
+    ) {
       setShowNotification(false);
       onFullyComplete();
       return;
@@ -82,8 +91,10 @@ export const useDonationNotification = (
 
     const processDonationAsync = async () => {
       const useSfx =
-        sfxText && Number.parseFloat(amount) > DONATION_SFX_MIN_AMOUNT;
-      const useTts = Number.parseFloat(amount) > DONATION_TTS_MIN_AMOUNT;
+        sfxText &&
+        Number.parseFloat(amount) > priceDropCalculatedAmount(minimumSfxAmount);
+      const useTts =
+        Number.parseFloat(amount) > priceDropCalculatedAmount(minimumTTSAmount);
 
       let sfxAudioForPlayback: HTMLAudioElement | null = null;
       let ttsAudioForPlayback: HTMLAudioElement | null = null;
@@ -244,6 +255,9 @@ export const useDonationNotification = (
     audio,
     minOverallVisibleDuration,
     onFullyComplete,
+    minimumAlertAmount,
+    minimumSfxAmount,
+    minimumTTSAmount,
   ]);
 
   return { showNotification };
