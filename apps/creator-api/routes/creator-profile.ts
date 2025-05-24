@@ -16,6 +16,7 @@ import {
   DEFAULT_DONATION_MIN_SFX_AMOUNT,
   CREATORS_LINK,
 } from '@idriss-xyz/constants';
+import { verifyToken } from '../db/middleware/auth.middleware';
 
 const router = Router();
 
@@ -107,7 +108,7 @@ router.get(
 );
 
 // Create new creator profile with donation parameters
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', verifyToken(), async (req: Request, res: Response) => {
   try {
     const {
       minimumAlertAmount = DEFAULT_DONATION_MIN_ALERT_AMOUNT,

@@ -73,16 +73,24 @@ export const getCreatorProfile = async (
 export const saveCreatorProfile = async (
   address: Hex,
   name?: string | null,
+  authToken?: string
 ): Promise<void> => {
   try {
     if (!address || !name) {
       console.error('No wallet address or name to create creator');
+      return;
+    }
+
+    if (!authToken) {
+      console.error('No auth token provided');
+      return;
     }
 
     const response = await fetch(`${CREATOR_API_URL}/creator-profile`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`
       },
       body: JSON.stringify({
         address: address,

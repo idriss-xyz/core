@@ -39,18 +39,19 @@ export const Providers = ({ children }: Properties) => {
               walletConnectors: [EthereumWalletConnectors],
               events: {
                 onAuthSuccess: async (arguments_) => {
-                  const twitchName = arguments_.user.verifiedCredentials.find(
+                  const twitchCredential = arguments_.user.verifiedCredentials.find(
                     (credential) => {
                       // Ignore due to missing direct enum type export from @dynamic-labs/sdk-react-core
                       // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
                       return credential.oauthProvider === 'twitch';
                     },
-                  )?.oauthUsername;
+                  )
+                  const twitchName = twitchCredential?.oauthUsername
                   const creator = await getCreatorProfile(twitchName);
                   if (creator === undefined) {
                     const walletAddress = arguments_.user
                       .verifiedCredentials?.[0]?.address as Hex;
-                    await saveCreatorProfile(walletAddress, twitchName);
+                    await saveCreatorProfile(walletAddress, twitchName, twitchCredential?.id); // TODO: check if credential.id is correct as jwt
                   }
                   router.push(`/creators/app`);
                 },
