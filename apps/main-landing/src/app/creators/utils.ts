@@ -73,11 +73,12 @@ export const getCreatorProfile = async (
 export const saveCreatorProfile = async (
   address: Hex,
   name?: string | null,
-  authToken?: string
+  dynamicId?: string | null,
+  authToken?: string,
 ): Promise<void> => {
   try {
-    if (!address || !name) {
-      console.error('No wallet address or name to create creator');
+    if (!address || !name || !dynamicId) {
+      console.error('No wallet address, name or dynamicId to create creator');
       return;
     }
 
@@ -90,12 +91,13 @@ export const saveCreatorProfile = async (
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authToken}`
+        'Authorization': `Bearer ${authToken}`,
       },
       body: JSON.stringify({
         address: address,
         primaryAddress: address,
         name,
+        dynamicId,
       }),
     });
 

@@ -140,6 +140,7 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
       (creatorData.primaryAddress as Hex) ?? (creatorData.address as Hex);
     creator.name = creatorData.name;
     creator.profilePictureUrl = creatorData.profilePictureUrl;
+    creator.dynamicId = creatorData.dynamicId;
     creator.donationUrl = `${CREATORS_LINK}/${creatorData.name}`;
     creator.obsUrl = `${CREATORS_LINK}/obs/${creatorData.name}`;
 
