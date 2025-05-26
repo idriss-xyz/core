@@ -7,7 +7,7 @@ export const verifyToken = () => {
   return async (req: Request, res: Response, next: NextFunction) => {
     const key = await getJWKS();
     if (!key) {
-      res.status(401).json({ error: 'Could not get JWKS' });
+      res.status(401).json({ error: 'Could not get JWKS. Check terminal.'});
       return;
     }
     const authHeader = req.headers.authorization;
@@ -21,7 +21,6 @@ export const verifyToken = () => {
 
     try {
       const decoded = jwt.verify(token, key);
-      console.log("Decoded is: ", decoded);
       // TODO: get the dynamic user id from the decoded token and find the user on db
       // const creatorsRepo = AppDataSource.getRepository(Creator);
       // const dynamicId = (decoded as Request)['user'].id;
@@ -37,6 +36,16 @@ export const verifyToken = () => {
 const getJWKS = async () => {
   const jwksUrl = `https://app.dynamic.xyz/api/v0/sdk/${process.env.DYNAMIC_ENVIRONMENT_ID}/.well-known/jwks`;
   const response = await fetch(jwksUrl);
+  if (!response.ok) {
+    console.error('Failed to fetch JWKS:', response.statusText);
+    return null;
+  }
   const jwks = await response.json();
-  return jwks;
+  const key = jwks.keys[0];
+  return jwkToPem(key);
+};
+
+const jwkToPem = (jwk: any): string => {
+  const jwkToPemLib = require('jwk-to-pem');
+  return jwkToPemLib(jwk);
 };

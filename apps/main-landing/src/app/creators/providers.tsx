@@ -3,7 +3,7 @@ import NiceModal from '@ebay/nice-modal-react';
 import { WithPortal } from '@idriss-xyz/ui/providers/with-portal';
 import { ReactNode } from 'react';
 import dynamic from 'next/dynamic';
-import { DynamicContextProvider } from '@dynamic-labs/sdk-react-core';
+import { DynamicContextProvider, getAuthToken } from '@dynamic-labs/sdk-react-core';
 import { EthereumWalletConnectors } from '@dynamic-labs/ethereum';
 import { useRouter } from 'next/navigation';
 import { Hex } from 'viem';
@@ -51,7 +51,8 @@ export const Providers = ({ children }: Properties) => {
                   if (creator === undefined) {
                     const walletAddress = arguments_.user
                       .verifiedCredentials?.[0]?.address as Hex;
-                    await saveCreatorProfile(walletAddress, twitchName, twitchCredential?.id); // TODO: check if credential.id is correct as jwt
+                    const dynamicJwtToken = getAuthToken();
+                    await saveCreatorProfile(walletAddress, twitchName, dynamicJwtToken); // TODO: check if credential.id is correct as jwt
                   }
                   router.push(`/creators/app`);
                 },
