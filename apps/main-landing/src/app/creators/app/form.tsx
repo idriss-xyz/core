@@ -16,7 +16,7 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { Controller, useForm } from 'react-hook-form';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Multiselect, MultiselectOption } from '@idriss-xyz/ui/multiselect';
-import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
+import { getAuthToken, useDynamicContext } from '@dynamic-labs/sdk-react-core';
 
 import { ethereumClient } from '../donate/config';
 import {
@@ -69,7 +69,7 @@ export function CreatorProfileForm() {
   const [copiedObsLink, setCopiedObsLink] = useState(false);
   const [copiedDonationLink, setCopiedDonationLink] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [saveSuccess, setSaveSuccess] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState<boolean | null>(null);
   const { user } = useDynamicContext();
   const initialName = user?.verifiedCredentials.find((credential) => {
     // Ignore due to missing direct enum type export from @dynamic-labs/sdk-react-core
@@ -284,21 +284,27 @@ export function CreatorProfileForm() {
 
     const chainsShortNames = getChainShortNamesFromIds(data.chainsIds);
 
-    try {
-      await editCreatorProfile(data.name, {
-        primaryAddress: data.address as Hex,
-        minimumAlertAmount: data.minimumAlertAmount,
-        minimumTTSAmount: data.minimumTTSAmount,
-        minimumSfxAmount: data.minimumSfxAmount,
-        networks: chainsShortNames,
-        tokens: data.tokensSymbols,
-      });
+    const authToken = getAuthToken();
 
-      setSaveSuccess(true);
+    try {
+      const editSuccess = await editCreatorProfile(
+        data.name,
+        {
+          primaryAddress: data.address as Hex,
+          minimumAlertAmount: data.minimumAlertAmount,
+          minimumTTSAmount: data.minimumTTSAmount,
+          minimumSfxAmount: data.minimumSfxAmount,
+          networks: chainsShortNames,
+          tokens: data.tokensSymbols,
+        },
+        authToken,
+      );
+
+      setSaveSuccess(editSuccess);
 
       // Reset success message after 3 seconds
       setTimeout(() => {
-        setSaveSuccess(false);
+        setSaveSuccess(null);
       }, 3000);
     } catch (error) {
       console.error('Error saving profile:', error);
@@ -514,6 +520,13 @@ export function CreatorProfileForm() {
         {saveSuccess && (
           <div className="mt-4 flex items-center gap-2">
             <span className="text-mint-600">Changes saved successfully!</span>
+          </div>
+        )}
+        {saveSuccess === false && (
+          <div className="mt-4 flex items-center gap-2">
+            <span className="text-red-500">
+              Something went wrong. Please try again.
+            </span>
           </div>
         )}
       </div>

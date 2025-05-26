@@ -112,17 +112,24 @@ export const saveCreatorProfile = async (
 export const editCreatorProfile = async (
   name: string,
   profile: Partial<CreatorProfile>,
-): Promise<void> => {
+  authToken?: string,
+): Promise<boolean> => {
   try {
     if (!name) {
       console.error('No name provided to edit creator profile');
-      return;
+      return false;
+    }
+
+    if (!authToken) {
+      console.error('No auth token provided');
+      return false;
     }
 
     const response = await fetch(`${CREATOR_API_URL}/creator-profile/${name}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`,
       },
       body: JSON.stringify({
         ...profile,
@@ -130,10 +137,12 @@ export const editCreatorProfile = async (
     });
 
     if (!response.ok) {
-      return;
+      return false;
     }
+    return true;
   } catch (error) {
     console.error('Error updating creator profile:', error);
+    return false;
   }
 };
 

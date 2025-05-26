@@ -32,7 +32,8 @@ export const verifyToken = () => {
       (req as any).creator = creator;
       next();
     } catch (error) {
-      res.status(401).json({ error: 'Unauthorized: Invalid token' });
+      console.error(error);
+      res.status(401).json({ error: 'Unauthorized: Something went wrong' });
       return;
     }
   };

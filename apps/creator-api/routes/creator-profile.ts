@@ -188,11 +188,16 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
 
 router.patch(
   '/:name',
+  verifyToken(),
   [param('name').isString().notEmpty()],
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       res.status(400).json({ errors: errors.array() });
+      return;
+    }
+    if (!(req as any).creator) {
+      res.status(401).json({ error: 'Unauthorized' });
       return;
     }
 
