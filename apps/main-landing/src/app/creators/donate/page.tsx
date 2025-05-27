@@ -70,8 +70,8 @@ function DonateContent({ creatorName }: Properties) {
           if (profile) {
             setCreatorInfo({
               address: {
-                data: profile.address,
-                isValid: isAddress(profile.address),
+                data: profile.primaryAddress,
+                isValid: isAddress(profile.primaryAddress),
                 isFetching: false,
               },
               name: profile.name,
