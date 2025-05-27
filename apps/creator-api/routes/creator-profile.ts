@@ -115,7 +115,9 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
       minimumTTSAmount = DEFAULT_DONATION_MIN_TTS_AMOUNT,
       minimumSfxAmount = DEFAULT_DONATION_MIN_SFX_AMOUNT,
       voiceId,
-      voiceMuted,
+      alertMuted,
+      ttsMuted,
+      sfxMuted,
       tokens = [],
       networks = [],
       ...creatorData
@@ -126,7 +128,9 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
     donationParameters.minimumTTSAmount = minimumTTSAmount;
     donationParameters.minimumSfxAmount = minimumSfxAmount;
     donationParameters.voiceId = voiceId;
-    donationParameters.voiceMuted = voiceMuted;
+    donationParameters.alertMuted = alertMuted;
+    donationParameters.ttsMuted = ttsMuted;
+    donationParameters.sfxMuted = sfxMuted;
 
     const creatorRepository = AppDataSource.getRepository(Creator);
     const donationParamsRepository =
@@ -223,7 +227,9 @@ router.patch(
         minimumTTSAmount,
         minimumSfxAmount,
         voiceId,
-        voiceMuted,
+        alertMuted,
+        ttsMuted,
+        sfxMuted,
         tokens = [],
         networks = [],
         ...creatorData
@@ -240,7 +246,9 @@ router.patch(
         minimumTTSAmount ||
         minimumSfxAmount ||
         voiceId ||
-        voiceMuted
+        alertMuted ||
+        ttsMuted ||
+        sfxMuted
       ) {
         const donationParams = await donationParamsRepository.findOne({
           where: { creator: { id: creator.id } },
@@ -254,7 +262,9 @@ router.patch(
               minimumTTSAmount,
               minimumSfxAmount,
               voiceId,
-              voiceMuted,
+              alertMuted,
+              ttsMuted,
+              sfxMuted,
             },
           );
         } else {
@@ -264,7 +274,9 @@ router.patch(
             minimumTTSAmount,
             minimumSfxAmount,
             voiceId,
-            voiceMuted,
+            alertMuted,
+            ttsMuted,
+            sfxMuted,
           });
           await donationParamsRepository.save(newDonationParams);
         }

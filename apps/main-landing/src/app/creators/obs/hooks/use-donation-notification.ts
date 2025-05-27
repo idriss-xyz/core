@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 
 import { getTextToSfx, getTextToSpeech } from '../utils';
-import { MinimumAmounts } from '../page';
+import { MinimumAmounts, MuteToggles } from '../page';
 
 const PRICE_DROP_RANGE = 0.05;
 const DONATION_TTS_DELAY = 2000;
@@ -35,6 +35,7 @@ export const useDonationNotification = (
   audio: HTMLAudioElement,
   amount: string,
   minimumAmounts: MinimumAmounts,
+  muteToggles: MuteToggles,
   message: string,
   sfxText: string | undefined,
   minOverallVisibleDuration: number, // Minimum total time the notification should be visible
@@ -51,6 +52,9 @@ export const useDonationNotification = (
   const didRunReference = useRef(false);
   const { minimumAlertAmount, minimumTTSAmount, minimumSfxAmount } =
     minimumAmounts;
+  const { alertMuted, sfxMuted, ttsMuted } = muteToggles;
+
+  console.log(muteToggles);
 
   useEffect(() => {
     if (didRunReference.current) return;
@@ -82,6 +86,7 @@ export const useDonationNotification = (
 
     if (
       !amount ||
+      alertMuted ||
       Number.parseFloat(amount) <= priceDropCalculatedAmount(minimumAlertAmount)
     ) {
       setShowNotification(false);
@@ -92,8 +97,10 @@ export const useDonationNotification = (
     const processDonationAsync = async () => {
       const useSfx =
         sfxText &&
+        !sfxMuted &&
         Number.parseFloat(amount) > priceDropCalculatedAmount(minimumSfxAmount);
       const useTts =
+        !ttsMuted &&
         Number.parseFloat(amount) > priceDropCalculatedAmount(minimumTTSAmount);
 
       let sfxAudioForPlayback: HTMLAudioElement | null = null;

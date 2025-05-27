@@ -70,8 +70,8 @@ function DonateContent({ creatorName }: Properties) {
           if (profile) {
             setCreatorInfo({
               address: {
-                data: profile.address,
-                isValid: isAddress(profile.address),
+                data: profile.primaryAddress,
+                isValid: isAddress(profile.primaryAddress),
                 isFetching: false,
               },
               name: profile.name,
@@ -84,7 +84,9 @@ function DonateContent({ creatorName }: Properties) {
               minimumTTSAmount: profile.minimumTTSAmount,
               minimumSfxAmount: profile.minimumSfxAmount,
               voiceId: profile.voiceId,
-              voiceMuted: profile.voiceMuted,
+              alertMuted: profile.alertMuted,
+              ttsMuted: profile.ttsMuted,
+              sfxMuted: profile.sfxMuted,
             });
             creatorInfoSetReference.current = true;
           }

@@ -17,6 +17,7 @@ import {
   RestructureDonations1743174000000,
   AddCreatorProfileEntities1747843796640,
   AddDynamicId1748284091728,
+  RefactorMuteToggles1748346009915,
 } from './migrations';
 import { CreatorProfileView } from './views/creator-profile.view';
 
@@ -43,6 +44,7 @@ export const AppDataSource = new DataSource({
     AddDonationEffects1747686797772,
     AddCreatorProfileEntities1747843796640,
     AddDynamicId1748284091728,
+    RefactorMuteToggles1748346009915,
   ],
 });
 

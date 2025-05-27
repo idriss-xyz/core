@@ -56,6 +56,13 @@ export type MinimumAmounts = {
   minimumSfxAmount: number;
   minimumTTSAmount: number;
 };
+
+export type MuteToggles = {
+  alertMuted: boolean;
+  sfxMuted: boolean;
+  ttsMuted: boolean;
+};
+
 type QueuedDonation = Omit<
   DonationNotificationProperties,
   'minOverallVisibleDuration' | 'onFullyComplete'
@@ -72,6 +79,11 @@ export default function Obs({ creatorName }: Properties) {
     minimumAlertAmount: DEFAULT_DONATION_MIN_ALERT_AMOUNT,
     minimumSfxAmount: DEFAULT_DONATION_MIN_SFX_AMOUNT,
     minimumTTSAmount: DEFAULT_DONATION_MIN_TTS_AMOUNT,
+  });
+  const [muteToggles, setMuteToggles] = useState({
+    alertMuted: false,
+    ttsMuted: false,
+    sfxMuted: false,
   });
 
   const router = useRouter();
@@ -99,6 +111,11 @@ export default function Obs({ creatorName }: Properties) {
               minimumAlertAmount: profile.minimumAlertAmount,
               minimumTTSAmount: profile.minimumTTSAmount,
               minimumSfxAmount: profile.minimumSfxAmount,
+            });
+            setMuteToggles({
+              alertMuted: profile.alertMuted,
+              sfxMuted: profile.sfxMuted,
+              ttsMuted: profile.ttsMuted,
             });
           }
         })
@@ -259,13 +276,14 @@ export default function Obs({ creatorName }: Properties) {
               details: tokenDetails,
             },
             minimumAmounts,
+            muteToggles,
           });
         }
       } catch (error) {
         console.error('Error fetching tip message log:', error);
       }
     }
-  }, [address, addDonation, minimumAmounts]);
+  }, [address, addDonation, minimumAmounts, muteToggles]);
 
   useEffect(() => {
     if (!address?.isValid) return;
@@ -295,6 +313,7 @@ export default function Obs({ creatorName }: Properties) {
           minOverallVisibleDuration={DONATION_MIN_OVERALL_VISIBLE_DURATION}
           onFullyComplete={handleDonationFullyComplete}
           minimumAmounts={minimumAmounts}
+          muteToggles={muteToggles}
         />
       )}
     </div>

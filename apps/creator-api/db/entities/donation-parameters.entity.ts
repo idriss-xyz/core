@@ -24,8 +24,14 @@ export class DonationParameters {
   @Column({ type: 'text', name: 'voice_id', nullable: true })
   voiceId?: string;
 
-  @Column({ type: 'boolean', name: 'voice_muted', nullable: true })
-  voiceMuted?: boolean;
+  @Column({ type: 'boolean', name: 'alert_muted', nullable: true })
+  alertMuted?: boolean;
+
+  @Column({ type: 'boolean', name: 'tts_muted', nullable: true })
+  ttsMuted?: boolean;
+
+  @Column({ type: 'text', name: 'sfx_muted', nullable: true })
+  sfxMuted?: boolean;
 
   @OneToOne(() => Creator)
   @JoinColumn({ name: 'creator_id' })

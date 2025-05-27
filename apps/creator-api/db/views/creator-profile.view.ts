@@ -17,7 +17,9 @@ import { CreatorNetwork, CreatorToken, DonationParameters } from '../entities';
       .addSelect('dp.minimum_tts_amount', 'minimumTTSAmount')
       .addSelect('dp.minimum_sfx_amount', 'minimumSfxAmount')
       .addSelect('dp.voice_id', 'voiceId')
-      .addSelect('dp.voice_muted', 'voiceMuted')
+      .addSelect('dp.alert_muted', 'alertMuted')
+      .addSelect('dp.tts_muted', 'ttsMuted')
+      .addSelect('dp.sfx_muted', 'sfxMuted')
       .addSelect(
         'COALESCE(ARRAY_REMOVE(ARRAY_AGG(DISTINCT ct.tokenSymbol), NULL), ARRAY[]::text[])',
         'tokens',
@@ -41,7 +43,9 @@ import { CreatorNetwork, CreatorToken, DonationParameters } from '../entities';
       .addGroupBy('dp.minimum_tts_amount')
       .addGroupBy('dp.minimum_sfx_amount')
       .addGroupBy('dp.voice_id')
-      .addGroupBy('dp.voice_muted'),
+      .addGroupBy('dp.alert_muted')
+      .addGroupBy('dp.tts_muted')
+      .addGroupBy('dp.sfx_muted'),
 })
 export class CreatorProfileView {
   @ViewColumn()
@@ -78,7 +82,13 @@ export class CreatorProfileView {
   voiceId!: string;
 
   @ViewColumn()
-  voiceMuted!: boolean;
+  alertMuted!: boolean;
+
+  @ViewColumn()
+  ttsMuted!: boolean;
+
+  @ViewColumn()
+  sfxMuted!: boolean;
 
   @ViewColumn()
   tokens!: string[];
