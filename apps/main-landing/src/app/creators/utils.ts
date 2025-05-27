@@ -75,21 +75,31 @@ export const getCreatorProfile = async (
 export const saveCreatorProfile = async (
   address: Hex,
   name?: string | null,
+  dynamicId?: string | null,
+  authToken?: string,
 ): Promise<void> => {
   try {
-    if (!address || !name) {
-      console.error('No wallet address or name to create creator');
+    if (!address || !name || !dynamicId) {
+      console.error('No wallet address, name or dynamicId to create creator');
+      return;
+    }
+
+    if (!authToken) {
+      console.error('No auth token provided');
+      return;
     }
 
     const response = await fetch(`${CREATOR_API_URL}/creator-profile`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`,
       },
       body: JSON.stringify({
         address: address,
         primaryAddress: address,
         name,
+        dynamicId,
       }),
     });
 
@@ -104,17 +114,24 @@ export const saveCreatorProfile = async (
 export const editCreatorProfile = async (
   name: string,
   profile: Partial<CreatorProfile>,
-): Promise<void> => {
+  authToken?: string,
+): Promise<boolean> => {
   try {
     if (!name) {
       console.error('No name provided to edit creator profile');
-      return;
+      return false;
+    }
+
+    if (!authToken) {
+      console.error('No auth token provided');
+      return false;
     }
 
     const response = await fetch(`${CREATOR_API_URL}/creator-profile/${name}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`,
       },
       body: JSON.stringify({
         ...profile,
@@ -122,10 +139,12 @@ export const editCreatorProfile = async (
     });
 
     if (!response.ok) {
-      return;
+      return false;
     }
+    return true;
   } catch (error) {
     console.error('Error updating creator profile:', error);
+    return false;
   }
 };
 
