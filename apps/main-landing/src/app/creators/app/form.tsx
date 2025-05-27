@@ -12,6 +12,7 @@ import { Hex, isAddress } from 'viem';
 import { normalize } from 'viem/ens';
 import { Form } from '@idriss-xyz/ui/form';
 import { Button } from '@idriss-xyz/ui/button';
+import { Switch } from '@idriss-xyz/ui/switch';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Controller, useForm } from 'react-hook-form';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -34,8 +35,10 @@ type FormPayload = {
   minimumAlertAmount: number;
   minimumTTSAmount: number;
   minimumSfxAmount: number;
-  voice_id: string;
-  voice_muted: boolean;
+  voiceId: string;
+  alertMuted: boolean;
+  ttsMuted: boolean;
+  sfxMuted: boolean;
 };
 
 const ALL_CHAIN_IDS = Object.values(CREATOR_CHAIN).map((chain) => {
@@ -274,6 +277,9 @@ export function CreatorProfileForm() {
         'chainsIds',
         getChainIdsFromShortNames(creatorProfile.networks),
       );
+      formMethods.setValue('alertMuted', creatorProfile.alertMuted);
+      formMethods.setValue('ttsMuted', creatorProfile.ttsMuted);
+      formMethods.setValue('sfxMuted', creatorProfile.sfxMuted);
     };
     void fetchCreatorProfile();
   }, [initialName, formMethods]);
@@ -290,6 +296,9 @@ export function CreatorProfileForm() {
         minimumAlertAmount: data.minimumAlertAmount,
         minimumTTSAmount: data.minimumTTSAmount,
         minimumSfxAmount: data.minimumSfxAmount,
+        alertMuted: data.alertMuted,
+        ttsMuted: data.ttsMuted,
+        sfxMuted: data.sfxMuted,
         networks: chainsShortNames,
         tokens: data.tokensSymbols,
       });
@@ -465,6 +474,55 @@ export function CreatorProfileForm() {
           );
         }}
       />
+
+      <Controller
+        name="alertMuted"
+        control={formMethods.control}
+        render={({ field }) => {
+          return (
+            <div className="mt-6 flex items-center justify-between">
+              <span>Mute Alerts</span>
+              <Switch
+                value={field.value}
+                onChange={field.onChange}
+              />
+            </div>
+          );
+        }}
+      />
+
+      <Controller
+        name="ttsMuted"
+        control={formMethods.control}
+        render={({ field }) => {
+          return (
+            <div className="mt-6 flex items-center justify-between">
+              <span>Mute TTS</span>
+              <Switch
+                value={field.value}
+                onChange={field.onChange}
+              />
+            </div>
+          );
+        }}
+      />
+
+      <Controller
+        name="sfxMuted"
+        control={formMethods.control}
+        render={({ field }) => {
+          return (
+            <div className="mt-6 flex items-center justify-between">
+              <span>Mute Sfx</span>
+              <Switch
+                value={field.value}
+                onChange={field.onChange}
+              />
+            </div>
+          );
+        }}
+      />
+
 
       <div className="mt-6 grid grid-cols-2 gap-2 lg:gap-4">
         <Button
