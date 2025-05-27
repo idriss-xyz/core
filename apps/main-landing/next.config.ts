@@ -117,7 +117,7 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/instagram',
-        destination: 'https://www.instagram.com/idriss_xyz_',
+        destination: 'https://www.instagram.com/idriss_xyz',
         basePath: false,
         permanent: false,
       },
