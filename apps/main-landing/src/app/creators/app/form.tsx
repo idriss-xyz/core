@@ -92,12 +92,14 @@ export function CreatorProfileForm() {
     },
     mode: 'onSubmit',
   });
-  const [creatorName, chainsIds, tokensSymbols, address] = formMethods.watch([
-    'name',
-    'chainsIds',
-    'tokensSymbols',
-    'address',
-  ]);
+  const [creatorName, chainsIds, tokensSymbols, address, alertMuted] =
+    formMethods.watch([
+      'name',
+      'chainsIds',
+      'tokensSymbols',
+      'address',
+      'alertMuted',
+    ]);
 
   const selectedChainsTokens: ChainToken[] = useMemo(() => {
     return chainsIds
@@ -201,6 +203,14 @@ export function CreatorProfileForm() {
       formMethods.setValue('tokensSymbols', updatedTokens);
     }
   }, [chainsIds, formMethods]);
+
+  // Effect to handle alertMuted changes
+  useEffect(() => {
+    if (alertMuted) {
+      formMethods.setValue('ttsMuted', true);
+      formMethods.setValue('sfxMuted', true);
+    }
+  }, [alertMuted, formMethods]);
 
   const validateAndCopy = async (copyFunction: () => Promise<void>) => {
     const isValid = await formMethods.trigger();
@@ -482,10 +492,7 @@ export function CreatorProfileForm() {
           return (
             <div className="mt-6 flex items-center justify-between">
               <span>Mute Alerts</span>
-              <Switch
-                value={field.value}
-                onChange={field.onChange}
-              />
+              <Switch value={field.value} onChange={field.onChange} />
             </div>
           );
         }}
@@ -499,6 +506,7 @@ export function CreatorProfileForm() {
             <div className="mt-6 flex items-center justify-between">
               <span>Mute TTS</span>
               <Switch
+                disabled={alertMuted}
                 value={field.value}
                 onChange={field.onChange}
               />
@@ -515,6 +523,7 @@ export function CreatorProfileForm() {
             <div className="mt-6 flex items-center justify-between">
               <span>Mute Sfx</span>
               <Switch
+                disabled={alertMuted}
                 value={field.value}
                 onChange={field.onChange}
               />
@@ -522,7 +531,6 @@ export function CreatorProfileForm() {
           );
         }}
       />
-
 
       <div className="mt-6 grid grid-cols-2 gap-2 lg:gap-4">
         <Button
