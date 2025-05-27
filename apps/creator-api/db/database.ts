@@ -16,6 +16,7 @@ import {
   InitialMigration1743173000000,
   RestructureDonations1743174000000,
   AddCreatorProfileEntities1747843796640,
+  RefactorMuteToggles1748346009915,
 } from './migrations';
 import { CreatorProfileView } from './views/creator-profile.view';
 
@@ -41,6 +42,7 @@ export const AppDataSource = new DataSource({
     AddAmountRaw1743181200000,
     AddDonationEffects1747686797772,
     AddCreatorProfileEntities1747843796640,
+    RefactorMuteToggles1748346009915,
   ],
 });
 
