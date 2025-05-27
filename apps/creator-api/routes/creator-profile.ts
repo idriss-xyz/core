@@ -16,6 +16,7 @@ import {
   DEFAULT_DONATION_MIN_SFX_AMOUNT,
   CREATORS_LINK,
 } from '@idriss-xyz/constants';
+import { verifyToken } from '../db/middleware/auth.middleware';
 
 const router = Router();
 
@@ -107,7 +108,7 @@ router.get(
 );
 
 // Create new creator profile with donation parameters
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', verifyToken(), async (req: Request, res: Response) => {
   try {
     const {
       minimumAlertAmount = DEFAULT_DONATION_MIN_ALERT_AMOUNT,
@@ -139,6 +140,7 @@ router.post('/', async (req: Request, res: Response) => {
       (creatorData.primaryAddress as Hex) ?? (creatorData.address as Hex);
     creator.name = creatorData.name;
     creator.profilePictureUrl = creatorData.profilePictureUrl;
+    creator.dynamicId = creatorData.dynamicId;
     creator.donationUrl = `${CREATORS_LINK}/${creatorData.name}`;
     creator.obsUrl = `${CREATORS_LINK}/obs/${creatorData.name}`;
 
@@ -186,11 +188,16 @@ router.post('/', async (req: Request, res: Response) => {
 
 router.patch(
   '/:name',
+  verifyToken(),
   [param('name').isString().notEmpty()],
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       res.status(400).json({ errors: errors.array() });
+      return;
+    }
+    if (!(req as any).creator) {
+      res.status(401).json({ error: 'Unauthorized' });
       return;
     }
 
