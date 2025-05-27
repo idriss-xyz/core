@@ -84,7 +84,9 @@ function DonateContent({ creatorName }: Properties) {
               minimumTTSAmount: profile.minimumTTSAmount,
               minimumSfxAmount: profile.minimumSfxAmount,
               voiceId: profile.voiceId,
-              voiceMuted: profile.voiceMuted,
+              alertMuted: profile.alertMuted,
+              ttsMuted: profile.ttsMuted,
+              sfxMuted: profile.sfxMuted,
             });
             creatorInfoSetReference.current = true;
           }

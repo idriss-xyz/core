@@ -66,5 +66,7 @@ export type CreatorProfile = {
   minimumTTSAmount: number;
   minimumSfxAmount: number;
   voiceId?: number;
-  voiceMuted?: boolean;
+  alertMuted?: boolean;
+  ttsMuted?: boolean;
+  sfxMuted?: boolean;
 };
