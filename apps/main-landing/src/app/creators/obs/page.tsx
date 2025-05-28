@@ -139,7 +139,9 @@ export default function Obs({ creatorName }: Properties) {
     updateCreatorInfo();
     const interval = setInterval(updateCreatorInfo, 60_000);
 
-    return () => {return clearInterval(interval)};
+    return () => {
+      return clearInterval(interval);
+    };
   }, [router, addressParameter.data, addressParameter.isFetching, creatorName]);
   const handleDonationFullyComplete = useCallback(() => {
     setDonationsQueue((previous) => {
