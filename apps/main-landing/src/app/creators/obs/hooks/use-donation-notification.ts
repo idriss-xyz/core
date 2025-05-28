@@ -54,8 +54,6 @@ export const useDonationNotification = (
     minimumAmounts;
   const { alertMuted, sfxMuted, ttsMuted } = muteToggles;
 
-  console.log(muteToggles);
-
   useEffect(() => {
     if (didRunReference.current) return;
     didRunReference.current = true;
