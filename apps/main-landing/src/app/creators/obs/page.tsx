@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   type AbiEvent,
@@ -73,7 +73,7 @@ export default function Obs({ creatorName }: Properties) {
   const {
     searchParams: { address: addressParameter },
   } = useCreators();
-  const addressSetReference = useRef(false);
+
   const [address, setAddress] = useState<Address | null>(null);
   const [minimumAmounts, setMinimumAmounts] = useState<MinimumAmounts>({
     minimumAlertAmount: DEFAULT_DONATION_MIN_ALERT_AMOUNT,
@@ -91,50 +91,56 @@ export default function Obs({ creatorName }: Properties) {
   const [donationsQueue, setDonationsQueue] = useState<QueuedDonation[]>([]);
 
   useEffect(() => {
-    if (addressSetReference.current) return;
-
-    if (
-      !addressParameter.isFetching &&
-      addressParameter.data == null &&
-      creatorName
-    ) {
-      getCreatorProfile(creatorName)
-        .then((profile) => {
-          if (profile) {
-            setAddress({
-              data: profile.primaryAddress,
-              isValid: isAddress(profile.primaryAddress),
-              isFetching: false,
-            });
-            addressSetReference.current = true;
-            setMinimumAmounts({
-              minimumAlertAmount: profile.minimumAlertAmount,
-              minimumTTSAmount: profile.minimumTTSAmount,
-              minimumSfxAmount: profile.minimumSfxAmount,
-            });
-            setMuteToggles({
-              alertMuted: profile.alertMuted,
-              sfxMuted: profile.sfxMuted,
-              ttsMuted: profile.ttsMuted,
-            });
-          }
-        })
-        .catch((error) => {
-          console.error(error);
+    const updateCreatorInfo = () => {
+      if (
+        !addressParameter.isFetching &&
+        addressParameter.data == null &&
+        creatorName
+      ) {
+        getCreatorProfile(creatorName)
+          .then((profile) => {
+            if (profile) {
+              setAddress({
+                data: profile.primaryAddress,
+                isValid: isAddress(profile.primaryAddress),
+                isFetching: false,
+              });
+              setMinimumAmounts({
+                minimumAlertAmount: profile.minimumAlertAmount,
+                minimumTTSAmount: profile.minimumTTSAmount,
+                minimumSfxAmount: profile.minimumSfxAmount,
+              });
+              setMuteToggles({
+                alertMuted: profile.alertMuted,
+                sfxMuted: profile.sfxMuted,
+                ttsMuted: profile.ttsMuted,
+              });
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      } else if (!addressParameter.isFetching && addressParameter.data) {
+        setAddress({
+          data: addressParameter.data,
+          isValid: isAddress(addressParameter.data),
+          isFetching: false,
         });
-    } else if (!addressParameter.isFetching && addressParameter.data) {
-      setAddress(addressParameter);
-      addressSetReference.current = true;
-    } else if (
-      !addressParameter.isFetching &&
-      !addressParameter.data &&
-      !creatorName
-    ) {
-      router.push(CREATORS_LINK);
-      return;
-    }
-  }, [router, addressParameter, creatorName]);
+      } else if (
+        !addressParameter.isFetching &&
+        !addressParameter.data &&
+        !creatorName
+      ) {
+        router.push(CREATORS_LINK);
+        return;
+      }
+    };
 
+    updateCreatorInfo();
+    const interval = setInterval(updateCreatorInfo, 60_000);
+
+    return () => {return clearInterval(interval)};
+  }, [router, addressParameter.data, addressParameter.isFetching, creatorName]);
   const handleDonationFullyComplete = useCallback(() => {
     setDonationsQueue((previous) => {
       return previous.slice(1);
@@ -283,7 +289,7 @@ export default function Obs({ creatorName }: Properties) {
         console.error('Error fetching tip message log:', error);
       }
     }
-  }, [address, addDonation, minimumAmounts, muteToggles]);
+  }, [address?.data, addDonation, minimumAmounts, muteToggles]);
 
   useEffect(() => {
     if (!address?.isValid) return;
@@ -293,7 +299,7 @@ export default function Obs({ creatorName }: Properties) {
     return () => {
       return clearInterval(intervalId);
     };
-  }, [fetchTipMessageLogs, address, address?.isValid]);
+  }, [address?.isValid]);
 
   useEffect(() => {
     if (!isDisplayingDonation && donationsQueue.length > 0) {
