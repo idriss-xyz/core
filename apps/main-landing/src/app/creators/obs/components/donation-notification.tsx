@@ -10,6 +10,7 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { IDRISS_ICON_CIRCLE, NOTIFICATION_SOUND } from '@/assets';
 
 import { useDonationNotification } from '../hooks/use-donation-notification';
+import { MinimumAmounts, MuteToggles } from '../page';
 
 export type DonationNotificationProperties = {
   donor: string;
@@ -19,6 +20,8 @@ export type DonationNotificationProperties = {
   txnHash: string;
   bgColor?: string;
   avatarUrl?: string;
+  minimumAmounts: MinimumAmounts;
+  muteToggles: MuteToggles;
   customIcon?: string;
   style?: CSSProperties;
   notificationSound?: string;
@@ -38,6 +41,8 @@ export default function DonationNotification({
   message,
   sfxText,
   avatarUrl,
+  minimumAmounts,
+  muteToggles,
   style = {},
   bgColor = 'bg-white',
   customIcon = IDRISS_ICON_CIRCLE.src,
@@ -52,6 +57,8 @@ export default function DonationNotification({
   const { showNotification } = useDonationNotification(
     audio,
     amount,
+    minimumAmounts,
+    muteToggles,
     message,
     sfxText,
     minOverallVisibleDuration,
