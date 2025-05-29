@@ -351,6 +351,11 @@ export const DonateForm = ({ className, creatorInfo }: Properties) => {
         {creatorInfo.name
           ? `Donate to ${creatorInfo.name}`
           : 'Select your donation details'}
+        <img
+          src={creatorInfo.profilePictureUrl}
+          className="ml-3 inline h-8 rounded-full"
+          alt='profile-pic'
+         />
       </h1>
 
       <Form onSubmit={formMethods.handleSubmit(onSubmit)} className="w-full">
