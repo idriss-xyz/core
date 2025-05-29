@@ -18,7 +18,7 @@ import {
   AddCreatorProfileEntities1747843796640,
   AddDynamicId1748284091728,
   RefactorMuteToggles1748346009915,
-  AddCreatorDisplayName1748521986209,
+  AddCreatorOauthProperties1748521986209,
 } from './migrations';
 import { CreatorProfileView } from './views/creator-profile.view';
 
@@ -46,7 +46,7 @@ export const AppDataSource = new DataSource({
     AddCreatorProfileEntities1747843796640,
     AddDynamicId1748284091728,
     RefactorMuteToggles1748346009915,
-    AddCreatorDisplayName1748521986209,
+    AddCreatorOauthProperties1748521986209,
   ],
 });
 

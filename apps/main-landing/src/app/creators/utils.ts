@@ -77,6 +77,7 @@ export const saveCreatorProfile = async (
   name?: string | null,
   displayName?: string | null,
   profilePictureUrl?: string | null,
+  oauthAccountId?: string | null,
   dynamicId?: string | null,
   authToken?: string,
 ): Promise<void> => {
@@ -104,6 +105,7 @@ export const saveCreatorProfile = async (
         profilePictureUrl,
         name,
         dynamicId,
+        oauthAccountId,
       }),
     });
 
