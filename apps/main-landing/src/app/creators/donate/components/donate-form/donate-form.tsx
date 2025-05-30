@@ -370,7 +370,9 @@ export const DonateForm = ({
             src={creatorInfo.profilePictureUrl}
             className="ml-3 inline h-8 rounded-full"
             alt="profile-pic"
-            onError={() => {return setImageError(true)}}
+            onError={() => {
+              return setImageError(true);
+            }}
           />
         )}
 
