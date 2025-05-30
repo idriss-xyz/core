@@ -57,6 +57,9 @@ export const Providers = ({ children }: Properties) => {
                     await saveCreatorProfile(
                       walletAddress,
                       twitchName,
+                      twitchCredential?.oauthDisplayName,
+                      twitchCredential?.oauthAccountPhotos?.[0],
+                      twitchCredential?.oauthAccountId,
                       arguments_.user.userId,
                       dynamicJwtToken,
                     );

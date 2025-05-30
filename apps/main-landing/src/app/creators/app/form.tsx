@@ -228,7 +228,7 @@ export function CreatorProfileForm() {
 
   // eslint-disable-next-line unicorn/consistent-function-scoping
   const copyDonationLink = async () => {
-    const donationURL = `https://www.idrissxyz./creators/${creatorName}`;
+    const donationURL = `${CREATORS_LINK}/${creatorName}`;
 
     await navigator.clipboard.writeText(donationURL);
 

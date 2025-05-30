@@ -51,16 +51,22 @@ import { ChainSelect, TokenSelect } from './components';
 type Properties = {
   className?: string;
   creatorInfo: CreatorProfile;
+  streamStatus: boolean | null;
 };
 
 const baseClassName =
   'z-1 w-[440px] max-w-full rounded-xl bg-white px-4 pb-9 pt-6 flex flex-col items-center relative';
 
-export const DonateForm = ({ className, creatorInfo }: Properties) => {
+export const DonateForm = ({
+  className,
+  creatorInfo,
+  streamStatus,
+}: Properties) => {
   const { isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
   const { connectModalOpen, openConnectModal } = useConnectModal();
   const [selectedTokenSymbol, setSelectedTokenSymbol] = useState<string>('ETH');
+  const [imageError, setImageError] = useState(false);
   const minimumSfxAmount =
     creatorInfo.minimumSfxAmount ?? DEFAULT_DONATION_MIN_SFX_AMOUNT;
 
@@ -351,6 +357,30 @@ export const DonateForm = ({ className, creatorInfo }: Properties) => {
         {creatorInfo.name
           ? `Donate to ${creatorInfo.name}`
           : 'Select your donation details'}
+        {imageError ? (
+          <div className="ml-3 inline-flex size-8 items-center justify-center rounded-full border border-neutral-300 bg-neutral-200">
+            <Icon
+              size={20}
+              name="CircleUserRound"
+              className="text-neutral-500"
+            />
+          </div>
+        ) : (
+          <img
+            src={creatorInfo.profilePictureUrl}
+            className="ml-3 inline h-8 rounded-full"
+            alt="profile-pic"
+            onError={() => {
+              return setImageError(true);
+            }}
+          />
+        )}
+
+        {streamStatus && (
+          <Badge type="danger" variant="solid" className="ml-3">
+            Live on Twitch
+          </Badge>
+        )}
       </h1>
 
       <Form onSubmit={formMethods.handleSubmit(onSubmit)} className="w-full">
