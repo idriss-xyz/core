@@ -13,7 +13,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { default as io } from 'socket.io-client';
 import { Hex, isAddress } from 'viem';
 import { useRouter } from 'next/navigation';
-
+import _ from 'lodash';
 import { backgroundLines2 } from '@/assets';
 import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
 import { DonateHistory } from '@/app/creators/donate/components/donate-history';
