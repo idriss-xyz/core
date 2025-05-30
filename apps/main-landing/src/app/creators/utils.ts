@@ -65,6 +65,7 @@ type TwitchAccountInfo = {
   offline_image_url: string;
   view_count: number;
   created_at: string;
+  streamStatus: boolean;
 };
 
 export const getCreatorProfile = async (

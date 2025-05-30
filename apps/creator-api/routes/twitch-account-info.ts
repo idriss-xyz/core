@@ -31,7 +31,7 @@ async function fetchAuthToken(
   }
 }
 
-async function fetchUserInfo(
+async function fetchTwitchUserInfo(
   authToken: string,
   clientId: string,
   userId: string,
@@ -49,6 +49,32 @@ async function fetchUserInfo(
   } catch (error) {
     console.error('Error fetching userInfo:', error);
     throw error;
+  }
+}
+
+async function fetchTwitchStreamStatus(
+  authToken: string,
+  clientId: string,
+  userId: string,
+) {
+  try {
+    const headers = {
+      'Authorization': `Bearer ${authToken}`,
+      'Client-Id': clientId,
+    };
+    const streamRes = await fetch(
+      `https://api.twitch.tv/helix/streams?user_id=${userId}`,
+      {
+        headers,
+      },
+    );
+
+    const streamData = await streamRes.json();
+    console.log('streamData', streamData);
+    return streamData.data.length > 0;
+  } catch (error) {
+    console.error(error);
+    return false;
   }
 }
 
@@ -77,10 +103,19 @@ router.get('/', async (req: Request, res: Response) => {
       return;
     }
 
-    const response = await fetchUserInfo(authToken, clientId, userId);
-    const userInfo = response.data[0];
+    const userInfoResponse = await fetchTwitchUserInfo(
+      authToken,
+      clientId,
+      userId,
+    );
+    const userInfo = userInfoResponse.data[0];
+    const streamStatusResponse = await fetchTwitchStreamStatus(
+      authToken,
+      clientId,
+      userId,
+    );
 
-    res.status(200).json(userInfo);
+    res.status(200).json({ ...userInfo, streamStatus: streamStatusResponse });
   } catch (error) {
     res
       .status(500)

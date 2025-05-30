@@ -58,6 +58,7 @@ function DonateContent({ creatorName }: Properties) {
     name: 'user-tip',
   });
   const [creatorInfo, setCreatorInfo] = useState<CreatorProfile | null>(null);
+  const [streamStatus, setStreamStatus] = useState<boolean | null>(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -73,6 +74,7 @@ function DonateContent({ creatorName }: Properties) {
           const twitchInfo = await getTwitchAccountInfo(profile.oauthAccountId);
           profilePictureUrl =
             twitchInfo?.profile_image_url ?? profile.profilePictureUrl;
+          setStreamStatus(twitchInfo?.streamStatus ?? null);
         }
         setCreatorInfo({
           ...profile,
@@ -218,6 +220,7 @@ function DonateContent({ creatorName }: Properties) {
                 <DonateForm
                   className="container mt-8 overflow-hidden lg:mt-[90px] lg:[@media(max-height:800px)]:mt-[40px]"
                   creatorInfo={creatorInfo}
+                  streamStatus={streamStatus}
                 />
 
                 <Leaderboard
