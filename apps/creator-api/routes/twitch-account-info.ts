@@ -1,11 +1,10 @@
 import { Router, Request, Response } from 'express';
-import axios from 'axios';
 
 const router = Router();
 let authToken: string | null = null;
 
 async function fetchAuthToken(
-  clientId: string,
+  client_id: string,
   client_secret: string,
 ): Promise<string | null> {
   if (authToken) {
@@ -13,29 +12,40 @@ async function fetchAuthToken(
   }
 
   try {
-    const response = await axios.post('https://id.twitch.tv/oauth2/token', {
-      clientId,
-      client_secret,
-      grant_type: 'client_credentials',
+    const response = await fetch('https://id.twitch.tv/oauth2/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        client_id,
+        client_secret,
+        grant_type: 'client_credentials',
+      }),
     });
-    return response.data.access_token;
+    const authToken = (await response.json()).access_token;
+    return authToken;
   } catch (error) {
     console.error('Error fetching authToken:', error);
     throw error;
   }
 }
 
-async function fetchUserInfo(authToken: string, userId: string) {
+async function fetchUserInfo(
+  authToken: string,
+  clientId: string,
+  userId: string,
+) {
   try {
     const headers = {
       'Authorization': `Bearer ${authToken}`,
-      'Client-Id': process.env.TWITCH_CLIENT_ID,
+      'Client-Id': clientId,
     };
-    const response = await axios.get(
+    const response = await fetch(
       `https://api.twitch.tv/helix/users?id=${userId}`,
       { headers },
     );
-    return response.data;
+    return await response.json();
   } catch (error) {
     console.error('Error fetching userInfo:', error);
     throw error;
@@ -67,12 +77,14 @@ router.get('/', async (req: Request, res: Response) => {
       return;
     }
 
-    const userInfo = await fetchUserInfo(authToken, userId);
+    const userInfo = await fetchUserInfo(authToken, clientId, userId);
 
     res.status(200).json(userInfo);
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
+    res
+      .status(500)
+      .json({ error: 'Error fetching twitch user info', message: error });
   }
 });
 
-module.exports = router;
+export default router;
