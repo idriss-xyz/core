@@ -37,6 +37,7 @@ type CreatorProfile = {
   address: Hex;
   primaryAddress: Hex;
   name: string;
+  displayName: string;
   profilePictureUrl: string;
   donationUrl: string;
   obsUrl: string;
@@ -49,6 +50,21 @@ type CreatorProfile = {
   sfxMuted: boolean;
   networks: string[];
   tokens: string[];
+  dynamicId: string;
+  oauthAccountId?: string;
+};
+
+type TwitchAccountInfo = {
+  id: string;
+  login: string;
+  display_name: string;
+  type: string;
+  broadcaster_type: string;
+  description: string;
+  profile_image_url: string;
+  offline_image_url: string;
+  view_count: number;
+  created_at: string;
 };
 
 export const getCreatorProfile = async (
@@ -152,6 +168,17 @@ export const editCreatorProfile = async (
     console.error('Error updating creator profile:', error);
     return false;
   }
+};
+
+export const getTwitchAccountInfo = async (oauthAccountId: string) => {
+  const response = await fetch(
+    `${CREATOR_API_URL}/twitch-account-info?oauthAccountId=${oauthAccountId}`,
+  );
+  if (!response.ok) {
+    return;
+  }
+  const data = (await response.json()) as TwitchAccountInfo;
+  return data;
 };
 
 export const getChainShortNamesFromIds = (chainsIds: number[]) => {

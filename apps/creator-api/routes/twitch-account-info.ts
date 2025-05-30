@@ -70,14 +70,15 @@ router.get('/', async (req: Request, res: Response) => {
       }
     }
 
-    const userId = req.body.userId;
+    const userId = req.query.oauthAccountId as string;
 
     if (!userId) {
       res.status(400).json('Missing user ID');
       return;
     }
 
-    const userInfo = await fetchUserInfo(authToken, clientId, userId);
+    const response = await fetchUserInfo(authToken, clientId, userId);
+    const userInfo = response.data[0];
 
     res.status(200).json(userInfo);
   } catch (error) {
