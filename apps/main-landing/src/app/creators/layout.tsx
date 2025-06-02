@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
+
 import { metadata as landingMetadata } from '@/app/layout';
 
+// ts-unused-exports:disable-next-line
 export const metadata: Metadata = {
   ...landingMetadata,
   description:
@@ -17,6 +19,7 @@ export const metadata: Metadata = {
   },
 };
 
+// ts-unused-exports:disable-next-line
 export default function CreatorsLayout({
   children,
 }: {
