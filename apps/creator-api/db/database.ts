@@ -20,7 +20,7 @@ import {
   RefactorMuteToggles1748346009915,
   AddCreatorOauthProperties1748521986209,
 } from './migrations';
-import { CreatorProfileView } from './views/creator-profile.view';
+import { CreatorProfileView } from './views';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
