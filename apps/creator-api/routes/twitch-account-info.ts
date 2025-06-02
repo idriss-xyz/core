@@ -1,101 +1,13 @@
 import { Router, Request, Response } from 'express';
+import {
+  fetchTwitchUserInfo,
+  fetchTwitchStreamStatus,
+} from '../utils/twitch-api';
 
 const router = Router();
-let authToken: string | null = null;
-
-async function fetchAuthToken(
-  client_id: string,
-  client_secret: string,
-): Promise<string | null> {
-  if (authToken) {
-    return authToken;
-  }
-
-  try {
-    const response = await fetch('https://id.twitch.tv/oauth2/token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        client_id,
-        client_secret,
-        grant_type: 'client_credentials',
-      }),
-    });
-    const authToken = (await response.json()).access_token;
-    return authToken;
-  } catch (error) {
-    console.error('Error fetching authToken:', error);
-    throw error;
-  }
-}
-
-async function fetchTwitchUserInfo(
-  authToken: string,
-  clientId: string,
-  userId: string,
-) {
-  try {
-    const headers = {
-      'Authorization': `Bearer ${authToken}`,
-      'Client-Id': clientId,
-    };
-    const response = await fetch(
-      `https://api.twitch.tv/helix/users?id=${userId}`,
-      { headers },
-    );
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching userInfo:', error);
-    throw error;
-  }
-}
-
-async function fetchTwitchStreamStatus(
-  authToken: string,
-  clientId: string,
-  userId: string,
-) {
-  try {
-    const headers = {
-      'Authorization': `Bearer ${authToken}`,
-      'Client-Id': clientId,
-    };
-    const streamRes = await fetch(
-      `https://api.twitch.tv/helix/streams?user_id=${userId}`,
-      {
-        headers,
-      },
-    );
-
-    const streamData = await streamRes.json();
-    console.log('streamData', streamData);
-    return streamData.data.length > 0;
-  } catch (error) {
-    console.error(error);
-    return false;
-  }
-}
 
 router.get('/', async (req: Request, res: Response) => {
-  const clientId = process.env.TWITCH_CLIENT_ID;
-  const clientSecret = process.env.TWITCH_CLIENT_SECRET;
-
   try {
-    if (!clientId || !clientSecret) {
-      res.status(401).json('Missing client ID or secret');
-      return;
-    }
-    if (!authToken) {
-      // TODO: Add contidion when authToken is expired
-      authToken = await fetchAuthToken(clientId, clientSecret);
-      if (!authToken) {
-        res.status(401).json('Failed to fetch auth token');
-        return;
-      }
-    }
-
     const userId = req.query.oauthAccountId as string;
 
     if (!userId) {
@@ -103,23 +15,25 @@ router.get('/', async (req: Request, res: Response) => {
       return;
     }
 
-    const userInfoResponse = await fetchTwitchUserInfo(
-      authToken,
-      clientId,
-      userId,
-    );
-    const userInfo = userInfoResponse.data[0];
-    const streamStatusResponse = await fetchTwitchStreamStatus(
-      authToken,
-      clientId,
-      userId,
-    );
+    const [userInfo, streamInfo] = await Promise.all([
+      fetchTwitchUserInfo(userId),
+      fetchTwitchStreamStatus(userId),
+    ]);
 
-    res.status(200).json({ ...userInfo, streamStatus: streamStatusResponse });
+    if (!userInfo) {
+      res.status(404).json('User not found');
+      return;
+    }
+
+    res.status(200).json({
+      ...userInfo,
+      streamStatus: streamInfo.isLive,
+    });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: 'Error fetching twitch user info', message: error });
+    res.status(500).json({
+      error: 'Error fetching twitch user info',
+      message: error,
+    });
   }
 });
 
