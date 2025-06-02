@@ -51,7 +51,6 @@ import { ChainSelect, TokenSelect } from './components';
 type Properties = {
   className?: string;
   creatorInfo: CreatorProfile;
-  streamStatus: boolean | null;
 };
 
 const baseClassName =
@@ -60,7 +59,6 @@ const baseClassName =
 export const DonateForm = ({
   className,
   creatorInfo,
-  streamStatus,
 }: Properties) => {
   const { isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
@@ -376,7 +374,7 @@ export const DonateForm = ({
           />
         )}
 
-        {streamStatus && (
+        {creatorInfo.streamStatus && (
           <Badge type="danger" variant="solid" className="ml-3">
             Live on Twitch
           </Badge>

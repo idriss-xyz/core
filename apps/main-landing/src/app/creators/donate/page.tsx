@@ -27,7 +27,7 @@ import {
 
 import { useCreators } from '../hooks/use-creators';
 import { TopBar } from '../components/top-bar';
-import { getCreatorProfile, getTwitchAccountInfo } from '../utils';
+import { getCreatorProfile } from '../utils';
 
 import { Leaderboard } from './components/leaderboard';
 import { DonateForm } from './components/donate-form';
@@ -59,7 +59,6 @@ function DonateContent({ creatorName }: Properties) {
     name: 'user-tip',
   });
   const [creatorInfo, setCreatorInfo] = useState<CreatorProfile | null>(null);
-  const [streamStatus, setStreamStatus] = useState<boolean | null>(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -70,16 +69,8 @@ function DonateContent({ creatorName }: Properties) {
           return;
         }
 
-        let profilePictureUrl = profile?.profilePictureUrl;
-        if (profile.oauthAccountId) {
-          const twitchInfo = await getTwitchAccountInfo(profile.oauthAccountId);
-          profilePictureUrl =
-            twitchInfo?.profile_image_url ?? profile.profilePictureUrl;
-          setStreamStatus(twitchInfo?.streamStatus ?? null);
-        }
         setCreatorInfo({
           ...profile,
-          profilePictureUrl,
           address: {
             data: profile.primaryAddress,
             isValid: isAddress(profile.primaryAddress),
@@ -221,7 +212,6 @@ function DonateContent({ creatorName }: Properties) {
                 <DonateForm
                   className="container mt-8 overflow-hidden lg:mt-[90px] lg:[@media(max-height:800px)]:mt-[40px]"
                   creatorInfo={creatorInfo}
-                  streamStatus={streamStatus}
                 />
 
                 <Leaderboard
