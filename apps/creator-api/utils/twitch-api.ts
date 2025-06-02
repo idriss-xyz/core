@@ -1,13 +1,13 @@
 import { twitchAuthManager } from '../services/twitch-auth-manager';
 
-export interface TwitchUserInfo {
+interface TwitchUserInfo {
   id: string;
   login: string;
   display_name: string;
   profile_image_url: string;
 }
 
-export interface TwitchStreamInfo {
+interface TwitchStreamInfo {
   isLive: boolean;
 }
 

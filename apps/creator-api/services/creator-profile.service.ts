@@ -6,11 +6,11 @@ import {
   fetchTwitchStreamStatus,
 } from '../utils/twitch-api';
 
-export interface EnrichedCreatorProfile extends CreatorProfileView {
+interface EnrichedCreatorProfile extends CreatorProfileView {
   streamStatus?: boolean;
 }
 
-export class CreatorProfileService {
+class CreatorProfileService {
   private profileRepository = AppDataSource.getRepository(CreatorProfileView);
   private creatorRepository = AppDataSource.getRepository(Creator);
 

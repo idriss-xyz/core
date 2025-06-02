@@ -56,10 +56,7 @@ type Properties = {
 const baseClassName =
   'z-1 w-[440px] max-w-full rounded-xl bg-white px-4 pb-9 pt-6 flex flex-col items-center relative';
 
-export const DonateForm = ({
-  className,
-  creatorInfo,
-}: Properties) => {
+export const DonateForm = ({ className, creatorInfo }: Properties) => {
   const { isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
   const { connectModalOpen, openConnectModal } = useConnectModal();
