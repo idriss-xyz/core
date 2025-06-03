@@ -11,9 +11,9 @@ import {
 import '@rainbow-me/rainbowkit/styles.css';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { default as io } from 'socket.io-client';
-import _ from 'lodash';
 import { Hex, isAddress } from 'viem';
 import { useRouter } from 'next/navigation';
+import _ from 'lodash';
 
 import { backgroundLines2 } from '@/assets';
 import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
@@ -60,57 +60,44 @@ function DonateContent({ creatorName }: Properties) {
   });
   const [creatorInfo, setCreatorInfo] = useState<CreatorProfile | null>(null);
 
-  // TODO: clean code
   useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const profile = await getCreatorProfile(creatorName);
+
+        if (!profile) {
+          return;
+        }
+
+        setCreatorInfo({
+          ...profile,
+          address: {
+            data: profile.primaryAddress,
+            isValid: isAddress(profile.primaryAddress),
+            isFetching: false,
+          },
+          network: profile.networks.join(','),
+          token: profile.tokens.join(','),
+        });
+        creatorInfoSetReference.current = true;
+      } catch (error) {
+        console.error('Failed to fetch profile data:', error);
+      }
+    };
+
     if (creatorInfoSetReference.current) return;
 
     if (searchParams.address.data == null && creatorName) {
-      getCreatorProfile(creatorName)
-        .then((profile) => {
-          if (profile) {
-            setCreatorInfo({
-              address: {
-                data: profile.primaryAddress,
-                isValid: isAddress(profile.primaryAddress),
-                isFetching: false,
-              },
-              name: profile.name,
-              network: profile.networks.join(','),
-              token: profile.tokens.join(','),
-              profilePictureUrl: profile.profilePictureUrl,
-              donationUrl: profile.donationUrl,
-              obsUrl: profile.obsUrl,
-              minimumAlertAmount: profile.minimumAlertAmount,
-              minimumTTSAmount: profile.minimumTTSAmount,
-              minimumSfxAmount: profile.minimumSfxAmount,
-              voiceId: profile.voiceId,
-              alertMuted: profile.alertMuted,
-              ttsMuted: profile.ttsMuted,
-              sfxMuted: profile.sfxMuted,
-            });
-            creatorInfoSetReference.current = true;
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    } else {
-      if (!searchParams.address.isFetching) {
-        setCreatorInfo({
-          address: {
-            data: searchParams.address.data,
-            isValid: searchParams.address.isValid,
-            isFetching: searchParams.address.isFetching,
-          },
-          name: searchParams.creatorName,
-          network: searchParams.network,
-          token: searchParams.token,
-          minimumAlertAmount: DEFAULT_DONATION_MIN_ALERT_AMOUNT,
-          minimumTTSAmount: DEFAULT_DONATION_MIN_TTS_AMOUNT,
-          minimumSfxAmount: DEFAULT_DONATION_MIN_SFX_AMOUNT,
-        });
-        creatorInfoSetReference.current = true;
-      }
+      void fetchProfile();
+    } else if (!searchParams.address.isFetching) {
+      setCreatorInfo({
+        ...searchParams,
+        name: searchParams.creatorName,
+        minimumAlertAmount: DEFAULT_DONATION_MIN_ALERT_AMOUNT,
+        minimumTTSAmount: DEFAULT_DONATION_MIN_TTS_AMOUNT,
+        minimumSfxAmount: DEFAULT_DONATION_MIN_SFX_AMOUNT,
+      });
+      creatorInfoSetReference.current = true;
     }
   }, [
     searchParams.address,

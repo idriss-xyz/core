@@ -69,4 +69,5 @@ export type CreatorProfile = {
   alertMuted?: boolean;
   ttsMuted?: boolean;
   sfxMuted?: boolean;
+  streamStatus?: string;
 };

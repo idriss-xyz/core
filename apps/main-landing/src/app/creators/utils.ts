@@ -37,6 +37,7 @@ type CreatorProfile = {
   address: Hex;
   primaryAddress: Hex;
   name: string;
+  displayName: string;
   profilePictureUrl: string;
   donationUrl: string;
   obsUrl: string;
@@ -49,6 +50,7 @@ type CreatorProfile = {
   sfxMuted: boolean;
   networks: string[];
   tokens: string[];
+  dynamicId: string;
 };
 
 export const getCreatorProfile = async (
@@ -75,6 +77,8 @@ export const getCreatorProfile = async (
 export const saveCreatorProfile = async (
   address: Hex,
   name?: string | null,
+  displayName?: string | null,
+  profilePictureUrl?: string | null,
   dynamicId?: string | null,
   authToken?: string,
 ): Promise<void> => {
@@ -98,6 +102,8 @@ export const saveCreatorProfile = async (
       body: JSON.stringify({
         address: address,
         primaryAddress: address,
+        displayName,
+        profilePictureUrl,
         name,
         dynamicId,
       }),

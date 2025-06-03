@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { param, validationResult } from 'express-validator';
-import { CreatorProfileView } from '../db/views/creator-profile.view';
+import { creatorProfileService } from '../services/creator-profile.service';
 import { AppDataSource } from '../db/database';
 import {
   Creator,
@@ -33,8 +33,7 @@ router.get(
 
     try {
       const name = req.params.name;
-      const repository = AppDataSource.getRepository(CreatorProfileView);
-      const profile = await repository.findOne({ where: { name } });
+      const profile = await creatorProfileService.getProfileByName(name);
 
       if (!profile) {
         res.status(404).json({ error: 'Creator profile not found' });
@@ -62,8 +61,7 @@ router.get(
 
     try {
       const id = parseInt(req.params.id);
-      const repository = AppDataSource.getRepository(CreatorProfileView);
-      const profile = await repository.findOne({ where: { id } });
+      const profile = await creatorProfileService.getProfileById(id);
 
       if (!profile) {
         res.status(404).json({ error: 'Creator profile not found' });
@@ -91,8 +89,7 @@ router.get(
 
     try {
       const address = req.params.address;
-      const repository = AppDataSource.getRepository(CreatorProfileView);
-      const profile = await repository.findOne({ where: { address } });
+      const profile = await creatorProfileService.getProfileByAddress(address);
 
       if (!profile) {
         res.status(404).json({ error: 'Creator profile not found' });
@@ -143,6 +140,7 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
     creator.primaryAddress =
       (creatorData.primaryAddress as Hex) ?? (creatorData.address as Hex);
     creator.name = creatorData.name;
+    creator.displayName = creatorData.displayName;
     creator.profilePictureUrl = creatorData.profilePictureUrl;
     creator.dynamicId = creatorData.dynamicId;
     creator.donationUrl = `${CREATORS_LINK}/${creatorData.name}`;
