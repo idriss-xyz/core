@@ -27,6 +27,7 @@ async function getHeaders(): Promise<Record<string, string>> {
   };
 }
 
+// Rerence: https://dev.twitch.tv/docs/api/reference/#get-users
 export async function fetchTwitchUserInfo(
   name: string,
 ): Promise<TwitchUserInfo | null> {
@@ -48,6 +49,7 @@ export async function fetchTwitchUserInfo(
   }
 }
 
+// Reference: https://dev.twitch.tv/docs/api/reference/#get-stream-key
 export async function fetchTwitchStreamStatus(
   name: string,
 ): Promise<TwitchStreamInfo> {

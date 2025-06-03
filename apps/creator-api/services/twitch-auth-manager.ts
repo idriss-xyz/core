@@ -28,6 +28,7 @@ class TwitchAuthManager {
     );
   }
 
+  // Reference: https://dev.twitch.tv/docs/authentication/getting-tokens-oauth/#client-credentials-grant-flow
   private async fetchNewToken(): Promise<string | null> {
     const clientId = process.env.TWITCH_CLIENT_ID;
     const clientSecret = process.env.TWITCH_CLIENT_SECRET;
