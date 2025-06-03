@@ -37,7 +37,6 @@ import { CreatorNetwork, CreatorToken, DonationParameters } from '../entities';
       .addGroupBy('c.primary_address')
       .addGroupBy('c.name')
       .addGroupBy('c.display_name')
-      .addGroupBy('c.oauth_account_id')
       .addGroupBy('c.profile_picture_url')
       .addGroupBy('c.donation_url')
       .addGroupBy('c.obs_url')
@@ -64,9 +63,6 @@ export class CreatorProfileView {
 
   @ViewColumn()
   displayName!: string;
-
-  @ViewColumn()
-  oauthAccountId!: string | null;
 
   @ViewColumn()
   profilePictureUrl!: string | null;

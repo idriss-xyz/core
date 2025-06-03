@@ -59,7 +59,6 @@ export const Providers = ({ children }: Properties) => {
                       twitchName,
                       twitchCredential?.oauthDisplayName,
                       twitchCredential?.oauthAccountPhotos?.[0],
-                      twitchCredential?.oauthAccountId,
                       arguments_.user.userId,
                       dynamicJwtToken,
                     );

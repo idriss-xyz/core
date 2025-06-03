@@ -39,14 +39,14 @@ class CreatorProfileService {
   private async enrichWithTwitchData(
     profile: CreatorProfileView,
   ): Promise<EnrichedCreatorProfile> {
-    if (!profile.oauthAccountId) {
+    if (!profile.name) {
       return profile;
     }
 
     try {
       const [streamInfo, userInfo] = await Promise.all([
-        fetchTwitchStreamStatus(profile.oauthAccountId),
-        fetchTwitchUserInfo(profile.oauthAccountId),
+        fetchTwitchStreamStatus(profile.name),
+        fetchTwitchUserInfo(profile.name),
       ]);
 
       if (

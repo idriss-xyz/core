@@ -28,11 +28,11 @@ async function getHeaders(): Promise<Record<string, string>> {
 }
 
 export async function fetchTwitchUserInfo(
-  userId: string,
+  name: string,
 ): Promise<TwitchUserInfo | null> {
   try {
     const headers = await getHeaders();
-    const response = await fetch(`${TWITCH_BASE_URL}/users?id=${userId}`, {
+    const response = await fetch(`${TWITCH_BASE_URL}/users?login=${name}`, {
       headers,
     });
 
@@ -49,12 +49,12 @@ export async function fetchTwitchUserInfo(
 }
 
 export async function fetchTwitchStreamStatus(
-  userId: string,
+  name: string,
 ): Promise<TwitchStreamInfo> {
   try {
     const headers = await getHeaders();
     const response = await fetch(
-      `${TWITCH_BASE_URL}/streams?user_id=${userId}`,
+      `${TWITCH_BASE_URL}/streams?user_login=${name}`,
       { headers },
     );
 

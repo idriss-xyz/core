@@ -1,16 +1,13 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class AddCreatorOauthProperties1748521986209
-  implements MigrationInterface
-{
+export class AddCreatorDisplayName1748521986209 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
             DROP VIEW IF EXISTS creator_profile_view;
         `);
     await queryRunner.query(
       `ALTER TABLE "creator"
-        ADD COLUMN "display_name" text,
-        ADD COLUMN oauth_account_id text`,
+        ADD COLUMN "display_name" text`,
     );
     await queryRunner.query(`
             CREATE VIEW "creator_profile_view" AS
@@ -21,7 +18,6 @@ export class AddCreatorOauthProperties1748521986209
                 c.name as name,
                 c.display_name as "displayName",
                 c.profile_picture_url as "profilePictureUrl",
-                c.oauth_account_id as "oauthAccountId",
                 c.donation_url as "donationUrl",
                 c.obs_url as "obsUrl",
                 dp.minimum_alert_amount as "minimumAlertAmount",
@@ -44,7 +40,6 @@ export class AddCreatorOauthProperties1748521986209
                 c.name,
                 c.display_name,
                 c.profile_picture_url,
-                c.oauth_account_id,
                 c.donation_url,
                 c.obs_url,
                 dp.minimum_alert_amount,
@@ -62,8 +57,7 @@ export class AddCreatorOauthProperties1748521986209
             DROP VIEW IF EXISTS creator_profile_view;
         `);
     await queryRunner.query(`ALTER TABLE "creator"
-      DROP COLUMN "display_name",
-      DROP COLUMN oauth_account_id`);
+      DROP COLUMN "display_name"`);
 
     await queryRunner.query(`
             CREATE VIEW "creator_profile_view" AS

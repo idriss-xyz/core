@@ -23,14 +23,6 @@ export class Creator {
   @Column({ type: 'text', name: 'dynamic_id', unique: true })
   dynamicId?: string;
 
-  @Column({
-    type: 'text',
-    name: 'oauth_account_id',
-    unique: true,
-    nullable: true,
-  })
-  oauthAccountId?: string;
-
   @Column({ type: 'text', name: 'profile_picture_url', nullable: true })
   profilePictureUrl?: string;
 

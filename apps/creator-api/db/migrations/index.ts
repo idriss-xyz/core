@@ -6,4 +6,4 @@ export { AddDonationEffects1747686797772 } from './1747686797772-AddDonationEffe
 export { AddCreatorProfileEntities1747843796640 } from './1747843796640-AddCreatorProfileEntities';
 export { AddDynamicId1748284091728 } from './1748284091728-AddDynamicId';
 export { RefactorMuteToggles1748346009915 } from './1748346009915-RefactorMuteToggles';
-export { AddCreatorOauthProperties1748521986209 } from './1748521986209-AddCreatorOauthProperties';
+export { AddCreatorDisplayName1748521986209 } from './1748521986209-AddCreatorDisplayName';

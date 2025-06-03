@@ -8,16 +8,16 @@ const router = Router();
 
 router.get('/', async (req: Request, res: Response) => {
   try {
-    const userId = req.query.oauthAccountId as string;
+    const name = req.query.name as string;
 
-    if (!userId) {
+    if (!name) {
       res.status(400).json('Missing user ID');
       return;
     }
 
     const [userInfo, streamInfo] = await Promise.all([
-      fetchTwitchUserInfo(userId),
-      fetchTwitchStreamStatus(userId),
+      fetchTwitchUserInfo(name),
+      fetchTwitchStreamStatus(name),
     ]);
 
     if (!userInfo) {
