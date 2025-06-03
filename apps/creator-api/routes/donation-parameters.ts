@@ -20,7 +20,12 @@ router.post('/', validationRules, async (req: Request, res: Response) => {
     res.status(400).json({ errors: errors.array() });
     return;
   }
-  const { minimumAlertAmount, minimumTTSAmount, minimumSfxAmount, customBadWords = [] } = req.body;
+  const {
+    minimumAlertAmount,
+    minimumTTSAmount,
+    minimumSfxAmount,
+    customBadWords = [],
+  } = req.body;
 
   try {
     const savedParams = await donationParamsRepository.save({

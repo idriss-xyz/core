@@ -51,6 +51,7 @@ type CreatorProfile = {
   networks: string[];
   tokens: string[];
   dynamicId: string;
+  customBadWords: string[];
 };
 
 export const getCreatorProfile = async (
