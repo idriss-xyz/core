@@ -116,7 +116,6 @@ export default function Obs({ creatorName }: Properties) {
                 sfxMuted: profile.sfxMuted,
                 ttsMuted: profile.ttsMuted,
               });
-              console.log('words', profile.customBadWords);
               setCustomBadWords(profile.customBadWords);
             }
           })
