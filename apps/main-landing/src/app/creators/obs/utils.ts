@@ -1,8 +1,8 @@
 import { type Hex } from 'viem';
 import { CREATOR_CHAIN } from '@idriss-xyz/constants';
-import { clientEthereum } from '@idriss-xyz/blockchain-clients';
 
 import { CREATOR_API_URL } from '../donate/constants';
+import { ethereumClient } from '../donate/config';
 
 const SELL_TOKEN_BY_NETWORK: Record<number, string> = {
   [CREATOR_CHAIN.BASE.id]: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',
@@ -82,7 +82,7 @@ export async function calculateDollar(
 
 export const resolveEnsName = async (address: Hex): Promise<string | null> => {
   try {
-    let resolved = await clientEthereum.getEnsName({ address });
+    let resolved = await ethereumClient.getEnsName({ address });
     if (resolved) return resolved;
 
     const response = await fetch(
