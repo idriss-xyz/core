@@ -12,28 +12,13 @@ export class DonationParameters {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({
-    name: 'minimum_alert_amount',
-    type: 'decimal',
-    precision: 10,
-    scale: 2,
-  })
+  @Column({ type: 'integer', name: 'minimum_alert_amount' })
   minimumAlertAmount!: number;
 
-  @Column({
-    name: 'minimum_tts_amount',
-    type: 'decimal',
-    precision: 10,
-    scale: 2,
-  })
+  @Column({ type: 'integer', name: 'minimum_tts_amount' })
   minimumTTSAmount!: number;
 
-  @Column({
-    name: 'minimum_sfx_amount',
-    type: 'decimal',
-    precision: 10,
-    scale: 2,
-  })
+  @Column({ type: 'integer', name: 'minimum_sfx_amount' })
   minimumSfxAmount!: number;
 
   @Column({ name: 'voice_id', nullable: true })
