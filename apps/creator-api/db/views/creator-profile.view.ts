@@ -20,6 +20,7 @@ import { CreatorNetwork, CreatorToken, DonationParameters } from '../entities';
       .addSelect('dp.alert_muted', 'alertMuted')
       .addSelect('dp.tts_muted', 'ttsMuted')
       .addSelect('dp.sfx_muted', 'sfxMuted')
+      .addSelect('dp.custom_bad_words', 'customBadWords')
       .addSelect(
         'COALESCE(ARRAY_REMOVE(ARRAY_AGG(DISTINCT ct.tokenSymbol), NULL), ARRAY[]::text[])',
         'tokens',
@@ -46,7 +47,8 @@ import { CreatorNetwork, CreatorToken, DonationParameters } from '../entities';
       .addGroupBy('dp.voice_id')
       .addGroupBy('dp.alert_muted')
       .addGroupBy('dp.tts_muted')
-      .addGroupBy('dp.sfx_muted'),
+      .addGroupBy('dp.sfx_muted')
+      .addGroupBy('dp.custom_bad_words'),
 })
 export class CreatorProfileView {
   @ViewColumn()
@@ -93,6 +95,9 @@ export class CreatorProfileView {
 
   @ViewColumn()
   sfxMuted!: boolean;
+
+  @ViewColumn()
+  customBadWords!: string[];
 
   @ViewColumn()
   tokens!: string[];

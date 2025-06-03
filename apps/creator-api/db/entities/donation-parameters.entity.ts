@@ -12,26 +12,49 @@ export class DonationParameters {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({ type: 'integer', name: 'minimum_alert_amount' })
+  @Column({
+    name: 'minimum_alert_amount',
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+  })
   minimumAlertAmount!: number;
 
-  @Column({ type: 'integer', name: 'minimum_tts_amount' })
+  @Column({
+    name: 'minimum_tts_amount',
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+  })
   minimumTTSAmount!: number;
 
-  @Column({ type: 'integer', name: 'minimum_sfx_amount' })
+  @Column({
+    name: 'minimum_sfx_amount',
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+  })
   minimumSfxAmount!: number;
 
-  @Column({ type: 'text', name: 'voice_id', nullable: true })
-  voiceId?: string;
+  @Column({ name: 'voice_id', nullable: true })
+  voiceId!: string;
 
-  @Column({ type: 'boolean', name: 'alert_muted', nullable: true })
-  alertMuted?: boolean;
+  @Column({ name: 'alert_muted', default: false })
+  alertMuted!: boolean;
 
-  @Column({ type: 'boolean', name: 'tts_muted', nullable: true })
-  ttsMuted?: boolean;
+  @Column({ name: 'tts_muted', default: false })
+  ttsMuted!: boolean;
 
-  @Column({ type: 'text', name: 'sfx_muted', nullable: true })
-  sfxMuted?: boolean;
+  @Column({ name: 'sfx_muted', default: false })
+  sfxMuted!: boolean;
+
+  @Column({
+    name: 'custom_bad_words',
+    type: 'text',
+    array: true,
+    default: '{}',
+  })
+  customBadWords!: string[];
 
   @OneToOne(() => Creator)
   @JoinColumn({ name: 'creator_id' })
