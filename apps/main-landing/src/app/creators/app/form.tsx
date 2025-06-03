@@ -39,7 +39,7 @@ type FormPayload = {
   alertMuted: boolean;
   ttsMuted: boolean;
   sfxMuted: boolean;
-  customBadWords: string;
+  customBadWords: string[];
 };
 
 const ALL_CHAIN_IDS = Object.values(CREATOR_CHAIN).map((chain) => {
@@ -90,7 +90,7 @@ export function CreatorProfileForm() {
       minimumAlertAmount: 1,
       minimumTTSAmount: 5,
       minimumSfxAmount: 10,
-      customBadWords: '',
+      customBadWords: [],
     },
     mode: 'onSubmit',
   });
@@ -292,10 +292,7 @@ export function CreatorProfileForm() {
       formMethods.setValue('alertMuted', creatorProfile.alertMuted);
       formMethods.setValue('ttsMuted', creatorProfile.ttsMuted);
       formMethods.setValue('sfxMuted', creatorProfile.sfxMuted);
-      formMethods.setValue(
-        'customBadWords',
-        creatorProfile.customBadWords.join(','),
-      );
+      formMethods.setValue('customBadWords', creatorProfile.customBadWords);
     };
     void fetchCreatorProfile();
   }, [initialName, formMethods]);
@@ -320,7 +317,7 @@ export function CreatorProfileForm() {
           sfxMuted: data.sfxMuted,
           networks: chainsShortNames,
           tokens: data.tokensSymbols,
-          customBadWords: data.customBadWords.split(','),
+          customBadWords: data.customBadWords,
         },
         authToken,
       );
@@ -502,13 +499,12 @@ export function CreatorProfileForm() {
         control={formMethods.control}
         render={({ field, fieldState }) => {
           return (
-            <Form.Field
-              label="Custom bad words (separated by comma)"
+            <Form.TagField
+              label="Custom Bad Words"
               className="mt-6 w-full"
               helperText={fieldState.error?.message}
               error={Boolean(fieldState.error?.message)}
               {...field}
-              value={field.value}
             />
           );
         }}

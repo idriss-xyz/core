@@ -14,6 +14,7 @@ type BaseProperties = {
   onChange: (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
   className?: string;
   error?: boolean;
   success?: boolean;
@@ -43,6 +44,7 @@ export const Input = forwardRef(
     const {
       value,
       onChange,
+      onKeyDown,
       className,
       success,
       error,
@@ -93,6 +95,7 @@ export const Input = forwardRef(
           <input
             ref={reference as ForwardedRef<HTMLInputElement>}
             {...inputProperties}
+            onKeyDown={onKeyDown}
             style={{
               paddingLeft:
                 properties.prefixIconName &&
