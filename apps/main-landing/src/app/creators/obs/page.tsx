@@ -90,6 +90,7 @@ export default function Obs({ creatorName }: Properties) {
   const [isDisplayingDonation, setIsDisplayingDonation] = useState(false);
   const [donationsQueue, setDonationsQueue] = useState<QueuedDonation[]>([]);
 
+  // If creator name present use info from db, if not, use params only
   useEffect(() => {
     const updateCreatorInfo = () => {
       if (
@@ -143,6 +144,7 @@ export default function Obs({ creatorName }: Properties) {
       return clearInterval(interval);
     };
   }, [router, addressParameter.data, addressParameter.isFetching, creatorName]);
+
   const handleDonationFullyComplete = useCallback(() => {
     setDonationsQueue((previous) => {
       return previous.slice(1);
@@ -168,6 +170,60 @@ export default function Obs({ creatorName }: Properties) {
       return [...previous, donation];
     });
   }, []);
+
+  // Check for test donations incoming in localStorage
+  useEffect(() => {
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === 'testDonation' && event.newValue) {
+        console.log('Received test donation event');
+
+        try {
+          const testDonation = JSON.parse(event.newValue);
+
+          const queuedDonation: QueuedDonation = {
+            avatarUrl: testDonation.avatarUrl,
+            message: testDonation.message,
+            sfxText: testDonation.sfxText,
+            amount: testDonation.amount,
+            donor: testDonation.donor,
+            txnHash: testDonation.txnHash,
+            token: {
+              amount: BigInt(testDonation.token.amount),
+              details: testDonation.token.details,
+            },
+            minimumAmounts,
+            muteToggles,
+          };
+
+          addDonation(queuedDonation);
+
+          // Clear the test donation from localStorage
+          localStorage.removeItem('testDonation');
+        } catch (error) {
+          console.error('Error parsing test donation:', error);
+        }
+      }
+    };
+
+    // Also check for existing test donation on mount
+    const checkForTestDonation = () => {
+      const testDonationData = localStorage.getItem('testDonation');
+      if (testDonationData) {
+        const event = {
+          key: 'testDonation',
+          newValue: testDonationData,
+        } as StorageEvent;
+        handleStorageChange(event);
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    checkForTestDonation(); // Check immediately on mount
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [addDonation, minimumAmounts, muteToggles]);
 
   const fetchTipMessageLogs = useCallback(async () => {
     if (!address?.data) return;
