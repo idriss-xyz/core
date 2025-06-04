@@ -28,7 +28,7 @@ export function GET(request: Request): NextResponse<ApiResponse> {
         .map((event) => {
           return {
             address: event.to!,
-            score: parseEther(event.total!).toString(),
+            score: (parseEther(event.total!) * 2n).toString(),
           };
         });
       return NextResponse.json({ score });
