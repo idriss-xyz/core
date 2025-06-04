@@ -99,13 +99,7 @@ function DonateContent({ creatorName }: Properties) {
       });
       creatorInfoSetReference.current = true;
     }
-  }, [
-    searchParams.address,
-    searchParams.creatorName,
-    searchParams.network,
-    searchParams.token,
-    creatorName,
-  ]);
+  }, [searchParams, creatorName]);
 
   const donationsHistory = useGetTipHistory(
     { address: creatorInfo?.address.data ?? EMPTY_HEX },

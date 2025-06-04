@@ -356,6 +356,8 @@ export default function Obs({ creatorName }: Properties) {
     return () => {
       return clearInterval(intervalId);
     };
+    // TODO: check why adding fetchTipMessageLogs makes infinite render loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address?.isValid]);
 
   useEffect(() => {
