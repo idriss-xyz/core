@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { parseEther } from 'viem';
+import { parseEther, formatEther } from 'viem';
 
 import { loadExistingEvents } from '@/utils';
 import { ClaimEvent } from '@/constants';
@@ -28,7 +28,7 @@ export function GET(request: Request): NextResponse<ApiResponse> {
         .map((event) => {
           return {
             address: event.to!,
-            score: parseEther(event.total!).toString(),
+            score: formatEther(parseEther(event.total!) * 2n),
           };
         });
       return NextResponse.json({ score });
