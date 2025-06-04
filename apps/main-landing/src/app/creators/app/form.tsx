@@ -306,12 +306,11 @@ export function CreatorProfileForm() {
     // Create test donation data
     const testDonation = {
       type: 'test' as const,
-      donor: 'TestDonor',
+      donor: 'idriss_xyz',
       amount: Math.floor(Math.random() * 50) + 10, // Random amount between $10-60
-      message: 'This is a test donation!',
-      sfxText: 'Notification chime',
-      avatarUrl:
-        'https://api.dicebear.com/7.x/avataaars/svg?seed=TestDonorIDRISS',
+      message: 'This is a test donation.',
+      sfxText: null,
+      avatarUrl: null,
       txnHash: fakeTransactionHash,
       token: {
         amount: 1_000_000_000_000,
