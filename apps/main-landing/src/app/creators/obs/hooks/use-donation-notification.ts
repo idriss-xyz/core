@@ -120,6 +120,9 @@ export const useDonationNotification = (
         }
 
         if (message === 'This is a test donation.') {
+          // Add a delay to allow the creator to switch tabs and check donation
+          await new Promise((resolve) => setTimeout(resolve, 3000));
+
           ttsAudioElementReference.current = new Audio(TEST_MESSAGE_SOUND);
           ttsAudioForPlayback = ttsAudioElementReference.current;
         } else if (useTts) {
