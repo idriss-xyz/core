@@ -284,10 +284,17 @@ export function CreatorProfileForm() {
       );
       formMethods.setValue('minimumTTSAmount', creatorProfile.minimumTTSAmount);
       formMethods.setValue('minimumSfxAmount', creatorProfile.minimumSfxAmount);
-      formMethods.setValue('tokensSymbols', creatorProfile.tokens);
+      formMethods.setValue(
+        'tokensSymbols',
+        creatorProfile.tokens.length > 0
+          ? creatorProfile.tokens
+          : UNIQUE_ALL_TOKEN_SYMBOLS,
+      );
       formMethods.setValue(
         'chainsIds',
-        getChainIdsFromShortNames(creatorProfile.networks),
+        creatorProfile.networks.length > 0
+          ? getChainIdsFromShortNames(creatorProfile.networks)
+          : ALL_CHAIN_IDS,
       );
       formMethods.setValue('alertMuted', creatorProfile.alertMuted);
       formMethods.setValue('ttsMuted', creatorProfile.ttsMuted);
