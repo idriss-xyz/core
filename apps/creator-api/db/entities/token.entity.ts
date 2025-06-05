@@ -1,7 +1,9 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, Index, ManyToMany, PrimaryColumn } from 'typeorm';
 import { Hex } from 'viem';
+import { Creator } from './creator.entity';
 
 @Entity('tokens')
+@Index(['address', 'network'], { unique: true })
 export class Token {
   @PrimaryColumn({ type: 'text' })
   address!: Hex;
@@ -17,4 +19,7 @@ export class Token {
 
   @Column({ type: 'integer' })
   decimals!: number;
+
+  @ManyToMany(() => Creator, (creator) => creator.networks)
+  creators!: Creator[];
 }

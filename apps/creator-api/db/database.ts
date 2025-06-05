@@ -1,22 +1,54 @@
 import { DataSource } from 'typeorm';
-import { Donation, Token, User, DonationEffect } from './entities';
+import {
+  Creator,
+  Donation,
+  DonationEffect,
+  DonationParameters,
+  CreatorNetwork,
+  CreatorToken,
+  Token,
+  User,
+} from './entities';
 import {
   AddAmountRaw1743181200000,
   AddDonationEffects1747686797772,
   AddTokenDecimals1743177600000,
+  InitialMigration1743173000000,
   RestructureDonations1743174000000,
+  AddCreatorProfileEntities1747843796640,
+  AddDynamicId1748284091728,
+  RefactorMuteToggles1748346009915,
+  AddCreatorDisplayName1748521986209,
+  AddBadWords1748967010401,
 } from './migrations';
+import { CreatorProfileView } from './views';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
   url: process.env.DATABASE_URL,
-  entities: [Donation, Token, User, DonationEffect],
+  entities: [
+    Donation,
+    DonationEffect,
+    Token,
+    User,
+    Creator,
+    CreatorNetwork,
+    CreatorToken,
+    DonationParameters,
+    CreatorProfileView,
+  ],
   synchronize: false,
   migrations: [
+    InitialMigration1743173000000,
     RestructureDonations1743174000000,
     AddTokenDecimals1743177600000,
     AddAmountRaw1743181200000,
     AddDonationEffects1747686797772,
+    AddCreatorProfileEntities1747843796640,
+    AddDynamicId1748284091728,
+    RefactorMuteToggles1748346009915,
+    AddCreatorDisplayName1748521986209,
+    AddBadWords1748967010401,
   ],
 });
 
