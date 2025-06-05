@@ -143,7 +143,13 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/snapshot',
-        destination: 'https://snapshot.box/#/s:idrissxyz.eth',
+        destination: String.raw`https://snapshot.box/#/s\:idrissxyz.eth`,
+        basePath: false,
+        permanent: false,
+      },
+      {
+        source: '/governance',
+        destination: 'https://docs.idriss.xyz/idriss-token/governance',
         basePath: false,
         permanent: false,
       },
