@@ -7,6 +7,7 @@ import {
   DEFAULT_DONATION_MIN_ALERT_AMOUNT,
   DEFAULT_DONATION_MIN_SFX_AMOUNT,
   DEFAULT_DONATION_MIN_TTS_AMOUNT,
+  CREATOR_API_URL,
 } from '@idriss-xyz/constants';
 import '@rainbow-me/rainbowkit/styles.css';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -32,7 +33,6 @@ import { getCreatorProfile } from '../utils';
 import { Leaderboard } from './components/leaderboard';
 import { DonateForm } from './components/donate-form';
 import { RainbowKitProviders } from './providers';
-import { CREATOR_API_URL } from './constants';
 
 interface Properties {
   creatorName?: string;
@@ -99,13 +99,7 @@ function DonateContent({ creatorName }: Properties) {
       });
       creatorInfoSetReference.current = true;
     }
-  }, [
-    searchParams.address,
-    searchParams.creatorName,
-    searchParams.network,
-    searchParams.token,
-    creatorName,
-  ]);
+  }, [searchParams, creatorName]);
 
   const donationsHistory = useGetTipHistory(
     { address: creatorInfo?.address.data ?? EMPTY_HEX },

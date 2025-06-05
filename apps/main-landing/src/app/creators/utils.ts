@@ -1,7 +1,5 @@
 import { Hex } from 'viem';
-import { CHAIN } from '@idriss-xyz/constants';
-
-import { CREATOR_API_URL } from './donate/constants';
+import { CHAIN, CREATOR_API_URL } from '@idriss-xyz/constants';
 
 type BrowserBasedImageProperties = {
   svgSrc: string;

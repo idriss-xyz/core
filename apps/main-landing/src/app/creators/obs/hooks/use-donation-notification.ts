@@ -1,7 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 
+import { TEST_MESSAGE_SOUND } from '@/assets';
+
 import { getTextToSfx, getTextToSpeech } from '../utils';
 import { MinimumAmounts, MuteToggles } from '../page';
+import { TEST_DONATION_MESSAGE } from '../../constants';
 
 const PRICE_DROP_RANGE = 0.05;
 const DONATION_TTS_DELAY = 2000;
@@ -53,6 +56,7 @@ export const useDonationNotification = (
   const { minimumAlertAmount, minimumTTSAmount, minimumSfxAmount } =
     minimumAmounts;
   const { alertMuted, sfxMuted, ttsMuted } = muteToggles;
+  const isTestNotification = message === TEST_DONATION_MESSAGE;
 
   useEffect(() => {
     if (didRunReference.current) return;
@@ -83,9 +87,11 @@ export const useDonationNotification = (
     // --- End of Effect Cleanup ---
 
     if (
-      !amount ||
-      alertMuted ||
-      Number.parseFloat(amount) <= priceDropCalculatedAmount(minimumAlertAmount)
+      (!amount ||
+        alertMuted ||
+        Number.parseFloat(amount) <=
+          priceDropCalculatedAmount(minimumAlertAmount)) &&
+      !isTestNotification
     ) {
       setShowNotification(false);
       onFullyComplete();
@@ -117,7 +123,15 @@ export const useDonationNotification = (
           }
         }
 
-        if (useTts) {
+        if (isTestNotification) {
+          // Add a delay to allow the creator to switch tabs and check donation
+          await new Promise((resolve) => {
+            return setTimeout(resolve, 3000);
+          });
+
+          ttsAudioElementReference.current = new Audio(TEST_MESSAGE_SOUND);
+          ttsAudioForPlayback = ttsAudioElementReference.current;
+        } else if (useTts) {
           const ttsStream = await getTextToSpeech(message);
           if (ttsStream) {
             ttsAudioElementReference.current = await toAudioElement(ttsStream);
@@ -263,6 +277,10 @@ export const useDonationNotification = (
     minimumAlertAmount,
     minimumSfxAmount,
     minimumTTSAmount,
+    alertMuted,
+    sfxMuted,
+    ttsMuted,
+    isTestNotification,
   ]);
 
   return { showNotification };

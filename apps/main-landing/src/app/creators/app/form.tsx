@@ -26,6 +26,7 @@ import {
   getChainIdsFromShortNames,
   getChainShortNamesFromIds,
 } from '../utils';
+import { TEST_DONATION_MESSAGE } from '../constants';
 
 type FormPayload = {
   name: string;
@@ -303,6 +304,40 @@ export function CreatorProfileForm() {
     };
     void fetchCreatorProfile();
   }, [initialName, formMethods]);
+
+  const sendTestDonation = useCallback(() => {
+    if (!address || !isAddress(address)) {
+      alert('Please enter a valid address first');
+      return;
+    }
+
+    // Generate a fake transaction hash
+    const fakeTransactionHash = `0x${Math.random().toString(16).slice(2).padStart(64, '0')}`;
+
+    // Create test donation data
+    const testDonation = {
+      type: 'test' as const,
+      donor: 'idriss_xyz',
+      amount: Math.floor(Math.random() * 99) + 1, // Random amount between $1-100
+      message: TEST_DONATION_MESSAGE,
+      sfxText: null,
+      avatarUrl: null,
+      txnHash: fakeTransactionHash,
+      token: {
+        amount: 1_000_000_000_000,
+        details: {
+          symbol: 'ETH',
+          name: 'Ethereum',
+          logo: 'https://assets.coingecko.com/coins/images/279/small/ethereum.png',
+        },
+      },
+    };
+
+    localStorage.setItem('testDonation', JSON.stringify(testDonation));
+
+    // Show confirmation
+    alert('Test donation sent! Check your OBS page.');
+  }, [address]);
 
   const onSubmit = async (data: FormPayload) => {
     setIsSaving(true);
@@ -603,6 +638,15 @@ export function CreatorProfileForm() {
           onClick={formMethods.handleSubmit(onSubmit)}
         >
           SAVE
+        </Button>
+
+        <Button
+          size="medium"
+          intent="tertiary"
+          onClick={sendTestDonation}
+          className="w-full"
+        >
+          TEST DONATION
         </Button>
 
         {/* TODO: Display modal on save loading and success */}

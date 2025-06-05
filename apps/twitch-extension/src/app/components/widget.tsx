@@ -2,7 +2,7 @@
 import { Hex, isAddress } from 'viem';
 import { useEffect, useState } from 'react';
 import { default as io } from 'socket.io-client';
-import { EMPTY_HEX, hexSchema } from '@idriss-xyz/constants';
+import { EMPTY_HEX, hexSchema, CREATOR_API_URL } from '@idriss-xyz/constants';
 import { useGetTipHistory } from '@idriss-xyz/main-landing/app/creators/donate/commands/get-donate-history';
 import { Leaderboard } from '@idriss-xyz/main-landing/app/creators/donate/components/leaderboard';
 import { QueryProvider } from '@idriss-xyz/main-landing/providers';
@@ -11,7 +11,6 @@ import {
   LeaderboardStats,
 } from '@idriss-xyz/main-landing/app/creators/donate/types';
 
-import { CREATOR_API_URL } from '@/app/constants';
 import { ConfigValues, WidgetVariants } from '@/app/types';
 
 type Properties = {
