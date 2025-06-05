@@ -7,7 +7,7 @@ import {
   DEFAULT_DONATION_MIN_ALERT_AMOUNT,
   DEFAULT_DONATION_MIN_SFX_AMOUNT,
   DEFAULT_DONATION_MIN_TTS_AMOUNT,
-} from '@idriss-xyz/constants';
+ CREATOR_API_URL } from '@idriss-xyz/constants';
 import '@rainbow-me/rainbowkit/styles.css';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { default as io } from 'socket.io-client';
@@ -32,7 +32,6 @@ import { getCreatorProfile } from '../utils';
 import { Leaderboard } from './components/leaderboard';
 import { DonateForm } from './components/donate-form';
 import { RainbowKitProviders } from './providers';
-import { CREATOR_API_URL } from '@idriss-xyz/constants';
 
 interface Properties {
   creatorName?: string;
