@@ -32,7 +32,7 @@ import { getCreatorProfile } from '../utils';
 import { Leaderboard } from './components/leaderboard';
 import { DonateForm } from './components/donate-form';
 import { RainbowKitProviders } from './providers';
-import { CREATOR_API_URL } from './constants';
+import { CREATOR_API_URL } from '@idriss-xyz/constants';
 
 interface Properties {
   creatorName?: string;

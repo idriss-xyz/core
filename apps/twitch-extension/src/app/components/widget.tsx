@@ -11,7 +11,7 @@ import {
   LeaderboardStats,
 } from '@idriss-xyz/main-landing/app/creators/donate/types';
 
-import { CREATOR_API_URL } from '@/app/constants';
+import { CREATOR_API_URL } from '@idriss-xyz/constants';
 import { ConfigValues, WidgetVariants } from '@/app/types';
 
 type Properties = {

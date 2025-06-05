@@ -43,7 +43,7 @@ import {
 } from '../../schema';
 import { getSendFormDefaultValues } from '../../utils';
 import { useSender } from '../../hooks';
-import { CREATOR_API_URL } from '../../constants';
+import { CREATOR_API_URL } from '@idriss-xyz/constants';
 import { CreatorProfile } from '../../types';
 
 import { ChainSelect, TokenSelect } from './components';
