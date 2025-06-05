@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Hex } from 'viem';
-import { TipHistoryResponse , CREATOR_API_URL } from '@idriss-xyz/constants';
-
+import { TipHistoryResponse, CREATOR_API_URL } from '@idriss-xyz/constants';
 
 type Payload = {
   address: Hex;

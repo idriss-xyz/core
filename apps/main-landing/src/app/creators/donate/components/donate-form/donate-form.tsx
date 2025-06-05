@@ -19,7 +19,8 @@ import {
   CREATORS_USER_GUIDE_LINK,
   DEFAULT_ALLOWED_CHAINS_IDS,
   DEFAULT_DONATION_MIN_SFX_AMOUNT,
- CREATOR_API_URL } from '@idriss-xyz/constants';
+  CREATOR_API_URL,
+} from '@idriss-xyz/constants';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Icon } from '@idriss-xyz/ui/icon';

@@ -7,7 +7,8 @@ import {
   DEFAULT_DONATION_MIN_ALERT_AMOUNT,
   DEFAULT_DONATION_MIN_SFX_AMOUNT,
   DEFAULT_DONATION_MIN_TTS_AMOUNT,
- CREATOR_API_URL } from '@idriss-xyz/constants';
+  CREATOR_API_URL,
+} from '@idriss-xyz/constants';
 import '@rainbow-me/rainbowkit/styles.css';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { default as io } from 'socket.io-client';
