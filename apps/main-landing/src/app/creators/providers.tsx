@@ -38,7 +38,7 @@ export const Providers = ({ children }: Properties) => {
           <DynamicContextProvider
             settings={{
               environmentId:
-                process.env.NEXT_PUBLIC_DYNAMIC_ENVIRONMENT_ID ?? '',
+                process.env.DYNAMIC_ENVIRONMENT_ID ?? '',
               walletConnectors: [EthereumWalletConnectors],
               events: {
                 onAuthSuccess: async (arguments_) => {
