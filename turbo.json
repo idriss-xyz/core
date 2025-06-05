@@ -121,7 +121,10 @@
         "DATABASE_URL",
         "SECRET_PASSWORD",
         "ALCHEMY_API_KEY",
-        "ELEVENLABS_API_KEY"
+        "ELEVENLABS_API_KEY",
+        "DYNAMIC_ENVIRONMENT_ID",
+        "TWITCH_CLIENT_ID",
+        "TWITCH_CLIENT_SECRET"
       ]
     },
     "@idriss-xyz/creator-api#prod": {
@@ -134,7 +137,10 @@
         "DATABASE_URL",
         "SECRET_PASSWORD",
         "ALCHEMY_API_KEY",
-        "ELEVENLABS_API_KEY"
+        "ELEVENLABS_API_KEY",
+        "DYNAMIC_ENVIRONMENT_ID",
+        "TWITCH_CLIENT_ID",
+        "TWITCH_CLIENT_SECRET"
       ]
     },
     "@idriss-xyz/twitch-extension#build": {
