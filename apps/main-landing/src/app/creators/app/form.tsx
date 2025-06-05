@@ -26,6 +26,7 @@ import {
   getChainIdsFromShortNames,
   getChainShortNamesFromIds,
 } from '../utils';
+import { TEST_DONATION_MESSAGE } from '../constants';
 
 type FormPayload = {
   name: string;
@@ -308,7 +309,7 @@ export function CreatorProfileForm() {
       type: 'test' as const,
       donor: 'idriss_xyz',
       amount: Math.floor(Math.random() * 99) + 1, // Random amount between $1-100
-      message: 'This is a test donation.',
+      message: TEST_DONATION_MESSAGE,
       sfxText: null,
       avatarUrl: null,
       txnHash: fakeTransactionHash,
