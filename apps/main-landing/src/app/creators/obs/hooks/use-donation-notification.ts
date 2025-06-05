@@ -55,6 +55,7 @@ export const useDonationNotification = (
   const { minimumAlertAmount, minimumTTSAmount, minimumSfxAmount } =
     minimumAmounts;
   const { alertMuted, sfxMuted, ttsMuted } = muteToggles;
+  const isTestNotification = message === 'This is a test donation.';
 
   useEffect(() => {
     if (didRunReference.current) return;
@@ -85,9 +86,11 @@ export const useDonationNotification = (
     // --- End of Effect Cleanup ---
 
     if (
-      !amount ||
-      alertMuted ||
-      Number.parseFloat(amount) <= priceDropCalculatedAmount(minimumAlertAmount)
+      (!amount ||
+        alertMuted ||
+        Number.parseFloat(amount) <=
+          priceDropCalculatedAmount(minimumAlertAmount)) &&
+      !isTestNotification
     ) {
       setShowNotification(false);
       onFullyComplete();
@@ -119,7 +122,7 @@ export const useDonationNotification = (
           }
         }
 
-        if (message === 'This is a test donation.') {
+        if (isTestNotification) {
           // Add a delay to allow the creator to switch tabs and check donation
           await new Promise((resolve) => {
             return setTimeout(resolve, 3000);
@@ -276,6 +279,7 @@ export const useDonationNotification = (
     alertMuted,
     sfxMuted,
     ttsMuted,
+    isTestNotification,
   ]);
 
   return { showNotification };

@@ -307,7 +307,7 @@ export function CreatorProfileForm() {
     const testDonation = {
       type: 'test' as const,
       donor: 'idriss_xyz',
-      amount: Math.floor(Math.random() * 50) + 10, // Random amount between $10-60
+      amount: Math.floor(Math.random() * 99) + 1, // Random amount between $1-100
       message: 'This is a test donation.',
       sfxText: null,
       avatarUrl: null,
