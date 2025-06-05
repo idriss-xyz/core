@@ -142,7 +142,7 @@ export async function GET() {
       }, 0n);
 
     const totalCirculatingSupplyAdjusted =
-      totalCirculatingSupply + bonusClaimTotal;
+      totalCirculatingSupply + bonusClaimTotal * 2n;
     const formattedBalance = formatEther(totalCirculatingSupplyAdjusted);
     return NextResponse.json(
       { result: formattedBalance },
