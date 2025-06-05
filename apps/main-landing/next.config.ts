@@ -142,6 +142,12 @@ const nextConfig: NextConfig = {
         permanent: false,
       },
       {
+        source: '/snapshot',
+        destination: 'https://snapshot.box/#/s:idrissxyz.eth',
+        basePath: false,
+        permanent: false,
+      },
+      {
         source: '/pp',
         destination: 'https://docs.idriss.xyz/resources/privacy-policy',
         basePath: false,
