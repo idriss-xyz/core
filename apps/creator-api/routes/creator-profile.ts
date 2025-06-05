@@ -115,6 +115,7 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
       alertMuted,
       ttsMuted,
       sfxMuted,
+      customBadWords = [],
       tokens = [],
       networks = [],
       ...creatorData
@@ -128,6 +129,7 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
     donationParameters.alertMuted = alertMuted;
     donationParameters.ttsMuted = ttsMuted;
     donationParameters.sfxMuted = sfxMuted;
+    donationParameters.customBadWords = customBadWords;
 
     const creatorRepository = AppDataSource.getRepository(Creator);
     const donationParamsRepository =
@@ -230,6 +232,7 @@ router.patch(
         sfxMuted,
         tokens = [],
         networks = [],
+        customBadWords,
         ...creatorData
       } = req.body;
 
@@ -246,7 +249,8 @@ router.patch(
         voiceId ||
         alertMuted ||
         ttsMuted ||
-        sfxMuted
+        sfxMuted ||
+        customBadWords
       ) {
         const donationParams = await donationParamsRepository.findOne({
           where: { creator: { id: creator.id } },
@@ -263,6 +267,7 @@ router.patch(
               alertMuted,
               ttsMuted,
               sfxMuted,
+              customBadWords,
             },
           );
         } else {
@@ -275,6 +280,7 @@ router.patch(
             alertMuted,
             ttsMuted,
             sfxMuted,
+            customBadWords,
           });
           await donationParamsRepository.save(newDonationParams);
         }

@@ -85,6 +85,7 @@ export default function Obs({ creatorName }: Properties) {
     ttsMuted: false,
     sfxMuted: false,
   });
+  const [customBadWords, setCustomBadWords] = useState<string[]>([]);
 
   const router = useRouter();
   const [isDisplayingDonation, setIsDisplayingDonation] = useState(false);
@@ -115,6 +116,7 @@ export default function Obs({ creatorName }: Properties) {
                 sfxMuted: profile.sfxMuted,
                 ttsMuted: profile.ttsMuted,
               });
+              setCustomBadWords(profile.customBadWords);
             }
           })
           .catch((error) => {
@@ -229,7 +231,7 @@ export default function Obs({ creatorName }: Properties) {
 
           if (recipient.toLowerCase() !== address?.data.toLowerCase()) continue;
 
-          if (message && containsBadWords(message)) {
+          if (message && containsBadWords(message, customBadWords)) {
             console.log('Filtered donation with inappropriate message');
             continue;
           }
@@ -266,7 +268,7 @@ export default function Obs({ creatorName }: Properties) {
 
           const sfxText = await fetchDonationSfxText(log.transactionHash!);
 
-          if (sfxText && containsBadWords(sfxText)) {
+          if (sfxText && containsBadWords(sfxText, customBadWords)) {
             console.log('Filtered donation with inappropriate sfx text');
             continue;
           }
@@ -290,7 +292,7 @@ export default function Obs({ creatorName }: Properties) {
         console.error('Error fetching tip message log:', error);
       }
     }
-  }, [address?.data, addDonation, minimumAmounts, muteToggles]);
+  }, [address?.data, addDonation, minimumAmounts, muteToggles, customBadWords]);
 
   useEffect(() => {
     if (!address?.isValid) return;

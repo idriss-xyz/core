@@ -457,12 +457,17 @@ function normalizeForComparison(text: string): string {
     .trim();
 }
 
-export function containsBadWords(message: string): boolean {
+export function containsBadWords(
+  message: string,
+  customBadWords: string[],
+): boolean {
   if (!message) return false;
   const normalized = normalizeForComparison(message);
 
+  const joinedBadWords = new Set([...BAD_WORDS, ...customBadWords]);
+
   // Check multi-word phrases
-  for (const bad of BAD_WORDS) {
+  for (const bad of joinedBadWords) {
     if (bad.includes(' ') && normalized.includes(bad)) {
       return true;
     }
@@ -471,6 +476,6 @@ export function containsBadWords(message: string): boolean {
   // Check single words
   const tokens = normalized.split(/\s+/);
   return tokens.some((token) => {
-    return BAD_WORDS.has(token);
+    return joinedBadWords.has(token);
   });
 }
