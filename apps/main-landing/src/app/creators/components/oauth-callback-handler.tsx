@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useDynamicContext, useSocialAccounts } from '@dynamic-labs/sdk-react-core';
 import { ProviderEnum } from '@dynamic-labs/types';
@@ -11,15 +11,18 @@ export function OAuthCallbackHandler() {
   const searchParams = useSearchParams();
   const { user } = useDynamicContext();
   const { getLinkedAccountInformation } = useSocialAccounts();
+  const processingRef = useRef(false);
 
   useEffect(() => {
     const dynamicOauthCode = searchParams.get('dynamicOauthCode');
     const dynamicOauthState = searchParams.get('dynamicOauthState');
 
     // Only run this if we have OAuth parameters in the URL
-    if (dynamicOauthCode && dynamicOauthState) {
+    if (dynamicOauthCode && dynamicOauthState && !processingRef.current) {
       const handleCallback = async () => {
         try {
+          // Set flag to prevent multiple executions
+          processingRef.current = true;
           const twitchAccount = getLinkedAccountInformation(ProviderEnum.Twitch);
           const twitchName = twitchAccount?.username;
 
@@ -43,10 +46,13 @@ export function OAuthCallbackHandler() {
             );
           }
 
-          // Redirect to app
+          // Clean up URL parameters (Check if needed)
+          window.history.replaceState({}, document.title, '/creators');
+
           router.push('/creators/app');
         } catch (error) {
           console.error("Error handling OAuth callback:", error);
+          processingRef.current = false;
         }
       };
 
