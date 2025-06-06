@@ -2,31 +2,36 @@
 'use client';
 import { Button } from '@idriss-xyz/ui/button';
 import { classes } from '@idriss-xyz/ui/utils';
-import { RefObject, useCallback } from 'react';
-import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
+import { RefObject, useCallback, useState } from 'react';
+import {
+  useDynamicContext,
+  useSocialAccounts,
+} from '@dynamic-labs/sdk-react-core';
 import { useRouter } from 'next/navigation';
 
 import { backgroundLines } from '@/assets';
 
 import { VideoPlayer } from './hero-section/video-player';
+import { LoginModal } from './login-modal';
 
 type Properties = {
   heroButtonReference?: RefObject<HTMLButtonElement>;
 };
 
 export const HeroSection = ({ heroButtonReference }: Properties) => {
-  const { setShowAuthFlow, user } = useDynamicContext();
   const router = useRouter();
+  const { user } = useDynamicContext();
+  const { error, isProcessing } = useSocialAccounts();
+  const [isLoginModalOpen, setIsModalOpen] = useState(false);
 
   const handleStartEarningClick = useCallback(() => {
-    // If user is not logged in, show the Dynamic login modal
+    // If user is logged in, redirect to app
     if (user) {
       router.push('/creators/app');
     } else {
-      setShowAuthFlow(true);
-      return;
+      setIsModalOpen(true);
     }
-  }, [setShowAuthFlow, user, router]);
+  }, [user, router]);
 
   return (
     <header
@@ -85,6 +90,14 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
           >
             Start earning now
           </Button>
+          {isProcessing && (
+            <span className="text-gray-200">Logging you in...</span>
+          )}
+          {error && (
+            <span className="text-red-500">
+              There was an error logging you in: {error.message}
+            </span>
+          )}
         </div>
 
         <div
@@ -95,6 +108,12 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
           <VideoPlayer />
         </div>
       </div>
+      <LoginModal
+        isOpened={isLoginModalOpen}
+        onClose={() => {
+          return setIsModalOpen(false);
+        }}
+      />
     </header>
   );
 };
