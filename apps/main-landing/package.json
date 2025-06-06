@@ -52,6 +52,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@dynamic-labs/types": "^4.19.6",
     "@idriss-xyz/eslint-config": "workspace:*",
     "@idriss-xyz/tailwind-config": "workspace:*",
     "@idriss-xyz/typescript-config": "workspace:*",
