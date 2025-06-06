@@ -14,8 +14,8 @@ type Properties = {
 export const LoginModal = ({ isOpened, onClose }: Properties) => {
   const { signInWithSocialAccount } = useSocialAccounts();
 
-  const handleTwitchLogin = () => {
-    void signInWithSocialAccount(ProviderEnum.Twitch);
+  const handleTwitchLogin = async () => {
+    await signInWithSocialAccount(ProviderEnum.Twitch);
   };
 
   return (
