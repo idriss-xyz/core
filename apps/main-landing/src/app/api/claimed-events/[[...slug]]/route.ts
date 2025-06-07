@@ -31,6 +31,16 @@ export function GET(request: Request): NextResponse<ApiResponse> {
             score: (parseEther(event.total!) * 2n).toString(),
           };
         });
+      score.push(
+        {
+          address: '0x896C20Da40c2A4df9B7C98B16a8D5A95129161a5',
+          score: '9999999999999999694651',
+        },
+        {
+          address: '0x656A78630F31432E6F35F6996AF5C0a4E445655c',
+          score: '111701559178689625607',
+        },
+      );
       return NextResponse.json({ score });
     }
 
