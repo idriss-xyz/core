@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@dynamic-labs/ethereum": "^4.12.1",
+    "@dynamic-labs/sdk-api-core": "^0.0.658",
     "@dynamic-labs/sdk-react-core": "^4.12.1",
     "@dynamic-labs/types": "^4.19.7",
     "@ebay/nice-modal-react": "^1.2.13",

@@ -7,7 +7,7 @@ export class AddCreatorDisplayName1748521986209 implements MigrationInterface {
         `);
     await queryRunner.query(
       `ALTER TABLE "creator"
-        ADD COLUMN "display_name" text`,
+        ADD COLUMN IF NOT EXISTS "display_name" text`,
     );
     await queryRunner.query(`
             CREATE VIEW "creator_profile_view" AS
