@@ -11,18 +11,21 @@ export function OAuthCallbackHandler() {
   const searchParams = useSearchParams();
   const { user } = useDynamicContext();
   const { getLinkedAccountInformation } = useSocialAccounts();
-  const processingRef = useRef(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const dynamicOauthCode = searchParams.get('dynamicOauthCode');
     const dynamicOauthState = searchParams.get('dynamicOauthState');
 
     // Only run this if we have OAuth parameters in the URL
-    if (dynamicOauthCode && dynamicOauthState && !processingRef.current) {
-      const handleCallback = async () => {
+    if (dynamicOauthCode && dynamicOauthState) {
+      // Clear any existing timeout
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      // Set a new timeout to debounce multiple calls
+      timeoutRef.current = setTimeout(async () => {
         try {
-          // Set flag to prevent multiple executions
-          processingRef.current = true;
           const twitchAccount = getLinkedAccountInformation(ProviderEnum.Twitch);
           const twitchName = twitchAccount?.username;
 
@@ -52,13 +55,16 @@ export function OAuthCallbackHandler() {
           router.push('/creators/app');
         } catch (error) {
           console.error("Error handling OAuth callback:", error);
-          processingRef.current = false;
         }
-      };
-
-      handleCallback();
+      }, 1000); // Small delay to debounce
     }
-  }, [searchParams, user, router]);
 
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+
+  }, [searchParams, user, router, getLinkedAccountInformation]);
   return null;
 }
