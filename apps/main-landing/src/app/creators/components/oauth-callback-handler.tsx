@@ -44,9 +44,6 @@ export function OAuthCallbackHandler() {
             return;
           }
 
-          // TODO: This get and saveCreator profile is executing twice.
-          // Should not do so, even with strict mode on.
-          // Check devtools network tab for this.
           const creator = await getCreatorProfile(twitchName);
 
           if (creator === undefined) {
