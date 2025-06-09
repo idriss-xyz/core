@@ -43,3 +43,4 @@ export { Etherscan } from './etherscan';
 export { Blockscout } from './blockscout';
 export { CrownCircled } from './crown-circled';
 export { Hexagon } from './hexagon';
+export { BellNotification } from './bell-notification';

@@ -32,6 +32,11 @@ import {
   TrendingUp,
   Trophy,
   BadgeDollarSign,
+  LayoutDashboard,
+  User,
+  LineChart,
+  History,
+  Bell
 } from 'lucide-react';
 
 import * as customIcons from './custom';
@@ -70,5 +75,10 @@ export const ICON = {
   TrendingUp,
   Trophy,
   BadgeDollarSign,
+  LayoutDashboard,
+  User,
+  LineChart,
+  History,
+  Bell,
   ...customIcons,
 };
