@@ -15,6 +15,7 @@ export function OAuthCallbackHandler() {
   const searchParameters = useSearchParams();
   const { user } = useDynamicContext();
   const { getLinkedAccountInformation } = useSocialAccounts();
+  // Timeout adds small delay to wait for auth to finish
   const timeoutReference = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -27,7 +28,10 @@ export function OAuthCallbackHandler() {
       if (timeoutReference.current) {
         clearTimeout(timeoutReference.current);
       }
-      // Set a new timeout to debounce multiple calls
+
+      // TODO: Show a "Logging you in" modal while waiting for this
+      // and/or loading the page
+
       timeoutReference.current = setTimeout(async () => {
         try {
           const twitchAccount = getLinkedAccountInformation(
@@ -66,7 +70,7 @@ export function OAuthCallbackHandler() {
         } catch (error) {
           console.error('Error handling OAuth callback:', error);
         }
-      }, 1000); // Small delay to debounce
+      }, 1500);
     }
 
     return () => {
