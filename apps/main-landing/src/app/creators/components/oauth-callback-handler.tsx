@@ -55,7 +55,7 @@ export function OAuthCallbackHandler() {
               twitchName,
               twitchAccount?.displayName,
               twitchAccount?.avatar,
-              twitchAccount?.accountId,
+              user?.userId,
               dynamicJwtToken,
             );
           }

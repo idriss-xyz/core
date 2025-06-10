@@ -27,9 +27,11 @@ export const verifyToken = () => {
       }
 
       const creatorsRepo = AppDataSource.getRepository(Creator);
-      const dynamicId = (decoded as any).sub;
+      const dynamicId = decoded.sub;
       const creator = await creatorsRepo.findOne({ where: { dynamicId } });
-      (req as any).creator = creator;
+
+      // We only check req.user on patch routes, on post it's ok to have empty string
+      req.user = { id: creator?.dynamicId || '' };
       next();
     } catch (error) {
       console.error(error);
