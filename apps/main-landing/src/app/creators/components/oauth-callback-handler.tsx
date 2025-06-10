@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
   useDynamicContext,
@@ -10,11 +10,14 @@ import { Hex } from 'viem';
 
 import { getCreatorProfile, saveCreatorProfile } from '../utils';
 
+import { LoadingModal } from './login-modal';
+
 export function OAuthCallbackHandler() {
   const router = useRouter();
   const searchParameters = useSearchParams();
   const { user } = useDynamicContext();
   const { getLinkedAccountInformation } = useSocialAccounts();
+  const [isProcessing, setIsProcessing] = useState(false);
   // Timeout adds small delay to wait for auth to finish
   const timeoutReference = useRef<NodeJS.Timeout | null>(null);
 
@@ -24,13 +27,12 @@ export function OAuthCallbackHandler() {
 
     // Only run this if we have OAuth parameters in the URL
     if (dynamicOauthCode && dynamicOauthState) {
+      setIsProcessing(true);
+
       // Clear any existing timeout
       if (timeoutReference.current) {
         clearTimeout(timeoutReference.current);
       }
-
-      // TODO: Show a "Logging you in" modal while waiting for this
-      // and/or loading the page
 
       timeoutReference.current = setTimeout(async () => {
         try {
@@ -74,7 +76,8 @@ export function OAuthCallbackHandler() {
       if (timeoutReference.current) {
         clearTimeout(timeoutReference.current);
       }
+      setIsProcessing(false);
     };
   }, [searchParameters, user, router, getLinkedAccountInformation]);
-  return null;
+  return <LoadingModal isProcessing={isProcessing} />;
 }
