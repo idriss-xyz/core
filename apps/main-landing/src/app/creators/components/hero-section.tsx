@@ -42,7 +42,7 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
       };
     }
     return;
-  }, [oauthError]);
+  }, [oauthError, clearOauthError]);
 
   return (
     <header
