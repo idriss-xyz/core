@@ -21,6 +21,12 @@ const WalletContextProvider = dynamic(
   { ssr: false },
 );
 
+const cssOverrides = `
+  div:has(.social-redirect-view__container) {
+    display: none;
+  }
+`;
+
 export const Providers = ({ children }: Properties) => {
   return (
     <QueryProvider>
@@ -30,6 +36,7 @@ export const Providers = ({ children }: Properties) => {
             settings={{
               environmentId: process.env.DYNAMIC_ENVIRONMENT_ID ?? '',
               walletConnectors: [EthereumWalletConnectors],
+              cssOverrides,
             }}
           >
             <WalletContextProvider>
