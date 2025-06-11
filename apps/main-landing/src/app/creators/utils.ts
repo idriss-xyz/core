@@ -81,38 +81,32 @@ export const saveCreatorProfile = async (
   dynamicId?: string | null,
   authToken?: string,
 ): Promise<void> => {
-  try {
-    if (!address || !name || !dynamicId) {
-      console.error('No wallet address, name or dynamicId to create creator');
-      return;
-    }
+  if (!address || !name || !dynamicId) {
+    throw new Error('No wallet address, name or dynamicId to create creator');
+  }
 
-    if (!authToken) {
-      console.error('No auth token provided');
-      return;
-    }
+  if (!authToken) {
+    throw new Error('No wallet address, name or dynamicId to create creator');
+  }
 
-    const response = await fetch(`${CREATOR_API_URL}/creator-profile`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authToken}`,
-      },
-      body: JSON.stringify({
-        address: address,
-        primaryAddress: address,
-        displayName,
-        profilePictureUrl,
-        name,
-        dynamicId,
-      }),
-    });
+  const response = await fetch(`${CREATOR_API_URL}/creator-profile`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`,
+    },
+    body: JSON.stringify({
+      address: address,
+      primaryAddress: address,
+      displayName,
+      profilePictureUrl,
+      name,
+      dynamicId,
+    }),
+  });
 
-    if (!response.ok) {
-      throw new Error('Failed to register creator');
-    }
-  } catch (error) {
-    console.error('Error registering creator:', error);
+  if (!response.ok) {
+    throw new Error('Failed to register creator');
   }
 };
 
