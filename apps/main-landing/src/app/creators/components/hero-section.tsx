@@ -2,14 +2,13 @@
 'use client';
 import { Button } from '@idriss-xyz/ui/button';
 import { classes } from '@idriss-xyz/ui/utils';
-import { RefObject, useCallback, useState } from 'react';
-import {
-  useDynamicContext,
-  useSocialAccounts,
-} from '@dynamic-labs/sdk-react-core';
+import { RefObject, useCallback, useEffect, useState } from 'react';
+import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
 import { useRouter } from 'next/navigation';
 
 import { backgroundLines } from '@/assets';
+
+import { useAuth } from '../context/auth-context';
 
 import { VideoPlayer } from './hero-section/video-player';
 import { LoginModal } from './login-modal';
@@ -21,7 +20,7 @@ type Properties = {
 export const HeroSection = ({ heroButtonReference }: Properties) => {
   const router = useRouter();
   const { user } = useDynamicContext();
-  const { error, isProcessing } = useSocialAccounts();
+  const { oauthError, clearOauthError } = useAuth();
   const [isLoginModalOpen, setIsModalOpen] = useState(false);
 
   const handleStartEarningClick = useCallback(() => {
@@ -32,6 +31,18 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
       setIsModalOpen(true);
     }
   }, [user, router]);
+
+  useEffect(() => {
+    if (oauthError) {
+      const timeout = setTimeout(() => {
+        clearOauthError();
+      }, 5000);
+      return () => {
+        return clearTimeout(timeout);
+      };
+    }
+    return;
+  }, [oauthError]);
 
   return (
     <header
@@ -90,12 +101,9 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
           >
             Start earning now
           </Button>
-          {isProcessing && (
-            <span className="text-gray-200">Logging you in...</span>
-          )}
-          {error && (
+          {oauthError && (
             <span className="text-red-500">
-              There was an error logging you in: {error.message}
+              There was an error logging you in
             </span>
           )}
         </div>

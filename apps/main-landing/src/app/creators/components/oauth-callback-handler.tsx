@@ -9,6 +9,7 @@ import { ProviderEnum } from '@dynamic-labs/types';
 import { Hex } from 'viem';
 
 import { getCreatorProfile, saveCreatorProfile } from '../utils';
+import { useAuth } from '../context/auth-context';
 
 import { LoadingModal } from './login-modal';
 
@@ -18,6 +19,7 @@ export function OAuthCallbackHandler() {
   const { user } = useDynamicContext();
   const { getLinkedAccountInformation } = useSocialAccounts();
   const [isProcessing, setIsProcessing] = useState(false);
+  const { setOauthError } = useAuth();
   // Timeout adds small delay to wait for auth to finish
   const timeoutReference = useRef<NodeJS.Timeout | null>(null);
 
@@ -42,8 +44,7 @@ export function OAuthCallbackHandler() {
           const twitchName = twitchAccount?.username;
 
           if (!twitchName) {
-            console.error('Could not get Twitch username');
-            return;
+            throw new Error('Could not get Twitch username');
           }
 
           const creator = await getCreatorProfile(twitchName);
@@ -68,6 +69,10 @@ export function OAuthCallbackHandler() {
           router.push('/creators/app');
         } catch (error) {
           console.error('Error handling OAuth callback:', error);
+          setOauthError('Authentication failed. Please try again.');
+          router.push('/creators');
+        } finally {
+          setIsProcessing(false);
         }
       }, 1500);
     }
@@ -78,6 +83,13 @@ export function OAuthCallbackHandler() {
       }
       setIsProcessing(false);
     };
-  }, [searchParameters, user, router, getLinkedAccountInformation]);
+  }, [
+    searchParameters,
+    user,
+    router,
+    getLinkedAccountInformation,
+    setOauthError,
+  ]);
+
   return <LoadingModal isProcessing={isProcessing} />;
 }
