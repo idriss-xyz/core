@@ -2,7 +2,7 @@
 'use client';
 import { Button } from '@idriss-xyz/ui/button';
 import { classes } from '@idriss-xyz/ui/utils';
-import { RefObject, useCallback, useEffect, useState } from 'react';
+import { RefObject, useCallback, useEffect } from 'react';
 import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
 import { useRouter } from 'next/navigation';
 
@@ -20,8 +20,8 @@ type Properties = {
 export const HeroSection = ({ heroButtonReference }: Properties) => {
   const router = useRouter();
   const { user } = useDynamicContext();
-  const { oauthError, clearOauthError } = useAuth();
-  const [isLoginModalOpen, setIsModalOpen] = useState(false);
+  const { oauthError, clearOauthError, isLoginModalOpen, setIsModalOpen } =
+    useAuth();
 
   const handleStartEarningClick = useCallback(() => {
     // If user is logged in, redirect to app
@@ -30,7 +30,7 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
     } else {
       setIsModalOpen(true);
     }
-  }, [user, router]);
+  }, [user, router, setIsModalOpen]);
 
   useEffect(() => {
     if (oauthError) {

@@ -1,8 +1,12 @@
 import { Button } from '@idriss-xyz/ui/button';
-import { CREATORS_FORM_LINK } from '@idriss-xyz/constants';
+import { useCallback } from 'react';
+import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
+import { useRouter } from 'next/navigation';
 
-import { Menu } from './menu';
+import { useAuth } from '@/app/creators/context/auth-context';
+
 import { Socials } from './socials';
+import { Menu } from './menu';
 
 type Properties = {
   displayCTA?: boolean;
@@ -10,6 +14,19 @@ type Properties = {
 };
 
 export const Desktop = ({ hideNavigation, displayCTA }: Properties) => {
+  const router = useRouter();
+  const { user } = useDynamicContext();
+  const { setIsModalOpen } = useAuth();
+
+  const handleStartEarningClick = useCallback(() => {
+    // If user is logged in, redirect to app
+    if (user) {
+      router.push('/creators/app');
+    } else {
+      setIsModalOpen(true);
+    }
+  }, [user, router, setIsModalOpen]);
+
   return (
     <>
       {!hideNavigation && <Menu className="hidden sm:flex" />}
@@ -19,10 +36,9 @@ export const Desktop = ({ hideNavigation, displayCTA }: Properties) => {
           <Socials />
 
           <Button
-            asLink
             size="medium"
             intent="primary"
-            href={CREATORS_FORM_LINK}
+            onClick={handleStartEarningClick}
             aria-label="Start earning"
             suffixIconName="IdrissArrowRight"
           >
