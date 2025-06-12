@@ -7,9 +7,6 @@ import {
   TERMS_OF_SERVICE_LINK,
 } from '@idriss-xyz/constants';
 import { classes } from '@idriss-xyz/ui/utils';
-import { useRouter } from 'next/navigation';
-import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
-import { useCallback } from 'react';
 
 import {
   EXTERNAL_RESOURCES,
@@ -18,23 +15,12 @@ import {
   SOCIALS,
 } from '@/components/footer';
 
-import { useAuth } from '../../context/auth-context';
+import { useStartEarningNavigation } from '../../utils';
 
 export const Footer = () => {
   const today = new Date();
   const year = today.getFullYear();
-  const router = useRouter();
-  const { user } = useDynamicContext();
-  const { setIsModalOpen } = useAuth();
-
-  const handleStartEarningClick = useCallback(() => {
-    // If user is logged in, redirect to app
-    if (user) {
-      router.push('/creators/app');
-    } else {
-      setIsModalOpen(true);
-    }
-  }, [user, router, setIsModalOpen]);
+  const handleStartEarningClick = useStartEarningNavigation();
 
   return (
     <footer

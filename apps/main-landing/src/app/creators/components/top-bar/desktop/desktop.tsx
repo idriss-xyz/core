@@ -1,9 +1,6 @@
 import { Button } from '@idriss-xyz/ui/button';
-import { useCallback } from 'react';
-import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
-import { useRouter } from 'next/navigation';
 
-import { useAuth } from '@/app/creators/context/auth-context';
+import { useStartEarningNavigation } from '@/app/creators/utils/';
 
 import { Socials } from './socials';
 import { Menu } from './menu';
@@ -14,18 +11,7 @@ type Properties = {
 };
 
 export const Desktop = ({ hideNavigation, displayCTA }: Properties) => {
-  const router = useRouter();
-  const { user } = useDynamicContext();
-  const { setIsModalOpen } = useAuth();
-
-  const handleStartEarningClick = useCallback(() => {
-    // If user is logged in, redirect to app
-    if (user) {
-      router.push('/creators/app');
-    } else {
-      setIsModalOpen(true);
-    }
-  }, [user, router, setIsModalOpen]);
+  const handleStartEarningClick = useStartEarningNavigation();
 
   return (
     <>

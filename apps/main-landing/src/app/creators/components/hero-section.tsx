@@ -2,13 +2,12 @@
 'use client';
 import { Button } from '@idriss-xyz/ui/button';
 import { classes } from '@idriss-xyz/ui/utils';
-import { RefObject, useCallback } from 'react';
-import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
-import { useRouter } from 'next/navigation';
+import { RefObject } from 'react';
 
 import { backgroundLines } from '@/assets';
 
 import { useAuth } from '../context/auth-context';
+import { useStartEarningNavigation } from '../utils';
 
 import { VideoPlayer } from './hero-section/video-player';
 import { LoginModal } from './login-modal';
@@ -18,18 +17,8 @@ type Properties = {
 };
 
 export const HeroSection = ({ heroButtonReference }: Properties) => {
-  const router = useRouter();
-  const { user } = useDynamicContext();
   const { isLoginModalOpen, setIsModalOpen } = useAuth();
-
-  const handleStartEarningClick = useCallback(() => {
-    // If user is logged in, redirect to app
-    if (user) {
-      router.push('/creators/app');
-    } else {
-      setIsModalOpen(true);
-    }
-  }, [user, router, setIsModalOpen]);
+  const handleStartEarningClick = useStartEarningNavigation();
 
   return (
     <header
