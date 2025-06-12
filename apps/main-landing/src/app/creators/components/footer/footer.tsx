@@ -5,9 +5,11 @@ import { Button } from '@idriss-xyz/ui/button';
 import {
   PRIVACY_POLICY_LINK,
   TERMS_OF_SERVICE_LINK,
-  CREATORS_FORM_LINK,
 } from '@idriss-xyz/constants';
 import { classes } from '@idriss-xyz/ui/utils';
+import { useRouter } from 'next/navigation';
+import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
+import { useCallback } from 'react';
 
 import {
   EXTERNAL_RESOURCES,
@@ -16,9 +18,23 @@ import {
   SOCIALS,
 } from '@/components/footer';
 
+import { useAuth } from '../../context/auth-context';
+
 export const Footer = () => {
   const today = new Date();
   const year = today.getFullYear();
+  const router = useRouter();
+  const { user } = useDynamicContext();
+  const { setIsModalOpen } = useAuth();
+
+  const handleStartEarningClick = useCallback(() => {
+    // If user is logged in, redirect to app
+    if (user) {
+      router.push('/creators/app');
+    } else {
+      setIsModalOpen(true);
+    }
+  }, [user, router, setIsModalOpen]);
 
   return (
     <footer
@@ -53,9 +69,7 @@ export const Footer = () => {
               size="medium"
               prefixIconName="BadgeDollarSign"
               className="mt-6 uppercase lg:mt-10"
-              href={CREATORS_FORM_LINK}
-              isExternal
-              asLink
+              onClick={handleStartEarningClick}
             >
               Start earning now
             </Button>
