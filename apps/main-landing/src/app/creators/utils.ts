@@ -86,7 +86,7 @@ export const saveCreatorProfile = async (
   }
 
   if (!authToken) {
-    throw new Error('No wallet address, name or dynamicId to create creator');
+    throw new Error('No auth token provided');
   }
 
   const response = await fetch(`${CREATOR_API_URL}/creator-profile`, {
