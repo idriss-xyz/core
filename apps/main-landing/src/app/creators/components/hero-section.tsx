@@ -2,7 +2,7 @@
 'use client';
 import { Button } from '@idriss-xyz/ui/button';
 import { classes } from '@idriss-xyz/ui/utils';
-import { RefObject, useCallback, useEffect } from 'react';
+import { RefObject, useCallback } from 'react';
 import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
 import { useRouter } from 'next/navigation';
 
@@ -20,8 +20,7 @@ type Properties = {
 export const HeroSection = ({ heroButtonReference }: Properties) => {
   const router = useRouter();
   const { user } = useDynamicContext();
-  const { oauthError, clearOauthError, isLoginModalOpen, setIsModalOpen } =
-    useAuth();
+  const { isLoginModalOpen, setIsModalOpen } = useAuth();
 
   const handleStartEarningClick = useCallback(() => {
     // If user is logged in, redirect to app
@@ -31,18 +30,6 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
       setIsModalOpen(true);
     }
   }, [user, router, setIsModalOpen]);
-
-  useEffect(() => {
-    if (oauthError) {
-      const timeout = setTimeout(() => {
-        clearOauthError();
-      }, 5000);
-      return () => {
-        return clearTimeout(timeout);
-      };
-    }
-    return;
-  }, [oauthError, clearOauthError]);
 
   return (
     <header
@@ -101,11 +88,6 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
           >
             Start earning now
           </Button>
-          {oauthError && (
-            <span className="text-red-500">
-              There was an error logging you in
-            </span>
-          )}
         </div>
 
         <div

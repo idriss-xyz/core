@@ -62,7 +62,6 @@ export function OAuthCallbackHandler() {
               dynamicJwtToken,
             );
           }
-
           // Clean up URL parameters (Check if needed)
           window.history.replaceState({}, document.title, '/creators');
 
@@ -70,8 +69,9 @@ export function OAuthCallbackHandler() {
         } catch (error) {
           console.error('Error handling OAuth callback:', error);
           setOauthError('Authentication failed. Please try again.');
-          router.push('/creators');
         } finally {
+          window.history.replaceState({}, document.title, '/creators');
+
           setIsProcessing(false);
         }
       }, 1500);
