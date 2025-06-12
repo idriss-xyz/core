@@ -172,3 +172,5 @@ export const getChainIdsFromShortNames = (shortNames: string[]) => {
     );
   });
 };
+
+export { useStartEarningNavigation } from './navigation';
