@@ -71,10 +71,9 @@ export function OAuthCallbackHandler() {
           setOauthError('Authentication failed. Please try again.');
         } finally {
           window.history.replaceState({}, document.title, '/creators');
-
           setIsProcessing(false);
         }
-      }, 1500);
+      }, 2000);
     }
 
     return () => {
