@@ -2,31 +2,23 @@
 'use client';
 import { Button } from '@idriss-xyz/ui/button';
 import { classes } from '@idriss-xyz/ui/utils';
-import { RefObject, useCallback } from 'react';
-import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
-import { useRouter } from 'next/navigation';
+import { RefObject } from 'react';
 
 import { backgroundLines } from '@/assets';
 
+import { useAuth } from '../context/auth-context';
+import { useStartEarningNavigation } from '../utils';
+
 import { VideoPlayer } from './hero-section/video-player';
+import { LoginModal } from './login-modal';
 
 type Properties = {
   heroButtonReference?: RefObject<HTMLButtonElement>;
 };
 
 export const HeroSection = ({ heroButtonReference }: Properties) => {
-  const { setShowAuthFlow, user } = useDynamicContext();
-  const router = useRouter();
-
-  const handleStartEarningClick = useCallback(() => {
-    // If user is not logged in, show the Dynamic login modal
-    if (user) {
-      router.push('/creators/app');
-    } else {
-      setShowAuthFlow(true);
-      return;
-    }
-  }, [setShowAuthFlow, user, router]);
+  const { isLoginModalOpen, setIsModalOpen } = useAuth();
+  const handleStartEarningClick = useStartEarningNavigation();
 
   return (
     <header
@@ -95,6 +87,12 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
           <VideoPlayer />
         </div>
       </div>
+      <LoginModal
+        isOpened={isLoginModalOpen}
+        onClose={() => {
+          return setIsModalOpen(false);
+        }}
+      />
     </header>
   );
 };

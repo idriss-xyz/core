@@ -30,13 +30,13 @@ export const browserBasedSource = ({
 };
 
 // TODO: check location and use zod
-type CreatorProfile = {
+export type CreatorProfileResponse = {
   id: number;
   address: Hex;
   primaryAddress: Hex;
   name: string;
-  displayName: string;
-  profilePictureUrl: string;
+  displayName?: string;
+  profilePictureUrl?: string;
   donationUrl: string;
   obsUrl: string;
   minimumAlertAmount: number;
@@ -55,7 +55,7 @@ type CreatorProfile = {
 export const getCreatorProfile = async (
   name?: string | null,
   address?: Hex | null,
-): Promise<CreatorProfile | undefined> => {
+): Promise<CreatorProfileResponse | undefined> => {
   if (!name && !address) {
     console.error('No name or address to get creator');
     return;
@@ -69,7 +69,7 @@ export const getCreatorProfile = async (
   if (!response.ok) {
     return;
   }
-  const data = (await response.json()) as CreatorProfile;
+  const data = (await response.json()) as CreatorProfileResponse;
   return data;
 };
 
@@ -81,44 +81,38 @@ export const saveCreatorProfile = async (
   dynamicId?: string | null,
   authToken?: string,
 ): Promise<void> => {
-  try {
-    if (!address || !name || !dynamicId) {
-      console.error('No wallet address, name or dynamicId to create creator');
-      return;
-    }
+  if (!address || !name || !dynamicId) {
+    throw new Error('No wallet address, name or dynamicId to create creator');
+  }
 
-    if (!authToken) {
-      console.error('No auth token provided');
-      return;
-    }
+  if (!authToken) {
+    throw new Error('No auth token provided');
+  }
 
-    const response = await fetch(`${CREATOR_API_URL}/creator-profile`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${authToken}`,
-      },
-      body: JSON.stringify({
-        address: address,
-        primaryAddress: address,
-        displayName,
-        profilePictureUrl,
-        name,
-        dynamicId,
-      }),
-    });
+  const response = await fetch(`${CREATOR_API_URL}/creator-profile`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`,
+    },
+    body: JSON.stringify({
+      address: address,
+      primaryAddress: address,
+      displayName,
+      profilePictureUrl,
+      name,
+      dynamicId,
+    }),
+  });
 
-    if (!response.ok) {
-      throw new Error('Failed to register creator');
-    }
-  } catch (error) {
-    console.error('Error registering creator:', error);
+  if (!response.ok) {
+    throw new Error('Failed to register creator');
   }
 };
 
 export const editCreatorProfile = async (
   name: string,
-  profile: Partial<CreatorProfile>,
+  profile: Partial<CreatorProfileResponse>,
   authToken?: string,
 ): Promise<boolean> => {
   try {
@@ -178,3 +172,5 @@ export const getChainIdsFromShortNames = (shortNames: string[]) => {
     );
   });
 };
+
+export { useStartEarningNavigation } from './navigation';

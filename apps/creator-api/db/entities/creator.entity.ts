@@ -21,7 +21,7 @@ export class Creator {
   displayName!: string;
 
   @Column({ type: 'text', name: 'dynamic_id', unique: true })
-  dynamicId?: string;
+  dynamicId!: string;
 
   @Column({ type: 'text', name: 'profile_picture_url', nullable: true })
   profilePictureUrl?: string;
