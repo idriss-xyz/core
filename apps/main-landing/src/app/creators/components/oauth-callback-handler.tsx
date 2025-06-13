@@ -5,7 +5,7 @@ import {
   useSocialAccounts,
   getAuthToken,
 } from '@dynamic-labs/sdk-react-core';
-import { ProviderEnum } from '@dynamic-labs/types';
+import { ProviderEnum } from '@dynamic-labs/sdk-api-core';
 import { Hex } from 'viem';
 
 import { getCreatorProfile, saveCreatorProfile } from '../utils';
@@ -69,15 +69,14 @@ export function OAuthCallbackHandler() {
           } else if (creator) {
             setCreator(creator);
           }
-          // Clean up URL parameters (Check if needed)
+          // Clean up URL parameters for next page load
           window.history.replaceState({}, document.title, '/creators');
-
           router.push('/creators/app');
         } catch (error) {
           console.error('Error handling OAuth callback:', error);
           setOauthError('Authentication failed. Please try again.');
-        } finally {
           window.history.replaceState({}, document.title, '/creators');
+        } finally {
           setIsProcessing(false);
         }
       }, 2000);

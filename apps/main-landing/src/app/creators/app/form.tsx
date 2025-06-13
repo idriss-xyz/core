@@ -18,6 +18,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Multiselect, MultiselectOption } from '@idriss-xyz/ui/multiselect';
 import { getAuthToken, useDynamicContext } from '@dynamic-labs/sdk-react-core';
+import { ProviderEnum } from '@dynamic-labs/sdk-api-core';
 
 import { ethereumClient } from '../donate/config';
 import {
@@ -77,10 +78,8 @@ export function CreatorProfileForm() {
   const [saveSuccess, setSaveSuccess] = useState<boolean | null>(null);
   const { user } = useDynamicContext();
   const initialName = user?.verifiedCredentials.find((credential) => {
-    // Ignore due to missing direct enum type export from @dynamic-labs/sdk-react-core
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
-    return credential.oauthProvider === 'twitch';
-  })?.oauthDisplayName;
+    return credential.oauthProvider === ProviderEnum.Twitch;
+  })?.oauthUsername;
 
   const formMethods = useForm<FormPayload>({
     defaultValues: {
