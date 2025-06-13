@@ -19,7 +19,7 @@ export function OAuthCallbackHandler() {
   const { user } = useDynamicContext();
   const { getLinkedAccountInformation } = useSocialAccounts();
   const [isProcessing, setIsProcessing] = useState(false);
-  const { setOauthError } = useAuth();
+  const { setOauthError, setCreator } = useAuth();
   // Timeout adds small delay to wait for auth to finish
   const timeoutReference = useRef<NodeJS.Timeout | null>(null);
 
@@ -61,6 +61,13 @@ export function OAuthCallbackHandler() {
               user?.userId,
               dynamicJwtToken,
             );
+            // TODO: receive response from saveCreatorProfile like below
+            // const newCreator = await saveCreatorProfile(twitchName);
+            const newCreator = await getCreatorProfile(twitchName);
+
+            setCreator(newCreator!);
+          } else if (creator) {
+            setCreator(creator);
           }
           // Clean up URL parameters (Check if needed)
           window.history.replaceState({}, document.title, '/creators');
@@ -88,6 +95,7 @@ export function OAuthCallbackHandler() {
     router,
     getLinkedAccountInformation,
     setOauthError,
+    setCreator,
   ]);
 
   return <LoadingModal isProcessing={isProcessing} />;

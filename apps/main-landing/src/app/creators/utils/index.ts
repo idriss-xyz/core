@@ -30,13 +30,13 @@ export const browserBasedSource = ({
 };
 
 // TODO: check location and use zod
-type CreatorProfile = {
+export type CreatorProfileResponse = {
   id: number;
   address: Hex;
   primaryAddress: Hex;
   name: string;
-  displayName: string;
-  profilePictureUrl: string;
+  displayName?: string;
+  profilePictureUrl?: string;
   donationUrl: string;
   obsUrl: string;
   minimumAlertAmount: number;
@@ -55,7 +55,7 @@ type CreatorProfile = {
 export const getCreatorProfile = async (
   name?: string | null,
   address?: Hex | null,
-): Promise<CreatorProfile | undefined> => {
+): Promise<CreatorProfileResponse | undefined> => {
   if (!name && !address) {
     console.error('No name or address to get creator');
     return;
@@ -69,7 +69,7 @@ export const getCreatorProfile = async (
   if (!response.ok) {
     return;
   }
-  const data = (await response.json()) as CreatorProfile;
+  const data = (await response.json()) as CreatorProfileResponse;
   return data;
 };
 
@@ -112,7 +112,7 @@ export const saveCreatorProfile = async (
 
 export const editCreatorProfile = async (
   name: string,
-  profile: Partial<CreatorProfile>,
+  profile: Partial<CreatorProfileResponse>,
   authToken?: string,
 ): Promise<boolean> => {
   try {
