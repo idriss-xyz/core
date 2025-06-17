@@ -23,7 +23,7 @@ import { backgroundLines2, backgroundLines3 } from '@/assets';
 import { Providers } from '../providers';
 import { ethereumClient } from '../donate/config';
 import { TopBar } from '../components/top-bar';
-import { Banner } from '../components/banner/banner';
+import { Banner } from '../components/banner';
 
 type FormPayload = {
   name: string;
