@@ -31,7 +31,8 @@
         "PUBLIC_ACCESS_ENABLED",
         "CI",
         "CREATOR_LINKS_SECRET",
-        "DYNAMIC_ENVIRONMENT_ID"
+        "DYNAMIC_ENVIRONMENT_ID",
+        "PRIVY_APP_ID"
       ]
     },
     "@idriss-xyz/main-landing#dev": {
@@ -44,7 +45,8 @@
         "PUBLIC_ACCESS_ENABLED",
         "CI",
         "CREATOR_LINKS_SECRET",
-        "DYNAMIC_ENVIRONMENT_ID"
+        "DYNAMIC_ENVIRONMENT_ID",
+        "PRIVY_APP_ID"
       ]
     },
     "@idriss-xyz/extension#dev": {
