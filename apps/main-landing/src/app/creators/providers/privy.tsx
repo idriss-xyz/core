@@ -1,6 +1,7 @@
 'use client';
 import { useCallback, ReactNode } from 'react';
 import { PrivyProvider } from '@privy-io/react-auth';
+import { base } from 'viem/chains';
 
 import { useAuth } from '../context/privy-auth-context';
 
@@ -35,6 +36,11 @@ export const PrivyAuthWrapper: React.FC<PrivyAuthWrapperProperties> = ({
         customAuth: {
           isLoading: false, // TODO: Implement loading state
           getCustomAccessToken: getCustomToken,
+        },
+        defaultChain: base,
+        embeddedWallets: {
+          createOnLogin: 'off',
+          showWalletUIs: false,
         },
       }}
     >

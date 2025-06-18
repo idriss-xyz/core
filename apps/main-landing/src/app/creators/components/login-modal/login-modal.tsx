@@ -1,10 +1,9 @@
-import { useSocialAccounts } from '@dynamic-labs/sdk-react-core';
-import { ProviderEnum } from '@dynamic-labs/sdk-api-core';
 import { TOKEN_TERMS_AND_CONDITIONS_LINK } from '@idriss-xyz/constants';
 import { Button } from '@idriss-xyz/ui/button';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { Link } from '@idriss-xyz/ui/link';
 import { Modal } from '@idriss-xyz/ui/modal';
+import { usePrivy } from '@privy-io/react-auth';
 
 type Properties = {
   isOpened: boolean;
@@ -12,10 +11,10 @@ type Properties = {
 };
 
 export const LoginModal = ({ isOpened, onClose }: Properties) => {
-  const { signInWithSocialAccount } = useSocialAccounts();
+  const { login } = usePrivy();
 
   const handleTwitchLogin = async () => {
-    await signInWithSocialAccount(ProviderEnum.Twitch);
+    await login();
   };
 
   return (

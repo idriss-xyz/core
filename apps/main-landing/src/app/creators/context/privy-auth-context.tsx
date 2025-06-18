@@ -6,6 +6,7 @@ import {
   useCallback,
   ReactNode,
 } from 'react';
+import { CreatorProfileResponse } from '../utils';
 
 interface AuthContextType {
   isLoginModalOpen: boolean;
@@ -13,7 +14,9 @@ interface AuthContextType {
   oauthError: string | null;
   setOauthError: (error: string | null) => void;
   clearOauthError: () => void;
-  getToken: () => Promise<string | undefined>;
+  creator: CreatorProfileResponse | null;
+  setCreator: (creator: CreatorProfileResponse | null) => void;
+  getToken: () => string | undefined;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -29,6 +32,7 @@ export const useAuth = () => {
 export const PrivyAuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoginModalOpen, setIsModalOpen] = useState(false);
   const [oauthError, setOauthError] = useState<string | null>(null);
+  const [creator, setCreator] = useState<CreatorProfileResponse | null>(null);
 
   const clearOauthError = useCallback(() => {
     setOauthError(null);
@@ -51,6 +55,8 @@ export const PrivyAuthProvider = ({ children }: { children: ReactNode }) => {
     oauthError,
     setOauthError,
     clearOauthError,
+    creator,
+    setCreator,
     getToken,
   };
 
