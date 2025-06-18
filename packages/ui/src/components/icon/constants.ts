@@ -36,7 +36,8 @@ import {
   User,
   LineChart,
   History,
-  Bell
+  Bell,
+  Gift
 } from 'lucide-react';
 
 import * as customIcons from './custom';
@@ -80,5 +81,6 @@ export const ICON = {
   LineChart,
   History,
   Bell,
+  Gift,
   ...customIcons,
 };

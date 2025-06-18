@@ -8,7 +8,6 @@ export const SOCIAL_LINK = {
   INSTAGRAM: 'https://www.instagram.com/idriss_xyz',
   TIKTOK: 'https://www.tiktok.com/@idriss_xyz_',
   YOUTUBE: 'https://www.youtube.com/@idriss_xyz',
-  FARCASTER: 'https://farcaster.xyz/idriss',
 };
 
 /**
