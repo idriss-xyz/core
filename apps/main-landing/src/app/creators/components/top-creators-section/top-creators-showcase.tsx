@@ -13,8 +13,9 @@ import {
   LambyseriestvCard,
   ViperCard,
   YoJurmyCard,
-  Alliestrasza,
-  Pandapple,
+  FenoHSCard,
+  AlliestraszaCard,
+  PandappleCard,
 } from './assets';
 
 const creators = [
@@ -93,7 +94,7 @@ const creators = [
   {
     name: 'Alliestrasza',
     followers: '233K',
-    image: Alliestrasza.src,
+    image: AlliestraszaCard.src,
     platform: {
       icon: (
         <IconButton
@@ -147,7 +148,7 @@ const creators = [
   {
     name: 'Pandapple',
     followers: '5.5K',
-    image: Pandapple.src,
+    image: PandappleCard.src,
     platform: {
       icon: (
         <IconButton
@@ -190,6 +191,24 @@ const creators = [
           asLink
           isExternal
           href="https://www.twitch.tv/yojurmy"
+          iconName="TwitchOutlinedBold"
+          size="extra"
+          intent="tertiary"
+          className="size-6 text-mint-200 md:size-8"
+        />
+      ),
+    },
+  },
+  {
+    name: 'FenoHS',
+    followers: '60k',
+    image: FenoHSCard.src,
+    platform: {
+      icon: (
+        <IconButton
+          asLink
+          isExternal
+          href="https://www.twitch.tv/fenohs"
           iconName="TwitchOutlinedBold"
           size="extra"
           intent="tertiary"
