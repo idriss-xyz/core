@@ -18,16 +18,16 @@ import { Controller, useForm } from 'react-hook-form';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Multiselect, MultiselectOption } from '@idriss-xyz/ui/multiselect';
 import { getAuthToken, useDynamicContext } from '@dynamic-labs/sdk-react-core';
-import { ProviderEnum } from '@dynamic-labs/sdk-api-core';
+import { Link } from '@idriss-xyz/ui/link';
 
 import { ethereumClient } from '../donate/config';
 import {
-  getCreatorProfile,
   editCreatorProfile,
   getChainIdsFromShortNames,
   getChainShortNamesFromIds,
 } from '../utils';
 import { TEST_DONATION_MESSAGE } from '../constants';
+import { useAuth } from '../context/auth-context';
 
 type FormPayload = {
   name: string;
@@ -71,26 +71,48 @@ const TOKENS_ORDER: Record<TokenSymbol, number> = {
   PENGU: 12,
 };
 
+const testDonation = {
+  type: 'test' as const,
+  donor: 'idriss_xyz',
+  amount: Math.floor(Math.random() * 99) + 1, // Random amount between $1-100
+  message: TEST_DONATION_MESSAGE,
+  sfxText: null,
+  avatarUrl: null,
+  txnHash: '0x22f0f25140b9fe35cc01722bb5b0366dcb68bb1bcaee3415ca9f48ce4e57d972',
+  token: {
+    amount: 1_000_000_000_000,
+    details: {
+      symbol: 'ETH',
+      name: 'Ethereum',
+      logo: 'https://assets.coingecko.com/coins/images/279/small/ethereum.png',
+    },
+  },
+};
+
 export function CreatorProfileForm() {
   const [copiedObsLink, setCopiedObsLink] = useState(false);
   const [copiedDonationLink, setCopiedDonationLink] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState<boolean | null>(null);
+  const { creator } = useAuth();
   const { user } = useDynamicContext();
-  const initialName = user?.verifiedCredentials.find((credential) => {
-    return credential.oauthProvider === ProviderEnum.Twitch;
-  })?.oauthUsername;
 
   const formMethods = useForm<FormPayload>({
     defaultValues: {
-      name: initialName ?? '',
-      address: '',
-      chainsIds: ALL_CHAIN_IDS,
-      tokensSymbols: UNIQUE_ALL_TOKEN_SYMBOLS,
-      minimumAlertAmount: 1,
-      minimumTTSAmount: 5,
-      minimumSfxAmount: 10,
-      customBadWords: [],
+      name: creator?.name ?? '',
+      address: creator?.primaryAddress ?? '',
+      chainsIds:
+        creator?.networks && creator.networks.length > 0
+          ? getChainIdsFromShortNames(creator?.networks)
+          : ALL_CHAIN_IDS,
+      tokensSymbols:
+        creator?.tokens && creator.tokens.length > 0
+          ? creator?.tokens
+          : UNIQUE_ALL_TOKEN_SYMBOLS,
+      minimumAlertAmount: creator?.minimumAlertAmount ?? 1,
+      minimumTTSAmount: creator?.minimumTTSAmount ?? 5,
+      minimumSfxAmount: creator?.minimumSfxAmount ?? 10,
+      customBadWords: creator?.customBadWords ?? [],
     },
     mode: 'onSubmit',
   });
@@ -267,70 +289,11 @@ export function CreatorProfileForm() {
     resetCopyState();
   }, [address, tokensSymbols, chainsIds, resetCopyState]);
 
-  useEffect(() => {
-    const fetchCreatorProfile = async () => {
-      if (!initialName) {
-        return;
-      }
-      const creatorProfile = await getCreatorProfile(initialName);
-      if (!creatorProfile) {
-        return;
-      }
-      formMethods.setValue('name', creatorProfile.name);
-      formMethods.setValue('address', creatorProfile.primaryAddress);
-      formMethods.setValue(
-        'minimumAlertAmount',
-        creatorProfile.minimumAlertAmount,
-      );
-      formMethods.setValue('minimumTTSAmount', creatorProfile.minimumTTSAmount);
-      formMethods.setValue('minimumSfxAmount', creatorProfile.minimumSfxAmount);
-      formMethods.setValue(
-        'tokensSymbols',
-        creatorProfile.tokens.length > 0
-          ? creatorProfile.tokens
-          : UNIQUE_ALL_TOKEN_SYMBOLS,
-      );
-      formMethods.setValue(
-        'chainsIds',
-        creatorProfile.networks.length > 0
-          ? getChainIdsFromShortNames(creatorProfile.networks)
-          : ALL_CHAIN_IDS,
-      );
-      formMethods.setValue('alertMuted', creatorProfile.alertMuted);
-      formMethods.setValue('ttsMuted', creatorProfile.ttsMuted);
-      formMethods.setValue('sfxMuted', creatorProfile.sfxMuted);
-      formMethods.setValue('customBadWords', creatorProfile.customBadWords);
-    };
-    void fetchCreatorProfile();
-  }, [initialName, formMethods]);
-
   const sendTestDonation = useCallback(() => {
     if (!address || !isAddress(address)) {
       alert('Please enter a valid address first');
       return;
     }
-
-    // Generate a fake transaction hash
-    const fakeTransactionHash = `0x${Math.random().toString(16).slice(2).padStart(64, '0')}`;
-
-    // Create test donation data
-    const testDonation = {
-      type: 'test' as const,
-      donor: 'idriss_xyz',
-      amount: Math.floor(Math.random() * 99) + 1, // Random amount between $1-100
-      message: TEST_DONATION_MESSAGE,
-      sfxText: null,
-      avatarUrl: null,
-      txnHash: fakeTransactionHash,
-      token: {
-        amount: 1_000_000_000_000,
-        details: {
-          symbol: 'ETH',
-          name: 'Ethereum',
-          logo: 'https://assets.coingecko.com/coins/images/279/small/ethereum.png',
-        },
-      },
-    };
 
     localStorage.setItem('testDonation', JSON.stringify(testDonation));
 
@@ -374,6 +337,17 @@ export function CreatorProfileForm() {
       setIsSaving(false);
     }
   };
+
+  if (!creator || !user) {
+    return (
+      <div className="flex h-40 flex-col items-center justify-center">
+        <p className="text-lg font-bold text-red-500">Creator not signed in</p>
+        <Link href="/creators" size="m">
+          Go back to creators
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <Form className="w-full" onSubmit={formMethods.handleSubmit(onSubmit)}>
