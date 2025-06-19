@@ -6,6 +6,6 @@ export { default as LambyseriestvCard } from './lambyseriestv-card.svg';
 export { default as ViperCard } from './viper-card.jpg';
 export { default as YoJurmyCard } from './yojurmy-card.webp';
 export { default as FenoHSCard } from './fenohs-card.png';
-export { default as BabyBearHS } from './babybearhs-card.jpg';
+export { default as BabyBearHSCard } from './babybearhs-card.jpg';
 export { default as AlliestraszaCard } from './alliestrasza-card.jpg';
 export { default as PandappleCard } from './pandapple-card.jpg';

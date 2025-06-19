@@ -7,7 +7,7 @@ import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import {
   DafaqtorCard,
   ExcelsorphCard,
-  BabyBearHS,
+  BabyBearHSCard,
   DmoneyCard,
   Qflux888Card,
   LambyseriestvCard,
@@ -58,7 +58,7 @@ const creators = [
   {
     name: 'BabyBearHS',
     followers: '8.4K',
-    image: BabyBearHS.src,
+    image: BabyBearHSCard.src,
     platform: {
       icon: (
         <IconButton
