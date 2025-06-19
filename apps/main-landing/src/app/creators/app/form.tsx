@@ -340,7 +340,6 @@ export function CreatorProfileForm() {
 
   const onSubmit = async (data: FormPayload) => {
     setIsSaving(true);
-    setSaveSuccess(false);
 
     const chainsShortNames = getChainShortNamesFromIds(data.chainsIds);
 
