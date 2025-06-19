@@ -21,7 +21,7 @@ import {
 const creators = [
   {
     name: 'dafaqtor',
-    followers: '3.7K',
+    followers: '3.6K',
     image: DafaqtorCard.src,
     platform: {
       icon: (
@@ -57,7 +57,7 @@ const creators = [
   },
   {
     name: 'BabyBearHS',
-    followers: '8.2K',
+    followers: '8.4K',
     image: BabyBearHS.src,
     platform: {
       icon: (
@@ -75,7 +75,7 @@ const creators = [
   },
   {
     name: 'Dmoney',
-    followers: '18.3K',
+    followers: '18.2K',
     image: DmoneyCard.src,
     platform: {
       icon: (
@@ -93,7 +93,7 @@ const creators = [
   },
   {
     name: 'Alliestrasza',
-    followers: '233K',
+    followers: '232K',
     image: AlliestraszaCard.src,
     platform: {
       icon: (
@@ -129,7 +129,7 @@ const creators = [
   },
   {
     name: 'lambyseriestv',
-    followers: '32.1K',
+    followers: '32.2K',
     image: LambyseriestvCard.src,
     platform: {
       icon: (
@@ -165,7 +165,7 @@ const creators = [
   },
   {
     name: 'viper_9337',
-    followers: '19K',
+    followers: '18.9K',
     image: ViperCard.src,
     platform: {
       icon: (
@@ -183,7 +183,7 @@ const creators = [
   },
   {
     name: 'YoJurmy',
-    followers: '675',
+    followers: '672',
     image: YoJurmyCard.src,
     platform: {
       icon: (
@@ -201,7 +201,7 @@ const creators = [
   },
   {
     name: 'FenoHS',
-    followers: '90k',
+    followers: '90K',
     image: FenoHSCard.src,
     platform: {
       icon: (
