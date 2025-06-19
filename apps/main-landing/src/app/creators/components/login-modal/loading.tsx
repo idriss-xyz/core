@@ -39,7 +39,7 @@ export const LoadingModal = ({ isProcessing }: Properties) => {
           </>
         ) : (
           <h1 className="text-heading4 text-neutral-900">
-            Creating your profile
+            Logging you in
           </h1>
         )}
       </div>
