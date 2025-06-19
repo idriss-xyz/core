@@ -7,20 +7,21 @@ import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import {
   DafaqtorCard,
   ExcelsorphCard,
-  BabyBearHS,
+  BabyBearHSCard,
   DmoneyCard,
   Qflux888Card,
   LambyseriestvCard,
   ViperCard,
   YoJurmyCard,
-  Alliestrasza,
-  Pandapple,
+  FenoHSCard,
+  AlliestraszaCard,
+  PandappleCard,
 } from './assets';
 
 const creators = [
   {
     name: 'dafaqtor',
-    followers: '3.7K',
+    followers: '3.6K',
     image: DafaqtorCard.src,
     platform: {
       icon: (
@@ -56,8 +57,8 @@ const creators = [
   },
   {
     name: 'BabyBearHS',
-    followers: '8.2K',
-    image: BabyBearHS.src,
+    followers: '8.4K',
+    image: BabyBearHSCard.src,
     platform: {
       icon: (
         <IconButton
@@ -74,7 +75,7 @@ const creators = [
   },
   {
     name: 'Dmoney',
-    followers: '18.3K',
+    followers: '18.2K',
     image: DmoneyCard.src,
     platform: {
       icon: (
@@ -92,8 +93,8 @@ const creators = [
   },
   {
     name: 'Alliestrasza',
-    followers: '233K',
-    image: Alliestrasza.src,
+    followers: '232K',
+    image: AlliestraszaCard.src,
     platform: {
       icon: (
         <IconButton
@@ -128,7 +129,7 @@ const creators = [
   },
   {
     name: 'lambyseriestv',
-    followers: '32.1K',
+    followers: '32.2K',
     image: LambyseriestvCard.src,
     platform: {
       icon: (
@@ -147,7 +148,7 @@ const creators = [
   {
     name: 'Pandapple',
     followers: '5.5K',
-    image: Pandapple.src,
+    image: PandappleCard.src,
     platform: {
       icon: (
         <IconButton
@@ -164,7 +165,7 @@ const creators = [
   },
   {
     name: 'viper_9337',
-    followers: '19K',
+    followers: '18.9K',
     image: ViperCard.src,
     platform: {
       icon: (
@@ -182,7 +183,7 @@ const creators = [
   },
   {
     name: 'YoJurmy',
-    followers: '675',
+    followers: '672',
     image: YoJurmyCard.src,
     platform: {
       icon: (
@@ -190,6 +191,24 @@ const creators = [
           asLink
           isExternal
           href="https://www.twitch.tv/yojurmy"
+          iconName="TwitchOutlinedBold"
+          size="extra"
+          intent="tertiary"
+          className="size-6 text-mint-200 md:size-8"
+        />
+      ),
+    },
+  },
+  {
+    name: 'FenoHS',
+    followers: '90K',
+    image: FenoHSCard.src,
+    platform: {
+      icon: (
+        <IconButton
+          asLink
+          isExternal
+          href="https://www.twitch.tv/fenohs"
           iconName="TwitchOutlinedBold"
           size="extra"
           intent="tertiary"
