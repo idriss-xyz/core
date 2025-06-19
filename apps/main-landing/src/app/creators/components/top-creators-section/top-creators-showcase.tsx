@@ -201,7 +201,7 @@ const creators = [
   },
   {
     name: 'FenoHS',
-    followers: '60k',
+    followers: '90k',
     image: FenoHSCard.src,
     platform: {
       icon: (
