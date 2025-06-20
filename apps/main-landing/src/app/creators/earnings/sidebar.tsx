@@ -2,6 +2,7 @@ import { NavigationMenu } from '@idriss-xyz/ui/navigation-menu';
 import { Icon } from '@idriss-xyz/ui/icon';
 // import { socialOptions } from '@/app/creators/earnings/social-options';
 import Link from 'next/link';
+import { socialOptions } from '@/app/creators/earnings/social-options';
 
 export function Sidebar() {
   return (
@@ -19,35 +20,78 @@ export function Sidebar() {
 
           {/*TODO: Reward and Earnings buttons are inconsistent*/}
           <NavigationMenu.List className="flex flex-col gap-4">
-            <NavigationMenu.Item className="flex h-[52px] items-center gap-2 rounded-full px-4 py-2">
-              <Icon name="LayoutDashboard" size={20} />
-              <span className="text-button1 uppercase">Setup</span>
+            <NavigationMenu.Item className="flex max-h-[82px] min-h-[52px] items-center gap-2 rounded-full px-4 py-2">
+              <Icon
+                name="LayoutDashboard"
+                size={20}
+                className="text-[#000A05]"
+              />
+              <span className="text-button1 uppercase text-[#000A05]">
+                Setup
+              </span>
             </NavigationMenu.Item>
 
             <NavigationMenu.Item className="flex items-center gap-2 rounded-full border border-neutral-300 bg-neutral-100 px-4 py-3">
-              <Icon name="User" size={20}/>
-              <span className="text-button1 uppercase">Profile</span>
+              <Icon name="User" size={20} className="text-[#000A05]" />
+              <span className="text-button1 uppercase text-[#000A05]">
+                Profile
+              </span>
             </NavigationMenu.Item>
 
-            <NavigationMenu.Item className="flex h-[52px] items-center gap-2 rounded-full px-4 py-2">
-              <Icon name="LayoutDashboard" size={20} />
-              <span className="text-button1 uppercase">Setup</span>
+            <NavigationMenu.Item className="flex max-h-[82px] min-h-[52px] items-center gap-2 rounded-full px-4 py-2">
+              <Icon
+                name="LayoutDashboard"
+                size={20}
+                className="text-[#000A05]"
+              />
+              <span className="text-button1 uppercase text-[#000A05]">
+                Setup
+              </span>
             </NavigationMenu.Item>
 
-            <NavigationMenu.Item className="flex h-[52px] items-center gap-2 rounded-full px-4 py-2">
-              <Icon name="Trophy" size={20} />
-              <span className="text-button1 uppercase">Ranking</span>
+            <NavigationMenu.Item className="flex max-h-[82px] min-h-[52px] items-center gap-2 rounded-full px-4 py-2">
+              <Icon name="Trophy" size={20} className="text-[#000A05]" />
+              <span className="text-button1 uppercase text-[#000A05]">
+                Ranking
+              </span>
             </NavigationMenu.Item>
 
-            <NavigationMenu.Item className="flex h-[52px] items-center gap-2 rounded-full px-4 py-2">
-              <Icon name="Gift" size={20} />
-              <span className="text-button1 uppercase">Rewards</span>
+            <NavigationMenu.Item className="flex max-h-[82px] min-h-[52px] items-center gap-2 rounded-full px-4 py-2">
+              <Icon name="Gift" size={20} className="text-[#000A05]" />
+              <span className="text-button1 uppercase text-[#000A05]">
+                Rewards
+              </span>
             </NavigationMenu.Item>
-
           </NavigationMenu.List>
         </div>
 
-        <div>Bottom frame</div>
+        <div className="flex flex-col gap-3.5">
+          <div className="flex flex-col gap-3.5">
+            <div className="flex min-h-[32px] max-h-[62px] flex-col rounded-[4px] px-3 py-1">
+              <div className="flex items-center gap-3">
+                <Icon name="BookOpen" size={20} className="text-[#717484]" />
+                <span className="text-body4 uppercase text-[#323339]">
+                  Setup guide
+                </span>
+              </div>
+            </div>
+
+            <div className="flex min-h-[32px] max-h-[62px] flex-col rounded-[4px] px-3 py-1">
+              <div className="flex items-center gap-3">
+                <Icon name="HelpCircle" size={20} className="text-[#717484]" />
+                <span className="text-body4 uppercase text-[#323339]">
+                  Support
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-between p-3">
+            {socialOptions.map((social, index) => {
+              return <Icon name={social.iconName} size={24} key={index} />;
+            })}
+          </div>
+        </div>
 
         {/*<NavigationMenu.List className="flex flex-col gap-4">*/}
         {/*  <NavigationMenu.Item className="flex h-[52px] items-center gap-2 rounded-full border border-transparent px-4 py-3 hover:border-neutral-300 hover:bg-neutral-100">*/}
