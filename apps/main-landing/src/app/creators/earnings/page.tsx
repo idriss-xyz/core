@@ -4,7 +4,7 @@ import '@rainbow-me/rainbowkit/styles.css';
 import { Sidebar } from '@/app/creators/earnings/sidebar';
 import { NavigationTabs } from '@/app/creators/earnings/navigation-tabs';
 import { Icon } from '@idriss-xyz/ui/icon';
-import { RightTopMenu } from '@/app/creators/earnings/right-top-menu';
+import { Navbar } from '@/app/creators/earnings/navbar';
 import {RainbowKitProviders} from "@/app/creators/donate/providers";
 
 // ts-unused-exports:disable-next-line
@@ -21,6 +21,17 @@ function EarningsContent() {
     <div className="bg-lime-400">
       <div className="flex min-w-[1440px] max-w-[1430px] min-h-[1264px] max-h-[1294px] bg-[#F6F7F8] justify-between">
         <Sidebar/>
+
+        <div className="flex flex-col gap-6 min-w-[1166px] max-w-[1196]">
+          <div className="flex flex-col">
+
+            <div className="flex flex-col min-h-[1188px] max-h-[1218]">
+                <Navbar/>
+            </div>
+
+          </div>
+        </div>
+
 
         {/*<div className="flex w-full flex-col gap-3">*/}
         {/*  <RightTopMenu />*/}
