@@ -32,20 +32,20 @@ export function Sidebar() {
             </NavigationMenu.Item>
 
             <NavigationMenu.Item className="flex items-center gap-2 rounded-full border border-neutral-300 bg-neutral-100 px-4 py-3">
-              <Icon name="User" size={20} className="text-[#000A05]" />
+              <Icon name="BadgeDollarSign" size={20} className="text-[#000A05]" />
               <span className="text-button1 uppercase text-[#000A05]">
-                Profile
+                Earnings
               </span>
             </NavigationMenu.Item>
 
             <NavigationMenu.Item className="flex max-h-[82px] min-h-[52px] items-center gap-2 rounded-full px-4 py-2">
               <Icon
-                name="LayoutDashboard"
+                name="User"
                 size={20}
                 className="text-[#000A05]"
               />
               <span className="text-button1 uppercase text-[#000A05]">
-                Setup
+                Profile
               </span>
             </NavigationMenu.Item>
 
