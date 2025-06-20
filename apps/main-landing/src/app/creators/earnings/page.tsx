@@ -22,7 +22,7 @@ function EarningsContent() {
       <div className="flex bg-[#F6F7F8]">
         <Sidebar />
 
-        <div className="flex w-full flex-col">
+        <div className="flex w-full flex-col gap-3">
           <RightTopMenu />
           <div className="flex flex-col gap-4">
             <div>
