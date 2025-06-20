@@ -18,31 +18,31 @@ export default function Earnings() {
 
 function EarningsContent() {
   return (
-    <>
-      <div className="flex bg-[#F6F7F8]">
-        <Sidebar />
+    <div className="bg-lime-400">
+      <div className="flex min-w-[1440px] max-w-[1430px] min-h-[1264px] max-h-[1294px] bg-[#F6F7F8] justify-between">
+        <Sidebar/>
 
-        <div className="flex w-full flex-col gap-3">
-          <RightTopMenu />
-          <div className="flex flex-col gap-4">
-            <div>
-              <div className="flex w-full items-center gap-2">
-                <span className="text-body6 text-neutral-800">Earnings</span>
-                <Icon
-                  name="IdrissArrowRight"
-                  size={20}
-                  className="text-black"
-                />
-                <span className="text-body6 text-neutral-800">Stats</span>
-              </div>
-              <span className="w-full text-heading3">Earnings</span>
-            </div>
-            <div className="w-full">
-              <NavigationTabs />
-            </div>
-          </div>
-        </div>
+        {/*<div className="flex w-full flex-col gap-3">*/}
+        {/*  <RightTopMenu />*/}
+        {/*  <div className="flex flex-col gap-4">*/}
+        {/*    <div>*/}
+        {/*      <div className="flex w-full items-center gap-2">*/}
+        {/*        <span className="text-body6 text-neutral-800">Earnings</span>*/}
+        {/*        <Icon*/}
+        {/*          name="IdrissArrowRight"*/}
+        {/*          size={20}*/}
+        {/*          className="text-black"*/}
+        {/*        />*/}
+        {/*        <span className="text-body6 text-neutral-800">Stats</span>*/}
+        {/*      </div>*/}
+        {/*      <span className="w-full text-heading3">Earnings</span>*/}
+        {/*    </div>*/}
+        {/*    <div className="w-full">*/}
+        {/*      <NavigationTabs />*/}
+        {/*    </div>*/}
+        {/*  </div>*/}
+        {/*</div>*/}
       </div>
-    </>
+    </div>
   );
 }

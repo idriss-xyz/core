@@ -85,7 +85,9 @@ export function RightTopMenu() {
               </NavigationMenu.Trigger>
 
               <NavigationMenu.Content>
+                {/*TODO: work on positioning*/}
                 <div className="max-w-[434px] flex flex-col gap-2 rounded-[12px] border border-neutral-300 bg-white p-4 shadow-lg absolute right-3 top-16">
+                  {/*TODO: adjust shadows?*/}
                   <div className="min-w-[400px] max-w-[430px] gap-2 rounded-[12px] p-4 3xl:shadow-sm">
                     <DonateHistoryItem
                       donation={donationData1}
