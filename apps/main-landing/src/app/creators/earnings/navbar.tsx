@@ -109,9 +109,9 @@ export function Navbar() {
             </NavigationMenu.Content>
           </NavigationMenu.Item>
 
-          <NavigationMenu.Item className="relative flex gap-2">
+          <NavigationMenu.Item className="relative flex gap-1">
             <NavigationMenu.Trigger asChild>
-              <div className="flex max-h-[70px] min-h-[40px] items-center gap-2.5">
+              <div className="flex max-h-[70px] min-h-[40px] items-center gap-2.5 w-max">
                 <div className="h-[48px] max-h-[48px] min-h-[48px] w-[48px] min-w-[48px] max-w-[48px] rounded-[999px] border border-[#AAAFB9]">
                   <img src="https://ipfs.io/ipfs/bafkreigwt4fn24gyh4nnqjutxio24dqfloyolo4h4nljkhran6dypy7e5q" />
                 </div>
@@ -119,7 +119,7 @@ export function Navbar() {
               </div>
             </NavigationMenu.Trigger>
 
-            <NavigationMenu.Content className="absolute w-[240px] gap-1 py-4">
+            <NavigationMenu.Content className="absolute top-full right-[-13px] mr-3 gap-1 py-2 w-max">
               <div className="flex min-w-[240px] max-w-[270px] flex-col gap-1 rounded-[12px] border border-neutral-300 bg-white pt-2 shadow-lg">
                 <div className="flex min-h-[32px] items-center gap-3 rounded-[4px] px-3 py-1">
                   <div className="flex gap-3 text-[#717484]">
