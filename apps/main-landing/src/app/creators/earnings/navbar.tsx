@@ -76,12 +76,38 @@ export function Navbar() {
     <>
       <NavigationMenu.Root className="flex justify-end gap-3">
         <NavigationMenu.List className="flex gap-3 p-3 items-center">
-          <NavigationMenu.Item>
+          <NavigationMenu.Item className="relative">
             <NavigationMenu.Trigger asChild>
               <div className="flex max-h-[70px] min-h-[40px] min-w-[40px] max-w-[70px] items-center justify-center rounded-full border border-neutral-300 bg-white">
                 <Icon name="BellNotification" size={20} />
               </div>
             </NavigationMenu.Trigger>
+
+            <NavigationMenu.Content className="absolute top-full mt-3 right-[-136px] mr-3 w-max">
+              {/*TODO: work on positioning*/}
+              <div className="flex flex-col gap-1 rounded-[12px] border border-neutral-300 bg-white p-4 shadow-lg">
+                <div className="min-w-[400px] max-w-[430px] gap-2 rounded-[12px] p-4">
+                  <DonateHistoryItem
+                    donation={donationData1}
+                    key={donationData1.transactionHash}
+                    showMenu={false}
+                  />
+                </div>
+
+                <div className="gap-2.5">
+                  <hr className="min-w-[400px] max-w-[430px] bg-[#DBDDE2]"/>
+                </div>
+
+                <div className="min-w-[400px] max-w-[430px] gap-2 rounded-[12px] p-4">
+                  <DonateHistoryItem
+                    donation={donationData2}
+                    key={donationData2.transactionHash}
+                    showMenu={false}
+                  />
+                </div>
+              </div>
+            </NavigationMenu.Content>
+
           </NavigationMenu.Item>
 
           <NavigationMenu.Item className="flex gap-2">
@@ -94,33 +120,6 @@ export function Navbar() {
               </div>
             </NavigationMenu.Trigger>
           </NavigationMenu.Item>
-
-          {/*      <NavigationMenu.Content>*/}
-          {/*        /!*TODO: work on positioning*!/*/}
-          {/*        <div className="max-w-[434px] flex flex-col gap-2 rounded-[12px] border border-neutral-300 bg-white p-4 shadow-lg absolute right-3 top-16">*/}
-          {/*          /!*TODO: adjust shadows?*!/*/}
-          {/*          <div className="min-w-[400px] max-w-[430px] gap-2 rounded-[12px] p-4 3xl:shadow-sm">*/}
-          {/*            <DonateHistoryItem*/}
-          {/*              donation={donationData1}*/}
-          {/*              key={donationData1.transactionHash}*/}
-          {/*              showMenu={false}*/}
-          {/*            />*/}
-          {/*          </div>*/}
-
-          {/*          <div className="gap-2.5">*/}
-          {/*            <hr className="min-w-[400px] max-w-[430px] bg-[#DBDDE2]" />*/}
-          {/*          </div>*/}
-
-          {/*          <div className="min-w-[400px] max-w-[430px] gap-2 rounded-[12px] p-4">*/}
-          {/*            <DonateHistoryItem*/}
-          {/*              donation={donationData2}*/}
-          {/*              key={donationData2.transactionHash}*/}
-          {/*              showMenu={false}*/}
-          {/*            />*/}
-          {/*          </div>*/}
-          {/*        </div>*/}
-          {/*      </NavigationMenu.Content>*/}
-          {/*    </NavigationMenu.Item>*/}
 
           {/*      <NavigationMenu.Content className="absolute left-[-120px] w-[240px] gap-1 py-4">*/}
           {/*        <div className="flex flex-col gap-1 rounded-[12px] border border-[#DBDDE2] bg-white pt-2 [box-shadow:0px_32px_64px_0px_#00000026,_0px_1px_3px_0px_#0000001A]">*/}
