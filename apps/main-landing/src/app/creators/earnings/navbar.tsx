@@ -75,7 +75,7 @@ export function Navbar() {
   return (
     <>
       <NavigationMenu.Root className="flex justify-end gap-3">
-        <NavigationMenu.List className="flex gap-3 p-3 items-center">
+        <NavigationMenu.List className="flex items-center gap-3 p-3">
           <NavigationMenu.Item className="relative">
             <NavigationMenu.Trigger asChild>
               <div className="flex max-h-[70px] min-h-[40px] min-w-[40px] max-w-[70px] items-center justify-center rounded-full border border-neutral-300 bg-white">
@@ -83,7 +83,7 @@ export function Navbar() {
               </div>
             </NavigationMenu.Trigger>
 
-            <NavigationMenu.Content className="absolute top-full mt-3 right-[-136px] mr-3 w-max">
+            <NavigationMenu.Content className="absolute right-[-136px] top-full mr-3 mt-3 w-max">
               {/*TODO: work on positioning*/}
               <div className="flex flex-col gap-1 rounded-[12px] border border-neutral-300 bg-white p-4 shadow-lg">
                 <div className="min-w-[400px] max-w-[430px] gap-2 rounded-[12px] p-4">
@@ -95,7 +95,7 @@ export function Navbar() {
                 </div>
 
                 <div className="gap-2.5">
-                  <hr className="min-w-[400px] max-w-[430px] bg-[#DBDDE2]"/>
+                  <hr className="min-w-[400px] max-w-[430px] bg-[#DBDDE2]" />
                 </div>
 
                 <div className="min-w-[400px] max-w-[430px] gap-2 rounded-[12px] p-4">
@@ -107,49 +107,43 @@ export function Navbar() {
                 </div>
               </div>
             </NavigationMenu.Content>
-
           </NavigationMenu.Item>
 
-          <NavigationMenu.Item className="flex gap-2">
+          <NavigationMenu.Item className="relative flex gap-2">
             <NavigationMenu.Trigger asChild>
-              <div className="flex min-h-[40px] max-h-[70px] gap-2.5 items-center">
-                <div className="max-h-[48px] min-h-[48px] min-w-[48px] max-w-[48px] w-[48px] h-[48px] rounded-[999px] border border-[#AAAFB9]">
+              <div className="flex max-h-[70px] min-h-[40px] items-center gap-2.5">
+                <div className="h-[48px] max-h-[48px] min-h-[48px] w-[48px] min-w-[48px] max-w-[48px] rounded-[999px] border border-[#AAAFB9]">
                   <img src="https://ipfs.io/ipfs/bafkreigwt4fn24gyh4nnqjutxio24dqfloyolo4h4nljkhran6dypy7e5q" />
                 </div>
                 <span className="text-label4 text-[#000A05]">geoist_</span>
               </div>
             </NavigationMenu.Trigger>
+
+            <NavigationMenu.Content className="absolute w-[240px] gap-1 py-4">
+              <div className="flex min-w-[240px] max-w-[270px] flex-col gap-1 rounded-[12px] border border-neutral-300 bg-white pt-2 shadow-lg">
+                <div className="flex min-h-[32px] items-center gap-3 rounded-[4px] px-3 py-1">
+                  <div className="flex gap-3 text-[#717484]">
+                    <Icon name="User" size={20} />
+                    <span className="text-body4 text-[#323339] min-w-[184px] max-w-[214px] min-h-[24px] max-h-[54px]">Profile</span>
+                  </div>
+                </div>
+
+                <div className="py-1 min-w-[240px] max-w-[270px] h-[1px]">
+                  <hr className="border-t border-t-[#E4E7EC]" />
+                </div>
+
+                <div className="flex flex-col gap-2 pb-2">
+                  <div className="flex min-h-[32px] items-center gap-3 rounded-[4px] px-3 py-1">
+                    <div className="flex gap-3 text-[#717484]">
+                      <Icon name="LogOut" size={20} />
+                      <span className="text-body4 text-[#323339] min-w-[184px] max-w-[214px] min-h-[24px] max-h-[54px]">Log out</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </NavigationMenu.Content>
           </NavigationMenu.Item>
 
-          {/*      <NavigationMenu.Content className="absolute left-[-120px] w-[240px] gap-1 py-4">*/}
-          {/*        <div className="flex flex-col gap-1 rounded-[12px] border border-[#DBDDE2] bg-white pt-2 [box-shadow:0px_32px_64px_0px_#00000026,_0px_1px_3px_0px_#0000001A]">*/}
-          {/*          <div className="flex items-center gap-3 px-3 py-1">*/}
-          {/*            <Icon name="User" size={20} className="text-[#717484]" />*/}
-          {/*            <span className="text-body4">Profile</span>*/}
-          {/*          </div>*/}
-
-          {/*          <div className="py-1">*/}
-          {/*            <hr className="border-t border-t-[#E4E7EC]" />*/}
-          {/*          </div>*/}
-
-          {/*          <div className="flex flex-col gap-2 pb-2">*/}
-          {/*            <div className="flex items-center gap-3 px-3 py-1">*/}
-          {/*              <Icon*/}
-          {/*                name="LogOut"*/}
-          {/*                size={20}*/}
-          {/*                className="text-[#717484]"*/}
-          {/*              />*/}
-          {/*              <span className="text-body4">Log out</span>*/}
-          {/*            </div>*/}
-          {/*          </div>*/}
-          {/*        </div>*/}
-          {/*      </NavigationMenu.Content>*/}
-          {/*    </NavigationMenu.Item>*/}
-
-          {/*    <NavigationMenu.Item className="flex items-center justify-center">*/}
-          {/*      <div className="text-label3">geoist.eth</div>*/}
-          {/*    </NavigationMenu.Item>*/}
-          {/*  </div>*/}
         </NavigationMenu.List>
       </NavigationMenu.Root>
     </>
