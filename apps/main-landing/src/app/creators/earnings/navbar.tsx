@@ -1,12 +1,9 @@
 import { NavigationMenu } from '@idriss-xyz/ui/navigation-menu';
 import { Icon } from '@idriss-xyz/ui/icon';
-import { DonateContentValues, DonationData } from '@/app/creators/donate/types';
-import { DonateHistory } from '@/app/creators/donate/components/donate-history';
-import { useCreators } from '@/app/creators/hooks/use-creators';
+import { DonationData } from '@/app/creators/donate/types';
 import { DonateHistoryItem } from '@/app/creators/donate/components/donate-history/donate-history-item';
 
 export function Navbar() {
-  const { urlParams } = useCreators();
 
   const donationData1: DonationData = {
     toAddress: '0x7d716741d2c37925e5e15123025400be80ec796d',

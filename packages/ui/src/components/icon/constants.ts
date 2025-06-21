@@ -38,7 +38,8 @@ import {
   History,
   Bell,
   Gift,
-  BookOpen
+  BookOpen,
+  Wallet
 } from 'lucide-react';
 
 import * as customIcons from './custom';
@@ -84,5 +85,6 @@ export const ICON = {
   Bell,
   Gift,
   BookOpen,
+  Wallet,
   ...customIcons,
 };

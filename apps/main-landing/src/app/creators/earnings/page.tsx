@@ -45,48 +45,54 @@ function EarningsContent() {
                       </div>
 
                       <div className="flex gap-2.5">
-                        <span className="max-h-[48px] min-h-[18px] min-w-[79px] max-w-[109px] text-body6 text-neutral-800 w-[79px] h-[18px]">
+                        <span className="h-[18px] max-h-[48px] min-h-[18px] w-[79px] min-w-[79px] max-w-[109px] text-body6 text-neutral-800">
                           Stats & history
                         </span>
                       </div>
                     </div>
 
                     <div className="flex gap-2.5">
-                      <div className="flex min-w-[213px] max-w-[243px] w-[213px] min-h-[40px] max-h-[70px] h-[40px] items-center">
-                        <span className="flex text-heading3 text-[#000A05] min-w-[126px] max-w-[156px] w-[126px] min-h-[40px] max-h-[70px] h-[40px]">
+                      <div className="flex h-[40px] max-h-[70px] min-h-[40px] w-[213px] min-w-[213px] max-w-[243px] items-center">
+                        <span className="flex h-[40px] max-h-[70px] min-h-[40px] w-[126px] min-w-[126px] max-w-[156px] text-heading3 text-[#000A05]">
                           Earnings
                         </span>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                <div>Tabs</div>
+                  <div className="flex min-w-[1166px] max-w-[1196px] gap-1">
+                    <div className="flex gap-1 rounded-full border border-neutral-300 bg-white p-1">
+                      <div className="flex items-center justify-center gap-2 rounded-full px-8 py-3">
+                        <Icon size={20} name="Wallet" className="text-black" />
+                        <span className="max-h-[38px] min-h-[18px] min-w-[59px] max-w-[89px] text-label4 text-black">
+                          Balance
+                        </span>
+                      </div>
+
+                      <div>
+                        <div className="relative flex min-h-[44px] max-h-[74px] items-center gap-2 bg-white justify-center rounded-full overflow-hidden border border-[#5FEB3C] px-8 py-2 text-[#000A05]">
+                          <Icon name={"LineChart"} size={20}/>
+                          <span className="relative z-[1] text-label4 text-black min-w-[108] max-w-[138] min-h-[18px] max-h-[48]">
+                            Stats & history
+                          </span>
+                          <span className="absolute top-[16px] h-[36px] w-[200px] rounded-tl-[1000px] rounded-tr-[1000px] bg-[#5FEB3C] opacity-[0.3] blur-md"></span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-center gap-2 rounded-full px-8 py-3">
+                        <Icon size={20} name="Trophy" className="text-black" />
+                        <span className="max-h-[38px] min-h-[18px] min-w-[83px] max-w-[113px] text-label4 text-black">
+                          Top donors
+                        </span>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-
-        {/*<div className="flex w-full flex-col gap-3">*/}
-        {/*  <RightTopMenu />*/}
-        {/*  <div className="flex flex-col gap-4">*/}
-        {/*    <div>*/}
-        {/*      <div className="flex w-full items-center gap-2">*/}
-        {/*        <span className="text-body6 text-neutral-800">Earnings</span>*/}
-        {/*        <Icon*/}
-        {/*          name="IdrissArrowRight"*/}
-        {/*          size={20}*/}
-        {/*          className="text-black"*/}
-        {/*        />*/}
-        {/*        <span className="text-body6 text-neutral-800">Stats</span>*/}
-        {/*      </div>*/}
-        {/*      <span className="w-full text-heading3">Earnings</span>*/}
-        {/*    </div>*/}
-        {/*    <div className="w-full">*/}
-        {/*      <NavigationTabs />*/}
-        {/*    </div>*/}
-        {/*  </div>*/}
-        {/*</div>*/}
       </div>
     </div>
   );
