@@ -20,14 +20,14 @@ import { Multiselect, MultiselectOption } from '@idriss-xyz/ui/multiselect';
 import { getAuthToken, useDynamicContext } from '@dynamic-labs/sdk-react-core';
 import { Link } from '@idriss-xyz/ui/link';
 
-import { ethereumClient } from '../donate/config';
+import { ethereumClient } from '../../donate/config';
 import {
   editCreatorProfile,
   getChainIdsFromShortNames,
   getChainShortNamesFromIds,
-} from '../utils';
-import { TEST_DONATION_MESSAGE } from '../constants';
-import { useAuth } from '../context/auth-context';
+} from '../../utils';
+import { TEST_DONATION_MESSAGE } from '../../constants';
+import { useAuth } from '../../context/auth-context';
 
 type FormPayload = {
   name: string;
