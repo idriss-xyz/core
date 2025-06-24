@@ -1,10 +1,11 @@
 'use client';
 
-import { IDRISS_ICON_CIRCLE } from '@/assets';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { classes } from '@idriss-xyz/ui/utils';
 import Image from 'next/image';
 import Link from 'next/link';
+
+import { IDRISS_ICON_CIRCLE } from '@/assets';
 
 export default function CreatorsLayout({
   children,
@@ -28,9 +29,9 @@ export default function CreatorsLayout({
           <div className="space-y-2 uppercase">
             <Link
               href="/creators/app/setup"
-              className="text-gray-700 hover:bg-gray-100 flex items-center rounded-lg px-4 py-2"
+              className="flex items-center rounded-lg px-4 py-2"
             >
-              <Icon size={32} name="Settings" className="mr-3 h-5 w-5" />
+              <Icon size={32} name="Settings" className="mr-3 size-5" />
               Setup
             </Link>
           </div>

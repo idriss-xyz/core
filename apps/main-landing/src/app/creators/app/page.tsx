@@ -1,5 +1,6 @@
-import { IDRISS_COIN } from '@/assets';
 import { Card, CardHeader, CardBody } from '@idriss-xyz/ui/card';
+
+import { IDRISS_COIN } from '@/assets';
 
 export default function Home() {
   return (
