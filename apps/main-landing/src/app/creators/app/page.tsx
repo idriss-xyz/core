@@ -3,8 +3,11 @@ import { Card, CardHeader, CardBody } from '@idriss-xyz/ui/card';
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@idriss-xyz/ui/charts';
 import { Bar, BarChart, XAxis } from "recharts"
 
-import { IDRISS_COIN } from '@/assets';
+import { IDRISS_COIN, IDRISS_ICON_CIRCLE } from '@/assets';
 import { Icon } from '@idriss-xyz/ui/icon';
+import { classes } from '@idriss-xyz/ui/utils';
+import { ECHELON_PRIME_LOGO, ETHEREUM_LOGO, USDC_LOGO } from '@idriss-xyz/constants';
+import Image from 'next/image';
 
 const chartData = [
   { month: "January", donations: 110 },
@@ -27,6 +30,28 @@ const chartConfig = {
     color: "#f3f4f6",
   },
 } satisfies ChartConfig
+
+
+const donations = [
+  {
+    name: "Ethereum",
+    icon: ETHEREUM_LOGO, // Replace with icon url
+    donations: 3,
+    amount: "$270",
+  },
+  {
+    name: "Echelon Prime",
+    icon: ECHELON_PRIME_LOGO,
+    donations: 3,
+    amount: "$150",
+  },
+  {
+    name: "USDC",
+    icon: USDC_LOGO,
+    donations: 3,
+    amount: "$85",
+  },
+];
 
 export default function Home() {
   return (
@@ -54,10 +79,10 @@ export default function Home() {
           </div>
         </CardBody>
       </Card>
-      <Card className="col-span-1">
+      <Card className="col-span-1 space-y-4">
         <CardHeader>Total earnings</CardHeader>
         <CardBody>
-          <span className='text-heading3 text-black mb-2'>$920</span>
+          <span className='text-heading3 text-black'>$920</span>
           <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
             <BarChart accessibilityLayer data={chartData}>
               <XAxis
@@ -75,6 +100,46 @@ export default function Home() {
       </Card>
       <Card className="col-span-1">
         <CardHeader>Earnings by asset</CardHeader>
+        <CardBody>
+          <div className="space-y-4 p-4">
+            <div className="flex items-center gap-3">
+              <Image
+                src={IDRISS_ICON_CIRCLE.src}
+                alt="Logo"
+                width={48}
+                height={48}
+                className={classes('size-[70px] rounded-full')}
+              />
+              <div className="flex flex-col">
+                <span className="w-fit rounded-full bg-mint-200 py-0.5 px-1 text-xs font-medium text-mint-700">
+                  12 donations
+                </span>
+                <span className="text-xl font-semibold flex items-center text-black">$320 <span className="text-sm text-gray-500 font-[500] ml-2">IDRISS</span></span>
+              </div>
+            </div>
+
+            <table className="w-full table-auto border-collapse">
+              <tbody>
+                {donations.map((item, idx) => (
+                  <tr key={idx} className="border-b border-gray-200 last:border-b-0">
+                    <td className="py-3 flex items-center gap-2">
+                      <Image src={item.icon} alt={item.name} width={24} height={24} />
+                      <span className="text-sm text-gray-800">{item.name}</span>
+                    </td>
+                    <td>
+                      <span className="w-fit rounded-full bg-mint-200 py-0.5 px-1 text-xs font-medium text-mint-700">
+                        {item.donations} donations
+                      </span>
+                    </td>
+                    <td className="text-right text-sm font-medium text-black align-middle ">
+                      {item.amount}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </CardBody>
       </Card>
       <Card className="col-span-3">
         <CardBody>history</CardBody>
