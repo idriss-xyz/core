@@ -35,7 +35,8 @@
     "./badge": "./src/components/badge/index.ts",
     "./blocked-button": "./src/components/blocked-button/index.ts",
     "./alert": "./src/components/alert/index.ts",
-    "./card": "./src/components/card/index.ts"
+    "./card": "./src/components/card/index.ts",
+    "./charts": "./src/components/charts/index.ts"
   },
   "scripts": {
     "format": "prettier --check --config ../../prettier.config.mjs --ignore-path .prettierignore .",
@@ -81,6 +82,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-number-format": "^5.4.2",
+    "recharts": "^3.0.0",
     "tailwind-merge": "^2.5.2"
   }
 }
