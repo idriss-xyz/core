@@ -18,13 +18,7 @@ type FormPayload = {
 };
 
 export const UnstakeTabContent = () => {
-  const {
-    unstake,
-    stakedBalance,
-    stakedBonusBalance,
-    totalStakedBalance,
-    account,
-  } = useStaking();
+  const { unstake, stakedBalance, rewards, account } = useStaking();
 
   const { handleSubmit, control, watch } = useForm<FormPayload>();
 
@@ -44,25 +38,16 @@ export const UnstakeTabContent = () => {
 
         <div className="flex flex-col gap-y-2 rounded-2xl bg-white/20 p-6">
           <div className="flex flex-row items-center justify-between">
-            <p className="text-body4 text-neutralGreen-500">Total locked</p>
-            <p className="text-label3 text-neutralGreen-700">
-              {totalStakedBalance.formattedAmount} IDRISS
-            </p>
-          </div>
-
-          <div className="flex flex-row items-center justify-between">
-            <p className="text-body4 text-neutralGreen-500">Unlockable</p>
+            <p className="text-body4 text-neutralGreen-500">Total balance</p>
             <p className="text-label3 text-neutralGreen-700">
               {stakedBalance.formattedAmount} IDRISS
             </p>
           </div>
 
           <div className="flex flex-row items-center justify-between">
-            <p className="text-body4 text-neutralGreen-500">
-              Unlockable from July 6
-            </p>
+            <p className="text-body4 text-neutralGreen-500">Rewards</p>
             <p className="text-label3 text-neutralGreen-700">
-              {stakedBonusBalance.formattedAmount} IDRISS
+              {rewards.formattedAmount} IDRISS
             </p>
           </div>
         </div>
