@@ -7,8 +7,6 @@ import {
   ChartTooltipContent,
 } from '@idriss-xyz/ui/charts';
 import { Bar, BarChart, XAxis } from 'recharts';
-
-import { IDRISS_COIN, IDRISS_ICON_CIRCLE } from '@/assets';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { classes } from '@idriss-xyz/ui/utils';
 import {
@@ -18,8 +16,11 @@ import {
   USDC_LOGO,
 } from '@idriss-xyz/constants';
 import Image from 'next/image';
-import { DonateHistoryItem } from '../donate/components/donate-history/donate-history-item';
 import { Hex } from 'viem';
+
+import { IDRISS_COIN, IDRISS_ICON_CIRCLE } from '@/assets';
+
+import { DonateHistoryItem } from '../donate/components/donate-history/donate-history-item';
 
 const chartData = [
   { month: 'January', donations: 110 },
@@ -70,7 +71,7 @@ const donations = [
     network: 'ETHEREUM',
     comment: 'Keep up the great work!',
     fromAddress: '0xFfF9876543210fedcbaFFF9876543210fedcbaFf' as Hex,
-    timestamp: 1750938428,
+    timestamp: 1_750_938_428,
     amountRaw: '300000000000000000000',
     tokenAddress: '0x6B175474E89094C44Da98b954EedeAC495271d0F' as Hex,
     tradeValue: 300,
@@ -98,7 +99,7 @@ const donations = [
     toAddress: '0x1111222233334444555566667777888899990000' as Hex,
     network: 'BASE',
     fromAddress: '0x9999000011112222333344445555666677778888' as Hex,
-    timestamp: 1750938913,
+    timestamp: 1_750_938_913,
     amountRaw: '5000000000000000000000',
     tokenAddress: '0x0000000000000000000000000000000000001010' as Hex,
     tradeValue: 3,
@@ -175,9 +176,11 @@ export default function Home() {
                 tickLine={false}
                 tickMargin={10}
                 axisLine={false}
-                tickFormatter={(value) =>
-                  typeof value === 'string' ? value.slice(0, 3) : value
-                }
+                tickFormatter={(value: string | number) => {
+                  return typeof value === 'string'
+                    ? value.slice(0, 3)
+                    : value.toString();
+                }}
               />
               <ChartTooltip
                 content={
@@ -185,7 +188,9 @@ export default function Home() {
                     hideIndicator
                     hideLabel
                     hideValueName
-                    formatter={(value) => `$${value.toLocaleString()}`}
+                    formatter={(value) => {
+                      return `$${value.toLocaleString()}`;
+                    }}
                   />
                 }
               />
@@ -217,7 +222,7 @@ export default function Home() {
                 </span>
                 <span className="flex items-center text-xl font-semibold text-black">
                   $320{' '}
-                  <span className="text-gray-500 ml-2 text-sm font-[500]">
+                  <span className="ml-2 text-sm font-[500] text-gray-300">
                     IDRISS
                   </span>
                 </span>
@@ -226,30 +231,34 @@ export default function Home() {
 
             <table className="w-full table-auto border-collapse">
               <tbody>
-                {earningsByAsset.map((item, idx) => (
-                  <tr
-                    key={idx}
-                    className="border-b border-gray-200 last:border-b-0"
-                  >
-                    <td className="flex items-center gap-2 py-3">
-                      <Image
-                        src={item.icon}
-                        alt={item.name}
-                        width={24}
-                        height={24}
-                      />
-                      <span className="text-gray-800 text-sm">{item.name}</span>
-                    </td>
-                    <td>
-                      <span className="w-fit rounded-full bg-mint-200 px-1 py-0.5 text-xs font-medium text-mint-700">
-                        {item.donations} donations
-                      </span>
-                    </td>
-                    <td className="text-right align-middle text-sm font-medium text-black">
-                      {item.amount}
-                    </td>
-                  </tr>
-                ))}
+                {earningsByAsset.map((item, index) => {
+                  return (
+                    <tr
+                      key={index}
+                      className="border-b border-gray-200 last:border-b-0"
+                    >
+                      <td className="flex items-center gap-2 py-3">
+                        <Image
+                          src={item.icon}
+                          alt={item.name}
+                          width={24}
+                          height={24}
+                        />
+                        <span className="text-sm text-gray-300">
+                          {item.name}
+                        </span>
+                      </td>
+                      <td>
+                        <span className="w-fit rounded-full bg-mint-200 px-1 py-0.5 text-xs font-medium text-mint-700">
+                          {item.donations} donations
+                        </span>
+                      </td>
+                      <td className="text-right align-middle text-sm font-medium text-black">
+                        {item.amount}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
