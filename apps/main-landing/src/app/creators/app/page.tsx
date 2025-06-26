@@ -6,8 +6,10 @@ import { Bar, BarChart, XAxis } from "recharts"
 import { IDRISS_COIN, IDRISS_ICON_CIRCLE } from '@/assets';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { classes } from '@idriss-xyz/ui/utils';
-import { ECHELON_PRIME_LOGO, ETHEREUM_LOGO, USDC_LOGO } from '@idriss-xyz/constants';
+import { ECHELON_PRIME_LOGO, ETHEREUM_LOGO, TOKEN, USDC_LOGO } from '@idriss-xyz/constants';
 import Image from 'next/image';
+import { DonateHistoryItem } from '../donate/components/donate-history/donate-history-item';
+import { Hex } from 'viem';
 
 const chartData = [
   { month: "January", donations: 110 },
@@ -32,7 +34,7 @@ const chartConfig = {
 } satisfies ChartConfig
 
 
-const donations = [
+const earningsByAsset = [
   {
     name: "Ethereum",
     icon: ETHEREUM_LOGO, // Replace with icon url
@@ -52,6 +54,66 @@ const donations = [
     amount: "$85",
   },
 ];
+
+const donations = [
+  {
+    toAddress: "0xAbC1234567890abcdefABC1234567890abcdefAB" as Hex,
+    network: 'ETHEREUM',
+    comment: "Keep up the great work!",
+    fromAddress: "0xFfF9876543210fedcbaFFF9876543210fedcbaFf" as Hex,
+    timestamp: 1750938428,
+    amountRaw: "300000000000000000000",
+    tokenAddress: "0x6B175474E89094C44Da98b954EedeAC495271d0F" as Hex,
+    tradeValue: 300,
+    token: {
+      address: "0x6B175474E89094C44Da98b954EedeAC495271d0F" as Hex,
+      symbol: "DAI",
+      network: 'ETHEREUM',
+      decimals: 18,
+      imageUrl: TOKEN.DAI.logo,
+    },
+    toUser: {
+      address: "0xAbC1234567890abcdefABC1234567890abcdefAB" as Hex,
+      avatarUrl: "https://i.pravatar.cc/150?img=3",
+      displayName: "DevFund",
+    },
+    transactionHash: "0xaaaabbbbcccc111122223333444455556666777788889999aaaabbbbccccdddd" as Hex,
+    fromUser: {
+      address: "0xFfF9876543210fedcbaFFF9876543210fedcbaFf" as Hex,
+      avatarUrl: "https://i.pravatar.cc/150?img=5",
+      displayName: "Alice",
+    },
+  },
+  {
+    toAddress: "0x1111222233334444555566667777888899990000" as Hex,
+    network: "BASE",
+    fromAddress: "0x9999000011112222333344445555666677778888" as Hex,
+    timestamp: 1750938913,
+    amountRaw: "5000000000000000000000",
+    tokenAddress: "0x0000000000000000000000000000000000001010" as Hex,
+    tradeValue: 3,
+    token: {
+      address: "0x0000000000000000000000000000000000001010" as Hex,
+      symbol: "IDRISS",
+      network: "BASE",
+      decimals: 18,
+      imageUrl: TOKEN.IDRISS.logo,
+    },
+    toUser: {
+      address: "0x1111222233334444555566667777888899990000" as Hex,
+      displayName: "PolygonDAO",
+    },
+    transactionHash: "0x1111111122222222333333334444444455555555666666667777777788888888" as Hex,
+    fromUser: {
+      address: "0x9999000011112222333344445555666677778888" as Hex,
+      avatarUrl: "https://i.pravatar.cc/150?img=2",
+    },
+  }
+]
+
+const sortedDonations = [...donations].sort((a, b) => {
+  return b.timestamp - a.timestamp;
+});
 
 export default function Home() {
   return (
@@ -120,7 +182,7 @@ export default function Home() {
 
             <table className="w-full table-auto border-collapse">
               <tbody>
-                {donations.map((item, idx) => (
+                {earningsByAsset.map((item, idx) => (
                   <tr key={idx} className="border-b border-gray-200 last:border-b-0">
                     <td className="py-3 flex items-center gap-2">
                       <Image src={item.icon} alt={item.name} width={24} height={24} />
@@ -142,7 +204,24 @@ export default function Home() {
         </CardBody>
       </Card>
       <Card className="col-span-3">
-        <CardBody>history</CardBody>
+        <CardBody>
+          <div className="flex w-full flex-col gap-y-3 pr-5 pt-1">
+            {sortedDonations.length > 0 ? (
+              sortedDonations.map((donation) => {
+                return (
+                  <DonateHistoryItem
+                    donation={donation}
+                    key={donation.transactionHash}
+                  />
+                );
+              })
+            ) : (
+              <p>
+                This address has not received any donations
+              </p>
+            )}
+          </div>
+        </CardBody>
       </Card>
     </div>
   );
