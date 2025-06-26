@@ -321,7 +321,6 @@ export const useStaking = () => {
       }
     }
   }, [
-    approveTokensCallback,
     isConnected,
     openConnectModal,
     stakedBalanceQuery,
@@ -384,7 +383,6 @@ export const useStaking = () => {
       }
     }
   }, [
-    approveTokensCallback,
     isConnected,
     openConnectModal,
     stakedBalanceQuery,
