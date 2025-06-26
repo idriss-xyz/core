@@ -9,7 +9,13 @@ import {
   useWriteContract,
 } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { EMPTY_HEX, STAKER_ADDRESS, StakingABI } from '@idriss-xyz/constants';
+import {
+  EMPTY_HEX,
+  REWARDS_ADDRESS,
+  RewardsABI,
+  STAKER_ADDRESS,
+  StakingABI,
+} from '@idriss-xyz/constants';
 
 import { useGetStakedBalance } from '@/app/vault/commands/get-staked-balance';
 import { useGetBonusStakedBalance } from '@/app/vault/commands/get-bonus-staked-balance';
@@ -45,6 +51,9 @@ export const useStaking = () => {
   const [stakePendingAmount, setStakePendingAmount] = useState<number>(0);
   const [unstakeIsPending, setUnstakeIsPending] = useState<boolean>(false);
   const [unstakePendingAmount, setUnstakePendingAmount] = useState<number>(0);
+  const [claimIsPending, setClaimIsPending] = useState<boolean>(false);
+  const [claimAndLockIsPending, setClaimAndLockIsPending] =
+    useState<boolean>(false);
 
   const approveTokensCallback = useCallback(
     async (payload: ApproveTokensPayload) => {
@@ -260,6 +269,132 @@ export const useStaking = () => {
     ],
   );
 
+  const claimCallback = useCallback(async () => {
+    if (!isConnected && openConnectModal) {
+      openConnectModal();
+    } else {
+      try {
+        if (!walletClient) {
+          return;
+        }
+
+        setClaimIsPending(true);
+        await switchChainAsync({ chainId: base.id });
+
+        const claimData = {
+          abi: RewardsABI,
+          functionName: 'claim',
+        };
+
+        const encodedClaimData = encodeFunctionData(claimData);
+
+        const gas = await estimateGas(walletClient, {
+          to: REWARDS_ADDRESS,
+          data: encodedClaimData,
+        }).catch((error) => {
+          throw error;
+        });
+
+        const hash = await writeContractAsync({
+          address: REWARDS_ADDRESS,
+          chain: base,
+          ...claimData,
+          gas,
+        });
+
+        const { status } = await waitForTransactionReceipt(walletClient, {
+          hash,
+        });
+
+        await stakedBalanceQuery.refetch();
+        await unstakedBalanceQuery.refetch();
+        await rewardsQuery.refetch();
+
+        setClaimIsPending(false);
+
+        if (status === 'reverted') {
+          throw new Error('Claim transaction reverted');
+        }
+      } catch (error) {
+        setClaimIsPending(false);
+        throw error;
+      }
+    }
+  }, [
+    approveTokensCallback,
+    isConnected,
+    openConnectModal,
+    stakedBalanceQuery,
+    switchChainAsync,
+    unstakedBalanceQuery,
+    rewardsQuery,
+    walletClient,
+    writeContractAsync,
+  ]);
+
+  const claimAndLockCallback = useCallback(async () => {
+    if (!isConnected && openConnectModal) {
+      openConnectModal();
+    } else {
+      try {
+        if (!walletClient) {
+          return;
+        }
+
+        setClaimAndLockIsPending(true);
+        await switchChainAsync({ chainId: base.id });
+
+        const claimData = {
+          abi: RewardsABI,
+          functionName: 'claimAndLock',
+        };
+
+        const encodedClaimData = encodeFunctionData(claimData);
+
+        const gas = await estimateGas(walletClient, {
+          to: REWARDS_ADDRESS,
+          data: encodedClaimData,
+        }).catch((error) => {
+          throw error;
+        });
+
+        const hash = await writeContractAsync({
+          address: REWARDS_ADDRESS,
+          chain: base,
+          ...claimData,
+          gas,
+        });
+
+        const { status } = await waitForTransactionReceipt(walletClient, {
+          hash,
+        });
+
+        await stakedBalanceQuery.refetch();
+        await unstakedBalanceQuery.refetch();
+        await rewardsQuery.refetch();
+
+        setClaimAndLockIsPending(false);
+
+        if (status === 'reverted') {
+          throw new Error('Claim and Lock transaction reverted');
+        }
+      } catch (error) {
+        setClaimAndLockIsPending(false);
+        throw error;
+      }
+    }
+  }, [
+    approveTokensCallback,
+    isConnected,
+    openConnectModal,
+    stakedBalanceQuery,
+    switchChainAsync,
+    unstakedBalanceQuery,
+    rewardsQuery,
+    walletClient,
+    writeContractAsync,
+  ]);
+
   const account = {
     isConnected,
   };
@@ -278,6 +413,20 @@ export const useStaking = () => {
     },
     isPending: unstakeIsPending,
     pendingAmount: unstakePendingAmount,
+  };
+
+  const claim = {
+    use: () => {
+      return claimCallback();
+    },
+    isPending: claimIsPending,
+  };
+
+  const claimAndLock = {
+    use: () => {
+      return claimAndLockCallback();
+    },
+    isPending: claimAndLockIsPending,
   };
 
   const stakedBalance = {
@@ -349,5 +498,7 @@ export const useStaking = () => {
     stakedBonusBalance,
     totalStakedBalance,
     rewards,
+    claim,
+    claimAndLock,
   };
 };

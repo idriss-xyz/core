@@ -18,12 +18,21 @@ type FormPayload = {
 };
 
 export const UnstakeTabContent = () => {
-  const { unstake, stakedBalance, rewards, account } = useStaking();
+  const { unstake, stakedBalance, rewards, account, claim, claimAndLock } =
+    useStaking();
 
   const { handleSubmit, control, watch } = useForm<FormPayload>();
 
   const handleUnstake = (payload: FormPayload) => {
     void unstake.use({ amount: payload.amount });
+  };
+
+  const handleClaim = () => {
+    void claim.use();
+  };
+
+  const handleClaimAndLock = () => {
+    void claimAndLock.use();
   };
 
   return (
@@ -47,6 +56,18 @@ export const UnstakeTabContent = () => {
           <div className="flex flex-row items-center justify-between">
             <p className="text-body4 text-neutralGreen-500">Rewards</p>
             <p className="text-label3 text-neutralGreen-700">
+              <span
+                className="mx-2 text-body5 text-mint-800 underline hover:cursor-pointer"
+                onClick={handleClaim}
+              >
+                Claim
+              </span>
+              <span
+                className="mx-2 text-body5 text-mint-800 underline hover:cursor-pointer"
+                onClick={handleClaimAndLock}
+              >
+                Claim & lock
+              </span>
               {rewards.formattedAmount} IDRISS
             </p>
           </div>
