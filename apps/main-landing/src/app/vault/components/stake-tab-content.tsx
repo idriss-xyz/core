@@ -30,7 +30,7 @@ export const StakeTabContent = () => {
     <>
       <TxLoadingModal
         show={stake.isPending}
-        heading={<TxLoadingHeading amount={stake.pendingAmount} />}
+        heading={<TxLoadingHeading amount={stake.pendingAmount} action='Locking' />}
       />
 
       <Form className="w-full" onSubmit={handleSubmit(handleStake)}>

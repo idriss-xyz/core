@@ -35,12 +35,41 @@ export const UnstakeTabContent = () => {
     void claimAndLock.use();
   };
 
+  // To display modal with different messages based on the current pending operation
+  const loadingStates = [
+    {
+      isPending: unstake.isPending,
+      pendingAmount: unstake.pendingAmount,
+      action: 'Unlocking',
+    },
+    {
+      isPending: claim.isPending,
+      pendingAmount: claim.pendingAmount,
+      action: 'Claiming',
+    },
+    {
+      isPending: claimAndLock.isPending,
+      pendingAmount: claimAndLock.pendingAmount,
+      action: 'Claiming and locking',
+    },
+  ];
+
+  // Find the current pending operation (if any)
+  const currentOperation = loadingStates.find((state) => {return state.isPending});
+
   return (
     <>
-      <TxLoadingModal
-        show={unstake.isPending}
-        heading={<TxLoadingHeading amount={unstake.pendingAmount} />}
-      />
+      {currentOperation && (
+        <TxLoadingModal
+          show
+          heading={
+            <TxLoadingHeading
+              amount={currentOperation.pendingAmount}
+              action={currentOperation.action}
+            />
+          }
+        />
+      )}
 
       <div className="relative mt-4 lg:mt-6">
         <RadialGradientBorder />
@@ -178,10 +207,10 @@ export const UnstakeTabContent = () => {
   );
 };
 
-const TxLoadingHeading = ({ amount }: TxLoadingHeadingParameters) => {
+const TxLoadingHeading = ({ amount, action }: TxLoadingHeadingParameters) => {
   return (
     <>
-      Unlocking <span className="text-mint-600">{amount.toLocaleString()}</span>{' '}
+      {action} <span className="text-mint-600">{amount.toLocaleString()}</span>{' '}
       IDRISS
     </>
   );

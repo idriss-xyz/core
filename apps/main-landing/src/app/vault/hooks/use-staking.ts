@@ -52,6 +52,7 @@ export const useStaking = () => {
   const [unstakeIsPending, setUnstakeIsPending] = useState<boolean>(false);
   const [unstakePendingAmount, setUnstakePendingAmount] = useState<number>(0);
   const [claimIsPending, setClaimIsPending] = useState<boolean>(false);
+  const [claimPendingAmount, setClaimPendingAmount] = useState<number>(0);
   const [claimAndLockIsPending, setClaimAndLockIsPending] =
     useState<boolean>(false);
 
@@ -279,6 +280,7 @@ export const useStaking = () => {
         }
 
         setClaimIsPending(true);
+        setClaimPendingAmount(Number.parseInt(rewardsQuery.data ?? '0'));
         await switchChainAsync({ chainId: base.id });
 
         const claimData = {
@@ -317,6 +319,7 @@ export const useStaking = () => {
         }
       } catch (error) {
         setClaimIsPending(false);
+        setClaimPendingAmount(0);
         throw error;
       }
     }
@@ -341,6 +344,7 @@ export const useStaking = () => {
         }
 
         setClaimAndLockIsPending(true);
+        setClaimPendingAmount(Number.parseInt(rewardsQuery.data ?? '0'));
         await switchChainAsync({ chainId: base.id });
 
         const claimData = {
@@ -379,6 +383,7 @@ export const useStaking = () => {
         }
       } catch (error) {
         setClaimAndLockIsPending(false);
+        setClaimPendingAmount(0);
         throw error;
       }
     }
@@ -418,6 +423,7 @@ export const useStaking = () => {
       return claimCallback();
     },
     isPending: claimIsPending,
+    pendingAmount: claimPendingAmount,
   };
 
   const claimAndLock = {
@@ -425,6 +431,7 @@ export const useStaking = () => {
       return claimAndLockCallback();
     },
     isPending: claimAndLockIsPending,
+    pendingAmount: claimPendingAmount,
   };
 
   const stakedBalance = {

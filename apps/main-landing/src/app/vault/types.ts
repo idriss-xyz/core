@@ -18,4 +18,5 @@ export type ApproveTokensPayload = {
 
 export type TxLoadingHeadingParameters = {
   amount: number;
+  action: string;
 };
