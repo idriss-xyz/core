@@ -12,15 +12,14 @@ import { classes } from '@idriss-xyz/ui/utils';
 import {
   ECHELON_PRIME_LOGO,
   ETHEREUM_LOGO,
-  TOKEN,
   USDC_LOGO,
 } from '@idriss-xyz/constants';
 import Image from 'next/image';
-import { Hex } from 'viem';
 
 import { IDRISS_COIN, IDRISS_ICON_CIRCLE } from '@/assets';
 
 import { DonateHistoryItem } from '../donate/components/donate-history/donate-history-item';
+import { useGetTipHistory } from '../donate/commands/get-donate-history';
 
 const chartData = [
   { month: 'January', donations: 110 },
@@ -65,69 +64,16 @@ const earningsByAsset = [
   },
 ];
 
-const donations = [
-  {
-    toAddress: '0xAbC1234567890abcdefABC1234567890abcdefAB' as Hex,
-    network: 'ETHEREUM',
-    comment: 'Keep up the great work!',
-    fromAddress: '0xFfF9876543210fedcbaFFF9876543210fedcbaFf' as Hex,
-    timestamp: 1_750_938_428,
-    amountRaw: '300000000000000000000',
-    tokenAddress: '0x6B175474E89094C44Da98b954EedeAC495271d0F' as Hex,
-    tradeValue: 300,
-    token: {
-      address: '0x6B175474E89094C44Da98b954EedeAC495271d0F' as Hex,
-      symbol: 'DAI',
-      network: 'ETHEREUM',
-      decimals: 18,
-      imageUrl: TOKEN.DAI.logo,
-    },
-    toUser: {
-      address: '0xAbC1234567890abcdefABC1234567890abcdefAB' as Hex,
-      avatarUrl: 'https://i.pravatar.cc/150?img=3',
-      displayName: 'DevFund',
-    },
-    transactionHash:
-      '0xaaaabbbbcccc111122223333444455556666777788889999aaaabbbbccccdddd' as Hex,
-    fromUser: {
-      address: '0xFfF9876543210fedcbaFFF9876543210fedcbaFf' as Hex,
-      avatarUrl: 'https://i.pravatar.cc/150?img=5',
-      displayName: 'Alice',
-    },
-  },
-  {
-    toAddress: '0x1111222233334444555566667777888899990000' as Hex,
-    network: 'BASE',
-    fromAddress: '0x9999000011112222333344445555666677778888' as Hex,
-    timestamp: 1_750_938_913,
-    amountRaw: '5000000000000000000000',
-    tokenAddress: '0x0000000000000000000000000000000000001010' as Hex,
-    tradeValue: 3,
-    token: {
-      address: '0x0000000000000000000000000000000000001010' as Hex,
-      symbol: 'IDRISS',
-      network: 'BASE',
-      decimals: 18,
-      imageUrl: TOKEN.IDRISS.logo,
-    },
-    toUser: {
-      address: '0x1111222233334444555566667777888899990000' as Hex,
-      displayName: 'PolygonDAO',
-    },
-    transactionHash:
-      '0x1111111122222222333333334444444455555555666666667777777788888888' as Hex,
-    fromUser: {
-      address: '0x9999000011112222333344445555666677778888' as Hex,
-      avatarUrl: 'https://i.pravatar.cc/150?img=2',
-    },
-  },
-];
-
-const sortedDonations = [...donations].sort((a, b) => {
-  return b.timestamp - a.timestamp;
-});
-
 export default function Home() {
+  const tipHistoryQuery = useGetTipHistory({
+    address: '0x7D716741D2c37925e5E15123025400Be80ec796d',
+  });
+  console.log('donations:', tipHistoryQuery.data?.donations);
+  const donations = tipHistoryQuery.data?.donations ?? [];
+  const sortedDonations = [...donations].sort((a, b) => {
+    return b.timestamp - a.timestamp;
+  });
+
   return (
     <div className="grid grid-cols-3 gap-4">
       <h1 className="col-span-3 mb-4 text-heading3">Earnings</h1>
