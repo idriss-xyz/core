@@ -1,2 +1,9 @@
-export { ChartContainer, ChartTooltip, ChartTooltipContent } from './bar/bar';
+export {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
+  ChartStyle,
+} from './bar/bar';
 export type { ChartConfig } from './bar/bar';
