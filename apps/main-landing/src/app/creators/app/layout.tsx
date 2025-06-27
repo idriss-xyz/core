@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { IDRISS_ICON_CIRCLE } from '@/assets';
 import { QueryProvider } from '@/providers';
 
+// ts-unused-exports:disable-next-line
 export default function CreatorsLayout({
   children,
 }: {
@@ -35,6 +36,13 @@ export default function CreatorsLayout({
               >
                 <Icon size={32} name="Settings" className="mr-3 size-5" />
                 Setup
+              </Link>
+              <Link
+                href="/creators/app/earnings"
+                className="flex items-center rounded-lg px-4 py-2"
+              >
+                <Icon size={32} name="BadgeDollarSign" className="mr-3 size-5" />
+                Earnings
               </Link>
             </div>
           </nav>
