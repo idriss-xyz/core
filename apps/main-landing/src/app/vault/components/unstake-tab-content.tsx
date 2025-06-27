@@ -55,7 +55,9 @@ export const UnstakeTabContent = () => {
   ];
 
   // Find the current pending operation (if any)
-  const currentOperation = loadingStates.find((state) => {return state.isPending});
+  const currentOperation = loadingStates.find((state) => {
+    return state.isPending;
+  });
 
   return (
     <>
