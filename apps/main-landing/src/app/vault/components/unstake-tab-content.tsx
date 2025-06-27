@@ -18,13 +18,8 @@ type FormPayload = {
 };
 
 export const UnstakeTabContent = () => {
-  const {
-    unstake,
-    stakedBalance,
-    stakedBonusBalance,
-    totalStakedBalance,
-    account,
-  } = useStaking();
+  const { unstake, stakedBalance, rewards, account, claim, claimAndLock } =
+    useStaking();
 
   const { handleSubmit, control, watch } = useForm<FormPayload>();
 
@@ -32,37 +27,79 @@ export const UnstakeTabContent = () => {
     void unstake.use({ amount: payload.amount });
   };
 
+  const handleClaim = () => {
+    void claim.use();
+  };
+
+  const handleClaimAndLock = () => {
+    void claimAndLock.use();
+  };
+
+  // To display modal with different messages based on the current pending operation
+  const loadingStates = [
+    {
+      isPending: unstake.isPending,
+      pendingAmount: unstake.pendingAmount,
+      action: 'Unlocking',
+    },
+    {
+      isPending: claim.isPending,
+      pendingAmount: claim.pendingAmount,
+      action: 'Claiming',
+    },
+    {
+      isPending: claimAndLock.isPending,
+      pendingAmount: claimAndLock.pendingAmount,
+      action: 'Claiming and locking',
+    },
+  ];
+
+  // Find the current pending operation (if any)
+  const currentOperation = loadingStates.find((state) => {
+    return state.isPending;
+  });
+
   return (
     <>
-      <TxLoadingModal
-        show={unstake.isPending}
-        heading={<TxLoadingHeading amount={unstake.pendingAmount} />}
-      />
+      {currentOperation && (
+        <TxLoadingModal
+          show
+          heading={
+            <TxLoadingHeading
+              amount={currentOperation.pendingAmount}
+              action={currentOperation.action}
+            />
+          }
+        />
+      )}
 
       <div className="relative mt-4 lg:mt-6">
         <RadialGradientBorder />
 
         <div className="flex flex-col gap-y-2 rounded-2xl bg-white/20 p-6">
           <div className="flex flex-row items-center justify-between">
-            <p className="text-body4 text-neutralGreen-500">Total locked</p>
-            <p className="text-label3 text-neutralGreen-700">
-              {totalStakedBalance.formattedAmount} IDRISS
-            </p>
-          </div>
-
-          <div className="flex flex-row items-center justify-between">
-            <p className="text-body4 text-neutralGreen-500">Unlockable</p>
+            <p className="text-body4 text-neutralGreen-500">Total balance</p>
             <p className="text-label3 text-neutralGreen-700">
               {stakedBalance.formattedAmount} IDRISS
             </p>
           </div>
 
           <div className="flex flex-row items-center justify-between">
-            <p className="text-body4 text-neutralGreen-500">
-              Unlockable from July 6
-            </p>
+            <p className="text-body4 text-neutralGreen-500">Rewards</p>
             <p className="text-label3 text-neutralGreen-700">
-              {stakedBonusBalance.formattedAmount} IDRISS
+              <span
+                className="mx-2 text-body5 text-mint-700 underline hover:cursor-pointer"
+                onClick={handleClaim}
+              >
+                Claim
+              </span>
+              <span
+                className="mx-2 text-body5 text-mint-700 underline hover:cursor-pointer"
+                onClick={handleClaimAndLock}
+              >
+                Claim & lock
+              </span>
+              {rewards.formattedAmount} IDRISS
             </p>
           </div>
         </div>
@@ -172,10 +209,10 @@ export const UnstakeTabContent = () => {
   );
 };
 
-const TxLoadingHeading = ({ amount }: TxLoadingHeadingParameters) => {
+const TxLoadingHeading = ({ amount, action }: TxLoadingHeadingParameters) => {
   return (
     <>
-      Unlocking <span className="text-mint-600">{amount.toLocaleString()}</span>{' '}
+      {action} <span className="text-mint-600">{amount.toLocaleString()}</span>{' '}
       IDRISS
     </>
   );
