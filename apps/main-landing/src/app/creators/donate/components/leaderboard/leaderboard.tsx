@@ -142,6 +142,24 @@ export const Leaderboard = ({
           </span>
         ) : (
           <ul className={classes(isTwitchPanel && 'min-h-[345px]')}>
+            {isCreatorsDashboard && (
+              <>
+                {leaderboard.map((item, index) =>
+                  <LeaderboardItem
+                    donorRank={index}
+                    onDonorClick={onDonorClick}
+                    donorDetails={{
+                      address: item.address,
+                      avatarUrl: item.avatarUrl,
+                      displayName: item.displayName,
+                    }}
+                    donateAmount={item.totalAmount}
+                    key={`${item.totalAmount}${item.address}`}
+                  />
+                )}
+              </>
+            )}
+
             {isTwitchPanel && (
               <>
                 {leaderboard.map((item, index) => {
