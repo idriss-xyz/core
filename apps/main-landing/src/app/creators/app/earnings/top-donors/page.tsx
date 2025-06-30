@@ -22,7 +22,8 @@ export default function TopDonors() {
           data: '0x7D716741D2c37925e5E15123025400Be80ec796d' as Hex,
           isFetching: false,
         }}
-        className="container w-full overflow-hidden px-0"
+        variant="creatorsDashboard"
+        className="container overflow-hidden px-0"
       />
     </div>
   );

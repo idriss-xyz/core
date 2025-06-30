@@ -82,7 +82,7 @@ export default function EarningsStats() {
             <div className="mx-14 my-4 flex items-center justify-center p-6">
               <img src={IDRISS_COIN.src} alt="coin" />
             </div>
-            <span className="pointer-events-none absolute left-6 top-16 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-[500] text-black">
+            <span className="pointer-events-none absolute left-6 top-16 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-black">
               <Icon
                 size={24}
                 name="BadgeDollarSign"
@@ -90,7 +90,7 @@ export default function EarningsStats() {
               />
               32 donations
             </span>
-            <span className="pointer-events-none absolute right-8 top-8 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-[500] text-black">
+            <span className="pointer-events-none absolute right-8 top-8 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-black">
               <Icon
                 size={24}
                 name="Trophy"
@@ -98,7 +98,7 @@ export default function EarningsStats() {
               />
               5 donors
             </span>
-            <span className="pointer-events-none absolute bottom-8 right-8 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-[500] text-black">
+            <span className="pointer-events-none absolute bottom-8 right-8 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-black">
               <Icon
                 size={24}
                 name="TrendingUp"
@@ -166,7 +166,7 @@ export default function EarningsStats() {
                 </span>
                 <span className="flex items-center text-xl font-semibold text-black">
                   $320{' '}
-                  <span className="ml-2 text-sm font-[500] text-gray-300">
+                  <span className="ml-2 text-sm font-medium text-gray-300">
                     IDRISS
                   </span>
                 </span>
