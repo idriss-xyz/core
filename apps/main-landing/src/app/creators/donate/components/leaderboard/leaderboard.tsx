@@ -143,7 +143,7 @@ export const Leaderboard = ({
         ) : (
           <ul className={classes(isTwitchPanel && 'min-h-[345px]')}>
             {isCreatorsDashboard && (
-              <>
+              <ScrollArea className="w-full max-h-[694px]  overflow-y-auto rounded-md border border-[#D1D5DB] bg-white text-black shadow-[inset_0_4px_4px_-6px_rgba(229,231,235,1),_inset_0_-4px_4px_-6px_rgba(229,231,235,1)] transition-all duration-500 [scrollbar-color:gray_#efefef] [scrollbar-width:thin]">
                 {leaderboard.map((item, index) =>
                   <LeaderboardItem
                     donorRank={index}
@@ -157,7 +157,7 @@ export const Leaderboard = ({
                     key={`${item.totalAmount}${item.address}`}
                   />
                 )}
-              </>
+              </ScrollArea>
             )}
 
             {isTwitchPanel && (
