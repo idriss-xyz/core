@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 // This component handles the final step of the custom auth flow.
+// ts-unused-exports:disable-next-line
 export default function CustomAuthCallbackPage() {
   const router = useRouter();
   const searchParameters = useSearchParams();

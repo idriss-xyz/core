@@ -370,13 +370,14 @@ export function CreatorProfileForm() {
   };
 
   // While Privy is loading, or we are authenticated and waiting for creator (before timeout)
-  if (!ready || creatorLoading) {return (
-    <div className="flex h-40 items-center justify-center">
-      <Spinner />
-    </div>
-  );}
+  if (!ready || creatorLoading) {
+    return (
+      <div className="flex h-40 items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
 
-  
   // After loading/timeout, if still no auth or creator, show error.
   if (!authenticated || !creator || !user) {
     return (

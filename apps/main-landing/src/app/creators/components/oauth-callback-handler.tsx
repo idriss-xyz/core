@@ -30,6 +30,7 @@ export function OAuthCallbackHandler() {
     if (!authenticated) {
       // User is not logged in yet, do nothing.
       setCreator(null);
+      // todo: check bug when not authed
       // setCreatorLoading(false);
       return;
     }
@@ -128,4 +129,5 @@ export function OAuthCallbackHandler() {
     getAccessToken,
     setCreatorLoading,
   ]);
+  return null;
 }
