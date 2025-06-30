@@ -20,6 +20,7 @@ import {
   RefactorMuteToggles1748346009915,
   AddCreatorDisplayName1748521986209,
   AddBadWords1748967010401,
+  RenameDynamicIdToPrivyId1749000000000,
 } from './migrations';
 import { CreatorProfileView } from './views';
 
@@ -49,6 +50,7 @@ export const AppDataSource = new DataSource({
     RefactorMuteToggles1748346009915,
     AddCreatorDisplayName1748521986209,
     AddBadWords1748967010401,
+    RenameDynamicIdToPrivyId1749000000000,
   ],
 });
 

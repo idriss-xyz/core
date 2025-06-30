@@ -7,6 +7,8 @@ type AuthContextType = {
   oauthError: string | null;
   isLoginModalOpen: boolean;
   creator: CreatorProfileResponse | null;
+  creatorLoading: boolean;
+  setCreatorLoading: (loading: boolean) => void;
   setOauthError: (error: string | null) => void;
   clearOauthError: () => void;
   setIsModalOpen: (isOpen: boolean) => void;
@@ -19,6 +21,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [oauthError, setOauthError] = useState<string | null>(null);
   const [isLoginModalOpen, setIsModalOpen] = useState(false);
   const [creator, setCreator] = useState<CreatorProfileResponse | null>(null);
+  const [creatorLoading, setCreatorLoading] = useState(true);
 
   const clearOauthError = () => {
     return setOauthError(null);
@@ -34,6 +37,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         clearOauthError,
         setIsModalOpen,
         setCreator,
+        creatorLoading,
+        setCreatorLoading,
       }}
     >
       {children}

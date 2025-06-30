@@ -8,3 +8,4 @@ export { AddDynamicId1748284091728 } from './1748284091728-AddDynamicId';
 export { RefactorMuteToggles1748346009915 } from './1748346009915-RefactorMuteToggles';
 export { AddCreatorDisplayName1748521986209 } from './1748521986209-AddCreatorDisplayName';
 export { AddBadWords1748967010401 } from './1748967010401-AddBadWords';
+export { RenameDynamicIdToPrivyId1749000000000 } from './1749000000000-RenameDynamicIdToPrivyId';

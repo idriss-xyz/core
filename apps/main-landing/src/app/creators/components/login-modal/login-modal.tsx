@@ -1,6 +1,8 @@
-import { useSocialAccounts } from '@dynamic-labs/sdk-react-core';
-import { ProviderEnum } from '@dynamic-labs/sdk-api-core';
-import { TOKEN_TERMS_AND_CONDITIONS_LINK } from '@idriss-xyz/constants';
+import { usePrivy } from '@privy-io/react-auth';
+import {
+  CREATOR_API_URL,
+  TOKEN_TERMS_AND_CONDITIONS_LINK,
+} from '@idriss-xyz/constants';
 import { Button } from '@idriss-xyz/ui/button';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { Link } from '@idriss-xyz/ui/link';
@@ -11,11 +13,15 @@ type Properties = {
   onClose: () => void;
 };
 
-export const LoginModal = ({ isOpened, onClose }: Properties) => {
-  const { signInWithSocialAccount } = useSocialAccounts();
+const handleTwitchLogin = () => {
+  window.location.href = `${CREATOR_API_URL}/auth/twitch`;
+};
 
-  const handleTwitchLogin = async () => {
-    await signInWithSocialAccount(ProviderEnum.Twitch);
+export const LoginModal = ({ isOpened, onClose }: Properties) => {
+  const { login } = usePrivy();
+
+  const handlePrivyLogin = () => {
+    login();
   };
 
   return (
@@ -39,6 +45,15 @@ export const LoginModal = ({ isOpened, onClose }: Properties) => {
         size="medium"
         className="w-full"
         intent="primary"
+        aria-label="Login with Email or Wallet"
+        onClick={handlePrivyLogin}
+      >
+        Continue with Email or Wallet
+      </Button>
+      <Button
+        size="medium"
+        className="w-full"
+        intent="secondary"
         aria-label="Login with Twitch"
         onClick={handleTwitchLogin}
       >

@@ -13,11 +13,12 @@ import { normalize } from 'viem/ens';
 import { Form } from '@idriss-xyz/ui/form';
 import { Button } from '@idriss-xyz/ui/button';
 import { Switch } from '@idriss-xyz/ui/switch';
+import { Spinner } from '@idriss-xyz/ui/spinner';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Controller, useForm } from 'react-hook-form';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Multiselect, MultiselectOption } from '@idriss-xyz/ui/multiselect';
-import { getAuthToken, useDynamicContext } from '@dynamic-labs/sdk-react-core';
+import { usePrivy } from '@privy-io/react-auth';
 import { Link } from '@idriss-xyz/ui/link';
 
 import { ethereumClient } from '../donate/config';
@@ -94,8 +95,8 @@ export function CreatorProfileForm() {
   const [copiedDonationLink, setCopiedDonationLink] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState<boolean | null>(null);
-  const { creator } = useAuth();
-  const { user } = useDynamicContext();
+  const { creator, creatorLoading } = useAuth();
+  const { user, getAccessToken, authenticated, ready } = usePrivy();
 
   const formMethods = useForm<FormPayload>({
     defaultValues: {
@@ -112,6 +113,9 @@ export function CreatorProfileForm() {
       minimumAlertAmount: creator?.minimumAlertAmount ?? 1,
       minimumTTSAmount: creator?.minimumTTSAmount ?? 5,
       minimumSfxAmount: creator?.minimumSfxAmount ?? 10,
+      alertMuted: creator?.alertMuted ?? false,
+      ttsMuted: creator?.ttsMuted ?? false,
+      sfxMuted: creator?.sfxMuted ?? false,
       customBadWords: creator?.customBadWords ?? [],
     },
     mode: 'onSubmit',
@@ -124,6 +128,30 @@ export function CreatorProfileForm() {
       'address',
       'alertMuted',
     ]);
+
+  useEffect(() => {
+    if (creator) {
+      formMethods.reset({
+        name: creator.name ?? '',
+        address: creator.primaryAddress ?? '',
+        chainsIds:
+          creator.networks && creator.networks.length > 0
+            ? getChainIdsFromShortNames(creator.networks)
+            : ALL_CHAIN_IDS,
+        tokensSymbols:
+          creator.tokens && creator.tokens.length > 0
+            ? creator.tokens
+            : UNIQUE_ALL_TOKEN_SYMBOLS,
+        minimumAlertAmount: creator.minimumAlertAmount ?? 1,
+        minimumTTSAmount: creator.minimumTTSAmount ?? 5,
+        minimumSfxAmount: creator.minimumSfxAmount ?? 10,
+        alertMuted: creator.alertMuted ?? false,
+        ttsMuted: creator.ttsMuted ?? false,
+        sfxMuted: creator.sfxMuted ?? false,
+        customBadWords: creator.customBadWords ?? [],
+      });
+    }
+  }, [creator, formMethods]);
 
   const selectedChainsTokens: ChainToken[] = useMemo(() => {
     return chainsIds
@@ -307,7 +335,10 @@ export function CreatorProfileForm() {
     const chainsShortNames = getChainShortNamesFromIds(data.chainsIds);
 
     try {
-      const authToken = getAuthToken();
+      const authToken = await getAccessToken();
+      if (!authToken) {
+        throw new Error('Could not get auth token.');
+      }
       const editSuccess = await editCreatorProfile(
         data.name,
         {
@@ -338,7 +369,16 @@ export function CreatorProfileForm() {
     }
   };
 
-  if (!creator || !user) {
+  // While Privy is loading, or we are authenticated and waiting for creator (before timeout)
+  if (!ready || creatorLoading) {return (
+    <div className="flex h-40 items-center justify-center">
+      <Spinner />
+    </div>
+  );}
+
+  
+  // After loading/timeout, if still no auth or creator, show error.
+  if (!authenticated || !creator || !user) {
     return (
       <div className="flex h-40 flex-col items-center justify-center">
         <p className="text-lg font-bold text-red-500">Creator not signed in</p>

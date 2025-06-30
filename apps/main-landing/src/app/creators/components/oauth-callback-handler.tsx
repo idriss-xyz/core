@@ -1,101 +1,131 @@
-import { useEffect, useRef, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import {
-  useDynamicContext,
-  useSocialAccounts,
-  getAuthToken,
-} from '@dynamic-labs/sdk-react-core';
-import { ProviderEnum } from '@dynamic-labs/sdk-api-core';
+'use client';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { usePrivy } from '@privy-io/react-auth';
 import { Hex } from 'viem';
 
 import { getCreatorProfile, saveCreatorProfile } from '../utils';
 import { useAuth } from '../context/auth-context';
 
-import { LoadingModal } from './login-modal';
-
 export function OAuthCallbackHandler() {
   const router = useRouter();
-  const searchParameters = useSearchParams();
-  const { user } = useDynamicContext();
-  const { getLinkedAccountInformation } = useSocialAccounts();
-  const [isProcessing, setIsProcessing] = useState(false);
-  const { setOauthError, setCreator } = useAuth();
-  // Timeout adds small delay to wait for auth to finish
-  const timeoutReference = useRef<NodeJS.Timeout | null>(null);
+  const { user, ready, authenticated, getAccessToken } = usePrivy();
+  const { setCreator, creator, setCreatorLoading } = useAuth();
+  const [authChecked, setAuthChecked] = useState(false);
 
   useEffect(() => {
-    const dynamicOauthCode = searchParameters.get('dynamicOauthCode');
-    const dynamicOauthState = searchParameters.get('dynamicOauthState');
-
-    // Only run this if we have OAuth parameters in the URL
-    if (dynamicOauthCode && dynamicOauthState) {
-      setIsProcessing(true);
-
-      // Clear any existing timeout
-      if (timeoutReference.current) {
-        clearTimeout(timeoutReference.current);
-      }
-
-      timeoutReference.current = setTimeout(async () => {
-        try {
-          const twitchAccount = getLinkedAccountInformation(
-            ProviderEnum.Twitch,
-          );
-          const twitchName = twitchAccount?.username;
-
-          if (!twitchName) {
-            throw new Error('Could not get Twitch username');
-          }
-
-          const creator = await getCreatorProfile(twitchName);
-
-          if (creator === undefined) {
-            const walletAddress = user?.verifiedCredentials?.[0]
-              ?.address as Hex;
-            const dynamicJwtToken = getAuthToken();
-            await saveCreatorProfile(
-              walletAddress,
-              twitchName,
-              twitchAccount?.displayName,
-              twitchAccount?.avatar,
-              user?.userId,
-              dynamicJwtToken,
-            );
-            // TODO: receive response from saveCreatorProfile like below
-            // const newCreator = await saveCreatorProfile(twitchName);
-            const newCreator = await getCreatorProfile(twitchName);
-
-            setCreator(newCreator!);
-          } else if (creator) {
-            setCreator(creator);
-          }
-          // Clean up URL parameters for next page load
-          window.history.replaceState({}, document.title, '/creators');
-          router.push('/creators/app');
-        } catch (error) {
-          console.error('Error handling OAuth callback:', error);
-          setOauthError('Authentication failed. Please try again.');
-          window.history.replaceState({}, document.title, '/creators');
-        } finally {
-          setIsProcessing(false);
-        }
-      }, 2000);
+    console.log('OAuthCallbackHandler state:', {
+      ready,
+      authenticated,
+      authChecked,
+      hasCreator: !!creator,
+    });
+    // This effect will now correctly wait for the authenticated state to be true.
+    // It will re-run when `authenticated` changes from false to true.
+    if (!ready) {
+      // Still waiting for Privy to initialize.
+      return;
     }
 
-    return () => {
-      if (timeoutReference.current) {
-        clearTimeout(timeoutReference.current);
+    if (!authenticated) {
+      // User is not logged in yet, do nothing.
+      setCreator(null);
+      // setCreatorLoading(false);
+      return;
+    }
+
+    if (authChecked || creator) {
+      // We have already processed the login or have a creator object.
+      return;
+    }
+
+    const handleAuth = async () => {
+      setAuthChecked(true);
+      setCreatorLoading(true);
+
+      try {
+        if (!user) {
+          throw new Error('handleAuth called but user is not available.');
+        }
+
+        const walletAddress = user.wallet?.address as Hex | undefined;
+        if (!walletAddress) {
+          throw new Error('No wallet address found for authenticated user.');
+        }
+
+        const existingCreator = await getCreatorProfile(
+          undefined,
+          walletAddress,
+        );
+
+        console.log('existingCreator', existingCreator);
+
+        if (existingCreator) {
+          setCreator(existingCreator);
+        } else {
+          // NEW USER ONBOARDING LOGIC
+          const authToken = await getAccessToken();
+          if (!authToken || !user.id) {
+            throw new Error(
+              'Could not get auth token or user ID for new user.',
+            );
+          }
+
+          let newCreatorName: string;
+          let newCreatorDisplayName: string | null = null;
+          let newCreatorProfilePic: string | null = null;
+
+          // Check if we have Twitch info from the custom login flow
+          const twitchInfoRaw = sessionStorage.getItem('twitch_new_user_info');
+          if (twitchInfoRaw) {
+            const twitchInfo = JSON.parse(twitchInfoRaw);
+            newCreatorName = twitchInfo.name;
+            newCreatorDisplayName = twitchInfo.displayName;
+            newCreatorProfilePic = twitchInfo.pfp;
+            console.log(`New user from Twitch: ${newCreatorName}`);
+            sessionStorage.removeItem('twitch_new_user_info'); // Clean up
+          } else {
+            // User logged in with email or wallet, generate a random name
+            newCreatorName = `user-${user.id.slice(-8)}`;
+            newCreatorDisplayName = newCreatorName;
+            console.log(
+              `New user from email/wallet, generated name: ${newCreatorName}`,
+            );
+          }
+
+          await saveCreatorProfile(
+            walletAddress,
+            newCreatorName,
+            newCreatorDisplayName,
+            newCreatorProfilePic,
+            user.id, // This is the Privy ID
+            authToken,
+          );
+
+          const newCreator = await getCreatorProfile(newCreatorName);
+          if (!newCreator) {
+            throw new Error('Failed to fetch newly created profile.');
+          }
+
+          setCreator(newCreator);
+        }
+      } catch (error) {
+        console.error('Error handling auth callback:', error);
+      } finally {
+        setCreatorLoading(false);
       }
-      setIsProcessing(false);
     };
+
+    void handleAuth();
   }, [
-    searchParameters,
+    ready,
+    authenticated,
     user,
     router,
-    getLinkedAccountInformation,
-    setOauthError,
     setCreator,
+    authChecked,
+    creator,
+    getAccessToken,
+    setCreatorLoading,
   ]);
-
-  return <LoadingModal isProcessing={isProcessing} />;
 }

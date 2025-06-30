@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { useDynamicContext } from '@dynamic-labs/sdk-react-core';
-import { ProviderEnum } from '@dynamic-labs/sdk-api-core';
+import { usePrivy } from '@privy-io/react-auth';
+import { Hex } from 'viem';
 
 import { useAuth } from '../context/auth-context';
 
@@ -9,7 +9,7 @@ import { getCreatorProfile } from '.';
 
 export const useStartEarningNavigation = () => {
   const router = useRouter();
-  const { user } = useDynamicContext();
+  const { user } = usePrivy();
   const { setIsModalOpen, creator, setCreator } = useAuth();
 
   const handleStartEarningClick = useCallback(async () => {
@@ -17,14 +17,13 @@ export const useStartEarningNavigation = () => {
     if (user && creator) {
       router.push('/creators/app');
     } else if (user) {
-      const twitchName = user.verifiedCredentials.find((credential) => {
-        return credential.oauthProvider === ProviderEnum.Twitch;
-      })?.oauthUsername;
-      const fetchedCreator = await getCreatorProfile(twitchName);
+      const walletAddress = user.wallet?.address as Hex | undefined;
+      const fetchedCreator = await getCreatorProfile(undefined, walletAddress);
       if (fetchedCreator == null || fetchedCreator === undefined) {
         console.error(
-          `Could not find creator with name ${twitchName}, clear localStorage and try again`,
+          `Could not find creator with address ${walletAddress}, this may be a new user.`,
         );
+        // TODO: Handle new user onboarding flow (e.g., redirect to a create profile page)
         return;
       }
       setCreator(fetchedCreator);

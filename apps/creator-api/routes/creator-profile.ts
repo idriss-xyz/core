@@ -144,7 +144,7 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
     creator.name = creatorData.name;
     creator.displayName = creatorData.displayName;
     creator.profilePictureUrl = creatorData.profilePictureUrl;
-    creator.dynamicId = creatorData.dynamicId;
+    creator.privyId = creatorData.privyId;
     creator.donationUrl = `${CREATORS_LINK}/${creatorData.name}`;
     creator.obsUrl = `${CREATORS_LINK}/obs/${creatorData.name}`;
 
@@ -219,6 +219,13 @@ router.patch(
 
       if (!creator) {
         res.status(404).json({ error: 'Creator profile not found' });
+        return;
+      }
+
+      if (creator.privyId !== req.user.id) {
+        res
+          .status(403)
+          .json({ error: 'Forbidden: You can only edit your own profile' });
         return;
       }
 
@@ -361,9 +368,11 @@ router.patch(
           networks: updatedNetworkEntities,
         },
       });
+      return;
     } catch (error) {
       console.error('Error updating creator profile:', error);
       res.status(500).json({ error: 'Failed to update creator profile' });
+      return;
     }
   },
 );
