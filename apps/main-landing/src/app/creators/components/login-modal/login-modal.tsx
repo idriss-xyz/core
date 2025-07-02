@@ -1,4 +1,3 @@
-import { usePrivy } from '@privy-io/react-auth';
 import {
   CREATOR_API_URL,
   TOKEN_TERMS_AND_CONDITIONS_LINK,
@@ -18,12 +17,6 @@ const handleTwitchLogin = () => {
 };
 
 export const LoginModal = ({ isOpened, onClose }: Properties) => {
-  const { login } = usePrivy();
-
-  const handlePrivyLogin = () => {
-    login();
-  };
-
   return (
     <Modal
       className="flex min-h-[300px] w-[400px] flex-col justify-center gap-y-3 rounded-lg border border-black/20 bg-white p-5"
@@ -41,15 +34,6 @@ export const LoginModal = ({ isOpened, onClose }: Properties) => {
           onClick={onClose}
         />
       </div>
-      <Button
-        size="medium"
-        className="w-full"
-        intent="primary"
-        aria-label="Login with Email or Wallet"
-        onClick={handlePrivyLogin}
-      >
-        Continue with Email or Wallet
-      </Button>
       <Button
         size="medium"
         className="w-full"

@@ -32,7 +32,6 @@ import { useAuth } from '../context/auth-context';
 
 type FormPayload = {
   name: string;
-  address: string;
   chainsIds: number[];
   tokensSymbols: string[];
   minimumAlertAmount: number;
@@ -101,7 +100,6 @@ export function CreatorProfileForm() {
   const formMethods = useForm<FormPayload>({
     defaultValues: {
       name: creator?.name ?? '',
-      address: creator?.primaryAddress ?? '',
       chainsIds:
         creator?.networks && creator.networks.length > 0
           ? getChainIdsFromShortNames(creator?.networks)
@@ -120,20 +118,14 @@ export function CreatorProfileForm() {
     },
     mode: 'onSubmit',
   });
-  const [creatorName, chainsIds, tokensSymbols, address, alertMuted] =
-    formMethods.watch([
-      'name',
-      'chainsIds',
-      'tokensSymbols',
-      'address',
-      'alertMuted',
-    ]);
+  const [creatorName, chainsIds, tokensSymbols, alertMuted] = formMethods.watch(
+    ['name', 'chainsIds', 'tokensSymbols', 'alertMuted'],
+  );
 
   useEffect(() => {
     if (creator) {
       formMethods.reset({
         name: creator.name ?? '',
-        address: creator.primaryAddress ?? '',
         chainsIds:
           creator.networks && creator.networks.length > 0
             ? getChainIdsFromShortNames(creator.networks)
@@ -300,8 +292,10 @@ export function CreatorProfileForm() {
 
   // eslint-disable-next-line unicorn/consistent-function-scoping
   const copyObsLink = async () => {
+    if (!creator?.primaryAddress) return;
+
     await navigator.clipboard.writeText(
-      `${CREATORS_LINK}/obs?address=${address}`,
+      `${CREATORS_LINK}/obs?address=${creator.primaryAddress}`,
     );
 
     setCopiedDonationLink(false);
@@ -315,10 +309,10 @@ export function CreatorProfileForm() {
 
   useEffect(() => {
     resetCopyState();
-  }, [address, tokensSymbols, chainsIds, resetCopyState]);
+  }, [tokensSymbols, chainsIds, resetCopyState]);
 
   const sendTestDonation = useCallback(() => {
-    if (!address || !isAddress(address)) {
+    if (!creator?.primaryAddress || !isAddress(creator.primaryAddress)) {
       alert('Please enter a valid address first');
       return;
     }
@@ -327,7 +321,7 @@ export function CreatorProfileForm() {
 
     // Show confirmation
     alert('Test donation sent! Check your OBS page.');
-  }, [address]);
+  }, [creator?.primaryAddress]);
 
   const onSubmit = async (data: FormPayload) => {
     setIsSaving(true);
@@ -342,7 +336,6 @@ export function CreatorProfileForm() {
       const editSuccess = await editCreatorProfile(
         data.name,
         {
-          primaryAddress: data.address as Hex,
           minimumAlertAmount: data.minimumAlertAmount,
           minimumTTSAmount: data.minimumTTSAmount,
           minimumSfxAmount: data.minimumSfxAmount,
@@ -415,39 +408,17 @@ export function CreatorProfileForm() {
         }}
       />
 
-      <Controller
-        name="address"
-        control={formMethods.control}
-        rules={{
-          required: 'Address is required',
-          validate: async (value) => {
-            try {
-              if (value.includes('.') && !value.endsWith('.')) {
-                const resolvedAddress = await ethereumClient?.getEnsAddress({
-                  name: normalize(value),
-                });
-
-                return resolvedAddress ? true : 'This address doesn’t exist.';
-              }
-
-              return isAddress(value) ? true : 'This address doesn’t exist.';
-            } catch {
-              return 'An unexpected error occurred. Try again.';
-            }
-          },
-        }}
-        render={({ field, fieldState }) => {
-          return (
-            <Form.Field
-              label="Wallet address"
-              className="mt-6 w-full"
-              helperText={fieldState.error?.message}
-              error={Boolean(fieldState.error?.message)}
-              {...field}
-            />
-          );
-        }}
-      />
+      <div className="mt-6 w-full">
+        <label className="text-sm font-medium text-neutral-900">
+          Wallet address
+        </label>
+        <p className="mt-1 w-full truncate rounded-md border border-neutral-300 bg-neutral-100 px-3 py-2 text-sm text-neutral-600">
+          {creator.primaryAddress}
+        </p>
+        <p className="mt-1 text-xs text-neutral-500">
+          This address is linked to your account and cannot be changed.
+        </p>
+      </div>
 
       <Controller
         name="chainsIds"

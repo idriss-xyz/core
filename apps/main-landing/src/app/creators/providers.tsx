@@ -36,8 +36,6 @@ export const Providers = ({ children }: Properties) => {
                 getCustomAccessToken: getCustomAuthToken,
                 isLoading: false,
               },
-              // This handles the standard Email and Wallet login modal
-              loginMethods: ['email', 'wallet'],
               embeddedWallets: {
                 createOnLogin: 'users-without-wallets',
               },

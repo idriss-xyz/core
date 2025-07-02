@@ -200,7 +200,7 @@ router.patch(
       res.status(400).json({ errors: errors.array() });
       return;
     }
-    if (!req.user) {
+    if (!req.user?.id) {
       res.status(401).json({ error: 'Unauthorized' });
       return;
     }
@@ -240,6 +240,7 @@ router.patch(
         tokens = [],
         networks = [],
         customBadWords,
+        primaryAddress,
         ...creatorData
       } = req.body;
 
