@@ -8,8 +8,7 @@ import {
   CHAIN_ID_TO_TOKENS,
   DEFAULT_ALLOWED_CHAINS_IDS,
 } from '@idriss-xyz/constants';
-import { Hex, isAddress } from 'viem';
-import { normalize } from 'viem/ens';
+import { isAddress } from 'viem';
 import { Form } from '@idriss-xyz/ui/form';
 import { Button } from '@idriss-xyz/ui/button';
 import { Switch } from '@idriss-xyz/ui/switch';
@@ -21,7 +20,6 @@ import { Multiselect, MultiselectOption } from '@idriss-xyz/ui/multiselect';
 import { usePrivy } from '@privy-io/react-auth';
 import { Link } from '@idriss-xyz/ui/link';
 
-import { ethereumClient } from '../donate/config';
 import {
   editCreatorProfile,
   getChainIdsFromShortNames,
