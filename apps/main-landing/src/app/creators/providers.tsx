@@ -1,10 +1,8 @@
 'use client';
 import NiceModal from '@ebay/nice-modal-react';
 import { WithPortal } from '@idriss-xyz/ui/providers/with-portal';
-import { ReactNode } from 'react';
-import dynamic from 'next/dynamic';
-import { DynamicContextProvider } from '@dynamic-labs/sdk-react-core';
-import { EthereumWalletConnectors } from '@dynamic-labs/ethereum';
+import { ReactNode, useCallback } from 'react';
+import { PrivyProvider } from '@privy-io/react-auth';
 
 import { QueryProvider } from '@/providers';
 
@@ -12,37 +10,39 @@ type Properties = {
   children: ReactNode;
 };
 
-const WalletContextProvider = dynamic(
-  () => {
-    return import('@idriss-xyz/wallet-connect').then((module) => {
-      return module.WalletContextProvider;
-    });
-  },
-  { ssr: false },
-);
-
-const cssOverrides = `
-  div:has(.social-redirect-view__container) {
-    display: none;
-  }
-`;
-
 export const Providers = ({ children }: Properties) => {
+  const getCustomAuthToken = useCallback(() => {
+    // This function looks for the token from our custom Twitch flow
+    const token = sessionStorage.getItem('custom-auth-token');
+    // The Privy SDK expects a Promise that resolves to a string or undefined.
+    // sessionStorage.getItem returns a string or null. We convert null to undefined.
+    return Promise.resolve(token ?? undefined);
+  }, []);
+
   return (
     <QueryProvider>
       <WithPortal>
         <NiceModal.Provider>
-          <DynamicContextProvider
-            settings={{
-              environmentId: process.env.DYNAMIC_ENVIRONMENT_ID ?? '',
-              walletConnectors: [EthereumWalletConnectors],
-              cssOverrides,
+          <PrivyProvider
+            appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID ?? ''}
+            config={{
+              appearance: {
+                theme: 'light',
+                accentColor: '#000000',
+                showWalletLoginFirst: true,
+              },
+              // This handles the custom Twitch login flow
+              customAuth: {
+                getCustomAccessToken: getCustomAuthToken,
+                isLoading: false,
+              },
+              embeddedWallets: {
+                createOnLogin: 'users-without-wallets',
+              },
             }}
           >
-            <WalletContextProvider>
-              <>{children}</>
-            </WalletContextProvider>
-          </DynamicContextProvider>
+            {children}
+          </PrivyProvider>
         </NiceModal.Provider>
       </WithPortal>
     </QueryProvider>

@@ -20,8 +20,8 @@ export class Creator {
   @Column({ type: 'text', name: 'display_name', unique: true })
   displayName!: string;
 
-  @Column({ type: 'text', name: 'dynamic_id', unique: true })
-  dynamicId!: string;
+  @Column({ type: 'text', name: 'privy_id', unique: true })
+  privyId!: string;
 
   @Column({ type: 'text', name: 'profile_picture_url', nullable: true })
   profilePictureUrl?: string;

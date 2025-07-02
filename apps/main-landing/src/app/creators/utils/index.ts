@@ -48,7 +48,7 @@ export type CreatorProfileResponse = {
   sfxMuted: boolean;
   networks: string[];
   tokens: string[];
-  dynamicId: string;
+  privyId: string;
   customBadWords: string[];
 };
 
@@ -78,11 +78,11 @@ export const saveCreatorProfile = async (
   name?: string | null,
   displayName?: string | null,
   profilePictureUrl?: string | null,
-  dynamicId?: string | null,
+  privyId?: string | null,
   authToken?: string,
 ): Promise<void> => {
-  if (!address || !name || !dynamicId) {
-    throw new Error('No wallet address, name or dynamicId to create creator');
+  if (!address || !name || !privyId) {
+    throw new Error('No wallet address, name or privyId to create creator');
   }
 
   if (!authToken) {
@@ -101,7 +101,7 @@ export const saveCreatorProfile = async (
       displayName,
       profilePictureUrl,
       name,
-      dynamicId,
+      privyId,
     }),
   });
 

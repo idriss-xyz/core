@@ -8,19 +8,18 @@ import {
   CHAIN_ID_TO_TOKENS,
   DEFAULT_ALLOWED_CHAINS_IDS,
 } from '@idriss-xyz/constants';
-import { Hex, isAddress } from 'viem';
-import { normalize } from 'viem/ens';
+import { isAddress } from 'viem';
 import { Form } from '@idriss-xyz/ui/form';
 import { Button } from '@idriss-xyz/ui/button';
 import { Switch } from '@idriss-xyz/ui/switch';
+import { Spinner } from '@idriss-xyz/ui/spinner';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Controller, useForm } from 'react-hook-form';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Multiselect, MultiselectOption } from '@idriss-xyz/ui/multiselect';
-import { getAuthToken, useDynamicContext } from '@dynamic-labs/sdk-react-core';
+import { usePrivy } from '@privy-io/react-auth';
 import { Link } from '@idriss-xyz/ui/link';
 
-import { ethereumClient } from '../donate/config';
 import {
   editCreatorProfile,
   getChainIdsFromShortNames,
@@ -31,7 +30,6 @@ import { useAuth } from '../context/auth-context';
 
 type FormPayload = {
   name: string;
-  address: string;
   chainsIds: number[];
   tokensSymbols: string[];
   minimumAlertAmount: number;
@@ -94,13 +92,12 @@ export function CreatorProfileForm() {
   const [copiedDonationLink, setCopiedDonationLink] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState<boolean | null>(null);
-  const { creator } = useAuth();
-  const { user } = useDynamicContext();
+  const { creator, creatorLoading } = useAuth();
+  const { user, getAccessToken, authenticated, ready } = usePrivy();
 
   const formMethods = useForm<FormPayload>({
     defaultValues: {
       name: creator?.name ?? '',
-      address: creator?.primaryAddress ?? '',
       chainsIds:
         creator?.networks && creator.networks.length > 0
           ? getChainIdsFromShortNames(creator?.networks)
@@ -112,18 +109,39 @@ export function CreatorProfileForm() {
       minimumAlertAmount: creator?.minimumAlertAmount ?? 1,
       minimumTTSAmount: creator?.minimumTTSAmount ?? 5,
       minimumSfxAmount: creator?.minimumSfxAmount ?? 10,
+      alertMuted: creator?.alertMuted ?? false,
+      ttsMuted: creator?.ttsMuted ?? false,
+      sfxMuted: creator?.sfxMuted ?? false,
       customBadWords: creator?.customBadWords ?? [],
     },
     mode: 'onSubmit',
   });
-  const [creatorName, chainsIds, tokensSymbols, address, alertMuted] =
-    formMethods.watch([
-      'name',
-      'chainsIds',
-      'tokensSymbols',
-      'address',
-      'alertMuted',
-    ]);
+  const [creatorName, chainsIds, tokensSymbols, alertMuted] = formMethods.watch(
+    ['name', 'chainsIds', 'tokensSymbols', 'alertMuted'],
+  );
+
+  useEffect(() => {
+    if (creator) {
+      formMethods.reset({
+        name: creator.name ?? '',
+        chainsIds:
+          creator.networks && creator.networks.length > 0
+            ? getChainIdsFromShortNames(creator.networks)
+            : ALL_CHAIN_IDS,
+        tokensSymbols:
+          creator.tokens && creator.tokens.length > 0
+            ? creator.tokens
+            : UNIQUE_ALL_TOKEN_SYMBOLS,
+        minimumAlertAmount: creator.minimumAlertAmount ?? 1,
+        minimumTTSAmount: creator.minimumTTSAmount ?? 5,
+        minimumSfxAmount: creator.minimumSfxAmount ?? 10,
+        alertMuted: creator.alertMuted ?? false,
+        ttsMuted: creator.ttsMuted ?? false,
+        sfxMuted: creator.sfxMuted ?? false,
+        customBadWords: creator.customBadWords ?? [],
+      });
+    }
+  }, [creator, formMethods]);
 
   const selectedChainsTokens: ChainToken[] = useMemo(() => {
     return chainsIds
@@ -272,8 +290,10 @@ export function CreatorProfileForm() {
 
   // eslint-disable-next-line unicorn/consistent-function-scoping
   const copyObsLink = async () => {
+    if (!creator?.primaryAddress) return;
+
     await navigator.clipboard.writeText(
-      `${CREATORS_LINK}/obs?address=${address}`,
+      `${CREATORS_LINK}/obs?address=${creator.primaryAddress}`,
     );
 
     setCopiedDonationLink(false);
@@ -287,10 +307,10 @@ export function CreatorProfileForm() {
 
   useEffect(() => {
     resetCopyState();
-  }, [address, tokensSymbols, chainsIds, resetCopyState]);
+  }, [tokensSymbols, chainsIds, resetCopyState]);
 
   const sendTestDonation = useCallback(() => {
-    if (!address || !isAddress(address)) {
+    if (!creator?.primaryAddress || !isAddress(creator.primaryAddress)) {
       alert('Please enter a valid address first');
       return;
     }
@@ -299,7 +319,7 @@ export function CreatorProfileForm() {
 
     // Show confirmation
     alert('Test donation sent! Check your OBS page.');
-  }, [address]);
+  }, [creator?.primaryAddress]);
 
   const onSubmit = async (data: FormPayload) => {
     setIsSaving(true);
@@ -307,11 +327,13 @@ export function CreatorProfileForm() {
     const chainsShortNames = getChainShortNamesFromIds(data.chainsIds);
 
     try {
-      const authToken = getAuthToken();
+      const authToken = await getAccessToken();
+      if (!authToken) {
+        throw new Error('Could not get auth token.');
+      }
       const editSuccess = await editCreatorProfile(
         data.name,
         {
-          primaryAddress: data.address as Hex,
           minimumAlertAmount: data.minimumAlertAmount,
           minimumTTSAmount: data.minimumTTSAmount,
           minimumSfxAmount: data.minimumSfxAmount,
@@ -338,7 +360,17 @@ export function CreatorProfileForm() {
     }
   };
 
-  if (!creator || !user) {
+  // While Privy is loading, or we are authenticated and waiting for creator (before timeout)
+  if (!ready || creatorLoading) {
+    return (
+      <div className="flex h-40 items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
+
+  // After loading/timeout, if still no auth or creator, show error.
+  if (!authenticated || !creator || !user) {
     return (
       <div className="flex h-40 flex-col items-center justify-center">
         <p className="text-lg font-bold text-red-500">Creator not signed in</p>
@@ -374,39 +406,17 @@ export function CreatorProfileForm() {
         }}
       />
 
-      <Controller
-        name="address"
-        control={formMethods.control}
-        rules={{
-          required: 'Address is required',
-          validate: async (value) => {
-            try {
-              if (value.includes('.') && !value.endsWith('.')) {
-                const resolvedAddress = await ethereumClient?.getEnsAddress({
-                  name: normalize(value),
-                });
-
-                return resolvedAddress ? true : 'This address doesn’t exist.';
-              }
-
-              return isAddress(value) ? true : 'This address doesn’t exist.';
-            } catch {
-              return 'An unexpected error occurred. Try again.';
-            }
-          },
-        }}
-        render={({ field, fieldState }) => {
-          return (
-            <Form.Field
-              label="Wallet address"
-              className="mt-6 w-full"
-              helperText={fieldState.error?.message}
-              error={Boolean(fieldState.error?.message)}
-              {...field}
-            />
-          );
-        }}
-      />
+      <div className="mt-6 w-full">
+        <label className="text-sm font-medium text-neutral-900">
+          Wallet address
+        </label>
+        <p className="mt-1 w-full truncate rounded-md border border-neutral-300 bg-neutral-100 px-3 py-2 text-sm text-neutral-600">
+          {creator.primaryAddress}
+        </p>
+        <p className="mt-1 text-xs text-neutral-500">
+          This address is linked to your account and cannot be changed.
+        </p>
+      </div>
 
       <Controller
         name="chainsIds"
