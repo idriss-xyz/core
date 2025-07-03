@@ -1,6 +1,6 @@
 import { Icon } from '@idriss-xyz/ui/icon';
 import { Link } from '@idriss-xyz/ui/link';
-import { getShortWalletHex } from '@idriss-xyz/utils';
+import { getShortWalletHex, getTimeDifferenceString } from '@idriss-xyz/utils';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Hex } from 'viem';
 
@@ -21,6 +21,8 @@ type Properties = {
   className?: string;
   isLastItem?: boolean;
   donateAmount: number;
+  donorSince?: number;
+  donationCount?: number;
   donorDetails: DonationUser;
   hideBottomBorder?: boolean;
   isTwitchExtension?: boolean;
@@ -32,6 +34,8 @@ export const LeaderboardItem = ({
   className,
   isLastItem,
   donateAmount,
+  donorSince,
+  donationCount,
   onDonorClick,
   donorDetails,
   isTwitchExtension,
@@ -86,8 +90,9 @@ export const LeaderboardItem = ({
   return (
     <li
       className={classes(
-        'grid grid-cols-[16px,1fr,64px] items-center gap-x-3.5 border-b px-5.5 py-[17.25px] text-body5',
+        'grid grid-cols-2 items-center gap-x-3.5 border-b px-5.5 py-[17.25px] text-body5',
         isLastItem ? 'border-b-transparent' : 'border-b-neutral-300',
+        donationCount && 'lg:grid-cols-4',
         className,
       )}
     >
@@ -112,7 +117,7 @@ export const LeaderboardItem = ({
         </Link>
       </span>
 
-      <span className="text-right text-neutral-900">
+      <span>
         $
         {donateAmount >= 0.01
           ? new Intl.NumberFormat('en-US', {
@@ -121,6 +126,20 @@ export const LeaderboardItem = ({
             }).format(Number(donateAmount ?? 0))
           : '<0.01'}
       </span>
+
+      {donationCount && (
+        <span>{donationCount}</span>
+      )}
+
+      {donorSince && (
+        <span>
+          {getTimeDifferenceString({
+            text: 'ago',
+            variant: 'short',
+            timestamp: donorSince,
+          })}
+        </span>
+      )}
     </li>
   );
 };

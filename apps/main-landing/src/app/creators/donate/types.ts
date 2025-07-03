@@ -9,6 +9,8 @@ export interface DonationUser {
 export interface LeaderboardStats extends DonationUser {
   totalAmount: number;
   donateLink?: string;
+  donorSince?: number;
+  donationCount?: number;
 }
 
 export interface DonationToken {

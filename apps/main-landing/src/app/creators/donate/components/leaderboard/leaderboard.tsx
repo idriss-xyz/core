@@ -121,10 +121,10 @@ export const Leaderboard = ({
               All time
             </span>
             <span className="flex w-[94px] justify-center rounded-full border border-mint-400 bg-white/80 p-1.5">
-              7 days
+              30 days
             </span>
             <span className="flex w-[94px] justify-center rounded-full border border-mint-400 bg-white/80 p-1.5">
-              30 days
+              7 days
             </span>
           </div>
         )}
@@ -143,7 +143,7 @@ export const Leaderboard = ({
         ) : (
           <ul className={classes(isTwitchPanel && 'min-h-[345px]')}>
             {isCreatorsDashboard && (
-              <ScrollArea className="w-full max-h-[694px]  overflow-y-auto rounded-md border border-[#D1D5DB] bg-white text-black shadow-[inset_0_4px_4px_-6px_rgba(229,231,235,1),_inset_0_-4px_4px_-6px_rgba(229,231,235,1)] transition-all duration-500 [scrollbar-color:gray_#efefef] [scrollbar-width:thin]">
+              <ScrollArea className="w-full max-h-[694px] overflow-y-auto border border-[#D1D5DB] rounded-b-md rounded-t-none bg-white text-black transition-all duration-500 [scrollbar-color:gray_#efefef] [scrollbar-width:thin]">
                 {leaderboard.map((item, index) =>
                   <LeaderboardItem
                     donorRank={index}
@@ -154,6 +154,8 @@ export const Leaderboard = ({
                       displayName: item.displayName,
                     }}
                     donateAmount={item.totalAmount}
+                    donorSince={item.donorSince}
+                    donationCount={item.donationCount}
                     key={`${item.totalAmount}${item.address}`}
                   />
                 )}
