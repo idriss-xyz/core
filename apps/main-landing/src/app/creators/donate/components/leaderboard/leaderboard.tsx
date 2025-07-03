@@ -5,7 +5,8 @@ import { Spinner } from '@idriss-xyz/ui/spinner';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 
-import { default as IDRISS_SCENE_STREAM_2 } from '../../../../../assets/idriss-scene-stream-2.png';
+import { IDRISS_SCENE_STREAM_2 } from '@/assets';
+
 import { WidgetVariants } from '../../../../../../../twitch-extension/src/app/types';
 import { LeaderboardStats, DonateContentValues } from '../../types';
 
@@ -143,25 +144,27 @@ export const Leaderboard = ({
         ) : (
           <ul className={classes(isTwitchPanel && 'min-h-[345px]')}>
             {isCreatorsDashboard && (
-              <ScrollArea className="w-full max-h-[694px] overflow-y-auto border border-[#D1D5DB] rounded-b-md rounded-t-none bg-white text-black transition-all duration-500 [scrollbar-color:gray_#efefef] [scrollbar-width:thin]">
-                {leaderboard.map((item, index) =>
-                  <LeaderboardItem
-                    donorRank={index}
-                    onDonorClick={onDonorClick}
-                    donorDetails={{
-                      address: item.address,
-                      avatarUrl: item.avatarUrl,
-                      displayName: item.displayName,
-                    }}
-                    donateAmount={item.totalAmount}
-                    donorSince={item.donorSince}
-                    donationCount={item.donationCount}
-                    key={`${item.totalAmount}${item.address}`}
-                  />
-                )}
-                {leaderboard.length == 0 && (
+              <ScrollArea className="max-h-[694px] w-full overflow-y-auto rounded-b-md rounded-t-none bg-white text-black transition-all duration-500 [scrollbar-color:gray_#efefef] [scrollbar-width:thin]">
+                {leaderboard.map((item, index) => {
+                  return (
+                    <LeaderboardItem
+                      donorRank={index}
+                      onDonorClick={onDonorClick}
+                      donorDetails={{
+                        address: item.address,
+                        avatarUrl: item.avatarUrl,
+                        displayName: item.displayName,
+                      }}
+                      donateAmount={item.totalAmount}
+                      donorSince={item.donorSince}
+                      donationCount={item.donationCount}
+                      key={`${item.totalAmount}${item.address}`}
+                    />
+                  );
+                })}
+                {leaderboard.length === 0 && (
                   <div className="flex min-h-96 w-full items-center justify-center">
-                    <p className="text-center text-heading6 text-neutral-900 uppercase">
+                    <p className="text-center text-heading6 uppercase text-neutral-900">
                       No donors yet
                     </p>
                   </div>
