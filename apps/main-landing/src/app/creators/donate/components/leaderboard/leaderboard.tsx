@@ -159,6 +159,13 @@ export const Leaderboard = ({
                     key={`${item.totalAmount}${item.address}`}
                   />
                 )}
+                {leaderboard.length == 0 && (
+                  <div className="flex min-h-96 w-full items-center justify-center">
+                    <p className="text-center text-heading6 text-neutral-900 uppercase">
+                      No donors yet
+                    </p>
+                  </div>
+                )}
               </ScrollArea>
             )}
 

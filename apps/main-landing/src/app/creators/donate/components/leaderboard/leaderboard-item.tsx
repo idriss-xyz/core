@@ -90,9 +90,9 @@ export const LeaderboardItem = ({
   return (
     <li
       className={classes(
-        'grid grid-cols-2 items-center gap-x-3.5 border-b px-5.5 py-[17.25px] text-body5',
+        'grid grid-cols-[16px,1fr,64px] items-center gap-x-3.5 border-b px-5.5 py-[17.25px] text-body5',
         isLastItem ? 'border-b-transparent' : 'border-b-neutral-300',
-        donationCount && 'lg:grid-cols-4',
+        (donationCount && donorSince) && 'grid grid-cols-[16px,1fr,1fr,1fr,64px]',
         className,
       )}
     >
