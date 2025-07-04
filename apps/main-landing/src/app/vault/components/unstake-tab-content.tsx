@@ -187,27 +187,26 @@ export const UnstakeTabContent = () => {
           }}
         />
 
-        <div className="relative">
-          <GeoConditionalButton
-            defaultButton={
-              <Button
-                intent="primary"
-                size="large"
-                className="mt-4 w-full lg:mt-6"
-                type="submit"
-                disabled={
-                  !watch('termsChecked') ||
-                  ((Number(watch('amount')) <= 0 ||
-                    watch('amount') === undefined ||
-                    Number(watch('amount')) > Number(stakedBalance.amount)) &&
-                    account.isConnected)
-                }
-              >
-                {account.isConnected ? 'UNLOCK' : 'LOG IN'}
-              </Button>
-            }
-          />
-        </div>
+        <GeoConditionalButton
+          defaultButton={
+            <Button
+              intent="primary"
+              size="large"
+              className="mt-4 w-full lg:mt-6"
+              type="submit"
+              disabled={
+                !watch('termsChecked') ||
+                ((Number(watch('amount')) <= 0 ||
+                  watch('amount') === undefined ||
+                  Number(watch('amount')) > Number(stakedBalance.amount)) &&
+                  account.isConnected)
+              }
+            >
+              {account.isConnected ? 'UNLOCK' : 'LOG IN'}
+            </Button>
+          }
+          className="mt-4 w-full lg:mt-6 lg:w-full"
+        />
       </Form>
     </>
   );
