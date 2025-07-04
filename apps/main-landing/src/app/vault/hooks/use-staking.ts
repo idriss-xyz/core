@@ -19,7 +19,6 @@ import {
 import { formatNumber } from '@idriss-xyz/utils';
 
 import { useGetStakedBalance } from '@/app/vault/commands/get-staked-balance';
-import { useGetBonusStakedBalance } from '@/app/vault/commands/get-bonus-staked-balance';
 import { useGetUnstakedBalance } from '@/app/vault/commands/get-unstaked-balance';
 import { useGetRewards } from '@/app/vault/commands/get-rewards';
 import { ERC20_ABI } from '@/app/creators/donate/constants';
@@ -38,9 +37,6 @@ export const useStaking = () => {
     address: walletClient?.account.address ?? EMPTY_HEX,
   });
   const unstakedBalanceQuery = useGetUnstakedBalance({
-    address: walletClient?.account.address ?? EMPTY_HEX,
-  });
-  const stakedBonusBalanceQuery = useGetBonusStakedBalance({
     address: walletClient?.account.address ?? EMPTY_HEX,
   });
   const rewardsQuery = useGetRewards({
@@ -456,17 +452,6 @@ export const useStaking = () => {
       : '—',
   };
 
-  const stakedBonusBalance = {
-    amount: stakedBonusBalanceQuery.data ?? '0',
-    refetch: stakedBonusBalanceQuery.refetch,
-    isError: stakedBonusBalanceQuery.isError,
-    isPending: stakedBonusBalanceQuery.isPending,
-    isSuccess: stakedBonusBalanceQuery.isSuccess,
-    formattedAmount: stakedBonusBalanceQuery.data
-      ? formatNumber(Number(stakedBonusBalanceQuery.data), 2)
-      : '—',
-  };
-
   const rewards = {
     amount: rewardsQuery.data ?? '0',
     refetch: rewardsQuery.refetch,
@@ -479,18 +464,10 @@ export const useStaking = () => {
   };
 
   const totalStakedBalance = {
-    amount: `${
-      Number(stakedBalanceQuery.data ?? 0) +
-      Number(stakedBonusBalanceQuery.data ?? 0)
-    }`,
-    formattedAmount:
-      stakedBalanceQuery.isSuccess && stakedBonusBalanceQuery.isSuccess
-        ? formatNumber(
-            Number(stakedBalanceQuery.data ?? 0) +
-              Number(stakedBonusBalanceQuery.data ?? 0),
-            2,
-          )
-        : '—',
+    amount: `${Number(stakedBalanceQuery.data ?? 0)}`,
+    formattedAmount: stakedBalanceQuery.isSuccess
+      ? formatNumber(Number(stakedBalanceQuery.data ?? 0), 2)
+      : '—',
   };
 
   return {
@@ -500,7 +477,6 @@ export const useStaking = () => {
     walletClient,
     stakedBalance,
     unstakedBalance,
-    stakedBonusBalance,
     totalStakedBalance,
     rewards,
     claim,
