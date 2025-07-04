@@ -11,7 +11,8 @@
     "lint:fix": "eslint --max-warnings=0 --fix",
     "circular-dependencies": "depcruise --config .dependency-cruiser.cjs .",
     "type-check": "tsc --noEmit",
-    "unused-exports": "./node_modules/.bin/ts-unused-exports ./tsconfig.json --ignoreFiles=.stories"
+    "unused-exports": "./node_modules/.bin/ts-unused-exports ./tsconfig.json --ignoreFiles=.stories",
+    "test": "vitest run"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -31,6 +32,7 @@
     "ts-node": "^10.9.2",
     "ts-unused-exports": "^10.1.0",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "vitest": "^3.2.4"
   }
 }

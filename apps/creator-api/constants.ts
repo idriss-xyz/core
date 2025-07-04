@@ -177,3 +177,18 @@ export const ALCHEMY_NATIVE_TOKENS = {
 } as const;
 
 export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
+
+export const monthNames = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
