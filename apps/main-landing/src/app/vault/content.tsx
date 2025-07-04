@@ -86,7 +86,7 @@ export const VaultContent = () => {
                   />
                   <span className="text-body4 text-neutralGreen-700 lg:text-body3">
                     Lock <span className="gradient-text">10,000 $IDRISS</span>{' '}
-                    or more to unlock upcoming premium features
+                    or more to unlock new premium features
                   </span>
                 </div>
                 <div className="flex gap-1.5 lg:gap-2.5">
