@@ -1,1 +1,1 @@
-export { TxLoadingModal } from './tx-loading-modal';
+export { TxLoadingModal, TxLoadingContent } from './tx-loading-modal';
