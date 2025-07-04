@@ -86,7 +86,7 @@ export const VaultContent = () => {
                   />
                   <span className="text-body4 text-neutralGreen-700 lg:text-body3">
                     Lock <span className="gradient-text">10,000 $IDRISS</span>{' '}
-                    or more to access premium features
+                    or more to unlock upcoming premium features
                   </span>
                 </div>
                 <div className="flex gap-1.5 lg:gap-2.5">
@@ -96,7 +96,7 @@ export const VaultContent = () => {
                     className="ml-[3px] text-gray-300 lg:size-[36px]"
                   />
                   <span className="text-body4 text-neutralGreen-700 lg:text-body3">
-                    Tap into decentralized revenue sharing from IDRISS apps
+                    Access to decentralized revenue sharing in the future
                   </span>
                 </div>
               </div>

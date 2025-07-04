@@ -8,6 +8,13 @@ import { Controller, useForm } from 'react-hook-form';
 import { RadialGradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { GeoConditionalButton } from '@idriss-xyz/ui/geo-conditional-button';
 import { TxLoadingModal } from '@idriss-xyz/ui/tx-loading-modal';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@idriss-xyz/ui/tooltip';
+import { Icon } from '@idriss-xyz/ui/icon';
 
 import { useStaking } from '@/app/vault/hooks/use-staking';
 import { TxLoadingHeadingParameters } from '@/app/vault/types';
@@ -85,7 +92,26 @@ export const UnstakeTabContent = () => {
           </div>
 
           <div className="flex flex-row items-center justify-between">
-            <p className="text-body4 text-neutralGreen-500">Rewards</p>
+            <div className="flex items-center gap-x-1">
+              <p className="text-body4 text-neutralGreen-500">Rewards</p>
+              <TooltipProvider delayDuration={400}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Icon
+                      name="HelpCircle"
+                      size={15}
+                      className="text-neutralGreen-500"
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent className="w-[300px] bg-black text-center text-white">
+                    <p className="text-label6">
+                      12% APR distributed every 6 months. First payout: July 6,
+                      2025.
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
             <p className="text-label3 text-neutralGreen-700">
               {rewards.amount != '0' && (
                 <>
