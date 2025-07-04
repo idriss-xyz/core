@@ -87,22 +87,22 @@ export const UnstakeTabContent = () => {
           <div className="flex flex-row items-center justify-between">
             <p className="text-body4 text-neutralGreen-500">Rewards</p>
             <p className="text-label3 text-neutralGreen-700">
-            {rewards.amount != '0' && (
-              <>
-                <span
-                  className="mx-2 text-body5 text-mint-700 underline hover:cursor-pointer"
-                  onClick={handleClaim}
-                >
-                  Claim
-                </span>
-                <span
-                  className="mx-2 text-body5 text-mint-700 underline hover:cursor-pointer"
-                  onClick={handleClaimAndLock}
-                >
-                  Claim & lock
-                </span>
-              </>
-            )}
+              {rewards.amount != '0' && (
+                <>
+                  <span
+                    className="mx-2 text-body5 text-mint-700 underline hover:cursor-pointer"
+                    onClick={handleClaim}
+                  >
+                    Claim
+                  </span>
+                  <span
+                    className="mx-2 text-body5 text-mint-700 underline hover:cursor-pointer"
+                    onClick={handleClaimAndLock}
+                  >
+                    Claim & lock
+                  </span>
+                </>
+              )}
               {rewards.formattedAmount} IDRISS
             </p>
           </div>
