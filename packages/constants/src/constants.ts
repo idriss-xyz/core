@@ -40,7 +40,7 @@ import {
 import { Chain, Token, ChainToken } from './types';
 
 export const STAKER_ADDRESS = '0x085e2DC1b05dcdbE011B5ad377C9f2fcD69B7057';
-export const REWARDS_ADDRESS = '0x13B9cdc7f526a4cb4206923D4aE65a23300b991B';
+export const REWARDS_ADDRESS = '0x48AB073FaB28aCeCB4C773CacD9BadB99BA2A054';
 
 export const NATIVE_COIN_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 
