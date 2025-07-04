@@ -438,7 +438,7 @@ export const useStaking = () => {
     isSuccess: stakedBalanceQuery.isSuccess,
     formattedAmount: stakedBalanceQuery.data
       ? formatNumber(Number(stakedBalanceQuery.data), 2)
-      : '—',
+      : '0',
   };
 
   const unstakedBalance = {
@@ -449,7 +449,7 @@ export const useStaking = () => {
     isSuccess: unstakedBalanceQuery.isSuccess,
     formattedAmount: unstakedBalanceQuery.data
       ? formatNumber(Number(unstakedBalanceQuery.data), 2)
-      : '—',
+      : '0',
   };
 
   const rewards = {
@@ -460,14 +460,14 @@ export const useStaking = () => {
     isSuccess: rewardsQuery.isSuccess,
     formattedAmount: rewardsQuery.data
       ? formatNumber(Number(rewardsQuery.data), 2)
-      : '—',
+      : '0',
   };
 
   const totalStakedBalance = {
     amount: `${Number(stakedBalanceQuery.data ?? 0)}`,
     formattedAmount: stakedBalanceQuery.isSuccess
       ? formatNumber(Number(stakedBalanceQuery.data ?? 0), 2)
-      : '—',
+      : '0',
   };
 
   return {
