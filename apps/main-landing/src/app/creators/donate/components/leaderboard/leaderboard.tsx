@@ -4,6 +4,7 @@ import { Hex } from 'viem';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
+import { Button } from '@idriss-xyz/ui/button';
 
 import { IDRISS_SCENE_STREAM_2 } from '@/assets';
 
@@ -163,10 +164,22 @@ export const Leaderboard = ({
                   );
                 })}
                 {leaderboard.length === 0 && (
-                  <div className="flex min-h-96 w-full items-center justify-center">
-                    <p className="text-center text-heading6 uppercase text-neutral-900">
+                  <div className="mx-auto flex min-h-[694px] w-[477px] flex-col items-center justify-center gap-4">
+                    <span className="text-center text-heading6 uppercase text-neutral-900">
                       No donors yet
-                    </p>
+                    </span>
+                    <span className="mx-8 text-center text-display5 uppercase gradient-text">
+                      Share your page to get your first donor
+                    </span>
+                    <Button
+                      size="medium"
+                      intent="secondary"
+                      onClick={() => {return console.log('Not implemented yet')}} // TODO: Add functionality
+                      suffixIconName="IdrissArrowRight"
+                      className="uppercase"
+                    >
+                      Copy link
+                    </Button>
                   </div>
                 )}
               </ScrollArea>
