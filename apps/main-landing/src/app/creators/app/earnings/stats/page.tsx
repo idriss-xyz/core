@@ -237,7 +237,7 @@ export default function EarningsStats() {
       ) : (
         <>
           <Card className="col-span-3 p-0">
-            <div className="relative h-[224px] overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)]">
+            <div className="relative h-[224px] overflow-hidden rounded-2xl bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)]">
               <img
                 alt="lines"
                 src={backgroundLines2.src}
@@ -246,12 +246,12 @@ export default function EarningsStats() {
               <img
                 alt="idriss stream"
                 src={IDRISS_SCENE_STREAM_4.src}
-                className="absolute top-[-108px] w-full"
+                className="absolute top-[-103px] w-full"
               />
               <img
                 alt="idriss coin"
                 src={IDRISS_COIN.src}
-                className="absolute left-1/2 top-0 w-[198px] -translate-x-1/2"
+                className="absolute left-1/2 top-1 w-[198px] -translate-x-1/2"
               />
             </div>
           </Card>
