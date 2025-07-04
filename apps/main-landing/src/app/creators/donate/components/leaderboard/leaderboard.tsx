@@ -174,7 +174,9 @@ export const Leaderboard = ({
                     <Button
                       size="medium"
                       intent="secondary"
-                      onClick={() => {return console.log('Not implemented yet')}} // TODO: Add functionality
+                      onClick={() => {
+                        return console.log('Not implemented yet');
+                      }} // TODO: Add functionality
                       suffixIconName="IdrissArrowRight"
                       className="uppercase"
                     >

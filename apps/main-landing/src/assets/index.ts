@@ -8,6 +8,7 @@ export { default as TEST_MESSAGE_SOUND } from './test-donation-message.mp3';
 export { default as IDRISS_COIN } from './idriss-coin.png';
 export { default as IDRISS_SCENE_STREAM } from './idriss-scene-stream.png';
 export { default as IDRISS_SCENE_STREAM_2 } from './idriss-scene-stream-2.png';
+export { default as IDRISS_SCENE_STREAM_4 } from './idriss-scene-stream-4.png';
 export { default as IDRISS_FALING_COINS } from './idriss-falling-coins.png';
 export { default as IDRISS_SCENE_STREAM_SHORT } from './idriss-scene-stream-short.png';
 export { default as IDRISS_SCENE_STREAM_SHORT_2 } from './idriss-scene-stream-short-2.png';
