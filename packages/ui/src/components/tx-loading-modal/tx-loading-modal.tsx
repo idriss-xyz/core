@@ -36,7 +36,12 @@ interface Properties {
   confirmationMessage?: string;
 }
 
-export const TxLoadingModal = ({ show, heading, className, confirmationMessage }: Properties) => {
+export const TxLoadingModal = ({
+  show,
+  heading,
+  className,
+  confirmationMessage,
+}: Properties) => {
   if (!show) return null;
 
   return createPortal(
@@ -47,7 +52,10 @@ export const TxLoadingModal = ({ show, heading, className, confirmationMessage }
           className,
         )}
       >
-        <TxLoadingContent heading={heading} confirmationMessage={confirmationMessage} />
+        <TxLoadingContent
+          heading={heading}
+          confirmationMessage={confirmationMessage}
+        />
       </div>
     </div>,
     document.body,
