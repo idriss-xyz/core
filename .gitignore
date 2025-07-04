@@ -2,6 +2,7 @@
 .vscode/
 build/
 node_modules/
+rsa_test/
 .DS_STORE
 tailwind.build.css
 *storybook.log
