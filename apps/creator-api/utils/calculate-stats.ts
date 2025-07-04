@@ -22,18 +22,27 @@ export function calculateDonationLeaderboard(
       if (!acc[fromAddress]) {
         acc[fromAddress] = {
           totalAmount: 0,
+          donationCount: 0,
+          donorSince: donation.timestamp,
           donorMetadata: donation.fromUser,
           displayName: donation.fromUser.displayName!,
           avatarUrl: donation.fromUser.avatarUrl!,
         };
       }
       acc[fromAddress].totalAmount += donation.tradeValue;
+      acc[fromAddress].donationCount += 1;
+      acc[fromAddress].donorSince = Math.min(
+        acc[fromAddress].donorSince,
+        donation.timestamp,
+      );
       return acc;
     },
     {} as Record<
       string,
       {
         totalAmount: number;
+        donationCount: number;
+        donorSince: number;
         donorMetadata: DonationData['fromUser'];
         displayName: string;
         avatarUrl: string;
@@ -49,6 +58,8 @@ export function calculateDonationLeaderboard(
       displayName: group.displayName,
       avatarUrl: group.avatarUrl,
       totalAmount: group.totalAmount,
+      donationCount: group.donationCount,
+      donorSince: group.donorSince,
     }),
   );
 

@@ -109,12 +109,11 @@ interface DonationData {
   amountRaw: string;
 }
 
-interface LeaderboardStats {
-  address: Hex;
-  avatarUrl: string;
-  displayName: string;
+export interface LeaderboardStats extends DonationUser {
   totalAmount: number;
   donateLink?: string;
+  donorSince: number;
+  donationCount: number;
 }
 
 interface DonationUser {

@@ -4,8 +4,10 @@ import { Hex } from 'viem';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
+import { Button } from '@idriss-xyz/ui/button';
 
-import { default as IDRISS_SCENE_STREAM_2 } from '../../../../../assets/idriss-scene-stream-2.png';
+import { IDRISS_SCENE_STREAM_2 } from '@/assets';
+
 import { WidgetVariants } from '../../../../../../../twitch-extension/src/app/types';
 import { LeaderboardStats, DonateContentValues } from '../../types';
 
@@ -48,6 +50,7 @@ export const Leaderboard = ({
   const isTwitchPanel = variant === 'panel';
   const isTwitchOverlay = variant === 'videoOverlay';
   const isTwitchComponent = variant === 'videoComponent';
+  const isCreatorsDashboard = variant === 'creatorsDashboard';
 
   if (!address.isFetching && !address.isValid) {
     return (
@@ -90,25 +93,43 @@ export const Leaderboard = ({
       className={classes(
         baseClassName,
         isTwitchExtension && 'w-[360px]',
+        isCreatorsDashboard && 'w-full',
         className,
       )}
     >
       <div
         className={classes(
-          'relative flex min-h-[100px] w-full items-center justify-center overflow-hidden',
+          'relative min-h-[100px] w-full overflow-hidden',
           isTwitchExtension && 'min-h-[85px]',
+          isCreatorsDashboard && 'min-h-[180px] w-full',
         )}
       >
         <img
           alt=""
           src={IDRISS_SCENE_STREAM_2.src}
-          className="absolute -left-5 -top-1 h-[110px] w-[640px] max-w-none object-cover"
+          className={classes(
+            'absolute -left-5 -top-1 h-[110px] w-[640px] max-w-none object-cover',
+            isCreatorsDashboard && 'inset-0 h-full w-full',
+          )}
         />
         <span className="absolute left-0 top-0 size-full bg-black/20" />
 
-        <h1 className="relative z-1 mx-12 my-6 text-center text-heading4 uppercase text-white">
+        <h1 className="relative z-1 mx-12 mb-4 mt-12 text-center text-heading4 uppercase text-white">
           Top donors
         </h1>
+        {isCreatorsDashboard && (
+          <div className="relative mx-auto flex w-[290px] gap-1 font-medium">
+            <span className="flex w-[94px] justify-center rounded-full border border-mint-400 bg-mint-400 p-1.5">
+              All time
+            </span>
+            <span className="flex w-[94px] justify-center rounded-full border border-mint-400 bg-white/80 p-1.5">
+              30 days
+            </span>
+            <span className="flex w-[94px] justify-center rounded-full border border-mint-400 bg-white/80 p-1.5">
+              7 days
+            </span>
+          </div>
+        )}
       </div>
 
       <div className="flex w-full flex-col">
@@ -123,6 +144,49 @@ export const Leaderboard = ({
           </span>
         ) : (
           <ul className={classes(isTwitchPanel && 'min-h-[345px]')}>
+            {isCreatorsDashboard && (
+              <ScrollArea className="max-h-[694px] w-full overflow-y-auto rounded-b-md rounded-t-none bg-white text-black transition-all duration-500 [scrollbar-color:gray_#efefef] [scrollbar-width:thin]">
+                {leaderboard.map((item, index) => {
+                  return (
+                    <LeaderboardItem
+                      donorRank={index}
+                      onDonorClick={onDonorClick}
+                      donorDetails={{
+                        address: item.address,
+                        avatarUrl: item.avatarUrl,
+                        displayName: item.displayName,
+                      }}
+                      donateAmount={item.totalAmount}
+                      donorSince={item.donorSince}
+                      donationCount={item.donationCount}
+                      key={`${item.totalAmount}${item.address}`}
+                    />
+                  );
+                })}
+                {leaderboard.length === 0 && (
+                  <div className="mx-auto flex min-h-[694px] w-[477px] flex-col items-center justify-center gap-4">
+                    <span className="text-center text-heading6 uppercase text-neutral-900">
+                      No donors yet
+                    </span>
+                    <span className="mx-8 text-center text-display5 uppercase gradient-text">
+                      Share your page to get your first donor
+                    </span>
+                    <Button
+                      size="medium"
+                      intent="secondary"
+                      onClick={() => {
+                        return console.log('Not implemented yet');
+                      }} // TODO: Add functionality
+                      suffixIconName="IdrissArrowRight"
+                      className="uppercase"
+                    >
+                      Copy link
+                    </Button>
+                  </div>
+                )}
+              </ScrollArea>
+            )}
+
             {isTwitchPanel && (
               <>
                 {leaderboard.map((item, index) => {

@@ -81,6 +81,8 @@ export interface LeaderboardStats {
   displayName: string;
   totalAmount: number;
   donateLink?: string;
+  donorSince?: number;
+  donationCount?: number;
 }
 
 export interface ZapperNode {
