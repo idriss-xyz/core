@@ -17,7 +17,12 @@ import {
 import Image from 'next/image';
 import { Button } from '@idriss-xyz/ui/button';
 
-import { IDRISS_COIN, IDRISS_ICON_CIRCLE, IDRISS_SCENE_STREAM_4 } from '@/assets';
+import {
+  backgroundLines2,
+  IDRISS_COIN,
+  IDRISS_ICON_CIRCLE,
+  IDRISS_SCENE_STREAM_4,
+} from '@/assets';
 import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
 import { DonateHistoryItem } from '@/app/creators/donate/components/donate-history/donate-history-item';
 
@@ -76,8 +81,7 @@ export default function EarningsStats() {
 
   return (
     <div className="grid grid-cols-3 gap-4">
-
-      { sortedDonations.length > 0 ? (
+      {sortedDonations.length > 0 ? (
         <>
           <Card className="col-span-1">
             <CardHeader>Transactions</CardHeader>
@@ -117,7 +121,10 @@ export default function EarningsStats() {
             <CardHeader>Total earnings</CardHeader>
             <CardBody>
               <span className="text-heading3 text-black">$920</span>
-              <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+              <ChartContainer
+                config={chartConfig}
+                className="min-h-[200px] w-full"
+              >
                 <BarChart accessibilityLayer data={chartData}>
                   <XAxis
                     dataKey="month"
@@ -230,37 +237,44 @@ export default function EarningsStats() {
       ) : (
         <>
           <Card className="col-span-3 p-0">
-            <div className='h-[224px] relative overflow-hidden'>
+            <div className="relative h-[224px] overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)]">
+              <img
+                alt="lines"
+                src={backgroundLines2.src}
+                className="absolute w-full opacity-40"
+              />
               <img
                 alt="idriss stream"
                 src={IDRISS_SCENE_STREAM_4.src}
-                className="absolute w-full top-[-112px] "/>
+                className="absolute top-[-108px] w-full"
+              />
               <img
                 alt="idriss coin"
                 src={IDRISS_COIN.src}
-                className="w-[198px] mx-auto "/>
+                className="absolute left-1/2 top-0 w-[198px] -translate-x-1/2"
+              />
             </div>
           </Card>
           <Card className="col-span-3">
             <div className="mx-auto flex min-h-[694px] w-[477px] flex-col items-center justify-center gap-4">
-                  <span className="text-center text-heading6 uppercase text-neutral-900">
-                    No donations yet
-                  </span>
-                  <span className="mx-8 text-center text-display5 uppercase gradient-text">
-                    Share your page to get your first donation
-                  </span>
-                  <Button
-                    size="medium"
-                    intent="secondary"
-                    onClick={() => {
-                      return console.log('Not implemented yet');
-                    }} // TODO: Add functionality
-                    suffixIconName="IdrissArrowRight"
-                    className="uppercase"
-                  >
-                    Copy link
-                  </Button>
-                </div>
+              <span className="text-center text-heading6 uppercase text-neutral-900">
+                No donations yet
+              </span>
+              <span className="mx-8 text-center text-display5 uppercase gradient-text">
+                Share your page to get your first donation
+              </span>
+              <Button
+                size="medium"
+                intent="secondary"
+                onClick={() => {
+                  return console.log('Not implemented yet');
+                }} // TODO: Add functionality
+                suffixIconName="IdrissArrowRight"
+                className="uppercase"
+              >
+                Copy link
+              </Button>
+            </div>
           </Card>
         </>
       )}
