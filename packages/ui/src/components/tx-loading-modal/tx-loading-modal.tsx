@@ -1,7 +1,8 @@
-import { Spinner } from '@idriss-xyz/ui/spinner';
-import { classes } from '@idriss-xyz/ui/utils';
 import { ReactNode } from 'react';
 import { createPortal } from 'react-dom';
+
+import { Spinner } from '../spinner';
+import { classes } from '../../utils';
 
 interface Properties {
   show: boolean;

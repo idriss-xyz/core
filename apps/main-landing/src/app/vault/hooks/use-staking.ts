@@ -16,12 +16,12 @@ import {
   STAKER_ADDRESS,
   StakingABI,
 } from '@idriss-xyz/constants';
+import { formatNumber } from '@idriss-xyz/utils';
 
 import { useGetStakedBalance } from '@/app/vault/commands/get-staked-balance';
 import { useGetBonusStakedBalance } from '@/app/vault/commands/get-bonus-staked-balance';
 import { useGetUnstakedBalance } from '@/app/vault/commands/get-unstaked-balance';
 import { useGetRewards } from '@/app/vault/commands/get-rewards';
-import { formatNumber } from '@/app/claim/components/claim/components/idriss-user-criteria-description';
 import { ERC20_ABI } from '@/app/creators/donate/constants';
 import { IDRISS_TOKEN_ADDRESS } from '@/components/token-section/constants';
 

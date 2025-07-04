@@ -7,8 +7,8 @@ import { TOKEN_TERMS_AND_CONDITIONS_LINK } from '@idriss-xyz/constants';
 import { Controller, useForm } from 'react-hook-form';
 import { RadialGradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { GeoConditionalButton } from '@idriss-xyz/ui/geo-conditional-button';
+import { TxLoadingModal } from '@idriss-xyz/ui/tx-loading-modal';
 
-import { TxLoadingModal } from '@/app/claim/components/tx-loading-modal/tx-loading-modal';
 import { useStaking } from '@/app/vault/hooks/use-staking';
 import { TxLoadingHeadingParameters } from '@/app/vault/types';
 

@@ -6,8 +6,8 @@ import { Checkbox } from '@idriss-xyz/ui/checkbox';
 import { Link } from '@idriss-xyz/ui/link';
 import { TOKEN_TERMS_AND_CONDITIONS_LINK } from '@idriss-xyz/constants';
 import { GeoConditionalButton } from '@idriss-xyz/ui/geo-conditional-button';
+import { TxLoadingModal } from '@idriss-xyz/ui/tx-loading-modal';
 
-import { TxLoadingModal } from '@/app/claim/components/tx-loading-modal/tx-loading-modal';
 import { useStaking } from '@/app/vault/hooks/use-staking';
 
 import { TxLoadingHeadingParameters } from '../types';
