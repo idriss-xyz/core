@@ -10,11 +10,13 @@ import { restrictedCountries } from './constants';
 type GeoConditionalButtonProperties = {
   defaultButton: React.ReactNode | React.ReactNode[]; // Support single or multiple buttons
   additionalClasses?: string;
+  className?: string;
 };
 
 export const GeoConditionalButton: React.FC<GeoConditionalButtonProperties> = ({
   defaultButton,
   additionalClasses = 'md:flex-row',
+  className,
 }) => {
   const { country, loading } = useGeoLocation();
 
@@ -27,10 +29,7 @@ export const GeoConditionalButton: React.FC<GeoConditionalButtonProperties> = ({
   const isRestricted = !country || restrictedCountries.includes(country);
 
   if (isRestricted) {
-    if (Array.isArray(defaultButton)) {
-      return <BlockedButton />;
-    }
-    return <BlockedButton />;
+    return <BlockedButton className={className} />;
   }
 
   if (Array.isArray(defaultButton)) {

@@ -6,8 +6,8 @@ import { Checkbox } from '@idriss-xyz/ui/checkbox';
 import { Link } from '@idriss-xyz/ui/link';
 import { TOKEN_TERMS_AND_CONDITIONS_LINK } from '@idriss-xyz/constants';
 import { GeoConditionalButton } from '@idriss-xyz/ui/geo-conditional-button';
+import { TxLoadingModal } from '@idriss-xyz/ui/tx-loading-modal';
 
-import { TxLoadingModal } from '@/app/claim/components/tx-loading-modal/tx-loading-modal';
 import { useStaking } from '@/app/vault/hooks/use-staking';
 
 import { TxLoadingHeadingParameters } from '../types';
@@ -30,7 +30,9 @@ export const StakeTabContent = () => {
     <>
       <TxLoadingModal
         show={stake.isPending}
-        heading={<TxLoadingHeading amount={stake.pendingAmount} />}
+        heading={
+          <TxLoadingHeading amount={stake.pendingAmount} action="Locking" />
+        }
       />
 
       <Form className="w-full" onSubmit={handleSubmit(handleStake)}>
@@ -110,28 +112,26 @@ export const StakeTabContent = () => {
             );
           }}
         />
-
-        <div className="relative">
-          <GeoConditionalButton
-            defaultButton={
-              <Button
-                intent="primary"
-                size="large"
-                className="mt-4 w-full lg:mt-6"
-                type="submit"
-                disabled={
-                  !watch('termsChecked') ||
-                  ((Number(watch('amount')) <= 0 ||
-                    watch('amount') === undefined ||
-                    Number(watch('amount')) > Number(unstakedBalance.amount)) &&
-                    account.isConnected)
-                }
-              >
-                {account.isConnected ? 'LOCK' : 'LOG IN'}
-              </Button>
-            }
-          />
-        </div>
+        <GeoConditionalButton
+          defaultButton={
+            <Button
+              intent="primary"
+              size="large"
+              className="mt-4 w-full lg:mt-6"
+              type="submit"
+              disabled={
+                !watch('termsChecked') ||
+                ((Number(watch('amount')) <= 0 ||
+                  watch('amount') === undefined ||
+                  Number(watch('amount')) > Number(unstakedBalance.amount)) &&
+                  account.isConnected)
+              }
+            >
+              {account.isConnected ? 'LOCK' : 'LOG IN'}
+            </Button>
+          }
+          className="mt-4 w-full lg:mt-6 lg:w-full"
+        />
       </Form>
     </>
   );

@@ -86,6 +86,11 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: '/claim',
+        destination: '/vault',
+        permanent: true,
+      },
+      {
         source: '/docs',
         destination: 'https://docs.idriss.xyz/',
         basePath: false,
