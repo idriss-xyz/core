@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
-import { formatEther, parseEther } from 'viem';
+import { formatEther } from 'viem';
 import { clientBase } from '@idriss-xyz/blockchain-clients';
 
-import { loadExistingEvents } from '@/utils';
 import { IDRISS_TOKEN_ADDRESS } from '@/components/token-section/constants';
 import { ERC20_ABI } from '@/app/creators/donate/constants';
 import {
