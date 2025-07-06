@@ -71,32 +71,34 @@ export const VaultContent = () => {
                 <span className="pb-4 text-label4 text-neutralGreen-700 lg:text-label3">
                   VAULT BENEFITS
                 </span>
-                <div className="flex gap-1 lg:gap-2">
-                  <Icon name="PiggyBank" size={24} className="text-gray-300" />
+                <div className="flex gap-1.5 lg:gap-2.5">
+                  <div className="flex size-6 items-center justify-center">
+                    <Icon
+                      name="PiggyBank"
+                      size={24}
+                      className="text-gray-300"
+                    />
+                  </div>
                   <span className="text-body4 text-neutralGreen-700 lg:text-body3">
                     Earn <span className="gradient-text">12% APR</span> on
                     locked tokens
                   </span>
                 </div>
                 <div className="flex gap-1.5 lg:gap-2.5">
-                  <Icon
-                    name="Gem"
-                    size={24}
-                    className="ml-[3px] text-gray-300 lg:ml-[2px] lg:size-[38px]"
-                  />
+                  <div className="flex size-6 items-center justify-center">
+                    <Icon name="Gem" size={24} className="text-gray-300" />
+                  </div>
                   <span className="text-body4 text-neutralGreen-700 lg:text-body3">
                     Lock <span className="gradient-text">10,000 $IDRISS</span>{' '}
-                    or more to access premium features
+                    or more to unlock new premium features
                   </span>
                 </div>
                 <div className="flex gap-1.5 lg:gap-2.5">
-                  <Icon
-                    name="PieChart"
-                    size={24}
-                    className="ml-[3px] text-gray-300 lg:size-[36px]"
-                  />
+                  <div className="flex size-6 shrink-0 items-center justify-center">
+                    <Icon name="PieChart" size={20} className="text-gray-300" />
+                  </div>
                   <span className="text-body4 text-neutralGreen-700 lg:text-body3">
-                    Tap into decentralized revenue sharing from IDRISS apps
+                    Access to decentralized revenue sharing in the future
                   </span>
                 </div>
               </div>
