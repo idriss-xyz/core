@@ -19,6 +19,8 @@ import refetchENSRouter from './routes/force-refresh-ens';
 import textToSpeechRouter from './routes/text-to-speech';
 import textToSfxRouter from './routes/text-to-sfx';
 import donationEffectsRouter from './routes/donation-effects';
+import uploadRouter from './routes/upload';
+import audioRouter from './routes/audio';
 import cors from 'cors';
 import { initializeDatabase } from './db/database';
 
@@ -48,6 +50,8 @@ app.use('/force-refresh-ens', refetchENSRouter);
 app.use('/text-to-speech', textToSpeechRouter);
 app.use('/donation-effects', donationEffectsRouter);
 app.use('/text-to-sfx', textToSfxRouter);
+app.use('/upload', uploadRouter);
+app.use('/audio', audioRouter);
 
 const HOST = process.env.HOST;
 const PORT = Number(process.env.PORT) || 4000;
