@@ -62,7 +62,7 @@ export const VaultContent = () => {
               borderWidth={1}
               borderRadius={36}
             />
-            <div className="lg:w-[400px]">
+            <div className="lg:w-[460px]">
               <Tabs items={tabItems} />
             </div>
             <span className="my-4 block h-px w-full bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] opacity-50 lg:mx-10 lg:my-0 lg:mt-6 lg:h-auto lg:w-px" />
