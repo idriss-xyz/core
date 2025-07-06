@@ -85,7 +85,7 @@ export const UnstakeTabContent = () => {
 
         <div className="flex flex-col gap-y-2 rounded-2xl bg-white/20 p-6">
           <div className="flex flex-row items-center justify-between">
-            <p className="text-body4 text-neutralGreen-500">Total balance</p>
+            <p className="text-body4 text-neutralGreen-500">Locked balance</p>
             <p className="text-label3 text-neutralGreen-700">
               {stakedBalance.formattedAmount} IDRISS
             </p>
