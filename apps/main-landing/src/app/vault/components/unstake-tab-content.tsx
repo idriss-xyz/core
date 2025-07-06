@@ -103,7 +103,7 @@ export const UnstakeTabContent = () => {
                       className="text-neutralGreen-500"
                     />
                   </TooltipTrigger>
-                  <TooltipContent className="w-[230px] text-pretty bg-black text-left text-white">
+                  <TooltipContent className="w-[225px] text-pretty bg-black text-left text-white">
                     <p className="text-label6">
                       12% APR distributed every 6 months.<br />
                       First payout: July 6, 2025.
