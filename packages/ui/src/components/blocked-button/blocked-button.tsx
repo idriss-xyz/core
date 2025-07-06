@@ -17,6 +17,7 @@ type Properties = {
   children?: ReactNode;
   buttonClasses?: string;
   tooltipClasses?: string;
+  className?: string;
 };
 
 export const BlockedButton = ({
@@ -25,6 +26,7 @@ export const BlockedButton = ({
   iconName = 'GlobeIcon',
   buttonText = 'Unavailable',
   children = <DefaultTooltipContent />,
+  className,
 }: Properties) => {
   return (
     <TooltipProvider delayDuration={400}>
@@ -37,6 +39,7 @@ export const BlockedButton = ({
             className={classes(
               'w-full text-balance uppercase lg:w-auto',
               buttonClasses,
+              className,
             )}
             aria-disabled
             disabled
@@ -57,8 +60,10 @@ export const BlockedButton = ({
 const DefaultTooltipContent = () => {
   return (
     <span>
-      Participation is unavailable to individuals or companies who are residents
-      of, are located in, are incorporated in, or have a registered agent in a
+      Participation is unavailable to individuals or companies who are residents{' '}
+      <br />
+      of, are located in, are incorporated in, or have a registered agent in a{' '}
+      <br />
       restricted territory. See our{' '}
       <a
         href={TOKEN_TERMS_AND_CONDITIONS_LINK}

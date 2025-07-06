@@ -9,6 +9,7 @@ export {
   getChainById,
   isUnrecognizedChainError,
   formatBigNumber,
+  formatNumber,
   getDefaultBlockExplorerUrl,
   getTransactionUrls,
   getSafeNumber,

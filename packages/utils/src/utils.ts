@@ -3,6 +3,13 @@ import { Hex } from 'viem';
 
 import { CHAIN, NATIVE_COIN_ADDRESS } from '../../constants/src';
 
+export const formatNumber = (value: number | undefined, digits = 0) => {
+  return new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: value && value % 1 !== 0 ? digits : 0,
+    maximumFractionDigits: digits,
+  }).format(value ?? 0);
+};
+
 export const formatBigNumber = (number: number | string): string => {
   if (Number(number) < 1000) {
     return number.toString();
