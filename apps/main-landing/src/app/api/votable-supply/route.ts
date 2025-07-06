@@ -132,18 +132,7 @@ export async function GET() {
       airdropBalance -
       amount0;
 
-    const { events } = loadExistingEvents();
-    const bonusClaimTotal = events
-      .filter((event) => {
-        return event.bonus;
-      })
-      .reduce((accumulator, event) => {
-        return accumulator + parseEther(event.total ?? '0');
-      }, 0n);
-
-    const totalCirculatingSupplyAdjusted =
-      totalCirculatingSupply + bonusClaimTotal * 2n;
-    const formattedBalance = formatEther(totalCirculatingSupplyAdjusted);
+    const formattedBalance = formatEther(totalCirculatingSupply);
     return NextResponse.json(
       { result: formattedBalance },
       { status: 200, headers: DEFAULT_HEADERS },
