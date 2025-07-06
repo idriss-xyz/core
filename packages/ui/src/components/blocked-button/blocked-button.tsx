@@ -60,8 +60,10 @@ export const BlockedButton = ({
 const DefaultTooltipContent = () => {
   return (
     <span>
-      Participation is unavailable to individuals or companies who are residents
-      of, are located in, are incorporated in, or have a registered agent in a
+      Participation is unavailable to individuals or companies who are residents{' '}
+      <br />
+      of, are located in, are incorporated in, or have a registered agent in a{' '}
+      <br />
       restricted territory. See our{' '}
       <a
         href={TOKEN_TERMS_AND_CONDITIONS_LINK}

@@ -457,10 +457,10 @@ export const DonateForm = ({ className }: Properties) => {
                         <TooltipTrigger asChild>
                           <Icon name="HelpCircle" size={15} />
                         </TooltipTrigger>
-                        <TooltipContent className="w-[300px] bg-black text-center text-white">
+                        <TooltipContent className="bg-black text-center text-white">
                           <p className="text-label6">
-                            Type what you want to hear. AI will turn it into a
-                            sound effect and replace the default sound.
+                            Type what you want to hear. AI will turn it into{' '}
+                            <br />a sound effect and replace the default sound.
                           </p>
                         </TooltipContent>
                       </Tooltip>
