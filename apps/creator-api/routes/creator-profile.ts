@@ -144,7 +144,7 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
     creator.name = creatorData.name;
     creator.displayName = creatorData.displayName;
     creator.profilePictureUrl = creatorData.profilePictureUrl;
-    creator.dynamicId = creatorData.dynamicId;
+    creator.privyId = creatorData.privyId;
     creator.donationUrl = `${CREATORS_LINK}/${creatorData.name}`;
     creator.obsUrl = `${CREATORS_LINK}/obs/${creatorData.name}`;
 
@@ -200,7 +200,7 @@ router.patch(
       res.status(400).json({ errors: errors.array() });
       return;
     }
-    if (!req.user) {
+    if (!req.user?.id) {
       res.status(401).json({ error: 'Unauthorized' });
       return;
     }
@@ -222,6 +222,13 @@ router.patch(
         return;
       }
 
+      if (creator.privyId !== req.user.id) {
+        res
+          .status(403)
+          .json({ error: 'Forbidden: You can only edit your own profile' });
+        return;
+      }
+
       const {
         minimumAlertAmount,
         minimumTTSAmount,
@@ -233,6 +240,7 @@ router.patch(
         tokens = [],
         networks = [],
         customBadWords,
+        primaryAddress,
         ...creatorData
       } = req.body;
 
@@ -361,9 +369,11 @@ router.patch(
           networks: updatedNetworkEntities,
         },
       });
+      return;
     } catch (error) {
       console.error('Error updating creator profile:', error);
       res.status(500).json({ error: 'Failed to update creator profile' });
+      return;
     }
   },
 );
