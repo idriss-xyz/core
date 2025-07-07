@@ -134,6 +134,9 @@
         "ELEVENLABS_API_KEY"
       ]
     },
+    "@idriss-xyz/creator-api#test": {
+      "cache": false
+    },
     "@idriss-xyz/twitch-extension#build": {
       "inputs": [
         "$TURBO_DEFAULT$"
