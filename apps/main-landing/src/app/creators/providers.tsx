@@ -24,7 +24,7 @@ export const Providers = ({ children }: Properties) => {
       <WithPortal>
         <NiceModal.Provider>
           <PrivyProvider
-            appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID ?? ''}
+            appId={process.env.PRIVY_APP_ID ?? ''}
             config={{
               appearance: {
                 theme: 'light',

@@ -11,7 +11,7 @@ const TWITCH_CLIENT_SECRET = process.env.TWITCH_CLIENT_SECRET;
 // This is the callback URL that Twitch will call on our backend
 const API_CALLBACK_URI = `${CREATOR_API_URL}/auth/twitch/callback`;
 // This is the callback URL on our frontend that the backend will redirect to
-const FRONTEND_CALLBACK_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/creators/auth/callback`;
+const FRONTEND_CALLBACK_URL = `${process.env.BASE_URL}/creators/auth/callback`;
 
 // Step 1: Redirect user to Twitch for authorization
 router.get('/twitch', (req, res) => {
@@ -56,7 +56,6 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
       },
     });
 
-
     const twitchUser = userResponse.data.data[0];
     if (!twitchUser) {
       throw new Error('Failed to fetch user profile from Twitch.');
@@ -83,7 +82,6 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
       displayName: twitchUser.display_name,
       pfp: twitchUser.profile_image_url,
     });
-
 
     res.redirect(
       `${FRONTEND_CALLBACK_URL}?${frontendRedirectParams.toString()}`,
