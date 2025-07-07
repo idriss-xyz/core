@@ -143,26 +143,49 @@ export const Leaderboard = ({
             <Spinner className="size-16 text-mint-600" />
           </span>
         ) : (
-          <ul className={classes(isTwitchPanel && 'min-h-[345px]')}>
+          <div className={classes(isTwitchPanel && 'min-h-[345px]')}>
             {isCreatorsDashboard && (
               <ScrollArea className="max-h-[694px] w-full overflow-y-auto rounded-b-md rounded-t-none bg-white text-black transition-all duration-500 [scrollbar-color:gray_#efefef] [scrollbar-width:thin]">
-                {leaderboard.map((item, index) => {
-                  return (
-                    <LeaderboardItem
-                      donorRank={index}
-                      onDonorClick={onDonorClick}
-                      donorDetails={{
-                        address: item.address,
-                        avatarUrl: item.avatarUrl,
-                        displayName: item.displayName,
-                      }}
-                      donateAmount={item.totalAmount}
-                      donorSince={item.donorSince}
-                      donationCount={item.donationCount}
-                      key={`${item.totalAmount}${item.address}`}
-                    />
-                  );
-                })}
+                <table className="w-full table-auto border-collapse text-left">
+                  <thead className="bg-neutral-100 text-label6">
+                    <tr>
+                      <th scope="col" className="px-4 py-3">
+                        #
+                      </th>
+                      <th scope="col" className="px-4 py-3">
+                        Donor
+                      </th>
+                      <th scope="col" className="px-4 py-3">
+                        Total donated
+                      </th>
+                      <th scope="col" className="px-4 py-3">
+                        Donations
+                      </th>
+                      <th scope="col" className="px-4 py-3">
+                        Donor since
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {leaderboard.map((item, index) => {
+                      return (
+                        <LeaderboardItem
+                          donorRank={index}
+                          onDonorClick={onDonorClick}
+                          donorDetails={{
+                            address: item.address,
+                            avatarUrl: item.avatarUrl,
+                            displayName: item.displayName,
+                          }}
+                          donateAmount={item.totalAmount}
+                          donorSince={item.donorSince}
+                          donationCount={item.donationCount}
+                          key={`${item.totalAmount}${item.address}`}
+                        />
+                      );
+                    })}
+                  </tbody>
+                </table>
                 {leaderboard.length === 0 && (
                   <div className="mx-auto flex min-h-[694px] w-[477px] flex-col items-center justify-center gap-4">
                     <span className="text-center text-heading6 uppercase text-neutral-900">
@@ -188,110 +211,116 @@ export const Leaderboard = ({
             )}
 
             {isTwitchPanel && (
-              <>
-                {leaderboard.map((item, index) => {
-                  if (index > 4) return null;
+              <table className="w-full table-auto border-collapse">
+                <tbody>
+                  {leaderboard.map((item, index) => {
+                    if (index > 4) return null;
 
-                  return (
-                    <LeaderboardItem
-                      donorRank={index}
-                      className="py-4.5"
-                      isLastItem={index === MAX_DISPLAYED_ITEMS - 1}
-                      onDonorClick={onDonorClick}
-                      donorDetails={{
-                        address: item.address,
-                        avatarUrl: item.avatarUrl,
-                        displayName: item.displayName,
-                      }}
-                      donateAmount={item.totalAmount}
-                      isTwitchExtension={isTwitchExtension}
-                      key={`${item.totalAmount}${item.address}`}
+                    return (
+                      <LeaderboardItem
+                        donorRank={index}
+                        className="py-4.5"
+                        isLastItem={index === MAX_DISPLAYED_ITEMS - 1}
+                        onDonorClick={onDonorClick}
+                        donorDetails={{
+                          address: item.address,
+                          avatarUrl: item.avatarUrl,
+                          displayName: item.displayName,
+                        }}
+                        donateAmount={item.totalAmount}
+                        isTwitchExtension={isTwitchExtension}
+                        key={`${item.totalAmount}${item.address}`}
+                      />
+                    );
+                  })}
+
+                  {leaderboard.length <= MAX_DISPLAYED_ITEMS && (
+                    <LeaderboardItemPlaceholder
+                      hideBottomBorder
+                      amountToDisplay={MAX_DISPLAYED_ITEMS}
+                      donorRank={leaderboard.length}
+                      previousDonateAmount={
+                        leaderboard.at(-1)?.totalAmount ?? 1234
+                      }
                     />
-                  );
-                })}
-
-                {leaderboard.length <= MAX_DISPLAYED_ITEMS && (
-                  <LeaderboardItemPlaceholder
-                    hideBottomBorder
-                    amountToDisplay={MAX_DISPLAYED_ITEMS}
-                    donorRank={leaderboard.length}
-                    previousDonateAmount={
-                      leaderboard.at(-1)?.totalAmount ?? 1234
-                    }
-                  />
-                )}
-              </>
+                  )}
+                </tbody>
+              </table>
             )}
 
             {(isTwitchComponent || isTwitchOverlay) && (
-              <>
-                {leaderboard.map((item, index) => {
-                  if (index > 2) return null;
+              <table className="w-full table-auto border-collapse">
+                <tbody>
+                  {leaderboard.map((item, index) => {
+                    if (index > 2) return null;
 
-                  return (
-                    <LeaderboardItem
-                      donorRank={index}
-                      className="py-4.5"
-                      isLastItem={index === 3}
-                      onDonorClick={onDonorClick}
-                      donorDetails={{
-                        address: item.address,
-                        avatarUrl: item.avatarUrl,
-                        displayName: item.displayName,
-                      }}
-                      donateAmount={item.totalAmount}
-                      isTwitchExtension={isTwitchExtension}
-                      key={`${item.totalAmount}${item.address}`}
+                    return (
+                      <LeaderboardItem
+                        donorRank={index}
+                        className="py-4.5"
+                        isLastItem={index === 3}
+                        onDonorClick={onDonorClick}
+                        donorDetails={{
+                          address: item.address,
+                          avatarUrl: item.avatarUrl,
+                          displayName: item.displayName,
+                        }}
+                        donateAmount={item.totalAmount}
+                        isTwitchExtension={isTwitchExtension}
+                        key={`${item.totalAmount}${item.address}`}
+                      />
+                    );
+                  })}
+
+                  {leaderboard.length <= 3 && (
+                    <LeaderboardItemPlaceholder
+                      hideBottomBorder
+                      hideEncouragement
+                      amountToDisplay={3}
+                      donorRank={leaderboard.length}
+                      previousDonateAmount={
+                        leaderboard.at(-1)?.totalAmount ?? 1234
+                      }
                     />
-                  );
-                })}
-
-                {leaderboard.length <= 3 && (
-                  <LeaderboardItemPlaceholder
-                    hideBottomBorder
-                    hideEncouragement
-                    amountToDisplay={3}
-                    donorRank={leaderboard.length}
-                    previousDonateAmount={
-                      leaderboard.at(-1)?.totalAmount ?? 1234
-                    }
-                  />
-                )}
-              </>
+                  )}
+                </tbody>
+              </table>
             )}
 
             {!isTwitchExtension && (
-              <>
-                {leaderboard.map((item, index) => {
-                  if (index > MAX_DISPLAYED_ITEMS) return null;
+              <table className="w-full table-auto border-collapse">
+                <tbody>
+                  {leaderboard.map((item, index) => {
+                    if (index > MAX_DISPLAYED_ITEMS) return null;
 
-                  return (
-                    <LeaderboardItem
-                      donorRank={index}
-                      onDonorClick={onDonorClick}
-                      donorDetails={{
-                        address: item.address,
-                        avatarUrl: item.avatarUrl,
-                        displayName: item.displayName,
-                      }}
-                      donateAmount={item.totalAmount}
-                      key={`${item.totalAmount}${item.address}`}
+                    return (
+                      <LeaderboardItem
+                        donorRank={index}
+                        onDonorClick={onDonorClick}
+                        donorDetails={{
+                          address: item.address,
+                          avatarUrl: item.avatarUrl,
+                          displayName: item.displayName,
+                        }}
+                        donateAmount={item.totalAmount}
+                        key={`${item.totalAmount}${item.address}`}
+                      />
+                    );
+                  })}
+
+                  {leaderboard.length <= MAX_DISPLAYED_ITEMS + 1 && (
+                    <LeaderboardItemPlaceholder
+                      amountToDisplay={MAX_DISPLAYED_ITEMS + 1}
+                      donorRank={leaderboard.length}
+                      previousDonateAmount={
+                        leaderboard.at(-1)?.totalAmount ?? 1234
+                      }
                     />
-                  );
-                })}
-
-                {leaderboard.length <= MAX_DISPLAYED_ITEMS + 1 && (
-                  <LeaderboardItemPlaceholder
-                    amountToDisplay={MAX_DISPLAYED_ITEMS + 1}
-                    donorRank={leaderboard.length}
-                    previousDonateAmount={
-                      leaderboard.at(-1)?.totalAmount ?? 1234
-                    }
-                  />
-                )}
-              </>
+                  )}
+                </tbody>
+              </table>
             )}
-          </ul>
+          </div>
         )}
       </div>
 
@@ -365,39 +394,43 @@ export const LeaderboardStandalone = ({
 
         {leaderboard && !leaderboardLoading && !leaderboardError && (
           <ScrollArea className="max-h-[480px] overflow-y-auto transition-all duration-500">
-            <ul className="flex flex-col pr-4">
-              {leaderboard.map((leaderboardItem, index) => {
-                if (!leaderboardItem || index > 9) return null;
+            <table className="w-full table-auto border-collapse pr-4">
+              <tbody>
+                {leaderboard.map((leaderboardItem, index) => {
+                  if (!leaderboardItem || index > 9) return null;
 
-                const isLastItem =
-                  index === leaderboard.length - 1 || index === 9;
+                  const isLastItem =
+                    index === leaderboard.length - 1 || index === 9;
 
-                return (
-                  <LeaderboardItem
-                    donorRank={index}
-                    isLastItem={isLastItem}
-                    onDonorClick={onDonorClick}
-                    className="max-w-[344px] py-[23.75px]"
-                    donateAmount={leaderboardItem.totalAmount}
-                    donorDetails={{
-                      address: leaderboardItem.address,
-                      avatarUrl: leaderboardItem.avatarUrl,
-                      displayName: leaderboardItem.displayName,
-                    }}
-                    key={`${leaderboardItem.address}${leaderboardItem.totalAmount}`}
+                  return (
+                    <LeaderboardItem
+                      donorRank={index}
+                      isLastItem={isLastItem}
+                      onDonorClick={onDonorClick}
+                      className="max-w-[344px] py-[23.75px]"
+                      donateAmount={leaderboardItem.totalAmount}
+                      donorDetails={{
+                        address: leaderboardItem.address,
+                        avatarUrl: leaderboardItem.avatarUrl,
+                        displayName: leaderboardItem.displayName,
+                      }}
+                      key={`${leaderboardItem.address}${leaderboardItem.totalAmount}`}
+                    />
+                  );
+                })}
+
+                {leaderboard.length <= MAX_DISPLAYED_ITEMS && (
+                  <LeaderboardItemPlaceholder
+                    itemHeight={79}
+                    amountToDisplay={MAX_DISPLAYED_ITEMS}
+                    donorRank={leaderboard.length}
+                    previousDonateAmount={
+                      leaderboard.at(-1)?.totalAmount ?? 1234
+                    }
                   />
-                );
-              })}
-
-              {leaderboard.length <= MAX_DISPLAYED_ITEMS && (
-                <LeaderboardItemPlaceholder
-                  itemHeight={79}
-                  amountToDisplay={MAX_DISPLAYED_ITEMS}
-                  donorRank={leaderboard.length}
-                  previousDonateAmount={leaderboard.at(-1)?.totalAmount ?? 1234}
-                />
-              )}
-            </ul>
+                )}
+              </tbody>
+            </table>
           </ScrollArea>
         )}
       </div>

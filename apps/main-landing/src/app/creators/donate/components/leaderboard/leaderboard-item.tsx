@@ -88,17 +88,16 @@ export const LeaderboardItem = ({
   );
 
   return (
-    <li
+    <tr
       className={classes(
-        'grid grid-cols-[16px,1fr,64px] items-center gap-x-3.5 border-b px-5.5 py-[17.25px] text-body5',
+        'border-b text-body5',
         isLastItem ? 'border-b-transparent' : 'border-b-neutral-300',
-        donationCount && donorSince && 'grid grid-cols-[16px,1fr,1fr,1fr,84px]',
         className,
       )}
     >
-      <span className="text-neutral-600">{donorRank + 1}</span>
+      <td className="px-4 py-3 text-neutral-600">{donorRank + 1}</td>
 
-      <span className="flex items-center gap-x-1.5 overflow-hidden text-neutral-900">
+      <td className="flex items-center gap-x-1.5 overflow-hidden px-4 py-3 text-neutral-900">
         {avatarImage}
 
         <Link
@@ -115,9 +114,9 @@ export const LeaderboardItem = ({
         >
           {displayName ?? getShortWalletHex(donorDetails.address)}
         </Link>
-      </span>
+      </td>
 
-      <span>
+      <td className="px-4 py-3">
         $
         {donateAmount >= 0.01
           ? new Intl.NumberFormat('en-US', {
@@ -125,20 +124,20 @@ export const LeaderboardItem = ({
               maximumFractionDigits: 2,
             }).format(Number(donateAmount ?? 0))
           : '<0.01'}
-      </span>
+      </td>
 
-      {donationCount && <span>{donationCount}</span>}
+      {donationCount && <td className="px-4 py-3">{donationCount}</td>}
 
       {donorSince && (
-        <span>
+        <td className="px-4 py-3">
           {getTimeDifferenceString({
             text: 'ago',
             variant: 'short',
             timestamp: donorSince,
           })}
-        </span>
+        </td>
       )}
-    </li>
+    </tr>
   );
 };
 
