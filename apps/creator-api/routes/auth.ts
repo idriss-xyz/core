@@ -15,7 +15,6 @@ const FRONTEND_CALLBACK_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/creators/auth
 
 // Step 1: Redirect user to Twitch for authorization
 router.get('/twitch', (req, res) => {
-  console.log('Getting a call on auth/twitch');
   const authUrl = `https://id.twitch.tv/oauth2/authorize?${new URLSearchParams({
     client_id: TWITCH_CLIENT_ID!,
     redirect_uri: API_CALLBACK_URI,
@@ -28,7 +27,6 @@ router.get('/twitch', (req, res) => {
 // Step 2: Twitch redirects back to this backend endpoint with a code
 router.get('/twitch/callback', async (req: Request, res: Response) => {
   const { code } = req.query;
-  console.log('call on /callback', code);
 
   if (!code) {
     res.status(400).send('Error: No code provided from Twitch.');
@@ -49,7 +47,6 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
     );
 
     const { access_token } = tokenResponse.data;
-    console.log('access_token', access_token);
 
     // Step 4: Use the access token to get the Twitch user's profile
     const userResponse = await axios.get('https://api.twitch.tv/helix/users', {
@@ -59,13 +56,11 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
       },
     });
 
-    console.log('userResponse', userResponse);
 
     const twitchUser = userResponse.data.data[0];
     if (!twitchUser) {
       throw new Error('Failed to fetch user profile from Twitch.');
     }
-    console.log('twitchUser', twitchUser);
 
     // Step 5: Mint our own custom JWT. This is a short-lived "ticket" for Privy.
     // The 'sub' (subject) claim MUST be the user's unique ID from the auth provider.
@@ -89,7 +84,6 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
       pfp: twitchUser.profile_image_url,
     });
 
-    console.log('returning to url with param', frontendRedirectParams);
 
     res.redirect(
       `${FRONTEND_CALLBACK_URL}?${frontendRedirectParams.toString()}`,
