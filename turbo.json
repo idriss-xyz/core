@@ -17,7 +17,7 @@
         "PUBLIC_ACCESS_ENABLED",
         "CI",
         "CREATOR_LINKS_SECRET",
-        "PRIVY_APP_ID"
+        "NEXT_PUBLIC_PRIVY_APP_ID"
       ]
     },
     "@idriss-xyz/main-landing#start": {
@@ -31,7 +31,7 @@
         "PUBLIC_ACCESS_ENABLED",
         "CI",
         "CREATOR_LINKS_SECRET",
-        "PRIVY_APP_ID"
+        "NEXT_PUBLIC_PRIVY_APP_ID"
       ]
     },
     "@idriss-xyz/main-landing#dev": {
@@ -44,7 +44,7 @@
         "PUBLIC_ACCESS_ENABLED",
         "CI",
         "CREATOR_LINKS_SECRET",
-        "PRIVY_APP_ID"
+        "NEXT_PUBLIC_PRIVY_APP_ID"
       ]
     },
     "@idriss-xyz/extension#dev": {
