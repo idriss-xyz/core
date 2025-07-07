@@ -14,12 +14,6 @@ export function OAuthCallbackHandler() {
   const [authChecked, setAuthChecked] = useState(false);
 
   useEffect(() => {
-    console.log('OAuthCallbackHandler state:', {
-      ready,
-      authenticated,
-      authChecked,
-      hasCreator: !!creator,
-    });
     // This effect will now correctly wait for the authenticated state to be true.
     // It will re-run when `authenticated` changes from false to true.
     if (!ready) {
@@ -59,8 +53,6 @@ export function OAuthCallbackHandler() {
           walletAddress,
         );
 
-        console.log('existingCreator', existingCreator);
-
         if (existingCreator) {
           setCreator(existingCreator);
         } else {
@@ -83,15 +75,11 @@ export function OAuthCallbackHandler() {
             newCreatorName = twitchInfo.name;
             newCreatorDisplayName = twitchInfo.displayName;
             newCreatorProfilePic = twitchInfo.pfp;
-            console.log(`New user from Twitch: ${newCreatorName}`);
             sessionStorage.removeItem('twitch_new_user_info'); // Clean up
           } else {
             // User logged in with email or wallet, generate a random name
             newCreatorName = `user-${user.id.slice(-8)}`;
             newCreatorDisplayName = newCreatorName;
-            console.log(
-              `New user from email/wallet, generated name: ${newCreatorName}`,
-            );
           }
 
           await saveCreatorProfile(
