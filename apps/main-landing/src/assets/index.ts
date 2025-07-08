@@ -13,3 +13,4 @@ export { default as IDRISS_FALING_COINS } from './idriss-falling-coins.png';
 export { default as IDRISS_SCENE_STREAM_SHORT } from './idriss-scene-stream-short.png';
 export { default as IDRISS_SCENE_STREAM_SHORT_2 } from './idriss-scene-stream-short-2.png';
 export { default as IDRISS_SCENE_STREAM_LIGHT } from './idriss-scene-stream-light.png';
+export { default as IDRISS_TOROID } from './idriss-toroid.png';

@@ -1,11 +1,15 @@
 import {
   CREATOR_API_URL,
-  TOKEN_TERMS_AND_CONDITIONS_LINK,
+  PRIVACY_POLICY_LINK,
+  TERMS_OF_SERVICE_LINK,
 } from '@idriss-xyz/constants';
 import { Button } from '@idriss-xyz/ui/button';
-import { IconButton } from '@idriss-xyz/ui/icon-button';
-import { Link } from '@idriss-xyz/ui/link';
+import { ExternalLink } from '@idriss-xyz/ui/external-link';
 import { Modal } from '@idriss-xyz/ui/modal';
+import { Divider } from '@idriss-xyz/ui/divider';
+import Image from 'next/image';
+
+import { IDRISS_TOROID } from '@/assets';
 
 type Properties = {
   isOpened: boolean;
@@ -19,41 +23,52 @@ const handleTwitchLogin = () => {
 export const LoginModal = ({ isOpened, onClose }: Properties) => {
   return (
     <Modal
-      className="flex min-h-[300px] w-[400px] flex-col justify-center gap-y-3 rounded-lg border border-black/20 bg-white p-5"
+      className="flex min-h-[420px] w-[500px] flex-col items-center justify-center gap-y-6 rounded-xl border border-black/20 bg-white p-6 text-center"
       isOpened={isOpened}
       onClose={onClose}
       closeOnClickAway
     >
-      <div className="flex h-[28px] flex-row items-center justify-between">
-        <h1 className="text-heading4 text-neutral-900">Log in or sign up</h1>
-        <IconButton
-          intent="tertiary"
-          size="medium"
-          iconName="X"
-          className="pr-0 pt-1.5 text-neutral-600"
-          onClick={onClose}
+      <div className="flex w-full flex-col items-center justify-center pb-4">
+        <Image
+          src={IDRISS_TOROID.src}
+          alt="Login modal image"
+          width={156}
+          height={156}
+          className='my-3'
         />
+        <h1 className="text-heading3 text-neutral-900">Log in or sign up</h1>
       </div>
-      <Button
-        size="medium"
-        className="w-full"
-        intent="secondary"
-        aria-label="Login with Twitch"
-        onClick={handleTwitchLogin}
-      >
-        Continue with Twitch
-      </Button>
-      <span className="w-full text-body5 text-neutralGreen-900">
-        By logging in, you agree to our{' '}
-        <Link
-          isExternal
-          size="medium"
-          className="text-body5 lg:text-body5"
-          href={TOKEN_TERMS_AND_CONDITIONS_LINK}
+      <div className="flex w-full flex-col items-center gap-6">
+        <Button
+          size="large"
+          className="w-full uppercase"
+          intent="secondary"
+          aria-label="Login with Twitch"
+          prefixIconName="TwitchOutlinedBold"
+          onClick={handleTwitchLogin}
         >
-          Terms{'\u00A0'}and{'\u00A0'}conditions
-        </Link>
-      </span>
+          Continue with Twitch
+        </Button>
+        <span className="w-full text-label5 text-neutral-500">
+          By logging in, you agree to our
+          <br />
+          <ExternalLink
+            className="text-mint-600 underline"
+            href={TERMS_OF_SERVICE_LINK}
+          >
+            Terms of service
+          </ExternalLink>{' '}
+          &{' '}
+          <ExternalLink
+            className="text-mint-600 underline"
+            href={PRIVACY_POLICY_LINK}
+          >
+            Privacy Policy
+          </ExternalLink>
+          .
+        </span>
+        <Divider />
+      </div>
     </Modal>
   );
 };
