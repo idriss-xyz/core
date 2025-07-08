@@ -8,7 +8,6 @@ import { Button } from '@idriss-xyz/ui/button';
 import { LeaderboardStats } from '@idriss-xyz/constants';
 import { useState } from 'react';
 
-
 import { IDRISS_SCENE_STREAM_2 } from '../../../../../assets';
 import { WidgetVariants } from '../../../../../../../twitch-extension/src/app/types';
 import { DonateContentValues } from '../../types';
