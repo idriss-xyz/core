@@ -5,6 +5,7 @@ import { Spinner } from '@idriss-xyz/ui/spinner';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { Button } from '@idriss-xyz/ui/button';
+import { useState } from 'react';
 
 import { IDRISS_SCENE_STREAM_2 } from '@/assets';
 
@@ -33,6 +34,14 @@ type Properties = {
   updateCurrentContent?: (content: DonateContentValues) => void;
 };
 
+// Define sort types
+type SortField = 'totalAmount' | 'donationCount' | 'donorSince';
+type SortDirection = 'asc' | 'desc' | null;
+type SortState = {
+  field: SortField;
+  direction: SortDirection;
+};
+
 const baseClassName =
   'z-1 w-[360px] max-w-full rounded-xl bg-white flex flex-col items-center relative overflow-hidden';
 
@@ -51,6 +60,88 @@ export const Leaderboard = ({
   const isTwitchOverlay = variant === 'videoOverlay';
   const isTwitchComponent = variant === 'videoComponent';
   const isCreatorsDashboard = variant === 'creatorsDashboard';
+
+  // State for sorting
+  const [sortStates, setSortStates] = useState<SortState[]>([]);
+
+  // Function to handle sort click
+  const handleSort = (field: SortField) => {
+    setSortStates((previousSortStates) => {
+      // Find if this field is already being sorted
+      const existingIndex = previousSortStates.findIndex((s) => {return s.field === field});
+
+      if (existingIndex >= 0) {
+        // Field is already being sorted, cycle through directions
+        const currentDirection = previousSortStates[existingIndex]?.direction;
+
+        if (currentDirection === 'desc') {
+          // Change to ascending
+          const newSortStates = [...previousSortStates];
+          newSortStates[existingIndex] = { field, direction: 'asc' };
+          return newSortStates;
+        } else {
+          // Remove this sort
+          return previousSortStates.filter((_, index) => {return index !== existingIndex});
+        }
+      } else {
+        // Add new sort with desc direction
+        return [...previousSortStates, { field, direction: 'desc' }];
+      }
+    });
+  };
+
+  // Function to get sort direction for a field
+  const getSortDirection = (field: SortField): SortDirection => {
+    const sortState = sortStates.find((s) => {return s.field === field});
+    return sortState?.direction ?? null;
+  };
+
+  // Function to sort leaderboard data
+  const getSortedLeaderboard = () => {
+    if (sortStates.length === 0) return leaderboard;
+
+    return [...leaderboard].sort((a, b) => {
+      // Apply sorts in order they were added
+      for (const { field, direction } of sortStates) {
+        if (direction === null) continue;
+
+        let comparison = 0;
+
+        switch (field) {
+        case 'totalAmount': {
+          comparison = a.totalAmount - b.totalAmount;
+
+        break;
+        }
+        case 'donationCount': {
+          comparison = (a.donationCount ?? 0) - (b.donationCount ?? 0);
+
+        break;
+        }
+        case 'donorSince': {
+          // Assuming donorSince is a date string
+          const dateA = a.donorSince ? new Date(a.donorSince).getTime() : 0;
+          const dateB = b.donorSince ? new Date(b.donorSince).getTime() : 0;
+          comparison = dateA - dateB;
+
+        break;
+        }
+        // No default
+        }
+
+        // If this sort gives a non-zero result, return it with direction applied
+        if (comparison !== 0) {
+          return direction === 'asc' ? comparison : -comparison;
+        }
+      }
+
+      // If all sorts are equal, maintain original order
+      return 0;
+    });
+  };
+
+  // Get sorted data
+  const sortedLeaderboard = getSortedLeaderboard();
 
   if (!address.isFetching && !address.isValid) {
     return (
@@ -155,19 +246,55 @@ export const Leaderboard = ({
                       <th scope="col" className="px-4 py-3">
                         Donor
                       </th>
-                      <th scope="col" className="px-4 py-3">
-                        Total donated
+                      <th
+                        scope="col"
+                        className="cursor-pointer select-none px-4 py-3"
+                        onClick={() => {return handleSort('totalAmount')}}
+                      >
+                        <div className="flex items-center gap-1">
+                          Total donated
+                          {getSortDirection('totalAmount') === 'desc' && (
+                            <Icon name="ArrowDown" size={16} />
+                          )}
+                          {getSortDirection('totalAmount') === 'asc' && (
+                            <Icon name="ArrowUp" size={16} />
+                          )}
+                        </div>
                       </th>
-                      <th scope="col" className="px-4 py-3">
-                        Donations
+                      <th
+                        scope="col"
+                        className="cursor-pointer select-none px-4 py-3"
+                        onClick={() => {return handleSort('donationCount')}}
+                      >
+                        <div className="flex items-center gap-1">
+                          Donations
+                          {getSortDirection('donationCount') === 'desc' && (
+                            <Icon name="ArrowDown" size={16} />
+                          )}
+                          {getSortDirection('donationCount') === 'asc' && (
+                            <Icon name="ArrowUp" size={16} />
+                          )}
+                        </div>
                       </th>
-                      <th scope="col" className="px-4 py-3">
-                        Donor since
+                      <th
+                        scope="col"
+                        className="cursor-pointer select-none px-4 py-3"
+                        onClick={() => {return handleSort('donorSince')}}
+                      >
+                        <div className="flex items-center gap-1">
+                          Donor since
+                          {getSortDirection('donorSince') === 'desc' && (
+                            <Icon name="ArrowDown" size={16} />
+                          )}
+                          {getSortDirection('donorSince') === 'asc' && (
+                            <Icon name="ArrowUp" size={16} />
+                          )}
+                        </div>
                       </th>
                     </tr>
                   </thead>
                   <tbody>
-                    {leaderboard.map((item, index) => {
+                    {sortedLeaderboard.map((item, index) => {
                       return (
                         <LeaderboardItem
                           donorRank={index}
@@ -186,7 +313,7 @@ export const Leaderboard = ({
                     })}
                   </tbody>
                 </table>
-                {leaderboard.length === 0 && (
+                {sortedLeaderboard.length === 0 && (
                   <div className="mx-auto flex min-h-[694px] w-[477px] flex-col items-center justify-center gap-4">
                     <span className="text-center text-heading6 uppercase text-neutral-900">
                       No donors yet
@@ -213,7 +340,7 @@ export const Leaderboard = ({
             {isTwitchPanel && (
               <table className="w-full table-auto border-collapse">
                 <tbody>
-                  {leaderboard.map((item, index) => {
+                  {sortedLeaderboard.map((item, index) => {
                     if (index > 4) return null;
 
                     return (
@@ -234,13 +361,13 @@ export const Leaderboard = ({
                     );
                   })}
 
-                  {leaderboard.length <= MAX_DISPLAYED_ITEMS && (
+                  {sortedLeaderboard.length <= MAX_DISPLAYED_ITEMS && (
                     <LeaderboardItemPlaceholder
                       hideBottomBorder
                       amountToDisplay={MAX_DISPLAYED_ITEMS}
-                      donorRank={leaderboard.length}
+                      donorRank={sortedLeaderboard.length}
                       previousDonateAmount={
-                        leaderboard.at(-1)?.totalAmount ?? 1234
+                        sortedLeaderboard.at(-1)?.totalAmount ?? 1234
                       }
                     />
                   )}
@@ -251,7 +378,7 @@ export const Leaderboard = ({
             {(isTwitchComponent || isTwitchOverlay) && (
               <table className="w-full table-auto border-collapse">
                 <tbody>
-                  {leaderboard.map((item, index) => {
+                  {sortedLeaderboard.map((item, index) => {
                     if (index > 2) return null;
 
                     return (
@@ -272,14 +399,14 @@ export const Leaderboard = ({
                     );
                   })}
 
-                  {leaderboard.length <= 3 && (
+                  {sortedLeaderboard.length <= 3 && (
                     <LeaderboardItemPlaceholder
                       hideBottomBorder
                       hideEncouragement
                       amountToDisplay={3}
-                      donorRank={leaderboard.length}
+                      donorRank={sortedLeaderboard.length}
                       previousDonateAmount={
-                        leaderboard.at(-1)?.totalAmount ?? 1234
+                        sortedLeaderboard.at(-1)?.totalAmount ?? 1234
                       }
                     />
                   )}
@@ -290,7 +417,7 @@ export const Leaderboard = ({
             {!isTwitchExtension && (
               <table className="w-full table-auto border-collapse">
                 <tbody>
-                  {leaderboard.map((item, index) => {
+                  {sortedLeaderboard.map((item, index) => {
                     if (index > MAX_DISPLAYED_ITEMS) return null;
 
                     return (
@@ -308,12 +435,12 @@ export const Leaderboard = ({
                     );
                   })}
 
-                  {leaderboard.length <= MAX_DISPLAYED_ITEMS + 1 && (
+                  {sortedLeaderboard.length <= MAX_DISPLAYED_ITEMS + 1 && (
                     <LeaderboardItemPlaceholder
                       amountToDisplay={MAX_DISPLAYED_ITEMS + 1}
-                      donorRank={leaderboard.length}
+                      donorRank={sortedLeaderboard.length}
                       previousDonateAmount={
-                        leaderboard.at(-1)?.totalAmount ?? 1234
+                        sortedLeaderboard.at(-1)?.totalAmount ?? 1234
                       }
                     />
                   )}
