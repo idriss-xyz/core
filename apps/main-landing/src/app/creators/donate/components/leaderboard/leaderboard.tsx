@@ -5,12 +5,13 @@ import { Spinner } from '@idriss-xyz/ui/spinner';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { Button } from '@idriss-xyz/ui/button';
+import { LeaderboardStats } from '@idriss-xyz/constants';
 import { useState } from 'react';
 
 import { IDRISS_SCENE_STREAM_2 } from '@/assets';
 
 import { WidgetVariants } from '../../../../../../../twitch-extension/src/app/types';
-import { LeaderboardStats, DonateContentValues } from '../../types';
+import { DonateContentValues } from '../../types';
 
 import {
   LeaderboardItem,
@@ -68,7 +69,9 @@ export const Leaderboard = ({
   const handleSort = (field: SortField) => {
     setSortStates((previousSortStates) => {
       // Find if this field is already being sorted
-      const existingIndex = previousSortStates.findIndex((s) => {return s.field === field});
+      const existingIndex = previousSortStates.findIndex((s) => {
+        return s.field === field;
+      });
 
       if (existingIndex >= 0) {
         // Field is already being sorted, cycle through directions
@@ -81,7 +84,9 @@ export const Leaderboard = ({
           return newSortStates;
         } else {
           // Remove this sort
-          return previousSortStates.filter((_, index) => {return index !== existingIndex});
+          return previousSortStates.filter((_, index) => {
+            return index !== existingIndex;
+          });
         }
       } else {
         // Add new sort with desc direction
@@ -92,7 +97,9 @@ export const Leaderboard = ({
 
   // Function to get sort direction for a field
   const getSortDirection = (field: SortField): SortDirection => {
-    const sortState = sortStates.find((s) => {return s.field === field});
+    const sortState = sortStates.find((s) => {
+      return s.field === field;
+    });
     return sortState?.direction ?? null;
   };
 
@@ -108,25 +115,25 @@ export const Leaderboard = ({
         let comparison = 0;
 
         switch (field) {
-        case 'totalAmount': {
-          comparison = a.totalAmount - b.totalAmount;
+          case 'totalAmount': {
+            comparison = a.totalAmount - b.totalAmount;
 
-        break;
-        }
-        case 'donationCount': {
-          comparison = (a.donationCount ?? 0) - (b.donationCount ?? 0);
+            break;
+          }
+          case 'donationCount': {
+            comparison = (a.donationCount ?? 0) - (b.donationCount ?? 0);
 
-        break;
-        }
-        case 'donorSince': {
-          // Assuming donorSince is a date string
-          const dateA = a.donorSince ? new Date(a.donorSince).getTime() : 0;
-          const dateB = b.donorSince ? new Date(b.donorSince).getTime() : 0;
-          comparison = dateA - dateB;
+            break;
+          }
+          case 'donorSince': {
+            // Assuming donorSince is a date string
+            const dateA = a.donorSince ? new Date(a.donorSince).getTime() : 0;
+            const dateB = b.donorSince ? new Date(b.donorSince).getTime() : 0;
+            comparison = dateA - dateB;
 
-        break;
-        }
-        // No default
+            break;
+          }
+          // No default
         }
 
         // If this sort gives a non-zero result, return it with direction applied
@@ -249,7 +256,9 @@ export const Leaderboard = ({
                       <th
                         scope="col"
                         className="cursor-pointer select-none px-4 py-3"
-                        onClick={() => {return handleSort('totalAmount')}}
+                        onClick={() => {
+                          return handleSort('totalAmount');
+                        }}
                       >
                         <div className="flex items-center gap-1">
                           Total donated
@@ -264,7 +273,9 @@ export const Leaderboard = ({
                       <th
                         scope="col"
                         className="cursor-pointer select-none px-4 py-3"
-                        onClick={() => {return handleSort('donationCount')}}
+                        onClick={() => {
+                          return handleSort('donationCount');
+                        }}
                       >
                         <div className="flex items-center gap-1">
                           Donations
@@ -279,7 +290,9 @@ export const Leaderboard = ({
                       <th
                         scope="col"
                         className="cursor-pointer select-none px-4 py-3"
-                        onClick={() => {return handleSort('donorSince')}}
+                        onClick={() => {
+                          return handleSort('donorSince');
+                        }}
                       >
                         <div className="flex items-center gap-1">
                           Donor since

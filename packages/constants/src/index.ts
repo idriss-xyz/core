@@ -53,6 +53,9 @@ export type {
   TipHistoryFromUser,
   TipHistoryNode,
   TipHistoryTokenV2,
+  LeaderboardStats,
+  DonationData,
+  DonationUser,
 } from './types';
 
 export * from './logos';

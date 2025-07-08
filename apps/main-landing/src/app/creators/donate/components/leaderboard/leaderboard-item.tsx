@@ -3,8 +3,8 @@ import { Link } from '@idriss-xyz/ui/link';
 import { getShortWalletHex, getTimeDifferenceString } from '@idriss-xyz/utils';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Hex } from 'viem';
+import { DonationUser } from '@idriss-xyz/constants';
 
-import { DonationUser } from '../../types';
 import { WHITELISTED_URLS } from '../../constants';
 import { useGetAvatarImage } from '../../commands/get-avatar-image';
 
