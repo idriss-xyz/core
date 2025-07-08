@@ -56,6 +56,7 @@ export type {
   LeaderboardStats,
   DonationData,
   DonationUser,
+  DonationToken,
 } from './types';
 
 export * from './logos';

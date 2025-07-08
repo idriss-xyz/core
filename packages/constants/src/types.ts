@@ -124,7 +124,7 @@ export interface DonationUser {
   avatarSource?: string;
 }
 
-interface DonationToken {
+export interface DonationToken {
   address: Hex;
   symbol: string;
   imageUrl?: string;

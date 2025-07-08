@@ -10,7 +10,7 @@ import {
   TooltipTrigger,
   TooltipProvider,
 } from '@idriss-xyz/ui/tooltip';
-import { CREATOR_CHAIN } from '@idriss-xyz/constants';
+import { CREATOR_CHAIN, DonationData } from '@idriss-xyz/constants';
 import {
   getShortWalletHex,
   getTransactionUrls,
@@ -20,7 +20,6 @@ import {
 import { Link } from '@idriss-xyz/ui/link';
 import { useRouter } from 'next/navigation';
 
-import { DonationData } from '@/app/creators/donate/types';
 import { removeMainnetSuffix } from '@/app/creators/donate/utils';
 
 type Properties = {
