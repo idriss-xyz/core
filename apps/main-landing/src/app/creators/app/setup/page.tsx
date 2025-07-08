@@ -4,11 +4,13 @@ import { backgroundLines2, backgroundLines3 } from '@/assets';
 import { Providers } from '../../providers';
 
 import { CreatorProfileForm } from './form';
+import { OAuthCallbackHandler } from '../../components/oauth-callback-handler';
 
 // ts-unused-exports:disable-next-line
 export default function CreatorProfile() {
   return (
     <Providers>
+      <OAuthCallbackHandler />
       <TopBar />
 
       <main className="relative flex min-h-screen grow flex-col items-center justify-around gap-4 overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] px-2 pb-1 pt-[56px] lg:flex-row lg:items-start lg:justify-center lg:px-0">

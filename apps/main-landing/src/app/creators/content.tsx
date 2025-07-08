@@ -9,7 +9,6 @@ import { SetUp } from './components/set-up';
 import { TopCreators } from './components/top-creators';
 import { Footer } from './components/footer';
 import { Providers } from './providers';
-import { OAuthCallbackHandler } from './components/oauth-callback-handler';
 
 // ts-unused-exports:disable-next-line
 export default function Content() {
@@ -31,7 +30,6 @@ export default function Content() {
           <ProsSection />
           <SetUp />
           <TopCreators />
-          <OAuthCallbackHandler />
         </main>
 
         <Footer />

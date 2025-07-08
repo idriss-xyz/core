@@ -1,6 +1,7 @@
-import { useSocialAccounts } from '@dynamic-labs/sdk-react-core';
-import { ProviderEnum } from '@dynamic-labs/sdk-api-core';
-import { TOKEN_TERMS_AND_CONDITIONS_LINK } from '@idriss-xyz/constants';
+import {
+  CREATOR_API_URL,
+  TOKEN_TERMS_AND_CONDITIONS_LINK,
+} from '@idriss-xyz/constants';
 import { Button } from '@idriss-xyz/ui/button';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { Link } from '@idriss-xyz/ui/link';
@@ -11,13 +12,11 @@ type Properties = {
   onClose: () => void;
 };
 
+const handleTwitchLogin = () => {
+  window.location.href = `${CREATOR_API_URL}/auth/twitch`;
+};
+
 export const LoginModal = ({ isOpened, onClose }: Properties) => {
-  const { signInWithSocialAccount } = useSocialAccounts();
-
-  const handleTwitchLogin = async () => {
-    await signInWithSocialAccount(ProviderEnum.Twitch);
-  };
-
   return (
     <Modal
       className="flex min-h-[300px] w-[400px] flex-col justify-center gap-y-3 rounded-lg border border-black/20 bg-white p-5"
@@ -38,7 +37,7 @@ export const LoginModal = ({ isOpened, onClose }: Properties) => {
       <Button
         size="medium"
         className="w-full"
-        intent="primary"
+        intent="secondary"
         aria-label="Login with Twitch"
         onClick={handleTwitchLogin}
       >
