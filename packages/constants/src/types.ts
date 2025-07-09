@@ -94,7 +94,7 @@ export interface TipHistoryResponse {
   leaderboard: LeaderboardStats[];
 }
 
-interface DonationData {
+export interface DonationData {
   transactionHash: Hex;
   fromAddress: Hex;
   toAddress: Hex;
@@ -109,15 +109,14 @@ interface DonationData {
   amountRaw: string;
 }
 
-interface LeaderboardStats {
-  address: Hex;
-  avatarUrl: string;
-  displayName: string;
+export interface LeaderboardStats extends DonationUser {
   totalAmount: number;
   donateLink?: string;
+  donorSince?: number;
+  donationCount?: number;
 }
 
-interface DonationUser {
+export interface DonationUser {
   address: Hex;
   displayName?: string;
   displayNameSource?: string;
@@ -125,7 +124,7 @@ interface DonationUser {
   avatarSource?: string;
 }
 
-interface DonationToken {
+export interface DonationToken {
   address: Hex;
   symbol: string;
   imageUrl?: string;

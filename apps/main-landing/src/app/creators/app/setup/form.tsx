@@ -24,9 +24,9 @@ import {
   editCreatorProfile,
   getChainIdsFromShortNames,
   getChainShortNamesFromIds,
-} from '../utils';
-import { TEST_DONATION_MESSAGE } from '../constants';
-import { useAuth } from '../context/auth-context';
+} from '../../utils';
+import { TEST_DONATION_MESSAGE } from '../../constants';
+import { useAuth } from '../../context/auth-context';
 
 type FormPayload = {
   name: string;

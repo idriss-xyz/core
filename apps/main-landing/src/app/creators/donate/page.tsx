@@ -8,6 +8,8 @@ import {
   DEFAULT_DONATION_MIN_SFX_AMOUNT,
   DEFAULT_DONATION_MIN_TTS_AMOUNT,
   CREATOR_API_URL,
+  DonationData,
+  LeaderboardStats,
 } from '@idriss-xyz/constants';
 import '@rainbow-me/rainbowkit/styles.css';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -22,8 +24,6 @@ import { DonateHistory } from '@/app/creators/donate/components/donate-history';
 import {
   CreatorProfile,
   DonateContentValues,
-  DonationData,
-  LeaderboardStats,
 } from '@/app/creators/donate/types';
 
 import { useCreators } from '../hooks/use-creators';

@@ -34,7 +34,10 @@
     "./geo-conditional-button": "./src/components/geo-conditional-button/index.ts",
     "./badge": "./src/components/badge/index.ts",
     "./blocked-button": "./src/components/blocked-button/index.ts",
-    "./alert": "./src/components/alert/index.ts"
+    "./alert": "./src/components/alert/index.ts",
+    "./card": "./src/components/card/index.ts",
+    "./charts": "./src/components/charts/index.ts",
+    "./divider": "./src/components/divider/index.ts"
   },
   "scripts": {
     "format": "prettier --check --config ../../prettier.config.mjs --ignore-path .prettierignore .",
@@ -80,6 +83,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-number-format": "^5.4.2",
+    "recharts": "^3.0.0",
     "tailwind-merge": "^2.5.2"
   }
 }
