@@ -1,5 +1,6 @@
 import { NavigationMenu } from '@idriss-xyz/ui/navigation-menu';
 import { Icon } from '@idriss-xyz/ui/icon';
+
 import { DonationData } from '@/app/creators/donate/types';
 import { DonateHistoryItem } from '@/app/creators/donate/components/donate-history/donate-history-item';
 
@@ -10,10 +11,10 @@ export function Navbar() {
     network: 'BASE_MAINNET',
     comment: ' Who is this legend?',
     fromAddress: '0x5abca791c22e7f99237fcc04639e094ffa0ccce9',
-    timestamp: 1749156845000,
+    timestamp: 1_749_156_845_000,
     amountRaw: '2327300895212334000000',
     tokenAddress: '0x000096630066820566162c94874a776532705231',
-    tradeValue: 9.883347318451692,
+    tradeValue: 9.883_347_318_451_692,
     token: {
       address: '0x000096630066820566162c94874a776532705231',
       symbol: 'IDRISS',
@@ -31,7 +32,7 @@ export function Navbar() {
       '0xf184d8e44c5e5e6e0fef2e781b36791ac840110393605dd3702a54c7dc23d378',
     fromUser: {
       address: '0x5abca791c22e7f99237fcc04639e094ffa0ccce9',
-      displayName: 'idriss.base.eth',
+      displayName: 'vitalik.eth',
       avatarUrl:
         'https://ipfs.io/ipfs/bafkreigwt4fn24gyh4nnqjutxio24dqfloyolo4h4nljkhran6dypy7e5q',
     },
@@ -42,10 +43,10 @@ export function Navbar() {
     network: 'BASE_MAINNET',
     comment: ' Who is this legend?',
     fromAddress: '0x5abca791c22e7f99237fcc04639e094ffa0ccce9',
-    timestamp: 1749156845000,
+    timestamp: 1_749_156_845_000,
     amountRaw: '2327300895212334000000',
     tokenAddress: '0x000096630066820566162c94874a776532705231',
-    tradeValue: 9.883347318451692,
+    tradeValue: 9.883_347_318_451_692,
     token: {
       address: '0x000096630066820566162c94874a776532705231',
       symbol: 'IDRISS',
@@ -56,7 +57,7 @@ export function Navbar() {
     },
     toUser: {
       address: '0x7d716741d2c37925e5e15123025400be80ec796d',
-      displayName: 'dafaqtor.eth',
+      displayName: 'vitalik.eth',
       avatarUrl: 'https://euc.li/dafaqtor.eth',
     },
     transactionHash:
@@ -82,8 +83,8 @@ export function Navbar() {
 
             <NavigationMenu.Content className="absolute right-[-136px] top-full mr-3 mt-3 w-max">
               {/*TODO: work on positioning*/}
-              <div className="flex flex-col gap-1 rounded-[12px] border border-neutral-300 bg-white p-4 shadow-lg">
-                <div className="min-w-[400px] max-w-[430px] gap-2 rounded-[12px] p-4">
+              <div className="flex flex-col gap-1 rounded-[12px] border border-neutral-300 bg-white p-3 shadow-lg">
+                <div className="min-w-[400px] max-w-[430px] gap-2 rounded-[12px] pb-3">
                   <DonateHistoryItem
                     donation={donationData1}
                     key={donationData1.transactionHash}
@@ -95,7 +96,7 @@ export function Navbar() {
                   <hr className="min-w-[400px] max-w-[430px] bg-[#DBDDE2]" />
                 </div>
 
-                <div className="min-w-[400px] max-w-[430px] gap-2 rounded-[12px] p-4">
+                <div className="min-w-[400px] max-w-[430px] gap-2 rounded-[12px] pt-3">
                   <DonateHistoryItem
                     donation={donationData2}
                     key={donationData2.transactionHash}
@@ -109,10 +110,10 @@ export function Navbar() {
           <NavigationMenu.Item className="relative flex gap-1">
             <NavigationMenu.Trigger asChild>
               <div className="flex max-h-[70px] min-h-[40px] items-center gap-2.5 w-max">
-                <div className="h-[48px] max-h-[48px] min-h-[48px] w-[48px] min-w-[48px] max-w-[48px] rounded-[999px] border border-[#AAAFB9]">
+                <div className="size-[48px] max-h-[48px] min-h-[48px] min-w-[48px] max-w-[48px] rounded-[999px] border border-[#AAAFB9]">
                   <img src="https://ipfs.io/ipfs/bafkreigwt4fn24gyh4nnqjutxio24dqfloyolo4h4nljkhran6dypy7e5q" />
                 </div>
-                <span className="text-label4 text-[#000A05]">geoist_</span>
+                <span className="text-label4 text-neutralGreen-900">geoist_</span>
               </div>
             </NavigationMenu.Trigger>
 
@@ -121,11 +122,11 @@ export function Navbar() {
                 <div className="flex min-h-[32px] items-center gap-3 rounded-[4px] px-3 py-1">
                   <div className="flex gap-3 text-[#717484]">
                     <Icon name="User" size={20} />
-                    <span className="text-body4 text-[#323339] min-w-[184px] max-w-[214px] min-h-[24px] max-h-[54px]">Profile</span>
+                    <span className="text-body4 text-neutral-900 min-w-[184px] max-w-[214px] min-h-[24px] max-h-[54px]">Profile</span>
                   </div>
                 </div>
 
-                <div className="py-1 min-w-[240px] max-w-[270px] h-[1px]">
+                <div className="py-1 min-w-[240px] max-w-[270px] h-px">
                   <hr className="border-t border-t-[#E4E7EC]" />
                 </div>
 
@@ -133,7 +134,7 @@ export function Navbar() {
                   <div className="flex min-h-[32px] items-center gap-3 rounded-[4px] px-3 py-1">
                     <div className="flex gap-3 text-[#717484]">
                       <Icon name="LogOut" size={20} />
-                      <span className="text-body4 text-[#323339] min-w-[184px] max-w-[214px] min-h-[24px] max-h-[54px]">Log out</span>
+                      <span className="text-body4 text-neutral-900 min-w-[184px] max-w-[214px] min-h-[24px] max-h-[54px]">Log out</span>
                     </div>
                   </div>
                 </div>
