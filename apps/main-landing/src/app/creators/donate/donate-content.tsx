@@ -1,4 +1,3 @@
-"use-client'";
 import { Button } from '@idriss-xyz/ui/button';
 import {
   CREATORS_LINK,
