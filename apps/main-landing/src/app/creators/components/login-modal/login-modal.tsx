@@ -34,7 +34,7 @@ export const LoginModal = ({ isOpened, onClose }: Properties) => {
           alt="Login modal image"
           width={156}
           height={156}
-          className='my-3'
+          className="my-3"
         />
         <h1 className="text-heading3 text-neutral-900">Log in or sign up</h1>
       </div>
