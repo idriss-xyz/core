@@ -23,7 +23,6 @@ import {
   OPTIMISM_LOGO,
   POLYGON_LOGO,
   USDC_LOGO,
-  ALEPH_LOGO,
   ABSTRACT_LOGO,
   PENGU_LOGO,
   YGG_LOGO,
@@ -49,6 +48,7 @@ export const CREATOR_CHAIN = {
     id: 2741,
     name: 'Abstract',
     shortName: 'Abstract',
+    dbName: 'ABSTRACT_MAINNET',
     logo: ABSTRACT_LOGO,
     nativeCurrency: {
       name: 'Ethereum',
@@ -63,28 +63,11 @@ export const CREATOR_CHAIN = {
       },
     },
   },
-  ALEPH: {
-    id: 41_455,
-    name: 'Aleph Zero EVM',
-    shortName: 'Aleph',
-    logo: ALEPH_LOGO,
-    nativeCurrency: {
-      name: 'AZERO',
-      symbol: 'AZERO',
-      decimals: 18,
-    },
-    rpcUrls: { default: { http: ['https://rpc.alephzero.raas.gelato.cloud'] } },
-    blockExplorers: {
-      default: {
-        name: 'Evm Explorer',
-        url: 'https://evm-explorer.alephzero.org',
-      },
-    },
-  },
   RONIN: {
     id: 2020,
     name: 'Ronin',
     shortName: 'Ronin',
+    dbName: 'RONIN_MAINNET',
     logo: RONIN_LOGO,
     nativeCurrency: {
       name: 'Ronin',
@@ -109,6 +92,7 @@ export const CREATOR_CHAIN = {
       },
     },
     shortName: 'Base',
+    dbName: 'BASE_MAINNET',
     logo: BASE_LOGO,
   },
   ETHEREUM: {
@@ -121,6 +105,7 @@ export const CREATOR_CHAIN = {
       },
     },
     shortName: 'Ethereum',
+    dbName: 'ETHEREUM_MAINNET',
     logo: ETHEREUM_LOGO,
   },
   MANTLE: {
@@ -133,6 +118,7 @@ export const CREATOR_CHAIN = {
       },
     },
     shortName: 'Mantle',
+    dbName: 'MANTLE_MAINNET',
     logo: MANTLE_LOGO,
   },
   OPTIMISM: {
@@ -145,6 +131,7 @@ export const CREATOR_CHAIN = {
       },
     },
     shortName: 'Optimism',
+    dbName: 'OPTIMISM_MAINNET',
     logo: OPTIMISM_LOGO,
   },
   POLYGON: {
@@ -157,6 +144,7 @@ export const CREATOR_CHAIN = {
       },
     },
     shortName: 'Polygon',
+    dbName: 'POLYGON_MAINNET',
     logo: POLYGON_LOGO,
   },
 } satisfies Record<string, Chain>;
@@ -165,32 +153,38 @@ export const CHAIN = Object.assign(CREATOR_CHAIN, {
   ARBITRUM_ONE: {
     ...arbitrum,
     shortName: 'Arbitrum',
+    dbName: 'ARBITRUM_MAINNET',
     logo: ARBITRUM_LOGO,
   },
   LINEA: {
     ...linea,
     shortName: 'Linea',
+    dbName: 'LINEA_MAINNET',
     logo: LINEA_LOGO,
   },
   ZK_SYNC_ERA: {
     ...zksync,
     shortName: 'ZkSync',
+    dbName: 'ZKSYNC_MAINNET',
     logo: ZYNK_SYNC_ERA_LOGO,
   },
   SCROLL: {
     ...scroll,
     shortName: 'Scroll',
+    dbName: 'SCROLL_MAINNET',
     logo: SCROLL_LOGO,
   },
   CELO: {
     ...celo,
     shortName: 'Celo',
+    dbName: 'CELO_MAINNET',
     logo: CELO_LOGO,
   },
   BNB_CHAIN: {
     id: 56,
     name: 'BNB Chain',
     shortName: 'BNB',
+    dbName: 'BNB_MAINNET',
     logo: BNB_LOGO,
     nativeCurrency: {
       name: 'BNB',
@@ -276,14 +270,6 @@ export const CHAIN_ID_TO_TOKENS = {
       ...TOKEN.PENGU,
       decimals: 18,
       address: '0x9eBe3A824Ca958e4b3Da772D2065518F009CBa62',
-    },
-  ],
-  [CREATOR_CHAIN.ALEPH.id]: [
-    {
-      ...TOKEN.USDC,
-      name: 'USDC',
-      decimals: 6,
-      address: '0x4Ca4B85Ead5EA49892d3a81DbfAE2f5c2F75d53D',
     },
   ],
   [CREATOR_CHAIN.ETHEREUM.id]: [
@@ -447,7 +433,6 @@ export const CHAIN_ID_TO_TOKENS = {
 
 export const DEFAULT_ALLOWED_CHAINS_IDS = [
   CREATOR_CHAIN.ABSTRACT.id,
-  CREATOR_CHAIN.ALEPH.id,
   CREATOR_CHAIN.BASE.id,
   CREATOR_CHAIN.ETHEREUM.id,
   CREATOR_CHAIN.MANTLE.id,

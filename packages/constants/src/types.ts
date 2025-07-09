@@ -14,7 +14,11 @@ export type ClaimedEventsResponse = {
   lastProcessedBlock: string;
 };
 
-export type Chain = ViemChain & { logo: string; shortName: string };
+export type Chain = ViemChain & {
+  logo: string;
+  shortName: string;
+  dbName: string;
+};
 
 export interface Token {
   name: string;

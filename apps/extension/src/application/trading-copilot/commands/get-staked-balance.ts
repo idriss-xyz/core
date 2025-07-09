@@ -36,7 +36,7 @@ export class GetStakedBalanceCommand extends Command<Payload, Response> {
         args: [this.payload.args],
       });
 
-      const balanceAsNumber = formatEther(balance as bigint);
+      const balanceAsNumber = formatEther(balance);
 
       return new OkResult(balanceAsNumber);
     } catch (error) {

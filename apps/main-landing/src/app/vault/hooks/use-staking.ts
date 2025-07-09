@@ -142,7 +142,7 @@ export const useStaking = () => {
             abi: STAKING_ABI,
             functionName: 'stake',
             args: [parsedAmount],
-          };
+          } as const;
 
           const encodedStakeData = encodeFunctionData(stakeData);
 
@@ -215,7 +215,7 @@ export const useStaking = () => {
             abi: STAKING_ABI,
             functionName: 'withdraw',
             args: [parsedAmount],
-          };
+          } as const;
 
           const encodedUnstakeData = encodeFunctionData(unstakeData);
 
@@ -282,7 +282,7 @@ export const useStaking = () => {
         const claimData = {
           abi: REWARDS_ABI,
           functionName: 'claim',
-        };
+        } as const;
 
         const encodedClaimData = encodeFunctionData(claimData);
 
@@ -346,7 +346,7 @@ export const useStaking = () => {
         const claimData = {
           abi: REWARDS_ABI,
           functionName: 'claimAndLock',
-        };
+        } as const;
 
         const encodedClaimData = encodeFunctionData(claimData);
 

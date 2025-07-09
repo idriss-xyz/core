@@ -143,7 +143,7 @@ export const STAKING_ABI = [
     stateMutability: 'nonpayable',
     type: 'function',
   },
-];
+] as const;
 
 export const ERC20_ABI = [
   {

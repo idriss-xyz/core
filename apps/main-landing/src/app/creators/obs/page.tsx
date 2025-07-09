@@ -18,13 +18,11 @@ import {
   DEFAULT_DONATION_MIN_SFX_AMOUNT,
   DEFAULT_DONATION_MIN_TTS_AMOUNT,
   NATIVE_COIN_ADDRESS,
+  TIPPING_ABI,
 } from '@idriss-xyz/constants';
 import { clients } from '@idriss-xyz/blockchain-clients';
 
-import {
-  CHAIN_TO_IDRISS_TIPPING_ADDRESS,
-  TIPPING_ABI,
-} from '../donate/constants';
+import { CHAIN_TO_IDRISS_TIPPING_ADDRESS } from '../donate/constants';
 import { ethereumClient } from '../donate/config';
 import { useCreators } from '../hooks/use-creators';
 import { getCreatorProfile } from '../utils';
