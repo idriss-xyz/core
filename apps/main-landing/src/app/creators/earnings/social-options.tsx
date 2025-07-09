@@ -1,7 +1,11 @@
-import {IconName} from "@idriss-xyz/ui/icon";
-import {SOCIAL_LINK} from "@idriss-xyz/constants";
+import { IconName } from '@idriss-xyz/ui/icon';
+import { SOCIAL_LINK } from '@idriss-xyz/constants';
 
-export const socialOptions: { label: string; iconName: IconName; link: string }[] = [
+export const socialOptions: {
+  label: string;
+  iconName: IconName;
+  link: string;
+}[] = [
   {
     label: 'Go to Twitter',
     iconName: 'TwitterX',
@@ -21,5 +25,5 @@ export const socialOptions: { label: string; iconName: IconName; link: string }[
     label: 'Go to Tiktok',
     iconName: 'Tiktok',
     link: SOCIAL_LINK.TIKTOK,
-  }
+  },
 ];

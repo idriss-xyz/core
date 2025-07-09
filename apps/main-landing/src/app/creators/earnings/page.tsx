@@ -20,7 +20,7 @@ function EarningsContent() {
     <div className="bg-lime-400">
       <div className="flex h-screen w-full justify-between bg-[#F6F7F8]">
         <Sidebar />
-        <div className="flex flex-col w-full gap-6">
+        <div className="flex w-full flex-col gap-6">
           <div className="flex flex-col">
             <div className="flex flex-col">
               <Navbar />
@@ -67,9 +67,9 @@ function EarningsContent() {
                       </div>
 
                       <div>
-                        <div className="relative flex min-h-[44px] max-h-[74px] items-center gap-2 bg-white justify-center rounded-full overflow-hidden border border-[#5FEB3C] px-8 py-2 text-neutralGreen-900">
-                          <Icon name="LineChart" size={20}/>
-                          <span className="relative z-1 text-label4 text-black min-w-[108] max-w-[138] min-h-4.5 max-h-[48]">
+                        <div className="relative flex max-h-[74px] min-h-[44px] items-center justify-center gap-2 overflow-hidden rounded-full border border-[#5FEB3C] bg-white px-8 py-2 text-neutralGreen-900">
+                          <Icon name="LineChart" size={20} />
+                          <span className="relative z-1 max-h-[48] min-h-4.5 min-w-[108] max-w-[138] text-label4 text-black">
                             Stats & history
                           </span>
                           <span className="absolute top-[16px] h-[36px] w-[200px] rounded-t-[1000px] bg-[#5FEB3C] opacity-30 blur-md" />
@@ -82,7 +82,6 @@ function EarningsContent() {
                           Top donors
                         </span>
                       </div>
-
                     </div>
                   </div>
                 </div>

@@ -32,18 +32,18 @@ export function Sidebar() {
             </NavigationMenu.Item>
 
             <NavigationMenu.Item className="flex items-center gap-2 rounded-full border border-neutral-300 bg-neutral-100 px-4 py-3">
-              <Icon name="BadgeDollarSign" size={20} className="text-neutralGreen-900" />
+              <Icon
+                name="BadgeDollarSign"
+                size={20}
+                className="text-neutralGreen-900"
+              />
               <span className="text-button1 uppercase text-neutralGreen-900">
                 Earnings
               </span>
             </NavigationMenu.Item>
 
             <NavigationMenu.Item className="flex max-h-[82px] min-h-[52px] items-center gap-2 rounded-full px-4 py-2">
-              <Icon
-                name="User"
-                size={20}
-                className="text-neutralGreen-900"
-              />
+              <Icon name="User" size={20} className="text-neutralGreen-900" />
               <span className="text-button1 uppercase text-neutralGreen-900">
                 Profile
               </span>
@@ -67,21 +67,17 @@ export function Sidebar() {
 
         <div className="flex flex-col gap-3.5">
           <div className="flex flex-col gap-3.5">
-            <div className="flex min-h-[32px] max-h-[62px] flex-col rounded-[4px] px-3 py-1">
+            <div className="flex max-h-[62px] min-h-[32px] flex-col rounded-[4px] px-3 py-1">
               <div className="flex items-center gap-3">
                 <Icon name="BookOpen" size={20} className="text-[#717484]" />
-                <span className="text-body4 text-neutral-900">
-                  Setup guide
-                </span>
+                <span className="text-body4 text-neutral-900">Setup guide</span>
               </div>
             </div>
 
-            <div className="flex min-h-[32px] max-h-[62px] flex-col rounded-[4px] px-3 py-1">
+            <div className="flex max-h-[62px] min-h-[32px] flex-col rounded-[4px] px-3 py-1">
               <div className="flex items-center gap-3">
                 <Icon name="HelpCircle" size={20} className="text-[#717484]" />
-                <span className="text-body4 text-neutral-900">
-                  Support
-                </span>
+                <span className="text-body4 text-neutral-900">Support</span>
               </div>
             </div>
           </div>
@@ -92,7 +88,6 @@ export function Sidebar() {
             })}
           </div>
         </div>
-
       </NavigationMenu.Root>
     </div>
   );
