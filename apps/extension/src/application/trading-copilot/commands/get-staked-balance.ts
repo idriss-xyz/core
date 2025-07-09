@@ -1,6 +1,6 @@
 import { createPublicClient, formatEther, Hex, http } from 'viem';
 import { base } from 'viem/chains';
-import { STAKER_ADDRESS, StakingABI } from '@idriss-xyz/constants';
+import { STAKER_ADDRESS, STAKING_ABI } from '@idriss-xyz/constants';
 
 import {
   Command,
@@ -30,7 +30,7 @@ export class GetStakedBalanceCommand extends Command<Payload, Response> {
       });
 
       const balance = await client.readContract({
-        abi: StakingABI,
+        abi: STAKING_ABI,
         address: STAKER_ADDRESS,
         functionName: 'getStakedBalance',
         args: [this.payload.args],

@@ -1,11 +1,14 @@
 import { useCallback, useState } from 'react';
 import { Hex, WalletClient } from 'viem';
 import { getSafeNumber, isNativeTokenAddress } from '@idriss-xyz/utils';
-import { CHAIN_ID_TO_TOKENS, EMPTY_HEX } from '@idriss-xyz/constants';
+import {
+  CHAIN_ID_TO_TOKENS,
+  EMPTY_HEX,
+  ERC20_ABI,
+} from '@idriss-xyz/constants';
 import { clients } from '@idriss-xyz/blockchain-clients';
 
 import { SendPayload } from '../schema';
-import { ERC20_ABI } from '../constants';
 
 import { useSwitchChain } from './use-switch-chain';
 import { useGetTokenPerDollar } from './use-get-token-per-dollar';

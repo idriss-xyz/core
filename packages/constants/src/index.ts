@@ -25,7 +25,7 @@ export {
   CREATORS_FORM_LINK,
 } from './links';
 
-export { StakingABI, RewardsABI } from './abis';
+export { STAKING_ABI, ERC20_ABI, TIPPING_ABI, REWARDS_ABI } from './abis';
 
 export {
   STAKER_ADDRESS,

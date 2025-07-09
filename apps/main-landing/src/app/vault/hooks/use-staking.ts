@@ -11,20 +11,20 @@ import {
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import {
   EMPTY_HEX,
+  ERC20_ABI,
   REWARDS_ADDRESS,
-  RewardsABI,
+  REWARDS_ABI,
   STAKER_ADDRESS,
-  StakingABI,
+  STAKING_ABI,
 } from '@idriss-xyz/constants';
-import { formatNumber } from '@idriss-xyz/utils';
 
 import { useGetStakedBalance } from '@/app/vault/commands/get-staked-balance';
 import { useGetUnstakedBalance } from '@/app/vault/commands/get-unstaked-balance';
-import { useGetRewards } from '@/app/vault/commands/get-rewards';
-import { ERC20_ABI } from '@/app/creators/donate/constants';
+import { formatNumber } from '@idriss-xyz/utils';
 import { IDRISS_TOKEN_ADDRESS } from '@/components/token-section/constants';
 
 import { ApproveTokensPayload, StakePayload, UnstakePayload } from '../types';
+import { useGetRewards } from '../commands/get-rewards';
 
 export const useStaking = () => {
   const { isConnected } = useAccount();
@@ -139,7 +139,7 @@ export const useStaking = () => {
           });
 
           const stakeData = {
-            abi: StakingABI,
+            abi: STAKING_ABI,
             functionName: 'stake',
             args: [parsedAmount],
           };
@@ -212,7 +212,7 @@ export const useStaking = () => {
           await switchChainAsync({ chainId: base.id });
 
           const unstakeData = {
-            abi: StakingABI,
+            abi: STAKING_ABI,
             functionName: 'withdraw',
             args: [parsedAmount],
           };
@@ -280,7 +280,7 @@ export const useStaking = () => {
         await switchChainAsync({ chainId: base.id });
 
         const claimData = {
-          abi: RewardsABI,
+          abi: REWARDS_ABI,
           functionName: 'claim',
         };
 
@@ -344,7 +344,7 @@ export const useStaking = () => {
         await switchChainAsync({ chainId: base.id });
 
         const claimData = {
-          abi: RewardsABI,
+          abi: REWARDS_ABI,
           functionName: 'claimAndLock',
         };
 
