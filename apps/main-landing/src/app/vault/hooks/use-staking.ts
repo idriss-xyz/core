@@ -9,13 +9,17 @@ import {
   useWriteContract,
 } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { EMPTY_HEX, STAKER_ADDRESS, StakingABI } from '@idriss-xyz/constants';
+import {
+  EMPTY_HEX,
+  ERC20_ABI,
+  STAKER_ADDRESS,
+  STAKING_ABI,
+} from '@idriss-xyz/constants';
 
 import { useGetStakedBalance } from '@/app/vault/commands/get-staked-balance';
 import { useGetBonusStakedBalance } from '@/app/vault/commands/get-bonus-staked-balance';
 import { useGetUnstakedBalance } from '@/app/vault/commands/get-unstaked-balance';
 import { formatNumber } from '@/app/claim/components/claim/components/idriss-user-criteria-description';
-import { ERC20_ABI } from '@/app/creators/donate/constants';
 import { IDRISS_TOKEN_ADDRESS } from '@/components/token-section/constants';
 
 import { ApproveTokensPayload, StakePayload, UnstakePayload } from '../types';
@@ -129,7 +133,7 @@ export const useStaking = () => {
           });
 
           const stakeData = {
-            abi: StakingABI,
+            abi: STAKING_ABI,
             functionName: 'stake',
             args: [parsedAmount],
           };
@@ -200,7 +204,7 @@ export const useStaking = () => {
           await switchChainAsync({ chainId: base.id });
 
           const unstakeData = {
-            abi: StakingABI,
+            abi: STAKING_ABI,
             functionName: 'withdraw',
             args: [parsedAmount],
           };
