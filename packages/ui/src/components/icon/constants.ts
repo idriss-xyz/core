@@ -39,7 +39,7 @@ import {
   Bell,
   Gift,
   BookOpen,
-  Wallet
+  Wallet,
 } from 'lucide-react';
 
 import * as customIcons from './custom';
