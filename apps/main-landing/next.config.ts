@@ -86,6 +86,11 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: '/claim',
+        destination: '/vault',
+        permanent: true,
+      },
+      {
         source: '/docs',
         destination: 'https://docs.idriss.xyz/',
         basePath: false,
@@ -117,7 +122,7 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/instagram',
-        destination: 'https://www.instagram.com/idriss_xyz_',
+        destination: 'https://www.instagram.com/idriss_xyz',
         basePath: false,
         permanent: false,
       },
@@ -138,6 +143,18 @@ const nextConfig: NextConfig = {
       {
         source: '/metamask',
         destination: 'https://snaps.metamask.io/snap/npm/idriss-crypto/snap/',
+        basePath: false,
+        permanent: false,
+      },
+      {
+        source: '/snapshot',
+        destination: String.raw`https://snapshot.box/#/s\:idrissxyz.eth`,
+        basePath: false,
+        permanent: false,
+      },
+      {
+        source: '/governance',
+        destination: 'https://docs.idriss.xyz/idriss-token/governance',
         basePath: false,
         permanent: false,
       },

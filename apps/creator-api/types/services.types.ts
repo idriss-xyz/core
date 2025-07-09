@@ -150,3 +150,23 @@ export interface DonationData {
   token: DonationToken;
   amountRaw: string;
 }
+
+export interface TokenEarnings {
+  tokenData: DonationToken;
+  totalAmount: number;
+  donationCount: number;
+}
+
+export interface DonationWithTimeAndAmount {
+  year: number;
+  month: string;
+  amount: number;
+}
+
+export interface RecipientDonationStats {
+  distinctDonorsCount: number;
+  totalDonationsCount: number;
+  biggestDonation: number;
+  donationsWithTimeAndAmount: DonationWithTimeAndAmount[];
+  earningsByTokenOverview: TokenEarnings[];
+}

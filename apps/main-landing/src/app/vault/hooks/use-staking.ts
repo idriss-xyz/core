@@ -9,12 +9,18 @@ import {
   useWriteContract,
 } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { EMPTY_HEX, STAKER_ADDRESS, StakingABI } from '@idriss-xyz/constants';
+import {
+  EMPTY_HEX,
+  REWARDS_ADDRESS,
+  RewardsABI,
+  STAKER_ADDRESS,
+  StakingABI,
+} from '@idriss-xyz/constants';
+import { formatNumber } from '@idriss-xyz/utils';
 
 import { useGetStakedBalance } from '@/app/vault/commands/get-staked-balance';
-import { useGetBonusStakedBalance } from '@/app/vault/commands/get-bonus-staked-balance';
 import { useGetUnstakedBalance } from '@/app/vault/commands/get-unstaked-balance';
-import { formatNumber } from '@/app/claim/components/claim/components/idriss-user-criteria-description';
+import { useGetRewards } from '@/app/vault/commands/get-rewards';
 import { ERC20_ABI } from '@/app/creators/donate/constants';
 import { IDRISS_TOKEN_ADDRESS } from '@/components/token-section/constants';
 
@@ -33,7 +39,7 @@ export const useStaking = () => {
   const unstakedBalanceQuery = useGetUnstakedBalance({
     address: walletClient?.account.address ?? EMPTY_HEX,
   });
-  const stakedBonusBalanceQuery = useGetBonusStakedBalance({
+  const rewardsQuery = useGetRewards({
     address: walletClient?.account.address ?? EMPTY_HEX,
   });
 
@@ -41,6 +47,10 @@ export const useStaking = () => {
   const [stakePendingAmount, setStakePendingAmount] = useState<number>(0);
   const [unstakeIsPending, setUnstakeIsPending] = useState<boolean>(false);
   const [unstakePendingAmount, setUnstakePendingAmount] = useState<number>(0);
+  const [claimIsPending, setClaimIsPending] = useState<boolean>(false);
+  const [claimPendingAmount, setClaimPendingAmount] = useState<number>(0);
+  const [claimAndLockIsPending, setClaimAndLockIsPending] =
+    useState<boolean>(false);
 
   const approveTokensCallback = useCallback(
     async (payload: ApproveTokensPayload) => {
@@ -156,6 +166,7 @@ export const useStaking = () => {
 
           await stakedBalanceQuery.refetch();
           await unstakedBalanceQuery.refetch();
+          await rewardsQuery.refetch();
 
           setStakeIsPending(false);
 
@@ -177,6 +188,7 @@ export const useStaking = () => {
       stakedBalanceQuery,
       switchChainAsync,
       unstakedBalanceQuery,
+      rewardsQuery,
       walletClient,
       writeContractAsync,
     ],
@@ -227,6 +239,7 @@ export const useStaking = () => {
 
           await stakedBalanceQuery.refetch();
           await unstakedBalanceQuery.refetch();
+          await rewardsQuery.refetch();
 
           setUnstakeIsPending(false);
 
@@ -247,10 +260,139 @@ export const useStaking = () => {
       stakedBalanceQuery,
       switchChainAsync,
       unstakedBalanceQuery,
+      rewardsQuery,
       walletClient,
       writeContractAsync,
     ],
   );
+
+  const claimCallback = useCallback(async () => {
+    if (!isConnected && openConnectModal) {
+      openConnectModal();
+    } else {
+      try {
+        if (!walletClient) {
+          return;
+        }
+
+        setClaimIsPending(true);
+        setClaimPendingAmount(Number.parseInt(rewardsQuery.data ?? '0'));
+        await switchChainAsync({ chainId: base.id });
+
+        const claimData = {
+          abi: RewardsABI,
+          functionName: 'claim',
+        };
+
+        const encodedClaimData = encodeFunctionData(claimData);
+
+        const gas = await estimateGas(walletClient, {
+          to: REWARDS_ADDRESS,
+          data: encodedClaimData,
+        }).catch((error) => {
+          throw error;
+        });
+
+        const hash = await writeContractAsync({
+          address: REWARDS_ADDRESS,
+          chain: base,
+          ...claimData,
+          gas,
+        });
+
+        const { status } = await waitForTransactionReceipt(walletClient, {
+          hash,
+        });
+
+        await stakedBalanceQuery.refetch();
+        await unstakedBalanceQuery.refetch();
+        await rewardsQuery.refetch();
+
+        setClaimIsPending(false);
+
+        if (status === 'reverted') {
+          throw new Error('Claim transaction reverted');
+        }
+      } catch (error) {
+        setClaimIsPending(false);
+        setClaimPendingAmount(0);
+        throw error;
+      }
+    }
+  }, [
+    isConnected,
+    openConnectModal,
+    stakedBalanceQuery,
+    switchChainAsync,
+    unstakedBalanceQuery,
+    rewardsQuery,
+    walletClient,
+    writeContractAsync,
+  ]);
+
+  const claimAndLockCallback = useCallback(async () => {
+    if (!isConnected && openConnectModal) {
+      openConnectModal();
+    } else {
+      try {
+        if (!walletClient) {
+          return;
+        }
+
+        setClaimAndLockIsPending(true);
+        setClaimPendingAmount(Number.parseInt(rewardsQuery.data ?? '0'));
+        await switchChainAsync({ chainId: base.id });
+
+        const claimData = {
+          abi: RewardsABI,
+          functionName: 'claimAndLock',
+        };
+
+        const encodedClaimData = encodeFunctionData(claimData);
+
+        const gas = await estimateGas(walletClient, {
+          to: REWARDS_ADDRESS,
+          data: encodedClaimData,
+        }).catch((error) => {
+          throw error;
+        });
+
+        const hash = await writeContractAsync({
+          address: REWARDS_ADDRESS,
+          chain: base,
+          ...claimData,
+          gas,
+        });
+
+        const { status } = await waitForTransactionReceipt(walletClient, {
+          hash,
+        });
+
+        await stakedBalanceQuery.refetch();
+        await unstakedBalanceQuery.refetch();
+        await rewardsQuery.refetch();
+
+        setClaimAndLockIsPending(false);
+
+        if (status === 'reverted') {
+          throw new Error('Claim and Lock transaction reverted');
+        }
+      } catch (error) {
+        setClaimAndLockIsPending(false);
+        setClaimPendingAmount(0);
+        throw error;
+      }
+    }
+  }, [
+    isConnected,
+    openConnectModal,
+    stakedBalanceQuery,
+    switchChainAsync,
+    unstakedBalanceQuery,
+    rewardsQuery,
+    walletClient,
+    writeContractAsync,
+  ]);
 
   const account = {
     isConnected,
@@ -272,6 +414,22 @@ export const useStaking = () => {
     pendingAmount: unstakePendingAmount,
   };
 
+  const claim = {
+    use: () => {
+      return claimCallback();
+    },
+    isPending: claimIsPending,
+    pendingAmount: claimPendingAmount,
+  };
+
+  const claimAndLock = {
+    use: () => {
+      return claimAndLockCallback();
+    },
+    isPending: claimAndLockIsPending,
+    pendingAmount: claimPendingAmount,
+  };
+
   const stakedBalance = {
     amount: stakedBalanceQuery.data ?? '0',
     refetch: stakedBalanceQuery.refetch,
@@ -280,7 +438,7 @@ export const useStaking = () => {
     isSuccess: stakedBalanceQuery.isSuccess,
     formattedAmount: stakedBalanceQuery.data
       ? formatNumber(Number(stakedBalanceQuery.data), 2)
-      : '—',
+      : '0',
   };
 
   const unstakedBalance = {
@@ -291,33 +449,25 @@ export const useStaking = () => {
     isSuccess: unstakedBalanceQuery.isSuccess,
     formattedAmount: unstakedBalanceQuery.data
       ? formatNumber(Number(unstakedBalanceQuery.data), 2)
-      : '—',
+      : '0',
   };
 
-  const stakedBonusBalance = {
-    amount: stakedBonusBalanceQuery.data ?? '0',
-    refetch: stakedBonusBalanceQuery.refetch,
-    isError: stakedBonusBalanceQuery.isError,
-    isPending: stakedBonusBalanceQuery.isPending,
-    isSuccess: stakedBonusBalanceQuery.isSuccess,
-    formattedAmount: stakedBonusBalanceQuery.data
-      ? formatNumber(Number(stakedBonusBalanceQuery.data), 2)
-      : '—',
+  const rewards = {
+    amount: rewardsQuery.data ?? '0',
+    refetch: rewardsQuery.refetch,
+    isError: rewardsQuery.isError,
+    isPending: rewardsQuery.isPending,
+    isSuccess: rewardsQuery.isSuccess,
+    formattedAmount: rewardsQuery.data
+      ? formatNumber(Number(rewardsQuery.data), 2)
+      : '0',
   };
 
   const totalStakedBalance = {
-    amount: `${
-      Number(stakedBalanceQuery.data ?? 0) +
-      Number(stakedBonusBalanceQuery.data ?? 0)
-    }`,
-    formattedAmount:
-      stakedBalanceQuery.isSuccess && stakedBonusBalanceQuery.isSuccess
-        ? formatNumber(
-            Number(stakedBalanceQuery.data ?? 0) +
-              Number(stakedBonusBalanceQuery.data ?? 0),
-            2,
-          )
-        : '—',
+    amount: `${Number(stakedBalanceQuery.data ?? 0)}`,
+    formattedAmount: stakedBalanceQuery.isSuccess
+      ? formatNumber(Number(stakedBalanceQuery.data ?? 0), 2)
+      : '0',
   };
 
   return {
@@ -327,7 +477,9 @@ export const useStaking = () => {
     walletClient,
     stakedBalance,
     unstakedBalance,
-    stakedBonusBalance,
     totalStakedBalance,
+    rewards,
+    claim,
+    claimAndLock,
   };
 };

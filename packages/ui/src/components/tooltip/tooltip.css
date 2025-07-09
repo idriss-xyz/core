@@ -1,0 +1,3 @@
+[data-side="top"] span > svg {
+  transform: translateY(calc(100% - 7px));
+}

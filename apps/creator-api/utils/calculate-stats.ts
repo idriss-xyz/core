@@ -1,4 +1,4 @@
-import { CREATOR_LINKS } from '../constants';
+import { CREATOR_LINKS, monthNames } from '../constants';
 import {
   fetchDonations,
   fetchDonationRecipients,
@@ -8,6 +8,9 @@ import {
   LeaderboardStats,
   DonationData,
   DonationToken,
+  RecipientDonationStats,
+  DonationWithTimeAndAmount,
+  TokenEarnings,
 } from '../types';
 import { Hex } from 'viem';
 
@@ -201,4 +204,59 @@ export async function calculateGlobalStreamerLeaderboard(): Promise<
     ...entry,
     donateLink: CREATOR_LINKS[entry.address.toLowerCase()],
   }));
+}
+
+export function calculateStatsForRecipientAddress(
+  donations: DonationData[],
+): RecipientDonationStats {
+  const donorsAddress = donations.map((donation) =>
+    donation.fromAddress.toLowerCase(),
+  );
+  const distinctDonorsCount = Array.from(new Set(donorsAddress)).length;
+  const totalDonationsCount = donations.length;
+  const biggestDonation = Math.max(...donations.map((d) => d.tradeValue));
+
+  const donationsWithTimeAndAmount = donations.map((donation) => {
+    const timestamp = donation.timestamp;
+    const date = new Date(timestamp);
+    const year = date.getUTCFullYear();
+    const monthIndex = date.getUTCMonth();
+    const monthName = monthNames[monthIndex];
+    const amount = donation.tradeValue;
+    return {
+      year,
+      month: monthName,
+      amount,
+    } as DonationWithTimeAndAmount;
+  });
+
+  const earningsByTokenOverview = Object.values(
+    donations.reduce(
+      (acc, donation) => {
+        const key = donation.token.symbol;
+
+        if (!acc[key]) {
+          acc[key] = {
+            tokenData: donation.token,
+            totalAmount: 0,
+            donationCount: 0,
+          };
+        }
+
+        acc[key].totalAmount += donation.tradeValue;
+        acc[key].donationCount += 1;
+
+        return acc;
+      },
+      {} as Record<string, TokenEarnings>,
+    ),
+  );
+
+  return {
+    distinctDonorsCount,
+    totalDonationsCount,
+    biggestDonation,
+    donationsWithTimeAndAmount,
+    earningsByTokenOverview,
+  };
 }

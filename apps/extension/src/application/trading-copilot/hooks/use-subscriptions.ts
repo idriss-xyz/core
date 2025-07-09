@@ -12,7 +12,6 @@ import { SubscriptionsStorage } from 'shared/web3';
 
 import {
   GetStakedBalanceCommand,
-  GetStakedBonusBalanceCommand,
   AddTradingCopilotSubscriptionCommand,
   GetTradingCopilotSubscriptionsCommand,
   RemoveTradingCopilotSubscriptionCommand,
@@ -52,15 +51,7 @@ export const useSubscriptions = ({ wallet, addTabListener }: Properties) => {
     staleTime: Number.POSITIVE_INFINITY,
     retryDelay: 5000,
   });
-  const stakedBonusBalanceQuery = useCommandQuery({
-    command: new GetStakedBonusBalanceCommand({
-      address: wallet?.account,
-    }),
-    staleTime: Number.POSITIVE_INFINITY,
-    retryDelay: 5000,
-  });
-  const stakedBalanceSum =
-    Number(stakedBalanceQuery.data) + Number(stakedBonusBalanceQuery.data);
+  const stakedBalanceSum = Number(stakedBalanceQuery.data); // leave as `sum` in case other parameters will be taken into account later
 
   const isPremiumUser = stakedBalanceSum >= PREMIUM_THRESHOLD;
   const canSubscribe =

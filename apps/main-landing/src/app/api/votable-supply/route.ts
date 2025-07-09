@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
-import { formatEther, parseEther } from 'viem';
+import { formatEther } from 'viem';
 import { clientBase } from '@idriss-xyz/blockchain-clients';
 
-import { loadExistingEvents } from '@/utils';
 import { IDRISS_TOKEN_ADDRESS } from '@/components/token-section/constants';
 import { ERC20_ABI } from '@/app/creators/donate/constants';
 import {
@@ -132,18 +131,7 @@ export async function GET() {
       airdropBalance -
       amount0;
 
-    const { events } = loadExistingEvents();
-    const bonusClaimTotal = events
-      .filter((event) => {
-        return event.bonus;
-      })
-      .reduce((accumulator, event) => {
-        return accumulator + parseEther(event.total ?? '0');
-      }, 0n);
-
-    const totalCirculatingSupplyAdjusted =
-      totalCirculatingSupply + bonusClaimTotal;
-    const formattedBalance = formatEther(totalCirculatingSupplyAdjusted);
+    const formattedBalance = formatEther(totalCirculatingSupply);
     return NextResponse.json(
       { result: formattedBalance },
       { status: 200, headers: DEFAULT_HEADERS },

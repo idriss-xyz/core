@@ -7,8 +7,15 @@ import { TOKEN_TERMS_AND_CONDITIONS_LINK } from '@idriss-xyz/constants';
 import { Controller, useForm } from 'react-hook-form';
 import { RadialGradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { GeoConditionalButton } from '@idriss-xyz/ui/geo-conditional-button';
+import { TxLoadingModal } from '@idriss-xyz/ui/tx-loading-modal';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@idriss-xyz/ui/tooltip';
+import { Icon } from '@idriss-xyz/ui/icon';
 
-import { TxLoadingModal } from '@/app/claim/components/tx-loading-modal/tx-loading-modal';
 import { useStaking } from '@/app/vault/hooks/use-staking';
 import { TxLoadingHeadingParameters } from '@/app/vault/types';
 
@@ -18,13 +25,8 @@ type FormPayload = {
 };
 
 export const UnstakeTabContent = () => {
-  const {
-    unstake,
-    stakedBalance,
-    stakedBonusBalance,
-    totalStakedBalance,
-    account,
-  } = useStaking();
+  const { unstake, stakedBalance, rewards, account, claim, claimAndLock } =
+    useStaking();
 
   const { handleSubmit, control, watch } = useForm<FormPayload>();
 
@@ -32,37 +34,103 @@ export const UnstakeTabContent = () => {
     void unstake.use({ amount: payload.amount });
   };
 
+  const handleClaim = () => {
+    void claim.use();
+  };
+
+  const handleClaimAndLock = () => {
+    void claimAndLock.use();
+  };
+
+  // To display modal with different messages based on the current pending operation
+  const loadingStates = [
+    {
+      isPending: unstake.isPending,
+      pendingAmount: unstake.pendingAmount,
+      action: 'Unlocking',
+    },
+    {
+      isPending: claim.isPending,
+      pendingAmount: claim.pendingAmount,
+      action: 'Claiming',
+    },
+    {
+      isPending: claimAndLock.isPending,
+      pendingAmount: claimAndLock.pendingAmount,
+      action: 'Claiming and locking',
+    },
+  ];
+
+  // Find the current pending operation (if any)
+  const currentOperation = loadingStates.find((state) => {
+    return state.isPending;
+  });
+
   return (
     <>
-      <TxLoadingModal
-        show={unstake.isPending}
-        heading={<TxLoadingHeading amount={unstake.pendingAmount} />}
-      />
+      {currentOperation && (
+        <TxLoadingModal
+          show
+          heading={
+            <TxLoadingHeading
+              amount={currentOperation.pendingAmount}
+              action={currentOperation.action}
+            />
+          }
+        />
+      )}
 
       <div className="relative mt-4 lg:mt-6">
         <RadialGradientBorder />
 
         <div className="flex flex-col gap-y-2 rounded-2xl bg-white/20 p-6">
           <div className="flex flex-row items-center justify-between">
-            <p className="text-body4 text-neutralGreen-500">Total locked</p>
-            <p className="text-label3 text-neutralGreen-700">
-              {totalStakedBalance.formattedAmount} IDRISS
-            </p>
-          </div>
-
-          <div className="flex flex-row items-center justify-between">
-            <p className="text-body4 text-neutralGreen-500">Unlockable</p>
+            <p className="text-body4 text-neutralGreen-500">Locked balance</p>
             <p className="text-label3 text-neutralGreen-700">
               {stakedBalance.formattedAmount} IDRISS
             </p>
           </div>
 
           <div className="flex flex-row items-center justify-between">
-            <p className="text-body4 text-neutralGreen-500">
-              Unlockable from July 6
-            </p>
+            <div className="flex items-center gap-x-1">
+              <p className="text-body4 text-neutralGreen-500">Rewards</p>
+              <TooltipProvider delayDuration={400}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Icon
+                      name="HelpCircle"
+                      size={15}
+                      className="text-neutralGreen-500"
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent className="text-pretty bg-black text-left text-white">
+                    <p className="text-label6">
+                      12% APR distributed every 6 months.
+                      <br />
+                      First payout: July 6, 2025.
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
             <p className="text-label3 text-neutralGreen-700">
-              {stakedBonusBalance.formattedAmount} IDRISS
+              {rewards.amount != '0' && (
+                <>
+                  <span
+                    className="mx-2 text-body5 text-mint-700 underline hover:cursor-pointer"
+                    onClick={handleClaim}
+                  >
+                    Claim
+                  </span>
+                  <span
+                    className="mx-2 text-body5 text-mint-700 underline hover:cursor-pointer"
+                    onClick={handleClaimAndLock}
+                  >
+                    Claim & lock
+                  </span>
+                </>
+              )}
+              {rewards.formattedAmount} IDRISS
             </p>
           </div>
         </div>
@@ -146,36 +214,35 @@ export const UnstakeTabContent = () => {
           }}
         />
 
-        <div className="relative">
-          <GeoConditionalButton
-            defaultButton={
-              <Button
-                intent="primary"
-                size="large"
-                className="mt-4 w-full lg:mt-6"
-                type="submit"
-                disabled={
-                  !watch('termsChecked') ||
-                  ((Number(watch('amount')) <= 0 ||
-                    watch('amount') === undefined ||
-                    Number(watch('amount')) > Number(stakedBalance.amount)) &&
-                    account.isConnected)
-                }
-              >
-                {account.isConnected ? 'UNLOCK' : 'LOG IN'}
-              </Button>
-            }
-          />
-        </div>
+        <GeoConditionalButton
+          defaultButton={
+            <Button
+              intent="primary"
+              size="large"
+              className="mt-4 w-full lg:mt-6"
+              type="submit"
+              disabled={
+                !watch('termsChecked') ||
+                ((Number(watch('amount')) <= 0 ||
+                  watch('amount') === undefined ||
+                  Number(watch('amount')) > Number(stakedBalance.amount)) &&
+                  account.isConnected)
+              }
+            >
+              {account.isConnected ? 'UNLOCK' : 'LOG IN'}
+            </Button>
+          }
+          className="mt-4 w-full lg:mt-6 lg:w-full"
+        />
       </Form>
     </>
   );
 };
 
-const TxLoadingHeading = ({ amount }: TxLoadingHeadingParameters) => {
+const TxLoadingHeading = ({ amount, action }: TxLoadingHeadingParameters) => {
   return (
     <>
-      Unlocking <span className="text-mint-600">{amount.toLocaleString()}</span>{' '}
+      {action} <span className="text-mint-600">{amount.toLocaleString()}</span>{' '}
       IDRISS
     </>
   );

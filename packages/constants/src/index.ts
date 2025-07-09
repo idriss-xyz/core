@@ -25,10 +25,11 @@ export {
   CREATORS_FORM_LINK,
 } from './links';
 
-export { StakingABI } from './abis';
+export { StakingABI, RewardsABI } from './abis';
 
 export {
   STAKER_ADDRESS,
+  REWARDS_ADDRESS,
   CHAIN_ID_TO_TOKENS,
   CREATOR_CHAIN,
   CHAIN,

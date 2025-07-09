@@ -5,7 +5,7 @@ export const SOCIAL_LINK = {
   X: 'https://x.com/idriss_xyz',
   WARPCAST: 'https://warpcast.com/idriss',
   DISCORD: 'https://discord.com/invite/RJhJKamjw5',
-  INSTAGRAM: 'https://www.instagram.com/idriss_xyz_',
+  INSTAGRAM: 'https://www.instagram.com/idriss_xyz',
   TIKTOK: 'https://www.tiktok.com/@idriss_xyz_',
   YOUTUBE: 'https://www.youtube.com/@idriss_xyz',
 };
@@ -49,8 +49,7 @@ export const TERMS_OF_SERVICE_LINK =
   'https://docs.idriss.xyz/resources/terms-of-service';
 export const AIRDROP_DOCS_LINK =
   'https://docs.idriss.xyz/idriss-token/retroactive-distribution';
-export const VAULT_DOCS_LINK =
-  'https://docs.idriss.xyz/idriss-token/retroactive-distribution#vault';
+export const VAULT_DOCS_LINK = 'https://docs.idriss.xyz/idriss-token/vault';
 export const TOKENOMICS_DOCS_LINK =
   'https://docs.idriss.xyz/idriss-token/tokenomics';
 

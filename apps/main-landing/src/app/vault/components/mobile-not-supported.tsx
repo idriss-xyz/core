@@ -4,7 +4,7 @@ import { IDRISS_SCENE_STREAM } from '@/assets';
 
 export const MobileNotSupportedContent = () => {
   return (
-    <main className="relative flex min-h-screen grow flex-col items-center justify-around overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] px-4 lg:hidden lg:flex-row lg:items-start lg:justify-center lg:px-0">
+    <main className="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] px-4 lg:hidden">
       <img
         alt=""
         src={IDRISS_SCENE_STREAM.src}
@@ -27,7 +27,7 @@ export const MobileNotSupportedContent = () => {
           />
 
           <p className="text-balance text-center text-heading5 text-neutralGreen-700">
-            The claim experience is designed for desktop.
+            Vault experience is designed for desktop.
           </p>
 
           <p className="text-balance text-center text-heading5 text-neutralGreen-700">

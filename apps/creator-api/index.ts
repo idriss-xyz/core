@@ -8,6 +8,7 @@ import http from 'http';
 import { Server as SocketIOServer, Socket } from 'socket.io';
 import { connectedClients } from './services/socket-server';
 import tipHistoryRouter from './routes/tip-history';
+import recipientHistoryRouter from './routes/recipient-history';
 import donorHistoryRouter from './routes/donor-history';
 import creatorLeaderboardRouter from './routes/creator-leaderboard';
 import donorLeaderboardRouter from './routes/donor-leaderboard';
@@ -42,6 +43,7 @@ app.use(
 const server = http.createServer(app);
 app.use('/tip-history', tipHistoryRouter);
 app.use('/donor-history', donorHistoryRouter);
+app.use('/recipient-history', recipientHistoryRouter);
 app.use('/creator-leaderboard', creatorLeaderboardRouter);
 app.use('/donor-leaderboard', donorLeaderboardRouter);
 app.use('/push-donation', pushDonationRouter);

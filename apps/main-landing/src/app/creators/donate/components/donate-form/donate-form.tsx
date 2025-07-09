@@ -25,7 +25,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { classes } from '@idriss-xyz/ui/utils';
-import { Spinner } from '@idriss-xyz/ui/spinner';
+import { TxLoadingContent } from '@idriss-xyz/ui/tx-loading-modal';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useAccount, useWalletClient } from 'wagmi';
 import {
@@ -278,22 +278,20 @@ export const DonateForm = ({ className, creatorInfo }: Properties) => {
   if (sender.isSending) {
     return (
       <div className={classes(baseClassName, className)}>
-        <Spinner className="size-16 text-mint-600" />
-
-        <p className="mt-6 text-heading5 text-neutral-900 lg:text-heading4">
-          Waiting for confirmation
-        </p>
-
-        <p className="mt-3 flex flex-wrap justify-center gap-1 text-body5 text-neutral-600 lg:text-body4">
-          Sending <span className="text-mint-600">${amount}</span>{' '}
-          {amountInSelectedToken
-            ? `(${roundToSignificantFigures(Number(amountInSelectedToken), 2)} ${selectedToken?.symbol})`
-            : null}
-        </p>
-
-        <p className="mt-1 text-body5 text-neutral-600 lg:text-body4">
-          Confirm transfer in your wallet
-        </p>
+        <TxLoadingContent
+          heading={
+            <>
+              Sending <span className="text-mint-600">${amount}</span>{' '}
+              {amountInSelectedToken
+                ? `(${roundToSignificantFigures(
+                    Number(amountInSelectedToken),
+                    2,
+                  )} ${selectedToken?.symbol})`
+                : null}
+            </>
+          }
+          confirmationMessage="Confirm transfer in your wallet"
+        />
       </div>
     );
   }
@@ -487,10 +485,10 @@ export const DonateForm = ({ className, creatorInfo }: Properties) => {
                         <TooltipTrigger asChild>
                           <Icon name="HelpCircle" size={15} />
                         </TooltipTrigger>
-                        <TooltipContent className="w-[300px] bg-black text-center text-white">
+                        <TooltipContent className="bg-black text-center text-white">
                           <p className="text-label6">
-                            Type what you want to hear. AI will turn it into a
-                            sound effect and replace the default sound.
+                            Type what you want to hear. AI will turn it into{' '}
+                            <br />a sound effect and replace the default sound.
                           </p>
                         </TooltipContent>
                       </Tooltip>

@@ -1,0 +1,98 @@
+[
+  {
+    "transactionHash": "0x107740977dc91f4ed2ecdd852b82caa3516b46883666543b3ee26e3856a65307",
+    "fromAddress": "0x5abca791c22e7f99237fcc04639e094ffa0ccce9",
+    "toAddress": "0x3c078bdab292f8e5e91cb5b16c210da71a3c8c42",
+    "timestamp": 1747744287000,
+    "comment": " GG",
+    "tradeValue": 67.321,
+    "tokenAddress": "0x0000000000000000000000000000000000000000",
+    "network": "BASE_MAINNET",
+    "amountRaw": "399794834138766",
+    "fromUser": {
+      "address": "0x5abca791c22e7f99237fcc04639e094ffa0ccce9",
+      "displayName": "idriss.base.eth",
+      "displayNameSource": "BASENAME",
+      "avatarUrl": "https://ipfs.io/ipfs/bafkreigwt4fn24gyh4nnqjutxio24dqfloyolo4h4nljkhran6dypy7e5q",
+      "avatarSource": "ENS"
+    },
+    "toUser": {
+      "address": "0x3c078bdab292f8e5e91cb5b16c210da71a3c8c42",
+      "displayName": "0x3c07...8c42",
+      "displayNameSource": "ADDRESS",
+      "avatarUrl": null,
+      "avatarSource": "OPEPENS"
+    },
+    "token": {
+      "address": "0x0000000000000000000000000000000000000000",
+      "symbol": "ETH",
+      "imageUrl": "https://storage.googleapis.com/zapper-fi-assets/tokens/base/0x0000000000000000000000000000000000000000.png",
+      "network": "BASE_MAINNET",
+      "decimals": 18
+    }
+  },
+  {
+    "transactionHash": "0xca440b483fb75b1b4de51851328e49fc92524de6421dd8de188b9a36b87b6b40",
+    "fromAddress": "0xee6799bc9772becbef8b24eee04781fa5e2e23d4",
+    "toAddress": "0xae3e3ab0ef15e38ce68f75ed8616c4df790724df",
+    "timestamp": 1737595643000,
+    "comment": null,
+    "tradeValue": 95.32615170996243,
+    "tokenAddress": "0xb23d80f5fefcddaa212212f028021b41ded428cf",
+    "network": "ETHEREUM_MAINNET",
+    "amountRaw": "8081921070501021000",
+    "fromUser": {
+      "address": "0xee6799bc9772becbef8b24eee04781fa5e2e23d4",
+      "displayName": "airevcash.eth",
+      "displayNameSource": "ENS",
+      "avatarUrl": "https://euc.li/airevcash.eth",
+      "avatarSource": "ENS"
+    },
+    "toUser": {
+      "address": "0xae3e3ab0ef15e38ce68f75ed8616c4df790724df",
+      "displayName": "0xae3e...24df",
+      "displayNameSource": "ADDRESS",
+      "avatarUrl": null,
+      "avatarSource": "OPEPENS"
+    },
+    "token": {
+      "address": "0xb23d80f5fefcddaa212212f028021b41ded428cf",
+      "symbol": "PRIME",
+      "imageUrl": "https://storage.googleapis.com/zapper-fi-assets/tokens/ethereum/0xb23d80f5fefcddaa212212f028021b41ded428cf.png",
+      "network": "ETHEREUM_MAINNET",
+      "decimals": 18
+    }
+  },
+  {
+    "transactionHash": "0xbdab4c2177af9159b02c250b30355049c373f02f687f56696d207d26d9b8c6c8",
+    "fromAddress": "0xee6799bc9772becbef8b24eee04781fa5e2e23d4",
+    "toAddress": "0x4f9dc8c989a8143c5a9c28682bdf46c212ebefb6",
+    "timestamp": 1738368000000,
+    "comment": null,
+    "tradeValue": 98.15162686310076,
+    "tokenAddress": "0xb23d80f5fefcddaa212212f028021b41ded428cf",
+    "network": "ETHEREUM_MAINNET",
+    "amountRaw": "9300192520992636000",
+    "fromUser": {
+      "address": "0xee6799bc9772becbef8b24eee04781fa5e2e23d4",
+      "displayName": "airevcash.eth",
+      "displayNameSource": "ENS",
+      "avatarUrl": "https://euc.li/airevcash.eth",
+      "avatarSource": "ENS"
+    },
+    "toUser": {
+      "address": "0x4f9dc8c989a8143c5a9c28682bdf46c212ebefb6",
+      "displayName": "excelsor.eth",
+      "displayNameSource": "ENS",
+      "avatarUrl": "https://euc.li/excelsor.eth",
+      "avatarSource": "ENS"
+    },
+    "token": {
+      "address": "0xb23d80f5fefcddaa212212f028021b41ded428cf",
+      "symbol": "PRIME",
+      "imageUrl": "https://storage.googleapis.com/zapper-fi-assets/tokens/ethereum/0xb23d80f5fefcddaa212212f028021b41ded428cf.png",
+      "network": "ETHEREUM_MAINNET",
+      "decimals": 18
+    }
+  }
+]
