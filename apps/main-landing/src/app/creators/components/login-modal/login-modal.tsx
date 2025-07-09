@@ -63,7 +63,7 @@ export const LoginModal = ({ isOpened, onClose }: Properties) => {
             className="text-mint-600 underline"
             href={PRIVACY_POLICY_LINK}
           >
-            Privacy Policy
+            Privacy policy
           </ExternalLink>
           .
         </span>

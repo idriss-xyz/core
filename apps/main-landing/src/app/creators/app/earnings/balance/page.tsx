@@ -9,12 +9,19 @@ export default function EarningsBalance() {
   return (
     <div className="grid grid-cols-3 gap-4">
       <Card className="col-span-3 p-0">
-        <div className="relative h-[224px] overflow-hidden rounded-2xl bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)]">
+        <div className="relative h-[224px] overflow-hidden rounded-2xl">
           <img
             alt="idriss stream"
             src={IDRISS_SCENE_STREAM_4.src}
-            className="absolute top-[-130px] w-full"
+            className="absolute top-[-165px] w-full"
           />
+          <div className='flex flex-col items-center gap-2 px-4 py-6'>
+            <div className="flex flex-col items-center">
+              <h4 className='text-heading4'>Available balance</h4>
+              <h2 className='text-heading2 gradient-text'>${balance}</h2>
+            </div>
+            <Button intent='primary' size='small' className="uppercase" prefixIconName='ArrowDownFromLine'>Withdraw</Button>
+          </div>
         </div>
       </Card>
       {balance > 0 ? (
