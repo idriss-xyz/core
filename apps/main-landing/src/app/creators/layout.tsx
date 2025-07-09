@@ -1,7 +1,8 @@
-import { AuthProvider } from './context/auth-context';
 import { Metadata } from 'next';
 
 import { metadata as landingMetadata } from '@/app/layout';
+
+import { AuthProvider } from './context/auth-context';
 
 // ts-unused-exports:disable-next-line
 export const metadata: Metadata = {

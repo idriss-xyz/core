@@ -17,10 +17,10 @@ import {
   STAKER_ADDRESS,
   STAKING_ABI,
 } from '@idriss-xyz/constants';
+import { formatNumber } from '@idriss-xyz/utils';
 
 import { useGetStakedBalance } from '@/app/vault/commands/get-staked-balance';
 import { useGetUnstakedBalance } from '@/app/vault/commands/get-unstaked-balance';
-import { formatNumber } from '@idriss-xyz/utils';
 import { IDRISS_TOKEN_ADDRESS } from '@/components/token-section/constants';
 
 import { ApproveTokensPayload, StakePayload, UnstakePayload } from '../types';
