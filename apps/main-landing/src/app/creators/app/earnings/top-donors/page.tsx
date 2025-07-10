@@ -9,7 +9,7 @@ import { IDRISS_SCENE_STREAM_LIGHT } from '@/assets';
 // ts-unused-exports:disable-next-line
 export default function TopDonors() {
   const tipHistoryQuery = useGetTipHistory({
-    address: '0x7D716741D2c37925e5E15123025400Be80ec796d',
+    address: '0x7D716741D2c37925e5E15123025400Be80ec796d', // TODO: Replace with user address
   });
   const donations = tipHistoryQuery.data?.leaderboard ?? [];
 
@@ -21,11 +21,11 @@ export default function TopDonors() {
         leaderboardLoading={tipHistoryQuery.isLoading}
         address={{
           isValid: true,
-          data: '0x7D716741D2c37925e5E15123025400Be80ec796d' as Hex,
+          data: '0x7D716741D2c37925e5E15123025400Be80ec796d' as Hex, // TODO: Replace with user address
           isFetching: false,
         }}
         variant="creatorsDashboard"
-        className="container overflow-hidden border border-neutral-300 px-0 shadow-lg"
+        className="container overflow-hidden px-0 shadow-lg"
       />
       <div className="relative mt-4 min-h-[136px] overflow-hidden rounded-lg bg-neutral-300">
         <img
