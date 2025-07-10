@@ -6,7 +6,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { IDRISS_ICON_CIRCLE } from '@/assets';
-import { QueryProvider } from '@/providers';
+
+import { Providers } from '../providers';
 
 // ts-unused-exports:disable-next-line
 export default function CreatorsLayout({
@@ -15,7 +16,7 @@ export default function CreatorsLayout({
   children: React.ReactNode;
 }) {
   return (
-    <QueryProvider>
+    <Providers>
       <div className="flex min-h-screen bg-neutral-100">
         {/* Sidebar */}
         <aside className="m-3 flex w-64 flex-col rounded-xl bg-white">
@@ -72,6 +73,6 @@ export default function CreatorsLayout({
           <main className="p-2">{children}</main>
         </div>
       </div>
-    </QueryProvider>
+    </Providers>
   );
 }
