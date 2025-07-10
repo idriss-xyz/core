@@ -58,7 +58,7 @@ const columns: ColumnDefinition<BalanceTableItem>[] = [
       return (
         <IconButton
           intent="tertiary"
-          size="small"
+          size="medium"
           iconName="ArrowDownFromLine"
           onClick={() => {
             return console.log('To be implemented'); // TODO: Implement download
@@ -66,6 +66,7 @@ const columns: ColumnDefinition<BalanceTableItem>[] = [
         />
       );
     },
+    className: 'flex justify-end',
   },
 ];
 

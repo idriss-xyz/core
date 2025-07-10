@@ -60,14 +60,14 @@ export default function EarningsBalance() {
   return (
     <div className="grid grid-cols-3 gap-4">
       <Card className="col-span-3 p-0">
-        <div className="relative h-[224px] overflow-hidden rounded-2xl">
+        <div className="relative h-[250px] overflow-hidden rounded-2xl">
           <img
             alt="idriss stream"
             src={IDRISS_SCENE_STREAM_4.src}
-            className="absolute top-[-165px] w-full"
+            className="absolute -bottom-80 w-full"
           />
-          <div className="flex flex-col items-center gap-2 px-4 py-6">
-            <div className="flex flex-col items-center">
+          <div className="relative flex flex-col items-center gap-2 px-4 py-6">
+            <div className="flex flex-col items-center gap-2">
               <h4 className="text-heading4">Available balance</h4>
               <h2 className="text-heading2 gradient-text">
                 ${formatNumber(totalUsdBalance, 2)}
@@ -86,6 +86,9 @@ export default function EarningsBalance() {
       </Card>
       {hasBalance ? (
         <Card className="col-span-3 p-0">
+          <div className="p-4">
+            <span className="text-label3">Assets</span>
+          </div>
           <BalanceTable data={tableData} />
         </Card>
       ) : (

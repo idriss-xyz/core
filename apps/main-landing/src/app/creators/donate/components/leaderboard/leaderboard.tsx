@@ -7,28 +7,19 @@ import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { Button } from '@idriss-xyz/ui/button';
 import { LeaderboardStats } from '@idriss-xyz/constants';
 import { ColumnDefinition, Table } from '@idriss-xyz/ui/table';
-import { getShortWalletHex, getTimeDifferenceString } from '@idriss-xyz/utils';
+import { getTimeDifferenceString } from '@idriss-xyz/utils';
 
 import { IDRISS_SCENE_STREAM_2 } from '../../../../../assets';
 import { WidgetVariants } from '../../../../../../../twitch-extension/src/app/types';
 import { DonateContentValues } from '../../types';
-import { WHITELISTED_URLS } from '../../constants';
-import { useGetAvatarImage } from '../../commands/get-avatar-image';
 
 import {
   LeaderboardItem,
   LeaderboardItemPlaceholder,
 } from './leaderboard-item';
+import { LeaderboardItemDonor } from './leaderboard-item-donor';
 
 const MAX_DISPLAYED_ITEMS = 6;
-
-const rankBorders = [
-  'border-[#FAC928]',
-  'border-[#979797]',
-  'border-[#934F0A]',
-];
-
-const rankColors = ['text-[#FAC928]', 'text-[#979797]', 'text-[#934F0A]'];
 
 type Properties = {
   className?: string;
@@ -60,65 +51,7 @@ const columns: ColumnDefinition<LeaderboardStats>[] = [
     id: 'donor',
     name: 'Donor',
     accessor: (item, index) => {
-      const avatarSourceUrl = item.avatarUrl;
-
-      const isAllowedUrl =
-        avatarSourceUrl &&
-        WHITELISTED_URLS.some((domain) => {
-          return avatarSourceUrl.startsWith(domain);
-        });
-
-      const avatarDataQuery = useGetAvatarImage(
-        { url: avatarSourceUrl ?? '' },
-        { enabled: !!avatarSourceUrl && !isAllowedUrl },
-      );
-
-      const avatarImage = (
-        <div className="relative w-max">
-          {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
-          {((avatarSourceUrl && isAllowedUrl) ||
-            (avatarSourceUrl && !isAllowedUrl && !!avatarDataQuery.data)) && (
-            <img
-              alt={`Rank ${index + 1}`}
-              src={isAllowedUrl ? avatarSourceUrl : avatarDataQuery.data}
-              className={`size-8 rounded-full bg-neutral-200 ${index <= 2 ? `border-2 ${rankBorders[index]}` : 'border border-neutral-400'}`}
-            />
-          )}
-
-          {(!avatarSourceUrl || (!isAllowedUrl && !avatarDataQuery.data)) && (
-            <div
-              className={`flex size-8 items-center justify-center rounded-full ${index <= 2 ? `border-2 ${rankBorders[index]}` : 'border border-neutral-300'} bg-neutral-200`}
-            >
-              <Icon
-                size={20}
-                name="CircleUserRound"
-                className="text-neutral-500"
-              />
-            </div>
-          )}
-
-          {index <= 2 && (
-            <Icon
-              size={13}
-              name="CrownCircled"
-              className={`absolute bottom-0 right-0 ${rankColors[index]}`}
-            />
-          )}
-        </div>
-      );
-
-      return (
-        <>
-          {avatarImage}
-
-          <Link
-            size="xs"
-            className="overflow-hidden text-ellipsis border-0 text-body5 text-neutral-900 no-underline lg:text-body5"
-          >
-            {item.displayName ?? getShortWalletHex(item.address)}
-          </Link>
-        </>
-      );
+      return <LeaderboardItemDonor item={item} index={index} />;
     },
     className: 'flex items-center gap-x-1.5 overflow-hidden',
   },

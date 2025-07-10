@@ -97,7 +97,7 @@ export function Table<T>({
   return (
     <table className={classes('w-full table-auto border-collapse', className)}>
       {showHeaders && (
-        <thead className="bg-neutral-100 text-label6 text-neutral-800">
+        <thead className="bg-neutral-100/80 text-label6 text-neutral-800">
           <tr>
             {columns.map((column) => {
               return (
@@ -105,7 +105,7 @@ export function Table<T>({
                   key={column.id}
                   scope="col"
                   className={classes(
-                    'px-4 py-3',
+                    'h-[44px] px-4',
                     column.sortable &&
                       'cursor-pointer select-none hover:text-mint-600',
                     column.className,
