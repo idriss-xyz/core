@@ -7,11 +7,13 @@ import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { Button } from '@idriss-xyz/ui/button';
 import { LeaderboardStats } from '@idriss-xyz/constants';
 import { ColumnDefinition, Table } from '@idriss-xyz/ui/table';
-import { getTimeDifferenceString } from '@idriss-xyz/utils';
+import { getShortWalletHex, getTimeDifferenceString } from '@idriss-xyz/utils';
 
 import { IDRISS_SCENE_STREAM_2 } from '../../../../../assets';
 import { WidgetVariants } from '../../../../../../../twitch-extension/src/app/types';
 import { DonateContentValues } from '../../types';
+import { WHITELISTED_URLS } from '../../constants';
+import { useGetAvatarImage } from '../../commands/get-avatar-image';
 
 import {
   LeaderboardItem,
@@ -19,6 +21,14 @@ import {
 } from './leaderboard-item';
 
 const MAX_DISPLAYED_ITEMS = 6;
+
+const rankBorders = [
+  'border-[#FAC928]',
+  'border-[#979797]',
+  'border-[#934F0A]',
+];
+
+const rankColors = ['text-[#FAC928]', 'text-[#979797]', 'text-[#934F0A]'];
 
 type Properties = {
   className?: string;
@@ -45,26 +55,72 @@ const columns: ColumnDefinition<LeaderboardStats>[] = [
     accessor: (_: LeaderboardStats, index: number) => {
       return index + 1;
     },
-    className: 'px-4 py-3',
   },
   {
     id: 'donor',
     name: 'Donor',
-    accessor: (item) => {
-      return (
-        <div className="flex items-center gap-2">
-          {item.avatarUrl && (
+    accessor: (item, index) => {
+      const avatarSourceUrl = item.avatarUrl;
+
+      const isAllowedUrl =
+        avatarSourceUrl &&
+        WHITELISTED_URLS.some((domain) => {
+          return avatarSourceUrl.startsWith(domain);
+        });
+
+      const avatarDataQuery = useGetAvatarImage(
+        { url: avatarSourceUrl ?? '' },
+        { enabled: !!avatarSourceUrl && !isAllowedUrl },
+      );
+
+      const avatarImage = (
+        <div className="relative w-max">
+          {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
+          {((avatarSourceUrl && isAllowedUrl) ||
+            (avatarSourceUrl && !isAllowedUrl && !!avatarDataQuery.data)) && (
             <img
-              src={item.avatarUrl}
-              alt=""
-              className="size-8 rounded-full object-cover"
+              alt={`Rank ${index + 1}`}
+              src={isAllowedUrl ? avatarSourceUrl : avatarDataQuery.data}
+              className={`size-8 rounded-full bg-neutral-200 ${index <= 2 ? `border-2 ${rankBorders[index]}` : 'border border-neutral-400'}`}
             />
           )}
-          <span>{item.displayName ?? 'Anonymous'}</span>
+
+          {(!avatarSourceUrl || (!isAllowedUrl && !avatarDataQuery.data)) && (
+            <div
+              className={`flex size-8 items-center justify-center rounded-full ${index <= 2 ? `border-2 ${rankBorders[index]}` : 'border border-neutral-300'} bg-neutral-200`}
+            >
+              <Icon
+                size={20}
+                name="CircleUserRound"
+                className="text-neutral-500"
+              />
+            </div>
+          )}
+
+          {index <= 2 && (
+            <Icon
+              size={13}
+              name="CrownCircled"
+              className={`absolute bottom-0 right-0 ${rankColors[index]}`}
+            />
+          )}
         </div>
       );
+
+      return (
+        <>
+          {avatarImage}
+
+          <Link
+            size="xs"
+            className="overflow-hidden text-ellipsis border-0 text-body5 text-neutral-900 no-underline lg:text-body5"
+          >
+            {item.displayName ?? getShortWalletHex(item.address)}
+          </Link>
+        </>
+      );
     },
-    className: 'px-4 py-3',
+    className: 'flex items-center gap-x-1.5 overflow-hidden',
   },
   {
     id: 'totalAmount',
@@ -76,7 +132,6 @@ const columns: ColumnDefinition<LeaderboardStats>[] = [
     sortFunction: (a, b) => {
       return a.totalAmount - b.totalAmount;
     },
-    className: 'px-4 py-3',
   },
   {
     id: 'donationCount',
@@ -88,7 +143,6 @@ const columns: ColumnDefinition<LeaderboardStats>[] = [
     sortFunction: (a, b) => {
       return (a.donationCount ?? 0) - (b.donationCount ?? 0);
     },
-    className: 'px-4 py-3',
   },
   {
     id: 'donorSince',
@@ -100,7 +154,7 @@ const columns: ColumnDefinition<LeaderboardStats>[] = [
             variant: 'short',
             timestamp: item.donorSince,
           })
-        : 'N/A';
+        : '-';
     },
     sortable: true,
     sortFunction: (a, b) => {
@@ -108,7 +162,6 @@ const columns: ColumnDefinition<LeaderboardStats>[] = [
       const dateB = b.donorSince ? new Date(b.donorSince).getTime() : 0;
       return dateA - dateB;
     },
-    className: 'px-4 py-3',
   },
 ];
 
