@@ -134,4 +134,11 @@ export interface DonationToken {
   imageUrl?: string;
   network: string;
   decimals: number;
+  name?: string; // TODO: Add to api
+}
+
+export interface BalanceTableItem {
+  totalAmount: number;
+  totalValue: number;
+  token: DonationToken;
 }

@@ -58,6 +58,7 @@ export type {
   DonationData,
   DonationUser,
   DonationToken,
+  BalanceTableItem,
 } from './types';
 
 export * from './logos';
