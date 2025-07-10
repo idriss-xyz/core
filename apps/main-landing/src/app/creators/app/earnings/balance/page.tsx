@@ -30,21 +30,30 @@ export default function EarningsBalance() {
   const totalUsdBalance = balancesData?.summary.totalUsdBalance ?? 0;
   const apiBalances = balancesData?.balances ?? [];
 
-  // Transform the API data to match the format expected by the BalanceTable component.
-  const tableData: BalanceTableItem[] = apiBalances.map((balance) => {
-    return {
-      totalAmount: Number(balance.balance),
-      totalValue: balance.usdValue,
-      token: {
-        address: balance.address,
-        symbol: balance.symbol,
-        name: balance.name,
-        imageUrl: balance.imageUrl ?? '',
-        network: balance.network,
-        decimals: balance.decimals,
-      },
-    };
-  });
+  const aggregatedBalances: Record<string, BalanceTableItem> = {};
+  for (const balance of apiBalances) {
+    const existing = aggregatedBalances[balance.symbol];
+
+    if (existing) {
+      existing.totalAmount += Number(balance.balance);
+      existing.totalValue += balance.usdValue;
+    } else {
+      aggregatedBalances[balance.symbol] = {
+        totalAmount: Number(balance.balance),
+        totalValue: balance.usdValue,
+        token: {
+          address: balance.address,
+          symbol: balance.symbol,
+          name: balance.name,
+          imageUrl: balance.imageUrl ?? '',
+          network: 'Multiple',
+          decimals: balance.decimals,
+        },
+      };
+    }
+  }
+
+  const tableData: BalanceTableItem[] = Object.values(aggregatedBalances);
 
   const hasBalance = !isLoading && !isError && tableData.length > 0;
 
