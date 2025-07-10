@@ -252,9 +252,11 @@ export const DonateForm = ({ className, creatorInfo }: Properties) => {
     if (!creatorInfo.address.data || !creatorInfo.address.isValid) {
       return;
     }
-    await fetch(`${CREATOR_API_URL}/push-donation`, {
+    await fetch(`${CREATOR_API_URL}/tip-history/sync`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({ address: creatorInfo.address.data }),
     });
   }, [creatorInfo.address.data, creatorInfo.address.isValid]);

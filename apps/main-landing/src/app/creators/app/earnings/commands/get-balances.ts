@@ -13,7 +13,7 @@ interface TokenBalance {
   usdValue: number;
 }
 
-export interface BalancesResponse {
+interface BalancesResponse {
   balances: TokenBalance[];
   summary: {
     totalUsdBalance: number;

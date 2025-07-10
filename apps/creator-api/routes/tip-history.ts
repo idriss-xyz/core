@@ -12,14 +12,21 @@ import {
 import { storeToDatabase } from '../db/store-new-donation';
 import {
   AppHistoryVariables,
+  DonationData,
   TipHistoryResponse,
   ZapperNode,
   ZapperResponse,
 } from '../types';
 import { calculateDonationLeaderboard } from '../utils/calculate-stats';
 import { enrichNodesWithHistoricalPrice } from '../utils/enrich-nodes';
+import { syncAndStoreNewDonations } from '../services/zapper/process-donations';
+import { connectedClients } from '../services/socket-server';
 
 const router = Router();
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const MAX_RETRIES = 6;
+const RETRY_INTERVAL = 5000;
 
 /**
  * Shared logic to fetch and process tip history for a given address.
@@ -58,100 +65,60 @@ router.get('/:address', handleFetchTipHistory);
 // This keeps the old POST endpoint working.
 router.post('/', handleFetchTipHistory);
 
-// --- Endpoint 2: Sync All Donations (for a scheduled job/cron) ---
-// This endpoint fetches all app transactions from Zapper and stores new ones.
+// --- Endpoint 2: Sync All Donations and Push to Clients ---
 router.post('/sync', async (req: Request, res: Response) => {
   try {
-    // 1. Get all transaction hashes already stored in your database.
-    const knownHashes = await fetchAllKnownDonationHashes();
+    // Address of the creator expecting the donation, used to control retries.
+    const { address } = req.body;
+    if (!address || typeof address !== 'string') {
+      res.status(400).json({ error: 'Invalid or missing address' });
+      return;
+    }
+    const lowerCaseAddress = address.toLowerCase();
 
-    const newEdges: { node: ZapperNode }[] = [];
-    let cursor: string | null = null;
-    let hasNextPage = true;
+    let retries = 0;
+    let foundDonationForUser = false;
+    const allNewlySyncedDonations: DonationData[] = [];
 
-    // 2. Loop through Zapper API to find new transactions.
-    while (hasNextPage) {
-      const variables: AppHistoryVariables = {
-        slug: 'idriss',
-        after: cursor,
-      };
+    while (retries < MAX_RETRIES && !foundDonationForUser) {
+      if (retries > 0) {
+        await delay(RETRY_INTERVAL);
+      }
+      retries++;
 
-      const encodedKey = Buffer.from(process.env.ZAPPER_API_KEY ?? '').toString(
-        'base64',
-      );
-      const response = await fetch(ZAPPER_API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Basic ${encodedKey}`,
-        },
-        body: JSON.stringify({ query: TipHistoryQuery, variables }),
-      });
-      const data: ZapperResponse = await response.json();
-      const appTimeline = data.data?.transactionsForAppV2;
-      if (!appTimeline) break;
+      const newDonations = await syncAndStoreNewDonations();
 
-      const currentEdges = appTimeline.edges || [];
+      // Always process all new donations found in this batch
+      if (newDonations.length > 0) {
+        allNewlySyncedDonations.push(...newDonations);
 
-      // Filter for valid, new donations
-      const relevantEdges = currentEdges.filter((edge) => {
-        if (edge.node.app?.slug !== 'idriss') return false;
-        const txHash = edge.node.transaction.hash.toLowerCase();
-        if (knownHashes.has(txHash)) return false;
-
-        const descriptionItems =
-          edge.node.interpretation?.descriptionDisplayItems;
-        const data = edge.node.transaction.decodedInputV2.data;
-        const hasValidData =
-          data.length > 0 && data[data.length - 1].value.length > 0;
-        if (!hasValidData) return false;
-
-        if (descriptionItems?.[2]?.stringValue) {
-          if (descriptionItems[2].stringValue === 'N/A') return false;
-          if (
-            descriptionItems[2].stringValue === descriptionItems[0]?.amountRaw
-          ) {
-            return false;
+        // Distribute ALL new donations to their respective clients via WebSockets
+        for (const donation of newDonations) {
+          const clients = connectedClients.get(
+            donation.toAddress.toLowerCase(),
+          );
+          if (clients) {
+            for (const socket of clients) {
+              socket.emit('newDonation', donation);
+            }
+          }
+          // Check if we found the specific donation we were polling for.
+          // This will stop the *polling*, but we have already processed the whole batch.
+          if (donation.toAddress.toLowerCase() === lowerCaseAddress) {
+            foundDonationForUser = true;
           }
         }
-        return true;
-      });
-
-      newEdges.push(...relevantEdges);
-
-      if (
-        currentEdges.some((edge) =>
-          knownHashes.has(edge.node.transaction.hash.toLowerCase()),
-        )
-      ) {
-        break; // Stop if we find a transaction we already have
       }
-
-      if (currentEdges.length === 0) break;
-      const lastEdge = currentEdges.at(-1);
-      if (lastEdge && lastEdge.node.timestamp < OLDEST_TRANSACTION_TIMESTAMP) {
-        break;
-      }
-
-      hasNextPage = appTimeline.pageInfo?.hasNextPage;
-      cursor = appTimeline.pageInfo?.endCursor ?? null;
     }
 
-    let storedCount = 0;
-    if (newEdges.length > 0) {
-      // 3. Enrich and store the new donations.
-      await enrichNodesWithHistoricalPrice(newEdges);
-      const storedDonations = await storeToDatabase(newEdges);
-      storedCount = storedDonations.length;
+    if (allNewlySyncedDonations.length > 0) {
+      res.json({ data: allNewlySyncedDonations });
+    } else {
+      res.status(200).json({ message: 'No new donations found after retries' });
     }
-
-    res.json({
-      status: 'success',
-      newDonationsSynced: storedCount,
-    });
   } catch (error) {
-    console.error('Sync error:', error);
-    res.status(500).json({ error: 'Failed to sync donations' });
+    console.error('Donation sync error:', error);
+    res.status(500).json({ error: 'Failed to sync donation data' });
   }
 });
 

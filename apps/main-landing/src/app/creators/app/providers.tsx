@@ -8,6 +8,8 @@ type Properties = {
   children: ReactNode;
 };
 
+// todo: check if unsed after privy?
+// ts-unused-exports:disable-next-line
 export const Providers = ({ children }: Properties) => {
   const getCustomAuthToken = useCallback(() => {
     // This function looks for the token from our custom Twitch flow
