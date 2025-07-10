@@ -51,6 +51,11 @@ export async function calculateBalances(userAddress: Hex) {
       }
 
       const formattedBalance = parseFloat(formatUnits(balance, token.decimals));
+
+      if (formattedBalance === 0) {
+        return null;
+      }
+
       const price = await getUsdPrice(token.address, token.network);
       const usdValue = formattedBalance * price;
 
