@@ -151,7 +151,7 @@ export function Table<T>({
                 >
                   {columns.map((column) => {
                     return (
-                      <td key={column.id} className={column.className}>
+                      <td key={column.id} className={classes('px-4 py-3', column.className)}>
                         {column.accessor(item, index)}
                       </td>
                     );
