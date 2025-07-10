@@ -134,7 +134,7 @@ export interface DonationToken {
   imageUrl?: string;
   network: string;
   decimals: number;
-  name?: string; // TODO: Add to api
+  name?: string;
 }
 
 export interface BalanceTableItem {
