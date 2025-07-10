@@ -7,8 +7,8 @@ import {
 import { fetchDonationsByToAddress } from '../../db/fetch-known-donations';
 import { storeToDatabase } from '../../db/store-new-donation';
 import {
+  AppHistoryVariables,
   DonationData,
-  TipHistoryVariables,
   ZapperNode,
   ZapperResponse,
 } from '../../types';
@@ -29,23 +29,17 @@ export async function processAllDonations(options: {
 }): Promise<{ donations: DonationData[] }> {
   const {
     address,
-    toAddresses = app_addresses,
     oldestTransactionTimestamp = OLDEST_TRANSACTION_TIMESTAMP,
-    isSigner = false,
     overwrite,
   } = options;
-
-  const addressesArray = Array.isArray(address) ? address : [address];
 
   const newEdges: { node: ZapperNode }[] = [];
   let cursor: string | null = null;
   let hasNextPage = true;
 
   while (hasNextPage) {
-    const variables: TipHistoryVariables = {
-      addresses: addressesArray,
-      toAddresses,
-      isSigner,
+    const variables: AppHistoryVariables = {
+      slug: 'idriss',
       after: cursor,
     };
 
@@ -60,7 +54,7 @@ export async function processAllDonations(options: {
     });
 
     const data: ZapperResponse = await response.json();
-    const accountsTimeline = data.data?.accountsTimeline;
+    const accountsTimeline = data.data?.transactionsForAppV2;
     if (!accountsTimeline) break;
 
     const currentEdges = accountsTimeline.edges || [];
@@ -153,10 +147,8 @@ export async function processNewDonations(
   let hasNextPage = true;
 
   while (hasNextPage) {
-    const variables: TipHistoryVariables = {
-      addresses: [address],
-      toAddresses: app_addresses,
-      isSigner: false,
+    const variables: AppHistoryVariables = {
+      slug: 'idriss',
       after: cursor,
     };
 
@@ -170,7 +162,7 @@ export async function processNewDonations(
       body: JSON.stringify({ query: TipHistoryQuery, variables }),
     });
     const data: ZapperResponse = await response.json();
-    const accountsTimeline = data.data?.accountsTimeline;
+    const accountsTimeline = data.data?.transactionsForAppV2;
     if (!accountsTimeline) break;
 
     const currentEdges = accountsTimeline.edges || [];

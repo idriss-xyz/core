@@ -7,6 +7,7 @@ import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { Button } from '@idriss-xyz/ui/button';
 import { LeaderboardStats } from '@idriss-xyz/constants';
 import { ColumnDefinition, Table } from '@idriss-xyz/ui/table';
+import { getTimeDifferenceString } from '@idriss-xyz/utils';
 
 import { IDRISS_SCENE_STREAM_2 } from '../../../../../assets';
 import { WidgetVariants } from '../../../../../../../twitch-extension/src/app/types';
@@ -16,7 +17,6 @@ import {
   LeaderboardItem,
   LeaderboardItemPlaceholder,
 } from './leaderboard-item';
-import { getTimeDifferenceString } from '@idriss-xyz/utils';
 
 const MAX_DISPLAYED_ITEMS = 6;
 

@@ -1,11 +1,11 @@
 export const ZAPPER_API_URL = 'https://public.zapper.xyz/graphql';
 
 export const TipHistoryQuery = `
-  query ($addresses: [Address!], $toAddresses: [String!], $isSigner: Boolean, $after: String) {
-    accountsTimeline(addresses: $addresses, toAddresses: $toAddresses, isSigner: $isSigner, after: $after, first: 25) {
-      edges {
-        node {
-          timestamp
+  query TransactionsForAppV2($slug: String!, $after: String) {
+  transactionsForAppV2(slug: $slug first: 25, after: $after) {
+    edges {
+      node {
+        timestamp
           network
           transaction {
             hash
@@ -49,11 +49,12 @@ export const TipHistoryQuery = `
                 tokenV2 {
                   symbol
                   imageUrlV2
-                  onchainMarketData {
+                  priceData {
                     price
                   }
                   address
                   decimals
+                  name
                 }
               }
               ... on StringDisplayItem {
@@ -99,9 +100,9 @@ export const TipHistoryQuery = `
 `;
 
 export const PriceHistoryQuery = `
-query ($address: Address!, $network: Network!, $currency: Currency!, $timeFrame: TimeFrame!) {
-  fungibleToken(address: $address, network: $network) {
-    onchainMarketData {
+query ($address: Address!, $currency: Currency!, $timeFrame: TimeFrame!, $chainId: Int!) {
+  fungibleTokenV2(address: $address, chainId: $chainId){
+    priceData {
       price
       priceTicks(currency: $currency, timeFrame: $timeFrame) {
         timestamp

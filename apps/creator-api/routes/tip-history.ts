@@ -8,9 +8,9 @@ import {
 
 import { fetchDonationsByToAddress } from '../db/fetch-known-donations';
 import {
+  AppHistoryVariables,
   DonationData,
   TipHistoryResponse,
-  TipHistoryVariables,
   ZapperNode,
   ZapperResponse,
 } from '../types';
@@ -46,11 +46,8 @@ router.post('/', async (req: Request, res: Response) => {
     let hasNextPage = true;
 
     while (hasNextPage) {
-      const variables: TipHistoryVariables = {
-        addresses: [hexAddress],
-        toAddresses: app_addresses,
-        isSigner: false,
-        after: cursor,
+      const variables: AppHistoryVariables = {
+        slug: 'idriss',
       };
 
       const encodedKey = Buffer.from(process.env.ZAPPER_API_KEY ?? '').toString(
@@ -65,7 +62,7 @@ router.post('/', async (req: Request, res: Response) => {
         body: JSON.stringify({ query: TipHistoryQuery, variables }),
       });
       const data: ZapperResponse = await response.json();
-      const accountsTimeline = data.data?.accountsTimeline;
+      const accountsTimeline = data.data?.transactionsForAppV2;
       if (!accountsTimeline) break;
 
       const currentEdges = accountsTimeline.edges || [];

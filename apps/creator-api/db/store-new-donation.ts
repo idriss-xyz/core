@@ -84,6 +84,7 @@ export async function storeToDatabase(
           imageUrl: tokenData.imageUrlV2,
           network: node.network,
           decimals: tokenData.decimals,
+          name: tokenData.name,
         },
         {
           conflictPaths: ['address', 'network'],
@@ -92,9 +93,9 @@ export async function storeToDatabase(
       );
       const amountRaw =
         node.interpretation.descriptionDisplayItems[0]?.amountRaw || '0';
-      const tradeValue = tokenData.onchainMarketData?.price
+      const tradeValue = tokenData.priceData?.price
         ? Number(formatUnits(BigInt(amountRaw), tokenData.decimals)) *
-          tokenData.onchainMarketData.price
+          tokenData.priceData.price
         : 0;
 
       const savedDonation = await donationRepo.save({

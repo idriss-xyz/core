@@ -11,6 +11,9 @@ export class Token {
   @Column({ type: 'text' })
   symbol!: string;
 
+  @Column({ type: 'text' })
+  name!: string;
+
   @Column({ type: 'text', name: 'image_url', nullable: true })
   imageUrl?: string;
 

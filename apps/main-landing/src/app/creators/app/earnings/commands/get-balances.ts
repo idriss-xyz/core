@@ -32,7 +32,8 @@ const getBalances = async (payload: Payload): Promise<BalancesResponse> => {
     throw new Error('Address is required to fetch balances');
   }
   const response = await fetch(
-    `${CREATOR_API_URL}/balances/${payload.address}`,
+    // `${CREATOR_API_URL}/get-balances/${payload.address}`,
+    `${CREATOR_API_URL}/get-balances/0x7D716741D2c37925e5E15123025400Be80ec796d`, // todo: change to upper line
   );
 
   if (!response.ok) {
@@ -47,7 +48,9 @@ const getBalances = async (payload: Payload): Promise<BalancesResponse> => {
 export const useGetBalances = (payload: Payload, options?: Options) => {
   return useQuery({
     queryKey: ['balances', payload.address],
-    queryFn: () => getBalances(payload),
+    queryFn: () => {
+      return getBalances(payload);
+    },
     ...options,
   });
 };

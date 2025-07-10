@@ -56,11 +56,12 @@ type UserData = {
 interface TokenV2 {
   symbol: string;
   imageUrlV2?: string;
-  onchainMarketData: {
+  priceData: {
     price: number;
   };
   address: Hex;
   decimals: number;
+  name: string;
 }
 
 export interface DonationStats {
@@ -113,14 +114,12 @@ export interface ZapperNode {
   };
 }
 
-export interface TipHistoryVariables {
-  addresses: Hex[];
-  toAddresses: Hex[];
-  isSigner: boolean;
+export interface AppHistoryVariables {
+  slug: string;
   after?: string | null;
 }
 
-interface AccountsTimeline {
+interface AppTimeline {
   edges: {
     node: ZapperNode;
   }[];
@@ -128,7 +127,7 @@ interface AccountsTimeline {
 }
 
 export interface ZapperResponse {
-  data: { accountsTimeline: AccountsTimeline };
+  data: { transactionsForAppV2: AppTimeline };
 }
 
 export interface TipHistoryResponse {
