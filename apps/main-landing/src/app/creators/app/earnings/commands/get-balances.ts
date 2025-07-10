@@ -5,6 +5,7 @@ import { CREATOR_API_URL } from '@idriss-xyz/constants';
 interface TokenBalance {
   address: Hex;
   symbol: string;
+  name: string;
   imageUrl?: string;
   network: string;
   decimals: number;
