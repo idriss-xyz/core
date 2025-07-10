@@ -9,7 +9,7 @@ import {
   LeaderboardStats,
   DonationData,
 } from '@idriss-xyz/constants';
-import { useGetTipHistory } from '@idriss-xyz/main-landing/app/creators/donate/commands/get-donate-history';
+import { useGetTipHistory } from '@idriss-xyz/main-landing/app/creators/app/commands/get-donate-history';
 import { Leaderboard } from '@idriss-xyz/main-landing/app/creators/donate/components/leaderboard';
 import { QueryProvider } from '@idriss-xyz/main-landing/providers';
 

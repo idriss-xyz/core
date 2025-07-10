@@ -1,5 +1,4 @@
 import {
-  CHAIN_TO_IDRISS_TIPPING_ADDRESS,
   OLDEST_TRANSACTION_TIMESTAMP,
   TipHistoryQuery,
   ZAPPER_API_URL,
@@ -16,9 +15,6 @@ import { enrichNodesWithHistoricalPrice } from '../../utils/enrich-nodes';
 import { Hex } from 'viem';
 
 const ZAPPER_API_KEY = process.env.ZAPPER_API_KEY;
-const app_addresses = Object.values(CHAIN_TO_IDRISS_TIPPING_ADDRESS).map(
-  (addr) => addr.toLowerCase() as Hex,
-);
 
 export async function processAllDonations(options: {
   address: Hex | Hex[];
@@ -28,7 +24,6 @@ export async function processAllDonations(options: {
   overwrite: boolean;
 }): Promise<{ donations: DonationData[] }> {
   const {
-    address,
     oldestTransactionTimestamp = OLDEST_TRANSACTION_TIMESTAMP,
     overwrite,
   } = options;
@@ -101,34 +96,8 @@ export async function processAllDonations(options: {
   let allDonations: DonationData[] = [];
   if (newEdges.length > 0) {
     await enrichNodesWithHistoricalPrice(newEdges);
-    const groupedByToAddress: Record<Hex, ZapperNode[]> = newEdges.reduce(
-      (acc, edge) => {
-        const descriptionItems =
-          edge.node.interpretation.descriptionDisplayItems;
-        if (
-          descriptionItems.length <= 1 ||
-          !descriptionItems[1]?.account?.address
-        ) {
-          return acc;
-        }
-        const toAddress = descriptionItems[1].account.address as Hex;
-        if (!acc[toAddress]) {
-          acc[toAddress] = [];
-        }
-        acc[toAddress].push(edge.node);
-        return acc;
-      },
-      {} as Record<Hex, ZapperNode[]>,
-    );
-
-    for (const [toAddress, edges] of Object.entries(groupedByToAddress)) {
-      const donations = await storeToDatabase(
-        toAddress as Hex,
-        edges.map((edge) => ({ node: edge })),
-        overwrite,
-      );
-      allDonations = allDonations.concat(donations);
-    }
+    const donations = await storeToDatabase(newEdges, overwrite);
+    allDonations = allDonations.concat(donations);
   }
 
   return { donations: allDonations };
@@ -195,6 +164,13 @@ export async function processNewDonations(
     });
 
     for (const edge of relevantEdges) {
+      const toAddress =
+        edge.node.interpretation?.descriptionDisplayItems?.[1]?.account
+          ?.address;
+      // This function is for a specific user, so only process donations to that address.
+      if (toAddress?.toLowerCase() !== address.toLowerCase()) {
+        continue;
+      }
       const txHash = edge.node.transaction.hash.toLowerCase();
       if (!knownHashes.has(txHash)) {
         newEdges.push(edge);
@@ -219,7 +195,7 @@ export async function processNewDonations(
   let storedDonations: DonationData[] = [];
   if (newEdges.length > 0) {
     await enrichNodesWithHistoricalPrice(newEdges);
-    storedDonations = await storeToDatabase(address, newEdges);
+    storedDonations = await storeToDatabase(newEdges);
   }
   return { storedDonations };
 }

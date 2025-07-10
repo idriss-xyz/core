@@ -18,7 +18,7 @@ import { useRouter } from 'next/navigation';
 import _ from 'lodash';
 
 import { backgroundLines2 } from '@/assets';
-import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
+import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history';
 import { DonateHistory } from '@/app/creators/donate/components/donate-history';
 import {
   CreatorProfile,

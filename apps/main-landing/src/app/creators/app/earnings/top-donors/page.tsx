@@ -2,7 +2,7 @@
 import { Hex } from 'viem';
 import { Button } from '@idriss-xyz/ui/button';
 
-import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
+import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history';
 import { Leaderboard } from '@/app/creators/donate/components/leaderboard';
 import { IDRISS_SCENE_STREAM_LIGHT } from '@/assets';
 

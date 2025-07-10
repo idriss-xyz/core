@@ -23,7 +23,7 @@ import {
   IDRISS_ICON_CIRCLE,
   IDRISS_SCENE_STREAM_4,
 } from '@/assets';
-import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
+import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history';
 import { DonateHistoryItem } from '@/app/creators/donate/components/donate-history/donate-history-item';
 
 const chartData = [

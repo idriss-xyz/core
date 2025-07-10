@@ -1,53 +1,79 @@
 import { Router, Request, Response } from 'express';
+import { Hex } from 'viem';
 import {
-  CHAIN_TO_IDRISS_TIPPING_ADDRESS,
-  OLDEST_TRANSACTION_TIMESTAMP,
   TipHistoryQuery,
+  OLDEST_TRANSACTION_TIMESTAMP,
   ZAPPER_API_URL,
 } from '../constants';
-
-import { fetchDonationsByToAddress } from '../db/fetch-known-donations';
+import {
+  fetchDonationsByToAddress,
+  fetchAllKnownDonationHashes,
+} from '../db/fetch-known-donations';
+import { storeToDatabase } from '../db/store-new-donation';
 import {
   AppHistoryVariables,
-  DonationData,
   TipHistoryResponse,
   ZapperNode,
   ZapperResponse,
 } from '../types';
-import { enrichNodesWithHistoricalPrice } from '../utils/enrich-nodes';
-import { storeToDatabase } from '../db/store-new-donation';
-import { Hex } from 'viem';
 import { calculateDonationLeaderboard } from '../utils/calculate-stats';
+import { enrichNodesWithHistoricalPrice } from '../utils/enrich-nodes';
 
 const router = Router();
 
-const app_addresses = Object.values(CHAIN_TO_IDRISS_TIPPING_ADDRESS).map(
-  (address) => address.toLowerCase() as Hex,
-);
-
-router.post('/', async (req: Request, res: Response) => {
+/**
+ * Shared logic to fetch and process tip history for a given address.
+ */
+async function handleFetchTipHistory(req: Request, res: Response) {
   try {
-    const { address } = req.body;
+    // Support address from either URL parameter (GET) or body (POST)
+    const address = (req.params.address || req.body.address) as string;
 
     if (!address || typeof address !== 'string') {
       res.status(400).json({ error: 'Invalid or missing address' });
       return;
     }
     const hexAddress = address as Hex;
-    const knownDonations = await fetchDonationsByToAddress(hexAddress);
-    const knownDonationMap = new Map<string, DonationData>();
-    for (const donation of knownDonations) {
-      knownDonationMap.set(donation.transactionHash.toLowerCase(), donation);
-    }
-    const knownHashes = new Set(knownDonationMap.keys());
+
+    const donations = await fetchDonationsByToAddress(hexAddress);
+    const leaderboard = await calculateDonationLeaderboard(donations);
+
+    const response: TipHistoryResponse = {
+      donations,
+      leaderboard,
+    };
+
+    res.json(response);
+  } catch (error) {
+    console.error('Fetch tip history error:', error);
+    res.status(500).json({ error: 'Failed to fetch tip history' });
+  }
+}
+
+// --- Endpoint 1: NEW and CORRECT way to fetch history ---
+// This is the new, preferred GET endpoint.
+router.get('/:address', handleFetchTipHistory);
+
+// --- Endpoint 1.1: BACKWARD COMPATIBILITY for old clients ---
+// This keeps the old POST endpoint working.
+router.post('/', handleFetchTipHistory);
+
+// --- Endpoint 2: Sync All Donations (for a scheduled job/cron) ---
+// This endpoint fetches all app transactions from Zapper and stores new ones.
+router.post('/sync', async (req: Request, res: Response) => {
+  try {
+    // 1. Get all transaction hashes already stored in your database.
+    const knownHashes = await fetchAllKnownDonationHashes();
 
     const newEdges: { node: ZapperNode }[] = [];
     let cursor: string | null = null;
     let hasNextPage = true;
 
+    // 2. Loop through Zapper API to find new transactions.
     while (hasNextPage) {
       const variables: AppHistoryVariables = {
         slug: 'idriss',
+        after: cursor,
       };
 
       const encodedKey = Buffer.from(process.env.ZAPPER_API_KEY ?? '').toString(
@@ -62,85 +88,70 @@ router.post('/', async (req: Request, res: Response) => {
         body: JSON.stringify({ query: TipHistoryQuery, variables }),
       });
       const data: ZapperResponse = await response.json();
-      const accountsTimeline = data.data?.transactionsForAppV2;
-      if (!accountsTimeline) break;
+      const appTimeline = data.data?.transactionsForAppV2;
+      if (!appTimeline) break;
 
-      const currentEdges = accountsTimeline.edges || [];
+      const currentEdges = appTimeline.edges || [];
 
+      // Filter for valid, new donations
       const relevantEdges = currentEdges.filter((edge) => {
         if (edge.node.app?.slug !== 'idriss') return false;
+        const txHash = edge.node.transaction.hash.toLowerCase();
+        if (knownHashes.has(txHash)) return false;
 
         const descriptionItems =
           edge.node.interpretation?.descriptionDisplayItems;
         const data = edge.node.transaction.decodedInputV2.data;
-
-        // Check if last element of data exists and has value
         const hasValidData =
           data.length > 0 && data[data.length - 1].value.length > 0;
         if (!hasValidData) return false;
 
-        // If we have a message (descriptionItems[2]), validate it
         if (descriptionItems?.[2]?.stringValue) {
-          // stringValue is "N/A"
           if (descriptionItems[2].stringValue === 'N/A') return false;
-
-          // string value is amountRaw (old tagging)
           if (
             descriptionItems[2].stringValue === descriptionItems[0]?.amountRaw
           ) {
             return false;
           }
         }
-
         return true;
       });
 
-      for (const edge of relevantEdges) {
-        const txHash = edge.node.transaction.hash.toLowerCase();
-        if (!knownHashes.has(txHash)) {
-          newEdges.push(edge);
-        }
-      }
+      newEdges.push(...relevantEdges);
 
       if (
-        relevantEdges.some((edge) =>
+        currentEdges.some((edge) =>
           knownHashes.has(edge.node.transaction.hash.toLowerCase()),
         )
-      )
-        break;
+      ) {
+        break; // Stop if we find a transaction we already have
+      }
+
       if (currentEdges.length === 0) break;
       const lastEdge = currentEdges.at(-1);
-
-      if (lastEdge && lastEdge.node.timestamp < OLDEST_TRANSACTION_TIMESTAMP)
+      if (lastEdge && lastEdge.node.timestamp < OLDEST_TRANSACTION_TIMESTAMP) {
         break;
-
-      hasNextPage = accountsTimeline.pageInfo?.hasNextPage;
-      cursor = accountsTimeline.pageInfo?.endCursor ?? null;
-    }
-
-    if (newEdges.length > 0) {
-      await enrichNodesWithHistoricalPrice(newEdges);
-      const storedDonations = await storeToDatabase(hexAddress, newEdges);
-      for (const donation of storedDonations) {
-        knownDonationMap.set(donation.transactionHash.toLowerCase(), donation);
       }
+
+      hasNextPage = appTimeline.pageInfo?.hasNextPage;
+      cursor = appTimeline.pageInfo?.endCursor ?? null;
     }
 
-    // Get leaderboard data
-    const leaderboard = await calculateDonationLeaderboard(
-      Array.from(knownDonationMap.values()),
-    );
+    let storedCount = 0;
+    if (newEdges.length > 0) {
+      // 3. Enrich and store the new donations.
+      await enrichNodesWithHistoricalPrice(newEdges);
+      const storedDonations = await storeToDatabase(newEdges);
+      storedCount = storedDonations.length;
+    }
 
-    // Return the structured response
-    const response: TipHistoryResponse = {
-      donations: Array.from(knownDonationMap.values()),
-      leaderboard,
-    };
-
-    res.json(response);
+    res.json({
+      status: 'success',
+      newDonationsSynced: storedCount,
+    });
   } catch (error) {
-    console.error('Tip history error:', error);
-    res.status(500).json({ error: 'Failed to fetch tip history' });
+    console.error('Sync error:', error);
+    res.status(500).json({ error: 'Failed to sync donations' });
   }
 });
 
