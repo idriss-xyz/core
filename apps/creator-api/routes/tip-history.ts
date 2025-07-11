@@ -1,22 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { Hex } from 'viem';
-import {
-  TipHistoryQuery,
-  OLDEST_TRANSACTION_TIMESTAMP,
-  ZAPPER_API_URL,
-} from '../constants';
-import {
-  fetchDonationsByToAddress,
-  fetchAllKnownDonationHashes,
-} from '../db/fetch-known-donations';
-import { storeToDatabase } from '../db/store-new-donation';
-import {
-  AppHistoryVariables,
-  DonationData,
-  TipHistoryResponse,
-  ZapperNode,
-  ZapperResponse,
-} from '../types';
+import { fetchDonationsByToAddress } from '../db/fetch-known-donations';
+import { DonationData, TipHistoryResponse } from '../types';
 import { calculateDonationLeaderboard } from '../utils/calculate-stats';
 import { syncAndStoreNewDonations } from '../services/zapper/process-donations';
 import { connectedClients } from '../services/socket-server';
