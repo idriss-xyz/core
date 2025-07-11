@@ -74,10 +74,11 @@ io.on('connection', (socket: Socket) => {
   console.log('Client connected');
 
   socket.on('register', (userId: string) => {
-    const clients = connectedClients.get(userId) || new Set<Socket>();
+    const userIdLower = userId.toLowerCase();
+    const clients = connectedClients.get(userIdLower) || new Set<Socket>();
     clients.add(socket);
-    connectedClients.set(userId, clients);
-    socket.data.userId = userId;
+    connectedClients.set(userIdLower, clients);
+    socket.data.userId = userIdLower;
   });
 
   socket.on('disconnect', () => {
