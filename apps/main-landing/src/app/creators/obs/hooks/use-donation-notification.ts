@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 
-import { TEST_MESSAGE_SOUND } from '@/assets';
+import { TEST_TTS_MESSAGE_SOUND } from '@/assets';
 
 import { getTextToSfx, getTextToSpeech } from '../utils';
 import { MinimumAmounts, MuteToggles } from '../page';
@@ -129,7 +129,7 @@ export const useDonationNotification = (
             return setTimeout(resolve, 3000);
           });
 
-          ttsAudioElementReference.current = new Audio(TEST_MESSAGE_SOUND);
+          ttsAudioElementReference.current = new Audio(TEST_TTS_MESSAGE_SOUND);
           ttsAudioForPlayback = ttsAudioElementReference.current;
         } else if (useTts) {
           const ttsStream = await getTextToSpeech(message);

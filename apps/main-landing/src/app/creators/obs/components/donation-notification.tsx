@@ -7,7 +7,7 @@ import { roundToSignificantFiguresForCopilotTrading } from '@idriss-xyz/utils';
 import { formatUnits } from 'viem';
 import { classes } from '@idriss-xyz/ui/utils';
 
-import { IDRISS_ICON_CIRCLE, NOTIFICATION_SOUND } from '@/assets';
+import { IDRISS_ICON_CIRCLE, DEFAULT_TRUMPET_SOUND } from '@/assets';
 
 import { useDonationNotification } from '../hooks/use-donation-notification';
 import { MinimumAmounts, MuteToggles } from '../page';
@@ -46,7 +46,7 @@ export default function DonationNotification({
   style = {},
   bgColor = 'bg-white',
   customIcon = IDRISS_ICON_CIRCLE.src,
-  notificationSound = NOTIFICATION_SOUND,
+  notificationSound = DEFAULT_TRUMPET_SOUND,
   minOverallVisibleDuration,
   onFullyComplete,
 }: DonationNotificationProperties) {
