@@ -4,17 +4,7 @@ import { getChainByNetworkName } from './network-utils';
 import { ERC20_ABI } from '@idriss-xyz/constants';
 import { NULL_ADDRESS } from '../constants';
 import { AppDataSource } from '../db/database';
-
-// Placeholder for a real price oracle (e.g., CoinGecko, 0x API)
-// For now, it will return a mock price.
-async function getUsdPrice(
-  _tokenAddress: Hex,
-  _network: string,
-): Promise<number> {
-  // TODO: Replace with a real price fetching service
-  // Example: call CoinGecko API `simple/token_price/{id}`
-  return 1.0; // Returning $1 for every token for now
-}
+import { getAlchemyPrice } from './price-fetchers';
 
 export async function calculateBalances(userAddress: Hex) {
   const tokenRepository = AppDataSource.getRepository(Token);
@@ -56,7 +46,8 @@ export async function calculateBalances(userAddress: Hex) {
         return null;
       }
 
-      const price = await getUsdPrice(token.address, token.network);
+      const price =
+        (await getAlchemyPrice(token.address, token.network, new Date())) ?? 0;
       const usdValue = formattedBalance * price;
 
       totalUsdBalance += usdValue;
