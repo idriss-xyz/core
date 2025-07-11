@@ -44,7 +44,7 @@ export function TabsPill({ tabs, renderLink }: TabsPillProperties) {
             >
               <div onClick={tab.onClick}>
                 {tab.isActive ? (
-                  <div className="relative flex max-h-[74px] min-h-[44px] items-center justify-center gap-2 overflow-hidden rounded-full border border-[#5FEB3C] bg-white px-8 py-2 text-neutralGreen-900">
+                  <div className="relative flex h-[44px] items-center justify-center gap-2 overflow-hidden rounded-full border border-[#5FEB3C] bg-white px-8 py-2 text-neutralGreen-900">
                     <Icon name={tab.iconName} size={20} />
                     <span className="relative z-1 max-h-[48] min-h-4.5 min-w-[108] max-w-[138] text-label4 text-black">
                       {tab.name}
@@ -58,7 +58,7 @@ export function TabsPill({ tabs, renderLink }: TabsPillProperties) {
                       name={tab.iconName}
                       className="text-black"
                     />
-                    <span className="max-h-[38px] min-h-4.5 min-w-[59px] max-w-[89px] text-label4 text-black">
+                    <span className="max-h-[38px] min-h-4.5 w-full text-label4 text-black">
                       {tab.name}
                     </span>
                   </div>
