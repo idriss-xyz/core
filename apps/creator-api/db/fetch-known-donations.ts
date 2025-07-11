@@ -90,3 +90,17 @@ export async function fetchDonationRecipients(): Promise<
 
   return groupedDonations;
 }
+
+export async function fetchAllKnownDonationHashes(): Promise<Set<string>> {
+  if (!AppDataSource.isInitialized) {
+    await AppDataSource.initialize();
+  }
+
+  const donationRepo = AppDataSource.getRepository(Donation);
+
+  const donations = await donationRepo.find({
+    select: ['transactionHash'],
+  });
+
+  return new Set(donations.map((d) => d.transactionHash.toLowerCase()));
+}

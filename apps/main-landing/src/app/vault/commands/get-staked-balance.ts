@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { createPublicClient, formatEther, Hex, http } from 'viem';
 import { base } from 'viem/chains';
-import { STAKER_ADDRESS, StakingABI } from '@idriss-xyz/constants';
+import { STAKER_ADDRESS, STAKING_ABI } from '@idriss-xyz/constants';
 
 type Payload = {
   address: Hex;
@@ -14,13 +14,13 @@ const getStakedBalance = async (payload: Payload) => {
   });
 
   const balance = await client.readContract({
-    abi: StakingABI,
+    abi: STAKING_ABI,
     address: STAKER_ADDRESS,
     functionName: 'getStakedBalance',
     args: [payload.address],
   });
 
-  return formatEther(balance as bigint) ?? '0';
+  return formatEther(balance) ?? '0';
 };
 
 export const useGetStakedBalance = (payload: Payload) => {

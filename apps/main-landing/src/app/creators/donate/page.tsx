@@ -10,11 +10,15 @@ export const metadata: Metadata = {
   },
 };
 
+interface Properties {
+  creatorName?: string;
+}
+
 // ts-unused-exports:disable-next-line
-export default function Donate() {
+export default function Donate({ creatorName }: Properties) {
   return (
     <RainbowKitProviders>
-      <DonateContent />
+      <DonateContent creatorName={creatorName} />
     </RainbowKitProviders>
   );
 }

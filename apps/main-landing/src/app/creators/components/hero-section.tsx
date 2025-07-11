@@ -2,18 +2,24 @@
 'use client';
 import { Button } from '@idriss-xyz/ui/button';
 import { classes } from '@idriss-xyz/ui/utils';
-import { CREATORS_FORM_LINK } from '@idriss-xyz/constants';
 import { RefObject } from 'react';
 
 import { backgroundLines } from '@/assets';
 
+import { useAuth } from '../context/auth-context';
+import { useStartEarningNavigation } from '../utils';
+
 import { VideoPlayer } from './hero-section/video-player';
+import { LoginModal } from './login-modal';
 
 type Properties = {
   heroButtonReference?: RefObject<HTMLButtonElement>;
 };
 
 export const HeroSection = ({ heroButtonReference }: Properties) => {
+  const { isLoginModalOpen, setIsModalOpen } = useAuth();
+  const handleStartEarningClick = useStartEarningNavigation();
+
   return (
     <header
       className={classes(
@@ -61,14 +67,13 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
           </p>
 
           <Button
-            asLink
             size="large"
             className="z-1"
             intent="primary"
-            href={CREATORS_FORM_LINK}
             ref={heroButtonReference}
             aria-label="Start earning now"
             suffixIconName="IdrissArrowRight"
+            onClick={handleStartEarningClick}
           >
             Start earning now
           </Button>
@@ -82,6 +87,12 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
           <VideoPlayer />
         </div>
       </div>
+      <LoginModal
+        isOpened={isLoginModalOpen}
+        onClose={() => {
+          return setIsModalOpen(false);
+        }}
+      />
     </header>
   );
 };

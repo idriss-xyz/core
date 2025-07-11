@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { createPublicClient, formatEther, Hex, http } from 'viem';
 import { base } from 'viem/chains';
+import { ERC20_ABI } from '@idriss-xyz/constants';
 
-import { ERC20_ABI } from '@/app/creators/donate/constants';
 import { IDRISS_TOKEN_ADDRESS } from '@/components/token-section/constants';
 
 type Payload = {

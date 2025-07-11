@@ -1,10 +1,9 @@
-import { Hex } from 'viem';
-
 import {
   DonationData,
   DonationToken,
   DonationUser,
-} from '@/app/creators/donate/types';
+} from '@idriss-xyz/constants';
+import { Hex } from 'viem';
 
 export interface DonorHistoryStats {
   mostDonatedToAddress: Hex;

@@ -1,13 +1,18 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, Index, ManyToMany, PrimaryColumn } from 'typeorm';
 import { Hex } from 'viem';
+import { Creator } from './creator.entity';
 
 @Entity('tokens')
+@Index(['address', 'network'], { unique: true })
 export class Token {
   @PrimaryColumn({ type: 'text' })
   address!: Hex;
 
   @Column({ type: 'text' })
   symbol!: string;
+
+  @Column({ type: 'text' })
+  name!: string;
 
   @Column({ type: 'text', name: 'image_url', nullable: true })
   imageUrl?: string;
@@ -17,4 +22,7 @@ export class Token {
 
   @Column({ type: 'integer' })
   decimals!: number;
+
+  @ManyToMany(() => Creator, (creator) => creator.networks)
+  creators!: Creator[];
 }

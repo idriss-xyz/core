@@ -19,7 +19,7 @@ export async function enrichNodesWithHistoricalPrice(
     const today = new Date();
     const isToday = txDate.toDateString() === today.toDateString();
 
-    if (isToday && tokenItem.tokenV2.onchainMarketData?.price) {
+    if (isToday && tokenItem.tokenV2.priceData?.price) {
       continue;
     }
 
@@ -27,7 +27,7 @@ export async function enrichNodesWithHistoricalPrice(
     const cacheKey = `${tokenItem.network}_${tokenItem.tokenV2.address}_${dateStr}`;
 
     if (priceCache[cacheKey] !== undefined) {
-      tokenItem.tokenV2.onchainMarketData.price = priceCache[cacheKey];
+      tokenItem.tokenV2.priceData.price = priceCache[cacheKey];
       continue;
     }
 
@@ -39,7 +39,7 @@ export async function enrichNodesWithHistoricalPrice(
 
     if (zapperPrice !== null) {
       priceCache[cacheKey] = zapperPrice;
-      tokenItem.tokenV2.onchainMarketData.price = zapperPrice;
+      tokenItem.tokenV2.priceData.price = zapperPrice;
       continue;
     }
 
@@ -51,7 +51,7 @@ export async function enrichNodesWithHistoricalPrice(
 
     if (alchemyPrice !== null) {
       priceCache[cacheKey] = alchemyPrice;
-      tokenItem.tokenV2.onchainMarketData.price = alchemyPrice;
+      tokenItem.tokenV2.priceData.price = alchemyPrice;
     } else {
       const fallbackPrice = getOldestZapperPrice(
         tokenItem.tokenV2.address,
@@ -59,7 +59,7 @@ export async function enrichNodesWithHistoricalPrice(
       );
       if (fallbackPrice) {
         priceCache[cacheKey] = fallbackPrice;
-        tokenItem.tokenV2.onchainMarketData.price = fallbackPrice;
+        tokenItem.tokenV2.priceData.price = fallbackPrice;
       }
     }
   }
