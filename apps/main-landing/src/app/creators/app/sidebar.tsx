@@ -23,7 +23,7 @@ export function Sidebar() {
             <NavigationMenu.Item className="flex max-h-[82px] min-h-[52px] items-center gap-2 rounded-full px-4 py-2 text-button1 uppercase">
               <Link
                 href="/creators/app/setup"
-                className="flex w-full items-center rounded-lg"
+                className="flex w-full items-center rounded-lg hover:text-mint-600"
               >
                 <Icon
                   size={20}
@@ -38,7 +38,7 @@ export function Sidebar() {
             <NavigationMenu.Item className="flex items-center gap-2 rounded-full border border-neutral-300 bg-neutral-100 px-4 py-3 text-button1 uppercase">
               <Link
                 href="/creators/app/earnings"
-                className="flex w-full items-center rounded-lg"
+                className="flex w-full items-center rounded-lg hover:text-mint-600"
               >
                 <Icon
                   size={20}
@@ -52,7 +52,7 @@ export function Sidebar() {
             <NavigationMenu.Item className="flex max-h-[82px] min-h-[52px] items-center gap-2 rounded-full px-4 py-2 text-button1 uppercase">
               <Link
                 href="" // TODO: Add link
-                className="flex w-full items-center rounded-lg"
+                className="flex w-full items-center rounded-lg hover:text-mint-600"
               >
                 <Icon size={20} name="User" className="mr-3 size-5" />
                 Profile
@@ -62,7 +62,7 @@ export function Sidebar() {
             <NavigationMenu.Item className="flex max-h-[82px] min-h-[52px] items-center gap-2 rounded-full px-4 py-2 text-button1 uppercase">
               <Link
                 href="" // TODO: Add link
-                className="flex w-full items-center rounded-lg"
+                className="flex w-full items-center rounded-lg hover:text-mint-600"
               >
                 <Icon size={20} name="Trophy" className="mr-3 size-5" />
                 Ranking
@@ -72,7 +72,7 @@ export function Sidebar() {
             <NavigationMenu.Item className="flex max-h-[82px] min-h-[52px] items-center gap-2 rounded-full px-4 py-2 text-button1 uppercase">
               <Link
                 href="" // TODO: Add link
-                className="flex w-full items-center rounded-lg"
+                className="flex w-full items-center rounded-lg hover:text-mint-600"
               >
                 <Icon size={20} name="Gift" className="mr-3 size-5" />
                 Rewards
