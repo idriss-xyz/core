@@ -1,4 +1,8 @@
+'use client';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 import { Icon } from '@idriss-xyz/ui/icon';
+import { TabsPill, TabItem } from '@idriss-xyz/ui/tabs-pill';
 
 // ts-unused-exports:disable-next-line
 export default function EarningsLayout({
@@ -6,6 +10,38 @@ export default function EarningsLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+
+  const earningsTabs: TabItem[] = [
+    {
+      name: 'Balance',
+      href: '/creators/app/earnings/balance',
+      iconName: 'Wallet',
+      isActive: pathname === '/creators/app/earnings/balance',
+    },
+    {
+      name: 'Stats & history',
+      href: '/creators/app/earnings',
+      iconName: 'LineChart',
+      isActive: pathname === '/creators/app/earnings',
+    },
+    {
+      name: 'Top donors',
+      href: '/creators/app/earnings/top-donors',
+      iconName: 'Trophy',
+      isActive: pathname === '/creators/app/earnings/top-donors',
+    },
+  ];
+
+  const renderLink = ({
+    href,
+    children,
+  }: {
+    href: string;
+    children: React.ReactNode;
+    isActive: boolean;
+  }) => <Link href={href}>{children}</Link>;
+
   return (
     <div>
       <div className="mb-4 flex flex-col gap-4">
@@ -34,33 +70,7 @@ export default function EarningsLayout({
           </div>
         </div>
 
-        <div className="flex min-w-[1166px] max-w-[1196px] gap-1">
-          <div className="flex gap-1 rounded-full border border-neutral-300 bg-white p-1">
-            <div className="flex items-center justify-center gap-2 rounded-full px-8 py-3">
-              <Icon size={20} name="Wallet" className="text-black" />
-              <span className="max-h-[38px] min-h-4.5 min-w-[59px] max-w-[89px] text-label4 text-black">
-                Balance
-              </span>
-            </div>
-
-            <div>
-              <div className="relative flex max-h-[74px] min-h-[44px] items-center justify-center gap-2 overflow-hidden rounded-full border border-[#5FEB3C] bg-white px-8 py-2 text-neutralGreen-900">
-                <Icon name="LineChart" size={20} />
-                <span className="relative z-1 max-h-[48] min-h-4.5 min-w-[108] max-w-[138] text-label4 text-black">
-                  Stats & history
-                </span>
-                <span className="absolute top-[16px] h-[36px] w-[200px] rounded-t-[1000px] bg-[#5FEB3C] opacity-30 blur-md" />
-              </div>
-            </div>
-
-            <div className="flex items-center justify-center gap-2 rounded-full px-8 py-3">
-              <Icon size={20} name="Trophy" className="text-black" />
-              <span className="max-h-[38px] min-h-4.5 min-w-[83px] max-w-[113px] text-label4 text-black">
-                Top donors
-              </span>
-            </div>
-          </div>
-        </div>
+        <TabsPill tabs={earningsTabs} renderLink={renderLink} />
       </div>
       {children}
     </div>

@@ -31,6 +31,7 @@
     "./radio-group": "./src/components/radio-group/index.ts",
     "./collapsible": "./src/components/collapsible/index.ts",
     "./tabs": "./src/components/tabs/index.ts",
+    "./tabs-pill": "./src/components/tabs-pill/index.ts",
     "./steps": "./src/components/steps/index.ts",
     "./geo-conditional-button": "./src/components/geo-conditional-button/index.ts",
     "./badge": "./src/components/badge/index.ts",
