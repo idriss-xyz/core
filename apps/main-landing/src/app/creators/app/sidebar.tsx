@@ -1,10 +1,23 @@
 import { NavigationMenu } from '@idriss-xyz/ui/navigation-menu';
 import { Icon } from '@idriss-xyz/ui/icon';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 import { socialOptions } from '../constants';
 
 export function Sidebar() {
+  const pathname = usePathname();
+
+  const isActive = (path: string) => {
+    return pathname === path;
+  };
+
+  const getLinkClasses = (path: string) => {
+    return `flex max-h-[82px] min-h-[52px] items-center gap-2 rounded-full px-4 py-2 text-button1 uppercase ${
+      isActive(path) ? 'border border-neutral-300 bg-neutral-100 px-4 py-3' : ''
+    }`;
+  };
+
   return (
     <div className="p-3">
       <NavigationMenu.Root
@@ -20,7 +33,9 @@ export function Sidebar() {
 
           {/*TODO: Extract this to a component*/}
           <NavigationMenu.List className="flex flex-col gap-4">
-            <NavigationMenu.Item className="flex max-h-[82px] min-h-[52px] items-center gap-2 rounded-full px-4 py-2 text-button1 uppercase">
+            <NavigationMenu.Item
+              className={getLinkClasses('/creators/app/setup')}
+            >
               <Link
                 href="/creators/app/setup"
                 className="flex w-full items-center rounded-lg hover:text-mint-600"
@@ -34,8 +49,9 @@ export function Sidebar() {
               </Link>
             </NavigationMenu.Item>
 
-            {/*TODO: Make this active state when clicked and pathname is equal to the link*/}
-            <NavigationMenu.Item className="flex items-center gap-2 rounded-full border border-neutral-300 bg-neutral-100 px-4 py-3 text-button1 uppercase">
+            <NavigationMenu.Item
+              className={getLinkClasses('/creators/app/earnings')}
+            >
               <Link
                 href="/creators/app/earnings"
                 className="flex w-full items-center rounded-lg hover:text-mint-600"
@@ -49,7 +65,7 @@ export function Sidebar() {
               </Link>
             </NavigationMenu.Item>
 
-            <NavigationMenu.Item className="flex max-h-[82px] min-h-[52px] items-center gap-2 rounded-full px-4 py-2 text-button1 uppercase">
+            <NavigationMenu.Item className={getLinkClasses('')}>
               <Link
                 href="" // TODO: Add link
                 className="flex w-full items-center rounded-lg hover:text-mint-600"
@@ -59,7 +75,7 @@ export function Sidebar() {
               </Link>
             </NavigationMenu.Item>
 
-            <NavigationMenu.Item className="flex max-h-[82px] min-h-[52px] items-center gap-2 rounded-full px-4 py-2 text-button1 uppercase">
+            <NavigationMenu.Item className={getLinkClasses('')}>
               <Link
                 href="" // TODO: Add link
                 className="flex w-full items-center rounded-lg hover:text-mint-600"
@@ -69,7 +85,7 @@ export function Sidebar() {
               </Link>
             </NavigationMenu.Item>
 
-            <NavigationMenu.Item className="flex max-h-[82px] min-h-[52px] items-center gap-2 rounded-full px-4 py-2 text-button1 uppercase">
+            <NavigationMenu.Item className={getLinkClasses('')}>
               <Link
                 href="" // TODO: Add link
                 className="flex w-full items-center rounded-lg hover:text-mint-600"
