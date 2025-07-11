@@ -1,13 +1,12 @@
 'use client';
 
-import { Icon } from '@idriss-xyz/ui/icon';
 import { classes } from '@idriss-xyz/ui/utils';
-import Image from 'next/image';
-import Link from 'next/link';
 
 import { IDRISS_ICON_CIRCLE } from '@/assets';
 
 import { Providers } from '../providers';
+
+import { Sidebar } from './sidebar';
 
 // ts-unused-exports:disable-next-line
 export default function CreatorsLayout({
@@ -18,40 +17,7 @@ export default function CreatorsLayout({
   return (
     <Providers>
       <div className="flex min-h-screen bg-neutral-100">
-        {/* Sidebar */}
-        <aside className="m-3 flex w-64 flex-col rounded-xl bg-white">
-          <div className="p-8">
-            <Image
-              src="/idriss-dark-logo.svg"
-              alt="Logo"
-              width={120}
-              height={40}
-              className="mx-auto"
-            />
-          </div>
-          <nav className="flex-1 p-4">
-            <div className="space-y-2 uppercase">
-              <Link
-                href="/creators/app/setup"
-                className="flex items-center rounded-lg px-4 py-2"
-              >
-                <Icon size={32} name="Settings" className="mr-3 size-5" />
-                Setup
-              </Link>
-              <Link
-                href="/creators/app/earnings"
-                className="flex items-center rounded-lg px-4 py-2"
-              >
-                <Icon
-                  size={32}
-                  name="BadgeDollarSign"
-                  className="mr-3 size-5"
-                />
-                Earnings
-              </Link>
-            </div>
-          </nav>
-        </aside>
+        <Sidebar />
 
         {/* Main Content */}
         <div className="flex-1">
