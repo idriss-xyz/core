@@ -2,6 +2,7 @@
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { ColumnDefinition, Table } from '@idriss-xyz/ui/table';
 import { BalanceTableItem } from '@idriss-xyz/constants';
+import { formatNumber } from '@idriss-xyz/utils';
 
 const columns: ColumnDefinition<BalanceTableItem>[] = [
   {
@@ -33,7 +34,7 @@ const columns: ColumnDefinition<BalanceTableItem>[] = [
     id: 'totalAmount',
     name: 'Amount',
     accessor: (item) => {
-      return `${item.totalAmount.toFixed(2)} ${item.token.symbol}`;
+      return `${formatNumber(item.totalAmount, 2)} ${item.token.symbol}`;
     },
     sortable: true,
     sortFunction: (a, b) => {
@@ -44,7 +45,7 @@ const columns: ColumnDefinition<BalanceTableItem>[] = [
     id: 'totalValue',
     name: 'Value',
     accessor: (item) => {
-      return `$${item.totalValue}` || 0;
+      return `$${formatNumber(item.totalValue, 2)}` || 0;
     },
     sortable: true,
     sortFunction: (a, b) => {

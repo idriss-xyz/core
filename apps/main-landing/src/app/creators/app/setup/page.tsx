@@ -4,7 +4,6 @@ import { Button } from '@idriss-xyz/ui/button';
 
 import { backgroundLines2, backgroundLines3 } from '@/assets';
 
-import { Providers } from '../../providers';
 import { OAuthCallbackHandler } from '../../components/oauth-callback-handler';
 import { Banner } from '../../components/banner';
 
@@ -23,7 +22,7 @@ export default function CreatorProfile() {
   };
 
   return (
-    <Providers>
+    <>
       <OAuthCallbackHandler />
 
       <main className="relative flex min-h-screen grow flex-col items-center justify-around gap-4 overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] px-2 pb-1 pt-[56px] lg:flex-row lg:items-start lg:justify-center lg:px-0">
@@ -65,6 +64,6 @@ export default function CreatorProfile() {
           </div>
         )}
       </main>
-    </Providers>
+    </>
   );
 }
