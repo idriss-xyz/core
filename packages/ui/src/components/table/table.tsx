@@ -78,6 +78,7 @@ export function Table<T>({
     if (!column?.sortFunction || direction === null) return data;
 
     return [...data].sort((a, b) => {
+      if (!column?.sortFunction) return 0;
       const comparison = column.sortFunction(a, b);
       return direction === 'asc' ? comparison : -comparison;
     });
