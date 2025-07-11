@@ -18,7 +18,6 @@ import {
   ZapperResponse,
 } from '../types';
 import { calculateDonationLeaderboard } from '../utils/calculate-stats';
-import { enrichNodesWithHistoricalPrice } from '../utils/enrich-nodes';
 import { syncAndStoreNewDonations } from '../services/zapper/process-donations';
 import { connectedClients } from '../services/socket-server';
 
