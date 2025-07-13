@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react';
 import { ProgressBarV2 } from '@idriss-xyz/ui/progress-bar-v2';
 import { Icon } from '@idriss-xyz/ui/icon';
-import { CREATOR_API_URL } from '@/app/creators/donate/constants';
+import {CREATOR_API_URL} from "@idriss-xyz/constants";
+
 
 const MAX_FILE_SIZE_KB = 300 * 1024;
 
