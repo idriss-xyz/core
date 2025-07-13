@@ -8,7 +8,7 @@ export const ProgressBarV2 = ({ progress }: Properties) => {
   return (
     <Progress.Root
       value={progress}
-      className="relative h-full w-full overflow-hidden rounded-full bg-gray-200"
+      className="relative size-full overflow-hidden rounded-full bg-gray-200"
     >
       <Progress.Indicator
         className="block h-full bg-midnightGreen-500 transition-all duration-200"
