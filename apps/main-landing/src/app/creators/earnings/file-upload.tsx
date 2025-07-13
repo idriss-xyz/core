@@ -1,8 +1,7 @@
 import { useRef, useState } from 'react';
 import { ProgressBarV2 } from '@idriss-xyz/ui/progress-bar-v2';
 import { Icon } from '@idriss-xyz/ui/icon';
-import {CREATOR_API_URL} from "@idriss-xyz/constants";
-
+import { CREATOR_API_URL } from '@idriss-xyz/constants';
 
 const MAX_FILE_SIZE_KB = 300 * 1024;
 
@@ -16,6 +15,14 @@ function formatFileName(filename: string): string {
   }
   return name.slice(0, 20) + '..' + extension;
 }
+
+const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+  event.preventDefault();
+};
+
+const formatFileSize = (bytes: number) => {
+  return `${Math.round(bytes / 1024)} KB`;
+};
 
 export const FileUpload = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -99,13 +106,6 @@ export const FileUpload = () => {
     setError(null);
   };
 
-  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-  };
-
-  const handleDragLeave = () => {
-  };
-
   const resetUpload = () => {
     setFile(null);
     setIsUploading(false);
@@ -113,8 +113,6 @@ export const FileUpload = () => {
     setError(null);
     if (fileInputReference.current) fileInputReference.current.value = '';
   };
-
-  const formatFileSize = (bytes: number) => `${Math.round(bytes / 1024)} KB`;
 
   return (
     <div className="flex w-[360px] flex-col gap-6">
@@ -125,18 +123,17 @@ export const FileUpload = () => {
         }}
         onDrop={handleDroppedFile}
         onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        className="flex flex-col items-center gap-6 rounded-[12px] bg-neutral-200 p-8 cursor-pointer"
+        className="flex cursor-pointer flex-col items-center gap-6 rounded-[12px] bg-neutral-200 p-8"
       >
-        <div className="flex h-[56px] w-[56px] items-center justify-center gap-2.5 rounded-[12px] bg-white">
+        <div className="flex size-[56px] items-center justify-center gap-2.5 rounded-[12px] bg-white">
           <Icon name="UploadCloud" size={24} />
         </div>
 
         <div className="flex flex-col gap-2">
           <div className="flex gap-0.5 pb-1">
-            <div className="h-[18px] w-[219px]">
+            <div className="h-4.5 w-[219px]">
               <span className="text-label4">
-                Drop your files here or {''}
+                Drop your files here or {` `}
                 <span className="underline decoration-solid underline-offset-[3px]">
                   browse
                 </span>
@@ -144,7 +141,7 @@ export const FileUpload = () => {
             </div>
           </div>
 
-          <div className="g-2 flex flex-col justify-center items-center">
+          <div className="flex flex-col items-center justify-center gap-2">
             <span className="text-label6 text-[#717484]">
               Max file size up to 300 KB
             </span>
@@ -170,13 +167,13 @@ export const FileUpload = () => {
       {((error === null && file) ?? isUploading) && (
         <div className="flex flex-col gap-2.5 rounded-[12px] border border-neutral-200 p-2">
           <div className="flex gap-4">
-            <div className="g-2.5 flex h-[42px] w-[42px] items-center justify-center rounded-[12px] border border-neutral-300 bg-white">
+            <div className="flex size-[42px] items-center justify-center gap-2.5 rounded-[12px] border border-neutral-300 bg-white">
               <Icon name="UploadCloud" size={24} />
             </div>
 
             <div className="flex flex-col">
               {/*TODO: In design there is 112px -> to small to display 25 sign file name with desired font*/}
-              <div className="h-[18px]">
+              <div className="h-4.5">
                 <span className="text-label4 text-[#111928]">
                   {file && formatFileName(file?.name)}
                 </span>

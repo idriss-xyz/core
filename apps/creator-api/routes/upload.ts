@@ -25,7 +25,7 @@ router.post('/', (req: Request, res: Response): void => {
       }
 
       if (!req.file) {
-        console.error('No file uploaded')
+        console.error('No file uploaded');
         return res.status(400).send('No file uploaded');
       }
 
@@ -48,13 +48,13 @@ async function handleUpload(req: FileUploadRequest, res: Response) {
   }
 
   if (req.file.mimetype !== 'audio/mpeg') {
-    console.error('Only MP3 files are allowed')
+    console.error('Only MP3 files are allowed');
     return res.status(400).send('Only MP3 files are allowed');
   }
 
   const type = await fileTypeFromBuffer(req.file.buffer);
   if (!type || type.mime !== 'audio/mpeg') {
-    console.error('Invalid file format: not a valid MP3')
+    console.error('Invalid file format: not a valid MP3');
     return res.status(400).send('Invalid file format: not a valid MP3');
   }
 
@@ -63,14 +63,16 @@ async function handleUpload(req: FileUploadRequest, res: Response) {
   });
   const duration = metadata.format.duration;
   if (!duration) {
-    console.error('Could not determine MP3 duration. File may be corrupted')
+    console.error('Could not determine MP3 duration. File may be corrupted');
     return res
       .status(400)
       .send('Could not determine MP3 duration. File may be corrupted');
   }
 
   if (duration > 5) {
-    console.error(`MP3 too long: ${duration.toFixed(2)} seconds. Max allowed is 5s`)
+    console.error(
+      `MP3 too long: ${duration.toFixed(2)} seconds. Max allowed is 5s`,
+    );
     return res
       .status(400)
       .send(`MP3 too long: ${duration.toFixed(2)} seconds. Max allowed is 5s`);
