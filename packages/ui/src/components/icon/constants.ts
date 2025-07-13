@@ -43,7 +43,7 @@ import {
   Gift,
   BookOpen,
   Wallet,
-  UploadCloud
+  UploadCloud,
 } from 'lucide-react';
 
 import * as customIcons from './custom';

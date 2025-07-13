@@ -17,4 +17,3 @@ export const ProgressBarV2 = ({ progress }: Properties) => {
     </Progress.Root>
   );
 };
-
