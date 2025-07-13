@@ -40,7 +40,9 @@ export default function EarningsLayout({
     href: string;
     children: React.ReactNode;
     isActive: boolean;
-  }) => <Link href={href}>{children}</Link>;
+  }) => {
+    return <Link href={href}>{children}</Link>;
+  };
 
   return (
     <div>
