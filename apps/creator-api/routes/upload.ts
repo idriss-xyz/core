@@ -17,14 +17,16 @@ router.post('/', (req: Request, res: Response): void => {
     try {
       if (err) {
         if ((err as MulterError).code === 'LIMIT_FILE_SIZE') {
-          return res.status(400).send('File too large. Max allowed is 300KB.');
+          console.error('File too large. Max allowed is 300KB');
+          return res.status(400).send('File too large. Max allowed is 300KB');
         }
         console.error('Multer error:', err);
-        return res.status(400).send('File upload failed.');
+        return res.status(400).send('File upload failed');
       }
 
       if (!req.file) {
-        return res.status(400).send('No file uploaded.');
+        console.error('No file uploaded')
+        return res.status(400).send('No file uploaded');
       }
 
       await handleUpload(req as FileUploadRequest, res);
@@ -41,16 +43,19 @@ async function handleUpload(req: FileUploadRequest, res: Response) {
   const { address } = req.body;
 
   if (!address) {
+    console.error('Address required');
     return res.status(400).send('Address required');
   }
 
   if (req.file.mimetype !== 'audio/mpeg') {
-    return res.status(400).send('Only MP3 files are allowed.');
+    console.error('Only MP3 files are allowed')
+    return res.status(400).send('Only MP3 files are allowed');
   }
 
   const type = await fileTypeFromBuffer(req.file.buffer);
   if (!type || type.mime !== 'audio/mpeg') {
-    return res.status(400).send('Invalid file format: not a valid MP3.');
+    console.error('Invalid file format: not a valid MP3')
+    return res.status(400).send('Invalid file format: not a valid MP3');
   }
 
   const metadata = await parseBuffer(req.file.buffer, {
@@ -58,15 +63,17 @@ async function handleUpload(req: FileUploadRequest, res: Response) {
   });
   const duration = metadata.format.duration;
   if (!duration) {
+    console.error('Could not determine MP3 duration. File may be corrupted')
     return res
       .status(400)
-      .send('Could not determine MP3 duration. File may be corrupted.');
+      .send('Could not determine MP3 duration. File may be corrupted');
   }
 
   if (duration > 5) {
+    console.error(`MP3 too long: ${duration.toFixed(2)} seconds. Max allowed is 5s`)
     return res
       .status(400)
-      .send(`MP3 too long: ${duration.toFixed(2)} seconds. Max allowed is 5s.`);
+      .send(`MP3 too long: ${duration.toFixed(2)} seconds. Max allowed is 5s`);
   }
 
   const sanitizedName = req.file.originalname.replace(/[^a-zA-Z0-9._-]/g, '_');

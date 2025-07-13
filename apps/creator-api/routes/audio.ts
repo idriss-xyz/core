@@ -11,6 +11,7 @@ router.get('/:address', async (req: Request, res: Response) => {
 
     if (!address) {
       res.status(400).json({ error: 'Invalid or missing address' });
+      console.error('Invalid or missing address');
       return;
     }
 
@@ -26,6 +27,7 @@ router.get('/:address', async (req: Request, res: Response) => {
 
     if (!response.Body || !(response.Body instanceof Readable)) {
       res.status(500).json({ error: 'Invalid S3 response body' });
+      console.error('Invalid S3 response body');
       return;
     }
 
@@ -33,8 +35,8 @@ router.get('/:address', async (req: Request, res: Response) => {
 
     response.Body.pipe(res);
   } catch (err) {
-    console.error('Error fetching audio:', err);
     res.status(404).json({ error: 'Audio file not found' });
+    console.error('Audio file not found');
     return;
   }
 });
