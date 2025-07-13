@@ -43,6 +43,7 @@ import {
   Gift,
   BookOpen,
   Wallet,
+  UploadCloud
 } from 'lucide-react';
 
 import * as customIcons from './custom';
@@ -92,5 +93,6 @@ export const ICON = {
   Gift,
   BookOpen,
   Wallet,
+  UploadCloud,
   ...customIcons,
 };

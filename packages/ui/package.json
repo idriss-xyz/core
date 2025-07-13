@@ -40,7 +40,8 @@
     "./card": "./src/components/card/index.ts",
     "./charts": "./src/components/charts/index.ts",
     "./divider": "./src/components/divider/index.ts",
-    "./table": "./src/components/table/index.ts"
+    "./table": "./src/components/table/index.ts",
+    "./progress-bar-v2": "./src/components/progress-bar-v2/index.ts"
   },
   "scripts": {
     "format": "prettier --check --config ../../prettier.config.mjs --ignore-path .prettierignore .",
