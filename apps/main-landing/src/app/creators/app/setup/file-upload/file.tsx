@@ -5,7 +5,6 @@ import { CREATOR_API_URL } from '@idriss-xyz/constants';
 // TODO: Uncomment when testing is done
 // const { user, getAccessToken, authenticated, ready } = usePrivy();
 
-
 const MAX_FILE_SIZE_KB = 300 * 1024;
 
 function formatFileName(filename: string): string {
