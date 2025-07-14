@@ -108,45 +108,6 @@ export const CREATOR_CHAIN = {
     dbName: 'ETHEREUM_MAINNET',
     logo: ETHEREUM_LOGO,
   },
-  MANTLE: {
-    ...mantle,
-    blockExplorers: {
-      ...mantle.blockExplorers,
-      blockscout: {
-        name: 'Blockscout',
-        url: 'https://explorer.mantle.xyz/',
-      },
-    },
-    shortName: 'Mantle',
-    dbName: 'MANTLE_MAINNET',
-    logo: MANTLE_LOGO,
-  },
-  OPTIMISM: {
-    ...optimism,
-    blockExplorers: {
-      ...optimism.blockExplorers,
-      blockscout: {
-        name: 'Blockscout',
-        url: 'https://optimism.blockscout.com',
-      },
-    },
-    shortName: 'Optimism',
-    dbName: 'OPTIMISM_MAINNET',
-    logo: OPTIMISM_LOGO,
-  },
-  POLYGON: {
-    ...polygon,
-    blockExplorers: {
-      ...polygon.blockExplorers,
-      blockscout: {
-        name: 'Blockscout',
-        url: 'https://polygon.blockscout.com',
-      },
-    },
-    shortName: 'Polygon',
-    dbName: 'POLYGON_MAINNET',
-    logo: POLYGON_LOGO,
-  },
 } satisfies Record<string, Chain>;
 
 export const CHAIN = Object.assign(CREATOR_CHAIN, {
@@ -195,6 +156,45 @@ export const CHAIN = Object.assign(CREATOR_CHAIN, {
     blockExplorers: {
       default: { name: 'BS Scan', url: 'https://bscscan.com' },
     },
+  },
+  MANTLE: {
+    ...mantle,
+    blockExplorers: {
+      ...mantle.blockExplorers,
+      blockscout: {
+        name: 'Blockscout',
+        url: 'https://explorer.mantle.xyz/',
+      },
+    },
+    shortName: 'Mantle',
+    dbName: 'MANTLE_MAINNET',
+    logo: MANTLE_LOGO,
+  },
+  OPTIMISM: {
+    ...optimism,
+    blockExplorers: {
+      ...optimism.blockExplorers,
+      blockscout: {
+        name: 'Blockscout',
+        url: 'https://optimism.blockscout.com',
+      },
+    },
+    shortName: 'Optimism',
+    dbName: 'OPTIMISM_MAINNET',
+    logo: OPTIMISM_LOGO,
+  },
+  POLYGON: {
+    ...polygon,
+    blockExplorers: {
+      ...polygon.blockExplorers,
+      blockscout: {
+        name: 'Blockscout',
+        url: 'https://polygon.blockscout.com',
+      },
+    },
+    shortName: 'Polygon',
+    dbName: 'POLYGON_MAINNET',
+    logo: POLYGON_LOGO,
   },
 }) satisfies Record<string, Chain>;
 
@@ -284,19 +284,9 @@ export const CHAIN_ID_TO_TOKENS = {
       address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
     },
     {
-      ...TOKEN.DAI,
-      decimals: 18,
-      address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
-    },
-    {
       ...TOKEN.ECHELON_PRIME,
       decimals: 18,
       address: '0xb23d80f5FefcDDaa212212F028021B41DEd428CF',
-    },
-    {
-      ...TOKEN.AAVEGOTCHI,
-      decimals: 18,
-      address: '0x3F382DbD960E3a9bbCeaE22651E88158d2791550',
     },
     {
       ...TOKEN.YGG,
@@ -307,45 +297,6 @@ export const CHAIN_ID_TO_TOKENS = {
       ...TOKEN.PDT,
       decimals: 18,
       address: '0x375abb85c329753b1ba849a601438ae77eec9893',
-    },
-  ],
-  [CREATOR_CHAIN.OPTIMISM.id]: [
-    {
-      ...TOKEN.ETHEREUM,
-      decimals: 18,
-      address: NATIVE_COIN_ADDRESS,
-    },
-    {
-      ...TOKEN.USDC,
-      decimals: 6,
-      address: '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85',
-    },
-    {
-      ...TOKEN.DAI,
-      decimals: 18,
-      address: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
-    },
-  ],
-  [CREATOR_CHAIN.POLYGON.id]: [
-    {
-      ...TOKEN.USDC,
-      decimals: 6,
-      address: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
-    },
-    {
-      ...TOKEN.DAI,
-      decimals: 18,
-      address: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063',
-    },
-    {
-      ...TOKEN.AAVEGOTCHI,
-      decimals: 18,
-      address: '0x385eeac5cb85a38a9a07a70c73e0a3271cfb54a7',
-    },
-    {
-      ...TOKEN.YGG,
-      decimals: 18,
-      address: '0x82617aa52dddf5ed9bb7b370ed777b3182a30fd1',
     },
   ],
   [CREATOR_CHAIN.RONIN.id]: [
@@ -380,13 +331,6 @@ export const CHAIN_ID_TO_TOKENS = {
     //   address: '0x7eae20d11ef8c779433eb24503def900b9d28ad7',
     // },
   ],
-  [CREATOR_CHAIN.MANTLE.id]: [
-    {
-      ...TOKEN.USDC,
-      decimals: 6,
-      address: '0x09Bc4E0D864854c6aFB6eB9A9cdF58aC190D0dF9',
-    },
-  ],
   [CREATOR_CHAIN.BASE.id]: [
     {
       ...TOKEN.ETHEREUM,
@@ -397,11 +341,6 @@ export const CHAIN_ID_TO_TOKENS = {
       ...TOKEN.USDC,
       decimals: 6,
       address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
-    },
-    {
-      ...TOKEN.DAI,
-      decimals: 18,
-      address: '0x50c5725949a6f0c72e6c4a641f24049a917db0cb',
     },
     {
       ...TOKEN.ECHELON_PRIME,
@@ -419,11 +358,6 @@ export const CHAIN_ID_TO_TOKENS = {
       address: '0xaac78d1219c08aecc8e37e03858fe885f5ef1799',
     },
     {
-      ...TOKEN.DEGEN,
-      decimals: 18,
-      address: '0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed',
-    },
-    {
       ...TOKEN.IDRISS,
       decimals: 18,
       address: '0x000096630066820566162c94874a776532705231',
@@ -435,9 +369,6 @@ export const DEFAULT_ALLOWED_CHAINS_IDS = [
   CREATOR_CHAIN.ABSTRACT.id,
   CREATOR_CHAIN.BASE.id,
   CREATOR_CHAIN.ETHEREUM.id,
-  CREATOR_CHAIN.MANTLE.id,
-  CREATOR_CHAIN.OPTIMISM.id,
-  CREATOR_CHAIN.POLYGON.id,
   CREATOR_CHAIN.RONIN.id,
 ];
 
