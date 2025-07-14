@@ -1,7 +1,5 @@
 import { Request, Response, Router } from 'express';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
-import { fileTypeFromBuffer } from 'file-type';
-import { parseBuffer } from 'music-metadata';
 import upload from '../config/multer';
 import s3Config from '../config/aws-s3';
 import { MulterError } from 'multer';
@@ -52,12 +50,14 @@ async function handleUpload(req: FileUploadRequest, res: Response) {
     return res.status(400).send('Only MP3 files are allowed');
   }
 
+  const { fileTypeFromBuffer } = await import('file-type');
   const type = await fileTypeFromBuffer(req.file.buffer);
   if (!type || type.mime !== 'audio/mpeg') {
     console.error('Invalid file format: not a valid MP3');
     return res.status(400).send('Invalid file format: not a valid MP3');
   }
 
+  const { parseBuffer } = await import('music-metadata');
   const metadata = await parseBuffer(req.file.buffer, {
     mimeType: 'audio/mpeg',
   });

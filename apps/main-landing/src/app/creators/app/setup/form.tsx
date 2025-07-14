@@ -27,6 +27,7 @@ import {
 } from '../../utils';
 import { TEST_DONATION_MESSAGE } from '../../constants';
 import { useAuth } from '../../context/auth-context';
+import {File} from "@/app/creators/app/setup/file-upload/file";
 
 type FormPayload = {
   name: string;
@@ -647,6 +648,7 @@ export function CreatorProfileForm() {
             </span>
           </div>
         )}
+        <File/>
       </div>
     </Form>
   );

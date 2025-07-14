@@ -24,7 +24,7 @@ const formatFileSize = (bytes: number) => {
   return `${Math.round(bytes / 1024)} KB`;
 };
 
-export const FileUpload = () => {
+export const File = () => {
   const [file, setFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [progress, setProgress] = useState(0);
