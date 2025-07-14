@@ -15,7 +15,7 @@ export type SiteMapItem = {
   children?: SiteMapItem[];
 };
 
-export type BreadcrumbNavigationProps = {
+export type BreadcrumbNavigationProperties = {
   pathname: string;
   siteMap: SiteMapItem[];
   basePath?: string; // Optional base path prefix
@@ -25,7 +25,7 @@ export function BreadcrumbNavigation({
   pathname,
   siteMap,
   basePath = '',
-}: BreadcrumbNavigationProps) {
+}: BreadcrumbNavigationProperties) {
   // Generate breadcrumb items based on current pathname and site structure
   const breadcrumbItems = React.useMemo(() => {
     const items: { name: string; path: string; isCurrentPage: boolean }[] = [];

@@ -223,7 +223,7 @@ export default function EarningsStats() {
                       width={48}
                       height={48}
                       className={classes(
-                        'bg-gray-100 size-[70px] rounded-full',
+                        'size-[70px] rounded-full bg-gray-200',
                       )}
                     />
                     <div className="flex flex-col">
@@ -257,7 +257,7 @@ export default function EarningsStats() {
                               alt={item.tokenData.symbol}
                               width={24}
                               height={24}
-                              className="bg-gray-100 rounded-full"
+                              className="rounded-full bg-gray-200"
                             />
                             <span className="text-sm text-gray-300">
                               {item.tokenData.symbol}
