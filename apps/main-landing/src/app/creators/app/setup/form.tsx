@@ -20,7 +20,7 @@ import { Multiselect, MultiselectOption } from '@idriss-xyz/ui/multiselect';
 import { usePrivy } from '@privy-io/react-auth';
 import { Link } from '@idriss-xyz/ui/link';
 
-import {File} from "@/app/creators/app/setup/file-upload/file";
+import { File } from '@/app/creators/app/setup/file-upload/file';
 
 import {
   editCreatorProfile,
@@ -649,7 +649,7 @@ export function CreatorProfileForm() {
             </span>
           </div>
         )}
-        <File/>
+        <File />
       </div>
     </Form>
   );
