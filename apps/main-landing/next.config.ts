@@ -46,7 +46,7 @@ const LEGACY_URLS = [
 
 const nextConfig: NextConfig = {
   generateBuildId: () => {
-    return process.env.RAILWAY_GIT_COMMIT_SHA || `build-${Date.now()}`;
+    return process.env.RAILWAY_GIT_COMMIT_SHA ?? `build-${Date.now()}`;
   },
 
   experimental: {
@@ -219,13 +219,12 @@ const nextConfig: NextConfig = {
     return config;
   },
   images: {
-    domains: ['localhost'],
+    domains: ['localhost', 'storage.googleapis.com'],
   },
   env: {
     DEV_LOGIN_PASSWORD: process.env.DEV_LOGIN_PASSWORD || '',
     PUBLIC_ACCESS_ENABLED: process.env.PUBLIC_ACCESS_ENABLED || '',
     RAILWAY_PUBLIC_DOMAIN: process.env.RAILWAY_PUBLIC_DOMAIN || '',
-    DYNAMIC_ENVIRONMENT_ID: process.env.DYNAMIC_ENVIRONMENT_ID || '',
   },
 };
 
