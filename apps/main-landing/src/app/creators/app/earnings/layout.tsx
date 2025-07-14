@@ -1,34 +1,7 @@
 'use client';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { BreadcrumbNavigation, SiteMapItem } from '@idriss-xyz/ui/breadcrumb';
 import { TabsPill, TabItem } from '@idriss-xyz/ui/tabs-pill';
-
-const siteMap: SiteMapItem[] = [
-  {
-    name: 'Home',
-    path: '/',
-  },
-  {
-    name: 'Earnings',
-    path: '/earnings',
-    children: [
-      {
-        name: 'Stats & history',
-        path: '/earnings/stats',
-      },
-      {
-        name: 'Balance',
-        path: '/earnings/balance',
-      },
-      {
-        name: 'Top donors',
-        path: '/earnings/top-donors',
-      },
-    ],
-  },
-  // TODO: Add more pages here and move to general layout
-];
 
 // ts-unused-exports:disable-next-line
 export default function EarningsLayout({
@@ -75,11 +48,6 @@ export default function EarningsLayout({
   return (
     <div>
       <div className="mb-4 flex flex-col gap-4">
-        <BreadcrumbNavigation
-          pathname={pathname}
-          siteMap={siteMap}
-          basePath="/creators/app"
-        />
         <h1 className="text-heading3">Earnings</h1>
         <TabsPill tabs={earningsTabs} renderLink={renderLink} />
       </div>
