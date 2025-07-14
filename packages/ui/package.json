@@ -40,7 +40,8 @@
     "./card": "./src/components/card/index.ts",
     "./charts": "./src/components/charts/index.ts",
     "./divider": "./src/components/divider/index.ts",
-    "./table": "./src/components/table/index.ts"
+    "./table": "./src/components/table/index.ts",
+    "./breadcrumb": "./src/components/breadcrumb/index.ts"
   },
   "scripts": {
     "format": "prettier --check --config ../../prettier.config.mjs --ignore-path .prettierignore .",
@@ -75,6 +76,7 @@
     "@radix-ui/react-progress": "^1.1.0",
     "@radix-ui/react-radio-group": "^1.2.2",
     "@radix-ui/react-scroll-area": "^1.2.0",
+    "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-switch": "^1.1.1",
     "@radix-ui/react-tabs": "^1.1.1",
     "@radix-ui/react-tooltip": "^1.1.6",
