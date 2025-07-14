@@ -46,6 +46,7 @@ router.get(
   },
 );
 
+// todo: remove old endpoints like this one from v2.
 // Create a new creator profile
 router.post(
   '/',
@@ -99,6 +100,7 @@ const editCreatorValidationRules = [
   body('obsUrl').optional().isString(),
 ];
 
+// todo: remove old endpoints like this one from v2.
 // Update creator profile by id
 router.put(
   '/:id',
