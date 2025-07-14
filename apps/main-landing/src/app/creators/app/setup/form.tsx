@@ -20,6 +20,8 @@ import { Multiselect, MultiselectOption } from '@idriss-xyz/ui/multiselect';
 import { usePrivy } from '@privy-io/react-auth';
 import { Link } from '@idriss-xyz/ui/link';
 
+import {File} from "@/app/creators/app/setup/file-upload/file";
+
 import {
   editCreatorProfile,
   getChainIdsFromShortNames,
@@ -27,7 +29,6 @@ import {
 } from '../../utils';
 import { TEST_DONATION_MESSAGE } from '../../constants';
 import { useAuth } from '../../context/auth-context';
-import {File} from "@/app/creators/app/setup/file-upload/file";
 
 type FormPayload = {
   name: string;
