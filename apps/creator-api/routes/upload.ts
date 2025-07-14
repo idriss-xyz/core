@@ -3,6 +3,8 @@ import { PutObjectCommand } from '@aws-sdk/client-s3';
 import upload from '../config/multer';
 import s3Config from '../config/aws-s3';
 import { MulterError } from 'multer';
+// TODO: Uncomment when testing is done
+// import { verifyToken } from '../db/middleware/auth.middleware';
 
 const router = Router();
 
@@ -11,6 +13,15 @@ interface FileUploadRequest extends Request {
 }
 
 router.post('/', (req: Request, res: Response): void => {
+  // TODO: Uncomment when testing is done
+  // router.post('/', verifyToken(), async (req, res) => {
+  // const privyId = req.user.id;
+  // const { whatever passed params } = req.body; // Note: address is no longer needed from the body
+  // if (!privyId) {
+  //   return res.status(401).json({ error: 'Unauthorized: User not found' });
+  // }
+  // const creator = await creatorsRepo.findOne({ where: { privyId } });
+
   upload.single('file')(req, res, async (err: any) => {
     try {
       if (err) {

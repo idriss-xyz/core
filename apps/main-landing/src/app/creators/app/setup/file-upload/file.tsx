@@ -2,6 +2,9 @@ import { useRef, useState } from 'react';
 import { ProgressBarV2 } from '@idriss-xyz/ui/progress-bar-v2';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { CREATOR_API_URL } from '@idriss-xyz/constants';
+// TODO: Uncomment when testing is done
+// const { user, getAccessToken, authenticated, ready } = usePrivy();
+
 
 const MAX_FILE_SIZE_KB = 300 * 1024;
 
@@ -47,6 +50,14 @@ export const File = () => {
   };
 
   const handleFileUpload = async (files: FileList | null) => {
+    // TODO: Uncomment when testing is done
+    // const address = user?.wallet?.address as Hex | undefined;``` to get the address
+    // const { user, getAccessToken, authenticated, ready } = usePrivy();
+    // const authToken = await getAccessToken();
+    // if (!authToken) {
+    //   throw new Error('Could not get auth token.');
+    // }
+
     if (!files || files.length > 1) {
       setError('Only one file allowed');
       return;
@@ -71,6 +82,7 @@ export const File = () => {
 
     const formData = new FormData();
     formData.append('file', file);
+    // TODO: Uncomment when testing is done. Change hardcoded value.
     formData.append('address', '0x5abca791c22e7f99237fcc04639e094ffa0ccce9');
 
     setIsUploading(true);
@@ -89,6 +101,11 @@ export const File = () => {
 
     const response = await fetch(`${CREATOR_API_URL}/upload`, {
       method: 'POST',
+      // TODO: Uncomment when testing is done
+      // headers: {
+      //   'Content-Type': 'application/json',
+      //   'Authorization': `Bearer ${authToken}`,
+      // },
       body: formData,
     });
 
