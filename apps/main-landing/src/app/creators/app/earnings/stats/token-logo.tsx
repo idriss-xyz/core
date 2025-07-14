@@ -50,7 +50,7 @@ export const TokenLogo = ({ symbol, imageUrl }: TokenLogoProperties) => {
   // Priority 3: Render a default placeholder
   return (
     <Image
-      src={IDRISS_ICON_CIRCLE.src}
+      src={logoMap.IDRISS!.src}
       alt={symbol}
       fill
       className="rounded-full"
