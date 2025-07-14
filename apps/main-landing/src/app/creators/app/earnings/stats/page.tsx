@@ -8,20 +8,15 @@ import {
 } from '@idriss-xyz/ui/charts';
 import { Bar, BarChart, XAxis } from 'recharts';
 import { Icon } from '@idriss-xyz/ui/icon';
-import { classes } from '@idriss-xyz/ui/utils';
-import Image from 'next/image';
 import { Button } from '@idriss-xyz/ui/button';
 import { useMemo } from 'react';
+import { formatNumber } from '@idriss-xyz/utils';
 
-import {
-  backgroundLines2,
-  IDRISS_COIN,
-  IDRISS_ICON_CIRCLE,
-  IDRISS_SCENE_STREAM_4,
-} from '@/assets';
+import { backgroundLines2, IDRISS_COIN, IDRISS_SCENE_STREAM_4 } from '@/assets';
 import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history';
 import { DonateHistoryItem } from '@/app/creators/donate/components/donate-history/donate-history-item';
 
+import { TokenLogo } from './token-logo';
 import { useGetRecipientStats } from './commands/get-recipient-stats';
 
 const chartConfig = {
@@ -30,13 +25,6 @@ const chartConfig = {
     color: '#f3f4f6',
   },
 } satisfies ChartConfig;
-
-const formatNumber = (value: number | undefined, digits = 0) => {
-  return new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: value && value % 1 !== 0 ? digits : 0,
-    maximumFractionDigits: digits,
-  }).format(value ?? 0);
-};
 
 // ts-unused-exports:disable-next-line
 export default function EarningsStats() {
@@ -215,17 +203,12 @@ export default function EarningsStats() {
               <div className="space-y-4 p-4">
                 {mainAsset && (
                   <div className="flex items-center gap-3">
-                    <Image
-                      src={
-                        mainAsset.tokenData.imageUrl ?? IDRISS_ICON_CIRCLE.src
-                      }
-                      alt={mainAsset.tokenData.symbol}
-                      width={48}
-                      height={48}
-                      className={classes(
-                        'size-[70px] rounded-full bg-gray-200',
-                      )}
-                    />
+                    <div className="relative size-[70px] rounded-full">
+                      <TokenLogo
+                        symbol={mainAsset.tokenData.symbol}
+                        imageUrl={mainAsset.tokenData.imageUrl}
+                      />
+                    </div>
                     <div className="flex flex-col">
                       <span className="w-fit rounded-full bg-mint-200 px-1 py-0.5 text-xs font-medium text-mint-700">
                         {mainAsset.donationCount} donations
@@ -249,16 +232,12 @@ export default function EarningsStats() {
                           className="border-b border-gray-200 last:border-b-0"
                         >
                           <td className="flex items-center gap-2 py-3">
-                            <Image
-                              src={
-                                item.tokenData.imageUrl ??
-                                IDRISS_ICON_CIRCLE.src
-                              }
-                              alt={item.tokenData.symbol}
-                              width={24}
-                              height={24}
-                              className="rounded-full bg-gray-200"
-                            />
+                            <div className="relative size-6 rounded-full">
+                              <TokenLogo
+                                symbol={item.tokenData.symbol}
+                                imageUrl={item.tokenData.imageUrl}
+                              />
+                            </div>
                             <span className="text-sm text-gray-300">
                               {item.tokenData.symbol}
                             </span>
