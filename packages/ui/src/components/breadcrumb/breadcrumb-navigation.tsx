@@ -15,7 +15,7 @@ export type SiteMapItem = {
   children?: SiteMapItem[];
 };
 
-export type BreadcrumbNavigationProperties = {
+type BreadcrumbNavigationProperties = {
   pathname: string;
   siteMap: SiteMapItem[];
   basePath?: string; // Optional base path prefix
