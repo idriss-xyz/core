@@ -10,10 +10,10 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { useAuth } from '../../context/auth-context';
 
 const validateAndCopy = (copyFunction: () => Promise<void>) => {
-    setTimeout(() => {
-      void copyFunction();
-    }, 0);
-  };
+  setTimeout(() => {
+    void copyFunction();
+  }, 0);
+};
 
 // ts-unused-exports:disable-next-line
 export default function SetupLayout({

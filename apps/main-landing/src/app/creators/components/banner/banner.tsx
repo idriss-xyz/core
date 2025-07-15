@@ -39,7 +39,7 @@ const banners = [
   banner12,
 ];
 
-export const Banner = ({ onBack }: { onBack: () => void }) => {
+export const Banner = ({ onBack }: { onBack?: () => void }) => {
   const [selectedBannerSource, setSelectedBannerSource] = useState<string>();
 
   const handleDownload = () => {
@@ -56,7 +56,7 @@ export const Banner = ({ onBack }: { onBack: () => void }) => {
   };
 
   return (
-    <div className="container relative mt-8 flex w-[460px] max-w-full flex-col items-center overflow-hidden rounded-xl bg-white px-1 pb-3 pt-6 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]">
+    <div className="container relative mt-8 flex flex-col items-center overflow-hidden rounded-xl bg-white px-1 pb-3 pt-6">
       <link rel="preload" as="image" href={backgroundLines3.src} />
       <img
         alt=""
