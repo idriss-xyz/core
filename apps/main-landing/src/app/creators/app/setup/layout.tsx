@@ -84,7 +84,7 @@ export default function SetupLayout({
   return (
     <div className="mb-4 flex flex-col gap-4">
       <h1 className="col-span-3 text-heading3">Setup</h1>
-      <div className="gap-4 relative flex flex-row items-center rounded-lg bg-white/80 p-4">
+      <div className="relative flex flex-row items-center gap-4 rounded-lg bg-white/80 p-4">
         <GradientBorder
           gradientDirection="toRight"
           borderRadius={8}
