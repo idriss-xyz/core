@@ -2,10 +2,11 @@
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { TabsPill, TabItem } from '@idriss-xyz/ui/tabs-pill';
-import { Button } from '@idriss-xyz/ui/button';
 import { CREATORS_LINK } from '@idriss-xyz/constants';
 import { useEffect, useState } from 'react';
-import { classes } from '@idriss-xyz/ui/utils';
+import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
+import { Input } from '@idriss-xyz/ui/input';
+import { Icon } from '@idriss-xyz/ui/icon';
 
 import { useAuth } from '../../context/auth-context';
 
@@ -81,36 +82,38 @@ export default function SetupLayout({
   }, [copiedDonationLink]);
 
   return (
-    <div>
-      <div className="mb-4 flex flex-col gap-4">
-        <h1 className="col-span-3 my-4 text-heading3">Setup</h1>
-
-        <div className="rounded-lg border-2 border-mint-300 bg-white p-4">
-          <span className="mr-3">Your donation page</span>
-          <input
-            className="mr-2 w-[320px] p-3"
-            value={`${CREATORS_LINK}/${creator?.name}`}
-            readOnly
-          />
-          <Button
-            size="medium"
-            intent="primary"
-            onClick={() => {
-              return validateAndCopy(copyDonationLink);
-            }}
-            prefixIconName={copiedDonationLink ? 'CheckCircle2' : undefined}
-            className={classes(
-              'inline w-fit',
-              copiedDonationLink &&
-                'bg-mint-600 hover:bg-mint-600 [&>div]:hidden',
-            )}
-          >
-            {copiedDonationLink ? '' : 'COPY'}
-          </Button>
-        </div>
-
-        <TabsPill tabs={setupTabs} renderLink={renderLink} />
+    <div className="mb-4 flex flex-col gap-4">
+      <h1 className="col-span-3 text-heading3">Setup</h1>
+      <div className="gap-4 relative flex flex-row items-center rounded-lg bg-white/80 p-4">
+        <GradientBorder
+          gradientDirection="toRight"
+          borderRadius={8}
+          gradientStopColor="#E8FCE3"
+        />
+        <span className="mr-3 text-heading5">Your donation page</span>
+        <Input
+          value={`${CREATORS_LINK}/${creator?.name}`}
+          readOnly
+          className="min-w-[380px] max-w-[500px]"
+          suffixElement={
+            <div
+              className="flex h-full items-center py-[2px]"
+              onClick={() => {
+                return validateAndCopy(copyDonationLink);
+              }}
+            >
+              <div className="mr-3 h-full border-l border-gray-200" />
+              {copiedDonationLink ? (
+                <Icon name="Check" size={15} />
+              ) : (
+                <Icon name="Copy" size={15} />
+              )}
+            </div>
+          }
+        />
       </div>
+
+      <TabsPill tabs={setupTabs} renderLink={renderLink} />
       {children}
     </div>
   );
