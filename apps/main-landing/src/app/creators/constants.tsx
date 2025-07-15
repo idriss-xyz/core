@@ -64,6 +64,10 @@ export const siteMap: SiteMapItem[] = [
         name: 'Stream alerts',
         path: '/setup/stream-alerts',
       },
+      {
+        name: 'Donation panel',
+        path: '/setup/donation-panel',
+      },
     ],
   },
 ];

@@ -29,8 +29,16 @@ export default function SetupLayout({
     {
       name: 'Stream alerts',
       href: '/creators/app/setup/stream-alerts',
-      iconName: 'Bell',
-      isActive: pathname === '/creators/app/setup/stream-alerts',
+      iconName: 'BellRing',
+      isActive:
+        pathname === '/creators/app/setup/stream-alerts' ||
+        pathname === '/creators/app/setup',
+    },
+    {
+      name: 'Donation panel',
+      href: '/creators/app/setup/donation-panel',
+      iconName: 'GalleryVertical',
+      isActive: pathname === '/creators/app/setup/donation-panel',
     },
   ];
 

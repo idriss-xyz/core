@@ -40,11 +40,13 @@ import {
   LineChart,
   History,
   Bell,
+  BellRing,
   Gift,
   BookOpen,
   Wallet,
   UploadCloud,
   PlayCircle,
+  GalleryVertical,
 } from 'lucide-react';
 
 import * as customIcons from './custom';
@@ -91,10 +93,12 @@ export const ICON = {
   LineChart,
   History,
   Bell,
+  BellRing,
   Gift,
   BookOpen,
   Wallet,
   UploadCloud,
   PlayCircle,
+  GalleryVertical,
   ...customIcons,
 };
