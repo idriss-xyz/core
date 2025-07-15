@@ -13,10 +13,3 @@ export { default as IDRISS_SCENE_STREAM_SHORT } from './idriss-scene-stream-shor
 export { default as IDRISS_SCENE_STREAM_SHORT_2 } from './idriss-scene-stream-short-2.png';
 export { default as IDRISS_SCENE_STREAM_LIGHT } from './idriss-scene-stream-light.png';
 export { default as IDRISS_TOROID } from './idriss-toroid.png';
-export { default as ETHEREUM_LOGO } from './token_svgs/ethereum.svg';
-export { default as IDRISS_LOGO } from './token_svgs/idriss.svg';
-export { default as PDT_LOGO } from './token_svgs/pdt.svg';
-export { default as ECHELON_PRIME_LOGO } from './token_svgs/prime.svg';
-export { default as RONIN_LOGO } from './token_svgs/ronin.svg';
-export { default as USDC_LOGO } from './token_svgs/usdc.svg';
-export { default as YGG_LOGO } from './token_svgs/ygg.svg';

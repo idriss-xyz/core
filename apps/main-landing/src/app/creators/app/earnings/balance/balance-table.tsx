@@ -4,6 +4,8 @@ import { ColumnDefinition, Table } from '@idriss-xyz/ui/table';
 import { BalanceTableItem } from '@idriss-xyz/constants';
 import { formatNumber } from '@idriss-xyz/utils';
 
+import { TokenLogo } from '../stats/token-logo';
+
 const columns: ColumnDefinition<BalanceTableItem>[] = [
   {
     id: 'rank',
@@ -18,13 +20,12 @@ const columns: ColumnDefinition<BalanceTableItem>[] = [
     accessor: (item) => {
       return (
         <div className="flex items-center gap-2">
-          {item.token.imageUrl && (
-            <img
-              src={item.token.imageUrl}
-              alt=""
-              className="size-8 rounded-full object-cover"
+          <div className="bg-gray-100 relative size-8 rounded-full">
+            <TokenLogo
+              symbol={item.token.symbol ?? ''}
+              imageUrl={item.token.imageUrl}
             />
-          )}
+          </div>
           <span>{item.token.symbol ?? 'UNKNOWN SYMBOL'}</span>
         </div>
       );
