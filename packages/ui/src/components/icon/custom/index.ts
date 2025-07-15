@@ -7,6 +7,7 @@ export { Youtube } from './youtube';
 export { Tiktok } from './tiktok';
 export { Check } from './check';
 export { IdrissCircled } from './idriss-circled';
+export { EthToken } from './eth-token';
 export { IdrissToken } from './idriss-token';
 export { PdtToken } from './pdt-token';
 export { RoninToken } from './ronin-token';

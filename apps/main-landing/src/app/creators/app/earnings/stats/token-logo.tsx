@@ -3,7 +3,7 @@ import { Icon, type IconName } from '@idriss-xyz/ui/icon';
 
 // This map translates a token symbol (from the API) to an IconName
 const symbolToIconNameMap: Record<string, IconName> = {
-  ETH: 'Eth',
+  ETH: 'EthToken',
   USDC: 'UsdcToken',
   PRIME: 'PrimeToken',
   IDRISS: 'IdrissToken',
