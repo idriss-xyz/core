@@ -21,7 +21,7 @@ export const CREATORS_INFO = {
 };
 
 export const PREDICTION_MARKETS_INFO = {
-  name: 'PREDICTION MARKETS',
+  name: 'COMMUNITY NOTES',
   title: 'Decentralized community notes for the internet',
   features: [
     'Verify authenticity of news and content',

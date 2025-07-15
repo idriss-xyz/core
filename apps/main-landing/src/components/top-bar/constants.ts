@@ -14,7 +14,7 @@ export const APPS_SECTION_NAVIGATION_ITEMS: NavigationSectionItem[] = [
     url: `/${INTERNAL_LINK.CREATORS}`,
   },
   {
-    title: 'PREDICTION MARKETS',
+    title: 'COMMUNITY NOTES',
     description: 'Decentralized community notes for the internet',
     url: `/${INTERNAL_LINK.PREDICTION_MARKETS}`,
   },

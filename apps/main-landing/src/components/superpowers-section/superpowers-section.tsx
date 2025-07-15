@@ -103,7 +103,7 @@ export const SuperpowersSection = () => {
                       href={CREATORS_LINK}
                       isExternal
                     >
-                      CREATE DONATION LINK
+                      START EARNING
                     </Button>
                   </>
                 }
