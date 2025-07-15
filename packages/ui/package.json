@@ -12,6 +12,7 @@
     "./link": "./src/components/link/index.ts",
     "./modal": "./src/components/modal/index.ts",
     "./numeric-input": "./src/components/numeric-input/index.ts",
+    "./input": "./src/components/input/index.ts",
     "./navigation-menu": "./src/components/navigation-menu/index.ts",
     "./visually-hidden": "./src/components/visually-hidden/index.ts",
     "./branding-assets": "./src/components/branding-assets/index.ts",
