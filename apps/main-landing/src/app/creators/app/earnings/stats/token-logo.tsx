@@ -2,7 +2,6 @@ import Image, { type StaticImageData } from 'next/image';
 
 import {
   ETHEREUM_LOGO,
-  IDRISS_ICON_CIRCLE,
   IDRISS_LOGO,
   PDT_LOGO,
   ECHELON_PRIME_LOGO,
