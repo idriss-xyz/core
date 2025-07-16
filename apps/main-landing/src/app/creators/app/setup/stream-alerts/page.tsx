@@ -13,16 +13,18 @@ import { editCreatorProfile } from '@/app/creators/utils';
 import { useAuth } from '@/app/creators/context/auth-context';
 import { testDonation } from '@/app/creators/constants';
 
-const SectionHeader = ({ title }: { title: string }) => (
-  <div className="flex flex-col gap-2">
-    <h5 className="pb-1 text-heading5">{title}</h5>
-    <hr />
-  </div>
-);
+const SectionHeader = ({ title }: { title: string }) => {
+  return (
+    <div className="flex flex-col gap-2">
+      <h5 className="pb-1 text-heading5">{title}</h5>
+      <hr />
+    </div>
+  );
+};
 
-const FormFieldWrapper = ({ children }: { children: React.ReactNode }) => (
-  <div className="flex flex-col gap-6">{children}</div>
-);
+const FormFieldWrapper = ({ children }: { children: React.ReactNode }) => {
+  return <div className="flex flex-col gap-6">{children}</div>;
+};
 
 type FormPayload = {
   minimumAlertAmount: number;
@@ -152,14 +154,16 @@ export default function StreamAlerts() {
             <Controller
               name="alertEnabled"
               control={formMethods.control}
-              render={({ field }) => (
-                <Toggle
-                  label="Alerts"
-                  sublabel="Plays a sound and shows a message when someone donates"
-                  value={field.value}
-                  onChange={field.onChange}
-                />
-              )}
+              render={({ field }) => {
+                return (
+                  <Toggle
+                    label="Alerts"
+                    sublabel="Plays a sound and shows a message when someone donates"
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                );
+              }}
             />
 
             {alertEnabled && (
@@ -167,17 +171,20 @@ export default function StreamAlerts() {
                 <Controller
                   name="minimumAlertAmount"
                   control={formMethods.control}
-                  render={({ field, fieldState }) => (
-                    <Form.Field
-                      className="max-w-[360px]"
-                      numeric
-                      label="Minimum alert amount ($)"
-                      helperText={fieldState.error?.message}
-                      error={Boolean(fieldState.error?.message)}
-                      {...field}
-                      value={field.value?.toString()}
-                    />
-                  )}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <Form.Field
+                        className="max-w-[360px]"
+                        numeric
+                        label="Minimum amount"
+                        placeholder="$1"
+                        helperText={fieldState.error?.message}
+                        error={Boolean(fieldState.error?.message)}
+                        {...field}
+                        value={field.value?.toString()}
+                      />
+                    );
+                  }}
                 />
                 <div className="grid grid-cols-2 gap-2 lg:gap-4">
                   <div className="flex max-w-[360px] flex-row">
@@ -187,7 +194,9 @@ export default function StreamAlerts() {
                       prefixIconName={
                         copiedObsLink ? 'CheckCircle2' : undefined
                       }
-                      onClick={() => validateAndCopy(copyObsLink)}
+                      onClick={() => {
+                        return validateAndCopy(copyObsLink);
+                      }}
                       className={
                         copiedObsLink
                           ? 'border-mint-600 bg-mint-300 hover:bg-mint-300'
@@ -216,14 +225,16 @@ export default function StreamAlerts() {
             <Controller
               name="ttsEnabled"
               control={formMethods.control}
-              render={({ field }) => (
-                <Toggle
-                  label="Text-to-speech"
-                  sublabel="Reads the donation message aloud during the alert"
-                  value={field.value}
-                  onChange={field.onChange}
-                />
-              )}
+              render={({ field }) => {
+                return (
+                  <Toggle
+                    label="Text-to-speech"
+                    sublabel="Reads the donation message aloud during the alert"
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                );
+              }}
             />
 
             {ttsEnabled && alertEnabled && (
@@ -231,30 +242,35 @@ export default function StreamAlerts() {
                 <Controller
                   name="minimumTTSAmount"
                   control={formMethods.control}
-                  render={({ field, fieldState }) => (
-                    <Form.Field
-                      className="max-w-[360px]"
-                      numeric
-                      label="Minimum TTS amount ($)"
-                      helperText={fieldState.error?.message}
-                      error={Boolean(fieldState.error?.message)}
-                      {...field}
-                      value={field.value?.toString()}
-                    />
-                  )}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <Form.Field
+                        className="max-w-[360px]"
+                        numeric
+                        label="Minimum amount"
+                        placeholder="$3"
+                        helperText={fieldState.error?.message}
+                        error={Boolean(fieldState.error?.message)}
+                        {...field}
+                        value={field.value?.toString()}
+                      />
+                    );
+                  }}
                 />
                 <Controller
                   name="customBadWords"
                   control={formMethods.control}
-                  render={({ field, fieldState }) => (
-                    <Form.TagField
-                      label="Custom Bad Words"
-                      className="max-w-[360px]"
-                      helperText={fieldState.error?.message}
-                      error={Boolean(fieldState.error?.message)}
-                      {...field}
-                    />
-                  )}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <Form.TagField
+                        label="Custom Bad Words"
+                        className="max-w-[360px]"
+                        helperText={fieldState.error?.message}
+                        error={Boolean(fieldState.error?.message)}
+                        {...field}
+                      />
+                    );
+                  }}
                 />
               </>
             )}
@@ -266,31 +282,36 @@ export default function StreamAlerts() {
             <Controller
               name="sfxEnabled"
               control={formMethods.control}
-              render={({ field }) => (
-                <Toggle
-                  label="AI sound effects"
-                  sublabel="Replaces the default alert sound with a custom effect"
-                  value={field.value}
-                  onChange={field.onChange}
-                />
-              )}
+              render={({ field }) => {
+                return (
+                  <Toggle
+                    label="AI sound effects"
+                    sublabel="Replaces the default alert sound with a custom effect"
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                );
+              }}
             />
 
             {sfxEnabled && alertEnabled && (
               <Controller
                 name="minimumSfxAmount"
                 control={formMethods.control}
-                render={({ field, fieldState }) => (
-                  <Form.Field
-                    className="max-w-[360px]"
-                    numeric
-                    label="Minimum Sfx amount ($)"
-                    helperText={fieldState.error?.message}
-                    error={Boolean(fieldState.error?.message)}
-                    {...field}
-                    value={field.value?.toString()}
-                  />
-                )}
+                render={({ field, fieldState }) => {
+                  return (
+                    <Form.Field
+                      className="max-w-[360px]"
+                      numeric
+                      label="Minimum amount"
+                      placeholder="$5"
+                      helperText={fieldState.error?.message}
+                      error={Boolean(fieldState.error?.message)}
+                      {...field}
+                      value={field.value?.toString()}
+                    />
+                  );
+                }}
               />
             )}
           </FormFieldWrapper>
