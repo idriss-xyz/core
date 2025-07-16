@@ -11,3 +11,4 @@ export { AddBadWords1748967010401 } from './1748967010401-AddBadWords';
 export { RenameDynamicIdToPrivyId1749000000000 } from './1749000000000-RenameDynamicIdToPrivyId';
 export { AddTokenName1752155170000 } from './1752155170000-AddTokenName';
 export { CompositeTokenPrimaryKey1752686842000 } from './1752686842000-CompositeTokenPrimaryKey';
+export { RenameAlertToggles1752674138685 } from './1752674138685-RenameAlertToggles';

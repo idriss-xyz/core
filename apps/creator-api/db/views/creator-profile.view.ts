@@ -17,9 +17,9 @@ import { CreatorNetwork, CreatorToken, DonationParameters } from '../entities';
       .addSelect('dp.minimum_tts_amount', 'minimumTTSAmount')
       .addSelect('dp.minimum_sfx_amount', 'minimumSfxAmount')
       .addSelect('dp.voice_id', 'voiceId')
-      .addSelect('dp.alert_muted', 'alertMuted')
-      .addSelect('dp.tts_muted', 'ttsMuted')
-      .addSelect('dp.sfx_muted', 'sfxMuted')
+      .addSelect('dp.alert_enabled', 'alertEnabled')
+      .addSelect('dp.tts_enabled', 'ttsEnabled')
+      .addSelect('dp.sfx_enabled', 'sfxEnabled')
       .addSelect('dp.custom_bad_words', 'customBadWords')
       .addSelect(
         'COALESCE(ARRAY_REMOVE(ARRAY_AGG(DISTINCT ct.tokenSymbol), NULL), ARRAY[]::text[])',
@@ -45,9 +45,9 @@ import { CreatorNetwork, CreatorToken, DonationParameters } from '../entities';
       .addGroupBy('dp.minimum_tts_amount')
       .addGroupBy('dp.minimum_sfx_amount')
       .addGroupBy('dp.voice_id')
-      .addGroupBy('dp.alert_muted')
-      .addGroupBy('dp.tts_muted')
-      .addGroupBy('dp.sfx_muted')
+      .addGroupBy('dp.alert_enabled')
+      .addGroupBy('dp.tts_enabled')
+      .addGroupBy('dp.sfx_enabled')
       .addGroupBy('dp.custom_bad_words'),
 })
 export class CreatorProfileView {
@@ -88,13 +88,13 @@ export class CreatorProfileView {
   voiceId!: string;
 
   @ViewColumn()
-  alertMuted!: boolean;
+  alertEnabled!: boolean;
 
   @ViewColumn()
-  ttsMuted!: boolean;
+  ttsEnabled!: boolean;
 
   @ViewColumn()
-  sfxMuted!: boolean;
+  sfxEnabled!: boolean;
 
   @ViewColumn()
   customBadWords!: string[];

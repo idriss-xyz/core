@@ -9,6 +9,9 @@ const validationRules = [
   body('minimumAlertAmount').isString().notEmpty(),
   body('minimumTTSAmount').isString().notEmpty(),
   body('minimumSfxAmount').isString().notEmpty(),
+  body('alertEnabled').isBoolean().notEmpty(),
+  body('ttsEnabled').isBoolean().notEmpty(),
+  body('sfxEnabled').isBoolean().notEmpty(),
   body('customBadWords').optional().isArray(),
 ];
 
@@ -24,6 +27,9 @@ router.post('/', validationRules, async (req: Request, res: Response) => {
     minimumAlertAmount,
     minimumTTSAmount,
     minimumSfxAmount,
+    alertEnabled,
+    ttsEnabled,
+    sfxEnabled,
     customBadWords = [],
   } = req.body;
 
@@ -32,6 +38,9 @@ router.post('/', validationRules, async (req: Request, res: Response) => {
       minimumAlertAmount,
       minimumTTSAmount,
       minimumSfxAmount,
+      alertEnabled,
+      ttsEnabled,
+      sfxEnabled,
       customBadWords,
       creator: {
         id: req.body.creatorId,
