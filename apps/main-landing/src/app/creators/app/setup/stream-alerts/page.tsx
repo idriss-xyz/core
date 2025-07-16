@@ -1,9 +1,8 @@
 'use client';
 import { CREATORS_LINK } from '@idriss-xyz/constants';
 import { Button } from '@idriss-xyz/ui/button';
-import { Card, CardHeader } from '@idriss-xyz/ui/card';
+import { Card } from '@idriss-xyz/ui/card';
 import { Switch } from '@idriss-xyz/ui/switch';
-import { classes } from '@idriss-xyz/ui/utils';
 import { Form } from '@idriss-xyz/ui/form';
 import { getAccessToken } from '@privy-io/react-auth';
 import { useCallback, useEffect, useState } from 'react';
@@ -19,9 +18,9 @@ type FormPayload = {
   minimumTTSAmount: number;
   minimumSfxAmount: number;
   voiceId: string;
-  alertMuted: boolean;
-  ttsMuted: boolean;
-  sfxMuted: boolean;
+  alertEnabled: boolean;
+  ttsEnabled: boolean;
+  sfxEnabled: boolean;
   customBadWords: string[];
 };
 
@@ -37,14 +36,18 @@ export default function StreamAlerts() {
       minimumAlertAmount: creator?.minimumAlertAmount ?? 1,
       minimumTTSAmount: creator?.minimumTTSAmount ?? 5,
       minimumSfxAmount: creator?.minimumSfxAmount ?? 10,
-      alertMuted: creator?.alertMuted ?? false,
-      ttsMuted: creator?.ttsMuted ?? false,
-      sfxMuted: creator?.sfxMuted ?? false,
+      alertEnabled: creator?.alertEnabled ?? false,
+      ttsEnabled: creator?.ttsEnabled ?? false,
+      sfxEnabled: creator?.sfxEnabled ?? false,
       customBadWords: creator?.customBadWords ?? [],
     },
     mode: 'onSubmit',
   });
-  const [alertMuted] = formMethods.watch(['alertMuted']);
+  const [alertEnabled, ttsEnabled, sfxEnabled] = formMethods.watch([
+    'alertEnabled',
+    'ttsEnabled',
+    'sfxEnabled',
+  ]);
 
   const sendTestDonation = useCallback(() => {
     if (!creator?.primaryAddress || !isAddress(creator.primaryAddress)) {
@@ -105,9 +108,9 @@ export default function StreamAlerts() {
           minimumAlertAmount: data.minimumAlertAmount,
           minimumTTSAmount: data.minimumTTSAmount,
           minimumSfxAmount: data.minimumSfxAmount,
-          alertMuted: data.alertMuted,
-          ttsMuted: data.ttsMuted,
-          sfxMuted: data.sfxMuted,
+          alertEnabled: data.alertEnabled,
+          ttsEnabled: data.ttsEnabled,
+          sfxEnabled: data.sfxEnabled,
           customBadWords: data.customBadWords,
         },
         authToken,
@@ -128,177 +131,208 @@ export default function StreamAlerts() {
 
   return (
     <Card>
-      <CardHeader>Alerts</CardHeader>
-      <hr />
-      <Form className="w-full" onSubmit={formMethods.handleSubmit(onSubmit)}>
-        <Controller
-          name="minimumAlertAmount"
-          control={formMethods.control}
-          render={({ field, fieldState }) => {
-            return (
-              <Form.Field
-                numeric
-                label="Minimum alert amount ($)"
-                className="mt-6 w-full"
-                helperText={fieldState.error?.message}
-                error={Boolean(fieldState.error?.message)}
-                {...field}
-                value={field.value?.toString()}
-              />
-            );
-          }}
-        />
-        <Controller
-          name="minimumTTSAmount"
-          control={formMethods.control}
-          render={({ field, fieldState }) => {
-            return (
-              <Form.Field
-                numeric
-                label="Minimum TTS amount ($)"
-                className="mt-6 w-full"
-                helperText={fieldState.error?.message}
-                error={Boolean(fieldState.error?.message)}
-                {...field}
-                value={field.value?.toString()}
-              />
-            );
-          }}
-        />
+      <div className="flex flex-col justify-between">
+        <div className="gap-6 py-4">
+          <Form onSubmit={formMethods.handleSubmit(onSubmit)}>
+            <div className="flex flex-col gap-2">
+              <h5 className="pb-1 text-heading5">Alerts</h5>
+              <hr />
+            </div>
+            <Controller
+              name="alertEnabled"
+              control={formMethods.control}
+              render={({ field }) => {
+                return (
+                  <div className="mt-6 flex max-w-[360px] items-center justify-between">
+                    <span>Alerts</span>
+                    <Switch value={field.value} onChange={field.onChange} />
+                  </div>
+                );
+              }}
+            />
 
-        <Controller
-          name="minimumSfxAmount"
-          control={formMethods.control}
-          render={({ field, fieldState }) => {
-            return (
-              <Form.Field
-                numeric
-                label="Minimum Sfx amount ($)"
-                className="mt-6 w-full"
-                helperText={fieldState.error?.message}
-                error={Boolean(fieldState.error?.message)}
-                {...field}
-                value={field.value?.toString()}
-              />
-            );
-          }}
-        />
-
-        <Controller
-          name="customBadWords"
-          control={formMethods.control}
-          render={({ field, fieldState }) => {
-            return (
-              <Form.TagField
-                label="Custom Bad Words"
-                className="mt-6 w-full"
-                helperText={fieldState.error?.message}
-                error={Boolean(fieldState.error?.message)}
-                {...field}
-              />
-            );
-          }}
-        />
-
-        <Controller
-          name="alertMuted"
-          control={formMethods.control}
-          render={({ field }) => {
-            return (
-              <div className="mt-6 flex items-center justify-between">
-                <span>Mute Alerts</span>
-                <Switch value={field.value} onChange={field.onChange} />
-              </div>
-            );
-          }}
-        />
-
-        <Controller
-          name="ttsMuted"
-          control={formMethods.control}
-          render={({ field }) => {
-            return (
-              <div className="mt-6 flex items-center justify-between">
-                <span>Mute TTS</span>
-                <Switch
-                  disabled={alertMuted}
-                  value={field.value}
-                  onChange={field.onChange}
+            {alertEnabled && (
+              <div>
+                <Controller
+                  name="minimumAlertAmount"
+                  control={formMethods.control}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <Form.Field
+                        numeric
+                        label="Minimum alert amount ($)"
+                        className="mt-6 max-w-[360px]"
+                        helperText={fieldState.error?.message}
+                        error={Boolean(fieldState.error?.message)}
+                        {...field}
+                        value={field.value?.toString()}
+                      />
+                    );
+                  }}
                 />
-              </div>
-            );
-          }}
-        />
+                <div className="mt-6 grid grid-cols-2 gap-2 lg:gap-4">
+                  <div className="flex max-w-[360px] flex-row">
+                    <Button
+                      size="medium"
+                      intent="secondary"
+                      prefixIconName={
+                        copiedObsLink ? 'CheckCircle2' : undefined
+                      }
+                      onClick={() => {
+                        return validateAndCopy(copyObsLink);
+                      }}
+                      className={
+                        copiedObsLink
+                          ? 'border-mint-600 bg-mint-300 hover:bg-mint-300'
+                          : ''
+                      }
+                    >
+                      {copiedObsLink ? 'COPIED' : 'OBS LINK'}
+                    </Button>
 
-        <Controller
-          name="sfxMuted"
-          control={formMethods.control}
-          render={({ field }) => {
-            return (
-              <div className="mt-6 flex items-center justify-between">
-                <span>Mute Sfx</span>
-                <Switch
-                  disabled={alertMuted}
-                  value={field.value}
-                  onChange={field.onChange}
-                />
+                    <Button
+                      size="medium"
+                      intent="tertiary"
+                      onClick={sendTestDonation}
+                    >
+                      TEST ALERT
+                    </Button>
+                  </div>
+                </div>
               </div>
-            );
-          }}
-        />
-
-        <div className="mt-6 grid grid-cols-2 gap-2 lg:gap-4">
-          <Button
-            size="medium"
-            intent="secondary"
-            prefixIconName={copiedObsLink ? 'CheckCircle2' : undefined}
-            onClick={() => {
-              return validateAndCopy(copyObsLink);
-            }}
-            className={classes(
-              'w-full',
-              copiedObsLink && 'border-mint-600 bg-mint-300 hover:bg-mint-300',
             )}
-          >
-            {copiedObsLink ? 'COPIED' : 'OBS LINK'}
-          </Button>
 
-          <Button
-            size="medium"
-            intent="primary"
-            className="mt-4 w-full"
-            onClick={formMethods.handleSubmit(onSubmit)}
-          >
-            SAVE
-          </Button>
-
-          <Button
-            size="medium"
-            intent="tertiary"
-            onClick={sendTestDonation}
-            className="w-full"
-          >
-            TEST DONATION
-          </Button>
-
-          {/* TODO: Display modal on save loading and success */}
-          {isSaving && (
-            <div className="mt-4 flex items-center gap-2">Saving...</div>
-          )}
-          {saveSuccess && (
-            <div className="mt-4 flex items-center gap-2">
-              <span className="text-mint-600">Changes saved successfully!</span>
+            <div className="flex flex-col gap-2">
+              <h5 className="pb-1 text-heading5">Text-to-speech</h5>
+              <hr />
             </div>
-          )}
-          {saveSuccess === false && (
-            <div className="mt-4 flex items-center gap-2">
-              <span className="text-red-500">
-                Something went wrong. Please try again.
-              </span>
+            <Controller
+              name="ttsEnabled"
+              control={formMethods.control}
+              render={({ field }) => {
+                return (
+                  <div className="mt-6 flex max-w-[360px] items-center justify-between">
+                    <span>Text-to-speech</span>
+                    <Switch
+                      disabled={!alertEnabled}
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                  </div>
+                );
+              }}
+            />
+
+            {ttsEnabled && alertEnabled && (
+              <div>
+                <Controller
+                  name="minimumTTSAmount"
+                  control={formMethods.control}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <Form.Field
+                        numeric
+                        label="Minimum TTS amount ($)"
+                        className="mt-6 max-w-[360px]"
+                        helperText={fieldState.error?.message}
+                        error={Boolean(fieldState.error?.message)}
+                        {...field}
+                        value={field.value?.toString()}
+                      />
+                    );
+                  }}
+                />
+                <Controller
+                  name="customBadWords"
+                  control={formMethods.control}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <Form.TagField
+                        label="Custom Bad Words"
+                        className="mt-6 max-w-[360px]"
+                        helperText={fieldState.error?.message}
+                        error={Boolean(fieldState.error?.message)}
+                        {...field}
+                      />
+                    );
+                  }}
+                />
+              </div>
+            )}
+
+            <div className="flex flex-col">
+              <div className="flex flex-col gap-2">
+                <h5 className="pb-1 text-heading5">AI sound effects</h5>
+                <hr />
+              </div>
+              <Controller
+                name="sfxEnabled"
+                control={formMethods.control}
+                render={({ field }) => {
+                  return (
+                    <div className="mt-6 flex max-w-[360px] items-center justify-between">
+                      <span>AI sound effects</span>
+                      <Switch
+                        disabled={!alertEnabled}
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                    </div>
+                  );
+                }}
+              />
+
+              {sfxEnabled && alertEnabled && (
+                <Controller
+                  name="minimumSfxAmount"
+                  control={formMethods.control}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <Form.Field
+                        numeric
+                        label="Minimum Sfx amount ($)"
+                        className="mt-6 max-w-[360px]"
+                        helperText={fieldState.error?.message}
+                        error={Boolean(fieldState.error?.message)}
+                        {...field}
+                        value={field.value?.toString()}
+                      />
+                    );
+                  }}
+                />
+              )}
             </div>
-          )}
+
+            <Button
+              size="medium"
+              intent="primary"
+              className="mt-4"
+              onClick={formMethods.handleSubmit(onSubmit)}
+            >
+              SAVE SETTINGS
+            </Button>
+
+            {/* TODO: Display modal on save loading and success */}
+            {isSaving && (
+              <div className="mt-4 flex items-center gap-2">Saving...</div>
+            )}
+            {saveSuccess && (
+              <div className="mt-4 flex items-center gap-2">
+                <span className="text-mint-600">
+                  Changes saved successfully!
+                </span>
+              </div>
+            )}
+            {saveSuccess === false && (
+              <div className="mt-4 flex items-center gap-2">
+                <span className="text-red-500">
+                  Something went wrong. Please try again.
+                </span>
+              </div>
+            )}
+          </Form>
         </div>
-      </Form>
+      </div>
     </Card>
   );
 }

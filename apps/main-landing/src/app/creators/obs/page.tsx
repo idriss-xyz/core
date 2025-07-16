@@ -55,10 +55,10 @@ export type MinimumAmounts = {
   minimumTTSAmount: number;
 };
 
-export type MuteToggles = {
-  alertMuted: boolean;
-  sfxMuted: boolean;
-  ttsMuted: boolean;
+export type EnableToggles = {
+  alertEnabled: boolean;
+  sfxEnabled: boolean;
+  ttsEnabled: boolean;
 };
 
 type QueuedDonation = Omit<
@@ -78,10 +78,10 @@ export default function Obs({ creatorName }: Properties) {
     minimumSfxAmount: DEFAULT_DONATION_MIN_SFX_AMOUNT,
     minimumTTSAmount: DEFAULT_DONATION_MIN_TTS_AMOUNT,
   });
-  const [muteToggles, setMuteToggles] = useState({
-    alertMuted: false,
-    ttsMuted: false,
-    sfxMuted: false,
+  const [enableToggles, setEnableToggles] = useState({
+    alertEnabled: false,
+    ttsEnabled: false,
+    sfxEnabled: false,
   });
   const [customBadWords, setCustomBadWords] = useState<string[]>([]);
 
@@ -110,10 +110,10 @@ export default function Obs({ creatorName }: Properties) {
                 minimumTTSAmount: profile.minimumTTSAmount,
                 minimumSfxAmount: profile.minimumSfxAmount,
               });
-              setMuteToggles({
-                alertMuted: profile.alertMuted,
-                sfxMuted: profile.sfxMuted,
-                ttsMuted: profile.ttsMuted,
+              setEnableToggles({
+                alertEnabled: profile.alertEnabled,
+                sfxEnabled: profile.sfxEnabled,
+                ttsEnabled: profile.ttsEnabled,
               });
               setCustomBadWords(profile.customBadWords);
             }
@@ -192,7 +192,7 @@ export default function Obs({ creatorName }: Properties) {
               details: testDonation.token.details,
             },
             minimumAmounts,
-            muteToggles,
+            enableToggles,
           };
 
           addDonation(queuedDonation);
@@ -223,7 +223,7 @@ export default function Obs({ creatorName }: Properties) {
     return () => {
       window.removeEventListener('storage', handleStorageChange);
     };
-  }, [addDonation, minimumAmounts, muteToggles]);
+  }, [addDonation, minimumAmounts, enableToggles]);
 
   const fetchTipMessageLogs = useCallback(async () => {
     if (!address?.data) return;
@@ -339,14 +339,20 @@ export default function Obs({ creatorName }: Properties) {
               details: tokenDetails,
             },
             minimumAmounts,
-            muteToggles,
+            enableToggles,
           });
         }
       } catch (error) {
         console.error('Error fetching tip message log:', error);
       }
     }
-  }, [address?.data, addDonation, minimumAmounts, muteToggles, customBadWords]);
+  }, [
+    address?.data,
+    addDonation,
+    minimumAmounts,
+    enableToggles,
+    customBadWords,
+  ]);
 
   useEffect(() => {
     if (!address?.isValid) return;
@@ -378,7 +384,7 @@ export default function Obs({ creatorName }: Properties) {
           minOverallVisibleDuration={DONATION_MIN_OVERALL_VISIBLE_DURATION}
           onFullyComplete={handleDonationFullyComplete}
           minimumAmounts={minimumAmounts}
-          muteToggles={muteToggles}
+          enableToggles={enableToggles}
         />
       )}
     </div>
