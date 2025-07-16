@@ -5,7 +5,6 @@ import { Icon, type IconName } from '@idriss-xyz/ui/icon';
 const symbolToIconNameMap: Record<string, IconName> = {
   ETH: 'EthToken',
   USDC: 'UsdcToken',
-  PRIME: 'PrimeToken',
   IDRISS: 'IdrissToken',
   PDT: 'PdtToken',
   RON: 'RoninToken',
