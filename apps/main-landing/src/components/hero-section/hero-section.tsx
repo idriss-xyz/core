@@ -31,7 +31,7 @@ export const HeroSection = () => {
             '4xl:text-display1',
           )}
         >
-          BUILDING ONCHAIN APPS <br className="hidden sm:block" /> THAT MATTER
+          BUILDING <br className="sm:hidden" /> ONCHAIN APPS <br /> THAT MATTER 
         </h1>
       </div>
       <Button
