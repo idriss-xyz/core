@@ -35,9 +35,9 @@ export const PlatformsSection = () => {
                   'text-body2 text-neutralGreen-900 opacity-70 sm:text-center lg:text-balance lg:text-left',
                 )}
               >
-                Whether you are on Twitch, YouTube, Kick, Facebook or
-                anywhere else, you can start earning with IDRISS. All it takes
-                is sharing a link with your audience.
+                Whether you are on Twitch, YouTube, Kick, Facebook or anywhere
+                else, you can start earning with IDRISS. All it takes is sharing
+                a link with your audience.
               </p>
             </div>
 
