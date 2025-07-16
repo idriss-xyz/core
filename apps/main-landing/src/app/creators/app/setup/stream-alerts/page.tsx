@@ -2,8 +2,8 @@
 import { CREATORS_LINK } from '@idriss-xyz/constants';
 import { Button } from '@idriss-xyz/ui/button';
 import { Card } from '@idriss-xyz/ui/card';
-import { Switch } from '@idriss-xyz/ui/switch';
 import { Form } from '@idriss-xyz/ui/form';
+import { Toggle } from '@idriss-xyz/ui/toggle';
 import { getAccessToken } from '@privy-io/react-auth';
 import { useCallback, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -146,10 +146,12 @@ export default function StreamAlerts() {
               control={formMethods.control}
               render={({ field }) => {
                 return (
-                  <div className="flex max-w-[360px] items-center justify-between">
-                    <span>Alerts</span>
-                    <Switch value={field.value} onChange={field.onChange} />
-                  </div>
+                  <Toggle
+                    label="Alerts"
+                    sublabel="Plays a sound and shows a message when someone donates"
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
                 );
               }}
             />
@@ -216,14 +218,12 @@ export default function StreamAlerts() {
               control={formMethods.control}
               render={({ field }) => {
                 return (
-                  <div className="flex max-w-[360px] items-center justify-between">
-                    <span>Text-to-speech</span>
-                    <Switch
-                      disabled={!alertEnabled}
-                      value={field.value}
-                      onChange={field.onChange}
-                    />
-                  </div>
+                  <Toggle
+                    label="Text-to-speech"
+                    sublabel="Reads the donation message aloud during the alert"
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
                 );
               }}
             />
@@ -276,14 +276,12 @@ export default function StreamAlerts() {
               control={formMethods.control}
               render={({ field }) => {
                 return (
-                  <div className="flex max-w-[360px] items-center justify-between">
-                    <span>AI sound effects</span>
-                    <Switch
-                      disabled={!alertEnabled}
-                      value={field.value}
-                      onChange={field.onChange}
-                    />
-                  </div>
+                  <Toggle
+                    label="AI sound effects"
+                    sublabel="Replaces the default alert sound with a custom effect"
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
                 );
               }}
             />

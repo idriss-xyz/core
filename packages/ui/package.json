@@ -43,7 +43,8 @@
     "./divider": "./src/components/divider/index.ts",
     "./table": "./src/components/table/index.ts",
     "./progress-bar-v2": "./src/components/progress-bar-v2/index.ts",
-    "./breadcrumb": "./src/components/breadcrumb/index.ts"
+    "./breadcrumb": "./src/components/breadcrumb/index.ts",
+    "./toggle": "./src/components/toggle/index.ts"
   },
   "scripts": {
     "format": "prettier --check --config ../../prettier.config.mjs --ignore-path .prettierignore .",
