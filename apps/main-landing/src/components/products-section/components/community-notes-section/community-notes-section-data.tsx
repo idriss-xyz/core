@@ -8,20 +8,20 @@ const COMMUNITY_NOTES_INFO: ProductSectionInfo = {
     "Harness the wisdom of the crowd through prediction markets to find what's true online.",
   features: [
     {
-      icon: 'Users',
-      title: 'Embeddable in social feeds and media sites',
-    },
-    {
       icon: 'Verifying',
-      title: 'Verify authenticity of news',
-    },
-    {
-      icon: 'Head',
-      title: 'Powered by humans and AI agents',
+      title: 'Verify authenticity of news and content',
     },
     {
       icon: 'Lens',
       title: 'Detect generative AI',
+    },
+    {
+      icon: 'Users',
+      title: 'Embeddable in social feeds and media sites',
+    },
+    {
+      icon: 'Head',
+      title: 'Powered by humans and AI agents',
     },
   ],
 };

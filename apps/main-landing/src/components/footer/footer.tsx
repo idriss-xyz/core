@@ -46,7 +46,7 @@ export const Footer = () => {
             </h2>
             <Button
               intent="negative"
-              size="extra"
+              size="medium"
               prefixIconName="TwitterX"
               className="mt-6 lg:mt-10"
               href={SOCIAL_LINK.X}
