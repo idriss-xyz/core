@@ -9,7 +9,7 @@ type WaitlistInput = {
 };
 
 //TODO Add zod validation and remove inline validation from Controller
-export const PredictionMarketsSectionActions = () => {
+export const CommunityNotesSectionActions = () => {
   const {
     control,
     handleSubmit,

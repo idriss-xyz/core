@@ -203,7 +203,7 @@ export const UnstakeTabContent = () => {
                       size="medium"
                       href={TOKEN_TERMS_AND_CONDITIONS_LINK}
                       isExternal
-                      className="text-body5 lg:text-body5"
+                      className="text-body5 md:text-body5 lg:text-body5"
                     >
                       Terms and conditions
                     </Link>

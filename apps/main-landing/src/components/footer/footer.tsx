@@ -3,7 +3,7 @@
 import { Link } from '@idriss-xyz/ui/link';
 import { Button } from '@idriss-xyz/ui/button';
 import {
-  CHROME_EXTENSION_LINK,
+  SOCIAL_LINK,
   PRIVACY_POLICY_LINK,
   TERMS_OF_SERVICE_LINK,
 } from '@idriss-xyz/constants';
@@ -41,18 +41,19 @@ export const Footer = () => {
                 'lg:text-display3',
               )}
             >
-              APPS UNIQUELY ENABLED BY CRYPTO AND AI
+              BUILDING ONCHAIN APPS <br className="hidden sm:block lg:block" />{' '}
+              THAT MATTER
             </h2>
             <Button
               intent="negative"
               size="medium"
-              prefixIconName="Puzzle"
+              prefixIconName="TwitterX"
               className="mt-6 lg:mt-10"
-              href={CHROME_EXTENSION_LINK}
+              href={SOCIAL_LINK.X}
               isExternal
               asLink
             >
-              DOWNLOAD EXTENSION
+              GET UPDATES
             </Button>
           </div>
 
