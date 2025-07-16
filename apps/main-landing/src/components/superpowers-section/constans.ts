@@ -20,7 +20,7 @@ export const CREATORS_INFO = {
   ],
 };
 
-export const PREDICTION_MARKETS_INFO = {
+export const COMMUNITY_NOTES_INFO = {
   name: 'COMMUNITY NOTES',
   title: 'Decentralized community notes for the internet',
   features: [

@@ -16,6 +16,6 @@ export const APPS_SECTION_NAVIGATION_ITEMS: NavigationSectionItem[] = [
   {
     title: 'COMMUNITY NOTES',
     description: 'Decentralized community notes for the internet',
-    url: `/${INTERNAL_LINK.PREDICTION_MARKETS}`,
+    url: `/${INTERNAL_LINK.COMMUNITY_NOTES}`,
   },
 ];

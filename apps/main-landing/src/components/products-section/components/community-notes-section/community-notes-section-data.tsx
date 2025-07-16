@@ -1,8 +1,8 @@
 import { ProductSectionInfo } from '../product-section';
 
-import { PredictionMarketsSectionActions } from './prediction-markets-section-actions';
+import { CommunityNotesSectionActions } from './community-notes-section-actions';
 
-const PREDICTION_MARKETS_INFO: ProductSectionInfo = {
+const COMMUNITY_NOTES_INFO: ProductSectionInfo = {
   title: 'DECENTRALIZED COMMUNITY NOTES FOR THE INTERNET',
   description:
     "Harness the wisdom of the crowd through prediction markets to find what's true online.",
@@ -26,8 +26,8 @@ const PREDICTION_MARKETS_INFO: ProductSectionInfo = {
   ],
 };
 
-export const PredictionMarketsSectionData = {
-  actions: <PredictionMarketsSectionActions />,
-  info: PREDICTION_MARKETS_INFO,
-  defaultOptionKey: 'prediction-markets',
+export const CommunityNotesSectionData = {
+  actions: <CommunityNotesSectionActions />,
+  info: COMMUNITY_NOTES_INFO,
+  defaultOptionKey: 'community-notes',
 };

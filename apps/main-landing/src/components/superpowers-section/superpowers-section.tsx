@@ -12,7 +12,7 @@ import { TopWave } from './components/top-wave';
 import {
   CREATORS_INFO,
   EXTENSION_INFO,
-  PREDICTION_MARKETS_INFO,
+  COMMUNITY_NOTES_INFO,
 } from './constans';
 import { stackedHex } from './assets';
 
@@ -109,7 +109,7 @@ export const SuperpowersSection = () => {
                 }
               />
               <ProductTile
-                {...PREDICTION_MARKETS_INFO}
+                {...COMMUNITY_NOTES_INFO}
                 actions={
                   <>
                     <Button

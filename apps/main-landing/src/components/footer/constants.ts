@@ -22,7 +22,7 @@ export const INTERNAL_LINKS: SectionItem[] = [
     isExternal: false,
   },
   {
-    link: INTERNAL_LINK.PREDICTION_MARKETS,
+    link: INTERNAL_LINK.COMMUNITY_NOTES,
     name: 'COMMUNITY NOTES',
     isExternal: false,
   },
