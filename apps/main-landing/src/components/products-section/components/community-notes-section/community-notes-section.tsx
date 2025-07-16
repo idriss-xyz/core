@@ -11,10 +11,7 @@ type Properties = {
 const CIRCLE_IMAGE_PATH =
   'extension-to-community-notes-circle-optimized/IDRISS_CIRCLE_0038.webp';
 
-export const CommunityNotesSection = ({
-  className,
-  fadeOut,
-}: Properties) => {
+export const CommunityNotesSection = ({ className, fadeOut }: Properties) => {
   return (
     <ProductSection
       tabsVisibile={false}
