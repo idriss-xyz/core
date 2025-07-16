@@ -132,8 +132,11 @@ export default function StreamAlerts() {
   return (
     <Card>
       <div className="flex flex-col justify-between">
-        <div className="gap-6 py-4">
-          <Form onSubmit={formMethods.handleSubmit(onSubmit)}>
+        <Form
+          onSubmit={formMethods.handleSubmit(onSubmit)}
+          className="flex flex-col gap-6"
+        >
+          <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-2">
               <h5 className="pb-1 text-heading5">Alerts</h5>
               <hr />
@@ -143,7 +146,7 @@ export default function StreamAlerts() {
               control={formMethods.control}
               render={({ field }) => {
                 return (
-                  <div className="mt-6 flex max-w-[360px] items-center justify-between">
+                  <div className="flex max-w-[360px] items-center justify-between">
                     <span>Alerts</span>
                     <Switch value={field.value} onChange={field.onChange} />
                   </div>
@@ -152,7 +155,7 @@ export default function StreamAlerts() {
             />
 
             {alertEnabled && (
-              <div>
+              <>
                 <Controller
                   name="minimumAlertAmount"
                   control={formMethods.control}
@@ -161,7 +164,7 @@ export default function StreamAlerts() {
                       <Form.Field
                         numeric
                         label="Minimum alert amount ($)"
-                        className="mt-6 max-w-[360px]"
+                        className="max-w-[360px]"
                         helperText={fieldState.error?.message}
                         error={Boolean(fieldState.error?.message)}
                         {...field}
@@ -170,7 +173,7 @@ export default function StreamAlerts() {
                     );
                   }}
                 />
-                <div className="mt-6 grid grid-cols-2 gap-2 lg:gap-4">
+                <div className="grid grid-cols-2 gap-2 lg:gap-4">
                   <div className="flex max-w-[360px] flex-row">
                     <Button
                       size="medium"
@@ -199,9 +202,11 @@ export default function StreamAlerts() {
                     </Button>
                   </div>
                 </div>
-              </div>
+              </>
             )}
+          </div>
 
+          <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-2">
               <h5 className="pb-1 text-heading5">Text-to-speech</h5>
               <hr />
@@ -211,7 +216,7 @@ export default function StreamAlerts() {
               control={formMethods.control}
               render={({ field }) => {
                 return (
-                  <div className="mt-6 flex max-w-[360px] items-center justify-between">
+                  <div className="flex max-w-[360px] items-center justify-between">
                     <span>Text-to-speech</span>
                     <Switch
                       disabled={!alertEnabled}
@@ -224,7 +229,7 @@ export default function StreamAlerts() {
             />
 
             {ttsEnabled && alertEnabled && (
-              <div>
+              <>
                 <Controller
                   name="minimumTTSAmount"
                   control={formMethods.control}
@@ -233,7 +238,7 @@ export default function StreamAlerts() {
                       <Form.Field
                         numeric
                         label="Minimum TTS amount ($)"
-                        className="mt-6 max-w-[360px]"
+                        className="max-w-[360px]"
                         helperText={fieldState.error?.message}
                         error={Boolean(fieldState.error?.message)}
                         {...field}
@@ -249,7 +254,7 @@ export default function StreamAlerts() {
                     return (
                       <Form.TagField
                         label="Custom Bad Words"
-                        className="mt-6 max-w-[360px]"
+                        className="max-w-[360px]"
                         helperText={fieldState.error?.message}
                         error={Boolean(fieldState.error?.message)}
                         {...field}
@@ -257,81 +262,79 @@ export default function StreamAlerts() {
                     );
                   }}
                 />
-              </div>
+              </>
             )}
+          </div>
 
-            <div className="flex flex-col">
-              <div className="flex flex-col gap-2">
-                <h5 className="pb-1 text-heading5">AI sound effects</h5>
-                <hr />
-              </div>
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-2">
+              <h5 className="pb-1 text-heading5">AI sound effects</h5>
+              <hr />
+            </div>
+            <Controller
+              name="sfxEnabled"
+              control={formMethods.control}
+              render={({ field }) => {
+                return (
+                  <div className="flex max-w-[360px] items-center justify-between">
+                    <span>AI sound effects</span>
+                    <Switch
+                      disabled={!alertEnabled}
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                  </div>
+                );
+              }}
+            />
+
+            {sfxEnabled && alertEnabled && (
               <Controller
-                name="sfxEnabled"
+                name="minimumSfxAmount"
                 control={formMethods.control}
-                render={({ field }) => {
+                render={({ field, fieldState }) => {
                   return (
-                    <div className="mt-6 flex max-w-[360px] items-center justify-between">
-                      <span>AI sound effects</span>
-                      <Switch
-                        disabled={!alertEnabled}
-                        value={field.value}
-                        onChange={field.onChange}
-                      />
-                    </div>
+                    <Form.Field
+                      numeric
+                      label="Minimum Sfx amount ($)"
+                      className="max-w-[360px]"
+                      helperText={fieldState.error?.message}
+                      error={Boolean(fieldState.error?.message)}
+                      {...field}
+                      value={field.value?.toString()}
+                    />
                   );
                 }}
               />
+            )}
+          </div>
 
-              {sfxEnabled && alertEnabled && (
-                <Controller
-                  name="minimumSfxAmount"
-                  control={formMethods.control}
-                  render={({ field, fieldState }) => {
-                    return (
-                      <Form.Field
-                        numeric
-                        label="Minimum Sfx amount ($)"
-                        className="mt-6 max-w-[360px]"
-                        helperText={fieldState.error?.message}
-                        error={Boolean(fieldState.error?.message)}
-                        {...field}
-                        value={field.value?.toString()}
-                      />
-                    );
-                  }}
-                />
-              )}
+          <Button
+            size="medium"
+            intent="primary"
+            className="mt-4"
+            onClick={formMethods.handleSubmit(onSubmit)}
+          >
+            SAVE SETTINGS
+          </Button>
+
+          {/* TODO: Display modal on save loading and success */}
+          {isSaving && (
+            <div className="mt-4 flex items-center gap-2">Saving...</div>
+          )}
+          {saveSuccess && (
+            <div className="mt-4 flex items-center gap-2">
+              <span className="text-mint-600">Changes saved successfully!</span>
             </div>
-
-            <Button
-              size="medium"
-              intent="primary"
-              className="mt-4"
-              onClick={formMethods.handleSubmit(onSubmit)}
-            >
-              SAVE SETTINGS
-            </Button>
-
-            {/* TODO: Display modal on save loading and success */}
-            {isSaving && (
-              <div className="mt-4 flex items-center gap-2">Saving...</div>
-            )}
-            {saveSuccess && (
-              <div className="mt-4 flex items-center gap-2">
-                <span className="text-mint-600">
-                  Changes saved successfully!
-                </span>
-              </div>
-            )}
-            {saveSuccess === false && (
-              <div className="mt-4 flex items-center gap-2">
-                <span className="text-red-500">
-                  Something went wrong. Please try again.
-                </span>
-              </div>
-            )}
-          </Form>
-        </div>
+          )}
+          {saveSuccess === false && (
+            <div className="mt-4 flex items-center gap-2">
+              <span className="text-red-500">
+                Something went wrong. Please try again.
+              </span>
+            </div>
+          )}
+        </Form>
       </div>
     </Card>
   );
