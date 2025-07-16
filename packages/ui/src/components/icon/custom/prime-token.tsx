@@ -1,3 +1,4 @@
+/* eslint-disable tailwindcss/no-custom-classname */
 import type { SVGProps } from 'react';
 
 export const PrimeToken = (properties: SVGProps<SVGSVGElement>) => {
