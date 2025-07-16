@@ -13,6 +13,17 @@ import { editCreatorProfile } from '@/app/creators/utils';
 import { useAuth } from '@/app/creators/context/auth-context';
 import { testDonation } from '@/app/creators/constants';
 
+const SectionHeader = ({ title }: { title: string }) => (
+  <div className="flex flex-col gap-2">
+    <h5 className="pb-1 text-heading5">{title}</h5>
+    <hr />
+  </div>
+);
+
+const FormFieldWrapper = ({ children }: { children: React.ReactNode }) => (
+  <div className="flex flex-col gap-6">{children}</div>
+);
+
 type FormPayload = {
   minimumAlertAmount: number;
   minimumTTSAmount: number;
@@ -118,7 +129,6 @@ export default function StreamAlerts() {
 
       setSaveSuccess(editSuccess);
 
-      // Reset success message after 3 seconds
       setTimeout(() => {
         setSaveSuccess(null);
       }, 3000);
@@ -136,24 +146,20 @@ export default function StreamAlerts() {
           onSubmit={formMethods.handleSubmit(onSubmit)}
           className="flex flex-col gap-6"
         >
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2">
-              <h5 className="pb-1 text-heading5">Alerts</h5>
-              <hr />
-            </div>
+          {/* Alerts form fields */}
+          <FormFieldWrapper>
+            <SectionHeader title="Alerts" />
             <Controller
               name="alertEnabled"
               control={formMethods.control}
-              render={({ field }) => {
-                return (
-                  <Toggle
-                    label="Alerts"
-                    sublabel="Plays a sound and shows a message when someone donates"
-                    value={field.value}
-                    onChange={field.onChange}
-                  />
-                );
-              }}
+              render={({ field }) => (
+                <Toggle
+                  label="Alerts"
+                  sublabel="Plays a sound and shows a message when someone donates"
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              )}
             />
 
             {alertEnabled && (
@@ -161,19 +167,17 @@ export default function StreamAlerts() {
                 <Controller
                   name="minimumAlertAmount"
                   control={formMethods.control}
-                  render={({ field, fieldState }) => {
-                    return (
-                      <Form.Field
-                        numeric
-                        label="Minimum alert amount ($)"
-                        className="max-w-[360px]"
-                        helperText={fieldState.error?.message}
-                        error={Boolean(fieldState.error?.message)}
-                        {...field}
-                        value={field.value?.toString()}
-                      />
-                    );
-                  }}
+                  render={({ field, fieldState }) => (
+                    <Form.Field
+                      className="max-w-[360px]"
+                      numeric
+                      label="Minimum alert amount ($)"
+                      helperText={fieldState.error?.message}
+                      error={Boolean(fieldState.error?.message)}
+                      {...field}
+                      value={field.value?.toString()}
+                    />
+                  )}
                 />
                 <div className="grid grid-cols-2 gap-2 lg:gap-4">
                   <div className="flex max-w-[360px] flex-row">
@@ -183,9 +187,7 @@ export default function StreamAlerts() {
                       prefixIconName={
                         copiedObsLink ? 'CheckCircle2' : undefined
                       }
-                      onClick={() => {
-                        return validateAndCopy(copyObsLink);
-                      }}
+                      onClick={() => validateAndCopy(copyObsLink)}
                       className={
                         copiedObsLink
                           ? 'border-mint-600 bg-mint-300 hover:bg-mint-300'
@@ -206,26 +208,22 @@ export default function StreamAlerts() {
                 </div>
               </>
             )}
-          </div>
+          </FormFieldWrapper>
 
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2">
-              <h5 className="pb-1 text-heading5">Text-to-speech</h5>
-              <hr />
-            </div>
+          {/* TTS form fields */}
+          <FormFieldWrapper>
+            <SectionHeader title="Text-to-speech" />
             <Controller
               name="ttsEnabled"
               control={formMethods.control}
-              render={({ field }) => {
-                return (
-                  <Toggle
-                    label="Text-to-speech"
-                    sublabel="Reads the donation message aloud during the alert"
-                    value={field.value}
-                    onChange={field.onChange}
-                  />
-                );
-              }}
+              render={({ field }) => (
+                <Toggle
+                  label="Text-to-speech"
+                  sublabel="Reads the donation message aloud during the alert"
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              )}
             />
 
             {ttsEnabled && alertEnabled && (
@@ -233,79 +231,69 @@ export default function StreamAlerts() {
                 <Controller
                   name="minimumTTSAmount"
                   control={formMethods.control}
-                  render={({ field, fieldState }) => {
-                    return (
-                      <Form.Field
-                        numeric
-                        label="Minimum TTS amount ($)"
-                        className="max-w-[360px]"
-                        helperText={fieldState.error?.message}
-                        error={Boolean(fieldState.error?.message)}
-                        {...field}
-                        value={field.value?.toString()}
-                      />
-                    );
-                  }}
+                  render={({ field, fieldState }) => (
+                    <Form.Field
+                      className="max-w-[360px]"
+                      numeric
+                      label="Minimum TTS amount ($)"
+                      helperText={fieldState.error?.message}
+                      error={Boolean(fieldState.error?.message)}
+                      {...field}
+                      value={field.value?.toString()}
+                    />
+                  )}
                 />
                 <Controller
                   name="customBadWords"
                   control={formMethods.control}
-                  render={({ field, fieldState }) => {
-                    return (
-                      <Form.TagField
-                        label="Custom Bad Words"
-                        className="max-w-[360px]"
-                        helperText={fieldState.error?.message}
-                        error={Boolean(fieldState.error?.message)}
-                        {...field}
-                      />
-                    );
-                  }}
+                  render={({ field, fieldState }) => (
+                    <Form.TagField
+                      label="Custom Bad Words"
+                      className="max-w-[360px]"
+                      helperText={fieldState.error?.message}
+                      error={Boolean(fieldState.error?.message)}
+                      {...field}
+                    />
+                  )}
                 />
               </>
             )}
-          </div>
+          </FormFieldWrapper>
 
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2">
-              <h5 className="pb-1 text-heading5">AI sound effects</h5>
-              <hr />
-            </div>
+          {/* SFX form fields */}
+          <FormFieldWrapper>
+            <SectionHeader title="AI sound effects" />
             <Controller
               name="sfxEnabled"
               control={formMethods.control}
-              render={({ field }) => {
-                return (
-                  <Toggle
-                    label="AI sound effects"
-                    sublabel="Replaces the default alert sound with a custom effect"
-                    value={field.value}
-                    onChange={field.onChange}
-                  />
-                );
-              }}
+              render={({ field }) => (
+                <Toggle
+                  label="AI sound effects"
+                  sublabel="Replaces the default alert sound with a custom effect"
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              )}
             />
 
             {sfxEnabled && alertEnabled && (
               <Controller
                 name="minimumSfxAmount"
                 control={formMethods.control}
-                render={({ field, fieldState }) => {
-                  return (
-                    <Form.Field
-                      numeric
-                      label="Minimum Sfx amount ($)"
-                      className="max-w-[360px]"
-                      helperText={fieldState.error?.message}
-                      error={Boolean(fieldState.error?.message)}
-                      {...field}
-                      value={field.value?.toString()}
-                    />
-                  );
-                }}
+                render={({ field, fieldState }) => (
+                  <Form.Field
+                    className="max-w-[360px]"
+                    numeric
+                    label="Minimum Sfx amount ($)"
+                    helperText={fieldState.error?.message}
+                    error={Boolean(fieldState.error?.message)}
+                    {...field}
+                    value={field.value?.toString()}
+                  />
+                )}
               />
             )}
-          </div>
+          </FormFieldWrapper>
 
           <Button
             size="medium"
@@ -316,7 +304,6 @@ export default function StreamAlerts() {
             SAVE SETTINGS
           </Button>
 
-          {/* TODO: Display modal on save loading and success */}
           {isSaving && (
             <div className="mt-4 flex items-center gap-2">Saving...</div>
           )}
