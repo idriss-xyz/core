@@ -7,7 +7,7 @@ import { tabOptions } from '../constants';
 
 import { CreatorsSection } from './creators-section';
 import { ExtensionSection } from './extension-section';
-import { PredictionMarketsSection } from './prediction-markets-section';
+import { CommunityNotesSection } from './community-notes-section';
 import { Tabs } from './tabs';
 
 type Properties = {
@@ -65,8 +65,8 @@ export const MobileProductsSection = ({ className }: Properties) => {
       <section className={className} id="creators">
         <CreatorsSection fadeOut={false} />
       </section>
-      <section className={className} id="prediction-markets">
-        <PredictionMarketsSection fadeOut={false} />
+      <section className={className} id="community-notes">
+        <CommunityNotesSection fadeOut={false} />
       </section>
     </div>
   );

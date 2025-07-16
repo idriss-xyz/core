@@ -13,7 +13,7 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { ProductSection } from './product-section';
 import { ExtensionSectionData } from './extension-section';
 import { CreatorsSectionData } from './creators-section';
-import { PredictionMarketsSectionData } from './prediction-markets-section';
+import { CommunityNotesSectionData } from './community-notes-section';
 
 type Properties = {
   className?: string;
@@ -26,7 +26,7 @@ const getSectionNumberByName = (key: string) => {
   return {
     'extension': 0,
     'creators': 1,
-    'prediction-markets': 2,
+    'community-notes': 2,
   }[key];
 };
 
@@ -34,9 +34,9 @@ const CIRCLE_IMAGE_NUMBER_START_GAP = 38;
 const CIRCLE_IMAGES_COUNT = 113;
 const EXTENSION_CIRCLE_INDEX = 0;
 const CREATORS_CIRCLE_INDEX = 57;
-const PREDICTION_MARKETS_CIRCLE_INDEX = 112;
+const COMMUNITY_NOTES_CIRCLE_INDEX = 112;
 
-const CIRCLE_IMAGES_BASE_NAME = `extension-to-prediction-markets-circle-optimized/IDRISS_CIRCLE_`;
+const CIRCLE_IMAGES_BASE_NAME = `extension-to-community-notes-circle-optimized/IDRISS_CIRCLE_`;
 
 const circleImages = [...Array.from({ length: CIRCLE_IMAGES_COUNT }).keys()]
   .map((_, index) => {
@@ -81,7 +81,7 @@ export const DesktopProductsSection = ({
     return [
       ExtensionSectionData,
       CreatorsSectionData,
-      PredictionMarketsSectionData,
+      CommunityNotesSectionData,
     ];
   }, []);
 
@@ -114,7 +114,7 @@ export const DesktopProductsSection = ({
         return CREATORS_CIRCLE_INDEX;
       }
       case 2: {
-        return PREDICTION_MARKETS_CIRCLE_INDEX;
+        return COMMUNITY_NOTES_CIRCLE_INDEX;
       }
       default: {
         return EXTENSION_CIRCLE_INDEX;
@@ -136,7 +136,7 @@ export const DesktopProductsSection = ({
         return CREATORS_CIRCLE_INDEX;
       }
       case 2: {
-        return PREDICTION_MARKETS_CIRCLE_INDEX;
+        return COMMUNITY_NOTES_CIRCLE_INDEX;
       }
       default: {
         return EXTENSION_CIRCLE_INDEX;
@@ -313,7 +313,7 @@ export const DesktopProductsSection = ({
             className="my-10 h-screen"
           />
           <div id="creators" className="h-screen" />
-          <div id="prediction-markets" className="h-screen" />
+          <div id="community-notes" className="h-screen" />
         </div>
       </div>
     </section>

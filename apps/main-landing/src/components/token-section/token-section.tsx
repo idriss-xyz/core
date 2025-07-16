@@ -190,7 +190,7 @@ export const TokenSection = () => {
                     href={TOKEN_TERMS_AND_CONDITIONS_LINK}
                     isExternal
                     className={classes(
-                      'border-none text-body5',
+                      'text-body5',
                       'md:text-body5',
                       //lg here is intentional to override the Link variant style
                       'lg:text-body5',
