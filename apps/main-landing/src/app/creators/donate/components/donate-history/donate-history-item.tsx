@@ -120,9 +120,9 @@ export const DonateHistoryItem = ({
                 )}{' '}
                 {tokenSymbol}{' '}
               </span>
-              <span className="relative inline-block size-6 align-middle">                                                                                                                      
-                <TokenLogo symbol={tokenSymbol} imageUrl={tokenImage} />                                                                                                                       
-              </span>{' '} 
+              <span className="relative inline-block size-6 align-middle">
+                <TokenLogo symbol={tokenSymbol} imageUrl={tokenImage} />
+              </span>{' '}
               <Badge type="success" variant="subtle">
                 $
                 {tradeValue >= 0.01
