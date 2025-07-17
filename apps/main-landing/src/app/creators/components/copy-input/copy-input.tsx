@@ -27,20 +27,25 @@ export function CopyInput({
   };
 
   return (
-    <Input
-      value={value}
-      readOnly
-      className={classes('min-w-[380px] max-w-[500px]', className)}
-      suffixElement={
-        <div className="flex h-full items-center py-[2px]" onClick={handleCopy}>
-          <div className="mr-3 h-full border-l border-gray-200" />
-          {copied ? (
-            <Icon name="Check" size={15} />
-          ) : (
-            <Icon name={iconName ?? 'Copy'} size={15} />
-          )}
-        </div>
-      }
-    />
+    <div className="relative flex">
+      <Input
+        value={value}
+        readOnly
+        className={classes('min-w-[380px] max-w-[500px]', className)}
+        suffixElement={
+          <div
+            className="flex h-full items-center py-[2px]"
+            onClick={handleCopy}
+          >
+            <div className="mr-3 h-full border-l border-gray-200" />
+            {copied ? (
+              <Icon name="Check" size={15} />
+            ) : (
+              <Icon name={iconName ?? 'Copy'} size={15} />
+            )}
+          </div>
+        }
+      />
+    </div>
   );
 }
