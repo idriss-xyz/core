@@ -3,6 +3,8 @@ import {
   forwardRef,
   HTMLProps,
   ReactNode,
+  useCallback,
+  useEffect,
   useState,
 } from 'react';
 
@@ -15,6 +17,9 @@ import { alert, AlertVariants, icon, iconClass } from './variants';
 type Properties = {
   heading: string;
   description: string;
+  autoClose?: boolean;
+  show?: boolean;
+  setShow?: (show: boolean) => void;
   onClose?: () => void;
   actionButtons?: (close: () => void) => ReactNode;
 } & AlertVariants &
@@ -27,6 +32,7 @@ export const Alert = forwardRef(
       className,
       heading,
       description,
+      autoClose,
       onClose,
       actionButtons,
       ...properties
@@ -41,10 +47,22 @@ export const Alert = forwardRef(
 
     const Component = 'span';
 
-    const handleClose = () => {
+    const handleClose = useCallback(() => {
       setIsVisible(false);
       if (onClose) onClose();
-    };
+    }, [onClose]);
+
+    useEffect(() => {
+      if (autoClose && isVisible) {
+        const timeout = setTimeout(() => {
+          handleClose();
+        }, 3000);
+        return () => {
+          return clearTimeout(timeout);
+        };
+      }
+      return () => {};
+    }, [isVisible, autoClose, onClose, handleClose]);
 
     if (!isVisible) return null;
 
@@ -57,7 +75,7 @@ export const Alert = forwardRef(
         <div className="grid grid-cols-[1fr,32px] items-start">
           <div className="flex flex-col items-start gap-y-1">
             <p className="text-label3 text-neutral-900">{heading}</p>
-            <p className="text-body4 text-neutral-600">{description}</p>
+            <p className="text-body5 text-neutral-600">{description}</p>
 
             {actionButtons && (
               <div className="mt-2 flex flex-row flex-wrap items-center gap-x-4 gap-y-2">

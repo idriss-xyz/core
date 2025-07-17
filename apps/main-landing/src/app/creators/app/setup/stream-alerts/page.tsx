@@ -4,6 +4,7 @@ import { Button } from '@idriss-xyz/ui/button';
 import { Card } from '@idriss-xyz/ui/card';
 import { Form } from '@idriss-xyz/ui/form';
 import { Toggle } from '@idriss-xyz/ui/toggle';
+import { Alert } from '@idriss-xyz/ui/alert';
 import { getAccessToken } from '@privy-io/react-auth';
 import { useCallback, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -74,16 +75,24 @@ export default function StreamAlerts() {
     alert('Test donation sent! Check your OBS page.');
   }, [creator?.primaryAddress]);
 
+  const handleAlertClose = useCallback(() => {
+    setSaveSuccess(null);
+  }, []);
+
   const onSubmit = async (data: FormPayload) => {
     setIsSaving(true);
 
     try {
       const authToken = await getAccessToken();
       if (!authToken) {
-        throw new Error('Could not get auth token.');
+        setSaveSuccess(false);
+        console.error('Could not get auth token.');
+        return;
       }
       if (!creator?.name) {
-        throw new Error('Creator not initialized');
+        setSaveSuccess(false);
+        console.error('Creator not initialized');
+        return;
       }
 
       const editSuccess = await editCreatorProfile(
@@ -297,24 +306,34 @@ export default function StreamAlerts() {
           >
             SAVE SETTINGS
           </Button>
-
-          {isSaving && (
-            <div className="mt-4 flex items-center gap-2">Saving...</div>
-          )}
-          {saveSuccess && (
-            <div className="mt-4 flex items-center gap-2">
-              <span className="text-mint-600">Changes saved successfully!</span>
-            </div>
-          )}
-          {saveSuccess === false && (
-            <div className="mt-4 flex items-center gap-2">
-              <span className="text-red-500">
-                Something went wrong. Please try again.
-              </span>
-            </div>
-          )}
         </Form>
       </div>
+      {isSaving && (
+        <Alert
+          heading="Saving settings"
+          type="default"
+          description="..."
+          autoClose
+        />
+      )}
+      {saveSuccess && (
+        <Alert
+          heading="Refresh the browser source in your streaming software"
+          type="success"
+          description="Keeps your donation alert setup up to date"
+          autoClose
+          onClose={handleAlertClose}
+        />
+      )}
+      {saveSuccess === false && (
+        <Alert
+          heading="Unable to save settings"
+          type="error"
+          description="Please try again later"
+          autoClose
+          onClose={handleAlertClose}
+        />
+      )}
     </Card>
   );
 }
