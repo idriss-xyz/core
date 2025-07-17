@@ -1,6 +1,5 @@
 'use client';
 import { useMemo, useState } from 'react';
-import { Hex } from 'viem';
 import { Button } from '@idriss-xyz/ui/button';
 import { calculateDonationLeaderboard } from '@idriss-xyz/utils';
 import { CREATOR_APP_TEST_ADDRESS } from '@idriss-xyz/constants';
