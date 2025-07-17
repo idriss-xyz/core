@@ -5,13 +5,14 @@ import { Card } from '@idriss-xyz/ui/card';
 import { Form } from '@idriss-xyz/ui/form';
 import { Toggle } from '@idriss-xyz/ui/toggle';
 import { getAccessToken } from '@privy-io/react-auth';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { isAddress } from 'viem';
 
 import { editCreatorProfile } from '@/app/creators/utils';
 import { useAuth } from '@/app/creators/context/auth-context';
 import { testDonation } from '@/app/creators/constants';
+import { CopyInput } from '@/app/creators/components/copy-input/copy-input';
 
 const SectionHeader = ({ title }: { title: string }) => {
   return (
@@ -42,7 +43,6 @@ export default function StreamAlerts() {
   const { creator, creatorLoading } = useAuth();
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState<boolean | null>(null);
-  const [copiedObsLink, setCopiedObsLink] = useState(false);
 
   const formMethods = useForm<FormPayload>({
     defaultValues: {
@@ -73,35 +73,6 @@ export default function StreamAlerts() {
     // Show confirmation
     alert('Test donation sent! Check your OBS page.');
   }, [creator?.primaryAddress]);
-
-  const copyObsLink = async () => {
-    if (!creator?.primaryAddress) return;
-
-    await navigator.clipboard.writeText(
-      `${CREATORS_LINK}/obs?address=${creator.primaryAddress}`,
-    );
-    setCopiedObsLink(true);
-  };
-
-  const validateAndCopy = async (copyFunction: () => Promise<void>) => {
-    const isValid = await formMethods.trigger();
-
-    if (isValid) {
-      // iOS is strict about gestures, and will throw NotAllowedError with async validation (e.g. API calls)
-      // setTimeout works here because it executes code in a subsequent event loop tick.
-      // This "trick" helps iOS associate the clipboard operation with the earlier gesture,
-      // as long as the user gesture initiates the chain of events
-      setTimeout(() => {
-        void copyFunction();
-      }, 0);
-    }
-  };
-
-  useEffect(() => {
-    setTimeout(() => {
-      setCopiedObsLink(false);
-    }, 3000);
-  }, []);
 
   const onSubmit = async (data: FormPayload) => {
     setIsSaving(true);
@@ -168,6 +139,26 @@ export default function StreamAlerts() {
 
             {alertEnabled && (
               <>
+                <div className="flex items-center gap-4">
+                  <div className="flex flex-col gap-1">
+                    <span className="pb-1 text-label4">Overlay link</span>
+                    <CopyInput
+                      value={`${CREATORS_LINK}/obs/${creator?.name}`}
+                    />
+                    {/* TODO: Add helper text to CopyInput*/}
+                    <span className="text-label6 text-neutral-600">
+                      Add this as a browser source in your streaming software
+                    </span>
+                  </div>
+                  <Button
+                    size="medium"
+                    intent="secondary"
+                    onClick={sendTestDonation}
+                    className="h-fit"
+                  >
+                    TEST ALERT
+                  </Button>
+                </div>
                 <Controller
                   name="minimumAlertAmount"
                   control={formMethods.control}
@@ -178,7 +169,10 @@ export default function StreamAlerts() {
                         numeric
                         label="Minimum amount"
                         placeholder="$1"
-                        helperText={fieldState.error?.message}
+                        helperText={
+                          fieldState.error?.message ??
+                          'Donation amount that triggers an alert'
+                        }
                         error={Boolean(fieldState.error?.message)}
                         {...field}
                         value={field.value?.toString()}
@@ -186,35 +180,6 @@ export default function StreamAlerts() {
                     );
                   }}
                 />
-                <div className="grid grid-cols-2 gap-2 lg:gap-4">
-                  <div className="flex max-w-[360px] flex-row">
-                    <Button
-                      size="medium"
-                      intent="secondary"
-                      prefixIconName={
-                        copiedObsLink ? 'CheckCircle2' : undefined
-                      }
-                      onClick={() => {
-                        return validateAndCopy(copyObsLink);
-                      }}
-                      className={
-                        copiedObsLink
-                          ? 'border-mint-600 bg-mint-300 hover:bg-mint-300'
-                          : ''
-                      }
-                    >
-                      {copiedObsLink ? 'COPIED' : 'OBS LINK'}
-                    </Button>
-
-                    <Button
-                      size="medium"
-                      intent="tertiary"
-                      onClick={sendTestDonation}
-                    >
-                      TEST ALERT
-                    </Button>
-                  </div>
-                </div>
               </>
             )}
           </FormFieldWrapper>
@@ -225,6 +190,7 @@ export default function StreamAlerts() {
             <Controller
               name="ttsEnabled"
               control={formMethods.control}
+              disabled={!alertEnabled}
               render={({ field }) => {
                 return (
                   <Toggle
@@ -249,7 +215,10 @@ export default function StreamAlerts() {
                         numeric
                         label="Minimum amount"
                         placeholder="$3"
-                        helperText={fieldState.error?.message}
+                        helperText={
+                          fieldState.error?.message ??
+                          'Donation amount that triggers an text-to-speech alert'
+                        }
                         error={Boolean(fieldState.error?.message)}
                         {...field}
                         value={field.value?.toString()}
@@ -282,6 +251,7 @@ export default function StreamAlerts() {
             <Controller
               name="sfxEnabled"
               control={formMethods.control}
+              disabled={!alertEnabled}
               render={({ field }) => {
                 return (
                   <Toggle
@@ -305,7 +275,10 @@ export default function StreamAlerts() {
                       numeric
                       label="Minimum amount"
                       placeholder="$5"
-                      helperText={fieldState.error?.message}
+                      helperText={
+                        fieldState.error?.message ??
+                        'Donation amount that triggers an AI sound effect'
+                      }
                       error={Boolean(fieldState.error?.message)}
                       {...field}
                       value={field.value?.toString()}
