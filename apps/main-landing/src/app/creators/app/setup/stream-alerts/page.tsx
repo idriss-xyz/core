@@ -190,13 +190,13 @@ export default function StreamAlerts() {
             <Controller
               name="ttsEnabled"
               control={formMethods.control}
-              disabled={!alertEnabled}
               render={({ field }) => {
                 return (
                   <Toggle
                     label="Text-to-speech"
                     sublabel="Reads the donation message aloud during the alert"
-                    value={field.value}
+                    value={alertEnabled ? field.value : false}
+                    disabled={!alertEnabled}
                     onChange={field.onChange}
                   />
                 );
@@ -251,13 +251,13 @@ export default function StreamAlerts() {
             <Controller
               name="sfxEnabled"
               control={formMethods.control}
-              disabled={!alertEnabled}
               render={({ field }) => {
                 return (
                   <Toggle
                     label="AI sound effects"
                     sublabel="Replaces the default alert sound with a custom effect"
-                    value={field.value}
+                    value={alertEnabled ? field.value : false}
+                    disabled={!alertEnabled}
                     onChange={field.onChange}
                   />
                 );
