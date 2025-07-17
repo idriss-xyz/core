@@ -6,13 +6,9 @@ import {
 } from '../../constants';
 import { fetchAllKnownDonationHashes } from '../../db/fetch-known-donations';
 import { storeToDatabase } from '../../db/store-new-donation';
-import {
-  AppHistoryVariables,
-  DonationData,
-  ZapperNode,
-  ZapperResponse,
-} from '../../types';
+import { AppHistoryVariables, ZapperNode, ZapperResponse } from '../../types';
 import { enrichNodesWithHistoricalPrice } from '../../utils/enrich-nodes';
+import { DonationData } from '@idriss-xyz/constants';
 
 const ZAPPER_API_KEY = process.env.ZAPPER_API_KEY;
 

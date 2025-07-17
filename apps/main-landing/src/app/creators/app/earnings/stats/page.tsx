@@ -11,6 +11,7 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { Button } from '@idriss-xyz/ui/button';
 import { useMemo } from 'react';
 import { formatNumber } from '@idriss-xyz/utils';
+import { CREATOR_APP_TEST_ADDRESS } from '@idriss-xyz/constants';
 
 import { backgroundLines2, IDRISS_COIN, IDRISS_SCENE_STREAM_4 } from '@/assets';
 import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history';
@@ -29,10 +30,10 @@ const chartConfig = {
 // ts-unused-exports:disable-next-line
 export default function EarningsStats() {
   const tipHistoryQuery = useGetTipHistory({
-    address: '0x7D716741D2c37925e5E15123025400Be80ec796d',
+    address: CREATOR_APP_TEST_ADDRESS,
   });
   const recipientStatsQuery = useGetRecipientStats({
-    address: '0x7D716741D2c37925e5E15123025400Be80ec796d',
+    address: CREATOR_APP_TEST_ADDRESS,
   });
 
   const donations = tipHistoryQuery.data?.donations ?? [];

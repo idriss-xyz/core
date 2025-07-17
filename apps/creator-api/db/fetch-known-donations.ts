@@ -1,7 +1,7 @@
 import { Hex } from 'viem';
 import { AppDataSource } from './database';
 import { Donation } from './entities/donations.entity';
-import { DonationData } from '../types';
+import { DonationData } from '@idriss-xyz/constants';
 
 export async function fetchDonationsByToAddress(
   toAddress: Hex,

@@ -18,4 +18,6 @@ export {
   getTimeDifferenceString,
   isSolanaAddress,
   removeEthSuffix,
-} from './utils';
+} from './formatting-utils';
+
+export { calculateDonationLeaderboard } from './donation-utils';

@@ -5,8 +5,9 @@ import { AppDataSource } from './database';
 import { Donation } from './entities/donations.entity';
 import { User } from './entities/user.entity';
 import { Token } from './entities/token.entity';
-import { DonationData, ZapperNode } from '../types';
+import { ZapperNode } from '../types';
 import { enrichUserData } from '../utils/enrich-user';
+import { DonationData } from '@idriss-xyz/constants';
 
 export async function storeToDatabase(
   edges: { node: ZapperNode }[],

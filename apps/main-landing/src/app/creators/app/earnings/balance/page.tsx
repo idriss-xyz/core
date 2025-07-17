@@ -24,7 +24,7 @@ export default function EarningsBalance() {
     try {
       const uiOptions = {
         title: 'You are voting for foobar project',
-        showWalletUIs: false
+        showWalletUIs: false,
       };
       const { signature } = await signMessage(
         { message: 'I hereby vote for foobar' },
@@ -102,7 +102,7 @@ export default function EarningsBalance() {
               >
                 Withdraw
               </Button>
-{/* todo: remove, just for testing */}
+              {/* todo: remove, just for testing */}
               <Button
                 intent="secondary"
                 size="small"

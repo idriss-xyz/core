@@ -119,7 +119,9 @@ export function BalanceTable({
             intent="tertiary"
             size="medium"
             iconName="ArrowDownFromLine"
-            onClick={() => {return handleWithdraw(item)}}
+            onClick={() => {
+              return handleWithdraw(item);
+            }}
           />
         );
       },

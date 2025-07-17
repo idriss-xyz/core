@@ -1,25 +1,15 @@
 import { Hex } from 'viem';
+import {
+  DonationData,
+  DonationToken,
+  DonationUser,
+  LeaderboardStats,
+} from '@idriss-xyz/constants';
 
 interface TokenDisplayItem {
   network: string;
   amountRaw: string;
   tokenV2: TokenV2;
-}
-
-interface DonationUser {
-  address: Hex;
-  displayName?: string;
-  displayNameSource?: string;
-  avatarUrl?: string;
-  avatarSource?: string;
-}
-
-export interface DonationToken {
-  address: Hex;
-  symbol: string;
-  imageUrl?: string;
-  network: string;
-  decimals: number;
 }
 
 type StringDisplayItem = {
@@ -76,16 +66,6 @@ export interface DonationStats {
   positionInLeaderboard: number | null;
 }
 
-export interface LeaderboardStats {
-  address: Hex;
-  avatarUrl: string;
-  displayName: string;
-  totalAmount: number;
-  donateLink?: string;
-  donorSince?: number;
-  donationCount?: number;
-}
-
 export interface ZapperNode {
   timestamp: number;
   network: string;
@@ -133,21 +113,6 @@ export interface ZapperResponse {
 export interface TipHistoryResponse {
   donations: DonationData[];
   leaderboard: LeaderboardStats[];
-}
-
-export interface DonationData {
-  transactionHash: Hex;
-  fromAddress: Hex;
-  toAddress: Hex;
-  timestamp: number;
-  comment?: string;
-  tradeValue: number;
-  tokenAddress: Hex;
-  network: string;
-  fromUser: DonationUser;
-  toUser: DonationUser;
-  token: DonationToken;
-  amountRaw: string;
 }
 
 export interface TokenEarnings {

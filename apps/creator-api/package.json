@@ -26,7 +26,8 @@
     "jwk-to-pem": "^2.0.7",
     "socket.io": "^4.8.1",
     "typeorm": "^0.3.20",
-    "viem": "^2.31.7"
+    "viem": "^2.31.7",
+    "@idriss-xyz/utils": "workspace:*"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
