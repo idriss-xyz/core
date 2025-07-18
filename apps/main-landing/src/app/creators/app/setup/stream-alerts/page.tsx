@@ -157,7 +157,7 @@ export default function StreamAlerts() {
 
   return (
     <Card className="size-full">
-      <div className="flex h-full flex-col justify-between">
+      <div className="flex h-full flex-col justify-between gap-6">
         <Form
           onSubmit={formMethods.handleSubmit(onSubmit)}
           className="flex flex-col gap-6"
