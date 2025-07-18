@@ -42,8 +42,10 @@ type FormPayload = {
 // ts-unused-exports:disable-next-line
 export default function StreamAlerts() {
   const { creator, creatorLoading } = useAuth();
-  const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState<boolean | null>(null);
+  const [testDonationSuccess, setTestDonationSuccess] = useState<
+    boolean | null
+  >(null);
 
   const formMethods = useForm<FormPayload>({
     defaultValues: {
@@ -65,23 +67,24 @@ export default function StreamAlerts() {
 
   const sendTestDonation = useCallback(() => {
     if (!creator?.primaryAddress || !isAddress(creator.primaryAddress)) {
-      alert('Please enter a valid address first');
+      setTestDonationSuccess(false);
       return;
     }
 
     localStorage.setItem('testDonation', JSON.stringify(testDonation));
 
-    // Show confirmation
-    alert('Test donation sent! Check your OBS page.');
+    setTestDonationSuccess(true);
   }, [creator?.primaryAddress]);
 
   const handleAlertClose = useCallback(() => {
     setSaveSuccess(null);
   }, []);
 
-  const onSubmit = async (data: FormPayload) => {
-    setIsSaving(true);
+  const handleTestDonationClose = useCallback(() => {
+    setTestDonationSuccess(null);
+  }, []);
 
+  const onSubmit = async (data: FormPayload) => {
     try {
       const authToken = await getAccessToken();
       if (!authToken) {
@@ -110,14 +113,8 @@ export default function StreamAlerts() {
       );
 
       setSaveSuccess(editSuccess);
-
-      setTimeout(() => {
-        setSaveSuccess(null);
-      }, 3000);
     } catch (error) {
       console.error('Error saving profile:', error);
-    } finally {
-      setIsSaving(false);
     }
   };
 
@@ -308,12 +305,25 @@ export default function StreamAlerts() {
           </Button>
         </Form>
       </div>
-      {isSaving && (
+      {/* Alerts */}
+      {testDonationSuccess && (
         <Alert
-          heading="Saving settings"
-          type="default"
-          description="..."
+          heading="Test alert sent successfully!"
+          type="success"
+          description="Check your stream preview to see it"
+          iconName="BellRing"
           autoClose
+          onClose={handleTestDonationClose}
+        />
+      )}
+      {testDonationSuccess === false && (
+        <Alert
+          heading="Unable to send test alert"
+          type="error"
+          description="Check your streaming software and verify the link"
+          iconName="BellRing"
+          autoClose
+          onClose={handleTestDonationClose}
         />
       )}
       {saveSuccess && (

@@ -9,7 +9,7 @@ import {
 } from 'react';
 
 import { classes } from '../../utils';
-import { Icon } from '../icon';
+import { Icon, IconName } from '../icon';
 import { IconButton } from '../icon-button';
 
 import { alert, AlertVariants, icon, iconClass } from './variants';
@@ -19,6 +19,7 @@ type Properties = {
   description: string;
   autoClose?: boolean;
   show?: boolean;
+  iconName?: IconName;
   setShow?: (show: boolean) => void;
   onClose?: () => void;
   actionButtons?: (close: () => void) => ReactNode;
@@ -33,6 +34,7 @@ export const Alert = forwardRef(
       heading,
       description,
       autoClose,
+      iconName,
       onClose,
       actionButtons,
       ...properties
@@ -42,7 +44,6 @@ export const Alert = forwardRef(
     const [isVisible, setIsVisible] = useState(true);
 
     const variantClassName = classes(alert({ type }), className);
-    const iconName = icon[type];
     const iconClassName = iconClass({ type });
 
     const Component = 'span';
@@ -69,7 +70,7 @@ export const Alert = forwardRef(
     return (
       <Component {...properties} ref={reference} className={variantClassName}>
         <span className={iconClassName}>
-          <Icon name={iconName} size={20} />
+          <Icon name={iconName ?? icon[type]} size={20} />
         </span>
 
         <div className="grid grid-cols-[1fr,32px] items-start">
