@@ -6,7 +6,7 @@ import {
   TokenSymbol,
   CREATORS_LINK,
   CHAIN_ID_TO_TOKENS,
-  DEFAULT_ALLOWED_CHAINS_IDS,
+  DEFAULT_ALLOWED_CHAINS_IDS, TOKEN, Token,
 } from '@idriss-xyz/constants';
 import { isAddress } from 'viem';
 import { Form } from '@idriss-xyz/ui/form';
@@ -20,6 +20,8 @@ import { Multiselect, MultiselectOption } from '@idriss-xyz/ui/multiselect';
 import { usePrivy } from '@privy-io/react-auth';
 import { Link } from '@idriss-xyz/ui/link';
 
+
+import {Select} from "@/app/creators/app/setup/select";
 import { File } from '@/app/creators/app/setup/file-upload/file';
 
 import {
@@ -383,8 +385,33 @@ export function CreatorProfileForm() {
     );
   }
 
+  const optionsFrom = (tokens: Token[]) => {
+    return tokens.map((token) => {
+      return {
+        label: token.name,
+        value: token.symbol,
+        prefix: (
+          <img
+            src={token.logo}
+            alt={token.symbol}
+            className="size-6 rounded-full"
+          />
+        ),
+      };
+    });
+  };
+
   return (
     <Form className="w-full" onSubmit={formMethods.handleSubmit(onSubmit)}>
+
+      <Select
+        label="Select a sound"
+        value={"field.value"}
+        className="mt-6 w-full"
+        options={optionsFrom(Object.values(TOKEN))}
+        onChange={() => {}}
+      />
+
       <Controller
         name="name"
         control={formMethods.control}

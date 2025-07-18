@@ -44,6 +44,7 @@ import {
   BookOpen,
   Wallet,
   UploadCloud,
+  PlayCircle
 } from 'lucide-react';
 
 import * as customIcons from './custom';
@@ -94,5 +95,6 @@ export const ICON = {
   BookOpen,
   Wallet,
   UploadCloud,
+  PlayCircle,
   ...customIcons,
 };
