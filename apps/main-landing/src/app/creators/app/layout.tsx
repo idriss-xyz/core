@@ -25,10 +25,10 @@ export default function CreatorsLayout({
 
         {/* Main Content */}
         <OAuthCallbackHandler />
-        <div className="flex-1">
+        <div className="flex h-screen w-full flex-col">
           <TopBar />
           {/* Page Content */}
-          <main className="p-2">
+          <main className="flex flex-1 flex-col overflow-auto p-2">
             <BreadcrumbNavigation pathname={pathname} siteMap={siteMap} />
             {children}
           </main>
