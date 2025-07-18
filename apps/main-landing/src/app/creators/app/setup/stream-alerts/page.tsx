@@ -174,7 +174,12 @@ export default function StreamAlerts() {
                     label="Alerts"
                     sublabel="Plays a sound and shows a message when someone donates"
                     value={field.value}
-                    onChange={field.onChange}
+                    onChange={(newValue) => {
+                      field.onChange(newValue);
+                      setTimeout(() => {
+                        void void formMethods.handleSubmit(onSubmit)();
+                      }, 0); // defer to ensure updated value
+                    }}
                   />
                 );
               }}
@@ -240,7 +245,12 @@ export default function StreamAlerts() {
                     sublabel="Reads the donation message aloud during the alert"
                     value={alertEnabled ? field.value : false}
                     disabled={!alertEnabled}
-                    onChange={field.onChange}
+                    onChange={(newValue) => {
+                      field.onChange(newValue);
+                      setTimeout(() => {
+                        void formMethods.handleSubmit(onSubmit)();
+                      }, 0); // defer to ensure updated value
+                    }}
                   />
                 );
               }}
@@ -301,7 +311,12 @@ export default function StreamAlerts() {
                     sublabel="Replaces the default alert sound with a custom effect"
                     value={alertEnabled ? field.value : false}
                     disabled={!alertEnabled}
-                    onChange={field.onChange}
+                    onChange={(newValue) => {
+                      field.onChange(newValue);
+                      setTimeout(() => {
+                        void formMethods.handleSubmit(onSubmit)();
+                      }, 0); // defer to ensure updated value
+                    }}
                   />
                 );
               }}
