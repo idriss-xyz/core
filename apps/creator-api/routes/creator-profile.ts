@@ -17,6 +17,7 @@ import {
   CREATORS_LINK,
 } from '@idriss-xyz/constants';
 import { verifyToken } from '../db/middleware/auth.middleware';
+import { streamAudioFromS3 } from '../utils/audio-utils';
 
 const router = Router();
 
@@ -374,6 +375,76 @@ router.patch(
       console.error('Error updating creator profile:', error);
       res.status(500).json({ error: 'Failed to update creator profile' });
       return;
+    }
+  },
+);
+
+// Get creator audio by name
+router.get(
+  '/audio/:name',
+  [param('name').isString().notEmpty()],
+  async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({ errors: errors.array() });
+      return;
+    }
+
+    try {
+      const name = req.params.name;
+      const creatorRepository = AppDataSource.getRepository(Creator);
+      const creator = await creatorRepository.findOne({
+        where: { name },
+      });
+
+      if (!creator || !creator.privyId) {
+        res
+          .status(404)
+          .json({ error: 'Creator profile not found or misconfigured' });
+        return;
+      }
+
+      await streamAudioFromS3(creator.privyId, res);
+    } catch (error) {
+      console.error('Error processing audio request by name:', error);
+      if (!res.headersSent) {
+        res.status(500).json({ error: 'Failed to process request' });
+      }
+    }
+  },
+);
+
+// Get creator audio by address
+router.get(
+  '/audio/address/:address',
+  [param('address').isString().notEmpty()],
+  async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({ errors: errors.array() });
+      return;
+    }
+
+    try {
+      const address = req.params.address as Hex;
+      const creatorRepository = AppDataSource.getRepository(Creator);
+      const creator = await creatorRepository.findOne({
+        where: { address },
+      });
+
+      if (!creator || !creator.privyId) {
+        res
+          .status(404)
+          .json({ error: 'Creator profile not found or misconfigured' });
+        return;
+      }
+
+      await streamAudioFromS3(creator.privyId, res);
+    } catch (error) {
+      console.error('Error processing audio request by address:', error);
+      if (!res.headersSent) {
+        res.status(500).json({ error: 'Failed to process request' });
+      }
     }
   },
 );
