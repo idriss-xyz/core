@@ -21,6 +21,7 @@ import { editCreatorProfile } from '@/app/creators/utils';
 import { useAuth } from '@/app/creators/context/auth-context';
 import { testDonation } from '@/app/creators/constants';
 import { CopyInput } from '@/app/creators/components/copy-input/copy-input';
+import { File } from '../file-upload/file';
 
 const SectionHeader = ({ title }: { title: string }) => {
   return (
@@ -246,6 +247,7 @@ export default function StreamAlerts() {
                     );
                   }}
                 />
+                <File />
               </>
             )}
           </FormFieldWrapper>
