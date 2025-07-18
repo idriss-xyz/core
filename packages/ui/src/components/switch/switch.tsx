@@ -1,4 +1,5 @@
 import * as RadixSwitch from '@radix-ui/react-switch';
+import { forwardRef } from 'react';
 
 type Properties = {
   value: boolean;
@@ -6,17 +7,22 @@ type Properties = {
   disabled?: boolean;
 };
 
-export const Switch = ({ value, onChange, disabled }: Properties) => {
-  return (
-    <RadixSwitch.Root
-      className="group p-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
-      checked={value}
-      onCheckedChange={onChange}
-      disabled={disabled}
-    >
-      <div className="h-5 w-8 rounded-full bg-neutral-300 p-0.5 group-data-[state=checked]:bg-mint-500">
-        <RadixSwitch.Thumb className="block size-4 rounded-[100%] bg-white shadow-sm transition-transform data-[state=checked]:translate-x-3" />
-      </div>
-    </RadixSwitch.Root>
-  );
-};
+export const Switch = forwardRef<HTMLButtonElement, Properties>(
+  ({ value, onChange, disabled }, reference) => {
+    return (
+      <RadixSwitch.Root
+        ref={reference}
+        className="group p-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+        checked={value}
+        onCheckedChange={onChange}
+        disabled={disabled}
+      >
+        <div className="h-5 w-8 rounded-full bg-neutral-300 p-0.5 group-data-[state=checked]:bg-mint-500">
+          <RadixSwitch.Thumb className="block size-4 rounded-[100%] bg-white shadow-sm transition-transform data-[state=checked]:translate-x-3" />
+        </div>
+      </RadixSwitch.Root>
+    );
+  },
+);
+
+Switch.displayName = 'Switch';
