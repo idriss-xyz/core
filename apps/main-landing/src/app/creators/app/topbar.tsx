@@ -33,7 +33,7 @@ const donationData1: DonationData = {
     address: '0x5abca791c22e7f99237fcc04639e094ffa0ccce9',
     displayName: 'vitalik.eth',
     avatarUrl:
-      'https://ipfs.io/ipfs/bafkreigwt4fn24gyh4nnqjutxio24dqfloyolo4h4nljkhran6dypy7e5q',
+      'https://res.cloudinary.com/base-web/image/fetch/w_64/f_webp/https%3A%2F%2Fbase.mypinata.cloud%2Fipfs%2Fbafkreicr5lh2f3eumcn4meif5t2pauzeddjjbhjbl4enqrp4ooz4e7on6i%3FpinataGatewayToken%3Df6uqhE35YREDMuFqLvxFLqd-MBRlrJ1qWog8gyCF8T88-Tsiu2IX48F-kyVti78J',
   },
 };
 
@@ -66,7 +66,7 @@ const donationData2: DonationData = {
     address: '0x5abca791c22e7f99237fcc04639e094ffa0ccce9',
     displayName: 'idriss',
     avatarUrl:
-      'https://ipfs.io/ipfs/bafkreigwt4fn24gyh4nnqjutxio24dqfloyolo4h4nljkhran6dypy7e5q',
+      'https://res.cloudinary.com/base-web/image/fetch/w_64/f_webp/https%3A%2F%2Fbase.mypinata.cloud%2Fipfs%2Fbafkreicr5lh2f3eumcn4meif5t2pauzeddjjbhjbl4enqrp4ooz4e7on6i%3FpinataGatewayToken%3Df6uqhE35YREDMuFqLvxFLqd-MBRlrJ1qWog8gyCF8T88-Tsiu2IX48F-kyVti78J',
   },
 };
 
@@ -113,7 +113,7 @@ export function TopBar() {
               <div className="flex max-h-[70px] min-h-[40px] w-max items-center gap-2.5">
                 <div className="size-[48px] max-h-[48px] min-h-[48px] min-w-[48px] max-w-[48px] rounded-[999px] border border-[#AAAFB9]">
                   <img
-                    src="https://ipfs.io/ipfs/bafkreigwt4fn24gyh4nnqjutxio24dqfloyolo4h4nljkhran6dypy7e5q"
+                    src="https://res.cloudinary.com/base-web/image/fetch/w_64/f_webp/https%3A%2F%2Fbase.mypinata.cloud%2Fipfs%2Fbafkreicr5lh2f3eumcn4meif5t2pauzeddjjbhjbl4enqrp4ooz4e7on6i%3FpinataGatewayToken%3Df6uqhE35YREDMuFqLvxFLqd-MBRlrJ1qWog8gyCF8T88-Tsiu2IX48F-kyVti78J"
                     alt="avatar"
                   />
                 </div>

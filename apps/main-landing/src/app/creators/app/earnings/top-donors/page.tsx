@@ -1,6 +1,8 @@
 'use client';
-import { Hex } from 'viem';
+import { useMemo, useState } from 'react';
 import { Button } from '@idriss-xyz/ui/button';
+import { calculateDonationLeaderboard } from '@idriss-xyz/utils';
+import { CREATOR_APP_TEST_ADDRESS } from '@idriss-xyz/constants';
 
 import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history';
 import { Leaderboard } from '@/app/creators/donate/components/leaderboard';
@@ -8,24 +10,46 @@ import { IDRISS_SCENE_STREAM_LIGHT } from '@/assets';
 
 // ts-unused-exports:disable-next-line
 export default function TopDonors() {
+  const [activeFilter, setActiveFilter] = useState('All time');
   const tipHistoryQuery = useGetTipHistory({
-    address: '0x7D716741D2c37925e5E15123025400Be80ec796d', // TODO: Replace with user address
+    address: CREATOR_APP_TEST_ADDRESS, // TODO: Replace with user address
   });
-  const donations = tipHistoryQuery.data?.leaderboard ?? [];
+  const allDonations = tipHistoryQuery.data?.donations ?? [];
+
+  const leaderboard = useMemo(() => {
+    const now = Date.now();
+    const thirtyDaysAgo = now - 30 * 24 * 60 * 60 * 1000;
+    const sevenDaysAgo = now - 7 * 24 * 60 * 60 * 1000;
+
+    const filteredDonations = allDonations.filter((donation) => {
+      // Assuming donation.timestamp is in milliseconds
+      if (activeFilter === '30 days') {
+        return donation.timestamp >= thirtyDaysAgo;
+      }
+      if (activeFilter === '7 days') {
+        return donation.timestamp >= sevenDaysAgo;
+      }
+      return true; // 'All time'
+    });
+
+    return calculateDonationLeaderboard(filteredDonations);
+  }, [allDonations, activeFilter]);
 
   return (
     <div>
       <Leaderboard
-        leaderboard={donations}
+        leaderboard={leaderboard}
         leaderboardError={tipHistoryQuery.isError}
         leaderboardLoading={tipHistoryQuery.isLoading}
         address={{
           isValid: true,
-          data: '0x7D716741D2c37925e5E15123025400Be80ec796d' as Hex, // TODO: Replace with user address
+          data: CREATOR_APP_TEST_ADDRESS, // TODO: Replace with user address
           isFetching: false,
         }}
         variant="creatorsDashboard"
         className="container overflow-hidden px-0 shadow-lg"
+        activeFilter={activeFilter}
+        onFilterChange={setActiveFilter}
       />
       <div className="relative mt-4 min-h-[136px] overflow-hidden rounded-lg bg-neutral-300">
         <img

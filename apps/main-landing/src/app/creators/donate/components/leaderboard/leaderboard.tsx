@@ -5,9 +5,9 @@ import { Spinner } from '@idriss-xyz/ui/spinner';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { Button } from '@idriss-xyz/ui/button';
-import { LeaderboardStats } from '@idriss-xyz/constants';
-import { ColumnDefinition, Table } from '@idriss-xyz/ui/table';
 import { getTimeDifferenceString } from '@idriss-xyz/utils';
+import { ColumnDefinition, Table } from '@idriss-xyz/ui/table';
+import { LeaderboardStats } from '@idriss-xyz/constants';
 
 import { IDRISS_SCENE_STREAM_2 } from '../../../../../assets';
 import { WidgetVariants } from '../../../../../../../twitch-extension/src/app/types';
@@ -34,6 +34,8 @@ type Properties = {
   leaderboard: LeaderboardStats[];
   onDonorClick?: (address: Hex) => void;
   updateCurrentContent?: (content: DonateContentValues) => void;
+  activeFilter?: string;
+  onFilterChange?: (filter: string) => void;
 };
 
 const baseClassName =
@@ -107,6 +109,8 @@ export const Leaderboard = ({
   leaderboardError,
   leaderboardLoading,
   updateCurrentContent,
+  activeFilter,
+  onFilterChange,
 }: Properties) => {
   const isTwitchExtension = !!variant;
   const isTwitchPanel = variant === 'panel';
@@ -181,13 +185,37 @@ export const Leaderboard = ({
         </h1>
         {isCreatorsDashboard && (
           <div className="relative mx-auto flex w-[290px] gap-1 font-medium">
-            <span className="flex w-[94px] justify-center rounded-full border border-mint-400 bg-mint-400 p-1.5">
+            <span
+              onClick={() => {
+                return onFilterChange?.('All time');
+              }}
+              className={classes(
+                'flex w-[94px] cursor-pointer justify-center rounded-full border border-mint-400 p-1.5',
+                activeFilter === 'All time' ? 'bg-mint-400' : 'bg-white/80',
+              )}
+            >
               All time
             </span>
-            <span className="flex w-[94px] justify-center rounded-full border border-mint-400 bg-white/80 p-1.5">
+            <span
+              onClick={() => {
+                return onFilterChange?.('30 days');
+              }}
+              className={classes(
+                'flex w-[94px] cursor-pointer justify-center rounded-full border border-mint-400 p-1.5',
+                activeFilter === '30 days' ? 'bg-mint-400' : 'bg-white/80',
+              )}
+            >
               30 days
             </span>
-            <span className="flex w-[94px] justify-center rounded-full border border-mint-400 bg-white/80 p-1.5">
+            <span
+              onClick={() => {
+                return onFilterChange?.('7 days');
+              }}
+              className={classes(
+                'flex w-[94px] cursor-pointer justify-center rounded-full border border-mint-400 p-1.5',
+                activeFilter === '7 days' ? 'bg-mint-400' : 'bg-white/80',
+              )}
+            >
               7 days
             </span>
           </div>

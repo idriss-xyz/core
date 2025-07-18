@@ -21,6 +21,7 @@ import { Link } from '@idriss-xyz/ui/link';
 import { useRouter } from 'next/navigation';
 
 import { removeMainnetSuffix } from '@/app/creators/donate/utils';
+import { TokenLogo } from '@/app/creators/app/earnings/stats/token-logo';
 
 type Properties = {
   donation: DonationData;
@@ -119,7 +120,9 @@ export const DonateHistoryItem = ({
                 )}{' '}
                 {tokenSymbol}{' '}
               </span>
-              <img className="size-6 rounded-full" src={tokenImage} alt="" />{' '}
+              <span className="relative inline-block size-6 align-middle">
+                <TokenLogo symbol={tokenSymbol} imageUrl={tokenImage} />
+              </span>{' '}
               <Badge type="success" variant="subtle">
                 $
                 {tradeValue >= 0.01

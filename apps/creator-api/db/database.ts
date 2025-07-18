@@ -22,6 +22,7 @@ import {
   AddBadWords1748967010401,
   RenameDynamicIdToPrivyId1749000000000,
   AddTokenName1752155170000,
+  CompositeTokenPrimaryKey1752686842000,
 } from './migrations';
 import { CreatorProfileView } from './views';
 
@@ -53,6 +54,7 @@ export const AppDataSource = new DataSource({
     AddBadWords1748967010401,
     RenameDynamicIdToPrivyId1749000000000,
     AddTokenName1752155170000,
+    CompositeTokenPrimaryKey1752686842000,
   ],
 });
 

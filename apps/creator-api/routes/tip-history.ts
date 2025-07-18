@@ -1,10 +1,11 @@
 import { Router, Request, Response } from 'express';
 import { Hex } from 'viem';
 import { fetchDonationsByToAddress } from '../db/fetch-known-donations';
-import { DonationData, TipHistoryResponse } from '../types';
-import { calculateDonationLeaderboard } from '../utils/calculate-stats';
+import { TipHistoryResponse } from '../types';
 import { syncAndStoreNewDonations } from '../services/zapper/process-donations';
 import { connectedClients } from '../services/socket-server';
+import { calculateDonationLeaderboard } from '@idriss-xyz/utils';
+import { DonationData } from '@idriss-xyz/constants';
 
 const router = Router();
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -86,12 +87,8 @@ router.post('/sync', async (req: Request, res: Response) => {
               socket.emit('newDonation', donation);
             }
           }
-          // Check if we found the specific donation we were polling for.
-          // This will stop the *polling*, but we have already processed the whole batch.
-          if (donation.toAddress.toLowerCase() === lowerCaseAddress) {
-            foundDonationForUser = true;
-          }
         }
+        break;
       }
     }
 

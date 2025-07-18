@@ -8,38 +8,17 @@ import {
 } from '@idriss-xyz/ui/charts';
 import { Bar, BarChart, XAxis } from 'recharts';
 import { Icon } from '@idriss-xyz/ui/icon';
-import { classes } from '@idriss-xyz/ui/utils';
-import {
-  ECHELON_PRIME_LOGO,
-  ETHEREUM_LOGO,
-  USDC_LOGO,
-} from '@idriss-xyz/constants';
-import Image from 'next/image';
 import { Button } from '@idriss-xyz/ui/button';
+import { useMemo } from 'react';
+import { formatNumber } from '@idriss-xyz/utils';
+import { CREATOR_APP_TEST_ADDRESS } from '@idriss-xyz/constants';
 
-import {
-  backgroundLines2,
-  IDRISS_COIN,
-  IDRISS_ICON_CIRCLE,
-  IDRISS_SCENE_STREAM_4,
-} from '@/assets';
+import { backgroundLines2, IDRISS_COIN, IDRISS_SCENE_STREAM_4 } from '@/assets';
 import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history';
 import { DonateHistoryItem } from '@/app/creators/donate/components/donate-history/donate-history-item';
 
-const chartData = [
-  { month: 'January', donations: 110 },
-  { month: 'February', donations: 92 },
-  { month: 'March', donations: 45 },
-  { month: 'April', donations: 260 },
-  { month: 'May', donations: 100 },
-  { month: 'June', donations: 100 },
-  { month: 'July', donations: 100 },
-  { month: 'August', donations: 100 },
-  { month: 'September', donations: 100 },
-  { month: 'October', donations: 100 },
-  { month: 'November', donations: 100 },
-  { month: 'December', donations: 100 },
-];
+import { TokenLogo } from './token-logo';
+import { useGetRecipientStats } from './commands/get-recipient-stats';
 
 const chartConfig = {
   donations: {
@@ -48,40 +27,98 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const earningsByAsset = [
-  {
-    name: 'Ethereum',
-    icon: ETHEREUM_LOGO, // Replace with icon url
-    donations: 3,
-    amount: '$270',
-  },
-  {
-    name: 'Echelon Prime',
-    icon: ECHELON_PRIME_LOGO,
-    donations: 3,
-    amount: '$150',
-  },
-  {
-    name: 'USDC',
-    icon: USDC_LOGO,
-    donations: 3,
-    amount: '$85',
-  },
-];
-
 // ts-unused-exports:disable-next-line
 export default function EarningsStats() {
   const tipHistoryQuery = useGetTipHistory({
-    address: '0x7D716741D2c37925e5E15123025400Be80ec796d',
+    address: CREATOR_APP_TEST_ADDRESS,
   });
+  const recipientStatsQuery = useGetRecipientStats({
+    address: CREATOR_APP_TEST_ADDRESS,
+  });
+
   const donations = tipHistoryQuery.data?.donations ?? [];
   const sortedDonations = [...donations].sort((a, b) => {
     return b.timestamp - a.timestamp;
   });
 
+  const stats = recipientStatsQuery.data;
+
+  const { totalEarnings, chartData, mainAsset, otherAssets } = useMemo(() => {
+    if (!stats) {
+      return {
+        totalEarnings: 0,
+        chartData: [],
+        mainAsset: null,
+        otherAssets: [],
+      };
+    }
+
+    const totalEarnings = stats.donationsWithTimeAndAmount.reduce(
+      (sum, item) => {
+        return sum + item.amount;
+      },
+      0,
+    );
+
+    // --- NEW, CORRECTED LOGIC FOR ROLLING 12-MONTH CHART ---
+    const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    const today = new Date();
+    const monthlyData = [];
+
+    // 1. Create the template for the last 12 months, including year info.
+    for (let index = 11; index >= 0; index--) {
+      const date = new Date(today.getFullYear(), today.getMonth() - index, 1);
+      const month = monthNames[date.getMonth()];
+      const year = date.getFullYear();
+      if (month) {
+        monthlyData.push({
+          month,
+          year,
+          donations: 0,
+        });
+      }
+    }
+
+    // 2. Aggregate data from the API, matching on both month AND year.
+    for (const item of stats.donationsWithTimeAndAmount) {
+      const index = monthlyData.findIndex((d) => {
+        return d.month === item.month && d.year === item.year;
+      });
+      const monthEntry = monthlyData[index];
+      if (monthEntry) {
+        monthEntry.donations += item.amount;
+      }
+    }
+    // --- END OF NEW LOGIC ---
+
+    const sortedAssets = [...stats.earningsByTokenOverview].sort((a, b) => {
+      return b.totalAmount - a.totalAmount;
+    });
+
+    return {
+      totalEarnings,
+      chartData: monthlyData,
+      mainAsset: sortedAssets[0] ?? null,
+      otherAssets: sortedAssets.slice(1, 4),
+    };
+  }, [stats]);
+
   return (
     <div className="grid grid-cols-3 gap-4">
-      {sortedDonations.length > 0 ? (
+      {sortedDonations.length > 0 && stats ? (
         <>
           <Card className="col-span-1">
             <CardHeader>Transactions</CardHeader>
@@ -96,7 +133,7 @@ export default function EarningsStats() {
                     name="BadgeDollarSign"
                     className="mr-1 rounded-full bg-mint-600 p-1 text-white"
                   />
-                  32 donations
+                  {stats.totalDonationsCount} donations
                 </span>
                 <span className="pointer-events-none absolute right-8 top-8 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-black">
                   <Icon
@@ -104,7 +141,7 @@ export default function EarningsStats() {
                     name="Trophy"
                     className="mr-1 rounded-full bg-mint-600 p-1 text-white"
                   />
-                  5 donors
+                  {stats.distinctDonorsCount} donors
                 </span>
                 <span className="pointer-events-none absolute bottom-8 right-8 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-black">
                   <Icon
@@ -112,7 +149,7 @@ export default function EarningsStats() {
                     name="TrendingUp"
                     className="mr-1 rounded-full bg-mint-600 p-1 text-white"
                   />
-                  $100 largest donation
+                  ${formatNumber(stats.biggestDonation, 2)} largest donation
                 </span>
               </div>
             </CardBody>
@@ -120,7 +157,9 @@ export default function EarningsStats() {
           <Card className="col-span-1 space-y-4">
             <CardHeader>Total earnings</CardHeader>
             <CardBody>
-              <span className="text-heading3 text-black">$920</span>
+              <span className="text-heading3 text-black">
+                ${formatNumber(totalEarnings, 2)}
+              </span>
               <ChartContainer
                 config={chartConfig}
                 className="min-h-[200px] w-full"
@@ -144,7 +183,7 @@ export default function EarningsStats() {
                         hideLabel
                         hideValueName
                         formatter={(value) => {
-                          return `$${value.toLocaleString()}`;
+                          return `$${formatNumber(Number(value), 2)}`;
                         }}
                       />
                     }
@@ -163,53 +202,54 @@ export default function EarningsStats() {
             <CardHeader>Earnings by asset</CardHeader>
             <CardBody>
               <div className="space-y-4 p-4">
-                <div className="flex items-center gap-3">
-                  <Image
-                    src={IDRISS_ICON_CIRCLE.src}
-                    alt="Logo"
-                    width={48}
-                    height={48}
-                    className={classes('size-[70px] rounded-full')}
-                  />
-                  <div className="flex flex-col">
-                    <span className="w-fit rounded-full bg-mint-200 px-1 py-0.5 text-xs font-medium text-mint-700">
-                      12 donations
-                    </span>
-                    <span className="flex items-center text-xl font-semibold text-black">
-                      $320{' '}
-                      <span className="ml-2 text-sm font-medium text-gray-300">
-                        IDRISS
+                {mainAsset && (
+                  <div className="flex items-center gap-3">
+                    <div className="relative size-[70px] rounded-full">
+                      <TokenLogo
+                        symbol={mainAsset.tokenData.symbol}
+                        imageUrl={mainAsset.tokenData.imageUrl}
+                      />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="w-fit rounded-full bg-mint-200 px-1 py-0.5 text-xs font-medium text-mint-700">
+                        {mainAsset.donationCount} donations
                       </span>
-                    </span>
+                      <span className="flex items-center text-xl font-semibold text-black">
+                        ${formatNumber(mainAsset.totalAmount, 2)}{' '}
+                        <span className="ml-2 text-sm font-medium text-gray-300">
+                          {mainAsset.tokenData.symbol}
+                        </span>
+                      </span>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <table className="w-full table-auto border-collapse">
                   <tbody>
-                    {earningsByAsset.map((item, index) => {
+                    {otherAssets.map((item, index) => {
                       return (
                         <tr
                           key={index}
                           className="border-b border-gray-200 last:border-b-0"
                         >
                           <td className="flex items-center gap-2 py-3">
-                            <Image
-                              src={item.icon}
-                              alt={item.name}
-                              width={24}
-                              height={24}
-                            />
+                            <div className="relative size-6 rounded-full">
+                              <TokenLogo
+                                symbol={item.tokenData.symbol}
+                                imageUrl={item.tokenData.imageUrl}
+                              />
+                            </div>
                             <span className="text-sm text-gray-300">
-                              {item.name}
+                              {item.tokenData.symbol}
                             </span>
                           </td>
                           <td>
                             <span className="w-fit rounded-full bg-mint-200 px-1 py-0.5 text-xs font-medium text-mint-700">
-                              {item.donations} donations
+                              {item.donationCount} donations
                             </span>
                           </td>
                           <td className="text-right align-middle text-sm font-medium text-black">
-                            {item.amount}
+                            ${formatNumber(item.totalAmount, 2)}
                           </td>
                         </tr>
                       );
