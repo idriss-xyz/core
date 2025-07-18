@@ -18,7 +18,11 @@ export { Governance } from './governance';
 export { PolymarketIcon } from './polymarket-icon';
 export { Tipping } from './tipping';
 export { Trading } from './trading';
-export { TwitchOutlined, TwitchOutlinedBold } from './twitch-outlined';
+export {
+  TwitchOutlined,
+  TwitchOutlinedBold,
+  TwitchOutlinedBold2,
+} from './twitch-outlined';
 export { YoutubeOutlined } from './youtube-outlined';
 export { Users } from './users';
 export { Verifying } from './verifying';

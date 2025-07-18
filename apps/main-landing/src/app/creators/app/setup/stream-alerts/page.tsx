@@ -9,6 +9,8 @@ import { getAccessToken } from '@privy-io/react-auth';
 import { useCallback, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { isAddress } from 'viem';
+import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
+import { IconButton } from '@idriss-xyz/ui/icon-button';
 
 import { editCreatorProfile } from '@/app/creators/utils';
 import { useAuth } from '@/app/creators/context/auth-context';
@@ -26,6 +28,41 @@ const SectionHeader = ({ title }: { title: string }) => {
 
 const FormFieldWrapper = ({ children }: { children: React.ReactNode }) => {
   return <div className="flex flex-col gap-6">{children}</div>;
+};
+
+const UpgradeBox: React.FC = () => {
+  return (
+    <div className="relative flex flex-row items-center gap-4 rounded-lg bg-white/80 p-4">
+      <GradientBorder
+        gradientDirection="toRight"
+        borderRadius={8}
+        gradientStopColor="#E8FCE3"
+      />
+      <div className="flex flex-row items-center gap-6">
+        <IconButton
+          iconName="TwitchOutlinedBold2"
+          intent="secondary"
+          size="extra"
+        />
+        <div className="flex w-[477px] flex-col gap-4 uppercase">
+          <p className="text-label4 text-neutralGreen-700">
+            Upgrade your Twitch Setup
+          </p>
+          <h3 className="text-display6 gradient-text">
+            Show top donors on your channel
+          </h3>
+        </div>
+      </div>
+      <Button
+        size="medium"
+        intent="secondary"
+        className="uppercase"
+        suffixIconName="ArrowRight"
+      >
+        Add Twitch extension
+      </Button>
+    </div>
+  );
 };
 
 type FormPayload = {
@@ -304,7 +341,10 @@ export default function StreamAlerts() {
             SAVE SETTINGS
           </Button>
         </Form>
+
+        <UpgradeBox />
       </div>
+
       {/* Alerts */}
       {testDonationSuccess && (
         <Alert
