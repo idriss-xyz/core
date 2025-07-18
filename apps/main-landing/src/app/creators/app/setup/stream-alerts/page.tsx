@@ -11,6 +11,11 @@ import { Controller, useForm } from 'react-hook-form';
 import { isAddress } from 'viem';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@idriss-xyz/ui/tooltip';
 
 import { editCreatorProfile } from '@/app/creators/utils';
 import { useAuth } from '@/app/creators/context/auth-context';
@@ -193,7 +198,6 @@ export default function StreamAlerts() {
                     <CopyInput
                       value={`${CREATORS_LINK}/obs/${creator?.name}`}
                     />
-                    {/* TODO: Add helper text to CopyInput*/}
                     <span className="text-label6 text-neutral-600">
                       Add this as a browser source in your streaming software
                     </span>
@@ -240,18 +244,32 @@ export default function StreamAlerts() {
               control={formMethods.control}
               render={({ field }) => {
                 return (
-                  <Toggle
-                    label="Text-to-speech"
-                    sublabel="Reads the donation message aloud during the alert"
-                    value={alertEnabled ? field.value : false}
-                    disabled={!alertEnabled}
-                    onChange={(newValue) => {
-                      field.onChange(newValue);
-                      setTimeout(() => {
-                        void formMethods.handleSubmit(onSubmit)();
-                      }, 0); // defer to ensure updated value
-                    }}
-                  />
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Toggle
+                        label="Text-to-speech"
+                        sublabel="Reads the donation message aloud during the alert"
+                        value={alertEnabled ? field.value : false}
+                        disabled={!alertEnabled}
+                        onChange={(newValue) => {
+                          field.onChange(newValue);
+                          setTimeout(() => {
+                            void formMethods.handleSubmit(onSubmit)();
+                          }, 0); // defer to ensure updated value
+                        }}
+                        className="w-fit"
+                      />
+                    </TooltipTrigger>
+                    <TooltipContent
+                      hidden={alertEnabled}
+                      className="z-portal bg-black text-white"
+                      side="right"
+                    >
+                      <p className="text-body6">
+                        Turn on Alerts to use this feature
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
                 );
               }}
             />
@@ -306,18 +324,32 @@ export default function StreamAlerts() {
               control={formMethods.control}
               render={({ field }) => {
                 return (
-                  <Toggle
-                    label="AI sound effects"
-                    sublabel="Replaces the default alert sound with a custom effect"
-                    value={alertEnabled ? field.value : false}
-                    disabled={!alertEnabled}
-                    onChange={(newValue) => {
-                      field.onChange(newValue);
-                      setTimeout(() => {
-                        void formMethods.handleSubmit(onSubmit)();
-                      }, 0); // defer to ensure updated value
-                    }}
-                  />
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Toggle
+                        label="AI sound effects"
+                        sublabel="Replaces the default alert sound with a custom effect"
+                        value={alertEnabled ? field.value : false}
+                        disabled={!alertEnabled}
+                        onChange={(newValue) => {
+                          field.onChange(newValue);
+                          setTimeout(() => {
+                            void formMethods.handleSubmit(onSubmit)();
+                          }, 0); // defer to ensure updated value
+                        }}
+                        className="w-fit"
+                      />
+                    </TooltipTrigger>
+                    <TooltipContent
+                      hidden={alertEnabled}
+                      className="z-portal bg-black text-white"
+                      side="right"
+                    >
+                      <p className="text-body6">
+                        Turn on Alerts to use this feature
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
                 );
               }}
             />
