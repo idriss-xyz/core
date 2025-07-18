@@ -30,7 +30,7 @@
     "@aws-sdk/client-s3": "^3.842.0",
     "file-type": "^21.0.0",
     "multer": "^2.0.1",
-    "music-metadata": "^11.6.0"
+    "music-metadata": "^11.6.0",
     "@idriss-xyz/utils": "workspace:*"
   },
   "devDependencies": {

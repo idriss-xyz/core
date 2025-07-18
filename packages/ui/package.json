@@ -41,7 +41,7 @@
     "./charts": "./src/components/charts/index.ts",
     "./divider": "./src/components/divider/index.ts",
     "./table": "./src/components/table/index.ts",
-    "./progress-bar-v2": "./src/components/progress-bar-v2/index.ts"
+    "./progress-bar-v2": "./src/components/progress-bar-v2/index.ts",
     "./breadcrumb": "./src/components/breadcrumb/index.ts"
   },
   "scripts": {
