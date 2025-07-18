@@ -22,6 +22,7 @@ import { Link } from '@idriss-xyz/ui/link';
 
 
 import {Select} from "@/app/creators/app/setup/select";
+import { File } from '@/app/creators/app/setup/file-upload/file';
 
 import {
   editCreatorProfile,
@@ -675,6 +676,7 @@ export function CreatorProfileForm() {
             </span>
           </div>
         )}
+        <File />
       </div>
     </Form>
   );
