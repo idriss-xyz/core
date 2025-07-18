@@ -4,7 +4,7 @@ import { cva } from 'class-variance-authority';
 import { IconName } from '../icon';
 
 export const alert = cva(
-  'fixed bottom-[3vh] z-alert left-1/2 grid max-h-[500px] grid-cols-[40px,1fr] items-center gap-x-4 rounded-xl border border-neutral-300 bg-white p-4 shadow-sm',
+  'fixed bottom-[3vh] left-1/2 z-alert grid max-h-[500px] grid-cols-[40px,1fr] items-center gap-x-4 rounded-xl border border-neutral-300 bg-white p-4 shadow-sm',
   {
     variants: {
       type: {
