@@ -6,7 +6,7 @@ import { Form } from '@idriss-xyz/ui/form';
 import { Toggle } from '@idriss-xyz/ui/toggle';
 import { Alert } from '@idriss-xyz/ui/alert';
 import { getAccessToken } from '@privy-io/react-auth';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { isAddress } from 'viem';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
@@ -159,6 +159,20 @@ export default function StreamAlerts() {
       console.error('Error saving profile:', error);
     }
   };
+
+  useEffect(() => {
+    if (creator) {
+      formMethods.reset({
+        minimumAlertAmount: creator.minimumAlertAmount ?? 1,
+        minimumTTSAmount: creator.minimumTTSAmount ?? 5,
+        minimumSfxAmount: creator.minimumSfxAmount ?? 10,
+        alertEnabled: creator.alertEnabled ?? false,
+        ttsEnabled: creator.ttsEnabled ?? false,
+        sfxEnabled: creator.sfxEnabled ?? false,
+        customBadWords: creator.customBadWords ?? [],
+      });
+    }
+  }, [creator, formMethods]);
 
   return (
     <Card className="size-full">
@@ -379,14 +393,16 @@ export default function StreamAlerts() {
             )}
           </FormFieldWrapper>
 
-          <Button
-            size="medium"
-            intent="primary"
-            className="mt-4"
-            onClick={formMethods.handleSubmit(onSubmit)}
-          >
-            SAVE SETTINGS
-          </Button>
+          {alertEnabled && (
+            <Button
+              size="medium"
+              intent="primary"
+              className="mt-4"
+              onClick={formMethods.handleSubmit(onSubmit)}
+            >
+              SAVE SETTINGS
+            </Button>
+          )}
         </Form>
 
         <UpgradeBox />
