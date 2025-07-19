@@ -44,7 +44,7 @@ import {
   BookOpen,
   Wallet,
   UploadCloud,
-  PlayCircle
+  PlayCircle,
 } from 'lucide-react';
 
 import * as customIcons from './custom';

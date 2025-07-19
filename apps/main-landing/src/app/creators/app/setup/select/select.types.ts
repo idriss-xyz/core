@@ -13,7 +13,7 @@ export type SelectOptionProperties<T> = {
   selected?: boolean;
 };
 
-export type SelectInputProperties= {
+export type SelectInputProperties = {
   className?: string;
   selected?: boolean;
 };

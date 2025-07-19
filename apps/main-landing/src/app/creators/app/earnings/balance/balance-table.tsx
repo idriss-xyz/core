@@ -77,7 +77,7 @@ export function BalanceTable({
       accessor: (item) => {
         return (
           <div className="flex items-center gap-2">
-            <div className="bg-gray-100 relative size-8 rounded-full">
+            <div className="relative size-8 rounded-full bg-gray-200">
               <TokenLogo
                 symbol={item.token.symbol ?? ''}
                 imageUrl={item.token.imageUrl}

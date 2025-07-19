@@ -4,7 +4,7 @@ import { usePortal } from '@idriss-xyz/ui/providers/with-portal';
 import { classes } from '@idriss-xyz/ui/utils';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 
-import {SelectInput} from "@/app/creators/app/setup/select/select-input";
+import { SelectInput } from '@/app/creators/app/setup/select/select-input';
 
 import { SelectProperties } from './select.types';
 import { SelectOption } from './select-option.component';
@@ -38,14 +38,12 @@ export const Select = <T,>({
       {renderLabel ? (
         renderLabel()
       ) : label ? (
-        <p className="mb-2 text-neutralGreen-700 text-label4">
-          {label}
-        </p>
+        <p className="mb-2 text-label4 text-neutralGreen-700">{label}</p>
       ) : null}
 
       <DropdownMenu.Root modal={false}>
         <DropdownMenu.Trigger asChild>
-          <button className="flex w-full h-[44px]">
+          <button className="flex h-[44px] w-full">
             <SelectOptionContainer className="overflow-hidden border border-neutral-200 bg-white text-neutralGreen-900 shadow-input focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
               <SelectInput selected />
             </SelectOptionContainer>
