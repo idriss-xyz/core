@@ -12,6 +12,7 @@
     "./link": "./src/components/link/index.ts",
     "./modal": "./src/components/modal/index.ts",
     "./numeric-input": "./src/components/numeric-input/index.ts",
+    "./input": "./src/components/input/index.ts",
     "./navigation-menu": "./src/components/navigation-menu/index.ts",
     "./visually-hidden": "./src/components/visually-hidden/index.ts",
     "./branding-assets": "./src/components/branding-assets/index.ts",
@@ -42,7 +43,8 @@
     "./divider": "./src/components/divider/index.ts",
     "./table": "./src/components/table/index.ts",
     "./progress-bar-v2": "./src/components/progress-bar-v2/index.ts",
-    "./breadcrumb": "./src/components/breadcrumb/index.ts"
+    "./breadcrumb": "./src/components/breadcrumb/index.ts",
+    "./toggle": "./src/components/toggle/index.ts"
   },
   "scripts": {
     "format": "prettier --check --config ../../prettier.config.mjs --ignore-path .prettierignore .",

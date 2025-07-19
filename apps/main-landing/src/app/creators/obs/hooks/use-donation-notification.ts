@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { TEST_TTS_MESSAGE_SOUND } from '@/assets';
 
 import { getTextToSfx, getTextToSpeech } from '../utils';
-import { MinimumAmounts, MuteToggles } from '../page';
+import { MinimumAmounts, EnableToggles } from '../page';
 import { TEST_DONATION_MESSAGE } from '../../constants';
 
 const PRICE_DROP_RANGE = 0.05;
@@ -38,7 +38,7 @@ export const useDonationNotification = (
   audio: HTMLAudioElement,
   amount: string,
   minimumAmounts: MinimumAmounts,
-  muteToggles: MuteToggles,
+  muteToggles: EnableToggles,
   message: string,
   sfxText: string | undefined,
   minOverallVisibleDuration: number, // Minimum total time the notification should be visible
@@ -55,7 +55,7 @@ export const useDonationNotification = (
   const didRunReference = useRef(false);
   const { minimumAlertAmount, minimumTTSAmount, minimumSfxAmount } =
     minimumAmounts;
-  const { alertMuted, sfxMuted, ttsMuted } = muteToggles;
+  const { alertEnabled, sfxEnabled, ttsEnabled } = muteToggles;
   const isTestNotification = message === TEST_DONATION_MESSAGE;
 
   useEffect(() => {
@@ -88,7 +88,7 @@ export const useDonationNotification = (
 
     if (
       (!amount ||
-        alertMuted ||
+        !alertEnabled ||
         Number.parseFloat(amount) <=
           priceDropCalculatedAmount(minimumAlertAmount)) &&
       !isTestNotification
@@ -101,10 +101,10 @@ export const useDonationNotification = (
     const processDonationAsync = async () => {
       const useSfx =
         sfxText &&
-        !sfxMuted &&
+        sfxEnabled &&
         Number.parseFloat(amount) > priceDropCalculatedAmount(minimumSfxAmount);
       const useTts =
-        !ttsMuted &&
+        ttsEnabled &&
         Number.parseFloat(amount) > priceDropCalculatedAmount(minimumTTSAmount);
 
       let sfxAudioForPlayback: HTMLAudioElement | null = null;
@@ -279,9 +279,9 @@ export const useDonationNotification = (
     minimumAlertAmount,
     minimumSfxAmount,
     minimumTTSAmount,
-    alertMuted,
-    sfxMuted,
-    ttsMuted,
+    alertEnabled,
+    sfxEnabled,
+    ttsEnabled,
     isTestNotification,
   ]);
 

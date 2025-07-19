@@ -23,6 +23,7 @@ import {
   RenameDynamicIdToPrivyId1749000000000,
   AddTokenName1752155170000,
   CompositeTokenPrimaryKey1752686842000,
+  RenameAlertToggles1752674138685,
 } from './migrations';
 import { CreatorProfileView } from './views';
 
@@ -55,6 +56,7 @@ export const AppDataSource = new DataSource({
     RenameDynamicIdToPrivyId1749000000000,
     AddTokenName1752155170000,
     CompositeTokenPrimaryKey1752686842000,
+    RenameAlertToggles1752674138685,
   ],
 });
 

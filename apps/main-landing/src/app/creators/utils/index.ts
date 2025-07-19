@@ -43,9 +43,9 @@ export type CreatorProfileResponse = {
   minimumTTSAmount: number;
   minimumSfxAmount: number;
   voiceId: number;
-  alertMuted: boolean;
-  ttsMuted: boolean;
-  sfxMuted: boolean;
+  alertEnabled: boolean;
+  ttsEnabled: boolean;
+  sfxEnabled: boolean;
   networks: string[];
   tokens: string[];
   privyId: string;

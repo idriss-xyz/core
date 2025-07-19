@@ -11,7 +11,7 @@ import { Icon, IconName } from '../icon';
 
 type BaseProperties = {
   value: string;
-  onChange: (
+  onChange?: (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
   onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
@@ -26,9 +26,11 @@ type BaseProperties = {
 type Properties =
   | (BaseProperties & {
       asTextArea: true;
+      readOnly: false;
     })
   | (BaseProperties & {
       asTextArea?: false;
+      readOnly?: boolean;
       prefixIconName?: IconName;
       suffixElement?: ReactElement;
     });
@@ -49,6 +51,7 @@ export const Input = forwardRef(
       success,
       error,
       asTextArea,
+      readOnly,
       placeholder,
       disabled,
     } = properties;
@@ -65,6 +68,7 @@ export const Input = forwardRef(
       onChange,
       placeholder,
       disabled,
+      readOnly,
     };
 
     if (asTextArea) {

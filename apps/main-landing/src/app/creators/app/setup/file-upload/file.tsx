@@ -153,7 +153,7 @@ export const File = () => {
 
           <div className="flex flex-col items-center justify-center gap-2">
             <span className="text-label6 text-[#717484]">
-              Max file size up to 300 KB
+              Max file size up to 500 KB
             </span>
 
             {error && (

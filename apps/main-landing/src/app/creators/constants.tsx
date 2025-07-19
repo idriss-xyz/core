@@ -64,6 +64,28 @@ export const siteMap: SiteMapItem[] = [
         name: 'Stream alerts',
         path: '/setup/stream-alerts',
       },
+      {
+        name: 'Donation panel',
+        path: '/setup/donation-panel',
+      },
     ],
   },
 ];
+
+export const testDonation = {
+  type: 'test' as const,
+  donor: 'idriss_xyz',
+  amount: Math.floor(Math.random() * 99) + 1, // Random amount between $1-100
+  message: TEST_DONATION_MESSAGE,
+  sfxText: null,
+  avatarUrl: null,
+  txnHash: '0x22f0f25140b9fe35cc01722bb5b0366dcb68bb1bcaee3415ca9f48ce4e57d972',
+  token: {
+    amount: 1_000_000_000_000,
+    details: {
+      symbol: 'ETH',
+      name: 'Ethereum',
+      logo: 'https://assets.coingecko.com/coins/images/279/small/ethereum.png',
+    },
+  },
+};

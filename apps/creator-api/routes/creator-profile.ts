@@ -113,9 +113,9 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
       minimumTTSAmount = DEFAULT_DONATION_MIN_TTS_AMOUNT,
       minimumSfxAmount = DEFAULT_DONATION_MIN_SFX_AMOUNT,
       voiceId,
-      alertMuted,
-      ttsMuted,
-      sfxMuted,
+      alertEnabled,
+      ttsEnabled,
+      sfxEnabled,
       customBadWords = [],
       tokens = [],
       networks = [],
@@ -127,9 +127,9 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
     donationParameters.minimumTTSAmount = minimumTTSAmount;
     donationParameters.minimumSfxAmount = minimumSfxAmount;
     donationParameters.voiceId = voiceId;
-    donationParameters.alertMuted = alertMuted;
-    donationParameters.ttsMuted = ttsMuted;
-    donationParameters.sfxMuted = sfxMuted;
+    donationParameters.alertEnabled = alertEnabled;
+    donationParameters.ttsEnabled = ttsEnabled;
+    donationParameters.sfxEnabled = sfxEnabled;
     donationParameters.customBadWords = customBadWords;
 
     const creatorRepository = AppDataSource.getRepository(Creator);
@@ -235,9 +235,9 @@ router.patch(
         minimumTTSAmount,
         minimumSfxAmount,
         voiceId,
-        alertMuted,
-        ttsMuted,
-        sfxMuted,
+        alertEnabled,
+        ttsEnabled,
+        sfxEnabled,
         tokens = [],
         networks = [],
         customBadWords,
@@ -256,9 +256,9 @@ router.patch(
         minimumTTSAmount ||
         minimumSfxAmount ||
         voiceId ||
-        alertMuted ||
-        ttsMuted ||
-        sfxMuted ||
+        alertEnabled ||
+        ttsEnabled ||
+        sfxEnabled ||
         customBadWords
       ) {
         const donationParams = await donationParamsRepository.findOne({
@@ -273,9 +273,9 @@ router.patch(
               minimumTTSAmount,
               minimumSfxAmount,
               voiceId,
-              alertMuted,
-              ttsMuted,
-              sfxMuted,
+              alertEnabled,
+              ttsEnabled,
+              sfxEnabled,
               customBadWords,
             },
           );
@@ -286,9 +286,9 @@ router.patch(
             minimumTTSAmount,
             minimumSfxAmount,
             voiceId,
-            alertMuted,
-            ttsMuted,
-            sfxMuted,
+            alertEnabled,
+            ttsEnabled,
+            sfxEnabled,
             customBadWords,
           });
           await donationParamsRepository.save(newDonationParams);

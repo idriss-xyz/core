@@ -5,6 +5,7 @@ import { BreadcrumbNavigation } from '@idriss-xyz/ui/breadcrumb';
 
 import { Providers } from '../providers';
 import { siteMap } from '../constants';
+import { OAuthCallbackHandler } from '../components/oauth-callback-handler';
 
 import { Sidebar } from './sidebar';
 import { TopBar } from './topbar';
@@ -23,10 +24,11 @@ export default function CreatorsLayout({
         <Sidebar />
 
         {/* Main Content */}
-        <div className="flex-1">
+        <OAuthCallbackHandler />
+        <div className="flex h-screen w-full flex-col">
           <TopBar />
           {/* Page Content */}
-          <main className="p-2">
+          <main className="flex flex-1 flex-col overflow-auto p-2">
             <BreadcrumbNavigation pathname={pathname} siteMap={siteMap} />
             {children}
           </main>

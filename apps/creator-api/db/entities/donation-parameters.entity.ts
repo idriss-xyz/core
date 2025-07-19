@@ -24,14 +24,14 @@ export class DonationParameters {
   @Column({ name: 'voice_id', nullable: true })
   voiceId!: string;
 
-  @Column({ name: 'alert_muted', default: false })
-  alertMuted!: boolean;
+  @Column({ name: 'alert_enabled', default: false })
+  alertEnabled!: boolean;
 
-  @Column({ name: 'tts_muted', default: false })
-  ttsMuted!: boolean;
+  @Column({ name: 'tts_enabled', default: false })
+  ttsEnabled!: boolean;
 
-  @Column({ name: 'sfx_muted', default: false })
-  sfxMuted!: boolean;
+  @Column({ name: 'sfx_enabled', default: false })
+  sfxEnabled!: boolean;
 
   @Column({
     name: 'custom_bad_words',
