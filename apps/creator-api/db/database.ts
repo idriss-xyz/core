@@ -7,8 +7,9 @@ import {
   CreatorNetwork,
   CreatorToken,
   Token,
-  User,
+  User, Referral,
 } from './entities';
+
 import {
   AddAmountRaw1743181200000,
   AddDonationEffects1747686797772,
@@ -21,7 +22,7 @@ import {
   AddCreatorDisplayName1748521986209,
   AddBadWords1748967010401,
   RenameDynamicIdToPrivyId1749000000000,
-  AddTokenName1752155170000,
+  AddReferralEntity1753000000000,
   CompositeTokenPrimaryKey1752686842000,
 } from './migrations';
 import { CreatorProfileView } from './views';
@@ -39,6 +40,7 @@ export const AppDataSource = new DataSource({
     CreatorToken,
     DonationParameters,
     CreatorProfileView,
+    Referral
   ],
   synchronize: false,
   migrations: [
@@ -53,8 +55,8 @@ export const AppDataSource = new DataSource({
     AddCreatorDisplayName1748521986209,
     AddBadWords1748967010401,
     RenameDynamicIdToPrivyId1749000000000,
-    AddTokenName1752155170000,
     CompositeTokenPrimaryKey1752686842000,
+    AddReferralEntity1753000000000
   ],
 });
 
