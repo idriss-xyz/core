@@ -7,6 +7,7 @@ import { Providers } from '../providers';
 import { siteMap } from '../constants';
 import { OAuthCallbackHandler } from '../components/oauth-callback-handler';
 
+import { CreatorSocketManager } from './creator-socket-manager';
 import { Sidebar } from './sidebar';
 import { TopBar } from './topbar';
 
@@ -20,6 +21,7 @@ export default function CreatorsLayout({
 
   return (
     <Providers>
+      <CreatorSocketManager />
       <div className="flex min-h-screen bg-neutral-100">
         <Sidebar />
 
