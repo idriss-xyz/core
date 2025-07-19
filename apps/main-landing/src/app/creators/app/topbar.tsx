@@ -20,7 +20,7 @@ export function TopBar() {
               >
                 <Icon className="text-gray-300" name="Bell" size={20} />
                 {newDonationsCount > 0 && (
-                  <div className="absolute right-[-6px] top-[-6px] flex size-[18px] items-center justify-center rounded-full border-2 border-white bg-[#05AB13] text-body6 text-white">
+                  <div className="absolute right-[-6px] top-[-6px] flex size-4.5 items-center justify-center rounded-full border-2 border-white bg-[#05AB13] text-body6 text-white">
                     {newDonationsCount}
                   </div>
                 )}
