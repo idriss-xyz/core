@@ -11,6 +11,10 @@ interface TwitchStreamInfo {
   isLive: boolean;
 }
 
+interface TwitchUserFollowersInfo {
+  total: number;
+}
+
 const TWITCH_BASE_URL = 'https://api.twitch.tv/helix';
 
 async function getHeaders(): Promise<Record<string, string>> {
@@ -69,5 +73,38 @@ export async function fetchTwitchStreamStatus(
   } catch (error) {
     console.error('Error fetching Twitch stream status:', error);
     return { isLive: false };
+  }
+}
+
+// Rerence: https://dev.twitch.tv/docs/api/reference/#get-users
+export async function fetchTwitchUserFollowersCount(
+  name: string,
+): Promise<TwitchUserFollowersInfo | null> {
+  try {
+
+    console.log('WESZLO?')
+
+    const headers = await getHeaders();
+    const userInfo = await fetchTwitchUserInfo(name);
+
+    console.log("USER_INFO", userInfo);
+
+    const response = await fetch(`${TWITCH_BASE_URL}/channels/followers?broadcaster_id=${userInfo?.id}`, {
+      headers,
+    });
+
+    const ah = await response.json();
+
+    console.log("response", ah)
+
+    if (!response.ok) {
+      throw new Error(`Twitch API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.data?.[0] || null;
+  } catch (error) {
+    console.error('Error fetching Twitch user info:', error);
+    return null;
   }
 }
