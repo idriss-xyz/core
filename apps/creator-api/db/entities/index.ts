@@ -6,3 +6,4 @@ export { CreatorNetwork } from './creator-network.entity';
 export { CreatorToken } from './creator-token.entity';
 export { DonationParameters } from './donation-parameters.entity';
 export { DonationEffect } from './donation-effect.entity';
+export { Referral } from './refferal.entity';
