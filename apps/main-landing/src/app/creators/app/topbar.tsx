@@ -18,7 +18,7 @@ export function TopBar() {
                 onClick={markDonationsAsSeen}
                 className="relative flex size-8 items-center justify-center rounded-full border border-neutral-300 bg-white"
               >
-                <Icon className='text-gray-300' name="Bell" size={20} />
+                <Icon className="text-gray-300" name="Bell" size={20} />
                 {newDonationsCount > 0 && (
                   <div className="absolute right-[-6px] top-[-6px] flex size-[18px] items-center justify-center rounded-full border-2 border-white bg-[#05AB13] text-body6 text-white">
                     {newDonationsCount}

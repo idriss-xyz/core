@@ -34,7 +34,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setDonations((previous) => {
       return [donation, ...previous];
     });
-    setNewDonationsCount((previous) => {return previous + 1});
+    setNewDonationsCount((previous) => {
+      return previous + 1;
+    });
   };
 
   const markDonationsAsSeen = () => {
