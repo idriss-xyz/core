@@ -1,5 +1,7 @@
 import { ReactNode } from 'react';
 
+// TODO remove
+// ts-unused-exports:disable-next-line
 export type Option<T> = {
   value: T;
   label: string;

@@ -1,3 +1,5 @@
+// TODO remove
+// ts-unused-exports:disable-next-line
 const SelectIcon = () => {
   return (
     <svg
@@ -17,4 +19,6 @@ const SelectIcon = () => {
   );
 };
 
+// TODO remove
+// ts-unused-exports:disable-next-line
 export default SelectIcon;

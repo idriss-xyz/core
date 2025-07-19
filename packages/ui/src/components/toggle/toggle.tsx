@@ -3,7 +3,7 @@ import { forwardRef } from 'react';
 import { classes } from '../../utils';
 import { Switch } from '../switch';
 
-export interface ToggleProperties {
+interface ToggleProperties {
   value: boolean;
   label?: string;
   sublabel?: string;

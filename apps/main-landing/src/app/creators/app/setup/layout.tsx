@@ -15,7 +15,7 @@ export default function SetupLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const { creator, creatorLoading } = useAuth();
+  const { creator } = useAuth();
 
   const setupTabs: TabItem[] = [
     {

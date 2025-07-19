@@ -85,7 +85,7 @@ type FormPayload = {
 
 // ts-unused-exports:disable-next-line
 export default function StreamAlerts() {
-  const { creator, creatorLoading } = useAuth();
+  const { creator } = useAuth();
   const [saveSuccess, setSaveSuccess] = useState<boolean | null>(null);
   const [testDonationSuccess, setTestDonationSuccess] = useState<
     boolean | null

@@ -10,6 +10,8 @@ import { SelectProperties } from './select.types';
 import { SelectOption } from './select-option.component';
 import { SelectOptionContainer } from './select-option-container.component';
 
+// TODO remove
+// ts-unused-exports:disable-next-line
 export const Select = <T,>({
   label,
   value,
