@@ -34,6 +34,7 @@ export const CHAIN = Object.assign(SHARED_CHAIN, {
     id: 1_151_111_081_099_710,
     name: 'Solana',
     shortName: 'Solana',
+    dbName: 'SOLANA_MAINNET',
     logo: SOLANA_LOGO,
     nativeCurrency: {
       name: 'Solana',
@@ -108,25 +109,6 @@ export const CHAIN_ID_TO_TOKENS = {
       ...TOKEN.PENGU,
       decimals: 18,
       address: '0x9eBe3A824Ca958e4b3Da772D2065518F009CBa62',
-    },
-  ],
-  [CHAIN.ALEPH.id]: [
-    {
-      ...TOKEN.AZERO,
-      decimals: 18,
-      address: NATIVE_COIN_ADDRESS,
-    },
-    {
-      ...TOKEN.WETH,
-      name: 'ETH on Aleph',
-      decimals: 18,
-      address: '0xB3f0eE446723f4258862D949B4c9688e7e7d35d3',
-    },
-    {
-      ...TOKEN.USDC,
-      name: 'USDC',
-      decimals: 6,
-      address: '0x4Ca4B85Ead5EA49892d3a81DbfAE2f5c2F75d53D',
     },
   ],
   [CHAIN.CELO.id]: [

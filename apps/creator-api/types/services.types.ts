@@ -1,25 +1,15 @@
 import { Hex } from 'viem';
+import {
+  DonationData,
+  DonationToken,
+  DonationUser,
+  LeaderboardStats,
+} from '@idriss-xyz/constants';
 
 interface TokenDisplayItem {
   network: string;
   amountRaw: string;
   tokenV2: TokenV2;
-}
-
-interface DonationUser {
-  address: Hex;
-  displayName?: string;
-  displayNameSource?: string;
-  avatarUrl?: string;
-  avatarSource?: string;
-}
-
-export interface DonationToken {
-  address: Hex;
-  symbol: string;
-  imageUrl?: string;
-  network: string;
-  decimals: number;
 }
 
 type StringDisplayItem = {
@@ -56,11 +46,12 @@ type UserData = {
 interface TokenV2 {
   symbol: string;
   imageUrlV2?: string;
-  onchainMarketData: {
+  priceData: {
     price: number;
   };
   address: Hex;
   decimals: number;
+  name: string;
 }
 
 export interface DonationStats {
@@ -73,14 +64,6 @@ export interface DonationStats {
   favoriteTokenMetadata: DonationToken | null;
   donorDisplayName: string | null;
   positionInLeaderboard: number | null;
-}
-
-export interface LeaderboardStats {
-  address: Hex;
-  avatarUrl: string;
-  displayName: string;
-  totalAmount: number;
-  donateLink?: string;
 }
 
 export interface ZapperNode {
@@ -111,14 +94,12 @@ export interface ZapperNode {
   };
 }
 
-export interface TipHistoryVariables {
-  addresses: Hex[];
-  toAddresses: Hex[];
-  isSigner: boolean;
+export interface AppHistoryVariables {
+  slug: string;
   after?: string | null;
 }
 
-interface AccountsTimeline {
+interface AppTimeline {
   edges: {
     node: ZapperNode;
   }[];
@@ -126,27 +107,12 @@ interface AccountsTimeline {
 }
 
 export interface ZapperResponse {
-  data: { accountsTimeline: AccountsTimeline };
+  data: { transactionsForAppV2: AppTimeline };
 }
 
 export interface TipHistoryResponse {
   donations: DonationData[];
   leaderboard: LeaderboardStats[];
-}
-
-export interface DonationData {
-  transactionHash: Hex;
-  fromAddress: Hex;
-  toAddress: Hex;
-  timestamp: number;
-  comment?: string;
-  tradeValue: number;
-  tokenAddress: Hex;
-  network: string;
-  fromUser: DonationUser;
-  toUser: DonationUser;
-  token: DonationToken;
-  amountRaw: string;
 }
 
 export interface TokenEarnings {

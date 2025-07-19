@@ -7,7 +7,7 @@ type GradientBorderProperties = {
   borderRadius?: number;
   /** value in px */
   borderWidth?: number;
-  gradientDirection: 'toTop' | 'toBottom';
+  gradientDirection: 'toTop' | 'toBottom' | 'toLeft' | 'toRight';
   gradientStartColor?: string;
   gradientStopColor?: string;
   className?: string;
@@ -35,10 +35,34 @@ export const GradientBorder = ({
       <defs>
         <linearGradient
           id={gradientId}
-          x1="0%"
-          y1={gradientDirection === 'toTop' ? '100%' : '0%'}
-          x2="0%"
-          y2={gradientDirection === 'toTop' ? '0%' : '100%'}
+          x1={
+            gradientDirection === 'toRight'
+              ? '0%'
+              : gradientDirection === 'toLeft'
+                ? '100%'
+                : '0%'
+          }
+          y1={
+            gradientDirection === 'toTop'
+              ? '100%'
+              : gradientDirection === 'toBottom'
+                ? '0%'
+                : '0%'
+          }
+          x2={
+            gradientDirection === 'toRight'
+              ? '100%'
+              : gradientDirection === 'toLeft'
+                ? '0%'
+                : '0%'
+          }
+          y2={
+            gradientDirection === 'toTop'
+              ? '0%'
+              : gradientDirection === 'toBottom'
+                ? '100%'
+                : '0%'
+          }
         >
           <stop offset="0%" stopColor={gradientStartColor} />
           <stop offset="100%" stopColor={gradientStopColor} />

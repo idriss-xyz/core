@@ -1,0 +1,323 @@
+'use client';
+import { Card, CardHeader, CardBody } from '@idriss-xyz/ui/card';
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from '@idriss-xyz/ui/charts';
+import { Bar, BarChart, XAxis } from 'recharts';
+import { Icon } from '@idriss-xyz/ui/icon';
+import { Button } from '@idriss-xyz/ui/button';
+import { useMemo } from 'react';
+import { formatNumber } from '@idriss-xyz/utils';
+import { CREATOR_APP_TEST_ADDRESS } from '@idriss-xyz/constants';
+
+import { backgroundLines2, IDRISS_COIN, IDRISS_SCENE_STREAM_4 } from '@/assets';
+import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history';
+import { DonateHistoryItem } from '@/app/creators/donate/components/donate-history/donate-history-item';
+
+import { TokenLogo } from './token-logo';
+import { useGetRecipientStats } from './commands/get-recipient-stats';
+
+const chartConfig = {
+  donations: {
+    label: 'Donations',
+    color: '#f3f4f6',
+  },
+} satisfies ChartConfig;
+
+// ts-unused-exports:disable-next-line
+export default function EarningsStats() {
+  const tipHistoryQuery = useGetTipHistory({
+    address: CREATOR_APP_TEST_ADDRESS,
+  });
+  const recipientStatsQuery = useGetRecipientStats({
+    address: CREATOR_APP_TEST_ADDRESS,
+  });
+
+  const donations = tipHistoryQuery.data?.donations ?? [];
+  const sortedDonations = [...donations].sort((a, b) => {
+    return b.timestamp - a.timestamp;
+  });
+
+  const stats = recipientStatsQuery.data;
+
+  const { totalEarnings, chartData, mainAsset, otherAssets } = useMemo(() => {
+    if (!stats) {
+      return {
+        totalEarnings: 0,
+        chartData: [],
+        mainAsset: null,
+        otherAssets: [],
+      };
+    }
+
+    const totalEarnings = stats.donationsWithTimeAndAmount.reduce(
+      (sum, item) => {
+        return sum + item.amount;
+      },
+      0,
+    );
+
+    // --- NEW, CORRECTED LOGIC FOR ROLLING 12-MONTH CHART ---
+    const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    const today = new Date();
+    const monthlyData = [];
+
+    // 1. Create the template for the last 12 months, including year info.
+    for (let index = 11; index >= 0; index--) {
+      const date = new Date(today.getFullYear(), today.getMonth() - index, 1);
+      const month = monthNames[date.getMonth()];
+      const year = date.getFullYear();
+      if (month) {
+        monthlyData.push({
+          month,
+          year,
+          donations: 0,
+        });
+      }
+    }
+
+    // 2. Aggregate data from the API, matching on both month AND year.
+    for (const item of stats.donationsWithTimeAndAmount) {
+      const index = monthlyData.findIndex((d) => {
+        return d.month === item.month && d.year === item.year;
+      });
+      const monthEntry = monthlyData[index];
+      if (monthEntry) {
+        monthEntry.donations += item.amount;
+      }
+    }
+    // --- END OF NEW LOGIC ---
+
+    const sortedAssets = [...stats.earningsByTokenOverview].sort((a, b) => {
+      return b.totalAmount - a.totalAmount;
+    });
+
+    return {
+      totalEarnings,
+      chartData: monthlyData,
+      mainAsset: sortedAssets[0] ?? null,
+      otherAssets: sortedAssets.slice(1, 4),
+    };
+  }, [stats]);
+
+  return (
+    <div className="grid grid-cols-3 gap-4">
+      {sortedDonations.length > 0 && stats ? (
+        <>
+          <Card className="col-span-1">
+            <CardHeader>Transactions</CardHeader>
+            <CardBody>
+              <div className="relative">
+                <div className="mx-14 my-4 flex items-center justify-center p-6">
+                  <img src={IDRISS_COIN.src} alt="coin" />
+                </div>
+                <span className="pointer-events-none absolute left-6 top-16 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-black">
+                  <Icon
+                    size={24}
+                    name="BadgeDollarSign"
+                    className="mr-1 rounded-full bg-mint-600 p-1 text-white"
+                  />
+                  {stats.totalDonationsCount} donations
+                </span>
+                <span className="pointer-events-none absolute right-8 top-8 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-black">
+                  <Icon
+                    size={24}
+                    name="Trophy"
+                    className="mr-1 rounded-full bg-mint-600 p-1 text-white"
+                  />
+                  {stats.distinctDonorsCount} donors
+                </span>
+                <span className="pointer-events-none absolute bottom-8 right-8 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-black">
+                  <Icon
+                    size={24}
+                    name="TrendingUp"
+                    className="mr-1 rounded-full bg-mint-600 p-1 text-white"
+                  />
+                  ${formatNumber(stats.biggestDonation, 2)} largest donation
+                </span>
+              </div>
+            </CardBody>
+          </Card>
+          <Card className="col-span-1 space-y-4">
+            <CardHeader>Total earnings</CardHeader>
+            <CardBody>
+              <span className="text-heading3 text-black">
+                ${formatNumber(totalEarnings, 2)}
+              </span>
+              <ChartContainer
+                config={chartConfig}
+                className="min-h-[200px] w-full"
+              >
+                <BarChart accessibilityLayer data={chartData}>
+                  <XAxis
+                    dataKey="month"
+                    tickLine={false}
+                    tickMargin={10}
+                    axisLine={false}
+                    tickFormatter={(value: string | number) => {
+                      return typeof value === 'string'
+                        ? value.slice(0, 3)
+                        : value.toString();
+                    }}
+                  />
+                  <ChartTooltip
+                    content={
+                      <ChartTooltipContent
+                        hideIndicator
+                        hideLabel
+                        hideValueName
+                        formatter={(value) => {
+                          return `$${formatNumber(Number(value), 2)}`;
+                        }}
+                      />
+                    }
+                  />
+                  <Bar
+                    dataKey="donations"
+                    fill="var(--color-donations)"
+                    radius={4}
+                    activeBar={{ fill: '#E7FED8' }}
+                  />
+                </BarChart>
+              </ChartContainer>
+            </CardBody>
+          </Card>
+          <Card className="col-span-1">
+            <CardHeader>Earnings by asset</CardHeader>
+            <CardBody>
+              <div className="space-y-4 p-4">
+                {mainAsset && (
+                  <div className="flex items-center gap-3">
+                    <div className="relative size-[70px] rounded-full">
+                      <TokenLogo
+                        symbol={mainAsset.tokenData.symbol}
+                        imageUrl={mainAsset.tokenData.imageUrl}
+                      />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="w-fit rounded-full bg-mint-200 px-1 py-0.5 text-xs font-medium text-mint-700">
+                        {mainAsset.donationCount} donations
+                      </span>
+                      <span className="flex items-center text-xl font-semibold text-black">
+                        ${formatNumber(mainAsset.totalAmount, 2)}{' '}
+                        <span className="ml-2 text-sm font-medium text-gray-300">
+                          {mainAsset.tokenData.symbol}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                <table className="w-full table-auto border-collapse">
+                  <tbody>
+                    {otherAssets.map((item, index) => {
+                      return (
+                        <tr
+                          key={index}
+                          className="border-b border-gray-200 last:border-b-0"
+                        >
+                          <td className="flex items-center gap-2 py-3">
+                            <div className="relative size-6 rounded-full">
+                              <TokenLogo
+                                symbol={item.tokenData.symbol}
+                                imageUrl={item.tokenData.imageUrl}
+                              />
+                            </div>
+                            <span className="text-sm text-gray-300">
+                              {item.tokenData.symbol}
+                            </span>
+                          </td>
+                          <td>
+                            <span className="w-fit rounded-full bg-mint-200 px-1 py-0.5 text-xs font-medium text-mint-700">
+                              {item.donationCount} donations
+                            </span>
+                          </td>
+                          <td className="text-right align-middle text-sm font-medium text-black">
+                            ${formatNumber(item.totalAmount, 2)}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </CardBody>
+          </Card>
+          <Card className="col-span-3">
+            <CardBody>
+              <div className="flex w-full flex-col gap-y-3 pr-5 pt-1">
+                {sortedDonations.map((donation) => {
+                  return (
+                    <DonateHistoryItem
+                      donation={donation}
+                      key={donation.transactionHash}
+                    />
+                  );
+                })}
+              </div>
+            </CardBody>
+          </Card>
+        </>
+      ) : (
+        <>
+          <Card className="col-span-3 p-0">
+            <div className="relative h-[224px] overflow-hidden rounded-2xl bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)]">
+              <img
+                alt="lines"
+                src={backgroundLines2.src}
+                className="absolute w-full opacity-40"
+              />
+              <img
+                alt="idriss stream"
+                src={IDRISS_SCENE_STREAM_4.src}
+                className="absolute top-[-103px] w-full"
+              />
+              <img
+                alt="idriss coin"
+                src={IDRISS_COIN.src}
+                className="absolute left-1/2 top-1 w-[198px] -translate-x-1/2"
+              />
+            </div>
+          </Card>
+          <Card className="col-span-3">
+            <div className="mx-auto flex min-h-[694px] w-[477px] flex-col items-center justify-center gap-4">
+              <span className="text-center text-heading6 uppercase text-neutral-900">
+                No donations yet
+              </span>
+              <span className="mx-8 text-center text-display5 uppercase gradient-text">
+                Share your page to get your first donation
+              </span>
+              <Button
+                size="medium"
+                intent="secondary"
+                onClick={() => {
+                  return console.log('Not implemented yet');
+                }} // TODO: Add functionality
+                suffixIconName="IdrissArrowRight"
+                className="uppercase"
+              >
+                Copy link
+              </Button>
+            </div>
+          </Card>
+        </>
+      )}
+    </div>
+  );
+}

@@ -5,11 +5,11 @@ import { AppDataSource } from './database';
 import { Donation } from './entities/donations.entity';
 import { User } from './entities/user.entity';
 import { Token } from './entities/token.entity';
-import { DonationData, ZapperNode } from '../types';
+import { ZapperNode } from '../types';
 import { enrichUserData } from '../utils/enrich-user';
+import { DonationData } from '@idriss-xyz/constants';
 
 export async function storeToDatabase(
-  address: Hex,
   edges: { node: ZapperNode }[],
   overwrite: boolean = false,
 ): Promise<DonationData[]> {
@@ -55,6 +55,11 @@ export async function storeToDatabase(
 
     const toUser = node.interpretation.descriptionDisplayItems[1]?.account;
     let enrichedToUser: typeof enrichedFromUser | undefined;
+
+    if (!toUser?.address) {
+      continue; // Skip if there is no recipient address in the node
+    }
+
     if (toUser) {
       const toAddress = toUser.address.toLowerCase() as Hex;
       enrichedToUser = enrichedUserCache.get(toAddress);
@@ -84,6 +89,7 @@ export async function storeToDatabase(
           imageUrl: tokenData.imageUrlV2,
           network: node.network,
           decimals: tokenData.decimals,
+          name: tokenData.name,
         },
         {
           conflictPaths: ['address', 'network'],
@@ -92,15 +98,15 @@ export async function storeToDatabase(
       );
       const amountRaw =
         node.interpretation.descriptionDisplayItems[0]?.amountRaw || '0';
-      const tradeValue = tokenData.onchainMarketData?.price
+      const tradeValue = tokenData.priceData?.price
         ? Number(formatUnits(BigInt(amountRaw), tokenData.decimals)) *
-          tokenData.onchainMarketData.price
+          tokenData.priceData.price
         : 0;
 
       const savedDonation = await donationRepo.save({
         transactionHash: node.transaction.hash,
         fromAddress: fromUser.address.toLowerCase() as Hex,
-        toAddress: address.toLowerCase() as Hex,
+        toAddress: toUser.address.toLowerCase() as Hex,
         timestamp: node.timestamp,
         comment: node.interpretation.descriptionDisplayItems[2]?.stringValue,
         tradeValue,

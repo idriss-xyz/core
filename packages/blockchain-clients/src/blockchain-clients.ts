@@ -1,68 +1,71 @@
 import { createPublicClient, http } from 'viem';
 import { CHAIN } from '@idriss-xyz/constants';
+import {
+  base,
+  mainnet,
+  polygon,
+  abstract,
+  celo,
+  linea,
+  optimism,
+  ronin,
+  arbitrum,
+  scroll,
+  zksync,
+} from 'viem/chains';
 
 export const clientBase = createPublicClient({
-  chain: CHAIN.BASE,
+  chain: base,
   transport: http('https://base-rpc.publicnode.com'),
 });
 
 export const clientEthereum = createPublicClient({
-  chain: CHAIN.ETHEREUM,
+  chain: mainnet,
   transport: http('https://ethereum-rpc.publicnode.com'),
 });
 
 const clientPolygon = createPublicClient({
-  chain: CHAIN.POLYGON,
+  chain: polygon,
   transport: http('https://polygon-rpc.com/'),
 });
 
-const clientAleph = createPublicClient({
-  chain: CHAIN.ALEPH,
-  transport: http(),
-});
-
 const clientAbstract = createPublicClient({
-  chain: CHAIN.ABSTRACT,
-  transport: http(),
-});
-
-const clientMantle = createPublicClient({
-  chain: CHAIN.MANTLE,
+  chain: abstract,
   transport: http(),
 });
 
 const clientOptimism = createPublicClient({
-  chain: CHAIN.OPTIMISM,
+  chain: optimism,
   transport: http(),
 });
 
 const clientRonin = createPublicClient({
-  chain: CHAIN.RONIN,
+  chain: ronin,
   transport: http(),
 });
 
 const clientCelo = createPublicClient({
-  chain: CHAIN.CELO,
+  chain: celo,
   transport: http(),
 });
 
 const clientArbitrum = createPublicClient({
-  chain: CHAIN.ARBITRUM_ONE,
+  chain: arbitrum,
   transport: http(),
 });
 
 const clientLinea = createPublicClient({
-  chain: CHAIN.LINEA,
+  chain: linea,
   transport: http(),
 });
 
 const clientZKSync = createPublicClient({
-  chain: CHAIN.ZK_SYNC_ERA,
+  chain: zksync,
   transport: http(),
 });
 
 const clientScroll = createPublicClient({
-  chain: CHAIN.SCROLL,
+  chain: scroll,
   transport: http(),
 });
 
@@ -93,11 +96,6 @@ export const clients = [
     name: CHAIN.OPTIMISM.shortName.toLowerCase(),
   },
   {
-    chain: CHAIN.ALEPH.id,
-    client: clientAleph,
-    name: CHAIN.ALEPH.shortName.toLowerCase(),
-  },
-  {
     chain: CHAIN.RONIN.id,
     client: clientRonin,
     name: CHAIN.RONIN.shortName.toLowerCase(),
@@ -106,11 +104,6 @@ export const clients = [
     chain: CHAIN.ABSTRACT.id,
     client: clientAbstract,
     name: CHAIN.ABSTRACT.shortName.toLowerCase(),
-  },
-  {
-    chain: CHAIN.MANTLE.id,
-    client: clientMantle,
-    name: CHAIN.MANTLE.name.toLowerCase(),
   },
   {
     chain: CHAIN.LINEA.id,

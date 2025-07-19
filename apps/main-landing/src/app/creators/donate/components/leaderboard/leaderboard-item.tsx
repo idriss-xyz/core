@@ -1,10 +1,10 @@
 import { Icon } from '@idriss-xyz/ui/icon';
 import { Link } from '@idriss-xyz/ui/link';
-import { getShortWalletHex } from '@idriss-xyz/utils';
+import { getShortWalletHex, getTimeDifferenceString } from '@idriss-xyz/utils';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Hex } from 'viem';
+import { DonationUser } from '@idriss-xyz/constants';
 
-import { DonationUser } from '../../types';
 import { WHITELISTED_URLS } from '../../constants';
 import { useGetAvatarImage } from '../../commands/get-avatar-image';
 
@@ -21,6 +21,8 @@ type Properties = {
   className?: string;
   isLastItem?: boolean;
   donateAmount: number;
+  donorSince?: number;
+  donationCount?: number;
   donorDetails: DonationUser;
   hideBottomBorder?: boolean;
   isTwitchExtension?: boolean;
@@ -32,6 +34,8 @@ export const LeaderboardItem = ({
   className,
   isLastItem,
   donateAmount,
+  donorSince,
+  donationCount,
   onDonorClick,
   donorDetails,
   isTwitchExtension,
@@ -84,16 +88,16 @@ export const LeaderboardItem = ({
   );
 
   return (
-    <li
+    <tr
       className={classes(
-        'grid grid-cols-[16px,1fr,64px] items-center gap-x-3.5 border-b px-5.5 py-[17.25px] text-body5',
+        'border-b text-body5',
         isLastItem ? 'border-b-transparent' : 'border-b-neutral-300',
         className,
       )}
     >
-      <span className="text-neutral-600">{donorRank + 1}</span>
+      <td className="px-4 py-3 text-neutral-600">{donorRank + 1}</td>
 
-      <span className="flex items-center gap-x-1.5 overflow-hidden text-neutral-900">
+      <td className="flex items-center gap-x-1.5 overflow-hidden px-4 py-3 text-neutral-900">
         {avatarImage}
 
         <Link
@@ -110,9 +114,9 @@ export const LeaderboardItem = ({
         >
           {displayName ?? getShortWalletHex(donorDetails.address)}
         </Link>
-      </span>
+      </td>
 
-      <span className="text-right text-neutral-900">
+      <td className="px-4 py-3">
         $
         {donateAmount >= 0.01
           ? new Intl.NumberFormat('en-US', {
@@ -120,8 +124,20 @@ export const LeaderboardItem = ({
               maximumFractionDigits: 2,
             }).format(Number(donateAmount ?? 0))
           : '<0.01'}
-      </span>
-    </li>
+      </td>
+
+      {donationCount && <td className="px-4 py-3">{donationCount}</td>}
+
+      {donorSince && (
+        <td className="px-4 py-3">
+          {getTimeDifferenceString({
+            text: 'ago',
+            variant: 'short',
+            timestamp: donorSince,
+          })}
+        </td>
+      )}
+    </tr>
   );
 };
 
@@ -165,15 +181,15 @@ export function LeaderboardItemPlaceholder({
   if (donorRank <= 2) {
     return (
       <>
-        <li className="grid grid-cols-[16px,1fr,64px] items-center gap-x-3.5 border-b border-b-neutral-300 px-5.5 py-4.5 text-body5">
-          <span className="text-neutral-600">{donorRank + 1}</span>
+        <tr className="flex items-center gap-x-3.5 border-b border-b-neutral-300 px-5.5 py-4.5 text-body5">
+          <td className="text-neutral-600">{donorRank + 1}</td>
 
-          <span className="flex items-center gap-x-1.5 overflow-hidden text-neutral-900">
+          <td className="flex items-center gap-x-1.5 overflow-hidden text-neutral-900">
             {avatarPlaceholder}
             <span className="select-none blur-sm">user.eth</span>
-          </span>
+          </td>
 
-          <span className="select-none text-right text-neutral-900 blur-sm">
+          <td className="select-none text-right text-neutral-900 blur-sm">
             $
             {donateAmount >= 0.01
               ? new Intl.NumberFormat('en-US', {
@@ -181,28 +197,30 @@ export function LeaderboardItemPlaceholder({
                   maximumFractionDigits: 2,
                 }).format(Number(donateAmount ?? 0))
               : '<0.01'}
-          </span>
-        </li>
+          </td>
+        </tr>
 
         {amountToDisplay - 1 - donorRank && (
-          <span
-            style={{
-              height: `${(amountToDisplay - 1 - donorRank) * placeholderHeight}px`,
-            }}
-            className="flex items-center justify-center border-b border-b-neutral-300 px-5.5 py-4.5 text-center text-label4 gradient-text-2"
-          >
-            {!hideEncouragement &&
-              `Donate now and claim ${rankPlaces[donorRank]} place`}
-          </span>
+          <tr>
+            <td
+              style={{
+                height: `${(amountToDisplay - 1 - donorRank) * placeholderHeight}px`,
+              }}
+              className="flex items-center justify-center border-b border-b-neutral-300 px-5.5 py-4.5 text-center text-label4 gradient-text-2"
+            >
+              {!hideEncouragement &&
+                `Donate now and claim ${rankPlaces[donorRank]} place`}
+            </td>
+          </tr>
         )}
       </>
     );
   }
 
   return (
-    <>
-      {!!placeholderPlaces && (
-        <span
+    !!placeholderPlaces && (
+      <tr>
+        <td
           style={{
             height: `${placeholderPlaces * placeholderHeight}px`,
           }}
@@ -211,7 +229,7 @@ export function LeaderboardItemPlaceholder({
             hideBottomBorder ? 'border-b-transparent' : 'border-b-neutral-300',
           )}
         />
-      )}
-    </>
+      </tr>
+    )
   );
 }

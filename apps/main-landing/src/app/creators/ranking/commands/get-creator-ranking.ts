@@ -1,8 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-
-import { LeaderboardStats } from '@/app/creators/donate/types';
-
-import { CREATOR_API_URL } from '../../donate/constants';
+import { CREATOR_API_URL, LeaderboardStats } from '@idriss-xyz/constants';
 
 const getCreatorRanking = async () => {
   const response = await fetch(`${CREATOR_API_URL}/creator-leaderboard`);

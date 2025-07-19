@@ -7,12 +7,22 @@ export { Youtube } from './youtube';
 export { Tiktok } from './tiktok';
 export { Check } from './check';
 export { IdrissCircled } from './idriss-circled';
+export { EthToken } from './eth-token';
 export { IdrissToken } from './idriss-token';
+export { PdtToken } from './pdt-token';
+export { RoninToken } from './ronin-token';
+export { UsdcToken } from './usdc-token';
+export { PrimeToken } from './prime-token';
+export { YggToken } from './ygg-token';
 export { Governance } from './governance';
 export { PolymarketIcon } from './polymarket-icon';
 export { Tipping } from './tipping';
 export { Trading } from './trading';
-export { TwitchOutlined, TwitchOutlinedBold } from './twitch-outlined';
+export {
+  TwitchOutlined,
+  TwitchOutlinedBold,
+  TwitchOutlinedBold2,
+} from './twitch-outlined';
 export { YoutubeOutlined } from './youtube-outlined';
 export { Users } from './users';
 export { Verifying } from './verifying';
@@ -43,3 +53,4 @@ export { Etherscan } from './etherscan';
 export { Blockscout } from './blockscout';
 export { CrownCircled } from './crown-circled';
 export { Hexagon } from './hexagon';
+export { BellNotification } from './bell-notification';

@@ -3,8 +3,9 @@ import { Spinner } from '@idriss-xyz/ui/spinner';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { Hex } from 'viem';
+import { DonationData } from '@idriss-xyz/constants';
 
-import { DonateContentValues, DonationData } from '@/app/creators/donate/types';
+import { DonateContentValues } from '@/app/creators/donate/types';
 
 import { DonateHistoryItem } from './donate-history-item';
 
