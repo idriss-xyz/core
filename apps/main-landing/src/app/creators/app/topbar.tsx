@@ -7,15 +7,23 @@ import { DonateHistoryItem } from '@/app/creators/donate/components/donate-histo
 import { useAuth } from '../context/auth-context';
 
 export function TopBar() {
-  const { donations } = useAuth();
+  const { donations, newDonationsCount, markDonationsAsSeen } = useAuth();
   return (
     <>
       <NavigationMenu.Root className="flex justify-end gap-3">
-        <NavigationMenu.List className="flex items-center gap-3 p-3">
+        <NavigationMenu.List className="flex items-center gap-2 p-3">
           <NavigationMenu.Item className="relative">
             <NavigationMenu.Trigger asChild>
-              <div className="flex max-h-[70px] min-h-[40px] min-w-[40px] max-w-[70px] items-center justify-center rounded-full border border-neutral-300 bg-white">
-                <Icon name="BellNotification" size={20} />
+              <div
+                onClick={markDonationsAsSeen}
+                className="relative flex size-8 items-center justify-center rounded-full border border-neutral-300 bg-white"
+              >
+                <Icon className='text-gray-300' name="Bell" size={20} />
+                {newDonationsCount > 0 && (
+                  <div className="absolute right-[-6px] top-[-6px] flex size-[18px] items-center justify-center rounded-full border-2 border-white bg-[#05AB13] text-body6 text-white">
+                    {newDonationsCount}
+                  </div>
+                )}
               </div>
             </NavigationMenu.Trigger>
 
@@ -34,7 +42,7 @@ export function TopBar() {
                         </div>
                         {index < donations.slice(0, 5).length - 1 && (
                           <div className="gap-2.5">
-                            <hr className="min-w-[400px] max-w-[430px] bg-[#DBDDE2]" />
+                            <hr className="min-w-[400px] max-w-[430px] bg-neutral-300" />
                           </div>
                         )}
                       </Fragment>
@@ -51,8 +59,8 @@ export function TopBar() {
 
           <NavigationMenu.Item className="relative flex gap-1">
             <NavigationMenu.Trigger asChild>
-              <div className="flex max-h-[70px] min-h-[40px] w-max items-center gap-2.5">
-                <div className="size-[48px] max-h-[48px] min-h-[48px] min-w-[48px] max-w-[48px] rounded-[999px] border border-[#AAAFB9]">
+              <div className="flex max-h-[70px] min-h-[32px] w-max items-center gap-2.5">
+                <div className="size-[32px] max-h-[48px] min-h-[32px] min-w-[32px] max-w-[48px] rounded-[999px] border border-[#AAAFB9]">
                   <img
                     src="https://res.cloudinary.com/base-web/image/fetch/w_64/f_webp/https%3A%2F%2Fbase.mypinata.cloud%2Fipfs%2Fbafkreicr5lh2f3eumcn4meif5t2pauzeddjjbhjbl4enqrp4ooz4e7on6i%3FpinataGatewayToken%3Df6uqhE35YREDMuFqLvxFLqd-MBRlrJ1qWog8gyCF8T88-Tsiu2IX48F-kyVti78J"
                     alt="avatar"

@@ -7,6 +7,8 @@ import { CreatorProfileResponse } from '../utils';
 type AuthContextType = {
   donations: DonationData[];
   addDonation: (donation: DonationData) => void;
+  newDonationsCount: number;
+  markDonationsAsSeen: () => void;
   oauthError: string | null;
   isLoginModalOpen: boolean;
   creator: CreatorProfileResponse | null;
@@ -26,11 +28,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [creator, setCreator] = useState<CreatorProfileResponse | null>(null);
   const [creatorLoading, setCreatorLoading] = useState(true);
   const [donations, setDonations] = useState<DonationData[]>([]);
+  const [newDonationsCount, setNewDonationsCount] = useState(0);
 
   const addDonation = (donation: DonationData) => {
     setDonations((previous) => {
       return [donation, ...previous];
     });
+    setNewDonationsCount((previous) => {return previous + 1});
+  };
+
+  const markDonationsAsSeen = () => {
+    setNewDonationsCount(0);
   };
 
   const clearOauthError = () => {
@@ -51,6 +59,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setCreator,
         donations,
         addDonation,
+        newDonationsCount,
+        markDonationsAsSeen,
       }}
     >
       {children}

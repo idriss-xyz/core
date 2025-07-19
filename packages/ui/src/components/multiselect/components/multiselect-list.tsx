@@ -20,7 +20,7 @@ export const MultiselectInputList = <T,>({
   return (
     <div
       className={classes(
-        'mt-1 flex w-[var(--radix-popper-anchor-width)] flex-col gap-2 overflow-y-auto rounded-xl border border-[#DBDDE2] bg-white p-[8px_0px] shadow-lg',
+        'mt-1 flex w-[var(--radix-popper-anchor-width)] flex-col gap-2 overflow-y-auto rounded-xl border border-neutral-300 bg-white p-[8px_0px] shadow-lg',
         className,
       )}
     >
