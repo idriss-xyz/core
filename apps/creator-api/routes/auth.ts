@@ -15,6 +15,20 @@ const FRONTEND_CALLBACK_URL = `${process.env.BASE_URL}/creators/auth/callback`;
 
 // Step 1: Redirect user to Twitch for authorization
 router.get('/twitch', (req, res) => {
+  const { token } = req.query;
+
+  if (!token) {
+    res.status(401).send('Unauthorized: Missing early access token.');
+    return;
+  }
+
+  try {
+    jwt.verify(token as string, process.env.EARLY_ACCESS_JWT_SECRET!);
+  } catch (error) {
+    res.status(401).send('Unauthorized: Invalid early access token.');
+    return;
+  }
+
   const authUrl = `https://id.twitch.tv/oauth2/authorize?${new URLSearchParams({
     client_id: TWITCH_CLIENT_ID!,
     redirect_uri: API_CALLBACK_URI,
@@ -92,6 +106,25 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
     res.status(500).send('Authentication failed.');
     return;
   }
+});
+
+router.post('/early-access', (req: Request, res: Response) => {
+  const { password } = req.body;
+
+  if (password !== process.env.EARLY_ACCESS_PASSWORD) {
+    res.status(401).json({ message: 'Incorrect password' });
+    return;
+  }
+
+  // If password is correct, issue a short-lived JWT
+  const token = jwt.sign(
+    { authorized: true },
+    process.env.EARLY_ACCESS_JWT_SECRET!,
+    { expiresIn: '15m' }, // Token is valid for 15 minutes
+  );
+
+  res.status(200).json({ token });
+  return;
 });
 
 export default router;

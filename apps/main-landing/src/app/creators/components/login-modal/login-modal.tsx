@@ -11,16 +11,21 @@ import Image from 'next/image';
 
 import { IDRISS_TOROID } from '@/assets';
 
+import { useAuth } from '../../context/auth-context';
+
 type Properties = {
   isOpened: boolean;
   onClose: () => void;
 };
 
-const handleTwitchLogin = () => {
-  window.location.href = `${CREATOR_API_URL}/auth/twitch`;
-};
-
 export const LoginModal = ({ isOpened, onClose }: Properties) => {
+  const { earlyAccessToken } = useAuth();
+
+  const handleTwitchLogin = () => {
+    if (!earlyAccessToken) return;
+    window.location.href = `${CREATOR_API_URL}/auth/twitch?token=${earlyAccessToken}`;
+  };
+
   return (
     <Modal
       className="flex min-h-[420px] w-[500px] flex-col items-center justify-center gap-y-6 rounded-xl border border-black/20 bg-white p-6 text-center"
@@ -46,6 +51,7 @@ export const LoginModal = ({ isOpened, onClose }: Properties) => {
           aria-label="Login with Twitch"
           prefixIconName="TwitchOutlinedBold"
           onClick={handleTwitchLogin}
+          disabled={!earlyAccessToken}
         >
           Continue with Twitch
         </Button>

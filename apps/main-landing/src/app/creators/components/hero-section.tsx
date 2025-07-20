@@ -11,14 +11,32 @@ import { useStartEarningNavigation } from '../utils';
 
 import { VideoPlayer } from './hero-section/video-player';
 import { LoginModal } from './login-modal';
+import { PasswordModal } from './password-modal/password-modal';
 
 type Properties = {
   heroButtonReference?: RefObject<HTMLButtonElement>;
 };
 
 export const HeroSection = ({ heroButtonReference }: Properties) => {
-  const { isLoginModalOpen, setIsModalOpen } = useAuth();
-  const handleStartEarningClick = useStartEarningNavigation();
+  const {
+    isLoginModalOpen,
+    setIsModalOpen,
+    isPasswordModalOpen,
+    setIsPasswordModalOpen,
+    earlyAccessToken,
+  } = useAuth();
+  const originalHandleStartEarningClick = useStartEarningNavigation();
+
+  const handlePasswordSuccess = () => {
+    setIsPasswordModalOpen(false);
+    void originalHandleStartEarningClick();
+  };
+
+  const handleStartEarningClick = () => {
+    void (earlyAccessToken
+      ? originalHandleStartEarningClick()
+      : setIsPasswordModalOpen(true));
+  };
 
   return (
     <header
@@ -92,6 +110,13 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
         onClose={() => {
           return setIsModalOpen(false);
         }}
+      />
+      <PasswordModal
+        isOpened={isPasswordModalOpen}
+        onClose={() => {
+          return setIsPasswordModalOpen(false);
+        }}
+        onSuccess={handlePasswordSuccess}
       />
     </header>
   );
