@@ -7,6 +7,8 @@ import { Input } from '@idriss-xyz/ui/input';
 import { Modal } from '@idriss-xyz/ui/modal';
 import Image from 'next/image';
 import { FormEvent, useState } from 'react';
+import { Icon } from '@idriss-xyz/ui/icon';
+import { classes } from '@idriss-xyz/ui/utils';
 
 import { IDRISS_TOROID } from '@/assets';
 
@@ -41,8 +43,7 @@ export const PasswordModal = ({ isOpened, onClose, onSuccess }: Properties) => {
         setEarlyAccessToken(token);
         onSuccess();
       } else {
-        const data = await response.json();
-        setError(data.message || 'Incorrect password.');
+        setError('Invalid code. Check it and try again.');
       }
     } catch {
       setError('An unexpected error occurred.');
@@ -53,7 +54,7 @@ export const PasswordModal = ({ isOpened, onClose, onSuccess }: Properties) => {
 
   return (
     <Modal
-      className="flex min-h-[420px] w-[500px] flex-col items-center justify-center gap-y-6 rounded-xl border border-black/20 bg-white p-6 text-center"
+      className="flex w-[500px] flex-col items-center justify-center gap-y-6 rounded-xl border border-black/20 bg-white p-6 text-center"
       isOpened={isOpened}
       onClose={onClose}
       closeOnClickAway
@@ -66,37 +67,44 @@ export const PasswordModal = ({ isOpened, onClose, onSuccess }: Properties) => {
           height={156}
           className="my-3"
         />
-        <h1 className="text-heading3 text-neutral-900">Early access is open</h1>
+        <h1 className="text-heading3 text-neutral-900">Welcome to v2 early access</h1>
       </div>
       <form
         onSubmit={handleSubmit}
         className="flex w-full flex-col items-center gap-6"
       >
-        <div className="flex w-full items-start gap-2">
-          <div className="grow">
-            <Input
-              placeholder="Enter invite code"
-              value={password}
-              onChange={(inputEvent) => {
-                return setPassword(inputEvent.target.value);
-              }}
+        <div className="w-full">
+          <div className="flex w-full items-start gap-2">
+            <div className="grow">
+              <Input
+                placeholder="Enter invite code"
+                value={password}
+                onChange={(inputEvent) => {
+                  return setPassword(inputEvent.target.value);
+                }}
+                disabled={isLoading}
+                className="w-full"
+              />
+            </div>
+            <Button
+              size="medium"
+              className="uppercase"
+              intent="secondary"
+              aria-label="Continue"
+              type="submit"
+              suffixIconName="IdrissArrowRight"
               disabled={isLoading}
-              className="w-full"
-            />
+            >
+              Continue
+            </Button>
           </div>
-          <Button
-            size="medium"
-            className="uppercase"
-            intent="secondary"
-            aria-label="Continue"
-            type="submit"
-            suffixIconName="IdrissArrowRight"
-            disabled={isLoading}
-          >
-            Continue
-          </Button>
+          {error && (
+            <span className="flex items-center space-x-1 pt-1 text-label7 text-red-500 lg:text-label7">
+              <Icon name="AlertCircle" size={12} className="p-0.5" />
+              {error}
+            </span>
+          )}
         </div>
-        {error && <span className="text-sm text-red-500">{error}</span>}
         <Divider />
       </form>
     </Modal>
