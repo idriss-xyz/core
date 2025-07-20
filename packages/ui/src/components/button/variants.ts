@@ -16,10 +16,10 @@ export const button = cva(
           'disabled:bg-neutral-400 disabled:text-white',
         ],
         secondary: [
-          'border border-mint-400 bg-white text-neutralGreen-900 shadow-input',
-          'hover:border-mint-500 hover:bg-mint-200',
-          'active:border-mint-600 active:bg-mint-300',
-          'disabled:border-none disabled:bg-neutral-400 disabled:text-white',
+          'bg-white text-neutralGreen-900 shadow-input outline outline-1 outline-offset-[-1px] outline-mint-400',
+          'hover:bg-mint-200 hover:outline-mint-500',
+          'active:bg-mint-300 active:outline-mint-600',
+          'disabled:bg-neutral-400 disabled:text-white disabled:outline-none',
         ],
         tertiary: [
           'bg-transparent text-neutralGreen-900',
