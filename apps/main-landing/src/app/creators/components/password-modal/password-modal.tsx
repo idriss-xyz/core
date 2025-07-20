@@ -8,7 +8,6 @@ import { Modal } from '@idriss-xyz/ui/modal';
 import Image from 'next/image';
 import { FormEvent, useState } from 'react';
 import { Icon } from '@idriss-xyz/ui/icon';
-import { classes } from '@idriss-xyz/ui/utils';
 
 import { IDRISS_TOROID } from '@/assets';
 
