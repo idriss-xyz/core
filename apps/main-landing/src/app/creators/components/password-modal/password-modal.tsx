@@ -67,7 +67,9 @@ export const PasswordModal = ({ isOpened, onClose, onSuccess }: Properties) => {
           height={156}
           className="my-3"
         />
-        <h1 className="text-heading3 text-neutral-900">Welcome to v2 early access</h1>
+        <h1 className="text-heading3 text-neutral-900">
+          Welcome to v2 early access
+        </h1>
       </div>
       <form
         onSubmit={handleSubmit}
