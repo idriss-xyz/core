@@ -1,6 +1,6 @@
 import { Input } from '@idriss-xyz/ui/input';
 import { classes } from '@idriss-xyz/ui/utils';
-import { Icon, IconName } from '@idriss-xyz/ui/icon';
+import { Icon, type IconName } from '@idriss-xyz/ui/icon';
 
 import { useCopyToClipboard } from '../../hooks/use-copy-to-clipboard';
 
@@ -34,7 +34,7 @@ export function CopyInput({
         className={classes('min-w-[380px] max-w-[500px]', className)}
         suffixElement={
           <div
-            className="flex h-full items-center py-[2px]"
+            className="flex h-full cursor-pointer items-center py-[2px]"
             onClick={handleCopy}
           >
             <div className="mr-3 h-full border-l border-gray-200" />

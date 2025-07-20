@@ -48,6 +48,7 @@ import {
   PlayCircle,
   GalleryVertical,
   RefreshCw,
+  FileUp,
 } from 'lucide-react';
 
 import * as customIcons from './custom';
@@ -102,5 +103,6 @@ export const ICON = {
   PlayCircle,
   GalleryVertical,
   RefreshCw,
+  FileUp,
   ...customIcons,
 };
