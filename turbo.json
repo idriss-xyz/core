@@ -127,7 +127,9 @@
         "BASE_URL",
         "JWT_SECRET",
         "TWITCH_CLIENT_ID",
-        "TWITCH_CLIENT_SECRET"
+        "TWITCH_CLIENT_SECRET",
+        "EARLY_ACCESS_PASSWORD",
+        "EARLY_ACCESS_JWT_SECRET"
       ]
     },
     "@idriss-xyz/creator-api#prod": {
@@ -146,7 +148,9 @@
         "BASE_URL",
         "JWT_SECRET",
         "TWITCH_CLIENT_ID",
-        "TWITCH_CLIENT_SECRET"
+        "TWITCH_CLIENT_SECRET",
+        "EARLY_ACCESS_PASSWORD",
+        "EARLY_ACCESS_JWT_SECRET"
       ]
     },
     "@idriss-xyz/creator-api#test": {
