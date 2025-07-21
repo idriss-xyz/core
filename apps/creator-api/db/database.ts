@@ -25,6 +25,8 @@ import {
   CompositeTokenPrimaryKey1752686842000,
   RenameAlertToggles1752674138685,
   AddAlertSoundParameter1753119779375,
+  AddEmailAndJoinedAtToCreator1753117191000,
+  UpdateCreatorProfileView1753117192000,
 } from './migrations';
 import { CreatorProfileView } from './views';
 
@@ -59,6 +61,8 @@ export const AppDataSource = new DataSource({
     CompositeTokenPrimaryKey1752686842000,
     RenameAlertToggles1752674138685,
     AddAlertSoundParameter1753119779375,
+    AddEmailAndJoinedAtToCreator1753117191000,
+    UpdateCreatorProfileView1753117192000,
   ],
 });
 

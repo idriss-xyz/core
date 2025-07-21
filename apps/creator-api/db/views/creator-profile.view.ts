@@ -10,9 +10,12 @@ import { CreatorNetwork, CreatorToken, DonationParameters } from '../entities';
       .addSelect('c.address', 'address')
       .addSelect('c.primary_address', 'primaryAddress')
       .addSelect('c.name', 'name')
+      .addSelect('c.display_name', 'displayName')
+      .addSelect('c.email', 'email')
       .addSelect('c.profile_picture_url', 'profilePictureUrl')
       .addSelect('c.donation_url', 'donationUrl')
       .addSelect('c.obs_url', 'obsUrl')
+      .addSelect('c.joined_at', 'joinedAt')
       .addSelect('dp.minimum_alert_amount', 'minimumAlertAmount')
       .addSelect('dp.minimum_tts_amount', 'minimumTTSAmount')
       .addSelect('dp.minimum_sfx_amount', 'minimumSfxAmount')
@@ -23,11 +26,11 @@ import { CreatorNetwork, CreatorToken, DonationParameters } from '../entities';
       .addSelect('dp.sfx_enabled', 'sfxEnabled')
       .addSelect('dp.custom_bad_words', 'customBadWords')
       .addSelect(
-        'COALESCE(ARRAY_REMOVE(ARRAY_AGG(DISTINCT ct.tokenSymbol), NULL), ARRAY[]::text[])',
+        'COALESCE(ARRAY_REMOVE(ARRAY_AGG(DISTINCT ct."tokenSymbol"), NULL), ARRAY[]::text[])',
         'tokens',
       )
       .addSelect(
-        'COALESCE(ARRAY_REMOVE(ARRAY_AGG(DISTINCT cn.chainName), NULL), ARRAY[]::text[])',
+        'COALESCE(ARRAY_REMOVE(ARRAY_AGG(DISTINCT cn."chainName"), NULL), ARRAY[]::text[])',
         'networks',
       )
       .from(Creator, 'c')
@@ -39,9 +42,11 @@ import { CreatorNetwork, CreatorToken, DonationParameters } from '../entities';
       .addGroupBy('c.primary_address')
       .addGroupBy('c.name')
       .addGroupBy('c.display_name')
+      .addGroupBy('c.email')
       .addGroupBy('c.profile_picture_url')
       .addGroupBy('c.donation_url')
       .addGroupBy('c.obs_url')
+      .addGroupBy('c.joined_at')
       .addGroupBy('dp.minimum_alert_amount')
       .addGroupBy('dp.minimum_tts_amount')
       .addGroupBy('dp.minimum_sfx_amount')
@@ -69,6 +74,9 @@ export class CreatorProfileView {
   displayName!: string;
 
   @ViewColumn()
+  email!: string | null;
+
+  @ViewColumn()
   profilePictureUrl!: string | null;
 
   @ViewColumn()
@@ -76,6 +84,9 @@ export class CreatorProfileView {
 
   @ViewColumn()
   obsUrl!: string | null;
+
+  @ViewColumn()
+  joinedAt!: Date;
 
   @ViewColumn()
   minimumAlertAmount!: number;

@@ -13,13 +13,14 @@ export default function CustomAuthCallbackPage() {
     const name = searchParameters.get('name');
     const displayName = searchParameters.get('displayName');
     const pfp = searchParameters.get('pfp');
+    const email = searchParameters.get('email');
 
     if (customToken) {
       // Store Twitch info in sessionStorage to be picked up by the next page.
       if (name) {
         sessionStorage.setItem(
           'twitch_new_user_info',
-          JSON.stringify({ name, displayName, pfp }),
+          JSON.stringify({ name, displayName, pfp, email }),
         );
       }
       // Store the custom token where our PrivyProvider can find it.

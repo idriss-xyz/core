@@ -1,4 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  OneToMany,
+} from 'typeorm';
 import { Hex } from 'viem';
 import { CreatorNetwork } from './creator-network.entity';
 import { CreatorToken } from './creator-token.entity';
@@ -26,11 +32,17 @@ export class Creator {
   @Column({ type: 'text', name: 'profile_picture_url', nullable: true })
   profilePictureUrl?: string;
 
+  @Column({ type: 'text', nullable: true, unique: true })
+  email?: string;
+
   @Column({ type: 'text', name: 'donation_url', nullable: true })
   donationUrl?: string;
 
   @Column({ type: 'text', name: 'obs_url', nullable: true })
   obsUrl?: string;
+
+  @CreateDateColumn({ type: 'timestamp with time zone', name: 'joined_at' })
+  joinedAt!: Date;
 
   @OneToMany(() => CreatorNetwork, (network) => network.creator)
   networks!: CreatorNetwork[];

@@ -40,8 +40,9 @@ router.get(
         res.status(404).json({ error: 'Creator profile not found' });
         return;
       }
-
-      res.json(profile);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { email, ...publicProfile } = profile;
+      res.json(publicProfile);
     } catch (error) {
       console.error('Error fetching creator profile by name:', error);
       res.status(500).json({ error: 'Failed to fetch creator profile' });
@@ -68,8 +69,9 @@ router.get(
         res.status(404).json({ error: 'Creator profile not found' });
         return;
       }
-
-      res.json(profile);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { email, ...publicProfile } = profile;
+      res.json(publicProfile);
     } catch (error) {
       console.error('Error fetching creator profile by ID:', error);
       res.status(500).json({ error: 'Failed to fetch creator profile' });
@@ -96,8 +98,9 @@ router.get(
         res.status(404).json({ error: 'Creator profile not found' });
         return;
       }
-
-      res.json(profile);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { email, ...publicProfile } = profile;
+      res.json(publicProfile);
     } catch (error) {
       console.error('Error fetching creator profile by address:', error);
       res.status(500).json({ error: 'Failed to fetch creator profile' });
@@ -145,9 +148,10 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
     creator.primaryAddress =
       (creatorData.primaryAddress as Hex) ?? (creatorData.address as Hex);
     creator.name = creatorData.name;
-    creator.displayName = creatorData.displayName;
+    creator.displayName = creatorData.displayName ?? creatorData.name;
     creator.profilePictureUrl = creatorData.profilePictureUrl;
     creator.privyId = creatorData.privyId;
+    creator.email = creatorData.email;
     creator.donationUrl = `${CREATORS_LINK}/${creatorData.name}`;
     creator.obsUrl = `${CREATORS_LINK}/obs/${creatorData.name}`;
 

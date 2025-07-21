@@ -37,8 +37,10 @@ export type CreatorProfileResponse = {
   name: string;
   displayName?: string;
   profilePictureUrl?: string;
+  email?: string;
   donationUrl: string;
   obsUrl: string;
+  joinedAt: string;
   minimumAlertAmount: number;
   minimumTTSAmount: number;
   minimumSfxAmount: number;
@@ -79,6 +81,7 @@ export const saveCreatorProfile = async (
   name?: string | null,
   displayName?: string | null,
   profilePictureUrl?: string | null,
+  email?: string | null,
   privyId?: string | null,
   authToken?: string,
 ): Promise<void> => {
@@ -89,7 +92,6 @@ export const saveCreatorProfile = async (
   if (!authToken) {
     throw new Error('No auth token provided');
   }
-
   const response = await fetch(`${CREATOR_API_URL}/creator-profile`, {
     method: 'POST',
     headers: {
@@ -102,6 +104,7 @@ export const saveCreatorProfile = async (
       displayName,
       profilePictureUrl,
       name,
+      email,
       privyId,
     }),
   });

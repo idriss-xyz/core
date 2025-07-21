@@ -13,3 +13,5 @@ export { AddTokenName1752155170000 } from './1752155170000-AddTokenName';
 export { CompositeTokenPrimaryKey1752686842000 } from './1752686842000-CompositeTokenPrimaryKey';
 export { RenameAlertToggles1752674138685 } from './1752674138685-RenameAlertToggles';
 export { AddAlertSoundParameter1753119779375 } from './1753119779375-AddAlertSoundParameter';
+export { AddEmailAndJoinedAtToCreator1753117191000 } from './1753117191000-AddEmailAndJoinedAtToCreator';
+export { UpdateCreatorProfileView1753117192000 } from './1753117192000-UpdateCreatorProfileView';

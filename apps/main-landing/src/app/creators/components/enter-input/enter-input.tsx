@@ -38,7 +38,9 @@ export function EnterInput({
         type="email"
         className="grow truncate bg-transparent p-3 text-sm outline-none"
         value={value}
-        onChange={(inputEvent) => {return setValue(inputEvent.target.value)}}
+        onChange={(inputEvent) => {
+          return setValue(inputEvent.target.value);
+        }}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
       />

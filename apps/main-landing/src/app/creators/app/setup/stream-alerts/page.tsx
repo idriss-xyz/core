@@ -30,7 +30,7 @@ import { File } from '../file-upload/file';
 import { Select } from '../select';
 
 // TODO: Extract to constants
-export const alertSounds = [
+const alertSounds = [
   { value: '1.mp3', label: 'Trumpet' },
   { value: '2.mp3', label: 'Siren' },
   { value: '3.mp3', label: 'Snap' },

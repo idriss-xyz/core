@@ -67,6 +67,7 @@ export function OAuthCallbackHandler() {
           let newCreatorName: string;
           let newCreatorDisplayName: string | null = null;
           let newCreatorProfilePic: string | null = null;
+          let newCreatorEmail: string | null = null;
 
           // Check if we have Twitch info from the custom login flow
           const twitchInfoRaw = sessionStorage.getItem('twitch_new_user_info');
@@ -75,11 +76,13 @@ export function OAuthCallbackHandler() {
             newCreatorName = twitchInfo.name;
             newCreatorDisplayName = twitchInfo.displayName;
             newCreatorProfilePic = twitchInfo.pfp;
+            newCreatorEmail = twitchInfo.email;
             sessionStorage.removeItem('twitch_new_user_info'); // Clean up
           } else {
             // User logged in with email or wallet, generate a random name
-            newCreatorName = `user-${user.id.slice(-8)}`;
-            newCreatorDisplayName = newCreatorName;
+            // newCreatorName = `user-${user.id.slice(-8)}`;
+            // newCreatorDisplayName = newCreatorName;
+            throw new Error('Unsupported login method');
           }
 
           await saveCreatorProfile(
@@ -87,6 +90,7 @@ export function OAuthCallbackHandler() {
             newCreatorName,
             newCreatorDisplayName,
             newCreatorProfilePic,
+            newCreatorEmail,
             user.id, // This is the Privy ID
             authToken,
           );

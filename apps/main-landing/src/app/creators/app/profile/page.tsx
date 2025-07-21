@@ -17,24 +17,36 @@ import {
   FormFieldWrapper,
   SectionHeader,
 } from '@/app/creators/components/layout';
-
-const handleEmailSave = (newEmail: string) => {
-    // TODO: Implement backend call to save email
-    console.log('Saving email:', newEmail);
-  };
+import { editCreatorProfile } from '@/app/creators/utils';
 
 const handleDeleteAccount = () => {
-    // TODO: Implement backend call to save email
-    console.log('Deleteing Account');
-  };
+  // TODO: Implement backend call to save email
+  console.log('Deleteing Account');
+};
 
 // ts-unused-exports:disable-next-line
 export default function ProfilePage() {
   const { creator } = useAuth();
-  const { user, exportWallet } = usePrivy();
+  const { user, exportWallet, getAccessToken } = usePrivy();
   const address = user?.wallet?.address as Hex | undefined;
-  const email = user?.email?.address ?? "test@gmail.com"
+  const email = creator?.email ?? user?.email?.address ?? '';
 
+  const handleEmailSave = async (newEmail: string) => {
+    if (!creator?.name) {
+      console.error('Creator name not found');
+      return;
+    }
+    try {
+      const authToken = await getAccessToken();
+      if (!authToken) {
+        console.error('Not authenticated');
+        return;
+      }
+      await editCreatorProfile(creator.name, { email: newEmail }, authToken);
+    } catch (error) {
+      console.error('Failed to save email:', error);
+    }
+  };
 
   const profileImageUrl = creator?.profilePictureUrl;
   const profileImageSize = 80;
@@ -172,9 +184,7 @@ export default function ProfilePage() {
 
       <Card>
         <FormFieldWrapper>
-          <SectionHeader
-            title="Account"
-          />
+          <SectionHeader title="Account" />
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-2">
               <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-10">
