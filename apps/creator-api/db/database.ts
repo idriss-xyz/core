@@ -24,6 +24,7 @@ import {
   AddTokenName1752155170000,
   CompositeTokenPrimaryKey1752686842000,
   RenameAlertToggles1752674138685,
+  AddAlertSoundParameter1753119779375,
 } from './migrations';
 import { CreatorProfileView } from './views';
 
@@ -57,6 +58,7 @@ export const AppDataSource = new DataSource({
     AddTokenName1752155170000,
     CompositeTokenPrimaryKey1752686842000,
     RenameAlertToggles1752674138685,
+    AddAlertSoundParameter1753119779375,
   ],
 });
 

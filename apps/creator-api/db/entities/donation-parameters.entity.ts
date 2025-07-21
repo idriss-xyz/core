@@ -24,6 +24,9 @@ export class DonationParameters {
   @Column({ name: 'voice_id', nullable: true })
   voiceId!: string;
 
+  @Column({ name: 'alert_sound', nullable: true })
+  alertSound!: string;
+
   @Column({ name: 'alert_enabled', default: false })
   alertEnabled!: boolean;
 

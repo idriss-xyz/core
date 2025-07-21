@@ -17,6 +17,7 @@ import { CreatorNetwork, CreatorToken, DonationParameters } from '../entities';
       .addSelect('dp.minimum_tts_amount', 'minimumTTSAmount')
       .addSelect('dp.minimum_sfx_amount', 'minimumSfxAmount')
       .addSelect('dp.voice_id', 'voiceId')
+      .addSelect('dp.alert_sound', 'alertSound')
       .addSelect('dp.alert_enabled', 'alertEnabled')
       .addSelect('dp.tts_enabled', 'ttsEnabled')
       .addSelect('dp.sfx_enabled', 'sfxEnabled')
@@ -45,6 +46,7 @@ import { CreatorNetwork, CreatorToken, DonationParameters } from '../entities';
       .addGroupBy('dp.minimum_tts_amount')
       .addGroupBy('dp.minimum_sfx_amount')
       .addGroupBy('dp.voice_id')
+      .addGroupBy('dp.alert_sound')
       .addGroupBy('dp.alert_enabled')
       .addGroupBy('dp.tts_enabled')
       .addGroupBy('dp.sfx_enabled')
@@ -86,6 +88,9 @@ export class CreatorProfileView {
 
   @ViewColumn()
   voiceId!: string;
+
+  @ViewColumn()
+  alertSound!: string;
 
   @ViewColumn()
   alertEnabled!: boolean;

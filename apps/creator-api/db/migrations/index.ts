@@ -12,3 +12,4 @@ export { RenameDynamicIdToPrivyId1749000000000 } from './1749000000000-RenameDyn
 export { AddTokenName1752155170000 } from './1752155170000-AddTokenName';
 export { CompositeTokenPrimaryKey1752686842000 } from './1752686842000-CompositeTokenPrimaryKey';
 export { RenameAlertToggles1752674138685 } from './1752674138685-RenameAlertToggles';
+export { AddAlertSoundParameter1753119779375 } from './1753119779375-AddAlertSoundParameter';

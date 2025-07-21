@@ -113,6 +113,7 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
       minimumTTSAmount = DEFAULT_DONATION_MIN_TTS_AMOUNT,
       minimumSfxAmount = DEFAULT_DONATION_MIN_SFX_AMOUNT,
       voiceId,
+      alertSound,
       alertEnabled,
       ttsEnabled,
       sfxEnabled,
@@ -127,6 +128,7 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
     donationParameters.minimumTTSAmount = minimumTTSAmount;
     donationParameters.minimumSfxAmount = minimumSfxAmount;
     donationParameters.voiceId = voiceId;
+    donationParameters.alertSound = alertSound;
     donationParameters.alertEnabled = alertEnabled;
     donationParameters.ttsEnabled = ttsEnabled;
     donationParameters.sfxEnabled = sfxEnabled;
@@ -235,6 +237,7 @@ router.patch(
         minimumTTSAmount,
         minimumSfxAmount,
         voiceId,
+        alertSound,
         alertEnabled,
         ttsEnabled,
         sfxEnabled,
@@ -256,6 +259,7 @@ router.patch(
         minimumTTSAmount ||
         minimumSfxAmount ||
         voiceId ||
+        alertSound ||
         alertEnabled ||
         ttsEnabled ||
         sfxEnabled ||
@@ -273,6 +277,7 @@ router.patch(
               minimumTTSAmount,
               minimumSfxAmount,
               voiceId,
+              alertSound,
               alertEnabled,
               ttsEnabled,
               sfxEnabled,
@@ -286,6 +291,7 @@ router.patch(
             minimumTTSAmount,
             minimumSfxAmount,
             voiceId,
+            alertSound,
             alertEnabled,
             ttsEnabled,
             sfxEnabled,
