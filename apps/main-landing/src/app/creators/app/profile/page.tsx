@@ -23,13 +23,17 @@ const handleEmailSave = (newEmail: string) => {
     console.log('Saving email:', newEmail);
   };
 
+const handleDeleteAccount = () => {
+    // TODO: Implement backend call to save email
+    console.log('Deleteing Account');
+  };
+
 // ts-unused-exports:disable-next-line
 export default function ProfilePage() {
   const { creator } = useAuth();
   const { user, exportWallet } = usePrivy();
   const address = user?.wallet?.address as Hex | undefined;
   const email = user?.email?.address ?? "test@gmail.com"
-
 
 
   const profileImageUrl = creator?.profilePictureUrl;
@@ -159,6 +163,29 @@ export default function ProfilePage() {
                   suffixIconName="FileUp"
                 >
                   EXPORT PHRASE
+                </Button>
+              </div>
+            </div>
+          </div>
+        </FormFieldWrapper>
+      </Card>
+
+      <Card>
+        <FormFieldWrapper>
+          <SectionHeader
+            title="Account"
+          />
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-10">
+                <Button
+                  size="medium"
+                  intent="negative"
+                  onClick={handleDeleteAccount}
+                  className="size-fit"
+                  suffixIconName="Trash2"
+                >
+                  DELETE ACCOUNT
                 </Button>
               </div>
             </div>
