@@ -8,6 +8,8 @@ export type Option<T> = {
   label: string;
   prefix?: ReactNode;
   suffix?: ReactNode;
+  renderLabel?: () => ReactNode;
+  onClick?: () => void;
 };
 
 export type SelectOptionProperties<T> = {

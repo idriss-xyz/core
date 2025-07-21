@@ -35,6 +35,16 @@ export const alertSounds = [
   { value: '2.mp3', label: 'Siren' },
   { value: '3.mp3', label: 'Snap' },
   { value: '4.mp3', label: 'Clapping' },
+  {
+    value: 'upload',
+    label: 'Custom',
+    renderLabel: () => {
+      return <span className="text-mint-500 underline">+ Upload your own</span>;
+    },
+    onClick: () => {
+      console.log('upload'); // TODO: implement
+    },
+  },
 ];
 
 const UpgradeBox: React.FC = () => {
@@ -255,7 +265,7 @@ export default function StreamAlerts() {
                 <Controller
                   name="alertSound"
                   control={formMethods.control}
-                  render={({ field, fieldState }) => {
+                  render={({ field, fieldState: _ }) => {
                     return (
                       <Select
                         label="Select a sound"

@@ -22,14 +22,18 @@ export const SelectOption = forwardRef(
           'hover:bg-black/10 focus:bg-black/50',
           className,
         )}
+        onClick={option.onClick}
       >
         <div className={classes('relative pr-3', selectedClassName)}>
           {option.prefix}
         </div>
-
-        <div className="flex-1 whitespace-nowrap text-neutralGreen-900">
-          {option.label}
-        </div>
+        {option.renderLabel ? (
+          option.renderLabel()
+        ) : (
+          <div className="flex-1 whitespace-nowrap text-neutralGreen-900">
+            {option.label}
+          </div>
+        )}
 
         {option.suffix}
 

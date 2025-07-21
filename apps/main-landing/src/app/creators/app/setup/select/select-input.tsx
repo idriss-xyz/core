@@ -27,12 +27,12 @@ export const SelectInput = forwardRef(
         )}
       >
         <div className="flex-1 px-3 py-2">
-          {!selected ? (
+          {selected ? (
+            <span className="text-body4 text-black">{value}</span>
+          ) : (
             <span className="text-body4 text-neutral-600">
               {placeholder ?? 'Select an option'}
             </span>
-          ) : (
-            <span className="text-body4 text-black">{value}</span>
           )}
         </div>
 
