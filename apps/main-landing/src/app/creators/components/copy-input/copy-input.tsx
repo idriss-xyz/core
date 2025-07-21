@@ -1,4 +1,3 @@
-import { Input } from '@idriss-xyz/ui/input';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Icon, type IconName } from '@idriss-xyz/ui/icon';
 
@@ -27,25 +26,23 @@ export function CopyInput({
   };
 
   return (
-    <div className="relative flex">
-      <Input
-        value={value}
-        readOnly
-        className={classes('min-w-[380px] max-w-[500px]', className)}
-        suffixElement={
-          <div
-            className="flex h-full cursor-pointer items-center py-[2px]"
-            onClick={handleCopy}
-          >
-            <div className="mr-3 h-full border-l border-gray-200" />
-            {copied ? (
-              <Icon name="Check" size={15} />
-            ) : (
-              <Icon name={iconName ?? 'Copy'} size={15} />
-            )}
-          </div>
-        }
-      />
+    <div
+      className={classes(
+        'bg-neutral-50 flex items-center rounded-xl border border-neutral-200',
+        className,
+      )}
+    >
+      <span className="grow truncate p-3 text-sm">{value}</span>
+      <div
+        className="flex shrink-0 cursor-pointer items-center self-stretch border-l border-gray-200 px-3"
+        onClick={handleCopy}
+      >
+        {copied ? (
+          <Icon name="Check" size={15} />
+        ) : (
+          <Icon name={iconName ?? 'Copy'} size={15} />
+        )}
+      </div>
     </div>
   );
 }

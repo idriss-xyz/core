@@ -70,6 +70,10 @@ export const siteMap: SiteMapItem[] = [
       },
     ],
   },
+  {
+    name: 'Profile',
+    path: '/profile',
+  },
 ];
 
 export const testDonation = {

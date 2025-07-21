@@ -5,10 +5,10 @@ import { Card } from '@idriss-xyz/ui/card';
 import { Form } from '@idriss-xyz/ui/form';
 import { Toggle } from '@idriss-xyz/ui/toggle';
 import { Alert } from '@idriss-xyz/ui/alert';
-import { getAccessToken, usePrivy } from '@privy-io/react-auth';
+import { getAccessToken } from '@privy-io/react-auth';
 import { useCallback, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { isAddress, type Hex } from 'viem';
+import { isAddress } from 'viem';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import {
@@ -16,34 +16,17 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
-import { Link } from '@idriss-xyz/ui/link';
 
 import { editCreatorProfile } from '@/app/creators/utils';
 import { useAuth } from '@/app/creators/context/auth-context';
 import { testDonation } from '@/app/creators/constants';
 import { CopyInput } from '@/app/creators/components/copy-input/copy-input';
+import {
+  FormFieldWrapper,
+  SectionHeader,
+} from '@/app/creators/components/layout';
 
 import { File } from '../file-upload/file';
-
-const SectionHeader = ({
-  title,
-  subtitle,
-}: {
-  title: string;
-  subtitle?: string;
-}) => {
-  return (
-    <div className="flex flex-col gap-2">
-      <h5 className="pb-1 text-heading5">{title}</h5>
-      {subtitle && <p className="text-body4 text-neutral-600">{subtitle}</p>}
-      <hr />
-    </div>
-  );
-};
-
-const FormFieldWrapper = ({ children }: { children: React.ReactNode }) => {
-  return <div className="flex flex-col gap-6">{children}</div>;
-};
 
 const UpgradeBox: React.FC = () => {
   return (
@@ -93,8 +76,6 @@ type FormPayload = {
 
 // ts-unused-exports:disable-next-line
 export default function StreamAlerts() {
-  const { exportWallet, user } = usePrivy();
-  const address = user?.wallet?.address as Hex | undefined;
   const { creator } = useAuth();
   const [saveSuccess, setSaveSuccess] = useState<boolean | null>(null);
   const [testDonationSuccess, setTestDonationSuccess] = useState<
@@ -406,50 +387,6 @@ export default function StreamAlerts() {
                 }}
               />
             )}
-          </FormFieldWrapper>
-
-          <FormFieldWrapper>
-            <SectionHeader
-              title="Crypto Wallet"
-              subtitle="Access your wallet address and secret phrase"
-            />
-            <div className="flex flex-col gap-6 pt-4">
-              <div className="flex flex-col gap-2">
-                <span className="pb-1 text-label4">Wallet address</span>
-                <p className="max-w-prose text-label6 text-neutral-600">
-                  This is your public wallet address. It was automatically
-                  created for your account and linked to your donation page. We
-                  show it only for reference and you do not need it to use the
-                  app.
-                </p>
-                <CopyInput value={address ?? ''} />
-              </div>
-              <div className="flex flex-col gap-2">
-                <span className="pb-1 text-label4">Secret recovery phrase</span>
-                <p className="max-w-prose text-body4 text-neutral-600">
-                  This phrase gives full access to your wallet and funds. Never
-                  share it with anyone and store it only in a secure offline
-                  environment.{' '}
-                  <Link
-                    size="medium"
-                    href="https://privy-io.notion.site/Transferring-Your-App-Account-9dab9e16c6034a7ab1ff7fa479b02828"
-                    isExternal
-                    className="text-body5 lg:text-body5"
-                  >
-                    Learn more about secret recovery phrases
-                  </Link>
-                </p>
-                <Button
-                  size="medium"
-                  intent="negative"
-                  onClick={exportWallet}
-                  className="size-fit"
-                  suffixIconName="FileUp"
-                >
-                  EXPORT PHRASE
-                </Button>
-              </div>
-            </div>
           </FormFieldWrapper>
 
           {alertEnabled && (

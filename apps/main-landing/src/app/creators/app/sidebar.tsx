@@ -65,9 +65,11 @@ export function Sidebar() {
               </Link>
             </NavigationMenu.Item>
 
-            <NavigationMenu.Item className={getLinkClasses('')}>
+            <NavigationMenu.Item
+              className={getLinkClasses('/creators/app/profile')}
+            >
               <Link
-                href="" // TODO: Add link
+                href="/creators/app/profile"
                 className="flex w-full items-center rounded-lg hover:text-mint-600"
               >
                 <Icon size={20} name="User" className="mr-3 size-5" />
