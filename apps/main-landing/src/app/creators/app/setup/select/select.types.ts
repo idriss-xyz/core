@@ -1,3 +1,4 @@
+import { IconName } from '@idriss-xyz/ui/icon';
 import { ReactNode } from 'react';
 
 // TODO remove
@@ -18,6 +19,9 @@ export type SelectOptionProperties<T> = {
 export type SelectInputProperties = {
   className?: string;
   selected?: boolean;
+  placeholder?: string;
+  iconName?: IconName;
+  value: string;
 };
 
 export type SelectProperties<T> = {
@@ -25,6 +29,8 @@ export type SelectProperties<T> = {
   label?: string;
   className?: string;
   options: Option<T>[];
+  placeholder?: string;
+  iconName?: IconName;
   onChange: (value: T) => void;
   renderLabel?: () => ReactNode;
   optionsContainerClassName?: string;
