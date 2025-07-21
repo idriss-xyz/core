@@ -4,6 +4,8 @@ export { default as backgroundLines3 } from './background-lines-3.png';
 export { default as backgroundLines4 } from './background-lines-4.png';
 export { default as IDRISS_ICON_CIRCLE } from './idriss-icon-circle.png';
 export { default as DEFAULT_TRUMPET_SOUND } from './default-trumpet.mp3';
+export { default as DEFAULT_COIN_SOUND } from './default-coin.mp3';
+export { default as DEFAULT_CASH_REGISTER_SOUND } from './default-cash-register.mp3';
 export { default as TEST_TTS_MESSAGE_SOUND } from './test-tts-message.mp3';
 export { default as IDRISS_COIN } from './idriss-coin.png';
 export { default as IDRISS_SCENE_STREAM } from './idriss-scene-stream.png';
