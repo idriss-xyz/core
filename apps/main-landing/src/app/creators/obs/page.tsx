@@ -195,6 +195,8 @@ export default function Obs({ creatorName }: Properties) {
             },
             minimumAmounts,
             enableToggles,
+            alertSound,
+            creatorName,
           };
 
           addDonation(queuedDonation);
@@ -329,6 +331,11 @@ export default function Obs({ creatorName }: Properties) {
             continue;
           }
 
+          if (!creatorName) {
+            console.error('Creator name not available, skipping donation');
+            continue;
+          }
+
           addDonation({
             avatarUrl: avatarUrl,
             message: message ?? '',
@@ -342,7 +349,8 @@ export default function Obs({ creatorName }: Properties) {
             },
             minimumAmounts,
             enableToggles,
-            notificationSound: alertSound,
+            alertSound,
+            creatorName,
           });
         }
       } catch (error) {
@@ -355,6 +363,8 @@ export default function Obs({ creatorName }: Properties) {
     minimumAmounts,
     enableToggles,
     customBadWords,
+    alertSound,
+    creatorName,
   ]);
 
   useEffect(() => {
@@ -386,9 +396,6 @@ export default function Obs({ creatorName }: Properties) {
           key={currentDonationData.txnHash}
           minOverallVisibleDuration={DONATION_MIN_OVERALL_VISIBLE_DURATION}
           onFullyComplete={handleDonationFullyComplete}
-          minimumAmounts={minimumAmounts}
-          enableToggles={enableToggles}
-          notificationSound={currentDonationData.notificationSound}
         />
       )}
     </div>

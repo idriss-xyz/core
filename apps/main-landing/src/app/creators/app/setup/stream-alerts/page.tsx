@@ -29,21 +29,6 @@ import {
 import { File } from '../file-upload/file';
 import { Select } from '../select';
 
-// TODO: Extract to constants
-const alertSounds = [
-  { value: '1.mp3', label: 'Trumpet' },
-  { value: '2.mp3', label: 'Siren' },
-  { value: '3.mp3', label: 'Snap' },
-  { value: '4.mp3', label: 'Clapping' },
-  {
-    value: 'upload',
-    label: 'Custom',
-    renderLabel: () => {
-      return <span className="text-mint-500 underline">+ Upload your own</span>;
-    },
-  },
-];
-
 const UpgradeBox: React.FC = () => {
   return (
     <div className="relative flex flex-row items-center gap-4 rounded-lg bg-white/80 p-4">
@@ -94,6 +79,27 @@ type FormPayload = {
 // ts-unused-exports:disable-next-line
 export default function StreamAlerts() {
   const { creator } = useAuth();
+
+  // TODO: Extract to constants
+  const alertSounds = [
+    { value: 'DEFAULT_TRUMPET_SOUND', label: 'Classic trumpet' },
+    { value: 'DEFAULT_COIN_SOUND', label: 'Coin drop' },
+    { value: 'DEFAULT_CASH_REGISTER_SOUND', label: 'Cash register' },
+    {
+      value: 'upload',
+      label: creator?.alertSound === 'upload' ? 'Replace custom' : 'Custom',
+      renderLabel: () => {
+        return (
+          <span className="text-mint-500 underline">
+            {creator?.alertSound === 'upload'
+              ? 'Replace custom sound'
+              : '+ Upload your own'}
+          </span>
+        );
+      },
+    },
+  ];
+
   const [saveSuccess, setSaveSuccess] = useState<boolean | null>(null);
   const [testDonationSuccess, setTestDonationSuccess] = useState<
     boolean | null
@@ -109,7 +115,7 @@ export default function StreamAlerts() {
       ttsEnabled: creator?.ttsEnabled ?? false,
       sfxEnabled: creator?.sfxEnabled ?? false,
       customBadWords: creator?.customBadWords ?? [],
-      alertSound: creator?.alertSound ?? '1.mp3',
+      alertSound: creator?.alertSound ?? 'DEFAULT_TRUMPET_SOUND',
     },
     mode: 'onSubmit',
   });
@@ -189,7 +195,7 @@ export default function StreamAlerts() {
         ttsEnabled: creator.ttsEnabled ?? false,
         sfxEnabled: creator.sfxEnabled ?? false,
         customBadWords: creator.customBadWords ?? [],
-        alertSound: creator.alertSound ?? '1.mp3',
+        alertSound: creator.alertSound ?? 'DEFAULT_TRUMPET_SOUND',
       });
       // Set initial state of custom upload based on creator's alertSound
       setShowCustomUpload(creator.alertSound === 'upload');

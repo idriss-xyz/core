@@ -1,16 +1,27 @@
 'use client';
 
 import { useMemo, type CSSProperties } from 'react';
-import { ChainToken } from '@idriss-xyz/constants';
+import { ChainToken, CREATOR_API_URL } from '@idriss-xyz/constants';
 import { Badge } from '@idriss-xyz/ui/badge';
 import { roundToSignificantFiguresForCopilotTrading } from '@idriss-xyz/utils';
 import { formatUnits } from 'viem';
 import { classes } from '@idriss-xyz/ui/utils';
 
-import { IDRISS_ICON_CIRCLE, DEFAULT_TRUMPET_SOUND, DEFAULT_COIN_SOUND, DEFAULT_CASH_REGISTER_SOUND } from '@/assets';
+import {
+  IDRISS_ICON_CIRCLE,
+  DEFAULT_TRUMPET_SOUND,
+  DEFAULT_COIN_SOUND,
+  DEFAULT_CASH_REGISTER_SOUND,
+} from '@/assets';
 
 import { useDonationNotification } from '../hooks/use-donation-notification';
 import { MinimumAmounts, EnableToggles } from '../page';
+
+const soundMap = {
+  DEFAULT_TRUMPET_SOUND,
+  DEFAULT_COIN_SOUND,
+  DEFAULT_CASH_REGISTER_SOUND,
+};
 
 export type DonationNotificationProperties = {
   donor: string;
@@ -24,7 +35,8 @@ export type DonationNotificationProperties = {
   enableToggles: EnableToggles;
   customIcon?: string;
   style?: CSSProperties;
-  notificationSound?: string;
+  alertSound?: string;
+  creatorName?: string;
   token: {
     amount: bigint;
     details?: ChainToken;
@@ -46,13 +58,23 @@ export default function DonationNotification({
   style = {},
   bgColor = 'bg-white',
   customIcon = IDRISS_ICON_CIRCLE.src,
-  notificationSound = DEFAULT_TRUMPET_SOUND,
+  alertSound = 'DEFAULT_TRUMPET_SOUND',
+  creatorName,
   minOverallVisibleDuration,
   onFullyComplete,
 }: DonationNotificationProperties) {
+  const audioSource = useMemo(() => {
+    if (alertSound === 'upload' && creatorName) {
+      return `${CREATOR_API_URL}/creator-profile/audio/${creatorName}`;
+    }
+    return (
+      soundMap[alertSound as keyof typeof soundMap] || DEFAULT_TRUMPET_SOUND
+    );
+  }, [alertSound, creatorName]);
+
   const audio = useMemo(() => {
-    return new Audio(notificationSound);
-  }, [notificationSound]);
+    return new Audio(audioSource);
+  }, [audioSource]);
 
   const { showNotification } = useDonationNotification(
     audio,
