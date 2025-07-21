@@ -25,7 +25,12 @@ const formatFileSize = (bytes: number) => {
   return `${Math.round(bytes / 1024)} KB`;
 };
 
-export const File = () => {
+interface FileProperties {
+  show?: boolean;
+  onUpload?: (file: File) => void;
+}
+
+export const File = ({ show, onUpload }: FileProperties) => {
   const { getAccessToken } = usePrivy();
   const [file, setFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -107,6 +112,7 @@ export const File = () => {
       setIsUploading(false);
       const errorMessage = await response.text();
       setError(errorMessage);
+      return;
     }
 
     clearInterval(interval);
@@ -114,6 +120,7 @@ export const File = () => {
     setIsUploading(false);
     setFile(file);
     setError(null);
+    onUpload?.(file);
   };
 
   const resetUpload = () => {
@@ -123,6 +130,8 @@ export const File = () => {
     setError(null);
     if (fileInputReference.current) fileInputReference.current.value = '';
   };
+
+  if (show === false) return null;
 
   return (
     <div className="flex w-[360px] flex-col gap-6">

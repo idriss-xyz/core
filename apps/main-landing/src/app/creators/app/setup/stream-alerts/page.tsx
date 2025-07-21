@@ -41,9 +41,6 @@ export const alertSounds = [
     renderLabel: () => {
       return <span className="text-mint-500 underline">+ Upload your own</span>;
     },
-    onClick: () => {
-      console.log('upload'); // TODO: implement
-    },
   },
 ];
 
@@ -101,6 +98,7 @@ export default function StreamAlerts() {
   const [testDonationSuccess, setTestDonationSuccess] = useState<
     boolean | null
   >(null);
+  const [showCustomUpload, setShowCustomUpload] = useState(false);
 
   const formMethods = useForm<FormPayload>({
     defaultValues: {
@@ -115,11 +113,17 @@ export default function StreamAlerts() {
     },
     mode: 'onSubmit',
   });
-  const [alertEnabled, ttsEnabled, sfxEnabled] = formMethods.watch([
+  const [alertEnabled, ttsEnabled, sfxEnabled, alertSound] = formMethods.watch([
     'alertEnabled',
     'ttsEnabled',
     'sfxEnabled',
+    'alertSound',
   ]);
+
+  // Update showCustomUpload when alertSound changes
+  useEffect(() => {
+    setShowCustomUpload(alertSound === 'upload');
+  }, [alertSound]);
 
   const sendTestDonation = useCallback(() => {
     if (!creator?.primaryAddress || !isAddress(creator.primaryAddress)) {
@@ -164,6 +168,7 @@ export default function StreamAlerts() {
           ttsEnabled: data.ttsEnabled,
           sfxEnabled: data.sfxEnabled,
           customBadWords: data.customBadWords,
+          alertSound: data.alertSound,
         },
         authToken,
       );
@@ -184,9 +189,22 @@ export default function StreamAlerts() {
         ttsEnabled: creator.ttsEnabled ?? false,
         sfxEnabled: creator.sfxEnabled ?? false,
         customBadWords: creator.customBadWords ?? [],
+        alertSound: creator.alertSound ?? '1.mp3',
       });
+      // Set initial state of custom upload based on creator's alertSound
+      setShowCustomUpload(creator.alertSound === 'upload');
     }
   }, [creator, formMethods]);
+
+  const handleAlertSoundChange = (value: string) => {
+    formMethods.setValue('alertSound', value);
+    setShowCustomUpload(value === 'upload');
+  };
+
+  const fileUploadCallback = useCallback(() => {
+    setShowCustomUpload(false);
+    // TODO: Change dropdown label to Replace custom
+  }, [setShowCustomUpload]);
 
   return (
     <Card className="w-full">
@@ -272,14 +290,14 @@ export default function StreamAlerts() {
                         value={field.value?.toString()}
                         className="max-w-[360px]"
                         options={alertSounds}
-                        onChange={field.onChange}
+                        onChange={handleAlertSoundChange}
                         // TODO: Add error handling
                         // error={Boolean(fieldState.error?.message)}
                       />
                     );
                   }}
                 />
-                <File />
+                {showCustomUpload && <File onUpload={fileUploadCallback} />}
               </>
             )}
           </FormFieldWrapper>
