@@ -27,6 +27,15 @@ import {
 } from '@/app/creators/components/layout';
 
 import { File } from '../file-upload/file';
+import { Select } from '../select';
+
+// TODO: Extract to constants
+export const alertSounds = [
+  { value: '1.mp3', label: 'Trumpet' },
+  { value: '2.mp3', label: 'Siren' },
+  { value: '3.mp3', label: 'Snap' },
+  { value: '4.mp3', label: 'Clapping' },
+];
 
 const UpgradeBox: React.FC = () => {
   return (
@@ -72,6 +81,7 @@ type FormPayload = {
   ttsEnabled: boolean;
   sfxEnabled: boolean;
   customBadWords: string[];
+  alertSound: string;
 };
 
 // ts-unused-exports:disable-next-line
@@ -91,6 +101,7 @@ export default function StreamAlerts() {
       ttsEnabled: creator?.ttsEnabled ?? false,
       sfxEnabled: creator?.sfxEnabled ?? false,
       customBadWords: creator?.customBadWords ?? [],
+      alertSound: creator?.alertSound ?? '1.mp3',
     },
     mode: 'onSubmit',
   });
@@ -237,6 +248,23 @@ export default function StreamAlerts() {
                         error={Boolean(fieldState.error?.message)}
                         {...field}
                         value={field.value?.toString()}
+                      />
+                    );
+                  }}
+                />
+                <Controller
+                  name="alertSound"
+                  control={formMethods.control}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <Select
+                        label="Select a sound"
+                        value={field.value?.toString()}
+                        className="max-w-[360px]"
+                        options={alertSounds}
+                        onChange={field.onChange}
+                        // TODO: Add error handling
+                        // error={Boolean(fieldState.error?.message)}
                       />
                     );
                   }}

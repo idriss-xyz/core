@@ -50,6 +50,7 @@ export type CreatorProfileResponse = {
   tokens: string[];
   privyId: string;
   customBadWords: string[];
+  alertSound: string;
 };
 
 export const getCreatorProfile = async (
