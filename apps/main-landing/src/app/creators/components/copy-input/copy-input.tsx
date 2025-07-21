@@ -38,9 +38,9 @@ export function CopyInput({
         onClick={handleCopy}
       >
         {copied ? (
-          <Icon name="Check" size={15} />
+          <Icon name="Check" size={16} />
         ) : (
-          <Icon name={iconName ?? 'Copy'} size={15} />
+          <Icon name={iconName ?? 'Copy'} size={16} />
         )}
       </div>
     </div>

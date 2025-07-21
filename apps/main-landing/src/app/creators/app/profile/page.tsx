@@ -12,16 +12,25 @@ import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { IDRISS_SCENE_STREAM_4, backgroundLines2 } from '@/assets';
 import { useAuth } from '@/app/creators/context/auth-context';
 import { CopyInput } from '@/app/creators/components/copy-input/copy-input';
+import { EnterInput } from '@/app/creators/components/enter-input/enter-input';
 import {
   FormFieldWrapper,
   SectionHeader,
 } from '@/app/creators/components/layout';
+
+const handleEmailSave = (newEmail: string) => {
+    // TODO: Implement backend call to save email
+    console.log('Saving email:', newEmail);
+  };
 
 // ts-unused-exports:disable-next-line
 export default function ProfilePage() {
   const { creator } = useAuth();
   const { user, exportWallet } = usePrivy();
   const address = user?.wallet?.address as Hex | undefined;
+  const email = user?.email?.address ?? "test@gmail.com"
+
+
 
   const profileImageUrl = creator?.profilePictureUrl;
   const profileImageSize = 80;
@@ -85,10 +94,31 @@ export default function ProfilePage() {
       <Card>
         <FormFieldWrapper>
           <SectionHeader
+            title="Updates"
+            subtitle="We'll use it to send updates about your account or the app"
+          />
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-2">
+              <span className="pb-1 text-label4">Email</span>
+              <div className="relative flex w-fit flex-row items-center rounded-xl bg-white/80">
+                <EnterInput
+                  initialValue={email ?? ''}
+                  onSave={handleEmailSave}
+                  placeholder="Enter your email"
+                />
+              </div>
+            </div>
+          </div>
+        </FormFieldWrapper>
+      </Card>
+
+      <Card>
+        <FormFieldWrapper>
+          <SectionHeader
             title="Crypto wallet"
             subtitle="Access your wallet address and secret phrase"
           />
-          <div className="flex flex-col gap-6 pt-4">
+          <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-2">
               <span className="pb-1 text-label4">Wallet address</span>
               <p className="max-w-prose text-body5 text-neutral-600">
