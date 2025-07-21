@@ -84,6 +84,7 @@ export default function Obs({ creatorName }: Properties) {
     sfxEnabled: false,
   });
   const [customBadWords, setCustomBadWords] = useState<string[]>([]);
+  const [alertSound, setAlertSound] = useState<string>();
 
   const router = useRouter();
   const [isDisplayingDonation, setIsDisplayingDonation] = useState(false);
@@ -116,6 +117,7 @@ export default function Obs({ creatorName }: Properties) {
                 ttsEnabled: profile.ttsEnabled,
               });
               setCustomBadWords(profile.customBadWords);
+              setAlertSound(profile.alertSound);
             }
           })
           .catch((error) => {
@@ -340,6 +342,7 @@ export default function Obs({ creatorName }: Properties) {
             },
             minimumAmounts,
             enableToggles,
+            notificationSound: alertSound,
           });
         }
       } catch (error) {
@@ -385,6 +388,7 @@ export default function Obs({ creatorName }: Properties) {
           onFullyComplete={handleDonationFullyComplete}
           minimumAmounts={minimumAmounts}
           enableToggles={enableToggles}
+          notificationSound={currentDonationData.notificationSound}
         />
       )}
     </div>
