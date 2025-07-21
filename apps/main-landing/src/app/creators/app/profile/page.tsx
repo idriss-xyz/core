@@ -9,7 +9,7 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import Image from 'next/image';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 
-import { IDRISS_SCENE_STREAM_4 } from '@/assets';
+import { IDRISS_SCENE_STREAM_4, backgroundLines2 } from '@/assets';
 import { useAuth } from '@/app/creators/context/auth-context';
 import { CopyInput } from '@/app/creators/components/copy-input/copy-input';
 import {
@@ -24,37 +24,60 @@ export default function ProfilePage() {
   const address = user?.wallet?.address as Hex | undefined;
 
   const profileImageUrl = creator?.profilePictureUrl;
+  const profileImageSize = 80;
+  const bannerHeight = 150 - profileImageSize / 2;
 
   return (
     <div className="mb-4 flex size-full flex-col gap-4">
       <h1 className="col-span-3 text-heading3">Profile</h1>
 
       <Card>
-        <div className="relative">
-          <Image
-            src={IDRISS_SCENE_STREAM_4.src}
-            alt="Profile banner"
-            width={1200}
-            height={150}
-            className="h-[150px] w-full rounded-xl object-cover"
-          />
-          <div className="absolute left-1/2 top-[150px] -translate-x-1/2 -translate-y-1/2">
+        <div className="relative overflow-hidden rounded-2xl">
+          <div
+            className="relative overflow-hidden rounded-2xl bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)]"
+            style={{ height: `${bannerHeight}px` }}
+          >
+            <img
+              alt="lines"
+              src={backgroundLines2.src}
+              className="absolute z-0 w-full opacity-40"
+            />
+            <img
+              alt="idriss stream"
+              src={IDRISS_SCENE_STREAM_4.src}
+              className="absolute top-[-103px] z-0 w-full"
+            />
+          </div>
+          <div className="rounded-b-2xl bg-white px-4 pt-12 text-center">
+            <h2 className="text-heading4">{creator?.name}</h2>
+          </div>
+          <div
+            className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2"
+            style={{ top: `${bannerHeight}px` }}
+          >
             {profileImageUrl ? (
               <Image
                 src={profileImageUrl}
                 alt={creator?.name ?? 'Creator profile picture'}
-                width={80}
-                height={80}
-                className="size-20 rounded-full border-2 border-white bg-gray-200"
+                width={profileImageSize}
+                height={profileImageSize}
+                className="rounded-full border-2 border-white bg-gray-200"
+                style={{
+                  width: `${profileImageSize}px`,
+                  height: `${profileImageSize}px`,
+                }}
               />
             ) : (
-              <div className="flex size-20 items-center justify-center rounded-full border-4 border-white bg-gray-200">
-                <Icon name="Head" className="size-16 text-neutral-400" />
+              <div
+                className="flex items-center justify-center rounded-full border-4 border-white bg-gray-200"
+                style={{
+                  width: `${profileImageSize}px`,
+                  height: `${profileImageSize}px`,
+                }}
+              >
+                <Icon name="Head" className="text-neutral-400" size={80} />
               </div>
             )}
-          </div>
-          <div className="px-4 pt-12 text-center">
-            <h2 className="mt-4 text-heading4">{creator?.name}</h2>
           </div>
         </div>
       </Card>
