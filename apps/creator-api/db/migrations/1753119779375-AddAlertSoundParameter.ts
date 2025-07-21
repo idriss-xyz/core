@@ -16,9 +16,11 @@ export class AddAlertSoundParameter1753119779375 implements MigrationInterface {
           c.primary_address as "primaryAddress",
           c.name as name,
           c.display_name as "displayName",
+          c.email as email,
           c.profile_picture_url as "profilePictureUrl",
           c.donation_url as "donationUrl",
           c.obs_url as "obsUrl",
+          c.joined_at as "joinedAt",
           dp.minimum_alert_amount as "minimumAlertAmount",
           dp.minimum_tts_amount as "minimumTTSAmount",
           dp.minimum_sfx_amount as "minimumSfxAmount",
@@ -40,9 +42,11 @@ export class AddAlertSoundParameter1753119779375 implements MigrationInterface {
           c.primary_address,
           c.name,
           c.display_name,
+          c.email,
           c.profile_picture_url,
           c.donation_url,
           c.obs_url,
+          c.joined_at,
           dp.minimum_alert_amount,
           dp.minimum_tts_amount,
           dp.minimum_sfx_amount,
@@ -51,7 +55,7 @@ export class AddAlertSoundParameter1753119779375 implements MigrationInterface {
           dp.alert_enabled,
           dp.tts_enabled,
           dp.sfx_enabled,
-          dp.custom_bad_words,
+          dp.custom_bad_words;
       `);
   }
 
@@ -66,9 +70,11 @@ export class AddAlertSoundParameter1753119779375 implements MigrationInterface {
           c.primary_address as "primaryAddress",
           c.name as name,
           c.display_name as "displayName",
+          c.email as email,
           c.profile_picture_url as "profilePictureUrl",
           c.donation_url as "donationUrl",
           c.obs_url as "obsUrl",
+          c.joined_at as "joinedAt",
           dp.minimum_alert_amount as "minimumAlertAmount",
           dp.minimum_tts_amount as "minimumTTSAmount",
           dp.minimum_sfx_amount as "minimumSfxAmount",
@@ -89,9 +95,11 @@ export class AddAlertSoundParameter1753119779375 implements MigrationInterface {
           c.primary_address,
           c.name,
           c.display_name,
+          c.email,
           c.profile_picture_url,
           c.donation_url,
           c.obs_url,
+          c.joined_at,
           dp.minimum_alert_amount,
           dp.minimum_tts_amount,
           dp.minimum_sfx_amount,
@@ -99,7 +107,7 @@ export class AddAlertSoundParameter1753119779375 implements MigrationInterface {
           dp.alert_enabled,
           dp.tts_enabled,
           dp.sfx_enabled,
-          dp.custom_bad_words,
+          dp.custom_bad_words;
       `);
   }
 }
