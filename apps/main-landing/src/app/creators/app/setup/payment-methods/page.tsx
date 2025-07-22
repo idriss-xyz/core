@@ -238,7 +238,11 @@ export default function PaymentMethods() {
               label="Crypto"
               sublabel="Get paid in Ethereum, USDC, or other popular assets. Instant, borderless, and without middlemen"
               value={toggleCrypto}
-              onChange={() => {return setToggleCrypto((previous) => {return !previous})}}
+              onChange={() => {
+                return setToggleCrypto((previous) => {
+                  return !previous;
+                });
+              }}
               className="max-w-screen-xs"
             />
             {toggleCrypto && (
