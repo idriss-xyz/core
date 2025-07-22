@@ -36,6 +36,7 @@ type Properties = {
   updateCurrentContent?: (content: DonateContentValues) => void;
   activeFilter?: string;
   onFilterChange?: (filter: string) => void;
+  title?: string;
 };
 
 const baseClassName =
@@ -111,6 +112,7 @@ export const Leaderboard = ({
   updateCurrentContent,
   activeFilter,
   onFilterChange,
+  title,
 }: Properties) => {
   const isTwitchExtension = !!variant;
   const isTwitchPanel = variant === 'panel';
@@ -181,7 +183,7 @@ export const Leaderboard = ({
         <span className="absolute left-0 top-0 size-full bg-black/20" />
 
         <h1 className="relative z-1 mx-12 mb-4 mt-12 text-center text-heading4 uppercase text-white">
-          Top donors
+          {title ?? 'Top donors'}
         </h1>
         {isCreatorsDashboard && (
           <div className="relative mx-auto flex w-[290px] gap-1 font-medium">

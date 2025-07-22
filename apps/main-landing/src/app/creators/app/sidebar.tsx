@@ -9,7 +9,8 @@ export function Sidebar() {
   const pathname = usePathname();
 
   const isActive = (path: string) => {
-    return pathname === path;
+    if (!path) return false;
+    return pathname.startsWith(path);
   };
 
   const getLinkClasses = (path: string) => {
@@ -65,9 +66,11 @@ export function Sidebar() {
               </Link>
             </NavigationMenu.Item>
 
-            <NavigationMenu.Item className={getLinkClasses('')}>
+            <NavigationMenu.Item
+              className={getLinkClasses('/creators/app/ranking')}
+            >
               <Link
-                href="" // TODO: Add link
+                href="/creators/app/ranking"
                 className="flex w-full items-center rounded-lg hover:text-mint-600"
               >
                 <Icon size={20} name="Trophy" className="mr-3 size-5" />

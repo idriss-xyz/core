@@ -49,6 +49,7 @@ import {
   GalleryVertical,
   RefreshCw,
   FileUp,
+  Gamepad2,
 } from 'lucide-react';
 
 import * as customIcons from './custom';
@@ -104,5 +105,6 @@ export const ICON = {
   GalleryVertical,
   RefreshCw,
   FileUp,
+  Gamepad2,
   ...customIcons,
 };

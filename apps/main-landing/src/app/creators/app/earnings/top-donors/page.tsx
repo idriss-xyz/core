@@ -8,6 +8,7 @@ import {
 import { CREATOR_APP_TEST_ADDRESS } from '@idriss-xyz/constants';
 
 import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history';
+import { periodMap } from '../../ranking/commands/use-get-leaderboard';
 import { Leaderboard } from '@/app/creators/donate/components/leaderboard';
 import { IDRISS_SCENE_STREAM_LIGHT } from '@/assets';
 
@@ -35,12 +36,7 @@ export default function TopDonors() {
       }),
     );
 
-    const periodMap = {
-      '30 days': '30d',
-      '7 days': '7d',
-    };
-
-    const period = periodMap[activeFilter as keyof typeof periodMap];
+    const period = periodMap[activeFilter] as '7d' | '30d';
     const filteredDonations = getFilteredDonationsByPeriod(
       allDonations,
       period,
@@ -67,6 +63,7 @@ export default function TopDonors() {
           data: CREATOR_APP_TEST_ADDRESS, // TODO: Replace with user address
           isFetching: false,
         }}
+        title="Top Donors"
         variant="creatorsDashboard"
         className="container overflow-hidden px-0 shadow-lg"
         activeFilter={activeFilter}
