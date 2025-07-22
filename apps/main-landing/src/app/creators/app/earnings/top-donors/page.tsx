@@ -8,9 +8,10 @@ import {
 import { CREATOR_APP_TEST_ADDRESS } from '@idriss-xyz/constants';
 
 import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history';
-import { periodMap } from '../../ranking/commands/use-get-leaderboard';
 import { Leaderboard } from '@/app/creators/donate/components/leaderboard';
 import { IDRISS_SCENE_STREAM_LIGHT } from '@/assets';
+
+import { periodMap } from '../../ranking/commands/use-get-leaderboard';
 
 // ts-unused-exports:disable-next-line
 export default function TopDonors() {
@@ -18,10 +19,9 @@ export default function TopDonors() {
   const tipHistoryQuery = useGetTipHistory({
     address: CREATOR_APP_TEST_ADDRESS, // TODO: Replace with user address
   });
-  const allDonations = useMemo(
-    () => {return tipHistoryQuery.data?.donations ?? []},
-    [tipHistoryQuery.data?.donations],
-  );
+  const allDonations = useMemo(() => {
+    return tipHistoryQuery.data?.donations ?? [];
+  }, [tipHistoryQuery.data?.donations]);
 
   const leaderboard = useMemo(() => {
     const allTimeLeaderboard = calculateDonationLeaderboard(allDonations);

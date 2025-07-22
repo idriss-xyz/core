@@ -165,7 +165,7 @@ export async function calculateGlobalStreamerLeaderboard(
         avatarUrl: donations[0].toUser.avatarUrl!,
         totalAmount,
         donationCount: filteredDonations.length,
-        creatorSince: firstDonationTimestamp,
+        donorSince: firstDonationTimestamp,
       };
     })
     .filter(Boolean) as LeaderboardStats[];

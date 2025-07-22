@@ -1,14 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { CREATOR_API_URL, LeaderboardStats } from '@idriss-xyz/constants';
 
-export type LeaderboardPeriod = '7d' | '30d' | 'all';
+type LeaderboardPeriod = '7d' | '30d' | 'all';
 
 export const periodMap: Record<string, LeaderboardPeriod> = {
   'All time': 'all',
   '30 days': '30d',
   '7 days': '7d',
 };
-export type LeaderboardType = 'creator' | 'donor';
+type LeaderboardType = 'creator' | 'donor';
 
 type Payload = {
   period: LeaderboardPeriod;
@@ -27,7 +27,7 @@ const getLeaderboard = async (
     throw new Error(`Failed to fetch ${payload.type} leaderboard`);
   }
 
-  const data = await response.json();
+  const data: { leaderboard: LeaderboardStats[] } = await response.json();
   return data.leaderboard;
 };
 

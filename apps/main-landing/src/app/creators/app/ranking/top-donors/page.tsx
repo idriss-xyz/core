@@ -4,11 +4,7 @@ import { CREATOR_APP_TEST_ADDRESS } from '@idriss-xyz/constants';
 
 import { Leaderboard } from '@/app/creators/donate/components/leaderboard';
 
-import {
-  useGetLeaderboard,
-  type LeaderboardPeriod,
-  periodMap,
-} from '../commands/use-get-leaderboard';
+import { useGetLeaderboard, periodMap } from '../commands/use-get-leaderboard';
 
 // ts-unused-exports:disable-next-line
 export default function TopDonors() {
@@ -16,7 +12,7 @@ export default function TopDonors() {
 
   const leaderboardQuery = useGetLeaderboard({
     type: 'donor',
-    period: periodMap[activeFilter] as LeaderboardPeriod,
+    period: periodMap[activeFilter]!,
   });
 
   return (
