@@ -61,29 +61,23 @@ export const Select = <T,>({
 
         <DropdownMenu.Portal container={portal}>
           <DropdownMenu.Content sideOffset={2} asChild>
-            <SelectOptionContainer>
+            <SelectOptionContainer className='py-2'>
               <ScrollArea
                 className={classes(
-                  'max-h-64 w-[var(--radix-popper-anchor-width)] overflow-y-auto text-black',
+                  'max-h-64 w-[var(--radix-popper-anchor-width)] pl-2 pr-4 gap-1 overflow-y-auto text-black',
                   optionsContainerClassName,
                 )}
               >
-                {options.map((option, index) => {
+                {options.map((option) => {
                   return (
                     <DropdownMenu.Item
                       key={option.label}
-                      className="outline-none"
+                      className="outline-none rounded-lg py-1 px-3 data-[highlighted]:bg-black/10 hover:bg-black/10 focus:bg-black/50"
                       onSelect={() => {
                         onChange(option.value);
                       }}
                     >
-                      <SelectOption
-                        option={option}
-                        className={classes(
-                          index === 0 && 'rounded-t-md',
-                          index === options.length - 1 && 'rounded-b-md',
-                        )}
-                      />
+                      <SelectOption option={option} />
                     </DropdownMenu.Item>
                   );
                 })}
