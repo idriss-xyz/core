@@ -2,7 +2,6 @@
 
 import { CREATOR_API_URL } from '@idriss-xyz/constants';
 import { Button } from '@idriss-xyz/ui/button';
-import { Divider } from '@idriss-xyz/ui/divider';
 import { Input } from '@idriss-xyz/ui/input';
 import { Modal } from '@idriss-xyz/ui/modal';
 import Image from 'next/image';
@@ -106,7 +105,6 @@ export const PasswordModal = ({ isOpened, onClose, onSuccess }: Properties) => {
             </span>
           )}
         </div>
-        <Divider />
       </form>
     </Modal>
   );

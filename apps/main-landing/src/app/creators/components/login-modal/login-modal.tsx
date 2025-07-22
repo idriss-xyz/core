@@ -6,7 +6,6 @@ import {
 import { Button } from '@idriss-xyz/ui/button';
 import { ExternalLink } from '@idriss-xyz/ui/external-link';
 import { Modal } from '@idriss-xyz/ui/modal';
-import { Divider } from '@idriss-xyz/ui/divider';
 import Image from 'next/image';
 
 import { IDRISS_TOROID } from '@/assets';
@@ -73,7 +72,6 @@ export const LoginModal = ({ isOpened, onClose }: Properties) => {
           </ExternalLink>
           .
         </span>
-        <Divider />
       </div>
     </Modal>
   );

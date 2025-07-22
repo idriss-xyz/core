@@ -4,7 +4,6 @@ import {
   ChainToken,
   CREATOR_CHAIN,
   DEFAULT_ALLOWED_CHAINS_IDS,
-  DonationToken,
   TOKEN,
   TokenSymbol,
 } from '@idriss-xyz/constants';
@@ -28,6 +27,7 @@ import {
   FormFieldWrapper,
   SectionHeader,
 } from '@/app/creators/components/layout';
+
 import { TokenLogo } from '../../earnings/stats/token-logo';
 
 type FormPayload = {
@@ -79,7 +79,10 @@ const TokenIconsRow = () => {
     <div className="-mt-4 flex flex-row items-center gap-2 px-12">
       {tokens.map((token) => {
         return (
-          <div className="relative size-6 rounded-full bg-gray-200">
+          <div
+            key={token.symbol}
+            className="relative size-6 rounded-full bg-gray-200"
+          >
             <TokenLogo symbol={token.symbol ?? ''} imageUrl={token.logo} />
           </div>
         );
