@@ -77,12 +77,9 @@ const TokenIconsRow = () => {
   ];
   return (
     <div className="-mt-4 flex flex-row items-center gap-2 px-12">
-      {tokens.map((token) => {
+      {tokens.map((token, index) => {
         return (
-          <div
-            key={token.symbol}
-            className="relative size-6 rounded-full bg-gray-200"
-          >
+          <div className="relative size-6 rounded-full bg-gray-200" key={index}>
             <TokenLogo symbol={token.symbol ?? ''} imageUrl={token.logo} />
           </div>
         );
@@ -333,15 +330,15 @@ export default function PaymentMethods() {
                 />
               </div>
             )}
+            <Button
+              size="medium"
+              intent="primary"
+              className="mt-4"
+              onClick={formMethods.handleSubmit(onSubmit)}
+            >
+              SAVE SETTINGS
+            </Button>
           </FormFieldWrapper>
-          <Button
-            size="medium"
-            intent="primary"
-            className="mt-4"
-            onClick={formMethods.handleSubmit(onSubmit)}
-          >
-            SAVE SETTINGS
-          </Button>
         </Form>
       </div>
 
