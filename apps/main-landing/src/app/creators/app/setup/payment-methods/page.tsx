@@ -64,17 +64,24 @@ const TOKENS_ORDER: Record<TokenSymbol, number> = {
   PENGU: 12,
 };
 
-const TokenIconsRow = () => {
-  const tokens = [
-    TOKEN.ETHEREUM,
-    TOKEN.USDC,
-    TOKEN.IDRISS,
-    TOKEN.RONIN,
-    TOKEN.ECHELON_PRIME,
-    TOKEN.PENGU,
-    TOKEN.YGG,
-    TOKEN.PDT,
-  ];
+const iconsForCryptoPaymentMethod = [
+  TOKEN.ETHEREUM,
+  TOKEN.USDC,
+  TOKEN.IDRISS,
+  TOKEN.RONIN,
+  TOKEN.ECHELON_PRIME,
+  TOKEN.PENGU,
+  TOKEN.YGG,
+  TOKEN.PDT,
+];
+
+const iconsForCardPaymentMethod = [TOKEN.AXIE, TOKEN.AAVEGOTCHI]; // TODO: Update for fiat icons
+
+const IconsRow = ({
+  tokens,
+}: {
+  tokens: { symbol?: string; logo: string }[];
+}) => {
   return (
     <div className="-mt-4 flex flex-row items-center gap-2 px-12">
       {tokens.map((token, index) => {
@@ -281,7 +288,7 @@ export default function PaymentMethods() {
               }}
               className="max-w-screen-xs"
             />
-            <TokenIconsRow />
+            <IconsRow tokens={iconsForCryptoPaymentMethod} />
             {toggleCrypto && (
               <div>
                 <Controller
@@ -359,6 +366,7 @@ export default function PaymentMethods() {
                 Coming soon!
               </span>
             </div>
+            <IconsRow tokens={iconsForCardPaymentMethod} />
           </FormFieldWrapper>
         </Form>
       </div>
