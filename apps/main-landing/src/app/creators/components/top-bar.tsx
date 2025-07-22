@@ -76,7 +76,8 @@ export const TopBar = ({
             height={24}
             className={classes(
               'min-w-20',
-              isSticky && 'min-w-[unset] max-w-[75px] xs:min-w-20 xs:max-w-none',
+              isSticky &&
+                'min-w-[unset] max-w-[75px] xs:min-w-20 xs:max-w-none',
             )}
             src="/idriss-creators-dark-logo.svg"
           />

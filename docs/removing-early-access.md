@@ -151,7 +151,7 @@ In `apps/main-landing/src/app/creators/components/hero-section.tsx`, remove the 
  
  import { VideoPlayer } from './hero-section/video-player';
  import { LoginModal } from './login-modal';
--import { PasswordModal } from './password-modal/password-modal';
+-import { PasswordModal } from './password-modal';
  
  type Properties = {
    heroButtonReference?: RefObject<HTMLButtonElement>;

@@ -11,7 +11,7 @@ import { useStartEarningNavigation } from '../utils';
 
 import { VideoPlayer } from './hero-section/video-player';
 import { LoginModal } from './login-modal';
-import { PasswordModal } from './password-modal/password-modal';
+import { PasswordModal } from './password-modal';
 
 type Properties = {
   heroButtonReference?: RefObject<HTMLButtonElement>;
