@@ -17,6 +17,7 @@ import {
   TokenSymbol,
 } from '@idriss-xyz/constants';
 import { Alert } from '@idriss-xyz/ui/alert';
+import { Button } from '@idriss-xyz/ui/button';
 import { Card } from '@idriss-xyz/ui/card';
 import { Form } from '@idriss-xyz/ui/form';
 import { Multiselect, MultiselectOption } from '@idriss-xyz/ui/multiselect';
@@ -237,6 +238,7 @@ export default function PaymentMethods() {
               sublabel="Get paid in Ethereum, USDC, or other popular assets. Instant, borderless, and without middlemen"
               value={toggleCrypto}
               onChange={() => setToggleCrypto((prev) => !prev)}
+              className="max-w-[400px]"
             />
             {toggleCrypto && (
               <div>
@@ -251,7 +253,7 @@ export default function PaymentMethods() {
                       <Multiselect<number>
                         label="Network"
                         value={field.value}
-                        inputClassName="mt-6"
+                        inputClassName="max-w-[360px]"
                         options={allowedChainOptions}
                         helperText={fieldState.error?.message}
                         error={Boolean(fieldState.error?.message)}
@@ -276,7 +278,7 @@ export default function PaymentMethods() {
                         label="Token"
                         value={field.value}
                         onChange={field.onChange}
-                        inputClassName="mt-6"
+                        inputClassName="mt-6 max-w-[360px]"
                         options={uniqueTokenOptions}
                         helperText={fieldState.error?.message}
                         error={Boolean(fieldState.error?.message)}
@@ -287,6 +289,14 @@ export default function PaymentMethods() {
               </div>
             )}
           </FormFieldWrapper>
+          <Button
+            size="medium"
+            intent="primary"
+            className="mt-4"
+            onClick={formMethods.handleSubmit(onSubmit)}
+          >
+            SAVE SETTINGS
+          </Button>
         </Form>
       </div>
       {saveSuccess && (
