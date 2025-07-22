@@ -1,9 +1,11 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { useMemo } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { usePortal } from '@idriss-xyz/ui/providers/with-portal';
 import { classes } from '@idriss-xyz/ui/utils';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
+import { IconButton } from '@idriss-xyz/ui/icon-button';
 
+import { AudioVisualizer } from '@/app/creators/components/hero-section/audio-visualizer';
 import { SelectInput } from '@/app/creators/app/setup/select/select-input';
 
 import { SelectProperties } from './select.types';
@@ -19,9 +21,29 @@ export const Select = <T,>({
   renderLabel,
   placeholder,
   iconName,
+  onIconClick,
+  isAudioPlaying,
   optionsContainerClassName,
-}: SelectProperties<T>) => {
+}: SelectProperties<T> & {
+  onIconClick?: () => void;
+  isAudioPlaying?: boolean;
+}) => {
   const { portal } = usePortal();
+  const anchorReference = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState(0);
+
+  useLayoutEffect(() => {
+    if (!anchorReference.current) return;
+
+    const resizeObserver = new ResizeObserver(() => {
+      setWidth(anchorReference.current?.offsetWidth ?? 0);
+    });
+
+    resizeObserver.observe(anchorReference.current);
+    return () => {
+      return resizeObserver.disconnect();
+    };
+  }, []);
 
   const pickedOption = useMemo(() => {
     return (
@@ -44,25 +66,54 @@ export const Select = <T,>({
       ) : null}
 
       <DropdownMenu.Root modal={false}>
-        <DropdownMenu.Trigger asChild>
-          <button className="flex h-[44px] w-full">
-            <SelectOptionContainer className="overflow-hidden border border-neutral-200 bg-white text-neutralGreen-900 shadow-input focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+        <div
+          ref={anchorReference}
+          className="flex h-[44px] w-full overflow-hidden rounded-lg border border-neutral-200 bg-white text-neutralGreen-900 shadow-input"
+        >
+          <DropdownMenu.Trigger asChild>
+            <button className="flex-1 overflow-hidden px-3 hover:bg-black/10 focus:outline-none">
               <SelectInput
                 placeholder={placeholder}
                 value={pickedOption.label}
                 selected={!!pickedOption}
-                iconName={iconName}
               />
-            </SelectOptionContainer>
-          </button>
-        </DropdownMenu.Trigger>
+            </button>
+          </DropdownMenu.Trigger>
+          <div className="flex h-full w-[40px] items-center border-l border-l-gray-200">
+            {isAudioPlaying ? (
+              <div className="flex size-full items-center justify-center">
+                <AudioVisualizer
+                  isMuted={false}
+                  disableHover
+                  className="!size-4"
+                />
+              </div>
+            ) : (
+              <IconButton
+                className="!h-full !w-full"
+                iconName={iconName ?? 'PlayCircle'}
+                size="small"
+                intent="tertiary"
+                onClick={(clickEvent) => {
+                  clickEvent.stopPropagation();
+                  onIconClick?.();
+                }}
+              />
+            )}
+          </div>
+        </div>
 
         <DropdownMenu.Portal container={portal}>
-          <DropdownMenu.Content sideOffset={2} asChild>
+          <DropdownMenu.Content
+            sideOffset={2}
+            asChild
+            style={{ width }}
+            align="start"
+          >
             <SelectOptionContainer className="py-2">
               <ScrollArea
                 className={classes(
-                  'max-h-64 w-[var(--radix-popper-anchor-width)] gap-1 overflow-y-auto pl-2 pr-4 text-black',
+                  'max-h-64 gap-1 overflow-y-auto pl-2 pr-4 text-black',
                   optionsContainerClassName,
                 )}
               >
@@ -70,7 +121,7 @@ export const Select = <T,>({
                   return (
                     <DropdownMenu.Item
                       key={option.label}
-                      className="rounded-lg px-3 py-1 outline-none hover:bg-black/10 focus:bg-black/50 data-[highlighted]:bg-black/10"
+                      className="rounded-lg px-3 py-1 outline-none data-[highlighted]:bg-black/10"
                       onSelect={() => {
                         onChange(option.value);
                       }}

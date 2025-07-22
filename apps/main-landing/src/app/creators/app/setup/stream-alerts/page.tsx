@@ -1,5 +1,5 @@
 'use client';
-import { CREATORS_LINK } from '@idriss-xyz/constants';
+import { CREATORS_LINK, CREATOR_API_URL } from '@idriss-xyz/constants';
 import { Button } from '@idriss-xyz/ui/button';
 import { Card } from '@idriss-xyz/ui/card';
 import { Form } from '@idriss-xyz/ui/form';
@@ -17,6 +17,11 @@ import {
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
 
+import {
+  DEFAULT_CASH_REGISTER_SOUND,
+  DEFAULT_COIN_SOUND,
+  DEFAULT_TRUMPET_SOUND,
+} from '@/assets';
 import { editCreatorProfile } from '@/app/creators/utils';
 import { useAuth } from '@/app/creators/context/auth-context';
 import { testDonation } from '@/app/creators/constants';
@@ -104,6 +109,7 @@ export default function StreamAlerts() {
     boolean | null
   >(null);
   const [showCustomUpload, setShowCustomUpload] = useState(false);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
 
   const formMethods = useForm<FormPayload>({
     defaultValues: {
@@ -296,6 +302,41 @@ export default function StreamAlerts() {
                         className="max-w-[360px]"
                         options={alertSounds}
                         onChange={handleAlertSoundChange}
+                        iconName="PlayCircle"
+                        isAudioPlaying={isAudioPlaying}
+                        onIconClick={() => {
+                          if (isAudioPlaying) return;
+
+                          let soundFile: string | undefined;
+
+                          if (field.value === 'upload') {
+                            if (creator?.name) {
+                              soundFile = `${CREATOR_API_URL}/creator-profile/audio/${creator.name}`;
+                            }
+                          } else {
+                            const soundMap: Record<string, string> = {
+                              DEFAULT_TRUMPET_SOUND,
+                              DEFAULT_COIN_SOUND,
+                              DEFAULT_CASH_REGISTER_SOUND,
+                            };
+                            soundFile = soundMap[field.value];
+                          }
+
+                          if (soundFile) {
+                            const audio = new Audio(soundFile);
+                            audio.addEventListener('play', () => {
+                              return setIsAudioPlaying(true);
+                            });
+                            audio.addEventListener('ended', () => {
+                              return setIsAudioPlaying(false);
+                            });
+                            audio.addEventListener('error', () => {
+                              setIsAudioPlaying(false);
+                              console.error('Error playing sound');
+                            });
+                            void audio.play();
+                          }
+                        }}
                         // TODO: Add error handling
                         // error={Boolean(fieldState.error?.message)}
                       />

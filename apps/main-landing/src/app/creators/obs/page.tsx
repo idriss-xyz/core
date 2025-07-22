@@ -227,8 +227,7 @@ export default function Obs({ creatorName }: Properties) {
     return () => {
       window.removeEventListener('storage', handleStorageChange);
     };
-  }, [addDonation, minimumAmounts, enableToggles]);
-
+  }, [addDonation, minimumAmounts, enableToggles, alertSound, creatorName]);
   const fetchTipMessageLogs = useCallback(async () => {
     if (!address?.data) return;
 
