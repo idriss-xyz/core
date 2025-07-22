@@ -68,6 +68,10 @@ export const siteMap: SiteMapItem[] = [
         name: 'Donation panel',
         path: '/setup/donation-panel',
       },
+      {
+        name: 'Payment methods',
+        path: 'setup/payment-methods',
+      }
     ],
   },
   {

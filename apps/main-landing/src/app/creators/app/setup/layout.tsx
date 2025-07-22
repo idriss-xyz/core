@@ -32,6 +32,12 @@ export default function SetupLayout({
       iconName: 'GalleryVertical',
       isActive: pathname === '/creators/app/setup/donation-panel',
     },
+    {
+      name: 'Payment methods',
+      href: '/creators/app/setup/payment-methods',
+      iconName: 'HandCoins',
+      isActive: pathname === '/creators/app/setup/payment-methods',
+    },
   ];
 
   const renderLink = ({
