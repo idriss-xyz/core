@@ -2,6 +2,33 @@ import { Hex } from 'viem';
 
 import { DonationData, LeaderboardStats } from '../../constants/src';
 
+export const getFilteredDonationsByPeriod = (
+  donations: DonationData[],
+  period?: string,
+) => {
+  if (!period || period === 'all') {
+    return donations;
+  }
+
+  const now = Date.now();
+  let startTime: number;
+
+  if (period === '30d') {
+    startTime = now - 30 * 24 * 60 * 60 * 1000;
+  } else if (period === '7d') {
+    startTime = now - 7 * 24 * 60 * 60 * 1000;
+  } else if (/^\d+$/.test(period)) {
+    const days = Number.parseInt(period, 10);
+    startTime = now - days * 24 * 60 * 60 * 1000;
+  } else {
+    return donations;
+  }
+
+  return donations.filter((donation) => {
+    return donation.timestamp >= startTime;
+  });
+};
+
 export function calculateDonationLeaderboard(
   donations: DonationData[],
 ): LeaderboardStats[] {

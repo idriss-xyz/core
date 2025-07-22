@@ -6,7 +6,10 @@ const router = Router();
 
 router.get('/', async (req: Request, res: Response) => {
   try {
-    const leaderboard = await calculateGlobalStreamerLeaderboard();
+    const { period } = req.query;
+    const leaderboard = await calculateGlobalStreamerLeaderboard(
+      period as string,
+    );
 
     res.json({
       leaderboard,

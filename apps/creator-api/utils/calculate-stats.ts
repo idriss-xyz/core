@@ -15,6 +15,7 @@ import {
   DonationToken,
   LeaderboardStats,
 } from '@idriss-xyz/constants';
+import { getFilteredDonationsByPeriod } from '@idriss-xyz/utils';
 
 export function calculateStatsForDonorAddress(
   donations: DonationData[],
@@ -87,16 +88,26 @@ export function calculateStatsForDonorAddress(
   };
 }
 
-export async function calculateGlobalDonorLeaderboard(): Promise<
-  LeaderboardStats[]
-> {
+export async function calculateGlobalDonorLeaderboard(
+  period?: string,
+): Promise<LeaderboardStats[]> {
   const groupedDonations = await fetchDonations();
 
-  const leaderboard = Object.entries(groupedDonations).map(
-    ([address, donations]) => {
+  const leaderboard = Object.entries(groupedDonations)
+    .map(([address, donations]) => {
       const hexAddress = address as Hex;
+      const firstDonationTimestamp = Math.min(
+        ...donations.map((d) => d.timestamp),
+      );
+
+      const filteredDonations = getFilteredDonationsByPeriod(donations, period);
+
+      if (filteredDonations.length === 0) {
+        return null;
+      }
+
       let totalAmount = 0;
-      for (const donation of donations) {
+      for (const donation of filteredDonations) {
         totalAmount += donation.tradeValue;
       }
       return {
@@ -104,18 +115,20 @@ export async function calculateGlobalDonorLeaderboard(): Promise<
         displayName: donations[0].fromUser.displayName!,
         avatarUrl: donations[0].fromUser.avatarUrl!,
         totalAmount,
+        donationCount: filteredDonations.length,
+        donorSince: firstDonationTimestamp,
       };
-    },
-  );
+    })
+    .filter(Boolean) as LeaderboardStats[];
 
   leaderboard.sort((a, b) => b.totalAmount - a.totalAmount);
 
   return leaderboard;
 }
 
-export async function calculateGlobalStreamerLeaderboard(): Promise<
-  LeaderboardStats[]
-> {
+export async function calculateGlobalStreamerLeaderboard(
+  period?: string,
+): Promise<LeaderboardStats[]> {
   const groupedDonations = await fetchDonationRecipients();
 
   const leaderboard = Object.entries(groupedDonations)
@@ -132,8 +145,18 @@ export async function calculateGlobalStreamerLeaderboard(): Promise<
     })
     .map(([address, donations]) => {
       const hexAddress = address as Hex;
+      const firstDonationTimestamp = Math.min(
+        ...donations.map((d) => d.timestamp),
+      );
+
+      const filteredDonations = getFilteredDonationsByPeriod(donations, period);
+
+      if (filteredDonations.length === 0) {
+        return null;
+      }
+
       let totalAmount = 0;
-      for (const donation of donations) {
+      for (const donation of filteredDonations) {
         totalAmount += donation.tradeValue;
       }
       return {
@@ -141,8 +164,11 @@ export async function calculateGlobalStreamerLeaderboard(): Promise<
         displayName: donations[0].toUser.displayName!,
         avatarUrl: donations[0].toUser.avatarUrl!,
         totalAmount,
+        donationCount: filteredDonations.length,
+        creatorSince: firstDonationTimestamp,
       };
-    });
+    })
+    .filter(Boolean) as LeaderboardStats[];
 
   leaderboard.sort((a, b) => b.totalAmount - a.totalAmount);
 

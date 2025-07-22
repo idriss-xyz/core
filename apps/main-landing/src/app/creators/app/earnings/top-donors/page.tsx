@@ -1,7 +1,10 @@
 'use client';
 import { useMemo, useState } from 'react';
 import { Button } from '@idriss-xyz/ui/button';
-import { calculateDonationLeaderboard } from '@idriss-xyz/utils';
+import {
+  calculateDonationLeaderboard,
+  getFilteredDonationsByPeriod,
+} from '@idriss-xyz/utils';
 import { CREATOR_APP_TEST_ADDRESS } from '@idriss-xyz/constants';
 
 import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history';
@@ -14,25 +17,43 @@ export default function TopDonors() {
   const tipHistoryQuery = useGetTipHistory({
     address: CREATOR_APP_TEST_ADDRESS, // TODO: Replace with user address
   });
-  const allDonations = tipHistoryQuery.data?.donations ?? [];
+  const allDonations = useMemo(
+    () => {return tipHistoryQuery.data?.donations ?? []},
+    [tipHistoryQuery.data?.donations],
+  );
 
   const leaderboard = useMemo(() => {
-    const now = Date.now();
-    const thirtyDaysAgo = now - 30 * 24 * 60 * 60 * 1000;
-    const sevenDaysAgo = now - 7 * 24 * 60 * 60 * 1000;
+    const allTimeLeaderboard = calculateDonationLeaderboard(allDonations);
 
-    const filteredDonations = allDonations.filter((donation) => {
-      // Assuming donation.timestamp is in milliseconds
-      if (activeFilter === '30 days') {
-        return donation.timestamp >= thirtyDaysAgo;
-      }
-      if (activeFilter === '7 days') {
-        return donation.timestamp >= sevenDaysAgo;
-      }
-      return true; // 'All time'
+    if (activeFilter === 'All time') {
+      return allTimeLeaderboard;
+    }
+
+    const donorSinceMap = new Map(
+      allTimeLeaderboard.map((item) => {
+        return [item.address, item.donorSince];
+      }),
+    );
+
+    const periodMap = {
+      '30 days': '30d',
+      '7 days': '7d',
+    };
+
+    const period = periodMap[activeFilter as keyof typeof periodMap];
+    const filteredDonations = getFilteredDonationsByPeriod(
+      allDonations,
+      period,
+    );
+
+    const filteredLeaderboard = calculateDonationLeaderboard(filteredDonations);
+
+    return filteredLeaderboard.map((item) => {
+      return {
+        ...item,
+        donorSince: donorSinceMap.get(item.address) ?? item.donorSince,
+      };
     });
-
-    return calculateDonationLeaderboard(filteredDonations);
   }, [allDonations, activeFilter]);
 
   return (

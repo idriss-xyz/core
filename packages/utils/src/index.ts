@@ -20,4 +20,7 @@ export {
   removeEthSuffix,
 } from './formatting-utils';
 
-export { calculateDonationLeaderboard } from './donation-utils';
+export {
+  calculateDonationLeaderboard,
+  getFilteredDonationsByPeriod,
+} from './donation-utils';
