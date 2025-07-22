@@ -27,8 +27,8 @@ export function Sidebar() {
       >
         <div className="flex flex-col gap-12">
           <div className="flex justify-center">
-            <Link href="/">
-              <img src="/idriss-dark-logo.svg" height={24} width={98} alt="" />
+            <Link href="/creators">
+              <img src="/idriss-creators-dark-logo.svg" height={50} alt="" />
             </Link>
           </div>
 
