@@ -5,6 +5,7 @@ import { Fragment } from 'react';
 import { DonateHistoryItem } from '@/app/creators/donate/components/donate-history/donate-history-item';
 
 import { useAuth } from '../context/auth-context';
+import { Link } from '@idriss-xyz/ui/link';
 
 export function TopBar() {
   const { donations, newDonationsCount, markDonationsAsSeen } = useAuth();
@@ -77,9 +78,13 @@ export function TopBar() {
                 <div className="flex min-h-[32px] items-center gap-3 rounded-[4px] px-3 py-1">
                   <div className="flex gap-3 text-[#717484]">
                     <Icon name="User" size={20} />
-                    <span className="max-h-[54px] min-h-[24px] min-w-[184px] max-w-[214px] text-body4 text-neutral-900">
+                    <Link
+                      size="medium"
+                      href="/creators/app/profile"
+                      className="max-h-[54px] min-h-[24px] min-w-[184px] max-w-[214px] text-body4 text-neutral-900 hover:text-mint-600"
+                    >
                       Profile
-                    </span>
+                    </Link>
                   </div>
                 </div>
 
@@ -91,7 +96,7 @@ export function TopBar() {
                   <div className="flex min-h-[32px] items-center gap-3 rounded-[4px] px-3 py-1">
                     <div className="flex gap-3 text-[#717484]">
                       <Icon name="LogOut" size={20} />
-                      <span className="max-h-[54px] min-h-[24px] min-w-[184px] max-w-[214px] text-body4 text-neutral-900">
+                      <span className="max-h-[54px] min-h-[24px] min-w-[184px] max-w-[214px] text-body4 text-neutral-900 hover:text-mint-600">
                         Log out
                       </span>
                     </div>

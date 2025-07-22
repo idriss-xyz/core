@@ -65,18 +65,6 @@ export function Sidebar() {
               </Link>
             </NavigationMenu.Item>
 
-            <NavigationMenu.Item
-              className={getLinkClasses('/creators/app/profile')}
-            >
-              <Link
-                href="/creators/app/profile"
-                className="flex w-full items-center rounded-lg hover:text-mint-600"
-              >
-                <Icon size={20} name="User" className="mr-3 size-5" />
-                Profile
-              </Link>
-            </NavigationMenu.Item>
-
             <NavigationMenu.Item className={getLinkClasses('')}>
               <Link
                 href="" // TODO: Add link
@@ -86,8 +74,8 @@ export function Sidebar() {
                 Ranking
               </Link>
             </NavigationMenu.Item>
-
-            <NavigationMenu.Item className={getLinkClasses('')}>
+            {/* Uncomment when Rewards gets implemented*/}
+            {/* <NavigationMenu.Item className={getLinkClasses('')}>
               <Link
                 href="" // TODO: Add link
                 className="flex w-full items-center rounded-lg hover:text-mint-600"
@@ -95,7 +83,7 @@ export function Sidebar() {
                 <Icon size={20} name="Gift" className="mr-3 size-5" />
                 Rewards
               </Link>
-            </NavigationMenu.Item>
+            </NavigationMenu.Item> */}
           </NavigationMenu.List>
         </div>
 
