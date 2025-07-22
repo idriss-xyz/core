@@ -24,13 +24,9 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
     isPasswordModalOpen,
     setIsPasswordModalOpen,
     earlyAccessToken,
+    handlePasswordSuccess,
   } = useAuth();
   const originalHandleStartEarningClick = useStartEarningNavigation();
-
-  const handlePasswordSuccess = () => {
-    setIsPasswordModalOpen(false);
-    void originalHandleStartEarningClick();
-  };
 
   const handleStartEarningClick = () => {
     void (earlyAccessToken

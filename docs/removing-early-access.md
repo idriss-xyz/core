@@ -71,7 +71,7 @@ In `apps/main-landing/src/app/creators/context/auth-context.tsx`, remove all sta
 ```diff
 --- a/apps/main-landing/src/app/creators/context/auth-context.tsx
 +++ b/apps/main-landing/src/app/creators/context/auth-context.tsx
-@@ -9,15 +9,9 @@
+@@ -9,26 +9,18 @@
    markDonationsAsSeen: () => void;
    oauthError: string | null;
    isLoginModalOpen: boolean;
@@ -86,18 +86,39 @@ In `apps/main-landing/src/app/creators/context/auth-context.tsx`, remove all sta
 -  setIsPasswordModalOpen: (isOpen: boolean) => void;
 -  setEarlyAccessToken: (token: string | null) => void;
    setCreator: (creator: CreatorProfileResponse | null) => void;
+-  handlePasswordSuccess: () => void;
  };
  
-@@ -26,9 +20,6 @@
+ const AuthContext = createContext<AuthContextType | undefined>(undefined);
+ 
  export function AuthProvider({ children }: { children: ReactNode }) {
    const [oauthError, setOauthError] = useState<string | null>(null);
-   const [isLoginModalOpen, setIsModalOpen] = useState(false);
+-  const [isLoginModalOpen, _setIsModalOpen] = useState(false);
 -  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 -  const [earlyAccessToken, setEarlyAccessToken] = useState<string | null>(null);
++  const [isLoginModalOpen, setIsModalOpen] = useState(false);
    const [creator, setCreator] = useState<CreatorProfileResponse | null>(null);
    const [creatorLoading, setCreatorLoading] = useState(true);
    const [donations, setDonations] = useState<DonationData[]>([]);
-@@ -54,16 +45,10 @@
+@@ -52,34 +44,20 @@
+     return setOauthError(null);
+   };
+ 
+-  const setIsModalOpen = (isOpen: boolean) => {
+-    if (isOpen && !earlyAccessToken) {
+-      setIsPasswordModalOpen(true);
+-    } else {
+-      _setIsModalOpen(isOpen);
+-    }
+-  };
+-
+-  const handlePasswordSuccess = () => {
+-    setIsPasswordModalOpen(false);
+-    _setIsModalOpen(true);
+-  };
+-
+   return (
+     <AuthContext.Provider
        value={{
          oauthError,
          isLoginModalOpen,
@@ -112,8 +133,10 @@ In `apps/main-landing/src/app/creators/context/auth-context.tsx`, remove all sta
 -        setIsPasswordModalOpen,
 -        setEarlyAccessToken,
          setCreator,
+-        handlePasswordSuccess,
          donations,
          addDonation,
+         newDonationsCount,
 ```
 
 ### B. Update the Hero Section
@@ -132,35 +155,28 @@ In `apps/main-landing/src/app/creators/components/hero-section.tsx`, remove the 
  
  type Properties = {
    heroButtonReference?: RefObject<HTMLButtonElement>;
-@@ -16,26 +15,12 @@
- 
- export const HeroSection = ({ heroButtonReference }: Properties) => {
+@@ -18,22 +17,12 @@
    const {
      isLoginModalOpen,
      setIsModalOpen,
 -    isPasswordModalOpen,
 -    setIsPasswordModalOpen,
 -    earlyAccessToken,
+-    handlePasswordSuccess,
    } = useAuth();
 -  const originalHandleStartEarningClick = useStartEarningNavigation();
 -
--  const handlePasswordSuccess = () => {
--    setIsPasswordModalOpen(false);
--    void originalHandleStartEarningClick();
--  };
-+  const handleStartEarningClick = useStartEarningNavigation();
- 
 -  const handleStartEarningClick = () => {
 -    void (earlyAccessToken
 -      ? originalHandleStartEarningClick()
 -      : setIsPasswordModalOpen(true));
 -  };
++  const handleStartEarningClick = useStartEarningNavigation();
  
-
    return (
      <header
        className={classes(
-@@ -83,7 +68,9 @@
+@@ -81,7 +70,9 @@
              ref={heroButtonReference}
              aria-label="Start earning now"
              suffixIconName="IdrissArrowRight"
@@ -171,7 +187,8 @@ In `apps/main-landing/src/app/creators/components/hero-section.tsx`, remove the 
            >
              Start earning now
            </Button>
-@@ -102,12 +89,6 @@
+@@ -99,13 +90,6 @@
+         onClose={() => {
            return setIsModalOpen(false);
          }}
        />

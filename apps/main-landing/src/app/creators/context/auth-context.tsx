@@ -22,13 +22,14 @@ type AuthContextType = {
   setIsPasswordModalOpen: (isOpen: boolean) => void;
   setEarlyAccessToken: (token: string | null) => void;
   setCreator: (creator: CreatorProfileResponse | null) => void;
+  handlePasswordSuccess: () => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [oauthError, setOauthError] = useState<string | null>(null);
-  const [isLoginModalOpen, setIsModalOpen] = useState(false);
+  const [isLoginModalOpen, _setIsModalOpen] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [earlyAccessToken, setEarlyAccessToken] = useState<string | null>(null);
   const [creator, setCreator] = useState<CreatorProfileResponse | null>(null);
@@ -53,6 +54,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return setOauthError(null);
   };
 
+  const setIsModalOpen = (isOpen: boolean) => {
+    if (isOpen && !earlyAccessToken) {
+      setIsPasswordModalOpen(true);
+    } else {
+      _setIsModalOpen(isOpen);
+    }
+  };
+
+  const handlePasswordSuccess = () => {
+    setIsPasswordModalOpen(false);
+    _setIsModalOpen(true);
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -69,6 +83,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setIsPasswordModalOpen,
         setEarlyAccessToken,
         setCreator,
+        handlePasswordSuccess,
         donations,
         addDonation,
         newDonationsCount,
