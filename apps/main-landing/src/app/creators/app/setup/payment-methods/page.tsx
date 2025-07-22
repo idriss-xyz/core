@@ -1,0 +1,312 @@
+"use client"
+import {
+  FormFieldWrapper,
+  SectionHeader,
+} from '@/app/creators/components/layout';
+import { useAuth } from '@/app/creators/context/auth-context';
+import {
+  editCreatorProfile,
+  getChainIdsFromShortNames,
+  getChainShortNamesFromIds,
+} from '@/app/creators/utils';
+import {
+  CHAIN_ID_TO_TOKENS,
+  ChainToken,
+  CREATOR_CHAIN,
+  DEFAULT_ALLOWED_CHAINS_IDS,
+  TokenSymbol,
+} from '@idriss-xyz/constants';
+import { Alert } from '@idriss-xyz/ui/alert';
+import { Card } from '@idriss-xyz/ui/card';
+import { Form } from '@idriss-xyz/ui/form';
+import { Multiselect, MultiselectOption } from '@idriss-xyz/ui/multiselect';
+import { Toggle } from '@idriss-xyz/ui/toggle';
+import { getAccessToken } from '@privy-io/react-auth';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+
+type FormPayload = {
+  name: string;
+  address: string;
+  chainsIds: number[];
+  tokensSymbols: string[];
+};
+
+const ALL_CHAIN_IDS = Object.values(CREATOR_CHAIN).map((chain) => {
+  return chain.id;
+});
+
+const ALL_TOKEN_SYMBOLS = Object.values(CHAIN_ID_TO_TOKENS)
+  .flat()
+  .map((token) => {
+    return token.symbol;
+  });
+
+const UNIQUE_ALL_TOKEN_SYMBOLS = [...new Set(ALL_TOKEN_SYMBOLS)];
+
+const TOKENS_ORDER: Record<TokenSymbol, number> = {
+  IDRISS: 1,
+  ETH: 2,
+  USDC: 3,
+  DAI: 4,
+  GHST: 5,
+  PRIME: 6,
+  YGG: 7,
+  RON: 8,
+  AXS: 9,
+  PDT: 10,
+  DEGEN: 11,
+  PENGU: 12,
+};
+
+// ts-unused-exports:disable-next-line
+export default function PaymentMethods() {
+  const { creator } = useAuth();
+  const [saveSuccess, setSaveSuccess] = useState<boolean | null>(null);
+  const [toggleCrypto, setToggleCrypto] = useState(false);
+
+  const formMethods = useForm<FormPayload>({
+    defaultValues: {
+      chainsIds:
+        creator?.networks && creator.networks.length > 0
+          ? getChainIdsFromShortNames(creator?.networks)
+          : ALL_CHAIN_IDS,
+      tokensSymbols:
+        creator?.tokens && creator.tokens.length > 0
+          ? creator?.tokens
+          : UNIQUE_ALL_TOKEN_SYMBOLS,
+    },
+    mode: 'onSubmit',
+  });
+
+  const [ chainsIds, tokensSymbols ] = formMethods.watch([
+    'chainsIds',
+    'tokensSymbols',
+  ]);
+
+  const selectedChainsTokens: ChainToken[] = useMemo(() => {
+    return chainsIds
+      .flatMap((chainId) => {
+        return CHAIN_ID_TO_TOKENS[chainId] as ChainToken | undefined;
+      })
+      .filter((token) => {
+        return token !== undefined;
+      });
+  }, [chainsIds]);
+
+  const uniqueTokenOptions: MultiselectOption<string>[] = useMemo(() => {
+    if (!selectedChainsTokens) {
+      return [];
+    }
+
+    const uniqueSymbols = new Set<string>();
+    const uniqueTokens = selectedChainsTokens.filter((token) => {
+      if (uniqueSymbols.has(token.symbol)) {
+        return false;
+      }
+
+      uniqueSymbols.add(token.symbol);
+
+      return true;
+    });
+
+    return uniqueTokens
+      .map((token) => {
+        return {
+          label: token.name,
+          value: token.symbol,
+          icon: (
+            <img
+              width={24}
+              height={24}
+              src={token.logo}
+              className="size-6 rounded-full"
+              alt={token.symbol}
+            />
+          ),
+        };
+      })
+      .sort((a, b) => {
+        return (
+          (TOKENS_ORDER[a.value as TokenSymbol] ?? 0) -
+          (TOKENS_ORDER[b.value as TokenSymbol] ?? 0)
+        );
+      });
+  }, [selectedChainsTokens]);
+
+  const allowedChainOptions: MultiselectOption<number>[] = useMemo(() => {
+    return DEFAULT_ALLOWED_CHAINS_IDS.map((chainId) => {
+      const foundChain = Object.values(CREATOR_CHAIN).find((chain) => {
+        return chain.id === chainId;
+      });
+
+      if (!foundChain) {
+        throw new Error(`${chainId} not found`);
+      }
+
+      return {
+        label: foundChain.name,
+        value: foundChain.id,
+        icon: (
+          <img
+            width={24}
+            height={24}
+            src={foundChain.logo}
+            className="size-6 rounded-full"
+            alt={foundChain.name}
+          />
+        ),
+      };
+    });
+  }, []);
+
+  const handleAlertClose = useCallback(() => {
+    setSaveSuccess(null);
+  }, []);
+
+  const onChangeChainId = useCallback(() => {
+    formMethods.setValue(
+      'tokensSymbols',
+      tokensSymbols.filter((symbol) => {
+        return selectedChainsTokens.some((option) => {
+          return option.symbol === symbol;
+        });
+      }),
+    );
+  }, [formMethods, tokensSymbols, selectedChainsTokens]);
+
+  const onSubmit = async (data: FormPayload) => {
+    try {
+      const authToken = await getAccessToken();
+      if (!authToken) {
+        setSaveSuccess(false);
+        console.error('Could not get auth token.');
+        return;
+      }
+      if (!creator?.name) {
+        setSaveSuccess(false);
+        console.error('Creator not initialized');
+        return;
+      }
+
+      const chainsShortNames = getChainShortNamesFromIds(data.chainsIds);
+
+      const editSuccess = await editCreatorProfile(
+        creator.name,
+        {
+          tokens: data.tokensSymbols,
+          networks: chainsShortNames,
+        },
+        authToken,
+      );
+
+      setSaveSuccess(editSuccess);
+    } catch (error) {
+      console.error('Error saving profile:', error);
+    }
+  };
+
+  useEffect(() => {
+    const currentTokensSymbols = formMethods.getValues('tokensSymbols');
+
+    const updatedTokens = currentTokensSymbols.filter((symbol) => {
+      return chainsIds.some((chainId) => {
+        return CHAIN_ID_TO_TOKENS[chainId]?.some((token) => {
+          return token.symbol === symbol;
+        });
+      });
+    });
+
+    if (updatedTokens.length !== currentTokensSymbols.length) {
+      formMethods.setValue('tokensSymbols', updatedTokens);
+    }
+  }, [chainsIds, formMethods]);
+
+  return (
+    <Card className="w-full">
+      <div className="flex flex-col gap-6">
+        <Form
+          onSubmit={formMethods.handleSubmit(onSubmit)}
+          className="flex flex-col gap-6"
+        >
+          {/* Alerts form fields */}
+          <FormFieldWrapper>
+            <SectionHeader title="Select your payment methods" />
+            <Toggle
+              label="Crypto"
+              sublabel="Get paid in Ethereum, USDC, or other popular assets. Instant, borderless, and without middlemen"
+              value={toggleCrypto}
+              onChange={() => setToggleCrypto((prev) => !prev)}
+            />
+            {toggleCrypto && (
+              <div>
+                <Controller
+                  name="chainsIds"
+                  control={formMethods.control}
+                  rules={{
+                    required: 'Select at least one network',
+                  }}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <Multiselect<number>
+                        label="Network"
+                        value={field.value}
+                        inputClassName="mt-6"
+                        options={allowedChainOptions}
+                        helperText={fieldState.error?.message}
+                        error={Boolean(fieldState.error?.message)}
+                        onChange={(value) => {
+                          onChangeChainId();
+                          field.onChange(value);
+                        }}
+                      />
+                    );
+                  }}
+                />
+
+                <Controller
+                  name="tokensSymbols"
+                  control={formMethods.control}
+                  rules={{
+                    required: 'Select at least one token',
+                  }}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <Multiselect<string>
+                        label="Token"
+                        value={field.value}
+                        onChange={field.onChange}
+                        inputClassName="mt-6"
+                        options={uniqueTokenOptions}
+                        helperText={fieldState.error?.message}
+                        error={Boolean(fieldState.error?.message)}
+                      />
+                    );
+                  }}
+                />
+              </div>
+            )}
+          </FormFieldWrapper>
+        </Form>
+      </div>
+      {saveSuccess && (
+        <Alert
+          heading="Refresh the browser source in your streaming software"
+          type="success"
+          description="Keeps your donation alert setup up to date"
+          autoClose
+          onClose={handleAlertClose}
+        />
+      )}
+      {saveSuccess === false && (
+        <Alert
+          heading="Unable to save settings"
+          type="error"
+          description="Please try again later"
+          autoClose
+          onClose={handleAlertClose}
+        />
+      )}
+    </Card>
+  );
+}
