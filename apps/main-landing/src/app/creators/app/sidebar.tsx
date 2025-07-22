@@ -2,6 +2,7 @@ import { NavigationMenu } from '@idriss-xyz/ui/navigation-menu';
 import { Icon } from '@idriss-xyz/ui/icon';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { IconButton } from '@idriss-xyz/ui/icon-button';
 
 import { socialOptions } from '../constants';
 
@@ -107,9 +108,20 @@ export function Sidebar() {
             </div>
           </div>
 
-          <div className="flex justify-between p-3">
+          <div className="flex h-[48px] justify-between gap-3">
             {socialOptions.map((social, index) => {
-              return <Icon name={social.iconName} size={24} key={index} />;
+              return (
+                <IconButton
+                  href={social.link}
+                  className="w-full"
+                  isExternal
+                  asLink
+                  intent="tertiary"
+                  iconName={social.iconName}
+                  size="extra"
+                  key={index}
+                />
+              );
             })}
           </div>
         </div>
