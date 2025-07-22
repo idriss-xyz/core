@@ -92,7 +92,7 @@ const TokenIconsRow = () => {
 export default function PaymentMethods() {
   const { creator } = useAuth();
   const [saveSuccess, setSaveSuccess] = useState<boolean | null>(null);
-  const [toggleCrypto, setToggleCrypto] = useState(false);
+  const [toggleCrypto, setToggleCrypto] = useState(true);
 
   const formMethods = useForm<FormPayload>({
     defaultValues: {
@@ -262,11 +262,11 @@ export default function PaymentMethods() {
   }, [creator, formMethods]);
 
   return (
-    <Card className="w-full">
+    <Card className="size-full">
       <div className="flex flex-col gap-6">
         <Form
           onSubmit={formMethods.handleSubmit(onSubmit)}
-          className="flex flex-col gap-6"
+          className="flex flex-col gap-8"
         >
           <FormFieldWrapper>
             <SectionHeader title="Select your payment methods" />
@@ -339,6 +339,26 @@ export default function PaymentMethods() {
                 </Button>
               </div>
             )}
+          </FormFieldWrapper>
+
+          <hr className="max-w-[445px]" />
+
+          <FormFieldWrapper>
+            <div className="relative">
+              <Toggle
+                label="Card & bank transfers"
+                sublabel="Get paid via credit cards or traditional bank transfers. Trusted, familiar, and widely used by fans."
+                value={false}
+                disabled
+                onChange={() => {
+                  console.log('Not implemented yet');
+                }}
+                className="relative max-w-screen-xs"
+              />
+              <span className="absolute left-52 top-1 text-[11px] tracking-tight text-mint-600">
+                Coming soon!
+              </span>
+            </div>
           </FormFieldWrapper>
         </Form>
       </div>
