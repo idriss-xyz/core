@@ -328,16 +328,17 @@ export default function PaymentMethods() {
                     );
                   }}
                 />
+
+                <Button
+                  size="medium"
+                  intent="primary"
+                  className="mt-4"
+                  onClick={formMethods.handleSubmit(onSubmit)}
+                >
+                  SAVE SETTINGS
+                </Button>
               </div>
             )}
-            <Button
-              size="medium"
-              intent="primary"
-              className="mt-4"
-              onClick={formMethods.handleSubmit(onSubmit)}
-            >
-              SAVE SETTINGS
-            </Button>
           </FormFieldWrapper>
         </Form>
       </div>
