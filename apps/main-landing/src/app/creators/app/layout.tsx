@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { BreadcrumbNavigation } from '@idriss-xyz/ui/breadcrumb';
+import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 
 import { Providers } from '../providers';
 import { siteMap } from '../constants';
@@ -30,9 +31,11 @@ export default function CreatorsLayout({
         <div className="flex w-full flex-col">
           <TopBar />
           {/* Page Content */}
-          <main className="flex flex-1 flex-col overflow-auto p-2">
-            <BreadcrumbNavigation pathname={pathname} siteMap={siteMap} />
-            {children}
+          <main className="flex flex-1 flex-col overflow-hidden">
+            <ScrollArea className="h-full p-2">
+              <BreadcrumbNavigation pathname={pathname} siteMap={siteMap} />
+              {children}
+            </ScrollArea>
           </main>
         </div>
       </div>
