@@ -1,15 +1,5 @@
 'use client';
 import {
-  FormFieldWrapper,
-  SectionHeader,
-} from '@/app/creators/components/layout';
-import { useAuth } from '@/app/creators/context/auth-context';
-import {
-  editCreatorProfile,
-  getChainIdsFromShortNames,
-  getChainShortNamesFromIds,
-} from '@/app/creators/utils';
-import {
   CHAIN_ID_TO_TOKENS,
   ChainToken,
   CREATOR_CHAIN,
@@ -25,6 +15,17 @@ import { Toggle } from '@idriss-xyz/ui/toggle';
 import { getAccessToken } from '@privy-io/react-auth';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+
+import {
+  editCreatorProfile,
+  getChainIdsFromShortNames,
+  getChainShortNamesFromIds,
+} from '@/app/creators/utils';
+import { useAuth } from '@/app/creators/context/auth-context';
+import {
+  FormFieldWrapper,
+  SectionHeader,
+} from '@/app/creators/components/layout';
 
 type FormPayload = {
   name: string;
@@ -237,8 +238,8 @@ export default function PaymentMethods() {
               label="Crypto"
               sublabel="Get paid in Ethereum, USDC, or other popular assets. Instant, borderless, and without middlemen"
               value={toggleCrypto}
-              onChange={() => setToggleCrypto((prev) => !prev)}
-              className="max-w-[400px]"
+              onChange={() => {return setToggleCrypto((previous) => {return !previous})}}
+              className="max-w-screen-xs"
             />
             {toggleCrypto && (
               <div>

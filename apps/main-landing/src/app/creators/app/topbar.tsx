@@ -1,11 +1,11 @@
 import { NavigationMenu } from '@idriss-xyz/ui/navigation-menu';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { Fragment } from 'react';
+import { Link } from '@idriss-xyz/ui/link';
 
 import { DonateHistoryItem } from '@/app/creators/donate/components/donate-history/donate-history-item';
 
 import { useAuth } from '../context/auth-context';
-import { Link } from '@idriss-xyz/ui/link';
 
 export function TopBar() {
   const { donations, newDonationsCount, markDonationsAsSeen } = useAuth();
