@@ -1,5 +1,9 @@
 'use client';
-import { CREATORS_LINK, CREATOR_API_URL } from '@idriss-xyz/constants';
+import {
+  CREATORS_LINK,
+  CREATOR_API_URL,
+  TWITCH_EXTENSION_LINK,
+} from '@idriss-xyz/constants';
 import { Button } from '@idriss-xyz/ui/button';
 import { Card } from '@idriss-xyz/ui/card';
 import { Form } from '@idriss-xyz/ui/form';
@@ -53,6 +57,8 @@ const UpgradeBox: React.FC = () => {
         </div>
       </div>
       <Button
+        asLink
+        href={TWITCH_EXTENSION_LINK}
         size="medium"
         intent="secondary"
         className="uppercase"

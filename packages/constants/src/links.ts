@@ -62,6 +62,9 @@ export const CREATORS_DONATE_LINK = 'https://www.idriss.xyz/creators/donate';
 export const CHROME_EXTENSION_LINK =
   'https://chromewebstore.google.com/detail/idriss/fghhpjoffbgecjikiipbkpdakfmkbmig';
 
+export const TWITCH_EXTENSION_LINK =
+  'https://dashboard.twitch.tv/extensions/0rvai4arse2wu9ucj2omj2zvajdc3m-0.0.1';
+
 export const CREATORS_USER_GUIDE_LINK =
   'https://docs.idriss.xyz/user-guides/creators';
 
