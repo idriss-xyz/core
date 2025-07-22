@@ -1,3 +1,4 @@
+// TODO: Remove this page and show error or success on login modal instead
 'use client';
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
