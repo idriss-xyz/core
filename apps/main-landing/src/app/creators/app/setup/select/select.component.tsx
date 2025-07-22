@@ -10,8 +10,6 @@ import { SelectProperties } from './select.types';
 import { SelectOption } from './select-option.component';
 import { SelectOptionContainer } from './select-option-container.component';
 
-// TODO remove
-// ts-unused-exports:disable-next-line
 export const Select = <T,>({
   label,
   value,
@@ -61,10 +59,10 @@ export const Select = <T,>({
 
         <DropdownMenu.Portal container={portal}>
           <DropdownMenu.Content sideOffset={2} asChild>
-            <SelectOptionContainer className='py-2'>
+            <SelectOptionContainer className="py-2">
               <ScrollArea
                 className={classes(
-                  'max-h-64 w-[var(--radix-popper-anchor-width)] pl-2 pr-4 gap-1 overflow-y-auto text-black',
+                  'max-h-64 w-[var(--radix-popper-anchor-width)] gap-1 overflow-y-auto pl-2 pr-4 text-black',
                   optionsContainerClassName,
                 )}
               >
@@ -72,7 +70,7 @@ export const Select = <T,>({
                   return (
                     <DropdownMenu.Item
                       key={option.label}
-                      className="outline-none rounded-lg py-1 px-3 data-[highlighted]:bg-black/10 hover:bg-black/10 focus:bg-black/50"
+                      className="rounded-lg px-3 py-1 outline-none hover:bg-black/10 focus:bg-black/50 data-[highlighted]:bg-black/10"
                       onSelect={() => {
                         onChange(option.value);
                       }}

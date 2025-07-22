@@ -23,7 +23,13 @@ export const SelectOption = forwardRef(
         )}
         onClick={option.onClick}
       >
-        <div className={classes('relative', selectedClassName, option.prefix && 'pr-3')}>
+        <div
+          className={classes(
+            'relative',
+            selectedClassName,
+            option.prefix && 'pr-3',
+          )}
+        >
           {option.prefix}
         </div>
         {option.renderLabel ? (
