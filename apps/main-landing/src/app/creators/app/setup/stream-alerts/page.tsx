@@ -17,14 +17,9 @@ import {
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
 
-import {
-  DEFAULT_CASH_REGISTER_SOUND,
-  DEFAULT_COIN_SOUND,
-  DEFAULT_TRUMPET_SOUND,
-} from '@/assets';
 import { editCreatorProfile } from '@/app/creators/utils';
 import { useAuth } from '@/app/creators/context/auth-context';
-import { testDonation } from '@/app/creators/constants';
+import { soundMap, testDonation } from '@/app/creators/constants';
 import { CopyInput } from '@/app/creators/components/copy-input/copy-input';
 import {
   FormFieldWrapper,
@@ -314,11 +309,6 @@ export default function StreamAlerts() {
                               soundFile = `${CREATOR_API_URL}/creator-profile/audio/${creator.name}`;
                             }
                           } else {
-                            const soundMap: Record<string, string> = {
-                              DEFAULT_TRUMPET_SOUND,
-                              DEFAULT_COIN_SOUND,
-                              DEFAULT_CASH_REGISTER_SOUND,
-                            };
                             soundFile = soundMap[field.value];
                           }
 

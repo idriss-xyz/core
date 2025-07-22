@@ -7,21 +7,11 @@ import { roundToSignificantFiguresForCopilotTrading } from '@idriss-xyz/utils';
 import { formatUnits } from 'viem';
 import { classes } from '@idriss-xyz/ui/utils';
 
-import {
-  IDRISS_ICON_CIRCLE,
-  DEFAULT_TRUMPET_SOUND,
-  DEFAULT_COIN_SOUND,
-  DEFAULT_CASH_REGISTER_SOUND,
-} from '@/assets';
+import { IDRISS_ICON_CIRCLE, DEFAULT_TRUMPET_SOUND } from '@/assets';
 
 import { useDonationNotification } from '../hooks/use-donation-notification';
+import { soundMap } from '../../constants';
 import { MinimumAmounts, EnableToggles } from '../page';
-
-const soundMap = {
-  DEFAULT_TRUMPET_SOUND,
-  DEFAULT_COIN_SOUND,
-  DEFAULT_CASH_REGISTER_SOUND,
-};
 
 export type DonationNotificationProperties = {
   donor: string;
@@ -68,7 +58,7 @@ export default function DonationNotification({
       return `${CREATOR_API_URL}/creator-profile/audio/${creatorName}`;
     }
     return (
-      soundMap[alertSound as keyof typeof soundMap] || DEFAULT_TRUMPET_SOUND
+      soundMap[alertSound] ?? DEFAULT_TRUMPET_SOUND
     );
   }, [alertSound, creatorName]);
 

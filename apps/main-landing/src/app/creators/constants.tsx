@@ -4,6 +4,12 @@ import { IconName } from '@idriss-xyz/ui/icon';
 import { SOCIAL_LINK } from '@idriss-xyz/constants';
 import { SiteMapItem } from '@idriss-xyz/ui/breadcrumb';
 
+import {
+  DEFAULT_CASH_REGISTER_SOUND,
+  DEFAULT_COIN_SOUND,
+  DEFAULT_TRUMPET_SOUND,
+} from '@/assets';
+
 type SocialOption = {
   label: string;
   iconName: IconName;
@@ -96,4 +102,10 @@ export const testDonation = {
       logo: 'https://assets.coingecko.com/coins/images/279/small/ethereum.png',
     },
   },
+};
+
+export const soundMap: Record<string, string> = {
+  DEFAULT_TRUMPET_SOUND,
+  DEFAULT_COIN_SOUND,
+  DEFAULT_CASH_REGISTER_SOUND,
 };
