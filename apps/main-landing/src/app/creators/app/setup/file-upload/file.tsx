@@ -1,3 +1,4 @@
+// TODO: Remove this from setup folder and move to a shared components file like packages/ui
 import { useRef, useState } from 'react';
 import { usePrivy } from '@privy-io/react-auth';
 import { ProgressBarV2 } from '@idriss-xyz/ui/progress-bar-v2';
