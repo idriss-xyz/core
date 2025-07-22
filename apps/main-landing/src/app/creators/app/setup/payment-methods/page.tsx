@@ -224,6 +224,16 @@ export default function PaymentMethods() {
     }
   }, [chainsIds, formMethods]);
 
+  // Initialize form values after fetching creator data
+  useEffect(() => {
+    if (creator) {
+      formMethods.reset({
+        tokensSymbols: creator.tokens,
+        chainsIds: getChainIdsFromShortNames(creator.networks),
+      });
+    }
+  }, [creator, formMethods]);
+
   return (
     <Card className="w-full">
       <div className="flex flex-col gap-6">

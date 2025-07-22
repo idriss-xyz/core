@@ -67,16 +67,16 @@ export const siteMap: SiteMapItem[] = [
     path: '/setup',
     children: [
       {
+        name: 'Payment methods',
+        path: 'setup/payment-methods',
+      },
+      {
         name: 'Stream alerts',
         path: '/setup/stream-alerts',
       },
       {
         name: 'Donation panel',
         path: '/setup/donation-panel',
-      },
-      {
-        name: 'Payment methods',
-        path: 'setup/payment-methods',
       },
     ],
   },

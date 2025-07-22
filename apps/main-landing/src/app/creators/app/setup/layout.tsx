@@ -19,6 +19,12 @@ export default function SetupLayout({
 
   const setupTabs: TabItem[] = [
     {
+      name: 'Payment methods',
+      href: '/creators/app/setup/payment-methods',
+      iconName: 'HandCoins',
+      isActive: pathname === '/creators/app/setup/payment-methods',
+    },
+    {
       name: 'Stream alerts',
       href: '/creators/app/setup/stream-alerts',
       iconName: 'BellRing',
@@ -31,12 +37,6 @@ export default function SetupLayout({
       href: '/creators/app/setup/donation-panel',
       iconName: 'GalleryVertical',
       isActive: pathname === '/creators/app/setup/donation-panel',
-    },
-    {
-      name: 'Payment methods',
-      href: '/creators/app/setup/payment-methods',
-      iconName: 'HandCoins',
-      isActive: pathname === '/creators/app/setup/payment-methods',
     },
   ];
 

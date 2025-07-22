@@ -191,6 +191,7 @@ export default function StreamAlerts() {
     }
   };
 
+  // Initialize form values after fetching creator data
   useEffect(() => {
     if (creator) {
       formMethods.reset({
