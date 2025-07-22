@@ -1,14 +1,25 @@
 import { NavigationMenu } from '@idriss-xyz/ui/navigation-menu';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { Fragment } from 'react';
-import { Link } from '@idriss-xyz/ui/link';
+import { usePrivy } from '@privy-io/react-auth';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import Link from 'next/link';
 
 import { DonateHistoryItem } from '@/app/creators/donate/components/donate-history/donate-history-item';
 
 import { useAuth } from '../context/auth-context';
 
 export function TopBar() {
-  const { donations, newDonationsCount, markDonationsAsSeen } = useAuth();
+  const { donations, newDonationsCount, markDonationsAsSeen, creator } =
+    useAuth();
+  const { logout } = usePrivy();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await logout();
+    router.push('/creators');
+  };
   return (
     <>
       <NavigationMenu.Root className="flex justify-end gap-3">
@@ -17,7 +28,7 @@ export function TopBar() {
             <NavigationMenu.Trigger asChild>
               <div
                 onClick={markDonationsAsSeen}
-                className="relative flex size-8 items-center justify-center rounded-full border border-neutral-300 bg-white"
+                className="relative flex size-8 cursor-pointer items-center justify-center rounded-full border border-neutral-300 bg-white"
               >
                 <Icon className="text-gray-300" name="Bell" size={20} />
                 {newDonationsCount > 0 && (
@@ -60,15 +71,28 @@ export function TopBar() {
 
           <NavigationMenu.Item className="relative flex gap-1">
             <NavigationMenu.Trigger asChild>
-              <div className="flex max-h-[70px] min-h-[32px] w-max items-center gap-2.5">
+              <div className="flex max-h-[70px] min-h-[32px] w-max cursor-pointer items-center gap-2.5">
                 <div className="size-[32px] max-h-[48px] min-h-[32px] min-w-[32px] max-w-[48px] rounded-[999px] border border-[#AAAFB9]">
-                  <img
-                    src="https://res.cloudinary.com/base-web/image/fetch/w_64/f_webp/https%3A%2F%2Fbase.mypinata.cloud%2Fipfs%2Fbafkreicr5lh2f3eumcn4meif5t2pauzeddjjbhjbl4enqrp4ooz4e7on6i%3FpinataGatewayToken%3Df6uqhE35YREDMuFqLvxFLqd-MBRlrJ1qWog8gyCF8T88-Tsiu2IX48F-kyVti78J"
-                    alt="avatar"
-                  />
+                  {creator?.profilePictureUrl ? (
+                    <Image
+                      src={creator.profilePictureUrl}
+                      alt={creator?.name ?? 'avatar'}
+                      width={32}
+                      height={32}
+                      className="rounded-full"
+                    />
+                  ) : (
+                    <div className="flex size-full items-center justify-center rounded-full bg-gray-200">
+                      <Icon
+                        name="UserRound"
+                        className="text-neutral-400"
+                        size={20}
+                      />
+                    </div>
+                  )}
                 </div>
                 <span className="text-label4 text-neutralGreen-900">
-                  geoist_
+                  {creator?.name}
                 </span>
               </div>
             </NavigationMenu.Trigger>
@@ -79,7 +103,6 @@ export function TopBar() {
                   <div className="flex gap-3 text-[#717484]">
                     <Icon name="User" size={20} />
                     <Link
-                      size="medium"
                       href="/creators/app/profile"
                       className="max-h-[54px] min-h-[24px] min-w-[184px] max-w-[214px] text-body4 text-neutral-900 hover:text-mint-600"
                     >
@@ -96,7 +119,10 @@ export function TopBar() {
                   <div className="flex min-h-[32px] items-center gap-3 rounded-[4px] px-3 py-1">
                     <div className="flex gap-3 text-[#717484]">
                       <Icon name="LogOut" size={20} />
-                      <span className="max-h-[54px] min-h-[24px] min-w-[184px] max-w-[214px] text-body4 text-neutral-900 hover:text-mint-600">
+                      <span
+                        onClick={handleLogout}
+                        className="max-h-[54px] min-h-[24px] min-w-[184px] max-w-[214px] cursor-pointer text-body4 text-neutral-900 hover:text-mint-600"
+                      >
                         Log out
                       </span>
                     </div>

@@ -107,7 +107,11 @@ export default function ProfilePage() {
                     height: `${profileImageSize}px`,
                   }}
                 >
-                  <Icon name="Head" className="text-neutral-400" size={80} />
+                  <Icon
+                    name="UserRound"
+                    className="text-neutral-400"
+                    size={48}
+                  />
                 </div>
               )}
             </div>
