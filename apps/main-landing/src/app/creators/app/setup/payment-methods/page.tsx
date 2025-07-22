@@ -4,6 +4,8 @@ import {
   ChainToken,
   CREATOR_CHAIN,
   DEFAULT_ALLOWED_CHAINS_IDS,
+  DonationToken,
+  TOKEN,
   TokenSymbol,
 } from '@idriss-xyz/constants';
 import { Alert } from '@idriss-xyz/ui/alert';
@@ -26,6 +28,7 @@ import {
   FormFieldWrapper,
   SectionHeader,
 } from '@/app/creators/components/layout';
+import { TokenLogo } from '../../earnings/stats/token-logo';
 
 type FormPayload = {
   name: string;
@@ -59,6 +62,30 @@ const TOKENS_ORDER: Record<TokenSymbol, number> = {
   PDT: 10,
   DEGEN: 11,
   PENGU: 12,
+};
+
+const TokenIconsRow = () => {
+  const tokens = [
+    TOKEN.ETHEREUM,
+    TOKEN.USDC,
+    TOKEN.IDRISS,
+    TOKEN.RONIN,
+    TOKEN.ECHELON_PRIME,
+    TOKEN.PENGU,
+    TOKEN.YGG,
+    TOKEN.PDT,
+  ];
+  return (
+    <div className="-mt-4 flex flex-row items-center gap-2 px-12">
+      {tokens.map((token) => {
+        return (
+          <div className="relative size-6 rounded-full bg-gray-200">
+            <TokenLogo symbol={token.symbol ?? ''} imageUrl={token.logo} />
+          </div>
+        );
+      })}
+    </div>
+  );
 };
 
 // ts-unused-exports:disable-next-line
@@ -241,7 +268,6 @@ export default function PaymentMethods() {
           onSubmit={formMethods.handleSubmit(onSubmit)}
           className="flex flex-col gap-6"
         >
-          {/* Alerts form fields */}
           <FormFieldWrapper>
             <SectionHeader title="Select your payment methods" />
             <Toggle
@@ -255,6 +281,7 @@ export default function PaymentMethods() {
               }}
               className="max-w-screen-xs"
             />
+            <TokenIconsRow />
             {toggleCrypto && (
               <div>
                 <Controller
@@ -314,6 +341,8 @@ export default function PaymentMethods() {
           </Button>
         </Form>
       </div>
+
+      {/* Alerts section */}
       {saveSuccess && (
         <Alert
           heading="Refresh the browser source in your streaming software"
