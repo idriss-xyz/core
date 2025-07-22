@@ -22,12 +22,12 @@ export default function CreatorsLayout({
   return (
     <Providers>
       <CreatorSocketManager />
-      <div className="flex min-h-screen bg-neutral-100">
+      <div className="flex h-screen bg-neutral-100">
         <Sidebar />
 
         {/* Main Content */}
         <OAuthCallbackHandler />
-        <div className="flex h-screen w-full flex-col">
+        <div className="flex w-full flex-col">
           <TopBar />
           {/* Page Content */}
           <main className="flex flex-1 flex-col overflow-auto p-2">
