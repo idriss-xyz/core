@@ -71,7 +71,7 @@ export const siteMap: SiteMapItem[] = [
       {
         name: 'Payment methods',
         path: 'setup/payment-methods',
-      }
+      },
     ],
   },
   {

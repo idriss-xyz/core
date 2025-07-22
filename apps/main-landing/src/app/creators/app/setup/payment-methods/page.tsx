@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import {
   FormFieldWrapper,
   SectionHeader,
@@ -80,7 +80,7 @@ export default function PaymentMethods() {
     mode: 'onSubmit',
   });
 
-  const [ chainsIds, tokensSymbols ] = formMethods.watch([
+  const [chainsIds, tokensSymbols] = formMethods.watch([
     'chainsIds',
     'tokensSymbols',
   ]);
