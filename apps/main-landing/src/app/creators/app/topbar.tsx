@@ -97,7 +97,7 @@ export function TopBar() {
               </div>
             </NavigationMenu.Trigger>
 
-            <NavigationMenu.Content className="absolute right-[-13px] top-full mr-3 w-max gap-1 py-2">
+            <NavigationMenu.Content className="absolute right-[-13px] top-full z-50 mr-3 w-max gap-1 py-2">
               <div className="flex min-w-[240px] max-w-[270px] flex-col gap-1 rounded-xl border border-neutral-300 bg-white pt-2 shadow-lg">
                 <div className="flex min-h-[32px] items-center gap-3 rounded-[4px] px-3 py-1">
                   <div className="flex gap-3 text-[#717484]">
