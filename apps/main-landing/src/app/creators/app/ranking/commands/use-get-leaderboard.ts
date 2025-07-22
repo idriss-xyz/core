@@ -28,7 +28,7 @@ const getLeaderboard = async (
   }
 
   const data = await response.json();
-  return data as LeaderboardStats[];
+  return data.leaderboard;
 };
 
 export const useGetLeaderboard = (payload: Payload) => {

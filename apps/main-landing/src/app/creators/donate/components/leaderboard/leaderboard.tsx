@@ -243,7 +243,7 @@ export const Leaderboard = ({
                   data={leaderboard}
                   className={className}
                   keyExtractor={(item) => {
-                    return `${item.address}${item.totalAmount}`;
+                    return item.address;
                   }}
                   emptyState={
                     <div className="mx-auto flex min-h-[694px] w-[477px] flex-col items-center justify-center gap-4">
@@ -289,7 +289,7 @@ export const Leaderboard = ({
                         }}
                         donateAmount={item.totalAmount}
                         isTwitchExtension={isTwitchExtension}
-                        key={`${item.totalAmount}${item.address}`}
+                        key={item.address}
                       />
                     );
                   })}
@@ -327,7 +327,7 @@ export const Leaderboard = ({
                         }}
                         donateAmount={item.totalAmount}
                         isTwitchExtension={isTwitchExtension}
-                        key={`${item.totalAmount}${item.address}`}
+                        key={item.address}
                       />
                     );
                   })}
@@ -363,7 +363,7 @@ export const Leaderboard = ({
                           displayName: item.displayName,
                         }}
                         donateAmount={item.totalAmount}
-                        key={`${item.totalAmount}${item.address}`}
+                        key={item.address}
                       />
                     );
                   })}
@@ -474,7 +474,7 @@ export const LeaderboardStandalone = ({
                         avatarUrl: leaderboardItem.avatarUrl,
                         displayName: leaderboardItem.displayName,
                       }}
-                      key={`${leaderboardItem.address}${leaderboardItem.totalAmount}`}
+                      key={leaderboardItem.address}
                     />
                   );
                 })}
