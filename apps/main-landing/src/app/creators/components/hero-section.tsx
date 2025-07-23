@@ -3,7 +3,7 @@
 import { Button } from '@idriss-xyz/ui/button';
 import { classes } from '@idriss-xyz/ui/utils';
 import { RefObject, useEffect, useState } from 'react';
-import { useRouter , useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { backgroundLines } from '@/assets';
 
