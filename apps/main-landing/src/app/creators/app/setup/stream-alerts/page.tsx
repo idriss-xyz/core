@@ -299,6 +299,10 @@ export default function StreamAlerts() {
                         error={Boolean(fieldState.error?.message)}
                         {...field}
                         value={field.value?.toString()}
+                        onChange={(value) => {
+                          field.onChange(Number(value));
+                        }}
+                        prefixElement={<span>$</span>}
                       />
                     );
                   }}
@@ -412,6 +416,10 @@ export default function StreamAlerts() {
                         error={Boolean(fieldState.error?.message)}
                         {...field}
                         value={field.value?.toString()}
+                        onChange={(value) => {
+                          field.onChange(Number(value));
+                        }}
+                        prefixElement={<span>$</span>}
                       />
                     );
                   }}
@@ -491,6 +499,10 @@ export default function StreamAlerts() {
                       error={Boolean(fieldState.error?.message)}
                       {...field}
                       value={field.value?.toString()}
+                      onChange={(value) => {
+                        field.onChange(Number(value));
+                      }}
+                      prefixElement={<span>$</span>}
                     />
                   );
                 }}

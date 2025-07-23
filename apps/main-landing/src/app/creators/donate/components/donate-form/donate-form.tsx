@@ -420,11 +420,12 @@ export const DonateForm = ({ className, creatorInfo }: Properties) => {
                   numeric
                   {...field}
                   className="mt-6"
-                  label="Amount ($)"
+                  label="Amount"
                   value={field.value.toString()}
                   onChange={(value) => {
                     field.onChange(Number(value));
                   }}
+                  prefixElement={<span>$</span>}
                 />
 
                 {!sender.haveEnoughBalance && (
