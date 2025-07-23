@@ -37,69 +37,11 @@ type Properties = {
   activeFilter?: string;
   onFilterChange?: (filter: string) => void;
   title?: string;
+  perspective?: 'creator' | 'donor';
 };
 
 const baseClassName =
   'z-1 w-[360px] max-w-full rounded-xl bg-white flex flex-col items-center relative overflow-hidden';
-
-const columns: ColumnDefinition<LeaderboardStats>[] = [
-  {
-    id: 'rank',
-    name: '#',
-    accessor: (_: LeaderboardStats, index: number) => {
-      return index + 1;
-    },
-  },
-  {
-    id: 'donor',
-    name: 'Donor',
-    accessor: (item, index) => {
-      return <LeaderboardItemDonor item={item} index={index} />;
-    },
-    className: 'flex items-center gap-x-1.5 overflow-hidden',
-  },
-  {
-    id: 'totalAmount',
-    name: 'Total donated',
-    accessor: (item) => {
-      return `$${item.totalAmount.toFixed(2)}`;
-    },
-    sortable: true,
-    sortFunction: (a, b) => {
-      return a.totalAmount - b.totalAmount;
-    },
-  },
-  {
-    id: 'donationCount',
-    name: 'Donations',
-    accessor: (item) => {
-      return item.donationCount ?? 0;
-    },
-    sortable: true,
-    sortFunction: (a, b) => {
-      return (a.donationCount ?? 0) - (b.donationCount ?? 0);
-    },
-  },
-  {
-    id: 'donorSince',
-    name: 'Donor since',
-    accessor: (item) => {
-      return item.donorSince
-        ? getTimeDifferenceString({
-            text: 'ago',
-            variant: 'short',
-            timestamp: item.donorSince,
-          })
-        : '-';
-    },
-    sortable: true,
-    sortFunction: (a, b) => {
-      const dateA = a.donorSince ? new Date(a.donorSince).getTime() : 0;
-      const dateB = b.donorSince ? new Date(b.donorSince).getTime() : 0;
-      return dateA - dateB;
-    },
-  },
-];
 
 export const Leaderboard = ({
   variant,
@@ -113,7 +55,66 @@ export const Leaderboard = ({
   activeFilter,
   onFilterChange,
   title,
+  perspective = 'donor',
 }: Properties) => {
+  const columns: ColumnDefinition<LeaderboardStats>[] = [
+    {
+      id: 'rank',
+      name: '#',
+      accessor: (_: LeaderboardStats, index: number) => {
+        return index + 1;
+      },
+    },
+    {
+      id: 'donor',
+      name: perspective === 'creator' ? 'Creator' : 'Donor',
+      accessor: (item, index) => {
+        return <LeaderboardItemDonor item={item} index={index} />;
+      },
+      className: 'flex items-center gap-x-1.5 overflow-hidden',
+    },
+    {
+      id: 'totalAmount',
+      name: perspective === 'creator' ? 'Total received' : 'Total donated',
+      accessor: (item) => {
+        return `$${item.totalAmount.toFixed(2)}`;
+      },
+      sortable: true,
+      sortFunction: (a, b) => {
+        return a.totalAmount - b.totalAmount;
+      },
+    },
+    {
+      id: 'donationCount',
+      name: 'Donations',
+      accessor: (item) => {
+        return item.donationCount ?? 0;
+      },
+      sortable: true,
+      sortFunction: (a, b) => {
+        return (a.donationCount ?? 0) - (b.donationCount ?? 0);
+      },
+    },
+    {
+      id: 'donorSince',
+      name: perspective === 'creator' ? 'Creator since' : 'Donor since',
+      accessor: (item) => {
+        return item.donorSince
+          ? getTimeDifferenceString({
+              text: 'ago',
+              variant: 'short',
+              timestamp: item.donorSince,
+            })
+          : '-';
+      },
+      sortable: true,
+      sortFunction: (a, b) => {
+        const dateA = a.donorSince ? new Date(a.donorSince).getTime() : 0;
+        const dateB = b.donorSince ? new Date(b.donorSince).getTime() : 0;
+        return dateA - dateB;
+      },
+    },
+  ];
   const isTwitchExtension = !!variant;
   const isTwitchPanel = variant === 'panel';
   const isTwitchOverlay = variant === 'videoOverlay';

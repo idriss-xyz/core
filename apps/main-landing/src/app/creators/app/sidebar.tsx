@@ -95,7 +95,10 @@ export function Sidebar() {
         <div className="flex flex-col gap-3.5">
           <div className="flex flex-col gap-3.5">
             <div className="flex max-h-[62px] min-h-[32px] flex-col rounded-[4px] px-3 py-1">
-              <Link href={CREATOR_SETUP_GUIDE_LINK} className="group flex items-center gap-3">
+              <Link
+                href={CREATOR_SETUP_GUIDE_LINK}
+                className="group flex items-center gap-3"
+              >
                 <Icon
                   name="BookOpen"
                   size={20}
@@ -108,7 +111,10 @@ export function Sidebar() {
             </div>
 
             <div className="flex max-h-[62px] min-h-[32px] flex-col rounded-[4px] px-3 py-1">
-              <Link href={SUPPORT_LINK} className="group flex items-center gap-3">
+              <Link
+                href={SUPPORT_LINK}
+                className="group flex items-center gap-3"
+              >
                 <Icon
                   name="HelpCircle"
                   size={20}
