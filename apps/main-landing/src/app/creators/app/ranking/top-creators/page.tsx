@@ -31,6 +31,7 @@ export default function TopCreators() {
         className="container overflow-hidden px-0 shadow-lg"
         activeFilter={activeFilter}
         onFilterChange={setActiveFilter}
+        perspective="creator"
       />
     </div>
   );
