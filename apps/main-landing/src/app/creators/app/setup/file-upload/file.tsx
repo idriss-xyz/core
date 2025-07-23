@@ -162,7 +162,7 @@ export const File = ({ show, onUpload }: FileProperties) => {
           </div>
 
           <div className="flex flex-col items-center justify-center gap-2">
-            <span className="text-label6 text-[#717484]">
+            <span className="text-label6 text-neutral-600">
               Max file size up to 500 KB
             </span>
 

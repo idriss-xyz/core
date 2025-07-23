@@ -6,6 +6,12 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@idriss-xyz/ui/charts';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@idriss-xyz/ui/tooltip';
 import { Bar, BarChart, XAxis } from 'recharts';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { Button } from '@idriss-xyz/ui/button';
@@ -121,7 +127,7 @@ export default function EarningsStats() {
       {sortedDonations.length > 0 && stats ? (
         <>
           <Card className="col-span-1">
-            <CardHeader>Transactions</CardHeader>
+            <CardHeader className="text-neutral-600">Transactions</CardHeader>
             <CardBody>
               <div className="relative">
                 <div className="mx-14 my-4 flex items-center justify-center p-6">
@@ -155,7 +161,19 @@ export default function EarningsStats() {
             </CardBody>
           </Card>
           <Card className="col-span-1 space-y-4">
-            <CardHeader>Total earnings</CardHeader>
+            <CardHeader className="flex items-center justify-between text-neutral-600">
+              Total earnings
+              <TooltipProvider delayDuration={400}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Icon name="HelpCircle" size={24} />
+                  </TooltipTrigger>
+                  <TooltipContent className="bg-black text-center text-white">
+                    <p>Value of assets at the time of receiving</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </CardHeader>
             <CardBody>
               <span className="text-heading3 text-black">
                 {formatFiatValue(totalEarnings)}
@@ -200,7 +218,9 @@ export default function EarningsStats() {
             </CardBody>
           </Card>
           <Card className="col-span-1">
-            <CardHeader>Earnings by asset</CardHeader>
+            <CardHeader className="text-neutral-600">
+              Earnings by asset
+            </CardHeader>
             <CardBody>
               <div className="space-y-4 p-4">
                 {mainAsset && (

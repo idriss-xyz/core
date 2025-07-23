@@ -7,7 +7,7 @@ export const SectionHeader = ({
 }) => {
   return (
     <div className="flex flex-col gap-2">
-      <h5 className="pb-1 text-heading5">{title}</h5>
+      <h5 className="pb-1 text-heading5 text-neutralGreen-900">{title}</h5>
       {subtitle && <p className="text-body4 text-neutral-600">{subtitle}</p>}
       <hr />
     </div>

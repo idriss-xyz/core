@@ -17,7 +17,9 @@ export function Sidebar() {
 
   const getLinkClasses = (path: string) => {
     return `flex max-h-[82px] min-h-[52px] items-center gap-2 rounded-full px-4 py-2 text-button1 uppercase ${
-      isActive(path) ? 'border border-neutral-300 bg-neutral-100 px-4 py-3' : ''
+      isActive(path)
+        ? 'border border-neutral-300 bg-neutral-100 px-4 py-3 text-neutral-900'
+        : 'text-neutralGreen-900'
     }`;
   };
 
@@ -102,7 +104,7 @@ export function Sidebar() {
                 <Icon
                   name="BookOpen"
                   size={20}
-                  className="text-[#717484] group-hover:text-mint-600"
+                  className="text-neutral-600 group-hover:text-mint-600"
                 />
                 <span className="text-body4 text-neutral-900 group-hover:text-mint-600">
                   Setup guide
@@ -118,7 +120,7 @@ export function Sidebar() {
                 <Icon
                   name="HelpCircle"
                   size={20}
-                  className="text-[#717484] group-hover:text-mint-600"
+                  className="text-neutral-600 group-hover:text-mint-600"
                 />
                 <span className="text-body4 text-neutral-900 group-hover:text-mint-600">
                   Support
