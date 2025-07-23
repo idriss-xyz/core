@@ -185,6 +185,7 @@ export default function EarningsStats() {
                         formatter={(value) => {
                           return `$${formatNumber(Number(value), 2)}`;
                         }}
+                        className="text-label4 font-medium"
                       />
                     }
                   />

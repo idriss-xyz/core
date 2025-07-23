@@ -183,7 +183,7 @@ function ChartTooltipContent({
   return (
     <div
       className={classes(
-        'grid items-start gap-1.5 rounded-full bg-mint-500 px-2.5 py-1.5 text-xs font-semibold text-black',
+        'grid items-start gap-1.5 rounded-full bg-mint-400 px-4 py-1.5 text-xs font-semibold text-black',
         className,
       )}
     >
@@ -212,8 +212,8 @@ function ChartTooltipContent({
                   indicator === 'dot' && 'items-center',
                 )}
               >
-                {formatter && item?.value !== undefined && item.name ? (
-                  formatter(item.value, item.name, item, index, []) // TODO: check payload param (empty on testing)
+                {formatter && item?.value !== undefined && item.dataKey ? (
+                  formatter(item.value, item.name ?? '', item, index, []) // TODO: check payload param (empty on testing)
                 ) : (
                   <>
                     {itemConfig?.icon ? (
