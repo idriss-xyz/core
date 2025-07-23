@@ -39,7 +39,7 @@ export function TopBar() {
               </div>
             </NavigationMenu.Trigger>
 
-            <NavigationMenu.Content className="absolute right-[-136px] top-full mr-3 mt-3 w-max z-50">
+            <NavigationMenu.Content className="absolute right-[-136px] top-full z-50 mr-3 mt-3 w-max">
               {/*TODO: work on positioning*/}
               <div className="flex flex-col gap-1 rounded-xl border border-neutral-300 bg-white p-3 shadow-lg">
                 {donations.length > 0 ? (

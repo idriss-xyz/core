@@ -20,6 +20,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
+import { Icon } from '@idriss-xyz/ui/icon';
 
 import { editCreatorProfile } from '@/app/creators/utils';
 import { useAuth } from '@/app/creators/context/auth-context';
@@ -32,7 +33,6 @@ import {
 
 import { File } from '../file-upload/file';
 import { Select } from '../select';
-import { Icon } from '@idriss-xyz/ui/icon';
 
 const UpgradeBox: React.FC = () => {
   return (
