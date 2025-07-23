@@ -2,7 +2,8 @@
 'use client';
 import { Button } from '@idriss-xyz/ui/button';
 import { classes } from '@idriss-xyz/ui/utils';
-import { RefObject } from 'react';
+import { RefObject, useEffect, useState } from 'react';
+import { useRouter , useSearchParams } from 'next/navigation';
 
 import { backgroundLines } from '@/assets';
 
@@ -18,6 +19,10 @@ type Properties = {
 };
 
 export const HeroSection = ({ heroButtonReference }: Properties) => {
+  const router = useRouter();
+  const searchParameters = useSearchParams();
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+
   const {
     isLoginModalOpen,
     setIsModalOpen,
@@ -33,6 +38,34 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
       ? originalHandleStartEarningClick()
       : setIsPasswordModalOpen(true));
   };
+
+  useEffect(() => {
+    const customToken = searchParameters.get('token');
+    const name = searchParameters.get('name');
+    const displayName = searchParameters.get('displayName');
+    const pfp = searchParameters.get('pfp');
+    const email = searchParameters.get('email');
+
+    if (customToken) {
+      setIsLoggingIn(true);
+      // Store Twitch info in sessionStorage to be picked up by the next page.
+      if (name) {
+        sessionStorage.setItem(
+          'twitch_new_user_info',
+          JSON.stringify({ name, displayName, pfp, email }),
+        );
+      }
+      // Store the custom token where our PrivyProvider can find it.
+      sessionStorage.setItem('custom-auth-token', customToken);
+      // Redirect to the main app. The PrivyProvider will now automatically
+      // use the token to authenticate the user.
+      router.push('/creators/app');
+    } else {
+      // No token found, redirect away
+      setIsModalOpen(false);
+      setIsLoggingIn(false);
+    }
+  }, [searchParameters, router]);
 
   return (
     <header
@@ -103,6 +136,7 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
       </div>
       <LoginModal
         isOpened={isLoginModalOpen}
+        isLoading={isLoggingIn}
         onClose={() => {
           return setIsModalOpen(false);
         }}

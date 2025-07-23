@@ -14,10 +14,11 @@ import { useAuth } from '../../context/auth-context';
 
 type Properties = {
   isOpened: boolean;
+  isLoading: boolean;
   onClose: () => void;
 };
 
-export const LoginModal = ({ isOpened, onClose }: Properties) => {
+export const LoginModal = ({ isOpened, onClose, isLoading }: Properties) => {
   const { earlyAccessToken } = useAuth();
 
   const handleTwitchLogin = () => {
@@ -51,6 +52,7 @@ export const LoginModal = ({ isOpened, onClose }: Properties) => {
           prefixIconName="TwitchOutlinedBold"
           onClick={handleTwitchLogin}
           disabled={!earlyAccessToken}
+          loading={isLoading}
         >
           Continue with Twitch
         </Button>
