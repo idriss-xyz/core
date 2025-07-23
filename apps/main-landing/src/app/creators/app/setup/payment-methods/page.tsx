@@ -16,6 +16,7 @@ import { Toggle } from '@idriss-xyz/ui/toggle';
 import { getAccessToken } from '@privy-io/react-auth';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { Icon, IconName } from '@idriss-xyz/ui/icon';
 
 import {
   editCreatorProfile,
@@ -27,8 +28,6 @@ import {
   FormFieldWrapper,
   SectionHeader,
 } from '@/app/creators/components/layout';
-
-import { TokenLogo } from '../../earnings/stats/token-logo';
 
 type FormPayload = {
   name: string;
@@ -76,19 +75,21 @@ const iconsForCryptoPaymentMethod = [
   TOKEN.PDT,
 ];
 
-const iconsForCardPaymentMethod = [TOKEN.AXIE, TOKEN.AAVEGOTCHI]; // TODO: Update for fiat icons
+const iconsForCardPaymentMethod: IconName[] = [
+  'AmericanExpress',
+  'Maestro',
+  'Mastercard',
+  'Paypal',
+  'Visa',
+];
 
-const IconsRow = ({
-  tokens,
-}: {
-  tokens: { symbol?: string; logo: string }[];
-}) => {
+const IconsRow = ({ icons }: { icons: IconName[] }) => {
   return (
     <div className="-mt-4 flex flex-row items-center gap-2 px-12">
-      {tokens.map((token, index) => {
+      {icons.map((iconName, index) => {
         return (
-          <div className="relative size-6 rounded-full bg-gray-200" key={index}>
-            <TokenLogo symbol={token.symbol ?? ''} imageUrl={token.logo} />
+          <div className="relative size-6" key={index}>
+            <Icon name={iconName} className="size-full" />
           </div>
         );
       })}
@@ -369,7 +370,7 @@ export default function PaymentMethods() {
                 Coming soon!
               </span>
             </div>
-            <IconsRow tokens={iconsForCardPaymentMethod} />
+            <IconsRow icons={iconsForCardPaymentMethod} />
           </FormFieldWrapper>
         </Form>
       </div>
