@@ -64,7 +64,7 @@ export const Leaderboard = ({
       accessor: (_: LeaderboardStats, index: number) => {
         return index + 1;
       },
-      className: 'w-[40px]',                                                                                                   
+      className: 'w-[40px]',
     },
     {
       id: 'donor',
