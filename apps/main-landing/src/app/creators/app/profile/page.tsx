@@ -60,7 +60,7 @@ export default function ProfilePage() {
 
   return (
     <>
-      <div className="mb-4 flex size-full flex-col gap-4">
+      <div className="mb-3 flex size-full flex-col gap-4">
         <h1 className="col-span-3 text-heading3">Profile</h1>
 
         <Card>

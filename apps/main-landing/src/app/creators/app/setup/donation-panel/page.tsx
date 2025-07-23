@@ -6,8 +6,10 @@ import { Banner } from '@/app/creators/components/banner';
 export default function DonationPanel() {
   return (
     <Card>
-      <CardHeader className="text-heading4">
-        <h1>Download your donation panel image</h1>
+      <CardHeader>
+        <h1 className="pb-1 text-heading4 text-neutralGreen-900">
+          Download your donation panel image
+        </h1>
         <hr />
       </CardHeader>
       <CardBody>

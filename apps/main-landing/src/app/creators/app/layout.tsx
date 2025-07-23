@@ -32,7 +32,7 @@ export default function CreatorsLayout({
           <TopBar />
           {/* Page Content */}
           <main className="flex flex-1 flex-col overflow-hidden">
-            <ScrollArea className="h-full p-2">
+            <ScrollArea className="h-full pr-3">
               <BreadcrumbNavigation pathname={pathname} siteMap={siteMap} />
               {children}
             </ScrollArea>

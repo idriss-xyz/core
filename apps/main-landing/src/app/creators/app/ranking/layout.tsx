@@ -41,7 +41,7 @@ export default function RankingLayout({
 
   return (
     <div>
-      <div className="mb-4 flex flex-col gap-4">
+      <div className="mb-3 flex flex-col gap-4">
         <h1 className="text-heading3">Ranking</h1>
         <TabsPill tabs={rankingTabs} renderLink={renderLink} />
       </div>

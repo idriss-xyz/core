@@ -47,7 +47,7 @@ export default function EarningsLayout({
 
   return (
     <div>
-      <div className="mb-4 flex flex-col gap-4">
+      <div className="mb-3 flex flex-col gap-4">
         <h1 className="text-heading3">Earnings</h1>
         <TabsPill tabs={earningsTabs} renderLink={renderLink} />
       </div>

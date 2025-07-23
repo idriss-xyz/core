@@ -69,10 +69,10 @@ export const GradientBorder = ({
         </linearGradient>
       </defs>
       <rect
-        x="0"
-        y="0"
-        width="100%"
-        height="100%"
+        x={borderWidth / 2}
+        y={borderWidth / 2}
+        width={`calc(100% - ${borderWidth}px)`}
+        height={`calc(100% - ${borderWidth}px)`}
         rx={borderRadius}
         ry={borderRadius}
         fill="none"

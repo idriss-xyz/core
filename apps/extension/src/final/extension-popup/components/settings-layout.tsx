@@ -47,7 +47,7 @@ export const SettingsLayout = () => {
 
   return (
     <div className="h-full bg-white px-4 py-5">
-      <div className="mb-4 flex items-center justify-between gap-2">
+      <div className="mb-3 flex items-center justify-between gap-2">
         {leftColumn}
 
         <h1 className="text-heading4 text-neutral-900">{title}</h1>
