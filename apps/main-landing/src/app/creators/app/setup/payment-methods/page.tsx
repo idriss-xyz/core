@@ -4,7 +4,6 @@ import {
   ChainToken,
   CREATOR_CHAIN,
   DEFAULT_ALLOWED_CHAINS_IDS,
-  TOKEN,
   TokenSymbol,
 } from '@idriss-xyz/constants';
 import { Alert } from '@idriss-xyz/ui/alert';
@@ -64,16 +63,16 @@ const TOKENS_ORDER: Record<TokenSymbol, number> = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const iconsForCryptoPaymentMethod = [
-  TOKEN.ETHEREUM,
-  TOKEN.USDC,
-  TOKEN.IDRISS,
-  TOKEN.RONIN,
-  TOKEN.ECHELON_PRIME,
-  TOKEN.PENGU,
-  TOKEN.YGG,
-  TOKEN.PDT,
-];
+// const iconsForCryptoPaymentMethod = [
+//   TOKEN.ETHEREUM,
+//   TOKEN.USDC,
+//   TOKEN.IDRISS,
+//   TOKEN.RONIN,
+//   TOKEN.ECHELON_PRIME,
+//   TOKEN.PENGU,
+//   TOKEN.YGG,
+//   TOKEN.PDT,
+// ];
 
 const iconsForCardPaymentMethod: IconName[] = [
   'AmericanExpress',
@@ -382,6 +381,7 @@ export default function PaymentMethods() {
           type="success"
           autoClose
           onClose={handleAlertClose}
+          description="" // TODO: added to silence type-check. do we need a description here?
         />
       )}
       {saveSuccess === false && (

@@ -52,7 +52,7 @@ export function TabsPill({ tabs, renderLink }: TabsPillProperties) {
                     <span className="absolute top-[16px] h-[36px] w-[200px] rounded-t-[1000px] bg-[#5FEB3C] opacity-30 blur-md" />
                   </div>
                 ) : (
-                  <div className="flex items-center justify-center gap-2 rounded-full px-8 py-3 hover:bg-mint-200 hover:border-[#5FEB3C]">
+                  <div className="flex items-center justify-center gap-2 rounded-full px-8 py-3 hover:border-[#5FEB3C] hover:bg-mint-200">
                     <Icon
                       size={20}
                       name={tab.iconName}
