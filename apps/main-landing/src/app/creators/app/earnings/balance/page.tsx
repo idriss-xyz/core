@@ -5,7 +5,7 @@ import { Card } from '@idriss-xyz/ui/card';
 import { BalanceTableItem } from '@idriss-xyz/constants';
 import { usePrivy } from '@privy-io/react-auth';
 import { Hex } from 'viem';
-import { formatNumber } from '@idriss-xyz/utils';
+import { formatFiatValue } from '@idriss-xyz/utils';
 
 import { IDRISS_SCENE_STREAM_4 } from '@/assets';
 
@@ -70,7 +70,7 @@ export default function EarningsBalance() {
             <div className="flex flex-col items-center gap-2">
               <h4 className="text-heading4">Available balance</h4>
               <h2 className="text-heading2 gradient-text">
-                ${formatNumber(totalUsdBalance, 2)}
+                {formatFiatValue(totalUsdBalance)}
               </h2>
             </div>
             <div className="flex gap-2">

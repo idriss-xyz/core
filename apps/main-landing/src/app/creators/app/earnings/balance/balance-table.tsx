@@ -3,7 +3,7 @@ import { useSendTransaction } from '@privy-io/react-auth';
 import { BalanceTableItem, ERC20_ABI } from '@idriss-xyz/constants';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { ColumnDefinition, Table } from '@idriss-xyz/ui/table';
-import { formatNumber } from '@idriss-xyz/utils';
+import { formatFiatValue, formatTokenValue } from '@idriss-xyz/utils';
 import { encodeFunctionData, Hex, parseUnits } from 'viem';
 
 import { TokenLogo } from '../stats/token-logo';
@@ -80,7 +80,7 @@ export function BalanceTable({
       id: 'totalAmount',
       name: 'Amount',
       accessor: (item) => {
-        return `${formatNumber(item.totalAmount, 2)} ${item.token.symbol}`;
+        return `${formatTokenValue(item.totalAmount)} ${item.token.symbol}`;
       },
       sortable: true,
       sortFunction: (a, b) => {
@@ -91,7 +91,7 @@ export function BalanceTable({
       id: 'totalValue',
       name: 'Value',
       accessor: (item) => {
-        return `$${formatNumber(item.totalValue, 2)}` || 0;
+        return `${formatFiatValue(item.totalValue)}` || 0;
       },
       sortable: true,
       sortFunction: (a, b) => {

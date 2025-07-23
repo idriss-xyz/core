@@ -17,7 +17,7 @@ import {
   STAKER_ADDRESS,
   STAKING_ABI,
 } from '@idriss-xyz/constants';
-import { formatNumber } from '@idriss-xyz/utils';
+import { formatTokenValue } from '@idriss-xyz/utils';
 
 import { useGetStakedBalance } from '@/app/vault/commands/get-staked-balance';
 import { useGetUnstakedBalance } from '@/app/vault/commands/get-unstaked-balance';
@@ -437,7 +437,7 @@ export const useStaking = () => {
     isPending: stakedBalanceQuery.isPending,
     isSuccess: stakedBalanceQuery.isSuccess,
     formattedAmount: stakedBalanceQuery.data
-      ? formatNumber(Number(stakedBalanceQuery.data), 2)
+      ? formatTokenValue(Number(stakedBalanceQuery.data))
       : '0',
   };
 
@@ -448,7 +448,7 @@ export const useStaking = () => {
     isPending: unstakedBalanceQuery.isPending,
     isSuccess: unstakedBalanceQuery.isSuccess,
     formattedAmount: unstakedBalanceQuery.data
-      ? formatNumber(Number(unstakedBalanceQuery.data), 2)
+      ? formatTokenValue(Number(unstakedBalanceQuery.data))
       : '0',
   };
 
@@ -459,14 +459,14 @@ export const useStaking = () => {
     isPending: rewardsQuery.isPending,
     isSuccess: rewardsQuery.isSuccess,
     formattedAmount: rewardsQuery.data
-      ? formatNumber(Number(rewardsQuery.data), 2)
+      ? formatTokenValue(Number(rewardsQuery.data))
       : '0',
   };
 
   const totalStakedBalance = {
     amount: `${Number(stakedBalanceQuery.data ?? 0)}`,
     formattedAmount: stakedBalanceQuery.isSuccess
-      ? formatNumber(Number(stakedBalanceQuery.data ?? 0), 2)
+      ? formatTokenValue(Number(stakedBalanceQuery.data ?? 0))
       : '0',
   };
 

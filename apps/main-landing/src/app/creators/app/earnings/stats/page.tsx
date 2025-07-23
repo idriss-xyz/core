@@ -10,7 +10,7 @@ import { Bar, BarChart, XAxis } from 'recharts';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { Button } from '@idriss-xyz/ui/button';
 import { useMemo } from 'react';
-import { formatNumber } from '@idriss-xyz/utils';
+import { formatFiatValue, formatTokenValue } from '@idriss-xyz/utils';
 import { CREATOR_APP_TEST_ADDRESS } from '@idriss-xyz/constants';
 
 import { backgroundLines2, IDRISS_COIN, IDRISS_SCENE_STREAM_4 } from '@/assets';
@@ -149,7 +149,7 @@ export default function EarningsStats() {
                     name="TrendingUp"
                     className="mr-1 rounded-full bg-mint-600 p-1 text-white"
                   />
-                  ${formatNumber(stats.biggestDonation, 2)} largest donation
+                  {formatFiatValue(stats.biggestDonation)} largest donation
                 </span>
               </div>
             </CardBody>
@@ -158,7 +158,7 @@ export default function EarningsStats() {
             <CardHeader>Total earnings</CardHeader>
             <CardBody>
               <span className="text-heading3 text-black">
-                ${formatNumber(totalEarnings, 2)}
+                {formatFiatValue(totalEarnings)}
               </span>
               <ChartContainer
                 config={chartConfig}
@@ -183,7 +183,7 @@ export default function EarningsStats() {
                         hideLabel
                         hideValueName
                         formatter={(value) => {
-                          return `$${formatNumber(Number(value), 2)}`;
+                          return `${formatFiatValue(Number(value))}`;
                         }}
                         className="text-label4 font-medium"
                       />
@@ -216,7 +216,7 @@ export default function EarningsStats() {
                         {mainAsset.donationCount} donations
                       </span>
                       <span className="flex items-center text-xl font-semibold text-black">
-                        ${formatNumber(mainAsset.totalAmount, 2)}{' '}
+                        ${formatTokenValue(mainAsset.totalAmount)}{' '}
                         <span className="ml-2 text-sm font-medium text-gray-300">
                           {mainAsset.tokenData.symbol}
                         </span>
@@ -250,7 +250,7 @@ export default function EarningsStats() {
                             </span>
                           </td>
                           <td className="text-right align-middle text-sm font-medium text-black">
-                            ${formatNumber(item.totalAmount, 2)}
+                            {formatFiatValue(item.totalAmount)}
                           </td>
                         </tr>
                       );

@@ -7,7 +7,7 @@ import { Button } from '@idriss-xyz/ui/button';
 import { Link } from '@idriss-xyz/ui/link';
 import {
   getTransactionUrl,
-  roundToSignificantFigures,
+  formatTokenValue,
   applyDecimalsToNumericString,
 } from '@idriss-xyz/utils';
 import {
@@ -285,9 +285,8 @@ export const DonateForm = ({ className, creatorInfo }: Properties) => {
             <>
               Sending <span className="text-mint-600">${amount}</span>{' '}
               {amountInSelectedToken
-                ? `(${roundToSignificantFigures(
+                ? `(${formatTokenValue(
                     Number(amountInSelectedToken),
-                    2,
                   )} ${selectedToken?.symbol})`
                 : null}
             </>

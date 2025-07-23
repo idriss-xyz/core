@@ -407,7 +407,7 @@ export default function StreamAlerts() {
                         placeholder="$3"
                         helperText={
                           fieldState.error?.message ??
-                          'Donation amount that triggers an text-to-speech alert'
+                          'Donation amount that triggers text-to-speech'
                         }
                         error={Boolean(fieldState.error?.message)}
                         {...field}
@@ -422,7 +422,7 @@ export default function StreamAlerts() {
                   render={({ field, fieldState }) => {
                     return (
                       <Form.TagField
-                        label="Custom bad words"
+                        label="Custom bad words filter"
                         className="max-w-[360px]"
                         helperText={fieldState.error?.message}
                         error={Boolean(fieldState.error?.message)}
