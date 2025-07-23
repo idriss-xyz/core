@@ -64,6 +64,7 @@ export const Leaderboard = ({
       accessor: (_: LeaderboardStats, index: number) => {
         return index + 1;
       },
+      className: 'w-[40px]',                                                                                                   
     },
     {
       id: 'donor',
@@ -242,7 +243,7 @@ export const Leaderboard = ({
                 <Table
                   columns={columns}
                   data={leaderboard}
-                  className={className}
+                  className={classes(className, 'table-fixed')}
                   keyExtractor={(item) => {
                     return item.address;
                   }}
@@ -272,7 +273,7 @@ export const Leaderboard = ({
             )}
 
             {isTwitchPanel && (
-              <table className="w-full table-auto border-collapse">
+              <table className="w-full table-fixed border-collapse">
                 <tbody>
                   {leaderboard.map((item, index) => {
                     if (index > 4) return null;
@@ -310,7 +311,7 @@ export const Leaderboard = ({
             )}
 
             {(isTwitchComponent || isTwitchOverlay) && (
-              <table className="w-full table-auto border-collapse">
+              <table className="w-full table-fixed border-collapse">
                 <tbody>
                   {leaderboard.map((item, index) => {
                     if (index > 2) return null;
@@ -349,7 +350,7 @@ export const Leaderboard = ({
             )}
 
             {!isTwitchExtension && (
-              <table className="w-full table-auto border-collapse">
+              <table className="w-full table-fixed border-collapse">
                 <tbody>
                   {leaderboard.map((item, index) => {
                     if (index > MAX_DISPLAYED_ITEMS) return null;
@@ -455,7 +456,7 @@ export const LeaderboardStandalone = ({
 
         {leaderboard && !leaderboardLoading && !leaderboardError && (
           <ScrollArea className="max-h-[480px] overflow-y-auto transition-all duration-500">
-            <table className="w-full table-auto border-collapse pr-4">
+            <table className="w-full table-fixed border-collapse pr-4">
               <tbody>
                 {leaderboard.map((leaderboardItem, index) => {
                   if (!leaderboardItem || index > 9) return null;

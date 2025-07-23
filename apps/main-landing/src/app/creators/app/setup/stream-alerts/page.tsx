@@ -412,7 +412,7 @@ export default function StreamAlerts() {
                   render={({ field, fieldState }) => {
                     return (
                       <Form.TagField
-                        label="Custom Bad Words"
+                        label="Custom bad words"
                         className="max-w-[360px]"
                         helperText={fieldState.error?.message}
                         error={Boolean(fieldState.error?.message)}

@@ -87,7 +87,7 @@ export const TagField = forwardRef(
                 return setInputValue(event.target.value);
               }}
               onKeyDown={handleKeyDown}
-              placeholder="Type and press comma or enter to add words"
+              placeholder="Type and hit comma or enter"
             />
           </RadixForm.Control>
 
