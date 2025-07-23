@@ -1,6 +1,6 @@
 'use client';
 import { useSendTransaction } from '@privy-io/react-auth';
-import { BalanceTableItem } from '@idriss-xyz/constants';
+import { BalanceTableItem, ERC20_ABI } from '@idriss-xyz/constants';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { ColumnDefinition, Table } from '@idriss-xyz/ui/table';
 import { formatNumber } from '@idriss-xyz/utils';
@@ -24,21 +24,9 @@ export function BalanceTable({
     }
 
     const amount = parseUnits(item.totalAmount.toString(), item.token.decimals);
-    const transferAbi = [
-      {
-        inputs: [
-          { name: 'to', type: 'address' },
-          { name: 'amount', type: 'uint256' },
-        ],
-        name: 'transfer',
-        outputs: [{ name: '', type: 'bool' }],
-        stateMutability: 'nonpayable',
-        type: 'function',
-      },
-    ] as const;
 
     const txData = encodeFunctionData({
-      abi: transferAbi,
+      abi: ERC20_ABI,
       functionName: 'transfer',
       args: [userAddress, amount],
     });
@@ -125,7 +113,8 @@ export function BalanceTable({
           />
         );
       },
-      className: 'flex justify-end',
+      className: 'flex justify-center',
+      headerClassName: 'justify-center',
     },
   ];
 

@@ -15,6 +15,7 @@ export type ColumnDefinition<T> = {
   sortable?: boolean;
   sortFunction?: (a: T, b: T) => number;
   className?: string;
+  headerClassName?: string;
 };
 
 // Sort state type
@@ -120,18 +121,23 @@ export function Table<T>({
                   }
                 >
                   {typeof column.name === 'string' ? (
-                    <div className="flex items-center gap-1">
+                    <div
+                      className={classes(
+                        'flex items-center gap-1',
+                        column.headerClassName,
+                      )}
+                    >
                       {column.name}
-                      <div className="w-4">
-                        {column.sortable &&
-                          getSortDirection(column.id) === 'desc' && (
+                      {column.sortable && (
+                        <div className="w-4">
+                          {getSortDirection(column.id) === 'desc' && (
                             <Icon name="ArrowDown" size={16} />
                           )}
-                        {column.sortable &&
-                          getSortDirection(column.id) === 'asc' && (
+                          {getSortDirection(column.id) === 'asc' && (
                             <Icon name="ArrowUp" size={16} />
                           )}
-                      </div>
+                        </div>
+                      )}
                     </div>
                   ) : (
                     column.name

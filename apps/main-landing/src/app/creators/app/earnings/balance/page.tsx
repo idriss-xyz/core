@@ -3,7 +3,7 @@
 import { Button } from '@idriss-xyz/ui/button';
 import { Card } from '@idriss-xyz/ui/card';
 import { BalanceTableItem } from '@idriss-xyz/constants';
-import { usePrivy, useSignMessage } from '@privy-io/react-auth';
+import { usePrivy } from '@privy-io/react-auth';
 import { Hex } from 'viem';
 import { formatNumber } from '@idriss-xyz/utils';
 
@@ -17,26 +17,6 @@ import { BalanceTable } from './balance-table';
 export default function EarningsBalance() {
   const { user, ready, authenticated } = usePrivy();
   const address = user?.wallet?.address as Hex | undefined;
-
-  const { signMessage } = useSignMessage();
-
-  const handleSignMessage = async () => {
-    try {
-      const uiOptions = {
-        title: 'You are voting for foobar project',
-        showWalletUIs: false,
-      };
-      const { signature } = await signMessage(
-        { message: 'I hereby vote for foobar' },
-        { uiOptions },
-      );
-      console.log(signature);
-      // Any logic you'd like to execute after a user successfully signs a message
-    } catch (error) {
-      console.log(error);
-      // Any logic you'd like to execute after a user exits the message signing flow or there is an error
-    }
-  };
 
   const {
     data: balancesData,
@@ -101,15 +81,6 @@ export default function EarningsBalance() {
                 prefixIconName="ArrowDownFromLine"
               >
                 Withdraw
-              </Button>
-              {/* todo: remove, just for testing */}
-              <Button
-                intent="secondary"
-                size="small"
-                className="uppercase"
-                onClick={handleSignMessage}
-              >
-                Sign Message
               </Button>
             </div>
           </div>
