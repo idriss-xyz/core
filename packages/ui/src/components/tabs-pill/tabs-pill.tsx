@@ -52,7 +52,7 @@ export function TabsPill({ tabs, renderLink }: TabsPillProperties) {
                     <span className="absolute top-[16px] h-[36px] w-[200px] rounded-t-[1000px] bg-[#5FEB3C] opacity-30 blur-md" />
                   </div>
                 ) : (
-                  <div className="flex items-center justify-center gap-2 rounded-full px-8 py-3 hover:border-[#5FEB3C] hover:bg-mint-200">
+                  <div className="group relative flex h-[44px] items-center justify-center gap-2 overflow-hidden rounded-full px-8 py-3 hover:border hover:border-[#5FEB3C]">
                     <Icon
                       size={20}
                       name={tab.iconName}
@@ -61,6 +61,7 @@ export function TabsPill({ tabs, renderLink }: TabsPillProperties) {
                     <span className="max-h-[38px] min-h-4.5 w-full text-label4 text-black">
                       {tab.name}
                     </span>
+                    <span className="absolute top-[16px] hidden h-[36px] w-[200px] rounded-t-[1000px] bg-[#5FEB3C] opacity-30 blur-md group-hover:inline" />
                   </div>
                 )}
               </div>
