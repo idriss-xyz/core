@@ -18,7 +18,7 @@ export const Switch = forwardRef<HTMLButtonElement, Properties>(
         disabled={disabled}
       >
         <div className="h-6 w-[42px] rounded-full bg-neutral-300 p-0.5 group-data-[state=checked]:bg-mint-500">
-          <RadixSwitch.Thumb className="block size-5 rounded-[100%] bg-white shadow-sm transition-transform data-[state=checked]:translate-x-[18px]" />
+          <RadixSwitch.Thumb className="block size-5 rounded-[100%] bg-white shadow-sm transition-transform data-[state=checked]:translate-x-4.5" />
         </div>
       </RadixSwitch.Root>
     );

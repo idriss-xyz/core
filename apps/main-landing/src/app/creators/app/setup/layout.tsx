@@ -38,6 +38,13 @@ export default function SetupLayout({
       iconName: 'GalleryVertical',
       isActive: pathname === '/creators/app/setup/donation-panel',
     },
+    {
+      name: 'Page customization',
+      subtitle: 'Coming soon',
+      iconName: 'Paintbrush',
+      isActive: pathname === '/creators/app/setup/page-customization',
+      disabled: true,
+    },
   ];
 
   const renderLink = ({

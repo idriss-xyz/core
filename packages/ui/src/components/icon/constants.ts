@@ -50,6 +50,7 @@ import {
   RefreshCw,
   FileUp,
   Gamepad2,
+  Paintbrush,
 } from 'lucide-react';
 
 import * as customIcons from './custom';
@@ -106,5 +107,6 @@ export const ICON = {
   RefreshCw,
   FileUp,
   Gamepad2,
+  Paintbrush,
   ...customIcons,
 };
