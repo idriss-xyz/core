@@ -16,7 +16,7 @@ import { alert, AlertVariants, icon, iconClass } from './variants';
 
 type Properties = {
   heading: string;
-  description: string;
+  description?: string;
   autoClose?: boolean;
   show?: boolean;
   iconName?: IconName;
@@ -76,7 +76,9 @@ export const Alert = forwardRef(
         <div className="grid grid-cols-[1fr,32px] items-start">
           <div className="flex flex-col items-start gap-y-1">
             <p className="text-label3 text-neutral-900">{heading}</p>
-            <p className="text-body5 text-neutral-600">{description}</p>
+            {description && (
+              <p className="text-body5 text-neutral-600">{description}</p>
+            )}
 
             {actionButtons && (
               <div className="mt-2 flex flex-row flex-wrap items-center gap-x-4 gap-y-2">

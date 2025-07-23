@@ -64,6 +64,7 @@ const TOKENS_ORDER: Record<TokenSymbol, number> = {
   PENGU: 12,
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const iconsForCryptoPaymentMethod = [
   TOKEN.ETHEREUM,
   TOKEN.USDC,
@@ -288,7 +289,8 @@ export default function PaymentMethods() {
               }}
               className="max-w-screen-xs"
             />
-            <IconsRow tokens={iconsForCryptoPaymentMethod} />
+            {/* Uncomment when we have second payment method ready */}
+            {/* <IconsRow tokens={iconsForCryptoPaymentMethod} /> */}
             {toggleCrypto && (
               <div>
                 <Controller
@@ -335,15 +337,16 @@ export default function PaymentMethods() {
                     );
                   }}
                 />
-
-                <Button
-                  size="medium"
-                  intent="primary"
-                  className="mt-4"
-                  onClick={formMethods.handleSubmit(onSubmit)}
-                >
-                  SAVE SETTINGS
-                </Button>
+                {formMethods.formState.isDirty && (
+                  <Button
+                    size="medium"
+                    intent="primary"
+                    className="mt-4"
+                    onClick={formMethods.handleSubmit(onSubmit)}
+                  >
+                    SAVE SETTINGS
+                  </Button>
+                )}
               </div>
             )}
           </FormFieldWrapper>
@@ -374,9 +377,8 @@ export default function PaymentMethods() {
       {/* Alerts section */}
       {saveSuccess && (
         <Alert
-          heading="Refresh the browser source in your streaming software"
+          heading="Settings saved!"
           type="success"
-          description="Keeps your donation alert setup up to date"
           autoClose
           onClose={handleAlertClose}
         />
