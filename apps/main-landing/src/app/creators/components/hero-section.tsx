@@ -25,6 +25,7 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
 
   const {
     isLoginModalOpen,
+    setLoginModalOpen,
     setIsModalOpen,
     isPasswordModalOpen,
     setIsPasswordModalOpen,
@@ -48,6 +49,7 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
 
     if (customToken) {
       setIsLoggingIn(true);
+      setLoginModalOpen(true);
       // Store Twitch info in sessionStorage to be picked up by the next page.
       if (name) {
         sessionStorage.setItem(
@@ -60,12 +62,8 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
       // Redirect to the main app. The PrivyProvider will now automatically
       // use the token to authenticate the user.
       router.push('/creators/app');
-    } else {
-      // No token found, redirect away
-      setIsModalOpen(false);
-      setIsLoggingIn(false);
     }
-  }, [searchParameters, router]);
+  }, [searchParameters, router, setIsLoggingIn, setLoginModalOpen]);
 
   return (
     <header

@@ -74,7 +74,7 @@ export const button = cva(
         isLoading: true,
         intent: 'secondary',
         className:
-          'disabled:border-solid disabled:bg-white disabled:text-neutralGreen-900',
+          'disabled:bg-white disabled:text-neutralGreen-900 disabled:outline disabled:outline-1 disabled:outline-offset-[-1px] disabled:outline-mint-400',
       },
       {
         isLoading: true,
