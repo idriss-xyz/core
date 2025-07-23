@@ -163,21 +163,23 @@ export default function EarningsStats() {
           <Card className="col-span-1 space-y-4">
             <CardHeader className="flex items-center justify-between text-neutral-600">
               Total earnings
-              <TooltipProvider delayDuration={400}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Icon name="HelpCircle" size={24} />
-                  </TooltipTrigger>
-                  <TooltipContent className="bg-black text-center text-white">
-                    <p>Value of assets at the time of receiving</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <div className="flex items-center gap-2">
+                <span className="text-heading3 text-black">
+                  {formatFiatValue(totalEarnings)}
+                </span>
+                <TooltipProvider delayDuration={400}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Icon name="HelpCircle" size={24} />
+                    </TooltipTrigger>
+                    <TooltipContent className="bg-black text-center text-white">
+                      <p>Value of assets at the time of receiving</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
             </CardHeader>
             <CardBody>
-              <span className="text-heading3 text-black">
-                {formatFiatValue(totalEarnings)}
-              </span>
               <ChartContainer
                 config={chartConfig}
                 className="min-h-[200px] w-full"
