@@ -17,8 +17,8 @@ export const Switch = forwardRef<HTMLButtonElement, Properties>(
         onCheckedChange={onChange}
         disabled={disabled}
       >
-        <div className="h-5 w-8 rounded-full bg-neutral-300 p-0.5 group-data-[state=checked]:bg-mint-500">
-          <RadixSwitch.Thumb className="block size-4 rounded-[100%] bg-white shadow-sm transition-transform data-[state=checked]:translate-x-3" />
+        <div className="h-6 w-[42px] rounded-full bg-neutral-300 p-0.5 group-data-[state=checked]:bg-mint-500">
+          <RadixSwitch.Thumb className="block size-5 rounded-[100%] bg-white shadow-sm transition-transform data-[state=checked]:translate-x-[18px]" />
         </div>
       </RadixSwitch.Root>
     );
