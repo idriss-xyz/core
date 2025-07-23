@@ -32,6 +32,7 @@ import {
 
 import { File } from '../file-upload/file';
 import { Select } from '../select';
+import { Icon } from '@idriss-xyz/ui/icon';
 
 const UpgradeBox: React.FC = () => {
   return (
@@ -253,13 +254,22 @@ export default function StreamAlerts() {
               <>
                 <div className="flex items-center gap-4">
                   <div className="flex flex-col gap-1">
-                    <span className="pb-1 text-label4">Overlay link</span>
+                    <label className="pb-1 text-label4 text-neutralGreen-700">
+                      Overlay link
+                    </label>
                     <CopyInput
                       value={`${CREATORS_LINK}/obs/${creator?.name}`}
                     />
-                    <span className="text-label6 text-neutral-600">
-                      Add this as a browser source in your streaming software
-                    </span>
+                    <div className="flex items-center pt-1">
+                      <span className="flex items-center space-x-1 text-label7 text-neutral-600 lg:text-label7">
+                        Add this as a browser source in your streaming software
+                      </span>
+                      <Icon
+                        name="HelpCircle"
+                        size={16}
+                        className="p-0.5 text-neutral-600"
+                      />
+                    </div>
                   </div>
                   <div className="flex flex-col gap-2">
                     <Button
