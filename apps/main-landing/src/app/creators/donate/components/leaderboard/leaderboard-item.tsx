@@ -1,6 +1,9 @@
 import { Icon } from '@idriss-xyz/ui/icon';
 import { Link } from '@idriss-xyz/ui/link';
-import { getShortWalletHex, getTimeDifferenceString } from '@idriss-xyz/utils';
+import {
+  getModifiedLeaderboardName,
+  getTimeDifferenceString,
+} from '@idriss-xyz/utils';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Hex } from 'viem';
 import { DonationUser } from '@idriss-xyz/constants';
@@ -112,7 +115,9 @@ export const LeaderboardItem = ({
             onDonorClick && 'cursor-pointer',
           )}
         >
-          {displayName ?? getShortWalletHex(donorDetails.address)}
+          {displayName
+            ? getModifiedLeaderboardName(displayName)
+            : getModifiedLeaderboardName(donorDetails.address)}
         </Link>
       </td>
 

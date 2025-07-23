@@ -5,10 +5,10 @@ import { Spinner } from '@idriss-xyz/ui/spinner';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { Button } from '@idriss-xyz/ui/button';
-import { getTimeDifferenceString } from '@idriss-xyz/utils';
 import { ColumnDefinition, Table } from '@idriss-xyz/ui/table';
 import { LeaderboardStats } from '@idriss-xyz/constants';
 
+import { useTimeAgo } from '../../hooks/use-time-ago';
 import { IDRISS_SCENE_STREAM_2 } from '../../../../../assets';
 import { WidgetVariants } from '../../../../../../../twitch-extension/src/app/types';
 import { DonateContentValues } from '../../types';
@@ -42,6 +42,11 @@ type Properties = {
 
 const baseClassName =
   'z-1 w-[360px] max-w-full rounded-xl bg-white flex flex-col items-center relative overflow-hidden';
+
+const TimeAgoCell = ({ timestamp }: { timestamp?: string | number }) => {
+  const timeAgo = useTimeAgo({ timestamp });
+  return <>{timeAgo}</>;
+};
 
 export const Leaderboard = ({
   variant,
@@ -100,13 +105,7 @@ export const Leaderboard = ({
       id: 'donorSince',
       name: perspective === 'creator' ? 'Creator since' : 'Donor since',
       accessor: (item) => {
-        return item.donorSince
-          ? getTimeDifferenceString({
-              text: 'ago',
-              variant: 'short',
-              timestamp: item.donorSince,
-            })
-          : '-';
+        return <TimeAgoCell timestamp={item.donorSince} />;
       },
       sortable: true,
       sortFunction: (a, b) => {

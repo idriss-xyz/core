@@ -14,10 +14,10 @@ export {
   getTransactionUrls,
   getSafeNumber,
   getShortWalletHex,
+  getModifiedLeaderboardName,
   getFormattedTimeDifference,
   getTimeDifferenceString,
   isSolanaAddress,
-  removeEthSuffix,
 } from './formatting-utils';
 
 export {

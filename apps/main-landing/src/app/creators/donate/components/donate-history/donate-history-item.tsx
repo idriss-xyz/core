@@ -12,16 +12,17 @@ import {
 } from '@idriss-xyz/ui/tooltip';
 import { CREATOR_CHAIN, DonationData } from '@idriss-xyz/constants';
 import {
-  getShortWalletHex,
   getTransactionUrls,
-  getTimeDifferenceString,
   roundToSignificantFiguresForCopilotTrading,
+  getModifiedLeaderboardName,
 } from '@idriss-xyz/utils';
 import { Link } from '@idriss-xyz/ui/link';
 import { useRouter } from 'next/navigation';
 
 import { removeMainnetSuffix } from '@/app/creators/donate/utils';
 import { TokenLogo } from '@/app/creators/app/earnings/stats/token-logo';
+
+import { useTimeAgo } from '../../hooks/use-time-ago';
 
 type Properties = {
   donation: DonationData;
@@ -34,6 +35,7 @@ export const DonateHistoryItem = ({
   showReceiver,
   showMenu = true,
 }: Properties) => {
+  const timeAgo = useTimeAgo({ timestamp: donation.timestamp });
   const router = useRouter();
   const tokenSymbol = donation.token.symbol;
   const tipReceiver = donation.toUser;
@@ -46,6 +48,10 @@ export const DonateHistoryItem = ({
   const displayName = showReceiver
     ? tipReceiver?.displayName
     : donation.fromUser.displayName;
+
+  const nameToDisplay = getModifiedLeaderboardName(
+    displayName ?? (showReceiver ? receiverAddress : tipperFromAddress),
+  );
 
   const redirectUrl = showReceiver
     ? `/creators/donor/${receiverAddress}`
@@ -100,10 +106,7 @@ export const DonateHistoryItem = ({
                 }}
                 className="cursor-pointer border-0 align-middle text-label3 text-neutral-900 no-underline lg:text-label3"
               >
-                {displayName ??
-                  (showReceiver
-                    ? getShortWalletHex(receiverAddress)
-                    : getShortWalletHex(tipperFromAddress))}
+                {nameToDisplay}
               </Link>{' '}
               <span className="align-middle text-body3 text-neutral-600">
                 {showReceiver ? 'received' : 'sent'}{' '}
@@ -144,13 +147,7 @@ export const DonateHistoryItem = ({
           <TooltipProvider delayDuration={400}>
             <Tooltip>
               <TooltipTrigger asChild>
-                <p className="w-fit text-body6 text-mint-700">
-                  {getTimeDifferenceString({
-                    text: 'ago',
-                    variant: 'short',
-                    timestamp: donation.timestamp,
-                  })}
-                </p>
+                <p className="w-fit text-body6 text-mint-700">{timeAgo}</p>
               </TooltipTrigger>
 
               <TooltipContent className="w-fit bg-black text-white">

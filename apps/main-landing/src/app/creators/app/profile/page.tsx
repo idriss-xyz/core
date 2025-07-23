@@ -13,13 +13,11 @@ import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { IDRISS_SCENE_STREAM_4, backgroundLines2 } from '@/assets';
 import { useAuth } from '@/app/creators/context/auth-context';
 import { CopyInput } from '@/app/creators/components/copy-input/copy-input';
-import { EnterInput } from '@/app/creators/components/enter-input/enter-input';
 import {
   FormFieldWrapper,
   SectionHeader,
 } from '@/app/creators/components/layout';
 import { ConfirmationModal } from '@/app/creators/components/confirmation-modal';
-import { editCreatorProfile } from '@/app/creators/utils';
 
 const handleDeleteAccount = () => {
   // TODO: Implement backend call to save email
@@ -33,26 +31,28 @@ export default function ProfilePage() {
     useState(false);
 
   const { creator } = useAuth();
-  const { user, exportWallet, getAccessToken } = usePrivy();
+  const { user, exportWallet } = usePrivy();
   const address = user?.wallet?.address as Hex | undefined;
-  const email = creator?.email ?? user?.email?.address ?? '';
 
-  const handleEmailSave = async (newEmail: string) => {
-    if (!creator?.name) {
-      console.error('Creator name not found');
-      return;
-    }
-    try {
-      const authToken = await getAccessToken();
-      if (!authToken) {
-        console.error('Not authenticated');
-        return;
-      }
-      await editCreatorProfile(creator.name, { email: newEmail }, authToken);
-    } catch (error) {
-      console.error('Failed to save email:', error);
-    }
-  };
+  // TODO: add back when email saving comes back, including `getAccessToken` in usePrivy()
+  // const email = creator?.email ?? user?.email?.address ?? '';
+
+  // const handleEmailSave = async (newEmail: string) => {
+  //   if (!creator?.name) {
+  //     console.error('Creator name not found');
+  //     return;
+  //   }
+  //   try {
+  //     const authToken = await getAccessToken();
+  //     if (!authToken) {
+  //       console.error('Not authenticated');
+  //       return;
+  //     }
+  //     await editCreatorProfile(creator.name, { email: newEmail }, authToken);
+  //   } catch (error) {
+  //     console.error('Failed to save email:', error);
+  //   }
+  // };
 
   const profileImageUrl = creator?.profilePictureUrl;
   const profileImageSize = 80;
@@ -118,7 +118,8 @@ export default function ProfilePage() {
           </div>
         </Card>
 
-        <Card>
+        {/* TODO: Unhide when we introduce updates */}
+        {/* <Card>
           <FormFieldWrapper>
             <SectionHeader
               title="Updates"
@@ -137,7 +138,7 @@ export default function ProfilePage() {
               </div>
             </div>
           </FormFieldWrapper>
-        </Card>
+        </Card> */}
 
         <Card>
           <FormFieldWrapper>

@@ -1,5 +1,5 @@
 import { PublicKey } from '@solana/web3.js';
-import { Hex } from 'viem';
+import { Hex, isAddress } from 'viem';
 
 import { CHAIN, NATIVE_COIN_ADDRESS } from '../../constants/src';
 
@@ -227,6 +227,16 @@ export const getShortWalletHex = (walletAddress: string) => {
   return `${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}`;
 };
 
+export const getModifiedLeaderboardName = (name: string) => {
+  if (isAddress(name)) {
+    return 'anon';
+  }
+  if (name.includes('.')) {
+    return name.split('.')[0];
+  }
+  return name;
+};
+
 export const getFormattedTimeDifference = (
   isoTimestamp: string | number,
   variant: 'long' | 'short',
@@ -283,10 +293,7 @@ export const getTimeDifferenceString = ({
   text: string;
   variant: 'long' | 'short';
 }) => {
-  let timeDifference = getFormattedTimeDifference(timestamp, variant);
-  setInterval(() => {
-    timeDifference = getFormattedTimeDifference(timestamp, variant);
-  }, 1000);
+  const timeDifference = getFormattedTimeDifference(timestamp, variant);
 
   return text ? `${timeDifference} ${text}` : timeDifference;
 };
@@ -298,12 +305,4 @@ export const isSolanaAddress = (address: string): boolean => {
   } catch {
     return false;
   }
-};
-
-export const removeEthSuffix = (name: string) => {
-  if (name.endsWith('.eth')) {
-    return name.slice(0, -4);
-  }
-
-  return name;
 };
