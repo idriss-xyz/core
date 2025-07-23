@@ -3,6 +3,7 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
+import { CREATOR_SETUP_GUIDE_LINK, SUPPORT_LINK } from '@idriss-xyz/constants';
 
 import { socialOptions } from '../constants';
 
@@ -94,17 +95,29 @@ export function Sidebar() {
         <div className="flex flex-col gap-3.5">
           <div className="flex flex-col gap-3.5">
             <div className="flex max-h-[62px] min-h-[32px] flex-col rounded-[4px] px-3 py-1">
-              <div className="flex items-center gap-3">
-                <Icon name="BookOpen" size={20} className="text-[#717484]" />
-                <span className="text-body4 text-neutral-900">Setup guide</span>
-              </div>
+              <Link href={CREATOR_SETUP_GUIDE_LINK} className="group flex items-center gap-3">
+                <Icon
+                  name="BookOpen"
+                  size={20}
+                  className="text-[#717484] group-hover:text-mint-600"
+                />
+                <span className="text-body4 text-neutral-900 group-hover:text-mint-600">
+                  Setup guide
+                </span>
+              </Link>
             </div>
 
             <div className="flex max-h-[62px] min-h-[32px] flex-col rounded-[4px] px-3 py-1">
-              <div className="flex items-center gap-3">
-                <Icon name="HelpCircle" size={20} className="text-[#717484]" />
-                <span className="text-body4 text-neutral-900">Support</span>
-              </div>
+              <Link href={SUPPORT_LINK} className="group flex items-center gap-3">
+                <Icon
+                  name="HelpCircle"
+                  size={20}
+                  className="text-[#717484] group-hover:text-mint-600"
+                />
+                <span className="text-body4 text-neutral-900 group-hover:text-mint-600">
+                  Support
+                </span>
+              </Link>
             </div>
           </div>
 
