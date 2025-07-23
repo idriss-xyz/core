@@ -86,10 +86,9 @@ export default function TopDonors() {
           </div>
           <Button
             asLink
-            isExternal
             size="medium"
             intent="secondary"
-            href="" // TODO: Add link
+            href="/creators/app/ranking/top-creators"
             suffixIconName="IdrissArrowRight"
             className="absolute left-[497px] top-8 uppercase"
           >

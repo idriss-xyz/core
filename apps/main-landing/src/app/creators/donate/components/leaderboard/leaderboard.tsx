@@ -238,7 +238,7 @@ export const Leaderboard = ({
         ) : (
           <div className={classes(isTwitchPanel && 'min-h-[345px]')}>
             {isCreatorsDashboard && (
-              <ScrollArea className="max-h-[694px] w-full overflow-y-auto rounded-b-md rounded-t-none bg-white text-black transition-all duration-500 [scrollbar-color:gray_#efefef] [scrollbar-width:thin]">
+              <ScrollArea className="h-[694px] w-full overflow-y-auto rounded-b-md rounded-t-none bg-white text-black transition-all duration-500 [scrollbar-color:gray_#efefef] [scrollbar-width:thin]">
                 <Table
                   columns={columns}
                   data={leaderboard}
