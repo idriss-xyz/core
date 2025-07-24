@@ -44,9 +44,15 @@ export function TabsPill({ tabs, renderLink }: TabsPillProperties) {
                 key={tab.name}
                 className="relative flex h-[44px] cursor-not-allowed items-center justify-center gap-2 overflow-hidden rounded-full border border-transparent px-8 py-2"
               >
-                <Icon size={20} name={tab.iconName} className="text-black" />
+                <Icon
+                  size={20}
+                  name={tab.iconName}
+                  className="text-neutral-900"
+                />
                 <div className="flex min-w-[108] max-w-[138] flex-col items-start">
-                  <span className="text-label4 text-black">{tab.name}</span>
+                  <span className="text-label4 text-neutral-900">
+                    {tab.name}
+                  </span>
                   {tab.subtitle && (
                     <span className="text-label6 text-mint-600">
                       {tab.subtitle}
@@ -67,7 +73,9 @@ export function TabsPill({ tabs, renderLink }: TabsPillProperties) {
                   <div className="relative flex h-[44px] items-center justify-center gap-2 overflow-hidden rounded-full border border-[#5FEB3C] bg-white px-8 py-2 text-neutralGreen-900">
                     <Icon name={tab.iconName} size={20} />
                     <div className="relative z-1 flex min-w-[108] max-w-[138] flex-col items-start">
-                      <span className="text-label4 text-black">{tab.name}</span>
+                      <span className="text-label4 text-neutral-900">
+                        {tab.name}
+                      </span>
                       {tab.subtitle && (
                         <span className="text-label6 text-mint-600">
                           {tab.subtitle}
@@ -81,10 +89,12 @@ export function TabsPill({ tabs, renderLink }: TabsPillProperties) {
                     <Icon
                       size={20}
                       name={tab.iconName}
-                      className="text-black"
+                      className="text-neutral-900"
                     />
                     <div className="relative z-1 flex min-w-[108] max-w-[138] flex-col items-start">
-                      <span className="text-label4 text-black">{tab.name}</span>
+                      <span className="text-label4 text-neutral-900">
+                        {tab.name}
+                      </span>
                       {tab.subtitle && (
                         <span className="text-label6 text-mint-600">
                           {tab.subtitle}
