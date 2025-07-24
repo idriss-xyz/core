@@ -7,6 +7,12 @@ import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { Button } from '@idriss-xyz/ui/button';
 import { ColumnDefinition, Table } from '@idriss-xyz/ui/table';
 import { LeaderboardStats } from '@idriss-xyz/constants';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@idriss-xyz/ui/tooltip';
 
 import { useTimeAgo } from '../../hooks/use-time-ago';
 import { IDRISS_SCENE_STREAM_2 } from '../../../../../assets';
@@ -45,7 +51,35 @@ const baseClassName =
 
 const TimeAgoCell = ({ timestamp }: { timestamp?: string | number }) => {
   const timeAgo = useTimeAgo({ timestamp });
-  return <>{timeAgo}</>;
+
+  if (!timestamp) {
+    return <>{timeAgo}</>;
+  }
+
+  return (
+    <TooltipProvider delayDuration={400}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span>{timeAgo}</span>
+        </TooltipTrigger>
+        <TooltipContent className="w-fit bg-black text-white">
+          <p className="text-body6">
+            {new Intl.DateTimeFormat('en-US', {
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit',
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+              hour12: false,
+            })
+              .format(new Date(timestamp))
+              .replaceAll('/', '-')}
+          </p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
 };
 
 export const Leaderboard = ({
