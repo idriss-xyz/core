@@ -135,14 +135,14 @@ export default function EarningsStats() {
     <div className="grid grid-cols-3 gap-4">
       {sortedDonations.length > 0 && stats ? (
         <>
-          <Card className="col-span-1">
+          <Card className="col-span-1 flex flex-col">
             <CardHeader className="text-neutral-900">Transactions</CardHeader>
-            <CardBody>
+            <CardBody className="flex grow items-center justify-center">
               <div className="relative">
-                <div className="mx-14 flex items-center justify-center p-6">
-                  <img src={IDRISS_COIN.src} alt="coin" />
+                <div className="mx-8 flex items-center justify-center p-6">
+                  <img src={IDRISS_COIN.src} alt="coin" className="w-[198px]" />
                 </div>
-                <span className="pointer-events-none absolute left-6 top-16 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-black">
+                <span className="pointer-events-none absolute left-2 top-12 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-black">
                   <Icon
                     size={24}
                     name="BadgeDollarSign"
@@ -150,7 +150,7 @@ export default function EarningsStats() {
                   />
                   {stats.totalDonationsCount} donations
                 </span>
-                <span className="pointer-events-none absolute right-8 top-8 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-black">
+                <span className="pointer-events-none absolute right-2 top-8 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-black">
                   <Icon
                     size={24}
                     name="Trophy"
@@ -158,7 +158,7 @@ export default function EarningsStats() {
                   />
                   {stats.distinctDonorsCount} donors
                 </span>
-                <span className="pointer-events-none absolute bottom-8 right-8 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-black">
+                <span className="pointer-events-none absolute bottom-4 right-2 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-black">
                   <Icon
                     size={24}
                     name="TrendingUp"
