@@ -1,12 +1,13 @@
 'use client';
+import { useState } from 'react';
 import { Dialog } from '@idriss-xyz/ui/dialog';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { VisuallyHidden } from '@idriss-xyz/ui/visually-hidden';
 import { Button } from '@idriss-xyz/ui/button';
 import Link from 'next/link';
 import { NavigationMenu } from '@idriss-xyz/ui/navigation-menu';
-import { CREATORS_FORM_LINK } from '@idriss-xyz/constants';
 import { classes } from '@idriss-xyz/ui/utils';
+import { MobileNotSupported } from '@idriss-xyz/ui/mobile-not-supported';
 
 import { EXTERNAL_LINK, INTERNAL_LINK } from '@/constants';
 import { Socials } from '@/components/top-bar/components/mobile/socials';
@@ -25,28 +26,51 @@ export const Mobile = ({
   displayCTA,
   hideNavigation,
 }: Properties) => {
+  const [isMobileNotSupportedOpen, setIsMobileNotSupportedOpen] =
+    useState(false);
+
+  const handleStartEarningClick = () => {
+    setIsMobileNotSupportedOpen(true);
+  };
+
   if (isLanding) {
     return (
-      <div className="flex flex-row flex-wrap items-center justify-end gap-x-1 xs:gap-2 sm:hidden">
-        {displayCTA && (
-          <Button
-            asLink
-            size="small"
-            intent="primary"
-            href={CREATORS_FORM_LINK}
-            aria-label="Start earning"
-            suffixIconName="IdrissArrowRight"
-          >
-            Start earning
-          </Button>
-        )}
+      <>
+        <div className="flex flex-row flex-wrap items-center justify-end gap-x-1 xs:gap-2 sm:hidden">
+          {displayCTA && (
+            <Button
+              size="small"
+              intent="primary"
+              aria-label="Start earning"
+              onClick={handleStartEarningClick}
+              suffixIconName="IdrissArrowRight"
+            >
+              Start earning
+            </Button>
+          )}
 
-        <DesktopSocials
-          enlargeIcon={!isSticky}
-          className={classes(isSticky && 'space-x-1 xs:space-x-2')}
-          iconClassName={classes(isSticky && 'px-1 xs:px-2')}
-        />
-      </div>
+          <DesktopSocials
+            enlargeIcon={!isSticky}
+            className={classes(isSticky && 'space-x-1 xs:space-x-2')}
+            iconClassName={classes(isSticky && 'px-1 xs:px-2')}
+          />
+        </div>
+        {isMobileNotSupportedOpen && (
+          <MobileNotSupported
+            className="bg-[#E7F5E6]/[0.6] backdrop-blur-sm"
+            onClose={() => {
+              return setIsMobileNotSupportedOpen(false);
+            }}
+          >
+            <p className="text-balance text-center text-heading5 text-neutralGreen-700">
+              This experience is designed for desktop.
+            </p>
+            <p className="text-balance text-center text-heading5 text-neutralGreen-700">
+              Please use a PC or a laptop.
+            </p>
+          </MobileNotSupported>
+        )}
+      </>
     );
   }
 

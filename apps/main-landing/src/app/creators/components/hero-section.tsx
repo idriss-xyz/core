@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
+import { MobileNotSupported } from '@idriss-xyz/ui/mobile-not-supported';
 import { Button } from '@idriss-xyz/ui/button';
 import { classes } from '@idriss-xyz/ui/utils';
 import { RefObject, useEffect, useState } from 'react';
@@ -22,6 +23,8 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
   const router = useRouter();
   const searchParameters = useSearchParams();
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [isMobileNotSupportedOpen, setIsMobileNotSupportedOpen] =
+    useState(false);
 
   const {
     isLoginModalOpen,
@@ -35,6 +38,11 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
   const originalHandleStartEarningClick = useStartEarningNavigation();
 
   const handleStartEarningClick = () => {
+    if (window.innerWidth < 1024) {
+      setIsMobileNotSupportedOpen(true);
+
+      return;
+    }
     void (earlyAccessToken
       ? originalHandleStartEarningClick()
       : setIsPasswordModalOpen(true));
@@ -146,6 +154,21 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
         }}
         onSuccess={handlePasswordSuccess}
       />
+      {isMobileNotSupportedOpen && (
+        <MobileNotSupported
+          className="bg-[#E7F5E6]/[0.6] backdrop-blur-sm"
+          onClose={() => {
+            return setIsMobileNotSupportedOpen(false);
+          }}
+        >
+          <p className="text-balance text-center text-heading5 text-neutralGreen-700">
+            This experience is designed for desktop.
+          </p>
+          <p className="text-balance text-center text-heading5 text-neutralGreen-700">
+            Please use a PC or a laptop.
+          </p>
+        </MobileNotSupported>
+      )}
     </header>
   );
 };

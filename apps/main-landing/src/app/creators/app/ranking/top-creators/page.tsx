@@ -35,6 +35,7 @@ export default function TopCreators() {
         activeFilter={activeFilter}
         onFilterChange={setActiveFilter}
         perspective="creator"
+        scope="global"
       />
     </div>
   );
