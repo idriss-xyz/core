@@ -41,7 +41,7 @@ export function BreadcrumbNavigation({
       items.push({
         name: 'Home',
         path: basePath || '/',
-        isCurrentPage: relativePath === '/',
+        isCurrentPage: false,
       });
 
       if (relativePath === '/') {
