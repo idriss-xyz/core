@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
-import { CREATOR_APP_TEST_ADDRESS } from '@idriss-xyz/constants';
+import { usePrivy } from '@privy-io/react-auth';
+import { Hex } from 'viem';
 
 import { Leaderboard } from '@/app/creators/donate/components/leaderboard';
 
@@ -9,6 +10,8 @@ import { useGetLeaderboard, periodMap } from '../commands/use-get-leaderboard';
 // ts-unused-exports:disable-next-line
 export default function TopCreators() {
   const [activeFilter, setActiveFilter] = useState('All time');
+  const { user } = usePrivy();
+  const address = user?.wallet?.address as Hex | undefined;
 
   const leaderboardQuery = useGetLeaderboard({
     type: 'creator',
@@ -22,8 +25,8 @@ export default function TopCreators() {
         leaderboardError={leaderboardQuery.isError}
         leaderboardLoading={leaderboardQuery.isLoading}
         address={{
-          isValid: true,
-          data: CREATOR_APP_TEST_ADDRESS,
+          isValid: !!address,
+          data: address ?? null,
           isFetching: false,
         }}
         title="Top Creators"

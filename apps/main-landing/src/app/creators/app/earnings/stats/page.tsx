@@ -17,7 +17,8 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { Button } from '@idriss-xyz/ui/button';
 import { useMemo } from 'react';
 import { formatFiatValue, formatTokenValue } from '@idriss-xyz/utils';
-import { CREATOR_APP_TEST_ADDRESS } from '@idriss-xyz/constants';
+import { usePrivy } from '@privy-io/react-auth';
+import { Hex } from 'viem';
 
 import { backgroundLines2, IDRISS_COIN, IDRISS_SCENE_STREAM_4 } from '@/assets';
 import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history';
@@ -35,12 +36,20 @@ const chartConfig = {
 
 // ts-unused-exports:disable-next-line
 export default function EarningsStats() {
-  const tipHistoryQuery = useGetTipHistory({
-    address: CREATOR_APP_TEST_ADDRESS,
-  });
-  const recipientStatsQuery = useGetRecipientStats({
-    address: CREATOR_APP_TEST_ADDRESS,
-  });
+  const { user, ready, authenticated } = usePrivy();
+  const address = user?.wallet?.address as Hex | undefined;
+  const tipHistoryQuery = useGetTipHistory(
+    {
+      address,
+    },
+    { enabled: ready && authenticated && !!address },
+  );
+  const recipientStatsQuery = useGetRecipientStats(
+    {
+      address,
+    },
+    { enabled: ready && authenticated && !!address },
+  );
 
   const donations = tipHistoryQuery.data?.donations ?? [];
   const sortedDonations = [...donations].sort((a, b) => {
@@ -161,7 +170,7 @@ export default function EarningsStats() {
             </CardBody>
           </Card>
           <Card className="col-span-1 space-y-4">
-            <CardHeader className="flex items-center justify-between text-neutral-900">
+            <CardHeader className="flex items-start justify-between text-neutral-900">
               Total earnings
               <div className="flex items-center gap-2">
                 <span className="text-heading3 text-black">

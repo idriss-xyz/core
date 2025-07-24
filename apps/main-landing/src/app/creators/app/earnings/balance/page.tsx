@@ -64,7 +64,7 @@ export default function EarningsBalance() {
           <img
             alt="idriss stream"
             src={IDRISS_SCENE_STREAM_4.src}
-            className="absolute -bottom-80 w-full"
+            className="absolute inset-0 size-full object-cover object-[center_35%] lg:object-[center_30%] 3xl:object-[center_25%]"
           />
           <div className="relative flex flex-col items-center gap-2 px-4 py-6">
             <div className="flex flex-col items-center gap-2">

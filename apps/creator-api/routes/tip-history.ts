@@ -6,6 +6,9 @@ import { syncAndStoreNewDonations } from '../services/zapper/process-donations';
 import { connectedClients } from '../services/socket-server';
 import { calculateDonationLeaderboard } from '@idriss-xyz/utils';
 import { DonationData } from '@idriss-xyz/constants';
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
+import { DEMO_ADDRESS } from '../tests/test-data/constants';
 
 const router = Router();
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -20,6 +23,17 @@ async function handleFetchTipHistory(req: Request, res: Response) {
   try {
     // Support address from either URL parameter (GET) or body (POST)
     const address = (req.params.address || req.body.address) as string;
+
+    if (address && address === DEMO_ADDRESS) {
+      const mockData = JSON.parse(
+        readFileSync(
+          resolve(__dirname, '../tests/test-data/mock-donations.json'),
+          'utf-8',
+        ),
+      );
+      res.json(mockData);
+      return;
+    }
 
     if (!address || typeof address !== 'string') {
       res.status(400).json({ error: 'Invalid or missing address' });
