@@ -263,9 +263,15 @@ export default function PaymentMethods() {
   useEffect(() => {
     if (creator) {
       formMethods.reset({
-        tokensSymbols: creator.tokens,
-        chainsIds: getChainIdsFromShortNames(creator.networks),
-      });
+        chainsIds:
+        creator.networks && creator.networks.length > 0
+          ? getChainIdsFromShortNames(creator.networks)
+          : ALL_CHAIN_IDS,
+        tokensSymbols:
+          creator.tokens && creator.tokens.length > 0
+            ? creator.tokens
+            : UNIQUE_ALL_TOKEN_SYMBOLS,
+        });
     }
   }, [creator, formMethods]);
 
