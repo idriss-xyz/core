@@ -47,6 +47,7 @@ const UpgradeBox: React.FC = () => {
           iconName="TwitchOutlinedBold2"
           intent="secondary"
           size="extra"
+          className="pointer-events-none"                                                                                                                                 
         />
         <div className="flex w-[477px] flex-col gap-4 uppercase">
           <p className="text-label4 text-neutralGreen-700">
