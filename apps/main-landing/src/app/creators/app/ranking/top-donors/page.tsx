@@ -34,6 +34,7 @@ export default function TopDonors() {
         className="overflow-hidden px-0 shadow-lg"
         activeFilter={activeFilter}
         onFilterChange={setActiveFilter}
+        scope="global"
       />
     </div>
   );

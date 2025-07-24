@@ -44,6 +44,7 @@ type Properties = {
   onFilterChange?: (filter: string) => void;
   title?: string;
   perspective?: 'creator' | 'donor';
+  scope?: 'local' | 'global';
 };
 
 const baseClassName =
@@ -95,6 +96,7 @@ export const Leaderboard = ({
   onFilterChange,
   title,
   perspective = 'donor',
+  scope = 'local',
 }: Properties) => {
   const columns: ColumnDefinition<LeaderboardStats>[] = [
     {
@@ -281,25 +283,36 @@ export const Leaderboard = ({
                     return item.address;
                   }}
                   emptyState={
-                    <div className="mx-auto flex min-h-[694px] w-[477px] flex-col items-center justify-center gap-4">
-                      <span className="text-center text-heading6 uppercase text-neutral-900">
-                        No donors yet
-                      </span>
-                      <span className="mx-8 text-center text-display5 uppercase gradient-text">
-                        Share your page to get your first donor
-                      </span>
-                      <Button
-                        size="medium"
-                        intent="secondary"
-                        onClick={() => {
-                          return console.log('Not implemented yet');
-                        }} // TODO: Add functionality
-                        suffixIconName="IdrissArrowRight"
-                        className="uppercase"
-                      >
-                        Copy link
-                      </Button>
-                    </div>
+                    scope === 'global' ? (
+                      <div className="mx-auto flex min-h-[694px] w-[477px] flex-col items-center justify-center gap-4">
+                        <span className="text-center text-heading6 uppercase text-neutral-900">
+                          No donations yet
+                        </span>
+                        <span className="mx-8 text-center text-display5 uppercase gradient-text">
+                          change the time range to see results
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="mx-auto flex min-h-[694px] w-[477px] flex-col items-center justify-center gap-4">
+                        <span className="text-center text-heading6 uppercase text-neutral-900">
+                          No donors yet
+                        </span>
+                        <span className="mx-8 text-center text-display5 uppercase gradient-text">
+                          Share your page to get your first donor
+                        </span>
+                        <Button
+                          size="medium"
+                          intent="secondary"
+                          onClick={() => {
+                            return console.log('Not implemented yet');
+                          }} // TODO: Add functionality
+                          suffixIconName="IdrissArrowRight"
+                          className="uppercase"
+                        >
+                          Copy link
+                        </Button>
+                      </div>
+                    )
                   }
                 />
               </ScrollArea>
