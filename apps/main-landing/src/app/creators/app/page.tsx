@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 import { useAuth } from '../context/auth-context';
+
 import Setup from './setup/page';
 
 // ts-unused-exports:disable-next-line
@@ -21,5 +22,5 @@ export default function Home() {
     }
   }, [creator, router]);
 
-  return <Setup/>;
+  return <Setup />;
 }

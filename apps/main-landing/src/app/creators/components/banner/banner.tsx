@@ -1,25 +1,26 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 import { Button } from '@idriss-xyz/ui/button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { classes } from '@idriss-xyz/ui/utils';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 
 import {
   banner1,
-  banner10,
-  banner11,
-  banner12,
+  // banner10,
+  banner13,
+  banner14,
   banner2,
   banner3,
   banner4,
   banner5,
   banner6,
   banner7,
-  banner8,
-  banner9,
+  // banner8,
+  // banner9,
 } from './assets';
+import { FilterOption } from './utils';
 
 const banners = [
   { src: banner1.src, type: 'unbranded' },
@@ -29,15 +30,23 @@ const banners = [
   { src: banner5.src, type: 'parallel' },
   { src: banner6.src, type: 'parallel' },
   { src: banner7.src, type: 'parallel' },
-  { src: banner8.src, type: 'aavegotchi' },
-  { src: banner9.src, type: 'aavegotchi' },
-  { src: banner10.src, type: 'aavegotchi' },
-  { src: banner11.src, type: 'unbranded' },
-  { src: banner12.src, type: 'unbranded' },
+  { src: banner13.src, type: 'ronin' },
+  { src: banner14.src, type: 'ronin' },
+  // { src: banner8.src, type: 'aavegotchi' },
+  // { src: banner9.src, type: 'aavegotchi' },
+  // { src: banner10.src, type: 'aavegotchi' },
 ];
 
-export const Banner = () => {
+interface Properties {
+  filter: FilterOption;
+}
+
+export const Banner = ({ filter }: Properties) => {
   const [selectedBannerSource, setSelectedBannerSource] = useState<string>();
+
+  useEffect(() => {
+    setSelectedBannerSource(undefined);
+  }, [filter]);
 
   const handleDownload = () => {
     if (!selectedBannerSource) {
@@ -52,11 +61,18 @@ export const Banner = () => {
     link.remove();
   };
 
+  const filteredBanners = banners.filter((banner) => {
+    if (filter === 'All') {
+      return true;
+    }
+    return banner.type === filter.toLowerCase();
+  });
+
   return (
     <div className="container relative flex flex-col items-center rounded-xl bg-white pb-3 pt-6">
       <ScrollArea className="transition-all duration-500">
         <div className="grid w-full grid-cols-2 justify-center gap-4">
-          {banners.map((banner) => {
+          {filteredBanners.map((banner) => {
             const isSelected = banner.src === selectedBannerSource;
 
             return (
