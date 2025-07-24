@@ -37,13 +37,6 @@ export function BreadcrumbNavigation({
         ? pathname.slice(basePath.length) || '/'
         : pathname;
 
-      // Add home by default (pointing to the base path)
-      items.push({
-        name: 'Home',
-        path: basePath || '/',
-        isCurrentPage: false,
-      });
-
       if (relativePath === '/') {
         return items;
       }
@@ -67,7 +60,7 @@ export function BreadcrumbNavigation({
 
         if (matchingItem) {
           // Construct the full path by combining base path with the item's path
-          const fullPath = `${basePath}${matchingItem.path}`;
+          const fullPath = `${basePath}${currentPath}`;
 
           items.push({
             name: matchingItem.name,
@@ -108,7 +101,7 @@ export function BreadcrumbNavigation({
         if (matchingItem) {
           items.push({
             name: matchingItem.name,
-            path: matchingItem.path,
+            path: currentPath,
             isCurrentPage: currentPath === pathname,
           });
 
