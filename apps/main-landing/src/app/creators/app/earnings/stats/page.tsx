@@ -246,13 +246,13 @@ export default function EarningsStats() {
                         imageUrl={mainAsset.tokenData.imageUrl}
                       />
                     </div>
-                    <div className="flex flex-col">
-                      <span className="w-fit rounded-full bg-mint-200 px-1 py-0.5 text-xs font-medium text-mint-700">
+                    <div className="flex flex-col gap-2">
+                      <span className="w-fit rounded-full bg-mint-200 px-1 text-xs font-medium text-mint-700">
                         {mainAsset.donationCount} donations
                       </span>
-                      <span className="flex items-center text-xl font-semibold text-black">
+                      <span className="flex items-center text-label1 text-black">
                         ${formatTokenValue(mainAsset.totalAmount)}{' '}
-                        <span className="ml-2 text-sm font-medium text-gray-300">
+                        <span className="ml-2 text-body4 text-gray-300">
                           {mainAsset.tokenData.symbol}
                         </span>
                       </span>
