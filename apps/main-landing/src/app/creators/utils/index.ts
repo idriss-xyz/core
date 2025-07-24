@@ -41,6 +41,7 @@ export type CreatorProfileResponse = {
   donationUrl: string;
   obsUrl: string;
   joinedAt: string;
+  doneSetup: boolean;
   minimumAlertAmount: number;
   minimumTTSAmount: number;
   minimumSfxAmount: number;
