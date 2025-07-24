@@ -83,11 +83,6 @@ export function BreadcrumbNavigation({
       }
     } else {
       // Original logic when no base path is provided
-      items.push({
-        name: 'Home',
-        path: '/',
-        isCurrentPage: pathname === '/',
-      });
 
       if (pathname === '/') {
         return items;
