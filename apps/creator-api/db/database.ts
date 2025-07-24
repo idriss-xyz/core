@@ -27,6 +27,7 @@ import {
   AddAlertSoundParameter1753119779375,
   AddEmailAndJoinedAtToCreator1753117191000,
   UpdateCreatorProfileView1753117192000,
+  AddDoneSetupCreatorField1753315853694,
 } from './migrations';
 import { CreatorProfileView } from './views';
 
@@ -63,6 +64,7 @@ export const AppDataSource = new DataSource({
     AddAlertSoundParameter1753119779375,
     AddEmailAndJoinedAtToCreator1753117191000,
     UpdateCreatorProfileView1753117192000,
+    AddDoneSetupCreatorField1753315853694,
   ],
 });
 

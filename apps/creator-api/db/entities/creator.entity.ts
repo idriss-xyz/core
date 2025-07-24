@@ -44,6 +44,9 @@ export class Creator {
   @CreateDateColumn({ type: 'timestamp with time zone', name: 'joined_at' })
   joinedAt!: Date;
 
+  @Column({ type: 'boolean', name: 'done_setup' })
+  doneSetup!: Boolean;
+
   @OneToMany(() => CreatorNetwork, (network) => network.creator)
   networks!: CreatorNetwork[];
 

@@ -144,6 +144,7 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
     const networkRepository = AppDataSource.getRepository(CreatorNetwork);
 
     const creator = new Creator();
+    creator.doneSetup = false;
     creator.address = creatorData.address as Hex;
     creator.primaryAddress =
       (creatorData.primaryAddress as Hex) ?? (creatorData.address as Hex);
@@ -251,6 +252,11 @@ router.patch(
         primaryAddress,
         ...creatorData
       } = req.body;
+
+      // Update creator done_setup
+      if (creator.doneSetup === false) {
+        await creatorRepository.update({ id: creator.id }, { doneSetup: true });
+      }
 
       // Update creator with provided fields if present
       if (Object.keys(creatorData).length > 0) {
