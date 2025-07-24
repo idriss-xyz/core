@@ -526,7 +526,7 @@ export default function StreamAlerts() {
       </div>
 
       {/* Alerts */}
-      {testDonationSuccess && (
+      {/* {testDonationSuccess && (
         <Alert
           heading="Test alert sent successfully!"
           type="success"
@@ -563,7 +563,7 @@ export default function StreamAlerts() {
           autoClose
           onClose={handleAlertClose}
         />
-      )}
+      )} */}
     </Card>
   );
 }

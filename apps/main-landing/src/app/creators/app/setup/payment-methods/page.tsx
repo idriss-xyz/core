@@ -377,7 +377,7 @@ export default function PaymentMethods() {
       </div>
 
       {/* Alerts section */}
-      {saveSuccess && (
+      {/* {saveSuccess && (
         <Alert
           heading="Settings saved!"
           type="success"
@@ -394,7 +394,7 @@ export default function PaymentMethods() {
           autoClose
           onClose={handleAlertClose}
         />
-      )}
+      )} */}
     </Card>
   );
 }
