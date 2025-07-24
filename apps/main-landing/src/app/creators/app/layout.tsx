@@ -7,11 +7,11 @@ import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { Providers } from '../providers';
 import { siteMap } from '../constants';
 import { OAuthCallbackHandler } from '../components/oauth-callback-handler';
+import { useAuth } from '../context/auth-context';
 
 import { CreatorSocketManager } from './creator-socket-manager';
 import { Sidebar } from './sidebar';
 import { TopBar } from './topbar';
-import { useAuth } from '../context/auth-context';
 
 // ts-unused-exports:disable-next-line
 export default function CreatorsLayout({

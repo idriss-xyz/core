@@ -264,14 +264,14 @@ export default function PaymentMethods() {
     if (creator) {
       formMethods.reset({
         chainsIds:
-        creator.networks && creator.networks.length > 0
-          ? getChainIdsFromShortNames(creator.networks)
-          : ALL_CHAIN_IDS,
+          creator.networks && creator.networks.length > 0
+            ? getChainIdsFromShortNames(creator.networks)
+            : ALL_CHAIN_IDS,
         tokensSymbols:
           creator.tokens && creator.tokens.length > 0
             ? creator.tokens
             : UNIQUE_ALL_TOKEN_SYMBOLS,
-        });
+      });
     }
   }, [creator, formMethods]);
 
