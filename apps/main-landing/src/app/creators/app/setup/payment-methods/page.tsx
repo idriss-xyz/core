@@ -280,7 +280,7 @@ export default function PaymentMethods() {
             <SectionHeader title="Select your payment methods" />
             <Toggle
               label="Crypto"
-              sublabel="Get paid in Ethereum, USDC, or other popular assets. Instant, borderless, and without middlemen"
+              sublabel="Get paid in Ethereum, USDC, or other popular assets. Instant, borderless, and without middlemen."
               value={toggleCrypto}
               onChange={() => {
                 return setToggleCrypto((previous) => {

@@ -69,7 +69,7 @@ export const Banner = ({ filter }: Properties) => {
   });
 
   return (
-    <div className="container relative flex flex-col items-center rounded-xl bg-white pb-3 pt-6">
+    <div className="container relative flex flex-col items-center rounded-xl bg-white pb-3">
       <ScrollArea className="transition-all duration-500">
         <div className="grid w-full grid-cols-2 justify-center gap-4">
           {filteredBanners.map((banner) => {
