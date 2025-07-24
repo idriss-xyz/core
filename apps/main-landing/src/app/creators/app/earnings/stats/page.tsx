@@ -139,7 +139,7 @@ export default function EarningsStats() {
             <CardHeader className="text-neutral-900">Transactions</CardHeader>
             <CardBody>
               <div className="relative">
-                <div className="mx-14 my-4 flex items-center justify-center p-6">
+                <div className="mx-14 flex items-center justify-center p-6">
                   <img src={IDRISS_COIN.src} alt="coin" />
                 </div>
                 <span className="pointer-events-none absolute left-6 top-16 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-black">
@@ -169,7 +169,7 @@ export default function EarningsStats() {
               </div>
             </CardBody>
           </Card>
-          <Card className="col-span-1 space-y-4">
+          <Card className="col-span-1 flex flex-col justify-between">
             <CardHeader className="flex items-start justify-between text-neutral-900">
               Total earnings
               <div className="flex items-center gap-2">
