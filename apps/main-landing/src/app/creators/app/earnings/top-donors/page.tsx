@@ -71,7 +71,7 @@ export default function TopDonors() {
         }}
         title="Top Donors"
         variant="creatorsDashboard"
-        className="container overflow-hidden px-0 shadow-lg"
+        className="overflow-hidden px-0 shadow-lg"
         activeFilter={activeFilter}
         onFilterChange={setActiveFilter}
       />

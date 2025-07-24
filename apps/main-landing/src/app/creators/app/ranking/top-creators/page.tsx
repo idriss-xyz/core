@@ -31,7 +31,7 @@ export default function TopCreators() {
         }}
         title="Top Creators"
         variant="creatorsDashboard"
-        className="container overflow-hidden px-0 shadow-lg"
+        className="overflow-hidden px-0 shadow-lg"
         activeFilter={activeFilter}
         onFilterChange={setActiveFilter}
         perspective="creator"
