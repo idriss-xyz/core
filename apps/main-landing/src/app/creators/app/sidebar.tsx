@@ -24,7 +24,7 @@ export function Sidebar() {
   };
 
   return (
-    <div className="p-3">
+    <div className="p-3 pr-0">
       <NavigationMenu.Root
         orientation="vertical"
         className="flex h-full w-[234px] flex-col justify-between rounded-2xl bg-white px-2 pb-2 pt-8"

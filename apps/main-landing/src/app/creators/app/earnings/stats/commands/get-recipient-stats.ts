@@ -1,6 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { Hex } from 'viem';
-import { CREATOR_API_URL } from '@idriss-xyz/constants';
+import {
+  CREATOR_API_URL,
+  CREATOR_APP_TEST_ADDRESS,
+} from '@idriss-xyz/constants';
 
 // These types should match the backend RecipientDonationStats
 interface DonationToken {
@@ -50,7 +53,8 @@ const getRecipientStats = async (
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ address: payload.address }),
+    // body: JSON.stringify({ address: payload.address }),
+    body: JSON.stringify({ address: CREATOR_APP_TEST_ADDRESS }),
   });
 
   if (!response.ok) {
