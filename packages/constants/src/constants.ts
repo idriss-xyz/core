@@ -376,8 +376,6 @@ export const EMPTY_HEX = '0x';
 
 export const COPILOT_API_URL = 'https://copilot-api.idriss.xyz';
 export const CREATOR_API_URL = 'https://core-staging-4c69.up.railway.app';
-export const CREATOR_APP_TEST_ADDRESS =
-  '0xee61f8d793fbe0cd2459c85160919128690cbba7';
 
 export const DEFAULT_DONATION_MIN_ALERT_AMOUNT = 1;
 export const DEFAULT_DONATION_MIN_TTS_AMOUNT = 5;
