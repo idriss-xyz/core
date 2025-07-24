@@ -11,7 +11,6 @@ export default function Home() {
 
   useEffect(() => {
     if (creator) {
-      console.log('creator is set up:', creator.doneSetup);
       if (creator.doneSetup) {
         router.replace('/creators/app/earnings/stats');
       } else {
