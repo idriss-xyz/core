@@ -359,6 +359,7 @@ export default function PaymentMethods() {
               sublabel="Get paid via credit cards or traditional bank transfers. Trusted, familiar, and widely used by fans."
               value={false}
               disabled
+              comingSoon
               onChange={() => {
                 console.log('Not implemented yet');
               }}
