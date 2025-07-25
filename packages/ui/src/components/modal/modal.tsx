@@ -75,7 +75,7 @@ export const Modal = ({
       <Portal.Root container={withoutPortal ? fakePortal : portal}>
         <Backdrop
           className={classes(
-            'fixed inset-0 z-portal bg-neutral-400/60',
+            'fixed inset-0 z-portal bg-neutralGreen-900/80',
             backdropClassName,
           )}
           onClick={closeOnClickAway ? onClose : undefined}
