@@ -124,7 +124,9 @@ export default function EarningsBalance() {
       )}
       <WithdrawWidget
         isOpened={isWithdrawModalOpen}
-        onClose={() => setIsWithdrawModalOpen(false)}
+        onClose={() => {
+          return setIsWithdrawModalOpen(false);
+        }}
       />
     </div>
   );

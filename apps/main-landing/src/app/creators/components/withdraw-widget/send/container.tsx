@@ -26,7 +26,6 @@ export const Container = memo(
         headerContainerClassName="pl-6 pt-5.5 pb-2.5"
         closeOnClickAway
         onClose={close}
-        backdropClassName="bg-transparent"
         withoutPortal
         className="flex w-[350px] flex-col rounded-xl border border-black/20 bg-white"
       >
