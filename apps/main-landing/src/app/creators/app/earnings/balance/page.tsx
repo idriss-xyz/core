@@ -19,6 +19,7 @@ import { BalanceTable } from './balance-table';
 export default function EarningsBalance() {
   const { user, ready, authenticated } = usePrivy();
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+  const [selectedToken, setSelectedToken] = useState<string>();
   const address = user?.wallet?.address as Hex | undefined;
 
   const {
@@ -97,7 +98,11 @@ export default function EarningsBalance() {
           <div className="p-4">
             <span className="text-label3">Assets</span>
           </div>
-          <BalanceTable data={tableData} userAddress={address} />
+          <BalanceTable
+            data={tableData}
+            setSelectedToken={setSelectedToken}
+            setIsWithdrawModalOpen={setIsWithdrawModalOpen}
+          />
         </Card>
       ) : (
         <Card className="col-span-3">
@@ -125,6 +130,7 @@ export default function EarningsBalance() {
       <WithdrawWidget
         isOpen={isWithdrawModalOpen}
         balances={tableData}
+        selectedToken={selectedToken}
         onClose={() => {
           return setIsWithdrawModalOpen(false);
         }}

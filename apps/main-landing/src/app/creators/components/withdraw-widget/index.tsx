@@ -33,6 +33,7 @@ type WithdrawFormValues = {
 type WithdrawWidgetProperties = {
   isOpen: boolean;
   balances: BalanceTableItem[];
+  selectedToken?: string;
   onClose: () => void;
 };
 
@@ -42,7 +43,6 @@ const ALL_CHAIN_IDS = Object.values(CREATOR_CHAIN).map((chain) => {
 
 // TODO: Extract
 function getTokenAddress(chainId: number, tokenSymbol: string) {
-  console.log('Getting token address:', chainId, tokenSymbol);
   const tokens = CHAIN_ID_TO_TOKENS[chainId];
   if (!tokens) return;
 
@@ -63,6 +63,7 @@ function getChainNameById(chainId: number): string | undefined {
 export const WithdrawWidget = ({
   isOpen,
   balances,
+  selectedToken,
   onClose,
 }: WithdrawWidgetProperties) => {
   const [step, setStep] = useState<1 | 2>(1);
@@ -77,8 +78,11 @@ export const WithdrawWidget = ({
     defaultValues: {
       amount: 0,
       chainId: ALL_CHAIN_IDS[0],
+      tokenSymbol: selectedToken,
     },
   });
+
+  console.log(formMethods.getValues());
 
   const formReference = useRef<HTMLFormElement | null>(null);
   const amount = formMethods.watch('amount');

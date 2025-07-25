@@ -1,56 +1,20 @@
 'use client';
-import { useSendTransaction } from '@privy-io/react-auth';
-import { BalanceTableItem, ERC20_ABI } from '@idriss-xyz/constants';
+import { BalanceTableItem } from '@idriss-xyz/constants';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { ColumnDefinition, Table } from '@idriss-xyz/ui/table';
 import { formatFiatValue, formatTokenValue } from '@idriss-xyz/utils';
-import { encodeFunctionData, Hex, parseUnits } from 'viem';
 
 import { TokenLogo } from '../stats/token-logo';
 
 export function BalanceTable({
   data,
-  userAddress,
+  setSelectedToken,
+  setIsWithdrawModalOpen,
 }: {
   data: BalanceTableItem[];
-  userAddress: Hex | undefined;
+  setSelectedToken: (tokenSymbol: string) => void;
+  setIsWithdrawModalOpen: (open: boolean) => void;
 }) {
-  const { sendTransaction } = useSendTransaction();
-
-  const handleWithdraw = async (item: BalanceTableItem) => {
-    if (!userAddress) {
-      console.error('User address not found');
-      return;
-    }
-
-    const amount = parseUnits(item.totalAmount.toString(), item.token.decimals);
-
-    const txData = encodeFunctionData({
-      abi: ERC20_ABI,
-      functionName: 'transfer',
-      args: [userAddress, amount],
-    });
-
-    try {
-      const tx = await sendTransaction(
-        {
-          to: item.token.address,
-          chainId: 8453,
-          data: txData,
-          value: '0',
-        },
-        {
-          uiOptions: {
-            showWalletUIs: false,
-          },
-        },
-      );
-      console.log('Transaction sent:', tx.hash);
-    } catch (error) {
-      console.error('Failed to send transaction', error);
-    }
-  };
-
   const columns: ColumnDefinition<BalanceTableItem>[] = [
     {
       id: 'rank',
@@ -108,7 +72,9 @@ export function BalanceTable({
             size="medium"
             iconName="ArrowDownFromLine"
             onClick={() => {
-              return handleWithdraw(item);
+              console.log('click:', item);
+              setSelectedToken(item.token.symbol);
+              setIsWithdrawModalOpen(true);
             }}
           />
         );
