@@ -6,8 +6,10 @@ import { BalanceTableItem } from '@idriss-xyz/constants';
 import { usePrivy } from '@privy-io/react-auth';
 import { Hex } from 'viem';
 import { formatFiatValue } from '@idriss-xyz/utils';
+import { useState } from 'react';
 
 import { IDRISS_SCENE_STREAM_4 } from '@/assets';
+import { WithdrawWidget } from '@/app/creators/components/withdraw-widget';
 
 import { useGetBalances } from '../commands/get-balances';
 
@@ -16,6 +18,7 @@ import { BalanceTable } from './balance-table';
 // ts-unused-exports:disable-next-line
 export default function EarningsBalance() {
   const { user, ready, authenticated } = usePrivy();
+  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
   const address = user?.wallet?.address as Hex | undefined;
 
   const {
@@ -79,6 +82,9 @@ export default function EarningsBalance() {
                 size="small"
                 className="uppercase"
                 prefixIconName="ArrowDownFromLine"
+                onClick={() => {
+                  return setIsWithdrawModalOpen(true);
+                }}
               >
                 Withdraw
               </Button>
@@ -116,6 +122,10 @@ export default function EarningsBalance() {
           </div>
         </Card>
       )}
+      <WithdrawWidget
+        isOpened={isWithdrawModalOpen}
+        onClose={() => setIsWithdrawModalOpen(false)}
+      />
     </div>
   );
 }
