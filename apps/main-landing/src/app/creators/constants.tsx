@@ -42,60 +42,36 @@ export const socialOptions: SocialOption[] = [
 export const siteMap: SiteMapItem[] = [
   {
     name: 'Home',
-    path: '/',
+    path: '',
   },
   {
     name: 'Earnings',
-    path: '/earnings',
+    path: 'earnings',
     children: [
-      {
-        name: 'Stats & history',
-        path: '/earnings/stats',
-      },
-      {
-        name: 'Balance',
-        path: '/earnings/balance',
-      },
-      {
-        name: 'Top donors',
-        path: '/earnings/top-donors',
-      },
+      { name: 'Stats & history', path: 'stats' },
+      { name: 'Balance', path: 'balance' },
+      { name: 'Top donors', path: 'top-donors' },
     ],
   },
   {
     name: 'Setup',
-    path: '/setup',
+    path: 'setup',
     children: [
-      {
-        name: 'Payment methods',
-        path: '/setup/payment-methods',
-      },
-      {
-        name: 'Stream alerts',
-        path: '/setup/stream-alerts',
-      },
-      {
-        name: 'Donation panel',
-        path: '/setup/donation-panel',
-      },
+      { name: 'Payment methods', path: 'payment-methods' },
+      { name: 'Stream alerts', path: 'stream-alerts' },
+      { name: 'Donation panel', path: 'donation-panel' },
     ],
   },
   {
     name: 'Profile',
-    path: '/profile',
+    path: 'profile',
   },
   {
     name: 'Ranking',
-    path: '/ranking',
+    path: 'ranking',
     children: [
-      {
-        name: 'Top creators',
-        path: '/ranking/top-creators',
-      },
-      {
-        name: 'Top donors',
-        path: '/ranking/top-donors',
-      },
+      { name: 'Top creators', path: 'top-creators' },
+      { name: 'Top donors', path: 'top-donors' },
     ],
   },
 ];

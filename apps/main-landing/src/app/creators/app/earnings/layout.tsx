@@ -13,18 +13,18 @@ export default function EarningsLayout({
 
   const earningsTabs: TabItem[] = [
     {
-      name: 'Balance',
-      href: '/creators/app/earnings/balance',
-      iconName: 'Wallet',
-      isActive: pathname === '/creators/app/earnings/balance',
-    },
-    {
       name: 'Stats & history',
       href: '/creators/app/earnings/stats',
       iconName: 'LineChart',
       isActive:
         pathname === '/creators/app/earnings/stats' ||
         pathname === '/creators/app/earnings',
+    },
+    {
+      name: 'Balance',
+      href: '/creators/app/earnings/balance',
+      iconName: 'Wallet',
+      isActive: pathname === '/creators/app/earnings/balance',
     },
     {
       name: 'Top donors',

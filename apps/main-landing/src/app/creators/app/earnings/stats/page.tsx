@@ -17,7 +17,8 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { Button } from '@idriss-xyz/ui/button';
 import { useMemo } from 'react';
 import { formatFiatValue, formatTokenValue } from '@idriss-xyz/utils';
-import { CREATOR_APP_TEST_ADDRESS } from '@idriss-xyz/constants';
+import { usePrivy } from '@privy-io/react-auth';
+import { Hex } from 'viem';
 
 import { backgroundLines2, IDRISS_COIN, IDRISS_SCENE_STREAM_4 } from '@/assets';
 import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history';
@@ -35,12 +36,20 @@ const chartConfig = {
 
 // ts-unused-exports:disable-next-line
 export default function EarningsStats() {
-  const tipHistoryQuery = useGetTipHistory({
-    address: CREATOR_APP_TEST_ADDRESS,
-  });
-  const recipientStatsQuery = useGetRecipientStats({
-    address: CREATOR_APP_TEST_ADDRESS,
-  });
+  const { user, ready, authenticated } = usePrivy();
+  const address = user?.wallet?.address as Hex | undefined;
+  const tipHistoryQuery = useGetTipHistory(
+    {
+      address,
+    },
+    { enabled: ready && authenticated && !!address },
+  );
+  const recipientStatsQuery = useGetRecipientStats(
+    {
+      address,
+    },
+    { enabled: ready && authenticated && !!address },
+  );
 
   const donations = tipHistoryQuery.data?.donations ?? [];
   const sortedDonations = [...donations].sort((a, b) => {
@@ -126,14 +135,18 @@ export default function EarningsStats() {
     <div className="grid grid-cols-3 gap-4">
       {sortedDonations.length > 0 && stats ? (
         <>
-          <Card className="col-span-1">
+          <Card className="col-span-1 flex flex-col">
             <CardHeader className="text-neutral-900">Transactions</CardHeader>
-            <CardBody>
+            <CardBody className="flex grow items-center justify-center">
               <div className="relative">
-                <div className="mx-14 my-4 flex items-center justify-center p-6">
-                  <img src={IDRISS_COIN.src} alt="coin" />
+                <div className="mx-8 flex items-center justify-center p-6">
+                  <img
+                    src={IDRISS_COIN.src}
+                    alt="coin"
+                    className="w-[198px] transition-all duration-300 ease-in-out 2xl:w-[220px]"
+                  />
                 </div>
-                <span className="pointer-events-none absolute left-6 top-16 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-black">
+                <span className="pointer-events-none absolute left-2 top-12 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-black">
                   <Icon
                     size={24}
                     name="BadgeDollarSign"
@@ -141,7 +154,7 @@ export default function EarningsStats() {
                   />
                   {stats.totalDonationsCount} donations
                 </span>
-                <span className="pointer-events-none absolute right-8 top-8 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-black">
+                <span className="pointer-events-none absolute right-2 top-8 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-black">
                   <Icon
                     size={24}
                     name="Trophy"
@@ -149,7 +162,7 @@ export default function EarningsStats() {
                   />
                   {stats.distinctDonorsCount} donors
                 </span>
-                <span className="pointer-events-none absolute bottom-8 right-8 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-black">
+                <span className="pointer-events-none absolute bottom-4 right-2 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-black">
                   <Icon
                     size={24}
                     name="TrendingUp"
@@ -160,8 +173,8 @@ export default function EarningsStats() {
               </div>
             </CardBody>
           </Card>
-          <Card className="col-span-1 space-y-4">
-            <CardHeader className="flex items-center justify-between text-neutral-900">
+          <Card className="col-span-1 flex flex-col justify-between">
+            <CardHeader className="flex items-start justify-between text-neutral-900">
               Total earnings
               <div className="flex items-center gap-2">
                 <span className="text-heading3 text-black">
@@ -237,13 +250,13 @@ export default function EarningsStats() {
                         imageUrl={mainAsset.tokenData.imageUrl}
                       />
                     </div>
-                    <div className="flex flex-col">
-                      <span className="w-fit rounded-full bg-mint-200 px-1 py-0.5 text-xs font-medium text-mint-700">
+                    <div className="flex flex-col gap-2">
+                      <span className="w-fit rounded-full bg-mint-200 px-1 text-xs font-medium text-mint-700">
                         {mainAsset.donationCount} donations
                       </span>
-                      <span className="flex items-center text-xl font-semibold text-black">
+                      <span className="flex items-center text-label1 text-black">
                         ${formatTokenValue(mainAsset.totalAmount)}{' '}
-                        <span className="ml-2 text-sm font-medium text-gray-300">
+                        <span className="ml-2 text-body4 text-gray-300">
                           {mainAsset.tokenData.symbol}
                         </span>
                       </span>

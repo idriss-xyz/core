@@ -7,6 +7,12 @@ import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { Button } from '@idriss-xyz/ui/button';
 import { ColumnDefinition, Table } from '@idriss-xyz/ui/table';
 import { LeaderboardStats } from '@idriss-xyz/constants';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@idriss-xyz/ui/tooltip';
 
 import { useTimeAgo } from '../../hooks/use-time-ago';
 import { IDRISS_SCENE_STREAM_2 } from '../../../../../assets';
@@ -38,6 +44,7 @@ type Properties = {
   onFilterChange?: (filter: string) => void;
   title?: string;
   perspective?: 'creator' | 'donor';
+  scope?: 'local' | 'global';
 };
 
 const baseClassName =
@@ -45,7 +52,35 @@ const baseClassName =
 
 const TimeAgoCell = ({ timestamp }: { timestamp?: string | number }) => {
   const timeAgo = useTimeAgo({ timestamp });
-  return <>{timeAgo}</>;
+
+  if (!timestamp) {
+    return <>{timeAgo}</>;
+  }
+
+  return (
+    <TooltipProvider delayDuration={400}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span>{timeAgo}</span>
+        </TooltipTrigger>
+        <TooltipContent className="w-fit bg-black text-white">
+          <p className="text-body6">
+            {new Intl.DateTimeFormat('en-US', {
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit',
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+              hour12: false,
+            })
+              .format(new Date(timestamp))
+              .replaceAll('/', '-')}
+          </p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
 };
 
 export const Leaderboard = ({
@@ -61,6 +96,7 @@ export const Leaderboard = ({
   onFilterChange,
   title,
   perspective = 'donor',
+  scope = 'local',
 }: Properties) => {
   const columns: ColumnDefinition<LeaderboardStats>[] = [
     {
@@ -247,25 +283,36 @@ export const Leaderboard = ({
                     return item.address;
                   }}
                   emptyState={
-                    <div className="mx-auto flex min-h-[694px] w-[477px] flex-col items-center justify-center gap-4">
-                      <span className="text-center text-heading6 uppercase text-neutral-900">
-                        No donors yet
-                      </span>
-                      <span className="mx-8 text-center text-display5 uppercase gradient-text">
-                        Share your page to get your first donor
-                      </span>
-                      <Button
-                        size="medium"
-                        intent="secondary"
-                        onClick={() => {
-                          return console.log('Not implemented yet');
-                        }} // TODO: Add functionality
-                        suffixIconName="IdrissArrowRight"
-                        className="uppercase"
-                      >
-                        Copy link
-                      </Button>
-                    </div>
+                    scope === 'global' ? (
+                      <div className="mx-auto flex min-h-[694px] w-[477px] flex-col items-center justify-center gap-4">
+                        <span className="text-center text-heading6 uppercase text-neutral-900">
+                          No donations yet
+                        </span>
+                        <span className="mx-8 text-center text-display5 uppercase gradient-text">
+                          change the time range to see results
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="mx-auto flex min-h-[694px] w-[477px] flex-col items-center justify-center gap-4">
+                        <span className="text-center text-heading6 uppercase text-neutral-900">
+                          No donors yet
+                        </span>
+                        <span className="mx-8 text-center text-display5 uppercase gradient-text">
+                          Share your page to get your first donor
+                        </span>
+                        <Button
+                          size="medium"
+                          intent="secondary"
+                          onClick={() => {
+                            return console.log('Not implemented yet');
+                          }} // TODO: Add functionality
+                          suffixIconName="IdrissArrowRight"
+                          className="uppercase"
+                        >
+                          Copy link
+                        </Button>
+                      </div>
+                    )
                   }
                 />
               </ScrollArea>

@@ -1,9 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Hex } from 'viem';
-import {
-  CREATOR_API_URL,
-  CREATOR_APP_TEST_ADDRESS,
-} from '@idriss-xyz/constants';
+import { CREATOR_API_URL } from '@idriss-xyz/constants';
 
 interface TokenBalance {
   address: Hex;
@@ -36,8 +33,7 @@ const getBalances = async (payload: Payload): Promise<BalancesResponse> => {
     throw new Error('Address is required to fetch balances');
   }
   const response = await fetch(
-    // `${CREATOR_API_URL}/get-balances/${payload.address}`,
-    `${CREATOR_API_URL}/get-balances/${CREATOR_APP_TEST_ADDRESS}`, // todo: change to upper line
+    `${CREATOR_API_URL}/get-balances/${payload.address}`,
   );
 
   if (!response.ok) {

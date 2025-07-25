@@ -3,7 +3,7 @@ import { Hex } from 'viem';
 import { TipHistoryResponse, CREATOR_API_URL } from '@idriss-xyz/constants';
 
 type Payload = {
-  address: Hex;
+  address?: Hex;
 };
 
 type Options = {
@@ -11,6 +11,9 @@ type Options = {
 };
 
 const getDonateHistory = async (payload: Payload) => {
+  if (!payload.address) {
+    throw new Error('Address is required to fetch donation history');
+  }
   const response = await fetch(`${CREATOR_API_URL}/tip-history`, {
     method: 'POST',
     headers: {

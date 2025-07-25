@@ -5,7 +5,8 @@ import {
   calculateDonationLeaderboard,
   getFilteredDonationsByPeriod,
 } from '@idriss-xyz/utils';
-import { CREATOR_APP_TEST_ADDRESS } from '@idriss-xyz/constants';
+import { usePrivy } from '@privy-io/react-auth';
+import { Hex } from 'viem';
 
 import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history';
 import { Leaderboard } from '@/app/creators/donate/components/leaderboard';
@@ -16,9 +17,14 @@ import { periodMap } from '../../ranking/commands/use-get-leaderboard';
 // ts-unused-exports:disable-next-line
 export default function TopDonors() {
   const [activeFilter, setActiveFilter] = useState('All time');
-  const tipHistoryQuery = useGetTipHistory({
-    address: CREATOR_APP_TEST_ADDRESS, // TODO: Replace with user address
-  });
+  const { user, ready, authenticated } = usePrivy();
+  const address = user?.wallet?.address as Hex | undefined;
+  const tipHistoryQuery = useGetTipHistory(
+    {
+      address,
+    },
+    { enabled: ready && authenticated && !!address },
+  );
   const allDonations = useMemo(() => {
     return tipHistoryQuery.data?.donations ?? [];
   }, [tipHistoryQuery.data?.donations]);
@@ -59,13 +65,13 @@ export default function TopDonors() {
         leaderboardError={tipHistoryQuery.isError}
         leaderboardLoading={tipHistoryQuery.isLoading}
         address={{
-          isValid: true,
-          data: CREATOR_APP_TEST_ADDRESS, // TODO: Replace with user address
+          isValid: !!address,
+          data: address ?? null,
           isFetching: false,
         }}
         title="Top Donors"
         variant="creatorsDashboard"
-        className="container overflow-hidden px-0 shadow-lg"
+        className="overflow-hidden px-0 shadow-lg"
         activeFilter={activeFilter}
         onFilterChange={setActiveFilter}
       />
