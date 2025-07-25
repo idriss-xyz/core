@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { usePrivy } from '@privy-io/react-auth';
 import { Hex } from 'viem';
 
-import { Leaderboard } from '@/app/creators/donate/components/leaderboard';
+import { Leaderboard } from '@/app/creators/components/leaderboard';
 
 import { useGetLeaderboard, periodMap } from '../commands/use-get-leaderboard';
 
