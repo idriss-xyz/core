@@ -122,6 +122,7 @@ export function BreadcrumbNavigation({
           return (
             <React.Fragment key={item.path}>
               <BreadcrumbItem>
+                {/* If we want navigation, render <BreadcrumbLink href={item.path}>{item.name}</BreadcrumbLink> instead */}
                 <BreadcrumbPage>{item.name}</BreadcrumbPage>
               </BreadcrumbItem>
               {index < breadcrumbItems.length - 1 && <BreadcrumbSeparator />}

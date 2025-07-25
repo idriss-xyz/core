@@ -31,11 +31,7 @@ export const useStartEarningNavigation = () => {
         return;
       }
       setCreator(fetchedCreator);
-      if (fetchedCreator.doneSetup) {
-        router.push('/creators/app/earnings/stats-and-history');
-      } else {
-        router.push('/creators/app/setup/payment-methods');
-      }
+      router.push('/creators/app/setup/payment-methods');
     } else {
       setIsModalOpen(true);
     }
