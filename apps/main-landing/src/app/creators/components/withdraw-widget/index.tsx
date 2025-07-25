@@ -7,15 +7,19 @@ import {
   CHAIN_ID_TO_TOKENS,
   CREATOR_CHAIN,
   EMPTY_HEX,
+  ERC20_ABI,
 } from '@idriss-xyz/constants';
-import { Hex } from 'viem';
+import { encodeFunctionData, Hex } from 'viem';
 import { Icon } from '@idriss-xyz/ui/icon';
+import { useSendTransaction } from '@privy-io/react-auth';
+import { getSafeNumber } from '@idriss-xyz/utils';
 
 import {
   ChainSelect,
   TokenSelect,
 } from '../../donate/components/donate-form/components';
 import { TokenLogo } from '../../app/earnings/stats/token-logo';
+import { useGetTokenPerDollar } from '../../donate/hooks/use-get-token-per-dollar';
 
 import { IdrissSend } from './send';
 
@@ -40,6 +44,7 @@ const ALL_CHAIN_IDS = Object.values(CREATOR_CHAIN).map((chain) => {
 
 // TODO: Extract
 function getTokenAddress(chainId: number, tokenSymbol: string) {
+  console.log('Getting token address:', chainId, tokenSymbol);
   const tokens = CHAIN_ID_TO_TOKENS[chainId];
   if (!tokens) return;
 
@@ -65,6 +70,9 @@ export const WithdrawWidget = ({
   onClose,
 }: WithdrawWidgetProperties) => {
   const [step, setStep] = useState<1 | 2>(1);
+  const { sendTransaction } = useSendTransaction();
+  const getTokenPerDollarMutation = useGetTokenPerDollar();
+
   const formMethods = useForm<WithdrawFormValues>({
     defaultValues: {
       amount: 0,
@@ -91,10 +99,74 @@ export const WithdrawWidget = ({
     [formMethods],
   );
 
-  const onSubmit = useCallback((values: WithdrawFormValues) => {
-    console.log('Final submit', values);
-    // TODO: call withdraw from Privy here
-  }, []);
+  const onSubmit = useCallback(
+    async (values: WithdrawFormValues) => {
+      if (
+        !values.amount ||
+        !values.withdrawalAddress ||
+        !values.tokenSymbol ||
+        !values.chainId
+      ) {
+        console.error('Missing required fields');
+        return;
+      }
+
+      const usdcToken = CHAIN_ID_TO_TOKENS[values.chainId]?.find((token) => {
+        return token.symbol === 'USDC';
+      });
+      const tokenAddress =
+        getTokenAddress(values.chainId, values.tokenSymbol) ?? '';
+      console.log('Amount on form:', values.amount);
+      console.log(
+        'Token amount:',
+        Number(values.amount) * 10 ** (usdcToken?.decimals ?? 0),
+      );
+
+      const tokenPerDollar = await getTokenPerDollarMutation.mutateAsync({
+        chainId: values.chainId,
+        buyToken: tokenAddress,
+        sellToken: usdcToken?.address ?? '',
+        amount: 10 ** (usdcToken?.decimals ?? 0),
+      });
+      const tokenPerDollarNormalised = Number(tokenPerDollar.price);
+      const tokenToSend = CHAIN_ID_TO_TOKENS[chainId]?.find((token) => {
+        return token.address === tokenAddress;
+      });
+      const { decimals, value } = getSafeNumber(
+        tokenPerDollarNormalised * amount,
+      );
+      const valueAsBigNumber = BigInt(value.toString());
+      const tokensToSend =
+        (valueAsBigNumber * BigInt(10) ** BigInt(tokenToSend?.decimals ?? 0)) /
+        BigInt(10) ** BigInt(decimals);
+
+      const txData = encodeFunctionData({
+        abi: ERC20_ABI,
+        functionName: 'transfer',
+        args: [values.withdrawalAddress as Hex, tokensToSend],
+      });
+
+      try {
+        const tx = await sendTransaction(
+          {
+            to: tokenAddress,
+            chainId: chainId,
+            data: txData,
+            value: '0',
+          },
+          {
+            uiOptions: {
+              showWalletUIs: false,
+            },
+          },
+        );
+        console.log('Transaction sent:', tx.hash); // TODO: Add transaction hash to state and use on success modal
+      } catch (error) {
+        console.error('Failed to send transaction', error);
+      }
+    },
+    [amount, chainId, getTokenPerDollarMutation, sendTransaction],
+  );
 
   const onNextStep = useCallback(() => {
     setStep(2);
@@ -146,7 +218,7 @@ export const WithdrawWidget = ({
             }
           >
             {step === 1 ? (
-              <>
+              <div className="p-4">
                 <Controller
                   control={formMethods.control}
                   name="chainId"
@@ -178,7 +250,6 @@ export const WithdrawWidget = ({
                     );
                   }}
                 />
-
                 <Controller
                   control={formMethods.control}
                   name="amount"
@@ -198,7 +269,6 @@ export const WithdrawWidget = ({
                     );
                   }}
                 />
-
                 <div className="mt-4 grid grid-cols-3 gap-4">
                   {[25, 50, 100].map((value) => {
                     return (
@@ -218,7 +288,7 @@ export const WithdrawWidget = ({
                     );
                   })}
                 </div>
-              </>
+              </div>
             ) : (
               <>
                 <div className="flex flex-col gap-[10px] px-6 py-4">
