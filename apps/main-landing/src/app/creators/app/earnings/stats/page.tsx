@@ -140,7 +140,11 @@ export default function EarningsStats() {
             <CardBody className="flex grow items-center justify-center">
               <div className="relative">
                 <div className="mx-8 flex items-center justify-center p-6">
-                  <img src={IDRISS_COIN.src} alt="coin" className="w-[198px]" />
+                  <img
+                    src={IDRISS_COIN.src}
+                    alt="coin"
+                    className="w-[198px] transition-all duration-300 ease-in-out 2xl:w-[220px]"
+                  />
                 </div>
                 <span className="pointer-events-none absolute left-2 top-12 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-black">
                   <Icon
