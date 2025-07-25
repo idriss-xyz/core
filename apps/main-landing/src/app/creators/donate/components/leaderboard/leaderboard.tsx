@@ -47,8 +47,7 @@ export const Leaderboard = ({
   leaderboardError,
   leaderboardLoading,
   updateCurrentContent,
-  isScrollable,
-  style
+  style,
 }: Properties) => {
   const isTwitchExtension = !!variant;
   const isTwitchPanel = variant === 'panel';
@@ -118,7 +117,7 @@ export const Leaderboard = ({
         </h1>
       </div>
 
-      <div className="flex flex-1 w-full flex-col min-h-0">
+      <div className="flex min-h-0 w-full flex-1 flex-col">
         {leaderboardLoading || address.isFetching ? (
           <span
             className={classes(

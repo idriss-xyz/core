@@ -12,7 +12,6 @@ import {
 } from '@idriss-xyz/constants';
 import '@rainbow-me/rainbowkit/styles.css';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { classes } from '@idriss-xyz/ui/utils';
 import { default as io } from 'socket.io-client';
 import { Hex, isAddress } from 'viem';
 import { useRouter } from 'next/navigation';
@@ -203,7 +202,9 @@ export function DonateContent({ creatorName }: Properties) {
 
     resizeObserver.observe(formElement);
 
-    return () => {return resizeObserver.disconnect()};
+    return () => {
+      return resizeObserver.disconnect();
+    };
   }, [creatorInfo]);
 
   const updateCurrentContent = useCallback((content: DonateContentValues) => {
@@ -241,7 +242,9 @@ export function DonateContent({ creatorName }: Properties) {
                   leaderboardError={donationsHistory.isError}
                   leaderboardLoading={donationsHistory.isLoading}
                   className="container mt-8 px-0 lg:mt-[90px] lg:[@media(max-height:800px)]:mt-[40px]"
-                  style={{ height: formHeight > 0 ? `${formHeight}px` : undefined }}
+                  style={{
+                    height: formHeight > 0 ? `${formHeight}px` : undefined,
+                  }}
                 />
               </>
             )}

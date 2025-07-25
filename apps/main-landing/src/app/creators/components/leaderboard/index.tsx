@@ -1,1 +1,1 @@
-export { Leaderboard, LeaderboardStandalone } from './leaderboard';
+export { Leaderboard } from './leaderboard';

@@ -15,7 +15,6 @@ import {
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
 
-
 import { IDRISS_SCENE_STREAM_2 } from '@/assets';
 
 import { WidgetVariants } from '../../../../../../twitch-extension/src/app/types';
@@ -269,7 +268,7 @@ export const Leaderboard = ({
         )}
       </div>
 
-      <div className="flex w-full flex-1 flex-col min-h-0">
+      <div className="flex min-h-0 w-full flex-1 flex-col">
         {leaderboardLoading || address.isFetching ? (
           <span
             className={classes(
@@ -409,19 +408,21 @@ export const Leaderboard = ({
                   <table className="w-full table-fixed border-collapse">
                     <tbody>
                       {leaderboard.length > 0 ? (
-                        leaderboard.map((item, index) => {return (
-                          <LeaderboardItem
-                            donorRank={index}
-                            onDonorClick={onDonorClick}
-                            donorDetails={{
-                              address: item.address,
-                              avatarUrl: item.avatarUrl,
-                              displayName: item.displayName,
-                            }}
-                            donateAmount={item.totalAmount}
-                            key={item.address}
-                          />
-                        )})
+                        leaderboard.map((item, index) => {
+                          return (
+                            <LeaderboardItem
+                              donorRank={index}
+                              onDonorClick={onDonorClick}
+                              donorDetails={{
+                                address: item.address,
+                                avatarUrl: item.avatarUrl,
+                                displayName: item.displayName,
+                              }}
+                              donateAmount={item.totalAmount}
+                              key={item.address}
+                            />
+                          );
+                        })
                       ) : (
                         <LeaderboardItemPlaceholder
                           amountToDisplay={MAX_DISPLAYED_ITEMS + 1}
@@ -487,98 +488,6 @@ export const Leaderboard = ({
           </Link>
         </div>
       )}
-    </div>
-  );
-};
-
-type StandaloneProperties = {
-  heading?: string;
-  className?: string;
-  leaderboardError: boolean;
-  leaderboardLoading: boolean;
-  leaderboard: LeaderboardStats[];
-  onDonorClick: (address: Hex) => void;
-};
-
-export const LeaderboardStandalone = ({
-  heading,
-  className,
-  leaderboard = [],
-  onDonorClick,
-  leaderboardError,
-  leaderboardLoading,
-}: StandaloneProperties) => {
-  return (
-    <div className={classes(baseClassName, className)}>
-      <div className="relative flex min-h-[100px] w-full items-center justify-center overflow-hidden">
-        <img
-          alt=""
-          src={IDRISS_SCENE_STREAM_2.src}
-          className="absolute -left-5 -top-1 h-[110px] w-[640px] max-w-none object-cover"
-        />
-        <span className="absolute left-0 top-0 size-full bg-black/20" />
-
-        <h1 className="relative z-1 mx-12 my-6 text-center text-heading4 uppercase text-white">
-          {heading ?? 'Leaderboard'}
-        </h1>
-      </div>
-
-      <div className="flex w-full flex-col">
-        {leaderboardLoading && (
-          <span className="flex w-full items-center justify-center px-5.5 py-4.5">
-            <Spinner className="size-16 text-mint-600" />
-          </span>
-        )}
-
-        {leaderboardError && (
-          <p className="flex items-center justify-center gap-2 px-5.5 py-[30px] text-center text-heading4 text-red-500">
-            <Icon name="AlertCircle" size={40} />{' '}
-            <span>Cannot get leaderboard</span>
-          </p>
-        )}
-
-        {leaderboard && !leaderboardLoading && !leaderboardError && (
-          <ScrollArea className="max-h-[480px] overflow-y-auto transition-all duration-500">
-            <table className="w-full table-fixed border-collapse pr-4">
-              <tbody>
-                {leaderboard.map((leaderboardItem, index) => {
-                  if (!leaderboardItem || index > 9) return null;
-
-                  const isLastItem =
-                    index === leaderboard.length - 1 || index === 9;
-
-                  return (
-                    <LeaderboardItem
-                      donorRank={index}
-                      isLastItem={isLastItem}
-                      onDonorClick={onDonorClick}
-                      className="max-w-[344px] py-[23.75px]"
-                      donateAmount={leaderboardItem.totalAmount}
-                      donorDetails={{
-                        address: leaderboardItem.address,
-                        avatarUrl: leaderboardItem.avatarUrl,
-                        displayName: leaderboardItem.displayName,
-                      }}
-                      key={leaderboardItem.address}
-                    />
-                  );
-                })}
-
-                {leaderboard.length <= MAX_DISPLAYED_ITEMS && (
-                  <LeaderboardItemPlaceholder
-                    itemHeight={79}
-                    amountToDisplay={MAX_DISPLAYED_ITEMS}
-                    donorRank={leaderboard.length}
-                    previousDonateAmount={
-                      leaderboard.at(-1)?.totalAmount ?? 1234
-                    }
-                  />
-                )}
-              </tbody>
-            </table>
-          </ScrollArea>
-        )}
-      </div>
     </div>
   );
 };

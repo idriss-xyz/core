@@ -11,7 +11,6 @@ import { DonationUser } from '@idriss-xyz/constants';
 import { WHITELISTED_URLS } from '../../donate/constants';
 import { useGetAvatarImage } from '../../donate/commands/get-avatar-image';
 
-
 const rankBorders = [
   'border-[#FAC928]',
   'border-[#979797]',
