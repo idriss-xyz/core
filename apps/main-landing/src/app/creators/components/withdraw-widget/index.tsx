@@ -6,13 +6,12 @@ import { classes } from '@idriss-xyz/ui/utils';
 import {
   CHAIN_ID_TO_TOKENS,
   CREATOR_CHAIN,
-  EMPTY_HEX,
   ERC20_ABI,
 } from '@idriss-xyz/constants';
 import { encodeFunctionData, Hex } from 'viem';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { useSendTransaction } from '@privy-io/react-auth';
-import { getSafeNumber } from '@idriss-xyz/utils';
+import { formatTokenValue, getSafeNumber } from '@idriss-xyz/utils';
 
 import {
   ChainSelect,
@@ -31,7 +30,7 @@ type WithdrawFormValues = {
 };
 
 type WithdrawWidgetProperties = {
-  isOpened: boolean;
+  isOpen: boolean;
   isLoading?: boolean;
   isSuccess?: boolean;
   transactionHash?: string;
@@ -63,22 +62,21 @@ function getChainNameById(chainId: number): string | undefined {
 }
 
 export const WithdrawWidget = ({
-  isOpened,
-  isLoading,
-  isSuccess,
-  transactionHash = EMPTY_HEX,
+  isOpen,
   onClose,
 }: WithdrawWidgetProperties) => {
   const [step, setStep] = useState<1 | 2>(1);
   const { sendTransaction } = useSendTransaction();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [amountInTokens, setAmountInTokens] = useState<bigint>();
+  const [transactionHash, setTransactionHash] = useState<string>();
   const getTokenPerDollarMutation = useGetTokenPerDollar();
 
   const formMethods = useForm<WithdrawFormValues>({
     defaultValues: {
       amount: 0,
       chainId: ALL_CHAIN_IDS[0],
-      tokenSymbol: '',
-      withdrawalAddress: '',
     },
   });
 
@@ -86,6 +84,8 @@ export const WithdrawWidget = ({
   const amount = formMethods.watch('amount');
   const chainId = formMethods.watch('chainId');
   const tokenSymbol = formMethods.watch('tokenSymbol');
+  const withdrawalAddress = formMethods.watch('withdrawalAddress');
+
   const tokens = useMemo(() => {
     return CHAIN_ID_TO_TOKENS[chainId] ?? [];
   }, [chainId]);
@@ -110,6 +110,7 @@ export const WithdrawWidget = ({
         console.error('Missing required fields');
         return;
       }
+      setIsLoading(true);
 
       const usdcToken = CHAIN_ID_TO_TOKENS[values.chainId]?.find((token) => {
         return token.symbol === 'USDC';
@@ -140,6 +141,8 @@ export const WithdrawWidget = ({
         (valueAsBigNumber * BigInt(10) ** BigInt(tokenToSend?.decimals ?? 0)) /
         BigInt(10) ** BigInt(decimals);
 
+      setAmountInTokens(tokensToSend);
+
       const txData = encodeFunctionData({
         abi: ERC20_ABI,
         functionName: 'transfer',
@@ -160,9 +163,15 @@ export const WithdrawWidget = ({
             },
           },
         );
-        console.log('Transaction sent:', tx.hash); // TODO: Add transaction hash to state and use on success modal
+
+        setTransactionHash(tx.hash);
+
+        setIsLoading(false);
+        setIsSuccess(true);
       } catch (error) {
         console.error('Failed to send transaction', error);
+        setIsLoading(false);
+        setIsSuccess(false);
       }
     },
     [amount, chainId, getTokenPerDollarMutation, sendTransaction],
@@ -174,8 +183,7 @@ export const WithdrawWidget = ({
 
   return (
     <IdrissSend.Container
-      isOpened={isOpened}
-      recipientName="Withdraw"
+      isOpened={isOpen}
       onClose={onClose}
       header={
         !isLoading &&
@@ -187,9 +195,18 @@ export const WithdrawWidget = ({
           return (
             <IdrissSend.Loading
               className="px-5 pb-9 pt-5"
-              heading={`Withdrawing $${amount}`}
+              heading={
+                <>
+                  Sending <span className="text-mint-600">${amount}</span> (
+                  {amountInTokens
+                    ? formatTokenValue(Number(amountInTokens) / 10 ** 18)
+                    : '0'}{' '}
+                  {tokenSymbol} )
+                </>
+              }
+              recipient={withdrawalAddress}
             >
-              Please wait while your withdrawal is being processed...
+              Withdrawing
             </IdrissSend.Loading>
           );
         }
@@ -197,9 +214,11 @@ export const WithdrawWidget = ({
         if (isSuccess) {
           return (
             <IdrissSend.Success
+              heading="Withdrawal completed"
               className="p-5"
               onConfirm={() => {
                 formMethods.reset();
+                onClose();
                 setStep(1);
               }}
               chainId={chainId}

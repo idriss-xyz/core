@@ -32,7 +32,7 @@ export const Loading = ({
               className="block max-w-40 truncate whitespace-nowrap"
               title={recipient}
             >
-              @{recipient}
+              {recipient}
             </span>
           </>
         ) : null}

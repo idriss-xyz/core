@@ -6,7 +6,6 @@ interface RenderChildrenProperties {
 }
 
 interface Properties {
-  recipientName: string;
   isOpened: boolean;
   onClose?: () => void;
   children: (v: RenderChildrenProperties) => ReactNode;

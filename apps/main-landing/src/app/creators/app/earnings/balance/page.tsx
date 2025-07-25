@@ -123,7 +123,7 @@ export default function EarningsBalance() {
         </Card>
       )}
       <WithdrawWidget
-        isOpened={isWithdrawModalOpen}
+        isOpen={isWithdrawModalOpen}
         onClose={() => {
           return setIsWithdrawModalOpen(false);
         }}
