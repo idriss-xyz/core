@@ -34,6 +34,7 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
     setIsPasswordModalOpen,
     earlyAccessToken,
     handlePasswordSuccess,
+    creator,
   } = useAuth();
   const originalHandleStartEarningClick = useStartEarningNavigation();
 
@@ -43,9 +44,14 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
 
       return;
     }
-    void (earlyAccessToken
-      ? originalHandleStartEarningClick()
-      : setIsPasswordModalOpen(true));
+
+    if (creator) {
+      void originalHandleStartEarningClick();
+    } else {
+      void (earlyAccessToken
+        ? originalHandleStartEarningClick()
+        : setIsPasswordModalOpen(true));
+    }
   };
 
   useEffect(() => {
@@ -69,8 +75,7 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
       sessionStorage.setItem('custom-auth-token', customToken);
       // Redirect to the main app. The PrivyProvider will now automatically
       // use the token to authenticate the user.
-      router.push('/creators/app');
-    }
+          }
   }, [searchParameters, router, setIsLoggingIn, setLoginModalOpen]);
 
   return (

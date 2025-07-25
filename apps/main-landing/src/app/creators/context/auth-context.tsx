@@ -1,8 +1,16 @@
 'use client';
-import { createContext, useContext, useState, ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from 'react';
 import { DonationData } from '@idriss-xyz/constants';
+import { usePrivy } from '@privy-io/react-auth';
+import { Hex } from 'viem';
 
-import { CreatorProfileResponse } from '../utils';
+import { CreatorProfileResponse, getCreatorProfile } from '../utils';
 
 type AuthContextType = {
   donations: DonationData[];
@@ -37,6 +45,47 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [creatorLoading, setCreatorLoading] = useState(true);
   const [donations, setDonations] = useState<DonationData[]>([]);
   const [newDonationsCount, setNewDonationsCount] = useState(0);
+  const { ready, authenticated, user } = usePrivy();
+
+  useEffect(() => {
+    if (!ready) {
+      return;
+    }
+
+    if (!authenticated) {
+      setCreator(null);
+      setCreatorLoading(false);
+      return;
+    }
+
+    if (creator) {
+      setCreatorLoading(false);
+      return;
+    }
+
+    const fetchCreatorProfile = async () => {
+      if (!user?.wallet?.address) {
+        return;
+      }
+      setCreatorLoading(true);
+      try {
+        const existingCreator = await getCreatorProfile(
+          undefined,
+          user.wallet.address as Hex,
+        );
+        setCreator(existingCreator ?? null);
+      } catch (error) {
+        console.error('Failed to fetch creator profile:', error);
+        setCreator(null);
+      } finally {
+        setCreatorLoading(false);
+      }
+    };
+
+    if (authenticated && !creator) {
+      void fetchCreatorProfile();
+    }
+  }, [ready, authenticated, user, creator]);
 
   const addDonation = (donation: DonationData) => {
     setDonations((previous) => {

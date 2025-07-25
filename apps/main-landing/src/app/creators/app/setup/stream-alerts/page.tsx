@@ -278,6 +278,7 @@ export default function StreamAlerts() {
                       intent="secondary"
                       onClick={sendTestDonation}
                       className="h-fit"
+                      suffixIconName='IdrissArrowRight'
                     >
                       TEST ALERT
                     </Button>
