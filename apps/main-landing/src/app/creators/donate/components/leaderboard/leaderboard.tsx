@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
 import { Hex } from 'viem';
@@ -45,6 +46,8 @@ type Properties = {
   title?: string;
   perspective?: 'creator' | 'donor';
   scope?: 'local' | 'global';
+  isScrollable?: boolean;
+  style?: CSSProperties;
 };
 
 const baseClassName =
@@ -87,7 +90,7 @@ export const Leaderboard = ({
   variant,
   address,
   className,
-  leaderboard,
+  leaderboard = [],
   onDonorClick,
   leaderboardError,
   leaderboardLoading,
@@ -97,6 +100,8 @@ export const Leaderboard = ({
   title,
   perspective = 'donor',
   scope = 'local',
+  isScrollable,
+  style,
 }: Properties) => {
   const columns: ColumnDefinition<LeaderboardStats>[] = [
     {
@@ -201,6 +206,7 @@ export const Leaderboard = ({
         isCreatorsDashboard && 'w-full',
         className,
       )}
+      style={style}
     >
       <div
         className={classes(
@@ -261,7 +267,7 @@ export const Leaderboard = ({
         )}
       </div>
 
-      <div className="flex w-full flex-col">
+      <div className="flex w-full flex-1 flex-col min-h-0">
         {leaderboardLoading || address.isFetching ? (
           <span
             className={classes(
@@ -272,7 +278,7 @@ export const Leaderboard = ({
             <Spinner className="size-16 text-mint-600" />
           </span>
         ) : (
-          <div className={classes(isTwitchPanel && 'min-h-[345px]')}>
+          <div className={classes(isTwitchPanel && 'min-h-[345px]', 'h-full')}>
             {isCreatorsDashboard && (
               <ScrollArea className="h-[694px] w-full overflow-y-auto rounded-b-md rounded-t-none bg-white text-black transition-all duration-500 [scrollbar-color:gray_#efefef] [scrollbar-width:thin]">
                 <Table
@@ -395,39 +401,68 @@ export const Leaderboard = ({
               </table>
             )}
 
-            {!isTwitchExtension && (
-              <table className="w-full table-fixed border-collapse">
-                <tbody>
-                  {leaderboard.map((item, index) => {
-                    if (index > MAX_DISPLAYED_ITEMS) return null;
+            {!isTwitchExtension &&
+              (isScrollable ? (
+                <ScrollArea className="h-full">
+                  <table className="w-full table-fixed border-collapse">
+                    <tbody>
+                      {leaderboard.length > 0 ? (
+                        leaderboard.map((item, index) => {return (
+                          <LeaderboardItem
+                            donorRank={index}
+                            onDonorClick={onDonorClick}
+                            donorDetails={{
+                              address: item.address,
+                              avatarUrl: item.avatarUrl,
+                              displayName: item.displayName,
+                            }}
+                            donateAmount={item.totalAmount}
+                            key={item.address}
+                          />
+                        )})
+                      ) : (
+                        <LeaderboardItemPlaceholder
+                          amountToDisplay={MAX_DISPLAYED_ITEMS + 1}
+                          donorRank={leaderboard.length}
+                          previousDonateAmount={1}
+                        />
+                      )}
+                    </tbody>
+                  </table>
+                </ScrollArea>
+              ) : (
+                <table className="w-full table-fixed border-collapse">
+                  <tbody>
+                    {leaderboard.map((item, index) => {
+                      if (index > MAX_DISPLAYED_ITEMS) return null;
 
-                    return (
-                      <LeaderboardItem
-                        donorRank={index}
-                        onDonorClick={onDonorClick}
-                        donorDetails={{
-                          address: item.address,
-                          avatarUrl: item.avatarUrl,
-                          displayName: item.displayName,
-                        }}
-                        donateAmount={item.totalAmount}
-                        key={item.address}
+                      return (
+                        <LeaderboardItem
+                          donorRank={index}
+                          onDonorClick={onDonorClick}
+                          donorDetails={{
+                            address: item.address,
+                            avatarUrl: item.avatarUrl,
+                            displayName: item.displayName,
+                          }}
+                          donateAmount={item.totalAmount}
+                          key={item.address}
+                        />
+                      );
+                    })}
+
+                    {leaderboard.length <= MAX_DISPLAYED_ITEMS + 1 && (
+                      <LeaderboardItemPlaceholder
+                        amountToDisplay={MAX_DISPLAYED_ITEMS + 1}
+                        donorRank={leaderboard.length}
+                        previousDonateAmount={
+                          leaderboard.at(-1)?.totalAmount ?? 1234
+                        }
                       />
-                    );
-                  })}
-
-                  {leaderboard.length <= MAX_DISPLAYED_ITEMS + 1 && (
-                    <LeaderboardItemPlaceholder
-                      amountToDisplay={MAX_DISPLAYED_ITEMS + 1}
-                      donorRank={leaderboard.length}
-                      previousDonateAmount={
-                        leaderboard.at(-1)?.totalAmount ?? 1234
-                      }
-                    />
-                  )}
-                </tbody>
-              </table>
-            )}
+                    )}
+                  </tbody>
+                </table>
+              ))}
           </div>
         )}
       </div>
@@ -466,7 +501,7 @@ type StandaloneProperties = {
 export const LeaderboardStandalone = ({
   heading,
   className,
-  leaderboard,
+  leaderboard = [],
   onDonorClick,
   leaderboardError,
   leaderboardLoading,

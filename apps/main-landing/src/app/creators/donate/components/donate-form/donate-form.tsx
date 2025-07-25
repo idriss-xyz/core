@@ -21,7 +21,7 @@ import {
   DEFAULT_DONATION_MIN_SFX_AMOUNT,
   CREATOR_API_URL,
 } from '@idriss-xyz/constants';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { classes } from '@idriss-xyz/ui/utils';
@@ -56,7 +56,8 @@ type Properties = {
 const baseClassName =
   'z-1 w-[440px] max-w-full rounded-xl bg-white px-4 pb-9 pt-6 flex flex-col items-center relative';
 
-export const DonateForm = ({ className, creatorInfo }: Properties) => {
+export const DonateForm = forwardRef<HTMLDivElement, Properties>(
+  ({ className, creatorInfo }, reference) => {
   const { isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
   const { connectModalOpen, openConnectModal } = useConnectModal();
@@ -339,7 +340,7 @@ export const DonateForm = ({ className, creatorInfo }: Properties) => {
     );
   }
   return (
-    <div className={classes(baseClassName, className)}>
+    <div ref={reference} className={classes(baseClassName, className)}>
       <link rel="preload" as="image" href={backgroundLines3.src} />
       <img
         alt=""
@@ -444,68 +445,77 @@ export const DonateForm = ({ className, creatorInfo }: Properties) => {
           }}
         />
 
-        <Controller
-          name="message"
-          control={formMethods.control}
-          render={({ field, fieldState }) => {
-            return (
-              <>
+        {creatorInfo.alertEnabled && (
+          <Controller
+            name="message"
+            control={formMethods.control}
+            render={({ field, fieldState }) => {
+              return (
+                <>
+                  <Form.Field
+                    {...field}
+                    label={
+                      <div className="flex items-center gap-2">
+                        <label>Message</label>
+                        {creatorInfo.minimumAlertAmount > 0  && (
+                          <Badge type="info" variant="subtle">
+                            Alert ${creatorInfo.minimumAlertAmount}+
+                          </Badge>
+                        )}
+                        {(creatorInfo.minimumTTSAmount > 0  && creatorInfo.ttsEnabled) && (
+                          <Badge type="info" variant="subtle">
+                            TTS ${creatorInfo.minimumTTSAmount}+
+                          </Badge>
+                        )}
+                      </div>
+                    }
+                    className="mt-4"
+                    helperText={fieldState.error?.message}
+                    error={Boolean(fieldState.error?.message)}
+                  />
+                </>
+              );
+            }}
+          />
+        )}
+
+        {creatorInfo.sfxEnabled && (
+          <Controller
+            name="sfx"
+            control={formMethods.control}
+            render={({ field, fieldState }) => {
+              return (
                 <Form.Field
                   {...field}
                   label={
-                    <div className="flex items-center gap-2">
-                      <label>Message</label>
-                      <Badge type="info" variant="subtle">
-                        Alert ${creatorInfo.minimumAlertAmount}+
-                      </Badge>
-                      <Badge type="info" variant="subtle">
-                        TTS ${creatorInfo.minimumTTSAmount}+
-                      </Badge>
+                    <div className="flex items-center gap-x-1">
+                      <label htmlFor="sfx">AI sound effect</label>
+                      <TooltipProvider delayDuration={400}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Icon name="HelpCircle" size={15} />
+                          </TooltipTrigger>
+                          <TooltipContent className="bg-black text-center text-white">
+                            <p className="text-label6">
+                              Type what you want to hear. AI will turn it into{' '}
+                              <br />a sound effect and replace the default
+                              sound.
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </div>
                   }
                   className="mt-4"
                   helperText={fieldState.error?.message}
                   error={Boolean(fieldState.error?.message)}
+                  placeholder={`🔒 Unlock at $${minimumSfxAmount}`}
+                  disabled={amount < minimumSfxAmount}
                 />
-              </>
-            );
-          }}
-        />
-
-        <Controller
-          name="sfx"
-          control={formMethods.control}
-          render={({ field, fieldState }) => {
-            return (
-              <Form.Field
-                {...field}
-                label={
-                  <div className="flex items-center gap-x-1">
-                    <label htmlFor="sfx">AI sound effect</label>
-                    <TooltipProvider delayDuration={400}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Icon name="HelpCircle" size={15} />
-                        </TooltipTrigger>
-                        <TooltipContent className="bg-black text-center text-white">
-                          <p className="text-label6">
-                            Type what you want to hear. AI will turn it into{' '}
-                            <br />a sound effect and replace the default sound.
-                          </p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
-                }
-                className="mt-4"
-                helperText={fieldState.error?.message}
-                error={Boolean(fieldState.error?.message)}
-                placeholder={`🔒 Unlock at $${minimumSfxAmount}`}
-                disabled={amount < minimumSfxAmount}
-              />
-            );
-          }}
-        />
+              );
+            }}
+          />
+        )}
 
         {isConnected ? (
           <Button
@@ -541,4 +551,5 @@ export const DonateForm = ({ className, creatorInfo }: Properties) => {
       </div>
     </div>
   );
-};
+});
+DonateForm.displayName = 'DonateForm';

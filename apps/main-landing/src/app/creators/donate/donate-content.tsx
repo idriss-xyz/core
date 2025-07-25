@@ -12,6 +12,7 @@ import {
 } from '@idriss-xyz/constants';
 import '@rainbow-me/rainbowkit/styles.css';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { classes } from '@idriss-xyz/ui/utils';
 import { default as io } from 'socket.io-client';
 import { Hex, isAddress } from 'viem';
 import { useRouter } from 'next/navigation';
@@ -48,6 +49,8 @@ export function DonateContent({ creatorName }: Properties) {
     name: 'user-tip',
   });
   const [creatorInfo, setCreatorInfo] = useState<CreatorProfile | null>(null);
+  const formReference = useRef<HTMLDivElement>(null);
+  const [formHeight, setFormHeight] = useState(0);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -58,6 +61,10 @@ export function DonateContent({ creatorName }: Properties) {
           return;
         }
 
+        const minimumAlertAmount = Number(profile.minimumAlertAmount);
+        const minimumTTSAmount = Number(profile.minimumTTSAmount);
+        const minimumSfxAmount = Number(profile.minimumSfxAmount);
+
         setCreatorInfo({
           ...profile,
           address: {
@@ -67,6 +74,15 @@ export function DonateContent({ creatorName }: Properties) {
           },
           network: profile.networks.join(','),
           token: profile.tokens.join(','),
+          minimumAlertAmount: Number.isNaN(minimumAlertAmount)
+            ? 0
+            : minimumAlertAmount,
+          minimumTTSAmount: Number.isNaN(minimumTTSAmount)
+            ? 0
+            : minimumTTSAmount,
+          minimumSfxAmount: Number.isNaN(minimumSfxAmount)
+            ? 0
+            : minimumSfxAmount,
         });
         creatorInfoSetReference.current = true;
       } catch (error) {
@@ -172,6 +188,24 @@ export function DonateContent({ creatorName }: Properties) {
     return;
   }, [socketConnected, socketInitialized, creatorInfo?.address.data]);
 
+  useEffect(() => {
+    const formElement = formReference.current;
+    if (!formElement) return;
+
+    const resizeObserver = new ResizeObserver(() => {
+      if (formReference.current) {
+        requestAnimationFrame(() => {
+          if (formReference.current)
+            setFormHeight(formReference.current.getBoundingClientRect().height);
+        });
+      }
+    });
+
+    resizeObserver.observe(formElement);
+
+    return () => {return resizeObserver.disconnect()};
+  }, [creatorInfo]);
+
   const updateCurrentContent = useCallback((content: DonateContentValues) => {
     setCurrentContent((previous) => {
       return { previous, ...content };
@@ -193,18 +227,21 @@ export function DonateContent({ creatorName }: Properties) {
             {creatorInfo && (
               <>
                 <DonateForm
+                  ref={formReference}
                   className="container mt-8 overflow-hidden lg:mt-[90px] lg:[@media(max-height:800px)]:mt-[40px]"
                   creatorInfo={creatorInfo}
                 />
 
                 <Leaderboard
+                  isScrollable
                   leaderboard={leaderboard}
                   onDonorClick={onDonorClick}
                   address={creatorInfo.address}
                   updateCurrentContent={updateCurrentContent}
                   leaderboardError={donationsHistory.isError}
                   leaderboardLoading={donationsHistory.isLoading}
-                  className="container mt-8 overflow-hidden px-0 lg:mt-[90px] lg:[@media(max-height:800px)]:mt-[40px]"
+                  className="container mt-8 px-0 lg:mt-[90px] lg:[@media(max-height:800px)]:mt-[40px]"
+                  style={{ height: formHeight > 0 ? `${formHeight}px` : undefined }}
                 />
               </>
             )}
@@ -238,6 +275,7 @@ export function DonateContent({ creatorName }: Properties) {
     currentContent,
     creatorInfo,
     updateCurrentContent,
+    formHeight,
     donationsHistory.isError,
     donationsHistory.isLoading,
   ]);
