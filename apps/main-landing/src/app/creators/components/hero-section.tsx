@@ -61,6 +61,11 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
     const pfp = searchParameters.get('pfp');
     const email = searchParameters.get('email');
 
+    if (searchParameters.get('login')) {
+      setIsModalOpen(true);
+      router.replace('/creators', { scroll: false });
+    }
+
     if (customToken) {
       setIsLoggingIn(true);
       setLoginModalOpen(true);
@@ -76,7 +81,13 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
       // Redirect to the main app. The PrivyProvider will now automatically
       // use the token to authenticate the user.
     }
-  }, [searchParameters, router, setIsLoggingIn, setLoginModalOpen]);
+  }, [
+    searchParameters,
+    router,
+    setIsLoggingIn,
+    setLoginModalOpen,
+    setIsModalOpen,
+  ]);
 
   return (
     <header

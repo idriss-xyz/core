@@ -20,15 +20,12 @@ function Layout({ children }: { children: React.ReactNode }) {
   const { ready, authenticated } = usePrivy();
 
   useEffect(() => {
-    console.log('Authenticated', authenticated);
-    console.log('Ready', ready);
-    console.log('CreatorLoading', creatorLoading);
     if (!ready || creatorLoading) {
       return;
     }
     if (!authenticated || !creator) {
       console.log('returning');
-      router.replace('/creators');
+      router.replace('/creators?login=true');
     }
   }, [ready, authenticated, creatorLoading, router, creator]);
 
