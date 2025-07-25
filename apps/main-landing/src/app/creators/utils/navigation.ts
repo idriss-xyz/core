@@ -16,7 +16,7 @@ export const useStartEarningNavigation = () => {
     // If user is logged in, redirect to app
     if (user && creator) {
       if (creator.doneSetup) {
-        router.push('/creators/app/earnings/stats');
+        router.push('/creators/app/earnings/stats-and-history');
       } else {
         router.push('/creators/app/setup/payment-methods');
       }
@@ -32,7 +32,7 @@ export const useStartEarningNavigation = () => {
       }
       setCreator(fetchedCreator);
       if (fetchedCreator.doneSetup) {
-        router.push('/creators/app/earnings/stats');
+        router.push('/creators/app/earnings/stats-and-history');
       } else {
         router.push('/creators/app/setup/payment-methods');
       }

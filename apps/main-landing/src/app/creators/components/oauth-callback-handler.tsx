@@ -54,7 +54,7 @@ export function OAuthCallbackHandler() {
         if (existingCreator) {
           setCreator(existingCreator);
           if (existingCreator.doneSetup) {
-            router.replace('/creators/app/earnings/stats');
+            router.replace('/creators/app/earnings/stats-and-history');
           } else {
             router.replace('/creators/app/setup/payment-methods');
           }

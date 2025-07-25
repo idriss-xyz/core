@@ -1,6 +1,7 @@
-import StreamAlerts from './stream-alerts/page';
-
-// ts-unused-exports:disable-next-line
-export default function Setup() {
-  return <StreamAlerts />;
-}
+                                                                                                                                          
+import { redirect } from 'next/navigation';                                                                                               
+                                                                                                                                          
+export default function Setup() {                                                                                                         
+  redirect('/creators/app/setup/payment-methods');                                                                                        
+}                                                                                                                                         
+         

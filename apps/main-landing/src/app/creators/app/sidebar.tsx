@@ -42,7 +42,7 @@ export function Sidebar() {
               className={getLinkClasses('/creators/app/setup')}
             >
               <Link
-                href="/creators/app/setup"
+                href="/creators/app/setup/payment-methods"
                 className="flex w-full items-center rounded-lg hover:text-mint-600"
               >
                 <Icon
@@ -58,7 +58,7 @@ export function Sidebar() {
               className={getLinkClasses('/creators/app/earnings')}
             >
               <Link
-                href="/creators/app/earnings"
+                href="/creators/app/earnings/stats-and-history"
                 className="flex w-full items-center rounded-lg hover:text-mint-600"
               >
                 <Icon
@@ -74,7 +74,7 @@ export function Sidebar() {
               className={getLinkClasses('/creators/app/ranking')}
             >
               <Link
-                href="/creators/app/ranking"
+                href="/creators/app/ranking/top-creators"
                 className="flex w-full items-center rounded-lg hover:text-mint-600"
               >
                 <Icon size={20} name="Trophy" className="mr-3 size-5" />

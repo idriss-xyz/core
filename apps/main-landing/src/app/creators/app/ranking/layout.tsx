@@ -17,8 +17,7 @@ export default function RankingLayout({
       href: '/creators/app/ranking/top-creators',
       iconName: 'Gamepad2',
       isActive:
-        pathname === '/creators/app/ranking/top-creators' ||
-        pathname === '/creators/app/ranking',
+        pathname === '/creators/app/ranking/top-creators'
     },
     {
       name: 'Top donors',

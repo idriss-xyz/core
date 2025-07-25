@@ -20,7 +20,7 @@ import { Link } from '@idriss-xyz/ui/link';
 import { useRouter } from 'next/navigation';
 
 import { removeMainnetSuffix } from '@/app/creators/donate/utils';
-import { TokenLogo } from '@/app/creators/app/earnings/stats/token-logo';
+import { TokenLogo } from '@/app/creators/app/earnings/stats-and-history/token-logo';
 
 import { useTimeAgo } from '../../hooks/use-time-ago';
 

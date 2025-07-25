@@ -23,8 +23,7 @@ export default function SetupLayout({
       href: '/creators/app/setup/payment-methods',
       iconName: 'HandCoins',
       isActive:
-        pathname === '/creators/app/setup/payment-methods' ||
-        pathname === '/creators/app/setup',
+        pathname === '/creators/app/setup/payment-methods'
     },
     {
       name: 'Stream alerts',

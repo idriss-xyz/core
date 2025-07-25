@@ -6,7 +6,7 @@ import { ColumnDefinition, Table } from '@idriss-xyz/ui/table';
 import { formatFiatValue, formatTokenValue } from '@idriss-xyz/utils';
 import { encodeFunctionData, Hex, parseUnits } from 'viem';
 
-import { TokenLogo } from '../stats/token-logo';
+import { TokenLogo } from '../stats-and-history/token-logo';
 
 export function BalanceTable({
   data,

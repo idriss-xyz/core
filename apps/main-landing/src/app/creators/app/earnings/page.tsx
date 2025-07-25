@@ -1,6 +1,5 @@
-import EarningsStats from './stats/page';
-
+import { redirect } from 'next/navigation';                                                                                               
 // ts-unused-exports:disable-next-line
 export default function Earnings() {
-  return <EarningsStats />;
+  redirect('/creators/app/earnings/stats-and-history');                                                                                               
 }
