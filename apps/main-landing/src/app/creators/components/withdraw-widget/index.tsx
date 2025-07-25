@@ -4,6 +4,7 @@ import { Button } from '@idriss-xyz/ui/button';
 import { Form as DesignSystemForm } from '@idriss-xyz/ui/form';
 import { classes } from '@idriss-xyz/ui/utils';
 import {
+  BalanceTableItem,
   CHAIN_ID_TO_TOKENS,
   CREATOR_CHAIN,
   ERC20_ABI,
@@ -31,9 +32,7 @@ type WithdrawFormValues = {
 
 type WithdrawWidgetProperties = {
   isOpen: boolean;
-  isLoading?: boolean;
-  isSuccess?: boolean;
-  transactionHash?: string;
+  balances: BalanceTableItem[];
   onClose: () => void;
 };
 
@@ -63,6 +62,7 @@ function getChainNameById(chainId: number): string | undefined {
 
 export const WithdrawWidget = ({
   isOpen,
+  balances,
   onClose,
 }: WithdrawWidgetProperties) => {
   const [step, setStep] = useState<1 | 2>(1);
@@ -99,6 +99,11 @@ export const WithdrawWidget = ({
     [formMethods],
   );
 
+  const tokenAddress = getTokenAddress(chainId, tokenSymbol);
+  const balanceOfToken = balances.find((item) => {
+    return item.token.address.toLowerCase() === tokenAddress?.toLowerCase();
+  })?.totalValue;
+
   const onSubmit = useCallback(
     async (values: WithdrawFormValues) => {
       if (
@@ -115,17 +120,10 @@ export const WithdrawWidget = ({
       const usdcToken = CHAIN_ID_TO_TOKENS[values.chainId]?.find((token) => {
         return token.symbol === 'USDC';
       });
-      const tokenAddress =
-        getTokenAddress(values.chainId, values.tokenSymbol) ?? '';
-      console.log('Amount on form:', values.amount);
-      console.log(
-        'Token amount:',
-        Number(values.amount) * 10 ** (usdcToken?.decimals ?? 0),
-      );
 
       const tokenPerDollar = await getTokenPerDollarMutation.mutateAsync({
         chainId: values.chainId,
-        buyToken: tokenAddress,
+        buyToken: tokenAddress ?? '',
         sellToken: usdcToken?.address ?? '',
         amount: 10 ** (usdcToken?.decimals ?? 0),
       });
@@ -174,7 +172,7 @@ export const WithdrawWidget = ({
         setIsSuccess(false);
       }
     },
-    [amount, chainId, getTokenPerDollarMutation, sendTransaction],
+    [amount, chainId, getTokenPerDollarMutation, tokenAddress, sendTransaction],
   );
 
   const onNextStep = useCallback(() => {
@@ -289,23 +287,25 @@ export const WithdrawWidget = ({
                   }}
                 />
                 <div className="mt-4 grid grid-cols-3 gap-4">
-                  {[25, 50, 100].map((value) => {
-                    return (
-                      <Button
-                        key={value}
-                        className={classes(
-                          'w-full',
-                          amount === value &&
-                            'border-mint-600 bg-mint-300 hover:border-mint-600 hover:bg-mint-300',
-                        )}
-                        intent="secondary"
-                        size="medium"
-                        onClick={setAmount(value)}
-                      >
-                        {value}%
-                      </Button>
-                    );
-                  })}
+                  {balanceOfToken !== undefined &&
+                    balanceOfToken !== 0 &&
+                    [25, 50, 100].map((value) => {
+                      return (
+                        <Button
+                          key={value}
+                          className={classes(
+                            'w-full',
+                            amount === value &&
+                              'border-mint-600 bg-mint-300 hover:border-mint-600 hover:bg-mint-300',
+                          )}
+                          intent="secondary"
+                          size="medium"
+                          onClick={setAmount((value / 100) * balanceOfToken)}
+                        >
+                          {value}%
+                        </Button>
+                      );
+                    })}
                 </div>
               </div>
             ) : (

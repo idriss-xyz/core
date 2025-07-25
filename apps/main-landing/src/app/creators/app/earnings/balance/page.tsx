@@ -124,6 +124,7 @@ export default function EarningsBalance() {
       )}
       <WithdrawWidget
         isOpen={isWithdrawModalOpen}
+        balances={tableData}
         onClose={() => {
           return setIsWithdrawModalOpen(false);
         }}
