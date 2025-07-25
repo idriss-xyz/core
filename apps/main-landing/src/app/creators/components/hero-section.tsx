@@ -75,7 +75,7 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
       sessionStorage.setItem('custom-auth-token', customToken);
       // Redirect to the main app. The PrivyProvider will now automatically
       // use the token to authenticate the user.
-          }
+    }
   }, [searchParameters, router, setIsLoggingIn, setLoginModalOpen]);
 
   return (

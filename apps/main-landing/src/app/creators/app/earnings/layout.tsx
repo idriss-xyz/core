@@ -16,8 +16,7 @@ export default function EarningsLayout({
       name: 'Stats & history',
       href: '/creators/app/earnings/stats-and-history',
       iconName: 'LineChart',
-      isActive:
-        pathname === '/creators/app/earnings/stats-and-history'
+      isActive: pathname === '/creators/app/earnings/stats-and-history',
     },
     {
       name: 'Balance',

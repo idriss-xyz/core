@@ -84,6 +84,7 @@ type FormPayload = {
   alertSound: string;
 };
 
+// ts-unused-exports:disable-next-line
 export default function StreamAlerts() {
   const { creator } = useAuth();
 
@@ -278,7 +279,7 @@ export default function StreamAlerts() {
                       intent="secondary"
                       onClick={sendTestDonation}
                       className="h-fit"
-                      suffixIconName='IdrissArrowRight'
+                      suffixIconName="IdrissArrowRight"
                     >
                       TEST ALERT
                     </Button>

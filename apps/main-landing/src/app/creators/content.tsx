@@ -14,23 +14,23 @@ export default function Content() {
   const heroButtonReference = useRef<HTMLButtonElement>(null);
 
   return (
-      <div className="relative">
-        <TopBar
-          isLanding
-          displayCTA
-          hideNavigation
-          heroButtonReference={heroButtonReference}
-        />
+    <div className="relative">
+      <TopBar
+        isLanding
+        displayCTA
+        hideNavigation
+        heroButtonReference={heroButtonReference}
+      />
 
-        <main>
-          <HeroSection heroButtonReference={heroButtonReference} />
-          <PlatformsSection />
-          <ProsSection />
-          <SetUp />
-          <TopCreators />
-        </main>
+      <main>
+        <HeroSection heroButtonReference={heroButtonReference} />
+        <PlatformsSection />
+        <ProsSection />
+        <SetUp />
+        <TopCreators />
+      </main>
 
-        <Footer />
-      </div>
+      <Footer />
+    </div>
   );
 }
