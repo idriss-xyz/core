@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
 import { formatEther } from 'viem';
 import { clientBase } from '@idriss-xyz/blockchain-clients';
+import { ERC20_ABI } from '@idriss-xyz/constants';
 
 import { IDRISS_TOKEN_ADDRESS } from '@/components/token-section/constants';
-import { ERC20_ABI } from '@/app/creators/donate/constants';
 import {
   VESTING_CONTRACT_ADDRESS,
   DAO_TREASURY_ADDRESS,

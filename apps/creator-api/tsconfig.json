@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
+    "moduleResolution": "node16",
     "target": "ES6",
     // Specify ECMAScript target version
-    "module": "commonjs",
+    "module": "Node16",
     // Specify module code generation
     "rootDir": "./",
     // Specify the root directory of input files

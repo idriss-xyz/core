@@ -1,10 +1,12 @@
+import { getChainByNetworkName } from '@idriss-xyz/utils';
 import {
   ALCHEMY_NATIVE_TOKENS,
   NETWORK_TO_ALCHEMY,
-  NULL_ADDRESS,
   PriceHistoryQuery,
   ZAPPER_API_URL,
 } from '../constants';
+
+import { NULL_ADDRESS } from '@idriss-xyz/constants';
 
 type PriceTick = { timestamp: number; median: number };
 
@@ -53,9 +55,11 @@ export async function getZapperPrice(
   // Fetch entire price history if not cached
   if (!priceTicks) {
     try {
+      const chain = getChainByNetworkName(network);
+
       const variables = {
         address: tokenAddress,
-        network: network,
+        chainId: chain?.id,
         currency: 'USD',
         timeFrame: 'YEAR',
       };
@@ -76,8 +80,7 @@ export async function getZapperPrice(
       });
 
       const json = await response.json();
-      priceTicks =
-        json.data?.fungibleToken?.onchainMarketData?.priceTicks ?? [];
+      priceTicks = json.data?.fungibleTokenV2?.priceData?.priceTicks ?? [];
       zapperHistoryCache[zapperCacheKey] = priceTicks;
     } catch (error) {
       console.error('Zapper price fetch failed:', error);

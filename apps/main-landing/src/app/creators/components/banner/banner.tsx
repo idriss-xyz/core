@@ -1,46 +1,52 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 import { Button } from '@idriss-xyz/ui/button';
-import { IconButton } from '@idriss-xyz/ui/icon-button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { classes } from '@idriss-xyz/ui/utils';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 
-import { backgroundLines3 } from '@/assets';
-
 import {
   banner1,
-  banner10,
-  banner11,
-  banner12,
+  // banner10,
+  banner13,
+  banner14,
   banner2,
   banner3,
   banner4,
   banner5,
   banner6,
   banner7,
-  banner8,
-  banner9,
+  // banner8,
+  // banner9,
 } from './assets';
+import { FilterOption } from './utils';
 
 const banners = [
-  banner1,
-  banner2,
-  banner3,
-  banner4,
-  banner5,
-  banner6,
-  banner7,
-  banner8,
-  banner9,
-  banner10,
-  banner11,
-  banner12,
+  { src: banner1.src, type: 'unbranded' },
+  { src: banner2.src, type: 'parallel' },
+  { src: banner3.src, type: 'parallel' },
+  { src: banner4.src, type: 'parallel' },
+  { src: banner5.src, type: 'parallel' },
+  { src: banner6.src, type: 'parallel' },
+  { src: banner7.src, type: 'parallel' },
+  { src: banner13.src, type: 'ronin' },
+  { src: banner14.src, type: 'ronin' },
+  // { src: banner8.src, type: 'aavegotchi' },
+  // { src: banner9.src, type: 'aavegotchi' },
+  // { src: banner10.src, type: 'aavegotchi' },
 ];
 
-export const Banner = ({ onBack }: { onBack: () => void }) => {
+interface Properties {
+  filter: FilterOption;
+}
+
+export const Banner = ({ filter }: Properties) => {
   const [selectedBannerSource, setSelectedBannerSource] = useState<string>();
+
+  useEffect(() => {
+    setSelectedBannerSource(undefined);
+  }, [filter]);
 
   const handleDownload = () => {
     if (!selectedBannerSource) {
@@ -55,30 +61,18 @@ export const Banner = ({ onBack }: { onBack: () => void }) => {
     link.remove();
   };
 
+  const filteredBanners = banners.filter((banner) => {
+    if (filter === 'All') {
+      return true;
+    }
+    return banner.type === filter.toLowerCase();
+  });
+
   return (
-    <div className="container relative mt-8 flex w-[460px] max-w-full flex-col items-center overflow-hidden rounded-xl bg-white px-1 pb-3 pt-6 lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]">
-      <link rel="preload" as="image" href={backgroundLines3.src} />
-      <img
-        alt=""
-        src={backgroundLines3.src}
-        className="pointer-events-none absolute top-0 hidden size-full opacity-40 lg:block"
-      />
-
-      <div className="mb-6 flex w-full items-center">
-        <IconButton
-          size="medium"
-          intent="tertiary"
-          iconName="ArrowLeft"
-          onClick={onBack}
-        />
-        <h1 className="my-auto self-start text-balance text-heading4">
-          Download a banner
-        </h1>
-      </div>
-
-      <ScrollArea className="right-0 max-h-[350px] transition-all duration-500">
-        <div className="grid w-full grid-cols-2 justify-center gap-4 px-3">
-          {banners.map((banner) => {
+    <div className="container relative flex flex-col items-center rounded-xl bg-white pb-3">
+      <ScrollArea className="transition-all duration-500">
+        <div className="grid w-full grid-cols-2 justify-center gap-4">
+          {filteredBanners.map((banner) => {
             const isSelected = banner.src === selectedBannerSource;
 
             return (
@@ -119,8 +113,8 @@ export const Banner = ({ onBack }: { onBack: () => void }) => {
       <div className="flex w-full px-3">
         <Button
           size="medium"
-          intent="secondary"
-          className="mt-6 w-full"
+          intent="primary"
+          className="mt-6"
           onClick={handleDownload}
           disabled={!selectedBannerSource}
         >

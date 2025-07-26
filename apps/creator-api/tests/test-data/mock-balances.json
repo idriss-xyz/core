@@ -1,0 +1,47 @@
+{
+  "balances": [
+    {
+      "address": "0x0000000000000000000000000000000000000000",
+      "symbol": "ETH",
+      "name": "Ethereum",
+      "imageUrl": "https://storage.googleapis.com/zapper-fi-assets/tokens/base/0x0000000000000000000000000000000000000000.png",
+      "network": "BASE_MAINNET",
+      "decimals": 18,
+      "balance": "0.0914",
+      "usdValue": 275.28
+    },
+    {
+      "address": "0xb23d80f5fefcddaa212212f028021b41ded428cf",
+      "symbol": "PRIME",
+      "name": "PRIME",
+      "imageUrl": "https://storage.googleapis.com/zapper-fi-assets/tokens/ethereum/0xb23d80f5fefcddaa212212f028021b41ded428cf.png",
+      "network": "ETHEREUM_MAINNET",
+      "decimals": 18,
+      "balance": "16.41",
+      "usdValue": 193.48
+    },
+    {
+      "address": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "imageUrl": "https://storage.googleapis.com/zapper-fi-assets/tokens/base/0x833589fcd6edb6e08f4c7c32d4f71b54bda02913.png",
+      "network": "BASE_MAINNET",
+      "decimals": 6,
+      "balance": "155.68",
+      "usdValue": 155.68
+    },
+    {
+      "address": "0x000096630066820566162c94874a776532705231",
+      "symbol": "IDRISS",
+      "name": "IDRISS",
+      "imageUrl": "https://storage.googleapis.com/zapper-fi-assets/tokens/base/0x000096630066820566162c94874a776532705231.png",
+      "network": "BASE_MAINNET",
+      "decimals": 18,
+      "balance": "2655.67",
+      "usdValue": 12.88
+    }
+  ],
+  "summary": {
+    "totalUsdBalance": 637.32
+  }
+}

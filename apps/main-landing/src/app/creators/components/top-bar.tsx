@@ -69,16 +69,17 @@ export const TopBar = ({
       )}
     >
       <div className="container flex items-center justify-between gap-x-1 py-1 xs:gap-x-2 lg:py-3">
-        <Link href="/">
+        <Link href="/creators">
           <img
             alt=""
             width={98}
             height={24}
             className={classes(
               'min-w-20',
-              isSticky && 'min-w-[unset] max-w-14 xs:min-w-20 xs:max-w-none',
+              isSticky &&
+                'min-w-[unset] max-w-[75px] xs:min-w-20 xs:max-w-none',
             )}
-            src="/idriss-dark-logo.svg"
+            src="/idriss-creators-dark-logo.svg"
           />
         </Link>
 

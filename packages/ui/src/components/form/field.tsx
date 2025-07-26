@@ -64,16 +64,16 @@ export const Field = forwardRef(
         {helperText && (
           <span
             className={classes(
-              'flex items-center space-x-1 pt-1 text-label7 text-neutral-600 lg:text-label7',
+              'flex items-center space-x-1 pt-1 text-label6 text-neutral-600 lg:text-label7',
               inputProperties.error && 'text-red-500',
             )}
           >
             {inputProperties.error && (
-              <Icon name="AlertCircle" size={12} className="p-0.5" />
+              <Icon name="AlertCircle" size={16} className="p-0.5" />
             )}
             {helperText}
             {!inputProperties.error && (
-              <Icon name="HelpCircle" size={12} className="p-0.5" />
+              <Icon name="HelpCircle" size={16} className="p-0.5" />
             )}
           </span>
         )}

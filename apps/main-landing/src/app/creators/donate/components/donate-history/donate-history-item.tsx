@@ -10,25 +10,32 @@ import {
   TooltipTrigger,
   TooltipProvider,
 } from '@idriss-xyz/ui/tooltip';
-import { CREATOR_CHAIN } from '@idriss-xyz/constants';
+import { CREATOR_CHAIN, DonationData } from '@idriss-xyz/constants';
 import {
-  getShortWalletHex,
   getTransactionUrls,
-  getTimeDifferenceString,
   roundToSignificantFiguresForCopilotTrading,
+  getModifiedLeaderboardName,
 } from '@idriss-xyz/utils';
 import { Link } from '@idriss-xyz/ui/link';
 import { useRouter } from 'next/navigation';
 
-import { DonationData } from '@/app/creators/donate/types';
 import { removeMainnetSuffix } from '@/app/creators/donate/utils';
+import { TokenLogo } from '@/app/creators/app/earnings/stats-and-history/token-logo';
+
+import { useTimeAgo } from '../../hooks/use-time-ago';
 
 type Properties = {
   donation: DonationData;
   showReceiver?: boolean;
+  showMenu?: boolean;
 };
 
-export const DonateHistoryItem = ({ donation, showReceiver }: Properties) => {
+export const DonateHistoryItem = ({
+  donation,
+  showReceiver,
+  showMenu = true,
+}: Properties) => {
+  const timeAgo = useTimeAgo({ timestamp: donation.timestamp });
   const router = useRouter();
   const tokenSymbol = donation.token.symbol;
   const tipReceiver = donation.toUser;
@@ -41,6 +48,10 @@ export const DonateHistoryItem = ({ donation, showReceiver }: Properties) => {
   const displayName = showReceiver
     ? tipReceiver?.displayName
     : donation.fromUser.displayName;
+
+  const nameToDisplay = getModifiedLeaderboardName(
+    displayName ?? (showReceiver ? receiverAddress : tipperFromAddress),
+  );
 
   const redirectUrl = showReceiver
     ? `/creators/donor/${receiverAddress}`
@@ -95,10 +106,7 @@ export const DonateHistoryItem = ({ donation, showReceiver }: Properties) => {
                 }}
                 className="cursor-pointer border-0 align-middle text-label3 text-neutral-900 no-underline lg:text-label3"
               >
-                {displayName ??
-                  (showReceiver
-                    ? getShortWalletHex(receiverAddress)
-                    : getShortWalletHex(tipperFromAddress))}
+                {nameToDisplay}
               </Link>{' '}
               <span className="align-middle text-body3 text-neutral-600">
                 {showReceiver ? 'received' : 'sent'}{' '}
@@ -115,7 +123,9 @@ export const DonateHistoryItem = ({ donation, showReceiver }: Properties) => {
                 )}{' '}
                 {tokenSymbol}{' '}
               </span>
-              <img className="size-6 rounded-full" src={tokenImage} alt="" />{' '}
+              <span className="relative inline-block size-6 align-middle">
+                <TokenLogo symbol={tokenSymbol} imageUrl={tokenImage} />
+              </span>{' '}
               <Badge type="success" variant="subtle">
                 $
                 {tradeValue >= 0.01
@@ -137,13 +147,7 @@ export const DonateHistoryItem = ({ donation, showReceiver }: Properties) => {
           <TooltipProvider delayDuration={400}>
             <Tooltip>
               <TooltipTrigger asChild>
-                <p className="w-fit text-body6 text-mint-700">
-                  {getTimeDifferenceString({
-                    text: 'ago',
-                    variant: 'short',
-                    timestamp: donation.timestamp,
-                  })}
-                </p>
+                <p className="w-fit text-body6 text-mint-700">{timeAgo}</p>
               </TooltipTrigger>
 
               <TooltipContent className="w-fit bg-black text-white">
@@ -166,49 +170,50 @@ export const DonateHistoryItem = ({ donation, showReceiver }: Properties) => {
         </div>
       </div>
 
-      <Dropdown
-        contentAlign="end"
-        trigger={() => {
-          return (
-            <IconButton
-              size="small"
-              intent="tertiary"
-              iconName="EllipsisVertical"
-            />
-          );
-        }}
-        className="z-extensionPopup rounded-xl border border-neutral-300 bg-white py-2 shadow-lg"
-      >
-        {() => {
-          return transactionUrls ? (
-            <ul className="flex flex-col items-start gap-y-1">
-              {transactionUrls.map((transactionUrl) => {
-                const explorer =
-                  transactionUrl.blockExplorer === 'Blockscout'
-                    ? 'Blockscout'
-                    : 'Etherscan';
-
-                return (
-                  <li key={transactionUrl.url}>
-                    <Button
-                      asLink
-                      isExternal
-                      size="large"
-                      intent="tertiary"
-                      href={transactionUrl.url}
-                      prefixIconName={explorer}
-                      prefixIconClassName="mr-3"
-                      className="w-full items-center px-3 py-1 font-normal text-neutral-900"
-                    >
-                      View on {explorer}
-                    </Button>
-                  </li>
-                );
-              })}
-            </ul>
-          ) : null;
-        }}
-      </Dropdown>
+      {showMenu && (
+        <Dropdown
+          contentAlign="end"
+          trigger={() => {
+            return (
+              <IconButton
+                size="small"
+                intent="tertiary"
+                iconName="EllipsisVertical"
+              />
+            );
+          }}
+          className="z-extensionPopup rounded-xl border border-neutral-300 bg-white py-2 shadow-lg"
+        >
+          {() => {
+            return transactionUrls ? (
+              <ul className="flex flex-col items-start gap-y-1">
+                {transactionUrls.map((transactionUrl) => {
+                  const explorer =
+                    transactionUrl.blockExplorer === 'Blockscout'
+                      ? 'Blockscout'
+                      : 'Etherscan';
+                  return (
+                    <li key={transactionUrl.url}>
+                      <Button
+                        asLink
+                        isExternal
+                        size="large"
+                        intent="tertiary"
+                        href={transactionUrl.url}
+                        prefixIconName={explorer}
+                        prefixIconClassName="mr-3"
+                        className="w-full items-center px-3 py-1 font-normal text-neutral-900"
+                      >
+                        View on {explorer}
+                      </Button>
+                    </li>
+                  );
+                })}
+              </ul>
+            ) : null;
+          }}
+        </Dropdown>
+      )}
     </div>
   );
 };

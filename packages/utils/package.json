@@ -23,6 +23,6 @@
   "dependencies": {
     "@solana/web3.js": "^1.98.0",
     "@swc/helpers": "^0.5.13",
-    "viem": "2.21.33"
+    "viem": "^2.31.7"
   }
 }

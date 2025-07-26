@@ -3,7 +3,10 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { Hex } from 'viem';
-import { getShortWalletHex, removeEthSuffix } from '@idriss-xyz/utils';
+import {
+  getShortWalletHex,
+  getModifiedLeaderboardName,
+} from '@idriss-xyz/utils';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import {
   Tooltip,
@@ -60,7 +63,7 @@ export default function DonorStatsList({
           Donation stats{' '}
           {(stats?.donorDisplayName ?? address.data) &&
             address.isValid &&
-            ` of ${stats?.donorDisplayName ?? getShortWalletHex(address.data ?? EMPTY_HEX)}`}
+            ` of ${stats?.donorDisplayName ? getModifiedLeaderboardName(stats?.donorDisplayName) : getShortWalletHex(address.data ?? EMPTY_HEX)}`}
         </h1>
 
         {(address.isFetching || (address.isValid && statsLoading)) && (
@@ -168,8 +171,12 @@ export default function DonorStatsList({
                         <TooltipTrigger asChild>
                           <p className="cursor-default truncate text-label3 text-neutral-800">
                             {mostDonatedToDisplayName
-                              ? removeEthSuffix(mostDonatedToDisplayName)
-                              : getShortWalletHex(stats.mostDonatedToAddress)}
+                              ? getModifiedLeaderboardName(
+                                  mostDonatedToDisplayName,
+                                )
+                              : getModifiedLeaderboardName(
+                                  stats.mostDonatedToAddress,
+                                )}
                           </p>
                         </TooltipTrigger>
 

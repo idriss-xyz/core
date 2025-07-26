@@ -7,22 +7,32 @@ import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 type Properties = {
   isMuted: boolean;
+  className?: string;
+  disableHover?: boolean;
 };
 
-export const AudioVisualizer = ({ isMuted }: Properties) => {
+export const AudioVisualizer = ({
+  isMuted,
+  className,
+  disableHover,
+}: Properties) => {
   const [isHovered, setIsHovered] = useState(false);
+
+  const showHoverIcon = isHovered && !disableHover;
 
   return (
     <div
-      className="relative flex size-8 items-center justify-center"
+      className={`relative flex size-8 items-center justify-center ${
+        className ?? ''
+      }`}
       onMouseEnter={() => {
-        return setIsHovered(true);
+        return !disableHover && setIsHovered(true);
       }}
       onMouseLeave={() => {
-        return setIsHovered(false);
+        return !disableHover && setIsHovered(false);
       }}
     >
-      {isHovered ? (
+      {showHoverIcon ? (
         <motion.div
           exit={{ opacity: 0 }}
           initial={{ opacity: 0 }}

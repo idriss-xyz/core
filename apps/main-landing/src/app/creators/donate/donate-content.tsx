@@ -1,33 +1,45 @@
 'use client';
-/* eslint-disable @next/next/no-img-element */
 import { Button } from '@idriss-xyz/ui/button';
-import { CREATORS_LINK, EMPTY_HEX } from '@idriss-xyz/constants';
-import '@rainbow-me/rainbowkit/styles.css';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { default as io } from 'socket.io-client';
-import _ from 'lodash';
-import { Hex } from 'viem';
-import { useRouter } from 'next/navigation';
-
-import { backgroundLines2 } from '@/assets';
-import { useGetTipHistory } from '@/app/creators/donate/commands/get-donate-history';
-import { DonateHistory } from '@/app/creators/donate/components/donate-history';
 import {
-  DonateContentValues,
+  CREATORS_LINK,
+  EMPTY_HEX,
+  DEFAULT_DONATION_MIN_ALERT_AMOUNT,
+  DEFAULT_DONATION_MIN_SFX_AMOUNT,
+  DEFAULT_DONATION_MIN_TTS_AMOUNT,
+  CREATOR_API_URL,
   DonationData,
   LeaderboardStats,
+} from '@idriss-xyz/constants';
+import '@rainbow-me/rainbowkit/styles.css';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { default as io } from 'socket.io-client';
+import { Hex, isAddress } from 'viem';
+import { useRouter } from 'next/navigation';
+import _ from 'lodash';
+
+import { backgroundLines2 } from '@/assets';
+import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history';
+import { DonateHistory } from '@/app/creators/donate/components/donate-history';
+import {
+  CreatorProfile,
+  DonateContentValues,
 } from '@/app/creators/donate/types';
 
 import { useCreators } from '../hooks/use-creators';
 import { TopBar } from '../components/top-bar';
+import { getCreatorProfile } from '../utils';
 
 import { Leaderboard } from './components/leaderboard';
 import { DonateForm } from './components/donate-form';
-import { CREATOR_API_URL } from './constants';
 
-export function DonateContent() {
+interface Properties {
+  creatorName?: string;
+}
+
+export function DonateContent({ creatorName }: Properties) {
   const router = useRouter();
   const { searchParams } = useCreators();
+  const creatorInfoSetReference = useRef(false);
   const [socketConnected, setSocketConnected] = useState(false);
   const [socketInitialized, setSocketInitialized] = useState(false);
   const [donations, setDonations] = useState<DonationData[]>([]);
@@ -35,10 +47,67 @@ export function DonateContent() {
   const [currentContent, setCurrentContent] = useState<DonateContentValues>({
     name: 'user-tip',
   });
+  const [creatorInfo, setCreatorInfo] = useState<CreatorProfile | null>(null);
+  const formReference = useRef<HTMLDivElement>(null);
+  const [formHeight, setFormHeight] = useState(0);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const profile = await getCreatorProfile(creatorName);
+
+        if (!profile) {
+          return;
+        }
+
+        const minimumAlertAmount = Number(profile.minimumAlertAmount);
+        const minimumTTSAmount = Number(profile.minimumTTSAmount);
+        const minimumSfxAmount = Number(profile.minimumSfxAmount);
+
+        setCreatorInfo({
+          ...profile,
+          address: {
+            data: profile.primaryAddress,
+            isValid: isAddress(profile.primaryAddress),
+            isFetching: false,
+          },
+          network: profile.networks.join(','),
+          token: profile.tokens.join(','),
+          minimumAlertAmount: Number.isNaN(minimumAlertAmount)
+            ? 0
+            : minimumAlertAmount,
+          minimumTTSAmount: Number.isNaN(minimumTTSAmount)
+            ? 0
+            : minimumTTSAmount,
+          minimumSfxAmount: Number.isNaN(minimumSfxAmount)
+            ? 0
+            : minimumSfxAmount,
+        });
+        creatorInfoSetReference.current = true;
+      } catch (error) {
+        console.error('Failed to fetch profile data:', error);
+      }
+    };
+
+    if (creatorInfoSetReference.current) return;
+
+    if (searchParams.address.data == null && creatorName) {
+      void fetchProfile();
+    } else if (!searchParams.address.isFetching) {
+      setCreatorInfo({
+        ...searchParams,
+        name: searchParams.creatorName,
+        minimumAlertAmount: DEFAULT_DONATION_MIN_ALERT_AMOUNT,
+        minimumTTSAmount: DEFAULT_DONATION_MIN_TTS_AMOUNT,
+        minimumSfxAmount: DEFAULT_DONATION_MIN_SFX_AMOUNT,
+      });
+      creatorInfoSetReference.current = true;
+    }
+  }, [searchParams, creatorName]);
 
   const donationsHistory = useGetTipHistory(
-    { address: searchParams.address.data ?? EMPTY_HEX },
-    { enabled: searchParams.address.isValid },
+    { address: creatorInfo?.address.data ?? EMPTY_HEX },
+    { enabled: creatorInfo?.address.isValid },
   );
 
   useEffect(() => {
@@ -49,13 +118,19 @@ export function DonateContent() {
   }, [donationsHistory.data]);
 
   useEffect(() => {
-    if (searchParams.address.data && !socketInitialized) {
+    if (creatorInfo?.address.isValid) {
+      void donationsHistory.refetch(); // refetch to get history after creatorInfo is done setting
+    }
+  }, [creatorInfo, donationsHistory]);
+
+  useEffect(() => {
+    if (creatorInfo?.address.data && !socketInitialized) {
       const socket = io(CREATOR_API_URL);
       setSocketInitialized(true);
 
       if (socket && !socketConnected) {
         socket.on('connect', () => {
-          socket.emit('register', searchParams.address.data);
+          socket.emit('register', creatorInfo?.address.data);
 
           if (socket.connected) {
             setSocketConnected(true);
@@ -110,7 +185,27 @@ export function DonateContent() {
     }
 
     return;
-  }, [socketConnected, socketInitialized, searchParams.address.data]);
+  }, [socketConnected, socketInitialized, creatorInfo?.address.data]);
+
+  useEffect(() => {
+    const formElement = formReference.current;
+    if (!formElement) return;
+
+    const resizeObserver = new ResizeObserver(() => {
+      if (formReference.current) {
+        requestAnimationFrame(() => {
+          if (formReference.current)
+            setFormHeight(formReference.current.getBoundingClientRect().height);
+        });
+      }
+    });
+
+    resizeObserver.observe(formElement);
+
+    return () => {
+      return resizeObserver.disconnect();
+    };
+  }, [creatorInfo]);
 
   const updateCurrentContent = useCallback((content: DonateContentValues) => {
     setCurrentContent((previous) => {
@@ -130,31 +225,45 @@ export function DonateContent() {
       case 'user-tip': {
         return (
           <div className="grid grid-cols-1 items-start gap-x-10 lg:grid-cols-[1fr,auto]">
-            <DonateForm className="container mt-8 overflow-hidden lg:mt-[90px] lg:[@media(max-height:800px)]:mt-[40px]" />
+            {creatorInfo && (
+              <>
+                <DonateForm
+                  ref={formReference}
+                  className="container mt-8 overflow-hidden lg:mt-[90px] lg:[@media(max-height:800px)]:mt-[40px]"
+                  creatorInfo={creatorInfo}
+                />
 
-            <Leaderboard
-              leaderboard={leaderboard}
-              onDonorClick={onDonorClick}
-              address={searchParams.address}
-              updateCurrentContent={updateCurrentContent}
-              leaderboardError={donationsHistory.isError}
-              leaderboardLoading={donationsHistory.isLoading}
-              className="container mt-8 overflow-hidden px-0 lg:mt-[90px] lg:[@media(max-height:800px)]:mt-[40px]"
-            />
+                <Leaderboard
+                  isScrollable
+                  leaderboard={leaderboard}
+                  onDonorClick={onDonorClick}
+                  address={creatorInfo.address}
+                  updateCurrentContent={updateCurrentContent}
+                  leaderboardError={donationsHistory.isError}
+                  leaderboardLoading={donationsHistory.isLoading}
+                  className="container mt-8 px-0 lg:mt-[90px] lg:[@media(max-height:800px)]:mt-[40px]"
+                  style={{
+                    height: formHeight > 0 ? `${formHeight}px` : undefined,
+                  }}
+                />
+              </>
+            )}
           </div>
         );
       }
 
       case 'user-history': {
         return (
-          <DonateHistory
-            donations={donations}
-            address={searchParams.address}
-            currentContent={currentContent}
-            donationsError={donationsHistory.isError}
-            updateCurrentContent={updateCurrentContent}
-            donationsLoading={donationsHistory.isLoading}
-          />
+          creatorInfo && (
+            <DonateHistory
+              donations={donations}
+              address={creatorInfo?.address}
+              currentContent={currentContent}
+              donationsError={donationsHistory.isError}
+              updateCurrentContent={updateCurrentContent}
+              donationsLoading={donationsHistory.isLoading}
+            />
+          )
         );
       }
 
@@ -167,8 +276,9 @@ export function DonateContent() {
     leaderboard,
     onDonorClick,
     currentContent,
-    searchParams.address,
+    creatorInfo,
     updateCurrentContent,
+    formHeight,
     donationsHistory.isError,
     donationsHistory.isLoading,
   ]);

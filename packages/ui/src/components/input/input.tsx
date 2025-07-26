@@ -11,9 +11,10 @@ import { Icon, IconName } from '../icon';
 
 type BaseProperties = {
   value: string;
-  onChange: (
+  onChange?: (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
   className?: string;
   error?: boolean;
   success?: boolean;
@@ -25,10 +26,13 @@ type BaseProperties = {
 type Properties =
   | (BaseProperties & {
       asTextArea: true;
+      readOnly: false;
     })
   | (BaseProperties & {
       asTextArea?: false;
+      readOnly?: boolean;
       prefixIconName?: IconName;
+      prefixElement?: ReactElement;
       suffixElement?: ReactElement;
     });
 
@@ -43,10 +47,12 @@ export const Input = forwardRef(
     const {
       value,
       onChange,
+      onKeyDown,
       className,
       success,
       error,
       asTextArea,
+      readOnly,
       placeholder,
       disabled,
     } = properties;
@@ -63,6 +69,7 @@ export const Input = forwardRef(
       onChange,
       placeholder,
       disabled,
+      readOnly,
     };
 
     if (asTextArea) {
@@ -90,13 +97,22 @@ export const Input = forwardRef(
               <div className="ml-3 h-full border-r border-gray-200" />
             </div>
           )}
+          {properties.prefixElement && !properties.prefixIconName && (
+            <div
+              ref={prefixReference}
+              className="absolute left-0 top-0 flex h-full items-center pl-3 text-body5 text-neutralGreen-900 lg:text-body4"
+            >
+              {properties.prefixElement}
+            </div>
+          )}
           <input
             ref={reference as ForwardedRef<HTMLInputElement>}
             {...inputProperties}
+            onKeyDown={onKeyDown}
             style={{
               paddingLeft:
-                properties.prefixIconName &&
-                `${(prefixReference.current?.offsetWidth ?? 0) + 12}px`,
+                (properties.prefixIconName ?? properties.prefixElement) &&
+                `${(prefixReference.current?.offsetWidth ?? 0) + 4}px`,
               paddingRight:
                 properties.suffixElement &&
                 `${(suffixReference.current?.offsetWidth ?? 0) + 12}px`,

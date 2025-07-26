@@ -11,20 +11,20 @@ import {
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import {
   EMPTY_HEX,
+  ERC20_ABI,
   REWARDS_ADDRESS,
-  RewardsABI,
+  REWARDS_ABI,
   STAKER_ADDRESS,
-  StakingABI,
+  STAKING_ABI,
 } from '@idriss-xyz/constants';
-import { formatNumber } from '@idriss-xyz/utils';
+import { formatTokenValue } from '@idriss-xyz/utils';
 
 import { useGetStakedBalance } from '@/app/vault/commands/get-staked-balance';
 import { useGetUnstakedBalance } from '@/app/vault/commands/get-unstaked-balance';
-import { useGetRewards } from '@/app/vault/commands/get-rewards';
-import { ERC20_ABI } from '@/app/creators/donate/constants';
 import { IDRISS_TOKEN_ADDRESS } from '@/components/token-section/constants';
 
 import { ApproveTokensPayload, StakePayload, UnstakePayload } from '../types';
+import { useGetRewards } from '../commands/get-rewards';
 
 export const useStaking = () => {
   const { isConnected } = useAccount();
@@ -139,10 +139,10 @@ export const useStaking = () => {
           });
 
           const stakeData = {
-            abi: StakingABI,
+            abi: STAKING_ABI,
             functionName: 'stake',
             args: [parsedAmount],
-          };
+          } as const;
 
           const encodedStakeData = encodeFunctionData(stakeData);
 
@@ -212,10 +212,10 @@ export const useStaking = () => {
           await switchChainAsync({ chainId: base.id });
 
           const unstakeData = {
-            abi: StakingABI,
+            abi: STAKING_ABI,
             functionName: 'withdraw',
             args: [parsedAmount],
-          };
+          } as const;
 
           const encodedUnstakeData = encodeFunctionData(unstakeData);
 
@@ -280,9 +280,9 @@ export const useStaking = () => {
         await switchChainAsync({ chainId: base.id });
 
         const claimData = {
-          abi: RewardsABI,
+          abi: REWARDS_ABI,
           functionName: 'claim',
-        };
+        } as const;
 
         const encodedClaimData = encodeFunctionData(claimData);
 
@@ -344,9 +344,9 @@ export const useStaking = () => {
         await switchChainAsync({ chainId: base.id });
 
         const claimData = {
-          abi: RewardsABI,
+          abi: REWARDS_ABI,
           functionName: 'claimAndLock',
-        };
+        } as const;
 
         const encodedClaimData = encodeFunctionData(claimData);
 
@@ -437,7 +437,7 @@ export const useStaking = () => {
     isPending: stakedBalanceQuery.isPending,
     isSuccess: stakedBalanceQuery.isSuccess,
     formattedAmount: stakedBalanceQuery.data
-      ? formatNumber(Number(stakedBalanceQuery.data), 2)
+      ? formatTokenValue(Number(stakedBalanceQuery.data))
       : '0',
   };
 
@@ -448,7 +448,7 @@ export const useStaking = () => {
     isPending: unstakedBalanceQuery.isPending,
     isSuccess: unstakedBalanceQuery.isSuccess,
     formattedAmount: unstakedBalanceQuery.data
-      ? formatNumber(Number(unstakedBalanceQuery.data), 2)
+      ? formatTokenValue(Number(unstakedBalanceQuery.data))
       : '0',
   };
 
@@ -459,14 +459,14 @@ export const useStaking = () => {
     isPending: rewardsQuery.isPending,
     isSuccess: rewardsQuery.isSuccess,
     formattedAmount: rewardsQuery.data
-      ? formatNumber(Number(rewardsQuery.data), 2)
+      ? formatTokenValue(Number(rewardsQuery.data))
       : '0',
   };
 
   const totalStakedBalance = {
     amount: `${Number(stakedBalanceQuery.data ?? 0)}`,
     formattedAmount: stakedBalanceQuery.isSuccess
-      ? formatNumber(Number(stakedBalanceQuery.data ?? 0), 2)
+      ? formatTokenValue(Number(stakedBalanceQuery.data ?? 0))
       : '0',
   };
 

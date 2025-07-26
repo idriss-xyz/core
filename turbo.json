@@ -16,7 +16,8 @@
         "DEV_LOGIN_PASSWORD",
         "PUBLIC_ACCESS_ENABLED",
         "CI",
-        "CREATOR_LINKS_SECRET"
+        "CREATOR_LINKS_SECRET",
+        "NEXT_PUBLIC_PRIVY_APP_ID"
       ]
     },
     "@idriss-xyz/main-landing#start": {
@@ -29,7 +30,8 @@
         "DEV_LOGIN_PASSWORD",
         "PUBLIC_ACCESS_ENABLED",
         "CI",
-        "CREATOR_LINKS_SECRET"
+        "CREATOR_LINKS_SECRET",
+        "NEXT_PUBLIC_PRIVY_APP_ID"
       ]
     },
     "@idriss-xyz/main-landing#dev": {
@@ -41,7 +43,8 @@
         "DEV_LOGIN_PASSWORD",
         "PUBLIC_ACCESS_ENABLED",
         "CI",
-        "CREATOR_LINKS_SECRET"
+        "CREATOR_LINKS_SECRET",
+        "NEXT_PUBLIC_PRIVY_APP_ID"
       ]
     },
     "@idriss-xyz/extension#dev": {
@@ -118,7 +121,15 @@
         "DATABASE_URL",
         "SECRET_PASSWORD",
         "ALCHEMY_API_KEY",
-        "ELEVENLABS_API_KEY"
+        "ELEVENLABS_API_KEY",
+        "PRIVY_APP_ID",
+        "PRIVY_PUBLIC_VERIFICATION_KEY",
+        "BASE_URL",
+        "JWT_SECRET",
+        "TWITCH_CLIENT_ID",
+        "TWITCH_CLIENT_SECRET",
+        "EARLY_ACCESS_PASSWORD",
+        "EARLY_ACCESS_JWT_SECRET"
       ]
     },
     "@idriss-xyz/creator-api#prod": {
@@ -131,7 +142,15 @@
         "DATABASE_URL",
         "SECRET_PASSWORD",
         "ALCHEMY_API_KEY",
-        "ELEVENLABS_API_KEY"
+        "ELEVENLABS_API_KEY",
+        "PRIVY_APP_ID",
+        "PRIVY_PUBLIC_VERIFICATION_KEY",
+        "BASE_URL",
+        "JWT_SECRET",
+        "TWITCH_CLIENT_ID",
+        "TWITCH_CLIENT_SECRET",
+        "EARLY_ACCESS_PASSWORD",
+        "EARLY_ACCESS_JWT_SECRET"
       ]
     },
     "@idriss-xyz/creator-api#test": {
