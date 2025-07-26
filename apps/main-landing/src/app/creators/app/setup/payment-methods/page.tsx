@@ -6,7 +6,7 @@ import {
   DEFAULT_ALLOWED_CHAINS_IDS,
   TokenSymbol,
 } from '@idriss-xyz/constants';
-// import { Alert } from '@idriss-xyz/ui/alert';
+import { Alert } from '@idriss-xyz/ui/alert';
 import { Button } from '@idriss-xyz/ui/button';
 import { Card } from '@idriss-xyz/ui/card';
 import { Form } from '@idriss-xyz/ui/form';
@@ -99,7 +99,7 @@ const IconsRow = ({ icons }: { icons: IconName[] }) => {
 // ts-unused-exports:disable-next-line
 export default function PaymentMethods() {
   const { creator } = useAuth();
-  const [_saveSuccess, setSaveSuccess] = useState<boolean | null>(null);
+  const [saveSuccess, setSaveSuccess] = useState<boolean | null>(null);
   const [toggleCrypto, setToggleCrypto] = useState(true);
 
   const formMethods = useForm<FormPayload>({
@@ -197,9 +197,9 @@ export default function PaymentMethods() {
     });
   }, []);
 
-  // const handleAlertClose = useCallback(() => {
-  //   setSaveSuccess(null);
-  // }, []);
+  const handleAlertClose = useCallback(() => {
+    setSaveSuccess(null);
+  }, []);
 
   const onChangeChainId = useCallback(() => {
     formMethods.setValue(
@@ -377,7 +377,7 @@ export default function PaymentMethods() {
       </div>
 
       {/* Alerts section */}
-      {/* {saveSuccess && (
+      {saveSuccess && (
         <Alert
           heading="Settings saved!"
           type="success"
@@ -394,7 +394,7 @@ export default function PaymentMethods() {
           autoClose
           onClose={handleAlertClose}
         />
-      )} */}
+      )}
     </Card>
   );
 }

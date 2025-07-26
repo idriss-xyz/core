@@ -8,7 +8,7 @@ import { Button } from '@idriss-xyz/ui/button';
 import { Card } from '@idriss-xyz/ui/card';
 import { Form } from '@idriss-xyz/ui/form';
 import { Toggle } from '@idriss-xyz/ui/toggle';
-// import { Alert } from '@idriss-xyz/ui/alert';
+import { Alert } from '@idriss-xyz/ui/alert';
 import { getAccessToken } from '@privy-io/react-auth';
 import { useCallback, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -108,8 +108,8 @@ export default function StreamAlerts() {
     },
   ];
 
-  const [_saveSuccess, setSaveSuccess] = useState<boolean | null>(null);
-  const [_testDonationSuccess, setTestDonationSuccess] = useState<
+  const [saveSuccess, setSaveSuccess] = useState<boolean | null>(null);
+  const [testDonationSuccess, setTestDonationSuccess] = useState<
     boolean | null
   >(null);
   const [showCustomUpload, setShowCustomUpload] = useState(false);
@@ -151,13 +151,13 @@ export default function StreamAlerts() {
     setTestDonationSuccess(true);
   }, [creator?.primaryAddress]);
 
-  // const handleAlertClose = useCallback(() => {
-  //   setSaveSuccess(null);
-  // }, []);
+  const handleAlertClose = useCallback(() => {
+    setSaveSuccess(null);
+  }, []);
 
-  // const handleTestDonationClose = useCallback(() => {
-  //   setTestDonationSuccess(null);
-  // }, []);
+  const handleTestDonationClose = useCallback(() => {
+    setTestDonationSuccess(null);
+  }, []);
 
   const onSubmit = async (data: FormPayload) => {
     try {
@@ -529,7 +529,7 @@ export default function StreamAlerts() {
       </div>
 
       {/* Alerts */}
-      {/* {testDonationSuccess && (
+      {testDonationSuccess && (
         <Alert
           heading="Test alert sent successfully!"
           type="success"
@@ -566,7 +566,7 @@ export default function StreamAlerts() {
           autoClose
           onClose={handleAlertClose}
         />
-      )} */}
+      )}
     </Card>
   );
 }

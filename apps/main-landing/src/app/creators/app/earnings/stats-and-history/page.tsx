@@ -152,7 +152,8 @@ export default function EarningsStats() {
                     name="BadgeDollarSign"
                     className="mr-1 rounded-full bg-mint-600 p-1 text-white"
                   />
-                  {stats.totalDonationsCount} donations
+                  {stats.totalDonationsCount} donation
+                  {stats.totalDonationsCount !== 1 && 's'}
                 </span>
                 <span className="pointer-events-none absolute right-2 top-8 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-black">
                   <Icon

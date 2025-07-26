@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Button } from '@idriss-xyz/ui/button';
 import { Form as DesignSystemForm } from '@idriss-xyz/ui/form';
@@ -81,6 +81,12 @@ export const WithdrawWidget = ({
       tokenSymbol: selectedToken,
     },
   });
+
+  useEffect(() => {
+    if (selectedToken) {
+      formMethods.setValue('tokenSymbol', selectedToken);
+    }
+  }, [selectedToken, formMethods]);
 
   console.log(formMethods.getValues());
 
