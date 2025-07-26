@@ -1,13 +1,11 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { BreadcrumbNavigation } from '@idriss-xyz/ui/breadcrumb';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
-import { useEffect } from 'react';
-import { usePrivy } from '@privy-io/react-auth';
 
 import { siteMap } from '../constants';
-import { useAuth } from '../context/auth-context';
+import useRedirectIfNotAuthenticated from '../hooks/use-redirect-not-authenticated';
 
 import { CreatorSocketManager } from './creator-socket-manager';
 import { Sidebar } from './sidebar';
@@ -15,19 +13,7 @@ import { TopBar } from './topbar';
 
 function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const router = useRouter();
-  const { creatorLoading, creator } = useAuth();
-  const { ready, authenticated } = usePrivy();
-
-  useEffect(() => {
-    if (!ready || creatorLoading) {
-      return;
-    }
-    if (!authenticated || !creator) {
-      console.log('returning');
-      router.replace('/creators?login=true');
-    }
-  }, [ready, authenticated, creatorLoading, router, creator]);
+  useRedirectIfNotAuthenticated();
 
   return (
     <>

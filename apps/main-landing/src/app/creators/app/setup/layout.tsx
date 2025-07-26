@@ -5,8 +5,9 @@ import { TabsPill, TabItem } from '@idriss-xyz/ui/tabs-pill';
 import { CREATORS_LINK } from '@idriss-xyz/constants';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 
-import { useAuth } from '../../context/auth-context';
 import { CopyInput } from '../../components/copy-input/copy-input';
+import useRedirectIfNotAuthenticated from '../../hooks/use-redirect-not-authenticated';
+import { useAuth } from '../../context/auth-context';
 
 // ts-unused-exports:disable-next-line
 export default function SetupLayout({
@@ -16,7 +17,7 @@ export default function SetupLayout({
 }) {
   const pathname = usePathname();
   const { creator } = useAuth();
-
+  useRedirectIfNotAuthenticated();
   const setupTabs: TabItem[] = [
     {
       name: 'Payment methods',
