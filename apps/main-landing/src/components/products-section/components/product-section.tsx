@@ -164,7 +164,7 @@ export const ProductSection = ({
               <div
                 className={classes(
                   'flex flex-col items-center gap-3 transition-transform duration-1000',
-                  'md:flex-row',
+                  'md:flex-row md:justify-center',
                   'lg:gap-4',
                   fadeOut && 'translate-y-[-120%]',
                 )}

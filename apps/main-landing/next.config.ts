@@ -82,7 +82,12 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/prediction-markets',
-        destination: '/#prediction-markets',
+        destination: '/#community-notes',
+        permanent: true,
+      },
+      {
+        source: '/#prediction-markets',
+        destination: '/#community-notes',
         permanent: true,
       },
       {

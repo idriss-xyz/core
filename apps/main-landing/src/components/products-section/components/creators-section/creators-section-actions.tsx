@@ -7,23 +7,23 @@ export const CreatorsSectionActions = () => {
       <Button
         intent="secondary"
         size="medium"
-        className="flex w-full md:w-1/2 lg:w-fit 4xl:hidden"
+        className="flex w-full md:w-fit 4xl:hidden"
         asLink
         href={CREATORS_LINK}
         isExternal
       >
-        CREATE DONATION LINK
+        START EARNING
       </Button>
       {/* 4xl */}
       <Button
         intent="secondary"
         size="large"
-        className="hidden w-full md:w-1/2 lg:w-fit 4xl:flex"
+        className="hidden w-full md:w-fit 4xl:flex"
         asLink
         href={CREATORS_LINK}
         isExternal
       >
-        CREATE DONATION LINK
+        START EARNING
       </Button>
     </>
   );

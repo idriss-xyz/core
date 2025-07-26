@@ -31,7 +31,7 @@ export const HeroSection = () => {
             '4xl:text-display1',
           )}
         >
-          APPS UNIQUELY ENABLED BY CRYPTO AND AI
+          BUILDING <br className="sm:hidden" /> ONCHAIN APPS <br /> THAT MATTER
         </h1>
       </div>
       <Button
