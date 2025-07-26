@@ -1,5 +1,6 @@
 import { Card } from '@idriss-xyz/ui/card';
 
+// ts-unused-exports:disable-next-line
 export default function SkeletonRanking() {
   return (
     <div className="flex animate-pulse flex-col gap-3">

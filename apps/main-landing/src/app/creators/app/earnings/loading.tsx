@@ -1,7 +1,7 @@
 import { Card } from '@idriss-xyz/ui/card';
 import { Icon } from '@idriss-xyz/ui/icon';
 
-const SkeletonComponent = () => {
+const SkeletonEarnings = () => {
   return (
     <div className="grid animate-pulse grid-cols-3 gap-3">
       {/* Card 1: Transactions */}
@@ -162,4 +162,5 @@ const SkeletonComponent = () => {
   );
 };
 
-export default SkeletonComponent;
+// ts-unused-exports:disable-next-line
+export default SkeletonEarnings;

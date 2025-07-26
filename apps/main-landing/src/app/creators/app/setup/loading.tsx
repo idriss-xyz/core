@@ -1,6 +1,7 @@
 import { Card } from '@idriss-xyz/ui/card';
 
-const SkeletonComponent = () => {
+// ts-unused-exports:disable-next-line
+const SkeletonSetup = () => {
   return (
     <div className="flex animate-pulse flex-col gap-3">
       {/* Banner */}
@@ -70,4 +71,5 @@ const SkeletonComponent = () => {
   );
 };
 
-export default SkeletonComponent;
+// ts-unused-exports:disable-next-line
+export default SkeletonSetup;
