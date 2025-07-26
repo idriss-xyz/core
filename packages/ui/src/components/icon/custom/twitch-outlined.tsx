@@ -83,3 +83,24 @@ export const TwitchOutlinedBold = ({ className, size = 64 }: Properties) => {
     </svg>
   );
 };
+
+export const TwitchOutlinedBold2 = ({ className, size = 64 }: Properties) => {
+  return (
+    <svg
+      fill="none"
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M9.16667 9.16699V5.83366M13.3333 9.16699V5.83366M17.5 1.66699H2.5V15.0003H6.66667V18.3337L10 15.0003H14.1667L17.5 11.667V1.66699Z"
+        stroke="#000A05"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};

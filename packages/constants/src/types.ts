@@ -14,7 +14,11 @@ export type ClaimedEventsResponse = {
   lastProcessedBlock: string;
 };
 
-export type Chain = ViemChain & { logo: string; shortName: string };
+export type Chain = ViemChain & {
+  logo: string;
+  shortName: string;
+  dbName: string;
+};
 
 export interface Token {
   name: string;
@@ -94,7 +98,7 @@ export interface TipHistoryResponse {
   leaderboard: LeaderboardStats[];
 }
 
-interface DonationData {
+export interface DonationData {
   transactionHash: Hex;
   fromAddress: Hex;
   toAddress: Hex;
@@ -109,15 +113,14 @@ interface DonationData {
   amountRaw: string;
 }
 
-interface LeaderboardStats {
-  address: Hex;
-  avatarUrl: string;
-  displayName: string;
+export interface LeaderboardStats extends DonationUser {
   totalAmount: number;
   donateLink?: string;
+  donorSince?: number;
+  donationCount?: number;
 }
 
-interface DonationUser {
+export interface DonationUser {
   address: Hex;
   displayName?: string;
   displayNameSource?: string;
@@ -125,10 +128,17 @@ interface DonationUser {
   avatarSource?: string;
 }
 
-interface DonationToken {
+export interface DonationToken {
   address: Hex;
   symbol: string;
   imageUrl?: string;
   network: string;
   decimals: number;
+  name?: string;
+}
+
+export interface BalanceTableItem {
+  totalAmount: number;
+  totalValue: number;
+  token: DonationToken;
 }

@@ -1,19 +1,94 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
+import { MobileNotSupported } from '@idriss-xyz/ui/mobile-not-supported';
 import { Button } from '@idriss-xyz/ui/button';
 import { classes } from '@idriss-xyz/ui/utils';
-import { CREATORS_FORM_LINK } from '@idriss-xyz/constants';
-import { RefObject } from 'react';
+import { RefObject, useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { backgroundLines } from '@/assets';
 
+import { useAuth } from '../context/auth-context';
+import { useStartEarningNavigation } from '../utils';
+
 import { VideoPlayer } from './hero-section/video-player';
+import { LoginModal } from './login-modal';
+import { PasswordModal } from './password-modal';
 
 type Properties = {
   heroButtonReference?: RefObject<HTMLButtonElement>;
 };
 
 export const HeroSection = ({ heroButtonReference }: Properties) => {
+  const router = useRouter();
+  const searchParameters = useSearchParams();
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [isMobileNotSupportedOpen, setIsMobileNotSupportedOpen] =
+    useState(false);
+
+  const {
+    isLoginModalOpen,
+    setLoginModalOpen,
+    setIsModalOpen,
+    isPasswordModalOpen,
+    setIsPasswordModalOpen,
+    earlyAccessToken,
+    handlePasswordSuccess,
+    creator,
+  } = useAuth();
+  const originalHandleStartEarningClick = useStartEarningNavigation();
+
+  const handleStartEarningClick = () => {
+    if (window.innerWidth < 1024) {
+      setIsMobileNotSupportedOpen(true);
+
+      return;
+    }
+
+    if (creator) {
+      void originalHandleStartEarningClick();
+    } else {
+      void (earlyAccessToken
+        ? originalHandleStartEarningClick()
+        : setIsPasswordModalOpen(true));
+    }
+  };
+
+  useEffect(() => {
+    const customToken = searchParameters.get('token');
+    const name = searchParameters.get('name');
+    const displayName = searchParameters.get('displayName');
+    const pfp = searchParameters.get('pfp');
+    const email = searchParameters.get('email');
+
+    if (searchParameters.get('login')) {
+      setIsModalOpen(true);
+      router.replace('/creators', { scroll: false });
+    }
+
+    if (customToken) {
+      setIsLoggingIn(true);
+      setLoginModalOpen(true);
+      // Store Twitch info in sessionStorage to be picked up by the next page.
+      if (name) {
+        sessionStorage.setItem(
+          'twitch_new_user_info',
+          JSON.stringify({ name, displayName, pfp, email }),
+        );
+      }
+      // Store the custom token where our PrivyProvider can find it.
+      sessionStorage.setItem('custom-auth-token', customToken);
+      // Redirect to the main app. The PrivyProvider will now automatically
+      // use the token to authenticate the user.
+    }
+  }, [
+    searchParameters,
+    router,
+    setIsLoggingIn,
+    setLoginModalOpen,
+    setIsModalOpen,
+  ]);
+
   return (
     <header
       className={classes(
@@ -61,14 +136,13 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
           </p>
 
           <Button
-            asLink
             size="large"
             className="z-1"
             intent="primary"
-            href={CREATORS_FORM_LINK}
             ref={heroButtonReference}
             aria-label="Start earning now"
             suffixIconName="IdrissArrowRight"
+            onClick={handleStartEarningClick}
           >
             Start earning now
           </Button>
@@ -82,6 +156,35 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
           <VideoPlayer />
         </div>
       </div>
+      <LoginModal
+        isOpened={isLoginModalOpen}
+        isLoading={isLoggingIn}
+        onClose={() => {
+          return setIsModalOpen(false);
+        }}
+      />
+      <PasswordModal
+        isOpened={isPasswordModalOpen}
+        onClose={() => {
+          return setIsPasswordModalOpen(false);
+        }}
+        onSuccess={handlePasswordSuccess}
+      />
+      {isMobileNotSupportedOpen && (
+        <MobileNotSupported
+          className="bg-[#E7F5E6]/[0.6] backdrop-blur-sm"
+          onClose={() => {
+            return setIsMobileNotSupportedOpen(false);
+          }}
+        >
+          <p className="text-balance text-center text-heading5 text-neutralGreen-700">
+            This experience is designed for desktop.
+          </p>
+          <p className="text-balance text-center text-heading5 text-neutralGreen-700">
+            Please use a PC or a laptop.
+          </p>
+        </MobileNotSupported>
+      )}
     </header>
   );
 };

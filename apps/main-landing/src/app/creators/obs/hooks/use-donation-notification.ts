@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 
-import { getTextToSfx, getTextToSpeech } from '../utils';
+import { TEST_TTS_MESSAGE_SOUND } from '@/assets';
 
-const DONATION_TTS_MIN_AMOUNT = 4.75; // $5 minus 5% margin for price drops
-const DONATION_SFX_MIN_AMOUNT = 9.5; // $10 minus 5% margin for price drops
-const DONATION_ALERT_MIN_AMOUNT = 0.95; // $1 minus 5% margin for price drops
+import { getTextToSfx, getTextToSpeech } from '../utils';
+import { MinimumAmounts, EnableToggles } from '../page';
+import { TEST_DONATION_MESSAGE } from '../../constants';
+
+const PRICE_DROP_RANGE = 0.05;
 const DONATION_TTS_DELAY = 2000;
 
 const toAudioElement = async (stream: Response): Promise<HTMLAudioElement> => {
@@ -28,9 +30,15 @@ const toAudioElement = async (stream: Response): Promise<HTMLAudioElement> => {
   return audioElement;
 };
 
+const priceDropCalculatedAmount = (amount: number) => {
+  return amount - amount * PRICE_DROP_RANGE;
+};
+
 export const useDonationNotification = (
   audio: HTMLAudioElement,
   amount: string,
+  minimumAmounts: MinimumAmounts,
+  muteToggles: EnableToggles,
   message: string,
   sfxText: string | undefined,
   minOverallVisibleDuration: number, // Minimum total time the notification should be visible
@@ -45,6 +53,10 @@ export const useDonationNotification = (
   const ttsAudioElementReference = useRef<HTMLAudioElement | null>(null);
 
   const didRunReference = useRef(false);
+  const { minimumAlertAmount, minimumTTSAmount, minimumSfxAmount } =
+    minimumAmounts;
+  const { alertEnabled, sfxEnabled, ttsEnabled } = muteToggles;
+  const isTestNotification = message === TEST_DONATION_MESSAGE;
 
   useEffect(() => {
     if (didRunReference.current) return;
@@ -74,7 +86,13 @@ export const useDonationNotification = (
     }
     // --- End of Effect Cleanup ---
 
-    if (!amount || Number.parseFloat(amount) <= DONATION_ALERT_MIN_AMOUNT) {
+    if (
+      (!amount ||
+        !alertEnabled ||
+        Number.parseFloat(amount) <=
+          priceDropCalculatedAmount(minimumAlertAmount)) &&
+      !isTestNotification
+    ) {
       setShowNotification(false);
       onFullyComplete();
       return;
@@ -82,8 +100,12 @@ export const useDonationNotification = (
 
     const processDonationAsync = async () => {
       const useSfx =
-        sfxText && Number.parseFloat(amount) > DONATION_SFX_MIN_AMOUNT;
-      const useTts = Number.parseFloat(amount) > DONATION_TTS_MIN_AMOUNT;
+        sfxText &&
+        sfxEnabled &&
+        Number.parseFloat(amount) > priceDropCalculatedAmount(minimumSfxAmount);
+      const useTts =
+        ttsEnabled &&
+        Number.parseFloat(amount) > priceDropCalculatedAmount(minimumTTSAmount);
 
       let sfxAudioForPlayback: HTMLAudioElement | null = null;
       let ttsAudioForPlayback: HTMLAudioElement | null = null;
@@ -101,7 +123,15 @@ export const useDonationNotification = (
           }
         }
 
-        if (useTts) {
+        if (isTestNotification) {
+          // Add a delay to allow the creator to switch tabs and check donation
+          await new Promise((resolve) => {
+            return setTimeout(resolve, 3000);
+          });
+
+          ttsAudioElementReference.current = new Audio(TEST_TTS_MESSAGE_SOUND);
+          ttsAudioForPlayback = ttsAudioElementReference.current;
+        } else if (useTts) {
           const ttsStream = await getTextToSpeech(message);
           if (ttsStream) {
             ttsAudioElementReference.current = await toAudioElement(ttsStream);
@@ -246,6 +276,13 @@ export const useDonationNotification = (
     audio,
     minOverallVisibleDuration,
     onFullyComplete,
+    minimumAlertAmount,
+    minimumSfxAmount,
+    minimumTTSAmount,
+    alertEnabled,
+    sfxEnabled,
+    ttsEnabled,
+    isTestNotification,
   ]);
 
   return { showNotification };

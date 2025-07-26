@@ -2,20 +2,28 @@ export type { FullyRequired } from './typescript-utils';
 
 export {
   roundToSignificantFiguresForCopilotTrading,
-  roundToSignificantFigures,
   applyDecimalsToNumericString,
   getTransactionUrl,
   isNativeTokenAddress,
   getChainById,
   isUnrecognizedChainError,
   formatBigNumber,
-  formatNumber,
+  formatTokenValue,
+  formatFiatValue,
   getDefaultBlockExplorerUrl,
   getTransactionUrls,
   getSafeNumber,
   getShortWalletHex,
+  getModifiedLeaderboardName,
   getFormattedTimeDifference,
   getTimeDifferenceString,
   isSolanaAddress,
-  removeEthSuffix,
-} from './utils';
+} from './formatting-utils';
+
+export {
+  calculateDonationLeaderboard,
+  getFilteredDonationsByPeriod,
+  getChainByNetworkName,
+  getChainLogoById,
+  getChainIdByNetworkName,
+} from './donation-utils';

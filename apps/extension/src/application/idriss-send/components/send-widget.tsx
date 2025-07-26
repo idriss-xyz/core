@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react';
 import { Button } from '@idriss-xyz/ui/button';
 import {
   applyDecimalsToNumericString,
-  roundToSignificantFigures,
+  formatTokenValue,
   isNativeTokenAddress,
 } from '@idriss-xyz/utils';
 import { EMPTY_HEX } from '@idriss-xyz/constants';
@@ -104,7 +104,7 @@ export const SendWidget = ({ widgetData }: Properties) => {
                 <>
                   Sending <span className="text-mint-600">${amount}</span>{' '}
                   {amountInSelectedToken
-                    ? `(${roundToSignificantFigures(Number(amountInSelectedToken), 2)} ${selectedToken?.symbol})`
+                    ? `(${formatTokenValue(Number(amountInSelectedToken))} ${selectedToken?.symbol})`
                     : null}
                 </>
               }

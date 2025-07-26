@@ -1,11 +1,11 @@
 export const ZAPPER_API_URL = 'https://public.zapper.xyz/graphql';
 
 export const TipHistoryQuery = `
-  query ($addresses: [Address!], $toAddresses: [String!], $isSigner: Boolean, $after: String) {
-    accountsTimeline(addresses: $addresses, toAddresses: $toAddresses, isSigner: $isSigner, after: $after, first: 25) {
-      edges {
-        node {
-          timestamp
+  query TransactionsForAppV2($slug: String!, $after: String) {
+  transactionsForAppV2(slug: $slug first: 25, after: $after) {
+    edges {
+      node {
+        timestamp
           network
           transaction {
             hash
@@ -49,11 +49,12 @@ export const TipHistoryQuery = `
                 tokenV2 {
                   symbol
                   imageUrlV2
-                  onchainMarketData {
+                  priceData {
                     price
                   }
                   address
                   decimals
+                  name
                 }
               }
               ... on StringDisplayItem {
@@ -99,9 +100,9 @@ export const TipHistoryQuery = `
 `;
 
 export const PriceHistoryQuery = `
-query ($address: Address!, $network: Network!, $currency: Currency!, $timeFrame: TimeFrame!) {
-  fungibleToken(address: $address, network: $network) {
-    onchainMarketData {
+query ($address: Address!, $currency: Currency!, $timeFrame: TimeFrame!, $chainId: Int!) {
+  fungibleTokenV2(address: $address, chainId: $chainId){
+    priceData {
       price
       priceTicks(currency: $currency, timeFrame: $timeFrame) {
         timestamp
@@ -112,18 +113,6 @@ query ($address: Address!, $network: Network!, $currency: Currency!, $timeFrame:
 }`;
 
 export const OLDEST_TRANSACTION_TIMESTAMP = 1_702_339_200;
-
-// Todo: Add import from package once refactor is done
-export const CHAIN_TO_IDRISS_TIPPING_ADDRESS = {
-  137: '0xe35B356ac2c880cCcc769bA9393F0748d94ABBCa',
-  1: '0xe18036D7E3377801a19d5Db3f9b236617979674E',
-  10: '0x43F532D678b6a1587BE989a50526F89428f68315',
-  8453: '0x324Ad1738B9308D5AF5E81eDd6389BFa082a8968',
-  5000: '0x324Ad1738B9308D5AF5E81eDd6389BFa082a8968',
-  41455: '0xcA6742d2d6B9dBFFD841DF25C15cFf45FBbB98f4',
-  2020: '0x74BD1b29B997ec081eb7AF06F2fd67CbfC74D26e',
-  2741: '0xEeFA4f7F4e9104D16673D0C2fE3D0bF4c45A7804',
-} as const;
 
 export const CREATOR_LINKS: Record<string, string> = {
   '0xc4607e7ab9200f955ec617698b2a4ee0c66f3fb4':
@@ -172,11 +161,9 @@ export const ALCHEMY_NATIVE_TOKENS = {
   BASE_MAINNET: 'ETH',
   MANTLE_MAINNET: 'MNT',
   OPTIMISM_MAINNET: 'ETH',
-  POLYGON_MAINNET: 'MATIC',
+  POLYGON_MAINNET: 'POL',
   RONIN_MAINNET: 'RON',
 } as const;
-
-export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 export const monthNames = [
   'January',

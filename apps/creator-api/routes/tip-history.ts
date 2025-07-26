@@ -1,149 +1,119 @@
 import { Router, Request, Response } from 'express';
-import {
-  CHAIN_TO_IDRISS_TIPPING_ADDRESS,
-  OLDEST_TRANSACTION_TIMESTAMP,
-  TipHistoryQuery,
-  ZAPPER_API_URL,
-} from '../constants';
-
-import { fetchDonationsByToAddress } from '../db/fetch-known-donations';
-import {
-  DonationData,
-  TipHistoryResponse,
-  TipHistoryVariables,
-  ZapperNode,
-  ZapperResponse,
-} from '../types';
-import { enrichNodesWithHistoricalPrice } from '../utils/enrich-nodes';
-import { storeToDatabase } from '../db/store-new-donation';
 import { Hex } from 'viem';
-import { calculateDonationLeaderboard } from '../utils/calculate-stats';
+import { fetchDonationsByToAddress } from '../db/fetch-known-donations';
+import { TipHistoryResponse } from '../types';
+import { syncAndStoreNewDonations } from '../services/zapper/process-donations';
+import { connectedClients } from '../services/socket-server';
+import { calculateDonationLeaderboard } from '@idriss-xyz/utils';
+import { DonationData } from '@idriss-xyz/constants';
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
+import { DEMO_ADDRESS } from '../tests/test-data/constants';
 
 const router = Router();
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const app_addresses = Object.values(CHAIN_TO_IDRISS_TIPPING_ADDRESS).map(
-  (address) => address.toLowerCase() as Hex,
-);
+const MAX_RETRIES = 6;
+const RETRY_INTERVAL = 5000;
 
-router.post('/', async (req: Request, res: Response) => {
+/**
+ * Shared logic to fetch and process tip history for a given address.
+ */
+async function handleFetchTipHistory(req: Request, res: Response) {
   try {
-    const { address } = req.body;
+    // Support address from either URL parameter (GET) or body (POST)
+    const address = (req.params.address || req.body.address) as string;
+
+    if (address && address === DEMO_ADDRESS) {
+      const mockData = JSON.parse(
+        readFileSync(
+          resolve(__dirname, '../tests/test-data/mock-donations.json'),
+          'utf-8',
+        ),
+      );
+      res.json(mockData);
+      return;
+    }
 
     if (!address || typeof address !== 'string') {
       res.status(400).json({ error: 'Invalid or missing address' });
       return;
     }
     const hexAddress = address as Hex;
-    const knownDonations = await fetchDonationsByToAddress(hexAddress);
-    const knownDonationMap = new Map<string, DonationData>();
-    for (const donation of knownDonations) {
-      knownDonationMap.set(donation.transactionHash.toLowerCase(), donation);
-    }
-    const knownHashes = new Set(knownDonationMap.keys());
 
-    const newEdges: { node: ZapperNode }[] = [];
-    let cursor: string | null = null;
-    let hasNextPage = true;
+    const donations = await fetchDonationsByToAddress(hexAddress);
+    const leaderboard = await calculateDonationLeaderboard(donations);
 
-    while (hasNextPage) {
-      const variables: TipHistoryVariables = {
-        addresses: [hexAddress],
-        toAddresses: app_addresses,
-        isSigner: false,
-        after: cursor,
-      };
-
-      const encodedKey = Buffer.from(process.env.ZAPPER_API_KEY ?? '').toString(
-        'base64',
-      );
-      const response = await fetch(ZAPPER_API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Basic ${encodedKey}`,
-        },
-        body: JSON.stringify({ query: TipHistoryQuery, variables }),
-      });
-      const data: ZapperResponse = await response.json();
-      const accountsTimeline = data.data?.accountsTimeline;
-      if (!accountsTimeline) break;
-
-      const currentEdges = accountsTimeline.edges || [];
-
-      const relevantEdges = currentEdges.filter((edge) => {
-        if (edge.node.app?.slug !== 'idriss') return false;
-
-        const descriptionItems =
-          edge.node.interpretation?.descriptionDisplayItems;
-        const data = edge.node.transaction.decodedInputV2.data;
-
-        // Check if last element of data exists and has value
-        const hasValidData =
-          data.length > 0 && data[data.length - 1].value.length > 0;
-        if (!hasValidData) return false;
-
-        // If we have a message (descriptionItems[2]), validate it
-        if (descriptionItems?.[2]?.stringValue) {
-          // stringValue is "N/A"
-          if (descriptionItems[2].stringValue === 'N/A') return false;
-
-          // string value is amountRaw (old tagging)
-          if (
-            descriptionItems[2].stringValue === descriptionItems[0]?.amountRaw
-          ) {
-            return false;
-          }
-        }
-
-        return true;
-      });
-
-      for (const edge of relevantEdges) {
-        const txHash = edge.node.transaction.hash.toLowerCase();
-        if (!knownHashes.has(txHash)) {
-          newEdges.push(edge);
-        }
-      }
-
-      if (
-        relevantEdges.some((edge) =>
-          knownHashes.has(edge.node.transaction.hash.toLowerCase()),
-        )
-      )
-        break;
-      if (currentEdges.length === 0) break;
-      const lastEdge = currentEdges.at(-1);
-
-      if (lastEdge && lastEdge.node.timestamp < OLDEST_TRANSACTION_TIMESTAMP)
-        break;
-
-      hasNextPage = accountsTimeline.pageInfo?.hasNextPage;
-      cursor = accountsTimeline.pageInfo?.endCursor ?? null;
-    }
-
-    if (newEdges.length > 0) {
-      await enrichNodesWithHistoricalPrice(newEdges);
-      const storedDonations = await storeToDatabase(hexAddress, newEdges);
-      for (const donation of storedDonations) {
-        knownDonationMap.set(donation.transactionHash.toLowerCase(), donation);
-      }
-    }
-
-    // Get leaderboard data
-    const leaderboard = await calculateDonationLeaderboard(
-      Array.from(knownDonationMap.values()),
-    );
-
-    // Return the structured response
     const response: TipHistoryResponse = {
-      donations: Array.from(knownDonationMap.values()),
+      donations,
       leaderboard,
     };
 
     res.json(response);
   } catch (error) {
-    console.error('Tip history error:', error);
+    console.error('Fetch tip history error:', error);
     res.status(500).json({ error: 'Failed to fetch tip history' });
+  }
+}
+
+// --- Endpoint 1: NEW and CORRECT way to fetch history ---
+// This is the new, preferred GET endpoint.
+router.get('/:address', handleFetchTipHistory);
+
+// --- Endpoint 1.1: BACKWARD COMPATIBILITY for old clients ---
+// This keeps the old POST endpoint working.
+router.post('/', handleFetchTipHistory);
+
+// --- Endpoint 2: Sync All Donations and Push to Clients ---
+router.post('/sync', async (req: Request, res: Response) => {
+  try {
+    // Address of the creator expecting the donation, used to control retries.
+    const { address } = req.body;
+    if (!address || typeof address !== 'string') {
+      res.status(400).json({ error: 'Invalid or missing address' });
+      return;
+    }
+    const lowerCaseAddress = address.toLowerCase();
+
+    let retries = 0;
+    let foundDonationForUser = false;
+    const allNewlySyncedDonations: DonationData[] = [];
+
+    while (retries < MAX_RETRIES && !foundDonationForUser) {
+      if (retries > 0) {
+        await delay(RETRY_INTERVAL);
+      }
+      retries++;
+
+      const newDonations = await syncAndStoreNewDonations();
+
+      // Always process all new donations found in this batch
+      if (newDonations.length > 0) {
+        allNewlySyncedDonations.push(...newDonations);
+
+        // Distribute ALL new donations to their respective clients via WebSockets
+        for (const donation of newDonations) {
+          const clients = connectedClients.get(
+            donation.toAddress.toLowerCase(),
+          );
+          if (clients) {
+            for (const socket of clients) {
+              socket.emit('newDonation', donation);
+            }
+          }
+        }
+        break;
+      }
+    }
+
+    if (allNewlySyncedDonations.length > 0) {
+      res.json({ data: allNewlySyncedDonations });
+    } else {
+      res.status(200).json({ message: 'No new donations found after retries' });
+    }
+  } catch (error) {
+    console.error('Donation sync error:', error);
+    res.status(500).json({ error: 'Failed to sync donation data' });
   }
 });
 

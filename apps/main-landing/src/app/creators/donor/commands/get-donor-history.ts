@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Hex } from 'viem';
+import { CREATOR_API_URL } from '@idriss-xyz/constants';
 
-import { CREATOR_API_URL } from '../../donate/constants';
 import { DonorHistoryResponse } from '../types';
 
 type Payload = {

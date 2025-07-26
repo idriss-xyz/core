@@ -23,7 +23,6 @@ import {
   OPTIMISM_LOGO,
   POLYGON_LOGO,
   USDC_LOGO,
-  ALEPH_LOGO,
   ABSTRACT_LOGO,
   PENGU_LOGO,
   YGG_LOGO,
@@ -43,12 +42,14 @@ export const STAKER_ADDRESS = '0x085e2DC1b05dcdbE011B5ad377C9f2fcD69B7057';
 export const REWARDS_ADDRESS = '0x4D66A8e9Da1F007802338B372aD348B78b455aBB';
 
 export const NATIVE_COIN_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
+export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 export const CREATOR_CHAIN = {
   ABSTRACT: {
     id: 2741,
     name: 'Abstract',
     shortName: 'Abstract',
+    dbName: 'ABSTRACT_MAINNET',
     logo: ABSTRACT_LOGO,
     nativeCurrency: {
       name: 'Ethereum',
@@ -63,28 +64,11 @@ export const CREATOR_CHAIN = {
       },
     },
   },
-  ALEPH: {
-    id: 41_455,
-    name: 'Aleph Zero EVM',
-    shortName: 'Aleph',
-    logo: ALEPH_LOGO,
-    nativeCurrency: {
-      name: 'AZERO',
-      symbol: 'AZERO',
-      decimals: 18,
-    },
-    rpcUrls: { default: { http: ['https://rpc.alephzero.raas.gelato.cloud'] } },
-    blockExplorers: {
-      default: {
-        name: 'Evm Explorer',
-        url: 'https://evm-explorer.alephzero.org',
-      },
-    },
-  },
   RONIN: {
     id: 2020,
     name: 'Ronin',
     shortName: 'Ronin',
+    dbName: 'RONIN_MAINNET',
     logo: RONIN_LOGO,
     nativeCurrency: {
       name: 'Ronin',
@@ -109,6 +93,7 @@ export const CREATOR_CHAIN = {
       },
     },
     shortName: 'Base',
+    dbName: 'BASE_MAINNET',
     logo: BASE_LOGO,
   },
   ETHEREUM: {
@@ -121,7 +106,57 @@ export const CREATOR_CHAIN = {
       },
     },
     shortName: 'Ethereum',
+    dbName: 'ETHEREUM_MAINNET',
     logo: ETHEREUM_LOGO,
+  },
+} satisfies Record<string, Chain>;
+
+export const CHAIN = Object.assign(CREATOR_CHAIN, {
+  ARBITRUM_ONE: {
+    ...arbitrum,
+    shortName: 'Arbitrum',
+    dbName: 'ARBITRUM_MAINNET',
+    logo: ARBITRUM_LOGO,
+  },
+  LINEA: {
+    ...linea,
+    shortName: 'Linea',
+    dbName: 'LINEA_MAINNET',
+    logo: LINEA_LOGO,
+  },
+  ZK_SYNC_ERA: {
+    ...zksync,
+    shortName: 'ZkSync',
+    dbName: 'ZKSYNC_MAINNET',
+    logo: ZYNK_SYNC_ERA_LOGO,
+  },
+  SCROLL: {
+    ...scroll,
+    shortName: 'Scroll',
+    dbName: 'SCROLL_MAINNET',
+    logo: SCROLL_LOGO,
+  },
+  CELO: {
+    ...celo,
+    shortName: 'Celo',
+    dbName: 'CELO_MAINNET',
+    logo: CELO_LOGO,
+  },
+  BNB_CHAIN: {
+    id: 56,
+    name: 'BNB Chain',
+    shortName: 'BNB',
+    dbName: 'BINANCE_SMART_CHAIN_MAINNET',
+    logo: BNB_LOGO,
+    nativeCurrency: {
+      name: 'BNB',
+      symbol: 'BNB',
+      decimals: 18,
+    },
+    rpcUrls: { default: { http: ['https://bsc-dataseed.binance.org'] } },
+    blockExplorers: {
+      default: { name: 'BS Scan', url: 'https://bscscan.com' },
+    },
   },
   MANTLE: {
     ...mantle,
@@ -133,6 +168,7 @@ export const CREATOR_CHAIN = {
       },
     },
     shortName: 'Mantle',
+    dbName: 'MANTLE_MAINNET',
     logo: MANTLE_LOGO,
   },
   OPTIMISM: {
@@ -145,6 +181,7 @@ export const CREATOR_CHAIN = {
       },
     },
     shortName: 'Optimism',
+    dbName: 'OPTIMISM_MAINNET',
     logo: OPTIMISM_LOGO,
   },
   POLYGON: {
@@ -157,50 +194,8 @@ export const CREATOR_CHAIN = {
       },
     },
     shortName: 'Polygon',
+    dbName: 'POLYGON_MAINNET',
     logo: POLYGON_LOGO,
-  },
-} satisfies Record<string, Chain>;
-
-export const CHAIN = Object.assign(CREATOR_CHAIN, {
-  ARBITRUM_ONE: {
-    ...arbitrum,
-    shortName: 'Arbitrum',
-    logo: ARBITRUM_LOGO,
-  },
-  LINEA: {
-    ...linea,
-    shortName: 'Linea',
-    logo: LINEA_LOGO,
-  },
-  ZK_SYNC_ERA: {
-    ...zksync,
-    shortName: 'ZkSync',
-    logo: ZYNK_SYNC_ERA_LOGO,
-  },
-  SCROLL: {
-    ...scroll,
-    shortName: 'Scroll',
-    logo: SCROLL_LOGO,
-  },
-  CELO: {
-    ...celo,
-    shortName: 'Celo',
-    logo: CELO_LOGO,
-  },
-  BNB_CHAIN: {
-    id: 56,
-    name: 'BNB Chain',
-    shortName: 'BNB',
-    logo: BNB_LOGO,
-    nativeCurrency: {
-      name: 'BNB',
-      symbol: 'BNB',
-      decimals: 18,
-    },
-    rpcUrls: { default: { http: ['https://bsc-dataseed.binance.org'] } },
-    blockExplorers: {
-      default: { name: 'BS Scan', url: 'https://bscscan.com' },
-    },
   },
 }) satisfies Record<string, Chain>;
 
@@ -278,14 +273,6 @@ export const CHAIN_ID_TO_TOKENS = {
       address: '0x9eBe3A824Ca958e4b3Da772D2065518F009CBa62',
     },
   ],
-  [CREATOR_CHAIN.ALEPH.id]: [
-    {
-      ...TOKEN.USDC,
-      name: 'USDC',
-      decimals: 6,
-      address: '0x4Ca4B85Ead5EA49892d3a81DbfAE2f5c2F75d53D',
-    },
-  ],
   [CREATOR_CHAIN.ETHEREUM.id]: [
     {
       ...TOKEN.ETHEREUM,
@@ -298,19 +285,9 @@ export const CHAIN_ID_TO_TOKENS = {
       address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
     },
     {
-      ...TOKEN.DAI,
-      decimals: 18,
-      address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
-    },
-    {
       ...TOKEN.ECHELON_PRIME,
       decimals: 18,
       address: '0xb23d80f5FefcDDaa212212F028021B41DEd428CF',
-    },
-    {
-      ...TOKEN.AAVEGOTCHI,
-      decimals: 18,
-      address: '0x3F382DbD960E3a9bbCeaE22651E88158d2791550',
     },
     {
       ...TOKEN.YGG,
@@ -321,45 +298,6 @@ export const CHAIN_ID_TO_TOKENS = {
       ...TOKEN.PDT,
       decimals: 18,
       address: '0x375abb85c329753b1ba849a601438ae77eec9893',
-    },
-  ],
-  [CREATOR_CHAIN.OPTIMISM.id]: [
-    {
-      ...TOKEN.ETHEREUM,
-      decimals: 18,
-      address: NATIVE_COIN_ADDRESS,
-    },
-    {
-      ...TOKEN.USDC,
-      decimals: 6,
-      address: '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85',
-    },
-    {
-      ...TOKEN.DAI,
-      decimals: 18,
-      address: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
-    },
-  ],
-  [CREATOR_CHAIN.POLYGON.id]: [
-    {
-      ...TOKEN.USDC,
-      decimals: 6,
-      address: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
-    },
-    {
-      ...TOKEN.DAI,
-      decimals: 18,
-      address: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063',
-    },
-    {
-      ...TOKEN.AAVEGOTCHI,
-      decimals: 18,
-      address: '0x385eeac5cb85a38a9a07a70c73e0a3271cfb54a7',
-    },
-    {
-      ...TOKEN.YGG,
-      decimals: 18,
-      address: '0x82617aa52dddf5ed9bb7b370ed777b3182a30fd1',
     },
   ],
   [CREATOR_CHAIN.RONIN.id]: [
@@ -394,13 +332,6 @@ export const CHAIN_ID_TO_TOKENS = {
     //   address: '0x7eae20d11ef8c779433eb24503def900b9d28ad7',
     // },
   ],
-  [CREATOR_CHAIN.MANTLE.id]: [
-    {
-      ...TOKEN.USDC,
-      decimals: 6,
-      address: '0x09Bc4E0D864854c6aFB6eB9A9cdF58aC190D0dF9',
-    },
-  ],
   [CREATOR_CHAIN.BASE.id]: [
     {
       ...TOKEN.ETHEREUM,
@@ -411,11 +342,6 @@ export const CHAIN_ID_TO_TOKENS = {
       ...TOKEN.USDC,
       decimals: 6,
       address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
-    },
-    {
-      ...TOKEN.DAI,
-      decimals: 18,
-      address: '0x50c5725949a6f0c72e6c4a641f24049a917db0cb',
     },
     {
       ...TOKEN.ECHELON_PRIME,
@@ -433,11 +359,6 @@ export const CHAIN_ID_TO_TOKENS = {
       address: '0xaac78d1219c08aecc8e37e03858fe885f5ef1799',
     },
     {
-      ...TOKEN.DEGEN,
-      decimals: 18,
-      address: '0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed',
-    },
-    {
       ...TOKEN.IDRISS,
       decimals: 18,
       address: '0x000096630066820566162c94874a776532705231',
@@ -447,15 +368,16 @@ export const CHAIN_ID_TO_TOKENS = {
 
 export const DEFAULT_ALLOWED_CHAINS_IDS = [
   CREATOR_CHAIN.ABSTRACT.id,
-  CREATOR_CHAIN.ALEPH.id,
   CREATOR_CHAIN.BASE.id,
   CREATOR_CHAIN.ETHEREUM.id,
-  CREATOR_CHAIN.MANTLE.id,
-  CREATOR_CHAIN.OPTIMISM.id,
-  CREATOR_CHAIN.POLYGON.id,
   CREATOR_CHAIN.RONIN.id,
 ];
 
 export const EMPTY_HEX = '0x';
 
 export const COPILOT_API_URL = 'https://copilot-api.idriss.xyz';
+export const CREATOR_API_URL = 'https://core-production-a116.up.railway.app';
+
+export const DEFAULT_DONATION_MIN_ALERT_AMOUNT = 1;
+export const DEFAULT_DONATION_MIN_TTS_AMOUNT = 3;
+export const DEFAULT_DONATION_MIN_SFX_AMOUNT = 10;

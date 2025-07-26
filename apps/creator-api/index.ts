@@ -12,13 +12,16 @@ import recipientHistoryRouter from './routes/recipient-history';
 import donorHistoryRouter from './routes/donor-history';
 import creatorLeaderboardRouter from './routes/creator-leaderboard';
 import donorLeaderboardRouter from './routes/donor-leaderboard';
-import pushDonationRouter from './routes/push-donation';
-import overwriteDonationRouter from './routes/overwrite-donation';
-import refetchDonationRouter from './routes/refetch-donations';
 import refetchENSRouter from './routes/force-refresh-ens';
 import textToSpeechRouter from './routes/text-to-speech';
+import creatorProfileRouter from './routes/creator-profile';
+import getBalances from './routes/get-balances';
+import donationParametersRouter from './routes/donation-parameters';
 import textToSfxRouter from './routes/text-to-sfx';
 import donationEffectsRouter from './routes/donation-effects';
+import twitchAccountInfoRouter from './routes/twitch-account-info';
+import authRouter from './routes/auth';
+import uploadRouter from './routes/upload';
 import cors from 'cors';
 import { initializeDatabase } from './db/database';
 
@@ -41,13 +44,16 @@ app.use('/donor-history', donorHistoryRouter);
 app.use('/recipient-history', recipientHistoryRouter);
 app.use('/creator-leaderboard', creatorLeaderboardRouter);
 app.use('/donor-leaderboard', donorLeaderboardRouter);
-app.use('/push-donation', pushDonationRouter);
-app.use('/overwrite-donation', overwriteDonationRouter);
-app.use('/refetch-donations', refetchDonationRouter);
 app.use('/force-refresh-ens', refetchENSRouter);
 app.use('/text-to-speech', textToSpeechRouter);
+app.use('/creator-profile', creatorProfileRouter);
+app.use('/get-balances', getBalances);
+app.use('/donation-parameters', donationParametersRouter);
 app.use('/donation-effects', donationEffectsRouter);
 app.use('/text-to-sfx', textToSfxRouter);
+app.use('/twitch-account-info', twitchAccountInfoRouter);
+app.use('/auth', authRouter);
+app.use('/upload', uploadRouter);
 
 const HOST = process.env.HOST;
 const PORT = Number(process.env.PORT) || 4000;
@@ -68,10 +74,11 @@ io.on('connection', (socket: Socket) => {
   console.log('Client connected');
 
   socket.on('register', (userId: string) => {
-    const clients = connectedClients.get(userId) || new Set<Socket>();
+    const userIdLower = userId.toLowerCase();
+    const clients = connectedClients.get(userIdLower) || new Set<Socket>();
     clients.add(socket);
-    connectedClients.set(userId, clients);
-    socket.data.userId = userId;
+    connectedClients.set(userIdLower, clients);
+    socket.data.userId = userIdLower;
   });
 
   socket.on('disconnect', () => {

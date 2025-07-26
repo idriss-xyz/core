@@ -5,7 +5,6 @@ import { Button } from '@idriss-xyz/ui/button';
 import {
   PRIVACY_POLICY_LINK,
   TERMS_OF_SERVICE_LINK,
-  CREATORS_FORM_LINK,
 } from '@idriss-xyz/constants';
 import { classes } from '@idriss-xyz/ui/utils';
 
@@ -16,9 +15,12 @@ import {
   SOCIALS,
 } from '@/components/footer';
 
+import { useStartEarningNavigation } from '../../utils';
+
 export const Footer = () => {
   const today = new Date();
   const year = today.getFullYear();
+  const handleStartEarningClick = useStartEarningNavigation();
 
   return (
     <footer
@@ -53,9 +55,7 @@ export const Footer = () => {
               size="medium"
               prefixIconName="BadgeDollarSign"
               className="mt-6 uppercase lg:mt-10"
-              href={CREATORS_FORM_LINK}
-              isExternal
-              asLink
+              onClick={handleStartEarningClick}
             >
               Start earning now
             </Button>

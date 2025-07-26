@@ -2,6 +2,8 @@ import { Metadata } from 'next';
 
 import { metadata as landingMetadata } from '@/app/layout';
 
+import { CreatorsProviders } from './creators-providers';
+
 // ts-unused-exports:disable-next-line
 export const metadata: Metadata = {
   ...landingMetadata,
@@ -25,5 +27,5 @@ export default function CreatorsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return <CreatorsProviders>{children}</CreatorsProviders>;
 }

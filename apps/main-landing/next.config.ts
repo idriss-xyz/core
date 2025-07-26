@@ -46,7 +46,7 @@ const LEGACY_URLS = [
 
 const nextConfig: NextConfig = {
   generateBuildId: () => {
-    return process.env.RAILWAY_GIT_COMMIT_SHA || `build-${Date.now()}`;
+    return process.env.RAILWAY_GIT_COMMIT_SHA ?? `build-${Date.now()}`;
   },
 
   experimental: {
@@ -224,7 +224,7 @@ const nextConfig: NextConfig = {
     return config;
   },
   images: {
-    domains: ['localhost'],
+    domains: ['localhost', 'storage.googleapis.com', 'static-cdn.jtvnw.net'],
   },
   env: {
     DEV_LOGIN_PASSWORD: process.env.DEV_LOGIN_PASSWORD || '',

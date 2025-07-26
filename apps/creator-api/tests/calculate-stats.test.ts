@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { calculateStatsForRecipientAddress } from '../utils/calculate-stats';
-import { DonationData } from '../types';
+import { DonationData } from '@idriss-xyz/constants';
 
 describe('Calculate stats', () => {
   it('Calculates correct stats for recipients', () => {

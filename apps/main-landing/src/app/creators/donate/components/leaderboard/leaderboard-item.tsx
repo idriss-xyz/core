@@ -1,10 +1,10 @@
 import { Icon } from '@idriss-xyz/ui/icon';
 import { Link } from '@idriss-xyz/ui/link';
-import { getShortWalletHex } from '@idriss-xyz/utils';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Hex } from 'viem';
+import { DonationUser } from '@idriss-xyz/constants';
+import { getModifiedLeaderboardName } from '@idriss-xyz/utils';
 
-import { DonationUser } from '../../types';
 import { WHITELISTED_URLS } from '../../constants';
 import { useGetAvatarImage } from '../../commands/get-avatar-image';
 
@@ -108,7 +108,9 @@ export const LeaderboardItem = ({
             onDonorClick && 'cursor-pointer',
           )}
         >
-          {displayName ?? getShortWalletHex(donorDetails.address)}
+          {displayName
+            ? getModifiedLeaderboardName(displayName)
+            : getModifiedLeaderboardName(donorDetails.address)}
         </Link>
       </span>
 
@@ -127,7 +129,6 @@ export const LeaderboardItem = ({
 
 type PlaceholderProperties = {
   donorRank: number;
-  itemHeight?: number;
   amountToDisplay: number;
   hideBottomBorder?: boolean;
   hideEncouragement?: boolean;
@@ -136,13 +137,11 @@ type PlaceholderProperties = {
 
 export function LeaderboardItemPlaceholder({
   donorRank,
-  itemHeight,
   amountToDisplay,
   hideBottomBorder,
   hideEncouragement,
   previousDonateAmount,
 }: PlaceholderProperties) {
-  const placeholderHeight = itemHeight ?? 67;
   const donateAmount = previousDonateAmount * 0.8;
   const placeholderPlaces = amountToDisplay - donorRank;
 
@@ -184,13 +183,8 @@ export function LeaderboardItemPlaceholder({
           </span>
         </li>
 
-        {amountToDisplay - 1 - donorRank && (
-          <span
-            style={{
-              height: `${(amountToDisplay - 1 - donorRank) * placeholderHeight}px`,
-            }}
-            className="flex items-center justify-center border-b border-b-neutral-300 px-5.5 py-4.5 text-center text-label4 gradient-text-2"
-          >
+        {amountToDisplay - 1 - donorRank > 0 && (
+          <span className="flex flex-1 items-center justify-center border-b border-b-neutral-300 px-5.5 py-4.5 text-center text-label4 gradient-text-2">
             {!hideEncouragement &&
               `Donate now and claim ${rankPlaces[donorRank]} place`}
           </span>
@@ -201,13 +195,10 @@ export function LeaderboardItemPlaceholder({
 
   return (
     <>
-      {!!placeholderPlaces && (
+      {placeholderPlaces > 0 && (
         <span
-          style={{
-            height: `${placeholderPlaces * placeholderHeight}px`,
-          }}
           className={classes(
-            'flex items-center justify-center border-b',
+            'flex flex-1 items-center justify-center border-b',
             hideBottomBorder ? 'border-b-transparent' : 'border-b-neutral-300',
           )}
         />

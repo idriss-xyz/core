@@ -6,7 +6,8 @@ const router = Router();
 
 router.get('/', async (req: Request, res: Response) => {
   try {
-    const leaderboard = await calculateGlobalDonorLeaderboard();
+    const { period } = req.query;
+    const leaderboard = await calculateGlobalDonorLeaderboard(period as string);
 
     res.json({
       leaderboard,

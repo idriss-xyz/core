@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { Button } from '@idriss-xyz/ui/button';
-import { roundToSignificantFigures } from '@idriss-xyz/utils';
+import { formatTokenValue } from '@idriss-xyz/utils';
 import { EMPTY_HEX } from '@idriss-xyz/constants';
 import { formatEther } from 'viem';
 
@@ -159,8 +159,7 @@ export const DonationWidget = ({ widgetData }: Properties) => {
               heading={
                 <>
                   Sending <span className="text-mint-600">${amount}</span> (
-                  {roundToSignificantFigures(userAmountInWei / 10 ** 18, 2)}{' '}
-                  ETH)
+                  {formatTokenValue(userAmountInWei / 10 ** 18)} ETH)
                 </>
               }
               recipient={username}

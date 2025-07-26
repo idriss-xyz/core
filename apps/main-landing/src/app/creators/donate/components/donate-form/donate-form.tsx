@@ -7,7 +7,7 @@ import { Button } from '@idriss-xyz/ui/button';
 import { Link } from '@idriss-xyz/ui/link';
 import {
   getTransactionUrl,
-  roundToSignificantFigures,
+  formatTokenValue,
   applyDecimalsToNumericString,
 } from '@idriss-xyz/utils';
 import {
@@ -18,8 +18,10 @@ import {
   CHAIN_ID_TO_TOKENS,
   CREATORS_USER_GUIDE_LINK,
   DEFAULT_ALLOWED_CHAINS_IDS,
+  DEFAULT_DONATION_MIN_SFX_AMOUNT,
+  CREATOR_API_URL,
 } from '@idriss-xyz/constants';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { classes } from '@idriss-xyz/ui/utils';
@@ -35,7 +37,6 @@ import {
 
 import { backgroundLines3 } from '@/assets';
 
-import { useCreators } from '../../../hooks/use-creators';
 import {
   FormPayload,
   SendPayload,
@@ -43,472 +44,521 @@ import {
 } from '../../schema';
 import { getSendFormDefaultValues } from '../../utils';
 import { useSender } from '../../hooks';
-import { CREATOR_API_URL, DONATION_MIN_SFX_AMOUNT } from '../../constants';
+import { CreatorProfile } from '../../types';
 
 import { ChainSelect, TokenSelect } from './components';
 
 type Properties = {
   className?: string;
+  creatorInfo: CreatorProfile;
 };
 
 const baseClassName =
   'z-1 w-[440px] max-w-full rounded-xl bg-white px-4 pb-9 pt-6 flex flex-col items-center relative';
 
-export const DonateForm = ({ className }: Properties) => {
-  const { searchParams } = useCreators();
-  const { isConnected } = useAccount();
-  const { data: walletClient } = useWalletClient();
-  const { connectModalOpen, openConnectModal } = useConnectModal();
-  const [selectedTokenSymbol, setSelectedTokenSymbol] = useState<string>('ETH');
+export const DonateForm = forwardRef<HTMLDivElement, Properties>(
+  ({ className, creatorInfo }, reference) => {
+    const { isConnected } = useAccount();
+    const { data: walletClient } = useWalletClient();
+    const { connectModalOpen, openConnectModal } = useConnectModal();
+    const [selectedTokenSymbol, setSelectedTokenSymbol] =
+      useState<string>('ETH');
+    const [imageError, setImageError] = useState(false);
+    const minimumSfxAmount =
+      creatorInfo.minimumSfxAmount ?? DEFAULT_DONATION_MIN_SFX_AMOUNT;
 
-  const possibleTokens: Token[] = useMemo(() => {
-    const tokensSymbols = (searchParams.token ?? '').toLowerCase().split(',');
-    const allPossibleTokens = Object.values(TOKEN);
-    const tokens = allPossibleTokens.filter((token) => {
-      return tokensSymbols.includes(token.symbol.toLowerCase());
-    });
-
-    // TODO: sort
-    if (tokens.length === 0) {
-      return allPossibleTokens;
-    }
-
-    return tokens;
-  }, [searchParams.token]);
-
-  const allowedChainsIds = useMemo(() => {
-    const networksShortNames =
-      searchParams.network?.toLowerCase().split(',') ??
-      Object.values(CREATOR_CHAIN).map((chain) => {
-        return chain.shortName.toLowerCase();
+    const possibleTokens: Token[] = useMemo(() => {
+      const tokensSymbols = (creatorInfo.token ?? '').toLowerCase().split(',');
+      const allPossibleTokens = Object.values(TOKEN);
+      const tokens = allPossibleTokens.filter((token) => {
+        return tokensSymbols.includes(token.symbol.toLowerCase());
       });
 
-    const chains = Object.values(CREATOR_CHAIN).filter((chain) => {
-      if (!networksShortNames.includes(chain.shortName.toLowerCase())) {
-        return false;
+      // TODO: sort
+      if (tokens.length === 0) {
+        return allPossibleTokens;
       }
 
-      const tokensForThisChain = CHAIN_ID_TO_TOKENS[chain.id];
+      return tokens;
+    }, [creatorInfo.token]);
 
-      return !!tokensForThisChain?.find((token) => {
-        return token.symbol === selectedTokenSymbol;
-      });
-    });
-
-    if (chains.length === 0) {
-      return DEFAULT_ALLOWED_CHAINS_IDS;
-    }
-
-    // TODO: sort
-    return chains.map((chain) => {
-      return chain.id;
-    });
-  }, [searchParams.network, selectedTokenSymbol]);
-
-  const defaultChainId = allowedChainsIds[0] ?? 0;
-
-  const defaultTokenSymbol = useMemo(() => {
-    const chainTokens =
-      CHAIN_ID_TO_TOKENS[defaultChainId]?.filter((chainToken) => {
-        return possibleTokens.some((token) => {
-          return token.symbol.toLowerCase() === chainToken.symbol.toLowerCase();
+    const allowedChainsIds = useMemo(() => {
+      const networksShortNames =
+        creatorInfo.network?.toLowerCase().split(',') ??
+        Object.values(CREATOR_CHAIN).map((chain) => {
+          return chain.shortName.toLowerCase();
         });
-      }) ?? [];
 
-    return (
-      chainTokens[0]?.symbol ??
-      CHAIN_ID_TO_TOKENS[defaultChainId]?.[0]?.symbol ??
-      ''
-    );
-  }, [defaultChainId, possibleTokens]);
+      const chains = Object.values(CREATOR_CHAIN).filter((chain) => {
+        if (!networksShortNames.includes(chain.shortName.toLowerCase())) {
+          return false;
+        }
 
-  const formMethods = useForm<FormPayload>({
-    defaultValues: getSendFormDefaultValues(defaultChainId, defaultTokenSymbol),
-    resolver: zodResolver(createFormPayloadSchema(allowedChainsIds)),
-  });
+        const tokensForThisChain = CHAIN_ID_TO_TOKENS[chain.id];
 
-  const { reset } = formMethods;
-
-  useEffect(() => {
-    reset(getSendFormDefaultValues(defaultChainId, selectedTokenSymbol));
-
-    sender.resetBalance();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [defaultChainId, selectedTokenSymbol, reset]);
-
-  const [chainId, tokenSymbol, amount, sfx] = formMethods.watch([
-    'chainId',
-    'tokenSymbol',
-    'amount',
-    'sfx',
-  ]);
-
-  const sendDonationEffects = useCallback(
-    async (txHash: string) => {
-      if (!sfx || !txHash) {
-        return;
-      }
-      await fetch(`${CREATOR_API_URL}/donation-effects`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          sfxMessage: sfx,
-          txHash: txHash,
-        }),
-      });
-    },
-    [sfx],
-  );
-
-  const sender = useSender({
-    walletClient,
-    callbackOnSend: sendDonationEffects,
-  });
-
-  // Reset SFX when amount falls below the minimum
-  useEffect(() => {
-    if (amount < DONATION_MIN_SFX_AMOUNT && sfx) {
-      formMethods.setValue('sfx', '');
-    }
-  }, [amount, sfx, formMethods]);
-
-  const selectedToken = useMemo(() => {
-    const token = possibleTokens?.find((token) => {
-      return token.symbol === tokenSymbol;
-    });
-    setSelectedTokenSymbol(token?.symbol ?? '');
-
-    return token;
-  }, [possibleTokens, tokenSymbol]);
-
-  const amountInSelectedToken = useMemo(() => {
-    if (!sender.tokensToSend || !selectedToken?.symbol) {
-      return;
-    }
-
-    const decimals =
-      CHAIN_ID_TO_TOKENS[chainId]?.find((token) => {
-        return token.symbol === selectedTokenSymbol;
-      })?.decimals ?? 1;
-
-    return applyDecimalsToNumericString(
-      sender.tokensToSend.toString(),
-      decimals,
-    );
-  }, [
-    chainId,
-    selectedTokenSymbol,
-    sender.tokensToSend,
-    selectedToken?.symbol,
-  ]);
-
-  const onSubmit: SubmitHandler<FormPayload> = useCallback(
-    async (payload) => {
-      if (
-        !walletClient ||
-        !searchParams.address.data ||
-        !searchParams.address.isValid
-      ) {
-        return;
-      }
-
-      const { chainId, tokenSymbol, ...rest } = payload;
-
-      rest.message = ' ' + rest.message;
-
-      const address =
-        CHAIN_ID_TO_TOKENS[chainId]?.find((token: Token) => {
-          return token.symbol === tokenSymbol;
-        })?.address ?? EMPTY_HEX;
-
-      const sendPayload: SendPayload = {
-        ...rest,
-        chainId,
-        tokenAddress: address,
-      };
-
-      try {
-        await sender.send({
-          sendPayload,
-          recipientAddress: searchParams.address.data,
+        return !!tokensForThisChain?.find((token) => {
+          return token.symbol === selectedTokenSymbol;
         });
-      } catch (error) {
-        console.error('Unknown error sending transaction.', error);
+      });
+
+      if (chains.length === 0) {
+        return DEFAULT_ALLOWED_CHAINS_IDS;
       }
-    },
-    [
-      sender,
+
+      // TODO: sort
+      return chains.map((chain) => {
+        return chain.id;
+      });
+    }, [creatorInfo.network, selectedTokenSymbol]);
+
+    const defaultChainId = allowedChainsIds[0] ?? 0;
+
+    const defaultTokenSymbol = useMemo(() => {
+      const chainTokens =
+        CHAIN_ID_TO_TOKENS[defaultChainId]?.filter((chainToken) => {
+          return possibleTokens.some((token) => {
+            return (
+              token.symbol.toLowerCase() === chainToken.symbol.toLowerCase()
+            );
+          });
+        }) ?? [];
+
+      return (
+        chainTokens[0]?.symbol ??
+        CHAIN_ID_TO_TOKENS[defaultChainId]?.[0]?.symbol ??
+        ''
+      );
+    }, [defaultChainId, possibleTokens]);
+
+    const formMethods = useForm<FormPayload>({
+      defaultValues: getSendFormDefaultValues(
+        defaultChainId,
+        defaultTokenSymbol,
+      ),
+      resolver: zodResolver(createFormPayloadSchema(allowedChainsIds)),
+    });
+
+    const { reset } = formMethods;
+
+    useEffect(() => {
+      reset(getSendFormDefaultValues(defaultChainId, selectedTokenSymbol));
+
+      sender.resetBalance();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [defaultChainId, selectedTokenSymbol, reset]);
+
+    const [chainId, tokenSymbol, amount, sfx] = formMethods.watch([
+      'chainId',
+      'tokenSymbol',
+      'amount',
+      'sfx',
+    ]);
+
+    const sendDonationEffects = useCallback(
+      async (txHash: string) => {
+        if (!sfx || !txHash) {
+          return;
+        }
+        await fetch(`${CREATOR_API_URL}/donation-effects`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sfxMessage: sfx,
+            txHash: txHash,
+          }),
+        });
+      },
+      [sfx],
+    );
+
+    const sender = useSender({
       walletClient,
-      searchParams.address.data,
-      searchParams.address.isValid,
-    ],
-  );
-
-  const sendDonation = useCallback(async () => {
-    if (!searchParams.address.data || !searchParams.address.isValid) {
-      return;
-    }
-    await fetch(`${CREATOR_API_URL}/push-donation`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ address: searchParams.address.data }),
+      callbackOnSend: sendDonationEffects,
     });
-  }, [searchParams.address.data, searchParams.address.isValid]);
 
-  useEffect(() => {
-    if (sender.isSuccess) {
-      void sendDonation();
-    }
-  }, [sender.isSuccess, sender.data, sendDonation]);
+    // Reset SFX when amount falls below the minimum
+    useEffect(() => {
+      if (amount < minimumSfxAmount && sfx) {
+        formMethods.setValue('sfx', '');
+      }
+    }, [amount, sfx, formMethods, minimumSfxAmount]);
 
-  if (!searchParams.address.isValid && !searchParams.address.isFetching) {
-    return (
-      <div className={classes(baseClassName, className)}>
-        <h1 className="flex items-center justify-center gap-2 text-center text-heading4 text-red-500">
-          <Icon name="AlertCircle" size={40} /> <span>Wrong address</span>
-        </h1>
-      </div>
-    );
-  }
+    const selectedToken = useMemo(() => {
+      const token = possibleTokens?.find((token) => {
+        return token.symbol === tokenSymbol;
+      });
+      setSelectedTokenSymbol(token?.symbol ?? '');
 
-  if (sender.isSending) {
-    return (
-      <div className={classes(baseClassName, className)}>
-        <TxLoadingContent
-          heading={
-            <>
-              Sending <span className="text-mint-600">${amount}</span>{' '}
-              {amountInSelectedToken
-                ? `(${roundToSignificantFigures(
-                    Number(amountInSelectedToken),
-                    2,
-                  )} ${selectedToken?.symbol})`
-                : null}
-            </>
-          }
-          confirmationMessage="Confirm transfer in your wallet"
-        />
-      </div>
-    );
-  }
+      return token;
+    }, [possibleTokens, tokenSymbol]);
 
-  if (sender.isSuccess) {
-    const transactionUrl = getTransactionUrl({
+    const amountInSelectedToken = useMemo(() => {
+      if (!sender.tokensToSend || !selectedToken?.symbol) {
+        return;
+      }
+
+      const decimals =
+        CHAIN_ID_TO_TOKENS[chainId]?.find((token) => {
+          return token.symbol === selectedTokenSymbol;
+        })?.decimals ?? 1;
+
+      return applyDecimalsToNumericString(
+        sender.tokensToSend.toString(),
+        decimals,
+      );
+    }, [
       chainId,
-      transactionHash: sender.data?.transactionHash ?? EMPTY_HEX,
-    });
+      selectedTokenSymbol,
+      sender.tokensToSend,
+      selectedToken?.symbol,
+    ]);
 
-    return (
-      <div className={classes(baseClassName, className)}>
-        <div className="rounded-[100%] bg-mint-200 p-4">
-          <Icon
-            size={48}
-            name="CheckCircle2"
-            className="stroke-1 text-mint-600"
+    const onSubmit: SubmitHandler<FormPayload> = useCallback(
+      async (payload) => {
+        if (
+          !walletClient ||
+          !creatorInfo.address.data ||
+          !creatorInfo.address.isValid
+        ) {
+          return;
+        }
+
+        const { chainId, tokenSymbol, ...rest } = payload;
+
+        rest.message = ' ' + rest.message;
+
+        const address =
+          CHAIN_ID_TO_TOKENS[chainId]?.find((token: Token) => {
+            return token.symbol === tokenSymbol;
+          })?.address ?? EMPTY_HEX;
+
+        const sendPayload: SendPayload = {
+          ...rest,
+          chainId,
+          tokenAddress: address,
+        };
+
+        try {
+          await sender.send({
+            sendPayload,
+            recipientAddress: creatorInfo.address.data,
+          });
+        } catch (error) {
+          console.error('Unknown error sending transaction.', error);
+        }
+      },
+      [
+        sender,
+        walletClient,
+        creatorInfo.address.data,
+        creatorInfo.address.isValid,
+      ],
+    );
+
+    const sendDonation = useCallback(async () => {
+      if (!creatorInfo.address.data || !creatorInfo.address.isValid) {
+        return;
+      }
+      await fetch(`${CREATOR_API_URL}/tip-history/sync`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ address: creatorInfo.address.data }),
+      });
+    }, [creatorInfo.address.data, creatorInfo.address.isValid]);
+
+    useEffect(() => {
+      if (sender.isSuccess) {
+        void sendDonation();
+      }
+    }, [sender.isSuccess, sender.data, sendDonation]);
+
+    if (!creatorInfo.address.isValid && !creatorInfo.address.isFetching) {
+      return (
+        <div className={classes(baseClassName, className)}>
+          <h1 className="flex items-center justify-center gap-2 text-center text-heading4 text-red-500">
+            <Icon name="AlertCircle" size={40} /> <span>Wrong address</span>
+          </h1>
+        </div>
+      );
+    }
+
+    if (sender.isSending) {
+      return (
+        <div className={classes(baseClassName, className)}>
+          <TxLoadingContent
+            heading={
+              <>
+                Sending <span className="text-mint-600">${amount}</span>{' '}
+                {amountInSelectedToken
+                  ? `(${formatTokenValue(
+                      Number(amountInSelectedToken),
+                    )} ${selectedToken?.symbol})`
+                  : null}
+              </>
+            }
+            confirmationMessage="Confirm transfer in your wallet"
           />
         </div>
+      );
+    }
 
-        <p className="text-heading4 text-neutral-900">Transfer completed</p>
+    if (sender.isSuccess) {
+      const transactionUrl = getTransactionUrl({
+        chainId,
+        transactionHash: sender.data?.transactionHash ?? EMPTY_HEX,
+      });
 
-        <Link
-          isExternal
-          size="medium"
-          href={transactionUrl}
-          className="mt-2 flex items-center"
-        >
-          View on explorer
-        </Link>
+      return (
+        <div className={classes(baseClassName, className)}>
+          <div className="rounded-[100%] bg-mint-200 p-4">
+            <Icon
+              size={48}
+              name="CheckCircle2"
+              className="stroke-1 text-mint-600"
+            />
+          </div>
 
-        <Button
-          size="medium"
-          intent="negative"
-          className="mt-6 w-full"
-          onClick={() => {
-            sender.reset();
-            formMethods.reset();
-          }}
-        >
-          CLOSE
-        </Button>
+          <p className="text-heading4 text-neutral-900">Transfer completed</p>
+
+          <Link
+            isExternal
+            size="medium"
+            href={transactionUrl}
+            className="mt-2 flex items-center"
+          >
+            View on explorer
+          </Link>
+
+          <Button
+            size="medium"
+            intent="negative"
+            className="mt-6 w-full"
+            onClick={() => {
+              sender.reset();
+              formMethods.reset();
+            }}
+          >
+            CLOSE
+          </Button>
+        </div>
+      );
+    }
+    return (
+      <div ref={reference} className={classes(baseClassName, className)}>
+        <link rel="preload" as="image" href={backgroundLines3.src} />
+        <img
+          alt=""
+          src={backgroundLines3.src}
+          className="pointer-events-none absolute top-0 hidden h-full opacity-100 lg:block"
+        />
+
+        <h1 className="self-start text-heading4">
+          {creatorInfo.name
+            ? `Donate to ${creatorInfo.name}`
+            : 'Select your donation details'}
+          {imageError || !creatorInfo.profilePictureUrl ? (
+            <div className="ml-3 inline-flex size-8 items-center justify-center rounded-full border border-neutral-300 bg-neutral-200">
+              <Icon
+                size={20}
+                name="CircleUserRound"
+                className="text-neutral-500"
+              />
+            </div>
+          ) : (
+            <img
+              src={creatorInfo.profilePictureUrl}
+              key={creatorInfo.profilePictureUrl}
+              className="ml-3 inline h-8 rounded-full"
+              alt="profile-pic"
+              onError={() => {
+                return setImageError(true);
+              }}
+            />
+          )}
+
+          {creatorInfo.streamStatus && (
+            <Badge type="danger" variant="solid" className="ml-3">
+              Live on Twitch
+            </Badge>
+          )}
+        </h1>
+
+        <Form onSubmit={formMethods.handleSubmit(onSubmit)} className="w-full">
+          <Controller
+            name="tokenSymbol"
+            control={formMethods.control}
+            render={({ field }) => {
+              return (
+                <TokenSelect
+                  label="Token"
+                  value={field.value}
+                  className="mt-6 w-full"
+                  tokens={possibleTokens}
+                  onChange={field.onChange}
+                />
+              );
+            }}
+          />
+
+          <Controller
+            name="chainId"
+            control={formMethods.control}
+            render={({ field }) => {
+              return (
+                <ChainSelect
+                  label="Network"
+                  value={field.value}
+                  className="mt-4 w-full"
+                  onChange={field.onChange}
+                  allowedChainsIds={allowedChainsIds}
+                />
+              );
+            }}
+          />
+
+          <Controller
+            name="amount"
+            control={formMethods.control}
+            render={({ field }) => {
+              return (
+                <>
+                  <Form.Field
+                    numeric
+                    {...field}
+                    className="mt-6"
+                    label="Amount"
+                    value={field.value.toString()}
+                    onChange={(value) => {
+                      field.onChange(Number(value));
+                    }}
+                    prefixElement={<span>$</span>}
+                  />
+
+                  {!sender.haveEnoughBalance && (
+                    <span
+                      className={classes(
+                        'flex items-center gap-x-1 pt-1 text-label7 text-red-500 lg:text-label6',
+                      )}
+                    >
+                      <Icon name="AlertCircle" size={12} className="p-px" />
+                      Not enough {selectedTokenSymbol} in your wallet. Add funds
+                      to continue.
+                    </span>
+                  )}
+                </>
+              );
+            }}
+          />
+
+          {creatorInfo.alertEnabled && (
+            <Controller
+              name="message"
+              control={formMethods.control}
+              render={({ field, fieldState }) => {
+                return (
+                  <>
+                    <Form.Field
+                      {...field}
+                      label={
+                        <div className="flex items-center gap-2">
+                          <label>Message</label>
+                          {creatorInfo.minimumAlertAmount > 0 && (
+                            <Badge type="info" variant="subtle">
+                              Alert ${creatorInfo.minimumAlertAmount}+
+                            </Badge>
+                          )}
+                          {creatorInfo.minimumTTSAmount > 0 &&
+                            creatorInfo.ttsEnabled && (
+                              <Badge type="info" variant="subtle">
+                                TTS ${creatorInfo.minimumTTSAmount}+
+                              </Badge>
+                            )}
+                        </div>
+                      }
+                      className="mt-4"
+                      helperText={fieldState.error?.message}
+                      error={Boolean(fieldState.error?.message)}
+                    />
+                  </>
+                );
+              }}
+            />
+          )}
+
+          {creatorInfo.sfxEnabled && (
+            <Controller
+              name="sfx"
+              control={formMethods.control}
+              render={({ field, fieldState }) => {
+                return (
+                  <Form.Field
+                    {...field}
+                    label={
+                      <div className="flex items-center gap-x-1">
+                        <label htmlFor="sfx">AI sound effect</label>
+                        <TooltipProvider delayDuration={400}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Icon name="HelpCircle" size={15} />
+                            </TooltipTrigger>
+                            <TooltipContent className="bg-black text-center text-white">
+                              <p className="text-label6">
+                                Type what you want to hear. AI will turn it into{' '}
+                                <br />a sound effect and replace the default
+                                sound.
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+                    }
+                    className="mt-4"
+                    helperText={fieldState.error?.message}
+                    error={Boolean(fieldState.error?.message)}
+                    placeholder={`🔒 Unlock at $${minimumSfxAmount}`}
+                    disabled={amount < minimumSfxAmount}
+                  />
+                );
+              }}
+            />
+          )}
+
+          {isConnected ? (
+            <Button
+              size="medium"
+              type="submit"
+              intent="primary"
+              className="mt-6 w-full"
+            >
+              SEND
+            </Button>
+          ) : (
+            <Button
+              size="medium"
+              intent="primary"
+              className="mt-6 w-full"
+              onClick={openConnectModal}
+              loading={connectModalOpen}
+            >
+              LOG IN
+            </Button>
+          )}
+        </Form>
+
+        <div className="mt-[23px] flex justify-center">
+          <Link
+            size="xs"
+            isExternal
+            className="lg:text-label7"
+            href={CREATORS_USER_GUIDE_LINK}
+          >
+            1% supplies IDRISS’s treasury
+          </Link>
+        </div>
       </div>
     );
-  }
-  return (
-    <div className={classes(baseClassName, className)}>
-      <link rel="preload" as="image" href={backgroundLines3.src} />
-      <img
-        alt=""
-        src={backgroundLines3.src}
-        className="pointer-events-none absolute top-0 hidden h-full opacity-100 lg:block"
-      />
-
-      <h1 className="self-start text-heading4">
-        {searchParams.creatorName
-          ? `Donate to ${searchParams.creatorName}`
-          : 'Select your donation details'}
-      </h1>
-
-      <Form onSubmit={formMethods.handleSubmit(onSubmit)} className="w-full">
-        <Controller
-          name="tokenSymbol"
-          control={formMethods.control}
-          render={({ field }) => {
-            return (
-              <TokenSelect
-                label="Token"
-                value={field.value}
-                className="mt-6 w-full"
-                tokens={possibleTokens}
-                onChange={field.onChange}
-              />
-            );
-          }}
-        />
-
-        <Controller
-          name="chainId"
-          control={formMethods.control}
-          render={({ field }) => {
-            return (
-              <ChainSelect
-                label="Network"
-                value={field.value}
-                className="mt-4 w-full"
-                onChange={field.onChange}
-                allowedChainsIds={allowedChainsIds}
-              />
-            );
-          }}
-        />
-
-        <Controller
-          name="amount"
-          control={formMethods.control}
-          render={({ field }) => {
-            return (
-              <>
-                <Form.Field
-                  numeric
-                  {...field}
-                  className="mt-6"
-                  label="Amount ($)"
-                  value={field.value.toString()}
-                  onChange={(value) => {
-                    field.onChange(Number(value));
-                  }}
-                />
-
-                {!sender.haveEnoughBalance && (
-                  <span
-                    className={classes(
-                      'flex items-center gap-x-1 pt-1 text-label7 text-red-500 lg:text-label6',
-                    )}
-                  >
-                    <Icon name="AlertCircle" size={12} className="p-px" />
-                    Not enough {selectedTokenSymbol} in your wallet. Add funds
-                    to continue.
-                  </span>
-                )}
-              </>
-            );
-          }}
-        />
-
-        <Controller
-          name="message"
-          control={formMethods.control}
-          render={({ field, fieldState }) => {
-            return (
-              <>
-                <Form.Field
-                  {...field}
-                  label={
-                    <div className="flex items-center gap-2">
-                      <label>Message</label>
-                      <Badge type="info" variant="subtle">
-                        Alert $1+
-                      </Badge>
-                      <Badge type="info" variant="subtle">
-                        TTS $5+
-                      </Badge>
-                    </div>
-                  }
-                  className="mt-4"
-                  helperText={fieldState.error?.message}
-                  error={Boolean(fieldState.error?.message)}
-                />
-              </>
-            );
-          }}
-        />
-
-        <Controller
-          name="sfx"
-          control={formMethods.control}
-          render={({ field, fieldState }) => {
-            return (
-              <Form.Field
-                {...field}
-                label={
-                  <div className="flex items-center gap-x-1">
-                    <label htmlFor="sfx">AI sound effect</label>
-                    <TooltipProvider delayDuration={400}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Icon name="HelpCircle" size={15} />
-                        </TooltipTrigger>
-                        <TooltipContent className="bg-black text-center text-white">
-                          <p className="text-label6">
-                            Type what you want to hear. AI will turn it into{' '}
-                            <br />a sound effect and replace the default sound.
-                          </p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
-                }
-                className="mt-4"
-                helperText={fieldState.error?.message}
-                error={Boolean(fieldState.error?.message)}
-                placeholder="🔒 Unlock at $10"
-                disabled={amount < DONATION_MIN_SFX_AMOUNT}
-              />
-            );
-          }}
-        />
-
-        {isConnected ? (
-          <Button
-            size="medium"
-            type="submit"
-            intent="primary"
-            className="mt-6 w-full"
-          >
-            SEND
-          </Button>
-        ) : (
-          <Button
-            size="medium"
-            intent="primary"
-            className="mt-6 w-full"
-            onClick={openConnectModal}
-            loading={connectModalOpen}
-          >
-            LOG IN
-          </Button>
-        )}
-      </Form>
-
-      <div className="mt-[23px] flex justify-center">
-        <Link
-          size="xs"
-          isExternal
-          className="lg:text-label7"
-          href={CREATORS_USER_GUIDE_LINK}
-        >
-          1% supplies IDRISS’s treasury
-        </Link>
-      </div>
-    </div>
-  );
-};
+  },
+);
+DonateForm.displayName = 'DonateForm';

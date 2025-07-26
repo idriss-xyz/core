@@ -1,13 +1,15 @@
+import type { CSSProperties } from 'react';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
 import { Hex } from 'viem';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
+import { LeaderboardStats } from '@idriss-xyz/constants';
 
 import { default as IDRISS_SCENE_STREAM_2 } from '../../../../../assets/idriss-scene-stream-2.png';
 import { WidgetVariants } from '../../../../../../../twitch-extension/src/app/types';
-import { LeaderboardStats, DonateContentValues } from '../../types';
+import { DonateContentValues } from '../../types';
 
 import {
   LeaderboardItem,
@@ -29,6 +31,8 @@ type Properties = {
   leaderboard: LeaderboardStats[];
   onDonorClick?: (address: Hex) => void;
   updateCurrentContent?: (content: DonateContentValues) => void;
+  isScrollable?: boolean;
+  style?: CSSProperties;
 };
 
 const baseClassName =
@@ -38,11 +42,12 @@ export const Leaderboard = ({
   variant,
   address,
   className,
-  leaderboard,
+  leaderboard = [],
   onDonorClick,
   leaderboardError,
   leaderboardLoading,
   updateCurrentContent,
+  style,
 }: Properties) => {
   const isTwitchExtension = !!variant;
   const isTwitchPanel = variant === 'panel';
@@ -92,6 +97,7 @@ export const Leaderboard = ({
         isTwitchExtension && 'w-[360px]',
         className,
       )}
+      style={style}
     >
       <div
         className={classes(
@@ -111,7 +117,7 @@ export const Leaderboard = ({
         </h1>
       </div>
 
-      <div className="flex w-full flex-col">
+      <div className="flex min-h-0 w-full flex-1 flex-col">
         {leaderboardLoading || address.isFetching ? (
           <span
             className={classes(
@@ -122,7 +128,14 @@ export const Leaderboard = ({
             <Spinner className="size-16 text-mint-600" />
           </span>
         ) : (
-          <ul className={classes(isTwitchPanel && 'min-h-[345px]')}>
+          <ul
+            className={classes(
+              isTwitchPanel && 'min-h-[345px]',
+              'h-full',
+              'flex',
+              'flex-col',
+            )}
+          >
             {isTwitchPanel && (
               <>
                 {leaderboard.map((item, index) => {
@@ -265,7 +278,7 @@ type StandaloneProperties = {
 export const LeaderboardStandalone = ({
   heading,
   className,
-  leaderboard,
+  leaderboard = [],
   onDonorClick,
   leaderboardError,
   leaderboardLoading,
@@ -327,7 +340,6 @@ export const LeaderboardStandalone = ({
 
               {leaderboard.length <= MAX_DISPLAYED_ITEMS && (
                 <LeaderboardItemPlaceholder
-                  itemHeight={79}
                   amountToDisplay={MAX_DISPLAYED_ITEMS}
                   donorRank={leaderboard.length}
                   previousDonateAmount={leaderboard.at(-1)?.totalAmount ?? 1234}
