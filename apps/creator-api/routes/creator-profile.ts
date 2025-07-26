@@ -15,6 +15,8 @@ import {
   DEFAULT_DONATION_MIN_TTS_AMOUNT,
   DEFAULT_DONATION_MIN_SFX_AMOUNT,
   CREATORS_LINK,
+  CREATOR_CHAIN,
+  TOKEN,
 } from '@idriss-xyz/constants';
 import { verifyToken } from '../db/middleware/auth.middleware';
 import { streamAudioFromS3 } from '../utils/audio-utils';
@@ -121,8 +123,8 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
       ttsEnabled,
       sfxEnabled,
       customBadWords = [],
-      tokens = [],
-      networks = [],
+      tokens = Object.values(TOKEN).map((token) => token.symbol),
+      networks = Object.values(CREATOR_CHAIN).map((chain) => chain.shortName),
       ...creatorData
     } = req.body;
 
