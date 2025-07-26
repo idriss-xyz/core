@@ -358,7 +358,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
           {creatorInfo.name
             ? `Donate to ${creatorInfo.name}`
             : 'Select your donation details'}
-          {imageError ? (
+          {imageError || !creatorInfo.profilePictureUrl ? (
             <div className="ml-3 inline-flex size-8 items-center justify-center rounded-full border border-neutral-300 bg-neutral-200">
               <Icon
                 size={20}
@@ -369,6 +369,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
           ) : (
             <img
               src={creatorInfo.profilePictureUrl}
+              key={creatorInfo.profilePictureUrl}
               className="ml-3 inline h-8 rounded-full"
               alt="profile-pic"
               onError={() => {
