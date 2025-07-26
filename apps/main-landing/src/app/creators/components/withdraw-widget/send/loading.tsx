@@ -1,5 +1,6 @@
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import { classes } from '@idriss-xyz/ui/utils';
+import { getShortWalletHex } from '@idriss-xyz/utils';
 import { ReactNode } from 'react';
 
 interface Properties {
@@ -32,7 +33,7 @@ export const Loading = ({
               className="block max-w-40 truncate whitespace-nowrap"
               title={recipient}
             >
-              {recipient}
+              {getShortWalletHex(recipient)}
             </span>
           </>
         ) : null}

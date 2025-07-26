@@ -1,6 +1,11 @@
 import { Hex } from 'viem';
 
-import { DonationData, LeaderboardStats } from '../../constants/src';
+import {
+  Chain,
+  CREATOR_CHAIN,
+  DonationData,
+  LeaderboardStats,
+} from '../../constants/src';
 
 export const getFilteredDonationsByPeriod = (
   donations: DonationData[],
@@ -83,4 +88,26 @@ export function calculateDonationLeaderboard(
     return b.totalAmount - a.totalAmount;
   });
   return leaderboard;
+}
+
+const databaseNameToChainMap = new Map<string, Chain>();
+for (const chain of Object.values(CREATOR_CHAIN)) {
+  databaseNameToChainMap.set(chain.dbName, chain);
+}
+
+export function getChainByNetworkName(networkName: string): Chain | undefined {
+  return databaseNameToChainMap.get(networkName);
+}
+
+export function getChainIdByNetworkName(
+  networkName: string,
+): number | undefined {
+  return databaseNameToChainMap.get(networkName)?.id;
+}
+
+export function getChainLogoById(chainId: number): string | undefined {
+  const entry = Object.values(CREATOR_CHAIN).find((chain) => {
+    return chain.id === Number(chainId);
+  });
+  return entry?.logo;
 }

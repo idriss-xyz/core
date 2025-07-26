@@ -1,11 +1,12 @@
+import { getChainByNetworkName } from '@idriss-xyz/utils';
 import {
   ALCHEMY_NATIVE_TOKENS,
   NETWORK_TO_ALCHEMY,
-  NULL_ADDRESS,
   PriceHistoryQuery,
   ZAPPER_API_URL,
 } from '../constants';
-import { getChainByNetworkName } from './network-utils';
+
+import { NULL_ADDRESS } from '@idriss-xyz/constants';
 
 type PriceTick = { timestamp: number; median: number };
 

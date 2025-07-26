@@ -1,10 +1,10 @@
 import { createPublicClient, http, Hex, formatUnits } from 'viem';
 import { Token } from '../db/entities/token.entity';
-import { getChainByNetworkName } from './network-utils';
 import { ERC20_ABI } from '@idriss-xyz/constants';
-import { NULL_ADDRESS } from '../constants';
+import { NULL_ADDRESS } from '@idriss-xyz/constants';
 import { AppDataSource } from '../db/database';
 import { getAlchemyPrice } from './price-fetchers';
+import { getChainByNetworkName } from '@idriss-xyz/utils';
 
 export async function calculateBalances(userAddress: Hex) {
   const tokenRepository = AppDataSource.getRepository(Token);

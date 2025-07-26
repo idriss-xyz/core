@@ -23,4 +23,7 @@ export {
 export {
   calculateDonationLeaderboard,
   getFilteredDonationsByPeriod,
+  getChainByNetworkName,
+  getChainLogoById,
+  getChainIdByNetworkName,
 } from './donation-utils';

@@ -165,8 +165,6 @@ export const ALCHEMY_NATIVE_TOKENS = {
   RONIN_MAINNET: 'RON',
 } as const;
 
-export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
-
 export const monthNames = [
   'January',
   'February',

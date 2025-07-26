@@ -4,27 +4,27 @@ import { Button } from '@idriss-xyz/ui/button';
 import { Form as DesignSystemForm } from '@idriss-xyz/ui/form';
 import { classes } from '@idriss-xyz/ui/utils';
 import {
-  CHAIN_ID_TO_TOKENS,
   CREATOR_CHAIN,
   DonationToken,
   ERC20_ABI,
   Token,
-  Chain,
+  NULL_ADDRESS,
 } from '@idriss-xyz/constants';
-import { encodeFunctionData, Hex } from 'viem';
+import { encodeFunctionData, Hex, parseUnits } from 'viem';
 import { Divider } from '@idriss-xyz/ui/divider';
 import { useSendTransaction } from '@privy-io/react-auth';
 import {
   formatFiatValue,
   formatTokenValue,
-  getSafeNumber,
+  getChainById,
+  getChainIdByNetworkName,
+  getChainLogoById,
 } from '@idriss-xyz/utils';
 
 import {
   ChainSelect,
   TokenSelect,
 } from '../../donate/components/donate-form/components';
-import { useGetTokenPerDollar } from '../../donate/hooks/use-get-token-per-dollar';
 import { TokenLogo } from '../../app/earnings/stats-and-history/token-logo';
 import { TokenBalance } from '../../app/earnings/commands/get-balances';
 
@@ -44,35 +44,11 @@ type WithdrawWidgetProperties = {
   onClose: () => void;
 };
 
-// TODO: Extract
-function getChainNameById(chainId: number): string | undefined {
-  const entry = Object.values(CREATOR_CHAIN).find((chain) => {
-    return chain.id === Number(chainId);
-  });
-  return entry?.name;
-}
-
-function getChainLogoById(chainId: number): string | undefined {
-  const entry = Object.values(CREATOR_CHAIN).find((chain) => {
-    return chain.id === Number(chainId);
-  });
-  return entry?.logo;
-}
-
-const databaseNameToChainMap = new Map<string, Chain>();
-for (const chain of Object.values(CREATOR_CHAIN)) {
-  databaseNameToChainMap.set(chain.dbName, chain);
-}
-
-function getChainByNetworkName(networkName: string): number | undefined {
-  return databaseNameToChainMap.get(networkName)?.id;
-}
-
 function getNetworkKeyByChainId(chainId: number): string | undefined {
   const entry = Object.entries(CREATOR_CHAIN).find(([, value]) => {
     return value.id === chainId;
   });
-  return entry?.[0];
+  return entry?.[1].dbName;
 }
 
 export const WithdrawWidget = ({
@@ -87,12 +63,12 @@ export const WithdrawWidget = ({
   const [isSuccess, setIsSuccess] = useState(false);
   const [amountInTokens, setAmountInTokens] = useState<bigint>();
   const [transactionHash, setTransactionHash] = useState<string>();
-  const getTokenPerDollarMutation = useGetTokenPerDollar();
 
   const formMethods = useForm<WithdrawFormValues>({
     defaultValues: {
       amount: 0,
       tokenSymbol: selectedToken,
+      withdrawalAddress: '',
     },
   });
 
@@ -100,6 +76,10 @@ export const WithdrawWidget = ({
     onClose();
     setStep(1);
     formMethods.reset();
+    setIsLoading(false);
+    setIsSuccess(false);
+    setAmountInTokens(undefined);
+    setTransactionHash(undefined);
   }, [onClose, formMethods]);
 
   useEffect(() => {
@@ -119,6 +99,14 @@ export const WithdrawWidget = ({
   const chainId = formMethods.watch('chainId');
   const tokenSymbol = formMethods.watch('tokenSymbol');
   const withdrawalAddress = formMethods.watch('withdrawalAddress');
+
+  const selectedBalance = useMemo(() => {
+    if (!chainId || !tokenSymbol) return;
+    const networkKey = getNetworkKeyByChainId(chainId);
+    return balances.find((b) => {
+      return b.symbol === tokenSymbol && b.network === networkKey;
+    });
+  }, [balances, chainId, tokenSymbol]);
 
   const uniqueOwnedTokens = useMemo(() => {
     if (!balances) return [];
@@ -147,7 +135,7 @@ export const WithdrawWidget = ({
         return b.symbol === tokenSymbol;
       })
       .map((b) => {
-        return getChainByNetworkName(b.network);
+        return getChainIdByNetworkName(b.network);
       })
       .filter((id): id is number => {
         return id !== undefined;
@@ -184,6 +172,7 @@ export const WithdrawWidget = ({
     const balance = balances.find((b) => {
       return b.symbol === tokenSymbol && b.network === networkKey;
     });
+    console.log('Found balance', balance, 'for network', networkKey);
     return balance?.address;
   }, [balances, chainId, tokenSymbol]);
 
@@ -209,52 +198,75 @@ export const WithdrawWidget = ({
         console.error('Missing required fields');
         return;
       }
+      if (                                                                                                                                                        
+        values.withdrawalAddress.toLowerCase() === NULL_ADDRESS.toLowerCase()                                                                                     
+      ) {                                                                                                                                                         
+        console.error('Cannot withdraw to the null address.');                                                                                                    
+        return;                                                                                                                                                   
+      }  
       setIsLoading(true);
 
-      const usdcToken = CHAIN_ID_TO_TOKENS[values.chainId]?.find((token) => {
-        return token.symbol === 'USDC';
+      const networkKey = getNetworkKeyByChainId(values.chainId);
+      const balance = balances.find((b) => {
+        return b.symbol === values.tokenSymbol && b.network === networkKey;
       });
 
-      const tokenPerDollar = await getTokenPerDollarMutation.mutateAsync({
-        chainId: values.chainId,
-        buyToken: tokenAddress ?? '',
-        sellToken: usdcToken?.address ?? '',
-        amount: 10 ** (usdcToken?.decimals ?? 0),
-      });
-      const tokenPerDollarNormalised = Number(tokenPerDollar.price);
-      const tokenToSend = CHAIN_ID_TO_TOKENS[chainId]?.find((token) => {
-        return token.address === tokenAddress;
-      });
-      const { decimals, value } = getSafeNumber(
-        tokenPerDollarNormalised * amount,
+      if (!balance || balance.usdValue <= 0) {
+        console.error('Could not find balance or invalid USD value');
+        setIsLoading(false);
+        return;
+      }
+
+      const totalTokenBalance = parseUnits(balance.balance, balance.decimals);
+      const totalUsdValue = balance.usdValue;
+      const requestedUsdAmount = values.amount;
+
+      // Use 18 decimals for high-precision floating point math, a common
+      // standard in crypto, to prevent rounding errors.
+      const precision = 1e18;
+      const scaledRequestedAmount = BigInt(
+        Math.round(requestedUsdAmount * precision),
       );
-      const valueAsBigNumber = BigInt(value.toString());
-      const tokensToSend =
-        (valueAsBigNumber * BigInt(10) ** BigInt(tokenToSend?.decimals ?? 0)) /
-        BigInt(10) ** BigInt(decimals);
+      const scaledTotalUsdValue = parseUnits(totalUsdValue.toString(), 18);
 
+      if (scaledTotalUsdValue === 0n) {
+        console.error(
+          'Total USD value is zero, cannot calculate tokens to send.',
+        );
+        setIsLoading(false);
+        return;
+      }
+
+      const tokensToSend =
+        (totalTokenBalance * scaledRequestedAmount) / scaledTotalUsdValue;
+      console.log(tokensToSend);
       setAmountInTokens(tokensToSend);
 
-      const txData = encodeFunctionData({
-        abi: ERC20_ABI,
-        functionName: 'transfer',
-        args: [values.withdrawalAddress as Hex, tokensToSend],
-      });
+      const isNative = tokenAddress === NULL_ADDRESS;
+      const txRequest = isNative
+        ? {
+            to: values.withdrawalAddress as Hex,
+            value: tokensToSend.toString(),
+            data: undefined,
+            chainId: values.chainId,
+          }
+        : {
+            to: tokenAddress,
+            value: '0',
+            data: encodeFunctionData({
+              abi: ERC20_ABI,
+              functionName: 'transfer',
+              args: [values.withdrawalAddress as Hex, tokensToSend],
+            }),
+            chainId: values.chainId,
+          };
 
       try {
-        const tx = await sendTransaction(
-          {
-            to: tokenAddress,
-            chainId: chainId,
-            data: txData,
-            value: '0',
+        const tx = await sendTransaction(txRequest, {
+          uiOptions: {
+            showWalletUIs: false,
           },
-          {
-            uiOptions: {
-              showWalletUIs: false,
-            },
-          },
-        );
+        });
 
         setTransactionHash(tx.hash);
 
@@ -266,7 +278,7 @@ export const WithdrawWidget = ({
         setIsSuccess(false);
       }
     },
-    [amount, chainId, getTokenPerDollarMutation, tokenAddress, sendTransaction],
+    [balances, tokenAddress, sendTransaction],
   );
 
   const onNextStep = useCallback(() => {
@@ -291,13 +303,15 @@ export const WithdrawWidget = ({
                 <>
                   Sending{' '}
                   <span className="text-mint-600">
-                    ${formatFiatValue(amount)}
+                    {formatFiatValue(amount)}
                   </span>{' '}
                   (
-                  {amountInTokens
-                    ? formatTokenValue(Number(amountInTokens) / 10 ** 18)
+                  {amountInTokens && selectedBalance
+                    ? formatTokenValue(
+                        Number(amountInTokens) / 10 ** selectedBalance.decimals,
+                      )
                     : '0'}{' '}
-                  {tokenSymbol} )
+                  {tokenSymbol})
                 </>
               }
               recipient={withdrawalAddress}
@@ -312,11 +326,7 @@ export const WithdrawWidget = ({
             <IdrissSend.Success
               heading="Withdrawal completed"
               className="p-5"
-              onConfirm={() => {
-                formMethods.reset();
-                onClose();
-                setStep(1);
-              }}
+              onConfirm={handleClose}
               chainId={chainId}
               transactionHash={transactionHash as Hex}
             />
@@ -450,7 +460,7 @@ export const WithdrawWidget = ({
                           alt=""
                         />{' '}
                         <span className="text-body4">
-                          {getChainNameById(chainId)}
+                          {getChainById(chainId)?.name}
                         </span>
                       </div>
                     </div>

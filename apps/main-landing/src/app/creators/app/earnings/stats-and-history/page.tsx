@@ -256,7 +256,7 @@ export default function EarningsStats() {
                         {mainAsset.donationCount} donations
                       </span>
                       <span className="flex items-center text-label1 text-black">
-                        ${formatFiatValue(mainAsset.totalAmount)}{' '}
+                        {formatFiatValue(mainAsset.totalAmount)}{' '}
                         <span className="ml-2 text-body4 text-gray-300">
                           {mainAsset.tokenData.symbol}
                         </span>
