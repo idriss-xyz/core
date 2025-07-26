@@ -2,9 +2,9 @@
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Card } from '@idriss-xyz/ui/card';
+import { Icon } from '@idriss-xyz/ui/icon';
 
 import { useAuth } from '../context/auth-context';
-import { Icon } from '@idriss-xyz/ui/icon';
 
 // ts-unused-exports:disable-next-line
 export default function Home() {
