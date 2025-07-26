@@ -82,6 +82,12 @@ export const WithdrawWidget = ({
     },
   });
 
+  const handleClose = useCallback(() => {
+    onClose();
+    setStep(1);
+    formMethods.reset();
+  }, [onClose, formMethods]);
+
   useEffect(() => {
     if (selectedToken) {
       formMethods.setValue('tokenSymbol', selectedToken);
@@ -192,7 +198,7 @@ export const WithdrawWidget = ({
   return (
     <IdrissSend.Container
       isOpened={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       header={
         !isLoading &&
         !isSuccess && <IdrissSend.Heading>Withdraw</IdrissSend.Heading>
