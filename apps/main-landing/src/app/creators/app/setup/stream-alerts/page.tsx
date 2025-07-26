@@ -294,7 +294,6 @@ export default function StreamAlerts() {
                         className="max-w-[360px]"
                         numeric
                         label="Minimum amount"
-                        placeholder="$1"
                         helperText={
                           fieldState.error?.message ??
                           'Donation amount that triggers an alert'
@@ -411,7 +410,6 @@ export default function StreamAlerts() {
                         className="max-w-[360px]"
                         numeric
                         label="Minimum amount"
-                        placeholder="$3"
                         helperText={
                           fieldState.error?.message ??
                           'Donation amount that triggers text-to-speech'
@@ -494,7 +492,6 @@ export default function StreamAlerts() {
                       className="max-w-[360px]"
                       numeric
                       label="Minimum amount"
-                      placeholder="$5"
                       helperText={
                         fieldState.error?.message ??
                         'Donation amount that triggers an AI sound effect'

@@ -56,7 +56,7 @@ export default function ProfilePage() {
 
   const profileImageUrl = creator?.profilePictureUrl;
   const profileImageSize = 80;
-  const bannerHeight = 150 - profileImageSize / 2;
+  const bannerHeight = 150;
 
   return (
     <>
@@ -77,7 +77,7 @@ export default function ProfilePage() {
               <img
                 alt="idriss stream"
                 src={IDRISS_SCENE_STREAM_4.src}
-                className="absolute top-[-103px] z-0 w-full"
+                className="absolute top-[-225px] z-0 w-full"
               />
             </div>
             <div className="rounded-b-2xl bg-white px-4 pt-12 text-center">
@@ -149,7 +149,7 @@ export default function ProfilePage() {
             <div className="flex flex-col gap-6">
               <div className="flex flex-col gap-2">
                 <span className="pb-1 text-label4">Wallet address</span>
-                <p className="max-w-prose text-body5 text-neutral-600">
+                <p className="max-w-[76ch] text-body5 text-neutral-600">
                   This is your public wallet address. It was automatically
                   created for your account and linked to your donation page. We
                   show it only for reference and you do not need it to use the
@@ -167,7 +167,7 @@ export default function ProfilePage() {
               <div className="flex flex-col gap-2">
                 <span className="pb-1 text-label4">Secret recovery phrase</span>
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-10">
-                  <p className="max-w-prose text-body5 text-neutral-600">
+                  <p className="max-w-[66ch] text-body5 text-neutral-600">
                     This phrase gives full access to your wallet and funds.
                     Never share it with anyone and store it only in a secure
                     offline environment.{' '}

@@ -78,17 +78,19 @@ export default function EarningsBalance() {
               </h2>
             </div>
             <div className="flex gap-2">
-              <Button
-                intent="primary"
-                size="small"
-                className="uppercase"
-                prefixIconName="ArrowDownFromLine"
-                onClick={() => {
-                  return setIsWithdrawModalOpen(true);
-                }}
-              >
-                Withdraw
-              </Button>
+              {hasBalance && (
+                <Button
+                  intent="primary"
+                  size="small"
+                  className="uppercase"
+                  prefixIconName="ArrowDownFromLine"
+                  onClick={() => {
+                    return setIsWithdrawModalOpen(true);
+                  }}
+                >
+                  Withdraw
+                </Button>
+              )}
             </div>
           </div>
         </div>
