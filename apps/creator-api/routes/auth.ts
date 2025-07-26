@@ -13,7 +13,6 @@ const API_CALLBACK_URI = `${CREATOR_API_URL}/auth/twitch/callback`;
 // This is the callback URL on our frontend that the backend will redirect to
 const FRONTEND_CALLBACK_URL = `${process.env.BASE_URL}/creators`;
 
-// Step 1: Redirect user to Twitch for authorization
 router.get('/twitch', (req, res) => {
   const { token } = req.query;
 
@@ -38,7 +37,6 @@ router.get('/twitch', (req, res) => {
   res.redirect(authUrl);
 });
 
-// Step 2: Twitch redirects back to this backend endpoint with a code
 router.get('/twitch/callback', async (req: Request, res: Response) => {
   const { code } = req.query;
 
@@ -48,7 +46,6 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
   }
 
   try {
-    // Step 3: Exchange the code for a Twitch access token
     const tokenResponse = await axios.post(
       'https://id.twitch.tv/oauth2/token',
       new URLSearchParams({
@@ -62,7 +59,6 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
 
     const { access_token } = tokenResponse.data;
 
-    // Step 4: Use the access token to get the Twitch user's profile
     const userResponse = await axios.get('https://api.twitch.tv/helix/users', {
       headers: {
         'Authorization': `Bearer ${access_token}`,
@@ -75,8 +71,6 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
       throw new Error('Failed to fetch user profile from Twitch.');
     }
 
-    // Step 5: Mint our own custom JWT. This is a short-lived "ticket" for Privy.
-    // The 'sub' (subject) claim MUST be the user's unique ID from the auth provider.
     const payload = {
       sub: twitchUser.id, // Twitch's unique user ID
       aud: process.env.PRIVY_APP_ID!,
@@ -88,8 +82,6 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
       expiresIn: '30d',
     });
 
-    // Step 6: Redirect the user back to the frontend with our custom token AND the user info
-    // We pass user info in the query string so the frontend can use it for new user onboarding.
     const frontendRedirectParams = new URLSearchParams({
       token: customToken,
       name: twitchUser.login,
@@ -117,11 +109,10 @@ router.post('/early-access', (req: Request, res: Response) => {
     return;
   }
 
-  // If password is correct, issue a short-lived JWT
   const token = jwt.sign(
     { authorized: true },
     process.env.EARLY_ACCESS_JWT_SECRET!,
-    { expiresIn: '15m' }, // Token is valid for 15 minutes
+    { expiresIn: '15m' },
   );
 
   res.status(200).json({ token });
