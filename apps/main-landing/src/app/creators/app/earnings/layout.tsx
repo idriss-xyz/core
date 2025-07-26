@@ -14,11 +14,9 @@ export default function EarningsLayout({
   const earningsTabs: TabItem[] = [
     {
       name: 'Stats & history',
-      href: '/creators/app/earnings/stats',
+      href: '/creators/app/earnings/stats-and-history',
       iconName: 'LineChart',
-      isActive:
-        pathname === '/creators/app/earnings/stats' ||
-        pathname === '/creators/app/earnings',
+      isActive: pathname === '/creators/app/earnings/stats-and-history',
     },
     {
       name: 'Balance',

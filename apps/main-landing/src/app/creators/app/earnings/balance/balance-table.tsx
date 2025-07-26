@@ -4,7 +4,7 @@ import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { ColumnDefinition, Table } from '@idriss-xyz/ui/table';
 import { formatFiatValue, formatTokenValue } from '@idriss-xyz/utils';
 
-import { TokenLogo } from '../stats/token-logo';
+import { TokenLogo } from '../stats-and-history/token-logo';
 
 export function BalanceTable({
   data,

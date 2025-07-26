@@ -9,8 +9,8 @@ import { usePrivy } from '@privy-io/react-auth';
 import { Hex } from 'viem';
 
 import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history';
-import { Leaderboard } from '@/app/creators/donate/components/leaderboard';
 import { IDRISS_SCENE_STREAM_LIGHT } from '@/assets';
+import { Leaderboard } from '@/app/creators/components/leaderboard';
 
 import { periodMap } from '../../ranking/commands/use-get-leaderboard';
 

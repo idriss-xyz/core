@@ -1,6 +1,6 @@
-import TopCreators from './top-creators/page';
+import { redirect } from 'next/navigation';
 
 // ts-unused-exports:disable-next-line
 export default function Ranking() {
-  return <TopCreators />;
+  redirect('/creators/app/ranking/top-creators');
 }

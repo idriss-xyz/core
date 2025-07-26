@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { usePrivy } from '@privy-io/react-auth';
 import { Hex } from 'viem';
@@ -11,32 +11,30 @@ export function OAuthCallbackHandler() {
   const router = useRouter();
   const { user, ready, authenticated, getAccessToken } = usePrivy();
   const { setCreator, creator, setCreatorLoading } = useAuth();
-  const [authChecked, setAuthChecked] = useState(false);
 
   useEffect(() => {
-    // This effect will now correctly wait for the authenticated state to be true.
-    // It will re-run when `authenticated` changes from false to true.
     if (!ready) {
-      // Still waiting for Privy to initialize.
       return;
     }
 
-    if (!authenticated) {
-      // User is not logged in yet, do nothing.
-      setCreator(null);
-      // todo: check bug when not authed
-      // setCreatorLoading(false);
+    const isTwitchLoginFlow = !!sessionStorage.getItem('twitch_new_user_info');
+
+    if (!isTwitchLoginFlow) {
       return;
     }
 
-    if (authChecked || creator) {
-      // We have already processed the login or have a creator object.
+    if (creator) {
+      setCreatorLoading(false);
       return;
     }
 
     const handleAuth = async () => {
-      setAuthChecked(true);
       setCreatorLoading(true);
+
+      const twitchInfoRaw = sessionStorage.getItem('twitch_new_user_info');
+      if (twitchInfoRaw) {
+        sessionStorage.removeItem('twitch_new_user_info');
+      }
 
       try {
         if (!user) {
@@ -55,6 +53,11 @@ export function OAuthCallbackHandler() {
 
         if (existingCreator) {
           setCreator(existingCreator);
+          if (existingCreator.doneSetup) {
+            router.replace('/creators/app/earnings/stats-and-history');
+          } else {
+            router.replace('/creators/app/setup/payment-methods');
+          }
         } else {
           // NEW USER ONBOARDING LOGIC
           const authToken = await getAccessToken();
@@ -70,14 +73,12 @@ export function OAuthCallbackHandler() {
           let newCreatorEmail: string | null = null;
 
           // Check if we have Twitch info from the custom login flow
-          const twitchInfoRaw = sessionStorage.getItem('twitch_new_user_info');
           if (twitchInfoRaw) {
             const twitchInfo = JSON.parse(twitchInfoRaw);
             newCreatorName = twitchInfo.name;
             newCreatorDisplayName = twitchInfo.displayName;
             newCreatorProfilePic = twitchInfo.pfp;
             newCreatorEmail = twitchInfo.email;
-            sessionStorage.removeItem('twitch_new_user_info'); // Clean up
           } else {
             // User logged in with email or wallet, generate a random name
             // newCreatorName = `user-${user.id.slice(-8)}`;
@@ -101,6 +102,7 @@ export function OAuthCallbackHandler() {
           }
 
           setCreator(newCreator);
+          router.replace('/creators/app/setup/payment-methods');
         }
       } catch (error) {
         console.error('Error handling auth callback:', error);
@@ -109,14 +111,18 @@ export function OAuthCallbackHandler() {
       }
     };
 
-    void handleAuth();
+    if (authenticated) {
+      void handleAuth();
+    } else {
+      setCreator(null);
+      setCreatorLoading(false);
+    }
   }, [
     ready,
     authenticated,
     user,
     router,
     setCreator,
-    authChecked,
     creator,
     getAccessToken,
     setCreatorLoading,

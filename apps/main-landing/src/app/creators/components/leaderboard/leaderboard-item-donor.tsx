@@ -3,8 +3,8 @@ import { Link } from '@idriss-xyz/ui/link';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { LeaderboardStats } from '@idriss-xyz/constants';
 
-import { useGetAvatarImage } from '../../commands/get-avatar-image';
-import { WHITELISTED_URLS } from '../../constants';
+import { WHITELISTED_URLS } from '../../donate/constants';
+import { useGetAvatarImage } from '../../donate/commands/get-avatar-image';
 
 const rankBorders = [
   'border-[#FAC928]',

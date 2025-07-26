@@ -18,7 +18,6 @@ export default function Home() {
       }
     }
   }, [creator, router]);
-
   return (
     <div
       role="status"

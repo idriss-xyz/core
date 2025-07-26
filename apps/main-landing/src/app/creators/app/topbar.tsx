@@ -72,7 +72,7 @@ export function TopBar() {
           <NavigationMenu.Item className="relative flex gap-1">
             <NavigationMenu.Trigger asChild>
               <div className="flex max-h-[70px] min-h-[32px] w-max cursor-pointer items-center gap-2.5">
-                <div className="size-[32px] max-h-[48px] min-h-[32px] min-w-[32px] max-w-[48px] rounded-[999px] border border-[#AAAFB9]">
+                <div className="size-[32px] max-h-[48px] min-h-[32px] min-w-[32px] max-w-[48px] rounded-[999px] border border-neutral-300">
                   {creator?.profilePictureUrl ? (
                     <Image
                       src={creator.profilePictureUrl}
@@ -82,10 +82,10 @@ export function TopBar() {
                       className="rounded-full"
                     />
                   ) : (
-                    <div className="flex size-full items-center justify-center rounded-full bg-gray-200">
+                    <div className="flex size-full items-center justify-center rounded-full bg-white">
                       <Icon
                         name="UserRound"
-                        className="text-neutral-400"
+                        className="text-gray-300"
                         size={20}
                       />
                     </div>

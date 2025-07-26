@@ -8,32 +8,29 @@ import { ProsSection } from './components/pros-section';
 import { SetUp } from './components/set-up';
 import { TopCreators } from './components/top-creators';
 import { Footer } from './components/footer';
-import { Providers } from './providers';
 
 // ts-unused-exports:disable-next-line
 export default function Content() {
   const heroButtonReference = useRef<HTMLButtonElement>(null);
 
   return (
-    <Providers>
-      <div className="relative">
-        <TopBar
-          isLanding
-          displayCTA
-          hideNavigation
-          heroButtonReference={heroButtonReference}
-        />
+    <div className="relative">
+      <TopBar
+        isLanding
+        displayCTA
+        hideNavigation
+        heroButtonReference={heroButtonReference}
+      />
 
-        <main>
-          <HeroSection heroButtonReference={heroButtonReference} />
-          <PlatformsSection />
-          <ProsSection />
-          <SetUp />
-          <TopCreators />
-        </main>
+      <main>
+        <HeroSection heroButtonReference={heroButtonReference} />
+        <PlatformsSection />
+        <ProsSection />
+        <SetUp />
+        <TopCreators />
+      </main>
 
-        <Footer />
-      </div>
-    </Providers>
+      <Footer />
+    </div>
   );
 }

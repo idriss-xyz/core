@@ -15,7 +15,11 @@ export const useStartEarningNavigation = () => {
   const handleStartEarningClick = useCallback(async () => {
     // If user is logged in, redirect to app
     if (user && creator) {
-      router.push('/creators/app');
+      if (creator.doneSetup) {
+        router.push('/creators/app/earnings/stats-and-history');
+      } else {
+        router.push('/creators/app/setup/payment-methods');
+      }
     } else if (user) {
       const walletAddress = user.wallet?.address as Hex | undefined;
       const fetchedCreator = await getCreatorProfile(undefined, walletAddress);
@@ -27,7 +31,7 @@ export const useStartEarningNavigation = () => {
         return;
       }
       setCreator(fetchedCreator);
-      router.push('/creators/app');
+      router.push('/creators/app/setup/payment-methods');
     } else {
       setIsModalOpen(true);
     }
