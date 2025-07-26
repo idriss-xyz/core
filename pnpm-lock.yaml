@@ -23,9 +23,6 @@ importers:
 
   apps/copilot-api:
     dependencies:
-      '@idriss-xyz/constants':
-        specifier: workspace:*
-        version: link:../../packages/constants
       '@lifi/sdk':
         specifier: ^3.4.2
         version: 3.4.4(@solana/wallet-adapter-base@0.9.23(@solana/web3.js@1.98.0(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10)))(@solana/web3.js@1.98.0(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10))(bufferutil@4.0.8)(typescript@5.6.3)(utf-8-validate@5.0.10)(viem@2.31.7(bufferutil@4.0.8)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.25.76))(zod@3.25.76)
