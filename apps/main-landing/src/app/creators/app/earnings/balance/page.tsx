@@ -129,7 +129,7 @@ export default function EarningsBalance() {
       )}
       <WithdrawWidget
         isOpen={isWithdrawModalOpen}
-        balances={tableData}
+        balances={apiBalances}
         selectedToken={selectedToken}
         onClose={() => {
           return setIsWithdrawModalOpen(false);

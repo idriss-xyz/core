@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Hex } from 'viem';
 import { CREATOR_API_URL } from '@idriss-xyz/constants';
 
-interface TokenBalance {
+export interface TokenBalance {
   address: Hex;
   symbol: string;
   name: string;

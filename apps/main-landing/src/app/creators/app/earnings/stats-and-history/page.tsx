@@ -16,7 +16,7 @@ import { Bar, BarChart, XAxis } from 'recharts';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { Button } from '@idriss-xyz/ui/button';
 import { useMemo } from 'react';
-import { formatFiatValue, formatTokenValue } from '@idriss-xyz/utils';
+import { formatFiatValue } from '@idriss-xyz/utils';
 import { usePrivy } from '@privy-io/react-auth';
 import { Hex } from 'viem';
 
@@ -256,7 +256,7 @@ export default function EarningsStats() {
                         {mainAsset.donationCount} donations
                       </span>
                       <span className="flex items-center text-label1 text-black">
-                        ${formatTokenValue(mainAsset.totalAmount)}{' '}
+                        ${formatFiatValue(mainAsset.totalAmount)}{' '}
                         <span className="ml-2 text-body4 text-gray-300">
                           {mainAsset.tokenData.symbol}
                         </span>
