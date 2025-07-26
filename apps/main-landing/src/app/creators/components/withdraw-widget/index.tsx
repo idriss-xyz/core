@@ -18,8 +18,8 @@ import {
   ChainSelect,
   TokenSelect,
 } from '../../donate/components/donate-form/components';
-import { TokenLogo } from '../../app/earnings/stats/token-logo';
 import { useGetTokenPerDollar } from '../../donate/hooks/use-get-token-per-dollar';
+import { TokenLogo } from '../../app/earnings/stats-and-history/token-logo';
 
 import { IdrissSend } from './send';
 
