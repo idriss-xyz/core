@@ -19,6 +19,8 @@ import {
 } from '@/app/creators/components/layout';
 import { ConfirmationModal } from '@/app/creators/components/confirmation-modal';
 
+import useRedirectIfNotAuthenticated from '../../hooks/use-redirect-not-authenticated';
+
 const handleDeleteAccount = () => {
   // TODO: Implement backend call to save email
   console.log('Deleteing Account');
@@ -26,6 +28,7 @@ const handleDeleteAccount = () => {
 
 // ts-unused-exports:disable-next-line
 export default function ProfilePage() {
+  useRedirectIfNotAuthenticated();
   const [isExportWalletModalOpen, setIsExportWalletModalOpen] = useState(false);
   const [isDeleteAccountModalOpen, setIsDeleteAccountModalOpen] =
     useState(false);

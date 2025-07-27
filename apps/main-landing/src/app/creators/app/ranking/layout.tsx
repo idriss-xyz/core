@@ -3,6 +3,8 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { TabsPill, TabItem } from '@idriss-xyz/ui/tabs-pill';
 
+import useRedirectIfNotAuthenticated from '../../hooks/use-redirect-not-authenticated';
+
 // ts-unused-exports:disable-next-line
 export default function RankingLayout({
   children,
@@ -10,6 +12,7 @@ export default function RankingLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  useRedirectIfNotAuthenticated();
 
   const rankingTabs: TabItem[] = [
     {
