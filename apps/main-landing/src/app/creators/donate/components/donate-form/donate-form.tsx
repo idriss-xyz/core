@@ -51,13 +51,14 @@ import { ChainSelect, TokenSelect } from './components';
 type Properties = {
   className?: string;
   creatorInfo: CreatorProfile;
+  isLegacyLink: boolean;
 };
 
 const baseClassName =
   'z-1 w-[440px] max-w-full rounded-xl bg-white px-4 pb-9 pt-6 flex flex-col items-center relative';
 
 export const DonateForm = forwardRef<HTMLDivElement, Properties>(
-  ({ className, creatorInfo }, reference) => {
+  ({ className, creatorInfo, isLegacyLink }, reference) => {
     const { isConnected } = useAccount();
     const { data: walletClient } = useWalletClient();
     const { connectModalOpen, openConnectModal } = useConnectModal();
@@ -452,7 +453,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
             }}
           />
 
-          {creatorInfo.alertEnabled && (
+          {(isLegacyLink || creatorInfo.alertEnabled) && (
             <Controller
               name="message"
               control={formMethods.control}
@@ -487,7 +488,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
             />
           )}
 
-          {creatorInfo.sfxEnabled && (
+          {(isLegacyLink || creatorInfo.sfxEnabled) && (
             <Controller
               name="sfx"
               control={formMethods.control}

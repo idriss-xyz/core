@@ -50,6 +50,7 @@ export function DonateContent({ creatorName }: Properties) {
   const [creatorInfo, setCreatorInfo] = useState<CreatorProfile | null>(null);
   const formReference = useRef<HTMLDivElement>(null);
   const [formHeight, setFormHeight] = useState(0);
+  const [isLegacyLink, setIsLegacyLink] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -57,6 +58,7 @@ export function DonateContent({ creatorName }: Properties) {
         const profile = await getCreatorProfile(creatorName);
 
         if (!profile) {
+          creatorInfoSetReference.current = true;
           return;
         }
 
@@ -101,6 +103,7 @@ export function DonateContent({ creatorName }: Properties) {
         minimumTTSAmount: DEFAULT_DONATION_MIN_TTS_AMOUNT,
         minimumSfxAmount: DEFAULT_DONATION_MIN_SFX_AMOUNT,
       });
+      setIsLegacyLink(true);
       creatorInfoSetReference.current = true;
     }
   }, [searchParams, creatorName]);
@@ -225,12 +228,13 @@ export function DonateContent({ creatorName }: Properties) {
       case 'user-tip': {
         return (
           <div className="grid grid-cols-1 items-start gap-x-10 lg:grid-cols-[1fr,auto]">
-            {creatorInfo && (
+            {creatorInfo ? (
               <>
                 <DonateForm
                   ref={formReference}
                   className="container mt-8 overflow-hidden lg:mt-[90px] lg:[@media(max-height:800px)]:mt-[40px]"
                   creatorInfo={creatorInfo}
+                  isLegacyLink={isLegacyLink}
                 />
 
                 <Leaderboard
@@ -247,6 +251,26 @@ export function DonateContent({ creatorName }: Properties) {
                   }}
                 />
               </>
+            ) : (
+              creatorInfoSetReference.current && (
+                <div className="flex h-[80vh] flex-col items-center justify-center gap-3">
+                  <h1 className="text-display2 uppercase text-neutral-900">
+                    Creator not found
+                  </h1>
+                  <span className="text-body2">
+                    A creator with name &quot;{creatorName}&quot; was not found.
+                    Check your spelling and try again.
+                  </span>
+                  <Button
+                    intent="primary"
+                    size="medium"
+                    asLink
+                    href="/creators"
+                  >
+                    Go to homepage
+                  </Button>
+                </div>
+              )
             )}
           </div>
         );
@@ -281,6 +305,8 @@ export function DonateContent({ creatorName }: Properties) {
     formHeight,
     donationsHistory.isError,
     donationsHistory.isLoading,
+    isLegacyLink,
+    creatorName,
   ]);
 
   return (
