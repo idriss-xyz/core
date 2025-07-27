@@ -50,6 +50,7 @@ export function DonateContent({ creatorName }: Properties) {
   const [creatorInfo, setCreatorInfo] = useState<CreatorProfile | null>(null);
   const formReference = useRef<HTMLDivElement>(null);
   const [formHeight, setFormHeight] = useState(0);
+  const [isLegacyLink, setIsLegacyLink] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -101,6 +102,7 @@ export function DonateContent({ creatorName }: Properties) {
         minimumTTSAmount: DEFAULT_DONATION_MIN_TTS_AMOUNT,
         minimumSfxAmount: DEFAULT_DONATION_MIN_SFX_AMOUNT,
       });
+      setIsLegacyLink(true);
       creatorInfoSetReference.current = true;
     }
   }, [searchParams, creatorName]);
@@ -231,6 +233,7 @@ export function DonateContent({ creatorName }: Properties) {
                   ref={formReference}
                   className="container mt-8 overflow-hidden lg:mt-[90px] lg:[@media(max-height:800px)]:mt-[40px]"
                   creatorInfo={creatorInfo}
+                  isLegacyLink={isLegacyLink}
                 />
 
                 <Leaderboard
@@ -281,6 +284,7 @@ export function DonateContent({ creatorName }: Properties) {
     formHeight,
     donationsHistory.isError,
     donationsHistory.isLoading,
+    isLegacyLink,
   ]);
 
   return (

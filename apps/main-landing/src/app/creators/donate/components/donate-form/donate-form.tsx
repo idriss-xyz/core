@@ -51,13 +51,14 @@ import { ChainSelect, TokenSelect } from './components';
 type Properties = {
   className?: string;
   creatorInfo: CreatorProfile;
+  isLegacyLink: boolean;
 };
 
 const baseClassName =
   'z-1 w-[440px] max-w-full rounded-xl bg-white px-4 pb-9 pt-6 flex flex-col items-center relative';
 
 export const DonateForm = forwardRef<HTMLDivElement, Properties>(
-  ({ className, creatorInfo }, reference) => {
+  ({ className, creatorInfo, isLegacyLink }, reference) => {
     const { isConnected } = useAccount();
     const { data: walletClient } = useWalletClient();
     const { connectModalOpen, openConnectModal } = useConnectModal();
@@ -452,78 +453,80 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
             }}
           />
 
-          {creatorInfo.alertEnabled && (
-            <Controller
-              name="message"
-              control={formMethods.control}
-              render={({ field, fieldState }) => {
-                return (
-                  <>
+          {isLegacyLink ||
+            (creatorInfo.alertEnabled && (
+              <Controller
+                name="message"
+                control={formMethods.control}
+                render={({ field, fieldState }) => {
+                  return (
+                    <>
+                      <Form.Field
+                        {...field}
+                        label={
+                          <div className="flex items-center gap-2">
+                            <label>Message</label>
+                            {creatorInfo.minimumAlertAmount > 0 && (
+                              <Badge type="info" variant="subtle">
+                                Alert ${creatorInfo.minimumAlertAmount}+
+                              </Badge>
+                            )}
+                            {creatorInfo.minimumTTSAmount > 0 &&
+                              creatorInfo.ttsEnabled && (
+                                <Badge type="info" variant="subtle">
+                                  TTS ${creatorInfo.minimumTTSAmount}+
+                                </Badge>
+                              )}
+                          </div>
+                        }
+                        className="mt-4"
+                        helperText={fieldState.error?.message}
+                        error={Boolean(fieldState.error?.message)}
+                      />
+                    </>
+                  );
+                }}
+              />
+            ))}
+
+          {isLegacyLink ||
+            (creatorInfo.sfxEnabled && (
+              <Controller
+                name="sfx"
+                control={formMethods.control}
+                render={({ field, fieldState }) => {
+                  return (
                     <Form.Field
                       {...field}
                       label={
-                        <div className="flex items-center gap-2">
-                          <label>Message</label>
-                          {creatorInfo.minimumAlertAmount > 0 && (
-                            <Badge type="info" variant="subtle">
-                              Alert ${creatorInfo.minimumAlertAmount}+
-                            </Badge>
-                          )}
-                          {creatorInfo.minimumTTSAmount > 0 &&
-                            creatorInfo.ttsEnabled && (
-                              <Badge type="info" variant="subtle">
-                                TTS ${creatorInfo.minimumTTSAmount}+
-                              </Badge>
-                            )}
+                        <div className="flex items-center gap-x-1">
+                          <label htmlFor="sfx">AI sound effect</label>
+                          <TooltipProvider delayDuration={400}>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Icon name="HelpCircle" size={15} />
+                              </TooltipTrigger>
+                              <TooltipContent className="bg-black text-center text-white">
+                                <p className="text-label6">
+                                  Type what you want to hear. AI will turn it
+                                  into <br />a sound effect and replace the
+                                  default sound.
+                                </p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
                         </div>
                       }
                       className="mt-4"
                       helperText={fieldState.error?.message}
                       error={Boolean(fieldState.error?.message)}
+                      placeholder={`🔒 Unlock at $${minimumSfxAmount}`}
+                      disabled={amount < minimumSfxAmount}
                     />
-                  </>
-                );
-              }}
-            />
-          )}
-
-          {creatorInfo.sfxEnabled && (
-            <Controller
-              name="sfx"
-              control={formMethods.control}
-              render={({ field, fieldState }) => {
-                return (
-                  <Form.Field
-                    {...field}
-                    label={
-                      <div className="flex items-center gap-x-1">
-                        <label htmlFor="sfx">AI sound effect</label>
-                        <TooltipProvider delayDuration={400}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Icon name="HelpCircle" size={15} />
-                            </TooltipTrigger>
-                            <TooltipContent className="bg-black text-center text-white">
-                              <p className="text-label6">
-                                Type what you want to hear. AI will turn it into{' '}
-                                <br />a sound effect and replace the default
-                                sound.
-                              </p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </div>
-                    }
-                    className="mt-4"
-                    helperText={fieldState.error?.message}
-                    error={Boolean(fieldState.error?.message)}
-                    placeholder={`🔒 Unlock at $${minimumSfxAmount}`}
-                    disabled={amount < minimumSfxAmount}
-                  />
-                );
-              }}
-            />
-          )}
+                  );
+                }}
+              />
+            ))}
 
           {isConnected ? (
             <Button
