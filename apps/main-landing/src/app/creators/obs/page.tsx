@@ -129,6 +129,11 @@ export default function Obs({ creatorName }: Properties) {
           isValid: isAddress(addressParameter.data),
           isFetching: false,
         });
+        setEnableToggles({
+          alertEnabled: true,
+          sfxEnabled: true,
+          ttsEnabled: true,
+        });
       } else if (
         !addressParameter.isFetching &&
         !addressParameter.data &&
