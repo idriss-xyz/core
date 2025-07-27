@@ -58,6 +58,7 @@ export function DonateContent({ creatorName }: Properties) {
         const profile = await getCreatorProfile(creatorName);
 
         if (!profile) {
+          creatorInfoSetReference.current = true;
           return;
         }
 
@@ -227,7 +228,7 @@ export function DonateContent({ creatorName }: Properties) {
       case 'user-tip': {
         return (
           <div className="grid grid-cols-1 items-start gap-x-10 lg:grid-cols-[1fr,auto]">
-            {creatorInfo && (
+            {creatorInfo ? (
               <>
                 <DonateForm
                   ref={formReference}
@@ -250,6 +251,26 @@ export function DonateContent({ creatorName }: Properties) {
                   }}
                 />
               </>
+            ) : (
+              creatorInfoSetReference.current && (
+                <div className="flex h-[80vh] flex-col items-center justify-center gap-3">
+                  <h1 className="text-display2 uppercase text-neutral-900">
+                    Creator not found
+                  </h1>
+                  <span className="text-body2">
+                    A creator with name &quot;{creatorName}&quot; was not found.
+                    Check your spelling and try again.
+                  </span>
+                  <Button
+                    intent="primary"
+                    size="medium"
+                    asLink
+                    href="/creators"
+                  >
+                    Go to homepage
+                  </Button>
+                </div>
+              )
             )}
           </div>
         );
@@ -285,6 +306,7 @@ export function DonateContent({ creatorName }: Properties) {
     donationsHistory.isError,
     donationsHistory.isLoading,
     isLegacyLink,
+    creatorName,
   ]);
 
   return (
