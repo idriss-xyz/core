@@ -1,6 +1,6 @@
 import { AppDataSource } from '../db/database';
-import { Creator } from '../db/entities';
 import { CreatorProfileView } from '../db/views';
+import { Creator, CreatorAddress } from '../db/entities';
 import {
   fetchTwitchUserInfo,
   fetchTwitchStreamStatus,
@@ -29,9 +29,22 @@ class CreatorProfileService {
   async getProfileByAddress(
     address: string,
   ): Promise<EnrichedCreatorProfile | null> {
-    const profile = await this.profileRepository.findOne({
+    let profile = await this.profileRepository.findOne({
       where: { address },
     });
+    if (!profile) {
+      const creatorAddressRepository =
+        AppDataSource.getRepository(CreatorAddress);
+      const secondaryAddress = await creatorAddressRepository.findOne({
+        where: { address },
+        relations: ['creator'],
+      });
+      if (secondaryAddress) {
+        profile = await this.profileRepository.findOne({
+          where: { id: secondaryAddress.creator.id },
+        });
+      }
+    }
     if (!profile) return null;
     return this.enrichWithTwitchData(profile);
   }

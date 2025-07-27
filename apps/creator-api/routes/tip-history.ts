@@ -9,6 +9,8 @@ import { DonationData } from '@idriss-xyz/constants';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { DEMO_ADDRESS } from '../tests/test-data/constants';
+import { AppDataSource } from '../db/database';
+import { Creator, CreatorAddress } from '../db/entities';
 
 const router = Router();
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -41,7 +43,32 @@ async function handleFetchTipHistory(req: Request, res: Response) {
     }
     const hexAddress = address as Hex;
 
-    const donations = await fetchDonationsByToAddress(hexAddress);
+    const creatorRepository = AppDataSource.getRepository(Creator);
+    const creatorAddressRepository =
+      AppDataSource.getRepository(CreatorAddress);
+
+    let creator = await creatorRepository.findOne({
+      where: { address: hexAddress },
+      relations: ['associatedAddresses'],
+    });
+
+    if (!creator) {
+      const secondaryAddress = await creatorAddressRepository.findOne({
+        where: { address: hexAddress },
+        relations: ['creator', 'creator.associatedAddresses'],
+      });
+      creator = secondaryAddress?.creator;
+    }
+
+    const allAddresses = creator
+      ? [creator.address, ...creator.associatedAddresses.map((a) => a.address)]
+      : [hexAddress];
+
+    const donations = (
+      await Promise.all(
+        allAddresses.map((addr) => fetchDonationsByToAddress(addr)),
+      )
+    ).flat();
     const leaderboard = await calculateDonationLeaderboard(donations);
 
     const response: TipHistoryResponse = {

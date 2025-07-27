@@ -1,0 +1,22 @@
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  JoinColumn,
+} from 'typeorm';
+import { Hex } from 'viem';
+import { Creator } from './creator.entity';
+
+@Entity('creator_address')
+export class CreatorAddress {
+  @PrimaryGeneratedColumn()
+  id!: number;
+
+  @Column({ type: 'text' })
+  address!: Hex;
+
+  @ManyToOne(() => Creator, (creator) => creator.associatedAddresses)
+  @JoinColumn({ name: 'creator_id' })
+  creator!: Creator;
+}

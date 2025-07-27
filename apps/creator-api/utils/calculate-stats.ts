@@ -16,6 +16,8 @@ import {
   LeaderboardStats,
 } from '@idriss-xyz/constants';
 import { getFilteredDonationsByPeriod } from '@idriss-xyz/utils';
+import { AppDataSource } from '../db/database';
+import { Creator } from '../db/entities';
 
 export function calculateStatsForDonorAddress(
   donations: DonationData[],
@@ -91,6 +93,20 @@ export function calculateStatsForDonorAddress(
 export async function calculateGlobalDonorLeaderboard(
   period?: string,
 ): Promise<LeaderboardStats[]> {
+  const creatorRepository = AppDataSource.getRepository(Creator);
+  const creators = await creatorRepository.find({
+    relations: ['associatedAddresses'],
+  });
+
+  const addressToCreatorMap = new Map<string, Creator>();
+  for (const creator of creators) {
+    addressToCreatorMap.set(creator.address.toLowerCase(), creator);
+    addressToCreatorMap.set(creator.primaryAddress.toLowerCase(), creator);
+    for (const addr of creator.associatedAddresses) {
+      addressToCreatorMap.set(addr.address.toLowerCase(), creator);
+    }
+  }
+
   const groupedDonations = await fetchDonations();
 
   const leaderboard = Object.entries(groupedDonations)
@@ -110,10 +126,17 @@ export async function calculateGlobalDonorLeaderboard(
       for (const donation of filteredDonations) {
         totalAmount += donation.tradeValue;
       }
+
+      const creator = addressToCreatorMap.get(address.toLowerCase());
+
       return {
         address: hexAddress,
-        displayName: donations[0].fromUser.displayName!,
-        avatarUrl: donations[0].fromUser.avatarUrl!,
+        displayName: creator
+          ? creator.displayName
+          : donations[0].fromUser.displayName!,
+        avatarUrl: creator
+          ? creator.profilePictureUrl!
+          : donations[0].fromUser.avatarUrl!,
         totalAmount,
         donationCount: filteredDonations.length,
         donorSince: firstDonationTimestamp,
@@ -129,40 +152,56 @@ export async function calculateGlobalDonorLeaderboard(
 export async function calculateGlobalStreamerLeaderboard(
   period?: string,
 ): Promise<LeaderboardStats[]> {
-  const groupedDonations = await fetchDonationRecipients();
+  const creatorRepository = AppDataSource.getRepository(Creator);
+  const creators = await creatorRepository.find({
+    relations: ['associatedAddresses'],
+  });
 
-  const leaderboard = Object.entries(groupedDonations)
-    .filter(([address, donations]) => {
-      const toUser = donations[0].toUser;
-      return (
-        toUser &&
-        toUser.address &&
-        /^0x[a-fA-F0-9]{40}$/.test(toUser.address) &&
-        toUser.displayName &&
-        toUser.displayNameSource &&
-        toUser.avatarUrl !== undefined
-      );
-    })
-    .map(([address, donations]) => {
-      const hexAddress = address as Hex;
+  const addressToCreatorMap = new Map<string, Creator>();
+  for (const creator of creators) {
+    addressToCreatorMap.set(creator.address.toLowerCase(), creator);
+    addressToCreatorMap.set(creator.primaryAddress.toLowerCase(), creator);
+    for (const addr of creator.associatedAddresses) {
+      addressToCreatorMap.set(addr.address.toLowerCase(), creator);
+    }
+  }
+
+  const groupedDonationsByRecipient = await fetchDonationRecipients();
+  const aggregatedDonationsByCreator = new Map<number, DonationData[]>();
+
+  for (const [address, donations] of Object.entries(
+    groupedDonationsByRecipient,
+  )) {
+    const creator = addressToCreatorMap.get(address.toLowerCase());
+    if (creator) {
+      const existingDonations =
+        aggregatedDonationsByCreator.get(creator.id) || [];
+      aggregatedDonationsByCreator.set(creator.id, [
+        ...existingDonations,
+        ...donations,
+      ]);
+    }
+  }
+
+  const leaderboard = Array.from(aggregatedDonationsByCreator.entries())
+    .map(([creatorId, donations]) => {
+      const creator = creators.find((c) => c.id === creatorId)!;
       const firstDonationTimestamp = Math.min(
         ...donations.map((d) => d.timestamp),
       );
 
       const filteredDonations = getFilteredDonationsByPeriod(donations, period);
 
-      if (filteredDonations.length === 0) {
-        return null;
-      }
-
       let totalAmount = 0;
       for (const donation of filteredDonations) {
         totalAmount += donation.tradeValue;
       }
+      if (totalAmount === 0) return null;
+
       return {
-        address: hexAddress,
-        displayName: donations[0].toUser.displayName!,
-        avatarUrl: donations[0].toUser.avatarUrl!,
+        address: creator.primaryAddress,
+        displayName: creator.displayName,
+        avatarUrl: creator.profilePictureUrl!,
         totalAmount,
         donationCount: filteredDonations.length,
         donorSince: firstDonationTimestamp,
@@ -172,7 +211,6 @@ export async function calculateGlobalStreamerLeaderboard(
 
   leaderboard.sort((a, b) => b.totalAmount - a.totalAmount);
 
-  // Enrich leaderboard with hardcoded links
   return leaderboard.map((entry) => ({
     ...entry,
     donateLink: CREATOR_LINKS[entry.address.toLowerCase()],

@@ -6,6 +6,8 @@ import { Hex } from 'viem';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { DEMO_ADDRESS } from '../tests/test-data/constants';
+import { AppDataSource } from '../db/database';
+import { Creator, CreatorAddress } from '../db/entities';
 
 const router = Router();
 
@@ -30,8 +32,36 @@ router.post('/', async (req: Request, res: Response) => {
       return;
     }
     const hexAddress = address as Hex;
-    const donations = await fetchDonationsByToAddress(hexAddress);
-    const recipientDonationStats = calculateStatsForRecipientAddress(donations);
+
+    const creatorRepository = AppDataSource.getRepository(Creator);
+    const creatorAddressRepository =
+      AppDataSource.getRepository(CreatorAddress);
+
+    let creator = await creatorRepository.findOne({
+      where: { address: hexAddress },
+      relations: ['associatedAddresses'],
+    });
+
+    if (!creator) {
+      const secondaryAddress = await creatorAddressRepository.findOne({
+        where: { address: hexAddress },
+        relations: ['creator', 'creator.associatedAddresses'],
+      });
+      creator = secondaryAddress?.creator;
+    }
+
+    const allAddresses = creator
+      ? [creator.address, ...creator.associatedAddresses.map((a) => a.address)]
+      : [hexAddress];
+
+    const allDonations = (
+      await Promise.all(
+        allAddresses.map((addr) => fetchDonationsByToAddress(addr)),
+      )
+    ).flat();
+
+    const recipientDonationStats =
+      calculateStatsForRecipientAddress(allDonations);
 
     res.json({
       ...recipientDonationStats,

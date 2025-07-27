@@ -8,6 +8,7 @@ import {
   CreatorToken,
   Token,
   User,
+  CreatorAddress,
 } from './entities';
 import {
   AddAmountRaw1743181200000,
@@ -28,6 +29,7 @@ import {
   AddEmailAndJoinedAtToCreator1753117191000,
   UpdateCreatorProfileView1753117192000,
   AddDoneSetupCreatorField1753315853694,
+  AddCreatorAddresses1753656919000,
 } from './migrations';
 import { CreatorProfileView } from './views';
 
