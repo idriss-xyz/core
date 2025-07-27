@@ -453,80 +453,78 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
             }}
           />
 
-          {isLegacyLink ||
-            (creatorInfo.alertEnabled && (
-              <Controller
-                name="message"
-                control={formMethods.control}
-                render={({ field, fieldState }) => {
-                  return (
-                    <>
-                      <Form.Field
-                        {...field}
-                        label={
-                          <div className="flex items-center gap-2">
-                            <label>Message</label>
-                            {creatorInfo.minimumAlertAmount > 0 && (
-                              <Badge type="info" variant="subtle">
-                                Alert ${creatorInfo.minimumAlertAmount}+
-                              </Badge>
-                            )}
-                            {creatorInfo.minimumTTSAmount > 0 &&
-                              creatorInfo.ttsEnabled && (
-                                <Badge type="info" variant="subtle">
-                                  TTS ${creatorInfo.minimumTTSAmount}+
-                                </Badge>
-                              )}
-                          </div>
-                        }
-                        className="mt-4"
-                        helperText={fieldState.error?.message}
-                        error={Boolean(fieldState.error?.message)}
-                      />
-                    </>
-                  );
-                }}
-              />
-            ))}
-
-          {isLegacyLink ||
-            (creatorInfo.sfxEnabled && (
-              <Controller
-                name="sfx"
-                control={formMethods.control}
-                render={({ field, fieldState }) => {
-                  return (
+          {(isLegacyLink || creatorInfo.alertEnabled) && (
+            <Controller
+              name="message"
+              control={formMethods.control}
+              render={({ field, fieldState }) => {
+                return (
+                  <>
                     <Form.Field
                       {...field}
                       label={
-                        <div className="flex items-center gap-x-1">
-                          <label htmlFor="sfx">AI sound effect</label>
-                          <TooltipProvider delayDuration={400}>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Icon name="HelpCircle" size={15} />
-                              </TooltipTrigger>
-                              <TooltipContent className="bg-black text-center text-white">
-                                <p className="text-label6">
-                                  Type what you want to hear. AI will turn it
-                                  into <br />a sound effect and replace the
-                                  default sound.
-                                </p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
+                        <div className="flex items-center gap-2">
+                          <label>Message</label>
+                          {creatorInfo.minimumAlertAmount > 0 && (
+                            <Badge type="info" variant="subtle">
+                              Alert ${creatorInfo.minimumAlertAmount}+
+                            </Badge>
+                          )}
+                          {creatorInfo.minimumTTSAmount > 0 &&
+                            creatorInfo.ttsEnabled && (
+                              <Badge type="info" variant="subtle">
+                                TTS ${creatorInfo.minimumTTSAmount}+
+                              </Badge>
+                            )}
                         </div>
                       }
                       className="mt-4"
                       helperText={fieldState.error?.message}
                       error={Boolean(fieldState.error?.message)}
-                      placeholder={`🔒 Unlock at $${minimumSfxAmount}`}
-                      disabled={amount < minimumSfxAmount}
                     />
-                  );
-                }}
-              />
-            ))}
+                  </>
+                );
+              }}
+            />
+          )}
+
+          {(isLegacyLink || creatorInfo.sfxEnabled) && (
+            <Controller
+              name="sfx"
+              control={formMethods.control}
+              render={({ field, fieldState }) => {
+                return (
+                  <Form.Field
+                    {...field}
+                    label={
+                      <div className="flex items-center gap-x-1">
+                        <label htmlFor="sfx">AI sound effect</label>
+                        <TooltipProvider delayDuration={400}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Icon name="HelpCircle" size={15} />
+                            </TooltipTrigger>
+                            <TooltipContent className="bg-black text-center text-white">
+                              <p className="text-label6">
+                                Type what you want to hear. AI will turn it into{' '}
+                                <br />a sound effect and replace the default
+                                sound.
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+                    }
+                    className="mt-4"
+                    helperText={fieldState.error?.message}
+                    error={Boolean(fieldState.error?.message)}
+                    placeholder={`🔒 Unlock at $${minimumSfxAmount}`}
+                    disabled={amount < minimumSfxAmount}
+                  />
+                );
+              }}
+            />
+          )}
 
           {isConnected ? (
             <Button
