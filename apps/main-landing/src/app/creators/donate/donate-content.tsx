@@ -258,8 +258,8 @@ export function DonateContent({ creatorName }: Properties) {
                     Creator not found
                   </h1>
                   <span className="text-body2">
-                    A creator with name &quot;{creatorName}&quot; was not found.
-                    Check your spelling and try again.
+                    We couldn’t find a creator with that name. Check the
+                    spelling and try again.
                   </span>
                   <Button
                     intent="primary"
