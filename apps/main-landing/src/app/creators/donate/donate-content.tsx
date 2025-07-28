@@ -306,7 +306,6 @@ export function DonateContent({ creatorName }: Properties) {
     donationsHistory.isError,
     donationsHistory.isLoading,
     isLegacyLink,
-    creatorName,
   ]);
 
   return (

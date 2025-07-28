@@ -296,23 +296,32 @@ export default function EarningsStats() {
                       );
                     })}
                     {/* Add skeleton rows to fill up to 3 total rows */}
-                    {Array.from({ length: Math.max(0, 3 - otherAssets.length) }).map((_, index) => (
-                      <tr key={`skeleton-${index}`} className="border-b border-gray-200 last:border-b-0">
-                        <td colSpan={3} className="py-0">
-                          <div className="flex h-[70px] items-center gap-6 py-8">
-                            <div className="size-9 rounded-full bg-neutral-100" />
-                            {[...Array.from({ length: 3 }).keys()].map((skeletonIndex) => {
-                              return (
-                                <div
-                                  key={skeletonIndex}
-                                  className="h-[10px] w-[65px] rounded-md bg-neutral-100"
-                                />
-                              );
-                            })}
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
+                    {Array.from({
+                      length: Math.max(0, 3 - otherAssets.length),
+                    }).map((_, index) => {
+                      return (
+                        <tr
+                          key={`skeleton-${index}`}
+                          className="border-b border-gray-200 last:border-b-0"
+                        >
+                          <td colSpan={3} className="py-0">
+                            <div className="flex h-[70px] items-center gap-6 py-8">
+                              <div className="size-9 rounded-full bg-neutral-100" />
+                              {[...Array.from({ length: 3 }).keys()].map(
+                                (skeletonIndex) => {
+                                  return (
+                                    <div
+                                      key={skeletonIndex}
+                                      className="h-[10px] w-[65px] rounded-md bg-neutral-100"
+                                    />
+                                  );
+                                },
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
