@@ -28,6 +28,7 @@ import {
   AddEmailAndJoinedAtToCreator1753117191000,
   UpdateCreatorProfileView1753117192000,
   AddDoneSetupCreatorField1753315853694,
+  AddReceiveEmailsCreatorField1753726864037,
 } from './migrations';
 import { CreatorProfileView } from './views';
 
@@ -65,6 +66,7 @@ export const AppDataSource = new DataSource({
     AddEmailAndJoinedAtToCreator1753117191000,
     UpdateCreatorProfileView1753117192000,
     AddDoneSetupCreatorField1753315853694,
+    AddReceiveEmailsCreatorField1753726864037,
   ],
 });
 
