@@ -1,14 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Button } from '@idriss-xyz/ui/button';
 import { Card } from '@idriss-xyz/ui/card';
-import { usePrivy } from '@privy-io/react-auth';
+import { getAccessToken, usePrivy } from '@privy-io/react-auth';
 import { type Hex } from 'viem';
 import { Link } from '@idriss-xyz/ui/link';
 import { Icon } from '@idriss-xyz/ui/icon';
 import Image from 'next/image';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
+import { Checkbox } from '@idriss-xyz/ui/checkbox';
+import { Alert } from '@idriss-xyz/ui/alert';
 
 import { IDRISS_SCENE_STREAM_4, backgroundLines2 } from '@/assets';
 import { useAuth } from '@/app/creators/context/auth-context';
@@ -20,6 +22,7 @@ import {
 import { ConfirmationModal } from '@/app/creators/components/confirmation-modal';
 
 import useRedirectIfNotAuthenticated from '../../hooks/use-redirect-not-authenticated';
+import { editCreatorProfile } from '../../utils';
 
 const handleDeleteAccount = () => {
   // TODO: Implement backend call to save email
@@ -32,30 +35,42 @@ export default function ProfilePage() {
   const [isExportWalletModalOpen, setIsExportWalletModalOpen] = useState(false);
   const [isDeleteAccountModalOpen, setIsDeleteAccountModalOpen] =
     useState(false);
+  const [receiveEmails, setReceiveEmails] = useState(true);
+  const [saveSuccess, setSaveSuccess] = useState<boolean | null>(null);
 
   const { creator } = useAuth();
   const { user, exportWallet } = usePrivy();
   const address = user?.wallet?.address as Hex | undefined;
 
-  // TODO: add back when email saving comes back, including `getAccessToken` in usePrivy()
-  // const email = creator?.email ?? user?.email?.address ?? '';
+  const handleAlertClose = useCallback(() => {
+    setSaveSuccess(null);
+  }, []);
 
-  // const handleEmailSave = async (newEmail: string) => {
-  //   if (!creator?.name) {
-  //     console.error('Creator name not found');
-  //     return;
-  //   }
-  //   try {
-  //     const authToken = await getAccessToken();
-  //     if (!authToken) {
-  //       console.error('Not authenticated');
-  //       return;
-  //     }
-  //     await editCreatorProfile(creator.name, { email: newEmail }, authToken);
-  //   } catch (error) {
-  //     console.error('Failed to save email:', error);
-  //   }
-  // };
+  const handleEmailPreferencesSave = async () => {
+    if (!creator?.name) {
+      console.error('Creator name not found');
+      setSaveSuccess(false);
+      return;
+    }
+    try {
+      const authToken = await getAccessToken();
+      if (!authToken) {
+        console.error('Not authenticated');
+        setSaveSuccess(false);
+        return;
+      }
+
+      setReceiveEmails((previous) => {
+        return !previous;
+      });
+
+      await editCreatorProfile(creator.name, { receiveEmails }, authToken);
+      setSaveSuccess(true);
+    } catch (error) {
+      console.error('Failed to save email:', error);
+      setSaveSuccess(false);
+    }
+  };
 
   const profileImageUrl = creator?.profilePictureUrl;
   const profileImageSize = 80;
@@ -121,27 +136,25 @@ export default function ProfilePage() {
           </div>
         </Card>
 
-        {/* TODO: Unhide when we introduce updates */}
-        {/* <Card>
+        <Card>
           <FormFieldWrapper>
             <SectionHeader
-              title="Updates"
-              subtitle="We'll use it to send updates about your account or the app"
+              title="Email preferences"
+              subtitle="We may email you about important things like logins, payouts, and account security. You can choose whether to receive additional updates below."
             />
-            <div className="flex flex-col gap-6">
-              <div className="flex flex-col gap-2">
-                <span className="pb-1 text-label4">Email</span>
-                <div className="relative flex w-fit flex-row items-center rounded-xl bg-white/80">
-                  <EnterInput
-                    initialValue={email ?? ''}
-                    onSave={handleEmailSave}
-                    placeholder="Enter your email"
-                  />
-                </div>
-              </div>
-            </div>
+            <Checkbox
+              rootClassName="border-neutral-200"
+              onChange={handleEmailPreferencesSave}
+              value={receiveEmails}
+              label={
+                <span className="w-full text-body5 text-neutralGreen-900">
+                  Send me updates about new features, donation activity, and
+                  earning opportunities
+                </span>
+              }
+            />
           </FormFieldWrapper>
-        </Card> */}
+        </Card>
 
         <Card>
           <FormFieldWrapper>
@@ -231,7 +244,7 @@ export default function ProfilePage() {
         onConfirm={exportWallet}
         title="Are you sure?"
         sectionTitle="⚠️ Are you sure you want to reveal your recovery phrase?"
-        sectionSubtitle="Anyone who sees this phrase can steal your funds. Never share it. Never show it. Only proceed if you’re in a private, secure environment."
+        sectionSubtitle="Anyone who sees this phrase can steal your funds. Never share it. Never show it. Only proceed if you're in a private, secure environment."
         confirmButtonText="CONFIRM"
         cancelButtonText="CANCEL"
       />
@@ -247,6 +260,25 @@ export default function ProfilePage() {
         confirmButtonText="CONFIRM"
         cancelButtonText="CANCEL"
       />
+
+      {/* Alerts */}
+      {saveSuccess && (
+        <Alert
+          heading="Settings saved!"
+          type="success"
+          autoClose
+          onClose={handleAlertClose}
+        />
+      )}
+      {saveSuccess === false && (
+        <Alert
+          heading="Unable to save settings"
+          type="error"
+          description="Please try again later"
+          autoClose
+          onClose={handleAlertClose}
+        />
+      )}
     </>
   );
 }
