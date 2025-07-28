@@ -15,7 +15,10 @@ import {
   DonationToken,
   LeaderboardStats,
 } from '@idriss-xyz/constants';
-import { getFilteredDonationsByPeriod } from '@idriss-xyz/utils';
+import {
+  createAddressToCreatorMap,
+  getFilteredDonationsByPeriod,
+} from '@idriss-xyz/utils';
 import { AppDataSource } from '../db/database';
 import { Creator } from '../db/entities';
 
@@ -97,15 +100,7 @@ export async function calculateGlobalDonorLeaderboard(
   const creators = await creatorRepository.find({
     relations: ['associatedAddresses'],
   });
-
-  const addressToCreatorMap = new Map<string, Creator>();
-  for (const creator of creators) {
-    addressToCreatorMap.set(creator.address.toLowerCase(), creator);
-    addressToCreatorMap.set(creator.primaryAddress.toLowerCase(), creator);
-    for (const addr of creator.associatedAddresses) {
-      addressToCreatorMap.set(addr.address.toLowerCase(), creator);
-    }
-  }
+  const addressToCreatorMap = createAddressToCreatorMap(creators);
 
   const groupedDonations = await fetchDonations();
 
@@ -156,15 +151,7 @@ export async function calculateGlobalStreamerLeaderboard(
   const creators = await creatorRepository.find({
     relations: ['associatedAddresses'],
   });
-
-  const addressToCreatorMap = new Map<string, Creator>();
-  for (const creator of creators) {
-    addressToCreatorMap.set(creator.address.toLowerCase(), creator);
-    addressToCreatorMap.set(creator.primaryAddress.toLowerCase(), creator);
-    for (const addr of creator.associatedAddresses) {
-      addressToCreatorMap.set(addr.address.toLowerCase(), creator);
-    }
-  }
+  const addressToCreatorMap = createAddressToCreatorMap(creators);
 
   const groupedDonationsByRecipient = await fetchDonationRecipients();
   const aggregatedDonationsByCreator = new Map<number, DonationData[]>();

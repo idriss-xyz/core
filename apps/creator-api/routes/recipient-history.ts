@@ -47,7 +47,7 @@ router.post('/', async (req: Request, res: Response) => {
         where: { address: hexAddress },
         relations: ['creator', 'creator.associatedAddresses'],
       });
-      creator = secondaryAddress?.creator;
+      creator = secondaryAddress?.creator ?? null;
     }
 
     const allAddresses = creator

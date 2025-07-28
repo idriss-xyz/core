@@ -1,3 +1,4 @@
+import { Hex } from 'viem';
 import { AppDataSource } from '../db/database';
 import { CreatorProfileView } from '../db/views';
 import { Creator, CreatorAddress } from '../db/entities';
@@ -36,7 +37,7 @@ class CreatorProfileService {
       const creatorAddressRepository =
         AppDataSource.getRepository(CreatorAddress);
       const secondaryAddress = await creatorAddressRepository.findOne({
-        where: { address },
+        where: { address: address as Hex },
         relations: ['creator'],
       });
       if (secondaryAddress) {
