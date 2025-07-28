@@ -77,6 +77,24 @@ export const getPublicCreatorProfile = async (
   return data;
 };
 
+export const getPublicCreatorProfileBySlug = async (
+  slug: string | null,
+): Promise<CreatorProfileResponse | undefined> => {
+  if (!slug) {
+    console.error('No name or address to get creator');
+    return;
+  }
+
+  const response = await fetch(
+    `${CREATOR_API_URL}/creator-profile/donation-overlay/${slug}`,
+  );
+  if (!response.ok) {
+    return;
+  }
+  const data = (await response.json()) as CreatorProfileResponse;
+  return data;
+};
+
 export const getCreatorProfile = async (
   authToken: string,
 ): Promise<CreatorProfileResponse | undefined> => {

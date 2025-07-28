@@ -44,7 +44,7 @@ export const ConfirmationModal = ({
           )}
         </div>
       </div>
-      <div className="flex flex-col gap-[10px] pb-5 pr-4 pl-5 text-left">
+      <div className="flex flex-col gap-[10px] pb-5 pl-5 pr-4 text-left">
         <p className="max-w-prose text-body5 text-neutral-600">
           {sectionSubtitle}
         </p>
@@ -57,11 +57,7 @@ export const ConfirmationModal = ({
         >
           {confirmButtonText}
         </Button>
-        <Button
-          size="medium"
-          intent="primary"
-          onClick={onClose}
-        >
+        <Button size="medium" intent="primary" onClick={onClose}>
           {cancelButtonText}
         </Button>
       </div>

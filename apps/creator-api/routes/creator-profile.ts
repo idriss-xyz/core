@@ -143,6 +143,48 @@ router.get(
   },
 );
 
+router.get(
+  '/donation-overlay/:slug',
+  [param('slug').isString().notEmpty()],
+  async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({ errors: errors.array() });
+      return;
+    }
+
+    try {
+      const slug = req.params.slug;
+      const creatorRepo = AppDataSource.getRepository(Creator);
+      const creator = await creatorRepo.findOne({
+        where: {
+          obsUrl: `https://idriss.xyz/creators/donation-overlay/${slug}`,
+        },
+      });
+
+      if (!creator) {
+        res.status(404).json({ error: 'Creator not found' });
+        return;
+      }
+
+      const profile = await creatorProfileService.getProfileByAddress(
+        creator?.address,
+      );
+
+      if (!profile) {
+        res.status(404).json({ error: 'Creator profile not found' });
+        return;
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { email, obsUrl, ...publicProfile } = profile;
+      res.json(publicProfile);
+    } catch (error) {
+      console.error('Error fetching creator profile by address:', error);
+      res.status(500).json({ error: 'Failed to fetch creator profile' });
+    }
+  },
+);
+
 // Create new creator profile with donation parameters
 router.post('/', verifyToken(), async (req: Request, res: Response) => {
   if (!req.user?.id) {
@@ -194,7 +236,7 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
     creator.email = creatorData.email;
     creator.donationUrl = `${CREATORS_LINK}/${creatorData.name}`;
     const obsUrlSecret = randomBytes(24).toString('base64url');
-    creator.obsUrl = `${CREATORS_LINK}/obs/${creatorData.name}/${obsUrlSecret}`;
+    creator.obsUrl = `${CREATORS_LINK}/donation-overlay/${obsUrlSecret}`;
 
     // Create and save new creator
     const savedCreator = await creatorRepository.save(creator);
@@ -416,6 +458,21 @@ router.patch(
       const updatedNetworkEntities = await networkRepository.find({
         where: { creator: { id: creator.id } },
       });
+
+      try {
+        const io = req.app.get('io');
+        const overlayWS = io.of('/overlay');
+        const userId = creator.privyId.toLowerCase();
+
+        overlayWS.to(userId).emit('creatorConfigUpdated', {
+          creator: updatedCreator,
+          donationParameters: updatedDonationParams,
+          tokens: updatedTokenEntities,
+          networks: updatedNetworkEntities,
+        });
+      } catch {
+        console.log('Streamer not online, will load on stream start.');
+      }
 
       res.json({
         message: 'Creator profile updated successfully',

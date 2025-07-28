@@ -23,7 +23,8 @@ import twitchAccountInfoRouter from './routes/twitch-account-info';
 import authRouter from './routes/auth';
 import uploadRouter from './routes/upload';
 import cors from 'cors';
-import { initializeDatabase } from './db/database';
+import { AppDataSource, initializeDatabase } from './db/database';
+import { Creator } from './db/entities';
 
 initializeDatabase()
   .then(() => console.log('DB connected...'))
@@ -93,6 +94,33 @@ io.on('connection', (socket: Socket) => {
       }
     }
   });
+});
+
+// a dedicated namespace for OBS overlays:
+const overlayWS = io.of('/overlay');
+
+overlayWS.use(async (socket: Socket, next) => {
+  const { overlayToken } = socket.handshake.auth as { overlayToken?: string };
+  if (!overlayToken) return next(new Error('auth error'));
+
+  const creatorRepo = AppDataSource.getRepository(Creator);
+  const creator = await creatorRepo.findOne({
+    where: {
+      obsUrl: `https://idriss.xyz/creators/donation-overlay/${overlayToken}`,
+    },
+  });
+
+  if (!creator) return next(new Error('invalid overlay token'));
+
+  // stash privyId for room‑joining & emits
+  socket.data.userId = creator.privyId.toLowerCase();
+  next();
+});
+
+overlayWS.on('connection', (socket) => {
+  const userId = socket.data.userId as string;
+  console.log('Overlay connected for', userId);
+  socket.join(userId);
 });
 
 app.get('/', (req: Request, res: Response) => {

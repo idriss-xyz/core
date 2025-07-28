@@ -1,8 +1,5 @@
 'use client';
-import {
-  CREATOR_API_URL,
-  TWITCH_EXTENSION_LINK,
-} from '@idriss-xyz/constants';
+import { CREATOR_API_URL, TWITCH_EXTENSION_LINK } from '@idriss-xyz/constants';
 import { Button } from '@idriss-xyz/ui/button';
 import { Card } from '@idriss-xyz/ui/card';
 import { Form } from '@idriss-xyz/ui/form';
@@ -262,12 +259,12 @@ export default function StreamAlerts() {
                     </label>
                     <div
                       className="cursor-pointer"
-                      onClick={() => {return setIsCopyModalOpen(true)}}
+                      onClick={() => {
+                        return setIsCopyModalOpen(true);
+                      }}
                     >
                       <div className="pointer-events-none">
-                        <CopyInput
-                          value={`${creator?.obsUrl}`}
-                        />
+                        <CopyInput value={`${creator?.obsUrl}`} />
                       </div>
                     </div>
                     <div className="flex items-center pt-1">
@@ -535,7 +532,9 @@ export default function StreamAlerts() {
 
       <ConfirmationModal
         isOpened={isCopyModalOpen}
-        onClose={() => {return setIsCopyModalOpen(false)}}
+        onClose={() => {
+          return setIsCopyModalOpen(false);
+        }}
         onConfirm={() => {
           if (creator?.obsUrl) {
             void navigator.clipboard.writeText(creator.obsUrl);
