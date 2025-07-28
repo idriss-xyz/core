@@ -2,6 +2,7 @@ import { Button } from '@idriss-xyz/ui/button';
 
 import { TopBar } from '../components/top-bar';
 
+// ts-unused-exports:disable-next-line
 export default function NotFound() {
   return (
     <>
@@ -11,7 +12,9 @@ export default function NotFound() {
           <h1 className="text-display2 uppercase text-neutral-900">
             Page Not Found
           </h1>
-          <span className="text-body2">This page you are looking for does not exist or has been moved.</span>
+          <span className="text-body2">
+            This page you are looking for does not exist or has been moved.
+          </span>
           <Button intent="primary" size="medium" asLink href="/creators">
             Go to homepage
           </Button>

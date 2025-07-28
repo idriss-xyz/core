@@ -75,7 +75,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         const existingCreator = await getCreatorProfile(authToken);
 
-        console.log("existingCreator", existingCreator)
+        console.log('existingCreator', existingCreator);
         setCreator(existingCreator ?? null);
       } catch (error) {
         console.error('Failed to fetch creator profile:', error);

@@ -13,7 +13,7 @@ import {
 import '@rainbow-me/rainbowkit/styles.css';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { default as io } from 'socket.io-client';
-import { Hex, isAddress } from 'viem';
+import { Hex } from 'viem';
 import { useRouter } from 'next/navigation';
 import _ from 'lodash';
 

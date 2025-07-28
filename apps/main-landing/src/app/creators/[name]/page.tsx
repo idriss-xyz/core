@@ -6,11 +6,11 @@ import Donate from '../donate/page';
 import { getPublicCreatorProfile } from '../utils';
 import { type CreatorProfile } from '../donate/types';
 
-
 type Properties = {
-  params: { name:string };
+  params: { name: string };
 };
 
+// ts-unused-exports:disable-next-line
 export async function generateMetadata({
   params,
 }: Properties): Promise<Metadata> {
