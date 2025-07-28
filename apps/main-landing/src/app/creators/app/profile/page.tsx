@@ -208,7 +208,7 @@ export default function ProfilePage() {
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-10">
                   <Button
                     size="medium"
-                    intent="negative"
+                    intent="secondary"
                     onClick={() => {
                       return setIsDeleteAccountModalOpen(true);
                     }}
