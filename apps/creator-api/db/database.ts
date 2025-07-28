@@ -7,7 +7,7 @@ import {
   CreatorNetwork,
   CreatorToken,
   Token,
-  User,
+  User, Referral,
 } from './entities';
 import {
   AddAmountRaw1743181200000,
@@ -28,6 +28,7 @@ import {
   AddEmailAndJoinedAtToCreator1753117191000,
   UpdateCreatorProfileView1753117192000,
   AddDoneSetupCreatorField1753315853694,
+  AddReferralEntity1753000000000
 } from './migrations';
 import { CreatorProfileView } from './views';
 
@@ -44,6 +45,7 @@ export const AppDataSource = new DataSource({
     CreatorToken,
     DonationParameters,
     CreatorProfileView,
+    Referral
   ],
   synchronize: false,
   migrations: [
@@ -65,6 +67,7 @@ export const AppDataSource = new DataSource({
     AddEmailAndJoinedAtToCreator1753117191000,
     UpdateCreatorProfileView1753117192000,
     AddDoneSetupCreatorField1753315853694,
+    AddReferralEntity1753000000000
   ],
 });
 
