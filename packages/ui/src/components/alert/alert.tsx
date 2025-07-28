@@ -73,9 +73,9 @@ export const Alert = forwardRef(
           <Icon name={iconName ?? icon[type]} size={20} />
         </span>
 
-        <div className="grid grid-cols-[1fr,32px] items-start">
-          <div className="flex flex-col items-start gap-y-1">
-            <p className="text-label3 text-neutral-900">{heading}</p>
+        <div className="grid grid-cols-[1fr,32px]">
+          <div className="flex flex-col gap-y-1">
+            <p className="text-label3 text-neutral-900 flex h-full items-center">{heading}</p>
             {description && (
               <p className="text-body5 text-neutral-600">{description}</p>
             )}

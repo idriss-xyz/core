@@ -383,7 +383,6 @@ export default function PaymentMethods() {
           type="success"
           autoClose
           onClose={handleAlertClose}
-          description="" // TODO: added to silence type-check. do we need a description here?
         />
       )}
       {saveSuccess === false && (
