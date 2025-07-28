@@ -27,7 +27,7 @@ import {
 
 import { useCreators } from '../hooks/use-creators';
 import { TopBar } from '../components/top-bar';
-import { getCreatorProfile } from '../utils';
+import { getPublicCreatorProfile } from '../utils';
 
 import { Leaderboard } from './components/leaderboard';
 import { DonateForm } from './components/donate-form';
@@ -55,7 +55,7 @@ export function DonateContent({ creatorName }: Properties) {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const profile = await getCreatorProfile(creatorName);
+        const profile = await getPublicCreatorProfile(creatorName);
 
         if (!profile) {
           creatorInfoSetReference.current = true;
@@ -306,7 +306,6 @@ export function DonateContent({ creatorName }: Properties) {
     donationsHistory.isError,
     donationsHistory.isLoading,
     isLegacyLink,
-    creatorName,
   ]);
 
   return (

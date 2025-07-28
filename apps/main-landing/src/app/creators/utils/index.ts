@@ -39,7 +39,7 @@ export type CreatorProfileResponse = {
   profilePictureUrl?: string;
   email?: string;
   donationUrl: string;
-  obsUrl: string;
+  obsUrl?: string;
   joinedAt: string;
   doneSetup: boolean;
   minimumAlertAmount: number;
@@ -56,7 +56,7 @@ export type CreatorProfileResponse = {
   alertSound: string;
 };
 
-export const getCreatorProfile = async (
+export const getPublicCreatorProfile = async (
   name?: string | null,
   address?: Hex | null,
 ): Promise<CreatorProfileResponse | undefined> => {
@@ -70,6 +70,28 @@ export const getCreatorProfile = async (
   const response = await fetch(
     `${CREATOR_API_URL}/creator-profile/${lookPath}`,
   );
+  if (!response.ok) {
+    return;
+  }
+  const data = (await response.json()) as CreatorProfileResponse;
+  return data;
+};
+
+export const getCreatorProfile = async (
+  authToken: string,
+): Promise<CreatorProfileResponse | undefined> => {
+  if (!authToken) {
+    console.error('No name or address to get creator');
+    return;
+  }
+
+  const response = await fetch(`${CREATOR_API_URL}/creator-profile/me`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`,
+    },
+  });
   if (!response.ok) {
     return;
   }

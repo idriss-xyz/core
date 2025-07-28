@@ -45,11 +45,11 @@ export function OAuthCallbackHandler() {
         if (!walletAddress) {
           throw new Error('No wallet address found for authenticated user.');
         }
-
-        const existingCreator = await getCreatorProfile(
-          undefined,
-          walletAddress,
-        );
+        const authToken = await getAccessToken();
+        if (!authToken || !user.id) {
+          throw new Error('Could not get auth token or user ID for new user.');
+        }
+        const existingCreator = await getCreatorProfile(authToken);
 
         if (existingCreator) {
           setCreator(existingCreator);
@@ -60,13 +60,6 @@ export function OAuthCallbackHandler() {
           }
         } else {
           // NEW USER ONBOARDING LOGIC
-          const authToken = await getAccessToken();
-          if (!authToken || !user.id) {
-            throw new Error(
-              'Could not get auth token or user ID for new user.',
-            );
-          }
-
           let newCreatorName: string;
           let newCreatorDisplayName: string | null = null;
           let newCreatorProfilePic: string | null = null;
@@ -96,7 +89,8 @@ export function OAuthCallbackHandler() {
             authToken,
           );
 
-          const newCreator = await getCreatorProfile(newCreatorName);
+          const newCreator = await getCreatorProfile(authToken);
+
           if (!newCreator) {
             throw new Error('Failed to fetch newly created profile.');
           }

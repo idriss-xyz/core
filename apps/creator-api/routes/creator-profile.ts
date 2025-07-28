@@ -1,4 +1,5 @@
 import { Router, Request, Response } from 'express';
+import { randomBytes } from 'crypto';
 import { param, validationResult } from 'express-validator';
 import { creatorProfileService } from '../services/creator-profile.service';
 import { AppDataSource } from '../db/database';
@@ -23,6 +24,38 @@ import { streamAudioFromS3 } from '../utils/audio-utils';
 
 const router = Router();
 
+router.get('/me', verifyToken(), async (req: Request, res: Response) => {
+  if (!req.user?.id) {
+    res.status(401).json({ error: 'Unauthorized' });
+    return;
+  }
+
+  try {
+    const creatorRepository = AppDataSource.getRepository(Creator);
+
+    const creator = await creatorRepository.findOne({
+      where: { privyId: req.user.id },
+    });
+
+    if (!creator) {
+      res.status(404).json({ error: 'Creator profile not found' });
+      return;
+    }
+
+    const fullProfile = await creatorProfileService.getProfileById(creator.id);
+
+    if (!fullProfile) {
+      res.status(404).json({ error: 'Creator profile not found' });
+      return;
+    }
+
+    res.json(fullProfile);
+  } catch (error) {
+    console.error('Error fetching authenticated creator profile:', error);
+    res.status(500).json({ error: 'Failed to fetch creator profile' });
+  }
+});
+
 // Get creator profile by name
 router.get(
   '/:name',
@@ -43,7 +76,7 @@ router.get(
         return;
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { email, ...publicProfile } = profile;
+      const { email, obsUrl, ...publicProfile } = profile;
       res.json(publicProfile);
     } catch (error) {
       console.error('Error fetching creator profile by name:', error);
@@ -72,7 +105,7 @@ router.get(
         return;
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { email, ...publicProfile } = profile;
+      const { email, obsUrl, ...publicProfile } = profile;
       res.json(publicProfile);
     } catch (error) {
       console.error('Error fetching creator profile by ID:', error);
@@ -101,7 +134,7 @@ router.get(
         return;
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { email, ...publicProfile } = profile;
+      const { email, obsUrl, ...publicProfile } = profile;
       res.json(publicProfile);
     } catch (error) {
       console.error('Error fetching creator profile by address:', error);
@@ -112,6 +145,10 @@ router.get(
 
 // Create new creator profile with donation parameters
 router.post('/', verifyToken(), async (req: Request, res: Response) => {
+  if (!req.user?.id) {
+    res.status(401).json({ error: 'Unauthorized' });
+    return;
+  }
   try {
     const {
       minimumAlertAmount = DEFAULT_DONATION_MIN_ALERT_AMOUNT,
@@ -153,10 +190,11 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
     creator.name = creatorData.name;
     creator.displayName = creatorData.displayName ?? creatorData.name;
     creator.profilePictureUrl = creatorData.profilePictureUrl;
-    creator.privyId = creatorData.privyId;
+    creator.privyId = req.user.id;
     creator.email = creatorData.email;
     creator.donationUrl = `${CREATORS_LINK}/${creatorData.name}`;
-    creator.obsUrl = `${CREATORS_LINK}/obs/${creatorData.name}`;
+    const obsUrlSecret = randomBytes(24).toString('base64url');
+    creator.obsUrl = `${CREATORS_LINK}/obs/${creatorData.name}/${obsUrlSecret}`;
 
     // Create and save new creator
     const savedCreator = await creatorRepository.save(creator);

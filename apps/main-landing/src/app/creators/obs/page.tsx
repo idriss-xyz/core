@@ -25,7 +25,7 @@ import { clients } from '@idriss-xyz/blockchain-clients';
 import { CHAIN_TO_IDRISS_TIPPING_ADDRESS } from '../donate/constants';
 import { ethereumClient } from '../donate/config';
 import { useCreators } from '../hooks/use-creators';
-import { getCreatorProfile } from '../utils';
+import { getPublicCreatorProfile } from '../utils';
 import { Address } from '../donate/types';
 
 import DonationNotification, {
@@ -98,7 +98,7 @@ export default function Obs({ creatorName }: Properties) {
         addressParameter.data == null &&
         creatorName
       ) {
-        getCreatorProfile(creatorName)
+        getPublicCreatorProfile(creatorName)
           .then((profile) => {
             if (profile) {
               setAddress({

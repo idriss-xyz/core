@@ -7,8 +7,7 @@ import {
   useEffect,
 } from 'react';
 import { DonationData } from '@idriss-xyz/constants';
-import { usePrivy } from '@privy-io/react-auth';
-import { Hex } from 'viem';
+import { getAccessToken, usePrivy } from '@privy-io/react-auth';
 
 import { CreatorProfileResponse, getCreatorProfile } from '../utils';
 
@@ -69,10 +68,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
       setCreatorLoading(true);
       try {
-        const existingCreator = await getCreatorProfile(
-          undefined,
-          user.wallet.address as Hex,
-        );
+        const authToken = await getAccessToken();
+        if (!authToken || !user.id) {
+          throw new Error('Could not get auth token or user ID for new user.');
+        }
+
+        const existingCreator = await getCreatorProfile(authToken);
+
+        console.log("existingCreator", existingCreator)
         setCreator(existingCreator ?? null);
       } catch (error) {
         console.error('Failed to fetch creator profile:', error);
