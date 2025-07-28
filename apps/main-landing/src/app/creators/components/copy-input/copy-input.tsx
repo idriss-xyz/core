@@ -1,5 +1,6 @@
 import { classes } from '@idriss-xyz/ui/utils';
 import { Icon, type IconName } from '@idriss-xyz/ui/icon';
+import { Alert } from '@idriss-xyz/ui/alert';
 
 import { useCopyToClipboard } from '../../hooks/use-copy-to-clipboard';
 
@@ -26,23 +27,32 @@ export function CopyInput({
   };
 
   return (
-    <div
-      className={classes(
-        'bg-neutral-50 flex items-center rounded-xl border border-neutral-200',
-        className,
-      )}
-    >
-      <span className="grow truncate p-3 text-sm">{value}</span>
+    <>
       <div
-        className="flex shrink-0 cursor-pointer items-center self-stretch border-l border-gray-200 px-3"
-        onClick={handleCopy}
-      >
-        {copied ? (
-          <Icon name="Check" size={16} />
-        ) : (
-          <Icon name={iconName ?? 'Copy'} size={16} />
+        className={classes(
+          'bg-neutral-50 flex items-center rounded-xl border border-neutral-200',
+          className,
         )}
+      >
+        <span className="grow truncate p-3 text-sm">{value}</span>
+        <div
+          className="flex shrink-0 cursor-pointer items-center self-stretch border-l border-gray-200 px-3 hover:text-mint-600"
+          onClick={handleCopy}
+        >
+          <Icon name={iconName ?? 'Copy'} size={16} />
+        </div>
       </div>
-    </div>
+
+      {/* Copy Alert */}
+      {copied && (
+        <div className="fixed bottom-[3vh] left-1/2 z-50">
+          <Alert
+            type="success"
+            heading="Your link has been copied!"
+            autoClose
+          />
+        </div>
+      )}
+    </>
   );
 }
