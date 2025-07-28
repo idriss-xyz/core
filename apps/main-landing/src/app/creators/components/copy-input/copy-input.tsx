@@ -28,7 +28,7 @@ export function CopyInput({
   return (
     <div
       className={classes(
-        'bg-neutral-50 flex items-center rounded-xl border border-neutral-200',
+        'bg-neutral-50 flex items-center w-[360px] rounded-xl border border-neutral-200',
         className,
       )}
     >
