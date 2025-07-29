@@ -7,35 +7,26 @@ import { getPublicCreatorProfile } from '../utils';
 import { type CreatorProfile } from '../donate/types';
 
 type Properties = {
-  params: { name: string };
+  params: Promise<{ name: string }>;
 };
 
 // ts-unused-exports:disable-next-line
 export async function generateMetadata({
   params,
 }: Properties): Promise<Metadata> {
-  const profile = await getPublicCreatorProfile(params.name);
-
+  const { name } = await params;
+  const profile = await getPublicCreatorProfile(name);
   if (!profile) {
-    return {
-      robots: {
-        index: false,
-        follow: false,
-      },
-    };
+    return { robots: { index: false, follow: false } };
   }
-
   return {};
 }
 
 // ts-unused-exports:disable-next-line
 export default async function CreatorProfile({ params }: Properties) {
-  const { name } = params;
+  const { name } = await params;
   const rawProfile = await getPublicCreatorProfile(name);
-
-  if (!rawProfile) {
-    notFound();
-  }
+  if (!rawProfile) notFound();
 
   const minimumAlertAmount = Number(rawProfile.minimumAlertAmount);
   const minimumTTSAmount = Number(rawProfile.minimumTTSAmount);
