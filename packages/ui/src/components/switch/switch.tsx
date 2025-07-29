@@ -1,18 +1,24 @@
 import * as RadixSwitch from '@radix-ui/react-switch';
 import { forwardRef } from 'react';
 
+import { classes } from '../../utils';
+
 type Properties = {
   value: boolean;
   onChange: (value: boolean) => void;
+  className?: string;
   disabled?: boolean;
 };
 
 export const Switch = forwardRef<HTMLButtonElement, Properties>(
-  ({ value, onChange, disabled }, reference) => {
+  ({ value, onChange, className, disabled }, reference) => {
     return (
       <RadixSwitch.Root
         ref={reference}
-        className="group p-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+        className={classes(
+          'group p-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 disabled:cursor-not-allowed disabled:opacity-50',
+          className,
+        )}
         checked={value}
         onCheckedChange={onChange}
         disabled={disabled}
