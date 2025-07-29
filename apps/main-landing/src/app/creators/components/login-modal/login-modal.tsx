@@ -11,6 +11,7 @@ import Image from 'next/image';
 import { IDRISS_TOROID } from '@/assets';
 
 import { useAuth } from '../../context/auth-context';
+import { usePrivy } from '@privy-io/react-auth';
 
 type Properties = {
   isOpened: boolean;
@@ -20,9 +21,11 @@ type Properties = {
 
 export const LoginModal = ({ isOpened, onClose, isLoading }: Properties) => {
   const { earlyAccessToken } = useAuth();
+  const { authenticated } = usePrivy();
 
   const handleTwitchLogin = () => {
     if (!earlyAccessToken) return;
+    if (authenticated) window.location.href = `creators/app/`;
     window.location.href = `${CREATOR_API_URL}/auth/twitch?token=${earlyAccessToken}`;
   };
 
