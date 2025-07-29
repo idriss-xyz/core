@@ -1,9 +1,5 @@
 'use client';
-import {
-  CREATORS_LINK,
-  CREATOR_API_URL,
-  TWITCH_EXTENSION_LINK,
-} from '@idriss-xyz/constants';
+import { CREATOR_API_URL, TWITCH_EXTENSION_LINK } from '@idriss-xyz/constants';
 import { Button } from '@idriss-xyz/ui/button';
 import { Card } from '@idriss-xyz/ui/card';
 import { Form } from '@idriss-xyz/ui/form';
@@ -25,6 +21,7 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { editCreatorProfile } from '@/app/creators/utils';
 import { useAuth } from '@/app/creators/context/auth-context';
 import { soundMap, testDonation } from '@/app/creators/constants';
+import { ConfirmationModal } from '@/app/creators/components/confirmation-modal/confirmation-modal';
 import { CopyInput } from '@/app/creators/components/copy-input/copy-input';
 import {
   FormFieldWrapper,
@@ -114,6 +111,7 @@ export default function StreamAlerts() {
   >(null);
   const [showCustomUpload, setShowCustomUpload] = useState(false);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [isCopyModalOpen, setIsCopyModalOpen] = useState(false);
 
   const formMethods = useForm<FormPayload>({
     defaultValues: {
@@ -259,9 +257,16 @@ export default function StreamAlerts() {
                     <label className="pb-1 text-label4 text-neutralGreen-700">
                       Overlay link
                     </label>
-                    <CopyInput
-                      value={`${CREATORS_LINK}/obs/${creator?.name}`}
-                    />
+                    <div
+                      className="cursor-pointer"
+                      onClick={() => {
+                        return setIsCopyModalOpen(true);
+                      }}
+                    >
+                      <div className="pointer-events-none">
+                        <CopyInput value={`${creator?.obsUrl}`} />
+                      </div>
+                    </div>
                     <div className="flex items-center pt-1">
                       <span className="flex items-center space-x-1 text-label7 text-neutral-600 lg:text-label7">
                         Add this as a browser source in your streaming software
@@ -524,6 +529,23 @@ export default function StreamAlerts() {
           <UpgradeBox />
         </Form>
       </div>
+
+      <ConfirmationModal
+        isOpened={isCopyModalOpen}
+        onClose={() => {
+          return setIsCopyModalOpen(false);
+        }}
+        onConfirm={() => {
+          if (creator?.obsUrl) {
+            void navigator.clipboard.writeText(creator.obsUrl);
+          }
+        }}
+        title="⚠️ Confirm before copying"
+        sectionSubtitle="Anyone with this link can embed your stream alerts on their own stream or website.
+Do not share it with anyone or show it on stream."
+        confirmButtonText="Copy link"
+        confirmButtonIntent="secondary"
+      />
 
       {/* Alerts */}
       {testDonationSuccess && (

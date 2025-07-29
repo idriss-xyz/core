@@ -1,6 +1,5 @@
 import { Button } from '@idriss-xyz/ui/button';
 import { Modal } from '@idriss-xyz/ui/modal';
-import { IconButton } from '@idriss-xyz/ui/icon-button';
 
 type Properties = {
   isOpened: boolean;
@@ -8,7 +7,6 @@ type Properties = {
   onConfirm: () => void;
   title: string;
   subtitle?: string;
-  sectionTitle: string;
   sectionSubtitle: string;
   confirmButtonText?: string;
   cancelButtonText?: string;
@@ -21,7 +19,6 @@ export const ConfirmationModal = ({
   onConfirm,
   title,
   subtitle,
-  sectionTitle,
   sectionSubtitle,
   confirmButtonText = 'Confirm',
   cancelButtonText = 'Cancel',
@@ -34,47 +31,33 @@ export const ConfirmationModal = ({
 
   return (
     <Modal
-      className="flex w-[543px] flex-col rounded-xl border border-black/20 bg-white"
+      className="flex w-[560px] flex-col rounded-xl border border-black/20 bg-white"
       isOpened={isOpened}
       onClose={onClose}
       closeOnClickAway
     >
-      <div className="flex w-full items-center justify-between border-b border-neutral-200 py-2 pl-6 pr-3">
+      <div className="flex w-full items-center justify-between border-neutral-200 p-5">
         <div className="flex flex-col gap-1">
-          <h1 className="text-heading5">{title}</h1>
+          <h1 className="text-heading4">{title}</h1>
           {subtitle && (
             <p className="text-body4 text-neutral-600">{subtitle}</p>
           )}
         </div>
-        <IconButton
-          iconName="X"
-          onClick={onClose}
-          size="medium"
-          intent="tertiary"
-          aria-label="Close modal"
-        />
       </div>
-      <div className="flex flex-col gap-[10px] px-6 py-4 text-left">
-        <h2 className="text-label3">{sectionTitle}</h2>
-        <p className="max-w-prose text-body4 text-neutral-600">
+      <div className="flex flex-col gap-[10px] pb-5 pl-5 pr-4 text-left">
+        <p className="max-w-prose text-body5 text-neutral-600">
           {sectionSubtitle}
         </p>
       </div>
-      <div className="flex w-full items-center gap-6 border-t border-neutral-200 px-6 py-3">
+      <div className="flex w-full items-center justify-end gap-3 border-neutral-200 p-5">
         <Button
           size="medium"
           intent={confirmButtonIntent}
           onClick={handleConfirm}
-          className="w-full"
         >
           {confirmButtonText}
         </Button>
-        <Button
-          size="medium"
-          intent="primary"
-          onClick={onClose}
-          className="w-full"
-        >
+        <Button size="medium" intent="primary" onClick={onClose}>
           {cancelButtonText}
         </Button>
       </div>

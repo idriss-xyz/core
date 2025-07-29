@@ -206,6 +206,11 @@ const nextConfig: NextConfig = {
         basePath: false,
         permanent: false,
       },
+      {
+        source: '/creators/obs/:slug*',
+        destination: '/creators/donation-overlay/:slug*',
+        permanent: true,
+      },
       ...LEGACY_URLS.map((url) => {
         return {
           source: url,
