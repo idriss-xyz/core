@@ -14,7 +14,7 @@ interface ToggleProperties {
   onChange: (value: boolean) => void;
 }
 
-export const Toggle = forwardRef<HTMLDivElement, ToggleProperties>(
+export const Toggle = forwardRef<HTMLButtonElement, ToggleProperties>(
   (
     {
       value,
@@ -32,13 +32,13 @@ export const Toggle = forwardRef<HTMLDivElement, ToggleProperties>(
     return (
       <div
         className={classes('flex items-start gap-2', className)}
-        ref={reference}
         {...properties}
       >
         <Switch
           value={value}
           onChange={onChange}
           disabled={disabled}
+          ref={reference}
           className={switchClassname}
         />
         <div className="flex flex-col gap-0">

@@ -18,7 +18,7 @@ export const alert = cva(
 
 export const icon: Record<'default' | 'success' | 'error', IconName> = {
   default: 'InfoCircle',
-  success: 'Check',
+  success: 'CheckCircle2',
   error: 'X',
 };
 

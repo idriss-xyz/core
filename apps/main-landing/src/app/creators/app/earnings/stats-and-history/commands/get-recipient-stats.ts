@@ -9,6 +9,7 @@ interface DonationToken {
   imageUrl?: string;
   network: string;
   decimals: number;
+  name?: string;
 }
 
 interface TokenEarnings {
