@@ -84,7 +84,7 @@ const iconsForCardPaymentMethod: IconName[] = [
 
 const IconsRow = ({ icons }: { icons: IconName[] }) => {
   return (
-    <div className="-mt-4 flex flex-row items-center gap-2 px-12">
+    <div className="-mt-4 flex flex-row items-center gap-2">
       {icons.map((iconName, index) => {
         return (
           <div className="relative size-6" key={index}>
@@ -294,6 +294,7 @@ export default function PaymentMethods() {
                 });
               }}
               className="max-w-screen-xs"
+              switchClassname="hidden"
             />
             {/* Uncomment when we have second payment method ready */}
             {/* <IconsRow tokens={iconsForCryptoPaymentMethod} /> */}
@@ -370,6 +371,7 @@ export default function PaymentMethods() {
                 console.log('Not implemented yet');
               }}
               className="max-w-screen-xs"
+              switchClassname="hidden"
             />
             <IconsRow icons={iconsForCardPaymentMethod} />
           </FormFieldWrapper>

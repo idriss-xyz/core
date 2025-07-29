@@ -9,6 +9,7 @@ interface ToggleProperties {
   sublabel?: string;
   disabled?: boolean;
   className?: string;
+  switchClassname?: string;
   comingSoon?: boolean;
   onChange: (value: boolean) => void;
 }
@@ -21,6 +22,7 @@ export const Toggle = forwardRef<HTMLButtonElement, ToggleProperties>(
       sublabel,
       disabled,
       className,
+      switchClassname,
       onChange,
       comingSoon = false,
       ...properties
@@ -37,6 +39,7 @@ export const Toggle = forwardRef<HTMLButtonElement, ToggleProperties>(
           onChange={onChange}
           disabled={disabled}
           ref={reference}
+          className={switchClassname}
         />
         <div className="flex flex-col gap-0">
           {label && (

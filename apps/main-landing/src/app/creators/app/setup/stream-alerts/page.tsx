@@ -20,7 +20,7 @@ import { Icon } from '@idriss-xyz/ui/icon';
 
 import { editCreatorProfile } from '@/app/creators/utils';
 import { useAuth } from '@/app/creators/context/auth-context';
-import { soundMap, testDonation } from '@/app/creators/constants';
+import { soundMap } from '@/app/creators/constants';
 import { ConfirmationModal } from '@/app/creators/components/confirmation-modal/confirmation-modal';
 import { CopyInput } from '@/app/creators/components/copy-input/copy-input';
 import {
@@ -138,15 +138,39 @@ export default function StreamAlerts() {
     setShowCustomUpload(alertSound === 'upload');
   }, [alertSound]);
 
-  const sendTestDonation = useCallback(() => {
+  const sendTestDonation = useCallback(async () => {
     if (!creator?.primaryAddress || !isAddress(creator.primaryAddress)) {
       setTestDonationSuccess(false);
       return;
     }
 
-    localStorage.setItem('testDonation', JSON.stringify(testDonation));
+    try {
+      const authToken = await getAccessToken();
+      if (!authToken) {
+        setTestDonationSuccess(false);
+        console.error('Could not get auth token.');
+        return;
+      }
 
-    setTestDonationSuccess(true);
+      const response = await fetch(
+        `${CREATOR_API_URL}/creator-profile/test-alert`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        },
+      );
+
+      if (response.ok) {
+        setTestDonationSuccess(true);
+      } else {
+        setTestDonationSuccess(false);
+      }
+    } catch (error) {
+      console.error('Error sending test donation:', error);
+      setTestDonationSuccess(false);
+    }
   }, [creator?.primaryAddress]);
 
   const handleAlertClose = useCallback(() => {
