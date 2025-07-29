@@ -27,20 +27,22 @@ export function CopyInput({
   };
 
   return (
-    <>
+    <div
+      className={classes(
+        'bg-neutral-50 flex w-[360px] items-center rounded-xl border border-neutral-200',
+        className,
+      )}
+    >
+      <span className="grow truncate p-3 text-sm">{value}</span>
       <div
-        className={classes(
-          'bg-neutral-50 flex items-center rounded-xl border border-neutral-200',
-          className,
-        )}
+        className="flex shrink-0 cursor-pointer items-center self-stretch border-l border-gray-200 px-3"
+        onClick={handleCopy}
       >
-        <span className="grow truncate p-3 text-sm">{value}</span>
-        <div
-          className="flex shrink-0 cursor-pointer items-center self-stretch border-l border-gray-200 px-3 hover:text-mint-600"
-          onClick={handleCopy}
-        >
+        {copied ? (
+          <Icon name="Check" size={16} />
+        ) : (
           <Icon name={iconName ?? 'Copy'} size={16} />
-        </div>
+        )}
       </div>
 
       {/* Copy Alert */}
@@ -53,6 +55,6 @@ export function CopyInput({
           />
         </div>
       )}
-    </>
+    </div>
   );
 }

@@ -3,7 +3,7 @@
 import { useMemo, type CSSProperties } from 'react';
 import { ChainToken, CREATOR_API_URL } from '@idriss-xyz/constants';
 import { Badge } from '@idriss-xyz/ui/badge';
-import { roundToSignificantFiguresForCopilotTrading } from '@idriss-xyz/utils';
+import { formatTokenValue } from '@idriss-xyz/utils';
 import { formatUnits } from 'viem';
 import { classes } from '@idriss-xyz/ui/utils';
 
@@ -75,14 +75,6 @@ export default function DonationNotification({
     onFullyComplete,
   );
 
-  const { value: roundedNumber, index: zerosIndex } =
-    roundToSignificantFiguresForCopilotTrading(
-      Number.parseFloat(
-        formatUnits(token.amount, Number(token.details?.decimals)),
-      ),
-      2,
-    );
-
   return (
     <div
       role="alert"
@@ -118,16 +110,10 @@ export default function DonationNotification({
             <>
               <span className="text-body3 text-neutral-600">
                 sent{' '}
-                {zerosIndex ? (
-                  <>
-                    0.0
-                    <span className="inline-block translate-y-1 px-px text-xs">
-                      {zerosIndex}
-                    </span>
-                    {roundedNumber}
-                  </>
-                ) : (
-                  roundedNumber
+                {formatTokenValue(
+                  Number.parseFloat(
+                    formatUnits(token.amount, Number(token.details?.decimals)),
+                  ),
                 )}{' '}
                 {token.details?.symbol}{' '}
               </span>

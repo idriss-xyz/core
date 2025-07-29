@@ -23,7 +23,8 @@ import twitchAccountInfoRouter from './routes/twitch-account-info';
 import authRouter from './routes/auth';
 import uploadRouter from './routes/upload';
 import cors from 'cors';
-import { initializeDatabase } from './db/database';
+import { AppDataSource, initializeDatabase } from './db/database';
+import { Creator } from './db/entities';
 
 initializeDatabase()
   .then(() => console.log('DB connected...'))
@@ -69,6 +70,8 @@ const io = new SocketIOServer(server, {
   },
 });
 
+app.set('io', io);
+
 // Socket.IO connection handler (mirroring your copilot-api)
 io.on('connection', (socket: Socket) => {
   console.log('Client connected');
@@ -93,6 +96,53 @@ io.on('connection', (socket: Socket) => {
       }
     }
   });
+});
+
+// a dedicated namespace for OBS overlays:
+const overlayWS = io.of('/overlay');
+
+overlayWS.use(async (socket: Socket, next) => {
+  const { overlayToken } = socket.handshake.auth as { overlayToken?: string };
+  if (!overlayToken) return next(new Error('auth error'));
+
+  const creatorRepo = AppDataSource.getRepository(Creator);
+  const creator = await creatorRepo.findOne({
+    where: {
+      obsUrl: `https://idriss.xyz/creators/donation-overlay/${overlayToken}`,
+    },
+  });
+
+  if (!creator) return next(new Error('invalid overlay token'));
+
+  socket.data.userId = creator.privyId.toLowerCase();
+  next();
+});
+
+overlayWS.on('connection', async (socket) => {
+  const userId = socket.data.userId as string;
+  const creatorRepo = AppDataSource.getRepository(Creator);
+  const creator = await creatorRepo.findOneBy({ privyId: userId });
+
+  if (!creator) {
+    console.error(
+      `Creator with privyId ${userId} not found for socket connection.`,
+    );
+    socket.disconnect();
+    return;
+  }
+
+  console.log('Overlay connected for', userId);
+  socket.join(userId);
+
+  if (creator.forceDonationOverlayRefresh) {
+    console.log('Forcing update');
+    socket.emit('forceRefresh');
+
+    await creatorRepo.update(
+      { id: creator.id },
+      { forceDonationOverlayRefresh: false },
+    );
+  }
 });
 
 app.get('/', (req: Request, res: Response) => {

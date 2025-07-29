@@ -8,6 +8,7 @@ import {
   CreatorToken,
   Token,
   User,
+  CreatorAddress,
 } from './entities';
 import {
   AddAmountRaw1743181200000,
@@ -28,6 +29,8 @@ import {
   AddEmailAndJoinedAtToCreator1753117191000,
   UpdateCreatorProfileView1753117192000,
   AddDoneSetupCreatorField1753315853694,
+  AddForceDonationOverlayRefresh1753315853694,
+  AddCreatorAddresses1753656919000,
   AddReceiveEmailsCreatorField1753726864037,
 } from './migrations';
 import { CreatorProfileView } from './views';
@@ -45,6 +48,7 @@ export const AppDataSource = new DataSource({
     CreatorToken,
     DonationParameters,
     CreatorProfileView,
+    CreatorAddress,
   ],
   synchronize: false,
   migrations: [
@@ -66,6 +70,8 @@ export const AppDataSource = new DataSource({
     AddEmailAndJoinedAtToCreator1753117191000,
     UpdateCreatorProfileView1753117192000,
     AddDoneSetupCreatorField1753315853694,
+    AddForceDonationOverlayRefresh1753315853694,
+    AddCreatorAddresses1753656919000,
     AddReceiveEmailsCreatorField1753726864037,
   ],
 });

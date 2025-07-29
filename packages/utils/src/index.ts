@@ -1,7 +1,6 @@
 export type { FullyRequired } from './typescript-utils';
 
 export {
-  roundToSignificantFiguresForCopilotTrading,
   applyDecimalsToNumericString,
   getTransactionUrl,
   isNativeTokenAddress,
@@ -26,4 +25,5 @@ export {
   getChainByNetworkName,
   getChainLogoById,
   getChainIdByNetworkName,
+  createAddressToCreatorMap,
 } from './donation-utils';

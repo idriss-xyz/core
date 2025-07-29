@@ -1,5 +1,6 @@
 'use client';
 
+import { io, Socket } from 'socket.io-client';
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
@@ -13,6 +14,7 @@ import { getEnsAvatar } from 'viem/actions';
 import { normalize } from 'viem/ens';
 import {
   CHAIN_ID_TO_TOKENS,
+  CREATOR_API_URL,
   CREATORS_LINK,
   DEFAULT_DONATION_MIN_ALERT_AMOUNT,
   DEFAULT_DONATION_MIN_SFX_AMOUNT,
@@ -25,7 +27,7 @@ import { clients } from '@idriss-xyz/blockchain-clients';
 import { CHAIN_TO_IDRISS_TIPPING_ADDRESS } from '../donate/constants';
 import { ethereumClient } from '../donate/config';
 import { useCreators } from '../hooks/use-creators';
-import { getCreatorProfile } from '../utils';
+import { getPublicCreatorProfileBySlug } from '../utils';
 import { Address } from '../donate/types';
 
 import DonationNotification, {
@@ -72,6 +74,7 @@ export default function Obs({ creatorName }: Properties) {
     searchParams: { address: addressParameter },
   } = useCreators();
 
+  const [name, setName] = useState<string | undefined>(creatorName);
   const [address, setAddress] = useState<Address | null>(null);
   const [minimumAmounts, setMinimumAmounts] = useState<MinimumAmounts>({
     minimumAlertAmount: DEFAULT_DONATION_MIN_ALERT_AMOUNT,
@@ -90,17 +93,66 @@ export default function Obs({ creatorName }: Properties) {
   const [isDisplayingDonation, setIsDisplayingDonation] = useState(false);
   const [donationsQueue, setDonationsQueue] = useState<QueuedDonation[]>([]);
 
+  useEffect(() => {
+    if (!name) return;
+
+    const overlayToken = window.location.pathname.split('/').pop()!;
+
+    const socket: Socket = io(`${CREATOR_API_URL}/overlay`, {
+      auth: { overlayToken },
+      transports: ['websocket'],
+    });
+
+    socket.on('connect', () => {
+      console.log('✅ Overlay socket connected');
+    });
+
+    socket.on('forceRefresh', () => {
+      console.log('Got force refresh');
+      const url = new URL(window.location.href);
+      url.searchParams.set('t', Date.now().toString());
+      window.location.href = url.toString();
+    });
+
+    socket.on('creatorConfigUpdated', (data) => {
+      console.log('Got new settings', data);
+      // update your local state with the new config
+      setMinimumAmounts({
+        minimumAlertAmount: data.donationParameters.minimumAlertAmount,
+        minimumSfxAmount: data.donationParameters.minimumSfxAmount,
+        minimumTTSAmount: data.donationParameters.minimumTTSAmount,
+      });
+      setEnableToggles({
+        alertEnabled: data.donationParameters.alertEnabled,
+        sfxEnabled: data.donationParameters.sfxEnabled,
+        ttsEnabled: data.donationParameters.ttsEnabled,
+      });
+      setCustomBadWords(data.donationParameters.customBadWords);
+      setAlertSound(data.donationParameters.alertSound);
+    });
+
+    socket.on('connect_error', (error) => {
+      console.error('Overlay auth failed:', error.message);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [name]);
+
   // If creator name present use info from db, if not, use params only
   useEffect(() => {
     const updateCreatorInfo = () => {
+      const slugFromUrl = window.location.pathname.split('/').pop();
       if (
         !addressParameter.isFetching &&
         addressParameter.data == null &&
-        creatorName
+        slugFromUrl
       ) {
-        getCreatorProfile(creatorName)
+        getPublicCreatorProfileBySlug(slugFromUrl)
           .then((profile) => {
             if (profile) {
+              setName(profile.name);
               setAddress({
                 data: profile.primaryAddress,
                 isValid: isAddress(profile.primaryAddress),
@@ -137,7 +189,7 @@ export default function Obs({ creatorName }: Properties) {
       } else if (
         !addressParameter.isFetching &&
         !addressParameter.data &&
-        !creatorName
+        !slugFromUrl
       ) {
         router.push(CREATORS_LINK);
         return;
@@ -150,7 +202,7 @@ export default function Obs({ creatorName }: Properties) {
     return () => {
       return clearInterval(interval);
     };
-  }, [router, addressParameter.data, addressParameter.isFetching, creatorName]);
+  }, [router, addressParameter.data, addressParameter.isFetching]);
 
   const handleDonationFullyComplete = useCallback(() => {
     setDonationsQueue((previous) => {
@@ -201,7 +253,7 @@ export default function Obs({ creatorName }: Properties) {
             minimumAmounts,
             enableToggles,
             alertSound,
-            creatorName,
+            creatorName: name,
           };
 
           addDonation(queuedDonation);
@@ -232,13 +284,13 @@ export default function Obs({ creatorName }: Properties) {
     return () => {
       window.removeEventListener('storage', handleStorageChange);
     };
-  }, [addDonation, minimumAmounts, enableToggles, alertSound, creatorName]);
+  }, [addDonation, minimumAmounts, enableToggles, alertSound, name]);
   const fetchTipMessageLogs = useCallback(async () => {
     if (!address?.data) return;
 
-    for (const { chain, client, name } of clients) {
+    for (const { chain, client, name: chainName } of clients) {
       try {
-        const eventSignature = TIP_MESSAGE_EVENT_ABI[name];
+        const eventSignature = TIP_MESSAGE_EVENT_ABI[chainName];
         if (!eventSignature) {
           continue;
         }
@@ -335,7 +387,7 @@ export default function Obs({ creatorName }: Properties) {
             continue;
           }
 
-          if (!creatorName) {
+          if (!name) {
             console.error('Creator name not available, skipping donation');
             continue;
           }
@@ -354,7 +406,7 @@ export default function Obs({ creatorName }: Properties) {
             minimumAmounts,
             enableToggles,
             alertSound,
-            creatorName,
+            creatorName: name,
           });
         }
       } catch (error) {
@@ -368,7 +420,7 @@ export default function Obs({ creatorName }: Properties) {
     enableToggles,
     customBadWords,
     alertSound,
-    creatorName,
+    name,
   ]);
 
   useEffect(() => {

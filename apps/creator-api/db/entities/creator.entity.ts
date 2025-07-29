@@ -6,6 +6,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Hex } from 'viem';
+import { CreatorAddress } from './creator-address.entity';
 import { CreatorNetwork } from './creator-network.entity';
 import { CreatorToken } from './creator-token.entity';
 
@@ -50,9 +51,19 @@ export class Creator {
   @Column({ type: 'boolean', name: 'receive_emails' })
   receiveEmails?: Boolean;
 
+  @Column({
+    type: 'boolean',
+    name: 'force_donation_overlay_refresh',
+    default: false,
+  })
+  forceDonationOverlayRefresh!: Boolean;
+
   @OneToMany(() => CreatorNetwork, (network) => network.creator)
   networks!: CreatorNetwork[];
 
   @OneToMany(() => CreatorToken, (token) => token.creator)
   tokens!: CreatorToken[];
+
+  @OneToMany(() => CreatorAddress, (address) => address.creator)
+  associatedAddresses!: CreatorAddress[];
 }
