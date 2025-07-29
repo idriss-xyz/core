@@ -9,6 +9,7 @@ interface ToggleProperties {
   sublabel?: string;
   disabled?: boolean;
   className?: string;
+  switchClassname?: string;
   comingSoon?: boolean;
   onChange: (value: boolean) => void;
 }
@@ -21,6 +22,7 @@ export const Toggle = forwardRef<HTMLDivElement, ToggleProperties>(
       sublabel,
       disabled,
       className,
+      switchClassname,
       onChange,
       comingSoon = false,
       ...properties
@@ -33,7 +35,12 @@ export const Toggle = forwardRef<HTMLDivElement, ToggleProperties>(
         ref={reference}
         {...properties}
       >
-        <Switch value={value} onChange={onChange} disabled={disabled} />
+        <Switch
+          value={value}
+          onChange={onChange}
+          disabled={disabled}
+          className={switchClassname}
+        />
         <div className="flex flex-col gap-0">
           {label && (
             <div className="flex items-center">
