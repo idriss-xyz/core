@@ -280,6 +280,7 @@ export const useDonationNotification = (
     alertEnabled,
     sfxEnabled,
     ttsEnabled,
+    isTestNotification,
   ]);
 
   return { showNotification };

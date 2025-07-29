@@ -307,8 +307,8 @@ export default function EarningsStats() {
                         >
                           <td className="py-3">
                             <div className="flex items-center gap-2">
-                              <div className="size-6 flex-shrink-0 rounded-full bg-neutral-100" />
-                              <div className="mr-5 h-[10px] flex-1 max-w-[90px] rounded-md bg-neutral-100" />
+                              <div className="size-6 shrink-0 rounded-full bg-neutral-100" />
+                              <div className="mr-5 h-[10px] max-w-[90px] flex-1 rounded-md bg-neutral-100" />
                             </div>
                           </td>
                           <td>
