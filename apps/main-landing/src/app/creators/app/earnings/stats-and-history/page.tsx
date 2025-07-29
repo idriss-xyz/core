@@ -281,7 +281,7 @@ export default function EarningsStats() {
                               />
                             </div>
                             <span className="text-sm text-gray-300">
-                              {item.tokenData.symbol}
+                              {item.tokenData.symbol} {/* TODO: Change for name */}
                             </span>
                           </td>
                           <td>
@@ -302,22 +302,19 @@ export default function EarningsStats() {
                       return (
                         <tr
                           key={`skeleton-${index}`}
-                          className="border-b border-gray-200 last:border-b-0"
+                          className="border-b border-gray-200 last:border-b-0 h-[49px]"
                         >
-                          <td colSpan={3} className="py-0">
-                            <div className="flex h-[70px] items-center gap-6 py-8">
-                              <div className="size-9 rounded-full bg-neutral-100" />
-                              {[...Array.from({ length: 3 }).keys()].map(
-                                (skeletonIndex) => {
-                                  return (
-                                    <div
-                                      key={skeletonIndex}
-                                      className="h-[10px] w-[65px] rounded-md bg-neutral-100"
-                                    />
-                                  );
-                                },
-                              )}
+                          <td className="py-3">
+                            <div className="flex items-center gap-2">
+                              <div className="size-6 rounded-full bg-neutral-100 flex-shrink-0" />
+                              <div className="h-[10px] rounded-md bg-neutral-100 flex-1 mr-5"/>
                             </div>
+                          </td>
+                          <td className="">
+                            <div className="h-[10px] w-[80px] mr-auto rounded-md bg-neutral-100"/>
+                          </td>
+                          <td className="">
+                            <div className="h-[10px] w-[49px] ml-auto rounded-md bg-neutral-100"/>
                           </td>
                         </tr>
                       );
