@@ -7,14 +7,14 @@ import { getPublicCreatorProfile } from '../utils';
 import { type CreatorProfile } from '../donate/types';
 
 type Properties = {
-  params: Promise<{ name: string }>;
+  params: { name: string };
 };
 
 // ts-unused-exports:disable-next-line
 export async function generateMetadata({
   params,
 }: Properties): Promise<Metadata> {
-  const { name } = await params;
+  const { name } = params;
   const profile = await getPublicCreatorProfile(name);
   if (!profile) {
     return { robots: { index: false, follow: false } };
@@ -24,7 +24,7 @@ export async function generateMetadata({
 
 // ts-unused-exports:disable-next-line
 export default async function CreatorProfile({ params }: Properties) {
-  const { name } = await params;
+  const { name } = params;
   const rawProfile = await getPublicCreatorProfile(name);
   if (!rawProfile) notFound();
 
