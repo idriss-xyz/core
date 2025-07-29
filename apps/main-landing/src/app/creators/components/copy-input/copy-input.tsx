@@ -1,5 +1,6 @@
 import { classes } from '@idriss-xyz/ui/utils';
 import { Icon, type IconName } from '@idriss-xyz/ui/icon';
+import { Alert } from '@idriss-xyz/ui/alert';
 
 import { useCopyToClipboard } from '../../hooks/use-copy-to-clipboard';
 
@@ -59,6 +60,17 @@ export function CopyInput({
           <Icon name={iconName ?? 'Copy'} size={16} />
         )}
       </div>
+
+      {/* Copy Alert */}
+      {copied && (
+        <div className="fixed bottom-[3vh] left-1/2 z-50">
+          <Alert
+            type="success"
+            heading="Your link has been copied!"
+            autoClose
+          />
+        </div>
+      )}
     </div>
   );
 }

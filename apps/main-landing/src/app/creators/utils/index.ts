@@ -38,6 +38,7 @@ export type CreatorProfileResponse = {
   displayName?: string;
   profilePictureUrl?: string;
   email?: string;
+  receiveEmails?: boolean;
   donationUrl: string;
   obsUrl?: string;
   joinedAt: string;

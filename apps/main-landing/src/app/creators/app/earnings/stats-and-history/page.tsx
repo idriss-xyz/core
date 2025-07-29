@@ -281,7 +281,8 @@ export default function EarningsStats() {
                               />
                             </div>
                             <span className="text-sm text-gray-300">
-                              {item.tokenData.symbol}
+                              {item.tokenData.name ?? item.tokenData.symbol}{' '}
+                              {/* TODO: Change for name, current db has name optional */}
                             </span>
                           </td>
                           <td>
@@ -291,6 +292,30 @@ export default function EarningsStats() {
                           </td>
                           <td className="text-right align-middle text-sm font-medium text-black">
                             {formatFiatValue(item.totalAmount)}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                    {/* Add skeleton rows to fill up to 3 total rows */}
+                    {Array.from({
+                      length: Math.max(0, 3 - otherAssets.length),
+                    }).map((_, index) => {
+                      return (
+                        <tr
+                          key={`skeleton-${index}`}
+                          className="h-[49px] border-b border-gray-200 last:border-b-0"
+                        >
+                          <td className="py-3">
+                            <div className="flex items-center gap-2">
+                              <div className="size-6 shrink-0 rounded-full bg-neutral-100" />
+                              <div className="mr-5 h-[10px] max-w-[90px] flex-1 rounded-md bg-neutral-100" />
+                            </div>
+                          </td>
+                          <td>
+                            <div className="mr-auto h-[10px] w-[80px] rounded-md bg-neutral-100" />
+                          </td>
+                          <td>
+                            <div className="ml-auto h-[10px] w-[49px] rounded-md bg-neutral-100" />
                           </td>
                         </tr>
                       );

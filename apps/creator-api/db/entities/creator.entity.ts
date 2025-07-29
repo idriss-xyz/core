@@ -48,6 +48,9 @@ export class Creator {
   @Column({ type: 'boolean', name: 'done_setup' })
   doneSetup!: Boolean;
 
+  @Column({ type: 'boolean', name: 'receive_emails', default: true })
+  receiveEmails!: Boolean;
+
   @Column({
     type: 'boolean',
     name: 'force_donation_overlay_refresh',
