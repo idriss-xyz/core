@@ -85,6 +85,18 @@ type FormPayload = {
 export default function StreamAlerts() {
   const { creator } = useAuth();
 
+  const [saveSuccess, setSaveSuccess] = useState<boolean | null>(null);
+  const [testDonationSuccess, setTestDonationSuccess] = useState<
+    boolean | null
+  >(null);
+  const [isCustomSoundUploaded, setIsCustomSoundUploaded] = useState(false);
+  const [fileComponentKey, setFileComponentKey] = useState(0);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [isCopyModalOpen, setIsCopyModalOpen] = useState(false);
+  const [isUrlWarningConfirmed, setIsUrlWarningConfirmed] = useState(false);
+  const [confirmButtonText, setConfirmButtonText] = useState('Copy link');
+  const [wasCopied, setWasCopied] = useState(false);
+
   // TODO: Extract to constants
   const alertSounds = [
     { value: 'DEFAULT_TRUMPET_SOUND', label: 'Classic trumpet' },
@@ -92,11 +104,11 @@ export default function StreamAlerts() {
     { value: 'DEFAULT_CASH_REGISTER_SOUND', label: 'Cash register' },
     {
       value: 'upload',
-      label: creator?.alertSound === 'upload' ? 'Replace custom' : 'Custom',
+      label: isCustomSoundUploaded ? 'Replace custom' : 'Custom',
       renderLabel: () => {
         return (
           <span className="text-mint-500 underline">
-            {creator?.alertSound === 'upload'
+            {isCustomSoundUploaded
               ? 'Replace custom sound'
               : '+ Upload your own'}
           </span>
@@ -104,17 +116,6 @@ export default function StreamAlerts() {
       },
     },
   ];
-
-  const [saveSuccess, setSaveSuccess] = useState<boolean | null>(null);
-  const [testDonationSuccess, setTestDonationSuccess] = useState<
-    boolean | null
-  >(null);
-  const [showCustomUpload, setShowCustomUpload] = useState(false);
-  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
-  const [isCopyModalOpen, setIsCopyModalOpen] = useState(false);
-  const [isUrlWarningConfirmed, setIsUrlWarningConfirmed] = useState(false);
-  const [confirmButtonText, setConfirmButtonText] = useState('Copy link');
-  const [wasCopied, setWasCopied] = useState(false);
 
   const openConfirmationModal = (source: 'text' | 'icon') => {
     if (source === 'icon') {
@@ -144,11 +145,6 @@ export default function StreamAlerts() {
     'sfxEnabled',
     'alertSound',
   ]);
-
-  // Update showCustomUpload when alertSound changes
-  useEffect(() => {
-    setShowCustomUpload(alertSound === 'upload');
-  }, [alertSound]);
 
   const sendTestDonation = useCallback(async () => {
     if (!creator?.primaryAddress || !isAddress(creator.primaryAddress)) {
@@ -242,19 +238,26 @@ export default function StreamAlerts() {
         alertSound: creator.alertSound ?? 'DEFAULT_TRUMPET_SOUND',
       });
       // Set initial state of custom upload based on creator's alertSound
-      setShowCustomUpload(creator.alertSound === 'upload');
+      setIsCustomSoundUploaded(creator.alertSound === 'upload');
     }
   }, [creator, formMethods]);
 
   const handleAlertSoundChange = (value: string) => {
+    if (value === 'upload' && isCustomSoundUploaded) {
+      setFileComponentKey((previous) => {
+        return previous + 1;
+      });
+    }
     formMethods.setValue('alertSound', value);
-    setShowCustomUpload(value === 'upload');
   };
 
   const fileUploadCallback = useCallback(() => {
-    setShowCustomUpload(false);
-    // TODO: Change dropdown label to Replace custom
-  }, [setShowCustomUpload]);
+    setIsCustomSoundUploaded(true);
+  }, []);
+
+  const handleFileRemove = useCallback(() => {
+    setIsCustomSoundUploaded(false);
+  }, []);
 
   return (
     <Card className="w-full">
@@ -405,7 +408,13 @@ export default function StreamAlerts() {
                     );
                   }}
                 />
-                {showCustomUpload && <File onUpload={fileUploadCallback} />}
+                {alertSound === 'upload' && (
+                  <File
+                    key={fileComponentKey}
+                    onUpload={fileUploadCallback}
+                    onRemove={handleFileRemove}
+                  />
+                )}
               </>
             )}
           </FormFieldWrapper>
