@@ -35,10 +35,9 @@ export const verifyToken = () => {
 
       const creatorsRepo = AppDataSource.getRepository(Creator);
       const privyId = decoded.sub;
-      const creator = await creatorsRepo.findOne({ where: { privyId } });
 
       // We only check req.user on patch routes, on post it's ok to have empty string
-      req.user = { id: creator?.privyId || '' };
+      req.user = { id: privyId };
       next();
     } catch (error) {
       console.error('Token verification failed:', error);
