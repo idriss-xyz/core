@@ -17,7 +17,6 @@ interface Properties {
 
 // ts-unused-exports:disable-next-line
 export default function Donate({ creatorProfile }: Properties) {
-  console.log(creatorProfile);
   return (
     <RainbowKitProviders>
       <DonateContent creatorProfile={creatorProfile} />
