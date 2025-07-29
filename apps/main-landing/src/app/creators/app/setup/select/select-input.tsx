@@ -25,7 +25,7 @@ export const SelectInput = forwardRef(
       >
         <div className="flex-1">
           {selected ? (
-            <span className="text-body4 text-black">{value}</span>
+            <span className="text-body4 text-neutral-900">{value}</span>
           ) : (
             <span className="text-body4 text-neutral-600">
               {placeholder ?? 'Select an option'}
