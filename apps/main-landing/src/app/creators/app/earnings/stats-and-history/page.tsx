@@ -155,7 +155,7 @@ export default function EarningsStats() {
                   {stats.totalDonationsCount} donation
                   {stats.totalDonationsCount !== 1 && 's'}
                 </span>
-                <span className="pointer-events-none absolute right-2 top-8 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-black">
+                <span className="pointer-events-none absolute right-2 top-8 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-mint-900">
                   <Icon
                     size={24}
                     name="Trophy"
@@ -163,7 +163,7 @@ export default function EarningsStats() {
                   />
                   {stats.distinctDonorsCount} donors
                 </span>
-                <span className="pointer-events-none absolute bottom-4 right-2 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-black">
+                <span className="pointer-events-none absolute bottom-4 right-2 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-mint-900">
                   <Icon
                     size={24}
                     name="TrendingUp"

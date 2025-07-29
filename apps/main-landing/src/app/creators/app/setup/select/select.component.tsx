@@ -113,7 +113,7 @@ export const Select = <T,>({
             <SelectOptionContainer className="py-2">
               <ScrollArea
                 className={classes(
-                  'max-h-64 gap-1 overflow-y-auto pl-2 pr-4 text-black',
+                  'max-h-64 gap-1 overflow-y-auto pl-2 pr-4 text-neutral-900',
                   optionsContainerClassName,
                 )}
               >
