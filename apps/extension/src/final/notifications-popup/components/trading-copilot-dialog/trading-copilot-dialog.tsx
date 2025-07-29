@@ -10,7 +10,7 @@ import { Link } from '@idriss-xyz/ui/link';
 import {
   formatBigNumber,
   getShortWalletHex,
-  roundToSignificantFiguresForCopilotTrading,
+  formatTokenValue,
   isSolanaAddress,
 } from '@idriss-xyz/utils';
 import {
@@ -174,16 +174,6 @@ const TradingCopilotDialogContent = ({
   );
 
   if (exchanger.isSending && exchanger.quoteData?.includedSteps[0]) {
-    const { value: fromRoundedNumber, index: fromZerosIndex } =
-      roundToSignificantFiguresForCopilotTrading(
-        exchanger.details.from.amount,
-        2,
-      );
-    const { value: toRoundedNumber, index: toZerosIndex } =
-      roundToSignificantFiguresForCopilotTrading(
-        exchanger.details.to.amount,
-        2,
-      );
     return (
       <IdrissSend.Loading
         className="px-5 pb-9 pt-5"
@@ -196,17 +186,7 @@ const TradingCopilotDialogContent = ({
                   exchanger.details.from.amount.toString(),
                 )}
               >
-                {fromZerosIndex ? (
-                  <>
-                    0.0
-                    <span className="inline-block translate-y-1 px-px text-xs">
-                      {fromZerosIndex}
-                    </span>
-                    {fromRoundedNumber}
-                  </>
-                ) : (
-                  fromRoundedNumber
-                )}
+                {formatTokenValue(exchanger.details.from.amount)}
               </TradingCopilotTooltip>{' '}
               {exchanger.details.from.symbol}
             </span>
@@ -215,17 +195,7 @@ const TradingCopilotDialogContent = ({
               <TradingCopilotTooltip
                 content={getWholeNumber(exchanger.details.to.amount.toString())}
               >
-                {toZerosIndex ? (
-                  <>
-                    0.0
-                    <span className="inline-block translate-y-1 px-px text-xs">
-                      {toZerosIndex}
-                    </span>
-                    {toRoundedNumber}
-                  </>
-                ) : (
-                  toRoundedNumber
-                )}
+                {formatTokenValue(exchanger.details.to.amount)}
               </TradingCopilotTooltip>{' '}
               {exchanger.details.to.symbol}
             </span>
@@ -248,9 +218,6 @@ const TradingCopilotDialogContent = ({
       />
     );
   }
-
-  const { value: roundedNumber, index: zerosIndex } =
-    roundToSignificantFiguresForCopilotTrading(dialog.tokenIn.amount, 2);
 
   return (
     <>
@@ -301,19 +268,7 @@ const TradingCopilotDialogContent = ({
                   </>
                 }
               >
-                <span>
-                  {zerosIndex ? (
-                    <>
-                      0.0
-                      <span className="inline-block translate-y-1 px-px text-xs">
-                        {zerosIndex}
-                      </span>
-                      {roundedNumber}
-                    </>
-                  ) : (
-                    roundedNumber
-                  )}
-                </span>
+                <span>{formatTokenValue(dialog.tokenIn.amount)}</span>
               </TradingCopilotTooltip>{' '}
               <span className="flex items-center justify-center gap-x-1">
                 {dialog.tokenIn.symbol}
@@ -446,24 +401,11 @@ const TradingCopilotWalletBalance = ({
     return;
   }
 
-  const { value: roundedNumber, index: zerosIndex } =
-    roundToSignificantFiguresForCopilotTrading(Number(balance), 2);
-
   return (
     <p className="text-body6 text-neutral-500">
       Balance:{' '}
       <TradingCopilotTooltip content={getWholeNumber(balance)}>
-        {zerosIndex ? (
-          <>
-            0.0
-            <span className="inline-block translate-y-1 px-px text-xs">
-              {zerosIndex}
-            </span>
-            {roundedNumber}
-          </>
-        ) : (
-          roundedNumber
-        )}
+        {formatTokenValue(Number(balance))}
       </TradingCopilotTooltip>{' '}
       {getNativeCurrencySymbol(network)}
     </p>

@@ -6,6 +6,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Hex } from 'viem';
+import { CreatorAddress } from './creator-address.entity';
 import { CreatorNetwork } from './creator-network.entity';
 import { CreatorToken } from './creator-token.entity';
 
@@ -59,4 +60,7 @@ export class Creator {
 
   @OneToMany(() => CreatorToken, (token) => token.creator)
   tokens!: CreatorToken[];
+
+  @OneToMany(() => CreatorAddress, (address) => address.creator)
+  associatedAddresses!: CreatorAddress[];
 }

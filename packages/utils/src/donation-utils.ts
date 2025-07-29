@@ -111,3 +111,25 @@ export function getChainLogoById(chainId: number): string | undefined {
   });
   return entry?.logo;
 }
+
+interface MappableCreator {
+  address: Hex;
+  primaryAddress: Hex;
+  displayName: string;
+  profilePictureUrl?: string | null;
+  associatedAddresses: { address: Hex }[];
+}
+
+export function createAddressToCreatorMap<T extends MappableCreator>(
+  creators: T[],
+): Map<string, T> {
+  const addressToCreatorMap = new Map<string, T>();
+  for (const creator of creators) {
+    addressToCreatorMap.set(creator.address.toLowerCase(), creator);
+    addressToCreatorMap.set(creator.primaryAddress.toLowerCase(), creator);
+    for (const addr of creator.associatedAddresses) {
+      addressToCreatorMap.set(addr.address.toLowerCase(), creator);
+    }
+  }
+  return addressToCreatorMap;
+}

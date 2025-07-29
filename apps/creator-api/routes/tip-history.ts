@@ -4,11 +4,16 @@ import { fetchDonationsByToAddress } from '../db/fetch-known-donations';
 import { TipHistoryResponse } from '../types';
 import { syncAndStoreNewDonations } from '../services/zapper/process-donations';
 import { connectedClients } from '../services/socket-server';
-import { calculateDonationLeaderboard } from '@idriss-xyz/utils';
+import {
+  calculateDonationLeaderboard,
+  createAddressToCreatorMap,
+} from '@idriss-xyz/utils';
 import { DonationData } from '@idriss-xyz/constants';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { DEMO_ADDRESS } from '../tests/test-data/constants';
+import { AppDataSource } from '../db/database';
+import { Creator, CreatorAddress } from '../db/entities';
 
 const router = Router();
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -41,7 +46,57 @@ async function handleFetchTipHistory(req: Request, res: Response) {
     }
     const hexAddress = address as Hex;
 
-    const donations = await fetchDonationsByToAddress(hexAddress);
+    const creatorRepository = AppDataSource.getRepository(Creator);
+    const creatorAddressRepository =
+      AppDataSource.getRepository(CreatorAddress);
+
+    let creator = await creatorRepository.findOne({
+      where: { address: hexAddress },
+      relations: ['associatedAddresses'],
+    });
+
+    if (!creator) {
+      const secondaryAddress = await creatorAddressRepository.findOne({
+        where: { address: hexAddress },
+        relations: ['creator', 'creator.associatedAddresses'],
+      });
+      creator = secondaryAddress?.creator ?? null;
+    }
+
+    const allAddresses = creator
+      ? [creator.address, ...creator.associatedAddresses.map((a) => a.address)]
+      : [hexAddress];
+
+    const donations = (
+      await Promise.all(
+        allAddresses.map((addr) => fetchDonationsByToAddress(addr)),
+      )
+    ).flat();
+
+    const allCreators = await creatorRepository.find({
+      relations: ['associatedAddresses'],
+    });
+    const addressToCreatorMap = createAddressToCreatorMap(allCreators);
+
+    for (const donation of donations) {
+      if (creator) {
+        donation.toUser.displayName = creator.displayName;
+        if (creator.profilePictureUrl) {
+          donation.toUser.avatarUrl = creator.profilePictureUrl;
+        }
+      }
+
+      const donorCreator = addressToCreatorMap.get(
+        donation.fromAddress.toLowerCase(),
+      );
+      if (donorCreator) {
+        donation.fromUser.displayName = donorCreator.displayName;
+        if (donorCreator.profilePictureUrl) {
+          donation.fromUser.avatarUrl = donorCreator.profilePictureUrl;
+        }
+      }
+    }
+
     const leaderboard = await calculateDonationLeaderboard(donations);
 
     const response: TipHistoryResponse = {
