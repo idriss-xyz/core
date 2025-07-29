@@ -3,7 +3,11 @@
 import { useMemo, type CSSProperties } from 'react';
 import { ChainToken, CREATOR_API_URL } from '@idriss-xyz/constants';
 import { Badge } from '@idriss-xyz/ui/badge';
-import { formatTokenValue } from '@idriss-xyz/utils';
+import {
+  formatFiatValue,
+  formatTokenValue,
+  getModifiedLeaderboardName,
+} from '@idriss-xyz/utils';
 import { formatUnits } from 'viem';
 import { classes } from '@idriss-xyz/ui/utils';
 
@@ -100,10 +104,12 @@ export default function DonationNotification({
 
       <div className="flex flex-col justify-center gap-y-1">
         <p className="flex flex-row flex-wrap items-center gap-x-1 text-label3 text-neutral-900">
-          {`${donor} `}
+          {`${getModifiedLeaderboardName(donor)} `}
 
           {!token.details && (
-            <span className="text-body3 text-neutral-600">sent ${amount}</span>
+            <span className="text-body3 text-neutral-600">
+              sent {formatFiatValue(Number(amount))}
+            </span>
           )}
 
           {token.details && (
@@ -123,13 +129,7 @@ export default function DonationNotification({
                 className="size-6 rounded-full"
               />{' '}
               <Badge type="success" variant="subtle">
-                $
-                {Number(amount) >= 0.01
-                  ? new Intl.NumberFormat('en-US', {
-                      minimumFractionDigits: Number(amount) % 1 === 0 ? 0 : 2,
-                      maximumFractionDigits: 2,
-                    }).format(Number(amount))
-                  : '<0.01'}
+                {formatFiatValue(Number(amount))}
               </Badge>
             </>
           )}

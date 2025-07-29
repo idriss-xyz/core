@@ -185,6 +185,62 @@ router.get(
   },
 );
 
+router.post(
+  '/test-alert',
+  verifyToken(),
+  async (req: Request, res: Response) => {
+    if (!req.user?.id) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    try {
+      const creatorRepository = AppDataSource.getRepository(Creator);
+      const creator = await creatorRepository.findOne({
+        where: { privyId: req.user.id },
+      });
+
+      if (!creator) {
+        res.status(404).json({ error: 'Creator not found' });
+        return;
+      }
+
+      const io = req.app.get('io');
+      const overlayWS = io.of('/overlay');
+      const userId = creator.privyId.toLowerCase();
+
+      const testDonationPayload = {
+        type: 'test' as const,
+        donor: 'idriss_xyz',
+        amount: 5, // Random amount between $1-100
+        message: 'This is a test donation.',
+        sfxText: null,
+        avatarUrl:
+          'https://res.cloudinary.com/base-web/image/fetch/w_64/f_webp/https%3A%2F%2Fbase.mypinata.cloud%2Fipfs%2Fbafkreicr5lh2f3eumcn4meif5t2pauzeddjjbhjbl4enqrp4ooz4e7on6i%3FpinataGatewayToken%3Df6uqhE35YREDMuFqLvxFLqd-MBRlrJ1qWog8gyCF8T88-Tsiu2IX48F-kyVti78J',
+        txnHash:
+          '0x22f0f25140b9fe35cc01722bb5b0366dcb68bb1bcaee3415ca9f48ce4e57d972',
+        token: {
+          amount: 1_000_000_000_000,
+          details: {
+            symbol: 'ETH',
+            name: 'Ethereum',
+            logo: 'https://assets.coingecko.com/coins/images/279/small/ethereum.png',
+          },
+        },
+      };
+
+      overlayWS.to(userId).emit('testDonation', testDonationPayload);
+
+      res.status(200).json({ message: 'Test alert sent.' });
+      return;
+    } catch (error) {
+      console.error('Error sending test alert:', error);
+      res.status(500).json({ error: 'Failed to send test alert' });
+      return;
+    }
+  },
+);
+
 // Create new creator profile with donation parameters
 router.post('/', verifyToken(), async (req: Request, res: Response) => {
   if (!req.user?.id) {

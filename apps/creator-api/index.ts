@@ -25,6 +25,7 @@ import uploadRouter from './routes/upload';
 import cors from 'cors';
 import { AppDataSource, initializeDatabase } from './db/database';
 import { Creator } from './db/entities';
+import { CREATORS_LINK } from '@idriss-xyz/constants';
 
 initializeDatabase()
   .then(() => console.log('DB connected...'))
@@ -108,7 +109,7 @@ overlayWS.use(async (socket: Socket, next) => {
   const creatorRepo = AppDataSource.getRepository(Creator);
   const creator = await creatorRepo.findOne({
     where: {
-      obsUrl: `https://idriss.xyz/creators/donation-overlay/${overlayToken}`,
+      obsUrl: `${CREATORS_LINK}/donation-overlay/${overlayToken}`,
     },
   });
 
