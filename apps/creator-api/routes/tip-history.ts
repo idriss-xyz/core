@@ -128,7 +128,6 @@ router.post('/sync', async (req: Request, res: Response) => {
       res.status(400).json({ error: 'Invalid or missing address' });
       return;
     }
-    const lowerCaseAddress = address.toLowerCase();
 
     let retries = 0;
     let foundDonationForUser = false;
@@ -146,6 +145,15 @@ router.post('/sync', async (req: Request, res: Response) => {
       if (newDonations.length > 0) {
         allNewlySyncedDonations.push(...newDonations);
 
+        // Check if the donation for the specific user is in this batch
+        if (
+          newDonations.some(
+            (d) => d.toAddress.toLowerCase() === address.toLowerCase(),
+          )
+        ) {
+          foundDonationForUser = true;
+        }
+
         // Distribute ALL new donations to their respective clients via WebSockets
         for (const donation of newDonations) {
           const clients = connectedClients.get(
@@ -157,7 +165,6 @@ router.post('/sync', async (req: Request, res: Response) => {
             }
           }
         }
-        break;
       }
     }
 
