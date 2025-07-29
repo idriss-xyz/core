@@ -29,9 +29,7 @@ function Layout({ children }: { children: React.ReactNode }) {
             <div className="px-3 py-2">
               <BreadcrumbNavigation pathname={pathname} siteMap={siteMap} />
             </div>
-            <ScrollArea className="flex-1 px-3">
-              {children}
-            </ScrollArea>
+            <ScrollArea className="flex-1 px-3">{children}</ScrollArea>
           </main>
         </div>
       </div>

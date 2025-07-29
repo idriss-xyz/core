@@ -7,11 +7,11 @@ import { Button } from '@idriss-xyz/ui/button';
 import { ExternalLink } from '@idriss-xyz/ui/external-link';
 import { Modal } from '@idriss-xyz/ui/modal';
 import Image from 'next/image';
+import { usePrivy } from '@privy-io/react-auth';
 
 import { IDRISS_TOROID } from '@/assets';
 
 import { useAuth } from '../../context/auth-context';
-import { usePrivy } from '@privy-io/react-auth';
 
 type Properties = {
   isOpened: boolean;
