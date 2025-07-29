@@ -52,28 +52,37 @@ export function DonateContent({ creatorProfile }: Properties) {
   const [formHeight, setFormHeight] = useState(0);
   const [isLegacyLink, setIsLegacyLink] = useState(false);
 
+  const {
+    address: { data: addr, isValid: addrValid, isFetching: addrFetching },
+    creatorName,
+    network: networkParameter,
+    token: tokenParameter,
+  } = searchParams;
+
   useEffect(() => {
-    // If profile is passed via props, we don't need to do anything with legacy params.
-    if (creatorProfile) {
-      return;
-    }
+    if (creatorProfile) return;
+    if (addrFetching) return;
+    if (!addr || !addrValid) return;
 
-    // Handle legacy URLs from search params
-    if (searchParams.address.isFetching) {
-      return; // Wait for it
-    }
-
-    if (searchParams.address.data) {
-      setCreatorInfo({
-        ...searchParams,
-        name: searchParams.creatorName,
-        minimumAlertAmount: DEFAULT_DONATION_MIN_ALERT_AMOUNT,
-        minimumTTSAmount: DEFAULT_DONATION_MIN_TTS_AMOUNT,
-        minimumSfxAmount: DEFAULT_DONATION_MIN_SFX_AMOUNT,
-      });
-      setIsLegacyLink(true);
-    }
-  }, [searchParams, creatorProfile]);
+    setCreatorInfo({
+      address: { data: addr, isValid: addrValid, isFetching: addrFetching },
+      name: creatorName ?? '',
+      token: tokenParameter,
+      network: networkParameter,
+      minimumAlertAmount: DEFAULT_DONATION_MIN_ALERT_AMOUNT,
+      minimumTTSAmount: DEFAULT_DONATION_MIN_TTS_AMOUNT,
+      minimumSfxAmount: DEFAULT_DONATION_MIN_SFX_AMOUNT,
+    });
+    setIsLegacyLink(true);
+  }, [
+    addr,
+    addrValid,
+    addrFetching,
+    creatorProfile,
+    creatorName,
+    networkParameter,
+    tokenParameter,
+  ]);
 
   const donationsHistory = useGetTipHistory(
     { address: creatorInfo?.address.data ?? EMPTY_HEX },

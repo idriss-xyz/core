@@ -29,9 +29,10 @@ const formatFileSize = (bytes: number) => {
 interface FileProperties {
   show?: boolean;
   onUpload?: (file: File) => void;
+  onRemove?: () => void;
 }
 
-export const File = ({ show, onUpload }: FileProperties) => {
+export const File = ({ show, onUpload, onRemove }: FileProperties) => {
   const { getAccessToken } = usePrivy();
   const [file, setFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -130,61 +131,14 @@ export const File = ({ show, onUpload }: FileProperties) => {
     setProgress(0);
     setError(null);
     if (fileInputReference.current) fileInputReference.current.value = '';
+    onRemove?.();
   };
 
   if (show === false) return null;
 
   return (
     <div className="flex w-[360px] flex-col gap-6">
-      {/* Drop Area */}
-      <div
-        onClick={() => {
-          return fileInputReference.current?.click();
-        }}
-        onDrop={handleDroppedFile}
-        onDragOver={handleDragOver}
-        className="flex cursor-pointer flex-col items-center gap-6 rounded-[12px] bg-neutral-200 p-8"
-      >
-        <div className="flex size-[56px] items-center justify-center gap-2.5 rounded-[12px] bg-white">
-          <Icon name="UploadCloud" size={24} />
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <div className="flex gap-0.5 pb-1">
-            <div className="h-4.5 w-[219px]">
-              <span className="text-label4">
-                Drop your files here or {` `}
-                <span className="underline decoration-solid underline-offset-[3px]">
-                  browse
-                </span>
-              </span>
-            </div>
-          </div>
-
-          <div className="flex flex-col items-center justify-center gap-2">
-            <span className="text-label6 text-neutral-600">
-              Max file size up to 500 KB
-            </span>
-
-            {error && (
-              <span className="flex items-center space-x-1 pt-1 text-label7 text-red-500 lg:text-label7">
-                <Icon name="AlertCircle" size={12} className="p-0.5" />
-                {error}
-              </span>
-            )}
-          </div>
-        </div>
-
-        <input
-          type="file"
-          ref={fileInputReference}
-          className="hidden"
-          onChange={handleSelectedFile}
-          accept="audio/mpeg"
-        />
-      </div>
-
-      {((error === null && file) ?? isUploading) && (
+      {file || isUploading ? (
         <div className="flex flex-col gap-2.5 rounded-[12px] border border-neutral-200 p-2">
           <div className="flex gap-4">
             <div className="flex size-[42px] items-center justify-center gap-2.5 rounded-[12px] border border-neutral-300 bg-white">
@@ -219,6 +173,53 @@ export const File = ({ show, onUpload }: FileProperties) => {
               )}
             </div>
           </div>
+        </div>
+      ) : (
+        <div
+          onClick={() => {
+            return fileInputReference.current?.click();
+          }}
+          onDrop={handleDroppedFile}
+          onDragOver={handleDragOver}
+          className="flex cursor-pointer flex-col items-center gap-6 rounded-[12px] bg-neutral-200 p-8"
+        >
+          <div className="flex size-[56px] items-center justify-center gap-2.5 rounded-[12px] bg-white">
+            <Icon name="UploadCloud" size={24} />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <div className="flex gap-0.5 pb-1">
+              <div className="h-4.5 w-[219px]">
+                <span className="text-label4">
+                  Drop your files here or {` `}
+                  <span className="underline decoration-solid underline-offset-[3px]">
+                    browse
+                  </span>
+                </span>
+              </div>
+            </div>
+
+            <div className="flex flex-col items-center justify-center gap-2">
+              <span className="text-label6 text-neutral-600">
+                Max file size up to 500 KB
+              </span>
+
+              {error && (
+                <span className="flex items-center space-x-1 pt-1 text-label7 text-red-500 lg:text-label7">
+                  <Icon name="AlertCircle" size={12} className="p-0.5" />
+                  {error}
+                </span>
+              )}
+            </div>
+          </div>
+
+          <input
+            type="file"
+            ref={fileInputReference}
+            className="hidden"
+            onChange={handleSelectedFile}
+            accept="audio/mpeg"
+          />
         </div>
       )}
     </div>
