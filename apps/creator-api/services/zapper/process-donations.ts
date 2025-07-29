@@ -1,4 +1,3 @@
-import { Hex } from 'viem';
 import {
   OLDEST_TRANSACTION_TIMESTAMP,
   TipHistoryQuery,
