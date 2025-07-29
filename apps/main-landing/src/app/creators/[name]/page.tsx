@@ -2,10 +2,9 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { isAddress } from 'viem';
 
+import Donate from '../donate/page';
 import { getPublicCreatorProfile } from '../utils';
 import { type CreatorProfile } from '../donate/types';
-import { DonateContent } from '../donate/donate-content';
-import { RainbowKitProviders } from '../donate/providers';
 
 type Properties = {
   params: { name: string };
@@ -58,9 +57,5 @@ export default async function CreatorProfile({ params }: Properties) {
     minimumSfxAmount: Number.isNaN(minimumSfxAmount) ? 0 : minimumSfxAmount,
   };
 
-  return (
-    <RainbowKitProviders>
-      <DonateContent creatorProfile={creatorProfile} />
-    </RainbowKitProviders>
-  );
+  return <Donate creatorProfile={creatorProfile} />;
 }
