@@ -471,7 +471,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                             </Badge>
                           )}
                           {creatorInfo.minimumTTSAmount > 0 &&
-                            creatorInfo.ttsEnabled && (
+                            (isLegacyLink || creatorInfo.ttsEnabled) && (
                               <Badge type="info" variant="subtle">
                                 TTS ${creatorInfo.minimumTTSAmount}+
                               </Badge>
