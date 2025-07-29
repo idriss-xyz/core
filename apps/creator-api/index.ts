@@ -70,6 +70,8 @@ const io = new SocketIOServer(server, {
   },
 });
 
+app.set('io', io);
+
 // Socket.IO connection handler (mirroring your copilot-api)
 io.on('connection', (socket: Socket) => {
   console.log('Client connected');
