@@ -114,15 +114,34 @@ overlayWS.use(async (socket: Socket, next) => {
 
   if (!creator) return next(new Error('invalid overlay token'));
 
-  // stash privyId for room‑joining & emits
   socket.data.userId = creator.privyId.toLowerCase();
   next();
 });
 
-overlayWS.on('connection', (socket) => {
+overlayWS.on('connection', async (socket) => {
   const userId = socket.data.userId as string;
+  const creatorRepo = AppDataSource.getRepository(Creator);
+  const creator = await creatorRepo.findOneBy({ privyId: userId });
+
+  if (!creator) {
+    console.error(
+      `Creator with privyId ${userId} not found for socket connection.`,
+    );
+    socket.disconnect();
+    return;
+  }
+
   console.log('Overlay connected for', userId);
   socket.join(userId);
+
+  if (creator.forceDonationOverlayRefresh) {
+    socket.emit('forceRefresh');
+
+    await creatorRepo.update(
+      { id: creator.id },
+      { forceDonationOverlayRefresh: false },
+    );
+  }
 });
 
 app.get('/', (req: Request, res: Response) => {

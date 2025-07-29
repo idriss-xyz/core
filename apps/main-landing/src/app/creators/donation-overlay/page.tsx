@@ -107,6 +107,12 @@ export default function Obs({ creatorName }: Properties) {
       console.log('✅ Overlay socket connected');
     });
 
+    socket.on('forceRefresh', () => {
+      const url = new URL(window.location.href);
+      url.searchParams.set('t', Date.now().toString());
+      window.location.href = url.toString();
+    });
+
     socket.on('creatorConfigUpdated', (data) => {
       // update your local state with the new config
       setMinimumAmounts({

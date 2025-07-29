@@ -562,4 +562,28 @@ router.get(
   },
 );
 
+router.post('/broadcast-force-refresh', async (req: Request, res: Response) => {
+  const adminSecret = req.headers['x-admin-secret'];
+  if (adminSecret !== process.env.SECRET_PASSWORD) {
+    res.status(401).json({ error: 'Unauthorized' });
+    return;
+  }
+
+  try {
+    const io = req.app.get('io');
+    const overlayWS = io.of('/overlay');
+
+    overlayWS.emit('forceRefresh');
+
+    res
+      .status(200)
+      .json({ message: 'Force refresh signal sent to all live overlays.' });
+    return;
+  } catch (error) {
+    console.error('Error broadcasting force refresh signal:', error);
+    res.status(500).json({ error: 'Failed to broadcast refresh signal.' });
+    return;
+  }
+});
+
 export default router;
