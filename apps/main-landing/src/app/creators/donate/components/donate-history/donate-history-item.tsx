@@ -13,8 +13,9 @@ import {
 import { CREATOR_CHAIN, DonationData } from '@idriss-xyz/constants';
 import {
   getTransactionUrls,
-  roundToSignificantFiguresForCopilotTrading,
   getModifiedLeaderboardName,
+  formatFiatValue,
+  formatTokenValue,
 } from '@idriss-xyz/utils';
 import { Link } from '@idriss-xyz/ui/link';
 import { useRouter } from 'next/navigation';
@@ -61,14 +62,6 @@ export const DonateHistoryItem = ({
     ? tipReceiver.avatarUrl
     : donation.fromUser.avatarUrl;
 
-  const { value: roundedNumber, index: zerosIndex } =
-    roundToSignificantFiguresForCopilotTrading(
-      Number.parseFloat(
-        formatUnits(BigInt(donation.amountRaw), donation.token.decimals),
-      ),
-      2,
-    );
-
   const transactionUrls = getTransactionUrls({
     chainId:
       CREATOR_CHAIN[
@@ -110,16 +103,13 @@ export const DonateHistoryItem = ({
               </Link>{' '}
               <span className="align-middle text-body3 text-neutral-600">
                 {showReceiver ? 'received' : 'sent'}{' '}
-                {zerosIndex ? (
-                  <>
-                    0.0
-                    <span className="inline-block translate-y-1 px-px text-xs">
-                      {zerosIndex}
-                    </span>
-                    {roundedNumber}
-                  </>
-                ) : (
-                  roundedNumber
+                {formatTokenValue(
+                  Number.parseFloat(
+                    formatUnits(
+                      BigInt(donation.amountRaw),
+                      donation.token.decimals,
+                    ),
+                  ),
                 )}{' '}
                 {tokenSymbol}{' '}
               </span>
@@ -127,13 +117,7 @@ export const DonateHistoryItem = ({
                 <TokenLogo symbol={tokenSymbol} imageUrl={tokenImage} />
               </span>{' '}
               <Badge type="success" variant="subtle">
-                $
-                {tradeValue >= 0.01
-                  ? new Intl.NumberFormat('en-US', {
-                      minimumFractionDigits: tradeValue % 1 === 0 ? 0 : 2,
-                      maximumFractionDigits: 2,
-                    }).format(Number(tradeValue ?? 0))
-                  : '<0.01'}
+                {formatFiatValue(tradeValue)}
               </Badge>
             </p>
           </div>

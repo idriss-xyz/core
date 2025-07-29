@@ -2,8 +2,8 @@ import { Button } from '@idriss-xyz/ui/button';
 import { isAddress } from 'viem';
 import { MutableRefObject, useRef } from 'react';
 import {
+  formatTokenValue,
   getShortWalletHex,
-  roundToSignificantFiguresForCopilotTrading,
   isSolanaAddress,
 } from '@idriss-xyz/utils';
 import {
@@ -49,9 +49,6 @@ export const TradingCopilotToast = ({
     );
   }
 
-  const { value: roundedNumber, index: zerosIndex } =
-    roundToSignificantFiguresForCopilotTrading(toast.tokenIn.amount, 2);
-
   return (
     <div className="grid grid-cols-[48px,1fr] gap-2">
       <PreloadedImage
@@ -73,18 +70,7 @@ export const TradingCopilotToast = ({
             <span className="inline-flex items-center justify-center gap-x-1">
               <TokenIcon tokenImage={tokenImage} tokenData={tokenData} />
               <span>
-                {zerosIndex ? (
-                  <>
-                    0.0
-                    <span className="inline-block translate-y-1 px-px text-xs">
-                      {zerosIndex}
-                    </span>
-                    {roundedNumber}
-                  </>
-                ) : (
-                  roundedNumber
-                )}{' '}
-                {toast.tokenIn.symbol}
+                {formatTokenValue(toast.tokenIn.amount)} {toast.tokenIn.symbol}
               </span>
             </span>
           </span>
