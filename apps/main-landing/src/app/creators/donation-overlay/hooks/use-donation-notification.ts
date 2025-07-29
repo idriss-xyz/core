@@ -87,11 +87,9 @@ export const useDonationNotification = (
     // --- End of Effect Cleanup ---
 
     if (
-      (!amount ||
-        !alertEnabled ||
-        Number.parseFloat(amount) <=
-          priceDropCalculatedAmount(minimumAlertAmount)) &&
-      !isTestNotification
+      !amount ||
+      !alertEnabled ||
+      Number.parseFloat(amount) <= priceDropCalculatedAmount(minimumAlertAmount)
     ) {
       setShowNotification(false);
       onFullyComplete();
@@ -123,23 +121,23 @@ export const useDonationNotification = (
           }
         }
 
-        if (isTestNotification) {
-          // Add a delay to allow the creator to switch tabs and check donation
-          await new Promise((resolve) => {
-            return setTimeout(resolve, 3000);
-          });
-
-          ttsAudioElementReference.current = new Audio(TEST_TTS_MESSAGE_SOUND);
-          ttsAudioForPlayback = ttsAudioElementReference.current;
-        } else if (useTts) {
-          const ttsStream = await getTextToSpeech(message);
-          if (ttsStream) {
-            ttsAudioElementReference.current = await toAudioElement(ttsStream);
+        if (useTts) {
+          if (isTestNotification) {
+            ttsAudioElementReference.current = new Audio(
+              TEST_TTS_MESSAGE_SOUND,
+            );
             ttsAudioForPlayback = ttsAudioElementReference.current;
           } else {
-            console.warn(
-              'TTS audio stream from API was null. TTS will be skipped.',
-            );
+            const ttsStream = await getTextToSpeech(message);
+            if (ttsStream) {
+              ttsAudioElementReference.current =
+                await toAudioElement(ttsStream);
+              ttsAudioForPlayback = ttsAudioElementReference.current;
+            } else {
+              console.warn(
+                'TTS audio stream from API was null. TTS will be skipped.',
+              );
+            }
           }
         }
 
@@ -282,7 +280,6 @@ export const useDonationNotification = (
     alertEnabled,
     sfxEnabled,
     ttsEnabled,
-    isTestNotification,
   ]);
 
   return { showNotification };
