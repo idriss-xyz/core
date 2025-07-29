@@ -208,7 +208,7 @@ export default function ProfilePage() {
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-10">
                   <Button
                     size="medium"
-                    intent="negative"
+                    intent="secondary"
                     onClick={() => {
                       return setIsDeleteAccountModalOpen(true);
                     }}
@@ -229,8 +229,7 @@ export default function ProfilePage() {
           return setIsExportWalletModalOpen(false);
         }}
         onConfirm={exportWallet}
-        title="Are you sure?"
-        sectionTitle="⚠️ Are you sure you want to reveal your recovery phrase?"
+        title="⚠️ Are you sure you want to reveal your recovery phrase?"
         sectionSubtitle="Anyone who sees this phrase can steal your funds. Never share it. Never show it. Only proceed if you’re in a private, secure environment."
         confirmButtonText="CONFIRM"
         cancelButtonText="CANCEL"
@@ -241,9 +240,8 @@ export default function ProfilePage() {
           return setIsDeleteAccountModalOpen(false);
         }}
         onConfirm={handleDeleteAccount}
-        title="Final confirmation required"
-        sectionTitle="Are you sure you want to delete your account?"
-        sectionSubtitle="Your account will be permanently deleted. This cannot be undone."
+        title="Are you sure you want to delete your account?"
+        sectionSubtitle="Your account will be permanently deleted. This cannot be undone. This will permanently delete your account and remove your data from our service."
         confirmButtonText="CONFIRM"
         cancelButtonText="CANCEL"
       />

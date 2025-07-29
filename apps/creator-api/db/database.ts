@@ -30,6 +30,7 @@ import {
   UpdateCreatorProfileView1753117192000,
   AddDoneSetupCreatorField1753315853694,
   AddCreatorAddresses1753656919000,
+  AddForceDonationOverlayRefresh1753315853694,
 } from './migrations';
 import { CreatorProfileView } from './views';
 
@@ -69,6 +70,7 @@ export const AppDataSource = new DataSource({
     UpdateCreatorProfileView1753117192000,
     AddDoneSetupCreatorField1753315853694,
     AddCreatorAddresses1753656919000,
+    AddForceDonationOverlayRefresh1753315853694,
   ],
 });
 

@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 
+import { CreatorProfile } from './types';
 import { DonateContent } from './donate-content';
 import { RainbowKitProviders } from './providers';
 
@@ -11,14 +12,14 @@ export const metadata: Metadata = {
 };
 
 interface Properties {
-  creatorName?: string;
+  creatorProfile?: CreatorProfile;
 }
 
 // ts-unused-exports:disable-next-line
-export default function Donate({ creatorName }: Properties) {
+export default function Donate({ creatorProfile }: Properties) {
   return (
     <RainbowKitProviders>
-      <DonateContent creatorName={creatorName} />
+      <DonateContent creatorProfile={creatorProfile} />
     </RainbowKitProviders>
   );
 }

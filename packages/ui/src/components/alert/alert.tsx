@@ -73,9 +73,13 @@ export const Alert = forwardRef(
           <Icon name={iconName ?? icon[type]} size={20} />
         </span>
 
-        <div className="grid grid-cols-[1fr,32px] items-start">
-          <div className="flex flex-col items-start gap-y-1">
-            <p className="text-label3 text-neutral-900">{heading}</p>
+        <div
+          className={`grid ${autoClose ? 'grid-cols-[1fr]' : 'grid-cols-[1fr,32px]'}`}
+        >
+          <div className="flex flex-col gap-y-1">
+            <p className="flex h-full items-center text-label3 text-neutral-900">
+              {heading}
+            </p>
             {description && (
               <p className="text-body5 text-neutral-600">{description}</p>
             )}
@@ -86,14 +90,15 @@ export const Alert = forwardRef(
               </div>
             )}
           </div>
-
-          <IconButton
-            size="small"
-            iconName="X"
-            intent="tertiary"
-            onClick={handleClose}
-            className="-right-2 -top-2 text-neutral-500"
-          />
+          {!autoClose && (
+            <IconButton
+              size="small"
+              iconName="X"
+              intent="tertiary"
+              onClick={handleClose}
+              className="-right-2 -top-2 text-neutral-500"
+            />
+          )}
         </div>
       </Component>
     );
