@@ -6,23 +6,34 @@ import { useCopyToClipboard } from '../../hooks/use-copy-to-clipboard';
 type CopyInputProperties = {
   value: string;
   className?: string;
-  onClick?: () => void;
+  onTextClick?: () => void;
+  onIconClick?: () => void;
   iconName?: IconName;
+  wasCopied?: boolean;
 };
 
 export function CopyInput({
   value,
   className,
-  onClick,
+  onTextClick,
+  onIconClick,
   iconName,
+  wasCopied,
 }: CopyInputProperties) {
   const { copied, copy } = useCopyToClipboard();
 
-  const handleCopy = () => {
-    if (onClick) onClick();
-    setTimeout(() => {
-      void copy(value);
-    }, 0);
+  const doCopy = () => {
+    void copy(value);
+  };
+
+  const handleIconClick = () => {
+    if (onIconClick) onIconClick();
+    else doCopy();
+  };
+
+  const handleTextClick = () => {
+    if (onTextClick) onTextClick();
+    else doCopy();
   };
 
   return (
@@ -32,12 +43,17 @@ export function CopyInput({
         className,
       )}
     >
-      <span className="grow truncate p-3 text-sm">{value}</span>
+      <span
+        className="grow cursor-pointer truncate p-3 text-sm"
+        onClick={handleTextClick}
+      >
+        {value}
+      </span>
       <div
         className="flex shrink-0 cursor-pointer items-center self-stretch border-l border-gray-200 px-3"
-        onClick={handleCopy}
+        onClick={handleIconClick}
       >
-        {copied ? (
+        {copied || wasCopied ? (
           <Icon name="Check" size={16} />
         ) : (
           <Icon name={iconName ?? 'Copy'} size={16} />

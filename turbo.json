@@ -129,7 +129,11 @@
         "TWITCH_CLIENT_ID",
         "TWITCH_CLIENT_SECRET",
         "EARLY_ACCESS_PASSWORD",
-        "EARLY_ACCESS_JWT_SECRET"
+        "EARLY_ACCESS_JWT_SECRET",
+        "AWS_ACCESS_KEY_ID",
+        "AWS_SECRET_ACCESS_KEY",
+        "AWS_REGION",
+        "AWS_S3_BUCKET"
       ]
     },
     "@idriss-xyz/creator-api#prod": {
@@ -150,7 +154,11 @@
         "TWITCH_CLIENT_ID",
         "TWITCH_CLIENT_SECRET",
         "EARLY_ACCESS_PASSWORD",
-        "EARLY_ACCESS_JWT_SECRET"
+        "EARLY_ACCESS_JWT_SECRET",
+        "AWS_ACCESS_KEY_ID",
+        "AWS_SECRET_ACCESS_KEY",
+        "AWS_REGION",
+        "AWS_S3_BUCKET"
       ]
     },
     "@idriss-xyz/creator-api#test": {
