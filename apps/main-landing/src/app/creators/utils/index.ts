@@ -81,7 +81,7 @@ export const getPublicCreatorProfileBySlug = async (
   slug: string | null,
 ): Promise<CreatorProfileResponse | undefined> => {
   if (!slug) {
-    console.error('No name or address to get creator');
+    console.error('No slug to get creator');
     return;
   }
 
@@ -99,7 +99,7 @@ export const getCreatorProfile = async (
   authToken: string,
 ): Promise<CreatorProfileResponse | undefined> => {
   if (!authToken) {
-    console.error('No name or address to get creator');
+    console.error('No slug to get creator');
     return;
   }
 

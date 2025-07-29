@@ -158,7 +158,7 @@ router.get(
       const creatorRepo = AppDataSource.getRepository(Creator);
       const creator = await creatorRepo.findOne({
         where: {
-          obsUrl: `https://idriss.xyz/creators/donation-overlay/${slug}`,
+          obsUrl: `${CREATORS_LINK}/donation-overlay/${slug}`,
         },
       });
 
