@@ -112,6 +112,18 @@ export default function StreamAlerts() {
   const [showCustomUpload, setShowCustomUpload] = useState(false);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [isCopyModalOpen, setIsCopyModalOpen] = useState(false);
+  const [isUrlWarningConfirmed, setIsUrlWarningConfirmed] = useState(false);
+  const [confirmButtonText, setConfirmButtonText] = useState('Copy link');
+  const [wasCopied, setWasCopied] = useState(false);
+
+  const openConfirmationModal = (source: 'text' | 'icon') => {
+    if (source === 'icon') {
+      setConfirmButtonText('Copy link');
+    } else {
+      setConfirmButtonText('Got it');
+    }
+    setIsCopyModalOpen(true);
+  };
 
   const formMethods = useForm<FormPayload>({
     defaultValues: {
@@ -281,16 +293,24 @@ export default function StreamAlerts() {
                     <label className="pb-1 text-label4 text-neutralGreen-700">
                       Overlay link
                     </label>
-                    <div
-                      className="cursor-pointer"
-                      onClick={() => {
-                        return setIsCopyModalOpen(true);
-                      }}
-                    >
-                      <div className="pointer-events-none">
-                        <CopyInput value={`${creator?.obsUrl}`} />
-                      </div>
-                    </div>
+                    <CopyInput
+                      value={`${creator?.obsUrl ?? ''}`}
+                      wasCopied={wasCopied}
+                      onIconClick={
+                        isUrlWarningConfirmed
+                          ? undefined
+                          : () => {
+                              return openConfirmationModal('icon');
+                            }
+                      }
+                      onTextClick={
+                        isUrlWarningConfirmed
+                          ? undefined
+                          : () => {
+                              return openConfirmationModal('text');
+                            }
+                      }
+                    />
                     <div className="flex items-center pt-1">
                       <span className="flex items-center space-x-1 text-label7 text-neutral-600 lg:text-label7">
                         Add this as a browser source in your streaming software
@@ -557,17 +577,22 @@ export default function StreamAlerts() {
       <ConfirmationModal
         isOpened={isCopyModalOpen}
         onClose={() => {
-          return setIsCopyModalOpen(false);
+          setIsCopyModalOpen(false);
+          setIsUrlWarningConfirmed(true);
         }}
         onConfirm={() => {
-          if (creator?.obsUrl) {
+          if (confirmButtonText === 'Copy link' && creator?.obsUrl) {
             void navigator.clipboard.writeText(creator.obsUrl);
+            setWasCopied(true);
+            setTimeout(() => {
+              return setWasCopied(false);
+            }, 2000);
           }
         }}
         title="⚠️ Confirm before copying"
         sectionSubtitle="Anyone with this link can embed your stream alerts on their own stream or website.
 Do not share it with anyone or show it on stream."
-        confirmButtonText="Copy link"
+        confirmButtonText={confirmButtonText}
         confirmButtonIntent="secondary"
       />
 
