@@ -464,8 +464,10 @@ router.patch(
         const overlayWS = io.of('/overlay');
         const userId = creator.privyId.toLowerCase();
 
+        const { email, joinedAt, ...updatedPublicProfile } = updatedCreator!;
+
         overlayWS.to(userId).emit('creatorConfigUpdated', {
-          creator: updatedCreator,
+          creator: updatedPublicProfile,
           donationParameters: updatedDonationParams,
           tokens: updatedTokenEntities,
           networks: updatedNetworkEntities,

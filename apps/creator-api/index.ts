@@ -135,6 +135,7 @@ overlayWS.on('connection', async (socket) => {
   socket.join(userId);
 
   if (creator.forceDonationOverlayRefresh) {
+    console.log('Forcing update');
     socket.emit('forceRefresh');
 
     await creatorRepo.update(

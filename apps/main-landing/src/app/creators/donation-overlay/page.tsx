@@ -108,12 +108,14 @@ export default function Obs({ creatorName }: Properties) {
     });
 
     socket.on('forceRefresh', () => {
+      console.log('Got force refresh');
       const url = new URL(window.location.href);
       url.searchParams.set('t', Date.now().toString());
       window.location.href = url.toString();
     });
 
     socket.on('creatorConfigUpdated', (data) => {
+      console.log('Got new settings', data);
       // update your local state with the new config
       setMinimumAmounts({
         minimumAlertAmount: data.donationParameters.minimumAlertAmount,
