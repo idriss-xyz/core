@@ -13,7 +13,7 @@ import {
 import '@rainbow-me/rainbowkit/styles.css';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { default as io } from 'socket.io-client';
-import { Hex, isAddress } from 'viem';
+import { Hex } from 'viem';
 import { useRouter } from 'next/navigation';
 import _ from 'lodash';
 
@@ -27,19 +27,17 @@ import {
 
 import { useCreators } from '../hooks/use-creators';
 import { TopBar } from '../components/top-bar';
-import { getCreatorProfile } from '../utils';
 
 import { Leaderboard } from './components/leaderboard';
 import { DonateForm } from './components/donate-form';
 
 interface Properties {
-  creatorName?: string;
+  creatorProfile?: CreatorProfile;
 }
 
-export function DonateContent({ creatorName }: Properties) {
+export function DonateContent({ creatorProfile }: Properties) {
   const router = useRouter();
   const { searchParams } = useCreators();
-  const creatorInfoSetReference = useRef(false);
   const [socketConnected, setSocketConnected] = useState(false);
   const [socketInitialized, setSocketInitialized] = useState(false);
   const [donations, setDonations] = useState<DonationData[]>([]);
@@ -47,55 +45,25 @@ export function DonateContent({ creatorName }: Properties) {
   const [currentContent, setCurrentContent] = useState<DonateContentValues>({
     name: 'user-tip',
   });
-  const [creatorInfo, setCreatorInfo] = useState<CreatorProfile | null>(null);
+  const [creatorInfo, setCreatorInfo] = useState<CreatorProfile | null>(
+    creatorProfile ?? null,
+  );
   const formReference = useRef<HTMLDivElement>(null);
   const [formHeight, setFormHeight] = useState(0);
   const [isLegacyLink, setIsLegacyLink] = useState(false);
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const profile = await getCreatorProfile(creatorName);
+    // If profile is passed via props, we don't need to do anything with legacy params.
+    if (creatorProfile) {
+      return;
+    }
 
-        if (!profile) {
-          creatorInfoSetReference.current = true;
-          return;
-        }
+    // Handle legacy URLs from search params
+    if (searchParams.address.isFetching) {
+      return; // Wait for it
+    }
 
-        const minimumAlertAmount = Number(profile.minimumAlertAmount);
-        const minimumTTSAmount = Number(profile.minimumTTSAmount);
-        const minimumSfxAmount = Number(profile.minimumSfxAmount);
-
-        setCreatorInfo({
-          ...profile,
-          address: {
-            data: profile.primaryAddress,
-            isValid: isAddress(profile.primaryAddress),
-            isFetching: false,
-          },
-          network: profile.networks.join(','),
-          token: profile.tokens.join(','),
-          minimumAlertAmount: Number.isNaN(minimumAlertAmount)
-            ? 0
-            : minimumAlertAmount,
-          minimumTTSAmount: Number.isNaN(minimumTTSAmount)
-            ? 0
-            : minimumTTSAmount,
-          minimumSfxAmount: Number.isNaN(minimumSfxAmount)
-            ? 0
-            : minimumSfxAmount,
-        });
-        creatorInfoSetReference.current = true;
-      } catch (error) {
-        console.error('Failed to fetch profile data:', error);
-      }
-    };
-
-    if (creatorInfoSetReference.current) return;
-
-    if (searchParams.address.data == null && creatorName) {
-      void fetchProfile();
-    } else if (!searchParams.address.isFetching) {
+    if (searchParams.address.data) {
       setCreatorInfo({
         ...searchParams,
         name: searchParams.creatorName,
@@ -104,9 +72,8 @@ export function DonateContent({ creatorName }: Properties) {
         minimumSfxAmount: DEFAULT_DONATION_MIN_SFX_AMOUNT,
       });
       setIsLegacyLink(true);
-      creatorInfoSetReference.current = true;
     }
-  }, [searchParams, creatorName]);
+  }, [searchParams, creatorProfile]);
 
   const donationsHistory = useGetTipHistory(
     { address: creatorInfo?.address.data ?? EMPTY_HEX },
@@ -228,7 +195,7 @@ export function DonateContent({ creatorName }: Properties) {
       case 'user-tip': {
         return (
           <div className="grid grid-cols-1 items-start gap-x-10 lg:grid-cols-[1fr,auto]">
-            {creatorInfo ? (
+            {creatorInfo && (
               <>
                 <DonateForm
                   ref={formReference}
@@ -251,26 +218,6 @@ export function DonateContent({ creatorName }: Properties) {
                   }}
                 />
               </>
-            ) : (
-              creatorInfoSetReference.current && (
-                <div className="flex h-[80vh] flex-col items-center justify-center gap-3">
-                  <h1 className="text-display2 uppercase text-neutral-900">
-                    Creator not found
-                  </h1>
-                  <span className="text-body2">
-                    We couldn’t find a creator with that name. Check the
-                    spelling and try again.
-                  </span>
-                  <Button
-                    intent="primary"
-                    size="medium"
-                    asLink
-                    href="/creators"
-                  >
-                    Go to homepage
-                  </Button>
-                </div>
-              )
             )}
           </div>
         );
@@ -306,7 +253,6 @@ export function DonateContent({ creatorName }: Properties) {
     donationsHistory.isError,
     donationsHistory.isLoading,
     isLegacyLink,
-    creatorName,
   ]);
 
   return (
