@@ -281,7 +281,8 @@ export default function EarningsStats() {
                               />
                             </div>
                             <span className="text-sm text-gray-300">
-                              {item.tokenData.symbol} {/* TODO: Change for name */}
+                              {item.tokenData.symbol}{' '}
+                              {/* TODO: Change for name */}
                             </span>
                           </td>
                           <td>
@@ -302,19 +303,19 @@ export default function EarningsStats() {
                       return (
                         <tr
                           key={`skeleton-${index}`}
-                          className="border-b border-gray-200 last:border-b-0 h-[49px]"
+                          className="h-[49px] border-b border-gray-200 last:border-b-0"
                         >
                           <td className="py-3">
                             <div className="flex items-center gap-2">
-                              <div className="size-6 rounded-full bg-neutral-100 flex-shrink-0" />
-                              <div className="h-[10px] rounded-md bg-neutral-100 flex-1 mr-5"/>
+                              <div className="size-6 flex-shrink-0 rounded-full bg-neutral-100" />
+                              <div className="mr-5 h-[10px] flex-1 rounded-md bg-neutral-100" />
                             </div>
                           </td>
                           <td className="">
-                            <div className="h-[10px] w-[80px] mr-auto rounded-md bg-neutral-100"/>
+                            <div className="mr-auto h-[10px] w-[80px] rounded-md bg-neutral-100" />
                           </td>
                           <td className="">
-                            <div className="h-[10px] w-[49px] ml-auto rounded-md bg-neutral-100"/>
+                            <div className="ml-auto h-[10px] w-[49px] rounded-md bg-neutral-100" />
                           </td>
                         </tr>
                       );
