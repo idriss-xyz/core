@@ -19,7 +19,8 @@
     "format:fix": "turbo run format:fix",
     "type-check": "turbo run type-check",
     "unused-exports": "turbo run unused-exports",
-    "circular-dependencies": "turbo run circular-dependencies"
+    "circular-dependencies": "turbo run circular-dependencies",
+    "check": "pnpm format:fix && pnpm lint:fix && pnpm type-check && pnpm unused-exports && pnpm circular-dependencies"
   },
   "devDependencies": {
     "prettier": "^3.3.3",
