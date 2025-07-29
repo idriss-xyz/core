@@ -7,9 +7,9 @@ import { getPublicCreatorProfileBySlug } from '../../utils';
 export default async function CreatorProfile({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const { slug } = params;
+  const { slug } = await params;
   const profile = await getPublicCreatorProfileBySlug(slug);
 
   if (!profile) {
