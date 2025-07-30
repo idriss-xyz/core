@@ -6,7 +6,7 @@ import { Form } from '@idriss-xyz/ui/form';
 import { Toggle } from '@idriss-xyz/ui/toggle';
 import { Alert } from '@idriss-xyz/ui/alert';
 import { getAccessToken } from '@privy-io/react-auth';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { isAddress } from 'viem';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
@@ -258,6 +258,16 @@ export default function StreamAlerts() {
   const handleFileRemove = useCallback(() => {
     setIsCustomSoundUploaded(false);
   }, []);
+
+  // Keep track of dirty form state (non-toggles only)
+  const isDirtyNonToggles = useMemo(() => {
+    const { dirtyFields } = formMethods.formState;
+
+    const nonToggleDirtyFields = Object.keys(dirtyFields).filter((field) => {
+      return !['alertEnabled', 'ttsEnabled', 'sfxEnabled'].includes(field);
+    });
+    return nonToggleDirtyFields.length > 0;
+  }, [formMethods.formState]);
 
   return (
     <Card className="w-full">
@@ -631,6 +641,7 @@ Do not share it with anyone or show it on stream."
           heading="Refresh the browser source in your streaming software"
           type="success"
           description="Keeps your donation alert setup up to date"
+          iconName="RefreshCw"
           autoClose
           onClose={handleAlertClose}
         />
@@ -642,6 +653,15 @@ Do not share it with anyone or show it on stream."
           description="Please try again later"
           autoClose
           onClose={handleAlertClose}
+        />
+      )}
+      {isDirtyNonToggles && (
+        <Alert
+          heading="You have unsaved changes"
+          type="error"
+          description="Don't forget to save when you are done"
+          iconName="RefreshCw"
+          autoClose
         />
       )}
     </Card>
