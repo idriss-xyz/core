@@ -5,9 +5,12 @@ import { SOCIAL_LINK } from '@idriss-xyz/constants';
 import { SiteMapItem } from '@idriss-xyz/ui/breadcrumb';
 
 import {
+  BILL,
   DEFAULT_CASH_REGISTER_SOUND,
   DEFAULT_COIN_SOUND,
   DEFAULT_TRUMPET_SOUND,
+  LAURA,
+  LIAM,
 } from '@/assets';
 
 type SocialOption = {
@@ -80,4 +83,10 @@ export const soundMap: Record<string, string> = {
   DEFAULT_TRUMPET_SOUND,
   DEFAULT_COIN_SOUND,
   DEFAULT_CASH_REGISTER_SOUND,
+};
+
+export const voiceMap: Record<string, string> = {
+  BILL,
+  LAURA,
+  LIAM,
 };
