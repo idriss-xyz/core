@@ -11,7 +11,7 @@ const router = express.Router();
 
 const validationRules = [
   body('text').isString().notEmpty(),
-  param('name').isString().optional()
+  param('name').isString().optional(),
 ];
 
 const requestLimitation = rateLimit({

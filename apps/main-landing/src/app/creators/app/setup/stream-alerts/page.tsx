@@ -466,7 +466,7 @@ export default function StreamAlerts() {
                             setIsVoicePlaying(false);
                             console.error('Error playing sound');
                           });
-                            void audio.play();
+                          void audio.play();
                         }}
                         // TODO: Add error handling
                         // error={Boolean(fieldState.error?.message)}
