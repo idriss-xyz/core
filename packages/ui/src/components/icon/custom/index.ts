@@ -11,6 +11,7 @@ export { EthToken } from './token/eth-token';
 export { IdrissToken } from './token/idriss-token';
 export { ParallelTeam } from './team/parallel-team';
 export { RoninTeam } from './team/ronin-team';
+export { PudgyTeam } from './team/pudgy-team';
 export { PdtToken } from './token/pdt-token';
 export { RoninToken } from './token/ronin-token';
 export { UsdcToken } from './token/usdc-token';

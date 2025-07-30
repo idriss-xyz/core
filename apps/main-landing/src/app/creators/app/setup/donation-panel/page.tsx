@@ -39,7 +39,7 @@ export default function DonationPanel() {
                   <Icon
                     size={16}
                     name={option.icon}
-                    className="text-[#757575]"
+                    className="h-[20px] text-[#757575]"
                   />
                 ) : null}
                 {option.label}
