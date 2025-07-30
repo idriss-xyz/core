@@ -224,6 +224,32 @@ export default function StreamAlerts() {
     }
   };
 
+  const onSubmitToggles = async (data: FormPayload) => {
+    try {
+      const authToken = await getAccessToken();
+      if (!authToken) {
+        console.error('Could not get auth token.');
+        return;
+      }
+      if (!creator?.name) {
+        console.error('Creator not initialized');
+        return;
+      }
+
+      await editCreatorProfile(
+        creator.name,
+        {
+          alertEnabled: data.alertEnabled,
+          ttsEnabled: data.ttsEnabled,
+          sfxEnabled: data.sfxEnabled,
+        },
+        authToken,
+      );
+    } catch (error) {
+      console.error('Error saving profile:', error);
+    }
+  };
+
   // Initialize form values after fetching creator data
   useEffect(() => {
     if (creator) {
@@ -291,7 +317,7 @@ export default function StreamAlerts() {
                     onChange={(newValue) => {
                       field.onChange(newValue);
                       setTimeout(() => {
-                        void void formMethods.handleSubmit(onSubmit)();
+                        void void formMethods.handleSubmit(onSubmitToggles)();
                       }, 0); // defer to ensure updated value
                     }}
                   />
@@ -447,7 +473,7 @@ export default function StreamAlerts() {
                         onChange={(newValue) => {
                           field.onChange(newValue);
                           setTimeout(() => {
-                            void formMethods.handleSubmit(onSubmit)();
+                            void formMethods.handleSubmit(onSubmitToggles)();
                           }, 0); // defer to ensure updated value
                         }}
                         className="w-fit"
@@ -530,7 +556,7 @@ export default function StreamAlerts() {
                         onChange={(newValue) => {
                           field.onChange(newValue);
                           setTimeout(() => {
-                            void formMethods.handleSubmit(onSubmit)();
+                            void formMethods.handleSubmit(onSubmitToggles)();
                           }, 0); // defer to ensure updated value
                         }}
                         className="w-fit"
