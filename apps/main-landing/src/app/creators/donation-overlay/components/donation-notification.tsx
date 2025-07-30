@@ -86,7 +86,7 @@ export default function DonationNotification({
       nonce={txnHash}
       aria-live="polite"
       className={classes(
-        'absolute left-0 top-0 m-3 flex w-max min-w-[400px] max-w-[450px] items-start gap-x-2 rounded-xl p-4 shadow-lg transition-opacity duration-1000',
+        'flex w-full items-start gap-x-2 rounded-xl p-4 shadow-lg transition-opacity duration-1000',
         showNotification ? 'opacity-100' : 'opacity-0',
         bgColor,
       )}
