@@ -3,16 +3,14 @@ import { Token } from '../db/entities/token.entity';
 import { ERC20_ABI } from '@idriss-xyz/constants';
 import { NULL_ADDRESS } from '@idriss-xyz/constants';
 import { AppDataSource } from '../db/database';
-import { getAlchemyPrice } from './price-fetchers';
+import { getAlchemyPrices } from './price-fetchers';
 import { getChainByNetworkName } from '@idriss-xyz/utils';
 
 export async function calculateBalances(userAddress: Hex) {
   const tokenRepository = AppDataSource.getRepository(Token);
   const allTokens = await tokenRepository.find();
 
-  let totalUsdBalance = 0;
-
-  const balancePromises = allTokens.map(async (token) => {
+  const balanceInfoPromises = allTokens.map(async (token) => {
     const chain = getChainByNetworkName(token.network);
     if (!chain) {
       console.warn(`Unsupported network: ${token.network}. Skipping.`);
@@ -24,14 +22,11 @@ export async function calculateBalances(userAddress: Hex) {
       transport: http(),
     });
 
-    let balance: bigint;
-
     try {
+      let balance: bigint;
       if (token.address.toLowerCase() === NULL_ADDRESS) {
-        // Native token balance
         balance = await client.getBalance({ address: userAddress });
       } else {
-        // ERC20 token balance
         balance = await client.readContract({
           address: token.address,
           abi: ERC20_ABI,
@@ -40,16 +35,49 @@ export async function calculateBalances(userAddress: Hex) {
         });
       }
 
-      const formattedBalance = parseFloat(formatUnits(balance, token.decimals));
+      const formattedBalance = formatUnits(balance, token.decimals);
 
-      if (formattedBalance === 0) {
-        return null;
+      if (parseFloat(formattedBalance) > 0) {
+        return {
+          token,
+          formattedBalance,
+        };
       }
+      return null;
+    } catch (error) {
+      console.error(
+        `Failed to fetch balance for ${token.symbol} on ${token.network}`,
+        error,
+      );
+      return null;
+    }
+  });
 
+  const balancesWithAmount = (await Promise.all(balanceInfoPromises)).filter(
+    (b): b is NonNullable<typeof b> => b !== null,
+  );
+
+  if (balancesWithAmount.length === 0) {
+    return {
+      balances: [],
+      summary: {
+        totalUsdBalance: 0,
+      },
+    };
+  }
+
+  const tokensToPrice = balancesWithAmount.map(({ token }) => ({
+    address: token.address,
+    network: token.network,
+  }));
+  const prices = await getAlchemyPrices(tokensToPrice);
+
+  let totalUsdBalance = 0;
+  const validBalances = balancesWithAmount.map(
+    ({ token, formattedBalance }) => {
       const price =
-        (await getAlchemyPrice(token.address, token.network, new Date())) ?? 0;
-      const usdValue = formattedBalance * price;
-
+        prices[`${token.network}:${token.address.toLowerCase()}`] ?? 0;
+      const usdValue = parseFloat(formattedBalance) * price;
       totalUsdBalance += usdValue;
 
       return {
@@ -57,17 +85,8 @@ export async function calculateBalances(userAddress: Hex) {
         balance: formattedBalance.toString(),
         usdValue: usdValue,
       };
-    } catch (error) {
-      console.error(
-        `Failed to fetch balance for ${token.symbol} on ${token.network}`,
-        error,
-      );
-      return null; // Return null on error for this token
-    }
-  });
-
-  const settledBalances = await Promise.all(balancePromises);
-  const validBalances = settledBalances.filter((b) => b !== null);
+    },
+  );
 
   return {
     balances: validBalances,

@@ -72,6 +72,7 @@ export const WithdrawWidget = ({
   const [amountInTokens, setAmountInTokens] = useState<bigint>();
   const [visualAmount, setVisualAmount] = useState<string>();
   const [transactionHash, setTransactionHash] = useState<string>();
+  const [isMaxAmount, setIsMaxAmount] = useState(false);
 
   const formMethods = useForm<WithdrawFormValues>({
     defaultValues: {
@@ -91,6 +92,7 @@ export const WithdrawWidget = ({
     setTransactionHash(undefined);
     setFormError(null);
     setVisualAmount(undefined);
+    setIsMaxAmount(false);
   }, [onClose, formMethods]);
 
   useEffect(() => {
@@ -102,8 +104,6 @@ export const WithdrawWidget = ({
       }
     }
   }, [isOpen, selectedToken, formMethods, balances]);
-
-  console.log(formMethods.getValues());
 
   const formReference = useRef<HTMLFormElement | null>(null);
   const amount = formMethods.watch('amount');
@@ -156,10 +156,8 @@ export const WithdrawWidget = ({
   const showNetworkSelector = networksForSelectedToken.length > 1;
 
   useEffect(() => {
-    console.log('chains', networksForSelectedToken);
     if (networksForSelectedToken.length === 1) {
       const chainId = networksForSelectedToken[0];
-      console.log('chainId', chainId);
       if (chainId !== undefined) {
         formMethods.setValue('chainId', chainId);
       }
@@ -169,10 +167,11 @@ export const WithdrawWidget = ({
   }, [networksForSelectedToken, formMethods]);
 
   const setAmount = useCallback(
-    (value: number) => {
+    (value: number, isMax: boolean) => {
       return () => {
         formMethods.setValue('amount', value);
         setVisualAmount(formatFiatValue(value));
+        setIsMaxAmount(isMax);
       };
     },
     [formMethods],
@@ -184,7 +183,6 @@ export const WithdrawWidget = ({
     const balance = balances.find((b) => {
       return b.symbol === tokenSymbol && b.network === networkKey;
     });
-    console.log('Found balance', balance, 'for network', networkKey);
     return balance?.address;
   }, [balances, chainId, tokenSymbol]);
 
@@ -203,7 +201,6 @@ export const WithdrawWidget = ({
     async (values: WithdrawFormValues) => {
       setFormError(null);
       if (!values.amount || !values.tokenSymbol || !values.chainId) {
-        console.error('Missing required fields');
         return;
       }
       setIsLoading(true);
@@ -214,34 +211,34 @@ export const WithdrawWidget = ({
       });
 
       if (!balance || balance.usdValue <= 0) {
-        console.error('Could not find balance or invalid USD value');
         setIsLoading(false);
         return;
       }
 
-      const totalTokenBalance = parseUnits(balance.balance, balance.decimals);
-      const totalUsdValue = balance.usdValue;
-      const requestedUsdAmount = values.amount;
+      let tokensToSend: bigint;
+      if (isMaxAmount) {
+        tokensToSend = parseUnits(balance.balance, balance.decimals);
+      } else {
+        const totalTokenBalance = parseUnits(balance.balance, balance.decimals);
+        const totalUsdValue = balance.usdValue;
+        const requestedUsdAmount = values.amount;
 
-      // Use 18 decimals for high-precision floating point math, a common
-      // standard in crypto, to prevent rounding errors.
-      const precision = 1e18;
-      const scaledRequestedAmount = BigInt(
-        Math.round(requestedUsdAmount * precision),
-      );
-      const scaledTotalUsdValue = parseUnits(totalUsdValue.toString(), 18);
-
-      if (scaledTotalUsdValue === 0n) {
-        console.error(
-          'Total USD value is zero, cannot calculate tokens to send.',
+        // Use 18 decimals for high-precision floating point math, a common
+        // standard in crypto, to prevent rounding errors.
+        const precision = 1e18;
+        const scaledRequestedAmount = BigInt(
+          Math.round(requestedUsdAmount * precision),
         );
-        setIsLoading(false);
-        return;
-      }
+        const scaledTotalUsdValue = parseUnits(totalUsdValue.toString(), 18);
 
-      const tokensToSend =
-        (totalTokenBalance * scaledRequestedAmount) / scaledTotalUsdValue;
-      console.log(tokensToSend);
+        if (scaledTotalUsdValue === 0n) {
+          setIsLoading(false);
+          return;
+        }
+
+        tokensToSend =
+          (totalTokenBalance * scaledRequestedAmount) / scaledTotalUsdValue;
+      }
       setAmountInTokens(tokensToSend);
 
       const isNative = tokenAddress === NULL_ADDRESS;
@@ -295,7 +292,7 @@ export const WithdrawWidget = ({
         setIsSuccess(false);
       }
     },
-    [balances, tokenAddress, sendTransaction],
+    [balances, tokenAddress, sendTransaction, isMaxAmount],
   );
 
   const onNextStep = useCallback(async () => {
@@ -309,7 +306,6 @@ export const WithdrawWidget = ({
       setFormError('Wallet not connected.');
       return;
     }
-    console.log(activeWallet);
 
     const networkKey = getNetworkKeyByChainId(chainId);
     const balance = balances.find((b) => {
@@ -320,20 +316,24 @@ export const WithdrawWidget = ({
       return;
     }
 
-    const totalTokenBalance = parseUnits(balance.balance, balance.decimals);
     const totalUsdValue = balance.usdValue;
-    const precision = 1e18;
-    const scaledRequestedAmount = BigInt(
-      Math.round(requestedUsdAmount * precision),
-    );
-    const scaledTotalUsdValue = parseUnits(totalUsdValue.toString(), 18);
+    let tokensToSend: bigint;
+    if (isMaxAmount) {
+      tokensToSend = parseUnits(balance.balance, balance.decimals);
+    } else {
+      const totalTokenBalance = parseUnits(balance.balance, balance.decimals);
+      const precision = 1e18;
+      const scaledRequestedAmount = BigInt(
+        Math.round(requestedUsdAmount * precision),
+      );
+      const scaledTotalUsdValue = parseUnits(totalUsdValue.toString(), 18);
 
-    if (scaledTotalUsdValue === 0n) {
-      return;
+      if (scaledTotalUsdValue === 0n) {
+        return;
+      }
+      tokensToSend =
+        (totalTokenBalance * scaledRequestedAmount) / scaledTotalUsdValue;
     }
-
-    const tokensToSend =
-      (totalTokenBalance * scaledRequestedAmount) / scaledTotalUsdValue;
     const isNative = tokenAddress === NULL_ADDRESS;
     const DUMMY_RECIPIENT = '0x0000000000000000000000000000000000000001';
 
@@ -369,7 +369,6 @@ export const WithdrawWidget = ({
       ]);
 
       const gasCost = BigInt(gas) * BigInt(gasPrice);
-      console.log('gasCost', gasCost);
       const nativeBalance = BigInt(nativeBalanceHex);
 
       if (isNative) {
@@ -382,9 +381,7 @@ export const WithdrawWidget = ({
           return;
         }
 
-        const is100Percent =
-          requestedUsdAmount.toFixed(5) === totalBalanceOfTokenInUSD.toFixed(5);
-        if (is100Percent && nativeBalance > gasCost) {
+        if (isMaxAmount && nativeBalance > gasCost) {
           const newTokensToSend = nativeBalance - gasCost;
           const price = totalUsdValue / Number.parseFloat(balance.balance);
           const newAmountFloat = Number.parseFloat(
@@ -407,11 +404,10 @@ export const WithdrawWidget = ({
       }
 
       setStep(2);
-    } catch (error) {
-      console.error('Gas estimation failed', error);
+    } catch {
       setFormError('Something went wrong. Try again in a few seconds.');
     }
-  }, [wallets, formMethods, balances, tokenAddress, totalBalanceOfTokenInUSD]);
+  }, [wallets, formMethods, balances, tokenAddress, isMaxAmount]);
 
   return (
     <IdrissSend.Container
@@ -495,6 +491,7 @@ export const WithdrawWidget = ({
                             field.onChange(value);
                             formMethods.resetField('amount');
                             setVisualAmount(undefined);
+                            setIsMaxAmount(false);
                           }}
                           value={field.value}
                         />
@@ -516,6 +513,7 @@ export const WithdrawWidget = ({
                               field.onChange(value);
                               formMethods.resetField('amount');
                               setVisualAmount(undefined);
+                              setIsMaxAmount(false);
                             }}
                             value={field.value}
                           />
@@ -546,6 +544,7 @@ export const WithdrawWidget = ({
                           value={visualAmount ?? field.value.toString()}
                           onChange={(value) => {
                             setVisualAmount(undefined);
+                            setIsMaxAmount(false);
                             return field.onChange(Number(value));
                           }}
                           label="Amount"
@@ -558,24 +557,32 @@ export const WithdrawWidget = ({
                     }}
                   />
                   <div className="mt-4 grid grid-cols-3 gap-4">
-                    {totalBalanceOfTokenInUSD !== undefined &&
-                      totalBalanceOfTokenInUSD !== 0 &&
-                      [25, 50, 100].map((value) => {
+                    {selectedBalance &&
+                      selectedBalance.usdValue > 0 &&
+                      [25, 50, 100].map((percentage) => {
+                        const balanceFloat = Number.parseFloat(
+                          selectedBalance.balance,
+                        );
+                        const price = selectedBalance.usdValue / balanceFloat;
+                        const amountInUSD =
+                          balanceFloat * (percentage / 100) * price;
+
+                        const isSelected =
+                          Math.abs(amount - amountInUSD) < 0.01;
+
                         return (
                           <Button
-                            key={value}
+                            key={percentage}
                             className={classes(
                               'w-full',
-                              amount === value &&
+                              isSelected &&
                                 'border-mint-600 bg-mint-300 hover:border-mint-600 hover:bg-mint-300',
                             )}
                             intent="secondary"
                             size="medium"
-                            onClick={setAmount(
-                              (value / 100) * totalBalanceOfTokenInUSD,
-                            )}
+                            onClick={setAmount(amountInUSD, percentage === 100)}
                           >
-                            {value}%
+                            {percentage}%
                           </Button>
                         );
                       })}
@@ -595,7 +602,7 @@ export const WithdrawWidget = ({
                         </span>
                         <span className="hidden">{tokenAddress}</span>{' '}
                         <span className="rounded-[4px] bg-mint-200 px-1 text-label6 text-mint-700">
-                          ${amount}
+                          {formatFiatValue(amount)}
                         </span>
                       </div>
                     </div>
