@@ -108,7 +108,7 @@ export default function EarningsBalance() {
         </Card>
       ) : (
         <Card className="col-span-3">
-          <div className="mx-auto flex min-h-[694px] w-[477px] flex-col items-center justify-center gap-4">
+          <div className="mx-auto flex min-h-[548px] w-[477px] flex-col items-center justify-center gap-4">
             <span className="text-center text-heading6 uppercase text-neutral-900">
               No donations yet
             </span>
