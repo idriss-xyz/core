@@ -297,7 +297,9 @@ export default function StreamAlerts() {
         setShowRefreshAlert(true);
       }, 3000);
 
-      return () => clearTimeout(timer);
+      return () => {
+        return clearTimeout(timer);
+      };
     }
     return;
   }, [saveSuccess]);
