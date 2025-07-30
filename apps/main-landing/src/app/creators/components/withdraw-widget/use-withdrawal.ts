@@ -2,9 +2,9 @@ import { useCallback, useState } from 'react';
 import { useSendTransaction, useWallets } from '@privy-io/react-auth';
 import { encodeFunctionData, formatUnits, Hex } from 'viem';
 import {
-  DUMMY_RECIPIENT,
   ERC20_ABI,
   NULL_ADDRESS,
+  DUMMY_RECIPIENT,
   TokenBalance,
 } from '@idriss-xyz/constants';
 import { calculateTokensToSend, getChainById } from '@idriss-xyz/utils';
