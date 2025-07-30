@@ -1,7 +1,7 @@
 'use client';
 
 import { io, Socket } from 'socket.io-client';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   type AbiEvent,
@@ -396,10 +396,24 @@ export default function Obs({ creatorName }: Properties) {
     name,
   ]);
 
+  const savedFetchTipMessageLogs = useRef(fetchTipMessageLogs);
+
+  useEffect(() => {
+    savedFetchTipMessageLogs.current = fetchTipMessageLogs;
+  }, [fetchTipMessageLogs]);
+
+  useEffect(() => {
+    if (!isDisplayingDonation && donationsQueue.length > 0) {
+      displayNextDonation();
+    }
+  }, [donationsQueue, isDisplayingDonation, displayNextDonation]);
+
   useEffect(() => {
     if (!address?.isValid) return;
 
-    const intervalId = setInterval(fetchTipMessageLogs, FETCH_INTERVAL);
+    const intervalId = setInterval(() => {
+      return savedFetchTipMessageLogs.current();
+    }, FETCH_INTERVAL);
 
     return () => {
       return clearInterval(intervalId);
@@ -408,25 +422,27 @@ export default function Obs({ creatorName }: Properties) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address?.isValid]);
 
-  useEffect(() => {
-    if (!isDisplayingDonation && donationsQueue.length > 0) {
-      displayNextDonation();
-    }
-  }, [donationsQueue, isDisplayingDonation, displayNextDonation]);
-
   const currentDonationData = donationsQueue[0];
   const shouldDisplayDonation = isDisplayingDonation && currentDonationData;
 
   return (
-    <div className="h-screen w-full bg-transparent">
-      {shouldDisplayDonation && (
-        <DonationNotification
-          {...currentDonationData}
-          key={currentDonationData.txnHash}
-          minOverallVisibleDuration={DONATION_MIN_OVERALL_VISIBLE_DURATION}
-          onFullyComplete={handleDonationFullyComplete}
-        />
-      )}
-    </div>
+    <>
+      <style>{`
+        html {
+          /* 16px at 450px width (450 / 16 = 28.125) */
+          font-size: calc(100vw / 28.125);
+        }
+      `}</style>
+      <div className="flex h-screen w-screen items-center bg-transparent p-3">
+        {shouldDisplayDonation && (
+          <DonationNotification
+            {...currentDonationData}
+            key={currentDonationData.txnHash}
+            minOverallVisibleDuration={DONATION_MIN_OVERALL_VISIBLE_DURATION}
+            onFullyComplete={handleDonationFullyComplete}
+          />
+        )}
+      </div>
+    </>
   );
 }

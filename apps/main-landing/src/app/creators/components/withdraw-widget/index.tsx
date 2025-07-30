@@ -227,7 +227,6 @@ export const WithdrawWidget = ({
       requestedUsdAmount,
       tokenAddress,
     });
-
     if (canProceed) {
       setStep(2);
     }
