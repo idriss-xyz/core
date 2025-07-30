@@ -96,6 +96,7 @@ export default function StreamAlerts() {
   const [isUrlWarningConfirmed, setIsUrlWarningConfirmed] = useState(false);
   const [confirmButtonText, setConfirmButtonText] = useState('Copy link');
   const [wasCopied, setWasCopied] = useState(false);
+  const [showRefreshAlert, setShowRefreshAlert] = useState(false);
 
   // TODO: Extract to constants
   const alertSounds = [
@@ -183,6 +184,10 @@ export default function StreamAlerts() {
 
   const handleAlertClose = useCallback(() => {
     setSaveSuccess(null);
+  }, []);
+
+  const handleRefreshAlertClose = useCallback(() => {
+    setShowRefreshAlert(false);
   }, []);
 
   const handleTestDonationClose = useCallback(() => {
@@ -284,6 +289,18 @@ export default function StreamAlerts() {
   const handleFileRemove = useCallback(() => {
     setIsCustomSoundUploaded(false);
   }, []);
+
+  // Timers to delay refresh alert opening
+  useEffect(() => {
+    if (saveSuccess === true) {
+      const timer = setTimeout(() => {
+        setShowRefreshAlert(true);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+    return;
+  }, [saveSuccess]);
 
   // Keep track of dirty form state (non-toggles only)
   const isDirtyNonToggles = useMemo(() => {
@@ -664,12 +681,20 @@ Do not share it with anyone or show it on stream."
       )}
       {saveSuccess && (
         <Alert
+          heading="Settings saved!"
+          type="success"
+          autoClose
+          onClose={handleAlertClose}
+        />
+      )}
+      {showRefreshAlert && (
+        <Alert
           heading="Refresh the browser source in your streaming software"
           type="success"
           description="Keeps your donation alert setup up to date"
           iconName="RefreshCw"
           autoClose
-          onClose={handleAlertClose}
+          onClose={handleRefreshAlertClose}
         />
       )}
       {saveSuccess === false && (
