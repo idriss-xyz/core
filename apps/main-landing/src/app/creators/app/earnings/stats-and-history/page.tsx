@@ -27,6 +27,7 @@ import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history
 import { DonateHistoryItem } from '@/app/creators/donate/components/donate-history/donate-history-item';
 
 import { useAuth } from '../../../context/auth-context';
+import SkeletonEarnings from '../loading';
 
 import { TokenLogo } from './token-logo';
 import { useGetRecipientStats } from './commands/get-recipient-stats';
@@ -143,7 +144,7 @@ export default function EarningsStats() {
     tipHistoryQuery.isLoading ||
     recipientStatsQuery.isLoading
   ) {
-    return null;
+    return <SkeletonEarnings />;
   }
 
   const handleCopyLink = () => {

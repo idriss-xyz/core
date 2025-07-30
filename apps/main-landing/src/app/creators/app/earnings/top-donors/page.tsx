@@ -13,6 +13,7 @@ import { IDRISS_SCENE_STREAM_LIGHT } from '@/assets';
 import { Leaderboard } from '@/app/creators/components/leaderboard';
 
 import { periodMap } from '../../ranking/commands/use-get-leaderboard';
+import SkeletonEarnings from '../loading';
 
 // ts-unused-exports:disable-next-line
 export default function TopDonors() {
@@ -59,7 +60,7 @@ export default function TopDonors() {
   }, [allDonations, activeFilter]);
 
   if (tipHistoryQuery.isLoading || !ready || !authenticated) {
-    return null;
+    return <SkeletonEarnings />;
   }
 
   return (
