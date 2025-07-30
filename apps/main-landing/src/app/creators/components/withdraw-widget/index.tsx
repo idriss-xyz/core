@@ -7,7 +7,6 @@ import {
   DonationToken,
   Token,
   NULL_ADDRESS,
-  DUMMY_RECIPIENT,
   TokenBalance,
 } from '@idriss-xyz/constants';
 import { Hex, isAddress } from 'viem';
