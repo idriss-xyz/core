@@ -20,7 +20,7 @@ import { Icon } from '@idriss-xyz/ui/icon';
 
 import { editCreatorProfile } from '@/app/creators/utils';
 import { useAuth } from '@/app/creators/context/auth-context';
-import { soundMap } from '@/app/creators/constants';
+import { soundMap, voiceMap } from '@/app/creators/constants';
 import { ConfirmationModal } from '@/app/creators/components/confirmation-modal/confirmation-modal';
 import { CopyInput } from '@/app/creators/components/copy-input/copy-input';
 import {
@@ -92,6 +92,7 @@ export default function StreamAlerts() {
   const [isCustomSoundUploaded, setIsCustomSoundUploaded] = useState(false);
   const [fileComponentKey, setFileComponentKey] = useState(0);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [isVoicePlaying, setIsVoicePlaying] = useState(false);
   const [isCopyModalOpen, setIsCopyModalOpen] = useState(false);
   const [isUrlWarningConfirmed, setIsUrlWarningConfirmed] = useState(false);
   const [confirmButtonText, setConfirmButtonText] = useState('Copy link');
@@ -117,6 +118,12 @@ export default function StreamAlerts() {
     },
   ];
 
+  const voices = [
+    { value: 'pqHfZKP75CvOlQylNhV4', label: 'Bill' },
+    { value: 'FGY2WhTYpPnrIDTdsKH5', label: 'Laura' },
+    { value: 'TX3LPaxmHKxFdv7VOQHJ', label: 'Liam' },
+  ];
+
   const openConfirmationModal = (source: 'text' | 'icon') => {
     if (source === 'icon') {
       setConfirmButtonText('COPY LINK');
@@ -136,6 +143,7 @@ export default function StreamAlerts() {
       sfxEnabled: creator?.sfxEnabled ?? false,
       customBadWords: creator?.customBadWords ?? [],
       alertSound: creator?.alertSound ?? 'DEFAULT_TRUMPET_SOUND',
+      voiceId: creator?.voiceId ?? 'TX3LPaxmHKxFdv7VOQHJ',
     },
     mode: 'onSubmit',
   });
@@ -236,6 +244,7 @@ export default function StreamAlerts() {
         sfxEnabled: creator.sfxEnabled ?? false,
         customBadWords: creator.customBadWords ?? [],
         alertSound: creator.alertSound ?? 'DEFAULT_TRUMPET_SOUND',
+        voiceId: creator.voiceId ?? 'TX3LPaxmHKxFdv7VOQHJ',
       });
       // Set initial state of custom upload based on creator's alertSound
       setIsCustomSoundUploaded(creator.alertSound === 'upload');
@@ -249,6 +258,10 @@ export default function StreamAlerts() {
       });
     }
     formMethods.setValue('alertSound', value);
+  };
+
+  const handleVoiceChange = (value: string) => {
+    formMethods.setValue('voiceId', value);
   };
 
   const fileUploadCallback = useCallback(() => {
@@ -348,30 +361,6 @@ export default function StreamAlerts() {
                   </div>
                 </div>
                 <Controller
-                  name="minimumAlertAmount"
-                  control={formMethods.control}
-                  render={({ field, fieldState }) => {
-                    return (
-                      <Form.Field
-                        className="max-w-[360px]"
-                        numeric
-                        label="Minimum amount"
-                        helperText={
-                          fieldState.error?.message ??
-                          'Donation amount that triggers an alert'
-                        }
-                        error={Boolean(fieldState.error?.message)}
-                        {...field}
-                        value={field.value?.toString()}
-                        onChange={(value) => {
-                          field.onChange(Number(value));
-                        }}
-                        prefixElement={<span>$</span>}
-                      />
-                    );
-                  }}
-                />
-                <Controller
                   name="alertSound"
                   control={formMethods.control}
                   render={({ field, fieldState: _ }) => {
@@ -425,6 +414,66 @@ export default function StreamAlerts() {
                     onRemove={handleFileRemove}
                   />
                 )}
+                <Controller
+                  name="minimumAlertAmount"
+                  control={formMethods.control}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <Form.Field
+                        className="max-w-[360px]"
+                        numeric
+                        label="Minimum amount"
+                        helperText={
+                          fieldState.error?.message ??
+                          'Donation amount that triggers an alert'
+                        }
+                        error={Boolean(fieldState.error?.message)}
+                        {...field}
+                        value={field.value?.toString()}
+                        onChange={(value) => {
+                          field.onChange(Number(value));
+                        }}
+                        prefixElement={<span>$</span>}
+                      />
+                    );
+                  }}
+                />
+                <Controller
+                  name="voiceId"
+                  control={formMethods.control}
+                  render={({ field, fieldState: _ }) => {
+                    return (
+                      <Select
+                        label="Select a voice"
+                        value={field.value?.toString()}
+                        className="max-w-[360px]"
+                        options={voices}
+                        onChange={handleVoiceChange}
+                        iconName="PlayCircle"
+                        isAudioPlaying={isVoicePlaying}
+                        onIconClick={() => {
+                          if (isVoicePlaying) return;
+
+                          const soundFile = voiceMap[field.value];
+                          const audio = new Audio(soundFile);
+                          audio.addEventListener('play', () => {
+                            return setIsVoicePlaying(true);
+                          });
+                          audio.addEventListener('ended', () => {
+                            return setIsVoicePlaying(false);
+                          });
+                          audio.addEventListener('error', () => {
+                            setIsVoicePlaying(false);
+                            console.error('Error playing sound');
+                          });
+                            void audio.play();
+                        }}
+                        // TODO: Add error handling
+                        // error={Boolean(fieldState.error?.message)}
+                      />
+                    );
+                  }}
+                />
               </>
             )}
           </FormFieldWrapper>
