@@ -6,7 +6,7 @@ import { Form } from '@idriss-xyz/ui/form';
 import { Toggle } from '@idriss-xyz/ui/toggle';
 import { Alert } from '@idriss-xyz/ui/alert';
 import { getAccessToken } from '@privy-io/react-auth';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { isAddress } from 'viem';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
@@ -96,6 +96,7 @@ export default function StreamAlerts() {
   const [isUrlWarningConfirmed, setIsUrlWarningConfirmed] = useState(false);
   const [confirmButtonText, setConfirmButtonText] = useState('Copy link');
   const [wasCopied, setWasCopied] = useState(false);
+  const [showRefreshAlert, setShowRefreshAlert] = useState(false);
 
   // TODO: Extract to constants
   const alertSounds = [
@@ -185,6 +186,10 @@ export default function StreamAlerts() {
     setSaveSuccess(null);
   }, []);
 
+  const handleRefreshAlertClose = useCallback(() => {
+    setShowRefreshAlert(false);
+  }, []);
+
   const handleTestDonationClose = useCallback(() => {
     setTestDonationSuccess(null);
   }, []);
@@ -219,6 +224,32 @@ export default function StreamAlerts() {
       );
 
       setSaveSuccess(editSuccess);
+    } catch (error) {
+      console.error('Error saving profile:', error);
+    }
+  };
+
+  const onSubmitToggles = async (data: FormPayload) => {
+    try {
+      const authToken = await getAccessToken();
+      if (!authToken) {
+        console.error('Could not get auth token.');
+        return;
+      }
+      if (!creator?.name) {
+        console.error('Creator not initialized');
+        return;
+      }
+
+      await editCreatorProfile(
+        creator.name,
+        {
+          alertEnabled: data.alertEnabled,
+          ttsEnabled: data.ttsEnabled,
+          sfxEnabled: data.sfxEnabled,
+        },
+        authToken,
+      );
     } catch (error) {
       console.error('Error saving profile:', error);
     }
@@ -259,6 +290,30 @@ export default function StreamAlerts() {
     setIsCustomSoundUploaded(false);
   }, []);
 
+  // Timers to delay refresh alert opening
+  useEffect(() => {
+    if (saveSuccess === true) {
+      const timer = setTimeout(() => {
+        setShowRefreshAlert(true);
+      }, 3000);
+
+      return () => {
+        return clearTimeout(timer);
+      };
+    }
+    return;
+  }, [saveSuccess]);
+
+  // Keep track of dirty form state (non-toggles only)
+  const isDirtyNonToggles = useMemo(() => {
+    const { dirtyFields } = formMethods.formState;
+
+    const nonToggleDirtyFields = Object.keys(dirtyFields).filter((field) => {
+      return !['alertEnabled', 'ttsEnabled', 'sfxEnabled'].includes(field);
+    });
+    return nonToggleDirtyFields.length > 0;
+  }, [formMethods.formState]);
+
   return (
     <Card className="w-full">
       <div className="flex flex-col gap-6">
@@ -281,7 +336,7 @@ export default function StreamAlerts() {
                     onChange={(newValue) => {
                       field.onChange(newValue);
                       setTimeout(() => {
-                        void void formMethods.handleSubmit(onSubmit)();
+                        void void formMethods.handleSubmit(onSubmitToggles)();
                       }, 0); // defer to ensure updated value
                     }}
                   />
@@ -447,7 +502,7 @@ export default function StreamAlerts() {
                         onChange={(newValue) => {
                           field.onChange(newValue);
                           setTimeout(() => {
-                            void formMethods.handleSubmit(onSubmit)();
+                            void formMethods.handleSubmit(onSubmitToggles)();
                           }, 0); // defer to ensure updated value
                         }}
                         className="w-fit"
@@ -530,7 +585,7 @@ export default function StreamAlerts() {
                         onChange={(newValue) => {
                           field.onChange(newValue);
                           setTimeout(() => {
-                            void formMethods.handleSubmit(onSubmit)();
+                            void formMethods.handleSubmit(onSubmitToggles)();
                           }, 0); // defer to ensure updated value
                         }}
                         className="w-fit"
@@ -638,11 +693,20 @@ Do not share it with anyone or show it on stream."
       )}
       {saveSuccess && (
         <Alert
+          heading="Settings saved!"
+          type="success"
+          autoClose
+          onClose={handleAlertClose}
+        />
+      )}
+      {showRefreshAlert && (
+        <Alert
           heading="Refresh the browser source in your streaming software"
           type="success"
           description="Keeps your donation alert setup up to date"
+          iconName="RefreshCw"
           autoClose
-          onClose={handleAlertClose}
+          onClose={handleRefreshAlertClose}
         />
       )}
       {saveSuccess === false && (
@@ -652,6 +716,15 @@ Do not share it with anyone or show it on stream."
           description="Please try again later"
           autoClose
           onClose={handleAlertClose}
+        />
+      )}
+      {isDirtyNonToggles && (
+        <Alert
+          heading="You have unsaved changes"
+          type="error"
+          description="Don't forget to save when you are done"
+          iconName="RefreshCw"
+          autoClose
         />
       )}
     </Card>
