@@ -18,28 +18,20 @@ type AuthContextType = {
   markDonationsAsSeen: () => void;
   oauthError: string | null;
   isLoginModalOpen: boolean;
-  setLoginModalOpen: (isOpen: boolean) => void;
-  isPasswordModalOpen: boolean;
-  earlyAccessToken: string | null;
   creator: CreatorProfileResponse | null;
   creatorLoading: boolean;
   setCreatorLoading: (loading: boolean) => void;
   setOauthError: (error: string | null) => void;
   clearOauthError: () => void;
   setIsModalOpen: (isOpen: boolean) => void;
-  setIsPasswordModalOpen: (isOpen: boolean) => void;
-  setEarlyAccessToken: (token: string | null) => void;
   setCreator: (creator: CreatorProfileResponse | null) => void;
-  handlePasswordSuccess: () => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [oauthError, setOauthError] = useState<string | null>(null);
-  const [isLoginModalOpen, setLoginModalOpen] = useState(false);
-  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
-  const [earlyAccessToken, setEarlyAccessToken] = useState<string | null>(null);
+  const [isLoginModalOpen, setIsModalOpen] = useState(false);
   const [creator, setCreator] = useState<CreatorProfileResponse | null>(null);
   const [creatorLoading, setCreatorLoading] = useState(true);
   const [donations, setDonations] = useState<DonationData[]>([]);
@@ -107,37 +99,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return setOauthError(null);
   };
 
-  const setIsModalOpen = (isOpen: boolean) => {
-    if (isOpen && !earlyAccessToken) {
-      setIsPasswordModalOpen(true);
-    } else {
-      setLoginModalOpen(isOpen);
-    }
-  };
-
-  const handlePasswordSuccess = () => {
-    setIsPasswordModalOpen(false);
-    setLoginModalOpen(true);
-  };
-
   return (
     <AuthContext.Provider
       value={{
         oauthError,
         isLoginModalOpen,
-        setLoginModalOpen,
-        isPasswordModalOpen,
-        earlyAccessToken,
         creator,
         creatorLoading,
         setCreatorLoading,
         setOauthError,
         clearOauthError,
         setIsModalOpen,
-        setIsPasswordModalOpen,
-        setEarlyAccessToken,
         setCreator,
-        handlePasswordSuccess,
         donations,
         addDonation,
         newDonationsCount,

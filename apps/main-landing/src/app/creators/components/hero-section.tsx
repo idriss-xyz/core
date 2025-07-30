@@ -13,7 +13,6 @@ import { useStartEarningNavigation } from '../utils';
 
 import { VideoPlayer } from './hero-section/video-player';
 import { LoginModal } from './login-modal';
-import { PasswordModal } from './password-modal';
 
 type Properties = {
   heroButtonReference?: RefObject<HTMLButtonElement>;
@@ -26,16 +25,7 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
   const [isMobileNotSupportedOpen, setIsMobileNotSupportedOpen] =
     useState(false);
 
-  const {
-    isLoginModalOpen,
-    setLoginModalOpen,
-    setIsModalOpen,
-    isPasswordModalOpen,
-    setIsPasswordModalOpen,
-    earlyAccessToken,
-    handlePasswordSuccess,
-    creator,
-  } = useAuth();
+  const { isLoginModalOpen, setIsModalOpen, creator } = useAuth();
   const originalHandleStartEarningClick = useStartEarningNavigation();
 
   const handleStartEarningClick = () => {
@@ -48,9 +38,7 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
     if (creator) {
       void originalHandleStartEarningClick();
     } else {
-      void (earlyAccessToken
-        ? originalHandleStartEarningClick()
-        : setIsPasswordModalOpen(true));
+      void originalHandleStartEarningClick();
     }
   };
 
@@ -68,7 +56,7 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
 
     if (customToken) {
       setIsLoggingIn(true);
-      setLoginModalOpen(true);
+      setIsModalOpen(true);
       // Store Twitch info in sessionStorage to be picked up by the next page.
       if (name) {
         sessionStorage.setItem(
@@ -81,13 +69,7 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
       // Redirect to the main app. The PrivyProvider will now automatically
       // use the token to authenticate the user.
     }
-  }, [
-    searchParameters,
-    router,
-    setIsLoggingIn,
-    setLoginModalOpen,
-    setIsModalOpen,
-  ]);
+  }, [searchParameters, router, setIsLoggingIn, setIsModalOpen]);
 
   return (
     <header
@@ -162,13 +144,6 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
         onClose={() => {
           return setIsModalOpen(false);
         }}
-      />
-      <PasswordModal
-        isOpened={isPasswordModalOpen}
-        onClose={() => {
-          return setIsPasswordModalOpen(false);
-        }}
-        onSuccess={handlePasswordSuccess}
       />
       {isMobileNotSupportedOpen && (
         <MobileNotSupported
