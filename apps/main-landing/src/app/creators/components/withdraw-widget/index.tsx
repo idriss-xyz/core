@@ -9,6 +9,7 @@ import {
   ERC20_ABI,
   Token,
   NULL_ADDRESS,
+  DUMMY_RECIPIENT,
 } from '@idriss-xyz/constants';
 import {
   encodeFunctionData,
@@ -335,7 +336,6 @@ export const WithdrawWidget = ({
     const tokensToSend =
       (totalTokenBalance * scaledRequestedAmount) / scaledTotalUsdValue;
     const isNative = tokenAddress === NULL_ADDRESS;
-    const DUMMY_RECIPIENT = '0x0000000000000000000000000000000000000001';
 
     const txForEstimation = isNative
       ? {

@@ -61,6 +61,7 @@ export const useDonationNotification = (
   useEffect(() => {
     if (didRunReference.current) return;
     didRunReference.current = true;
+
     // --- Start of Effect Cleanup (from previous run or on unmount) ---
     notificationVisibleStartTimeReference.current = null; // Reset on new effect run
 

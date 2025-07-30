@@ -43,6 +43,7 @@ export const REWARDS_ADDRESS = '0x4D66A8e9Da1F007802338B372aD348B78b455aBB';
 
 export const NATIVE_COIN_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
+export const DUMMY_RECIPIENT = '0x0000000000000000000000000000000000000001';
 
 export const CREATOR_CHAIN = {
   ABSTRACT: {
@@ -376,7 +377,7 @@ export const DEFAULT_ALLOWED_CHAINS_IDS = [
 export const EMPTY_HEX = '0x';
 
 export const COPILOT_API_URL = 'https://copilot-api.idriss.xyz';
-export const CREATOR_API_URL = 'https://core-production-a116.up.railway.app';
+export const CREATOR_API_URL = 'http://localhost:4000';
 
 export const DEFAULT_DONATION_MIN_ALERT_AMOUNT = 1;
 export const DEFAULT_DONATION_MIN_TTS_AMOUNT = 3;
