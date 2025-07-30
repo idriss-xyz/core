@@ -119,9 +119,9 @@ export default function StreamAlerts() {
 
   const openConfirmationModal = (source: 'text' | 'icon') => {
     if (source === 'icon') {
-      setConfirmButtonText('Copy link');
+      setConfirmButtonText('COPY LINK');
     } else {
-      setConfirmButtonText('Got it');
+      setConfirmButtonText('GOT IT');
     }
     setIsCopyModalOpen(true);
   };
@@ -301,14 +301,24 @@ export default function StreamAlerts() {
                       wasCopied={wasCopied}
                       onIconClick={
                         isUrlWarningConfirmed
-                          ? undefined
+                          ? () => {
+                              if (creator?.obsUrl) {
+                                void navigator.clipboard.writeText(
+                                  creator.obsUrl,
+                                );
+                                setWasCopied(true);
+                                setTimeout(() => {
+                                  return setWasCopied(false);
+                                }, 2000);
+                              }
+                            }
                           : () => {
                               return openConfirmationModal('icon');
                             }
                       }
                       onTextClick={
                         isUrlWarningConfirmed
-                          ? undefined
+                          ? () => {}
                           : () => {
                               return openConfirmationModal('text');
                             }
@@ -590,7 +600,7 @@ export default function StreamAlerts() {
           setIsUrlWarningConfirmed(true);
         }}
         onConfirm={() => {
-          if (confirmButtonText === 'Copy link' && creator?.obsUrl) {
+          if (confirmButtonText === 'COPY LINK' && creator?.obsUrl) {
             void navigator.clipboard.writeText(creator.obsUrl);
             setWasCopied(true);
             setTimeout(() => {
