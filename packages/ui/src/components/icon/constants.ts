@@ -51,6 +51,7 @@ import {
   FileUp,
   Gamepad2,
   Paintbrush,
+  Users as Users2,
 } from 'lucide-react';
 
 import * as customIcons from './custom';
@@ -108,5 +109,6 @@ export const ICON = {
   FileUp,
   Gamepad2,
   Paintbrush,
+  Users2,
   ...customIcons,
 };
