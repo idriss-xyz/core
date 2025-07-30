@@ -7,7 +7,6 @@ import { Button } from '@idriss-xyz/ui/button';
 import { ExternalLink } from '@idriss-xyz/ui/external-link';
 import { Modal } from '@idriss-xyz/ui/modal';
 import Image from 'next/image';
-import { usePrivy } from '@privy-io/react-auth';
 
 import { IDRISS_TOROID } from '@/assets';
 
@@ -21,11 +20,9 @@ type Properties = {
 
 export const LoginModal = ({ isOpened, onClose, isLoading }: Properties) => {
   const { earlyAccessToken } = useAuth();
-  const { authenticated } = usePrivy();
 
   const handleTwitchLogin = () => {
     if (!earlyAccessToken) return;
-    if (authenticated) window.location.href = `creators/app/`;
     window.location.href = `${CREATOR_API_URL}/auth/twitch?token=${earlyAccessToken}`;
   };
 
