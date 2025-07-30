@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { TabsPill, TabItem } from '@idriss-xyz/ui/tabs-pill';
 import { CREATORS_LINK } from '@idriss-xyz/constants';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
+import { useEffect, useState } from 'react';
 
 import { CopyInput } from '../../components/copy-input/copy-input';
 import useRedirectIfNotAuthenticated from '../../hooks/use-redirect-not-authenticated';
@@ -17,7 +18,21 @@ export default function SetupLayout({
 }) {
   const pathname = usePathname();
   const { creator } = useAuth();
+  const [hasVisitedStreamAlerts, setHasVisitedStreamAlerts] = useState(false);
+
   useRedirectIfNotAuthenticated();
+
+  useEffect(() => {
+    const visitedKey = 'idriss-visited-stream-alerts';
+    const hasVisited = localStorage.getItem(visitedKey) === 'true';
+    setHasVisitedStreamAlerts(hasVisited);
+
+    // If currently on stream alerts page and hasn't been marked as visited, mark it
+    if (pathname === '/creators/app/setup/stream-alerts' && !hasVisited) {
+      localStorage.setItem(visitedKey, 'true');
+      setHasVisitedStreamAlerts(true);
+    }
+  }, [pathname]);
   const setupTabs: TabItem[] = [
     {
       name: 'Payment methods',
@@ -30,6 +45,7 @@ export default function SetupLayout({
       href: '/creators/app/setup/stream-alerts',
       iconName: 'BellRing',
       isActive: pathname === '/creators/app/setup/stream-alerts',
+      showPulsingDot: !hasVisitedStreamAlerts,
     },
     {
       name: 'Donation panel',
@@ -58,7 +74,7 @@ export default function SetupLayout({
   };
 
   return (
-    <div className="mb-3 flex size-full flex-col gap-4">
+    <div className="flex size-full flex-col gap-4">
       <h1 className="col-span-3 text-heading3">Setup</h1>
       <div className="relative flex flex-row items-center gap-4 rounded-lg bg-white/80 p-4">
         <GradientBorder

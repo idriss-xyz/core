@@ -10,6 +10,7 @@ export type TabItem = {
   onClick?: () => void;
   disabled?: boolean;
   subtitle?: string;
+  showPulsingDot?: boolean;
 };
 
 type TabsPillProperties = {
@@ -59,6 +60,9 @@ export function TabsPill({ tabs, renderLink }: TabsPillProperties) {
                     </span>
                   )}
                 </div>
+                {tab.showPulsingDot && (
+                  <div className="absolute bottom-1 left-1/2 size-2 -translate-x-1/2 animate-pulse rounded-full bg-mint-600" />
+                )}
               </div>
             );
           }
@@ -83,6 +87,9 @@ export function TabsPill({ tabs, renderLink }: TabsPillProperties) {
                       )}
                     </div>
                     <span className="absolute top-[16px] h-[36px] w-[200px] rounded-t-[1000px] bg-[#5FEB3C] opacity-30 blur-md" />
+                    {tab.showPulsingDot && (
+                      <div className="absolute bottom-1 left-1/2 size-2 -translate-x-1/2 animate-pulse rounded-full bg-mint-600" />
+                    )}
                   </div>
                 ) : (
                   <div className="group relative flex h-[44px] items-center justify-center gap-2 overflow-hidden rounded-full border border-transparent px-8 py-2 hover:border-[#5FEB3C]">
@@ -102,6 +109,9 @@ export function TabsPill({ tabs, renderLink }: TabsPillProperties) {
                       )}
                     </div>
                     <span className="absolute top-[16px] hidden h-[36px] w-[200px] rounded-t-[1000px] bg-[#5FEB3C] opacity-30 blur-md group-hover:inline" />
+                    {tab.showPulsingDot && (
+                      <div className="absolute bottom-1 left-1/2 size-1.5 -translate-x-1/2 animate-pulse rounded-full bg-mint-600" />
+                    )}
                   </div>
                 )}
               </div>
