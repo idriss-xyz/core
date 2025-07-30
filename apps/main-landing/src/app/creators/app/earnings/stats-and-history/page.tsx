@@ -19,10 +19,14 @@ import { useMemo } from 'react';
 import { formatFiatValue } from '@idriss-xyz/utils';
 import { usePrivy } from '@privy-io/react-auth';
 import { Hex } from 'viem';
+import { Alert } from '@idriss-xyz/ui/alert';
 
+import { useCopyToClipboard } from '@/app/creators/hooks/use-copy-to-clipboard';
 import { backgroundLines2, IDRISS_COIN, IDRISS_SCENE_STREAM_4 } from '@/assets';
 import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history';
 import { DonateHistoryItem } from '@/app/creators/donate/components/donate-history/donate-history-item';
+
+import { useAuth } from '../../../context/auth-context';
 
 import { TokenLogo } from './token-logo';
 import { useGetRecipientStats } from './commands/get-recipient-stats';
@@ -37,6 +41,8 @@ const chartConfig = {
 // ts-unused-exports:disable-next-line
 export default function EarningsStats() {
   const { user, ready, authenticated } = usePrivy();
+  const { copied, copy } = useCopyToClipboard();
+  const { creator } = useAuth();
   const address = user?.wallet?.address as Hex | undefined;
   const tipHistoryQuery = useGetTipHistory(
     {
@@ -130,6 +136,12 @@ export default function EarningsStats() {
       otherAssets: sortedAssets.slice(1, 4),
     };
   }, [stats]);
+
+  const handleCopyLink = () => {
+    if (creator?.donationUrl) {
+      void copy(creator.donationUrl);
+    }
+  };
 
   return (
     <div className="grid grid-cols-3 gap-4">
@@ -372,17 +384,26 @@ export default function EarningsStats() {
               <Button
                 size="medium"
                 intent="secondary"
-                onClick={() => {
-                  return console.log('Not implemented yet');
-                }} // TODO: Add functionality
-                suffixIconName="IdrissArrowRight"
-                className="uppercase"
+                onClick={handleCopyLink}
+                suffixIconName={copied ? undefined : 'IdrissArrowRight'}
+                prefixIconName={copied ? 'Check' : undefined}
+                className="min-w-[137px] justify-center uppercase"
+                disabled={!creator?.donationUrl}
               >
-                Copy link
+                {copied ? 'Copied' : 'Copy link'}
               </Button>
             </div>
           </Card>
         </>
+      )}
+      {copied && (
+        <div className="fixed bottom-[3vh] left-1/2 z-50 -translate-x-1/2">
+          <Alert
+            type="success"
+            heading="Your link has been copied!"
+            autoClose
+          />
+        </div>
       )}
     </div>
   );

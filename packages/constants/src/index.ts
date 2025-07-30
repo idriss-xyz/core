@@ -39,6 +39,7 @@ export {
   TOKEN,
   NATIVE_COIN_ADDRESS,
   NULL_ADDRESS,
+  DUMMY_RECIPIENT,
   DEFAULT_ALLOWED_CHAINS_IDS,
   EMPTY_HEX,
   COPILOT_API_URL,
@@ -63,6 +64,7 @@ export type {
   DonationUser,
   DonationToken,
   BalanceTableItem,
+  TokenBalance,
 } from './types';
 
 export * from './logos';

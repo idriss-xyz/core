@@ -4,27 +4,20 @@ import { Button } from '@idriss-xyz/ui/button';
 import { Form as DesignSystemForm } from '@idriss-xyz/ui/form';
 import { classes } from '@idriss-xyz/ui/utils';
 import {
-  CREATOR_CHAIN,
   DonationToken,
-  ERC20_ABI,
   Token,
   NULL_ADDRESS,
+  TokenBalance,
 } from '@idriss-xyz/constants';
-import {
-  encodeFunctionData,
-  Hex,
-  isAddress,
-  parseUnits,
-  formatUnits,
-} from 'viem';
+import { Hex, isAddress } from 'viem';
 import { Divider } from '@idriss-xyz/ui/divider';
-import { useSendTransaction, useWallets } from '@privy-io/react-auth';
 import {
   formatFiatValue,
   formatTokenValue,
   getChainById,
   getChainIdByNetworkName,
   getChainLogoById,
+  getNetworkKeyByChainId,
 } from '@idriss-xyz/utils';
 
 import {
@@ -32,8 +25,8 @@ import {
   TokenSelect,
 } from '../../donate/components/donate-form/components';
 import { TokenLogo } from '../../app/earnings/stats-and-history/token-logo';
-import { TokenBalance } from '../../app/earnings/commands/get-balances';
 
+import { useWithdrawal } from './use-withdrawal';
 import { IdrissSend } from './send';
 
 type WithdrawFormValues = {
@@ -50,13 +43,6 @@ type WithdrawWidgetProperties = {
   onClose: () => void;
 };
 
-function getNetworkKeyByChainId(chainId: number): string | undefined {
-  const entry = Object.entries(CREATOR_CHAIN).find(([, value]) => {
-    return value.id === chainId;
-  });
-  return entry?.[1].dbName;
-}
-
 export const WithdrawWidget = ({
   isOpen,
   balances,
@@ -64,14 +50,18 @@ export const WithdrawWidget = ({
   onClose,
 }: WithdrawWidgetProperties) => {
   const [step, setStep] = useState<1 | 2>(1);
-  const { wallets } = useWallets();
-  const { sendTransaction } = useSendTransaction();
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [formError, setFormError] = useState<string | null>(null);
-  const [amountInTokens, setAmountInTokens] = useState<bigint>();
+  const {
+    sendWithdrawal,
+    checkGasAndProceed,
+    isLoading,
+    isSuccess,
+    error: formError,
+    transactionHash,
+    amountInTokens,
+    adjustedAmount,
+    reset: resetWithdrawal,
+  } = useWithdrawal();
   const [visualAmount, setVisualAmount] = useState<string>();
-  const [transactionHash, setTransactionHash] = useState<string>();
   const [isMaxAmount, setIsMaxAmount] = useState(false);
 
   const formMethods = useForm<WithdrawFormValues>({
@@ -86,14 +76,10 @@ export const WithdrawWidget = ({
     onClose();
     setStep(1);
     formMethods.reset();
-    setIsLoading(false);
-    setIsSuccess(false);
-    setAmountInTokens(undefined);
-    setTransactionHash(undefined);
-    setFormError(null);
+    resetWithdrawal();
     setVisualAmount(undefined);
     setIsMaxAmount(false);
-  }, [onClose, formMethods]);
+  }, [onClose, formMethods, resetWithdrawal]);
 
   useEffect(() => {
     if (isOpen) {
@@ -104,6 +90,15 @@ export const WithdrawWidget = ({
       }
     }
   }, [isOpen, selectedToken, formMethods, balances]);
+
+  useEffect(() => {
+    if (adjustedAmount) {
+      formMethods.setValue('amount', adjustedAmount, {
+        shouldValidate: true,
+      });
+      setVisualAmount(formatFiatValue(adjustedAmount));
+    }
+  }, [adjustedAmount, formMethods]);
 
   const formReference = useRef<HTMLFormElement | null>(null);
   const amount = formMethods.watch('amount');
@@ -199,215 +194,50 @@ export const WithdrawWidget = ({
 
   const onSubmit = useCallback(
     async (values: WithdrawFormValues) => {
-      setFormError(null);
-      if (!values.amount || !values.tokenSymbol || !values.chainId) {
+      if (
+        !values.amount ||
+        !values.tokenSymbol ||
+        !values.chainId ||
+        !selectedBalance
+      ) {
         return;
       }
-      setIsLoading(true);
-
-      const networkKey = getNetworkKeyByChainId(values.chainId);
-      const balance = balances.find((b) => {
-        return b.symbol === values.tokenSymbol && b.network === networkKey;
+      await sendWithdrawal({
+        withdrawalAddress: values.withdrawalAddress as Hex,
+        chainId: values.chainId,
+        isMaxAmount,
+        selectedBalance,
+        requestedUsdAmount: values.amount,
+        tokenAddress,
       });
-
-      if (!balance || balance.usdValue <= 0) {
-        setIsLoading(false);
-        return;
-      }
-
-      let tokensToSend: bigint;
-      if (isMaxAmount) {
-        tokensToSend = parseUnits(balance.balance, balance.decimals);
-      } else {
-        const totalTokenBalance = parseUnits(balance.balance, balance.decimals);
-        const totalUsdValue = balance.usdValue;
-        const requestedUsdAmount = values.amount;
-
-        // Use 18 decimals for high-precision floating point math, a common
-        // standard in crypto, to prevent rounding errors.
-        const precision = 1e18;
-        const scaledRequestedAmount = BigInt(
-          Math.round(requestedUsdAmount * precision),
-        );
-        const scaledTotalUsdValue = parseUnits(totalUsdValue.toString(), 18);
-
-        if (scaledTotalUsdValue === 0n) {
-          setIsLoading(false);
-          return;
-        }
-
-        tokensToSend =
-          (totalTokenBalance * scaledRequestedAmount) / scaledTotalUsdValue;
-      }
-      setAmountInTokens(tokensToSend);
-
-      const isNative = tokenAddress === NULL_ADDRESS;
-      const txRequest = isNative
-        ? {
-            to: values.withdrawalAddress as Hex,
-            value: tokensToSend.toString(),
-            data: undefined,
-            chainId: values.chainId,
-          }
-        : {
-            to: tokenAddress,
-            value: '0',
-            data: encodeFunctionData({
-              abi: ERC20_ABI,
-              functionName: 'transfer',
-              args: [values.withdrawalAddress as Hex, tokensToSend],
-            }),
-            chainId: values.chainId,
-          };
-
-      try {
-        const tx = await sendTransaction(txRequest, {
-          uiOptions: {
-            showWalletUIs: false,
-          },
-        });
-
-        setTransactionHash(tx.hash);
-
-        setIsLoading(false);
-        setIsSuccess(true);
-      } catch (error) {
-        console.error('Failed to send transaction', error);
-        if (
-          error instanceof Error &&
-          (error.message.toLowerCase().includes('insufficient funds') ||
-            error.message
-              .toLowerCase()
-              .includes('gas required exceeds allowance'))
-        ) {
-          const chain = getChainById(values.chainId);
-          const nativeCurrencySymbol = chain?.nativeCurrency.symbol ?? 'ETH';
-          setFormError(
-            `Not enough ${nativeCurrencySymbol} in your wallet to cover network fees.`,
-          );
-        } else {
-          setFormError('Something went wrong. Try again in a few seconds.');
-        }
-        setIsLoading(false);
-        setIsSuccess(false);
-      }
     },
-    [balances, tokenAddress, sendTransaction, isMaxAmount],
+    [selectedBalance, tokenAddress, isMaxAmount, sendWithdrawal],
   );
 
   const onNextStep = useCallback(async () => {
-    setFormError(null);
-
     const values = formMethods.getValues();
-    const { amount: requestedUsdAmount, chainId, tokenSymbol } = values;
+    const { amount: requestedUsdAmount, chainId } = values;
 
-    const activeWallet = wallets[0];
-    if (!activeWallet) {
-      setFormError('Wallet not connected.');
-      return;
-    }
+    if (!selectedBalance) return;
 
-    const networkKey = getNetworkKeyByChainId(chainId);
-    const balance = balances.find((b) => {
-      return b.symbol === tokenSymbol && b.network === networkKey;
+    const canProceed = await checkGasAndProceed({
+      chainId,
+      isMaxAmount,
+      selectedBalance,
+      requestedUsdAmount,
+      tokenAddress,
     });
 
-    if (!balance || balance.usdValue <= 0) {
-      return;
-    }
-
-    const totalUsdValue = balance.usdValue;
-    let tokensToSend: bigint;
-    if (isMaxAmount) {
-      tokensToSend = parseUnits(balance.balance, balance.decimals);
-    } else {
-      const totalTokenBalance = parseUnits(balance.balance, balance.decimals);
-      const precision = 1e18;
-      const scaledRequestedAmount = BigInt(
-        Math.round(requestedUsdAmount * precision),
-      );
-      const scaledTotalUsdValue = parseUnits(totalUsdValue.toString(), 18);
-
-      if (scaledTotalUsdValue === 0n) {
-        return;
-      }
-      tokensToSend =
-        (totalTokenBalance * scaledRequestedAmount) / scaledTotalUsdValue;
-    }
-    const isNative = tokenAddress === NULL_ADDRESS;
-    const DUMMY_RECIPIENT = '0x0000000000000000000000000000000000000001';
-
-    const txForEstimation = isNative
-      ? {
-          from: activeWallet.address,
-          to: DUMMY_RECIPIENT,
-          value: `0x${tokensToSend.toString(16)}`,
-        }
-      : {
-          from: activeWallet.address,
-          to: tokenAddress,
-          data: encodeFunctionData({
-            abi: ERC20_ABI,
-            functionName: 'transfer',
-            args: [DUMMY_RECIPIENT as Hex, tokensToSend],
-          }),
-        };
-
-    try {
-      await activeWallet.switchChain(chainId);
-      const provider = await activeWallet.getEthereumProvider();
-      const [gas, gasPrice, nativeBalanceHex] = await Promise.all([
-        provider.request({
-          method: 'eth_estimateGas',
-          params: [txForEstimation],
-        }),
-        provider.request({ method: 'eth_gasPrice', params: [] }),
-        provider.request({
-          method: 'eth_getBalance',
-          params: [activeWallet.address, 'latest'],
-        }),
-      ]);
-
-      const gasCost = BigInt(gas) * BigInt(gasPrice);
-      const nativeBalance = BigInt(nativeBalanceHex);
-
-      if (isNative) {
-        if (nativeBalance < tokensToSend + gasCost) {
-          const chain = getChainById(chainId);
-          const nativeCurrencySymbol = chain?.nativeCurrency.symbol ?? 'ETH';
-          setFormError(
-            `Not enough ${nativeCurrencySymbol} in your wallet to cover network fees.`,
-          );
-          return;
-        }
-
-        if (isMaxAmount && nativeBalance > gasCost) {
-          const newTokensToSend = nativeBalance - gasCost;
-          const price = totalUsdValue / Number.parseFloat(balance.balance);
-          const newAmountFloat = Number.parseFloat(
-            formatUnits(newTokensToSend, balance.decimals),
-          );
-          const newAmountInUSD = newAmountFloat * price;
-
-          formMethods.setValue('amount', newAmountInUSD, {
-            shouldValidate: true,
-          });
-          setVisualAmount(formatFiatValue(newAmountInUSD));
-        }
-      } else if (nativeBalance < gasCost) {
-        const chain = getChainById(chainId);
-        const nativeCurrencySymbol = chain?.nativeCurrency.symbol ?? 'ETH';
-        setFormError(
-          `Not enough ${nativeCurrencySymbol} in your wallet to cover network fees.`,
-        );
-        return;
-      }
-
+    if (canProceed) {
       setStep(2);
-    } catch {
-      setFormError('Something went wrong. Try again in a few seconds.');
     }
-  }, [wallets, formMethods, balances, tokenAddress, isMaxAmount]);
+  }, [
+    formMethods,
+    tokenAddress,
+    isMaxAmount,
+    selectedBalance,
+    checkGasAndProceed,
+  ]);
 
   return (
     <IdrissSend.Container
@@ -452,7 +282,7 @@ export const WithdrawWidget = ({
               className="p-5"
               onConfirm={handleClose}
               chainId={chainId}
-              transactionHash={transactionHash as Hex}
+              transactionHash={transactionHash!}
             />
           );
         }
