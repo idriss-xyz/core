@@ -158,7 +158,7 @@ export default function EarningsStats() {
                 <span className="pointer-events-none absolute right-2 top-8 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-mint-900">
                   <Icon
                     size={24}
-                    name="Users"
+                    name="Users2"
                     className="mr-1 rounded-full bg-mint-600 p-1 text-white"
                   />
                   {stats.distinctDonorsCount} donors
