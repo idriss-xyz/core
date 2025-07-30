@@ -9,6 +9,17 @@ type ClaimedEvent = {
   transactionHash: string;
 };
 
+export interface TokenBalance {
+  address: Hex;
+  symbol: string;
+  name: string;
+  imageUrl?: string;
+  network: string;
+  decimals: number;
+  balance: string;
+  usdValue: number;
+}
+
 export type ClaimedEventsResponse = {
   events: ClaimedEvent[];
   lastProcessedBlock: string;

@@ -14,6 +14,10 @@ export const NumericInput = forwardRef(
     inputProperties: Properties,
     reference: ForwardedRef<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
+    const { value, ...rest } = inputProperties;
+
+    const displayValue = value === '0' ? '' : value;
+
     return (
       <NumericFormat
         getInputRef={reference}
@@ -21,7 +25,8 @@ export const NumericInput = forwardRef(
         decimalScale={inputProperties.decimalScale ?? 3}
         thousandSeparator=","
         customInput={Input}
-        {...inputProperties}
+        {...rest}
+        value={displayValue}
         onChange={(event) => {
           inputProperties.onChange(event.target.value.replaceAll(',', ''));
         }}

@@ -112,7 +112,7 @@ export const Input = forwardRef(
             style={{
               paddingLeft:
                 (properties.prefixIconName ?? properties.prefixElement) &&
-                `${(prefixReference.current?.offsetWidth ?? 0) + 4}px`,
+                `${prefixReference.current?.offsetWidth ?? 0}px`,
               paddingRight:
                 properties.suffixElement &&
                 `${(suffixReference.current?.offsetWidth ?? 0) + 12}px`,

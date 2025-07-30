@@ -1,10 +1,11 @@
-import { Hex } from 'viem';
+import { Hex, parseUnits } from 'viem';
 
 import {
   Chain,
   CREATOR_CHAIN,
   DonationData,
   LeaderboardStats,
+  TokenBalance,
 } from '../../constants/src';
 
 export const getFilteredDonationsByPeriod = (
@@ -95,6 +96,13 @@ for (const chain of Object.values(CREATOR_CHAIN)) {
   databaseNameToChainMap.set(chain.dbName, chain);
 }
 
+export function getNetworkKeyByChainId(chainId: number): string | undefined {
+  const entry = Object.entries(CREATOR_CHAIN).find(([, value]) => {
+    return value.id === chainId;
+  });
+  return entry?.[1].dbName;
+}
+
 export function getChainByNetworkName(networkName: string): Chain | undefined {
   return databaseNameToChainMap.get(networkName);
 }
@@ -132,4 +140,35 @@ export function createAddressToCreatorMap<T extends MappableCreator>(
     }
   }
   return addressToCreatorMap;
+}
+
+export function calculateTokensToSend({
+  isMaxAmount,
+  balance,
+  requestedUsdAmount,
+}: {
+  isMaxAmount: boolean;
+  balance: TokenBalance;
+  requestedUsdAmount: number;
+}): bigint | null {
+  if (isMaxAmount) {
+    return parseUnits(balance.balance, balance.decimals);
+  }
+
+  const totalTokenBalance = parseUnits(balance.balance, balance.decimals);
+  const totalUsdValue = balance.usdValue;
+
+  // Use 18 decimals for high-precision floating point math, a common
+  // standard in crypto, to prevent rounding errors.
+  const precision = 1e18;
+  const scaledRequestedAmount = BigInt(
+    Math.round(requestedUsdAmount * precision),
+  );
+  const scaledTotalUsdValue = parseUnits(totalUsdValue.toString(), 18);
+
+  if (scaledTotalUsdValue === BigInt(0)) {
+    return null;
+  }
+
+  return (totalTokenBalance * scaledRequestedAmount) / scaledTotalUsdValue;
 }

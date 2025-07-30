@@ -1,17 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Hex } from 'viem';
-import { CREATOR_API_URL } from '@idriss-xyz/constants';
-
-export interface TokenBalance {
-  address: Hex;
-  symbol: string;
-  name: string;
-  imageUrl?: string;
-  network: string;
-  decimals: number;
-  balance: string;
-  usdValue: number;
-}
+import { CREATOR_API_URL, TokenBalance } from '@idriss-xyz/constants';
 
 interface BalancesResponse {
   balances: TokenBalance[];
