@@ -2,7 +2,6 @@
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { TabsPill, TabItem } from '@idriss-xyz/ui/tabs-pill';
-import { CREATORS_LINK } from '@idriss-xyz/constants';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { useEffect, useState } from 'react';
 
@@ -83,9 +82,8 @@ export default function SetupLayout({
           gradientStopColor="#E8FCE3"
         />
         <span className="mr-3 text-heading5">Your donation page</span>
-        <CopyInput value={`${CREATORS_LINK}/${creator?.name}`} />
+        <CopyInput value={`${creator?.donationUrl}`} />
       </div>
-
       <TabsPill tabs={setupTabs} renderLink={renderLink} />
       {children}
     </div>
