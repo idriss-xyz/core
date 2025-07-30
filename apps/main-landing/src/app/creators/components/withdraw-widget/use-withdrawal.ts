@@ -89,7 +89,7 @@ export const useWithdrawal = ({
         ? {
             from: activeWallet.address,
             to: DUMMY_RECIPIENT,
-            value: `0x${tokensToSend.toString(16)}`,
+            value: tokensToSend,
           }
         : {
             from: activeWallet.address,
@@ -233,7 +233,7 @@ export const useWithdrawal = ({
         ) {
           const chain = getChainById(chainId);
           const nativeCurrencySymbol = chain?.nativeCurrency.symbol ?? 'ETH';
-          errorMessage = `Not enough ${nativeCurrencySymbol} in your wallet to cover network fees.`;
+          errorMessage = `Not enough ${nativeCurrencySymbol} in your wallet for network fees.`;
         }
         setError(errorMessage);
         onError?.(errorMessage);
