@@ -99,6 +99,7 @@ const IconsRow = ({ icons }: { icons: IconName[] }) => {
 // ts-unused-exports:disable-next-line
 export default function PaymentMethods() {
   const { creator } = useAuth();
+
   const [saveSuccess, setSaveSuccess] = useState<boolean | null>(null);
   const [toggleCrypto, setToggleCrypto] = useState(true);
 
@@ -274,6 +275,10 @@ export default function PaymentMethods() {
       });
     }
   }, [creator, formMethods]);
+
+  if (!creator) {
+    return null;
+  }
 
   return (
     <Card className="size-full">

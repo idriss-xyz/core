@@ -66,6 +66,10 @@ export default function EarningsBalance() {
 
   const hasBalance = !isLoading && !isError && tableData.length > 0;
 
+  if (!ready || !authenticated || isLoading) {
+    return null;
+  }
+
   const handleCopyLink = () => {
     if (creator?.donationUrl) {
       void copy(creator.donationUrl);

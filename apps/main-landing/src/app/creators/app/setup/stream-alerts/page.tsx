@@ -314,6 +314,10 @@ export default function StreamAlerts() {
     return nonToggleDirtyFields.length > 0;
   }, [formMethods.formState]);
 
+  if (!creator) {
+    return null;
+  }
+
   return (
     <Card className="w-full">
       <div className="flex flex-col gap-6">

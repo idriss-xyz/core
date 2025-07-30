@@ -137,6 +137,15 @@ export default function EarningsStats() {
     };
   }, [stats]);
 
+  if (
+    !ready ||
+    !authenticated ||
+    tipHistoryQuery.isLoading ||
+    recipientStatsQuery.isLoading
+  ) {
+    return null;
+  }
+
   const handleCopyLink = () => {
     if (creator?.donationUrl) {
       void copy(creator.donationUrl);

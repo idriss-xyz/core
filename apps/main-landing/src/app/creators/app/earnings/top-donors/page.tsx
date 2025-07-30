@@ -58,6 +58,10 @@ export default function TopDonors() {
     });
   }, [allDonations, activeFilter]);
 
+  if (tipHistoryQuery.isLoading || !ready || !authenticated) {
+    return null;
+  }
+
   return (
     <div>
       <Leaderboard

@@ -32,6 +32,10 @@ export default function TopCreators() {
     [leaderboardQuery.data],
   );
 
+  if (leaderboardQuery.isLoading) {
+    return null;
+  }
+
   return (
     <div>
       <Leaderboard
