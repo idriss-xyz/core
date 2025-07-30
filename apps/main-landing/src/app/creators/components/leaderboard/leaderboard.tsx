@@ -14,9 +14,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
+import { Alert } from '@idriss-xyz/ui/alert';
 
+import { useCopyToClipboard } from '@/app/creators/hooks/use-copy-to-clipboard';
 import { IDRISS_SCENE_STREAM_2 } from '@/assets';
 
+import { useAuth } from '../../context/auth-context';
 import { WidgetVariants } from '../../../../../../twitch-extension/src/app/types';
 import { DonateContentValues } from '../../donate/types';
 import { useTimeAgo } from '../../donate/hooks/use-time-ago';
@@ -104,6 +107,8 @@ export const Leaderboard = ({
   isScrollable,
   style,
 }: Properties) => {
+  const { copied, copy } = useCopyToClipboard();
+  const { creator } = useAuth();
   const columns: ColumnDefinition<LeaderboardStats>[] = [
     {
       id: 'rank',
@@ -162,6 +167,12 @@ export const Leaderboard = ({
   const isTwitchOverlay = variant === 'videoOverlay';
   const isTwitchComponent = variant === 'videoComponent';
   const isCreatorsDashboard = variant === 'creatorsDashboard';
+
+  const handleCopyLink = () => {
+    if (creator?.donationUrl) {
+      void copy(creator.donationUrl);
+    }
+  };
 
   if (!address.isFetching && !address.isValid) {
     return (
@@ -310,13 +321,15 @@ export const Leaderboard = ({
                         <Button
                           size="medium"
                           intent="secondary"
-                          onClick={() => {
-                            return console.log('Not implemented yet');
-                          }} // TODO: Add functionality
-                          suffixIconName="IdrissArrowRight"
-                          className="uppercase"
+                          onClick={handleCopyLink}
+                          suffixIconName={
+                            copied ? undefined : 'IdrissArrowRight'
+                          }
+                          prefixIconName={copied ? 'Check' : undefined}
+                          className="min-w-[137px] justify-center uppercase"
+                          disabled={!creator?.donationUrl}
                         >
-                          Copy link
+                          {copied ? 'Copied' : 'Copy link'}
                         </Button>
                       </div>
                     )
@@ -486,6 +499,15 @@ export const Leaderboard = ({
           >
             See full donation history
           </Link>
+        </div>
+      )}
+      {copied && (
+        <div className="fixed bottom-[3vh] left-1/2 z-50 -translate-x-1/2">
+          <Alert
+            type="success"
+            heading="Your link has been copied!"
+            autoClose
+          />
         </div>
       )}
     </div>

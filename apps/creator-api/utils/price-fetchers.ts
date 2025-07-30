@@ -104,7 +104,7 @@ export async function getZapperPrice(
   return null;
 }
 
-export async function getAlchemyPrice(
+export async function getAlchemyHistoricalPrice(
   tokenAddress: string,
   network: string,
   txDate: Date,
@@ -114,6 +114,7 @@ export async function getAlchemyPrice(
   if (!alchemyNetwork) return null;
 
   try {
+    console.log('Getting the price');
     return await retryWithBackoff(async () => {
       const startTime = Math.floor(
         new Date(txDate).setHours(0, 0, 0, 0) / 1000,
@@ -153,6 +154,7 @@ export async function getAlchemyPrice(
       );
 
       const data = await response.json();
+      console.log(data);
       if (data.data?.[0]?.value) {
         const price = Number(data.data[0].value);
         return price;
@@ -165,5 +167,73 @@ export async function getAlchemyPrice(
       error,
     );
     return null;
+  }
+}
+
+async function fetchFromAlchemy(body: object) {
+  return retryWithBackoff(() =>
+    fetch(
+      `https://api.g.alchemy.com/prices/v1/${process.env.ALCHEMY_API_KEY}/tokens/by-address`,
+      {
+        method: 'POST',
+        headers: {
+          'accept': 'application/json',
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      },
+    ).then((res) => {
+      if (!res.ok) {
+        throw new Error(`Alchemy request failed with status ${res.status}`);
+      }
+      return res.json();
+    }),
+  );
+}
+
+export async function getAlchemyPrices(
+  tokens: { address: string; network: string }[],
+): Promise<Record<string, number>> {
+  if (tokens.length === 0) {
+    return {};
+  }
+
+  const alchemyToNetworkMap = Object.fromEntries(
+    Object.entries(NETWORK_TO_ALCHEMY).map(([k, v]) => [v, k]),
+  );
+
+  const alchemyAddresses = tokens
+    .map((token) => {
+      const alchemyNetwork =
+        NETWORK_TO_ALCHEMY[token.network as keyof typeof NETWORK_TO_ALCHEMY];
+      if (!alchemyNetwork) return null;
+      return {
+        address: token.address,
+        network: alchemyNetwork,
+      };
+    })
+    .filter((t): t is NonNullable<typeof t> => t !== null);
+
+  if (alchemyAddresses.length === 0) {
+    return {};
+  }
+
+  try {
+    const data = await fetchFromAlchemy({ addresses: alchemyAddresses });
+    const result: Record<string, number> = {};
+    if (data.data) {
+      for (const priceInfo of data.data) {
+        const network = alchemyToNetworkMap[priceInfo.network];
+        const address = priceInfo.address;
+        const price = priceInfo.prices?.[0]?.value;
+        if (network && address && price) {
+          result[`${network}:${address.toLowerCase()}`] = Number(price);
+        }
+      }
+    }
+    return result;
+  } catch (error) {
+    console.error(`Failed to batch fetch Alchemy prices:`, error);
+    return {};
   }
 }

@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { usePrivy } from '@privy-io/react-auth';
 import { Hex } from 'viem';
 
@@ -17,6 +17,20 @@ export default function TopCreators() {
     type: 'creator',
     period: periodMap[activeFilter]!,
   });
+
+  const onDonorClick = useCallback(
+    (address: Hex) => {
+      const donor = leaderboardQuery.data?.find((d) => {
+        return d.address === address;
+      });
+      if (donor?.donateLink) {
+        window.open(`${donor.donateLink}`, '_blank');
+      } else if (donor?.displayName && donor.displayNameSource != 'ADDRESS') {
+        window.open(`/creators/${donor.displayName}`);
+      }
+    },
+    [leaderboardQuery.data],
+  );
 
   return (
     <div>
@@ -36,6 +50,7 @@ export default function TopCreators() {
         onFilterChange={setActiveFilter}
         perspective="creator"
         scope="global"
+        onDonorClick={onDonorClick}
       />
     </div>
   );

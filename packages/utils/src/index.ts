@@ -26,4 +26,6 @@ export {
   getChainLogoById,
   getChainIdByNetworkName,
   createAddressToCreatorMap,
+  getNetworkKeyByChainId,
+  calculateTokensToSend,
 } from './donation-utils';

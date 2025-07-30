@@ -1,7 +1,7 @@
 import { ZapperNode } from '../types';
 import {
   getZapperPrice,
-  getAlchemyPrice,
+  getAlchemyHistoricalPrice,
   getOldestZapperPrice,
 } from './price-fetchers';
 
@@ -43,7 +43,7 @@ export async function enrichNodesWithHistoricalPrice(
       continue;
     }
 
-    const alchemyPrice = await getAlchemyPrice(
+    const alchemyPrice = await getAlchemyHistoricalPrice(
       tokenItem.tokenV2.address,
       tokenItem.network,
       txDate,
