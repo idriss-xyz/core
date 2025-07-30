@@ -11,6 +11,7 @@ import {
 } from '@idriss-xyz/constants';
 import { Hex, isAddress } from 'viem';
 import { Divider } from '@idriss-xyz/ui/divider';
+import { Icon } from '@idriss-xyz/ui/icon';
 import {
   formatFiatValue,
   formatTokenValue,
@@ -50,6 +51,8 @@ export const WithdrawWidget = ({
   onClose,
 }: WithdrawWidgetProperties) => {
   const [step, setStep] = useState<1 | 2>(1);
+  const [showLoader, setShowLoader] = useState(false);
+  const loadingStartTimestamp = useRef(0);
   const {
     sendWithdrawal,
     checkGasAndProceed,
@@ -80,6 +83,36 @@ export const WithdrawWidget = ({
     setVisualAmount(undefined);
     setIsMaxAmount(false);
   }, [onClose, formMethods, resetWithdrawal]);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    if (isLoading) {
+      setShowLoader(true);
+      loadingStartTimestamp.current = Date.now();
+    }
+
+    if (!isLoading && showLoader) {
+      if (isSuccess) {
+        const loadingDuration = Date.now() - loadingStartTimestamp.current;
+        const minLoadingTime = 2000;
+        const remainingTime = Math.max(0, minLoadingTime - loadingDuration);
+
+        timer = setTimeout(() => {
+          return setShowLoader(false);
+        }, remainingTime);
+      } else {
+        // This handles error case, or other cases where we need to hide the loader
+        setShowLoader(false);
+      }
+    }
+
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
+  }, [isLoading, isSuccess, showLoader]);
 
   useEffect(() => {
     if (isOpen) {
@@ -248,7 +281,7 @@ export const WithdrawWidget = ({
       }
     >
       {() => {
-        if (isLoading) {
+        if (showLoader) {
           return (
             <IdrissSend.Loading
               className="px-5 pb-9 pt-5"
@@ -268,9 +301,7 @@ export const WithdrawWidget = ({
                 </>
               }
               recipient={withdrawalAddress}
-            >
-              Withdrawing
-            </IdrissSend.Loading>
+            />
           );
         }
 
@@ -483,7 +514,7 @@ export const WithdrawWidget = ({
                 </>
               )}
 
-              <div className="border-t border-t-neutral-300 px-6 py-3">
+              <div className="border-t border-t-neutral-300 px-4 py-3">
                 <Button
                   intent="primary"
                   size="medium"
@@ -493,9 +524,10 @@ export const WithdrawWidget = ({
                   {step === 1 ? 'Continue' : 'Send'}
                 </Button>
                 {formError && (
-                  <p className="mt-2 text-center text-sm text-red-500">
-                    {formError}
-                  </p>
+                  <div className="mt-1 flex items-start gap-x-1 text-label7 text-red-500 lg:text-label6">
+                    <Icon name="AlertCircle" size={16} className="p-px" />
+                    <span>{formError}</span>
+                  </div>
                 )}
               </div>
             </DesignSystemForm>
