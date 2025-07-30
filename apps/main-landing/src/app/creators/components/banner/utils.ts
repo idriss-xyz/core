@@ -4,14 +4,18 @@ type BannerType =
   | 'unbranded'
   | 'parallel'
   | 'ronin'
-  | 'paragonsDAO'
-  | 'Vibes (Pudgy TCG)';
+  | 'vibes (Pudgy TCG)'
+  | 'paragonsDAO';
 export type FilterOption = 'All' | Capitalize<BannerType>;
-export const filterOptions: { label: FilterOption; icon?: IconName }[] = [
+export const filterOptions: {
+  label: FilterOption;
+  icon?: IconName;
+  customClass?: string;
+}[] = [
   { label: 'All' },
   { label: 'Unbranded' },
   { label: 'Parallel', icon: 'ParallelTeam' },
   { label: 'Ronin', icon: 'RoninTeam' },
-  { label: 'Vibes (Pudgy TCG)', icon: 'PudgyTeam' },
-  { label: 'ParagonsDAO', icon: 'PdtToken' },
+  { label: 'Vibes (Pudgy TCG)', icon: 'PudgyTeam', customClass: 'h-[16px]' },
+  { label: 'ParagonsDAO', icon: 'PdtToken', customClass: 'w-[20px]' },
 ];
