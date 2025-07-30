@@ -51,7 +51,7 @@ export function CopyInput({
         {value}
       </span>
       <div
-        className="flex shrink-0 cursor-pointer items-center self-stretch border-l border-gray-200 px-3"
+        className="flex shrink-0 cursor-pointer items-center self-stretch border-l border-gray-200 px-3 hover:text-mint-600"
         onClick={handleIconClick}
       >
         {copied || wasCopied ? (
