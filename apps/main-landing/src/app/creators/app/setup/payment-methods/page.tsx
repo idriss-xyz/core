@@ -75,10 +75,8 @@ const TOKENS_ORDER: Record<TokenSymbol, number> = {
 // ];
 
 const iconsForCardPaymentMethod: IconName[] = [
-  'AmericanExpress',
-  'Maestro',
   'Mastercard',
-  'Paypal',
+  'AmericanExpress',
   'Visa',
 ];
 
@@ -293,7 +291,7 @@ export default function PaymentMethods() {
                   return !previous;
                 });
               }}
-              className="max-w-screen-xs"
+              className="max-w-[336px]"
               switchClassname="hidden"
             />
             {/* Uncomment when we have second payment method ready */}
@@ -370,7 +368,7 @@ export default function PaymentMethods() {
               onChange={() => {
                 console.log('Not implemented yet');
               }}
-              className="max-w-screen-xs"
+              className="max-w-[336px]"
               switchClassname="hidden"
             />
             <IconsRow icons={iconsForCardPaymentMethod} />
