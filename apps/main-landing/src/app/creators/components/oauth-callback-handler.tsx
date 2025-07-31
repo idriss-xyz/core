@@ -17,7 +17,7 @@ export function OAuthCallbackHandler() {
       return;
     }
 
-    const isTwitchLoginFlow = !!sessionStorage.getItem('twitch_new_user_info');
+    const isTwitchLoginFlow = !!localStorage.getItem('twitch_new_user_info');
 
     if (!isTwitchLoginFlow) {
       return;
@@ -31,9 +31,9 @@ export function OAuthCallbackHandler() {
     const handleAuth = async () => {
       setCreatorLoading(true);
 
-      const twitchInfoRaw = sessionStorage.getItem('twitch_new_user_info');
+      const twitchInfoRaw = localStorage.getItem('twitch_new_user_info');
       if (twitchInfoRaw) {
-        sessionStorage.removeItem('twitch_new_user_info');
+        localStorage.removeItem('twitch_new_user_info');
       }
 
       try {

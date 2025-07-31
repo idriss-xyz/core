@@ -1,22 +1,21 @@
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { usePrivy } from '@privy-io/react-auth';
 
 import { useAuth } from '../context/auth-context';
 
 const useRedirectIfNotAuthenticated = () => {
   const router = useRouter();
-  const { creatorLoading, creator } = useAuth();
-  const { ready, authenticated } = usePrivy();
+  const { creator, creatorLoading, isLoggingOut } = useAuth();
 
   useEffect(() => {
-    if (!ready || creatorLoading) {
+    if (creatorLoading || isLoggingOut) {
       return;
     }
-    if (!authenticated || !creator) {
+
+    if (!creator) {
       router.replace('/creators?login=true');
     }
-  }, [ready, authenticated, creatorLoading, router, creator]);
+  }, [creator, creatorLoading, router, isLoggingOut]);
 };
 
 export default useRedirectIfNotAuthenticated;

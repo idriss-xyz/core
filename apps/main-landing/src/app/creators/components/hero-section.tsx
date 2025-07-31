@@ -21,12 +21,30 @@ type Properties = {
 export const HeroSection = ({ heroButtonReference }: Properties) => {
   const router = useRouter();
   const searchParameters = useSearchParams();
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [isMobileNotSupportedOpen, setIsMobileNotSupportedOpen] =
     useState(false);
 
-  const { isLoginModalOpen, setIsModalOpen, creator } = useAuth();
+  const {
+    isLoginModalOpen,
+    setIsModalOpen,
+    creator,
+    setCustomAuthToken,
+    creatorLoading,
+  } = useAuth();
   const originalHandleStartEarningClick = useStartEarningNavigation();
+
+  useEffect(() => {
+    if (creator && !creatorLoading && isLoginModalOpen) {
+      void originalHandleStartEarningClick();
+      setIsModalOpen(false);
+    }
+  }, [
+    creator,
+    creatorLoading,
+    isLoginModalOpen,
+    originalHandleStartEarningClick,
+    setIsModalOpen,
+  ]);
 
   const handleStartEarningClick = () => {
     if (window.innerWidth < 1024) {
@@ -55,21 +73,18 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
     }
 
     if (customToken) {
-      setIsLoggingIn(true);
       setIsModalOpen(true);
       // Store Twitch info in sessionStorage to be picked up by the next page.
       if (name) {
-        sessionStorage.setItem(
+        localStorage.setItem(
           'twitch_new_user_info',
           JSON.stringify({ name, displayName, pfp, email }),
         );
       }
-      // Store the custom token where our PrivyProvider can find it.
-      sessionStorage.setItem('custom-auth-token', customToken);
-      // Redirect to the main app. The PrivyProvider will now automatically
-      // use the token to authenticate the user.
+      // Use the hook to pass the custom token to Privy
+      setCustomAuthToken(customToken);
     }
-  }, [searchParameters, router, setIsLoggingIn, setIsModalOpen]);
+  }, [searchParameters, router, setIsModalOpen, setCustomAuthToken]);
 
   return (
     <header
@@ -140,7 +155,7 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
       </div>
       <LoginModal
         isOpened={isLoginModalOpen}
-        isLoading={isLoggingIn}
+        isLoading={creatorLoading}
         onClose={() => {
           return setIsModalOpen(false);
         }}
