@@ -224,6 +224,7 @@ export default function StreamAlerts() {
           sfxEnabled: data.sfxEnabled,
           customBadWords: data.customBadWords,
           alertSound: data.alertSound,
+          voiceId: data.voiceId,
         },
         authToken,
       );
