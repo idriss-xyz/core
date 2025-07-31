@@ -43,20 +43,21 @@ const chartConfig = {
 export default function EarningsStats() {
   const { user, ready, authenticated } = usePrivy();
   const { copied, copy } = useCopyToClipboard();
-  const { creator } = useAuth();
+  const { creator, creatorLoading } = useAuth();
   const address = user?.wallet?.address as Hex | undefined;
   const tipHistoryQuery = useGetTipHistory(
     {
       address,
     },
-    { enabled: ready && authenticated && !!address },
+    { enabled: !creatorLoading && ready && authenticated && !!address },
   );
   const recipientStatsQuery = useGetRecipientStats(
     {
       address,
     },
-    { enabled: ready && authenticated && !!address },
+    { enabled: !creatorLoading && ready && authenticated && !!address },
   );
+  console.log(creatorLoading, ready, authenticated, address, creator);
 
   const donations = tipHistoryQuery.data?.donations ?? [];
   const sortedDonations = [...donations].sort((a, b) => {
@@ -139,6 +140,7 @@ export default function EarningsStats() {
   }, [stats]);
 
   if (
+    creatorLoading ||
     !ready ||
     !authenticated ||
     tipHistoryQuery.isLoading ||
