@@ -18,7 +18,6 @@ export default function SetupLayout({
   const { creator } = useAuth();
   const [hasVisitedStreamAlerts, setHasVisitedStreamAlerts] = useState(false);
 
-
   useEffect(() => {
     const visitedKey = 'idriss-visited-stream-alerts';
     const hasVisited = localStorage.getItem(visitedKey) === 'true';

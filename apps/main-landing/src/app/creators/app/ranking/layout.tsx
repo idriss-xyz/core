@@ -3,7 +3,6 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { TabsPill, TabItem } from '@idriss-xyz/ui/tabs-pill';
 
-
 // ts-unused-exports:disable-next-line
 export default function RankingLayout({
   children,
