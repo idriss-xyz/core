@@ -3,23 +3,25 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Card } from '@idriss-xyz/ui/card';
 import { Icon } from '@idriss-xyz/ui/icon';
+import { usePrivy } from '@privy-io/react-auth';
 
 import { useAuth } from '../context/auth-context';
 
 // ts-unused-exports:disable-next-line
 export default function Home() {
   const { creator } = useAuth();
+  const { ready, authenticated, user } = usePrivy();
   const router = useRouter();
 
   useEffect(() => {
-    if (creator) {
+    if (creator && ready && authenticated && user?.wallet?.address) {
       if (creator.doneSetup) {
         router.replace('/creators/app/earnings/stats-and-history');
       } else {
         router.replace('/creators/app/setup/payment-methods');
       }
     }
-  }, [creator, router]);
+  }, [creator, router, ready, authenticated, user?.wallet?.address]);
   return (
     <div role="status">
       <div className="grid animate-pulse grid-cols-3 gap-3">
