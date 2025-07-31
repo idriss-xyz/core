@@ -30,7 +30,6 @@ import {
 
 import { File } from '../file-upload/file';
 import { Select } from '../select';
-import SkeletonSetup from '../loading';
 
 const UpgradeBox: React.FC = () => {
   return (
@@ -84,7 +83,7 @@ type FormPayload = {
 
 // ts-unused-exports:disable-next-line
 export default function StreamAlerts() {
-  const { creator, creatorLoading } = useAuth();
+  const { creator } = useAuth();
 
   const [saveSuccess, setSaveSuccess] = useState<boolean | null>(null);
   const [testDonationSuccess, setTestDonationSuccess] = useState<
@@ -314,10 +313,6 @@ export default function StreamAlerts() {
     });
     return nonToggleDirtyFields.length > 0;
   }, [formMethods.formState]);
-
-  if (creatorLoading) {
-    return <SkeletonSetup />;
-  }
 
   return (
     <Card className="w-full">

@@ -28,8 +28,6 @@ import {
   SectionHeader,
 } from '@/app/creators/components/layout';
 
-import SkeletonSetup from '../loading';
-
 type FormPayload = {
   name: string;
   address: string;
@@ -98,7 +96,7 @@ const IconsRow = ({ icons }: { icons: IconName[] }) => {
 
 // ts-unused-exports:disable-next-line
 export default function PaymentMethods() {
-  const { creator, creatorLoading } = useAuth();
+  const { creator } = useAuth();
 
   const [saveSuccess, setSaveSuccess] = useState<boolean | null>(null);
   const [toggleCrypto, setToggleCrypto] = useState(true);
@@ -275,10 +273,6 @@ export default function PaymentMethods() {
       });
     }
   }, [creator, formMethods]);
-
-  if (creatorLoading) {
-    return <SkeletonSetup />;
-  }
 
   return (
     <Card className="size-full">
