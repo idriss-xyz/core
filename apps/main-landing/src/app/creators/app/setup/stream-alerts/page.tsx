@@ -724,7 +724,6 @@ Do not share it with anyone or show it on stream."
           type="error"
           description="Don't forget to save when you are done"
           iconName="RefreshCw"
-          autoClose
         />
       )}
     </Card>
