@@ -6,6 +6,7 @@ import { Hex } from 'viem';
 import { Leaderboard } from '@/app/creators/components/leaderboard';
 
 import { useGetLeaderboard, periodMap } from '../commands/use-get-leaderboard';
+import SkeletonRanking from '../loading';
 
 // ts-unused-exports:disable-next-line
 export default function TopCreators() {
@@ -31,6 +32,10 @@ export default function TopCreators() {
     },
     [leaderboardQuery.data],
   );
+
+  if (leaderboardQuery.isLoading) {
+    return <SkeletonRanking />;
+  }
 
   return (
     <div>
