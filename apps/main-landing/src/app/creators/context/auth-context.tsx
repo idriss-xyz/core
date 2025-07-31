@@ -4,16 +4,18 @@ import {
   useContext,
   useState,
   ReactNode,
-  useEffect,
+  useCallback,
 } from 'react';
 import { DonationData } from '@idriss-xyz/constants';
-import {
-  getAccessToken,
-  usePrivy,
-  useSubscribeToJwtAuthWithFlag,
-} from '@privy-io/react-auth';
+import { usePrivy, useSubscribeToJwtAuthWithFlag } from '@privy-io/react-auth';
+import { Hex } from 'viem';
+import { useRouter } from 'next/navigation';
 
-import { CreatorProfileResponse, getCreatorProfile } from '../utils';
+import {
+  CreatorProfileResponse,
+  getCreatorProfile,
+  saveCreatorProfile,
+} from '../utils';
 
 type AuthContextType = {
   donations: DonationData[];
@@ -32,6 +34,7 @@ type AuthContextType = {
   setCustomAuthToken: (token: string | null) => void;
   isLoggingOut: boolean;
   setIsLoggingOut: (isLoggingOut: boolean) => void;
+  handleCreatorsAuth: (authToken: string) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -50,7 +53,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [creatorLoading, setCreatorLoading] = useState(true);
   const [donations, setDonations] = useState<DonationData[]>([]);
   const [newDonationsCount, setNewDonationsCount] = useState(0);
-  const { ready, authenticated, user } = usePrivy();
+  const { user } = usePrivy();
+  const router = useRouter();
 
   useSubscribeToJwtAuthWithFlag({
     isAuthenticated: !!customAuthToken,
@@ -60,26 +64,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
   });
 
-  useEffect(() => {
-    if (!ready) {
-      return;
-    }
-
-    // If not authenticated and not in the process of a custom token login,
-    // then the user is logged out.
-    if (!authenticated && !customAuthToken) {
-      setCreator(null);
-      setCreatorLoading(false);
-      return;
-    }
-
-    const fetchCreatorProfile = async () => {
-      if (!user?.wallet?.address) {
-        return;
-      }
-      setCreatorLoading(true);
+  const handleCreatorsAuth = useCallback(
+    async (authToken: string) => {
+      console.log('Auth context');
       try {
-        const authToken = await getAccessToken();
+        if (!user) {
+          throw new Error('handleAuth called but user is not available.');
+        }
+
+        const walletAddress = user.wallet?.address as Hex | undefined;
+        if (!walletAddress) {
+          throw new Error('No wallet address found for authenticated user.');
+        }
+
+        setCreatorLoading(true);
+
         if (!authToken || !user.id) {
           throw new Error('Could not get auth token or user ID for new user.');
         }
@@ -88,18 +87,62 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         console.log('existingCreator', existingCreator);
         setCreator(existingCreator ?? null);
+        if (existingCreator) {
+          if (existingCreator.doneSetup) {
+            router.replace('/creators/app/earnings/stats-and-history');
+          } else {
+            router.replace('/creators/app/setup/payment-methods');
+          }
+        } else {
+          // NEW USER ONBOARDING LOGIC
+          let newCreatorName: string;
+          let newCreatorDisplayName: string | null = null;
+          let newCreatorProfilePic: string | null = null;
+          let newCreatorEmail: string | null = null;
+
+          const twitchInfoRaw = localStorage.getItem('twitch_new_user_info');
+
+          // Check if we have Twitch info from the custom login flow
+          if (twitchInfoRaw) {
+            const twitchInfo = JSON.parse(twitchInfoRaw);
+            newCreatorName = twitchInfo.name;
+            newCreatorDisplayName = twitchInfo.displayName;
+            newCreatorProfilePic = twitchInfo.pfp;
+            newCreatorEmail = twitchInfo.email;
+          } else {
+            // User logged in with email or wallet, generate a random name
+            // newCreatorName = `user-${user.id.slice(-8)}`;
+            // newCreatorDisplayName = newCreatorName;
+            throw new Error('Unsupported login method');
+          }
+          await saveCreatorProfile(
+            walletAddress,
+            newCreatorName,
+            newCreatorDisplayName,
+            newCreatorProfilePic,
+            newCreatorEmail,
+            user.id, // This is the Privy ID
+            authToken,
+          );
+
+          const newCreator = await getCreatorProfile(authToken);
+
+          if (!newCreator) {
+            throw new Error('Failed to fetch newly created profile.');
+          }
+
+          setCreator(newCreator);
+          router.replace('/creators/app/setup/payment-methods');
+        }
       } catch (error) {
         console.error('Failed to fetch creator profile:', error);
         setCreator(null);
       } finally {
         setCreatorLoading(false);
       }
-    };
-
-    if (authenticated && !creator) {
-      void fetchCreatorProfile();
-    }
-  }, [ready, authenticated, user, creator, customAuthToken]);
+    },
+    [user, router],
+  );
 
   const addDonation = (donation: DonationData) => {
     setDonations((previous) => {
@@ -148,6 +191,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         markDonationsAsSeen,
         isLoggingOut,
         setIsLoggingOut,
+        handleCreatorsAuth,
       }}
     >
       {children}
