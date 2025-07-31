@@ -81,13 +81,12 @@ type FormPayload = {
   alertSound: string;
 };
 
-// TODO: Potentially refactor into a mapping in constants
-// to use like VOICES.LIAM and get id
-const voices = [
-  { value: 'pqHfZKP75CvOlQylNhV4', label: 'Bill' },
-  { value: 'FGY2WhTYpPnrIDTdsKH5', label: 'Laura' },
-  { value: 'TX3LPaxmHKxFdv7VOQHJ', label: 'Liam' },
-];
+const voices = Object.entries(voiceMap).map(([id, { name }]) => {
+  return {
+    value: id,
+    label: name,
+  };
+});
 
 // ts-unused-exports:disable-next-line
 export default function StreamAlerts() {
@@ -456,19 +455,21 @@ export default function StreamAlerts() {
                         isAudioPlaying={isVoicePlaying}
                         onIconClick={() => {
                           if (isVoicePlaying) return;
-                          const soundFile = voiceMap[field.value];
-                          const audio = new Audio(soundFile);
-                          audio.addEventListener('play', () => {
-                            return setIsVoicePlaying(true);
-                          });
-                          audio.addEventListener('ended', () => {
-                            return setIsVoicePlaying(false);
-                          });
-                          audio.addEventListener('error', () => {
-                            setIsVoicePlaying(false);
-                            console.error('Error playing sound');
-                          });
-                          void audio.play();
+                          const voiceData = voiceMap[field.value];
+                          if (voiceData) {
+                            const audio = new Audio(voiceData.audioFile);
+                            audio.addEventListener('play', () => {
+                              return setIsVoicePlaying(true);
+                            });
+                            audio.addEventListener('ended', () => {
+                              return setIsVoicePlaying(false);
+                            });
+                            audio.addEventListener('error', () => {
+                              setIsVoicePlaying(false);
+                              console.error('Error playing sound');
+                            });
+                            void audio.play();
+                          }
                         }}
                         // TODO: Add error handling
                         // error={Boolean(fieldState.error?.message)}

@@ -85,8 +85,8 @@ export const soundMap: Record<string, string> = {
   DEFAULT_CASH_REGISTER_SOUND,
 };
 
-export const voiceMap: Record<string, string> = {
-  BILL,
-  LAURA,
-  LIAM,
+export const voiceMap: Record<string, { name: string; audioFile: string }> = {
+  pqHfZKP75CvOlQylNhV4: { name: 'Bill', audioFile: BILL },
+  FGY2WhTYpPnrIDTdsKH5: { name: 'Laura', audioFile: LAURA },
+  TX3LPaxmHKxFdv7VOQHJ: { name: 'Liam', audioFile: LIAM },
 };
