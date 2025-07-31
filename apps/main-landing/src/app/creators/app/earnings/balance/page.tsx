@@ -15,7 +15,7 @@ import { WithdrawWidget } from '@/app/creators/components/withdraw-widget';
 
 import { useAuth } from '../../../context/auth-context';
 import { useGetBalances } from '../commands/get-balances';
-import SkeletonEarnings from '../loading';
+import SkeletonRanking from '../loading';
 
 import { BalanceTable } from './balance-table';
 
@@ -68,7 +68,7 @@ export default function EarningsBalance() {
   const hasBalance = !isLoading && !isError && tableData.length > 0;
 
   if (!ready || !authenticated || isLoading) {
-    return <SkeletonEarnings />;
+    return <SkeletonRanking />;
   }
 
   const handleCopyLink = () => {
