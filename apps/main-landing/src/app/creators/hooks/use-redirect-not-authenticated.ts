@@ -1,19 +1,21 @@
-// src/hooks/use-redirect-not-authenticated.ts
-'use client';
-
-import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { usePrivy } from '@privy-io/react-auth';
+import { useEffect } from 'react';
 
-export default function useRedirectIfNotAuthenticated() {
+import { useAuth } from '../context/auth-context';
+
+const useRedirectIfNotAuthenticated = () => {
   const router = useRouter();
-  const { ready, authenticated } = usePrivy();
+  const { creator, creatorLoading, isLoggingOut } = useAuth();
 
   useEffect(() => {
-    if (!ready) return; // wait for Privy to init
-    if (!authenticated) {
-      // only bounce truly unauth’d
+    if (creatorLoading || isLoggingOut) {
+      return;
+    }
+
+    if (!creator) {
       router.replace('/creators?login=true');
     }
-  }, [ready, authenticated, router]);
-}
+  }, [creator, creatorLoading, router, isLoggingOut]);
+};
+
+export default useRedirectIfNotAuthenticated;
