@@ -36,6 +36,7 @@ const priceDropCalculatedAmount = (amount: number) => {
 
 export const useDonationNotification = (
   audio: HTMLAudioElement,
+  voiceId: string,
   amount: string,
   minimumAmounts: MinimumAmounts,
   muteToggles: EnableToggles,
@@ -129,7 +130,7 @@ export const useDonationNotification = (
             );
             ttsAudioForPlayback = ttsAudioElementReference.current;
           } else {
-            const ttsStream = await getTextToSpeech(message);
+            const ttsStream = await getTextToSpeech(message, voiceId);
             if (ttsStream) {
               ttsAudioElementReference.current =
                 await toAudioElement(ttsStream);
@@ -279,6 +280,7 @@ export const useDonationNotification = (
     minimumSfxAmount,
     minimumTTSAmount,
     alertEnabled,
+    voiceId,
     sfxEnabled,
     ttsEnabled,
     isTestNotification,

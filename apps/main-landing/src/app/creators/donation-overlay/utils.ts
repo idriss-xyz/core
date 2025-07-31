@@ -98,15 +98,18 @@ export const resolveEnsName = async (address: Hex): Promise<string | null> => {
   }
 };
 
-export const getTextToSpeech = async (text: string) => {
+export const getTextToSpeech = async (text: string, voiceId?: string) => {
   try {
-    const response = await fetch(`${CREATOR_API_URL}/text-to-speech`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    const response = await fetch(
+      `${CREATOR_API_URL}/text-to-speech/${voiceId}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text }),
       },
-      body: JSON.stringify({ text }),
-    });
+    );
     if (!response.ok) {
       console.error(
         `Creator API error: ${response.status} ${response.statusText}`,
