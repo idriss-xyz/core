@@ -25,11 +25,11 @@ function Layout({ children }: { children: React.ReactNode }) {
         <div className="flex w-full flex-col">
           <TopBar />
           {/* Page Content */}
-          <main className="flex flex-1 flex-col overflow-hidden pb-3">
+          <main className="flex flex-1 flex-col overflow-hidden">
             <div className="px-3 py-2">
               <BreadcrumbNavigation pathname={pathname} siteMap={siteMap} />
             </div>
-            <ScrollArea className="flex-1 px-3">{children}</ScrollArea>
+            <ScrollArea className="flex-1 px-3 pb-3">{children}</ScrollArea>
           </main>
         </div>
       </div>
