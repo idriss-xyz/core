@@ -88,6 +88,7 @@ export default function Obs({ creatorName }: Properties) {
   });
   const [customBadWords, setCustomBadWords] = useState<string[]>([]);
   const [alertSound, setAlertSound] = useState<string>();
+  const [voiceId, setVoiceId] = useState<string>();
 
   const router = useRouter();
   const [isDisplayingDonation, setIsDisplayingDonation] = useState(false);
@@ -143,6 +144,7 @@ export default function Obs({ creatorName }: Properties) {
       });
       setCustomBadWords(data.donationParameters.customBadWords);
       setAlertSound(data.donationParameters.alertSound);
+      setVoiceId(data.donationParameters.voiceId);
     });
 
     socket.on('testDonation', (testDonation) => {
@@ -164,6 +166,7 @@ export default function Obs({ creatorName }: Properties) {
           minimumAmounts,
           enableToggles,
           alertSound,
+          voiceId,
           creatorName: name,
         };
         addDonation(queuedDonation);
@@ -179,7 +182,7 @@ export default function Obs({ creatorName }: Properties) {
     return () => {
       socket.disconnect();
     };
-  }, [name, addDonation, minimumAmounts, enableToggles, alertSound]);
+  }, [name, addDonation, minimumAmounts, enableToggles, alertSound, voiceId]);
 
   // If creator name present use info from db, if not, use params only
   useEffect(() => {
@@ -211,6 +214,7 @@ export default function Obs({ creatorName }: Properties) {
               });
               setCustomBadWords(profile.customBadWords);
               setAlertSound(profile.alertSound);
+              setVoiceId(profile.voiceId);
             }
           })
           .catch((error) => {
@@ -379,6 +383,7 @@ export default function Obs({ creatorName }: Properties) {
             minimumAmounts,
             enableToggles,
             alertSound,
+            voiceId,
             creatorName: name,
           });
         }
@@ -393,6 +398,7 @@ export default function Obs({ creatorName }: Properties) {
     enableToggles,
     customBadWords,
     alertSound,
+    voiceId,
     name,
   ]);
 

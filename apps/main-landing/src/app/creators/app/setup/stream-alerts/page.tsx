@@ -81,6 +81,14 @@ type FormPayload = {
   alertSound: string;
 };
 
+// TODO: Potentially refactor into a mapping in constants
+// to use like VOICES.LIAM and get id
+const voices = [
+  { value: 'pqHfZKP75CvOlQylNhV4', label: 'Bill' },
+  { value: 'FGY2WhTYpPnrIDTdsKH5', label: 'Laura' },
+  { value: 'TX3LPaxmHKxFdv7VOQHJ', label: 'Liam' },
+];
+
 // ts-unused-exports:disable-next-line
 export default function StreamAlerts() {
   const { creator } = useAuth();
@@ -116,12 +124,6 @@ export default function StreamAlerts() {
         );
       },
     },
-  ];
-
-  const voices = [
-    { value: 'pqHfZKP75CvOlQylNhV4', label: 'Bill' },
-    { value: 'FGY2WhTYpPnrIDTdsKH5', label: 'Laura' },
-    { value: 'TX3LPaxmHKxFdv7VOQHJ', label: 'Liam' },
   ];
 
   const openConfirmationModal = (source: 'text' | 'icon') => {
@@ -453,7 +455,6 @@ export default function StreamAlerts() {
                         isAudioPlaying={isVoicePlaying}
                         onIconClick={() => {
                           if (isVoicePlaying) return;
-
                           const soundFile = voiceMap[field.value];
                           const audio = new Audio(soundFile);
                           audio.addEventListener('play', () => {
