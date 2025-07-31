@@ -7,7 +7,11 @@ import {
   useEffect,
 } from 'react';
 import { DonationData } from '@idriss-xyz/constants';
-import { getAccessToken, usePrivy } from '@privy-io/react-auth';
+import {
+  getAccessToken,
+  usePrivy,
+  useSubscribeToJwtAuthWithFlag,
+} from '@privy-io/react-auth';
 
 import { CreatorProfileResponse, getCreatorProfile } from '../utils';
 
@@ -25,6 +29,9 @@ type AuthContextType = {
   clearOauthError: () => void;
   setIsModalOpen: (isOpen: boolean) => void;
   setCreator: (creator: CreatorProfileResponse | null) => void;
+  setCustomAuthToken: (token: string | null) => void;
+  isLoggingOut: boolean;
+  setIsLoggingOut: (isLoggingOut: boolean) => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -32,24 +39,36 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [oauthError, setOauthError] = useState<string | null>(null);
   const [isLoginModalOpen, setIsModalOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [customAuthToken, setCustomAuthToken] = useState<string | null>(() => {
+    if (typeof window === 'undefined') {
+      return null;
+    }
+    return localStorage.getItem('custom-auth-token');
+  });
   const [creator, setCreator] = useState<CreatorProfileResponse | null>(null);
   const [creatorLoading, setCreatorLoading] = useState(true);
   const [donations, setDonations] = useState<DonationData[]>([]);
   const [newDonationsCount, setNewDonationsCount] = useState(0);
   const { ready, authenticated, user } = usePrivy();
 
+  useSubscribeToJwtAuthWithFlag({
+    isAuthenticated: !!customAuthToken,
+    isLoading: false,
+    getExternalJwt: () => {
+      return Promise.resolve(customAuthToken ?? undefined);
+    },
+  });
+
   useEffect(() => {
     if (!ready) {
       return;
     }
 
-    if (!authenticated) {
+    // If not authenticated and not in the process of a custom token login,
+    // then the user is logged out.
+    if (!authenticated && !customAuthToken) {
       setCreator(null);
-      setCreatorLoading(false);
-      return;
-    }
-
-    if (creator) {
       setCreatorLoading(false);
       return;
     }
@@ -80,7 +99,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (authenticated && !creator) {
       void fetchCreatorProfile();
     }
-  }, [ready, authenticated, user, creator]);
+  }, [ready, authenticated, user, creator, customAuthToken]);
 
   const addDonation = (donation: DonationData) => {
     setDonations((previous) => {
@@ -99,6 +118,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return setOauthError(null);
   };
 
+  const handleSetCustomAuthToken = (token: string | null) => {
+    if (typeof window !== 'undefined') {
+      if (token) {
+        localStorage.setItem('custom-auth-token', token);
+      } else {
+        localStorage.removeItem('custom-auth-token');
+      }
+    }
+    setCustomAuthToken(token);
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -112,9 +142,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setIsModalOpen,
         setCreator,
         donations,
+        setCustomAuthToken: handleSetCustomAuthToken,
         addDonation,
         newDonationsCount,
         markDonationsAsSeen,
+        isLoggingOut,
+        setIsLoggingOut,
       }}
     >
       {children}
