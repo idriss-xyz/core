@@ -27,7 +27,6 @@ import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history
 import { DonateHistoryItem } from '@/app/creators/donate/components/donate-history/donate-history-item';
 
 import { useAuth } from '../../../context/auth-context';
-import SkeletonEarnings from '../loading';
 
 import { TokenLogo } from './token-logo';
 import { useGetRecipientStats } from './commands/get-recipient-stats';
@@ -137,15 +136,6 @@ export default function EarningsStats() {
       otherAssets: sortedAssets.slice(1, 4),
     };
   }, [stats]);
-
-  if (
-    !ready ||
-    !authenticated ||
-    tipHistoryQuery.isLoading ||
-    recipientStatsQuery.isLoading
-  ) {
-    return <SkeletonEarnings />;
-  }
 
   const handleCopyLink = () => {
     if (creator?.donationUrl) {
