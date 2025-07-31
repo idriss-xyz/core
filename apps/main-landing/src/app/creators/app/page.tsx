@@ -14,7 +14,7 @@ export default function Home() {
   useEffect(() => {
     if (creator) {
       if (creator.doneSetup) {
-        router.replace('/creators/app/earnings/stats');
+        router.replace('/creators/app/earnings/stats-and-history');
       } else {
         router.replace('/creators/app/setup/payment-methods');
       }
