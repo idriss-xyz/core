@@ -15,7 +15,7 @@ export default function Home() {
     if (creatorLoading) return; // wait for your profile to load
     if (!creator) return; // if still no record, stay on onboarding
     if (creator.doneSetup) {
-      router.replace('/creators/app/earnings/stats');
+      router.replace('/creators/app/earnings/stats-and-history');
     } else {
       router.replace('/creators/app/setup/payment-methods');
     }
