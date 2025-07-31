@@ -6,7 +6,6 @@ import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { useEffect, useState } from 'react';
 
 import { CopyInput } from '../../components/copy-input/copy-input';
-import useRedirectIfNotAuthenticated from '../../hooks/use-redirect-not-authenticated';
 import { useAuth } from '../../context/auth-context';
 
 // ts-unused-exports:disable-next-line
@@ -19,7 +18,6 @@ export default function SetupLayout({
   const { creator } = useAuth();
   const [hasVisitedStreamAlerts, setHasVisitedStreamAlerts] = useState(false);
 
-  useRedirectIfNotAuthenticated();
 
   useEffect(() => {
     const visitedKey = 'idriss-visited-stream-alerts';
