@@ -3,25 +3,24 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Card } from '@idriss-xyz/ui/card';
 import { Icon } from '@idriss-xyz/ui/icon';
-import { usePrivy } from '@privy-io/react-auth';
 
 import { useAuth } from '../context/auth-context';
 
 // ts-unused-exports:disable-next-line
 export default function Home() {
-  const { creator } = useAuth();
-  const { ready, authenticated, user } = usePrivy();
+  const { creator, creatorLoading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (creator && ready && authenticated && user?.wallet?.address) {
-      if (creator.doneSetup) {
-        router.replace('/creators/app/earnings/stats-and-history');
-      } else {
-        router.replace('/creators/app/setup/payment-methods');
-      }
+    if (creatorLoading) return; // wait for your profile to load
+    if (!creator) return; // if still no record, stay on onboarding
+    if (creator.doneSetup) {
+      router.replace('/creators/app/earnings/stats');
+    } else {
+      router.replace('/creators/app/setup/payment-methods');
     }
-  }, [creator, router, ready, authenticated, user?.wallet?.address]);
+  }, [creator, creatorLoading, router]);
+
   return (
     <div role="status">
       <div className="grid animate-pulse grid-cols-3 gap-3">

@@ -41,6 +41,8 @@ export function OAuthCallbackHandler() {
           throw new Error('handleAuth called but user is not available.');
         }
 
+        console.log('user on oauth callback:', user);
+
         const walletAddress = user.wallet?.address as Hex | undefined;
         if (!walletAddress) {
           throw new Error('No wallet address found for authenticated user.');
@@ -53,11 +55,7 @@ export function OAuthCallbackHandler() {
 
         if (existingCreator) {
           setCreator(existingCreator);
-          if (existingCreator.doneSetup) {
-            router.replace('/creators/app/earnings/stats-and-history');
-          } else {
-            router.replace('/creators/app/setup/payment-methods');
-          }
+          router.replace('/creators/app');
         } else {
           // NEW USER ONBOARDING LOGIC
           let newCreatorName: string;
@@ -96,7 +94,7 @@ export function OAuthCallbackHandler() {
           }
 
           setCreator(newCreator);
-          router.replace('/creators/app/setup/payment-methods');
+          router.replace('/creators/app');
         }
       } catch (error) {
         console.error('Error handling auth callback:', error);
@@ -105,7 +103,7 @@ export function OAuthCallbackHandler() {
       }
     };
 
-    if (authenticated) {
+    if (ready && authenticated) {
       void handleAuth();
     } else {
       setCreator(null);
