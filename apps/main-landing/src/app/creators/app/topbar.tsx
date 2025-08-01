@@ -11,12 +11,18 @@ import { DonateHistoryItem } from '@/app/creators/donate/components/donate-histo
 import { useAuth } from '../context/auth-context';
 
 export function TopBar() {
-  const { donations, newDonationsCount, markDonationsAsSeen, creator } =
-    useAuth();
+  const {
+    donations,
+    newDonationsCount,
+    markDonationsAsSeen,
+    creator,
+    setCreator,
+  } = useAuth();
   const { logout } = usePrivy();
   const router = useRouter();
 
   const handleLogout = async () => {
+    setCreator(null);
     await logout();
     router.push('/creators');
   };
