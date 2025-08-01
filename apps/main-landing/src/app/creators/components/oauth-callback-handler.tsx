@@ -14,10 +14,10 @@ export function OAuthCallbackHandler({ authToken }: CallbackProperties) {
 
   useEffect(() => {
     if (ready && authenticated && authToken != null) {
-      void handleCreatorsAuth(authToken);
+      void handleCreatorsAuth();
     }
     return;
-  }, [ready, authenticated]);
+  }, [ready, authenticated, authToken, handleCreatorsAuth]);
 
   return null;
 }
