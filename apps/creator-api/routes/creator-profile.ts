@@ -644,4 +644,34 @@ router.post('/broadcast-force-refresh', async (req: Request, res: Response) => {
   }
 });
 
+router.get('/list/all', async (req: Request, res: Response) => {
+  const { secret } = req.query;
+  if (secret !== process.env.SECRET_PASSWORD) {
+    res.status(401).json({ error: 'Unauthorized' });
+    return;
+  }
+
+  try {
+    const creatorRepository = AppDataSource.getRepository(Creator);
+    const creators = await creatorRepository.find({
+      order: {
+        joinedAt: 'ASC',
+      },
+    });
+
+    const creatorList = creators.map((creator) => ({
+      displayName: creator.displayName,
+      joinedAt: creator.joinedAt,
+      doneSetup: creator.doneSetup,
+      donationUrl: creator.donationUrl,
+      twitchUrl: `https://twitch.tv/${creator.displayName}`,
+    }));
+
+    res.json(creatorList);
+  } catch (error) {
+    console.error('Error fetching all creators:', error);
+    res.status(500).json({ error: 'Failed to fetch all creators' });
+  }
+});
+
 export default router;
