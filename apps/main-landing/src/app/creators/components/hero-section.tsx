@@ -49,15 +49,9 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
   const handleStartEarningClick = () => {
     if (window.innerWidth < 1024) {
       setIsMobileNotSupportedOpen(true);
-
       return;
     }
-
-    if (creator) {
-      void originalHandleStartEarningClick();
-    } else {
-      void originalHandleStartEarningClick();
-    }
+    void originalHandleStartEarningClick();
   };
 
   useEffect(() => {
