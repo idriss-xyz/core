@@ -45,14 +45,16 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const waitForWalletAddress = async (
   user: User,
-  maxWaitMs = 20000,
+  maxWaitMs = 20_000,
 ): Promise<Hex> => {
   const start = Date.now();
   while (!user.wallet?.address) {
     if (Date.now() - start > maxWaitMs) {
       throw new Error('Timed out waiting for embedded wallet to be created.');
     }
-    await new Promise((res) => setTimeout(res, 200));
+    await new Promise((response) => {
+      return setTimeout(response, 200);
+    });
   }
   return user.wallet.address as Hex;
 };
