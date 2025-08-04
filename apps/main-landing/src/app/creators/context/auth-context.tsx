@@ -7,7 +7,11 @@ import {
   useCallback,
 } from 'react';
 import { DonationData } from '@idriss-xyz/constants';
-import { usePrivy, useSubscribeToJwtAuthWithFlag } from '@privy-io/react-auth';
+import {
+  usePrivy,
+  User,
+  useSubscribeToJwtAuthWithFlag,
+} from '@privy-io/react-auth';
 import { Hex } from 'viem';
 import { useRouter } from 'next/navigation';
 
@@ -38,6 +42,20 @@ type AuthContextType = {
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+const waitForWalletAddress = async (
+  user: User,
+  maxWaitMs = 20000,
+): Promise<Hex> => {
+  const start = Date.now();
+  while (!user.wallet?.address) {
+    if (Date.now() - start > maxWaitMs) {
+      throw new Error('Timed out waiting for embedded wallet to be created.');
+    }
+    await new Promise((res) => setTimeout(res, 200));
+  }
+  return user.wallet.address as Hex;
+};
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [oauthError, setOauthError] = useState<string | null>(null);
@@ -72,10 +90,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         throw new Error('handleAuth called but user is not available.');
       }
 
-      const walletAddress = user.wallet?.address as Hex | undefined;
-      if (!walletAddress) {
-        throw new Error('No wallet address found for authenticated user.');
-      }
+      const walletAddress = await waitForWalletAddress(user);
 
       if (!authToken || !user.id) {
         throw new Error('Could not get auth token or user ID for new user.');
@@ -83,7 +98,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       const existingCreator = await getCreatorProfile(authToken);
 
-      console.log('existingCreator', existingCreator);
       if (existingCreator) {
         setCreator(existingCreator);
         setCreatorLoading(false);
@@ -134,11 +148,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         router.replace('/creators/app/setup/payment-methods');
       }
     } catch (error) {
-      console.error('Failed to authotize creator:', error);
+      console.error('Failed to authenticate creator:', error);
       void logout();
       // TODO: Check if we need to remove localstorage twitch_new_user_info here
       setCreator(null);
-      setCreatorLoading(false);
     } finally {
       setCreatorLoading(false);
     }
