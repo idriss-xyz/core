@@ -43,21 +43,6 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const waitForWalletAddress = async (
-  user: User,
-  maxWaitMs = 20_000,
-): Promise<Hex> => {
-  const start = Date.now();
-  while (!user.wallet?.address) {
-    if (Date.now() - start > maxWaitMs) {
-      throw new Error('Timed out waiting for embedded wallet to be created.');
-    }
-    await new Promise((response) => {
-      return setTimeout(response, 200);
-    });
-  }
-  return user.wallet.address as Hex;
-};
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [oauthError, setOauthError] = useState<string | null>(null);
@@ -92,7 +77,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         throw new Error('handleAuth called but user is not available.');
       }
 
-      const walletAddress = await waitForWalletAddress(user);
+      if (!user.wallet?.address) {
+        throw new Error('Wallet not available yet');
+      }
+
+      const walletAddress = user.wallet.address as Hex;
 
       if (!authToken || !user.id) {
         throw new Error('Could not get auth token or user ID for new user.');
