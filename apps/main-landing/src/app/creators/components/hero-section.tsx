@@ -4,7 +4,6 @@ import { MobileNotSupported } from '@idriss-xyz/ui/mobile-not-supported';
 import { Button } from '@idriss-xyz/ui/button';
 import { classes } from '@idriss-xyz/ui/utils';
 import { RefObject, useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
 
 import { backgroundLines } from '@/assets';
 
@@ -19,18 +18,11 @@ type Properties = {
 };
 
 export const HeroSection = ({ heroButtonReference }: Properties) => {
-  const router = useRouter();
-  const searchParameters = useSearchParams();
   const [isMobileNotSupportedOpen, setIsMobileNotSupportedOpen] =
     useState(false);
 
-  const {
-    isLoginModalOpen,
-    setIsModalOpen,
-    creator,
-    setCustomAuthToken,
-    creatorLoading,
-  } = useAuth();
+  const { isLoginModalOpen, setIsModalOpen, creator, creatorLoading } =
+    useAuth();
   const originalHandleStartEarningClick = useStartEarningNavigation();
 
   useEffect(() => {
@@ -53,32 +45,6 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
     }
     void originalHandleStartEarningClick();
   };
-
-  useEffect(() => {
-    const customToken = searchParameters.get('token');
-    const name = searchParameters.get('name');
-    const displayName = searchParameters.get('displayName');
-    const pfp = searchParameters.get('pfp');
-    const email = searchParameters.get('email');
-
-    if (searchParameters.get('login')) {
-      setIsModalOpen(true);
-      router.replace('/creators', { scroll: false });
-    }
-
-    if (customToken) {
-      setIsModalOpen(true);
-      // Store Twitch info in sessionStorage to be picked up by the next page.
-      if (name) {
-        localStorage.setItem(
-          'twitch_new_user_info',
-          JSON.stringify({ name, displayName, pfp, email }),
-        );
-      }
-      // Use the hook to pass the custom token to Privy
-      setCustomAuthToken(customToken);
-    }
-  }, [searchParameters, router, setIsModalOpen, setCustomAuthToken]);
 
   return (
     <header

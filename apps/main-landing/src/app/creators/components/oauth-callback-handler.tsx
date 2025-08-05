@@ -1,23 +1,63 @@
 'use client';
-import { usePrivy } from '@privy-io/react-auth';
 import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { useAuth } from '../context/auth-context';
 
 interface CallbackProperties {
   authToken: string | null;
+  name: string | null;
+  displayName: string | null;
+  pfp: string | null;
+  email: string | null;
+  login: string | null;
 }
 
-export function OAuthCallbackHandler({ authToken }: CallbackProperties) {
-  const { handleCreatorsAuth } = useAuth();
-  const { ready, authenticated } = usePrivy();
+export function OAuthCallbackHandler({
+  authToken,
+  name,
+  displayName,
+  pfp,
+  email,
+  login,
+}: CallbackProperties) {
+  const { setCustomAuthToken, setIsModalOpen, setOauthLoading } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
-    if (ready && authenticated && authToken != null) {
-      void handleCreatorsAuth();
+    if (login) {
+      // Twitch has finished authenticating the user and failed
+      setOauthLoading(false);
+      setIsModalOpen(true);
+      router.replace('/creators', { scroll: false });
     }
-    return;
-  }, [ready, authenticated, authToken, handleCreatorsAuth]);
+
+    if (authToken) {
+      // Twitch has finished authenticating the user and succeeded
+      setOauthLoading(false);
+      setIsModalOpen(true);
+      // Store Twitch info in localStorage to be picked up by the next page.
+      if (name) {
+        localStorage.setItem(
+          'twitch_new_user_info',
+          JSON.stringify({ name, displayName, pfp, email }),
+        );
+      }
+      // Use the hook to pass the custom token to Privy
+      setCustomAuthToken(authToken);
+    }
+  }, [
+    authToken,
+    name,
+    displayName,
+    pfp,
+    email,
+    login,
+    router,
+    setIsModalOpen,
+    setOauthLoading,
+    setCustomAuthToken,
+  ]);
 
   return null;
 }

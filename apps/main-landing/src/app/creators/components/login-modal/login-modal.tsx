@@ -1,3 +1,4 @@
+'use client';
 import {
   CREATOR_API_URL,
   PRIVACY_POLICY_LINK,
@@ -7,8 +8,11 @@ import { Button } from '@idriss-xyz/ui/button';
 import { ExternalLink } from '@idriss-xyz/ui/external-link';
 import { Modal } from '@idriss-xyz/ui/modal';
 import Image from 'next/image';
+import { useCallback } from 'react';
 
 import { IDRISS_TOROID } from '@/assets';
+
+import { useAuth } from '../../context/auth-context';
 
 type Properties = {
   isOpened: boolean;
@@ -16,11 +20,14 @@ type Properties = {
   onClose: () => void;
 };
 
-const handleTwitchLogin = () => {
-  window.location.href = `${CREATOR_API_URL}/auth/twitch`;
-};
-
 export const LoginModal = ({ isOpened, onClose, isLoading }: Properties) => {
+  const { setOauthLoading, oauthLoading } = useAuth();
+
+  const handleTwitchLogin = useCallback(() => {
+    setOauthLoading(true);
+    window.location.href = `${CREATOR_API_URL}/auth/twitch`;
+  }, [setOauthLoading]);
+
   return (
     <Modal
       className="flex min-h-[420px] w-[500px] flex-col items-center justify-center gap-y-6 rounded-xl border border-black/20 bg-white p-6 text-center"
@@ -46,7 +53,7 @@ export const LoginModal = ({ isOpened, onClose, isLoading }: Properties) => {
           aria-label="Login with Twitch"
           prefixIconName="TwitchOutlinedBold"
           onClick={handleTwitchLogin}
-          loading={isLoading}
+          loading={isLoading || oauthLoading}
         >
           Continue with Twitch
         </Button>
