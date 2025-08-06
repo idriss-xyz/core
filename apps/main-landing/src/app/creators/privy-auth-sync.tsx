@@ -125,6 +125,7 @@ export function PrivyAuthSync() {
     isAuthenticated,
     isLoading: oauthLoading,
     getExternalJwt: () => {
+      console.log('Getting external jwt: ', customAuthToken)
       return Promise.resolve(customAuthToken ?? undefined);
     },
     onAuthenticated: handleCreatorsAuth,
