@@ -1,5 +1,9 @@
 'use client';
-import { useCreateWallet, usePrivy, useSubscribeToJwtAuthWithFlag } from '@privy-io/react-auth';
+import {
+  useCreateWallet,
+  usePrivy,
+  useSubscribeToJwtAuthWithFlag,
+} from '@privy-io/react-auth';
 import { useCallback } from 'react';
 import { Hex } from 'viem';
 import { useRouter } from 'next/navigation';
@@ -8,8 +12,13 @@ import { getCreatorProfile, saveCreatorProfile } from './utils';
 import { useAuth } from './context/auth-context';
 
 export function PrivyAuthSync() {
-  const { customAuthToken, oauthLoading, setCreatorLoading, setCreator } =
-    useAuth();
+  const {
+    customAuthToken,
+    oauthLoading,
+    setCreatorLoading,
+    setCreator,
+    isAuthenticated,
+  } = useAuth();
   const { user, ready, getAccessToken, logout, authenticated } = usePrivy();
   const router = useRouter();
   const { createWallet } = useCreateWallet();
@@ -19,15 +28,20 @@ export function PrivyAuthSync() {
     console.log('Authorizing on creators...');
     try {
       const authToken = await getAccessToken();
-      console.log("authToken: ", authToken);
-      console.log("customAuthToken: ", customAuthToken);
-      console.log("user: ", user);
-      console.log("oauthLoading: ", oauthLoading);
-      console.log("ready: ", ready)
-      console.log("authenticated: ", authenticated);
-      if (!user || !authenticated || !authToken) {
-        console.log('Waiting for Privy authentication to complete...');
-        return;
+      console.log('authToken:', authToken);
+      console.log('customAuthToken:', customAuthToken);
+      console.log('user:', user);
+      console.log('oauthLoading:', oauthLoading);
+      console.log('ready:', ready);
+      console.log('privy authenticated:', authenticated);
+      console.log('twitch authenticated:', isAuthenticated);
+
+      if (!user) {
+        throw new Error('handleAuth called but user is not available.');
+      }
+
+      if (!authToken) {
+        throw new Error('Could not get auth token for new user.');
       }
 
       const existingCreator = await getCreatorProfile(authToken);
@@ -63,7 +77,7 @@ export function PrivyAuthSync() {
         }
         // Create an embedded wallet for the creator
         const newCreatorwallet = await createWallet();
-        console.log("newCreatorwallet: ", newCreatorwallet)
+        console.log('newCreatorwallet:', newCreatorwallet);
 
         await saveCreatorProfile(
           newCreatorwallet.address as Hex,
@@ -96,19 +110,27 @@ export function PrivyAuthSync() {
     user,
     router,
     authenticated,
+    customAuthToken,
+    isAuthenticated,
+    oauthLoading,
+    ready,
     setCreator,
     setCreatorLoading,
     getAccessToken,
     logout,
+    createWallet,
   ]);
 
   useSubscribeToJwtAuthWithFlag({
-    isAuthenticated: !!customAuthToken,
+    isAuthenticated,
     isLoading: oauthLoading,
     getExternalJwt: () => {
       return Promise.resolve(customAuthToken ?? undefined);
     },
     onAuthenticated: handleCreatorsAuth,
+    onError(error) {
+      console.error('Error ocurred syncing: ', error);
+    },
   });
 
   return null;

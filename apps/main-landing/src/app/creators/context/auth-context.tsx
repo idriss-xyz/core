@@ -24,6 +24,7 @@ type AuthContextType = {
   customAuthToken: string | null;
   oauthLoading: boolean;
   setOauthLoading: (oauthLoading: boolean) => void;
+  isAuthenticated: boolean;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -43,6 +44,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [creatorLoading, setCreatorLoading] = useState(false);
   const [donations, setDonations] = useState<DonationData[]>([]);
   const [newDonationsCount, setNewDonationsCount] = useState(0);
+  const isAuthenticated = customAuthToken != null && !oauthLoading;
 
   const addDonation = (donation: DonationData) => {
     setDonations((previous) => {
@@ -94,6 +96,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setIsLoggingOut,
         oauthLoading,
         setOauthLoading,
+        isAuthenticated,
       }}
     >
       {children}
