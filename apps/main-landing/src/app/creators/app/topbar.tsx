@@ -23,6 +23,8 @@ export function TopBar() {
 
   const handleLogout = async () => {
     setCreator(null);
+    localStorage.removeItem('twitch_new_user_info');
+    localStorage.removeItem('custom-auth-token');
     await logout();
     router.push('/creators');
   };
