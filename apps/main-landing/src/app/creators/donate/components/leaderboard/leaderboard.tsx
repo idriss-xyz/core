@@ -212,7 +212,7 @@ export const Leaderboard = ({
             {!isTwitchExtension && (
               <>
                 {leaderboard.map((item, index) => {
-                  if (index > MAX_DISPLAYED_ITEMS -1) return null;
+                  if (index > MAX_DISPLAYED_ITEMS - 1) return null;
 
                   return (
                     <LeaderboardItem
