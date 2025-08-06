@@ -8,6 +8,7 @@ import {
   CreatorToken,
   Token,
   User,
+  Referral,
   CreatorAddress,
 } from './entities';
 import {
@@ -32,6 +33,7 @@ import {
   AddForceDonationOverlayRefresh1753315853694,
   AddCreatorAddresses1753656919000,
   AddReceiveEmailsCreatorField1753726864037,
+  AddReferralEntity1753000000000,
 } from './migrations';
 import { CreatorProfileView } from './views';
 
@@ -49,6 +51,7 @@ export const AppDataSource = new DataSource({
     DonationParameters,
     CreatorProfileView,
     CreatorAddress,
+    Referral,
   ],
   synchronize: false,
   migrations: [
@@ -73,6 +76,7 @@ export const AppDataSource = new DataSource({
     AddForceDonationOverlayRefresh1753315853694,
     AddCreatorAddresses1753656919000,
     AddReceiveEmailsCreatorField1753726864037,
+    AddReferralEntity1753000000000,
   ],
 });
 

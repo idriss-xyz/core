@@ -1,5 +1,4 @@
 import { Router, Request, Response } from 'express';
-import { randomBytes } from 'crypto';
 import { param, validationResult } from 'express-validator';
 import { creatorProfileService } from '../services/creator-profile.service';
 import { AppDataSource } from '../db/database';
@@ -249,77 +248,11 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
   }
   try {
     const {
-      minimumAlertAmount = DEFAULT_DONATION_MIN_ALERT_AMOUNT,
-      minimumTTSAmount = DEFAULT_DONATION_MIN_TTS_AMOUNT,
-      minimumSfxAmount = DEFAULT_DONATION_MIN_SFX_AMOUNT,
-      voiceId,
-      alertSound,
-      alertEnabled,
-      ttsEnabled,
-      sfxEnabled,
-      customBadWords = [],
-      tokens = Object.values(TOKEN).map((token) => token.symbol),
-      networks = Object.values(CREATOR_CHAIN).map((chain) => chain.shortName),
-      ...creatorData
-    } = req.body;
-
-    const donationParameters = new DonationParameters();
-    donationParameters.minimumAlertAmount = minimumAlertAmount;
-    donationParameters.minimumTTSAmount = minimumTTSAmount;
-    donationParameters.minimumSfxAmount = minimumSfxAmount;
-    donationParameters.voiceId = voiceId;
-    donationParameters.alertSound = alertSound;
-    donationParameters.alertEnabled = alertEnabled;
-    donationParameters.ttsEnabled = ttsEnabled;
-    donationParameters.sfxEnabled = sfxEnabled;
-    donationParameters.customBadWords = customBadWords;
-
-    const creatorRepository = AppDataSource.getRepository(Creator);
-    const donationParamsRepository =
-      AppDataSource.getRepository(DonationParameters);
-    const tokenRepository = AppDataSource.getRepository(CreatorToken);
-    const networkRepository = AppDataSource.getRepository(CreatorNetwork);
-
-    const creator = new Creator();
-    creator.doneSetup = false;
-    creator.address = creatorData.address as Hex;
-    creator.primaryAddress =
-      (creatorData.primaryAddress as Hex) ?? (creatorData.address as Hex);
-    creator.name = creatorData.name;
-    creator.displayName = creatorData.displayName ?? creatorData.name;
-    creator.profilePictureUrl = creatorData.profilePictureUrl;
-    creator.privyId = req.user.id;
-    creator.email = creatorData.email;
-    creator.donationUrl = `${CREATORS_LINK}/${creatorData.name}`;
-    const obsUrlSecret = randomBytes(24).toString('base64url');
-    creator.obsUrl = `${CREATORS_LINK}/donation-overlay/${obsUrlSecret}`;
-
-    // Create and save new creator
-    const savedCreator = await creatorRepository.save(creator);
-
-    donationParameters.creator = savedCreator;
-
-    // Create and save donation parameters with creator reference
-    const savedDonationParameters =
-      await donationParamsRepository.save(donationParameters);
-
-    // Create token records
-    const tokenEntities = tokens.map((tokenSymbol: string) => {
-      const token = new CreatorToken();
-      token.tokenSymbol = tokenSymbol;
-      token.creator = savedCreator;
-      return token;
-    });
-    await tokenRepository.save(tokenEntities);
-
-    // Create network records
-    const networkEntities = networks.map((chainName: string) => {
-      const network = new CreatorNetwork();
-      network.chainName = chainName;
-      network.creator = savedCreator;
-      return network;
-    });
-    await networkRepository.save(networkEntities);
+      savedCreator,
+      savedDonationParameters,
+      tokenEntities,
+      networkEntities,
+    } = await creatorProfileService.createCreatorProfile(req);
 
     // TODO: Remove token and network linked creator (redundant in response)
     res.status(201).json({
