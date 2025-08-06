@@ -1,5 +1,5 @@
 'use client';
-import { usePrivy, useSubscribeToJwtAuthWithFlag } from '@privy-io/react-auth';
+import { useCreateWallet, usePrivy, useSubscribeToJwtAuthWithFlag } from '@privy-io/react-auth';
 import { useCallback } from 'react';
 import { Hex } from 'viem';
 import { useRouter } from 'next/navigation';
@@ -8,24 +8,26 @@ import { getCreatorProfile, saveCreatorProfile } from './utils';
 import { useAuth } from './context/auth-context';
 
 export function PrivyAuthSync() {
-  const { customAuthToken, oauthLoading, creatorLoading, setCreatorLoading, setCreator } =
+  const { customAuthToken, oauthLoading, setCreatorLoading, setCreator } =
     useAuth();
-  const { user, getAccessToken, logout, authenticated } = usePrivy();
+  const { user, ready, getAccessToken, logout, authenticated } = usePrivy();
   const router = useRouter();
+  const { createWallet } = useCreateWallet();
 
   const handleCreatorsAuth = useCallback(async () => {
     setCreatorLoading(true);
     console.log('Authorizing on creators...');
     try {
       const authToken = await getAccessToken();
-      if (!user) {
-        throw new Error('handleAuth called but user is not available.');
-      }
-
-      const walletAddress = user?.wallet?.address as Hex; // TODO: Crete wallet here manually with Privy hook
-
-      if (!authToken || !user.id) {
-        throw new Error('Could not get auth token or user ID for new user.');
+      console.log("authToken: ", authToken);
+      console.log("customAuthToken: ", customAuthToken);
+      console.log("user: ", user);
+      console.log("oauthLoading: ", oauthLoading);
+      console.log("ready: ", ready)
+      console.log("authenticated: ", authenticated);
+      if (!user || !authenticated || !authToken) {
+        console.log('Waiting for Privy authentication to complete...');
+        return;
       }
 
       const existingCreator = await getCreatorProfile(authToken);
@@ -39,7 +41,6 @@ export function PrivyAuthSync() {
           router.replace('/creators/app/setup/payment-methods');
         }
       } else {
-        // NEW USER ONBOARDING LOGIC
         let newCreatorName: string;
         let newCreatorDisplayName: string | null = null;
         let newCreatorProfilePic: string | null = null;
@@ -60,8 +61,12 @@ export function PrivyAuthSync() {
           // newCreatorDisplayName = newCreatorName;
           throw new Error('Unsupported login method');
         }
+        // Create an embedded wallet for the creator
+        const newCreatorwallet = await createWallet();
+        console.log("newCreatorwallet: ", newCreatorwallet)
+
         await saveCreatorProfile(
-          walletAddress,
+          newCreatorwallet.address as Hex,
           newCreatorName,
           newCreatorDisplayName,
           newCreatorProfilePic,
@@ -99,7 +104,7 @@ export function PrivyAuthSync() {
 
   useSubscribeToJwtAuthWithFlag({
     isAuthenticated: !!customAuthToken,
-    isLoading: creatorLoading || oauthLoading,
+    isLoading: oauthLoading,
     getExternalJwt: () => {
       return Promise.resolve(customAuthToken ?? undefined);
     },
