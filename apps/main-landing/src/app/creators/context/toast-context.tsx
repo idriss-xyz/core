@@ -1,5 +1,11 @@
 'use client';
-import { createContext, useContext, useState, ReactNode, useCallback } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useCallback,
+} from 'react';
 import { Toast } from '@idriss-xyz/ui/toast';
 import { IconName } from '@idriss-xyz/ui/icon';
 
@@ -17,7 +23,8 @@ interface ToastData {
 }
 
 interface ToastContextValue {
-  toast: (options: Omit<ToastData, 'id'>) => void;
+  toast: (options: Omit<ToastData, 'id'>) => string;
+  removeToast: (id: string) => void;
 }
 
 const ToastContext = createContext<ToastContextValue | undefined>(undefined);
@@ -30,45 +37,56 @@ export const useToast = () => {
   return context;
 };
 
-interface ToastProviderProps {
+interface ToastProviderProperties {
   children: ReactNode;
 }
 
-export const ToastProvider = ({ children }: ToastProviderProps) => {
+export const ToastProvider = ({ children }: ToastProviderProperties) => {
   const [toasts, setToasts] = useState<ToastData[]>([]);
 
   const toast = useCallback((options: Omit<ToastData, 'id'>) => {
-    const id = Math.random().toString(36).substring(2, 9);
+    const id = Math.random().toString(36).slice(2, 9);
     const newToast: ToastData = {
       ...options,
       id,
     };
 
-    setToasts(prev => [...prev, newToast]);
+    setToasts((previous) => {
+      return [...previous, newToast];
+    });
+    return id;
   }, []);
 
   const removeToast = useCallback((id: string) => {
-    setToasts(prev => prev.filter(toast => toast.id !== id));
+    setToasts((previous) => {
+      return previous.filter((toast) => {
+        return toast.id !== id;
+      });
+    });
   }, []);
 
   return (
-    <ToastContext.Provider value={{ toast }}>
+    <ToastContext.Provider value={{ toast, removeToast }}>
       {children}
 
       {/* Toast Container */}
-      <div className="fixed bottom-0 left-1/2 z-alert gap-3 flex flex-col-reverse py-3">
-        {toasts.map((toastData) => (
-          <Toast
-            key={toastData.id}
-            type={toastData.type}
-            heading={toastData.heading}
-            description={toastData.description}
-            iconName={toastData.iconName}
-            autoClose={toastData.autoClose}
-            actionButtons={toastData.actionButtons}
-            onClose={() => removeToast(toastData.id)}
-          />
-        ))}
+      <div className="fixed bottom-0 left-1/2 z-alert flex flex-col-reverse gap-3 py-3">
+        {toasts.map((toastData) => {
+          return (
+            <Toast
+              key={toastData.id}
+              type={toastData.type}
+              heading={toastData.heading}
+              description={toastData.description}
+              iconName={toastData.iconName}
+              autoClose={toastData.autoClose}
+              actionButtons={toastData.actionButtons}
+              onClose={() => {
+                return removeToast(toastData.id);
+              }}
+            />
+          );
+        })}
       </div>
     </ToastContext.Provider>
   );

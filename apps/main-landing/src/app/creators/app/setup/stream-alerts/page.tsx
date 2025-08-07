@@ -4,7 +4,6 @@ import { Button } from '@idriss-xyz/ui/button';
 import { Card } from '@idriss-xyz/ui/card';
 import { Form } from '@idriss-xyz/ui/form';
 import { Toggle } from '@idriss-xyz/ui/toggle';
-import { Toast } from '@idriss-xyz/ui/toast';
 import { getAccessToken } from '@privy-io/react-auth';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -86,7 +85,7 @@ type FormPayload = {
 // ts-unused-exports:disable-next-line
 export default function StreamAlerts() {
   const { creator, creatorLoading } = useAuth();
-  const { toast } = useToast();
+  const { toast, removeToast } = useToast();
 
   const [isCustomSoundUploaded, setIsCustomSoundUploaded] = useState(false);
   const [fileComponentKey, setFileComponentKey] = useState(0);
@@ -95,6 +94,7 @@ export default function StreamAlerts() {
   const [isUrlWarningConfirmed, setIsUrlWarningConfirmed] = useState(false);
   const [confirmButtonText, setConfirmButtonText] = useState('Copy link');
   const [wasCopied, setWasCopied] = useState(false);
+  const [unsavedChangesToastId, setUnsavedChangesToastId] = useState('');
 
   // TODO: Extract to constants
   const alertSounds = [
@@ -210,7 +210,6 @@ export default function StreamAlerts() {
     }
   }, [creator?.primaryAddress, toast]);
 
-
   const onSubmit = async (data: FormPayload) => {
     try {
       const authToken = await getAccessToken();
@@ -251,6 +250,10 @@ export default function StreamAlerts() {
       );
 
       if (editSuccess) {
+        // Reset form dirty state after successful save
+        formMethods.reset(data, { keepValues: true });
+        removeToast(unsavedChangesToastId);
+
         toast({
           type: 'success',
           heading: 'Settings saved!',
@@ -347,7 +350,6 @@ export default function StreamAlerts() {
     setIsCustomSoundUploaded(false);
   }, []);
 
-
   // Keep track of dirty form state (non-toggles only)
   const isDirtyNonToggles = useMemo(() => {
     const { dirtyFields } = formMethods.formState;
@@ -359,16 +361,17 @@ export default function StreamAlerts() {
   }, [formMethods.formState]);
 
   useEffect(() => {
-    if (isDirtyNonToggles){
-      toast({
+    if (isDirtyNonToggles) {
+      const toastId = toast({
         type: 'error',
         heading: 'You have unsaved changes',
         description: 'Don´t forget to save when you are done',
         iconName: 'RefreshCw',
         closable: false,
       });
+      setUnsavedChangesToastId(toastId);
     }
-  }, [isDirtyNonToggles])
+  }, [isDirtyNonToggles, toast]);
 
   if (creatorLoading) {
     return <SkeletonSetup />;
