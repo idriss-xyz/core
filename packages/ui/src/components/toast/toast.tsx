@@ -26,6 +26,7 @@ type Properties = {
 } & ToastVariants &
   HTMLProps<HTMLSpanElement>;
 
+// Meant to be used within Toast context as in creators app
 export const Toast = forwardRef(
   (
     {
