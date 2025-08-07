@@ -27,6 +27,7 @@ import {
   FormFieldWrapper,
   SectionHeader,
 } from '@/app/creators/components/layout';
+import { useToast } from '@/app/creators/context/toast-context';
 
 import { File } from '../file-upload/file';
 import { Select } from '../select';
@@ -85,11 +86,8 @@ type FormPayload = {
 // ts-unused-exports:disable-next-line
 export default function StreamAlerts() {
   const { creator, creatorLoading } = useAuth();
+  const { toast } = useToast();
 
-  const [saveSuccess, setSaveSuccess] = useState<boolean | null>(null);
-  const [testDonationSuccess, setTestDonationSuccess] = useState<
-    boolean | null
-  >(null);
   const [isCustomSoundUploaded, setIsCustomSoundUploaded] = useState(false);
   const [fileComponentKey, setFileComponentKey] = useState(0);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
@@ -97,7 +95,6 @@ export default function StreamAlerts() {
   const [isUrlWarningConfirmed, setIsUrlWarningConfirmed] = useState(false);
   const [confirmButtonText, setConfirmButtonText] = useState('Copy link');
   const [wasCopied, setWasCopied] = useState(false);
-  const [showRefreshAlert, setShowRefreshAlert] = useState(false);
 
   // TODO: Extract to constants
   const alertSounds = [
@@ -150,14 +147,26 @@ export default function StreamAlerts() {
 
   const sendTestDonation = useCallback(async () => {
     if (!creator?.primaryAddress || !isAddress(creator.primaryAddress)) {
-      setTestDonationSuccess(false);
+      toast({
+        type: 'error',
+        heading: 'Unable to send test alert',
+        description: 'Check your streaming software and verify the link',
+        iconName: 'BellRing',
+        autoClose: true,
+      });
       return;
     }
 
     try {
       const authToken = await getAccessToken();
       if (!authToken) {
-        setTestDonationSuccess(false);
+        toast({
+          type: 'error',
+          heading: 'Unable to send test alert',
+          description: 'Check your streaming software and verify the link',
+          iconName: 'BellRing',
+          autoClose: true,
+        });
         console.error('Could not get auth token.');
         return;
       }
@@ -173,38 +182,55 @@ export default function StreamAlerts() {
       );
 
       if (response.ok) {
-        setTestDonationSuccess(true);
+        toast({
+          type: 'success',
+          heading: 'Test alert sent successfully!',
+          description: 'Check your stream preview to see it',
+          iconName: 'BellRing',
+          autoClose: true,
+        });
       } else {
-        setTestDonationSuccess(false);
+        toast({
+          type: 'error',
+          heading: 'Unable to send test alert',
+          description: 'Check your streaming software and verify the link',
+          iconName: 'BellRing',
+          autoClose: true,
+        });
       }
     } catch (error) {
       console.error('Error sending test donation:', error);
-      setTestDonationSuccess(false);
+      toast({
+        type: 'error',
+        heading: 'Unable to send test alert',
+        description: 'Check your streaming software and verify the link',
+        iconName: 'BellRing',
+        autoClose: true,
+      });
     }
-  }, [creator?.primaryAddress]);
+  }, [creator?.primaryAddress, toast]);
 
-  const handleAlertClose = useCallback(() => {
-    setSaveSuccess(null);
-  }, []);
-
-  const handleRefreshAlertClose = useCallback(() => {
-    setShowRefreshAlert(false);
-  }, []);
-
-  const handleTestDonationClose = useCallback(() => {
-    setTestDonationSuccess(null);
-  }, []);
 
   const onSubmit = async (data: FormPayload) => {
     try {
       const authToken = await getAccessToken();
       if (!authToken) {
-        setSaveSuccess(false);
+        toast({
+          type: 'error',
+          heading: 'Unable to save settings',
+          description: 'Please try again later',
+          autoClose: true,
+        });
         console.error('Could not get auth token.');
         return;
       }
       if (!creator?.name) {
-        setSaveSuccess(false);
+        toast({
+          type: 'error',
+          heading: 'Unable to save settings',
+          description: 'Please try again later',
+          autoClose: true,
+        });
         console.error('Creator not initialized');
         return;
       }
@@ -224,9 +250,39 @@ export default function StreamAlerts() {
         authToken,
       );
 
-      setSaveSuccess(editSuccess);
+      if (editSuccess) {
+        toast({
+          type: 'success',
+          heading: 'Settings saved!',
+          autoClose: true,
+        });
+
+        // Show refresh alert after 3 seconds
+        setTimeout(() => {
+          toast({
+            type: 'success',
+            heading: 'Refresh the browser source in your streaming software',
+            description: 'Keeps your donation alert setup up to date',
+            iconName: 'RefreshCw',
+            autoClose: true,
+          });
+        }, 3000);
+      } else {
+        toast({
+          type: 'error',
+          heading: 'Unable to save settings',
+          description: 'Please try again later',
+          autoClose: true,
+        });
+      }
     } catch (error) {
       console.error('Error saving profile:', error);
+      toast({
+        type: 'error',
+        heading: 'Unable to save settings',
+        description: 'Please try again later',
+        autoClose: true,
+      });
     }
   };
 
@@ -291,19 +347,6 @@ export default function StreamAlerts() {
     setIsCustomSoundUploaded(false);
   }, []);
 
-  // Timers to delay refresh alert opening
-  useEffect(() => {
-    if (saveSuccess === true) {
-      const timer = setTimeout(() => {
-        setShowRefreshAlert(true);
-      }, 3000);
-
-      return () => {
-        return clearTimeout(timer);
-      };
-    }
-    return;
-  }, [saveSuccess]);
 
   // Keep track of dirty form state (non-toggles only)
   const isDirtyNonToggles = useMemo(() => {
@@ -314,6 +357,17 @@ export default function StreamAlerts() {
     });
     return nonToggleDirtyFields.length > 0;
   }, [formMethods.formState]);
+
+  useEffect(() => {
+    if (isDirtyNonToggles){
+      toast({
+        type: 'error',
+        heading: 'You have unsaved changes',
+        description: 'Don´t forget to save when you are done',
+        iconName: 'RefreshCw',
+      });
+    }
+  }, [isDirtyNonToggles])
 
   if (creatorLoading) {
     return <SkeletonSetup />;
@@ -670,67 +724,10 @@ export default function StreamAlerts() {
         }}
         title="⚠️ Confirm before copying"
         sectionSubtitle="Anyone with this link can embed your stream alerts on their own stream or website.
-Do not share it with anyone or show it on stream."
+          Do not share it with anyone or show it on stream."
         confirmButtonText={confirmButtonText}
         confirmButtonIntent="secondary"
       />
-
-      {/* Alerts */}
-      {testDonationSuccess && (
-        <Toast
-          heading="Test alert sent successfully!"
-          type="success"
-          description="Check your stream preview to see it"
-          iconName="BellRing"
-          autoClose
-          onClose={handleTestDonationClose}
-        />
-      )}
-      {testDonationSuccess === false && (
-        <Toast
-          heading="Unable to send test alert"
-          type="error"
-          description="Check your streaming software and verify the link"
-          iconName="BellRing"
-          autoClose
-          onClose={handleTestDonationClose}
-        />
-      )}
-      {saveSuccess && (
-        <Toast
-          heading="Settings saved!"
-          type="success"
-          autoClose
-          onClose={handleAlertClose}
-        />
-      )}
-      {showRefreshAlert && (
-        <Toast
-          heading="Refresh the browser source in your streaming software"
-          type="success"
-          description="Keeps your donation alert setup up to date"
-          iconName="RefreshCw"
-          autoClose
-          onClose={handleRefreshAlertClose}
-        />
-      )}
-      {saveSuccess === false && (
-        <Toast
-          heading="Unable to save settings"
-          type="error"
-          description="Please try again later"
-          autoClose
-          onClose={handleAlertClose}
-        />
-      )}
-      {isDirtyNonToggles && (
-        <Toast
-          heading="You have unsaved changes"
-          type="error"
-          description="Don't forget to save when you are done"
-          iconName="RefreshCw"
-        />
-      )}
     </Card>
   );
 }

@@ -6,7 +6,6 @@ import {
   DEFAULT_ALLOWED_CHAINS_IDS,
   TokenSymbol,
 } from '@idriss-xyz/constants';
-import { Toast } from '@idriss-xyz/ui/toast';
 import { Button } from '@idriss-xyz/ui/button';
 import { Card } from '@idriss-xyz/ui/card';
 import { Form } from '@idriss-xyz/ui/form';
@@ -27,6 +26,7 @@ import {
   FormFieldWrapper,
   SectionHeader,
 } from '@/app/creators/components/layout';
+import { useToast } from '@/app/creators/context/toast-context';
 
 import SkeletonSetup from '../loading';
 
@@ -99,8 +99,8 @@ const IconsRow = ({ icons }: { icons: IconName[] }) => {
 // ts-unused-exports:disable-next-line
 export default function PaymentMethods() {
   const { creator, creatorLoading } = useAuth();
+  const { toast } = useToast();
 
-  const [saveSuccess, setSaveSuccess] = useState<boolean | null>(null);
   const [toggleCrypto, setToggleCrypto] = useState(true);
 
   const formMethods = useForm<FormPayload>({
@@ -198,9 +198,6 @@ export default function PaymentMethods() {
     });
   }, []);
 
-  const handleAlertClose = useCallback(() => {
-    setSaveSuccess(null);
-  }, []);
 
   const onChangeChainId = useCallback(() => {
     formMethods.setValue(
@@ -217,12 +214,22 @@ export default function PaymentMethods() {
     try {
       const authToken = await getAccessToken();
       if (!authToken) {
-        setSaveSuccess(false);
+        toast({
+          type: 'error',
+          heading: 'Unable to save settings',
+          description: 'Please try again later',
+          autoClose: true,
+        });
         console.error('Could not get auth token.');
         return;
       }
       if (!creator?.name) {
-        setSaveSuccess(false);
+        toast({
+          type: 'error',
+          heading: 'Unable to save settings',
+          description: 'Please try again later',
+          autoClose: true,
+        });
         console.error('Creator not initialized');
         return;
       }
@@ -238,9 +245,28 @@ export default function PaymentMethods() {
         authToken,
       );
 
-      setSaveSuccess(editSuccess);
+      if (editSuccess) {
+        toast({
+          type: 'success',
+          heading: 'Settings saved!',
+          autoClose: true,
+        });
+      } else {
+        toast({
+          type: 'error',
+          heading: 'Unable to save settings',
+          description: 'Please try again later',
+          autoClose: true,
+        });
+      }
     } catch (error) {
       console.error('Error saving profile:', error);
+      toast({
+        type: 'error',
+        heading: 'Unable to save settings',
+        description: 'Please try again later',
+        autoClose: true,
+      });
     }
   };
 
@@ -382,25 +408,6 @@ export default function PaymentMethods() {
           </FormFieldWrapper>
         </Form>
       </div>
-
-      {/* Alerts section */}
-      {saveSuccess && (
-        <Toast
-          heading="Settings saved!"
-          type="success"
-          autoClose
-          onClose={handleAlertClose}
-        />
-      )}
-      {saveSuccess === false && (
-        <Toast
-          heading="Unable to save settings"
-          type="error"
-          description="Please try again later"
-          autoClose
-          onClose={handleAlertClose}
-        />
-      )}
     </Card>
   );
 }
