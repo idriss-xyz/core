@@ -12,6 +12,7 @@ interface ToastData {
   description?: string;
   iconName?: IconName;
   autoClose?: boolean;
+  closable?: boolean;
   actionButtons?: (close: () => void) => ReactNode;
 }
 

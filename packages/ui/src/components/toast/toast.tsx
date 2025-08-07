@@ -18,6 +18,7 @@ type Properties = {
   heading: string;
   description?: string;
   autoClose?: boolean;
+  closable?: boolean;
   show?: boolean;
   iconName?: IconName;
   setShow?: (show: boolean) => void;
@@ -35,6 +36,7 @@ export const Toast = forwardRef(
       heading,
       description,
       autoClose,
+      closable,
       iconName,
       onClose,
       actionButtons,
@@ -75,7 +77,7 @@ export const Toast = forwardRef(
         </span>
 
         <div
-          className={`grid ${autoClose ? 'grid-cols-[1fr]' : 'grid-cols-[1fr,32px]'}`}
+          className={`grid ${autoClose || !closable ? 'grid-cols-[1fr]' : 'grid-cols-[1fr,32px]'}`}
         >
           <div className="flex flex-col gap-y-1">
             <p className="flex h-full items-center text-label3 text-neutral-900">
@@ -91,7 +93,7 @@ export const Toast = forwardRef(
               </div>
             )}
           </div>
-          {!autoClose && (
+          {!autoClose && closable && (
             <IconButton
               size="small"
               iconName="X"

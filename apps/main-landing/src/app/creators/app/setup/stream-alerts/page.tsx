@@ -365,6 +365,7 @@ export default function StreamAlerts() {
         heading: 'You have unsaved changes',
         description: 'Don´t forget to save when you are done',
         iconName: 'RefreshCw',
+        closable: false,
       });
     }
   }, [isDirtyNonToggles])
