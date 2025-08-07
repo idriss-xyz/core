@@ -14,7 +14,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
-import { Alert } from '@idriss-xyz/ui/alert';
+import { Toast } from '@idriss-xyz/ui/toast';
 
 import { useCopyToClipboard } from '@/app/creators/hooks/use-copy-to-clipboard';
 import { IDRISS_SCENE_STREAM_2 } from '@/assets';
@@ -503,7 +503,7 @@ export const Leaderboard = ({
       )}
       {copied && (
         <div className="fixed bottom-[3vh] left-1/2 z-50 -translate-x-1/2">
-          <Alert
+          <Toast
             type="success"
             heading="Your link has been copied!"
             autoClose

@@ -6,7 +6,7 @@ import {
   DEFAULT_ALLOWED_CHAINS_IDS,
   TokenSymbol,
 } from '@idriss-xyz/constants';
-import { Alert } from '@idriss-xyz/ui/alert';
+import { Toast } from '@idriss-xyz/ui/toast';
 import { Button } from '@idriss-xyz/ui/button';
 import { Card } from '@idriss-xyz/ui/card';
 import { Form } from '@idriss-xyz/ui/form';
@@ -385,7 +385,7 @@ export default function PaymentMethods() {
 
       {/* Alerts section */}
       {saveSuccess && (
-        <Alert
+        <Toast
           heading="Settings saved!"
           type="success"
           autoClose
@@ -393,7 +393,7 @@ export default function PaymentMethods() {
         />
       )}
       {saveSuccess === false && (
-        <Alert
+        <Toast
           heading="Unable to save settings"
           type="error"
           description="Please try again later"

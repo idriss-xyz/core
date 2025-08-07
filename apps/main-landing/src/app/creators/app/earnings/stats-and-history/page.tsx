@@ -19,7 +19,7 @@ import { useMemo } from 'react';
 import { formatFiatValue } from '@idriss-xyz/utils';
 import { usePrivy } from '@privy-io/react-auth';
 import { Hex } from 'viem';
-import { Alert } from '@idriss-xyz/ui/alert';
+import { Toast } from '@idriss-xyz/ui/toast';
 
 import { useCopyToClipboard } from '@/app/creators/hooks/use-copy-to-clipboard';
 import { backgroundLines2, IDRISS_COIN, IDRISS_SCENE_STREAM_4 } from '@/assets';
@@ -408,7 +408,7 @@ export default function EarningsStats() {
       )}
       {copied && (
         <div className="fixed bottom-[3vh] left-1/2 z-50 -translate-x-1/2">
-          <Alert
+          <Toast
             type="success"
             heading="Your link has been copied!"
             autoClose

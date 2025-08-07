@@ -10,7 +10,7 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import Image from 'next/image';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { Checkbox } from '@idriss-xyz/ui/checkbox';
-import { Alert } from '@idriss-xyz/ui/alert';
+import { Toast } from '@idriss-xyz/ui/toast';
 
 import { IDRISS_SCENE_STREAM_4, backgroundLines2 } from '@/assets';
 import { useAuth } from '@/app/creators/context/auth-context';
@@ -259,7 +259,7 @@ export default function ProfilePage() {
 
       {/* Alerts */}
       {saveSuccess && (
-        <Alert
+        <Toast
           heading="Settings saved!"
           type="success"
           autoClose
@@ -267,7 +267,7 @@ export default function ProfilePage() {
         />
       )}
       {saveSuccess === false && (
-        <Alert
+        <Toast
           heading="Unable to save settings"
           type="error"
           description="Please try again later"

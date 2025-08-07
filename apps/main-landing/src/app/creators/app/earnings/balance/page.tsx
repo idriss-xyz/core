@@ -7,7 +7,7 @@ import { usePrivy } from '@privy-io/react-auth';
 import { Hex } from 'viem';
 import { formatFiatValue } from '@idriss-xyz/utils';
 import { useState } from 'react';
-import { Alert } from '@idriss-xyz/ui/alert';
+import { Toast } from '@idriss-xyz/ui/toast';
 
 import { useCopyToClipboard } from '@/app/creators/hooks/use-copy-to-clipboard';
 import { IDRISS_SCENE_STREAM_4 } from '@/assets';
@@ -155,7 +155,7 @@ export default function EarningsBalance() {
       />
       {copied && (
         <div className="fixed bottom-[3vh] left-1/2 z-50 -translate-x-1/2">
-          <Alert
+          <Toast
             type="success"
             heading="Your link has been copied!"
             autoClose

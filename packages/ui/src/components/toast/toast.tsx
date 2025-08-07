@@ -12,7 +12,7 @@ import { classes } from '../../utils';
 import { Icon, IconName } from '../icon';
 import { IconButton } from '../icon-button';
 
-import { alert, AlertVariants, icon, iconClass } from './variants';
+import { toast, ToastVariants, icon, iconClass } from './variants';
 
 type Properties = {
   heading: string;
@@ -23,10 +23,10 @@ type Properties = {
   setShow?: (show: boolean) => void;
   onClose?: () => void;
   actionButtons?: (close: () => void) => ReactNode;
-} & AlertVariants &
+} & ToastVariants &
   HTMLProps<HTMLSpanElement>;
 
-export const Alert = forwardRef(
+export const Toast = forwardRef(
   (
     {
       type,
@@ -43,7 +43,7 @@ export const Alert = forwardRef(
   ) => {
     const [isVisible, setIsVisible] = useState(true);
 
-    const variantClassName = classes(alert({ type }), className);
+    const variantClassName = classes(toast({ type }), className);
     const iconClassName = iconClass({ type });
 
     const Component = 'span';
@@ -105,4 +105,4 @@ export const Alert = forwardRef(
   },
 );
 
-Alert.displayName = 'Alert';
+Toast.displayName = 'Toast';

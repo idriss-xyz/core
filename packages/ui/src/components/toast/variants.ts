@@ -3,7 +3,7 @@ import { cva } from 'class-variance-authority';
 
 import { IconName } from '../icon';
 
-export const alert = cva(
+export const toast = cva(
   'fixed bottom-[3vh] left-1/2 z-alert grid max-h-[500px] grid-cols-[40px,1fr] items-center gap-x-4 rounded-xl border border-neutral-300 bg-white p-4 shadow-sm',
   {
     variants: {
@@ -32,6 +32,6 @@ export const iconClass = cva('rounded-full p-2.5', {
   },
 });
 
-export type AlertVariants = FullyRequired<{
+export type ToastVariants = FullyRequired<{
   type: 'default' | 'success' | 'error';
 }>;

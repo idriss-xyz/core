@@ -4,7 +4,7 @@ import { Button } from '@idriss-xyz/ui/button';
 import { Card } from '@idriss-xyz/ui/card';
 import { Form } from '@idriss-xyz/ui/form';
 import { Toggle } from '@idriss-xyz/ui/toggle';
-import { Alert } from '@idriss-xyz/ui/alert';
+import { Toast } from '@idriss-xyz/ui/toast';
 import { getAccessToken } from '@privy-io/react-auth';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -677,7 +677,7 @@ Do not share it with anyone or show it on stream."
 
       {/* Alerts */}
       {testDonationSuccess && (
-        <Alert
+        <Toast
           heading="Test alert sent successfully!"
           type="success"
           description="Check your stream preview to see it"
@@ -687,7 +687,7 @@ Do not share it with anyone or show it on stream."
         />
       )}
       {testDonationSuccess === false && (
-        <Alert
+        <Toast
           heading="Unable to send test alert"
           type="error"
           description="Check your streaming software and verify the link"
@@ -697,7 +697,7 @@ Do not share it with anyone or show it on stream."
         />
       )}
       {saveSuccess && (
-        <Alert
+        <Toast
           heading="Settings saved!"
           type="success"
           autoClose
@@ -705,7 +705,7 @@ Do not share it with anyone or show it on stream."
         />
       )}
       {showRefreshAlert && (
-        <Alert
+        <Toast
           heading="Refresh the browser source in your streaming software"
           type="success"
           description="Keeps your donation alert setup up to date"
@@ -715,7 +715,7 @@ Do not share it with anyone or show it on stream."
         />
       )}
       {saveSuccess === false && (
-        <Alert
+        <Toast
           heading="Unable to save settings"
           type="error"
           description="Please try again later"
@@ -724,7 +724,7 @@ Do not share it with anyone or show it on stream."
         />
       )}
       {isDirtyNonToggles && (
-        <Alert
+        <Toast
           heading="You have unsaved changes"
           type="error"
           description="Don't forget to save when you are done"
