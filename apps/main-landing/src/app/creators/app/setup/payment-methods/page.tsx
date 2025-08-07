@@ -198,7 +198,6 @@ export default function PaymentMethods() {
     });
   }, []);
 
-
   const onChangeChainId = useCallback(() => {
     formMethods.setValue(
       'tokensSymbols',

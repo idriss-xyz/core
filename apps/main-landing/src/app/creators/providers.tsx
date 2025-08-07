@@ -6,6 +6,7 @@ import { PrivyProvider } from '@privy-io/react-auth';
 import { TooltipProvider } from '@idriss-xyz/ui/tooltip';
 
 import { QueryProvider } from '@/providers';
+
 import { ToastProvider } from './context/toast-context';
 
 type Properties = {
