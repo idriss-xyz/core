@@ -84,6 +84,8 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
     console.error('Twitch auth failed:', error);
     res.status(500).send('Authentication failed.');
     return;
+    // TODO: redirect to creators with an error param and message
+    //  use setOauthError on cretors app
   }
 });
 

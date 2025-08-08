@@ -25,7 +25,7 @@ import { editCreatorProfile } from '../../utils';
 
 const handleDeleteAccount = () => {
   // TODO: Implement backend call to save email
-  console.log('Deleteing Account');
+  console.log('Not implemented yet');
 };
 
 // ts-unused-exports:disable-next-line

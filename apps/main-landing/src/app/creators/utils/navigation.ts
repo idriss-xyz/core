@@ -22,7 +22,7 @@ export const useStartEarningNavigation = () => {
       } else {
         router.push('/creators/app/setup/payment-methods');
       }
-    } else if (user) {
+    } else if (user && !creator) {
       const walletAddress = user.wallet?.address as Hex | undefined;
       const authToken = await getAccessToken();
       if (!authToken || !user.id) {

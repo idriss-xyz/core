@@ -1,19 +1,8 @@
 'use client';
-import {
-  createContext,
-  useContext,
-  useState,
-  ReactNode,
-  useEffect,
-} from 'react';
+import { createContext, useContext, useState, ReactNode } from 'react';
 import { DonationData } from '@idriss-xyz/constants';
-import {
-  getAccessToken,
-  usePrivy,
-  useSubscribeToJwtAuthWithFlag,
-} from '@privy-io/react-auth';
 
-import { CreatorProfileResponse, getCreatorProfile } from '../utils';
+import { CreatorProfileResponse } from '../utils';
 
 type AuthContextType = {
   donations: DonationData[];
@@ -32,12 +21,17 @@ type AuthContextType = {
   setCustomAuthToken: (token: string | null) => void;
   isLoggingOut: boolean;
   setIsLoggingOut: (isLoggingOut: boolean) => void;
+  customAuthToken: string | null;
+  oauthLoading: boolean;
+  setOauthLoading: (oauthLoading: boolean) => void;
+  isAuthenticated: boolean;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [oauthError, setOauthError] = useState<string | null>(null);
+  const [oauthLoading, setOauthLoading] = useState(false);
   const [isLoginModalOpen, setIsModalOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [customAuthToken, setCustomAuthToken] = useState<string | null>(() => {
@@ -47,59 +41,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return localStorage.getItem('custom-auth-token');
   });
   const [creator, setCreator] = useState<CreatorProfileResponse | null>(null);
-  const [creatorLoading, setCreatorLoading] = useState(true);
+  const [creatorLoading, setCreatorLoading] = useState(false);
   const [donations, setDonations] = useState<DonationData[]>([]);
   const [newDonationsCount, setNewDonationsCount] = useState(0);
-  const { ready, authenticated, user } = usePrivy();
-
-  useSubscribeToJwtAuthWithFlag({
-    isAuthenticated: !!customAuthToken,
-    isLoading: false,
-    getExternalJwt: () => {
-      return Promise.resolve(customAuthToken ?? undefined);
-    },
-  });
-
-  useEffect(() => {
-    if (!ready) {
-      return;
-    }
-
-    // If not authenticated and not in the process of a custom token login,
-    // then the user is logged out.
-    if (!authenticated && !customAuthToken) {
-      setCreator(null);
-      setCreatorLoading(false);
-      return;
-    }
-
-    const fetchCreatorProfile = async () => {
-      if (!user?.wallet?.address) {
-        return;
-      }
-      setCreatorLoading(true);
-      try {
-        const authToken = await getAccessToken();
-        if (!authToken || !user.id) {
-          throw new Error('Could not get auth token or user ID for new user.');
-        }
-
-        const existingCreator = await getCreatorProfile(authToken);
-
-        console.log('existingCreator', existingCreator);
-        setCreator(existingCreator ?? null);
-      } catch (error) {
-        console.error('Failed to fetch creator profile:', error);
-        setCreator(null);
-      } finally {
-        setCreatorLoading(false);
-      }
-    };
-
-    if (authenticated && !creator) {
-      void fetchCreatorProfile();
-    }
-  }, [ready, authenticated, user, creator, customAuthToken]);
+  const isAuthenticated = customAuthToken != null && !oauthLoading;
 
   const addDonation = (donation: DonationData) => {
     setDonations((previous) => {
@@ -142,12 +87,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setIsModalOpen,
         setCreator,
         donations,
+        customAuthToken,
         setCustomAuthToken: handleSetCustomAuthToken,
         addDonation,
         newDonationsCount,
         markDonationsAsSeen,
         isLoggingOut,
         setIsLoggingOut,
+        oauthLoading,
+        setOauthLoading,
+        isAuthenticated,
       }}
     >
       {children}

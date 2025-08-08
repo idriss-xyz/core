@@ -1,5 +1,7 @@
 'use client';
 
+import { PrivyProvider } from '@privy-io/react-auth';
+
 import { AuthProvider } from './context/auth-context';
 import { PrivyAuthSync } from './privy-auth-sync';
 import { Providers } from './providers';
@@ -8,9 +10,10 @@ export function CreatorsProviders({ children }: { children: React.ReactNode }) {
   return (
     <Providers>
       <AuthProvider>
-        <PrivyAuthSync />
-
-        {children}
+        <PrivyProvider appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID ?? ''}>
+          <PrivyAuthSync />
+          {children}
+        </PrivyProvider>
       </AuthProvider>
     </Providers>
   );
