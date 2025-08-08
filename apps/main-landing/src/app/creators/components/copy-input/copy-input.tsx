@@ -1,8 +1,8 @@
 import { classes } from '@idriss-xyz/ui/utils';
 import { Icon, type IconName } from '@idriss-xyz/ui/icon';
-import { Alert } from '@idriss-xyz/ui/alert';
 
 import { useCopyToClipboard } from '../../hooks/use-copy-to-clipboard';
+import { useToast } from '../../context/toast-context';
 
 type CopyInputProperties = {
   value: string;
@@ -22,9 +22,15 @@ export function CopyInput({
   wasCopied,
 }: CopyInputProperties) {
   const { copied, copy } = useCopyToClipboard();
+  const { toast } = useToast();
 
   const doCopy = () => {
     void copy(value);
+    toast({
+      type: 'success',
+      heading: 'Your link has been copied!',
+      autoClose: true,
+    });
   };
 
   const handleIconClick = () => {
@@ -60,17 +66,6 @@ export function CopyInput({
           <Icon name={iconName ?? 'Copy'} size={16} />
         )}
       </div>
-
-      {/* Copy Alert */}
-      {copied && (
-        <div className="fixed bottom-[3vh] left-1/2 z-50">
-          <Alert
-            type="success"
-            heading="Your link has been copied!"
-            autoClose
-          />
-        </div>
-      )}
     </div>
   );
 }

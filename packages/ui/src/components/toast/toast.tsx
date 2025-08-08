@@ -12,21 +12,23 @@ import { classes } from '../../utils';
 import { Icon, IconName } from '../icon';
 import { IconButton } from '../icon-button';
 
-import { alert, AlertVariants, icon, iconClass } from './variants';
+import { toast, ToastVariants, icon, iconClass } from './variants';
 
 type Properties = {
   heading: string;
   description?: string;
   autoClose?: boolean;
+  closable?: boolean;
   show?: boolean;
   iconName?: IconName;
   setShow?: (show: boolean) => void;
   onClose?: () => void;
   actionButtons?: (close: () => void) => ReactNode;
-} & AlertVariants &
+} & ToastVariants &
   HTMLProps<HTMLSpanElement>;
 
-export const Alert = forwardRef(
+// Meant to be used within Toast context as in creators app
+export const Toast = forwardRef(
   (
     {
       type,
@@ -34,6 +36,7 @@ export const Alert = forwardRef(
       heading,
       description,
       autoClose,
+      closable,
       iconName,
       onClose,
       actionButtons,
@@ -43,7 +46,7 @@ export const Alert = forwardRef(
   ) => {
     const [isVisible, setIsVisible] = useState(true);
 
-    const variantClassName = classes(alert({ type }), className);
+    const variantClassName = classes(toast({ type }), className);
     const iconClassName = iconClass({ type });
 
     const Component = 'span';
@@ -74,7 +77,7 @@ export const Alert = forwardRef(
         </span>
 
         <div
-          className={`grid ${autoClose ? 'grid-cols-[1fr]' : 'grid-cols-[1fr,32px]'}`}
+          className={`grid ${autoClose || !closable ? 'grid-cols-[1fr]' : 'grid-cols-[1fr,32px]'}`}
         >
           <div className="flex flex-col gap-y-1">
             <p className="flex h-full items-center text-label3 text-neutral-900">
@@ -90,7 +93,7 @@ export const Alert = forwardRef(
               </div>
             )}
           </div>
-          {!autoClose && (
+          {!autoClose && closable && (
             <IconButton
               size="small"
               iconName="X"
@@ -105,4 +108,4 @@ export const Alert = forwardRef(
   },
 );
 
-Alert.displayName = 'Alert';
+Toast.displayName = 'Toast';

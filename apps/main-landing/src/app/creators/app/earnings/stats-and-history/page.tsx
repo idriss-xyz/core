@@ -19,7 +19,6 @@ import { useMemo } from 'react';
 import { formatFiatValue } from '@idriss-xyz/utils';
 import { usePrivy } from '@privy-io/react-auth';
 import { Hex } from 'viem';
-import { Alert } from '@idriss-xyz/ui/alert';
 
 import { useCopyToClipboard } from '@/app/creators/hooks/use-copy-to-clipboard';
 import { backgroundLines2, IDRISS_COIN, IDRISS_SCENE_STREAM_4 } from '@/assets';
@@ -27,6 +26,7 @@ import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history
 import { DonateHistoryItem } from '@/app/creators/donate/components/donate-history/donate-history-item';
 
 import { useAuth } from '../../../context/auth-context';
+import { useToast } from '../../../context/toast-context';
 import SkeletonEarnings from '../loading';
 
 import { TokenLogo } from './token-logo';
@@ -44,6 +44,7 @@ export default function EarningsStats() {
   const { user, ready, authenticated } = usePrivy();
   const { copied, copy } = useCopyToClipboard();
   const { creator } = useAuth();
+  const { toast } = useToast();
   const address = user?.wallet?.address as Hex | undefined;
   const tipHistoryQuery = useGetTipHistory(
     {
@@ -150,6 +151,11 @@ export default function EarningsStats() {
   const handleCopyLink = () => {
     if (creator?.donationUrl) {
       void copy(creator.donationUrl);
+      toast({
+        type: 'success',
+        heading: 'Your link has been copied!',
+        autoClose: true,
+      });
     }
   };
 
@@ -405,15 +411,6 @@ export default function EarningsStats() {
             </div>
           </Card>
         </>
-      )}
-      {copied && (
-        <div className="fixed bottom-[3vh] left-1/2 z-50 -translate-x-1/2">
-          <Alert
-            type="success"
-            heading="Your link has been copied!"
-            autoClose
-          />
-        </div>
       )}
     </div>
   );

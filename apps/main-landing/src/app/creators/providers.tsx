@@ -7,6 +7,8 @@ import { TooltipProvider } from '@idriss-xyz/ui/tooltip';
 
 import { QueryProvider } from '@/providers';
 
+import { ToastProvider } from './context/toast-context';
+
 type Properties = {
   children: ReactNode;
 };
@@ -30,26 +32,28 @@ export const Providers = ({ children }: Properties) => {
       <WithPortal>
         <NiceModal.Provider>
           <TooltipProvider delayDuration={400}>
-            <PrivyProvider
-              appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID ?? ''}
-              config={{
-                appearance: {
-                  theme: 'light',
-                  accentColor: '#000000',
-                  showWalletLoginFirst: true,
-                },
-                // This handles the custom Twitch login flow
-                customAuth: {
-                  getCustomAccessToken: getCustomAuthToken,
-                  isLoading: loadingToken,
-                },
-                embeddedWallets: {
-                  createOnLogin: 'users-without-wallets',
-                },
-              }}
-            >
-              {children}
-            </PrivyProvider>
+            <ToastProvider>
+              <PrivyProvider
+                appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID ?? ''}
+                config={{
+                  appearance: {
+                    theme: 'light',
+                    accentColor: '#000000',
+                    showWalletLoginFirst: true,
+                  },
+                  // This handles the custom Twitch login flow
+                  customAuth: {
+                    getCustomAccessToken: getCustomAuthToken,
+                    isLoading: loadingToken,
+                  },
+                  embeddedWallets: {
+                    createOnLogin: 'users-without-wallets',
+                  },
+                }}
+              >
+                {children}
+              </PrivyProvider>
+            </ToastProvider>
           </TooltipProvider>
         </NiceModal.Provider>
       </WithPortal>
