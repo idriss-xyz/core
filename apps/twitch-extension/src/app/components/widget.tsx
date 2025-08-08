@@ -10,10 +10,12 @@ import {
   DonationData,
 } from '@idriss-xyz/constants';
 import { useGetTipHistory } from '@idriss-xyz/main-landing/app/creators/app/commands/get-donate-history';
+import { getPublicCreatorProfile } from '@idriss-xyz/main-landing/app/creators/utils/index';
 import { Leaderboard } from '@idriss-xyz/main-landing/app/creators/donate/components/leaderboard';
 import { QueryProvider } from '@idriss-xyz/main-landing/providers';
+import { calculateDonationLeaderboard } from '@idriss-xyz/utils';
 
-import { ConfigValues, WidgetVariants } from '@/app/types';
+import { WidgetVariants } from '@/app/types';
 
 type Properties = {
   variant: WidgetVariants;
@@ -57,17 +59,38 @@ function WidgetContent({ variant }: ContentProperties) {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    twitch.ext.onAuthorized(() => {
-      const storedConfig = twitch.ext.configuration.broadcaster?.content;
+    twitch.ext.onAuthorized(
+      async (auth: {
+        clientId: string;
+        helixToken: string;
+        userId: string;
+        channelId: string;
+      }) => {
+        const response = await fetch(
+          `https://api.twitch.tv/helix/users?id=${auth.channelId}`,
+          {
+            headers: {
+              'Client-ID': '0rvai4arse2wu9ucj2omj2zvajdc3m',
+              'Authorization': `Extension ${auth.helixToken}`,
+            },
+          },
+        );
+        const data = await response.json();
+        const name = data.data?.[0]?.login;
 
-      if (storedConfig) {
-        const parsedConfig: ConfigValues = JSON.parse(storedConfig);
+        if (!name) {
+          setAddress(null);
+          return;
+        }
 
-        setAddress(parsedConfig.address as Hex);
-      } else {
-        setAddress(null);
-      }
-    });
+        const profileResponse = await getPublicCreatorProfile(name);
+        if (!profileResponse) {
+          setAddress(null);
+          throw new Error('Not found');
+        }
+        setAddress(profileResponse.primaryAddress);
+      },
+    );
   }, []);
 
   const donationsHistory = useGetTipHistory(
@@ -77,7 +100,12 @@ function WidgetContent({ variant }: ContentProperties) {
 
   useEffect(() => {
     if (donationsHistory.data) {
-      setLeaderboard(donationsHistory.data.leaderboard);
+      console.log(donationsHistory);
+
+      const allTimeLeaderboard = calculateDonationLeaderboard(
+        donationsHistory.data.donations,
+      );
+      setLeaderboard(allTimeLeaderboard);
     }
   }, [donationsHistory.data]);
 
