@@ -3,7 +3,7 @@
 import { MobileNotSupported } from '@idriss-xyz/ui/mobile-not-supported';
 import { Button } from '@idriss-xyz/ui/button';
 import { classes } from '@idriss-xyz/ui/utils';
-import { RefObject, useEffect, useState } from 'react';
+import { RefObject, useState } from 'react';
 
 import { backgroundLines } from '@/assets';
 
@@ -21,22 +21,8 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
   const [isMobileNotSupportedOpen, setIsMobileNotSupportedOpen] =
     useState(false);
 
-  const { isLoginModalOpen, setIsModalOpen, creator, creatorLoading } =
-    useAuth();
+  const { isLoginModalOpen, setIsModalOpen, creatorLoading } = useAuth();
   const originalHandleStartEarningClick = useStartEarningNavigation();
-
-  useEffect(() => {
-    if (creator && !creatorLoading && isLoginModalOpen) {
-      void originalHandleStartEarningClick();
-      setIsModalOpen(false);
-    }
-  }, [
-    creator,
-    creatorLoading,
-    isLoginModalOpen,
-    originalHandleStartEarningClick,
-    setIsModalOpen,
-  ]);
 
   const handleStartEarningClick = () => {
     if (window.innerWidth < 1024) {

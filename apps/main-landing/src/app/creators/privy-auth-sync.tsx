@@ -13,32 +13,30 @@ import { useAuth } from './context/auth-context';
 
 export function PrivyAuthSync() {
   const hasRunAuth = useRef(false);
+  const isAuthInProgress = useRef(false);
   const {
     customAuthToken,
     oauthLoading,
     setCreatorLoading,
     setCreator,
     isAuthenticated,
+    isLoginModalOpen,
   } = useAuth();
   const { user, ready, getAccessToken, logout, authenticated } = usePrivy();
   const router = useRouter();
   const { createWallet } = useCreateWallet();
 
   const handleCreatorsAuth = useCallback(async () => {
+    if (isAuthInProgress.current) return;
+
+    isAuthInProgress.current = true;
     setCreatorLoading(true);
     console.log('Authorizing on creators...');
     try {
       const authToken = await getAccessToken();
-      console.log('authToken:', authToken);
-      console.log('customAuthToken:', customAuthToken);
-      console.log('user:', user);
-      console.log('oauthLoading:', oauthLoading);
-      console.log('ready:', ready);
-      console.log('privy authenticated:', authenticated);
-      console.log('twitch authenticated:', isAuthenticated);
 
-      if (!user) {
-        throw new Error('handleAuth called but user is not available.');
+      if (!user?.id) {
+        throw new Error('Could not get user id.');
       }
 
       if (!authToken) {
@@ -78,7 +76,7 @@ export function PrivyAuthSync() {
         }
         // Create an embedded wallet for the creator
         let wallet = user.wallet;
-        if (!wallet){
+        if (!wallet) {
           wallet = await createWallet();
           console.log('newCreatorwallet:', wallet);
         }
@@ -109,15 +107,13 @@ export function PrivyAuthSync() {
       setCreator(null);
     } finally {
       setCreatorLoading(false);
+      isAuthInProgress.current = false;
     }
   }, [
-    user,
+    user?.id,
+    user?.wallet,
     router,
     authenticated,
-    customAuthToken,
-    isAuthenticated,
-    oauthLoading,
-    ready,
     setCreator,
     setCreatorLoading,
     getAccessToken,
@@ -126,22 +122,27 @@ export function PrivyAuthSync() {
   ]);
 
   useEffect(() => {
-    if (ready && authenticated && user && !hasRunAuth.current) {
+    if (
+      ready &&
+      authenticated &&
+      user &&
+      !hasRunAuth.current &&
+      isLoginModalOpen
+    ) {
       hasRunAuth.current = true;
-      handleCreatorsAuth();
+      void handleCreatorsAuth();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ready, authenticated, user])
+  }, [ready, authenticated, user, isLoginModalOpen, handleCreatorsAuth]);
 
   useSubscribeToJwtAuthWithFlag({
     isAuthenticated,
     isLoading: oauthLoading,
     getExternalJwt: () => {
-      console.log('Getting external jwt: ', customAuthToken)
+      console.log('Getting external jwt:', customAuthToken);
       return Promise.resolve(customAuthToken ?? undefined);
     },
     onError(error) {
-      console.error('Error ocurred syncing: ', error);
+      console.error('Error ocurred syncing:', error);
     },
   });
 
