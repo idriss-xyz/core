@@ -48,7 +48,7 @@ export const siteMap: SiteMapItem[] = [
     name: 'Earnings',
     path: 'earnings',
     children: [
-      { name: 'Stats & history', path: 'stats' },
+      { name: 'Stats & history', path: 'stats-and-history' },
       { name: 'Balance', path: 'balance' },
       { name: 'Top donors', path: 'top-donors' },
     ],
