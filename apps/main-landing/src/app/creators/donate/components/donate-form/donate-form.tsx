@@ -381,7 +381,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
 
           {creatorInfo.streamStatus && (
             <Badge type="danger" variant="solid" className="ml-3">
-              Live on Twitch
+              Live
             </Badge>
           )}
         </h1>
