@@ -260,16 +260,6 @@ export default function StreamAlerts() {
           autoClose: true,
         });
 
-        // Show refresh alert after 3 seconds
-        setTimeout(() => {
-          toast({
-            type: 'success',
-            heading: 'Refresh the browser source in your streaming software',
-            description: 'Keeps your donation alert setup up to date',
-            iconName: 'RefreshCw',
-            autoClose: true,
-          });
-        }, 3000);
       } else {
         toast({
           type: 'error',
@@ -696,7 +686,7 @@ export default function StreamAlerts() {
             )}
           </FormFieldWrapper>
 
-          {alertEnabled && (
+          {alertEnabled && isDirtyNonToggles && (
             <Button
               size="medium"
               intent="primary"
