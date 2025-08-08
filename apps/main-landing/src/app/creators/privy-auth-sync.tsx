@@ -31,7 +31,6 @@ export function PrivyAuthSync() {
 
     isAuthInProgress.current = true;
     setCreatorLoading(true);
-    console.log('Authorizing on creators...');
     try {
       const authToken = await getAccessToken();
 
@@ -78,7 +77,6 @@ export function PrivyAuthSync() {
         let wallet = user.wallet;
         if (!wallet) {
           wallet = await createWallet();
-          console.log('newCreatorwallet:', wallet);
         }
 
         await saveCreatorProfile(
@@ -138,7 +136,6 @@ export function PrivyAuthSync() {
     isAuthenticated,
     isLoading: oauthLoading,
     getExternalJwt: () => {
-      console.log('Getting external jwt:', customAuthToken);
       return Promise.resolve(customAuthToken ?? undefined);
     },
     onError(error) {
