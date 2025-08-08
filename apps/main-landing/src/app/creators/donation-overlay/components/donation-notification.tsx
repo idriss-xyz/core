@@ -30,6 +30,7 @@ export type DonationNotificationProperties = {
   customIcon?: string;
   style?: CSSProperties;
   alertSound?: string;
+  voiceId?: string;
   creatorName?: string;
   token: {
     amount: bigint;
@@ -53,6 +54,7 @@ export default function DonationNotification({
   bgColor = 'bg-white',
   customIcon = IDRISS_ICON_CIRCLE.src,
   alertSound = 'DEFAULT_TRUMPET_SOUND',
+  voiceId = 'TX3LPaxmHKxFdv7VOQHJ',
   creatorName,
   minOverallVisibleDuration,
   onFullyComplete,
@@ -70,6 +72,7 @@ export default function DonationNotification({
 
   const { showNotification } = useDonationNotification(
     audio,
+    voiceId,
     amount,
     minimumAmounts,
     enableToggles,

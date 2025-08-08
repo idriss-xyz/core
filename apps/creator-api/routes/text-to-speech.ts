@@ -1,15 +1,18 @@
 import { Request, Response } from 'express';
 import express from 'express';
 import rateLimit from 'express-rate-limit';
-import { body, validationResult } from 'express-validator';
+import { body, param, validationResult } from 'express-validator';
 import { Readable } from 'stream';
 
 const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
-const ELEVENLABS_VOICE_ID = 'TX3LPaxmHKxFdv7VOQHJ';
+const ELEVENLABS_DEFAULT_VOICE_ID = 'TX3LPaxmHKxFdv7VOQHJ';
 const MAX_REQUESTS_PER_MINUTE = 3;
 const router = express.Router();
 
-const validationRules = [body('text').isString().notEmpty()];
+const validationRules = [
+  body('text').isString().notEmpty(),
+  param('name').isString().optional(),
+];
 
 const requestLimitation = rateLimit({
   windowMs: 60 * 1000,
@@ -20,7 +23,7 @@ const requestLimitation = rateLimit({
 });
 
 router.post(
-  '/',
+  '/:voiceId',
   requestLimitation,
   validationRules,
   async (req: Request, res: Response) => {
@@ -30,13 +33,13 @@ router.post(
       return;
     }
     try {
-      const { text } = req.body;
+      const { text, voiceId } = req.body;
       const trimmedText = text.trim();
       const finalText =
         trimmedText.length > 70 ? trimmedText.slice(0, 70) : trimmedText;
 
       const response = await fetch(
-        `https://api.elevenlabs.io/v1/text-to-speech/${ELEVENLABS_VOICE_ID}`,
+        `https://api.elevenlabs.io/v1/text-to-speech/${voiceId ?? ELEVENLABS_DEFAULT_VOICE_ID}`,
         {
           method: 'POST',
           headers: {
