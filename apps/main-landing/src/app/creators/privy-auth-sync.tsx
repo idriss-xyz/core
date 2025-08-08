@@ -4,7 +4,7 @@ import {
   usePrivy,
   useSubscribeToJwtAuthWithFlag,
 } from '@privy-io/react-auth';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { Hex } from 'viem';
 import { useRouter } from 'next/navigation';
 
@@ -12,6 +12,7 @@ import { getCreatorProfile, saveCreatorProfile } from './utils';
 import { useAuth } from './context/auth-context';
 
 export function PrivyAuthSync() {
+  const hasRunAuth = useRef(false);
   const {
     customAuthToken,
     oauthLoading,
@@ -76,16 +77,19 @@ export function PrivyAuthSync() {
           throw new Error('Unsupported login method');
         }
         // Create an embedded wallet for the creator
-        const newCreatorwallet = await createWallet();
-        console.log('newCreatorwallet:', newCreatorwallet);
+        let wallet = user.wallet;
+        if (!wallet){
+          wallet = await createWallet();
+          console.log('newCreatorwallet:', wallet);
+        }
 
         await saveCreatorProfile(
-          newCreatorwallet.address as Hex,
+          wallet.address as Hex,
           newCreatorName,
           newCreatorDisplayName,
           newCreatorProfilePic,
           newCreatorEmail,
-          user.id, // This is the Privy ID
+          user.id,
           authToken,
         );
 
@@ -121,6 +125,14 @@ export function PrivyAuthSync() {
     createWallet,
   ]);
 
+  useEffect(() => {
+    if (ready && authenticated && user && !hasRunAuth.current) {
+      hasRunAuth.current = true;
+      handleCreatorsAuth();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ready, authenticated, user])
+
   useSubscribeToJwtAuthWithFlag({
     isAuthenticated,
     isLoading: oauthLoading,
@@ -128,7 +140,6 @@ export function PrivyAuthSync() {
       console.log('Getting external jwt: ', customAuthToken)
       return Promise.resolve(customAuthToken ?? undefined);
     },
-    onAuthenticated: handleCreatorsAuth,
     onError(error) {
       console.error('Error ocurred syncing: ', error);
     },
