@@ -603,6 +603,9 @@ importers:
       '@idriss-xyz/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@idriss-xyz/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       '@types/lodash':
         specifier: ^4.17.12
         version: 4.17.12
