@@ -7,13 +7,13 @@ import { usePrivy } from '@privy-io/react-auth';
 import { Hex } from 'viem';
 import { formatFiatValue } from '@idriss-xyz/utils';
 import { useState } from 'react';
-import { Alert } from '@idriss-xyz/ui/alert';
 
 import { useCopyToClipboard } from '@/app/creators/hooks/use-copy-to-clipboard';
 import { IDRISS_SCENE_STREAM_4 } from '@/assets';
 import { WithdrawWidget } from '@/app/creators/components/withdraw-widget';
 
 import { useAuth } from '../../../context/auth-context';
+import { useToast } from '../../../context/toast-context';
 import { useGetBalances } from '../commands/get-balances';
 import SkeletonRanking from '../loading';
 
@@ -24,6 +24,7 @@ export default function EarningsBalance() {
   const { user, ready, authenticated } = usePrivy();
   const { copied, copy } = useCopyToClipboard();
   const { creator } = useAuth();
+  const { toast } = useToast();
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
   const [selectedToken, setSelectedToken] = useState<string>();
   const address = user?.wallet?.address as Hex | undefined;
@@ -74,6 +75,11 @@ export default function EarningsBalance() {
   const handleCopyLink = () => {
     if (creator?.donationUrl) {
       void copy(creator.donationUrl);
+      toast({
+        type: 'success',
+        heading: 'Your link has been copied!',
+        autoClose: true,
+      });
     }
   };
 
@@ -153,15 +159,6 @@ export default function EarningsBalance() {
           return setIsWithdrawModalOpen(false);
         }}
       />
-      {copied && (
-        <div className="fixed bottom-[3vh] left-1/2 z-50 -translate-x-1/2">
-          <Alert
-            type="success"
-            heading="Your link has been copied!"
-            autoClose
-          />
-        </div>
-      )}
     </div>
   );
 }
