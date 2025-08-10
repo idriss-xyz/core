@@ -253,13 +253,13 @@ export default function StreamAlerts() {
         // Reset form dirty state after successful save
         formMethods.reset(data, { keepValues: true });
         removeToast(unsavedChangesToastId);
+        setUnsavedChangesToastId('');
 
         toast({
           type: 'success',
           heading: 'Settings saved!',
           autoClose: true,
         });
-
       } else {
         toast({
           type: 'error',
@@ -351,7 +351,8 @@ export default function StreamAlerts() {
   }, [formMethods.formState]);
 
   useEffect(() => {
-    if (isDirtyNonToggles) {
+    if (isDirtyNonToggles && !unsavedChangesToastId) {
+      // Create new toast when dirty and no toast exists
       const toastId = toast({
         type: 'error',
         heading: 'You have unsaved changes',
@@ -360,8 +361,12 @@ export default function StreamAlerts() {
         closable: false,
       });
       setUnsavedChangesToastId(toastId);
+    } else if (!isDirtyNonToggles && unsavedChangesToastId) {
+      // Remove toast when no longer dirty
+      removeToast(unsavedChangesToastId);
+      setUnsavedChangesToastId('');
     }
-  }, [isDirtyNonToggles, toast]);
+  }, [isDirtyNonToggles, unsavedChangesToastId, toast, removeToast]);
 
   if (creatorLoading) {
     return <SkeletonSetup />;
