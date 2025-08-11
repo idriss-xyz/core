@@ -10,7 +10,14 @@ export function CreatorsProviders({ children }: { children: React.ReactNode }) {
   return (
     <Providers>
       <AuthProvider>
-        <PrivyProvider appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID ?? ''}>
+        <PrivyProvider
+          appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID ?? ''}
+          config={{
+            embeddedWallets: {
+              showWalletUIs: false,
+            },
+          }}
+        >
           <PrivyAuthSync />
           {children}
         </PrivyProvider>
