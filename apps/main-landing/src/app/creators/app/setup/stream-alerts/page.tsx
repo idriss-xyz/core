@@ -91,7 +91,7 @@ const voices = Object.entries(voiceMap).map(([id, { name }]) => {
 
 // ts-unused-exports:disable-next-line
 export default function StreamAlerts() {
-  const { creator, creatorLoading } = useAuth();
+  const { creator, creatorLoading, setCreator } = useAuth();
   const { toast, removeToast } = useToast();
 
   const [isCustomSoundUploaded, setIsCustomSoundUploaded] = useState(false);
@@ -260,8 +260,12 @@ export default function StreamAlerts() {
       );
 
       if (editSuccess) {
-        // Reset form dirty state after successful save
         formMethods.reset(data, { keepValues: true });
+
+        setCreator((previous) => {
+          return previous ? { ...previous, ...data } : previous;
+        });
+
         removeToast(unsavedChangesToastId);
         setUnsavedChangesToastId('');
 
@@ -310,6 +314,10 @@ export default function StreamAlerts() {
         },
         authToken,
       );
+
+      setCreator((previous) => {
+        return previous ? { ...previous, ...data } : previous;
+      });
     } catch (error) {
       console.error('Error saving profile:', error);
     }

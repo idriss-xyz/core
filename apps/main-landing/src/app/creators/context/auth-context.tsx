@@ -5,6 +5,8 @@ import {
   useState,
   ReactNode,
   useEffect,
+  Dispatch,
+  SetStateAction,
 } from 'react';
 import { DonationData } from '@idriss-xyz/constants';
 import {
@@ -28,7 +30,7 @@ type AuthContextType = {
   setOauthError: (error: string | null) => void;
   clearOauthError: () => void;
   setIsModalOpen: (isOpen: boolean) => void;
-  setCreator: (creator: CreatorProfileResponse | null) => void;
+  setCreator: Dispatch<SetStateAction<CreatorProfileResponse | null>>;
   setCustomAuthToken: (token: string | null) => void;
   isLoggingOut: boolean;
   setIsLoggingOut: (isLoggingOut: boolean) => void;
