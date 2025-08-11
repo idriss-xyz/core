@@ -4,6 +4,7 @@ import { ReactNode } from 'react';
 import { TooltipProvider } from '@idriss-xyz/ui/tooltip';
 
 import { QueryProvider } from '@/providers';
+
 import { ToastProvider } from './context/toast-context';
 
 type Properties = {
@@ -16,9 +17,7 @@ export const Providers = ({ children }: Properties) => {
       <WithPortal>
         <NiceModal.Provider>
           <TooltipProvider delayDuration={400}>
-            <ToastProvider>
-              {children}
-            </ToastProvider>
+            <ToastProvider>{children}</ToastProvider>
           </TooltipProvider>
         </NiceModal.Provider>
       </WithPortal>
