@@ -1,7 +1,7 @@
 import { Response, Request } from 'express';
 import { GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 import { Readable } from 'stream';
-import s3Config from '../config/aws-s3';
+import { S3_CLIENT, S3_BUCKET } from '../config/aws-config';
 
 export interface FileUploadRequest extends Request {
   file: Express.Multer.File;
@@ -51,9 +51,8 @@ export async function handleUpload(
 
   const sanitizedName = req.file.originalname.replace(/[^a-zA-Z0-9._-]/g, '_');
   const s3Key = privyId;
-  const { s3, S3_BUCKET } = s3Config;
 
-  await s3.send(
+  await S3_CLIENT.send(
     new PutObjectCommand({
       Bucket: S3_BUCKET,
       Key: s3Key,
@@ -75,14 +74,13 @@ export async function streamAudioFromS3(
 ): Promise<void> {
   try {
     const s3Key = privyId;
-    const { s3, S3_BUCKET } = s3Config;
 
     const command = new GetObjectCommand({
       Bucket: S3_BUCKET,
       Key: s3Key,
     });
 
-    const response = await s3.send(command);
+    const response = await S3_CLIENT.send(command);
 
     if (!response.Body || !(response.Body instanceof Readable)) {
       console.error('Invalid S3 response body');
