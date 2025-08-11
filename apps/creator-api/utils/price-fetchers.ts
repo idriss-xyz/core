@@ -87,11 +87,11 @@ export async function getZapperPrice(
       return null;
     }
   }
-
   // Find closest price within 24 hours
   if (priceTicks.length > 0) {
     const closestTick = priceTicks.find((tick) => {
-      const tickTime = tick.timestamp * 1000;
+      const tickTime =
+        tick.timestamp > 1e12 ? tick.timestamp : tick.timestamp * 1000;
       const txTime = txDate.getTime();
       return Math.abs(tickTime - txTime) <= 24 * 60 * 60 * 1000;
     });
@@ -114,7 +114,6 @@ export async function getAlchemyHistoricalPrice(
   if (!alchemyNetwork) return null;
 
   try {
-    console.log('Getting the price');
     return await retryWithBackoff(async () => {
       const startTime = Math.floor(
         new Date(txDate).setHours(0, 0, 0, 0) / 1000,
@@ -154,7 +153,6 @@ export async function getAlchemyHistoricalPrice(
       );
 
       const data = await response.json();
-      console.log(data);
       if (data.data?.[0]?.value) {
         const price = Number(data.data[0].value);
         return price;
