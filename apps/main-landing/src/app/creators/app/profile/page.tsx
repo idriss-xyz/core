@@ -41,7 +41,7 @@ const handleDeleteAccount = async (
     }
 
     await deleteCreatorAccount(authToken);
-    
+
     toast({
       type: 'success',
       heading: 'Account deleted',
@@ -49,7 +49,6 @@ const handleDeleteAccount = async (
     });
 
     await handleLogout();
-
   } catch (error) {
     console.error('Failed to delete account:', error);
     toast({
