@@ -193,6 +193,19 @@ export const editCreatorProfile = async (
   }
 };
 
+export const deleteCreatorAccount = async (authToken: string) => {
+  const response = await fetch(`${CREATOR_API_URL}/creator-profile/me`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`,
+    },
+  });
+  if (!response.ok) {
+    throw new Error('Deletion failed');
+  }
+};
+
 // TODO remove
 // ts-unused-exports:disable-next-line
 export const getChainShortNamesFromIds = (chainsIds: number[]) => {

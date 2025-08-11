@@ -21,11 +21,44 @@ import {
 import { ConfirmationModal } from '@/app/creators/components/confirmation-modal';
 import { useToast } from '@/app/creators/context/toast-context';
 
-import { editCreatorProfile } from '../../utils';
+import { useLogout } from '../../hooks/use-logout';
+import { editCreatorProfile, deleteCreatorAccount } from '../../utils';
 
-const handleDeleteAccount = () => {
-  // TODO: Implement backend call to save email
-  console.log('Deleteing Account');
+const handleDeleteAccount = async (
+  toast: ReturnType<typeof useToast>['toast'],
+  handleLogout: () => Promise<void>,
+) => {
+  try {
+    const authToken = await getAccessToken();
+    if (!authToken) {
+      toast({
+        type: 'error',
+        heading: 'Unable to delete account',
+        description: 'Please try again later',
+        autoClose: true,
+      });
+      return;
+    }
+
+    await deleteCreatorAccount(authToken);
+    
+    toast({
+      type: 'success',
+      heading: 'Account deleted',
+      autoClose: true,
+    });
+
+    await handleLogout();
+
+  } catch (error) {
+    console.error('Failed to delete account:', error);
+    toast({
+      type: 'error',
+      heading: 'Unable to delete account',
+      description: 'Please try again later',
+      autoClose: true,
+    });
+  }
 };
 
 // ts-unused-exports:disable-next-line
@@ -37,6 +70,7 @@ export default function ProfilePage() {
 
   const { creator } = useAuth();
   const { user, exportWallet } = usePrivy();
+  const handleLogout = useLogout();
   const { toast } = useToast();
   const address = user?.wallet?.address as Hex | undefined;
 
@@ -265,7 +299,9 @@ export default function ProfilePage() {
         onClose={() => {
           return setIsDeleteAccountModalOpen(false);
         }}
-        onConfirm={handleDeleteAccount}
+        onConfirm={() => {
+          return handleDeleteAccount(toast, handleLogout);
+        }}
         title="Are you sure you want to delete your account?"
         sectionSubtitle="Your account will be permanently deleted. This cannot be undone. This will permanently delete your account and remove your data from our service."
         confirmButtonText="CONFIRM"

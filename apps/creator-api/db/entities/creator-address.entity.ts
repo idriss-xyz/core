@@ -16,7 +16,9 @@ export class CreatorAddress {
   @Column({ type: 'text' })
   address!: Hex;
 
-  @ManyToOne(() => Creator, (creator) => creator.associatedAddresses)
+  @ManyToOne(() => Creator, (creator) => creator.associatedAddresses, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'creator_id' })
   creator!: Creator;
 }

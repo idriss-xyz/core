@@ -1,7 +1,5 @@
 import { Hex, Chain as ViemChain } from 'viem';
 
-import { TOKEN } from './constants';
-
 type ClaimedEvent = {
   to: string;
   total: string;
@@ -41,8 +39,6 @@ export interface ChainToken extends Token {
   decimals: number;
   address: Hex;
 }
-
-export type TokenSymbol = (typeof TOKEN)[keyof typeof TOKEN]['symbol'];
 
 export interface TipHistoryTokenV2 {
   symbol: string;

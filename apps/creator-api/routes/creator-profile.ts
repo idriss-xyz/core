@@ -56,6 +56,34 @@ router.get('/me', verifyToken(), async (req: Request, res: Response) => {
   }
 });
 
+router.delete('/me', verifyToken(), async (req: Request, res: Response) => {
+  if (!req.user?.id) {
+    res.status(401).json({ error: 'Unauthorized' });
+    return;
+  }
+
+  try {
+    const creatorRepository = AppDataSource.getRepository(Creator);
+    const creator = await creatorRepository.findOne({
+      where: { privyId: req.user.id },
+    });
+
+    if (!creator) {
+      res.status(404).json({ error: 'Creator not found' });
+      return;
+    }
+
+    await creatorRepository.remove(creator);
+
+    res.status(200).json({ message: 'Account deleted successfully' });
+    return;
+  } catch (error) {
+    console.error('Error deleting creator account:', error);
+    res.status(500).json({ error: 'Failed to delete creator account' });
+    return;
+  }
+});
+
 // Get creator profile by name
 router.get(
   '/:name',
