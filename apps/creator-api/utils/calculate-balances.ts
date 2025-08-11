@@ -3,7 +3,7 @@ import { Token } from '../db/entities/token.entity';
 import { ERC20_ABI } from '@idriss-xyz/constants';
 import { NULL_ADDRESS } from '@idriss-xyz/constants';
 import { AppDataSource } from '../db/database';
-import { getAlchemyPrices } from './price-fetchers';
+import { getAlchemyPrices, getZapperPrice } from './price-fetchers';
 import { getChainByNetworkName } from '@idriss-xyz/utils';
 
 export async function calculateBalances(userAddress: Hex) {
@@ -71,6 +71,23 @@ export async function calculateBalances(userAddress: Hex) {
     network: token.network,
   }));
   const prices = await getAlchemyPrices(tokensToPrice);
+
+  // Fallback: fetch any missing prices from Zapper
+  await Promise.all(
+    balancesWithAmount.map(async ({ token }) => {
+      const key = `${token.network}:${token.address.toLowerCase()}`;
+      if (prices[key] === undefined) {
+        const zapperPrice = await getZapperPrice(
+          token.address,
+          token.network,
+          new Date(),
+        );
+        if (zapperPrice !== null) {
+          prices[key] = zapperPrice;
+        }
+      }
+    }),
+  );
 
   let totalUsdBalance = 0;
   const validBalances = balancesWithAmount.map(
