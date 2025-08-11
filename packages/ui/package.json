@@ -38,7 +38,7 @@
     "./geo-conditional-button": "./src/components/geo-conditional-button/index.ts",
     "./badge": "./src/components/badge/index.ts",
     "./blocked-button": "./src/components/blocked-button/index.ts",
-    "./alert": "./src/components/alert/index.ts",
+    "./toast": "./src/components/toast/index.ts",
     "./card": "./src/components/card/index.ts",
     "./charts": "./src/components/charts/index.ts",
     "./divider": "./src/components/divider/index.ts",

@@ -15,7 +15,9 @@ export class CreatorNetwork {
   @Column()
   chainName!: string;
 
-  @ManyToOne(() => Creator, (creator) => creator.networks)
+  @ManyToOne(() => Creator, (creator) => creator.networks, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'creator_id' })
   creator!: Creator;
 }

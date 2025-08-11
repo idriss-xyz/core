@@ -56,6 +56,34 @@ router.get('/me', verifyToken(), async (req: Request, res: Response) => {
   }
 });
 
+router.delete('/me', verifyToken(), async (req: Request, res: Response) => {
+  if (!req.user?.id) {
+    res.status(401).json({ error: 'Unauthorized' });
+    return;
+  }
+
+  try {
+    const creatorRepository = AppDataSource.getRepository(Creator);
+    const creator = await creatorRepository.findOne({
+      where: { privyId: req.user.id },
+    });
+
+    if (!creator) {
+      res.status(404).json({ error: 'Creator not found' });
+      return;
+    }
+
+    await creatorRepository.remove(creator);
+
+    res.status(200).json({ message: 'Account deleted successfully' });
+    return;
+  } catch (error) {
+    console.error('Error deleting creator account:', error);
+    res.status(500).json({ error: 'Failed to delete creator account' });
+    return;
+  }
+});
+
 // Get creator profile by name
 router.get(
   '/:name',
@@ -641,6 +669,36 @@ router.post('/broadcast-force-refresh', async (req: Request, res: Response) => {
     console.error('Error broadcasting force refresh signal:', error);
     res.status(500).json({ error: 'Failed to broadcast refresh signal.' });
     return;
+  }
+});
+
+router.get('/list/all', async (req: Request, res: Response) => {
+  const { secret } = req.query;
+  if (secret !== process.env.SECRET_PASSWORD) {
+    res.status(401).json({ error: 'Unauthorized' });
+    return;
+  }
+
+  try {
+    const creatorRepository = AppDataSource.getRepository(Creator);
+    const creators = await creatorRepository.find({
+      order: {
+        joinedAt: 'ASC',
+      },
+    });
+
+    const creatorList = creators.map((creator) => ({
+      displayName: creator.displayName,
+      joinedAt: creator.joinedAt,
+      doneSetup: creator.doneSetup,
+      donationUrl: creator.donationUrl,
+      twitchUrl: `https://twitch.tv/${creator.displayName}`,
+    }));
+
+    res.json(creatorList);
+  } catch (error) {
+    console.error('Error fetching all creators:', error);
+    res.status(500).json({ error: 'Failed to fetch all creators' });
   }
 });
 

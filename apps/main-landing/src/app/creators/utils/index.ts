@@ -46,7 +46,7 @@ export type CreatorProfileResponse = {
   minimumAlertAmount: number;
   minimumTTSAmount: number;
   minimumSfxAmount: number;
-  voiceId: number;
+  voiceId: string;
   alertEnabled: boolean;
   ttsEnabled: boolean;
   sfxEnabled: boolean;
@@ -190,6 +190,19 @@ export const editCreatorProfile = async (
   } catch (error) {
     console.error('Error updating creator profile:', error);
     return false;
+  }
+};
+
+export const deleteCreatorAccount = async (authToken: string) => {
+  const response = await fetch(`${CREATOR_API_URL}/creator-profile/me`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`,
+    },
+  });
+  if (!response.ok) {
+    throw new Error('Deletion failed');
   }
 };
 

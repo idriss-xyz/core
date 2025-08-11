@@ -107,7 +107,7 @@ export function Table<T>({
                   key={column.id}
                   scope="col"
                   className={classes(
-                    'h-[44px] px-4',
+                    'h-[44px] px-4 font-medium',
                     column.sortable &&
                       'cursor-pointer select-none hover:text-mint-600',
                     column.className,
