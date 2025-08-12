@@ -21,7 +21,7 @@ type Properties = {
 };
 
 export const LoginModal = ({ isOpened, onClose, isLoading }: Properties) => {
-  const { setOauthLoading, oauthLoading, oauthError } = useAuth();
+  const { setOauthLoading, oauthLoading, error } = useAuth();
 
   const handleTwitchLogin = useCallback(() => {
     setOauthLoading(true);
@@ -57,8 +57,10 @@ export const LoginModal = ({ isOpened, onClose, isLoading }: Properties) => {
         >
           Continue with Twitch
         </Button>
-        {oauthError && (
-          <p className="text-sm text-[#ef4444]">Something went wrong</p>
+        {error && (
+          <p className="text-label6 text-red-500">
+            Something went wrong. Try again.
+          </p>
         )}
         <span className="w-full text-label5 text-neutral-500">
           By logging in, you agree to our

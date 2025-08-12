@@ -16,13 +16,12 @@ type AuthContextType = {
   addDonation: (donation: DonationData) => void;
   newDonationsCount: number;
   markDonationsAsSeen: () => void;
-  oauthError: string | null;
+  error: boolean;
   isLoginModalOpen: boolean;
   creator: CreatorProfileResponse | null;
   creatorLoading: boolean;
   setCreatorLoading: (loading: boolean) => void;
-  setOauthError: (error: string | null) => void;
-  clearOauthError: () => void;
+  setOauthError: (error: boolean) => void;
   setIsModalOpen: (isOpen: boolean) => void;
   setCreator: Dispatch<SetStateAction<CreatorProfileResponse | null>>;
   setCustomAuthToken: (token: string | null) => void;
@@ -32,12 +31,14 @@ type AuthContextType = {
   oauthLoading: boolean;
   setOauthLoading: (oauthLoading: boolean) => void;
   isAuthenticated: boolean;
+  setLoginError: (loginError: boolean) => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [oauthError, setOauthError] = useState<string | null>(null);
+  const [oauthError, setOauthError] = useState(false);
+  const [loginError, setLoginError] = useState(false);
   const [oauthLoading, setOauthLoading] = useState(false);
   const [isLoginModalOpen, setIsModalOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -53,6 +54,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [newDonationsCount, setNewDonationsCount] = useState(0);
   const isAuthenticated = customAuthToken != null && !oauthLoading;
 
+  const error = loginError || oauthError;
+
   const addDonation = (donation: DonationData) => {
     setDonations((previous) => {
       return [donation, ...previous];
@@ -64,10 +67,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const markDonationsAsSeen = () => {
     setNewDonationsCount(0);
-  };
-
-  const clearOauthError = () => {
-    return setOauthError(null);
   };
 
   const handleSetCustomAuthToken = (token: string | null) => {
@@ -84,13 +83,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   return (
     <AuthContext.Provider
       value={{
-        oauthError,
         isLoginModalOpen,
         creator,
         creatorLoading,
         setCreatorLoading,
         setOauthError,
-        clearOauthError,
         setIsModalOpen,
         setCreator,
         donations,
@@ -104,6 +101,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         oauthLoading,
         setOauthLoading,
         isAuthenticated,
+        error,
+        setLoginError,
       }}
     >
       {children}

@@ -21,6 +21,7 @@ export function PrivyAuthSync() {
     setCreator,
     isAuthenticated,
     isLoginModalOpen,
+    setLoginError,
   } = useAuth();
   const { user, ready, getAccessToken, logout, authenticated } = usePrivy();
   const router = useRouter();
@@ -99,9 +100,9 @@ export function PrivyAuthSync() {
         router.replace('/creators/app/setup/payment-methods');
       }
     } catch (error) {
-      console.error('Failed to authenticate creator:', error);
+      console.error('Failed to authenticate creator.', error);
+      setLoginError(true);
       if (authenticated) void logout();
-      // TODO: Check if we need to remove localstorage twitch_new_user_info here
       setCreator(null);
     } finally {
       setCreatorLoading(false);
@@ -117,6 +118,7 @@ export function PrivyAuthSync() {
     getAccessToken,
     logout,
     createWallet,
+    setLoginError,
   ]);
 
   useEffect(() => {

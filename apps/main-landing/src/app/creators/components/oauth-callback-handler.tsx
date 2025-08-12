@@ -38,7 +38,8 @@ export function OAuthCallbackHandler({
     if (error) {
       // Twitch could not authenticate the user
       setOauthLoading(false);
-      setOauthError(error);
+      console.error('Oauth error.', error);
+      setOauthError(true);
     }
 
     if (authToken) {
