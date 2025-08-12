@@ -11,6 +11,7 @@ interface CallbackProperties {
   pfp: string | null;
   email: string | null;
   login: string | null;
+  error: string | null;
 }
 
 export function OAuthCallbackHandler({
@@ -20,8 +21,10 @@ export function OAuthCallbackHandler({
   pfp,
   email,
   login,
+  error,
 }: CallbackProperties) {
-  const { setCustomAuthToken, setIsModalOpen, setOauthLoading } = useAuth();
+  const { setCustomAuthToken, setIsModalOpen, setOauthLoading, setOauthError } =
+    useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -30,6 +33,12 @@ export function OAuthCallbackHandler({
       setOauthLoading(false);
       setIsModalOpen(true);
       router.replace('/creators', { scroll: false });
+    }
+
+    if (error) {
+      // Twitch could not authenticate the user
+      setOauthLoading(false);
+      setOauthError(error);
     }
 
     if (authToken) {
@@ -54,9 +63,11 @@ export function OAuthCallbackHandler({
     email,
     login,
     router,
+    error,
     setIsModalOpen,
     setOauthLoading,
     setCustomAuthToken,
+    setOauthError,
   ]);
 
   return null;

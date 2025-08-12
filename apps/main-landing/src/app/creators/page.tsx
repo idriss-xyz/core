@@ -14,6 +14,7 @@ export default function Landing() {
   const pfp = searchParameters.get('pfp');
   const email = searchParameters.get('email');
   const login = searchParameters.get('login');
+  const error = searchParameters.get('error');
 
   return (
     <div className="relative flex h-screen">
@@ -24,6 +25,7 @@ export default function Landing() {
         pfp={pfp}
         email={email}
         login={login}
+        error={error}
       />
       <ScrollArea
         type="always"
