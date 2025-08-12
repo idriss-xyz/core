@@ -4,6 +4,7 @@ import { WithPortal } from '@idriss-xyz/ui/providers/with-portal';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { PrivyProvider } from '@privy-io/react-auth';
 import { TooltipProvider } from '@idriss-xyz/ui/tooltip';
+import { abstract, base, mainnet, ronin } from 'viem/chains';
 
 import { QueryProvider } from '@/providers';
 
@@ -49,6 +50,8 @@ export const Providers = ({ children }: Properties) => {
                   embeddedWallets: {
                     createOnLogin: 'users-without-wallets',
                   },
+                  defaultChain: base,
+                  supportedChains: [abstract, base, mainnet, ronin],
                 }}
               >
                 {children}
