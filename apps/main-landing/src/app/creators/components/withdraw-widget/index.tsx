@@ -184,7 +184,7 @@ export const WithdrawWidget = ({
   const showNetworkSelector = networksForSelectedToken.length > 1;
 
   useEffect(() => {
-    if (networksForSelectedToken.length === 1) {
+    if (networksForSelectedToken.length > 0) {
       const chainId = networksForSelectedToken[0];
       if (chainId !== undefined) {
         formMethods.setValue('chainId', chainId);
