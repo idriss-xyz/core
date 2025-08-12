@@ -17,6 +17,7 @@ export const Select = <T,>({
   renderLabel,
   optionsContainerClassName,
   renderRight,
+  renderLeft,
 }: SelectProperties<T>) => {
   const { portal } = usePortal();
 
@@ -46,12 +47,19 @@ export const Select = <T,>({
         <DropdownMenu.Trigger asChild>
           <button className="block w-full">
             <SelectOptionContainer className="flex overflow-hidden border border-neutral-200 bg-white text-neutralGreen-900 shadow-input focus-visible:border-neutral-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+              {renderLeft && (
+                <div className="relative flex items-center px-3 before:absolute before:inset-y-[2px] before:right-0 before:w-px before:bg-neutral-200">
+                  {renderLeft()}
+                </div>
+              )}
+
               <div className="flex-1 overflow-hidden">
                 <SelectOption
                   option={pickedOption}
                   selected
                   disableHover
                   hideSuffix
+                  hidePrefix
                 />
               </div>
 

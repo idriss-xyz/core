@@ -37,6 +37,7 @@ export type SelectProperties<T> = {
   renderLabel?: () => ReactNode;
   optionsContainerClassName?: string;
   renderRight?: () => ReactNode;
+  renderLeft?: () => ReactNode;
 };
 
 export type SelectOptionContainerProperties = {

@@ -20,6 +20,7 @@ export const Select = <T,>({
   className,
   renderLabel,
   renderRight,
+  renderLeft,
   placeholder,
   iconName,
   onIconClick,
@@ -72,6 +73,12 @@ export const Select = <T,>({
             ref={anchorReference}
             className="flex h-[44px] w-full overflow-hidden rounded-[12px] border border-neutral-200 bg-white text-neutralGreen-900 shadow-input focus:border-neutral-300 focus:outline-none"
           >
+            {(renderLeft ?? pickedOption.prefix) && (
+              <div className="after:absolute after:inset-y-[2px] after:left-0 after:w-px after:bg-gray-200">
+                {renderLeft ? renderLeft() : pickedOption.prefix}
+              </div>
+            )}
+
             <div className="flex-1 overflow-hidden px-3">
               <SelectInput
                 placeholder={placeholder}

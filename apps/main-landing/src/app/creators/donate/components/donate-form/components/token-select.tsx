@@ -10,6 +10,7 @@ interface Properties {
   className?: string;
   onChange: (value: string) => void;
   renderRight?: () => ReactNode;
+  renderLeft?: () => ReactNode;
 }
 
 export const TokenSelect = ({
@@ -19,10 +20,29 @@ export const TokenSelect = ({
   onChange,
   className,
   renderRight,
+  renderLeft,
 }: Properties) => {
   const options = useMemo(() => {
     return optionsFrom(tokens);
   }, [tokens]);
+
+  const selectedToken = useMemo(() => {
+    return tokens.find((t) => {
+      return t.symbol === value;
+    });
+  }, [tokens, value]);
+
+  const autoRenderLeft = selectedToken
+    ? () => {
+        return (
+          <img
+            src={selectedToken.logo}
+            alt={selectedToken.symbol}
+            className="size-6 rounded-full"
+          />
+        );
+      }
+    : undefined;
 
   return (
     <Select
@@ -32,6 +52,7 @@ export const TokenSelect = ({
       onChange={onChange}
       className={className}
       renderRight={renderRight}
+      renderLeft={renderLeft ?? autoRenderLeft}
     />
   );
 };

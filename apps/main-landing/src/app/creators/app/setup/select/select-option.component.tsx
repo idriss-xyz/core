@@ -10,10 +10,6 @@ export const SelectOption = forwardRef(
     { option, className, selected }: SelectOptionProperties<unknown>,
     reference: ForwardedRef<HTMLDivElement>,
   ) => {
-    const selectedClassName = selected
-      ? 'after:absolute after:-top-1.5 after:right-0 after:h-[calc(2.625rem_-_6px)] after:w-px after:bg-gray-200'
-      : '';
-
     return (
       <div
         ref={reference}
@@ -23,13 +19,7 @@ export const SelectOption = forwardRef(
         )}
         onClick={option.onClick}
       >
-        <div
-          className={classes(
-            'relative',
-            selectedClassName,
-            option.prefix && 'pr-3',
-          )}
-        >
+        <div className={classes('relative', option.prefix && 'pr-3')}>
           {option.prefix}
         </div>
         {option.renderLabel ? (

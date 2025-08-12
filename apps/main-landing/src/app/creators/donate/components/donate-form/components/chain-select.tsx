@@ -12,6 +12,7 @@ interface Properties {
   onChange: (value: number) => void;
   renderRight?: () => ReactNode;
   suffixByChainId?: Record<number, ReactNode>;
+  renderLeft?: () => ReactNode;
 }
 
 export const ChainSelect = ({
@@ -23,10 +24,29 @@ export const ChainSelect = ({
   renderRight,
   allowedChainsIds,
   suffixByChainId,
+  renderLeft,
 }: Properties) => {
   const options = useMemo(() => {
     return getOptions(allowedChainsIds, suffixByChainId);
   }, [allowedChainsIds, suffixByChainId]);
+
+  const selectedChain = useMemo(() => {
+    return Object.values(CREATOR_CHAIN).find((c) => {
+      return c.id === value;
+    });
+  }, [value]);
+
+  const autoRenderLeft = selectedChain
+    ? () => {
+        return (
+          <img
+            src={selectedChain.logo}
+            className="size-6 rounded-full"
+            alt=""
+          />
+        );
+      }
+    : undefined;
 
   return (
     <Select
@@ -37,6 +57,7 @@ export const ChainSelect = ({
       className={className}
       renderLabel={renderLabel}
       renderRight={renderRight}
+      renderLeft={renderLeft ?? autoRenderLeft}
     />
   );
 };

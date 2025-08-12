@@ -12,8 +12,8 @@ export type SelectOptionProperties<T> = {
   className?: string;
   selected?: boolean;
   disableHover?: boolean;
-  /** Hides the grey “suffix bubble” when the option is used in a trigger. */
   hideSuffix?: boolean;
+  hidePrefix?: boolean;
 };
 
 export type SelectProperties<T> = {
@@ -25,6 +25,7 @@ export type SelectProperties<T> = {
   renderLabel?: () => ReactNode;
   optionsContainerClassName?: string;
   renderRight?: () => ReactNode;
+  renderLeft?: () => ReactNode;
 };
 
 export type SelectOptionContainerProperties = {
