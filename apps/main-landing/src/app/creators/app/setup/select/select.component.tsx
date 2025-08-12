@@ -19,6 +19,7 @@ export const Select = <T,>({
   onChange,
   className,
   renderLabel,
+  renderRight,
   placeholder,
   iconName,
   onIconClick,
@@ -29,7 +30,7 @@ export const Select = <T,>({
   isAudioPlaying?: boolean;
 }) => {
   const { portal } = usePortal();
-  const anchorReference = useRef<HTMLDivElement>(null);
+  const anchorReference = useRef<HTMLButtonElement>(null);
   const [width, setWidth] = useState(0);
 
   useLayoutEffect(() => {
@@ -66,42 +67,47 @@ export const Select = <T,>({
       ) : null}
 
       <DropdownMenu.Root modal={false}>
-        <div
-          ref={anchorReference}
-          className="flex h-[44px] w-full overflow-hidden rounded-lg border border-neutral-200 bg-white text-neutralGreen-900 shadow-input"
-        >
-          <DropdownMenu.Trigger asChild>
-            <button className="flex-1 overflow-hidden px-3 hover:bg-black/10 focus:outline-none">
+        <DropdownMenu.Trigger asChild>
+          <button
+            ref={anchorReference}
+            className="flex h-[44px] w-full overflow-hidden rounded-[12px] border border-neutral-200 bg-white text-neutralGreen-900 shadow-input focus:border-neutral-300 focus:outline-none"
+          >
+            <div className="flex-1 overflow-hidden px-3">
               <SelectInput
                 placeholder={placeholder}
                 value={pickedOption.label}
                 selected={!!pickedOption}
               />
-            </button>
-          </DropdownMenu.Trigger>
-          <div className="flex h-full w-[40px] items-center border-l border-l-gray-200">
-            {isAudioPlaying ? (
-              <div className="flex size-full items-center justify-center">
-                <AudioVisualizer
-                  isMuted={false}
-                  disableHover
-                  className="!size-4"
+            </div>
+            <div className="flex h-full w-[40px] items-center border-l border-l-gray-200">
+              {isAudioPlaying ? (
+                <div className="flex size-full items-center justify-center">
+                  <AudioVisualizer
+                    isMuted={false}
+                    disableHover
+                    className="!size-4"
+                  />
+                </div>
+              ) : (
+                <IconButton
+                  className="!h-full !w-full hover:bg-transparent focus:bg-transparent active:bg-transparent"
+                  iconName={iconName ?? 'PlayCircle'}
+                  size="small"
+                  intent="tertiary"
+                  onClick={(clickEvent) => {
+                    clickEvent.stopPropagation();
+                    onIconClick?.();
+                  }}
                 />
+              )}
+            </div>
+            {renderRight && (
+              <div className="flex items-center border-l border-l-gray-200 px-3">
+                {renderRight()}
               </div>
-            ) : (
-              <IconButton
-                className="!h-full !w-full"
-                iconName={iconName ?? 'PlayCircle'}
-                size="small"
-                intent="tertiary"
-                onClick={(clickEvent) => {
-                  clickEvent.stopPropagation();
-                  onIconClick?.();
-                }}
-              />
             )}
-          </div>
-        </div>
+          </button>
+        </DropdownMenu.Trigger>
 
         <DropdownMenu.Portal container={portal}>
           <DropdownMenu.Content
@@ -121,7 +127,7 @@ export const Select = <T,>({
                   return (
                     <DropdownMenu.Item
                       key={option.label}
-                      className="rounded-lg px-3 py-1 outline-none data-[highlighted]:bg-black/10"
+                      className="rounded-[12px] px-3 py-1 outline-none data-[highlighted]:bg-black/10"
                       onSelect={() => {
                         onChange(option.value);
                       }}

@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, ReactNode } from 'react';
 import { Token } from '@idriss-xyz/constants';
 
 import { Select } from './select';
@@ -9,6 +9,7 @@ interface Properties {
   tokens: Token[];
   className?: string;
   onChange: (value: string) => void;
+  renderRight?: () => ReactNode;
 }
 
 export const TokenSelect = ({
@@ -17,6 +18,7 @@ export const TokenSelect = ({
   tokens,
   onChange,
   className,
+  renderRight,
 }: Properties) => {
   const options = useMemo(() => {
     return optionsFrom(tokens);
@@ -29,15 +31,17 @@ export const TokenSelect = ({
       options={options}
       onChange={onChange}
       className={className}
+      renderRight={renderRight}
     />
   );
 };
 
-const optionsFrom = (tokens: Token[]) => {
+const optionsFrom = (tokens: (Token & { suffix?: ReactNode })[]) => {
   return tokens.map((token) => {
     return {
       label: token.name,
       value: token.symbol,
+      suffix: token.suffix,
       prefix: (
         <img
           src={token.logo}
