@@ -10,7 +10,9 @@ interface Properties {
   allowedChainsIds?: number[];
   renderLabel?: () => ReactNode;
   onChange: (value: number) => void;
-  renderSuffix?: (chainId: number) => ReactNode;
+  renderRight?: () => ReactNode;
+  suffixByChainId?: Record<number, ReactNode>;
+  renderLeft?: () => ReactNode;
 }
 
 export const ChainSelect = ({
@@ -19,12 +21,32 @@ export const ChainSelect = ({
   onChange,
   className,
   renderLabel,
-  renderSuffix,
+  renderRight,
   allowedChainsIds,
+  suffixByChainId,
+  renderLeft,
 }: Properties) => {
   const options = useMemo(() => {
-    return getOptions(allowedChainsIds, renderSuffix);
-  }, [allowedChainsIds, renderSuffix]);
+    return getOptions(allowedChainsIds, suffixByChainId);
+  }, [allowedChainsIds, suffixByChainId]);
+
+  const selectedChain = useMemo(() => {
+    return Object.values(CREATOR_CHAIN).find((c) => {
+      return c.id === value;
+    });
+  }, [value]);
+
+  const autoRenderLeft = selectedChain
+    ? () => {
+        return (
+          <img
+            src={selectedChain.logo}
+            className="size-6 rounded-full"
+            alt=""
+          />
+        );
+      }
+    : undefined;
 
   return (
     <Select
@@ -34,29 +56,28 @@ export const ChainSelect = ({
       onChange={onChange}
       className={className}
       renderLabel={renderLabel}
+      renderRight={renderRight}
+      renderLeft={renderLeft ?? autoRenderLeft}
     />
   );
 };
 
-const optionsFrom = (
-  chain: Chain,
-  renderSuffix?: (chainId: number) => ReactNode,
-): Option<number> => {
+const optionsFrom = (chain: Chain, suffix?: ReactNode): Option<number> => {
   return {
     value: chain.id,
     label: chain.name,
-    suffix: renderSuffix?.(chain.id),
+    suffix,
     prefix: <img src={chain.logo} className="size-6 rounded-full" alt="" />,
   };
 };
 
 const getOptions = (
   allowedChainsIds?: number[],
-  renderSuffix?: (chainId: number) => ReactNode,
+  suffixByChainId: Record<number, ReactNode> = {},
 ) => {
   if (!allowedChainsIds) {
     return Object.values(CREATOR_CHAIN).map((chain) => {
-      return optionsFrom(chain, renderSuffix);
+      return optionsFrom(chain, suffixByChainId[chain.id]);
     });
   }
 
@@ -69,6 +90,6 @@ const getOptions = (
       throw new Error(`${chainId} not found`);
     }
 
-    return optionsFrom(foundChain, renderSuffix);
+    return optionsFrom(foundChain, suffixByChainId[foundChain.id]);
   });
 };

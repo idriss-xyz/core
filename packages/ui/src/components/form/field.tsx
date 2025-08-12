@@ -32,7 +32,7 @@ export const Field = forwardRef(
       numeric,
       decimalScale,
       onChange,
-      ...inputProperties // Spread all Input props here
+      ...inputProperties
     }: Properties,
     reference: ForwardedRef<HTMLDivElement>,
   ) => {
@@ -46,7 +46,7 @@ export const Field = forwardRef(
         <RadixForm.Control asChild>
           {numeric ? (
             <NumericInput
-              {...inputProperties} // Pass all Input props
+              {...inputProperties}
               decimalScale={decimalScale}
               onChange={(value) => {
                 onChange(value);
@@ -54,7 +54,7 @@ export const Field = forwardRef(
             />
           ) : (
             <Input
-              {...inputProperties} // Pass all Input props
+              {...inputProperties}
               onChange={(event) => {
                 onChange(event.target.value);
               }}

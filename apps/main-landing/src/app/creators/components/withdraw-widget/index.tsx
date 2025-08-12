@@ -183,6 +183,29 @@ export const WithdrawWidget = ({
 
   const showNetworkSelector = networksForSelectedToken.length > 1;
 
+  const perNetworkSuffixByChainId = useMemo(() => {
+    const map: Record<number, React.ReactNode> = {};
+    for (const id of networksForSelectedToken) {
+      const usd = balances
+        .filter((b) => {
+          return (
+            b.symbol === tokenSymbol &&
+            getChainIdByNetworkName(b.network) === id
+          );
+        })
+        .reduce((s, b) => {
+          return s + b.usdValue;
+        }, 0);
+
+      map[id] = (
+        <span className="text-label6 text-neutral-600">
+          ↳{formatFiatValue(usd)}
+        </span>
+      );
+    }
+    return map;
+  }, [balances, tokenSymbol, networksForSelectedToken]);
+
   useEffect(() => {
     if (networksForSelectedToken.length > 0) {
       const chainId = networksForSelectedToken[0];
@@ -339,12 +362,25 @@ export const WithdrawWidget = ({
                           className="mt-2"
                           label="Token"
                           tokens={uniqueOwnedTokens.map(
-                            ({ symbol, name, imageUrl }): Token => {
+                            ({ symbol, name, imageUrl }) => {
                               return {
                                 symbol,
                                 name: name!,
                                 logo: imageUrl!,
-                              };
+                                suffix: (
+                                  <span className="text-label6 text-neutral-600">
+                                    {formatFiatValue(
+                                      balances
+                                        .filter((b) => {
+                                          return b.symbol === symbol;
+                                        })
+                                        .reduce((s, b) => {
+                                          return s + b.usdValue;
+                                        }, 0),
+                                    )}
+                                  </span>
+                                ),
+                              } as Token;
                             },
                           )}
                           onChange={(value) => {
@@ -354,6 +390,15 @@ export const WithdrawWidget = ({
                             setIsMaxAmount(false);
                           }}
                           value={field.value}
+                          renderRight={() => {
+                            return (
+                              <div className="flex flex-col items-end rounded-[4px] bg-neutral-200 px-1 py-0.5 leading-none">
+                                <span className="text-label6 text-neutral-600">
+                                  {formatFiatValue(totalBalanceOfTokenInUSD)}
+                                </span>
+                              </div>
+                            );
+                          }}
                         />
                       );
                     }}
@@ -369,6 +414,7 @@ export const WithdrawWidget = ({
                             className="mt-4"
                             label="Network"
                             allowedChainsIds={networksForSelectedToken}
+                            suffixByChainId={perNetworkSuffixByChainId}
                             onChange={(value) => {
                               field.onChange(value);
                               formMethods.resetField('amount');
@@ -376,6 +422,15 @@ export const WithdrawWidget = ({
                               setIsMaxAmount(false);
                             }}
                             value={field.value}
+                            renderRight={() => {
+                              return selectedBalance ? (
+                                <div className="flex flex-col items-end rounded-[4px] bg-neutral-200 px-1 py-0.5 leading-none">
+                                  <span className="text-label6 text-neutral-600">
+                                    ↳{formatFiatValue(selectedBalance.usdValue)}
+                                  </span>
+                                </div>
+                              ) : null;
+                            }}
                           />
                         );
                       }}
