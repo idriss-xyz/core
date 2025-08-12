@@ -98,7 +98,7 @@ export type ButtonVariants = FullyRequired<
 
 export const glow = cva(
   [
-    'absolute left-1/2 -z-1 size-full -translate-x-1/2 overflow-hidden rounded-[100%]',
+    'absolute left-1/2 z-0 size-full -translate-x-1/2 transform-gpu overflow-visible rounded-[100%]',
   ],
   {
     variants: {
