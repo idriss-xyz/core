@@ -2,12 +2,11 @@
 
 import { useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { getAccessToken, usePrivy } from '@privy-io/react-auth';
-import { Hex } from 'viem';
+import { usePrivy } from '@privy-io/react-auth';
 
 import { useAuth } from '../context/auth-context';
 
-import { getCreatorProfile } from '.';
+import { setCreatorIfSessionPresent } from '.';
 
 export const useStartEarningNavigation = () => {
   const router = useRouter();
@@ -23,19 +22,7 @@ export const useStartEarningNavigation = () => {
         router.push('/creators/app/setup/payment-methods');
       }
     } else if (user && !creator) {
-      const walletAddress = user.wallet?.address as Hex | undefined;
-      const authToken = await getAccessToken();
-      if (!authToken || !user.id) {
-        throw new Error('Could not get auth token or user ID for new user.');
-      }
-      const fetchedCreator = await getCreatorProfile(authToken);
-      if (fetchedCreator == null || fetchedCreator === undefined) {
-        console.error(
-          `Could not find creator with address ${walletAddress}, this may be a new user.`,
-        );
-        return;
-      }
-      setCreator(fetchedCreator);
+      await setCreatorIfSessionPresent(user, setCreator);
       router.push('/creators/app/setup/payment-methods');
     } else {
       setIsModalOpen(true);
