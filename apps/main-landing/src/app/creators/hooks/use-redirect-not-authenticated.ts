@@ -24,7 +24,16 @@ const useRedirectIfNotAuthenticated = () => {
       console.log('NOT AUTHENTICATED');
       router.replace('/creators?login=true');
     }
-  }, [creator, creatorLoading, router, isLoggingOut, ready, user, pathname, setCreator]);
+  }, [
+    creator,
+    creatorLoading,
+    router,
+    isLoggingOut,
+    ready,
+    user,
+    pathname,
+    setCreator,
+  ]);
 };
 
 export default useRedirectIfNotAuthenticated;

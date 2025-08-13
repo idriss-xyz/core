@@ -1,11 +1,11 @@
 'use client';
 
 import { PrivyProvider } from '@privy-io/react-auth';
+import { abstract, base, mainnet, ronin } from 'viem/chains';
 
 import { AuthProvider } from './context/auth-context';
 import { PrivyAuthSync } from './privy-auth-sync';
 import { Providers } from './providers';
-import { abstract, base, mainnet, ronin } from 'viem/chains';
 
 export function CreatorsProviders({ children }: { children: React.ReactNode }) {
   return (
