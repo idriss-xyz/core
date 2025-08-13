@@ -10,9 +10,14 @@ export const useLogout = () => {
 
   return async () => {
     await logout();
+
+    router.replace('/creators');
+
     localStorage.removeItem('twitch_new_user_info');
     localStorage.removeItem('custom-auth-token');
-    setCreator(null);
-    router.push('/creators');
+
+    void Promise.resolve().then(() => {
+      setCreator(null);
+    });
   };
 };
