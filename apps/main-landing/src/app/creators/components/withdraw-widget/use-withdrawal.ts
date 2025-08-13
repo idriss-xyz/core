@@ -64,7 +64,9 @@ export const useWithdrawal = ({
       setError(null);
       setAdjustedAmount(undefined);
 
-      const activeWallet = wallets[0];
+      const activeWallet = wallets.find((wallet) => {
+        return wallet.walletClientType === 'privy';
+      });
       if (!activeWallet) {
         setError('Wallet not connected.');
         return false;
@@ -150,7 +152,8 @@ export const useWithdrawal = ({
         }
 
         return true;
-      } catch {
+      } catch (error) {
+        console.warn(error);
         setError('Something went wrong. Try again in a few seconds.');
         return false;
       }

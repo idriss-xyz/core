@@ -11,6 +11,9 @@ export type SelectOptionProperties<T> = {
   option: Option<T>;
   className?: string;
   selected?: boolean;
+  disableHover?: boolean;
+  hideSuffix?: boolean;
+  hidePrefix?: boolean;
 };
 
 export type SelectProperties<T> = {
@@ -21,6 +24,8 @@ export type SelectProperties<T> = {
   onChange: (value: T) => void;
   renderLabel?: () => ReactNode;
   optionsContainerClassName?: string;
+  renderRight?: () => ReactNode;
+  renderLeft?: () => ReactNode;
 };
 
 export type SelectOptionContainerProperties = {
