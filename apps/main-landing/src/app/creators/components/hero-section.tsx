@@ -7,7 +7,6 @@ import { RefObject, useState } from 'react';
 
 import { backgroundLines } from '@/assets';
 
-import { useAuth } from '../context/auth-context';
 import { useStartEarningNavigation } from '../utils';
 
 import { VideoPlayer } from './hero-section/video-player';
@@ -21,7 +20,6 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
   const [isMobileNotSupportedOpen, setIsMobileNotSupportedOpen] =
     useState(false);
 
-  const { isLoginModalOpen, setIsModalOpen, creatorLoading } = useAuth();
   const originalHandleStartEarningClick = useStartEarningNavigation();
 
   const handleStartEarningClick = () => {
@@ -99,13 +97,7 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
           <VideoPlayer />
         </div>
       </div>
-      <LoginModal
-        isOpened={isLoginModalOpen}
-        isLoading={creatorLoading}
-        onClose={() => {
-          return setIsModalOpen(false);
-        }}
-      />
+      <LoginModal />
       {isMobileNotSupportedOpen && (
         <MobileNotSupported
           className="bg-[#E7F5E6]/[0.6] backdrop-blur-sm"

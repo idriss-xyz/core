@@ -30,31 +30,25 @@ export function OAuthCallbackHandler({
   useEffect(() => {
     if (login) {
       // Twitch has finished authenticating the user and failed
-      setOauthLoading(false);
       setIsModalOpen(true);
       router.replace('/creators', { scroll: false });
-    }
-
-    if (error) {
+    } else if (error) {
       // Twitch could not authenticate the user
-      setOauthLoading(false);
       console.error('Oauth error.', error);
       setOauthError(true);
-    }
-
-    if (authToken) {
+    } else if (authToken) {
       // Twitch has finished authenticating the user and succeeded
-      setOauthLoading(false);
       setIsModalOpen(true);
-      // Store Twitch info in localStorage to be picked up by the next page.
       if (name) {
         localStorage.setItem(
           'twitch_new_user_info',
           JSON.stringify({ name, displayName, pfp, email }),
         );
       }
-      // Use the hook to pass the custom token to Privy
       setCustomAuthToken(authToken);
+    }
+    if (login || error || authToken) {
+      setOauthLoading(false);
     }
   }, [
     authToken,

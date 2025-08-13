@@ -14,14 +14,9 @@ import { IDRISS_TOROID } from '@/assets';
 
 import { useAuth } from '../../context/auth-context';
 
-type Properties = {
-  isOpened: boolean;
-  isLoading: boolean;
-  onClose: () => void;
-};
-
-export const LoginModal = ({ isOpened, onClose, isLoading }: Properties) => {
-  const { setOauthLoading, oauthLoading, error } = useAuth();
+export const LoginModal = () => {
+  const { setOauthLoading, loading, error, isLoginModalOpen, setIsModalOpen } =
+    useAuth();
 
   const handleTwitchLogin = useCallback(() => {
     setOauthLoading(true);
@@ -31,8 +26,10 @@ export const LoginModal = ({ isOpened, onClose, isLoading }: Properties) => {
   return (
     <Modal
       className="flex min-h-[420px] w-[500px] flex-col items-center justify-center gap-y-6 rounded-xl border border-black/20 bg-white p-6 text-center"
-      isOpened={isOpened}
-      onClose={onClose}
+      isOpened={isLoginModalOpen}
+      onClose={() => {
+        return setIsModalOpen(false);
+      }}
       closeOnClickAway
     >
       <div className="flex w-full flex-col items-center justify-center pb-4">
@@ -53,7 +50,7 @@ export const LoginModal = ({ isOpened, onClose, isLoading }: Properties) => {
           aria-label="Login with Twitch"
           prefixIconName="TwitchOutlinedBold"
           onClick={handleTwitchLogin}
-          loading={isLoading || oauthLoading}
+          loading={loading}
         >
           Continue with Twitch
         </Button>

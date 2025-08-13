@@ -28,6 +28,7 @@ type AuthContextType = {
   isLoggingOut: boolean;
   setIsLoggingOut: (isLoggingOut: boolean) => void;
   customAuthToken: string | null;
+  loading: boolean;
   oauthLoading: boolean;
   setOauthLoading: (oauthLoading: boolean) => void;
   isAuthenticated: boolean;
@@ -55,6 +56,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const isAuthenticated = customAuthToken != null && !oauthLoading;
 
   const error = loginError || oauthError;
+  const loading = oauthLoading || creatorLoading;
 
   const addDonation = (donation: DonationData) => {
     setDonations((previous) => {
@@ -98,6 +100,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         markDonationsAsSeen,
         isLoggingOut,
         setIsLoggingOut,
+        loading,
         oauthLoading,
         setOauthLoading,
         isAuthenticated,
