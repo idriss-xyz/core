@@ -5,6 +5,7 @@ import { PrivyProvider } from '@privy-io/react-auth';
 import { AuthProvider } from './context/auth-context';
 import { PrivyAuthSync } from './privy-auth-sync';
 import { Providers } from './providers';
+import { abstract, base, mainnet, ronin } from 'viem/chains';
 
 export function CreatorsProviders({ children }: { children: React.ReactNode }) {
   return (
@@ -16,6 +17,8 @@ export function CreatorsProviders({ children }: { children: React.ReactNode }) {
             embeddedWallets: {
               showWalletUIs: false,
             },
+            defaultChain: base,
+            supportedChains: [abstract, base, mainnet, ronin],
           }}
         >
           <PrivyAuthSync />
