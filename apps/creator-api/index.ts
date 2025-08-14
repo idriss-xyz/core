@@ -25,6 +25,7 @@ import uploadRouter from './routes/upload';
 import joinRouter from './routes/join';
 import referralRouter from './routes/referral-history';
 import claimRewardsRouter from './routes/claim-rewards';
+import dripRouter from './routes/drip';
 import cors from 'cors';
 import { AppDataSource, initializeDatabase } from './db/database';
 import { Creator } from './db/entities';
@@ -62,6 +63,7 @@ app.use('/upload', uploadRouter);
 app.use('/join', joinRouter);
 app.use('/referral-history', referralRouter);
 app.use('/claim-rewards', claimRewardsRouter);
+app.use('/drip', dripRouter);
 
 const HOST = process.env.HOST;
 const PORT = Number(process.env.PORT) || 4000;

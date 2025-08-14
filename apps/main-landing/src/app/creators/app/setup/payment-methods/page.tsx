@@ -2,6 +2,7 @@
 import {
   CHAIN_ID_TO_TOKENS,
   ChainToken,
+  CREATOR_API_URL,
   CREATOR_CHAIN,
   DEFAULT_ALLOWED_CHAINS_IDS,
   TokenSymbol,
@@ -63,18 +64,6 @@ const TOKENS_ORDER: Record<TokenSymbol, number> = {
   DEGEN: 11,
   PENGU: 12,
 };
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-// const iconsForCryptoPaymentMethod = [
-//   TOKEN.ETHEREUM,
-//   TOKEN.USDC,
-//   TOKEN.IDRISS,
-//   TOKEN.RONIN,
-//   TOKEN.ECHELON_PRIME,
-//   TOKEN.PENGU,
-//   TOKEN.YGG,
-//   TOKEN.PDT,
-// ];
 
 const iconsForCardPaymentMethod: IconName[] = [
   'Mastercard',
@@ -212,6 +201,36 @@ export default function PaymentMethods() {
       }),
     );
   }, [formMethods, tokensSymbols, selectedChainsTokens]);
+
+  // TODO: delete
+  const dripToken = useCallback(async () => {
+    try {
+      const authToken = await getAccessToken();
+      if (!authToken) {
+        console.error('Could not get auth token.');
+        return;
+      }
+
+      const response = await fetch(`${CREATOR_API_URL}/drip`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({
+          chainId: '11155111',
+        }),
+      });
+
+      if (response.ok) {
+        console.log('success:', response);
+      } else {
+        console.log('failed:', response);
+      }
+    } catch (error) {
+      console.error('Error sending test donation:', error);
+    }
+  }, []);
 
   const onSubmit = async (data: FormPayload) => {
     try {
@@ -381,6 +400,19 @@ export default function PaymentMethods() {
             <IconsRow icons={iconsForCardPaymentMethod} />
           </FormFieldWrapper>
         </Form>
+      </div>
+
+      {/* TODO: delete */}
+      <div className="flex flex-col gap-2">
+        <Button
+          size="medium"
+          intent="secondary"
+          onClick={dripToken}
+          className="h-fit"
+          suffixIconName="IdrissArrowRight"
+        >
+          DRIP TOKEN
+        </Button>
       </div>
 
       {/* Alerts section */}
