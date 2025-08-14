@@ -95,7 +95,6 @@ export default function StreamAlerts() {
   const { toast, removeToast } = useToast();
 
   const [isCustomSoundUploaded, setIsCustomSoundUploaded] = useState(false);
-  const [fileComponentKey, setFileComponentKey] = useState(0);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [isVoicePlaying, setIsVoicePlaying] = useState(false);
   const [isCopyModalOpen, setIsCopyModalOpen] = useState(false);
@@ -109,9 +108,12 @@ export default function StreamAlerts() {
     { value: 'DEFAULT_TRUMPET_SOUND', label: 'Classic trumpet' },
     { value: 'DEFAULT_COIN_SOUND', label: 'Coin drop' },
     { value: 'DEFAULT_CASH_REGISTER_SOUND', label: 'Cash register' },
+    ...(isCustomSoundUploaded
+      ? [{ value: 'CUSTOM_SOUND', label: 'Custom' }]
+      : []),
     {
       value: 'upload',
-      label: isCustomSoundUploaded ? 'Replace custom' : 'Custom',
+      label: 'Upload',
       renderLabel: () => {
         return (
           <span className="text-mint-500 underline">
@@ -338,16 +340,11 @@ export default function StreamAlerts() {
         voiceId: creator.voiceId ?? 'TX3LPaxmHKxFdv7VOQHJ',
       });
       // Set initial state of custom upload based on creator's alertSound
-      setIsCustomSoundUploaded(creator.alertSound === 'upload');
+      setIsCustomSoundUploaded(creator.alertSound === 'CUSTOM_SOUND');
     }
   }, [creator, formMethods]);
 
   const handleAlertSoundChange = (value: string) => {
-    if (value === 'upload' && isCustomSoundUploaded) {
-      setFileComponentKey((previous) => {
-        return previous + 1;
-      });
-    }
     formMethods.setValue('alertSound', value);
   };
 
@@ -357,11 +354,13 @@ export default function StreamAlerts() {
 
   const fileUploadCallback = useCallback(() => {
     setIsCustomSoundUploaded(true);
-  }, []);
+    formMethods.setValue('alertSound', 'CUSTOM_SOUND');
+  }, [formMethods]);
 
   const handleFileRemove = useCallback(() => {
     setIsCustomSoundUploaded(false);
-  }, []);
+    formMethods.setValue('alertSound', 'DEFAULT_TRUMPET_SOUND');
+  }, [formMethods]);
 
   // Keep track of dirty form state (non-toggles only)
   const isDirtyNonToggles = useMemo(() => {
@@ -501,7 +500,7 @@ export default function StreamAlerts() {
 
                           let soundFile: string | undefined;
 
-                          if (field.value === 'upload') {
+                          if (field.value === 'CUSTOM_SOUND') {
                             if (creator?.name) {
                               soundFile = `${CREATOR_API_URL}/creator-profile/audio/${creator.name}`;
                             }
@@ -530,11 +529,12 @@ export default function StreamAlerts() {
                     );
                   }}
                 />
-                {alertSound === 'upload' && (
+                {(alertSound === 'upload' || alertSound === 'CUSTOM_SOUND') && (
                   <File
-                    key={fileComponentKey}
                     onUpload={fileUploadCallback}
                     onRemove={handleFileRemove}
+                    hasCustomSound={isCustomSoundUploaded}
+                    showUploadInterface={alertSound === 'upload'}
                   />
                 )}
                 <Controller
