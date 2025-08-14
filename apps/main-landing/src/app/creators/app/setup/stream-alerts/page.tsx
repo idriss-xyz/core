@@ -94,7 +94,7 @@ export default function StreamAlerts() {
   const { creator, creatorLoading, setCreator } = useAuth();
   const { toast, removeToast } = useToast();
 
-  const [isCustomSoundUploaded, setIsCustomSoundUploaded] = useState(false);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [isVoicePlaying, setIsVoicePlaying] = useState(false);
   const [isCopyModalOpen, setIsCopyModalOpen] = useState(false);
@@ -108,18 +108,14 @@ export default function StreamAlerts() {
     { value: 'DEFAULT_TRUMPET_SOUND', label: 'Classic trumpet' },
     { value: 'DEFAULT_COIN_SOUND', label: 'Coin drop' },
     { value: 'DEFAULT_CASH_REGISTER_SOUND', label: 'Cash register' },
-    ...(isCustomSoundUploaded
-      ? [{ value: 'CUSTOM_SOUND', label: 'Custom' }]
-      : []),
+    ...(uploadedFile ? [{ value: 'CUSTOM_SOUND', label: 'Custom' }] : []),
     {
       value: 'upload',
       label: 'Upload',
       renderLabel: () => {
         return (
           <span className="text-mint-500 underline">
-            {isCustomSoundUploaded
-              ? 'Replace custom sound'
-              : '+ Upload your own'}
+            {uploadedFile ? 'Replace custom sound' : '+ Upload your own'}
           </span>
         );
       },
@@ -340,7 +336,9 @@ export default function StreamAlerts() {
         voiceId: creator.voiceId ?? 'TX3LPaxmHKxFdv7VOQHJ',
       });
       // Set initial state of custom upload based on creator's alertSound
-      setIsCustomSoundUploaded(creator.alertSound === 'CUSTOM_SOUND');
+      if (creator.alertSound === 'CUSTOM_SOUND') {
+        setUploadedFile({ name: 'custom-sound.mp3', size: 0 } as File);
+      }
     }
   }, [creator, formMethods]);
 
@@ -352,13 +350,16 @@ export default function StreamAlerts() {
     formMethods.setValue('voiceId', value);
   };
 
-  const fileUploadCallback = useCallback(() => {
-    setIsCustomSoundUploaded(true);
-    formMethods.setValue('alertSound', 'CUSTOM_SOUND');
-  }, [formMethods]);
+  const fileUploadCallback = useCallback(
+    (file: File) => {
+      setUploadedFile(file);
+      formMethods.setValue('alertSound', 'CUSTOM_SOUND');
+    },
+    [formMethods],
+  );
 
   const handleFileRemove = useCallback(() => {
-    setIsCustomSoundUploaded(false);
+    setUploadedFile(null);
     formMethods.setValue('alertSound', 'DEFAULT_TRUMPET_SOUND');
   }, [formMethods]);
 
@@ -533,7 +534,7 @@ export default function StreamAlerts() {
                   <File
                     onUpload={fileUploadCallback}
                     onRemove={handleFileRemove}
-                    hasCustomSound={isCustomSoundUploaded}
+                    placeholderFile={uploadedFile}
                     showUploadInterface={alertSound === 'upload'}
                   />
                 )}

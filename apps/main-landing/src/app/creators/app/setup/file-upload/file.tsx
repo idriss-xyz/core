@@ -30,7 +30,7 @@ interface FileProperties {
   show?: boolean;
   onUpload?: (file: File) => void;
   onRemove?: () => void;
-  hasCustomSound?: boolean;
+  placeholderFile?: File | null;
   showUploadInterface?: boolean;
 }
 
@@ -38,11 +38,11 @@ export const File = ({
   show,
   onUpload,
   onRemove,
-  hasCustomSound = false,
+  placeholderFile,
   showUploadInterface = false,
 }: FileProperties) => {
   const { getAccessToken } = usePrivy();
-  const [file, setFile] = useState<File | null>(null);
+  const [file, setFile] = useState<File | null>(placeholderFile ?? null);
   const [isUploading, setIsUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
@@ -51,13 +51,12 @@ export const File = ({
 
   // Initialize file state based on hasCustomSound prop
   useEffect(() => {
-    if (hasCustomSound && !file) {
+    if (placeholderFile && !file) {
       // Create a placeholder file object to represent the existing custom sound
-      const placeholderFile = { name: 'custom-sound.mp3', size: 0 };
-      setFile(placeholderFile as File);
+      setFile(placeholderFile);
       setProgress(100);
     }
-  }, [hasCustomSound, file]);
+  }, [placeholderFile, file]);
 
   const handleSelectedFile = async (
     event: React.ChangeEvent<HTMLInputElement>,
