@@ -90,3 +90,9 @@ export const voiceMap: Record<string, { name: string; audioFile: string }> = {
   FGY2WhTYpPnrIDTdsKH5: { name: 'Laura', audioFile: LAURA },
   TX3LPaxmHKxFdv7VOQHJ: { name: 'Liam', audioFile: LIAM },
 };
+
+export const defaultAlertSounds = [
+  { value: 'DEFAULT_TRUMPET_SOUND', label: 'Classic trumpet' },
+  { value: 'DEFAULT_COIN_SOUND', label: 'Coin drop' },
+  { value: 'DEFAULT_CASH_REGISTER_SOUND', label: 'Cash register' },
+];

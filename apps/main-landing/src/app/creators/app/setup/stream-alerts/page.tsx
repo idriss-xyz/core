@@ -19,14 +19,18 @@ import { Icon } from '@idriss-xyz/ui/icon';
 
 import { editCreatorProfile } from '@/app/creators/utils';
 import { useAuth } from '@/app/creators/context/auth-context';
-import { soundMap, voiceMap } from '@/app/creators/constants';
+import {
+  defaultAlertSounds,
+  soundMap,
+  voiceMap,
+} from '@/app/creators/constants';
 import { ConfirmationModal } from '@/app/creators/components/confirmation-modal/confirmation-modal';
 import { CopyInput } from '@/app/creators/components/copy-input/copy-input';
 import {
   FormFieldWrapper,
   SectionHeader,
 } from '@/app/creators/components/layout';
-import { useToast } from '@/app/creators/context/toast-context';
+import { ToastData, useToast } from '@/app/creators/context/toast-context';
 
 import { File } from '../file-upload/file';
 import { Select } from '../select';
@@ -89,13 +93,27 @@ const voices = Object.entries(voiceMap).map(([id, { name }]) => {
   };
 });
 
+const errorTestAlertToast: Omit<ToastData, 'id'> = {
+  type: 'error',
+  heading: 'Unable to send test alert',
+  description: 'Check your streaming software and verify the link',
+  iconName: 'BellRing',
+  autoClose: true,
+};
+
+const errorSaveSettingsToast: Omit<ToastData, 'id'> = {
+  type: 'error',
+  heading: 'Unable to save settings',
+  description: 'Please try again later',
+  autoClose: true,
+};
+
 // ts-unused-exports:disable-next-line
 export default function StreamAlerts() {
   const { creator, creatorLoading, setCreator } = useAuth();
   const { toast, removeToast } = useToast();
 
-  const [isCustomSoundUploaded, setIsCustomSoundUploaded] = useState(false);
-  const [fileComponentKey, setFileComponentKey] = useState(0);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [isVoicePlaying, setIsVoicePlaying] = useState(false);
   const [isCopyModalOpen, setIsCopyModalOpen] = useState(false);
@@ -106,18 +124,15 @@ export default function StreamAlerts() {
 
   // TODO: Extract to constants
   const alertSounds = [
-    { value: 'DEFAULT_TRUMPET_SOUND', label: 'Classic trumpet' },
-    { value: 'DEFAULT_COIN_SOUND', label: 'Coin drop' },
-    { value: 'DEFAULT_CASH_REGISTER_SOUND', label: 'Cash register' },
+    ...defaultAlertSounds,
+    ...(uploadedFile ? [{ value: 'CUSTOM_SOUND', label: 'Custom' }] : []),
     {
       value: 'upload',
-      label: isCustomSoundUploaded ? 'Replace custom' : 'Custom',
+      label: 'Upload',
       renderLabel: () => {
         return (
           <span className="text-mint-500 underline">
-            {isCustomSoundUploaded
-              ? 'Replace custom sound'
-              : '+ Upload your own'}
+            {uploadedFile ? 'Replace custom sound' : '+ Upload your own'}
           </span>
         );
       },
@@ -156,26 +171,14 @@ export default function StreamAlerts() {
 
   const sendTestDonation = useCallback(async () => {
     if (!creator?.primaryAddress || !isAddress(creator.primaryAddress)) {
-      toast({
-        type: 'error',
-        heading: 'Unable to send test alert',
-        description: 'Check your streaming software and verify the link',
-        iconName: 'BellRing',
-        autoClose: true,
-      });
+      toast(errorTestAlertToast);
       return;
     }
 
     try {
       const authToken = await getAccessToken();
       if (!authToken) {
-        toast({
-          type: 'error',
-          heading: 'Unable to send test alert',
-          description: 'Check your streaming software and verify the link',
-          iconName: 'BellRing',
-          autoClose: true,
-        });
+        toast(errorTestAlertToast);
         console.error('Could not get auth token.');
         return;
       }
@@ -199,23 +202,11 @@ export default function StreamAlerts() {
           autoClose: true,
         });
       } else {
-        toast({
-          type: 'error',
-          heading: 'Unable to send test alert',
-          description: 'Check your streaming software and verify the link',
-          iconName: 'BellRing',
-          autoClose: true,
-        });
+        toast(errorTestAlertToast);
       }
     } catch (error) {
       console.error('Error sending test donation:', error);
-      toast({
-        type: 'error',
-        heading: 'Unable to send test alert',
-        description: 'Check your streaming software and verify the link',
-        iconName: 'BellRing',
-        autoClose: true,
-      });
+      toast(errorTestAlertToast);
     }
   }, [creator?.primaryAddress, toast]);
 
@@ -223,22 +214,12 @@ export default function StreamAlerts() {
     try {
       const authToken = await getAccessToken();
       if (!authToken) {
-        toast({
-          type: 'error',
-          heading: 'Unable to save settings',
-          description: 'Please try again later',
-          autoClose: true,
-        });
+        toast(errorSaveSettingsToast);
         console.error('Could not get auth token.');
         return;
       }
       if (!creator?.name) {
-        toast({
-          type: 'error',
-          heading: 'Unable to save settings',
-          description: 'Please try again later',
-          autoClose: true,
-        });
+        toast(errorSaveSettingsToast);
         console.error('Creator not initialized');
         return;
       }
@@ -275,21 +256,11 @@ export default function StreamAlerts() {
           autoClose: true,
         });
       } else {
-        toast({
-          type: 'error',
-          heading: 'Unable to save settings',
-          description: 'Please try again later',
-          autoClose: true,
-        });
+        toast(errorSaveSettingsToast);
       }
     } catch (error) {
       console.error('Error saving profile:', error);
-      toast({
-        type: 'error',
-        heading: 'Unable to save settings',
-        description: 'Please try again later',
-        autoClose: true,
-      });
+      toast(errorSaveSettingsToast);
     }
   };
 
@@ -338,16 +309,13 @@ export default function StreamAlerts() {
         voiceId: creator.voiceId ?? 'TX3LPaxmHKxFdv7VOQHJ',
       });
       // Set initial state of custom upload based on creator's alertSound
-      setIsCustomSoundUploaded(creator.alertSound === 'upload');
+      if (creator.alertSound === 'CUSTOM_SOUND') {
+        setUploadedFile({ name: 'custom-sound.mp3', size: 0 } as File);
+      }
     }
   }, [creator, formMethods]);
 
   const handleAlertSoundChange = (value: string) => {
-    if (value === 'upload' && isCustomSoundUploaded) {
-      setFileComponentKey((previous) => {
-        return previous + 1;
-      });
-    }
     formMethods.setValue('alertSound', value);
   };
 
@@ -355,13 +323,18 @@ export default function StreamAlerts() {
     formMethods.setValue('voiceId', value);
   };
 
-  const fileUploadCallback = useCallback(() => {
-    setIsCustomSoundUploaded(true);
-  }, []);
+  const fileUploadCallback = useCallback(
+    (file: File) => {
+      setUploadedFile(file);
+      formMethods.setValue('alertSound', 'CUSTOM_SOUND');
+    },
+    [formMethods],
+  );
 
   const handleFileRemove = useCallback(() => {
-    setIsCustomSoundUploaded(false);
-  }, []);
+    setUploadedFile(null);
+    formMethods.setValue('alertSound', 'DEFAULT_TRUMPET_SOUND');
+  }, [formMethods]);
 
   // Keep track of dirty form state (non-toggles only)
   const isDirtyNonToggles = useMemo(() => {
@@ -501,7 +474,7 @@ export default function StreamAlerts() {
 
                           let soundFile: string | undefined;
 
-                          if (field.value === 'upload') {
+                          if (field.value === 'CUSTOM_SOUND') {
                             if (creator?.name) {
                               soundFile = `${CREATOR_API_URL}/creator-profile/audio/${creator.name}`;
                             }
@@ -530,11 +503,12 @@ export default function StreamAlerts() {
                     );
                   }}
                 />
-                {alertSound === 'upload' && (
+                {(alertSound === 'upload' || alertSound === 'CUSTOM_SOUND') && (
                   <File
-                    key={fileComponentKey}
                     onUpload={fileUploadCallback}
                     onRemove={handleFileRemove}
+                    placeholderFile={uploadedFile}
+                    showUploadInterface={alertSound === 'upload'}
                   />
                 )}
                 <Controller
