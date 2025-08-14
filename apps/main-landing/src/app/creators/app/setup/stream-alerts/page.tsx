@@ -19,14 +19,14 @@ import { Icon } from '@idriss-xyz/ui/icon';
 
 import { editCreatorProfile } from '@/app/creators/utils';
 import { useAuth } from '@/app/creators/context/auth-context';
-import { soundMap, voiceMap } from '@/app/creators/constants';
+import { defaultAlertSounds, soundMap, voiceMap } from '@/app/creators/constants';
 import { ConfirmationModal } from '@/app/creators/components/confirmation-modal/confirmation-modal';
 import { CopyInput } from '@/app/creators/components/copy-input/copy-input';
 import {
   FormFieldWrapper,
   SectionHeader,
 } from '@/app/creators/components/layout';
-import { useToast } from '@/app/creators/context/toast-context';
+import { ToastData, useToast } from '@/app/creators/context/toast-context';
 
 import { File } from '../file-upload/file';
 import { Select } from '../select';
@@ -89,6 +89,21 @@ const voices = Object.entries(voiceMap).map(([id, { name }]) => {
   };
 });
 
+const errorTestAlertToast: Omit<ToastData, 'id'> = {
+  type: 'error',
+  heading: 'Unable to send test alert',
+  description: 'Check your streaming software and verify the link',
+  iconName: 'BellRing',
+  autoClose: true,
+};
+
+const errorSaveSettingsToast: Omit<ToastData, 'id'> = {
+  type: 'error',
+  heading: 'Unable to save settings',
+  description: 'Please try again later',
+  autoClose: true,
+};
+
 // ts-unused-exports:disable-next-line
 export default function StreamAlerts() {
   const { creator, creatorLoading, setCreator } = useAuth();
@@ -105,9 +120,7 @@ export default function StreamAlerts() {
 
   // TODO: Extract to constants
   const alertSounds = [
-    { value: 'DEFAULT_TRUMPET_SOUND', label: 'Classic trumpet' },
-    { value: 'DEFAULT_COIN_SOUND', label: 'Coin drop' },
-    { value: 'DEFAULT_CASH_REGISTER_SOUND', label: 'Cash register' },
+    ...defaultAlertSounds,
     ...(uploadedFile ? [{ value: 'CUSTOM_SOUND', label: 'Custom' }] : []),
     {
       value: 'upload',
@@ -154,26 +167,14 @@ export default function StreamAlerts() {
 
   const sendTestDonation = useCallback(async () => {
     if (!creator?.primaryAddress || !isAddress(creator.primaryAddress)) {
-      toast({
-        type: 'error',
-        heading: 'Unable to send test alert',
-        description: 'Check your streaming software and verify the link',
-        iconName: 'BellRing',
-        autoClose: true,
-      });
+      toast(errorTestAlertToast);
       return;
     }
 
     try {
       const authToken = await getAccessToken();
       if (!authToken) {
-        toast({
-          type: 'error',
-          heading: 'Unable to send test alert',
-          description: 'Check your streaming software and verify the link',
-          iconName: 'BellRing',
-          autoClose: true,
-        });
+        toast(errorTestAlertToast)
         console.error('Could not get auth token.');
         return;
       }
@@ -197,23 +198,11 @@ export default function StreamAlerts() {
           autoClose: true,
         });
       } else {
-        toast({
-          type: 'error',
-          heading: 'Unable to send test alert',
-          description: 'Check your streaming software and verify the link',
-          iconName: 'BellRing',
-          autoClose: true,
-        });
+        toast(errorTestAlertToast);
       }
     } catch (error) {
       console.error('Error sending test donation:', error);
-      toast({
-        type: 'error',
-        heading: 'Unable to send test alert',
-        description: 'Check your streaming software and verify the link',
-        iconName: 'BellRing',
-        autoClose: true,
-      });
+      toast(errorTestAlertToast);
     }
   }, [creator?.primaryAddress, toast]);
 
@@ -221,22 +210,12 @@ export default function StreamAlerts() {
     try {
       const authToken = await getAccessToken();
       if (!authToken) {
-        toast({
-          type: 'error',
-          heading: 'Unable to save settings',
-          description: 'Please try again later',
-          autoClose: true,
-        });
+        toast(errorSaveSettingsToast);
         console.error('Could not get auth token.');
         return;
       }
       if (!creator?.name) {
-        toast({
-          type: 'error',
-          heading: 'Unable to save settings',
-          description: 'Please try again later',
-          autoClose: true,
-        });
+        toast(errorSaveSettingsToast);
         console.error('Creator not initialized');
         return;
       }
@@ -273,21 +252,11 @@ export default function StreamAlerts() {
           autoClose: true,
         });
       } else {
-        toast({
-          type: 'error',
-          heading: 'Unable to save settings',
-          description: 'Please try again later',
-          autoClose: true,
-        });
+        toast(errorSaveSettingsToast);
       }
     } catch (error) {
       console.error('Error saving profile:', error);
-      toast({
-        type: 'error',
-        heading: 'Unable to save settings',
-        description: 'Please try again later',
-        autoClose: true,
-      });
+      toast(errorSaveSettingsToast);
     }
   };
 
