@@ -19,7 +19,11 @@ import { Icon } from '@idriss-xyz/ui/icon';
 
 import { editCreatorProfile } from '@/app/creators/utils';
 import { useAuth } from '@/app/creators/context/auth-context';
-import { defaultAlertSounds, soundMap, voiceMap } from '@/app/creators/constants';
+import {
+  defaultAlertSounds,
+  soundMap,
+  voiceMap,
+} from '@/app/creators/constants';
 import { ConfirmationModal } from '@/app/creators/components/confirmation-modal/confirmation-modal';
 import { CopyInput } from '@/app/creators/components/copy-input/copy-input';
 import {
@@ -174,7 +178,7 @@ export default function StreamAlerts() {
     try {
       const authToken = await getAccessToken();
       if (!authToken) {
-        toast(errorTestAlertToast)
+        toast(errorTestAlertToast);
         console.error('Could not get auth token.');
         return;
       }
