@@ -72,7 +72,6 @@ export function BalanceTable({
             size="medium"
             iconName="ArrowDownFromLine"
             onClick={() => {
-              console.log('click:', item);
               setSelectedToken(item.token.symbol);
               setIsWithdrawModalOpen(true);
             }}

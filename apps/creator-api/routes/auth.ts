@@ -80,9 +80,9 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
       `${FRONTEND_CALLBACK_URL}?${frontendRedirectParams.toString()}`,
     );
     return;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Twitch auth failed:', error);
-    res.status(500).send('Authentication failed.');
+    res.redirect(`${FRONTEND_CALLBACK_URL}?error=${error.message}`);
     return;
   }
 });
