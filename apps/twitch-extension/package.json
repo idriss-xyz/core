@@ -30,6 +30,7 @@
     "@idriss-xyz/eslint-config": "workspace:*",
     "@idriss-xyz/tailwind-config": "workspace:*",
     "@idriss-xyz/typescript-config": "workspace:*",
+    "@idriss-xyz/utils": "workspace:*",
     "@types/react": "^18.3.11",
     "dependency-cruiser": "^16.4.2",
     "eslint-config-next": "15.0.1",
