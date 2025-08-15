@@ -25,12 +25,13 @@ export const LoginModal = () => {
 
   return (
     <Modal
-      className="flex min-h-[420px] w-[500px] flex-col items-center justify-center gap-y-6 rounded-xl border border-black/20 bg-white p-6 text-center"
+      className="z-[2147483647] flex min-h-[420px] w-[500px] flex-col items-center justify-center gap-y-6 rounded-xl border border-black/20 bg-white p-6 text-center"
       isOpened={isLoginModalOpen}
       onClose={() => {
         return setIsModalOpen(false);
       }}
       closeOnClickAway
+      withoutPortal
     >
       <div className="flex w-full flex-col items-center justify-center pb-4">
         <Image
