@@ -14,6 +14,7 @@ import {
   estimateErc20GasOrDefault,
   getClient,
 } from '../utils/drip-utils';
+import { hasClaimedToday, recordClaim } from '../db/drip-quota';
 
 dotenv.config();
 
@@ -49,6 +50,15 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
   const fullProfile = await creatorProfileService.getProfileById(creator.id);
   if (!fullProfile?.primaryAddress) {
     res.status(400).json({ error: 'No primary address found' });
+    return;
+  }
+
+  // daily-per-chain guard (use funding chain for the claim)
+  const already = await hasClaimedToday(creator.id, Number(11155111));
+  if (already) {
+    res
+      .status(429)
+      .json({ error: 'Daily drip already claimed for this chain' });
     return;
   }
 
@@ -96,6 +106,8 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
       res.status(502).json({ error: body.error });
       return;
     }
+
+    await recordClaim(creator.id, Number(11155111));
 
     res.status(200).json({ txHash: body.txHash });
   } catch (e: any) {

@@ -8,3 +8,4 @@ export { DonationParameters } from './donation-parameters.entity';
 export { DonationEffect } from './donation-effect.entity';
 export { CreatorAddress } from './creator-address.entity';
 export { Referral } from './referral.entity';
+export { DripDailyClaim } from './daily-drip.entity';
