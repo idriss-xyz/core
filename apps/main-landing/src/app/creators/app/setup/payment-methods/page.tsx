@@ -218,7 +218,8 @@ export default function PaymentMethods() {
           'Authorization': `Bearer ${authToken}`,
         },
         body: JSON.stringify({
-          chainId: '11155111',
+          chainId: '8453',
+          token: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
         }),
       });
 

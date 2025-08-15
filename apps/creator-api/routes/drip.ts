@@ -1,25 +1,27 @@
 import { Router, Request, Response } from 'express';
-import { Hex, getAddress, createPublicClient, http, parseGwei } from 'viem';
-import { sepolia } from 'viem/chains';
+import { getAddress } from 'viem';
 import dotenv from 'dotenv';
 import { AppDataSource } from '../db/database';
 import { Creator } from '../db/entities';
 import { verifyToken } from '../db/middleware/auth.middleware';
-import { LAMBDA_CLIENT, SIGNING_LAMBDA_NAME } from '../config/aws-config';
-import { InvokeCommand } from '@aws-sdk/client-lambda';
+import { LAMBDA_CLIENT } from '../config/aws-config';
 import { creatorProfileService } from '../services/creator-profile.service';
+import {
+  buildInvokeCommand,
+  calcDripWei,
+  chainMap,
+  decodeLambda,
+  estimateErc20GasOrDefault,
+  getClient,
+} from '../utils/drip-utils';
 
 dotenv.config();
 
 const router = Router();
 
-const chainMap = {
-  '11155111': sepolia,
-};
-
 // TEMPORARY TEST ENDPOINT, ADD PRECAUTIONS FOR PROD
 router.post('/', verifyToken(), async (req: Request, res: Response) => {
-  const { chainId } = req.body;
+  const { chainId, token } = req.body;
 
   if (!Object.keys(chainMap).includes(String(chainId))) {
     res.status(400).json({ error: 'Unsupported chainId' });
@@ -27,6 +29,7 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
   }
 
   const chain = chainMap[String(chainId) as keyof typeof chainMap];
+  const chainTest = chainMap[String(11155111) as keyof typeof chainMap];
 
   if (!req.user?.id || !chain) {
     res.status(400).json({ error: 'Invalid request' });
@@ -49,67 +52,52 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
     return;
   }
 
-  const client = createPublicClient({
-    chain,
-    transport: http(process.env.RPC_URL || ''),
-  });
+  const client = getClient(chain);
+  const clinetTest = getClient(chainTest);
 
   const faucetAddress = getAddress(process.env.FAUCET_ADDRESS || '');
-  const nonce = await client.getTransactionCount({ address: faucetAddress });
-  const gasPrice = await client.getGasPrice();
-  const estimatedGas = BigInt(50000);
-  const amount = gasPrice * estimatedGas * BigInt(3);
+  const userAddress = getAddress(fullProfile.primaryAddress);
+  const nonce = await clinetTest.getTransactionCount({
+    address: faucetAddress,
+    blockTag: 'pending',
+  });
 
-  const command = new InvokeCommand({
-    FunctionName: SIGNING_LAMBDA_NAME,
-    Payload: Buffer.from(
-      JSON.stringify({
-        body: JSON.stringify({
-          recipient: fullProfile.primaryAddress,
-          amount: amount.toString(),
-          chainId: String(chain.id),
-          nonce,
-        }),
-      }),
-    ),
+  const gasLimit = await estimateErc20GasOrDefault({
+    client,
+    token,
+    from: userAddress,
+    to: faucetAddress,
+  });
+
+  const amountWei = await calcDripWei({ client, gasLimit });
+
+  const cmd = buildInvokeCommand({
+    recipient: fullProfile.primaryAddress,
+    amount: amountWei.toString(),
+    // chainId: String(chain.id),
+    chainId: '11155111',
+    nonce,
   });
 
   try {
-    const resp = await LAMBDA_CLIENT.send(command);
-
-    const payloadStr =
-      resp.Payload && (resp.Payload as Uint8Array).byteLength
-        ? Buffer.from(resp.Payload as Uint8Array).toString('utf8')
-        : '';
+    const resp = await LAMBDA_CLIENT.send(cmd);
 
     if (resp.FunctionError) {
-      res.status(502).json({
-        error: 'Lambda FunctionError',
-        functionError: resp.FunctionError,
-        details: payloadStr || null,
-        statusCode: resp.StatusCode,
-      });
+      const details =
+        resp.Payload && (resp.Payload as Uint8Array).byteLength
+          ? Buffer.from(resp.Payload as Uint8Array).toString('utf8')
+          : null;
+      res.status(502).json({ error: 'Lambda FunctionError', details });
       return;
     }
 
-    if (!payloadStr) {
-      res.status(502).json({
-        error: 'No response from lambda',
-        statusCode: resp.StatusCode,
-      });
+    const body = decodeLambda(resp);
+    if (body?.error) {
+      res.status(502).json({ error: body.error });
       return;
     }
 
-    const outer = JSON.parse(payloadStr); // { statusCode, body }
-    const bodyObj =
-      typeof outer.body === 'string' ? JSON.parse(outer.body) : outer.body;
-
-    if (bodyObj?.error) {
-      res.status(502).json({ error: bodyObj.error });
-      return;
-    }
-
-    res.status(200).json({ txHash: bodyObj.txHash });
+    res.status(200).json({ txHash: body.txHash });
   } catch (e: any) {
     res.status(500).json({ error: 'Lambda invoke failed', detail: e.message });
   }
