@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import { CreatorProfile } from './types';
 import { DonateContent } from './donate-content';
 import { RainbowKitProviders } from './providers';
+import { DonateOptionsModal } from './donate-options-modal';
 
 // ts-unused-exports:disable-next-line
 export const metadata: Metadata = {
@@ -19,6 +20,7 @@ interface Properties {
 export default function Donate({ creatorProfile }: Properties) {
   return (
     <RainbowKitProviders>
+      <DonateOptionsModal />
       <DonateContent creatorProfile={creatorProfile} />
     </RainbowKitProviders>
   );
