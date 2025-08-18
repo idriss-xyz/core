@@ -11,7 +11,7 @@ import { IconName } from '@idriss-xyz/ui/icon';
 
 type ToastType = 'default' | 'success' | 'error';
 
-interface ToastData {
+export interface ToastData {
   id: string;
   type: ToastType;
   heading: string;
