@@ -10,6 +10,7 @@ import {
   User,
   Referral,
   CreatorAddress,
+  DripDailyClaim,
 } from './entities';
 import {
   AddAmountRaw1743181200000,
@@ -53,6 +54,7 @@ export const AppDataSource = new DataSource({
     CreatorProfileView,
     CreatorAddress,
     Referral,
+    DripDailyClaim,
   ],
   synchronize: false,
   migrations: [
