@@ -1,13 +1,39 @@
 import { useCallback, useState } from 'react';
-import { useSendTransaction, useWallets } from '@privy-io/react-auth';
+import {
+  useSendTransaction,
+  useWallets,
+  getAccessToken,
+} from '@privy-io/react-auth';
 import { encodeFunctionData, formatUnits, Hex } from 'viem';
 import {
   ERC20_ABI,
   NULL_ADDRESS,
   DUMMY_RECIPIENT,
   TokenBalance,
+  CREATOR_API_URL,
 } from '@idriss-xyz/constants';
 import { calculateTokensToSend, getChainById } from '@idriss-xyz/utils';
+
+const claimDailyDrip = async (chainId: number, token?: Hex) => {
+  try {
+    const authToken = await getAccessToken();
+    if (!authToken) return;
+
+    const body: Record<string, string> = { chainId: String(chainId) };
+    if (token && token !== NULL_ADDRESS) body.token = token;
+
+    await fetch(`${CREATOR_API_URL}/drip`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`,
+      },
+      body: JSON.stringify(body),
+    });
+  } catch {
+    /* silent */
+  }
+};
 
 type UseWithdrawalProperties = {
   onSuccess?: (txHash: Hex) => void;
@@ -62,6 +88,7 @@ export const useWithdrawal = ({
       tokenAddress,
     }: CheckGasAndProceedArguments) => {
       setError(null);
+      await claimDailyDrip(chainId, tokenAddress);
       setAdjustedAmount(undefined);
 
       const activeWallet = wallets[0];
