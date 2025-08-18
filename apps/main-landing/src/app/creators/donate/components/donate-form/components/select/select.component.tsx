@@ -16,6 +16,8 @@ export const Select = <T,>({
   className,
   renderLabel,
   optionsContainerClassName,
+  renderRight,
+  renderLeft,
 }: SelectProperties<T>) => {
   const { portal } = usePortal();
 
@@ -44,8 +46,28 @@ export const Select = <T,>({
       <DropdownMenu.Root modal={false}>
         <DropdownMenu.Trigger asChild>
           <button className="block w-full">
-            <SelectOptionContainer className="overflow-hidden border border-neutral-200 bg-white text-neutralGreen-900 shadow-input focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
-              <SelectOption option={pickedOption} selected />
+            <SelectOptionContainer className="flex overflow-hidden border border-neutral-200 bg-white text-neutralGreen-900 shadow-input focus-visible:border-neutral-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+              {renderLeft && (
+                <div className="relative flex items-center px-3 before:absolute before:inset-y-[2px] before:right-0 before:w-px before:bg-neutral-200">
+                  {renderLeft()}
+                </div>
+              )}
+
+              <div className="flex-1 overflow-hidden">
+                <SelectOption
+                  option={pickedOption}
+                  selected
+                  disableHover
+                  hideSuffix
+                  hidePrefix
+                />
+              </div>
+
+              {renderRight && (
+                <div className="relative flex items-center px-3 before:absolute before:inset-y-[2px] before:left-0 before:w-px before:bg-neutral-200">
+                  {renderRight()}
+                </div>
+              )}
             </SelectOptionContainer>
           </button>
         </DropdownMenu.Trigger>
@@ -71,8 +93,11 @@ export const Select = <T,>({
                       <SelectOption
                         option={option}
                         className={classes(
-                          index === 0 && 'rounded-t-md',
-                          index === options.length - 1 && 'rounded-b-md',
+                          'border border-neutral-300',
+                          index !== options.length - 1 && 'border-b-0',
+                          index !== 0 && 'border-t-0',
+                          index === 0 && 'rounded-t-[12px]',
+                          index === options.length - 1 && 'rounded-b-[12px]',
                         )}
                       />
                     </DropdownMenu.Item>

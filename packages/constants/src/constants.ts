@@ -256,6 +256,8 @@ export const TOKEN = {
   },
 } as const satisfies Record<string, Token>;
 
+export type TokenSymbol = (typeof TOKEN)[keyof typeof TOKEN]['symbol'];
+
 export const CHAIN_ID_TO_TOKENS = {
   [CREATOR_CHAIN.ABSTRACT.id]: [
     {

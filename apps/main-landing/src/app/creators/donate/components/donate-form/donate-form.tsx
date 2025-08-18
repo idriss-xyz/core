@@ -381,7 +381,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
 
           {creatorInfo.streamStatus && (
             <Badge type="danger" variant="solid" className="ml-3">
-              Live on Twitch
+              Live
             </Badge>
           )}
         </h1>
@@ -499,6 +499,12 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                     label={
                       <div className="flex items-center gap-x-1">
                         <label htmlFor="sfx">AI sound effect</label>
+                        {creatorInfo.minimumSfxAmount > 0 &&
+                          (isLegacyLink || creatorInfo.sfxEnabled) && (
+                            <Badge type="info" variant="subtle">
+                              SFX ${creatorInfo.minimumSfxAmount}+
+                            </Badge>
+                          )}
                         <TooltipProvider delayDuration={400}>
                           <Tooltip>
                             <TooltipTrigger asChild>
@@ -508,7 +514,16 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                               <p className="text-label6">
                                 Type what you want to hear. AI will turn it into{' '}
                                 <br />a sound effect and replace the default
-                                sound.
+                                sound. You can{' '}
+                                <a
+                                  href="https://elevenlabs.io/sound-effects"
+                                  className="text-mint-500 underline"
+                                  target="_blank"
+                                  rel="noreferrer"
+                                >
+                                  test it
+                                </a>
+                                before sending.
                               </p>
                             </TooltipContent>
                           </Tooltip>
@@ -518,7 +533,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                     className="mt-4"
                     helperText={fieldState.error?.message}
                     error={Boolean(fieldState.error?.message)}
-                    placeholder={`🔒 Unlock at $${minimumSfxAmount}`}
+                    placeholder={amount < minimumSfxAmount ? '🔒' : ''}
                     disabled={amount < minimumSfxAmount}
                   />
                 );

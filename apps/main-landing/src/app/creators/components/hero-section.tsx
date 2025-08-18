@@ -3,12 +3,10 @@
 import { MobileNotSupported } from '@idriss-xyz/ui/mobile-not-supported';
 import { Button } from '@idriss-xyz/ui/button';
 import { classes } from '@idriss-xyz/ui/utils';
-import { RefObject, useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { RefObject, useState } from 'react';
 
 import { backgroundLines } from '@/assets';
 
-import { useAuth } from '../context/auth-context';
 import { useStartEarningNavigation } from '../utils';
 
 import { VideoPlayer } from './hero-section/video-player';
@@ -19,72 +17,18 @@ type Properties = {
 };
 
 export const HeroSection = ({ heroButtonReference }: Properties) => {
-  const router = useRouter();
-  const searchParameters = useSearchParams();
   const [isMobileNotSupportedOpen, setIsMobileNotSupportedOpen] =
     useState(false);
 
-  const {
-    isLoginModalOpen,
-    setIsModalOpen,
-    creator,
-    setCustomAuthToken,
-    creatorLoading,
-  } = useAuth();
   const originalHandleStartEarningClick = useStartEarningNavigation();
-
-  useEffect(() => {
-    if (creator && !creatorLoading && isLoginModalOpen) {
-      void originalHandleStartEarningClick();
-      setIsModalOpen(false);
-    }
-  }, [
-    creator,
-    creatorLoading,
-    isLoginModalOpen,
-    originalHandleStartEarningClick,
-    setIsModalOpen,
-  ]);
 
   const handleStartEarningClick = () => {
     if (window.innerWidth < 1024) {
       setIsMobileNotSupportedOpen(true);
-
       return;
     }
-
-    if (creator) {
-      void originalHandleStartEarningClick();
-    } else {
-      void originalHandleStartEarningClick();
-    }
+    void originalHandleStartEarningClick();
   };
-
-  useEffect(() => {
-    const customToken = searchParameters.get('token');
-    const name = searchParameters.get('name');
-    const displayName = searchParameters.get('displayName');
-    const pfp = searchParameters.get('pfp');
-    const email = searchParameters.get('email');
-
-    if (searchParameters.get('login')) {
-      setIsModalOpen(true);
-      router.replace('/creators', { scroll: false });
-    }
-
-    if (customToken) {
-      setIsModalOpen(true);
-      // Store Twitch info in sessionStorage to be picked up by the next page.
-      if (name) {
-        localStorage.setItem(
-          'twitch_new_user_info',
-          JSON.stringify({ name, displayName, pfp, email }),
-        );
-      }
-      // Use the hook to pass the custom token to Privy
-      setCustomAuthToken(customToken);
-    }
-  }, [searchParameters, router, setIsModalOpen, setCustomAuthToken]);
 
   return (
     <header
@@ -153,13 +97,7 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
           <VideoPlayer />
         </div>
       </div>
-      <LoginModal
-        isOpened={isLoginModalOpen}
-        isLoading={creatorLoading}
-        onClose={() => {
-          return setIsModalOpen(false);
-        }}
-      />
+      <LoginModal />
       {isMobileNotSupportedOpen && (
         <MobileNotSupported
           className="bg-[#E7F5E6]/[0.6] backdrop-blur-sm"

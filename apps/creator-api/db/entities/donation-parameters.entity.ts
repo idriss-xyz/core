@@ -44,7 +44,7 @@ export class DonationParameters {
   })
   customBadWords!: string[];
 
-  @OneToOne(() => Creator)
+  @OneToOne(() => Creator, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'creator_id' })
   creator!: Creator;
 }

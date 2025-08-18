@@ -15,7 +15,9 @@ export class CreatorToken {
   @Column()
   tokenSymbol!: string;
 
-  @ManyToOne(() => Creator, (creator) => creator.tokens)
+  @ManyToOne(() => Creator, (creator) => creator.tokens, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'creator_id' })
   creator!: Creator;
 }

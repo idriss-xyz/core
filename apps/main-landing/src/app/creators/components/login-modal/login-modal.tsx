@@ -1,3 +1,4 @@
+'use client';
 import {
   CREATOR_API_URL,
   PRIVACY_POLICY_LINK,
@@ -7,26 +8,30 @@ import { Button } from '@idriss-xyz/ui/button';
 import { ExternalLink } from '@idriss-xyz/ui/external-link';
 import { Modal } from '@idriss-xyz/ui/modal';
 import Image from 'next/image';
+import { useCallback } from 'react';
 
 import { IDRISS_TOROID } from '@/assets';
 
-type Properties = {
-  isOpened: boolean;
-  isLoading: boolean;
-  onClose: () => void;
-};
+import { useAuth } from '../../context/auth-context';
 
-const handleTwitchLogin = () => {
-  window.location.href = `${CREATOR_API_URL}/auth/twitch`;
-};
+export const LoginModal = () => {
+  const { setOauthLoading, loading, error, isLoginModalOpen, setIsModalOpen } =
+    useAuth();
 
-export const LoginModal = ({ isOpened, onClose, isLoading }: Properties) => {
+  const handleTwitchLogin = useCallback(() => {
+    setOauthLoading(true);
+    window.location.href = `${CREATOR_API_URL}/auth/twitch`;
+  }, [setOauthLoading]);
+
   return (
     <Modal
-      className="flex min-h-[420px] w-[500px] flex-col items-center justify-center gap-y-6 rounded-xl border border-black/20 bg-white p-6 text-center"
-      isOpened={isOpened}
-      onClose={onClose}
+      className="z-[2147483647] flex min-h-[420px] w-[500px] flex-col items-center justify-center gap-y-6 rounded-xl border border-black/20 bg-white p-6 text-center"
+      isOpened={isLoginModalOpen}
+      onClose={() => {
+        return setIsModalOpen(false);
+      }}
       closeOnClickAway
+      withoutPortal
     >
       <div className="flex w-full flex-col items-center justify-center pb-4">
         <Image
@@ -46,10 +51,15 @@ export const LoginModal = ({ isOpened, onClose, isLoading }: Properties) => {
           aria-label="Login with Twitch"
           prefixIconName="TwitchOutlinedBold"
           onClick={handleTwitchLogin}
-          loading={isLoading}
+          loading={loading}
         >
           Continue with Twitch
         </Button>
+        {error && (
+          <p className="text-label6 text-red-500">
+            Something went wrong. Try again.
+          </p>
+        )}
         <span className="w-full text-label5 text-neutral-500">
           By logging in, you agree to our
           <br />

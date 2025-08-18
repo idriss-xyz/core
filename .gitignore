@@ -25,4 +25,4 @@ apps/main-landing/data/creator-links.json
 .env
 
 # AI files
-LLM.txt
+LLM.md

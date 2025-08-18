@@ -9,7 +9,7 @@ type EnterInputProperties = {
   placeholder?: string;
 };
 
-// TODO: remove ts-unused line when email collection comes back
+// TODO: Remove if not going to be used
 // ts-unused-exports:disable-next-line
 export function EnterInput({
   initialValue,

@@ -1,25 +1,18 @@
 import { NavigationMenu } from '@idriss-xyz/ui/navigation-menu';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { Fragment } from 'react';
-import { usePrivy } from '@privy-io/react-auth';
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 
 import { DonateHistoryItem } from '@/app/creators/donate/components/donate-history/donate-history-item';
 
+import { useLogout } from '../hooks/use-logout';
 import { useAuth } from '../context/auth-context';
 
 export function TopBar() {
   const { donations, newDonationsCount, markDonationsAsSeen, creator } =
     useAuth();
-  const { logout } = usePrivy();
-  const router = useRouter();
-
-  const handleLogout = async () => {
-    await logout();
-    router.push('/creators');
-  };
+  const handleLogout = useLogout();
   return (
     <>
       <NavigationMenu.Root className="flex justify-end gap-3">
@@ -40,7 +33,6 @@ export function TopBar() {
             </NavigationMenu.Trigger>
 
             <NavigationMenu.Content className="absolute right-[-136px] top-full z-50 mr-3 mt-3 w-max">
-              {/*TODO: work on positioning*/}
               <div className="flex flex-col gap-1 rounded-xl border border-neutral-300 bg-white p-3 shadow-lg">
                 {donations.length > 0 ? (
                   donations.slice(0, 5).map((donation, index) => {

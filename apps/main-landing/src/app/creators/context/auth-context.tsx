@@ -4,40 +4,43 @@ import {
   useContext,
   useState,
   ReactNode,
-  useEffect,
+  Dispatch,
+  SetStateAction,
 } from 'react';
 import { DonationData } from '@idriss-xyz/constants';
-import {
-  getAccessToken,
-  usePrivy,
-  useSubscribeToJwtAuthWithFlag,
-} from '@privy-io/react-auth';
 
-import { CreatorProfileResponse, getCreatorProfile } from '../utils';
+import { CreatorProfileResponse } from '../utils';
 
 type AuthContextType = {
   donations: DonationData[];
   addDonation: (donation: DonationData) => void;
   newDonationsCount: number;
   markDonationsAsSeen: () => void;
-  oauthError: string | null;
+  error: boolean;
   isLoginModalOpen: boolean;
   creator: CreatorProfileResponse | null;
   creatorLoading: boolean;
   setCreatorLoading: (loading: boolean) => void;
-  setOauthError: (error: string | null) => void;
-  clearOauthError: () => void;
+  setOauthError: (error: boolean) => void;
   setIsModalOpen: (isOpen: boolean) => void;
-  setCreator: (creator: CreatorProfileResponse | null) => void;
+  setCreator: Dispatch<SetStateAction<CreatorProfileResponse | null>>;
   setCustomAuthToken: (token: string | null) => void;
   isLoggingOut: boolean;
   setIsLoggingOut: (isLoggingOut: boolean) => void;
+  customAuthToken: string | null;
+  loading: boolean;
+  oauthLoading: boolean;
+  setOauthLoading: (oauthLoading: boolean) => void;
+  isAuthenticated: boolean;
+  setLoginError: (loginError: boolean) => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [oauthError, setOauthError] = useState<string | null>(null);
+  const [oauthError, setOauthError] = useState(false);
+  const [loginError, setLoginError] = useState(false);
+  const [oauthLoading, setOauthLoading] = useState(false);
   const [isLoginModalOpen, setIsModalOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [customAuthToken, setCustomAuthToken] = useState<string | null>(() => {
@@ -47,59 +50,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return localStorage.getItem('custom-auth-token');
   });
   const [creator, setCreator] = useState<CreatorProfileResponse | null>(null);
-  const [creatorLoading, setCreatorLoading] = useState(true);
+  const [creatorLoading, setCreatorLoading] = useState(false);
   const [donations, setDonations] = useState<DonationData[]>([]);
   const [newDonationsCount, setNewDonationsCount] = useState(0);
-  const { ready, authenticated, user } = usePrivy();
+  const isAuthenticated = customAuthToken != null && !oauthLoading;
 
-  useSubscribeToJwtAuthWithFlag({
-    isAuthenticated: !!customAuthToken,
-    isLoading: false,
-    getExternalJwt: () => {
-      return Promise.resolve(customAuthToken ?? undefined);
-    },
-  });
-
-  useEffect(() => {
-    if (!ready) {
-      return;
-    }
-
-    // If not authenticated and not in the process of a custom token login,
-    // then the user is logged out.
-    if (!authenticated && !customAuthToken) {
-      setCreator(null);
-      setCreatorLoading(false);
-      return;
-    }
-
-    const fetchCreatorProfile = async () => {
-      if (!user?.wallet?.address) {
-        return;
-      }
-      setCreatorLoading(true);
-      try {
-        const authToken = await getAccessToken();
-        if (!authToken || !user.id) {
-          throw new Error('Could not get auth token or user ID for new user.');
-        }
-
-        const existingCreator = await getCreatorProfile(authToken);
-
-        console.log('existingCreator', existingCreator);
-        setCreator(existingCreator ?? null);
-      } catch (error) {
-        console.error('Failed to fetch creator profile:', error);
-        setCreator(null);
-      } finally {
-        setCreatorLoading(false);
-      }
-    };
-
-    if (authenticated && !creator) {
-      void fetchCreatorProfile();
-    }
-  }, [ready, authenticated, user, creator, customAuthToken]);
+  const error = loginError || oauthError;
+  const loading = oauthLoading || creatorLoading;
 
   const addDonation = (donation: DonationData) => {
     setDonations((previous) => {
@@ -112,10 +69,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const markDonationsAsSeen = () => {
     setNewDonationsCount(0);
-  };
-
-  const clearOauthError = () => {
-    return setOauthError(null);
   };
 
   const handleSetCustomAuthToken = (token: string | null) => {
@@ -132,22 +85,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   return (
     <AuthContext.Provider
       value={{
-        oauthError,
         isLoginModalOpen,
         creator,
         creatorLoading,
         setCreatorLoading,
         setOauthError,
-        clearOauthError,
         setIsModalOpen,
         setCreator,
         donations,
+        customAuthToken,
         setCustomAuthToken: handleSetCustomAuthToken,
         addDonation,
         newDonationsCount,
         markDonationsAsSeen,
         isLoggingOut,
         setIsLoggingOut,
+        loading,
+        oauthLoading,
+        setOauthLoading,
+        isAuthenticated,
+        error,
+        setLoginError,
       }}
     >
       {children}

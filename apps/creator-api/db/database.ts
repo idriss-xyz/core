@@ -36,6 +36,7 @@ import {
   AddReceiveEmailsCreatorField1753726864037,
   AddReferralEntity1753000000000,
   CreateDripDailyClaim1755298637000,
+  PopulateCreatorTokenAndNetworkDefaults1754915299000,
 } from './migrations';
 import { CreatorProfileView } from './views';
 
@@ -81,6 +82,7 @@ export const AppDataSource = new DataSource({
     AddReceiveEmailsCreatorField1753726864037,
     AddReferralEntity1753000000000,
     CreateDripDailyClaim1755298637000,
+    PopulateCreatorTokenAndNetworkDefaults1754915299000,
   ],
 });
 

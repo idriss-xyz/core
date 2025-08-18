@@ -4,7 +4,6 @@ import { Button } from '@idriss-xyz/ui/button';
 import { Card } from '@idriss-xyz/ui/card';
 import { Form } from '@idriss-xyz/ui/form';
 import { Toggle } from '@idriss-xyz/ui/toggle';
-import { Alert } from '@idriss-xyz/ui/alert';
 import { getAccessToken } from '@privy-io/react-auth';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -20,13 +19,18 @@ import { Icon } from '@idriss-xyz/ui/icon';
 
 import { editCreatorProfile } from '@/app/creators/utils';
 import { useAuth } from '@/app/creators/context/auth-context';
-import { soundMap } from '@/app/creators/constants';
+import {
+  defaultAlertSounds,
+  soundMap,
+  voiceMap,
+} from '@/app/creators/constants';
 import { ConfirmationModal } from '@/app/creators/components/confirmation-modal/confirmation-modal';
 import { CopyInput } from '@/app/creators/components/copy-input/copy-input';
 import {
   FormFieldWrapper,
   SectionHeader,
 } from '@/app/creators/components/layout';
+import { ToastData, useToast } from '@/app/creators/context/toast-context';
 
 import { File } from '../file-upload/file';
 import { Select } from '../select';
@@ -82,37 +86,53 @@ type FormPayload = {
   alertSound: string;
 };
 
+const voices = Object.entries(voiceMap).map(([id, { name }]) => {
+  return {
+    value: id,
+    label: name,
+  };
+});
+
+const errorTestAlertToast: Omit<ToastData, 'id'> = {
+  type: 'error',
+  heading: 'Unable to send test alert',
+  description: 'Check your streaming software and verify the link',
+  iconName: 'BellRing',
+  autoClose: true,
+};
+
+const errorSaveSettingsToast: Omit<ToastData, 'id'> = {
+  type: 'error',
+  heading: 'Unable to save settings',
+  description: 'Please try again later',
+  autoClose: true,
+};
+
 // ts-unused-exports:disable-next-line
 export default function StreamAlerts() {
-  const { creator, creatorLoading } = useAuth();
+  const { creator, creatorLoading, setCreator } = useAuth();
+  const { toast, removeToast } = useToast();
 
-  const [saveSuccess, setSaveSuccess] = useState<boolean | null>(null);
-  const [testDonationSuccess, setTestDonationSuccess] = useState<
-    boolean | null
-  >(null);
-  const [isCustomSoundUploaded, setIsCustomSoundUploaded] = useState(false);
-  const [fileComponentKey, setFileComponentKey] = useState(0);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [isVoicePlaying, setIsVoicePlaying] = useState(false);
   const [isCopyModalOpen, setIsCopyModalOpen] = useState(false);
   const [isUrlWarningConfirmed, setIsUrlWarningConfirmed] = useState(false);
   const [confirmButtonText, setConfirmButtonText] = useState('Copy link');
   const [wasCopied, setWasCopied] = useState(false);
-  const [showRefreshAlert, setShowRefreshAlert] = useState(false);
+  const [unsavedChangesToastId, setUnsavedChangesToastId] = useState('');
 
   // TODO: Extract to constants
   const alertSounds = [
-    { value: 'DEFAULT_TRUMPET_SOUND', label: 'Classic trumpet' },
-    { value: 'DEFAULT_COIN_SOUND', label: 'Coin drop' },
-    { value: 'DEFAULT_CASH_REGISTER_SOUND', label: 'Cash register' },
+    ...defaultAlertSounds,
+    ...(uploadedFile ? [{ value: 'CUSTOM_SOUND', label: 'Custom' }] : []),
     {
       value: 'upload',
-      label: isCustomSoundUploaded ? 'Replace custom' : 'Custom',
+      label: 'Upload',
       renderLabel: () => {
         return (
           <span className="text-mint-500 underline">
-            {isCustomSoundUploaded
-              ? 'Replace custom sound'
-              : '+ Upload your own'}
+            {uploadedFile ? 'Replace custom sound' : '+ Upload your own'}
           </span>
         );
       },
@@ -138,6 +158,7 @@ export default function StreamAlerts() {
       sfxEnabled: creator?.sfxEnabled ?? false,
       customBadWords: creator?.customBadWords ?? [],
       alertSound: creator?.alertSound ?? 'DEFAULT_TRUMPET_SOUND',
+      voiceId: creator?.voiceId ?? 'TX3LPaxmHKxFdv7VOQHJ',
     },
     mode: 'onSubmit',
   });
@@ -150,14 +171,14 @@ export default function StreamAlerts() {
 
   const sendTestDonation = useCallback(async () => {
     if (!creator?.primaryAddress || !isAddress(creator.primaryAddress)) {
-      setTestDonationSuccess(false);
+      toast(errorTestAlertToast);
       return;
     }
 
     try {
       const authToken = await getAccessToken();
       if (!authToken) {
-        setTestDonationSuccess(false);
+        toast(errorTestAlertToast);
         console.error('Could not get auth token.');
         return;
       }
@@ -173,38 +194,32 @@ export default function StreamAlerts() {
       );
 
       if (response.ok) {
-        setTestDonationSuccess(true);
+        toast({
+          type: 'success',
+          heading: 'Test alert sent successfully!',
+          description: 'Check your stream preview to see it',
+          iconName: 'BellRing',
+          autoClose: true,
+        });
       } else {
-        setTestDonationSuccess(false);
+        toast(errorTestAlertToast);
       }
     } catch (error) {
       console.error('Error sending test donation:', error);
-      setTestDonationSuccess(false);
+      toast(errorTestAlertToast);
     }
-  }, [creator?.primaryAddress]);
-
-  const handleAlertClose = useCallback(() => {
-    setSaveSuccess(null);
-  }, []);
-
-  const handleRefreshAlertClose = useCallback(() => {
-    setShowRefreshAlert(false);
-  }, []);
-
-  const handleTestDonationClose = useCallback(() => {
-    setTestDonationSuccess(null);
-  }, []);
+  }, [creator?.primaryAddress, toast]);
 
   const onSubmit = async (data: FormPayload) => {
     try {
       const authToken = await getAccessToken();
       if (!authToken) {
-        setSaveSuccess(false);
+        toast(errorSaveSettingsToast);
         console.error('Could not get auth token.');
         return;
       }
       if (!creator?.name) {
-        setSaveSuccess(false);
+        toast(errorSaveSettingsToast);
         console.error('Creator not initialized');
         return;
       }
@@ -220,13 +235,32 @@ export default function StreamAlerts() {
           sfxEnabled: data.sfxEnabled,
           customBadWords: data.customBadWords,
           alertSound: data.alertSound,
+          voiceId: data.voiceId,
         },
         authToken,
       );
 
-      setSaveSuccess(editSuccess);
+      if (editSuccess) {
+        formMethods.reset(data, { keepValues: true });
+
+        setCreator((previous) => {
+          return previous ? { ...previous, ...data } : previous;
+        });
+
+        removeToast(unsavedChangesToastId);
+        setUnsavedChangesToastId('');
+
+        toast({
+          type: 'success',
+          heading: 'Settings saved!',
+          autoClose: true,
+        });
+      } else {
+        toast(errorSaveSettingsToast);
+      }
     } catch (error) {
       console.error('Error saving profile:', error);
+      toast(errorSaveSettingsToast);
     }
   };
 
@@ -251,6 +285,10 @@ export default function StreamAlerts() {
         },
         authToken,
       );
+
+      setCreator((previous) => {
+        return previous ? { ...previous, ...data } : previous;
+      });
     } catch (error) {
       console.error('Error saving profile:', error);
     }
@@ -268,42 +306,35 @@ export default function StreamAlerts() {
         sfxEnabled: creator.sfxEnabled ?? false,
         customBadWords: creator.customBadWords ?? [],
         alertSound: creator.alertSound ?? 'DEFAULT_TRUMPET_SOUND',
+        voiceId: creator.voiceId ?? 'TX3LPaxmHKxFdv7VOQHJ',
       });
       // Set initial state of custom upload based on creator's alertSound
-      setIsCustomSoundUploaded(creator.alertSound === 'upload');
+      if (creator.alertSound === 'CUSTOM_SOUND') {
+        setUploadedFile({ name: 'custom-sound.mp3', size: 0 } as File);
+      }
     }
   }, [creator, formMethods]);
 
   const handleAlertSoundChange = (value: string) => {
-    if (value === 'upload' && isCustomSoundUploaded) {
-      setFileComponentKey((previous) => {
-        return previous + 1;
-      });
-    }
     formMethods.setValue('alertSound', value);
   };
 
-  const fileUploadCallback = useCallback(() => {
-    setIsCustomSoundUploaded(true);
-  }, []);
+  const handleVoiceChange = (value: string) => {
+    formMethods.setValue('voiceId', value);
+  };
+
+  const fileUploadCallback = useCallback(
+    (file: File) => {
+      setUploadedFile(file);
+      formMethods.setValue('alertSound', 'CUSTOM_SOUND');
+    },
+    [formMethods],
+  );
 
   const handleFileRemove = useCallback(() => {
-    setIsCustomSoundUploaded(false);
-  }, []);
-
-  // Timers to delay refresh alert opening
-  useEffect(() => {
-    if (saveSuccess === true) {
-      const timer = setTimeout(() => {
-        setShowRefreshAlert(true);
-      }, 3000);
-
-      return () => {
-        return clearTimeout(timer);
-      };
-    }
-    return;
-  }, [saveSuccess]);
+    setUploadedFile(null);
+    formMethods.setValue('alertSound', 'DEFAULT_TRUMPET_SOUND');
+  }, [formMethods]);
 
   // Keep track of dirty form state (non-toggles only)
   const isDirtyNonToggles = useMemo(() => {
@@ -314,6 +345,24 @@ export default function StreamAlerts() {
     });
     return nonToggleDirtyFields.length > 0;
   }, [formMethods.formState]);
+
+  useEffect(() => {
+    if (isDirtyNonToggles && !unsavedChangesToastId) {
+      // Create new toast when dirty and no toast exists
+      const toastId = toast({
+        type: 'error',
+        heading: 'You have unsaved changes',
+        description: 'Don´t forget to save when you are done',
+        iconName: 'RefreshCw',
+        closable: false,
+      });
+      setUnsavedChangesToastId(toastId);
+    } else if (!isDirtyNonToggles && unsavedChangesToastId) {
+      // Remove toast when no longer dirty
+      removeToast(unsavedChangesToastId);
+      setUnsavedChangesToastId('');
+    }
+  }, [isDirtyNonToggles, unsavedChangesToastId, toast, removeToast]);
 
   if (creatorLoading) {
     return <SkeletonSetup />;
@@ -408,30 +457,6 @@ export default function StreamAlerts() {
                   </div>
                 </div>
                 <Controller
-                  name="minimumAlertAmount"
-                  control={formMethods.control}
-                  render={({ field, fieldState }) => {
-                    return (
-                      <Form.Field
-                        className="max-w-[360px]"
-                        numeric
-                        label="Minimum amount"
-                        helperText={
-                          fieldState.error?.message ??
-                          'Donation amount that triggers an alert'
-                        }
-                        error={Boolean(fieldState.error?.message)}
-                        {...field}
-                        value={field.value?.toString()}
-                        onChange={(value) => {
-                          field.onChange(Number(value));
-                        }}
-                        prefixElement={<span>$</span>}
-                      />
-                    );
-                  }}
-                />
-                <Controller
                   name="alertSound"
                   control={formMethods.control}
                   render={({ field, fieldState: _ }) => {
@@ -449,7 +474,7 @@ export default function StreamAlerts() {
 
                           let soundFile: string | undefined;
 
-                          if (field.value === 'upload') {
+                          if (field.value === 'CUSTOM_SOUND') {
                             if (creator?.name) {
                               soundFile = `${CREATOR_API_URL}/creator-profile/audio/${creator.name}`;
                             }
@@ -478,13 +503,75 @@ export default function StreamAlerts() {
                     );
                   }}
                 />
-                {alertSound === 'upload' && (
+                {(alertSound === 'upload' || alertSound === 'CUSTOM_SOUND') && (
                   <File
-                    key={fileComponentKey}
                     onUpload={fileUploadCallback}
                     onRemove={handleFileRemove}
+                    placeholderFile={uploadedFile}
+                    showUploadInterface={alertSound === 'upload'}
                   />
                 )}
+                <Controller
+                  name="minimumAlertAmount"
+                  control={formMethods.control}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <Form.Field
+                        className="max-w-[360px]"
+                        numeric
+                        label="Minimum amount"
+                        helperText={
+                          fieldState.error?.message ??
+                          'Donation amount that triggers an alert'
+                        }
+                        error={Boolean(fieldState.error?.message)}
+                        {...field}
+                        value={field.value?.toString()}
+                        onChange={(value) => {
+                          field.onChange(Number(value));
+                        }}
+                        prefixElement={<span>$</span>}
+                      />
+                    );
+                  }}
+                />
+                <Controller
+                  name="voiceId"
+                  control={formMethods.control}
+                  render={({ field, fieldState: _ }) => {
+                    return (
+                      <Select
+                        label="Select a voice"
+                        value={field.value?.toString()}
+                        className="max-w-[360px]"
+                        options={voices}
+                        onChange={handleVoiceChange}
+                        iconName="PlayCircle"
+                        isAudioPlaying={isVoicePlaying}
+                        onIconClick={() => {
+                          if (isVoicePlaying) return;
+                          const voiceData = voiceMap[field.value];
+                          if (voiceData) {
+                            const audio = new Audio(voiceData.audioFile);
+                            audio.addEventListener('play', () => {
+                              return setIsVoicePlaying(true);
+                            });
+                            audio.addEventListener('ended', () => {
+                              return setIsVoicePlaying(false);
+                            });
+                            audio.addEventListener('error', () => {
+                              setIsVoicePlaying(false);
+                              console.error('Error playing sound');
+                            });
+                            void audio.play();
+                          }
+                        }}
+                        // TODO: Add error handling
+                        // error={Boolean(fieldState.error?.message)}
+                      />
+                    );
+                  }}
+                />
               </>
             )}
           </FormFieldWrapper>
@@ -638,7 +725,7 @@ export default function StreamAlerts() {
             )}
           </FormFieldWrapper>
 
-          {alertEnabled && (
+          {alertEnabled && isDirtyNonToggles && (
             <Button
               size="medium"
               intent="primary"
@@ -670,67 +757,10 @@ export default function StreamAlerts() {
         }}
         title="⚠️ Confirm before copying"
         sectionSubtitle="Anyone with this link can embed your stream alerts on their own stream or website.
-Do not share it with anyone or show it on stream."
+          Do not share it with anyone or show it on stream."
         confirmButtonText={confirmButtonText}
         confirmButtonIntent="secondary"
       />
-
-      {/* Alerts */}
-      {testDonationSuccess && (
-        <Alert
-          heading="Test alert sent successfully!"
-          type="success"
-          description="Check your stream preview to see it"
-          iconName="BellRing"
-          autoClose
-          onClose={handleTestDonationClose}
-        />
-      )}
-      {testDonationSuccess === false && (
-        <Alert
-          heading="Unable to send test alert"
-          type="error"
-          description="Check your streaming software and verify the link"
-          iconName="BellRing"
-          autoClose
-          onClose={handleTestDonationClose}
-        />
-      )}
-      {saveSuccess && (
-        <Alert
-          heading="Settings saved!"
-          type="success"
-          autoClose
-          onClose={handleAlertClose}
-        />
-      )}
-      {showRefreshAlert && (
-        <Alert
-          heading="Refresh the browser source in your streaming software"
-          type="success"
-          description="Keeps your donation alert setup up to date"
-          iconName="RefreshCw"
-          autoClose
-          onClose={handleRefreshAlertClose}
-        />
-      )}
-      {saveSuccess === false && (
-        <Alert
-          heading="Unable to save settings"
-          type="error"
-          description="Please try again later"
-          autoClose
-          onClose={handleAlertClose}
-        />
-      )}
-      {isDirtyNonToggles && (
-        <Alert
-          heading="You have unsaved changes"
-          type="error"
-          description="Don't forget to save when you are done"
-          iconName="RefreshCw"
-        />
-      )}
     </Card>
   );
 }

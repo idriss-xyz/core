@@ -1,5 +1,7 @@
 import { Hex } from 'viem';
 import { CHAIN, CREATOR_API_URL } from '@idriss-xyz/constants';
+import { getAccessToken, User } from '@privy-io/react-auth';
+import { SetStateAction } from 'react';
 
 type BrowserBasedImageProperties = {
   svgSrc: string;
@@ -46,7 +48,7 @@ export type CreatorProfileResponse = {
   minimumAlertAmount: number;
   minimumTTSAmount: number;
   minimumSfxAmount: number;
-  voiceId: number;
+  voiceId: string;
   alertEnabled: boolean;
   ttsEnabled: boolean;
   sfxEnabled: boolean;
@@ -193,6 +195,19 @@ export const editCreatorProfile = async (
   }
 };
 
+export const deleteCreatorAccount = async (authToken: string) => {
+  const response = await fetch(`${CREATOR_API_URL}/creator-profile/me`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`,
+    },
+  });
+  if (!response.ok) {
+    throw new Error('Deletion failed');
+  }
+};
+
 // TODO remove
 // ts-unused-exports:disable-next-line
 export const getChainShortNamesFromIds = (chainsIds: number[]) => {
@@ -224,3 +239,22 @@ export const getChainIdsFromShortNames = (shortNames: string[]) => {
 };
 
 export { useStartEarningNavigation } from './navigation';
+
+export const setCreatorIfSessionPresent = async (
+  user: User,
+  setCreator: (value: SetStateAction<CreatorProfileResponse | null>) => void,
+) => {
+  const walletAddress = user.wallet?.address as Hex | undefined;
+  const authToken = await getAccessToken();
+  if (!authToken || !user.id) {
+    throw new Error('Could not get auth token or user ID for new user.');
+  }
+  const fetchedCreator = await getCreatorProfile(authToken);
+  if (fetchedCreator == null || fetchedCreator === undefined) {
+    console.error(
+      `Could not find creator with address ${walletAddress}, this may be a new user.`,
+    );
+    return;
+  }
+  setCreator(fetchedCreator);
+};

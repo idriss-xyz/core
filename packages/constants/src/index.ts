@@ -49,11 +49,12 @@ export {
   DEFAULT_DONATION_MIN_SFX_AMOUNT,
 } from './constants';
 
+export type { TokenSymbol } from './constants';
+
 export type {
   ClaimedEventsResponse,
   Chain,
   ChainToken,
-  TokenSymbol,
   Token,
   TipHistoryResponse,
   TipHistoryFromUser,

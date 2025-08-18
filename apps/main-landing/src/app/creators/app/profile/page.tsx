@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { Button } from '@idriss-xyz/ui/button';
 import { Card } from '@idriss-xyz/ui/card';
 import { getAccessToken, usePrivy } from '@privy-io/react-auth';
@@ -10,7 +10,6 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import Image from 'next/image';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { Checkbox } from '@idriss-xyz/ui/checkbox';
-import { Alert } from '@idriss-xyz/ui/alert';
 
 import { IDRISS_SCENE_STREAM_4, backgroundLines2 } from '@/assets';
 import { useAuth } from '@/app/creators/context/auth-context';
@@ -20,12 +19,45 @@ import {
   SectionHeader,
 } from '@/app/creators/components/layout';
 import { ConfirmationModal } from '@/app/creators/components/confirmation-modal';
+import { useToast } from '@/app/creators/context/toast-context';
 
-import { editCreatorProfile } from '../../utils';
+import { useLogout } from '../../hooks/use-logout';
+import { editCreatorProfile, deleteCreatorAccount } from '../../utils';
 
-const handleDeleteAccount = () => {
-  // TODO: Implement backend call to save email
-  console.log('Deleteing Account');
+const handleDeleteAccount = async (
+  toast: ReturnType<typeof useToast>['toast'],
+  handleLogout: () => Promise<void>,
+) => {
+  try {
+    const authToken = await getAccessToken();
+    if (!authToken) {
+      toast({
+        type: 'error',
+        heading: 'Unable to delete account',
+        description: 'Please try again later',
+        autoClose: true,
+      });
+      return;
+    }
+
+    await deleteCreatorAccount(authToken);
+
+    toast({
+      type: 'success',
+      heading: 'Account deleted',
+      autoClose: true,
+    });
+
+    await handleLogout();
+  } catch (error) {
+    console.error('Failed to delete account:', error);
+    toast({
+      type: 'error',
+      heading: 'Unable to delete account',
+      description: 'Please try again later',
+      autoClose: true,
+    });
+  }
 };
 
 // ts-unused-exports:disable-next-line
@@ -34,27 +66,34 @@ export default function ProfilePage() {
   const [isDeleteAccountModalOpen, setIsDeleteAccountModalOpen] =
     useState(false);
   const [receiveEmails, setReceiveEmails] = useState(true);
-  const [saveSuccess, setSaveSuccess] = useState<boolean | null>(null);
 
   const { creator } = useAuth();
   const { user, exportWallet } = usePrivy();
+  const handleLogout = useLogout();
+  const { toast } = useToast();
   const address = user?.wallet?.address as Hex | undefined;
-
-  const handleAlertClose = useCallback(() => {
-    setSaveSuccess(null);
-  }, []);
 
   const handleEmailPreferencesSave = async () => {
     if (!creator?.name) {
       console.error('Creator name not found');
-      setSaveSuccess(false);
+      toast({
+        type: 'error',
+        heading: 'Unable to save settings',
+        description: 'Please try again later',
+        autoClose: true,
+      });
       return;
     }
     try {
       const authToken = await getAccessToken();
       if (!authToken) {
         console.error('Not authenticated');
-        setSaveSuccess(false);
+        toast({
+          type: 'error',
+          heading: 'Unable to save settings',
+          description: 'Please try again later',
+          autoClose: true,
+        });
         return;
       }
 
@@ -63,10 +102,19 @@ export default function ProfilePage() {
       });
 
       await editCreatorProfile(creator.name, { receiveEmails }, authToken);
-      setSaveSuccess(true);
+      toast({
+        type: 'success',
+        heading: 'Settings saved!',
+        autoClose: true,
+      });
     } catch (error) {
       console.error('Failed to save email:', error);
-      setSaveSuccess(false);
+      toast({
+        type: 'error',
+        heading: 'Unable to save settings',
+        description: 'Please try again later',
+        autoClose: true,
+      });
     }
   };
 
@@ -250,31 +298,14 @@ export default function ProfilePage() {
         onClose={() => {
           return setIsDeleteAccountModalOpen(false);
         }}
-        onConfirm={handleDeleteAccount}
+        onConfirm={() => {
+          return handleDeleteAccount(toast, handleLogout);
+        }}
         title="Are you sure you want to delete your account?"
         sectionSubtitle="Your account will be permanently deleted. This cannot be undone. This will permanently delete your account and remove your data from our service."
         confirmButtonText="CONFIRM"
         cancelButtonText="CANCEL"
       />
-
-      {/* Alerts */}
-      {saveSuccess && (
-        <Alert
-          heading="Settings saved!"
-          type="success"
-          autoClose
-          onClose={handleAlertClose}
-        />
-      )}
-      {saveSuccess === false && (
-        <Alert
-          heading="Unable to save settings"
-          type="error"
-          description="Please try again later"
-          autoClose
-          onClose={handleAlertClose}
-        />
-      )}
     </>
   );
 }
