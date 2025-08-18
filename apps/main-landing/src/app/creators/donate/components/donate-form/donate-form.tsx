@@ -510,11 +510,11 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                             <TooltipTrigger asChild>
                               <Icon name="HelpCircle" size={15} />
                             </TooltipTrigger>
-                            <TooltipContent className="bg-black text-center text-white">
+                            <TooltipContent className="bg-black text-left text-white">
                               <p className="text-label6">
-                                Type what you want to hear. AI will turn it into{' '}
-                                <br />a sound effect and replace the default
-                                sound. You can{' '}
+                                Type what you want to hear. AI will turn it into
+                                a sound effect <br />
+                                and replace the default sound. You can{' '}
                                 <a
                                   href="https://elevenlabs.io/sound-effects"
                                   className="text-mint-500 underline"
@@ -522,7 +522,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                                   rel="noreferrer"
                                 >
                                   test it
-                                </a>
+                                </a>{' '}
                                 before sending.
                               </p>
                             </TooltipContent>
