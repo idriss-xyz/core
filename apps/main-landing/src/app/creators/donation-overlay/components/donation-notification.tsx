@@ -1,7 +1,7 @@
 'use client';
 
-import { useMemo, type CSSProperties } from 'react';
-import { ChainToken, CREATOR_API_URL } from '@idriss-xyz/constants';
+import { useMemo } from 'react';
+import { CREATOR_API_URL } from '@idriss-xyz/constants';
 import { Badge } from '@idriss-xyz/ui/badge';
 import {
   formatFiatValue,
@@ -15,30 +15,7 @@ import { IDRISS_ICON_CIRCLE, DEFAULT_TRUMPET_SOUND } from '@/assets';
 
 import { useDonationNotification } from '../hooks/use-donation-notification';
 import { soundMap } from '../../constants';
-import { MinimumAmounts, EnableToggles } from '../page';
-
-export type DonationNotificationProperties = {
-  donor: string;
-  amount: string;
-  message: string;
-  sfxText?: string;
-  txnHash: string;
-  bgColor?: string;
-  avatarUrl?: string;
-  minimumAmounts: MinimumAmounts;
-  enableToggles: EnableToggles;
-  customIcon?: string;
-  style?: CSSProperties;
-  alertSound?: string;
-  voiceId?: string;
-  creatorName?: string;
-  token: {
-    amount: bigint;
-    details?: ChainToken;
-  };
-  minOverallVisibleDuration: number; // Minimum total time the notification should be visible
-  onFullyComplete: () => void; // Callback when the notification lifecycle is complete
-};
+import { DonationNotificationProperties } from '../types';
 
 export default function DonationNotification({
   donor,

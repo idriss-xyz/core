@@ -1,7 +1,7 @@
 import { Hex } from 'viem';
 import { CHAIN, CREATOR_API_URL } from '@idriss-xyz/constants';
-import { getAccessToken, User } from '@privy-io/react-auth';
-import { SetStateAction } from 'react';
+
+import { CreatorProfileResponse } from './types';
 
 type BrowserBasedImageProperties = {
   svgSrc: string;
@@ -29,34 +29,6 @@ export const browserBasedSource = ({
   }
 
   return svgSrc;
-};
-
-// TODO: check location and use zod
-export type CreatorProfileResponse = {
-  id: number;
-  address: Hex;
-  primaryAddress: Hex;
-  name: string;
-  displayName?: string;
-  profilePictureUrl?: string;
-  email?: string;
-  receiveEmails?: boolean;
-  donationUrl: string;
-  obsUrl?: string;
-  joinedAt: string;
-  doneSetup: boolean;
-  minimumAlertAmount: number;
-  minimumTTSAmount: number;
-  minimumSfxAmount: number;
-  voiceId: string;
-  alertEnabled: boolean;
-  ttsEnabled: boolean;
-  sfxEnabled: boolean;
-  networks: string[];
-  tokens: string[];
-  privyId: string;
-  customBadWords: string[];
-  alertSound: string;
 };
 
 export const getPublicCreatorProfile = async (
@@ -91,28 +63,6 @@ export const getPublicCreatorProfileBySlug = async (
   const response = await fetch(
     `${CREATOR_API_URL}/creator-profile/donation-overlay/${slug}`,
   );
-  if (!response.ok) {
-    return;
-  }
-  const data = (await response.json()) as CreatorProfileResponse;
-  return data;
-};
-
-export const getCreatorProfile = async (
-  authToken: string,
-): Promise<CreatorProfileResponse | undefined> => {
-  if (!authToken) {
-    console.error('No slug to get creator');
-    return;
-  }
-
-  const response = await fetch(`${CREATOR_API_URL}/creator-profile/me`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${authToken}`,
-    },
-  });
   if (!response.ok) {
     return;
   }
@@ -238,23 +188,8 @@ export const getChainIdsFromShortNames = (shortNames: string[]) => {
   });
 };
 
-export { useStartEarningNavigation } from './navigation';
-
-export const setCreatorIfSessionPresent = async (
-  user: User,
-  setCreator: (value: SetStateAction<CreatorProfileResponse | null>) => void,
-) => {
-  const walletAddress = user.wallet?.address as Hex | undefined;
-  const authToken = await getAccessToken();
-  if (!authToken || !user.id) {
-    throw new Error('Could not get auth token or user ID for new user.');
-  }
-  const fetchedCreator = await getCreatorProfile(authToken);
-  if (fetchedCreator == null || fetchedCreator === undefined) {
-    console.error(
-      `Could not find creator with address ${walletAddress}, this may be a new user.`,
-    );
-    return;
-  }
-  setCreator(fetchedCreator);
-};
+export {
+  useStartEarningNavigation,
+  getCreatorProfile,
+  setCreatorIfSessionPresent,
+} from './navigation';
