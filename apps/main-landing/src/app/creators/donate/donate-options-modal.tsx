@@ -1,42 +1,72 @@
 'use client';
 import { useState } from 'react';
+import { CREATOR_API_URL } from '@idriss-xyz/constants';
 import { Modal } from '@idriss-xyz/ui/modal';
 import { Button } from '@idriss-xyz/ui/button';
 import {
   IdrissCardRadioGroup,
   CardRadioItem,
 } from '@idriss-xyz/ui/radio-group';
+import { usePrivy } from '@privy-io/react-auth';
 
 import { ACCOUNT_CARD, GUEST_CARD } from '@/assets';
 
+import { useAuth } from '../context/auth-context';
+
+const cardRadioItems: CardRadioItem[] = [
+  {
+    value: 'guest',
+    title: 'Donate as a guest',
+    description: 'Quick and anonymous donation without creating an account.',
+    image: GUEST_CARD.src,
+    imageAlt: 'Guest donation',
+  },
+  {
+    value: 'account',
+    title: 'Get recognized',
+    description: 'Create an account to track donations and get recognition.',
+    image: ACCOUNT_CARD.src,
+    imageAlt: 'Account donation',
+  },
+];
+
 export const DonateOptionsModal = () => {
   const [selectedOption, setSelectedOption] = useState<string>('account');
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
+  const { authenticated } = usePrivy();
+  const { creator } = useAuth();
 
-  const cardRadioItems: CardRadioItem[] = [
-    {
-      value: 'guest',
-      title: 'Donate as a guest',
-      description: 'Quick and anonymous donation without creating an account.',
-      image: GUEST_CARD.src,
-      imageAlt: 'Guest donation',
-    },
-    {
-      value: 'account',
-      title: 'Get recognized',
-      description: 'Create an account to track donations and get recognition.',
-      image: ACCOUNT_CARD.src,
-      imageAlt: 'Account donation',
-    },
-  ];
+  const modalOpen = isModalOpen && !(authenticated && creator);
 
   const handleSaveChoice = () => {
-    if (selectedOption) {
-      localStorage.setItem('donateOptionChosen', selectedOption);
+    switch (selectedOption) {
+      case 'guest': {
+        setIsModalOpen(false);
+        break;
+      }
+      case 'account': {
+        // Redirect to Twitch auth with callback parameter
+        const currentPath = window.location.pathname;
+        const callbackParameter = currentPath.startsWith('/creators/')
+          ? currentPath.slice(1)
+          : 'creators'; // Remove leading slash
+        window.location.href = `${CREATOR_API_URL}/auth/twitch?callback=${encodeURIComponent(callbackParameter)}`;
+        setIsModalOpen(false);
+        break;
+      }
+      default: {
+        break;
+      }
     }
   };
 
   return (
-    <Modal isOpened onClose={() => {}}>
+    <Modal
+      isOpened={modalOpen}
+      onClose={() => {
+        return setIsModalOpen(false);
+      }}
+    >
       <div className="mx-auto flex w-[752px] flex-col gap-8 p-6">
         <h3 className="text-center text-heading3 text-neutral-900">
           How would you like to donate?
