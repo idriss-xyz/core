@@ -10,14 +10,7 @@ import {
 } from '../db/entities';
 import { Hex } from 'viem';
 
-import {
-  DEFAULT_DONATION_MIN_ALERT_AMOUNT,
-  DEFAULT_DONATION_MIN_TTS_AMOUNT,
-  DEFAULT_DONATION_MIN_SFX_AMOUNT,
-  CREATORS_LINK,
-  CREATOR_CHAIN,
-  TOKEN,
-} from '@idriss-xyz/constants';
+import { CREATORS_LINK } from '@idriss-xyz/constants';
 import { verifyToken } from '../db/middleware/auth.middleware';
 import { streamAudioFromS3 } from '../utils/audio-utils';
 
