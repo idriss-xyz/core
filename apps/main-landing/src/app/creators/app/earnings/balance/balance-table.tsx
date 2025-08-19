@@ -1,8 +1,15 @@
 'use client';
-import { BalanceTableItem } from '@idriss-xyz/constants';
+import { BalanceTableItem, NULL_ADDRESS } from '@idriss-xyz/constants';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { ColumnDefinition, Table } from '@idriss-xyz/ui/table';
 import { formatFiatValue, formatTokenValue } from '@idriss-xyz/utils';
+import {
+  TooltipProvider,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from '@idriss-xyz/ui/tooltip';
+import { Icon } from '@idriss-xyz/ui/icon';
 
 import { TokenLogo } from '../stats-and-history/token-logo';
 
@@ -35,7 +42,40 @@ export function BalanceTable({
                 imageUrl={item.token.imageUrl}
               />
             </div>
-            <span>{item.token.symbol ?? 'UNKNOWN SYMBOL'}</span>
+
+            <div className="flex flex-col">
+              <div className="inline-flex items-center gap-1">
+                <span className="text-body4 text-neutral-900">
+                  {item.token.name ?? item.token.symbol ?? 'UNKNOWN TOKEN'}
+                </span>
+
+                {item.token.address === NULL_ADDRESS && (
+                  <TooltipProvider delayDuration={400}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Icon
+                          name="HelpCircle"
+                          size={14}
+                          className="text-neutral-900"
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent className="bg-black text-left text-white">
+                        <p className="text-label6">
+                          You may see a small {item.token.symbol} balance even
+                          if no one donated it to you. We sponsor network fees
+                          <br /> for one withdrawal per day on each network, and
+                          any unused portion stays in your balance.
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                )}
+              </div>
+
+              <span className="text-body5 text-neutral-600">
+                {item.token.symbol ?? 'UNKNOWN SYMBOL'}
+              </span>
+            </div>
           </div>
         );
       },
