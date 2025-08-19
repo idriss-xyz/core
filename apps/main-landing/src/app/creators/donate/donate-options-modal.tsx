@@ -1,16 +1,33 @@
 'use client';
 import { useState } from 'react';
 import { Modal } from '@idriss-xyz/ui/modal';
-import { Card, CardHeader, CardBody } from '@idriss-xyz/ui/card';
 import { Button } from '@idriss-xyz/ui/button';
-import { Checkbox } from '@idriss-xyz/ui/checkbox';
+import {
+  IdrissCardRadioGroup,
+  CardRadioItem,
+} from '@idriss-xyz/ui/radio-group';
 
 import { ACCOUNT_CARD, GUEST_CARD } from '@/assets';
 
 export const DonateOptionsModal = () => {
-  const [selectedOption, setSelectedOption] = useState<
-    'guest' | 'account' | null
-  >(null);
+  const [selectedOption, setSelectedOption] = useState<string>('');
+
+  const cardRadioItems: CardRadioItem[] = [
+    {
+      value: 'guest',
+      title: 'Donate as a guest',
+      description: 'Quick and anonymous donation without creating an account',
+      image: GUEST_CARD.src,
+      imageAlt: 'Guest donation',
+    },
+    {
+      value: 'account',
+      title: 'Get recognized',
+      description: 'Create an account to track donations and get recognition',
+      image: ACCOUNT_CARD.src,
+      imageAlt: 'Account donation',
+    },
+  ];
 
   const handleSaveChoice = () => {
     if (selectedOption) {
@@ -25,73 +42,12 @@ export const DonateOptionsModal = () => {
           How would you like to donate?
         </h3>
 
-        <div className="mb-6 grid grid-cols-2 gap-4">
-          {/* Guest Card */}
-          <Card
-            className={`cursor-pointer p-0 shadow-none transition-all ${selectedOption === 'guest' ? 'border-[1.5px] border-mint-400' : 'border border-gray-200'}`}
-          >
-            <div className="p-1">
-              <img
-                src={GUEST_CARD.src}
-                alt="Guest card"
-                className="h-[200px] w-full rounded-lg bg-neutral-100 object-cover"
-              />
-            </div>
-            <div className="flex flex-col gap-1 p-4">
-              <div className="flex items-center justify-between">
-                <CardHeader className="text-heading4">
-                  Donate as a guest
-                </CardHeader>
-                <Checkbox
-                  value={selectedOption === 'guest'}
-                  onChange={() => {
-                    return setSelectedOption(
-                      selectedOption === 'guest' ? null : 'guest',
-                    );
-                  }}
-                />
-              </div>
-              <CardBody>
-                <p className="text-body2 text-neutral-600">
-                  Support quietly without logging in and creating a public
-                  profile.
-                </p>
-              </CardBody>
-            </div>
-          </Card>
-
-          {/* Account Card */}
-          <Card
-            className={`cursor-pointer p-0 shadow-none transition-all ${selectedOption === 'account' ? 'border-[1.5px] border-mint-400' : 'border border-gray-200'}`}
-          >
-            <div className="p-1">
-              <img
-                src={ACCOUNT_CARD.src}
-                alt="Account card"
-                className="h-[200px] w-full rounded-lg bg-gradient-to-t object-cover"
-              />
-            </div>
-            <div className="flex flex-col gap-1 p-4">
-              <div className="flex items-center justify-between">
-                <CardHeader className="text-heading4">
-                  Get recognized
-                </CardHeader>
-                <Checkbox
-                  value={selectedOption === 'account'}
-                  onChange={() => {
-                    return setSelectedOption(
-                      selectedOption === 'account' ? null : 'account',
-                    );
-                  }}
-                />
-              </div>
-              <CardBody>
-                <p className="text-body2 text-neutral-600">
-                  Personalized donation with custom message
-                </p>
-              </CardBody>
-            </div>
-          </Card>
+        <div className="mb-6">
+          <IdrissCardRadioGroup
+            items={cardRadioItems}
+            value={selectedOption}
+            onChange={setSelectedOption}
+          />
         </div>
 
         <div className="flex justify-center">
