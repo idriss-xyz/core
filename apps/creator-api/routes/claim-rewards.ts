@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 
-import { Hex } from 'viem';
+import {Hex, parseUnits} from 'viem';
 
 import dotenv from 'dotenv';
 import { AppDataSource } from '../db/database';
@@ -8,10 +8,15 @@ import { Creator, Referral } from '../db/entities';
 import { InvokeCommand } from '@aws-sdk/client-lambda';
 import { verifyToken } from '../db/middleware/auth.middleware';
 import { LAMBDA_CLIENT, SIGNING_LAMBDA_NAME } from '../config/aws-config';
+import {CHAIN_ID_TO_TOKENS} from "@idriss-xyz/constants";
 
 dotenv.config();
 
 const router = Router();
+
+type Response1 = {
+  price: string;
+};
 
 router.post('/:address', verifyToken(), async (req: Request, res: Response) => {
   const address = req.params.address;
@@ -58,13 +63,43 @@ router.post('/:address', verifyToken(), async (req: Request, res: Response) => {
     return;
   }
 
-  // todo: Calculate unsigned transaction hash. Temporary value is hardcoded.
-  const txHash =
-    '0xa3f4c51234abcdef5678deadbeef9abc1234567890fedcba9876543210abcdef0'; // your digest
+  const chainId = 8453;
+  const tokenAddress = '0x000096630066820566162c94874a776532705231' as Hex;
+  const amount = 2;
+
+  const usdcToken = CHAIN_ID_TO_TOKENS[chainId]?.find(
+    (token) => {
+      return token.symbol === 'USDC';
+    },
+  );
+
+  const payload = {
+    chainId: chainId,
+    buyToken: tokenAddress,
+    sellToken: usdcToken?.address ?? '',
+    amount: 10 ** (usdcToken?.decimals ?? 0),
+  };
+
+  const response = await fetch(
+    `https://api.idriss.xyz/token-price?${new URLSearchParams({
+      buyToken: payload.buyToken,
+      sellToken: payload.sellToken,
+      network: payload.chainId.toString(),
+      sellAmount: payload.amount.toString(),
+    }).toString()}`,
+  );
+
+  const tokenPerDolar = (await response.json()) as Response1;
+
+  const idrissAmount = amount * Number(tokenPerDolar.price);
+
+  const tokenAmountInUnits = parseUnits(idrissAmount.toString(), 18);
+
+  console.log("Amount:", tokenAmountInUnits );
 
   const command = new InvokeCommand({
     FunctionName: SIGNING_LAMBDA_NAME,
-    Payload: Buffer.from(JSON.stringify({ txHash })),
+    // Payload: Buffer.from(JSON.stringify({  })),
   });
 
   let payload;
