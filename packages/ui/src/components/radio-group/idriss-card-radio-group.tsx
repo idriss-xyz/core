@@ -31,7 +31,12 @@ export const IdrissCardRadioGroup = ({
           return (
             <Card
               key={item.value}
-              className="cursor-pointer border-[1.5px] border-gray-200 p-0 shadow-none transition-all data-[state=checked]:border-mint-500"
+              className={classes(
+                'cursor-pointer border p-0 shadow-none transition-colors hover:border-mint-500',
+                value === item.value
+                  ? 'border-[1.5px] border-mint-500'
+                  : 'border-gray-200',
+              )}
               onClick={() => {
                 return onChange(item.value);
               }}

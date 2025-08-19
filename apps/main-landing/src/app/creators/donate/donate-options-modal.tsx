@@ -16,14 +16,14 @@ export const DonateOptionsModal = () => {
     {
       value: 'guest',
       title: 'Donate as a guest',
-      description: 'Quick and anonymous donation without creating an account',
+      description: 'Quick and anonymous donation without creating an account.',
       image: GUEST_CARD.src,
       imageAlt: 'Guest donation',
     },
     {
       value: 'account',
       title: 'Get recognized',
-      description: 'Create an account to track donations and get recognition',
+      description: 'Create an account to track donations and get recognition.',
       image: ACCOUNT_CARD.src,
       imageAlt: 'Account donation',
     },
@@ -37,29 +37,28 @@ export const DonateOptionsModal = () => {
 
   return (
     <Modal isOpened onClose={() => {}}>
-      <div className="mx-auto w-[752px] p-6">
-        <h3 className="mb-6 text-center text-heading3 font-semibold">
+      <div className="mx-auto flex w-[752px] flex-col gap-8 p-6">
+        <h3 className="text-center text-heading3 text-neutral-900">
           How would you like to donate?
         </h3>
 
-        <div className="mb-6">
+        <div className="flex flex-col gap-6">
           <IdrissCardRadioGroup
             items={cardRadioItems}
             value={selectedOption}
             onChange={setSelectedOption}
           />
-        </div>
-
-        <div className="flex justify-center">
-          <Button
-            onClick={handleSaveChoice}
-            disabled={!selectedOption}
-            intent="primary"
-            size="medium"
-            prefixIconName="Coins"
-          >
-            Donate
-          </Button>
+          <div className="flex justify-center">
+            <Button
+              onClick={handleSaveChoice}
+              disabled={!selectedOption}
+              intent="primary"
+              size="medium"
+              prefixIconName="Coins"
+            >
+              Donate
+            </Button>
+          </div>
         </div>
       </div>
     </Modal>
