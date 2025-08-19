@@ -85,6 +85,7 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
       displayName: twitchUser.display_name,
       pfp: twitchUser.profile_image_url,
       email: twitchUser.email,
+      callbackUrl: finalCallbackUrl,
     });
 
     res.redirect(`${finalCallbackUrl}?${frontendRedirectParams.toString()}`);

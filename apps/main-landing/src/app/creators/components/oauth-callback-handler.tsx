@@ -5,8 +5,13 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '../context/auth-context';
 
 export function OAuthCallbackHandler() {
-  const { setCustomAuthToken, setIsModalOpen, setOauthLoading, setOauthError } =
-    useAuth();
+  const {
+    setCustomAuthToken,
+    setIsModalOpen,
+    setOauthLoading,
+    setOauthError,
+    setCallbackUrl,
+  } = useAuth();
   const router = useRouter();
   const searchParameters = useSearchParams();
   const {
@@ -17,12 +22,20 @@ export function OAuthCallbackHandler() {
     email,
     login,
     error,
+    callbackUrl,
   } = Object.fromEntries(
-    ['token', 'name', 'displayName', 'pfp', 'email', 'login', 'error'].map(
-      (k) => {
-        return [k, searchParameters.get(k)];
-      },
-    ),
+    [
+      'token',
+      'name',
+      'displayName',
+      'pfp',
+      'email',
+      'login',
+      'error',
+      'callbackUrl',
+    ].map((k) => {
+      return [k, searchParameters.get(k)];
+    }),
   );
 
   useEffect(() => {
@@ -43,6 +56,7 @@ export function OAuthCallbackHandler() {
           JSON.stringify({ name, displayName, pfp, email }),
         );
       }
+      if (callbackUrl) setCallbackUrl(callbackUrl);
       setCustomAuthToken(authToken);
     }
     if (login || error || authToken) {
@@ -57,10 +71,12 @@ export function OAuthCallbackHandler() {
     login,
     router,
     error,
+    callbackUrl,
     setIsModalOpen,
     setOauthLoading,
     setCustomAuthToken,
     setOauthError,
+    setCallbackUrl,
   ]);
 
   return null;
