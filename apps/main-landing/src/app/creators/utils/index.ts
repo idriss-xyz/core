@@ -87,8 +87,7 @@ export const saveCreatorProfile = async (
     throw new Error('No auth token provided');
   }
 
-  const response = await fetch(`${CREATOR_API_URL}/creator-profile-from-referral/0x643bd6D96fa309A3CbB5CC39a5b19401cD706d56`, {
-    // const response = await fetch(`${CREATOR_API_URL}/creator-profile`, {
+    const response = await fetch(`${CREATOR_API_URL}/creator-profile`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
