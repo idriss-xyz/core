@@ -28,7 +28,7 @@ export {
   createAddressToCreatorMap,
   getNetworkKeyByChainId,
   calculateTokensToSend,
-  calculateDollarsInIdrissToken
+  calculateDollarsInIdrissToken,
 } from './donation-utils';
 
 export { getTokenPerDollar } from './get-token-per-dollar';
