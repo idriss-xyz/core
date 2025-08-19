@@ -37,6 +37,7 @@ import {
   AddReferralEntity1753000000000,
   CreateDripDailyClaim1755298637000,
   PopulateCreatorTokenAndNetworkDefaults1754915299000,
+  RenameEtherToEthereum1755609037000,
 } from './migrations';
 import { CreatorProfileView } from './views';
 
@@ -83,6 +84,7 @@ export const AppDataSource = new DataSource({
     AddReferralEntity1753000000000,
     CreateDripDailyClaim1755298637000,
     PopulateCreatorTokenAndNetworkDefaults1754915299000,
+    RenameEtherToEthereum1755609037000,
   ],
 });
 

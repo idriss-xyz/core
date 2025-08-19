@@ -63,9 +63,14 @@ router.post(
       return;
     }
 
+    console.log('Refferer', referrer);
+
     const referred = await creatorRepository.findOne({
       where: { address: hexReferredAddress },
     });
+
+    console.log('Reffered', referred);
+
 
     if (!referred) {
       console.error('Referred with given address does not exist');

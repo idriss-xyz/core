@@ -60,10 +60,10 @@ app.use('/text-to-sfx', textToSfxRouter);
 app.use('/twitch-account-info', twitchAccountInfoRouter);
 app.use('/auth', authRouter);
 app.use('/upload', uploadRouter);
-app.use('/join', creatorProfileFromReferral);
 app.use('/referral-history', referralRouter);
 app.use('/claim-rewards', claimRewardsRouter);
-app.use('/creator-profile-from-referral', dripRouter);
+app.use('/drip', dripRouter);
+app.use('/creator-profile-from-referral', creatorProfileFromReferral);
 
 const HOST = process.env.HOST;
 const PORT = Number(process.env.PORT) || 4000;

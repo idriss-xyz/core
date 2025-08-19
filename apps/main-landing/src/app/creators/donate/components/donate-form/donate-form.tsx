@@ -16,10 +16,11 @@ import {
   Token,
   EMPTY_HEX,
   CHAIN_ID_TO_TOKENS,
-  CREATORS_USER_GUIDE_LINK,
   DEFAULT_ALLOWED_CHAINS_IDS,
   DEFAULT_DONATION_MIN_SFX_AMOUNT,
   CREATOR_API_URL,
+  TERMS_OF_SERVICE_LINK,
+  PRIVACY_POLICY_LINK,
 } from '@idriss-xyz/constants';
 import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -34,6 +35,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
+import { ExternalLink } from '@idriss-xyz/ui/external-link';
 
 import { backgroundLines3 } from '@/assets';
 
@@ -510,11 +512,11 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                             <TooltipTrigger asChild>
                               <Icon name="HelpCircle" size={15} />
                             </TooltipTrigger>
-                            <TooltipContent className="bg-black text-center text-white">
+                            <TooltipContent className="bg-black text-left text-white">
                               <p className="text-label6">
-                                Type what you want to hear. AI will turn it into{' '}
-                                <br />a sound effect and replace the default
-                                sound. You can{' '}
+                                Type what you want to hear. AI will turn it into
+                                a sound effect <br />
+                                and replace the default sound. You can{' '}
                                 <a
                                   href="https://elevenlabs.io/sound-effects"
                                   className="text-mint-500 underline"
@@ -522,7 +524,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                                   rel="noreferrer"
                                 >
                                   test it
-                                </a>
+                                </a>{' '}
                                 before sending.
                               </p>
                             </TooltipContent>
@@ -547,8 +549,9 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
               type="submit"
               intent="primary"
               className="mt-6 w-full"
+              prefixIconName="Coins"
             >
-              SEND
+              Donate
             </Button>
           ) : (
             <Button
@@ -562,16 +565,23 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
             </Button>
           )}
         </Form>
-
-        <div className="mt-[23px] flex justify-center">
-          <Link
-            size="xs"
-            isExternal
-            className="lg:text-label7"
-            href={CREATORS_USER_GUIDE_LINK}
-          >
-            1% supplies IDRISS’s treasury
-          </Link>
+        <div className="mt-4 w-full py-3 text-center">
+          <span className="text-label7 text-neutral-500">
+            By donating, you agree to the{' '}
+            <ExternalLink
+              className="text-mint-600 underline"
+              href={TERMS_OF_SERVICE_LINK}
+            >
+              Terms of service
+            </ExternalLink>{' '}
+            and{' '}
+            <ExternalLink
+              className="text-mint-600 underline"
+              href={PRIVACY_POLICY_LINK}
+            >
+              Privacy policy
+            </ExternalLink>
+          </span>
         </div>
       </div>
     );

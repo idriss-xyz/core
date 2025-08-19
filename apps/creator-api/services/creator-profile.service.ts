@@ -9,11 +9,11 @@ import {
 import { randomBytes } from 'crypto';
 import { Request, Response } from 'express';
 import {
-  CREATOR_CHAIN,
-  CREATORS_LINK,
   DEFAULT_DONATION_MIN_ALERT_AMOUNT,
-  DEFAULT_DONATION_MIN_SFX_AMOUNT,
   DEFAULT_DONATION_MIN_TTS_AMOUNT,
+  DEFAULT_DONATION_MIN_SFX_AMOUNT,
+  CREATORS_LINK,
+  CREATOR_CHAIN,
   TOKEN,
 } from '@idriss-xyz/constants';
 import { Hex } from 'viem';

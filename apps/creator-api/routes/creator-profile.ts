@@ -10,7 +10,12 @@ import {
 } from '../db/entities';
 import { Hex } from 'viem';
 
-import { CREATORS_LINK } from '@idriss-xyz/constants';
+import {
+  CREATORS_LINK,
+  CREATOR_CHAIN,
+  CHAIN_ID_TO_TOKENS,
+} from '@idriss-xyz/constants';
+
 import { verifyToken } from '../db/middleware/auth.middleware';
 import { streamAudioFromS3 } from '../utils/audio-utils';
 
@@ -338,8 +343,8 @@ router.patch(
         alertEnabled,
         ttsEnabled,
         sfxEnabled,
-        tokens = [],
-        networks = [],
+        tokens,
+        networks,
         customBadWords,
         primaryAddress,
         ...creatorData
@@ -404,52 +409,108 @@ router.patch(
       }
 
       // Handle tokens
-      const existingTokens = await tokenRepository.find({
-        where: { creator: { id: creator.id } },
-      });
+      if (tokens !== undefined && tokens.length > 0) {
+        const networksToCheck =
+          networks !== undefined && networks.length > 0
+            ? networks
+            : (
+                await AppDataSource.getRepository(CreatorNetwork).find({
+                  where: { creator: { id: creator.id } },
+                })
+              ).map((n) => n.chainName);
 
-      // Remove tokens that are no longer in the params
-      for (const existingToken of existingTokens) {
-        if (!tokens.includes(existingToken.tokenSymbol)) {
-          await tokenRepository.remove(existingToken);
-        }
-      }
+        const networkIds = networksToCheck
+          .map(
+            (shortName: string) =>
+              Object.values(CREATOR_CHAIN).find(
+                (c) => c.shortName === shortName,
+              )?.id,
+          )
+          .filter((id: number | undefined): id is number => id !== undefined);
 
-      // Add new tokens
-      for (const tokenSymbol of tokens) {
-        const existingToken = existingTokens.find(
-          (t) => t.tokenSymbol === tokenSymbol,
+        const allowedTokenSymbols = [
+          ...new Set(
+            networkIds.flatMap(
+              (id: number) =>
+                CHAIN_ID_TO_TOKENS[id]?.map((t) => t.symbol) ?? [],
+            ),
+          ),
+        ];
+
+        const invalidTokens = tokens.filter(
+          (symbol: string) => !allowedTokenSymbols.includes(symbol),
         );
-        if (!existingToken) {
-          const newToken = new CreatorToken();
-          newToken.tokenSymbol = tokenSymbol;
-          newToken.creator = creator;
-          await tokenRepository.save(newToken);
+        if (invalidTokens.length) {
+          res.status(400).json({
+            error: `Invalid token(s) for selected networks: ${invalidTokens.join(
+              ', ',
+            )}`,
+          });
+          return;
+        }
+
+        const existingTokens = await tokenRepository.find({
+          where: { creator: { id: creator.id } },
+        });
+
+        // Remove tokens that are no longer in the params
+        for (const existingToken of existingTokens) {
+          if (!tokens.includes(existingToken.tokenSymbol)) {
+            await tokenRepository.remove(existingToken);
+          }
+        }
+
+        // Add new tokens
+        for (const tokenSymbol of tokens) {
+          const existingToken = existingTokens.find(
+            (t) => t.tokenSymbol === tokenSymbol,
+          );
+          if (!existingToken) {
+            const newToken = new CreatorToken();
+            newToken.tokenSymbol = tokenSymbol;
+            newToken.creator = creator;
+            await tokenRepository.save(newToken);
+          }
         }
       }
 
       // Handle networks
-      const existingNetworks = await networkRepository.find({
-        where: { creator: { id: creator.id } },
-      });
-
-      // Remove networks that are no longer in the params
-      for (const existingNetwork of existingNetworks) {
-        if (!networks.includes(existingNetwork.chainName)) {
-          await networkRepository.remove(existingNetwork);
-        }
-      }
-
-      // Add new networks
-      for (const chainName of networks) {
-        const existingNetwork = existingNetworks.find(
-          (n) => n.chainName === chainName,
+      if (networks !== undefined && networks.length > 0) {
+        const allowedNetworks = Object.values(CREATOR_CHAIN).map(
+          (c) => c.shortName,
         );
-        if (!existingNetwork) {
-          const newNetwork = new CreatorNetwork();
-          newNetwork.chainName = chainName;
-          newNetwork.creator = creator;
-          await networkRepository.save(newNetwork);
+        const invalidNetworks = networks.filter(
+          (n: string) => !allowedNetworks.includes(n),
+        );
+        if (invalidNetworks.length) {
+          res.status(400).json({
+            error: `Invalid network(s): ${invalidNetworks.join(', ')}`,
+          });
+          return;
+        }
+
+        const existingNetworks = await networkRepository.find({
+          where: { creator: { id: creator.id } },
+        });
+
+        // Remove networks that are no longer in the params
+        for (const existingNetwork of existingNetworks) {
+          if (!networks.includes(existingNetwork.chainName)) {
+            await networkRepository.remove(existingNetwork);
+          }
+        }
+
+        // Add new networks
+        for (const chainName of networks) {
+          const existingNetwork = existingNetworks.find(
+            (n) => n.chainName === chainName,
+          );
+          if (!existingNetwork) {
+            const newNetwork = new CreatorNetwork();
+            newNetwork.chainName = chainName;
+            newNetwork.creator = creator;
+            await networkRepository.save(newNetwork);
+          }
         }
       }
 
