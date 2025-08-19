@@ -21,8 +21,9 @@ export function TopBar() {
     }
   }, [user, setCreator]);
   return (
-    <>
-      <NavigationMenu.Root className="fixed right-0 top-0 z-10 flex justify-end gap-3">
+    creator &&
+    user && (
+      <NavigationMenu.Root className="fixed right-0 top-0 z-20 flex justify-end gap-3">
         <NavigationMenu.List className="flex items-center gap-2 p-3">
           <NavigationMenu.Item className="relative flex gap-1">
             <NavigationMenu.Trigger asChild>
@@ -94,6 +95,6 @@ export function TopBar() {
           </NavigationMenu.Item>
         </NavigationMenu.List>
       </NavigationMenu.Root>
-    </>
+    )
   );
 }
