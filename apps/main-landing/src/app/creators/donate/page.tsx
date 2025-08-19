@@ -1,10 +1,11 @@
 import { Metadata } from 'next';
 
+import { TopBar } from '../[name]/topbar';
+
 import { CreatorProfile } from './types';
 import { DonateContent } from './donate-content';
 import { RainbowKitProviders } from './providers';
 import { DonateOptionsModal } from './donate-options-modal';
-import { TopBar } from '../[name]/topbar';
 
 // ts-unused-exports:disable-next-line
 export const metadata: Metadata = {

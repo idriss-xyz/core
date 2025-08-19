@@ -1,14 +1,14 @@
-'use client'
+'use client';
 import { NavigationMenu } from '@idriss-xyz/ui/navigation-menu';
 import { Icon } from '@idriss-xyz/ui/icon';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useEffect } from 'react';
+import { usePrivy } from '@privy-io/react-auth';
 
 import { useLogout } from '../hooks/use-logout';
 import { useAuth } from '../context/auth-context';
-import { useEffect } from 'react';
 import { setCreatorIfSessionPresent } from '../utils';
-import { usePrivy } from '@privy-io/react-auth';
 
 export function TopBar() {
   const { creator, setCreator } = useAuth();
@@ -16,15 +16,14 @@ export function TopBar() {
   const handleLogout = useLogout();
 
   useEffect(() => {
-    if(user){
-      setCreatorIfSessionPresent(user, setCreator);
+    if (user) {
+      void setCreatorIfSessionPresent(user, setCreator);
     }
   }, [user, setCreator]);
   return (
     <>
-      <NavigationMenu.Root className="fixed top-0 right-0 z-10 flex justify-end gap-3">
+      <NavigationMenu.Root className="fixed right-0 top-0 z-10 flex justify-end gap-3">
         <NavigationMenu.List className="flex items-center gap-2 p-3">
-
           <NavigationMenu.Item className="relative flex gap-1">
             <NavigationMenu.Trigger asChild>
               <div className="flex max-h-[70px] min-h-[32px] w-max cursor-pointer items-center gap-2.5">
