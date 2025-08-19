@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 
-import {Hex, parseUnits} from 'viem';
+import { Hex, parseUnits } from 'viem';
 
 import dotenv from 'dotenv';
 import { AppDataSource } from '../db/database';
@@ -8,7 +8,7 @@ import { Creator, Referral } from '../db/entities';
 import { InvokeCommand } from '@aws-sdk/client-lambda';
 import { verifyToken } from '../db/middleware/auth.middleware';
 import { LAMBDA_CLIENT, SIGNING_LAMBDA_NAME } from '../config/aws-config';
-import {CHAIN_ID_TO_TOKENS} from "@idriss-xyz/constants";
+import { CHAIN_ID_TO_TOKENS } from '@idriss-xyz/constants';
 
 dotenv.config();
 
@@ -67,13 +67,11 @@ router.post('/:address', verifyToken(), async (req: Request, res: Response) => {
   const tokenAddress = '0x000096630066820566162c94874a776532705231' as Hex;
   const amount = 2;
 
-  const usdcToken = CHAIN_ID_TO_TOKENS[chainId]?.find(
-    (token) => {
-      return token.symbol === 'USDC';
-    },
-  );
+  const usdcToken = CHAIN_ID_TO_TOKENS[chainId]?.find((token) => {
+    return token.symbol === 'USDC';
+  });
 
-  const payload = {
+  const pricingPayload = {
     chainId: chainId,
     buyToken: tokenAddress,
     sellToken: usdcToken?.address ?? '',
@@ -82,10 +80,10 @@ router.post('/:address', verifyToken(), async (req: Request, res: Response) => {
 
   const response = await fetch(
     `https://api.idriss.xyz/token-price?${new URLSearchParams({
-      buyToken: payload.buyToken,
-      sellToken: payload.sellToken,
-      network: payload.chainId.toString(),
-      sellAmount: payload.amount.toString(),
+      buyToken: pricingPayload.buyToken,
+      sellToken: pricingPayload.sellToken,
+      network: pricingPayload.chainId.toString(),
+      sellAmount: pricingPayload.amount.toString(),
     }).toString()}`,
   );
 
@@ -95,7 +93,7 @@ router.post('/:address', verifyToken(), async (req: Request, res: Response) => {
 
   const tokenAmountInUnits = parseUnits(idrissAmount.toString(), 18);
 
-  console.log("Amount:", tokenAmountInUnits );
+  console.log('Amount:', tokenAmountInUnits);
 
   const command = new InvokeCommand({
     FunctionName: SIGNING_LAMBDA_NAME,
