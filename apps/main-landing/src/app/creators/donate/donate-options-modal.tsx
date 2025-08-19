@@ -10,7 +10,7 @@ import {
 import { ACCOUNT_CARD, GUEST_CARD } from '@/assets';
 
 export const DonateOptionsModal = () => {
-  const [selectedOption, setSelectedOption] = useState<string>('');
+  const [selectedOption, setSelectedOption] = useState<string>('account');
 
   const cardRadioItems: CardRadioItem[] = [
     {
