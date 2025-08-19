@@ -87,7 +87,7 @@ export const saveCreatorProfile = async (
     throw new Error('No auth token provided');
   }
 
-    const response = await fetch(`${CREATOR_API_URL}/creator-profile`, {
+  const response = await fetch(`${CREATOR_API_URL}/creator-profile`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -126,7 +126,7 @@ export const editCreatorProfile = async (
     }
 
     const response = await fetch(`${CREATOR_API_URL}/creator-profile/${name}`, {
-      method: 'POST',
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${authToken}`,

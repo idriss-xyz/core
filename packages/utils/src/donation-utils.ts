@@ -9,13 +9,15 @@ import {
   TokenBalance,
 } from '../../constants/src';
 
+import {IDRISS_TOKEN_ADDRESS} from "../../constants/src/constants";
+
 import { getTokenPerDollar } from './get-token-per-dollar';
 
 export const calculateDollarsInIdrissToken = async (
   amount: number,
   chainId: number,
 ) => {
-  const tokenAddress = '0x000096630066820566162c94874a776532705231' as Hex;
+  const tokenAddress = IDRISS_TOKEN_ADDRESS;
 
   const usdcToken = CHAIN_ID_TO_TOKENS[chainId]?.find((token) => {
     return token.symbol === 'USDC';

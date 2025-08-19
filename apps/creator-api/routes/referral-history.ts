@@ -4,8 +4,10 @@ import { AppDataSource } from '../db/database';
 import { Creator, Referral } from '../db/entities';
 import { In } from 'typeorm';
 import { verifyToken } from '../db/middleware/auth.middleware';
-import {creatorProfileService} from "../services/creator-profile.service";
-import {calculateReward, getAvailableRewards} from "../services/reward-calculating-utils";
+import {
+  calculateReward,
+  getAvailableRewards,
+} from '../services/reward-calculating-utils';
 
 const router = Router();
 
@@ -25,6 +27,11 @@ interface InvitedStreamersData {
 }
 
 router.get('/', verifyToken(), async (req: Request, res: Response) => {
+  if (!req.user?.id) {
+    res.status(401).json({ error: 'Unauthorized' });
+    return;
+  }
+
   try {
     const creatorRepository = AppDataSource.getRepository(Creator);
     const referrer = await creatorRepository.findOne({

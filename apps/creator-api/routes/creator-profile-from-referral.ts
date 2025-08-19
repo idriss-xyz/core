@@ -71,7 +71,6 @@ router.post(
 
     console.log('Reffered', referred);
 
-
     if (!referred) {
       console.error('Referred with given address does not exist');
       res

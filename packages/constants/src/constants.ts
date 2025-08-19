@@ -379,9 +379,9 @@ export const DEFAULT_ALLOWED_CHAINS_IDS = [
 export const EMPTY_HEX = '0x';
 
 export const COPILOT_API_URL = 'https://copilot-api.idriss.xyz';
-// export const CREATOR_API_URL = 'https://core-production-a116.up.railway.app';
-export const CREATOR_API_URL = 'http://localhost:4000';
+export const CREATOR_API_URL = 'https://core-production-a116.up.railway.app';
 
 export const DEFAULT_DONATION_MIN_ALERT_AMOUNT = 1;
 export const DEFAULT_DONATION_MIN_TTS_AMOUNT = 3;
 export const DEFAULT_DONATION_MIN_SFX_AMOUNT = 10;
+export const IDRISS_TOKEN_ADDRESS = '0x000096630066820566162c94874a776532705231';

@@ -21,6 +21,11 @@ dotenv.config();
 const router = Router();
 
 router.post('/', verifyToken(), async (req: Request, res: Response) => {
+  if (!req.user?.id) {
+    res.status(401).json({ error: 'Unauthorized' });
+    return;
+  }
+
   const creatorRepository = AppDataSource.getRepository(Creator);
   const creator = await creatorRepository.findOne({
     where: { privyId: req.user.id },

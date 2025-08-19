@@ -1,4 +1,4 @@
-import {Referral} from "../db/entities";
+import { Referral } from '../db/entities';
 
 export const calculateReward = (followersCount: number) => {
   let reward;
