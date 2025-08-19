@@ -55,7 +55,7 @@ export function BalanceTable({
                       <TooltipTrigger asChild>
                         <Icon
                           name="HelpCircle"
-                          size={14}
+                          size={16}
                           className="text-neutral-900"
                         />
                       </TooltipTrigger>
