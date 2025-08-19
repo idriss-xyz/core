@@ -9,7 +9,7 @@ import {
 } from 'react';
 import { DonationData } from '@idriss-xyz/constants';
 
-import { CreatorProfileResponse } from '../utils';
+import { CreatorProfileResponse } from '../utils/types';
 
 type AuthContextType = {
   donations: DonationData[];
