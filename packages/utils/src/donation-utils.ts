@@ -5,10 +5,10 @@ import {
   CHAIN_ID_TO_TOKENS,
   CREATOR_CHAIN,
   DonationData,
+  IDRISS_TOKEN_ADDRESS,
   LeaderboardStats,
   TokenBalance,
 } from '../../constants/src';
-import {IDRISS_TOKEN_ADDRESS} from "../../constants/src/constants";
 
 import { getTokenPerDollar } from './get-token-per-dollar';
 

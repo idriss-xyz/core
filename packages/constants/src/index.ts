@@ -25,7 +25,7 @@ export {
   CREATORS_FORM_LINK,
   TWITCH_EXTENSION_LINK,
   CREATOR_SETUP_GUIDE_LINK,
-  SUPPORT_LINK,
+  SUPPORT_LINK
 } from './links';
 
 export { STAKING_ABI, ERC20_ABI, TIPPING_ABI, REWARDS_ABI } from './abis';
@@ -47,6 +47,7 @@ export {
   DEFAULT_DONATION_MIN_ALERT_AMOUNT,
   DEFAULT_DONATION_MIN_TTS_AMOUNT,
   DEFAULT_DONATION_MIN_SFX_AMOUNT,
+  IDRISS_TOKEN_ADDRESS
 } from './constants';
 
 export type { TokenSymbol } from './constants';
