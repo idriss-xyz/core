@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 
 import { TopBar } from '../[name]/topbar';
+import { OAuthCallbackHandler } from '../components/oauth-callback-handler';
 
 import { CreatorProfile } from './types';
 import { DonateContent } from './donate-content';
@@ -22,6 +23,7 @@ interface Properties {
 export default function Donate({ creatorProfile }: Properties) {
   return (
     <RainbowKitProviders>
+      <OAuthCallbackHandler />
       <TopBar />
       <DonateOptionsModal />
       <DonateContent creatorProfile={creatorProfile} />

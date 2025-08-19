@@ -1,31 +1,29 @@
 'use client';
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { useAuth } from '../context/auth-context';
 
-interface CallbackProperties {
-  authToken: string | null;
-  name: string | null;
-  displayName: string | null;
-  pfp: string | null;
-  email: string | null;
-  login: string | null;
-  error: string | null;
-}
-
-export function OAuthCallbackHandler({
-  authToken,
-  name,
-  displayName,
-  pfp,
-  email,
-  login,
-  error,
-}: CallbackProperties) {
+export function OAuthCallbackHandler() {
   const { setCustomAuthToken, setIsModalOpen, setOauthLoading, setOauthError } =
     useAuth();
   const router = useRouter();
+  const searchParameters = useSearchParams();
+  const {
+    token: authToken,
+    name,
+    displayName,
+    pfp,
+    email,
+    login,
+    error,
+  } = Object.fromEntries(
+    ['token', 'name', 'displayName', 'pfp', 'email', 'login', 'error'].map(
+      (k) => {
+        return [k, searchParameters.get(k)];
+      },
+    ),
+  );
 
   useEffect(() => {
     if (login) {
