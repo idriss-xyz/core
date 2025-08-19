@@ -83,13 +83,10 @@ router.post(
       ? twitchUserFollowersInfo.total
       : 0;
 
-    const reward = calculateReward(followersCount);
-
     const referral = new Referral();
     referral.credited = false;
     referral.referrer = referrer;
     referral.referred = referred;
-    referral.reward = reward;
     referral.numberOfFollowers = followersCount;
 
     await referralRepository.save(referral);
@@ -99,28 +96,5 @@ router.post(
     });
   },
 );
-
-const calculateReward = (followersCount: number) => {
-  let reward;
-
-  switch (true) {
-    case followersCount >= 100_000:
-      reward = 25;
-      break;
-    case followersCount >= 10_000:
-      reward = 20;
-      break;
-    case followersCount >= 1_000:
-      reward = 15;
-      break;
-    case followersCount >= 100:
-      reward = 10;
-      break;
-    default:
-      reward = 0;
-      break;
-  }
-  return reward;
-};
 
 export default router;

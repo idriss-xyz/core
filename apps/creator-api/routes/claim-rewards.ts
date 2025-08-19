@@ -1,35 +1,29 @@
-import { Router, Request, Response } from 'express';
+import { Request, Response, Router } from 'express';
 
-import { Hex, parseUnits } from 'viem';
+import { getAddress } from 'viem';
 
 import dotenv from 'dotenv';
 import { AppDataSource } from '../db/database';
 import { Creator, Referral } from '../db/entities';
-import { InvokeCommand } from '@aws-sdk/client-lambda';
 import { verifyToken } from '../db/middleware/auth.middleware';
-import { LAMBDA_CLIENT, SIGNING_LAMBDA_NAME } from '../config/aws-config';
-import { CHAIN_ID_TO_TOKENS } from '@idriss-xyz/constants';
+import { LAMBDA_CLIENT } from '../config/aws-config';
+import { getAvailableRewards } from '../services/reward-calculating-utils';
+import { calculateDollarsInIdrissToken } from '@idriss-xyz/utils';
+import {
+  buildInvokeCommand,
+  chainMap,
+  decodeLambda,
+  getClient,
+} from '../utils/drip-utils';
 
 dotenv.config();
 
 const router = Router();
 
-type Response1 = {
-  price: string;
-};
-
-router.post('/:address', verifyToken(), async (req: Request, res: Response) => {
-  const address = req.params.address;
-  if (!address) {
-    console.error('Invalid creator address provided');
-    res.status(400).json({ error: 'Invalid creator address provided' });
-    return;
-  }
-  const hexAddress = address as Hex;
-
+router.post('/', verifyToken(), async (req: Request, res: Response) => {
   const creatorRepository = AppDataSource.getRepository(Creator);
   const creator = await creatorRepository.findOne({
-    where: { address: hexAddress },
+    where: { privyId: req.user.id },
   });
 
   if (!creator) {
@@ -53,9 +47,7 @@ router.post('/:address', verifyToken(), async (req: Request, res: Response) => {
     return;
   }
 
-  const rewardsToClaim = referrals
-    .filter((referral) => !referral.credited)
-    .reduce((sum, referral) => sum + referral.reward, 0);
+  const rewardsToClaim = getAvailableRewards(referrals);
 
   if (rewardsToClaim === 0) {
     console.error('No rewards to claim');
@@ -64,83 +56,50 @@ router.post('/:address', verifyToken(), async (req: Request, res: Response) => {
   }
 
   const chainId = 8453;
-  const tokenAddress = '0x000096630066820566162c94874a776532705231' as Hex;
-  const amount = 2;
+  const amount = await calculateDollarsInIdrissToken(rewardsToClaim, chainId);
 
-  const usdcToken = CHAIN_ID_TO_TOKENS[chainId]?.find((token) => {
-    return token.symbol === 'USDC';
+  const chain = chainMap[String(chainId) as keyof typeof chainMap];
+
+  const faucetAddress = getAddress(process.env.FAUCET_ADDRESS || '');
+  const client = getClient(chain);
+  const nonce = await client.getTransactionCount({
+    address: faucetAddress,
+    blockTag: 'pending',
   });
 
-  const pricingPayload = {
-    chainId: chainId,
-    buyToken: tokenAddress,
-    sellToken: usdcToken?.address ?? '',
-    amount: 10 ** (usdcToken?.decimals ?? 0),
-  };
-
-  const response = await fetch(
-    `https://api.idriss.xyz/token-price?${new URLSearchParams({
-      buyToken: pricingPayload.buyToken,
-      sellToken: pricingPayload.sellToken,
-      network: pricingPayload.chainId.toString(),
-      sellAmount: pricingPayload.amount.toString(),
-    }).toString()}`,
-  );
-
-  const tokenPerDolar = (await response.json()) as Response1;
-
-  const idrissAmount = amount * Number(tokenPerDolar.price);
-
-  const tokenAmountInUnits = parseUnits(idrissAmount.toString(), 18);
-
-  console.log('Amount:', tokenAmountInUnits);
-
-  const command = new InvokeCommand({
-    FunctionName: SIGNING_LAMBDA_NAME,
-    // Payload: Buffer.from(JSON.stringify({  })),
+  const command = buildInvokeCommand({
+    recipient: creator.primaryAddress,
+    amount: amount,
+    chainId: chainId.toString(),
+    nonce,
   });
-
-  let payload;
 
   try {
-    const response = await LAMBDA_CLIENT.send(command);
-
-    payload = response.Payload
-      ? JSON.parse(new TextDecoder().decode(response.Payload))
-      : null;
-
-    if (!payload) {
-      console.error('Payload is null');
-      res.status(400).json({ error: 'Payload is null' });
+    const resp = await LAMBDA_CLIENT.send(command);
+    if (resp.FunctionError) {
+      const details =
+        resp.Payload && (resp.Payload as Uint8Array).byteLength
+          ? Buffer.from(resp.Payload as Uint8Array).toString('utf8')
+          : null;
+      res.status(502).json({ error: 'Lambda FunctionError', details });
       return;
     }
-  } catch (err) {
-    console.error('Lambda invoke error:', err);
-    res.status(400).json({ error: 'Transaction failed' });
-    return;
+
+    const body = decodeLambda(resp);
+    if (body?.error) {
+      res.status(502).json({ error: body.error });
+      return;
+    }
+
+    await referralRepository.update(
+      { referrer: { id: creator.id } },
+      { credited: true },
+    );
+
+    res.status(200).json({ txHash: body.txHash });
+  } catch (e: any) {
+    res.status(500).json({ error: 'Lambda invoke failed', detail: e.message });
   }
-
-  try {
-    await AppDataSource.transaction(async (manager) => {
-      // Perform transaction
-
-      // If successful update referrals as credited
-      await manager.update(
-        Referral,
-        { referrer: { id: creator.id } },
-        { credited: true },
-      );
-    });
-  } catch (error) {
-    console.error('Transaction failed:', error);
-    res.status(400).json({ error: 'Transaction failed' });
-    return;
-  }
-
-  res.status(201).json({
-    message: 'Success',
-    payload,
-  });
 });
 
 export default router;

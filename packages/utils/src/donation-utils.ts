@@ -2,11 +2,37 @@ import { Hex, parseUnits } from 'viem';
 
 import {
   Chain,
+  CHAIN_ID_TO_TOKENS,
   CREATOR_CHAIN,
   DonationData,
   LeaderboardStats,
   TokenBalance,
 } from '../../constants/src';
+
+import { getTokenPerDollar } from './get-token-per-dollar';
+
+export const calculateDollarsInIdrissToken = async (
+  amount: number,
+  chainId: number,
+) => {
+  const tokenAddress = '0x000096630066820566162c94874a776532705231' as Hex;
+
+  const usdcToken = CHAIN_ID_TO_TOKENS[chainId]?.find((token) => {
+    return token.symbol === 'USDC';
+  });
+
+  const payload = {
+    chainId: chainId,
+    buyToken: tokenAddress,
+    sellToken: usdcToken?.address ?? '',
+    amount: 10 ** (usdcToken?.decimals ?? 0),
+  };
+
+  const tokenPerDollar = await getTokenPerDollar(payload);
+  const idrissAmount = amount * Number(tokenPerDollar.price);
+
+  return parseUnits(idrissAmount.toString(), 18);
+};
 
 export const getFilteredDonationsByPeriod = (
   donations: DonationData[],

@@ -4,7 +4,8 @@ import { AppDataSource } from '../db/database';
 import { Creator, Referral } from '../db/entities';
 import { In } from 'typeorm';
 import { verifyToken } from '../db/middleware/auth.middleware';
-import { Hex } from 'viem';
+import {creatorProfileService} from "../services/creator-profile.service";
+import {calculateReward, getAvailableRewards} from "../services/reward-calculating-utils";
 
 const router = Router();
 
@@ -23,21 +24,11 @@ interface InvitedStreamersData {
   reward: number;
 }
 
-router.get('/:address', verifyToken(), async (req: Request, res: Response) => {
+router.get('/', verifyToken(), async (req: Request, res: Response) => {
   try {
-    const address = req.params.address;
-    if (!address) {
-      console.error('Invalid creator address provided');
-      res.status(400).json({ error: 'Invalid creator address provided' });
-      return;
-    }
-
-    const hexAddress = address as Hex;
-
     const creatorRepository = AppDataSource.getRepository(Creator);
-
     const referrer = await creatorRepository.findOne({
-      where: { address: hexAddress },
+      where: { privyId: req.user.id },
     });
 
     if (!referrer) {
@@ -49,7 +40,6 @@ router.get('/:address', verifyToken(), async (req: Request, res: Response) => {
     }
 
     const referralRepository = AppDataSource.getRepository(Referral);
-
     const referrals = await referralRepository.find({
       where: { referrer: { id: referrer.id } },
       relations: ['referrer', 'referred'],
@@ -57,12 +47,10 @@ router.get('/:address', verifyToken(), async (req: Request, res: Response) => {
 
     const totalInvites = referrals.length;
     const totalRewards = referrals.reduce(
-      (sum, referral) => sum + referral.reward,
+      (sum, referral) => sum + calculateReward(referral.numberOfFollowers!),
       0,
     );
-    const availableRewards = referrals
-      .filter((referral) => !referral.credited)
-      .reduce((sum, referral) => sum + referral.reward, 0);
+    const availableRewards = getAvailableRewards(referrals);
 
     const streamerIds = referrals.map((referral) => referral.referred.id);
 
@@ -79,7 +67,7 @@ router.get('/:address', verifyToken(), async (req: Request, res: Response) => {
         profilePictureUrl: streamer.profilePictureUrl,
         numberOfFollowers: referred?.numberOfFollowers,
         joinDate: streamer.joinedAt,
-        reward: referred?.reward,
+        reward: calculateReward(referred?.numberOfFollowers!),
       };
     });
 

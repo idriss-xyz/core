@@ -10,7 +10,6 @@ export class AddReferralEntity1753000000000 implements MigrationInterface {
         "referrer_id" INTEGER NOT NULL,
         "referred_id" INTEGER NOT NULL UNIQUE,
         "credited" BOOLEAN NOT NULL,
-        "reward" INTEGER NOT NULL,
         "number_of_followers" INTEGER NOT NULL,
         CONSTRAINT "FK_referrals_referrer" FOREIGN KEY ("referrer_id") REFERENCES "creator"("id"),
         CONSTRAINT "FK_referrals_referred" FOREIGN KEY ("referred_id") REFERENCES "creator"("id")

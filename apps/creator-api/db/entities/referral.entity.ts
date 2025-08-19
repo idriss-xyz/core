@@ -26,9 +26,6 @@ export class Referral {
   @Column()
   credited!: boolean;
 
-  @Column()
-  reward!: number;
-
   @Column({ name: 'number_of_followers' })
   numberOfFollowers?: number;
 }
