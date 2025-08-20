@@ -15,6 +15,7 @@ import {
   decodeLambda,
   getClient,
 } from '../utils/drip-utils';
+import { base } from 'viem/op-stack';
 
 dotenv.config();
 
@@ -60,10 +61,8 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
     return;
   }
 
-  const chainId = 8453;
-  const amount = await calculateDollarsInIdrissToken(rewardsToClaim, chainId);
-
-  const chain = chainMap[String(chainId) as keyof typeof chainMap];
+  const chain = base;
+  const amount = await calculateDollarsInIdrissToken(rewardsToClaim, chain.id);
 
   const faucetAddress = getAddress(process.env.FAUCET_ADDRESS || '');
   const client = getClient(chain);
@@ -75,7 +74,7 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
   const command = buildInvokeCommand({
     recipient: creator.primaryAddress,
     amount: amount,
-    chainId: chainId.toString(),
+    chainId: chain.id.toString(),
     nonce,
   });
 
