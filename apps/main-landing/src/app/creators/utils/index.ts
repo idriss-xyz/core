@@ -1,6 +1,8 @@
 import { Hex } from 'viem';
 import { CHAIN, CREATOR_API_URL } from '@idriss-xyz/constants';
 
+import { CreatorProfileResponse } from './types';
+
 type BrowserBasedImageProperties = {
   svgSrc: string;
   pngSrc: string;
@@ -27,34 +29,6 @@ export const browserBasedSource = ({
   }
 
   return svgSrc;
-};
-
-// TODO: check location and use zod
-export type CreatorProfileResponse = {
-  id: number;
-  address: Hex;
-  primaryAddress: Hex;
-  name: string;
-  displayName?: string;
-  profilePictureUrl?: string;
-  email?: string;
-  receiveEmails?: boolean;
-  donationUrl: string;
-  obsUrl?: string;
-  joinedAt: string;
-  doneSetup: boolean;
-  minimumAlertAmount: number;
-  minimumTTSAmount: number;
-  minimumSfxAmount: number;
-  voiceId: string;
-  alertEnabled: boolean;
-  ttsEnabled: boolean;
-  sfxEnabled: boolean;
-  networks: string[];
-  tokens: string[];
-  privyId: string;
-  customBadWords: string[];
-  alertSound: string;
 };
 
 export const getPublicCreatorProfile = async (
@@ -89,28 +63,6 @@ export const getPublicCreatorProfileBySlug = async (
   const response = await fetch(
     `${CREATOR_API_URL}/creator-profile/donation-overlay/${slug}`,
   );
-  if (!response.ok) {
-    return;
-  }
-  const data = (await response.json()) as CreatorProfileResponse;
-  return data;
-};
-
-export const getCreatorProfile = async (
-  authToken: string,
-): Promise<CreatorProfileResponse | undefined> => {
-  if (!authToken) {
-    console.error('No slug to get creator');
-    return;
-  }
-
-  const response = await fetch(`${CREATOR_API_URL}/creator-profile/me`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${authToken}`,
-    },
-  });
   if (!response.ok) {
     return;
   }
@@ -236,5 +188,8 @@ export const getChainIdsFromShortNames = (shortNames: string[]) => {
   });
 };
 
-export { useStartEarningNavigation } from './navigation';
 export { setCreatorIfSessionPresent } from './session';
+export {
+  useStartEarningNavigation,
+  getCreatorProfile,
+} from './navigation';

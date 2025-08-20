@@ -30,9 +30,7 @@ import { useCreators } from '../hooks/use-creators';
 import { getPublicCreatorProfileBySlug } from '../utils';
 import { Address } from '../donate/types';
 
-import DonationNotification, {
-  type DonationNotificationProperties,
-} from './components/donation-notification';
+import DonationNotification from './components/donation-notification';
 import {
   calculateDollar,
   fetchDonationSfxText,
@@ -40,6 +38,7 @@ import {
   TIP_MESSAGE_EVENT_ABI,
 } from './utils';
 import { containsBadWords } from './utils/bad-words';
+import { DonationNotificationProperties, MinimumAmounts } from './types';
 
 const FETCH_INTERVAL = 5000;
 const BLOCK_LOOKBACK_RANGE = 5n;
@@ -50,18 +49,6 @@ const latestCheckedBlocks = new Map();
 interface Properties {
   creatorName?: string;
 }
-
-export type MinimumAmounts = {
-  minimumAlertAmount: number;
-  minimumSfxAmount: number;
-  minimumTTSAmount: number;
-};
-
-export type EnableToggles = {
-  alertEnabled: boolean;
-  sfxEnabled: boolean;
-  ttsEnabled: boolean;
-};
 
 type QueuedDonation = Omit<
   DonationNotificationProperties,

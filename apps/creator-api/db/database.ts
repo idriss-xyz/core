@@ -33,6 +33,7 @@ import {
   AddCreatorAddresses1753656919000,
   AddReceiveEmailsCreatorField1753726864037,
   PopulateCreatorTokenAndNetworkDefaults1754915299000,
+  RenameEtherToEthereum1755609037000,
 } from './migrations';
 import { CreatorProfileView } from './views';
 
@@ -75,6 +76,7 @@ export const AppDataSource = new DataSource({
     AddCreatorAddresses1753656919000,
     AddReceiveEmailsCreatorField1753726864037,
     PopulateCreatorTokenAndNetworkDefaults1754915299000,
+    RenameEtherToEthereum1755609037000,
   ],
 });
 

@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { TEST_TTS_MESSAGE_SOUND } from '@/assets';
 
 import { getTextToSfx, getTextToSpeech } from '../utils';
-import { MinimumAmounts, EnableToggles } from '../page';
+import { MinimumAmounts, EnableToggles } from '../types';
 import { TEST_DONATION_MESSAGE } from '../../constants';
 
 const PRICE_DROP_RANGE = 0.05;
