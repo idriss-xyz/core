@@ -52,7 +52,9 @@ export const IdrissCardRadioGroup = ({
               <div className="flex flex-col gap-1 p-4">
                 <div className="flex items-center justify-between">
                   <CardHeader>
-                    <h4 className="text-heading4">{item.title}</h4>
+                    <h4 className="text-heading4 text-neutral-900">
+                      {item.title}
+                    </h4>
                   </CardHeader>
                   <RadixRadioGroup.Item
                     className="size-[20px] cursor-default rounded-full border-2 border-neutral-400 data-[state=checked]:border-mint-500"

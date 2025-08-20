@@ -17,14 +17,16 @@ const cardRadioItems: CardRadioItem[] = [
   {
     value: 'guest',
     title: 'Donate as a guest',
-    description: 'Quick and anonymous donation without creating an account.',
+    description:
+      'Support quietly without logging in and creating a public profile.',
     image: GUEST_CARD.src,
     imageAlt: 'Guest donation',
   },
   {
     value: 'account',
     title: 'Get recognized',
-    description: 'Create an account to track donations and get recognition.',
+    description:
+      'Join the leaderboard, earn status, and track impact with a profile.',
     image: ACCOUNT_CARD.src,
     imageAlt: 'Account donation',
   },
