@@ -188,6 +188,22 @@ export const getChainIdsFromShortNames = (shortNames: string[]) => {
   });
 };
 
+export const getUsernameOrAnon = async (address: string): Promise<string> => {
+  try {
+    const response = await fetch(
+      `${CREATOR_API_URL}/creator-profile/address/${address}`,
+    );
+    if (response.ok) {
+      const profile = (await response.json()) as CreatorProfileResponse;
+      return profile.name ?? 'anon';
+    }
+    return 'anon';
+  } catch (error) {
+    console.error('Error fetching creator profile by address.', error);
+    return 'anon';
+  }
+};
+
 export {
   useStartEarningNavigation,
   getCreatorProfile,

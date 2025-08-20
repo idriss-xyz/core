@@ -27,14 +27,13 @@ import { clients } from '@idriss-xyz/blockchain-clients';
 import { CHAIN_TO_IDRISS_TIPPING_ADDRESS } from '../donate/constants';
 import { ethereumClient } from '../donate/config';
 import { useCreators } from '../hooks/use-creators';
-import { getPublicCreatorProfileBySlug } from '../utils';
+import { getPublicCreatorProfileBySlug, getUsernameOrAnon } from '../utils';
 import { Address } from '../donate/types';
 
 import DonationNotification from './components/donation-notification';
 import {
   calculateDollar,
   fetchDonationSfxText,
-  resolveEnsName,
   TIP_MESSAGE_EVENT_ABI,
 } from './utils';
 import { containsBadWords } from './utils/bad-words';
@@ -314,7 +313,7 @@ export default function Obs({ creatorName }: Properties) {
             continue;
           }
 
-          const resolved = await resolveEnsName(txn.from);
+          const resolved = await getUsernameOrAnon(txn.from);
 
           const senderIdentifier =
             resolved ?? `${txn.from.slice(0, 4)}...${txn.from.slice(-2)}`;
