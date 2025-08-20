@@ -188,8 +188,5 @@ export const getChainIdsFromShortNames = (shortNames: string[]) => {
   });
 };
 
-export {
-  useStartEarningNavigation,
-  getCreatorProfile,
-  setCreatorIfSessionPresent,
-} from './navigation';
+export { setCreatorIfSessionPresent } from './session';
+export { useStartEarningNavigation, getCreatorProfile } from './navigation';

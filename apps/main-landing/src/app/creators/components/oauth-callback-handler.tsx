@@ -1,31 +1,42 @@
 'use client';
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { useAuth } from '../context/auth-context';
 
-interface CallbackProperties {
-  authToken: string | null;
-  name: string | null;
-  displayName: string | null;
-  pfp: string | null;
-  email: string | null;
-  login: string | null;
-  error: string | null;
-}
-
-export function OAuthCallbackHandler({
-  authToken,
-  name,
-  displayName,
-  pfp,
-  email,
-  login,
-  error,
-}: CallbackProperties) {
-  const { setCustomAuthToken, setIsModalOpen, setOauthLoading, setOauthError } =
-    useAuth();
+export function OAuthCallbackHandler() {
+  const {
+    setCustomAuthToken,
+    setIsModalOpen,
+    setOauthLoading,
+    setOauthError,
+    setCallbackUrl,
+  } = useAuth();
   const router = useRouter();
+  const searchParameters = useSearchParams();
+  const {
+    token: authToken,
+    name,
+    displayName,
+    pfp,
+    email,
+    login,
+    error,
+    callbackUrl,
+  } = Object.fromEntries(
+    [
+      'token',
+      'name',
+      'displayName',
+      'pfp',
+      'email',
+      'login',
+      'error',
+      'callbackUrl',
+    ].map((k) => {
+      return [k, searchParameters.get(k)];
+    }),
+  );
 
   useEffect(() => {
     if (login) {
@@ -45,6 +56,7 @@ export function OAuthCallbackHandler({
           JSON.stringify({ name, displayName, pfp, email }),
         );
       }
+      if (callbackUrl) setCallbackUrl(callbackUrl);
       setCustomAuthToken(authToken);
     }
     if (login || error || authToken) {
@@ -59,10 +71,12 @@ export function OAuthCallbackHandler({
     login,
     router,
     error,
+    callbackUrl,
     setIsModalOpen,
     setOauthLoading,
     setCustomAuthToken,
     setOauthError,
+    setCallbackUrl,
   ]);
 
   return null;
