@@ -2,7 +2,6 @@
 import { NavigationMenu } from '@idriss-xyz/ui/navigation-menu';
 import { Icon } from '@idriss-xyz/ui/icon';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useEffect } from 'react';
 import { usePrivy } from '@privy-io/react-auth';
 

@@ -3,7 +3,8 @@ import { getAccessToken, User } from '@privy-io/react-auth';
 import { SetStateAction } from 'react';
 import { Hex } from 'viem';
 
-import { CreatorProfileResponse, getCreatorProfile } from '.';
+import { CreatorProfileResponse } from './types';
+import { getCreatorProfile } from './navigation';
 
 export const setCreatorIfSessionPresent = async (
   user: User,
