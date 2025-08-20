@@ -132,7 +132,8 @@
         "AWS_SECRET_ACCESS_KEY",
         "AWS_REGION",
         "AWS_S3_BUCKET",
-        "AWS_SIGNING_LAMBDA_NAME",
+        "AWS_LAMBDA_FAUCET_NAME",
+        "AWS_LAMBDA_REWARDS_NAME",
         "FAUCET_ADDRESS"
       ]
     },
@@ -157,7 +158,8 @@
         "AWS_SECRET_ACCESS_KEY",
         "AWS_REGION",
         "AWS_S3_BUCKET",
-        "AWS_SIGNING_LAMBDA_NAME",
+        "AWS_LAMBDA_FAUCET_NAME",
+        "AWS_LAMBDA_REWARDS_NAME",
         "FAUCET_ADDRESS"
       ]
     },

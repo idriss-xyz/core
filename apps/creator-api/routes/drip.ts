@@ -1,10 +1,10 @@
 import { Router, Request, Response } from 'express';
-import { getAddress } from 'viem';
+import { getAddress, Hex } from 'viem';
 import dotenv from 'dotenv';
 import { AppDataSource } from '../db/database';
 import { Creator } from '../db/entities';
 import { verifyToken } from '../db/middleware/auth.middleware';
-import { LAMBDA_CLIENT } from '../config/aws-config';
+import { LAMBDA_CLIENT, LAMBDA_FAUCET } from '../config/aws-config';
 import { creatorProfileService } from '../services/creator-profile.service';
 import {
   buildInvokeCommand,
@@ -15,12 +15,12 @@ import {
   getClient,
 } from '../utils/drip-utils';
 import { hasClaimedToday, recordClaim } from '../db/drip-quota';
+import { CHAIN_ID_TO_TOKENS } from '@idriss-xyz/constants';
 
 dotenv.config();
 
 const router = Router();
 
-// TEMPORARY TEST ENDPOINT, ADD PRECAUTIONS FOR PROD
 router.post('/', verifyToken(), async (req: Request, res: Response) => {
   const { chainId, token } = req.body;
 
@@ -30,7 +30,14 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
   }
 
   const chain = chainMap[String(chainId) as keyof typeof chainMap];
-  const chainTest = chainMap[String(11155111) as keyof typeof chainMap];
+  const allowedTokens = CHAIN_ID_TO_TOKENS[Number(chain.id)]?.map((t) =>
+    getAddress(t.address),
+  );
+
+  if (token && (!allowedTokens || !allowedTokens.includes(token))) {
+    res.status(400).json({ error: 'Unsupported token for this chain' });
+    return;
+  }
 
   if (!req.user?.id || !chain) {
     res.status(400).json({ error: 'Invalid request' });
@@ -54,7 +61,7 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
   }
 
   // daily-per-chain guard (use funding chain for the claim)
-  const already = await hasClaimedToday(creator.id, Number(11155111));
+  const already = await hasClaimedToday(creator.id, chain.id);
   if (already) {
     res
       .status(429)
@@ -63,11 +70,10 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
   }
 
   const client = getClient(chain);
-  const clinetTest = getClient(chainTest);
 
   const faucetAddress = getAddress(process.env.FAUCET_ADDRESS || '');
   const userAddress = getAddress(fullProfile.primaryAddress);
-  const nonce = await clinetTest.getTransactionCount({
+  const nonce = await client.getTransactionCount({
     address: faucetAddress,
     blockTag: 'pending',
   });
@@ -81,13 +87,15 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
 
   const amountWei = await calcDripWei({ client, gasLimit });
 
-  const cmd = buildInvokeCommand({
-    recipient: fullProfile.primaryAddress,
-    amount: amountWei.toString(),
-    // chainId: String(chain.id),
-    chainId: '11155111',
-    nonce,
-  });
+  const cmd = buildInvokeCommand(
+    {
+      recipient: fullProfile.primaryAddress as Hex,
+      amount: amountWei.toString(),
+      chainId: String(chain.id),
+      nonce,
+    },
+    LAMBDA_FAUCET,
+  );
 
   try {
     const resp = await LAMBDA_CLIENT.send(cmd);
@@ -107,7 +115,7 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
       return;
     }
 
-    await recordClaim(creator.id, Number(11155111));
+    await recordClaim(creator.id, chain.id);
 
     res.status(200).json({ txHash: body.txHash });
   } catch (e: any) {

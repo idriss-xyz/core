@@ -1,5 +1,6 @@
-import { ERC20_ABI } from '@idriss-xyz/constants';
+import { CREATOR_CHAIN, ERC20_ABI, NULL_ADDRESS } from '@idriss-xyz/constants';
 import {
+  Chain,
   createPublicClient,
   encodeFunctionData,
   getAddress,
@@ -7,16 +8,25 @@ import {
   http,
   parseUnits,
 } from 'viem';
-import { sepolia, base } from 'viem/chains';
 import { InvokeCommand } from '@aws-sdk/client-lambda';
-import { SIGNING_LAMBDA_NAME } from '../config/aws-config';
+import {
+  DecodedLambdaBody,
+  LambdaName,
+  LambdaPayload,
+  LambdaResponse,
+} from '../types';
 
-export const chainMap = {
-  '11155111': sepolia,
-  '8453': base,
-};
+export const chainMap: Record<string, Chain> = Object.values(
+  CREATOR_CHAIN,
+).reduce(
+  (acc, chain) => {
+    acc[String(chain.id)] = chain;
+    return acc;
+  },
+  {} as Record<string, Chain>,
+);
 
-export function getClient(chain: (typeof chainMap)[keyof typeof chainMap]) {
+export function getClient(chain: Chain) {
   return createPublicClient({ chain, transport: http() });
 }
 
@@ -27,8 +37,9 @@ export async function estimateErc20GasOrDefault(params: {
   to: Hex;
 }) {
   const fallback = BigInt(65000);
-  if (!params.token) return fallback;
-
+  if (!params.token || params.token === NULL_ADDRESS) {
+    return fallback;
+  }
   let tokenAddr;
   try {
     tokenAddr = getAddress(params.token);
@@ -78,16 +89,19 @@ export async function calcDripWei(params: {
   return (base * factor) / scale;
 }
 
-export function buildInvokeCommand(payload: unknown) {
+export function buildInvokeCommand(
+  payload: LambdaPayload,
+  functionName: LambdaName,
+) {
   return new InvokeCommand({
-    FunctionName: SIGNING_LAMBDA_NAME,
+    FunctionName: functionName,
     InvocationType: 'RequestResponse',
     LogType: 'Tail',
     Payload: Buffer.from(JSON.stringify({ body: JSON.stringify(payload) })),
   });
 }
 
-export function decodeLambda(resp: any) {
+export function decodeLambda(resp: LambdaResponse): DecodedLambdaBody {
   const s =
     resp.Payload && (resp.Payload as Uint8Array).byteLength
       ? Buffer.from(resp.Payload as Uint8Array).toString('utf8')

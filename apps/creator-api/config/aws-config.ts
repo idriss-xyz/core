@@ -5,7 +5,9 @@ import { LambdaClient } from '@aws-sdk/client-lambda';
 dotenv.config();
 
 const region = process.env.AWS_REGION!;
-const SIGNING_LAMBDA_NAME = process.env.AWS_SIGNING_LAMBDA_NAME!;
+const LAMBDA_FAUCET = process.env.AWS_LAMBDA_FAUCET_NAME;
+const LAMBDA_REWARDS = process.env.AWS_LAMBDA_REWARDS_NAME;
+
 const S3_CLIENT = new S3Client({
   region,
   credentials: {
@@ -22,4 +24,4 @@ const LAMBDA_CLIENT = new LambdaClient({
 });
 const S3_BUCKET = process.env.AWS_S3_BUCKET!;
 
-export { S3_CLIENT, S3_BUCKET, LAMBDA_CLIENT, SIGNING_LAMBDA_NAME };
+export { S3_CLIENT, S3_BUCKET, LAMBDA_CLIENT, LAMBDA_FAUCET, LAMBDA_REWARDS };

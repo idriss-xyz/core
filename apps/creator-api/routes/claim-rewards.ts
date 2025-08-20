@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 import { AppDataSource } from '../db/database';
 import { Creator, Referral } from '../db/entities';
 import { verifyToken } from '../db/middleware/auth.middleware';
-import { LAMBDA_CLIENT } from '../config/aws-config';
+import { LAMBDA_CLIENT, LAMBDA_REWARDS } from '../config/aws-config';
 import { getAvailableRewards } from '../services/reward-calculating-utils';
 import { calculateDollarsInIdrissToken } from '@idriss-xyz/utils';
 import {
@@ -70,12 +70,15 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
     blockTag: 'pending',
   });
 
-  const command = buildInvokeCommand({
-    recipient: creator.primaryAddress,
-    amount: amount,
-    chainId: chain.id.toString(),
-    nonce,
-  });
+  const command = buildInvokeCommand(
+    {
+      recipient: creator.primaryAddress,
+      amount: amount,
+      chainId: String(chain.id),
+      nonce,
+    },
+    LAMBDA_REWARDS,
+  );
 
   try {
     const resp = await LAMBDA_CLIENT.send(command);
