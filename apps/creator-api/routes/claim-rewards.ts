@@ -11,11 +11,10 @@ import { getAvailableRewards } from '../services/reward-calculating-utils';
 import { calculateDollarsInIdrissToken } from '@idriss-xyz/utils';
 import {
   buildInvokeCommand,
-  chainMap,
   decodeLambda,
   getClient,
 } from '../utils/drip-utils';
-import { base } from 'viem/op-stack';
+import { base } from 'viem/chains';
 
 dotenv.config();
 
