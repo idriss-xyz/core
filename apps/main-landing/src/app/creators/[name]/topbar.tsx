@@ -55,26 +55,6 @@ export function TopBar() {
 
             <NavigationMenu.Content className="absolute right-[-13px] top-full z-50 mr-3 w-max gap-1 py-2">
               <div className="flex min-w-[240px] max-w-[270px] flex-col gap-1 rounded-xl border border-neutral-300 bg-white pt-2 shadow-lg">
-                <div className="flex min-h-[32px] items-center rounded-[4px] px-3 py-1">
-                  <Link
-                    href="/creators/app/profile"
-                    className="group flex w-full items-center gap-3"
-                  >
-                    <Icon
-                      name="User"
-                      size={20}
-                      className="text-neutral-600 group-hover:text-mint-600"
-                    />
-                    <span className="max-h-[54px] min-h-[24px] min-w-[184px] max-w-[214px] text-body4 text-neutral-900 group-hover:text-mint-600">
-                      Profile
-                    </span>
-                  </Link>
-                </div>
-
-                <div className="h-px min-w-[240px] max-w-[270px] py-1">
-                  <hr className="border-t border-t-[#E4E7EC]" />
-                </div>
-
                 <div className="flex flex-col gap-2 pb-2">
                   <div
                     onClick={handleLogout}
