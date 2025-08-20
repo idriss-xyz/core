@@ -26,9 +26,9 @@ import creatorProfileFromReferral from './routes/creator-profile-from-referral';
 import referralRouter from './routes/referral-history';
 import claimRewardsRouter from './routes/claim-rewards';
 import dripRouter from './routes/drip';
-import cors from 'cors';
 import { AppDataSource, initializeDatabase } from './db/database';
 import { Creator } from './db/entities';
+import { isAllowedOrigin, openCors } from './config/cors';
 import { CREATORS_LINK } from '@idriss-xyz/constants';
 
 initializeDatabase()
@@ -38,11 +38,7 @@ initializeDatabase()
 const app: Application = express();
 app.use(express.json());
 
-app.use(
-  cors({
-    origin: '*',
-  }),
-);
+app.use(openCors);
 
 const server = http.createServer(app);
 app.use('/tip-history', tipHistoryRouter);
@@ -74,7 +70,8 @@ if (!HOST || !PORT) {
 
 const io = new SocketIOServer(server, {
   cors: {
-    origin: '*',
+    origin: (origin, cb) =>
+      isAllowedOrigin(origin) ? cb(null, true) : cb(new Error('CORS blocked')),
     methods: ['GET', 'POST'],
   },
 });

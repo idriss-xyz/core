@@ -16,70 +16,83 @@ import {
   CHAIN_ID_TO_TOKENS,
 } from '@idriss-xyz/constants';
 
+import { tightCors } from '../config/cors';
 import { verifyToken } from '../db/middleware/auth.middleware';
 import { streamAudioFromS3 } from '../utils/audio-utils';
 
 const router = Router();
 
-router.get('/me', verifyToken(), async (req: Request, res: Response) => {
-  if (!req.user?.id) {
-    res.status(401).json({ error: 'Unauthorized' });
-    return;
-  }
-
-  try {
-    const creatorRepository = AppDataSource.getRepository(Creator);
-
-    const creator = await creatorRepository.findOne({
-      where: { privyId: req.user.id },
-    });
-
-    if (!creator) {
-      res.status(404).json({ error: 'Creator profile not found' });
+router.get(
+  '/me',
+  tightCors,
+  verifyToken(),
+  async (req: Request, res: Response) => {
+    if (!req.user?.id) {
+      res.status(401).json({ error: 'Unauthorized' });
       return;
     }
 
-    const fullProfile = await creatorProfileService.getProfileById(creator.id);
+    try {
+      const creatorRepository = AppDataSource.getRepository(Creator);
 
-    if (!fullProfile) {
-      res.status(404).json({ error: 'Creator profile not found' });
+      const creator = await creatorRepository.findOne({
+        where: { privyId: req.user.id },
+      });
+
+      if (!creator) {
+        res.status(404).json({ error: 'Creator profile not found' });
+        return;
+      }
+
+      const fullProfile = await creatorProfileService.getProfileById(
+        creator.id,
+      );
+
+      if (!fullProfile) {
+        res.status(404).json({ error: 'Creator profile not found' });
+        return;
+      }
+
+      res.json(fullProfile);
+    } catch (error) {
+      console.error('Error fetching authenticated creator profile:', error);
+      res.status(500).json({ error: 'Failed to fetch creator profile' });
+    }
+  },
+);
+
+router.delete(
+  '/me',
+  tightCors,
+  verifyToken(),
+  async (req: Request, res: Response) => {
+    if (!req.user?.id) {
+      res.status(401).json({ error: 'Unauthorized' });
       return;
     }
 
-    res.json(fullProfile);
-  } catch (error) {
-    console.error('Error fetching authenticated creator profile:', error);
-    res.status(500).json({ error: 'Failed to fetch creator profile' });
-  }
-});
+    try {
+      const creatorRepository = AppDataSource.getRepository(Creator);
+      const creator = await creatorRepository.findOne({
+        where: { privyId: req.user.id },
+      });
 
-router.delete('/me', verifyToken(), async (req: Request, res: Response) => {
-  if (!req.user?.id) {
-    res.status(401).json({ error: 'Unauthorized' });
-    return;
-  }
+      if (!creator) {
+        res.status(404).json({ error: 'Creator not found' });
+        return;
+      }
 
-  try {
-    const creatorRepository = AppDataSource.getRepository(Creator);
-    const creator = await creatorRepository.findOne({
-      where: { privyId: req.user.id },
-    });
+      await creatorRepository.remove(creator);
 
-    if (!creator) {
-      res.status(404).json({ error: 'Creator not found' });
+      res.status(200).json({ message: 'Account deleted successfully' });
+      return;
+    } catch (error) {
+      console.error('Error deleting creator account:', error);
+      res.status(500).json({ error: 'Failed to delete creator account' });
       return;
     }
-
-    await creatorRepository.remove(creator);
-
-    res.status(200).json({ message: 'Account deleted successfully' });
-    return;
-  } catch (error) {
-    console.error('Error deleting creator account:', error);
-    res.status(500).json({ error: 'Failed to delete creator account' });
-    return;
-  }
-});
+  },
+);
 
 // Get creator profile by name
 router.get(
@@ -212,6 +225,7 @@ router.get(
 
 router.post(
   '/test-alert',
+  tightCors,
   verifyToken(),
   async (req: Request, res: Response) => {
     if (!req.user?.id) {
@@ -267,36 +281,42 @@ router.post(
 );
 
 // Create new creator profile with donation parameters
-router.post('/', verifyToken(), async (req: Request, res: Response) => {
-  if (!req.user?.id) {
-    res.status(401).json({ error: 'Unauthorized' });
-    return;
-  }
-  try {
-    const {
-      savedCreator,
-      savedDonationParameters,
-      tokenEntities,
-      networkEntities,
-    } = await creatorProfileService.createCreatorProfile(req);
+router.post(
+  '/',
+  tightCors,
+  verifyToken(),
+  async (req: Request, res: Response) => {
+    if (!req.user?.id) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+    try {
+      const {
+        savedCreator,
+        savedDonationParameters,
+        tokenEntities,
+        networkEntities,
+      } = await creatorProfileService.createCreatorProfile(req);
 
-    // TODO: Remove token and network linked creator (redundant in response)
-    res.status(201).json({
-      creator: {
-        ...savedCreator,
-        donationParameters: savedDonationParameters,
-        tokens: tokenEntities,
-        networks: networkEntities,
-      },
-    });
-  } catch (error) {
-    console.error('Error creating creator profile:', error);
-    res.status(500).json({ error: 'Failed to create creator profile' });
-  }
-});
+      // TODO: Remove token and network linked creator (redundant in response)
+      res.status(201).json({
+        creator: {
+          ...savedCreator,
+          donationParameters: savedDonationParameters,
+          tokens: tokenEntities,
+          networks: networkEntities,
+        },
+      });
+    } catch (error) {
+      console.error('Error creating creator profile:', error);
+      res.status(500).json({ error: 'Failed to create creator profile' });
+    }
+  },
+);
 
 router.patch(
   '/:name',
+  tightCors,
   verifyToken(),
   [param('name').isString().notEmpty()],
   async (req: Request, res: Response) => {
