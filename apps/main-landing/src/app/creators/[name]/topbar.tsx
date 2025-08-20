@@ -9,7 +9,7 @@ import { useLogout } from '../hooks/use-logout';
 import { useAuth } from '../context/auth-context';
 import { setCreatorIfSessionPresent } from '../utils';
 
-export function TopBar() {
+export function DonatePageTopBar() {
   const { creator, setCreator } = useAuth();
   const { user } = usePrivy();
   const handleLogout = useLogout();

@@ -1,12 +1,10 @@
 import { Metadata } from 'next';
 
-import { TopBar } from '../[name]/topbar';
+import { DonatePageTopBar } from '../[name]/topbar';
 import { OAuthCallbackHandler } from '../components/oauth-callback-handler';
 
-import { CreatorProfile } from './types';
 import { DonateContent } from './donate-content';
 import { RainbowKitProviders } from './providers';
-import { DonateOptionsModal } from './donate-options-modal';
 
 // ts-unused-exports:disable-next-line
 export const metadata: Metadata = {
@@ -15,18 +13,13 @@ export const metadata: Metadata = {
   },
 };
 
-interface Properties {
-  creatorProfile?: CreatorProfile;
-}
-
 // ts-unused-exports:disable-next-line
-export default function Donate({ creatorProfile }: Properties) {
+export default function Donate() {
   return (
     <RainbowKitProviders>
       <OAuthCallbackHandler />
-      <TopBar />
-      <DonateOptionsModal />
-      <DonateContent creatorProfile={creatorProfile} />
+      <DonatePageTopBar />
+      <DonateContent />
     </RainbowKitProviders>
   );
 }

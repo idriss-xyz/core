@@ -2,9 +2,14 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { isAddress } from 'viem';
 
-import Donate from '../donate/page';
 import { getPublicCreatorProfile } from '../utils';
 import { type CreatorProfile } from '../donate/types';
+import { OAuthCallbackHandler } from '../components/oauth-callback-handler';
+import { DonateContent } from '../donate/donate-content';
+import { DonateOptionsModal } from '../donate/donate-options-modal';
+import { RainbowKitProviders } from '../donate/providers';
+
+import { DonatePageTopBar } from './topbar';
 
 type Properties = {
   params: Promise<{ name: string }>;
@@ -48,5 +53,12 @@ export default async function CreatorProfile({ params }: Properties) {
     minimumSfxAmount: Number.isNaN(minimumSfxAmount) ? 0 : minimumSfxAmount,
   };
 
-  return <Donate creatorProfile={creatorProfile} />;
+  return (
+    <RainbowKitProviders>
+      <OAuthCallbackHandler />
+      <DonatePageTopBar />
+      <DonateOptionsModal />
+      <DonateContent creatorProfile={creatorProfile} />
+    </RainbowKitProviders>
+  );
 }
