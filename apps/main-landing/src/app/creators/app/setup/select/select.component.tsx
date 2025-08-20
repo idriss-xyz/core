@@ -31,7 +31,7 @@ export const Select = <T,>({
   isAudioPlaying?: boolean;
 }) => {
   const { portal } = usePortal();
-  const anchorReference = useRef<HTMLButtonElement>(null);
+  const anchorReference = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
 
   useLayoutEffect(() => {
@@ -69,7 +69,7 @@ export const Select = <T,>({
 
       <DropdownMenu.Root modal={false}>
         <DropdownMenu.Trigger asChild>
-          <button
+          <div
             ref={anchorReference}
             className="flex h-[44px] w-full overflow-hidden rounded-[12px] border border-neutral-200 bg-white text-neutralGreen-900 shadow-input focus:border-neutral-300 focus:outline-none"
           >
@@ -113,7 +113,7 @@ export const Select = <T,>({
                 {renderRight()}
               </div>
             )}
-          </button>
+          </div>
         </DropdownMenu.Trigger>
 
         <DropdownMenu.Portal container={portal}>
