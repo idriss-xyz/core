@@ -28,8 +28,7 @@ export function middleware(request: NextRequest) {
   const response = NextResponse.next();
 
   response.headers.set('X-Frame-Options', 'DENY');
-  // uncomment in prod
-  // response.headers.set('Content-Security-Policy', CSP);
+  response.headers.set('Content-Security-Policy', CSP);
   response.headers.set('Content-Security-Policy-Report-Only', CSP);
 
   if (
