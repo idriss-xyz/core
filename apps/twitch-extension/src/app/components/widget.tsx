@@ -8,6 +8,7 @@ import {
   CREATOR_API_URL,
   LeaderboardStats,
   DonationData,
+  NULL_ADDRESS,
 } from '@idriss-xyz/constants';
 import { useGetTipHistory } from '@idriss-xyz/main-landing/app/creators/app/commands/get-donate-history';
 import { getPublicCreatorProfile } from '@idriss-xyz/main-landing/app/creators/utils/index';
@@ -85,8 +86,9 @@ function WidgetContent({ variant }: ContentProperties) {
 
         const profileResponse = await getPublicCreatorProfile(name);
         if (!profileResponse) {
-          setAddress(null);
-          throw new Error('Not found');
+          setAddress(NULL_ADDRESS);
+          console.info('No creator account found, setting default');
+          return;
         }
         setAddress(profileResponse.primaryAddress);
       },
