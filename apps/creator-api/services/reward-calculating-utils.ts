@@ -4,16 +4,16 @@ export const calculateReward = (followersCount: number) => {
   let reward;
 
   switch (true) {
-    case followersCount >= 100_000:
+    case followersCount >= 100_000_000:
       reward = 25;
       break;
-    case followersCount >= 10_000:
+    case followersCount >= 100_000_000:
       reward = 20;
       break;
-    case followersCount >= 1_000:
+    case followersCount >= 100_000_000:
       reward = 15;
       break;
-    case followersCount >= 100:
+    case followersCount >= 100_000_000:
       reward = 10;
       break;
     default:
