@@ -36,8 +36,10 @@ import {
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
 import { ExternalLink } from '@idriss-xyz/ui/external-link';
+import { getAddress } from 'viem';
 
 import { backgroundLines3 } from '@/assets';
+import { useAuth } from '@/app/creators/context/auth-context';
 
 import {
   FormPayload,
@@ -62,6 +64,7 @@ const baseClassName =
 export const DonateForm = forwardRef<HTMLDivElement, Properties>(
   ({ className, creatorInfo, isLegacyLink }, reference) => {
     const { isConnected } = useAccount();
+    const { creator: donorCreator } = useAuth();
     const { data: walletClient } = useWalletClient();
     const { connectModalOpen, openConnectModal } = useConnectModal();
     const [selectedTokenSymbol, setSelectedTokenSymbol] =
@@ -174,6 +177,20 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       [sfx],
     );
 
+    // Add a record to creator-address table on db (link
+    // wallet address to creator)
+    const createCreatorAddressLink = useCallback(async () => {
+      if (!walletClient?.account.address) return;
+      await fetch(`${CREATOR_API_URL}/creator-address`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          creatorId: donorCreator?.id,
+          address: getAddress(walletClient.account.address),
+        }),
+      });
+    }, [donorCreator, walletClient]);
+
     const sender = useSender({
       walletClient,
       callbackOnSend: sendDonationEffects,
@@ -273,9 +290,10 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
 
     useEffect(() => {
       if (sender.isSuccess) {
+        void createCreatorAddressLink();
         void sendDonation();
       }
-    }, [sender.isSuccess, sender.data, sendDonation]);
+    }, [sender.isSuccess, sender.data, sendDonation, createCreatorAddressLink]);
 
     if (!creatorInfo.address.isValid && !creatorInfo.address.isFetching) {
       return (

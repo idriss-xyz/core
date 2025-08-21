@@ -1,4 +1,4 @@
-import { Hex } from 'viem';
+import { getAddress, Hex } from 'viem';
 import { CHAIN, CREATOR_API_URL } from '@idriss-xyz/constants';
 
 import { CreatorProfileResponse } from './types';
@@ -189,9 +189,10 @@ export const getChainIdsFromShortNames = (shortNames: string[]) => {
 };
 
 export const getUsernameOrAnon = async (address: string): Promise<string> => {
+  const formattedAddress = getAddress(address);
   try {
     const response = await fetch(
-      `${CREATOR_API_URL}/creator-profile/address/${address}`,
+      `${CREATOR_API_URL}/creator-profile/address/${formattedAddress}`,
     );
     if (response.ok) {
       const profile = (await response.json()) as CreatorProfileResponse;

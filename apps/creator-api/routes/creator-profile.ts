@@ -8,7 +8,6 @@ import {
   DonationParameters,
   CreatorToken,
   CreatorNetwork,
-  CreatorAddress,
 } from '../db/entities';
 import { Hex } from 'viem';
 
@@ -309,8 +308,6 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
       AppDataSource.getRepository(DonationParameters);
     const tokenRepository = AppDataSource.getRepository(CreatorToken);
     const networkRepository = AppDataSource.getRepository(CreatorNetwork);
-    const creatorAddressRepository =
-      AppDataSource.getRepository(CreatorAddress);
 
     const creator = new Creator();
     creator.doneSetup = false;
@@ -328,12 +325,6 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
 
     // Create and save new creator
     const savedCreator = await creatorRepository.save(creator);
-
-    // Create creator address record
-    const creatorAddress = new CreatorAddress();
-    creatorAddress.address = savedCreator.address;
-    creatorAddress.creator = savedCreator;
-    await creatorAddressRepository.save(creatorAddress);
 
     donationParameters.creator = savedCreator;
 
