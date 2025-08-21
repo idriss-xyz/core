@@ -6,11 +6,13 @@ import { verifyToken } from '../db/middleware/auth.middleware';
 import { fetchTwitchUserFollowersCount } from '../utils/twitch-api';
 import { creatorProfileService } from '../services/creator-profile.service';
 import { Hex } from 'viem';
+import { tightCors } from '../config/cors';
 
 const router = Router();
 
 router.post(
   '/:referrerAddress',
+  tightCors,
   verifyToken(),
   async (req: Request, res: Response) => {
     if (!req.user?.id) {
