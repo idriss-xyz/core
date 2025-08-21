@@ -220,8 +220,8 @@ export function calculateStatsForRecipientAddress(
   );
   const distinctDonorsCount = Array.from(new Set(donorsAddress)).length;
   const totalDonationsCount = donations.length;
-  const biggestDonation = Math.max(...donations.map((d) => d.tradeValue));
-
+  const biggestDonation =
+    donations.length > 0 ? Math.max(...donations.map((d) => d.tradeValue)) : 0;
   const donationsWithTimeAndAmount = donations.map((donation) => {
     const timestamp = donation.timestamp;
     const date = new Date(timestamp);
