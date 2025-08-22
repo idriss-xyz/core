@@ -64,18 +64,6 @@ const TOKENS_ORDER: Record<TokenSymbol, number> = {
   PENGU: 12,
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-// const iconsForCryptoPaymentMethod = [
-//   TOKEN.ETHEREUM,
-//   TOKEN.USDC,
-//   TOKEN.IDRISS,
-//   TOKEN.RONIN,
-//   TOKEN.ECHELON_PRIME,
-//   TOKEN.PENGU,
-//   TOKEN.YGG,
-//   TOKEN.PDT,
-// ];
-
 const iconsForCardPaymentMethod: IconName[] = [
   'Mastercard',
   'AmericanExpress',

@@ -131,7 +131,10 @@
         "AWS_ACCESS_KEY_ID",
         "AWS_SECRET_ACCESS_KEY",
         "AWS_REGION",
-        "AWS_S3_BUCKET"
+        "AWS_S3_BUCKET",
+        "AWS_LAMBDA_FAUCET_NAME",
+        "AWS_LAMBDA_REWARDS_NAME",
+        "FAUCET_ADDRESS"
       ]
     },
     "@idriss-xyz/creator-api#prod": {
@@ -154,7 +157,10 @@
         "AWS_ACCESS_KEY_ID",
         "AWS_SECRET_ACCESS_KEY",
         "AWS_REGION",
-        "AWS_S3_BUCKET"
+        "AWS_S3_BUCKET",
+        "AWS_LAMBDA_FAUCET_NAME",
+        "AWS_LAMBDA_REWARDS_NAME",
+        "FAUCET_ADDRESS"
       ]
     },
     "@idriss-xyz/creator-api#test": {
