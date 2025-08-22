@@ -10,8 +10,6 @@ import {
   isAddress,
   parseAbiItem,
 } from 'viem';
-import { getEnsAvatar } from 'viem/actions';
-import { normalize } from 'viem/ens';
 import {
   CHAIN_ID_TO_TOKENS,
   CREATOR_API_URL,
@@ -25,9 +23,11 @@ import {
 import { clients } from '@idriss-xyz/blockchain-clients';
 
 import { CHAIN_TO_IDRISS_TIPPING_ADDRESS } from '../donate/constants';
-import { ethereumClient } from '../donate/config';
 import { useCreators } from '../hooks/use-creators';
-import { getPublicCreatorProfileBySlug, getUsernameOrAnon } from '../utils';
+import {
+  getPublicCreatorProfileBySlug,
+  getCreatorNameAndPicOrAnon,
+} from '../utils';
 import { Address } from '../donate/types';
 
 import DonationNotification from './components/donation-notification';
@@ -313,18 +313,8 @@ export default function DonationOverlay({ creatorName }: Properties) {
             continue;
           }
 
-          const resolved = await getUsernameOrAnon(txn.from);
-
-          const senderIdentifier =
-            resolved ?? `${txn.from.slice(0, 4)}...${txn.from.slice(-2)}`;
-
-          const donorAvatar = resolved
-            ? await getEnsAvatar(ethereumClient, {
-                name: normalize(resolved),
-              })
-            : null;
-
-          const avatarUrl = donorAvatar ?? undefined;
+          const { profilePicUrl, name: resolvedName } =
+            await getCreatorNameAndPicOrAnon(txn.from);
 
           const amountInDollar = await calculateDollar(
             tokenAddress as Hex,
@@ -356,11 +346,11 @@ export default function DonationOverlay({ creatorName }: Properties) {
           }
 
           addDonation({
-            avatarUrl: avatarUrl,
+            avatarUrl: profilePicUrl,
             message: message ?? '',
             sfxText,
             amount: amountInDollar,
-            donor: senderIdentifier,
+            donor: resolvedName,
             txnHash: log.transactionHash!,
             token: {
               amount: tokenAmount,

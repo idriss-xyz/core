@@ -188,7 +188,9 @@ export const getChainIdsFromShortNames = (shortNames: string[]) => {
   });
 };
 
-export const getUsernameOrAnon = async (address: string): Promise<string> => {
+export const getCreatorNameAndPicOrAnon = async (
+  address: string,
+): Promise<{ profilePicUrl: string | undefined; name: string }> => {
   const formattedAddress = getAddress(address);
   try {
     const response = await fetch(
@@ -196,12 +198,15 @@ export const getUsernameOrAnon = async (address: string): Promise<string> => {
     );
     if (response.ok) {
       const profile = (await response.json()) as CreatorProfileResponse;
-      return profile.name ?? 'anon';
+      return {
+        profilePicUrl: profile.profilePictureUrl ?? undefined,
+        name: profile.name ?? 'anon',
+      };
     }
-    return 'anon';
+    return { profilePicUrl: undefined, name: 'anon' };
   } catch (error) {
     console.error('Error fetching creator profile by address.', error);
-    return 'anon';
+    return { profilePicUrl: undefined, name: 'anon' };
   }
 };
 
