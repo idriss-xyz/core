@@ -191,9 +191,31 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       });
     }, [donorCreator, walletClient]);
 
+    const sendDonation = useCallback(async () => {
+      if (!creatorInfo.address.data || !creatorInfo.address.isValid) {
+        return;
+      }
+      await fetch(`${CREATOR_API_URL}/tip-history/sync`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ address: creatorInfo.address.data }),
+      });
+    }, [creatorInfo.address.data, creatorInfo.address.isValid]);
+
+    const callbackOnSend = useCallback(
+      async (txHash: string) => {
+        await sendDonationEffects(txHash);
+        await createCreatorAddressLink();
+        await sendDonation();
+      },
+      [sendDonationEffects, createCreatorAddressLink, sendDonation],
+    );
+
     const sender = useSender({
       walletClient,
-      callbackOnSend: sendDonationEffects,
+      callbackOnSend,
     });
 
     // Reset SFX when amount falls below the minimum
@@ -274,26 +296,6 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         creatorInfo.address.isValid,
       ],
     );
-
-    const sendDonation = useCallback(async () => {
-      if (!creatorInfo.address.data || !creatorInfo.address.isValid) {
-        return;
-      }
-      await fetch(`${CREATOR_API_URL}/tip-history/sync`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ address: creatorInfo.address.data }),
-      });
-    }, [creatorInfo.address.data, creatorInfo.address.isValid]);
-
-    useEffect(() => {
-      if (sender.isSuccess) {
-        void createCreatorAddressLink();
-        void sendDonation();
-      }
-    }, [sender.isSuccess, sender.data, sendDonation, createCreatorAddressLink]);
 
     if (!creatorInfo.address.isValid && !creatorInfo.address.isFetching) {
       return (
