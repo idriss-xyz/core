@@ -36,8 +36,10 @@ import {
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
 import { ExternalLink } from '@idriss-xyz/ui/external-link';
+import { getAddress } from 'viem';
 
 import { backgroundLines3 } from '@/assets';
+import { useAuth } from '@/app/creators/context/auth-context';
 
 import {
   FormPayload,
@@ -62,6 +64,7 @@ const baseClassName =
 export const DonateForm = forwardRef<HTMLDivElement, Properties>(
   ({ className, creatorInfo, isLegacyLink }, reference) => {
     const { isConnected } = useAccount();
+    const { creator: donorCreator } = useAuth();
     const { data: walletClient } = useWalletClient();
     const { connectModalOpen, openConnectModal } = useConnectModal();
     const [selectedTokenSymbol, setSelectedTokenSymbol] =
@@ -174,9 +177,45 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       [sfx],
     );
 
+    // Add a record to creator-address table on db (link
+    // wallet address to creator)
+    const createCreatorAddressLink = useCallback(async () => {
+      if (!walletClient?.account.address) return;
+      await fetch(`${CREATOR_API_URL}/creator-address`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          creatorId: donorCreator?.id,
+          address: getAddress(walletClient.account.address),
+        }),
+      });
+    }, [donorCreator, walletClient]);
+
+    const sendDonation = useCallback(async () => {
+      if (!creatorInfo.address.data || !creatorInfo.address.isValid) {
+        return;
+      }
+      await fetch(`${CREATOR_API_URL}/tip-history/sync`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ address: creatorInfo.address.data }),
+      });
+    }, [creatorInfo.address.data, creatorInfo.address.isValid]);
+
+    const callbackOnSend = useCallback(
+      async (txHash: string) => {
+        await sendDonationEffects(txHash);
+        await createCreatorAddressLink();
+        await sendDonation();
+      },
+      [sendDonationEffects, createCreatorAddressLink, sendDonation],
+    );
+
     const sender = useSender({
       walletClient,
-      callbackOnSend: sendDonationEffects,
+      callbackOnSend,
     });
 
     // Reset SFX when amount falls below the minimum
@@ -257,25 +296,6 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         creatorInfo.address.isValid,
       ],
     );
-
-    const sendDonation = useCallback(async () => {
-      if (!creatorInfo.address.data || !creatorInfo.address.isValid) {
-        return;
-      }
-      await fetch(`${CREATOR_API_URL}/tip-history/sync`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ address: creatorInfo.address.data }),
-      });
-    }, [creatorInfo.address.data, creatorInfo.address.isValid]);
-
-    useEffect(() => {
-      if (sender.isSuccess) {
-        void sendDonation();
-      }
-    }, [sender.isSuccess, sender.data, sendDonation]);
 
     if (!creatorInfo.address.isValid && !creatorInfo.address.isFetching) {
       return (

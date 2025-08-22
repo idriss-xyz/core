@@ -22,6 +22,7 @@ import donationEffectsRouter from './routes/donation-effects';
 import twitchAccountInfoRouter from './routes/twitch-account-info';
 import authRouter from './routes/auth';
 import uploadRouter from './routes/upload';
+import creatorAddressRouter from './routes/creator-address';
 import cors from 'cors';
 import { AppDataSource, initializeDatabase } from './db/database';
 import { Creator } from './db/entities';
@@ -56,6 +57,7 @@ app.use('/text-to-sfx', textToSfxRouter);
 app.use('/twitch-account-info', twitchAccountInfoRouter);
 app.use('/auth', authRouter);
 app.use('/upload', uploadRouter);
+app.use('/creator-address', creatorAddressRouter);
 
 const HOST = process.env.HOST;
 const PORT = Number(process.env.PORT) || 4000;
