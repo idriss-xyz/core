@@ -20,7 +20,7 @@ router.post('/', async (req: Request, res: Response) => {
     const hexAddress = address as Hex;
 
     const donations = await fetchDonationsByFromAddress(hexAddress);
-    const stats = calculateStatsForDonorAddress(donations);
+    const stats = await calculateStatsForDonorAddress(donations);
 
     const leaderboard = await calculateGlobalDonorLeaderboard();
     const donorPosition = leaderboard.findIndex(

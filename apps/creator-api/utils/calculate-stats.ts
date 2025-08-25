@@ -9,7 +9,7 @@ import {
   DonationWithTimeAndAmount,
   TokenEarnings,
 } from '../types';
-import { Hex } from 'viem';
+import { getAddress, Hex } from 'viem';
 import {
   DonationData,
   DonationToken,
@@ -22,9 +22,39 @@ import {
 import { AppDataSource } from '../db/database';
 import { Creator } from '../db/entities';
 
-export function calculateStatsForDonorAddress(
+async function getCreatorNameOrAnon(address: string): Promise<string> {
+  address = getAddress(address);
+  const creatorRepository = AppDataSource.getRepository(Creator);
+
+  // First, try to find creator by primary address
+  const creatorByPrimaryAddress = await creatorRepository.findOne({
+    where: { primaryAddress: address as Hex },
+  });
+
+  if (creatorByPrimaryAddress) {
+    return creatorByPrimaryAddress.name;
+  }
+
+  // If not found, search in associated addresses
+  const creatorByAssociatedAddress = await creatorRepository.findOne({
+    where: {
+      associatedAddresses: {
+        address: address as Hex,
+      },
+    },
+    relations: ['associatedAddresses'],
+  });
+
+  if (creatorByAssociatedAddress) {
+    return creatorByAssociatedAddress.name;
+  }
+
+  return 'anon';
+}
+
+export async function calculateStatsForDonorAddress(
   donations: DonationData[],
-): DonationStats {
+): Promise<DonationStats> {
   let totalDonationsCount = 0;
   let totalDonationAmount = 0;
   const donationAmounts: Record<string, number> = {};
@@ -43,7 +73,7 @@ export function calculateStatsForDonorAddress(
   let donorDisplayName: string | null = null;
   let positionInLeaderboard = null;
 
-  donations.forEach((donation) => {
+  for (const donation of donations) {
     const toAddress = donation.toAddress;
     const tradeValue = donation.tradeValue;
 
@@ -75,10 +105,10 @@ export function calculateStatsForDonorAddress(
     }
 
     if (!donorDisplayName) {
-      donorDisplayName = donation.fromUser.displayName ?? null;
+      donorDisplayName = await getCreatorNameOrAnon(donation.fromAddress);
     }
     totalDonationsCount += 1;
-  });
+  }
 
   return {
     totalDonationsCount,

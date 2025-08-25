@@ -37,9 +37,11 @@ import {
 } from '@idriss-xyz/ui/tooltip';
 import { ExternalLink } from '@idriss-xyz/ui/external-link';
 import { getAddress } from 'viem';
+import { usePrivy } from '@privy-io/react-auth';
 
 import { backgroundLines3 } from '@/assets';
 import { useAuth } from '@/app/creators/context/auth-context';
+import { setCreatorIfSessionPresent } from '@/app/creators/utils';
 
 import {
   FormPayload,
@@ -64,7 +66,7 @@ const baseClassName =
 export const DonateForm = forwardRef<HTMLDivElement, Properties>(
   ({ className, creatorInfo, isLegacyLink }, reference) => {
     const { isConnected } = useAccount();
-    const { creator: donorCreator } = useAuth();
+    const { creator: donorCreator, setCreator } = useAuth();
     const { data: walletClient } = useWalletClient();
     const { connectModalOpen, openConnectModal } = useConnectModal();
     const [selectedTokenSymbol, setSelectedTokenSymbol] =
@@ -217,6 +219,13 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       walletClient,
       callbackOnSend,
     });
+    const { user } = usePrivy();
+
+    useEffect(() => {
+      if (user) {
+        void setCreatorIfSessionPresent(user, setCreator);
+      }
+    }, [user, setCreator]);
 
     // Reset SFX when amount falls below the minimum
     useEffect(() => {
