@@ -535,7 +535,8 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                     className="mt-4"
                     helperText={fieldState.error?.message}
                     error={Boolean(fieldState.error?.message)}
-                    placeholder={amount < minimumSfxAmount ? '🔒' : ''}
+                    placeholder={amount < minimumSfxAmount ? '🔒' : undefined}
+                    placeholderTooltip={`This feature unlocks for donations of $${minimumSfxAmount} or more`}
                     disabled={amount < minimumSfxAmount}
                   />
                 );
