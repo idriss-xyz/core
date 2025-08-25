@@ -8,6 +8,7 @@ import {
 
 import { classes } from '../../utils';
 import { Icon, IconName } from '../icon';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../tooltip';
 
 type BaseProperties = {
   value: string;
@@ -20,6 +21,7 @@ type BaseProperties = {
   success?: boolean;
   asTextArea?: boolean;
   placeholder?: string;
+  placeholderTooltip?: string;
   disabled?: boolean;
 };
 
@@ -55,6 +57,7 @@ export const Input = forwardRef(
       readOnly,
       placeholder,
       disabled,
+      placeholderTooltip,
     } = properties;
     const inputProperties = {
       className: classes(
@@ -72,20 +75,17 @@ export const Input = forwardRef(
       readOnly,
     };
 
-    if (asTextArea) {
-      return (
-        <textarea
-          ref={reference as ForwardedRef<HTMLTextAreaElement>}
-          rows={2}
-          {...inputProperties}
-          className={classes(
-            inputProperties.className,
-            'min-h-[4.3125rem] pb-[7px]',
-          )}
-        />
-      );
-    }
-    return (
+    const inputElement = asTextArea ? (
+      <textarea
+        ref={reference as ForwardedRef<HTMLTextAreaElement>}
+        rows={2}
+        {...inputProperties}
+        className={classes(
+          inputProperties.className,
+          'min-h-[4.3125rem] pb-[7px]',
+        )}
+      />
+    ) : (
       <label>
         <div className="relative">
           {properties.prefixIconName && (
@@ -129,6 +129,23 @@ export const Input = forwardRef(
         </div>
       </label>
     );
+
+    if (placeholderTooltip && placeholder) {
+      return (
+        <Tooltip>
+          <TooltipTrigger asChild>{inputElement}</TooltipTrigger>
+          <TooltipContent
+            className="bg-black text-left text-white"
+            side="right"
+            sideOffset={-(390 - (placeholder?.length || 0) * 8)}
+          >
+            <p className="text-label6">{placeholderTooltip}</p>
+          </TooltipContent>
+        </Tooltip>
+      );
+    }
+
+    return inputElement;
   },
 );
 

@@ -31,6 +31,7 @@ export const Field = forwardRef(
       className,
       numeric,
       decimalScale,
+      placeholderTooltip,
       onChange,
       ...inputProperties
     }: Properties,
@@ -48,6 +49,7 @@ export const Field = forwardRef(
             <NumericInput
               {...inputProperties}
               decimalScale={decimalScale}
+              placeholderTooltip={placeholderTooltip}
               onChange={(value) => {
                 onChange(value);
               }}
@@ -55,6 +57,7 @@ export const Field = forwardRef(
           ) : (
             <Input
               {...inputProperties}
+              placeholderTooltip={placeholderTooltip}
               onChange={(event) => {
                 onChange(event.target.value);
               }}
