@@ -390,38 +390,6 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
 
         <Form onSubmit={formMethods.handleSubmit(onSubmit)} className="w-full">
           <Controller
-            name="tokenSymbol"
-            control={formMethods.control}
-            render={({ field }) => {
-              return (
-                <TokenSelect
-                  label="Token"
-                  value={field.value}
-                  className="mt-6 w-full"
-                  tokens={possibleTokens}
-                  onChange={field.onChange}
-                />
-              );
-            }}
-          />
-
-          <Controller
-            name="chainId"
-            control={formMethods.control}
-            render={({ field }) => {
-              return (
-                <ChainSelect
-                  label="Network"
-                  value={field.value}
-                  className="mt-4 w-full"
-                  onChange={field.onChange}
-                  allowedChainsIds={allowedChainsIds}
-                />
-              );
-            }}
-          />
-
-          <Controller
             name="amount"
             control={formMethods.control}
             render={({ field }) => {
@@ -451,6 +419,38 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                     </span>
                   )}
                 </>
+              );
+            }}
+          />
+
+          <Controller
+            name="tokenSymbol"
+            control={formMethods.control}
+            render={({ field }) => {
+              return (
+                <TokenSelect
+                  label="Token"
+                  value={field.value}
+                  className="mt-6 w-full"
+                  tokens={possibleTokens}
+                  onChange={field.onChange}
+                />
+              );
+            }}
+          />
+
+          <Controller
+            name="chainId"
+            control={formMethods.control}
+            render={({ field }) => {
+              return (
+                <ChainSelect
+                  label="Network"
+                  value={field.value}
+                  className="mt-4 w-full"
+                  onChange={field.onChange}
+                  allowedChainsIds={allowedChainsIds}
+                />
               );
             }}
           />
