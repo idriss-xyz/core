@@ -77,6 +77,11 @@ export const siteMap: SiteMapItem[] = [
       { name: 'Top donors', path: 'top-donors' },
     ],
   },
+  {
+    name: 'Rewards',
+    path: 'rewards',
+    children: [{ name: 'Invites', path: 'invites' }],
+  },
 ];
 
 export const soundMap: Record<string, string> = {
