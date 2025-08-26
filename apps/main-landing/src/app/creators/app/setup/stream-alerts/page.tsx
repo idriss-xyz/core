@@ -316,24 +316,24 @@ export default function StreamAlerts() {
   }, [creator, formMethods]);
 
   const handleAlertSoundChange = (value: string) => {
-    formMethods.setValue('alertSound', value);
+    formMethods.setValue('alertSound', value, { shouldDirty: true });
   };
 
   const handleVoiceChange = (value: string) => {
-    formMethods.setValue('voiceId', value);
+    formMethods.setValue('voiceId', value, { shouldDirty: true });
   };
 
   const fileUploadCallback = useCallback(
     (file: File) => {
       setUploadedFile(file);
-      formMethods.setValue('alertSound', 'CUSTOM_SOUND');
+      formMethods.setValue('alertSound', 'CUSTOM_SOUND', { shouldDirty: true });
     },
     [formMethods],
   );
 
   const handleFileRemove = useCallback(() => {
     setUploadedFile(null);
-    formMethods.setValue('alertSound', 'DEFAULT_TRUMPET_SOUND');
+    formMethods.setValue('alertSound', 'DEFAULT_TRUMPET_SOUND', { shouldDirty: true });
   }, [formMethods]);
 
   // Keep track of dirty form state (non-toggles only)
