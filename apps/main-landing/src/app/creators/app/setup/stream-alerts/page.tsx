@@ -535,43 +535,6 @@ export default function StreamAlerts() {
                     );
                   }}
                 />
-                <Controller
-                  name="voiceId"
-                  control={formMethods.control}
-                  render={({ field, fieldState: _ }) => {
-                    return (
-                      <Select
-                        label="Select a voice"
-                        value={field.value?.toString()}
-                        className="max-w-[360px]"
-                        options={voices}
-                        onChange={handleVoiceChange}
-                        iconName="PlayCircle"
-                        isAudioPlaying={isVoicePlaying}
-                        onIconClick={() => {
-                          if (isVoicePlaying) return;
-                          const voiceData = voiceMap[field.value];
-                          if (voiceData) {
-                            const audio = new Audio(voiceData.audioFile);
-                            audio.addEventListener('play', () => {
-                              return setIsVoicePlaying(true);
-                            });
-                            audio.addEventListener('ended', () => {
-                              return setIsVoicePlaying(false);
-                            });
-                            audio.addEventListener('error', () => {
-                              setIsVoicePlaying(false);
-                              console.error('Error playing sound');
-                            });
-                            void audio.play();
-                          }
-                        }}
-                        // TODO: Add error handling
-                        // error={Boolean(fieldState.error?.message)}
-                      />
-                    );
-                  }}
-                />
               </>
             )}
           </FormFieldWrapper>
@@ -616,6 +579,43 @@ export default function StreamAlerts() {
 
             {ttsEnabled && alertEnabled && (
               <>
+              <Controller
+                  name="voiceId"
+                  control={formMethods.control}
+                  render={({ field, fieldState: _ }) => {
+                    return (
+                      <Select
+                        label="Select a voice"
+                        value={field.value?.toString()}
+                        className="max-w-[360px]"
+                        options={voices}
+                        onChange={handleVoiceChange}
+                        iconName="PlayCircle"
+                        isAudioPlaying={isVoicePlaying}
+                        onIconClick={() => {
+                          if (isVoicePlaying) return;
+                          const voiceData = voiceMap[field.value];
+                          if (voiceData) {
+                            const audio = new Audio(voiceData.audioFile);
+                            audio.addEventListener('play', () => {
+                              return setIsVoicePlaying(true);
+                            });
+                            audio.addEventListener('ended', () => {
+                              return setIsVoicePlaying(false);
+                            });
+                            audio.addEventListener('error', () => {
+                              setIsVoicePlaying(false);
+                              console.error('Error playing sound');
+                            });
+                            void audio.play();
+                          }
+                        }}
+                        // TODO: Add error handling
+                        // error={Boolean(fieldState.error?.message)}
+                      />
+                    );
+                  }}
+                />
                 <Controller
                   name="minimumTTSAmount"
                   control={formMethods.control}
