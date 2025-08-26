@@ -39,7 +39,6 @@ router.post(
     const allowedTokens = CHAIN_ID_TO_TOKENS[Number(chain.id)]?.map((t) =>
       getAddress(t.address),
     );
-    console.log(checkedTokenAddress, allowedTokens);
 
     if (
       checkedTokenAddress &&
