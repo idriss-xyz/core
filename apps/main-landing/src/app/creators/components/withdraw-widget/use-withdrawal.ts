@@ -19,8 +19,10 @@ const claimDailyDrip = async (chainId: number, token?: Hex) => {
     const authToken = await getAccessToken();
     if (!authToken) return;
 
-    const body: Record<string, string> = { chainId: String(chainId) };
-    if (token && token !== NULL_ADDRESS) body.token = token;
+    const body: Record<string, string> = {
+      chainId: String(chainId),
+      token: token ?? NULL_ADDRESS,
+    };
 
     await fetch(`${CREATOR_API_URL}/drip`, {
       method: 'POST',

@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { getAddress, Hex } from 'viem';
+import { NULL_ADDRESS } from '@idriss-xyz/constants';
 import dotenv from 'dotenv';
 import { AppDataSource } from '../db/database';
 import { Creator } from '../db/entities';
@@ -28,7 +29,16 @@ router.post(
   verifyToken(),
   async (req: Request, res: Response) => {
     const { chainId, token } = req.body;
-    const checkedTokenAddress = getAddress(token);
+
+    const tokenParam: string = typeof token === 'string' ? token : NULL_ADDRESS;
+
+    let checkedTokenAddress: Hex;
+    try {
+      checkedTokenAddress = getAddress(tokenParam);
+    } catch {
+      res.status(400).json({ error: 'Invalid token address' });
+      return;
+    }
 
     if (!Object.keys(chainMap).includes(String(chainId))) {
       res.status(400).json({ error: 'Unsupported chainId' });
@@ -41,7 +51,7 @@ router.post(
     );
 
     if (
-      checkedTokenAddress &&
+      tokenParam !== NULL_ADDRESS &&
       (!allowedTokens || !allowedTokens.includes(checkedTokenAddress))
     ) {
       res.status(400).json({ error: 'Unsupported token for this chain' });
