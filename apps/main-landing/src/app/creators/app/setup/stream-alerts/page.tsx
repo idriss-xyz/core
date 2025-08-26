@@ -333,7 +333,9 @@ export default function StreamAlerts() {
 
   const handleFileRemove = useCallback(() => {
     setUploadedFile(null);
-    formMethods.setValue('alertSound', 'DEFAULT_TRUMPET_SOUND', { shouldDirty: true });
+    formMethods.setValue('alertSound', 'DEFAULT_TRUMPET_SOUND', {
+      shouldDirty: true,
+    });
   }, [formMethods]);
 
   // Keep track of dirty form state (non-toggles only)
@@ -363,6 +365,15 @@ export default function StreamAlerts() {
       setUnsavedChangesToastId('');
     }
   }, [isDirtyNonToggles, unsavedChangesToastId, toast, removeToast]);
+
+  // Cleanup toast on unmount
+  useEffect(() => {
+    return () => {
+      if (unsavedChangesToastId) {
+        removeToast(unsavedChangesToastId);
+      }
+    };
+  }, [unsavedChangesToastId, removeToast]);
 
   if (creatorLoading) {
     return <SkeletonSetup />;
@@ -579,7 +590,7 @@ export default function StreamAlerts() {
 
             {ttsEnabled && alertEnabled && (
               <>
-              <Controller
+                <Controller
                   name="voiceId"
                   control={formMethods.control}
                   render={({ field, fieldState: _ }) => {
