@@ -316,24 +316,26 @@ export default function StreamAlerts() {
   }, [creator, formMethods]);
 
   const handleAlertSoundChange = (value: string) => {
-    formMethods.setValue('alertSound', value);
+    formMethods.setValue('alertSound', value, { shouldDirty: true });
   };
 
   const handleVoiceChange = (value: string) => {
-    formMethods.setValue('voiceId', value);
+    formMethods.setValue('voiceId', value, { shouldDirty: true });
   };
 
   const fileUploadCallback = useCallback(
     (file: File) => {
       setUploadedFile(file);
-      formMethods.setValue('alertSound', 'CUSTOM_SOUND');
+      formMethods.setValue('alertSound', 'CUSTOM_SOUND', { shouldDirty: true });
     },
     [formMethods],
   );
 
   const handleFileRemove = useCallback(() => {
     setUploadedFile(null);
-    formMethods.setValue('alertSound', 'DEFAULT_TRUMPET_SOUND');
+    formMethods.setValue('alertSound', 'DEFAULT_TRUMPET_SOUND', {
+      shouldDirty: true,
+    });
   }, [formMethods]);
 
   // Keep track of dirty form state (non-toggles only)
@@ -363,6 +365,15 @@ export default function StreamAlerts() {
       setUnsavedChangesToastId('');
     }
   }, [isDirtyNonToggles, unsavedChangesToastId, toast, removeToast]);
+
+  // Cleanup toast on unmount
+  useEffect(() => {
+    return () => {
+      if (unsavedChangesToastId) {
+        removeToast(unsavedChangesToastId);
+      }
+    };
+  }, [unsavedChangesToastId, removeToast]);
 
   if (creatorLoading) {
     return <SkeletonSetup />;
@@ -535,43 +546,6 @@ export default function StreamAlerts() {
                     );
                   }}
                 />
-                <Controller
-                  name="voiceId"
-                  control={formMethods.control}
-                  render={({ field, fieldState: _ }) => {
-                    return (
-                      <Select
-                        label="Select a voice"
-                        value={field.value?.toString()}
-                        className="max-w-[360px]"
-                        options={voices}
-                        onChange={handleVoiceChange}
-                        iconName="PlayCircle"
-                        isAudioPlaying={isVoicePlaying}
-                        onIconClick={() => {
-                          if (isVoicePlaying) return;
-                          const voiceData = voiceMap[field.value];
-                          if (voiceData) {
-                            const audio = new Audio(voiceData.audioFile);
-                            audio.addEventListener('play', () => {
-                              return setIsVoicePlaying(true);
-                            });
-                            audio.addEventListener('ended', () => {
-                              return setIsVoicePlaying(false);
-                            });
-                            audio.addEventListener('error', () => {
-                              setIsVoicePlaying(false);
-                              console.error('Error playing sound');
-                            });
-                            void audio.play();
-                          }
-                        }}
-                        // TODO: Add error handling
-                        // error={Boolean(fieldState.error?.message)}
-                      />
-                    );
-                  }}
-                />
               </>
             )}
           </FormFieldWrapper>
@@ -616,6 +590,43 @@ export default function StreamAlerts() {
 
             {ttsEnabled && alertEnabled && (
               <>
+                <Controller
+                  name="voiceId"
+                  control={formMethods.control}
+                  render={({ field, fieldState: _ }) => {
+                    return (
+                      <Select
+                        label="Select a voice"
+                        value={field.value?.toString()}
+                        className="max-w-[360px]"
+                        options={voices}
+                        onChange={handleVoiceChange}
+                        iconName="PlayCircle"
+                        isAudioPlaying={isVoicePlaying}
+                        onIconClick={() => {
+                          if (isVoicePlaying) return;
+                          const voiceData = voiceMap[field.value];
+                          if (voiceData) {
+                            const audio = new Audio(voiceData.audioFile);
+                            audio.addEventListener('play', () => {
+                              return setIsVoicePlaying(true);
+                            });
+                            audio.addEventListener('ended', () => {
+                              return setIsVoicePlaying(false);
+                            });
+                            audio.addEventListener('error', () => {
+                              setIsVoicePlaying(false);
+                              console.error('Error playing sound');
+                            });
+                            void audio.play();
+                          }
+                        }}
+                        // TODO: Add error handling
+                        // error={Boolean(fieldState.error?.message)}
+                      />
+                    );
+                  }}
+                />
                 <Controller
                   name="minimumTTSAmount"
                   control={formMethods.control}
