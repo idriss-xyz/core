@@ -28,6 +28,7 @@ router.post(
   verifyToken(),
   async (req: Request, res: Response) => {
     const { chainId, token } = req.body;
+    const checkedTokenAddress = getAddress(token);
 
     if (!Object.keys(chainMap).includes(String(chainId))) {
       res.status(400).json({ error: 'Unsupported chainId' });
@@ -38,8 +39,12 @@ router.post(
     const allowedTokens = CHAIN_ID_TO_TOKENS[Number(chain.id)]?.map((t) =>
       getAddress(t.address),
     );
+    console.log(checkedTokenAddress, allowedTokens);
 
-    if (token && (!allowedTokens || !allowedTokens.includes(token))) {
+    if (
+      checkedTokenAddress &&
+      (!allowedTokens || !allowedTokens.includes(checkedTokenAddress))
+    ) {
       res.status(400).json({ error: 'Unsupported token for this chain' });
       return;
     }
@@ -85,7 +90,7 @@ router.post(
 
     const gasLimit = await estimateErc20GasOrDefault({
       client,
-      token,
+      token: checkedTokenAddress,
       from: userAddress,
       to: faucetAddress,
     });
