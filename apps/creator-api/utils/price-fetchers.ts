@@ -189,6 +189,7 @@ async function fetchFromAlchemy(body: object) {
   );
 }
 
+// todo: build a pricing map for alchemy, as native currency needs symbol representation for alchemy calls
 export async function getAlchemyPrices(
   tokens: { address: string; network: string }[],
 ): Promise<Record<string, number>> {
