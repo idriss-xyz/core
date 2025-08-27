@@ -3,6 +3,7 @@ import { TOKEN } from '@idriss-xyz/constants';
 import AvailableRewardsCard from './available-rewards';
 import SuccessfulInvitesCard from './succesful-invites';
 import TotalRewardsCard from './total-rewards';
+import StreamersTable from './streamers-table';
 
 // ts-unused-exports:disable-next-line
 export default function InvitesPage() {
@@ -35,6 +36,7 @@ export default function InvitesPage() {
           successfulInvitesUsers={successfulInvitesUsers}
         />
         <TotalRewardsCard totalRewards={totalRewards} />
+        <StreamersTable />
       </div>
     </div>
   );

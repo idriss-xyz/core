@@ -55,6 +55,7 @@ import {
   Coins,
   MailCheck,
   Handshake,
+  Send,
 } from 'lucide-react';
 
 import * as customIcons from './custom';
@@ -116,5 +117,6 @@ export const ICON = {
   Coins,
   MailCheck,
   Handshake,
+  Send,
   ...customIcons,
 };
