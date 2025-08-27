@@ -14,7 +14,7 @@ export default function AvailableRewardsCard({
     <Card className="col-span-1">
       <div className="flex flex-col gap-6">
         <CardHeader className="text-label3 text-neutral-900">
-          Available Rewards
+          Available rewards
         </CardHeader>
         <CardBody className="flex grow items-center">
           <div className="flex items-center gap-6">
