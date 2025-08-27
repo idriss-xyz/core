@@ -2,13 +2,13 @@
 import { Card, CardBody, CardHeader } from '@idriss-xyz/ui/card';
 import { ColumnDefinition, Table } from '@idriss-xyz/ui/table';
 import { TabItem, TabsPill } from '@idriss-xyz/ui/tabs-pill';
-import { TOKEN } from '@idriss-xyz/constants';
-import Image from 'next/image';
 import { Badge } from '@idriss-xyz/ui/badge';
 import {
   formatFollowerCount,
   getTimeDifferenceString,
 } from '@idriss-xyz/utils';
+
+import { Avatar } from '@/app/creators/components/avatar/avatar';
 
 interface Streamer {
   id: string;
@@ -26,7 +26,8 @@ const streamers: Streamer[] = [
   {
     id: '1',
     name: 'airev',
-    profilePictureUrl: TOKEN.IDRISS.logo,
+    profilePictureUrl:
+      'https://static-cdn.jtvnw.net/jtv_user_pictures/70c95583-d288-4f71-b787-15c75f95da54-profile_image-300x300.png',
     streamStatus: true,
     followers: 25_400,
     reward: 60,
@@ -36,7 +37,7 @@ const streamers: Streamer[] = [
   {
     id: '2',
     name: 'ramzes',
-    profilePictureUrl: TOKEN.IDRISS.logo,
+    profilePictureUrl: '',
     streamStatus: false,
     followers: 8700,
     reward: 30,
@@ -46,7 +47,8 @@ const streamers: Streamer[] = [
   {
     id: '3',
     name: 'illojuan',
-    profilePictureUrl: TOKEN.IDRISS.logo,
+    profilePictureUrl:
+      'https://static-cdn.jtvnw.net/user-default-pictures-uv/cdd517fe-def4-11e9-948e-784f43822e80-profile_image-300x300.png',
     streamStatus: false,
     followers: 44_123,
     reward: 100,
@@ -68,14 +70,7 @@ const columns: ColumnDefinition<Streamer>[] = [
     accessor: (item) => {
       return (
         <div className="flex items-center gap-2">
-          <div className="relative size-8 rounded-full bg-gray-200">
-            <Image
-              src={item.profilePictureUrl}
-              alt={item.name}
-              width={32}
-              height={32}
-            />
-          </div>
+          <Avatar src={item.profilePictureUrl} size={32} />
           <span className="text-body4">{item.name}</span>
           {item.streamStatus && (
             <Badge type="danger" variant="solid">
