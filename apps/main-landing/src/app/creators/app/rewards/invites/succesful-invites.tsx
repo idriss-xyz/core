@@ -2,14 +2,16 @@ import { Card, CardBody, CardHeader } from '@idriss-xyz/ui/card';
 import { Icon } from '@idriss-xyz/ui/icon';
 import Image from 'next/image';
 
+type Properties = {
+  successfulInvites: number;
+  successfulInvitesUsers: { profilePictureUrl: string; displayName: string }[];
+};
+
 // ts-unused-exports:disable-next-line
 export default function SuccessfulInvitesCard({
   successfulInvites,
   successfulInvitesUsers,
-}: {
-  successfulInvites: number;
-  successfulInvitesUsers: { profilePictureUrl: string; displayName: string }[];
-}) {
+}: Properties) {
   return (
     <Card className="col-span-1">
       <div className="flex flex-col gap-6">

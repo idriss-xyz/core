@@ -4,12 +4,12 @@ import { Card, CardBody, CardHeader } from '@idriss-xyz/ui/card';
 import { formatFiatValue } from '@idriss-xyz/utils';
 import Image from 'next/image';
 
-// ts-unused-exports:disable-next-line
-export default function AvailableRewardsCard({
-  availableRewards,
-}: {
+type Properties = {
   availableRewards: number;
-}) {
+};
+
+// ts-unused-exports:disable-next-line
+export default function AvailableRewardsCard({ availableRewards }: Properties) {
   return (
     <Card className="col-span-1">
       <div className="flex flex-col gap-6">

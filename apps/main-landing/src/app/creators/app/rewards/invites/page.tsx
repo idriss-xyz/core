@@ -6,7 +6,12 @@ import TotalRewardsCard from './total-rewards';
 
 // ts-unused-exports:disable-next-line
 export default function InvitesPage() {
-  const { availableRewards, successfulInvites, successfulInvitesUsers, totalRewards } = {
+  const {
+    availableRewards,
+    successfulInvites,
+    successfulInvitesUsers,
+    totalRewards,
+  } = {
     availableRewards: 32,
     successfulInvites: 32,
     successfulInvitesUsers: [
