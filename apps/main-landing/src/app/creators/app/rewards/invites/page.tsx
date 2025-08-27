@@ -2,10 +2,11 @@ import { TOKEN } from '@idriss-xyz/constants';
 
 import AvailableRewardsCard from './available-rewards';
 import SuccessfulInvitesCard from './succesful-invites';
+import TotalRewardsCard from './total-rewards';
 
 // ts-unused-exports:disable-next-line
 export default function InvitesPage() {
-  const { availableRewards, successfulInvites, successfulInvitesUsers } = {
+  const { availableRewards, successfulInvites, successfulInvitesUsers, totalRewards } = {
     availableRewards: 32,
     successfulInvites: 32,
     successfulInvitesUsers: [
@@ -18,6 +19,7 @@ export default function InvitesPage() {
         displayName: 'Jane Doe',
       },
     ],
+    totalRewards: 100,
   }; // TODO: Hook to data (useRewards)
   return (
     <div>
@@ -27,6 +29,7 @@ export default function InvitesPage() {
           successfulInvites={successfulInvites}
           successfulInvitesUsers={successfulInvitesUsers}
         />
+        <TotalRewardsCard totalRewards={totalRewards} />
       </div>
     </div>
   );
