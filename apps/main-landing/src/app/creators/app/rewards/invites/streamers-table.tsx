@@ -2,14 +2,22 @@
 import { Card, CardBody, CardHeader } from '@idriss-xyz/ui/card';
 import { ColumnDefinition, Table } from '@idriss-xyz/ui/table';
 import { TabItem, TabsPill } from '@idriss-xyz/ui/tabs-pill';
+import { TOKEN } from '@idriss-xyz/constants';
+import Image from 'next/image';
+import { Badge } from '@idriss-xyz/ui/badge';
+import {
+  formatFollowerCount,
+  getTimeDifferenceString,
+} from '@idriss-xyz/utils';
 
 interface Streamer {
   id: string;
   name: string;
-  status: boolean;
+  profilePictureUrl: string;
+  streamStatus: boolean;
   followers: number;
   reward: number;
-  joined: string;
+  joined?: string;
   games: string[];
 }
 
@@ -18,28 +26,30 @@ const streamers: Streamer[] = [
   {
     id: '1',
     name: 'ShadowKnight',
-    status: true,
+    profilePictureUrl: TOKEN.IDRISS.logo,
+    streamStatus: true,
     followers: 25_400,
-    reward: 120,
-    joined: '2023-01-15',
+    reward: 60,
+    joined: '2025-07-15',
     games: ['League of Legends', 'Valorant', 'Apex Legends'],
   },
   {
     id: '2',
     name: 'LunaStar',
-    status: false,
+    profilePictureUrl: TOKEN.IDRISS.logo,
+    streamStatus: false,
     followers: 8700,
-    reward: 75,
-    joined: '2022-07-30',
+    reward: 30,
+    joined: '2025-01-10',
     games: ['Minecraft', 'Stardew Valley', 'The Sims 4'],
   },
   {
     id: '3',
     name: 'TurboGamer',
-    status: true,
-    followers: 44_100,
-    reward: 210,
-    joined: '2021-11-05',
+    profilePictureUrl: TOKEN.IDRISS.logo,
+    streamStatus: false,
+    followers: 44_123,
+    reward: 100,
     games: ['Fortnite', 'Call of Duty', 'Overwatch'],
   },
 ];
@@ -56,14 +66,40 @@ const columns: ColumnDefinition<Streamer>[] = [
     id: 'name',
     name: 'Name',
     accessor: (item) => {
-      return item.name;
+      return (
+        <div className="flex items-center gap-2">
+          <div className="relative size-8 rounded-full bg-gray-200">
+            <Image
+              src={item.profilePictureUrl}
+              alt={item.name}
+              width={32}
+              height={32}
+            />
+          </div>
+          <span className="text-body4">{item.name}</span>
+          {item.streamStatus && (
+            <Badge type="danger" variant="solid" className="ml-3">
+              Live
+            </Badge>
+          )}
+        </div>
+      );
     },
+    sortable: false,
   },
   {
     id: 'status',
     name: 'Status',
     accessor: (item) => {
-      return item.status ? 'Joined' : `Invite to get $${item.reward}`;
+      return item.joined ? (
+        <Badge type="success" variant="subtle" className="normal-case">
+          Joined
+        </Badge>
+      ) : (
+        <Badge type="info" variant="subtle" className="normal-case">
+          Invite to get ${item.reward}
+        </Badge>
+      );
     },
     sortable: false,
   },
@@ -71,7 +107,7 @@ const columns: ColumnDefinition<Streamer>[] = [
     id: 'followers',
     name: 'Followers',
     accessor: (item) => {
-      return item.followers;
+      return formatFollowerCount(item.followers);
     },
     sortable: true,
     sortFunction: (a, b) => {
@@ -82,7 +118,7 @@ const columns: ColumnDefinition<Streamer>[] = [
     id: 'reward',
     name: 'Reward',
     accessor: (item) => {
-      return item.reward;
+      return `$${item.reward}`;
     },
     sortable: true,
     sortFunction: (a, b) => {
@@ -93,11 +129,20 @@ const columns: ColumnDefinition<Streamer>[] = [
     id: 'joined',
     name: 'Joined',
     accessor: (item) => {
-      return item.joined;
+      return item.joined
+        ? getTimeDifferenceString({
+            text: 'ago',
+            variant: 'short',
+            timestamp: item.joined,
+          })
+        : null;
     },
     sortable: true,
     sortFunction: (a, b) => {
-      return new Date(a.joined).getTime() - new Date(b.joined).getTime();
+      return (
+        new Date(a.joined ?? '1970-01-01').getTime() -
+        new Date(b.joined ?? '1970-01-01').getTime()
+      );
     },
   },
   {
@@ -142,6 +187,7 @@ export default function StreamersTable() {
           keyExtractor={(item) => {
             return item.id;
           }}
+          className="text-neutral-900"
         />
       </CardBody>
     </Card>
