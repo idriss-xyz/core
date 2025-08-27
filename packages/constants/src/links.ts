@@ -2,7 +2,9 @@ export const MAIN_LANDING_LINK = 'https://www.idriss.xyz';
 export const VAULT_LINK = 'https://www.idriss.xyz/vault';
 export const STATIC_ORIGINS = [
   'https://idriss.xyz',
+  'https://www.idriss.xyz',
   'https://main-landing-staging.up.railway.app',
+  'https://www.main-landing-staging.up.railway.app',
   'http://localhost:3000',
 ];
 
