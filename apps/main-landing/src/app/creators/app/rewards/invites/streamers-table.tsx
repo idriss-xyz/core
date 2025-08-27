@@ -25,32 +25,32 @@ interface Streamer {
 const streamers: Streamer[] = [
   {
     id: '1',
-    name: 'ShadowKnight',
+    name: 'airev',
     profilePictureUrl: TOKEN.IDRISS.logo,
     streamStatus: true,
     followers: 25_400,
     reward: 60,
     joined: '2025-07-15',
-    games: ['League of Legends', 'Valorant', 'Apex Legends'],
+    games: ['Axie Infinity', 'Ronin', 'Parallel'],
   },
   {
     id: '2',
-    name: 'LunaStar',
+    name: 'ramzes',
     profilePictureUrl: TOKEN.IDRISS.logo,
     streamStatus: false,
     followers: 8700,
     reward: 30,
     joined: '2025-01-10',
-    games: ['Minecraft', 'Stardew Valley', 'The Sims 4'],
+    games: ['Axie Infinity', 'Ronin', 'Parallel'],
   },
   {
     id: '3',
-    name: 'TurboGamer',
+    name: 'illojuan',
     profilePictureUrl: TOKEN.IDRISS.logo,
     streamStatus: false,
     followers: 44_123,
     reward: 100,
-    games: ['Fortnite', 'Call of Duty', 'Overwatch'],
+    games: ['Parallel'],
   },
 ];
 
@@ -78,7 +78,7 @@ const columns: ColumnDefinition<Streamer>[] = [
           </div>
           <span className="text-body4">{item.name}</span>
           {item.streamStatus && (
-            <Badge type="danger" variant="solid" className="ml-3">
+            <Badge type="danger" variant="solid">
               Live
             </Badge>
           )}
