@@ -16,7 +16,7 @@ export default function AvailableRewardsCard({ availableRewards }: Properties) {
         <CardHeader className="text-label3 text-neutral-900">
           Available rewards
         </CardHeader>
-        <CardBody className="flex grow items-center">
+        <CardBody className="flex items-center">
           <div className="flex items-center gap-6">
             <div className="relative size-[70px] rounded-full">
               <Image
@@ -26,7 +26,7 @@ export default function AvailableRewardsCard({ availableRewards }: Properties) {
                 className="rounded-full"
               />
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-col gap-2 xl:flex-row">
               <div className="flex gap-2">
                 <span className="flex items-center text-label1 text-black">
                   {formatFiatValue(availableRewards)}{' '}
