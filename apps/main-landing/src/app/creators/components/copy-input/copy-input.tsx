@@ -1,3 +1,4 @@
+'use client';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Icon, type IconName } from '@idriss-xyz/ui/icon';
 

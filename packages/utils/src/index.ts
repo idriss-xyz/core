@@ -17,6 +17,7 @@ export {
   getFormattedTimeDifference,
   getTimeDifferenceString,
   isSolanaAddress,
+  formatFollowerCount,
 } from './formatting-utils';
 
 export {

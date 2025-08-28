@@ -2,14 +2,13 @@
 
 import { Card, CardBody, CardHeader } from '@idriss-xyz/ui/card';
 import { useState } from 'react';
-import { classes } from '@idriss-xyz/ui/utils';
-import { Icon } from '@idriss-xyz/ui/icon';
 
 import {
   Banner,
   filterOptions,
   type FilterOption,
 } from '@/app/creators/components/banner';
+import { PillLabel } from '@/app/creators/components/pill-label';
 
 // ts-unused-exports:disable-next-line
 export default function DonationPanel() {
@@ -22,28 +21,18 @@ export default function DonationPanel() {
           Download your donation panel image
         </h1>
         <hr />
-        <div className="relative my-4 flex gap-1.5 font-medium">
+        <div className="relative my-4 flex gap-1.5">
           {filterOptions.map((option) => {
             return (
-              <span
+              <PillLabel
                 key={option.label}
-                onClick={() => {
-                  return setActiveFilter(option.label);
+                option={option}
+                isActive={activeFilter === option.label}
+                onClick={(label) => {
+                  return setActiveFilter(label as FilterOption);
                 }}
-                className={classes(
-                  'flex h-[34px] cursor-pointer items-center justify-center gap-1 rounded-full border border-mint-400 px-3 py-1 text-label4 text-neutralGreen-900',
-                  activeFilter === option.label ? 'bg-mint-400' : 'bg-white/80',
-                )}
-              >
-                {option.icon ? (
-                  <Icon
-                    size={16}
-                    name={option.icon}
-                    className={classes('text-[#757575]', option.customClass)}
-                  />
-                ) : null}
-                {option.label}
-              </span>
+                size="medium"
+              />
             );
           })}
         </div>

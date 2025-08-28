@@ -18,3 +18,9 @@ export { default as IDRISS_SCENE_STREAM_SHORT } from './idriss-scene-stream-shor
 export { default as IDRISS_SCENE_STREAM_SHORT_2 } from './idriss-scene-stream-short-2.png';
 export { default as IDRISS_SCENE_STREAM_LIGHT } from './idriss-scene-stream-light.png';
 export { default as IDRISS_TOROID } from './idriss-toroid.png';
+
+// Game logos
+export { default as AxieLogo } from './game-logos/axie.svg';
+export { default as OffTheGridLogo } from './game-logos/offthegrid.svg';
+export { default as RoninLogo } from './game-logos/ronin.svg';
+export { default as ParallelLogo } from './game-logos/parallel.svg';
