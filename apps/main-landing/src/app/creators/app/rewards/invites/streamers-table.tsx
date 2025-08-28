@@ -9,6 +9,8 @@ import {
 } from '@idriss-xyz/utils';
 
 import { Avatar } from '@/app/creators/components/avatar/avatar';
+import { PillLabel } from '@/app/creators/components/pill-label';
+import { gameLogoMap } from '@/app/creators/constants';
 
 interface Streamer {
   id: string;
@@ -144,7 +146,30 @@ const columns: ColumnDefinition<Streamer>[] = [
     id: 'games',
     name: 'Games',
     accessor: (item) => {
-      return item.games.join(', ');
+      return (
+        <div className="flex flex-wrap gap-1.5">
+          {item.games.map((game) => {
+            return (
+              <PillLabel
+                key={game}
+                option={{ label: game }}
+                className="w-fit border-neutral-300"
+              >
+                <div className="flex items-center gap-1.5">
+                  {gameLogoMap[game] && (
+                    <img
+                      src={gameLogoMap[game]}
+                      alt={`${game} logo`}
+                      className="size-4"
+                    />
+                  )}
+                  {game}
+                </div>
+              </PillLabel>
+            );
+          })}
+        </div>
+      );
     },
     sortable: false,
   },
