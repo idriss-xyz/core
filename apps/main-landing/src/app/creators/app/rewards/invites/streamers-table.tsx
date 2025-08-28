@@ -74,7 +74,11 @@ const columns: ColumnDefinition<Streamer>[] = [
         <div className="flex items-center gap-2">
           <Avatar src={item.profilePictureUrl} size={32} />
           <span className="text-body4">
-            <a href={`https://twitch.tv/${item.name}`} target="_blank">
+            <a
+              href={`https://twitch.tv/${item.name}`}
+              target="_blank"
+              rel="noreferrer"
+            >
               {item.name}
             </a>
           </span>

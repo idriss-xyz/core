@@ -31,7 +31,7 @@ export const Avatar: React.FC<AvatarProperties> = ({
           )}
           style={{ width: size, height: size }}
         >
-          <Icon name="UserRound" size={20} className="text-neutral-500" />
+          <Icon name="CircleUserRound" size={20} className="text-neutral-500" />
         </div>
       ) : (
         <Image
