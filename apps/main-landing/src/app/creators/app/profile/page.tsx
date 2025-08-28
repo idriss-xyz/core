@@ -288,7 +288,7 @@ export default function ProfilePage() {
           return setIsExportWalletModalOpen(false);
         }}
         onConfirm={exportWallet}
-        title="⚠️ Are you sure you want to reveal your recovery phrase?"
+        title="Are you sure you want to reveal your secret recovery phrase?"
         sectionSubtitle="Anyone who sees this phrase can steal your funds. Never share it. Never show it. Only proceed if you’re in a private, secure environment."
         confirmButtonText="CONFIRM"
         cancelButtonText="CANCEL"

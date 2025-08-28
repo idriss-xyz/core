@@ -766,7 +766,7 @@ export default function StreamAlerts() {
             }, 2000);
           }
         }}
-        title="⚠️ Confirm before copying"
+        title="Confirm before copying"
         sectionSubtitle="Anyone with this link can embed your stream alerts on their own stream or website.
           Do not share it with anyone or show it on stream."
         confirmButtonText={confirmButtonText}
