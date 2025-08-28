@@ -49,6 +49,7 @@ export {
   DEFAULT_DONATION_MIN_TTS_AMOUNT,
   DEFAULT_DONATION_MIN_SFX_AMOUNT,
   IDRISS_TOKEN_ADDRESS,
+  TEST_DONATION_MESSAGE,
 } from './constants';
 
 export type { TokenSymbol } from './constants';

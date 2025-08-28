@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
+import { TEST_DONATION_MESSAGE } from '@idriss-xyz/constants';
 
 import { TEST_TTS_MESSAGE_SOUND } from '@/assets';
 
 import { getTextToSfx, getTextToSpeech } from '../utils';
 import { MinimumAmounts, EnableToggles } from '../types';
-import { TEST_DONATION_MESSAGE } from '../../constants';
 
 const PRICE_DROP_RANGE = 0.05;
 const DONATION_TTS_DELAY = 2000;
