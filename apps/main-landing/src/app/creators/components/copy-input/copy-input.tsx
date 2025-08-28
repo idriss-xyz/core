@@ -28,7 +28,7 @@ export function CopyInput({
     void copy(value);
     toast({
       type: 'success',
-      heading: 'Your link has been copied!',
+      heading: 'Your link has been copied',
       autoClose: true,
     });
   };

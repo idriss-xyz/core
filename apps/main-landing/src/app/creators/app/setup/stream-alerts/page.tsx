@@ -196,8 +196,8 @@ export default function StreamAlerts() {
       if (response.ok) {
         toast({
           type: 'success',
-          heading: 'Test alert sent successfully!',
-          description: 'Check your stream preview to see it',
+          heading: 'Test alert sent successfully',
+          description: 'Check your stream preview to confirm it shows up',
           iconName: 'BellRing',
           autoClose: true,
         });

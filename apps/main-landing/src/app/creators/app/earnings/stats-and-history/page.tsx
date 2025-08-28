@@ -14,19 +14,17 @@ import {
 } from '@idriss-xyz/ui/tooltip';
 import { Bar, BarChart, XAxis } from 'recharts';
 import { Icon } from '@idriss-xyz/ui/icon';
-import { Button } from '@idriss-xyz/ui/button';
 import { useMemo } from 'react';
 import { formatFiatValue } from '@idriss-xyz/utils';
 import { usePrivy } from '@privy-io/react-auth';
 import { Hex } from 'viem';
 
-import { useCopyToClipboard } from '@/app/creators/hooks/use-copy-to-clipboard';
 import { backgroundLines2, IDRISS_COIN, IDRISS_SCENE_STREAM_4 } from '@/assets';
 import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history';
 import { DonateHistoryItem } from '@/app/creators/donate/components/donate-history/donate-history-item';
+import { CopyButton } from '@/app/creators/components/copy-button/copy-button';
 
 import { useAuth } from '../../../context/auth-context';
-import { useToast } from '../../../context/toast-context';
 import SkeletonEarnings from '../loading';
 
 import { TokenLogo } from './token-logo';
@@ -42,9 +40,7 @@ const chartConfig = {
 // ts-unused-exports:disable-next-line
 export default function EarningsStats() {
   const { user, ready, authenticated } = usePrivy();
-  const { copied, copy } = useCopyToClipboard();
   const { creator } = useAuth();
-  const { toast } = useToast();
   const address = user?.wallet?.address as Hex | undefined;
   const tipHistoryQuery = useGetTipHistory(
     {
@@ -147,17 +143,6 @@ export default function EarningsStats() {
   ) {
     return <SkeletonEarnings />;
   }
-
-  const handleCopyLink = () => {
-    if (creator?.donationUrl) {
-      void copy(creator.donationUrl);
-      toast({
-        type: 'success',
-        heading: 'Your link has been copied!',
-        autoClose: true,
-      });
-    }
-  };
 
   return (
     <div className="grid grid-cols-3 gap-4">
@@ -397,17 +382,10 @@ export default function EarningsStats() {
               <span className="mx-8 text-center text-display5 uppercase gradient-text">
                 Share your page to get your first donation
               </span>
-              <Button
-                size="medium"
-                intent="secondary"
-                onClick={handleCopyLink}
-                suffixIconName={copied ? undefined : 'IdrissArrowRight'}
-                prefixIconName={copied ? 'Check' : undefined}
-                className="min-w-[137px] justify-center uppercase"
+              <CopyButton
+                text={creator?.donationUrl ?? ''}
                 disabled={!creator?.donationUrl}
-              >
-                {copied ? 'Copied' : 'Copy link'}
-              </Button>
+              />
             </div>
           </Card>
         </>
