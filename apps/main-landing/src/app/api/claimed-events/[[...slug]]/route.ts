@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { parseEther } from 'viem';
 
 import { loadExistingEvents } from '@/utils';
 import { ClaimEvent } from '@/constants';
@@ -21,26 +20,17 @@ export function GET(request: Request): NextResponse<ApiResponse> {
     const { events } = loadExistingEvents();
 
     if (snapshotFormat) {
-      const score = events
-        .filter((event) => {
-          return event.bonus;
-        })
-        .map((event) => {
-          return {
-            address: event.to!,
-            score: (parseEther(event.total!) * 2n).toString(),
-          };
-        });
-      score.push(
+      // only look at LP positions
+      const score = [
         {
           address: '0x896C20Da40c2A4df9B7C98B16a8D5A95129161a5',
-          score: '9999999999999999694651',
+          score: '18836827713071916039467',
         },
         {
           address: '0x656A78630F31432E6F35F6996AF5C0a4E445655c',
           score: '111701559178689625607',
         },
-      );
+      ];
       return NextResponse.json({ score });
     }
 
