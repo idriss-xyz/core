@@ -57,7 +57,7 @@ export async function storeToDatabase(
     let enrichedToUser: typeof enrichedFromUser | undefined;
 
     if (!toUser?.address) {
-      continue; // Skip if there is no recipient address in the node
+      continue;
     }
 
     if (toUser) {
@@ -82,20 +82,22 @@ export async function storeToDatabase(
 
     const tokenData = node.interpretation.descriptionDisplayItems[0]?.tokenV2;
     if (tokenData) {
-      await tokenRepo.upsert(
-        {
+      const existingToken = await tokenRepo.findOneBy({
+        address: tokenData.address.toLowerCase() as Hex,
+        network: node.network,
+      });
+
+      if (!existingToken) {
+        await tokenRepo.save({
           address: tokenData.address.toLowerCase() as Hex,
           symbol: tokenData.symbol,
           imageUrl: tokenData.imageUrlV2,
           network: node.network,
           decimals: tokenData.decimals,
           name: tokenData.name,
-        },
-        {
-          conflictPaths: ['address', 'network'],
-          skipUpdateIfNoValuesChanged: true,
-        },
-      );
+        });
+      }
+
       const amountRaw =
         node.interpretation.descriptionDisplayItems[0]?.amountRaw || '0';
       const tradeValue = tokenData.priceData?.price
