@@ -469,6 +469,7 @@ export const WithdrawWidget = ({
                             return field.onChange(Number(value));
                           }}
                           label="Amount"
+                          placeholder="0"
                           numeric
                           prefixElement={<span>$</span>}
                           error={!!error}
