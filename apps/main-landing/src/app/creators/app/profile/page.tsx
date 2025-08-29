@@ -223,7 +223,10 @@ export default function ProfilePage() {
                     borderRadius={12}
                     gradientStopColor="#E8FCE3"
                   />
-                  <CopyInput value={address ?? ''} />
+                  <CopyInput
+                    value={address ?? ''}
+                    message="Your address has been copied"
+                  />
                 </div>
               </div>
               <div className="flex flex-col gap-2">

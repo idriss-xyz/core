@@ -11,10 +11,12 @@ type CopyInputProperties = {
   onIconClick?: () => void;
   iconName?: IconName;
   wasCopied?: boolean;
+  message?: string;
 };
 
 export function CopyInput({
   value,
+  message,
   className,
   onTextClick,
   onIconClick,
@@ -28,7 +30,7 @@ export function CopyInput({
     void copy(value);
     toast({
       type: 'success',
-      heading: 'Your link has been copied',
+      heading: message ?? 'Your link has been copied',
       autoClose: true,
     });
   };
