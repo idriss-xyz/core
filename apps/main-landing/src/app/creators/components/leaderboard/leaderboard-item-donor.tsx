@@ -35,8 +35,7 @@ export const LeaderboardItemDonor = ({ item, index }: Properties) => {
 
   const avatarImage = (
     <div className="relative w-max">
-      {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
-      {((avatarSourceUrl && isAllowedUrl) ||
+      {((avatarSourceUrl && isAllowedUrl) ??
         (avatarSourceUrl && !isAllowedUrl && !!avatarDataQuery.data)) && (
         <img
           alt={`Rank ${index + 1}`}
