@@ -94,17 +94,60 @@ export default function Obs({ creatorName }: Properties) {
     });
   }, []);
 
+  const socketReference = useRef<Socket | null>(null);
+  const minimumAmountsReference = useRef(minimumAmounts);
+  const enableTogglesReference = useRef(enableToggles);
+  const alertSoundReference = useRef(alertSound);
+  const voiceIdReference = useRef(voiceId);
+  const addDonationReference = useRef(addDonation);
+
   useEffect(() => {
-    if (!name) return;
+    minimumAmountsReference.current = minimumAmounts;
+  }, [minimumAmounts]);
+
+  useEffect(() => {
+    enableTogglesReference.current = enableToggles;
+  }, [enableToggles]);
+
+  useEffect(() => {
+    alertSoundReference.current = alertSound;
+  }, [alertSound]);
+
+  useEffect(() => {
+    voiceIdReference.current = voiceId;
+  }, [voiceId]);
+
+  useEffect(() => {
+    addDonationReference.current = addDonation;
+  }, [addDonation]);
+
+  useEffect(() => {
+    if (!name || socketReference.current) return;
 
     const overlayToken = window.location.pathname.split('/').pop()!;
     console.log(overlayToken);
-
     const socket: Socket = io(`${CREATOR_API_URL}/overlay`, {
       auth: { overlayToken },
       transports: ['websocket'],
+      reconnection: true,
+      reconnectionAttempts: 20,
+      reconnectionDelay: 1000,
     });
 
+    socketReference.current = socket;
+
+    socket.io.on('reconnect_attempt', () => {
+      return console.log('[WS] reconnecting...');
+    });
+    socket.io.on('reconnect_error', (error) => {
+      return console.error('[WS] reconnect error', error);
+    });
+    socket.io.on('reconnect_failed', () => {
+      console.error('[WS] reconnect failed – forcing refresh');
+      const url = new URL(window.location.href);
+      url.searchParams.set('t', Date.now().toString());
+      window.location.href = url.toString();
+    });
     socket.on('connect', () => {
       console.log('✅ Overlay socket connected');
     });
@@ -136,8 +179,8 @@ export default function Obs({ creatorName }: Properties) {
 
     socket.on('testDonation', (testDonation) => {
       console.log('Received test donation event via socket');
-      console.log(enableToggles);
-      console.log(minimumAmounts);
+      console.log(enableTogglesReference.current);
+      console.log(minimumAmountsReference.current);
       try {
         const queuedDonation: QueuedDonation = {
           avatarUrl: testDonation.avatarUrl,
@@ -150,13 +193,13 @@ export default function Obs({ creatorName }: Properties) {
             amount: BigInt(testDonation.token.amount),
             details: testDonation.token.details,
           },
-          minimumAmounts,
-          enableToggles,
-          alertSound,
-          voiceId,
+          minimumAmounts: minimumAmountsReference.current,
+          enableToggles: enableTogglesReference.current,
+          alertSound: alertSoundReference.current,
+          voiceId: voiceIdReference.current,
           creatorName: name,
         };
-        addDonation(queuedDonation);
+        addDonationReference.current(queuedDonation);
       } catch (error) {
         console.error('Error processing test donation:', error);
       }
@@ -167,9 +210,12 @@ export default function Obs({ creatorName }: Properties) {
     });
 
     return () => {
-      socket.disconnect();
+      if (socketReference.current) {
+        socketReference.current.disconnect();
+        socketReference.current = null;
+      }
     };
-  }, [name, addDonation, minimumAmounts, enableToggles, alertSound, voiceId]);
+  }, [name]);
 
   // If creator name present use info from db, if not, use params only
   useEffect(() => {
