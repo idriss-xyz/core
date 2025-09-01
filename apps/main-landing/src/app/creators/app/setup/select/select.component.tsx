@@ -131,17 +131,19 @@ export const Select = <T,>({
                   optionsContainerClassName,
                 )}
               >
-                {options.map((option) => (
-                  <DropdownMenu.Item
-                    key={option.label}
-                    className="rounded-[12px] px-3 py-1 outline-none data-[highlighted]:bg-black/10"
-                    onSelect={() => {
-                      onChange(option.value);
-                    }}
-                  >
-                    <SelectOption option={option} />
-                  </DropdownMenu.Item>
-                ))}
+                {options.map((option) => {
+                  return (
+                    <DropdownMenu.Item
+                      key={option.label}
+                      className="rounded-[12px] px-3 py-1 outline-none data-[highlighted]:bg-black/10"
+                      onSelect={() => {
+                        onChange(option.value);
+                      }}
+                    >
+                      <SelectOption option={option} />
+                    </DropdownMenu.Item>
+                  );
+                })}
               </ScrollArea>
             </SelectOptionContainer>
           </DropdownMenu.Content>
