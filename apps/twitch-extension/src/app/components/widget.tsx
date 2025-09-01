@@ -102,7 +102,6 @@ function WidgetContent({ variant }: ContentProperties) {
 
   useEffect(() => {
     if (donationsHistory.data) {
-      console.log(donationsHistory);
 
       const allTimeLeaderboard = calculateDonationLeaderboard(
         donationsHistory.data.donations,
