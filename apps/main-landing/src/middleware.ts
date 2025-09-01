@@ -13,10 +13,10 @@ const CSP = [
   `script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com${DEV ? " 'unsafe-eval'" : ''}`,
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com",
-  "img-src 'self' data: blob: https://cdn.discordapp.com https://cdn.pixabay.com https://res.cloudinary.com https://imagedelivery.net https://i.imgur.com https://storage.googleapis.com https://static-cdn.jtvnw.net https://euc.li https://idriss.xyz https://explorer-api.walletconnect.com",
+  "img-src 'self' data: blob: https://assets.coingecko.com https://cdn.discordapp.com https://cdn.pixabay.com https://res.cloudinary.com https://imagedelivery.net https://i.imgur.com https://storage.googleapis.com https://static-cdn.jtvnw.net https://euc.li https://idriss.xyz https://explorer-api.walletconnect.com",
   'child-src https://auth.privy.io https://verify.walletconnect.com https://verify.walletconnect.org',
   'frame-src https://auth.privy.io https://verify.walletconnect.com https://verify.walletconnect.org https://challenges.cloudflare.com',
-  `connect-src 'self' https://api.mainnet.abs.xyz https://api.roninchain.com/rpc https://ethereum-rpc.publicnode.com https://base-rpc.publicnode.com https://auth.privy.io https://creators-api.idriss.xyz https://core-staging-4c69.up.railway.app https://id.twitch.tv https://api.twitch.tv https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com https://explorer-api.walletconnect.com https://pulse.walletconnect.org wss://relay.walletconnect.com wss://relay.walletconnect.org wss://www.walletlink.org https://*.rpc.privy.systems https://api.web3modal.org${DEV ? ' http://localhost:* ws://localhost:*' : ''}`,
+  `connect-src 'self' wss://creators-api.idriss.xyz https://api.mainnet.abs.xyz https://api.roninchain.com/rpc https://ethereum-rpc.publicnode.com https://base-rpc.publicnode.com https://auth.privy.io https://creators-api.idriss.xyz https://core-staging-4c69.up.railway.app https://id.twitch.tv https://api.twitch.tv https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com https://explorer-api.walletconnect.com https://pulse.walletconnect.org wss://relay.walletconnect.com wss://relay.walletconnect.org wss://www.walletlink.org https://*.rpc.privy.systems https://api.web3modal.org${DEV ? ' http://localhost:* ws://localhost:*' : ''}`,
   "worker-src 'self' blob:",
   "manifest-src 'self'",
 ].join('; ');

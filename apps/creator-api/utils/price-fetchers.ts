@@ -51,6 +51,7 @@ export async function getZapperPrice(
 ): Promise<number | null> {
   const zapperCacheKey = `${network}_${tokenAddress}`;
   let priceTicks = zapperHistoryCache[zapperCacheKey];
+  let fallbackPrice: number | null = null;
 
   // Fetch entire price history if not cached
   if (!priceTicks) {
@@ -80,6 +81,7 @@ export async function getZapperPrice(
       });
 
       const json = await response.json();
+      fallbackPrice = json.data?.fungibleTokenV2?.priceData?.price ?? null;
       priceTicks = json.data?.fungibleTokenV2?.priceData?.priceTicks ?? [];
       zapperHistoryCache[zapperCacheKey] = priceTicks;
     } catch (error) {
@@ -101,7 +103,7 @@ export async function getZapperPrice(
     }
   }
 
-  return null;
+  return fallbackPrice;
 }
 
 export async function getAlchemyHistoricalPrice(
@@ -168,7 +170,7 @@ export async function getAlchemyHistoricalPrice(
   }
 }
 
-async function fetchFromAlchemy(body: object) {
+async function fetchERC20PricesFromAlchemy(body: object) {
   return retryWithBackoff(() =>
     fetch(
       `https://api.g.alchemy.com/prices/v1/${process.env.ALCHEMY_API_KEY}/tokens/by-address`,
@@ -189,50 +191,109 @@ async function fetchFromAlchemy(body: object) {
   );
 }
 
-// todo: build a pricing map for alchemy, as native currency needs symbol representation for alchemy calls
+async function fetchNativePricesFromAlchemy(
+  symbols: string[],
+): Promise<Record<string, number>> {
+  const result: Record<string, number> = {};
+  if (symbols.length === 0) return result;
+
+  const uniqueSymbols = [...new Set(symbols)];
+
+  for (const symbol of uniqueSymbols) {
+    try {
+      const response = await fetch(
+        `https://api.g.alchemy.com/prices/v1/${process.env.ALCHEMY_API_KEY}/tokens/by-symbol?symbols=${symbol}`,
+        {
+          method: 'GET',
+          headers: { accept: 'application/json' },
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Alchemy symbol request failed for ${symbol}: ${response.status}`,
+        );
+      }
+
+      const json = await response.json();
+      const entry = json.data?.[0];
+      const price = entry?.prices?.[0]?.value;
+      if (entry?.symbol && price) {
+        result[entry.symbol] = Number(price);
+      }
+    } catch (err) {
+      console.error(`Failed to fetch native price for ${symbol}:`, err);
+    }
+  }
+
+  return result;
+}
+
 export async function getAlchemyPrices(
   tokens: { address: string; network: string }[],
 ): Promise<Record<string, number>> {
-  if (tokens.length === 0) {
-    return {};
-  }
+  const result: Record<string, number> = {};
+  if (tokens.length === 0) return result;
 
-  const alchemyToNetworkMap = Object.fromEntries(
-    Object.entries(NETWORK_TO_ALCHEMY).map(([k, v]) => [v, k]),
-  );
+  const nativeSymbols: string[] = [];
+  const erc20Addresses: { address: string; network: string }[] = [];
 
-  const alchemyAddresses = tokens
-    .map((token) => {
+  for (const t of tokens) {
+    if (t.address === NULL_ADDRESS) {
+      const sym =
+        ALCHEMY_NATIVE_TOKENS[t.network as keyof typeof ALCHEMY_NATIVE_TOKENS];
+      if (sym) nativeSymbols.push(sym);
+    } else {
       const alchemyNetwork =
-        NETWORK_TO_ALCHEMY[token.network as keyof typeof NETWORK_TO_ALCHEMY];
-      if (!alchemyNetwork) return null;
-      return {
-        address: token.address,
-        network: alchemyNetwork,
-      };
-    })
-    .filter((t): t is NonNullable<typeof t> => t !== null);
-
-  if (alchemyAddresses.length === 0) {
-    return {};
-  }
-
-  try {
-    const data = await fetchFromAlchemy({ addresses: alchemyAddresses });
-    const result: Record<string, number> = {};
-    if (data.data) {
-      for (const priceInfo of data.data) {
-        const network = alchemyToNetworkMap[priceInfo.network];
-        const address = priceInfo.address;
-        const price = priceInfo.prices?.[0]?.value;
-        if (network && address && price) {
-          result[`${network}:${address.toLowerCase()}`] = Number(price);
-        }
+        NETWORK_TO_ALCHEMY[t.network as keyof typeof NETWORK_TO_ALCHEMY];
+      if (alchemyNetwork) {
+        erc20Addresses.push({ address: t.address, network: alchemyNetwork });
       }
     }
-    return result;
-  } catch (error) {
-    console.error(`Failed to batch fetch Alchemy prices:`, error);
-    return {};
   }
+
+  // native
+  if (nativeSymbols.length > 0) {
+    try {
+      const nativePrices = await fetchNativePricesFromAlchemy(nativeSymbols);
+      for (const t of tokens) {
+        if (t.address !== NULL_ADDRESS) continue;
+        const sym =
+          ALCHEMY_NATIVE_TOKENS[
+            t.network as keyof typeof ALCHEMY_NATIVE_TOKENS
+          ];
+        const price = sym ? nativePrices[sym] : undefined;
+        if (price !== undefined) {
+          result[`${t.network}:${NULL_ADDRESS}`] = price;
+        }
+      }
+    } catch (err) {
+      console.error('Failed to fetch native prices from Alchemy:', err);
+    }
+  }
+
+  // erc20
+  if (erc20Addresses.length > 0) {
+    try {
+      const data = await fetchERC20PricesFromAlchemy({
+        addresses: erc20Addresses,
+      });
+      for (const priceInfo of data.data || []) {
+        const net = Object.keys(NETWORK_TO_ALCHEMY).find(
+          (n) =>
+            NETWORK_TO_ALCHEMY[n as keyof typeof NETWORK_TO_ALCHEMY] ===
+            priceInfo.network,
+        );
+        const address = priceInfo.address;
+        const price = priceInfo.prices?.[0]?.value;
+        if (net && address && price) {
+          result[`${net}:${address.toLowerCase()}`] = Number(price);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to fetch ERC20 prices from Alchemy:', err);
+    }
+  }
+
+  return result;
 }
