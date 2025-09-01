@@ -74,7 +74,6 @@ export async function calculateBalances(userAddress: Hex) {
           token.network,
           new Date(),
         );
-        console.log(zapperPrice, token.name);
         if (zapperPrice !== null) prices[key] = zapperPrice;
       }
     }),

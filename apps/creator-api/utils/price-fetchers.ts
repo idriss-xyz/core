@@ -254,10 +254,8 @@ export async function getAlchemyPrices(
 
   // native
   if (nativeSymbols.length > 0) {
-    console.log('fetching for natives', nativeSymbols);
     try {
       const nativePrices = await fetchNativePricesFromAlchemy(nativeSymbols);
-      console.log(nativePrices);
       for (const t of tokens) {
         if (t.address !== NULL_ADDRESS) continue;
         const sym =
@@ -276,12 +274,10 @@ export async function getAlchemyPrices(
 
   // erc20
   if (erc20Addresses.length > 0) {
-    console.log('fetching for erc20s');
     try {
       const data = await fetchERC20PricesFromAlchemy({
         addresses: erc20Addresses,
       });
-      console.log(data);
       for (const priceInfo of data.data || []) {
         const net = Object.keys(NETWORK_TO_ALCHEMY).find(
           (n) =>
