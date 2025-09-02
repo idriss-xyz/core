@@ -136,8 +136,6 @@ export default function Obs({ creatorName }: Properties) {
 
     socket.on('testDonation', (testDonation) => {
       console.log('Received test donation event via socket');
-      console.log(enableToggles);
-      console.log(minimumAmounts);
       try {
         const queuedDonation: QueuedDonation = {
           avatarUrl: testDonation.avatarUrl,
@@ -155,6 +153,7 @@ export default function Obs({ creatorName }: Properties) {
           alertSound,
           voiceId,
           creatorName: name,
+          forceDisplay: true,
         };
         addDonation(queuedDonation);
       } catch (error) {
@@ -261,7 +260,7 @@ export default function Obs({ creatorName }: Properties) {
 
         const latestBlock = await client.getBlockNumber();
         const lastCheckedBlock =
-          latestCheckedBlocks.get(chain) || latestBlock - BLOCK_LOOKBACK_RANGE;
+          latestCheckedBlocks.get(chain) ?? latestBlock - BLOCK_LOOKBACK_RANGE;
 
         if (latestBlock <= lastCheckedBlock) continue;
 
