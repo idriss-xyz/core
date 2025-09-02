@@ -23,9 +23,6 @@ export class TwitchInfo {
   @Column({ type: 'text', nullable: true })
   description?: string;
 
-  @Column({ type: 'jsonb', nullable: true })
-  socials?: Record<string, string>;
-
   @Column({ type: 'integer', name: 'follower_count', default: 0 })
   followerCount!: number;
 

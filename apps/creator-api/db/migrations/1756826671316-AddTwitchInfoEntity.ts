@@ -73,11 +73,6 @@ export class AddTwitchInfo1756826671316 implements MigrationInterface {
             isNullable: true,
           },
           {
-            name: 'socials',
-            type: 'jsonb',
-            isNullable: true,
-          },
-          {
             name: 'follower_count',
             type: 'integer',
             default: 0,
