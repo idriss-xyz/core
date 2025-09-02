@@ -39,7 +39,7 @@ async function getTwitchInfoForCreator(creatorName: string) {
   }
 }
 
-export class AddTwitchInfo1756826671316 implements MigrationInterface {
+export class AddTwitchInfoEntity1756826671316 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     // Create twitch_info table
     await queryRunner.createTable(
@@ -105,12 +105,19 @@ export class AddTwitchInfo1756826671316 implements MigrationInterface {
         await queryRunner.query(
           `INSERT INTO twitch_info (twitch_id, username, description, follower_count, created_at, updated_at)
            VALUES ($1, $2, $3, $4, now(), now())`,
-          [twitchInfo.twitchId, twitchInfo.username, twitchInfo.description, twitchInfo.followerCount],
+          [
+            twitchInfo.twitchId,
+            twitchInfo.username,
+            twitchInfo.description,
+            twitchInfo.followerCount,
+          ],
         );
       } else {
         // Create a placeholder record with the creator name as fallback
         const fallbackTwitchId = `fallback_${creator.id}_${Date.now()}`;
-        console.error(`No Twitch info found for ${creator.name}, Update it manually after migration runs.`);
+        console.error(
+          `No Twitch info found for ${creator.name}, Update it manually after migration runs.`,
+        );
         await queryRunner.query(
           `INSERT INTO twitch_info (twitch_id, username, description, follower_count, created_at, updated_at)
            VALUES ($1, $2, $3, $4, now(), now())`,

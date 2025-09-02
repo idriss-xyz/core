@@ -23,3 +23,4 @@ export { AddReferralEntity1753000000000 } from './1753000000000-AddReferralEntit
 export { CreateDripDailyClaim1755298637000 } from './1755298637000-CreateDripDailyClaim';
 export { PopulateCreatorTokenAndNetworkDefaults1754915299000 } from './1754915299000-PopulateCreatorTokenAndNetworkDefaults';
 export { RenameEtherToEthereum1755609037000 } from './1755609037000-RenameEtherToEthereum';
+export { AddTwitchInfoEntity1756826671316 } from './1756826671316-AddTwitchInfoEntity';

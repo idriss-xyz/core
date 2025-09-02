@@ -38,6 +38,7 @@ import {
   CreateDripDailyClaim1755298637000,
   PopulateCreatorTokenAndNetworkDefaults1754915299000,
   RenameEtherToEthereum1755609037000,
+  AddTwitchInfoEntity1756826671316,
 } from './migrations';
 import { CreatorProfileView } from './views';
 
@@ -85,6 +86,7 @@ export const AppDataSource = new DataSource({
     CreateDripDailyClaim1755298637000,
     PopulateCreatorTokenAndNetworkDefaults1754915299000,
     RenameEtherToEthereum1755609037000,
+    AddTwitchInfoEntity1756826671316,
   ],
 });
 
