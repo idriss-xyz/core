@@ -4,11 +4,14 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   OneToMany,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
 import { Hex } from 'viem';
 import { CreatorAddress } from './creator-address.entity';
 import { CreatorNetwork } from './creator-network.entity';
 import { CreatorToken } from './creator-token.entity';
+import { TwitchInfo } from './twitch-info.entity';
 
 @Entity('creator')
 export class Creator {
@@ -41,6 +44,13 @@ export class Creator {
 
   @Column({ type: 'text', name: 'obs_url', nullable: true })
   obsUrl?: string;
+
+  @Column({ type: 'text', name: 'twitch_id', nullable: true, unique: true })
+  twitchId?: string;
+
+  @OneToOne(() => TwitchInfo, { nullable: true })
+  @JoinColumn({ name: 'twitch_id', referencedColumnName: 'twitchId' })
+  twitchInfo?: TwitchInfo;
 
   @CreateDateColumn({ type: 'timestamp with time zone', name: 'joined_at' })
   joinedAt!: Date;
