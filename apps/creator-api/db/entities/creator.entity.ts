@@ -45,12 +45,12 @@ export class Creator {
   @Column({ type: 'text', name: 'obs_url', nullable: true })
   obsUrl?: string;
 
-  @Column({ type: 'text', name: 'twitch_id', nullable: true, unique: true })
-  twitchId?: string;
+  @Column({ type: 'text', name: 'twitch_id', nullable: false, unique: true })
+  twitchId!: string;
 
-  @OneToOne(() => TwitchInfo, { nullable: true })
+  @OneToOne(() => TwitchInfo, { nullable: false })
   @JoinColumn({ name: 'twitch_id', referencedColumnName: 'twitchId' })
-  twitchInfo?: TwitchInfo;
+  twitchInfo!: TwitchInfo;
 
   @CreateDateColumn({ type: 'timestamp with time zone', name: 'joined_at' })
   joinedAt!: Date;

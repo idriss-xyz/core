@@ -1,4 +1,43 @@
-import { MigrationInterface, QueryRunner, Table, TableColumn, TableForeignKey } from 'typeorm';
+import {
+  MigrationInterface,
+  QueryRunner,
+  Table,
+  TableColumn,
+  TableForeignKey,
+} from 'typeorm';
+import {
+  fetchTwitchUserInfo,
+  fetchTwitchUserFollowersCount,
+} from '../../utils/twitch-api';
+
+interface CreatorRow {
+  id: number;
+  name: string;
+}
+
+async function getTwitchInfoForCreator(creatorName: string) {
+  try {
+    const userInfo = await fetchTwitchUserInfo(creatorName);
+    if (!userInfo) {
+      console.warn(`No Twitch user found for creator: ${creatorName}`);
+      return null;
+    }
+
+    const followersInfo = await fetchTwitchUserFollowersCount(creatorName);
+
+    return {
+      twitchId: userInfo.id,
+      username: userInfo.login,
+      displayName: userInfo.display_name,
+      profileImageUrl: userInfo.profile_image_url,
+      description: userInfo.description,
+      followerCount: followersInfo?.total || 0,
+    };
+  } catch (error) {
+    console.error(`Error fetching Twitch info for ${creatorName}:`, error);
+    return null;
+  }
+}
 
 export class AddTwitchInfo1756826671316 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -57,13 +96,72 @@ export class AddTwitchInfo1756826671316 implements MigrationInterface {
       }),
     );
 
-    // Add twitch_id column to creator table
+    // Get all existing creators
+    const creators = (await queryRunner.query(
+      'SELECT id, name FROM creator',
+    )) as CreatorRow[];
+
+    // Fetch Twitch info for each creator and populate twitch_info table
+    for (const creator of creators) {
+      const twitchInfo = await getTwitchInfoForCreator(creator.name);
+
+      if (twitchInfo) {
+        // Insert into twitch_info table
+        await queryRunner.query(
+          `INSERT INTO twitch_info (twitch_id, username, description, follower_count, created_at, updated_at)
+           VALUES ($1, $2, $3, $4, now(), now())`,
+          [twitchInfo.twitchId, twitchInfo.username, twitchInfo.description, twitchInfo.followerCount],
+        );
+      } else {
+        // Create a placeholder record with the creator name as fallback
+        const fallbackTwitchId = `fallback_${creator.id}_${Date.now()}`;
+        console.error(`No Twitch info found for ${creator.name}, Update it manually after migration runs.`);
+        await queryRunner.query(
+          `INSERT INTO twitch_info (twitch_id, username, description, follower_count, created_at, updated_at)
+           VALUES ($1, $2, $3, $4, now(), now())`,
+          [fallbackTwitchId, creator.name, null, 0],
+        );
+      }
+    }
+
+    // Add twitch_id column to creator table (temporarily nullable)
     await queryRunner.addColumn(
       'creator',
       new TableColumn({
         name: 'twitch_id',
         type: 'text',
         isNullable: true,
+        isUnique: true,
+      }),
+    );
+
+    // Update creators with their corresponding twitch_id
+    for (const creator of creators) {
+      const twitchInfo = await getTwitchInfoForCreator(creator.name);
+
+      if (twitchInfo) {
+        await queryRunner.query(
+          'UPDATE creator SET twitch_id = $1 WHERE id = $2',
+          [twitchInfo.twitchId, creator.id],
+        );
+      } else {
+        // Use the fallback twitch_id we created
+        const fallbackTwitchId = `fallback_${creator.id}_${Date.now()}`;
+        await queryRunner.query(
+          'UPDATE creator SET twitch_id = $1 WHERE id = $2',
+          [fallbackTwitchId, creator.id],
+        );
+      }
+    }
+
+    // Make twitch_id column not nullable
+    await queryRunner.changeColumn(
+      'creator',
+      'twitch_id',
+      new TableColumn({
+        name: 'twitch_id',
+        type: 'text',
+        isNullable: false,
         isUnique: true,
       }),
     );
@@ -75,7 +173,7 @@ export class AddTwitchInfo1756826671316 implements MigrationInterface {
         columnNames: ['twitch_id'],
         referencedTableName: 'twitch_info',
         referencedColumnNames: ['twitch_id'],
-        onDelete: 'SET NULL',
+        onDelete: 'CASCADE',
       }),
     );
 
@@ -128,7 +226,9 @@ export class AddTwitchInfo1756826671316 implements MigrationInterface {
 
     // Drop foreign key
     const table = await queryRunner.getTable('creator');
-    const foreignKey = table?.foreignKeys.find(fk => fk.columnNames.indexOf('twitch_id') !== -1);
+    const foreignKey = table?.foreignKeys.find(
+      (fk) => fk.columnNames.indexOf('twitch_id') !== -1,
+    );
     if (foreignKey) {
       await queryRunner.dropForeignKey('creator', foreignKey);
     }

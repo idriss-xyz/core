@@ -5,6 +5,7 @@ interface TwitchUserInfo {
   login: string;
   display_name: string;
   profile_image_url: string;
+  description: string;
 }
 
 interface TwitchStreamInfo {

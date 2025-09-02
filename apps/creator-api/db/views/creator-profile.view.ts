@@ -92,7 +92,7 @@ export class CreatorProfileView {
   obsUrl!: string | null;
 
   @ViewColumn()
-  twitchId!: string | null;
+  twitchId!: string;
 
   @ViewColumn()
   joinedAt!: Date;
