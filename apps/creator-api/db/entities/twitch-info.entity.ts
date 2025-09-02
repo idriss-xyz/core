@@ -18,9 +18,6 @@ export class TwitchInfo {
   username!: string;
 
   @Column({ type: 'text', nullable: true })
-  email?: string;
-
-  @Column({ type: 'text', nullable: true })
   description?: string;
 
   @Column({ type: 'integer', name: 'follower_count', default: 0 })

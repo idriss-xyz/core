@@ -210,8 +210,8 @@ export class AddTwitchInfoEntity1756826671316 implements MigrationInterface {
         COALESCE(ARRAY_REMOVE(ARRAY_AGG(DISTINCT cn."chainName"), NULL), ARRAY[]::text[]) AS networks
       FROM creator c
       LEFT JOIN donation_parameters dp ON dp.creator_id = c.id
-      LEFT JOIN creator_token ct ON ct.creator_id = c.id
-      LEFT JOIN creator_network cn ON cn.creator_id = c.id
+      LEFT JOIN creator_tokens ct ON ct.creator_id = c.id
+      LEFT JOIN creator_networks cn ON cn.creator_id = c.id
       GROUP BY
         c.id, c.address, c.primary_address, c.name, c.display_name, c.email,
         c.profile_picture_url, c.donation_url, c.obs_url, c.joined_at,
@@ -270,8 +270,8 @@ export class AddTwitchInfoEntity1756826671316 implements MigrationInterface {
         COALESCE(ARRAY_REMOVE(ARRAY_AGG(DISTINCT cn."chainName"), NULL), ARRAY[]::text[]) AS networks
       FROM creator c
       LEFT JOIN donation_parameters dp ON dp.creator_id = c.id
-      LEFT JOIN creator_token ct ON ct.creator_id = c.id
-      LEFT JOIN creator_network cn ON cn.creator_id = c.id
+      LEFT JOIN creator_tokens ct ON ct.creator_id = c.id
+      LEFT JOIN creator_networks cn ON cn.creator_id = c.id
       GROUP BY
         c.id, c.address, c.primary_address, c.name, c.display_name, c.email,
         c.profile_picture_url, c.donation_url, c.obs_url, c.joined_at,
