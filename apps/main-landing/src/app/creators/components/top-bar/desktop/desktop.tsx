@@ -43,11 +43,15 @@ export const Desktop = ({ hideNavigation, displayCTA }: Properties) => {
             size="small"
             intent="secondary"
             href={CREATORS_LINK}
-            className="lg:px-5 lg:py-3.5 uppercase"
+            className="uppercase lg:px-5 lg:py-3.5"
           >
             Create your page
           </Button>
-          {user ? <DonatePageAvatarMenu /> : <Socials className="hidden sm:flex" />}
+          {user ? (
+            <DonatePageAvatarMenu />
+          ) : (
+            <Socials className="hidden sm:flex" />
+          )}
         </div>
       )}
     </>
