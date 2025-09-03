@@ -4,7 +4,9 @@ This is the open-source repository for IDRISS apps.
 ## Interfaces
 * <a href="https://www.idriss.xyz" target="_blank">Org landing page</a>
 * <a href="https://www.idriss.xyz/creators" target="_blank">IDRISS Creators</a>
-* <a href="https://chrome.google.com/webstore/detail/idriss-crypto/fghhpjoffbgecjikiipbkpdakfmkbmig" target="_blank">IDRISS Extension</a>
+* <a href="https://idriss.xyz/twitch-extension" target="_blank">Twitch Extension</a>
+* <a href="https://idriss.xyz/extension" target="_blank">IDRISS Extension</a>
+
 * <a href="https://idriss.xyz/vault" target="_blank">Vault</a>
 
 ## Install dependecies
