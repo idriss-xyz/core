@@ -5,6 +5,7 @@ This is the open-source repository for IDRISS apps.
 * [Org landing page](https://www.idriss.xyz)
 * [IDRISS Creators](https://www.idriss.xyz/creators)
 * [IDRISS Extension](https://chrome.google.com/webstore/detail/idriss-crypto/fghhpjoffbgecjikiipbkpdakfmkbmig)
+* [Vault](https://idriss.xyz/vault)
 
 ### Build (extension)
 To compile the extension install [pnpm](https://pnpm.io/) and then from CLI:
