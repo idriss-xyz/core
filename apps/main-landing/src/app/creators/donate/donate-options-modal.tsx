@@ -69,8 +69,8 @@ export const DonateOptionsModal = () => {
         return setIsModalOpen(false);
       }}
     >
-      <div className="mx-auto flex w-[752px] flex-col gap-8 p-6">
-        <h3 className="text-center text-heading3 text-neutral-900">
+      <div className="mx-auto flex w-[360px] lg:w-[752px] flex-col gap-8 p-6">
+        <h3 className="text-center text-heading4 lg:text-heading3 text-neutral-900">
           How would you like to donate?
         </h3>
 

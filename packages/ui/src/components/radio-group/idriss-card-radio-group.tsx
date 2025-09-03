@@ -26,13 +26,13 @@ export const IdrissCardRadioGroup = ({
 }: Properties) => {
   return (
     <RadixRadioGroup.Root value={value} onValueChange={onChange}>
-      <div className={classes('grid grid-cols-2 gap-4', className)}>
+      <div className={classes('grid grid-cols-1 lg:grid-cols-2 gap-4', className)}>
         {items.map((item) => {
           return (
             <Card
               key={item.value}
               className={classes(
-                'cursor-pointer border p-0 shadow-none transition-colors hover:border-mint-500',
+                'col-span-1 cursor-pointer border p-0 shadow-none transition-colors hover:border-mint-500',
                 value === item.value
                   ? 'border-[1.5px] border-mint-500'
                   : 'border-gray-200',
@@ -45,14 +45,14 @@ export const IdrissCardRadioGroup = ({
                 <img
                   src={item.image}
                   alt={item.imageAlt}
-                  className="h-[200px] w-full rounded-lg object-cover"
+                  className="h-[150px] lg:h-[200px] w-full rounded-lg object-cover"
                 />
               </div>
 
               <div className="flex flex-col gap-1 p-4">
                 <div className="flex items-center justify-between">
                   <CardHeader>
-                    <h4 className="text-heading4 text-neutral-900">
+                    <h4 className="text-heading6 lg:text-heading4 text-neutral-900">
                       {item.title}
                     </h4>
                   </CardHeader>
@@ -65,7 +65,7 @@ export const IdrissCardRadioGroup = ({
                 </div>
 
                 <CardBody>
-                  <p className="text-body2 text-neutral-600">
+                  <p className="text-body4 lg:text-body2 text-neutral-600">
                     {item.description}
                   </p>
                 </CardBody>
