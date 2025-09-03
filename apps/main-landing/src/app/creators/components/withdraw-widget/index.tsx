@@ -28,7 +28,7 @@ import {
 import { TokenLogo } from '../../app/earnings/stats-and-history/token-logo';
 
 import { useWithdrawal } from './use-withdrawal';
-import { IdrissSend } from './send';
+import { IdrissWithdraw } from './widget';
 
 type WithdrawFormValues = {
   amount: number;
@@ -66,6 +66,7 @@ export const WithdrawWidget = ({
   } = useWithdrawal();
   const [visualAmount, setVisualAmount] = useState<string>();
   const [isMaxAmount, setIsMaxAmount] = useState(false);
+  const [gasLoading, setGasLoading] = useState(false);
 
   const formMethods = useForm<WithdrawFormValues>({
     defaultValues: {
@@ -271,10 +272,14 @@ export const WithdrawWidget = ({
   );
 
   const onNextStep = useCallback(async () => {
+    setGasLoading(true);
     const values = formMethods.getValues();
     const { amount: requestedUsdAmount, chainId } = values;
 
-    if (!selectedBalance) return;
+    if (!selectedBalance) {
+      setGasLoading(false);
+      return;
+    }
 
     const canProceed = await checkGasAndProceed({
       chainId,
@@ -286,6 +291,7 @@ export const WithdrawWidget = ({
     if (canProceed) {
       setStep(2);
     }
+    setGasLoading(false);
   }, [
     formMethods,
     tokenAddress,
@@ -295,22 +301,22 @@ export const WithdrawWidget = ({
   ]);
 
   return (
-    <IdrissSend.Container
+    <IdrissWithdraw.Container
       isOpened={isOpen}
       onClose={handleClose}
       header={
         !isLoading &&
-        !isSuccess && <IdrissSend.Heading>Withdraw</IdrissSend.Heading>
+        !isSuccess && <IdrissWithdraw.Heading>Withdraw</IdrissWithdraw.Heading>
       }
     >
       {() => {
         if (showLoader) {
           return (
-            <IdrissSend.Loading
+            <IdrissWithdraw.Loading
               className="px-5 pb-9 pt-5"
               heading={
                 <>
-                  Sending{' '}
+                  Withdrawing{' '}
                   <span className="text-mint-600">
                     {formatFiatValue(amount)}
                   </span>{' '}
@@ -330,7 +336,7 @@ export const WithdrawWidget = ({
 
         if (isSuccess) {
           return (
-            <IdrissSend.Success
+            <IdrissWithdraw.Success
               heading="Withdrawal completed"
               className="p-5"
               onConfirm={handleClose}
@@ -463,6 +469,7 @@ export const WithdrawWidget = ({
                             return field.onChange(Number(value));
                           }}
                           label="Amount"
+                          placeholder="0"
                           numeric
                           prefixElement={<span>$</span>}
                           error={!!error}
@@ -575,8 +582,9 @@ export const WithdrawWidget = ({
                   size="medium"
                   type="submit"
                   className="w-full"
+                  loading={gasLoading}
                 >
-                  {step === 1 ? 'Continue' : 'Send'}
+                  {step === 1 ? 'Continue' : 'Withdraw'}
                 </Button>
                 {formError && (
                   <div className="mt-1 flex items-start gap-x-1 text-label7 text-red-500 lg:text-label6">
@@ -589,7 +597,7 @@ export const WithdrawWidget = ({
           </>
         );
       }}
-    </IdrissSend.Container>
+    </IdrissWithdraw.Container>
   );
 };
 

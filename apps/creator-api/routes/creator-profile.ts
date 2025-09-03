@@ -14,6 +14,7 @@ import {
   CREATORS_LINK,
   CREATOR_CHAIN,
   CHAIN_ID_TO_TOKENS,
+  TEST_DONATION_MESSAGE,
 } from '@idriss-xyz/constants';
 
 import { tightCors } from '../config/cors';
@@ -252,7 +253,7 @@ router.post(
         type: 'test' as const,
         donor: 'idriss_xyz',
         amount: 5, // Random amount between $1-100
-        message: 'This is a test donation.',
+        message: TEST_DONATION_MESSAGE,
         sfxText: null,
         avatarUrl:
           'https://res.cloudinary.com/base-web/image/fetch/w_64/f_webp/https%3A%2F%2Fbase.mypinata.cloud%2Fipfs%2Fbafkreicr5lh2f3eumcn4meif5t2pauzeddjjbhjbl4enqrp4ooz4e7on6i%3FpinataGatewayToken%3Df6uqhE35YREDMuFqLvxFLqd-MBRlrJ1qWog8gyCF8T88-Tsiu2IX48F-kyVti78J',

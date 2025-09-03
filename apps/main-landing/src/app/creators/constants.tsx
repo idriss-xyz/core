@@ -1,5 +1,3 @@
-export const TEST_DONATION_MESSAGE = 'This is a test donation.';
-
 import { IconName } from '@idriss-xyz/ui/icon';
 import { SOCIAL_LINK } from '@idriss-xyz/constants';
 import { SiteMapItem } from '@idriss-xyz/ui/breadcrumb';

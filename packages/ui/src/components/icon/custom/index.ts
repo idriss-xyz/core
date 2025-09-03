@@ -17,6 +17,7 @@ export { RoninToken } from './token/ronin-token';
 export { UsdcToken } from './token/usdc-token';
 export { PrimeToken } from './token/prime-token';
 export { YggToken } from './token/ygg-token';
+export { PenguToken } from './token/pengu-token';
 export { Governance } from './governance';
 export { PolymarketIcon } from './polymarket-icon';
 export { Tipping } from './tipping';

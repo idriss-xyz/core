@@ -8,12 +8,11 @@ import { Hex } from 'viem';
 import { formatFiatValue } from '@idriss-xyz/utils';
 import { useState } from 'react';
 
-import { useCopyToClipboard } from '@/app/creators/hooks/use-copy-to-clipboard';
 import { IDRISS_SCENE_STREAM_4 } from '@/assets';
 import { WithdrawWidget } from '@/app/creators/components/withdraw-widget';
+import { CopyButton } from '@/app/creators/components/copy-button/copy-button';
 
 import { useAuth } from '../../../context/auth-context';
-import { useToast } from '../../../context/toast-context';
 import { useGetBalances } from '../commands/get-balances';
 import SkeletonRanking from '../loading';
 
@@ -22,9 +21,7 @@ import { BalanceTable } from './balance-table';
 // ts-unused-exports:disable-next-line
 export default function EarningsBalance() {
   const { user, ready, authenticated } = usePrivy();
-  const { copied, copy } = useCopyToClipboard();
   const { creator } = useAuth();
-  const { toast } = useToast();
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
   const [selectedToken, setSelectedToken] = useState<string>();
   const address = user?.wallet?.address as Hex | undefined;
@@ -71,17 +68,6 @@ export default function EarningsBalance() {
   if (!ready || !authenticated || isLoading) {
     return <SkeletonRanking />;
   }
-
-  const handleCopyLink = () => {
-    if (creator?.donationUrl) {
-      void copy(creator.donationUrl);
-      toast({
-        type: 'success',
-        heading: 'Your link has been copied!',
-        autoClose: true,
-      });
-    }
-  };
 
   return (
     <div className="grid grid-cols-3 gap-4">
@@ -137,17 +123,10 @@ export default function EarningsBalance() {
             <span className="mx-8 text-center text-display5 uppercase gradient-text">
               Share your page to get your first donation
             </span>
-            <Button
-              size="medium"
-              intent="secondary"
-              onClick={handleCopyLink}
-              suffixIconName={copied ? undefined : 'IdrissArrowRight'}
-              prefixIconName={copied ? 'Check' : undefined}
-              className="min-w-[137px] justify-center uppercase"
+            <CopyButton
+              text={creator?.donationUrl ?? ''}
               disabled={!creator?.donationUrl}
-            >
-              {copied ? 'Copied' : 'Copy link'}
-            </Button>
+            />
           </div>
         </Card>
       )}
