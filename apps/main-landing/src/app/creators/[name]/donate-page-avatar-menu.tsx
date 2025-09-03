@@ -4,12 +4,14 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import Image from 'next/image';
 import { useEffect } from 'react';
 import { usePrivy } from '@privy-io/react-auth';
+import { IconButton } from '@idriss-xyz/ui/icon-button';
 
 import { useLogout } from '../hooks/use-logout';
 import { useAuth } from '../context/auth-context';
 import { setCreatorIfSessionPresent } from '../utils';
+import { socialOptions } from '../constants';
 
-export function DonatePageTopBar() {
+export function DonatePageAvatarMenu() {
   const { creator, setCreator } = useAuth();
   const { user } = usePrivy();
   const handleLogout = useLogout();
@@ -22,7 +24,7 @@ export function DonatePageTopBar() {
   return (
     creator &&
     user && (
-      <NavigationMenu.Root className="fixed right-0 top-0 z-20 flex justify-end gap-3">
+      <NavigationMenu.Root className="flex">
         <NavigationMenu.List className="flex items-center gap-2 p-3">
           <NavigationMenu.Item className="relative flex gap-1">
             <NavigationMenu.Trigger asChild>
@@ -46,7 +48,7 @@ export function DonatePageTopBar() {
                     </div>
                   )}
                 </div>
-                <span className="text-label4 text-neutralGreen-900">
+                <span className="hidden text-label4 text-neutralGreen-900 sm:flex">
                   {creator?.name}
                 </span>
               </div>
@@ -55,6 +57,10 @@ export function DonatePageTopBar() {
             <NavigationMenu.Content className="absolute right-[-13px] top-full z-50 mr-3 w-max gap-1 py-2">
               <div className="flex min-w-[240px] max-w-[270px] flex-col gap-1 rounded-xl border border-neutral-300 bg-white pt-2 shadow-lg">
                 <div className="flex flex-col gap-2 pb-2">
+                  <span className="flex px-3 py-1 text-label4 text-neutralGreen-900 sm:hidden">
+                    Welcome, {creator?.name}
+                  </span>
+                  <hr />
                   <div
                     onClick={handleLogout}
                     className="group flex min-h-[32px] cursor-pointer items-center gap-3 rounded-[4px] px-3 py-1"
@@ -68,6 +74,23 @@ export function DonatePageTopBar() {
                       Log out
                     </span>
                   </div>
+                </div>
+                <hr />
+                <div className="flex gap-2">
+                  {socialOptions.map((social, index) => {
+                    return (
+                      <IconButton
+                        href={social.link}
+                        className="w-full"
+                        isExternal
+                        asLink
+                        intent="tertiary"
+                        iconName={social.iconName}
+                        size="extra"
+                        key={index}
+                      />
+                    );
+                  })}
                 </div>
               </div>
             </NavigationMenu.Content>

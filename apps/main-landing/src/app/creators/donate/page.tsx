@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
 
-import { DonatePageTopBar } from '../[name]/topbar';
 import { OAuthCallbackHandler } from '../components/oauth-callback-handler';
 
 import { DonateContent } from './donate-content';
@@ -18,7 +17,6 @@ export default function Donate() {
   return (
     <RainbowKitProviders>
       <OAuthCallbackHandler />
-      <DonatePageTopBar />
       <DonateContent />
     </RainbowKitProviders>
   );

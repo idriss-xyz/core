@@ -9,8 +9,6 @@ import { DonateContent } from '../donate/donate-content';
 import { DonateOptionsModal } from '../donate/donate-options-modal';
 import { RainbowKitProviders } from '../donate/providers';
 
-import { DonatePageTopBar } from './topbar';
-
 type Properties = {
   params: Promise<{ name: string }>;
 };
@@ -56,7 +54,6 @@ export default async function CreatorProfile({ params }: Properties) {
   return (
     <RainbowKitProviders>
       <OAuthCallbackHandler />
-      <DonatePageTopBar />
       <DonateOptionsModal />
       <DonateContent creatorProfile={creatorProfile} />
     </RainbowKitProviders>

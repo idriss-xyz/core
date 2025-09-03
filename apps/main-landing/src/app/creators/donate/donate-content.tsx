@@ -1,7 +1,5 @@
 'use client';
-import { Button } from '@idriss-xyz/ui/button';
 import {
-  CREATORS_LINK,
   EMPTY_HEX,
   DEFAULT_DONATION_MIN_ALERT_AMOUNT,
   DEFAULT_DONATION_MIN_SFX_AMOUNT,
@@ -277,17 +275,6 @@ export function DonateContent({ creatorProfile }: Properties) {
         />
 
         {currentContentComponent}
-
-        <Button
-          asLink
-          isExternal
-          size="small"
-          intent="secondary"
-          href={CREATORS_LINK}
-          className="px-5 py-3.5 lg:absolute lg:bottom-6 lg:right-7 lg:translate-x-0"
-        >
-          CREATE YOUR LINK
-        </Button>
       </main>
     </>
   );

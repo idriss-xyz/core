@@ -1,6 +1,9 @@
 import { Button } from '@idriss-xyz/ui/button';
+import { usePrivy } from '@privy-io/react-auth';
+import { CREATORS_LINK } from '@idriss-xyz/constants';
 
 import { useStartEarningNavigation } from '@/app/creators/utils/';
+import { DonatePageAvatarMenu } from '@/app/creators/[name]/donate-page-avatar-menu';
 
 import { Socials } from './socials';
 import { Menu } from './menu';
@@ -12,6 +15,7 @@ type Properties = {
 
 export const Desktop = ({ hideNavigation, displayCTA }: Properties) => {
   const handleStartEarningClick = useStartEarningNavigation();
+  const { user } = usePrivy();
 
   return (
     <>
@@ -32,7 +36,19 @@ export const Desktop = ({ hideNavigation, displayCTA }: Properties) => {
           </Button>
         </div>
       ) : (
-        <Socials className="hidden sm:flex" />
+        <div className="flex items-center">
+          <Button
+            asLink
+            isExternal
+            size="small"
+            intent="secondary"
+            href={CREATORS_LINK}
+            className="lg:px-5 lg:py-3.5 uppercase"
+          >
+            Create your page
+          </Button>
+          {user ? <DonatePageAvatarMenu /> : <Socials className="hidden sm:flex" />}
+        </div>
       )}
     </>
   );
