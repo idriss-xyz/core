@@ -66,7 +66,7 @@ const baseClassName =
 export const DonateForm = forwardRef<HTMLDivElement, Properties>(
   ({ className, creatorInfo, isLegacyLink }, reference) => {
     const { isConnected } = useAccount();
-    const { creator: donorCreator, setCreator } = useAuth();
+    const { setCreator } = useAuth();
     const { data: walletClient } = useWalletClient();
     const { connectModalOpen, openConnectModal } = useConnectModal();
     const [selectedTokenSymbol, setSelectedTokenSymbol] =
@@ -191,11 +191,10 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
           'Authorization': `Bearer ${authToken}`,
         },
         body: JSON.stringify({
-          creatorId: donorCreator?.id,
           address: getAddress(walletClient.account.address),
         }),
       });
-    }, [donorCreator, walletClient]);
+    }, [walletClient]);
 
     const sendDonation = useCallback(async () => {
       if (!creatorInfo.address.data || !creatorInfo.address.isValid) {

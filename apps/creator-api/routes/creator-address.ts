@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express';
 import { AppDataSource } from '../db/database';
 import { CreatorAddress } from '../db/entities';
 import { Creator } from '../db/entities/creator.entity';
-import { getAddress, Hex } from 'viem';
+import { getAddress, Hex, isAddress } from 'viem';
 import { verifyToken } from '../db/middleware/auth.middleware';
 
 const router = Router();
@@ -11,20 +11,18 @@ const creatorRepository = AppDataSource.getRepository(Creator);
 
 router.post('/', verifyToken(), async (req: Request, res: Response) => {
   try {
-    const { address, creatorId } = req.body;
+    const { address } = req.body;
 
-    // Validate required fields
-    if (!address || !creatorId) {
-      res.status(400).json({
-        error: 'Address and creatorId are required',
-      });
+    // Validate user id
+    if (!req.user?.id) {
+      res.status(401).json({ error: 'Unauthorized' });
       return;
     }
 
-    // Validate address format (basic hex validation)
-    if (!address.startsWith('0x')) {
+    // Validate required field
+    if (!address || !isAddress(address)) {
       res.status(400).json({
-        error: 'Invalid address format',
+        error: 'Invalid address',
       });
       return;
     }
@@ -33,7 +31,7 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
 
     // Check if creator exists
     const creator = await creatorRepository.findOne({
-      where: { id: creatorId },
+      where: { privyId: req.user.id },
     });
 
     if (!creator) {
@@ -54,7 +52,7 @@ router.post('/', verifyToken(), async (req: Request, res: Response) => {
       await creatorAddressRepository.findOne({
         where: {
           address: formattedAddress,
-          creator: { id: creatorId },
+          creator: { privyId: req.user.id },
         },
       });
 
