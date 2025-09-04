@@ -1,7 +1,6 @@
 import { createPublicClient, http, Hex, formatUnits } from 'viem';
 import { Token } from '../db/entities/token.entity';
-import { ERC20_ABI } from '@idriss-xyz/constants';
-import { NULL_ADDRESS } from '@idriss-xyz/constants';
+import { ERC20_ABI, NULL_ADDRESS } from '@idriss-xyz/constants';
 import { AppDataSource } from '../db/database';
 import { getAlchemyPrices, getZapperPrice } from './price-fetchers';
 import { getChainByNetworkName } from '@idriss-xyz/utils';
@@ -10,20 +9,15 @@ export async function calculateBalances(userAddress: Hex) {
   const tokenRepository = AppDataSource.getRepository(Token);
   const allTokens = await tokenRepository.find();
 
-  const balanceInfoPromises = allTokens.map(async (token) => {
+  const balancePromises = allTokens.map(async (token) => {
     const chain = getChainByNetworkName(token.network);
-    if (!chain) {
-      console.warn(`Unsupported network: ${token.network}. Skipping.`);
-      return null;
-    }
+    if (!chain) return null;
 
-    const client = createPublicClient({
-      chain,
-      transport: http(),
-    });
+    const client = createPublicClient({ chain, transport: http() });
 
     try {
       let balance: bigint;
+
       if (token.address.toLowerCase() === NULL_ADDRESS) {
         balance = await client.getBalance({ address: userAddress });
       } else {
@@ -35,15 +29,10 @@ export async function calculateBalances(userAddress: Hex) {
         });
       }
 
-      const formattedBalance = formatUnits(balance, token.decimals);
+      if (balance === BigInt(0)) return null;
 
-      if (parseFloat(formattedBalance) > 0) {
-        return {
-          token,
-          formattedBalance,
-        };
-      }
-      return null;
+      const formattedBalance = formatUnits(balance, token.decimals);
+      return { token, formattedBalance };
     } catch (error) {
       console.error(
         `Failed to fetch balance for ${token.symbol} on ${token.network}`,
@@ -53,16 +42,14 @@ export async function calculateBalances(userAddress: Hex) {
     }
   });
 
-  const balancesWithAmount = (await Promise.all(balanceInfoPromises)).filter(
+  const balancesWithAmount = (await Promise.all(balancePromises)).filter(
     (b): b is NonNullable<typeof b> => b !== null,
   );
 
   if (balancesWithAmount.length === 0) {
     return {
       balances: [],
-      summary: {
-        totalUsdBalance: 0,
-      },
+      summary: { totalUsdBalance: 0 },
     };
   }
 
@@ -70,9 +57,14 @@ export async function calculateBalances(userAddress: Hex) {
     address: token.address,
     network: token.network,
   }));
-  const prices = await getAlchemyPrices(tokensToPrice);
 
-  // Fallback: fetch any missing prices from Zapper
+  let prices: Record<string, number> = {};
+  try {
+    prices = await getAlchemyPrices(tokensToPrice);
+  } catch (err) {
+    console.error('Failed to batch fetch Alchemy prices:', err);
+  }
+
   await Promise.all(
     balancesWithAmount.map(async ({ token }) => {
       const key = `${token.network}:${token.address.toLowerCase()}`;
@@ -82,33 +74,27 @@ export async function calculateBalances(userAddress: Hex) {
           token.network,
           new Date(),
         );
-        if (zapperPrice !== null) {
-          prices[key] = zapperPrice;
-        }
+        if (zapperPrice !== null) prices[key] = zapperPrice;
       }
     }),
   );
 
   let totalUsdBalance = 0;
-  const validBalances = balancesWithAmount.map(
-    ({ token, formattedBalance }) => {
-      const price =
-        prices[`${token.network}:${token.address.toLowerCase()}`] ?? 0;
-      const usdValue = parseFloat(formattedBalance) * price;
-      totalUsdBalance += usdValue;
+  const balances = balancesWithAmount.map(({ token, formattedBalance }) => {
+    const price =
+      prices[`${token.network}:${token.address.toLowerCase()}`] ?? 0;
+    const usdValue = parseFloat(formattedBalance) * price;
+    totalUsdBalance += usdValue;
 
-      return {
-        ...token,
-        balance: formattedBalance.toString(),
-        usdValue: usdValue,
-      };
-    },
-  );
+    return {
+      ...token,
+      balance: formattedBalance.toString(),
+      usdValue,
+    };
+  });
 
   return {
-    balances: validBalances,
-    summary: {
-      totalUsdBalance: totalUsdBalance,
-    },
+    balances,
+    summary: { totalUsdBalance },
   };
 }

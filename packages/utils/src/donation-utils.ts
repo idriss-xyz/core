@@ -2,11 +2,38 @@ import { Hex, parseUnits } from 'viem';
 
 import {
   Chain,
+  CHAIN_ID_TO_TOKENS,
   CREATOR_CHAIN,
   DonationData,
+  IDRISS_TOKEN_ADDRESS,
   LeaderboardStats,
   TokenBalance,
 } from '../../constants/src';
+
+import { getTokenPerDollar } from './get-token-per-dollar';
+
+export const calculateDollarsInIdrissToken = async (
+  amount: number,
+  chainId: number,
+) => {
+  const tokenAddress = IDRISS_TOKEN_ADDRESS;
+
+  const usdcToken = CHAIN_ID_TO_TOKENS[chainId]?.find((token) => {
+    return token.symbol === 'USDC';
+  });
+
+  const payload = {
+    chainId: chainId,
+    buyToken: tokenAddress,
+    sellToken: usdcToken?.address ?? '',
+    amount: 10 ** (usdcToken?.decimals ?? 0),
+  };
+
+  const tokenPerDollar = await getTokenPerDollar(payload);
+  const idrissAmount = amount * Number(tokenPerDollar.price);
+
+  return parseUnits(idrissAmount.toString(), 18);
+};
 
 export const getFilteredDonationsByPeriod = (
   donations: DonationData[],
@@ -37,11 +64,12 @@ export const getFilteredDonationsByPeriod = (
 
 export function calculateDonationLeaderboard(
   donations: DonationData[],
+  addressToCreatorMap?: Map<string, MappableCreator>,
 ): LeaderboardStats[] {
-  // Group donations by sender address
   const groupedDonations: Record<
     string,
     {
+      canonicalAddress: Hex;
       totalAmount: number;
       donationCount: number;
       donorSince: number;
@@ -51,30 +79,41 @@ export function calculateDonationLeaderboard(
   > = {};
 
   for (const donation of donations) {
-    const fromAddress = donation.fromAddress;
-    // Initialize the group if it doesn't exist
-    if (!groupedDonations[fromAddress]) {
-      groupedDonations[fromAddress] = {
+    const creator = addressToCreatorMap?.get(
+      donation.fromAddress.toLowerCase(),
+    );
+
+    const groupKey = creator
+      ? creator.primaryAddress.toLowerCase()
+      : donation.fromAddress.toLowerCase();
+
+    if (!groupedDonations[groupKey]) {
+      groupedDonations[groupKey] = {
+        canonicalAddress: creator
+          ? creator.primaryAddress
+          : donation.fromAddress,
         totalAmount: 0,
         donationCount: 0,
         donorSince: donation.timestamp,
-        displayName: donation.fromUser.displayName!,
-        avatarUrl: donation.fromUser.avatarUrl!,
+        displayName: creator
+          ? creator.displayName
+          : donation.fromUser.displayName!,
+        avatarUrl: creator
+          ? (creator.profilePictureUrl ?? donation.fromUser.avatarUrl!)
+          : donation.fromUser.avatarUrl!,
       };
     }
-    groupedDonations[fromAddress].totalAmount += donation.tradeValue;
-    groupedDonations[fromAddress].donationCount += 1;
-    groupedDonations[fromAddress].donorSince = Math.min(
-      groupedDonations[fromAddress].donorSince,
-      donation.timestamp,
-    );
+
+    const group = groupedDonations[groupKey];
+    group.totalAmount += donation.tradeValue;
+    group.donationCount += 1;
+    group.donorSince = Math.min(group.donorSince, donation.timestamp);
   }
 
-  // Create leaderboard array from grouped data
-  const leaderboard: LeaderboardStats[] = Object.entries(groupedDonations).map(
-    ([address, group]) => {
+  const leaderboard: LeaderboardStats[] = Object.values(groupedDonations).map(
+    (group) => {
       return {
-        address: address as Hex,
+        address: group.canonicalAddress,
         displayName: group.displayName,
         avatarUrl: group.avatarUrl,
         totalAmount: group.totalAmount,
@@ -84,7 +123,6 @@ export function calculateDonationLeaderboard(
     },
   );
 
-  // Sort descending by donation total
   leaderboard.sort((a, b) => {
     return b.totalAmount - a.totalAmount;
   });

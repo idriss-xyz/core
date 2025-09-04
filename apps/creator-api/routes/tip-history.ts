@@ -97,7 +97,10 @@ async function handleFetchTipHistory(req: Request, res: Response) {
       }
     }
 
-    const leaderboard = await calculateDonationLeaderboard(donations);
+    const leaderboard = await calculateDonationLeaderboard(
+      donations,
+      addressToCreatorMap,
+    );
 
     const response: TipHistoryResponse = {
       donations,

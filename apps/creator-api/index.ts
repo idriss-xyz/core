@@ -23,9 +23,13 @@ import twitchAccountInfoRouter from './routes/twitch-account-info';
 import authRouter from './routes/auth';
 import uploadRouter from './routes/upload';
 import creatorAddressRouter from './routes/creator-address';
-import cors from 'cors';
+import creatorProfileFromReferral from './routes/creator-profile-from-referral';
+import referralRouter from './routes/referral-history';
+import claimRewardsRouter from './routes/claim-rewards';
+import dripRouter from './routes/drip';
 import { AppDataSource, initializeDatabase } from './db/database';
 import { Creator } from './db/entities';
+import { isAllowedOrigin, openCors } from './config/cors';
 import { CREATORS_LINK } from '@idriss-xyz/constants';
 
 initializeDatabase()
@@ -35,11 +39,7 @@ initializeDatabase()
 const app: Application = express();
 app.use(express.json());
 
-app.use(
-  cors({
-    origin: '*',
-  }),
-);
+app.use(openCors);
 
 const server = http.createServer(app);
 app.use('/tip-history', tipHistoryRouter);
@@ -58,6 +58,10 @@ app.use('/twitch-account-info', twitchAccountInfoRouter);
 app.use('/auth', authRouter);
 app.use('/upload', uploadRouter);
 app.use('/creator-address', creatorAddressRouter);
+app.use('/referral-history', referralRouter);
+app.use('/claim-rewards', claimRewardsRouter);
+app.use('/drip', dripRouter);
+app.use('/creator-profile-from-referral', creatorProfileFromReferral);
 
 const HOST = process.env.HOST;
 const PORT = Number(process.env.PORT) || 4000;
@@ -68,7 +72,8 @@ if (!HOST || !PORT) {
 
 const io = new SocketIOServer(server, {
   cors: {
-    origin: '*',
+    origin: (origin, cb) =>
+      isAllowedOrigin(origin) ? cb(null, true) : cb(new Error('CORS blocked')),
     methods: ['GET', 'POST'],
   },
 });
