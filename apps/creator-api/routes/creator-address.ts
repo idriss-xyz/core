@@ -3,12 +3,13 @@ import { AppDataSource } from '../db/database';
 import { CreatorAddress } from '../db/entities';
 import { Creator } from '../db/entities/creator.entity';
 import { getAddress, Hex } from 'viem';
+import { verifyToken } from '../db/middleware/auth.middleware';
 
 const router = Router();
 const creatorAddressRepository = AppDataSource.getRepository(CreatorAddress);
 const creatorRepository = AppDataSource.getRepository(Creator);
 
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', verifyToken(), async (req: Request, res: Response) => {
   try {
     const { address, creatorId } = req.body;
 

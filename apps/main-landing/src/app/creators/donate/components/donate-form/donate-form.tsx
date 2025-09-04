@@ -37,7 +37,7 @@ import {
 } from '@idriss-xyz/ui/tooltip';
 import { ExternalLink } from '@idriss-xyz/ui/external-link';
 import { getAddress } from 'viem';
-import { usePrivy } from '@privy-io/react-auth';
+import { usePrivy, getAccessToken } from '@privy-io/react-auth';
 
 import { backgroundLines3 } from '@/assets';
 import { useAuth } from '@/app/creators/context/auth-context';
@@ -183,9 +183,13 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
     // wallet address to creator)
     const createCreatorAddressLink = useCallback(async () => {
       if (!walletClient?.account.address) return;
+      const authToken = await getAccessToken();
       await fetch(`${CREATOR_API_URL}/creator-address`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`,
+        },
         body: JSON.stringify({
           creatorId: donorCreator?.id,
           address: getAddress(walletClient.account.address),
