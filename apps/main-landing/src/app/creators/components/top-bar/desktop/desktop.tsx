@@ -19,7 +19,7 @@ export const Desktop = ({ hideNavigation, displayCTA }: Properties) => {
 
   return (
     <>
-      {!hideNavigation && <Menu className="hidden sm:flex" />}
+      {!hideNavigation && <Menu className="hidden lg:flex" />}
 
       {displayCTA ? (
         <div className="hidden items-center gap-x-9 sm:flex">
