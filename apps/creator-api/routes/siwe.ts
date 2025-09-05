@@ -1,11 +1,11 @@
 import cors from 'cors';
 import { Router, Request, Response } from 'express';
 import { generateNonce, SiweMessage } from 'siwe';
-import { getAddress } from 'viem';
+import { getAddress, Hex } from 'viem';
 import { verifyToken } from '../db/middleware/auth.middleware';
 import { AppDataSource } from '../db/database';
 import { Creator, CreatorAddress } from '../db/entities';
-import { MAIN_LANDING_LINK } from '@idriss-xyz/constants';
+import { MAIN_LANDING_LINK, NULL_ADDRESS } from '@idriss-xyz/constants';
 
 const router = Router();
 
@@ -75,7 +75,8 @@ router.post(
         res.status(401).json({ error: 'Bad nonce' });
         return;
       }
-      if (siwe.domain !== req.hostname) {
+      const host = (req.get('host') ?? '').split(':')[0] || req.hostname;
+      if (siwe.domain !== host) {
         res.status(401).json({ error: 'Bad domain' });
         return;
       }
@@ -90,8 +91,6 @@ router.post(
         res.status(401).json({ error: 'SIWE verify failed' });
         return;
       }
-
-      nonceStore.delete(req.user.id);
 
       const formattedAddress = getAddress(data.address);
       const creatorId = creator.id;
@@ -125,7 +124,52 @@ router.post(
     } catch (e) {
       res.status(500).json({ error: 'Internal error' });
       return;
+    } finally {
+      if (req.user?.id) nonceStore.delete(req.user.id);
     }
+  },
+);
+
+router.options('/linked', siweCors);
+router.get(
+  '/linked',
+  siweCors,
+  verifyToken(),
+  async (req: Request, res: Response) => {
+    if (!req.user?.id) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    const raw = req.query.address;
+    if (typeof raw !== 'string') {
+      res.status(400).json({ error: 'Missing address' });
+      return;
+    }
+
+    let address: Hex;
+    try {
+      address = getAddress(raw);
+      if (address === NULL_ADDRESS) {
+        res.status(400).json({ error: 'Invalid address' });
+        return;
+      }
+    } catch {
+      {
+        res.status(400).json({ error: 'Invalid address' });
+        return;
+      }
+    }
+
+    const creatorAddressRepository =
+      AppDataSource.getRepository(CreatorAddress);
+    const linked = !!(await creatorAddressRepository.findOne({
+      where: { address, creator: { privyId: req.user.id } },
+      select: ['id'],
+    }));
+
+    res.json({ linked });
+    return;
   },
 );
 
