@@ -93,18 +93,13 @@ router.post(
       }
 
       const formattedAddress = getAddress(data.address);
-      const creatorId = creator.id;
-
-      const existingAddressInCreator = await creatorRepository.findOne({
-        where: { address: formattedAddress },
-      });
 
       const existingAddressInCreatorAddress =
         await creatorAddressRepository.findOne({
-          where: { address: formattedAddress, creator: { id: creatorId } },
+          where: { address: formattedAddress, creator: { id: creator.id } },
         });
 
-      if (existingAddressInCreatorAddress || existingAddressInCreator) {
+      if (existingAddressInCreatorAddress) {
         res.status(409).json({ error: 'Address already exists for a creator' });
         return;
       }
