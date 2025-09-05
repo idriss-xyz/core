@@ -100,7 +100,9 @@ router.post(
         });
 
       if (existingAddressInCreatorAddress) {
-        res.status(409).json({ error: 'Address already exists for a creator' });
+        res
+          .status(409)
+          .json({ error: 'Address already exists for the creator' });
         return;
       }
 
@@ -158,8 +160,15 @@ router.get(
 
     const creatorAddressRepository =
       AppDataSource.getRepository(CreatorAddress);
+    console.log('Checking if address is linked for ', address);
+    console.log('Checking if address is linked for ', req.user.id);
+    const creator = await creatorAddressRepository.findOne({
+      where: { address },
+      select: ['id'],
+    });
+    console.log('Found creator', creator);
     const linked = !!(await creatorAddressRepository.findOne({
-      where: { address, creator: { privyId: req.user.id } },
+      where: { address },
       select: ['id'],
     }));
 

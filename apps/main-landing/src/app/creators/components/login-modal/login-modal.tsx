@@ -9,6 +9,7 @@ import { ExternalLink } from '@idriss-xyz/ui/external-link';
 import { Modal } from '@idriss-xyz/ui/modal';
 import Image from 'next/image';
 import { useCallback } from 'react';
+import { Icon } from '@idriss-xyz/ui/icon';
 
 import { IDRISS_TOROID } from '@/assets';
 
@@ -56,9 +57,10 @@ export const LoginModal = () => {
           Continue with Twitch
         </Button>
         {error && (
-          <p className="text-label6 text-red-500">
-            Something went wrong. Try again.
-          </p>
+          <div className="mt-1 flex items-start gap-x-1 text-label7 text-red-500 lg:text-label6">
+            <Icon name="AlertCircle" size={16} className="p-px" />
+            <span>{error}</span>
+          </div>
         )}
         <span className="w-full text-label5 text-neutral-500">
           By logging in, you agree to our

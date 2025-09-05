@@ -73,6 +73,8 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
     const [selectedTokenSymbol, setSelectedTokenSymbol] =
       useState<string>('ETH');
     const [imageError, setImageError] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
+
     const minimumSfxAmount =
       creatorInfo.minimumSfxAmount ?? DEFAULT_DONATION_MIN_SFX_AMOUNT;
 
@@ -194,7 +196,9 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         headers: { Authorization: `Bearer ${authToken}` },
       });
       const { linked } = await linkedResult.json();
-      if (linked) return;
+      if (linked) {
+        throw new Error('This wallet is already linked to a public account.');
+      }
 
       // 2) nonce
       const nonceResult = await fetch(`${CREATOR_API_URL}/siwe/nonce`, {
@@ -304,15 +308,25 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
 
     const onSubmit: SubmitHandler<FormPayload> = useCallback(
       async (payload) => {
+        setSubmitError(null); // Clear any previous error when retrying
+
         if (
           !walletClient ||
           !creatorInfo.address.data ||
           !creatorInfo.address.isValid
         ) {
+          setSubmitError('Invalid wallet or address');
           return;
         }
         if (user) {
-          await linkWalletIfNeeded();
+          try {
+            await linkWalletIfNeeded();
+          } catch {
+            setSubmitError(
+              'This wallet is already linked to a public account.',
+            );
+            return;
+          }
         }
 
         const { chainId, tokenSymbol, ...rest } = payload;
@@ -336,6 +350,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
             recipientAddress: creatorInfo.address.data,
           });
         } catch (error) {
+          setSubmitError('Unknown error sending transaction.');
           console.error('Unknown error sending transaction.', error);
         }
       },
@@ -636,6 +651,12 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
             >
               LOG IN
             </Button>
+          )}
+          {submitError && (
+            <div className="mt-1 flex items-start gap-x-1 text-label7 text-red-500 lg:text-label6">
+              <Icon name="AlertCircle" size={16} className="p-px" />
+              <span>{submitError}</span>
+            </div>
           )}
         </Form>
         <div className="mt-4 w-full py-3 text-center">
