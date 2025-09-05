@@ -192,7 +192,6 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       const qs = new URLSearchParams({ address });
       const linkedResult = await fetch(`${CREATOR_API_URL}/siwe/linked?${qs}`, {
         headers: { Authorization: `Bearer ${authToken}` },
-        credentials: 'include',
       });
       const { linked } = await linkedResult.json();
       if (linked) return;
@@ -200,7 +199,6 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       // 2) nonce
       const nonceResult = await fetch(`${CREATOR_API_URL}/siwe/nonce`, {
         headers: { Authorization: `Bearer ${authToken}` },
-        credentials: 'include',
       });
       const { nonce } = await nonceResult.json();
 
@@ -228,7 +226,6 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${authToken}`,
         },
-        credentials: 'include',
         body: JSON.stringify({ message, signature }),
       });
       if (!verifyResult.ok) throw new Error('SIWE verify failed');
