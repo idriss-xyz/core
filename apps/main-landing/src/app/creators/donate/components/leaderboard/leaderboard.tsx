@@ -49,10 +49,11 @@ export const Leaderboard = ({
   updateCurrentContent,
   style,
 }: Properties) => {
-  const isTwitchExtension = !!variant;
   const isTwitchPanel = variant === 'panel';
   const isTwitchOverlay = variant === 'videoOverlay';
   const isTwitchComponent = variant === 'videoComponent';
+  const isTwitchExtension =
+    isTwitchPanel || isTwitchOverlay || isTwitchComponent;
 
   if (!address.isFetching && !address.isValid) {
     return (
