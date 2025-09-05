@@ -9,7 +9,7 @@ import {
   DonationWithTimeAndAmount,
   TokenEarnings,
 } from '../types';
-import { Hex } from 'viem';
+import { getAddress, Hex } from 'viem';
 import {
   DonationData,
   DonationToken,
@@ -22,9 +22,39 @@ import {
 import { AppDataSource } from '../db/database';
 import { Creator } from '../db/entities';
 
-export function calculateStatsForDonorAddress(
+async function getCreatorNameOrAnon(address: string): Promise<string> {
+  address = getAddress(address);
+  const creatorRepository = AppDataSource.getRepository(Creator);
+
+  // First, try to find creator by primary address
+  const creatorByPrimaryAddress = await creatorRepository.findOne({
+    where: { primaryAddress: address as Hex },
+  });
+
+  if (creatorByPrimaryAddress) {
+    return creatorByPrimaryAddress.name;
+  }
+
+  // If not found, search in associated addresses
+  const creatorByAssociatedAddress = await creatorRepository.findOne({
+    where: {
+      associatedAddresses: {
+        address: address as Hex,
+      },
+    },
+    relations: ['associatedAddresses'],
+  });
+
+  if (creatorByAssociatedAddress) {
+    return creatorByAssociatedAddress.name;
+  }
+
+  return 'anon';
+}
+
+export async function calculateStatsForDonorAddress(
   donations: DonationData[],
-): DonationStats {
+): Promise<DonationStats> {
   let totalDonationsCount = 0;
   let totalDonationAmount = 0;
   const donationAmounts: Record<string, number> = {};
@@ -43,7 +73,7 @@ export function calculateStatsForDonorAddress(
   let donorDisplayName: string | null = null;
   let positionInLeaderboard = null;
 
-  donations.forEach((donation) => {
+  for (const donation of donations) {
     const toAddress = donation.toAddress;
     const tradeValue = donation.tradeValue;
 
@@ -75,10 +105,10 @@ export function calculateStatsForDonorAddress(
     }
 
     if (!donorDisplayName) {
-      donorDisplayName = donation.fromUser.displayName ?? null;
+      donorDisplayName = await getCreatorNameOrAnon(donation.fromAddress);
     }
     totalDonationsCount += 1;
-  });
+  }
 
   return {
     totalDonationsCount,
@@ -104,28 +134,36 @@ export async function calculateGlobalDonorLeaderboard(
 
   const groupedDonations = await fetchDonations();
 
-  const leaderboard = Object.entries(groupedDonations)
-    .map(([address, donations]) => {
-      const hexAddress = address as Hex;
+  const aggregatedByDonor = new Map<
+    string,
+    { creator: Creator | null; donations: DonationData[] }
+  >();
+
+  for (const [address, donations] of Object.entries(groupedDonations)) {
+    const creator = addressToCreatorMap.get(address.toLowerCase()) ?? null;
+    const key = creator ? `creator:${creator.id}` : address.toLowerCase();
+
+    if (!aggregatedByDonor.has(key)) {
+      aggregatedByDonor.set(key, { creator, donations: [] });
+    }
+    aggregatedByDonor.get(key)!.donations.push(...donations);
+  }
+
+  const leaderboard = Array.from(aggregatedByDonor.values())
+    .map(({ creator, donations }) => {
       const firstDonationTimestamp = Math.min(
         ...donations.map((d) => d.timestamp),
       );
 
-      const filteredDonations = getFilteredDonationsByPeriod(donations, period);
+      const filtered = getFilteredDonationsByPeriod(donations, period);
+      if (filtered.length === 0) return null;
 
-      if (filteredDonations.length === 0) {
-        return null;
-      }
-
-      let totalAmount = 0;
-      for (const donation of filteredDonations) {
-        totalAmount += donation.tradeValue;
-      }
-
-      const creator = addressToCreatorMap.get(address.toLowerCase());
+      const totalAmount = filtered.reduce((sum, d) => sum + d.tradeValue, 0);
 
       return {
-        address: hexAddress,
+        address: (creator
+          ? creator.primaryAddress
+          : donations[0].fromAddress) as Hex,
         displayName: creator
           ? creator.displayName
           : donations[0].fromUser.displayName!,
@@ -133,9 +171,9 @@ export async function calculateGlobalDonorLeaderboard(
           ? creator.profilePictureUrl!
           : donations[0].fromUser.avatarUrl!,
         totalAmount,
-        donationCount: filteredDonations.length,
+        donationCount: filtered.length,
         donorSince: firstDonationTimestamp,
-      };
+      } as LeaderboardStats;
     })
     .filter(Boolean) as LeaderboardStats[];
 
@@ -212,8 +250,8 @@ export function calculateStatsForRecipientAddress(
   );
   const distinctDonorsCount = Array.from(new Set(donorsAddress)).length;
   const totalDonationsCount = donations.length;
-  const biggestDonation = Math.max(...donations.map((d) => d.tradeValue));
-
+  const biggestDonation =
+    donations.length > 0 ? Math.max(...donations.map((d) => d.tradeValue)) : 0;
   const donationsWithTimeAndAmount = donations.map((donation) => {
     const timestamp = donation.timestamp;
     const date = new Date(timestamp);

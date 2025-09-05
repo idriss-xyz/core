@@ -8,7 +8,9 @@ import {
   CreatorToken,
   Token,
   User,
+  Referral,
   CreatorAddress,
+  DripDailyClaim,
 } from './entities';
 import {
   AddAmountRaw1743181200000,
@@ -32,6 +34,8 @@ import {
   AddForceDonationOverlayRefresh1753315853694,
   AddCreatorAddresses1753656919000,
   AddReceiveEmailsCreatorField1753726864037,
+  AddReferralEntity1753000000000,
+  CreateDripDailyClaim1755298637000,
   PopulateCreatorTokenAndNetworkDefaults1754915299000,
   RenameEtherToEthereum1755609037000,
 } from './migrations';
@@ -51,6 +55,8 @@ export const AppDataSource = new DataSource({
     DonationParameters,
     CreatorProfileView,
     CreatorAddress,
+    Referral,
+    DripDailyClaim,
   ],
   synchronize: false,
   migrations: [
@@ -75,6 +81,8 @@ export const AppDataSource = new DataSource({
     AddForceDonationOverlayRefresh1753315853694,
     AddCreatorAddresses1753656919000,
     AddReceiveEmailsCreatorField1753726864037,
+    AddReferralEntity1753000000000,
+    CreateDripDailyClaim1755298637000,
     PopulateCreatorTokenAndNetworkDefaults1754915299000,
     RenameEtherToEthereum1755609037000,
   ],

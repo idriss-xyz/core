@@ -268,7 +268,7 @@ export const CHAIN_ID_TO_TOKENS = {
     {
       ...TOKEN.USDC,
       decimals: 6,
-      address: '0x84a71ccd554cc1b02749b35d22f684cc8ec987e1',
+      address: '0x84A71ccD554Cc1b02749b35d22F684CC8ec987e1',
     },
     {
       ...TOKEN.PENGU,
@@ -295,12 +295,12 @@ export const CHAIN_ID_TO_TOKENS = {
     {
       ...TOKEN.YGG,
       decimals: 18,
-      address: '0x25f8087ead173b73d6e8b84329989a8eea16cf73',
+      address: '0x25f8087EAD173b73D6e8B84329989A8eEA16CF73',
     },
     {
       ...TOKEN.PDT,
       decimals: 18,
-      address: '0x375abb85c329753b1ba849a601438ae77eec9893',
+      address: '0x375aBB85C329753b1Ba849a601438AE77eEc9893',
     },
   ],
   [CREATOR_CHAIN.RONIN.id]: [
@@ -312,22 +312,22 @@ export const CHAIN_ID_TO_TOKENS = {
     {
       ...TOKEN.ETHEREUM,
       decimals: 18,
-      address: '0xc99a6a985ed2cac1ef41640596c5a5f9f4e19ef5',
+      address: '0xc99a6A985eD2Cac1ef41640596C5A5f9F4E19Ef5',
     },
     {
       ...TOKEN.USDC,
       decimals: 6,
-      address: '0x0b7007c13325c48911f73a2dad5fa5dcbf808adc',
+      address: '0x0B7007c13325C48911F73A2daD5FA5dCBf808aDc',
     },
     {
       ...TOKEN.AXIE,
       decimals: 18,
-      address: '0x97a9107c1793bc407d6f527b77e7fff4d812bece',
+      address: '0x97a9107C1793BC407d6F527b77e7fff4D812bece',
     },
     {
       ...TOKEN.YGG,
       decimals: 18,
-      address: '0x1c306872bc82525d72bf3562e8f0aa3f8f26e857',
+      address: '0x1c306872bC82525d72Bf3562E8F0aA3f8F26e857',
     },
     // {
     //   ...TOKEN.PIXEL,
@@ -354,17 +354,17 @@ export const CHAIN_ID_TO_TOKENS = {
     {
       ...TOKEN.PDT,
       decimals: 18,
-      address: '0xeff2a458e464b07088bdb441c21a42ab4b61e07e',
+      address: '0xeff2A458E464b07088bDB441C21A42AB4b61e07E',
     },
     {
       ...TOKEN.YGG,
       decimals: 18,
-      address: '0xaac78d1219c08aecc8e37e03858fe885f5ef1799',
+      address: '0xaAC78d1219c08AecC8e37e03858FE885f5EF1799',
     },
     {
       ...TOKEN.IDRISS,
       decimals: 18,
-      address: '0x000096630066820566162c94874a776532705231',
+      address: '0x000096630066820566162C94874A776532705231',
     },
   ],
 } satisfies Record<string, ChainToken[]>;
@@ -384,3 +384,5 @@ export const CREATOR_API_URL = 'https://creators-api.idriss.xyz';
 export const DEFAULT_DONATION_MIN_ALERT_AMOUNT = 1;
 export const DEFAULT_DONATION_MIN_TTS_AMOUNT = 3;
 export const DEFAULT_DONATION_MIN_SFX_AMOUNT = 10;
+export const IDRISS_TOKEN_ADDRESS =
+  '0x000096630066820566162c94874a776532705231';

@@ -5,6 +5,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { Badge } from '@idriss-xyz/ui/badge';
 import { Button } from '@idriss-xyz/ui/button';
 import { Link } from '@idriss-xyz/ui/link';
+import { SiweMessage } from 'siwe';
 import {
   getTransactionUrl,
   formatTokenValue,
@@ -36,8 +37,12 @@ import {
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
 import { ExternalLink } from '@idriss-xyz/ui/external-link';
+import { getAddress } from 'viem';
+import { usePrivy, getAccessToken } from '@privy-io/react-auth';
 
 import { backgroundLines3 } from '@/assets';
+import { useAuth } from '@/app/creators/context/auth-context';
+import { setCreatorIfSessionPresent } from '@/app/creators/utils';
 
 import {
   FormPayload,
@@ -62,6 +67,7 @@ const baseClassName =
 export const DonateForm = forwardRef<HTMLDivElement, Properties>(
   ({ className, creatorInfo, isLegacyLink }, reference) => {
     const { isConnected } = useAccount();
+    const { setCreator } = useAuth();
     const { data: walletClient } = useWalletClient();
     const { connectModalOpen, openConnectModal } = useConnectModal();
     const [selectedTokenSymbol, setSelectedTokenSymbol] =
@@ -174,10 +180,93 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       [sfx],
     );
 
+    // Add a record to creator-address table on db (link
+    // wallet address to creator)
+    const linkWalletIfNeeded = useCallback(async () => {
+      if (!walletClient?.account?.address) return;
+
+      const authToken = await getAccessToken();
+      const address = getAddress(walletClient.account.address);
+
+      // 1) check
+      const qs = new URLSearchParams({ address });
+      const linkedResult = await fetch(`${CREATOR_API_URL}/siwe/linked?${qs}`, {
+        headers: { Authorization: `Bearer ${authToken}` },
+        credentials: 'include',
+      });
+      const { linked } = await linkedResult.json();
+      if (linked) return;
+
+      // 2) nonce
+      const nonceResult = await fetch(`${CREATOR_API_URL}/siwe/nonce`, {
+        headers: { Authorization: `Bearer ${authToken}` },
+        credentials: 'include',
+      });
+      const { nonce } = await nonceResult.json();
+
+      // 3) sign SIWE
+      const message_ = new SiweMessage({
+        domain: window.location.hostname,
+        address,
+        statement:
+          'Sign to confirm this wallet is yours and link it to your IDRISS Creators account. This is a one-time free signature.',
+        uri: window.location.origin,
+        version: '1',
+        chainId,
+        nonce,
+      });
+      const message = message_.prepareMessage();
+      const signature = await walletClient.signMessage({
+        account: address,
+        message,
+      });
+
+      // 4) verify
+      const verifyResult = await fetch(`${CREATOR_API_URL}/siwe/verify`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`,
+        },
+        credentials: 'include',
+        body: JSON.stringify({ message, signature }),
+      });
+      if (!verifyResult.ok) throw new Error('SIWE verify failed');
+    }, [walletClient, chainId]);
+
+    const syncDonation = useCallback(async () => {
+      if (!creatorInfo.address.data || !creatorInfo.address.isValid) {
+        return;
+      }
+      await fetch(`${CREATOR_API_URL}/tip-history/sync`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ address: creatorInfo.address.data }),
+      });
+    }, [creatorInfo.address.data, creatorInfo.address.isValid]);
+
+    const { user } = usePrivy();
+
+    const callbackOnSend = useCallback(
+      async (txHash: string) => {
+        await sendDonationEffects(txHash);
+        await syncDonation();
+      },
+      [sendDonationEffects, syncDonation],
+    );
+
     const sender = useSender({
       walletClient,
-      callbackOnSend: sendDonationEffects,
+      callbackOnSend,
     });
+
+    useEffect(() => {
+      if (user) {
+        void setCreatorIfSessionPresent(user, setCreator);
+      }
+    }, [user, setCreator]);
 
     // Reset SFX when amount falls below the minimum
     useEffect(() => {
@@ -225,6 +314,9 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         ) {
           return;
         }
+        if (user) {
+          await linkWalletIfNeeded();
+        }
 
         const { chainId, tokenSymbol, ...rest } = payload;
 
@@ -255,27 +347,10 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         walletClient,
         creatorInfo.address.data,
         creatorInfo.address.isValid,
+        user,
+        linkWalletIfNeeded,
       ],
     );
-
-    const sendDonation = useCallback(async () => {
-      if (!creatorInfo.address.data || !creatorInfo.address.isValid) {
-        return;
-      }
-      await fetch(`${CREATOR_API_URL}/tip-history/sync`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ address: creatorInfo.address.data }),
-      });
-    }, [creatorInfo.address.data, creatorInfo.address.isValid]);
-
-    useEffect(() => {
-      if (sender.isSuccess) {
-        void sendDonation();
-      }
-    }, [sender.isSuccess, sender.data, sendDonation]);
 
     if (!creatorInfo.address.isValid && !creatorInfo.address.isFetching) {
       return (
@@ -390,38 +465,6 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
 
         <Form onSubmit={formMethods.handleSubmit(onSubmit)} className="w-full">
           <Controller
-            name="tokenSymbol"
-            control={formMethods.control}
-            render={({ field }) => {
-              return (
-                <TokenSelect
-                  label="Token"
-                  value={field.value}
-                  className="mt-6 w-full"
-                  tokens={possibleTokens}
-                  onChange={field.onChange}
-                />
-              );
-            }}
-          />
-
-          <Controller
-            name="chainId"
-            control={formMethods.control}
-            render={({ field }) => {
-              return (
-                <ChainSelect
-                  label="Network"
-                  value={field.value}
-                  className="mt-4 w-full"
-                  onChange={field.onChange}
-                  allowedChainsIds={allowedChainsIds}
-                />
-              );
-            }}
-          />
-
-          <Controller
             name="amount"
             control={formMethods.control}
             render={({ field }) => {
@@ -451,6 +494,38 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                     </span>
                   )}
                 </>
+              );
+            }}
+          />
+
+          <Controller
+            name="tokenSymbol"
+            control={formMethods.control}
+            render={({ field }) => {
+              return (
+                <TokenSelect
+                  label="Token"
+                  value={field.value}
+                  className="mt-6 w-full"
+                  tokens={possibleTokens}
+                  onChange={field.onChange}
+                />
+              );
+            }}
+          />
+
+          <Controller
+            name="chainId"
+            control={formMethods.control}
+            render={({ field }) => {
+              return (
+                <ChainSelect
+                  label="Network"
+                  value={field.value}
+                  className="mt-4 w-full"
+                  onChange={field.onChange}
+                  allowedChainsIds={allowedChainsIds}
+                />
               );
             }}
           />
@@ -535,7 +610,8 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                     className="mt-4"
                     helperText={fieldState.error?.message}
                     error={Boolean(fieldState.error?.message)}
-                    placeholder={amount < minimumSfxAmount ? '🔒' : ''}
+                    placeholder={amount < minimumSfxAmount ? '🔒' : undefined}
+                    placeholderTooltip={`This feature unlocks for donations of $${minimumSfxAmount} or more`}
                     disabled={amount < minimumSfxAmount}
                   />
                 );

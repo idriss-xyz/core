@@ -174,38 +174,42 @@ export const Leaderboard = ({
 
             {(isTwitchComponent || isTwitchOverlay) && (
               <>
-                {leaderboard.map((item, index) => {
-                  if (index > 2) return null;
+                {[0, 1, 2].map((rank) => {
+                  const donor = leaderboard[rank];
 
+                  if (donor) {
+                    return (
+                      <LeaderboardItem
+                        donorRank={rank}
+                        className="py-4.5"
+                        isLastItem={rank === 2}
+                        onDonorClick={onDonorClick}
+                        donorDetails={{
+                          address: donor.address,
+                          avatarUrl: donor.avatarUrl,
+                          displayName: donor.displayName,
+                        }}
+                        donateAmount={donor.totalAmount}
+                        isTwitchExtension={isTwitchExtension}
+                        key={`donor-${donor.address}`}
+                      />
+                    );
+                  }
+
+                  /* missing slot → render placeholder for this exact rank */
                   return (
-                    <LeaderboardItem
-                      donorRank={index}
-                      className="py-4.5"
-                      isLastItem={index === 3}
-                      onDonorClick={onDonorClick}
-                      donorDetails={{
-                        address: item.address,
-                        avatarUrl: item.avatarUrl,
-                        displayName: item.displayName,
-                      }}
-                      donateAmount={item.totalAmount}
-                      isTwitchExtension={isTwitchExtension}
-                      key={`${item.totalAmount}${item.address}`}
+                    <LeaderboardItemPlaceholder
+                      hideBottomBorder={rank === 2}
+                      hideEncouragement
+                      amountToDisplay={rank + 1} // prevents extra filler span
+                      donorRank={rank}
+                      previousDonateAmount={
+                        leaderboard.at(-1)?.totalAmount ?? 1234
+                      }
+                      key={`placeholder-${rank}`}
                     />
                   );
                 })}
-
-                {leaderboard.length <= 3 && (
-                  <LeaderboardItemPlaceholder
-                    hideBottomBorder
-                    hideEncouragement
-                    amountToDisplay={3}
-                    donorRank={leaderboard.length}
-                    previousDonateAmount={
-                      leaderboard.at(-1)?.totalAmount ?? 1234
-                    }
-                  />
-                )}
               </>
             )}
 

@@ -5,6 +5,7 @@ import {
   DonationUser,
   LeaderboardStats,
 } from '@idriss-xyz/constants';
+import { LAMBDA_FAUCET, LAMBDA_REWARDS } from '../config/aws-config';
 
 interface TokenDisplayItem {
   network: string;
@@ -134,3 +135,19 @@ export interface RecipientDonationStats {
   donationsWithTimeAndAmount: DonationWithTimeAndAmount[];
   earningsByTokenOverview: TokenEarnings[];
 }
+
+export type LambdaName = typeof LAMBDA_FAUCET | typeof LAMBDA_REWARDS;
+
+export type LambdaPayload = {
+  recipient: Hex;
+  amount: string | bigint;
+  chainId: string;
+  nonce: number;
+};
+
+export type LambdaResponse = {
+  Payload?: Uint8Array;
+  FunctionError?: string;
+};
+
+export type DecodedLambdaBody = Record<string, any>;
