@@ -33,6 +33,7 @@ export default function DonationNotification({
   alertSound = 'DEFAULT_TRUMPET_SOUND',
   voiceId = 'TX3LPaxmHKxFdv7VOQHJ',
   creatorName,
+  forceDisplay = false,
   minOverallVisibleDuration,
   onFullyComplete,
 }: DonationNotificationProperties) {
@@ -55,6 +56,7 @@ export default function DonationNotification({
     enableToggles,
     message,
     sfxText,
+    forceDisplay,
     minOverallVisibleDuration,
     onFullyComplete,
   );
