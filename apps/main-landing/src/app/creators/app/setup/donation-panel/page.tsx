@@ -10,6 +10,7 @@ import {
   filterOptions,
   type FilterOption,
 } from '@/app/creators/components/banner';
+import { SectionHeader } from '@/app/creators/components/layout';
 
 // ts-unused-exports:disable-next-line
 export default function DonationPanel() {
@@ -18,9 +19,7 @@ export default function DonationPanel() {
   return (
     <Card>
       <CardHeader>
-        <h1 className="pb-1 text-heading4 text-neutralGreen-900">
-          Download your donation panel image
-        </h1>
+        <SectionHeader title="Download your donation panel image" />
         <hr />
         <div className="relative my-4 flex gap-1.5 font-medium">
           {filterOptions.map((option) => {
