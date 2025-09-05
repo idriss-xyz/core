@@ -26,6 +26,7 @@ export const TopBar = ({
 
   useEffect(() => {
     const handleScroll = (event: Event) => {
+      console.log('scrolling');
       const customEvent = event as CustomEvent<{ scrollTop: number }>;
 
       const scrollTop = customEvent.detail.scrollTop;

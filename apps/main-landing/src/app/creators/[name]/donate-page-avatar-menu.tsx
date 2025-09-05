@@ -60,7 +60,7 @@ export function DonatePageAvatarMenu() {
                   <span className="flex px-3 py-1 text-label4 text-neutralGreen-900 sm:hidden">
                     Welcome, {creator?.name}
                   </span>
-                  <hr />
+                  <hr className="sm:hidden" />
                   <div
                     onClick={handleLogout}
                     className="group flex min-h-[32px] cursor-pointer items-center gap-3 rounded-[4px] px-3 py-1"
