@@ -234,7 +234,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       if (!verifyResult.ok) throw new Error('SIWE verify failed');
     }, [walletClient, chainId]);
 
-    const sendDonation = useCallback(async () => {
+    const syncDonation = useCallback(async () => {
       if (!creatorInfo.address.data || !creatorInfo.address.isValid) {
         return;
       }
@@ -252,10 +252,9 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
     const callbackOnSend = useCallback(
       async (txHash: string) => {
         await sendDonationEffects(txHash);
-        if (user) await linkWalletIfNeeded();
-        await sendDonation();
+        await syncDonation();
       },
-      [sendDonationEffects, linkWalletIfNeeded, sendDonation, user],
+      [sendDonationEffects, syncDonation],
     );
 
     const sender = useSender({
@@ -315,6 +314,9 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         ) {
           return;
         }
+        if (user) {
+          await linkWalletIfNeeded();
+        }
 
         const { chainId, tokenSymbol, ...rest } = payload;
 
@@ -345,6 +347,8 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         walletClient,
         creatorInfo.address.data,
         creatorInfo.address.isValid,
+        user,
+        linkWalletIfNeeded,
       ],
     );
 
