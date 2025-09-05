@@ -59,7 +59,7 @@ export const IdrissCardRadioGroup = ({
                     </h4>
                   </CardHeader>
                   <RadixRadioGroup.Item
-                    className="size-[20px] rounded-full border-2 border-neutral-400 data-[state=checked]:border-mint-500 hover:border-mint-500"
+                    className="size-[20px] rounded-full border-2 border-neutral-400 hover:border-mint-500 data-[state=checked]:border-mint-500"
                     value={item.value}
                   >
                     <RadixRadioGroup.Indicator className="relative flex size-full items-center justify-center after:block after:size-[16px] after:rounded-full after:border-2 after:border-neutral-100 after:bg-mint-500" />
