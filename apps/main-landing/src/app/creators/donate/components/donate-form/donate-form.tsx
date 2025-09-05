@@ -208,7 +208,8 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       const message_ = new SiweMessage({
         domain: window.location.hostname,
         address,
-        statement: 'Link this wallet to my account.',
+        statement:
+          'Sign to confirm this wallet is yours and link it to your IDRISS Creators account. This is a one-time free signature.',
         uri: window.location.origin,
         version: '1',
         chainId,
