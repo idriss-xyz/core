@@ -1,4 +1,4 @@
-import { Hex } from 'viem';
+import { getAddress, Hex } from 'viem';
 import { CHAIN, CREATOR_API_URL } from '@idriss-xyz/constants';
 
 import { CreatorProfileResponse } from './types';
@@ -189,8 +189,27 @@ export const getChainIdsFromShortNames = (shortNames: string[]) => {
   });
 };
 
-export {
-  useStartEarningNavigation,
-  getCreatorProfile,
-  setCreatorIfSessionPresent,
-} from './navigation';
+export const getCreatorNameAndPicOrAnon = async (
+  address: string,
+): Promise<{ profilePicUrl: string | undefined; name: string }> => {
+  const formattedAddress = getAddress(address);
+  try {
+    const response = await fetch(
+      `${CREATOR_API_URL}/creator-profile/address/${formattedAddress}`,
+    );
+    if (response.ok) {
+      const profile = (await response.json()) as CreatorProfileResponse;
+      return {
+        profilePicUrl: profile.profilePictureUrl ?? undefined,
+        name: profile.name ?? 'anon',
+      };
+    }
+    return { profilePicUrl: undefined, name: 'anon' };
+  } catch (error) {
+    console.error('Error fetching creator profile by address.', error);
+    return { profilePicUrl: undefined, name: 'anon' };
+  }
+};
+
+export { setCreatorIfSessionPresent } from './session';
+export { useStartEarningNavigation, getCreatorProfile } from './navigation';

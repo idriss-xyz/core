@@ -1,5 +1,4 @@
 import { Desktop } from './desktop';
-import { Mobile } from './mobile';
 
 type Properties = {
   isSticky?: boolean;
@@ -17,14 +16,12 @@ export const Navigation = ({
   displayMobileCTA,
 }: Properties) => {
   return (
-    <>
-      <Mobile
-        isSticky={isSticky}
-        isLanding={isLanding}
-        displayCTA={displayMobileCTA}
-        hideNavigation={hideNavigation}
-      />
-      <Desktop hideNavigation={hideNavigation} displayCTA={displayCTA} />
-    </>
+    <Desktop
+      hideNavigation={hideNavigation}
+      displayCTA={displayCTA}
+      isSticky={isSticky}
+      isLanding={isLanding}
+      displayMobileCTA={displayMobileCTA}
+    />
   );
 };

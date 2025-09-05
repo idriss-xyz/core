@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 
-import Obs from '../page';
+import DonationOverlay from '../donation-overlay';
 import { getPublicCreatorProfileBySlug } from '../../utils';
 
 // ts-unused-exports:disable-next-line
@@ -16,5 +16,5 @@ export default async function CreatorProfile({
     notFound();
   }
 
-  return <Obs creatorName={profile.name} />;
+  return <DonationOverlay creatorName={profile.name} />;
 }

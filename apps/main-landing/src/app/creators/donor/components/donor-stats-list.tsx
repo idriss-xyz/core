@@ -1,12 +1,9 @@
+import { useState, useEffect } from 'react';
 import { EMPTY_HEX } from '@idriss-xyz/constants';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
 import { Icon } from '@idriss-xyz/ui/icon';
-import { Hex } from 'viem';
-import {
-  getShortWalletHex,
-  getModifiedLeaderboardName,
-} from '@idriss-xyz/utils';
+import { getAddress, Hex } from 'viem';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import {
   Tooltip,
@@ -20,6 +17,7 @@ import { backgroundLines4 } from '@/assets';
 import { DonateContentValues } from '@/app/creators/donate/types';
 
 import { DonorHistoryStats } from '../types';
+import { getCreatorNameAndPicOrAnon } from '../../utils';
 
 const baseClassName =
   'z-1 w-[440px] max-w-full rounded-xl bg-mint-100 px-4 pb-9 pt-9 flex flex-col items-center relative container mt-8 overflow-hidden lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]';
@@ -45,9 +43,21 @@ export default function DonorStatsList({
 }: Properties) {
   const router = useRouter();
 
-  const mostDonatedTo = stats?.mostDonatedToUser;
-  const mostDonatedToAvatarUrl = mostDonatedTo?.avatarUrl;
-  const mostDonatedToDisplayName = mostDonatedTo?.displayName;
+  const [mostDonatedToData, setMostDonatedToData] = useState<{
+    profilePicUrl: string | undefined;
+    name: string;
+  }>({ profilePicUrl: undefined, name: 'anon' });
+
+  useEffect(() => {
+    if (
+      stats?.mostDonatedToAddress &&
+      stats?.mostDonatedToAddress !== EMPTY_HEX
+    ) {
+      void getCreatorNameAndPicOrAnon(
+        getAddress(stats?.mostDonatedToAddress),
+      ).then(setMostDonatedToData);
+    }
+  }, [stats?.mostDonatedToAddress]);
 
   return (
     <div className="grid grid-cols-1 items-start gap-x-10 lg:grid-cols-[1fr,auto]">
@@ -60,10 +70,7 @@ export default function DonorStatsList({
         />
 
         <h1 className="self-start text-heading4 text-neutralGreen-900">
-          Donation stats{' '}
-          {(stats?.donorDisplayName ?? address.data) &&
-            address.isValid &&
-            ` of ${stats?.donorDisplayName ? getModifiedLeaderboardName(stats?.donorDisplayName) : getShortWalletHex(address.data ?? EMPTY_HEX)}`}
+          Donation stats of {stats?.donorDisplayName ?? 'anon'}
         </h1>
 
         {(address.isFetching || (address.isValid && statsLoading)) && (
@@ -150,13 +157,7 @@ export default function DonorStatsList({
                   <p className="text-label5 text-neutral-600">Top recipient</p>
 
                   <div className="flex flex-row items-center gap-x-1">
-                    {mostDonatedToAvatarUrl ? (
-                      <img
-                        alt="Donor avatar"
-                        src={mostDonatedToAvatarUrl}
-                        className="size-10 rounded-full border border-neutral-400"
-                      />
-                    ) : (
+                    {mostDonatedToData.profilePicUrl === undefined ? (
                       <div className="flex size-10 items-center justify-center rounded-full border border-neutral-300 bg-neutral-200">
                         <Icon
                           size={25}
@@ -164,25 +165,25 @@ export default function DonorStatsList({
                           className="text-neutral-500"
                         />
                       </div>
+                    ) : (
+                      <img
+                        alt="Donor avatar"
+                        src={mostDonatedToData.profilePicUrl}
+                        className="size-10 rounded-full border border-neutral-400"
+                      />
                     )}
 
                     <TooltipProvider delayDuration={400}>
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <p className="cursor-default truncate text-label3 text-neutral-800">
-                            {mostDonatedToDisplayName
-                              ? getModifiedLeaderboardName(
-                                  mostDonatedToDisplayName,
-                                )
-                              : getModifiedLeaderboardName(
-                                  stats.mostDonatedToAddress,
-                                )}
+                            {mostDonatedToData.name}
                           </p>
                         </TooltipTrigger>
 
                         <TooltipContent className="w-fit bg-black text-white">
                           <p>
-                            {mostDonatedToDisplayName ??
+                            {mostDonatedToData.name ??
                               stats.mostDonatedToAddress}
                           </p>
                         </TooltipContent>

@@ -36,7 +36,7 @@ type Properties = {
 };
 
 const baseClassName =
-  'z-1 w-[360px] max-w-full rounded-xl bg-white flex flex-col items-center relative overflow-hidden';
+  'z-1 w-[440px] lg:w-[360px] max-w-full rounded-xl bg-white flex flex-col items-center relative overflow-hidden';
 
 export const Leaderboard = ({
   variant,

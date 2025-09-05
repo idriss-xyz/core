@@ -33,6 +33,8 @@ type AuthContextType = {
   setOauthLoading: (oauthLoading: boolean) => void;
   isAuthenticated: boolean;
   setLoginError: (loginError: boolean) => void;
+  callbackUrl: string | null;
+  setCallbackUrl: (callbackUrl: string | null) => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -53,6 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [creatorLoading, setCreatorLoading] = useState(false);
   const [donations, setDonations] = useState<DonationData[]>([]);
   const [newDonationsCount, setNewDonationsCount] = useState(0);
+  const [callbackUrl, setCallbackUrl] = useState<string | null>(null);
   const isAuthenticated = customAuthToken != null && !oauthLoading;
 
   const error = loginError || oauthError;
@@ -106,6 +109,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isAuthenticated,
         error,
         setLoginError,
+        callbackUrl,
+        setCallbackUrl,
       }}
     >
       {children}

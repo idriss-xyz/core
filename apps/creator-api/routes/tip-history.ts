@@ -1,5 +1,4 @@
 import { Router, Request, Response } from 'express';
-import { Hex } from 'viem';
 import { fetchDonationsByToAddress } from '../db/fetch-known-donations';
 import { TipHistoryResponse } from '../types';
 import { syncAndStoreNewDonations } from '../services/zapper/process-donations';
@@ -8,12 +7,14 @@ import {
   calculateDonationLeaderboard,
   createAddressToCreatorMap,
 } from '@idriss-xyz/utils';
+import { enrichDonationsWithCreatorInfo } from '../utils/calculate-stats';
 import { DonationData } from '@idriss-xyz/constants';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { DEMO_ADDRESS } from '../tests/test-data/constants';
 import { AppDataSource } from '../db/database';
-import { Creator, CreatorAddress } from '../db/entities';
+import { Creator } from '../db/entities';
+import { resolveCreatorAndAddresses } from '../utils/calculate-stats';
 
 const router = Router();
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -27,9 +28,9 @@ const RETRY_INTERVAL = 5000;
 async function handleFetchTipHistory(req: Request, res: Response) {
   try {
     // Support address from either URL parameter (GET) or body (POST)
-    const address = (req.params.address || req.body.address) as string;
+    const identifier = (req.params.address || req.body.address) as string;
 
-    if (address && address === DEMO_ADDRESS) {
+    if (identifier && identifier === DEMO_ADDRESS) {
       const mockData = JSON.parse(
         readFileSync(
           resolve(__dirname, '../tests/test-data/mock-donations.json'),
@@ -40,32 +41,13 @@ async function handleFetchTipHistory(req: Request, res: Response) {
       return;
     }
 
-    if (!address || typeof address !== 'string') {
+    if (!identifier || typeof identifier !== 'string') {
       res.status(400).json({ error: 'Invalid or missing address' });
       return;
     }
-    const hexAddress = address as Hex;
 
-    const creatorRepository = AppDataSource.getRepository(Creator);
-    const creatorAddressRepository =
-      AppDataSource.getRepository(CreatorAddress);
-
-    let creator = await creatorRepository.findOne({
-      where: { address: hexAddress },
-      relations: ['associatedAddresses'],
-    });
-
-    if (!creator) {
-      const secondaryAddress = await creatorAddressRepository.findOne({
-        where: { address: hexAddress },
-        relations: ['creator', 'creator.associatedAddresses'],
-      });
-      creator = secondaryAddress?.creator ?? null;
-    }
-
-    const allAddresses = creator
-      ? [creator.address, ...creator.associatedAddresses.map((a) => a.address)]
-      : [hexAddress];
+    const { creator, addresses: allAddresses } =
+      await resolveCreatorAndAddresses(identifier);
 
     const donations = (
       await Promise.all(
@@ -73,29 +55,13 @@ async function handleFetchTipHistory(req: Request, res: Response) {
       )
     ).flat();
 
+    const creatorRepository = AppDataSource.getRepository(Creator);
     const allCreators = await creatorRepository.find({
       relations: ['associatedAddresses'],
     });
     const addressToCreatorMap = createAddressToCreatorMap(allCreators);
 
-    for (const donation of donations) {
-      if (creator) {
-        donation.toUser.displayName = creator.displayName;
-        if (creator.profilePictureUrl) {
-          donation.toUser.avatarUrl = creator.profilePictureUrl;
-        }
-      }
-
-      const donorCreator = addressToCreatorMap.get(
-        donation.fromAddress.toLowerCase(),
-      );
-      if (donorCreator) {
-        donation.fromUser.displayName = donorCreator.displayName;
-        if (donorCreator.profilePictureUrl) {
-          donation.fromUser.avatarUrl = donorCreator.profilePictureUrl;
-        }
-      }
-    }
+    enrichDonationsWithCreatorInfo(donations, addressToCreatorMap);
 
     const leaderboard = await calculateDonationLeaderboard(
       donations,
