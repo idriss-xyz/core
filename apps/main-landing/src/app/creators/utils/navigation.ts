@@ -1,14 +1,13 @@
 'use client';
-
-import { SetStateAction, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { getAccessToken, usePrivy, User } from '@privy-io/react-auth';
-import { Hex } from 'viem';
+import { usePrivy } from '@privy-io/react-auth';
 import { CREATOR_API_URL } from '@idriss-xyz/constants';
 
 import { useAuth } from '../context/auth-context';
 
 import { CreatorProfileResponse } from './types';
+import { setCreatorIfSessionPresent } from './session';
 
 export const getCreatorProfile = async (
   authToken: string,
@@ -54,23 +53,4 @@ export const useStartEarningNavigation = () => {
   }, [user, router, creator, setIsModalOpen, setCreator]);
 
   return handleStartEarningClick;
-};
-
-export const setCreatorIfSessionPresent = async (
-  user: User,
-  setCreator: (value: SetStateAction<CreatorProfileResponse | null>) => void,
-) => {
-  const walletAddress = user.wallet?.address as Hex | undefined;
-  const authToken = await getAccessToken();
-  if (!authToken || !user.id) {
-    throw new Error('Could not get auth token or user ID for new user.');
-  }
-  const fetchedCreator = await getCreatorProfile(authToken);
-  if (fetchedCreator == null || fetchedCreator === undefined) {
-    console.error(
-      `Could not find creator with address ${walletAddress}, this may be a new user.`,
-    );
-    return;
-  }
-  setCreator(fetchedCreator);
 };

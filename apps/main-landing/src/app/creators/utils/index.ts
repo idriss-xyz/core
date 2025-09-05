@@ -211,8 +211,5 @@ export const getCreatorNameAndPicOrAnon = async (
   }
 };
 
-export {
-  useStartEarningNavigation,
-  getCreatorProfile,
-  setCreatorIfSessionPresent,
-} from './navigation';
+export { setCreatorIfSessionPresent } from './session';
+export { useStartEarningNavigation, getCreatorProfile } from './navigation';

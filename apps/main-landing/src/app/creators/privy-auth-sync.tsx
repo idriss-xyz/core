@@ -22,6 +22,7 @@ export function PrivyAuthSync() {
     isAuthenticated,
     isLoginModalOpen,
     setLoginError,
+    callbackUrl,
   } = useAuth();
   const { user, ready, getAccessToken, logout, authenticated } = usePrivy();
   const router = useRouter();
@@ -48,7 +49,9 @@ export function PrivyAuthSync() {
       if (existingCreator) {
         setCreator(existingCreator);
         setCreatorLoading(false);
-        if (existingCreator.doneSetup) {
+        if (callbackUrl && !callbackUrl?.endsWith('/creators')) {
+          router.replace(callbackUrl);
+        } else if (existingCreator.doneSetup) {
           router.replace('/creators/app/earnings/stats-and-history');
         } else {
           router.replace('/creators/app/setup/payment-methods');
@@ -97,7 +100,11 @@ export function PrivyAuthSync() {
         }
 
         setCreator(newCreator);
-        router.replace('/creators/app/setup/payment-methods');
+        if (callbackUrl && !callbackUrl?.endsWith('/creators')) {
+          router.replace(callbackUrl);
+        } else {
+          router.replace('/creators/app/setup/payment-methods');
+        }
       }
     } catch (error) {
       console.error('Failed to authenticate creator.', error);
@@ -113,6 +120,7 @@ export function PrivyAuthSync() {
     user?.wallet,
     router,
     authenticated,
+    callbackUrl,
     setCreator,
     setCreatorLoading,
     getAccessToken,
