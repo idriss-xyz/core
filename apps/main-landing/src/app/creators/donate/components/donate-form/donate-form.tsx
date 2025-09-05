@@ -5,6 +5,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { Badge } from '@idriss-xyz/ui/badge';
 import { Button } from '@idriss-xyz/ui/button';
 import { Link } from '@idriss-xyz/ui/link';
+import { SiweMessage } from 'siwe';
 import {
   getTransactionUrl,
   formatTokenValue,
@@ -181,20 +182,56 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
 
     // Add a record to creator-address table on db (link
     // wallet address to creator)
-    const createCreatorAddressLink = useCallback(async () => {
-      if (!walletClient?.account.address) return;
+    const linkWalletIfNeeded = useCallback(async () => {
+      if (!walletClient?.account?.address) return;
+
       const authToken = await getAccessToken();
-      await fetch(`${CREATOR_API_URL}/creator-address`, {
+      const address = getAddress(walletClient.account.address);
+
+      // 1) check
+      const qs = new URLSearchParams({ address });
+      const linkedResult = await fetch(`${CREATOR_API_URL}/siwe/linked?${qs}`, {
+        headers: { Authorization: `Bearer ${authToken}` },
+        credentials: 'include',
+      });
+      const { linked } = await linkedResult.json();
+      if (linked) return;
+
+      // 2) nonce
+      const nonceResult = await fetch(`${CREATOR_API_URL}/siwe/nonce`, {
+        headers: { Authorization: `Bearer ${authToken}` },
+        credentials: 'include',
+      });
+      const { nonce } = await nonceResult.json();
+
+      // 3) sign SIWE
+      const message_ = new SiweMessage({
+        domain: window.location.hostname,
+        address,
+        statement: 'Link this wallet to my account.',
+        uri: window.location.origin,
+        version: '1',
+        chainId,
+        nonce,
+      });
+      const message = message_.prepareMessage();
+      const signature = await walletClient.signMessage({
+        account: address,
+        message,
+      });
+
+      // 4) verify
+      const verifyResult = await fetch(`${CREATOR_API_URL}/siwe/verify`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${authToken}`,
         },
-        body: JSON.stringify({
-          address: getAddress(walletClient.account.address),
-        }),
+        credentials: 'include',
+        body: JSON.stringify({ message, signature }),
       });
-    }, [walletClient]);
+      if (!verifyResult.ok) throw new Error('SIWE verify failed');
+    }, [walletClient, chainId]);
 
     const sendDonation = useCallback(async () => {
       if (!creatorInfo.address.data || !creatorInfo.address.isValid) {
@@ -209,20 +246,21 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       });
     }, [creatorInfo.address.data, creatorInfo.address.isValid]);
 
+    const { user } = usePrivy();
+
     const callbackOnSend = useCallback(
       async (txHash: string) => {
         await sendDonationEffects(txHash);
-        await createCreatorAddressLink();
+        if (user) await linkWalletIfNeeded();
         await sendDonation();
       },
-      [sendDonationEffects, createCreatorAddressLink, sendDonation],
+      [sendDonationEffects, linkWalletIfNeeded, sendDonation, user],
     );
 
     const sender = useSender({
       walletClient,
       callbackOnSend,
     });
-    const { user } = usePrivy();
 
     useEffect(() => {
       if (user) {
