@@ -13,7 +13,7 @@
     "./modal": "./src/components/modal/index.ts",
     "./numeric-input": "./src/components/numeric-input/index.ts",
     "./mobile-not-supported": "./src/components/mobile-not-supported/index.ts",
-    "./fullsceen-overlay": "./src/components/fullscreen-overlay/index.ts",
+    "./fullscreen-overlay": "./src/components/fullscreen-overlay/index.ts",
     "./input": "./src/components/input/index.ts",
     "./navigation-menu": "./src/components/navigation-menu/index.ts",
     "./visually-hidden": "./src/components/visually-hidden/index.ts",
