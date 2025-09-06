@@ -16,6 +16,8 @@ import { default as io } from 'socket.io-client';
 import { Hex } from 'viem';
 import { useRouter } from 'next/navigation';
 import _ from 'lodash';
+import { ExternalLink } from '@idriss-xyz/ui/external-link';
+import { FullscreenOverlay } from '@idriss-xyz/ui/fullsceen-overlay';
 
 import { backgroundLines2 } from '@/assets';
 import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history';
@@ -276,7 +278,7 @@ export function DonateContent({ creatorProfile }: Properties) {
           className="pointer-events-none absolute top-0 hidden size-full opacity-40 lg:block"
         />
 
-        {currentContentComponent}
+        {!isLegacyLink && currentContentComponent}
 
         <Button
           asLink
@@ -289,6 +291,22 @@ export function DonateContent({ creatorProfile }: Properties) {
           CREATE YOUR LINK
         </Button>
       </main>
+      {isLegacyLink && (
+        <FullscreenOverlay className="bg-[#E7F5E6]/[0.6] backdrop-blur-sm">
+          <p className="text-balance text-center text-heading5 text-neutralGreen-700">
+            This is a legacy donation page. Set up your account in
+          </p>
+          <p className="text-balance text-center text-heading5 text-neutralGreen-700">
+            <ExternalLink
+              className="text-mint-600 underline"
+              href={CREATORS_LINK}
+            >
+              IDRISS Creators&nbsp;v2
+            </ExternalLink>{' '}
+            to continue receiving donations.
+          </p>
+        </FullscreenOverlay>
+      )}
     </>
   );
 }
