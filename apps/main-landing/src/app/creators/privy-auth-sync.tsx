@@ -8,7 +8,11 @@ import { useCallback, useEffect, useRef } from 'react';
 import { Hex } from 'viem';
 import { useRouter } from 'next/navigation';
 
-import { getCreatorProfile, saveCreatorProfile } from './utils';
+import {
+  getCreatorProfile,
+  saveCreatorProfile,
+  editCreatorProfile,
+} from './utils';
 import { useAuth } from './context/auth-context';
 
 export function PrivyAuthSync() {
@@ -50,6 +54,16 @@ export function PrivyAuthSync() {
         setCreator(existingCreator);
         setCreatorLoading(false);
         if (callbackUrl && !callbackUrl?.endsWith('/creators')) {
+          // If existing creator has isDonor true, update it to false
+          if (existingCreator.isDonor) {
+            await editCreatorProfile(
+              existingCreator.name,
+              { isDonor: false },
+              authToken,
+            );
+          }
+          const updatedCreator = await getCreatorProfile(authToken);
+          setCreator(updatedCreator ?? existingCreator);
           router.replace(callbackUrl);
         } else if (existingCreator.doneSetup) {
           router.replace('/creators/app/earnings/stats-and-history');
@@ -61,6 +75,12 @@ export function PrivyAuthSync() {
         let newCreatorDisplayName: string | null = null;
         let newCreatorProfilePic: string | null = null;
         let newCreatorEmail: string | null = null;
+        let isDonor = false;
+        // set isDonor when callback is not the normal creators landing signup
+        // (ex. a donate page like "/creators/daniel0ar")
+        if (callbackUrl && !callbackUrl?.endsWith('/creators')) {
+          isDonor = true;
+        }
 
         const twitchInfoRaw = localStorage.getItem('twitch_new_user_info');
 
@@ -91,6 +111,7 @@ export function PrivyAuthSync() {
           newCreatorEmail,
           user.id,
           authToken,
+          isDonor,
         );
 
         const newCreator = await getCreatorProfile(authToken);

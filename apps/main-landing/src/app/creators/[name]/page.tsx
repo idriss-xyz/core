@@ -29,7 +29,7 @@ export async function generateMetadata({
 export default async function CreatorProfile({ params }: Properties) {
   const { name } = await params;
   const rawProfile = await getPublicCreatorProfile(name);
-  if (!rawProfile) notFound();
+  if (!rawProfile || rawProfile.isDonor) notFound();
 
   const minimumAlertAmount = Number(rawProfile.minimumAlertAmount);
   const minimumTTSAmount = Number(rawProfile.minimumTTSAmount);

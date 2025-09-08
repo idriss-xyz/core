@@ -78,6 +78,7 @@ export const saveCreatorProfile = async (
   email?: string | null,
   privyId?: string | null,
   authToken?: string,
+  isDonor?: boolean,
 ): Promise<void> => {
   if (!address || !name || !privyId) {
     throw new Error('No wallet address, name or privyId to create creator');
@@ -101,6 +102,7 @@ export const saveCreatorProfile = async (
       name,
       email,
       privyId,
+      isDonor,
     }),
   });
 
