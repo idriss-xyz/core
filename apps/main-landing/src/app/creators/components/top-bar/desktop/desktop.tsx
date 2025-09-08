@@ -16,6 +16,7 @@ import { DonatePageAvatarMenu } from '@/app/creators/[name]/donate-page-avatar-m
 import { EXTERNAL_LINK, INTERNAL_LINK } from '@/constants';
 import { Socials as MobileSocials } from '@/components/top-bar/components/mobile/socials';
 import { Socials as DesktopSocials } from '@/components/top-bar/components/desktop/socials';
+import { useAuth } from '@/app/creators/context/auth-context';
 
 import { Socials } from './socials';
 import { Menu } from './menu';
@@ -37,6 +38,7 @@ export const Desktop = ({
 }: Properties) => {
   const handleStartEarningClick = useStartEarningNavigation();
   const { user } = usePrivy();
+  const { creator } = useAuth();
   const [isMobileNotSupportedOpen, setIsMobileNotSupportedOpen] =
     useState(false);
 
@@ -211,16 +213,18 @@ export const Desktop = ({
       ) : (
         <div className="flex items-center gap-x-2">
           <MobileMenu />
-          <Button
-            asLink
-            isExternal
-            size="small"
-            intent="secondary"
-            href={CREATORS_LINK}
-            className="uppercase md:px-5 md:py-3.5"
-          >
-            Create your page
-          </Button>
+          {creator?.isDonor && (
+            <Button
+              asLink
+              isExternal
+              size="small"
+              intent="secondary"
+              href={CREATORS_LINK}
+              className="uppercase md:px-5 md:py-3.5"
+            >
+              Create your page
+            </Button>
+          )}
           {user ? (
             <DonatePageAvatarMenu />
           ) : (

@@ -4,7 +4,7 @@ import { SetStateAction } from 'react';
 import { Hex } from 'viem';
 
 import { CreatorProfileResponse } from './types';
-import { getCreatorProfile } from './navigation';
+import { getCreatorProfile, removeDonorStatus } from './navigation';
 
 export const setCreatorIfSessionPresent = async (
   user: User,
@@ -22,5 +22,10 @@ export const setCreatorIfSessionPresent = async (
     );
     return;
   }
+  await removeDonorStatus(
+    fetchedCreator.isDonor,
+    fetchedCreator.name,
+    getAccessToken,
+  );
   setCreator(fetchedCreator);
 };

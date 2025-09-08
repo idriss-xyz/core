@@ -9,6 +9,8 @@ import { useAuth } from '../context/auth-context';
 import { CreatorProfileResponse } from './types';
 import { setCreatorIfSessionPresent } from './session';
 
+import { editCreatorProfile } from '.';
+
 export const getCreatorProfile = async (
   authToken: string,
 ): Promise<CreatorProfileResponse | undefined> => {
@@ -31,14 +33,31 @@ export const getCreatorProfile = async (
   return data;
 };
 
+// If user is donor, remove donor status (become creator with page)
+export const removeDonorStatus = async (
+  isDonor: boolean,
+  creatorName: string,
+  getAccessToken: () => Promise<string | null>,
+) => {
+  if (isDonor) {
+    const authToken = await getAccessToken();
+    if (!authToken) {
+      console.error('No auth token to edit creator profile');
+      return;
+    }
+    await editCreatorProfile(creatorName, { isDonor: false }, authToken);
+  }
+};
+
 export const useStartEarningNavigation = () => {
   const router = useRouter();
-  const { user } = usePrivy();
+  const { user, getAccessToken } = usePrivy();
   const { setIsModalOpen, creator, setCreator } = useAuth();
 
   const handleStartEarningClick = useCallback(async () => {
     // If user is logged in, redirect to app
     if (user && creator) {
+      await removeDonorStatus(creator.isDonor, creator.name, getAccessToken);
       if (creator.doneSetup) {
         router.push('/creators/app/earnings/stats-and-history');
       } else {
@@ -50,7 +69,7 @@ export const useStartEarningNavigation = () => {
     } else {
       setIsModalOpen(true);
     }
-  }, [user, router, creator, setIsModalOpen, setCreator]);
+  }, [user, router, creator, setIsModalOpen, setCreator, getAccessToken]);
 
   return handleStartEarningClick;
 };
