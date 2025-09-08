@@ -179,8 +179,6 @@ export const getChainShortNamesFromIds = (chainsIds: number[]) => {
   );
 };
 
-// TODO remove
-// ts-unused-exports:disable-next-line
 export const getChainIdsFromShortNames = (shortNames: string[]) => {
   return shortNames.map((shortName) => {
     return (
