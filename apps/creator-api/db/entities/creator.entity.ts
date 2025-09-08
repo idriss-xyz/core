@@ -58,6 +58,9 @@ export class Creator {
   })
   forceDonationOverlayRefresh!: Boolean;
 
+  @Column({ type: 'boolean', name: 'is_donor', default: false })
+  isDonor!: Boolean;
+
   @OneToMany(() => CreatorNetwork, (network) => network.creator)
   networks!: CreatorNetwork[];
 
