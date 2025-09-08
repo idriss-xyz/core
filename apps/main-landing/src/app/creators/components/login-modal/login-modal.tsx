@@ -57,9 +57,9 @@ export const LoginModal = () => {
           Continue with Twitch
         </Button>
         {error && (
-          <div className="mt-1 flex items-start gap-x-1 text-label7 text-red-500 lg:text-label6">
+          <div className="flex items-start gap-x-1 text-label7 text-red-500 lg:text-label6">
             <Icon name="AlertCircle" size={16} className="p-px" />
-            <span>{error}</span>
+            <span>Something went wrong. Try again.</span>
           </div>
         )}
         <span className="w-full text-label5 text-neutral-500">
