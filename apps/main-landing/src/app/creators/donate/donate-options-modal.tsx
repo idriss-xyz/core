@@ -36,9 +36,9 @@ export const DonateOptionsModal = () => {
   const [selectedOption, setSelectedOption] = useState<string>('account');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
   const { authenticated } = usePrivy();
-  const { creator } = useAuth();
+  const { donor } = useAuth();
 
-  const modalOpen = isModalOpen && !(authenticated && creator);
+  const modalOpen = isModalOpen && !(authenticated && donor);
 
   const handleSaveChoice = () => {
     switch (selectedOption) {

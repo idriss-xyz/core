@@ -6,7 +6,7 @@ import { useAuth } from '../context/auth-context';
 export const useLogout = () => {
   const { logout } = usePrivy();
   const router = useRouter();
-  const { setCreator, setIsModalOpen, callbackUrl } = useAuth();
+  const { setCreator, setDonor, setIsModalOpen, callbackUrl } = useAuth();
 
   return async () => {
     await logout();
@@ -22,6 +22,7 @@ export const useLogout = () => {
 
     void Promise.resolve().then(() => {
       setCreator(null);
+      setDonor(null);
       setIsModalOpen(false);
     });
   };

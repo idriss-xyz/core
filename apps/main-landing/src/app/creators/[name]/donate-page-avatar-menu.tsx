@@ -12,17 +12,17 @@ import { setCreatorIfSessionPresent } from '../utils';
 import { socialOptions } from '../constants';
 
 export function DonatePageAvatarMenu() {
-  const { creator, setCreator } = useAuth();
+  const { donor, setDonor } = useAuth();
   const { user } = usePrivy();
   const handleLogout = useLogout();
 
   useEffect(() => {
     if (user) {
-      void setCreatorIfSessionPresent(user, setCreator);
+      void setCreatorIfSessionPresent(user, setDonor);
     }
-  }, [user, setCreator]);
+  }, [user, setDonor]);
   return (
-    creator &&
+    donor &&
     user && (
       <NavigationMenu.Root className="flex">
         <NavigationMenu.List className="flex items-center gap-2 p-3">
@@ -30,10 +30,10 @@ export function DonatePageAvatarMenu() {
             <NavigationMenu.Trigger asChild>
               <div className="flex max-h-[70px] min-h-[32px] w-max cursor-pointer items-center gap-2.5">
                 <div className="size-[32px] max-h-[48px] min-h-[32px] min-w-[32px] max-w-[48px] rounded-[999px] border border-neutral-300">
-                  {creator?.profilePictureUrl ? (
+                  {donor?.profilePictureUrl ? (
                     <Image
-                      src={creator.profilePictureUrl}
-                      alt={creator?.name ?? 'avatar'}
+                      src={donor.profilePictureUrl}
+                      alt={donor?.name ?? 'avatar'}
                       width={32}
                       height={32}
                       className="rounded-full"
@@ -49,7 +49,7 @@ export function DonatePageAvatarMenu() {
                   )}
                 </div>
                 <span className="hidden text-label4 text-neutralGreen-900 sm:flex">
-                  {creator?.name}
+                  {donor?.name}
                 </span>
               </div>
             </NavigationMenu.Trigger>
@@ -58,7 +58,7 @@ export function DonatePageAvatarMenu() {
               <div className="flex min-w-[240px] max-w-[270px] flex-col gap-1 rounded-xl border border-neutral-300 bg-white pt-2 shadow-lg">
                 <div className="flex flex-col gap-2 pb-2">
                   <span className="flex px-3 py-1 text-label4 text-neutralGreen-900 sm:hidden">
-                    Welcome, {creator?.name}
+                    Welcome, {donor?.name}
                   </span>
                   <hr className="sm:hidden" />
                   <div

@@ -37,8 +37,7 @@ export const Desktop = ({
   displayMobileCTA,
 }: Properties) => {
   const handleStartEarningClick = useStartEarningNavigation();
-  const { user } = usePrivy();
-  const { creator } = useAuth();
+  const { creator, donor } = useAuth();
   const [isMobileNotSupportedOpen, setIsMobileNotSupportedOpen] =
     useState(false);
 
@@ -225,7 +224,7 @@ export const Desktop = ({
               Create your page
             </Button>
           )}
-          {user ? (
+          {donor ? (
             <DonatePageAvatarMenu />
           ) : (
             <Socials className="hidden sm:flex" />

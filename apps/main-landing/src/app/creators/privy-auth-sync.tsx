@@ -27,6 +27,7 @@ export function PrivyAuthSync() {
     isLoginModalOpen,
     setLoginError,
     callbackUrl,
+    setDonor,
   } = useAuth();
   const { user, ready, getAccessToken, logout, authenticated } = usePrivy();
   const router = useRouter();
@@ -64,6 +65,7 @@ export function PrivyAuthSync() {
           }
           const updatedCreator = await getCreatorProfile(authToken);
           setCreator(updatedCreator ?? existingCreator);
+          setDonor(updatedCreator ?? existingCreator);
           router.replace(callbackUrl);
         } else if (existingCreator.doneSetup) {
           router.replace('/creators/app/earnings/stats-and-history');
@@ -122,6 +124,7 @@ export function PrivyAuthSync() {
 
         setCreator(newCreator);
         if (callbackUrl && !callbackUrl?.endsWith('/creators')) {
+          setDonor(newCreator);
           router.replace(callbackUrl);
         } else {
           router.replace('/creators/app/setup/payment-methods');
@@ -132,6 +135,7 @@ export function PrivyAuthSync() {
       setLoginError(true);
       if (authenticated) void logout();
       setCreator(null);
+      setDonor(null);
     } finally {
       setCreatorLoading(false);
       isAuthInProgress.current = false;
@@ -143,6 +147,7 @@ export function PrivyAuthSync() {
     authenticated,
     callbackUrl,
     setCreator,
+    setDonor,
     setCreatorLoading,
     getAccessToken,
     logout,
