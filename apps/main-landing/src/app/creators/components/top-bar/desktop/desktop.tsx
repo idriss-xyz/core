@@ -1,7 +1,6 @@
 'use client';
 import { useState } from 'react';
 import { Button } from '@idriss-xyz/ui/button';
-import { usePrivy } from '@privy-io/react-auth';
 import { CREATORS_LINK } from '@idriss-xyz/constants';
 import { Dialog } from '@idriss-xyz/ui/dialog';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
