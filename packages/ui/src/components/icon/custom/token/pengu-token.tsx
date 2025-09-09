@@ -4,9 +4,7 @@ export const PenguToken = (properties: SVGProps<SVGSVGElement>) => {
   return (
     <svg
       {...properties}
-      width="60"
-      height="60"
-      viewBox="0 0 60 60"
+      viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
