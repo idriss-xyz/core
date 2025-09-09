@@ -180,24 +180,15 @@ router.get(
       }
     }
 
-    const creatorRepository = AppDataSource.getRepository(Creator);
     const creatorAddressRepository =
       AppDataSource.getRepository(CreatorAddress);
 
     const linkedCreator = await creatorAddressRepository.findOne({
       where: { address },
+      relations: ['creator'],
     });
 
-    const creator = await creatorRepository.findOne({
-      where: { id: linkedCreator?.id },
-    });
-
-    if (!creator) {
-      res.status(404).json({ error: 'Creator profile not found' });
-      return;
-    }
-
-    res.json({ linkedTo: creator?.name });
+    res.json({ linkedTo: linkedCreator?.creator.name });
     return;
   },
 );
