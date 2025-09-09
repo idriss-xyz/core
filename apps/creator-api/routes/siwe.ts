@@ -141,6 +141,7 @@ router.post(
       });
       return;
     } catch (e) {
+      console.log('Error', e);
       res.status(500).json({ error: 'Internal error' });
       return;
     } finally {
