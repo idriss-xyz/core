@@ -21,6 +21,8 @@ import {
   TIPPING_ABI,
 } from '@idriss-xyz/constants';
 import { clients } from '@idriss-xyz/blockchain-clients';
+import { FullscreenOverlay } from '@idriss-xyz/ui/fullscreen-overlay';
+import { ExternalLink } from '@idriss-xyz/ui/external-link';
 
 import { CHAIN_TO_IDRISS_TIPPING_ADDRESS } from '../donate/constants';
 import { useCreators } from '../hooks/use-creators';
@@ -80,6 +82,12 @@ export default function DonationOverlay({ creatorName }: Properties) {
   const [isDisplayingDonation, setIsDisplayingDonation] = useState(false);
   const [donationsQueue, setDonationsQueue] = useState<QueuedDonation[]>([]);
 
+  /* legacy overlay = raw address param, no creator slug */
+  const isLegacyLink =
+    !creatorName &&
+    !addressParameter.isFetching &&
+    Boolean(addressParameter.data);
+
   const addDonation = useCallback((donation: QueuedDonation) => {
     setDonationsQueue((previous) => {
       if (
@@ -95,6 +103,8 @@ export default function DonationOverlay({ creatorName }: Properties) {
 
   useEffect(() => {
     if (!name) return;
+
+    if (isLegacyLink) return;
 
     const overlayToken = window.location.pathname.split('/').pop()!;
     console.log(overlayToken);
@@ -168,10 +178,20 @@ export default function DonationOverlay({ creatorName }: Properties) {
     return () => {
       socket.disconnect();
     };
-  }, [name, addDonation, minimumAmounts, enableToggles, alertSound, voiceId]);
+  }, [
+    name,
+    addDonation,
+    minimumAmounts,
+    enableToggles,
+    alertSound,
+    voiceId,
+    isLegacyLink,
+  ]);
 
   // If creator name present use info from db, if not, use params only
   useEffect(() => {
+    if (isLegacyLink) return;
+
     const updateCreatorInfo = () => {
       const slugFromUrl = window.location.pathname.split('/').pop();
       if (
@@ -233,7 +253,12 @@ export default function DonationOverlay({ creatorName }: Properties) {
     return () => {
       return clearInterval(interval);
     };
-  }, [router, addressParameter.data, addressParameter.isFetching]);
+  }, [
+    router,
+    addressParameter.data,
+    addressParameter.isFetching,
+    isLegacyLink,
+  ]);
 
   const handleDonationFullyComplete = useCallback(() => {
     setDonationsQueue((previous) => {
@@ -249,6 +274,8 @@ export default function DonationOverlay({ creatorName }: Properties) {
   }, [donationsQueue, isDisplayingDonation]);
 
   const fetchTipMessageLogs = useCallback(async () => {
+    if (isLegacyLink) return;
+
     if (!address?.data) return;
 
     for (const { chain, client, name: chainName } of clients) {
@@ -376,6 +403,7 @@ export default function DonationOverlay({ creatorName }: Properties) {
     alertSound,
     voiceId,
     name,
+    isLegacyLink,
   ]);
 
   const savedFetchTipMessageLogs = useRef(fetchTipMessageLogs);
@@ -391,6 +419,8 @@ export default function DonationOverlay({ creatorName }: Properties) {
   }, [donationsQueue, isDisplayingDonation, displayNextDonation]);
 
   useEffect(() => {
+    if (isLegacyLink) return;
+
     if (!address?.isValid) return;
 
     const intervalId = setInterval(() => {
@@ -402,10 +432,11 @@ export default function DonationOverlay({ creatorName }: Properties) {
     };
     // TODO: check why adding fetchTipMessageLogs makes infinite render loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [address?.isValid]);
+  }, [address?.isValid, isLegacyLink]);
 
   const currentDonationData = donationsQueue[0];
-  const shouldDisplayDonation = isDisplayingDonation && currentDonationData;
+  const shouldDisplayDonation =
+    !isLegacyLink && isDisplayingDonation && currentDonationData;
 
   return (
     <>
@@ -425,6 +456,22 @@ export default function DonationOverlay({ creatorName }: Properties) {
           />
         )}
       </div>
+      {isLegacyLink && (
+        <FullscreenOverlay className="bg-[#E7F5E6]/[0.6] backdrop-blur-sm">
+          <p className="text-balance text-center text-heading5 text-neutralGreen-700">
+            This is a legacy donation overlay. Set up your account in
+          </p>
+          <p className="text-balance text-center text-heading5 text-neutralGreen-700">
+            <ExternalLink
+              className="text-mint-600 underline"
+              href={CREATORS_LINK}
+            >
+              IDRISS Creators&nbsp;v2
+            </ExternalLink>{' '}
+            to continue receiving donations.
+          </p>
+        </FullscreenOverlay>
+      )}
     </>
   );
 }

@@ -58,14 +58,13 @@ import { ChainSelect, TokenSelect } from './components';
 type Properties = {
   className?: string;
   creatorInfo: CreatorProfile;
-  isLegacyLink: boolean;
 };
 
 const baseClassName =
   'z-1 w-[440px] max-w-full rounded-xl bg-white px-4 pb-9 pt-6 flex flex-col items-center relative';
 
 export const DonateForm = forwardRef<HTMLDivElement, Properties>(
-  ({ className, creatorInfo, isLegacyLink }, reference) => {
+  ({ className, creatorInfo }, reference) => {
     const { isConnected } = useAccount();
     const { setCreator } = useAuth();
     const { data: walletClient } = useWalletClient();
@@ -542,7 +541,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
             }}
           />
 
-          {(isLegacyLink || creatorInfo.alertEnabled) && (
+          {creatorInfo.alertEnabled && (
             <Controller
               name="message"
               control={formMethods.control}
@@ -560,7 +559,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                             </Badge>
                           )}
                           {creatorInfo.minimumTTSAmount > 0 &&
-                            (isLegacyLink || creatorInfo.ttsEnabled) && (
+                            creatorInfo.ttsEnabled && (
                               <Badge type="info" variant="subtle">
                                 TTS ${creatorInfo.minimumTTSAmount}+
                               </Badge>
@@ -577,7 +576,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
             />
           )}
 
-          {(isLegacyLink || creatorInfo.sfxEnabled) && (
+          {creatorInfo.sfxEnabled && (
             <Controller
               name="sfx"
               control={formMethods.control}
@@ -589,7 +588,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                       <div className="flex items-center gap-x-1">
                         <label htmlFor="sfx">AI sound effect</label>
                         {creatorInfo.minimumSfxAmount > 0 &&
-                          (isLegacyLink || creatorInfo.sfxEnabled) && (
+                          creatorInfo.sfxEnabled && (
                             <Badge type="info" variant="subtle">
                               SFX ${creatorInfo.minimumSfxAmount}+
                             </Badge>
