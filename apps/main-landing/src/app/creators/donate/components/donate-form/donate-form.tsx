@@ -236,7 +236,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         body: JSON.stringify({ message, signature }),
       });
       if (!verifyResult.ok) throw new Error('SIWE verify failed');
-    }, [walletClient, chainId]);
+    }, [walletClient, chainId, donor?.name]);
 
     const syncDonation = useCallback(async () => {
       if (!creatorInfo.address.data || !creatorInfo.address.isValid) {
@@ -362,7 +362,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         walletClient,
         creatorInfo.address.data,
         creatorInfo.address.isValid,
-        user,
+        donor,
         linkWalletIfNeeded,
       ],
     );
