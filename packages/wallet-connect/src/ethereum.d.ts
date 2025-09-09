@@ -9,7 +9,7 @@ interface SolanaProvider {
   isSolflare?: boolean;
   connect(): Promise<void>;
   disconnect(): Promise<void>;
-  publicKey: PublicKey | null; // TODO: Check if it's string instead
+  publicKey: PublicKey | null;
   on(event: SolanaEvent, handler: (publicKey?: string) => void): void;
   removeListener(
     event: SolanaEvent,

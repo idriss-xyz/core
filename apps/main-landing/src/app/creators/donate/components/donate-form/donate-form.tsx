@@ -5,6 +5,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { Badge } from '@idriss-xyz/ui/badge';
 import { Button } from '@idriss-xyz/ui/button';
 import { Link } from '@idriss-xyz/ui/link';
+import { SiweMessage } from 'siwe';
 import {
   getTransactionUrl,
   formatTokenValue,
@@ -36,8 +37,12 @@ import {
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
 import { ExternalLink } from '@idriss-xyz/ui/external-link';
+import { getAddress } from 'viem';
+import { usePrivy, getAccessToken } from '@privy-io/react-auth';
 
 import { backgroundLines3 } from '@/assets';
+import { useAuth } from '@/app/creators/context/auth-context';
+import { setCreatorIfSessionPresent } from '@/app/creators/utils';
 
 import {
   FormPayload,
@@ -61,11 +66,14 @@ const baseClassName =
 export const DonateForm = forwardRef<HTMLDivElement, Properties>(
   ({ className, creatorInfo }, reference) => {
     const { isConnected } = useAccount();
+    const { setCreator } = useAuth();
     const { data: walletClient } = useWalletClient();
     const { connectModalOpen, openConnectModal } = useConnectModal();
     const [selectedTokenSymbol, setSelectedTokenSymbol] =
       useState<string>('ETH');
     const [imageError, setImageError] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
+
     const minimumSfxAmount =
       creatorInfo.minimumSfxAmount ?? DEFAULT_DONATION_MIN_SFX_AMOUNT;
 
@@ -173,10 +181,92 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       [sfx],
     );
 
+    // Add a record to creator-address table on db (link
+    // wallet address to creator)
+    const linkWalletIfNeeded = useCallback(async () => {
+      if (!walletClient?.account?.address) return;
+
+      const authToken = await getAccessToken();
+      const address = getAddress(walletClient.account.address);
+
+      // 1) check
+      const qs = new URLSearchParams({ address });
+      const linkedResult = await fetch(`${CREATOR_API_URL}/siwe/linked?${qs}`, {
+        headers: { Authorization: `Bearer ${authToken}` },
+      });
+      const { linked } = await linkedResult.json();
+      if (linked) {
+        throw new Error('This wallet is already linked to a public account.');
+      }
+
+      // 2) nonce
+      const nonceResult = await fetch(`${CREATOR_API_URL}/siwe/nonce`, {
+        headers: { Authorization: `Bearer ${authToken}` },
+      });
+      const { nonce } = await nonceResult.json();
+
+      // 3) sign SIWE
+      const message_ = new SiweMessage({
+        domain: window.location.hostname,
+        address,
+        statement:
+          'Sign to confirm this wallet is yours and link it to your IDRISS Creators account. This is a one-time free signature.',
+        uri: window.location.origin,
+        version: '1',
+        chainId,
+        nonce,
+      });
+      const message = message_.prepareMessage();
+      const signature = await walletClient.signMessage({
+        account: address,
+        message,
+      });
+
+      // 4) verify
+      const verifyResult = await fetch(`${CREATOR_API_URL}/siwe/verify`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({ message, signature }),
+      });
+      if (!verifyResult.ok) throw new Error('SIWE verify failed');
+    }, [walletClient, chainId]);
+
+    const syncDonation = useCallback(async () => {
+      if (!creatorInfo.address.data || !creatorInfo.address.isValid) {
+        return;
+      }
+      await fetch(`${CREATOR_API_URL}/tip-history/sync`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ address: creatorInfo.address.data }),
+      });
+    }, [creatorInfo.address.data, creatorInfo.address.isValid]);
+
+    const { user } = usePrivy();
+
+    const callbackOnSend = useCallback(
+      async (txHash: string) => {
+        await sendDonationEffects(txHash);
+        await syncDonation();
+      },
+      [sendDonationEffects, syncDonation],
+    );
+
     const sender = useSender({
       walletClient,
-      callbackOnSend: sendDonationEffects,
+      callbackOnSend,
     });
+
+    useEffect(() => {
+      if (user) {
+        void setCreatorIfSessionPresent(user, setCreator);
+      }
+    }, [user, setCreator]);
 
     // Reset SFX when amount falls below the minimum
     useEffect(() => {
@@ -217,12 +307,25 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
 
     const onSubmit: SubmitHandler<FormPayload> = useCallback(
       async (payload) => {
+        setSubmitError(null); // Clear any previous error when retrying
+
         if (
           !walletClient ||
           !creatorInfo.address.data ||
           !creatorInfo.address.isValid
         ) {
+          setSubmitError('Invalid wallet or address');
           return;
+        }
+        if (user) {
+          try {
+            await linkWalletIfNeeded();
+          } catch {
+            setSubmitError(
+              'This wallet is already linked to a public account.',
+            );
+            return;
+          }
         }
 
         const { chainId, tokenSymbol, ...rest } = payload;
@@ -246,6 +349,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
             recipientAddress: creatorInfo.address.data,
           });
         } catch (error) {
+          setSubmitError('Unknown error sending transaction.');
           console.error('Unknown error sending transaction.', error);
         }
       },
@@ -254,27 +358,10 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         walletClient,
         creatorInfo.address.data,
         creatorInfo.address.isValid,
+        user,
+        linkWalletIfNeeded,
       ],
     );
-
-    const sendDonation = useCallback(async () => {
-      if (!creatorInfo.address.data || !creatorInfo.address.isValid) {
-        return;
-      }
-      await fetch(`${CREATOR_API_URL}/tip-history/sync`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ address: creatorInfo.address.data }),
-      });
-    }, [creatorInfo.address.data, creatorInfo.address.isValid]);
-
-    useEffect(() => {
-      if (sender.isSuccess) {
-        void sendDonation();
-      }
-    }, [sender.isSuccess, sender.data, sendDonation]);
 
     if (!creatorInfo.address.isValid && !creatorInfo.address.isFetching) {
       return (
@@ -563,6 +650,12 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
             >
               LOG IN
             </Button>
+          )}
+          {submitError && (
+            <div className="mt-1 flex items-start gap-x-1 text-label7 text-red-500 lg:text-label6">
+              <Icon name="AlertCircle" size={16} className="p-px" />
+              <span>{submitError}</span>
+            </div>
           )}
         </Form>
         <div className="mt-4 w-full py-3 text-center">

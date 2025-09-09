@@ -44,6 +44,7 @@ class CreatorProfileService {
       customBadWords = [],
       tokens = Object.values(TOKEN).map((token) => token.symbol),
       networks = Object.values(CREATOR_CHAIN).map((chain) => chain.shortName),
+      isDonor = false,
       ...creatorData
     } = req.body;
 
@@ -77,6 +78,7 @@ class CreatorProfileService {
     creator.donationUrl = `${CREATORS_LINK}/${creatorData.name}`;
     const obsUrlSecret = randomBytes(24).toString('base64url');
     creator.obsUrl = `${CREATORS_LINK}/donation-overlay/${obsUrlSecret}`;
+    creator.isDonor = isDonor;
 
     // Create and save new creator
     const savedCreator = await creatorRepository.save(creator);

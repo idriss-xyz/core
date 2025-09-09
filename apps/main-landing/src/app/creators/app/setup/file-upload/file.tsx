@@ -213,7 +213,7 @@ export const File = ({
             </div>
 
             <div className="flex flex-col">
-              {/*TODO: In design there is 112px -> to small to display 25 sign file name with desired font*/}
+              {/* In design there is 112px -> to small to display 25 sign file name with desired font */}
               <div className="h-4.5">
                 <span className="text-label4 text-[#111928]">
                   {file && formatFileName(file?.name)}

@@ -46,6 +46,7 @@
     "react-use": "^17.5.1",
     "recharts": "^3.0.0",
     "reflect-metadata": "^0.2.2",
+    "siwe": "^3.0.0",
     "socket.io-client": "4.8.1",
     "typeorm": "^0.3.20",
     "viem": "^2.31.7",

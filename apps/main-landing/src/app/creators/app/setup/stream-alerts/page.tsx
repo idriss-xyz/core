@@ -122,7 +122,6 @@ export default function StreamAlerts() {
   const [wasCopied, setWasCopied] = useState(false);
   const [unsavedChangesToastId, setUnsavedChangesToastId] = useState('');
 
-  // TODO: Extract to constants
   const alertSounds = [
     ...defaultAlertSounds,
     ...(uploadedFile ? [{ value: 'CUSTOM_SOUND', label: 'Custom' }] : []),
@@ -508,8 +507,6 @@ export default function StreamAlerts() {
                             void audio.play();
                           }
                         }}
-                        // TODO: Add error handling
-                        // error={Boolean(fieldState.error?.message)}
                       />
                     );
                   }}
@@ -621,8 +618,6 @@ export default function StreamAlerts() {
                             void audio.play();
                           }
                         }}
-                        // TODO: Add error handling
-                        // error={Boolean(fieldState.error?.message)}
                       />
                     );
                   }}
