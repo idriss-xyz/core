@@ -8,7 +8,7 @@ export class FixCreatorAddressSequence1757432868000
     await queryRunner.query(`
       SELECT setval(
         pg_get_serial_sequence('"creator_address"', 'id'),
-        COALESCE((SELECT MAX(id) FROM "creator_address"), 1)
+        COALESCE((SELECT MAX(id) FROM "creator_address"), 0)
       );
     `);
   }
