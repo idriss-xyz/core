@@ -66,7 +66,7 @@ const baseClassName =
 export const DonateForm = forwardRef<HTMLDivElement, Properties>(
   ({ className, creatorInfo }, reference) => {
     const { isConnected } = useAccount();
-    const { setCreator } = useAuth();
+    const { donor, setCreator } = useAuth();
     const { data: walletClient } = useWalletClient();
     const { connectModalOpen, openConnectModal } = useConnectModal();
     const [selectedTokenSymbol, setSelectedTokenSymbol] =
@@ -194,11 +194,15 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       const linkedResult = await fetch(`${CREATOR_API_URL}/siwe/linked?${qs}`, {
         headers: { Authorization: `Bearer ${authToken}` },
       });
-      const { linked } = await linkedResult.json();
-      if (linked) {
+      const { linkedTo } = await linkedResult.json();
+      // Wallet is already linked to another (not donor's) public account
+      if (linkedTo && linkedTo !== donor?.name) {
         throw new Error('This wallet is already linked to a public account.');
       }
+      // Wallet is already linked to the donor account
+      else if (linkedTo) return;
 
+      // Wallet is not linked to any account, link to current
       // 2) nonce
       const nonceResult = await fetch(`${CREATOR_API_URL}/siwe/nonce`, {
         headers: { Authorization: `Bearer ${authToken}` },
