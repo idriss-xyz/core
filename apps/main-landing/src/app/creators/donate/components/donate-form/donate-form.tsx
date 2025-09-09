@@ -321,7 +321,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
           setSubmitError('Invalid wallet or address');
           return;
         }
-        if (user) {
+        if (donor) {
           try {
             await linkWalletIfNeeded();
           } catch {
