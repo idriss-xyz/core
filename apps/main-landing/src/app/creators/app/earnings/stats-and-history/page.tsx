@@ -310,7 +310,6 @@ export default function EarningsStats() {
                             </div>
                             <span className="text-sm text-gray-300">
                               {item.tokenData.name ?? item.tokenData.symbol}{' '}
-                              {/* TODO: Change for name, current db has name optional */}
                             </span>
                           </td>
                           <td>

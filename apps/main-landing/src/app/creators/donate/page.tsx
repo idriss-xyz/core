@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 
-import { CreatorProfile } from './types';
+import { OAuthCallbackHandler } from '../components/oauth-callback-handler';
+
 import { DonateContent } from './donate-content';
 import { RainbowKitProviders } from './providers';
 
@@ -11,15 +12,12 @@ export const metadata: Metadata = {
   },
 };
 
-interface Properties {
-  creatorProfile?: CreatorProfile;
-}
-
 // ts-unused-exports:disable-next-line
-export default function Donate({ creatorProfile }: Properties) {
+export default function Donate() {
   return (
     <RainbowKitProviders>
-      <DonateContent creatorProfile={creatorProfile} />
+      <OAuthCallbackHandler />
+      <DonateContent />
     </RainbowKitProviders>
   );
 }

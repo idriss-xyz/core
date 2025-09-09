@@ -8,7 +8,11 @@ import { useCallback, useEffect, useRef } from 'react';
 import { Hex } from 'viem';
 import { useRouter } from 'next/navigation';
 
-import { getCreatorProfile, saveCreatorProfile } from './utils';
+import {
+  getCreatorProfile,
+  saveCreatorProfile,
+  editCreatorProfile,
+} from './utils';
 import { useAuth } from './context/auth-context';
 
 export function PrivyAuthSync() {
@@ -22,6 +26,8 @@ export function PrivyAuthSync() {
     isAuthenticated,
     isLoginModalOpen,
     setLoginError,
+    callbackUrl,
+    setDonor,
   } = useAuth();
   const { user, ready, getAccessToken, logout, authenticated } = usePrivy();
   const router = useRouter();
@@ -48,7 +54,20 @@ export function PrivyAuthSync() {
       if (existingCreator) {
         setCreator(existingCreator);
         setCreatorLoading(false);
-        if (existingCreator.doneSetup) {
+        if (callbackUrl && !callbackUrl?.endsWith('/creators')) {
+          // If existing creator has isDonor true, update it to false
+          if (existingCreator.isDonor) {
+            await editCreatorProfile(
+              existingCreator.name,
+              { isDonor: false },
+              authToken,
+            );
+          }
+          const updatedCreator = await getCreatorProfile(authToken);
+          setCreator(updatedCreator ?? existingCreator);
+          setDonor(updatedCreator ?? existingCreator);
+          router.replace(callbackUrl);
+        } else if (existingCreator.doneSetup) {
           router.replace('/creators/app/earnings/stats-and-history');
         } else {
           router.replace('/creators/app/setup/payment-methods');
@@ -58,6 +77,12 @@ export function PrivyAuthSync() {
         let newCreatorDisplayName: string | null = null;
         let newCreatorProfilePic: string | null = null;
         let newCreatorEmail: string | null = null;
+        let isDonor = false;
+        // set isDonor when callback is not the normal creators landing signup
+        // (ex. a donate page like "/creators/daniel0ar")
+        if (callbackUrl && !callbackUrl?.endsWith('/creators')) {
+          isDonor = true;
+        }
 
         const twitchInfoRaw = localStorage.getItem('twitch_new_user_info');
 
@@ -88,6 +113,7 @@ export function PrivyAuthSync() {
           newCreatorEmail,
           user.id,
           authToken,
+          isDonor,
         );
 
         const newCreator = await getCreatorProfile(authToken);
@@ -97,13 +123,19 @@ export function PrivyAuthSync() {
         }
 
         setCreator(newCreator);
-        router.replace('/creators/app/setup/payment-methods');
+        if (callbackUrl && !callbackUrl?.endsWith('/creators')) {
+          setDonor(newCreator);
+          router.replace(callbackUrl);
+        } else {
+          router.replace('/creators/app/setup/payment-methods');
+        }
       }
     } catch (error) {
       console.error('Failed to authenticate creator.', error);
       setLoginError(true);
       if (authenticated) void logout();
       setCreator(null);
+      setDonor(null);
     } finally {
       setCreatorLoading(false);
       isAuthInProgress.current = false;
@@ -113,7 +145,9 @@ export function PrivyAuthSync() {
     user?.wallet,
     router,
     authenticated,
+    callbackUrl,
     setCreator,
+    setDonor,
     setCreatorLoading,
     getAccessToken,
     logout,

@@ -1,4 +1,4 @@
-import { Hex } from 'viem';
+import { getAddress, Hex } from 'viem';
 import { CHAIN, CREATOR_API_URL } from '@idriss-xyz/constants';
 
 import { CreatorProfileResponse } from './types';
@@ -78,6 +78,7 @@ export const saveCreatorProfile = async (
   email?: string | null,
   privyId?: string | null,
   authToken?: string,
+  isDonor?: boolean,
 ): Promise<void> => {
   if (!address || !name || !privyId) {
     throw new Error('No wallet address, name or privyId to create creator');
@@ -101,6 +102,7 @@ export const saveCreatorProfile = async (
       name,
       email,
       privyId,
+      isDonor,
     }),
   });
 
@@ -177,8 +179,6 @@ export const getChainShortNamesFromIds = (chainsIds: number[]) => {
   );
 };
 
-// TODO remove
-// ts-unused-exports:disable-next-line
 export const getChainIdsFromShortNames = (shortNames: string[]) => {
   return shortNames.map((shortName) => {
     return (
@@ -189,8 +189,27 @@ export const getChainIdsFromShortNames = (shortNames: string[]) => {
   });
 };
 
-export {
-  useStartEarningNavigation,
-  getCreatorProfile,
-  setCreatorIfSessionPresent,
-} from './navigation';
+export const getCreatorNameAndPicOrAnon = async (
+  address: string,
+): Promise<{ profilePicUrl: string | undefined; name: string }> => {
+  const formattedAddress = getAddress(address);
+  try {
+    const response = await fetch(
+      `${CREATOR_API_URL}/creator-profile/address/${formattedAddress}`,
+    );
+    if (response.ok) {
+      const profile = (await response.json()) as CreatorProfileResponse;
+      return {
+        profilePicUrl: profile.profilePictureUrl ?? undefined,
+        name: profile.name ?? 'anon',
+      };
+    }
+    return { profilePicUrl: undefined, name: 'anon' };
+  } catch (error) {
+    console.error('Error fetching creator profile by address.', error);
+    return { profilePicUrl: undefined, name: 'anon' };
+  }
+};
+
+export { setCreatorIfSessionPresent } from './session';
+export { useStartEarningNavigation, getCreatorProfile } from './navigation';

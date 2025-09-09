@@ -14,17 +14,23 @@ const API_CALLBACK_URI = `${CREATOR_API_URL}/auth/twitch/callback`;
 const FRONTEND_CALLBACK_URL = `${process.env.BASE_URL}/creators`;
 
 router.get('/twitch', (req, res) => {
+  const { callback } = req.query;
+
+  // Store the callback in the state parameter to retrieve it later
+  const state = callback ? encodeURIComponent(callback as string) : '';
+
   const authUrl = `https://id.twitch.tv/oauth2/authorize?${new URLSearchParams({
     client_id: TWITCH_CLIENT_ID!,
     redirect_uri: API_CALLBACK_URI,
     response_type: 'code',
     scope: 'user:read:email',
+    ...(state && { state }),
   })}`;
   res.redirect(authUrl);
 });
 
 router.get('/twitch/callback', async (req: Request, res: Response) => {
-  const { code } = req.query;
+  const { code, state } = req.query;
 
   if (!code) {
     res.status(400).send('Error: No code provided from Twitch.');
@@ -68,21 +74,28 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
       expiresIn: '30d',
     });
 
+    // Use the callback from state if provided, otherwise use default
+    const finalCallbackUrl = state
+      ? `${process.env.BASE_URL}/${decodeURIComponent(state as string)}`
+      : FRONTEND_CALLBACK_URL;
+
     const frontendRedirectParams = new URLSearchParams({
       token: customToken,
       name: twitchUser.login,
       displayName: twitchUser.display_name,
       pfp: twitchUser.profile_image_url,
       email: twitchUser.email,
+      callbackUrl: finalCallbackUrl,
     });
 
-    res.redirect(
-      `${FRONTEND_CALLBACK_URL}?${frontendRedirectParams.toString()}`,
-    );
+    res.redirect(`${finalCallbackUrl}?${frontendRedirectParams.toString()}`);
     return;
   } catch (error: any) {
     console.error('Twitch auth failed:', error);
-    res.redirect(`${FRONTEND_CALLBACK_URL}?error=${error.message}`);
+    const finalCallbackUrl = state
+      ? `${process.env.BASE_URL}/${decodeURIComponent(state as string)}`
+      : FRONTEND_CALLBACK_URL;
+    res.redirect(`${finalCallbackUrl}?error=${error.message}`);
     return;
   }
 });
