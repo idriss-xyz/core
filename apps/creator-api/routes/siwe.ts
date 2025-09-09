@@ -5,7 +5,11 @@ import { getAddress, Hex } from 'viem';
 import { verifyToken } from '../db/middleware/auth.middleware';
 import { AppDataSource } from '../db/database';
 import { Creator, CreatorAddress } from '../db/entities';
-import { MAIN_LANDING_LINK, NULL_ADDRESS } from '@idriss-xyz/constants';
+import {
+  MAIN_LANDING_LINK,
+  NULL_ADDRESS,
+  STATIC_ORIGINS,
+} from '@idriss-xyz/constants';
 
 const router = Router();
 
@@ -75,8 +79,26 @@ router.post(
         res.status(401).json({ error: 'Bad nonce' });
         return;
       }
-      const host = (req.get('host') ?? '').split(':')[0] || req.hostname;
-      if (siwe.domain !== host) {
+
+      const allowedHosts = new Set(
+        STATIC_ORIGINS.map((o) => new URL(o).hostname.toLowerCase()),
+      );
+
+      const origin = req.get('origin') ?? req.get('referer') ?? '';
+      let callerHost = '';
+      try {
+        if (origin) callerHost = new URL(origin).hostname.toLowerCase();
+      } catch {}
+      if (!callerHost) {
+        const hdr = (req.get('x-forwarded-host') ??
+          req.get('host') ??
+          req.hostname) as string;
+        callerHost = hdr.split(':')[0].toLowerCase();
+      }
+
+      const siweHost = siwe.domain.toLowerCase();
+
+      if (!allowedHosts.has(siweHost) || siweHost !== callerHost) {
         res.status(401).json({ error: 'Bad domain' });
         return;
       }
