@@ -185,6 +185,7 @@ router.get(
 
     const linkedCreator = await creatorAddressRepository.findOne({
       where: { address },
+      relations: ['creator'],
     });
 
     res.json({ linkedTo: linkedCreator?.creator.name });
