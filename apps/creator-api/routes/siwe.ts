@@ -160,19 +160,12 @@ router.get(
 
     const creatorAddressRepository =
       AppDataSource.getRepository(CreatorAddress);
-    console.log('Checking if address is linked for ', address);
-    console.log('Checking if address is linked for ', req.user.id);
-    const creator = await creatorAddressRepository.findOne({
-      where: { address },
-      select: ['id'],
-    });
-    console.log('Found creator', creator);
-    const linked = !!(await creatorAddressRepository.findOne({
-      where: { address },
-      select: ['id'],
-    }));
 
-    res.json({ linked });
+    const linkedCreator = await creatorAddressRepository.findOne({
+      where: { address },
+    });
+
+    res.json({ linkedTo: linkedCreator?.creator.name });
     return;
   },
 );
