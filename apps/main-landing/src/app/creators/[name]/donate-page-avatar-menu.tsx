@@ -2,9 +2,10 @@
 import { NavigationMenu } from '@idriss-xyz/ui/navigation-menu';
 import { Icon } from '@idriss-xyz/ui/icon';
 import Image from 'next/image';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { usePrivy } from '@privy-io/react-auth';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
+import { useRouter } from 'next/navigation';
 
 import { useLogout } from '../hooks/use-logout';
 import { useAuth } from '../context/auth-context';
@@ -15,6 +16,11 @@ export function DonatePageAvatarMenu() {
   const { donor, setDonor } = useAuth();
   const { user } = usePrivy();
   const handleLogout = useLogout();
+  const router = useRouter();
+
+  const handleNavigateToDonorStats = useCallback(() => {
+    router.push(`/creators/donor/${donor?.address}`);
+  }, [router, donor]);
 
   useEffect(() => {
     if (user) {
@@ -61,6 +67,19 @@ export function DonatePageAvatarMenu() {
                     Welcome, {donor?.name}
                   </span>
                   <hr className="sm:hidden" />
+                  <div
+                    onClick={handleNavigateToDonorStats}
+                    className="group flex min-h-[32px] cursor-pointer items-center gap-3 rounded-[4px] px-3 py-1"
+                  >
+                    <Icon
+                      name="BadgeDollarSign"
+                      size={20}
+                      className="text-neutral-600 group-hover:text-mint-600"
+                    />
+                    <span className="max-h-[54px] min-h-[24px] min-w-[184px] max-w-[214px] text-body4 text-neutral-900 group-hover:text-mint-600">
+                      My stats & history
+                    </span>
+                  </div>
                   <div
                     onClick={handleLogout}
                     className="group flex min-h-[32px] cursor-pointer items-center gap-3 rounded-[4px] px-3 py-1"
