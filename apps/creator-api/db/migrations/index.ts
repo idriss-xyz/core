@@ -24,3 +24,4 @@ export { CreateDripDailyClaim1755298637000 } from './1755298637000-CreateDripDai
 export { PopulateCreatorTokenAndNetworkDefaults1754915299000 } from './1754915299000-PopulateCreatorTokenAndNetworkDefaults';
 export { RenameEtherToEthereum1755609037000 } from './1755609037000-RenameEtherToEthereum';
 export { AddIsDonorToCreator1757184858317 } from './1757184858317-AddIsDonorToCreator';
+export { FixCreatorAddressSequence1757432868000 } from './1757432868000-FixCreatorAddressSequence';
