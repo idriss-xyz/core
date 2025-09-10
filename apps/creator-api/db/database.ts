@@ -40,6 +40,7 @@ import {
   RenameEtherToEthereum1755609037000,
   AddIsDonorToCreator1757184858317,
   FixCreatorAddressSequence1757432868000,
+  CleanupUnsupportedTokensNetworks1757496093000,
 } from './migrations';
 import { CreatorProfileView } from './views';
 
@@ -89,6 +90,7 @@ export const AppDataSource = new DataSource({
     RenameEtherToEthereum1755609037000,
     AddIsDonorToCreator1757184858317,
     FixCreatorAddressSequence1757432868000,
+    CleanupUnsupportedTokensNetworks1757496093000,
   ],
 });
 
