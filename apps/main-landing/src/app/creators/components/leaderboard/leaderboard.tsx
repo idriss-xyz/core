@@ -5,7 +5,6 @@ import { Hex } from 'viem';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
-import { Button } from '@idriss-xyz/ui/button';
 import { ColumnDefinition, Table } from '@idriss-xyz/ui/table';
 import { LeaderboardStats } from '@idriss-xyz/constants';
 import {
@@ -15,14 +14,13 @@ import {
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
 
-import { useCopyToClipboard } from '@/app/creators/hooks/use-copy-to-clipboard';
 import { IDRISS_SCENE_STREAM_2 } from '@/assets';
 
 import { useAuth } from '../../context/auth-context';
-import { useToast } from '../../context/toast-context';
 import { WidgetVariants } from '../../../../../../twitch-extension/src/app/types';
 import { DonateContentValues } from '../../donate/types';
 import { useTimeAgo } from '../../donate/hooks/use-time-ago';
+import { CopyButton } from '../copy-button/copy-button';
 
 import {
   LeaderboardItem,
@@ -107,9 +105,7 @@ export const Leaderboard = ({
   isScrollable,
   style,
 }: Properties) => {
-  const { copied, copy } = useCopyToClipboard();
   const { creator } = useAuth();
-  const { toast } = useToast();
   const columns: ColumnDefinition<LeaderboardStats>[] = [
     {
       id: 'rank',
@@ -168,17 +164,6 @@ export const Leaderboard = ({
   const isTwitchOverlay = variant === 'videoOverlay';
   const isTwitchComponent = variant === 'videoComponent';
   const isCreatorsDashboard = variant === 'creatorsDashboard';
-
-  const handleCopyLink = () => {
-    if (creator?.donationUrl) {
-      void copy(creator.donationUrl);
-      toast({
-        type: 'success',
-        heading: 'Your link has been copied!',
-        autoClose: true,
-      });
-    }
-  };
 
   if (!address.isFetching && !address.isValid) {
     return (
@@ -324,19 +309,10 @@ export const Leaderboard = ({
                         <span className="mx-8 text-center text-display5 uppercase gradient-text">
                           Share your page to get your first donor
                         </span>
-                        <Button
-                          size="medium"
-                          intent="secondary"
-                          onClick={handleCopyLink}
-                          suffixIconName={
-                            copied ? undefined : 'IdrissArrowRight'
-                          }
-                          prefixIconName={copied ? 'Check' : undefined}
-                          className="min-w-[137px] justify-center uppercase"
+                        <CopyButton
+                          text={creator?.donationUrl ?? ''}
                           disabled={!creator?.donationUrl}
-                        >
-                          {copied ? 'Copied' : 'Copy link'}
-                        </Button>
+                        />
                       </div>
                     )
                   }
