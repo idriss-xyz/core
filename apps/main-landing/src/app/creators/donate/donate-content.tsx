@@ -14,7 +14,6 @@ import { useRouter } from 'next/navigation';
 import _ from 'lodash';
 import { ExternalLink } from '@idriss-xyz/ui/external-link';
 import { FullscreenOverlay } from '@idriss-xyz/ui/fullscreen-overlay';
-import { Button } from '@idriss-xyz/ui/button';
 
 import { backgroundLines2 } from '@/assets';
 import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history';
@@ -268,7 +267,6 @@ export function DonateContent({ creatorProfile }: Properties) {
           />
 
           {!isLegacyLink && currentContentComponent}
-
         </main>
       </div>
       {isLegacyLink && (
