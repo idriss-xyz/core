@@ -4,7 +4,7 @@ import { Heading } from './heading';
 import { Loading } from './loading';
 import { Success } from './success';
 
-export const Send = {
+export const Withdraw = {
   Error,
   Success,
   Loading,
