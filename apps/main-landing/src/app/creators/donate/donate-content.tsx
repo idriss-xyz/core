@@ -1,14 +1,10 @@
 'use client';
-import { Button } from '@idriss-xyz/ui/button';
 import {
-  CREATORS_LINK,
   EMPTY_HEX,
-  DEFAULT_DONATION_MIN_ALERT_AMOUNT,
-  DEFAULT_DONATION_MIN_SFX_AMOUNT,
-  DEFAULT_DONATION_MIN_TTS_AMOUNT,
   CREATOR_API_URL,
   DonationData,
   LeaderboardStats,
+  CREATORS_LINK,
 } from '@idriss-xyz/constants';
 import '@rainbow-me/rainbowkit/styles.css';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -16,6 +12,9 @@ import { default as io } from 'socket.io-client';
 import { Hex } from 'viem';
 import { useRouter } from 'next/navigation';
 import _ from 'lodash';
+import { ExternalLink } from '@idriss-xyz/ui/external-link';
+import { FullscreenOverlay } from '@idriss-xyz/ui/fullscreen-overlay';
+import { Button } from '@idriss-xyz/ui/button';
 
 import { backgroundLines2 } from '@/assets';
 import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history';
@@ -54,35 +53,18 @@ export function DonateContent({ creatorProfile }: Properties) {
 
   const {
     address: { data: addr, isValid: addrValid, isFetching: addrFetching },
-    creatorName,
-    network: networkParameter,
-    token: tokenParameter,
   } = searchParams;
 
   useEffect(() => {
-    if (creatorProfile) return;
+    if (creatorProfile) {
+      setCreatorInfo(creatorProfile);
+      return;
+    }
     if (addrFetching) return;
     if (!addr || !addrValid) return;
 
-    setCreatorInfo({
-      address: { data: addr, isValid: addrValid, isFetching: addrFetching },
-      name: creatorName ?? '',
-      token: tokenParameter,
-      network: networkParameter,
-      minimumAlertAmount: DEFAULT_DONATION_MIN_ALERT_AMOUNT,
-      minimumTTSAmount: DEFAULT_DONATION_MIN_TTS_AMOUNT,
-      minimumSfxAmount: DEFAULT_DONATION_MIN_SFX_AMOUNT,
-    });
     setIsLegacyLink(true);
-  }, [
-    addr,
-    addrValid,
-    addrFetching,
-    creatorProfile,
-    creatorName,
-    networkParameter,
-    tokenParameter,
-  ]);
+  }, [addr, addrValid, addrFetching, creatorProfile]);
 
   const donationsHistory = useGetTipHistory(
     { address: creatorInfo?.address.data ?? EMPTY_HEX },
@@ -210,7 +192,6 @@ export function DonateContent({ creatorProfile }: Properties) {
                   ref={formReference}
                   className="container mt-8 overflow-hidden lg:mt-[90px] lg:[@media(max-height:800px)]:mt-[40px]"
                   creatorInfo={creatorInfo}
-                  isLegacyLink={isLegacyLink}
                 />
 
                 <Leaderboard
@@ -261,34 +242,61 @@ export function DonateContent({ creatorProfile }: Properties) {
     formHeight,
     donationsHistory.isError,
     donationsHistory.isLoading,
-    isLegacyLink,
   ]);
 
   return (
     <>
       <TopBar />
+      {/* Temproarily use a div instead of ScrollArea (not dispatching event) */}
+      <div
+        onScroll={(event) => {
+          const scrollTop = (event.target as HTMLDivElement).scrollTop;
+          window.dispatchEvent(
+            new CustomEvent('creatorsLandingPageScroll', {
+              detail: { scrollTop },
+            }),
+          );
+        }}
+        className="h-screen overflow-y-auto"
+      >
+        <main className="relative flex min-h-screen grow flex-col items-center justify-around gap-4 overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] px-2 pb-1 pt-[56px] lg:flex-row lg:items-start lg:justify-center lg:px-0">
+          <link rel="preload" as="image" href={backgroundLines2.src} />
+          <img
+            alt=""
+            src={backgroundLines2.src}
+            className="pointer-events-none absolute top-0 hidden size-full opacity-40 lg:block"
+          />
 
-      <main className="relative flex min-h-screen grow flex-col items-center justify-around gap-4 overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] px-2 pb-1 pt-[56px] lg:flex-row lg:items-start lg:justify-center lg:px-0">
-        <link rel="preload" as="image" href={backgroundLines2.src} />
-        <img
-          alt=""
-          src={backgroundLines2.src}
-          className="pointer-events-none absolute top-0 hidden size-full opacity-40 lg:block"
-        />
+          {!isLegacyLink && currentContentComponent}
 
-        {currentContentComponent}
-
-        <Button
-          asLink
-          isExternal
-          size="small"
-          intent="secondary"
-          href={CREATORS_LINK}
-          className="px-5 py-3.5 lg:absolute lg:bottom-6 lg:right-7 lg:translate-x-0"
-        >
-          CREATE YOUR LINK
-        </Button>
-      </main>
+          <Button
+            asLink
+            isExternal
+            size="small"
+            intent="secondary"
+            href={CREATORS_LINK}
+            className="px-5 py-3.5 lg:absolute lg:bottom-6 lg:right-7 lg:translate-x-0"
+          >
+            CREATE YOUR LINK
+          </Button>
+        </main>
+      </div>
+      {isLegacyLink && (
+        <FullscreenOverlay className="bg-[#E7F5E6]/[0.6] backdrop-blur-sm">
+          <p className="text-balance text-center text-heading5 text-neutralGreen-700">
+            This is a legacy donation page. Set up your account in
+          </p>
+          <p className="text-balance text-center text-heading5 text-neutralGreen-700">
+            <ExternalLink
+              className="text-mint-600 underline"
+              href={CREATORS_LINK}
+            >
+              IDRISS Creators&nbsp;v2
+            </ExternalLink>{' '}
+            to continue receiving donations.
+          </p>
+        </FullscreenOverlay>
+      )}
     </>
   );
 }

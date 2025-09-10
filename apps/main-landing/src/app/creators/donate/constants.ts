@@ -9,4 +9,10 @@ export const CHAIN_TO_IDRISS_TIPPING_ADDRESS = {
 
 export const IDRISS_LEGACY_API_URL = 'https://api.idriss.xyz';
 
-export const WHITELISTED_URLS = ['https://static-cdn.jtvnw.net'];
+export const WHITELISTED_URLS = [
+  'https://static-cdn.jtvnw.net',
+  'https://ik.imagekit.io/lens/media-snapshot',
+  'https://imagedelivery.net',
+  'https://i.imgur.com',
+  'https://euc.li',
+];

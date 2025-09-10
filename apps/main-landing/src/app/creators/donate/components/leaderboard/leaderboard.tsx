@@ -36,7 +36,7 @@ type Properties = {
 };
 
 const baseClassName =
-  'z-1 w-[360px] max-w-full rounded-xl bg-white flex flex-col items-center relative overflow-hidden';
+  'z-1 w-[440px] lg:w-[360px] max-w-full rounded-xl bg-white flex flex-col items-center relative overflow-hidden';
 
 export const Leaderboard = ({
   variant,
@@ -49,10 +49,11 @@ export const Leaderboard = ({
   updateCurrentContent,
   style,
 }: Properties) => {
-  const isTwitchExtension = !!variant;
   const isTwitchPanel = variant === 'panel';
   const isTwitchOverlay = variant === 'videoOverlay';
   const isTwitchComponent = variant === 'videoComponent';
+  const isTwitchExtension =
+    isTwitchPanel || isTwitchOverlay || isTwitchComponent;
 
   if (!address.isFetching && !address.isValid) {
     return (

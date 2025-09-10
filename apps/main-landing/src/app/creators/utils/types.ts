@@ -14,6 +14,7 @@ export type CreatorProfileResponse = {
   obsUrl?: string;
   joinedAt: string;
   doneSetup: boolean;
+  isDonor: boolean;
   minimumAlertAmount: number;
   minimumTTSAmount: number;
   minimumSfxAmount: number;
