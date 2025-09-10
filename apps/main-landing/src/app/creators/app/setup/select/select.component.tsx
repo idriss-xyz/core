@@ -79,7 +79,7 @@ export const Select = <T,>({
           )}
 
           <DropdownMenu.Trigger asChild>
-            <div className="flex-1 cursor-pointer overflow-hidden px-3">
+            <div className="flex-1 cursor-pointer overflow-hidden pl-3">
               <SelectInput
                 placeholder={placeholder}
                 value={pickedOption.label}
