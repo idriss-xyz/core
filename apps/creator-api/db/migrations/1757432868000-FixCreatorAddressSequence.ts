@@ -1,5 +1,6 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
+// Needed to fix a manual edit on production database
 export class FixCreatorAddressSequence1757432868000
   implements MigrationInterface
 {
@@ -13,6 +14,6 @@ export class FixCreatorAddressSequence1757432868000
   }
 
   public async down(_queryRunner: QueryRunner): Promise<void> {
-    // no-op
+    // no-op (this is a non reversible change)
   }
 }

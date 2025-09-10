@@ -20,8 +20,10 @@ type AuthContextType = {
   isLoginModalOpen: boolean;
   creator: CreatorProfileResponse | null;
   donor: CreatorProfileResponse | null;
+  donorLoading: boolean;
   creatorLoading: boolean;
   setCreatorLoading: (loading: boolean) => void;
+  setDonorLoading: (loading: boolean) => void;
   setDonor: Dispatch<SetStateAction<CreatorProfileResponse | null>>;
   setOauthError: (error: boolean) => void;
   setIsModalOpen: (isOpen: boolean) => void;
@@ -55,6 +57,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
   const [creator, setCreator] = useState<CreatorProfileResponse | null>(null);
   const [creatorLoading, setCreatorLoading] = useState(false);
+  const [donorLoading, setDonorLoading] = useState(false);
   const [donor, setDonor] = useState<CreatorProfileResponse | null>(null);
   const [donations, setDonations] = useState<DonationData[]>([]);
   const [newDonationsCount, setNewDonationsCount] = useState(0);
@@ -96,7 +99,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         creatorLoading,
         setCreatorLoading,
         donor,
+        donorLoading,
         setDonor,
+        setDonorLoading,
         setOauthError,
         setIsModalOpen,
         setCreator,
