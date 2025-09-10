@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CREATOR_API_URL } from '@idriss-xyz/constants';
 import { Modal } from '@idriss-xyz/ui/modal';
 import { Button } from '@idriss-xyz/ui/button';
@@ -7,11 +7,8 @@ import {
   IdrissCardRadioGroup,
   CardRadioItem,
 } from '@idriss-xyz/ui/radio-group';
-import { usePrivy } from '@privy-io/react-auth';
 
 import { ACCOUNT_CARD, GUEST_CARD } from '@/assets';
-
-import { useAuth } from '../context/auth-context';
 
 const cardRadioItems: CardRadioItem[] = [
   {
@@ -34,13 +31,21 @@ const cardRadioItems: CardRadioItem[] = [
 
 export const DonateOptionsModal = () => {
   const [selectedOption, setSelectedOption] = useState<string>('account');
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
-  const { authenticated } = usePrivy();
-  const { donor } = useAuth();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  const modalOpen = isModalOpen && !(authenticated && donor);
+  const modalOpen = isModalOpen;
+
+  useEffect(() => {
+    const savedChoice = localStorage.getItem('donate-option-choice');
+
+    if (!savedChoice || savedChoice === 'guest') {
+      setIsModalOpen(true);
+    }
+  }, []);
 
   const handleSaveChoice = () => {
+    localStorage.setItem('donate-option-choice', selectedOption);
+
     switch (selectedOption) {
       case 'guest': {
         setIsModalOpen(false);

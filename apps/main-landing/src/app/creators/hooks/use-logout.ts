@@ -19,6 +19,7 @@ export const useLogout = () => {
 
     localStorage.removeItem('twitch_new_user_info');
     localStorage.removeItem('custom-auth-token');
+    localStorage.removeItem('donate-option-choice');
 
     void Promise.resolve().then(() => {
       setCreator(null);
