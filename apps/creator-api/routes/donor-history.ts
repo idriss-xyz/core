@@ -13,19 +13,18 @@ import { createAddressToCreatorMap } from '@idriss-xyz/utils';
 
 const router = Router();
 
-router.post('/', async (req: Request, res: Response) => {
+router.get('/', async (req: Request, res: Response) => {
   try {
-    const { address: identifier } = req.body;
-    if (!identifier || typeof identifier !== 'string') {
-      res.status(400).json({ error: 'Invalid or missing identifier' });
+    const { name } = req.query;
+    if (!name || typeof name !== 'string') {
+      res.status(400).json({ error: 'Invalid or missing name parameter' });
       return;
     }
 
-    const { addresses: allAddresses } =
-      await resolveCreatorAndAddresses(identifier);
+    const { addresses: allAddresses } = await resolveCreatorAndAddresses(name);
 
     if (allAddresses.length === 0) {
-      res.status(404).json({ error: 'Creator or address not found' });
+      res.status(404).json({ error: 'Creator not found' });
       return;
     }
 
@@ -41,7 +40,7 @@ router.post('/', async (req: Request, res: Response) => {
     const addressToCreatorMap = createAddressToCreatorMap(creators);
     enrichDonationsWithCreatorInfo(donations, addressToCreatorMap);
 
-    const stats = await calculateStatsForDonorAddress(donations);
+    const stats = await calculateStatsForDonorAddress(donations, name);
 
     const leaderboard = await calculateGlobalDonorLeaderboard();
     const donorPosition = leaderboard.findIndex((entry) =>
@@ -55,8 +54,8 @@ router.post('/', async (req: Request, res: Response) => {
       donations,
     });
   } catch (error) {
-    console.error('Tip history error:', error);
-    res.status(500).json({ error: 'Failed to fetch tip history' });
+    console.error('Donor history error:', error);
+    res.status(500).json({ error: 'Failed to fetch donor history' });
   }
 });
 

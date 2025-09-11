@@ -2,9 +2,7 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { useState, useEffect } from 'react';
 import { Link } from '@idriss-xyz/ui/link';
 import { classes } from '@idriss-xyz/ui/utils';
-import { Hex } from 'viem';
 import { DonationUser } from '@idriss-xyz/constants';
-import { getModifiedLeaderboardName } from '@idriss-xyz/utils';
 
 import { WHITELISTED_URLS } from '../../constants';
 import { useGetAvatarImage } from '../../commands/get-avatar-image';
@@ -25,7 +23,7 @@ type Properties = {
   donorDetails: DonationUser;
   hideBottomBorder?: boolean;
   isTwitchExtension?: boolean;
-  onDonorClick?: (address: Hex) => void;
+  onDonorClick?: (displayName: string) => void;
 };
 
 export const LeaderboardItem = ({
@@ -37,7 +35,7 @@ export const LeaderboardItem = ({
   donorDetails,
   isTwitchExtension,
 }: Properties) => {
-  const displayName = donorDetails.displayName;
+  const displayName = donorDetails.displayName ?? 'anon';
   const avatarSourceUrl = donorDetails.avatarUrl;
 
   const isAllowedUrl =
@@ -114,7 +112,7 @@ export const LeaderboardItem = ({
           size="xs"
           onClick={() => {
             if (onDonorClick) {
-              onDonorClick(donorDetails.address);
+              onDonorClick(displayName);
             }
           }}
           className={classes(
@@ -122,9 +120,7 @@ export const LeaderboardItem = ({
             onDonorClick && 'cursor-pointer',
           )}
         >
-          {displayName
-            ? getModifiedLeaderboardName(displayName)
-            : getModifiedLeaderboardName(donorDetails.address)}
+          {displayName}
         </Link>
       </span>
 
