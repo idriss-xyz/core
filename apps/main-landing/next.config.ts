@@ -33,17 +33,6 @@ const loadEnvironmentConfig = () => {
 
 loadEnvironmentConfig();
 
-const LEGACY_URLS = [
-  '/partner-whitelist',
-  '/pricing',
-  '/token-price',
-  '/v1/getTwitterIDPlugin',
-  '/v2/getTwitterIDPlugin',
-  '/v2/getTwitterNamesPlugin',
-  '/v1/getTwitterID',
-  '/v1/getTwitterNames',
-];
-
 const nextConfig: NextConfig = {
   generateBuildId: () => {
     return process.env.RAILWAY_GIT_COMMIT_SHA ?? `build-${Date.now()}`;
@@ -211,13 +200,6 @@ const nextConfig: NextConfig = {
         destination: '/creators/donation-overlay/:slug*',
         permanent: true,
       },
-      ...LEGACY_URLS.map((url) => {
-        return {
-          source: url,
-          destination: `https://legacy.idriss.xyz${url}`,
-          permanent: false,
-        };
-      }),
     ];
   },
   webpack(config) {

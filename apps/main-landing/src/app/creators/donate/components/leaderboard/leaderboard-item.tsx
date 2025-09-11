@@ -1,4 +1,5 @@
 import { Icon } from '@idriss-xyz/ui/icon';
+import { useState, useEffect } from 'react';
 import { Link } from '@idriss-xyz/ui/link';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Hex } from 'viem';
@@ -48,6 +49,12 @@ export const LeaderboardItem = ({
       })
     );
 
+  const [imageError, setImageError] = useState(false);
+  useEffect(() => {
+    // reset error flag whenever avatar url changes
+    setImageError(false);
+  }, [avatarSourceUrl]);
+
   const avatarDataQuery = useGetAvatarImage(
     { url: avatarSourceUrl ?? '' },
     { enabled: !!avatarSourceUrl && !isAllowedUrl },
@@ -55,17 +62,24 @@ export const LeaderboardItem = ({
 
   const avatarImage = (
     <div className="relative w-max">
-      {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
-      {((avatarSourceUrl && isAllowedUrl) ||
-        (avatarSourceUrl && !isAllowedUrl && !!avatarDataQuery.data)) && (
+      {((avatarSourceUrl && isAllowedUrl && !imageError) ??
+        (avatarSourceUrl &&
+          !isAllowedUrl &&
+          !!avatarDataQuery.data &&
+          !imageError)) && (
         <img
           alt={`Rank ${donorRank + 1}`}
           src={isAllowedUrl ? avatarSourceUrl : avatarDataQuery.data}
           className={`size-8 rounded-full bg-neutral-200 ${donorRank <= 2 ? `border-2 ${rankBorders[donorRank]}` : 'border border-neutral-400'}`}
+          onError={() => {
+            return setImageError(true);
+          }}
         />
       )}
 
-      {(!avatarSourceUrl || (!isAllowedUrl && !avatarDataQuery.data)) && (
+      {(!avatarSourceUrl ||
+        imageError ||
+        (!isAllowedUrl && !avatarDataQuery.data)) && (
         <div
           className={`flex size-8 items-center justify-center rounded-full ${donorRank <= 2 ? `border-2 ${rankBorders[donorRank]}` : 'border border-neutral-300'} bg-neutral-200`}
         >

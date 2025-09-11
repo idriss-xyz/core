@@ -46,9 +46,15 @@ router.post(
     }
 
     const chain = chainMap[String(chainId) as keyof typeof chainMap];
-    const allowedTokens = CHAIN_ID_TO_TOKENS[Number(chain.id)]?.map((t) =>
-      getAddress(t.address),
-    );
+    let allowedTokens: `0x${string}`[] = [];
+    try {
+      allowedTokens = CHAIN_ID_TO_TOKENS[Number(chain.id)]?.map((t) =>
+        getAddress(t.address),
+      );
+    } catch {
+      res.status(400).json({ error: 'Error parsing allowed tokens' });
+      return;
+    }
 
     if (
       tokenParam !== NULL_ADDRESS &&
@@ -88,10 +94,23 @@ router.post(
       return;
     }
 
-    const client = getClient(chain);
+    let client;
+    try {
+      client = getClient(chain);
+    } catch {
+      res.status(400).json({ error: 'Could not get client for chain' });
+      return;
+    }
 
-    const faucetAddress = getAddress(process.env.FAUCET_ADDRESS || '');
-    const userAddress = getAddress(fullProfile.primaryAddress);
+    let faucetAddress: Hex, userAddress: Hex;
+    try {
+      faucetAddress = getAddress(process.env.FAUCET_ADDRESS || '');
+      userAddress = getAddress(fullProfile.primaryAddress);
+    } catch {
+      res.status(400).json({ error: 'Invalid faucet or user address' });
+      return;
+    }
+
     const nonce = await client.getTransactionCount({
       address: faucetAddress,
       blockTag: 'pending',

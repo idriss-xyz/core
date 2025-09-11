@@ -20,9 +20,14 @@ const useRedirectIfNotAuthenticated = () => {
       void setCreatorIfSessionPresent(user, setCreator);
     }
 
-    if (!user && !creator && !pathname.startsWith('/creators')) {
-      console.log('NOT AUTHENTICATED');
-      router.replace('/creators?login=true');
+    if (!user && !creator) {
+      if (pathname.startsWith('/creators/app')) {
+        router.replace('/creators?login=true');
+      } else if (pathname.startsWith('/creators')) {
+        return;
+      } else {
+        router.replace('/creators');
+      }
     }
   }, [
     creator,

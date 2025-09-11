@@ -122,7 +122,6 @@ export default function StreamAlerts() {
   const [wasCopied, setWasCopied] = useState(false);
   const [unsavedChangesToastId, setUnsavedChangesToastId] = useState('');
 
-  // TODO: Extract to constants
   const alertSounds = [
     ...defaultAlertSounds,
     ...(uploadedFile ? [{ value: 'CUSTOM_SOUND', label: 'Custom' }] : []),
@@ -196,8 +195,8 @@ export default function StreamAlerts() {
       if (response.ok) {
         toast({
           type: 'success',
-          heading: 'Test alert sent successfully!',
-          description: 'Check your stream preview to see it',
+          heading: 'Test alert sent successfully',
+          description: 'Check your stream preview to confirm it shows up',
           iconName: 'BellRing',
           autoClose: true,
         });
@@ -508,8 +507,6 @@ export default function StreamAlerts() {
                             void audio.play();
                           }
                         }}
-                        // TODO: Add error handling
-                        // error={Boolean(fieldState.error?.message)}
                       />
                     );
                   }}
@@ -621,8 +618,6 @@ export default function StreamAlerts() {
                             void audio.play();
                           }
                         }}
-                        // TODO: Add error handling
-                        // error={Boolean(fieldState.error?.message)}
                       />
                     );
                   }}
@@ -766,7 +761,7 @@ export default function StreamAlerts() {
             }, 2000);
           }
         }}
-        title="⚠️ Confirm before copying"
+        title="Confirm before copying"
         sectionSubtitle="Anyone with this link can embed your stream alerts on their own stream or website.
           Do not share it with anyone or show it on stream."
         confirmButtonText={confirmButtonText}
