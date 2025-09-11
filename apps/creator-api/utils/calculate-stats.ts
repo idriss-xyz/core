@@ -160,16 +160,19 @@ export async function calculateGlobalDonorLeaderboard(
 
       const totalAmount = filtered.reduce((sum, d) => sum + d.tradeValue, 0);
 
+      const address = (
+        creator ? creator.primaryAddress : donations[0].fromAddress
+      ) as Hex;
+
+      const displayName = creator ? creator.displayName : 'anon';
+
+      const avatarUrl =
+        creator && creator.profilePictureUrl ? creator.profilePictureUrl : '';
+
       return {
-        address: (creator
-          ? creator.primaryAddress
-          : donations[0].fromAddress) as Hex,
-        displayName: creator
-          ? creator.displayName
-          : donations[0].fromUser.displayName!,
-        avatarUrl: creator
-          ? creator.profilePictureUrl!
-          : donations[0].fromUser.avatarUrl!,
+        address,
+        displayName,
+        avatarUrl,
         totalAmount,
         donationCount: filtered.length,
         donorSince: firstDonationTimestamp,
