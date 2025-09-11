@@ -164,6 +164,7 @@ export default function DonationOverlay({ creatorName }: Properties) {
           alertSound,
           voiceId,
           creatorName: name,
+          forceDisplay: true,
         };
         addDonation(queuedDonation);
       } catch (error) {
@@ -287,7 +288,7 @@ export default function DonationOverlay({ creatorName }: Properties) {
 
         const latestBlock = await client.getBlockNumber();
         const lastCheckedBlock =
-          latestCheckedBlocks.get(chain) || latestBlock - BLOCK_LOOKBACK_RANGE;
+          latestCheckedBlocks.get(chain) ?? latestBlock - BLOCK_LOOKBACK_RANGE;
 
         if (latestBlock <= lastCheckedBlock) continue;
 
