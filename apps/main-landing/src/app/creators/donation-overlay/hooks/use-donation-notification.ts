@@ -42,6 +42,7 @@ export const useDonationNotification = (
   muteToggles: EnableToggles,
   message: string,
   sfxText: string | undefined,
+  forceDisplay: boolean | undefined,
   minOverallVisibleDuration: number, // Minimum total time the notification should be visible
   onFullyComplete: () => void, // Callback when the notification lifecycle is complete
 ) => {
@@ -91,7 +92,9 @@ export const useDonationNotification = (
     if (
       !amount ||
       !alertEnabled ||
-      Number.parseFloat(amount) <= priceDropCalculatedAmount(minimumAlertAmount)
+      (!forceDisplay &&
+        Number.parseFloat(amount) <=
+          priceDropCalculatedAmount(minimumAlertAmount))
     ) {
       setShowNotification(false);
       onFullyComplete();
@@ -102,10 +105,14 @@ export const useDonationNotification = (
       const useSfx =
         sfxText &&
         sfxEnabled &&
-        Number.parseFloat(amount) > priceDropCalculatedAmount(minimumSfxAmount);
+        (forceDisplay ??
+          Number.parseFloat(amount) >
+            priceDropCalculatedAmount(minimumSfxAmount));
       const useTts =
         ttsEnabled &&
-        Number.parseFloat(amount) > priceDropCalculatedAmount(minimumTTSAmount);
+        (forceDisplay ??
+          Number.parseFloat(amount) >
+            priceDropCalculatedAmount(minimumTTSAmount));
 
       let sfxAudioForPlayback: HTMLAudioElement | null = null;
       let ttsAudioForPlayback: HTMLAudioElement | null = null;
@@ -284,6 +291,7 @@ export const useDonationNotification = (
     sfxEnabled,
     ttsEnabled,
     isTestNotification,
+    forceDisplay,
   ]);
 
   return { showNotification };

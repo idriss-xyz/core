@@ -33,5 +33,6 @@ export type DonationNotificationProperties = {
     details?: ChainToken;
   };
   minOverallVisibleDuration: number; // Minimum total time the notification should be visible
+  forceDisplay?: boolean; // use true for test donations
   onFullyComplete: () => void; // Callback when the notification lifecycle is complete
 };
