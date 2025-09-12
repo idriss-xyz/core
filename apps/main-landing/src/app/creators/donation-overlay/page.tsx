@@ -3,24 +3,19 @@
 import { io, Socket } from 'socket.io-client';
 import { useCallback, useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  type AbiEvent,
-  decodeFunctionData,
-  type Hex,
-  isAddress,
-  parseAbiItem,
-} from 'viem';
+import { type AbiEvent, type Hex, isAddress, parseAbiItem } from 'viem';
 import { getEnsAvatar } from 'viem/actions';
 import { normalize } from 'viem/ens';
 import {
   CHAIN_ID_TO_TOKENS,
   CREATOR_API_URL,
   CREATORS_LINK,
+  DEFAULT_ALLOWED_CHAINS_IDS,
   DEFAULT_DONATION_MIN_ALERT_AMOUNT,
   DEFAULT_DONATION_MIN_SFX_AMOUNT,
   DEFAULT_DONATION_MIN_TTS_AMOUNT,
   NATIVE_COIN_ADDRESS,
-  TIPPING_ABI,
+  NULL_ADDRESS,
 } from '@idriss-xyz/constants';
 import { clients } from '@idriss-xyz/blockchain-clients';
 import { FullscreenOverlay } from '@idriss-xyz/ui/fullscreen-overlay';
@@ -274,10 +269,10 @@ export default function Obs({ creatorName }: Properties) {
     if (isLegacyLink) return;
     if (!address?.data) return;
 
-    for (const { chain, client, name: chainName } of clients) {
+    for (const { chain, client } of clients) {
       try {
-        const eventSignature = TIP_MESSAGE_EVENT_ABI[chainName];
-        if (!eventSignature) {
+        const eventSignature = TIP_MESSAGE_EVENT_ABI;
+        if (!DEFAULT_ALLOWED_CHAINS_IDS.includes(chain)) {
           continue;
         }
 
@@ -307,39 +302,42 @@ export default function Obs({ creatorName }: Properties) {
             continue;
           }
 
-          const txn = await client.getTransaction({
-            hash: log.transactionHash!,
-          });
+          // destructure event arguments
+          const {
+            recipientAddress,
+            message,
+            sender,
+            tokenAddress,
+            amount,
+            assetType,
+          } = log.args as {
+            recipientAddress: Hex;
+            message: string;
+            sender: Hex;
+            tokenAddress: Hex;
+            amount: bigint;
+            fee: bigint;
+            assetType: bigint;
+          };
+          console.log(assetType > 0n);
+          console.log(assetType === 0n);
+          console.log(assetType);
 
-          const decoded = decodeFunctionData({
-            abi: TIPPING_ABI,
-            data: txn.input,
-          });
+          // skip ERC-721 & ERC-1155 for now (assetType 2 & 3)
+          if (assetType > 1n) continue;
 
-          let recipient, tokenAmount, tokenAddress, message;
-
-          if (decoded.functionName === 'sendTo') {
-            [recipient, tokenAmount, message] = decoded.args;
-            tokenAddress = NATIVE_COIN_ADDRESS;
-          } else if (decoded.functionName === 'sendTokenTo') {
-            [recipient, tokenAmount, tokenAddress, message] = decoded.args;
-          }
-
-          if (!recipient || !tokenAmount || !tokenAddress) {
+          if (recipientAddress.toLowerCase() !== address?.data.toLowerCase())
             continue;
-          }
-
-          if (recipient.toLowerCase() !== address?.data.toLowerCase()) continue;
 
           if (message && containsBadWords(message, customBadWords)) {
             console.log('Filtered donation with inappropriate message');
             continue;
           }
 
-          const resolved = await resolveEnsName(txn.from);
+          const resolved = await resolveEnsName(sender);
 
           const senderIdentifier =
-            resolved ?? `${txn.from.slice(0, 4)}...${txn.from.slice(-2)}`;
+            resolved ?? `${sender.slice(0, 4)}...${sender.slice(-2)}`;
 
           const donorAvatar = resolved
             ? await getEnsAvatar(ethereumClient, {
@@ -349,16 +347,19 @@ export default function Obs({ creatorName }: Properties) {
 
           const avatarUrl = donorAvatar ?? undefined;
 
+          const effectiveTokenAddress =
+            tokenAddress === NULL_ADDRESS ? NATIVE_COIN_ADDRESS : tokenAddress;
+
           const amountInDollar = await calculateDollar(
-            tokenAddress as Hex,
-            tokenAmount,
+            effectiveTokenAddress,
+            amount,
             chain,
           );
 
           const tokenDetails = CHAIN_ID_TO_TOKENS[chain]?.find((token) => {
             return (
               token.address?.toLowerCase() ===
-              (tokenAddress as Hex).toLowerCase()
+              effectiveTokenAddress.toLowerCase()
             );
           });
 
@@ -386,7 +387,7 @@ export default function Obs({ creatorName }: Properties) {
             donor: senderIdentifier,
             txnHash: log.transactionHash!,
             token: {
-              amount: tokenAmount,
+              amount: amount,
               details: tokenDetails,
             },
             minimumAmounts,

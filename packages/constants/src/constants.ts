@@ -9,6 +9,7 @@ import {
   zksync,
   scroll,
   celo,
+  avalanche,
 } from 'viem/chains';
 
 import {
@@ -35,6 +36,8 @@ import {
   SCROLL_LOGO,
   CELO_LOGO,
   BNB_LOGO,
+  AVAX_LOGO,
+  GUNZ_LOGO,
 } from './logos';
 import { Chain, Token, ChainToken } from './types';
 
@@ -109,6 +112,12 @@ export const CREATOR_CHAIN = {
     shortName: 'Ethereum',
     dbName: 'ETHEREUM_MAINNET',
     logo: ETHEREUM_LOGO,
+  },
+  AVALANCHE: {
+    ...avalanche,
+    shortName: 'Avalanche',
+    dbName: 'AVALANCHE_MAINNET',
+    logo: AVAX_LOGO,
   },
 } satisfies Record<string, Chain>;
 
@@ -201,6 +210,11 @@ export const CHAIN = Object.assign(CREATOR_CHAIN, {
 }) satisfies Record<string, Chain>;
 
 export const TOKEN = {
+  AVAX: {
+    name: 'Avalanche',
+    symbol: 'AVAX',
+    logo: AVAX_LOGO,
+  },
   ETHEREUM: {
     name: 'Ethereum',
     symbol: 'ETH',
@@ -239,6 +253,11 @@ export const TOKEN = {
     symbol: 'AXS',
     logo: AXIE_LOGO,
   },
+  GUN: {
+    name: 'Gunz',
+    symbol: 'GUN',
+    logo: GUNZ_LOGO,
+  },
   // PIXEL: {
   //   name: 'Pixels',
   //   symbol: 'PIXEL',
@@ -274,6 +293,23 @@ export const CHAIN_ID_TO_TOKENS = {
       ...TOKEN.PENGU,
       decimals: 18,
       address: '0x9eBe3A824Ca958e4b3Da772D2065518F009CBa62',
+    },
+  ],
+  [CREATOR_CHAIN.AVALANCHE.id]: [
+    {
+      ...TOKEN.AVAX,
+      decimals: 18,
+      address: NATIVE_COIN_ADDRESS,
+    },
+    {
+      ...TOKEN.GUN,
+      decimals: 18,
+      address: '0x26debd39d5ed069770406fca10a0e4f8d2c743eb',
+    },
+    {
+      ...TOKEN.USDC,
+      decimals: 6,
+      address: '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E',
     },
   ],
   [CREATOR_CHAIN.ETHEREUM.id]: [
@@ -374,6 +410,7 @@ export const DEFAULT_ALLOWED_CHAINS_IDS = [
   CREATOR_CHAIN.BASE.id,
   CREATOR_CHAIN.ETHEREUM.id,
   CREATOR_CHAIN.RONIN.id,
+  CREATOR_CHAIN.AVALANCHE.id,
 ];
 
 export const EMPTY_HEX = '0x';

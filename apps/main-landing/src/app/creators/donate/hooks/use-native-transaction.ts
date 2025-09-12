@@ -37,7 +37,7 @@ export const useNativeTransaction = () => {
       const sendToData = {
         abi: TIPPING_ABI,
         functionName: 'sendTo',
-        args: [recipientAddress, tokensToSend, message],
+        args: [recipientAddress, message],
       } as const;
 
       const encodedData = encodeFunctionData(sendToData);
