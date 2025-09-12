@@ -153,7 +153,7 @@ export const NETWORK_TO_ALCHEMY = {
   OPTIMISM_MAINNET: 'optimism-mainnet',
   MANTLE_MAINNET: 'mantle-mainnet',
   RONIN_MAINNET: 'ronin-mainnet',
-  AVALANCHE_MAINNET: 'avax-mainnet',
+  // AVALANCHE_MAINNET: 'avax-mainnet',
 } as const;
 
 export const ALCHEMY_NATIVE_TOKENS = {
@@ -164,7 +164,7 @@ export const ALCHEMY_NATIVE_TOKENS = {
   OPTIMISM_MAINNET: 'ETH',
   POLYGON_MAINNET: 'POL',
   RONIN_MAINNET: 'RON',
-  AVALANCHE_MAINNET: 'AVAX',
+  // AVALANCHE_MAINNET: 'AVAX',
 } as const;
 
 export const monthNames = [

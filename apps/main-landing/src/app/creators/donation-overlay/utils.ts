@@ -7,7 +7,7 @@ const SELL_TOKEN_BY_NETWORK: Record<number, string> = {
   [CREATOR_CHAIN.ETHEREUM.id]: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
   [CREATOR_CHAIN.RONIN.id]: '0x0b7007c13325c48911f73a2dad5fa5dcbf808adc',
   [CREATOR_CHAIN.ABSTRACT.id]: '0x84a71ccd554cc1b02749b35d22f684cc8ec987e1',
-  [CREATOR_CHAIN.AVALANCHE.id]: '0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e',
+  // [CREATOR_CHAIN.AVALANCHE.id]: '0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e',
 };
 
 export async function calculateDollar(

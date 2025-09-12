@@ -49,21 +49,36 @@ const ALL_TOKEN_SYMBOLS = Object.values(CHAIN_ID_TO_TOKENS)
 
 const UNIQUE_ALL_TOKEN_SYMBOLS = [...new Set(ALL_TOKEN_SYMBOLS)];
 
+// const TOKENS_ORDER: Record<TokenSymbol, number> = {
+//   IDRISS: 1,
+//   ETH: 2,
+//   USDC: 3,
+//   DAI: 4,
+//   AVAX: 5,
+//   GUN: 6,
+//   PRIME: 7,
+//   GHST: 8,
+//   RON: 9,
+//   AXS: 10,
+//   YGG: 11,
+//   PDT: 12,
+//   DEGEN: 13,
+//   PENGU: 14,
+// };
+
 const TOKENS_ORDER: Record<TokenSymbol, number> = {
   IDRISS: 1,
   ETH: 2,
   USDC: 3,
   DAI: 4,
-  AVAX: 5,
-  GUN: 6,
-  PRIME: 7,
-  GHST: 8,
-  RON: 9,
-  AXS: 10,
-  YGG: 11,
-  PDT: 12,
-  DEGEN: 13,
-  PENGU: 14,
+  PRIME: 5,
+  GHST: 6,
+  RON: 7,
+  AXS: 8,
+  YGG: 9,
+  PDT: 10,
+  DEGEN: 11,
+  PENGU: 12,
 };
 
 const iconsForCardPaymentMethod: IconName[] = [
