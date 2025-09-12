@@ -28,7 +28,7 @@ function RankingContent() {
 
   const onDonorClick = useCallback(
     (displayName: string) => {
-      router.push(`/creators/donor/${displayName}`);
+      router.push(`/creators/${displayName}`);
     },
     [router],
   );

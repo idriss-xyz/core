@@ -3,7 +3,7 @@ import { Router, Request, Response } from 'express';
 import { fetchDonationsByFromAddress } from '../db/fetch-known-donations';
 import {
   calculateGlobalDonorLeaderboard,
-  calculateStatsForDonorAddress,
+  calculateStatsForDonor,
   resolveCreatorAndAddresses,
 } from '../utils/calculate-stats';
 import { AppDataSource } from '../db/database';
@@ -40,7 +40,7 @@ router.get('/', async (req: Request, res: Response) => {
     const addressToCreatorMap = createAddressToCreatorMap(creators);
     enrichDonationsWithCreatorInfo(donations, addressToCreatorMap);
 
-    const stats = await calculateStatsForDonorAddress(donations, name);
+    const stats = await calculateStatsForDonor(donations, name);
 
     const leaderboard = await calculateGlobalDonorLeaderboard();
     const donorPosition = leaderboard.findIndex((entry) =>

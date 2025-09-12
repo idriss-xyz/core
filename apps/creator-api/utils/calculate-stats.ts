@@ -52,7 +52,7 @@ async function getCreatorNameOrAnon(address: string): Promise<string> {
   return 'anon';
 }
 
-export async function calculateStatsForDonorAddress(
+export async function calculateStatsForDonor(
   donations: DonationData[],
   displayName?: string,
 ): Promise<DonationStats> {
