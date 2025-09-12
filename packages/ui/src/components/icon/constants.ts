@@ -53,6 +53,7 @@ import {
   Paintbrush,
   Users as Users2,
   Coins,
+  Search,
 } from 'lucide-react';
 
 import * as customIcons from './custom';
@@ -112,5 +113,6 @@ export const ICON = {
   Paintbrush,
   Users2,
   Coins,
+  Search,
   ...customIcons,
 };
