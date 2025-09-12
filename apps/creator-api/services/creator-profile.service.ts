@@ -7,14 +7,14 @@ import {
   CreatorAddress,
 } from '../db/entities';
 import { randomBytes } from 'crypto';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import {
   DEFAULT_DONATION_MIN_ALERT_AMOUNT,
   DEFAULT_DONATION_MIN_TTS_AMOUNT,
   DEFAULT_DONATION_MIN_SFX_AMOUNT,
   CREATORS_LINK,
   CREATOR_CHAIN,
-  TOKEN,
+  CHAIN_ID_TO_TOKENS,
 } from '@idriss-xyz/constants';
 import { Hex } from 'viem';
 import { CreatorProfileView } from '../db/views';
@@ -26,6 +26,13 @@ import {
 interface EnrichedCreatorProfile extends CreatorProfileView {
   streamStatus?: boolean;
 }
+const DEFAULT_SUPPORTED_TOKEN_SYMBOLS: string[] = Array.from(
+  new Set(
+    Object.values(CHAIN_ID_TO_TOKENS)
+      .flat()
+      .map((t) => t.symbol),
+  ),
+);
 
 class CreatorProfileService {
   private profileRepository = AppDataSource.getRepository(CreatorProfileView);
@@ -42,8 +49,9 @@ class CreatorProfileService {
       ttsEnabled,
       sfxEnabled,
       customBadWords = [],
-      tokens = Object.values(TOKEN).map((token) => token.symbol),
+      tokens = DEFAULT_SUPPORTED_TOKEN_SYMBOLS,
       networks = Object.values(CREATOR_CHAIN).map((chain) => chain.shortName),
+      isDonor = false,
       ...creatorData
     } = req.body;
 
@@ -77,6 +85,7 @@ class CreatorProfileService {
     creator.donationUrl = `${CREATORS_LINK}/${creatorData.name}`;
     const obsUrlSecret = randomBytes(24).toString('base64url');
     creator.obsUrl = `${CREATORS_LINK}/donation-overlay/${obsUrlSecret}`;
+    creator.isDonor = isDonor;
 
     // Create and save new creator
     const savedCreator = await creatorRepository.save(creator);

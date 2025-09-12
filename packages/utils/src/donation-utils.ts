@@ -95,12 +95,8 @@ export function calculateDonationLeaderboard(
         totalAmount: 0,
         donationCount: 0,
         donorSince: donation.timestamp,
-        displayName: creator
-          ? creator.displayName
-          : donation.fromUser.displayName!,
-        avatarUrl: creator
-          ? (creator.profilePictureUrl ?? donation.fromUser.avatarUrl!)
-          : donation.fromUser.avatarUrl!,
+        displayName: creator ? creator.displayName : 'anon',
+        avatarUrl: creator ? (creator.profilePictureUrl ?? '') : '',
       };
     }
 

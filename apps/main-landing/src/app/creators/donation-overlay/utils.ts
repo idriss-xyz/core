@@ -1,6 +1,5 @@
 import { type Hex } from 'viem';
 import { CREATOR_CHAIN, CREATOR_API_URL } from '@idriss-xyz/constants';
-import { clientEthereum } from '@idriss-xyz/blockchain-clients';
 
 const SELL_TOKEN_BY_NETWORK: Record<number, string> = {
   [CREATOR_CHAIN.BASE.id]: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',
@@ -74,30 +73,6 @@ export async function calculateDollar(
     return '0';
   }
 }
-
-export const resolveEnsName = async (address: Hex): Promise<string | null> => {
-  try {
-    let resolved = await clientEthereum.getEnsName({ address });
-    if (resolved) return resolved;
-
-    const response = await fetch(
-      `https://api.idriss.xyz/v1/ENS-Addresses?identifier=${address}`,
-    );
-    if (!response.ok) {
-      console.error(
-        `Idriss API error: ${response.status} ${response.statusText}`,
-      );
-      return null;
-    }
-
-    const data = await response.json();
-    resolved = data.ens || null;
-    return resolved;
-  } catch (error) {
-    console.error('Error resolving ENS name from address:', error);
-    return null;
-  }
-};
 
 export const getTextToSpeech = async (text: string, voiceId?: string) => {
   try {

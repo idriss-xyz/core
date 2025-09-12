@@ -1,11 +1,10 @@
 'use client';
-import { Button } from '@idriss-xyz/ui/button';
 import {
-  CREATORS_LINK,
   EMPTY_HEX,
   CREATOR_API_URL,
   DonationData,
   LeaderboardStats,
+  CREATORS_LINK,
 } from '@idriss-xyz/constants';
 import '@rainbow-me/rainbowkit/styles.css';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -247,28 +246,29 @@ export function DonateContent({ creatorProfile }: Properties) {
   return (
     <>
       <TopBar />
+      {/* Temproarily use a div instead of ScrollArea (not dispatching event) */}
+      <div
+        onScroll={(event) => {
+          const scrollTop = (event.target as HTMLDivElement).scrollTop;
+          window.dispatchEvent(
+            new CustomEvent('creatorsLandingPageScroll', {
+              detail: { scrollTop },
+            }),
+          );
+        }}
+        className="h-screen overflow-y-auto"
+      >
+        <main className="relative flex min-h-screen grow flex-col items-center justify-around gap-4 overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] px-2 pb-1 pt-[56px] lg:flex-row lg:items-start lg:justify-center lg:px-0">
+          <link rel="preload" as="image" href={backgroundLines2.src} />
+          <img
+            alt=""
+            src={backgroundLines2.src}
+            className="pointer-events-none absolute top-0 hidden size-full opacity-40 lg:block"
+          />
 
-      <main className="relative flex min-h-screen grow flex-col items-center justify-around gap-4 overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] px-2 pb-1 pt-[56px] lg:flex-row lg:items-start lg:justify-center lg:px-0">
-        <link rel="preload" as="image" href={backgroundLines2.src} />
-        <img
-          alt=""
-          src={backgroundLines2.src}
-          className="pointer-events-none absolute top-0 hidden size-full opacity-40 lg:block"
-        />
-
-        {!isLegacyLink && currentContentComponent}
-
-        <Button
-          asLink
-          isExternal
-          size="small"
-          intent="secondary"
-          href={CREATORS_LINK}
-          className="px-5 py-3.5 lg:absolute lg:bottom-6 lg:right-7 lg:translate-x-0"
-        >
-          CREATE YOUR LINK
-        </Button>
-      </main>
+          {!isLegacyLink && currentContentComponent}
+        </main>
+      </div>
       {isLegacyLink && (
         <FullscreenOverlay className="bg-[#E7F5E6]/[0.6] backdrop-blur-sm">
           <p className="text-balance text-center text-heading5 text-neutralGreen-700">

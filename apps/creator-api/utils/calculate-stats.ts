@@ -9,7 +9,7 @@ import {
   DonationWithTimeAndAmount,
   TokenEarnings,
 } from '../types';
-import { Hex } from 'viem';
+import { getAddress, Hex } from 'viem';
 import {
   DonationData,
   DonationToken,
@@ -20,11 +20,41 @@ import {
   getFilteredDonationsByPeriod,
 } from '@idriss-xyz/utils';
 import { AppDataSource } from '../db/database';
-import { Creator } from '../db/entities';
+import { Creator, CreatorAddress } from '../db/entities';
 
-export function calculateStatsForDonorAddress(
+async function getCreatorNameOrAnon(address: string): Promise<string> {
+  address = getAddress(address);
+  const creatorRepository = AppDataSource.getRepository(Creator);
+
+  // First, try to find creator by primary address
+  const creatorByPrimaryAddress = await creatorRepository.findOne({
+    where: { primaryAddress: address as Hex },
+  });
+
+  if (creatorByPrimaryAddress) {
+    return creatorByPrimaryAddress.name;
+  }
+
+  // If not found, search in associated addresses
+  const creatorByAssociatedAddress = await creatorRepository.findOne({
+    where: {
+      associatedAddresses: {
+        address: address as Hex,
+      },
+    },
+    relations: ['associatedAddresses'],
+  });
+
+  if (creatorByAssociatedAddress) {
+    return creatorByAssociatedAddress.name;
+  }
+
+  return 'anon';
+}
+
+export async function calculateStatsForDonorAddress(
   donations: DonationData[],
-): DonationStats {
+): Promise<DonationStats> {
   let totalDonationsCount = 0;
   let totalDonationAmount = 0;
   const donationAmounts: Record<string, number> = {};
@@ -43,7 +73,7 @@ export function calculateStatsForDonorAddress(
   let donorDisplayName: string | null = null;
   let positionInLeaderboard = null;
 
-  donations.forEach((donation) => {
+  for (const donation of donations) {
     const toAddress = donation.toAddress;
     const tradeValue = donation.tradeValue;
 
@@ -75,10 +105,10 @@ export function calculateStatsForDonorAddress(
     }
 
     if (!donorDisplayName) {
-      donorDisplayName = donation.fromUser.displayName ?? null;
+      donorDisplayName = await getCreatorNameOrAnon(donation.fromAddress);
     }
     totalDonationsCount += 1;
-  });
+  }
 
   return {
     totalDonationsCount,
@@ -130,16 +160,19 @@ export async function calculateGlobalDonorLeaderboard(
 
       const totalAmount = filtered.reduce((sum, d) => sum + d.tradeValue, 0);
 
+      const address = (
+        creator ? creator.primaryAddress : donations[0].fromAddress
+      ) as Hex;
+
+      const displayName = creator ? creator.displayName : 'anon';
+
+      const avatarUrl =
+        creator && creator.profilePictureUrl ? creator.profilePictureUrl : '';
+
       return {
-        address: (creator
-          ? creator.primaryAddress
-          : donations[0].fromAddress) as Hex,
-        displayName: creator
-          ? creator.displayName
-          : donations[0].fromUser.displayName!,
-        avatarUrl: creator
-          ? creator.profilePictureUrl!
-          : donations[0].fromUser.avatarUrl!,
+        address,
+        displayName,
+        avatarUrl,
         totalAmount,
         donationCount: filtered.length,
         donorSince: firstDonationTimestamp,
@@ -212,6 +245,54 @@ export async function calculateGlobalStreamerLeaderboard(
   }));
 }
 
+/**
+ * Resolve a user identifier (hex address OR displayName) to creator and all
+ * its addresses (primary + associated).  If identifier is a plain address that
+ * is not linked to any creator we just return that address.
+ */
+export async function resolveCreatorAndAddresses(
+  identifier: string,
+): Promise<{ creator: Creator | null; addresses: Hex[] }> {
+  const creatorRepository = AppDataSource.getRepository(Creator);
+  const creatorAddressRepository = AppDataSource.getRepository(CreatorAddress);
+
+  const isAddress = identifier.toLowerCase().startsWith('0x');
+  let creator: Creator | null = null;
+
+  if (isAddress) {
+    const hex = identifier as Hex;
+
+    // primary address
+    creator = await creatorRepository.findOne({
+      where: { address: hex },
+      relations: ['associatedAddresses'],
+    });
+
+    // secondary address
+    if (!creator) {
+      const secondary = await creatorAddressRepository.findOne({
+        where: { address: hex },
+        relations: ['creator', 'creator.associatedAddresses'],
+      });
+      creator = secondary?.creator ?? null;
+    }
+  } else {
+    // resolve by displayName (case-sensitive/insensitive depending on DB collation)
+    creator = await creatorRepository.findOne({
+      where: { displayName: identifier },
+      relations: ['associatedAddresses'],
+    });
+  }
+
+  const addresses: Hex[] = creator
+    ? [creator.address, ...creator.associatedAddresses.map((a) => a.address)]
+    : isAddress
+      ? [identifier as Hex]
+      : [];
+
+  return { creator, addresses };
+}
+
 export function calculateStatsForRecipientAddress(
   donations: DonationData[],
 ): RecipientDonationStats {
@@ -260,4 +341,55 @@ export function calculateStatsForRecipientAddress(
     donationsWithTimeAndAmount,
     earningsByTokenOverview,
   };
+}
+
+/**
+ * For each donation:
+ *   – if address belongs to a creator (primary or associated)
+ *       • displayName = creator.displayName
+ *       • displayNameSource = undefined
+ *       • avatarUrl  = creator.profilePictureUrl (if present)
+ *       • avatarSource = 'Creator'
+ *   – otherwise
+ *       • displayName = 'anon'
+ *       • displayNameSource = undefined
+ *       • avatarUrl  = ''
+ *       • avatarSource = undefined
+ * Address itself is NOT modified.
+ */
+export function enrichDonationsWithCreatorInfo(
+  donations: DonationData[],
+  addressToCreatorMap: Map<string, Creator>,
+) {
+  const normalise = (addr: string) => addr.toLowerCase();
+
+  const patch = (
+    address: string,
+    user: {
+      displayName?: string;
+      displayNameSource?: string | undefined;
+      avatarUrl?: string | undefined;
+      avatarSource?: string | undefined;
+    },
+  ) => {
+    const creator = addressToCreatorMap.get(normalise(address));
+    if (creator) {
+      user.displayName = creator.displayName;
+      user.displayNameSource = undefined;
+      if (creator.profilePictureUrl) {
+        user.avatarUrl = creator.profilePictureUrl;
+        user.avatarSource = 'Creator';
+      }
+    } else {
+      user.displayName = 'anon';
+      user.displayNameSource = undefined;
+      user.avatarUrl = '';
+      user.avatarSource = undefined;
+    }
+  };
+
+  for (const d of donations) {
+    patch(d.fromAddress, d.fromUser);
+    patch(d.toAddress, d.toUser);
+  }
 }

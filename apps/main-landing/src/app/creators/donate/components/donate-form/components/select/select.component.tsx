@@ -38,9 +38,7 @@ export const Select = <T,>({
       {renderLabel ? (
         renderLabel()
       ) : label ? (
-        <p className="mb-2 text-label5 text-neutral-700 lg:text-label4">
-          {label}
-        </p>
+        <p className="mb-2 text-label4 text-neutralGreen-700">{label}</p>
       ) : null}
 
       <DropdownMenu.Root modal={false}>
