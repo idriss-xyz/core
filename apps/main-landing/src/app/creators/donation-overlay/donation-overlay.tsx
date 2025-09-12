@@ -3,22 +3,17 @@
 import { io, Socket } from 'socket.io-client';
 import { useCallback, useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  type AbiEvent,
-  decodeFunctionData,
-  type Hex,
-  isAddress,
-  parseAbiItem,
-} from 'viem';
+import { type AbiEvent, type Hex, isAddress, parseAbiItem } from 'viem';
 import {
   CHAIN_ID_TO_TOKENS,
   CREATOR_API_URL,
   CREATORS_LINK,
+  DEFAULT_ALLOWED_CHAINS_IDS,
   DEFAULT_DONATION_MIN_ALERT_AMOUNT,
   DEFAULT_DONATION_MIN_SFX_AMOUNT,
   DEFAULT_DONATION_MIN_TTS_AMOUNT,
   NATIVE_COIN_ADDRESS,
-  TIPPING_ABI,
+  NULL_ADDRESS,
 } from '@idriss-xyz/constants';
 import { clients } from '@idriss-xyz/blockchain-clients';
 import { FullscreenOverlay } from '@idriss-xyz/ui/fullscreen-overlay';
@@ -62,6 +57,7 @@ export default function DonationOverlay({ creatorName }: Properties) {
     searchParams: { address: addressParameter },
   } = useCreators();
 
+  const router = useRouter();
   const [name, setName] = useState<string | undefined>(creatorName);
   const [address, setAddress] = useState<Address | null>(null);
   const [minimumAmounts, setMinimumAmounts] = useState<MinimumAmounts>({
@@ -77,8 +73,6 @@ export default function DonationOverlay({ creatorName }: Properties) {
   const [customBadWords, setCustomBadWords] = useState<string[]>([]);
   const [alertSound, setAlertSound] = useState<string>();
   const [voiceId, setVoiceId] = useState<string>();
-
-  const router = useRouter();
   const [isDisplayingDonation, setIsDisplayingDonation] = useState(false);
   const [donationsQueue, setDonationsQueue] = useState<QueuedDonation[]>([]);
 
@@ -102,12 +96,10 @@ export default function DonationOverlay({ creatorName }: Properties) {
   }, []);
 
   useEffect(() => {
+    if (isLegacyLink) return;
     if (!name) return;
 
-    if (isLegacyLink) return;
-
     const overlayToken = window.location.pathname.split('/').pop()!;
-    console.log(overlayToken);
 
     const socket: Socket = io(`${CREATOR_API_URL}/overlay`, {
       auth: { overlayToken },
@@ -279,10 +271,10 @@ export default function DonationOverlay({ creatorName }: Properties) {
 
     if (!address?.data) return;
 
-    for (const { chain, client, name: chainName } of clients) {
+    for (const { chain, client } of clients) {
       try {
-        const eventSignature = TIP_MESSAGE_EVENT_ABI[chainName];
-        if (!eventSignature) {
+        const eventSignature = TIP_MESSAGE_EVENT_ABI;
+        if (!DEFAULT_ALLOWED_CHAINS_IDS.includes(chain)) {
           continue;
         }
 
@@ -312,29 +304,30 @@ export default function DonationOverlay({ creatorName }: Properties) {
             continue;
           }
 
-          const txn = await client.getTransaction({
-            hash: log.transactionHash!,
-          });
+          // destructure event arguments
+          const {
+            recipientAddress,
+            message,
+            sender,
+            tokenAddress,
+            amount,
+            assetType,
+          } = log.args as {
+            recipientAddress: Hex;
+            message: string;
+            sender: Hex;
+            tokenAddress: Hex;
+            amount: bigint;
+            fee: bigint;
+            assetType: bigint;
+          };
 
-          const decoded = decodeFunctionData({
-            abi: TIPPING_ABI,
-            data: txn.input,
-          });
 
-          let recipient, tokenAmount, tokenAddress, message;
+          // skip ERC-721 & ERC-1155 for now (assetType 2 & 3)
+          if (assetType > 1n) continue;
 
-          if (decoded.functionName === 'sendTo') {
-            [recipient, tokenAmount, message] = decoded.args;
-            tokenAddress = NATIVE_COIN_ADDRESS;
-          } else if (decoded.functionName === 'sendTokenTo') {
-            [recipient, tokenAmount, tokenAddress, message] = decoded.args;
-          }
-
-          if (!recipient || !tokenAmount || !tokenAddress) {
+          if (recipientAddress.toLowerCase() !== address?.data.toLowerCase())
             continue;
-          }
-
-          if (recipient.toLowerCase() !== address?.data.toLowerCase()) continue;
 
           if (message && containsBadWords(message, customBadWords)) {
             console.log('Filtered donation with inappropriate message');
@@ -342,18 +335,21 @@ export default function DonationOverlay({ creatorName }: Properties) {
           }
 
           const { profilePicUrl, name: resolvedName } =
-            await getCreatorNameAndPicOrAnon(txn.from);
+            await getCreatorNameAndPicOrAnon(sender);
+
+          const effectiveTokenAddress =
+            tokenAddress === NULL_ADDRESS ? NATIVE_COIN_ADDRESS : tokenAddress;
 
           const amountInDollar = await calculateDollar(
-            tokenAddress as Hex,
-            tokenAmount,
+            effectiveTokenAddress,
+            amount,
             chain,
           );
 
           const tokenDetails = CHAIN_ID_TO_TOKENS[chain]?.find((token) => {
             return (
               token.address?.toLowerCase() ===
-              (tokenAddress as Hex).toLowerCase()
+              effectiveTokenAddress.toLowerCase()
             );
           });
 
@@ -381,7 +377,7 @@ export default function DonationOverlay({ creatorName }: Properties) {
             donor: resolvedName,
             txnHash: log.transactionHash!,
             token: {
-              amount: tokenAmount,
+              amount: amount,
               details: tokenDetails,
             },
             minimumAmounts,
