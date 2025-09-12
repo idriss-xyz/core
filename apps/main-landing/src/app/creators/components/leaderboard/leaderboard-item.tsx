@@ -1,9 +1,6 @@
 import { Icon } from '@idriss-xyz/ui/icon';
 import { Link } from '@idriss-xyz/ui/link';
-import {
-  getModifiedLeaderboardName,
-  getTimeDifferenceString,
-} from '@idriss-xyz/utils';
+import { getTimeDifferenceString } from '@idriss-xyz/utils';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Hex } from 'viem';
 import { DonationUser } from '@idriss-xyz/constants';
@@ -113,11 +110,10 @@ export const LeaderboardItem = ({
           className={classes(
             'overflow-hidden text-ellipsis border-0 text-body5 text-neutral-900 no-underline lg:text-body5',
             onDonorClick && 'cursor-pointer',
+            displayName === 'anon' && 'pointer-events-none cursor-auto',
           )}
         >
-          {displayName
-            ? getModifiedLeaderboardName(displayName)
-            : getModifiedLeaderboardName(donorDetails.address)}
+          {displayName}
         </Link>
       </td>
 

@@ -118,6 +118,7 @@ export const LeaderboardItem = ({
           className={classes(
             'overflow-hidden text-ellipsis border-0 text-body5 text-neutral-900 no-underline lg:text-body5',
             onDonorClick && 'cursor-pointer',
+            displayName === 'anon' && 'pointer-events-none cursor-auto',
           )}
         >
           {displayName}
