@@ -20,6 +20,13 @@ export type Address = {
   isFetching: boolean;
 };
 
+export type Collectible = {
+  id: string;
+  name: string;
+  image: string;
+  collection: string;
+};
+
 export type CreatorProfile = {
   name: string | null;
   address: Address;

@@ -1,5 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
+import { Tabs } from '@idriss-xyz/ui/tabs';
+import { Modal } from '@idriss-xyz/ui/modal';
+import { Input } from '@idriss-xyz/ui/input';
 import { Form } from '@idriss-xyz/ui/form';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { Badge } from '@idriss-xyz/ui/badge';
@@ -53,7 +56,7 @@ import { getSendFormDefaultValues } from '../../utils';
 import { useSender } from '../../hooks';
 import { CreatorProfile } from '../../types';
 
-import { ChainSelect, TokenSelect } from './components';
+import { ChainSelect, CollectibleGallery, TokenSelect } from './components';
 
 type Properties = {
   className?: string;
@@ -73,6 +76,8 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       useState<string>('ETH');
     const [imageError, setImageError] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
+    const [isCollectibleModalOpen, setIsCollectibleModalOpen] = useState(false);
+    const [collectibleSearch, setCollectibleSearch] = useState('');
 
     const minimumSfxAmount =
       creatorInfo.minimumSfxAmount ?? DEFAULT_DONATION_MIN_SFX_AMOUNT;
@@ -513,37 +518,78 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
             }}
           />
 
-          <Controller
-            name="tokenSymbol"
-            control={formMethods.control}
-            render={({ field }) => {
-              return (
-                <TokenSelect
-                  label="Token"
-                  value={field.value}
-                  className="mt-4 w-full"
-                  tokens={possibleTokens}
-                  onChange={field.onChange}
-                />
-              );
-            }}
-          />
-
-          <Controller
-            name="chainId"
-            control={formMethods.control}
-            render={({ field }) => {
-              return (
-                <ChainSelect
-                  label="Network"
-                  value={field.value}
-                  className="mt-4 w-full"
-                  onChange={field.onChange}
-                  allowedChainsIds={allowedChainsIds}
-                />
-              );
-            }}
-          />
+          <div>
+            <Tabs
+              items={[
+                {
+                  key: 'token',
+                  label: 'Token',
+                  children: (
+                    <div>
+                      <Controller
+                        name="tokenSymbol"
+                        control={formMethods.control}
+                        render={({ field }) => {
+                          return (
+                            <TokenSelect
+                              label="Token"
+                              value={field.value}
+                              className="mt-4 w-full"
+                              tokens={possibleTokens}
+                              onChange={field.onChange}
+                            />
+                          );
+                        }}
+                      />
+                      <Controller
+                        name="chainId"
+                        control={formMethods.control}
+                        render={({ field }) => {
+                          return (
+                            <ChainSelect
+                              label="Network"
+                              value={field.value}
+                              className="mt-4 w-full"
+                              onChange={field.onChange}
+                              allowedChainsIds={allowedChainsIds}
+                            />
+                          );
+                        }}
+                      />
+                    </div>
+                  ),
+                },
+                {
+                  key: 'collectible',
+                  label: 'Collectible',
+                  children: (
+                    <Controller
+                      name="collectible"
+                      control={formMethods.control}
+                      render={({ field }) => {
+                        return (
+                          <div className="mt-4">
+                            <Button
+                              intent="secondary"
+                              size="medium"
+                              className="w-full"
+                              onClick={() => {
+                                return setIsCollectibleModalOpen(true);
+                              }}
+                            >
+                              {field.value
+                                ? `Selected: ${field.value}`
+                                : 'Select Collectible'}
+                            </Button>
+                          </div>
+                        );
+                      }}
+                    />
+                  ),
+                },
+              ]}
+            />
+          </div>
 
           {creatorInfo.alertEnabled && (
             <Controller
@@ -680,6 +726,42 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
             </ExternalLink>
           </span>
         </div>
+
+        <Modal
+          isOpened={isCollectibleModalOpen}
+          onClose={() => {
+            return setIsCollectibleModalOpen(false);
+          }}
+          header={
+            <p className="truncate text-heading5 text-neutralGreen-900">
+              Search collectible
+            </p>
+          }
+          headerContainerClassName="pl-6 pt-5.5 pb-2.5"
+          className="w-[436px]"
+        >
+          <div className="p-6">
+            <Input
+              placeholder="Search collectibles"
+              className="mb-4"
+              prefixIconName="Search"
+              prefixIconSize={16}
+              value={collectibleSearch}
+              onChange={(event) => {
+                setCollectibleSearch(event.target.value);
+              }}
+            />
+
+            <CollectibleGallery
+              collections={['0xa7b67cd6b31b73772ae3c8ea784317207194a6f4']} // Replace with creatorInfo.collections
+              searchQuery={collectibleSearch}
+              onSelect={(collectible) => {
+                formMethods.setValue('collectible', collectible.id);
+                setIsCollectibleModalOpen(false);
+              }}
+            />
+          </div>
+        </Modal>
       </div>
     );
   },

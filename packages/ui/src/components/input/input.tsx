@@ -34,6 +34,7 @@ type Properties =
       asTextArea?: false;
       readOnly?: boolean;
       prefixIconName?: IconName;
+      prefixIconSize?: number;
       prefixElement?: ReactElement;
       suffixElement?: ReactElement;
     });
@@ -93,7 +94,10 @@ export const Input = forwardRef(
               ref={prefixReference}
               className="absolute left-0 top-0 flex h-full items-center py-[2px] pl-3"
             >
-              <Icon name={properties.prefixIconName} size={24} />
+              <Icon
+                name={properties.prefixIconName}
+                size={properties.prefixIconSize ?? 24}
+              />
               <div className="ml-3 h-full border-r border-gray-200" />
             </div>
           )}
@@ -112,7 +116,7 @@ export const Input = forwardRef(
             style={{
               paddingLeft:
                 (properties.prefixIconName ?? properties.prefixElement) &&
-                `${prefixReference.current?.offsetWidth ?? 0}px`,
+                `${(prefixReference.current?.offsetWidth ?? 48) + 6}px`,
               paddingRight:
                 properties.suffixElement &&
                 `${(suffixReference.current?.offsetWidth ?? 0) + 12}px`,
