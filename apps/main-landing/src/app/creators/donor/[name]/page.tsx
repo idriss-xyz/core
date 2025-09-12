@@ -2,7 +2,7 @@
 'use client';
 
 import { useCallback, useMemo, useState } from 'react';
-import { EMPTY_HEX } from '@idriss-xyz/constants';
+import { useParams } from 'next/navigation';
 
 import { RainbowKitProviders } from '@/app/creators/donate/providers';
 import { backgroundLines2 } from '@/assets';
@@ -11,7 +11,6 @@ import { useGetDonorHistory } from '@/app/creators/donor/commands/get-donor-hist
 import { DonateHistory } from '@/app/creators/donate/components/donate-history';
 
 import DonorStatsList from '../components/donor-stats-list';
-import { useCreators } from '../../hooks/use-creators';
 import { TopBar } from '../../components/top-bar';
 
 // ts-unused-exports:disable-next-line
@@ -24,14 +23,16 @@ export default function Donor() {
 }
 
 function DonorContent() {
-  const { urlParams } = useCreators();
+  const parameters = useParams();
+  const donorName = typeof parameters.name === 'string' ? parameters.name : '';
+
   const [currentContent, setCurrentContent] = useState<DonateContentValues>({
     name: 'donor-stats',
   });
 
   const donorHistory = useGetDonorHistory(
-    { address: urlParams.address.data ?? EMPTY_HEX },
-    { enabled: urlParams.address.isValid },
+    { name: donorName },
+    { enabled: !!donorName },
   );
 
   const donorStats = donorHistory.data?.stats;
@@ -49,7 +50,6 @@ function DonorContent() {
         return (
           <DonorStatsList
             stats={donorStats}
-            address={urlParams.address}
             statsError={donorHistory.isError}
             statsLoading={donorHistory.isLoading}
             updateCurrentContent={updateCurrentContent}
@@ -61,7 +61,6 @@ function DonorContent() {
         return (
           <DonateHistory
             showReceiver
-            address={urlParams.address}
             currentContent={currentContent}
             donations={donorDonations ?? []}
             donationsError={donorHistory.isError}
@@ -79,7 +78,6 @@ function DonorContent() {
     donorStats,
     donorDonations,
     currentContent,
-    urlParams.address,
     donorHistory.isError,
     updateCurrentContent,
     donorHistory.isLoading,

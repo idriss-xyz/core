@@ -16,7 +16,7 @@ export function DonatePageAvatarMenu() {
   const router = useRouter();
 
   const handleNavigateToDonorStats = useCallback(() => {
-    router.push(`/creators/donor/${donor?.address}`);
+    router.push(`/creators/donor/${donor?.name}`);
   }, [router, donor]);
 
   return (

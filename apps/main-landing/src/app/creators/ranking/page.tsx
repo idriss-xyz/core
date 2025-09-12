@@ -2,8 +2,8 @@
 /* eslint-disable @next/next/no-img-element */
 import '@rainbow-me/rainbowkit/styles.css';
 
-import { Hex } from 'viem';
 import { useRouter } from 'next/navigation';
+import { useCallback } from 'react';
 
 import { backgroundLines2 } from '@/assets';
 import { LeaderboardStandalone } from '@/app/creators/donate/components/leaderboard';
@@ -26,20 +26,12 @@ function RankingContent() {
   const router = useRouter();
   const creatorRanking = useGetCreatorRanking();
 
-  const onDonorClick = (address: Hex) => {
-    const donateLink = creatorRanking.data?.find((stats) => {
-      return stats.address.toLowerCase() === address.toLowerCase();
-    })?.donateLink;
-
-    if (donateLink) {
-      const url = new URL(donateLink);
-      const parameters = new URLSearchParams(url.search);
-
-      router.push(`/creators/donate?${parameters.toString()}`);
-    } else {
-      router.push(`/creators/donate?address=${address}`);
-    }
-  };
+  const onDonorClick = useCallback(
+    (displayName: string) => {
+      router.push(`/creators/${displayName}`);
+    },
+    [router],
+  );
 
   return (
     <>

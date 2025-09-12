@@ -9,7 +9,6 @@ import {
 import '@rainbow-me/rainbowkit/styles.css';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { default as io } from 'socket.io-client';
-import { Hex } from 'viem';
 import { useRouter } from 'next/navigation';
 import _ from 'lodash';
 import { ExternalLink } from '@idriss-xyz/ui/external-link';
@@ -174,8 +173,8 @@ export function DonateContent({ creatorProfile }: Properties) {
   }, []);
 
   const onDonorClick = useCallback(
-    (address: Hex) => {
-      router.push(`/creators/donor/${address}`);
+    (displayName: string) => {
+      router.push(`/creators/donor/${displayName}`);
     },
     [router],
   );
@@ -217,7 +216,6 @@ export function DonateContent({ creatorProfile }: Properties) {
           creatorInfo && (
             <DonateHistory
               donations={donations}
-              address={creatorInfo?.address}
               currentContent={currentContent}
               donationsError={donationsHistory.isError}
               updateCurrentContent={updateCurrentContent}

@@ -1,4 +1,3 @@
-import { getModifiedLeaderboardName } from '@idriss-xyz/utils';
 import { Link } from '@idriss-xyz/ui/link';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { LeaderboardStats } from '@idriss-xyz/constants';
@@ -70,9 +69,7 @@ export const LeaderboardItemDonor = ({ item, index }: Properties) => {
         size="xs"
         className="overflow-hidden text-ellipsis border-0 text-body5 text-neutral-900 no-underline lg:text-body5"
       >
-        {item.displayName
-          ? getModifiedLeaderboardName(item.displayName)
-          : getModifiedLeaderboardName(item.address)}
+        {item.displayName}
       </Link>
     </>
   );

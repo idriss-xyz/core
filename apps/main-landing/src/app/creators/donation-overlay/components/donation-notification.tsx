@@ -3,11 +3,7 @@
 import { useMemo } from 'react';
 import { CREATOR_API_URL } from '@idriss-xyz/constants';
 import { Badge } from '@idriss-xyz/ui/badge';
-import {
-  formatFiatValue,
-  formatTokenValue,
-  getModifiedLeaderboardName,
-} from '@idriss-xyz/utils';
+import { formatFiatValue, formatTokenValue } from '@idriss-xyz/utils';
 import { formatUnits } from 'viem';
 import { classes } from '@idriss-xyz/ui/utils';
 
@@ -86,7 +82,7 @@ export default function DonationNotification({
 
       <div className="flex flex-col justify-center gap-y-1">
         <p className="flex flex-row flex-wrap items-center gap-x-1 text-label3 text-neutral-900">
-          {`${getModifiedLeaderboardName(donor)} `}
+          {donor}
 
           {!token.details && (
             <span className="text-body3 text-neutral-600">

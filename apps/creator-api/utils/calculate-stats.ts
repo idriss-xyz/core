@@ -52,8 +52,9 @@ async function getCreatorNameOrAnon(address: string): Promise<string> {
   return 'anon';
 }
 
-export async function calculateStatsForDonorAddress(
+export async function calculateStatsForDonor(
   donations: DonationData[],
+  displayName?: string,
 ): Promise<DonationStats> {
   let totalDonationsCount = 0;
   let totalDonationAmount = 0;
@@ -70,7 +71,7 @@ export async function calculateStatsForDonorAddress(
   };
   let favoriteDonationToken = '';
   let favoriteTokenMetadata: DonationToken | null = null;
-  let donorDisplayName: string | null = null;
+  let donorDisplayName: string | null = displayName ?? null;
   let positionInLeaderboard = null;
 
   for (const donation of donations) {
