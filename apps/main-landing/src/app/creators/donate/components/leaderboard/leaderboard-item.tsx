@@ -23,7 +23,6 @@ type Properties = {
   isTwitchExtension?: boolean;
   onDonorClick?: (displayName: string) => void;
   isDemo?: boolean;
-  onDonorClick?: (address: Hex) => void;
 };
 
 export const LeaderboardItem = ({
