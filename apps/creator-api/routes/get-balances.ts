@@ -30,19 +30,39 @@ router.get('/:address', async (req: Request, res: Response) => {
   }
 
   try {
-    const [tokenResult, nftResult] = await Promise.all([
-      calculateBalances(address),
-      calculateNftBalances(address),
-    ]);
-
-    res.json({
-      balances: tokenResult.balances,
-      summary: tokenResult.summary,
-      nfts: nftResult.balances,
-    });
+    const tokenResult = await calculateBalances(address);
+    res.json({ tokenResult });
   } catch (error) {
     console.error('Get balances error:', error);
     res.status(500).json({ error: 'Failed to fetch balances' });
+  }
+});
+
+router.get('/nft/:address', async (req: Request, res: Response) => {
+  const { address } = req.params;
+
+  if (address && address === DEMO_ADDRESS) {
+    const mockBalances = JSON.parse(
+      readFileSync(
+        resolve(__dirname, '../tests/test-data/mock-balances.json'),
+        'utf-8',
+      ),
+    );
+    res.json({ nftResult: { balances: mockBalances.nfts } });
+    return;
+  }
+
+  if (!address || !isAddress(address)) {
+    res.status(400).json({ error: 'A valid wallet address is required' });
+    return;
+  }
+
+  try {
+    const nftResult = await calculateNftBalances(address);
+    res.json({ nftResult });
+  } catch (error) {
+    console.error('Get NFT balances error:', error);
+    res.status(500).json({ error: 'Failed to fetch NFT balances' });
   }
 });
 
