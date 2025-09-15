@@ -1,3 +1,4 @@
+import { IDRISS_LEGACY_API_URL } from '@idriss-xyz/constants';
 import { useMutation } from '@tanstack/react-query';
 
 type Payload = {
@@ -19,7 +20,7 @@ export const useGetTokenPerDollar = () => {
       }
 
       const response = await fetch(
-        `https://api.idriss.xyz/token-price?${new URLSearchParams({
+        `${IDRISS_LEGACY_API_URL}/token-price?${new URLSearchParams({
           buyToken: payload.buyToken,
           sellToken: payload.sellToken,
           network: payload.chainId.toString(),
