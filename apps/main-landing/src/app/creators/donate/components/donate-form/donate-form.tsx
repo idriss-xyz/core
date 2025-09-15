@@ -42,6 +42,7 @@ import {
 import { ExternalLink } from '@idriss-xyz/ui/external-link';
 import { getAddress } from 'viem';
 import { usePrivy, getAccessToken } from '@privy-io/react-auth';
+import { IconButton } from '@idriss-xyz/ui/icon-button';
 
 import { backgroundLines3 } from '@/assets';
 import { useAuth } from '@/app/creators/context/auth-context';
@@ -58,7 +59,6 @@ import { useMobileFilter } from '../../hooks/use-mobile-filter';
 import { CreatorProfile } from '../../types';
 
 import { ChainSelect, CollectibleGallery, TokenSelect } from './components';
-import { IconButton } from '@idriss-xyz/ui/icon-button';
 
 type Properties = {
   className?: string;
@@ -772,13 +772,15 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
           className="h-[550px] w-[400px] sm:w-[500px] md:w-[780px]"
         >
           <div className="p-6">
-            <div className="flex w-full mb-4 gap-2">
+            <div className="mb-4 flex w-full gap-2">
               {/* Mobile Filter Button - only visible below md */}
               <IconButton
                 intent="tertiary"
                 size="small"
                 iconName="Filter"
-                onClick={() => setShowMobileFilter(true)}
+                onClick={() => {
+                  return setShowMobileFilter(true);
+                }}
                 className="shrink-0 md:hidden"
               />
               <Input
@@ -790,7 +792,6 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                   setCollectibleSearch(event.target.value);
                 }}
               />
-
             </div>
 
             <CollectibleGallery

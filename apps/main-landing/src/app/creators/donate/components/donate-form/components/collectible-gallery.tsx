@@ -63,10 +63,9 @@ export const CollectibleGallery = ({
 
   return (
     <div>
-
       <div className="flex gap-6">
         {/* Desktop Collection Filter - hidden below md */}
-        <div className="hidden md:block w-48 shrink-0">
+        <div className="hidden w-48 shrink-0 md:block">
           <h3 className="mb-3 text-sm font-medium text-neutral-900">
             Collections
           </h3>
@@ -99,7 +98,7 @@ export const CollectibleGallery = ({
               No collectibles found
             </div>
           ) : (
-            <div className="grid max-h-96 grid-cols-2 md:grid-cols-3 gap-4 overflow-y-auto">
+            <div className="grid max-h-96 grid-cols-2 gap-4 overflow-y-auto md:grid-cols-3">
               {filteredCollectibles.map((collectible) => {
                 return (
                   <div
@@ -130,13 +129,15 @@ export const CollectibleGallery = ({
 
       {/* Mobile Filter Card - floating from bottom */}
       {showMobileFilter && (
-        <div className="fixed inset-0 z-50 md:hidden mt-0">
+        <div className="fixed inset-0 z-50 mt-0 md:hidden">
           <div
-            className="absolute inset-0 bg-black/50 rounded-xl"
-            onClick={() => setShowMobileFilter(false)}
+            className="absolute inset-0 rounded-xl bg-black/50"
+            onClick={() => {
+              return setShowMobileFilter(false);
+            }}
           />
-          <Card className="absolute bottom-0 left-0 right-0 rounded-t-lg rounded-b-xl p-4">
-            <div className="flex items-center justify-between mb-4">
+          <Card className="absolute inset-x-0 bottom-0 rounded-b-xl rounded-t-lg p-4">
+            <div className="mb-4 flex items-center justify-between">
               <h3 className="text-sm font-medium text-neutral-900">
                 Collections
               </h3>
@@ -144,7 +145,9 @@ export const CollectibleGallery = ({
                 iconName="X"
                 intent="tertiary"
                 size="small"
-                onClick={() => setShowMobileFilter(false)}
+                onClick={() => {
+                  return setShowMobileFilter(false);
+                }}
               />
             </div>
             <div className="space-y-2">
