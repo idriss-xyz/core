@@ -7,6 +7,7 @@ export const STATIC_ORIGINS = [
   'https://www.main-landing-staging.up.railway.app',
   'http://localhost:3000',
 ];
+export const IDRISS_LEGACY_API_URL = 'https://api.idriss.xyz';
 
 export const SOCIAL_LINK = {
   X: 'https://x.com/idriss_xyz',
