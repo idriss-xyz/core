@@ -1,11 +1,9 @@
 import { Icon } from '@idriss-xyz/ui/icon';
-import { useState, useEffect } from 'react';
 import { Link } from '@idriss-xyz/ui/link';
 import { classes } from '@idriss-xyz/ui/utils';
 import { DonationUser } from '@idriss-xyz/constants';
 
-import { WHITELISTED_URLS } from '../../constants';
-import { useGetAvatarImage } from '../../commands/get-avatar-image';
+import { LeaderboardAvatar } from '../../../components/leaderboard/leaderboard-avatar';
 
 const rankBorders = [
   'border-[#FAC928]',
@@ -24,6 +22,8 @@ type Properties = {
   hideBottomBorder?: boolean;
   isTwitchExtension?: boolean;
   onDonorClick?: (displayName: string) => void;
+  isDemo?: boolean;
+  onDonorClick?: (address: Hex) => void;
 };
 
 export const LeaderboardItem = ({
@@ -33,66 +33,17 @@ export const LeaderboardItem = ({
   donateAmount,
   onDonorClick,
   donorDetails,
-  isTwitchExtension,
+  isDemo,
 }: Properties) => {
   const displayName = donorDetails.displayName ?? 'anon';
   const avatarSourceUrl = donorDetails.avatarUrl;
 
-  const isAllowedUrl =
-    !isTwitchExtension ||
-    !!(
-      avatarSourceUrl &&
-      WHITELISTED_URLS.some((domain) => {
-        return avatarSourceUrl.startsWith(domain);
-      })
-    );
-
-  const [imageError, setImageError] = useState(false);
-  useEffect(() => {
-    // reset error flag whenever avatar url changes
-    setImageError(false);
-  }, [avatarSourceUrl]);
-
-  const avatarDataQuery = useGetAvatarImage(
-    { url: avatarSourceUrl ?? '' },
-    { enabled: !!avatarSourceUrl && !isAllowedUrl },
-  );
-
   const avatarImage = (
-    <div className="relative w-max">
-      {((avatarSourceUrl && isAllowedUrl && !imageError) ??
-        (avatarSourceUrl &&
-          !isAllowedUrl &&
-          !!avatarDataQuery.data &&
-          !imageError)) && (
-        <img
-          alt={`Rank ${donorRank + 1}`}
-          src={isAllowedUrl ? avatarSourceUrl : avatarDataQuery.data}
-          className={`size-8 rounded-full bg-neutral-200 ${donorRank <= 2 ? `border-2 ${rankBorders[donorRank]}` : 'border border-neutral-400'}`}
-          onError={() => {
-            return setImageError(true);
-          }}
-        />
-      )}
-
-      {(!avatarSourceUrl ||
-        imageError ||
-        (!isAllowedUrl && !avatarDataQuery.data)) && (
-        <div
-          className={`flex size-8 items-center justify-center rounded-full ${donorRank <= 2 ? `border-2 ${rankBorders[donorRank]}` : 'border border-neutral-300'} bg-neutral-200`}
-        >
-          <Icon size={20} name="CircleUserRound" className="text-neutral-500" />
-        </div>
-      )}
-
-      {donorRank <= 2 && (
-        <Icon
-          size={13}
-          name="CrownCircled"
-          className={`absolute bottom-0 right-0 ${rankColors[donorRank]}`}
-        />
-      )}
-    </div>
+    <LeaderboardAvatar
+      rank={donorRank}
+      avatarUrl={avatarSourceUrl}
+      allowAllUrls={isDemo}
+    />
   );
 
   return (

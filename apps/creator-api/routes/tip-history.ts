@@ -8,10 +8,9 @@ import {
   createAddressToCreatorMap,
 } from '@idriss-xyz/utils';
 import { enrichDonationsWithCreatorInfo } from '../utils/calculate-stats';
-import { DonationData } from '@idriss-xyz/constants';
+import { DEMO_ADDRESS, DonationData } from '@idriss-xyz/constants';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
-import { DEMO_ADDRESS } from '../tests/test-data/constants';
 import { AppDataSource } from '../db/database';
 import { Creator } from '../db/entities';
 import { resolveCreatorAndAddresses } from '../utils/calculate-stats';

@@ -1,3 +1,4 @@
+import { IDRISS_LEGACY_API_URL } from '@idriss-xyz/constants';
 import { Button } from '@idriss-xyz/ui/button';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { classes } from '@idriss-xyz/ui/utils';
@@ -23,8 +24,7 @@ export const CommunityNotesSectionActions = () => {
 
   const mutation = useMutation({
     mutationFn: async (data: WaitlistInput) => {
-      //TODO Add axios and replace native fetch
-      const response = await fetch('https://api.idriss.xyz/subscribe', {
+      const response = await fetch(`${IDRISS_LEGACY_API_URL}/subscribe`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),

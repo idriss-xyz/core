@@ -5,7 +5,7 @@ import { Hex } from 'viem';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
-import { LeaderboardStats } from '@idriss-xyz/constants';
+import { DEMO_ADDRESS, LeaderboardStats } from '@idriss-xyz/constants';
 
 import { default as IDRISS_SCENE_STREAM_2 } from '../../../../../assets/idriss-scene-stream-2.png';
 import { WidgetVariants } from '../../../../../../../twitch-extension/src/app/types';
@@ -54,6 +54,8 @@ export const Leaderboard = ({
   const isTwitchComponent = variant === 'videoComponent';
   const isTwitchExtension =
     isTwitchPanel || isTwitchOverlay || isTwitchComponent;
+
+  const isDemo = address.data === DEMO_ADDRESS;
 
   if (!address.isFetching && !address.isValid) {
     return (
@@ -155,6 +157,7 @@ export const Leaderboard = ({
                       }}
                       donateAmount={item.totalAmount}
                       isTwitchExtension={isTwitchExtension}
+                      isDemo={isDemo}
                       key={`${item.totalAmount}${item.address}`}
                     />
                   );
@@ -192,6 +195,7 @@ export const Leaderboard = ({
                         }}
                         donateAmount={donor.totalAmount}
                         isTwitchExtension={isTwitchExtension}
+                        isDemo={isDemo}
                         key={`donor-${donor.address}`}
                       />
                     );
@@ -229,6 +233,7 @@ export const Leaderboard = ({
                         displayName: item.displayName,
                       }}
                       donateAmount={item.totalAmount}
+                      isDemo={isDemo}
                       key={`${item.totalAmount}${item.address}`}
                     />
                   );
