@@ -40,6 +40,12 @@ export interface ChainToken extends Token {
   address: Hex;
 }
 
+export interface ChainNft {
+  address: Hex;
+  name: string;
+  standard: 'erc1155' | 'erc721';
+}
+
 export interface TipHistoryTokenV2 {
   symbol: string;
   imageUrlV2?: string;

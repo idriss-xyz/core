@@ -50,6 +50,7 @@ export {
   DEFAULT_DONATION_MIN_SFX_AMOUNT,
   IDRISS_TOKEN_ADDRESS,
   TEST_DONATION_MESSAGE,
+  CHAIN_ID_TO_NFT_COLLECTIONS,
 } from './constants';
 
 export type { TokenSymbol } from './constants';

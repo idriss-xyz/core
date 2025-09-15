@@ -1,6 +1,9 @@
 import { Router, Request, Response } from 'express';
 import { isAddress } from 'viem';
-import { calculateBalances } from '../utils/calculate-balances';
+import {
+  calculateBalances,
+  calculateNftBalances,
+} from '../utils/calculate-balances';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { DEMO_ADDRESS } from '../tests/test-data/constants';
@@ -27,9 +30,16 @@ router.get('/:address', async (req: Request, res: Response) => {
   }
 
   try {
-    const result = await calculateBalances(address);
+    const [tokenResult, nftResult] = await Promise.all([
+      calculateBalances(address),
+      calculateNftBalances(address),
+    ]);
 
-    res.json(result);
+    res.json({
+      balances: tokenResult.balances,
+      summary: tokenResult.summary,
+      nfts: nftResult.balances,
+    });
   } catch (error) {
     console.error('Get balances error:', error);
     res.status(500).json({ error: 'Failed to fetch balances' });

@@ -39,7 +39,7 @@ import {
   // AVAX_LOGO,
   // GUNZ_LOGO,
 } from './logos';
-import { Chain, Token, ChainToken } from './types';
+import { Chain, Token, ChainToken, ChainNft } from './types';
 
 export const STAKER_ADDRESS = '0x085e2DC1b05dcdbE011B5ad377C9f2fcD69B7057';
 export const REWARDS_ADDRESS = '0x4D66A8e9Da1F007802338B372aD348B78b455aBB';
@@ -404,6 +404,78 @@ export const CHAIN_ID_TO_TOKENS = {
     },
   ],
 } satisfies Record<string, ChainToken[]>;
+
+export const CHAIN_ID_TO_NFT_COLLECTIONS = {
+  [CREATOR_CHAIN.ETHEREUM.id]: [
+    {
+      address: '0x0fc3dd8c37880a297166bed57759974a157f0e74',
+      name: 'Avatars',
+      standard: 'erc721',
+    },
+    {
+      address: '0x76be3b62873462d2142405439777e971754e8e77',
+      name: 'Parallel Alpha',
+      standard: 'erc1155',
+    },
+    {
+      address: '0x6811f2f20c42f42656a3c8623ad5e9461b83f719',
+      name: 'Parallel Planetfall',
+      standard: 'erc1155',
+    },
+    {
+      address: '0x9d764bcf1affd83554b7626f22eab2ffc60590c7',
+      name: 'Parallel Battlepass',
+      standard: 'erc1155',
+    },
+    {
+      address: '0x6e3bc168f6260ff54257ae4b56449efd7afd5934',
+      name: 'Parallel Cosmetics',
+      standard: 'erc1155',
+    },
+    {
+      address: '0x5302a847e53c7b2ff4daea7559f82f02446bee61',
+      name: 'Parallel Lore',
+      standard: 'erc1155',
+    },
+    {
+      address: '0x38398a2d7a4278b8d83967e0d235164335a0394a',
+      name: 'Parallel Auxillary',
+      standard: 'erc1155',
+    },
+  ],
+  [CREATOR_CHAIN.BASE.id]: [
+    {
+      address: '0x206571b68c66e1d112b74d65695043ad2b5f95d5',
+      name: 'Parallel Alpha',
+      standard: 'erc1155',
+    },
+    {
+      address: '0x8bb4033af06b363a8391f795a39281bcc3b6197d',
+      name: 'Parallel Planetfall',
+      standard: 'erc1155',
+    },
+    {
+      address: '0xa7b67cd6b31b73772ae3c8ea784317207194a6f4',
+      name: 'Parallel Aftermath',
+      standard: 'erc1155',
+    },
+    {
+      address: '0x504405158f9960a0252a83ee2fd13167991addd6',
+      name: 'Parallel Battle Pass',
+      standard: 'erc1155',
+    },
+    {
+      address: '0xc6c03d452906aad9a364989608d947bac11e478c',
+      name: 'Parallel Cosmetics',
+      standard: 'erc1155',
+    },
+    {
+      address: '0x2de4941fec832d5d2f7ab69df397f3e2fb28d391',
+      name: 'Parallel Companions',
+      standard: 'erc1155',
+    },
+  ],
+} satisfies Record<string, ChainNft[]>;
 
 export const DEFAULT_ALLOWED_CHAINS_IDS = [
   CREATOR_CHAIN.ABSTRACT.id,
