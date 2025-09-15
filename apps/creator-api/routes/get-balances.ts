@@ -3,7 +3,7 @@ import { isAddress } from 'viem';
 import { calculateBalances } from '../utils/calculate-balances';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
-import { DEMO_ADDRESS } from '../tests/test-data/constants';
+import { DEMO_ADDRESS } from '@idriss-xyz/constants';
 
 const router = Router();
 

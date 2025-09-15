@@ -4,12 +4,12 @@ import { fetchDonationsByToAddress } from '../db/fetch-known-donations';
 import { calculateStatsForRecipientAddress } from '../utils/calculate-stats';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
-import { DEMO_ADDRESS } from '../tests/test-data/constants';
 import { resolveCreatorAndAddresses } from '../utils/calculate-stats';
 import { AppDataSource } from '../db/database';
 import { Creator } from '../db/entities';
 import { enrichDonationsWithCreatorInfo } from '../utils/calculate-stats';
 import { createAddressToCreatorMap } from '@idriss-xyz/utils';
+import { DEMO_ADDRESS } from '@idriss-xyz/constants';
 
 const router = Router();
 

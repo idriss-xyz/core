@@ -1,4 +1,3 @@
-import { Icon } from '@idriss-xyz/ui/icon';
 import { Link } from '@idriss-xyz/ui/link';
 import {
   getModifiedLeaderboardName,
@@ -7,9 +6,9 @@ import {
 import { classes } from '@idriss-xyz/ui/utils';
 import { Hex } from 'viem';
 import { DonationUser } from '@idriss-xyz/constants';
+import { Icon } from '@idriss-xyz/ui/icon';
 
-import { WHITELISTED_URLS } from '../../donate/constants';
-import { useGetAvatarImage } from '../../donate/commands/get-avatar-image';
+import { LeaderboardAvatar } from './leaderboard-avatar';
 
 const rankBorders = [
   'border-[#FAC928]',
@@ -29,6 +28,7 @@ type Properties = {
   donorDetails: DonationUser;
   hideBottomBorder?: boolean;
   isTwitchExtension?: boolean;
+  isDemo?: boolean;
   onDonorClick?: (address: Hex) => void;
 };
 
@@ -42,53 +42,10 @@ export const LeaderboardItem = ({
   onDonorClick,
   donorDetails,
   isTwitchExtension,
+  isDemo,
 }: Properties) => {
   const displayName = donorDetails.displayName;
   const avatarSourceUrl = donorDetails.avatarUrl;
-
-  const isAllowedUrl =
-    !isTwitchExtension ||
-    !!(
-      avatarSourceUrl &&
-      WHITELISTED_URLS.some((domain) => {
-        return avatarSourceUrl.startsWith(domain);
-      })
-    );
-
-  const avatarDataQuery = useGetAvatarImage(
-    { url: avatarSourceUrl ?? '' },
-    { enabled: !!avatarSourceUrl && !isAllowedUrl },
-  );
-
-  const avatarImage = (
-    <div className="relative w-max">
-      {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
-      {((avatarSourceUrl && isAllowedUrl) ||
-        (avatarSourceUrl && !isAllowedUrl && !!avatarDataQuery.data)) && (
-        <img
-          alt={`Rank ${donorRank + 1}`}
-          src={isAllowedUrl ? avatarSourceUrl : avatarDataQuery.data}
-          className={`size-8 rounded-full bg-neutral-200 ${donorRank <= 2 ? `border-2 ${rankBorders[donorRank]}` : 'border border-neutral-400'}`}
-        />
-      )}
-
-      {(!avatarSourceUrl || (!isAllowedUrl && !avatarDataQuery.data)) && (
-        <div
-          className={`flex size-8 items-center justify-center rounded-full ${donorRank <= 2 ? `border-2 ${rankBorders[donorRank]}` : 'border border-neutral-300'} bg-neutral-200`}
-        >
-          <Icon size={20} name="CircleUserRound" className="text-neutral-500" />
-        </div>
-      )}
-
-      {donorRank <= 2 && (
-        <Icon
-          size={13}
-          name="CrownCircled"
-          className={`absolute bottom-0 right-0 ${rankColors[donorRank]}`}
-        />
-      )}
-    </div>
-  );
 
   return (
     <tr
@@ -101,7 +58,11 @@ export const LeaderboardItem = ({
       <td className="px-4 py-3 text-neutral-600">{donorRank + 1}</td>
 
       <td className="flex items-center gap-x-1.5 overflow-hidden px-4 py-3 text-neutral-900">
-        {avatarImage}
+        <LeaderboardAvatar
+          rank={donorRank}
+          avatarUrl={avatarSourceUrl}
+          allowAllUrls={!isTwitchExtension && isDemo}
+        />
 
         <Link
           size="xs"

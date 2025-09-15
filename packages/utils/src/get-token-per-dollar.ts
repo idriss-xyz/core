@@ -1,3 +1,5 @@
+import { IDRISS_LEGACY_API_URL } from '../../constants/src';
+
 type Payload = {
   amount: number;
   chainId: number;
@@ -17,7 +19,7 @@ export const getTokenPerDollar = async (
   }
 
   const response = await fetch(
-    `https://api.idriss.xyz/token-price?${new URLSearchParams({
+    `${IDRISS_LEGACY_API_URL}/token-price?${new URLSearchParams({
       buyToken: payload.buyToken,
       sellToken: payload.sellToken,
       network: payload.chainId.toString(),
