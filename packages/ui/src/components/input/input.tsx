@@ -87,7 +87,7 @@ export const Input = forwardRef(
         )}
       />
     ) : (
-      <label>
+      <label className="block w-full">
         <div className="relative">
           {properties.prefixIconName && (
             <div
