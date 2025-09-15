@@ -78,6 +78,12 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
     const [submitError, setSubmitError] = useState<string | null>(null);
     const [isCollectibleModalOpen, setIsCollectibleModalOpen] = useState(false);
     const [collectibleSearch, setCollectibleSearch] = useState('');
+    const [selectedCollectible, setSelectedCollectible] = useState<{
+      id: string;
+      name: string;
+      collection: string;
+      image: string;
+    } | null>(null);
 
     const minimumSfxAmount =
       creatorInfo.minimumSfxAmount ?? DEFAULT_DONATION_MIN_SFX_AMOUNT;
@@ -159,6 +165,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       reset(getSendFormDefaultValues(defaultChainId, selectedTokenSymbol));
 
       sender.resetBalance();
+      setSelectedCollectible(null);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [defaultChainId, selectedTokenSymbol, reset]);
 
@@ -566,9 +573,31 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                     <Controller
                       name="collectible"
                       control={formMethods.control}
-                      render={({ field }) => {
+                      render={({ _field }) => {
+                        // TODO: Use field
                         return (
                           <div className="mt-4">
+                            {selectedCollectible && (
+                              <div className="mb-4 flex gap-2.5 rounded-[12px] border border-neutral-200 p-2">
+                                <img
+                                  src={selectedCollectible.image}
+                                  alt={selectedCollectible.name}
+                                  className="size-[42px] rounded-[12px] border-neutral-300 object-cover"
+                                />
+                                <div className="flex flex-col">
+                                  <div className="h-4.5">
+                                    <span className="text-label4 text-neutral-900">
+                                      {selectedCollectible.name}
+                                    </span>
+                                  </div>
+                                  <div className="h-[20px]">
+                                    <span className="text-body5 text-neutral-500">
+                                      {selectedCollectible.collection}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
                             <Button
                               intent="secondary"
                               size="medium"
@@ -577,9 +606,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                                 return setIsCollectibleModalOpen(true);
                               }}
                             >
-                              {field.value
-                                ? `Selected: ${field.value}`
-                                : 'Select Collectible'}
+                              Select Collectible
                             </Button>
                           </div>
                         );
@@ -738,7 +765,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
             </p>
           }
           headerContainerClassName="pl-6 pt-5.5 pb-2.5"
-          className="w-[436px]"
+          className="h-[550px] w-[800px]"
         >
           <div className="p-6">
             <Input
@@ -753,10 +780,19 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
             />
 
             <CollectibleGallery
-              collections={['0xa7b67cd6b31b73772ae3c8ea784317207194a6f4']} // Replace with creatorInfo.collections
+              collections={[
+                '0xa7b67cd6b31b73772ae3c8ea784317207194a6f4',
+                '0x8bb4033af06b363a8391f795a39281bcc3b6197d',
+              ]} // Replace with creatorInfo.collections
               searchQuery={collectibleSearch}
               onSelect={(collectible) => {
                 formMethods.setValue('collectible', collectible.id);
+                setSelectedCollectible({
+                  id: collectible.id,
+                  name: collectible.name,
+                  collection: collectible.collection,
+                  image: collectible.image,
+                });
                 setIsCollectibleModalOpen(false);
               }}
             />

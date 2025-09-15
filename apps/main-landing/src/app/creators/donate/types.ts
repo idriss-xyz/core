@@ -25,6 +25,7 @@ export type Collectible = {
   name: string;
   image: string;
   collection: string;
+  collectionAddress: string;
 };
 
 export type CreatorProfile = {
