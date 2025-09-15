@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Checkbox } from '@idriss-xyz/ui/checkbox';
+import { Card } from '@idriss-xyz/ui/card';
+import { IconButton } from '@idriss-xyz/ui/icon-button';
 
 import { Collectible } from '../../../types';
 import { useCollectibles } from '../../../hooks/use-collectibles';
@@ -18,12 +20,16 @@ const COLLECTIONS = [
 interface Properties {
   collections: string[];
   searchQuery: string;
+  showMobileFilter: boolean;
+  setShowMobileFilter: (show: boolean) => void;
   onSelect: (collectible: Collectible) => void;
 }
 
 export const CollectibleGallery = ({
   collections,
   searchQuery,
+  showMobileFilter,
+  setShowMobileFilter,
   onSelect,
 }: Properties) => {
   const { data: collectibles, isLoading } = useCollectibles(collections);
@@ -56,68 +62,114 @@ export const CollectibleGallery = ({
   }
 
   return (
-    <div className="flex gap-6">
-      {/* Collection Filter */}
-      <div className="w-48 shrink-0">
-        <h3 className="mb-3 text-sm font-medium text-neutral-900">
-          Collections
-        </h3>
-        <div className="space-y-2">
-          {COLLECTIONS.map((collection) => {
-            return (
-              <label
-                key={collection.address}
-                className="flex cursor-pointer items-center gap-2"
-              >
-                <Checkbox
-                  value={selectedCollections.includes(collection.address)}
-                  onChange={() => {
-                    return handleCollectionToggle(collection.address);
-                  }}
-                />
-                <span className="text-sm text-neutral-700">
-                  {collection.name}
-                </span>
-              </label>
-            );
-          })}
-        </div>
-      </div>
+    <div>
 
-      {/* Gallery */}
-      <div className="flex-1">
-        {filteredCollectibles.length === 0 ? (
-          <div className="py-8 text-center text-neutral-500">
-            No collectibles found
-          </div>
-        ) : (
-          <div className="grid max-h-96 grid-cols-3 gap-4 overflow-y-auto">
-            {filteredCollectibles.map((collectible) => {
+      <div className="flex gap-6">
+        {/* Desktop Collection Filter - hidden below md */}
+        <div className="hidden md:block w-48 shrink-0">
+          <h3 className="mb-3 text-sm font-medium text-neutral-900">
+            Collections
+          </h3>
+          <div className="space-y-2">
+            {COLLECTIONS.map((collection) => {
               return (
-                <div
-                  key={collectible.id}
-                  className="cursor-pointer rounded-lg border border-neutral-200 p-2 transition-colors hover:border-mint-500"
-                  onClick={() => {
-                    return onSelect(collectible);
-                  }}
+                <label
+                  key={collection.address}
+                  className="flex cursor-pointer items-center gap-2"
                 >
-                  <img
-                    src={collectible.image}
-                    alt={collectible.name}
-                    className="mb-2 aspect-square w-full rounded-md object-cover"
+                  <Checkbox
+                    value={selectedCollections.includes(collection.address)}
+                    onChange={() => {
+                      return handleCollectionToggle(collection.address);
+                    }}
                   />
-                  <p className="truncate text-sm font-medium">
-                    {collectible.name}
-                  </p>
-                  <p className="truncate text-xs text-neutral-500">
-                    {collectible.collection}
-                  </p>
-                </div>
+                  <span className="text-sm text-neutral-700">
+                    {collection.name}
+                  </span>
+                </label>
               );
             })}
           </div>
-        )}
+        </div>
+
+        {/* Gallery */}
+        <div className="flex-1">
+          {filteredCollectibles.length === 0 ? (
+            <div className="py-8 text-center text-neutral-500">
+              No collectibles found
+            </div>
+          ) : (
+            <div className="grid max-h-96 grid-cols-2 md:grid-cols-3 gap-4 overflow-y-auto">
+              {filteredCollectibles.map((collectible) => {
+                return (
+                  <div
+                    key={collectible.id}
+                    className="cursor-pointer rounded-lg border border-neutral-200 p-2 transition-colors hover:border-mint-500"
+                    onClick={() => {
+                      return onSelect(collectible);
+                    }}
+                  >
+                    <img
+                      src={collectible.image}
+                      alt={collectible.name}
+                      className="mb-2 aspect-square w-full rounded-md object-cover"
+                    />
+                    <p className="truncate text-sm font-medium">
+                      {collectible.name}
+                    </p>
+                    <p className="truncate text-xs text-neutral-500">
+                      {collectible.collection}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
+
+      {/* Mobile Filter Card - floating from bottom */}
+      {showMobileFilter && (
+        <div className="fixed inset-0 z-50 md:hidden mt-0">
+          <div
+            className="absolute inset-0 bg-black/50 rounded-xl"
+            onClick={() => setShowMobileFilter(false)}
+          />
+          <Card className="absolute bottom-0 left-0 right-0 rounded-t-lg rounded-b-xl p-4">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-sm font-medium text-neutral-900">
+                Collections
+              </h3>
+              <IconButton
+                iconName="X"
+                intent="tertiary"
+                size="small"
+                onClick={() => setShowMobileFilter(false)}
+              />
+            </div>
+            <div className="space-y-2">
+              {COLLECTIONS.map((collection) => {
+                return (
+                  <label
+                    key={collection.address}
+                    className="flex cursor-pointer items-center gap-2"
+                  >
+                    <Checkbox
+                      value={selectedCollections.includes(collection.address)}
+                      onChange={() => {
+                        return handleCollectionToggle(collection.address);
+                      }}
+                    />
+                    <span className="text-sm text-neutral-700">
+                      {collection.name}
+                    </span>
+                  </label>
+                );
+              })}
+            </div>
+          </Card>
+        </div>
+      )}
     </div>
   );
 };

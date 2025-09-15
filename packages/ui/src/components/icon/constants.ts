@@ -54,6 +54,7 @@ import {
   Users as Users2,
   Coins,
   Search,
+  Filter,
 } from 'lucide-react';
 
 import * as customIcons from './custom';
@@ -114,5 +115,6 @@ export const ICON = {
   Users2,
   Coins,
   Search,
+  Filter,
   ...customIcons,
 };

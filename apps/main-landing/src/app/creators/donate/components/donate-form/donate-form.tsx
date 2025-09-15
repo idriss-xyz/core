@@ -54,9 +54,11 @@ import {
 } from '../../schema';
 import { getSendFormDefaultValues } from '../../utils';
 import { useSender } from '../../hooks';
+import { useMobileFilter } from '../../hooks/use-mobile-filter';
 import { CreatorProfile } from '../../types';
 
 import { ChainSelect, CollectibleGallery, TokenSelect } from './components';
+import { IconButton } from '@idriss-xyz/ui/icon-button';
 
 type Properties = {
   className?: string;
@@ -84,6 +86,8 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       collection: string;
       image: string;
     } | null>(null);
+
+    const { showMobileFilter, setShowMobileFilter } = useMobileFilter();
 
     const minimumSfxAmount =
       creatorInfo.minimumSfxAmount ?? DEFAULT_DONATION_MIN_SFX_AMOUNT;
@@ -765,19 +769,29 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
             </p>
           }
           headerContainerClassName="pl-6 pt-5.5 pb-2.5"
-          className="h-[550px] w-[800px]"
+          className="h-[550px] w-[400px] sm:w-[500px] md:w-[780px]"
         >
           <div className="p-6">
-            <Input
-              placeholder="Search collectibles"
-              className="mb-4"
-              prefixIconName="Search"
-              prefixIconSize={16}
-              value={collectibleSearch}
-              onChange={(event) => {
-                setCollectibleSearch(event.target.value);
-              }}
-            />
+            <div className="flex w-full mb-4 gap-2">
+              {/* Mobile Filter Button - only visible below md */}
+              <IconButton
+                intent="tertiary"
+                size="small"
+                iconName="Filter"
+                onClick={() => setShowMobileFilter(true)}
+                className="shrink-0 md:hidden"
+              />
+              <Input
+                placeholder="Search collectibles"
+                prefixIconName="Search"
+                prefixIconSize={16}
+                value={collectibleSearch}
+                onChange={(event) => {
+                  setCollectibleSearch(event.target.value);
+                }}
+              />
+
+            </div>
 
             <CollectibleGallery
               collections={[
@@ -785,6 +799,8 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                 '0x8bb4033af06b363a8391f795a39281bcc3b6197d',
               ]} // Replace with creatorInfo.collections
               searchQuery={collectibleSearch}
+              showMobileFilter={showMobileFilter}
+              setShowMobileFilter={setShowMobileFilter}
               onSelect={(collectible) => {
                 formMethods.setValue('collectible', collectible.id);
                 setSelectedCollectible({
