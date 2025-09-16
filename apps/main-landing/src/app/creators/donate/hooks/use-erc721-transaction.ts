@@ -16,7 +16,7 @@ interface Properties {
   chainId: number;
   message: string;
   assetAddress: Hex;
-  tokenId: bigint;
+  assetId: bigint;
   recipientAddress: Hex;
   walletClient: WalletClient;
   callbackOnSend?: (txHash: string) => void;
@@ -28,7 +28,7 @@ export const useErc721Transaction = () => {
       chainId,
       message,
       assetAddress,
-      tokenId,
+      assetId,
       walletClient,
       recipientAddress,
       callbackOnSend,
@@ -91,7 +91,7 @@ export const useErc721Transaction = () => {
       const sendNftData = encodeFunctionData({
         abi: TIPPING_ABI,
         functionName: 'sendERC721To',
-        args: [recipientAddress, tokenId, assetAddress, message],
+        args: [recipientAddress, assetId, assetAddress, message],
       });
 
       const gas = await estimateGas(walletClient, {
