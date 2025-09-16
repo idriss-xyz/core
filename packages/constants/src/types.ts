@@ -44,6 +44,7 @@ export interface ChainNft {
   address: Hex;
   name: string;
   standard: 'erc1155' | 'erc721';
+  slug: string;
 }
 
 export interface TipHistoryTokenV2 {
