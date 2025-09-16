@@ -14,6 +14,8 @@ import { useSwitchChain } from './use-switch-chain';
 import { useGetTokenPerDollar } from './use-get-token-per-dollar';
 import { useNativeTransaction } from './use-native-transaction';
 import { useErc20Transaction } from './use-erc20-transaction';
+// import { useErc721Transaction } from './use-erc721-transaction';
+// import { useErc1155Transaction } from './use-erc1155-transaction';
 
 type Properties = {
   walletClient?: WalletClient;
@@ -22,8 +24,10 @@ type Properties = {
 
 export const useSender = ({ walletClient, callbackOnSend }: Properties) => {
   const switchChain = useSwitchChain();
-  const erc20Transaction = useErc20Transaction();
   const nativeTransaction = useNativeTransaction();
+  const erc20Transaction = useErc20Transaction();
+  // const erc721Transaction = useErc721Transaction();
+  // const erc1155Transaction = useErc1155Transaction();
   const getTokenPerDollarMutation = useGetTokenPerDollar();
   const [haveEnoughBalance, setHaveEnoughBalance] = useState<boolean>(true);
 

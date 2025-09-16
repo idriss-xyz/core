@@ -338,6 +338,46 @@ export const TIPPING_ABI = [
     type: 'constructor',
   },
   {
+    inputs: [],
+    name: 'BadAddr',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'BadMsgValue',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'EthTransferFailed',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'InvalidRecipient',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'InvalidToken',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'MsgTooLong',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'NoReceive',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'NoValue',
+    type: 'error',
+  },
+  {
     inputs: [
       {
         internalType: 'address',
@@ -489,6 +529,12 @@ export const TIPPING_ABI = [
         internalType: 'uint8',
         name: 'assetType',
         type: 'uint8',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'assetId',
+        type: 'uint256',
       },
     ],
     name: 'TipMessage',

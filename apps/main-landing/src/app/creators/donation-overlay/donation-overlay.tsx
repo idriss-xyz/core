@@ -312,6 +312,7 @@ export default function DonationOverlay({ creatorName }: Properties) {
             tokenAddress,
             amount,
             assetType,
+            assetId,
           } = log.args as {
             recipientAddress: Hex;
             message: string;
@@ -320,11 +321,11 @@ export default function DonationOverlay({ creatorName }: Properties) {
             amount: bigint;
             fee: bigint;
             assetType: bigint;
+            assetId: bigint;
           };
 
-
           // skip ERC-721 & ERC-1155 for now (assetType 2 & 3)
-          if (assetType > 1n) continue;
+          if (assetType > 1n || assetId >= 1n) continue;
 
           if (recipientAddress.toLowerCase() !== address?.data.toLowerCase())
             continue;

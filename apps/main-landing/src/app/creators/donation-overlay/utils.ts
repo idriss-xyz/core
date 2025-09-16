@@ -151,4 +151,4 @@ export const fetchDonationSfxText = async (txHash: string) => {
 };
 
 export const TIP_MESSAGE_EVENT_ABI =
-  'event TipMessage(address indexed recipientAddress, string message, address indexed sender, address indexed tokenAddress, uint256 amount, uint256 fee, uint8 assetType)';
+  'event TipMessage(address indexed recipientAddress, string message, address indexed sender, address indexed tokenAddress, uint256 amount, uint256 fee, uint8 assetType, uint256 assetId)';
