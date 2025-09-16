@@ -333,31 +333,60 @@ export const ERC20_ABI = [
 
 export const TIPPING_ABI = [
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: '_maticUsdAggregator',
-        type: 'address',
-      },
-    ],
+    inputs: [],
     stateMutability: 'nonpayable',
     type: 'constructor',
   },
   {
     inputs: [
       {
-        internalType: 'bytes',
-        name: 'innerError',
-        type: 'bytes',
+        internalType: 'address',
+        name: 'owner',
+        type: 'address',
       },
     ],
-    name: 'BatchError',
+    name: 'OwnableInvalidOwner',
+    type: 'error',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+    ],
+    name: 'OwnableUnauthorizedAccount',
     type: 'error',
   },
   {
     inputs: [],
-    name: 'tipping__withdraw__OnlyAdminCanWithdraw',
+    name: 'ReentrancyGuardReentrantCall',
     type: 'error',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'token',
+        type: 'address',
+      },
+    ],
+    name: 'SafeERC20FailedOperation',
+    type: 'error',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'bool',
+        name: 'enabled',
+        type: 'bool',
+      },
+    ],
+    name: 'GateSet',
+    type: 'event',
   },
   {
     anonymous: false,
@@ -376,6 +405,44 @@ export const TIPPING_ABI = [
       },
     ],
     name: 'OwnershipTransferred',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'user',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint64',
+        name: 'until',
+        type: 'uint64',
+      },
+    ],
+    name: 'PaidUntilSet',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'user',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'bool',
+        name: 'staked',
+        type: 'bool',
+      },
+    ],
+    name: 'StakedSet',
     type: 'event',
   },
   {
@@ -405,13 +472,31 @@ export const TIPPING_ABI = [
         name: 'tokenAddress',
         type: 'address',
       },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'fee',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint8',
+        name: 'assetType',
+        type: 'uint8',
+      },
     ],
     name: 'TipMessage',
     type: 'event',
   },
   {
     inputs: [],
-    name: 'MINIMAL_PAYMENT_FEE',
+    name: 'BPS_DENOM',
     outputs: [
       {
         internalType: 'uint256',
@@ -424,7 +509,7 @@ export const TIPPING_ABI = [
   },
   {
     inputs: [],
-    name: 'MINIMAL_PAYMENT_FEE_DENOMINATOR',
+    name: 'FEE_BPS',
     outputs: [
       {
         internalType: 'uint256',
@@ -437,7 +522,7 @@ export const TIPPING_ABI = [
   },
   {
     inputs: [],
-    name: 'PAYMENT_FEE_PERCENTAGE',
+    name: 'MAX_MSG',
     outputs: [
       {
         internalType: 'uint256',
@@ -450,52 +535,7 @@ export const TIPPING_ABI = [
   },
   {
     inputs: [],
-    name: 'PAYMENT_FEE_PERCENTAGE_DENOMINATOR',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'PAYMENT_FEE_SLIPPAGE_PERCENT',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: '_adminAddress',
-        type: 'address',
-      },
-    ],
-    name: 'addAdmin',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    name: 'admins',
+    name: 'gateEnabled',
     outputs: [
       {
         internalType: 'bool',
@@ -510,78 +550,16 @@ export const TIPPING_ABI = [
     inputs: [
       {
         internalType: 'address',
-        name: '',
+        name: 'user',
         type: 'address',
       },
     ],
-    name: 'balanceOf',
+    name: 'isAllowed',
     outputs: [
       {
-        internalType: 'uint256',
+        internalType: 'bool',
         name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'bytes[]',
-        name: '_calls',
-        type: 'bytes[]',
-      },
-    ],
-    name: 'batch',
-    outputs: [],
-    stateMutability: 'payable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_minimalPaymentFee',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: '_paymentFeeDenominator',
-        type: 'uint256',
-      },
-    ],
-    name: 'changeMinimalPaymentFee',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_paymentFeePercentage',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: '_paymentFeeDenominator',
-        type: 'uint256',
-      },
-    ],
-    name: 'changePaymentFeePercentage',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'contractOwner',
-    outputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
+        type: 'bool',
       },
     ],
     stateMutability: 'view',
@@ -591,34 +569,16 @@ export const TIPPING_ABI = [
     inputs: [
       {
         internalType: 'address',
-        name: '_adminAddress',
+        name: 'user',
         type: 'address',
       },
     ],
-    name: 'deleteAdmin',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_value',
-        type: 'uint256',
-      },
-      {
-        internalType: 'enum AssetType',
-        name: '_assetType',
-        type: 'uint8',
-      },
-    ],
-    name: 'getPaymentFee',
+    name: 'isStaked',
     outputs: [
       {
-        internalType: 'uint256',
+        internalType: 'bool',
         name: '',
-        type: 'uint256',
+        type: 'bool',
       },
     ],
     stateMutability: 'view',
@@ -638,10 +598,42 @@ export const TIPPING_ABI = [
     type: 'function',
   },
   {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'user',
+        type: 'address',
+      },
+    ],
+    name: 'paidUntilOf',
+    outputs: [
+      {
+        internalType: 'uint64',
+        name: '',
+        type: 'uint64',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
     inputs: [],
     name: 'renounceOwnership',
     outputs: [],
-    stateMutability: 'view',
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address[]',
+        name: 'users',
+        type: 'address[]',
+      },
+    ],
+    name: 'revokePaidBatch',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
@@ -663,7 +655,7 @@ export const TIPPING_ABI = [
       },
       {
         internalType: 'address',
-        name: '_assetContractAddress',
+        name: '_assetAddress',
         type: 'address',
       },
       {
@@ -674,7 +666,47 @@ export const TIPPING_ABI = [
     ],
     name: 'sendERC1155To',
     outputs: [],
-    stateMutability: 'payable',
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        components: [
+          {
+            internalType: 'address',
+            name: 'recipient',
+            type: 'address',
+          },
+          {
+            internalType: 'uint256',
+            name: 'id',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'amount',
+            type: 'uint256',
+          },
+          {
+            internalType: 'address',
+            name: 'token',
+            type: 'address',
+          },
+          {
+            internalType: 'string',
+            name: 'message',
+            type: 'string',
+          },
+        ],
+        internalType: 'struct Tipping.ERC1155Tip[]',
+        name: 'tips',
+        type: 'tuple[]',
+      },
+    ],
+    name: 'sendERC1155ToMany',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
@@ -691,7 +723,7 @@ export const TIPPING_ABI = [
       },
       {
         internalType: 'address',
-        name: '_nftContractAddress',
+        name: '_nftAddress',
         type: 'address',
       },
       {
@@ -702,7 +734,42 @@ export const TIPPING_ABI = [
     ],
     name: 'sendERC721To',
     outputs: [],
-    stateMutability: 'payable',
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        components: [
+          {
+            internalType: 'address',
+            name: 'recipient',
+            type: 'address',
+          },
+          {
+            internalType: 'uint256',
+            name: 'tokenId',
+            type: 'uint256',
+          },
+          {
+            internalType: 'address',
+            name: 'token',
+            type: 'address',
+          },
+          {
+            internalType: 'string',
+            name: 'message',
+            type: 'string',
+          },
+        ],
+        internalType: 'struct Tipping.ERC721Tip[]',
+        name: 'tips',
+        type: 'tuple[]',
+      },
+    ],
+    name: 'sendERC721ToMany',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
@@ -713,17 +780,42 @@ export const TIPPING_ABI = [
         type: 'address',
       },
       {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-      {
         internalType: 'string',
         name: '_message',
         type: 'string',
       },
     ],
     name: 'sendTo',
+    outputs: [],
+    stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        components: [
+          {
+            internalType: 'address',
+            name: 'recipient',
+            type: 'address',
+          },
+          {
+            internalType: 'uint256',
+            name: 'amount',
+            type: 'uint256',
+          },
+          {
+            internalType: 'string',
+            name: 'message',
+            type: 'string',
+          },
+        ],
+        internalType: 'struct Tipping.NativeTip[]',
+        name: 'tips',
+        type: 'tuple[]',
+      },
+    ],
+    name: 'sendToMany',
     outputs: [],
     stateMutability: 'payable',
     type: 'function',
@@ -742,7 +834,7 @@ export const TIPPING_ABI = [
       },
       {
         internalType: 'address',
-        name: '_tokenContractAddr',
+        name: '_tokenAddress',
         type: 'address',
       },
       {
@@ -753,26 +845,127 @@ export const TIPPING_ABI = [
     ],
     name: 'sendTokenTo',
     outputs: [],
-    stateMutability: 'payable',
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
     inputs: [
       {
-        internalType: 'bytes4',
-        name: 'interfaceId',
-        type: 'bytes4',
+        components: [
+          {
+            internalType: 'address',
+            name: 'recipient',
+            type: 'address',
+          },
+          {
+            internalType: 'uint256',
+            name: 'amount',
+            type: 'uint256',
+          },
+          {
+            internalType: 'address',
+            name: 'token',
+            type: 'address',
+          },
+          {
+            internalType: 'string',
+            name: 'message',
+            type: 'string',
+          },
+        ],
+        internalType: 'struct Tipping.ERC20Tip[]',
+        name: 'tips',
+        type: 'tuple[]',
       },
     ],
-    name: 'supportsInterface',
-    outputs: [
+    name: 'sendTokensToMany',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
       {
         internalType: 'bool',
-        name: '',
+        name: 'enabled',
         type: 'bool',
       },
     ],
-    stateMutability: 'pure',
+    name: 'setGateEnabled',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'user',
+        type: 'address',
+      },
+      {
+        internalType: 'uint64',
+        name: 'until',
+        type: 'uint64',
+      },
+    ],
+    name: 'setPaidUntil',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address[]',
+        name: 'users',
+        type: 'address[]',
+      },
+      {
+        internalType: 'uint64',
+        name: 'until',
+        type: 'uint64',
+      },
+    ],
+    name: 'setPaidUntilBatch',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'user',
+        type: 'address',
+      },
+      {
+        internalType: 'bool',
+        name: 'staked_',
+        type: 'bool',
+      },
+    ],
+    name: 'setStaked',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address[]',
+        name: 'users',
+        type: 'address[]',
+      },
+      {
+        internalType: 'bool',
+        name: 'staked_',
+        type: 'bool',
+      },
+    ],
+    name: 'setStakedBatch',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
@@ -789,8 +982,24 @@ export const TIPPING_ABI = [
     type: 'function',
   },
   {
-    inputs: [],
-    name: 'withdraw',
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'token',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: 'to',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'withdrawERC20',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -799,14 +1008,23 @@ export const TIPPING_ABI = [
     inputs: [
       {
         internalType: 'address',
-        name: '_tokenContract',
+        name: 'to',
         type: 'address',
       },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
     ],
-    name: 'withdrawToken',
+    name: 'withdrawETH',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
+  },
+  {
+    stateMutability: 'payable',
+    type: 'receive',
   },
 ] as const;
 

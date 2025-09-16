@@ -18,6 +18,7 @@ export function CreatorsProviders({ children }: { children: React.ReactNode }) {
               showWalletUIs: false,
             },
             defaultChain: base,
+            // supportedChains: [abstract, base, mainnet, ronin, avalanche],
             supportedChains: [abstract, base, mainnet, ronin],
           }}
         >

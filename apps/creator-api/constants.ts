@@ -1,3 +1,5 @@
+import { CREATOR_CHAIN } from '@idriss-xyz/constants';
+
 export const ZAPPER_API_URL = 'https://public.zapper.xyz/graphql';
 
 export const TipHistoryQuery = `
@@ -153,6 +155,7 @@ export const NETWORK_TO_ALCHEMY = {
   OPTIMISM_MAINNET: 'optimism-mainnet',
   MANTLE_MAINNET: 'mantle-mainnet',
   RONIN_MAINNET: 'ronin-mainnet',
+  // AVALANCHE_MAINNET: 'avax-mainnet',
 } as const;
 
 export const ALCHEMY_NATIVE_TOKENS = {
@@ -163,7 +166,13 @@ export const ALCHEMY_NATIVE_TOKENS = {
   OPTIMISM_MAINNET: 'ETH',
   POLYGON_MAINNET: 'POL',
   RONIN_MAINNET: 'RON',
+  // AVALANCHE_MAINNET: 'AVAX',
 } as const;
+
+export const ALCHEMY_BASE_URLS: Record<number, string> = {
+  [CREATOR_CHAIN.ETHEREUM.id]: `https://eth-mainnet.g.alchemy.com`,
+  [CREATOR_CHAIN.BASE.id]: `https://base-mainnet.g.alchemy.com`,
+};
 
 export const monthNames = [
   'January',

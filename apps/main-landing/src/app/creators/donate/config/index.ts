@@ -1,29 +1,11 @@
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
-import { mainnet, base, ronin } from 'wagmi/chains';
-import { defineChain, createPublicClient, http } from 'viem';
-import { ABSTRACT_LOGO } from '@idriss-xyz/constants';
-
-const abstract = defineChain({
-  id: 2741,
-  name: 'Abstract',
-  logo: ABSTRACT_LOGO,
-  nativeCurrency: {
-    name: 'Ethereum',
-    symbol: 'ETH',
-    decimals: 18,
-  },
-  rpcUrls: { default: { http: ['https://api.mainnet.abs.xyz'] } },
-  blockExplorers: {
-    default: {
-      name: 'Evm Explorer',
-      url: 'https://abscan.org',
-    },
-  },
-});
+import { mainnet, base, ronin, abstract } from 'wagmi/chains';
+import { createPublicClient, http } from 'viem';
 
 export const wagmiconfig = getDefaultConfig({
   appName: 'IDRISS Creators Login',
   projectId: 'c68a9fb876e8a1c0a99f89debcfeb2bf',
+  // chains: [mainnet, base, abstract, ronin, avalanche],
   chains: [mainnet, base, abstract, ronin],
   ssr: true,
 });
