@@ -86,6 +86,9 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       collection: string;
       image: string;
     } | null>(null);
+    const [activeTab, setActiveTab] = useState<'token' | 'collectible'>(
+      'token',
+    );
 
     const { showMobileFilter, setShowMobileFilter } = useMobileFilter();
 
@@ -531,6 +534,9 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
 
           <div>
             <Tabs
+              onChange={(value) =>
+                setActiveTab(value as 'token' | 'collectible')
+              }
               items={[
                 {
                   key: 'token',
