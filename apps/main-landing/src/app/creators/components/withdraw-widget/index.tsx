@@ -27,7 +27,7 @@ import {
 } from '../../donate/components/donate-form/components';
 import { TokenLogo } from '../../app/earnings/stats-and-history/token-logo';
 
-import { useWithdrawal } from './use-withdrawal';
+import { useWithdrawal } from './hooks/use-withdrawal';
 import { IdrissWithdraw } from './widget';
 
 type WithdrawFormValues = {
