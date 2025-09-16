@@ -14,6 +14,7 @@ import { ALCHEMY_BASE_URLS } from '../constants';
 type NftBalance = {
   chainId: number;
   contract: string;
+  collectionName: string;
   tokenId: string;
   balance: string;
   name?: string;
@@ -165,6 +166,7 @@ export async function calculateNftBalances(
         results.push({
           chainId,
           contract: nft.contract.address,
+          collectionName: nft.contract.name,
           tokenId: nft.tokenId,
           balance: nft.balance,
           name: nft.name ?? nft.raw?.metadata?.name,
