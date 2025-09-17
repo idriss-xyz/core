@@ -1,16 +1,27 @@
 import { Hex } from 'viem';
 import {
-  DonationData,
+  StoredDonationData,
   DonationToken,
   DonationUser,
   LeaderboardStats,
 } from '@idriss-xyz/constants';
 import { LAMBDA_FAUCET, LAMBDA_REWARDS } from '../config/aws-config';
 
-interface TokenDisplayItem {
+export interface TokenDisplayItem {
   network: string;
   amountRaw: string;
   tokenV2: TokenV2;
+}
+
+export interface NftDisplayItem {
+  tokenId: number;
+  type: string;
+  collectionAddress: Hex;
+  quantity: number;
+  nftToken: {
+    metadata: { uri: string };
+    name: string;
+  };
 }
 
 type StringDisplayItem = {
@@ -58,6 +69,7 @@ interface TokenV2 {
 export interface DonationStats {
   totalDonationsCount: number;
   totalDonationAmount: number;
+  totalNftDonationAmount: number;
   mostDonatedToAddress: Hex;
   mostDonatedToUser: DonationUser;
   biggestDonationAmount: number;
@@ -85,7 +97,7 @@ export interface ZapperNode {
   };
   interpretation: {
     descriptionDisplayItems: [
-      TokenDisplayItem | undefined,
+      TokenDisplayItem | NftDisplayItem,
       ActorDisplayItem | undefined,
       StringDisplayItem | undefined,
     ];
@@ -112,7 +124,7 @@ export interface ZapperResponse {
 }
 
 export interface TipHistoryResponse {
-  donations: DonationData[];
+  donations: StoredDonationData[];
   leaderboard: LeaderboardStats[];
 }
 

@@ -7,13 +7,13 @@ import {
   Dispatch,
   SetStateAction,
 } from 'react';
-import { DonationData } from '@idriss-xyz/constants';
+import { StoredDonationData } from '@idriss-xyz/constants';
 
 import { CreatorProfileResponse } from '../utils/types';
 
 type AuthContextType = {
-  donations: DonationData[];
-  addDonation: (donation: DonationData) => void;
+  donations: StoredDonationData[];
+  addDonation: (donation: StoredDonationData) => void;
   newDonationsCount: number;
   markDonationsAsSeen: () => void;
   error: boolean;
@@ -59,7 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [creatorLoading, setCreatorLoading] = useState(false);
   const [donorLoading, setDonorLoading] = useState(false);
   const [donor, setDonor] = useState<CreatorProfileResponse | null>(null);
-  const [donations, setDonations] = useState<DonationData[]>([]);
+  const [donations, setDonations] = useState<StoredDonationData[]>([]);
   const [newDonationsCount, setNewDonationsCount] = useState(0);
   const [callbackUrl, setCallbackUrl] = useState<string | null>(null);
   const isAuthenticated = customAuthToken != null && !oauthLoading;
@@ -67,7 +67,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const error = loginError || oauthError;
   const loading = oauthLoading || creatorLoading;
 
-  const addDonation = (donation: DonationData) => {
+  const addDonation = (donation: StoredDonationData) => {
     setDonations((previous) => {
       return [donation, ...previous];
     });

@@ -2,13 +2,13 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { calculateStatsForRecipientAddress } from '../utils/calculate-stats';
-import { DonationData } from '@idriss-xyz/constants';
+import { StoredDonationData } from '@idriss-xyz/constants';
 
 describe('Calculate stats', () => {
   it('Calculates correct stats for recipients', () => {
     const donations = JSON.parse(
       readFileSync(resolve(__dirname, 'test-data/donation-data.json'), 'utf-8'),
-    ) as DonationData[];
+    ) as StoredDonationData[];
 
     const result = calculateStatsForRecipientAddress(donations);
 

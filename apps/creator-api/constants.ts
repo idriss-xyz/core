@@ -59,6 +59,18 @@ export const TipHistoryQuery = `
                   name
                 }
               }
+                ... on NFTDisplayItem {
+                tokenId
+                type
+                collectionAddress
+                quantity
+                nftToken {
+                  metadata {
+                    uri
+                  }
+                  name
+                }
+              }
               ... on StringDisplayItem {
                 stringValue
               }
