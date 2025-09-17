@@ -14,6 +14,7 @@ import { ALCHEMY_BASE_URLS } from '../constants';
 type NftBalance = {
   chainId: number;
   contract: string;
+  collectionName: string;
   tokenId: string;
   balance: string;
   name?: string;

@@ -7,6 +7,7 @@ import {
 } from '../constants';
 
 import { NULL_ADDRESS } from '@idriss-xyz/constants';
+import { formatUnits } from 'viem';
 
 type PriceTick = { timestamp: number; median: number };
 
@@ -296,4 +297,54 @@ export async function getAlchemyPrices(
   }
 
   return result;
+}
+
+type BestOffer = {
+  price: string;
+  currency: string;
+  usdValue?: number;
+};
+
+export async function fetchNftFloorFromAlchemy(
+  collectionSlug: string,
+  tokenId: string,
+): Promise<BestOffer | null> {
+  const url = new URL(`https://api.opensea.io/v2/offers/best`);
+  url.searchParams.set('collection_slug', collectionSlug);
+  url.searchParams.set('token_id', tokenId);
+
+  const resp = await fetch(url.toString(), {
+    headers: {
+      'X-API-KEY': process.env.OPENSEA_API_KEY ?? '',
+      'accept': 'application/json',
+    },
+  });
+
+  if (!resp.ok) {
+    console.error('OpenSea error', await resp.text());
+    return null;
+  }
+
+  const json = await resp.json();
+  const offer = json.best_offer;
+  if (!offer) return null;
+
+  const rawPrice = offer.price.current?.value ?? '0';
+  const currency = offer.price.current?.currency ?? 'WETH';
+
+  let usdValue: number | undefined;
+  if (currency.toUpperCase() === 'WETH' || currency.toUpperCase() === 'ETH') {
+    const prices = await fetchNativePricesFromAlchemy(['ETH']);
+    const ethPrice = prices['ETH'];
+    if (ethPrice) {
+      const ethAmount = parseFloat(formatUnits(BigInt(rawPrice), 18));
+      usdValue = ethAmount * ethPrice;
+    }
+  }
+
+  return {
+    price: rawPrice,
+    currency,
+    usdValue,
+  };
 }
