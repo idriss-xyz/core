@@ -1,17 +1,14 @@
+import { CREATOR_API_URL } from '@idriss-xyz/constants';
 import { useState, useEffect } from 'react';
+import { useWalletClient } from 'wagmi';
 
-interface Collectible {
-  id: string;
-  name: string;
-  image: string;
-  collection: string;
-  collectionAddress: string;
-}
+import { Collectible } from '../types';
 
 export const useCollectibles = (collections: string[]) => {
   const [data, setData] = useState<Collectible[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { data: walletClient } = useWalletClient();
 
   useEffect(() => {
     if (collections.length === 0) {
@@ -19,67 +16,20 @@ export const useCollectibles = (collections: string[]) => {
       return;
     }
 
-    const fetchCollectibles = () => {
+    const fetchCollectibles = async () => {
       setIsLoading(true);
       setError(null);
 
       try {
-        // TODO: Replace with actual API call
-        // const response = await fetch(`${CREATOR_API_URL}/my-collectibles`, {
-        //   method: 'POST',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   body: JSON.stringify({ collections }),
-        // });
-        // const collectibles = await response.json();
-        // setData(collectibles);
-
-        // Dummy data for now
-        const dummyCollectibles: Collectible[] = [
+        const response = await fetch(
+          `${CREATOR_API_URL}/get-balances/nft/${walletClient?.account.address}`,
           {
-            id: '1',
-            name: 'Cool NFT #1',
-            image: 'https://placehold.co/100',
-            collection: 'Cool Collection',
-            collectionAddress: '0x8bb4033af06b363a8391f795a39281bcc3b6197d',
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
           },
-          {
-            id: '2',
-            name: 'Awesome NFT #2',
-            image: 'https://placehold.co/100',
-            collection: 'Awesome Collection',
-            collectionAddress: '0xa7b67cd6b31b73772ae3c8ea784317207194a6f4',
-          },
-          {
-            id: '3',
-            name: 'Epic NFT #3',
-            image: 'https://placehold.co/100',
-            collection: 'Epic Collection',
-            collectionAddress: '0xa7b67cd6b31b73772ae3c8ea784317207194a6f4',
-          },
-          {
-            id: '4',
-            name: 'Rare NFT #4',
-            image: 'https://placehold.co/100',
-            collection: 'Rare Collection',
-            collectionAddress: '0x8bb4033af06b363a8391f795a39281bcc3b6197d',
-          },
-          {
-            id: '5',
-            name: 'Legendary NFT #5',
-            image: 'https://placehold.co/100',
-            collection: 'Legendary Collection',
-            collectionAddress: '0x8bb4033af06b363a8391f795a39281bcc3b6197d',
-          },
-          {
-            id: '6',
-            name: 'Mythic NFT #6',
-            image: 'https://placehold.co/100',
-            collection: 'Mythic Collection',
-            collectionAddress: '0xa7b67cd6b31b73772ae3c8ea784317207194a6f4',
-          },
-        ];
-
-        setData(dummyCollectibles);
+        );
+        const collectibles = await response.json();
+        setData(collectibles.nftResult.balances);
       } catch (error_) {
         setError('Failed to fetch collectibles');
         console.error('Error fetching collectibles:', error_);
@@ -88,8 +38,8 @@ export const useCollectibles = (collections: string[]) => {
       }
     };
 
-    fetchCollectibles();
-  }, [collections]);
+    void fetchCollectibles();
+  }, [collections, walletClient]);
 
   return { data, isLoading, error };
 };

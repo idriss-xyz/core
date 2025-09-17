@@ -40,7 +40,7 @@ import {
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
 import { ExternalLink } from '@idriss-xyz/ui/external-link';
-import { getAddress } from 'viem';
+import { getAddress, Hex } from 'viem';
 import { usePrivy, getAccessToken } from '@privy-io/react-auth';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 
@@ -81,9 +81,11 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
     const [isCollectibleModalOpen, setIsCollectibleModalOpen] = useState(false);
     const [collectibleSearch, setCollectibleSearch] = useState('');
     const [selectedCollectible, setSelectedCollectible] = useState<{
-      id: string;
+      tokenId: string;
       name: string;
       collection: string;
+      contract: Hex;
+      chainId: number;
       image: string;
     } | null>(null);
     const [activeTab, setActiveTab] = useState<'token' | 'collectible'>(
@@ -523,8 +525,9 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                       )}
                     >
                       <Icon name="AlertCircle" size={12} className="p-px" />
-                      Not enough {selectedTokenSymbol} in your wallet. Add funds
-                      to continue.
+                      {activeTab === 'collectible'
+                        ? 'You do not own this collectible.'
+                        : `Not enough ${selectedTokenSymbol} in your wallet. Add funds to continue.`}
                     </span>
                   )}
                 </>
@@ -534,9 +537,9 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
 
           <div>
             <Tabs
-              onChange={(value) =>
-                setActiveTab(value as 'token' | 'collectible')
-              }
+              onChange={(value) => {
+                return setActiveTab(value as 'token' | 'collectible');
+              }}
               items={[
                 {
                   key: 'token',
@@ -580,48 +583,39 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                   key: 'collectible',
                   label: 'Collectible',
                   children: (
-                    <Controller
-                      name="collectible"
-                      control={formMethods.control}
-                      render={({ _field }) => {
-                        // TODO: Use field
-                        return (
-                          <div className="mt-4">
-                            {selectedCollectible && (
-                              <div className="mb-4 flex gap-2.5 rounded-[12px] border border-neutral-200 p-2">
-                                <img
-                                  src={selectedCollectible.image}
-                                  alt={selectedCollectible.name}
-                                  className="size-[42px] rounded-[12px] border-neutral-300 object-cover"
-                                />
-                                <div className="flex flex-col">
-                                  <div className="h-4.5">
-                                    <span className="text-label4 text-neutral-900">
-                                      {selectedCollectible.name}
-                                    </span>
-                                  </div>
-                                  <div className="h-[20px]">
-                                    <span className="text-body5 text-neutral-500">
-                                      {selectedCollectible.collection}
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                            )}
-                            <Button
-                              intent="secondary"
-                              size="medium"
-                              className="w-full"
-                              onClick={() => {
-                                return setIsCollectibleModalOpen(true);
-                              }}
-                            >
-                              Select Collectible
-                            </Button>
+                    <div className="mt-4">
+                      {selectedCollectible && (
+                        <div className="mb-4 flex gap-2.5 rounded-[12px] border border-neutral-200 p-2">
+                          <img
+                            src={selectedCollectible.image}
+                            alt={selectedCollectible.name}
+                            className="size-[42px] rounded-[12px] border-neutral-300 object-cover"
+                          />
+                          <div className="flex flex-col">
+                            <div className="h-4.5">
+                              <span className="text-label4 text-neutral-900">
+                                {selectedCollectible.name}
+                              </span>
+                            </div>
+                            <div className="h-[20px]">
+                              <span className="text-body5 text-neutral-500">
+                                {selectedCollectible.collection}
+                              </span>
+                            </div>
                           </div>
-                        );
-                      }}
-                    />
+                        </div>
+                      )}
+                      <Button
+                        intent="secondary"
+                        size="medium"
+                        className="w-full"
+                        onClick={() => {
+                          return setIsCollectibleModalOpen(true);
+                        }}
+                      >
+                        Select Collectible
+                      </Button>
+                    </div>
                   ),
                 },
               ]}
@@ -802,18 +796,19 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
 
             <CollectibleGallery
               collections={[
-                '0xa7b67cd6b31b73772ae3c8ea784317207194a6f4',
-                '0x8bb4033af06b363a8391f795a39281bcc3b6197d',
+                '0xA7B67cD6B31b73772AE3C8ea784317207194A6f4',
+                '0x8bB4033AF06B363A8391F795A39281bcc3b6197D',
               ]} // Replace with creatorInfo.collections
               searchQuery={collectibleSearch}
               showMobileFilter={showMobileFilter}
               setShowMobileFilter={setShowMobileFilter}
               onSelect={(collectible) => {
-                formMethods.setValue('collectible', collectible.id);
                 setSelectedCollectible({
-                  id: collectible.id,
+                  tokenId: collectible.tokenId,
                   name: collectible.name,
                   collection: collectible.collection,
+                  contract: collectible.contract,
+                  chainId: collectible.chainId,
                   image: collectible.image,
                 });
                 setIsCollectibleModalOpen(false);

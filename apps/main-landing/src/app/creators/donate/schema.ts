@@ -12,6 +12,8 @@ const _createSendPayloadSchema = (allowedChainIds: number[]) => {
       .number()
       .gte(MIN_SEND_AMOUNT, `Value must be at least $${MIN_SEND_AMOUNT}`),
     sfx: z.string().max(30, 'Max 30 characters allowed.'),
+    type: z.string().optional(),
+    tokenId: z.number().optional(),
   });
 };
 
@@ -26,7 +28,6 @@ export const createFormPayloadSchema = (allowedChainIds: number[]) => {
       .number()
       .gte(MIN_SEND_AMOUNT, `Value must be at least $${MIN_SEND_AMOUNT}`),
     sfx: z.string().max(30, 'Max 30 characters allowed.'),
-    collectible: z.string().optional(),
   });
 };
 

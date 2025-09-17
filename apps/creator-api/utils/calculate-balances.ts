@@ -18,6 +18,7 @@ type NftBalance = {
   balance: string;
   name?: string;
   image?: string;
+  collection?: string;
 };
 
 export async function calculateBalances(userAddress: Hex) {
@@ -165,6 +166,7 @@ export async function calculateNftBalances(
         results.push({
           chainId,
           contract: nft.contract.address,
+          collection: nft.contract.name,
           tokenId: nft.tokenId,
           balance: nft.balance,
           name: nft.name ?? nft.raw?.metadata?.name,

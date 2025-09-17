@@ -8,11 +8,11 @@ import { useCollectibles } from '../../../hooks/use-collectibles';
 
 const COLLECTIONS = [
   {
-    address: '0xa7b67cd6b31b73772ae3c8ea784317207194a6f4',
+    address: '0xA7B67cD6B31b73772AE3C8ea784317207194A6f4',
     name: 'Parallel Aftermath',
   },
   {
-    address: '0x8bb4033af06b363a8391f795a39281bcc3b6197d',
+    address: '0x8bB4033AF06B363A8391F795A39281bcc3b6197D',
     name: 'Parallel PlanetFall',
   },
 ];
@@ -52,7 +52,7 @@ export const CollectibleGallery = ({
         .toLowerCase()
         .includes(searchQuery.toLowerCase());
       const matchesCollection = selectedCollections.includes(
-        collectible.collectionAddress,
+        collectible.contract,
       );
       return matchesSearch && matchesCollection;
     }) ?? [];
@@ -102,7 +102,7 @@ export const CollectibleGallery = ({
               {filteredCollectibles.map((collectible) => {
                 return (
                   <div
-                    key={collectible.id}
+                    key={collectible.tokenId}
                     className="cursor-pointer rounded-lg border border-neutral-200 p-2 transition-colors hover:border-mint-500"
                     onClick={() => {
                       return onSelect(collectible);
