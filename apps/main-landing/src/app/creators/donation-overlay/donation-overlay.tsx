@@ -322,7 +322,6 @@ export default function DonationOverlay({ creatorName }: Properties) {
             assetType: bigint;
           };
 
-
           // skip ERC-721 & ERC-1155 for now (assetType 2 & 3)
           if (assetType > 1n) continue;
 
