@@ -29,7 +29,7 @@ type Properties = {
   leaderboardError: boolean;
   leaderboardLoading: boolean;
   leaderboard: LeaderboardStats[];
-  onDonorClick?: (address: Hex) => void;
+  onDonorClick?: (displayName: string) => void;
   updateCurrentContent?: (content: DonateContentValues) => void;
   isScrollable?: boolean;
   style?: CSSProperties;
@@ -282,7 +282,7 @@ type StandaloneProperties = {
   leaderboardError: boolean;
   leaderboardLoading: boolean;
   leaderboard: LeaderboardStats[];
-  onDonorClick: (address: Hex) => void;
+  onDonorClick: (displayName: string) => void;
 };
 
 export const LeaderboardStandalone = ({

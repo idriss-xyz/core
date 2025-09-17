@@ -13,7 +13,6 @@ export {
   getTransactionUrls,
   getSafeNumber,
   getShortWalletHex,
-  getModifiedLeaderboardName,
   getFormattedTimeDifference,
   getTimeDifferenceString,
   isSolanaAddress,

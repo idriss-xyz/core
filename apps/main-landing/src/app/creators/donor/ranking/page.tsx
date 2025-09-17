@@ -2,7 +2,6 @@
 /* eslint-disable @next/next/no-img-element */
 import '@rainbow-me/rainbowkit/styles.css';
 
-import { Hex } from 'viem';
 import { useRouter } from 'next/navigation';
 
 import { backgroundLines2 } from '@/assets';
@@ -25,8 +24,8 @@ function RankingContent() {
   const router = useRouter();
   const donorRanking = useGetDonorRanking();
 
-  const onDonorClick = (address: Hex) => {
-    router.push(`/creators/donor/${address}`);
+  const onDonorClick = (displayName: string) => {
+    router.push(`/creators/donor/${displayName}`);
   };
 
   return (

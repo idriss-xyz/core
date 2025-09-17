@@ -3,7 +3,7 @@ import { EMPTY_HEX } from '@idriss-xyz/constants';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
 import { Icon } from '@idriss-xyz/ui/icon';
-import { getAddress, Hex } from 'viem';
+import { getAddress } from 'viem';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import {
   Tooltip,
@@ -23,11 +23,6 @@ const baseClassName =
   'z-1 w-[440px] max-w-full rounded-xl bg-mint-100 px-4 pb-9 pt-9 flex flex-col items-center relative container mt-8 overflow-hidden lg:mt-[130px] lg:[@media(max-height:800px)]:mt-[60px]';
 
 type Properties = {
-  address: {
-    isValid: boolean;
-    data: Hex | null;
-    isFetching: boolean;
-  };
   statsError: boolean;
   statsLoading: boolean;
   stats?: DonorHistoryStats;
@@ -36,7 +31,6 @@ type Properties = {
 
 export default function DonorStatsList({
   stats,
-  address,
   statsError,
   statsLoading,
   updateCurrentContent,
@@ -73,24 +67,15 @@ export default function DonorStatsList({
           Donation stats of {stats?.donorDisplayName ?? 'anon'}
         </h1>
 
-        {(address.isFetching || (address.isValid && statsLoading)) && (
+        {statsLoading && (
           <Spinner className="mx-auto mt-9 size-16 text-mint-600" />
         )}
 
-        {address.isValid && statsError && (
+        {statsError && (
           <div className="mx-auto mt-9">
             <p className="flex items-center justify-center gap-2 px-5.5 py-3 text-center text-heading4 text-red-500">
               <Icon name="AlertCircle" size={40} />{' '}
               <span>Cannot get donation stats</span>
-            </p>
-          </div>
-        )}
-
-        {!address.isFetching && !address.isValid && (
-          <div className="mx-auto mt-9">
-            <p className="flex items-center justify-center gap-2 text-center text-heading4 text-red-500">
-              <Icon name="AlertCircle" size={40} />
-              <span>Wrong address</span>
             </p>
           </div>
         )}
