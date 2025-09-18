@@ -5,17 +5,8 @@ import { IconButton } from '@idriss-xyz/ui/icon-button';
 
 import { Collectible } from '../../../types';
 import { useCollectibles } from '../../../hooks/use-collectibles';
-
-const COLLECTIONS = [
-  {
-    address: '0xA7B67cD6B31b73772AE3C8ea784317207194A6f4',
-    name: 'Parallel Aftermath',
-  },
-  {
-    address: '0x8bB4033AF06B363A8391F795A39281bcc3b6197D',
-    name: 'Parallel PlanetFall',
-  },
-];
+import { CHAIN_ID_TO_NFT_COLLECTIONS, CREATOR_CHAIN } from '@idriss-xyz/constants';
+import { getAddress } from 'viem';
 
 interface Properties {
   collections: string[];
@@ -70,16 +61,17 @@ export const CollectibleGallery = ({
             Collections
           </h3>
           <div className="space-y-2">
-            {COLLECTIONS.map((collection) => {
+            {CHAIN_ID_TO_NFT_COLLECTIONS[CREATOR_CHAIN.BASE.id].map((collection) => {
+              const collectionChecksumAddress = getAddress(collection.address);
               return (
                 <label
-                  key={collection.address}
+                  key={collectionChecksumAddress}
                   className="flex cursor-pointer items-center gap-2"
                 >
                   <Checkbox
-                    value={selectedCollections.includes(collection.address)}
+                    value={selectedCollections.includes(collectionChecksumAddress)}
                     onChange={() => {
-                      return handleCollectionToggle(collection.address);
+                      return handleCollectionToggle(collectionChecksumAddress);
                     }}
                   />
                   <span className="text-sm text-neutral-700">
@@ -151,16 +143,17 @@ export const CollectibleGallery = ({
               />
             </div>
             <div className="space-y-2">
-              {COLLECTIONS.map((collection) => {
+              {CHAIN_ID_TO_NFT_COLLECTIONS[CREATOR_CHAIN.BASE.id].map((collection) => {
+                const collectionChecksumAddress = getAddress(collection.address);
                 return (
                   <label
-                    key={collection.address}
+                    key={collectionChecksumAddress}
                     className="flex cursor-pointer items-center gap-2"
                   >
                     <Checkbox
-                      value={selectedCollections.includes(collection.address)}
+                      value={selectedCollections.includes(collectionChecksumAddress)}
                       onChange={() => {
-                        return handleCollectionToggle(collection.address);
+                        return handleCollectionToggle(collectionChecksumAddress);
                       }}
                     />
                     <span className="text-sm text-neutral-700">

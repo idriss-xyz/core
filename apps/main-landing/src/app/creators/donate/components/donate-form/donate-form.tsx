@@ -398,7 +398,15 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
           <TxLoadingContent
             heading={
               <>
-                Sending <span className="text-mint-600">${amount}</span>{' '}
+                Sending{' '}
+                <span className="text-mint-600">
+                  {activeTab === 'collectible' && selectedCollectible
+                    ? selectedCollectible.name
+                    : amount}
+                </span>{' '}
+                {/* TODO: If collectible, display amount of collectibles to send here
+                    1 for ERC721 and amountOfTokens for ERC1155
+                */}
                 {amountInSelectedToken
                   ? `(${formatTokenValue(
                       Number(amountInSelectedToken),
@@ -499,41 +507,6 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
           })}
           className="w-full"
         >
-          <Controller
-            name="amount"
-            control={formMethods.control}
-            render={({ field }) => {
-              return (
-                <>
-                  <Form.Field
-                    numeric
-                    {...field}
-                    className="mt-6"
-                    label="Amount"
-                    value={field.value?.toString() ?? '1'}
-                    onChange={(value) => {
-                      field.onChange(Number(value));
-                    }}
-                    prefixElement={<span>$</span>}
-                  />
-
-                  {!sender.haveEnoughBalance && (
-                    <span
-                      className={classes(
-                        'flex items-center gap-x-1 pt-1 text-label7 text-red-500 lg:text-label6',
-                      )}
-                    >
-                      <Icon name="AlertCircle" size={12} className="p-px" />
-                      {activeTab === 'collectible'
-                        ? 'You do not own this collectible.'
-                        : `Not enough ${selectedTokenSymbol} in your wallet. Add funds to continue.`}
-                    </span>
-                  )}
-                </>
-              );
-            }}
-          />
-
           <div>
             <Tabs
               onChange={(value) => {
@@ -549,6 +522,44 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                   label: 'Token',
                   children: (
                     <div>
+                      <Controller
+                        name="amount"
+                        control={formMethods.control}
+                        render={({ field }) => {
+                          return (
+                            <>
+                              <Form.Field
+                                numeric
+                                {...field}
+                                className="mt-6"
+                                label="Amount"
+                                value={field.value?.toString() ?? '1'}
+                                onChange={(value) => {
+                                  field.onChange(Number(value));
+                                }}
+                                prefixElement={<span>$</span>}
+                              />
+
+                              {!sender.haveEnoughBalance && (
+                                <span
+                                  className={classes(
+                                    'flex items-center gap-x-1 pt-1 text-label7 text-red-500 lg:text-label6',
+                                  )}
+                                >
+                                  <Icon
+                                    name="AlertCircle"
+                                    size={12}
+                                    className="p-px"
+                                  />
+                                  {activeTab === 'collectible'
+                                    ? 'You do not own this collectible.'
+                                    : `Not enough ${selectedTokenSymbol} in your wallet. Add funds to continue.`}
+                                </span>
+                              )}
+                            </>
+                          );
+                        }}
+                      />
                       <Controller
                         name="tokenSymbol"
                         control={formMethods.control}
@@ -821,9 +832,19 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                   chainId: collectible.chainId,
                   image: collectible.image,
                 });
-                setIsCollectibleModalOpen(false);
               }}
             />
+            <Button
+              size="medium"
+              intent="primary"
+              onClick={() => {
+                setIsCollectibleModalOpen(false);
+              }}
+              className="uppercase"
+              suffixIconName='ChevronRight'
+            >
+              Confirm
+            </Button>
           </div>
         </Modal>
       </div>
