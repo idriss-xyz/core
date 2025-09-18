@@ -40,7 +40,7 @@ import {
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
 import { ExternalLink } from '@idriss-xyz/ui/external-link';
-import { getAddress, Hex } from 'viem';
+import { getAddress } from 'viem';
 import { usePrivy, getAccessToken } from '@privy-io/react-auth';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 
@@ -56,7 +56,7 @@ import {
 import { getSendFormDefaultValues } from '../../utils';
 import { useSender } from '../../hooks';
 import { useMobileFilter } from '../../hooks/use-mobile-filter';
-import { CreatorProfile } from '../../types';
+import { Collectible, CreatorProfile } from '../../types';
 
 import { ChainSelect, CollectibleGallery, TokenSelect } from './components';
 
@@ -80,14 +80,8 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
     const [submitError, setSubmitError] = useState<string | null>(null);
     const [isCollectibleModalOpen, setIsCollectibleModalOpen] = useState(false);
     const [collectibleSearch, setCollectibleSearch] = useState('');
-    const [selectedCollectible, setSelectedCollectible] = useState<{
-      tokenId: string;
-      name: string;
-      collection: string;
-      contract: Hex;
-      chainId: number;
-      image: string;
-    } | null>(null);
+    const [selectedCollectible, setSelectedCollectible] =
+      useState<Collectible | null>(null);
     const [activeTab, setActiveTab] = useState<'token' | 'collectible'>(
       'token',
     );
@@ -295,7 +289,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
 
     // Reset SFX when amount falls below the minimum
     useEffect(() => {
-      if (amount < minimumSfxAmount && sfx) {
+      if (amount && amount < minimumSfxAmount && sfx) {
         formMethods.setValue('sfx', '');
       }
     }, [amount, sfx, formMethods, minimumSfxAmount]);
@@ -511,7 +505,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                     {...field}
                     className="mt-6"
                     label="Amount"
-                    value={field.value.toString()}
+                    value={field.value?.toString() ?? '1'}
                     onChange={(value) => {
                       field.onChange(Number(value));
                     }}
@@ -538,7 +532,11 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
           <div>
             <Tabs
               onChange={(value) => {
-                return setActiveTab(value as 'token' | 'collectible');
+                formMethods.setValue(
+                  'type',
+                  value === 'token' ? 'token' : 'erc1155',
+                );
+                setActiveTab(value as 'token' | 'collectible');
               }}
               items={[
                 {
@@ -702,9 +700,11 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                     className="mt-4"
                     helperText={fieldState.error?.message}
                     error={Boolean(fieldState.error?.message)}
-                    placeholder={amount < minimumSfxAmount ? '🔒' : undefined}
+                    placeholder={
+                      amount && amount < minimumSfxAmount ? '🔒' : undefined
+                    }
                     placeholderTooltip={`This feature unlocks for donations of $${minimumSfxAmount} or more`}
-                    disabled={amount < minimumSfxAmount}
+                    disabled={amount !== undefined && amount < minimumSfxAmount}
                   />
                 );
               }}
@@ -803,9 +803,14 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
               showMobileFilter={showMobileFilter}
               setShowMobileFilter={setShowMobileFilter}
               onSelect={(collectible) => {
+                formMethods.setValue('tokenId', collectible.tokenId);
+                formMethods.setValue('contract', collectible.contract);
+                formMethods.setValue('type', collectible.type ?? 'erc1155');
+                formMethods.setValue('chainId', collectible.chainId);
                 setSelectedCollectible({
                   tokenId: collectible.tokenId,
                   name: collectible.name,
+                  type: collectible.type,
                   collection: collectible.collection,
                   contract: collectible.contract,
                   chainId: collectible.chainId,

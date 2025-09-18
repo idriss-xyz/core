@@ -65,24 +65,38 @@ export const useSender = ({ walletClient, callbackOnSend }: Properties) => {
       if (!clientDetails) return;
       const { client } = clientDetails;
 
+      // Send flow for ERC721 tokens
       if (sendPayload.type === 'erc721') {
+        if (!sendPayload.contract || !sendPayload.tokenId) {
+          console.error('Missing contract or tokenId');
+          return;
+        }
         erc721Transaction.mutate({
           walletClient,
           chainId: sendPayload.chainId,
           recipientAddress,
           message: sendPayload.message,
-          collectionAddress: sendPayload.tokenAddress,
           tokenId: BigInt(sendPayload.tokenId),
+          collectionAddress: sendPayload.contract,
           callbackOnSend,
         });
         return;
       }
 
+      // Send flow for ERC1155 tokens
       if (sendPayload.type === 'erc1155') {
-        // balance check for ERC1155
+        if (
+          !sendPayload.contract ||
+          !sendPayload.tokenId ||
+          !sendPayload.amount
+        ) {
+          console.error('Missing contract or tokenId');
+          return;
+        }
+
         const bal1155 = await client.readContract({
           abi: erc1155Abi,
-          address: sendPayload.tokenAddress,
+          address: sendPayload.contract,
           functionName: 'balanceOf',
           args: [walletClient.account.address, BigInt(sendPayload.tokenId)],
         });
@@ -100,11 +114,17 @@ export const useSender = ({ walletClient, callbackOnSend }: Properties) => {
           chainId: sendPayload.chainId,
           recipientAddress,
           message: sendPayload.message,
-          contractAddress: sendPayload.tokenAddress,
+          contractAddress: sendPayload.contract,
           tokenId: BigInt(sendPayload.tokenId),
           amount: amount1155,
           callbackOnSend,
         });
+        return;
+      }
+
+      // Normal ERC20 send flow
+      if (!sendPayload.tokenAddress || !sendPayload.amount) {
+        console.error('Missing token address or amount');
         return;
       }
 

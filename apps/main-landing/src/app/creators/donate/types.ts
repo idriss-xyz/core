@@ -21,12 +21,13 @@ export type Address = {
 };
 
 export type Collectible = {
-  tokenId: string;
+  tokenId: number;
   name: string;
   image: string;
   collection: string;
   contract: Hex;
   chainId: number;
+  type: string;
 };
 
 export type CreatorProfile = {

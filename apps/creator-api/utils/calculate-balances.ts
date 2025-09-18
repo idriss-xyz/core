@@ -2,7 +2,6 @@ import { createPublicClient, http, Hex, formatUnits } from 'viem';
 import { Token } from '../db/entities/token.entity';
 import {
   CHAIN_ID_TO_NFT_COLLECTIONS,
-  CREATOR_CHAIN,
   ERC20_ABI,
   NULL_ADDRESS,
 } from '@idriss-xyz/constants';
@@ -14,12 +13,11 @@ import { ALCHEMY_BASE_URLS } from '../constants';
 type NftBalance = {
   chainId: number;
   contract: string;
-  collectionName: string;
-  tokenId: string;
+  collection: string;
+  tokenId: number;
   balance: string;
   name?: string;
   image?: string;
-  collection?: string;
 };
 
 export async function calculateBalances(userAddress: Hex) {
