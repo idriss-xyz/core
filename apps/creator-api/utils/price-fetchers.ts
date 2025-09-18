@@ -305,7 +305,7 @@ type BestOffer = {
   usdValue?: number;
 };
 
-export async function fetchNftFloorFromAlchemy(
+export async function fetchNftFloorFromOpensea(
   collectionSlug: string,
   tokenId: string,
 ): Promise<BestOffer | null> {

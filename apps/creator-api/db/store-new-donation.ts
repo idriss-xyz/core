@@ -9,7 +9,7 @@ import { TokenDonation } from './entities/token-donation.entity';
 import { NftDonation } from './entities/nft-donation.entity';
 import { ZapperNode } from '../types';
 import { isTokenItem, isNftItem } from '../utils/zapper-type-guards';
-import { fetchNftFloorFromAlchemy } from '../utils/price-fetchers';
+import { fetchNftFloorFromOpensea } from '../utils/price-fetchers';
 import { enrichUserData } from '../utils/enrich-user';
 import {
   StoredDonationData,
@@ -165,7 +165,7 @@ export async function storeToDatabase(
         )?.slug;
 
       const floor = slug
-        ? await fetchNftFloorFromAlchemy(slug, tokenId.toString())
+        ? await fetchNftFloorFromOpensea(slug, tokenId.toString())
         : null;
 
       const tradeValue = (floor?.usdValue ?? 0) * quantity;
