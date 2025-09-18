@@ -1,12 +1,20 @@
-import { Column, Entity, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  JoinColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Hex } from 'viem';
 import { User } from './user.entity';
-import { Token } from './token.entity';
 import { ZapperNode } from '../../types';
 
 @Entity('creator_donations')
-export class Donation {
-  @PrimaryColumn({ type: 'text', name: 'transaction_hash' })
+export abstract class Donation {
+  @PrimaryGeneratedColumn()
+  id!: number;
+
+  @Column({ type: 'text', name: 'transaction_hash', unique: true })
   transactionHash!: Hex;
 
   @Column({ type: 'text', name: 'from_address' })
@@ -46,22 +54,6 @@ export class Donation {
   @ManyToOne(() => User)
   @JoinColumn({ name: 'to_address' })
   toUser!: User;
-
-  @ManyToOne(() => Token)
-  @JoinColumn([
-    { name: 'token_address', referencedColumnName: 'address' },
-    { name: 'network', referencedColumnName: 'network' },
-  ])
-  token!: Token;
-
-  @Column({ type: 'text', name: 'token_address' })
-  tokenAddress!: Hex;
-
-  @Column({ type: 'text' })
-  network!: string;
-
-  @Column({ type: 'text', name: 'amount_raw' })
-  amountRaw!: string;
 
   @Column({ type: 'json' })
   data!: ZapperNode;

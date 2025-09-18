@@ -59,6 +59,26 @@ export const TipHistoryQuery = `
                   name
                 }
               }
+                ... on NFTDisplayItem {
+                tokenId
+                type
+                collectionAddress
+                quantity
+                nftToken {
+                  mediasV3 {
+                    images {
+                      edges {
+                        node {
+                          large
+                          medium
+                          url
+                        }
+                      }
+                    }
+                  }
+                  name
+                }
+              }
               ... on StringDisplayItem {
                 stringValue
               }

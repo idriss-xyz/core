@@ -6,9 +6,14 @@ import {
   NULL_ADDRESS,
 } from '@idriss-xyz/constants';
 import { AppDataSource } from '../db/database';
-import { getAlchemyPrices, getZapperPrice } from './price-fetchers';
+import {
+  getAlchemyPrices,
+  getZapperPrice,
+  fetchNftFloorFromOpensea,
+} from './price-fetchers';
 import { getChainByNetworkName } from '@idriss-xyz/utils';
 import { ALCHEMY_BASE_URLS } from '../constants';
+import { NftDonation } from '../db/entities/nft-donation.entity';
 
 type NftBalance = {
   chainId: number;
@@ -18,6 +23,8 @@ type NftBalance = {
   balance: string;
   name?: string;
   image?: string;
+  usdValue?: number;
+  type: 'erc721' | 'erc1155';
 };
 
 export async function calculateBalances(userAddress: Hex) {
@@ -134,13 +141,15 @@ async function fetchAllPages(url: string, params: URLSearchParams) {
 
 export async function calculateNftBalances(
   userAddress: Hex,
-): Promise<{ balances: NftBalance[] }> {
+): Promise<{ balances: NftBalance[]; summary: { totalUsdBalance: number } }> {
   const results: NftBalance[] = [];
+  const nftDonationRepo = AppDataSource.getRepository(NftDonation);
+  let totalUsdBalance = 0;
 
-  for (const [chainIdStr, collections] of Object.entries(
+  for (const [chainIdOption, collections] of Object.entries(
     CHAIN_ID_TO_NFT_COLLECTIONS,
   )) {
-    const chainId = Number(chainIdStr);
+    const chainId = Number(chainIdOption);
     if (!collections.length) continue;
 
     const url = `${ALCHEMY_BASE_URLS[chainId]}/nft/v3/${process.env.ALCHEMY_API_KEY}/getNFTsForOwner`;
@@ -155,25 +164,47 @@ export async function calculateNftBalances(
     }
 
     try {
-      console.log(params);
       const ownedNfts = await fetchAllPages(url, params);
 
-      const allowed = new Set(collections.map((c) => c.address.toLowerCase()));
-
       for (const nft of ownedNfts) {
-        if (!allowed.has(nft.contract.address.toLowerCase())) continue;
+        const meta = collections.find(
+          (c) => c.address.toLowerCase() === nft.contract.address.toLowerCase(),
+        );
+        if (!meta) continue;
+
+        let usdValue: number | undefined;
+        if (meta.slug) {
+          const floor = await fetchNftFloorFromOpensea(meta.slug, nft.tokenId);
+          if (floor?.usdValue) {
+            usdValue = floor.usdValue * Number(nft.balance);
+          }
+        }
+        totalUsdBalance += usdValue ?? 0;
+
+        const dbRow = await nftDonationRepo.findOne({
+          where: {
+            collectionAddress: nft.contract.address.toLowerCase() as Hex,
+            tokenId: Number(nft.tokenId),
+          },
+          select: ['imageUrl'],
+        });
+        const image =
+          dbRow?.imageUrl ??
+          nft.image?.cachedUrl ??
+          nft.image?.originalUrl ??
+          nft.raw?.metadata?.image ??
+          null;
+
         results.push({
           chainId,
           contract: nft.contract.address,
           collection: nft.contract.name,
           tokenId: nft.tokenId,
           balance: nft.balance,
+          type: meta.standard,
+          image,
+          usdValue,
           name: nft.name ?? nft.raw?.metadata?.name,
-          image:
-            nft.image?.cachedUrl ??
-            nft.image?.originalUrl ??
-            nft.raw?.metadata?.image ??
-            null,
         });
       }
     } catch (err) {
@@ -181,5 +212,8 @@ export async function calculateNftBalances(
     }
   }
 
-  return { balances: results };
+  return {
+    balances: results,
+    summary: { totalUsdBalance },
+  };
 }

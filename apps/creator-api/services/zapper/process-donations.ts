@@ -7,11 +7,12 @@ import { fetchAllKnownDonationHashes } from '../../db/fetch-known-donations';
 import { storeToDatabase } from '../../db/store-new-donation';
 import { AppHistoryVariables, ZapperNode, ZapperResponse } from '../../types';
 import { enrichNodesWithHistoricalPrice } from '../../utils/enrich-nodes';
-import { DonationData } from '@idriss-xyz/constants';
+import { StoredDonationData } from '@idriss-xyz/constants';
+import { isTokenItem } from '../../utils/zapper-type-guards';
 
-const ZAPPER_API_KEY = process.env.ZAPPER_API_KEY;
-
-export async function syncAndStoreNewDonations(): Promise<DonationData[]> {
+export async function syncAndStoreNewDonations(): Promise<
+  StoredDonationData[]
+> {
   const knownHashes = await fetchAllKnownDonationHashes();
 
   const newEdges: { node: ZapperNode }[] = [];
@@ -20,7 +21,9 @@ export async function syncAndStoreNewDonations(): Promise<DonationData[]> {
 
   while (hasNextPage) {
     const variables: AppHistoryVariables = { slug: 'idriss', after: cursor };
-    const encodedKey = Buffer.from(ZAPPER_API_KEY ?? '').toString('base64');
+    const encodedKey = Buffer.from(process.env.ZAPPER_API_KEY ?? '').toString(
+      'base64',
+    );
     const response = await fetch(ZAPPER_API_URL, {
       method: 'POST',
       headers: {
@@ -50,7 +53,8 @@ export async function syncAndStoreNewDonations(): Promise<DonationData[]> {
       if (descriptionItems?.[2]?.stringValue) {
         if (descriptionItems[2].stringValue === 'N/A') return false;
         if (
-          descriptionItems[2].stringValue === descriptionItems[0]?.amountRaw
+          isTokenItem(descriptionItems[0]) &&
+          descriptionItems[2].stringValue === descriptionItems[0].amountRaw
         ) {
           return false;
         }
@@ -78,7 +82,7 @@ export async function syncAndStoreNewDonations(): Promise<DonationData[]> {
     cursor = appTimeline.pageInfo?.endCursor ?? null;
   }
 
-  let storedDonations: DonationData[] = [];
+  let storedDonations: StoredDonationData[] = [];
   if (newEdges.length > 0) {
     await enrichNodesWithHistoricalPrice(newEdges);
     storedDonations = await storeToDatabase(newEdges);

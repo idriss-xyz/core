@@ -405,7 +405,7 @@ export const CHAIN_ID_TO_TOKENS = {
   ],
 } satisfies Record<string, ChainToken[]>;
 
-export const CHAIN_ID_TO_NFT_COLLECTIONS = {
+export const CHAIN_ID_TO_NFT_COLLECTIONS: Record<number, ChainNft[]> = {
   [CREATOR_CHAIN.ETHEREUM.id]: [
     {
       address: '0x0fc3dd8c37880a297166bed57759974a157f0e74',
@@ -488,7 +488,7 @@ export const CHAIN_ID_TO_NFT_COLLECTIONS = {
       slug: 'parallel-companions',
     },
   ],
-} satisfies Record<string, ChainNft[]>;
+};
 
 export const DEFAULT_ALLOWED_CHAINS_IDS = [
   CREATOR_CHAIN.ABSTRACT.id,
@@ -501,7 +501,7 @@ export const DEFAULT_ALLOWED_CHAINS_IDS = [
 export const EMPTY_HEX = '0x';
 
 export const COPILOT_API_URL = 'https://copilot-api.idriss.xyz';
-export const CREATOR_API_URL = 'https://creators-api.idriss.xyz';
+export const CREATOR_API_URL = 'http://localhost:4000';
 
 export const DEFAULT_DONATION_MIN_ALERT_AMOUNT = 1;
 export const DEFAULT_DONATION_MIN_TTS_AMOUNT = 3;

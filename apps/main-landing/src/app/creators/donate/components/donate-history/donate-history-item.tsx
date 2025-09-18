@@ -10,7 +10,7 @@ import {
   TooltipTrigger,
   TooltipProvider,
 } from '@idriss-xyz/ui/tooltip';
-import { CREATOR_CHAIN, DonationData } from '@idriss-xyz/constants';
+import { CREATOR_CHAIN, StoredDonationData } from '@idriss-xyz/constants';
 import {
   getTransactionUrls,
   getModifiedLeaderboardName,
@@ -26,7 +26,7 @@ import { TokenLogo } from '@/app/creators/app/earnings/stats-and-history/token-l
 import { useTimeAgo } from '../../hooks/use-time-ago';
 
 type Properties = {
-  donation: DonationData;
+  donation: StoredDonationData;
   showReceiver?: boolean;
   showMenu?: boolean;
 };
@@ -36,13 +36,32 @@ export const DonateHistoryItem = ({
   showReceiver,
   showMenu = true,
 }: Properties) => {
+  console.log(donation);
   const timeAgo = useTimeAgo({ timestamp: donation.timestamp });
   const router = useRouter();
-  const tokenSymbol = donation.token.symbol;
+  /* ——— distinguish donation type ——— */
+  const isTokenDonation = donation.kind === 'token';
+
+  const tokenSymbol = isTokenDonation
+    ? donation.token.symbol // fungible token
+    : donation.name; // ← assumes column exists for NFTs
   const tipReceiver = donation.toUser;
   const tradeValue = donation.tradeValue;
   const tipComment = donation.comment;
-  const tokenImage = donation.token.imageUrl;
+  const tokenImage = isTokenDonation
+    ? donation.token.imageUrl
+    : donation.imageUrl; // ← assumes column exists for NFTs
+
+  const tokenDecimals = isTokenDonation ? donation.token.decimals : 0;
+
+  const formattedAmount = isTokenDonation
+    ? formatTokenValue(
+        Number.parseFloat(
+          formatUnits(BigInt(donation.amountRaw), tokenDecimals),
+        ),
+      )
+    : donation.quantity.toString(); // NFTs: plain quantity
+
   const receiverAddress = tipReceiver.address;
   const tipperFromAddress = donation.fromAddress;
 
@@ -102,15 +121,7 @@ export const DonateHistoryItem = ({
                 {nameToDisplay}
               </Link>{' '}
               <span className="align-middle text-body3 text-neutral-600">
-                {showReceiver ? 'received' : 'sent'}{' '}
-                {formatTokenValue(
-                  Number.parseFloat(
-                    formatUnits(
-                      BigInt(donation.amountRaw),
-                      donation.token.decimals,
-                    ),
-                  ),
-                )}{' '}
+                {showReceiver ? 'received' : 'sent'} {formattedAmount}{' '}
                 {tokenSymbol}{' '}
               </span>
               <span className="relative inline-block size-6 align-middle">

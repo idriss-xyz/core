@@ -2,6 +2,8 @@ import { DataSource } from 'typeorm';
 import {
   Creator,
   Donation,
+  NftDonation,
+  TokenDonation,
   DonationEffect,
   DonationParameters,
   CreatorNetwork,
@@ -41,6 +43,8 @@ import {
   AddIsDonorToCreator1757184858317,
   FixCreatorAddressSequence1757432868000,
   CleanupUnsupportedTokensNetworks1757496093000,
+  RestructureDonations1758104996000,
+  MoveNetworkToChildTables1758104997000,
 } from './migrations';
 import { CreatorProfileView } from './views';
 
@@ -49,6 +53,8 @@ export const AppDataSource = new DataSource({
   url: process.env.DATABASE_URL,
   entities: [
     Donation,
+    NftDonation,
+    TokenDonation,
     DonationEffect,
     Token,
     User,
@@ -91,6 +97,8 @@ export const AppDataSource = new DataSource({
     AddIsDonorToCreator1757184858317,
     FixCreatorAddressSequence1757432868000,
     CleanupUnsupportedTokensNetworks1757496093000,
+    RestructureDonations1758104996000,
+    MoveNetworkToChildTables1758104997000,
   ],
 });
 

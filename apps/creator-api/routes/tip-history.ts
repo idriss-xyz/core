@@ -8,7 +8,7 @@ import {
   createAddressToCreatorMap,
 } from '@idriss-xyz/utils';
 import { enrichDonationsWithCreatorInfo } from '../utils/calculate-stats';
-import { DonationData } from '@idriss-xyz/constants';
+import { StoredDonationData } from '@idriss-xyz/constants';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { DEMO_ADDRESS } from '../tests/test-data/constants';
@@ -100,7 +100,7 @@ router.post('/sync', async (req: Request, res: Response) => {
 
     let retries = 0;
     let foundDonationForUser = false;
-    const allNewlySyncedDonations: DonationData[] = [];
+    const allNewlySyncedDonations: StoredDonationData[] = [];
 
     while (retries < MAX_RETRIES && !foundDonationForUser) {
       if (retries > 0) {

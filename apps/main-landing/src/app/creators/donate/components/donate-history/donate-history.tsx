@@ -3,7 +3,7 @@ import { Spinner } from '@idriss-xyz/ui/spinner';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { Hex } from 'viem';
-import { DonationData } from '@idriss-xyz/constants';
+import { StoredDonationData } from '@idriss-xyz/constants';
 
 import { DonateContentValues } from '@/app/creators/donate/types';
 
@@ -18,7 +18,7 @@ type Properties = {
   showReceiver?: boolean;
   donationsError: boolean;
   donationsLoading: boolean;
-  donations: DonationData[];
+  donations: StoredDonationData[];
   currentContent: DonateContentValues;
   updateCurrentContent: (content: DonateContentValues) => void;
 };

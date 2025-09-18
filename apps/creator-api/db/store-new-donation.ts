@@ -5,23 +5,35 @@ import { AppDataSource } from './database';
 import { Donation } from './entities/donations.entity';
 import { User } from './entities/user.entity';
 import { Token } from './entities/token.entity';
+import { TokenDonation } from './entities/token-donation.entity';
+import { NftDonation } from './entities/nft-donation.entity';
 import { ZapperNode } from '../types';
+import { isTokenItem, isNftItem } from '../utils/zapper-type-guards';
+import { fetchNftFloorFromOpensea } from '../utils/price-fetchers';
 import { enrichUserData } from '../utils/enrich-user';
-import { DonationData } from '@idriss-xyz/constants';
+import {
+  StoredDonationData,
+  TokenDonationData,
+  NftDonationData,
+  CHAIN_ID_TO_NFT_COLLECTIONS,
+} from '@idriss-xyz/constants';
+import { getChainByNetworkName } from '@idriss-xyz/utils';
 
 export async function storeToDatabase(
   edges: { node: ZapperNode }[],
   overwrite: boolean = false,
-): Promise<DonationData[]> {
-  const donationRepo = AppDataSource.getRepository(Donation);
+): Promise<StoredDonationData[]> {
+  const donationBaseRepo = AppDataSource.getRepository(Donation);
+  const tokenDonationRepo = AppDataSource.getRepository(TokenDonation);
+  const nftDonationRepo = AppDataSource.getRepository(NftDonation);
   const userRepo = AppDataSource.getRepository(User);
   const tokenRepo = AppDataSource.getRepository(Token);
-  const savedDonations: DonationData[] = [];
+  const savedDonations: StoredDonationData[] = [];
 
   const nodes = edges.map((edge) => edge.node);
   const transactionHashes = nodes.map((node) => node.transaction.hash);
 
-  const existingDonations = await donationRepo.find({
+  const existingDonations = await donationBaseRepo.find({
     where: { transactionHash: In(transactionHashes) },
     select: ['transactionHash'],
   });
@@ -80,15 +92,18 @@ export async function storeToDatabase(
       }
     }
 
-    const tokenData = node.interpretation.descriptionDisplayItems[0]?.tokenV2;
-    if (tokenData) {
-      const existingToken = await tokenRepo.findOneBy({
+    const item0 = node.interpretation.descriptionDisplayItems[0];
+
+    /* ──────────── TOKEN donation ──────────── */
+    if (isTokenItem(item0)) {
+      const tokenData = item0.tokenV2;
+      let existingToken = await tokenRepo.findOneBy({
         address: tokenData.address.toLowerCase() as Hex,
         network: node.network,
       });
 
       if (!existingToken) {
-        await tokenRepo.save({
+        existingToken = await tokenRepo.save({
           address: tokenData.address.toLowerCase() as Hex,
           symbol: tokenData.symbol,
           imageUrl: tokenData.imageUrlV2,
@@ -98,35 +113,98 @@ export async function storeToDatabase(
         });
       }
 
-      const amountRaw =
-        node.interpretation.descriptionDisplayItems[0]?.amountRaw || '0';
+      const amountRaw = item0.amountRaw || '0';
       const tradeValue = tokenData.priceData?.price
         ? Number(formatUnits(BigInt(amountRaw), tokenData.decimals)) *
           tokenData.priceData.price
         : 0;
 
-      const savedDonation = await donationRepo.save({
+      // Save base donation row
+      const base = donationBaseRepo.create({
         transactionHash: node.transaction.hash,
-        fromAddress: fromUser.address.toLowerCase() as Hex,
+        fromAddress: fromAddress,
         toAddress: toUser.address.toLowerCase() as Hex,
         timestamp: node.timestamp,
         comment: node.interpretation.descriptionDisplayItems[2]?.stringValue,
         tradeValue,
-        tokenAddress: tokenData.address.toLowerCase() as Hex,
-        network: node.network,
         data: node,
-        amountRaw,
         fromUser: enrichedFromUser,
         toUser: enrichedToUser,
-        token: {
-          address: tokenData.address.toLowerCase() as Hex,
-          symbol: tokenData.symbol,
-          imageUrl: tokenData.imageUrlV2,
-          network: node.network,
-          decimals: tokenData.decimals,
-        },
       });
-      savedDonations.push(savedDonation);
+      const savedBase = await donationBaseRepo.save(base);
+
+      // Save token-specific row
+      await tokenDonationRepo.save({
+        id: savedBase.id,
+        tokenAddress: tokenData.address.toLowerCase() as Hex,
+        amountRaw: amountRaw,
+        network: node.network,
+        token: existingToken,
+      });
+
+      savedDonations.push({
+        ...savedBase,
+        kind: 'token',
+        tokenAddress: tokenData.address.toLowerCase() as Hex,
+        amountRaw,
+        network: node.network,
+        token: existingToken,
+      } satisfies TokenDonationData);
+      continue;
+    }
+
+    /* ──────────── NFT donation ──────────── */
+    if (isNftItem(item0)) {
+      const { collectionAddress, tokenId, quantity, nftToken } = item0;
+
+      const chain = getChainByNetworkName(node.network);
+      const slug =
+        chain &&
+        CHAIN_ID_TO_NFT_COLLECTIONS[chain.id]?.find(
+          (c) => c.address.toLowerCase() === collectionAddress.toLowerCase(),
+        )?.slug;
+
+      const floor = slug
+        ? await fetchNftFloorFromOpensea(slug, tokenId.toString())
+        : null;
+
+      const tradeValue = (floor?.usdValue ?? 0) * quantity;
+
+      // Save base donation row
+      const base = donationBaseRepo.create({
+        transactionHash: node.transaction.hash,
+        fromAddress: fromAddress,
+        toAddress: toUser.address.toLowerCase() as Hex,
+        timestamp: node.timestamp,
+        comment: node.interpretation.descriptionDisplayItems[2]?.stringValue,
+        tradeValue,
+        data: node,
+        fromUser: enrichedFromUser,
+        toUser: enrichedToUser,
+      });
+      const savedBase = await donationBaseRepo.save(base);
+
+      await nftDonationRepo.save({
+        id: savedBase.id,
+        collectionAddress: collectionAddress.toLowerCase() as Hex,
+        tokenId,
+        quantity,
+        name: nftToken.name,
+        imageUrl: nftToken.mediasV3.images.edges.node.medium,
+        network: node.network,
+      });
+
+      savedDonations.push({
+        ...savedBase,
+        kind: 'nft',
+        collectionAddress: collectionAddress.toLowerCase() as Hex,
+        tokenId,
+        quantity,
+        name: nftToken.name,
+        imageUrl: nftToken.mediasV3.images.edges.node.medium,
+        network: node.network,
+      } satisfies NftDonationData);
+      continue;
     }
   }
   return savedDonations;
