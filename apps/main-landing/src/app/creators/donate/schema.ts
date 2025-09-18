@@ -14,7 +14,7 @@ const _createSendPayloadSchema = (allowedChainIds: number[]) => {
       .optional(),
     sfx: z.string().max(30, 'Max 30 characters allowed.'),
     type: z.string().optional(),
-    tokenId: z.number().optional(),
+    tokenId: z.string().optional(),
     contract: hexSchema.optional(),
   });
 };
@@ -32,7 +32,7 @@ export const createFormPayloadSchema = (allowedChainIds: number[]) => {
       .optional(),
     sfx: z.string().max(30, 'Max 30 characters allowed.'),
     type: z.string().optional(),
-    tokenId: z.number().optional(),
+    tokenId: z.string().optional(),
     contract: hexSchema.optional(),
   });
 };

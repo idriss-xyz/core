@@ -14,7 +14,7 @@ type NftBalance = {
   chainId: number;
   contract: string;
   collection: string;
-  tokenId: number;
+  tokenId: string;
   balance: string;
   name?: string;
   image?: string;

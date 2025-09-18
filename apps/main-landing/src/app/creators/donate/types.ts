@@ -21,7 +21,7 @@ export type Address = {
 };
 
 export type Collectible = {
-  tokenId: number;
+  tokenId: string;
   name: string;
   image: string;
   collection: string;

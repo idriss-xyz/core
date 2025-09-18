@@ -493,7 +493,12 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
           )}
         </h1>
 
-        <Form onSubmit={formMethods.handleSubmit(onSubmit)} className="w-full">
+        <Form
+          onSubmit={formMethods.handleSubmit(onSubmit, (errors) => {
+            console.error('Form validation errors:', errors);
+          })}
+          className="w-full"
+        >
           <Controller
             name="amount"
             control={formMethods.control}
