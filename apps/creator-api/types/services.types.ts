@@ -19,8 +19,18 @@ export interface NftDisplayItem {
   collectionAddress: Hex;
   quantity: number;
   nftToken: {
-    metadata: { uri: string };
     name: string;
+    mediasV3: {
+      images: {
+        edges: {
+          node: {
+            large: string;
+            medium: string;
+            url: string;
+          };
+        };
+      };
+    };
   };
 }
 

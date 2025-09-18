@@ -65,8 +65,16 @@ export const TipHistoryQuery = `
                 collectionAddress
                 quantity
                 nftToken {
-                  metadata {
-                    uri
+                  mediasV3 {
+                    images {
+                      edges {
+                        node {
+                          large
+                          medium
+                          url
+                        }
+                      }
+                    }
                   }
                   name
                 }

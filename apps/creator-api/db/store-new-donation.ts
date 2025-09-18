@@ -182,7 +182,7 @@ export async function storeToDatabase(
         tokenId,
         quantity,
         name: nftToken.name,
-        imageUrl: nftToken.metadata.uri,
+        imageUrl: nftToken.mediasV3.images.edges.node.medium,
         network: node.network,
       });
 
@@ -193,7 +193,7 @@ export async function storeToDatabase(
         tokenId,
         quantity,
         name: nftToken.name,
-        imageUrl: nftToken.metadata.uri,
+        imageUrl: nftToken.mediasV3.images.edges.node.medium,
         network: node.network,
       } satisfies NftDonationData);
       continue;
