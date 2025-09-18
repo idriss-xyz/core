@@ -161,8 +161,6 @@ export const deleteCreatorAccount = async (authToken: string) => {
   }
 };
 
-// TODO remove
-// ts-unused-exports:disable-next-line
 export const getChainShortNamesFromIds = (chainsIds: number[]) => {
   return (
     chainsIds

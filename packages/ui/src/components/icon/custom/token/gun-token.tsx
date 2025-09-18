@@ -11,7 +11,7 @@ export const GunToken = ({ className }: Properties) => {
       width="40"
       height="40"
       viewBox="0 0 300 346.15"
-      >
+    >
       <defs>
         <style>
           {`.{fill:none;}
