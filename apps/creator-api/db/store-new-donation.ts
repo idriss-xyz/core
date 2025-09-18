@@ -15,7 +15,9 @@ import {
   StoredDonationData,
   TokenDonationData,
   NftDonationData,
+  CHAIN_ID_TO_NFT_COLLECTIONS,
 } from '@idriss-xyz/constants';
+import { getChainByNetworkName } from '@idriss-xyz/utils';
 
 export async function storeToDatabase(
   edges: { node: ZapperNode }[],
@@ -155,11 +157,17 @@ export async function storeToDatabase(
     if (isNftItem(item0)) {
       const { collectionAddress, tokenId, quantity, nftToken } = item0;
 
-      // todo: change to slug instead of address
-      const floor = await fetchNftFloorFromAlchemy(
-        collectionAddress,
-        tokenId.toString(),
-      );
+      const chain = getChainByNetworkName(node.network);
+      const slug =
+        chain &&
+        CHAIN_ID_TO_NFT_COLLECTIONS[chain.id]?.find(
+          (c) => c.address.toLowerCase() === collectionAddress.toLowerCase(),
+        )?.slug;
+
+      const floor = slug
+        ? await fetchNftFloorFromAlchemy(slug, tokenId.toString())
+        : null;
+
       const tradeValue = (floor?.usdValue ?? 0) * quantity;
 
       // Save base donation row

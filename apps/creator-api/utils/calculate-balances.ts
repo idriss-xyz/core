@@ -2,7 +2,6 @@ import { createPublicClient, http, Hex, formatUnits } from 'viem';
 import { Token } from '../db/entities/token.entity';
 import {
   CHAIN_ID_TO_NFT_COLLECTIONS,
-  CREATOR_CHAIN,
   ERC20_ABI,
   NULL_ADDRESS,
 } from '@idriss-xyz/constants';
@@ -138,10 +137,10 @@ export async function calculateNftBalances(
 ): Promise<{ balances: NftBalance[] }> {
   const results: NftBalance[] = [];
 
-  for (const [chainIdStr, collections] of Object.entries(
+  for (const [chainIdOption, collections] of Object.entries(
     CHAIN_ID_TO_NFT_COLLECTIONS,
   )) {
-    const chainId = Number(chainIdStr);
+    const chainId = Number(chainIdOption);
     if (!collections.length) continue;
 
     const url = `${ALCHEMY_BASE_URLS[chainId]}/nft/v3/${process.env.ALCHEMY_API_KEY}/getNFTsForOwner`;
