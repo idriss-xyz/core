@@ -27,7 +27,9 @@ export type Collectible = {
   collection: string;
   contract: Hex;
   chainId: number;
-  type: string;
+  balance: string;
+  usdValue?: number;
+  type: 'erc721' | 'erc1155';
 };
 
 export type CreatorProfile = {
