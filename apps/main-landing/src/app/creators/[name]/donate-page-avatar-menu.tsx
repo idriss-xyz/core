@@ -16,7 +16,7 @@ export function DonatePageAvatarMenu() {
   const router = useRouter();
 
   const handleNavigateToDonorStats = useCallback(() => {
-    router.push(`/creators/donor/${donor?.address}`);
+    router.push(`/creators/donor/${donor?.name}`);
   }, [router, donor]);
 
   return (
@@ -62,7 +62,7 @@ export function DonatePageAvatarMenu() {
                   className="group flex min-h-[32px] cursor-pointer items-center gap-3 rounded-[4px] px-3 py-1"
                 >
                   <Icon
-                    name="BadgeDollarSign"
+                    name="LineChart"
                     size={20}
                     className="text-neutral-600 group-hover:text-mint-600"
                   />

@@ -8,12 +8,4 @@ export const CHAIN_TO_IDRISS_TIPPING_ADDRESS = {
   // [CREATOR_CHAIN.AVALANCHE.id]: '0xBDc14c9946A957C7038900dE19Fb2Aa3f72CFAc2',
 } as const;
 
-export const IDRISS_LEGACY_API_URL = 'https://api.idriss.xyz';
-
-export const WHITELISTED_URLS = [
-  'https://static-cdn.jtvnw.net',
-  'https://ik.imagekit.io/lens/media-snapshot',
-  'https://imagedelivery.net',
-  'https://i.imgur.com',
-  'https://euc.li',
-];
+export const WHITELISTED_URLS = ['https://static-cdn.jtvnw.net'];

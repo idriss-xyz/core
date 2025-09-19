@@ -13,7 +13,6 @@ import {
 import { CREATOR_CHAIN, StoredDonationData } from '@idriss-xyz/constants';
 import {
   getTransactionUrls,
-  getModifiedLeaderboardName,
   formatFiatValue,
   formatTokenValue,
 } from '@idriss-xyz/utils';
@@ -69,13 +68,12 @@ export const DonateHistoryItem = ({
     ? tipReceiver?.displayName
     : donation.fromUser.displayName;
 
-  const nameToDisplay = getModifiedLeaderboardName(
-    displayName ?? (showReceiver ? receiverAddress : tipperFromAddress),
-  );
+  const nameToDisplay =
+    (displayName ?? showReceiver) ? receiverName : tipperFromName;
 
   const redirectUrl = showReceiver
-    ? `/creators/donor/${receiverAddress}`
-    : `/creators/donor/${tipperFromAddress}`;
+    ? `/creators/donor/${receiverName}`
+    : `/creators/donor/${tipperFromName}`;
 
   const avatarSource = showReceiver
     ? tipReceiver.avatarUrl

@@ -1,5 +1,9 @@
 import { type Hex } from 'viem';
-import { CREATOR_CHAIN, CREATOR_API_URL } from '@idriss-xyz/constants';
+import {
+  CREATOR_CHAIN,
+  CREATOR_API_URL,
+  IDRISS_LEGACY_API_URL,
+} from '@idriss-xyz/constants';
 
 const SELL_TOKEN_BY_NETWORK: Record<number, string> = {
   [CREATOR_CHAIN.BASE.id]: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',
@@ -38,7 +42,7 @@ export async function calculateDollar(
     }
 
     const response = await fetch(
-      `https://api.idriss.xyz/token-price?${new URLSearchParams({
+      `${IDRISS_LEGACY_API_URL}/token-price?${new URLSearchParams({
         sellToken,
         buyToken,
         network: networkId.toString(),

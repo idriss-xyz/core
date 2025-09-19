@@ -79,13 +79,20 @@ export function calculateDonationLeaderboard(
   > = {};
 
   for (const donation of donations) {
-    const creator = addressToCreatorMap?.get(
-      donation.fromAddress.toLowerCase(),
-    );
+    const fromAddrLower = donation.fromAddress.toLowerCase();
 
-    const groupKey = creator
-      ? creator.primaryAddress.toLowerCase()
-      : donation.fromAddress.toLowerCase();
+    const donorDisplayName = donation.fromUser?.displayName ?? 'anon';
+    const donorAvatarUrl = donation.fromUser?.avatarUrl ?? '';
+
+    const creator = addressToCreatorMap?.get(fromAddrLower);
+
+    const isRegisteredDonor = !creator && donorDisplayName !== 'anon';
+
+    const groupKey: string = creator
+      ? creator.primaryAddress.toLowerCase() // bundle all creator wallets
+      : isRegisteredDonor
+        ? donorDisplayName.toLowerCase() // bundle by user name
+        : fromAddrLower; // anonymous → per-address
 
     if (!groupedDonations[groupKey]) {
       groupedDonations[groupKey] = {
@@ -95,8 +102,16 @@ export function calculateDonationLeaderboard(
         totalAmount: 0,
         donationCount: 0,
         donorSince: donation.timestamp,
-        displayName: creator ? creator.displayName : 'anon',
-        avatarUrl: creator ? (creator.profilePictureUrl ?? '') : '',
+        displayName: creator
+          ? creator.displayName
+          : isRegisteredDonor
+            ? donorDisplayName
+            : 'anon',
+        avatarUrl: creator
+          ? (creator.profilePictureUrl ?? '')
+          : isRegisteredDonor
+            ? donorAvatarUrl
+            : '',
       };
     }
 
@@ -192,8 +207,6 @@ export function calculateTokensToSend({
   const totalTokenBalance = parseUnits(balance.balance, balance.decimals);
   const totalUsdValue = balance.usdValue;
 
-  // Use 18 decimals for high-precision floating point math, a common
-  // standard in crypto, to prevent rounding errors.
   const precision = 1e18;
   const scaledRequestedAmount = BigInt(
     Math.round(requestedUsdAmount * precision),

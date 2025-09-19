@@ -2,7 +2,6 @@ import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { Spinner } from '@idriss-xyz/ui/spinner';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { Icon } from '@idriss-xyz/ui/icon';
-import { Hex } from 'viem';
 import { StoredDonationData } from '@idriss-xyz/constants';
 
 import { DonateContentValues } from '@/app/creators/donate/types';
@@ -10,11 +9,6 @@ import { DonateContentValues } from '@/app/creators/donate/types';
 import { DonateHistoryItem } from './donate-history-item';
 
 type Properties = {
-  address: {
-    isValid: boolean;
-    data: Hex | null;
-    isFetching: boolean;
-  };
   showReceiver?: boolean;
   donationsError: boolean;
   donationsLoading: boolean;
@@ -23,7 +17,6 @@ type Properties = {
   updateCurrentContent: (content: DonateContentValues) => void;
 };
 export const DonateHistory = ({
-  address,
   donations,
   showReceiver,
   donationsError,
@@ -58,24 +51,18 @@ export const DonateHistory = ({
         rootClassName="w-full max-h-[500px]"
         className="size-full max-h-[500px] overflow-y-auto transition-all duration-500"
       >
-        {(address.isFetching || (address.isValid && donationsLoading)) && (
+        {donationsLoading && (
           <Spinner className="mx-auto my-4 size-16 text-mint-600" />
         )}
 
-        {address.isValid && donationsError && (
+        {donationsError && (
           <p className="flex items-center justify-center gap-2 text-center text-heading4 text-red-500">
             <Icon name="AlertCircle" size={40} />{' '}
             <span>Cannot get donation list</span>
           </p>
         )}
 
-        {!address.isFetching && !address.isValid && (
-          <p className="flex items-center justify-center gap-2 text-center text-heading4 text-red-500">
-            <Icon name="AlertCircle" size={40} /> <span>Wrong address</span>
-          </p>
-        )}
-
-        {address.isValid && !donationsError && !donationsLoading && (
+        {!donationsLoading && (
           <div className="flex w-full flex-col gap-y-3 pr-5 pt-1">
             {sortedDonations.length > 0 ? (
               sortedDonations.map((donation) => {

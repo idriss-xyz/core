@@ -103,7 +103,7 @@ export default function DonationNotification({
 
       <div className="flex flex-col justify-center gap-y-1">
         <p className="flex flex-row flex-wrap items-center gap-x-1 text-label3 text-neutral-900">
-          {`${getModifiedLeaderboardName(donor)} `}
+          {donor}
 
           {!token.details && (
             <span className="text-body3 text-neutral-600">
