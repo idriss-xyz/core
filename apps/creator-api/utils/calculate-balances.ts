@@ -141,6 +141,7 @@ async function fetchAllPages(url: string, params: URLSearchParams) {
 
 export async function calculateNftBalances(
   userAddress: Hex,
+  includePrices = true,
 ): Promise<{ balances: NftBalance[]; summary: { totalUsdBalance: number } }> {
   const results: NftBalance[] = [];
   const nftDonationRepo = AppDataSource.getRepository(NftDonation);
@@ -173,11 +174,10 @@ export async function calculateNftBalances(
         if (!meta) continue;
 
         let usdValue: number | undefined;
-        if (meta.slug) {
+
+        if (includePrices && meta.slug) {
           const floor = await fetchNftFloorFromOpensea(meta.slug, nft.tokenId);
-          if (floor?.usdValue) {
-            usdValue = floor.usdValue * Number(nft.balance);
-          }
+          if (floor?.usdValue) usdValue = floor.usdValue * Number(nft.balance);
         }
         totalUsdBalance += usdValue ?? 0;
 
@@ -186,8 +186,8 @@ export async function calculateNftBalances(
             collectionAddress: nft.contract.address.toLowerCase() as Hex,
             tokenId: Number(nft.tokenId),
           },
-          select: ['imageUrl'],
         });
+
         const image =
           dbRow?.imageUrl ??
           nft.image?.cachedUrl ??

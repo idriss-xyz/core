@@ -40,6 +40,8 @@ router.get('/:address', async (req: Request, res: Response) => {
 
 router.get('/nft/:address', async (req: Request, res: Response) => {
   const { address } = req.params;
+  const { includePrices } = req.query;
+  const withPrices = includePrices === 'true';
 
   if (address && address === DEMO_ADDRESS) {
     const mockBalances = JSON.parse(
@@ -58,7 +60,7 @@ router.get('/nft/:address', async (req: Request, res: Response) => {
   }
 
   try {
-    const nftResult = await calculateNftBalances(address);
+    const nftResult = await calculateNftBalances(address, withPrices);
     res.json({ nftResult });
   } catch (error) {
     console.error('Get NFT balances error:', error);
