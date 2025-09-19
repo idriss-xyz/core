@@ -59,6 +59,7 @@ import { useMobileFilter } from '../../hooks/use-mobile-filter';
 import { Collectible, CreatorProfile } from '../../types';
 
 import { ChainSelect, CollectibleGallery, TokenSelect } from './components';
+import { LayersBadge } from './components/collectible-gallery';
 
 type Properties = {
   className?: string;
@@ -519,7 +520,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
               items={[
                 {
                   key: 'token',
-                  label: 'Token',
+                  label: 'TOKEN',
                   children: (
                     <div>
                       <Controller
@@ -595,7 +596,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                 },
                 {
                   key: 'collectible',
-                  label: 'Collectible',
+                  label: 'COLLECTIBLE',
                   children: (
                     <div className="mt-4">
                       {selectedCollectible && (
@@ -603,7 +604,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                           <img
                             src={selectedCollectible.image}
                             alt={selectedCollectible.name}
-                            className="size-[42px] rounded-[12px] border-neutral-300 object-cover"
+                            className="h-[88px] w-auto rounded-[12px] border-neutral-300 object-cover"
                           />
                           <div className="flex flex-col">
                             <div className="h-4.5">
@@ -616,19 +617,38 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                                 {selectedCollectible.collection}
                               </span>
                             </div>
+                            <div className="h-4.5">
+                              <LayersBadge
+                                amount={selectedCollectible.balance}
+                              />
+                            </div>
+                          </div>
+                          <div className="flex w-10">
+                            <IconButton
+                              intent="tertiary"
+                              size="small"
+                              iconName="RefreshCw"
+                              className="rounded-xl"
+                              onClick={() => {
+                                return setIsCollectibleModalOpen(true);
+                              }}
+                            />
                           </div>
                         </div>
                       )}
-                      <Button
-                        intent="secondary"
-                        size="medium"
-                        className="w-full"
-                        onClick={() => {
-                          return setIsCollectibleModalOpen(true);
-                        }}
-                      >
-                        Select Collectible
-                      </Button>
+                      {!selectedCollectible && (
+                        <Button
+                          intent="primary"
+                          size="medium"
+                          className="w-full uppercase"
+                          onClick={() => {
+                            return setIsCollectibleModalOpen(true);
+                          }}
+                          disabled={!walletClient?.account}
+                        >
+                          Select collectible
+                        </Button>
+                      )}
                     </div>
                   ),
                 },
@@ -754,25 +774,25 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
               <span>{submitError}</span>
             </div>
           )}
+          <div className="mt-4 w-full py-3 text-center">
+            <span className="text-label7 text-neutral-500">
+              By donating, you agree to the{' '}
+              <ExternalLink
+                className="text-mint-600 underline"
+                href={TERMS_OF_SERVICE_LINK}
+              >
+                Terms of service
+              </ExternalLink>{' '}
+              and{' '}
+              <ExternalLink
+                className="text-mint-600 underline"
+                href={PRIVACY_POLICY_LINK}
+              >
+                Privacy policy
+              </ExternalLink>
+            </span>
+          </div>
         </Form>
-        <div className="mt-4 w-full py-3 text-center">
-          <span className="text-label7 text-neutral-500">
-            By donating, you agree to the{' '}
-            <ExternalLink
-              className="text-mint-600 underline"
-              href={TERMS_OF_SERVICE_LINK}
-            >
-              Terms of service
-            </ExternalLink>{' '}
-            and{' '}
-            <ExternalLink
-              className="text-mint-600 underline"
-              href={PRIVACY_POLICY_LINK}
-            >
-              Privacy policy
-            </ExternalLink>
-          </span>
-        </div>
 
         <Modal
           isOpened={isCollectibleModalOpen}
@@ -831,20 +851,24 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                   contract: collectible.contract,
                   chainId: collectible.chainId,
                   image: collectible.image,
+                  balance: collectible.balance,
                 });
               }}
             />
-            <Button
-              size="medium"
-              intent="primary"
-              onClick={() => {
-                setIsCollectibleModalOpen(false);
-              }}
-              className="uppercase"
-              suffixIconName='ChevronRight'
-            >
-              Confirm
-            </Button>
+            <div className="flex items-center justify-end">
+              <Button
+                size="medium"
+                intent="primary"
+                onClick={() => {
+                  setIsCollectibleModalOpen(false);
+                }}
+                className="uppercase"
+                suffixIconName="ChevronRight"
+                disabled={!selectedCollectible}
+              >
+                Confirm
+              </Button>
+            </div>
           </div>
         </Modal>
       </div>

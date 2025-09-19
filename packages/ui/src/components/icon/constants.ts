@@ -55,6 +55,7 @@ import {
   Coins,
   Search,
   Filter,
+  Layers,
 } from 'lucide-react';
 
 import * as customIcons from './custom';
@@ -116,5 +117,6 @@ export const ICON = {
   Coins,
   Search,
   Filter,
+  Layers,
   ...customIcons,
 };

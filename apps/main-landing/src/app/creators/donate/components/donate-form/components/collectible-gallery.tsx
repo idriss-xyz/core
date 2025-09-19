@@ -2,11 +2,15 @@ import { useState } from 'react';
 import { Checkbox } from '@idriss-xyz/ui/checkbox';
 import { Card } from '@idriss-xyz/ui/card';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
-
-import { Collectible } from '../../../types';
-import { useCollectibles } from '../../../hooks/use-collectibles';
-import { CHAIN_ID_TO_NFT_COLLECTIONS, CREATOR_CHAIN } from '@idriss-xyz/constants';
+import {
+  CHAIN_ID_TO_NFT_COLLECTIONS,
+  CREATOR_CHAIN,
+} from '@idriss-xyz/constants';
 import { getAddress } from 'viem';
+import { Icon } from '@idriss-xyz/ui/icon';
+
+import { useCollectibles } from '../../../hooks/use-collectibles';
+import { Collectible } from '../../../types';
 
 interface Properties {
   collections: string[];
@@ -15,6 +19,15 @@ interface Properties {
   setShowMobileFilter: (show: boolean) => void;
   onSelect: (collectible: Collectible) => void;
 }
+
+export const LayersBadge = ({ amount }: { amount: string }) => {
+  return (
+    <div className="flex min-h-4 items-center gap-[6px] rounded-[4px] border border-neutral-300 bg-white p-1">
+      <Icon name="Layers" className="text-neutral-500" />
+      <span className="text-label6 text-neutralGreen-900">{amount}</span>
+    </div>
+  );
+};
 
 export const CollectibleGallery = ({
   collections,
@@ -61,30 +74,38 @@ export const CollectibleGallery = ({
             Collections
           </h3>
           <div className="space-y-2">
-            {CHAIN_ID_TO_NFT_COLLECTIONS[CREATOR_CHAIN.BASE.id].map((collection) => {
-              const collectionChecksumAddress = getAddress(collection.address);
-              return (
-                <label
-                  key={collectionChecksumAddress}
-                  className="flex cursor-pointer items-center gap-2"
-                >
-                  <Checkbox
-                    value={selectedCollections.includes(collectionChecksumAddress)}
-                    onChange={() => {
-                      return handleCollectionToggle(collectionChecksumAddress);
-                    }}
-                  />
-                  <span className="text-sm text-neutral-700">
-                    {collection.name}
-                  </span>
-                </label>
-              );
-            })}
+            {CHAIN_ID_TO_NFT_COLLECTIONS[CREATOR_CHAIN.BASE.id]?.map(
+              (collection) => {
+                const collectionChecksumAddress = getAddress(
+                  collection.address,
+                );
+                return (
+                  <label
+                    key={collectionChecksumAddress}
+                    className="flex cursor-pointer items-center gap-2"
+                  >
+                    <Checkbox
+                      value={selectedCollections.includes(
+                        collectionChecksumAddress,
+                      )}
+                      onChange={() => {
+                        return handleCollectionToggle(
+                          collectionChecksumAddress,
+                        );
+                      }}
+                    />
+                    <span className="text-sm text-neutral-700">
+                      {collection.name}
+                    </span>
+                  </label>
+                );
+              },
+            )}
           </div>
         </div>
 
         {/* Gallery */}
-        <div className="flex-1">
+        <div className="min-h-[340px] flex-1">
           {filteredCollectibles.length === 0 ? (
             <div className="py-8 text-center text-neutral-500">
               No collectibles found
@@ -95,7 +116,7 @@ export const CollectibleGallery = ({
                 return (
                   <div
                     key={collectible.tokenId}
-                    className="cursor-pointer rounded-lg border border-neutral-200 p-2 transition-colors hover:border-mint-500"
+                    className="flex cursor-pointer gap-[10px] rounded-xl border border-neutral-200 p-[6px] transition-colors hover:border-mint-500"
                     onClick={() => {
                       return onSelect(collectible);
                     }}
@@ -103,14 +124,21 @@ export const CollectibleGallery = ({
                     <img
                       src={collectible.image}
                       alt={collectible.name}
-                      className="mb-2 aspect-square w-full rounded-md object-cover"
+                      className="h-[214px] w-auto rounded-xl object-cover"
                     />
-                    <p className="truncate text-sm font-medium">
-                      {collectible.name}
-                    </p>
-                    <p className="truncate text-xs text-neutral-500">
-                      {collectible.collection}
-                    </p>
+                    <div className="flex">
+                      <div className="flex flex-col">
+                        <p className="truncate text-sm font-medium">
+                          {collectible.name}
+                        </p>
+                        <p className="truncate text-xs text-neutral-500">
+                          {collectible.collection}
+                        </p>
+                      </div>
+                      {collectible.type === 'erc1155' && (
+                        <LayersBadge amount={collectible.balance} />
+                      )}
+                    </div>
                   </div>
                 );
               })}
@@ -143,25 +171,33 @@ export const CollectibleGallery = ({
               />
             </div>
             <div className="space-y-2">
-              {CHAIN_ID_TO_NFT_COLLECTIONS[CREATOR_CHAIN.BASE.id].map((collection) => {
-                const collectionChecksumAddress = getAddress(collection.address);
-                return (
-                  <label
-                    key={collectionChecksumAddress}
-                    className="flex cursor-pointer items-center gap-2"
-                  >
-                    <Checkbox
-                      value={selectedCollections.includes(collectionChecksumAddress)}
-                      onChange={() => {
-                        return handleCollectionToggle(collectionChecksumAddress);
-                      }}
-                    />
-                    <span className="text-sm text-neutral-700">
-                      {collection.name}
-                    </span>
-                  </label>
-                );
-              })}
+              {CHAIN_ID_TO_NFT_COLLECTIONS[CREATOR_CHAIN.BASE.id]?.map(
+                (collection) => {
+                  const collectionChecksumAddress = getAddress(
+                    collection.address,
+                  );
+                  return (
+                    <label
+                      key={collectionChecksumAddress}
+                      className="flex cursor-pointer items-center gap-2"
+                    >
+                      <Checkbox
+                        value={selectedCollections.includes(
+                          collectionChecksumAddress,
+                        )}
+                        onChange={() => {
+                          return handleCollectionToggle(
+                            collectionChecksumAddress,
+                          );
+                        }}
+                      />
+                      <span className="text-sm text-neutral-700">
+                        {collection.name}
+                      </span>
+                    </label>
+                  );
+                },
+              )}
             </div>
           </Card>
         </div>
