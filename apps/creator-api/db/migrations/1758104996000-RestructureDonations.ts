@@ -6,7 +6,7 @@ export class RestructureDonations1758104996000 implements MigrationInterface {
     await q.query(`
       ALTER TABLE "creator_donations"
         DROP CONSTRAINT IF EXISTS "FK_donations_to_tokens",
-        DROP CONSTRAINT IF EXISTS "creator_donations_new_pkey1";
+        DROP CONSTRAINT IF EXISTS "creator_donations_new_pkey";
     `);
 
     /* 1 ── add surrogate id + new PK */
@@ -90,7 +90,7 @@ export class RestructureDonations1758104996000 implements MigrationInterface {
           FOREIGN KEY (token_address, network)
           REFERENCES tokens(address, network),
         ADD CONSTRAINT creator_donations_new_pkey1 PRIMARY KEY(transaction_hash);
-      
+
       ALTER TABLE "creator_donations"
         DROP CONSTRAINT IF EXISTS creator_donations_pk,
         DROP COLUMN IF EXISTS "id";
