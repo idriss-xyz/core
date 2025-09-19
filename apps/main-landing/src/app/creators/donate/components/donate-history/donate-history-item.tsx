@@ -43,13 +43,13 @@ export const DonateHistoryItem = ({
 
   const tokenSymbol = isTokenDonation
     ? donation.token.symbol // fungible token
-    : donation.name; // ← assumes column exists for NFTs
+    : donation.name;
   const tipReceiver = donation.toUser;
   const tradeValue = donation.tradeValue;
   const tipComment = donation.comment;
   const tokenImage = isTokenDonation
     ? donation.token.imageUrl
-    : donation.imageUrl; // ← assumes column exists for NFTs
+    : donation.imageUrl;
 
   const tokenDecimals = isTokenDonation ? donation.token.decimals : 0;
 
@@ -59,10 +59,10 @@ export const DonateHistoryItem = ({
           formatUnits(BigInt(donation.amountRaw), tokenDecimals),
         ),
       )
-    : donation.quantity.toString(); // NFTs: plain quantity
+    : donation.quantity.toString();
 
-  const receiverAddress = tipReceiver.address;
-  const tipperFromAddress = donation.fromAddress;
+  const receiverName = tipReceiver.displayName;
+  const tipperFromName = donation.fromUser.displayName;
 
   const displayName = showReceiver
     ? tipReceiver?.displayName

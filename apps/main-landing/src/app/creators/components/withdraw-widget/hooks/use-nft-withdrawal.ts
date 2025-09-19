@@ -28,6 +28,7 @@ type SendNftWithdrawalArguments = {
   amount1155?: bigint; // defaults to 1 if omitted
 };
 
+// ts-unused-exports:disable-next-line
 export const useNftWithdrawal = ({
   onSuccess,
   onError,

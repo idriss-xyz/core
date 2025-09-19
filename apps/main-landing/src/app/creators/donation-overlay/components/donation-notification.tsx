@@ -5,11 +5,7 @@ import { CREATOR_API_URL } from '@idriss-xyz/constants';
 import { Badge } from '@idriss-xyz/ui/badge';
 import { Icon } from '@idriss-xyz/ui/icon';
 import type { ChainToken } from '@idriss-xyz/constants';
-import {
-  formatFiatValue,
-  formatTokenValue,
-  getModifiedLeaderboardName,
-} from '@idriss-xyz/utils';
+import { formatFiatValue, formatTokenValue } from '@idriss-xyz/utils';
 import { formatUnits } from 'viem';
 import { classes } from '@idriss-xyz/ui/utils';
 
