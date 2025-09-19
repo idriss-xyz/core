@@ -2,9 +2,9 @@ import { ChainToken } from '@idriss-xyz/constants';
 import { CSSProperties } from 'react';
 
 export interface NftDetails {
-  id: bigint;              // tokenId
-  name: string;            // NFT-specific name
-  logo?: string;           // image URL from metadata
+  id: bigint; // tokenId
+  name: string; // NFT-specific name
+  logo?: string; // image URL from metadata
   collectionName?: string; // contract-level name()
 }
 

@@ -25,7 +25,9 @@ function isNftDetails(
   return !!details && !('decimals' in details);
 }
 
-function isChainToken(details?: NftDetails | ChainToken): details is ChainToken {
+function isChainToken(
+  details?: NftDetails | ChainToken,
+): details is ChainToken {
   return !!details && 'decimals' in details;
 }
 
@@ -73,7 +75,7 @@ export default function DonationNotification({
     onFullyComplete,
   );
 
-  const nftDetails  = isNftDetails(token.details)  ? token.details : undefined;
+  const nftDetails = isNftDetails(token.details) ? token.details : undefined;
   const erc20Details = isChainToken(token.details) ? token.details : undefined;
 
   return (
@@ -139,7 +141,11 @@ export default function DonationNotification({
                 </span>
 
                 {nftDetails.logo && (
-                  <img alt="" src={nftDetails.logo} className="size-6 rounded-full" />
+                  <img
+                    alt=""
+                    src={nftDetails.logo}
+                    className="size-6 rounded-full"
+                  />
                 )}
 
                 {Number(amount) > 1 && (
@@ -150,13 +156,15 @@ export default function DonationNotification({
                     )}
                   >
                     <Icon name="Layers" className="size-4 text-neutral-600" />
-                    <span className="text-body5 text-neutral-600">{amount}</span>
+                    <span className="text-body5 text-neutral-600">
+                      {amount}
+                    </span>
                   </span>
                 )}
               </span>
 
               {nftDetails.collectionName && (
-                <span className="text-body5 text-neutral-500 basis-full w-full">
+                <span className="w-full basis-full text-body5 text-neutral-500">
                   ({nftDetails.collectionName})
                 </span>
               )}
