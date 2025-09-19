@@ -24,8 +24,8 @@ interface Properties {
 
 export const LayersBadge = ({ amount }: { amount: string }) => {
   return (
-    <div className="flex min-h-4 items-center gap-[6px] rounded-[4px] border border-neutral-300 bg-white p-1">
-      <Icon name="Layers" className="text-neutral-500" />
+    <div className="flex my-auto self-center min-h-4 items-center gap-[6px] rounded-[4px] border border-neutral-300 bg-white p-1">
+      <Icon name="Layers" className="text-neutral-500 size-4" />
       <span className="text-label6 text-neutralGreen-900">{amount}</span>
     </div>
   );
@@ -155,7 +155,7 @@ export const CollectibleGallery = ({
                 return (
                   <div
                     key={collectible.tokenId}
-                    className="relative flex cursor-pointer gap-[10px] rounded-xl border border-neutral-200 p-[6px] transition-colors hover:border-mint-500"
+                    className="relative flex flex-col cursor-pointer gap-[10px] rounded-xl border border-neutral-200 p-[6px] transition-colors hover:border-mint-500"
                     onClick={() => {
                       return handleCollectibleClick(collectible);
                     }}
@@ -163,10 +163,10 @@ export const CollectibleGallery = ({
                     <img
                       src={collectible.image}
                       alt={collectible.name}
-                      className="size-[48px] rounded-xl object-cover"
+                      className="h-[240px] w-auto rounded-xl object-cover"
                     />
-                    <div className="flex">
-                      <div className="flex flex-col">
+                    <div className="flex justify-between items-center gap-2">
+                      <div className="flex flex-col min-w-0">
                         <p className="truncate text-sm font-medium">
                           {collectible.name}
                         </p>
@@ -174,7 +174,7 @@ export const CollectibleGallery = ({
                           {collectible.collection}
                         </p>
                       </div>
-                      {collectible.type === 'erc1155' && (
+                      {collectible.type === 'erc1155' && Number(collectible.balance) > 1 && (
                         <LayersBadge amount={collectible.balance} />
                       )}
                     </div>

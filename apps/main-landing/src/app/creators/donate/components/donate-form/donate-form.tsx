@@ -805,7 +805,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
             </p>
           }
           headerContainerClassName="pl-6 pt-5.5 pb-2.5"
-          className="h-[550px] w-[400px] sm:w-[500px] md:w-[780px]"
+          className="h-[550px] w-[400px] sm:w-[500px] md:w-[827px]"
         >
           <div className="p-6">
             <div className="mb-4 flex w-full gap-2">
@@ -856,7 +856,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                 });
               }}
             />
-            <div className="flex items-center justify-end">
+            <div className="flex items-center justify-end mt-5">
               <Button
                 size="medium"
                 intent="primary"
