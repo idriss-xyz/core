@@ -29,7 +29,13 @@ export {
   STATIC_ORIGINS,
 } from './links';
 
-export { STAKING_ABI, ERC20_ABI, TIPPING_ABI, REWARDS_ABI } from './abis';
+export {
+  STAKING_ABI,
+  ERC20_ABI,
+  NFT_ABI,
+  TIPPING_ABI,
+  REWARDS_ABI,
+} from './abis';
 
 export {
   STAKER_ADDRESS,

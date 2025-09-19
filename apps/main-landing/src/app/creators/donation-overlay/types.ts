@@ -1,6 +1,13 @@
 import { ChainToken } from '@idriss-xyz/constants';
 import { CSSProperties } from 'react';
 
+export interface NftDetails {
+  id: bigint;              // tokenId
+  name: string;            // NFT-specific name
+  logo?: string;           // image URL from metadata
+  collectionName?: string; // contract-level name()
+}
+
 export type MinimumAmounts = {
   minimumAlertAmount: number;
   minimumSfxAmount: number;
@@ -30,7 +37,7 @@ export type DonationNotificationProperties = {
   creatorName?: string;
   token: {
     amount: bigint;
-    details?: ChainToken;
+    details?: ChainToken | NftDetails;
   };
   minOverallVisibleDuration: number; // Minimum total time the notification should be visible
   forceDisplay?: boolean; // use true for test donations

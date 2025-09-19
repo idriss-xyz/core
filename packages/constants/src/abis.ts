@@ -1,3 +1,5 @@
+import { parseAbiItem } from 'viem';
+
 export const STAKING_ABI = [
   {
     inputs: [
@@ -1430,4 +1432,10 @@ export const REWARDS_ABI = [
     stateMutability: 'view',
     type: 'function',
   },
+] as const;
+
+export const NFT_ABI = [
+  parseAbiItem('function name() view returns (string)'),
+  parseAbiItem('function tokenURI(uint256) view returns (string)'),
+  parseAbiItem('function uri(uint256) view returns (string)'),
 ] as const;
