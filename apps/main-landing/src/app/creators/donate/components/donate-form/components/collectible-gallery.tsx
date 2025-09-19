@@ -9,10 +9,12 @@ import {
 } from '@idriss-xyz/constants';
 import { getAddress } from 'viem';
 import { Icon } from '@idriss-xyz/ui/icon';
-
-import { useCollectibles } from '../../../hooks/use-collectibles';
-import { Collectible } from '../../../types';
 import { useWalletClient } from 'wagmi';
+import { classes } from '@idriss-xyz/ui/utils';
+import { Button } from '@idriss-xyz/ui/button';
+
+import { Collectible } from '../../../types';
+import { useCollectibles } from '../../../hooks/use-collectibles';
 
 interface Properties {
   collections: string[];
@@ -20,12 +22,17 @@ interface Properties {
   showMobileFilter: boolean;
   setShowMobileFilter: (show: boolean) => void;
   onSelect: (collectible: Collectible & { amount: number }) => void;
+  onConfirm: () => void;
 }
+
+const getCollectibleKey = (collectible: Collectible) => {
+  return `${collectible.contract}-${collectible.tokenId}`;
+};
 
 export const LayersBadge = ({ amount }: { amount: string }) => {
   return (
-    <div className="flex my-auto self-center min-h-4 items-center gap-[6px] rounded-[4px] border border-neutral-300 bg-white p-1">
-      <Icon name="Layers" className="text-neutral-500 size-4" />
+    <div className="my-auto flex min-h-4 items-center gap-[6px] self-center rounded-[4px] border border-neutral-300 bg-white p-1">
+      <Icon name="Layers" className="size-4 text-neutral-500" />
       <span className="text-label6 text-neutralGreen-900">{amount}</span>
     </div>
   );
@@ -37,16 +44,19 @@ export const CollectibleGallery = ({
   showMobileFilter,
   setShowMobileFilter,
   onSelect,
+  onConfirm,
 }: Properties) => {
   const { data: walletClient } = useWalletClient();
-  const { data: collectibles, isLoading, isError } = useCollectibles({
+  const { data: collectibles, isLoading } = useCollectibles({
     collections,
     address: walletClient?.account?.address,
   });
   const [selectedCollections, setSelectedCollections] =
     useState<string[]>(collections);
-  const [selectedCollectibleId, setSelectedCollectibleId] = useState<string | null>(null);
-  const [selectedAmount, setSelectedAmount] = useState<number>(1);
+  const [selectedCollectibleId, setSelectedCollectibleId] = useState<
+    string | null
+  >(null);
+  const [selectedAmount, setSelectedAmount] = useState<number>(0);
 
   const handleCollectionToggle = (collectionAddress: string) => {
     setSelectedCollections((previous) => {
@@ -58,23 +68,21 @@ export const CollectibleGallery = ({
     });
   };
 
-  const getCollectibleKey = (collectible: Collectible) => {
-    return `${collectible.contract}-${collectible.tokenId}`;
-  };
-
   const handleCollectibleClick = (collectible: Collectible) => {
     const collectibleKey = getCollectibleKey(collectible);
 
-    if (collectible.type === 'erc721') {
-      // For ERC721, always amount 1
-      setSelectedCollectibleId(collectibleKey);
-      setSelectedAmount(1);
-      onSelect({ ...collectible, amount: 1 });
-    } else {
-      // For ERC1155, start with amount 1
-      setSelectedCollectibleId(collectibleKey);
-      setSelectedAmount(1);
-      onSelect({ ...collectible, amount: 1 });
+    if (
+      collectible.type === 'erc721' ||
+      (collectible.type === 'erc1155' && Number(collectible.balance) === 1)
+    ) {
+      if (selectedAmount === 1) {
+        setSelectedAmount(0);
+        setSelectedCollectibleId(null);
+      } else {
+        setSelectedCollectibleId(collectibleKey);
+        setSelectedAmount(1);
+        onSelect({ ...collectible, amount: 1 });
+      }
     }
   };
 
@@ -82,7 +90,6 @@ export const CollectibleGallery = ({
     if (newAmount === 0) {
       // Remove selection
       setSelectedCollectibleId(null);
-      setSelectedAmount(1);
     } else {
       setSelectedAmount(newAmount);
       onSelect({ ...collectible, amount: newAmount });
@@ -150,12 +157,18 @@ export const CollectibleGallery = ({
               No collectibles found
             </div>
           ) : (
-            <div className="grid max-h-80 grid-cols-2 gap-4 overflow-y-auto md:grid-cols-3">
+            <div className="grid max-h-96 grid-cols-2 gap-4 overflow-y-auto md:grid-cols-3">
               {filteredCollectibles.map((collectible) => {
+                const collectibleKey = getCollectibleKey(collectible);
+                const isSelected = selectedCollectibleId === collectibleKey;
+
                 return (
                   <div
                     key={collectible.tokenId}
-                    className="relative flex flex-col cursor-pointer gap-[10px] rounded-xl border border-neutral-200 p-[6px] transition-colors hover:border-mint-500"
+                    className={classes(
+                      'relative flex cursor-pointer flex-col gap-[10px] rounded-xl border border-neutral-200 p-[6px] transition-colors hover:border-mint-500',
+                      isSelected ? 'border-mint-500' : '',
+                    )}
                     onClick={() => {
                       return handleCollectibleClick(collectible);
                     }}
@@ -165,8 +178,8 @@ export const CollectibleGallery = ({
                       alt={collectible.name}
                       className="h-[240px] w-auto rounded-xl object-cover"
                     />
-                    <div className="flex justify-between items-center gap-2">
-                      <div className="flex flex-col min-w-0">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex min-w-0 flex-col">
                         <p className="truncate text-sm font-medium">
                           {collectible.name}
                         </p>
@@ -174,21 +187,23 @@ export const CollectibleGallery = ({
                           {collectible.collection}
                         </p>
                       </div>
-                      {collectible.type === 'erc1155' && Number(collectible.balance) > 1 && (
-                        <LayersBadge amount={collectible.balance} />
-                      )}
+                      {collectible.type === 'erc1155' &&
+                        Number(collectible.balance) > 1 && (
+                          <LayersBadge amount={collectible.balance} />
+                        )}
                     </div>
 
                     {/* Selection controls */}
                     <div className="absolute right-2 top-2">
                       {(() => {
-                        const collectibleKey = getCollectibleKey(collectible);
-                        const isSelected = selectedCollectibleId === collectibleKey;
-
-                        if (collectible.type === 'erc721') {
+                        if (
+                          collectible.type === 'erc721' ||
+                          (collectible.type === 'erc1155' &&
+                            Number(collectible.balance) === 1)
+                        ) {
                           return (
                             <IconButton
-                              iconName={isSelected ? "Check" : "Plus"}
+                              iconName={isSelected ? 'Check' : 'Plus'}
                               intent="tertiary"
                               size="small"
                               className={`${isSelected ? 'bg-mint-500 text-white' : 'bg-white'}`}
@@ -200,31 +215,31 @@ export const CollectibleGallery = ({
                           );
                         } else {
                           // ERC1155
-                          if (isSelected && selectedAmount > 0) {
-                            return (
-                              <NumericButtonGroup
-                                value={selectedAmount}
-                                onChange={(newAmount) => handleAmountChange(collectible, newAmount)}
-                                min={0}
-                                max={Number(collectible.balance)}
-                                className="bg-white"
-                                onClick={(event) => event.stopPropagation()}
-                              />
-                            );
-                          } else {
-                            return (
-                              <IconButton
-                                iconName="Plus"
-                                intent="tertiary"
-                                size="small"
-                                className="bg-white"
-                                onClick={(event) => {
-                                  event.stopPropagation();
-                                  handleCollectibleClick(collectible);
-                                }}
-                              />
-                            );
-                          }
+                          return isSelected && selectedAmount > 0 ? (
+                            <NumericButtonGroup
+                              value={selectedAmount}
+                              onChange={(newAmount) => {
+                                return handleAmountChange(
+                                  collectible,
+                                  newAmount,
+                                );
+                              }}
+                              min={0}
+                              max={Number(collectible.balance)}
+                              className="bg-white"
+                            />
+                          ) : (
+                            <IconButton
+                              iconName="Plus"
+                              intent="tertiary"
+                              size="small"
+                              className="bg-white"
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                handleCollectibleClick(collectible);
+                              }}
+                            />
+                          );
                         }
                       })()}
                     </div>
@@ -289,6 +304,19 @@ export const CollectibleGallery = ({
               )}
             </div>
           </Card>
+        </div>
+      )}
+      {selectedCollectibleId && (
+        <div className="fixed bottom-0 right-0 z-10 flex w-full items-center justify-end rounded-b-xl border-t border-neutral-300 bg-white px-12 py-3">
+          <Button
+            size="medium"
+            intent="primary"
+            onClick={onConfirm}
+            className="uppercase"
+            suffixIconName="ChevronRight"
+          >
+            Confirm
+          </Button>
         </div>
       )}
     </div>

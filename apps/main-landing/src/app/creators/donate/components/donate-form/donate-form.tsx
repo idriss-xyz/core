@@ -839,6 +839,10 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
               showMobileFilter={showMobileFilter}
               setShowMobileFilter={setShowMobileFilter}
               onSelect={(collectible) => {
+                if (collectible.amount === 0) {
+                  setSelectedCollectible(null);
+                  return;
+                }
                 formMethods.setValue('tokenId', collectible.tokenId);
                 formMethods.setValue('contract', collectible.contract);
                 formMethods.setValue('type', collectible.type ?? 'erc1155');
@@ -855,21 +859,10 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                   balance: collectible.balance,
                 });
               }}
+              onConfirm={() => {
+                setIsCollectibleModalOpen(false);
+              }}
             />
-            <div className="flex items-center justify-end mt-5">
-              <Button
-                size="medium"
-                intent="primary"
-                onClick={() => {
-                  setIsCollectibleModalOpen(false);
-                }}
-                className="uppercase"
-                suffixIconName="ChevronRight"
-                disabled={!selectedCollectible}
-              >
-                Confirm
-              </Button>
-            </div>
           </div>
         </Modal>
       </div>
