@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Checkbox } from '@idriss-xyz/ui/checkbox';
 import { Card } from '@idriss-xyz/ui/card';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
+import { NumericButtonGroup } from '@idriss-xyz/ui/numeric-button-group';
 import {
   CHAIN_ID_TO_NFT_COLLECTIONS,
   CREATOR_CHAIN,
@@ -11,13 +12,14 @@ import { Icon } from '@idriss-xyz/ui/icon';
 
 import { useCollectibles } from '../../../hooks/use-collectibles';
 import { Collectible } from '../../../types';
+import { useWalletClient } from 'wagmi';
 
 interface Properties {
   collections: string[];
   searchQuery: string;
   showMobileFilter: boolean;
   setShowMobileFilter: (show: boolean) => void;
-  onSelect: (collectible: Collectible) => void;
+  onSelect: (collectible: Collectible & { amount: number }) => void;
 }
 
 export const LayersBadge = ({ amount }: { amount: string }) => {
@@ -36,9 +38,15 @@ export const CollectibleGallery = ({
   setShowMobileFilter,
   onSelect,
 }: Properties) => {
-  const { data: collectibles, isLoading } = useCollectibles(collections);
+  const { data: walletClient } = useWalletClient();
+  const { data: collectibles, isLoading, isError } = useCollectibles({
+    collections,
+    address: walletClient?.account?.address,
+  });
   const [selectedCollections, setSelectedCollections] =
     useState<string[]>(collections);
+  const [selectedCollectibleId, setSelectedCollectibleId] = useState<string | null>(null);
+  const [selectedAmount, setSelectedAmount] = useState<number>(1);
 
   const handleCollectionToggle = (collectionAddress: string) => {
     setSelectedCollections((previous) => {
@@ -48,6 +56,37 @@ export const CollectibleGallery = ({
           })
         : [...previous, collectionAddress];
     });
+  };
+
+  const getCollectibleKey = (collectible: Collectible) => {
+    return `${collectible.contract}-${collectible.tokenId}`;
+  };
+
+  const handleCollectibleClick = (collectible: Collectible) => {
+    const collectibleKey = getCollectibleKey(collectible);
+
+    if (collectible.type === 'erc721') {
+      // For ERC721, always amount 1
+      setSelectedCollectibleId(collectibleKey);
+      setSelectedAmount(1);
+      onSelect({ ...collectible, amount: 1 });
+    } else {
+      // For ERC1155, start with amount 1
+      setSelectedCollectibleId(collectibleKey);
+      setSelectedAmount(1);
+      onSelect({ ...collectible, amount: 1 });
+    }
+  };
+
+  const handleAmountChange = (collectible: Collectible, newAmount: number) => {
+    if (newAmount === 0) {
+      // Remove selection
+      setSelectedCollectibleId(null);
+      setSelectedAmount(1);
+    } else {
+      setSelectedAmount(newAmount);
+      onSelect({ ...collectible, amount: newAmount });
+    }
   };
 
   const filteredCollectibles =
@@ -105,26 +144,26 @@ export const CollectibleGallery = ({
         </div>
 
         {/* Gallery */}
-        <div className="min-h-[340px] flex-1">
+        <div className="min-h-[300px] flex-1">
           {filteredCollectibles.length === 0 ? (
             <div className="py-8 text-center text-neutral-500">
               No collectibles found
             </div>
           ) : (
-            <div className="grid max-h-96 grid-cols-2 gap-4 overflow-y-auto md:grid-cols-3">
+            <div className="grid max-h-80 grid-cols-2 gap-4 overflow-y-auto md:grid-cols-3">
               {filteredCollectibles.map((collectible) => {
                 return (
                   <div
                     key={collectible.tokenId}
-                    className="flex cursor-pointer gap-[10px] rounded-xl border border-neutral-200 p-[6px] transition-colors hover:border-mint-500"
+                    className="relative flex cursor-pointer gap-[10px] rounded-xl border border-neutral-200 p-[6px] transition-colors hover:border-mint-500"
                     onClick={() => {
-                      return onSelect(collectible);
+                      return handleCollectibleClick(collectible);
                     }}
                   >
                     <img
                       src={collectible.image}
                       alt={collectible.name}
-                      className="h-[214px] w-auto rounded-xl object-cover"
+                      className="size-[48px] rounded-xl object-cover"
                     />
                     <div className="flex">
                       <div className="flex flex-col">
@@ -138,6 +177,56 @@ export const CollectibleGallery = ({
                       {collectible.type === 'erc1155' && (
                         <LayersBadge amount={collectible.balance} />
                       )}
+                    </div>
+
+                    {/* Selection controls */}
+                    <div className="absolute right-2 top-2">
+                      {(() => {
+                        const collectibleKey = getCollectibleKey(collectible);
+                        const isSelected = selectedCollectibleId === collectibleKey;
+
+                        if (collectible.type === 'erc721') {
+                          return (
+                            <IconButton
+                              iconName={isSelected ? "Check" : "Plus"}
+                              intent="tertiary"
+                              size="small"
+                              className={`${isSelected ? 'bg-mint-500 text-white' : 'bg-white'}`}
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                handleCollectibleClick(collectible);
+                              }}
+                            />
+                          );
+                        } else {
+                          // ERC1155
+                          if (isSelected && selectedAmount > 0) {
+                            return (
+                              <NumericButtonGroup
+                                value={selectedAmount}
+                                onChange={(newAmount) => handleAmountChange(collectible, newAmount)}
+                                min={0}
+                                max={Number(collectible.balance)}
+                                className="bg-white"
+                                onClick={(event) => event.stopPropagation()}
+                              />
+                            );
+                          } else {
+                            return (
+                              <IconButton
+                                iconName="Plus"
+                                intent="tertiary"
+                                size="small"
+                                className="bg-white"
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                  handleCollectibleClick(collectible);
+                                }}
+                              />
+                            );
+                          }
+                        }
+                      })()}
                     </div>
                   </div>
                 );

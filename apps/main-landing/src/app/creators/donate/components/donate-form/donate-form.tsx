@@ -843,6 +843,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                 formMethods.setValue('contract', collectible.contract);
                 formMethods.setValue('type', collectible.type ?? 'erc1155');
                 formMethods.setValue('chainId', collectible.chainId);
+                formMethods.setValue('amount', collectible.amount);
                 setSelectedCollectible({
                   tokenId: collectible.tokenId,
                   name: collectible.name,
