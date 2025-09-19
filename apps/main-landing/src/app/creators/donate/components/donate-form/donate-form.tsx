@@ -568,7 +568,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                           return (
                             <TokenSelect
                               label="Token"
-                              value={field.value}
+                              value={field.value ?? defaultTokenSymbol}
                               className="mt-4 w-full"
                               tokens={possibleTokens}
                               onChange={field.onChange}
