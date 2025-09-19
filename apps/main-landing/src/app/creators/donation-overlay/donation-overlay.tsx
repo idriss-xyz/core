@@ -24,6 +24,7 @@ import { useCreators } from '../hooks/use-creators';
 import {
   getPublicCreatorProfileBySlug,
   getCreatorNameAndPicOrAnon,
+  getNftMetadata,
 } from '../utils';
 import { Address } from '../donate/types';
 
@@ -41,6 +42,8 @@ const BLOCK_LOOKBACK_RANGE = 5n;
 const DONATION_MIN_OVERALL_VISIBLE_DURATION = 11_000;
 
 const latestCheckedBlocks = new Map();
+//todo: remove
+latestCheckedBlocks.set(8453, BigInt(35_709_802));
 
 interface Properties {
   creatorName?: string;
@@ -144,12 +147,17 @@ export default function DonationOverlay({ creatorName }: Properties) {
           avatarUrl: testDonation.avatarUrl,
           message: testDonation.message,
           sfxText: testDonation.sfxText,
-          amount: testDonation.amount,
+          amount: '2',
           donor: testDonation.donor,
           txnHash: testDonation.txnHash,
           token: {
-            amount: BigInt(testDonation.token.amount),
-            details: testDonation.token.details,
+            amount: BigInt(1),
+            details: {
+              id: BigInt('100400158'),
+              name: 'Embedded Agent',
+              logo: 'https://nftmedia.parallelnft.com/parallel-aftermath/QmPPNj5MpR9FcxzPUu2gKQygNp5gxNvxwGgTkAGaef6mX9/image.png',
+              collectionName: 'Parallel Aftermath',
+            },
           },
           minimumAmounts,
           enableToggles,
@@ -221,7 +229,9 @@ export default function DonationOverlay({ creatorName }: Properties) {
           });
       } else if (!addressParameter.isFetching && addressParameter.data) {
         setAddress({
-          data: addressParameter.data,
+          // todo: revert
+          data: '0x100A3316aD8AFc50554153789373fA8b96948769',
+          // data: addressParameter.data,
           isValid: isAddress(addressParameter.data),
           isFetching: false,
         });
@@ -320,15 +330,24 @@ export default function DonationOverlay({ creatorName }: Properties) {
             tokenAddress: Hex;
             amount: bigint;
             fee: bigint;
-            assetType: bigint;
+            assetType: number;
             assetId: bigint;
           };
 
-          // skip ERC-721 & ERC-1155 for now (assetType 2 & 3)
-          if (assetType > 1n || assetId >= 1n) continue;
+          console.log(
+            'Found donation props',
+            recipientAddress,
+            message,
+            amount,
+            assetType,
+            typeof assetType,
+            assetId,
+            tokenAddress,
+          );
 
-          if (recipientAddress.toLowerCase() !== address?.data.toLowerCase())
-            continue;
+          // todo: revert
+          // if (recipientAddress.toLowerCase() !== address?.data.toLowerCase())
+          //   continue;
 
           if (message && containsBadWords(message, customBadWords)) {
             console.log('Filtered donation with inappropriate message');
@@ -341,51 +360,97 @@ export default function DonationOverlay({ creatorName }: Properties) {
           const effectiveTokenAddress =
             tokenAddress === NULL_ADDRESS ? NATIVE_COIN_ADDRESS : tokenAddress;
 
-          const amountInDollar = await calculateDollar(
-            effectiveTokenAddress,
-            amount,
-            chain,
-          );
-
-          const tokenDetails = CHAIN_ID_TO_TOKENS[chain]?.find((token) => {
-            return (
-              token.address?.toLowerCase() ===
-              effectiveTokenAddress.toLowerCase()
-            );
-          });
-
+          /* ── fetch SFX text once for either asset type ─────────────── */
           await new Promise((resolve) => {
             return setTimeout(resolve, 2500);
           });
-
           const sfxText = await fetchDonationSfxText(log.transactionHash!);
 
           if (sfxText && containsBadWords(sfxText, customBadWords)) {
             console.log('Filtered donation with inappropriate sfx text');
-            continue;
+            continue; // skip this log
           }
 
-          if (!name) {
-            console.error('Creator name not available, skipping donation');
-            continue;
+          const isToken = assetType <= 1n && assetId === 0n;
+
+          if (isToken) {
+            const amountInDollar = await calculateDollar(
+              effectiveTokenAddress,
+              amount,
+              chain,
+            );
+
+            const tokenDetails = CHAIN_ID_TO_TOKENS[chain]?.find((token) => {
+              return (
+                token.address?.toLowerCase() ===
+                effectiveTokenAddress.toLowerCase()
+              );
+            });
+
+            if (!name) {
+              console.error('Creator name not available, skipping donation');
+              continue;
+            }
+
+            addDonation({
+              avatarUrl: profilePicUrl,
+              message: message ?? '',
+              sfxText,
+              amount: amountInDollar,
+              donor: resolvedName,
+              txnHash: log.transactionHash!,
+              token: {
+                amount: amount,
+                details: tokenDetails,
+              },
+              minimumAmounts,
+              enableToggles,
+              alertSound,
+              voiceId,
+              creatorName: name,
+            });
+            continue; // prevent fall-through
           }
 
+          const {
+            name: nftName,
+            image: nftImage,
+            collectionName,
+          } = await getNftMetadata(
+            client,
+            effectiveTokenAddress,
+            assetId,
+            assetType,
+          );
+
+          console.log('Using nft add donation with', {
+            id: assetId,
+            name: nftName,
+            logo: nftImage,
+            collectionName,
+          });
           addDonation({
             avatarUrl: profilePicUrl,
             message: message ?? '',
             sfxText,
-            amount: amountInDollar,
+            amount: amount.toString(),
             donor: resolvedName,
             txnHash: log.transactionHash!,
             token: {
-              amount: amount,
-              details: tokenDetails,
+              amount,
+              details: {
+                id: assetId,
+                name: nftName,
+                logo: nftImage,
+                collectionName,
+              },
             },
             minimumAmounts,
             enableToggles,
             alertSound,
             voiceId,
             creatorName: name,
+            forceDisplay: true, // always display NFTs for now
           });
         }
       } catch (error) {
