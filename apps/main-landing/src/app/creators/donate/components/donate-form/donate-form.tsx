@@ -604,33 +604,33 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                           <img
                             src={selectedCollectible.image}
                             alt={selectedCollectible.name}
-                            className="h-[88px] w-auto rounded-[12px] border-neutral-300 object-cover"
+                            className="h-[88px] w-[72px] rounded-[12px] border-neutral-300 object-cover"
                           />
-                          <div className="flex flex-col">
-                            <div className="h-4.5">
+                          <div className="flex flex-1 flex-col justify-center gap-2">
+                            <div className="flex flex-col gap-[6px]">
                               <span className="text-label4 text-neutral-900">
                                 {selectedCollectible.name}
                               </span>
-                            </div>
-                            <div className="h-[20px]">
                               <span className="text-body5 text-neutral-500">
                                 {selectedCollectible.collection}
                               </span>
-                            </div>
-                            <div className="h-4.5">
-                              <LayersBadge
-                                amount={selectedCollectible.balance}
-                              />
+                              <div className="h-4.5">
+                                <LayersBadge
+                                  amount={amount?.toString() ?? '1'}
+                                />
+                              </div>
                             </div>
                           </div>
-                          <div className="flex w-10">
+                          <div className="flex w-10 items-start">
                             <IconButton
                               intent="tertiary"
-                              size="small"
-                              iconName="RefreshCw"
-                              className="rounded-xl"
+                              size="medium"
+                              iconName="Repeat2"
+                              iconClassName="size-4"
+                              className="rounded-xl border border-neutral-200 bg-white"
                               onClick={() => {
-                                return setIsCollectibleModalOpen(true);
+                                setSelectedCollectible(null);
+                                setIsCollectibleModalOpen(true);
                               }}
                             />
                           </div>
@@ -834,7 +834,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
               collections={[
                 '0xA7B67cD6B31b73772AE3C8ea784317207194A6f4',
                 '0x8bB4033AF06B363A8391F795A39281bcc3b6197D',
-              ]} // Replace with creatorInfo.collections
+              ]} // TODO: Replace with creatorInfo.collections
               searchQuery={collectibleSearch}
               showMobileFilter={showMobileFilter}
               setShowMobileFilter={setShowMobileFilter}
