@@ -1,38 +1,42 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type NumericButtonGroupProperties = {
   min?: number;
   max?: number;
-  defaultValue?: number;
+  value?: number;
   onChange?: (value: number) => void;
+  className?: string;
 };
 
 export const NumericButtonGroup = ({
   min = 0,
   max = Infinity,
-  defaultValue = 0,
+  value = 0,
   onChange,
+  className,
 }: NumericButtonGroupProperties) => {
-  const [value, setValue] = useState(defaultValue);
+  const [internalValue, setInternalValue] = useState(value);
+
+  useEffect(() => {
+    setInternalValue(value);
+  }, [value]);
 
   const handleDecrement = () => {
-    setValue((previous) => {
-      const newValue = Math.max(previous - 1, min);
-      onChange?.(newValue);
-      return newValue;
-    });
+    const newValue = Math.max(internalValue - 1, min);
+    setInternalValue(newValue);
+    onChange?.(newValue);
   };
 
   const handleIncrement = () => {
-    setValue((previous) => {
-      const newValue = Math.min(previous + 1, max);
-      onChange?.(newValue);
-      return newValue;
-    });
+    const newValue = Math.min(internalValue + 1, max);
+    setInternalValue(newValue);
+    onChange?.(newValue);
   };
 
   return (
-    <div className="inline-flex items-center overflow-hidden rounded-md border border-neutral-300 bg-white shadow-sm">
+    <div
+      className={`inline-flex items-center overflow-hidden rounded-xl border border-neutral-300 bg-white shadow-sm ${className ?? ''}`}
+    >
       {/* Minus button */}
       <button
         onClick={handleDecrement}
@@ -43,7 +47,7 @@ export const NumericButtonGroup = ({
 
       {/* Value */}
       <div className="select-none px-4 py-2 text-lg font-semibold text-neutral-900">
-        {value}
+        {internalValue}
       </div>
 
       {/* Plus button */}

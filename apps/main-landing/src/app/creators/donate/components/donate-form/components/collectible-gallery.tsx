@@ -75,7 +75,7 @@ export const CollectibleGallery = ({
       collectible.type === 'erc721' ||
       (collectible.type === 'erc1155' && Number(collectible.balance) === 1)
     ) {
-      if (selectedAmount === 1) {
+      if (selectedAmount === 1 && selectedCollectibleId === collectibleKey) {
         setSelectedAmount(0);
         setSelectedCollectibleId(null);
       } else {
@@ -83,15 +83,25 @@ export const CollectibleGallery = ({
         setSelectedAmount(1);
         onSelect({ ...collectible, amount: 1 });
       }
+    } else if (
+      collectible.type === 'erc1155' &&
+      Number(collectible.balance) > 1
+    ) {
+      // For ERC1155 with multiple tokens, always set to 1 when clicked
+      setSelectedCollectibleId(collectibleKey);
+      setSelectedAmount(1);
+      onSelect({ ...collectible, amount: 1 });
     }
   };
 
   const handleAmountChange = (collectible: Collectible, newAmount: number) => {
+    setSelectedAmount(newAmount);
+
     if (newAmount === 0) {
-      // Remove selection
+      // Remove selection when amount goes to 0
       setSelectedCollectibleId(null);
+      onSelect({ ...collectible, amount: 0 });
     } else {
-      setSelectedAmount(newAmount);
       onSelect({ ...collectible, amount: newAmount });
     }
   };
@@ -214,20 +224,26 @@ export const CollectibleGallery = ({
                             />
                           );
                         } else {
-                          // ERC1155
-                          return isSelected && selectedAmount > 0 ? (
-                            <NumericButtonGroup
-                              value={selectedAmount}
-                              onChange={(newAmount) => {
-                                return handleAmountChange(
-                                  collectible,
-                                  newAmount,
-                                );
+                          // ERC1155 with multiple tokens
+                          return isSelected ? (
+                            <div
+                              onClick={(event) => {
+                                return event.stopPropagation();
                               }}
-                              min={0}
-                              max={Number(collectible.balance)}
-                              className="bg-white"
-                            />
+                            >
+                              <NumericButtonGroup
+                                value={selectedAmount}
+                                onChange={(newAmount) => {
+                                  return handleAmountChange(
+                                    collectible,
+                                    newAmount,
+                                  );
+                                }}
+                                min={0}
+                                max={Number(collectible.balance)}
+                                className="bg-white"
+                              />
+                            </div>
                           ) : (
                             <IconButton
                               iconName="Plus"
