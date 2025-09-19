@@ -310,9 +310,9 @@ export async function fetchNftFloorFromOpensea(
   tokenId: string,
 ): Promise<BestOffer | null> {
   try {
-    const url = new URL('https://api.opensea.io/v2/offers/best');
-    url.searchParams.set('collection_slug', collectionSlug);
-    url.searchParams.set('token_id', tokenId);
+    const url = new URL(
+      `https://api.opensea.io/api/v2/offers/collection/${collectionSlug}/nfts/${tokenId}/best`,
+    );
 
     const resp = await fetch(url.toString(), {
       headers: {
@@ -330,18 +330,20 @@ export async function fetchNftFloorFromOpensea(
     }
 
     const json = await resp.json();
-    const offer = json.best_offer;
+    const offer = json.price;
     if (!offer) return null;
 
-    const rawPrice = offer.price.current?.value ?? '0';
-    const currency = offer.price.current?.currency ?? 'WETH';
+    const rawPrice = offer.price?.value ?? '0';
+    const currency = offer.price?.currency ?? 'WETH';
 
     let usdValue: number | undefined;
     if (currency.toUpperCase() === 'WETH' || currency.toUpperCase() === 'ETH') {
       const prices = await fetchNativePricesFromAlchemy(['ETH']);
       const ethPrice = prices['ETH'];
       if (ethPrice) {
-        const ethAmount = parseFloat(formatUnits(BigInt(rawPrice), 18));
+        const ethAmount = parseFloat(
+          formatUnits(BigInt(rawPrice), offer.price?.decimals),
+        );
         usdValue = ethAmount * ethPrice;
       }
     }
