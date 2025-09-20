@@ -410,7 +410,7 @@ export const CHAIN_ID_TO_NFT_COLLECTIONS: Record<number, ChainNft[]> = {
   [CREATOR_CHAIN.ETHEREUM.id]: [
     {
       address: '0x0Fc3DD8C37880a297166BEd57759974A157f0E74',
-      name: 'Avatars',
+      name: 'Parallel Avatars',
       standard: 'erc721',
       slug: 'parallel-avatars',
     },
@@ -454,13 +454,13 @@ export const CHAIN_ID_TO_NFT_COLLECTIONS: Record<number, ChainNft[]> = {
   [CREATOR_CHAIN.BASE.id]: [
     {
       address: '0x206571b68c66E1d112b74d65695043ad2b5F95D5',
-      name: 'Parallel Alpha',
+      name: 'Parallel Alpha [Base]',
       standard: 'erc1155',
       slug: 'parallel-on-base',
     },
     {
       address: '0x8bB4033AF06B363A8391F795A39281bcc3b6197D',
-      name: 'Parallel Planetfall',
+      name: 'Parallel Planetfall [Base]',
       standard: 'erc1155',
       slug: 'planetfall-on-base',
     },
@@ -471,14 +471,20 @@ export const CHAIN_ID_TO_NFT_COLLECTIONS: Record<number, ChainNft[]> = {
       slug: 'parallel-aftermath',
     },
     {
+      address: '0xA669ca42f91873d406847D8329233C2703f377cd',
+      name: 'Parallel Deception',
+      standard: 'erc1155',
+      slug: 'parallel-on-base',
+    },
+    {
       address: '0x504405158f9960A0252a83EE2Fd13167991ADdD6',
-      name: 'Parallel Battle Pass',
+      name: 'Parallel Battlepass [Base]',
       standard: 'erc1155',
       slug: 'parallel-battlepass-cards-base',
     },
     {
       address: '0xC6C03D452906aaD9A364989608d947bAc11E478c',
-      name: 'Parallel Cosmetics',
+      name: 'Parallel Cosmetics [Base]',
       standard: 'erc1155',
       slug: 'parallel-cosmetics-base',
     },
