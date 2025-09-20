@@ -58,8 +58,7 @@ import { useSender } from '../../hooks';
 import { useMobileFilter } from '../../hooks/use-mobile-filter';
 import { Collectible, CreatorProfile } from '../../types';
 
-import { ChainSelect, CollectibleGallery, TokenSelect } from './components';
-import { LayersBadge } from './components/collectible-gallery';
+import { ChainSelect, CollectibleGallery, LayersBadge, TokenSelect } from './components';
 
 type Properties = {
   className?: string;

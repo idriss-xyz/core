@@ -3,7 +3,6 @@
 import { useMemo } from 'react';
 import { CREATOR_API_URL } from '@idriss-xyz/constants';
 import { Badge } from '@idriss-xyz/ui/badge';
-import { Icon } from '@idriss-xyz/ui/icon';
 import type { ChainToken } from '@idriss-xyz/constants';
 import { formatFiatValue, formatTokenValue } from '@idriss-xyz/utils';
 import { formatUnits } from 'viem';
@@ -14,6 +13,7 @@ import { IDRISS_ICON_CIRCLE, DEFAULT_TRUMPET_SOUND } from '@/assets';
 import { useDonationNotification } from '../hooks/use-donation-notification';
 import { soundMap } from '../../constants';
 import { DonationNotificationProperties, NftDetails } from '../types';
+import { LayersBadge } from '../../donate/components/donate-form/components';
 
 function isNftDetails(
   details?: NftDetails | ChainToken,
@@ -145,17 +145,7 @@ export default function DonationNotification({
                 )}
 
                 {Number(amount) > 1 && (
-                  <span
-                    className={classes(
-                      'flex items-center justify-center gap-[6px] border-[2px] border-neutral-300',
-                      'rounded-sm px-0.5',
-                    )}
-                  >
-                    <Icon name="Layers" className="size-4 text-neutral-600" />
-                    <span className="text-body5 text-neutral-600">
-                      {amount}
-                    </span>
-                  </span>
+                  <LayersBadge amount={amount} />
                 )}
               </span>
 
