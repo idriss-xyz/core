@@ -3,9 +3,7 @@ import { Checkbox } from '@idriss-xyz/ui/checkbox';
 import { Card } from '@idriss-xyz/ui/card';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { NumericButtonGroup } from '@idriss-xyz/ui/numeric-button-group';
-import {
-  CHAIN_ID_TO_NFT_COLLECTIONS,
-} from '@idriss-xyz/constants';
+import { CHAIN_ID_TO_NFT_COLLECTIONS } from '@idriss-xyz/constants';
 import { getAddress } from 'viem';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { useWalletClient } from 'wagmi';
@@ -21,8 +19,8 @@ interface Properties {
   setShowMobileFilter: (show: boolean) => void;
   onSelect: (collectible: Collectible & { amount: number }) => void;
   onConfirm: () => void;
-  initialSelectedCollections?: string[];              
-  onSelectedCollectionsChange?: (c: string[]) => void; 
+  initialSelectedCollections?: string[];
+  onSelectedCollectionsChange?: (c: string[]) => void;
 }
 
 const getCollectibleKey = (collectible: Collectible) => {
@@ -48,7 +46,9 @@ export const CollectibleGallery = ({
   onSelectedCollectionsChange,
 }: Properties) => {
   const { data: walletClient } = useWalletClient();
-  const { data: collectibles, isLoading } = useCollectibles(walletClient?.account?.address);
+  const { data: collectibles, isLoading } = useCollectibles(
+    walletClient?.account?.address,
+  );
 
   const uniqueCollections = useMemo(() => {
     if (!collectibles) return [];
@@ -63,21 +63,20 @@ export const CollectibleGallery = ({
 
       seen.add(key);
 
-      const known =
-        CHAIN_ID_TO_NFT_COLLECTIONS[c.chainId]?.find(
-          (col) => {return getAddress(col.address) === address},
-        );
+      const known = CHAIN_ID_TO_NFT_COLLECTIONS[c.chainId]?.find((col) => {
+        return getAddress(col.address) === address;
+      });
 
       result.push({
         chainId: c.chainId,
         address,
-        name:
-          known?.name ??
-          `${address.slice(0, 6)}…${address.slice(-4)}`, // fallback label
+        name: known?.name ?? `${address.slice(0, 6)}…${address.slice(-4)}`, // fallback label
       });
     }
 
-    return result.sort((a, b) => {return a.name.localeCompare(b.name)});
+    return result.sort((a, b) => {
+      return a.name.localeCompare(b.name);
+    });
   }, [collectibles]);
 
   const [_selectedCollections, _setSelectedCollections] = useState<string[]>(
@@ -96,14 +95,15 @@ export const CollectibleGallery = ({
   useEffect(() => {
     if (!collectibles?.length) return;
 
-    const allContracts = uniqueCollections.map(
-      (col) => {return `${col.chainId}-${col.address}`},
-    );
+    const allContracts = uniqueCollections.map((col) => {
+      return `${col.chainId}-${col.address}`;
+    });
 
-    const startSelection =
-      initialSelectedCollections?.length
-        ? initialSelectedCollections.filter((c) => {return allContracts.includes(c)})
-        : allContracts;
+    const startSelection = initialSelectedCollections?.length
+      ? initialSelectedCollections.filter((c) => {
+          return allContracts.includes(c);
+        })
+      : allContracts;
 
     setSelectedCollections(startSelection, false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -112,10 +112,12 @@ export const CollectibleGallery = ({
   // Toggle handler now uses composite key and the new setter (replace body)
   const handleCollectionToggle = (key: string) => {
     const updated = _selectedCollections.includes(key)
-      ? _selectedCollections.filter((k) => {return k !== key})
+      ? _selectedCollections.filter((k) => {
+          return k !== key;
+        })
       : [..._selectedCollections, key];
 
-    setSelectedCollections(updated);   // ← now matches the expected type
+    setSelectedCollections(updated); // ← now matches the expected type
   };
 
   const handleCollectibleClick = (collectible: Collectible) => {
@@ -183,12 +185,19 @@ export const CollectibleGallery = ({
             {uniqueCollections.map((collection) => {
               const collectionKey = `${collection.chainId}-${collection.address}`;
               return (
-                <label key={collectionKey} className="flex cursor-pointer items-center gap-2">
+                <label
+                  key={collectionKey}
+                  className="flex cursor-pointer items-center gap-2"
+                >
                   <Checkbox
                     value={_selectedCollections.includes(collectionKey)}
-                    onChange={() => {return handleCollectionToggle(collectionKey)}}
+                    onChange={() => {
+                      return handleCollectionToggle(collectionKey);
+                    }}
                   />
-                  <span className="text-sm text-neutral-700">{collection.name}</span>
+                  <span className="text-sm text-neutral-700">
+                    {collection.name}
+                  </span>
                 </label>
               );
             })}
@@ -329,12 +338,19 @@ export const CollectibleGallery = ({
               {uniqueCollections.map((collection) => {
                 const collectionKey = `${collection.chainId}-${collection.address}`;
                 return (
-                  <label key={collectionKey} className="flex cursor-pointer items-center gap-2">
+                  <label
+                    key={collectionKey}
+                    className="flex cursor-pointer items-center gap-2"
+                  >
                     <Checkbox
                       value={_selectedCollections.includes(collectionKey)}
-                      onChange={() => {return handleCollectionToggle(collectionKey)}}
+                      onChange={() => {
+                        return handleCollectionToggle(collectionKey);
+                      }}
                     />
-                    <span className="text-sm text-neutral-700">{collection.name}</span>
+                    <span className="text-sm text-neutral-700">
+                      {collection.name}
+                    </span>
                   </label>
                 );
               })}
