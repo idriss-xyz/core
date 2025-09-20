@@ -1,11 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Checkbox } from '@idriss-xyz/ui/checkbox';
 import { Card } from '@idriss-xyz/ui/card';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { NumericButtonGroup } from '@idriss-xyz/ui/numeric-button-group';
 import {
   CHAIN_ID_TO_NFT_COLLECTIONS,
-  CREATOR_CHAIN,
 } from '@idriss-xyz/constants';
 import { getAddress } from 'viem';
 import { Icon } from '@idriss-xyz/ui/icon';
@@ -17,12 +16,13 @@ import { Collectible } from '../../../types';
 import { useCollectibles } from '../../../hooks/use-collectibles';
 
 interface Properties {
-  collections: string[];
   searchQuery: string;
   showMobileFilter: boolean;
   setShowMobileFilter: (show: boolean) => void;
   onSelect: (collectible: Collectible & { amount: number }) => void;
   onConfirm: () => void;
+  initialSelectedCollections?: string[];              
+  onSelectedCollectionsChange?: (c: string[]) => void; 
 }
 
 const getCollectibleKey = (collectible: Collectible) => {
@@ -39,33 +39,83 @@ export const LayersBadge = ({ amount }: { amount: string }) => {
 };
 
 export const CollectibleGallery = ({
-  collections,
   searchQuery,
   showMobileFilter,
   setShowMobileFilter,
   onSelect,
   onConfirm,
+  initialSelectedCollections,
+  onSelectedCollectionsChange,
 }: Properties) => {
   const { data: walletClient } = useWalletClient();
-  const { data: collectibles, isLoading } = useCollectibles({
-    collections,
-    address: walletClient?.account?.address,
-  });
-  const [selectedCollections, setSelectedCollections] =
-    useState<string[]>(collections);
+  const { data: collectibles, isLoading } = useCollectibles(walletClient?.account?.address);
+
+  const uniqueCollections = useMemo(() => {
+    if (!collectibles) return [];
+
+    const seen = new Set<string>();
+    const result: { chainId: number; address: string; name: string }[] = [];
+
+    for (const c of collectibles) {
+      const address = getAddress(c.contract);
+      const key = `${c.chainId}-${address}`;
+      if (seen.has(key)) continue;
+
+      seen.add(key);
+
+      const known =
+        CHAIN_ID_TO_NFT_COLLECTIONS[c.chainId]?.find(
+          (col) => {return getAddress(col.address) === address},
+        );
+
+      result.push({
+        chainId: c.chainId,
+        address,
+        name:
+          known?.name ??
+          `${address.slice(0, 6)}…${address.slice(-4)}`, // fallback label
+      });
+    }
+
+    return result.sort((a, b) => {return a.name.localeCompare(b.name)});
+  }, [collectibles]);
+
+  const [_selectedCollections, _setSelectedCollections] = useState<string[]>(
+    initialSelectedCollections ?? [],
+  );
+
+  const setSelectedCollections = (next: string[], propagate = true) => {
+    _setSelectedCollections(next);
+    if (propagate) onSelectedCollectionsChange?.(next);
+  };
   const [selectedCollectibleId, setSelectedCollectibleId] = useState<
     string | null
   >(null);
   const [selectedAmount, setSelectedAmount] = useState<number>(0);
 
-  const handleCollectionToggle = (collectionAddress: string) => {
-    setSelectedCollections((previous) => {
-      return previous.includes(collectionAddress)
-        ? previous.filter((addr) => {
-            return addr !== collectionAddress;
-          })
-        : [...previous, collectionAddress];
-    });
+  useEffect(() => {
+    if (!collectibles?.length) return;
+
+    const allContracts = uniqueCollections.map(
+      (col) => {return `${col.chainId}-${col.address}`},
+    );
+
+    const startSelection =
+      initialSelectedCollections?.length
+        ? initialSelectedCollections.filter((c) => {return allContracts.includes(c)})
+        : allContracts;
+
+    setSelectedCollections(startSelection, false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [collectibles, uniqueCollections, initialSelectedCollections]);
+
+  // Toggle handler now uses composite key and the new setter (replace body)
+  const handleCollectionToggle = (key: string) => {
+    const updated = _selectedCollections.includes(key)
+      ? _selectedCollections.filter((k) => {return k !== key})
+      : [..._selectedCollections, key];
+
+    setSelectedCollections(updated);   // ← now matches the expected type
   };
 
   const handleCollectibleClick = (collectible: Collectible) => {
@@ -111,8 +161,8 @@ export const CollectibleGallery = ({
       const matchesSearch = collectible.name
         .toLowerCase()
         .includes(searchQuery.toLowerCase());
-      const matchesCollection = selectedCollections.includes(
-        collectible.contract,
+      const matchesCollection = _selectedCollections.includes(
+        `${collectible.chainId}-${getAddress(collectible.contract)}`,
       );
       return matchesSearch && matchesCollection;
     }) ?? [];
@@ -130,33 +180,18 @@ export const CollectibleGallery = ({
             Collections
           </h3>
           <div className="space-y-2">
-            {CHAIN_ID_TO_NFT_COLLECTIONS[CREATOR_CHAIN.BASE.id]?.map(
-              (collection) => {
-                const collectionChecksumAddress = getAddress(
-                  collection.address,
-                );
-                return (
-                  <label
-                    key={collectionChecksumAddress}
-                    className="flex cursor-pointer items-center gap-2"
-                  >
-                    <Checkbox
-                      value={selectedCollections.includes(
-                        collectionChecksumAddress,
-                      )}
-                      onChange={() => {
-                        return handleCollectionToggle(
-                          collectionChecksumAddress,
-                        );
-                      }}
-                    />
-                    <span className="text-sm text-neutral-700">
-                      {collection.name}
-                    </span>
-                  </label>
-                );
-              },
-            )}
+            {uniqueCollections.map((collection) => {
+              const collectionKey = `${collection.chainId}-${collection.address}`;
+              return (
+                <label key={collectionKey} className="flex cursor-pointer items-center gap-2">
+                  <Checkbox
+                    value={_selectedCollections.includes(collectionKey)}
+                    onChange={() => {return handleCollectionToggle(collectionKey)}}
+                  />
+                  <span className="text-sm text-neutral-700">{collection.name}</span>
+                </label>
+              );
+            })}
           </div>
         </div>
 
@@ -174,7 +209,7 @@ export const CollectibleGallery = ({
 
                 return (
                   <div
-                    key={collectible.tokenId}
+                    key={collectibleKey}
                     className={classes(
                       'relative flex cursor-pointer flex-col gap-[10px] rounded-xl border border-neutral-200 p-[6px] transition-colors hover:border-mint-500',
                       isSelected ? 'border-mint-500' : '',
@@ -291,33 +326,18 @@ export const CollectibleGallery = ({
               />
             </div>
             <div className="space-y-2">
-              {CHAIN_ID_TO_NFT_COLLECTIONS[CREATOR_CHAIN.BASE.id]?.map(
-                (collection) => {
-                  const collectionChecksumAddress = getAddress(
-                    collection.address,
-                  );
-                  return (
-                    <label
-                      key={collectionChecksumAddress}
-                      className="flex cursor-pointer items-center gap-2"
-                    >
-                      <Checkbox
-                        value={selectedCollections.includes(
-                          collectionChecksumAddress,
-                        )}
-                        onChange={() => {
-                          return handleCollectionToggle(
-                            collectionChecksumAddress,
-                          );
-                        }}
-                      />
-                      <span className="text-sm text-neutral-700">
-                        {collection.name}
-                      </span>
-                    </label>
-                  );
-                },
-              )}
+              {uniqueCollections.map((collection) => {
+                const collectionKey = `${collection.chainId}-${collection.address}`;
+                return (
+                  <label key={collectionKey} className="flex cursor-pointer items-center gap-2">
+                    <Checkbox
+                      value={_selectedCollections.includes(collectionKey)}
+                      onChange={() => {return handleCollectionToggle(collectionKey)}}
+                    />
+                    <span className="text-sm text-neutral-700">{collection.name}</span>
+                  </label>
+                );
+              })}
             </div>
           </Card>
         </div>

@@ -86,6 +86,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
     const [activeTab, setActiveTab] = useState<'token' | 'collectible'>(
       'token',
     );
+    const [collectionFilters, setCollectionFilters] = useState<string[]>([]);
 
     const { showMobileFilter, setShowMobileFilter } = useMobileFilter();
 
@@ -831,13 +832,11 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
             </div>
 
             <CollectibleGallery
-              collections={[
-                '0xA7B67cD6B31b73772AE3C8ea784317207194A6f4',
-                '0x8bB4033AF06B363A8391F795A39281bcc3b6197D',
-              ]} // TODO: Replace with creatorInfo.collections
               searchQuery={collectibleSearch}
               showMobileFilter={showMobileFilter}
               setShowMobileFilter={setShowMobileFilter}
+              initialSelectedCollections={collectionFilters}
+              onSelectedCollectionsChange={setCollectionFilters}
               onSelect={(collectible) => {
                 if (collectible.amount === 0) {
                   setSelectedCollectible(null);

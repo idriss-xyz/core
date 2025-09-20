@@ -1,4 +1,4 @@
-import { createPublicClient, http, Hex, formatUnits } from 'viem';
+import { createPublicClient, http, Hex, formatUnits, getAddress } from 'viem';
 import { Token } from '../db/entities/token.entity';
 import {
   CHAIN_ID_TO_NFT_COLLECTIONS,
@@ -198,7 +198,7 @@ export async function calculateNftBalances(
         results.push({
           chainId,
           contract: nft.contract.address,
-          collection: nft.contract.name,
+          collection: meta.name,
           tokenId: nft.tokenId,
           balance: nft.balance,
           type: meta.standard,

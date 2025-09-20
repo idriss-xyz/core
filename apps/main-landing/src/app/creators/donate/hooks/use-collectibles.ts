@@ -4,26 +4,17 @@ import { Hex } from 'viem';
 
 import { Collectible } from '../types';
 
-type Payload = {
-  address?: Hex;
-  collections: string[];
-};
-
 type Options = {
   enabled?: boolean;
 };
 
-const getCollectibles = async (payload: Payload): Promise<Collectible[]> => {
-  if (!payload.address) {
+const getCollectibles = async (address?: Hex): Promise<Collectible[]> => {
+  if (!address) {
     throw new Error('Address is required to fetch collectibles');
   }
 
-  if (payload.collections.length === 0) {
-    return [];
-  }
-
   const response = await fetch(
-    `${CREATOR_API_URL}/get-balances/nft/${payload.address}`,
+    `${CREATOR_API_URL}/get-balances/nft/${address}`,
     {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
@@ -38,11 +29,11 @@ const getCollectibles = async (payload: Payload): Promise<Collectible[]> => {
   return collectibles.nftResult.balances as Collectible[];
 };
 
-export const useCollectibles = (payload: Payload, options?: Options) => {
+export const useCollectibles = (address?: Hex, options?: Options) => {
   return useQuery({
-    queryKey: ['collectibles', payload.address, payload.collections],
+    queryKey: ['collectibles', address],
     queryFn: () => {
-      return getCollectibles(payload);
+      return getCollectibles(address);
     },
     retryDelay: 1000,
     staleTime: 1000 * 60 * 5, // 5 minutes
