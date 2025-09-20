@@ -755,6 +755,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
               intent="primary"
               className="mt-6 w-full"
               prefixIconName="Coins"
+              disabled={activeTab === 'collectible' && !selectedCollectible}
             >
               Donate
             </Button>
