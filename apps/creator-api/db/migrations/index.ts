@@ -26,3 +26,5 @@ export { RenameEtherToEthereum1755609037000 } from './1755609037000-RenameEtherT
 export { AddIsDonorToCreator1757184858317 } from './1757184858317-AddIsDonorToCreator';
 export { FixCreatorAddressSequence1757432868000 } from './1757432868000-FixCreatorAddressSequence';
 export { CleanupUnsupportedTokensNetworks1757496093000 } from './1757496093000-CleanupUnsupportedTokensNetworks';
+export { RestructureDonations1758104996000 } from './1758104996000-RestructureDonations';
+export { MoveNetworkToChildTables1758104997000 } from './1758104997000-MoveNetworkToChildTables';

@@ -30,7 +30,13 @@ export {
   IDRISS_LEGACY_API_URL,
 } from './links';
 
-export { STAKING_ABI, ERC20_ABI, TIPPING_ABI, REWARDS_ABI } from './abis';
+export {
+  STAKING_ABI,
+  ERC20_ABI,
+  NFT_ABI,
+  TIPPING_ABI,
+  REWARDS_ABI,
+} from './abis';
 
 export {
   STAKER_ADDRESS,
@@ -52,6 +58,7 @@ export {
   DEFAULT_DONATION_MIN_SFX_AMOUNT,
   IDRISS_TOKEN_ADDRESS,
   TEST_DONATION_MESSAGE,
+  CHAIN_ID_TO_NFT_COLLECTIONS,
 } from './constants';
 
 export type { TokenSymbol } from './constants';
@@ -66,7 +73,9 @@ export type {
   TipHistoryNode,
   TipHistoryTokenV2,
   LeaderboardStats,
-  DonationData,
+  StoredDonationData,
+  TokenDonationData,
+  NftDonationData,
   DonationUser,
   DonationToken,
   BalanceTableItem,

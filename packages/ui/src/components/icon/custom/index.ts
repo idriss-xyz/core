@@ -8,6 +8,8 @@ export { Tiktok } from './tiktok';
 export { Check } from './check';
 export { IdrissCircled } from './idriss-circled';
 export { EthToken } from './token/eth-token';
+export { AvaxToken } from './token/avax-token';
+export { GunToken } from './token/gun-token';
 export { IdrissToken } from './token/idriss-token';
 export { ParallelTeam } from './team/parallel-team';
 export { RoninTeam } from './team/ronin-team';

@@ -40,6 +40,13 @@ export interface ChainToken extends Token {
   address: Hex;
 }
 
+export interface ChainNft {
+  address: Hex;
+  name: string;
+  standard: 'erc1155' | 'erc721';
+  slug: string;
+}
+
 export interface TipHistoryTokenV2 {
   symbol: string;
   imageUrlV2?: string;
@@ -101,23 +108,8 @@ export interface TipHistoryNode {
 }
 
 export interface TipHistoryResponse {
-  donations: DonationData[];
+  donations: StoredDonationData[];
   leaderboard: LeaderboardStats[];
-}
-
-export interface DonationData {
-  transactionHash: Hex;
-  fromAddress: Hex;
-  toAddress: Hex;
-  timestamp: number;
-  comment?: string;
-  tradeValue: number;
-  tokenAddress: Hex;
-  network: string;
-  fromUser: DonationUser;
-  toUser: DonationUser;
-  token: DonationToken;
-  amountRaw: string;
 }
 
 export interface LeaderboardStats extends DonationUser {
@@ -149,3 +141,38 @@ export interface BalanceTableItem {
   totalValue: number;
   token: DonationToken;
 }
+
+/* ────────────── common donation shape ────────────── */
+interface BaseDonationData {
+  transactionHash: Hex;
+  fromAddress: Hex;
+  toAddress: Hex;
+  timestamp: number;
+  comment?: string;
+  tradeValue: number;
+  fromUser: DonationUser;
+  toUser: DonationUser;
+}
+
+/* ────────────── token donation ────────────── */
+export interface TokenDonationData extends BaseDonationData {
+  kind: 'token';
+  tokenAddress: Hex;
+  amountRaw: string;
+  network: string;
+  token: DonationToken;
+}
+
+/* ────────────── nft donation ──────────────── */
+export interface NftDonationData extends BaseDonationData {
+  kind: 'nft';
+  collectionAddress: Hex;
+  tokenId: number;
+  quantity: number;
+  name: string;
+  network: string;
+  imageUrl: string;
+}
+
+/* ────────────── union used by creator-api ─── */
+export type StoredDonationData = TokenDonationData | NftDonationData;

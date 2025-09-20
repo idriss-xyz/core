@@ -4,7 +4,7 @@ import {
   Chain,
   CHAIN_ID_TO_TOKENS,
   CREATOR_CHAIN,
-  DonationData,
+  StoredDonationData,
   IDRISS_TOKEN_ADDRESS,
   LeaderboardStats,
   TokenBalance,
@@ -36,7 +36,7 @@ export const calculateDollarsInIdrissToken = async (
 };
 
 export const getFilteredDonationsByPeriod = (
-  donations: DonationData[],
+  donations: StoredDonationData[],
   period?: string,
 ) => {
   if (!period || period === 'all') {
@@ -63,7 +63,7 @@ export const getFilteredDonationsByPeriod = (
 };
 
 export function calculateDonationLeaderboard(
-  donations: DonationData[],
+  donations: StoredDonationData[],
   addressToCreatorMap?: Map<string, MappableCreator>,
 ): LeaderboardStats[] {
   const groupedDonations: Record<

@@ -13,6 +13,7 @@ export const getSendFormDefaultValues = (
     sfx: '',
     chainId: defaultChainId,
     tokenSymbol: defaultTokenSymbol,
+    type: 'token',
   };
 };
 

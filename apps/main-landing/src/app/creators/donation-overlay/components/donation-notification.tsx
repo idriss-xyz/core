@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import { CREATOR_API_URL } from '@idriss-xyz/constants';
 import { Badge } from '@idriss-xyz/ui/badge';
+import type { ChainToken } from '@idriss-xyz/constants';
 import { formatFiatValue, formatTokenValue } from '@idriss-xyz/utils';
 import { formatUnits } from 'viem';
 import { classes } from '@idriss-xyz/ui/utils';
@@ -11,7 +12,20 @@ import { IDRISS_ICON_CIRCLE, DEFAULT_TRUMPET_SOUND } from '@/assets';
 
 import { useDonationNotification } from '../hooks/use-donation-notification';
 import { soundMap } from '../../constants';
-import { DonationNotificationProperties } from '../types';
+import { DonationNotificationProperties, NftDetails } from '../types';
+import { LayersBadge } from '../../donate/components/donate-form/components';
+
+function isNftDetails(
+  details?: NftDetails | ChainToken,
+): details is NftDetails {
+  return !!details && !('decimals' in details);
+}
+
+function isChainToken(
+  details?: NftDetails | ChainToken,
+): details is ChainToken {
+  return !!details && 'decimals' in details;
+}
 
 export default function DonationNotification({
   donor,
@@ -57,6 +71,9 @@ export default function DonationNotification({
     onFullyComplete,
   );
 
+  const nftDetails = isNftDetails(token.details) ? token.details : undefined;
+  const erc20Details = isChainToken(token.details) ? token.details : undefined;
+
   return (
     <div
       role="alert"
@@ -90,25 +107,53 @@ export default function DonationNotification({
             </span>
           )}
 
-          {token.details && (
+          {erc20Details && (
             <>
               <span className="text-body3 text-neutral-600">
                 sent{' '}
                 {formatTokenValue(
                   Number.parseFloat(
-                    formatUnits(token.amount, Number(token.details?.decimals)),
+                    formatUnits(token.amount, Number(erc20Details.decimals)),
                   ),
                 )}{' '}
-                {token.details?.symbol}{' '}
+                {erc20Details.symbol}{' '}
               </span>
               <img
                 alt=""
-                src={token.details?.logo}
+                src={erc20Details.logo}
                 className="size-6 rounded-full"
               />{' '}
               <Badge type="success" variant="subtle">
                 {formatFiatValue(Number(amount))}
               </Badge>
+            </>
+          )}
+
+          {nftDetails && (
+            <>
+              <span className="flex items-center gap-[6px]">
+                <span className="text-body3 text-neutral-600">
+                  sent {nftDetails.name}
+                </span>
+
+                {nftDetails.logo && (
+                  <img
+                    alt=""
+                    src={nftDetails.logo}
+                    className="size-6 rounded-full"
+                  />
+                )}
+
+                {Number(amount) > 1 && (
+                  <LayersBadge amount={amount} />
+                )}
+              </span>
+
+              {nftDetails.collectionName && (
+                <span className="w-full basis-full text-body5 text-neutral-500">
+                  ({nftDetails.collectionName})
+                </span>
+              )}
             </>
           )}
         </p>

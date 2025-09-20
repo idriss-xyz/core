@@ -20,6 +20,18 @@ export type Address = {
   isFetching: boolean;
 };
 
+export type Collectible = {
+  tokenId: string;
+  name: string;
+  image: string;
+  collection: string;
+  contract: Hex;
+  chainId: number;
+  balance: string;
+  usdValue?: number;
+  type: 'erc721' | 'erc1155';
+};
+
 export type CreatorProfile = {
   name: string | null;
   address: Address;

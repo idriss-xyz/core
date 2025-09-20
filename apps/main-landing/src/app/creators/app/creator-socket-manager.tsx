@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { default as io } from 'socket.io-client';
-import { CREATOR_API_URL, DonationData } from '@idriss-xyz/constants';
+import { CREATOR_API_URL, StoredDonationData } from '@idriss-xyz/constants';
 
 import { useAuth } from '../context/auth-context';
 
@@ -20,7 +20,7 @@ export const CreatorSocketManager = () => {
       socket.emit('register', creator.primaryAddress);
     });
 
-    socket.on('newDonation', (donation: DonationData) => {
+    socket.on('newDonation', (donation: StoredDonationData) => {
       addDonation(donation);
       void queryClient.invalidateQueries({
         queryKey: ['balances', creator.primaryAddress],

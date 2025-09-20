@@ -299,13 +299,10 @@ router.post(
         networkEntities,
       } = await creatorProfileService.createCreatorProfile(req);
 
-      // TODO: Remove token and network linked creator (redundant in response)
       res.status(201).json({
         creator: {
           ...savedCreator,
           donationParameters: savedDonationParameters,
-          tokens: tokenEntities,
-          networks: networkEntities,
         },
       });
     } catch (error) {

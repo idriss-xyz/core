@@ -9,6 +9,7 @@ import {
   zksync,
   scroll,
   celo,
+  // avalanche,
 } from 'viem/chains';
 
 import {
@@ -35,8 +36,10 @@ import {
   SCROLL_LOGO,
   CELO_LOGO,
   BNB_LOGO,
+  // AVAX_LOGO,
+  // GUNZ_LOGO,
 } from './logos';
-import { Chain, Token, ChainToken } from './types';
+import { Chain, Token, ChainToken, ChainNft } from './types';
 
 export const STAKER_ADDRESS = '0x085e2DC1b05dcdbE011B5ad377C9f2fcD69B7057';
 export const REWARDS_ADDRESS = '0x4D66A8e9Da1F007802338B372aD348B78b455aBB';
@@ -111,6 +114,12 @@ export const CREATOR_CHAIN = {
     dbName: 'ETHEREUM_MAINNET',
     logo: ETHEREUM_LOGO,
   },
+  // AVALANCHE: {
+  //   ...avalanche,
+  //   shortName: 'Avalanche',
+  //   dbName: 'AVALANCHE_MAINNET',
+  //   logo: AVAX_LOGO,
+  // },
 } satisfies Record<string, Chain>;
 
 export const CHAIN = Object.assign(CREATOR_CHAIN, {
@@ -202,6 +211,11 @@ export const CHAIN = Object.assign(CREATOR_CHAIN, {
 }) satisfies Record<string, Chain>;
 
 export const TOKEN = {
+  // AVAX: {
+  //   name: 'Avalanche',
+  //   symbol: 'AVAX',
+  //   logo: AVAX_LOGO,
+  // },
   ETHEREUM: {
     name: 'Ethereum',
     symbol: 'ETH',
@@ -240,6 +254,11 @@ export const TOKEN = {
     symbol: 'AXS',
     logo: AXIE_LOGO,
   },
+  // GUN: {
+  //   name: 'Gunz',
+  //   symbol: 'GUN',
+  //   logo: GUNZ_LOGO,
+  // },
   // PIXEL: {
   //   name: 'Pixels',
   //   symbol: 'PIXEL',
@@ -277,6 +296,23 @@ export const CHAIN_ID_TO_TOKENS = {
       address: '0x9eBe3A824Ca958e4b3Da772D2065518F009CBa62',
     },
   ],
+  // [CREATOR_CHAIN.AVALANCHE.id]: [
+  //   {
+  //     ...TOKEN.AVAX,
+  //     decimals: 18,
+  //     address: NATIVE_COIN_ADDRESS,
+  //   },
+  //   {
+  //     ...TOKEN.GUN,
+  //     decimals: 18,
+  //     address: '0x26debd39d5ed069770406fca10a0e4f8d2c743eb',
+  //   },
+  //   {
+  //     ...TOKEN.USDC,
+  //     decimals: 6,
+  //     address: '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E',
+  //   },
+  // ],
   [CREATOR_CHAIN.ETHEREUM.id]: [
     {
       ...TOKEN.ETHEREUM,
@@ -370,17 +406,109 @@ export const CHAIN_ID_TO_TOKENS = {
   ],
 } satisfies Record<string, ChainToken[]>;
 
+export const CHAIN_ID_TO_NFT_COLLECTIONS: Record<number, ChainNft[]> = {
+  [CREATOR_CHAIN.ETHEREUM.id]: [
+    {
+      address: '0x0Fc3DD8C37880a297166BEd57759974A157f0E74',
+      name: 'Parallel Avatars',
+      standard: 'erc721',
+      slug: 'parallel-avatars',
+    },
+    {
+      address: '0x76BE3b62873462d2142405439777e971754E8E77',
+      name: 'Parallel Alpha',
+      standard: 'erc1155',
+      slug: 'parallelalpha',
+    },
+    {
+      address: '0x6811f2f20c42f42656A3c8623aD5e9461b83f719',
+      name: 'Parallel Planetfall',
+      standard: 'erc1155',
+      slug: 'parallelplanetfall',
+    },
+    {
+      address: '0x9d764bcf1AFFd83554B7626F22EAB2ffC60590C7',
+      name: 'Parallel Battlepass',
+      standard: 'erc1155',
+      slug: 'parallel-battlepass-cards',
+    },
+    {
+      address: '0x6E3bc168F6260Ff54257aE4B56449eFd7aFd5934',
+      name: 'Parallel Cosmetics',
+      standard: 'erc1155',
+      slug: 'parallel-cosmetics',
+    },
+    {
+      address: '0x5302A847E53c7b2ff4DaEa7559F82F02446BEE61',
+      name: 'Parallel Lore',
+      standard: 'erc1155',
+      slug: 'parallellore',
+    },
+    {
+      address: '0x38398a2d7A4278b8d83967E0D235164335A0394A',
+      name: 'Parallel Auxillary',
+      standard: 'erc1155',
+      slug: 'parallel-auxiliary-items',
+    },
+  ],
+  [CREATOR_CHAIN.BASE.id]: [
+    {
+      address: '0x206571b68c66E1d112b74d65695043ad2b5F95D5',
+      name: 'Parallel Alpha [Base]',
+      standard: 'erc1155',
+      slug: 'parallel-on-base',
+    },
+    {
+      address: '0x8bB4033AF06B363A8391F795A39281bcc3b6197D',
+      name: 'Parallel Planetfall [Base]',
+      standard: 'erc1155',
+      slug: 'planetfall-on-base',
+    },
+    {
+      address: '0xA7B67cD6B31b73772AE3C8ea784317207194A6f4',
+      name: 'Parallel Aftermath',
+      standard: 'erc1155',
+      slug: 'parallel-aftermath',
+    },
+    {
+      address: '0xA669ca42f91873d406847D8329233C2703f377cd',
+      name: 'Parallel Deception',
+      standard: 'erc1155',
+      slug: 'parallel-on-base',
+    },
+    {
+      address: '0x504405158f9960A0252a83EE2Fd13167991ADdD6',
+      name: 'Parallel Battlepass [Base]',
+      standard: 'erc1155',
+      slug: 'parallel-battlepass-cards-base',
+    },
+    {
+      address: '0xC6C03D452906aaD9A364989608d947bAc11E478c',
+      name: 'Parallel Cosmetics [Base]',
+      standard: 'erc1155',
+      slug: 'parallel-cosmetics-base',
+    },
+    {
+      address: '0x2dE4941fec832D5d2F7Ab69DF397f3E2fB28d391',
+      name: 'Parallel Companions',
+      standard: 'erc1155',
+      slug: 'parallel-companions',
+    },
+  ],
+};
+
 export const DEFAULT_ALLOWED_CHAINS_IDS = [
   CREATOR_CHAIN.ABSTRACT.id,
   CREATOR_CHAIN.BASE.id,
   CREATOR_CHAIN.ETHEREUM.id,
   CREATOR_CHAIN.RONIN.id,
+  // CREATOR_CHAIN.AVALANCHE.id,
 ];
 
 export const EMPTY_HEX = '0x';
 
 export const COPILOT_API_URL = 'https://copilot-api.idriss.xyz';
-export const CREATOR_API_URL = 'https://creators-api.idriss.xyz';
+export const CREATOR_API_URL = 'https://core-staging-4c69.up.railway.app';
 
 export const DEFAULT_DONATION_MIN_ALERT_AMOUNT = 1;
 export const DEFAULT_DONATION_MIN_TTS_AMOUNT = 3;
