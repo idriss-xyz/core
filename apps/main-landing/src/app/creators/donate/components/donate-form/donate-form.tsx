@@ -334,6 +334,11 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       async (payload) => {
         setSubmitError(null); // Clear any previous error when retrying
 
+        if (!isConnected) {
+          openConnectModal?.();
+          return;
+        }
+
         if (
           !walletClient ||
           !creatorInfo.address.data ||
@@ -647,9 +652,12 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                           size="medium"
                           className="w-full uppercase"
                           onClick={() => {
+                            if (!isConnected){
+                              openConnectModal?.();
+                              return;
+                            }
                             return setIsCollectibleModalOpen(true);
                           }}
-                          disabled={!walletClient?.account}
                         >
                           Select collectible
                         </Button>
@@ -759,7 +767,6 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
               intent="primary"
               className="mt-6 w-full"
               prefixIconName="Coins"
-              disabled={activeTab === 'collectible' && !selectedCollectible}
             >
               Donate
             </Button>

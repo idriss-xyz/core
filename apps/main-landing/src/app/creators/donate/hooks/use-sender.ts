@@ -68,8 +68,7 @@ export const useSender = ({ walletClient, callbackOnSend }: Properties) => {
       // Send flow for ERC721 tokens
       if (sendPayload.type === 'erc721') {
         if (!sendPayload.contract || !sendPayload.tokenId) {
-          console.error('Missing contract or tokenId');
-          return;
+          throw new Error('Missing contract or tokenId');
         }
         erc721Transaction.mutate({
           walletClient,
@@ -90,8 +89,7 @@ export const useSender = ({ walletClient, callbackOnSend }: Properties) => {
           !sendPayload.tokenId ||
           !sendPayload.amount
         ) {
-          console.error('Missing contract or tokenId');
-          return;
+          throw new Error('Missing contract or tokenId');
         }
 
         const bal1155 = await client.readContract({
