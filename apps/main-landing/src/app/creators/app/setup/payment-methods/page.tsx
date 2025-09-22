@@ -106,7 +106,7 @@ const CollectiblesRow = () => {
   ];
 
   return (
-    <div className="flex flex-row gap-[10px]">
+    <div className="mt-1 flex flex-row gap-[10px]">
       {images.map((source, index) => {
         return (
           <div
