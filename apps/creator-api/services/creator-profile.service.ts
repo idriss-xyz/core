@@ -48,6 +48,7 @@ class CreatorProfileService {
       alertEnabled,
       ttsEnabled,
       sfxEnabled,
+      collectibleEnabled = true,
       customBadWords = [],
       tokens = DEFAULT_SUPPORTED_TOKEN_SYMBOLS,
       networks = Object.values(CREATOR_CHAIN).map((chain) => chain.shortName),
@@ -89,6 +90,9 @@ class CreatorProfileService {
 
     // Create and save new creator
     const savedCreator = await creatorRepository.save(creator);
+
+    donationParameters.customBadWords = customBadWords;
+    donationParameters.collectibleEnabled = collectibleEnabled;
 
     donationParameters.creator = savedCreator;
 

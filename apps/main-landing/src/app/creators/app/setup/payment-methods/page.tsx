@@ -35,6 +35,7 @@ type FormPayload = {
   address: string;
   chainsIds: number[];
   tokensSymbols: string[];
+  collectibleEnabled?: boolean;
 };
 
 const ALL_CHAIN_IDS = Object.values(CREATOR_CHAIN).map((chain) => {
@@ -89,7 +90,7 @@ const iconsForCardPaymentMethod: IconName[] = [
 
 const IconsRow = ({ icons }: { icons: IconName[] }) => {
   return (
-    <div className="-mt-4 flex flex-row items-center gap-2">
+    <div className="flex flex-row items-center gap-2">
       {icons.map((iconName, index) => {
         return (
           <div className="relative size-6" key={index}>
@@ -107,6 +108,13 @@ export default function PaymentMethods() {
   const { toast } = useToast();
 
   const [toggleCrypto, setToggleCrypto] = useState(true);
+  const [toggleCollectible, setToggleCollectible] = useState(
+    creator?.collectibleEnabled ?? true,
+  );
+
+  useEffect(() => {
+    if (creator) setToggleCollectible(creator.collectibleEnabled);
+  }, [creator]);
 
   const formMethods = useForm<FormPayload>({
     defaultValues: {
@@ -328,8 +336,8 @@ export default function PaymentMethods() {
                   return !previous;
                 });
               }}
+              disabled
               className="max-w-[336px]"
-              switchClassname="hidden"
             />
             {/* Uncomment when we have second payment method ready */}
             {/* <IconsRow tokens={iconsForCryptoPaymentMethod} /> */}
@@ -397,6 +405,32 @@ export default function PaymentMethods() {
 
           <FormFieldWrapper>
             <Toggle
+              label="Digital collectibles"
+              sublabel="Receive in-game assets such as cards, skins, and collectibles."
+              value={toggleCollectible}
+              onChange={async () => {
+                const newValue = !toggleCollectible;
+                setToggleCollectible(newValue);
+
+                const authToken = await getAccessToken();
+                if (!authToken || !creator?.name) return;
+
+                await editCreatorProfile(
+                  creator.name,
+                  { collectibleEnabled: newValue },
+                  authToken,
+                );
+              }}
+              className="max-w-[336px]"
+            >
+              <IconsRow icons={iconsForCardPaymentMethod} />
+            </Toggle>
+          </FormFieldWrapper>
+
+          <hr className="max-w-[445px]" />
+
+          <FormFieldWrapper>
+            <Toggle
               label="Card & bank transfers"
               sublabel="Get paid via credit cards or traditional bank transfers. Trusted, familiar, and widely used by fans."
               value={false}
@@ -406,9 +440,10 @@ export default function PaymentMethods() {
                 console.log('Not implemented yet');
               }}
               className="max-w-[336px]"
-              switchClassname="hidden"
-            />
-            <IconsRow icons={iconsForCardPaymentMethod} />
+              switchClassname="invisible"
+            >
+              <IconsRow icons={iconsForCardPaymentMethod} />
+            </Toggle>
           </FormFieldWrapper>
         </Form>
       </div>

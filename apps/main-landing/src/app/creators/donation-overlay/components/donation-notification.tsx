@@ -144,9 +144,7 @@ export default function DonationNotification({
                   />
                 )}
 
-                {Number(amount) > 1 && (
-                  <LayersBadge amount={amount} />
-                )}
+                {Number(amount) > 1 && <LayersBadge amount={amount} />}
               </span>
 
               {nftDetails.collectionName && (

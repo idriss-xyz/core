@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import { forwardRef, ReactNode } from 'react';
 
 import { classes } from '../../utils';
 import { Switch } from '../switch';
@@ -11,6 +11,7 @@ interface ToggleProperties {
   className?: string;
   switchClassname?: string;
   comingSoon?: boolean;
+  children?: ReactNode;
   onChange: (value: boolean) => void;
 }
 
@@ -21,10 +22,11 @@ export const Toggle = forwardRef<HTMLButtonElement, ToggleProperties>(
       label,
       sublabel,
       disabled,
+      comingSoon = false,
       className,
       switchClassname,
+      children,
       onChange,
-      comingSoon = false,
       ...properties
     }: ToggleProperties,
     reference,
@@ -55,6 +57,7 @@ export const Toggle = forwardRef<HTMLButtonElement, ToggleProperties>(
           {sublabel && (
             <span className="text-body5 text-neutral-600">{sublabel}</span>
           )}
+          {children && <div>{children}</div>}
         </div>
       </div>
     );

@@ -45,6 +45,7 @@ import {
   CleanupUnsupportedTokensNetworks1757496093000,
   RestructureDonations1758104996000,
   MoveNetworkToChildTables1758104997000,
+  AddCollectibleEnabledToCreator1758546104000,
 } from './migrations';
 import { CreatorProfileView } from './views';
 
@@ -99,6 +100,7 @@ export const AppDataSource = new DataSource({
     CleanupUnsupportedTokensNetworks1757496093000,
     RestructureDonations1758104996000,
     MoveNetworkToChildTables1758104997000,
+    AddCollectibleEnabledToCreator1758546104000,
   ],
 });
 

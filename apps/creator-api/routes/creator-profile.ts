@@ -292,12 +292,8 @@ router.post(
       return;
     }
     try {
-      const {
-        savedCreator,
-        savedDonationParameters,
-        tokenEntities,
-        networkEntities,
-      } = await creatorProfileService.createCreatorProfile(req);
+      const { savedCreator, savedDonationParameters } =
+        await creatorProfileService.createCreatorProfile(req);
 
       res.status(201).json({
         creator: {
@@ -361,6 +357,7 @@ router.patch(
         alertEnabled,
         ttsEnabled,
         sfxEnabled,
+        collectibleEnabled,
         tokens,
         networks,
         customBadWords,
@@ -388,7 +385,8 @@ router.patch(
         alertEnabled ||
         ttsEnabled ||
         sfxEnabled ||
-        customBadWords
+        customBadWords ||
+        collectibleEnabled
       ) {
         const donationParams = await donationParamsRepository.findOne({
           where: { creator: { id: creator.id } },
@@ -407,6 +405,7 @@ router.patch(
               ttsEnabled,
               sfxEnabled,
               customBadWords,
+              collectibleEnabled,
             },
           );
         } else {
@@ -421,6 +420,7 @@ router.patch(
             ttsEnabled,
             sfxEnabled,
             customBadWords,
+            collectibleEnabled,
           });
           await donationParamsRepository.save(newDonationParams);
         }

@@ -28,3 +28,4 @@ export { FixCreatorAddressSequence1757432868000 } from './1757432868000-FixCreat
 export { CleanupUnsupportedTokensNetworks1757496093000 } from './1757496093000-CleanupUnsupportedTokensNetworks';
 export { RestructureDonations1758104996000 } from './1758104996000-RestructureDonations';
 export { MoveNetworkToChildTables1758104997000 } from './1758104997000-MoveNetworkToChildTables';
+export { AddCollectibleEnabledToCreator1758546104000 } from './1758546104000-AddCollectibleEnabledToCreator';

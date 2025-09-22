@@ -5,7 +5,6 @@ import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { NumericButtonGroup } from '@idriss-xyz/ui/numeric-button-group';
 import { CHAIN_ID_TO_NFT_COLLECTIONS } from '@idriss-xyz/constants';
 import { getAddress } from 'viem';
-import { Icon } from '@idriss-xyz/ui/icon';
 import { useWalletClient } from 'wagmi';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Button } from '@idriss-xyz/ui/button';
