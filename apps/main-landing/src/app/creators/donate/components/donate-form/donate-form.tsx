@@ -38,11 +38,10 @@ import {
 } from '@idriss-xyz/ui/tooltip';
 import { ExternalLink } from '@idriss-xyz/ui/external-link';
 import { getAddress } from 'viem';
-import { usePrivy, getAccessToken } from '@privy-io/react-auth';
+import { getAccessToken } from '@privy-io/react-auth';
 
 import { backgroundLines3 } from '@/assets';
 import { useAuth } from '@/app/creators/context/auth-context';
-import { setCreatorIfSessionPresent } from '@/app/creators/utils';
 
 import {
   FormPayload,
@@ -66,7 +65,7 @@ const baseClassName =
 export const DonateForm = forwardRef<HTMLDivElement, Properties>(
   ({ className, creatorInfo }, reference) => {
     const { isConnected } = useAccount();
-    const { donor, setCreator } = useAuth();
+    const { donor } = useAuth();
     const { data: walletClient } = useWalletClient();
     const { connectModalOpen, openConnectModal } = useConnectModal();
     const [selectedTokenSymbol, setSelectedTokenSymbol] =
@@ -250,8 +249,6 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         body: JSON.stringify({ address: creatorInfo.address.data }),
       });
     }, [creatorInfo.address.data, creatorInfo.address.isValid]);
-
-    const { user } = usePrivy();
 
     const callbackOnSend = useCallback(
       async (txHash: string) => {
