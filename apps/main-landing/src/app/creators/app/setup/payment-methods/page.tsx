@@ -30,6 +30,14 @@ import { useToast } from '@/app/creators/context/toast-context';
 
 import SkeletonSetup from '../loading';
 
+import {
+  Collectible1,
+  Collectible2,
+  Collectible3,
+  Collectible4,
+  Collectible5,
+} from './assets';
+
 type FormPayload = {
   name: string;
   address: string;
@@ -87,6 +95,36 @@ const iconsForCardPaymentMethod: IconName[] = [
   'AmericanExpress',
   'Visa',
 ];
+
+const CollectiblesRow = () => {
+  const images = [
+    Collectible1,
+    Collectible2,
+    Collectible3,
+    Collectible4,
+    Collectible5,
+  ];
+
+  return (
+    <div className="flex flex-row gap-[10px]">
+      {images.map((source, index) => {
+        return (
+          <div
+            key={index}
+            className="rounded-[4px] border border-neutral-300 p-px"
+          >
+            <img
+              src={source.src}
+              alt={`Collectible ${index + 1}`}
+              width={32}
+              className="h-auto rounded-[4px]"
+            />
+          </div>
+        );
+      })}
+    </div>
+  );
+};
 
 const IconsRow = ({ icons }: { icons: IconName[] }) => {
   return (
@@ -423,7 +461,7 @@ export default function PaymentMethods() {
               }}
               className="max-w-[336px]"
             >
-              <IconsRow icons={iconsForCardPaymentMethod} />
+              <CollectiblesRow />
             </Toggle>
           </FormFieldWrapper>
 
