@@ -266,12 +266,6 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       callbackOnSend,
     });
 
-    useEffect(() => {
-      if (user) {
-        void setCreatorIfSessionPresent(user, setCreator);
-      }
-    }, [user, setCreator]);
-
     // Reset SFX when amount falls below the minimum
     useEffect(() => {
       if (amount < minimumSfxAmount && sfx) {

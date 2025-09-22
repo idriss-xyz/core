@@ -51,7 +51,9 @@ export const Desktop = ({
   };
 
   useEffect(() => {
+    console.log("user", user);
     if (user && localStorage.getItem('donate-option-choice') === 'account') {
+      console.log("SETTING DONOR")
       void setCreatorIfSessionPresent(user, setDonor);
     }
   }, [user, setDonor]);
