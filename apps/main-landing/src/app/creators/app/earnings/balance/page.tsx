@@ -7,13 +7,18 @@ import { usePrivy } from '@privy-io/react-auth';
 import { Hex } from 'viem';
 import { formatFiatValue } from '@idriss-xyz/utils';
 import { useState } from 'react';
+import { classes } from '@idriss-xyz/ui/utils';
+import { TabsPill, TabItem } from '@idriss-xyz/ui/tabs-pill';
 
 import { IDRISS_SCENE_STREAM_4 } from '@/assets';
 import { WithdrawWidget } from '@/app/creators/components/withdraw-widget';
 import { CopyButton } from '@/app/creators/components/copy-button/copy-button';
 
+import {
+  useGetCollectibleBalances,
+  useGetTokenBalances,
+} from '../commands/get-balances';
 import { useAuth } from '../../../context/auth-context';
-import { useGetTokenBalances } from '../commands/get-balances';
 import SkeletonRanking from '../loading';
 
 import { BalanceTable } from './balance-table';
@@ -24,6 +29,9 @@ export default function EarningsBalance() {
   const { creator } = useAuth();
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
   const [selectedToken, setSelectedToken] = useState<string>();
+  const [activeTab, setActiveTab] = useState<'Tokens' | 'Collectibles'>(
+    'Tokens',
+  );
   const address = user?.wallet?.address as Hex | undefined;
 
   const { data, isLoading, isError } = useGetTokenBalances(
@@ -31,9 +39,29 @@ export default function EarningsBalance() {
     { enabled: ready && authenticated && !!address },
   );
 
-  const tokenBalancesData = data?.tokenResult;
+  const {
+    data: collectiblesData,
+    isLoading: isLoadingCollectibles,
+    isError: isErrorCollectibles,
+  } = useGetCollectibleBalances(
+    { address },
+    {
+      enabled:
+        activeTab === 'Collectibles' && ready && authenticated && !!address,
+    },
+  );
 
-  const totalUsdBalance = tokenBalancesData?.summary.totalUsdBalance ?? 0;
+  const tokenBalancesData = data?.tokenResult;
+  const collectiblesBalanceData = collectiblesData?.nftResult;
+
+  const tokenTotal = tokenBalancesData?.summary.totalUsdBalance ?? 0;
+  const collectiblesTotal =
+    collectiblesBalanceData?.summary.totalUsdBalance ?? 0;
+  const totalUsdBalance =
+    activeTab === 'Tokens' ? tokenTotal : collectiblesTotal;
+  const heading =
+    activeTab === 'Tokens' ? 'Available balance' : 'Estimated value';
+
   const apiBalances = tokenBalancesData?.balances ?? [];
 
   const aggregatedBalances: Record<string, BalanceTableItem> = {};
@@ -61,11 +89,63 @@ export default function EarningsBalance() {
 
   const tableData: BalanceTableItem[] = Object.values(aggregatedBalances);
 
-  const hasBalance = !isLoading && !isError && tableData.length > 0;
+  const hasTokens = !isLoading && !isError && tableData.length > 0;
+  const hasCollectibles =
+    !isLoadingCollectibles &&
+    !isErrorCollectibles &&
+    (collectiblesBalanceData?.balances.length ?? 0) > 0;
+  const hasBalance = activeTab === 'Tokens' ? hasTokens : hasCollectibles;
 
-  if (!ready || !authenticated || isLoading) {
+  if (
+    !ready ||
+    !authenticated ||
+    (activeTab === 'Tokens' ? isLoading : isLoadingCollectibles)
+  ) {
     return <SkeletonRanking />;
   }
+
+  const NoDonations = (
+    <div className="mx-auto flex min-h-[548px] w-[477px] flex-col items-center justify-center gap-4">
+      <span
+        className={classes(
+          'text-center text-heading6 uppercase text-neutral-900',
+        )}
+      >
+        No donations yet
+      </span>
+      <span
+        className={classes(
+          'mx-8 text-center text-display5 uppercase gradient-text',
+        )}
+      >
+        Share your page to get your first donation
+      </span>
+      <CopyButton
+        text={creator?.donationUrl ?? ''}
+        disabled={!creator?.donationUrl}
+      />
+    </div>
+  );
+
+  // Tabs definition for Tokens/Collectibles
+  const balanceTabs: TabItem[] = [
+    {
+      name: 'Tokens',
+      iconName: 'Coins',
+      isActive: activeTab === 'Tokens',
+      onClick: () => {
+        return setActiveTab('Tokens');
+      },
+    },
+    {
+      name: 'Collectibles',
+      iconName: 'Coins',
+      isActive: activeTab === 'Collectibles',
+      onClick: () => {
+        return setActiveTab('Collectibles');
+      },
+    },
+  ];
 
   return (
     <div className="grid grid-cols-3 gap-4">
@@ -78,8 +158,8 @@ export default function EarningsBalance() {
           />
           <div className="relative flex flex-col items-center gap-2 px-4 py-6">
             <div className="flex flex-col items-center gap-2">
-              <h4 className="text-heading4">Available balance</h4>
-              <h2 className="text-heading2 gradient-text">
+              <h4 className={classes('text-heading4')}>{heading}</h4>
+              <h2 className={classes('text-heading2 gradient-text')}>
                 {formatFiatValue(totalUsdBalance)}
               </h2>
             </div>
@@ -101,33 +181,28 @@ export default function EarningsBalance() {
           </div>
         </div>
       </Card>
-      {hasBalance ? (
-        <Card className="col-span-3 p-0">
-          <div className="p-4">
-            <span className="text-label3">Assets</span>
-          </div>
-          <BalanceTable
-            data={tableData}
-            setSelectedToken={setSelectedToken}
-            setIsWithdrawModalOpen={setIsWithdrawModalOpen}
-          />
-        </Card>
-      ) : (
-        <Card className="col-span-3">
-          <div className="mx-auto flex min-h-[548px] w-[477px] flex-col items-center justify-center gap-4">
-            <span className="text-center text-heading6 uppercase text-neutral-900">
-              No donations yet
-            </span>
-            <span className="mx-8 text-center text-display5 uppercase gradient-text">
-              Share your page to get your first donation
-            </span>
-            <CopyButton
-              text={creator?.donationUrl ?? ''}
-              disabled={!creator?.donationUrl}
+      <Card className="col-span-3 p-0">
+        <div className="flex items-center gap-4 p-4">
+          <span className={classes('text-label3')}>Assets</span>
+          <TabsPill tabs={balanceTabs} />
+        </div>
+
+        {activeTab === 'Tokens' ? (
+          hasTokens ? (
+            <BalanceTable
+              data={tableData}
+              setSelectedToken={setSelectedToken}
+              setIsWithdrawModalOpen={setIsWithdrawModalOpen}
             />
-          </div>
-        </Card>
-      )}
+          ) : (
+            NoDonations
+          )
+        ) : hasCollectibles ? (
+          <p> implement later</p>
+        ) : (
+          NoDonations
+        )}
+      </Card>
       <WithdrawWidget
         isOpen={isWithdrawModalOpen}
         balances={apiBalances}

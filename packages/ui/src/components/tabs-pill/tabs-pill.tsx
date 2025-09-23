@@ -43,7 +43,7 @@ export function TabsPill({ tabs, renderLink }: TabsPillProperties) {
             return (
               <div
                 key={tab.name}
-                className="relative flex h-[44px] cursor-not-allowed items-center justify-center gap-2 overflow-hidden rounded-full border border-transparent px-8 py-2"
+                className="relative flex h-[40px] cursor-not-allowed items-center justify-center gap-2 overflow-hidden rounded-full border border-transparent px-8 py-2"
               >
                 <Icon
                   size={20}
@@ -74,7 +74,7 @@ export function TabsPill({ tabs, renderLink }: TabsPillProperties) {
             >
               <div onClick={tab.onClick}>
                 {tab.isActive ? (
-                  <div className="relative flex h-[44px] items-center justify-center gap-2 overflow-hidden rounded-full border border-[#5FEB3C] bg-white px-8 py-2 text-neutralGreen-900">
+                  <div className="relative flex h-[40px] items-center justify-center gap-2 overflow-hidden rounded-full border border-[#5FEB3C] bg-white px-8 py-2 text-neutralGreen-900">
                     <Icon name={tab.iconName} size={20} />
                     <div className="relative z-1 flex min-w-[108] max-w-[138] flex-col items-start">
                       <span className="text-label4 text-neutral-900">
@@ -92,7 +92,7 @@ export function TabsPill({ tabs, renderLink }: TabsPillProperties) {
                     )}
                   </div>
                 ) : (
-                  <div className="group relative flex h-[44px] items-center justify-center gap-2 overflow-hidden rounded-full border border-transparent px-8 py-2 hover:border-[#5FEB3C]">
+                  <div className="group relative flex h-[40px] items-center justify-center gap-2 overflow-hidden rounded-full border border-transparent px-8 py-2 hover:border-[#5FEB3C]">
                     <Icon
                       size={20}
                       name={tab.iconName}

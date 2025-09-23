@@ -18,6 +18,18 @@ export interface TokenBalance {
   usdValue: number;
 }
 
+export interface CollectibleBalance {
+  chainId: number;
+  contract: string;
+  collection: string;
+  tokenId: string;
+  balance: string;
+  name?: string;
+  image?: string;
+  usdValue?: number;
+  type: 'erc721' | 'erc1155';
+}
+
 export type ClaimedEventsResponse = {
   events: ClaimedEvent[];
   lastProcessedBlock: string;
