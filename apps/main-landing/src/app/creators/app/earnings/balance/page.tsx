@@ -23,6 +23,7 @@ import { useAuth } from '../../../context/auth-context';
 import SkeletonRanking from '../loading';
 
 import { BalanceTable } from './balance-table';
+import CollectibleBalanceGallery from './collectible-balance-gallery';
 
 // ts-unused-exports:disable-next-line
 export default function EarningsBalance() {
@@ -199,7 +200,9 @@ export default function EarningsBalance() {
             NoDonations
           )
         ) : hasCollectibles ? (
-          <p> implement later</p>
+          <CollectibleBalanceGallery
+            collectibles={collectiblesBalanceData?.balances ?? []}
+          />
         ) : (
           NoDonations
         )}
