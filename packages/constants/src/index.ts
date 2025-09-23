@@ -57,6 +57,7 @@ export {
   IDRISS_TOKEN_ADDRESS,
   TEST_DONATION_MESSAGE,
   CHAIN_ID_TO_NFT_COLLECTIONS,
+  CHAIN_ID_TO_OPENSEA_NETWORK_NAMES,
 } from './constants';
 
 export type { TokenSymbol } from './constants';

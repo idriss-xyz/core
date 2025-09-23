@@ -497,6 +497,11 @@ export const CHAIN_ID_TO_NFT_COLLECTIONS: Record<number, ChainNft[]> = {
   ],
 };
 
+export const CHAIN_ID_TO_OPENSEA_NETWORK_NAMES: Record<number, string> = {
+  [CREATOR_CHAIN.BASE.id]: 'base',
+  [CREATOR_CHAIN.ETHEREUM.id]: 'ethereum',
+};
+
 export const DEFAULT_ALLOWED_CHAINS_IDS = [
   CREATOR_CHAIN.ABSTRACT.id,
   CREATOR_CHAIN.BASE.id,

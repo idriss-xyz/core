@@ -1,8 +1,12 @@
 import { Icon } from '@idriss-xyz/ui/icon';
-import { CollectibleBalance } from '@idriss-xyz/constants';
+import {
+  CHAIN_ID_TO_OPENSEA_NETWORK_NAMES,
+  CollectibleBalance,
+} from '@idriss-xyz/constants';
+import { formatFiatValue } from '@idriss-xyz/utils';
+import { IconButton } from '@idriss-xyz/ui/icon-button';
 
 import { LayersBadge } from '@/app/creators/donate/components/donate-form/components';
-import { formatFiatValue } from '@idriss-xyz/utils';
 
 type CollectibleBalanceGalleryProperties = {
   collectibles: CollectibleBalance[];
@@ -12,14 +16,14 @@ export default function CollectibleBalanceGallery({
   collectibles,
 }: CollectibleBalanceGalleryProperties) {
   return (
-    <div className="justify-left flex flex-wrap gap-4 px-4 py-2">
+    <div className="flex flex-wrap justify-start gap-4 px-4 py-2">
       {collectibles.map((collectible) => {
         return (
           <div
             key={collectible.tokenId}
-            className="flex w-[268px] flex-shrink-0 cursor-pointer flex-col gap-2 rounded-xl"
+            className="flex w-[268px] shrink-0 flex-col gap-2 rounded-xl"
           >
-            <div className="bg-gray-100 flex h-[400px] w-full items-center justify-center overflow-hidden rounded-xl">
+            <div className="flex h-[400px] w-full items-center justify-center overflow-hidden rounded-xl bg-gray-200">
               <img
                 src={collectible.image}
                 alt={collectible.name}
@@ -49,7 +53,25 @@ export default function CollectibleBalanceGallery({
                       ? formatFiatValue(collectible.usdValue)
                       : ''}
                   </span>
-                  <Icon name="OpenSea" />
+                  <IconButton
+                    intent="tertiary"
+                    size="medium"
+                    iconName="OpenSea"
+                    className="p-0"
+                    onClick={() => {
+                      window.open(
+                        'https://opensea.io/item/' +
+                          CHAIN_ID_TO_OPENSEA_NETWORK_NAMES[
+                            collectible.chainId
+                          ] +
+                          '/' +
+                          collectible.contract +
+                          '/' +
+                          collectible.tokenId,
+                        '_blank',
+                      );
+                    }}
+                  />
                 </div>
               </div>
             </div>
