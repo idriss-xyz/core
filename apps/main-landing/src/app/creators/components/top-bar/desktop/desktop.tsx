@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@idriss-xyz/ui/button';
 import { CREATORS_LINK } from '@idriss-xyz/constants';
 import { Dialog } from '@idriss-xyz/ui/dialog';
@@ -9,12 +9,8 @@ import Link from 'next/link';
 import { NavigationMenu } from '@idriss-xyz/ui/navigation-menu';
 import { classes } from '@idriss-xyz/ui/utils';
 import { MobileNotSupported } from '@idriss-xyz/ui/mobile-not-supported';
-import { usePrivy } from '@privy-io/react-auth';
 
-import {
-  setCreatorIfSessionPresent,
-  useStartEarningNavigation,
-} from '@/app/creators/utils/';
+import { useStartEarningNavigation } from '@/app/creators/utils/';
 import { DonatePageAvatarMenu } from '@/app/creators/[name]/donate-page-avatar-menu';
 import { EXTERNAL_LINK, INTERNAL_LINK } from '@/constants';
 import { Socials as MobileSocials } from '@/components/top-bar/components/mobile/socials';
@@ -40,8 +36,7 @@ export const Desktop = ({
   displayMobileCTA,
 }: Properties) => {
   const handleStartEarningClick = useStartEarningNavigation();
-  const { creator, donor, setDonor } = useAuth();
-  const { user } = usePrivy();
+  const { creator, donor } = useAuth();
 
   const [isMobileNotSupportedOpen, setIsMobileNotSupportedOpen] =
     useState(false);
@@ -49,14 +44,6 @@ export const Desktop = ({
   const handleMobileStartEarningClick = () => {
     setIsMobileNotSupportedOpen(true);
   };
-
-  useEffect(() => {
-    console.log('user', user);
-    if (user && localStorage.getItem('donate-option-choice') === 'account') {
-      console.log('SETTING DONOR');
-      void setCreatorIfSessionPresent(user, setDonor);
-    }
-  }, [user, setDonor]);
 
   // Mobile menu component for landing pages
   const MobileMenu = () => {
