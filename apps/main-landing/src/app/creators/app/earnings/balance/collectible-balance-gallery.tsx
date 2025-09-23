@@ -2,6 +2,7 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { CollectibleBalance } from '@idriss-xyz/constants';
 
 import { LayersBadge } from '@/app/creators/donate/components/donate-form/components';
+import { formatFiatValue } from '@idriss-xyz/utils';
 
 type CollectibleBalanceGalleryProperties = {
   collectibles: CollectibleBalance[];
@@ -11,18 +12,18 @@ export default function CollectibleBalanceGallery({
   collectibles,
 }: CollectibleBalanceGalleryProperties) {
   return (
-    <div className="grid grid-cols-2 gap-4 px-4 py-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+    <div className="justify-left flex flex-wrap gap-4 px-4 py-2">
       {collectibles.map((collectible) => {
         return (
           <div
             key={collectible.tokenId}
-            className="flex max-w-[268px] cursor-pointer flex-col gap-2 rounded-xl"
+            className="flex w-[268px] flex-shrink-0 cursor-pointer flex-col gap-2 rounded-xl"
           >
-            <div className="h-[328px] overflow-hidden rounded-xl">
+            <div className="bg-gray-100 flex h-[400px] w-full items-center justify-center overflow-hidden rounded-xl">
               <img
                 src={collectible.image}
                 alt={collectible.name}
-                className="object-cover"
+                className="h-full w-auto object-contain"
               />
             </div>
             <div className="flex flex-col gap-3 px-1 py-[10px]">
@@ -42,8 +43,12 @@ export default function CollectibleBalanceGallery({
               </div>
               <div className="flex items-center justify-between">
                 <Icon name="Parallel" size={20} />
-                <div className="flex">
-                  <span>{collectible.usdValue}</span>
+                <div className="flex gap-2">
+                  <span>
+                    {collectible.usdValue
+                      ? formatFiatValue(collectible.usdValue)
+                      : ''}
+                  </span>
                   <Icon name="OpenSea" />
                 </div>
               </div>
