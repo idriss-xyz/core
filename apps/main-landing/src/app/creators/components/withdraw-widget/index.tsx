@@ -461,7 +461,7 @@ export const WithdrawWidget = ({
                     rules={{
                       validate: (value) => {
                         if (value <= 0) {
-                          return 'Amount must be greater than zero.';
+                          return 'Amount must be greater than zero';
                         }
                         if (value > totalBalanceOfTokenInUSD) {
                           return `Not enough ${tokenSymbol} in your wallet. Add funds to continue.`;

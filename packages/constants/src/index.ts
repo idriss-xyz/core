@@ -66,6 +66,8 @@ export type {
   Chain,
   ChainToken,
   Token,
+  NftOption,
+  CollectionOption,
   TipHistoryResponse,
   TipHistoryFromUser,
   TipHistoryNode,

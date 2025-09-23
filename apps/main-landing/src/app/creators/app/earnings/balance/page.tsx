@@ -12,6 +12,7 @@ import { TabsPill, TabItem } from '@idriss-xyz/ui/tabs-pill';
 
 import { IDRISS_SCENE_STREAM_4 } from '@/assets';
 import { WithdrawWidget } from '@/app/creators/components/withdraw-widget';
+import { WithdrawCollectibleWidget } from '@/app/creators/components/withdraw-widget/withdraw-collectible-widget';
 import { CopyButton } from '@/app/creators/components/copy-button/copy-button';
 
 import {
@@ -61,10 +62,11 @@ export default function EarningsBalance() {
   const heading =
     activeTab === 'Tokens' ? 'Available balance' : 'Estimated value';
 
-  const apiBalances = tokenBalancesData?.balances ?? [];
+  const tokenApiBalances = tokenBalancesData?.balances ?? [];
+  const collectiblesApiBalances = collectiblesBalanceData?.balances ?? [];
 
   const aggregatedBalances: Record<string, BalanceTableItem> = {};
-  for (const balance of apiBalances) {
+  for (const balance of tokenApiBalances) {
     const existing = aggregatedBalances[balance.symbol];
 
     if (existing) {
@@ -202,14 +204,24 @@ export default function EarningsBalance() {
           NoDonations
         )}
       </Card>
-      <WithdrawWidget
-        isOpen={isWithdrawModalOpen}
-        balances={apiBalances}
-        selectedToken={selectedToken}
-        onClose={() => {
-          return setIsWithdrawModalOpen(false);
-        }}
-      />
+      {activeTab === 'Tokens' ? (
+        <WithdrawWidget
+          isOpen={isWithdrawModalOpen}
+          balances={tokenApiBalances}
+          selectedToken={selectedToken}
+          onClose={() => {
+            return setIsWithdrawModalOpen(false);
+          }}
+        />
+      ) : (
+        <WithdrawCollectibleWidget
+          isOpen={isWithdrawModalOpen}
+          nftBalances={collectiblesApiBalances}
+          onClose={() => {
+            return setIsWithdrawModalOpen(false);
+          }}
+        />
+      )}
     </div>
   );
 }

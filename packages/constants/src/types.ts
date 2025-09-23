@@ -59,6 +59,23 @@ export interface ChainNft {
   slug: string;
 }
 
+export interface NftOption {
+  tokenId: string;
+  name: string;
+  image: string;
+  balance: string;
+  type: 'erc721' | 'erc1155';
+}
+
+export interface CollectionOption {
+  address: Hex;
+  chainId: number;
+  name: string;
+  image: string;
+  usdValue: number;
+  itemsCount: number;
+}
+
 export interface TipHistoryTokenV2 {
   symbol: string;
   imageUrlV2?: string;
