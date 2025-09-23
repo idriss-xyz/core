@@ -41,6 +41,7 @@ import {
   AddIsDonorToCreator1757184858317,
   FixCreatorAddressSequence1757432868000,
   CleanupUnsupportedTokensNetworks1757496093000,
+  RemoveWwwFromUrls1758590345135,
 } from './migrations';
 import { CreatorProfileView } from './views';
 
@@ -91,6 +92,7 @@ export const AppDataSource = new DataSource({
     AddIsDonorToCreator1757184858317,
     FixCreatorAddressSequence1757432868000,
     CleanupUnsupportedTokensNetworks1757496093000,
+    RemoveWwwFromUrls1758590345135,
   ],
 });
 
