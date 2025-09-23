@@ -24,14 +24,14 @@ const CSP = [
 // ts-unused-exports:disable-next-line
 export function middleware(request: NextRequest) {
   const url = request.nextUrl;
-  
+
   // Redirect www to non-www
   if (url.hostname.startsWith('www.')) {
     const newUrl = url.clone();
     newUrl.hostname = url.hostname.replace('www.', '');
     return NextResponse.redirect(newUrl, 301);
   }
-  
+
   const password = request.cookies.get('password')?.value;
   const response = NextResponse.next();
 
