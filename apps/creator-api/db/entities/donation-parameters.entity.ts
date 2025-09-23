@@ -44,7 +44,7 @@ export class DonationParameters {
   })
   customBadWords!: string[];
 
-  @Column({ name: 'collectible_enabled', type: 'boolean', default: true })
+  @Column({ name: 'collectible_enabled', default: true })
   collectibleEnabled!: boolean;
 
   @OneToOne(() => Creator, { onDelete: 'CASCADE' })

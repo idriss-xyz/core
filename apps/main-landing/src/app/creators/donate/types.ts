@@ -48,4 +48,5 @@ export type CreatorProfile = {
   ttsEnabled?: boolean;
   sfxEnabled?: boolean;
   streamStatus?: string;
+  collectibleEnabled?: boolean;
 };
