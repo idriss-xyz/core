@@ -22,6 +22,7 @@ import {
   fetchTwitchUserInfo,
   fetchTwitchStreamStatus,
 } from '../utils/twitch-api';
+import { ILike } from 'typeorm';
 
 interface EnrichedCreatorProfile extends CreatorProfileView {
   streamStatus?: boolean;
@@ -127,7 +128,9 @@ class CreatorProfileService {
   }
 
   async getProfileByName(name: string): Promise<EnrichedCreatorProfile | null> {
-    const profile = await this.profileRepository.findOne({ where: { name } });
+    const profile = await this.profileRepository.findOne({
+      where: { name: ILike(name) },
+    });
     if (!profile) return null;
     return this.enrichWithTwitchData(profile);
   }

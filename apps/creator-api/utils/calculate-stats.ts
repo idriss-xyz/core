@@ -21,6 +21,7 @@ import {
 } from '@idriss-xyz/utils';
 import { AppDataSource } from '../db/database';
 import { Creator, CreatorAddress } from '../db/entities';
+import { ILike } from 'typeorm';
 
 async function getCreatorNameOrAnon(address: string): Promise<string> {
   address = getAddress(address);
@@ -289,7 +290,7 @@ export async function resolveCreatorAndAddresses(
   } else {
     // resolve by displayName (case-sensitive/insensitive depending on DB collation)
     creator = await creatorRepository.findOne({
-      where: { displayName: identifier },
+      where: { displayName: ILike(identifier) },
       relations: ['associatedAddresses'],
     });
   }
@@ -330,7 +331,7 @@ export function calculateStatsForRecipientAddress(
   const earningsByToken: Record<string, TokenEarnings> = {};
 
   for (const donation of donations) {
-    if (donation.kind !== 'token') continue; // ← skip NFTs
+    if (donation.kind !== 'token') continue;
 
     const key = donation.token.symbol;
 
