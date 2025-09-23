@@ -2,8 +2,8 @@
 This is the open-source repository for IDRISS apps.
 
 ## Interfaces
-* <a href="https://www.idriss.xyz" target="_blank">Org landing page</a>
-* <a href="https://www.idriss.xyz/creators" target="_blank">IDRISS Creators</a>
+* <a href="https://idriss.xyz" target="_blank">Org landing page</a>
+* <a href="https://idriss.xyz/creators" target="_blank">IDRISS Creators</a>
 * <a href="https://idriss.xyz/twitch-extension" target="_blank">Twitch Extension</a>
 * <a href="https://idriss.xyz/extension" target="_blank">IDRISS Extension</a>
 
@@ -39,7 +39,7 @@ pnpm main-landing:dev
 pnpm creator-api:dev
 ```
 
-The landing page is running on port `3000`, the api on port `4000`. 
+The landing page is running on port `3000`, the api on port `4000`.
 
 Remember to configure API keys in `apps/creator-api/.env.development` for the `creator-api` backend and in `/apps/main-landing/.env.development` for the `creator` app.
 

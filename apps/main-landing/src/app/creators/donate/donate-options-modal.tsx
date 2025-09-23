@@ -7,8 +7,12 @@ import {
   IdrissCardRadioGroup,
   CardRadioItem,
 } from '@idriss-xyz/ui/radio-group';
+import { usePrivy } from '@privy-io/react-auth';
 
 import { ACCOUNT_CARD, GUEST_CARD } from '@/assets';
+
+import { setCreatorIfSessionPresent } from '../utils';
+import { useAuth } from '../context/auth-context';
 
 const cardRadioItems: CardRadioItem[] = [
   {
@@ -32,16 +36,20 @@ const cardRadioItems: CardRadioItem[] = [
 export const DonateOptionsModal = () => {
   const [selectedOption, setSelectedOption] = useState<string>('account');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const { user } = usePrivy();
+  const { setDonor } = useAuth();
 
   const modalOpen = isModalOpen;
 
   useEffect(() => {
     const savedChoice = localStorage.getItem('donate-option-choice');
 
-    if (!savedChoice || savedChoice === 'guest') {
+    if (user && savedChoice === 'account') {
+      void setCreatorIfSessionPresent(user, setDonor);
+    } else if (!savedChoice || savedChoice === 'guest') {
       setIsModalOpen(true);
     }
-  }, []);
+  }, [user, setDonor]);
 
   const handleSaveChoice = () => {
     localStorage.setItem('donate-option-choice', selectedOption);
