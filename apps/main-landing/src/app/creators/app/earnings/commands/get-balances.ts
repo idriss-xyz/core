@@ -53,7 +53,7 @@ const getTokenBalances = async (
 
 export const useGetTokenBalances = (payload: Payload, options?: Options) => {
   return useQuery({
-    queryKey: ['balances', payload.address],
+    queryKey: ['token-balances', payload.address],
     queryFn: () => {
       return getTokenBalances(payload);
     },
@@ -85,7 +85,7 @@ export const useGetCollectibleBalances = (
   options?: Options,
 ) => {
   return useQuery({
-    queryKey: ['balances', payload.address],
+    queryKey: ['collectible-balances', payload.address],
     queryFn: () => {
       return getCollectibleBalances(payload);
     },

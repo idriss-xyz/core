@@ -46,8 +46,7 @@ export default function EarningsBalance() {
   } = useGetCollectibleBalances(
     { address },
     {
-      enabled:
-        activeTab === 'Collectibles' && ready && authenticated && !!address,
+      enabled: ready && authenticated && !!address,
     },
   );
 

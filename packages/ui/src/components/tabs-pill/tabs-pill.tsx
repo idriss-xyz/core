@@ -50,10 +50,12 @@ export function TabsPill({ tabs, renderLink }: TabsPillProperties) {
                 <Icon
                   size={20}
                   name={tab.iconName}
-                  className={classes("text-neutralGreen-900")}
+                  className={classes('text-neutralGreen-900')}
                 />
                 <div className="flex min-w-[108] max-w-[138] flex-col items-start">
-                  <span className={classes('text-label4 text-neutralGreen-900')}>
+                  <span
+                    className={classes('text-label4 text-neutralGreen-900')}
+                  >
                     {tab.name}
                   </span>
                   {tab.subtitle && (
@@ -91,7 +93,9 @@ export function TabsPill({ tabs, renderLink }: TabsPillProperties) {
                         'relative z-1 flex min-w-[108] max-w-[138] flex-col items-start',
                       )}
                     >
-                      <span className={classes('text-label4 text-neutralGreen-900')}>
+                      <span
+                        className={classes('text-label4 text-neutralGreen-900')}
+                      >
                         {tab.name}
                       </span>
                       {tab.subtitle && (
@@ -114,14 +118,16 @@ export function TabsPill({ tabs, renderLink }: TabsPillProperties) {
                     <Icon
                       size={20}
                       name={tab.iconName}
-                      className={classes("text-neutralGreen-900")}
+                      className={classes('text-neutralGreen-900')}
                     />
                     <div
                       className={classes(
                         'relative z-1 flex min-w-[108] max-w-[138] flex-col items-start',
                       )}
                     >
-                      <span className={classes('text-label4 text-neutralGreen-900')}>
+                      <span
+                        className={classes('text-label4 text-neutralGreen-900')}
+                      >
                         {tab.name}
                       </span>
                       {tab.subtitle && (
