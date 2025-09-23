@@ -41,7 +41,7 @@ import {
 } from '@idriss-xyz/ui/tooltip';
 import { ExternalLink } from '@idriss-xyz/ui/external-link';
 import { getAddress } from 'viem';
-import { usePrivy, getAccessToken } from '@privy-io/react-auth';
+import { getAccessToken } from '@privy-io/react-auth';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 
 import { backgroundLines3 } from '@/assets';
@@ -643,7 +643,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                           size="medium"
                           className="w-full uppercase"
                           onClick={() => {
-                            if (!isConnected){
+                            if (!isConnected) {
                               openConnectModal?.();
                               return;
                             }

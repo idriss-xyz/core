@@ -3,9 +3,11 @@ import { Hex } from 'viem';
 import { CREATOR_API_URL, TokenBalance } from '@idriss-xyz/constants';
 
 interface BalancesResponse {
-  balances: TokenBalance[];
-  summary: {
-    totalUsdBalance: number;
+  tokenResult: {
+    balances: TokenBalance[];
+    summary: {
+      totalUsdBalance: number;
+    };
   };
 }
 
@@ -17,7 +19,9 @@ type Options = {
   enabled?: boolean;
 };
 
-const getBalances = async (payload: Payload): Promise<BalancesResponse> => {
+const getTokenBalances = async (
+  payload: Payload,
+): Promise<BalancesResponse> => {
   if (!payload.address) {
     throw new Error('Address is required to fetch balances');
   }
@@ -34,11 +38,11 @@ const getBalances = async (payload: Payload): Promise<BalancesResponse> => {
   return balances as BalancesResponse;
 };
 
-export const useGetBalances = (payload: Payload, options?: Options) => {
+export const useGetTokenBalances = (payload: Payload, options?: Options) => {
   return useQuery({
     queryKey: ['balances', payload.address],
     queryFn: () => {
-      return getBalances(payload);
+      return getTokenBalances(payload);
     },
     ...options,
   });

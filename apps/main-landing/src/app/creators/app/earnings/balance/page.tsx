@@ -13,7 +13,7 @@ import { WithdrawWidget } from '@/app/creators/components/withdraw-widget';
 import { CopyButton } from '@/app/creators/components/copy-button/copy-button';
 
 import { useAuth } from '../../../context/auth-context';
-import { useGetBalances } from '../commands/get-balances';
+import { useGetTokenBalances } from '../commands/get-balances';
 import SkeletonRanking from '../loading';
 
 import { BalanceTable } from './balance-table';
@@ -26,17 +26,15 @@ export default function EarningsBalance() {
   const [selectedToken, setSelectedToken] = useState<string>();
   const address = user?.wallet?.address as Hex | undefined;
 
-  const {
-    data: balancesData,
-    isLoading,
-    isError,
-  } = useGetBalances(
+  const { data, isLoading, isError } = useGetTokenBalances(
     { address },
     { enabled: ready && authenticated && !!address },
   );
 
-  const totalUsdBalance = balancesData?.summary.totalUsdBalance ?? 0;
-  const apiBalances = balancesData?.balances ?? [];
+  const tokenBalancesData = data?.tokenResult;
+
+  const totalUsdBalance = tokenBalancesData?.summary.totalUsdBalance ?? 0;
+  const apiBalances = tokenBalancesData?.balances ?? [];
 
   const aggregatedBalances: Record<string, BalanceTableItem> = {};
   for (const balance of apiBalances) {
