@@ -61,3 +61,4 @@ export { CrownCircled } from './crown-circled';
 export { Hexagon } from './hexagon';
 export { BellNotification } from './bell-notification';
 export { AmericanExpress, Maestro, Mastercard, Paypal, Visa } from './cards';
+export { Card } from './card';

@@ -139,7 +139,7 @@ export default function EarningsBalance() {
     },
     {
       name: 'Collectibles',
-      iconName: 'Coins',
+      iconName: 'Card',
       isActive: activeTab === 'Collectibles',
       onClick: () => {
         return setActiveTab('Collectibles');
