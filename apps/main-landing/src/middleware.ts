@@ -28,8 +28,8 @@ export function middleware(request: NextRequest) {
   // Redirect www to non-www
   if (url.hostname.startsWith('www.')) {
     const newUrl = url.clone();
-    newUrl.hostname = url.hostname.replace('www.', '');
-    return NextResponse.redirect(newUrl, 301);
+    newUrl.hostname = url.hostname.replace(/^www\./, '');
+    return NextResponse.redirect(newUrl, { status: 301 });
   }
 
   const password = request.cookies.get('password')?.value;
