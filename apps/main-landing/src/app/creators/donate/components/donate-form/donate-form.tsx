@@ -46,7 +46,6 @@ import { IconButton } from '@idriss-xyz/ui/icon-button';
 
 import { backgroundLines3 } from '@/assets';
 import { useAuth } from '@/app/creators/context/auth-context';
-import { setCreatorIfSessionPresent } from '@/app/creators/utils';
 
 import {
   FormPayload,
@@ -76,7 +75,7 @@ const baseClassName =
 export const DonateForm = forwardRef<HTMLDivElement, Properties>(
   ({ className, creatorInfo }, reference) => {
     const { isConnected } = useAccount();
-    const { donor, setCreator } = useAuth();
+    const { donor } = useAuth();
     const { data: walletClient } = useWalletClient();
     const { connectModalOpen, openConnectModal } = useConnectModal();
     const [selectedTokenSymbol, setSelectedTokenSymbol] =
@@ -272,8 +271,6 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       });
     }, [creatorInfo.address.data, creatorInfo.address.isValid]);
 
-    const { user } = usePrivy();
-
     const callbackOnSend = useCallback(
       async (txHash: string) => {
         await sendDonationEffects(txHash);
@@ -286,12 +283,6 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       walletClient,
       callbackOnSend,
     });
-
-    useEffect(() => {
-      if (user) {
-        void setCreatorIfSessionPresent(user, setCreator);
-      }
-    }, [user, setCreator]);
 
     // Reset SFX when amount falls below the minimum
     useEffect(() => {
