@@ -31,7 +31,7 @@ type WithdrawFormValues = {
 type Properties = {
   isOpen: boolean;
   nftBalances: CollectibleBalance[];
-  selectedNft?: { contract: Hex; tokenId: string };
+  selectedNft?: { contract: Hex; tokenId: string; chainId: number };
   onClose: () => void;
 };
 
@@ -70,7 +70,7 @@ export const WithdrawCollectibleWidget = ({
           address: b.contract as Hex,
           chainId: b.chainId,
           name: b.collection,
-          image: b.image ?? '',
+          image: b.collectionImage ?? '',
           usdValue: 0,
           itemsCount: 0,
         });
@@ -142,7 +142,10 @@ export const WithdrawCollectibleWidget = ({
       resetWithdrawal();
       if (selectedNft) {
         const col = collections.find((c) => {
-          return c.address === selectedNft.contract;
+          return (
+            c.address === selectedNft.contract &&
+            c.chainId === selectedNft.chainId
+          );
         });
         setSelectedCollection(col);
         const itm = nftBalances.find((b) => {

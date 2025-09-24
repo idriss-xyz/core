@@ -1,6 +1,7 @@
-import { createPublicClient, http, Hex, formatUnits, getAddress } from 'viem';
+import { createPublicClient, http, Hex, formatUnits, erc1155Abi } from 'viem';
 import { Token } from '../db/entities/token.entity';
 import {
+  Chain,
   CHAIN_ID_TO_NFT_COLLECTIONS,
   ERC20_ABI,
   NULL_ADDRESS,
@@ -11,8 +12,8 @@ import {
   getZapperPrice,
   fetchNftFloorFromOpensea,
 } from './price-fetchers';
-import { getChainByNetworkName } from '@idriss-xyz/utils';
-import { ALCHEMY_BASE_URLS } from '../constants';
+import { getChainById, getChainByNetworkName } from '@idriss-xyz/utils';
+import { ALCHEMY_BASE_URLS, OPENSEA_BASE_URLS } from '../constants';
 import { NftDonation } from '../db/entities/nft-donation.entity';
 
 type NftBalance = {
@@ -23,6 +24,7 @@ type NftBalance = {
   balance: string;
   name?: string;
   image?: string;
+  collectionImage?: string;
   usdValue?: number;
   type: 'erc721' | 'erc1155';
 };
@@ -121,22 +123,97 @@ export async function calculateBalances(userAddress: Hex) {
   };
 }
 
-async function fetchAllPages(url: string, params: URLSearchParams) {
-  const owned: any[] = [];
-  let pageKey: string | undefined;
+async function fetchAllNftsFromOpensea(
+  chainId: number,
+  address: Hex,
+  collections?: string[],
+) {
+  const nfts: any[] = [];
+  const baseUrl = `${OPENSEA_BASE_URLS[chainId]}/account/${address}/nfts`;
+  const headers = {
+    'accept': 'application/json',
+    'x-api-key': process.env.OPENSEA_API_KEY!,
+  };
 
+  let next: string | undefined;
   do {
-    if (pageKey) params.set('pageKey', pageKey);
+    const url = new URL(baseUrl);
+    url.searchParams.set('limit', '200');
+    if (next) url.searchParams.set('next', next);
 
-    const resp = await fetch(`${url}?${params}`);
-    if (!resp.ok) throw new Error(`Alchemy error: ${resp.status}`);
+    const resp = await fetch(url.toString(), { headers });
+    if (!resp.ok) throw new Error(`OpenSea API error: ${resp.status}`);
     const json = await resp.json();
+    nfts.push(...json.nfts);
+    next = json.next;
+  } while (next);
 
-    owned.push(...(json.ownedNfts || []));
-    pageKey = json.pageKey;
-  } while (pageKey);
+  if (collections && collections.length) {
+    return nfts.filter((nft) => collections.includes(nft.collection));
+  }
+  return nfts;
+}
 
-  return owned;
+async function fetchMetadataFromAlchemyBatch(
+  chainId: number,
+  tokens: { contractAddress: string; tokenId: string }[],
+) {
+  const url = `${ALCHEMY_BASE_URLS[chainId]}/nft/v3/${process.env.ALCHEMY_API_KEY}/getNFTMetadataBatch`;
+  const headers = {
+    'accept': 'application/json',
+    'content-type': 'application/json',
+  };
+
+  const metadataMap: Record<
+    string,
+    { image: string | null; name: string | null }
+  > = {};
+
+  for (let i = 0; i < tokens.length; i += 100) {
+    const batch = tokens.slice(i, i + 100);
+    try {
+      const resp = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ tokens: batch }),
+      });
+      if (!resp.ok) throw new Error(`Alchemy metadata error: ${resp.status}`);
+      const json = await resp.json();
+
+      for (const item of json.nfts || []) {
+        const key = `${item.contract.address.toLowerCase()}-${item.tokenId}`;
+        metadataMap[key] = {
+          image: item.image?.thumbnailUrl ?? item.image?.originalUrl ?? null,
+          name: item.name ?? item.raw?.metadata?.name ?? null,
+        };
+      }
+    } catch (err) {
+      console.error('Failed to fetch batch metadata from Alchemy', err);
+    }
+  }
+
+  return metadataMap;
+}
+
+async function fetch1155BalancesBatch(
+  chain: Chain,
+  contract: Hex,
+  owner: Hex,
+  tokenIds: bigint[],
+) {
+  const client = createPublicClient({ chain, transport: http() });
+  const calls = tokenIds.map((id) => ({
+    address: contract,
+    abi: erc1155Abi,
+    functionName: 'balanceOf',
+    args: [owner, id],
+  }));
+
+  const results = await client.multicall({ contracts: calls });
+  return results.map((r, i) => ({
+    tokenId: tokenIds[i].toString(),
+    balance: r.status === 'success' ? (r.result as bigint) : BigInt(0),
+  }));
 }
 
 export async function calculateNftBalances(
@@ -153,62 +230,125 @@ export async function calculateNftBalances(
     const chainId = Number(chainIdOption);
     if (!collections.length) continue;
 
-    const url = `${ALCHEMY_BASE_URLS[chainId]}/nft/v3/${process.env.ALCHEMY_API_KEY}/getNFTsForOwner`;
-    if (!url) continue;
-
-    const params = new URLSearchParams({
-      owner: userAddress,
-      withMetadata: 'true',
-    });
-    for (const c of collections) {
-      params.append('contractAddresses[]', c.address);
-    }
-
     try {
-      const ownedNfts = await fetchAllPages(url, params);
+      console.time(`opensea-${chainId}`);
+
+      const ownedNfts = await fetchAllNftsFromOpensea(
+        chainId,
+        userAddress,
+        collections.map((c) => c.slug),
+      );
+      console.timeEnd(`opensea-${chainId}`);
+
+      const erc1155Buckets: Record<string, bigint[]> = {};
+      const tokensForMetadata: { contractAddress: string; tokenId: string }[] =
+        [];
+      const interim: NftBalance[] = [];
 
       for (const nft of ownedNfts) {
         const meta = collections.find(
-          (c) => c.address.toLowerCase() === nft.contract.address.toLowerCase(),
+          (c) => c.address.toLowerCase() === nft.contract.toLowerCase(),
         );
         if (!meta) continue;
 
-        let usdValue: number | undefined;
+        const tokenId = nft.identifier;
+        const type = nft.token_standard;
 
-        if (includePrices && meta.slug) {
-          const floor = await fetchNftFloorFromOpensea(meta.slug, nft.tokenId);
-          if (floor?.usdValue) usdValue = floor.usdValue * Number(nft.balance);
+        if (type === 'erc1155') {
+          if (!erc1155Buckets[nft.contract]) erc1155Buckets[nft.contract] = [];
+          erc1155Buckets[nft.contract].push(BigInt(tokenId));
         }
-        totalUsdBalance += usdValue ?? 0;
+
+        if (nft.contract && tokenId) {
+          tokensForMetadata.push({
+            contractAddress: nft.contract,
+            tokenId,
+          });
+        }
+
+        let usdValue: number | undefined;
+        if (includePrices && meta.slug) {
+          console.time(`floor-prices-${chainId}`);
+          const floor = await fetchNftFloorFromOpensea(meta.slug, tokenId);
+          console.timeEnd(`floor-prices-${chainId}`);
+
+          if (floor?.usdValue) usdValue = floor.usdValue;
+        }
+        console.time(`db-lookups-${chainId}`);
 
         const dbRow = await nftDonationRepo.findOne({
           where: {
-            collectionAddress: nft.contract.address.toLowerCase() as Hex,
-            tokenId: Number(nft.tokenId),
+            collectionAddress: nft.contract.toLowerCase() as Hex,
+            tokenId: Number(tokenId),
           },
         });
+        console.timeEnd(`db-lookups-${chainId}`);
 
-        const image =
-          dbRow?.imageUrl ??
-          nft.image?.cachedUrl ??
-          nft.image?.originalUrl ??
-          nft.raw?.metadata?.image ??
-          null;
-
-        results.push({
+        interim.push({
           chainId,
-          contract: nft.contract.address,
+          contract: nft.contract,
           collection: meta.name,
-          tokenId: nft.tokenId,
-          balance: nft.balance,
-          type: meta.standard,
-          image,
+          tokenId,
+          balance: type === 'erc721' ? '1' : '0',
+          type,
+          image: dbRow?.imageUrl ?? undefined,
+          collectionImage: meta.image,
           usdValue,
-          name: nft.name ?? nft.raw?.metadata?.name,
+          name: nft.name,
         });
+      }
+
+      // fetch metadata in bulk from Alchemy
+      console.time(`alchemy-meta-${chainId}`);
+
+      const metadataMap = await fetchMetadataFromAlchemyBatch(
+        chainId,
+        tokensForMetadata,
+      );
+      console.timeEnd(`alchemy-meta-${chainId}`);
+
+      // merge metadata into interim results
+      for (const entry of interim) {
+        const key = `${entry.contract.toLowerCase()}-${entry.tokenId}`;
+        const metaInfo = metadataMap[key];
+        if (metaInfo) {
+          entry.image = entry.image ?? metaInfo.image ?? undefined;
+          entry.name = entry.name ?? metaInfo.name ?? undefined;
+        }
+        results.push(entry);
+      }
+
+      for (const [contract, ids] of Object.entries(erc1155Buckets)) {
+        for (let i = 0; i < ids.length; i += 50) {
+          const batch = ids.slice(i, i + 50);
+          const chain = getChainById(chainId);
+          if (!chain) continue;
+          console.time(`erc1155-balances-${chainId}`);
+
+          const balances = await fetch1155BalancesBatch(
+            chain,
+            contract as Hex,
+            userAddress,
+            batch,
+          );
+          console.timeEnd(`erc1155-balances-${chainId}`);
+
+          for (const b of balances) {
+            const entry = results.find(
+              (r) => r.contract === contract && r.tokenId === b.tokenId,
+            );
+            if (entry) entry.balance = b.balance.toString();
+          }
+        }
       }
     } catch (err) {
       console.error(`Failed to fetch NFTs for chain ${chainId}`, err);
+    }
+  }
+
+  for (const r of results) {
+    if (r.usdValue) {
+      totalUsdBalance += Number(r.balance) * r.usdValue;
     }
   }
 
