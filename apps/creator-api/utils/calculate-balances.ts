@@ -183,7 +183,7 @@ async function fetchMetadataFromAlchemyBatch(
       for (const item of json.nfts || []) {
         const key = `${item.contract.address.toLowerCase()}-${item.tokenId}`;
         metadataMap[key] = {
-          image: item.image?.thumbnailUrl ?? item.image?.originalUrl ?? null,
+          image: item.image?.originalUrl ?? item.image?.thumbnailUrl ?? null,
           name: item.name ?? item.raw?.metadata?.name ?? null,
         };
       }
