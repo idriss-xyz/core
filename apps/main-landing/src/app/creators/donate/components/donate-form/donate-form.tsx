@@ -380,6 +380,8 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         creatorInfo.address.data,
         creatorInfo.address.isValid,
         donor,
+        isConnected,
+        openConnectModal,
         linkWalletIfNeeded,
       ],
     );

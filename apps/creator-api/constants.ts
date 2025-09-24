@@ -189,6 +189,11 @@ export const ALCHEMY_NATIVE_TOKENS = {
   // AVALANCHE_MAINNET: 'AVAX',
 } as const;
 
+export const OPENSEA_BASE_URLS: Record<number, string> = {
+  [CREATOR_CHAIN.ETHEREUM.id]: `https://api.opensea.io/api/v2/chain/ethereum`,
+  [CREATOR_CHAIN.BASE.id]: `https://api.opensea.io/api/v2/chain/base`,
+};
+
 export const ALCHEMY_BASE_URLS: Record<number, string> = {
   [CREATOR_CHAIN.ETHEREUM.id]: `https://eth-mainnet.g.alchemy.com`,
   [CREATOR_CHAIN.BASE.id]: `https://base-mainnet.g.alchemy.com`,

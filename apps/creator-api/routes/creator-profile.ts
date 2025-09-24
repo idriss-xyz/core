@@ -377,16 +377,16 @@ router.patch(
 
       // Update donation parameters if they exist and are provided
       if (
-        minimumAlertAmount ||
-        minimumTTSAmount ||
-        minimumSfxAmount ||
-        voiceId ||
-        alertSound ||
-        alertEnabled ||
-        ttsEnabled ||
-        sfxEnabled ||
-        customBadWords ||
-        collectibleEnabled
+        minimumAlertAmount !== undefined ||
+        minimumTTSAmount !== undefined ||
+        minimumSfxAmount !== undefined ||
+        voiceId !== undefined ||
+        alertSound !== undefined ||
+        alertEnabled !== undefined ||
+        ttsEnabled !== undefined ||
+        sfxEnabled !== undefined ||
+        customBadWords !== undefined ||
+        collectibleEnabled !== undefined
       ) {
         const donationParams = await donationParamsRepository.findOne({
           where: { creator: { id: creator.id } },

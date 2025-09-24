@@ -18,6 +18,19 @@ export interface TokenBalance {
   usdValue: number;
 }
 
+export interface CollectibleBalance {
+  chainId: number;
+  contract: string;
+  collection: string;
+  tokenId: string;
+  balance: string;
+  name?: string;
+  image?: string;
+  collectionImage?: string;
+  usdValue?: number;
+  type: 'erc721' | 'erc1155';
+}
+
 export type ClaimedEventsResponse = {
   events: ClaimedEvent[];
   lastProcessedBlock: string;
@@ -45,6 +58,24 @@ export interface ChainNft {
   name: string;
   standard: 'erc1155' | 'erc721';
   slug: string;
+  image: string;
+}
+
+export interface NftOption {
+  tokenId: string;
+  name: string;
+  image: string;
+  balance: string;
+  type: 'erc721' | 'erc1155';
+}
+
+export interface CollectionOption {
+  address: Hex;
+  chainId: number;
+  name: string;
+  image: string;
+  usdValue: number;
+  itemsCount: number;
 }
 
 export interface TipHistoryTokenV2 {

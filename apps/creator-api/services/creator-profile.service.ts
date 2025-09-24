@@ -66,6 +66,7 @@ class CreatorProfileService {
     donationParameters.alertEnabled = alertEnabled;
     donationParameters.ttsEnabled = ttsEnabled;
     donationParameters.sfxEnabled = sfxEnabled;
+    donationParameters.collectibleEnabled = collectibleEnabled;
     donationParameters.customBadWords = customBadWords;
 
     const creatorRepository = AppDataSource.getRepository(Creator);

@@ -333,8 +333,8 @@ export async function fetchNftFloorFromOpensea(
     const offer = json.price;
     if (!offer) return null;
 
-    const rawPrice = offer.price?.value ?? '0';
-    const currency = offer.price?.currency ?? 'WETH';
+    const rawPrice = offer?.value ?? '0';
+    const currency = offer?.currency ?? 'WETH';
 
     let usdValue: number | undefined;
     if (currency.toUpperCase() === 'WETH' || currency.toUpperCase() === 'ETH') {
@@ -342,7 +342,7 @@ export async function fetchNftFloorFromOpensea(
       const ethPrice = prices['ETH'];
       if (ethPrice) {
         const ethAmount = parseFloat(
-          formatUnits(BigInt(rawPrice), offer.price?.decimals),
+          formatUnits(BigInt(rawPrice), offer?.decimals),
         );
         usdValue = ethAmount * ethPrice;
       }

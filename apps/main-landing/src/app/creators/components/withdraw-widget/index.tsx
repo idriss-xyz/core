@@ -20,12 +20,14 @@ import {
   getChainLogoById,
   getNetworkKeyByChainId,
 } from '@idriss-xyz/utils';
+import { useQueryClient } from '@tanstack/react-query';
 
 import {
   ChainSelect,
   TokenSelect,
 } from '../../donate/components/donate-form/components';
 import { TokenLogo } from '../../app/earnings/stats-and-history/token-logo';
+import { useAuth } from '../../context/auth-context';
 
 import { useWithdrawal } from './hooks/use-withdrawal';
 import { IdrissWithdraw } from './widget';
@@ -67,6 +69,8 @@ export const WithdrawWidget = ({
   const [visualAmount, setVisualAmount] = useState<string>();
   const [isMaxAmount, setIsMaxAmount] = useState(false);
   const [gasLoading, setGasLoading] = useState(false);
+  const queryClient = useQueryClient();
+  const { creator } = useAuth();
 
   const formMethods = useForm<WithdrawFormValues>({
     defaultValues: {
@@ -83,7 +87,13 @@ export const WithdrawWidget = ({
     resetWithdrawal();
     setVisualAmount(undefined);
     setIsMaxAmount(false);
-  }, [onClose, formMethods, resetWithdrawal]);
+    void queryClient.invalidateQueries({
+      queryKey: ['collectible-balances', creator?.address],
+    });
+    void queryClient.invalidateQueries({
+      queryKey: ['token-balances', creator?.address],
+    });
+  }, [onClose, formMethods, resetWithdrawal, queryClient, creator]);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -461,7 +471,7 @@ export const WithdrawWidget = ({
                     rules={{
                       validate: (value) => {
                         if (value <= 0) {
-                          return 'Amount must be greater than zero.';
+                          return 'Amount must be greater than zero';
                         }
                         if (value > totalBalanceOfTokenInUSD) {
                           return `Not enough ${tokenSymbol} in your wallet. Add funds to continue.`;

@@ -11,6 +11,11 @@ import { Card } from '@idriss-xyz/ui/card';
 import { Form } from '@idriss-xyz/ui/form';
 import { Multiselect, MultiselectOption } from '@idriss-xyz/ui/multiselect';
 import { Toggle } from '@idriss-xyz/ui/toggle';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@idriss-xyz/ui/tooltip';
 import { getAccessToken } from '@privy-io/react-auth';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -365,20 +370,36 @@ export default function PaymentMethods() {
         >
           <FormFieldWrapper>
             <SectionHeader title="Select your payment methods" />
-            <Toggle
-              label="Crypto"
-              sublabel="Get paid in Ethereum, USDC, or other popular assets. Instant, borderless, and without middlemen."
-              value={toggleCrypto}
-              onChange={() => {
-                return setToggleCrypto((previous) => {
-                  return !previous;
-                });
-              }}
-              disabled
-              className="max-w-[336px]"
-            />
-            {/* Uncomment when we have second payment method ready */}
-            {/* <IconsRow tokens={iconsForCryptoPaymentMethod} /> */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Toggle
+                  label="Crypto"
+                  sublabel="Get paid in Ethereum, USDC, or other popular assets. Instant, borderless, and without middlemen."
+                  value={toggleCrypto}
+                  disabled={!toggleCollectible && toggleCrypto}
+                  onChange={() => {
+                    return setToggleCrypto((previous) => {
+                      const newCryptoValue = !previous;
+                      // Prevent disabling crypto if collectible is also disabled
+                      if (!newCryptoValue && !toggleCollectible) {
+                        return previous; // Keep current state (don't change)
+                      }
+                      return newCryptoValue;
+                    });
+                  }}
+                  className="max-w-[336px]"
+                />
+              </TooltipTrigger>
+              <TooltipContent
+                hidden={!(!toggleCollectible && toggleCrypto)}
+                className="z-portal bg-black text-white"
+                side="right"
+              >
+                <p className="text-body6">
+                  At least one payment method must be enabled
+                </p>
+              </TooltipContent>
+            </Tooltip>
             {toggleCrypto && (
               <div>
                 <Controller
@@ -442,27 +463,47 @@ export default function PaymentMethods() {
           <hr className="max-w-[445px]" />
 
           <FormFieldWrapper>
-            <Toggle
-              label="Digital collectibles"
-              sublabel="Receive in-game assets such as cards, skins, and collectibles."
-              value={toggleCollectible}
-              onChange={async () => {
-                const newValue = !toggleCollectible;
-                setToggleCollectible(newValue);
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Toggle
+                  label="Digital collectibles"
+                  sublabel="Receive in-game assets such as cards, skins, and collectibles."
+                  value={toggleCollectible}
+                  disabled={!toggleCrypto && toggleCollectible}
+                  onChange={async () => {
+                    const newValue = !toggleCollectible;
 
-                const authToken = await getAccessToken();
-                if (!authToken || !creator?.name) return;
+                    // Prevent disabling collectible if crypto is also disabled
+                    if (!newValue && !toggleCrypto) {
+                      return; // Don't change state
+                    }
 
-                await editCreatorProfile(
-                  creator.name,
-                  { collectibleEnabled: newValue },
-                  authToken,
-                );
-              }}
-              className="max-w-[336px]"
-            >
-              <CollectiblesRow />
-            </Toggle>
+                    setToggleCollectible(newValue);
+
+                    const authToken = await getAccessToken();
+                    if (!authToken || !creator?.name) return;
+
+                    await editCreatorProfile(
+                      creator.name,
+                      { collectibleEnabled: newValue },
+                      authToken,
+                    );
+                  }}
+                  className="max-w-[336px]"
+                >
+                  <CollectiblesRow />
+                </Toggle>
+              </TooltipTrigger>
+              <TooltipContent
+                hidden={!(!toggleCrypto && toggleCollectible)}
+                className="z-portal bg-black text-white"
+                side="right"
+              >
+                <p className="text-body6">
+                  At least one payment method must be enabled
+                </p>
+              </TooltipContent>
+            </Tooltip>
           </FormFieldWrapper>
 
           <hr className="max-w-[445px]" />
