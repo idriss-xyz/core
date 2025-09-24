@@ -188,7 +188,7 @@ export function DonateContent({ creatorProfile }: Properties) {
               <>
                 <DonateForm
                   ref={formReference}
-                  className="container mt-8 gap-6 overflow-hidden lg:mt-[90px] lg:[@media(max-height:800px)]:mt-[40px]"
+                  className="container mt-8 overflow-hidden lg:mt-[90px] lg:[@media(max-height:800px)]:mt-[40px]"
                   creatorInfo={creatorInfo}
                 />
 

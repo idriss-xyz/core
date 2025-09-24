@@ -663,7 +663,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
           className="pointer-events-none absolute top-0 hidden h-full opacity-100 lg:block"
         />
 
-        <h1 className="self-start text-heading4">
+        <h1 className="mb-6 self-start text-heading4">
           {creatorInfo.name
             ? `Donate to ${creatorInfo.name}`
             : 'Select your donation details'}
