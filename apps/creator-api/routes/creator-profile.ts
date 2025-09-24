@@ -357,6 +357,7 @@ router.patch(
         alertEnabled,
         ttsEnabled,
         sfxEnabled,
+        tokenEnabled,
         collectibleEnabled,
         tokens,
         networks,
@@ -386,6 +387,7 @@ router.patch(
         ttsEnabled !== undefined ||
         sfxEnabled !== undefined ||
         customBadWords !== undefined ||
+        tokenEnabled !== undefined ||
         collectibleEnabled !== undefined
       ) {
         const donationParams = await donationParamsRepository.findOne({
@@ -405,6 +407,7 @@ router.patch(
               ttsEnabled,
               sfxEnabled,
               customBadWords,
+              tokenEnabled,
               collectibleEnabled,
             },
           );
@@ -420,6 +423,7 @@ router.patch(
             ttsEnabled,
             sfxEnabled,
             customBadWords,
+            tokenEnabled,
             collectibleEnabled,
           });
           await donationParamsRepository.save(newDonationParams);

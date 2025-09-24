@@ -47,6 +47,7 @@ import {
   MoveNetworkToChildTables1758104997000,
   AddCollectibleEnabledToCreator1758546104000,
   RemoveWwwFromUrls1758590345135,
+  AddTokenEnabledToCreator1758728078982,
 } from './migrations';
 import { CreatorProfileView } from './views';
 
@@ -103,6 +104,7 @@ export const AppDataSource = new DataSource({
     MoveNetworkToChildTables1758104997000,
     AddCollectibleEnabledToCreator1758546104000,
     RemoveWwwFromUrls1758590345135,
+    AddTokenEnabledToCreator1758728078982,
   ],
 });
 

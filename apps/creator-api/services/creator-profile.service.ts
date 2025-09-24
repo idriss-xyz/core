@@ -50,6 +50,7 @@ class CreatorProfileService {
       ttsEnabled,
       sfxEnabled,
       collectibleEnabled = true,
+      tokenEnabled = true,
       customBadWords = [],
       tokens = DEFAULT_SUPPORTED_TOKEN_SYMBOLS,
       networks = Object.values(CREATOR_CHAIN).map((chain) => chain.shortName),
@@ -67,6 +68,7 @@ class CreatorProfileService {
     donationParameters.ttsEnabled = ttsEnabled;
     donationParameters.sfxEnabled = sfxEnabled;
     donationParameters.collectibleEnabled = collectibleEnabled;
+    donationParameters.tokenEnabled = tokenEnabled;
     donationParameters.customBadWords = customBadWords;
 
     const creatorRepository = AppDataSource.getRepository(Creator);
@@ -95,7 +97,7 @@ class CreatorProfileService {
 
     donationParameters.customBadWords = customBadWords;
     donationParameters.collectibleEnabled = collectibleEnabled;
-
+    donationParameters.tokenEnabled = tokenEnabled;
     donationParameters.creator = savedCreator;
 
     // Create and save donation parameters with creator reference

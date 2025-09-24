@@ -49,6 +49,7 @@ type FormPayload = {
   chainsIds: number[];
   tokensSymbols: string[];
   collectibleEnabled?: boolean;
+  tokenEnabled?: boolean;
 };
 
 const ALL_CHAIN_IDS = Object.values(CREATOR_CHAIN).map((chain) => {
@@ -150,13 +151,16 @@ export default function PaymentMethods() {
   const { creator, creatorLoading } = useAuth();
   const { toast } = useToast();
 
-  const [toggleCrypto, setToggleCrypto] = useState(true);
   const [toggleCollectible, setToggleCollectible] = useState(
     creator?.collectibleEnabled ?? true,
   );
+  const [toggleToken, setToggleToken] = useState(creator?.tokenEnabled ?? true);
 
   useEffect(() => {
-    if (creator) setToggleCollectible(creator.collectibleEnabled);
+    if (creator) {
+      setToggleCollectible(creator.collectibleEnabled);
+      setToggleToken(creator.tokenEnabled);
+    }
   }, [creator]);
 
   const formMethods = useForm<FormPayload>({
@@ -375,23 +379,31 @@ export default function PaymentMethods() {
                 <Toggle
                   label="Crypto"
                   sublabel="Get paid in Ethereum, USDC, or other popular assets. Instant, borderless, and without middlemen."
-                  value={toggleCrypto}
-                  disabled={!toggleCollectible && toggleCrypto}
-                  onChange={() => {
-                    return setToggleCrypto((previous) => {
-                      const newCryptoValue = !previous;
-                      // Prevent disabling crypto if collectible is also disabled
-                      if (!newCryptoValue && !toggleCollectible) {
-                        return previous; // Keep current state (don't change)
-                      }
-                      return newCryptoValue;
-                    });
+                  value={toggleToken}
+                  disabled={!toggleCollectible && toggleToken}
+                  onChange={async () => {
+                    const newTokenValue = !toggleToken;
+                    // Prevent disabling crypto if collectible is also disabled
+                    if (!newTokenValue && !toggleCollectible) {
+                      return; // Keep current state (don't change)
+                    }
+
+                    setToggleToken(newTokenValue);
+
+                    const authToken = await getAccessToken();
+                    if (!authToken || !creator?.name) return;
+
+                    await editCreatorProfile(
+                      creator.name,
+                      { tokenEnabled: newTokenValue },
+                      authToken,
+                    );
                   }}
                   className="max-w-[336px]"
                 />
               </TooltipTrigger>
               <TooltipContent
-                hidden={!(!toggleCollectible && toggleCrypto)}
+                hidden={!(!toggleCollectible && toggleToken)}
                 className="z-portal bg-black text-white"
                 side="right"
               >
@@ -400,7 +412,7 @@ export default function PaymentMethods() {
                 </p>
               </TooltipContent>
             </Tooltip>
-            {toggleCrypto && (
+            {toggleToken && (
               <div>
                 <Controller
                   name="chainsIds"
@@ -469,12 +481,12 @@ export default function PaymentMethods() {
                   label="Digital collectibles"
                   sublabel="Receive in-game assets such as cards, skins, and collectibles."
                   value={toggleCollectible}
-                  disabled={!toggleCrypto && toggleCollectible}
+                  disabled={!toggleToken && toggleCollectible}
                   onChange={async () => {
                     const newValue = !toggleCollectible;
 
                     // Prevent disabling collectible if crypto is also disabled
-                    if (!newValue && !toggleCrypto) {
+                    if (!newValue && !toggleToken) {
                       return; // Don't change state
                     }
 
@@ -495,7 +507,7 @@ export default function PaymentMethods() {
                 </Toggle>
               </TooltipTrigger>
               <TooltipContent
-                hidden={!(!toggleCrypto && toggleCollectible)}
+                hidden={!(!toggleToken && toggleCollectible)}
                 className="z-portal bg-black text-white"
                 side="right"
               >

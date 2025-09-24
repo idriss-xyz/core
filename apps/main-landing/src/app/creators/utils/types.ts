@@ -22,6 +22,7 @@ export type CreatorProfileResponse = {
   alertEnabled: boolean;
   ttsEnabled: boolean;
   sfxEnabled: boolean;
+  tokenEnabled: boolean;
   collectibleEnabled: boolean;
   networks: string[];
   tokens: string[];

@@ -44,6 +44,9 @@ export class DonationParameters {
   })
   customBadWords!: string[];
 
+  @Column({ name: 'token_enabled', default: true })
+  tokenEnabled!: boolean;
+
   @Column({ name: 'collectible_enabled', default: true })
   collectibleEnabled!: boolean;
 
