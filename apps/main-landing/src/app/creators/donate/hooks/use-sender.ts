@@ -26,6 +26,29 @@ const utf8Bytes = (s: string) => {
   return new TextEncoder().encode(s).length;
 };
 
+export type SenderReturnType = {
+  send: ({
+    sendPayload,
+    recipientAddress,
+  }: {
+    recipientAddress: `0x${string}`;
+    sendPayload: SendPayload;
+  }) => Promise<void>;
+  data:
+    | {
+        transactionHash: `0x${string}`;
+      }
+    | undefined;
+  reset: () => void;
+  isIdle: boolean;
+  isError: boolean;
+  isSending: boolean;
+  isSuccess: boolean;
+  resetBalance: () => void;
+  tokensToSend: bigint | undefined;
+  haveEnoughBalance: boolean;
+};
+
 export const useSender = ({ walletClient, callbackOnSend }: Properties) => {
   const switchChain = useSwitchChain();
   const nativeTransaction = useNativeTransaction();

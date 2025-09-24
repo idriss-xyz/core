@@ -4,7 +4,12 @@ import { Tabs } from '@idriss-xyz/ui/tabs';
 import { Modal } from '@idriss-xyz/ui/modal';
 import { Input } from '@idriss-xyz/ui/input';
 import { Form } from '@idriss-xyz/ui/form';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import {
+  Controller,
+  SubmitHandler,
+  useForm,
+  UseFormReturn,
+} from 'react-hook-form';
 import { Badge } from '@idriss-xyz/ui/badge';
 import { Button } from '@idriss-xyz/ui/button';
 import { Link } from '@idriss-xyz/ui/link';
@@ -56,6 +61,7 @@ import { getSendFormDefaultValues } from '../../utils';
 import { useSender } from '../../hooks';
 import { useMobileFilter } from '../../hooks/use-mobile-filter';
 import { Collectible, CreatorProfile } from '../../types';
+import { SenderReturnType } from '../../hooks/use-sender';
 
 import {
   ChainSelect,
@@ -63,6 +69,165 @@ import {
   LayersBadge,
   TokenSelect,
 } from './components';
+
+const TokenTabContent = ({
+  formMethods,
+  defaultTokenSymbol,
+  possibleTokens,
+  allowedChainsIds,
+  sender,
+  selectedTokenSymbol,
+  activeTab,
+}: {
+  formMethods: UseFormReturn<FormPayload, undefined>;
+  defaultTokenSymbol: string;
+  possibleTokens: Token[];
+  allowedChainsIds: number[];
+  sender: SenderReturnType;
+  selectedTokenSymbol: string;
+  activeTab: string;
+}) => {
+  return (
+    <div>
+      <Controller
+        name="amount"
+        control={formMethods.control}
+        render={({ field }) => {
+          return (
+            <>
+              <Form.Field
+                numeric
+                {...field}
+                className="mt-6"
+                label="Amount"
+                value={field.value?.toString() ?? '1'}
+                onChange={(value) => {
+                  field.onChange(Number(value));
+                }}
+                prefixElement={<span>$</span>}
+              />
+
+              {!sender.haveEnoughBalance && (
+                <span
+                  className={classes(
+                    'flex items-center gap-x-1 pt-1 text-label7 text-red-500 lg:text-label6',
+                  )}
+                >
+                  <Icon name="AlertCircle" size={12} className="p-px" />
+                  {activeTab === 'collectible'
+                    ? 'You do not own this collectible.'
+                    : `Not enough ${selectedTokenSymbol} in your wallet. Add funds to continue.`}
+                </span>
+              )}
+            </>
+          );
+        }}
+      />
+      <Controller
+        name="tokenSymbol"
+        control={formMethods.control}
+        render={({ field }) => {
+          return (
+            <TokenSelect
+              label="Token"
+              value={field.value ?? defaultTokenSymbol}
+              className="mt-4 w-full"
+              tokens={possibleTokens}
+              onChange={field.onChange}
+            />
+          );
+        }}
+      />
+      <Controller
+        name="chainId"
+        control={formMethods.control}
+        render={({ field }) => {
+          return (
+            <ChainSelect
+              label="Network"
+              value={field.value}
+              className="mt-4 w-full"
+              onChange={field.onChange}
+              allowedChainsIds={allowedChainsIds}
+            />
+          );
+        }}
+      />
+    </div>
+  );
+};
+
+const CollectibleTabContent = ({
+  selectedCollectible,
+  amount,
+  setSelectedCollectible,
+  setIsCollectibleModalOpen,
+  isConnected,
+  openConnectModal,
+}: {
+  selectedCollectible: Collectible | null;
+  amount: number | undefined;
+  setSelectedCollectible: (collectible: Collectible | null) => void;
+  setIsCollectibleModalOpen: (open: boolean) => void;
+  isConnected: boolean;
+  openConnectModal?: () => void;
+}) => {
+  return (
+    <div className="mt-4">
+      {selectedCollectible && (
+        <div className="mb-4 flex gap-2.5 rounded-[12px] border border-neutral-200 p-2">
+          <img
+            src={selectedCollectible.image}
+            alt={selectedCollectible.name}
+            className="h-[88px] w-[72px] rounded-[12px] border-neutral-300 object-cover"
+          />
+          <div className="flex flex-1 flex-col justify-center gap-2">
+            <div className="flex flex-col gap-[6px]">
+              <span className="text-label4 text-neutral-900">
+                {selectedCollectible.name}
+              </span>
+              <span className="text-body5 text-neutral-500">
+                {selectedCollectible.collection}
+              </span>
+              <div className="h-4.5">
+                <LayersBadge amount={amount?.toString() ?? '1'} />
+              </div>
+            </div>
+          </div>
+          <div className="flex w-10 items-start">
+            <IconButton
+              intent="tertiary"
+              size="medium"
+              iconName="Repeat2"
+              iconClassName="size-4"
+              className="rounded-xl border border-neutral-200 bg-white"
+              onClick={() => {
+                setSelectedCollectible(null);
+                setIsCollectibleModalOpen(true);
+              }}
+            />
+          </div>
+        </div>
+      )}
+      {!selectedCollectible && (
+        <Button
+          intent="primary"
+          size="medium"
+          className="w-full uppercase"
+          onClick={() => {
+            if (!isConnected) {
+              openConnectModal?.();
+              return;
+            }
+            return setIsCollectibleModalOpen(true);
+          }}
+        >
+          Select collectible
+        </Button>
+      )}
+    </div>
+  );
+};
 
 type Properties = {
   className?: string;
@@ -174,8 +339,23 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
 
       sender.resetBalance();
       setSelectedCollectible(null);
+
+      // Set the correct form type based on what's enabled
+      if (creatorInfo.collectibleEnabled && !creatorInfo.tokenEnabled) {
+        formMethods.setValue('type', 'erc1155');
+        setActiveTab('collectible');
+      } else {
+        formMethods.setValue('type', 'token');
+        setActiveTab('token');
+      }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [defaultChainId, selectedTokenSymbol, reset]);
+    }, [
+      defaultChainId,
+      selectedTokenSymbol,
+      reset,
+      creatorInfo.collectibleEnabled,
+      creatorInfo.tokenEnabled,
+    ]);
 
     const [chainId, tokenSymbol, amount, sfx] = formMethods.watch([
       'chainId',
@@ -521,154 +701,72 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
           className="w-full"
         >
           <div>
-            <Tabs
-              onChange={(value) => {
-                formMethods.setValue(
-                  'type',
-                  value === 'token' ? 'token' : 'erc1155',
-                );
-                setActiveTab(value as 'token' | 'collectible');
-              }}
-              items={[
-                {
-                  key: 'token',
-                  label: 'TOKEN',
-                  children: (
-                    <div>
-                      <Controller
-                        name="amount"
-                        control={formMethods.control}
-                        render={({ field }) => {
-                          return (
-                            <>
-                              <Form.Field
-                                numeric
-                                {...field}
-                                className="mt-6"
-                                label="Amount"
-                                value={field.value?.toString() ?? '1'}
-                                onChange={(value) => {
-                                  field.onChange(Number(value));
-                                }}
-                                prefixElement={<span>$</span>}
-                              />
-
-                              {!sender.haveEnoughBalance && (
-                                <span
-                                  className={classes(
-                                    'flex items-center gap-x-1 pt-1 text-label7 text-red-500 lg:text-label6',
-                                  )}
-                                >
-                                  <Icon
-                                    name="AlertCircle"
-                                    size={12}
-                                    className="p-px"
-                                  />
-                                  {activeTab === 'collectible'
-                                    ? 'You do not own this collectible.'
-                                    : `Not enough ${selectedTokenSymbol} in your wallet. Add funds to continue.`}
-                                </span>
-                              )}
-                            </>
-                          );
-                        }}
+            {creatorInfo.collectibleEnabled && creatorInfo.tokenEnabled ? (
+              <Tabs
+                onChange={(value) => {
+                  formMethods.setValue(
+                    'type',
+                    value === 'token' ? 'token' : 'erc1155',
+                  );
+                  setActiveTab(value as 'token' | 'collectible');
+                }}
+                items={[
+                  {
+                    key: 'token',
+                    label: 'TOKEN',
+                    children: (
+                      <TokenTabContent
+                        formMethods={formMethods}
+                        defaultTokenSymbol={defaultTokenSymbol}
+                        possibleTokens={possibleTokens}
+                        allowedChainsIds={allowedChainsIds}
+                        sender={sender}
+                        selectedTokenSymbol={selectedTokenSymbol}
+                        activeTab={activeTab}
                       />
-                      <Controller
-                        name="tokenSymbol"
-                        control={formMethods.control}
-                        render={({ field }) => {
-                          return (
-                            <TokenSelect
-                              label="Token"
-                              value={field.value ?? defaultTokenSymbol}
-                              className="mt-4 w-full"
-                              tokens={possibleTokens}
-                              onChange={field.onChange}
-                            />
-                          );
-                        }}
+                    ),
+                  },
+                  {
+                    key: 'collectible',
+                    label: 'COLLECTIBLE',
+                    children: (
+                      <CollectibleTabContent
+                        selectedCollectible={selectedCollectible}
+                        amount={amount}
+                        setSelectedCollectible={setSelectedCollectible}
+                        setIsCollectibleModalOpen={setIsCollectibleModalOpen}
+                        isConnected={isConnected}
+                        openConnectModal={openConnectModal}
                       />
-                      <Controller
-                        name="chainId"
-                        control={formMethods.control}
-                        render={({ field }) => {
-                          return (
-                            <ChainSelect
-                              label="Network"
-                              value={field.value}
-                              className="mt-4 w-full"
-                              onChange={field.onChange}
-                              allowedChainsIds={allowedChainsIds}
-                            />
-                          );
-                        }}
-                      />
-                    </div>
-                  ),
-                },
-                {
-                  key: 'collectible',
-                  label: 'COLLECTIBLE',
-                  children: (
-                    <div className="mt-4">
-                      {selectedCollectible && (
-                        <div className="mb-4 flex gap-2.5 rounded-[12px] border border-neutral-200 p-2">
-                          <img
-                            src={selectedCollectible.image}
-                            alt={selectedCollectible.name}
-                            className="h-[88px] w-[72px] rounded-[12px] border-neutral-300 object-cover"
-                          />
-                          <div className="flex flex-1 flex-col justify-center gap-2">
-                            <div className="flex flex-col gap-[6px]">
-                              <span className="text-label4 text-neutral-900">
-                                {selectedCollectible.name}
-                              </span>
-                              <span className="text-body5 text-neutral-500">
-                                {selectedCollectible.collection}
-                              </span>
-                              <div className="h-4.5">
-                                <LayersBadge
-                                  amount={amount?.toString() ?? '1'}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                          <div className="flex w-10 items-start">
-                            <IconButton
-                              intent="tertiary"
-                              size="medium"
-                              iconName="Repeat2"
-                              iconClassName="size-4"
-                              className="rounded-xl border border-neutral-200 bg-white"
-                              onClick={() => {
-                                setSelectedCollectible(null);
-                                setIsCollectibleModalOpen(true);
-                              }}
-                            />
-                          </div>
-                        </div>
-                      )}
-                      {!selectedCollectible && (
-                        <Button
-                          intent="primary"
-                          size="medium"
-                          className="w-full uppercase"
-                          onClick={() => {
-                            if (!isConnected) {
-                              openConnectModal?.();
-                              return;
-                            }
-                            return setIsCollectibleModalOpen(true);
-                          }}
-                        >
-                          Select collectible
-                        </Button>
-                      )}
-                    </div>
-                  ),
-                },
-              ]}
-            />
+                    ),
+                  },
+                ]}
+              />
+            ) : (
+              <>
+                {creatorInfo.tokenEnabled && (
+                  <TokenTabContent
+                    formMethods={formMethods}
+                    defaultTokenSymbol={defaultTokenSymbol}
+                    possibleTokens={possibleTokens}
+                    allowedChainsIds={allowedChainsIds}
+                    sender={sender}
+                    selectedTokenSymbol={selectedTokenSymbol}
+                    activeTab={activeTab}
+                  />
+                )}
+                {creatorInfo.collectibleEnabled && (
+                  <CollectibleTabContent
+                    selectedCollectible={selectedCollectible}
+                    amount={amount}
+                    setSelectedCollectible={setSelectedCollectible}
+                    setIsCollectibleModalOpen={setIsCollectibleModalOpen}
+                    isConnected={isConnected}
+                    openConnectModal={openConnectModal}
+                  />
+                )}
+              </>
+            )}
           </div>
 
           {creatorInfo.alertEnabled && (
