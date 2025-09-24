@@ -42,6 +42,13 @@ router.get('/', async (req: Request, res: Response) => {
 
     const stats = await calculateStatsForDonor(donations, name);
 
+    // ── inject fresh avatar from Creator table
+    const donorCreator = allAddresses
+      .map((addr) => addressToCreatorMap.get(addr.toLowerCase()))
+      .find(Boolean);
+    if (donorCreator?.profilePictureUrl)
+      stats.donorAvatarUrl = donorCreator.profilePictureUrl;
+
     const leaderboard = await calculateGlobalDonorLeaderboard();
     const donorPosition = leaderboard.findIndex((entry) =>
       allAddresses.some((a) => a.toLowerCase() === entry.address.toLowerCase()),

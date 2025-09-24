@@ -98,7 +98,7 @@ export default function DonationNotification({
       </div>
 
       <div className="flex flex-col justify-center gap-y-1">
-        <p className="flex flex-row flex-wrap items-center gap-x-1 text-label3 text-neutral-900">
+        <div className="flex flex-row flex-wrap items-center gap-x-1 text-label3 text-neutral-900">
           {donor}
 
           {!token.details && (
@@ -130,33 +130,35 @@ export default function DonationNotification({
           )}
 
           {nftDetails && (
-            <>
-              <span className="flex items-center gap-[6px]">
-                <span className="text-body3 text-neutral-600">
-                  sent {nftDetails.name}
-                </span>
-
-                {nftDetails.logo && (
-                  <img
-                    alt=""
-                    src={nftDetails.logo}
-                    className="size-6 rounded-full"
-                  />
-                )}
-
-                {Number(amount) > 1 && <LayersBadge amount={amount} />}
-              </span>
-
-              {nftDetails.collectionName && (
-                <span className="w-full basis-full text-body5 text-neutral-500">
-                  ({nftDetails.collectionName})
-                </span>
-              )}
-            </>
+            <span className="text-body3 text-neutral-600">
+              sent {nftDetails.name}
+            </span>
           )}
-        </p>
+        </div>
 
         {message && <p className="text-body5 text-neutral-600">{message}</p>}
+
+        {nftDetails && Number(amount) > 1 && (
+          <div className="w-fit self-start">
+            <LayersBadge amount={amount} />
+          </div>
+        )}
+
+        {nftDetails && (
+          <div
+            key={String(nftDetails.id)}
+            className="flex w-[15.5625rem] shrink-0 flex-col gap-2 rounded-xl"
+          >
+            <div className="flex size-full items-center justify-center overflow-hidden rounded-xl bg-gray-200">
+              <img
+                src={nftDetails.logo}
+                alt={nftDetails.name}
+                /* shrink image if the height cap is reached */
+                className="h-full max-h-full w-auto object-contain"
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

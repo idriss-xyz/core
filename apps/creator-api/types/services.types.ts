@@ -86,6 +86,7 @@ export interface DonationStats {
   favoriteDonationToken: string;
   favoriteTokenMetadata: DonationToken | null;
   donorDisplayName: string | null;
+  donorAvatarUrl: string | null;
   positionInLeaderboard: number | null;
 }
 

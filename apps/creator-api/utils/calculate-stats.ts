@@ -74,6 +74,7 @@ export async function calculateStatsForDonor(
   let favoriteDonationToken = '';
   let favoriteTokenMetadata: DonationToken | null = null;
   let donorDisplayName: string | null = displayName ?? null;
+  let donorAvatarUrl: string | null = null;
   let positionInLeaderboard = null;
 
   for (const donation of donations) {
@@ -117,6 +118,8 @@ export async function calculateStatsForDonor(
     if (!donorDisplayName) {
       donorDisplayName = await getCreatorNameOrAnon(donation.fromAddress);
     }
+    if (!donorAvatarUrl && donation.fromUser.avatarUrl)
+      donorAvatarUrl = donation.fromUser.avatarUrl;
     totalDonationsCount += 1;
   }
 
@@ -130,6 +133,7 @@ export async function calculateStatsForDonor(
     favoriteDonationToken,
     favoriteTokenMetadata,
     donorDisplayName,
+    donorAvatarUrl,
     positionInLeaderboard,
   };
 }

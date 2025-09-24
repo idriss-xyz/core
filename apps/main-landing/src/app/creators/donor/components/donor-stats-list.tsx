@@ -42,6 +42,8 @@ export default function DonorStatsList({
     name: string;
   }>({ profilePicUrl: undefined, name: 'anon' });
 
+  const [avatarError, setAvatarError] = useState(false);
+
   useEffect(() => {
     if (
       stats?.mostDonatedToAddress &&
@@ -63,8 +65,28 @@ export default function DonorStatsList({
           className="pointer-events-none absolute top-0 hidden size-full opacity-100 lg:block"
         />
 
-        <h1 className="self-start text-heading4 text-neutralGreen-900">
-          Donation stats of {stats?.donorDisplayName ?? 'anon'}
+        <h1 className="flex items-center self-start text-heading4 text-neutralGreen-900">
+          <span className="truncate">
+            Donation stats of {stats?.donorDisplayName ?? 'anon'}
+          </span>
+          {avatarError || !stats?.donorAvatarUrl ? (
+            <div className="ml-3 inline-flex size-8 items-center justify-center rounded-full border border-neutral-300 bg-neutral-200">
+              <Icon
+                name="CircleUserRound"
+                size={20}
+                className="text-neutral-500"
+              />
+            </div>
+          ) : (
+            <img
+              src={stats.donorAvatarUrl ?? ''}
+              alt="Donor avatar"
+              className="ml-2 inline h-8 rounded-full"
+              onError={() => {
+                return setAvatarError(true);
+              }}
+            />
+          )}
         </h1>
 
         {statsLoading && (

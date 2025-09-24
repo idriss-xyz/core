@@ -84,7 +84,7 @@ export function TabsPill({ tabs, renderLink }: TabsPillProperties) {
                 {tab.isActive ? (
                   <div
                     className={classes(
-                      'relative flex h-[40px] items-center justify-center gap-2 overflow-hidden rounded-full border border-[#5FEB3C] bg-white px-6 py-2 text-neutralGreen-900',
+                      'relative flex h-[40px] items-center justify-center gap-2 overflow-hidden rounded-full border border-[#5FEB3C] bg-white px-6 py-2 text-neutralGreen-900 hover:cursor-pointer',
                     )}
                   >
                     <Icon name={tab.iconName} size={20} />
@@ -114,7 +114,7 @@ export function TabsPill({ tabs, renderLink }: TabsPillProperties) {
                     )}
                   </div>
                 ) : (
-                  <div className="group relative flex h-[40px] items-center justify-center gap-2 overflow-hidden rounded-full border border-transparent px-6 py-2 hover:border-[#5FEB3C]">
+                  <div className="group relative flex h-[40px] items-center justify-center gap-2 overflow-hidden rounded-full border border-transparent px-6 py-2 hover:cursor-pointer hover:border-[#5FEB3C]">
                     <Icon
                       size={20}
                       name={tab.iconName}

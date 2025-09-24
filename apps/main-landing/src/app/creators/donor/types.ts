@@ -15,6 +15,7 @@ export interface DonorHistoryStats {
   donorDisplayName: string | null;
   positionInLeaderboard: number | null;
   favoriteTokenMetadata: DonationToken | null;
+  donorAvatarUrl?: string | null;
 }
 
 export interface DonorHistoryResponse {
