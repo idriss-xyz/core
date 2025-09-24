@@ -349,19 +349,27 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
           }
         }
 
-        const { chainId, tokenSymbol, ...rest } = payload;
+        const { chainId: formChainId, tokenSymbol, type, ...rest } = payload;
+
+        const chainId =
+          type === 'token'
+            ? formChainId
+            : (selectedCollectible?.chainId ?? formChainId);
+
+        const tokenAddress =
+          type === 'token'
+            ? (CHAIN_ID_TO_TOKENS[chainId]?.find((t) => {
+                return t.symbol === tokenSymbol;
+              })?.address ?? EMPTY_HEX)
+            : EMPTY_HEX;
 
         rest.message = ' ' + rest.message;
-
-        const address =
-          CHAIN_ID_TO_TOKENS[chainId]?.find((token: Token) => {
-            return token.symbol === tokenSymbol;
-          })?.address ?? EMPTY_HEX;
 
         const sendPayload: SendPayload = {
           ...rest,
           chainId,
-          tokenAddress: address,
+          tokenAddress,
+          type,
         };
 
         try {
@@ -383,6 +391,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         isConnected,
         openConnectModal,
         linkWalletIfNeeded,
+        selectedCollectible,
       ],
     );
 
@@ -850,7 +859,6 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                 formMethods.setValue('tokenId', collectible.tokenId);
                 formMethods.setValue('contract', collectible.contract);
                 formMethods.setValue('type', collectible.type ?? 'erc1155');
-                formMethods.setValue('chainId', collectible.chainId);
                 formMethods.setValue('amount', collectible.amount);
                 setSelectedCollectible({
                   tokenId: collectible.tokenId,

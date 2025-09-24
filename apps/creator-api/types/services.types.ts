@@ -28,7 +28,7 @@ export interface NftDisplayItem {
             medium: string;
             url: string;
           };
-        };
+        }[];
       };
     };
   };

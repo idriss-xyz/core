@@ -43,7 +43,7 @@ const DONATION_MIN_OVERALL_VISIBLE_DURATION = 11_000;
 
 const latestCheckedBlocks = new Map();
 //todo: remove
-latestCheckedBlocks.set(8453, BigInt(35_709_802));
+// latestCheckedBlocks.set(8453, BigInt(	35_973_508));
 
 interface Properties {
   creatorName?: string;
@@ -230,8 +230,8 @@ export default function DonationOverlay({ creatorName }: Properties) {
       } else if (!addressParameter.isFetching && addressParameter.data) {
         setAddress({
           // todo: revert
-          data: '0x100A3316aD8AFc50554153789373fA8b96948769',
-          // data: addressParameter.data,
+          // data: '0x100A3316aD8AFc50554153789373fA8b96948769',
+          data: addressParameter.data,
           isValid: isAddress(addressParameter.data),
           isFetching: false,
         });
@@ -345,9 +345,8 @@ export default function DonationOverlay({ creatorName }: Properties) {
             tokenAddress,
           );
 
-          // todo: revert
-          // if (recipientAddress.toLowerCase() !== address?.data.toLowerCase())
-          //   continue;
+          if (recipientAddress.toLowerCase() !== address?.data.toLowerCase())
+            continue;
 
           if (message && containsBadWords(message, customBadWords)) {
             console.log('Filtered donation with inappropriate message');
