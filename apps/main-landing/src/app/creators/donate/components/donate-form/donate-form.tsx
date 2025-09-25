@@ -70,6 +70,37 @@ import {
   TokenSelect,
 } from './components';
 
+const SelectCollectibleButton = ({
+  isConnected,
+  openConnectModal,
+  setIsCollectibleModalOpen,
+}: {
+  isConnected: boolean;
+  openConnectModal?: () => void;
+  setIsCollectibleModalOpen: (open: boolean) => void;
+}) => {
+  return (
+    <div className="flex flex-col py-6 px-12 gap-[10px] rounded-2xl border border-neutral-300 bg-neutral-100 items-center justify-center cursor-pointer"
+      onClick={() => {
+        if (!isConnected) {
+          openConnectModal?.();
+          return;
+        }
+        return setIsCollectibleModalOpen(true);
+      }}
+    >
+      <IconButton
+        intent="tertiary"
+        size="medium"
+        iconName="Card"
+        iconClassName="size-6"
+        className="size-12 rounded-xl border border-neutral-200 bg-white"
+      />
+      <span className="text-label5 text-neutral-900">Select a collectible</span>
+    </div>
+  );
+};
+
 const TokenTabContent = ({
   formMethods,
   defaultTokenSymbol,
@@ -210,20 +241,11 @@ const CollectibleTabContent = ({
         </div>
       )}
       {!selectedCollectible && (
-        <Button
-          intent="primary"
-          size="medium"
-          className="w-full uppercase"
-          onClick={() => {
-            if (!isConnected) {
-              openConnectModal?.();
-              return;
-            }
-            return setIsCollectibleModalOpen(true);
-          }}
-        >
-          Select collectible
-        </Button>
+        <SelectCollectibleButton
+          isConnected={isConnected}
+          openConnectModal={openConnectModal}
+          setIsCollectibleModalOpen={setIsCollectibleModalOpen}
+        />
       )}
     </div>
   );
@@ -867,6 +889,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
               intent="primary"
               className="mt-6 w-full"
               prefixIconName="Coins"
+              disabled={activeTab === "collectible" && !selectedCollectible}
             >
               Donate
             </Button>
