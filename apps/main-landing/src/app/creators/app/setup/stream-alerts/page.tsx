@@ -17,6 +17,7 @@ import {
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
 import { Icon } from '@idriss-xyz/ui/icon';
+import { classes } from '@idriss-xyz/ui/utils';
 
 import { editCreatorProfile } from '@/app/creators/utils';
 import { useAuth } from '@/app/creators/context/auth-context';
@@ -53,10 +54,10 @@ const UpgradeBox: React.FC = () => {
           className="pointer-events-none"
         />
         <div className="flex w-[477px] flex-col gap-4 uppercase">
-          <p className="text-label4 text-neutralGreen-700">
+          <p className={classes('text-label4 text-neutralGreen-700')}>
             Upgrade your Twitch Setup
           </p>
-          <h3 className="text-display6 gradient-text">
+          <h3 className={classes('text-display6 gradient-text')}>
             Show top donors on your channel
           </h3>
         </div>
@@ -112,6 +113,8 @@ const errorSaveSettingsToast: Omit<ToastData, 'id'> = {
 // ts-unused-exports:disable-next-line
 export default function StreamAlerts() {
   const { creator, creatorLoading, setCreator } = useAuth();
+  const isAcceptingToken = creator?.tokenEnabled ?? false;
+  const isAcceptingCollectibles = creator?.collectibleEnabled ?? false;
   const { toast, removeToast } = useToast();
 
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
@@ -123,6 +126,7 @@ export default function StreamAlerts() {
   const [wasCopied, setWasCopied] = useState(false);
   const [unsavedChangesToastId, setUnsavedChangesToastId] = useState('');
 
+
   const alertSounds = [
     ...defaultAlertSounds,
     ...(uploadedFile ? [{ value: 'CUSTOM_SOUND', label: 'Custom' }] : []),
@@ -131,7 +135,7 @@ export default function StreamAlerts() {
       label: 'Upload',
       renderLabel: () => {
         return (
-          <span className="text-mint-500 underline">
+          <span className={classes('text-mint-500 underline')}>
             {uploadedFile ? 'Replace custom sound' : '+ Upload your own'}
           </span>
         );
@@ -418,7 +422,11 @@ export default function StreamAlerts() {
               <>
                 <div className="flex items-center gap-4">
                   <div className="flex flex-col gap-1">
-                    <label className="pb-1 text-label4 text-neutralGreen-700">
+                    <label
+                      className={classes(
+                        'pb-1 text-label4 text-neutralGreen-700',
+                      )}
+                    >
                       Overlay link
                     </label>
                     <CopyInput
@@ -450,7 +458,11 @@ export default function StreamAlerts() {
                       }
                     />
                     <div className="flex items-center pt-1">
-                      <span className="flex items-center space-x-1 text-label7 text-neutral-600 lg:text-label7">
+                      <span
+                        className={classes(
+                          'flex items-center space-x-1 text-label7 text-neutral-600 lg:text-label7',
+                        )}
+                      >
                         Add this as a browser source in your streaming software
                       </span>
                       <Icon
@@ -461,58 +473,78 @@ export default function StreamAlerts() {
                     </div>
                   </div>
                   <div className="flex flex-col gap-2">
-                    <Dropdown
-                      className="z-extensionPopup min-w-60 rounded-xl border border-neutral-300 bg-white py-2 shadow-lg"
-                      contentAlign="end"
-                      trigger={({ isOpened }) => {
-                        return (
-                          <Button
-                            size="medium"
-                            intent="secondary"
-                            className="h-fit"
-                            suffixIconName="ChevronDown"
-                            suffixIconClassName={`transition-all duration-200 ease-in-out ${isOpened ? 'rotate-[180deg]' : ''}`}
-                          >
-                            TEST&nbsp;ALERT
-                          </Button>
-                        );
-                      }}
-                    >
-                      {() => {
-                        return (
-                          <ul className="flex flex-col gap-y-1">
-                            <li>
-                              <Button
-                                className="w-full justify-start px-3 py-1 font-normal text-neutral-900"
-                                intent="tertiary"
-                                size="large"
-                                prefixIconName="DollarSign"
-                                prefixIconClassName="mr-3"
-                                onClick={() => {
-                                  void sendTestDonation('token');
-                                }}
-                              >
-                                Token&nbsp;Donation
-                              </Button>
-                            </li>
-                            <li>
-                              <Button
-                                className="w-full justify-start px-3 py-1 font-normal text-neutral-900"
-                                intent="tertiary"
-                                size="large"
-                                prefixIconName="Layers"
-                                prefixIconClassName="mr-3"
-                                onClick={() => {
-                                  void sendTestDonation('nft');
-                                }}
-                              >
-                                NFT&nbsp;Donation
-                              </Button>
-                            </li>
-                          </ul>
-                        );
-                      }}
-                    </Dropdown>
+                    {isAcceptingToken && isAcceptingCollectibles ? (
+                      <Dropdown
+                        className={classes(
+                          'z-extensionPopup rounded-xl border border-neutral-300 bg-white py-2 shadow-lg',
+                        )}
+                        contentAlign="end"
+                        trigger={({ isOpened }) => {
+                          return (
+                            <Button
+                              size="medium"
+                              intent="secondary"
+                              className="h-fit"
+                              suffixIconName="ArrowDown"
+                              suffixIconClassName={`transition-all duration-200 ease-in-out ${
+                                isOpened ? 'rotate-[180deg]' : ''
+                              }`}
+                            >
+                              TEST ALERT
+                            </Button>
+                          );
+                        }}
+                      >
+                        {() => {
+                          return (
+                            <ul className="flex flex-col gap-y-1">
+                              <li>
+                                <Button
+                                  className="w-full justify-start px-3 py-1 font-normal text-neutral-900"
+                                  intent="tertiary"
+                                  size="large"
+                                  prefixIconName="Coins"
+                                  prefixIconClassName="mr-3"
+                                  onClick={() => {
+                                    return void sendTestDonation('token');
+                                  }}
+                                >
+                                  Token
+                                </Button>
+                              </li>
+                              <li>
+                                <Button
+                                  className="w-full justify-start px-3 py-1 font-normal text-neutral-900"
+                                  intent="tertiary"
+                                  size="large"
+                                  prefixIconName="Card"
+                                  prefixIconClassName="mr-3"
+                                  onClick={() => {
+                                    return void sendTestDonation('nft');
+                                  }}
+                                >
+                                  Collectible
+                                </Button>
+                              </li>
+                            </ul>
+                          );
+                        }}
+                      </Dropdown>
+                    ) : (
+                      <Button
+                        size="medium"
+                        intent="secondary"
+                        onClick={() => {
+                          return void sendTestDonation(
+                            isAcceptingToken ? 'token' : 'nft',
+                          );
+                        }}
+                        className="h-fit"
+                        suffixIconName="IdrissArrowRight"
+                      >
+                        TEST ALERT
+                      </Button>
+                    )}
                   </div>
                 </div>
                 <Controller
@@ -622,10 +654,10 @@ export default function StreamAlerts() {
                     </TooltipTrigger>
                     <TooltipContent
                       hidden={alertEnabled}
-                      className="z-portal bg-black text-white"
+                      className={classes('z-portal bg-black text-white')}
                       side="right"
                     >
-                      <p className="text-body6">
+                      <p className={classes('text-body6')}>
                         Turn on Alerts to use this feature
                       </p>
                     </TooltipContent>
@@ -740,10 +772,10 @@ export default function StreamAlerts() {
                     </TooltipTrigger>
                     <TooltipContent
                       hidden={alertEnabled}
-                      className="z-portal bg-black text-white"
+                      className={classes('z-portal bg-black text-white')}
                       side="right"
                     >
-                      <p className="text-body6">
+                      <p className={classes('text-body6')}>
                         Turn on Alerts to use this feature
                       </p>
                     </TooltipContent>
