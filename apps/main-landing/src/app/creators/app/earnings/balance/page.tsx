@@ -173,7 +173,11 @@ export default function EarningsBalance() {
                   <TooltipProvider delayDuration={400}>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <Icon className='text-neutral-600' name="HelpCircle" size={24} />
+                        <Icon
+                          className="text-neutral-600"
+                          name="HelpCircle"
+                          size={24}
+                        />
                       </TooltipTrigger>
                       <TooltipContent className="bg-black text-left text-white">
                         <p className="text-label6">

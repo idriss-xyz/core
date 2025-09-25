@@ -318,6 +318,7 @@ export function calculateStatsForRecipientAddress(
   const totalDonationsCount = donations.length;
   const biggestDonation =
     donations.length > 0 ? Math.max(...donations.map((d) => d.tradeValue)) : 0;
+
   const donationsWithTimeAndAmount = donations.map((donation) => {
     const timestamp = donation.timestamp;
     const date = new Date(timestamp);
@@ -333,24 +334,47 @@ export function calculateStatsForRecipientAddress(
   });
 
   const earningsByToken: Record<string, TokenEarnings> = {};
+  let collectiblesEarnings: TokenEarnings | null = null;
 
   for (const donation of donations) {
-    if (donation.kind !== 'token') continue;
+    if (donation.kind === 'token') {
+      const key = donation.token.symbol;
 
-    const key = donation.token.symbol;
+      if (!earningsByToken[key]) {
+        earningsByToken[key] = {
+          tokenData: donation.token,
+          totalAmount: 0,
+          donationCount: 0,
+        };
+      }
 
-    if (!earningsByToken[key]) {
-      earningsByToken[key] = {
-        tokenData: donation.token,
-        totalAmount: 0,
-        donationCount: 0,
-      };
+      earningsByToken[key].totalAmount += donation.tradeValue;
+      earningsByToken[key].donationCount += 1;
+    } else {
+      // Batch all collectibles into one synthetic bucket
+      if (!collectiblesEarnings) {
+        collectiblesEarnings = {
+          tokenData: {
+            symbol: 'NFT',
+            name: 'Collectibles',
+            imageUrl: '',
+            decimals: 0,
+            address: '' as Hex,
+            network: '',
+          },
+          totalAmount: 0,
+          donationCount: 0,
+        };
+      }
+      collectiblesEarnings.totalAmount += donation.tradeValue;
+      collectiblesEarnings.donationCount += 1;
     }
-
-    earningsByToken[key].totalAmount += donation.tradeValue;
-    earningsByToken[key].donationCount += 1;
   }
-  const earningsByTokenOverview = Object.values(earningsByToken);
+
+  const earningsByTokenOverview = [
+    ...Object.values(earningsByToken),
+    ...(collectiblesEarnings ? [collectiblesEarnings] : []),
+  ];
 
   return {
     distinctDonorsCount,

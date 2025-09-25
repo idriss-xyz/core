@@ -174,7 +174,8 @@ export default function EarningsStats() {
                     name="Users2"
                     className="mr-1 rounded-full bg-mint-600 p-1 text-white"
                   />
-                  {stats.distinctDonorsCount} donors
+                  {stats.distinctDonorsCount} donor
+                  {stats.distinctDonorsCount !== 1 && 's'}
                 </span>
                 <span className="pointer-events-none absolute bottom-4 right-2 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-mint-900">
                   <Icon
@@ -266,7 +267,8 @@ export default function EarningsStats() {
                     </div>
                     <div className="flex flex-col gap-2">
                       <span className="w-fit rounded-full bg-mint-200 px-1 text-xs font-medium text-mint-700">
-                        {mainAsset.donationCount} donations
+                        {mainAsset.donationCount} donation
+                        {mainAsset.donationCount !== 1 && 's'}
                       </span>
                       <span className="flex items-center text-label1 text-black">
                         {formatFiatValue(mainAsset.totalAmount)}{' '}
@@ -287,7 +289,7 @@ export default function EarningsStats() {
                           className="border-b border-gray-200 last:border-b-0"
                         >
                           <td className="flex items-center gap-2 py-3">
-                            <div className="relative size-6 rounded-full">
+                            <div className="relative size-6 rounded-full text-black">
                               <TokenLogo
                                 symbol={item.tokenData.symbol}
                                 imageUrl={item.tokenData.imageUrl}
@@ -299,7 +301,8 @@ export default function EarningsStats() {
                           </td>
                           <td>
                             <span className="w-fit rounded-full bg-mint-200 px-1 py-0.5 text-xs font-medium text-mint-700">
-                              {item.donationCount} donations
+                              {item.donationCount} donation
+                              {item.donationCount !== 1 && 's'}
                             </span>
                           </td>
                           <td className="text-right align-middle text-sm font-medium text-black">
