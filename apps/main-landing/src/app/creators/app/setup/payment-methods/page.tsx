@@ -408,7 +408,7 @@ export default function PaymentMethods() {
                 side="right"
               >
                 <p className="text-body6">
-                  At least one payment method must be enabled
+                  At least one method must stay enabled
                 </p>
               </TooltipContent>
             </Tooltip>
@@ -512,7 +512,7 @@ export default function PaymentMethods() {
                 side="right"
               >
                 <p className="text-body6">
-                  At least one payment method must be enabled
+                  At least one method must stay enabled
                 </p>
               </TooltipContent>
             </Tooltip>
