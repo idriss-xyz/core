@@ -17,8 +17,8 @@ import {
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
 import { getAccessToken } from '@privy-io/react-auth';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react';
+import { Controller, useForm, UseFormReset } from 'react-hook-form';
 import { Icon, IconName } from '@idriss-xyz/ui/icon';
 
 import {
@@ -32,6 +32,7 @@ import {
   SectionHeader,
 } from '@/app/creators/components/layout';
 import { useToast } from '@/app/creators/context/toast-context';
+import { CreatorProfileResponse } from '@/app/creators/utils/types';
 
 import SkeletonSetup from '../loading';
 
@@ -146,9 +147,26 @@ const IconsRow = ({ icons }: { icons: IconName[] }) => {
   );
 };
 
+const resetCreatorOnEdit = (
+  reset: UseFormReset<FormPayload>,
+  data: Partial<CreatorProfileResponse>,
+  setCreator: Dispatch<SetStateAction<CreatorProfileResponse | null>>,
+) => {
+  reset(
+    { ...data },
+    { keepValues: true },
+  );
+
+  setCreator((previous) => {
+    return previous
+      ? { ...previous, ...data }
+      : previous;
+  });
+};
+
 // ts-unused-exports:disable-next-line
 export default function PaymentMethods() {
-  const { creator, creatorLoading } = useAuth();
+  const { creator, creatorLoading, setCreator } = useAuth();
   const { toast } = useToast();
 
   const [toggleCollectible, setToggleCollectible] = useState(
@@ -307,7 +325,7 @@ export default function PaymentMethods() {
       if (editSuccess) {
         toast({
           type: 'success',
-          heading: 'Settings saved!',
+          heading: 'Settings saved',
           autoClose: true,
         });
       } else {
@@ -393,11 +411,19 @@ export default function PaymentMethods() {
                     const authToken = await getAccessToken();
                     if (!authToken || !creator?.name) return;
 
-                    await editCreatorProfile(
+                    const editSuccess = await editCreatorProfile(
                       creator.name,
                       { tokenEnabled: newTokenValue },
                       authToken,
                     );
+
+                    if (editSuccess) {
+                      resetCreatorOnEdit(
+                        formMethods.reset,
+                        { tokenEnabled: newTokenValue },
+                        setCreator,
+                      );
+                    }
                   }}
                   className="max-w-[336px]"
                 />
@@ -495,11 +521,19 @@ export default function PaymentMethods() {
                     const authToken = await getAccessToken();
                     if (!authToken || !creator?.name) return;
 
-                    await editCreatorProfile(
+                    const editSuccess = await editCreatorProfile(
                       creator.name,
                       { collectibleEnabled: newValue },
                       authToken,
                     );
+
+                    if (editSuccess) {
+                      resetCreatorOnEdit(
+                        formMethods.reset,
+                        { collectibleEnabled: newValue },
+                        setCreator,
+                      );
+                    }
                   }}
                   className="max-w-[336px]"
                 >
