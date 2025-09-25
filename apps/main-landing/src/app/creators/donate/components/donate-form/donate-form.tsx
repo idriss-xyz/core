@@ -134,7 +134,7 @@ const TokenTabContent = ({
                 {...field}
                 className="mt-6"
                 label="Amount"
-                value={field.value?.toString() ?? '1'}
+                value={field.value?.toString() ?? ''}
                 onChange={(value) => {
                   field.onChange(Number(value));
                 }}
