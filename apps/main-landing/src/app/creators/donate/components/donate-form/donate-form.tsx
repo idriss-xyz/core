@@ -74,16 +74,19 @@ const SelectCollectibleButton = ({
   isConnected,
   openConnectModal,
   setIsCollectibleModalOpen,
+  setPendingCollectibleModal,
 }: {
   isConnected: boolean;
   openConnectModal?: () => void;
   setIsCollectibleModalOpen: (open: boolean) => void;
+  setPendingCollectibleModal: (pending: boolean) => void;
 }) => {
   return (
     <div
       className="group flex cursor-pointer flex-col items-center justify-center gap-[10px] rounded-2xl border border-neutral-300 bg-neutral-100 px-12 py-6 hover:border-mint-600"
       onClick={() => {
         if (!isConnected) {
+          setPendingCollectibleModal(true);
           openConnectModal?.();
           return;
         }
@@ -198,6 +201,7 @@ const CollectibleTabContent = ({
   setIsCollectibleModalOpen,
   isConnected,
   openConnectModal,
+  setPendingCollectibleModal,
 }: {
   selectedCollectible: Collectible | null;
   amount: number | undefined;
@@ -205,6 +209,7 @@ const CollectibleTabContent = ({
   setIsCollectibleModalOpen: (open: boolean) => void;
   isConnected: boolean;
   openConnectModal?: () => void;
+  setPendingCollectibleModal: (pending: boolean) => void;
 }) => {
   return (
     <div className="mt-4">
@@ -248,6 +253,7 @@ const CollectibleTabContent = ({
           isConnected={isConnected}
           openConnectModal={openConnectModal}
           setIsCollectibleModalOpen={setIsCollectibleModalOpen}
+          setPendingCollectibleModal={setPendingCollectibleModal}
         />
       )}
     </div>
@@ -280,6 +286,8 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       'token',
     );
     const [collectionFilters, setCollectionFilters] = useState<string[]>([]);
+    const [pendingCollectibleModal, setPendingCollectibleModal] =
+      useState(false);
 
     const { showMobileFilter, setShowMobileFilter } = useMobileFilter();
 
@@ -495,6 +503,14 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         formMethods.setValue('sfx', '');
       }
     }, [amount, sfx, formMethods, minimumSfxAmount]);
+
+    // Watch for connection changes to open collectible modal
+    useEffect(() => {
+      if (isConnected && pendingCollectibleModal) {
+        setIsCollectibleModalOpen(true);
+        setPendingCollectibleModal(false);
+      }
+    }, [isConnected, pendingCollectibleModal]);
 
     const selectedToken = useMemo(() => {
       const token = possibleTokens?.find((token) => {
@@ -762,6 +778,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                         setIsCollectibleModalOpen={setIsCollectibleModalOpen}
                         isConnected={isConnected}
                         openConnectModal={openConnectModal}
+                        setPendingCollectibleModal={setPendingCollectibleModal}
                       />
                     ),
                   },
@@ -788,6 +805,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                     setIsCollectibleModalOpen={setIsCollectibleModalOpen}
                     isConnected={isConnected}
                     openConnectModal={openConnectModal}
+                    setPendingCollectibleModal={setPendingCollectibleModal}
                   />
                 )}
               </>
