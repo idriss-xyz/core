@@ -27,6 +27,8 @@ export interface CollectibleBalance {
   name?: string;
   image?: string;
   collectionImage?: string;
+  collectionShortName: string;
+  collectionCategory: string;
   usdValue?: number;
   type: 'erc721' | 'erc1155';
 }
@@ -59,6 +61,8 @@ export interface ChainNft {
   standard: 'erc1155' | 'erc721';
   slug: string;
   image: string;
+  shortName: string;
+  category: string;
 }
 
 export interface NftOption {

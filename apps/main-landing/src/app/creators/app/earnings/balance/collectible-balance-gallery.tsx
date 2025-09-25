@@ -37,7 +37,7 @@ export default function CollectibleBalanceGallery({
                     {collectible.name}
                   </p>
                   <p className="truncate text-body5 text-neutral-600">
-                    {collectible.collection}
+                    {collectible.collectionShortName}
                   </p>
                 </div>
                 {collectible.type === 'erc1155' &&

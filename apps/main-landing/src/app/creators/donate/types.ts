@@ -25,6 +25,9 @@ export type Collectible = {
   name: string;
   image: string;
   collection: string;
+  collectionShortName: string;
+  collectionCategory: string;
+  collectionImage: string;
   contract: Hex;
   chainId: number;
   balance: string;

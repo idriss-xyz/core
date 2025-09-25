@@ -25,6 +25,8 @@ type NftBalance = {
   name?: string;
   image?: string;
   collectionImage?: string;
+  collectionShortName: string;
+  collectionCategory: string;
   usdValue?: number;
   type: 'erc721' | 'erc1155';
 };
@@ -295,6 +297,8 @@ export async function calculateNftBalances(
           collectionImage: meta.image,
           usdValue,
           name: nft.name,
+          collectionShortName: meta.shortName,
+          collectionCategory: meta.category,
         });
       }
 

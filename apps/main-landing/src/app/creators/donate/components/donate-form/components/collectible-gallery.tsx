@@ -42,11 +42,20 @@ export const CollectibleGallery = ({
     walletClient?.account?.address,
   );
 
+  type Collection = {
+    chainId: number;
+    address: string;
+    name: string;
+    shortName: string;
+    category: string;
+    image: string;
+  };
+
   const uniqueCollections = useMemo(() => {
     if (!collectibles) return [];
 
     const seen = new Set<string>();
-    const result: { chainId: number; address: string; name: string }[] = [];
+    const result: Collection[] = [];
 
     for (const c of collectibles) {
       const address = getAddress(c.contract);
@@ -63,6 +72,9 @@ export const CollectibleGallery = ({
         chainId: c.chainId,
         address,
         name: known?.name ?? `${address.slice(0, 6)}…${address.slice(-4)}`, // fallback label
+        shortName: c.collectionShortName,
+        category: c.collectionCategory,
+        image: c.collectionImage,
       });
     }
 
@@ -70,6 +82,15 @@ export const CollectibleGallery = ({
       return a.name.localeCompare(b.name);
     });
   }, [collectibles]);
+
+  const groupedCollections = useMemo(() => {
+    const groups: Record<string, Collection[]> = {};
+    for (const col of uniqueCollections ?? []) {
+      (groups[col.category] ||= []).push(col);
+    }
+    console.log(uniqueCollections);
+    return groups;
+  }, [uniqueCollections]);
 
   const [_selectedCollections, _setSelectedCollections] = useState<string[]>(
     initialSelectedCollections ?? [],
@@ -169,28 +190,44 @@ export const CollectibleGallery = ({
     <div>
       <div className="flex gap-6">
         {/* Desktop Collection Filter - hidden below md */}
-        <div className="hidden w-48 shrink-0 md:block">
-          <h3 className="mb-3 text-sm font-medium text-neutral-900">
+        <div className="hidden max-h-96 w-48 shrink-0 overflow-y-auto md:block">
+          <h3 className="mb-3 text-label3 text-neutralGreen-900">
             Collections
           </h3>
           <div className="space-y-2">
-            {uniqueCollections.map((collection) => {
-              const collectionKey = `${collection.chainId}-${collection.address}`;
+            {Object.entries(groupedCollections).map(([category, cols]) => {
               return (
-                <label
-                  key={collectionKey}
-                  className="flex cursor-pointer items-center gap-2"
-                >
-                  <Checkbox
-                    value={_selectedCollections.includes(collectionKey)}
-                    onChange={() => {
-                      return handleCollectionToggle(collectionKey);
-                    }}
-                  />
-                  <span className="text-sm text-neutral-700">
-                    {collection.name}
-                  </span>
-                </label>
+                <div key={category} className="mb-4">
+                  <h3 className="mb-3 text-body6 text-neutral-600">
+                    {category}
+                  </h3>
+                  <div className="space-y-2">
+                    {cols.map((collection) => {
+                      const collectionKey = `${collection.chainId}-${collection.address}`;
+                      return (
+                        <label
+                          key={collectionKey}
+                          className="flex cursor-pointer items-center gap-2"
+                        >
+                          <Checkbox
+                            value={_selectedCollections.includes(collectionKey)}
+                            onChange={() => {
+                              return handleCollectionToggle(collectionKey);
+                            }}
+                          />
+                          <img
+                            src={collection.image}
+                            className="size-6 rounded"
+                            alt=""
+                          />
+                          <span className="text-sm text-neutral-700">
+                            {collection.shortName}
+                          </span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </div>
               );
             })}
           </div>
