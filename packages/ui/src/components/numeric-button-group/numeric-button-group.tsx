@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 
+import { Icon } from '../icon';
+
 type NumericButtonGroupProperties = {
   min?: number;
   max?: number;
@@ -35,27 +37,33 @@ export const NumericButtonGroup = ({
 
   return (
     <div
-      className={`inline-flex items-center overflow-hidden rounded-xl border border-neutral-300 bg-white shadow-sm ${className ?? ''}`}
+      className={`inline-flex items-center overflow-hidden rounded-xl border border-neutral-300 bg-white ${className ?? ''}`}
     >
       {/* Minus button */}
       <button
         onClick={handleDecrement}
-        className="px-3 py-2 text-lg font-medium text-neutral-700 hover:bg-neutral-100 focus:outline-none"
+        className="px-2 py-1 font-medium text-neutralGreen-900 hover:bg-neutral-100 focus:outline-none"
       >
-        –
+        <Icon name="Minus" size={16} />
       </button>
 
+      {/* Divider */}
+      <div className="h-7 w-px bg-neutral-300" />
+
       {/* Value */}
-      <div className="select-none px-4 py-2 text-lg font-semibold text-neutral-900">
+      <div className="select-none px-3 py-1.5 text-body5 font-semibold text-neutralGreen-900">
         {internalValue}
       </div>
+
+      {/* Divider */}
+      <div className="h-7 w-px bg-neutral-300" />
 
       {/* Plus button */}
       <button
         onClick={handleIncrement}
-        className="px-3 py-2 text-lg font-medium text-neutral-700 hover:bg-neutral-100 focus:outline-none"
+        className="px-2 py-1 font-medium text-neutralGreen-900 hover:bg-neutral-100 focus:outline-none"
       >
-        +
+        <Icon name="Plus" size={16} />
       </button>
     </div>
   );

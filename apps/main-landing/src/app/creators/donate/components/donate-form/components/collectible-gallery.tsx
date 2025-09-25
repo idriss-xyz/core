@@ -212,7 +212,7 @@ export const CollectibleGallery = ({
                   <div
                     key={collectibleKey}
                     className={classes(
-                      'relative flex cursor-pointer flex-col gap-[10px] rounded-xl border border-neutral-200 p-[6px] transition-colors hover:border-mint-500',
+                      'relative flex cursor-pointer flex-col gap-[10px] rounded-xl border border-neutral-300 p-[6px] transition-colors hover:border-mint-500',
                       isSelected ? 'border-mint-500' : '',
                     )}
                     onClick={() => {
@@ -240,7 +240,7 @@ export const CollectibleGallery = ({
                     </div>
 
                     {/* Selection controls */}
-                    <div className="absolute right-2 top-2">
+                    <div className="absolute right-3 top-3">
                       {(() => {
                         if (
                           collectible.type === 'erc721' ||
@@ -252,7 +252,7 @@ export const CollectibleGallery = ({
                               iconName={isSelected ? 'Check' : 'Plus'}
                               intent="tertiary"
                               size="small"
-                              className={`${isSelected ? 'bg-mint-500 text-white' : 'bg-white'}`}
+                              className={`shadow-[0_0_0_4px_rgba(242,242,242,0.14)] ${isSelected ? 'bg-mint-500 text-white' : 'bg-white'}`}
                               onClick={(event) => {
                                 event.stopPropagation();
                                 handleCollectibleClick(collectible);
@@ -277,7 +277,7 @@ export const CollectibleGallery = ({
                                 }}
                                 min={0}
                                 max={Number(collectible.balance)}
-                                className="bg-white"
+                                className="bg-white shadow-[0_0_0_4px_rgba(242,242,242,0.14)]"
                               />
                             </div>
                           ) : (
@@ -285,7 +285,7 @@ export const CollectibleGallery = ({
                               iconName="Plus"
                               intent="tertiary"
                               size="small"
-                              className="bg-white"
+                              className="bg-white shadow-[0_0_0_4px_rgba(242,242,242,0.14)]"
                               onClick={(event) => {
                                 event.stopPropagation();
                                 handleCollectibleClick(collectible);
