@@ -260,7 +260,7 @@ export default function StreamAlerts() {
 
         toast({
           type: 'success',
-          heading: 'Settings saved!',
+          heading: 'Settings saved',
           autoClose: true,
         });
       } else {

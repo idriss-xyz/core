@@ -104,7 +104,7 @@ export default function ProfilePage() {
       await editCreatorProfile(creator.name, { receiveEmails }, authToken);
       toast({
         type: 'success',
-        heading: 'Settings saved!',
+        heading: 'Settings saved',
         autoClose: true,
       });
     } catch (error) {
