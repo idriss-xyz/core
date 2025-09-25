@@ -475,7 +475,7 @@ export default function StreamAlerts() {
                     {isAcceptingToken && isAcceptingCollectibles ? (
                       <Dropdown
                         className={classes(
-                          'z-extensionPopup rounded-xl border border-neutral-300 bg-white py-2 shadow-lg',
+                          'z-extensionPopup w-[var(--radix-dropdown-menu-trigger-width)] rounded-xl border border-neutral-300 bg-white py-2 shadow-lg',
                         )}
                         contentAlign="end"
                         trigger={({ isOpened }) => {
