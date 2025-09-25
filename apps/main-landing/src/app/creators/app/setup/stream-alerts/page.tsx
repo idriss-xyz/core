@@ -126,7 +126,6 @@ export default function StreamAlerts() {
   const [wasCopied, setWasCopied] = useState(false);
   const [unsavedChangesToastId, setUnsavedChangesToastId] = useState('');
 
-
   const alertSounds = [
     ...defaultAlertSounds,
     ...(uploadedFile ? [{ value: 'CUSTOM_SOUND', label: 'Custom' }] : []),
