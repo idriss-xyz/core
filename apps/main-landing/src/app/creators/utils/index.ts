@@ -130,7 +130,6 @@ export async function getNftMetadata(
 }
 
 export {
-  removeDonorStatus,
   setCreatorIfSessionPresent,
   getCreatorProfile,
   saveCreatorProfile,

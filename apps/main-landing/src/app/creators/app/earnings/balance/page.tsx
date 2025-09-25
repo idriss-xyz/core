@@ -9,6 +9,13 @@ import { formatFiatValue } from '@idriss-xyz/utils';
 import { useState } from 'react';
 import { classes } from '@idriss-xyz/ui/utils';
 import { TabsPill, TabItem } from '@idriss-xyz/ui/tabs-pill';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@idriss-xyz/ui/tooltip';
+import { Icon } from '@idriss-xyz/ui/icon';
 
 import { IDRISS_SCENE_STREAM_4 } from '@/assets';
 import { WithdrawWidget } from '@/app/creators/components/withdraw-widget';
@@ -160,7 +167,34 @@ export default function EarningsBalance() {
           />
           <div className="relative flex flex-col items-center gap-2 px-4 py-6">
             <div className="flex flex-col items-center gap-2">
-              <h4 className={classes('text-heading4')}>{heading}</h4>
+              <div className="flex items-center gap-x-1">
+                <h4 className={classes('text-heading4')}>{heading}</h4>
+                {activeTab !== 'Tokens' && (
+                  <TooltipProvider delayDuration={400}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Icon className='text-neutral-600' name="HelpCircle" size={24} />
+                      </TooltipTrigger>
+                      <TooltipContent className="bg-black text-left text-white">
+                        <p className="text-label6">
+                          Based on the current highest market offers
+                          <br />
+                          on{' '}
+                          <a
+                            href="https://opensea.io/"
+                            className="text-mint-500 underline"
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            OpenSea
+                          </a>
+                          . Actual sale prices may vary.
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                )}
+              </div>
               <h2 className={classes('text-heading2 gradient-text')}>
                 {formatFiatValue(totalUsdBalance)}
               </h2>
