@@ -2,6 +2,7 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { Link } from '@idriss-xyz/ui/link';
 import { classes } from '@idriss-xyz/ui/utils';
 import { DonationUser } from '@idriss-xyz/constants';
+import { formatFiatValue } from '@idriss-xyz/utils';
 
 import { LeaderboardAvatar } from '../../../components/leaderboard/leaderboard-avatar';
 
@@ -76,13 +77,7 @@ export const LeaderboardItem = ({
       </span>
 
       <span className="text-right text-neutral-900">
-        $
-        {donateAmount >= 0.01
-          ? new Intl.NumberFormat('en-US', {
-              minimumFractionDigits: donateAmount % 1 === 0 ? 0 : 2,
-              maximumFractionDigits: 2,
-            }).format(Number(donateAmount ?? 0))
-          : '<0.01'}
+        {formatFiatValue(donateAmount)}
       </span>
     </li>
   );
@@ -134,13 +129,7 @@ export function LeaderboardItemPlaceholder({
           </span>
 
           <span className="select-none text-right text-neutral-900 blur-sm">
-            $
-            {donateAmount >= 0.01
-              ? new Intl.NumberFormat('en-US', {
-                  minimumFractionDigits: donateAmount % 1 === 0 ? 0 : 2,
-                  maximumFractionDigits: 2,
-                }).format(Number(donateAmount ?? 0))
-              : '<0.01'}
+            {formatFiatValue(donateAmount)}
           </span>
         </li>
 

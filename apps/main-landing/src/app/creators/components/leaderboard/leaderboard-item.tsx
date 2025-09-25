@@ -1,5 +1,5 @@
 import { Link } from '@idriss-xyz/ui/link';
-import { getTimeDifferenceString } from '@idriss-xyz/utils';
+import { formatFiatValue, getTimeDifferenceString } from '@idriss-xyz/utils';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Hex } from 'viem';
 import { DonationUser } from '@idriss-xyz/constants';
@@ -78,15 +78,7 @@ export const LeaderboardItem = ({
         </Link>
       </td>
 
-      <td className="px-4 py-3">
-        $
-        {donateAmount >= 0.01
-          ? new Intl.NumberFormat('en-US', {
-              minimumFractionDigits: donateAmount % 1 === 0 ? 0 : 2,
-              maximumFractionDigits: 2,
-            }).format(Number(donateAmount ?? 0))
-          : '<0.01'}
-      </td>
+      <td className="px-4 py-3"> {formatFiatValue(donateAmount)}</td>
 
       {donationCount && <td className="px-4 py-3">{donationCount}</td>}
 
@@ -152,13 +144,7 @@ export function LeaderboardItemPlaceholder({
           </td>
 
           <td className="select-none text-right text-neutral-900 blur-sm">
-            $
-            {donateAmount >= 0.01
-              ? new Intl.NumberFormat('en-US', {
-                  minimumFractionDigits: donateAmount % 1 === 0 ? 0 : 2,
-                  maximumFractionDigits: 2,
-                }).format(Number(donateAmount ?? 0))
-              : '<0.01'}
+            {formatFiatValue(donateAmount)}
           </td>
         </tr>
 

@@ -12,6 +12,7 @@ import {
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
 import { useRouter } from 'next/navigation';
+import { formatFiatValue } from '@idriss-xyz/utils';
 
 import { backgroundLines4 } from '@/assets';
 import { DonateContentValues } from '@/app/creators/donate/types';
@@ -117,12 +118,7 @@ export default function DonorStatsList({
                 <p className="text-label5 text-neutral-600">Total volume</p>
 
                 <p className="text-heading4 text-neutral-800">
-                  $
-                  {new Intl.NumberFormat('en-US', {
-                    minimumFractionDigits:
-                      stats.totalDonationAmount % 1 === 0 ? 0 : 2,
-                    maximumFractionDigits: 2,
-                  }).format(Number(stats.totalDonationAmount))}
+                  {formatFiatValue(stats.totalDonationAmount)}
                 </p>
               </div>
 
@@ -130,12 +126,7 @@ export default function DonorStatsList({
                 <p className="text-label5 text-neutral-600">Largest donation</p>
 
                 <p className="text-heading4 text-neutral-800">
-                  $
-                  {new Intl.NumberFormat('en-US', {
-                    minimumFractionDigits:
-                      stats.biggestDonationAmount % 1 === 0 ? 0 : 2,
-                    maximumFractionDigits: 2,
-                  }).format(Number(stats.biggestDonationAmount))}
+                  {formatFiatValue(stats.biggestDonationAmount)}
                 </p>
               </div>
 
