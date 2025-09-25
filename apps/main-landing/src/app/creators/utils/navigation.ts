@@ -2,52 +2,10 @@
 import { useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { usePrivy } from '@privy-io/react-auth';
-import { CREATOR_API_URL } from '@idriss-xyz/constants';
 
 import { useAuth } from '../context/auth-context';
 
-import { CreatorProfileResponse } from './types';
-import { setCreatorIfSessionPresent } from './session';
-
-import { editCreatorProfile } from '.';
-
-export const getCreatorProfile = async (
-  authToken: string,
-): Promise<CreatorProfileResponse | undefined> => {
-  if (!authToken) {
-    console.error('No slug to get creator');
-    return;
-  }
-
-  const response = await fetch(`${CREATOR_API_URL}/creator-profile/me`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${authToken}`,
-    },
-  });
-  if (!response.ok) {
-    return;
-  }
-  const data = (await response.json()) as CreatorProfileResponse;
-  return data;
-};
-
-// If user is donor, remove donor status (become creator with page)
-export const removeDonorStatus = async (
-  isDonor: boolean,
-  creatorName: string,
-  getAccessToken: () => Promise<string | null>,
-) => {
-  if (isDonor) {
-    const authToken = await getAccessToken();
-    if (!authToken) {
-      console.error('No auth token to edit creator profile');
-      return;
-    }
-    await editCreatorProfile(creatorName, { isDonor: false }, authToken);
-  }
-};
+import { removeDonorStatus, setCreatorIfSessionPresent } from './session';
 
 export const useStartEarningNavigation = () => {
   const router = useRouter();
