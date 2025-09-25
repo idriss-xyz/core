@@ -504,15 +504,8 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       async (txHash: string) => {
         await sendDonationEffects(txHash);
         await syncDonation();
-        reset(getSendFormDefaultValues(defaultChainId, selectedTokenSymbol));
       },
-      [
-        sendDonationEffects,
-        syncDonation,
-        defaultChainId,
-        selectedTokenSymbol,
-        reset,
-      ],
+      [sendDonationEffects, syncDonation],
     );
 
     const sender = useSender({
@@ -658,6 +651,8 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       onSubmit,
     ]);
 
+    console.log('rerender, active tab', activeTab);
+
     if (!creatorInfo.address.isValid && !creatorInfo.address.isFetching) {
       return (
         <div className={classes(baseClassName, className)}>
@@ -730,6 +725,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
             onClick={() => {
               sender.reset();
               formMethods.reset();
+              setSelectedCollectible(null);
             }}
           >
             CLOSE
@@ -786,6 +782,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
           <div>
             {creatorInfo.collectibleEnabled && creatorInfo.tokenEnabled ? (
               <Tabs
+                initialTab={activeTab}
                 onChange={(value) => {
                   formMethods.setValue(
                     'type',
