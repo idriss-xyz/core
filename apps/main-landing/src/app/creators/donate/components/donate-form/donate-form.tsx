@@ -273,7 +273,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
     const { isConnected } = useAccount();
     const { donor } = useAuth();
     const { data: walletClient } = useWalletClient();
-    const { connectModalOpen, openConnectModal } = useConnectModal();
+    const { openConnectModal } = useConnectModal();
     const [selectedTokenSymbol, setSelectedTokenSymbol] =
       useState<string>('ETH');
     const [imageError, setImageError] = useState(false);
@@ -288,6 +288,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
     const [collectionFilters, setCollectionFilters] = useState<string[]>([]);
     const [pendingCollectibleModal, setPendingCollectibleModal] =
       useState(false);
+    const [pendingFormSubmission, setPendingFormSubmission] = useState(false);
 
     const { showMobileFilter, setShowMobileFilter } = useMobileFilter();
 
@@ -503,15 +504,6 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         formMethods.setValue('sfx', '');
       }
     }, [amount, sfx, formMethods, minimumSfxAmount]);
-
-    // Watch for connection changes to open collectible modal
-    useEffect(() => {
-      if (isConnected && pendingCollectibleModal) {
-        setIsCollectibleModalOpen(true);
-        setPendingCollectibleModal(false);
-      }
-    }, [isConnected, pendingCollectibleModal]);
-
     const selectedToken = useMemo(() => {
       const token = possibleTokens?.find((token) => {
         return token.symbol === tokenSymbol;
@@ -547,9 +539,15 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         setSubmitError(null); // Clear any previous error when retrying
 
         if (!isConnected) {
+          if (activeTab === 'token') {
+            setPendingFormSubmission(true);
+          }
           openConnectModal?.();
           return;
         }
+
+        // Clear pending submission since we're now connected
+        setPendingFormSubmission(false);
 
         if (
           !walletClient ||
@@ -613,8 +611,24 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         openConnectModal,
         linkWalletIfNeeded,
         selectedCollectible,
+        activeTab,
       ],
     );
+
+    // Watch for connection changes to open collectible modal
+    useEffect(() => {
+      if (isConnected && pendingCollectibleModal) {
+        setIsCollectibleModalOpen(true);
+        setPendingCollectibleModal(false);
+      }
+
+      // Handle pending form submission after connection
+      if (isConnected && pendingFormSubmission && walletClient) {
+        formMethods.handleSubmit(onSubmit)();
+        setPendingFormSubmission(false);
+      }
+    }, [isConnected, pendingCollectibleModal, pendingFormSubmission, formMethods, walletClient, onSubmit]);
+
 
     if (!creatorInfo.address.isValid && !creatorInfo.address.isFetching) {
       return (
@@ -903,7 +917,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
             />
           )}
 
-          {isConnected ? (
+
             <Tooltip>
               <TooltipTrigger className="w-full">
                 <Button
@@ -919,7 +933,8 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
               </TooltipTrigger>
               <TooltipContent
                 hidden={
-                  activeTab === 'collectible' && selectedCollectible != null
+                  (activeTab === 'collectible' && selectedCollectible != null) ||
+                  activeTab === 'token'
                 }
                 className="z-portal bg-black text-white"
                 side="bottom"
@@ -927,17 +942,6 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                 <p className="text-body6">Select a collectible first</p>
               </TooltipContent>
             </Tooltip>
-          ) : (
-            <Button
-              size="medium"
-              intent="primary"
-              className="mt-6 w-full"
-              onClick={openConnectModal}
-              loading={connectModalOpen}
-            >
-              LOG IN
-            </Button>
-          )}
           {submitError && (
             <div className="mt-1 flex items-start gap-x-1 text-label7 text-red-500 lg:text-label6">
               <Icon name="AlertCircle" size={16} className="p-px" />
