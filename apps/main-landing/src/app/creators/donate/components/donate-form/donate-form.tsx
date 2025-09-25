@@ -80,7 +80,8 @@ const SelectCollectibleButton = ({
   setIsCollectibleModalOpen: (open: boolean) => void;
 }) => {
   return (
-    <div className="flex flex-col py-6 px-12 gap-[10px] rounded-2xl border border-neutral-300 bg-neutral-100 items-center justify-center cursor-pointer"
+    <div
+      className="group flex cursor-pointer flex-col items-center justify-center gap-[10px] rounded-2xl border border-neutral-300 bg-neutral-100 px-12 py-6 hover:border-mint-600"
       onClick={() => {
         if (!isConnected) {
           openConnectModal?.();
@@ -93,10 +94,12 @@ const SelectCollectibleButton = ({
         intent="tertiary"
         size="medium"
         iconName="Card"
-        iconClassName="size-6"
+        iconClassName="size-6 group-hover:text-mint-600"
         className="size-12 rounded-xl border border-neutral-200 bg-white"
       />
-      <span className="text-label5 text-neutral-900">Select a collectible</span>
+      <span className="text-label5 text-neutral-900 group-hover:text-mint-600">
+        Select a collectible
+      </span>
     </div>
   );
 };
@@ -883,16 +886,29 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
           )}
 
           {isConnected ? (
-            <Button
-              size="medium"
-              type="submit"
-              intent="primary"
-              className="mt-6 w-full"
-              prefixIconName="Coins"
-              disabled={activeTab === "collectible" && !selectedCollectible}
-            >
-              Donate
-            </Button>
+            <Tooltip>
+              <TooltipTrigger className="w-full">
+                <Button
+                  size="medium"
+                  type="submit"
+                  intent="primary"
+                  className="mt-6 w-full"
+                  prefixIconName="Coins"
+                  disabled={activeTab === 'collectible' && !selectedCollectible}
+                >
+                  Donate
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent
+                hidden={
+                  activeTab === 'collectible' && selectedCollectible != null
+                }
+                className="z-portal bg-black text-white"
+                side="bottom"
+              >
+                <p className="text-body6">Select a collectible first</p>
+              </TooltipContent>
+            </Tooltip>
           ) : (
             <Button
               size="medium"
