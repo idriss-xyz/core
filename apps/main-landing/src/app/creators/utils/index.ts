@@ -133,10 +133,12 @@ export {
   removeDonorStatus,
   setCreatorIfSessionPresent,
   getCreatorProfile,
-  getPublicCreatorProfile,
-  getPublicCreatorProfileBySlug,
   saveCreatorProfile,
   editCreatorProfile,
   deleteCreatorAccount,
 } from './session';
+export {
+  getPublicCreatorProfile,
+  getPublicCreatorProfileBySlug,
+} from './server-session';
 export { useStartEarningNavigation } from './navigation';
