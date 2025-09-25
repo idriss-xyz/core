@@ -1,6 +1,7 @@
 'use client';
 import { CREATOR_API_URL, TWITCH_EXTENSION_LINK } from '@idriss-xyz/constants';
 import { Button } from '@idriss-xyz/ui/button';
+import { Dropdown } from '@idriss-xyz/ui/dropdown';
 import { Card } from '@idriss-xyz/ui/card';
 import { Form } from '@idriss-xyz/ui/form';
 import { Toggle } from '@idriss-xyz/ui/toggle';
@@ -168,46 +169,51 @@ export default function StreamAlerts() {
     'alertSound',
   ]);
 
-  const sendTestDonation = useCallback(async () => {
-    if (!creator?.primaryAddress || !isAddress(creator.primaryAddress)) {
-      toast(errorTestAlertToast);
-      return;
-    }
-
-    try {
-      const authToken = await getAccessToken();
-      if (!authToken) {
+  const sendTestDonation = useCallback(
+    async (kind: 'token' | 'nft') => {
+      if (!creator?.primaryAddress || !isAddress(creator.primaryAddress)) {
         toast(errorTestAlertToast);
-        console.error('Could not get auth token.');
         return;
       }
 
-      const response = await fetch(
-        `${CREATOR_API_URL}/creator-profile/test-alert`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        },
-      );
+      try {
+        const authToken = await getAccessToken();
+        if (!authToken) {
+          toast(errorTestAlertToast);
+          console.error('Could not get auth token.');
+          return;
+        }
 
-      if (response.ok) {
-        toast({
-          type: 'success',
-          heading: 'Test alert sent successfully',
-          description: 'Check your stream preview to confirm it shows up',
-          iconName: 'BellRing',
-          autoClose: true,
-        });
-      } else {
+        const response = await fetch(
+          `${CREATOR_API_URL}/creator-profile/test-alert`,
+          {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${authToken}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ kind }),
+          },
+        );
+
+        if (response.ok) {
+          toast({
+            type: 'success',
+            heading: 'Test alert sent successfully',
+            description: 'Check your stream preview to confirm it shows up',
+            iconName: 'BellRing',
+            autoClose: true,
+          });
+        } else {
+          toast(errorTestAlertToast);
+        }
+      } catch (error) {
+        console.error('Error sending test donation:', error);
         toast(errorTestAlertToast);
       }
-    } catch (error) {
-      console.error('Error sending test donation:', error);
-      toast(errorTestAlertToast);
-    }
-  }, [creator?.primaryAddress, toast]);
+    },
+    [creator?.primaryAddress, toast],
+  );
 
   const onSubmit = async (data: FormPayload) => {
     try {
@@ -455,15 +461,58 @@ export default function StreamAlerts() {
                     </div>
                   </div>
                   <div className="flex flex-col gap-2">
-                    <Button
-                      size="medium"
-                      intent="secondary"
-                      onClick={sendTestDonation}
-                      className="h-fit"
-                      suffixIconName="IdrissArrowRight"
+                    <Dropdown
+                      className="z-extensionPopup min-w-60 rounded-xl border border-neutral-300 bg-white py-2 shadow-lg"
+                      contentAlign="end"
+                      trigger={({ isOpened }) => {
+                        return (
+                          <Button
+                            size="medium"
+                            intent="secondary"
+                            className="h-fit"
+                            suffixIconName="ChevronDown"
+                            suffixIconClassName={`transition-all duration-200 ease-in-out ${isOpened ? 'rotate-[180deg]' : ''}`}
+                          >
+                            TEST&nbsp;ALERT
+                          </Button>
+                        );
+                      }}
                     >
-                      TEST ALERT
-                    </Button>
+                      {() => {
+                        return (
+                          <ul className="flex flex-col gap-y-1">
+                            <li>
+                              <Button
+                                className="w-full justify-start px-3 py-1 font-normal text-neutral-900"
+                                intent="tertiary"
+                                size="large"
+                                prefixIconName="DollarSign"
+                                prefixIconClassName="mr-3"
+                                onClick={() => {
+                                  void sendTestDonation('token');
+                                }}
+                              >
+                                Token&nbsp;Donation
+                              </Button>
+                            </li>
+                            <li>
+                              <Button
+                                className="w-full justify-start px-3 py-1 font-normal text-neutral-900"
+                                intent="tertiary"
+                                size="large"
+                                prefixIconName="Layers"
+                                prefixIconClassName="mr-3"
+                                onClick={() => {
+                                  void sendTestDonation('nft');
+                                }}
+                              >
+                                NFT&nbsp;Donation
+                              </Button>
+                            </li>
+                          </ul>
+                        );
+                      }}
+                    </Dropdown>
                   </div>
                 </div>
                 <Controller

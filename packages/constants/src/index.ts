@@ -58,6 +58,8 @@ export {
   TEST_DONATION_MESSAGE,
   CHAIN_ID_TO_NFT_COLLECTIONS,
   CHAIN_ID_TO_OPENSEA_NETWORK_NAMES,
+  TEST_TOKEN_DONATION,
+  TEST_NFT_DONATION,
 } from './constants';
 
 export type { TokenSymbol } from './constants';

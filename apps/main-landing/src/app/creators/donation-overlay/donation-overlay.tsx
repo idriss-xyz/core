@@ -142,34 +142,17 @@ export default function DonationOverlay({ creatorName }: Properties) {
       console.log('Received test donation event via socket');
       console.log(enableToggles);
       console.log(minimumAmounts);
-      try {
-        const queuedDonation: QueuedDonation = {
-          avatarUrl: testDonation.avatarUrl,
-          message: testDonation.message,
-          sfxText: testDonation.sfxText,
-          amount: '2',
-          donor: testDonation.donor,
-          txnHash: testDonation.txnHash,
-          token: {
-            amount: BigInt(1),
-            details: {
-              id: BigInt('100400158'),
-              name: 'Embedded Agent',
-              logo: 'https://nftmedia.parallelnft.com/parallel-aftermath/QmPPNj5MpR9FcxzPUu2gKQygNp5gxNvxwGgTkAGaef6mX9/image.png',
-              collectionName: 'Parallel Aftermath',
-            },
-          },
-          minimumAmounts,
-          enableToggles,
-          alertSound,
-          voiceId,
-          creatorName: name,
-          forceDisplay: true,
-        };
-        addDonation(queuedDonation);
-      } catch (error) {
-        console.error('Error processing test donation:', error);
-      }
+      console.log(testDonation);
+      const queuedDonation: QueuedDonation = {
+        ...testDonation,
+        minimumAmounts,
+        enableToggles,
+        alertSound,
+        voiceId,
+        creatorName: name,
+        forceDisplay: true,
+      };
+      addDonation(queuedDonation);
     });
 
     socket.on('connect_error', (error) => {
@@ -508,7 +491,7 @@ export default function DonationOverlay({ creatorName }: Properties) {
           font-size: calc(100vw / 28.125);
         }
       `}</style>
-      <div className="flex h-screen w-screen items-center bg-transparent p-3">
+      <div className="flex h-screen w-screen items-start justify-center bg-transparent p-3">
         {shouldDisplayDonation && (
           <DonationNotification
             {...currentDonationData}

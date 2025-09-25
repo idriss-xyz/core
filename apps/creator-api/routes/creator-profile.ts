@@ -14,7 +14,8 @@ import {
   CREATORS_LINK,
   CREATOR_CHAIN,
   CHAIN_ID_TO_TOKENS,
-  TEST_DONATION_MESSAGE,
+  TEST_TOKEN_DONATION,
+  TEST_NFT_DONATION,
 } from '@idriss-xyz/constants';
 
 import { tightCors } from '../config/cors';
@@ -245,31 +246,15 @@ router.post(
         return;
       }
 
+      const { kind = 'token' } = req.body ?? {};
+
+      const payload = kind === 'nft' ? TEST_NFT_DONATION : TEST_TOKEN_DONATION;
+
       const io = req.app.get('io');
       const overlayWS = io.of('/overlay');
       const userId = creator.privyId.toLowerCase();
 
-      const testDonationPayload = {
-        type: 'test' as const,
-        donor: 'idriss_xyz',
-        amount: 5, // Random amount between $1-100
-        message: TEST_DONATION_MESSAGE,
-        sfxText: null,
-        avatarUrl:
-          'https://res.cloudinary.com/base-web/image/fetch/w_64/f_webp/https%3A%2F%2Fbase.mypinata.cloud%2Fipfs%2Fbafkreicr5lh2f3eumcn4meif5t2pauzeddjjbhjbl4enqrp4ooz4e7on6i%3FpinataGatewayToken%3Df6uqhE35YREDMuFqLvxFLqd-MBRlrJ1qWog8gyCF8T88-Tsiu2IX48F-kyVti78J',
-        txnHash:
-          '0x22f0f25140b9fe35cc01722bb5b0366dcb68bb1bcaee3415ca9f48ce4e57d972',
-        token: {
-          amount: 1_000_000_000_000,
-          details: {
-            symbol: 'ETH',
-            name: 'Ethereum',
-            logo: 'https://assets.coingecko.com/coins/images/279/small/ethereum.png',
-          },
-        },
-      };
-
-      overlayWS.to(userId).emit('testDonation', testDonationPayload);
+      overlayWS.to(userId).emit('testDonation', payload);
 
       res.status(200).json({ message: 'Test alert sent.' });
       return;
