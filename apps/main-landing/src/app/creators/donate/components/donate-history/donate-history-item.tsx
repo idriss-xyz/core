@@ -125,9 +125,34 @@ export const DonateHistoryItem = ({
               <span className="relative inline-block size-6 align-middle">
                 <TokenLogo symbol={tokenSymbol} imageUrl={tokenImage} />
               </span>{' '}
-              <Badge type="success" variant="subtle">
-                {formatFiatValue(tradeValue)}
-              </Badge>
+              {!isTokenDonation && tradeValue === 0 ? (
+                <div className="flex items-center gap-x-1">
+                  <Badge type="success" variant="subtle">
+                    -
+                  </Badge>
+                  <TooltipProvider delayDuration={400}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Icon
+                          className="text-neutral-600"
+                          name="HelpCircle"
+                          size={12}
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent className="bg-black text-center text-white">
+                        <p>
+                          This collectible had no market offers at the time of
+                          receiving
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+              ) : (
+                <Badge type="success" variant="subtle">
+                  {formatFiatValue(tradeValue)}
+                </Badge>
+              )}
             </p>
           </div>
 
