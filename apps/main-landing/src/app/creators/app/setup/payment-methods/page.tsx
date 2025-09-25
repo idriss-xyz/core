@@ -17,7 +17,14 @@ import {
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
 import { getAccessToken } from '@privy-io/react-auth';
-import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { Controller, useForm, UseFormReset } from 'react-hook-form';
 import { Icon, IconName } from '@idriss-xyz/ui/icon';
 
@@ -152,15 +159,10 @@ const resetCreatorOnEdit = (
   data: Partial<CreatorProfileResponse>,
   setCreator: Dispatch<SetStateAction<CreatorProfileResponse | null>>,
 ) => {
-  reset(
-    { ...data },
-    { keepValues: true },
-  );
+  reset({ ...data }, { keepValues: true });
 
   setCreator((previous) => {
-    return previous
-      ? { ...previous, ...data }
-      : previous;
+    return previous ? { ...previous, ...data } : previous;
   });
 };
 
