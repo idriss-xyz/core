@@ -20,7 +20,7 @@ router.get('/:address', async (req: Request, res: Response) => {
         'utf-8',
       ),
     );
-    res.json(mockBalances);
+    res.json({ tokenResult: mockBalances });
     return;
   }
 
@@ -50,7 +50,7 @@ router.get('/nft/:address', async (req: Request, res: Response) => {
         'utf-8',
       ),
     );
-    res.json({ nftResult: { balances: mockBalances.nfts } });
+    res.json({ nftResult: mockBalances });
     return;
   }
 
