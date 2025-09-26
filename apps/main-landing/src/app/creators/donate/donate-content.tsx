@@ -2,7 +2,7 @@
 import {
   EMPTY_HEX,
   CREATOR_API_URL,
-  DonationData,
+  StoredDonationData,
   LeaderboardStats,
   CREATORS_LINK,
 } from '@idriss-xyz/constants';
@@ -37,7 +37,7 @@ export function DonateContent({ creatorProfile }: Properties) {
   const { searchParams } = useCreators();
   const [socketConnected, setSocketConnected] = useState(false);
   const [socketInitialized, setSocketInitialized] = useState(false);
-  const [donations, setDonations] = useState<DonationData[]>([]);
+  const [donations, setDonations] = useState<StoredDonationData[]>([]);
   const [leaderboard, setLeaderboard] = useState<LeaderboardStats[]>([]);
   const [currentContent, setCurrentContent] = useState<DonateContentValues>({
     name: 'user-tip',
@@ -96,7 +96,7 @@ export function DonateContent({ creatorProfile }: Properties) {
           }
         });
 
-        socket.on('newDonation', (donation: DonationData) => {
+        socket.on('newDonation', (donation: StoredDonationData) => {
           setDonations((previousState) => {
             return _.uniqBy([donation, ...previousState], (item) => {
               return _.get(item, 'transactionHash');

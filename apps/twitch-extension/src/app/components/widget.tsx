@@ -7,7 +7,7 @@ import {
   hexSchema,
   CREATOR_API_URL,
   LeaderboardStats,
-  DonationData,
+  StoredDonationData,
   NULL_ADDRESS,
 } from '@idriss-xyz/constants';
 import { useGetTipHistory } from '@idriss-xyz/main-landing/app/creators/app/commands/get-donate-history';
@@ -123,7 +123,7 @@ function WidgetContent({ variant }: ContentProperties) {
           }
         });
 
-        socket.on('newDonation', (donation: DonationData) => {
+        socket.on('newDonation', (donation: StoredDonationData) => {
           setLeaderboard((previousState) => {
             const leaderboard = [...previousState];
 

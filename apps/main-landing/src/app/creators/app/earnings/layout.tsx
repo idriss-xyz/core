@@ -2,6 +2,7 @@
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { TabsPill, TabItem } from '@idriss-xyz/ui/tabs-pill';
+import { classes } from '@idriss-xyz/ui/utils';
 
 // ts-unused-exports:disable-next-line
 export default function EarningsLayout({
@@ -46,7 +47,7 @@ export default function EarningsLayout({
   return (
     <div>
       <div className="mb-3 flex flex-col gap-4">
-        <h1 className="text-heading3">Earnings</h1>
+        <h1 className={classes('text-heading3')}>Earnings</h1>
         <TabsPill tabs={earningsTabs} renderLink={renderLink} />
       </div>
       {children}

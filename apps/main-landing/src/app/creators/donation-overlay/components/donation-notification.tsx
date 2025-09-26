@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import { CREATOR_API_URL } from '@idriss-xyz/constants';
 import { Badge } from '@idriss-xyz/ui/badge';
+import type { ChainToken } from '@idriss-xyz/constants';
 import { formatFiatValue, formatTokenValue } from '@idriss-xyz/utils';
 import { formatUnits } from 'viem';
 import { classes } from '@idriss-xyz/ui/utils';
@@ -11,7 +12,20 @@ import { IDRISS_ICON_CIRCLE, DEFAULT_TRUMPET_SOUND } from '@/assets';
 
 import { useDonationNotification } from '../hooks/use-donation-notification';
 import { soundMap } from '../../constants';
-import { DonationNotificationProperties } from '../types';
+import { DonationNotificationProperties, NftDetails } from '../types';
+import { LayersBadge } from '../../donate/components/donate-form/components';
+
+function isNftDetails(
+  details?: NftDetails | ChainToken,
+): details is NftDetails {
+  return !!details && !('decimals' in details);
+}
+
+function isChainToken(
+  details?: NftDetails | ChainToken,
+): details is ChainToken {
+  return !!details && 'decimals' in details;
+}
 
 export default function DonationNotification({
   donor,
@@ -57,6 +71,9 @@ export default function DonationNotification({
     onFullyComplete,
   );
 
+  const nftDetails = isNftDetails(token.details) ? token.details : undefined;
+  const erc20Details = isChainToken(token.details) ? token.details : undefined;
+
   return (
     <div
       role="alert"
@@ -81,7 +98,7 @@ export default function DonationNotification({
       </div>
 
       <div className="flex flex-col justify-center gap-y-1">
-        <p className="flex flex-row flex-wrap items-center gap-x-1 text-label3 text-neutral-900">
+        <div className="flex flex-row flex-wrap items-center gap-x-1 text-label3 text-neutral-900">
           {donor}
 
           {!token.details && (
@@ -90,20 +107,20 @@ export default function DonationNotification({
             </span>
           )}
 
-          {token.details && (
+          {erc20Details && (
             <>
               <span className="text-body3 text-neutral-600">
                 sent{' '}
                 {formatTokenValue(
                   Number.parseFloat(
-                    formatUnits(token.amount, Number(token.details?.decimals)),
+                    formatUnits(token.amount, Number(erc20Details.decimals)),
                   ),
                 )}{' '}
-                {token.details?.symbol}{' '}
+                {erc20Details.symbol}{' '}
               </span>
               <img
                 alt=""
-                src={token.details?.logo}
+                src={erc20Details.logo}
                 className="size-6 rounded-full"
               />{' '}
               <Badge type="success" variant="subtle">
@@ -111,9 +128,37 @@ export default function DonationNotification({
               </Badge>
             </>
           )}
-        </p>
+
+          {nftDetails && (
+            <span className="text-body3 text-neutral-600">
+              sent {nftDetails.name}
+            </span>
+          )}
+        </div>
 
         {message && <p className="text-body5 text-neutral-600">{message}</p>}
+
+        {nftDetails && Number(amount) > 1 && (
+          <div className="w-fit self-start">
+            <LayersBadge amount={amount} />
+          </div>
+        )}
+
+        {nftDetails && (
+          <div
+            key={String(nftDetails.id)}
+            className="flex w-[15.5625rem] shrink-0 flex-col gap-2 rounded-xl"
+          >
+            <div className="flex size-full items-center justify-center overflow-hidden rounded-xl bg-gray-200">
+              <img
+                src={nftDetails.logo}
+                alt={nftDetails.name}
+                /* shrink image if the height cap is reached */
+                className="h-full max-h-full w-auto object-contain"
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

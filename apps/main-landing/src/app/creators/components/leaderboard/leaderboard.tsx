@@ -13,6 +13,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
+import { formatFiatValue } from '@idriss-xyz/utils';
 
 import { IDRISS_SCENE_STREAM_2 } from '@/assets';
 
@@ -131,7 +132,7 @@ export const Leaderboard = ({
       id: 'totalAmount',
       name: perspective === 'creator' ? 'Total received' : 'Total donated',
       accessor: (item) => {
-        return `$${item.totalAmount.toFixed(2)}`;
+        return `${formatFiatValue(item.totalAmount)}`;
       },
       sortable: true,
       sortFunction: (a, b) => {

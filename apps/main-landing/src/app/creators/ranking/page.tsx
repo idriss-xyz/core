@@ -28,7 +28,7 @@ function RankingContent() {
 
   const onDonorClick = useCallback(
     (displayName: string) => {
-      router.push(`/creators/${displayName}`);
+      router.push(`/creators/${displayName.toLowerCase()}`);
     },
     [router],
   );

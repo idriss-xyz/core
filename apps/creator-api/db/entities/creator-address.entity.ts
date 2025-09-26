@@ -8,6 +8,7 @@ import {
 import { Hex } from 'viem';
 import { Creator } from './creator.entity';
 
+// todo: fix circular dependency with creator
 @Entity('creator_address')
 export class CreatorAddress {
   @PrimaryGeneratedColumn()

@@ -1,6 +1,7 @@
 'use client';
 import { CREATOR_API_URL, TWITCH_EXTENSION_LINK } from '@idriss-xyz/constants';
 import { Button } from '@idriss-xyz/ui/button';
+import { Dropdown } from '@idriss-xyz/ui/dropdown';
 import { Card } from '@idriss-xyz/ui/card';
 import { Form } from '@idriss-xyz/ui/form';
 import { Toggle } from '@idriss-xyz/ui/toggle';
@@ -16,6 +17,7 @@ import {
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
 import { Icon } from '@idriss-xyz/ui/icon';
+import { classes } from '@idriss-xyz/ui/utils';
 
 import { editCreatorProfile } from '@/app/creators/utils';
 import { useAuth } from '@/app/creators/context/auth-context';
@@ -52,10 +54,10 @@ const UpgradeBox: React.FC = () => {
           className="pointer-events-none"
         />
         <div className="flex w-[477px] flex-col gap-4 uppercase">
-          <p className="text-label4 text-neutralGreen-700">
+          <p className={classes('text-label4 text-neutralGreen-700')}>
             Upgrade your Twitch Setup
           </p>
-          <h3 className="text-display6 gradient-text">
+          <h3 className={classes('text-display6 gradient-text')}>
             Show top donors on your channel
           </h3>
         </div>
@@ -111,6 +113,8 @@ const errorSaveSettingsToast: Omit<ToastData, 'id'> = {
 // ts-unused-exports:disable-next-line
 export default function StreamAlerts() {
   const { creator, creatorLoading, setCreator } = useAuth();
+  const isAcceptingToken = creator?.tokenEnabled ?? false;
+  const isAcceptingCollectibles = creator?.collectibleEnabled ?? false;
   const { toast, removeToast } = useToast();
 
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
@@ -130,7 +134,7 @@ export default function StreamAlerts() {
       label: 'Upload',
       renderLabel: () => {
         return (
-          <span className="text-mint-500 underline">
+          <span className={classes('text-mint-500 underline')}>
             {uploadedFile ? 'Replace custom sound' : '+ Upload your own'}
           </span>
         );
@@ -168,46 +172,51 @@ export default function StreamAlerts() {
     'alertSound',
   ]);
 
-  const sendTestDonation = useCallback(async () => {
-    if (!creator?.primaryAddress || !isAddress(creator.primaryAddress)) {
-      toast(errorTestAlertToast);
-      return;
-    }
-
-    try {
-      const authToken = await getAccessToken();
-      if (!authToken) {
+  const sendTestDonation = useCallback(
+    async (kind: 'token' | 'nft') => {
+      if (!creator?.primaryAddress || !isAddress(creator.primaryAddress)) {
         toast(errorTestAlertToast);
-        console.error('Could not get auth token.');
         return;
       }
 
-      const response = await fetch(
-        `${CREATOR_API_URL}/creator-profile/test-alert`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        },
-      );
+      try {
+        const authToken = await getAccessToken();
+        if (!authToken) {
+          toast(errorTestAlertToast);
+          console.error('Could not get auth token.');
+          return;
+        }
 
-      if (response.ok) {
-        toast({
-          type: 'success',
-          heading: 'Test alert sent successfully',
-          description: 'Check your stream preview to confirm it shows up',
-          iconName: 'BellRing',
-          autoClose: true,
-        });
-      } else {
+        const response = await fetch(
+          `${CREATOR_API_URL}/creator-profile/test-alert`,
+          {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${authToken}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ kind }),
+          },
+        );
+
+        if (response.ok) {
+          toast({
+            type: 'success',
+            heading: 'Test alert sent successfully',
+            description: 'Check your stream preview to confirm it shows up',
+            iconName: 'BellRing',
+            autoClose: true,
+          });
+        } else {
+          toast(errorTestAlertToast);
+        }
+      } catch (error) {
+        console.error('Error sending test donation:', error);
         toast(errorTestAlertToast);
       }
-    } catch (error) {
-      console.error('Error sending test donation:', error);
-      toast(errorTestAlertToast);
-    }
-  }, [creator?.primaryAddress, toast]);
+    },
+    [creator?.primaryAddress, toast],
+  );
 
   const onSubmit = async (data: FormPayload) => {
     try {
@@ -251,7 +260,7 @@ export default function StreamAlerts() {
 
         toast({
           type: 'success',
-          heading: 'Settings saved!',
+          heading: 'Settings saved',
           autoClose: true,
         });
       } else {
@@ -412,7 +421,11 @@ export default function StreamAlerts() {
               <>
                 <div className="flex items-center gap-4">
                   <div className="flex flex-col gap-1">
-                    <label className="pb-1 text-label4 text-neutralGreen-700">
+                    <label
+                      className={classes(
+                        'pb-1 text-label4 text-neutralGreen-700',
+                      )}
+                    >
                       Overlay link
                     </label>
                     <CopyInput
@@ -444,7 +457,11 @@ export default function StreamAlerts() {
                       }
                     />
                     <div className="flex items-center pt-1">
-                      <span className="flex items-center space-x-1 text-label7 text-neutral-600 lg:text-label7">
+                      <span
+                        className={classes(
+                          'flex items-center space-x-1 text-label7 text-neutral-600 lg:text-label7',
+                        )}
+                      >
                         Add this as a browser source in your streaming software
                       </span>
                       <Icon
@@ -455,15 +472,78 @@ export default function StreamAlerts() {
                     </div>
                   </div>
                   <div className="flex flex-col gap-2">
-                    <Button
-                      size="medium"
-                      intent="secondary"
-                      onClick={sendTestDonation}
-                      className="h-fit"
-                      suffixIconName="IdrissArrowRight"
-                    >
-                      TEST ALERT
-                    </Button>
+                    {isAcceptingToken && isAcceptingCollectibles ? (
+                      <Dropdown
+                        className={classes(
+                          'z-extensionPopup w-[var(--radix-dropdown-menu-trigger-width)] rounded-xl border border-neutral-300 bg-white py-2 shadow-lg',
+                        )}
+                        contentAlign="end"
+                        trigger={({ isOpened }) => {
+                          return (
+                            <Button
+                              size="medium"
+                              intent="secondary"
+                              className="h-fit"
+                              suffixIconName="ArrowDown"
+                              suffixIconClassName={`transition-all duration-200 ease-in-out ${
+                                isOpened ? 'rotate-[180deg]' : ''
+                              }`}
+                            >
+                              TEST ALERT
+                            </Button>
+                          );
+                        }}
+                      >
+                        {() => {
+                          return (
+                            <ul className="flex flex-col gap-y-1">
+                              <li>
+                                <Button
+                                  className="w-full justify-start px-3 py-1 font-normal text-neutral-900"
+                                  intent="tertiary"
+                                  size="large"
+                                  prefixIconName="Coins"
+                                  prefixIconClassName="mr-3"
+                                  onClick={() => {
+                                    return void sendTestDonation('token');
+                                  }}
+                                >
+                                  Token
+                                </Button>
+                              </li>
+                              <li>
+                                <Button
+                                  className="w-full justify-start px-3 py-1 font-normal text-neutral-900"
+                                  intent="tertiary"
+                                  size="large"
+                                  prefixIconName="Card"
+                                  prefixIconClassName="mr-3"
+                                  onClick={() => {
+                                    return void sendTestDonation('nft');
+                                  }}
+                                >
+                                  Collectible
+                                </Button>
+                              </li>
+                            </ul>
+                          );
+                        }}
+                      </Dropdown>
+                    ) : (
+                      <Button
+                        size="medium"
+                        intent="secondary"
+                        onClick={() => {
+                          return void sendTestDonation(
+                            isAcceptingToken ? 'token' : 'nft',
+                          );
+                        }}
+                        className="h-fit"
+                        suffixIconName="IdrissArrowRight"
+                      >
+                        TEST ALERT
+                      </Button>
+                    )}
                   </div>
                 </div>
                 <Controller
@@ -573,10 +653,10 @@ export default function StreamAlerts() {
                     </TooltipTrigger>
                     <TooltipContent
                       hidden={alertEnabled}
-                      className="z-portal bg-black text-white"
+                      className={classes('z-portal bg-black text-white')}
                       side="right"
                     >
-                      <p className="text-body6">
+                      <p className={classes('text-body6')}>
                         Turn on Alerts to use this feature
                       </p>
                     </TooltipContent>
@@ -691,10 +771,10 @@ export default function StreamAlerts() {
                     </TooltipTrigger>
                     <TooltipContent
                       hidden={alertEnabled}
-                      className="z-portal bg-black text-white"
+                      className={classes('z-portal bg-black text-white')}
                       side="right"
                     >
-                      <p className="text-body6">
+                      <p className={classes('text-body6')}>
                         Turn on Alerts to use this feature
                       </p>
                     </TooltipContent>

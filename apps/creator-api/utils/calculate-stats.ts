@@ -11,7 +11,7 @@ import {
 } from '../types';
 import { getAddress, Hex } from 'viem';
 import {
-  DonationData,
+  StoredDonationData,
   DonationToken,
   LeaderboardStats,
 } from '@idriss-xyz/constants';
@@ -21,6 +21,7 @@ import {
 } from '@idriss-xyz/utils';
 import { AppDataSource } from '../db/database';
 import { Creator, CreatorAddress } from '../db/entities';
+import { ILike } from 'typeorm';
 
 async function getCreatorNameOrAnon(address: string): Promise<string> {
   address = getAddress(address);
@@ -53,16 +54,17 @@ async function getCreatorNameOrAnon(address: string): Promise<string> {
 }
 
 export async function calculateStatsForDonor(
-  donations: DonationData[],
+  donations: StoredDonationData[],
   displayName?: string,
 ): Promise<DonationStats> {
   let totalDonationsCount = 0;
   let totalDonationAmount = 0;
+  let totalNftDonationAmount = 0;
   const donationAmounts: Record<string, number> = {};
   const tokenFrequency: Record<string, number> = {};
   let biggestDonationAmount = 0;
   let mostDonatedToAddress = '0x' as Hex;
-  let mostDonatedToUser: DonationData['toUser'] = {
+  let mostDonatedToUser: StoredDonationData['toUser'] = {
     address: '0x' as Hex,
     displayName: undefined,
     displayNameSource: undefined,
@@ -72,33 +74,41 @@ export async function calculateStatsForDonor(
   let favoriteDonationToken = '';
   let favoriteTokenMetadata: DonationToken | null = null;
   let donorDisplayName: string | null = displayName ?? null;
+  let donorAvatarUrl: string | null = null;
   let positionInLeaderboard = null;
 
   for (const donation of donations) {
     const toAddress = donation.toAddress;
     const tradeValue = donation.tradeValue;
 
-    totalDonationAmount += tradeValue;
     donationAmounts[toAddress] = (donationAmounts[toAddress] || 0) + tradeValue;
+    if (donation.kind === 'nft') {
+      totalNftDonationAmount += tradeValue;
+    } else {
+      totalDonationAmount += tradeValue;
+    }
     if (
       donationAmounts[toAddress] > (donationAmounts[mostDonatedToAddress] || 0)
     ) {
       mostDonatedToAddress = toAddress as Hex;
       mostDonatedToUser = donation.toUser;
     }
-    const tokenSymbol = donation.token.symbol;
-    tokenFrequency[tokenSymbol] = (tokenFrequency[tokenSymbol] || 0) + 1;
-    if (
-      tokenFrequency[tokenSymbol] > (tokenFrequency[favoriteDonationToken] || 0)
-    ) {
-      favoriteDonationToken = tokenSymbol;
-      favoriteTokenMetadata = {
-        symbol: donation.token.symbol,
-        imageUrl: donation.token.imageUrl,
-        address: donation.token.address,
-        decimals: donation.token.decimals,
-        network: donation.network,
-      };
+    if (donation.kind === 'token') {
+      const tokenSymbol = donation.token.symbol;
+      tokenFrequency[tokenSymbol] = (tokenFrequency[tokenSymbol] || 0) + 1;
+      if (
+        tokenFrequency[tokenSymbol] >
+        (tokenFrequency[favoriteDonationToken] || 0)
+      ) {
+        favoriteDonationToken = tokenSymbol;
+        favoriteTokenMetadata = {
+          symbol: donation.token.symbol,
+          imageUrl: donation.token.imageUrl,
+          address: donation.token.address,
+          decimals: donation.token.decimals,
+          network: donation.network,
+        };
+      }
     }
 
     if (tradeValue > biggestDonationAmount) {
@@ -108,18 +118,22 @@ export async function calculateStatsForDonor(
     if (!donorDisplayName) {
       donorDisplayName = await getCreatorNameOrAnon(donation.fromAddress);
     }
+    if (!donorAvatarUrl && donation.fromUser.avatarUrl)
+      donorAvatarUrl = donation.fromUser.avatarUrl;
     totalDonationsCount += 1;
   }
 
   return {
     totalDonationsCount,
     totalDonationAmount,
+    totalNftDonationAmount,
     mostDonatedToAddress,
     mostDonatedToUser,
     biggestDonationAmount,
     favoriteDonationToken,
     favoriteTokenMetadata,
     donorDisplayName,
+    donorAvatarUrl,
     positionInLeaderboard,
   };
 }
@@ -137,7 +151,7 @@ export async function calculateGlobalDonorLeaderboard(
 
   const aggregatedByDonor = new Map<
     string,
-    { creator: Creator | null; donations: DonationData[] }
+    { creator: Creator | null; donations: StoredDonationData[] }
   >();
 
   for (const [address, donations] of Object.entries(groupedDonations)) {
@@ -196,7 +210,7 @@ export async function calculateGlobalStreamerLeaderboard(
   const addressToCreatorMap = createAddressToCreatorMap(creators);
 
   const groupedDonationsByRecipient = await fetchDonationRecipients();
-  const aggregatedDonationsByCreator = new Map<number, DonationData[]>();
+  const aggregatedDonationsByCreator = new Map<number, StoredDonationData[]>();
 
   for (const [address, donations] of Object.entries(
     groupedDonationsByRecipient,
@@ -280,7 +294,7 @@ export async function resolveCreatorAndAddresses(
   } else {
     // resolve by displayName (case-sensitive/insensitive depending on DB collation)
     creator = await creatorRepository.findOne({
-      where: { displayName: identifier },
+      where: { displayName: ILike(identifier) },
       relations: ['associatedAddresses'],
     });
   }
@@ -295,7 +309,7 @@ export async function resolveCreatorAndAddresses(
 }
 
 export function calculateStatsForRecipientAddress(
-  donations: DonationData[],
+  donations: StoredDonationData[],
 ): RecipientDonationStats {
   const donorsAddress = donations.map((donation) =>
     donation.fromAddress.toLowerCase(),
@@ -304,6 +318,7 @@ export function calculateStatsForRecipientAddress(
   const totalDonationsCount = donations.length;
   const biggestDonation =
     donations.length > 0 ? Math.max(...donations.map((d) => d.tradeValue)) : 0;
+
   const donationsWithTimeAndAmount = donations.map((donation) => {
     const timestamp = donation.timestamp;
     const date = new Date(timestamp);
@@ -319,21 +334,47 @@ export function calculateStatsForRecipientAddress(
   });
 
   const earningsByToken: Record<string, TokenEarnings> = {};
+  let collectiblesEarnings: TokenEarnings | null = null;
+
   for (const donation of donations) {
-    const key = donation.token.symbol;
+    if (donation.kind === 'token') {
+      const key = donation.token.symbol;
 
-    if (!earningsByToken[key]) {
-      earningsByToken[key] = {
-        tokenData: donation.token,
-        totalAmount: 0,
-        donationCount: 0,
-      };
+      if (!earningsByToken[key]) {
+        earningsByToken[key] = {
+          tokenData: donation.token,
+          totalAmount: 0,
+          donationCount: 0,
+        };
+      }
+
+      earningsByToken[key].totalAmount += donation.tradeValue;
+      earningsByToken[key].donationCount += 1;
+    } else {
+      // Batch all collectibles into one synthetic bucket
+      if (!collectiblesEarnings) {
+        collectiblesEarnings = {
+          tokenData: {
+            symbol: 'NFT',
+            name: 'Collectibles',
+            imageUrl: '',
+            decimals: 0,
+            address: '' as Hex,
+            network: '',
+          },
+          totalAmount: 0,
+          donationCount: 0,
+        };
+      }
+      collectiblesEarnings.totalAmount += donation.tradeValue;
+      collectiblesEarnings.donationCount += 1;
     }
-
-    earningsByToken[key].totalAmount += donation.tradeValue;
-    earningsByToken[key].donationCount += 1;
   }
-  const earningsByTokenOverview = Object.values(earningsByToken);
+
+  const earningsByTokenOverview = [
+    ...Object.values(earningsByToken),
+    ...(collectiblesEarnings ? [collectiblesEarnings] : []),
+  ];
 
   return {
     distinctDonorsCount,
@@ -359,7 +400,7 @@ export function calculateStatsForRecipientAddress(
  * Address itself is NOT modified.
  */
 export function enrichDonationsWithCreatorInfo(
-  donations: DonationData[],
+  donations: StoredDonationData[],
   addressToCreatorMap: Map<string, Creator>,
 ) {
   const normalise = (addr: string) => addr.toLowerCase();
