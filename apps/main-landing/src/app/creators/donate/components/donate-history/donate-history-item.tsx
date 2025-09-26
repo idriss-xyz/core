@@ -128,7 +128,7 @@ export const DonateHistoryItem = ({
               {!isTokenDonation && tradeValue === 0 ? (
                 <div className="flex items-center gap-x-1">
                   <Badge type="success" variant="subtle">
-                    -
+                    –
                   </Badge>
                   <TooltipProvider delayDuration={400}>
                     <Tooltip>

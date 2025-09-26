@@ -306,7 +306,31 @@ export default function EarningsStats() {
                             </span>
                           </td>
                           <td className="text-right align-middle text-sm font-medium text-black">
-                            {formatFiatValue(item.totalAmount)}
+                            {item.tokenData.symbol === 'NFT' &&
+                            item.totalAmount === 0 ? (
+                              <div className="inline-flex items-center gap-1">
+                                <span>–</span>
+                                <TooltipProvider delayDuration={400}>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Icon
+                                        className="text-neutral-600"
+                                        name="HelpCircle"
+                                        size={12}
+                                      />
+                                    </TooltipTrigger>
+                                    <TooltipContent className="bg-black text-center text-white">
+                                      <p>
+                                        This collectible had no market offers at
+                                        the time of receiving
+                                      </p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                              </div>
+                            ) : (
+                              formatFiatValue(item.totalAmount)
+                            )}
                           </td>
                         </tr>
                       );
