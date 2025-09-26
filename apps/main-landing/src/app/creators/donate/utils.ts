@@ -9,6 +9,8 @@ export const getSendFormDefaultValues = (
 ): FormPayload => {
   return {
     amount: 1,
+    tokenAmount: 1,
+    collectibleAmount: 1,
     message: '',
     sfx: '',
     chainId: defaultChainId,

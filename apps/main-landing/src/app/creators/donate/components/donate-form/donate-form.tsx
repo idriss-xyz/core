@@ -127,7 +127,7 @@ const TokenTabContent = ({
   return (
     <div>
       <Controller
-        name="amount"
+        name="tokenAmount"
         control={formMethods.control}
         render={({ field }) => {
           return (
@@ -369,16 +369,21 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
     const { reset } = formMethods;
 
     useEffect(() => {
-      const currentAmount = formMethods.getValues('amount');
+      const currentTokenAmount = formMethods.getValues('tokenAmount');
+      const currentCollectibleAmount =
+        formMethods.getValues('collectibleAmount');
       const currentMessage = formMethods.getValues('message');
       const defaultValues = getSendFormDefaultValues(
         defaultChainId,
         selectedTokenSymbol,
       );
 
-      // Preserve the current amount and message if they exist
-      if (currentAmount !== undefined) {
-        defaultValues.amount = currentAmount;
+      // Preserve the current amounts and message if they exist
+      if (currentTokenAmount !== undefined) {
+        defaultValues.tokenAmount = currentTokenAmount;
+      }
+      if (currentCollectibleAmount !== undefined) {
+        defaultValues.collectibleAmount = currentCollectibleAmount;
       }
       if (currentMessage !== undefined) {
         defaultValues.message = currentMessage;
@@ -406,12 +411,17 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       creatorInfo.tokenEnabled,
     ]);
 
-    const [chainId, tokenSymbol, amount, sfx] = formMethods.watch([
-      'chainId',
-      'tokenSymbol',
-      'amount',
-      'sfx',
-    ]);
+    const [chainId, tokenSymbol, tokenAmount, collectibleAmount, sfx] =
+      formMethods.watch([
+        'chainId',
+        'tokenSymbol',
+        'tokenAmount',
+        'collectibleAmount',
+        'sfx',
+      ]);
+
+    // Derive the current amount based on active tab
+    const amount = activeTab === 'token' ? tokenAmount : collectibleAmount;
 
     const sendDonationEffects = useCallback(
       async (txHash: string) => {
@@ -515,10 +525,19 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
 
     // Reset SFX when amount falls below the minimum
     useEffect(() => {
-      if (amount && amount < minimumSfxAmount && sfx) {
+      const currentAmount =
+        activeTab === 'token' ? tokenAmount : collectibleAmount;
+      if (currentAmount && currentAmount < minimumSfxAmount && sfx) {
         formMethods.setValue('sfx', '');
       }
-    }, [amount, sfx, formMethods, minimumSfxAmount]);
+    }, [
+      tokenAmount,
+      collectibleAmount,
+      activeTab,
+      sfx,
+      formMethods,
+      minimumSfxAmount,
+    ]);
     const selectedToken = useMemo(() => {
       const token = possibleTokens?.find((token) => {
         return token.symbol === tokenSymbol;
@@ -599,8 +618,22 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
 
         rest.message = ' ' + rest.message;
 
+        // Set the amount based on active tab for the SendPayload
+        const finalAmount =
+          activeTab === 'token'
+            ? payload.tokenAmount
+            : payload.collectibleAmount;
+
+        console.log(
+          'finalAmount, tokenAmount and collectibleAmount',
+          finalAmount,
+          payload.tokenAmount,
+          payload.collectibleAmount,
+        );
+
         const sendPayload: SendPayload = {
           ...rest,
+          amount: finalAmount, // Use the derived amount
           chainId,
           tokenAddress,
           type,
@@ -812,7 +845,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                     children: (
                       <CollectibleTabContent
                         selectedCollectible={selectedCollectible}
-                        amount={amount}
+                        amount={collectibleAmount}
                         setSelectedCollectible={setSelectedCollectible}
                         setIsCollectibleModalOpen={setIsCollectibleModalOpen}
                         isConnected={isConnected}
@@ -839,7 +872,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                 {creatorInfo.collectibleEnabled && (
                   <CollectibleTabContent
                     selectedCollectible={selectedCollectible}
-                    amount={amount}
+                    amount={collectibleAmount}
                     setSelectedCollectible={setSelectedCollectible}
                     setIsCollectibleModalOpen={setIsCollectibleModalOpen}
                     isConnected={isConnected}
@@ -1042,7 +1075,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                 formMethods.setValue('tokenId', collectible.tokenId);
                 formMethods.setValue('contract', collectible.contract);
                 formMethods.setValue('type', collectible.type ?? 'erc1155');
-                formMethods.setValue('amount', collectible.amount);
+                formMethods.setValue('collectibleAmount', collectible.amount);
                 setSelectedCollectible({
                   tokenId: collectible.tokenId,
                   name: collectible.name,
