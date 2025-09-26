@@ -19,10 +19,10 @@ export default function RankingLayout({
       isActive: pathname === '/creators/app/ranking/top-creators',
     },
     {
-      name: 'Top donors',
-      href: '/creators/app/ranking/top-donors',
-      iconName: 'Trophy',
-      isActive: pathname === '/creators/app/ranking/top-donors',
+      name: 'Top fans',
+      href: '/creators/app/ranking/top-fans',
+      iconName: 'Star',
+      isActive: pathname === '/creators/app/ranking/top-fans',
     },
   ];
 

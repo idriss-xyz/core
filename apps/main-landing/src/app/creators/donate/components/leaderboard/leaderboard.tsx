@@ -116,7 +116,7 @@ export const Leaderboard = ({
         <span className="absolute left-0 top-0 size-full bg-black/20" />
 
         <h1 className="relative z-1 mx-12 my-6 text-center text-heading4 uppercase text-white">
-          Top donors
+          Top fans
         </h1>
       </div>
 

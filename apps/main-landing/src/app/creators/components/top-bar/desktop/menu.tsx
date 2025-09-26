@@ -39,7 +39,7 @@ export const Menu = ({ className }: Properties) => {
                   asLink
                   className="uppercase"
                 >
-                  Top donors
+                  Top fans
                 </Button>
               </Link>
             </span>

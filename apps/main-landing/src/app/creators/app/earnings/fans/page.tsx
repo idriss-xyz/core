@@ -74,7 +74,7 @@ export default function TopDonors() {
           data: address ?? null,
           isFetching: false,
         }}
-        title="Top Donors"
+        title="My Fans"
         variant="creatorsDashboard"
         className="overflow-hidden px-0 shadow-lg"
         activeFilter={activeFilter}
