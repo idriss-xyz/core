@@ -369,7 +369,22 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
     const { reset } = formMethods;
 
     useEffect(() => {
-      reset(getSendFormDefaultValues(defaultChainId, selectedTokenSymbol));
+      const currentAmount = formMethods.getValues('amount');
+      const currentMessage = formMethods.getValues('message');
+      const defaultValues = getSendFormDefaultValues(
+        defaultChainId,
+        selectedTokenSymbol,
+      );
+
+      // Preserve the current amount and message if they exist
+      if (currentAmount !== undefined) {
+        defaultValues.amount = currentAmount;
+      }
+      if (currentMessage !== undefined) {
+        defaultValues.message = currentMessage;
+      }
+
+      reset(defaultValues);
 
       sender.resetBalance();
       setSelectedCollectible(null);
@@ -489,8 +504,15 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       async (txHash: string) => {
         await sendDonationEffects(txHash);
         await syncDonation();
+        reset(getSendFormDefaultValues(defaultChainId, selectedTokenSymbol));
       },
-      [sendDonationEffects, syncDonation],
+      [
+        sendDonationEffects,
+        syncDonation,
+        defaultChainId,
+        selectedTokenSymbol,
+        reset,
+      ],
     );
 
     const sender = useSender({
@@ -624,11 +646,17 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
 
       // Handle pending form submission after connection
       if (isConnected && pendingFormSubmission && walletClient) {
-        formMethods.handleSubmit(onSubmit)();
+        void formMethods.handleSubmit(onSubmit)();
         setPendingFormSubmission(false);
       }
-    }, [isConnected, pendingCollectibleModal, pendingFormSubmission, formMethods, walletClient, onSubmit]);
-
+    }, [
+      isConnected,
+      pendingCollectibleModal,
+      pendingFormSubmission,
+      formMethods,
+      walletClient,
+      onSubmit,
+    ]);
 
     if (!creatorInfo.address.isValid && !creatorInfo.address.isFetching) {
       return (
@@ -917,31 +945,30 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
             />
           )}
 
-
-            <Tooltip>
-              <TooltipTrigger className="w-full">
-                <Button
-                  size="medium"
-                  type="submit"
-                  intent="primary"
-                  className="mt-6 w-full"
-                  prefixIconName="Coins"
-                  disabled={activeTab === 'collectible' && !selectedCollectible}
-                >
-                  Donate
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent
-                hidden={
-                  (activeTab === 'collectible' && selectedCollectible != null) ||
-                  activeTab === 'token'
-                }
-                className="z-portal bg-black text-white"
-                side="bottom"
+          <Tooltip>
+            <TooltipTrigger className="w-full">
+              <Button
+                size="medium"
+                type="submit"
+                intent="primary"
+                className="mt-6 w-full"
+                prefixIconName="Coins"
+                disabled={activeTab === 'collectible' && !selectedCollectible}
               >
-                <p className="text-body6">Select a collectible first</p>
-              </TooltipContent>
-            </Tooltip>
+                Donate
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent
+              hidden={
+                (activeTab === 'collectible' && selectedCollectible != null) ||
+                activeTab === 'token'
+              }
+              className="z-portal bg-black text-white"
+              side="bottom"
+            >
+              <p className="text-body6">Select a collectible first</p>
+            </TooltipContent>
+          </Tooltip>
           {submitError && (
             <div className="mt-1 flex items-start gap-x-1 text-label7 text-red-500 lg:text-label6">
               <Icon name="AlertCircle" size={16} className="p-px" />
