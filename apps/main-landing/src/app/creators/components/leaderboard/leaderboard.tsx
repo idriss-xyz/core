@@ -234,7 +234,7 @@ export const Leaderboard = ({
         <span className="absolute left-0 top-0 size-full bg-black/20" />
 
         <h1 className="relative z-1 mx-12 mb-4 mt-12 text-center text-heading4 uppercase text-white">
-          {title ?? 'Top donors'}
+          {title ?? 'Top fans'}
         </h1>
         {isCreatorsDashboard && (
           <div className="relative mx-auto flex w-[290px] gap-1 font-medium">
@@ -309,10 +309,10 @@ export const Leaderboard = ({
                     ) : (
                       <div className="mx-auto flex min-h-[694px] w-[477px] flex-col items-center justify-center gap-4">
                         <span className="text-center text-heading6 uppercase text-neutral-900">
-                          No donors yet
+                          No fans yet
                         </span>
                         <span className="mx-8 text-center text-display5 uppercase gradient-text">
-                          Share your page to get your first donor
+                          Share your page to get your first fan
                         </span>
                         <CopyButton
                           text={creator?.donationUrl ?? ''}

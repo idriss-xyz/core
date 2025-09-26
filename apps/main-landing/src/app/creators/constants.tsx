@@ -51,7 +51,7 @@ export const siteMap: SiteMapItem[] = [
     children: [
       { name: 'Stats & history', path: 'stats-and-history' },
       { name: 'Balance', path: 'balance' },
-      { name: 'Top donors', path: 'top-donors' },
+      { name: 'Fans', path: 'fans' },
     ],
   },
   {
@@ -72,7 +72,7 @@ export const siteMap: SiteMapItem[] = [
     path: 'ranking',
     children: [
       { name: 'Top creators', path: 'top-creators' },
-      { name: 'Top donors', path: 'top-donors' },
+      { name: 'Top fans', path: 'top-fans' },
     ],
   },
 ];

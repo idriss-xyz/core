@@ -20,7 +20,7 @@ router.get('/:address', async (req: Request, res: Response) => {
         'utf-8',
       ),
     );
-    res.json(mockBalances);
+    res.json({ tokenResult: mockBalances });
     return;
   }
 
@@ -46,11 +46,11 @@ router.get('/nft/:address', async (req: Request, res: Response) => {
   if (address && address === DEMO_ADDRESS) {
     const mockBalances = JSON.parse(
       readFileSync(
-        resolve(__dirname, '../tests/test-data/mock-balances.json'),
+        resolve(__dirname, '../tests/test-data/mock-nft-balances.json'),
         'utf-8',
       ),
     );
-    res.json({ nftResult: { balances: mockBalances.nfts } });
+    res.json({ nftResult: mockBalances });
     return;
   }
 
