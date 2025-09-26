@@ -18,6 +18,7 @@ import { useMemo } from 'react';
 import { formatFiatValue } from '@idriss-xyz/utils';
 import { usePrivy } from '@privy-io/react-auth';
 import { Hex } from 'viem';
+import { classes } from '@idriss-xyz/ui/utils';
 
 import { backgroundLines2, IDRISS_COIN, IDRISS_SCENE_STREAM_4 } from '@/assets';
 import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history';
@@ -159,29 +160,47 @@ export default function EarningsStats() {
                     className="w-[198px] transition-all duration-300 ease-in-out 2xl:w-[220px]"
                   />
                 </div>
-                <span className="pointer-events-none absolute left-2 top-12 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-black">
+                <span
+                  className={classes(
+                    'pointer-events-none absolute left-2 top-12 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-black',
+                  )}
+                >
                   <Icon
                     size={24}
                     name="HandCoins"
-                    className="mr-1 rounded-full bg-mint-600 p-1 text-white"
+                    className={classes(
+                      'mr-1 rounded-full bg-mint-600 p-1 text-white',
+                    )}
                   />
                   {stats.totalDonationsCount} donation
                   {stats.totalDonationsCount !== 1 && 's'}
                 </span>
-                <span className="pointer-events-none absolute right-2 top-8 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-mint-900">
+                <span
+                  className={classes(
+                    'pointer-events-none absolute right-2 top-8 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-mint-900',
+                  )}
+                >
                   <Icon
                     size={24}
                     name="Users2"
-                    className="mr-1 rounded-full bg-mint-600 p-1 text-white"
+                    className={classes(
+                      'mr-1 rounded-full bg-mint-600 p-1 text-white',
+                    )}
                   />
                   {stats.distinctDonorsCount} donor
                   {stats.distinctDonorsCount !== 1 && 's'}
                 </span>
-                <span className="pointer-events-none absolute bottom-4 right-2 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-mint-900">
+                <span
+                  className={classes(
+                    'pointer-events-none absolute bottom-4 right-2 flex items-center justify-center rounded-full bg-mint-200 px-2 py-1.5 font-medium text-mint-900',
+                  )}
+                >
                   <Icon
                     size={24}
                     name="TrendingUp"
-                    className="mr-1 rounded-full bg-mint-600 p-1 text-white"
+                    className={classes(
+                      'mr-1 rounded-full bg-mint-600 p-1 text-white',
+                    )}
                   />
                   {formatFiatValue(stats.biggestDonation)} largest donation
                 </span>
@@ -192,7 +211,7 @@ export default function EarningsStats() {
             <CardHeader className="flex items-start justify-between text-neutral-900">
               Total earnings
               <div className="flex items-center gap-2">
-                <span className="text-heading3 text-black">
+                <span className={classes('text-heading3 text-black')}>
                   {formatFiatValue(totalEarnings)}
                 </span>
                 <TooltipProvider delayDuration={400}>
@@ -237,7 +256,7 @@ export default function EarningsStats() {
                         formatter={(value) => {
                           return `${formatFiatValue(Number(value))}`;
                         }}
-                        className="text-label4 font-medium"
+                        className={classes('text-label4 font-medium')}
                       />
                     }
                   />
@@ -266,13 +285,23 @@ export default function EarningsStats() {
                       />
                     </div>
                     <div className="flex flex-col gap-2">
-                      <span className="w-fit rounded-full bg-mint-200 px-1 text-xs font-medium text-mint-700">
+                      <span
+                        className={classes(
+                          'w-fit rounded-full bg-mint-200 px-1 text-xs font-medium text-mint-700',
+                        )}
+                      >
                         {mainAsset.donationCount} donation
                         {mainAsset.donationCount !== 1 && 's'}
                       </span>
-                      <span className="flex items-center text-label1 text-black">
+                      <span
+                        className={classes(
+                          'flex items-center text-label1 text-black',
+                        )}
+                      >
                         {formatFiatValue(mainAsset.totalAmount)}{' '}
-                        <span className="ml-2 text-body4 text-gray-300">
+                        <span
+                          className={classes('ml-2 text-body4 text-gray-300')}
+                        >
                           {mainAsset.tokenData.symbol}
                         </span>
                       </span>
@@ -300,7 +329,11 @@ export default function EarningsStats() {
                             </span>
                           </td>
                           <td>
-                            <span className="w-fit rounded-full bg-mint-200 px-1 py-0.5 text-xs font-medium text-mint-700">
+                            <span
+                              className={classes(
+                                'w-fit rounded-full bg-mint-200 px-1 py-0.5 text-xs font-medium text-mint-700',
+                              )}
+                            >
                               {item.donationCount} donation
                               {item.donationCount !== 1 && 's'}
                             </span>
@@ -402,10 +435,18 @@ export default function EarningsStats() {
           </Card>
           <Card className="col-span-3">
             <div className="mx-auto flex min-h-[694px] w-[477px] flex-col items-center justify-center gap-4">
-              <span className="text-center text-heading6 uppercase text-neutral-900">
+              <span
+                className={classes(
+                  'text-center text-heading6 uppercase text-neutral-900',
+                )}
+              >
                 No donations yet
               </span>
-              <span className="mx-8 text-center text-display5 uppercase gradient-text">
+              <span
+                className={classes(
+                  'mx-8 text-center text-display5 uppercase gradient-text',
+                )}
+              >
                 Share your page to get your first donation
               </span>
               <CopyButton

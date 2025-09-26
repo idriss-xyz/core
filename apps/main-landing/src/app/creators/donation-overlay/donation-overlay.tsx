@@ -18,6 +18,7 @@ import {
 import { clients } from '@idriss-xyz/blockchain-clients';
 import { FullscreenOverlay } from '@idriss-xyz/ui/fullscreen-overlay';
 import { ExternalLink } from '@idriss-xyz/ui/external-link';
+import { classes } from '@idriss-xyz/ui/utils';
 
 import { CHAIN_TO_IDRISS_TIPPING_ADDRESS } from '../donate/constants';
 import { useCreators } from '../hooks/use-creators';
@@ -313,17 +314,6 @@ export default function DonationOverlay({ creatorName }: Properties) {
             assetId: bigint;
           };
 
-          console.log(
-            'Found donation props',
-            recipientAddress,
-            message,
-            amount,
-            assetType,
-            typeof assetType,
-            assetId,
-            tokenAddress,
-          );
-
           if (recipientAddress.toLowerCase() !== address?.data.toLowerCase())
             continue;
 
@@ -334,8 +324,6 @@ export default function DonationOverlay({ creatorName }: Properties) {
 
           const { profilePicUrl, name: resolvedName } =
             await getCreatorNameAndPicOrAnon(sender);
-
-          console.log(profilePicUrl, name);
 
           const effectiveTokenAddress =
             tokenAddress === NULL_ADDRESS ? NATIVE_COIN_ADDRESS : tokenAddress;
@@ -350,8 +338,6 @@ export default function DonationOverlay({ creatorName }: Properties) {
             console.log('Filtered donation with inappropriate sfx text');
             continue; // skip this log
           }
-
-          console.log('post checks');
 
           const isToken = assetType <= 1 && assetId === BigInt(0);
 
@@ -405,14 +391,6 @@ export default function DonationOverlay({ creatorName }: Properties) {
             assetType,
           );
 
-          console.log('data found', name, nftName, nftImage);
-
-          console.log('Using nft add donation with', {
-            id: assetId,
-            name: nftName,
-            logo: nftImage,
-            collectionName,
-          });
           addDonation({
             avatarUrl: profilePicUrl,
             message: message ?? '',
@@ -505,12 +483,20 @@ export default function DonationOverlay({ creatorName }: Properties) {
       </div>
       {isLegacyLink && (
         <FullscreenOverlay className="bg-[#E7F5E6]/[0.6] backdrop-blur-sm">
-          <p className="text-balance text-center text-heading5 text-neutralGreen-700">
+          <p
+            className={classes(
+              'text-balance text-center text-heading5 text-neutralGreen-700',
+            )}
+          >
             This is a legacy donation overlay. Set up your account in
           </p>
-          <p className="text-balance text-center text-heading5 text-neutralGreen-700">
+          <p
+            className={classes(
+              'text-balance text-center text-heading5 text-neutralGreen-700',
+            )}
+          >
             <ExternalLink
-              className="text-mint-600 underline"
+              className={classes('text-mint-600 underline')}
               href={CREATORS_LINK}
             >
               IDRISS Creators&nbsp;v2
