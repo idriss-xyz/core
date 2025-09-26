@@ -98,7 +98,6 @@ export async function getNftMetadata(
   }
 
   const function_ = assetType === 2 ? 'tokenURI' : 'uri';
-  console.log('Calling', function_, 'on', contract);
   let uri: string | undefined;
   try {
     uri = await client.readContract({
@@ -124,8 +123,7 @@ export async function getNftMetadata(
     if (img?.startsWith('ipfs://'))
       img = img.replace('ipfs://', 'https://ipfs.io/ipfs/');
     return { name: meta.name ?? 'NFT', image: img, collectionName };
-  } catch (error) {
-    console.log('error in metadata', error);
+  } catch {
     return { name: 'NFT', image: undefined, collectionName };
   }
 }

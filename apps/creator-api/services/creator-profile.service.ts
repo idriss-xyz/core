@@ -69,7 +69,9 @@ class CreatorProfileService {
     donationParameters.sfxEnabled = sfxEnabled;
     donationParameters.collectibleEnabled = collectibleEnabled;
     donationParameters.tokenEnabled = tokenEnabled;
-    donationParameters.customBadWords = customBadWords;
+    donationParameters.customBadWords = Array.isArray(customBadWords)
+      ? customBadWords
+      : [];
 
     const creatorRepository = AppDataSource.getRepository(Creator);
     const donationParamsRepository =
