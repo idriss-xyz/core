@@ -335,6 +335,8 @@ export default function DonationOverlay({ creatorName }: Properties) {
           const { profilePicUrl, name: resolvedName } =
             await getCreatorNameAndPicOrAnon(sender);
 
+          console.log(profilePicUrl, name);
+
           const effectiveTokenAddress =
             tokenAddress === NULL_ADDRESS ? NATIVE_COIN_ADDRESS : tokenAddress;
 
@@ -349,7 +351,9 @@ export default function DonationOverlay({ creatorName }: Properties) {
             continue; // skip this log
           }
 
-          const isToken = assetType <= 1n && assetId === 0n;
+          console.log('post checks');
+
+          const isToken = assetType <= 1 && assetId === BigInt(0);
 
           if (isToken) {
             const amountInDollar = await calculateDollar(
@@ -400,6 +404,8 @@ export default function DonationOverlay({ creatorName }: Properties) {
             assetId,
             assetType,
           );
+
+          console.log('data found', name, nftName, nftImage);
 
           console.log('Using nft add donation with', {
             id: assetId,
