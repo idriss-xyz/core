@@ -8,7 +8,7 @@ const symbolToIconNameMap: Record<string, IconName> = {
   PDT: 'PdtToken',
   RON: 'RoninToken',
   YGG: 'YggToken',
-  NFT: 'Card',
+  NFT: 'CardCoin',
   // AVAX: 'AvaxToken',
   // GUN: 'GunToken',
 };
