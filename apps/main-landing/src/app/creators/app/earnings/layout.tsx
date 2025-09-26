@@ -28,7 +28,7 @@ export default function EarningsLayout({
     {
       name: 'Top donors',
       href: '/creators/app/earnings/top-donors',
-      iconName: 'Trophy',
+      iconName: 'Users2',
       isActive: pathname === '/creators/app/earnings/top-donors',
     },
   ];

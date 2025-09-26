@@ -67,7 +67,7 @@ export function DonatePageAvatarMenu() {
                     className="text-neutral-600 group-hover:text-mint-600"
                   />
                   <span className="max-h-[54px] min-h-[24px] min-w-[184px] max-w-[214px] text-body4 text-neutral-900 group-hover:text-mint-600">
-                    stats & history
+                    Stats & history
                   </span>
                 </div>
                 <div
