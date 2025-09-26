@@ -37,6 +37,9 @@ export const useGetTipHistory = (payload: Payload, options?: Options) => {
     queryFn: () => {
       return getDonateHistory({ address: payload.address });
     },
+    staleTime: 1000 * 60 * 5,
+    retry: 2,
+    retryDelay: 5000,
     ...options,
   });
 };

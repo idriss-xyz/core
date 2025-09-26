@@ -20,14 +20,16 @@ import {
   getChainLogoById,
   getNetworkKeyByChainId,
 } from '@idriss-xyz/utils';
+import { useQueryClient } from '@tanstack/react-query';
 
 import {
   ChainSelect,
   TokenSelect,
 } from '../../donate/components/donate-form/components';
 import { TokenLogo } from '../../app/earnings/stats-and-history/token-logo';
+import { useAuth } from '../../context/auth-context';
 
-import { useWithdrawal } from './use-withdrawal';
+import { useWithdrawal } from './hooks/use-withdrawal';
 import { IdrissWithdraw } from './widget';
 
 type WithdrawFormValues = {
@@ -67,6 +69,8 @@ export const WithdrawWidget = ({
   const [visualAmount, setVisualAmount] = useState<string>();
   const [isMaxAmount, setIsMaxAmount] = useState(false);
   const [gasLoading, setGasLoading] = useState(false);
+  const queryClient = useQueryClient();
+  const { creator } = useAuth();
 
   const formMethods = useForm<WithdrawFormValues>({
     defaultValues: {
@@ -83,7 +87,13 @@ export const WithdrawWidget = ({
     resetWithdrawal();
     setVisualAmount(undefined);
     setIsMaxAmount(false);
-  }, [onClose, formMethods, resetWithdrawal]);
+    void queryClient.invalidateQueries({
+      queryKey: ['collectible-balances', creator?.address],
+    });
+    void queryClient.invalidateQueries({
+      queryKey: ['token-balances', creator?.address],
+    });
+  }, [onClose, formMethods, resetWithdrawal, queryClient, creator]);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -199,7 +209,7 @@ export const WithdrawWidget = ({
         }, 0);
 
       map[id] = (
-        <span className="text-label6 text-neutral-600">
+        <span className={classes('text-label6 text-neutral-600')}>
           ↳{formatFiatValue(usd)}
         </span>
       );
@@ -317,7 +327,7 @@ export const WithdrawWidget = ({
               heading={
                 <>
                   Withdrawing{' '}
-                  <span className="text-mint-600">
+                  <span className={classes('text-mint-600')}>
                     {formatFiatValue(amount)}
                   </span>{' '}
                   (
@@ -374,7 +384,11 @@ export const WithdrawWidget = ({
                                 name: name!,
                                 logo: imageUrl!,
                                 suffix: (
-                                  <span className="text-label6 text-neutral-600">
+                                  <span
+                                    className={classes(
+                                      'text-label6 text-neutral-600',
+                                    )}
+                                  >
                                     {formatFiatValue(
                                       balances
                                         .filter((b) => {
@@ -399,7 +413,11 @@ export const WithdrawWidget = ({
                           renderRight={() => {
                             return (
                               <div className="flex flex-col items-end rounded-[4px] bg-neutral-200 px-1 py-0.5 leading-none">
-                                <span className="text-label6 text-neutral-600">
+                                <span
+                                  className={classes(
+                                    'text-label6 text-neutral-600',
+                                  )}
+                                >
                                   {formatFiatValue(totalBalanceOfTokenInUSD)}
                                 </span>
                               </div>
@@ -431,7 +449,11 @@ export const WithdrawWidget = ({
                             renderRight={() => {
                               return selectedBalance ? (
                                 <div className="flex flex-col items-end rounded-[4px] bg-neutral-200 px-1 py-0.5 leading-none">
-                                  <span className="text-label6 text-neutral-600">
+                                  <span
+                                    className={classes(
+                                      'text-label6 text-neutral-600',
+                                    )}
+                                  >
                                     ↳{formatFiatValue(selectedBalance.usdValue)}
                                   </span>
                                 </div>
@@ -449,7 +471,7 @@ export const WithdrawWidget = ({
                     rules={{
                       validate: (value) => {
                         if (value <= 0) {
-                          return 'Amount must be greater than zero.';
+                          return 'Amount must be greater than zero';
                         }
                         if (value > totalBalanceOfTokenInUSD) {
                           return `Not enough ${tokenSymbol} in your wallet. Add funds to continue.`;
@@ -514,31 +536,51 @@ export const WithdrawWidget = ({
                 <>
                   <div className="flex flex-col gap-[10px] px-6 py-4">
                     <div className="flex flex-col gap-1">
-                      <span className="text-label4">Selected asset</span>
-                      <div className="flex flex-row items-center gap-[10px] text-label4">
+                      <span className={classes('text-label4')}>
+                        Selected asset
+                      </span>
+                      <div
+                        className={classes(
+                          'flex flex-row items-center gap-[10px] text-label4',
+                        )}
+                      >
                         <div className="h-6">
                           <TokenLogo symbol={tokenSymbol} />
                         </div>
-                        <span className="text-body4 text-neutralGreen-900">
+                        <span
+                          className={classes(
+                            'text-body4 text-neutralGreen-900',
+                          )}
+                        >
                           {tokenSymbol}
                         </span>
                         <span className="hidden">{tokenAddress}</span>{' '}
-                        <span className="rounded-[4px] bg-mint-200 px-1 text-label6 text-mint-700">
+                        <span
+                          className={classes(
+                            'rounded-[4px] bg-mint-200 px-1 text-label6 text-mint-700',
+                          )}
+                        >
                           {formatFiatValue(amount)}
                         </span>
                       </div>
                     </div>
                     <div className="flex flex-col gap-1">
-                      <span className="text-label4 text-neutralGreen-900">
+                      <span
+                        className={classes('text-label4 text-neutralGreen-900')}
+                      >
                         Selected network
                       </span>
-                      <div className="flex flex-row gap-[10px] text-label4">
+                      <div
+                        className={classes(
+                          'flex flex-row gap-[10px] text-label4',
+                        )}
+                      >
                         <img
                           src={getChainLogoById(chainId)}
                           className="size-6 rounded-full"
                           alt=""
                         />{' '}
-                        <span className="text-body4">
+                        <span className={classes('text-body4')}>
                           {getChainById(chainId)?.name}
                         </span>
                       </div>
@@ -587,7 +629,11 @@ export const WithdrawWidget = ({
                   {step === 1 ? 'Continue' : 'Withdraw'}
                 </Button>
                 {formError && (
-                  <div className="mt-1 flex items-start gap-x-1 text-label7 text-red-500 lg:text-label6">
+                  <div
+                    className={classes(
+                      'mt-1 flex items-start gap-x-1 text-label7 text-red-500 lg:text-label6',
+                    )}
+                  >
                     <Icon name="AlertCircle" size={16} className="p-px" />
                     <span>{formError}</span>
                   </div>

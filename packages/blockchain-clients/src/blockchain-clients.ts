@@ -9,6 +9,7 @@ import {
   linea,
   optimism,
   ronin,
+  // avalanche,
   arbitrum,
   scroll,
   zksync,
@@ -43,6 +44,11 @@ const clientRonin = createPublicClient({
   chain: ronin,
   transport: http(),
 });
+
+// const clientAvalanche = createPublicClient({
+//   chain: avalanche,
+//   transport: http(),
+// });
 
 const clientCelo = createPublicClient({
   chain: celo,
@@ -100,6 +106,11 @@ export const clients = [
     client: clientRonin,
     name: CHAIN.RONIN.shortName.toLowerCase(),
   },
+  // {
+  //   chain: CHAIN.AVALANCHE.id,
+  //   client: clientAvalanche,
+  //   name: CHAIN.AVALANCHE.shortName.toLowerCase(),
+  // },
   {
     chain: CHAIN.ABSTRACT.id,
     client: clientAbstract,

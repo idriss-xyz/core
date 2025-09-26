@@ -22,6 +22,7 @@ import {
   fetchTwitchUserInfo,
   fetchTwitchStreamStatus,
 } from '../utils/twitch-api';
+import { ILike } from 'typeorm';
 
 interface EnrichedCreatorProfile extends CreatorProfileView {
   streamStatus?: boolean;
@@ -48,6 +49,8 @@ class CreatorProfileService {
       alertEnabled,
       ttsEnabled,
       sfxEnabled,
+      collectibleEnabled = true,
+      tokenEnabled = true,
       customBadWords = [],
       tokens = DEFAULT_SUPPORTED_TOKEN_SYMBOLS,
       networks = Object.values(CREATOR_CHAIN).map((chain) => chain.shortName),
@@ -64,6 +67,8 @@ class CreatorProfileService {
     donationParameters.alertEnabled = alertEnabled;
     donationParameters.ttsEnabled = ttsEnabled;
     donationParameters.sfxEnabled = sfxEnabled;
+    donationParameters.collectibleEnabled = collectibleEnabled;
+    donationParameters.tokenEnabled = tokenEnabled;
     donationParameters.customBadWords = customBadWords;
 
     const creatorRepository = AppDataSource.getRepository(Creator);
@@ -90,6 +95,9 @@ class CreatorProfileService {
     // Create and save new creator
     const savedCreator = await creatorRepository.save(creator);
 
+    donationParameters.customBadWords = customBadWords;
+    donationParameters.collectibleEnabled = collectibleEnabled;
+    donationParameters.tokenEnabled = tokenEnabled;
     donationParameters.creator = savedCreator;
 
     // Create and save donation parameters with creator reference
@@ -123,7 +131,9 @@ class CreatorProfileService {
   }
 
   async getProfileByName(name: string): Promise<EnrichedCreatorProfile | null> {
-    const profile = await this.profileRepository.findOne({ where: { name } });
+    const profile = await this.profileRepository.findOne({
+      where: { name: ILike(name) },
+    });
     if (!profile) return null;
     return this.enrichWithTwitchData(profile);
   }

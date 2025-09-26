@@ -1,7 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
+import { Tabs } from '@idriss-xyz/ui/tabs';
+import { Modal } from '@idriss-xyz/ui/modal';
+import { Input } from '@idriss-xyz/ui/input';
 import { Form } from '@idriss-xyz/ui/form';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import {
+  Controller,
+  SubmitHandler,
+  useForm,
+  UseFormReturn,
+} from 'react-hook-form';
 import { Badge } from '@idriss-xyz/ui/badge';
 import { Button } from '@idriss-xyz/ui/button';
 import { Link } from '@idriss-xyz/ui/link';
@@ -39,6 +47,7 @@ import {
 import { ExternalLink } from '@idriss-xyz/ui/external-link';
 import { getAddress } from 'viem';
 import { getAccessToken } from '@privy-io/react-auth';
+import { IconButton } from '@idriss-xyz/ui/icon-button';
 
 import { backgroundLines3 } from '@/assets';
 import { useAuth } from '@/app/creators/context/auth-context';
@@ -50,9 +59,200 @@ import {
 } from '../../schema';
 import { getSendFormDefaultValues } from '../../utils';
 import { useSender } from '../../hooks';
-import { CreatorProfile } from '../../types';
+import { useMobileFilter } from '../../hooks/use-mobile-filter';
+import { Collectible, CreatorProfile } from '../../types';
+import { SenderReturnType } from '../../hooks/use-sender';
 
-import { ChainSelect, TokenSelect } from './components';
+import {
+  ChainSelect,
+  CollectibleGallery,
+  LayersBadge,
+  TokenSelect,
+} from './components';
+
+const SelectCollectibleButton = ({
+  isConnected,
+  openConnectModal,
+  setIsCollectibleModalOpen,
+}: {
+  isConnected: boolean;
+  openConnectModal?: () => void;
+  setIsCollectibleModalOpen: (open: boolean) => void;
+}) => {
+  return (
+    <div
+      className="group flex cursor-pointer flex-col items-center justify-center gap-[10px] rounded-2xl border border-neutral-300 bg-neutral-100 px-12 py-6 hover:border-mint-600"
+      onClick={() => {
+        if (!isConnected) {
+          openConnectModal?.();
+          return;
+        }
+        return setIsCollectibleModalOpen(true);
+      }}
+    >
+      <IconButton
+        intent="tertiary"
+        size="medium"
+        iconName="Card"
+        iconClassName="size-6 group-hover:text-mint-600"
+        className="size-12 rounded-xl border border-neutral-200 bg-white"
+      />
+      <span className="text-label5 text-neutral-900 group-hover:text-mint-600">
+        Select a collectible
+      </span>
+    </div>
+  );
+};
+
+const TokenTabContent = ({
+  formMethods,
+  defaultTokenSymbol,
+  possibleTokens,
+  allowedChainsIds,
+  sender,
+  selectedTokenSymbol,
+  activeTab,
+}: {
+  formMethods: UseFormReturn<FormPayload, undefined>;
+  defaultTokenSymbol: string;
+  possibleTokens: Token[];
+  allowedChainsIds: number[];
+  sender: SenderReturnType;
+  selectedTokenSymbol: string;
+  activeTab: string;
+}) => {
+  return (
+    <div>
+      <Controller
+        name="amount"
+        control={formMethods.control}
+        render={({ field }) => {
+          return (
+            <>
+              <Form.Field
+                numeric
+                {...field}
+                className="mt-6"
+                label="Amount"
+                value={field.value?.toString() ?? '1'}
+                onChange={(value) => {
+                  field.onChange(Number(value));
+                }}
+                prefixElement={<span>$</span>}
+              />
+
+              {!sender.haveEnoughBalance && (
+                <span
+                  className={classes(
+                    'flex items-center gap-x-1 pt-1 text-label7 text-red-500 lg:text-label6',
+                  )}
+                >
+                  <Icon name="AlertCircle" size={12} className="p-px" />
+                  {activeTab === 'collectible'
+                    ? 'You do not own this collectible.'
+                    : `Not enough ${selectedTokenSymbol} in your wallet. Add funds to continue.`}
+                </span>
+              )}
+            </>
+          );
+        }}
+      />
+      <Controller
+        name="tokenSymbol"
+        control={formMethods.control}
+        render={({ field }) => {
+          return (
+            <TokenSelect
+              label="Token"
+              value={field.value ?? defaultTokenSymbol}
+              className="mt-4 w-full"
+              tokens={possibleTokens}
+              onChange={field.onChange}
+            />
+          );
+        }}
+      />
+      <Controller
+        name="chainId"
+        control={formMethods.control}
+        render={({ field }) => {
+          return (
+            <ChainSelect
+              label="Network"
+              value={field.value}
+              className="mt-4 w-full"
+              onChange={field.onChange}
+              allowedChainsIds={allowedChainsIds}
+            />
+          );
+        }}
+      />
+    </div>
+  );
+};
+
+const CollectibleTabContent = ({
+  selectedCollectible,
+  amount,
+  setSelectedCollectible,
+  setIsCollectibleModalOpen,
+  isConnected,
+  openConnectModal,
+}: {
+  selectedCollectible: Collectible | null;
+  amount: number | undefined;
+  setSelectedCollectible: (collectible: Collectible | null) => void;
+  setIsCollectibleModalOpen: (open: boolean) => void;
+  isConnected: boolean;
+  openConnectModal?: () => void;
+}) => {
+  return (
+    <div className="mt-4">
+      {selectedCollectible && (
+        <div className="mb-4 flex gap-2.5 rounded-[12px] border border-neutral-200 p-2">
+          <img
+            src={selectedCollectible.image}
+            alt={selectedCollectible.name}
+            className="h-[88px] w-[72px] rounded-[12px] border-neutral-300 object-cover"
+          />
+          <div className="flex flex-1 flex-col justify-center gap-2">
+            <div className="flex flex-col gap-[6px]">
+              <span className="text-label4 text-neutral-900">
+                {selectedCollectible.name}
+              </span>
+              <span className="text-body5 text-neutral-500">
+                {selectedCollectible.collection}
+              </span>
+              <div className="h-4.5">
+                <LayersBadge amount={amount?.toString() ?? '1'} />
+              </div>
+            </div>
+          </div>
+          <div className="flex w-10 items-start">
+            <IconButton
+              intent="tertiary"
+              size="medium"
+              iconName="Repeat2"
+              iconClassName="size-4"
+              className="rounded-xl border border-neutral-200 bg-white"
+              onClick={() => {
+                setSelectedCollectible(null);
+                setIsCollectibleModalOpen(true);
+              }}
+            />
+          </div>
+        </div>
+      )}
+      {!selectedCollectible && (
+        <SelectCollectibleButton
+          isConnected={isConnected}
+          openConnectModal={openConnectModal}
+          setIsCollectibleModalOpen={setIsCollectibleModalOpen}
+        />
+      )}
+    </div>
+  );
+};
 
 type Properties = {
   className?: string;
@@ -72,6 +272,16 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       useState<string>('ETH');
     const [imageError, setImageError] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
+    const [isCollectibleModalOpen, setIsCollectibleModalOpen] = useState(false);
+    const [collectibleSearch, setCollectibleSearch] = useState('');
+    const [selectedCollectible, setSelectedCollectible] =
+      useState<Collectible | null>(null);
+    const [activeTab, setActiveTab] = useState<'token' | 'collectible'>(
+      'token',
+    );
+    const [collectionFilters, setCollectionFilters] = useState<string[]>([]);
+
+    const { showMobileFilter, setShowMobileFilter } = useMobileFilter();
 
     const minimumSfxAmount =
       creatorInfo.minimumSfxAmount ?? DEFAULT_DONATION_MIN_SFX_AMOUNT;
@@ -153,8 +363,24 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       reset(getSendFormDefaultValues(defaultChainId, selectedTokenSymbol));
 
       sender.resetBalance();
+      setSelectedCollectible(null);
+
+      // Set the correct form type based on what's enabled
+      if (creatorInfo.collectibleEnabled && !creatorInfo.tokenEnabled) {
+        formMethods.setValue('type', 'erc1155');
+        setActiveTab('collectible');
+      } else {
+        formMethods.setValue('type', 'token');
+        setActiveTab('token');
+      }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [defaultChainId, selectedTokenSymbol, reset]);
+    }, [
+      defaultChainId,
+      selectedTokenSymbol,
+      reset,
+      creatorInfo.collectibleEnabled,
+      creatorInfo.tokenEnabled,
+    ]);
 
     const [chainId, tokenSymbol, amount, sfx] = formMethods.watch([
       'chainId',
@@ -265,7 +491,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
 
     // Reset SFX when amount falls below the minimum
     useEffect(() => {
-      if (amount < minimumSfxAmount && sfx) {
+      if (amount && amount < minimumSfxAmount && sfx) {
         formMethods.setValue('sfx', '');
       }
     }, [amount, sfx, formMethods, minimumSfxAmount]);
@@ -304,6 +530,11 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       async (payload) => {
         setSubmitError(null); // Clear any previous error when retrying
 
+        if (!isConnected) {
+          openConnectModal?.();
+          return;
+        }
+
         if (
           !walletClient ||
           !creatorInfo.address.data ||
@@ -323,19 +554,27 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
           }
         }
 
-        const { chainId, tokenSymbol, ...rest } = payload;
+        const { chainId: formChainId, tokenSymbol, type, ...rest } = payload;
+
+        const chainId =
+          type === 'token'
+            ? formChainId
+            : (selectedCollectible?.chainId ?? formChainId);
+
+        const tokenAddress =
+          type === 'token'
+            ? (CHAIN_ID_TO_TOKENS[chainId]?.find((t) => {
+                return t.symbol === tokenSymbol;
+              })?.address ?? EMPTY_HEX)
+            : EMPTY_HEX;
 
         rest.message = ' ' + rest.message;
-
-        const address =
-          CHAIN_ID_TO_TOKENS[chainId]?.find((token: Token) => {
-            return token.symbol === tokenSymbol;
-          })?.address ?? EMPTY_HEX;
 
         const sendPayload: SendPayload = {
           ...rest,
           chainId,
-          tokenAddress: address,
+          tokenAddress,
+          type,
         };
 
         try {
@@ -354,7 +593,10 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         creatorInfo.address.data,
         creatorInfo.address.isValid,
         donor,
+        isConnected,
+        openConnectModal,
         linkWalletIfNeeded,
+        selectedCollectible,
       ],
     );
 
@@ -374,7 +616,15 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
           <TxLoadingContent
             heading={
               <>
-                Sending <span className="text-mint-600">${amount}</span>{' '}
+                Sending{' '}
+                <span className="text-mint-600">
+                  {activeTab === 'collectible' && selectedCollectible
+                    ? selectedCollectible.name
+                    : amount}
+                </span>{' '}
+                {/* TODO: If collectible, display amount of collectibles to send here
+                    1 for ERC721 and amountOfTokens for ERC1155
+                */}
                 {amountInSelectedToken
                   ? `(${formatTokenValue(
                       Number(amountInSelectedToken),
@@ -438,7 +688,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
           className="pointer-events-none absolute top-0 hidden h-full opacity-100 lg:block"
         />
 
-        <h1 className="self-start text-heading4">
+        <h1 className="mb-6 self-start text-heading4">
           {creatorInfo.name
             ? `Donate to ${creatorInfo.name}`
             : 'Select your donation details'}
@@ -469,72 +719,80 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
           )}
         </h1>
 
-        <Form onSubmit={formMethods.handleSubmit(onSubmit)} className="w-full">
-          <Controller
-            name="amount"
-            control={formMethods.control}
-            render={({ field }) => {
-              return (
-                <>
-                  <Form.Field
-                    numeric
-                    {...field}
-                    className="mt-6"
-                    label="Amount"
-                    value={field.value.toString()}
-                    onChange={(value) => {
-                      field.onChange(Number(value));
-                    }}
-                    prefixElement={<span>$</span>}
+        <Form
+          onSubmit={formMethods.handleSubmit(onSubmit, (errors) => {
+            console.error('Form validation errors:', errors);
+          })}
+          className="w-full"
+        >
+          <div>
+            {creatorInfo.collectibleEnabled && creatorInfo.tokenEnabled ? (
+              <Tabs
+                onChange={(value) => {
+                  formMethods.setValue(
+                    'type',
+                    value === 'token' ? 'token' : 'erc1155',
+                  );
+                  setActiveTab(value as 'token' | 'collectible');
+                }}
+                items={[
+                  {
+                    key: 'token',
+                    label: 'TOKEN',
+                    children: (
+                      <TokenTabContent
+                        formMethods={formMethods}
+                        defaultTokenSymbol={defaultTokenSymbol}
+                        possibleTokens={possibleTokens}
+                        allowedChainsIds={allowedChainsIds}
+                        sender={sender}
+                        selectedTokenSymbol={selectedTokenSymbol}
+                        activeTab={activeTab}
+                      />
+                    ),
+                  },
+                  {
+                    key: 'collectible',
+                    label: 'COLLECTIBLE',
+                    children: (
+                      <CollectibleTabContent
+                        selectedCollectible={selectedCollectible}
+                        amount={amount}
+                        setSelectedCollectible={setSelectedCollectible}
+                        setIsCollectibleModalOpen={setIsCollectibleModalOpen}
+                        isConnected={isConnected}
+                        openConnectModal={openConnectModal}
+                      />
+                    ),
+                  },
+                ]}
+              />
+            ) : (
+              <>
+                {creatorInfo.tokenEnabled && (
+                  <TokenTabContent
+                    formMethods={formMethods}
+                    defaultTokenSymbol={defaultTokenSymbol}
+                    possibleTokens={possibleTokens}
+                    allowedChainsIds={allowedChainsIds}
+                    sender={sender}
+                    selectedTokenSymbol={selectedTokenSymbol}
+                    activeTab={activeTab}
                   />
-
-                  {!sender.haveEnoughBalance && (
-                    <span
-                      className={classes(
-                        'flex items-center gap-x-1 pt-1 text-label7 text-red-500 lg:text-label6',
-                      )}
-                    >
-                      <Icon name="AlertCircle" size={12} className="p-px" />
-                      Not enough {selectedTokenSymbol} in your wallet. Add funds
-                      to continue.
-                    </span>
-                  )}
-                </>
-              );
-            }}
-          />
-
-          <Controller
-            name="tokenSymbol"
-            control={formMethods.control}
-            render={({ field }) => {
-              return (
-                <TokenSelect
-                  label="Token"
-                  value={field.value}
-                  className="mt-4 w-full"
-                  tokens={possibleTokens}
-                  onChange={field.onChange}
-                />
-              );
-            }}
-          />
-
-          <Controller
-            name="chainId"
-            control={formMethods.control}
-            render={({ field }) => {
-              return (
-                <ChainSelect
-                  label="Network"
-                  value={field.value}
-                  className="mt-4 w-full"
-                  onChange={field.onChange}
-                  allowedChainsIds={allowedChainsIds}
-                />
-              );
-            }}
-          />
+                )}
+                {creatorInfo.collectibleEnabled && (
+                  <CollectibleTabContent
+                    selectedCollectible={selectedCollectible}
+                    amount={amount}
+                    setSelectedCollectible={setSelectedCollectible}
+                    setIsCollectibleModalOpen={setIsCollectibleModalOpen}
+                    isConnected={isConnected}
+                    openConnectModal={openConnectModal}
+                  />
+                )}
+              </>
+            )}
+          </div>
 
           {creatorInfo.alertEnabled && (
             <Controller
@@ -616,9 +874,11 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                     className="mt-4"
                     helperText={fieldState.error?.message}
                     error={Boolean(fieldState.error?.message)}
-                    placeholder={amount < minimumSfxAmount ? '🔒' : undefined}
+                    placeholder={
+                      amount && amount < minimumSfxAmount ? '🔒' : undefined
+                    }
                     placeholderTooltip={`This feature unlocks for donations of $${minimumSfxAmount} or more`}
-                    disabled={amount < minimumSfxAmount}
+                    disabled={amount !== undefined && amount < minimumSfxAmount}
                   />
                 );
               }}
@@ -626,15 +886,29 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
           )}
 
           {isConnected ? (
-            <Button
-              size="medium"
-              type="submit"
-              intent="primary"
-              className="mt-6 w-full"
-              prefixIconName="Coins"
-            >
-              Donate
-            </Button>
+            <Tooltip>
+              <TooltipTrigger className="w-full">
+                <Button
+                  size="medium"
+                  type="submit"
+                  intent="primary"
+                  className="mt-6 w-full"
+                  prefixIconName="Coins"
+                  disabled={activeTab === 'collectible' && !selectedCollectible}
+                >
+                  Donate
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent
+                hidden={
+                  activeTab === 'collectible' && selectedCollectible != null
+                }
+                className="z-portal bg-black text-white"
+                side="bottom"
+              >
+                <p className="text-body6">Select a collectible first</p>
+              </TooltipContent>
+            </Tooltip>
           ) : (
             <Button
               size="medium"
@@ -652,25 +926,97 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
               <span>{submitError}</span>
             </div>
           )}
+          <div className="mt-4 w-full py-3 text-center">
+            <span className="text-label7 text-neutral-500">
+              By donating, you agree to the{' '}
+              <ExternalLink
+                className="text-mint-600 underline"
+                href={TERMS_OF_SERVICE_LINK}
+              >
+                Terms of service
+              </ExternalLink>{' '}
+              and{' '}
+              <ExternalLink
+                className="text-mint-600 underline"
+                href={PRIVACY_POLICY_LINK}
+              >
+                Privacy policy
+              </ExternalLink>
+            </span>
+          </div>
         </Form>
-        <div className="mt-4 w-full py-3 text-center">
-          <span className="text-label7 text-neutral-500">
-            By donating, you agree to the{' '}
-            <ExternalLink
-              className="text-mint-600 underline"
-              href={TERMS_OF_SERVICE_LINK}
-            >
-              Terms of service
-            </ExternalLink>{' '}
-            and{' '}
-            <ExternalLink
-              className="text-mint-600 underline"
-              href={PRIVACY_POLICY_LINK}
-            >
-              Privacy policy
-            </ExternalLink>
-          </span>
-        </div>
+
+        <Modal
+          isOpened={isCollectibleModalOpen}
+          onClose={() => {
+            return setIsCollectibleModalOpen(false);
+          }}
+          header={
+            <p className="truncate text-heading5 text-neutralGreen-900">
+              Search collectible
+            </p>
+          }
+          headerContainerClassName="pl-6 pt-5.5 pb-2.5"
+          className="h-[550px] w-[400px] sm:w-[500px] md:w-[827px]"
+        >
+          <div className="p-6">
+            <div className="mb-4 flex w-full gap-2">
+              {/* Mobile Filter Button - only visible below md */}
+              <IconButton
+                intent="tertiary"
+                size="small"
+                iconName="Filter"
+                onClick={() => {
+                  return setShowMobileFilter(true);
+                }}
+                className="shrink-0 md:hidden"
+              />
+              <Input
+                placeholder="Search collectibles"
+                prefixIconName="Search"
+                prefixIconSize={16}
+                value={collectibleSearch}
+                onChange={(event) => {
+                  setCollectibleSearch(event.target.value);
+                }}
+              />
+            </div>
+
+            <CollectibleGallery
+              searchQuery={collectibleSearch}
+              showMobileFilter={showMobileFilter}
+              setShowMobileFilter={setShowMobileFilter}
+              initialSelectedCollections={collectionFilters}
+              onSelectedCollectionsChange={setCollectionFilters}
+              onSelect={(collectible) => {
+                if (collectible.amount === 0) {
+                  setSelectedCollectible(null);
+                  return;
+                }
+                formMethods.setValue('tokenId', collectible.tokenId);
+                formMethods.setValue('contract', collectible.contract);
+                formMethods.setValue('type', collectible.type ?? 'erc1155');
+                formMethods.setValue('amount', collectible.amount);
+                setSelectedCollectible({
+                  tokenId: collectible.tokenId,
+                  name: collectible.name,
+                  type: collectible.type,
+                  collection: collectible.collection,
+                  collectionShortName: collectible.collectionShortName,
+                  collectionImage: collectible.collectionImage,
+                  collectionCategory: collectible.collectionCategory,
+                  contract: collectible.contract,
+                  chainId: collectible.chainId,
+                  image: collectible.image,
+                  balance: collectible.balance,
+                });
+              }}
+              onConfirm={() => {
+                setIsCollectibleModalOpen(false);
+              }}
+            />
+          </div>
+        </Modal>
       </div>
     );
   },

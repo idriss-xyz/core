@@ -1,52 +1,96 @@
 import { Hex } from 'viem';
 import { AppDataSource } from './database';
+import { TokenDonation } from './entities/token-donation.entity';
+import { NftDonation } from './entities/nft-donation.entity';
 import { Donation } from './entities/donations.entity';
-import { DonationData } from '@idriss-xyz/constants';
+import {
+  StoredDonationData,
+  TokenDonationData,
+  NftDonationData,
+} from '@idriss-xyz/constants';
+
+async function getTokenAndNftRows(
+  where: object,
+  needTokenRelation = false,
+): Promise<StoredDonationData[]> {
+  const tokenRepo = AppDataSource.getRepository(TokenDonation);
+  const nftRepo = AppDataSource.getRepository(NftDonation);
+
+  const applyBase = (w: object) =>
+    Object.keys(w).length ? ({ base: w } as object) : {};
+
+  const tokenRows = await tokenRepo.find({
+    where: applyBase(where),
+    relations: needTokenRelation
+      ? ['base', 'base.fromUser', 'base.toUser', 'token']
+      : ['base', 'base.fromUser', 'base.toUser'],
+  });
+
+  const nftRows = await nftRepo.find({
+    where: applyBase(where), // ← use the wrapped filter
+    relations: ['base', 'base.fromUser', 'base.toUser'],
+  });
+
+  const tokenDtos: TokenDonationData[] = tokenRows.map((t) => ({
+    ...t.base, // parent columns
+    kind: 'token',
+    tokenAddress: t.tokenAddress,
+    amountRaw: t.amountRaw,
+    network: t.network,
+    token: t.token,
+  }));
+
+  const nftDtos: NftDonationData[] = nftRows.map((n) => ({
+    ...n.base,
+    kind: 'nft',
+    collectionAddress: n.collectionAddress,
+    tokenId: n.tokenId,
+    quantity: n.quantity,
+    name: n.name,
+    imageUrl: n.imageUrl,
+    network: n.network,
+  }));
+
+  return [...tokenDtos, ...nftDtos];
+}
 
 export async function fetchDonationsByToAddress(
   toAddress: Hex,
-): Promise<DonationData[]> {
+): Promise<StoredDonationData[]> {
   if (!AppDataSource.isInitialized) {
     await AppDataSource.initialize();
   }
 
-  const donationRepo = AppDataSource.getRepository(Donation);
+  const donations = await getTokenAndNftRows(
+    { toAddress: toAddress.toLowerCase() },
+    true,
+  );
 
-  const donations = await donationRepo.find({
-    where: [{ toAddress }, { toAddress: toAddress.toLowerCase() as Hex }],
-    relations: ['fromUser', 'toUser', 'token'],
-  });
-
-  return donations as DonationData[];
+  return donations;
 }
 
 export async function fetchDonationsByFromAddress(
   fromAddress: Hex,
-): Promise<DonationData[]> {
+): Promise<StoredDonationData[]> {
   if (!AppDataSource.isInitialized) {
     await AppDataSource.initialize();
   }
 
-  const donationRepo = AppDataSource.getRepository(Donation);
-
-  const donations = await donationRepo.find({
-    where: [{ fromAddress }, { fromAddress: fromAddress.toLowerCase() as Hex }],
-    relations: ['fromUser', 'toUser', 'token'],
-  });
-
-  return donations as DonationData[];
+  const donations = await getTokenAndNftRows(
+    { fromAddress: fromAddress.toLowerCase() },
+    true,
+  );
+  return donations;
 }
 
-export async function fetchDonations(): Promise<Record<Hex, DonationData[]>> {
+export async function fetchDonations(): Promise<
+  Record<Hex, StoredDonationData[]>
+> {
   if (!AppDataSource.isInitialized) {
     await AppDataSource.initialize();
   }
 
-  const donationRepo = AppDataSource.getRepository(Donation);
-
-  const donations = await donationRepo.find({
-    relations: ['fromUser', 'toUser', 'token'],
-  });
+  const donations = await getTokenAndNftRows({}, true);
 
   const groupedDonations = donations.reduce(
     (acc, donation) => {
@@ -54,27 +98,23 @@ export async function fetchDonations(): Promise<Record<Hex, DonationData[]>> {
       if (!acc[key]) {
         acc[key] = [];
       }
-      acc[key].push(donation as DonationData);
+      acc[key].push(donation);
       return acc;
     },
-    {} as Record<Hex, DonationData[]>,
+    {} as Record<Hex, StoredDonationData[]>,
   );
 
   return groupedDonations;
 }
 
 export async function fetchDonationRecipients(): Promise<
-  Record<Hex, DonationData[]>
+  Record<Hex, StoredDonationData[]>
 > {
   if (!AppDataSource.isInitialized) {
     await AppDataSource.initialize();
   }
 
-  const donationRepo = AppDataSource.getRepository(Donation);
-
-  const donations = await donationRepo.find({
-    relations: ['fromUser', 'toUser', 'token'],
-  });
+  const donations = await getTokenAndNftRows({}, true);
 
   const groupedDonations = donations.reduce(
     (acc, donation) => {
@@ -82,10 +122,10 @@ export async function fetchDonationRecipients(): Promise<
       if (!acc[key]) {
         acc[key] = [];
       }
-      acc[key].push(donation as DonationData);
+      acc[key].push(donation);
       return acc;
     },
-    {} as Record<Hex, DonationData[]>,
+    {} as Record<Hex, StoredDonationData[]>,
   );
 
   return groupedDonations;

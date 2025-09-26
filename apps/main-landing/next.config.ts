@@ -211,7 +211,12 @@ const nextConfig: NextConfig = {
     return config;
   },
   images: {
-    domains: ['localhost', 'storage.googleapis.com', 'static-cdn.jtvnw.net'],
+    domains: [
+      'localhost',
+      'storage.googleapis.com',
+      'static-cdn.jtvnw.net',
+      'images.zapper.xyz',
+    ],
   },
   env: {
     DEV_LOGIN_PASSWORD: process.env.DEV_LOGIN_PASSWORD || '',

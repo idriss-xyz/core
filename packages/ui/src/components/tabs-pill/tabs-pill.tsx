@@ -2,6 +2,8 @@ import { ReactNode } from 'react';
 
 import { Icon, IconName } from '@idriss-xyz/ui/icon';
 
+import { classes } from '../../utils';
+
 export type TabItem = {
   name: string;
   href?: string;
@@ -43,25 +45,31 @@ export function TabsPill({ tabs, renderLink }: TabsPillProperties) {
             return (
               <div
                 key={tab.name}
-                className="relative flex h-[44px] cursor-not-allowed items-center justify-center gap-2 overflow-hidden rounded-full border border-transparent px-8 py-2"
+                className="relative flex h-[40px] cursor-not-allowed items-center justify-center gap-2 overflow-hidden rounded-full border border-transparent px-6 py-2"
               >
                 <Icon
                   size={20}
                   name={tab.iconName}
-                  className="text-neutral-900"
+                  className={classes('text-neutralGreen-900')}
                 />
                 <div className="flex min-w-[108] max-w-[138] flex-col items-start">
-                  <span className="text-label4 text-neutral-900">
+                  <span
+                    className={classes('text-label4 text-neutralGreen-900')}
+                  >
                     {tab.name}
                   </span>
                   {tab.subtitle && (
-                    <span className="text-label6 text-mint-600">
+                    <span className={classes('text-label6 text-mint-600')}>
                       {tab.subtitle}
                     </span>
                   )}
                 </div>
                 {tab.showPulsingDot && (
-                  <div className="absolute bottom-1 left-1/2 size-2 -translate-x-1/2 animate-pulse rounded-full bg-mint-600" />
+                  <div
+                    className={classes(
+                      'absolute bottom-1 left-1/2 size-2 -translate-x-1/2 animate-pulse rounded-full bg-mint-600',
+                    )}
+                  />
                 )}
               </div>
             );
@@ -74,43 +82,67 @@ export function TabsPill({ tabs, renderLink }: TabsPillProperties) {
             >
               <div onClick={tab.onClick}>
                 {tab.isActive ? (
-                  <div className="relative flex h-[44px] items-center justify-center gap-2 overflow-hidden rounded-full border border-[#5FEB3C] bg-white px-8 py-2 text-neutralGreen-900">
+                  <div
+                    className={classes(
+                      'relative flex h-[40px] items-center justify-center gap-2 overflow-hidden rounded-full border border-[#5FEB3C] bg-white px-6 py-2 text-neutralGreen-900 hover:cursor-pointer',
+                    )}
+                  >
                     <Icon name={tab.iconName} size={20} />
-                    <div className="relative z-1 flex min-w-[108] max-w-[138] flex-col items-start">
-                      <span className="text-label4 text-neutral-900">
+                    <div
+                      className={classes(
+                        'relative z-1 flex min-w-[108] max-w-[138] flex-col items-start',
+                      )}
+                    >
+                      <span
+                        className={classes('text-label4 text-neutralGreen-900')}
+                      >
                         {tab.name}
                       </span>
                       {tab.subtitle && (
-                        <span className="text-label6 text-mint-600">
+                        <span className={classes('text-label6 text-mint-600')}>
                           {tab.subtitle}
                         </span>
                       )}
                     </div>
                     <span className="absolute top-[16px] h-[36px] w-[200px] rounded-t-[1000px] bg-[#5FEB3C] opacity-30 blur-md" />
                     {tab.showPulsingDot && (
-                      <div className="absolute bottom-1 left-1/2 size-2 -translate-x-1/2 animate-pulse rounded-full bg-mint-600" />
+                      <div
+                        className={classes(
+                          'absolute bottom-1 left-1/2 size-2 -translate-x-1/2 animate-pulse rounded-full bg-mint-600',
+                        )}
+                      />
                     )}
                   </div>
                 ) : (
-                  <div className="group relative flex h-[44px] items-center justify-center gap-2 overflow-hidden rounded-full border border-transparent px-8 py-2 hover:border-[#5FEB3C]">
+                  <div className="group relative flex h-[40px] items-center justify-center gap-2 overflow-hidden rounded-full border border-transparent px-6 py-2 hover:cursor-pointer hover:border-[#5FEB3C]">
                     <Icon
                       size={20}
                       name={tab.iconName}
-                      className="text-neutral-900"
+                      className={classes('text-neutralGreen-900')}
                     />
-                    <div className="relative z-1 flex min-w-[108] max-w-[138] flex-col items-start">
-                      <span className="text-label4 text-neutral-900">
+                    <div
+                      className={classes(
+                        'relative z-1 flex min-w-[108] max-w-[138] flex-col items-start',
+                      )}
+                    >
+                      <span
+                        className={classes('text-label4 text-neutralGreen-900')}
+                      >
                         {tab.name}
                       </span>
                       {tab.subtitle && (
-                        <span className="text-label6 text-mint-600">
+                        <span className={classes('text-label6 text-mint-600')}>
                           {tab.subtitle}
                         </span>
                       )}
                     </div>
                     <span className="absolute top-[16px] hidden h-[36px] w-[200px] rounded-t-[1000px] bg-[#5FEB3C] opacity-30 blur-md group-hover:inline" />
                     {tab.showPulsingDot && (
-                      <div className="absolute bottom-1 left-1/2 size-1.5 -translate-x-1/2 animate-pulse rounded-full bg-mint-600" />
+                      <div
+                        className={classes(
+                          'absolute bottom-1 left-1/2 size-1.5 -translate-x-1/2 animate-pulse rounded-full bg-mint-600',
+                        )}
+                      />
                     )}
                   </div>
                 )}

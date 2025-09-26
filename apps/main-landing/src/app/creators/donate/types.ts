@@ -20,6 +20,22 @@ export type Address = {
   isFetching: boolean;
 };
 
+export type Collectible = {
+  tokenId: string;
+  name: string;
+  image: string;
+  collection: string;
+  collectionShortName: string;
+  collectionCategory: string;
+  collectionImage: string;
+  contract: Hex;
+  chainId: number;
+  balance: string;
+  usdValue?: number;
+  type: 'erc721' | 'erc1155';
+};
+
+// TODO: Check why we have CreatorProfile and CreatorProfileResponse
 export type CreatorProfile = {
   name: string | null;
   address: Address;
@@ -36,4 +52,6 @@ export type CreatorProfile = {
   ttsEnabled?: boolean;
   sfxEnabled?: boolean;
   streamStatus?: string;
+  tokenEnabled?: boolean;
+  collectibleEnabled?: boolean;
 };

@@ -9,6 +9,7 @@ import {
   zksync,
   scroll,
   celo,
+  // avalanche,
 } from 'viem/chains';
 
 import {
@@ -35,8 +36,10 @@ import {
   SCROLL_LOGO,
   CELO_LOGO,
   BNB_LOGO,
+  // AVAX_LOGO,
+  // GUNZ_LOGO,
 } from './logos';
-import { Chain, Token, ChainToken } from './types';
+import { Chain, Token, ChainToken, ChainNft } from './types';
 
 export const STAKER_ADDRESS = '0x085e2DC1b05dcdbE011B5ad377C9f2fcD69B7057';
 export const REWARDS_ADDRESS = '0x4D66A8e9Da1F007802338B372aD348B78b455aBB';
@@ -111,6 +114,12 @@ export const CREATOR_CHAIN = {
     dbName: 'ETHEREUM_MAINNET',
     logo: ETHEREUM_LOGO,
   },
+  // AVALANCHE: {
+  //   ...avalanche,
+  //   shortName: 'Avalanche',
+  //   dbName: 'AVALANCHE_MAINNET',
+  //   logo: AVAX_LOGO,
+  // },
 } satisfies Record<string, Chain>;
 
 export const CHAIN = Object.assign(CREATOR_CHAIN, {
@@ -202,6 +211,11 @@ export const CHAIN = Object.assign(CREATOR_CHAIN, {
 }) satisfies Record<string, Chain>;
 
 export const TOKEN = {
+  // AVAX: {
+  //   name: 'Avalanche',
+  //   symbol: 'AVAX',
+  //   logo: AVAX_LOGO,
+  // },
   ETHEREUM: {
     name: 'Ethereum',
     symbol: 'ETH',
@@ -240,6 +254,11 @@ export const TOKEN = {
     symbol: 'AXS',
     logo: AXIE_LOGO,
   },
+  // GUN: {
+  //   name: 'Gunz',
+  //   symbol: 'GUN',
+  //   logo: GUNZ_LOGO,
+  // },
   // PIXEL: {
   //   name: 'Pixels',
   //   symbol: 'PIXEL',
@@ -277,6 +296,23 @@ export const CHAIN_ID_TO_TOKENS = {
       address: '0x9eBe3A824Ca958e4b3Da772D2065518F009CBa62',
     },
   ],
+  // [CREATOR_CHAIN.AVALANCHE.id]: [
+  //   {
+  //     ...TOKEN.AVAX,
+  //     decimals: 18,
+  //     address: NATIVE_COIN_ADDRESS,
+  //   },
+  //   {
+  //     ...TOKEN.GUN,
+  //     decimals: 18,
+  //     address: '0x26debd39d5ed069770406fca10a0e4f8d2c743eb',
+  //   },
+  //   {
+  //     ...TOKEN.USDC,
+  //     decimals: 6,
+  //     address: '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E',
+  //   },
+  // ],
   [CREATOR_CHAIN.ETHEREUM.id]: [
     {
       ...TOKEN.ETHEREUM,
@@ -370,17 +406,165 @@ export const CHAIN_ID_TO_TOKENS = {
   ],
 } satisfies Record<string, ChainToken[]>;
 
+export const CHAIN_ID_TO_NFT_COLLECTIONS: Record<number, ChainNft[]> = {
+  [CREATOR_CHAIN.ETHEREUM.id]: [
+    {
+      address: '0x0Fc3DD8C37880a297166BEd57759974A157f0E74',
+      name: 'Parallel Avatars',
+      standard: 'erc721',
+      slug: 'parallel-avatars',
+      image:
+        'https://i.seadn.io/gcs/files/f77f0f2cc27dd427c69c68e81bfb0b97.gif?h=250&w=250',
+      shortName: 'Avatars',
+      category: 'Parallel',
+    },
+    {
+      address: '0x76BE3b62873462d2142405439777e971754E8E77',
+      name: 'Parallel Alpha',
+      standard: 'erc1155',
+      slug: 'parallelalpha',
+      image:
+        'https://i.seadn.io/gae/Nnp8Pdo6EidK7eBduGnAn_JBvFsYGhNGMJ_fHJ_mzGMN_2Khu5snL5zmiUMcSsIqtANh19KqxXDs0iNq_aYbKC5smO3hiCSw9PlL?h=250&w=250',
+      shortName: 'Alpha',
+      category: 'Parallel',
+    },
+    {
+      address: '0x6811f2f20c42f42656A3c8623aD5e9461b83f719',
+      name: 'Parallel Planetfall',
+      standard: 'erc1155',
+      slug: 'parallelplanetfall',
+      image:
+        'https://i2.seadn.io/ethereum/3627f87f8cda484d9f4f7b3b633264f5/ce98acde508d20a97a6e3baae442d0/4fce98acde508d20a97a6e3baae442d0.png?h=250&w=250',
+      shortName: 'Planetfall',
+      category: 'Parallel',
+    },
+    {
+      address: '0x9d764bcf1AFFd83554B7626F22EAB2ffC60590C7',
+      name: 'Parallel Battlepass',
+      standard: 'erc1155',
+      slug: 'parallel-battlepass-cards',
+      image:
+        'https://i2.seadn.io/ethereum/feb787aaf01b4125871c2f82d06a758a/d9d6c15b41903ed124d673e2b5b651/93d9d6c15b41903ed124d673e2b5b651.png?h=250&w=250',
+      shortName: 'Battlepass',
+      category: 'Parallel',
+    },
+    {
+      address: '0x6E3bc168F6260Ff54257aE4B56449eFd7aFd5934',
+      name: 'Parallel Cosmetics',
+      standard: 'erc1155',
+      slug: 'parallel-cosmetics',
+      image:
+        'https://i2.seadn.io/ethereum/feb787aaf01b4125871c2f82d06a758a/d9d6c15b41903ed124d673e2b5b651/93d9d6c15b41903ed124d673e2b5b651.png?h=250&w=250',
+      shortName: 'Cosmetics',
+      category: 'Parallel',
+    },
+    {
+      address: '0x5302A847E53c7b2ff4DaEa7559F82F02446BEE61',
+      name: 'Parallel Lore',
+      standard: 'erc1155',
+      slug: 'parallellore',
+      image:
+        'https://i2.seadn.io/ethereum/feb787aaf01b4125871c2f82d06a758a/d9d6c15b41903ed124d673e2b5b651/93d9d6c15b41903ed124d673e2b5b651.png?h=250&w=250',
+      shortName: 'Lore',
+      category: 'Parallel',
+    },
+    {
+      address: '0x38398a2d7A4278b8d83967E0D235164335A0394A',
+      name: 'Parallel Auxillary',
+      standard: 'erc1155',
+      slug: 'parallel-auxiliary-items',
+      image:
+        'https://i2.seadn.io/ethereum/feb787aaf01b4125871c2f82d06a758a/d9d6c15b41903ed124d673e2b5b651/93d9d6c15b41903ed124d673e2b5b651.png?h=250&w=250',
+      shortName: 'Auxillary',
+      category: 'Parallel',
+    },
+    {
+      address: '0x2dE4941fec832D5d2F7Ab69DF397f3E2fB28d391',
+      name: 'Parallel Companions',
+      standard: 'erc1155',
+      slug: 'parallel-companions',
+      image:
+        'https://i2.seadn.io/ethereum/0dd4bece1f894321b0793b4f7a0d94db/d279f67a2d4a27cfdbb3883564cd14/1dd279f67a2d4a27cfdbb3883564cd14.png?h=250&w=250',
+      shortName: 'Companions',
+      category: 'Parallel',
+    },
+  ],
+  [CREATOR_CHAIN.BASE.id]: [
+    {
+      address: '0x206571b68c66E1d112b74d65695043ad2b5F95D5',
+      name: 'Parallel Alpha [Base]',
+      standard: 'erc1155',
+      slug: 'parallel-on-base',
+      image:
+        'https://i2.seadn.io/ethereum/feb787aaf01b4125871c2f82d06a758a/d9d6c15b41903ed124d673e2b5b651/93d9d6c15b41903ed124d673e2b5b651.png?h=250&w=250',
+      shortName: 'Alpha [Base]',
+      category: 'Parallel',
+    },
+    {
+      address: '0x8bB4033AF06B363A8391F795A39281bcc3b6197D',
+      name: 'Parallel Planetfall [Base]',
+      standard: 'erc1155',
+      slug: 'planetfall-on-base',
+      image:
+        'https://i.seadn.io/s/raw/files/33c294ebc43b4b5cf89038e2da83529d.png?h=250&w=250',
+      shortName: 'Planetfall [Base]',
+      category: 'Parallel',
+    },
+    {
+      address: '0xA7B67cD6B31b73772AE3C8ea784317207194A6f4',
+      name: 'Parallel Aftermath',
+      standard: 'erc1155',
+      slug: 'parallel-aftermath',
+      image:
+        'https://i.seadn.io/s/raw/files/f782faa4af801c5d31622008bbb5e524.png?h=250&w=250',
+      shortName: 'Aftermath',
+      category: 'Parallel',
+    },
+    {
+      address: '0xA669ca42f91873d406847D8329233C2703f377cd',
+      name: 'Parallel Deception',
+      standard: 'erc1155',
+      slug: 'parallel-deception',
+      image:
+        'https://i2.seadn.io/base/0xa669ca42f91873d406847d8329233c2703f377cd/81834cb06121f75a353dcf071b24b9/1c81834cb06121f75a353dcf071b24b9.png?h=250&w=250',
+      shortName: 'Deception',
+      category: 'Parallel',
+    },
+    {
+      address: '0x504405158f9960A0252a83EE2Fd13167991ADdD6',
+      name: 'Parallel Battlepass [Base]',
+      standard: 'erc1155',
+      slug: 'parallel-battlepass-cards-base',
+      image:
+        'https://i2.seadn.io/base/0x504405158f9960a0252a83ee2fd13167991addd6/5717f576ac1162e4a1d8dc459e4d28e1.png?h=250&w=250',
+      shortName: 'Battlepass [Base]',
+      category: 'Parallel',
+    },
+    {
+      address: '0xC6C03D452906aaD9A364989608d947bAc11E478c',
+      name: 'Parallel Cosmetics [Base]',
+      standard: 'erc1155',
+      slug: 'parallel-cosmetics-base',
+      image:
+        'https://i2.seadn.io/base/2714dae8521e4a7097a5003a0a132d1d/c76c32bd7d1e92fe20eb8782d11936/2dc76c32bd7d1e92fe20eb8782d11936.png?h=250&w=250',
+      shortName: 'Cosmetics [Base]',
+      category: 'Parallel',
+    },
+  ],
+};
+
 export const DEFAULT_ALLOWED_CHAINS_IDS = [
   CREATOR_CHAIN.ABSTRACT.id,
   CREATOR_CHAIN.BASE.id,
   CREATOR_CHAIN.ETHEREUM.id,
   CREATOR_CHAIN.RONIN.id,
+  // CREATOR_CHAIN.AVALANCHE.id,
 ];
 
 export const EMPTY_HEX = '0x';
 
 export const COPILOT_API_URL = 'https://copilot-api.idriss.xyz';
-export const CREATOR_API_URL = 'https://creators-api.idriss.xyz';
+export const CREATOR_API_URL = 'https://core-staging-4c69.up.railway.app';
 
 export const DEFAULT_DONATION_MIN_ALERT_AMOUNT = 1;
 export const DEFAULT_DONATION_MIN_TTS_AMOUNT = 3;
@@ -389,3 +573,49 @@ export const IDRISS_TOKEN_ADDRESS =
   '0x000096630066820566162c94874a776532705231';
 
 export const TEST_DONATION_MESSAGE = 'This is a test donation';
+
+export const CHAIN_ID_TO_OPENSEA_NETWORK_NAMES: Record<number, string> = {
+  [CREATOR_CHAIN.BASE.id]: 'base',
+  [CREATOR_CHAIN.ETHEREUM.id]: 'ethereum',
+};
+
+export const TEST_TOKEN_DONATION = {
+  type: 'test' as const,
+  donor: 'idriss_xyz',
+  amount: 5, // USD value
+  message: TEST_DONATION_MESSAGE,
+  sfxText: null,
+  avatarUrl:
+    'https://res.cloudinary.com/base-web/image/fetch/w_64/f_webp/https%3A%2F%2Fbase.mypinata.cloud%2Fipfs%2Fbafkreicr5lh2f3eumcn4meif5t2pauzeddjjbhjbl4enqrp4ooz4e7on6i%3FpinataGatewayToken%3Df6uqhE35YREDMuFqLvxFLqd-MBRlrJ1qWog8gyCF8T88-Tsiu2IX48F-kyVti78J',
+  txnHash: '0x22f0f25140b9fe35cc01722bb5b0366dcb68bb1bcaee3415ca9f48ce4e57d972',
+  token: {
+    amount: 1_000_000_000_000,
+    details: {
+      symbol: 'ETH',
+      name: 'Ethereum',
+      logo: 'https://assets.coingecko.com/coins/images/279/small/ethereum.png',
+      decimals: 18,
+      address: NATIVE_COIN_ADDRESS,
+    },
+  },
+};
+
+export const TEST_NFT_DONATION = {
+  type: 'test' as const,
+  donor: 'idriss_xyz',
+  amount: 2, // USD value
+  message: TEST_DONATION_MESSAGE,
+  sfxText: null,
+  avatarUrl:
+    'https://res.cloudinary.com/base-web/image/fetch/w_64/f_webp/https%3A%2F%2Fbase.mypinata.cloud%2Fipfs%2Fbafkreicr5lh2f3eumcn4meif5t2pauzeddjjbhjbl4enqrp4ooz4e7on6i%3FpinataGatewayToken%3Df6uqhE35YREDMuFqLvxFLqd-MBRlrJ1qWog8gyCF8T88-Tsiu2IX48F-kyVti78J',
+  txnHash: '0x22f0f25140b9fe35cc01722bb5b0366dcb68bb1bcaee3415ca9f48ce4e57d972',
+  token: {
+    amount: 2,
+    details: {
+      id: '100400158',
+      name: 'Embedded Agent',
+      logo: 'https://nftmedia.parallelnft.com/parallel-aftermath/QmPPNj5MpR9FcxzPUu2gKQygNp5gxNvxwGgTkAGaef6mX9/image.png',
+      collectionName: 'Parallel Aftermath',
+    },
+  },
+};

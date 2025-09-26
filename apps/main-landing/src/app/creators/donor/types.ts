@@ -1,5 +1,5 @@
 import {
-  DonationData,
+  StoredDonationData,
   DonationToken,
   DonationUser,
 } from '@idriss-xyz/constants';
@@ -15,9 +15,10 @@ export interface DonorHistoryStats {
   donorDisplayName: string | null;
   positionInLeaderboard: number | null;
   favoriteTokenMetadata: DonationToken | null;
+  donorAvatarUrl?: string | null;
 }
 
 export interface DonorHistoryResponse {
   stats: DonorHistoryStats;
-  donations: DonationData[];
+  donations: StoredDonationData[];
 }

@@ -13,6 +13,8 @@ const validationRules = [
   body('ttsEnabled').isBoolean().notEmpty(),
   body('sfxEnabled').isBoolean().notEmpty(),
   body('customBadWords').optional().isArray(),
+  body('tokenEnabled').isBoolean().notEmpty(),
+  body('collectibleEnabled').isBoolean().notEmpty(),
 ];
 
 router.post('/', validationRules, async (req: Request, res: Response) => {
@@ -31,6 +33,8 @@ router.post('/', validationRules, async (req: Request, res: Response) => {
     ttsEnabled,
     sfxEnabled,
     customBadWords = [],
+    tokenEnabled,
+    collectibleEnabled,
   } = req.body;
 
   try {
@@ -42,6 +46,8 @@ router.post('/', validationRules, async (req: Request, res: Response) => {
       ttsEnabled,
       sfxEnabled,
       customBadWords,
+      tokenEnabled,
+      collectibleEnabled,
       creator: {
         id: req.body.creatorId,
       },

@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { Creator } from './creator.entity';
 
+// todo: fix circular dependency with creator
 @Entity('creator_networks')
 export class CreatorNetwork {
   @PrimaryGeneratedColumn()

@@ -11,9 +11,21 @@ import { Card } from '@idriss-xyz/ui/card';
 import { Form } from '@idriss-xyz/ui/form';
 import { Multiselect, MultiselectOption } from '@idriss-xyz/ui/multiselect';
 import { Toggle } from '@idriss-xyz/ui/toggle';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@idriss-xyz/ui/tooltip';
 import { getAccessToken } from '@privy-io/react-auth';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import { Controller, useForm, UseFormReset } from 'react-hook-form';
 import { Icon, IconName } from '@idriss-xyz/ui/icon';
 
 import {
@@ -27,14 +39,25 @@ import {
   SectionHeader,
 } from '@/app/creators/components/layout';
 import { useToast } from '@/app/creators/context/toast-context';
+import { CreatorProfileResponse } from '@/app/creators/utils/types';
 
 import SkeletonSetup from '../loading';
+
+import {
+  Collectible1,
+  Collectible2,
+  Collectible3,
+  Collectible4,
+  Collectible5,
+} from './assets';
 
 type FormPayload = {
   name: string;
   address: string;
   chainsIds: number[];
   tokensSymbols: string[];
+  collectibleEnabled?: boolean;
+  tokenEnabled?: boolean;
 };
 
 const ALL_CHAIN_IDS = Object.values(CREATOR_CHAIN).map((chain) => {
@@ -49,16 +72,33 @@ const ALL_TOKEN_SYMBOLS = Object.values(CHAIN_ID_TO_TOKENS)
 
 const UNIQUE_ALL_TOKEN_SYMBOLS = [...new Set(ALL_TOKEN_SYMBOLS)];
 
+// const TOKENS_ORDER: Record<TokenSymbol, number> = {
+//   IDRISS: 1,
+//   ETH: 2,
+//   USDC: 3,
+//   DAI: 4,
+//   AVAX: 5,
+//   GUN: 6,
+//   PRIME: 7,
+//   GHST: 8,
+//   RON: 9,
+//   AXS: 10,
+//   YGG: 11,
+//   PDT: 12,
+//   DEGEN: 13,
+//   PENGU: 14,
+// };
+
 const TOKENS_ORDER: Record<TokenSymbol, number> = {
   IDRISS: 1,
   ETH: 2,
   USDC: 3,
   DAI: 4,
-  GHST: 5,
-  PRIME: 6,
-  YGG: 7,
-  RON: 8,
-  AXS: 9,
+  PRIME: 5,
+  GHST: 6,
+  RON: 7,
+  AXS: 8,
+  YGG: 9,
   PDT: 10,
   DEGEN: 11,
   PENGU: 12,
@@ -70,9 +110,39 @@ const iconsForCardPaymentMethod: IconName[] = [
   'Visa',
 ];
 
+const CollectiblesRow = () => {
+  const images = [
+    Collectible1,
+    Collectible2,
+    Collectible3,
+    Collectible4,
+    Collectible5,
+  ];
+
+  return (
+    <div className="mt-1 flex flex-row gap-[10px]">
+      {images.map((source, index) => {
+        return (
+          <div
+            key={index}
+            className="rounded-[4px] border border-neutral-300 p-px"
+          >
+            <img
+              src={source.src}
+              alt={`Collectible ${index + 1}`}
+              width={32}
+              className="h-auto rounded-[4px]"
+            />
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
 const IconsRow = ({ icons }: { icons: IconName[] }) => {
   return (
-    <div className="-mt-4 flex flex-row items-center gap-2">
+    <div className="flex flex-row items-center gap-2">
       {icons.map((iconName, index) => {
         return (
           <div className="relative size-6" key={index}>
@@ -84,12 +154,34 @@ const IconsRow = ({ icons }: { icons: IconName[] }) => {
   );
 };
 
+const resetCreatorOnEdit = (
+  reset: UseFormReset<FormPayload>,
+  data: Partial<CreatorProfileResponse>,
+  setCreator: Dispatch<SetStateAction<CreatorProfileResponse | null>>,
+) => {
+  reset({ ...data }, { keepValues: true });
+
+  setCreator((previous) => {
+    return previous ? { ...previous, ...data } : previous;
+  });
+};
+
 // ts-unused-exports:disable-next-line
 export default function PaymentMethods() {
-  const { creator, creatorLoading } = useAuth();
+  const { creator, creatorLoading, setCreator } = useAuth();
   const { toast } = useToast();
 
-  const [toggleCrypto, setToggleCrypto] = useState(true);
+  const [toggleCollectible, setToggleCollectible] = useState(
+    creator?.collectibleEnabled ?? true,
+  );
+  const [toggleToken, setToggleToken] = useState(creator?.tokenEnabled ?? true);
+
+  useEffect(() => {
+    if (creator) {
+      setToggleCollectible(creator.collectibleEnabled);
+      setToggleToken(creator.tokenEnabled);
+    }
+  }, [creator]);
 
   const formMethods = useForm<FormPayload>({
     defaultValues: {
@@ -235,7 +327,7 @@ export default function PaymentMethods() {
       if (editSuccess) {
         toast({
           type: 'success',
-          heading: 'Settings saved!',
+          heading: 'Settings saved',
           autoClose: true,
         });
       } else {
@@ -302,21 +394,53 @@ export default function PaymentMethods() {
         >
           <FormFieldWrapper>
             <SectionHeader title="Select your payment methods" />
-            <Toggle
-              label="Crypto"
-              sublabel="Get paid in Ethereum, USDC, or other popular assets. Instant, borderless, and without middlemen."
-              value={toggleCrypto}
-              onChange={() => {
-                return setToggleCrypto((previous) => {
-                  return !previous;
-                });
-              }}
-              className="max-w-[336px]"
-              switchClassname="hidden"
-            />
-            {/* Uncomment when we have second payment method ready */}
-            {/* <IconsRow tokens={iconsForCryptoPaymentMethod} /> */}
-            {toggleCrypto && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Toggle
+                  label="Crypto"
+                  sublabel="Get paid in Ethereum, USDC, or other popular assets. Instant, borderless, and without middlemen."
+                  value={toggleToken}
+                  disabled={!toggleCollectible && toggleToken}
+                  onChange={async () => {
+                    const newTokenValue = !toggleToken;
+                    // Prevent disabling crypto if collectible is also disabled
+                    if (!newTokenValue && !toggleCollectible) {
+                      return; // Keep current state (don't change)
+                    }
+
+                    setToggleToken(newTokenValue);
+
+                    const authToken = await getAccessToken();
+                    if (!authToken || !creator?.name) return;
+
+                    const editSuccess = await editCreatorProfile(
+                      creator.name,
+                      { tokenEnabled: newTokenValue },
+                      authToken,
+                    );
+
+                    if (editSuccess) {
+                      resetCreatorOnEdit(
+                        formMethods.reset,
+                        { tokenEnabled: newTokenValue },
+                        setCreator,
+                      );
+                    }
+                  }}
+                  className="max-w-[336px]"
+                />
+              </TooltipTrigger>
+              <TooltipContent
+                hidden={!(!toggleCollectible && toggleToken)}
+                className="z-portal bg-black text-white"
+                side="right"
+              >
+                <p className="text-body6">
+                  At least one method must stay enabled
+                </p>
+              </TooltipContent>
+            </Tooltip>
+            {toggleToken && (
               <div>
                 <Controller
                   name="chainsIds"
@@ -379,6 +503,60 @@ export default function PaymentMethods() {
           <hr className="max-w-[445px]" />
 
           <FormFieldWrapper>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Toggle
+                  label="Digital collectibles"
+                  sublabel="Receive in-game assets such as cards, skins, and collectibles."
+                  value={toggleCollectible}
+                  disabled={!toggleToken && toggleCollectible}
+                  onChange={async () => {
+                    const newValue = !toggleCollectible;
+
+                    // Prevent disabling collectible if crypto is also disabled
+                    if (!newValue && !toggleToken) {
+                      return; // Don't change state
+                    }
+
+                    setToggleCollectible(newValue);
+
+                    const authToken = await getAccessToken();
+                    if (!authToken || !creator?.name) return;
+
+                    const editSuccess = await editCreatorProfile(
+                      creator.name,
+                      { collectibleEnabled: newValue },
+                      authToken,
+                    );
+
+                    if (editSuccess) {
+                      resetCreatorOnEdit(
+                        formMethods.reset,
+                        { collectibleEnabled: newValue },
+                        setCreator,
+                      );
+                    }
+                  }}
+                  className="max-w-[336px]"
+                >
+                  <CollectiblesRow />
+                </Toggle>
+              </TooltipTrigger>
+              <TooltipContent
+                hidden={!(!toggleToken && toggleCollectible)}
+                className="z-portal bg-black text-white"
+                side="right"
+              >
+                <p className="text-body6">
+                  At least one method must stay enabled
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </FormFieldWrapper>
+
+          <hr className="max-w-[445px]" />
+
+          <FormFieldWrapper>
             <Toggle
               label="Card & bank transfers"
               sublabel="Get paid via credit cards or traditional bank transfers. Trusted, familiar, and widely used by fans."
@@ -389,9 +567,10 @@ export default function PaymentMethods() {
                 console.log('Not implemented yet');
               }}
               className="max-w-[336px]"
-              switchClassname="hidden"
-            />
-            <IconsRow icons={iconsForCardPaymentMethod} />
+              switchClassname="invisible"
+            >
+              <IconsRow icons={iconsForCardPaymentMethod} />
+            </Toggle>
           </FormFieldWrapper>
         </Form>
       </div>

@@ -19,6 +19,8 @@ import { CreatorNetwork, CreatorToken, DonationParameters } from '../entities';
       .addSelect('c.done_setup', 'doneSetup')
       .addSelect('c.receive_emails', 'receiveEmails')
       .addSelect('c.is_donor', 'isDonor')
+      .addSelect('dp.token_enabled', 'tokenEnabled')
+      .addSelect('dp.collectible_enabled', 'collectibleEnabled')
       .addSelect('dp.minimum_alert_amount', 'minimumAlertAmount')
       .addSelect('dp.minimum_tts_amount', 'minimumTTSAmount')
       .addSelect('dp.minimum_sfx_amount', 'minimumSfxAmount')
@@ -102,6 +104,12 @@ export class CreatorProfileView {
 
   @ViewColumn()
   isDonor!: boolean;
+
+  @ViewColumn()
+  tokenEnabled!: boolean;
+
+  @ViewColumn()
+  collectibleEnabled!: boolean;
 
   @ViewColumn()
   minimumAlertAmount!: number;
