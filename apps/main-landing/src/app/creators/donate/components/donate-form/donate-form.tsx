@@ -74,16 +74,19 @@ const SelectCollectibleButton = ({
   isConnected,
   openConnectModal,
   setIsCollectibleModalOpen,
+  setPendingCollectibleModal,
 }: {
   isConnected: boolean;
   openConnectModal?: () => void;
   setIsCollectibleModalOpen: (open: boolean) => void;
+  setPendingCollectibleModal: (pending: boolean) => void;
 }) => {
   return (
     <div
       className="group flex cursor-pointer flex-col items-center justify-center gap-[10px] rounded-2xl border border-neutral-300 bg-neutral-100 px-12 py-6 hover:border-mint-600"
       onClick={() => {
         if (!isConnected) {
+          setPendingCollectibleModal(true);
           openConnectModal?.();
           return;
         }
@@ -124,7 +127,7 @@ const TokenTabContent = ({
   return (
     <div>
       <Controller
-        name="amount"
+        name="tokenAmount"
         control={formMethods.control}
         render={({ field }) => {
           return (
@@ -134,7 +137,7 @@ const TokenTabContent = ({
                 {...field}
                 className="mt-6"
                 label="Amount"
-                value={field.value?.toString() ?? '1'}
+                value={field.value?.toString() ?? ''}
                 onChange={(value) => {
                   field.onChange(Number(value));
                 }}
@@ -198,6 +201,7 @@ const CollectibleTabContent = ({
   setIsCollectibleModalOpen,
   isConnected,
   openConnectModal,
+  setPendingCollectibleModal,
 }: {
   selectedCollectible: Collectible | null;
   amount: number | undefined;
@@ -205,6 +209,7 @@ const CollectibleTabContent = ({
   setIsCollectibleModalOpen: (open: boolean) => void;
   isConnected: boolean;
   openConnectModal?: () => void;
+  setPendingCollectibleModal: (pending: boolean) => void;
 }) => {
   return (
     <div className="mt-4">
@@ -248,6 +253,7 @@ const CollectibleTabContent = ({
           isConnected={isConnected}
           openConnectModal={openConnectModal}
           setIsCollectibleModalOpen={setIsCollectibleModalOpen}
+          setPendingCollectibleModal={setPendingCollectibleModal}
         />
       )}
     </div>
@@ -267,7 +273,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
     const { isConnected } = useAccount();
     const { donor } = useAuth();
     const { data: walletClient } = useWalletClient();
-    const { connectModalOpen, openConnectModal } = useConnectModal();
+    const { openConnectModal } = useConnectModal();
     const [selectedTokenSymbol, setSelectedTokenSymbol] =
       useState<string>('ETH');
     const [imageError, setImageError] = useState(false);
@@ -280,6 +286,9 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       'token',
     );
     const [collectionFilters, setCollectionFilters] = useState<string[]>([]);
+    const [pendingCollectibleModal, setPendingCollectibleModal] =
+      useState(false);
+    const [pendingFormSubmission, setPendingFormSubmission] = useState(false);
 
     const { showMobileFilter, setShowMobileFilter } = useMobileFilter();
 
@@ -360,7 +369,27 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
     const { reset } = formMethods;
 
     useEffect(() => {
-      reset(getSendFormDefaultValues(defaultChainId, selectedTokenSymbol));
+      const currentTokenAmount = formMethods.getValues('tokenAmount');
+      const currentCollectibleAmount =
+        formMethods.getValues('collectibleAmount');
+      const currentMessage = formMethods.getValues('message');
+      const defaultValues = getSendFormDefaultValues(
+        defaultChainId,
+        selectedTokenSymbol,
+      );
+
+      // Preserve the current amounts and message if they exist
+      if (currentTokenAmount !== undefined) {
+        defaultValues.tokenAmount = currentTokenAmount;
+      }
+      if (currentCollectibleAmount !== undefined) {
+        defaultValues.collectibleAmount = currentCollectibleAmount;
+      }
+      if (currentMessage !== undefined) {
+        defaultValues.message = currentMessage;
+      }
+
+      reset(defaultValues);
 
       sender.resetBalance();
       setSelectedCollectible(null);
@@ -382,12 +411,17 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       creatorInfo.tokenEnabled,
     ]);
 
-    const [chainId, tokenSymbol, amount, sfx] = formMethods.watch([
-      'chainId',
-      'tokenSymbol',
-      'amount',
-      'sfx',
-    ]);
+    const [chainId, tokenSymbol, tokenAmount, collectibleAmount, sfx] =
+      formMethods.watch([
+        'chainId',
+        'tokenSymbol',
+        'tokenAmount',
+        'collectibleAmount',
+        'sfx',
+      ]);
+
+    // Derive the current amount based on active tab
+    const amount = activeTab === 'token' ? tokenAmount : collectibleAmount;
 
     const sendDonationEffects = useCallback(
       async (txHash: string) => {
@@ -491,11 +525,19 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
 
     // Reset SFX when amount falls below the minimum
     useEffect(() => {
-      if (amount && amount < minimumSfxAmount && sfx) {
+      const currentAmount =
+        activeTab === 'token' ? tokenAmount : collectibleAmount;
+      if (currentAmount && currentAmount < minimumSfxAmount && sfx) {
         formMethods.setValue('sfx', '');
       }
-    }, [amount, sfx, formMethods, minimumSfxAmount]);
-
+    }, [
+      tokenAmount,
+      collectibleAmount,
+      activeTab,
+      sfx,
+      formMethods,
+      minimumSfxAmount,
+    ]);
     const selectedToken = useMemo(() => {
       const token = possibleTokens?.find((token) => {
         return token.symbol === tokenSymbol;
@@ -531,9 +573,15 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         setSubmitError(null); // Clear any previous error when retrying
 
         if (!isConnected) {
+          if (activeTab === 'token') {
+            setPendingFormSubmission(true);
+          }
           openConnectModal?.();
           return;
         }
+
+        // Clear pending submission since we're now connected
+        setPendingFormSubmission(false);
 
         if (
           !walletClient ||
@@ -570,8 +618,22 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
 
         rest.message = ' ' + rest.message;
 
+        // Set the amount based on active tab for the SendPayload
+        const finalAmount =
+          activeTab === 'token'
+            ? payload.tokenAmount
+            : payload.collectibleAmount;
+
+        console.log(
+          'finalAmount, tokenAmount and collectibleAmount',
+          finalAmount,
+          payload.tokenAmount,
+          payload.collectibleAmount,
+        );
+
         const sendPayload: SendPayload = {
           ...rest,
+          amount: finalAmount, // Use the derived amount
           chainId,
           tokenAddress,
           type,
@@ -597,8 +659,32 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         openConnectModal,
         linkWalletIfNeeded,
         selectedCollectible,
+        activeTab,
       ],
     );
+
+    // Watch for connection changes to open collectible modal
+    useEffect(() => {
+      if (isConnected && pendingCollectibleModal) {
+        setIsCollectibleModalOpen(true);
+        setPendingCollectibleModal(false);
+      }
+
+      // Handle pending form submission after connection
+      if (isConnected && pendingFormSubmission && walletClient) {
+        void formMethods.handleSubmit(onSubmit)();
+        setPendingFormSubmission(false);
+      }
+    }, [
+      isConnected,
+      pendingCollectibleModal,
+      pendingFormSubmission,
+      formMethods,
+      walletClient,
+      onSubmit,
+    ]);
+
+    console.log('rerender, active tab', activeTab);
 
     if (!creatorInfo.address.isValid && !creatorInfo.address.isFetching) {
       return (
@@ -672,6 +758,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
             onClick={() => {
               sender.reset();
               formMethods.reset();
+              setSelectedCollectible(null);
             }}
           >
             CLOSE
@@ -728,6 +815,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
           <div>
             {creatorInfo.collectibleEnabled && creatorInfo.tokenEnabled ? (
               <Tabs
+                initialTab={activeTab}
                 onChange={(value) => {
                   formMethods.setValue(
                     'type',
@@ -757,11 +845,12 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                     children: (
                       <CollectibleTabContent
                         selectedCollectible={selectedCollectible}
-                        amount={amount}
+                        amount={collectibleAmount}
                         setSelectedCollectible={setSelectedCollectible}
                         setIsCollectibleModalOpen={setIsCollectibleModalOpen}
                         isConnected={isConnected}
                         openConnectModal={openConnectModal}
+                        setPendingCollectibleModal={setPendingCollectibleModal}
                       />
                     ),
                   },
@@ -783,11 +872,12 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                 {creatorInfo.collectibleEnabled && (
                   <CollectibleTabContent
                     selectedCollectible={selectedCollectible}
-                    amount={amount}
+                    amount={collectibleAmount}
                     setSelectedCollectible={setSelectedCollectible}
                     setIsCollectibleModalOpen={setIsCollectibleModalOpen}
                     isConnected={isConnected}
                     openConnectModal={openConnectModal}
+                    setPendingCollectibleModal={setPendingCollectibleModal}
                   />
                 )}
               </>
@@ -885,41 +975,30 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
             />
           )}
 
-          {isConnected ? (
-            <Tooltip>
-              <TooltipTrigger className="w-full">
-                <Button
-                  size="medium"
-                  type="submit"
-                  intent="primary"
-                  className="mt-6 w-full"
-                  prefixIconName="Coins"
-                  disabled={activeTab === 'collectible' && !selectedCollectible}
-                >
-                  Donate
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent
-                hidden={
-                  activeTab === 'collectible' && selectedCollectible != null
-                }
-                className="z-portal bg-black text-white"
-                side="bottom"
+          <Tooltip>
+            <TooltipTrigger className="w-full">
+              <Button
+                size="medium"
+                type="submit"
+                intent="primary"
+                className="mt-6 w-full"
+                prefixIconName="Coins"
+                disabled={activeTab === 'collectible' && !selectedCollectible}
               >
-                <p className="text-body6">Select a collectible first</p>
-              </TooltipContent>
-            </Tooltip>
-          ) : (
-            <Button
-              size="medium"
-              intent="primary"
-              className="mt-6 w-full"
-              onClick={openConnectModal}
-              loading={connectModalOpen}
+                Donate
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent
+              hidden={
+                (activeTab === 'collectible' && selectedCollectible != null) ||
+                activeTab === 'token'
+              }
+              className="z-portal bg-black text-white"
+              side="bottom"
             >
-              LOG IN
-            </Button>
-          )}
+              <p className="text-body6">Select a collectible first</p>
+            </TooltipContent>
+          </Tooltip>
           {submitError && (
             <div className="mt-1 flex items-start gap-x-1 text-label7 text-red-500 lg:text-label6">
               <Icon name="AlertCircle" size={16} className="p-px" />
@@ -996,7 +1075,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                 formMethods.setValue('tokenId', collectible.tokenId);
                 formMethods.setValue('contract', collectible.contract);
                 formMethods.setValue('type', collectible.type ?? 'erc1155');
-                formMethods.setValue('amount', collectible.amount);
+                formMethods.setValue('collectibleAmount', collectible.amount);
                 setSelectedCollectible({
                   tokenId: collectible.tokenId,
                   name: collectible.name,

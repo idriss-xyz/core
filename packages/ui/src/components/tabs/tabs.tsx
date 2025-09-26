@@ -9,16 +9,17 @@ export type TabItem = {
 
 type Properties = {
   items: TabItem[];
+  initialTab?: string;
   onChange?: (tabKey: string) => void;
 };
 
-export const Tabs = ({ items, onChange }: Properties) => {
-  const [activeTab, setActiveTab] = useState(items[0]?.key);
+export const Tabs = ({ items, initialTab, onChange }: Properties) => {
+  const [activeTab, setActiveTab] = useState(initialTab ?? items[0]?.key);
 
   return (
     <RadixTabs.Root
       className="flex flex-col"
-      defaultValue={items[0]?.key}
+      defaultValue={activeTab}
       onValueChange={(value) => {
         setActiveTab(value);
         onChange?.(value);

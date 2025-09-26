@@ -18,5 +18,5 @@ export { default as IDRISS_SCENE_STREAM_SHORT } from './idriss-scene-stream-shor
 export { default as IDRISS_SCENE_STREAM_SHORT_2 } from './idriss-scene-stream-short-2.png';
 export { default as IDRISS_SCENE_STREAM_LIGHT } from './idriss-scene-stream-light.png';
 export { default as IDRISS_TOROID } from './idriss-toroid.png';
-export { default as ACCOUNT_CARD } from './account-card.png';
-export { default as GUEST_CARD } from './guest-card.png';
+export { default as ACCOUNT_CARD } from './account-card.svg';
+export { default as GUEST_CARD } from './guest-card.svg';
