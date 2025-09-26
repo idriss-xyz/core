@@ -131,7 +131,7 @@ export default function DonationOverlay({ creatorName }: Properties) {
         sfxEnabled: data.donationParameters.sfxEnabled,
         ttsEnabled: data.donationParameters.ttsEnabled,
       });
-      setCustomBadWords(data.donationParameters.customBadWords);
+      setCustomBadWords(data.donationParameters.customBadWords ?? []);
       setAlertSound(data.donationParameters.alertSound);
       setVoiceId(data.donationParameters.voiceId);
     });
@@ -200,7 +200,7 @@ export default function DonationOverlay({ creatorName }: Properties) {
                 sfxEnabled: profile.sfxEnabled,
                 ttsEnabled: profile.ttsEnabled,
               });
-              setCustomBadWords(profile.customBadWords);
+              setCustomBadWords(profile.customBadWords ?? []);
               setAlertSound(profile.alertSound);
               setVoiceId(profile.voiceId);
             }
