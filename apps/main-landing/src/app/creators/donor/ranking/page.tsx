@@ -42,7 +42,7 @@ function RankingContent() {
 
         <div className="grid grid-cols-1 items-start gap-x-10">
           <LeaderboardStandalone
-            heading="Top donors"
+            heading="Top fans"
             onDonorClick={onDonorClick}
             leaderboard={donorRanking.data ?? []}
             leaderboardError={donorRanking.isError}

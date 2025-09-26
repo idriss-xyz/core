@@ -26,10 +26,10 @@ export default function EarningsLayout({
       isActive: pathname === '/creators/app/earnings/balance',
     },
     {
-      name: 'Top donors',
-      href: '/creators/app/earnings/top-donors',
+      name: 'Fans',
+      href: '/creators/app/earnings/fans',
       iconName: 'Users2',
-      isActive: pathname === '/creators/app/earnings/top-donors',
+      isActive: pathname === '/creators/app/earnings/fans',
     },
   ];
 

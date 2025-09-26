@@ -1,0 +1,33 @@
+{
+  "balances": [
+    {
+      "chainId": 8453,
+      "contract": "0xa7b67cd6b31b73772ae3c8ea784317207194a6f4",
+      "collection": "Parallel Aftermath",
+      "tokenId": "100400079",
+      "balance": "1",
+      "type": "erc1155",
+      "image": "https://images.zapper.xyz/z/?path=zapper-fi-assets/nfts/medias/bde1ebef9eb63d8e3eb568814228e42da3ae90e72695d7643475b3477556ce87.png&width=250&checksum=dXh8tsKL1feE_AOIDro5mS1yc4lq09xfDWVwzt_HN78",
+      "collectionImage": "https://i.seadn.io/s/raw/files/f782faa4af801c5d31622008bbb5e524.png?h=250&w=250",
+      "name": "Terra's Fury",
+      "collectionShortName": "Aftermath",
+      "collectionCategory": "Parallel"
+    },
+    {
+      "chainId": 8453,
+      "contract": "0x8bb4033af06b363a8391f795a39281bcc3b6197d",
+      "collection": "Parallel Planetfall [Base]",
+      "tokenId": "100200305",
+      "balance": "2",
+      "type": "erc1155",
+      "image": "https://images.zapper.xyz/z/?path=zapper-fi-assets/nfts/medias/f88fe03fa2a43a1b01450ebe0c6f8dfcfae825013091a762e8b8339d00fea88e.png&width=250&checksum=MsHBNFUrqXfbCtUosn_eef5m4bdJ4hwlNsnXBtEyy9w",
+      "collectionImage": "https://i.seadn.io/s/raw/files/33c294ebc43b4b5cf89038e2da83529d.png?h=250&w=250",
+      "name": "Corrupted Monolith",
+      "collectionShortName": "Planetfall [Base]",
+      "collectionCategory": "Parallel"
+    }
+  ],
+  "summary": {
+    "totalUsdBalance": 0
+  }
+}

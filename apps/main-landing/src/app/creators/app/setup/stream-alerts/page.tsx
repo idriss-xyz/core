@@ -58,7 +58,7 @@ const UpgradeBox: React.FC = () => {
             Upgrade your Twitch Setup
           </p>
           <h3 className={classes('text-display6 gradient-text')}>
-            Show top donors on your channel
+            Show top fans on your channel
           </h3>
         </div>
       </div>
