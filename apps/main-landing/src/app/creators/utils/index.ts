@@ -124,7 +124,8 @@ export async function getNftMetadata(
     if (img?.startsWith('ipfs://'))
       img = img.replace('ipfs://', 'https://ipfs.io/ipfs/');
     return { name: meta.name ?? 'NFT', image: img, collectionName };
-  } catch {
+  } catch (error) {
+    console.log('error in metadata', error);
     return { name: 'NFT', image: undefined, collectionName };
   }
 }
