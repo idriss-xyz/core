@@ -18,6 +18,7 @@ import {
 } from '@idriss-xyz/utils';
 import { Link } from '@idriss-xyz/ui/link';
 import { useRouter } from 'next/navigation';
+import { classes } from '@idriss-xyz/ui/utils';
 
 import { removeMainnetSuffix } from '@/app/creators/donate/utils';
 import { TokenLogo } from '@/app/creators/app/earnings/stats-and-history/token-logo';
@@ -32,10 +33,9 @@ type Properties = {
 
 export const DonateHistoryItem = ({
   donation,
-  showReceiver,
+  showReceiver = false,
   showMenu = true,
 }: Properties) => {
-  console.log(donation);
   const timeAgo = useTimeAgo({ timestamp: donation.timestamp });
   const router = useRouter();
   /* ——— distinguish donation type ——— */
@@ -64,12 +64,9 @@ export const DonateHistoryItem = ({
   const receiverName = tipReceiver.displayName;
   const tipperFromName = donation.fromUser.displayName;
 
-  const displayName = showReceiver
-    ? tipReceiver?.displayName
-    : donation.fromUser.displayName;
-
-  const nameToDisplay =
-    (displayName ?? showReceiver) ? receiverName : tipperFromName;
+  const nameToDisplay = showReceiver
+    ? (tipReceiver?.displayName ?? 'anon')
+    : (donation.fromUser.displayName ?? 'anon');
 
   const redirectUrl = showReceiver
     ? `/creators/donor/${receiverName}`
@@ -108,17 +105,25 @@ export const DonateHistoryItem = ({
 
         <div className="flex flex-col justify-center gap-y-1">
           <div className="flex items-center gap-x-2">
-            <p className="flex flex-row flex-wrap items-center gap-x-1 text-body3 text-neutral-900">
+            <p
+              className={classes(
+                'flex flex-row flex-wrap items-center gap-x-1 text-body3 text-neutral-900',
+              )}
+            >
               <Link
                 size="xs"
                 onClick={() => {
                   router.push(redirectUrl);
                 }}
-                className="cursor-pointer border-0 align-middle text-label3 text-neutral-900 no-underline lg:text-label3"
+                className={classes(
+                  'cursor-pointer border-0 align-middle text-label3 text-neutral-900 no-underline lg:text-label3',
+                )}
               >
                 {nameToDisplay}
               </Link>{' '}
-              <span className="align-middle text-body3 text-neutral-600">
+              <span
+                className={classes('align-middle text-body3 text-neutral-600')}
+              >
                 {showReceiver ? 'received' : 'sent'} {formattedAmount}{' '}
                 {tokenSymbol}{' '}
               </span>
@@ -157,7 +162,7 @@ export const DonateHistoryItem = ({
           </div>
 
           {tipComment && (
-            <p className="align-middle text-body5 text-neutral-600">
+            <p className={classes('align-middle text-body5 text-neutral-600')}>
               {tipComment}
             </p>
           )}
@@ -165,11 +170,13 @@ export const DonateHistoryItem = ({
           <TooltipProvider delayDuration={400}>
             <Tooltip>
               <TooltipTrigger asChild>
-                <p className="w-fit text-body6 text-mint-700">{timeAgo}</p>
+                <p className={classes('w-fit text-body6 text-mint-700')}>
+                  {timeAgo}
+                </p>
               </TooltipTrigger>
 
               <TooltipContent className="w-fit bg-black text-white">
-                <p className="text-body6">
+                <p className={classes('text-body6')}>
                   {new Intl.DateTimeFormat('en-US', {
                     year: 'numeric',
                     month: '2-digit',
@@ -200,7 +207,9 @@ export const DonateHistoryItem = ({
               />
             );
           }}
-          className="z-extensionPopup rounded-xl border border-neutral-300 bg-white py-2 shadow-lg"
+          className={classes(
+            'z-extensionPopup rounded-xl border border-neutral-300 bg-white py-2 shadow-lg',
+          )}
         >
           {() => {
             return transactionUrls ? (

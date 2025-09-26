@@ -88,7 +88,6 @@ export const CollectibleGallery = ({
     for (const col of uniqueCollections ?? []) {
       (groups[col.category] ||= []).push(col);
     }
-    console.log(uniqueCollections);
     return groups;
   }, [uniqueCollections]);
 
@@ -191,14 +190,14 @@ export const CollectibleGallery = ({
       <div className="flex gap-6">
         {/* Desktop Collection Filter - hidden below md */}
         <div className="hidden max-h-96 w-48 shrink-0 overflow-y-auto md:block">
-          <h3 className="mb-3 text-label3 text-neutralGreen-900">
+          <h3 className={classes('mb-3 text-label3 text-neutralGreen-900')}>
             Collections
           </h3>
           <div className="space-y-2">
             {Object.entries(groupedCollections).map(([category, cols]) => {
               return (
                 <div key={category} className="mb-4">
-                  <h3 className="mb-3 text-body6 text-neutral-600">
+                  <h3 className={classes('mb-3 text-body6 text-neutral-600')}>
                     {category}
                   </h3>
                   <div className="space-y-2">
