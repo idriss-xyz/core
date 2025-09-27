@@ -1,6 +1,7 @@
 {
   "donations": [
     {
+      "kind": "token",
       "transactionHash": "0x107740977dc91f4ed2ecdd852b82caa3516b46883666543b3ee26e3856a65307",
       "fromAddress": "0x5abca791c22e7f99237fcc04639e094ffa0ccce9",
       "toAddress": "0x57658D89126610CbD05CAb564b6B13e7E3D1c843",
@@ -33,6 +34,7 @@
       }
     },
     {
+      "kind": "token",
       "transactionHash": "0xca440b483fb75b1b4de51851328e49fc92524de6421dd8de188b9a36b87b6b40",
       "fromAddress": "0xee6799bc9772becbef8b24eee04781fa5e2e23d4",
       "toAddress": "0x57658D89126610CbD05CAb564b6B13e7E3D1c843",
@@ -65,6 +67,7 @@
       }
     },
     {
+      "kind": "token",
       "transactionHash": "0xbdab4c2177af9159b02c250b30355049c373f02f687f56696d207d26d9b8c6c8",
       "fromAddress": "0xee6799bc9772becbef8b24eee04781fa5e2e23d4",
       "toAddress": "0x57658D89126610CbD05CAb564b6B13e7E3D1c843",
@@ -97,6 +100,7 @@
       }
     },
     {
+      "kind": "token",
       "transactionHash": "0xb7ba536c92528acf85563b54775089282370190df5d375f4bbf1ac1d6ae759c7",
       "fromAddress": "0xdd44d5e2d75a4b85a20184157ec92e5c64a39b4a",
       "toAddress": "0x57658D89126610CbD05CAb564b6B13e7E3D1c843",
@@ -130,6 +134,7 @@
       }
     },
     {
+      "kind": "token",
       "transactionHash": "0x1cfa0b9318f1a8f8d60874c48331342db9430e50041d7a41422e415c8178b2a9",
       "fromAddress": "0x1cfa0b9318f1a8f8d60874c48331342d",
       "toAddress": "0x57658D89126610CbD05CAb564b6B13e7E3D1c843",
@@ -162,6 +167,7 @@
       }
     },
     {
+      "kind": "token",
       "transactionHash": "0x2dabea88d8a3d4e5a6b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4",
       "fromAddress": "0x3dabea88d8a3d4e5a6b2c3d4e5f6a7b8",
       "toAddress": "0x57658D89126610CbD05CAb564b6B13e7E3D1c843",
@@ -195,6 +201,7 @@
       }
     },
     {
+      "kind": "token",
       "transactionHash": "0x4eafba99e9a4d5e6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6",
       "fromAddress": "0x4eafba99e9a4d5e6a7b8c9d0e1f2a3b4",
       "toAddress": "0x57658D89126610CbD05CAb564b6B13e7E3D1c843",
@@ -227,6 +234,7 @@
       }
     },
     {
+      "kind": "token",
       "transactionHash": "0x5fbccb00f0a5d6e7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7",
       "fromAddress": "0x5fbccb00f0a5d6e7a8b9c0d1e2f3a4b5",
       "toAddress": "0x57658D89126610CbD05CAb564b6B13e7E3D1c843",
@@ -260,6 +268,7 @@
       }
     },
     {
+      "kind": "token",
       "transactionHash": "0x6cdadc11a1b6d7e8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8",
       "fromAddress": "0x1cfa0b9318f1a8f8d60874c48331342d",
       "toAddress": "0x57658D89126610CbD05CAb564b6B13e7E3D1c843",
@@ -292,6 +301,7 @@
       }
     },
     {
+      "kind": "token",
       "transactionHash": "0x7bdbc222b2c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9",
       "fromAddress": "0x2bdbc222b2c7d8e9f0a1b2c3d4e5f6a7",
       "toAddress": "0x57658D89126610CbD05CAb564b6B13e7E3D1c843",
@@ -325,6 +335,7 @@
       }
     },
     {
+      "kind": "token",
       "transactionHash": "0x8acdc333c3d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0",
       "fromAddress": "0x3dabea88d8a3d4e5a6b2c3d4e5f6a7b8",
       "toAddress": "0x57658D89126610CbD05CAb564b6B13e7E3D1c843",
@@ -357,6 +368,7 @@
       }
     },
     {
+      "kind": "token",
       "transactionHash": "0x99bed444d4e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1",
       "fromAddress": "0x4eafba99e9a4d5e6a7b8c9d0e1f2a3b4",
       "toAddress": "0x57658D89126610CbD05CAb564b6B13e7E3D1c843",
@@ -390,6 +402,7 @@
       }
     },
     {
+      "kind": "token",
       "transactionHash": "0xa8cfd555e5f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2",
       "fromAddress": "0x1cfa0b9318f1a8f8d60874c48331342d",
       "toAddress": "0x57658D89126610CbD05CAb564b6B13e7E3D1c843",
@@ -422,6 +435,7 @@
       }
     },
     {
+      "kind": "token",
       "transactionHash": "0xb7bfe666f6a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3",
       "fromAddress": "0x2bdbc222b2c7d8e9f0a1b2c3d4e5f6a7",
       "toAddress": "0x57658D89126610CbD05CAb564b6B13e7E3D1c843",
@@ -454,6 +468,7 @@
       }
     },
     {
+      "kind": "token",
       "transactionHash": "0xc6c0f777a7b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4",
       "fromAddress": "0x5fbccb00f0a5d6e7a8b9c0d1e2f3a4b5",
       "toAddress": "0x57658D89126610CbD05CAb564b6B13e7E3D1c843",
@@ -487,6 +502,7 @@
       }
     },
     {
+      "kind": "token",
       "transactionHash": "0xd5d10888b8c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5",
       "fromAddress": "0x3dabea88d8a3d4e5a6b2c3d4e5f6a7b8",
       "toAddress": "0x57658D89126610CbD05CAb564b6B13e7E3D1c843",
@@ -519,6 +535,7 @@
       }
     },
     {
+      "kind": "token",
       "transactionHash": "0xe4e21999c9d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6",
       "fromAddress": "0x1cfa0b9318f1a8f8d60874c48331342d",
       "toAddress": "0x57658D89126610CbD05CAb564b6B13e7E3D1c843",
