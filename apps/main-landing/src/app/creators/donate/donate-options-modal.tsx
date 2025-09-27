@@ -94,15 +94,27 @@ export const DonateOptionsModal = () => {
             onChange={setSelectedOption}
           />
           <div className="flex justify-center">
-            <Button
-              onClick={handleSaveChoice}
-              disabled={!selectedOption}
-              intent="primary"
-              size="medium"
-              prefixIconName="Coins"
-            >
-              Donate
-            </Button>
+            {selectedOption === 'guest' ? (
+              <Button
+                onClick={handleSaveChoice}
+                disabled={!selectedOption}
+                intent="primary"
+                size="medium"
+                suffixIconName="IdrissArrowRight"
+              >
+                Continue
+              </Button>
+            ) : (
+              <Button
+                onClick={handleSaveChoice}
+                disabled={!selectedOption}
+                intent="primary"
+                size="medium"
+                prefixIconName="TwitchOutlinedBold2"
+              >
+                Continue with Twitch
+              </Button>
+            )}
           </div>
         </div>
       </div>
