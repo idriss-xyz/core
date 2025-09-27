@@ -25,7 +25,7 @@ function RankingContent() {
   const donorRanking = useGetDonorRanking();
 
   const onDonorClick = (displayName: string) => {
-    router.push(`/creators/donor/${displayName.toLowerCase()}`);
+    router.push(`/creators/fan/${displayName.toLowerCase()}`);
   };
 
   return (

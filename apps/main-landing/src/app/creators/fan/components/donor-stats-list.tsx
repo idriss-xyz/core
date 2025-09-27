@@ -195,7 +195,7 @@ export default function DonorStatsList({
                 <div
                   className="flex cursor-pointer flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-8 shadow-md"
                   onClick={() => {
-                    router.push('/creators/donor/ranking');
+                    router.push('/creators/fan/ranking');
                   }}
                 >
                   <p className="text-label5 text-neutral-600">

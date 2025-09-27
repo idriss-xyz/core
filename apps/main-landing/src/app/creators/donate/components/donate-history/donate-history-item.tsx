@@ -69,8 +69,8 @@ export const DonateHistoryItem = ({
     : (donation.fromUser.displayName ?? 'anon');
 
   const redirectUrl = showReceiver
-    ? `/creators/donor/${receiverName}`
-    : `/creators/donor/${tipperFromName}`;
+    ? `/creators/fan/${receiverName}`
+    : `/creators/fan/${tipperFromName}`;
 
   const avatarSource = showReceiver
     ? tipReceiver.avatarUrl

@@ -174,7 +174,7 @@ export function DonateContent({ creatorProfile }: Properties) {
 
   const onDonorClick = useCallback(
     (displayName: string) => {
-      router.push(`/creators/donor/${displayName}`);
+      router.push(`/creators/fan/${displayName}`);
     },
     [router],
   );

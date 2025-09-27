@@ -19,7 +19,7 @@ const cardRadioItems: CardRadioItem[] = [
     value: 'guest',
     title: 'Donate as a guest',
     description:
-      'Support quietly without logging in and creating a public profile.',
+      'Support quietly without logging in and creating a fan profile.',
     image: GUEST_CARD.src,
     imageAlt: 'Guest donation',
   },
@@ -27,7 +27,7 @@ const cardRadioItems: CardRadioItem[] = [
     value: 'account',
     title: 'Get recognized',
     description:
-      'Join the leaderboard, earn status, and track impact with a profile.',
+      'Join the leaderboard, earn status, and track impact with a fan profile.',
     image: ACCOUNT_CARD.src,
     imageAlt: 'Account donation',
   },

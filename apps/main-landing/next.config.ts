@@ -46,7 +46,12 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/donors/ranking',
-        destination: '/creators/donor/ranking',
+        destination: '/creators/fan/ranking',
+        permanent: true,
+      },
+      {
+        source: '/creators/donor/ranking',
+        destination: '/creators/fan/ranking',
         permanent: true,
       },
       {
