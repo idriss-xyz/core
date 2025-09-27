@@ -51,7 +51,7 @@ export const NumericButtonGroup = ({
       <div className="h-7 w-px bg-neutral-300" />
 
       {/* Value */}
-      <div className="select-none px-3 py-1.5 text-body5 font-semibold text-neutralGreen-900">
+      <div className="flex w-8 select-none items-center justify-center py-1.5 text-body5 font-semibold text-neutralGreen-900">
         {internalValue}
       </div>
 
