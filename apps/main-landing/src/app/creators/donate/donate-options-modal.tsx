@@ -104,8 +104,7 @@ export const DonateOptionsModal = () => {
               >
                 Continue
               </Button>
-            ) :
-            (
+            ) : (
               <Button
                 onClick={handleSaveChoice}
                 disabled={!selectedOption}

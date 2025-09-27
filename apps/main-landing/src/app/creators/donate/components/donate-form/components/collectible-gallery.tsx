@@ -8,6 +8,7 @@ import { getAddress } from 'viem';
 import { useWalletClient } from 'wagmi';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Button } from '@idriss-xyz/ui/button';
+import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 
 import { Collectible } from '../../../types';
 import { useCollectibles } from '../../../hooks/use-collectibles';
@@ -189,48 +190,52 @@ export const CollectibleGallery = ({
     <div>
       <div className="flex gap-6">
         {/* Desktop Collection Filter - hidden below md */}
-        <div className="hidden max-h-96 w-48 shrink-0 overflow-y-auto md:block">
-          <h3 className={classes('mb-3 text-label3 text-neutralGreen-900')}>
-            Collections
-          </h3>
-          <div className="space-y-2">
-            {Object.entries(groupedCollections).map(([category, cols]) => {
-              return (
-                <div key={category} className="mb-4">
-                  <h3 className={classes('mb-3 text-body6 text-neutral-600')}>
-                    {category}
-                  </h3>
-                  <div className="space-y-2">
-                    {cols.map((collection) => {
-                      const collectionKey = `${collection.chainId}-${collection.address}`;
-                      return (
-                        <label
-                          key={collectionKey}
-                          className="flex cursor-pointer items-center gap-2"
-                        >
-                          <Checkbox
-                            value={_selectedCollections.includes(collectionKey)}
-                            onChange={() => {
-                              return handleCollectionToggle(collectionKey);
-                            }}
-                          />
-                          <img
-                            src={collection.image}
-                            className="size-6 rounded"
-                            alt=""
-                          />
-                          <span className="text-sm text-neutral-700">
-                            {collection.shortName}
-                          </span>
-                        </label>
-                      );
-                    })}
+        <ScrollArea className="hidden max-h-96 overflow-y-auto md:block">
+          <div className="w-48 shrink-0">
+            <h3 className={classes('mb-3 text-label3 text-neutralGreen-900')}>
+              Collections
+            </h3>
+            <div className="space-y-2">
+              {Object.entries(groupedCollections).map(([category, cols]) => {
+                return (
+                  <div key={category} className="mb-4">
+                    <h3 className={classes('mb-3 text-body6 text-neutral-600')}>
+                      {category}
+                    </h3>
+                    <div className="space-y-2">
+                      {cols.map((collection) => {
+                        const collectionKey = `${collection.chainId}-${collection.address}`;
+                        return (
+                          <label
+                            key={collectionKey}
+                            className="flex cursor-pointer items-center gap-2"
+                          >
+                            <Checkbox
+                              value={_selectedCollections.includes(
+                                collectionKey,
+                              )}
+                              onChange={() => {
+                                return handleCollectionToggle(collectionKey);
+                              }}
+                            />
+                            <img
+                              src={collection.image}
+                              className="size-6 rounded"
+                              alt=""
+                            />
+                            <span className="text-sm text-neutral-700">
+                              {collection.shortName}
+                            </span>
+                          </label>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
-        </div>
+        </ScrollArea>
 
         {/* Gallery */}
         <div className="min-h-[300px] flex-1">
@@ -239,102 +244,104 @@ export const CollectibleGallery = ({
               No collectibles found
             </div>
           ) : (
-            <div className="grid max-h-96 grid-cols-2 gap-4 overflow-y-auto md:grid-cols-3">
-              {filteredCollectibles.map((collectible) => {
-                const collectibleKey = getCollectibleKey(collectible);
-                const isSelected = selectedCollectibleId === collectibleKey;
+            <ScrollArea className="max-h-96 overflow-y-auto">
+              <div className="grid grid-cols-2 gap-4 pr-5 md:grid-cols-3">
+                {filteredCollectibles.map((collectible) => {
+                  const collectibleKey = getCollectibleKey(collectible);
+                  const isSelected = selectedCollectibleId === collectibleKey;
 
-                return (
-                  <div
-                    key={collectibleKey}
-                    className={classes(
-                      'relative flex cursor-pointer flex-col gap-[10px] rounded-xl border border-neutral-300 p-[6px] transition-colors hover:border-mint-500',
-                      isSelected ? 'border-mint-500' : '',
-                    )}
-                    onClick={() => {
-                      return handleCollectibleClick(collectible);
-                    }}
-                  >
-                    <img
-                      src={collectible.image}
-                      alt={collectible.name}
-                      className="h-[240px] w-auto rounded-xl object-cover"
-                    />
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="flex min-w-0 flex-col">
-                        <p className="truncate text-sm font-medium">
-                          {collectible.name}
-                        </p>
-                        <p className="truncate text-xs text-neutral-500">
-                          {collectible.collection}
-                        </p>
+                  return (
+                    <div
+                      key={collectibleKey}
+                      className={classes(
+                        'relative flex cursor-pointer flex-col gap-[10px] rounded-xl border border-neutral-300 p-[6px] transition-colors hover:border-mint-500',
+                        isSelected ? 'border-mint-500' : '',
+                      )}
+                      onClick={() => {
+                        return handleCollectibleClick(collectible);
+                      }}
+                    >
+                      <img
+                        src={collectible.image}
+                        alt={collectible.name}
+                        className="h-[240px] w-auto rounded-xl object-cover"
+                      />
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex min-w-0 flex-col">
+                          <p className="truncate text-sm font-medium">
+                            {collectible.name}
+                          </p>
+                          <p className="truncate text-xs text-neutral-500">
+                            {collectible.collection}
+                          </p>
+                        </div>
+                        {collectible.type === 'erc1155' &&
+                          Number(collectible.balance) > 1 && (
+                            <LayersBadge amount={collectible.balance} />
+                          )}
                       </div>
-                      {collectible.type === 'erc1155' &&
-                        Number(collectible.balance) > 1 && (
-                          <LayersBadge amount={collectible.balance} />
-                        )}
-                    </div>
 
-                    {/* Selection controls */}
-                    <div className="absolute right-3 top-3">
-                      {(() => {
-                        if (
-                          collectible.type === 'erc721' ||
-                          (collectible.type === 'erc1155' &&
-                            Number(collectible.balance) === 1)
-                        ) {
-                          return (
-                            <IconButton
-                              iconName={isSelected ? 'Check' : 'Plus'}
-                              intent="tertiary"
-                              size="small"
-                              className={`shadow-[0_0_0_4px_rgba(242,242,242,0.14)] ${isSelected ? 'bg-mint-500 text-white' : 'bg-white'}`}
-                              onClick={(event) => {
-                                event.stopPropagation();
-                                handleCollectibleClick(collectible);
-                              }}
-                            />
-                          );
-                        } else {
-                          // ERC1155 with multiple tokens
-                          return isSelected ? (
-                            <div
-                              onClick={(event) => {
-                                return event.stopPropagation();
-                              }}
-                            >
-                              <NumericButtonGroup
-                                value={selectedAmount}
-                                onChange={(newAmount) => {
-                                  return handleAmountChange(
-                                    collectible,
-                                    newAmount,
-                                  );
+                      {/* Selection controls */}
+                      <div className="absolute right-3 top-3">
+                        {(() => {
+                          if (
+                            collectible.type === 'erc721' ||
+                            (collectible.type === 'erc1155' &&
+                              Number(collectible.balance) === 1)
+                          ) {
+                            return (
+                              <IconButton
+                                iconName={isSelected ? 'Check' : 'Plus'}
+                                intent="tertiary"
+                                size="small"
+                                className={`shadow-[0_0_0_4px_rgba(242,242,242,0.14)] ${isSelected ? 'bg-mint-500 text-white' : 'bg-white'}`}
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                  handleCollectibleClick(collectible);
                                 }}
-                                min={0}
-                                max={Number(collectible.balance)}
-                                className="bg-white shadow-[0_0_0_4px_rgba(242,242,242,0.14)]"
                               />
-                            </div>
-                          ) : (
-                            <IconButton
-                              iconName="Plus"
-                              intent="tertiary"
-                              size="small"
-                              className="bg-white shadow-[0_0_0_4px_rgba(242,242,242,0.14)]"
-                              onClick={(event) => {
-                                event.stopPropagation();
-                                handleCollectibleClick(collectible);
-                              }}
-                            />
-                          );
-                        }
-                      })()}
+                            );
+                          } else {
+                            // ERC1155 with multiple tokens
+                            return isSelected ? (
+                              <div
+                                onClick={(event) => {
+                                  return event.stopPropagation();
+                                }}
+                              >
+                                <NumericButtonGroup
+                                  value={selectedAmount}
+                                  onChange={(newAmount) => {
+                                    return handleAmountChange(
+                                      collectible,
+                                      newAmount,
+                                    );
+                                  }}
+                                  min={0}
+                                  max={Number(collectible.balance)}
+                                  className="bg-white shadow-[0_0_0_4px_rgba(242,242,242,0.14)]"
+                                />
+                              </div>
+                            ) : (
+                              <IconButton
+                                iconName="Plus"
+                                intent="tertiary"
+                                size="small"
+                                className="bg-white shadow-[0_0_0_4px_rgba(242,242,242,0.14)]"
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                  handleCollectibleClick(collectible);
+                                }}
+                              />
+                            );
+                          }
+                        })()}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
+            </ScrollArea>
           )}
         </div>
       </div>
