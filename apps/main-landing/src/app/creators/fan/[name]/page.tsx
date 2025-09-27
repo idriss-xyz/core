@@ -7,8 +7,8 @@ import { useParams } from 'next/navigation';
 import { RainbowKitProviders } from '@/app/creators/donate/providers';
 import { backgroundLines2 } from '@/assets';
 import { DonateContentValues } from '@/app/creators/donate/types';
-import { useGetDonorHistory } from '@/app/creators/donor/commands/get-donor-history';
 import { DonateHistory } from '@/app/creators/donate/components/donate-history';
+import { useGetDonorHistory } from '@/app/creators/fan/commands/get-donor-history';
 
 import DonorStatsList from '../components/donor-stats-list';
 import { TopBar } from '../../components/top-bar';
