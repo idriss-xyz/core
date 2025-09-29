@@ -18,6 +18,7 @@ import {
   getTransactionUrl,
   formatTokenValue,
   applyDecimalsToNumericString,
+  formatFiatValue,
 } from '@idriss-xyz/utils';
 import {
   CREATOR_CHAIN,
@@ -706,7 +707,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                 <span className="text-mint-600">
                   {activeTab === 'collectible' && selectedCollectible
                     ? selectedCollectible.name
-                    : amount}
+                    : formatFiatValue(amount ?? 0)}
                 </span>{' '}
                 {/* TODO: If collectible, display amount of collectibles to send here
                     1 for ERC721 and amountOfTokens for ERC1155

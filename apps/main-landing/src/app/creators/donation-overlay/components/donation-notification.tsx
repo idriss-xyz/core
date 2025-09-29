@@ -97,20 +97,18 @@ export default function DonationNotification({
         />
       </div>
 
-      <div className="flex flex-col justify-center gap-y-1">
+      <div className="flex min-w-0 flex-col justify-center gap-y-1">
         <div className="flex flex-row flex-wrap items-center gap-x-1 text-label3 text-neutral-900">
-          {donor}
-
           {!token.details && (
             <span className="text-body3 text-neutral-600">
-              sent {formatFiatValue(Number(amount))}
+              {donor} sent {formatFiatValue(Number(amount))}
             </span>
           )}
 
           {erc20Details && (
             <>
               <span className="text-body3 text-neutral-600">
-                sent{' '}
+                {donor} sent{' '}
                 {formatTokenValue(
                   Number.parseFloat(
                     formatUnits(token.amount, Number(erc20Details.decimals)),
@@ -130,8 +128,8 @@ export default function DonationNotification({
           )}
 
           {nftDetails && (
-            <span className="text-body3 text-neutral-600">
-              sent {nftDetails.name}
+            <span className="flex-1 truncate text-body3 text-neutral-600">
+              {donor} sent {nftDetails.name}
             </span>
           )}
         </div>
