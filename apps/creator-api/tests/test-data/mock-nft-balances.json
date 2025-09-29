@@ -97,9 +97,23 @@
       "name": "Aetian Speculatore",
       "collectionShortName": "Deception",
       "collectionCategory": "Parallel"
+    },
+    {
+      "chainId": 8453,
+      "contract": "0xa669ca42f91873d406847d8329233c2703f377cd",
+      "collection": "Parallel Deception",
+      "tokenId": "100500001",
+      "balance": "1",
+      "usdValue": 35,
+      "type": "erc1155",
+      "image": "https://i2.seadn.io/base/0xa669ca42f91873d406847d8329233c2703f377cd/a4286090266f0191fc6c80f264003e/e7a4286090266f0191fc6c80f264003e.png?w=1000",
+      "collectionImage": "https://i2.seadn.io/base/0xa669ca42f91873d406847d8329233c2703f377cd/81834cb06121f75a353dcf071b24b9/1c81834cb06121f75a353dcf071b24b9.png?h=250&w=250",
+      "name": "Deception Collectors Pack",
+      "collectionShortName": "Deception",
+      "collectionCategory": "Parallel"
     }
   ],
   "summary": {
-    "totalUsdBalance": 80.11
+    "totalUsdBalance": 115.11
   }
 }
