@@ -192,14 +192,14 @@ export const CollectibleGallery = ({
         {/* Desktop Collection Filter - hidden below md */}
         <ScrollArea className="hidden max-h-96 overflow-y-auto md:block">
           <div className="w-48 shrink-0">
-            <h3 className={classes('mb-3 text-label3 text-neutralGreen-900')}>
+            <h3 className="mb-3 text-label3 text-neutralGreen-900">
               Collections
             </h3>
             <div className="space-y-2">
               {Object.entries(groupedCollections).map(([category, cols]) => {
                 return (
                   <div key={category} className="mb-4">
-                    <h3 className={classes('mb-3 text-body6 text-neutral-600')}>
+                    <h3 className="mb-3 text-body6 text-neutral-600">
                       {category}
                     </h3>
                     <div className="space-y-2">
@@ -369,27 +369,45 @@ export const CollectibleGallery = ({
                 }}
               />
             </div>
-            <div className="space-y-2">
-              {uniqueCollections.map((collection) => {
-                const collectionKey = `${collection.chainId}-${collection.address}`;
+            <ScrollArea className="max-h-72 w-full overflow-y-auto space-y-2">
+              {Object.entries(groupedCollections).map(([category, cols]) => {
                 return (
-                  <label
-                    key={collectionKey}
-                    className="flex cursor-pointer items-center gap-2"
-                  >
-                    <Checkbox
-                      value={_selectedCollections.includes(collectionKey)}
-                      onChange={() => {
-                        return handleCollectionToggle(collectionKey);
-                      }}
-                    />
-                    <span className="text-sm text-neutral-700">
-                      {collection.name}
-                    </span>
-                  </label>
+                  <div key={category} className="mb-4">
+                    <h3 className="mb-3 text-body6 text-neutral-600">
+                      {category}
+                    </h3>
+                    <div className="space-y-2">
+                      {cols.map((collection) => {
+                        const collectionKey = `${collection.chainId}-${collection.address}`;
+                        return (
+                          <label
+                            key={collectionKey}
+                            className="flex cursor-pointer items-center gap-2"
+                          >
+                            <Checkbox
+                              value={_selectedCollections.includes(
+                                collectionKey,
+                              )}
+                              onChange={() => {
+                                return handleCollectionToggle(collectionKey);
+                              }}
+                            />
+                            <img
+                              src={collection.image}
+                              className="size-6 rounded"
+                              alt=""
+                            />
+                            <span className="text-sm text-neutral-700">
+                              {collection.shortName}
+                            </span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                  </div>
                 );
               })}
-            </div>
+            </ScrollArea>
           </Card>
         </div>
       )}
