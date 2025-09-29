@@ -3,6 +3,7 @@ import {
   Chain,
   createPublicClient,
   encodeFunctionData,
+  erc1155Abi,
   getAddress,
   Hex,
   http,
@@ -51,6 +52,41 @@ export async function estimateErc20GasOrDefault(params: {
     abi: ERC20_ABI,
     functionName: 'transfer',
     args: [params.to, BigInt(1)],
+  });
+
+  try {
+    return await params.client.estimateGas({
+      account: params.from,
+      to: tokenAddr,
+      data,
+    });
+  } catch (error) {
+    console.log('Estimation failed, returning fallback', error);
+    return fallback;
+  }
+}
+
+export async function estimateNftGasOrDefault(params: {
+  client: ReturnType<typeof getClient>;
+  token?: Hex;
+  from: Hex;
+  to: Hex;
+}) {
+  const fallback = BigInt(120000);
+  if (!params.token || params.token === NULL_ADDRESS) {
+    return fallback;
+  }
+  let tokenAddr;
+  try {
+    tokenAddr = getAddress(params.token);
+  } catch {
+    return fallback;
+  }
+
+  const data = encodeFunctionData({
+    abi: erc1155Abi,
+    functionName: 'safeTransferFrom',
+    args: [params.from, params.to, BigInt(1), BigInt(1), '0x'],
   });
 
   try {
