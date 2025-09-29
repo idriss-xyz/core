@@ -83,7 +83,9 @@ const SelectCollectibleButton = ({
 }) => {
   return (
     <div
-      className="group flex cursor-pointer flex-col items-center justify-center gap-[10px] rounded-2xl border border-neutral-300 bg-neutral-100 px-12 py-6 hover:border-mint-600"
+      className={classes(
+        'group flex cursor-pointer flex-col items-center justify-center gap-[10px] rounded-2xl border border-neutral-300 bg-neutral-100 px-12 py-6 hover:border-mint-600',
+      )}
       onClick={() => {
         if (!isConnected) {
           setPendingCollectibleModal(true);
@@ -100,7 +102,11 @@ const SelectCollectibleButton = ({
         iconClassName="size-6 group-hover:text-mint-600"
         className="size-12 rounded-xl border border-neutral-200 bg-white"
       />
-      <span className="text-label5 text-neutral-900 group-hover:text-mint-600">
+      <span
+        className={classes(
+          'text-label5 text-neutral-900 group-hover:text-mint-600',
+        )}
+      >
         Select a collectible
       </span>
     </div>
@@ -222,13 +228,13 @@ const CollectibleTabContent = ({
           />
           <div className="flex flex-1 flex-col justify-center gap-2">
             <div className="flex flex-col gap-[6px]">
-              <span className="text-label4 text-neutral-900">
+              <span className={classes('text-label4 text-neutral-900')}>
                 {selectedCollectible.name}
               </span>
-              <span className="text-body5 text-neutral-500">
+              <span className={classes('text-body5 text-neutral-500')}>
                 {selectedCollectible.collection}
               </span>
-              <div className="h-4.5">
+              <div className={classes('h-4.5')}>
                 <LayersBadge amount={amount?.toString() ?? '1'} />
               </div>
             </div>
@@ -689,7 +695,11 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
     if (!creatorInfo.address.isValid && !creatorInfo.address.isFetching) {
       return (
         <div className={classes(baseClassName, className)}>
-          <h1 className="flex items-center justify-center gap-2 text-center text-heading4 text-red-500">
+          <h1
+            className={classes(
+              'flex items-center justify-center gap-2 text-center text-heading4 text-red-500',
+            )}
+          >
             <Icon name="AlertCircle" size={40} /> <span>Wrong address</span>
           </h1>
         </div>
@@ -703,16 +713,18 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
             heading={
               <>
                 Sending{' '}
-                <span className="text-mint-600">
+                <span className={classes("text-mint-600")}>
                   {activeTab === 'collectible' && selectedCollectible
                     ? selectedCollectible.name
                     : amount}
                 </span>{' '}
-                {/* TODO: If collectible, display amount of collectibles to send here
-                    1 for ERC721 and amountOfTokens for ERC1155
-                */}
+                {activeTab === 'collectible' &&
+                collectibleAmount &&
+                collectibleAmount > 1
+                  ? `(${collectibleAmount}x)`
+                  : null}
                 {amountInSelectedToken
-                  ? `(${formatTokenValue(
+                  ? ` (${formatTokenValue(
                       Number(amountInSelectedToken),
                     )} ${selectedToken?.symbol})`
                   : null}
@@ -732,15 +744,17 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
 
       return (
         <div className={classes(baseClassName, className)}>
-          <div className="rounded-[100%] bg-mint-200 p-4">
+          <div className={classes('rounded-[100%] bg-mint-200 p-4')}>
             <Icon
               size={48}
               name="CheckCircle2"
-              className="stroke-1 text-mint-600"
+              className={classes('stroke-1 text-mint-600')}
             />
           </div>
 
-          <p className="text-heading4 text-neutral-900">Transfer completed</p>
+          <p className={classes('text-heading4 text-neutral-900')}>
+            Transfer completed
+          </p>
 
           <Link
             isExternal
@@ -775,7 +789,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
           className="pointer-events-none absolute top-0 hidden h-full opacity-100 lg:block"
         />
 
-        <h1 className="mb-6 self-start text-heading4">
+        <h1 className={classes('mb-6 self-start text-heading4')}>
           {creatorInfo.name
             ? `Donate to ${creatorInfo.name}`
             : 'Select your donation details'}
@@ -942,13 +956,13 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                               <Icon name="HelpCircle" size={15} />
                             </TooltipTrigger>
                             <TooltipContent className="bg-black text-left text-white">
-                              <p className="text-label6">
+                              <p className={classes('text-label6')}>
                                 Type what you want to hear. AI will turn it into
                                 a sound effect <br />
                                 and replace the default sound. You can{' '}
                                 <a
                                   href="https://elevenlabs.io/sound-effects"
-                                  className="text-mint-500 underline"
+                                  className={classes('text-mint-500 underline')}
                                   target="_blank"
                                   rel="noreferrer"
                                 >
@@ -993,30 +1007,36 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                 (activeTab === 'collectible' && selectedCollectible != null) ||
                 activeTab === 'token'
               }
-              className="z-portal bg-black text-white"
+              className={classes('z-portal bg-black text-white')}
               side="bottom"
             >
-              <p className="text-body6">Select a collectible first</p>
+              <p className={classes('text-body6')}>
+                Select a collectible first
+              </p>
             </TooltipContent>
           </Tooltip>
           {submitError && (
-            <div className="mt-1 flex items-start gap-x-1 text-label7 text-red-500 lg:text-label6">
+            <div
+              className={classes(
+                'mt-1 flex items-start gap-x-1 text-label7 text-red-500 lg:text-label6',
+              )}
+            >
               <Icon name="AlertCircle" size={16} className="p-px" />
               <span>{submitError}</span>
             </div>
           )}
           <div className="mt-4 w-full py-3 text-center">
-            <span className="text-label7 text-neutral-500">
+            <span className={classes('text-label7 text-neutral-500')}>
               By donating, you agree to the{' '}
               <ExternalLink
-                className="text-mint-600 underline"
+                className={classes('text-mint-600 underline')}
                 href={TERMS_OF_SERVICE_LINK}
               >
                 Terms of service
               </ExternalLink>{' '}
               and{' '}
               <ExternalLink
-                className="text-mint-600 underline"
+                className={classes('text-mint-600 underline')}
                 href={PRIVACY_POLICY_LINK}
               >
                 Privacy policy
@@ -1031,7 +1051,11 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
             return setIsCollectibleModalOpen(false);
           }}
           header={
-            <p className="truncate text-heading5 text-neutralGreen-900">
+            <p
+              className={classes(
+                'truncate text-heading5 text-neutralGreen-900',
+              )}
+            >
               Search collectible
             </p>
           }
