@@ -369,7 +369,7 @@ export const CollectibleGallery = ({
                 }}
               />
             </div>
-            <ScrollArea className="max-h-72 w-full overflow-y-auto space-y-2">
+            <ScrollArea className="max-h-72 w-full space-y-2 overflow-y-auto">
               {Object.entries(groupedCollections).map(([category, cols]) => {
                 return (
                   <div key={category} className="mb-4">
