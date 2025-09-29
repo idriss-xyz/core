@@ -236,6 +236,29 @@ export const DonateHistoryItem = ({
                     </li>
                   );
                 })}
+                {!isTokenDonation && (
+                  <li key={donation.name}>
+                    <Button
+                      asLink
+                      isExternal
+                      size="large"
+                      intent="tertiary"
+                      href={
+                        'https://opensea.io/item/' +
+                        removeMainnetSuffix(donation.network).toLowerCase() +
+                        '/' +
+                        donation.collectionAddress +
+                        '/' +
+                        donation.tokenId
+                      }
+                      prefixIconName="OpenSea"
+                      prefixIconClassName="mr-3"
+                      className="w-full items-center px-3 py-1 font-normal text-neutral-900"
+                    >
+                      View on OpenSea
+                    </Button>
+                  </li>
+                )}
               </ul>
             ) : null;
           }}

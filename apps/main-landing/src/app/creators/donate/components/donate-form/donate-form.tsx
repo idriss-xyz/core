@@ -214,7 +214,7 @@ const CollectibleTabContent = ({
   return (
     <div className="mt-4">
       {selectedCollectible && (
-        <div className="mb-4 flex gap-2.5 rounded-[12px] border border-neutral-200 p-2">
+        <div className="flex gap-2.5 rounded-[12px] border border-neutral-200 p-2">
           <img
             src={selectedCollectible.image}
             alt={selectedCollectible.name}

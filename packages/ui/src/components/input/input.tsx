@@ -66,6 +66,7 @@ export const Input = forwardRef(
         success && 'border-mint-400 focus-visible:border-mint-400',
         error && 'border-red-400 focus-visible:border-red-400',
         disabled && 'cursor-not-allowed opacity-50',
+        'prefixElement' in properties && 'pl-1',
         className,
       ),
       value,
@@ -101,7 +102,10 @@ export const Input = forwardRef(
           {properties.prefixElement && !properties.prefixIconName && (
             <div
               ref={prefixReference}
-              className="flex h-full items-center pl-3 text-body5 text-neutralGreen-900 lg:text-body4"
+              className={classes(
+                'flex h-full items-center pl-3 text-body5 text-neutralGreen-900 lg:text-body4',
+                !value && 'text-neutral-600',
+              )}
             >
               {properties.prefixElement}
             </div>
