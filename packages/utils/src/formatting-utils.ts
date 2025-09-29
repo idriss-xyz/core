@@ -126,7 +126,7 @@ export const getSafeNumber = (
 };
 
 export const getShortWalletHex = (walletAddress: string) => {
-  return `${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}`;
+  return `${walletAddress.slice(0, 6)}...${walletAddress.slice(-6)}`;
 };
 
 export const getFormattedTimeDifference = (
