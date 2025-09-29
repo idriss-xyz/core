@@ -66,6 +66,7 @@ export const Input = forwardRef(
         success && 'border-mint-400 focus-visible:border-mint-400',
         error && 'border-red-400 focus-visible:border-red-400',
         disabled && 'cursor-not-allowed opacity-50',
+        "prefixElement" in properties && 'pl-1',
         className,
       ),
       value,
