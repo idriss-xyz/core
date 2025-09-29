@@ -713,7 +713,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
             heading={
               <>
                 Sending{' '}
-                <span className={classes("text-mint-600")}>
+                <span className={classes('text-mint-600')}>
                   {activeTab === 'collectible' && selectedCollectible
                     ? selectedCollectible.name
                     : amount}
