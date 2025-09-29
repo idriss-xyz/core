@@ -57,6 +57,7 @@ import {
   Filter,
   Layers,
   Star,
+  ExternalLink,
 } from 'lucide-react';
 
 import * as customIcons from './custom';
@@ -120,5 +121,6 @@ export const ICON = {
   Filter,
   Layers,
   Star,
+  ExternalLink,
   ...customIcons,
 };
