@@ -102,7 +102,10 @@ export const Input = forwardRef(
           {properties.prefixElement && !properties.prefixIconName && (
             <div
               ref={prefixReference}
-              className="flex h-full items-center pl-3 text-body5 text-neutralGreen-900 lg:text-body4"
+              className={classes(
+                'flex h-full items-center pl-3 text-body5 text-neutralGreen-900 lg:text-body4',
+                !value && 'text-neutral-600',
+              )}
             >
               {properties.prefixElement}
             </div>
