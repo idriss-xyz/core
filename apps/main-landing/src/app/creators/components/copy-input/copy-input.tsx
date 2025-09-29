@@ -70,7 +70,9 @@ export function CopyInput({
       </div>
       <div
         className="flex shrink-0 cursor-pointer items-center self-stretch border-l border-gray-200 px-3 hover:text-mint-600"
-        onClick={() => window.open(value, '_blank', 'noreferrer,noopener')}
+        onClick={() => {
+          return window.open(value, '_blank', 'noreferrer,noopener');
+        }}
       >
         <a
           href={value}
