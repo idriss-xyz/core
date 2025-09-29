@@ -12,9 +12,10 @@ export default function NotFound() {
           <h1 className="text-display4 uppercase text-neutral-900 md:text-display2">
             Creator not found
           </h1>
-          <span className="text-body4 md:text-body2">
-            We couldn’t find a creator with that name. Check the spelling and
-            try again.
+          <span className="mb-2 text-body5 text-neutral-800 md:text-body2">
+            We couldn’t find a creator with that name.
+            <br />
+            Check the spelling and try again.
           </span>
           <Button intent="primary" size="medium" asLink href="/creators">
             Go to homepage
