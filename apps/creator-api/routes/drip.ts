@@ -1,6 +1,9 @@
 import { Router, Request, Response } from 'express';
 import { getAddress, Hex } from 'viem';
-import { NULL_ADDRESS } from '@idriss-xyz/constants';
+import {
+  CHAIN_ID_TO_NFT_COLLECTIONS,
+  NULL_ADDRESS,
+} from '@idriss-xyz/constants';
 import dotenv from 'dotenv';
 import { AppDataSource } from '../db/database';
 import { Creator } from '../db/entities';
@@ -13,6 +16,7 @@ import {
   chainMap,
   decodeLambda,
   estimateErc20GasOrDefault,
+  estimateNftGasOrDefault,
   getClient,
 } from '../utils/drip-utils';
 import { hasClaimedToday, recordClaim } from '../db/drip-quota';
@@ -28,9 +32,10 @@ router.post(
   tightCors,
   verifyToken(),
   async (req: Request, res: Response) => {
-    const { chainId, token } = req.body;
+    const { chainId, token, type } = req.body;
 
     const tokenParam: string = typeof token === 'string' ? token : NULL_ADDRESS;
+    const isNft = type && ['erc721', 'erc1155'].includes(type);
 
     let checkedTokenAddress: Hex;
     try {
@@ -48,9 +53,13 @@ router.post(
     const chain = chainMap[String(chainId) as keyof typeof chainMap];
     let allowedTokens: `0x${string}`[] = [];
     try {
-      allowedTokens = CHAIN_ID_TO_TOKENS[Number(chain.id)]?.map((t) =>
-        getAddress(t.address),
+      const allowedErc20Tokens = CHAIN_ID_TO_TOKENS[Number(chain.id)]?.map(
+        (t) => getAddress(t.address),
       );
+      const allowedNftTokens = CHAIN_ID_TO_NFT_COLLECTIONS[
+        Number(chain.id)
+      ]?.map((t) => getAddress(t.address));
+      allowedTokens = [...allowedErc20Tokens, ...allowedNftTokens];
     } catch {
       res.status(400).json({ error: 'Error parsing allowed tokens' });
       return;
@@ -116,12 +125,19 @@ router.post(
       blockTag: 'pending',
     });
 
-    const gasLimit = await estimateErc20GasOrDefault({
-      client,
-      token: checkedTokenAddress,
-      from: userAddress,
-      to: faucetAddress,
-    });
+    const gasLimit = isNft
+      ? await estimateNftGasOrDefault({
+          client,
+          token: checkedTokenAddress,
+          from: userAddress,
+          to: faucetAddress,
+        })
+      : await estimateErc20GasOrDefault({
+          client,
+          token: checkedTokenAddress,
+          from: userAddress,
+          to: faucetAddress,
+        });
 
     const amountWei = await calcDripWei({ client, gasLimit });
 
