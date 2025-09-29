@@ -57,7 +57,7 @@ export default function CollectibleBalanceGallery({
                     intent="tertiary"
                     size="medium"
                     iconName="OpenSea"
-                    className="p-0"
+                    className="p-0 text-[#0086FF]"
                     onClick={() => {
                       window.open(
                         'https://opensea.io/item/' +
