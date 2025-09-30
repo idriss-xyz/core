@@ -509,9 +509,7 @@ export default function PaymentMethods() {
                   label="Digital collectibles"
                   sublabel="Receive in-game assets such as cards, skins, and collectibles."
                   value={toggleCollectible}
-                  // todo: unlock after launch
-                  // disabled={!toggleToken && toggleCollectible}
-                  disabled
+                  disabled={!toggleToken && toggleCollectible}
                   onChange={async () => {
                     const newValue = !toggleCollectible;
 

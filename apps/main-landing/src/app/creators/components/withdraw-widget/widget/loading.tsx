@@ -20,11 +20,19 @@ export const Loading = ({
     <div
       className={classes('flex flex-col items-center text-center', className)}
     >
-      <Spinner className="size-16 text-mint-600" />
-      <p className="mt-6 text-heading5 text-neutral-900 lg:text-heading4">
+      <Spinner className={classes('size-16 text-mint-600')} />
+      <p
+        className={classes(
+          'mt-6 text-heading5 text-neutral-900 lg:text-heading4',
+        )}
+      >
         Waiting for confirmation
       </p>
-      <p className="mt-3 flex flex-wrap justify-center gap-1 text-body5 text-neutral-600 lg:text-body4">
+      <p
+        className={classes(
+          'mt-3 flex flex-wrap justify-center gap-1 text-body5 text-neutral-600 lg:text-body4',
+        )}
+      >
         {heading}
         {recipient ? (
           <>
@@ -39,7 +47,9 @@ export const Loading = ({
         ) : null}
       </p>
       {children ? (
-        <p className="mt-1 text-body5 text-neutral-600 lg:text-body4">
+        <p
+          className={classes('mt-1 text-body5 text-neutral-600 lg:text-body4')}
+        >
           {' '}
           {children}
         </p>

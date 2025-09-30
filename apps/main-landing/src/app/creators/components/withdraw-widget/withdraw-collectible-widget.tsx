@@ -278,8 +278,8 @@ export const WithdrawCollectibleWidget = ({
                     {selectedItem?.name}
                   </span>{' '}
                   {selectedItem?.type === 'erc1155' &&
-                    Number(selectedItem.balance) > 1 && (
-                      <LayersBadge amount={selectedItem.balance} />
+                    Number(formMethods.getValues().amount1155 ?? '1') > 1 && (
+                      <>({formMethods.getValues().amount1155 ?? '1'}x)</>
                     )}
                 </>
               }
@@ -447,8 +447,11 @@ export const WithdrawCollectibleWidget = ({
                           {selectedCollection!.address}
                         </span>{' '}
                         {selectedItem!.type === 'erc1155' &&
-                          Number(selectedItem!.balance) > 1 && (
-                            <LayersBadge amount={selectedItem!.balance} />
+                          Number(formMethods.getValues().amount1155 ?? '1') >
+                            1 && (
+                            <LayersBadge
+                              amount={formMethods.getValues().amount1155 ?? '1'}
+                            />
                           )}
                       </div>
                     </div>
