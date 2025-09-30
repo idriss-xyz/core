@@ -3,7 +3,6 @@ import {
   EMPTY_HEX,
   CREATOR_API_URL,
   StoredDonationData,
-  LeaderboardStats,
   CREATORS_LINK,
 } from '@idriss-xyz/constants';
 import '@rainbow-me/rainbowkit/styles.css';
@@ -13,6 +12,10 @@ import { useRouter } from 'next/navigation';
 import _ from 'lodash';
 import { ExternalLink } from '@idriss-xyz/ui/external-link';
 import { FullscreenOverlay } from '@idriss-xyz/ui/fullscreen-overlay';
+import {
+  calculateDonationLeaderboard,
+  getFilteredDonationsByPeriod,
+} from '@idriss-xyz/utils';
 
 import { backgroundLines2 } from '@/assets';
 import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history';
@@ -24,6 +27,7 @@ import {
 
 import { useCreators } from '../hooks/use-creators';
 import { TopBar } from '../components/top-bar';
+import { periodMap } from '../app/ranking/commands/use-get-leaderboard';
 
 import { Leaderboard } from './components/leaderboard';
 import { DonateForm } from './components/donate-form';
@@ -38,7 +42,6 @@ export function DonateContent({ creatorProfile }: Properties) {
   const [socketConnected, setSocketConnected] = useState(false);
   const [socketInitialized, setSocketInitialized] = useState(false);
   const [donations, setDonations] = useState<StoredDonationData[]>([]);
-  const [leaderboard, setLeaderboard] = useState<LeaderboardStats[]>([]);
   const [currentContent, setCurrentContent] = useState<DonateContentValues>({
     name: 'user-tip',
   });
@@ -48,6 +51,7 @@ export function DonateContent({ creatorProfile }: Properties) {
   const formReference = useRef<HTMLDivElement>(null);
   const [formHeight, setFormHeight] = useState(0);
   const [isLegacyLink, setIsLegacyLink] = useState(false);
+  const [activeFilter, setActiveFilter] = useState('All time');
 
   const {
     address: { data: addr, isValid: addrValid, isFetching: addrFetching },
@@ -72,7 +76,6 @@ export function DonateContent({ creatorProfile }: Properties) {
   useEffect(() => {
     if (donationsHistory.data) {
       setDonations(donationsHistory.data.donations);
-      setLeaderboard(donationsHistory.data.leaderboard);
     }
   }, [donationsHistory.data]);
 
@@ -97,40 +100,11 @@ export function DonateContent({ creatorProfile }: Properties) {
         });
 
         socket.on('newDonation', (donation: StoredDonationData) => {
+          void donationsHistory.refetch();
           setDonations((previousState) => {
             return _.uniqBy([donation, ...previousState], (item) => {
               return _.get(item, 'transactionHash');
             });
-          });
-
-          setLeaderboard((previousState) => {
-            const leaderboard = [...previousState];
-
-            const donorIndex = leaderboard.findIndex((item) => {
-              return (
-                item.address.toLowerCase() ===
-                donation.fromAddress.toLowerCase()
-              );
-            });
-
-            if (donorIndex === -1) {
-              leaderboard.push({
-                ...donation.fromUser,
-                totalAmount: donation.tradeValue,
-              });
-            } else {
-              const donor = leaderboard[donorIndex]!;
-              leaderboard[donorIndex] = {
-                ...donor,
-                totalAmount: donor.totalAmount + donation.tradeValue,
-              };
-            }
-
-            leaderboard.sort((a, b) => {
-              return b.totalAmount - a.totalAmount;
-            });
-
-            return leaderboard;
           });
         });
       }
@@ -144,7 +118,12 @@ export function DonateContent({ creatorProfile }: Properties) {
     }
 
     return;
-  }, [socketConnected, socketInitialized, creatorInfo?.address.data]);
+  }, [
+    donationsHistory,
+    socketConnected,
+    socketInitialized,
+    creatorInfo?.address.data,
+  ]);
 
   useEffect(() => {
     const formElement = formReference.current;
@@ -179,6 +158,39 @@ export function DonateContent({ creatorProfile }: Properties) {
     [router],
   );
 
+  const allDonations = useMemo(() => {
+    return donationsHistory.data?.donations ?? [];
+  }, [donationsHistory.data?.donations]);
+
+  const leaderboard = useMemo(() => {
+    const allTimeLeaderboard = calculateDonationLeaderboard(allDonations);
+
+    if (activeFilter === 'All time') {
+      return allTimeLeaderboard;
+    }
+
+    const donorSinceMap = new Map(
+      allTimeLeaderboard.map((item) => {
+        return [item.address, item.donorSince];
+      }),
+    );
+
+    const period = periodMap[activeFilter] as '7d' | '30d';
+    const filteredDonations = getFilteredDonationsByPeriod(
+      allDonations,
+      period,
+    );
+
+    const filteredLeaderboard = calculateDonationLeaderboard(filteredDonations);
+
+    return filteredLeaderboard.map((item) => {
+      return {
+        ...item,
+        donorSince: donorSinceMap.get(item.address) ?? item.donorSince,
+      };
+    });
+  }, [allDonations, activeFilter]);
+
   const currentContentComponent = useMemo(() => {
     switch (currentContent?.name) {
       case 'user-tip': {
@@ -193,6 +205,9 @@ export function DonateContent({ creatorProfile }: Properties) {
                 />
 
                 <Leaderboard
+                  variant="donatePage"
+                  activeFilter={activeFilter}
+                  onFilterChange={setActiveFilter}
                   isScrollable
                   leaderboard={leaderboard}
                   onDonorClick={onDonorClick}
@@ -239,6 +254,7 @@ export function DonateContent({ creatorProfile }: Properties) {
     formHeight,
     donationsHistory.isError,
     donationsHistory.isLoading,
+    activeFilter,
   ]);
 
   return (

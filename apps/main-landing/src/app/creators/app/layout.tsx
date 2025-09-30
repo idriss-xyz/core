@@ -3,17 +3,24 @@
 import { usePathname } from 'next/navigation';
 import { BreadcrumbNavigation } from '@idriss-xyz/ui/breadcrumb';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
+import { useEffect } from 'react';
 
 import { siteMap } from '../constants';
 import useRedirectIfNotAuthenticated from '../hooks/use-redirect-not-authenticated';
+import { useAuth } from '../context/auth-context';
 
 import { CreatorSocketManager } from './creator-socket-manager';
 import { Sidebar } from './sidebar';
 import { TopBar } from './topbar';
 
 function Layout({ children }: { children: React.ReactNode }) {
+  const { setIsLoading } = useAuth();
   const pathname = usePathname();
   useRedirectIfNotAuthenticated();
+
+  useEffect(() => {
+    setIsLoading(false);
+  }, [setIsLoading]);
 
   return (
     <>

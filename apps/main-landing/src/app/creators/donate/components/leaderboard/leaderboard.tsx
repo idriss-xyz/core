@@ -33,6 +33,8 @@ type Properties = {
   updateCurrentContent?: (content: DonateContentValues) => void;
   isScrollable?: boolean;
   style?: CSSProperties;
+  activeFilter?: string;
+  onFilterChange?: (filter: string) => void;
 };
 
 const baseClassName =
@@ -48,12 +50,15 @@ export const Leaderboard = ({
   leaderboardLoading,
   updateCurrentContent,
   style,
+  activeFilter,
+  onFilterChange,
 }: Properties) => {
   const isTwitchPanel = variant === 'panel';
   const isTwitchOverlay = variant === 'videoOverlay';
   const isTwitchComponent = variant === 'videoComponent';
   const isTwitchExtension =
     isTwitchPanel || isTwitchOverlay || isTwitchComponent;
+  const isDonatePage = variant === 'donatePage';
 
   const isDemo = address.data === DEMO_ADDRESS;
 
@@ -104,7 +109,7 @@ export const Leaderboard = ({
     >
       <div
         className={classes(
-          'relative flex min-h-[100px] w-full items-center justify-center overflow-hidden',
+          'relative min-h-[100px] w-full overflow-hidden',
           isTwitchExtension && 'min-h-[85px]',
         )}
       >
@@ -115,9 +120,51 @@ export const Leaderboard = ({
         />
         <span className="absolute left-0 top-0 size-full bg-black/20" />
 
-        <h1 className="relative z-1 mx-12 my-6 text-center text-heading4 uppercase text-white">
+        <h1
+          className={classes(
+            'relative z-1 mx-12 text-center text-heading4 uppercase text-white',
+            isDonatePage ? 'mb-2 mt-5' : 'my-6',
+          )}
+        >
           Top fans
         </h1>
+        {isDonatePage && (
+          <div className="relative mx-auto flex w-[290px] items-center justify-center gap-1 text-label6">
+            <span
+              onClick={() => {
+                return onFilterChange?.('All time');
+              }}
+              className={classes(
+                'flex cursor-pointer justify-center rounded-full border border-mint-400 p-1.5',
+                activeFilter === 'All time' ? 'bg-mint-400' : 'bg-white/80',
+              )}
+            >
+              All time
+            </span>
+            <span
+              onClick={() => {
+                return onFilterChange?.('30 days');
+              }}
+              className={classes(
+                'flex cursor-pointer justify-center rounded-full border border-mint-400 px-3 py-1',
+                activeFilter === '30 days' ? 'bg-mint-400' : 'bg-white/80',
+              )}
+            >
+              30 days
+            </span>
+            <span
+              onClick={() => {
+                return onFilterChange?.('7 days');
+              }}
+              className={classes(
+                'flex cursor-pointer justify-center rounded-full border border-mint-400 px-3 py-1',
+                activeFilter === '7 days' ? 'bg-mint-400' : 'bg-white/80',
+              )}
+            >
+              7 days
+            </span>
+          </div>
+        )}
       </div>
 
       <div className="flex min-h-0 w-full flex-1 flex-col">
