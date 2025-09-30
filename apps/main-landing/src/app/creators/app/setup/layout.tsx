@@ -79,7 +79,7 @@ export default function SetupLayout({
           gradientStopColor="#E8FCE3"
         />
         <span className="mr-3 text-heading5">Your donation page</span>
-        <CopyInput value={`${creator?.donationUrl}`} />
+        <CopyInput value={`${creator?.donationUrl}`} openExternal />
       </div>
       <TabsPill tabs={setupTabs} renderLink={renderLink} />
       {children}

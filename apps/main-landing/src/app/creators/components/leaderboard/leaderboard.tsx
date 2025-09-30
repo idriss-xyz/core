@@ -169,6 +169,7 @@ export const Leaderboard = ({
   const isTwitchOverlay = variant === 'videoOverlay';
   const isTwitchComponent = variant === 'videoComponent';
   const isCreatorsDashboard = variant === 'creatorsDashboard';
+  const isDonatePage = variant === 'donatePage';
 
   if (!address.isFetching && !address.isValid) {
     return (
@@ -236,7 +237,7 @@ export const Leaderboard = ({
         <h1 className="relative z-1 mx-12 mb-4 mt-12 text-center text-heading4 uppercase text-white">
           {title ?? 'Top fans'}
         </h1>
-        {isCreatorsDashboard && (
+        {(isCreatorsDashboard || isDonatePage) && (
           <div className="relative mx-auto flex w-[290px] gap-1 font-medium">
             <span
               onClick={() => {

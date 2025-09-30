@@ -462,6 +462,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       const { linkedTo } = await linkedResult.json();
       // Wallet is already linked to another (not donor's) public account
       if (linkedTo && linkedTo !== donor?.name) {
+        console.error('Wallet already linked to another account', linkedTo);
         throw new Error('This wallet is already linked to a public account.');
       }
       // Wallet is already linked to the donor account
@@ -600,7 +601,8 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         if (donor) {
           try {
             await linkWalletIfNeeded();
-          } catch {
+          } catch (error) {
+            console.error('Error linking wallet', error);
             setSubmitError(
               'This wallet is already linked to a public account.',
             );
