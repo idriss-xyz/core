@@ -12,6 +12,7 @@ type CopyInputProperties = {
   iconName?: IconName;
   wasCopied?: boolean;
   message?: string;
+  openExternal?: boolean;
 };
 
 export function CopyInput({
@@ -22,6 +23,7 @@ export function CopyInput({
   onIconClick,
   iconName,
   wasCopied,
+  openExternal,
 }: CopyInputProperties) {
   const { copied, copy } = useCopyToClipboard();
   const { toast } = useToast();
@@ -68,21 +70,23 @@ export function CopyInput({
           <Icon name={iconName ?? 'Copy'} size={16} />
         )}
       </div>
-      <div
-        className="flex shrink-0 cursor-pointer items-center self-stretch border-l border-gray-200 px-3 hover:text-mint-600"
-        onClick={() => {
-          return window.open(value, '_blank', 'noreferrer,noopener');
-        }}
-      >
-        <a
-          href={value}
-          target="_blank"
-          rel="noreferrer noopener"
-          className="flex items-center"
+      {openExternal && (
+        <div
+          className="flex shrink-0 cursor-pointer items-center self-stretch border-l border-gray-200 px-3 hover:text-mint-600"
+          onClick={() => {
+            return window.open(value, '_blank', 'noreferrer,noopener');
+          }}
         >
-          <Icon name="ExternalLink" size={16} />
-        </a>
-      </div>
+          <a
+            href={value}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="flex items-center"
+          >
+            <Icon name="ExternalLink" size={16} />
+          </a>
+        </div>
+      )}
     </div>
   );
 }
