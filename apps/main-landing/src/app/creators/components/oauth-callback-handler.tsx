@@ -6,11 +6,14 @@ import { useAuth } from '../context/auth-context';
 
 export function OAuthCallbackHandler() {
   const {
+    oauthLoading,
+    loading,
     setCustomAuthToken,
     setIsModalOpen,
     setOauthLoading,
     setOauthError,
     setCallbackUrl,
+    setIsLoading,
   } = useAuth();
   const router = useRouter();
   const searchParameters = useSearchParams();
@@ -46,7 +49,11 @@ export function OAuthCallbackHandler() {
     } else if (error) {
       // Twitch could not authenticate the user
       console.error('Oauth error.', error);
+      setIsModalOpen(true);
       setOauthError(true);
+      if (!oauthLoading) {
+        setOauthLoading(false);
+      }
     } else if (authToken) {
       // Twitch has finished authenticating the user and succeeded
       setIsModalOpen(true);
@@ -59,8 +66,9 @@ export function OAuthCallbackHandler() {
       if (callbackUrl) setCallbackUrl(callbackUrl);
       setCustomAuthToken(authToken);
     }
-    if (login || error || authToken) {
+    if (authToken && !loading) {
       setOauthLoading(false);
+      setIsLoading(true);
     }
   }, [
     authToken,
@@ -72,11 +80,14 @@ export function OAuthCallbackHandler() {
     router,
     error,
     callbackUrl,
+    loading,
+    oauthLoading,
     setIsModalOpen,
     setOauthLoading,
     setCustomAuthToken,
     setOauthError,
     setCallbackUrl,
+    setIsLoading,
   ]);
 
   return null;
