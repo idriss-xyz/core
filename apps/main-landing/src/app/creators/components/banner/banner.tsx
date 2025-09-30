@@ -8,7 +8,6 @@ import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 
 import {
   banner1,
-  // banner10,
   banner13,
   banner14,
   banner15,
@@ -24,12 +23,44 @@ import {
   banner5,
   banner6,
   banner7,
-  // banner8,
-  // banner9,
+  banner37,
+  banner22,
+  banner23,
+  banner24,
+  banner25,
+  banner26,
+  banner27,
+  banner28,
+  banner29,
+  banner30,
+  banner31,
+  banner32,
+  banner33,
+  banner34,
+  banner35,
+  banner36,
+  banner38,
+  banner39,
 } from './assets';
 import { FilterOption } from './utils';
 
-const banners = [
+type Banner = {
+  src: string;
+  type: string;
+};
+
+const shuffleArray = (array: Banner[]): Banner[] => {
+  const shuffled = [...array];
+  for (let index = shuffled.length - 1; index > 0; index--) {
+    const index_ = Math.floor(Math.random() * (index + 1));
+    const temporary = shuffled[index]!;
+    shuffled[index] = shuffled[index_]!;
+    shuffled[index_] = temporary;
+  }
+  return shuffled;
+};
+
+const banners: Banner[] = [
   { src: banner1.src, type: 'unbranded' },
   { src: banner2.src, type: 'parallel' },
   { src: banner3.src, type: 'parallel' },
@@ -46,9 +77,24 @@ const banners = [
   { src: banner19.src, type: 'vibes (pudgy tcg)' },
   { src: banner20.src, type: 'vibes (pudgy tcg)' },
   { src: banner21.src, type: 'paragonsdao' },
-  // { src: banner8.src, type: 'aavegotchi' },
-  // { src: banner9.src, type: 'aavegotchi' },
-  // { src: banner10.src, type: 'aavegotchi' },
+  { src: banner22.src, type: 'parallel' },
+  { src: banner23.src, type: 'parallel' },
+  { src: banner24.src, type: 'parallel' },
+  { src: banner25.src, type: 'parallel' },
+  { src: banner26.src, type: 'parallel' },
+  { src: banner27.src, type: 'parallel' },
+  { src: banner28.src, type: 'parallel' },
+  { src: banner29.src, type: 'parallel' },
+  { src: banner30.src, type: 'parallel' },
+  { src: banner31.src, type: 'parallel' },
+  { src: banner32.src, type: 'parallel' },
+  { src: banner33.src, type: 'parallel' },
+  { src: banner34.src, type: 'parallel' },
+  { src: banner35.src, type: 'parallel' },
+  { src: banner36.src, type: 'parallel' },
+  { src: banner37.src, type: 'parallel' },
+  { src: banner38.src, type: 'parallel' },
+  { src: banner39.src, type: 'parallel' },
 ];
 
 interface Properties {
@@ -57,9 +103,13 @@ interface Properties {
 
 export const Banner = ({ filter }: Properties) => {
   const [selectedBannerSource, setSelectedBannerSource] = useState<string>();
+  const [shuffledBanners, setShuffledBanners] = useState(banners);
 
   useEffect(() => {
     setSelectedBannerSource(undefined);
+    if (filter === 'All') {
+      setShuffledBanners(shuffleArray(banners));
+    }
   }, [filter]);
 
   const handleDownload = () => {
@@ -75,12 +125,12 @@ export const Banner = ({ filter }: Properties) => {
     link.remove();
   };
 
-  const filteredBanners = banners.filter((banner) => {
-    if (filter === 'All') {
-      return true;
-    }
-    return banner.type === filter.toLowerCase();
-  });
+  const filteredBanners =
+    filter === 'All'
+      ? shuffledBanners
+      : banners.filter((banner) => {
+          return banner.type === filter.toLowerCase();
+        });
 
   return (
     <div className="container relative flex flex-col items-center rounded-xl bg-white pb-3">
