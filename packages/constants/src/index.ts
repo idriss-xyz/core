@@ -83,7 +83,7 @@ export type {
   DonationToken,
   BalanceTableItem,
   TokenBalance,
-  CollectibleBalance,
+  NftBalance,
 } from './types';
 
 export * from './logos';

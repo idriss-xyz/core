@@ -14,7 +14,7 @@ export interface TokenDisplayItem {
 }
 
 export interface NftDisplayItem {
-  tokenId: number;
+  tokenId: string;
   type: string;
   collectionAddress: Hex;
   quantity: number;
