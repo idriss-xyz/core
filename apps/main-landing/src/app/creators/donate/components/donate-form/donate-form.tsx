@@ -62,6 +62,7 @@ import { useSender } from '../../hooks';
 import { useMobileFilter } from '../../hooks/use-mobile-filter';
 import { Collectible, CreatorProfile } from '../../types';
 import { SenderReturnType } from '../../hooks/use-sender';
+import { useSwitchChain } from '../../hooks/use-switch-chain';
 
 import {
   ChainSelect,
@@ -69,7 +70,6 @@ import {
   LayersBadge,
   TokenSelect,
 } from './components';
-import { useSwitchChain } from '../../hooks/use-switch-chain';
 
 const SelectCollectibleButton = ({
   isConnected,
@@ -461,7 +461,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         headers: { Authorization: `Bearer ${authToken}` },
       });
       const { linkedTo } = await linkedResult.json();
-      console.log("linkedTo", linkedTo) // TODO: Remove
+      console.log('linkedTo', linkedTo); // TODO: Remove
       // Wallet is already linked to another (not donor's) public account
       if (linkedTo && linkedTo !== donor?.name) {
         console.error('Wallet already linked to another account', linkedTo);
@@ -472,12 +472,12 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
 
       // Wallet is not linked to any account, link to current
       // 2) nonce
-      console.log("authtoken", authToken) // TODO: Remove
+      console.log('authtoken', authToken); // TODO: Remove
       const nonceResult = await fetch(`${CREATOR_API_URL}/siwe/nonce`, {
         headers: { Authorization: `Bearer ${authToken}` },
       });
       const { nonce } = await nonceResult.json();
-      console.log("nonce", nonce) // TODO: Remove
+      console.log('nonce', nonce); // TODO: Remove
 
       // 3) sign SIWE
       const message_ = new SiweMessage({
@@ -491,19 +491,19 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         nonce,
       });
       const message = message_.prepareMessage();
-      console.log("message", message) // TODO: Remove
+      console.log('message', message); // TODO: Remove
 
       await switchChain.mutateAsync({
         walletClient,
         chainId,
       });
-      console.log("switchChain.mutateAsync done") // TODO: Remove
+      console.log('switchChain.mutateAsync done'); // TODO: Remove
 
       const signature = await walletClient.signMessage({
         account: address,
         message,
       });
-      console.log("signature", signature) // TODO: Remove
+      console.log('signature', signature); // TODO: Remove
 
       // 4) verify
       const verifyResult = await fetch(`${CREATOR_API_URL}/siwe/verify`, {
@@ -515,9 +515,9 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         body: JSON.stringify({ message, signature }),
       });
       const verifyResultJson = await verifyResult.json();
-      console.log("verifyResultJson", verifyResultJson) // TODO: Remove
+      console.log('verifyResultJson', verifyResultJson); // TODO: Remove
       if (!verifyResult.ok) throw new Error('SIWE verify failed');
-    }, [walletClient, chainId, donor?.name]);
+    }, [walletClient, chainId, donor?.name, switchChain]);
 
     const syncDonation = useCallback(async () => {
       if (!creatorInfo.address.data || !creatorInfo.address.isValid) {
