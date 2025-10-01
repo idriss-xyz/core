@@ -452,71 +452,78 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
     const linkWalletIfNeeded = useCallback(async () => {
       if (!walletClient?.account?.address) return;
 
-      const authToken = await getAccessToken();
+      const savedChoice = localStorage.getItem('donate-option-choice');
+
       const address = getAddress(walletClient.account.address);
 
-      // 1) check
+      // 1) check if addrss is linked to an account
       const qs = new URLSearchParams({ address });
-      const linkedResult = await fetch(`${CREATOR_API_URL}/siwe/linked?${qs}`, {
-        headers: { Authorization: `Bearer ${authToken}` },
-      });
+      const linkedResult = await fetch(`${CREATOR_API_URL}/siwe/linked?${qs}`);
       const { linkedTo } = await linkedResult.json();
       console.log('linkedTo', linkedTo); // TODO: Remove
-      // Wallet is already linked to another (not donor's) public account
-      if (linkedTo && linkedTo !== donor?.name) {
-        console.error('Wallet already linked to another account', linkedTo);
+
+      if (savedChoice === 'account' && donor?.name) {
+        // Wallet is already linked to another (not donor's) public account
+        if (linkedTo && linkedTo !== donor?.name) {
+          console.error('Wallet already linked to another account', linkedTo);
+          throw new Error('This wallet is already linked to a public account.');
+        }
+        // Wallet is already linked to the donor account
+        else if (linkedTo) return;
+
+        // Wallet is not linked to any account, link to current
+
+        const authToken = await getAccessToken();
+        console.log('authToken', authToken); // TODO: Remove
+
+        // 2) get nonce
+        const nonceResult = await fetch(`${CREATOR_API_URL}/siwe/nonce`, {
+          headers: { Authorization: `Bearer ${authToken}` },
+        });
+        const { nonce } = await nonceResult.json();
+        console.log('nonce', nonce); // TODO: Remove
+
+        // 3) sign SIWE
+        const message_ = new SiweMessage({
+          domain: window.location.hostname,
+          address,
+          statement:
+            'Sign to confirm this wallet is yours and link it to your IDRISS Creators account. This is a one-time free signature.',
+          uri: window.location.origin,
+          version: '1',
+          chainId,
+          nonce,
+        });
+        const message = message_.prepareMessage();
+        console.log('message', message); // TODO: Remove
+
+        await switchChain.mutateAsync({
+          walletClient,
+          chainId,
+        });
+        console.log('switchChain.mutateAsync done'); // TODO: Remove
+
+        const signature = await walletClient.signMessage({
+          account: address,
+          message,
+        });
+        console.log('signature', signature); // TODO: Remove
+
+        // 4) verify
+        const verifyResult = await fetch(`${CREATOR_API_URL}/siwe/verify`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({ message, signature }),
+        });
+        const verifyResultJson = await verifyResult.json();
+        console.log('verifyResultJson', verifyResultJson); // TODO: Remove
+        if (!verifyResult.ok) throw new Error('SIWE verify failed');
+      } else if ((savedChoice === 'guest' || !savedChoice) && linkedTo) {
         throw new Error('This wallet is already linked to a public account.');
       }
-      // Wallet is already linked to the donor account
-      else if (linkedTo) return;
-
-      // Wallet is not linked to any account, link to current
-      // 2) nonce
-      console.log('authtoken', authToken); // TODO: Remove
-      const nonceResult = await fetch(`${CREATOR_API_URL}/siwe/nonce`, {
-        headers: { Authorization: `Bearer ${authToken}` },
-      });
-      const { nonce } = await nonceResult.json();
-      console.log('nonce', nonce); // TODO: Remove
-
-      // 3) sign SIWE
-      const message_ = new SiweMessage({
-        domain: window.location.hostname,
-        address,
-        statement:
-          'Sign to confirm this wallet is yours and link it to your IDRISS Creators account. This is a one-time free signature.',
-        uri: window.location.origin,
-        version: '1',
-        chainId,
-        nonce,
-      });
-      const message = message_.prepareMessage();
-      console.log('message', message); // TODO: Remove
-
-      await switchChain.mutateAsync({
-        walletClient,
-        chainId,
-      });
-      console.log('switchChain.mutateAsync done'); // TODO: Remove
-
-      const signature = await walletClient.signMessage({
-        account: address,
-        message,
-      });
-      console.log('signature', signature); // TODO: Remove
-
-      // 4) verify
-      const verifyResult = await fetch(`${CREATOR_API_URL}/siwe/verify`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authToken}`,
-        },
-        body: JSON.stringify({ message, signature }),
-      });
-      const verifyResultJson = await verifyResult.json();
-      console.log('verifyResultJson', verifyResultJson); // TODO: Remove
-      if (!verifyResult.ok) throw new Error('SIWE verify failed');
     }, [walletClient, chainId, donor?.name, switchChain]);
 
     const syncDonation = useCallback(async () => {
@@ -613,16 +620,13 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
           setSubmitError('Invalid wallet or address');
           return;
         }
-        if (donor) {
-          try {
-            await linkWalletIfNeeded();
-          } catch (error) {
-            console.error('Error linking wallet', error);
-            setSubmitError(
-              'This wallet is already linked to a public account.',
-            );
-            return;
-          }
+
+        try {
+          await linkWalletIfNeeded();
+        } catch (error) {
+          console.error('Error linking wallet', error);
+          setSubmitError('This wallet is already linked to a public account.');
+          return;
         }
 
         const { chainId: formChainId, tokenSymbol, type, ...rest } = payload;
@@ -677,7 +681,6 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         walletClient,
         creatorInfo.address.data,
         creatorInfo.address.isValid,
-        donor,
         isConnected,
         openConnectModal,
         linkWalletIfNeeded,
@@ -693,11 +696,17 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         setPendingCollectibleModal(false);
       }
 
+      const savedChoice = localStorage.getItem('donate-option-choice');
+
       // Handle pending form submission after connection
       if (isConnected && pendingFormSubmission && walletClient) {
-        console.log('from pendingFormSubmission'); // TODO: Remove
-        void formMethods.handleSubmit(onSubmit)();
-        setPendingFormSubmission(false);
+        if (savedChoice === 'account' && donor) {
+          void formMethods.handleSubmit(onSubmit)();
+          setPendingFormSubmission(false);
+        } else if (savedChoice === 'guest' || !savedChoice) {
+          void formMethods.handleSubmit(onSubmit)();
+          setPendingFormSubmission(false);
+        }
       }
     }, [
       isConnected,
@@ -705,6 +714,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       pendingFormSubmission,
       formMethods,
       walletClient,
+      donor,
       onSubmit,
     ]);
 
