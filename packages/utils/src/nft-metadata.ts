@@ -3,6 +3,11 @@ import { Hex } from 'viem';
 import { NFT_ABI } from '../../constants/src';
 import { clients } from '../../blockchain-clients/src';
 
+type NftMeta = {
+  name?: string;
+  image?: string;
+};
+
 export async function getNftMetadata(
   client: (typeof clients)[number]['client'],
   contract: Hex,
@@ -39,9 +44,9 @@ export async function getNftMetadata(
     uri = uri.replace('ipfs://', 'https://ipfs.io/ipfs/');
 
   try {
-    const meta = await fetch(uri).then((r) => {
+    const meta = (await fetch(uri).then((r) => {
       return r.json();
-    });
+    })) as NftMeta;
     let img: string | undefined = meta.image;
     if (img?.startsWith('ipfs://'))
       img = img.replace('ipfs://', 'https://ipfs.io/ipfs/');
@@ -82,9 +87,9 @@ export async function fetchPreferredImage(
     uri = uri.replace('ipfs://', 'https://ipfs.io/ipfs/');
 
   try {
-    const meta = await fetch(uri).then((r) => {
+    const meta = (await fetch(uri).then((r) => {
       return r.json();
-    });
+    })) as NftMeta;
     let img: string | undefined = meta.image;
     if (img?.startsWith('ipfs://'))
       img = img.replace('ipfs://', 'https://ipfs.io/ipfs/');
