@@ -18,6 +18,7 @@ import {
   getTransactionUrl,
   formatTokenValue,
   applyDecimalsToNumericString,
+  formatFiatValue,
 } from '@idriss-xyz/utils';
 import {
   CREATOR_CHAIN,
@@ -732,7 +733,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                 <span className={classes('text-mint-600')}>
                   {activeTab === 'collectible' && selectedCollectible
                     ? selectedCollectible.name
-                    : amount}
+                    : formatFiatValue(amount!)}
                 </span>{' '}
                 {activeTab === 'collectible' &&
                 collectibleAmount &&
