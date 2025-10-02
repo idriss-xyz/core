@@ -21,24 +21,24 @@ export const SelectOption = forwardRef(
       <div
         ref={reference}
         className={classes(
-          'flex w-full cursor-pointer items-center space-x-3 py-[9px] ps-3 text-left',
+          'flex w-full cursor-pointer items-center py-[9px] ps-3 text-left',
           !disableHover && 'hover:bg-black/10 focus:bg-black/50',
           className,
         )}
       >
         {!hidePrefix && <div className="relative pr-3">{option.prefix}</div>}
 
-        <div className="flex-1 whitespace-nowrap text-neutralGreen-900">
+        <div className="flex-1 min-w-0 overflow-hidden text-ellipsis whitespace-nowrap text-neutralGreen-900">
           {option.label}
         </div>
 
         {!hideSuffix && option.suffix && (
-          <div className="flex items-center rounded-[4px] bg-neutral-200 px-1 py-0.5">
+          <div className="ml-3 flex items-center rounded-[4px] bg-neutral-200 px-1 py-0.5">
             {option.suffix}
           </div>
         )}
 
-        <div className="items-center">{selected ? <SelectIcon /> : ''}</div>
+        <div className="ml-auto flex items-center">{selected ? <SelectIcon /> : ''}</div>
       </div>
     );
   },
