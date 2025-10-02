@@ -137,7 +137,7 @@ export const useDonationNotification = (
             );
             ttsAudioForPlayback = ttsAudioElementReference.current;
           } else {
-            const ttsStream = await getTextToSpeech(message, voiceId);
+            const ttsStream = await getTextToSpeech(message.trim(), voiceId);
             if (ttsStream) {
               ttsAudioElementReference.current =
                 await toAudioElement(ttsStream);
