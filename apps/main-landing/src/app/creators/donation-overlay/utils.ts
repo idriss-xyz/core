@@ -79,6 +79,7 @@ export async function calculateDollar(
 }
 
 export const getTextToSpeech = async (text: string, voiceId?: string) => {
+  if (text === '') return null;
   try {
     const response = await fetch(
       `${CREATOR_API_URL}/text-to-speech/${voiceId}`,
