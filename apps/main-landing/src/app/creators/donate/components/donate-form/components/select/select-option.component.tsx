@@ -28,7 +28,7 @@ export const SelectOption = forwardRef(
       >
         {!hidePrefix && <div className="relative pr-3">{option.prefix}</div>}
 
-        <div className="flex-1 min-w-0 overflow-hidden text-ellipsis whitespace-nowrap text-neutralGreen-900">
+        <div className="min-w-0 flex-1 truncate text-neutralGreen-900">
           {option.label}
         </div>
 
@@ -38,7 +38,9 @@ export const SelectOption = forwardRef(
           </div>
         )}
 
-        <div className="ml-auto flex items-center">{selected ? <SelectIcon /> : ''}</div>
+        <div className="ml-auto flex items-center">
+          {selected ? <SelectIcon /> : ''}
+        </div>
       </div>
     );
   },
