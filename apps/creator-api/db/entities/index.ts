@@ -1,5 +1,7 @@
 export { Donation } from './donations.entity';
 export { NftDonation } from './nft-donation.entity';
+export { NftToken } from './nft-token.entity';
+export { NftCollection } from './nft-collection.entity';
 export { TokenDonation } from './token-donation.entity';
 export { Token } from './token.entity';
 export { User } from './user.entity';
