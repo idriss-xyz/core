@@ -291,7 +291,7 @@ export async function calculateNftBalances(
           contract: nft.contract,
           collection: meta.name,
           tokenId,
-          balance: type === 'erc721' ? '1' : '0',
+          balance: '1', // defaulting to 1 as opensea only returns owned nfts (without exact balance)
           type,
           image: dbRow?.imageUrl ?? undefined,
           collectionImage: meta.image,
