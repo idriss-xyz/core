@@ -84,5 +84,5 @@ export function useLinkWalletIfNeeded(
       setSubmitError('This wallet is already linked to a public account.');
       throw new Error('This wallet is already linked to a public account.');
     }
-  }, [walletClient, chainId, donorName, switchChain]);
+  }, [walletClient, chainId, donorName, switchChain, setSubmitError]);
 }
