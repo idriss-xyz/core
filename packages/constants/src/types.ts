@@ -206,21 +206,21 @@ export interface NftDonationData extends BaseDonationData {
 
 export type NftBalance = {
   chainId: number;
-  contract: string;
+  contract: Hex;
   collection: string;
   tokenId: string;
   balance: string;
   type: 'erc721' | 'erc1155';
 
   /* token meta */
-  name?: string;
+  name: string;
   imgSmall?: string;
   imgMedium?: string;
   imgLarge?: string;
   imgPreferred?: string;
 
   /* collection meta */
-  collectionImage?: string;
+  collectionImage: string;
   collectionShortName: string;
   collectionCategory: string;
 

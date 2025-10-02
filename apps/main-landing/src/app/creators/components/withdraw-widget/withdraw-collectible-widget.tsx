@@ -67,7 +67,7 @@ export const WithdrawCollectibleWidget = ({
       const key = `${b.contract}_${b.chainId}`;
       if (!map.has(key)) {
         map.set(key, {
-          address: b.contract as Hex,
+          address: b.contract,
           chainId: b.chainId,
           name: b.collection,
           image: b.collectionImage ?? '',

@@ -30,6 +30,7 @@ import {
   CREATOR_API_URL,
   TERMS_OF_SERVICE_LINK,
   PRIVACY_POLICY_LINK,
+  NftBalance,
 } from '@idriss-xyz/constants';
 import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -60,7 +61,7 @@ import {
 import { getSendFormDefaultValues } from '../../utils';
 import { useSender } from '../../hooks';
 import { useMobileFilter } from '../../hooks/use-mobile-filter';
-import { Collectible, CreatorProfile } from '../../types';
+import { CreatorProfile } from '../../types';
 import { SenderReturnType } from '../../hooks/use-sender';
 
 import {
@@ -209,9 +210,9 @@ const CollectibleTabContent = ({
   openConnectModal,
   setPendingCollectibleModal,
 }: {
-  selectedCollectible: Collectible | null;
+  selectedCollectible: NftBalance | null;
   amount: number | undefined;
-  setSelectedCollectible: (collectible: Collectible | null) => void;
+  setSelectedCollectible: (collectible: NftBalance | null) => void;
   setIsCollectibleModalOpen: (open: boolean) => void;
   isConnected: boolean;
   openConnectModal?: () => void;
@@ -222,7 +223,9 @@ const CollectibleTabContent = ({
       {selectedCollectible && (
         <div className="flex gap-2.5 rounded-[12px] border border-neutral-200 p-2">
           <img
-            src={selectedCollectible.image}
+            src={
+              selectedCollectible.imgPreferred ?? selectedCollectible.imgMedium
+            }
             alt={selectedCollectible.name}
             className="h-[88px] w-[72px] rounded-[12px] border-neutral-300 object-cover"
           />
@@ -287,7 +290,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
     const [isCollectibleModalOpen, setIsCollectibleModalOpen] = useState(false);
     const [collectibleSearch, setCollectibleSearch] = useState('');
     const [selectedCollectible, setSelectedCollectible] =
-      useState<Collectible | null>(null);
+      useState<NftBalance | null>(null);
     const [activeTab, setActiveTab] = useState<'token' | 'collectible'>(
       'token',
     );
@@ -1112,7 +1115,8 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
                   collectionCategory: collectible.collectionCategory,
                   contract: collectible.contract,
                   chainId: collectible.chainId,
-                  image: collectible.image,
+                  imgPreferred:
+                    collectible.imgPreferred ?? collectible.imgMedium,
                   balance: collectible.balance,
                 });
               }}
