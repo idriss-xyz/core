@@ -27,8 +27,14 @@ async function getTokenAndNftRows(
   });
 
   const nftRows = await nftRepo.find({
-    where: applyBase(where), // ← use the wrapped filter
-    relations: ['base', 'base.fromUser', 'base.toUser'],
+    where: applyBase(where),
+    relations: [
+      'base',
+      'base.fromUser',
+      'base.toUser',
+      'nft',
+      'nft.collection',
+    ],
   });
 
   const tokenDtos: TokenDonationData[] = tokenRows.map((t) => ({
@@ -43,12 +49,20 @@ async function getTokenAndNftRows(
   const nftDtos: NftDonationData[] = nftRows.map((n) => ({
     ...n.base,
     kind: 'nft',
-    collectionAddress: n.collectionAddress,
-    tokenId: n.tokenId,
+    collectionAddress: n.nft.collectionAddress,
+    tokenId: n.nft.tokenId,
     quantity: n.quantity,
-    name: n.name,
-    imageUrl: n.imageUrl,
-    network: n.network,
+    network: n.nft.network,
+
+    name: n.nft.name,
+    imgSmall: n.nft.imgSmall,
+    imgMedium: n.nft.imgMedium,
+    imgLarge: n.nft.imgLarge,
+    imgPreferred: n.nft.imgPreferred,
+
+    collectionShortName: n.nft.collection.shortName,
+    collectionSlug: n.nft.collection.slug,
+    collectionCategory: n.nft.collection.category,
   }));
 
   return [...tokenDtos, ...nftDtos];

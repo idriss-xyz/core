@@ -39,7 +39,7 @@ import {
   // AVAX_LOGO,
   // GUNZ_LOGO,
 } from './logos';
-import { Chain, Token, ChainToken, ChainNft } from './types';
+import { Chain, Token, ChainToken, NftCollection } from './types';
 
 export const STAKER_ADDRESS = '0x085e2DC1b05dcdbE011B5ad377C9f2fcD69B7057';
 export const REWARDS_ADDRESS = '0x4D66A8e9Da1F007802338B372aD348B78b455aBB';
@@ -406,7 +406,7 @@ export const CHAIN_ID_TO_TOKENS = {
   ],
 } satisfies Record<string, ChainToken[]>;
 
-export const CHAIN_ID_TO_NFT_COLLECTIONS: Record<number, ChainNft[]> = {
+export const CHAIN_ID_TO_NFT_COLLECTIONS: Record<number, NftCollection[]> = {
   [CREATOR_CHAIN.ETHEREUM.id]: [
     {
       address: '0x0Fc3DD8C37880a297166BEd57759974A157f0E74',
@@ -564,7 +564,7 @@ export const DEFAULT_ALLOWED_CHAINS_IDS = [
 export const EMPTY_HEX = '0x';
 
 export const COPILOT_API_URL = 'https://copilot-api.idriss.xyz';
-export const CREATOR_API_URL = 'https://creators-api.idriss.xyz';
+export const CREATOR_API_URL = 'https://core-staging-4c69.up.railway.app';
 
 export const DEFAULT_DONATION_MIN_ALERT_AMOUNT = 1;
 export const DEFAULT_DONATION_MIN_TTS_AMOUNT = 3;
@@ -613,7 +613,7 @@ export const TEST_NFT_DONATION = {
     amount: 2,
     details: {
       id: '100400158',
-      name: 'Embedded Agent',
+      name: 'High-Density Genetic Replicator',
       logo: 'https://nftmedia.parallelnft.com/parallel-aftermath/QmPPNj5MpR9FcxzPUu2gKQygNp5gxNvxwGgTkAGaef6mX9/image.png',
       collectionName: 'Parallel Aftermath',
     },

@@ -3,7 +3,7 @@ import { Hex } from 'viem';
 import {
   CREATOR_API_URL,
   TokenBalance,
-  CollectibleBalance,
+  NftBalance,
 } from '@idriss-xyz/constants';
 
 interface BalancesResponse {
@@ -17,10 +17,8 @@ interface BalancesResponse {
 
 interface CollectiblesResponse {
   nftResult: {
-    balances: CollectibleBalance[];
-    summary: {
-      totalUsdBalance: number;
-    };
+    balances: NftBalance[];
+    summary: { totalUsdBalance: number };
   };
 }
 

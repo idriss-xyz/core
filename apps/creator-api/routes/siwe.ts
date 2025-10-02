@@ -151,47 +151,36 @@ router.post(
 );
 
 router.options('/linked', siweCors);
-router.get(
-  '/linked',
-  siweCors,
-  verifyToken(),
-  async (req: Request, res: Response) => {
-    if (!req.user?.id) {
-      res.status(401).json({ error: 'Unauthorized' });
-      return;
-    }
-
-    const raw = req.query.address;
-    if (typeof raw !== 'string') {
-      res.status(400).json({ error: 'Missing address' });
-      return;
-    }
-
-    let address: Hex;
-    try {
-      address = getAddress(raw);
-      if (address === NULL_ADDRESS) {
-        res.status(400).json({ error: 'Invalid address' });
-        return;
-      }
-    } catch {
-      {
-        res.status(400).json({ error: 'Invalid address' });
-        return;
-      }
-    }
-
-    const creatorAddressRepository =
-      AppDataSource.getRepository(CreatorAddress);
-
-    const linkedCreator = await creatorAddressRepository.findOne({
-      where: { address },
-      relations: ['creator'],
-    });
-
-    res.json({ linkedTo: linkedCreator?.creator.name });
+router.get('/linked', siweCors, async (req: Request, res: Response) => {
+  const raw = req.query.address;
+  if (typeof raw !== 'string') {
+    res.status(400).json({ error: 'Missing address' });
     return;
-  },
-);
+  }
+
+  let address: Hex;
+  try {
+    address = getAddress(raw);
+    if (address === NULL_ADDRESS) {
+      res.status(400).json({ error: 'Invalid address: burner address' });
+      return;
+    }
+  } catch {
+    {
+      res.status(400).json({ error: 'Invalid address' });
+      return;
+    }
+  }
+
+  const creatorAddressRepository = AppDataSource.getRepository(CreatorAddress);
+
+  const linkedCreator = await creatorAddressRepository.findOne({
+    where: { address },
+    relations: ['creator'],
+  });
+
+  res.json({ linkedTo: linkedCreator?.creator.name });
+  return;
+});
 
 export default router;

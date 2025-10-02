@@ -7,6 +7,8 @@ import { User } from './entities/user.entity';
 import { Token } from './entities/token.entity';
 import { TokenDonation } from './entities/token-donation.entity';
 import { NftDonation } from './entities/nft-donation.entity';
+import { NftCollection } from './entities/nft-collection.entity';
+import { NftToken } from './entities/nft-token.entity';
 import { ZapperNode } from '../types';
 import { isTokenItem, isNftItem } from '../utils/zapper-type-guards';
 import { fetchNftFloorFromOpensea } from '../utils/price-fetchers';
@@ -17,7 +19,7 @@ import {
   NftDonationData,
   CHAIN_ID_TO_NFT_COLLECTIONS,
 } from '@idriss-xyz/constants';
-import { getChainByNetworkName } from '@idriss-xyz/utils';
+import { fetchPreferredImage, getChainByNetworkName } from '@idriss-xyz/utils';
 
 export async function storeToDatabase(
   edges: { node: ZapperNode }[],
@@ -28,6 +30,8 @@ export async function storeToDatabase(
   const nftDonationRepo = AppDataSource.getRepository(NftDonation);
   const userRepo = AppDataSource.getRepository(User);
   const tokenRepo = AppDataSource.getRepository(Token);
+  const collectionRepo = AppDataSource.getRepository(NftCollection);
+  const nftTokenRepo = AppDataSource.getRepository(NftToken);
   const savedDonations: StoredDonationData[] = [];
 
   const nodes = edges.map((edge) => edge.node);
@@ -155,14 +159,20 @@ export async function storeToDatabase(
 
     /* ──────────── NFT donation ──────────── */
     if (isNftItem(item0)) {
-      const { collectionAddress, tokenId, quantity, nftToken } = item0;
+      const rawCollectionAddress = item0.collectionAddress.toLowerCase();
+      const { tokenId, quantity, nftToken } = item0;
+
+      const bigIntTokenId = BigInt(tokenId);
 
       const chain = getChainByNetworkName(node.network);
-      const slug =
+      const collectionNft =
         chain &&
         CHAIN_ID_TO_NFT_COLLECTIONS[chain.id]?.find(
-          (c) => c.address.toLowerCase() === collectionAddress.toLowerCase(),
-        )?.slug;
+          (c) => c.address.toLowerCase() === rawCollectionAddress,
+        );
+      const slug = collectionNft?.slug;
+      const shortName = collectionNft?.shortName;
+      const category = collectionNft?.category;
 
       const floor = slug
         ? await fetchNftFloorFromOpensea(slug, tokenId.toString())
@@ -170,7 +180,48 @@ export async function storeToDatabase(
 
       const tradeValue = (floor?.usdValue ?? 0) * quantity;
 
-      // Save base donation row
+      /* 1 ─ upsert / fetch collection */
+      const collection = await collectionRepo.upsert(
+        {
+          address: rawCollectionAddress as Hex,
+          network: node.network,
+          name: nftToken.name, // nullable in entity
+          shortName: shortName,
+          category: category,
+          slug: slug,
+          imageUrl: nftToken.mediasV3.images.edges[0]?.node.large,
+        },
+        {
+          conflictPaths: ['address', 'network'],
+          skipUpdateIfNoValuesChanged: true,
+        },
+      );
+
+      /* 2 ─ upsert / fetch token */
+      let storedToken = await nftTokenRepo.findOneBy({
+        collectionAddress: rawCollectionAddress as Hex,
+        network: node.network,
+        tokenId: Number(tokenId),
+      });
+
+      if (!storedToken) {
+        storedToken = await nftTokenRepo.save({
+          collectionAddress: rawCollectionAddress as Hex,
+          network: node.network,
+          tokenId: Number(bigIntTokenId),
+          name: nftToken.name,
+          imgSmall: nftToken.mediasV3.images.edges[0]?.node.url,
+          imgMedium: nftToken.mediasV3.images.edges[0]?.node.medium,
+          imgLarge: nftToken.mediasV3.images.edges[0]?.node.large,
+          imgPreferred: await fetchPreferredImage(
+            bigIntTokenId,
+            rawCollectionAddress as Hex,
+            chain!.id,
+          ),
+        });
+      }
+
+      /* 3 ─ save base donation row (unchanged) */
       const base = donationBaseRepo.create({
         transactionHash: node.transaction.hash,
         fromAddress: fromAddress,
@@ -184,26 +235,34 @@ export async function storeToDatabase(
       });
       const savedBase = await donationBaseRepo.save(base);
 
+      /* 4 ─ save NFT-specific row */
       await nftDonationRepo.save({
         id: savedBase.id,
-        collectionAddress: collectionAddress.toLowerCase() as Hex,
-        tokenId,
+        nftTokenId: storedToken.id,
         quantity,
-        name: nftToken.name,
-        imageUrl: nftToken.mediasV3.images.edges[0].node.medium,
-        network: node.network,
       });
 
+      /* 5 ─ return shape stays backward-compatible */
       savedDonations.push({
         ...savedBase,
         kind: 'nft',
-        collectionAddress: collectionAddress.toLowerCase() as Hex,
-        tokenId,
+        collectionAddress: rawCollectionAddress as Hex,
+        tokenId: Number(bigIntTokenId),
         quantity,
-        name: nftToken.name,
-        imageUrl: nftToken.mediasV3.images.edges[0].node.medium,
         network: node.network,
-      } satisfies NftDonationData);
+
+        /* token meta */
+        name: storedToken.name,
+        imgSmall: storedToken.imgSmall,
+        imgMedium: storedToken.imgMedium,
+        imgLarge: storedToken.imgLarge,
+        imgPreferred: storedToken.imgPreferred,
+
+        /* collection meta */
+        collectionShortName: shortName,
+        collectionSlug: slug,
+        collectionCategory: category,
+      } as NftDonationData);
       continue;
     }
   }

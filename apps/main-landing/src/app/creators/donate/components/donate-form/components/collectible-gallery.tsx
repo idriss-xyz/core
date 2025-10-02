@@ -3,14 +3,13 @@ import { Checkbox } from '@idriss-xyz/ui/checkbox';
 import { Card } from '@idriss-xyz/ui/card';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { NumericButtonGroup } from '@idriss-xyz/ui/numeric-button-group';
-import { CHAIN_ID_TO_NFT_COLLECTIONS } from '@idriss-xyz/constants';
+import { CHAIN_ID_TO_NFT_COLLECTIONS, NftBalance } from '@idriss-xyz/constants';
 import { getAddress } from 'viem';
 import { useWalletClient } from 'wagmi';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Button } from '@idriss-xyz/ui/button';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 
-import { Collectible } from '../../../types';
 import { useCollectibles } from '../../../hooks/use-collectibles';
 
 import { LayersBadge } from './layer-badge';
@@ -19,13 +18,13 @@ interface Properties {
   searchQuery: string;
   showMobileFilter: boolean;
   setShowMobileFilter: (show: boolean) => void;
-  onSelect: (collectible: Collectible & { amount: number }) => void;
+  onSelect: (collectible: NftBalance & { amount: number }) => void;
   onConfirm: () => void;
   initialSelectedCollections?: string[];
   onSelectedCollectionsChange?: (c: string[]) => void;
 }
 
-const getCollectibleKey = (collectible: Collectible) => {
+const getCollectibleKey = (collectible: NftBalance) => {
   return `${collectible.contract}-${collectible.tokenId}`;
 };
 
@@ -133,7 +132,7 @@ export const CollectibleGallery = ({
     setSelectedCollections(updated); // ← now matches the expected type
   };
 
-  const handleCollectibleClick = (collectible: Collectible) => {
+  const handleCollectibleClick = (collectible: NftBalance) => {
     const collectibleKey = getCollectibleKey(collectible);
 
     if (
@@ -159,7 +158,7 @@ export const CollectibleGallery = ({
     }
   };
 
-  const handleAmountChange = (collectible: Collectible, newAmount: number) => {
+  const handleAmountChange = (collectible: NftBalance, newAmount: number) => {
     setSelectedAmount(newAmount);
 
     if (newAmount === 0) {
@@ -262,7 +261,7 @@ export const CollectibleGallery = ({
                       }}
                     >
                       <img
-                        src={collectible.image}
+                        src={collectible.imgPreferred ?? collectible.imgMedium}
                         alt={collectible.name}
                         className="h-[240px] w-auto rounded-xl object-cover"
                       />

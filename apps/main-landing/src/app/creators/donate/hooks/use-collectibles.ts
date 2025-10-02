@@ -1,14 +1,12 @@
-import { CREATOR_API_URL } from '@idriss-xyz/constants';
+import { CREATOR_API_URL, NftBalance } from '@idriss-xyz/constants';
 import { useQuery } from '@tanstack/react-query';
 import { Hex } from 'viem';
-
-import { Collectible } from '../types';
 
 type Options = {
   enabled?: boolean;
 };
 
-const getCollectibles = async (address?: Hex): Promise<Collectible[]> => {
+const getCollectibles = async (address?: Hex): Promise<NftBalance[]> => {
   if (!address) {
     throw new Error('Address is required to fetch collectibles');
   }
@@ -26,7 +24,7 @@ const getCollectibles = async (address?: Hex): Promise<Collectible[]> => {
   }
 
   const collectibles = await response.json();
-  return collectibles.nftResult.balances as Collectible[];
+  return collectibles.nftResult.balances as NftBalance[];
 };
 
 export const useCollectibles = (address?: Hex, options?: Options) => {

@@ -4,7 +4,7 @@ import { Button } from '@idriss-xyz/ui/button';
 import { Form as DesignSystemForm } from '@idriss-xyz/ui/form';
 import { classes } from '@idriss-xyz/ui/utils';
 import {
-  CollectibleBalance,
+  NftBalance,
   CollectionOption,
   NftOption,
   NULL_ADDRESS,
@@ -30,7 +30,7 @@ type WithdrawFormValues = {
 
 type Properties = {
   isOpen: boolean;
-  nftBalances: CollectibleBalance[];
+  nftBalances: NftBalance[];
   selectedNft?: { contract: Hex; tokenId: string; chainId: number };
   onClose: () => void;
 };
@@ -67,7 +67,7 @@ export const WithdrawCollectibleWidget = ({
       const key = `${b.contract}_${b.chainId}`;
       if (!map.has(key)) {
         map.set(key, {
-          address: b.contract as Hex,
+          address: b.contract,
           chainId: b.chainId,
           name: b.collection,
           image: b.collectionImage ?? '',
@@ -97,7 +97,7 @@ export const WithdrawCollectibleWidget = ({
         return {
           tokenId: b.tokenId,
           name: b.name ?? `NFT #${b.tokenId}`,
-          image: b.image ?? '',
+          image: b.imgSmall ?? '',
           balance: b.balance,
           type: b.type,
         };
@@ -159,7 +159,7 @@ export const WithdrawCollectibleWidget = ({
             ? {
                 tokenId: itm.tokenId,
                 name: itm.name ?? `NFT #${itm.tokenId}`,
-                image: itm.image ?? '',
+                image: itm.imgMedium ?? itm.imgSmall ?? '',
                 balance: itm.balance,
                 type: itm.type,
               }
