@@ -82,6 +82,7 @@ export function CollectibleSelectModal({
             }
             formMethods.setValue('tokenId', collectible.tokenId);
             formMethods.setValue('contract', collectible.contract);
+            formMethods.setValue('chainId', collectible.chainId);
             formMethods.setValue('type', collectible.type ?? 'erc1155');
             formMethods.setValue('collectibleAmount', collectible.amount);
             setSelectedCollectible({
