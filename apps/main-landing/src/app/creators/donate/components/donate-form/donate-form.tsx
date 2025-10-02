@@ -62,7 +62,7 @@ import { useSender } from '../../hooks';
 import { useMobileFilter } from '../../hooks/use-mobile-filter';
 import { Collectible, CreatorProfile } from '../../types';
 import { SenderReturnType } from '../../hooks/use-sender';
-// import { useSwitchChain } from '../../hooks/use-switch-chain';
+import { useSwitchChain } from '../../hooks/use-switch-chain';
 
 import {
   ChainSelect,
@@ -296,7 +296,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
     const [pendingCollectibleModal, setPendingCollectibleModal] =
       useState(false);
     const [pendingFormSubmission, setPendingFormSubmission] = useState(false);
-    // const switchChain = useSwitchChain();
+    const switchChain = useSwitchChain();
     const { showMobileFilter, setShowMobileFilter } = useMobileFilter();
 
     const minimumSfxAmount =
@@ -460,12 +460,11 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       const qs = new URLSearchParams({ address });
       const linkedResult = await fetch(`${CREATOR_API_URL}/siwe/linked?${qs}`);
       const { linkedTo } = await linkedResult.json();
-      console.log('linkedTo', linkedTo); // TODO: Remove
 
       if (savedChoice === 'account' && donor?.name) {
         // Wallet is already linked to another (not donor's) public account
         if (linkedTo && linkedTo !== donor?.name) {
-          console.error('Wallet already linked to another account', linkedTo);
+          setSubmitError('This wallet is already linked to a public account.');
           throw new Error('This wallet is already linked to a public account.');
         }
         // Wallet is already linked to the donor account
@@ -474,14 +473,12 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         // Wallet is not linked to any account, link to current
 
         const authToken = await getAccessToken();
-        console.log('authToken', authToken); // TODO: Remove
 
         // 2) get nonce
         const nonceResult = await fetch(`${CREATOR_API_URL}/siwe/nonce`, {
           headers: { Authorization: `Bearer ${authToken}` },
         });
         const { nonce } = await nonceResult.json();
-        console.log('nonce', nonce); // TODO: Remove
 
         // 3) sign SIWE
         const message_ = new SiweMessage({
@@ -495,19 +492,16 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
           nonce,
         });
         const message = message_.prepareMessage();
-        console.log('message', message); // TODO: Remove
 
-        // await switchChain.mutateAsync({
-        //   walletClient,
-        //   chainId,
-        // });
-        console.log('switchChain.mutateAsync done'); // TODO: Remove
+        await switchChain.mutateAsync({
+          walletClient,
+          chainId,
+        });
 
         const signature = await walletClient.signMessage({
           account: address,
           message,
         });
-        console.log('signature', signature); // TODO: Remove
 
         // 4) verify
         const verifyResult = await fetch(`${CREATOR_API_URL}/siwe/verify`, {
@@ -518,13 +512,12 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
           },
           body: JSON.stringify({ message, signature }),
         });
-        const verifyResultJson = await verifyResult.json();
-        console.log('verifyResultJson', verifyResultJson); // TODO: Remove
         if (!verifyResult.ok) throw new Error('Error verifying signature');
       } else if ((savedChoice === 'guest' || !savedChoice) && linkedTo) {
+        setSubmitError('This wallet is already linked to a public account.');
         throw new Error('This wallet is already linked to a public account.');
       }
-    }, [walletClient, chainId, donor?.name]);
+    }, [walletClient, chainId, donor?.name, switchChain]);
 
     const syncDonation = useCallback(async () => {
       if (!creatorInfo.address.data || !creatorInfo.address.isValid) {
@@ -625,11 +618,9 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
           await linkWalletIfNeeded();
         } catch (error) {
           console.error('Error linking wallet', error);
-          const errorMessage =
-            error instanceof Error
-              ? error.message
-              : 'Unknown error linking wallet';
-          setSubmitError(errorMessage);
+          if (!submitError) {
+            setSubmitError('Unknown error linking wallet.');
+          }
           return;
         }
 
@@ -690,6 +681,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         linkWalletIfNeeded,
         selectedCollectible,
         activeTab,
+        submitError,
       ],
     );
 
