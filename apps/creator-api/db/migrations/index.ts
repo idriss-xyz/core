@@ -31,3 +31,4 @@ export { MoveNetworkToChildTables1758104997000 } from './1758104997000-MoveNetwo
 export { AddCollectibleEnabledToCreator1758546104000 } from './1758546104000-AddCollectibleEnabledToCreator';
 export { RemoveWwwFromUrls1758590345135 } from './1758590345135-RemoveWwwFromUrls';
 export { AddTokenEnabledToCreator1758728078982 } from './1758728078982-AddTokenEnabledToCreator';
+export { SplitNftMetadata1759318771000 } from './1759318771000-split-nft-metadata';
