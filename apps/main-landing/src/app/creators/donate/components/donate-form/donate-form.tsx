@@ -73,7 +73,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
     const [pendingCollectibleModal, setPendingCollectibleModal] =
       useState(false);
     const [pendingFormSubmission, setPendingFormSubmission] = useState(false);
-
+    // const switchChain = useSwitchChain();
     const { showMobileFilter, setShowMobileFilter } = useMobileFilter();
 
     const minimumSfxAmount =
@@ -293,16 +293,17 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
           setSubmitError('Invalid wallet or address');
           return;
         }
-        if (donor) {
-          try {
-            await linkWalletIfNeeded();
-          } catch (error) {
-            console.error('Error linking wallet', error);
-            setSubmitError(
-              'This wallet is already linked to a public account.',
-            );
-            return;
-          }
+
+        try {
+          await linkWalletIfNeeded();
+        } catch (error) {
+          console.error('Error linking wallet', error);
+          const errorMessage =
+            error instanceof Error
+              ? error.message
+              : 'Unknown error linking wallet';
+          setSubmitError(errorMessage);
+          return;
         }
 
         const { chainId: formChainId, tokenSymbol, type, ...rest } = payload;
@@ -357,7 +358,6 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         walletClient,
         creatorInfo.address.data,
         creatorInfo.address.isValid,
-        donor,
         isConnected,
         openConnectModal,
         linkWalletIfNeeded,
@@ -373,10 +373,17 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         setPendingCollectibleModal(false);
       }
 
+      const savedChoice = localStorage.getItem('donate-option-choice');
+
       // Handle pending form submission after connection
       if (isConnected && pendingFormSubmission && walletClient) {
-        void formMethods.handleSubmit(onSubmit)();
-        setPendingFormSubmission(false);
+        if (savedChoice === 'account' && donor) {
+          void formMethods.handleSubmit(onSubmit)();
+          setPendingFormSubmission(false);
+        } else if (savedChoice === 'guest' || !savedChoice) {
+          void formMethods.handleSubmit(onSubmit)();
+          setPendingFormSubmission(false);
+        }
       }
     }, [
       isConnected,
@@ -384,10 +391,9 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       pendingFormSubmission,
       formMethods,
       walletClient,
+      donor,
       onSubmit,
     ]);
-
-    console.log('rerender, active tab', activeTab);
 
     if (!creatorInfo.address.isValid && !creatorInfo.address.isFetching) {
       return <DonateFormWrongAddress className={className} />;
