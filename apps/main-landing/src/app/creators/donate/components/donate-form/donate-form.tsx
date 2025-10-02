@@ -520,7 +520,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         });
         const verifyResultJson = await verifyResult.json();
         console.log('verifyResultJson', verifyResultJson); // TODO: Remove
-        if (!verifyResult.ok) throw new Error('SIWE verify failed');
+        if (!verifyResult.ok) throw new Error('Error verifying signature');
       } else if ((savedChoice === 'guest' || !savedChoice) && linkedTo) {
         throw new Error('This wallet is already linked to a public account.');
       }
@@ -625,7 +625,11 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
           await linkWalletIfNeeded();
         } catch (error) {
           console.error('Error linking wallet', error);
-          setSubmitError('This wallet is already linked to a public account.');
+          const errorMessage =
+            error instanceof Error
+              ? error.message
+              : 'Unknown error linking wallet';
+          setSubmitError(errorMessage);
           return;
         }
 
