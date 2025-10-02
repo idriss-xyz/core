@@ -23,14 +23,9 @@ export function useLinkWalletIfNeeded(
 
     const address = getAddress(walletClient.account.address);
 
-    const authToken = await getAccessToken();
-    console.log('authToken', authToken); // TODO: Remove
-
     // 1) check if address is linked
     const qs = new URLSearchParams({ address });
-    const linkedResult = await fetch(`${CREATOR_API_URL}/siwe/linked?${qs}`, {
-      headers: { Authorization: `Bearer ${authToken}` },
-    });
+    const linkedResult = await fetch(`${CREATOR_API_URL}/siwe/linked?${qs}`);
     const { linkedTo } = await linkedResult.json();
     console.log('linkedTo', linkedTo); // TODO: Remove
 
@@ -42,6 +37,9 @@ export function useLinkWalletIfNeeded(
       }
       // Wallet is already linked to the donor account
       else if (linkedTo) return;
+
+      const authToken = await getAccessToken();
+      console.log('authToken', authToken); // TODO: Remove
 
       // Wallet is not linked to any account, link to current
       // 2) get nonce
