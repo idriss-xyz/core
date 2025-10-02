@@ -339,7 +339,7 @@ export default function EarningsStats() {
                             </span>
                           </td>
                           <td className="text-right align-middle text-sm font-medium text-black">
-                            {item.tokenData.symbol === 'NFT' &&
+                            {item.tokenData.symbol === 'Collectibles' &&
                             item.totalAmount === 0 ? (
                               <div className="inline-flex items-center gap-1">
                                 <span>–</span>
