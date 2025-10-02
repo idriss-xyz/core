@@ -278,11 +278,21 @@ export default function EarningsStats() {
               <div className="space-y-4 p-4">
                 {mainAsset && (
                   <div className="flex items-center gap-3">
-                    <div className="relative size-[70px] rounded-full">
-                      <TokenLogo
-                        symbol={mainAsset.tokenData.symbol}
-                        imageUrl={mainAsset.tokenData.imageUrl}
-                      />
+                    <div
+                      className={classes(
+                        'relative size-[70px] rounded-full',
+                        mainAsset.tokenData.symbol === 'Collectibles' &&
+                          'flex items-center justify-center border-2 border-neutral-300',
+                      )}
+                    >
+                      {mainAsset.tokenData.symbol === 'Collectibles' ? (
+                        <Icon name="Card" size={36} className="text-black" />
+                      ) : (
+                        <TokenLogo
+                          symbol={mainAsset.tokenData.symbol}
+                          imageUrl={mainAsset.tokenData.imageUrl}
+                        />
+                      )}
                     </div>
                     <div className="flex flex-col gap-2">
                       <span
@@ -318,11 +328,25 @@ export default function EarningsStats() {
                           className="border-b border-gray-200 last:border-b-0"
                         >
                           <td className="flex items-center gap-2 py-3">
-                            <div className="relative size-6 rounded-full text-black">
-                              <TokenLogo
-                                symbol={item.tokenData.symbol}
-                                imageUrl={item.tokenData.imageUrl}
-                              />
+                            <div
+                              className={classes(
+                                'relative size-6 rounded-full text-black',
+                                item.tokenData.symbol === 'Collectibles' &&
+                                  'flex items-center justify-center border-2 border-neutral-300',
+                              )}
+                            >
+                              {item.tokenData.symbol === 'Collectibles' ? (
+                                <Icon
+                                  name="Card"
+                                  size={36}
+                                  className="text-black"
+                                />
+                              ) : (
+                                <TokenLogo
+                                  symbol={item.tokenData.symbol}
+                                  imageUrl={item.tokenData.imageUrl}
+                                />
+                              )}
                             </div>
                             <span className="text-sm text-gray-300">
                               {item.tokenData.name ?? item.tokenData.symbol}{' '}

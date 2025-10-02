@@ -355,7 +355,7 @@ export function calculateStatsForRecipientAddress(
       if (!collectiblesEarnings) {
         collectiblesEarnings = {
           tokenData: {
-            symbol: 'NFT',
+            symbol: 'Collectibles',
             name: 'Collectibles',
             imageUrl: '',
             decimals: 0,
