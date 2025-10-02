@@ -62,7 +62,7 @@ import { useSender } from '../../hooks';
 import { useMobileFilter } from '../../hooks/use-mobile-filter';
 import { Collectible, CreatorProfile } from '../../types';
 import { SenderReturnType } from '../../hooks/use-sender';
-import { useSwitchChain } from '../../hooks/use-switch-chain';
+// import { useSwitchChain } from '../../hooks/use-switch-chain';
 
 import {
   ChainSelect,
@@ -296,7 +296,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
     const [pendingCollectibleModal, setPendingCollectibleModal] =
       useState(false);
     const [pendingFormSubmission, setPendingFormSubmission] = useState(false);
-    const switchChain = useSwitchChain();
+    // const switchChain = useSwitchChain();
     const { showMobileFilter, setShowMobileFilter } = useMobileFilter();
 
     const minimumSfxAmount =
@@ -497,10 +497,10 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         const message = message_.prepareMessage();
         console.log('message', message); // TODO: Remove
 
-        await switchChain.mutateAsync({
-          walletClient,
-          chainId,
-        });
+        // await switchChain.mutateAsync({
+        //   walletClient,
+        //   chainId,
+        // });
         console.log('switchChain.mutateAsync done'); // TODO: Remove
 
         const signature = await walletClient.signMessage({
@@ -524,7 +524,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       } else if ((savedChoice === 'guest' || !savedChoice) && linkedTo) {
         throw new Error('This wallet is already linked to a public account.');
       }
-    }, [walletClient, chainId, donor?.name, switchChain]);
+    }, [walletClient, chainId, donor?.name]);
 
     const syncDonation = useCallback(async () => {
       if (!creatorInfo.address.data || !creatorInfo.address.isValid) {
