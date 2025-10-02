@@ -4,6 +4,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import {
   formatTokenValue,
   applyDecimalsToNumericString,
+  formatFiatValue,
 } from '@idriss-xyz/utils';
 import {
   CREATOR_CHAIN,
