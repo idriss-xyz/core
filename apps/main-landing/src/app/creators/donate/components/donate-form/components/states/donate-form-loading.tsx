@@ -1,5 +1,6 @@
 import { TxLoadingContent } from '@idriss-xyz/ui/tx-loading-modal';
 import { classes } from '@idriss-xyz/ui/utils';
+import { formatFiatValue } from '@idriss-xyz/utils';
 
 const baseClassName =
   'z-1 w-[440px] max-w-full rounded-xl bg-white px-4 pb-9 pt-6 flex flex-col items-center relative';
@@ -32,7 +33,7 @@ export function DonateFormLoading({
             <span className={classes('text-mint-600')}>
               {activeTab === 'collectible' && selectedCollectible
                 ? selectedCollectible.name
-                : amount}
+                : formatFiatValue(amount!)}
             </span>{' '}
             {activeTab === 'collectible' &&
             collectibleAmount &&
