@@ -165,22 +165,14 @@ export async function storeToDatabase(
       const bigIntTokenId = BigInt(tokenId);
 
       const chain = getChainByNetworkName(node.network);
-      const slug =
+      const collectionNft =
         chain &&
         CHAIN_ID_TO_NFT_COLLECTIONS[chain.id]?.find(
-          (c) => c.address.toLowerCase() === rawCollectionAddress.toLowerCase(),
-        )?.slug;
-      const shortName =
-        chain &&
-        CHAIN_ID_TO_NFT_COLLECTIONS[chain.id]?.find(
-          (c) => c.address.toLowerCase() === rawCollectionAddress.toLowerCase(),
-        )?.shortName;
-
-      const category =
-        chain &&
-        CHAIN_ID_TO_NFT_COLLECTIONS[chain.id]?.find(
-          (c) => c.address.toLowerCase() === rawCollectionAddress.toLowerCase(),
-        )?.category;
+          (c) => c.address.toLowerCase() === rawCollectionAddress,
+        );
+      const slug = collectionNft?.slug;
+      const shortName = collectionNft?.shortName;
+      const category = collectionNft?.category;
 
       const floor = slug
         ? await fetchNftFloorFromOpensea(slug, tokenId.toString())
