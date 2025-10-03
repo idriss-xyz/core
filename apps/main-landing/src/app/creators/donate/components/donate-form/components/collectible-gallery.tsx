@@ -94,6 +94,7 @@ export const CollectibleGallery = ({
   const [_selectedCollections, _setSelectedCollections] = useState<string[]>(
     initialSelectedCollections ?? [],
   );
+  const [hasInitialized, setHasInitialized] = useState(false);
 
   const setSelectedCollections = (next: string[], propagate = true) => {
     _setSelectedCollections(next);
@@ -105,7 +106,7 @@ export const CollectibleGallery = ({
   const [selectedAmount, setSelectedAmount] = useState<number>(0);
 
   useEffect(() => {
-    if (!collectibles?.length) return;
+    if (!collectibles?.length || hasInitialized) return;
 
     const allContracts = uniqueCollections.map((col) => {
       return `${col.chainId}-${col.address}`;
@@ -118,6 +119,7 @@ export const CollectibleGallery = ({
       : allContracts;
 
     setSelectedCollections(startSelection, false);
+    setHasInitialized(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collectibles, uniqueCollections, initialSelectedCollections]);
 
