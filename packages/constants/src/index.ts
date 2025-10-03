@@ -77,6 +77,7 @@ export type {
   TipHistoryTokenV2,
   LeaderboardStats,
   StoredDonationData,
+  DonorHistoryStats,
   TokenDonationData,
   NftDonationData,
   DonationUser,
