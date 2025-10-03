@@ -4,7 +4,7 @@ export const ZAPPER_API_URL = 'https://public.zapper.xyz/graphql';
 
 export const TipHistoryQuery = `
   query TransactionsForAppV2($slug: String!, $after: String) {
-  transactionsForAppV2(slug: $slug first: 25, after: $after) {
+  transactionsForAppV2(slug: $slug first: 100, after: $after) {
     edges {
       node {
         timestamp
