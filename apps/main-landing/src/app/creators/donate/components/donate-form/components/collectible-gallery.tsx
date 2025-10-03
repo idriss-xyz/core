@@ -9,6 +9,7 @@ import { useWalletClient } from 'wagmi';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Button } from '@idriss-xyz/ui/button';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
+import { Link } from '@idriss-xyz/ui/link';
 
 import { useCollectibles } from '../../../hooks/use-collectibles';
 
@@ -183,6 +184,18 @@ export const CollectibleGallery = ({
       return matchesSearch && matchesCollection;
     }) ?? [];
 
+  const handleSelectAllCollections = () => {
+    if (_selectedCollections.length > 0) {
+      setSelectedCollections([]);
+    } else {
+      setSelectedCollections(
+        uniqueCollections.map((c) => {
+          return `${c.chainId}-${c.address}`;
+        }),
+      );
+    }
+  };
+
   if (isLoading) {
     return <div className="py-8 text-center">Loading collectibles...</div>;
   }
@@ -197,15 +210,15 @@ export const CollectibleGallery = ({
               Collections
             </h3>
             <div className="mb-4">
-              <label className="flex cursor-pointer items-center gap-2">
-                <Checkbox
-                  value={_selectedCollections.length === 0}
-                  onChange={() => {
-                    return setSelectedCollections([]);
-                  }}
-                />
-                <span className="text-sm text-neutral-700">Unselect all</span>
-              </label>
+              <Link
+                size="m"
+                onClick={handleSelectAllCollections}
+                className="my-3 cursor-pointer lg:text-label7"
+              >
+                {_selectedCollections.length > 0
+                  ? 'Unselect all'
+                  : 'Select all'}
+              </Link>
             </div>
             <div className="space-y-2">
               {Object.entries(groupedCollections).map(([category, cols]) => {
