@@ -6,7 +6,7 @@ import { Card } from '@idriss-xyz/ui/card';
 import { Form } from '@idriss-xyz/ui/form';
 import { Toggle } from '@idriss-xyz/ui/toggle';
 import { getAccessToken } from '@privy-io/react-auth';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { isAddress } from 'viem';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
@@ -125,6 +125,7 @@ export default function StreamAlerts() {
   const [confirmButtonText, setConfirmButtonText] = useState('Copy link');
   const [wasCopied, setWasCopied] = useState(false);
   const [unsavedChangesToastId, setUnsavedChangesToastId] = useState('');
+  const hasShownTestAlertToastReference = useRef(false);
 
   const alertSounds = [
     ...defaultAlertSounds,
@@ -492,6 +493,24 @@ export default function StreamAlerts() {
                               TEST ALERT
                             </Button>
                           );
+                        }}
+                        onChange={(opened) => {
+                          if (
+                            opened &&
+                            !hasShownTestAlertToastReference.current
+                          ) {
+                            hasShownTestAlertToastReference.current = true;
+                            toast({
+                              type: 'error',
+                              heading:
+                                'Collectible alerts require portrait mode',
+                              description:
+                                'Test both tokens and collectibles to confirm they display correctly',
+                              iconName: 'BellRing',
+                              autoClose: true,
+                              duration: 6000,
+                            });
+                          }
                         }}
                       >
                         {() => {
