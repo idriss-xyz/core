@@ -217,7 +217,7 @@ export default function ProfilePage() {
                   show it only for reference and you do not need it to use the
                   app.
                 </p>
-                <div className="relative flex w-fit flex-row items-center gap-4 rounded-xl bg-white/80 p-4">
+                <div className="relative flex max-w-[616px] flex-row items-center gap-4 rounded-xl bg-white/80 p-4">
                   <GradientBorder
                     gradientDirection="toRight"
                     borderRadius={12}
@@ -226,6 +226,7 @@ export default function ProfilePage() {
                   <CopyInput
                     value={address ?? ''}
                     message="Your address has been copied"
+                    className="w-full"
                   />
                 </div>
               </div>

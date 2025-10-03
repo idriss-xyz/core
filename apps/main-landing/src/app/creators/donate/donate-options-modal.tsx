@@ -39,17 +39,19 @@ export const DonateOptionsModal = () => {
   const { user } = usePrivy();
   const { setDonor } = useAuth();
 
-  const modalOpen = isModalOpen;
+  useEffect(() => {
+    const savedChoice = localStorage.getItem('donate-option-choice');
+    if (user && savedChoice === 'account') {
+      void setCreatorIfSessionPresent(user, setDonor);
+    }
+  }, [user, setDonor]);
 
   useEffect(() => {
     const savedChoice = localStorage.getItem('donate-option-choice');
-
-    if (user && savedChoice === 'account') {
-      void setCreatorIfSessionPresent(user, setDonor);
-    } else if (!savedChoice || savedChoice === 'guest') {
+    if (!savedChoice || savedChoice === 'guest') {
       setIsModalOpen(true);
     }
-  }, [user, setDonor]);
+  }, []);
 
   const handleSaveChoice = () => {
     localStorage.setItem('donate-option-choice', selectedOption);
@@ -77,7 +79,7 @@ export const DonateOptionsModal = () => {
 
   return (
     <Modal
-      isOpened={modalOpen}
+      isOpened={isModalOpen}
       onClose={() => {
         return setIsModalOpen(false);
       }}

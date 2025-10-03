@@ -73,7 +73,6 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
     const [pendingCollectibleModal, setPendingCollectibleModal] =
       useState(false);
     const [pendingFormSubmission, setPendingFormSubmission] = useState(false);
-    // const switchChain = useSwitchChain();
     const { showMobileFilter, setShowMobileFilter } = useMobileFilter();
 
     const minimumSfxAmount =
@@ -207,6 +206,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
     const linkWalletIfNeeded = useLinkWalletIfNeeded(
       walletClient,
       chainId,
+      setSubmitError,
       donor?.name,
     );
 
@@ -298,11 +298,9 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
           await linkWalletIfNeeded();
         } catch (error) {
           console.error('Error linking wallet', error);
-          const errorMessage =
-            error instanceof Error
-              ? error.message
-              : 'Unknown error linking wallet';
-          setSubmitError(errorMessage);
+          if (!submitError) {
+            setSubmitError('Unknown error linking wallet.');
+          }
           return;
         }
 
@@ -327,13 +325,6 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
           activeTab === 'token'
             ? payload.tokenAmount
             : payload.collectibleAmount;
-
-        console.log(
-          'finalAmount, tokenAmount and collectibleAmount',
-          finalAmount,
-          payload.tokenAmount,
-          payload.collectibleAmount,
-        );
 
         const sendPayload: SendPayload = {
           ...rest,
@@ -363,6 +354,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         linkWalletIfNeeded,
         selectedCollectible,
         activeTab,
+        submitError,
       ],
     );
 

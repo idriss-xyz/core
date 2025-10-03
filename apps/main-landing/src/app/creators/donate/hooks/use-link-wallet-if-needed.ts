@@ -12,6 +12,7 @@ type WalletClient = NonNullable<UseWalletClientReturnType['data']>;
 export function useLinkWalletIfNeeded(
   walletClient: WalletClient | undefined,
   chainId: number,
+  setSubmitError: (error: string) => void,
   donorName?: string,
 ) {
   const switchChain = useSwitchChain();
@@ -27,19 +28,17 @@ export function useLinkWalletIfNeeded(
     const qs = new URLSearchParams({ address });
     const linkedResult = await fetch(`${CREATOR_API_URL}/siwe/linked?${qs}`);
     const { linkedTo } = await linkedResult.json();
-    console.log('linkedTo', linkedTo); // TODO: Remove
 
     if (savedChoice === 'account' && donorName) {
       // Wallet is already linked to another (not donor's) public account
       if (linkedTo && linkedTo !== donorName) {
-        console.error('Wallet already linked to another account', linkedTo);
+        setSubmitError('This wallet is already linked to a public account.');
         throw new Error('This wallet is already linked to a public account.');
       }
       // Wallet is already linked to the donor account
       else if (linkedTo) return;
 
       const authToken = await getAccessToken();
-      console.log('authToken', authToken); // TODO: Remove
 
       // Wallet is not linked to any account, link to current
       // 2) get nonce
@@ -47,7 +46,6 @@ export function useLinkWalletIfNeeded(
         headers: { Authorization: `Bearer ${authToken}` },
       });
       const { nonce } = await nonceResult.json();
-      console.log('nonce', nonce); // TODO: Remove
 
       // 3) sign SIWE
       const message_ = new SiweMessage({
@@ -61,19 +59,16 @@ export function useLinkWalletIfNeeded(
         nonce,
       });
       const message = message_.prepareMessage();
-      console.log('message', message); // TODO: Remove
 
       await switchChain.mutateAsync({
         walletClient,
         chainId,
       });
-      console.log('switchChain.mutateAsync done'); // TODO: Remove
 
       const signature = await walletClient.signMessage({
         account: address,
         message,
       });
-      console.log('signature', signature); // TODO: Remove
 
       // 4) verify
       const verifyResult = await fetch(`${CREATOR_API_URL}/siwe/verify`, {
@@ -84,11 +79,10 @@ export function useLinkWalletIfNeeded(
         },
         body: JSON.stringify({ message, signature }),
       });
-      const verifyResultJson = await verifyResult.json();
-      console.log('verifyResultJson', verifyResultJson); // TODO: Remove
       if (!verifyResult.ok) throw new Error('Error verifying signature');
     } else if ((savedChoice === 'guest' || !savedChoice) && linkedTo) {
+      setSubmitError('This wallet is already linked to a public account.');
       throw new Error('This wallet is already linked to a public account.');
     }
-  }, [walletClient, chainId, donorName, switchChain]);
+  }, [walletClient, chainId, donorName, switchChain, setSubmitError]);
 }
