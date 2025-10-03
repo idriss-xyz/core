@@ -77,6 +77,9 @@ export const TWITCH_EXTENSION_LINK =
 export const CREATORS_USER_GUIDE_LINK =
   'https://docs.idriss.xyz/user-guides/creators';
 
+export const CREATORS_NFT_DONATIONS_X_POST =
+  'https://x.com/idriss_xyz/status/1973146133469024326';
+
 export const TOKEN_TERMS_AND_CONDITIONS_LINK =
   'https://docs.idriss.xyz/idriss-token/terms-and-conditions';
 
