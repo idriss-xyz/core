@@ -61,6 +61,8 @@ export const DonateHistoryItem = ({
       )
     : donation.quantity.toString();
 
+  const showAmount = isTokenDonation || formattedAmount !== '1';
+
   const receiverName = tipReceiver.displayName;
   const tipperFromName = donation.fromUser.displayName;
 
@@ -124,8 +126,8 @@ export const DonateHistoryItem = ({
               <span
                 className={classes('align-middle text-body3 text-neutral-600')}
               >
-                {showReceiver ? 'received' : 'sent'} {formattedAmount}{' '}
-                {tokenSymbol}{' '}
+                {showReceiver ? 'received' : 'sent'}{' '}
+                {showAmount && `${formattedAmount}`} {tokenSymbol}{' '}
               </span>
               <span className="relative inline-block size-6 align-middle">
                 <TokenLogo symbol={tokenSymbol} imageUrl={tokenImage} />
