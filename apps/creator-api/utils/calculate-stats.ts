@@ -4,7 +4,6 @@ import {
   fetchDonationRecipients,
 } from '../db/fetch-known-donations';
 import {
-  DonationStats,
   RecipientDonationStats,
   DonationWithTimeAndAmount,
   TokenEarnings,
@@ -14,6 +13,7 @@ import {
   StoredDonationData,
   DonationToken,
   LeaderboardStats,
+  DonorHistoryStats,
 } from '@idriss-xyz/constants';
 import {
   createAddressToCreatorMap,
@@ -56,7 +56,7 @@ async function getCreatorNameOrAnon(address: string): Promise<string> {
 export async function calculateStatsForDonor(
   donations: StoredDonationData[],
   displayName?: string,
-): Promise<DonationStats> {
+): Promise<DonorHistoryStats> {
   let totalDonationsCount = 0;
   let totalDonationAmount = 0;
   let totalNftDonationAmount = 0;
