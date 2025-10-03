@@ -194,6 +194,17 @@ export const CollectibleGallery = ({
             <h3 className="mb-3 text-label3 text-neutralGreen-900">
               Collections
             </h3>
+            <div className="mb-4">
+              <label className="flex cursor-pointer items-center gap-2">
+                <Checkbox
+                  value={_selectedCollections.length === 0}
+                  onChange={() => {
+                    return setSelectedCollections([]);
+                  }}
+                />
+                <span className="text-sm text-neutral-700">Unselect all</span>
+              </label>
+            </div>
             <div className="space-y-2">
               {Object.entries(groupedCollections).map(([category, cols]) => {
                 return (
@@ -367,6 +378,17 @@ export const CollectibleGallery = ({
                   return setShowMobileFilter(false);
                 }}
               />
+            </div>
+            <div className="mb-4">
+              <label className="flex cursor-pointer items-center gap-2">
+                <Checkbox
+                  value={_selectedCollections.length === 0}
+                  onChange={() => {
+                    return setSelectedCollections([]);
+                  }}
+                />
+                <span className="text-sm text-neutral-700">Unselect all</span>
+              </label>
             </div>
             <ScrollArea className="max-h-72 w-full space-y-2 overflow-y-auto">
               {Object.entries(groupedCollections).map(([category, cols]) => {
