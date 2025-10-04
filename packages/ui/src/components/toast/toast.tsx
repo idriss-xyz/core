@@ -18,6 +18,7 @@ type Properties = {
   heading: string;
   description?: string;
   autoClose?: boolean;
+  duration?: number;
   closable?: boolean;
   show?: boolean;
   iconName?: IconName;
@@ -36,6 +37,7 @@ export const Toast = forwardRef(
       heading,
       description,
       autoClose,
+      duration,
       closable,
       iconName,
       onClose,
@@ -60,13 +62,13 @@ export const Toast = forwardRef(
       if (autoClose && isVisible) {
         const timeout = setTimeout(() => {
           handleClose();
-        }, 3000);
+        }, duration ?? 3000);
         return () => {
           return clearTimeout(timeout);
         };
       }
       return () => {};
-    }, [isVisible, autoClose, onClose, handleClose]);
+    }, [isVisible, autoClose, duration, onClose, handleClose]);
 
     if (!isVisible) return null;
 
