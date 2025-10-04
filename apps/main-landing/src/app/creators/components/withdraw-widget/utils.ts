@@ -20,7 +20,7 @@ export const claimDailyDrip = async (
 
     if (tokenId !== undefined) body.tokenId = String(tokenId);
 
-    await fetch(`${CREATOR_API_URL}/drip`, {
+    const resp = await fetch(`${CREATOR_API_URL}/drip`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -28,7 +28,13 @@ export const claimDailyDrip = async (
       },
       body: JSON.stringify(body),
     });
+
+    if (!resp.ok) return;
+    const { txHash } = await resp.json().catch(() => {
+      return {};
+    });
+    return txHash as Hex | undefined;
   } catch {
-    /* silent */
+    return;
   }
 };

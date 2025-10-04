@@ -1,8 +1,15 @@
 import { useCallback, useState } from 'react';
-import { useSendTransaction, useWallets } from '@privy-io/react-auth';
-import { encodeFunctionData, Hex, erc721Abi, erc1155Abi } from 'viem';
-import { DUMMY_RECIPIENT } from '@idriss-xyz/constants';
 import { getChainById } from '@idriss-xyz/utils';
+import { useSendTransaction, useWallets } from '@privy-io/react-auth';
+import {
+  encodeFunctionData,
+  Hex,
+  erc721Abi,
+  erc1155Abi,
+  createPublicClient,
+  http,
+} from 'viem';
+import { DUMMY_RECIPIENT } from '@idriss-xyz/constants';
 
 import { claimDailyDrip } from '../utils';
 
@@ -57,7 +64,23 @@ export const useNftWithdrawal = ({
       amount1155,
     }: CheckGasAndProceedNftArguments) => {
       setError(null);
-      await claimDailyDrip(chainId, assetAddress, nftType, tokenId);
+      const dripTxHash = await claimDailyDrip(
+        chainId,
+        assetAddress,
+        nftType,
+        tokenId,
+      );
+      if (dripTxHash) {
+        try {
+          const client = createPublicClient({
+            chain: getChainById(chainId),
+            transport: http(),
+          });
+          await client.waitForTransactionReceipt({ hash: dripTxHash });
+        } catch {
+          /* ignore – fallback to normal flow */
+        }
+      }
 
       const activeWallet = wallets.find((w) => {
         return w.walletClientType === 'privy';
