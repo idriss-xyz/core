@@ -57,7 +57,7 @@ export const useNftWithdrawal = ({
       amount1155,
     }: CheckGasAndProceedNftArguments) => {
       setError(null);
-      await claimDailyDrip(chainId, assetAddress, nftType);
+      await claimDailyDrip(chainId, assetAddress, nftType, tokenId);
 
       const activeWallet = wallets.find((w) => {
         return w.walletClientType === 'privy';
