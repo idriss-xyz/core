@@ -450,6 +450,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
           isConnected={isConnected}
           openConnectModal={openConnectModal}
           setPendingCollectibleModal={setPendingCollectibleModal}
+          setIsCollectibleModalOpen={setIsCollectibleModalOpen}
           submitError={submitError}
           onSubmit={onSubmit}
           amount={amount}

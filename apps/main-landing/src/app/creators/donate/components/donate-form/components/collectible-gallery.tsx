@@ -9,6 +9,7 @@ import { useWalletClient } from 'wagmi';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Button } from '@idriss-xyz/ui/button';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
+import { Link } from '@idriss-xyz/ui/link';
 
 import { useCollectibles } from '../../../hooks/use-collectibles';
 
@@ -94,6 +95,7 @@ export const CollectibleGallery = ({
   const [_selectedCollections, _setSelectedCollections] = useState<string[]>(
     initialSelectedCollections ?? [],
   );
+  const [hasInitialized, setHasInitialized] = useState(false);
 
   const setSelectedCollections = (next: string[], propagate = true) => {
     _setSelectedCollections(next);
@@ -105,7 +107,7 @@ export const CollectibleGallery = ({
   const [selectedAmount, setSelectedAmount] = useState<number>(0);
 
   useEffect(() => {
-    if (!collectibles?.length) return;
+    if (!collectibles?.length || hasInitialized) return;
 
     const allContracts = uniqueCollections.map((col) => {
       return `${col.chainId}-${col.address}`;
@@ -118,6 +120,7 @@ export const CollectibleGallery = ({
       : allContracts;
 
     setSelectedCollections(startSelection, false);
+    setHasInitialized(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collectibles, uniqueCollections, initialSelectedCollections]);
 
@@ -181,6 +184,18 @@ export const CollectibleGallery = ({
       return matchesSearch && matchesCollection;
     }) ?? [];
 
+  const handleSelectAllCollections = () => {
+    if (_selectedCollections.length > 0) {
+      setSelectedCollections([]);
+    } else {
+      setSelectedCollections(
+        uniqueCollections.map((c) => {
+          return `${c.chainId}-${c.address}`;
+        }),
+      );
+    }
+  };
+
   if (isLoading) {
     return <div className="py-8 text-center">Loading collectibles...</div>;
   }
@@ -194,6 +209,17 @@ export const CollectibleGallery = ({
             <h3 className="mb-3 text-label3 text-neutralGreen-900">
               Collections
             </h3>
+            <div className="mb-4">
+              <Link
+                size="m"
+                onClick={handleSelectAllCollections}
+                className="my-3 cursor-pointer lg:text-label7"
+              >
+                {_selectedCollections.length > 0
+                  ? 'Unselect all'
+                  : 'Select all'}
+              </Link>
+            </div>
             <div className="space-y-2">
               {Object.entries(groupedCollections).map(([category, cols]) => {
                 return (
@@ -367,6 +393,17 @@ export const CollectibleGallery = ({
                   return setShowMobileFilter(false);
                 }}
               />
+            </div>
+            <div className="mb-4">
+              <label className="flex cursor-pointer items-center gap-2">
+                <Checkbox
+                  value={_selectedCollections.length === 0}
+                  onChange={() => {
+                    return setSelectedCollections([]);
+                  }}
+                />
+                <span className="text-sm text-neutral-700">Unselect all</span>
+              </label>
             </div>
             <ScrollArea className="max-h-72 w-full space-y-2 overflow-y-auto">
               {Object.entries(groupedCollections).map(([category, cols]) => {
