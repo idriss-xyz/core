@@ -207,9 +207,7 @@ export const CollectibleGallery = ({
         <ScrollArea className="hidden max-h-96 overflow-y-auto md:block">
           <div className="w-48 shrink-0">
             <div className="mb-3 flex items-center justify-between">
-              <h3 className="text-label3 text-neutralGreen-900">
-                Collections
-              </h3>
+              <h3 className="text-label3 text-neutralGreen-900">Collections</h3>
               <Link
                 size="m"
                 onClick={handleSelectAllCollections}
@@ -382,9 +380,20 @@ export const CollectibleGallery = ({
           />
           <Card className="absolute inset-x-0 bottom-0 rounded-b-xl rounded-t-lg p-4">
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-sm font-medium text-neutral-900">
-                Collections
-              </h3>
+              <div className="flex items-center gap-2">
+                <h3 className="text-sm font-medium text-neutral-900">
+                  Collections
+                </h3>
+                <Link
+                  size="s"
+                  onClick={handleSelectAllCollections}
+                  className="cursor-pointer lg:text-label7"
+                >
+                  {_selectedCollections.length > 0
+                    ? 'Unselect all'
+                    : 'Select all'}
+                </Link>
+              </div>
               <IconButton
                 iconName="X"
                 intent="tertiary"
@@ -393,17 +402,6 @@ export const CollectibleGallery = ({
                   return setShowMobileFilter(false);
                 }}
               />
-            </div>
-            <div className="mb-4">
-              <label className="flex cursor-pointer items-center gap-2">
-                <Checkbox
-                  value={_selectedCollections.length === 0}
-                  onChange={() => {
-                    return setSelectedCollections([]);
-                  }}
-                />
-                <span className="text-sm text-neutral-700">Unselect all</span>
-              </label>
             </div>
             <ScrollArea className="max-h-72 w-full space-y-2 overflow-y-auto">
               {Object.entries(groupedCollections).map(([category, cols]) => {
