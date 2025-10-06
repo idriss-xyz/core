@@ -206,14 +206,14 @@ export const CollectibleGallery = ({
         {/* Desktop Collection Filter - hidden below md */}
         <ScrollArea className="hidden max-h-96 overflow-y-auto md:block">
           <div className="w-48 shrink-0">
-            <h3 className="mb-3 text-label3 text-neutralGreen-900">
-              Collections
-            </h3>
-            <div className="mb-4">
+            <div className="mb-3 flex items-center justify-between">
+              <h3 className="text-label3 text-neutralGreen-900">
+                Collections
+              </h3>
               <Link
                 size="m"
                 onClick={handleSelectAllCollections}
-                className="my-3 cursor-pointer lg:text-label7"
+                className="cursor-pointer lg:text-label7"
               >
                 {_selectedCollections.length > 0
                   ? 'Unselect all'
