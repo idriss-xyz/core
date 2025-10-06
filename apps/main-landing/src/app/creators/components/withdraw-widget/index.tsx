@@ -607,7 +607,7 @@ export const WithdrawWidget = ({
                         <DesignSystemForm.Field
                           {...field}
                           className="mb-3 px-6"
-                          label="Withdrawal address"
+                          label="Send to"
                           placeholder="External wallet address"
                           error={!!error}
                           helperText={error?.message}
