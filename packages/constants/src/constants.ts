@@ -564,7 +564,7 @@ export const DEFAULT_ALLOWED_CHAINS_IDS = [
 export const EMPTY_HEX = '0x';
 
 export const COPILOT_API_URL = 'https://copilot-api.idriss.xyz';
-export const CREATOR_API_URL = 'http://localhost:4000';
+export const CREATOR_API_URL = 'https://creators-api.idriss.xyz';
 
 export const DEFAULT_DONATION_MIN_ALERT_AMOUNT = 1;
 export const DEFAULT_DONATION_MIN_TTS_AMOUNT = 3;
