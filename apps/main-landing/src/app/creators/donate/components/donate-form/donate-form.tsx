@@ -72,7 +72,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
     const [collectionFilters, setCollectionFilters] = useState<string[]>([]);
     const [pendingCollectibleModal, setPendingCollectibleModal] =
       useState(false);
-    const [pendingFormSubmission, setPendingFormSubmission] = useState(false);
+    const [pendingFormSubmission, setPendingFormSubmission] = useState(false); // State to manage automatic tx sending after connecting a wallet
     const { showMobileFilter, setShowMobileFilter } = useMobileFilter();
 
     const minimumSfxAmount =
