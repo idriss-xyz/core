@@ -33,7 +33,7 @@ export const SelectOption = forwardRef(
         </div>
 
         {!hideSuffix && option.suffix && (
-          <div className="ml-3 flex items-center rounded-[4px] bg-neutral-200 px-1 py-0.5">
+          <div className="mx-3 flex items-center rounded-[4px] bg-neutral-200 px-1 py-0.5">
             {option.suffix}
           </div>
         )}
