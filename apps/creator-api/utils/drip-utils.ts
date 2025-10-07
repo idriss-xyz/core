@@ -71,8 +71,10 @@ export async function estimateNftGasOrDefault(params: {
   token?: Hex;
   from: Hex;
   to: Hex;
+  tokenId?: bigint;
 }) {
   const fallback = BigInt(120000);
+  const tid = params.tokenId ?? BigInt(1);
   if (!params.token || params.token === NULL_ADDRESS) {
     return fallback;
   }
@@ -86,7 +88,7 @@ export async function estimateNftGasOrDefault(params: {
   const data = encodeFunctionData({
     abi: erc1155Abi,
     functionName: 'safeTransferFrom',
-    args: [params.from, params.to, BigInt(1), BigInt(1), '0x'],
+    args: [params.from, params.to, tid, BigInt(1), '0x'],
   });
 
   try {

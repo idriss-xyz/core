@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { EMPTY_HEX } from '@idriss-xyz/constants';
+import { DonorHistoryStats, EMPTY_HEX } from '@idriss-xyz/constants';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
 import { Icon } from '@idriss-xyz/ui/icon';
@@ -17,7 +17,6 @@ import { formatFiatValue } from '@idriss-xyz/utils';
 import { backgroundLines4 } from '@/assets';
 import { DonateContentValues } from '@/app/creators/donate/types';
 
-import { DonorHistoryStats } from '../types';
 import { getCreatorNameAndPicOrAnon } from '../../utils';
 
 const baseClassName =
@@ -118,7 +117,9 @@ export default function DonorStatsList({
                 <p className="text-label5 text-neutral-600">Total volume</p>
 
                 <p className="text-heading4 text-neutral-800">
-                  {formatFiatValue(stats.totalDonationAmount)}
+                  {formatFiatValue(
+                    stats.totalDonationAmount + stats.totalNftDonationAmount,
+                  )}
                 </p>
               </div>
 
@@ -132,7 +133,7 @@ export default function DonorStatsList({
 
               {stats.favoriteDonationToken && (
                 <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-8 shadow-md">
-                  <p className="text-label5 text-neutral-600">Favorite token</p>
+                  <p className="text-label5 text-neutral-600">Favorite asset</p>
 
                   <span className="flex items-center justify-center gap-x-1">
                     <p className="text-heading4 text-neutral-800">

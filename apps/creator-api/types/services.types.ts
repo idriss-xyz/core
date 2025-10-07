@@ -76,20 +76,6 @@ interface TokenV2 {
   name: string;
 }
 
-export interface DonationStats {
-  totalDonationsCount: number;
-  totalDonationAmount: number;
-  totalNftDonationAmount: number;
-  mostDonatedToAddress: Hex;
-  mostDonatedToUser: DonationUser;
-  biggestDonationAmount: number;
-  favoriteDonationToken: string;
-  favoriteTokenMetadata: DonationToken | null;
-  donorDisplayName: string | null;
-  donorAvatarUrl: string | null;
-  positionInLeaderboard: number | null;
-}
-
 export interface ZapperNode {
   timestamp: number;
   network: string;

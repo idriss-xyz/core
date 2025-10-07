@@ -147,6 +147,20 @@ export interface DonationUser {
   avatarSource?: string;
 }
 
+export interface DonorHistoryStats {
+  totalDonationsCount: number;
+  totalDonationAmount: number;
+  totalNftDonationAmount: number;
+  mostDonatedToAddress: Hex;
+  mostDonatedToUser: DonationUser;
+  biggestDonationAmount: number;
+  favoriteDonationToken: string;
+  favoriteTokenMetadata: DonationToken | null;
+  donorDisplayName: string | null;
+  donorAvatarUrl: string | null;
+  positionInLeaderboard: number | null;
+}
+
 export interface DonationToken {
   address: Hex;
   symbol: string;

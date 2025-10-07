@@ -32,7 +32,7 @@ router.post(
   tightCors,
   verifyToken(),
   async (req: Request, res: Response) => {
-    const { chainId, token, type } = req.body;
+    const { chainId, token, type, tokenId } = req.body;
 
     const tokenParam: string = typeof token === 'string' ? token : NULL_ADDRESS;
     const isNft = type && ['erc721', 'erc1155'].includes(type);
@@ -64,6 +64,8 @@ router.post(
       res.status(400).json({ error: 'Error parsing allowed tokens' });
       return;
     }
+
+    const parsedTokenId = tokenId !== undefined ? BigInt(tokenId) : BigInt(1);
 
     if (
       tokenParam !== NULL_ADDRESS &&
@@ -131,6 +133,7 @@ router.post(
           token: checkedTokenAddress,
           from: userAddress,
           to: faucetAddress,
+          tokenId: parsedTokenId,
         })
       : await estimateErc20GasOrDefault({
           client,
