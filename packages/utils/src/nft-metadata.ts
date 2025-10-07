@@ -40,13 +40,34 @@ export async function getNftMetadata(
 
   if (!uri) return { name: 'NFT', image: undefined, collectionName };
 
+  /* ---------- fix Parallel “/tokens/” URLs ---------- */
+  if (
+    uri &&
+    uri.includes('nftdata.parallelnft.com') &&
+    uri.includes('/tokens/')
+  ) {
+    const hexId = `0x${id.toString(16).toUpperCase()}`;
+
+    try {
+      const url = new URL(uri);
+      const segments = url.pathname.split('/');
+      segments[segments.length - 1] = hexId;
+      url.pathname = segments.join('/');
+      uri = url.toString();
+    } catch {
+      // fallback in extremely unlikely malformed-URL case
+      uri = uri.slice(0, uri.lastIndexOf('/') + 1) + hexId;
+    }
+  }
+  /* -------------------------------------------------- */
+
   if (uri.startsWith('ipfs://'))
     uri = uri.replace('ipfs://', 'https://ipfs.io/ipfs/');
 
   try {
-    const meta = (await fetch(uri).then((r) => {
+    const meta = await fetch(uri).then((r) => {
       return r.json();
-    })) as NftMeta;
+    });
     let img: string | undefined = meta.image;
     if (img?.startsWith('ipfs://'))
       img = img.replace('ipfs://', 'https://ipfs.io/ipfs/');
