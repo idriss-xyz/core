@@ -107,6 +107,25 @@ export async function calculateStatsForDonor(
           network: donation.network,
         };
       }
+    } else if (donation.kind === 'nft') {
+      // Treat every collectible as one synthetic “Collectibles” token bucket
+      const tokenSymbol = 'Collectibles';
+      tokenFrequency[tokenSymbol] = (tokenFrequency[tokenSymbol] || 0) + 1;
+
+      if (
+        tokenFrequency[tokenSymbol] >
+        (tokenFrequency[favoriteDonationToken] || 0)
+      ) {
+        favoriteDonationToken = tokenSymbol;
+        favoriteTokenMetadata = {
+          symbol: tokenSymbol,
+          name: tokenSymbol,
+          imageUrl: '',
+          address: '0x0' as Hex,
+          decimals: 0,
+          network: '',
+        };
+      }
     }
 
     if (tradeValue > biggestDonationAmount) {

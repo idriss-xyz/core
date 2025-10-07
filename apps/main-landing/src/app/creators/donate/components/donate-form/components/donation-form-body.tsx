@@ -42,6 +42,7 @@ type Properties = {
   isConnected: boolean;
   openConnectModal?: () => void;
   setPendingCollectibleModal: (pending: boolean) => void;
+  setIsCollectibleModalOpen: (open: boolean) => void;
   submitError: string | null;
   onSubmit: (values: FormPayload) => void;
   amount?: number;
@@ -64,6 +65,7 @@ export function DonateFormBody({
   isConnected,
   openConnectModal,
   setPendingCollectibleModal,
+  setIsCollectibleModalOpen,
   submitError,
   onSubmit,
   amount,
@@ -111,7 +113,7 @@ export function DonateFormBody({
                     selectedCollectible={selectedCollectible}
                     amount={collectibleAmount}
                     setSelectedCollectible={setSelectedCollectible}
-                    setIsCollectibleModalOpen={() => {}}
+                    setIsCollectibleModalOpen={setIsCollectibleModalOpen}
                     isConnected={isConnected}
                     openConnectModal={openConnectModal}
                     setPendingCollectibleModal={setPendingCollectibleModal}
@@ -138,7 +140,7 @@ export function DonateFormBody({
                 selectedCollectible={selectedCollectible}
                 amount={collectibleAmount}
                 setSelectedCollectible={setSelectedCollectible}
-                setIsCollectibleModalOpen={() => {}}
+                setIsCollectibleModalOpen={setIsCollectibleModalOpen}
                 isConnected={isConnected}
                 openConnectModal={openConnectModal}
                 setPendingCollectibleModal={setPendingCollectibleModal}
