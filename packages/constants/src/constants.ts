@@ -557,7 +557,7 @@ export const CHAIN_ID_TO_NFT_COLLECTIONS: Record<number, ChainNft[]> = {
       slug: 'echelon-pass',
       image:
         'https://i2.seadn.io/base/0x51b398c5743c85cc093830174d64e9f4b440239a/978494bb9117b08c96dd7af41625f4/fd978494bb9117b08c96dd7af41625f4.png?h=250&w=250',
-      shortName: 'Redeemables',
+      shortName: 'Echelon Pass',
       category: 'Echelon',
     },
   ],
