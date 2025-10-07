@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Hide Privy "All set!" modal */
+[data-privy-modal] h3:has(> :where(:not(script)):where(:not(style)):where(:not(template)):where(:not(:empty)):contains("All set!")),
+[data-privy-modal] h3:has(> :where(:not(script)):where(:not(style)):where(:not(template)):where(:not(:empty)):contains("Welcome")),
+[data-privy-modal] h3:contains("All set!"),
+[data-privy-modal] h3:contains("Welcome") {
+  display: none !important;
+}
