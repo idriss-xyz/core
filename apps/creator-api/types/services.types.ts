@@ -1,10 +1,5 @@
 import { Hex } from 'viem';
-import {
-  StoredDonationData,
-  DonationToken,
-  DonationUser,
-  LeaderboardStats,
-} from '@idriss-xyz/constants';
+import { StoredDonationData, LeaderboardStats } from '@idriss-xyz/constants';
 import { LAMBDA_FAUCET, LAMBDA_REWARDS } from '../config/aws-config';
 
 export interface TokenDisplayItem {
@@ -14,7 +9,7 @@ export interface TokenDisplayItem {
 }
 
 export interface NftDisplayItem {
-  tokenId: number;
+  tokenId: string;
   type: string;
   collectionAddress: Hex;
   quantity: number;
@@ -123,26 +118,6 @@ export interface ZapperResponse {
 export interface TipHistoryResponse {
   donations: StoredDonationData[];
   leaderboard: LeaderboardStats[];
-}
-
-export interface TokenEarnings {
-  tokenData: DonationToken;
-  totalAmount: number;
-  donationCount: number;
-}
-
-export interface DonationWithTimeAndAmount {
-  year: number;
-  month: string;
-  amount: number;
-}
-
-export interface RecipientDonationStats {
-  distinctDonorsCount: number;
-  totalDonationsCount: number;
-  biggestDonation: number;
-  donationsWithTimeAndAmount: DonationWithTimeAndAmount[];
-  earningsByTokenOverview: TokenEarnings[];
 }
 
 export type LambdaName = typeof LAMBDA_FAUCET | typeof LAMBDA_REWARDS;

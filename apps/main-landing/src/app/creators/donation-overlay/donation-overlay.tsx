@@ -19,13 +19,13 @@ import { clients } from '@idriss-xyz/blockchain-clients';
 import { FullscreenOverlay } from '@idriss-xyz/ui/fullscreen-overlay';
 import { ExternalLink } from '@idriss-xyz/ui/external-link';
 import { classes } from '@idriss-xyz/ui/utils';
+import { getNftMetadata } from '@idriss-xyz/utils';
 
 import { CHAIN_TO_IDRISS_TIPPING_ADDRESS } from '../donate/constants';
 import { useCreators } from '../hooks/use-creators';
 import {
   getPublicCreatorProfileBySlug,
   getCreatorNameAndPicOrAnon,
-  getNftMetadata,
 } from '../utils';
 import { Address } from '../donate/types';
 

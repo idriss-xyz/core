@@ -8,6 +8,7 @@ import { ProsSection } from './components/pros-section';
 import { SetUp } from './components/set-up';
 import { TopCreators } from './components/top-creators';
 import { Footer } from './components/footer';
+import { NftSection } from './components/nft-section';
 
 // ts-unused-exports:disable-next-line
 export default function Content() {
@@ -26,6 +27,7 @@ export default function Content() {
         <HeroSection heroButtonReference={heroButtonReference} />
         <PlatformsSection />
         <ProsSection />
+        <NftSection />
         <SetUp />
         <TopCreators />
       </main>

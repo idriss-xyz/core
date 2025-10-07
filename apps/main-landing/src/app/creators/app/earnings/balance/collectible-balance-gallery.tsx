@@ -1,7 +1,7 @@
 import { Icon } from '@idriss-xyz/ui/icon';
 import {
   CHAIN_ID_TO_OPENSEA_NETWORK_NAMES,
-  CollectibleBalance,
+  NftBalance,
 } from '@idriss-xyz/constants';
 import { formatFiatValue } from '@idriss-xyz/utils';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
@@ -9,7 +9,7 @@ import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { LayersBadge } from '@/app/creators/donate/components/donate-form/components';
 
 type CollectibleBalanceGalleryProperties = {
-  collectibles: CollectibleBalance[];
+  collectibles: NftBalance[];
 };
 
 export default function CollectibleBalanceGallery({
@@ -25,7 +25,7 @@ export default function CollectibleBalanceGallery({
           >
             <div className="flex h-[400px] w-full items-center justify-center overflow-hidden rounded-xl bg-gray-200">
               <img
-                src={collectible.image}
+                src={collectible.imgPreferred ?? collectible.imgLarge}
                 alt={collectible.name}
                 className="h-full w-auto object-contain"
               />
