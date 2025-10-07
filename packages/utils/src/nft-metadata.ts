@@ -65,9 +65,9 @@ export async function getNftMetadata(
     uri = uri.replace('ipfs://', 'https://ipfs.io/ipfs/');
 
   try {
-    const meta = await fetch(uri).then((r) => {
+    const meta = (await fetch(uri).then((r) => {
       return r.json();
-    });
+    })) as NftMeta;
     let img: string | undefined = meta.image;
     if (img?.startsWith('ipfs://'))
       img = img.replace('ipfs://', 'https://ipfs.io/ipfs/');
