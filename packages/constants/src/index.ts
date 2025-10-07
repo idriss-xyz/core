@@ -23,6 +23,7 @@ export {
   VAULT_LINK,
   TWITCH_EXTENSION_LINK,
   CREATOR_SETUP_GUIDE_LINK,
+  CREATORS_NFT_DONATIONS_X_POST,
   SUPPORT_LINK,
   STATIC_ORIGINS,
   IDRISS_LEGACY_API_URL,
@@ -82,9 +83,12 @@ export type {
   NftDonationData,
   DonationUser,
   DonationToken,
+  RecipientDonationStats,
+  DonationWithTimeAndAmount,
+  TokenEarnings,
   BalanceTableItem,
   TokenBalance,
-  CollectibleBalance,
+  NftBalance,
 } from './types';
 
 export * from './logos';

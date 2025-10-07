@@ -4,6 +4,7 @@ import {
   Chain,
   CHAIN_ID_TO_NFT_COLLECTIONS,
   ERC20_ABI,
+  NftBalance,
   NULL_ADDRESS,
 } from '@idriss-xyz/constants';
 import { AppDataSource } from '../db/database';
@@ -15,21 +16,6 @@ import {
 import { getChainById, getChainByNetworkName } from '@idriss-xyz/utils';
 import { ALCHEMY_BASE_URLS, OPENSEA_BASE_URLS } from '../constants';
 import { NftDonation } from '../db/entities/nft-donation.entity';
-
-type NftBalance = {
-  chainId: number;
-  contract: string;
-  collection: string;
-  tokenId: string;
-  balance: string;
-  name?: string;
-  image?: string;
-  collectionImage?: string;
-  collectionShortName: string;
-  collectionCategory: string;
-  usdValue?: number;
-  type: 'erc721' | 'erc1155';
-};
 
 export async function calculateBalances(userAddress: Hex) {
   const tokenRepository = AppDataSource.getRepository(Token);
@@ -285,11 +271,15 @@ export async function calculateNftBalances(
 
         const dbRow = await nftDonationRepo.findOne({
           where: {
-            collectionAddress: nft.contract.toLowerCase() as Hex,
-            tokenId: Number(tokenId),
+            nft: {
+              collectionAddress: nft.contract.toLowerCase() as Hex,
+              tokenId: Number(tokenId),
+            },
           },
+          relations: ['nft', 'nft.collection'],
         });
         console.timeEnd(`db-lookups-${chainId}`);
+        const tokenMeta = dbRow?.nft;
 
         interim.push({
           chainId,
@@ -298,12 +288,20 @@ export async function calculateNftBalances(
           tokenId,
           balance: '1',
           type,
-          image: dbRow?.imageUrl ?? undefined,
+
+          /* token meta */
+          imgSmall: tokenMeta?.imgSmall,
+          imgMedium: tokenMeta?.imgMedium,
+          imgLarge: tokenMeta?.imgLarge,
+          imgPreferred: tokenMeta?.imgPreferred,
+          name: tokenMeta?.name ?? nft.name,
+
+          /* collection meta */
           collectionImage: meta.image,
-          usdValue,
-          name: nft.name,
           collectionShortName: meta.shortName,
           collectionCategory: meta.category,
+
+          usdValue,
         });
       }
 
@@ -321,7 +319,7 @@ export async function calculateNftBalances(
         const key = `${entry.contract.toLowerCase()}-${entry.tokenId}`;
         const metaInfo = metadataMap[key];
         if (metaInfo) {
-          entry.image = entry.image ?? metaInfo.image ?? undefined;
+          entry.imgMedium = entry.imgMedium ?? metaInfo.image ?? undefined;
           entry.name = entry.name ?? metaInfo.name ?? undefined;
         }
         results.push(entry);

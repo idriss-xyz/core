@@ -16,6 +16,7 @@ import {
   TooltipTrigger,
 } from '@idriss-xyz/ui/tooltip';
 import { Icon } from '@idriss-xyz/ui/icon';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { IDRISS_SCENE_STREAM_4 } from '@/assets';
 import { WithdrawWidget } from '@/app/creators/components/withdraw-widget';
@@ -36,6 +37,7 @@ import CollectibleBalanceGallery from './collectible-balance-gallery';
 export default function EarningsBalance() {
   const { user, ready, authenticated } = usePrivy();
   const { creator } = useAuth();
+  const queryClient = useQueryClient();
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
   const [selectedToken, setSelectedToken] = useState<string>();
   const [activeTab, setActiveTab] = useState<'Tokens' | 'Collectibles'>(
@@ -251,6 +253,9 @@ export default function EarningsBalance() {
           balances={tokenApiBalances}
           selectedToken={selectedToken}
           onClose={() => {
+            void queryClient.invalidateQueries({
+              queryKey: ['token-balances'],
+            });
             return setIsWithdrawModalOpen(false);
           }}
         />
@@ -259,6 +264,9 @@ export default function EarningsBalance() {
           isOpen={isWithdrawModalOpen}
           nftBalances={collectiblesApiBalances}
           onClose={() => {
+            void queryClient.invalidateQueries({
+              queryKey: ['collectible-balances'],
+            });
             return setIsWithdrawModalOpen(false);
           }}
         />

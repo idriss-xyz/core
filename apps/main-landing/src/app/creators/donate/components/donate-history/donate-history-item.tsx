@@ -49,7 +49,7 @@ export const DonateHistoryItem = ({
   const tipComment = donation.comment;
   const tokenImage = isTokenDonation
     ? donation.token.imageUrl
-    : donation.imageUrl;
+    : donation.imgSmall;
 
   const tokenDecimals = isTokenDonation ? donation.token.decimals : 0;
 

@@ -18,21 +18,6 @@ export interface TokenBalance {
   usdValue: number;
 }
 
-export interface CollectibleBalance {
-  chainId: number;
-  contract: string;
-  collection: string;
-  tokenId: string;
-  balance: string;
-  name?: string;
-  image?: string;
-  collectionImage?: string;
-  collectionShortName: string;
-  collectionCategory: string;
-  usdValue?: number;
-  type: 'erc721' | 'erc1155';
-}
-
 export type ClaimedEventsResponse = {
   events: ClaimedEvent[];
   lastProcessedBlock: string;
@@ -55,7 +40,7 @@ export interface ChainToken extends Token {
   address: Hex;
 }
 
-export interface ChainNft {
+export interface NftCollection {
   address: Hex;
   name: string;
   standard: 'erc1155' | 'erc721';
@@ -185,6 +170,26 @@ export interface DonationToken {
   name?: string;
 }
 
+export interface TokenEarnings {
+  tokenData: DonationToken;
+  totalAmount: number;
+  donationCount: number;
+}
+
+export interface DonationWithTimeAndAmount {
+  year: number;
+  month: string;
+  amount: number;
+}
+
+export interface RecipientDonationStats {
+  distinctDonorsCount: number;
+  totalDonationsCount: number;
+  biggestDonation: number;
+  donationsWithTimeAndAmount: DonationWithTimeAndAmount[];
+  earningsByTokenOverview: TokenEarnings[];
+}
+
 export interface BalanceTableItem {
   totalAmount: number;
   totalValue: number;
@@ -218,10 +223,43 @@ export interface NftDonationData extends BaseDonationData {
   collectionAddress: Hex;
   tokenId: number;
   quantity: number;
-  name: string;
   network: string;
-  imageUrl: string;
+
+  /* token-level meta */
+  name: string;
+  imgSmall?: string;
+  imgMedium?: string;
+  imgLarge?: string;
+  imgPreferred?: string;
+
+  /* collection-level meta */
+  collectionShortName: string;
+  collectionSlug: string;
+  collectionCategory: string;
 }
+
+export type NftBalance = {
+  chainId: number;
+  contract: Hex;
+  collection: string;
+  tokenId: string;
+  balance: string;
+  type: 'erc721' | 'erc1155';
+
+  /* token meta */
+  name: string;
+  imgSmall?: string;
+  imgMedium?: string;
+  imgLarge?: string;
+  imgPreferred?: string;
+
+  /* collection meta */
+  collectionImage: string;
+  collectionShortName: string;
+  collectionCategory: string;
+
+  usdValue?: number;
+};
 
 /* ────────────── union used by creator-api ─── */
 export type StoredDonationData = TokenDonationData | NftDonationData;

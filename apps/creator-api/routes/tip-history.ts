@@ -45,7 +45,7 @@ async function handleFetchTipHistory(req: Request, res: Response) {
       return;
     }
 
-    const { creator, addresses: allAddresses } =
+    const { addresses: allAddresses } =
       await resolveCreatorAndAddresses(identifier);
 
     const donations = (

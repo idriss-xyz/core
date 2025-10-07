@@ -3,6 +3,8 @@ import {
   Creator,
   Donation,
   NftDonation,
+  NftToken,
+  NftCollection,
   TokenDonation,
   DonationEffect,
   DonationParameters,
@@ -48,6 +50,7 @@ import {
   AddCollectibleEnabledToCreator1758546104000,
   RemoveWwwFromUrls1758590345135,
   AddTokenEnabledToCreator1758728078982,
+  SplitNftMetadata1759318771000,
 } from './migrations';
 import { CreatorProfileView } from './views';
 
@@ -57,6 +60,8 @@ export const AppDataSource = new DataSource({
   entities: [
     Donation,
     NftDonation,
+    NftToken,
+    NftCollection,
     TokenDonation,
     DonationEffect,
     Token,
@@ -105,6 +110,7 @@ export const AppDataSource = new DataSource({
     AddCollectibleEnabledToCreator1758546104000,
     RemoveWwwFromUrls1758590345135,
     AddTokenEnabledToCreator1758728078982,
+    SplitNftMetadata1759318771000,
   ],
 });
 
