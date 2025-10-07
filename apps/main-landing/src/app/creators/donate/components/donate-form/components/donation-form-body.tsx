@@ -238,7 +238,7 @@ export function DonateFormBody({
       )}
 
       <Tooltip>
-        <TooltipTrigger className="w-full">
+        <TooltipTrigger asChild className="w-full">
           <Button
             size="medium"
             type="submit"
