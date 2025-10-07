@@ -16,20 +16,13 @@ import { IDRISS_TOROID } from '@/assets';
 import { useAuth } from '../../context/auth-context';
 
 export const LoginModal = () => {
-  const {
-    setOauthLoading,
-    loading,
-    error,
-    isLoginModalOpen,
-    setIsModalOpen,
-    setIsLoading,
-  } = useAuth();
+  const { loading, error, isLoginModalOpen, setIsModalOpen, setIsLoading } =
+    useAuth();
 
   const handleTwitchLogin = useCallback(() => {
     setIsLoading(true);
-    setOauthLoading(true);
     window.location.href = `${CREATOR_API_URL}/auth/twitch`;
-  }, [setOauthLoading, setIsLoading]);
+  }, [setIsLoading]);
 
   return (
     <Modal

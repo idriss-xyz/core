@@ -40,8 +40,9 @@ export const DonateOptionsModal = () => {
     setDonor,
     isDonateOptionsModalOpen,
     setIsDonateOptionsModalOpen,
-    donorLoading,
+    loading,
     donor,
+    setIsLoading,
   } = useAuth();
 
   useEffect(() => {
@@ -59,22 +60,23 @@ export const DonateOptionsModal = () => {
   }, [setIsDonateOptionsModalOpen]);
 
   useEffect(() => {
-    if (!donorLoading && donor) {
+    if (donor) {
       setIsDonateOptionsModalOpen(false);
+      setIsLoading(false);
     }
-  }, [donorLoading, donor, setIsDonateOptionsModalOpen]);
+  }, [donor, setIsDonateOptionsModalOpen, setIsLoading]);
 
   const handleSaveChoice = () => {
     localStorage.setItem('donate-option-choice', selectedOption);
 
     switch (selectedOption) {
       case 'guest': {
-        console.log('Guest selected');
         setIsDonateOptionsModalOpen(false);
         break;
       }
       case 'account': {
         // Redirect to Twitch auth with callback parameter
+        setIsLoading(true);
         const currentPath = window.location.pathname;
         const callbackParameter = currentPath.startsWith('/creators/')
           ? currentPath.slice(1)
@@ -114,7 +116,7 @@ export const DonateOptionsModal = () => {
                 intent="primary"
                 size="medium"
                 suffixIconName="IdrissArrowRight"
-                loading={donorLoading}
+                loading={loading}
               >
                 Continue
               </Button>
@@ -125,7 +127,7 @@ export const DonateOptionsModal = () => {
                 intent="primary"
                 size="medium"
                 prefixIconName="TwitchOutlinedBold2"
-                loading={donorLoading}
+                loading={loading}
               >
                 Continue with Twitch
               </Button>

@@ -20,7 +20,6 @@ export function PrivyAuthSync() {
   const isAuthInProgress = useRef(false);
   const {
     customAuthToken,
-    oauthLoading,
     setCreatorLoading,
     setCreator,
     isAuthenticated,
@@ -29,6 +28,7 @@ export function PrivyAuthSync() {
     callbackUrl,
     setDonor,
     setDonorLoading,
+    loading,
   } = useAuth();
   const { user, ready, getAccessToken, logout, authenticated } = usePrivy();
   const router = useRouter();
@@ -174,7 +174,7 @@ export function PrivyAuthSync() {
 
   useSubscribeToJwtAuthWithFlag({
     isAuthenticated,
-    isLoading: oauthLoading,
+    isLoading: loading,
     getExternalJwt: () => {
       return Promise.resolve(customAuthToken ?? undefined);
     },

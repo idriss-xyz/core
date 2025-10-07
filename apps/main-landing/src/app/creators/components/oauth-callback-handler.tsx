@@ -1,17 +1,15 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import { useAuth } from '../context/auth-context';
 
 export function OAuthCallbackHandler() {
   const {
-    oauthLoading,
     loading,
     setCustomAuthToken,
     setIsModalOpen,
     setIsDonateOptionsModalOpen,
-    setOauthLoading,
     setOauthError,
     setCallbackUrl,
     setIsLoading,
@@ -41,6 +39,7 @@ export function OAuthCallbackHandler() {
       return [k, searchParameters.get(k)];
     }),
   );
+  const hasSetAuthTokenReference = useRef(false);
 
   useEffect(() => {
     if (login) {
@@ -52,35 +51,18 @@ export function OAuthCallbackHandler() {
       console.error('Oauth error.', error);
       setIsModalOpen(true);
       setOauthError(true);
-      if (!oauthLoading) {
-        setOauthLoading(false);
-      }
     }
-  }, [
-    name,
-    displayName,
-    pfp,
-    email,
-    login,
-    router,
-    error,
-    callbackUrl,
-    loading,
-    oauthLoading,
-    setIsModalOpen,
-    setOauthLoading,
-    setCustomAuthToken,
-    setOauthError,
-    setCallbackUrl,
-    setIsLoading,
-  ]);
+  }, [login, router, error, setIsModalOpen, setOauthError]);
 
   // Separate effect to set authToken once
   useEffect(() => {
-    if (authToken) {
+    if (authToken && !hasSetAuthTokenReference.current) {
       // Twitch has finished authenticating the user and succeeded
       setIsModalOpen(true);
       setIsDonateOptionsModalOpen(true);
+      if (!loading) {
+        setIsLoading(true);
+      }
       if (name) {
         localStorage.setItem(
           'twitch_new_user_info',
@@ -89,10 +71,7 @@ export function OAuthCallbackHandler() {
       }
       if (callbackUrl) setCallbackUrl(callbackUrl);
       setCustomAuthToken(authToken);
-      if (!loading) {
-        setOauthLoading(false);
-        setIsLoading(true);
-      }
+      hasSetAuthTokenReference.current = true;
     }
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authToken, loading]);
