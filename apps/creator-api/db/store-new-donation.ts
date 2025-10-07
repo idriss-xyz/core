@@ -174,6 +174,13 @@ export async function storeToDatabase(
       const shortName = collectionNft?.shortName;
       const category = collectionNft?.category;
 
+      if (!slug || !shortName || !category || !nftToken.name) {
+        console.warn(
+          `Skipping NFT donation from unsupported collection ${rawCollectionAddress} (${node.network})`,
+        );
+        continue;
+      }
+
       const floor = slug
         ? await fetchNftFloorFromOpensea(slug, tokenId.toString())
         : null;
