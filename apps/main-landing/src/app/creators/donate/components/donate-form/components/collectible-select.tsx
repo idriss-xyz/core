@@ -80,9 +80,10 @@ export function CollectibleSelectModal({
               setSelectedCollectible(null);
               return;
             }
+            // do not set chainId here to not change the chainId on the tokenTab.
+            // Sending collectibles already uses selectedCollectible?.chainId instead of the payload chainId
             formMethods.setValue('tokenId', collectible.tokenId);
             formMethods.setValue('contract', collectible.contract);
-            formMethods.setValue('chainId', collectible.chainId);
             formMethods.setValue('type', collectible.type ?? 'erc1155');
             formMethods.setValue('collectibleAmount', collectible.amount);
             setSelectedCollectible({
