@@ -41,9 +41,7 @@ export const DonateHistoryItem = ({
   /* ——— distinguish donation type ——— */
   const isTokenDonation = donation.kind === 'token';
 
-  const tokenSymbol = isTokenDonation
-    ? donation.token.symbol // fungible token
-    : donation.name;
+  const tokenSymbol = isTokenDonation ? donation.token.symbol : donation.name;
   const tipReceiver = donation.toUser;
   const tradeValue = donation.tradeValue;
   const tipComment = donation.comment;

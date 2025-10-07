@@ -105,7 +105,7 @@ export class SplitNftMetadata1759318771000 implements MigrationInterface {
           row.collection_address.toLowerCase(),
           row.network,
           row.token_id,
-          collName,
+          row.name,
           image,
         ],
       );
