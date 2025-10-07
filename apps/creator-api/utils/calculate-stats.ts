@@ -3,17 +3,15 @@ import {
   fetchDonations,
   fetchDonationRecipients,
 } from '../db/fetch-known-donations';
-import {
-  RecipientDonationStats,
-  DonationWithTimeAndAmount,
-  TokenEarnings,
-} from '../types';
 import { getAddress, Hex } from 'viem';
 import {
   StoredDonationData,
   DonationToken,
   LeaderboardStats,
   DonorHistoryStats,
+  RecipientDonationStats,
+  DonationWithTimeAndAmount,
+  TokenEarnings,
 } from '@idriss-xyz/constants';
 import {
   createAddressToCreatorMap,

@@ -125,26 +125,6 @@ export interface TipHistoryResponse {
   leaderboard: LeaderboardStats[];
 }
 
-export interface TokenEarnings {
-  tokenData: DonationToken;
-  totalAmount: number;
-  donationCount: number;
-}
-
-export interface DonationWithTimeAndAmount {
-  year: number;
-  month: string;
-  amount: number;
-}
-
-export interface RecipientDonationStats {
-  distinctDonorsCount: number;
-  totalDonationsCount: number;
-  biggestDonation: number;
-  donationsWithTimeAndAmount: DonationWithTimeAndAmount[];
-  earningsByTokenOverview: TokenEarnings[];
-}
-
 export type LambdaName = typeof LAMBDA_FAUCET | typeof LAMBDA_REWARDS;
 
 export type LambdaPayload = {
