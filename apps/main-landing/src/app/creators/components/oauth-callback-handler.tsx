@@ -10,6 +10,7 @@ export function OAuthCallbackHandler() {
     loading,
     setCustomAuthToken,
     setIsModalOpen,
+    setIsDonateOptionsModalOpen,
     setOauthLoading,
     setOauthError,
     setCallbackUrl,
@@ -54,24 +55,8 @@ export function OAuthCallbackHandler() {
       if (!oauthLoading) {
         setOauthLoading(false);
       }
-    } else if (authToken) {
-      // Twitch has finished authenticating the user and succeeded
-      setIsModalOpen(true);
-      if (name) {
-        localStorage.setItem(
-          'twitch_new_user_info',
-          JSON.stringify({ name, displayName, pfp, email }),
-        );
-      }
-      if (callbackUrl) setCallbackUrl(callbackUrl);
-      setCustomAuthToken(authToken);
-    }
-    if (authToken && !loading) {
-      setOauthLoading(false);
-      setIsLoading(true);
     }
   }, [
-    authToken,
     name,
     displayName,
     pfp,
@@ -89,6 +74,28 @@ export function OAuthCallbackHandler() {
     setCallbackUrl,
     setIsLoading,
   ]);
+
+  // Separate effect to set authToken once
+  useEffect(() => {
+    if (authToken) {
+      // Twitch has finished authenticating the user and succeeded
+      setIsModalOpen(true);
+      setIsDonateOptionsModalOpen(true);
+      if (name) {
+        localStorage.setItem(
+          'twitch_new_user_info',
+          JSON.stringify({ name, displayName, pfp, email }),
+        );
+      }
+      if (callbackUrl) setCallbackUrl(callbackUrl);
+      setCustomAuthToken(authToken);
+      if (!loading) {
+        setOauthLoading(false);
+        setIsLoading(true);
+      }
+    }
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authToken, loading]);
 
   return null;
 }

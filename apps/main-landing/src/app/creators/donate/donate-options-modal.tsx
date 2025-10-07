@@ -35,13 +35,18 @@ const cardRadioItems: CardRadioItem[] = [
 
 export const DonateOptionsModal = () => {
   const [selectedOption, setSelectedOption] = useState<string>('account');
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const { user } = usePrivy();
-  const { setDonor } = useAuth();
+  const {
+    setDonor,
+    isDonateOptionsModalOpen,
+    setIsDonateOptionsModalOpen,
+    donorLoading,
+    donor,
+  } = useAuth();
 
   useEffect(() => {
     const savedChoice = localStorage.getItem('donate-option-choice');
-    if (user && savedChoice === 'account') {
+    if (user?.wallet?.address && savedChoice === 'account') {
       void setCreatorIfSessionPresent(user, setDonor);
     }
   }, [user, setDonor]);
@@ -49,16 +54,23 @@ export const DonateOptionsModal = () => {
   useEffect(() => {
     const savedChoice = localStorage.getItem('donate-option-choice');
     if (!savedChoice || savedChoice === 'guest') {
-      setIsModalOpen(true);
+      setIsDonateOptionsModalOpen(true);
     }
-  }, []);
+  }, [setIsDonateOptionsModalOpen]);
+
+  useEffect(() => {
+    if (!donorLoading && donor) {
+      setIsDonateOptionsModalOpen(false);
+    }
+  }, [donorLoading, donor, setIsDonateOptionsModalOpen]);
 
   const handleSaveChoice = () => {
     localStorage.setItem('donate-option-choice', selectedOption);
 
     switch (selectedOption) {
       case 'guest': {
-        setIsModalOpen(false);
+        console.log('Guest selected');
+        setIsDonateOptionsModalOpen(false);
         break;
       }
       case 'account': {
@@ -68,7 +80,6 @@ export const DonateOptionsModal = () => {
           ? currentPath.slice(1)
           : 'creators'; // Remove leading slash
         window.location.href = `${CREATOR_API_URL}/auth/twitch?callback=${encodeURIComponent(callbackParameter)}`;
-        setIsModalOpen(false);
         break;
       }
       default: {
@@ -79,9 +90,9 @@ export const DonateOptionsModal = () => {
 
   return (
     <Modal
-      isOpened={isModalOpen}
+      isOpened={isDonateOptionsModalOpen}
       onClose={() => {
-        return setIsModalOpen(false);
+        return setIsDonateOptionsModalOpen(false);
       }}
     >
       <div className="mx-auto flex w-[360px] flex-col gap-8 p-6 lg:w-[752px]">
@@ -103,6 +114,7 @@ export const DonateOptionsModal = () => {
                 intent="primary"
                 size="medium"
                 suffixIconName="IdrissArrowRight"
+                loading={donorLoading}
               >
                 Continue
               </Button>
@@ -113,6 +125,7 @@ export const DonateOptionsModal = () => {
                 intent="primary"
                 size="medium"
                 prefixIconName="TwitchOutlinedBold2"
+                loading={donorLoading}
               >
                 Continue with Twitch
               </Button>

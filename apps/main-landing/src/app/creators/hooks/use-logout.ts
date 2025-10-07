@@ -4,7 +4,8 @@ import { useAuth } from '../context/auth-context';
 
 export const useLogout = () => {
   const { logout } = usePrivy();
-  const { setCreator, setIsModalOpen, setDonor } = useAuth();
+  const { setCreator, setIsModalOpen, setIsDonateOptionsModalOpen, setDonor } =
+    useAuth();
 
   return async () => {
     await logout();
@@ -17,6 +18,7 @@ export const useLogout = () => {
       setCreator(null);
       setDonor(null);
       setIsModalOpen(false);
+      setIsDonateOptionsModalOpen(true);
     });
   };
 };
