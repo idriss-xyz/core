@@ -140,7 +140,7 @@ export function DonateFormBody({
                 selectedCollectible={selectedCollectible}
                 amount={collectibleAmount}
                 setSelectedCollectible={setSelectedCollectible}
-                setIsCollectibleModalOpen={() => {}}
+                setIsCollectibleModalOpen={setIsCollectibleModalOpen}
                 isConnected={isConnected}
                 openConnectModal={openConnectModal}
                 setPendingCollectibleModal={setPendingCollectibleModal}

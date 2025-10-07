@@ -20,6 +20,7 @@ export interface ToastData {
   autoClose?: boolean;
   closable?: boolean;
   actionButtons?: (close: () => void) => ReactNode;
+  duration?: number;
 }
 
 interface ToastContextValue {
@@ -80,6 +81,8 @@ export const ToastProvider = ({ children }: ToastProviderProperties) => {
               description={toastData.description}
               iconName={toastData.iconName}
               autoClose={toastData.autoClose}
+              closable={toastData.closable}
+              duration={toastData.duration}
               actionButtons={toastData.actionButtons}
               onClose={() => {
                 return removeToast(toastData.id);

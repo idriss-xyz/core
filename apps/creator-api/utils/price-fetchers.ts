@@ -336,19 +336,28 @@ export async function fetchNftFloorFromOpensea(
     const rawPrice = offer?.value ?? '0';
     const currency = offer?.currency ?? 'WETH';
 
+    // normalize price per-item if ERC1155 bundle
+    let perUnitRaw = BigInt(rawPrice);
+    const consideration = json.protocol_data?.parameters?.consideration?.[0];
+    const amount = consideration?.startAmount
+      ? BigInt(consideration.startAmount)
+      : BigInt(1);
+
+    if (amount > BigInt(1)) {
+      perUnitRaw = perUnitRaw / amount;
+    }
+
     let usdValue: number | undefined;
     if (currency.toUpperCase() === 'WETH' || currency.toUpperCase() === 'ETH') {
       const prices = await fetchNativePricesFromAlchemy(['ETH']);
       const ethPrice = prices['ETH'];
       if (ethPrice) {
-        const ethAmount = parseFloat(
-          formatUnits(BigInt(rawPrice), offer?.decimals),
-        );
+        const ethAmount = parseFloat(formatUnits(perUnitRaw, offer?.decimals));
         usdValue = ethAmount * ethPrice;
       }
     }
 
-    return { price: rawPrice, currency, usdValue };
+    return { price: perUnitRaw.toString(), currency, usdValue };
   } catch (err) {
     console.error(
       `Failed to fetch OpenSea floor for ${collectionSlug}/${tokenId}:`,

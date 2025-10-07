@@ -6,7 +6,8 @@ export const claimDailyDrip = async (
   chainId: number,
   token?: Hex,
   type?: string,
-) => {
+  tokenId?: bigint | number,
+): Promise<Hex | undefined> => {
   try {
     const authToken = await getAccessToken();
     if (!authToken) return;
@@ -17,7 +18,9 @@ export const claimDailyDrip = async (
       type: type ?? 'token',
     };
 
-    await fetch(`${CREATOR_API_URL}/drip`, {
+    if (tokenId !== undefined) body.tokenId = String(tokenId);
+
+    const resp = await fetch(`${CREATOR_API_URL}/drip`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -25,7 +28,13 @@ export const claimDailyDrip = async (
       },
       body: JSON.stringify(body),
     });
+
+    if (!resp.ok) return;
+    const { txHash } = await resp.json().catch(() => {
+      return {};
+    });
+    return txHash as Hex | undefined;
   } catch {
-    /* silent */
+    return;
   }
 };
