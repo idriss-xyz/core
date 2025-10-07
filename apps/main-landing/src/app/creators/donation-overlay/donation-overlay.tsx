@@ -151,6 +151,7 @@ export default function DonationOverlay({ creatorName }: Properties) {
         creatorName: name,
         forceDisplay: true,
       };
+      console.log(queuedDonation)
       addDonation(queuedDonation);
     });
 
