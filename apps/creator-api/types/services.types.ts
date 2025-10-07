@@ -1,10 +1,5 @@
 import { Hex } from 'viem';
-import {
-  StoredDonationData,
-  DonationToken,
-  DonationUser,
-  LeaderboardStats,
-} from '@idriss-xyz/constants';
+import { StoredDonationData, LeaderboardStats } from '@idriss-xyz/constants';
 import { LAMBDA_FAUCET, LAMBDA_REWARDS } from '../config/aws-config';
 
 export interface TokenDisplayItem {
