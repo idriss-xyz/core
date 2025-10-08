@@ -9,6 +9,7 @@ import { useWalletClient } from 'wagmi';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Button } from '@idriss-xyz/ui/button';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
+import { Link } from '@idriss-xyz/ui/link';
 
 import { useCollectibles } from '../../../hooks/use-collectibles';
 
@@ -94,6 +95,7 @@ export const CollectibleGallery = ({
   const [_selectedCollections, _setSelectedCollections] = useState<string[]>(
     initialSelectedCollections ?? [],
   );
+  const [hasInitialized, setHasInitialized] = useState(false);
 
   const setSelectedCollections = (next: string[], propagate = true) => {
     _setSelectedCollections(next);
@@ -105,7 +107,7 @@ export const CollectibleGallery = ({
   const [selectedAmount, setSelectedAmount] = useState<number>(0);
 
   useEffect(() => {
-    if (!collectibles?.length) return;
+    if (!collectibles?.length || hasInitialized) return;
 
     const allContracts = uniqueCollections.map((col) => {
       return `${col.chainId}-${col.address}`;
@@ -118,6 +120,7 @@ export const CollectibleGallery = ({
       : allContracts;
 
     setSelectedCollections(startSelection, false);
+    setHasInitialized(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collectibles, uniqueCollections, initialSelectedCollections]);
 
@@ -181,6 +184,18 @@ export const CollectibleGallery = ({
       return matchesSearch && matchesCollection;
     }) ?? [];
 
+  const handleSelectAllCollections = () => {
+    if (_selectedCollections.length > 0) {
+      setSelectedCollections([]);
+    } else {
+      setSelectedCollections(
+        uniqueCollections.map((c) => {
+          return `${c.chainId}-${c.address}`;
+        }),
+      );
+    }
+  };
+
   if (isLoading) {
     return <div className="py-8 text-center">Loading collectibles...</div>;
   }
@@ -191,9 +206,18 @@ export const CollectibleGallery = ({
         {/* Desktop Collection Filter - hidden below md */}
         <ScrollArea className="hidden max-h-96 overflow-y-auto md:block">
           <div className="w-48 shrink-0">
-            <h3 className="mb-3 text-label3 text-neutralGreen-900">
-              Collections
-            </h3>
+            <div className="mb-3 flex items-center justify-between">
+              <h3 className="text-label3 text-neutralGreen-900">Collections</h3>
+              <Link
+                size="m"
+                onClick={handleSelectAllCollections}
+                className="cursor-pointer lg:text-label7"
+              >
+                {_selectedCollections.length > 0
+                  ? 'Unselect all'
+                  : 'Select all'}
+              </Link>
+            </div>
             <div className="space-y-2">
               {Object.entries(groupedCollections).map(([category, cols]) => {
                 return (
@@ -356,9 +380,20 @@ export const CollectibleGallery = ({
           />
           <Card className="absolute inset-x-0 bottom-0 rounded-b-xl rounded-t-lg p-4">
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-sm font-medium text-neutral-900">
-                Collections
-              </h3>
+              <div className="flex items-center gap-2">
+                <h3 className="text-sm font-medium text-neutral-900">
+                  Collections
+                </h3>
+                <Link
+                  size="s"
+                  onClick={handleSelectAllCollections}
+                  className="cursor-pointer lg:text-label7"
+                >
+                  {_selectedCollections.length > 0
+                    ? 'Unselect all'
+                    : 'Select all'}
+                </Link>
+              </div>
               <IconButton
                 iconName="X"
                 intent="tertiary"
