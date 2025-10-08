@@ -48,7 +48,7 @@ export default function DonationNotification({
   onFullyComplete,
 }: DonationNotificationProperties) {
   const audioSource = useMemo(() => {
-    if (alertSound === 'upload' && creatorName) {
+    if (alertSound === 'CUSTOM_SOUND' && creatorName) {
       return `${CREATOR_API_URL}/creator-profile/audio/${creatorName}`;
     }
     return soundMap[alertSound] ?? DEFAULT_TRUMPET_SOUND;
