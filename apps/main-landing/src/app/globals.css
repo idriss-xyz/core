@@ -6,6 +6,9 @@
 [data-privy-modal] h3:has(> :where(:not(script)):where(:not(style)):where(:not(template)):where(:not(:empty)):contains("All set!")),
 [data-privy-modal] h3:has(> :where(:not(script)):where(:not(style)):where(:not(template)):where(:not(:empty)):contains("Welcome")),
 [data-privy-modal] h3:contains("All set!"),
-[data-privy-modal] h3:contains("Welcome") {
+[data-privy-modal] h3:contains("Welcome"),
+div.DialogContainer-sc-3cfde0b5-2,
+div#privy-modal,
+div#privy-modal-content {
   display: none !important;
 }
