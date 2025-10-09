@@ -16,10 +16,8 @@ export function PrivyModalHider() {
             }
 
             // Also check children
-            const portalRoot = node.querySelector(
-              '#headlessui-portal-root',
-            ) as HTMLElement;
-            if (portalRoot) {
+            const portalRoot = node.querySelector('#headlessui-portal-root')!;
+            if (portalRoot instanceof HTMLElement) {
               portalRoot.style.display = 'none';
               portalRoot.style.visibility = 'hidden';
               portalRoot.style.opacity = '0';
