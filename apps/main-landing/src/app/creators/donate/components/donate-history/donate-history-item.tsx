@@ -10,7 +10,11 @@ import {
   TooltipTrigger,
   TooltipProvider,
 } from '@idriss-xyz/ui/tooltip';
-import { CREATOR_CHAIN, StoredDonationData } from '@idriss-xyz/constants';
+import {
+  CREATOR_CHAIN,
+  StoredDonationData,
+  CREATOR_API_URL,
+} from '@idriss-xyz/constants';
 import {
   getTransactionUrls,
   formatFiatValue,
@@ -18,6 +22,7 @@ import {
 } from '@idriss-xyz/utils';
 import { Link } from '@idriss-xyz/ui/link';
 import { useRouter } from 'next/navigation';
+import { getAccessToken } from '@privy-io/react-auth';
 import { classes } from '@idriss-xyz/ui/utils';
 
 import { removeMainnetSuffix } from '@/app/creators/donate/utils';
@@ -29,12 +34,14 @@ type Properties = {
   donation: StoredDonationData;
   showReceiver?: boolean;
   showMenu?: boolean;
+  canReplay?: boolean;
 };
 
 export const DonateHistoryItem = ({
   donation,
   showReceiver = false,
   showMenu = true,
+  canReplay = false,
 }: Properties) => {
   const timeAgo = useTimeAgo({ timestamp: donation.timestamp });
   const router = useRouter();
@@ -83,6 +90,26 @@ export const DonateHistoryItem = ({
       ].id,
     transactionHash: donation.transactionHash,
   });
+
+  const replayDonation = async () => {
+    try {
+      const authToken = await getAccessToken();
+      if (!authToken) {
+        console.error('Replay failed: no auth token');
+        return;
+      }
+      await fetch(`${CREATOR_API_URL}/creator-profile/test-alert`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ donation }),
+      });
+    } catch (error) {
+      console.error('Error replaying donation:', error);
+    }
+  };
 
   return (
     <div className="grid w-full grid-cols-[1fr,32px] items-start gap-x-2">
@@ -212,9 +239,24 @@ export const DonateHistoryItem = ({
           )}
         >
           {() => {
-            return transactionUrls ? (
+            return (
               <ul className="flex flex-col items-start gap-y-1">
-                {transactionUrls.map((transactionUrl) => {
+                {canReplay && (
+                  <li>
+                    <Button
+                      size="large"
+                      intent="tertiary"
+                      prefixIconName="RotateCcw"
+                      prefixIconClassName="mr-3"
+                      className="w-full items-center px-3 py-1 font-normal text-neutral-900"
+                      onClick={replayDonation}
+                    >
+                      Replay alert
+                    </Button>
+                  </li>
+                )}
+
+                {transactionUrls?.map((transactionUrl) => {
                   const explorer =
                     transactionUrl.blockExplorer === 'Blockscout'
                       ? 'Blockscout'
@@ -236,6 +278,7 @@ export const DonateHistoryItem = ({
                     </li>
                   );
                 })}
+
                 {!isTokenDonation && (
                   <li key={donation.name}>
                     <Button
@@ -260,7 +303,7 @@ export const DonateHistoryItem = ({
                   </li>
                 )}
               </ul>
-            ) : null;
+            );
           }}
         </Dropdown>
       )}

@@ -21,6 +21,7 @@ import {
 import { tightCors } from '../config/cors';
 import { verifyToken } from '../db/middleware/auth.middleware';
 import { streamAudioFromS3 } from '../utils/audio-utils';
+import type { StoredDonationData } from '@idriss-xyz/constants';
 
 const router = Router();
 
@@ -225,6 +226,66 @@ router.get(
   },
 );
 
+function safeToNumber(raw: string): number {
+  try {
+    const b = BigInt(raw);
+    const max = BigInt(Number.MAX_SAFE_INTEGER);
+    return Number(b > max ? max : b);
+  } catch {
+    const n = Number(raw);
+    return Number.isFinite(n) ? n : 0;
+  }
+}
+
+function buildTestDonationPayload(donation: StoredDonationData) {
+  const base = {
+    type: 'test' as const,
+    donor: donation.fromUser.displayName ?? 'anon',
+    message: donation.comment ?? '',
+    sfxText: null,
+    avatarUrl: donation.fromUser.avatarUrl,
+    txnHash: donation.transactionHash,
+  };
+
+  if (donation.kind === 'token') {
+    return {
+      ...base,
+      amount: donation.tradeValue ?? 0,
+      token: {
+        amount: safeToNumber(donation.amountRaw),
+        details: {
+          symbol: donation.token.symbol,
+          name: donation.token.name ?? donation.token.symbol,
+          logo: donation.token.imageUrl,
+          decimals: donation.token.decimals,
+          address: donation.token.address,
+        },
+      },
+    };
+  }
+
+  // nft
+  const nftImage =
+    donation.imgPreferred ||
+    donation.imgMedium ||
+    donation.imgSmall ||
+    donation.imgLarge;
+
+  return {
+    ...base,
+    amount: donation.quantity,
+    token: {
+      amount: donation.quantity,
+      details: {
+        id: String(donation.tokenId),
+        name: donation.name,
+        logo: nftImage,
+        collectionName: donation.collectionShortName || donation.collectionSlug,
+      },
+    },
+  };
+}
+
 router.post(
   '/test-alert',
   tightCors,
@@ -246,9 +307,13 @@ router.post(
         return;
       }
 
-      const { kind = 'token' } = req.body ?? {};
+      const { kind = 'token', donation } = req.body ?? {};
 
-      const payload = kind === 'nft' ? TEST_NFT_DONATION : TEST_TOKEN_DONATION;
+      const payload = donation
+        ? buildTestDonationPayload(donation as StoredDonationData)
+        : kind === 'nft'
+          ? TEST_NFT_DONATION
+          : TEST_TOKEN_DONATION;
 
       const io = req.app.get('io');
       const overlayWS = io.of('/overlay');

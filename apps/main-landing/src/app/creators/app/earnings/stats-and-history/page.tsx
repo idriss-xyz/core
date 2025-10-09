@@ -429,6 +429,7 @@ export default function EarningsStats() {
                     <DonateHistoryItem
                       donation={donation}
                       key={donation.transactionHash}
+                      canReplay
                     />
                   );
                 })}
