@@ -9,6 +9,8 @@
 [data-privy-modal] h3:contains("Welcome"),
 div.DialogContainer-sc-3cfde0b5-2,
 div#privy-modal,
-div#privy-modal-content {
+div#privy-modal-content,
+div#headlessui-portal-root,
+div#privy-dialog {
   display: none !important;
 }
