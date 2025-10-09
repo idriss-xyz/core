@@ -6,7 +6,6 @@ export function PrivyModalHider() {
   useEffect(() => {
     const observer = new MutationObserver((mutations) => {
       for (const mutation of mutations) {
-        console.log('Mutation detected', mutation);
         for (const node of mutation.addedNodes) {
           if (node instanceof HTMLElement) {
             if (node.id === 'headlessui-portal-root') {
