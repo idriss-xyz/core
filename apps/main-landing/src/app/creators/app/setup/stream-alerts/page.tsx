@@ -610,7 +610,9 @@ export default function StreamAlerts() {
                     );
                   }}
                 />
-                {(alertSound === 'upload' || (alertSound === 'CUSTOM_SOUND' && unsavedChangesToastId !== '')) && (
+                {(alertSound === 'upload' ||
+                  (alertSound === 'CUSTOM_SOUND' &&
+                    unsavedChangesToastId !== '')) && (
                   <File
                     onUpload={fileUploadCallback}
                     onRemove={handleFileRemove}

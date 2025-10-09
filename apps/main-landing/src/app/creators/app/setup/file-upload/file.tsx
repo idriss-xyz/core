@@ -1,5 +1,5 @@
 // TODO: Remove this from setup folder and move to a shared components file like packages/ui
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import { usePrivy } from '@privy-io/react-auth';
 import { ProgressBarV2 } from '@idriss-xyz/ui/progress-bar-v2';
 import { Icon } from '@idriss-xyz/ui/icon';
