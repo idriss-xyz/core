@@ -295,8 +295,7 @@ export async function storeToDatabase(
           (e) => e.node.nftDeltasV2?.edges ?? [],
         ) ?? [];
       const deltaNodes = deltaEdges.map((e) => e.node).filter((n) => !!n.nft);
-      const sentNode =
-        deltaNodes.find((n) => n.amount < 0) ?? deltaNodes[0];
+      const sentNode = deltaNodes.find((n) => n.amount < 0) ?? deltaNodes[0];
       if (!sentNode?.nft) {
         console.warn(
           `Skipping NFT donation via deltas: no NFT metadata (tx ${node.transaction.hash})`,
