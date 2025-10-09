@@ -49,15 +49,6 @@ export const File = ({
 
   const fileInputReference = useRef<HTMLInputElement>(null);
 
-  // Initialize file state based on hasCustomSound prop
-  useEffect(() => {
-    if (placeholderFile && !file) {
-      // Create a placeholder file object to represent the existing custom sound
-      setFile(placeholderFile);
-      setProgress(100);
-    }
-  }, [placeholderFile, file]);
-
   const handleSelectedFile = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
