@@ -3,12 +3,14 @@ import { StoredDonationData, LeaderboardStats } from '@idriss-xyz/constants';
 import { LAMBDA_FAUCET, LAMBDA_REWARDS } from '../config/aws-config';
 
 export interface TokenDisplayItem {
+  __typename: 'TokenDisplayItem';
   network: string;
   amountRaw: string;
   tokenV2: TokenV2;
 }
 
 export interface NftDisplayItem {
+  __typename: 'NFTDisplayItem';
   tokenId: string;
   type: string;
   collectionAddress: Hex;
@@ -29,13 +31,29 @@ export interface NftDisplayItem {
   };
 }
 
-type StringDisplayItem = {
+export type StringDisplayItem = {
+  __typename: 'StringDisplayItem';
   stringValue: string;
 };
 
-interface ActorDisplayItem {
+export interface ActorDisplayItem {
+  __typename: 'ActorDisplayItem';
   account: UserData;
 }
+
+export interface NftCollectionDisplayItem {
+  __typename: 'NFTCollectionDisplayItem';
+  collectionAddress: Hex;
+  type: string;
+  nftCollection: { displayName?: string | null } | null;
+}
+
+type DisplayItem =
+  | TokenDisplayItem
+  | NftDisplayItem
+  | StringDisplayItem
+  | ActorDisplayItem
+  | NftCollectionDisplayItem;
 
 export interface FarcasterUserData {
   username: string;
@@ -88,11 +106,31 @@ export interface ZapperNode {
     };
   };
   interpretation: {
-    descriptionDisplayItems: [
-      TokenDisplayItem | NftDisplayItem,
-      ActorDisplayItem | undefined,
-      StringDisplayItem | undefined,
-    ];
+    descriptionDisplayItems: DisplayItem[];
+  };
+  accountDeltasV2?: {
+    edges: {
+      node: {
+        nftDeltasV2?: {
+          edges: {
+            node: {
+              nft: {
+                tokenId: string;
+                name?: string;
+                mediasV3: {
+                  images: {
+                    edges: {
+                      node: { large: string; medium: string; url: string };
+                    }[];
+                  };
+                };
+              } | null;
+              amount: number;
+            };
+          }[];
+        };
+      };
+    }[];
   };
   app?: {
     slug: string;
