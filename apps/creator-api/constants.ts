@@ -45,6 +45,7 @@ export const TipHistoryQuery = `
           }
           interpretation {
             descriptionDisplayItems {
+              __typename
               ... on TokenDisplayItem {
                 network
                 amountRaw
@@ -79,6 +80,13 @@ export const TipHistoryQuery = `
                   name
                 }
               }
+                ... on NFTCollectionDisplayItem {
+                  collectionAddress
+                  type
+                  nftCollection {
+                    displayName
+                  }
+                }
               ... on StringDisplayItem {
                 stringValue
               }
@@ -102,6 +110,34 @@ export const TipHistoryQuery = `
                     metadata {
                       displayName
                       imageUrl
+                    }
+                  }
+                }
+              }
+            }
+          }
+          accountDeltasV2 {
+            edges {
+              node {
+                nftDeltasV2 {
+                  edges {
+                    node {
+                      nft {
+                        tokenId
+                        name
+                        mediasV3 {
+                          images {
+                            edges {
+                              node {
+                                large
+                                medium
+                                url
+                              }
+                            }
+                          }
+                        }
+                      }
+                      amount
                     }
                   }
                 }
