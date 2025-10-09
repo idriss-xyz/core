@@ -13,10 +13,9 @@ export async function enrichNodesWithHistoricalPrice(
 
   for (const edge of edges) {
     const node = edge.node;
-    const item0 = node.interpretation.descriptionDisplayItems[0];
-
-    if (!isTokenItem(item0)) continue;
-    const tokenItem = item0;
+    const items = node.interpretation.descriptionDisplayItems;
+    const tokenItem = items.find(isTokenItem);
+    if (!tokenItem) continue;
 
     const txDate = new Date(node.timestamp);
     const today = new Date();
