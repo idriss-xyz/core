@@ -278,7 +278,7 @@ export const DonateHistoryItem = ({
             'z-extensionPopup rounded-xl border border-neutral-300 bg-white py-2 shadow-lg',
           )}
         >
-          {() => {
+          {({ close }) => {
             return (
               <ul className="flex flex-col items-start gap-y-1">
                 {canReplay && (
@@ -289,7 +289,10 @@ export const DonateHistoryItem = ({
                       prefixIconName="RotateCcw"
                       prefixIconClassName="mr-3"
                       className="w-full items-center px-3 py-1 font-normal text-neutral-900"
-                      onClick={replayDonation}
+                      onClick={() => {
+                        close();
+                        void replayDonation();
+                      }}
                     >
                       Replay alert
                     </Button>
