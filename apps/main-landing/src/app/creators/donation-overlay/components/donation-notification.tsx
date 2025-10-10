@@ -48,7 +48,7 @@ export default function DonationNotification({
   onFullyComplete,
 }: DonationNotificationProperties) {
   const audioSource = useMemo(() => {
-    if (alertSound === 'upload' && creatorName) {
+    if (alertSound === 'CUSTOM_SOUND' && creatorName) {
       return `${CREATOR_API_URL}/creator-profile/audio/${creatorName}`;
     }
     return soundMap[alertSound] ?? DEFAULT_TRUMPET_SOUND;
@@ -74,6 +74,9 @@ export default function DonationNotification({
   const nftDetails = isNftDetails(token.details) ? token.details : undefined;
   const erc20Details = isChainToken(token.details) ? token.details : undefined;
 
+  const hasAvatar =
+    typeof avatarUrl === 'string' && avatarUrl.trim().length > 0;
+
   return (
     <div
       role="alert"
@@ -88,11 +91,11 @@ export default function DonationNotification({
     >
       <div className="flex shrink-0 items-center justify-center">
         <img
-          src={avatarUrl ?? customIcon}
-          alt={avatarUrl ? 'Donor avatar' : 'Icon avatar'}
+          src={hasAvatar ? avatarUrl : customIcon}
+          alt={hasAvatar ? 'Donor avatar' : 'Icon avatar'}
           className={classes(
             'size-12 rounded-full',
-            avatarUrl && 'border border-neutral-400',
+            hasAvatar && 'border border-neutral-400',
           )}
         />
       </div>

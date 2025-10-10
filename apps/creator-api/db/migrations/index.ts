@@ -32,3 +32,4 @@ export { AddCollectibleEnabledToCreator1758546104000 } from './1758546104000-Add
 export { RemoveWwwFromUrls1758590345135 } from './1758590345135-RemoveWwwFromUrls';
 export { AddTokenEnabledToCreator1758728078982 } from './1758728078982-AddTokenEnabledToCreator';
 export { SplitNftMetadata1759318771000 } from './1759318771000-split-nft-metadata';
+export { FixIncorrectNftNames1759846236000 } from './1759846236000-FixIncorrectNftNames';

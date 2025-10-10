@@ -1,36 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Hex } from 'viem';
-import { CREATOR_API_URL } from '@idriss-xyz/constants';
-
-// These types should match the backend RecipientDonationStats
-interface DonationToken {
-  address: Hex;
-  symbol: string;
-  imageUrl?: string;
-  network: string;
-  decimals: number;
-  name?: string;
-}
-
-interface TokenEarnings {
-  tokenData: DonationToken;
-  totalAmount: number;
-  donationCount: number;
-}
-
-interface DonationWithTimeAndAmount {
-  year: number;
-  month: string;
-  amount: number;
-}
-
-interface RecipientStatsResponse {
-  distinctDonorsCount: number;
-  totalDonationsCount: number;
-  biggestDonation: number;
-  donationsWithTimeAndAmount: DonationWithTimeAndAmount[];
-  earningsByTokenOverview: TokenEarnings[];
-}
+import { CREATOR_API_URL, RecipientDonationStats } from '@idriss-xyz/constants';
 
 type Payload = {
   address?: Hex;
@@ -42,7 +12,7 @@ type Options = {
 
 const getRecipientStats = async (
   payload: Payload,
-): Promise<RecipientStatsResponse> => {
+): Promise<RecipientDonationStats> => {
   if (!payload.address) {
     throw new Error('Address is required to fetch recipient stats');
   }
@@ -60,7 +30,7 @@ const getRecipientStats = async (
 
   const stats = await response.json();
 
-  return stats as RecipientStatsResponse;
+  return stats as RecipientDonationStats;
 };
 
 export const useGetRecipientStats = (payload: Payload, options?: Options) => {

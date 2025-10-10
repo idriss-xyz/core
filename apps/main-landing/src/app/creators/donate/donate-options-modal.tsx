@@ -50,7 +50,7 @@ export const DonateOptionsModal = () => {
     if (user?.wallet?.address && savedChoice === 'account') {
       void setCreatorIfSessionPresent(user, setDonor);
     }
-  }, [user, setDonor]);
+  }, []);
 
   useEffect(() => {
     const savedChoice = localStorage.getItem('donate-option-choice');
@@ -96,6 +96,8 @@ export const DonateOptionsModal = () => {
       onClose={() => {
         return setIsDonateOptionsModalOpen(false);
       }}
+      className="z-[2147483647]"
+      withoutPortal
     >
       <div className="mx-auto flex w-[360px] flex-col gap-8 p-6 lg:w-[752px]">
         <h3 className="text-center text-heading4 text-neutral-900 lg:text-heading3">

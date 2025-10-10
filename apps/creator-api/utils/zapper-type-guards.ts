@@ -1,14 +1,24 @@
-import { NftDisplayItem, TokenDisplayItem } from '../types';
+import {
+  NftDisplayItem,
+  TokenDisplayItem,
+  StringDisplayItem,
+  ActorDisplayItem,
+  NftCollectionDisplayItem,
+} from '../types';
 
-export function isTokenItem(
-  item: TokenDisplayItem | NftDisplayItem | undefined,
-): item is TokenDisplayItem {
-  // `tokenV2` is present only on fungible-token display items
-  return !!item && 'tokenV2' in item;
-}
+export const isTokenItem = (item: unknown): item is TokenDisplayItem =>
+  !!item && (item as any).__typename === 'TokenDisplayItem';
 
-export function isNftItem(
-  item: TokenDisplayItem | NftDisplayItem | undefined,
-): item is NftDisplayItem {
-  return !!item && 'tokenId' in item;
-}
+export const isNftItem = (item: unknown): item is NftDisplayItem =>
+  !!item && (item as any).__typename === 'NFTDisplayItem';
+
+export const isStringItem = (item: unknown): item is StringDisplayItem =>
+  !!item && (item as any).__typename === 'StringDisplayItem';
+
+export const isActorItem = (item: unknown): item is ActorDisplayItem =>
+  !!item && (item as any).__typename === 'ActorDisplayItem';
+
+export const isNftCollectionItem = (
+  item: unknown,
+): item is NftCollectionDisplayItem =>
+  !!item && (item as any).__typename === 'NFTCollectionDisplayItem';

@@ -3,17 +3,15 @@ import {
   fetchDonations,
   fetchDonationRecipients,
 } from '../db/fetch-known-donations';
-import {
-  DonationStats,
-  RecipientDonationStats,
-  DonationWithTimeAndAmount,
-  TokenEarnings,
-} from '../types';
 import { getAddress, Hex } from 'viem';
 import {
   StoredDonationData,
   DonationToken,
   LeaderboardStats,
+  DonorHistoryStats,
+  RecipientDonationStats,
+  DonationWithTimeAndAmount,
+  TokenEarnings,
 } from '@idriss-xyz/constants';
 import {
   createAddressToCreatorMap,
@@ -56,7 +54,7 @@ async function getCreatorNameOrAnon(address: string): Promise<string> {
 export async function calculateStatsForDonor(
   donations: StoredDonationData[],
   displayName?: string,
-): Promise<DonationStats> {
+): Promise<DonorHistoryStats> {
   let totalDonationsCount = 0;
   let totalDonationAmount = 0;
   let totalNftDonationAmount = 0;
@@ -107,6 +105,25 @@ export async function calculateStatsForDonor(
           address: donation.token.address,
           decimals: donation.token.decimals,
           network: donation.network,
+        };
+      }
+    } else if (donation.kind === 'nft') {
+      // Treat every collectible as one synthetic “Collectibles” token bucket
+      const tokenSymbol = 'Collectibles';
+      tokenFrequency[tokenSymbol] = (tokenFrequency[tokenSymbol] || 0) + 1;
+
+      if (
+        tokenFrequency[tokenSymbol] >
+        (tokenFrequency[favoriteDonationToken] || 0)
+      ) {
+        favoriteDonationToken = tokenSymbol;
+        favoriteTokenMetadata = {
+          symbol: tokenSymbol,
+          name: tokenSymbol,
+          imageUrl: '',
+          address: '0x0' as Hex,
+          decimals: 0,
+          network: '',
         };
       }
     }

@@ -189,7 +189,12 @@ async function fetch1155BalancesBatch(
   owner: Hex,
   tokenIds: bigint[],
 ) {
-  const client = createPublicClient({ chain, transport: http() });
+  const client = createPublicClient({
+    chain,
+    transport: http(
+      `${ALCHEMY_BASE_URLS[chain.id]}/v2/${process.env.ALCHEMY_API_KEY}`,
+    ),
+  });
   const calls = tokenIds.map((id) => ({
     address: contract,
     abi: erc1155Abi,
@@ -200,7 +205,7 @@ async function fetch1155BalancesBatch(
   const results = await client.multicall({ contracts: calls });
   return results.map((r, i) => ({
     tokenId: tokenIds[i].toString(),
-    balance: r.status === 'success' ? (r.result as bigint) : BigInt(0),
+    balance: r.status === 'success' ? (r.result as bigint) : BigInt(1),
   }));
 }
 
@@ -281,7 +286,7 @@ export async function calculateNftBalances(
           contract: nft.contract,
           collection: meta.name,
           tokenId,
-          balance: type === 'erc721' ? '1' : '0',
+          balance: '1',
           type,
 
           /* token meta */

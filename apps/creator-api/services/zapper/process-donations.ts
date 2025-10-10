@@ -8,7 +8,7 @@ import { storeToDatabase } from '../../db/store-new-donation';
 import { AppHistoryVariables, ZapperNode, ZapperResponse } from '../../types';
 import { enrichNodesWithHistoricalPrice } from '../../utils/enrich-nodes';
 import { StoredDonationData } from '@idriss-xyz/constants';
-import { isTokenItem } from '../../utils/zapper-type-guards';
+import { isStringItem, isTokenItem } from '../../utils/zapper-type-guards';
 
 export async function syncAndStoreNewDonations(): Promise<
   StoredDonationData[]
@@ -44,18 +44,23 @@ export async function syncAndStoreNewDonations(): Promise<
       if (knownHashes.has(edge.node.transaction.hash.toLowerCase())) {
         return false;
       }
-      const descriptionItems =
-        edge.node.interpretation?.descriptionDisplayItems;
+      const items = edge.node.interpretation?.descriptionDisplayItems ?? [];
       const data = edge.node.transaction.decodedInputV2.data;
       const hasValidData =
         data.length > 0 && data[data.length - 1].value.length > 0;
-      if (!hasValidData) return false;
-      if (descriptionItems?.[2]?.stringValue) {
-        if (descriptionItems[2].stringValue === 'N/A') return false;
-        if (
-          isTokenItem(descriptionItems[0]) &&
-          descriptionItems[2].stringValue === descriptionItems[0].amountRaw
-        ) {
+      const hasAnyNftDelta = (edge.node.accountDeltasV2?.edges ?? []).some(
+        (e) =>
+          (e.node.nftDeltasV2?.edges ?? []).some((d) => Boolean(d.node.nft)),
+      );
+      if (!hasValidData && !hasAnyNftDelta) return false;
+
+      const stringItem = items.find(isStringItem);
+
+      const tokenItem = items.find(isTokenItem);
+
+      if (stringItem?.stringValue) {
+        if (stringItem.stringValue === 'N/A') return false;
+        if (tokenItem && stringItem.stringValue === tokenItem.amountRaw) {
           return false;
         }
       }

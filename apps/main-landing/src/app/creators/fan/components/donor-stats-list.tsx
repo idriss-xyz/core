@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { EMPTY_HEX } from '@idriss-xyz/constants';
+import { DonorHistoryStats, EMPTY_HEX } from '@idriss-xyz/constants';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
 import { Icon } from '@idriss-xyz/ui/icon';
@@ -17,7 +17,6 @@ import { formatFiatValue } from '@idriss-xyz/utils';
 import { backgroundLines4 } from '@/assets';
 import { DonateContentValues } from '@/app/creators/donate/types';
 
-import { DonorHistoryStats } from '../types';
 import { getCreatorNameAndPicOrAnon } from '../../utils';
 
 const baseClassName =
@@ -66,7 +65,11 @@ export default function DonorStatsList({
           className="pointer-events-none absolute top-0 hidden size-full opacity-100 lg:block"
         />
 
-        <h1 className="flex items-center self-start text-heading4 text-neutralGreen-900">
+        <h1
+          className={classes(
+            'flex items-center self-start text-heading4 text-neutralGreen-900',
+          )}
+        >
           <span className="truncate">
             Donation stats of {stats?.donorDisplayName ?? 'anon'}
           </span>
@@ -91,12 +94,16 @@ export default function DonorStatsList({
         </h1>
 
         {statsLoading && (
-          <Spinner className="mx-auto mt-9 size-16 text-mint-600" />
+          <Spinner className={classes('mx-auto mt-9 size-16 text-mint-600')} />
         )}
 
         {statsError && (
           <div className="mx-auto mt-9">
-            <p className="flex items-center justify-center gap-2 px-5.5 py-3 text-center text-heading4 text-red-500">
+            <p
+              className={classes(
+                'flex items-center justify-center gap-2 px-5.5 py-3 text-center text-heading4 text-red-500',
+              )}
+            >
               <Icon name="AlertCircle" size={40} />{' '}
               <span>Cannot get donation stats</span>
             </p>
@@ -107,52 +114,67 @@ export default function DonorStatsList({
           <>
             <div className="relative z-0 mb-[3px] mt-9 grid w-full grid-cols-1 gap-3 lg:grid-cols-2">
               <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-8 shadow-md">
-                <p className="text-label5 text-neutral-600">Donations</p>
+                <p className={classes('text-label5 text-neutral-600')}>
+                  Donations
+                </p>
 
-                <p className="text-heading4 text-neutral-800">
+                <p className={classes('text-heading4 text-neutral-800')}>
                   {stats.totalDonationsCount}
                 </p>
               </div>
 
               <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-8 shadow-md">
-                <p className="text-label5 text-neutral-600">Total volume</p>
+                <p className={classes('text-label5 text-neutral-600')}>
+                  Total volume
+                </p>
 
-                <p className="text-heading4 text-neutral-800">
-                  {formatFiatValue(stats.totalDonationAmount)}
+                <p className={classes('text-heading4 text-neutral-800')}>
+                  {formatFiatValue(
+                    stats.totalDonationAmount + stats.totalNftDonationAmount,
+                  )}
                 </p>
               </div>
 
               <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-8 shadow-md">
-                <p className="text-label5 text-neutral-600">Largest donation</p>
+                <p className={classes('text-label5 text-neutral-600')}>
+                  Largest donation
+                </p>
 
-                <p className="text-heading4 text-neutral-800">
+                <p className={classes('text-heading4 text-neutral-800')}>
                   {formatFiatValue(stats.biggestDonationAmount)}
                 </p>
               </div>
 
               {stats.favoriteDonationToken && (
                 <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-8 shadow-md">
-                  <p className="text-label5 text-neutral-600">Favorite token</p>
+                  <p className={classes('text-label5 text-neutral-600')}>
+                    Favorite asset
+                  </p>
 
                   <span className="flex items-center justify-center gap-x-1">
-                    <p className="text-heading4 text-neutral-800">
+                    <p className={classes('text-heading4 text-neutral-800')}>
                       {stats.favoriteDonationToken}{' '}
                     </p>
 
-                    {stats.favoriteTokenMetadata && (
-                      <img
-                        alt=""
-                        src={stats.favoriteTokenMetadata.imageUrl}
-                        className="inline-block size-6 rounded-full"
-                      />
-                    )}
+                    {stats.favoriteTokenMetadata &&
+                      (stats.favoriteTokenMetadata.symbol === 'Collectibles' ? (
+                        <Icon name="Card" size={24} className="text-black" />
+                      ) : (
+                        <img
+                          alt=""
+                          src={stats.favoriteTokenMetadata.imageUrl}
+                          className="inline-block size-6 rounded-full"
+                        />
+                      ))}
                   </span>
                 </div>
               )}
 
               {stats.mostDonatedToAddress !== EMPTY_HEX && (
                 <div className="flex flex-col items-center justify-center gap-y-2 rounded-2xl bg-white px-2 py-7 shadow-md">
-                  <p className="text-label5 text-neutral-600">Top recipient</p>
+                  <p className={classes('text-label5 text-neutral-600')}>
+                    Top recipient
+                  </p>
 
                   <div className="flex flex-row items-center gap-x-1">
                     {mostDonatedToData.profilePicUrl === undefined ? (
@@ -174,7 +196,11 @@ export default function DonorStatsList({
                     <TooltipProvider delayDuration={400}>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <p className="cursor-default truncate text-label3 text-neutral-800">
+                          <p
+                            className={classes(
+                              'cursor-default truncate text-label3 text-neutral-800',
+                            )}
+                          >
                             {mostDonatedToData.name}
                           </p>
                         </TooltipTrigger>
@@ -198,11 +224,11 @@ export default function DonorStatsList({
                     router.push('/creators/fan/ranking');
                   }}
                 >
-                  <p className="text-label5 text-neutral-600">
+                  <p className={classes('text-label5 text-neutral-600')}>
                     Leaderboard rank
                   </p>
 
-                  <p className="text-heading4 text-neutral-800">
+                  <p className={classes('text-heading4 text-neutral-800')}>
                     #{stats.positionInLeaderboard}
                   </p>
                 </div>

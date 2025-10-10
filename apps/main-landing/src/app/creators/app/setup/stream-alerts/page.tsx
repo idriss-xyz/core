@@ -98,7 +98,7 @@ const voices = Object.entries(voiceMap).map(([id, { name }]) => {
 const errorTestAlertToast: Omit<ToastData, 'id'> = {
   type: 'error',
   heading: 'Unable to send test alert',
-  description: 'Check your streaming software and verify the link',
+  description: 'Refresh the page and try again in a few seconds',
   iconName: 'BellRing',
   autoClose: true,
 };
@@ -505,7 +505,7 @@ export default function StreamAlerts() {
                               heading:
                                 'Collectible alerts require portrait mode',
                               description:
-                                'Test both tokens and collectibles to confirm they display correctly',
+                                'Set the browser source in your streaming software to 600x800 (WxH) or similar',
                               iconName: 'BellRing',
                               autoClose: true,
                               duration: 6000,
@@ -610,7 +610,9 @@ export default function StreamAlerts() {
                     );
                   }}
                 />
-                {(alertSound === 'upload' || alertSound === 'CUSTOM_SOUND') && (
+                {(alertSound === 'upload' ||
+                  (alertSound === 'CUSTOM_SOUND' &&
+                    unsavedChangesToastId !== '')) && (
                   <File
                     onUpload={fileUploadCallback}
                     onRemove={handleFileRemove}

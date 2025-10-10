@@ -1,10 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { TEST_DONATION_MESSAGE } from '@idriss-xyz/constants';
 
-import { TEST_TTS_MESSAGE_SOUND } from '@/assets';
-
 import { getTextToSfx, getTextToSpeech } from '../utils';
 import { MinimumAmounts, EnableToggles } from '../types';
+import { voiceMap } from '../../constants';
 
 const PRICE_DROP_RANGE = 0.05;
 const DONATION_TTS_DELAY = 2000;
@@ -132,12 +131,22 @@ export const useDonationNotification = (
 
         if (useTts) {
           if (isTestNotification) {
-            ttsAudioElementReference.current = new Audio(
-              TEST_TTS_MESSAGE_SOUND,
-            );
-            ttsAudioForPlayback = ttsAudioElementReference.current;
+            /* ── Test alert: play the bundled preview that matches the selected voice ── */
+            const localPreviewFile = voiceMap[voiceId]?.audioFile;
+            if (localPreviewFile) {
+              ttsAudioElementReference.current = new Audio(localPreviewFile);
+              ttsAudioForPlayback = ttsAudioElementReference.current;
+            } else {
+              console.warn(
+                `No local preview clip for voiceId "${voiceId}". Skipping TTS for test donation.`,
+              );
+            }
           } else {
-            const ttsStream = await getTextToSpeech(message, voiceId);
+            /* Live donation: always fetch TTS for the selected voiceId */
+            const ttsStream = await getTextToSpeech(
+              message ? message.trim() : '',
+              voiceId,
+            );
             if (ttsStream) {
               ttsAudioElementReference.current =
                 await toAudioElement(ttsStream);
