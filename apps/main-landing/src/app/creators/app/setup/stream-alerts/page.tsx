@@ -129,6 +129,7 @@ export default function StreamAlerts() {
 
   const alertSounds = [
     ...defaultAlertSounds,
+    ...(creator?.alertSound === 'CUSTOM_SOUND' && !uploadedFile ? [{ value: 'CUSTOM_SOUND', label: 'Custom' }] : []),
     ...(uploadedFile ? [{ value: 'CUSTOM_SOUND', label: 'Custom' }] : []),
     {
       value: 'upload',
@@ -258,6 +259,7 @@ export default function StreamAlerts() {
 
         removeToast(unsavedChangesToastId);
         setUnsavedChangesToastId('');
+        setUploadedFile(null);
 
         toast({
           type: 'success',
@@ -317,10 +319,6 @@ export default function StreamAlerts() {
         alertSound: creator.alertSound ?? 'DEFAULT_TRUMPET_SOUND',
         voiceId: creator.voiceId ?? 'TX3LPaxmHKxFdv7VOQHJ',
       });
-      // Set initial state of custom upload based on creator's alertSound
-      if (creator.alertSound === 'CUSTOM_SOUND') {
-        setUploadedFile({ name: 'custom-sound.mp3', size: 0 } as File);
-      }
     }
   }, [creator, formMethods]);
 
@@ -610,9 +608,7 @@ export default function StreamAlerts() {
                     );
                   }}
                 />
-                {(alertSound === 'upload' ||
-                  (alertSound === 'CUSTOM_SOUND' &&
-                    unsavedChangesToastId !== '')) && (
+                {(alertSound === 'upload' || uploadedFile) && (
                   <File
                     onUpload={fileUploadCallback}
                     onRemove={handleFileRemove}
