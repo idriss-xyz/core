@@ -27,6 +27,7 @@ import { classes } from '@idriss-xyz/ui/utils';
 
 import { removeMainnetSuffix } from '@/app/creators/donate/utils';
 import { TokenLogo } from '@/app/creators/app/earnings/stats-and-history/token-logo';
+import { useToast } from '@/app/creators/context/toast-context';
 
 import { useTimeAgo } from '../../hooks/use-time-ago';
 
@@ -45,6 +46,7 @@ export const DonateHistoryItem = ({
 }: Properties) => {
   const timeAgo = useTimeAgo({ timestamp: donation.timestamp });
   const router = useRouter();
+  const { toast } = useToast();
   /* ——— distinguish donation type ——— */
   const isTokenDonation = donation.kind === 'token';
 
@@ -96,18 +98,56 @@ export const DonateHistoryItem = ({
       const authToken = await getAccessToken();
       if (!authToken) {
         console.error('Replay failed: no auth token');
+        toast({
+          type: 'error',
+          heading: 'Unable to replay alert',
+          description: 'Please try again later',
+          autoClose: true,
+        });
         return;
       }
-      await fetch(`${CREATOR_API_URL}/creator-profile/test-alert`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${CREATOR_API_URL}/creator-profile/test-alert`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${authToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ donation }),
         },
-        body: JSON.stringify({ donation }),
-      });
+      );
+
+      if (response.ok) {
+        toast({
+          type: 'success',
+          heading: 'Alert replayed successfully',
+          description: 'Check your stream preview to confirm it shows up',
+          iconName: 'BellRing',
+          autoClose: true,
+        });
+      } else {
+        const text = await response.text().catch(() => {
+          return '';
+        });
+        console.error('Replay failed:', text || response.statusText);
+        toast({
+          type: 'error',
+          heading: 'Unable to replay alert',
+          description: 'Refresh the page and try again in a few seconds',
+          iconName: 'BellRing',
+          autoClose: true,
+        });
+      }
     } catch (error) {
       console.error('Error replaying donation:', error);
+      toast({
+        type: 'error',
+        heading: 'Unable to replay alert',
+        description: 'Refresh the page and try again in a few seconds',
+        iconName: 'BellRing',
+        autoClose: true,
+      });
     }
   };
 
