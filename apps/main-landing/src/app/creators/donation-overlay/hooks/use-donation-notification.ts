@@ -143,7 +143,10 @@ export const useDonationNotification = (
             }
           } else {
             /* Live donation: always fetch TTS for the selected voiceId */
-            const ttsStream = await getTextToSpeech(message.trim(), voiceId);
+            const ttsStream = await getTextToSpeech(
+              message ? message.trim() : '',
+              voiceId,
+            );
             if (ttsStream) {
               ttsAudioElementReference.current =
                 await toAudioElement(ttsStream);

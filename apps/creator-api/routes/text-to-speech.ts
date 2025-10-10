@@ -34,7 +34,7 @@ router.post(
     }
     try {
       const { text, voiceId } = req.body;
-      const trimmedText = text.trim();
+      const trimmedText = text ? text.trim() : '';
       const finalText =
         trimmedText.length > 70 ? trimmedText.slice(0, 70) : trimmedText;
 
