@@ -382,12 +382,14 @@ export async function storeToDatabase(
       });
       const savedBase = await donationBaseRepo.save(base);
 
+      /* 4 ─ save NFT-specific row */
       await nftDonationRepo.save({
         id: savedBase.id,
         nftTokenId: storedToken.id,
         quantity,
       });
 
+      /* 5 ─ return shape stays backward-compatible */
       savedDonations.push({
         ...savedBase,
         kind: 'nft',

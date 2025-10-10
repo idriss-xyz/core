@@ -35,40 +35,53 @@ const cardRadioItems: CardRadioItem[] = [
 
 export const DonateOptionsModal = () => {
   const [selectedOption, setSelectedOption] = useState<string>('account');
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const { user } = usePrivy();
-  const { setDonor } = useAuth();
+  const {
+    setDonor,
+    isDonateOptionsModalOpen,
+    setIsDonateOptionsModalOpen,
+    loading,
+    donor,
+    setIsLoading,
+  } = useAuth();
 
   useEffect(() => {
     const savedChoice = localStorage.getItem('donate-option-choice');
-    if (user && savedChoice === 'account') {
+    if (user?.wallet?.address && savedChoice === 'account') {
       void setCreatorIfSessionPresent(user, setDonor);
     }
-  }, [user, setDonor]);
+  }, []);
 
   useEffect(() => {
     const savedChoice = localStorage.getItem('donate-option-choice');
     if (!savedChoice || savedChoice === 'guest') {
-      setIsModalOpen(true);
+      setIsDonateOptionsModalOpen(true);
     }
-  }, []);
+  }, [setIsDonateOptionsModalOpen]);
+
+  useEffect(() => {
+    if (donor) {
+      setIsDonateOptionsModalOpen(false);
+      setIsLoading(false);
+    }
+  }, [donor, setIsDonateOptionsModalOpen, setIsLoading]);
 
   const handleSaveChoice = () => {
     localStorage.setItem('donate-option-choice', selectedOption);
 
     switch (selectedOption) {
       case 'guest': {
-        setIsModalOpen(false);
+        setIsDonateOptionsModalOpen(false);
         break;
       }
       case 'account': {
         // Redirect to Twitch auth with callback parameter
+        setIsLoading(true);
         const currentPath = window.location.pathname;
         const callbackParameter = currentPath.startsWith('/creators/')
           ? currentPath.slice(1)
           : 'creators'; // Remove leading slash
         window.location.href = `${CREATOR_API_URL}/auth/twitch?callback=${encodeURIComponent(callbackParameter)}`;
-        setIsModalOpen(false);
         break;
       }
       default: {
@@ -79,9 +92,9 @@ export const DonateOptionsModal = () => {
 
   return (
     <Modal
-      isOpened={isModalOpen}
+      isOpened={isDonateOptionsModalOpen}
       onClose={() => {
-        return setIsModalOpen(false);
+        return setIsDonateOptionsModalOpen(false);
       }}
       className="z-[2147483647]"
       withoutPortal
@@ -105,6 +118,7 @@ export const DonateOptionsModal = () => {
                 intent="primary"
                 size="medium"
                 suffixIconName="IdrissArrowRight"
+                loading={loading}
               >
                 Continue
               </Button>
@@ -115,6 +129,7 @@ export const DonateOptionsModal = () => {
                 intent="primary"
                 size="medium"
                 prefixIconName="TwitchOutlinedBold2"
+                loading={loading}
               >
                 Continue with Twitch
               </Button>
