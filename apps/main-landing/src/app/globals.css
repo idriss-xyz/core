@@ -1,3 +1,29 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Hide Privy "All set!" modal - Fixed selectors */
+[data-privy-modal] h3:has(> *:not(script):not(style):not(template):not(:empty)) {
+  display: none !important;
+}
+
+[data-privy-modal] h3 {
+  display: none !important;
+}
+
+div.DialogContainer-sc-3cfde0b5-2,
+div#privy-modal,
+div#privy-modal-content,
+div#headlessui-portal-root,
+div#privy-dialog {
+  display: none !important;
+}
+
+/* Additional fallback selectors */
+#headlessui-portal-root {
+  display: none !important;
+}
+
+[id="headlessui-portal-root"] {
+  display: none !important;
+}
