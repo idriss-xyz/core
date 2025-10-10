@@ -89,7 +89,7 @@ export const Select = <T,>({
           </DropdownMenu.Trigger>
 
           <div className="flex h-full w-[40px] items-center border-l border-l-gray-200">
-            {isAudioPlaying ? (
+            {isAudioPlaying === true ? (
               <div className="flex size-full items-center justify-center">
                 <AudioVisualizer
                   isMuted={false}

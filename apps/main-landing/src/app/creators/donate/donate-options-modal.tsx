@@ -83,6 +83,8 @@ export const DonateOptionsModal = () => {
       onClose={() => {
         return setIsModalOpen(false);
       }}
+      className="z-[2147483647]"
+      withoutPortal
     >
       <div className="mx-auto flex w-[360px] flex-col gap-8 p-6 lg:w-[752px]">
         <h3 className="text-center text-heading4 text-neutral-900 lg:text-heading3">

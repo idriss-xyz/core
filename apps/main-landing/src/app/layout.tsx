@@ -5,6 +5,8 @@ import { ReactNode } from 'react';
 import { headers } from 'next/headers';
 import { GoogleAnalytics } from '@next/third-parties/google';
 
+import { PrivyModalHider } from './components/privy-modal-hider';
+
 const aeonikPro = localFont({
   src: [
     {
@@ -103,6 +105,7 @@ export default async function RootLayout({
       <body
         className={`${aeonikPro.variable} flex min-h-screen flex-col font-sans antialiased`}
       >
+        <PrivyModalHider />
         {children}
 
         <GoogleAnalytics gaId="G-YM1B80KWY4" />

@@ -1,5 +1,5 @@
 // TODO: Remove this from setup folder and move to a shared components file like packages/ui
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import { usePrivy } from '@privy-io/react-auth';
 import { ProgressBarV2 } from '@idriss-xyz/ui/progress-bar-v2';
 import { Icon } from '@idriss-xyz/ui/icon';
@@ -48,15 +48,6 @@ export const File = ({
   const [error, setError] = useState<string | null>(null);
 
   const fileInputReference = useRef<HTMLInputElement>(null);
-
-  // Initialize file state based on hasCustomSound prop
-  useEffect(() => {
-    if (placeholderFile && !file) {
-      // Create a placeholder file object to represent the existing custom sound
-      setFile(placeholderFile);
-      setProgress(100);
-    }
-  }, [placeholderFile, file]);
 
   const handleSelectedFile = async (
     event: React.ChangeEvent<HTMLInputElement>,
