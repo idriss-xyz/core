@@ -59,21 +59,26 @@ export const LeaderboardItem = ({
       <span className="flex items-center gap-x-1.5 overflow-hidden text-neutral-900">
         {avatarImage}
 
-        <Link
-          size="xs"
-          onClick={() => {
-            if (onDonorClick) {
-              onDonorClick(displayName);
-            }
-          }}
-          className={classes(
-            'overflow-hidden text-ellipsis border-0 text-body5 text-neutral-900 no-underline lg:text-body5',
-            onDonorClick && 'cursor-pointer',
-            displayName === 'anon' && 'pointer-events-none cursor-auto',
-          )}
-        >
-          {displayName}
-        </Link>
+        {displayName === 'anon' ? (
+          <span className="overflow-hidden text-ellipsis text-body5 text-neutral-900 lg:text-body5">
+            {displayName}
+          </span>
+        ) : (
+          <Link
+            size="xs"
+            onClick={() => {
+              if (onDonorClick) {
+                onDonorClick(displayName);
+              }
+            }}
+            className={classes(
+              'overflow-hidden text-ellipsis border-0 text-body5 text-neutral-900 no-underline lg:text-body5',
+              onDonorClick && 'cursor-pointer',
+            )}
+          >
+            {displayName}
+          </Link>
+        )}
       </span>
 
       <span className="text-right text-neutral-900">

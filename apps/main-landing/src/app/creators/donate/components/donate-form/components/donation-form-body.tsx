@@ -183,7 +183,7 @@ export function DonateFormBody({
         />
       )}
 
-      {creatorInfo.sfxEnabled && (
+      {creatorInfo.alertEnabled && creatorInfo.sfxEnabled && (
         <Controller
           name="sfx"
           control={formMethods.control}
