@@ -564,7 +564,7 @@ export const DEFAULT_ALLOWED_CHAINS_IDS = [
 export const EMPTY_HEX = '0x';
 
 export const COPILOT_API_URL = 'https://copilot-api.idriss.xyz';
-export const CREATOR_API_URL = 'https://creators-api.idriss.xyz';
+export const CREATOR_API_URL = 'http://localhost:4000';
 
 export const DEFAULT_DONATION_MIN_ALERT_AMOUNT = 1;
 export const DEFAULT_DONATION_MIN_TTS_AMOUNT = 3;
@@ -602,20 +602,20 @@ export const TEST_TOKEN_DONATION = {
 
 export const TEST_NFT_DONATION = {
   type: 'test' as const,
-  donor: 'idriss_xyz',
-  amount: 2, // USD value
-  message: TEST_DONATION_MESSAGE,
+  donor: 'Parallel_TCG',
+  amount: 10, // USD value
+  message: 'May your pulls be prime //',
   sfxText: null,
   avatarUrl:
-    'https://res.cloudinary.com/base-web/image/fetch/w_64/f_webp/https%3A%2F%2Fbase.mypinata.cloud%2Fipfs%2Fbafkreicr5lh2f3eumcn4meif5t2pauzeddjjbhjbl4enqrp4ooz4e7on6i%3FpinataGatewayToken%3Df6uqhE35YREDMuFqLvxFLqd-MBRlrJ1qWog8gyCF8T88-Tsiu2IX48F-kyVti78J',
-  txnHash: '0x22f0f25140b9fe35cc01722bb5b0366dcb68bb1bcaee3415ca9f48ce4e57d972',
+    'https://static-cdn.jtvnw.net/jtv_user_pictures/57f54587-f824-4bea-929e-54ab9a78e1bf-profile_image-300x300.png',
+  txnHash: '0x359208bfadf2321c31f49517dffe591a4c48864b925774c5df7b1ef2947fc733',
   token: {
-    amount: 2,
+    amount: 10,
     details: {
-      id: '100400158',
-      name: 'High-Density Genetic Replicator',
-      logo: 'https://nftmedia.parallelnft.com/parallel-aftermath/QmPPNj5MpR9FcxzPUu2gKQygNp5gxNvxwGgTkAGaef6mX9/image.png',
-      collectionName: 'Parallel Aftermath',
+      id: '100500001',
+      name: 'Deception Collector Pack',
+      logo: 'https://images.zapper.xyz/z/?path=zapper-fi-assets/nfts/medias/565bc551e85d4406b56a9388162cca63927d3725afebe3a67bb050e529940900.png&width=250&checksum=o-gzX-oHSa-nb3aGvtrtwkwDJ4eXB9iU2qE3u3TiWO4',
+      collectionName: 'Parallel Deception',
     },
   },
 };
