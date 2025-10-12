@@ -602,7 +602,7 @@ export const TEST_TOKEN_DONATION = {
 
 export const TEST_NFT_DONATION = {
   type: 'test' as const,
-  donor: 'Parallel_TCG',
+  donor: 'parallel_tcg',
   amount: 10, // USD value
   message: 'May your pulls be prime //',
   sfxText: null,
