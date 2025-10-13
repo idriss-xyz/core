@@ -347,6 +347,7 @@ export const Leaderboard = ({
                     previousDonateAmount={
                       leaderboard.at(-1)?.totalAmount ?? 1234
                     }
+                    hideBottomBorder={leaderboard.length >= visibleLimit}
                   />
                 )}
               </>
