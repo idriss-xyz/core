@@ -27,8 +27,8 @@ import referralRouter from './routes/referral-history';
 import claimRewardsRouter from './routes/claim-rewards';
 import dripRouter from './routes/drip';
 import siweRouter from './routes/siwe';
-import { AppDataSource, initializeDatabase } from './db/database';
-import { Creator } from './db/entities';
+import { AppDataSource, initializeDatabase } from '@idriss-xyz/db';
+import { Creator } from '@idriss-xyz/db';
 import { isAllowedOrigin, openCors } from './config/cors';
 import { CREATORS_LINK } from '@idriss-xyz/constants';
 

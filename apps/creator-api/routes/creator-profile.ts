@@ -1,13 +1,13 @@
 import { Router, Request, Response } from 'express';
 import { param, validationResult } from 'express-validator';
 import { creatorProfileService } from '../services/creator-profile.service';
-import { AppDataSource } from '../db/database';
 import {
   Creator,
   DonationParameters,
   CreatorToken,
   CreatorNetwork,
-} from '../db/entities';
+  AppDataSource,
+} from '@idriss-xyz/db';
 import { Hex } from 'viem';
 
 import {
@@ -19,7 +19,7 @@ import {
 } from '@idriss-xyz/constants';
 
 import { tightCors } from '../config/cors';
-import { verifyToken } from '../db/middleware/auth.middleware';
+import { verifyToken } from '../middleware/auth.middleware';
 import { streamAudioFromS3 } from '../utils/audio-utils';
 import type { StoredDonationData } from '@idriss-xyz/constants';
 

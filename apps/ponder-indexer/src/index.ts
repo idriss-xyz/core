@@ -1,9 +1,23 @@
 import { ponder } from 'ponder:registry';
 
-ponder.on('idrissTippingEthereum:TipMessage', async ({ event, context }) => {
-  console.log('Ethereum tip:', event.args);
-});
+async function handleTipMessage({ event, context }: any) {
+  const chainId = context.chain.id;
 
-ponder.on('idrissTippingBase:TipMessage', async ({ event, context }) => {
-  console.log('Base tip:', event.args);
-});
+  await context.db.insert(tipMessage).values({
+    id: `${chainId}-${event.log.logIndex}-${event.transaction.hash}`,
+    chainId,
+    txHash: event.transaction.hash,
+    sender: event.args.sender,
+    recipient: event.args.recipientAddress,
+    token: event.args.tokenAddress,
+    amount: event.args.amount.toString(),
+    fee: event.args.fee.toString(),
+    assetType: event.args.assetType,
+    assetId: event.args.assetId.toString(),
+    message: event.args.message,
+    timestamp: event.block.timestamp,
+  });
+}
+
+ponder.on('idrissTippingBase:TipMessage', handleTipMessage);
+ponder.on('idrissTippingEthereum:TipMessage', handleTipMessage);

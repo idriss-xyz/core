@@ -3,12 +3,17 @@ import {
   TipHistoryQuery,
   ZAPPER_API_URL,
 } from '../../constants';
-import { fetchAllKnownDonationHashes } from '../../db/fetch-known-donations';
-import { storeToDatabase } from '../../db/store-new-donation';
-import { AppHistoryVariables, ZapperNode, ZapperResponse } from '../../types';
+import {
+  fetchAllKnownDonationHashes,
+  isStringItem,
+  isTokenItem,
+  ZapperNode,
+  ZapperResponse,
+} from '@idriss-xyz/db';
+import { storeToDatabase } from '@idriss-xyz/db';
+import { AppHistoryVariables } from '../../types';
 import { enrichNodesWithHistoricalPrice } from '../../utils/enrich-nodes';
 import { StoredDonationData } from '@idriss-xyz/constants';
-import { isStringItem, isTokenItem } from '../../utils/zapper-type-guards';
 
 export async function syncAndStoreNewDonations(): Promise<
   StoredDonationData[]

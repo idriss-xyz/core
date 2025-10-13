@@ -1,7 +1,7 @@
 import { Request, Response, Router } from 'express';
 import upload from '../config/multer';
 import { MulterError } from 'multer';
-import { verifyToken } from '../db/middleware/auth.middleware';
+import { verifyToken } from '../middleware/auth.middleware';
 import { handleUpload, FileUploadRequest } from '../utils/audio-utils';
 import { tightCors } from '../config/cors';
 

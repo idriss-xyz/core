@@ -9,7 +9,8 @@
     "db": "ponder db",
     "codegen": "ponder codegen",
     "lint": "eslint .",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "serve": "ponder serve --api src/api/index.ts"
   },
   "dependencies": {
     "@idriss-xyz/constants": "workspace:*",

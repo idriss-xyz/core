@@ -1,13 +1,13 @@
 import { Router, Request, Response } from 'express';
 
-import { fetchDonationsByFromAddress } from '../db/fetch-known-donations';
+import { fetchDonationsByFromAddress } from '@idriss-xyz/db';
 import {
   calculateGlobalDonorLeaderboard,
   calculateStatsForDonor,
   resolveCreatorAndAddresses,
 } from '../utils/calculate-stats';
-import { AppDataSource } from '../db/database';
-import { Creator } from '../db/entities';
+import { AppDataSource } from '@idriss-xyz/db';
+import { Creator } from '@idriss-xyz/db';
 import { enrichDonationsWithCreatorInfo } from '../utils/calculate-stats';
 import { createAddressToCreatorMap } from '@idriss-xyz/utils';
 

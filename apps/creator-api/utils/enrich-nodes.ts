@@ -1,10 +1,9 @@
-import { ZapperNode } from '../types';
-import { isTokenItem } from './zapper-type-guards';
 import {
   getZapperPrice,
   getAlchemyHistoricalPrice,
   getOldestZapperPrice,
 } from './price-fetchers';
+import { isTokenItem, ZapperNode } from '@idriss-xyz/db';
 
 export async function enrichNodesWithHistoricalPrice(
   edges: { node: ZapperNode }[],

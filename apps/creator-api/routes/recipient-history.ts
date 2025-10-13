@@ -1,12 +1,12 @@
 import { Router, Request, Response } from 'express';
 
-import { fetchDonationsByToAddress } from '../db/fetch-known-donations';
+import { fetchDonationsByToAddress } from '@idriss-xyz/db';
 import { calculateStatsForRecipientAddress } from '../utils/calculate-stats';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { resolveCreatorAndAddresses } from '../utils/calculate-stats';
-import { AppDataSource } from '../db/database';
-import { Creator } from '../db/entities';
+import { AppDataSource } from '@idriss-xyz/db';
+import { Creator } from '@idriss-xyz/db';
 import { enrichDonationsWithCreatorInfo } from '../utils/calculate-stats';
 import { createAddressToCreatorMap } from '@idriss-xyz/utils';
 import { DEMO_ADDRESS } from '@idriss-xyz/constants';

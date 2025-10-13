@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { fetchDonationsByToAddress } from '../db/fetch-known-donations';
+import { fetchDonationsByToAddress } from '@idriss-xyz/db';
 import { TipHistoryResponse } from '../types';
 import { syncAndStoreNewDonations } from '../services/zapper/process-donations';
 import { connectedClients } from '../services/socket-server';
@@ -11,8 +11,8 @@ import { enrichDonationsWithCreatorInfo } from '../utils/calculate-stats';
 import { DEMO_ADDRESS, StoredDonationData } from '@idriss-xyz/constants';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
-import { AppDataSource } from '../db/database';
-import { Creator } from '../db/entities';
+import { AppDataSource } from '@idriss-xyz/db';
+import { Creator } from '@idriss-xyz/db';
 import { resolveCreatorAndAddresses } from '../utils/calculate-stats';
 
 const router = Router();

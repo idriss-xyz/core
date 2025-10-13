@@ -1,6 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { DonationEffect } from '../db/entities';
-import { AppDataSource } from '../db/database';
+import { AppDataSource, DonationEffect } from '@idriss-xyz/db';
 
 const router = Router();
 

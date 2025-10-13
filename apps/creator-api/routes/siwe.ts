@@ -2,9 +2,9 @@ import cors from 'cors';
 import { Router, Request, Response } from 'express';
 import { generateNonce, SiweMessage } from 'siwe';
 import { getAddress, Hex } from 'viem';
-import { verifyToken } from '../db/middleware/auth.middleware';
-import { AppDataSource } from '../db/database';
-import { Creator, CreatorAddress } from '../db/entities';
+import { verifyToken } from '../middleware/auth.middleware';
+import { AppDataSource } from '@idriss-xyz/db';
+import { Creator, CreatorAddress } from '@idriss-xyz/db';
 import {
   MAIN_LANDING_LINK,
   NULL_ADDRESS,

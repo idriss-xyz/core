@@ -181,6 +181,19 @@
       "cache": false,
       "persistent": true
     },
+    "@idriss-xyz/db#dev": {
+      "cache": false,
+      "persistent": true,
+      "env": [
+        "DATABASE_URL"
+      ]
+    },
+    "@idriss-xyz/db#build": {
+      "cache": true,
+      "env": [
+        "DATABASE_URL"
+      ]
+    },
     "lint": {
       "inputs": [
         "$TURBO_DEFAULT$",
