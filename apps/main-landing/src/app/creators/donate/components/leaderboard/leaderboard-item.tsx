@@ -178,7 +178,9 @@ export function LeaderboardItemPlaceholder({
           <span
             className={classes(
               'flex flex-1 items-center justify-center border-b px-5.5 py-4.5 text-center text-label4 gradient-text-2',
-              hideBottomBorder ? 'border-b-transparent' : 'border-b-neutral-300',
+              hideBottomBorder
+                ? 'border-b-transparent'
+                : 'border-b-neutral-300',
             )}
           >
             {!hideEncouragement &&
