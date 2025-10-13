@@ -14,6 +14,7 @@ import {
   DEFAULT_DONATION_MIN_TTS_AMOUNT,
   NATIVE_COIN_ADDRESS,
   NULL_ADDRESS,
+  CHAIN_TO_IDRISS_TIPPING_ADDRESS,
 } from '@idriss-xyz/constants';
 import { clients } from '@idriss-xyz/blockchain-clients';
 import { FullscreenOverlay } from '@idriss-xyz/ui/fullscreen-overlay';
@@ -21,7 +22,6 @@ import { ExternalLink } from '@idriss-xyz/ui/external-link';
 import { classes } from '@idriss-xyz/ui/utils';
 import { getNftMetadata } from '@idriss-xyz/utils';
 
-import { CHAIN_TO_IDRISS_TIPPING_ADDRESS } from '../donate/constants';
 import { useCreators } from '../hooks/use-creators';
 import {
   getPublicCreatorProfileBySlug,

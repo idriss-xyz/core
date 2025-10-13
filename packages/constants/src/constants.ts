@@ -41,6 +41,8 @@ import {
 } from './logos';
 import { Chain, Token, ChainToken, NftCollection } from './types';
 
+export const IDRISS_TOKEN_ADDRESS =
+  '0x000096630066820566162c94874a776532705231';
 export const STAKER_ADDRESS = '0x085e2DC1b05dcdbE011B5ad377C9f2fcD69B7057';
 export const REWARDS_ADDRESS = '0x4D66A8e9Da1F007802338B372aD348B78b455aBB';
 
@@ -48,6 +50,14 @@ export const NATIVE_COIN_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
 export const DUMMY_RECIPIENT = '0x0000000000000000000000000000000000000001';
 export const DEMO_ADDRESS = '0x57658D89126610CbD05CAb564b6B13e7E3D1c843';
+
+export const EMPTY_HEX = '0x';
+
+export const DEFAULT_DONATION_MIN_ALERT_AMOUNT = 1;
+export const DEFAULT_DONATION_MIN_TTS_AMOUNT = 3;
+export const DEFAULT_DONATION_MIN_SFX_AMOUNT = 10;
+
+export const TEST_DONATION_MESSAGE = 'This is a test donation';
 
 export const CREATOR_CHAIN = {
   ABSTRACT: {
@@ -561,18 +571,13 @@ export const DEFAULT_ALLOWED_CHAINS_IDS = [
   // CREATOR_CHAIN.AVALANCHE.id,
 ];
 
-export const EMPTY_HEX = '0x';
-
-export const COPILOT_API_URL = 'https://copilot-api.idriss.xyz';
-export const CREATOR_API_URL = 'https://creators-api.idriss.xyz';
-
-export const DEFAULT_DONATION_MIN_ALERT_AMOUNT = 1;
-export const DEFAULT_DONATION_MIN_TTS_AMOUNT = 3;
-export const DEFAULT_DONATION_MIN_SFX_AMOUNT = 10;
-export const IDRISS_TOKEN_ADDRESS =
-  '0x000096630066820566162c94874a776532705231';
-
-export const TEST_DONATION_MESSAGE = 'This is a test donation';
+export const CHAIN_TO_IDRISS_TIPPING_ADDRESS = {
+  [CREATOR_CHAIN.ETHEREUM.id]: '0xBDc14c9946A957C7038900dE19Fb2Aa3f72CFAc2',
+  [CREATOR_CHAIN.BASE.id]: '0x1A5dc020dcd36C997f6349801583738CFb4bD44a',
+  [CREATOR_CHAIN.RONIN.id]: '0x7DE583608091c21A09040Bf24A178a9156c18219',
+  [CREATOR_CHAIN.ABSTRACT.id]: '0xBDc14c9946A957C7038900dE19Fb2Aa3f72CFAc2',
+  // [CREATOR_CHAIN.AVALANCHE.id]: '0xBDc14c9946A957C7038900dE19Fb2Aa3f72CFAc2',
+} as const;
 
 export const CHAIN_ID_TO_OPENSEA_NETWORK_NAMES: Record<number, string> = {
   [CREATOR_CHAIN.BASE.id]: 'base',

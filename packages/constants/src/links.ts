@@ -8,6 +8,8 @@ export const STATIC_ORIGINS = [
   'http://localhost:3000',
 ];
 export const IDRISS_LEGACY_API_URL = 'https://api.idriss.xyz';
+export const COPILOT_API_URL = 'https://copilot-api.idriss.xyz';
+export const CREATOR_API_URL = 'https://creators-api.idriss.xyz';
 
 export const SOCIAL_LINK = {
   X: 'https://x.com/idriss_xyz',
