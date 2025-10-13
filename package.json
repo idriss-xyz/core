@@ -12,6 +12,8 @@
     "creator-api:test": "turbo run test --filter=@idriss-xyz/creator-api",
     "twitch-extension:dev": "turbo watch dev --filter=@idriss-xyz/twitch-extension",
     "twitch-extension:prod": "turbo run build --filter=@idriss-xyz/twitch-extension",
+    "ponder-indexer:dev": "turbo run dev --filter=@idriss-xyz/ponder-indexer",
+    "ponder-indexer:prod": "turbo run start --filter=@idriss-xyz/ponder-indexer",
     "dev": "turbo dev",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix",

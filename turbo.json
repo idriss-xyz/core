@@ -181,16 +181,19 @@
       "cache": false,
       "persistent": true
     },
-    "@idriss-xyz/db#dev": {
+    "@idriss-xyz/ponder-indexer#dev": {
       "cache": false,
       "persistent": true,
       "env": [
+        "ALCHEMY_URL",
         "DATABASE_URL"
       ]
     },
-    "@idriss-xyz/db#build": {
+    "@idriss-xyz/ponder-indexer#prod": {
       "cache": true,
+      "persistent": true,
       "env": [
+        "ALCHEMY_URL",
         "DATABASE_URL"
       ]
     },

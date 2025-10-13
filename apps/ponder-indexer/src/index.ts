@@ -1,4 +1,5 @@
 import { ponder } from 'ponder:registry';
+import { tipMessage } from 'ponder:schema';
 
 async function handleTipMessage({ event, context }: any) {
   const chainId = context.chain.id;

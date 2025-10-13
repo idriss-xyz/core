@@ -1,5 +1,5 @@
 {
-  "name": "idriss-cretor-indexer",
+  "name": "@idriss-xyz/ponder-indexer",
   "version": "0.0.1",
   "private": true,
   "type": "module",
