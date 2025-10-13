@@ -3,6 +3,12 @@ import { Link } from '@idriss-xyz/ui/link';
 import { classes } from '@idriss-xyz/ui/utils';
 import { DonationUser } from '@idriss-xyz/constants';
 import { formatFiatValue } from '@idriss-xyz/utils';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@idriss-xyz/ui/tooltip';
 
 import { LeaderboardAvatar } from '../../../components/leaderboard/leaderboard-avatar';
 
@@ -81,9 +87,34 @@ export const LeaderboardItem = ({
         )}
       </span>
 
-      <span className="text-right text-neutral-900">
-        {formatFiatValue(donateAmount)}
-      </span>
+      {donateAmount === 0 ? (
+        <span className="flex justify-end text-neutral-900">
+          <span className="inline-flex items-center gap-1">
+            <span>–</span>
+            <TooltipProvider delayDuration={400}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Icon
+                    className="text-neutral-600"
+                    name="HelpCircle"
+                    size={12}
+                  />
+                </TooltipTrigger>
+                <TooltipContent className="bg-black text-center text-white">
+                  <p>
+                    The collectibles sent had no market offers at the time of
+                    receiving
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </span>
+        </span>
+      ) : (
+        <span className="text-right text-neutral-900">
+          {formatFiatValue(donateAmount)}
+        </span>
+      )}
     </li>
   );
 };

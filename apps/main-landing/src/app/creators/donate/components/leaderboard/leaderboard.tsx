@@ -95,7 +95,8 @@ export const Leaderboard = ({
     const roContainer = new ResizeObserver(recompute);
     const roList = new ResizeObserver(recompute);
 
-    if (listContainerReference.current) roContainer.observe(listContainerReference.current);
+    if (listContainerReference.current)
+      roContainer.observe(listContainerReference.current);
     if (listReference.current) roList.observe(listReference.current);
 
     requestAnimationFrame(recompute);
@@ -104,7 +105,12 @@ export const Leaderboard = ({
       roContainer.disconnect();
       roList.disconnect();
     };
-  }, [leaderboardLoading, address.isFetching, leaderboard.length, isTwitchExtension]);
+  }, [
+    leaderboardLoading,
+    address.isFetching,
+    leaderboard.length,
+    isTwitchExtension,
+  ]);
 
   if (!address.isFetching && !address.isValid) {
     return (
@@ -211,7 +217,10 @@ export const Leaderboard = ({
         )}
       </div>
 
-      <div className="flex min-h-0 w-full flex-1 flex-col" ref={listContainerReference}>
+      <div
+        className="flex min-h-0 w-full flex-1 flex-col"
+        ref={listContainerReference}
+      >
         {leaderboardLoading || address.isFetching ? (
           <span
             className={classes(

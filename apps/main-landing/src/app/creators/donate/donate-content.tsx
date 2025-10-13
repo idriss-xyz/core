@@ -134,7 +134,9 @@ export function DonateContent({ creatorProfile }: Properties) {
         requestAnimationFrame(() => {
           if (formReference.current) {
             const h = formReference.current.getBoundingClientRect().height;
-            setFormHeight((previous) => {return (previous === 0 ? h : Math.max(previous, h))});
+            setFormHeight((previous) => {
+              return previous === 0 ? h : Math.max(previous, h);
+            });
           }
         });
       }
