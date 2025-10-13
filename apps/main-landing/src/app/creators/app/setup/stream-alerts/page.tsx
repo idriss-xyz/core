@@ -129,7 +129,9 @@ export default function StreamAlerts() {
 
   const alertSounds = [
     ...defaultAlertSounds,
-    ...(creator?.alertSound === 'CUSTOM_SOUND' && !uploadedFile ? [{ value: 'CUSTOM_SOUND', label: 'Custom' }] : []),
+    ...(creator?.alertSound === 'CUSTOM_SOUND' && !uploadedFile
+      ? [{ value: 'CUSTOM_SOUND', label: 'Custom' }]
+      : []),
     ...(uploadedFile ? [{ value: 'CUSTOM_SOUND', label: 'Custom' }] : []),
     {
       value: 'upload',
