@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Link } from '@idriss-xyz/ui/link';
 import { Hex } from 'viem';
@@ -61,6 +61,56 @@ export const Leaderboard = ({
   const isDonatePage = variant === 'donatePage';
 
   const isDemo = address.data === DEMO_ADDRESS;
+  const [visibleLimit, setVisibleLimit] = useState(MAX_DISPLAYED_ITEMS);
+  const listContainerReference = useRef<HTMLDivElement>(null);
+  const listReference = useRef<HTMLUListElement>(null);
+
+  useEffect(() => {
+    if (isTwitchExtension) return; // only for non-Twitch
+    if (leaderboardLoading || address.isFetching) return;
+
+    const recompute = () => {
+      const container = listContainerReference.current;
+      if (!container) return;
+
+      const availableHeight = container.clientHeight;
+
+      let rowHeight = 0;
+      const listElement = listReference.current;
+      if (listElement) {
+        const firstRow = listElement.querySelector('li') as HTMLElement | null;
+        if (firstRow) {
+          rowHeight = Math.ceil(firstRow.getBoundingClientRect().height);
+        }
+      }
+
+      if (!rowHeight || Number.isNaN(rowHeight)) {
+        rowHeight = 72; // conservative fallback
+      }
+
+      const limit = Math.max(1, Math.floor(availableHeight / rowHeight));
+      setVisibleLimit(limit);
+    };
+
+    const roContainer = new ResizeObserver(recompute);
+    const roList = new ResizeObserver(recompute);
+
+    if (listContainerReference.current)
+      roContainer.observe(listContainerReference.current);
+    if (listReference.current) roList.observe(listReference.current);
+
+    requestAnimationFrame(recompute);
+
+    return () => {
+      roContainer.disconnect();
+      roList.disconnect();
+    };
+  }, [
+    leaderboardLoading,
+    address.isFetching,
+    leaderboard.length,
+    isTwitchExtension,
+  ]);
 
   if (!address.isFetching && !address.isValid) {
     return (
@@ -167,7 +217,10 @@ export const Leaderboard = ({
         )}
       </div>
 
-      <div className="flex min-h-0 w-full flex-1 flex-col">
+      <div
+        className="flex min-h-0 w-full flex-1 flex-col"
+        ref={listContainerReference}
+      >
         {leaderboardLoading || address.isFetching ? (
           <span
             className={classes(
@@ -179,6 +232,7 @@ export const Leaderboard = ({
           </span>
         ) : (
           <ul
+            ref={listReference}
             className={classes(
               isTwitchPanel && 'min-h-[345px]',
               'h-full',
@@ -268,7 +322,7 @@ export const Leaderboard = ({
             {!isTwitchExtension && (
               <>
                 {leaderboard.map((item, index) => {
-                  if (index > MAX_DISPLAYED_ITEMS - 1) return null;
+                  if (index > visibleLimit - 1) return null;
 
                   return (
                     <LeaderboardItem
@@ -286,13 +340,14 @@ export const Leaderboard = ({
                   );
                 })}
 
-                {leaderboard.length <= MAX_DISPLAYED_ITEMS + 1 && (
+                {leaderboard.length <= visibleLimit + 1 && (
                   <LeaderboardItemPlaceholder
-                    amountToDisplay={MAX_DISPLAYED_ITEMS + 1}
+                    amountToDisplay={visibleLimit + 1}
                     donorRank={leaderboard.length}
                     previousDonateAmount={
                       leaderboard.at(-1)?.totalAmount ?? 1234
                     }
+                    hideBottomBorder={leaderboard.length >= visibleLimit}
                   />
                 )}
               </>

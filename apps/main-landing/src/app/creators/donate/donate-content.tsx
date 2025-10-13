@@ -132,8 +132,12 @@ export function DonateContent({ creatorProfile }: Properties) {
     const resizeObserver = new ResizeObserver(() => {
       if (formReference.current) {
         requestAnimationFrame(() => {
-          if (formReference.current)
-            setFormHeight(formReference.current.getBoundingClientRect().height);
+          if (formReference.current) {
+            const h = formReference.current.getBoundingClientRect().height;
+            setFormHeight((previous) => {
+              return previous === 0 ? h : Math.max(previous, h);
+            });
+          }
         });
       }
     });
@@ -144,6 +148,10 @@ export function DonateContent({ creatorProfile }: Properties) {
       return resizeObserver.disconnect();
     };
   }, [creatorInfo]);
+
+  useEffect(() => {
+    setFormHeight(0);
+  }, [creatorInfo?.address.data]);
 
   const updateCurrentContent = useCallback((content: DonateContentValues) => {
     setCurrentContent((previous) => {

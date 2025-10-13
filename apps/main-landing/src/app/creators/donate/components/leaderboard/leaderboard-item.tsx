@@ -3,6 +3,12 @@ import { Link } from '@idriss-xyz/ui/link';
 import { classes } from '@idriss-xyz/ui/utils';
 import { DonationUser } from '@idriss-xyz/constants';
 import { formatFiatValue } from '@idriss-xyz/utils';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@idriss-xyz/ui/tooltip';
 
 import { LeaderboardAvatar } from '../../../components/leaderboard/leaderboard-avatar';
 
@@ -59,26 +65,56 @@ export const LeaderboardItem = ({
       <span className="flex items-center gap-x-1.5 overflow-hidden text-neutral-900">
         {avatarImage}
 
-        <Link
-          size="xs"
-          onClick={() => {
-            if (onDonorClick) {
-              onDonorClick(displayName);
-            }
-          }}
-          className={classes(
-            'overflow-hidden text-ellipsis border-0 text-body5 text-neutral-900 no-underline lg:text-body5',
-            onDonorClick && 'cursor-pointer',
-            displayName === 'anon' && 'pointer-events-none cursor-auto',
-          )}
-        >
-          {displayName}
-        </Link>
+        {displayName === 'anon' ? (
+          <span className="overflow-hidden text-ellipsis text-body5 text-neutral-900 lg:text-body5">
+            {displayName}
+          </span>
+        ) : (
+          <Link
+            size="xs"
+            onClick={() => {
+              if (onDonorClick) {
+                onDonorClick(displayName);
+              }
+            }}
+            className={classes(
+              'overflow-hidden text-ellipsis border-0 text-body5 text-neutral-900 no-underline lg:text-body5',
+              onDonorClick && 'cursor-pointer',
+            )}
+          >
+            {displayName}
+          </Link>
+        )}
       </span>
 
-      <span className="text-right text-neutral-900">
-        {formatFiatValue(donateAmount)}
-      </span>
+      {donateAmount === 0 ? (
+        <span className="flex justify-end text-neutral-900">
+          <span className="inline-flex items-center gap-1">
+            <span>–</span>
+            <TooltipProvider delayDuration={400}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Icon
+                    className="text-neutral-600"
+                    name="HelpCircle"
+                    size={12}
+                  />
+                </TooltipTrigger>
+                <TooltipContent className="bg-black text-center text-white">
+                  <p>
+                    The collectibles sent had no market offers at the time of
+                    receiving
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </span>
+        </span>
+      ) : (
+        <span className="text-right text-neutral-900">
+          {formatFiatValue(donateAmount)}
+        </span>
+      )}
     </li>
   );
 };
@@ -120,7 +156,12 @@ export function LeaderboardItemPlaceholder({
   if (donorRank <= 2) {
     return (
       <>
-        <li className="grid grid-cols-[16px,1fr,64px] items-center gap-x-3.5 border-b border-b-neutral-300 px-5.5 py-4.5 text-body5">
+        <li
+          className={classes(
+            'grid grid-cols-[16px,1fr,64px] items-center gap-x-3.5 border-b px-5.5 py-4.5 text-body5',
+            hideBottomBorder ? 'border-b-transparent' : 'border-b-neutral-300',
+          )}
+        >
           <span className="text-neutral-600">{donorRank + 1}</span>
 
           <span className="flex items-center gap-x-1.5 overflow-hidden text-neutral-900">
@@ -134,7 +175,14 @@ export function LeaderboardItemPlaceholder({
         </li>
 
         {amountToDisplay - 1 - donorRank > 0 && (
-          <span className="flex flex-1 items-center justify-center border-b border-b-neutral-300 px-5.5 py-4.5 text-center text-label4 gradient-text-2">
+          <span
+            className={classes(
+              'flex flex-1 items-center justify-center border-b px-5.5 py-4.5 text-center text-label4 gradient-text-2',
+              hideBottomBorder
+                ? 'border-b-transparent'
+                : 'border-b-neutral-300',
+            )}
+          >
             {!hideEncouragement &&
               `Donate now and claim ${rankPlaces[donorRank]} place`}
           </span>
