@@ -7,7 +7,8 @@ import { setCreatorIfSessionPresent } from '../utils';
 
 const useRedirectIfNotAuthenticated = () => {
   const router = useRouter();
-  const { creator, creatorLoading, isLoggingOut, setCreator } = useAuth();
+  const { creator, creatorLoading, isLoggingOut, setCreator, setIsModalOpen } =
+    useAuth();
   const { ready, user } = usePrivy();
   const pathname = usePathname();
 
@@ -18,6 +19,7 @@ const useRedirectIfNotAuthenticated = () => {
 
     if (user && !creator) {
       void setCreatorIfSessionPresent(user, setCreator);
+      setIsModalOpen(false);
     }
 
     if (!user && !creator) {
@@ -38,6 +40,7 @@ const useRedirectIfNotAuthenticated = () => {
     user,
     pathname,
     setCreator,
+    setIsModalOpen,
   ]);
 };
 

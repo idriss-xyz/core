@@ -16,6 +16,7 @@ import {
   calculateDonationLeaderboard,
   getFilteredDonationsByPeriod,
 } from '@idriss-xyz/utils';
+import { Spinner } from '@idriss-xyz/ui/spinner';
 
 import { backgroundLines2 } from '@/assets';
 import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history';
@@ -28,6 +29,7 @@ import {
 import { useCreators } from '../hooks/use-creators';
 import { TopBar } from '../components/top-bar';
 import { periodMap } from '../app/ranking/commands/use-get-leaderboard';
+import { useAuth } from '../context/auth-context';
 
 import { Leaderboard } from './components/leaderboard';
 import { DonateForm } from './components/donate-form';
@@ -39,6 +41,7 @@ interface Properties {
 export function DonateContent({ creatorProfile }: Properties) {
   const router = useRouter();
   const { searchParams } = useCreators();
+  const { loading } = useAuth();
   const [socketConnected, setSocketConnected] = useState(false);
   const [socketInitialized, setSocketInitialized] = useState(false);
   const [donations, setDonations] = useState<StoredDonationData[]>([]);
@@ -147,7 +150,7 @@ export function DonateContent({ creatorProfile }: Properties) {
     return () => {
       return resizeObserver.disconnect();
     };
-  }, [creatorInfo]);
+  }, [creatorInfo, donationsHistory.isLoading]);
 
   useEffect(() => {
     setFormHeight(0);
@@ -287,8 +290,13 @@ export function DonateContent({ creatorProfile }: Properties) {
             src={backgroundLines2.src}
             className="pointer-events-none absolute top-0 hidden size-full opacity-40 lg:block"
           />
-
-          {!isLegacyLink && currentContentComponent}
+          {loading || donationsHistory.isLoading ? (
+            <div className="flex min-h-[80vh] w-full items-center justify-center">
+              <Spinner className="size-16 text-mint-600" />
+            </div>
+          ) : (
+            !isLegacyLink && currentContentComponent
+          )}
         </main>
       </div>
       {isLegacyLink && (

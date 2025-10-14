@@ -18,6 +18,7 @@ type AuthContextType = {
   markDonationsAsSeen: () => void;
   error: boolean;
   isLoginModalOpen: boolean;
+  isDonateOptionsModalOpen: boolean;
   creator: CreatorProfileResponse | null;
   donor: CreatorProfileResponse | null;
   donorLoading: boolean;
@@ -27,14 +28,13 @@ type AuthContextType = {
   setDonor: Dispatch<SetStateAction<CreatorProfileResponse | null>>;
   setOauthError: (error: boolean) => void;
   setIsModalOpen: (isOpen: boolean) => void;
+  setIsDonateOptionsModalOpen: (isOpen: boolean) => void;
   setCreator: Dispatch<SetStateAction<CreatorProfileResponse | null>>;
   setCustomAuthToken: (token: string | null) => void;
   isLoggingOut: boolean;
   setIsLoggingOut: (isLoggingOut: boolean) => void;
   customAuthToken: string | null;
   loading: boolean;
-  oauthLoading: boolean;
-  setOauthLoading: (oauthLoading: boolean) => void;
   isAuthenticated: boolean;
   setLoginError: (loginError: boolean) => void;
   callbackUrl: string | null;
@@ -47,7 +47,6 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [oauthError, setOauthError] = useState(false);
   const [loginError, setLoginError] = useState(false);
-  const [oauthLoading, setOauthLoading] = useState(false);
   const [isLoginModalOpen, setIsModalOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [customAuthToken, setCustomAuthToken] = useState<string | null>(() => {
@@ -63,11 +62,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [donations, setDonations] = useState<StoredDonationData[]>([]);
   const [newDonationsCount, setNewDonationsCount] = useState(0);
   const [callbackUrl, setCallbackUrl] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const isAuthenticated = customAuthToken != null && !oauthLoading;
+  const [loading, setIsLoading] = useState(false);
+  const isAuthenticated = customAuthToken != null && !loading;
+  const [isDonateOptionsModalOpen, setIsDonateOptionsModalOpen] =
+    useState(false);
 
   const error = loginError || oauthError;
-  const loading = isLoading;
 
   const addDonation = (donation: StoredDonationData) => {
     setDonations((previous) => {
@@ -97,6 +97,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     <AuthContext.Provider
       value={{
         isLoginModalOpen,
+        setIsDonateOptionsModalOpen,
+        isDonateOptionsModalOpen,
         creator,
         creatorLoading,
         setCreatorLoading,
@@ -116,8 +118,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isLoggingOut,
         setIsLoggingOut,
         loading,
-        oauthLoading,
-        setOauthLoading,
         isAuthenticated,
         error,
         setLoginError,
