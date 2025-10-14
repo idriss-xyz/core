@@ -6,3 +6,5 @@ export * from './views';
 export * from './drip-quota';
 export type * from './types';
 export * from './utils';
+export { storeTipMessage } from './store-tip-message';
+export type { TipMessageEvent } from './store-tip-message';

@@ -1,24 +1,26 @@
 import { ponder } from 'ponder:registry';
-import { tipMessage } from 'ponder:schema';
+import { storeTipMessage } from '@idriss-xyz/db';
 
 async function handleTipMessage({ event, context }: any) {
-  const chainId = context.chain.id;
-
-  await context.db.insert(tipMessage).values({
-    id: `${chainId}-${event.log.logIndex}-${event.transaction.hash}`,
-    chainId,
+  await storeTipMessage({
+    chainId: context.chain.id,
     txHash: event.transaction.hash,
-    sender: event.args.sender,
-    recipient: event.args.recipientAddress,
-    token: event.args.tokenAddress,
-    amount: event.args.amount.toString(),
-    fee: event.args.fee.toString(),
-    assetType: event.args.assetType,
-    assetId: event.args.assetId.toString(),
-    message: event.args.message,
-    timestamp: event.block.timestamp,
+    blockTimestamp: event.block.timestamp,
+    args: {
+      sender: event.args.sender,
+      recipientAddress: event.args.recipientAddress,
+      tokenAddress: event.args.tokenAddress,
+      amount: event.args.amount,
+      fee: event.args.fee,
+      assetType: Number(event.args.assetType),
+      assetId: event.args.assetId,
+      message: event.args.message,
+    },
   });
 }
 
 ponder.on('idrissTippingBase:TipMessage', handleTipMessage);
 ponder.on('idrissTippingEthereum:TipMessage', handleTipMessage);
+ponder.on('idrissTippingRonin:TipMessage', handleTipMessage);
+ponder.on('idrissTippingAbstract:TipMessage', handleTipMessage);
+ponder.on('idrissTippingAvalanche:TipMessage', handleTipMessage);
