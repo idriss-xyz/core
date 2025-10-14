@@ -50,7 +50,7 @@ export const DonateOptionsModal = () => {
     if (user?.wallet?.address && savedChoice === 'account') {
       void setCreatorIfSessionPresent(user, setDonor);
     }
-  }, []);
+  }, [user, setDonor]);
 
   useEffect(() => {
     const savedChoice = localStorage.getItem('donate-option-choice');
