@@ -1,4 +1,4 @@
-import { IDRISS_LEGACY_API_URL } from '../../constants/src';
+import { IDRISS_LEGACY_API_URL } from '@idriss-xyz/constants';
 
 type Payload = {
   amount: number;

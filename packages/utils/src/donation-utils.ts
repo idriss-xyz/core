@@ -1,5 +1,4 @@
 import { Hex, parseUnits } from 'viem';
-
 import {
   Chain,
   CHAIN_ID_TO_TOKENS,
@@ -8,7 +7,7 @@ import {
   IDRISS_TOKEN_ADDRESS,
   LeaderboardStats,
   TokenBalance,
-} from '../../constants/src';
+} from '@idriss-xyz/constants';
 
 import { getTokenPerDollar } from './get-token-per-dollar';
 

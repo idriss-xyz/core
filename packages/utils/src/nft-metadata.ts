@@ -1,6 +1,6 @@
 import { Hex } from 'viem';
+import { NFT_ABI } from '@idriss-xyz/constants';
 
-import { NFT_ABI } from '../../constants/src';
 import { clients } from '../../blockchain-clients/src';
 
 type NftMeta = {
