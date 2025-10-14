@@ -16,6 +16,7 @@ import {
   calculateDonationLeaderboard,
   getFilteredDonationsByPeriod,
 } from '@idriss-xyz/utils';
+import { Spinner } from '@idriss-xyz/ui/spinner';
 
 import { backgroundLines2 } from '@/assets';
 import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history';
@@ -28,11 +29,10 @@ import {
 import { useCreators } from '../hooks/use-creators';
 import { TopBar } from '../components/top-bar';
 import { periodMap } from '../app/ranking/commands/use-get-leaderboard';
+import { useAuth } from '../context/auth-context';
 
 import { Leaderboard } from './components/leaderboard';
 import { DonateForm } from './components/donate-form';
-import { useAuth } from '../context/auth-context';
-import { Spinner } from '@idriss-xyz/ui/spinner';
 
 interface Properties {
   creatorProfile?: CreatorProfile;
@@ -248,7 +248,7 @@ export function DonateContent({ creatorProfile }: Properties) {
       }
     }
   }, [
-    donationsHistory.data?.donations,
+    donations,
     leaderboard,
     onDonorClick,
     currentContent,
@@ -283,7 +283,7 @@ export function DonateContent({ creatorProfile }: Properties) {
             className="pointer-events-none absolute top-0 hidden size-full opacity-40 lg:block"
           />
           {loading || donationsHistory.isLoading ? (
-            <div className='flex min-h-[80vh] w-full items-center justify-center'>
+            <div className="flex min-h-[80vh] w-full items-center justify-center">
               <Spinner className="size-16 text-mint-600" />
             </div>
           ) : (
