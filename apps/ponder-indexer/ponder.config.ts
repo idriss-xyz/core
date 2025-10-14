@@ -16,25 +16,25 @@ export default createConfig({
   chains: {
     ethereum: {
       id: 1,
-      // rpc: `https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_URL}`,
+      // rpc: `https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
       rpc: `https://eth.drpc.org`,
     },
     base: {
       id: 8453,
-      // rpc: `https://base-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_URL}`,
+      // rpc: `https://base-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
       rpc: `https://1rpc.io/base`,
     },
     ronin: {
       id: 2020,
-      rpc: `https://ronin-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_URL}`,
+      rpc: `https://ronin-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
     },
     abstract: {
       id: 2741,
-      rpc: `https://abstract-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_URL}`,
+      rpc: `https://abstract-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
     },
     avalanche: {
       id: 43114,
-      rpc: `https://avax-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_URL}`,
+      rpc: `https://avax-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
     },
   },
   contracts: {
@@ -76,8 +76,12 @@ export default createConfig({
           kind: 'postgres',
           connectionString: process.env.DATABASE_URL!,
         }
-      : {
-          kind: 'pglite',
-          directory: '.ponder/local.db',
+      : // : {
+        //     kind: 'pglite',
+        //     directory: '.ponder/local.db',
+        //   },
+        {
+          kind: 'postgres',
+          connectionString: process.env.DATABASE_URL!,
         },
 });

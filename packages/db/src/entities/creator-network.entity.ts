@@ -14,7 +14,7 @@ export class CreatorNetwork {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column()
+  @Column({ type: 'text' })
   chainName!: string;
 
   @ManyToOne(

@@ -184,6 +184,7 @@ export async function storeTipMessage(
       network,
       token: tokenRow,
     };
+    console.log('Adding Donation', result);
     return result;
   }
 
@@ -316,6 +317,7 @@ export async function storeTipMessage(
       collectionSlug: collectionRow.slug,
       collectionCategory: collectionRow.category,
     };
+    console.log('Adding Donation', result);
     return result;
   }
 

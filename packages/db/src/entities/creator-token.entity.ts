@@ -14,7 +14,7 @@ export class CreatorToken {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column()
+  @Column({ type: 'text' })
   tokenSymbol!: string;
 
   @ManyToOne(

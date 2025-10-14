@@ -34,9 +34,9 @@ export class Referral {
   @JoinColumn({ name: 'referred_id' })
   referred!: Creator;
 
-  @Column()
+  @Column({ type: 'boolean' })
   credited!: boolean;
 
-  @Column({ name: 'number_of_followers' })
+  @Column({ name: 'number_of_followers', type: 'integer' })
   numberOfFollowers?: number;
 }

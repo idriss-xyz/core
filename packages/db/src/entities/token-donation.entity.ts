@@ -14,7 +14,7 @@ import { Token } from './token.entity';
 @Entity('creator_token_donations')
 export class TokenDonation {
   /* share PK with parent row */
-  @PrimaryColumn()
+  @PrimaryColumn({ type: 'integer' })
   id!: number;
 
   @OneToOne(

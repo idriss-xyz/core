@@ -185,7 +185,6 @@
       "cache": false,
       "persistent": true,
       "env": [
-        "ALCHEMY_URL",
         "DATABASE_URL",
         "ZAPPER_API_KEY",
         "ALCHEMY_API_KEY",
@@ -196,7 +195,6 @@
       "cache": true,
       "persistent": true,
       "env": [
-        "ALCHEMY_URL",
         "DATABASE_URL",
         "ZAPPER_API_KEY",
         "ALCHEMY_API_KEY",

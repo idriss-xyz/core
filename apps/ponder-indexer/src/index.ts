@@ -21,6 +21,6 @@ async function handleTipMessage({ event, context }: any) {
 
 ponder.on('idrissTippingBase:TipMessage', handleTipMessage);
 ponder.on('idrissTippingEthereum:TipMessage', handleTipMessage);
-ponder.on('idrissTippingRonin:TipMessage', handleTipMessage);
-ponder.on('idrissTippingAbstract:TipMessage', handleTipMessage);
-ponder.on('idrissTippingAvalanche:TipMessage', handleTipMessage);
+// ponder.on('idrissTippingRonin:TipMessage', handleTipMessage);
+// ponder.on('idrissTippingAbstract:TipMessage', handleTipMessage);
+// ponder.on('idrissTippingAvalanche:TipMessage', handleTipMessage);

@@ -22,19 +22,19 @@ export class DonationParameters {
   @Column({ type: 'integer', name: 'minimum_sfx_amount' })
   minimumSfxAmount!: number;
 
-  @Column({ name: 'voice_id', nullable: true })
+  @Column({ name: 'voice_id', type: 'text', nullable: true })
   voiceId!: string;
 
-  @Column({ name: 'alert_sound', nullable: true })
+  @Column({ name: 'alert_sound', type: 'text', nullable: true })
   alertSound!: string;
 
-  @Column({ name: 'alert_enabled', default: false })
+  @Column({ name: 'alert_enabled', type: 'boolean', default: false })
   alertEnabled!: boolean;
 
-  @Column({ name: 'tts_enabled', default: false })
+  @Column({ name: 'tts_enabled', type: 'boolean', default: false })
   ttsEnabled!: boolean;
 
-  @Column({ name: 'sfx_enabled', default: false })
+  @Column({ name: 'sfx_enabled', type: 'boolean', default: false })
   sfxEnabled!: boolean;
 
   @Column({
@@ -45,10 +45,10 @@ export class DonationParameters {
   })
   customBadWords!: string[];
 
-  @Column({ name: 'token_enabled', default: true })
+  @Column({ name: 'token_enabled', type: 'boolean', default: true })
   tokenEnabled!: boolean;
 
-  @Column({ name: 'collectible_enabled', default: true })
+  @Column({ name: 'collectible_enabled', type: 'boolean', default: true })
   collectibleEnabled!: boolean;
 
   @OneToOne(

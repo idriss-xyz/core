@@ -12,7 +12,7 @@ import { NftToken } from './nft-token.entity';
 
 @Entity('creator_nft_donations')
 export class NftDonation {
-  @PrimaryColumn()
+  @PrimaryColumn({ type: 'integer' })
   id!: number;
 
   @OneToOne(
@@ -24,7 +24,7 @@ export class NftDonation {
   @JoinColumn({ name: 'id' })
   base!: Donation;
 
-  @Column({ name: 'nft_token_id' })
+  @Column({ name: 'nft_token_id', type: 'integer' })
   nftTokenId!: number;
 
   @ManyToOne(
