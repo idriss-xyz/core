@@ -1,14 +1,13 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
 import { formatUnits, zeroAddress } from 'viem';
-
-import { getChainByNetworkName } from '@idriss-xyz/utils';
-
 import {
+  ZAPPER_API_URL,
+  PriceHistoryQuery,
   ALCHEMY_NATIVE_TOKENS,
   NETWORK_TO_ALCHEMY,
-  PriceHistoryQuery,
-} from '../../constants/src/constants';
-import { ZAPPER_API_URL } from '../../constants/src/links';
+} from '@idriss-xyz/constants';
+
+import { getChainByNetworkName } from '@idriss-xyz/utils';
 
 type PriceTick = { timestamp: number; median: number };
 
