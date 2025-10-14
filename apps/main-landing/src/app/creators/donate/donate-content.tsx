@@ -31,6 +31,8 @@ import { periodMap } from '../app/ranking/commands/use-get-leaderboard';
 
 import { Leaderboard } from './components/leaderboard';
 import { DonateForm } from './components/donate-form';
+import { useAuth } from '../context/auth-context';
+import { Spinner } from '@idriss-xyz/ui/spinner';
 
 interface Properties {
   creatorProfile?: CreatorProfile;
@@ -39,6 +41,7 @@ interface Properties {
 export function DonateContent({ creatorProfile }: Properties) {
   const router = useRouter();
   const { searchParams } = useCreators();
+  const { loading } = useAuth();
   const [socketConnected, setSocketConnected] = useState(false);
   const [socketInitialized, setSocketInitialized] = useState(false);
   const [donations, setDonations] = useState<StoredDonationData[]>([]);
@@ -143,7 +146,7 @@ export function DonateContent({ creatorProfile }: Properties) {
     return () => {
       return resizeObserver.disconnect();
     };
-  }, [creatorInfo]);
+  }, [creatorInfo, donationsHistory.isLoading]);
 
   const updateCurrentContent = useCallback((content: DonateContentValues) => {
     setCurrentContent((previous) => {
@@ -245,7 +248,7 @@ export function DonateContent({ creatorProfile }: Properties) {
       }
     }
   }, [
-    donations,
+    donationsHistory.data?.donations,
     leaderboard,
     onDonorClick,
     currentContent,
@@ -279,8 +282,13 @@ export function DonateContent({ creatorProfile }: Properties) {
             src={backgroundLines2.src}
             className="pointer-events-none absolute top-0 hidden size-full opacity-40 lg:block"
           />
-
-          {!isLegacyLink && currentContentComponent}
+          {loading || donationsHistory.isLoading ? (
+            <div className='flex min-h-[80vh] w-full items-center justify-center'>
+              <Spinner className="size-16 text-mint-600" />
+            </div>
+          ) : (
+            !isLegacyLink && currentContentComponent
+          )}
         </main>
       </div>
       {isLegacyLink && (
