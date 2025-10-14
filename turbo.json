@@ -186,7 +186,10 @@
       "persistent": true,
       "env": [
         "ALCHEMY_URL",
-        "DATABASE_URL"
+        "DATABASE_URL",
+        "ZAPPER_API_KEY",
+        "ALCHEMY_API_KEY",
+        "OPENSEA_API_KEY"
       ]
     },
     "@idriss-xyz/ponder-indexer#prod": {
@@ -194,7 +197,10 @@
       "persistent": true,
       "env": [
         "ALCHEMY_URL",
-        "DATABASE_URL"
+        "DATABASE_URL",
+        "ZAPPER_API_KEY",
+        "ALCHEMY_API_KEY",
+        "OPENSEA_API_KEY"
       ]
     },
     "lint": {

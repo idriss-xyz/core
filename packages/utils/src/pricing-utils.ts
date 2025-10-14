@@ -1,30 +1,46 @@
+/* eslint-disable turbo/no-undeclared-env-vars */
+import { formatUnits, zeroAddress } from 'viem';
+
 import { getChainByNetworkName } from '@idriss-xyz/utils';
+
 import {
   ALCHEMY_NATIVE_TOKENS,
   NETWORK_TO_ALCHEMY,
   PriceHistoryQuery,
-  ZAPPER_API_URL,
-} from '../constants';
-
-import { NULL_ADDRESS } from '@idriss-xyz/constants';
-import { formatUnits } from 'viem';
+} from '../../constants/src/constants';
+import { ZAPPER_API_URL } from '../../constants/src/links';
 
 type PriceTick = { timestamp: number; median: number };
+
+type AlchemyPriceResponse = {
+  data: { address: string; network: string; prices?: { value: string }[] }[];
+};
+
+type OpenSeaBestOfferResponse = {
+  price?: { value?: string; currency?: string; decimals?: number };
+  protocol_data?: {
+    parameters?: {
+      consideration?: { startAmount?: string }[];
+    };
+  };
+};
 
 const zapperHistoryCache: Record<string, PriceTick[]> = {};
 
 async function retryWithBackoff<T>(
-  fn: () => Promise<T>,
-  maxRetries: number = 3,
-  baseDelay: number = 1000,
+  function_: () => Promise<T>,
+  maxRetries = 3,
+  baseDelay = 1000,
 ): Promise<T> {
-  for (let i = 0; i < maxRetries; i++) {
+  for (let index = 0; index < maxRetries; index++) {
     try {
-      return await fn();
+      return await function_();
     } catch (error) {
-      if (i === maxRetries - 1) throw error;
-      const delay = baseDelay * Math.pow(2, i);
-      await new Promise((resolve) => setTimeout(resolve, delay));
+      if (index === maxRetries - 1) throw error;
+      const delay = baseDelay * Math.pow(2, index);
+      await new Promise((resolve) => {
+        return setTimeout(resolve, delay);
+      });
     }
   }
   throw new Error('Retry failed');
@@ -37,9 +53,9 @@ export function getOldestZapperPrice(
   const zapperCacheKey = `${network}_${tokenAddress}`;
   const priceTicks = zapperHistoryCache[zapperCacheKey];
 
-  if (priceTicks?.length > 0) {
-    const oldestTick = priceTicks[priceTicks.length - 1];
-    return oldestTick.median;
+  if (priceTicks && priceTicks?.length > 0) {
+    const oldestTick = priceTicks.at(-1);
+    return oldestTick!.median;
   }
 
   return null;
@@ -51,7 +67,7 @@ export async function getZapperPrice(
   txDate: Date,
 ): Promise<number | null> {
   const zapperCacheKey = `${network}_${tokenAddress}`;
-  let priceTicks = zapperHistoryCache[zapperCacheKey];
+  const priceTicks = zapperHistoryCache[zapperCacheKey];
   let fallbackPrice: number | null = null;
 
   // Fetch entire price history if not cached
@@ -83,15 +99,15 @@ export async function getZapperPrice(
 
       const json = await response.json();
       fallbackPrice = json.data?.fungibleTokenV2?.priceData?.price ?? null;
-      priceTicks = json.data?.fungibleTokenV2?.priceData?.priceTicks ?? [];
-      zapperHistoryCache[zapperCacheKey] = priceTicks;
+      zapperHistoryCache[zapperCacheKey] =
+        json.data?.fungibleTokenV2?.priceData?.priceTicks ?? [];
     } catch (error) {
       console.error('Zapper price fetch failed:', error);
       return null;
     }
   }
   // Find closest price within 24 hours
-  if (priceTicks.length > 0) {
+  if (priceTicks && priceTicks.length > 0) {
     const closestTick = priceTicks.find((tick) => {
       const tickTime =
         tick.timestamp > 1e12 ? tick.timestamp : tick.timestamp * 1000;
@@ -125,7 +141,7 @@ export async function getAlchemyHistoricalPrice(
         new Date(txDate).setHours(23, 59, 59, 999) / 1000,
       );
 
-      const isNativeToken = tokenAddress === NULL_ADDRESS;
+      const isNativeToken = tokenAddress === zeroAddress;
       const options = {
         method: 'POST',
         headers: {
@@ -171,9 +187,11 @@ export async function getAlchemyHistoricalPrice(
   }
 }
 
-async function fetchERC20PricesFromAlchemy(body: object) {
-  return retryWithBackoff(() =>
-    fetch(
+async function fetchERC20PricesFromAlchemy<T = unknown>(
+  body: object,
+): Promise<T> {
+  return retryWithBackoff(async () => {
+    const response = await fetch(
       `https://api.g.alchemy.com/prices/v1/${process.env.ALCHEMY_API_KEY}/tokens/by-address`,
       {
         method: 'POST',
@@ -183,13 +201,11 @@ async function fetchERC20PricesFromAlchemy(body: object) {
         },
         body: JSON.stringify(body),
       },
-    ).then((res) => {
-      if (!res.ok) {
-        throw new Error(`Alchemy request failed with status ${res.status}`);
-      }
-      return res.json();
-    }),
-  );
+    );
+    if (!response.ok)
+      throw new Error(`Alchemy request failed with status ${response.status}`);
+    return (await response.json()) as T;
+  });
 }
 
 async function fetchNativePricesFromAlchemy(
@@ -222,8 +238,8 @@ async function fetchNativePricesFromAlchemy(
       if (entry?.symbol && price) {
         result[entry.symbol] = Number(price);
       }
-    } catch (err) {
-      console.error(`Failed to fetch native price for ${symbol}:`, err);
+    } catch (error) {
+      console.error(`Failed to fetch native price for ${symbol}:`, error);
     }
   }
 
@@ -240,7 +256,7 @@ export async function getAlchemyPrices(
   const erc20Addresses: { address: string; network: string }[] = [];
 
   for (const t of tokens) {
-    if (t.address === NULL_ADDRESS) {
+    if (t.address === zeroAddress) {
       const sym =
         ALCHEMY_NATIVE_TOKENS[t.network as keyof typeof ALCHEMY_NATIVE_TOKENS];
       if (sym) nativeSymbols.push(sym);
@@ -258,41 +274,42 @@ export async function getAlchemyPrices(
     try {
       const nativePrices = await fetchNativePricesFromAlchemy(nativeSymbols);
       for (const t of tokens) {
-        if (t.address !== NULL_ADDRESS) continue;
+        if (t.address !== zeroAddress) continue;
         const sym =
           ALCHEMY_NATIVE_TOKENS[
             t.network as keyof typeof ALCHEMY_NATIVE_TOKENS
           ];
         const price = sym ? nativePrices[sym] : undefined;
         if (price !== undefined) {
-          result[`${t.network}:${NULL_ADDRESS}`] = price;
+          result[`${t.network}:${zeroAddress}`] = price;
         }
       }
-    } catch (err) {
-      console.error('Failed to fetch native prices from Alchemy:', err);
+    } catch (error) {
+      console.error('Failed to fetch native prices from Alchemy:', error);
     }
   }
 
   // erc20
   if (erc20Addresses.length > 0) {
     try {
-      const data = await fetchERC20PricesFromAlchemy({
+      const data = await fetchERC20PricesFromAlchemy<AlchemyPriceResponse>({
         addresses: erc20Addresses,
       });
       for (const priceInfo of data.data || []) {
-        const net = Object.keys(NETWORK_TO_ALCHEMY).find(
-          (n) =>
+        const net = Object.keys(NETWORK_TO_ALCHEMY).find((n) => {
+          return (
             NETWORK_TO_ALCHEMY[n as keyof typeof NETWORK_TO_ALCHEMY] ===
-            priceInfo.network,
-        );
+            priceInfo.network
+          );
+        });
         const address = priceInfo.address;
         const price = priceInfo.prices?.[0]?.value;
         if (net && address && price) {
           result[`${net}:${address.toLowerCase()}`] = Number(price);
         }
       }
-    } catch (err) {
-      console.error('Failed to fetch ERC20 prices from Alchemy:', err);
+    } catch (error) {
+      console.error('Failed to fetch ERC20 prices from Alchemy:', error);
     }
   }
 
@@ -329,7 +346,7 @@ export async function fetchNftFloorFromOpensea(
       return null;
     }
 
-    const json = await resp.json();
+    const json: OpenSeaBestOfferResponse = await resp.json();
     const offer = json.price;
     if (!offer) return null;
 
@@ -350,18 +367,20 @@ export async function fetchNftFloorFromOpensea(
     let usdValue: number | undefined;
     if (currency.toUpperCase() === 'WETH' || currency.toUpperCase() === 'ETH') {
       const prices = await fetchNativePricesFromAlchemy(['ETH']);
-      const ethPrice = prices['ETH'];
+      const ethPrice = prices.ETH;
       if (ethPrice) {
-        const ethAmount = parseFloat(formatUnits(perUnitRaw, offer?.decimals));
+        const ethAmount = Number.parseFloat(
+          formatUnits(perUnitRaw, offer?.decimals ?? 18),
+        );
         usdValue = ethAmount * ethPrice;
       }
     }
 
     return { price: perUnitRaw.toString(), currency, usdValue };
-  } catch (err) {
+  } catch (error) {
     console.error(
       `Failed to fetch OpenSea floor for ${collectionSlug}/${tokenId}:`,
-      err,
+      error,
     );
     return null;
   }

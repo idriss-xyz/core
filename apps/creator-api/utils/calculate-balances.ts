@@ -9,11 +9,12 @@ import {
 } from '@idriss-xyz/constants';
 import { AppDataSource } from '@idriss-xyz/db';
 import {
-  getAlchemyPrices,
-  getZapperPrice,
   fetchNftFloorFromOpensea,
-} from './price-fetchers';
-import { getChainById, getChainByNetworkName } from '@idriss-xyz/utils';
+  getAlchemyPrices,
+  getChainById,
+  getChainByNetworkName,
+  getZapperPrice,
+} from '@idriss-xyz/utils';
 import { ALCHEMY_BASE_URLS, OPENSEA_BASE_URLS } from '../constants';
 import { NftDonation } from '@idriss-xyz/db';
 

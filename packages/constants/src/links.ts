@@ -19,6 +19,7 @@ export const SOCIAL_LINK = {
   TIKTOK: 'https://www.tiktok.com/@idriss_xyz_',
   YOUTUBE: 'https://www.youtube.com/@idriss_xyz',
 };
+export const ZAPPER_API_URL = 'https://public.zapper.xyz/graphql';
 
 /**
  * Our things announced by us

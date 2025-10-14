@@ -624,3 +624,38 @@ export const TEST_NFT_DONATION = {
     },
   },
 };
+
+export const PriceHistoryQuery = `
+query ($address: Address!, $currency: Currency!, $timeFrame: TimeFrame!, $chainId: Int!) {
+  fungibleTokenV2(address: $address, chainId: $chainId){
+    priceData {
+      price
+      priceTicks(currency: $currency, timeFrame: $timeFrame) {
+        timestamp
+        median
+      }
+    }
+  }
+}`;
+
+export const NETWORK_TO_ALCHEMY = {
+  BASE_MAINNET: 'base-mainnet',
+  ABSTRACT_MAINNET: 'abstract-mainnet',
+  ETHEREUM_MAINNET: 'eth-mainnet',
+  POLYGON_MAINNET: 'polygon-mainnet',
+  OPTIMISM_MAINNET: 'optimism-mainnet',
+  MANTLE_MAINNET: 'mantle-mainnet',
+  RONIN_MAINNET: 'ronin-mainnet',
+  // AVALANCHE_MAINNET: 'avax-mainnet',
+} as const;
+
+export const ALCHEMY_NATIVE_TOKENS = {
+  ETHEREUM_MAINNET: 'ETH',
+  ABSTRACT_MAINNET: 'ETH',
+  BASE_MAINNET: 'ETH',
+  MANTLE_MAINNET: 'MNT',
+  OPTIMISM_MAINNET: 'ETH',
+  POLYGON_MAINNET: 'POL',
+  RONIN_MAINNET: 'RON',
+  // AVALANCHE_MAINNET: 'AVAX',
+} as const;

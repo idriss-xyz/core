@@ -3,6 +3,10 @@ import {
   getChainById,
   fetchPreferredImage,
   getNftMetadata,
+  getZapperPrice,
+  getAlchemyHistoricalPrice,
+  getOldestZapperPrice,
+  fetchNftFloorFromOpensea,
 } from '@idriss-xyz/utils';
 import {
   NATIVE_COIN_ADDRESS,
@@ -13,12 +17,6 @@ import {
   NftDonationData,
 } from '@idriss-xyz/constants';
 
-import {
-  getZapperPrice,
-  getAlchemyHistoricalPrice,
-  getOldestZapperPrice,
-  fetchNftFloorFromOpensea,
-} from '../../../apps/creator-api/utils/price-fetchers';
 import { clients } from '../../blockchain-clients/src';
 
 import { AppDataSource } from './database';
