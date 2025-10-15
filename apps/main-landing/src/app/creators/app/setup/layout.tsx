@@ -53,7 +53,9 @@ export default function SetupLayout({
       name: 'Donation goals',
       href: '/creators/app/setup/donation-goals',
       iconName: 'Trophy',
-      isActive: pathname === '/creators/app/setup/donation-goals',
+      isActive:
+        pathname === '/creators/app/setup/donation-goals/active' ||
+        pathname === '/creators/app/setup/donation-goals/history',
     },
     {
       name: 'Page customization',
