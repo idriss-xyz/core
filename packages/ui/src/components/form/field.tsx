@@ -55,14 +55,15 @@ export const Field = forwardRef(
         <RadixForm.Control asChild>
           {datePicker ? (
             <DatePicker date={dateValue} onSelect={onDateChange}>
-              <Input
-                {...inputProperties}
-                value={dateValue ? format(dateValue, 'PPP') : ''}
-                placeholder="Pick a date"
-                readOnly
-                asTextArea={false}
-                onChange={() => {}} // Prevent direct input
-              />
+              <div>
+                <Input
+                  {...inputProperties}
+                  value={dateValue ? format(dateValue, 'dd/MM/yyyy') : ''}
+                  placeholder="DD/MM/YYYY"
+                  asTextArea={false}
+                  onChange={() => {}} // Prevent direct input
+                />
+              </div>
             </DatePicker>
           ) : numeric ? (
             <NumericInput

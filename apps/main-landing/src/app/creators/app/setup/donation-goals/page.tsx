@@ -22,7 +22,7 @@ import SkeletonSetup from '../loading';
 type FormPayload = {
   name: string;
   targetAmount: number;
-  endDate: Date | null;
+  endDate: Date;
 };
 
 const errorSaveSettingsToast: Omit<ToastData, 'id'> = {
@@ -84,7 +84,7 @@ export default function DonationGoals() {
     defaultValues: {
       name: creator?.name ?? '',
       targetAmount: 0,
-      endDate: null,
+      endDate: new Date(),
     },
     mode: 'onSubmit',
   });
@@ -282,6 +282,7 @@ export default function DonationGoals() {
                     onDateChange={(date) => {
                       field.onChange(date);
                     }}
+                    value={field.value.toString()} // Required prop but not used for date picker
                     onChange={() => {}} // Required prop but not used for date picker
                   />
                 );
