@@ -266,6 +266,27 @@ export default function DonationGoals() {
                 );
               }}
             />
+            <Controller
+              name="endDate"
+              control={formMethods.control}
+              render={({ field, fieldState }) => {
+                return (
+                  <Form.Field
+                    name="endDate"
+                    className="max-w-[360px]"
+                    label="End date"
+                    helperText={fieldState.error?.message}
+                    error={Boolean(fieldState.error?.message)}
+                    datePicker
+                    dateValue={field.value}
+                    onDateChange={(date) => {
+                      field.onChange(date);
+                    }}
+                    onChange={() => {}} // Required prop but not used for date picker
+                  />
+                );
+              }}
+            />
           </FormFieldWrapper>
 
           {isDirty && (
