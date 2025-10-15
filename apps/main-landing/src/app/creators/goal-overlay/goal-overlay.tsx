@@ -14,8 +14,26 @@ interface GoalData {
   goalName: string;
   progress: number;
   target: number;
-  daysLeft: number;
-  topDonor: string;
+  endDate: string;
+  topDonor: { name: string; amount: number };
+}
+
+function getTimeRemaining(endDate: string): string {
+  const now = new Date();
+  const end = new Date(endDate);
+  const diffInMs = end.getTime() - now.getTime();
+
+  if (diffInMs <= 0) {
+    return 'Goal ended';
+  }
+
+  const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24));
+
+  if (diffInDays === 1) {
+    return '1 day left';
+  }
+
+  return `${diffInDays} days left`;
 }
 
 // ts-unused-exports:disable-next-line
@@ -24,8 +42,8 @@ export default function GoalOverlay({ creatorName }: Properties) {
     goalName: 'New Gaming Setup',
     progress: 1250,
     target: 5000,
-    daysLeft: 15,
-    topDonor: 'CryptoFan123',
+    endDate: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString(),
+    topDonor: { name: 'CryptoFan123', amount: 50 },
   });
 
   const progressPercentage = Math.min(
@@ -105,12 +123,14 @@ export default function GoalOverlay({ creatorName }: Properties) {
             </p>
 
             <p className={classes('text-body5 text-neutralGreen-500')}>
-              {goalData.daysLeft} days left
+              {getTimeRemaining(goalData.endDate)}
             </p>
 
             <p className={classes('text-body5 text-neutralGreen-500')}>
               Top donor:{' '}
-              <span className="font-medium">{goalData.topDonor}</span>
+              <span className="font-medium">
+                {goalData.topDonor.name} (${goalData.topDonor.amount})
+              </span>
             </p>
           </div>
         </div>
