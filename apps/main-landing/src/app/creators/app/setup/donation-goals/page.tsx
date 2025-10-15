@@ -1,64 +1,23 @@
 'use client';
-import { TWITCH_EXTENSION_LINK } from '@idriss-xyz/constants';
 import { Button } from '@idriss-xyz/ui/button';
 import { Card } from '@idriss-xyz/ui/card';
 import { Form } from '@idriss-xyz/ui/form';
 import { getAccessToken } from '@privy-io/react-auth';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
-import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { classes } from '@idriss-xyz/ui/utils';
+import { usePathname } from 'next/navigation';
+import { TabItem, TabsPill } from '@idriss-xyz/ui/tabs-pill';
+import Link from 'next/link';
 
 import { useAuth } from '@/app/creators/context/auth-context';
 import { ConfirmationModal } from '@/app/creators/components/confirmation-modal/confirmation-modal';
 import { CopyInput } from '@/app/creators/components/copy-input/copy-input';
-import {
-  FormFieldWrapper,
-  SectionHeader,
-} from '@/app/creators/components/layout';
+import { FormFieldWrapper } from '@/app/creators/components/layout';
 import { ToastData, useToast } from '@/app/creators/context/toast-context';
 
 import SkeletonSetup from '../loading';
-
-const UpgradeBox: React.FC = () => {
-  return (
-    <div className="relative flex flex-row items-center gap-4 rounded-lg bg-white/80 p-4">
-      <GradientBorder
-        gradientDirection="toRight"
-        borderRadius={8}
-        gradientStopColor="#E8FCE3"
-      />
-      <div className="flex flex-row items-center gap-6">
-        <IconButton
-          iconName="TwitchOutlinedBold2"
-          intent="secondary"
-          size="extra"
-          className="pointer-events-none"
-        />
-        <div className="flex w-[477px] flex-col gap-4 uppercase">
-          <p className={classes('text-label4 text-neutralGreen-700')}>
-            Upgrade your Twitch Setup
-          </p>
-          <h3 className={classes('text-display6 gradient-text')}>
-            Show top fans on your channel
-          </h3>
-        </div>
-      </div>
-      <Button
-        asLink
-        href={TWITCH_EXTENSION_LINK}
-        size="medium"
-        intent="secondary"
-        className="uppercase"
-        suffixIconName="ArrowRight"
-      >
-        Add Twitch extension
-      </Button>
-    </div>
-  );
-};
 
 type FormPayload = {
   name: string;
@@ -73,6 +32,17 @@ const errorSaveSettingsToast: Omit<ToastData, 'id'> = {
   autoClose: true,
 };
 
+const renderLink = ({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+  isActive: boolean;
+}) => {
+  return <Link href={href}>{children}</Link>;
+};
+
 // ts-unused-exports:disable-next-line
 export default function DonationGoals() {
   const { creator, creatorLoading } = useAuth();
@@ -83,6 +53,23 @@ export default function DonationGoals() {
   const [confirmButtonText, setConfirmButtonText] = useState('Copy link');
   const [wasCopied, setWasCopied] = useState(false);
   const [unsavedChangesToastId, setUnsavedChangesToastId] = useState('');
+
+  const pathname = usePathname();
+
+  const donationGoalsTabs: TabItem[] = [
+    {
+      name: 'Active',
+      href: '/creators/app/donation-goals/active',
+      iconName: 'Goal',
+      isActive: pathname === '/creators/app/donation-goals/active',
+    },
+    {
+      name: 'History',
+      href: '/creators/app/donation-goals/history',
+      iconName: 'History',
+      isActive: pathname === '/creators/app/donation-goals/history',
+    },
+  ];
 
   const openConfirmationModal = (source: 'text' | 'icon') => {
     if (source === 'icon') {
@@ -182,9 +169,13 @@ export default function DonationGoals() {
           onSubmit={formMethods.handleSubmit(onSubmit)}
           className="flex flex-col gap-6"
         >
-          {/* Alerts form fields */}
           <FormFieldWrapper>
-            <SectionHeader title="Active goal" />
+            <div className="flex items-center gap-2">
+              <h5 className="pb-1 text-heading5 text-neutralGreen-900">
+                Donation goals
+              </h5>
+              <TabsPill tabs={donationGoalsTabs} renderLink={renderLink} />
+            </div>
             <div className="flex items-center gap-4">
               <div className="flex flex-col gap-1">
                 <label
@@ -225,7 +216,7 @@ export default function DonationGoals() {
                       'flex items-center space-x-1 text-label7 text-neutral-600 lg:text-label7',
                     )}
                   >
-                    Add this as a browser source in your streaming software
+                    Copy this permanent link to show your goal on stream.
                   </span>
                   <Icon
                     name="HelpCircle"
@@ -235,13 +226,18 @@ export default function DonationGoals() {
                 </div>
               </div>
             </div>
+            <hr />
+            <h5 className="pb-1 text-heading5 text-neutralGreen-900">
+              Creating a new goal
+            </h5>
+            {/* Fields for active goal */}
             <Controller
               name="name"
               control={formMethods.control}
               render={({ field, fieldState }) => {
                 return (
                   <Form.Field
-                    label="Goal name"
+                    label="Name"
                     className="max-w-[360px]"
                     error={Boolean(fieldState.error?.message)}
                     {...field}
@@ -258,10 +254,7 @@ export default function DonationGoals() {
                     className="max-w-[360px]"
                     numeric
                     label="Target amount"
-                    helperText={
-                      fieldState.error?.message ??
-                      'Donation amount that you want to be reached'
-                    }
+                    helperText={fieldState.error?.message}
                     error={Boolean(fieldState.error?.message)}
                     {...field}
                     value={field.value?.toString()}
@@ -275,11 +268,6 @@ export default function DonationGoals() {
             />
           </FormFieldWrapper>
 
-          {/* TTS form fields */}
-          <FormFieldWrapper>
-            <SectionHeader title="Previous goals" />
-          </FormFieldWrapper>
-
           {isDirty && (
             <Button
               size="medium"
@@ -290,8 +278,6 @@ export default function DonationGoals() {
               SAVE SETTINGS
             </Button>
           )}
-
-          <UpgradeBox />
         </Form>
       </div>
 
