@@ -215,7 +215,7 @@ export default function ProfilePage() {
                   This is your public wallet address. It was automatically
                   created for your account and linked to your donation page. We
                   show it only for reference and you do not need it to use the
-                  app.
+                  app
                 </p>
                 <div className="relative flex max-w-[616px] flex-row items-center gap-4 rounded-xl bg-white/80 p-4">
                   <GradientBorder
