@@ -1,6 +1,6 @@
 import * as RadixForm from '@radix-ui/react-form';
 import { ComponentProps, ForwardedRef, forwardRef, ReactNode } from 'react';
-import { format } from "date-fns";
+import { format } from 'date-fns';
 
 import { classes } from '../../utils';
 import { Icon } from '../icon';
@@ -57,7 +57,7 @@ export const Field = forwardRef(
             <DatePicker date={dateValue} onSelect={onDateChange}>
               <Input
                 {...inputProperties}
-                value={dateValue ? format(dateValue, "PPP") : ""}
+                value={dateValue ? format(dateValue, 'PPP') : ''}
                 placeholder="Pick a date"
                 readOnly
                 asTextArea={false}

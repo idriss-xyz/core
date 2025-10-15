@@ -1,21 +1,22 @@
-import { ReactNode } from 'react'
-import { Popover } from "@radix-ui/react-popover"
+import { ReactNode } from 'react';
+import * as Popover from '@radix-ui/react-popover';
+import { DayPicker } from 'react-day-picker';
+import 'react-day-picker/style.css';
 
-import { DayPicker } from "react-day-picker";
-import "react-day-picker/style.css";
-
-interface DatePickerProps {
-  date?: Date
-  onSelect?: (date: Date | undefined) => void
-  children: ReactNode
+interface DatePickerProperties {
+  date?: Date;
+  onSelect?: (date: Date | undefined) => void;
+  children: ReactNode;
 }
 
-export const DatePicker = ({ date, onSelect, children }: DatePickerProps) => {
+export const DatePicker = ({
+  date,
+  onSelect,
+  children,
+}: DatePickerProperties) => {
   return (
     <Popover.Root>
-      <Popover.Trigger asChild>
-        {children}
-      </Popover.Trigger>
+      <Popover.Trigger asChild>{children}</Popover.Trigger>
 
       <Popover.Portal>
         <Popover.Content
@@ -27,5 +28,5 @@ export const DatePicker = ({ date, onSelect, children }: DatePickerProps) => {
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>
-  )
-}
+  );
+};
