@@ -157,6 +157,21 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Creator API Socket server is running');
 });
 
+app.get('/health', (req: Request, res: Response) => {
+  res.send('ok');
+});
+
 server.listen(PORT, HOST, () => {
   console.log(`Server is running at http://${HOST}:${PORT}`);
+});
+
+// Graceful shutdown for Railway
+process.on('SIGTERM', async () => {
+  console.log('SIGTERM received. Closing...');
+  io.close();
+  server.close(async () => {
+    if (AppDataSource.isInitialized) await AppDataSource.destroy();
+    console.log('Shutdown complete');
+    process.exit(0);
+  });
 });
