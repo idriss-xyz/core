@@ -6,17 +6,7 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { ProgressBarV2 } from '@idriss-xyz/ui/progress-bar-v2';
 
 import { getTimeRemaining } from '@/app/creators/utils';
-
-type Goal = {
-  id: string;
-  name: string;
-  targetAmount: number;
-  progress: number;
-  startDate: string;
-  endDate: string;
-  topDonor: string;
-  topDonorAmount: number;
-};
+import { Goal } from '@/app/creators/utils/types';
 
 /* TODO: Replace for hook and call to api */
 const useGoals: () => Goal[] = () => {
@@ -28,8 +18,7 @@ const useGoals: () => Goal[] = () => {
       progress: 320,
       startDate: '01/01/2025',
       endDate: '12/31/2025',
-      topDonor: 'geoist_',
-      topDonorAmount: 50,
+      topDonor: { name: 'geoist_', amount: 50 },
     },
     {
       id: '2',
@@ -38,8 +27,7 @@ const useGoals: () => Goal[] = () => {
       progress: 320,
       startDate: '01/01/2025',
       endDate: '11/15/2025',
-      topDonor: 'geoist_',
-      topDonorAmount: 50,
+      topDonor: { name: 'geoist_', amount: 50 },
     },
     {
       id: '3',
@@ -48,8 +36,7 @@ const useGoals: () => Goal[] = () => {
       progress: 320,
       startDate: '01/01/2025',
       endDate: '01/20/2026',
-      topDonor: 'geoist_',
-      topDonorAmount: 50,
+      topDonor: { name: 'geoist_', amount: 50 },
     },
     {
       id: '4',
@@ -58,8 +45,7 @@ const useGoals: () => Goal[] = () => {
       progress: 30,
       startDate: '01/01/2025',
       endDate: '03/01/2025',
-      topDonor: 'geoist_',
-      topDonorAmount: 50,
+      topDonor: { name: 'geoist_', amount: 50 },
     },
   ];
 };
@@ -118,7 +104,7 @@ export default function GoalHistory() {
                 <Icon name="Users2" size={20} />
                 <span className="text-neutral-600">Top donor:</span>
                 <span className="text-neutral-900">
-                  @{goal.topDonor} (${goal.topDonorAmount})
+                  @{goal.topDonor.name} (${goal.topDonor.amount})
                 </span>
               </div>
             </CardBody>

@@ -7,31 +7,26 @@ import { ProgressBarV2 } from '@idriss-xyz/ui/progress-bar-v2';
 import { classes } from '@idriss-xyz/ui/utils';
 
 import { getTimeRemaining } from '../utils';
+import { Goal } from '../utils/types';
 
 interface Properties {
   creatorName?: string;
 }
 
-interface GoalData {
-  goalName: string;
-  progress: number;
-  target: number;
-  endDate: string;
-  topDonor: { name: string; amount: number };
-}
-
 // ts-unused-exports:disable-next-line
 export default function GoalOverlay({ creatorName }: Properties) {
-  const [goalData, setGoalData] = useState<GoalData>({
-    goalName: 'New Gaming Setup',
+  const [goalData, setGoalData] = useState<Goal>({
+    id: '1',
+    name: 'New Gaming Setup',
     progress: 1250,
-    target: 5000,
+    targetAmount: 5000,
+    startDate: new Date(Date.now()).toISOString(),
     endDate: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString(),
-    topDonor: { name: 'CryptoFan123', amount: 50 },
+    topDonor: { name: 'geoist_', amount: 50 },
   });
 
   const progressPercentage = Math.min(
-    (goalData.progress / goalData.target) * 100,
+    (goalData.progress / goalData.targetAmount) * 100,
     100,
   );
 
@@ -56,7 +51,7 @@ export default function GoalOverlay({ creatorName }: Properties) {
       window.location.href = url.toString();
     });
 
-    socket.on('goalDataUpdated', (data: GoalData) => {
+    socket.on('goalDataUpdated', (data: Goal) => {
       console.log('Got new goal data', data);
       setGoalData(data);
     });
@@ -86,7 +81,7 @@ export default function GoalOverlay({ creatorName }: Properties) {
               'mb-4 text-center text-heading6 font-semibold text-neutralGreen-700',
             )}
           >
-            {goalData.goalName}
+            {goalData.name}
           </h2>
 
           {/* Progress Bar */}
@@ -102,7 +97,7 @@ export default function GoalOverlay({ creatorName }: Properties) {
               )}
             >
               ${goalData.progress.toLocaleString()} / $
-              {goalData.target.toLocaleString()} (
+              {goalData.targetAmount.toLocaleString()} (
               {progressPercentage.toFixed(0)}%)
             </p>
 

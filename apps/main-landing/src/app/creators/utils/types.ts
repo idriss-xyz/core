@@ -30,3 +30,13 @@ export type CreatorProfileResponse = {
   customBadWords: string[];
   alertSound: string;
 };
+
+export type Goal = {
+  id: string;
+  name: string;
+  targetAmount: number;
+  progress: number;
+  startDate: string;
+  endDate: string;
+  topDonor: { name: string; amount: number };
+};
