@@ -8,6 +8,7 @@ import http from 'http';
 import { Server as SocketIOServer, Socket } from 'socket.io';
 import { connectedClients } from './services/socket-server';
 import tipHistoryRouter from './routes/tip-history';
+import internalRouter from './routes/internal-events';
 import recipientHistoryRouter from './routes/recipient-history';
 import donorHistoryRouter from './routes/donor-history';
 import creatorLeaderboardRouter from './routes/creator-leaderboard';
@@ -43,7 +44,8 @@ app.use(openCors);
 
 const server = http.createServer(app);
 app.use('/tip-history', tipHistoryRouter);
-app.use('/donor-history', donorHistoryRouter);
+app.use('/internal-events', internalRouter),
+  app.use('/donor-history', donorHistoryRouter);
 app.use('/recipient-history', recipientHistoryRouter);
 app.use('/creator-leaderboard', creatorLeaderboardRouter);
 app.use('/donor-leaderboard', donorLeaderboardRouter);

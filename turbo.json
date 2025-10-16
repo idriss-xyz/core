@@ -135,7 +135,8 @@
         "AWS_LAMBDA_FAUCET_NAME",
         "AWS_LAMBDA_REWARDS_NAME",
         "FAUCET_ADDRESS",
-        "OPENSEA_API_KEY"
+        "OPENSEA_API_KEY",
+        "INTERNAL_SYNC_TOKEN"
       ]
     },
     "@idriss-xyz/creator-api#prod": {
@@ -162,7 +163,8 @@
         "AWS_LAMBDA_FAUCET_NAME",
         "AWS_LAMBDA_REWARDS_NAME",
         "FAUCET_ADDRESS",
-        "OPENSEA_API_KEY"
+        "OPENSEA_API_KEY",
+        "INTERNAL_SYNC_TOKEN"
       ]
     },
     "@idriss-xyz/creator-api#test": {
@@ -188,7 +190,8 @@
         "DATABASE_URL",
         "ZAPPER_API_KEY",
         "ALCHEMY_API_KEY",
-        "OPENSEA_API_KEY"
+        "OPENSEA_API_KEY",
+        "INTERNAL_SYNC_TOKEN"
       ]
     },
     "@idriss-xyz/ponder-indexer#prod": {
@@ -198,7 +201,8 @@
         "DATABASE_URL",
         "ZAPPER_API_KEY",
         "ALCHEMY_API_KEY",
-        "OPENSEA_API_KEY"
+        "OPENSEA_API_KEY",
+        "INTERNAL_SYNC_TOKEN"
       ]
     },
     "lint": {

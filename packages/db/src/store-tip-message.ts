@@ -127,7 +127,7 @@ export async function storeTipMessage(
     }
     const decimals = tokenMeta.decimals;
     const priceUSD = await getHourlyTokenPriceUSD(
-      lookupAddress,
+      tokenAddrDatabase,
       network,
       timestampNumber,
     );
