@@ -6,6 +6,8 @@ import { CREATOR_API_URL } from '@idriss-xyz/constants';
 import { ProgressBarV2 } from '@idriss-xyz/ui/progress-bar-v2';
 import { classes } from '@idriss-xyz/ui/utils';
 
+import { getTimeRemaining } from '../utils';
+
 interface Properties {
   creatorName?: string;
 }
@@ -16,24 +18,6 @@ interface GoalData {
   target: number;
   endDate: string;
   topDonor: { name: string; amount: number };
-}
-
-function getTimeRemaining(endDate: string): string {
-  const now = new Date();
-  const end = new Date(endDate);
-  const diffInMs = end.getTime() - now.getTime();
-
-  if (diffInMs <= 0) {
-    return 'Goal ended';
-  }
-
-  const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24));
-
-  if (diffInDays === 1) {
-    return '1 day left';
-  }
-
-  return `${diffInDays} days left`;
 }
 
 // ts-unused-exports:disable-next-line
