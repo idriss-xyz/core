@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import { CREATOR_API_URL } from '@idriss-xyz/constants';
 import { ProgressBarV2 } from '@idriss-xyz/ui/progress-bar-v2';
 import { classes } from '@idriss-xyz/ui/utils';
+import { Icon } from '@idriss-xyz/ui/icon';
+import { Badge } from '@idriss-xyz/ui/badge';
 
 import { getTimeRemaining } from '../utils';
 import { Goal } from '../utils/types';
@@ -18,10 +20,10 @@ export default function GoalOverlay({ creatorName }: Properties) {
   const [goalData, setGoalData] = useState<Goal>({
     id: '1',
     name: 'New Gaming Setup',
-    progress: 1250,
-    targetAmount: 5000,
+    progress: 320,
+    targetAmount: 500,
     startDate: new Date(Date.now()).toISOString(),
-    endDate: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString(),
+    endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
     topDonor: { name: 'geoist_', amount: 50 },
   });
 
@@ -74,43 +76,54 @@ export default function GoalOverlay({ creatorName }: Properties) {
         }
       `}</style>
       <div className="flex h-screen w-screen items-center justify-center bg-transparent p-6">
-        <div className="w-full max-w-md rounded-lg bg-white/90 p-6 shadow-lg backdrop-blur-sm">
-          {/* Goal Name */}
-          <h2
-            className={classes(
-              'mb-4 text-center text-heading6 font-semibold text-neutralGreen-700',
-            )}
-          >
-            {goalData.name}
-          </h2>
-
-          {/* Progress Bar */}
-          <div className="mb-4 h-9">
-            <ProgressBarV2 progress={progressPercentage} />
+        <div className="flex w-full max-w-md flex-col gap-6 rounded-lg border bg-white/90 p-4">
+          {/* Goal name and incoming donation chip*/}
+          <div className="flex w-full items-center">
+            <div className="flex grow items-center">
+              <h2
+                className={classes(
+                  'text-center text-heading5 text-neutralGreen-900',
+                )}
+              >
+                {goalData.name}
+              </h2>
+            </div>
+            <div className="flex items-center justify-end gap-2 rounded-full bg-mint-400 py-1.5 pl-1 pr-3">
+              <div className="flex size-6 items-center justify-center rounded-full bg-mint-200">
+                <Icon name="Check" className="text-mint-500" size={20} />
+              </div>
+              <span className="text-label4">$20</span>{' '}
+              {/* TODO: Replace for incoming donation amounts*/}
+            </div>
           </div>
 
-          {/* Progress Info */}
-          <div className="space-y-2 text-center">
-            <p
-              className={classes(
-                'text-neutralGreen-600 text-body4 font-medium',
-              )}
-            >
-              ${goalData.progress.toLocaleString()} / $
-              {goalData.targetAmount.toLocaleString()} (
-              {progressPercentage.toFixed(0)}%)
-            </p>
-
-            <p className={classes('text-body5 text-neutralGreen-500')}>
-              {getTimeRemaining(goalData.endDate)}
-            </p>
-
-            <p className={classes('text-body5 text-neutralGreen-500')}>
-              Top donor:{' '}
-              <span className="font-medium">
-                {goalData.topDonor.name} (${goalData.topDonor.amount})
+          {/* Progress Bar and info*/}
+          <div className="flex flex-col gap-2">
+            <div className="h-4">
+              <ProgressBarV2 progress={progressPercentage} />
+            </div>
+            <div className="flex items-center justify-between text-label4">
+              <Badge
+                type="success"
+                variant="subtle"
+                className="w-fit lowercase"
+              >
+                {getTimeRemaining(goalData.endDate)}
+              </Badge>
+              <span className="text-neutral-900">
+                ${goalData.progress}/${goalData.targetAmount} (
+                {progressPercentage.toFixed(0)}%)
               </span>
-            </p>
+            </div>
+          </div>
+
+          {/* Top donor */}
+          <div className="flex items-center gap-2 text-label4">
+            <Icon name="Users2" size={20} />
+            <span className="text-neutral-600">Top donor:</span>
+            <span className="text-neutral-900">
+              {goalData.topDonor.name} (${goalData.topDonor.amount})
+            </span>
           </div>
         </div>
       </div>

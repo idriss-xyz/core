@@ -127,7 +127,7 @@ export default function GoalHistory() {
                   <Icon name="Users2" size={20} />
                   <span className="text-neutral-600">Top donor:</span>
                   <span className="text-neutral-900">
-                    @{goal.topDonor.name} (${goal.topDonor.amount})
+                    {goal.topDonor.name} (${goal.topDonor.amount})
                   </span>
                 </div>
               </CardBody>
