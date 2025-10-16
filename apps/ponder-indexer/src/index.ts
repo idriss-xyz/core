@@ -12,7 +12,7 @@ async function handleTipMessage({ event, context }: any) {
       tokenAddress: event.args.tokenAddress,
       amount: event.args.amount,
       fee: event.args.fee,
-      assetType: Number(event.args.assetType),
+      assetType: Number(event.args.assetType) * 1000,
       assetId: event.args.assetId,
       message: event.args.message,
     },
