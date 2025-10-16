@@ -62,7 +62,7 @@ export default function GoalHistory() {
         return (
           <Card
             key={goal.id}
-            className="flex w-[366px] shrink-0 flex-col gap-12"
+            className="flex w-[366px] shrink-0 flex-col gap-12 shadow-none border"
           >
             {/* Header section*/}
             <div className="flex flex-col gap-6">
@@ -81,11 +81,11 @@ export default function GoalHistory() {
               </div>
               <div className="flex items-center justify-between text-label4">
                 <span className="text-neutral-600">Start date</span>
-                <span>{goal.startDate}</span>
+                <span className="text-neutral-900">{goal.startDate}</span>
               </div>
               <div className="flex items-center justify-between text-label4">
                 <span className="text-neutral-600">End date</span>
-                <span>{goal.endDate}</span>
+                <span className="text-neutral-900">{goal.endDate}</span>
               </div>
             </div>
             <CardBody className="flex flex-col gap-12 text-label4">
@@ -100,8 +100,8 @@ export default function GoalHistory() {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-label4 text-neutral-600">Progress</span>
-                  <span className="text-label3 text-neutral-900">
-                    ${goal.progress}/ ${goal.targetAmount} (
+                  <span className="text-label3 text-black">
+                    ${goal.progress}/${goal.targetAmount} (
                     {progressPercentage.toFixed(0)}%)
                   </span>
                 </div>
