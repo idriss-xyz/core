@@ -24,7 +24,7 @@ interface Properties {
 export const useSender = ({ wallet }: Properties) => {
   const [haveEnoughBalance, setHaveEnoughBalance] = useState<boolean>(true);
   const switchChain = useSwitchChain();
-  const getTokenPerDollarMutation = useCommandMutation(GetTokenPriceCommand);
+  const getTokenPriceMutation = useCommandMutation(GetTokenPriceCommand);
   const getEthBalaceMutation = useCommandMutation(GetEthBalanceCommand);
   const getTokenBalanceMutation = useCommandMutation(GetTokenBalanceCommand);
   const nativeTransaction = useNativeTransaction();
@@ -48,13 +48,13 @@ export const useSender = ({ wallet }: Properties) => {
         },
       );
 
-      const tokenPerDollar = await getTokenPerDollarMutation.mutateAsync({
+      const tokenUsd = await getTokenPriceMutation.mutateAsync({
         chainId: sendPayload.chainId,
         amount: 10 ** (usdcToken?.decimals ?? 0),
         buyToken: sendPayload.tokenAddress,
         sellToken: usdcToken?.address ?? '',
       });
-      const tokenPerDollarNormalised = Number(tokenPerDollar.price);
+      const tokenPerDollarNormalised = 1 / Number(tokenUsd.price);
 
       const tokenToSend = CHAIN_ID_TO_TOKENS[sendPayload.chainId]?.find(
         (token) => {
@@ -128,7 +128,7 @@ export const useSender = ({ wallet }: Properties) => {
     },
     [
       erc20Transaction,
-      getTokenPerDollarMutation,
+      getTokenPriceMutation,
       getEthBalaceMutation,
       getTokenBalanceMutation,
       nativeTransaction,
@@ -141,13 +141,13 @@ export const useSender = ({ wallet }: Properties) => {
     switchChain.isPending ||
     nativeTransaction.isPending ||
     erc20Transaction.isPending ||
-    getTokenPerDollarMutation.isPending ||
+    getTokenPriceMutation.isPending ||
     getEthBalaceMutation.isPending ||
     getTokenBalanceMutation.isPending;
 
   const isError =
     switchChain.isError ||
-    getTokenPerDollarMutation.isError ||
+    getTokenPriceMutation.isError ||
     nativeTransaction.isError ||
     erc20Transaction.isError ||
     getEthBalaceMutation.isError ||
@@ -166,17 +166,12 @@ export const useSender = ({ wallet }: Properties) => {
   const isIdle = !isSending && !isError && !isSuccess;
 
   const reset = useCallback(() => {
-    getTokenPerDollarMutation.reset();
+    getTokenPriceMutation.reset();
     nativeTransaction.reset();
     erc20Transaction.reset();
     switchChain.reset();
     setHaveEnoughBalance(true);
-  }, [
-    erc20Transaction,
-    getTokenPerDollarMutation,
-    nativeTransaction,
-    switchChain,
-  ]);
+  }, [erc20Transaction, getTokenPriceMutation, nativeTransaction, switchChain]);
 
   return {
     send,
