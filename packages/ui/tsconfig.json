@@ -1,10 +1,8 @@
 {
-  "extends": "@idriss-xyz/typescript-config/react",
-  "include": [
-    "src"
-  ],
-  "exclude": [
-    "node_modules",
-    "build"
-  ]
+  "extends": "@idriss-xyz/typescript-config/base",
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "build"]
 }
