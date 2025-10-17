@@ -32,7 +32,7 @@ export type CreatorProfileResponse = {
 };
 
 export type Goal = {
-  id: string;
+  id: number;
   name: string;
   targetAmount: number;
   progress: number;

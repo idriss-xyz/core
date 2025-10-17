@@ -52,8 +52,10 @@ import {
   AddTokenEnabledToCreator1758728078982,
   SplitNftMetadata1759318771000,
   FixIncorrectNftNames1759846236000,
+  AddDonationGoal1760651767821,
 } from './migrations';
 import { CreatorProfileView } from './views';
+import { DonationGoalView } from './views';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -72,6 +74,7 @@ export const AppDataSource = new DataSource({
     CreatorToken,
     DonationParameters,
     CreatorProfileView,
+    DonationGoalView,
     CreatorAddress,
     Referral,
     DripDailyClaim,
@@ -113,6 +116,7 @@ export const AppDataSource = new DataSource({
     AddTokenEnabledToCreator1758728078982,
     SplitNftMetadata1759318771000,
     FixIncorrectNftNames1759846236000,
+    AddDonationGoal1760651767821,
   ],
 });
 
