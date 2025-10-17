@@ -35,6 +35,7 @@ export class AddDonationGoal1760651767821 implements MigrationInterface {
           g.start_date AS "startDate",
           g.end_date AS "endDate",
           g.active AS active,
+          c.name AS "creatorName",
           COALESCE(SUM(d.trade_value), 0) AS progress,
           (
             SELECT u.display_name
@@ -63,6 +64,7 @@ export class AddDonationGoal1760651767821 implements MigrationInterface {
             LIMIT 1
           ) AS "topDonorAmount"
         FROM donation_goal g
+        LEFT JOIN creator c ON c.id = g.creator_id
         LEFT JOIN donation_goal_donations_creator_donations dg
           ON dg."donation_goal_id" = g.id
         LEFT JOIN creator_donations d
@@ -73,8 +75,8 @@ export class AddDonationGoal1760651767821 implements MigrationInterface {
           g.target_amount,
           g.start_date,
           g.end_date,
-          g.active;
-
+          g.active,
+          c.name;
         `);
   }
 

@@ -13,6 +13,7 @@ import { Donation } from '../entities/donations.entity';
       .addSelect('g.start_date', 'startDate')
       .addSelect('g.end_date', 'endDate')
       .addSelect('g.active', 'active')
+      .addSelect('c.name', 'creatorName')
       // total donated so far (progress)
       .addSelect('COALESCE(SUM(d.trade_value), 0)', 'progress')
       .addSelect(
@@ -41,6 +42,7 @@ import { Donation } from '../entities/donations.entity';
         'topDonorAmount',
       )
       .from(DonationGoal, 'g')
+      .leftJoin('creator', 'c', 'c.id = g.creator_id')
       .leftJoin(
         'donation_goal_donations_creator_donations',
         'dg',
@@ -56,7 +58,8 @@ import { Donation } from '../entities/donations.entity';
       .addGroupBy('g.target_amount')
       .addGroupBy('g.start_date')
       .addGroupBy('g.end_date')
-      .addGroupBy('g.active'),
+      .addGroupBy('g.active')
+      .addGroupBy('c.name'),
 })
 export class DonationGoalView {
   @ViewColumn()
@@ -76,6 +79,9 @@ export class DonationGoalView {
 
   @ViewColumn()
   active!: boolean;
+
+  @ViewColumn()
+  creatorName!: string;
 
   @ViewColumn()
   progress!: number;
