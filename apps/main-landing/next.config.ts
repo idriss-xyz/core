@@ -221,6 +221,7 @@ const nextConfig: NextConfig = {
       'storage.googleapis.com',
       'static-cdn.jtvnw.net',
       'images.zapper.xyz',
+      'nftmedia.parallelnft.com',
     ],
   },
   env: {
