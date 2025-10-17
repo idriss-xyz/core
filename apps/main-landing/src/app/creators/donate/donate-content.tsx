@@ -16,6 +16,7 @@ import {
   calculateDonationLeaderboard,
   getFilteredDonationsByPeriod,
 } from '@idriss-xyz/utils';
+import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 
 import { backgroundLines2 } from '@/assets';
 import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history';
@@ -269,7 +270,7 @@ export function DonateContent({ creatorProfile }: Properties) {
     <>
       <TopBar />
       {/* Temproarily use a div instead of ScrollArea (not dispatching event) */}
-      <div
+      <ScrollArea
         onScroll={(event) => {
           const scrollTop = (event.target as HTMLDivElement).scrollTop;
           window.dispatchEvent(
@@ -278,7 +279,6 @@ export function DonateContent({ creatorProfile }: Properties) {
             }),
           );
         }}
-        className="h-screen overflow-y-auto"
       >
         <main className="relative flex min-h-screen grow flex-col items-center justify-around gap-4 overflow-hidden bg-[radial-gradient(181.94%_192.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] px-2 pb-1 pt-[56px] lg:flex-row lg:items-start lg:justify-center lg:px-0">
           <link rel="preload" as="image" href={backgroundLines2.src} />
@@ -290,7 +290,7 @@ export function DonateContent({ creatorProfile }: Properties) {
 
           {!isLegacyLink && currentContentComponent}
         </main>
-      </div>
+      </ScrollArea>
       {isLegacyLink && (
         <FullscreenOverlay className="bg-[#E7F5E6]/[0.6] backdrop-blur-sm">
           <p className="text-balance text-center text-heading5 text-neutralGreen-700">
