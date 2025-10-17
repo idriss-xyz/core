@@ -21,11 +21,11 @@ export abstract class DonationGoal {
   @Column({ type: 'integer', name: 'target_amount' })
   targetAmount!: number;
 
-  @Column({ type: 'timestamp', name: 'start_date' })
-  startDate!: Date;
+  @Column({ type: 'bigint', name: 'start_date' })
+  startDate!: number;
 
-  @Column({ type: 'timestamp', name: 'end_date' })
-  endDate!: Date;
+  @Column({ type: 'bigint', name: 'end_date' })
+  endDate!: number;
 
   @Column({ type: 'boolean', name: 'active' })
   active!: boolean;
