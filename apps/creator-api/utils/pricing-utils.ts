@@ -45,21 +45,6 @@ async function retryWithBackoff<T>(
   throw new Error('Retry failed');
 }
 
-export function getOldestZapperPrice(
-  tokenAddress: string,
-  network: string,
-): number | null {
-  const zapperCacheKey = `${network}_${tokenAddress}`;
-  const priceTicks = zapperHistoryCache[zapperCacheKey];
-
-  if (priceTicks && priceTicks?.length > 0) {
-    const oldestTick = priceTicks.at(-1);
-    return oldestTick!.median;
-  }
-
-  return null;
-}
-
 export async function getZapperPrice(
   tokenAddress: string,
   network: string,
@@ -126,72 +111,6 @@ export async function getZapperPrice(
   }
 
   return fallbackPrice;
-}
-
-export async function getAlchemyHistoricalPrice(
-  tokenAddress: string,
-  network: string,
-  txDate: Date,
-): Promise<number | null> {
-  const alchemyNetwork =
-    NETWORK_TO_ALCHEMY[network as keyof typeof NETWORK_TO_ALCHEMY];
-  if (!alchemyNetwork) return null;
-
-  try {
-    return await retryWithBackoff(async () => {
-      const startTime = Math.floor(
-        new Date(txDate).setHours(0, 0, 0, 0) / 1000,
-      );
-      const endTime = Math.floor(
-        new Date(txDate).setHours(23, 59, 59, 999) / 1000,
-      );
-
-      const isNativeToken = tokenAddress === zeroAddress;
-      const options = {
-        method: 'POST',
-        headers: {
-          'accept': 'application/json',
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...(isNativeToken
-            ? {
-                symbol:
-                  ALCHEMY_NATIVE_TOKENS[
-                    network as keyof typeof ALCHEMY_NATIVE_TOKENS
-                  ],
-              }
-            : {
-                address: tokenAddress,
-                network: alchemyNetwork,
-              }),
-          startTime,
-          endTime,
-          interval: '1d',
-        }),
-      };
-
-      const response = await fetch(
-        `https://api.g.alchemy.com/prices/v1/${process.env.ALCHEMY_API_KEY}/tokens/historical`,
-        options,
-      );
-
-      const data = (await response.json()) as {
-        data?: { value?: string }[];
-      };
-      if (data.data?.[0]?.value) {
-        const price = Number(data.data[0].value);
-        return price;
-      }
-      return null;
-    });
-  } catch (error) {
-    console.error(
-      `Failed to fetch Alchemy price for token ${tokenAddress} on ${network} after retries:`,
-      error,
-    );
-    return null;
-  }
 }
 
 async function fetchERC20PricesFromAlchemy<T = unknown>(

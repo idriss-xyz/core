@@ -22,6 +22,7 @@
     "@idriss-xyz/constants": "workspace:*",
     "@idriss-xyz/db": "workspace:*",
     "@idriss-xyz/utils": "workspace:*",
+    "@idriss-xyz/blockchain-clients": "workspace:*",
     "dotenv": "^16.4.5",
     "hono": "^4.5.0",
     "pg": "^8.13.1",

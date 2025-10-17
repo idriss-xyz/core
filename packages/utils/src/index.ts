@@ -33,11 +33,3 @@ export {
 export { getTokenPerDollar } from './get-token-per-dollar';
 
 export { getNftMetadata, fetchPreferredImage } from './nft-metadata';
-
-export {
-  getAlchemyHistoricalPrice,
-  getAlchemyPrices,
-  getOldestZapperPrice,
-  getZapperPrice,
-  fetchNftFloorFromOpensea,
-} from './pricing-utils';

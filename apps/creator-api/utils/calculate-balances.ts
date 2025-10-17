@@ -11,12 +11,11 @@ import { AppDataSource } from '@idriss-xyz/db';
 import {
   fetchNftFloorFromOpensea,
   getAlchemyPrices,
-  getChainById,
-  getChainByNetworkName,
   getZapperPrice,
-} from '@idriss-xyz/utils';
+} from './pricing-utils';
 import { ALCHEMY_BASE_URLS, OPENSEA_BASE_URLS } from '../constants';
 import { NftDonation } from '@idriss-xyz/db';
+import { getChainById, getChainByNetworkName } from '@idriss-xyz/utils';
 
 export async function calculateBalances(userAddress: Hex) {
   const tokenRepository = AppDataSource.getRepository(Token);

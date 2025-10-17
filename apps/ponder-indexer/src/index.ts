@@ -1,5 +1,5 @@
 import { ponder } from 'ponder:registry';
-import { storeTipMessage } from '@idriss-xyz/db';
+import { storeTipMessage } from './store-tip-message.js';
 
 async function handleTipMessage({ event, context }: any) {
   const saved = await storeTipMessage({

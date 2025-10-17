@@ -3,10 +3,6 @@ import {
   getChainById,
   fetchPreferredImage,
   getNftMetadata,
-  getZapperPrice,
-  getAlchemyHistoricalPrice,
-  getOldestZapperPrice,
-  fetchNftFloorFromOpensea,
 } from '@idriss-xyz/utils';
 import {
   NATIVE_COIN_ADDRESS,
@@ -18,15 +14,23 @@ import {
 } from '@idriss-xyz/constants';
 import { clients } from '@idriss-xyz/blockchain-clients';
 
-import { AppDataSource } from './database';
-import { Donation } from './entities/donations.entity';
-import { User } from './entities/user.entity';
-import { Token } from './entities/token.entity';
-import { TokenDonation } from './entities/token-donation.entity';
-import { NftCollection } from './entities/nft-collection.entity';
-import { NftToken } from './entities/nft-token.entity';
-import { NftDonation } from './entities/nft-donation.entity';
-import { getCreatorNameOrAnon } from './utils';
+import {
+  AppDataSource,
+  Donation,
+  User,
+  Token,
+  TokenDonation,
+  NftDonation,
+  NftCollection,
+  NftToken,
+  getCreatorNameOrAnon,
+} from '@idriss-xyz/db';
+import {
+  fetchNftFloorFromOpensea,
+  getAlchemyHistoricalPrice,
+  getOldestZapperPrice,
+  getZapperPrice,
+} from './pricing-utils.js';
 
 const HOURLY_PRICE_CACHE = new Map<string, number>();
 
@@ -59,7 +63,7 @@ async function getHourlyTokenPriceUSD(
   return price;
 }
 
-export type TipMessageEvent = {
+type TipMessageEvent = {
   chainId: number;
   txHash: Hex;
   blockTimestamp: number | bigint;

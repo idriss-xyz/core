@@ -16,6 +16,7 @@
   "devDependencies": {
     "@idriss-xyz/eslint-config": "workspace:*",
     "@idriss-xyz/typescript-config": "workspace:*",
+    "@idriss-xyz/blockchain-clients": "workspace:*",
     "@types/node": "^24.7.2",
     "dependency-cruiser": "^16.4.2",
     "ts-unused-exports": "^10.1.0",
