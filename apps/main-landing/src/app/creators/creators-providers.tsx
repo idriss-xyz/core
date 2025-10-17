@@ -1,7 +1,7 @@
 'use client';
 
 import { PrivyProvider } from '@privy-io/react-auth';
-import { abstract, base, mainnet, ronin } from 'viem/chains';
+import { abstract, base, mainnet, ronin, avalanche } from 'viem/chains';
 
 import { AuthProvider } from './context/auth-context';
 import { PrivyAuthSync } from './privy-auth-sync';
@@ -18,8 +18,7 @@ export function CreatorsProviders({ children }: { children: React.ReactNode }) {
               showWalletUIs: false,
             },
             defaultChain: base,
-            // supportedChains: [abstract, base, mainnet, ronin, avalanche],
-            supportedChains: [abstract, base, mainnet, ronin],
+            supportedChains: [abstract, base, mainnet, ronin, avalanche],
           }}
         >
           <PrivyAuthSync />
