@@ -226,17 +226,6 @@ router.get(
   },
 );
 
-function safeToNumber(raw: string): number {
-  try {
-    const b = BigInt(raw);
-    const max = BigInt(Number.MAX_SAFE_INTEGER);
-    return Number(b > max ? max : b);
-  } catch {
-    const n = Number(raw);
-    return Number.isFinite(n) ? n : 0;
-  }
-}
-
 function buildTestDonationPayload(donation: StoredDonationData) {
   const base = {
     type: 'test' as const,
@@ -252,7 +241,7 @@ function buildTestDonationPayload(donation: StoredDonationData) {
       ...base,
       amount: donation.tradeValue ?? 0,
       token: {
-        amount: safeToNumber(donation.amountRaw),
+        amount: donation.amountRaw,
         details: {
           symbol: donation.token.symbol,
           name: donation.token.name ?? donation.token.symbol,
