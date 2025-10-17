@@ -1,6 +1,11 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-import { mode } from '../../../../apps/creator-api/utils/mode';
+const mode =
+  process?.argv
+    ?.find((argument) => {
+      return argument.includes('--mode');
+    })
+    ?.split('=')?.[1] ?? 'production';
 
 export class InitialMigration1743173000000 implements MigrationInterface {
   name = 'InitialMigration1743173000000';

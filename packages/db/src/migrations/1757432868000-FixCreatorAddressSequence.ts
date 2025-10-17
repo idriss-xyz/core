@@ -6,9 +6,11 @@ export class FixCreatorAddressSequence1757432868000
 {
   public async up(queryRunner: QueryRunner): Promise<void> {
     // get the current highest id in creator_address
-    const [{ max }] = (await queryRunner.query(
+    const [row] = (await queryRunner.query(
       `SELECT MAX(id) AS max FROM "creator_address";`,
     )) as { max: string | null }[];
+
+    const max = row?.max ?? null;
 
     // if table is empty – nothing to fix
     if (max === null) {

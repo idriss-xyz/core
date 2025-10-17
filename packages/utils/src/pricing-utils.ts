@@ -96,7 +96,13 @@ export async function getZapperPrice(
         }),
       });
 
-      const json = await response.json();
+      const json = (await response.json()) as {
+        data?: {
+          fungibleTokenV2?: {
+            priceData?: { price?: number; priceTicks?: PriceTick[] };
+          };
+        };
+      };
       fallbackPrice = json.data?.fungibleTokenV2?.priceData?.price ?? null;
       zapperHistoryCache[zapperCacheKey] =
         json.data?.fungibleTokenV2?.priceData?.priceTicks ?? [];
@@ -170,7 +176,9 @@ export async function getAlchemyHistoricalPrice(
         options,
       );
 
-      const data = await response.json();
+      const data = (await response.json()) as {
+        data?: { value?: string }[];
+      };
       if (data.data?.[0]?.value) {
         const price = Number(data.data[0].value);
         return price;
@@ -231,7 +239,9 @@ async function fetchNativePricesFromAlchemy(
         );
       }
 
-      const json = await response.json();
+      const json = (await response.json()) as {
+        data?: { prices?: { value?: string }[]; symbol?: string }[];
+      };
       const entry = json.data?.[0];
       const price = entry?.prices?.[0]?.value;
       if (entry?.symbol && price) {
@@ -345,7 +355,7 @@ export async function fetchNftFloorFromOpensea(
       return null;
     }
 
-    const json: OpenSeaBestOfferResponse = await resp.json();
+    const json = (await resp.json()) as OpenSeaBestOfferResponse;
     const offer = json.price;
     if (!offer) return null;
 

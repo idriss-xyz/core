@@ -24,6 +24,7 @@
     "dependencies": {
         "@idriss-xyz/constants": "workspace:*",
         "@idriss-xyz/utils": "workspace:*",
+        "@idriss-xyz/blockchain-clients": "workspace:*",
         "@swc/helpers": "^0.5.13",
         "typeorm": "^0.3.20",
         "viem": "^2.38.0",

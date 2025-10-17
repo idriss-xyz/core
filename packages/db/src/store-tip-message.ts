@@ -16,8 +16,7 @@ import {
   TokenDonationData,
   NftDonationData,
 } from '@idriss-xyz/constants';
-
-import { clients } from '../../blockchain-clients/src';
+import { clients } from '@idriss-xyz/blockchain-clients';
 
 import { AppDataSource } from './database';
 import { Donation } from './entities/donations.entity';
@@ -48,7 +47,7 @@ async function getHourlyTokenPriceUSD(
   const date = new Date(Number(ts));
   const hourKey = date.toISOString().slice(0, 13); // YYYY-MM-DDTHH
   const key = `${network}_${lookupAddress.toLowerCase()}_${hourKey}`;
-  if (HOURLY_PRICE_CACHE.has(key)) return HOURLY_PRICE_CACHE.get(key)!;
+  if (HOURLY_PRICE_CACHE.has(key)) return HOURLY_PRICE_CACHE.get(key) ?? null;
 
   const price =
     (await getZapperPrice(lookupAddress, network, date)) ??

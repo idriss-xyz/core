@@ -1,16 +1,18 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "NodeNext",
-    "types": ["node"],
-    "moduleResolution": "NodeNext",
+    "outDir": "dist",
+    "declaration": true,
+    "composite": true,
+
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "strict": true,
-    "skipLibCheck": true,
+    "module": "Node16",
+    "moduleResolution": "node16",
+    "target": "ES2022",
+    "lib": ["ES2022"],
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "outDir": "dist"
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "rootDir": "./"
   },
   "include": ["src"]
 }

@@ -5,7 +5,7 @@ async function handleTipMessage({ event, context }: any) {
   const saved = await storeTipMessage({
     chainId: context.chain.id,
     txHash: event.transaction.hash,
-    blockTimestamp: event.block.timestamp * 1000,
+    blockTimestamp: event.block.timestamp * BigInt(1000),
     args: {
       sender: event.args.sender,
       recipientAddress: event.args.recipientAddress,
@@ -24,7 +24,7 @@ async function handleTipMessage({ event, context }: any) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.INTERNAL_SYNC_TOKEN}`,
+        'Authorization': `Bearer ${process.env.INTERNAL_SYNC_TOKEN}`,
       },
       body: JSON.stringify(saved),
     }).catch((e) => console.warn('notify donation failed', e));
