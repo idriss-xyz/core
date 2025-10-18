@@ -70,18 +70,18 @@ export const useWithdrawal = ({
       tokenAddress,
     }: CheckGasAndProceedArguments) => {
       setError(null);
-      // const dripTxHash = await claimDailyDrip(chainId, tokenAddress);
-      // if (dripTxHash) {
-      //   try {
-      //     const client = createPublicClient({
-      //       chain: getChainById(chainId),
-      //       transport: http(),
-      //     });
-      //     await client.waitForTransactionReceipt({ hash: dripTxHash });
-      //   } catch {
-      //     /* ignore */
-      //   }
-      // }
+      const dripTxHash = await claimDailyDrip(chainId, tokenAddress);
+      if (dripTxHash) {
+        try {
+          const client = createPublicClient({
+            chain: getChainById(chainId),
+            transport: http(),
+          });
+          await client.waitForTransactionReceipt({ hash: dripTxHash });
+        } catch {
+          /* ignore */
+        }
+      }
       setAdjustedAmount(undefined);
 
       const activeWallet = wallets.find((wallet) => {

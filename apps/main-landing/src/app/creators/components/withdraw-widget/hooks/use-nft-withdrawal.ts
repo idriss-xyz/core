@@ -64,23 +64,23 @@ export const useNftWithdrawal = ({
       amount1155,
     }: CheckGasAndProceedNftArguments) => {
       setError(null);
-      // const dripTxHash = await claimDailyDrip(
-      //   chainId,
-      //   assetAddress,
-      //   nftType,
-      //   tokenId,
-      // );
-      // if (dripTxHash) {
-      //   try {
-      //     const client = createPublicClient({
-      //       chain: getChainById(chainId),
-      //       transport: http(),
-      //     });
-      //     await client.waitForTransactionReceipt({ hash: dripTxHash });
-      //   } catch {
-      //     /* ignore – fallback to normal flow */
-      //   }
-      // }
+      const dripTxHash = await claimDailyDrip(
+        chainId,
+        assetAddress,
+        nftType,
+        tokenId,
+      );
+      if (dripTxHash) {
+        try {
+          const client = createPublicClient({
+            chain: getChainById(chainId),
+            transport: http(),
+          });
+          await client.waitForTransactionReceipt({ hash: dripTxHash });
+        } catch {
+          /* ignore – fallback to normal flow */
+        }
+      }
 
       const activeWallet = wallets.find((w) => {
         return w.walletClientType === 'privy';
