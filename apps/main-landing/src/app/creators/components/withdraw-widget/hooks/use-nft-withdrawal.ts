@@ -64,23 +64,23 @@ export const useNftWithdrawal = ({
       amount1155,
     }: CheckGasAndProceedNftArguments) => {
       setError(null);
-      const dripTxHash = await claimDailyDrip(
-        chainId,
-        assetAddress,
-        nftType,
-        tokenId,
-      );
-      if (dripTxHash) {
-        try {
-          const client = createPublicClient({
-            chain: getChainById(chainId),
-            transport: http(),
-          });
-          await client.waitForTransactionReceipt({ hash: dripTxHash });
-        } catch {
-          /* ignore – fallback to normal flow */
-        }
-      }
+      // const dripTxHash = await claimDailyDrip(
+      //   chainId,
+      //   assetAddress,
+      //   nftType,
+      //   tokenId,
+      // );
+      // if (dripTxHash) {
+      //   try {
+      //     const client = createPublicClient({
+      //       chain: getChainById(chainId),
+      //       transport: http(),
+      //     });
+      //     await client.waitForTransactionReceipt({ hash: dripTxHash });
+      //   } catch {
+      //     /* ignore – fallback to normal flow */
+      //   }
+      // }
 
       const activeWallet = wallets.find((w) => {
         return w.walletClientType === 'privy';
@@ -198,8 +198,9 @@ export const useNftWithdrawal = ({
 
         const tx = await sendTransaction(
           { to: assetAddress, value: '0', data, chainId },
-          { uiOptions: { showWalletUIs: false } },
+          { uiOptions: { showWalletUIs: false }, sponsor: true },
         );
+        console.log(tx.hash);
 
         setTransactionHash(tx.hash);
         setIsLoading(false);
