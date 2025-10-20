@@ -31,12 +31,12 @@ export type CreatorProfileResponse = {
   alertSound: string;
 };
 
-export type Goal = {
+export type DonationGoal = {
   id: number;
   name: string;
   targetAmount: number;
   progress: number;
-  startDate: string;
-  endDate: string;
+  startDate: number;
+  endDate: number;
   topDonor: { name: string; amount: number };
 };

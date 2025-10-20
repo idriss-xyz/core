@@ -9,7 +9,7 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { Badge } from '@idriss-xyz/ui/badge';
 
 import { getTimeRemaining } from '../utils';
-import { Goal } from '../utils/types';
+import { DonationGoal } from '../utils/types';
 
 interface Properties {
   creatorName?: string;
@@ -17,7 +17,7 @@ interface Properties {
 
 // ts-unused-exports:disable-next-line
 export default function GoalOverlay({ creatorName }: Properties) {
-  const [goalData, setGoalData] = useState<Goal>({
+  const [goalData, setGoalData] = useState<DonationGoal>({
     id: 1,
     name: 'New Gaming Setup',
     progress: 320,
@@ -43,7 +43,7 @@ export default function GoalOverlay({ creatorName }: Properties) {
     });
 
     socket.on('connect', () => {
-      console.log('✅ Goal overlay socket connected');
+      console.log('✅ DonationGoal overlay socket connected');
     });
 
     socket.on('forceRefresh', () => {
@@ -53,13 +53,13 @@ export default function GoalOverlay({ creatorName }: Properties) {
       window.location.href = url.toString();
     });
 
-    socket.on('goalDataUpdated', (data: Goal) => {
+    socket.on('goalDataUpdated', (data: DonationGoal) => {
       console.log('Got new goal data', data);
       setGoalData(data);
     });
 
     socket.on('connect_error', (error) => {
-      console.error('Goal overlay auth failed:', error.message);
+      console.error('DonationGoal overlay auth failed:', error.message);
     });
 
     return () => {
@@ -77,7 +77,7 @@ export default function GoalOverlay({ creatorName }: Properties) {
       `}</style>
       <div className="flex h-screen w-screen items-center justify-center bg-transparent p-6">
         <div className="flex w-full max-w-md flex-col gap-6 rounded-lg border bg-white/90 p-4">
-          {/* Goal name and incoming donation chip*/}
+          {/* DonationGoal name and incoming donation chip*/}
           <div className="flex w-full items-center">
             <div className="flex grow items-center">
               <h2

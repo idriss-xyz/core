@@ -8,11 +8,11 @@ import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { useState } from 'react';
 
 import { getTimeRemaining } from '@/app/creators/utils';
-import { Goal } from '@/app/creators/utils/types';
+import { DonationGoal } from '@/app/creators/utils/types';
 import { ConfirmationModal } from '@/app/creators/components/confirmation-modal';
 
 /* TODO: Replace for hook and call to api */
-const useGoals: () => Goal[] = () => {
+const useGoals: () => DonationGoal[] = () => {
   return [
     {
       id: 1,

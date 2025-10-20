@@ -12,6 +12,7 @@ import { ConfirmationModal } from '@/app/creators/components/confirmation-modal/
 import { CopyInput } from '@/app/creators/components/copy-input/copy-input';
 import { FormFieldWrapper } from '@/app/creators/components/layout';
 import { ToastData, useToast } from '@/app/creators/context/toast-context';
+import { createDonationGoal } from '@/app/creators/utils';
 
 type FormPayload = {
   name: string;
@@ -47,11 +48,6 @@ export default function ActiveGoal() {
   };
 
   const formMethods = useForm<FormPayload>({
-    defaultValues: {
-      name: creator?.name ?? '',
-      targetAmount: 0,
-      endDate: new Date(),
-    },
     mode: 'onSubmit',
   });
 
@@ -71,7 +67,14 @@ export default function ActiveGoal() {
         return;
       }
 
-      console.log(data);
+      await createDonationGoal(
+        {
+          ...data,
+          startDate: Date.now(),
+          endDate: data.endDate.getTime(),
+        },
+        authToken,
+      );
       removeToast(unsavedChangesToastId);
       setUnsavedChangesToastId('');
 
@@ -81,24 +84,16 @@ export default function ActiveGoal() {
         autoClose: true,
       });
     } catch (error) {
-      console.error('Error saving profile:', error);
+      console.error('Error saving donation goal:', error);
       toast(errorSaveSettingsToast);
     }
   };
 
-  // TODO: Initialize form values after fetching creator goals
-  useEffect(() => {
-    if (creator) {
-      formMethods.reset({
-        name: 'Test goal',
-        targetAmount: 1,
-        endDate: new Date(),
-      });
-    }
-  }, [creator, formMethods]);
+  // TODO: Fetch creator goals and display here on page load
 
   useEffect(() => {
     if (isDirty && !unsavedChangesToastId) {
+      console.log('creating new toast');
       // Create new toast when dirty and no toast exists
       const toastId = toast({
         type: 'error',
@@ -196,6 +191,7 @@ export default function ActiveGoal() {
                   className="max-w-[360px]"
                   error={Boolean(fieldState.error?.message)}
                   {...field}
+                  placeholder="New microphone"
                 />
               );
             }}
@@ -217,6 +213,7 @@ export default function ActiveGoal() {
                     field.onChange(Number(value));
                   }}
                   prefixElement={<span>$</span>}
+                  placeholder="500"
                 />
               );
             }}
@@ -237,7 +234,7 @@ export default function ActiveGoal() {
                   onDateChange={(date) => {
                     field.onChange(date);
                   }}
-                  value={field.value.toString()} // Required prop but not used for date picker
+                  value={field.value?.toString()} // Required prop but not used for date picker
                   onChange={() => {}} // Required prop but not used for date picker
                 />
               );
@@ -265,7 +262,7 @@ export default function ActiveGoal() {
         }}
         onConfirm={() => {
           {
-            /* TODO: Replace for donation goal overlay link*/
+            /* TODO: Replace for donation goal overlay link (add property on backend)*/
           }
           if (confirmButtonText === 'COPY LINK' && creator?.obsUrl) {
             void navigator.clipboard.writeText(creator.obsUrl);
