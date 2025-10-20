@@ -52,6 +52,7 @@ router.post(
         await donationGoalService.createDonationGoal(donationGoal);
       res.status(201).json(createdDonationGoal);
     } catch (error) {
+      console.error('Error creating donation goal:', error);
       res.status(500).json({ error: 'Failed to create donation goal' });
     }
   },

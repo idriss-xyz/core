@@ -15,6 +15,7 @@ import {
   Referral,
   CreatorAddress,
   DripDailyClaim,
+  DonationGoal,
 } from './entities';
 import {
   AddAmountRaw1743181200000,
@@ -78,6 +79,7 @@ export const AppDataSource = new DataSource({
     CreatorAddress,
     Referral,
     DripDailyClaim,
+    DonationGoal,
   ],
   synchronize: false,
   migrations: [

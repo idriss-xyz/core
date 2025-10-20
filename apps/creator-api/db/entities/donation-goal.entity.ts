@@ -27,7 +27,7 @@ export class DonationGoal {
   @Column({ type: 'bigint', name: 'end_date' })
   endDate!: number;
 
-  @Column({ type: 'boolean', name: 'active' })
+  @Column({ type: 'boolean', name: 'active', default: false })
   active!: boolean;
 
   @ManyToOne(() => Creator, { onDelete: 'CASCADE' })

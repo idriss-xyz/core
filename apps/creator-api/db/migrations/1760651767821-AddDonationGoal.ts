@@ -9,7 +9,7 @@ export class AddDonationGoal1760651767821 implements MigrationInterface {
           "target_amount" integer NOT NULL,
           "start_date" bigint NOT NULL,
           "end_date" bigint NOT NULL,
-          "active" boolean NOT NULL,
+          "active" boolean NOT NULL DEFAULT false,
           "creator_id" integer NOT NULL,
           CONSTRAINT "PK_donation_goal" PRIMARY KEY ("id"),
           CONSTRAINT "FK_donation_goal_creator" FOREIGN KEY ("creator_id") REFERENCES "creator"("id") ON DELETE CASCADE ON UPDATE CASCADE
@@ -81,10 +81,10 @@ export class AddDonationGoal1760651767821 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`DROP VIEW "donation_goal_view"`);
     await queryRunner.query(
       `DROP TABLE "donation_goal_donations_creator_donations"`,
     );
     await queryRunner.query(`DROP TABLE "donation_goal"`);
-    await queryRunner.query(`DROP VIEW "donation_goal_view"`);
   }
 }
