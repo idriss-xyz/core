@@ -8,7 +8,7 @@ class DonationGoalService {
   private donationGoalRepository = AppDataSource.getRepository(DonationGoal);
 
   async getDonationGoalsByCreatorName(creatorName: string) {
-    return this.donationGoalViewRepository.findOne({
+    return this.donationGoalViewRepository.find({
       where: { creatorName },
     });
   }

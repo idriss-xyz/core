@@ -18,14 +18,3 @@ export const createDonationGoal = async (
     throw new Error('Failed to create donation goal');
   }
 };
-
-export const getDonationGoals = async (name: string, authToken: string) => {
-  const response = await fetch(`${CREATOR_API_URL}/donation-goal/${name}`, {
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-  if (!response.ok) {
-    throw new Error('Failed to get donation goals');
-  }
-};

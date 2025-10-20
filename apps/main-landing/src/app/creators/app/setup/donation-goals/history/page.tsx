@@ -5,63 +5,30 @@ import { Card, CardBody, CardHeader } from '@idriss-xyz/ui/card';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { ProgressBarV2 } from '@idriss-xyz/ui/progress-bar-v2';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { usePrivy } from '@privy-io/react-auth';
 
 import { getTimeRemaining } from '@/app/creators/utils';
-import { DonationGoal } from '@/app/creators/utils/types';
 import { ConfirmationModal } from '@/app/creators/components/confirmation-modal';
-
-/* TODO: Replace for hook and call to api */
-const useGoals: () => DonationGoal[] = () => {
-  return [
-    {
-      id: 1,
-      name: 'Help me upgrade to the secretlab titan chair',
-      targetAmount: 500,
-      progress: 320,
-      startDate: '01/01/2025',
-      endDate: '12/31/2025',
-      topDonor: { name: 'geoist_', amount: 50 },
-    },
-    {
-      id: 2,
-      name: 'Get an elgato key light to brighten up my stream',
-      targetAmount: 180,
-      progress: 210,
-      startDate: '01/01/2025',
-      endDate: '11/15/2025',
-      topDonor: { name: 'geoist_', amount: 50 },
-    },
-    {
-      id: 3,
-      name: 'New microphone',
-      targetAmount: 320,
-      progress: 320,
-      startDate: '01/01/2025',
-      endDate: '01/20/2026',
-      topDonor: { name: 'geoist_', amount: 50 },
-    },
-    {
-      id: 4,
-      name: 'New graphics card',
-      targetAmount: 430,
-      progress: 30,
-      startDate: '01/01/2025',
-      endDate: '03/01/2025',
-      topDonor: { name: 'geoist_', amount: 50 },
-    },
-  ];
-};
+import { useAuth } from '@/app/creators/context/auth-context';
+import { useGetDonationGoals } from '@/app/creators/app/commands/get-donation-goals';
 
 // ts-unused-exports:disable-next-line
 export default function GoalHistory() {
-  const goals = useGoals();
+  const { creator } = useAuth();
+  const { ready, authenticated } = usePrivy();
+  const tipHistoryQuery = useGetDonationGoals(creator?.name, {
+    enabled: ready && authenticated && !!creator?.name,
+  });
+  const allGoals = useMemo(() => {
+    return tipHistoryQuery.data ?? [];
+  }, [tipHistoryQuery.data]);
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
 
   return (
     <>
       <div className="flex flex-wrap justify-start gap-4 px-4 py-2">
-        {goals.map((goal) => {
+        {allGoals.map((goal) => {
           const progressPercentage = (goal.progress / goal.targetAmount) * 100;
           return (
             <Card
@@ -119,7 +86,8 @@ export default function GoalHistory() {
                     variant="subtle"
                     className="w-fit lowercase"
                   >
-                    {getTimeRemaining(goal.endDate)}
+                    {goal.endDate}
+                    {/*getTimeRemaining(new Date(goal.endDate).toISOString())*/}
                   </Badge>
                 </div>
                 {/* Top donor section*/}

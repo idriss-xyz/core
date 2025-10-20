@@ -109,4 +109,4 @@ export {
   getPublicCreatorProfileBySlug,
 } from './server-session';
 export { useStartEarningNavigation } from './navigation';
-export { getDonationGoals, createDonationGoal } from './donation-goals';
+export { createDonationGoal } from './donation-goals';

@@ -17,7 +17,17 @@ router.get(
     const { creatorName } = req.params;
     const donationGoals =
       await donationGoalService.getDonationGoalsByCreatorName(creatorName);
-    res.status(200).json(donationGoals);
+
+    // Parse each donation goal and add topDonor field
+    const parsedDonationGoals = donationGoals.map((donationGoal) => ({
+      ...donationGoal,
+      topDonor: {
+        name: donationGoal.topDonorName,
+        amount: donationGoal.topDonorAmount,
+      },
+    }));
+
+    res.status(200).json(parsedDonationGoals);
   },
 );
 
