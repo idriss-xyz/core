@@ -18,7 +18,7 @@ interface Properties {
 // ts-unused-exports:disable-next-line
 export default function GoalOverlay({ creatorName }: Properties) {
   const [goalData, setGoalData] = useState<Goal>({
-    id: '1',
+    id: 1,
     name: 'New Gaming Setup',
     progress: 320,
     targetAmount: 500,

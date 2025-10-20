@@ -15,7 +15,7 @@ import { ConfirmationModal } from '@/app/creators/components/confirmation-modal'
 const useGoals: () => Goal[] = () => {
   return [
     {
-      id: '1',
+      id: 1,
       name: 'Help me upgrade to the secretlab titan chair',
       targetAmount: 500,
       progress: 320,
@@ -24,7 +24,7 @@ const useGoals: () => Goal[] = () => {
       topDonor: { name: 'geoist_', amount: 50 },
     },
     {
-      id: '2',
+      id: 2,
       name: 'Get an elgato key light to brighten up my stream',
       targetAmount: 180,
       progress: 210,
@@ -33,7 +33,7 @@ const useGoals: () => Goal[] = () => {
       topDonor: { name: 'geoist_', amount: 50 },
     },
     {
-      id: '3',
+      id: 3,
       name: 'New microphone',
       targetAmount: 320,
       progress: 320,
@@ -42,7 +42,7 @@ const useGoals: () => Goal[] = () => {
       topDonor: { name: 'geoist_', amount: 50 },
     },
     {
-      id: '4',
+      id: 4,
       name: 'New graphics card',
       targetAmount: 430,
       progress: 30,
