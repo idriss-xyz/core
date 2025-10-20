@@ -190,6 +190,7 @@ export async function storeToDatabase(
       if (!slug || !shortName || !category || !nftToken || !nftToken.name) {
         console.warn(
           `Skipping NFT donation from unsupported collection ${rawCollectionAddress} (${node.network})`,
+          `More info: ${node.transaction.hash}`,
         );
         continue;
       }
