@@ -92,6 +92,11 @@ export const clients = [
     name: CHAIN.ETHEREUM.name.toLowerCase(),
   },
   {
+    chain: CHAIN.AVALANCHE.id,
+    client: clientAvalanche,
+    name: CHAIN.AVALANCHE.name.toLowerCase(),
+  },
+  {
     chain: CHAIN.POLYGON.id,
     client: clientPolygon,
     name: CHAIN.POLYGON.name.toLowerCase(),
