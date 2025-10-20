@@ -187,7 +187,7 @@ export async function storeToDatabase(
       const category = collectionNft?.category;
       const collectionName = collectionNft?.name;
 
-      if (!slug || !shortName || !category || !nftToken.name) {
+      if (!slug || !shortName || !category || !nftToken || !nftToken.name) {
         console.warn(
           `Skipping NFT donation from unsupported collection ${rawCollectionAddress} (${node.network})`,
         );
