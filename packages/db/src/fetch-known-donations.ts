@@ -14,7 +14,7 @@ const applyBase = (w: object) => {
   return Object.keys(w).length > 0 ? ({ base: w } as object) : {};
 };
 
-async function getTokenAndNftRows(
+export async function getTokenAndNftRows(
   where: object,
   needTokenRelation = false,
 ): Promise<StoredDonationData[]> {

@@ -1,8 +1,8 @@
 import { config as dotenv } from 'dotenv';
 import { createConfig } from 'ponder';
 import {
-  CHAIN_TO_IDRISS_TIPPING_ADDRESS,
   TIPPING_ABI,
+  CHAIN_TO_IDRISS_TIPPING_ADDRESS,
 } from '@idriss-xyz/constants';
 
 dotenv({

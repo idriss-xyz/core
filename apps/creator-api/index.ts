@@ -8,7 +8,6 @@ import http from 'http';
 import { Server as SocketIOServer, Socket } from 'socket.io';
 import { connectedClients } from './services/socket-server';
 import tipHistoryRouter from './routes/tip-history';
-import internalRouter from './routes/internal-events';
 import recipientHistoryRouter from './routes/recipient-history';
 import donorHistoryRouter from './routes/donor-history';
 import creatorLeaderboardRouter from './routes/creator-leaderboard';
@@ -32,10 +31,19 @@ import { AppDataSource, initializeDatabase } from '@idriss-xyz/db';
 import { Creator } from '@idriss-xyz/db';
 import { isAllowedOrigin, openCors } from './config/cors';
 import { CREATORS_LINK } from '@idriss-xyz/constants';
+import { startDbListener } from './services/db-listener';
 
-initializeDatabase()
-  .then(() => console.log('DB connected...'))
-  .catch((err) => console.error('Error during DB initialization:', err));
+(async () => {
+  try {
+    await initializeDatabase();
+    console.log('DB connected...');
+    await startDbListener();
+    console.log('Trigger listener started...');
+  } catch (err) {
+    console.error('Startup failure:', err);
+    process.exit(1);
+  }
+})();
 
 const app: Application = express();
 app.use(express.json());
@@ -44,8 +52,7 @@ app.use(openCors);
 
 const server = http.createServer(app);
 app.use('/tip-history', tipHistoryRouter);
-app.use('/internal-events', internalRouter),
-  app.use('/donor-history', donorHistoryRouter);
+app.use('/donor-history', donorHistoryRouter);
 app.use('/recipient-history', recipientHistoryRouter);
 app.use('/creator-leaderboard', creatorLeaderboardRouter);
 app.use('/donor-leaderboard', donorLeaderboardRouter);

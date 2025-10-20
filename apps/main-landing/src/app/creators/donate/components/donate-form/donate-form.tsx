@@ -210,12 +210,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       donor?.name,
     );
 
-    const callbackOnSend = useDonationCallback(
-      sfx,
-      creatorInfo.address.isValid
-        ? (creatorInfo.address.data ?? undefined)
-        : undefined,
-    );
+    const callbackOnSend = useDonationCallback(sfx);
 
     // Derive the current amount based on active tab
     const amount = activeTab === 'token' ? tokenAmount : collectibleAmount;

@@ -1,5 +1,6 @@
 import { ponder } from 'ponder:registry';
 import { storeTipMessage } from './store-tip-message.js';
+import { CREATOR_API_URL } from '@idriss-xyz/constants';
 
 async function handleTipMessage({ event, context }: any) {
   const saved = await storeTipMessage({
@@ -17,18 +18,6 @@ async function handleTipMessage({ event, context }: any) {
       message: event.args.message,
     },
   });
-
-  if (saved) {
-    // Fire-and-forget push to backend to broadcast over overlay WS
-    fetch(`${process.env.CREATOR_API_URL}/internal/events/donations`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.INTERNAL_SYNC_TOKEN}`,
-      },
-      body: JSON.stringify(saved),
-    }).catch((e) => console.warn('notify donation failed', e));
-  }
 }
 
 ponder.on('idrissTippingBase:TipMessage', handleTipMessage);

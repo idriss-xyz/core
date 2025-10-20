@@ -11,7 +11,7 @@ import { User } from './user.entity';
 
 @Entity('creator_donations')
 export abstract class Donation {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ type: 'integer' })
   id!: number;
 
   @Column({ type: 'text', name: 'transaction_hash', unique: true })
