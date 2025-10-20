@@ -11,7 +11,7 @@ import { Creator } from './creator.entity';
 import { Donation } from './donations.entity';
 
 @Entity('donation_goal')
-export abstract class DonationGoal {
+export class DonationGoal {
   @PrimaryGeneratedColumn()
   id!: number;
 
