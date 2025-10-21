@@ -22,8 +22,8 @@ export default function GoalOverlay({ creatorName }: Properties) {
     name: 'New Gaming Setup',
     progress: 320,
     targetAmount: 500,
-    startDate: new Date(Date.now()).toISOString(),
-    endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+    startDate: 1_742_807_935_000,
+    endDate: 1_752_807_935_000,
     topDonor: { name: 'geoist_', amount: 50 },
   });
 
