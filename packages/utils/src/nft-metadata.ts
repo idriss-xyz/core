@@ -40,7 +40,7 @@ export async function getNftMetadata(
   if (!uri) return { name: 'NFT', image: undefined, collectionName };
 
   /* ---------- fix Parallel “/tokens/” URLs ---------- */
-  if (uri?.includes('nftdata.parallelnft.com') && uri.includes('/tokens/')) {
+  if (uri.includes('nftdata.parallelnft.com') && uri.includes('/tokens/')) {
     const hexId = `0x${id.toString(16).toUpperCase()}`;
 
     try {

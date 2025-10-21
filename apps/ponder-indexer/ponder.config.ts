@@ -76,11 +76,7 @@ export default createConfig({
           kind: 'postgres',
           connectionString: process.env.DATABASE_URL!,
         }
-      : // : {
-        //     kind: 'pglite',
-        //     directory: '.ponder/local.db',
-        //   },
-        {
+      : {
           kind: 'postgres',
           connectionString: process.env.DATABASE_URL!,
         },
