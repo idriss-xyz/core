@@ -55,11 +55,17 @@ export default function GoalHistory() {
                 </div>
                 <div className="flex items-center justify-between text-label4">
                   <span className="text-neutral-600">Start date</span>
-                  <span className="text-neutral-900">{goal.startDate}</span>
+                  <span className="text-neutral-900">
+                    {new Date(Number(goal.startDate)).toLocaleDateString(
+                      'en-GB',
+                    )}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between text-label4">
                   <span className="text-neutral-600">End date</span>
-                  <span className="text-neutral-900">{goal.endDate}</span>
+                  <span className="text-neutral-900">
+                    {new Date(Number(goal.endDate)).toLocaleDateString('en-GB')}
+                  </span>
                 </div>
               </div>
               <CardBody className="flex flex-col gap-12 text-label4">
@@ -86,8 +92,7 @@ export default function GoalHistory() {
                     variant="subtle"
                     className="w-fit lowercase"
                   >
-                    {goal.endDate}
-                    {/*getTimeRemaining(new Date(goal.endDate).toISOString())*/}
+                    {getTimeRemaining(Number(goal.endDate))}
                   </Badge>
                 </div>
                 {/* Top donor section*/}

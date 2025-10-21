@@ -79,7 +79,7 @@ export const getCreatorNameAndPicOrAnon = async (
   }
 };
 
-export const getTimeRemaining = (endDate: string): string => {
+export const getTimeRemaining = (endDate: number): string => {
   const now = new Date();
   const end = new Date(endDate);
   const diffInMs = end.getTime() - now.getTime();
