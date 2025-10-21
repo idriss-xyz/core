@@ -127,6 +127,10 @@ export default function DonationOverlay({ creatorName }: Properties) {
       console.log(testDonation);
       const queuedDonation: QueuedDonation = {
         ...testDonation,
+        token: {
+          ...testDonation.token,
+          amount: BigInt(testDonation.token.amount),
+        },
         minimumAmounts,
         enableToggles,
         alertSound,

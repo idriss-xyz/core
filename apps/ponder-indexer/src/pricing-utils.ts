@@ -7,7 +7,8 @@ import {
   NETWORK_TO_ALCHEMY,
 } from '@idriss-xyz/constants';
 
-import { getChainByNetworkName } from '@idriss-xyz/utils';
+import { NATIVE_COIN_ADDRESS, NULL_ADDRESS } from '@idriss-xyz/constants';
+import { formatUnits } from 'viem';
 
 type PriceTick = { timestamp: number; median: number };
 
@@ -247,8 +248,80 @@ async function fetchNativePricesFromAlchemy(
       if (entry?.symbol && price) {
         result[entry.symbol] = Number(price);
       }
-    } catch (error) {
-      console.error(`Failed to fetch native price for ${symbol}:`, error);
+    } catch (err) {
+      console.error(`Failed to fetch native price for ${symbol}:`, err);
+    }
+  }
+
+  return result;
+}
+
+export async function getAlchemyPrices(
+  tokens: { address: string; network: string }[],
+): Promise<Record<string, number>> {
+  const result: Record<string, number> = {};
+  if (tokens.length === 0) return result;
+
+  const nativeSymbols: string[] = [];
+  const erc20Addresses: { address: string; network: string }[] = [];
+
+  for (const t of tokens) {
+    if (t.address === NULL_ADDRESS || t.address === NATIVE_COIN_ADDRESS) {
+      const sym =
+        ALCHEMY_NATIVE_TOKENS[t.network as keyof typeof ALCHEMY_NATIVE_TOKENS];
+      if (sym) nativeSymbols.push(sym);
+    } else {
+      const alchemyNetwork =
+        NETWORK_TO_ALCHEMY[t.network as keyof typeof NETWORK_TO_ALCHEMY];
+      if (alchemyNetwork) {
+        erc20Addresses.push({ address: t.address, network: alchemyNetwork });
+      }
+    }
+  }
+
+  // native
+  if (nativeSymbols.length > 0) {
+    try {
+      const nativePrices = await fetchNativePricesFromAlchemy(nativeSymbols);
+      for (const t of tokens) {
+        if (t.address !== NULL_ADDRESS && t.address !== NATIVE_COIN_ADDRESS)
+          continue;
+        const sym =
+          ALCHEMY_NATIVE_TOKENS[
+            t.network as keyof typeof ALCHEMY_NATIVE_TOKENS
+          ];
+        const price = sym ? nativePrices[sym] : undefined;
+
+        if (price !== undefined) {
+          result[`${t.network}:${NULL_ADDRESS}`] = price;
+          result[`${t.network}:${NATIVE_COIN_ADDRESS}`] = price;
+        }
+      }
+    } catch (err) {
+      console.error('Failed to fetch native prices from Alchemy:', err);
+    }
+  }
+
+  // erc20
+  if (erc20Addresses.length > 0) {
+    try {
+      const data = await fetchERC20PricesFromAlchemy({
+        addresses: erc20Addresses,
+      });
+      for (const priceInfo of data.data || []) {
+        const net = Object.keys(NETWORK_TO_ALCHEMY).find(
+          (n) =>
+            NETWORK_TO_ALCHEMY[n as keyof typeof NETWORK_TO_ALCHEMY] ===
+            priceInfo.network,
+        );
+        const address = priceInfo.address;
+        const price = priceInfo.prices?.[0]?.value;
+        if (net && address && price) {
+          result[`${net}:${address.toLowerCase()}`] = Number(price);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to fetch ERC20 prices from Alchemy:', err);
     }
   }
 
