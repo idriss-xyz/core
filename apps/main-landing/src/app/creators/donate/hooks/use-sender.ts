@@ -11,7 +11,7 @@ import { clients } from '@idriss-xyz/blockchain-clients';
 import { SendPayload } from '../schema';
 
 import { useSwitchChain } from './use-switch-chain';
-import { useGetTokenPerDollar } from './use-get-token-per-dollar';
+import { useGetTokenPrice } from './use-get-token-price';
 import { useNativeTransaction } from './use-native-transaction';
 import { useErc20Transaction } from './use-erc20-transaction';
 import { useErc721Transaction } from './use-erc721-transaction';
@@ -55,7 +55,7 @@ export const useSender = ({ walletClient, callbackOnSend }: Properties) => {
   const erc20Transaction = useErc20Transaction();
   const erc721Transaction = useErc721Transaction();
   const erc1155Transaction = useErc1155Transaction();
-  const getTokenPerDollarMutation = useGetTokenPerDollar();
+  const getTokenPriceMutation = useGetTokenPrice();
   const [haveEnoughBalance, setHaveEnoughBalance] = useState<boolean>(true);
 
   const send = useCallback(
@@ -156,14 +156,13 @@ export const useSender = ({ walletClient, callbackOnSend }: Properties) => {
         return t.symbol === 'USDC';
       });
 
-      const tokenPerDollar = await getTokenPerDollarMutation.mutateAsync({
+      const tokenPrice = await getTokenPriceMutation.mutateAsync({
         chainId: sendPayload.chainId,
         buyToken: sendPayload.tokenAddress,
         sellToken: usdcToken?.address ?? '',
-        amount: 10 ** (usdcToken?.decimals ?? 0),
       });
 
-      const tokenPerDollarNormalised = Number(tokenPerDollar.price);
+      const tokenPerDollarNormalised = 1 / Number(tokenPrice.price);
 
       const tokenToSend = CHAIN_ID_TO_TOKENS[sendPayload.chainId]?.find((t) => {
         return t.address === sendPayload.tokenAddress;
@@ -235,7 +234,7 @@ export const useSender = ({ walletClient, callbackOnSend }: Properties) => {
       nativeTransaction,
       erc721Transaction,
       erc1155Transaction,
-      getTokenPerDollarMutation,
+      getTokenPriceMutation,
       callbackOnSend,
     ],
   );
@@ -252,7 +251,7 @@ export const useSender = ({ walletClient, callbackOnSend }: Properties) => {
     nativeTransaction.isError ||
     erc721Transaction.isError ||
     erc1155Transaction.isError ||
-    getTokenPerDollarMutation.isError;
+    getTokenPriceMutation.isError;
 
   const isSuccess =
     nativeTransaction.isSuccess ||
@@ -280,7 +279,7 @@ export const useSender = ({ walletClient, callbackOnSend }: Properties) => {
     nativeTransaction.reset();
     erc721Transaction.reset();
     erc1155Transaction.reset();
-    getTokenPerDollarMutation.reset();
+    getTokenPriceMutation.reset();
     setHaveEnoughBalance(true);
   }, [
     switchChain,
@@ -288,7 +287,7 @@ export const useSender = ({ walletClient, callbackOnSend }: Properties) => {
     nativeTransaction,
     erc721Transaction,
     erc1155Transaction,
-    getTokenPerDollarMutation,
+    getTokenPriceMutation,
   ]);
 
   const resetBalance = useCallback(() => {

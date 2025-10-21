@@ -6,7 +6,7 @@ import {
   ZAPPER_API_URL,
 } from '../constants';
 
-import { NULL_ADDRESS } from '@idriss-xyz/constants';
+import { NATIVE_COIN_ADDRESS, NULL_ADDRESS } from '@idriss-xyz/constants';
 import { formatUnits } from 'viem';
 
 type PriceTick = { timestamp: number; median: number };
@@ -240,7 +240,7 @@ export async function getAlchemyPrices(
   const erc20Addresses: { address: string; network: string }[] = [];
 
   for (const t of tokens) {
-    if (t.address === NULL_ADDRESS) {
+    if (t.address === NULL_ADDRESS || t.address === NATIVE_COIN_ADDRESS) {
       const sym =
         ALCHEMY_NATIVE_TOKENS[t.network as keyof typeof ALCHEMY_NATIVE_TOKENS];
       if (sym) nativeSymbols.push(sym);
@@ -258,14 +258,17 @@ export async function getAlchemyPrices(
     try {
       const nativePrices = await fetchNativePricesFromAlchemy(nativeSymbols);
       for (const t of tokens) {
-        if (t.address !== NULL_ADDRESS) continue;
+        if (t.address !== NULL_ADDRESS && t.address !== NATIVE_COIN_ADDRESS)
+          continue;
         const sym =
           ALCHEMY_NATIVE_TOKENS[
             t.network as keyof typeof ALCHEMY_NATIVE_TOKENS
           ];
         const price = sym ? nativePrices[sym] : undefined;
+
         if (price !== undefined) {
           result[`${t.network}:${NULL_ADDRESS}`] = price;
+          result[`${t.network}:${NATIVE_COIN_ADDRESS}`] = price;
         }
       }
     } catch (err) {
