@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { CHAIN_ID_TO_TOKENS } from '@idriss-xyz/constants';
-import { getAlchemyPrices, getZapperPrice } from '../utils/price-fetchers';
 import { getNetworkKeyByChainId } from '@idriss-xyz/utils';
+import { getAlchemyPrices, getZapperPrice } from '../utils/pricing-utils';
 
 const router = Router();
 
