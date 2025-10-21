@@ -78,8 +78,7 @@ export default createConfig({
     idrissTippingAvalanche: {
       chain: 'avalanche',
       abi: TIPPING_ABI,
-      // address: CHAIN_TO_IDRISS_TIPPING_ADDRESS[43114],
-      address: '0xBDc14c9946A957C7038900dE19Fb2Aa3f72CFAc2',
+      address: CHAIN_TO_IDRISS_TIPPING_ADDRESS[43114],
       startBlock: 70683678,
     },
   },
