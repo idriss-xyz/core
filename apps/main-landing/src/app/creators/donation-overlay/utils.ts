@@ -1,9 +1,5 @@
 import { type Hex } from 'viem';
-import {
-  CREATOR_CHAIN,
-  CREATOR_API_URL,
-  IDRISS_LEGACY_API_URL,
-} from '@idriss-xyz/constants';
+import { CREATOR_CHAIN, CREATOR_API_URL } from '@idriss-xyz/constants';
 
 const SELL_TOKEN_BY_NETWORK: Record<number, string> = {
   [CREATOR_CHAIN.BASE.id]: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',
@@ -20,58 +16,38 @@ export async function calculateDollar(
 ): Promise<string> {
   const decimals = 18;
 
-  let amountPerDollar = 1;
-
   try {
     if (
       SELL_TOKEN_BY_NETWORK[networkId]?.toLowerCase() ===
       tokenAddress?.toLowerCase()
     ) {
-      const value = Number(amount) / 10 ** 6 / amountPerDollar;
-
-      return Number.isNaN(value) || value === undefined
-        ? ''
-        : Number(value.toFixed(2)).toString();
+      const value = Number(amount) / 10 ** 6;
+      return Number.isNaN(value) ? '' : value.toFixed(2).toString();
     }
 
-    const sellToken = SELL_TOKEN_BY_NETWORK[networkId];
     const buyToken = tokenAddress?.toLowerCase();
-
-    if (!sellToken || !buyToken) {
-      throw new Error('Token address or sell token is undefined');
-    }
+    if (!buyToken) throw new Error('Token address undefined');
 
     const response = await fetch(
-      `${IDRISS_LEGACY_API_URL}/token-price?${new URLSearchParams({
-        sellToken,
+      `${CREATOR_API_URL}/token-price?${new URLSearchParams({
         buyToken,
         network: networkId.toString(),
-        sellAmount: '1000000',
       }).toString()}`,
     );
 
-    if (!response.ok) {
+    if (!response.ok)
       throw new Error(`Failed to fetch token price: ${response.statusText}`);
-    }
 
     const data = await response.json();
+    const price = Number(data.price);
 
-    if (
-      data.price === undefined ||
-      data.price === null ||
-      Number.isNaN(data.price)
-    ) {
-      console.warn('Invalid price data received:', data);
+    if (!price || Number.isNaN(price)) {
+      console.warn('Invalid price data:', data);
       return '';
     }
 
-    amountPerDollar = data.price;
-
-    const value = Number(amount) / 10 ** decimals / amountPerDollar;
-
-    return Number.isNaN(value) || value === undefined
-      ? ''
-      : Number(value.toFixed(2)).toString();
+    const value = (Number(amount) / 10 ** decimals) * price;
+    return Number.isNaN(value) ? '' : value.toFixed(2).toString();
   } catch (error) {
     console.error('Error in calculateDollar:', error);
     return '0';

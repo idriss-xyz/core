@@ -77,7 +77,7 @@ This command will create a `dist` directory inside your twitch-extension app dir
 
    > Allowlist for Media Domains: `https://twitch.tv/, https://dev.twitch.tv/`
 
-   > Allowlist for URL Fetching Domains: `wss://creators-api.idriss.xyz, https://creators-api.idriss.xyz, https://eth.llamarpc.com, https://api.idriss.xyz`
+   > Allowlist for URL Fetching Domains: `wss://creators-api.idriss.xyz, https://creators-api.idriss.xyz, https://eth.llamarpc.com`
 
 &nbsp;
 
