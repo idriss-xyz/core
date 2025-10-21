@@ -7,7 +7,7 @@ import {
   fetchDonationRecipients,
   getCreatorNameOrAnon,
 } from '@idriss-xyz/db';
-import { getAddress, Hex } from 'viem';
+import { Hex } from 'viem';
 import {
   StoredDonationData,
   DonationToken,
