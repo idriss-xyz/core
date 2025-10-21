@@ -16,25 +16,38 @@ export default createConfig({
   chains: {
     ethereum: {
       id: 1,
-      // rpc: `https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
-      rpc: `https://eth.drpc.org`,
+      rpc: [
+        `https://eth.drpc.org`,
+        `https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
+      ],
     },
     base: {
       id: 8453,
-      // rpc: `https://base-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
-      rpc: `https://1rpc.io/base`,
+      rpc: [
+        `https://1rpc.io/base`,
+        `https://base-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
+      ],
     },
     ronin: {
       id: 2020,
-      rpc: `https://ronin-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
+      rpc: [
+        `https://ronin.drpc.org`,
+        `https://ronin-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
+      ],
     },
     abstract: {
       id: 2741,
-      rpc: `https://abstract-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
+      rpc: [
+        `https://api.mainnet.abs.xyz`,
+        `https://abstract-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
+      ],
     },
     avalanche: {
       id: 43114,
-      rpc: `https://avax-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
+      rpc: [
+        `https://api.avax.network/ext/bc/C/rpc`,
+        `https://avax-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
+      ],
     },
   },
   contracts: {
@@ -54,7 +67,7 @@ export default createConfig({
       chain: 'ronin',
       abi: TIPPING_ABI,
       address: CHAIN_TO_IDRISS_TIPPING_ADDRESS[2020],
-      startBlock: 48718768,
+      startBlock: 49731011,
     },
     idrissTippingAbstract: {
       chain: 'abstract',

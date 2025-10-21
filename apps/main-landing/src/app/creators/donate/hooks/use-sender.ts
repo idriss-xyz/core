@@ -112,7 +112,6 @@ export const useSender = ({ walletClient, callbackOnSend }: Properties) => {
           !sendPayload.tokenId ||
           !sendPayload.amount
         ) {
-          console.log(sendPayload);
           throw new Error('Missing contract or tokenId');
         }
 

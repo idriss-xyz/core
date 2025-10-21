@@ -9,7 +9,7 @@ export const STATIC_ORIGINS = [
 ];
 export const IDRISS_LEGACY_API_URL = 'https://api.idriss.xyz';
 export const COPILOT_API_URL = 'https://copilot-api.idriss.xyz';
-export const CREATOR_API_URL = 'https://creators-api.idriss.xyz';
+export const CREATOR_API_URL = 'https://core-staging-4c69.up.railway.app';
 
 export const SOCIAL_LINK = {
   X: 'https://x.com/idriss_xyz',

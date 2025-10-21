@@ -9,7 +9,7 @@ import {
   zksync,
   scroll,
   celo,
-  // avalanche,
+  avalanche,
 } from 'viem/chains';
 
 import {
@@ -36,8 +36,8 @@ import {
   SCROLL_LOGO,
   CELO_LOGO,
   BNB_LOGO,
-  // AVAX_LOGO,
-  // GUNZ_LOGO,
+  AVAX_LOGO,
+  GUNZ_LOGO,
 } from './logos';
 import { Chain, Token, ChainToken, NftCollection } from './types';
 
@@ -124,12 +124,12 @@ export const CREATOR_CHAIN = {
     dbName: 'ETHEREUM_MAINNET',
     logo: ETHEREUM_LOGO,
   },
-  // AVALANCHE: {
-  //   ...avalanche,
-  //   shortName: 'Avalanche',
-  //   dbName: 'AVALANCHE_MAINNET',
-  //   logo: AVAX_LOGO,
-  // },
+  AVALANCHE: {
+    ...avalanche,
+    shortName: 'Avalanche',
+    dbName: 'AVALANCHE_MAINNET',
+    logo: AVAX_LOGO,
+  },
 } satisfies Record<string, Chain>;
 
 export const CHAIN = Object.assign(CREATOR_CHAIN, {
@@ -221,11 +221,11 @@ export const CHAIN = Object.assign(CREATOR_CHAIN, {
 }) satisfies Record<string, Chain>;
 
 export const TOKEN = {
-  // AVAX: {
-  //   name: 'Avalanche',
-  //   symbol: 'AVAX',
-  //   logo: AVAX_LOGO,
-  // },
+  AVAX: {
+    name: 'Avalanche',
+    symbol: 'AVAX',
+    logo: AVAX_LOGO,
+  },
   ETHEREUM: {
     name: 'Ethereum',
     symbol: 'ETH',
@@ -264,11 +264,11 @@ export const TOKEN = {
     symbol: 'AXS',
     logo: AXIE_LOGO,
   },
-  // GUN: {
-  //   name: 'Gunz',
-  //   symbol: 'GUN',
-  //   logo: GUNZ_LOGO,
-  // },
+  GUN: {
+    name: 'Gunz',
+    symbol: 'GUN',
+    logo: GUNZ_LOGO,
+  },
   // PIXEL: {
   //   name: 'Pixels',
   //   symbol: 'PIXEL',
@@ -306,23 +306,23 @@ export const CHAIN_ID_TO_TOKENS = {
       address: '0x9eBe3A824Ca958e4b3Da772D2065518F009CBa62',
     },
   ],
-  // [CREATOR_CHAIN.AVALANCHE.id]: [
-  //   {
-  //     ...TOKEN.AVAX,
-  //     decimals: 18,
-  //     address: NATIVE_COIN_ADDRESS,
-  //   },
-  //   {
-  //     ...TOKEN.GUN,
-  //     decimals: 18,
-  //     address: '0x26debd39d5ed069770406fca10a0e4f8d2c743eb',
-  //   },
-  //   {
-  //     ...TOKEN.USDC,
-  //     decimals: 6,
-  //     address: '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E',
-  //   },
-  // ],
+  [CREATOR_CHAIN.AVALANCHE.id]: [
+    {
+      ...TOKEN.AVAX,
+      decimals: 18,
+      address: NATIVE_COIN_ADDRESS,
+    },
+    {
+      ...TOKEN.GUN,
+      decimals: 18,
+      address: '0x26debd39d5ed069770406fca10a0e4f8d2c743eb',
+    },
+    {
+      ...TOKEN.USDC,
+      decimals: 6,
+      address: '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E',
+    },
+  ],
   [CREATOR_CHAIN.ETHEREUM.id]: [
     {
       ...TOKEN.ETHEREUM,
@@ -568,7 +568,7 @@ export const DEFAULT_ALLOWED_CHAINS_IDS = [
   CREATOR_CHAIN.BASE.id,
   CREATOR_CHAIN.ETHEREUM.id,
   CREATOR_CHAIN.RONIN.id,
-  // CREATOR_CHAIN.AVALANCHE.id,
+  CREATOR_CHAIN.AVALANCHE.id,
 ];
 
 export const CHAIN_TO_IDRISS_TIPPING_ADDRESS = {
@@ -576,7 +576,7 @@ export const CHAIN_TO_IDRISS_TIPPING_ADDRESS = {
   [CREATOR_CHAIN.BASE.id]: '0x1A5dc020dcd36C997f6349801583738CFb4bD44a',
   [CREATOR_CHAIN.RONIN.id]: '0x7DE583608091c21A09040Bf24A178a9156c18219',
   [CREATOR_CHAIN.ABSTRACT.id]: '0xBDc14c9946A957C7038900dE19Fb2Aa3f72CFAc2',
-  // [CREATOR_CHAIN.AVALANCHE.id]: '0xBDc14c9946A957C7038900dE19Fb2Aa3f72CFAc2',
+  [CREATOR_CHAIN.AVALANCHE.id]: '0xBDc14c9946A957C7038900dE19Fb2Aa3f72CFAc2',
 } as const;
 
 export const CHAIN_ID_TO_OPENSEA_NETWORK_NAMES: Record<number, string> = {
@@ -646,7 +646,7 @@ export const NETWORK_TO_ALCHEMY = {
   OPTIMISM_MAINNET: 'optimism-mainnet',
   MANTLE_MAINNET: 'mantle-mainnet',
   RONIN_MAINNET: 'ronin-mainnet',
-  // AVALANCHE_MAINNET: 'avax-mainnet',
+  AVALANCHE_MAINNET: 'avax-mainnet',
 } as const;
 
 export const ALCHEMY_NATIVE_TOKENS = {
@@ -657,5 +657,5 @@ export const ALCHEMY_NATIVE_TOKENS = {
   OPTIMISM_MAINNET: 'ETH',
   POLYGON_MAINNET: 'POL',
   RONIN_MAINNET: 'RON',
-  // AVALANCHE_MAINNET: 'AVAX',
+  AVALANCHE_MAINNET: 'AVAX',
 } as const;

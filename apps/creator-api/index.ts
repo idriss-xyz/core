@@ -33,18 +33,6 @@ import { isAllowedOrigin, openCors } from './config/cors';
 import { CREATORS_LINK } from '@idriss-xyz/constants';
 import { startDbListener } from './services/db-listener';
 
-(async () => {
-  try {
-    await initializeDatabase();
-    console.log('DB connected...');
-    await startDbListener();
-    console.log('Trigger listener started...');
-  } catch (err) {
-    console.error('Startup failure:', err);
-    process.exit(1);
-  }
-})();
-
 const app: Application = express();
 app.use(express.json());
 
@@ -87,6 +75,18 @@ const io = new SocketIOServer(server, {
     methods: ['GET', 'POST'],
   },
 });
+
+(async () => {
+  try {
+    await initializeDatabase();
+    console.log('DB connected...');
+    await startDbListener(io);
+    console.log('Trigger listener started...');
+  } catch (err) {
+    console.error('Startup failure:', err);
+    process.exit(1);
+  }
+})();
 
 app.set('io', io);
 

@@ -191,7 +191,7 @@
         "OPENSEA_API_KEY"
       ]
     },
-    "@idriss-xyz/ponder-indexer#prod": {
+    "@idriss-xyz/ponder-indexer#start": {
       "cache": true,
       "persistent": true,
       "env": [
