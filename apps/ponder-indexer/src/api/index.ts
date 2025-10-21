@@ -12,4 +12,8 @@ app.use('/graphql', graphql({ db, schema }));
 // SQL over HTTP
 app.use('/sql/*', client({ db, schema }));
 
+// Health endpoints required by Railway
+app.use('/health');
+app.use('/ready');
+
 export default app;
