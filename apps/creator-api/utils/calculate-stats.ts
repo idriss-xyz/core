@@ -1,5 +1,8 @@
 import { CREATOR_LINKS, monthNames } from '../constants';
 import {
+  AppDataSource,
+  Creator,
+  CreatorAddress,
   fetchDonations,
   fetchDonationRecipients,
   getCreatorNameOrAnon,
@@ -18,8 +21,7 @@ import {
   createAddressToCreatorMap,
   getFilteredDonationsByPeriod,
 } from '@idriss-xyz/utils';
-import { AppDataSource } from '@idriss-xyz/db';
-import { Creator, CreatorAddress } from '@idriss-xyz/db';
+
 import { ILike } from 'typeorm';
 
 export async function calculateStatsForDonor(

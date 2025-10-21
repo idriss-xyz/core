@@ -1,10 +1,11 @@
-import { AppDataSource } from '@idriss-xyz/db';
 import {
+  AppDataSource,
   Creator,
   CreatorNetwork,
   CreatorToken,
   DonationParameters,
   CreatorAddress,
+  CreatorProfileView,
 } from '@idriss-xyz/db';
 import { randomBytes } from 'crypto';
 import { Request } from 'express';
@@ -17,7 +18,6 @@ import {
   CHAIN_ID_TO_TOKENS,
 } from '@idriss-xyz/constants';
 import { Hex } from 'viem';
-import { CreatorProfileView } from '@idriss-xyz/db';
 import {
   fetchTwitchUserInfo,
   fetchTwitchStreamStatus,

@@ -1,7 +1,6 @@
 import { Router, Request, Response } from 'express';
 
-import { AppDataSource } from '@idriss-xyz/db';
-import { Creator, Referral } from '@idriss-xyz/db';
+import { AppDataSource, Creator, Referral } from '@idriss-xyz/db';
 import { In } from 'typeorm';
 import { verifyToken } from '../middleware/auth.middleware';
 import {

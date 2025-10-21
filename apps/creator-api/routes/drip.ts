@@ -5,8 +5,12 @@ import {
   NULL_ADDRESS,
 } from '@idriss-xyz/constants';
 import dotenv from 'dotenv';
-import { AppDataSource } from '@idriss-xyz/db';
-import { Creator } from '@idriss-xyz/db';
+import {
+  AppDataSource,
+  Creator,
+  hasClaimedToday,
+  recordClaim,
+} from '@idriss-xyz/db';
 import { LAMBDA_CLIENT, LAMBDA_FAUCET } from '../config/aws-config';
 import { creatorProfileService } from '../services/creator-profile.service';
 import {
@@ -18,7 +22,6 @@ import {
   estimateNftGasOrDefault,
   getClient,
 } from '../utils/drip-utils';
-import { hasClaimedToday, recordClaim } from '@idriss-xyz/db';
 import { CHAIN_ID_TO_TOKENS } from '@idriss-xyz/constants';
 import { tightCors } from '../config/cors';
 import { verifyToken } from '../middleware/auth.middleware';

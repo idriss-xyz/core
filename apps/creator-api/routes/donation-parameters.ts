@@ -1,6 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { DonationParameters } from '@idriss-xyz/db';
-import { AppDataSource } from '@idriss-xyz/db';
+import { AppDataSource, DonationParameters } from '@idriss-xyz/db';
 import { body, validationResult } from 'express-validator';
 
 const router = Router();

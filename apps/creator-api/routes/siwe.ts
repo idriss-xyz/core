@@ -3,8 +3,7 @@ import { Router, Request, Response } from 'express';
 import { generateNonce, SiweMessage } from 'siwe';
 import { getAddress, Hex } from 'viem';
 import { verifyToken } from '../middleware/auth.middleware';
-import { AppDataSource } from '@idriss-xyz/db';
-import { Creator, CreatorAddress } from '@idriss-xyz/db';
+import { AppDataSource, Creator, CreatorAddress } from '@idriss-xyz/db';
 import {
   MAIN_LANDING_LINK,
   NULL_ADDRESS,
