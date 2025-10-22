@@ -20,11 +20,5 @@ export {
   COMMAND_MAP as EXTENSION_COMMAND_MAP,
   GetServiceStatusCommand,
 } from './commands';
-export type {
-  ExtensionSettingName,
-  StoredAuthToken,
-  StoredToastSoundState,
-  StoredSubscriptionsAmount,
-  StoredSubscriptions,
-} from './types';
+export type { ExtensionSettingName, StoredAuthToken } from './types';
 export { ExtensionSettingsManager } from './extension-settings-manager';

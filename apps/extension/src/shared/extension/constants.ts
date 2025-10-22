@@ -17,7 +17,5 @@ export const EXTENSION_BUTTON_CLICKED = 'EXTENSION_BUTTON_CLICKED';
 export const ACTIVE_TAB_CHANGED = 'ACTIVE_TAB_CHANGED';
 
 export const DEFAULT_EXTENSION_SETTINGS: ExtensionSettings = {
-  'idriss-send-enabled': false,
-  'wallet-lookup-enabled': false,
   'entire-extension-enabled': false,
 };
