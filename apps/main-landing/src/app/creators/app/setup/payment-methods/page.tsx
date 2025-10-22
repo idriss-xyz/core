@@ -5,6 +5,8 @@ import {
   CREATOR_CHAIN,
   DEFAULT_ALLOWED_CHAINS_IDS,
   TokenSymbol,
+  TOKENS_ORDER,
+  Chain,
 } from '@idriss-xyz/constants';
 import { Button } from '@idriss-xyz/ui/button';
 import { Card } from '@idriss-xyz/ui/card';
@@ -27,6 +29,7 @@ import {
 } from 'react';
 import { Controller, useForm, UseFormReset } from 'react-hook-form';
 import { Icon, IconName } from '@idriss-xyz/ui/icon';
+import { AssetLogo } from '@idriss-xyz/ui/asset-logo';
 
 import {
   editCreatorProfile,
@@ -71,23 +74,6 @@ const ALL_TOKEN_SYMBOLS = Object.values(CHAIN_ID_TO_TOKENS)
   });
 
 const UNIQUE_ALL_TOKEN_SYMBOLS = [...new Set(ALL_TOKEN_SYMBOLS)];
-
-const TOKENS_ORDER: Record<TokenSymbol, number> = {
-  IDRISS: 1,
-  ETH: 2,
-  USDC: 3,
-  DAI: 4,
-  AVAX: 5,
-  GUN: 6,
-  PRIME: 7,
-  GHST: 8,
-  RON: 9,
-  AXS: 10,
-  YGG: 11,
-  PDT: 12,
-  DEGEN: 13,
-  PENGU: 14,
-};
 
 const iconsForCardPaymentMethod: IconName[] = [
   'Mastercard',
@@ -219,10 +205,9 @@ export default function PaymentMethods() {
           label: token.name,
           value: token.symbol,
           icon: (
-            <img
-              width={24}
-              height={24}
-              src={token.logo}
+            <AssetLogo
+              logo={token.logo}
+              iconName={token.iconName}
               className="size-6 rounded-full"
               alt={token.symbol}
             />
@@ -239,9 +224,11 @@ export default function PaymentMethods() {
 
   const allowedChainOptions: MultiselectOption<number>[] = useMemo(() => {
     return DEFAULT_ALLOWED_CHAINS_IDS.map((chainId) => {
-      const foundChain = Object.values(CREATOR_CHAIN).find((chain) => {
-        return chain.id === chainId;
-      });
+      const foundChain = (Object.values(CREATOR_CHAIN) as Chain[]).find(
+        (chain) => {
+          return chain.id === chainId;
+        },
+      );
 
       if (!foundChain) {
         throw new Error(`${chainId} not found`);
@@ -251,10 +238,9 @@ export default function PaymentMethods() {
         label: foundChain.name,
         value: foundChain.id,
         icon: (
-          <img
-            width={24}
-            height={24}
-            src={foundChain.logo}
+          <AssetLogo
+            logo={foundChain.logo}
+            iconName={foundChain.iconName}
             className="size-6 rounded-full"
             alt={foundChain.name}
           />
@@ -438,7 +424,7 @@ export default function PaymentMethods() {
                       <Multiselect<number>
                         label="Network"
                         value={field.value}
-                        inputClassName="max-w-[360px]"
+                        inputClassName="max-w-[400px]"
                         options={allowedChainOptions}
                         helperText={fieldState.error?.message}
                         error={Boolean(fieldState.error?.message)}
@@ -463,7 +449,7 @@ export default function PaymentMethods() {
                         label="Token"
                         value={field.value}
                         onChange={field.onChange}
-                        inputClassName="mt-6 max-w-[360px]"
+                        inputClassName="mt-6 max-w-[400px]"
                         options={uniqueTokenOptions}
                         helperText={fieldState.error?.message}
                         error={Boolean(fieldState.error?.message)}
