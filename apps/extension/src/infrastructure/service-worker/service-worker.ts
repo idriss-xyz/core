@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import { io } from 'socket.io-client';
-
 import { TWITTER_COMMAND_MAP } from 'host/twitter';
 import {
   Command,
@@ -23,9 +21,6 @@ import {
 } from 'shared/observability';
 import { UTILS_COMMAND_MAP } from 'shared/utils';
 
-import { SbtResolver } from '../../common/resolvers/SbtResolver';
-import { AddressResolver } from '../../common/resolvers/AddressResolver';
-
 const COMMAND_MAP = {
   ...WEB3_COMMAND_MAP,
   ...OBESRVABILITY_COMMAND_MAP,
@@ -47,7 +42,6 @@ export class ServiceWorker {
     serviceWorker.watchStartup();
     serviceWorker.watchInstalled();
     serviceWorker.watchPopupClick();
-    serviceWorker.watchLegacyMessages();
     serviceWorker.watchWorkerError();
   }
 
@@ -97,92 +91,6 @@ export class ServiceWorker {
       (request, _sender, sendResponse) => {
         if (request.type === type) {
           callback(request.data, sendResponse);
-        }
-
-        return true;
-      },
-    );
-  }
-
-  // TODO: refactor
-  watchLegacyMessages() {
-    this.environment.runtime.onMessage.addListener(
-      (request, _sender, sendResponse) => {
-        switch (request.type) {
-          case 'apiAddressesRequest': {
-            AddressResolver.get(request.value)
-              .then((x) => {
-                return sendResponse(x);
-              })
-              .catch(() => {
-                return sendResponse({});
-              });
-            return true;
-          }
-          case 'reverseResolveRequest': {
-            AddressResolver.getManyReverse(request.value)
-              .then((x) => {
-                return sendResponse(x);
-              })
-              .catch(() => {
-                return sendResponse({});
-              });
-            return true;
-          }
-          case 'sbtRequest': {
-            SbtResolver.getSBT(request.value)
-              .then((x) => {
-                return sendResponse(x);
-              })
-              .catch(() => {
-                return sendResponse({});
-              });
-            return true;
-          }
-          case 'getIconUrl': {
-            if (request.custom == '') {
-              fetch(this.environment.runtime.getURL('img/icon148.png'))
-                .then((fetchRequest) => {
-                  return fetchRequest.blob();
-                })
-                .then((blob) => {
-                  return this.readBlob(blob);
-                })
-                .then((x) => {
-                  return sendResponse(x);
-                })
-                .catch(console.error);
-              return true;
-            } else {
-              fetch(this.environment.runtime.getURL(request.custom))
-                .then((fetchRequest) => {
-                  return fetchRequest.blob();
-                })
-                .then((blob) => {
-                  return this.readBlob(blob);
-                })
-                .then((x) => {
-                  return sendResponse(x);
-                })
-                .catch(console.error);
-              return true;
-            }
-          }
-          case 'getTwitterIconUrl': {
-            fetch(this.environment.runtime.getURL('img/twitter.svg'))
-              .then((fetchRequest) => {
-                return fetchRequest.blob();
-              })
-              .then((blob) => {
-                return this.readBlob(blob);
-              })
-              .then((x) => {
-                return sendResponse(x);
-              })
-              .catch(console.error);
-            return true;
-          }
-          // No default
         }
 
         return true;
