@@ -7,7 +7,6 @@ export {
   EXTENSION_BUTTON_CLICKED,
   DEFAULT_EXTENSION_SETTINGS,
 } from './constants';
-export type { PopupRoute } from './constants';
 export {
   ExtensionSettingsProvider,
   useExtensionSettings,

@@ -8,8 +8,6 @@ export const POPUP_ROUTE = {
   PRODUCTS: '/products',
 } as const;
 
-export type PopupRoute = (typeof POPUP_ROUTE)[keyof typeof POPUP_ROUTE];
-
 export const SETTINGS_STORAGE_KEY = 'EXTENSION_SETTINGS';
 export const EXTENSION_BUTTON_CLICKED = 'EXTENSION_BUTTON_CLICKED';
 export const ACTIVE_TAB_CHANGED = 'ACTIVE_TAB_CHANGED';
