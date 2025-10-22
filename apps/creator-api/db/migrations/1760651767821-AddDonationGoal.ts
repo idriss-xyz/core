@@ -1,7 +1,13 @@
-import { MigrationInterface, QueryRunner } from 'typeorm';
+import {
+  MigrationInterface,
+  QueryRunner,
+  TableColumn,
+  TableForeignKey,
+} from 'typeorm';
 
 export class AddDonationGoal1760651767821 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
+    // Create the donation_goal table
     await queryRunner.query(
       `CREATE TABLE "donation_goal" (
           "id" SERIAL NOT NULL,
@@ -16,75 +22,128 @@ export class AddDonationGoal1760651767821 implements MigrationInterface {
         )`,
     );
 
-    await queryRunner.query(
-      `CREATE TABLE "donation_goal_donations_creator_donations" (
-          "donation_goal_id" integer NOT NULL,
-          "creator_donations_id" integer NOT NULL,
-          CONSTRAINT "PK_donation_goal_donations" PRIMARY KEY ("donation_goal_id", "creator_donations_id"),
-          CONSTRAINT "FK_donation_goal" FOREIGN KEY ("donation_goal_id") REFERENCES "donation_goal"("id") ON DELETE CASCADE,
-          CONSTRAINT "FK_creator_donations" FOREIGN KEY ("creator_donations_id") REFERENCES "creator_donations"("id") ON DELETE CASCADE
-        )`,
+    // Add donation_goal_id column to creator_donations table
+    await queryRunner.addColumn(
+      'creator_donations',
+      new TableColumn({
+        name: 'donation_goal_id',
+        type: 'int',
+        isNullable: true,
+      }),
     );
 
+    // Add foreign key constraint
+    await queryRunner.createForeignKey(
+      'creator_donations',
+      new TableForeignKey({
+        columnNames: ['donation_goal_id'],
+        referencedTableName: 'donation_goal',
+        referencedColumnNames: ['id'],
+        onDelete: 'SET NULL', // If a donation goal is deleted, the donation remains but loses association
+      }),
+    );
+
+    // Create a database function and trigger for automatically associating new donations with goals
     await queryRunner.query(`
-        CREATE OR REPLACE VIEW donation_goal_view AS
-        SELECT
-          g.id AS id,
-          g.name AS name,
-          g.target_amount AS "targetAmount",
-          g.start_date AS "startDate",
-          g.end_date AS "endDate",
-          g.active AS active,
-          c.name AS "creatorName",
-          COALESCE(SUM(d.trade_value), 0) AS progress,
-          (
-            SELECT u.display_name
-            FROM creator_donations du
-            JOIN donation_goal_donations_creator_donations j
-              ON j."creator_donations_id" = du.id
-            LEFT JOIN users u
-              ON u.address = du.from_address
-            WHERE j."donation_goal_id" = g.id
-              AND du.timestamp >= g.start_date
-              AND du.timestamp <= g.end_date
-            GROUP BY du.from_address, u.display_name
-            ORDER BY SUM(du.trade_value) DESC
-            LIMIT 1
-          ) AS "topDonorName",
-          (
-            SELECT SUM(du.trade_value)
-            FROM creator_donations du
-            JOIN donation_goal_donations_creator_donations j
-              ON j."creator_donations_id" = du.id
-            WHERE j."donation_goal_id" = g.id
-              AND du.timestamp >= g.start_date
-              AND du.timestamp <= g.end_date
-            GROUP BY du.from_address
-            ORDER BY SUM(du.trade_value) DESC
-            LIMIT 1
-          ) AS "topDonorAmount"
-        FROM donation_goal g
-        LEFT JOIN creator c ON c.id = g.creator_id
-        LEFT JOIN donation_goal_donations_creator_donations dg
-          ON dg."donation_goal_id" = g.id
-        LEFT JOIN creator_donations d
-          ON d.id = dg."creator_donations_id" AND d.timestamp >= g.start_date AND d.timestamp <= g.end_date
-        GROUP BY
-          g.id,
-          g.name,
-          g.target_amount,
-          g.start_date,
-          g.end_date,
-          g.active,
-          c.name;
-        `);
+      CREATE OR REPLACE FUNCTION associate_donation_with_goal()
+      RETURNS TRIGGER AS $$
+      BEGIN
+        -- Find the active donation goal for this creator at the time of donation
+        UPDATE creator_donations
+        SET donation_goal_id = (
+          SELECT dg.id
+          FROM donation_goal dg
+          JOIN creator c ON c.id = dg.creator_id
+          JOIN creator_address ca ON ca.creator_id = c.id
+          WHERE NEW.to_address = ca.address
+            AND dg.active = true
+            AND NEW.timestamp >= dg.start_date
+            AND NEW.timestamp <= dg.end_date
+          LIMIT 1
+        )
+        WHERE id = NEW.id;
+
+        RETURN NEW;
+      END;
+      $$ LANGUAGE plpgsql;
+
+      CREATE TRIGGER donation_goal_association_trigger
+      AFTER INSERT ON creator_donations
+      FOR EACH ROW
+      EXECUTE FUNCTION associate_donation_with_goal();
+    `);
+
+    // Create the donation_goal_view
+    await queryRunner.query(`
+      CREATE OR REPLACE VIEW donation_goal_view AS
+      SELECT
+        g.id AS id,
+        g.name AS name,
+        g.target_amount AS "targetAmount",
+        g.start_date AS "startDate",
+        g.end_date AS "endDate",
+        g.active AS active,
+        c.name AS "creatorName",
+        COALESCE(SUM(d.trade_value), 0) AS progress,
+        (
+          SELECT u.display_name
+          FROM creator_donations du
+          LEFT JOIN users u
+            ON u.address = du.from_address
+          WHERE du.donation_goal_id = g.id
+            AND du.timestamp >= g.start_date
+            AND du.timestamp <= g.end_date
+          GROUP BY du.from_address, u.display_name
+          ORDER BY SUM(du.trade_value) DESC
+          LIMIT 1
+        ) AS "topDonorName",
+        (
+          SELECT SUM(du.trade_value)
+          FROM creator_donations du
+          WHERE du.donation_goal_id = g.id
+            AND du.timestamp >= g.start_date
+            AND du.timestamp <= g.end_date
+          GROUP BY du.from_address
+          ORDER BY SUM(du.trade_value) DESC
+          LIMIT 1
+        ) AS "topDonorAmount"
+      FROM donation_goal g
+      LEFT JOIN creator c ON c.id = g.creator_id
+      LEFT JOIN creator_donations d
+        ON d.donation_goal_id = g.id AND d.timestamp >= g.start_date AND d.timestamp <= g.end_date
+      GROUP BY
+        g.id,
+        g.name,
+        g.target_amount,
+        g.start_date,
+        g.end_date,
+        g.active,
+        c.name;
+    `);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`DROP VIEW "donation_goal_view"`);
-    await queryRunner.query(
-      `DROP TABLE "donation_goal_donations_creator_donations"`,
+    // Drop the view
+    await queryRunner.query(`DROP VIEW IF EXISTS "donation_goal_view"`);
+
+    // Remove trigger and function
+    await queryRunner.query(`
+      DROP TRIGGER IF EXISTS donation_goal_association_trigger ON creator_donations;
+      DROP FUNCTION IF EXISTS associate_donation_with_goal();
+    `);
+
+    // Remove foreign key and column
+    const table = await queryRunner.getTable('creator_donations');
+    const foreignKey = table?.foreignKeys.find(
+      (fk) => fk.columnNames.indexOf('donation_goal_id') !== -1,
     );
-    await queryRunner.query(`DROP TABLE "donation_goal"`);
+    if (foreignKey) {
+      await queryRunner.dropForeignKey('creator_donations', foreignKey);
+    }
+
+    await queryRunner.dropColumn('creator_donations', 'donation_goal_id');
+
+    // Drop the donation_goal table
+    await queryRunner.query(`DROP TABLE IF EXISTS "donation_goal"`);
   }
 }

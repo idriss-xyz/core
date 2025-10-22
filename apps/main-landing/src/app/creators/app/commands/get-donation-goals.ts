@@ -40,7 +40,7 @@ export const useGetDonationGoals = (
   options?: Options,
 ) => {
   return useQuery({
-    queryKey: ['donationGoals', creatorName],
+    queryKey: ['donation-goals', creatorName],
     queryFn: () => {
       return getDonationGoals(creatorName);
     },

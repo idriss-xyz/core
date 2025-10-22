@@ -34,4 +34,3 @@ export { AddTokenEnabledToCreator1758728078982 } from './1758728078982-AddTokenE
 export { SplitNftMetadata1759318771000 } from './1759318771000-split-nft-metadata';
 export { FixIncorrectNftNames1759846236000 } from './1759846236000-FixIncorrectNftNames';
 export { AddDonationGoal1760651767821 } from './1760651767821-AddDonationGoal';
-export { AddDonationGoalFk1760733444000 } from './AddDonationGoalFk1760733444000';

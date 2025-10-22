@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { Card } from '@idriss-xyz/ui/card';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { classes } from '@idriss-xyz/ui/utils';
@@ -14,6 +15,7 @@ import { NewGoalForm } from './components/new-goal-form';
 // ts-unused-exports:disable-next-line
 export default function ActiveGoalPage() {
   const { creator } = useAuth();
+  const queryClient = useQueryClient();
 
   const [isCopyModalOpen, setIsCopyModalOpen] = useState(false);
   const [isUrlWarningConfirmed, setIsUrlWarningConfirmed] = useState(false);
@@ -90,7 +92,9 @@ export default function ActiveGoalPage() {
 
           <NewGoalForm
             onGoalCreated={() => {
-              // Refresh goals list if needed
+              void queryClient.invalidateQueries({
+                queryKey: ['donation-goals', creator?.name],
+              });
             }}
           />
         </div>

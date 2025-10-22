@@ -14,13 +14,17 @@ import { useGetDonationGoals } from '@/app/creators/app/commands/get-donation-go
 export function GoalsList() {
   const { creator } = useAuth();
   const { ready, authenticated } = usePrivy();
-  const tipHistoryQuery = useGetDonationGoals(creator?.name, {
+  const goalListQuery = useGetDonationGoals(creator?.name, {
     enabled: ready && authenticated && !!creator?.name,
   });
   const allGoals = useMemo(() => {
-    return tipHistoryQuery.data ?? [];
-  }, [tipHistoryQuery.data]);
+    return goalListQuery.data ?? [];
+  }, [goalListQuery.data]);
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
+  
+  const handleActivateGoal = () => {
+    // Implement activation logic here
+  };
 
   return (
     <>
@@ -85,6 +89,7 @@ export function GoalsList() {
                     intent="secondary"
                     size="medium"
                     className="py-auto h-11 px-6 uppercase"
+                    onClick={handleActivateGoal}
                   >
                     Activate
                   </Button>
