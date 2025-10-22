@@ -265,7 +265,7 @@ export const TOKEN = {
     logo: AXIE_LOGO,
   },
   GUN: {
-    name: 'Gunz',
+    name: 'GUNZ',
     symbol: 'GUN',
     logo: GUNZ_LOGO,
   },
