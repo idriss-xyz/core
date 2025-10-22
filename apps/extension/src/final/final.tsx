@@ -1,6 +1,5 @@
 import { useExtensionSettings } from 'shared/extension';
 import { ErrorBoundary } from 'shared/observability';
-import { LookUpWalletAddress } from 'application/look-up-wallet-address';
 
 import {
   UserWidgets,
@@ -17,7 +16,6 @@ export const Final = () => {
 
   return (
     <ErrorBoundary>
-      <LookUpWalletAddress />
       <UserWidgets />
       <FollowOnFarcaster />
       <FollowTradingCopilot />

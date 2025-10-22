@@ -7,7 +7,6 @@ import {
   Final,
   NotificationsPopup,
 } from 'final';
-import { LookUpWalletAddress } from 'application/look-up-wallet-address';
 
 import { Providers } from './providers';
 
@@ -72,7 +71,6 @@ const ApplicationWithProviders = () => {
 
   return (
     <Providers disabledWalletRdns={disabledWalletRdns}>
-      <LookUpWalletAddress />
       <NotificationsPopup isSwapEventListenerAdded={isSwapEventListenerAdded} />
       <ExtensionPopup />
       <Final />
