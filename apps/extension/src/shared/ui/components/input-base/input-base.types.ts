@@ -7,7 +7,7 @@ export interface InputBaseLabelProperties {
   label: string;
 }
 
-export interface InputBaseProperties {
+interface InputBaseProperties {
   children: ReactNode;
   label?: string;
   prefix?: ReactNode;

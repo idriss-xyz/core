@@ -17,12 +17,10 @@ import {
   OBESRVABILITY_COMMAND_MAP,
   ObservabilityScope,
 } from 'shared/observability';
-import { UTILS_COMMAND_MAP } from 'shared/utils';
 
 const COMMAND_MAP = {
   ...OBESRVABILITY_COMMAND_MAP,
   ...EXTENSION_COMMAND_MAP,
-  ...UTILS_COMMAND_MAP,
 };
 
 export class ServiceWorker {

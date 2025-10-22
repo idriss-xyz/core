@@ -1,5 +1,4 @@
 import type {
-  ComponentPropsWithRef,
   ComponentPropsWithoutRef,
   ElementType,
   PropsWithChildren,
@@ -16,9 +15,6 @@ type PolymorphicComponentProperty<
   Properties = object,
 > = PropsWithChildren<Properties & AsProperty<C>> &
   Omit<ComponentPropsWithoutRef<C>, PropertiesToOmit<C, Properties>>;
-
-export type PolymorphicReference<C extends ElementType> =
-  ComponentPropsWithRef<C>['ref'];
 
 export type PolymorphicComponentProperties<
   C extends React.ElementType,

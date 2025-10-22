@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { useCallback, useMemo } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { useCallback } from 'react';
 import { Scope } from '@sentry/browser';
 
 import {
@@ -108,66 +108,4 @@ export const useCommandMutation = <Payload, Response extends JsonValue>(
     mutationFn: mutationFunction,
     onMutate: options?.onMutate,
   });
-};
-
-interface CommandQueryProperties<
-  Payload,
-  Response extends JsonValue,
-  MappedResponse = Response,
-> {
-  command: Command<Payload, Response>;
-  retry?: number;
-  retryDelay?: number;
-  refetchInterval?: number;
-  select?: (response: Response) => MappedResponse;
-  enabled?: boolean;
-  staleTime?: number;
-  placeholderData?: (previousData?: Response) => Response | undefined;
-}
-
-export const useCommandQuery = <
-  Parameters,
-  ExpectedResponse extends JsonValue,
-  MappedResponse = ExpectedResponse,
->({
-  command,
-  select,
-  retry = 3,
-  retryDelay = 3000,
-  staleTime,
-  refetchInterval,
-  placeholderData,
-  enabled = true,
-}: CommandQueryProperties<Parameters, ExpectedResponse, MappedResponse>) => {
-  const queryFunction = useCallback(() => {
-    return command.send();
-  }, [command]);
-
-  const queryOptions = useMemo(() => {
-    return {
-      queryKey: [command.name, JSON.stringify(command.payload)],
-      refetchInterval,
-      retry,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      placeholderData: placeholderData as any,
-      retryDelay: retryDelay,
-      staleTime,
-      enabled,
-      select,
-      queryFn: queryFunction,
-    };
-  }, [
-    command.name,
-    command.payload,
-    refetchInterval,
-    retry,
-    placeholderData,
-    retryDelay,
-    staleTime,
-    enabled,
-    select,
-    queryFunction,
-  ]);
-
-  return useQuery(queryOptions);
 };

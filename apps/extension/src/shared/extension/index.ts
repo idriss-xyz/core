@@ -14,5 +14,4 @@ export {
   useExtensionPopup,
 } from './context';
 export { COMMAND_MAP as EXTENSION_COMMAND_MAP } from './commands';
-export type { ExtensionSettingName } from './types';
 export { ExtensionSettingsManager } from './extension-settings-manager';

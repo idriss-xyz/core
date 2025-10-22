@@ -1,4 +1,1 @@
-export type {
-  PolymorphicComponentProperties,
-  PolymorphicReference,
-} from './polymorphic-component';
+export type { PolymorphicComponentProperties } from './polymorphic-component';
