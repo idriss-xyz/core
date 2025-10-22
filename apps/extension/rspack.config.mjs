@@ -40,7 +40,6 @@ export default (_env, argv) => {
         patterns: [
           { from: './src/runtime/chromium/manifest.json', to: 'chromium' },
           { from: './src/assets/fonts', to: 'chromium/fonts' },
-          { from: './src/assets/audio', to: 'chromium/audio' },
           { from: './src/common/img', to: 'chromium/img' },
         ],
       }),
