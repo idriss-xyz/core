@@ -2,21 +2,15 @@ import { Route, Routes } from 'react-router';
 
 import { Closable } from 'shared/ui';
 import { POPUP_ROUTE, useExtensionPopup } from 'shared/extension';
-import { SubscriptionsManagement } from 'application/trading-copilot';
-import { LINES, LINES2 } from 'assets/images';
+import { LINES } from 'assets/images';
 
 import {
-  GovernanceSettings,
-  MainSettings,
-  OtherSettings,
   Products,
 } from './views';
 import {
   TopBar,
   Footer,
   PopupContentLayout,
-  SettingsLayout,
-  TradingCopilotLayout,
 } from './components';
 
 export const ExtensionPopup = () => {
@@ -38,26 +32,6 @@ export const ExtensionPopup = () => {
       <Routes>
         <Route element={<PopupContentLayout backgroundImage={LINES} />}>
           <Route path={POPUP_ROUTE.PRODUCTS} element={<Products />} />
-        </Route>
-        <Route element={<PopupContentLayout backgroundImage={LINES2} />}>
-          <Route element={<SettingsLayout />}>
-            <Route path={POPUP_ROUTE.SETTINGS} element={<MainSettings />} />
-            <Route
-              path={POPUP_ROUTE.GOVERNANCE_SETTINGS}
-              element={<GovernanceSettings />}
-            />
-            <Route
-              path={POPUP_ROUTE.OTHER_SETTINGS}
-              element={<OtherSettings />}
-            />
-          </Route>
-
-          <Route element={<TradingCopilotLayout />}>
-            <Route
-              path={POPUP_ROUTE.TRADING_COPILOT}
-              element={<SubscriptionsManagement />}
-            />
-          </Route>
         </Route>
       </Routes>
 
