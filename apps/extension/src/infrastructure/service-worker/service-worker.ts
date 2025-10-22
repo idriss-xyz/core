@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import { TWITTER_COMMAND_MAP } from 'host/twitter';
 import {
   Command,
   COMMAND_BUS_REQUEST_MESSAGE,
@@ -26,7 +25,6 @@ const COMMAND_MAP = {
   ...OBESRVABILITY_COMMAND_MAP,
   ...EXTENSION_COMMAND_MAP,
   ...UTILS_COMMAND_MAP,
-  ...TWITTER_COMMAND_MAP,
 };
 
 export class ServiceWorker {

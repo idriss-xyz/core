@@ -15,7 +15,6 @@ import {
   TailwindProvider,
   WithExtensionInfo,
 } from 'shared/ui';
-import { TwitterScrapingContextProvider } from 'host/twitter';
 import {
   ExtensionPopupProvider,
   ExtensionSettingsProvider,
@@ -55,9 +54,7 @@ export const Providers = ({
                                 >
                                   <ExtensionPopupProvider>
                                     <ExtensionSettingsProvider>
-                                      <TwitterScrapingContextProvider>
                                             {children}
-                                      </TwitterScrapingContextProvider>
                                     </ExtensionSettingsProvider>
                                   </ExtensionPopupProvider>
                                 </WalletContextProvider>

@@ -58,17 +58,9 @@ const bootstrap = () => {
 };
 
 const ApplicationWithProviders = () => {
-  const { isTwitter } = useLocationInfo();
 
-  const disabledWalletRdns = useMemo(() => {
-    if (isTwitter) {
-      return ['coinbase'];
-    }
-    return [];
-  }, [isTwitter]);
-
-  return (
-    <Providers disabledWalletRdns={disabledWalletRdns}>
+ return (
+    <Providers>
       <ExtensionPopup />
       <Final />
     </Providers>
