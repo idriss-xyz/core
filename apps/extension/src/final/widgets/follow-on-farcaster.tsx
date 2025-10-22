@@ -8,7 +8,6 @@ import {
   PortalWithTailwind,
   usePooling,
 } from 'shared/ui';
-import { getWarpcastUserLink } from 'host/warpcast';
 import { FARCASTER_LOGO } from 'assets/images';
 import { useEventsLogger } from 'shared/observability';
 import { createLookup } from 'shared/utils';
@@ -99,8 +98,6 @@ export const FollowOnFarcaster = () => {
       return;
     }
     void eventsLogger.track(EVENT.FOLLOW_ON_FC_CLICKED);
-    const url = getWarpcastUserLink(maybeUserData.farcasterName);
-    window.open(url, '_blank', 'noopener,noreferrer');
   }, [eventsLogger, maybeUserData]);
 
   if (!portal || !childOfContainerForInjection) {

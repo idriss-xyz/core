@@ -2,8 +2,6 @@ import NiceModal from '@ebay/nice-modal-react';
 import { ReactNode, StrictMode } from 'react';
 import { WithPortal } from '@idriss-xyz/ui/providers/with-portal';
 
-import { SupercastScrapingContextProvider } from 'host/supercast';
-import { WarpcastScrapingContextProvider } from 'host/warpcast';
 import {
   ErrorBoundary,
   WithEventsLogger,
@@ -58,11 +56,7 @@ export const Providers = ({
                                   <ExtensionPopupProvider>
                                     <ExtensionSettingsProvider>
                                       <TwitterScrapingContextProvider>
-                                        <WarpcastScrapingContextProvider>
-                                          <SupercastScrapingContextProvider>
                                             {children}
-                                          </SupercastScrapingContextProvider>
-                                        </WarpcastScrapingContextProvider>
                                       </TwitterScrapingContextProvider>
                                     </ExtensionSettingsProvider>
                                   </ExtensionPopupProvider>
