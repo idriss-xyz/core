@@ -19,15 +19,15 @@ export const EXTENSION_BUTTON_CLICKED = 'EXTENSION_BUTTON_CLICKED';
 export const ACTIVE_TAB_CHANGED = 'ACTIVE_TAB_CHANGED';
 
 export const DEFAULT_EXTENSION_SETTINGS: ExtensionSettings = {
-  'agora-enabled': true,
-  'tally-enabled': true,
+  'agora-enabled': false,
+  'tally-enabled': false,
   'kaito-enabled': false,
-  'gitcoin-enabled': true,
-  'snapshot-enabled': true,
-  'polymarket-enabled': true,
-  'idriss-send-enabled': true,
-  'wallet-lookup-enabled': true,
-  'entire-extension-enabled': true,
-  'trading-copilot-notifications-enabled': true,
-  'trading-copilot-latest-transactions-enabled': true,
+  'gitcoin-enabled': false,
+  'snapshot-enabled': false,
+  'polymarket-enabled': false,
+  'idriss-send-enabled': false,
+  'wallet-lookup-enabled': false,
+  'entire-extension-enabled': false,
+  'trading-copilot-notifications-enabled': false,
+  'trading-copilot-latest-transactions-enabled': false,
 };
