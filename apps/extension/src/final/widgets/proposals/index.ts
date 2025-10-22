@@ -1,1 +1,0 @@
-export { Proposals } from './proposals';

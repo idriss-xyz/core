@@ -27,10 +27,8 @@ import {
   ObservabilityScope,
 } from 'shared/observability';
 import { UTILS_COMMAND_MAP } from 'shared/utils';
-import { AGORA_COMMAND_MAP } from 'application/agora';
 import { IDRISS_COMMAND_MAP } from 'shared/idriss';
 import { IDRISS_SEND_COMMAND_MAP } from 'application/idriss-send';
-import { TALLY_COMMAND_MAP } from 'application/tally';
 import { FARCASTER_COMMAND_MAP } from 'shared/farcaster';
 import {
   TRADING_COPILOT_COMMAND_MAP,
@@ -47,10 +45,8 @@ const COMMAND_MAP = {
   ...EXTENSION_COMMAND_MAP,
   ...UTILS_COMMAND_MAP,
   ...TWITTER_COMMAND_MAP,
-  ...AGORA_COMMAND_MAP,
   ...IDRISS_COMMAND_MAP,
   ...IDRISS_SEND_COMMAND_MAP,
-  ...TALLY_COMMAND_MAP,
   ...FARCASTER_COMMAND_MAP,
   ...TRADING_COPILOT_COMMAND_MAP,
 };

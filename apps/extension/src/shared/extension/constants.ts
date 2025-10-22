@@ -7,7 +7,6 @@ export const GET_EXTENSION_SETTINGS_RESPONSE =
 export const POPUP_ROUTE = {
   PRODUCTS: '/products',
   SETTINGS: '/settings',
-  GOVERNANCE_SETTINGS: '/settings/governance',
   OTHER_SETTINGS: '/settings/other',
   TRADING_COPILOT: '/trading-copilot',
 } as const;
@@ -19,8 +18,6 @@ export const EXTENSION_BUTTON_CLICKED = 'EXTENSION_BUTTON_CLICKED';
 export const ACTIVE_TAB_CHANGED = 'ACTIVE_TAB_CHANGED';
 
 export const DEFAULT_EXTENSION_SETTINGS: ExtensionSettings = {
-  'agora-enabled': false,
-  'tally-enabled': false,
   'gitcoin-enabled': false,
   'idriss-send-enabled': false,
   'wallet-lookup-enabled': false,

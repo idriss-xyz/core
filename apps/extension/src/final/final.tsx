@@ -3,7 +3,6 @@ import { ErrorBoundary } from 'shared/observability';
 import { LookUpWalletAddress } from 'application/look-up-wallet-address';
 
 import {
-  Proposals,
   UserWidgets,
   FollowOnFarcaster,
 } from './widgets';
@@ -20,7 +19,6 @@ export const Final = () => {
     <ErrorBoundary>
       <LookUpWalletAddress />
       <UserWidgets />
-      <Proposals />
       <FollowOnFarcaster />
       <FollowTradingCopilot />
     </ErrorBoundary>

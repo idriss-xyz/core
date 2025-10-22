@@ -10,7 +10,5 @@ export const useApplicationStatus = () => {
   return {
     gitcoin: Boolean(serviceStatusQuery.data?.gitcoin),
     idrissSend: Boolean(serviceStatusQuery.data?.['idriss-send']),
-    agora: Boolean(serviceStatusQuery.data?.agora),
-    tally: Boolean(serviceStatusQuery.data?.tally),
   };
 };

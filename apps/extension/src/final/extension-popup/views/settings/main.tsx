@@ -8,10 +8,6 @@ import { SETTING_NAME_TO_LABEL } from './constants';
 export const MainSettings = () => {
   const popup = useExtensionPopup();
 
-  const goToGovernanceSettings = useCallback(() => {
-    popup.navigate(POPUP_ROUTE.GOVERNANCE_SETTINGS);
-  }, [popup]);
-
   const goToOtherSettings = useCallback(() => {
     popup.navigate(POPUP_ROUTE.OTHER_SETTINGS);
   }, [popup]);
@@ -21,11 +17,6 @@ export const MainSettings = () => {
       <Setting
         label={SETTING_NAME_TO_LABEL['idriss-send-enabled']}
         action={<Setting.Switch name="idriss-send-enabled" />}
-      />
-
-      <Setting
-        label="Governance widget"
-        action={<Setting.ArrowRightButton onClick={goToGovernanceSettings} />}
       />
 
       <Setting
