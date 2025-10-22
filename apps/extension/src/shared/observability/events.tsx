@@ -3,7 +3,6 @@ import {
   createContext,
   ReactNode,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
 } from 'react';
@@ -103,14 +102,6 @@ type EventsLogger = {
 
 const EventsLoggerContext = createContext<EventsLogger | undefined>(undefined);
 
-export const useEventsLogger = () => {
-  const context = useContext(EventsLoggerContext);
-  if (!context) {
-    throw new Error('Expected WithEventsLogger');
-  }
-
-  return context;
-};
 
 type Properties = {
   children: ReactNode;

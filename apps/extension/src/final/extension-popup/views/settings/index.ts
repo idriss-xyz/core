@@ -1,1 +1,0 @@
-export { MainSettings } from './main';

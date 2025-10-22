@@ -13,12 +13,7 @@ export {
   useExtensionSettings,
   ExtensionPopupProvider,
   useExtensionPopup,
-  WalletContextProvider,
-  useWallet,
 } from './context';
-export {
-  COMMAND_MAP as EXTENSION_COMMAND_MAP,
-  GetServiceStatusCommand,
-} from './commands';
-export type { ExtensionSettingName, StoredAuthToken } from './types';
+export { COMMAND_MAP as EXTENSION_COMMAND_MAP } from './commands';
+export type { ExtensionSettingName } from './types';
 export { ExtensionSettingsManager } from './extension-settings-manager';
