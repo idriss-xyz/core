@@ -8,7 +8,6 @@ export {
 } from './constants';
 export {
   WalletWindowMessages,
-  SolanaWalletWindowMessages,
   AuthTokenWindowMessages,
   DeviceIdWindowMessages,
 } from './messages';
@@ -37,8 +36,4 @@ export {
   GetAcrossChainFeeCommand,
 } from './commands';
 export { TransactionRevertedError } from './errors';
-export {
-  WalletStorage,
-  SolanaWalletStorage,
-  AuthTokenStorage,
-} from './storage';
+export { WalletStorage, AuthTokenStorage } from './storage';

@@ -1,22 +1,8 @@
 import { StoredWallet } from '@idriss-xyz/wallet-connect';
 
-import { StoredSubscriptions } from 'shared/extension';
 import { onWindowMessage } from 'shared/messaging';
 
-import {
-  AuthTokenWindowMessages,
-  SolanaWalletWindowMessages,
-  WalletWindowMessages,
-} from './messages';
-
-type StoredToastSoundState = boolean | undefined;
-
-type StoredSubscriptionsAmount = number | undefined;
-
-interface StoredSolanaWallet {
-  account: string;
-  providerName: string;
-}
+import { AuthTokenWindowMessages, WalletWindowMessages } from './messages';
 
 type StoredAuthToken = string | undefined;
 
@@ -46,36 +32,6 @@ export class WalletStorage {
   public static clear() {
     window.postMessage({
       type: WalletWindowMessages.CLEAR_WALLET,
-    });
-  }
-}
-
-export class SolanaWalletStorage {
-  public static get(): Promise<StoredSolanaWallet | undefined> {
-    return new Promise((resolve) => {
-      window.postMessage({
-        type: SolanaWalletWindowMessages.GET_SOLANA_WALLET,
-      });
-
-      onWindowMessage<StoredSolanaWallet | undefined>(
-        SolanaWalletWindowMessages.GET_SOLANA_WALLET_RESPONSE,
-        (maybeWallet) => {
-          resolve(maybeWallet);
-        },
-      );
-    });
-  }
-
-  public static save(payload: StoredSolanaWallet) {
-    window.postMessage({
-      type: SolanaWalletWindowMessages.SAVE_SOLANA_WALLET,
-      detail: payload,
-    });
-  }
-
-  public static clear() {
-    window.postMessage({
-      type: SolanaWalletWindowMessages.CLEAR_SOLANA_WALLET,
     });
   }
 }

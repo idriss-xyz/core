@@ -22,14 +22,9 @@ import {
   ExtensionPopupProvider,
   ExtensionSettingsProvider,
   WalletContextProvider,
-  SolanaContextProvider,
 } from 'shared/extension';
 import {
-  AuthTokenStorage,
   WalletStorage,
-  SolanaWalletStorage,
-  ToastSoundStateStorage,
-  SubscriptionsAmountStorage,
 } from 'shared/web3';
 
 type Properties = {
@@ -53,12 +48,7 @@ export const Providers = ({
                     <TailwindProvider>
                       <QueryProvider>
                         <NiceModal.Provider>
-                                                      <NotificationsProvider>
-                              <SolanaContextProvider
-                                onGetWallet={SolanaWalletStorage.get}
-                                onClearWallet={SolanaWalletStorage.clear}
-                                onSaveWallet={SolanaWalletStorage.save}
-                              >
+                              <NotificationsProvider>
                                 <WalletContextProvider
                                   disabledWalletsRdns={disabledWalletRdns}
                                   onGetWallet={WalletStorage.get}
@@ -77,7 +67,6 @@ export const Providers = ({
                                     </ExtensionSettingsProvider>
                                   </ExtensionPopupProvider>
                                 </WalletContextProvider>
-                              </SolanaContextProvider>
                             </NotificationsProvider>
                         </NiceModal.Provider>
                       </QueryProvider>

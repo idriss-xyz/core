@@ -11,7 +11,6 @@ import {
   RVLT_LOGO,
   WETH_LOGO,
   ALEPH_LOGO,
-  SOLANA_LOGO,
   // PIXELS_LOGO,
   NATIVE_COIN_ADDRESS,
   CHAIN as SHARED_CHAIN,
@@ -27,29 +26,10 @@ export const NATIVE_ETH_ADDRESS = '0x0000000000000000000000000000000000000000';
 export const NATIVE_SOL_ADDRESS = '11111111111111111111111111111111';
 
 // TODO: IMPORTANT CHECK SHORTNAMES
-export const CHAIN = Object.assign(SHARED_CHAIN, {
-  // The following chain object is what Li.Fi uses to get quotes for Solana trades.
-  // Not to be used on other parts of the app as it's not a real EVM chain.
-  SOLANA: {
-    id: 1_151_111_081_099_710,
-    name: 'Solana',
-    shortName: 'Solana',
-    dbName: 'SOLANA_MAINNET',
-    logo: SOLANA_LOGO,
-    nativeCurrency: {
-      name: 'Solana',
-      symbol: 'SOL',
-      decimals: 9,
-    },
-    rpcUrls: { default: { http: ['https://api.mainnet-beta.solana.com'] } },
-    blockExplorers: {
-      default: {
-        name: 'Solana Explorer',
-        url: 'https://solscan.io',
-      },
-    },
-  },
-}) satisfies Record<string, Chain>;
+export const CHAIN = Object.assign(SHARED_CHAIN, {}) satisfies Record<
+  string,
+  Chain
+>;
 
 export const TOKEN = Object.assign(SHARED_TOKEN, {
   CELO: {

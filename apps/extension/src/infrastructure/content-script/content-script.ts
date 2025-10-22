@@ -18,11 +18,7 @@ import {
   EXTENSION_BUTTON_CLICKED,
   ACTIVE_TAB_CHANGED,
 } from 'shared/extension';
-import {
-  DeviceIdWindowMessages,
-  SolanaWalletWindowMessages,
-  WalletWindowMessages,
-} from 'shared/web3';
+import { DeviceIdWindowMessages, WalletWindowMessages } from 'shared/web3';
 
 export class ContentScript {
   private constructor(private environment: typeof chrome) {}
@@ -34,7 +30,6 @@ export class ContentScript {
 
     contentScript.subscribeToExtensionSettings();
     contentScript.subscribeToWallet();
-    contentScript.subscribeToSolanaWallet();
     contentScript.subscribeToDeviceId();
     contentScript.blockGithubShortcuts();
   }
@@ -173,30 +168,6 @@ export class ContentScript {
       WalletWindowMessages.SAVE_WALLET,
       (v) => {
         void ExtensionSettingsManager.saveWallet(v);
-      },
-    );
-  }
-
-  subscribeToSolanaWallet() {
-    onWindowMessage(SolanaWalletWindowMessages.GET_SOLANA_WALLET, async () => {
-      const maybeWallet = await ExtensionSettingsManager.getSolanaWallet();
-
-      const message = {
-        type: SolanaWalletWindowMessages.GET_SOLANA_WALLET_RESPONSE,
-        detail: maybeWallet,
-      };
-
-      window.postMessage(message);
-    });
-
-    onWindowMessage(SolanaWalletWindowMessages.CLEAR_SOLANA_WALLET, () => {
-      void ExtensionSettingsManager.clearSolanaWallet();
-    });
-
-    onWindowMessage<{ account: string; providerName: string }>(
-      SolanaWalletWindowMessages.SAVE_SOLANA_WALLET,
-      (v) => {
-        void ExtensionSettingsManager.saveSolanaWallet(v);
       },
     );
   }
