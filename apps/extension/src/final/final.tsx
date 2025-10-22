@@ -5,9 +5,7 @@ import { LookUpWalletAddress } from 'application/look-up-wallet-address';
 import {
   Proposals,
   UserWidgets,
-  PolymarketMarkets,
   FollowOnFarcaster,
-  YapsStats,
 } from './widgets';
 import { FollowTradingCopilot } from './widgets/follow-trading-copilot';
 
@@ -22,11 +20,9 @@ export const Final = () => {
     <ErrorBoundary>
       <LookUpWalletAddress />
       <UserWidgets />
-      <PolymarketMarkets />
       <Proposals />
       <FollowOnFarcaster />
       <FollowTradingCopilot />
-      <YapsStats />
     </ErrorBoundary>
   );
 };

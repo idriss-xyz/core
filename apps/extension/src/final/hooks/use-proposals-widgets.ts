@@ -17,12 +17,11 @@ export const useProposalsWidgets = () => {
   const getOfficialNames = useCallback(
     (username: string) => {
       return {
-        snapshot: handleMap.snapshot[username],
         tally: handleMap.tally[username],
         agora: handleMap.agora[username],
       };
     },
-    [handleMap.agora, handleMap.snapshot, handleMap.tally],
+    [handleMap.agora, handleMap.tally],
   );
 
   const getProposalsSources = useCallback(

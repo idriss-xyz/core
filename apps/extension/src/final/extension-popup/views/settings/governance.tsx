@@ -14,10 +14,6 @@ export const GovernanceSettings = () => {
         action={<Setting.Switch name="tally-enabled" />}
       />
 
-      <Setting
-        label={SETTING_NAME_TO_LABEL['snapshot-enabled']}
-        action={<Setting.Switch name="snapshot-enabled" />}
-      />
     </div>
   );
 };

@@ -29,11 +29,6 @@ export const MainSettings = () => {
       />
 
       <Setting
-        label={SETTING_NAME_TO_LABEL['polymarket-enabled']}
-        action={<Setting.Switch name="polymarket-enabled" />}
-      />
-
-      <Setting
         label="More features"
         action={<Setting.ArrowRightButton onClick={goToOtherSettings} />}
       />

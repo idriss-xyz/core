@@ -13,11 +13,6 @@ export const OtherSettings = () => {
         label={SETTING_NAME_TO_LABEL['gitcoin-enabled']}
         action={<Setting.Switch name="gitcoin-enabled" />}
       />
-
-      <Setting
-        label={SETTING_NAME_TO_LABEL['kaito-enabled']}
-        action={<Setting.Switch name="kaito-enabled" />}
-      />
     </div>
   );
 };

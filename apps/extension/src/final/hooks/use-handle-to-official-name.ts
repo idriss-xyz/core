@@ -4,7 +4,6 @@ import {
   FARCASTER_HANDLE_TO_AGORA,
 } from 'application/agora';
 import { FARCASTER_HANDLE_TO_TALLY } from 'application/tally';
-import { FARCASTER_HANDLE_TO_SNAPSHOT } from 'application/snapshot';
 import { useExtensionSettings } from 'shared/extension';
 
 import { useApplicationStatus } from './use-application-status';
@@ -14,14 +13,6 @@ export const useHandleToOfficialName = () => {
   const applicationsStatus = useApplicationStatus();
   const { extensionSettings } = useExtensionSettings();
   const { isWarpcast, isTwitter, isSupercast } = useLocationInfo();
-
-  const snapshotEnabled =
-    applicationsStatus.snapshot && extensionSettings['snapshot-enabled'];
-
-  const { data: twitterSnapshotHandlesMap } = useTwitterHandleToUsernameMap({
-    application: 'snapshot',
-    enabled: snapshotEnabled,
-  });
 
   const tallyEnabled =
     applicationsStatus.tally && extensionSettings['tally-enabled'];
@@ -35,7 +26,6 @@ export const useHandleToOfficialName = () => {
 
   if (isTwitter) {
     return {
-      snapshot: twitterSnapshotHandlesMap ?? {},
       tally: twitterTallyHandlesMap ?? {},
       agora: agoraEnabled ? TWITTER_HANDLE_TO_AGORA : {},
     };
@@ -43,14 +33,12 @@ export const useHandleToOfficialName = () => {
 
   if (isWarpcast || isSupercast) {
     return {
-      snapshot: snapshotEnabled ? FARCASTER_HANDLE_TO_SNAPSHOT : {},
       tally: tallyEnabled ? FARCASTER_HANDLE_TO_TALLY : {},
       agora: agoraEnabled ? FARCASTER_HANDLE_TO_AGORA : {},
     };
   }
 
   return {
-    snapshot: {},
     tally: {},
     agora: {},
   };

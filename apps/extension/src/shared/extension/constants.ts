@@ -21,10 +21,7 @@ export const ACTIVE_TAB_CHANGED = 'ACTIVE_TAB_CHANGED';
 export const DEFAULT_EXTENSION_SETTINGS: ExtensionSettings = {
   'agora-enabled': false,
   'tally-enabled': false,
-  'kaito-enabled': false,
   'gitcoin-enabled': false,
-  'snapshot-enabled': false,
-  'polymarket-enabled': false,
   'idriss-send-enabled': false,
   'wallet-lookup-enabled': false,
   'entire-extension-enabled': false,

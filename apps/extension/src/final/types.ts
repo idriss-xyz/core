@@ -3,7 +3,7 @@ import { IdrissSendWidgetData } from 'application/idriss-send';
 
 export type UserWidgetData = GitcoinDonationWidgetData | IdrissSendWidgetData;
 
-export type ProposalSource = 'snapshot' | 'tally' | 'agora';
+export type ProposalSource = 'tally' | 'agora';
 
 export interface PostWidgetProposalData {
   top: number;

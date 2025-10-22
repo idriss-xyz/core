@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import * as Tabs from '@radix-ui/react-tabs';
-import { AGORA_LOGO, SNAPSHOT_LOGO, TALLY_LOGO } from '@idriss-xyz/constants';
+import { AGORA_LOGO, TALLY_LOGO } from '@idriss-xyz/constants';
 
 import { AgoraWidget } from 'application/agora';
-import { SnapshotWidget } from 'application/snapshot';
 import { TallyWidget } from 'application/tally';
 import { classes } from 'shared/ui';
 import { ErrorBoundary } from 'shared/observability';
@@ -18,26 +17,20 @@ interface Properties {
 }
 
 const PROPOSAL_SOURCE_TO_COMPONENT = {
-  snapshot: SnapshotWidget,
   tally: TallyWidget,
   agora: AgoraWidget,
 };
 const PROPOSAL_SOURCE_TO_IMG = {
-  snapshot: SNAPSHOT_LOGO,
   tally: TALLY_LOGO,
   agora: AGORA_LOGO,
 };
 
 const PROPOSAL_SOURCE_TO_NAME = {
-  snapshot: 'Snapshot',
   tally: 'Tally',
   agora: 'Agora',
 };
 
 const PROPOSAL_SOURCE_TO_CLASSES = {
-  snapshot: {
-    trigger: 'bg-[#2d2d2d] text-white',
-  },
   tally: {
     trigger: 'bg-white text-black',
   },

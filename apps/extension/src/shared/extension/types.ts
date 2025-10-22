@@ -4,12 +4,9 @@ export type ExtensionSettingName =
   | 'entire-extension-enabled'
   | 'idriss-send-enabled'
   | 'wallet-lookup-enabled'
-  | 'snapshot-enabled'
   | 'tally-enabled'
   | 'agora-enabled'
-  | 'polymarket-enabled'
   | 'gitcoin-enabled'
-  | 'kaito-enabled'
   | 'trading-copilot-latest-transactions-enabled'
   | 'trading-copilot-notifications-enabled';
 

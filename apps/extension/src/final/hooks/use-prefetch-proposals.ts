@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 
 import { useAgoraProposalsQuery } from 'application/agora';
-import { useSnapshotProposalsQuery } from 'application/snapshot';
 import { useTallyProposalsQuery } from 'application/tally';
 import { useExtensionSettings } from 'shared/extension';
 
@@ -29,17 +28,6 @@ export const usePrefetchProposals = ({ widgetData }: Properties) => {
     enabled: agoraEnabled,
   });
 
-  const snapshotEnabled =
-    applicationsStatus.snapshot &&
-    widgetData.proposalsSources.includes('snapshot') &&
-    extensionSettings['snapshot-enabled'];
-
-  const snapshotProposalsQuery = useSnapshotProposalsQuery({
-    pageNumber: 0,
-    enabled: snapshotEnabled,
-    officialName: widgetData.officialNames.snapshot ?? '',
-  });
-
   const tallyEnabled =
     applicationsStatus.tally &&
     widgetData.proposalsSources.includes('tally') &&
@@ -54,20 +42,12 @@ export const usePrefetchProposals = ({ widgetData }: Properties) => {
   const isAgoraProposalPrefetched =
     !agoraProposalsQuery.isLoading && !agoraProposalsQuery.isPlaceholderData;
 
-  const isSnapshotProposalPrefetched =
-    !snapshotProposalsQuery.isLoading &&
-    !snapshotProposalsQuery.isPlaceholderData;
-
   const isTallyProposalPrefetched =
     !tallyProposalsQuery.isLoading && !tallyProposalsQuery.isPlaceholderData;
 
-  const isPrefetched =
-    isAgoraProposalPrefetched &&
-    isSnapshotProposalPrefetched &&
-    isTallyProposalPrefetched;
+  const isPrefetched = isAgoraProposalPrefetched && isTallyProposalPrefetched;
 
   const hasAgoraProposal = Boolean(agoraProposalsQuery.data?.proposal);
-  const hasSnapshotProposal = Boolean(snapshotProposalsQuery.data?.proposal);
   const hasTallyProposal = Boolean(tallyProposalsQuery.data?.nodes[0]);
 
   const activeSources = useMemo(() => {
@@ -77,23 +57,12 @@ export const usePrefetchProposals = ({ widgetData }: Properties) => {
       sources.push('agora');
     }
 
-    if (hasSnapshotProposal && snapshotEnabled) {
-      sources.push('snapshot');
-    }
-
     if (hasTallyProposal && tallyEnabled) {
       sources.push('tally');
     }
 
     return sources;
-  }, [
-    agoraEnabled,
-    hasAgoraProposal,
-    hasSnapshotProposal,
-    hasTallyProposal,
-    snapshotEnabled,
-    tallyEnabled,
-  ]);
+  }, [agoraEnabled, hasAgoraProposal, hasTallyProposal, tallyEnabled]);
 
   return {
     isPrefetched,

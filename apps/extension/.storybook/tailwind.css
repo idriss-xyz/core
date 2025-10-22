@@ -1157,10 +1157,6 @@ video {
   --tw-bg-opacity: 1;
   background-color: rgb(17 221 116 / var(--tw-bg-opacity));
 }
-.bg-polymarket-gray {
-  --tw-bg-opacity: 1;
-  background-color: rgb(29 43 57 / var(--tw-bg-opacity));
-}
 .bg-red-200 {
   --tw-bg-opacity: 1;
   background-color: rgb(254 202 202 / var(--tw-bg-opacity));

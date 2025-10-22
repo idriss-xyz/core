@@ -14,8 +14,6 @@ import {
 } from 'shared/messaging';
 import { WEB3_COMMAND_MAP } from 'shared/web3';
 import { GITCOIN_DONATION_COMMAND_MAP } from 'application/gitcoin';
-import { POLYMARKET_COMMAND_MAP } from 'application/polymarket';
-import { SNAPSHOT_COMMAND_MAP } from 'application/snapshot';
 import {
   DEFAULT_EXTENSION_SETTINGS,
   EXTENSION_BUTTON_CLICKED,
@@ -38,7 +36,6 @@ import {
   TRADING_COPILOT_COMMAND_MAP,
   SwapData,
 } from 'application/trading-copilot';
-import { KAITO_COMMAND_MAP } from 'application/kaito';
 
 import { SbtResolver } from '../../common/resolvers/SbtResolver';
 import { AddressResolver } from '../../common/resolvers/AddressResolver';
@@ -47,9 +44,7 @@ const COMMAND_MAP = {
   ...WEB3_COMMAND_MAP,
   ...OBESRVABILITY_COMMAND_MAP,
   ...GITCOIN_DONATION_COMMAND_MAP,
-  ...POLYMARKET_COMMAND_MAP,
   ...EXTENSION_COMMAND_MAP,
-  ...SNAPSHOT_COMMAND_MAP,
   ...UTILS_COMMAND_MAP,
   ...TWITTER_COMMAND_MAP,
   ...AGORA_COMMAND_MAP,
@@ -58,7 +53,6 @@ const COMMAND_MAP = {
   ...TALLY_COMMAND_MAP,
   ...FARCASTER_COMMAND_MAP,
   ...TRADING_COPILOT_COMMAND_MAP,
-  ...KAITO_COMMAND_MAP,
 };
 
 export class ServiceWorker {
