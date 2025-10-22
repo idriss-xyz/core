@@ -1,8 +1,7 @@
-import { useMemo, createElement } from 'react';
+import { createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import {
-  useLocationInfo,
   ExtensionPopup,
   Final,
 } from 'final';
