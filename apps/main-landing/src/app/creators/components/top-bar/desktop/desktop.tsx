@@ -210,9 +210,14 @@ export const Desktop = ({
           </Button>
         </div>
       ) : (
-        <div className="flex items-center gap-x-2">
+        <div
+          className={classes(
+            'flex items-center gap-x-2',
+            creator?.isDonor ? 'gap-x-1' : '',
+          )}
+        >
           <MobileMenu />
-          {creator?.isDonor && (
+          {(creator?.isDonor || creator == null) && (
             <Button
               asLink
               isExternal
