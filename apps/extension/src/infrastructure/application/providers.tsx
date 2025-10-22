@@ -18,11 +18,7 @@ import {
 import {
   ExtensionPopupProvider,
   ExtensionSettingsProvider,
-  WalletContextProvider,
 } from 'shared/extension';
-import {
-  WalletStorage,
-} from 'shared/web3';
 
 type Properties = {
   children: ReactNode;
@@ -31,7 +27,6 @@ type Properties = {
 
 export const Providers = ({
   children,
-  disabledWalletRdns = [],
 }: Properties) => {
   return (
     <StrictMode>
@@ -46,18 +41,11 @@ export const Providers = ({
                       <QueryProvider>
                         <NiceModal.Provider>
                               <NotificationsProvider>
-                                <WalletContextProvider
-                                  disabledWalletsRdns={disabledWalletRdns}
-                                  onGetWallet={WalletStorage.get}
-                                  onClearWallet={WalletStorage.clear}
-                                  onSaveWallet={WalletStorage.save}
-                                >
-                                  <ExtensionPopupProvider>
+                                                                  <ExtensionPopupProvider>
                                     <ExtensionSettingsProvider>
                                             {children}
                                     </ExtensionSettingsProvider>
                                   </ExtensionPopupProvider>
-                                </WalletContextProvider>
                             </NotificationsProvider>
                         </NiceModal.Provider>
                       </QueryProvider>

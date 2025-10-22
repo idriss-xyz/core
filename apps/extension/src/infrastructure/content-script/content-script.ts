@@ -1,5 +1,3 @@
-import { Hex } from 'viem';
-
 import {
   COMMAND_BUS_REQUEST_MESSAGE,
   COMMAND_BUS_RESPONSE_MESSAGE,
@@ -18,7 +16,6 @@ import {
   EXTENSION_BUTTON_CLICKED,
   ACTIVE_TAB_CHANGED,
 } from 'shared/extension';
-import { DeviceIdWindowMessages, WalletWindowMessages } from 'shared/web3';
 
 export class ContentScript {
   private constructor(private environment: typeof chrome) {}
@@ -29,8 +26,6 @@ export class ContentScript {
     contentScript.bridgeCommunication();
 
     contentScript.subscribeToExtensionSettings();
-    contentScript.subscribeToWallet();
-    contentScript.subscribeToDeviceId();
     contentScript.blockGithubShortcuts();
   }
 
@@ -145,47 +140,6 @@ export class ContentScript {
         detail,
       };
       window.postMessage(message);
-    });
-  }
-
-  subscribeToWallet() {
-    onWindowMessage(WalletWindowMessages.GET_WALLET, async () => {
-      const maybeWallet = await ExtensionSettingsManager.getWallet();
-
-      const message = {
-        type: WalletWindowMessages.GET_WALLET_RESPONSE,
-        detail: maybeWallet,
-      };
-
-      window.postMessage(message);
-    });
-
-    onWindowMessage(WalletWindowMessages.CLEAR_WALLET, () => {
-      void ExtensionSettingsManager.clearWallet();
-    });
-
-    onWindowMessage<{ account: Hex; providerRdns: string }>(
-      WalletWindowMessages.SAVE_WALLET,
-      (v) => {
-        void ExtensionSettingsManager.saveWallet(v);
-      },
-    );
-  }
-
-  subscribeToDeviceId() {
-    onWindowMessage(DeviceIdWindowMessages.GET_DEVICE_ID, async () => {
-      const maybeDeviceId = await ExtensionSettingsManager.getDeviceId();
-
-      const message = {
-        type: DeviceIdWindowMessages.GET_DEVICE_ID_RESPONSE,
-        detail: maybeDeviceId,
-      };
-
-      window.postMessage(message);
-    });
-
-    onWindowMessage<string>(DeviceIdWindowMessages.SET_DEVICE_ID, (v) => {
-      void ExtensionSettingsManager.setDeviceId(v);
     });
   }
 

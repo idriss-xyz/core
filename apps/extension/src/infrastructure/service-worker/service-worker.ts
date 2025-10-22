@@ -6,7 +6,6 @@ import {
   JsonValue,
   SerializedCommand,
 } from 'shared/messaging';
-import { WEB3_COMMAND_MAP } from 'shared/web3';
 import {
   DEFAULT_EXTENSION_SETTINGS,
   EXTENSION_BUTTON_CLICKED,
@@ -21,7 +20,6 @@ import {
 import { UTILS_COMMAND_MAP } from 'shared/utils';
 
 const COMMAND_MAP = {
-  ...WEB3_COMMAND_MAP,
   ...OBESRVABILITY_COMMAND_MAP,
   ...EXTENSION_COMMAND_MAP,
   ...UTILS_COMMAND_MAP,
