@@ -2,11 +2,7 @@ import NiceModal from '@ebay/nice-modal-react';
 import { ReactNode, StrictMode } from 'react';
 import { WithPortal } from '@idriss-xyz/ui/providers/with-portal';
 
-import {
-  ErrorBoundary,
-  WithEventsLogger,
-  WithObservabilityScope,
-} from 'shared/observability';
+import { ErrorBoundary } from 'shared/observability';
 import {
   NotificationsProvider,
   FontProvider,
@@ -28,33 +24,29 @@ type Properties = {
 export const Providers = ({ children }: Properties) => {
   return (
     <StrictMode>
-      <WithObservabilityScope>
-        <ErrorBoundary>
-          <WithEventsLogger>
-            <WithPortal>
-              <PortalProvider>
-                <WithExtensionInfo>
-                  <FontProvider>
-                    <TailwindProvider>
-                      <QueryProvider>
-                        <NiceModal.Provider>
-                          <NotificationsProvider>
-                            <ExtensionPopupProvider>
-                              <ExtensionSettingsProvider>
-                                {children}
-                              </ExtensionSettingsProvider>
-                            </ExtensionPopupProvider>
-                          </NotificationsProvider>
-                        </NiceModal.Provider>
-                      </QueryProvider>
-                    </TailwindProvider>
-                  </FontProvider>
-                </WithExtensionInfo>
-              </PortalProvider>
-            </WithPortal>
-          </WithEventsLogger>
-        </ErrorBoundary>
-      </WithObservabilityScope>
+      <ErrorBoundary>
+        <WithPortal>
+          <PortalProvider>
+            <WithExtensionInfo>
+              <FontProvider>
+                <TailwindProvider>
+                  <QueryProvider>
+                    <NiceModal.Provider>
+                      <NotificationsProvider>
+                        <ExtensionPopupProvider>
+                          <ExtensionSettingsProvider>
+                            {children}
+                          </ExtensionSettingsProvider>
+                        </ExtensionPopupProvider>
+                      </NotificationsProvider>
+                    </NiceModal.Provider>
+                  </QueryProvider>
+                </TailwindProvider>
+              </FontProvider>
+            </WithExtensionInfo>
+          </PortalProvider>
+        </WithPortal>
+      </ErrorBoundary>
     </StrictMode>
   );
 };

@@ -12,21 +12,12 @@ import {
   EXTENSION_COMMAND_MAP,
   ExtensionSettingsManager,
 } from 'shared/extension';
-import {
-  createObservabilityScope,
-  OBESRVABILITY_COMMAND_MAP,
-  ObservabilityScope,
-} from 'shared/observability';
 
 const COMMAND_MAP = {
-  ...OBESRVABILITY_COMMAND_MAP,
   ...EXTENSION_COMMAND_MAP,
 };
 
 export class ServiceWorker {
-  private observabilityScope: ObservabilityScope =
-    createObservabilityScope('service-worker');
-
   private constructor(private environment: typeof chrome) {}
 
   static run(environment: typeof chrome) {
@@ -53,7 +44,6 @@ export class ServiceWorker {
           const error = new Error(
             `Missing command definition for ${serializedCommand.name}. Make sure it's added to COMMAND_MAP`,
           );
-          this.observabilityScope.captureException(error);
           throw error;
         }
 
@@ -62,15 +52,13 @@ export class ServiceWorker {
           serializedCommand.payload as any,
         ) as Command<unknown, JsonValue>;
         command.id = serializedCommand.id;
-        command.observabilityScope = this.observabilityScope;
 
         command
           .handle()
           .then((response: unknown) => {
             return sendResponse(response);
           })
-          .catch((error: unknown) => {
-            this.observabilityScope.captureException(error);
+          .catch(() => {
             return sendResponse(new FailureResult('Service worker error'));
           });
       },
@@ -163,9 +151,7 @@ export class ServiceWorker {
   }
 
   watchWorkerError() {
-    self.addEventListener('error', (event) => {
-      this.observabilityScope.captureException(event.error);
-    });
+    self.addEventListener('error', () => {});
   }
 
   private static isValidTab = (

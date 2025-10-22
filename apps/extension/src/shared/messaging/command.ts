@@ -1,7 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { useMutation } from '@tanstack/react-query';
 import { useCallback } from 'react';
-import { Scope } from '@sentry/browser';
 
 import {
   COMMAND_BUS_REQUEST_MESSAGE,
@@ -34,7 +33,6 @@ export abstract class Command<Payload, ExpectedResponse extends JsonValue> {
   public abstract readonly name: string;
   public abstract readonly payload: Payload;
   public id: string;
-  public observabilityScope?: Scope;
 
   constructor() {
     this.id = uuidv4();
@@ -56,10 +54,6 @@ export abstract class Command<Payload, ExpectedResponse extends JsonValue> {
             return;
           }
           if (!detail?.response) {
-            this.captureWarning('missing response field in event detail', {
-              commandName: this.name,
-              detail: detail,
-            });
             reject(new Error('Unexpected error'));
           }
           // TODO: serialize and de-serialize Result obj
@@ -77,14 +71,6 @@ export abstract class Command<Payload, ExpectedResponse extends JsonValue> {
 
   public serialize(): SerializedCommand<Payload> {
     return { name: this.name, payload: this.payload, id: this.id };
-  }
-
-  protected captureException(exception: unknown) {
-    this.observabilityScope?.captureException(exception);
-  }
-
-  protected captureWarning(warning: string, data?: Record<string, unknown>) {
-    this.observabilityScope?.captureMessage(warning, 'warning', { data });
   }
 }
 

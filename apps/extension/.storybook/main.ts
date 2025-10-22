@@ -33,9 +33,6 @@ const config: StorybookConfig = {
       config.plugins.push(
         new DefinePlugin({
           'process.env': JSON.stringify({
-            SENTRY_ENVIRONMENT: 'storybook',
-            SENTRY_DSN: '',
-            AMPLITUDE_API_KEY: '',
             ENVIRONMENT: 'storybook',
           }),
         }),
