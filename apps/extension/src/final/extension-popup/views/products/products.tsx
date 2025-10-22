@@ -9,14 +9,14 @@ export const Products = () => {
       <p className="mt-2 text-center text-label4 text-neutralGreen-700">
         Now building the best onchain
         <br />
-        monetization app for streamers
+        monetization app for streamers.
       </p>
       <Button
         intent="primary"
         size="medium"
         isExternal
         asLink
-        className="mx-auto mt-10"
+        className="mx-auto mt-6"
         href="https://idriss.xyz"
         suffixIconName="IdrissArrowRight"
       >
