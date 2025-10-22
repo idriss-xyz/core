@@ -19,7 +19,7 @@ const SOCIALS: { iconName: IconName; link: string }[] = [
   {
     iconName: 'Tiktok',
     link: SOCIAL_LINK.TIKTOK,
-  }
+  },
 ];
 
 type Properties = {

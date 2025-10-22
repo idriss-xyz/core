@@ -1,12 +1,10 @@
 import { ReactNode, createContext, useMemo, useState } from 'react';
 
-
 interface PortalContextValue {
   portal: HTMLDivElement | null;
 }
 
 const PortalContext = createContext<PortalContextValue | undefined>(undefined);
-
 
 interface Properties {
   children: ReactNode;

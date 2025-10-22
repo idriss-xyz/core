@@ -4,11 +4,7 @@ import { Closable } from 'shared/ui';
 import { POPUP_ROUTE, useExtensionPopup } from 'shared/extension';
 import { LINES } from 'assets/images';
 
-import {
-  TopBar,
-  Footer,
-  PopupContentLayout,
-} from './components';
+import { TopBar, Footer, PopupContentLayout } from './components';
 import { Products } from './views';
 
 export const ExtensionPopup = () => {

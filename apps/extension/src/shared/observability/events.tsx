@@ -102,7 +102,6 @@ type EventsLogger = {
 
 const EventsLoggerContext = createContext<EventsLogger | undefined>(undefined);
 
-
 type Properties = {
   children: ReactNode;
 };

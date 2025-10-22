@@ -1,10 +1,7 @@
 import { createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import {
-  ExtensionPopup,
-  Final,
-} from 'final';
+import { ExtensionPopup, Final } from 'final';
 
 import { Providers } from './providers';
 
@@ -57,8 +54,7 @@ const bootstrap = () => {
 };
 
 const ApplicationWithProviders = () => {
-
- return (
+  return (
     <Providers>
       <ExtensionPopup />
       <Final />

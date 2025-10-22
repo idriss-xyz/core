@@ -25,9 +25,7 @@ type Properties = {
   disabledWalletRdns?: string[];
 };
 
-export const Providers = ({
-  children,
-}: Properties) => {
+export const Providers = ({ children }: Properties) => {
   return (
     <StrictMode>
       <WithObservabilityScope>
@@ -40,13 +38,13 @@ export const Providers = ({
                     <TailwindProvider>
                       <QueryProvider>
                         <NiceModal.Provider>
-                              <NotificationsProvider>
-                                                                  <ExtensionPopupProvider>
-                                    <ExtensionSettingsProvider>
-                                            {children}
-                                    </ExtensionSettingsProvider>
-                                  </ExtensionPopupProvider>
-                            </NotificationsProvider>
+                          <NotificationsProvider>
+                            <ExtensionPopupProvider>
+                              <ExtensionSettingsProvider>
+                                {children}
+                              </ExtensionSettingsProvider>
+                            </ExtensionPopupProvider>
+                          </NotificationsProvider>
                         </NiceModal.Provider>
                       </QueryProvider>
                     </TailwindProvider>

@@ -1,9 +1,7 @@
 import { useExtensionSettings } from 'shared/extension';
 import { ErrorBoundary } from 'shared/observability';
 
-import {
-  UserWidgets,
-} from './widgets';
+import { UserWidgets } from './widgets';
 
 export const Final = () => {
   const { extensionSettings } = useExtensionSettings();
