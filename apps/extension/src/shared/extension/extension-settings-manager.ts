@@ -1,5 +1,3 @@
-import { StoredWallet } from '@idriss-xyz/wallet-connect';
-
 import { DEFAULT_EXTENSION_SETTINGS, SETTINGS_STORAGE_KEY } from './constants';
 import { ExtensionSettings } from './types';
 
@@ -16,39 +14,6 @@ export const ExtensionSettingsManager = {
 
   setSettings(settings: ExtensionSettings) {
     return chrome.storage.local.set({ [SETTINGS_STORAGE_KEY]: settings });
-  },
-
-  // TODO: move the wallet to a separate manager
-  saveWallet(wallet: StoredWallet) {
-    return chrome.storage.local.set({
-      'idriss-wallet': JSON.stringify(wallet),
-    });
-  },
-
-  clearWallet() {
-    return chrome.storage.local.remove('idriss-wallet');
-  },
-
-  getWallet(): Promise<StoredWallet | undefined> {
-    return new Promise((resolve) => {
-      void chrome.storage.local.get('idriss-wallet').then((storedWalletRaw) => {
-        const storedWallet = storedWalletRaw['idriss-wallet']
-          ? (JSON.parse(storedWalletRaw['idriss-wallet']) as StoredWallet)
-          : undefined;
-        return resolve(storedWallet);
-      });
-    });
-  },
-
-  onWalletChange(callback: (newWallet: StoredWallet | undefined) => void) {
-    chrome.storage.onChanged.addListener((changes, namespace) => {
-      if (namespace === 'local' && changes['idriss-wallet']) {
-        const newWallet = changes['idriss-wallet'].newValue
-          ? (JSON.parse(changes['idriss-wallet'].newValue) as StoredWallet)
-          : undefined;
-        callback(newWallet);
-      }
-    });
   },
 
   // TODO: move the device-id to a separate manager
