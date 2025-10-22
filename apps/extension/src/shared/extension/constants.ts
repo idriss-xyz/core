@@ -18,7 +18,6 @@ export const EXTENSION_BUTTON_CLICKED = 'EXTENSION_BUTTON_CLICKED';
 export const ACTIVE_TAB_CHANGED = 'ACTIVE_TAB_CHANGED';
 
 export const DEFAULT_EXTENSION_SETTINGS: ExtensionSettings = {
-  'gitcoin-enabled': false,
   'idriss-send-enabled': false,
   'wallet-lookup-enabled': false,
   'entire-extension-enabled': false,

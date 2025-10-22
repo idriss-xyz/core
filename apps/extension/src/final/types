@@ -1,0 +1,12 @@
+import { IdrissSendWidgetData } from 'application/idriss-send';
+
+export type UserWidgetData = IdrissSendWidgetData;
+
+export type ProposalSource = 'tally' | 'agora';
+
+export interface PostWidgetProposalData {
+  top: number;
+  username: string;
+  officialNames: Record<ProposalSource, string | undefined>;
+  proposalsSources: ProposalSource[];
+}

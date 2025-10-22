@@ -1,6 +1,5 @@
 import _ from 'lodash';
 
-import { useGitcoinDonationWidgetsData } from 'application/gitcoin';
 import { useIdrissSendWidgetsData } from 'application/idriss-send';
 import { useExtensionSettings } from 'shared/extension';
 import { useCommandQuery } from 'shared/messaging';
@@ -38,14 +37,6 @@ export const useUserWidgets = () => {
     enabled: idrissSendEnabled && isTwitter,
   });
 
-  const gitcoinEnabled =
-    applicationsStatus.gitcoin && extensionSettings['gitcoin-enabled'];
-
-  const { widgets: gitcoinDonationWidgets } = useGitcoinDonationWidgetsData({
-    scrapedUsers: users,
-    enabled: gitcoinEnabled && isTwitter,
-  });
-
   if (isFarcaster) {
     const usersThatFollowIdriss = users
       .map((user) => {
@@ -73,11 +64,9 @@ export const useUserWidgets = () => {
   return {
     widgets: userWidgetDataAdapter.fromTwitterWidgetsData({
       applicationsStatus: {
-        gitcoin: gitcoinEnabled,
         idrissSend: idrissSendEnabled,
       },
       idrissSendWidgets,
-      gitcoinDonationWidgets,
     }),
   };
 };

@@ -4,7 +4,6 @@ export type ExtensionSettingName =
   | 'entire-extension-enabled'
   | 'idriss-send-enabled'
   | 'wallet-lookup-enabled'
-  | 'gitcoin-enabled'
   | 'trading-copilot-latest-transactions-enabled'
   | 'trading-copilot-notifications-enabled';
 

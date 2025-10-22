@@ -13,7 +13,6 @@ import {
   SWAP_EVENT,
 } from 'shared/messaging';
 import { WEB3_COMMAND_MAP } from 'shared/web3';
-import { GITCOIN_DONATION_COMMAND_MAP } from 'application/gitcoin';
 import {
   DEFAULT_EXTENSION_SETTINGS,
   EXTENSION_BUTTON_CLICKED,
@@ -41,7 +40,6 @@ import { AddressResolver } from '../../common/resolvers/AddressResolver';
 const COMMAND_MAP = {
   ...WEB3_COMMAND_MAP,
   ...OBESRVABILITY_COMMAND_MAP,
-  ...GITCOIN_DONATION_COMMAND_MAP,
   ...EXTENSION_COMMAND_MAP,
   ...UTILS_COMMAND_MAP,
   ...TWITTER_COMMAND_MAP,
