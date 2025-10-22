@@ -1,6 +1,4 @@
 export type { CommandResponse, SerializedCommand } from './command';
-export { Command, useCommandMutation, type JsonValue } from './command';
-export { OkResult, FailureResult } from './result';
 export { onWindowMessage } from './on-window-message';
 export {
   POPUP_TO_WEBPAGE_MESSAGE,

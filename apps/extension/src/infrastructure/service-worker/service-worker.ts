@@ -1,21 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import {
-  Command,
-  COMMAND_BUS_REQUEST_MESSAGE,
-  FailureResult,
-  JsonValue,
-  SerializedCommand,
-} from 'shared/messaging';
-import {
   DEFAULT_EXTENSION_SETTINGS,
   EXTENSION_BUTTON_CLICKED,
-  EXTENSION_COMMAND_MAP,
   ExtensionSettingsManager,
 } from 'shared/extension';
-
-const COMMAND_MAP = {
-  ...EXTENSION_COMMAND_MAP,
-};
 
 export class ServiceWorker {
   private constructor(private environment: typeof chrome) {}
@@ -23,7 +11,6 @@ export class ServiceWorker {
   static run(environment: typeof chrome) {
     const serviceWorker = new ServiceWorker(environment);
 
-    serviceWorker.watchCommands();
     serviceWorker.watchStartup();
     serviceWorker.watchInstalled();
     serviceWorker.watchPopupClick();
@@ -32,37 +19,6 @@ export class ServiceWorker {
 
   keepAlive() {
     return setInterval(this.environment.runtime.getPlatformInfo, 20e3);
-  }
-
-  watchCommands() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.onMessage<SerializedCommand<unknown>>(
-      COMMAND_BUS_REQUEST_MESSAGE,
-      (serializedCommand, sendResponse) => {
-        const commandDefinition = COMMAND_MAP[serializedCommand.name];
-        if (!commandDefinition) {
-          const error = new Error(
-            `Missing command definition for ${serializedCommand.name}. Make sure it's added to COMMAND_MAP`,
-          );
-          throw error;
-        }
-
-        const command = new commandDefinition(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          serializedCommand.payload as any,
-        ) as Command<unknown, JsonValue>;
-        command.id = serializedCommand.id;
-
-        command
-          .handle()
-          .then((response: unknown) => {
-            return sendResponse(response);
-          })
-          .catch(() => {
-            return sendResponse(new FailureResult('Service worker error'));
-          });
-      },
-    );
   }
 
   onMessage<Data>(

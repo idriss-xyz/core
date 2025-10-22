@@ -1,20 +1,12 @@
 import { classes } from '@idriss-xyz/ui/utils';
-import { useCallback } from 'react';
 
 import { IDRISS_DARK_LOGO } from 'assets/images';
-import { POPUP_ROUTE, useExtensionPopup } from 'shared/extension';
 
 type Properties = {
   className?: string;
 };
 
 export const TopBar = ({ className }: Properties) => {
-  const popup = useExtensionPopup();
-
-  const goToProducts = useCallback(() => {
-    popup.navigate(POPUP_ROUTE.PRODUCTS);
-  }, [popup]);
-
   return (
     <div
       className={classes(
@@ -24,7 +16,7 @@ export const TopBar = ({ className }: Properties) => {
     >
       <img
         src={IDRISS_DARK_LOGO}
-        onClick={goToProducts}
+        onClick={() => {}}
         className="h-4.5 cursor-pointer"
         alt=""
       />

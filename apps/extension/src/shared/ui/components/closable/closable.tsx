@@ -2,7 +2,6 @@ import { ReactNode } from 'react';
 
 import { classes } from '../../utils';
 import { IconButton } from '../icon-button';
-import { Backdrop } from '../backdrop';
 
 type Properties = {
   children: ReactNode;
@@ -24,20 +23,9 @@ export const Closable = ({
   closeButtonClassName,
   closeButtonIconClassName,
   onClickInside,
-  closeOnClickAway = false,
-  closeOnHoverAway = false,
 }: Properties) => {
-  const shouldRenderBackdrop = closeOnClickAway || closeOnHoverAway;
-
   return (
     <>
-      {shouldRenderBackdrop && (
-        <Backdrop
-          onClick={closeOnClickAway ? onClose : undefined}
-          onHover={closeOnHoverAway ? onClose : undefined}
-          hoverActionDelay={1500}
-        />
-      )}
       <div
         className={classes('relative p-5 shadow-lg', className)}
         onClick={onClickInside}
