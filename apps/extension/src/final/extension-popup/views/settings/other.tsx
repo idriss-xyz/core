@@ -5,8 +5,8 @@ export const OtherSettings = () => {
   return (
     <div>
       <Setting
-        label={SETTING_NAME_TO_LABEL['wallet-lookup-enabled']}
-        action={<Setting.Switch name="wallet-lookup-enabled" />}
+        label={SETTING_NAME_TO_LABEL['entire-extension-enabled']}
+        action={<Setting.Switch name="entire-extension-enabled" />}
       />
     </div>
   );

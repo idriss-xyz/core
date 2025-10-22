@@ -5,13 +5,11 @@ import { POPUP_ROUTE, useExtensionPopup } from 'shared/extension';
 import { LINES } from 'assets/images';
 
 import {
-  Products,
-} from './views';
-import {
   TopBar,
   Footer,
   PopupContentLayout,
 } from './components';
+import { Products } from './views';
 
 export const ExtensionPopup = () => {
   const extensionPopup = useExtensionPopup();
