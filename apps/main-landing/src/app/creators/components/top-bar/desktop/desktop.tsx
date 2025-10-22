@@ -212,8 +212,8 @@ export const Desktop = ({
       ) : (
         <div
           className={classes(
-            'flex items-center gap-x-2',
-            creator?.isDonor ? 'gap-x-1' : '',
+            'flex items-center',
+            creator?.isDonor ? 'gap-x-1' : 'gap-x-2',
           )}
         >
           <MobileMenu />
