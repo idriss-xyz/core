@@ -24,7 +24,6 @@ import {
 import { UTILS_COMMAND_MAP } from 'shared/utils';
 import { IDRISS_COMMAND_MAP } from 'shared/idriss';
 import { IDRISS_SEND_COMMAND_MAP } from 'application/idriss-send';
-import { FARCASTER_COMMAND_MAP } from 'shared/farcaster';
 
 import { SbtResolver } from '../../common/resolvers/SbtResolver';
 import { AddressResolver } from '../../common/resolvers/AddressResolver';
@@ -37,7 +36,6 @@ const COMMAND_MAP = {
   ...TWITTER_COMMAND_MAP,
   ...IDRISS_COMMAND_MAP,
   ...IDRISS_SEND_COMMAND_MAP,
-  ...FARCASTER_COMMAND_MAP,
 };
 
 export class ServiceWorker {

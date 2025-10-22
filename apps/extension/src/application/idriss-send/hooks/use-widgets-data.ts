@@ -9,7 +9,6 @@ import {
 import { reverseObject } from 'shared/utils';
 import { UserScrapingResult } from 'shared/scraping';
 import { getNodeToInjectToUser, isHandleNode } from 'host/twitter';
-import { GetFollowersCommand } from 'shared/farcaster';
 
 import { GetCustomRecipientsCommand } from '../commands';
 import { PUBLIC_ETH_TAG_NAME } from '../constants';
@@ -55,14 +54,6 @@ export const useWidgetsData = ({ scrapedUsers, enabled }: Properties) => {
       return !Object.keys(usernameToTwitterId).includes(handle.toLowerCase());
     });
   }, [enabled, scrapedUsers, usernameToTwitterId]);
-
-  const followersQuery = useCommandQuery({
-    command: new GetFollowersCommand({}),
-    enabled: enabled,
-    placeholderData: (previousData) => {
-      return previousData;
-    },
-  });
 
   const customRecipientsQuery = useCommandQuery({
     command: new GetCustomRecipientsCommand({}),
@@ -185,18 +176,9 @@ export const useWidgetsData = ({ scrapedUsers, enabled }: Properties) => {
           const publicEthDigestedMessage =
             user.walletTagToDigestedMessage[PUBLIC_ETH_TAG_NAME] ?? '';
 
-          const addressFromFollowersList = Object.values(
-            followersQuery.data ?? {},
-          ).find((follower) => {
-            return (
-              follower.twitter.toLowerCase() === user.username.toLowerCase()
-            );
-          })?.address;
-
           walletAddress =
             userDigestToWallet[publicEthDigestedMessage] ??
-            Object.values(userDigestToWallet)[0] ??
-            addressFromFollowersList;
+            Object.values(userDigestToWallet)[0];
         }
 
         if (!walletAddress) {
@@ -232,7 +214,7 @@ export const useWidgetsData = ({ scrapedUsers, enabled }: Properties) => {
         };
       })
       .filter(Boolean);
-  }, [recipientsWithOptionalWallet, digestToWallet, followersQuery.data]);
+  }, [recipientsWithOptionalWallet, digestToWallet]);
 
   return { widgets };
 };

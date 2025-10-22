@@ -3,7 +3,6 @@ import { ErrorBoundary } from 'shared/observability';
 
 import {
   UserWidgets,
-  FollowOnFarcaster,
 } from './widgets';
 
 export const Final = () => {
@@ -16,7 +15,6 @@ export const Final = () => {
   return (
     <ErrorBoundary>
       <UserWidgets />
-      <FollowOnFarcaster />
     </ErrorBoundary>
   );
 };
