@@ -1,2 +1,2 @@
 export { Products } from './products';
-export { MainSettings, OtherSettings } from './settings';
+export { MainSettings } from './settings';

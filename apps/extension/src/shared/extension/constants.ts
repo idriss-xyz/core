@@ -6,8 +6,6 @@ export const GET_EXTENSION_SETTINGS_RESPONSE =
 
 export const POPUP_ROUTE = {
   PRODUCTS: '/products',
-  SETTINGS: '/settings',
-  OTHER_SETTINGS: '/settings/other',
 } as const;
 
 export type PopupRoute = (typeof POPUP_ROUTE)[keyof typeof POPUP_ROUTE];

@@ -3,7 +3,6 @@ import {
   COMMAND_BUS_RESPONSE_MESSAGE,
   CommandResponse,
   POPUP_TO_WEBPAGE_MESSAGE,
-  SWAP_EVENT,
   TAB_CHANGED,
   SerializedCommand,
   TOGGLE_EXTENSION_POPUP_VISIBILITY,
@@ -96,15 +95,6 @@ export class ContentScript {
       if (request.type === EXTENSION_BUTTON_CLICKED) {
         const message = {
           type: TOGGLE_EXTENSION_POPUP_VISIBILITY,
-        };
-        window.postMessage(message);
-        return;
-      }
-
-      if (request.type === SWAP_EVENT) {
-        const message = {
-          type: SWAP_EVENT,
-          detail: request.detail,
         };
         window.postMessage(message);
         return;
