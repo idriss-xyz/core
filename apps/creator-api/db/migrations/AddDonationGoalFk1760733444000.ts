@@ -1,4 +1,9 @@
-import { MigrationInterface, QueryRunner, TableColumn, TableForeignKey } from 'typeorm';
+import {
+  MigrationInterface,
+  QueryRunner,
+  TableColumn,
+  TableForeignKey,
+} from 'typeorm';
 
 export class AddDonationGoalFk1760733444000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -9,7 +14,7 @@ export class AddDonationGoalFk1760733444000 implements MigrationInterface {
         name: 'donation_goal_id',
         type: 'int',
         isNullable: true,
-      })
+      }),
     );
 
     // Add foreign key constraint
@@ -20,7 +25,7 @@ export class AddDonationGoalFk1760733444000 implements MigrationInterface {
         referencedTableName: 'donation_goal',
         referencedColumnNames: ['id'],
         onDelete: 'SET NULL', // If a donation goal is deleted, the donation remains but loses association
-      })
+      }),
     );
 
     // Drop the join table since we're moving to a direct foreign key approach
@@ -28,7 +33,7 @@ export class AddDonationGoalFk1760733444000 implements MigrationInterface {
       DROP TABLE IF EXISTS donation_goal_donations_creator_donations
     `);
 
-    // Create a database function and trigger for automatically associating donations with goals
+    // Create a database function and trigger for automatically associating new donations with goals
     await queryRunner.query(`
       CREATE OR REPLACE FUNCTION associate_donation_with_goal()
       RETURNS TRIGGER AS $$
@@ -71,7 +76,7 @@ export class AddDonationGoalFk1760733444000 implements MigrationInterface {
     // Remove foreign key and column
     const table = await queryRunner.getTable('creator_donations');
     const foreignKey = table?.foreignKeys.find(
-      (fk) => fk.columnNames.indexOf('donation_goal_id') !== -1
+      (fk) => fk.columnNames.indexOf('donation_goal_id') !== -1,
     );
     if (foreignKey) {
       await queryRunner.dropForeignKey('creator_donations', foreignKey);

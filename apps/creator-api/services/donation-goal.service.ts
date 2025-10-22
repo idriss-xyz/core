@@ -43,11 +43,6 @@ class DonationGoalService {
 
     const saved = await this.donationGoalRepository.save(donationGoal);
 
-    // Associate existing donations that fall within the goal's timeframe
-    if (donationGoal.active) {
-      await this.associateExistingDonations(saved);
-    }
-
     return saved;
   }
 
@@ -67,9 +62,6 @@ class DonationGoalService {
     // Activate this goal
     goal.active = true;
     const savedGoal = await this.donationGoalRepository.save(goal);
-
-    // Associate existing donations that fall within the goal's timeframe
-    await this.associateExistingDonations(savedGoal);
 
     return savedGoal;
   }
@@ -93,41 +85,6 @@ class DonationGoalService {
       .update(DonationGoal)
       .set({ active: false })
       .where('creator_id = :creatorId AND active = true', { creatorId })
-      .execute();
-  }
-
-  private async associateExistingDonations(goal: DonationGoal): Promise<void> {
-    // Get all creator addresses
-    const creator = await this.creatorRepository.findOne({
-      where: { id: goal.creator.id },
-      relations: ['addresses'],
-    });
-
-    if (!creator || !creator.addresses || creator.addresses.length === 0) {
-      return;
-    }
-
-    const creatorAddresses = creator.addresses.map((addr) => addr.address);
-
-    // Find all donations to this creator within the goal's timeframe
-    // that don't already have a goal assigned
-    await this.donationRepository
-      .createQueryBuilder()
-      .update(Donation)
-      .set({ donationGoal: goal })
-      .where(
-        `
-        to_address IN (:...creatorAddresses) AND
-        donation_goal_id IS NULL AND
-        timestamp >= :startDate AND
-        timestamp <= :endDate
-      `,
-        {
-          creatorAddresses,
-          startDate: goal.startDate,
-          endDate: goal.endDate,
-        },
-      )
       .execute();
   }
 }
