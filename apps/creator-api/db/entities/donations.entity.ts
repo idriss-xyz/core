@@ -8,6 +8,7 @@ import {
 import { Hex } from 'viem';
 import { User } from './user.entity';
 import { ZapperNode } from '../../types';
+import { DonationGoal } from './donation-goal.entity';
 
 @Entity('creator_donations')
 export abstract class Donation {
@@ -57,4 +58,10 @@ export abstract class Donation {
 
   @Column({ type: 'json' })
   data!: ZapperNode;
+
+  @ManyToOne(() => DonationGoal, (donationGoal) => donationGoal.donations, {
+    nullable: true,
+  })
+  @JoinColumn({ name: 'donation_goal_id' })
+  donationGoal?: DonationGoal;
 }

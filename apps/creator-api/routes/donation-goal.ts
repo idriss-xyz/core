@@ -50,12 +50,13 @@ router.post(
       res.status(404).json({ error: 'Creator not found' });
       return;
     }
-    const { name, targetAmount, startDate, endDate } = req.body;
+    const { name, targetAmount, startDate, endDate, active = false } = req.body;
     const donationGoal = new DonationGoal();
     donationGoal.name = name;
     donationGoal.targetAmount = targetAmount;
     donationGoal.startDate = startDate;
     donationGoal.endDate = endDate;
+    donationGoal.active = active;
     donationGoal.creator = creator;
     try {
       const createdDonationGoal =
@@ -64,6 +65,50 @@ router.post(
     } catch (error) {
       console.error('Error creating donation goal:', error);
       res.status(500).json({ error: 'Failed to create donation goal' });
+    }
+  },
+);
+
+// Activate a donation goal
+router.patch(
+  '/:goalId/activate',
+  tightCors,
+  verifyToken(),
+  async (req: Request, res: Response) => {
+    if (!req.user?.id) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    try {
+      const goalId = parseInt(req.params.goalId);
+      const activatedGoal = await donationGoalService.activateGoal(goalId);
+      res.status(200).json(activatedGoal);
+    } catch (error) {
+      console.error('Error activating donation goal:', error);
+      res.status(500).json({ error: 'Failed to activate donation goal' });
+    }
+  },
+);
+
+// Deactivate a donation goal
+router.patch(
+  '/:goalId/deactivate',
+  tightCors,
+  verifyToken(),
+  async (req: Request, res: Response) => {
+    if (!req.user?.id) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    try {
+      const goalId = parseInt(req.params.goalId);
+      const deactivatedGoal = await donationGoalService.deactivateGoal(goalId);
+      res.status(200).json(deactivatedGoal);
+    } catch (error) {
+      console.error('Error deactivating donation goal:', error);
+      res.status(500).json({ error: 'Failed to deactivate donation goal' });
     }
   },
 );

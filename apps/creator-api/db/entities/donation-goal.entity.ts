@@ -4,8 +4,7 @@ import {
   ManyToOne,
   JoinColumn,
   PrimaryGeneratedColumn,
-  ManyToMany,
-  JoinTable,
+  OneToMany,
 } from 'typeorm';
 import { Creator } from './creator.entity';
 import { Donation } from './donations.entity';
@@ -34,7 +33,6 @@ export class DonationGoal {
   @JoinColumn({ name: 'creator_id' })
   creator!: Creator;
 
-  @ManyToMany(() => Donation)
-  @JoinTable()
+  @OneToMany(() => Donation, (donation) => donation.donationGoal)
   donations!: Donation[];
 }

@@ -7,7 +7,7 @@ import { Donation } from '../entities/donations.entity';
   expression: (dataSource: DataSource) =>
     dataSource
       .createQueryBuilder()
-      .select('g.id', 'id')
+      .addSelect('g.id', 'id')
       .addSelect('g.name', 'name')
       .addSelect('g.target_amount', 'targetAmount')
       .addSelect('g.start_date', 'startDate')
@@ -19,11 +19,9 @@ import { Donation } from '../entities/donations.entity';
       .addSelect(
         `(SELECT u.display_name
           FROM creator_donations du
-          JOIN donation_goal_donations_creator_donations j
-            ON j."creator_donations_id" = du.id
           LEFT JOIN users u
             ON u.address = du.from_address
-          WHERE j."donation_goal_id" = g.id
+          WHERE du.donation_goal_id = g.id
           GROUP BY du.from_address, u.display_name
           ORDER BY SUM(du.trade_value) DESC
           LIMIT 1)`,
@@ -33,9 +31,7 @@ import { Donation } from '../entities/donations.entity';
       .addSelect(
         `(SELECT SUM(du.trade_value)
           FROM creator_donations du
-          JOIN donation_goal_donations_creator_donations j
-            ON j."creator_donations_id" = du.id
-          WHERE j."donation_goal_id" = g.id
+          WHERE du.donation_goal_id = g.id
           GROUP BY du.from_address
           ORDER BY SUM(du.trade_value) DESC
           LIMIT 1)`,
@@ -44,14 +40,9 @@ import { Donation } from '../entities/donations.entity';
       .from(DonationGoal, 'g')
       .leftJoin('creator', 'c', 'c.id = g.creator_id')
       .leftJoin(
-        'donation_goal_donations_creator_donations',
-        'dg',
-        'dg."donation_goal_id" = g.id',
-      )
-      .leftJoin(
         Donation,
         'd',
-        'd.id = dg."creator_donations_id" AND d.timestamp >= g.start_date AND d.timestamp <= g.end_date',
+        'd.donation_goal_id = g.id AND d.timestamp >= g.start_date AND d.timestamp <= g.end_date',
       )
       .groupBy('g.id')
       .addGroupBy('g.name')
