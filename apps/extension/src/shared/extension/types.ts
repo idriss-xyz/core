@@ -3,9 +3,7 @@ export type ExtensionSettings = Record<ExtensionSettingName, boolean>;
 export type ExtensionSettingName =
   | 'entire-extension-enabled'
   | 'idriss-send-enabled'
-  | 'wallet-lookup-enabled'
-  | 'trading-copilot-latest-transactions-enabled'
-  | 'trading-copilot-notifications-enabled';
+  | 'wallet-lookup-enabled';
 
 export type StoredAuthToken = string | undefined;
 

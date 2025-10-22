@@ -21,13 +21,11 @@ import { EMPTY_HEX } from '@idriss-xyz/constants';
 
 import { onWindowMessage } from '../../messaging';
 
-import { useTradingCopilot } from './trading-copilot-context';
 
 type WalletContextValue = {
   wallet?: Wallet;
   isConnectionModalOpened: boolean;
   openConnectionModal: () => Promise<Wallet>;
-  removeWalletInfo: () => void;
   setWalletInfo: (wallet: Wallet) => void;
   verifyWalletProvider: (wallet: Wallet) => Promise<boolean>;
 };
@@ -46,22 +44,15 @@ export const WalletContextProvider = (properties: {
   onGetWallet?: () => Promise<StoredWallet | undefined>;
   onSaveWallet?: (wallet: StoredWallet) => void;
 }) => {
-  const { onClearWallet, onGetWallet, onSaveWallet, disabledWalletsRdns } =
+  const { onGetWallet, onSaveWallet, disabledWalletsRdns } =
     properties;
   const [tabChangedListenerInitialized, setTabChangedListenerInitialized] =
     useState(false);
-  const { clearAuthToken, clearSubscriptionsAmount } = useTradingCopilot();
   const [wallet, setWallet] = useState<Wallet>();
   const walletConnectModal = useModal(WalletConnectModal, {
     disabledWalletsRdns: disabledWalletsRdns ?? [],
   });
 
-  const removeWalletInfo = useCallback(() => {
-    onClearWallet?.();
-    setWallet(undefined);
-    clearAuthToken();
-    clearSubscriptionsAmount();
-  }, [clearAuthToken, clearSubscriptionsAmount, onClearWallet]);
 
   const setWalletInfo = useCallback(
     (wallet: Wallet) => {
@@ -180,26 +171,6 @@ export const WalletContextProvider = (properties: {
   ]);
 
   useEffect(() => {
-    wallet?.provider.on('accountsChanged', (accounts) => {
-      if (accounts[0]) {
-        const loggedInToCurrentWallet = getAddress(accounts[0]).includes(
-          wallet.account,
-        );
-
-        if (!loggedInToCurrentWallet) {
-          removeWalletInfo();
-        }
-      } else {
-        removeWalletInfo();
-      }
-    });
-
-    return () => {
-      wallet?.provider.removeListener('accountsChanged', removeWalletInfo);
-    };
-  }, [properties, removeWalletInfo, wallet?.account, wallet?.provider]);
-
-  useEffect(() => {
     const onChainChanged = (chainId: Hex) => {
       setWallet((previous) => {
         if (!previous) {
@@ -217,6 +188,7 @@ export const WalletContextProvider = (properties: {
   }, [properties, wallet?.provider]);
 
   const openConnectionModal = useCallback(async () => {
+    // eslint-disable-next-line no-useless-catch
     try {
       const resolvedWallet = (await walletConnectModal.show({
         disabledWalletsRdns: disabledWalletsRdns ?? [],
@@ -224,21 +196,18 @@ export const WalletContextProvider = (properties: {
       setWalletInfo(resolvedWallet);
       return resolvedWallet;
     } catch (error) {
-      removeWalletInfo();
       throw error;
     }
   }, [
     walletConnectModal,
     disabledWalletsRdns,
     setWalletInfo,
-    removeWalletInfo,
   ]);
 
   const contextValue: WalletContextValue = useMemo(() => {
     return {
       wallet,
       setWalletInfo,
-      removeWalletInfo,
       openConnectionModal,
       verifyWalletProvider,
       isConnectionModalOpened: walletConnectModal.visible,
@@ -246,7 +215,6 @@ export const WalletContextProvider = (properties: {
   }, [
     wallet,
     setWalletInfo,
-    removeWalletInfo,
     openConnectionModal,
     verifyWalletProvider,
     walletConnectModal.visible,

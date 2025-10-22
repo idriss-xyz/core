@@ -19,7 +19,6 @@ import {
 } from 'shared/ui';
 import { TwitterScrapingContextProvider } from 'host/twitter';
 import {
-  TradingCopilotContextProvider,
   ExtensionPopupProvider,
   ExtensionSettingsProvider,
   WalletContextProvider,
@@ -54,24 +53,7 @@ export const Providers = ({
                     <TailwindProvider>
                       <QueryProvider>
                         <NiceModal.Provider>
-                          <TradingCopilotContextProvider
-                            onGetAuthToken={AuthTokenStorage.get}
-                            onClearAuthToken={AuthTokenStorage.clear}
-                            onSaveAuthToken={AuthTokenStorage.save}
-                            onClearToastSoundState={
-                              ToastSoundStateStorage.clear
-                            }
-                            onGetToastSoundState={ToastSoundStateStorage.get}
-                            onSaveToastSoundState={ToastSoundStateStorage.save}
-                            onGetWallet={WalletStorage.get}
-                            onSaveSubscriptionsAmount={
-                              SubscriptionsAmountStorage.save
-                            }
-                            onClearSubscriptionsAmount={
-                              SubscriptionsAmountStorage.clear
-                            }
-                          >
-                            <NotificationsProvider>
+                                                      <NotificationsProvider>
                               <SolanaContextProvider
                                 onGetWallet={SolanaWalletStorage.get}
                                 onClearWallet={SolanaWalletStorage.clear}
@@ -97,7 +79,6 @@ export const Providers = ({
                                 </WalletContextProvider>
                               </SolanaContextProvider>
                             </NotificationsProvider>
-                          </TradingCopilotContextProvider>
                         </NiceModal.Provider>
                       </QueryProvider>
                     </TailwindProvider>

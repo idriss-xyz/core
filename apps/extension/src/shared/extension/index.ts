@@ -10,8 +10,6 @@ export {
 export type { PopupRoute } from './constants';
 export {
   ExtensionSettingsProvider,
-  TradingCopilotContextProvider,
-  useTradingCopilot,
   useExtensionSettings,
   ExtensionPopupProvider,
   useExtensionPopup,
@@ -32,4 +30,3 @@ export type {
   StoredSubscriptions,
 } from './types';
 export { ExtensionSettingsManager } from './extension-settings-manager';
-export { TradingCopilotManager } from './trading-copilot-manager';

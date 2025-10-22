@@ -5,7 +5,6 @@ import {
   UserWidgets,
   FollowOnFarcaster,
 } from './widgets';
-import { FollowTradingCopilot } from './widgets/follow-trading-copilot';
 
 export const Final = () => {
   const { extensionSettings } = useExtensionSettings();
@@ -18,7 +17,6 @@ export const Final = () => {
     <ErrorBoundary>
       <UserWidgets />
       <FollowOnFarcaster />
-      <FollowTradingCopilot />
     </ErrorBoundary>
   );
 };

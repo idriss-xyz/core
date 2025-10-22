@@ -5,7 +5,6 @@ import {
   useLocationInfo,
   ExtensionPopup,
   Final,
-  NotificationsPopup,
 } from 'final';
 
 import { Providers } from './providers';
@@ -60,7 +59,6 @@ const bootstrap = () => {
 
 const ApplicationWithProviders = () => {
   const { isTwitter } = useLocationInfo();
-  const isSwapEventListenerAdded = useRef(false);
 
   const disabledWalletRdns = useMemo(() => {
     if (isTwitter) {
@@ -71,7 +69,6 @@ const ApplicationWithProviders = () => {
 
   return (
     <Providers disabledWalletRdns={disabledWalletRdns}>
-      <NotificationsPopup isSwapEventListenerAdded={isSwapEventListenerAdded} />
       <ExtensionPopup />
       <Final />
     </Providers>

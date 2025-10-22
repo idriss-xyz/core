@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { io } from 'socket.io-client';
-import { COPILOT_API_URL } from '@idriss-xyz/constants';
 
 import { TWITTER_COMMAND_MAP } from 'host/twitter';
 import {
@@ -8,9 +7,7 @@ import {
   COMMAND_BUS_REQUEST_MESSAGE,
   FailureResult,
   JsonValue,
-  TAB_CHANGED,
   SerializedCommand,
-  SWAP_EVENT,
 } from 'shared/messaging';
 import { WEB3_COMMAND_MAP } from 'shared/web3';
 import {
@@ -18,7 +15,6 @@ import {
   EXTENSION_BUTTON_CLICKED,
   EXTENSION_COMMAND_MAP,
   ExtensionSettingsManager,
-  TradingCopilotManager,
 } from 'shared/extension';
 import {
   createObservabilityScope,
@@ -29,10 +25,6 @@ import { UTILS_COMMAND_MAP } from 'shared/utils';
 import { IDRISS_COMMAND_MAP } from 'shared/idriss';
 import { IDRISS_SEND_COMMAND_MAP } from 'application/idriss-send';
 import { FARCASTER_COMMAND_MAP } from 'shared/farcaster';
-import {
-  TRADING_COPILOT_COMMAND_MAP,
-  SwapData,
-} from 'application/trading-copilot';
 
 import { SbtResolver } from '../../common/resolvers/SbtResolver';
 import { AddressResolver } from '../../common/resolvers/AddressResolver';
@@ -46,20 +38,13 @@ const COMMAND_MAP = {
   ...IDRISS_COMMAND_MAP,
   ...IDRISS_SEND_COMMAND_MAP,
   ...FARCASTER_COMMAND_MAP,
-  ...TRADING_COPILOT_COMMAND_MAP,
 };
 
 export class ServiceWorker {
   private observabilityScope: ObservabilityScope =
     createObservabilityScope('service-worker');
 
-  private socket: ReturnType<typeof io>;
-
-  private constructor(private environment: typeof chrome) {
-    this.socket = io(COPILOT_API_URL, { transports: ['websocket'] });
-    console.log('%c[WebSocket] Creating socket connection', 'color: #FF9900;');
-    void this.initializeSocketEvents();
-  }
+  private constructor(private environment: typeof chrome) {}
 
   static run(environment: typeof chrome) {
     const serviceWorker = new ServiceWorker(environment);
@@ -70,236 +55,6 @@ export class ServiceWorker {
     serviceWorker.watchPopupClick();
     serviceWorker.watchLegacyMessages();
     serviceWorker.watchWorkerError();
-    serviceWorker.watchWorkerInactivity();
-    serviceWorker.watchTabChanges();
-  }
-
-  initializeSocketEvents() {
-    this.socket.on('connect', async () => {
-      console.log(
-        '%c[WebSocket] Initializing connection...',
-        'color: #FF9900;',
-      );
-      const wallet = await ExtensionSettingsManager.getWallet();
-
-      if (wallet?.account) {
-        this.registerWithServer(wallet.account);
-      } else {
-        console.log('%c[WebSocket] User not found.', 'color: red;');
-        this.socket.disconnect();
-      }
-    });
-
-    ExtensionSettingsManager.onWalletChange((wallet) => {
-      console.log('%c[WebSocket] Wallet changed.', 'color: #FF9900;');
-
-      if (wallet && 'providerRdns' in wallet) {
-        if (this.socket.connected) {
-          this.socket.disconnect();
-        }
-
-        if (wallet?.account) {
-          this.socket.connect();
-        }
-      }
-    });
-
-    TradingCopilotManager.onSubscriptionsAmountChange((subscriptionAmount) => {
-      if (this.socket.connected && !subscriptionAmount) {
-        this.socket.disconnect();
-      }
-
-      if (!this.socket.connected && subscriptionAmount) {
-        this.socket.connect();
-      }
-    });
-
-    this.socket.on('disconnect', () => {
-      console.log('%c[WebSocket] Disconnected.', 'color: red;');
-    });
-
-    this.socket.on('swapEvent', (swapData) => {
-      this.createSwapNotification(swapData);
-    });
-  }
-
-  private registerWithServer(walletAddress: string) {
-    console.log(
-      `%c[WebSocket] Found user with wallet ${walletAddress}`,
-      'color: #32CD32;',
-    );
-    this.socket.emit('register', walletAddress);
-  }
-
-  createSwapNotification(swapData: SwapData) {
-    const message = `New trade detected: ${swapData.tokenIn?.amount} of ${swapData.tokenIn?.symbol} traded for ${swapData.tokenOut?.amount} of ${swapData.tokenOut?.symbol} at txn ${swapData.transactionHash}`;
-    console.log(`%c[WebSocket] ${message}`, 'color: yellow;');
-
-    const soundFile = this.environment.runtime.getURL('audio/notification.mp3');
-
-    const swapDataWithSoundFile = { ...swapData, soundFile };
-
-    this.environment.tabs.query(
-      { active: true, currentWindow: true },
-      async (tabs) => {
-        const activeTab = tabs[0];
-
-        if (ServiceWorker.isValidTab(activeTab)) {
-          try {
-            await this.environment.tabs.sendMessage(activeTab.id, {
-              type: SWAP_EVENT,
-              detail: swapDataWithSoundFile,
-            });
-          } catch {
-            console.log(
-              '%c[Notifications] Failed to render notification',
-              'color: red;',
-            );
-            await this.saveNotificationToStorage(swapData);
-          }
-        } else {
-          console.log(
-            '%c[Notifications] Failed to render notification',
-            'color: red;',
-          );
-          await this.saveNotificationToStorage(swapData);
-        }
-      },
-    );
-  }
-
-  private async saveNotificationToStorage(swapData: SwapData) {
-    const key = 'swapNotifications';
-    try {
-      const notificationsFromStorage = await this.getNotificationsFromStorage();
-      await this.environment.storage.local.set({
-        [key]: [...notificationsFromStorage, swapData],
-      });
-      console.log(
-        '%c[Notifications] Notification saved to storage',
-        'color: orange;',
-      );
-    } catch {
-      console.log(
-        '%c[Notifications] Failed to save notification to storage',
-        'color: red;',
-      );
-    }
-  }
-
-  private async getNotificationsFromStorage(): Promise<SwapData[]> {
-    const key = 'swapNotifications';
-    return new Promise((resolve) => {
-      this.environment.storage.local.get([key], (result) => {
-        resolve(result[key] || []);
-      });
-    });
-  }
-
-  private async clearNotificationsFromStorage() {
-    const key = 'swapNotifications';
-    return new Promise((resolve) => {
-      this.environment.storage.local.remove([key], () => {
-        console.log(
-          '%c[Notifications] Notifications storage cleared',
-          'color: #32CD32;',
-        );
-        resolve(true);
-      });
-    });
-  }
-
-  private async renderSavedNotifications(tab: chrome.tabs.Tab) {
-    const savedNotifications = await this.getNotificationsFromStorage();
-
-    if (savedNotifications.length === 0) {
-      return;
-    }
-
-    const renderPromises = savedNotifications.map((notification) => {
-      const soundFile = this.environment.runtime.getURL(
-        'audio/notification.mp3',
-      );
-      const notificationWithSoundFile = { ...notification, soundFile };
-
-      return this.environment.tabs.sendMessage(tab.id!, {
-        type: SWAP_EVENT,
-        detail: notificationWithSoundFile,
-      });
-    });
-
-    try {
-      await Promise.all(renderPromises);
-      console.log(
-        '%c[Notifications] All notifications rendered successfully',
-        'color: #32CD32;',
-      );
-
-      await this.clearNotificationsFromStorage();
-    } catch {
-      console.log(
-        '%c[Notifications] Failed to render notifications from storage',
-        'color: red;',
-      );
-      console.log(
-        '%c[Notifications] Notifications in storage still waiting for render',
-        'color: orange;',
-      );
-    }
-  }
-
-  private async notifyActiveTab() {
-    const tabs = await this.queryActiveTabs();
-    const activeTab = tabs[0];
-
-    if (ServiceWorker.isValidTab(activeTab)) {
-      try {
-        await this.environment.tabs.sendMessage(activeTab.id, {
-          type: TAB_CHANGED,
-        });
-      } catch {
-        //
-      }
-    }
-  }
-
-  private async handleTabChange(tab: chrome.tabs.Tab) {
-    await this.delay(500); // Temporary delay to prevent rendering notifications before extension content is loaded
-    await this.renderSavedNotifications(tab);
-    await this.notifyActiveTab();
-  }
-
-  watchTabChanges() {
-    this.environment.tabs.onActivated.addListener(async (activeInfo) => {
-      const tab = await this.getTabById(activeInfo.tabId);
-      if (tab?.status === 'complete' && ServiceWorker.isValidTab(tab)) {
-        await this.handleTabChange(tab);
-      }
-    });
-
-    this.environment.tabs.onUpdated.addListener(
-      async (_tabId, changeInfo, tab) => {
-        if (changeInfo.status === 'complete' && ServiceWorker.isValidTab(tab)) {
-          await this.handleTabChange(tab);
-        }
-      },
-    );
-  }
-
-  private queryActiveTabs(): Promise<chrome.tabs.Tab[]> {
-    return new Promise((resolve) => {
-      this.environment.tabs.query(
-        { active: true, currentWindow: true },
-        resolve,
-      );
-    });
-  }
-
-  // TODO: remove after fixing rendering saved notifications
-  private delay(ms: number): Promise<void> {
-    return new Promise((resolve) => {
-      return setTimeout(resolve, ms);
-    });
   }
 
   keepAlive() {
@@ -514,22 +269,6 @@ export class ServiceWorker {
   watchWorkerError() {
     self.addEventListener('error', (event) => {
       this.observabilityScope.captureException(event.error);
-    });
-  }
-
-  watchWorkerInactivity() {
-    self.addEventListener('uninstall', () => {
-      this.socket.disconnect();
-    });
-  }
-
-  private async getTabById(
-    tabId: number,
-  ): Promise<chrome.tabs.Tab | undefined> {
-    return new Promise((resolve) => {
-      this.environment.tabs.get(tabId, (tab) => {
-        resolve(tab);
-      });
     });
   }
 

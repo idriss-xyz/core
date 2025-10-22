@@ -8,7 +8,6 @@ export const POPUP_ROUTE = {
   PRODUCTS: '/products',
   SETTINGS: '/settings',
   OTHER_SETTINGS: '/settings/other',
-  TRADING_COPILOT: '/trading-copilot',
 } as const;
 
 export type PopupRoute = (typeof POPUP_ROUTE)[keyof typeof POPUP_ROUTE];
@@ -21,6 +20,4 @@ export const DEFAULT_EXTENSION_SETTINGS: ExtensionSettings = {
   'idriss-send-enabled': false,
   'wallet-lookup-enabled': false,
   'entire-extension-enabled': false,
-  'trading-copilot-notifications-enabled': false,
-  'trading-copilot-latest-transactions-enabled': false,
 };

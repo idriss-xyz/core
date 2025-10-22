@@ -6,7 +6,6 @@ import { onWindowMessage } from 'shared/messaging';
 import {
   AuthTokenWindowMessages,
   SolanaWalletWindowMessages,
-  TradingCopilotWindowMessages,
   WalletWindowMessages,
 } from './messages';
 
@@ -107,75 +106,6 @@ export class AuthTokenStorage {
   public static clear() {
     window.postMessage({
       type: AuthTokenWindowMessages.CLEAR_AUTH_TOKEN,
-    });
-  }
-}
-
-export class ToastSoundStateStorage {
-  public static get(): Promise<StoredToastSoundState> {
-    return new Promise((resolve) => {
-      window.postMessage({
-        type: TradingCopilotWindowMessages.GET_TOAST_SOUND_STATE,
-      });
-
-      onWindowMessage<StoredToastSoundState>(
-        TradingCopilotWindowMessages.GET_TOAST_SOUND_STATE_RESPONSE,
-        (maybeToastSoundState) => {
-          resolve(maybeToastSoundState);
-        },
-      );
-    });
-  }
-
-  public static save(payload: StoredToastSoundState) {
-    window.postMessage({
-      type: TradingCopilotWindowMessages.SAVE_TOAST_SOUND_STATE,
-      detail: payload,
-    });
-  }
-
-  public static clear() {
-    window.postMessage({
-      type: TradingCopilotWindowMessages.CLEAR_TOAST_SOUND_STATE,
-    });
-  }
-}
-
-export class SubscriptionsAmountStorage {
-  public static save(payload: StoredSubscriptionsAmount) {
-    window.postMessage({
-      type: TradingCopilotWindowMessages.SAVE_SUBSCRIPTIONS_AMOUNT,
-      detail: payload,
-    });
-  }
-
-  public static clear() {
-    window.postMessage({
-      type: TradingCopilotWindowMessages.CLEAR_SUBSCRIPTIONS_AMOUNT,
-    });
-  }
-}
-
-export class SubscriptionsStorage {
-  public static get(): Promise<StoredSubscriptions> {
-    return new Promise((resolve) => {
-      window.postMessage({
-        type: TradingCopilotWindowMessages.GET_SUBSCRIPTIONS,
-      });
-
-      onWindowMessage<StoredSubscriptions>(
-        TradingCopilotWindowMessages.GET_SUBSCRIPTIONS_RESPONSE,
-        (subscriptions) => {
-          resolve(subscriptions ?? []);
-        },
-      );
-    });
-  }
-
-  public static save(payload: StoredSubscriptions) {
-    window.postMessage({
-      type: TradingCopilotWindowMessages.SAVE_SUBSCRIPTIONS,
-      detail: payload,
     });
   }
 }

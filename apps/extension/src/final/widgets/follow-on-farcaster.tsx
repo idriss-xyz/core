@@ -7,7 +7,6 @@ import {
   classes,
   PortalWithTailwind,
   usePooling,
-  TradingCopilotTooltip,
 } from 'shared/ui';
 import { getWarpcastUserLink } from 'host/warpcast';
 import { FARCASTER_LOGO } from 'assets/images';
@@ -117,11 +116,7 @@ export const FollowOnFarcaster = () => {
   // some weird styles in the button are there to replicate buttons from Twitter which have weird styling method themself (like margin-bottom for centering)
   return (
     <PortalWithTailwind container={portal}>
-      <TradingCopilotTooltip
-        className="-translate-y-6"
-        content="Follow on Farcaster"
-      >
-        <FarcasterButton
+              <FarcasterButton
           className={classes(
             'mb-3 mr-2 flex cursor-pointer rounded-full p-1.5',
           )}
@@ -134,7 +129,6 @@ export const FollowOnFarcaster = () => {
             height={iconHeight}
           />
         </FarcasterButton>
-      </TradingCopilotTooltip>
     </PortalWithTailwind>
   );
 };
