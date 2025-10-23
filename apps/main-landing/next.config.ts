@@ -134,7 +134,7 @@ const nextConfig: NextConfig = {
       {
         source: '/extension',
         destination:
-          'https://chromewebstore.google.com/detail/idriss/fghhpjoffbgecjikiipbkpdakfmkbmig',
+          'https://dashboard.twitch.tv/extensions/0rvai4arse2wu9ucj2omj2zvajdc3m-0.0.1 ',
         basePath: false,
         permanent: false,
       },
