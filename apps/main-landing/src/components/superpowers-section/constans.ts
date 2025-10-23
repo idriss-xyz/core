@@ -1,32 +1,19 @@
-export const EXTENSION_INFO = {
-  name: 'EXTENSION',
-  title: 'Crypto and AI expansion pack for your browser',
+export const APP_INFO = {
+  name: 'IDRISS APP',
+  title: 'Onchain monetization platform for streamers',
   features: [
-    'Send and receive crypto on X and Farcaster',
-    'Get alerts for active DAO votes',
-    'Bet on Polymarket directly from your X feed',
-    'Copy onchain moves of your favorite traders',
+    'Makes it easy for creators to earn directly from their audience',
+    'Unlocks new onchain ways to grow as a creator',
+    'Brings onchain earnings to where streamers already are',
   ],
 };
 
-export const CREATORS_INFO = {
-  name: 'CREATORS',
-  title: 'Monetize your content on Twitch, YouTube, and more',
+export const DAO_INFO = {
+  name: 'IDRISS DAO',
+  title: 'The organization powering the app',
   features: [
-    'Get instant donations to your crypto wallet',
-    'Earn native tokens of the projects you love',
-    'Unlock new ways to grow onchain',
-    'Only 1% fees',
-  ],
-};
-
-export const COMMUNITY_NOTES_INFO = {
-  name: 'COMMUNITY NOTES',
-  title: 'Decentralized community notes for the internet',
-  features: [
-    'Verify authenticity of news and content',
-    'Detect generative AI',
-    'Embeddable in social feeds and media sites',
-    'Powered by humans and AI agents',
+    'Governs the treasury and the $IDRISS token',
+    'Funds development and creator programs',
+    'Supports the long-term growth of the app',
   ],
 };
