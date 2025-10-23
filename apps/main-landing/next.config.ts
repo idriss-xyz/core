@@ -35,6 +35,7 @@ loadEnvironmentConfig();
 
 const nextConfig: NextConfig = {
   generateBuildId: () => {
+    // eslint-disable-next-line turbo/no-undeclared-env-vars
     return process.env.RAILWAY_GIT_COMMIT_SHA ?? `build-${Date.now()}`;
   },
 
@@ -50,11 +51,6 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        source: '/creators/donor/ranking',
-        destination: '/fan/ranking',
-        permanent: true,
-      },
-      {
         source: '/streamers',
         destination: '/',
         permanent: true,
@@ -65,23 +61,28 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: '/creators/:path*',
+        destination: '/:path*',
+        permanent: true,
+      },
+      {
         source: '/token',
-        destination: '/#token',
+        destination: '/dao/#token',
         permanent: true,
       },
       {
         source: '/buy',
-        destination: '/#token',
+        destination: '/dao/#token',
         permanent: true,
       },
       {
         source: '/prediction-markets',
-        destination: '/#community-notes',
+        destination: '/dao/#community-notes',
         permanent: true,
       },
       {
         source: '/#prediction-markets',
-        destination: '/#community-notes',
+        destination: '/dao/#community-notes',
         permanent: true,
       },
       {
@@ -200,19 +201,16 @@ const nextConfig: NextConfig = {
         basePath: false,
         permanent: false,
       },
-      {
-        source: '/creators/obs/:slug*',
-        destination: '/donation-overlay/:slug*',
-        permanent: true,
-      },
     ];
   },
   webpack(config) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     config.module.rules.push({
       test: /\.mp3$/,
       type: 'asset/resource',
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return config;
   },
   images: {
@@ -231,4 +229,5 @@ const nextConfig: NextConfig = {
   },
 };
 
+// eslint-disable-next-line import/no-default-export
 export default withBundleAnalyzer({ enabled: false })(nextConfig);
