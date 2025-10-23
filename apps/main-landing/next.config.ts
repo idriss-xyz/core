@@ -72,22 +72,22 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/token',
-        destination: '/dao/#token',
+        destination: '/dao#token',
         permanent: true,
       },
       {
         source: '/buy',
-        destination: '/dao/#token',
+        destination: '/dao#token',
         permanent: true,
       },
       {
         source: '/prediction-markets',
-        destination: '/dao/#community-notes',
+        destination: '/',
         permanent: true,
       },
       {
         source: '/#prediction-markets',
-        destination: '/dao/#community-notes',
+        destination: '/',
         permanent: true,
       },
       {
