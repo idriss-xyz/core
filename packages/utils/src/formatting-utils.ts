@@ -1,6 +1,6 @@
 import { PublicKey } from '@solana/web3.js';
 import { Hex } from 'viem';
-import { CHAIN, NATIVE_COIN_ADDRESS } from '@idriss-xyz/constants';
+import { CREATOR_CHAIN, NATIVE_COIN_ADDRESS } from '@idriss-xyz/constants';
 
 export const formatBigNumber = (number: number | string): string => {
   if (Number(number) < 1000) {
@@ -46,7 +46,7 @@ export const isNativeTokenAddress = (tokenAddress: Hex) => {
 };
 
 export const getChainById = (chainId: number) => {
-  return Object.values(CHAIN).find((chain) => {
+  return Object.values(CREATOR_CHAIN).find((chain) => {
     return chain.id === chainId;
   });
 };

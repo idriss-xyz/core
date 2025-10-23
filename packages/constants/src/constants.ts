@@ -1,25 +1,10 @@
-import {
-  arbitrum,
-  base,
-  linea,
-  mainnet,
-  mantle,
-  optimism,
-  polygon,
-  zksync,
-  scroll,
-  celo,
-  avalanche,
-} from 'viem/chains';
+import { base, mainnet, avalanche } from 'viem/chains';
 
 import {
   BASE_LOGO,
   IDRISS_LOGO,
   ECHELON_PRIME_LOGO,
   ETHEREUM_LOGO,
-  MANTLE_LOGO,
-  OPTIMISM_LOGO,
-  POLYGON_LOGO,
   USDC_LOGO,
   ABSTRACT_LOGO,
   PENGU_LOGO,
@@ -27,12 +12,6 @@ import {
   PDT_LOGO,
   RONIN_LOGO,
   AXIE_LOGO,
-  ARBITRUM_LOGO,
-  LINEA_LOGO,
-  ZYNK_SYNC_ERA_LOGO,
-  SCROLL_LOGO,
-  CELO_LOGO,
-  BNB_LOGO,
   AVAX_LOGO,
   GUNZ_LOGO,
 } from './logos';
@@ -132,94 +111,6 @@ export const CREATOR_CHAIN = {
     },
   },
 } satisfies Record<string, Chain>;
-
-export const CHAIN = Object.assign(CREATOR_CHAIN, {
-  ARBITRUM_ONE: {
-    ...arbitrum,
-    shortName: 'Arbitrum',
-    dbName: 'ARBITRUM_MAINNET',
-    logo: ARBITRUM_LOGO,
-  },
-  LINEA: {
-    ...linea,
-    shortName: 'Linea',
-    dbName: 'LINEA_MAINNET',
-    logo: LINEA_LOGO,
-  },
-  ZK_SYNC_ERA: {
-    ...zksync,
-    shortName: 'ZkSync',
-    dbName: 'ZKSYNC_MAINNET',
-    logo: ZYNK_SYNC_ERA_LOGO,
-  },
-  SCROLL: {
-    ...scroll,
-    shortName: 'Scroll',
-    dbName: 'SCROLL_MAINNET',
-    logo: SCROLL_LOGO,
-  },
-  CELO: {
-    ...celo,
-    shortName: 'Celo',
-    dbName: 'CELO_MAINNET',
-    logo: CELO_LOGO,
-  },
-  BNB_CHAIN: {
-    id: 56,
-    name: 'BNB Chain',
-    shortName: 'BNB',
-    dbName: 'BINANCE_SMART_CHAIN_MAINNET',
-    logo: BNB_LOGO,
-    nativeCurrency: {
-      name: 'BNB',
-      symbol: 'BNB',
-      decimals: 18,
-    },
-    rpcUrls: { default: { http: ['https://bsc-dataseed.binance.org'] } },
-    blockExplorers: {
-      default: { name: 'BS Scan', url: 'https://bscscan.com' },
-    },
-  },
-  MANTLE: {
-    ...mantle,
-    blockExplorers: {
-      ...mantle.blockExplorers,
-      blockscout: {
-        name: 'Blockscout',
-        url: 'https://explorer.mantle.xyz/',
-      },
-    },
-    shortName: 'Mantle',
-    dbName: 'MANTLE_MAINNET',
-    logo: MANTLE_LOGO,
-  },
-  OPTIMISM: {
-    ...optimism,
-    blockExplorers: {
-      ...optimism.blockExplorers,
-      blockscout: {
-        name: 'Blockscout',
-        url: 'https://optimism.blockscout.com',
-      },
-    },
-    shortName: 'Optimism',
-    dbName: 'OPTIMISM_MAINNET',
-    logo: OPTIMISM_LOGO,
-  },
-  POLYGON: {
-    ...polygon,
-    blockExplorers: {
-      ...polygon.blockExplorers,
-      blockscout: {
-        name: 'Blockscout',
-        url: 'https://polygon.blockscout.com',
-      },
-    },
-    shortName: 'Polygon',
-    dbName: 'POLYGON_MAINNET',
-    logo: POLYGON_LOGO,
-  },
-}) satisfies Record<string, Chain>;
 
 export const TOKEN = {
   AVAX: {
@@ -652,9 +543,6 @@ export const NETWORK_TO_ALCHEMY = {
   BASE_MAINNET: 'base-mainnet',
   ABSTRACT_MAINNET: 'abstract-mainnet',
   ETHEREUM_MAINNET: 'eth-mainnet',
-  POLYGON_MAINNET: 'polygon-mainnet',
-  OPTIMISM_MAINNET: 'optimism-mainnet',
-  MANTLE_MAINNET: 'mantle-mainnet',
   RONIN_MAINNET: 'ronin-mainnet',
   AVALANCHE_MAINNET: 'avax-mainnet',
 } as const;
@@ -663,9 +551,6 @@ export const ALCHEMY_NATIVE_TOKENS = {
   ETHEREUM_MAINNET: 'ETH',
   ABSTRACT_MAINNET: 'ETH',
   BASE_MAINNET: 'ETH',
-  MANTLE_MAINNET: 'MNT',
-  OPTIMISM_MAINNET: 'ETH',
-  POLYGON_MAINNET: 'POL',
   RONIN_MAINNET: 'RON',
   AVALANCHE_MAINNET: 'AVAX',
 } as const;

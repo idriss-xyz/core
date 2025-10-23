@@ -1,5 +1,5 @@
 import { getAddress } from 'viem';
-import { CHAIN, CREATOR_API_URL } from '@idriss-xyz/constants';
+import { CREATOR_CHAIN, CREATOR_API_URL } from '@idriss-xyz/constants';
 
 import { CreatorProfileResponse } from './types';
 
@@ -38,7 +38,7 @@ export const getChainShortNamesFromIds = (chainsIds: number[]) => {
       .reduce((previous, chainId) => {
         return [
           ...previous,
-          Object.values(CHAIN).find((chain) => {
+          Object.values(CREATOR_CHAIN).find((chain) => {
             return chain.id === chainId;
           })?.shortName ?? '',
         ];
@@ -50,7 +50,7 @@ export const getChainShortNamesFromIds = (chainsIds: number[]) => {
 export const getChainIdsFromShortNames = (shortNames: string[]) => {
   return shortNames.map((shortName) => {
     return (
-      Object.values(CHAIN).find((chain) => {
+      Object.values(CREATOR_CHAIN).find((chain) => {
         return chain.shortName === shortName;
       })?.id ?? 0
     );
