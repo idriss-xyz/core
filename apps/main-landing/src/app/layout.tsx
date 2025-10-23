@@ -1,12 +1,12 @@
 import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
-import './dao/globals.css';
+import './globals.css';
 import { ReactNode } from 'react';
 import { headers } from 'next/headers';
 import { GoogleAnalytics } from '@next/third-parties/google';
 
 import { CreatorsProviders } from './creators-providers';
-import { PrivyModalHider } from './dao/components/privy-modal-hider';
+import { PrivyModalHider } from './components/privy-modal-hider';
 
 const aeonikPro = localFont({
   src: [

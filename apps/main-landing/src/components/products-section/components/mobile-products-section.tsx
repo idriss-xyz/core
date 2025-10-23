@@ -6,8 +6,6 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { tabOptions } from '../constants';
 
 import { CreatorsSection } from './creators-section';
-import { ExtensionSection } from './extension-section';
-import { CommunityNotesSection } from './community-notes-section';
 import { Tabs } from './tabs';
 
 type Properties = {
@@ -59,14 +57,8 @@ export const MobileProductsSection = ({ className }: Properties) => {
         ref={reference}
       />
       {/* -mt-5 was added to compensate the Tabs height */}
-      <section className={classes('-mt-5', className)} id="extension">
-        <ExtensionSection fadeOut={false} headerClassName="md:pt-10" />
-      </section>
       <section className={className} id="creators">
         <CreatorsSection fadeOut={false} />
-      </section>
-      <section className={className} id="community-notes">
-        <CommunityNotesSection fadeOut={false} />
       </section>
     </div>
   );

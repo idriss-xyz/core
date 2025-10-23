@@ -11,9 +11,7 @@ import { useDebounce, usePrevious } from 'react-use';
 import { classes } from '@idriss-xyz/ui/utils';
 
 import { ProductSection } from './product-section';
-import { ExtensionSectionData } from './extension-section';
 import { CreatorsSectionData } from './creators-section';
-import { CommunityNotesSectionData } from './community-notes-section';
 
 type Properties = {
   className?: string;
@@ -78,11 +76,7 @@ export const DesktopProductsSection = ({
   );
 
   const sectionsData = useMemo(() => {
-    return [
-      ExtensionSectionData,
-      CreatorsSectionData,
-      CommunityNotesSectionData,
-    ];
+    return [CreatorsSectionData];
   }, []);
 
   const animationDirection = useMemo(() => {
@@ -145,7 +139,7 @@ export const DesktopProductsSection = ({
   }, [currentSectionIndex, previousSectionIndex]);
 
   const selectedSectionData = useMemo(() => {
-    return sectionsData[debouncedCurrentSectionIndex] ?? ExtensionSectionData;
+    return sectionsData[debouncedCurrentSectionIndex] ?? CreatorsSectionData;
   }, [debouncedCurrentSectionIndex, sectionsData]);
 
   useEffect(() => {

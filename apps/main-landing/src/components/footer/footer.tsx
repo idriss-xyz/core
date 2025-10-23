@@ -11,9 +11,9 @@ import { classes } from '@idriss-xyz/ui/utils';
 
 import idrissHalfTransparent from './idriss-half-transparent.png';
 import { Section } from './components';
-import { EXTERNAL_RESOURCES, INTERNAL_LINKS, SOCIALS } from './constants';
+import { EXTERNAL_RESOURCES_DAO, SOCIALS } from './constants';
 
-export const Footer = () => {
+export const FooterDao = () => {
   const today = new Date();
   const year = today.getFullYear();
 
@@ -34,21 +34,23 @@ export const Footer = () => {
             '4xl:grid 4xl:grid-cols-[1080px_auto]',
           )}
         >
-          <div className={classes('flex flex-col items-start')}>
+          <div className={classes('flex flex-col items-start gap-4')}>
             <h2
               className={classes(
                 'text-balance text-display6 text-neutral-900',
                 'lg:text-display3',
               )}
             >
-              BUILDING ONCHAIN APPS <br className="hidden sm:block lg:block" />{' '}
-              THAT MATTER
+              IDRISS DAO
             </h2>
+            <span className="text-body4">
+              The decentralized organization overseeing the economy <br />
+              and governance of the IDRISS app.
+            </span>
             <Button
               intent="negative"
               size="medium"
               prefixIconName="TwitterX"
-              className="mt-6 lg:mt-10"
               href={SOCIAL_LINK.X}
               isExternal
               asLink
@@ -64,8 +66,7 @@ export const Footer = () => {
               'lg:mt-0',
             )}
           >
-            <Section title="GET STARTED" items={INTERNAL_LINKS} />
-            <Section title="RESOURCES" items={EXTERNAL_RESOURCES} />
+            <Section title="RESOURCES" items={EXTERNAL_RESOURCES_DAO} />
             <Section title="SOCIALS" items={SOCIALS} />
           </div>
         </div>

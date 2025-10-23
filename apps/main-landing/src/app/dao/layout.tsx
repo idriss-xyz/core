@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import './globals.css';
+import '../globals.css';
 import { ReactNode } from 'react';
 
 const DEPLOYMENT_URL = process.env.RAILWAY_PUBLIC_DOMAIN

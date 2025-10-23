@@ -9,7 +9,7 @@ import {
 import { classes } from '@idriss-xyz/ui/utils';
 
 import {
-  EXTERNAL_RESOURCES,
+  EXTERNAL_RESOURCES_LANDING,
   idrissHalfTransparent,
   Section,
   SOCIALS,
@@ -68,7 +68,7 @@ export const Footer = () => {
               'lg:mt-0',
             )}
           >
-            <Section title="RESOURCES" items={EXTERNAL_RESOURCES} />
+            <Section title="RESOURCES" items={EXTERNAL_RESOURCES_LANDING} />
             <Section title="SOCIALS" items={SOCIALS} />
           </div>
         </div>

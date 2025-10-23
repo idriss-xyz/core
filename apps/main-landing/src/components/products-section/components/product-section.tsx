@@ -6,10 +6,7 @@ import { classes } from '@idriss-xyz/ui/utils';
 
 import { ImageSequencer } from '@/components/image-sequencer';
 
-import { tabOptions } from '../constants';
-
 import { ProductInfo } from './product-info';
-import { Tabs } from './tabs';
 
 type ProductSectionProperties = {
   activeOptionKey: string;
@@ -108,13 +105,6 @@ export const ProductSection = ({
                   }
             }
           >
-            {tabsVisibile && (
-              <Tabs
-                options={tabOptions}
-                activeOptionKey={activeOptionKey}
-                asLink={tabsAsLinks}
-              />
-            )}
             <div
               className={classes(
                 'z-1 flex flex-col gap-4',

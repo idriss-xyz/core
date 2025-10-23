@@ -79,6 +79,10 @@ export const getCreatorNameAndPicOrAnon = async (
   }
 };
 
+export const isHomeCallback = (u: string) => {
+  return u === '/' || u.startsWith('/?');
+};
+
 export {
   setCreatorIfSessionPresent,
   getCreatorProfile,

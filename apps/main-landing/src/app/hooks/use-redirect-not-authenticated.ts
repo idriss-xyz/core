@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { usePrivy } from '@privy-io/react-auth';
 
 import { useAuth } from '../context/auth-context';
-import { setCreatorIfSessionPresent } from '../utils';
+import { isHomeCallback, setCreatorIfSessionPresent } from '../utils';
 
 const useRedirectIfNotAuthenticated = () => {
   const router = useRouter();
@@ -22,7 +22,7 @@ const useRedirectIfNotAuthenticated = () => {
     if (!user && !creator) {
       if (pathname.startsWith('/app')) {
         router.replace('/?login=true');
-      } else if (pathname === '/' || pathname.startsWith('/?')) {
+      } else if (isHomeCallback(pathname)) {
         return;
       } else {
         router.replace('/');

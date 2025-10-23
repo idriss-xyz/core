@@ -12,12 +12,9 @@ import {
   getCreatorProfile,
   saveCreatorProfile,
   editCreatorProfile,
+  isHomeCallback,
 } from './utils';
 import { useAuth } from './context/auth-context';
-
-const isHomeCallback = (u: string) => {
-  return u === '/' || u.startsWith('/?');
-};
 
 export function PrivyAuthSync() {
   const hasRunAuth = useRef(false);

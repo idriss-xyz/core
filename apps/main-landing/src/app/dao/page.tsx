@@ -6,7 +6,7 @@ import {
   ProductsSection,
   TokenSection,
   TopBar,
-  Footer,
+  FooterDao,
 } from '@/components';
 
 // ts-unused-exports:disable-next-line
@@ -27,7 +27,7 @@ export default function Home() {
             <ProductsSection />
             <TokenSection />
           </main>
-          <Footer />
+          <FooterDao />
         </div>
       </ScrollArea>
     </div>

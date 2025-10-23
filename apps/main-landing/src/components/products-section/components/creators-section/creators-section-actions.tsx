@@ -5,7 +5,7 @@ export const CreatorsSectionActions = () => {
     <>
       {/* 2xl, 3xl */}
       <Button
-        intent="secondary"
+        intent="primary"
         size="medium"
         className="flex w-full md:w-fit 4xl:hidden"
         asLink
@@ -16,7 +16,7 @@ export const CreatorsSectionActions = () => {
       </Button>
       {/* 4xl */}
       <Button
-        intent="secondary"
+        intent="primary"
         size="large"
         className="hidden w-full md:w-fit 4xl:flex"
         asLink

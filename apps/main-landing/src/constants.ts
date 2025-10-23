@@ -1,11 +1,9 @@
 import { Hex, parseAbi } from 'viem';
 
 export const INTERNAL_LINK = {
-  SUPERPOWERS: '/#apps',
-  EXTENSION: '/#extension',
-  CREATORS: '/#creators',
-  COMMUNITY_NOTES: '/#community-notes',
-  TOKEN: '/#token',
+  SUPERPOWERS: '/dao/#apps',
+  CREATORS: '/dao/#creators',
+  TOKEN: '/dao/#token',
 };
 
 export const EXTERNAL_LINK = {
