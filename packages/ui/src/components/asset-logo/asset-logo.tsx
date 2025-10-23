@@ -22,5 +22,8 @@ export const AssetLogo = ({
       <Icon name={iconName as IconName} className={className} size={size} />
     );
   }
-  return <img src={logo} alt={alt} className={className} />;
+  if (logo != '') {
+    return <img src={logo} alt={alt} className={className} />;
+  }
+  return <Icon name="IdrissToken" className="size-full" />;
 };

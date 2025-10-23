@@ -1,5 +1,5 @@
-import Image from 'next/image';
-import { Icon, type IconName } from '@idriss-xyz/ui/icon';
+import { type IconName } from '@idriss-xyz/ui/icon';
+import { AssetLogo } from '@idriss-xyz/ui/asset-logo';
 
 const symbolToIconNameMap: Record<string, IconName> = {
   ETH: 'EthToken',
@@ -21,12 +21,12 @@ interface TokenLogoProperties {
 export const TokenLogo = ({ symbol, imageUrl }: TokenLogoProperties) => {
   const iconName = symbolToIconNameMap[symbol];
 
-  if (iconName) {
-    return <Icon name={iconName} className="size-full" />;
-  }
-
-  if (imageUrl) {
-    return <Image src={imageUrl} alt={symbol} fill className="rounded-full" />;
-  }
-  return <Icon name="IdrissToken" className="size-full" />;
+  return (
+    <AssetLogo
+      logo={imageUrl ?? ''}
+      iconName={iconName}
+      className="size-full"
+      alt={symbol}
+    />
+  );
 };

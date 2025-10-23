@@ -7,6 +7,7 @@ import type { ChainToken } from '@idriss-xyz/constants';
 import { formatFiatValue, formatTokenValue } from '@idriss-xyz/utils';
 import { formatUnits } from 'viem';
 import { classes } from '@idriss-xyz/ui/utils';
+import { AssetLogo } from '@idriss-xyz/ui/asset-logo';
 
 import { IDRISS_ICON_CIRCLE, DEFAULT_TRUMPET_SOUND } from '@/assets';
 
@@ -121,10 +122,11 @@ export default function DonationNotification({
                 )}{' '}
                 {erc20Details.symbol}{' '}
               </span>
-              <img
-                alt=""
-                src={erc20Details.logo}
+              <AssetLogo
+                logo={erc20Details.logo}
+                iconName={erc20Details.iconName}
                 className="size-6 rounded-full"
+                alt={erc20Details.name}
               />{' '}
               <Badge type="success" variant="subtle">
                 {formatFiatValue(Number(amount))}
