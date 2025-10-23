@@ -6,7 +6,7 @@ import {
   useState,
 } from 'react';
 import debounce from 'lodash/debounce';
-import { MemoryRouter, useLocation, useNavigate } from 'react-router';
+import { MemoryRouter, useNavigate } from 'react-router';
 
 import {
   onWindowMessage,
@@ -14,7 +14,7 @@ import {
 } from 'shared/messaging';
 import { createContextHook, useNotification } from 'shared/ui';
 
-import { POPUP_ROUTE, PopupRoute } from '../constants';
+import { POPUP_ROUTE } from '../constants';
 
 interface Properties {
   children: ReactNode;
@@ -22,9 +22,7 @@ interface Properties {
 
 interface ExtensionPopupContextValues {
   isVisible: boolean;
-  navigate: (route: PopupRoute) => void;
   navigateBack: () => void;
-  currentRoute: PopupRoute;
   hide: () => void;
   open: () => void;
   showNotification: (message: string) => void;
@@ -39,7 +37,6 @@ const InnerExtensionPopupProvider = ({ children }: Properties) => {
   const notification = useNotification();
 
   const navigate = useNavigate();
-  const location = useLocation();
 
   const showNotification = (message: string) => {
     notification.show(<span>{message}</span>, 'top-right');
@@ -84,8 +81,6 @@ const InnerExtensionPopupProvider = ({ children }: Properties) => {
     <ExtensionPopupContext.Provider
       value={{
         isVisible,
-        currentRoute: location.pathname as PopupRoute,
-        navigate,
         navigateBack,
         hide,
         open,

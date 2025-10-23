@@ -1,14 +1,10 @@
 import { ReactNode, createContext, useMemo, useState } from 'react';
 
-import { createContextHook } from '../utils';
-
 interface PortalContextValue {
   portal: HTMLDivElement | null;
 }
 
 const PortalContext = createContext<PortalContextValue | undefined>(undefined);
-
-export const usePortal = createContextHook(PortalContext);
 
 interface Properties {
   children: ReactNode;
