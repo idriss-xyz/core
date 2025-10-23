@@ -48,27 +48,24 @@ export class AddDonationGoal1760651767821 implements MigrationInterface {
       CREATE OR REPLACE FUNCTION associate_donation_with_goal()
       RETURNS TRIGGER AS $$
       BEGIN
-        -- Find the active donation goal for this creator at the time of donation
-        UPDATE creator_donations
-        SET donation_goal_id = (
-          SELECT dg.id
-          FROM donation_goal dg
-          JOIN creator c ON c.id = dg.creator_id
-          JOIN creator_address ca ON ca.creator_id = c.id
-          WHERE NEW.to_address = ca.address
-            AND dg.active = true
-            AND NEW.timestamp >= dg.start_date
-            AND NEW.timestamp <= dg.end_date
-          LIMIT 1
-        )
-        WHERE id = NEW.id;
+        RAISE NOTICE 'NEW donation record: id=%, to_address=%, from_address=%, timestamp=%, trade_value=%',
+          NEW.id, NEW.to_address, NEW.from_address, NEW.timestamp, NEW.trade_value;
+
+        SELECT dg.id INTO NEW.donation_goal_id
+        FROM donation_goal dg
+        JOIN creator c ON c.id = dg.creator_id
+        WHERE LOWER(NEW.to_address) = LOWER(c.address)
+          AND dg.active = true
+          AND NEW.timestamp >= dg.start_date
+          AND NEW.timestamp <= dg.end_date
+        LIMIT 1;
 
         RETURN NEW;
       END;
       $$ LANGUAGE plpgsql;
 
       CREATE TRIGGER donation_goal_association_trigger
-      AFTER INSERT ON creator_donations
+      BEFORE INSERT ON creator_donations
       FOR EACH ROW
       EXECUTE FUNCTION associate_donation_with_goal();
     `);
@@ -89,7 +86,7 @@ export class AddDonationGoal1760651767821 implements MigrationInterface {
           SELECT u.display_name
           FROM creator_donations du
           LEFT JOIN users u
-            ON u.address = du.from_address
+            ON LOWER(u.address) = LOWER(du.from_address)
           WHERE du.donation_goal_id = g.id
             AND du.timestamp >= g.start_date
             AND du.timestamp <= g.end_date
