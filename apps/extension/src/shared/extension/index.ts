@@ -7,29 +7,10 @@ export {
   EXTENSION_BUTTON_CLICKED,
   DEFAULT_EXTENSION_SETTINGS,
 } from './constants';
-export type { PopupRoute } from './constants';
 export {
   ExtensionSettingsProvider,
-  TradingCopilotContextProvider,
-  useTradingCopilot,
   useExtensionSettings,
   ExtensionPopupProvider,
   useExtensionPopup,
-  WalletContextProvider,
-  SolanaContextProvider,
-  useWallet,
-  useSolanaWallet,
 } from './context';
-export {
-  COMMAND_MAP as EXTENSION_COMMAND_MAP,
-  GetServiceStatusCommand,
-} from './commands';
-export type {
-  ExtensionSettingName,
-  StoredAuthToken,
-  StoredToastSoundState,
-  StoredSubscriptionsAmount,
-  StoredSubscriptions,
-} from './types';
 export { ExtensionSettingsManager } from './extension-settings-manager';
-export { TradingCopilotManager } from './trading-copilot-manager';

@@ -1,7 +1,6 @@
 import rspack from '@rspack/core';
 import path from 'path';
 import NodePolyfillPlugin from 'node-polyfill-webpack-plugin';
-import { sentryWebpackPlugin } from '@sentry/webpack-plugin';
 import * as url from 'url';
 import { config as loadEnvironmentVariables } from 'dotenv-safe';
 // import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
@@ -24,9 +23,6 @@ export default (_env, argv) => {
       'chromium/webpage-script': './src/runtime/chromium/webpage-script.ts',
       'chromium/content-script': './src/runtime/chromium/content-script.ts',
       'chromium/service-worker': './src/runtime/chromium/service-worker.ts',
-      'firefox/webpage-script': './src/runtime/firefox/webpage-script.ts',
-      'firefox/content-script': './src/runtime/firefox/content-script.ts',
-      'firefox/service-worker': './src/runtime/firefox/service-worker.ts',
     },
     devtool: 'source-map',
     output: {
@@ -44,12 +40,7 @@ export default (_env, argv) => {
         patterns: [
           { from: './src/runtime/chromium/manifest.json', to: 'chromium' },
           { from: './src/assets/fonts', to: 'chromium/fonts' },
-          { from: './src/assets/audio', to: 'chromium/audio' },
           { from: './src/common/img', to: 'chromium/img' },
-          { from: './src/runtime/firefox/manifest.json', to: 'firefox' },
-          { from: './src/assets/fonts', to: 'firefox/fonts' },
-          { from: './src/common/img', to: 'firefox/img' },
-          { from: './src/assets/audio', to: 'firefox/audio' },
         ],
       }),
       new NodePolyfillPlugin(),
@@ -58,20 +49,9 @@ export default (_env, argv) => {
       }),
       new rspack.DefinePlugin({
         'process.env': JSON.stringify({
-          SENTRY_ENVIRONMENT: process.env.SENTRY_ENVIRONMENT,
-          SENTRY_DSN: process.env.SENTRY_DSN,
-          AMPLITUDE_API_KEY: process.env.AMPLITUDE_API_KEY,
           ENVIRONMENT: process.env.ENVIRONMENT,
         }),
       }),
-      sentryWebpackPlugin({
-        authToken: process.env.SENTRY_AUTH_TOKEN,
-        org: process.env.SENTRY_ORGANISATION,
-        project: process.env.SENTRY_PROJECT,
-        telemetry: false,
-        disable: process.env.SENTRY_ENVIRONMENT !== 'production',
-      }),
-      // new BundleAnalyzerPlugin()
     ],
     resolve: {
       extensions: ['.ts', '.tsx', '...'],
