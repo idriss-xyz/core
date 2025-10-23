@@ -18,21 +18,13 @@ type Properties = {
   isFirstRender: MutableRefObject<boolean>;
 };
 
-const numberOfSections = 3;
-
 const getSectionNumberByName = (key: string) => {
-  return {
-    'extension': 0,
-    'creators': 1,
-    'community-notes': 2,
-  }[key];
+  return key === 'creators' ? 0 : undefined;
 };
 
 const CIRCLE_IMAGE_NUMBER_START_GAP = 38;
 const CIRCLE_IMAGES_COUNT = 113;
-const EXTENSION_CIRCLE_INDEX = 0;
 const CREATORS_CIRCLE_INDEX = 57;
-const COMMUNITY_NOTES_CIRCLE_INDEX = 112;
 
 const CIRCLE_IMAGES_BASE_NAME = `extension-to-community-notes-circle-optimized/IDRISS_CIRCLE_`;
 
@@ -78,6 +70,7 @@ export const DesktopProductsSection = ({
   const sectionsData = useMemo(() => {
     return [CreatorsSectionData];
   }, []);
+  const numberOfSections = sectionsData.length;
 
   const animationDirection = useMemo(() => {
     if (previousSectionIndex === undefined) {
@@ -102,16 +95,10 @@ export const DesktopProductsSection = ({
 
     switch (sectionIndex) {
       case 0: {
-        return EXTENSION_CIRCLE_INDEX;
-      }
-      case 1: {
         return CREATORS_CIRCLE_INDEX;
       }
-      case 2: {
-        return COMMUNITY_NOTES_CIRCLE_INDEX;
-      }
       default: {
-        return EXTENSION_CIRCLE_INDEX;
+        return CREATORS_CIRCLE_INDEX;
       }
     }
   }, [currentSectionIndex, previousSectionIndex]);
@@ -124,16 +111,10 @@ export const DesktopProductsSection = ({
 
     switch (sectionIndex) {
       case 0: {
-        return EXTENSION_CIRCLE_INDEX;
-      }
-      case 1: {
         return CREATORS_CIRCLE_INDEX;
       }
-      case 2: {
-        return COMMUNITY_NOTES_CIRCLE_INDEX;
-      }
       default: {
-        return EXTENSION_CIRCLE_INDEX;
+        return CREATORS_CIRCLE_INDEX;
       }
     }
   }, [currentSectionIndex, previousSectionIndex]);
@@ -289,7 +270,6 @@ export const DesktopProductsSection = ({
             description={selectedSectionData.info.description}
             title={selectedSectionData.info.title}
             features={selectedSectionData.info.features}
-            tabsAsLinks
             fadeOut={currentSectionIndex !== debouncedCurrentSectionIndex}
             animated
             animationDirection={animationDirection}
@@ -303,11 +283,9 @@ export const DesktopProductsSection = ({
         <div className="w-[0.5px]">
           <div
             ref={firstSectionAnchorReference}
-            id="extension"
+            id="creators"
             className="my-10 h-screen"
           />
-          <div id="creators" className="h-screen" />
-          <div id="community-notes" className="h-screen" />
         </div>
       </div>
     </section>

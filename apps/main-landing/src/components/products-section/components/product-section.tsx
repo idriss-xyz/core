@@ -14,11 +14,9 @@ type ProductSectionProperties = {
   description: string;
   actions: ReactNode;
   features: ProductSectionFeature[];
-  tabsAsLinks: boolean;
   className?: string;
   headerClassName?: string;
   fadeOut: boolean;
-  tabsVisibile?: boolean;
   marginX?: number;
   marginY?: number;
   borderRadius?: number;
@@ -57,12 +55,10 @@ export const ProductSection = ({
   description,
   actions,
   features,
-  tabsAsLinks,
   fadeOut,
   borderRadius,
   marginX,
   marginY,
-  tabsVisibile = true,
   ...properties
 }: ProductSectionProperties) => {
   return (
