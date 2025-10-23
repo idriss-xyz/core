@@ -5,7 +5,7 @@ import { VisuallyHidden } from '@idriss-xyz/ui/visually-hidden';
 import { Button } from '@idriss-xyz/ui/button';
 import Link from 'next/link';
 import { NavigationMenu } from '@idriss-xyz/ui/navigation-menu';
-import { DOCUMENTATION_LINK } from '@idriss-xyz/constants';
+import { DOCUMENTATION_LINK_DAO } from '@idriss-xyz/constants';
 
 import { EXTERNAL_LINK, INTERNAL_LINK } from '@/constants';
 
@@ -105,7 +105,7 @@ export const Mobile = () => {
                           intent="tertiary"
                           size="large"
                           onClick={close}
-                          href={DOCUMENTATION_LINK}
+                          href={DOCUMENTATION_LINK_DAO}
                           isExternal
                           asLink
                         >

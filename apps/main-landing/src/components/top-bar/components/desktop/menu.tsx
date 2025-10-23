@@ -1,7 +1,7 @@
 import { Button } from '@idriss-xyz/ui/button';
 import { NavigationMenu } from '@idriss-xyz/ui/navigation-menu';
 import Link from 'next/link';
-import { DOCUMENTATION_LINK } from '@idriss-xyz/constants';
+import { DOCUMENTATION_LINK_DAO } from '@idriss-xyz/constants';
 
 import { EXTERNAL_LINK, INTERNAL_LINK } from '@/constants';
 
@@ -54,7 +54,7 @@ export const Menu = ({ className }: Properties) => {
               <Button
                 intent="tertiary"
                 size="large"
-                href={DOCUMENTATION_LINK}
+                href={DOCUMENTATION_LINK_DAO}
                 isExternal
                 asLink
               >

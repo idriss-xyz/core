@@ -44,6 +44,7 @@ export const EXTERNAL_ANNOUNCEMENT_LINK = {
 };
 
 export const DOCUMENTATION_LINK = 'https://docs.idriss.xyz/';
+export const DOCUMENTATION_LINK_DAO = 'https://docs.idriss.xyz/idriss-token';
 export const SUPPORT_LINK = 'https://discord.gg/WC4fvKB8RC';
 export const CREATOR_SETUP_GUIDE_LINK =
   'https://docs.idriss.xyz/user-guides/creators#setup-guide';

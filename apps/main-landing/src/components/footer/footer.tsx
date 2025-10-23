@@ -43,7 +43,7 @@ export const FooterDao = () => {
             >
               IDRISS DAO
             </h2>
-            <span className="text-body4">
+            <span className="text-body4 text-neutralGreen-900">
               The decentralized organization overseeing the economy <br />
               and governance of the IDRISS app.
             </span>
