@@ -31,7 +31,7 @@ export function Sidebar() {
       >
         <div className="flex flex-col gap-12">
           <div className="flex justify-center">
-            <Link href="/creators">
+            <Link href="/">
               <img src="/idriss-creators-dark-logo.svg" height={50} alt="" />
             </Link>
           </div>
@@ -39,10 +39,10 @@ export function Sidebar() {
           {/*TODO: Extract this to a component*/}
           <NavigationMenu.List className="flex flex-col gap-4">
             <NavigationMenu.Item
-              className={getLinkClasses('/creators/app/setup')}
+              className={getLinkClasses('/app/setup')}
             >
               <Link
-                href="/creators/app/setup/payment-methods"
+                href="/app/setup/payment-methods"
                 className="flex w-full items-center rounded-lg hover:text-mint-600"
               >
                 <Icon
@@ -55,10 +55,10 @@ export function Sidebar() {
             </NavigationMenu.Item>
 
             <NavigationMenu.Item
-              className={getLinkClasses('/creators/app/earnings')}
+              className={getLinkClasses('/app/earnings')}
             >
               <Link
-                href="/creators/app/earnings/stats-and-history"
+                href="/app/earnings/stats-and-history"
                 className="flex w-full items-center rounded-lg hover:text-mint-600"
               >
                 <Icon
@@ -71,10 +71,10 @@ export function Sidebar() {
             </NavigationMenu.Item>
 
             <NavigationMenu.Item
-              className={getLinkClasses('/creators/app/ranking')}
+              className={getLinkClasses('/app/ranking')}
             >
               <Link
-                href="/creators/app/ranking/top-creators"
+                href="/app/ranking/top-creators"
                 className="flex w-full items-center rounded-lg hover:text-mint-600"
               >
                 <Icon size={20} name="Trophy" className="mr-3 size-5" />

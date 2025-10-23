@@ -28,19 +28,6 @@ import {
 import { Controller, useForm, UseFormReset } from 'react-hook-form';
 import { Icon, IconName } from '@idriss-xyz/ui/icon';
 
-import {
-  editCreatorProfile,
-  getChainIdsFromShortNames,
-  getChainShortNamesFromIds,
-} from '@/app/creators/utils';
-import { useAuth } from '@/app/creators/context/auth-context';
-import {
-  FormFieldWrapper,
-  SectionHeader,
-} from '@/app/creators/components/layout';
-import { useToast } from '@/app/creators/context/toast-context';
-import { CreatorProfileResponse } from '@/app/creators/utils/types';
-
 import SkeletonSetup from '../loading';
 
 import {
@@ -50,6 +37,21 @@ import {
   Collectible4,
   Collectible5,
 } from './assets';
+
+import {
+  editCreatorProfile,
+  getChainIdsFromShortNames,
+  getChainShortNamesFromIds,
+} from '@/app/utils';
+import { useAuth } from '@/app/context/auth-context';
+import {
+  FormFieldWrapper,
+  SectionHeader,
+} from '@/app/components/layout';
+import { useToast } from '@/app/context/toast-context';
+import { CreatorProfileResponse } from '@/app/utils/types';
+
+
 
 type FormPayload = {
   name: string;

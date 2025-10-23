@@ -1,9 +1,10 @@
 import { ForwardedRef, forwardRef } from 'react';
 import { classes } from '@idriss-xyz/ui/utils';
 
-import SelectIcon from '@/app/creators/donate/components/donate-form/components/select/select-icon';
-
 import { SelectInputProperties } from './select.types';
+
+import SelectIcon from '@/app/donate/components/donate-form/components/select/select-icon';
+
 
 export const SelectInput = forwardRef(
   (

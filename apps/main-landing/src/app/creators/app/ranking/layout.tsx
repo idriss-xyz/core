@@ -14,15 +14,15 @@ export default function RankingLayout({
   const rankingTabs: TabItem[] = [
     {
       name: 'Top creators',
-      href: '/creators/app/ranking/top-creators',
+      href: '/app/ranking/top-creators',
       iconName: 'Gamepad2',
-      isActive: pathname === '/creators/app/ranking/top-creators',
+      isActive: pathname === '/app/ranking/top-creators',
     },
     {
       name: 'Top fans',
-      href: '/creators/app/ranking/top-fans',
+      href: '/app/ranking/top-fans',
       iconName: 'Star',
-      isActive: pathname === '/creators/app/ranking/top-fans',
+      isActive: pathname === '/app/ranking/top-fans',
     },
   ];
 

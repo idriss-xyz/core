@@ -5,12 +5,13 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 
-import { AudioVisualizer } from '@/app/creators/components/hero-section/audio-visualizer';
-import { SelectInput } from '@/app/creators/app/setup/select/select-input';
 
 import { SelectProperties } from './select.types';
 import { SelectOption } from './select-option.component';
 import { SelectOptionContainer } from './select-option-container.component';
+
+import { SelectInput } from '@/app/app/setup/select/select-input';
+import { AudioVisualizer } from '@/app/components/hero-section/audio-visualizer';
 
 export const Select = <T,>({
   label,

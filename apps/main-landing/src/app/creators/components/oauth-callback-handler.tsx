@@ -45,7 +45,7 @@ export function OAuthCallbackHandler() {
     if (login) {
       // Twitch has finished authenticating the user and failed
       setIsModalOpen(true);
-      router.replace('/creators', { scroll: false });
+      router.replace('/', { scroll: false });
     } else if (error) {
       // Twitch could not authenticate the user
       console.error('Oauth error.', error);

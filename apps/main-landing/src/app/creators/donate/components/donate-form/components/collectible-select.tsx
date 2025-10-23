@@ -5,9 +5,10 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { UseFormReturn } from 'react-hook-form';
 import { NftBalance } from '@idriss-xyz/constants';
 
-import { FormPayload } from '@/app/creators/donate/schema';
-
 import { CollectibleGallery } from './collectible-gallery';
+
+import { FormPayload } from '@/app/donate/schema';
+
 
 type Properties = {
   isOpen: boolean;

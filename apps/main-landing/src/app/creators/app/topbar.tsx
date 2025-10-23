@@ -4,10 +4,11 @@ import { Fragment } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { DonateHistoryItem } from '@/app/creators/donate/components/donate-history/donate-history-item';
 
 import { useLogout } from '../hooks/use-logout';
 import { useAuth } from '../context/auth-context';
+
+import { DonateHistoryItem } from '@/app/donate/components/donate-history/donate-history-item';
 
 export function TopBar() {
   const { donations, newDonationsCount, markDonationsAsSeen, creator } =
@@ -93,7 +94,7 @@ export function TopBar() {
               <div className="flex min-w-[240px] max-w-[270px] flex-col gap-1 rounded-xl border border-neutral-300 bg-white pt-2 shadow-lg">
                 <div className="flex min-h-[32px] items-center rounded-[4px] px-3 py-1">
                   <Link
-                    href="/creators/app/profile"
+                    href="/app/profile"
                     className="group flex w-full items-center gap-3"
                   >
                     <Icon

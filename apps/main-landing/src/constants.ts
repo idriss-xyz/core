@@ -10,8 +10,8 @@ export const INTERNAL_LINK = {
 
 export const EXTERNAL_LINK = {
   VAULT: '/vault',
-  TOP_CREATORS: '/creators/ranking',
-  TOP_DONORS: '/creators/fan/ranking',
+  TOP_CREATORS: '/ranking',
+  TOP_DONORS: '/fan/ranking',
 };
 
 export const TOTAL_SUPPLY = 1_000_000_000n * 10n ** 18n;

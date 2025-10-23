@@ -24,7 +24,7 @@ export default function SetupLayout({
     setHasVisitedStreamAlerts(hasVisited);
 
     // If currently on stream alerts page and hasn't been marked as visited, mark it
-    if (pathname === '/creators/app/setup/stream-alerts' && !hasVisited) {
+    if (pathname === '/app/setup/stream-alerts' && !hasVisited) {
       localStorage.setItem(visitedKey, 'true');
       setHasVisitedStreamAlerts(true);
     }
@@ -32,28 +32,28 @@ export default function SetupLayout({
   const setupTabs: TabItem[] = [
     {
       name: 'Payment methods',
-      href: '/creators/app/setup/payment-methods',
+      href: '/app/setup/payment-methods',
       iconName: 'HandCoins',
-      isActive: pathname === '/creators/app/setup/payment-methods',
+      isActive: pathname === '/app/setup/payment-methods',
     },
     {
       name: 'Stream alerts',
-      href: '/creators/app/setup/stream-alerts',
+      href: '/app/setup/stream-alerts',
       iconName: 'BellRing',
-      isActive: pathname === '/creators/app/setup/stream-alerts',
+      isActive: pathname === '/app/setup/stream-alerts',
       showPulsingDot: !hasVisitedStreamAlerts,
     },
     {
       name: 'Donation panel',
-      href: '/creators/app/setup/donation-panel',
+      href: '/app/setup/donation-panel',
       iconName: 'GalleryVertical',
-      isActive: pathname === '/creators/app/setup/donation-panel',
+      isActive: pathname === '/app/setup/donation-panel',
     },
     {
       name: 'Page customization',
       subtitle: 'Coming soon',
       iconName: 'Paintbrush',
-      isActive: pathname === '/creators/app/setup/page-customization',
+      isActive: pathname === '/app/setup/page-customization',
       disabled: true,
     },
   ];

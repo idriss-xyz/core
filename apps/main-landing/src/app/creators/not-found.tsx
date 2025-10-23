@@ -17,7 +17,7 @@ export default function NotFound() {
             <br />
             Check the spelling and try again.
           </span>
-          <Button intent="primary" size="medium" asLink href="/creators">
+          <Button intent="primary" size="medium" asLink href="/">
             Go to homepage
           </Button>
         </div>

@@ -64,7 +64,7 @@ export const DonateOptionsModal = () => {
       case 'account': {
         // Redirect to Twitch auth with callback parameter
         const currentPath = window.location.pathname;
-        const callbackParameter = currentPath.startsWith('/creators/')
+        const callbackParameter = currentPath.startsWith('/')
           ? currentPath.slice(1)
           : 'creators'; // Remove leading slash
         window.location.href = `${CREATOR_API_URL}/auth/twitch?callback=${encodeURIComponent(callbackParameter)}`;

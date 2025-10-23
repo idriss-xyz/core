@@ -69,7 +69,7 @@ export const TopBar = ({
       )}
     >
       <div className="container flex items-center justify-between gap-x-1 py-1 xs:gap-x-2 lg:py-3">
-        <Link href="/creators">
+        <Link href="/">
           <img
             alt=""
             width={98}

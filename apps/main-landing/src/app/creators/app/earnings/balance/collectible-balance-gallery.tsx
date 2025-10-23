@@ -6,7 +6,7 @@ import {
 import { formatFiatValue } from '@idriss-xyz/utils';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 
-import { LayersBadge } from '@/app/creators/donate/components/donate-form/components';
+import { LayersBadge } from '@/app/donate/components/donate-form/components';
 
 type CollectibleBalanceGalleryProperties = {
   collectibles: NftBalance[];

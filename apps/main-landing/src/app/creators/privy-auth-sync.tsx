@@ -55,6 +55,7 @@ export function PrivyAuthSync() {
 
       if (existingCreator) {
         setCreator(existingCreator);
+        // TODO: check how to change
         if (callbackUrl && !callbackUrl?.endsWith('/creators')) {
           // If existing creator has isDonor true, update it to false
           if (existingCreator.isDonor) {
@@ -69,9 +70,9 @@ export function PrivyAuthSync() {
           setDonor(updatedCreator ?? existingCreator);
           router.replace(callbackUrl);
         } else if (existingCreator.doneSetup) {
-          router.replace('/creators/app/earnings/stats-and-history');
+          router.replace('/app/earnings/stats-and-history');
         } else {
-          router.replace('/creators/app/setup/payment-methods');
+          router.replace('/app/setup/payment-methods');
         }
       } else {
         let newCreatorName: string;
@@ -80,7 +81,8 @@ export function PrivyAuthSync() {
         let newCreatorEmail: string | null = null;
         let isDonor = false;
         // set isDonor when callback is not the normal creators landing signup
-        // (ex. a donate page like "/creators/daniel0ar")
+        // (ex. a donate page like "/daniel0ar")
+        // TODO: check how to change
         if (callbackUrl && !callbackUrl?.endsWith('/creators')) {
           isDonor = true;
         }
@@ -124,12 +126,13 @@ export function PrivyAuthSync() {
         }
 
         setCreator(newCreator);
+        // TODO: check how to change
         if (callbackUrl && !callbackUrl?.endsWith('/creators')) {
           setDonor(newCreator);
           setDonorLoading(false);
           router.replace(callbackUrl);
         } else {
-          router.replace('/creators/app/setup/payment-methods');
+          router.replace('/app/setup/payment-methods');
         }
       }
     } catch (error) {

@@ -3,10 +3,11 @@ import { useCallback, useState } from 'react';
 import { usePrivy } from '@privy-io/react-auth';
 import { Hex } from 'viem';
 
-import { Leaderboard } from '@/app/creators/components/leaderboard';
 
 import { useGetLeaderboard, periodMap } from '../commands/use-get-leaderboard';
 import SkeletonRanking from '../loading';
+
+import { Leaderboard } from '@/app/components/leaderboard';
 
 // ts-unused-exports:disable-next-line
 export default function TopCreators() {
@@ -27,7 +28,7 @@ export default function TopCreators() {
       if (donor?.donateLink) {
         window.open(`${donor.donateLink}`, '_blank');
       } else if (donor?.displayName && donor.displayNameSource != 'ADDRESS') {
-        window.open(`/creators/${donor.displayName}`);
+        window.open(`/${donor.displayName}`);
       }
     },
     [leaderboardQuery.data],

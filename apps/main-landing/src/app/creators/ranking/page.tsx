@@ -6,12 +6,15 @@ import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 
 import { backgroundLines2 } from '@/assets';
-import { LeaderboardStandalone } from '@/app/creators/donate/components/leaderboard';
-import { RainbowKitProviders } from '@/app/creators/donate/providers';
 
 import { TopBar } from '../components/top-bar';
 
 import { useGetCreatorRanking } from './commands/get-creator-ranking';
+
+import { LeaderboardStandalone } from '@/app/donate/components/leaderboard';
+import { RainbowKitProviders } from '@/app/donate/providers';
+
+
 
 // ts-unused-exports:disable-next-line
 export default function Ranking() {
@@ -28,7 +31,7 @@ function RankingContent() {
 
   const onDonorClick = useCallback(
     (displayName: string) => {
-      router.push(`/creators/${displayName.toLowerCase()}`);
+      router.push(`/${displayName.toLowerCase()}`);
     },
     [router],
   );

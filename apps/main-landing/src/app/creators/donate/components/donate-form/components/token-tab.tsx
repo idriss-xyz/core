@@ -4,11 +4,12 @@ import { Form } from '@idriss-xyz/ui/form';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Icon } from '@idriss-xyz/ui/icon';
 
-import { FormPayload } from '@/app/creators/donate/schema';
-import { SenderReturnType } from '@/app/creators/donate/hooks/use-sender';
-
 import { TokenSelect } from './token-select';
 import { ChainSelect } from './chain-select';
+
+import { FormPayload } from '@/app/donate/schema';
+import { SenderReturnType } from '@/app/donate/hooks/use-sender';
+
 
 export const TokenTabContent = ({
   formMethods,

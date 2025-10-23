@@ -3,12 +3,14 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 
 import { TopWave } from '@/components/superpowers-section/components/top-wave';
-import { browserBasedSource } from '@/app/creators/utils';
 
 import {
   PLATFORMS_TOKEN_SVG,
   PLATFORMS_TOKEN_PNG,
 } from './platforms-section/assets';
+
+import { browserBasedSource } from '@/app/utils';
+
 
 export const PlatformsSection = () => {
   return (

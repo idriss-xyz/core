@@ -4,14 +4,16 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useParams } from 'next/navigation';
 
-import { RainbowKitProviders } from '@/app/creators/donate/providers';
 import { backgroundLines2 } from '@/assets';
-import { DonateContentValues } from '@/app/creators/donate/types';
-import { DonateHistory } from '@/app/creators/donate/components/donate-history';
-import { useGetDonorHistory } from '@/app/creators/fan/commands/get-donor-history';
 
 import DonorStatsList from '../components/donor-stats-list';
 import { TopBar } from '../../components/top-bar';
+
+import { RainbowKitProviders } from '@/app/donate/providers';
+import { DonateContentValues } from '@/app/donate/types';
+import { DonateHistory } from '@/app/donate/components/donate-history';
+import { useGetDonorHistory } from '@/app/fan/commands/get-donor-history';
+
 
 // ts-unused-exports:disable-next-line
 export default function Donor() {

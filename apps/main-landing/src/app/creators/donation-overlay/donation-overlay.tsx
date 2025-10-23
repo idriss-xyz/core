@@ -7,7 +7,7 @@ import { type AbiEvent, type Hex, isAddress, parseAbiItem } from 'viem';
 import {
   CHAIN_ID_TO_TOKENS,
   CREATOR_API_URL,
-  CREATORS_LINK,
+  MAIN_LANDING_LINK,
   DEFAULT_ALLOWED_CHAINS_IDS,
   DEFAULT_DONATION_MIN_ALERT_AMOUNT,
   DEFAULT_DONATION_MIN_SFX_AMOUNT,
@@ -229,7 +229,7 @@ export default function DonationOverlay({ creatorName }: Properties) {
         !addressParameter.data &&
         !slugFromUrl
       ) {
-        router.push(CREATORS_LINK);
+        router.push(MAIN_LANDING_LINK);
         return;
       }
     };
@@ -501,7 +501,7 @@ export default function DonationOverlay({ creatorName }: Properties) {
           >
             <ExternalLink
               className={classes('text-mint-600 underline')}
-              href={CREATORS_LINK}
+              href={MAIN_LANDING_LINK}
             >
               IDRISS Creators&nbsp;v2
             </ExternalLink>{' '}

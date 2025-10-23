@@ -12,17 +12,19 @@ import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { Checkbox } from '@idriss-xyz/ui/checkbox';
 
 import { IDRISS_SCENE_STREAM_4, backgroundLines2 } from '@/assets';
-import { useAuth } from '@/app/creators/context/auth-context';
-import { CopyInput } from '@/app/creators/components/copy-input/copy-input';
-import {
-  FormFieldWrapper,
-  SectionHeader,
-} from '@/app/creators/components/layout';
-import { ConfirmationModal } from '@/app/creators/components/confirmation-modal';
-import { useToast } from '@/app/creators/context/toast-context';
 
 import { useLogout } from '../../hooks/use-logout';
 import { editCreatorProfile, deleteCreatorAccount } from '../../utils';
+
+import { useAuth } from '@/app/context/auth-context';
+import { CopyInput } from '@/app/components/copy-input/copy-input';
+import {
+  FormFieldWrapper,
+  SectionHeader,
+} from '@/app/components/layout';
+import { ConfirmationModal } from '@/app/components/confirmation-modal';
+import { useToast } from '@/app/context/toast-context';
+
 
 const handleDeleteAccount = async (
   toast: ReturnType<typeof useToast>['toast'],

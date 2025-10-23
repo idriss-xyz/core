@@ -9,8 +9,8 @@ import {
   Banner,
   filterOptions,
   type FilterOption,
-} from '@/app/creators/components/banner';
-import { SectionHeader } from '@/app/creators/components/layout';
+} from '@/app/components/banner';
+import { SectionHeader } from '@/app/components/layout';
 
 // ts-unused-exports:disable-next-line
 export default function DonationPanel() {

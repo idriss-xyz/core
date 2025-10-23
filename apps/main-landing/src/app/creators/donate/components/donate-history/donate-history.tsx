@@ -4,9 +4,10 @@ import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { StoredDonationData } from '@idriss-xyz/constants';
 
-import { DonateContentValues } from '@/app/creators/donate/types';
-
 import { DonateHistoryItem } from './donate-history-item';
+
+import { DonateContentValues } from '@/app/donate/types';
+
 
 type Properties = {
   showReceiver?: boolean;

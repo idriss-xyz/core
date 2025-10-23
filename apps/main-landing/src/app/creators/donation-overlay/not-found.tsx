@@ -15,7 +15,7 @@ export default function NotFound() {
           <span className="text-body2">
             This page you are looking for does not exist or has been moved.
           </span>
-          <Button intent="primary" size="medium" asLink href="/creators">
+          <Button intent="primary" size="medium" asLink href="/">
             Go to homepage
           </Button>
         </div>

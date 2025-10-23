@@ -25,11 +25,12 @@ import { useRouter } from 'next/navigation';
 import { getAccessToken } from '@privy-io/react-auth';
 import { classes } from '@idriss-xyz/ui/utils';
 
-import { removeMainnetSuffix } from '@/app/creators/donate/utils';
-import { TokenLogo } from '@/app/creators/app/earnings/stats-and-history/token-logo';
-import { useToast } from '@/app/creators/context/toast-context';
-
 import { useTimeAgo } from '../../hooks/use-time-ago';
+
+import { removeMainnetSuffix } from '@/app/donate/utils';
+import { TokenLogo } from '@/app/app/earnings/stats-and-history/token-logo';
+import { useToast } from '@/app/context/toast-context';
+
 
 type Properties = {
   donation: StoredDonationData;
@@ -78,8 +79,8 @@ export const DonateHistoryItem = ({
     : (donation.fromUser.displayName ?? 'anon');
 
   const redirectUrl = showReceiver
-    ? `/creators/${receiverName}`
-    : `/creators/fan/${tipperFromName}`;
+    ? `/${receiverName}`
+    : `/fan/${tipperFromName}`;
 
   const avatarSource = showReceiver
     ? tipReceiver.avatarUrl

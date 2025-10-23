@@ -2,7 +2,7 @@
 import { Button } from '@idriss-xyz/ui/button';
 import {
   CHROME_EXTENSION_LINK,
-  CREATORS_LINK,
+  MAIN_LANDING_LINK,
   EXTENSION_USER_GUIDE_LINK,
 } from '@idriss-xyz/constants';
 import { classes } from '@idriss-xyz/ui/utils';
@@ -100,7 +100,7 @@ export const SuperpowersSection = () => {
                       suffixIconName="IdrissArrowRight"
                       className="w-full"
                       asLink
-                      href={CREATORS_LINK}
+                      href={MAIN_LANDING_LINK}
                       isExternal
                     >
                       START EARNING

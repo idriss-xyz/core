@@ -19,24 +19,25 @@ import {
 import { Icon } from '@idriss-xyz/ui/icon';
 import { classes } from '@idriss-xyz/ui/utils';
 
-import { editCreatorProfile } from '@/app/creators/utils';
-import { useAuth } from '@/app/creators/context/auth-context';
+import { File } from '../file-upload/file';
+import { Select } from '../select';
+import SkeletonSetup from '../loading';
+
+import { editCreatorProfile } from '@/app/utils';
+import { useAuth } from '@/app/context/auth-context';
 import {
   defaultAlertSounds,
   soundMap,
   voiceMap,
-} from '@/app/creators/constants';
-import { ConfirmationModal } from '@/app/creators/components/confirmation-modal/confirmation-modal';
-import { CopyInput } from '@/app/creators/components/copy-input/copy-input';
+} from '@/app/constants';
+import { ConfirmationModal } from '@/app/components/confirmation-modal/confirmation-modal';
+import { CopyInput } from '@/app/components/copy-input/copy-input';
 import {
   FormFieldWrapper,
   SectionHeader,
-} from '@/app/creators/components/layout';
-import { ToastData, useToast } from '@/app/creators/context/toast-context';
+} from '@/app/components/layout';
+import { ToastData, useToast } from '@/app/context/toast-context';
 
-import { File } from '../file-upload/file';
-import { Select } from '../select';
-import SkeletonSetup from '../loading';
 
 const UpgradeBox: React.FC = () => {
   return (

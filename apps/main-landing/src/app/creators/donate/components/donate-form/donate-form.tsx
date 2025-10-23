@@ -22,7 +22,7 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useAccount, useWalletClient } from 'wagmi';
 
 import { backgroundLines3 } from '@/assets';
-import { useAuth } from '@/app/creators/context/auth-context';
+
 
 import {
   FormPayload,
@@ -44,6 +44,8 @@ import {
   DonateFormBody,
   CollectibleSelectModal,
 } from './components';
+
+import { useAuth } from '@/app/context/auth-context';
 
 type Properties = {
   className?: string;

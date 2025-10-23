@@ -16,9 +16,9 @@ export default function Home() {
   useEffect(() => {
     if (creator && ready && authenticated && user?.wallet?.address) {
       if (creator.doneSetup) {
-        router.replace('/creators/app/earnings/stats-and-history');
+        router.replace('/app/earnings/stats-and-history');
       } else {
-        router.replace('/creators/app/setup/payment-methods');
+        router.replace('/app/setup/payment-methods');
       }
     }
   }, [creator, router, ready, authenticated, user?.wallet?.address]);

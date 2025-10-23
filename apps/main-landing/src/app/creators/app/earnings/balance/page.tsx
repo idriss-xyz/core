@@ -19,9 +19,7 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { IDRISS_SCENE_STREAM_4 } from '@/assets';
-import { WithdrawWidget } from '@/app/creators/components/withdraw-widget';
-import { WithdrawCollectibleWidget } from '@/app/creators/components/withdraw-widget/withdraw-collectible-widget';
-import { CopyButton } from '@/app/creators/components/copy-button/copy-button';
+
 
 import {
   useGetCollectibleBalances,
@@ -32,6 +30,10 @@ import SkeletonRanking from '../loading';
 
 import { BalanceTable } from './balance-table';
 import CollectibleBalanceGallery from './collectible-balance-gallery';
+
+import { CopyButton } from '@/app/components/copy-button/copy-button';
+import { WithdrawCollectibleWidget } from '@/app/components/withdraw-widget/withdraw-collectible-widget';
+import { WithdrawWidget } from '@/app/components/withdraw-widget';
 
 // ts-unused-exports:disable-next-line
 export default function EarningsBalance() {

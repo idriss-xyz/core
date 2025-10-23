@@ -21,15 +21,17 @@ import { Hex } from 'viem';
 import { classes } from '@idriss-xyz/ui/utils';
 
 import { backgroundLines2, IDRISS_COIN, IDRISS_SCENE_STREAM_4 } from '@/assets';
-import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history';
-import { DonateHistoryItem } from '@/app/creators/donate/components/donate-history/donate-history-item';
-import { CopyButton } from '@/app/creators/components/copy-button/copy-button';
+
 
 import { useAuth } from '../../../context/auth-context';
 import SkeletonEarnings from '../loading';
 
 import { TokenLogo } from './token-logo';
 import { useGetRecipientStats } from './commands/get-recipient-stats';
+
+import { CopyButton } from '@/app/components/copy-button/copy-button';
+import { DonateHistoryItem } from '@/app/donate/components/donate-history/donate-history-item';
+import { useGetTipHistory } from '@/app/app/commands/get-donate-history';
 
 const chartConfig = {
   donations: {

@@ -3,7 +3,7 @@ import {
   EMPTY_HEX,
   CREATOR_API_URL,
   StoredDonationData,
-  CREATORS_LINK,
+  MAIN_LANDING_LINK,
 } from '@idriss-xyz/constants';
 import '@rainbow-me/rainbowkit/styles.css';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -19,12 +19,7 @@ import {
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 
 import { backgroundLines2 } from '@/assets';
-import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history';
-import { DonateHistory } from '@/app/creators/donate/components/donate-history';
-import {
-  CreatorProfile,
-  DonateContentValues,
-} from '@/app/creators/donate/types';
+
 
 import { useCreators } from '../hooks/use-creators';
 import { TopBar } from '../components/top-bar';
@@ -32,6 +27,13 @@ import { periodMap } from '../app/ranking/commands/use-get-leaderboard';
 
 import { Leaderboard } from './components/leaderboard';
 import { DonateForm } from './components/donate-form';
+
+import {
+  CreatorProfile,
+  DonateContentValues,
+} from '@/app/donate/types';
+import { DonateHistory } from '@/app/donate/components/donate-history';
+import { useGetTipHistory } from '@/app/app/commands/get-donate-history';
 
 interface Properties {
   creatorProfile?: CreatorProfile;
@@ -162,7 +164,7 @@ export function DonateContent({ creatorProfile }: Properties) {
 
   const onDonorClick = useCallback(
     (displayName: string) => {
-      router.push(`/creators/fan/${displayName}`);
+      router.push(`/fan/${displayName}`);
     },
     [router],
   );
@@ -299,7 +301,7 @@ export function DonateContent({ creatorProfile }: Properties) {
           <p className="text-balance text-center text-heading5 text-neutralGreen-700">
             <ExternalLink
               className="text-mint-600 underline"
-              href={CREATORS_LINK}
+              href={MAIN_LANDING_LINK}
             >
               IDRISS Creators&nbsp;v2
             </ExternalLink>{' '}

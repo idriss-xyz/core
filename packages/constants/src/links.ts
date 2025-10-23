@@ -66,8 +66,6 @@ export const TOKENOMICS_DOCS_LINK =
 
 export const SNAPSHOT_IDRISS_LINK = 'https://snapshot.box/#/s:idrissxyz.eth';
 
-export const CREATORS_LINK = 'https://idriss.xyz/creators';
-
 export const CHROME_EXTENSION_LINK =
   'https://chromewebstore.google.com/detail/idriss/fghhpjoffbgecjikiipbkpdakfmkbmig';
 

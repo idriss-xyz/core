@@ -19,9 +19,9 @@ const useRedirectIfNotAuthenticated = () => {
     if (user && !creator) {
       void setCreatorIfSessionPresent(user, setCreator);
     }
-
+    // TODO: check how to change
     if (!user && !creator) {
-      if (pathname.startsWith('/creators/app')) {
+      if (pathname.startsWith('/app')) {
         router.replace('/creators?login=true');
       } else if (pathname.startsWith('/creators')) {
         return;

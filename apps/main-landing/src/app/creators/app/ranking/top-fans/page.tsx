@@ -3,10 +3,11 @@ import { useState } from 'react';
 import { usePrivy } from '@privy-io/react-auth';
 import { Hex } from 'viem';
 
-import { Leaderboard } from '@/app/creators/components/leaderboard';
 
 import { useGetLeaderboard, periodMap } from '../commands/use-get-leaderboard';
 import SkeletonRanking from '../loading';
+
+import { Leaderboard } from '@/app/components/leaderboard';
 
 // ts-unused-exports:disable-next-line
 export default function TopDonors() {

@@ -46,22 +46,22 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/donors/ranking',
-        destination: '/creators/fan/ranking',
+        destination: '/fan/ranking',
         permanent: true,
       },
       {
         source: '/creators/donor/ranking',
-        destination: '/creators/fan/ranking',
+        destination: '/fan/ranking',
         permanent: true,
       },
       {
         source: '/streamers',
-        destination: '/creators',
+        destination: '/',
         permanent: true,
       },
       {
         source: '/streamers/donate',
-        destination: '/creators/donate',
+        destination: '/donate',
         permanent: true,
       },
       {
@@ -202,7 +202,7 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/creators/obs/:slug*',
-        destination: '/creators/donation-overlay/:slug*',
+        destination: '/donation-overlay/:slug*',
         permanent: true,
       },
     ];

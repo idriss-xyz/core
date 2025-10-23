@@ -5,11 +5,13 @@ import '@rainbow-me/rainbowkit/styles.css';
 import { useRouter } from 'next/navigation';
 
 import { backgroundLines2 } from '@/assets';
-import { LeaderboardStandalone } from '@/app/creators/donate/components/leaderboard';
-import { RainbowKitProviders } from '@/app/creators/donate/providers';
 
 import { useGetDonorRanking } from '../commands/get-donor-ranking';
 import { TopBar } from '../../components/top-bar';
+
+import { LeaderboardStandalone } from '@/app/donate/components/leaderboard';
+import { RainbowKitProviders } from '@/app/donate/providers';
+
 
 // ts-unused-exports:disable-next-line
 export default function Ranking() {
@@ -25,7 +27,7 @@ function RankingContent() {
   const donorRanking = useGetDonorRanking();
 
   const onDonorClick = (displayName: string) => {
-    router.push(`/creators/fan/${displayName.toLowerCase()}`);
+    router.push(`/fan/${displayName.toLowerCase()}`);
   };
 
   return (

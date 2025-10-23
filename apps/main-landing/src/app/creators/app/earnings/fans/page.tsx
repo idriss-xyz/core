@@ -8,12 +8,14 @@ import {
 import { usePrivy } from '@privy-io/react-auth';
 import { Hex } from 'viem';
 
-import { useGetTipHistory } from '@/app/creators/app/commands/get-donate-history';
 import { IDRISS_SCENE_STREAM_LIGHT } from '@/assets';
-import { Leaderboard } from '@/app/creators/components/leaderboard';
+
 
 import { periodMap } from '../../ranking/commands/use-get-leaderboard';
 import SkeletonRanking from '../loading';
+
+import { Leaderboard } from '@/app/components/leaderboard';
+import { useGetTipHistory } from '@/app/app/commands/get-donate-history';
 
 // ts-unused-exports:disable-next-line
 export default function TopDonors() {
@@ -99,7 +101,7 @@ export default function TopDonors() {
             asLink
             size="medium"
             intent="secondary"
-            href="/creators/app/ranking/top-creators"
+            href="/app/ranking/top-creators"
             suffixIconName="IdrissArrowRight"
             className="absolute left-[497px] top-8 uppercase"
           >

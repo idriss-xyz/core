@@ -3,7 +3,7 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { hexSchema } from '@idriss-xyz/constants';
 import { isAddress } from 'viem';
 
-import { validateAddressOrENS } from '@/app/creators/donate/utils';
+import { validateAddressOrENS } from '@/app/donate/utils';
 
 const SEARCH_PARAMETER = {
   TOKEN: 'token',

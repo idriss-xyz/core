@@ -5,7 +5,6 @@ import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 
-import { browserBasedSource } from '@/app/creators/utils';
 
 import { TokensShowcase } from './pros-section/tokens-showcase';
 import { ProsItem } from './pros-section/pros-item';
@@ -18,6 +17,8 @@ import {
   DONORS_LEADERBOARD_SVG,
   FEE_CHART,
 } from './pros-section/assets';
+
+import { browserBasedSource } from '@/app/utils';
 
 export const ProsSection = () => {
   const [direction, setDirection] = useState(1);

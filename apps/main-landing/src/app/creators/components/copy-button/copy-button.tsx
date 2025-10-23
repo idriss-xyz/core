@@ -1,8 +1,9 @@
 import { Button } from '@idriss-xyz/ui/button';
 
-import { useCopyToClipboard } from '@/app/creators/hooks/use-copy-to-clipboard';
-
 import { useToast } from '../../context/toast-context';
+
+import { useCopyToClipboard } from '@/app/hooks/use-copy-to-clipboard';
+
 
 interface CopyButtonProperties {
   text: string;

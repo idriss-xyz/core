@@ -2,9 +2,10 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { Button } from '@idriss-xyz/ui/button';
 import { CREATORS_NFT_DONATIONS_X_POST } from '@idriss-xyz/constants';
 
-import { browserBasedSource } from '@/app/creators/utils';
-
 import { NFTS_SVG, NFTS_PNG } from './assets';
+
+import { browserBasedSource } from '@/app/utils';
+
 
 export const NftSection = () => {
   return (

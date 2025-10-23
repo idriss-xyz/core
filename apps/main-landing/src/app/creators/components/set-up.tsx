@@ -6,7 +6,6 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { CREATORS_USER_GUIDE_LINK } from '@idriss-xyz/constants';
 
 import { IDRISS_SCENE_STREAM } from '@/assets';
-import { browserBasedSource } from '@/app/creators/utils';
 
 import {
   CREATORS_LINES,
@@ -17,6 +16,9 @@ import {
   CRETORS_FORM_PNG,
   CRETORS_FORM_SVG,
 } from './set-up-section/assets';
+
+import { browserBasedSource } from '@/app/utils';
+
 
 export const SetUp = () => {
   return (

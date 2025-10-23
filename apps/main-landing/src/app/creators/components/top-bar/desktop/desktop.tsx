@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { Button } from '@idriss-xyz/ui/button';
-import { CREATORS_LINK } from '@idriss-xyz/constants';
+import { MAIN_LANDING_LINK } from '@idriss-xyz/constants';
 import { Dialog } from '@idriss-xyz/ui/dialog';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { VisuallyHidden } from '@idriss-xyz/ui/visually-hidden';
@@ -10,15 +10,17 @@ import { NavigationMenu } from '@idriss-xyz/ui/navigation-menu';
 import { classes } from '@idriss-xyz/ui/utils';
 import { MobileNotSupported } from '@idriss-xyz/ui/mobile-not-supported';
 
-import { useStartEarningNavigation } from '@/app/creators/utils/';
-import { DonatePageAvatarMenu } from '@/app/creators/[name]/donate-page-avatar-menu';
 import { EXTERNAL_LINK, INTERNAL_LINK } from '@/constants';
 import { Socials as MobileSocials } from '@/components/top-bar/components/mobile/socials';
 import { Socials as DesktopSocials } from '@/components/top-bar/components/desktop/socials';
-import { useAuth } from '@/app/creators/context/auth-context';
+
 
 import { Socials } from './socials';
 import { Menu } from './menu';
+
+import { useAuth } from '@/app/context/auth-context';
+import { DonatePageAvatarMenu } from '@/app/[name]/donate-page-avatar-menu';
+import { useStartEarningNavigation } from '@/app/utils/';
 
 type Properties = {
   displayCTA?: boolean;
@@ -218,7 +220,7 @@ export const Desktop = ({
               isExternal
               size="small"
               intent="secondary"
-              href={CREATORS_LINK}
+              href={MAIN_LANDING_LINK}
               className="uppercase md:px-5 md:py-3.5"
             >
               Create your page

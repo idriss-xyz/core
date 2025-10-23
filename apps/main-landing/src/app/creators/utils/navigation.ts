@@ -17,13 +17,13 @@ export const useStartEarningNavigation = () => {
     if (user && creator) {
       await removeDonorStatus(creator.isDonor, creator.name, getAccessToken);
       if (creator.doneSetup) {
-        router.push('/creators/app/earnings/stats-and-history');
+        router.push('/app/earnings/stats-and-history');
       } else {
-        router.push('/creators/app/setup/payment-methods');
+        router.push('/app/setup/payment-methods');
       }
     } else if (user && !creator) {
       await setCreatorIfSessionPresent(user, setCreator);
-      router.push('/creators/app/setup/payment-methods');
+      router.push('/app/setup/payment-methods');
     } else {
       setIsModalOpen(true);
     }
