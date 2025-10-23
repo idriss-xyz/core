@@ -1,6 +1,6 @@
 import {
-  BLOG_LINK,
   BRAND_GUIDELINE_LINK,
+  DAO_LINK,
   DOCUMENTATION_LINK,
   GITHUB_LINK,
   SOCIAL_LINK,
@@ -40,8 +40,8 @@ export const EXTERNAL_RESOURCES: SectionItem[] = [
     isExternal: true,
   },
   {
-    link: BLOG_LINK,
-    name: 'BLOG',
+    link: DAO_LINK,
+    name: 'DAO',
     isExternal: true,
   },
   {

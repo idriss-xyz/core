@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 
-import DonationOverlay from '../donation-overlay';
+import DonationOverlay from '../alert-overlay';
 import { getPublicCreatorProfileBySlug } from '../../utils';
 
 // ts-unused-exports:disable-next-line

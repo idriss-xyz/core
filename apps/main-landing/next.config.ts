@@ -61,6 +61,11 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: '/creators/donation-overlay/:slug*',
+        destination: '/alert-overlay/:slug*',
+        permanent: true,
+      },
+      {
         source: '/creators/:path*',
         destination: '/:path*',
         permanent: true,

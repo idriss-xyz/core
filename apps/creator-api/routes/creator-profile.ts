@@ -185,7 +185,7 @@ router.get(
 );
 
 router.get(
-  '/donation-overlay/:slug',
+  '/alert-overlay/:slug',
   [param('slug').isString().notEmpty()],
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
@@ -199,7 +199,7 @@ router.get(
       const creatorRepo = AppDataSource.getRepository(Creator);
       const creator = await creatorRepo.findOne({
         where: {
-          obsUrl: `${MAIN_LANDING_LINK}/donation-overlay/${slug}`,
+          obsUrl: `${MAIN_LANDING_LINK}/alert-overlay/${slug}`,
         },
       });
 

@@ -118,7 +118,7 @@ overlayWS.use(async (socket: Socket, next) => {
   const creatorRepo = AppDataSource.getRepository(Creator);
   const creator = await creatorRepo.findOne({
     where: {
-      obsUrl: `${MAIN_LANDING_LINK}/donation-overlay/${overlayToken}`,
+      obsUrl: `${MAIN_LANDING_LINK}/alert-overlay/${overlayToken}`,
     },
   });
 

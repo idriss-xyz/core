@@ -10,7 +10,7 @@ const DEPLOYMENT_URL = process.env.RAILWAY_PUBLIC_DOMAIN
 export const metadata: Metadata = {
   title: 'IDRISS DAO',
   description:
-    'Our apps bring the power of crypto and AI to your browsing experience, empower creators through digital ownership, and help find what’s true on the internet.',
+    'The decentralized organization overseeing the economy and governance of the IDRISS app.',
   icons: [
     {
       rel: 'apple-touch-icon',
@@ -35,10 +35,10 @@ export const metadata: Metadata = {
     url: DEPLOYMENT_URL,
     title: 'Superpowers for your internet',
     description:
-      'Our apps bring the power of crypto and AI to your browsing experience, empower creators through digital ownership, and help find what’s true on the internet.',
+      'The decentralized organization overseeing the economy and governance of the IDRISS app.',
     images: [
       {
-        url: '/og.png',
+        url: '/og-dao.png',
       },
     ],
   },

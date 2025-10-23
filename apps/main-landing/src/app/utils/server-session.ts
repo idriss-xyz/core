@@ -34,7 +34,7 @@ export const getPublicCreatorProfileBySlug = async (
   }
 
   const response = await fetch(
-    `${CREATOR_API_URL}/creator-profile/donation-overlay/${slug}`,
+    `${CREATOR_API_URL}/creator-profile/alert-overlay/${slug}`,
   );
   if (!response.ok) {
     return;

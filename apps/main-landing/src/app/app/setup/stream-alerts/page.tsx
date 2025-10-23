@@ -420,7 +420,7 @@ export default function StreamAlerts() {
                         'pb-1 text-label4 text-neutralGreen-700',
                       )}
                     >
-                      Overlay link
+                      Alert overlay link
                     </label>
                     <CopyInput
                       value={`${creator?.obsUrl ?? ''}`}

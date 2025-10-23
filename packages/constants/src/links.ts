@@ -50,7 +50,7 @@ export const CREATOR_SETUP_GUIDE_LINK =
 export const EXTENSION_USER_GUIDE_LINK =
   'https://docs.idriss.xyz/user-guides/extension';
 export const GITHUB_LINK = 'https://www.github.com/idriss-xyz';
-export const BLOG_LINK = 'https://www.paragraph.xyz/@idriss';
+export const DAO_LINK = 'https://idriss.xyz/dao';
 export const BRAND_KIT_LINK =
   'https://docs.idriss.xyz/contributor-guides/brand-resources';
 export const BRAND_GUIDELINE_LINK = 'https://docs.idriss.xyz/resources/brand';
