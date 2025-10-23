@@ -38,5 +38,7 @@ export type DonationGoal = {
   progress: number;
   startDate: number;
   endDate: number;
+  active: boolean;
+  creatorName: string;
   topDonor: { name: string; amount: number };
 };

@@ -5,11 +5,22 @@ import { Button } from '@idriss-xyz/ui/button';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { useMemo, useState } from 'react';
-import { usePrivy } from '@privy-io/react-auth';
+import { getAccessToken, usePrivy } from '@privy-io/react-auth';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { ConfirmationModal } from '@/app/creators/components/confirmation-modal';
 import { useAuth } from '@/app/creators/context/auth-context';
 import { useGetDonationGoals } from '@/app/creators/app/commands/get-donation-goals';
+import { activateDonationGoal } from '@/app/creators/utils/donation-goals';
+
+const handleActivateGoal = async (goalId: number) => {
+  const authToken = await getAccessToken();
+  if (!authToken) {
+    console.error('No auth token found');
+    return;
+  }
+  await activateDonationGoal(goalId, authToken);
+};
 
 export function GoalsList() {
   const { creator } = useAuth();
@@ -21,10 +32,8 @@ export function GoalsList() {
     return goalListQuery.data ?? [];
   }, [goalListQuery.data]);
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
-  
-  const handleActivateGoal = () => {
-    // Implement activation logic here
-  };
+
+  const queryClient = useQueryClient();
 
   return (
     <>
@@ -85,14 +94,21 @@ export function GoalsList() {
                       return setIsRemoveModalOpen(true);
                     }}
                   />
-                  <Button
-                    intent="secondary"
-                    size="medium"
-                    className="py-auto h-11 px-6 uppercase"
-                    onClick={handleActivateGoal}
-                  >
-                    Activate
-                  </Button>
+                  {!goal.active && (
+                    <Button
+                      intent="secondary"
+                      size="medium"
+                      className="py-auto h-11 px-6 uppercase"
+                      onClick={async () => {
+                        await handleActivateGoal(goal.id);
+                        void queryClient.invalidateQueries({
+                          queryKey: ['donation-goals', goal.creatorName],
+                        });
+                      }}
+                    >
+                      Activate
+                    </Button>
+                  )}
                 </div>
               </CardBody>
             </Card>
