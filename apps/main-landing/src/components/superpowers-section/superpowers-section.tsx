@@ -31,7 +31,10 @@ export const SuperpowersSection = () => {
                   'lg:mt-[60px] lg:text-display3',
                 )}
               >
-                TWO PARTS BUT ONE MISSION
+                TWO PARTS
+                <span className="hidden md:inline"> </span>
+                <br className="md:hidden" />
+                BUT ONE MISSION
               </h2>
               <p
                 className={classes(

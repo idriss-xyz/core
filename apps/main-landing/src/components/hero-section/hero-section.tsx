@@ -23,7 +23,7 @@ export const HeroSection = () => {
         className="pointer-events-none absolute top-0 hidden opacity-40 lg:block"
         alt=""
       />
-      <div className="z-1 flex flex-col items-center gap-6 text-center px-safe">
+      <div className="z-1 flex flex-col items-center gap-4 text-center px-safe md:gap-8">
         <h1
           className={classes(
             'container my-0 text-balance text-center text-display4 font-normal gradient-text lg:text-display2',

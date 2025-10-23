@@ -34,7 +34,7 @@ export const FooterDao = () => {
             '4xl:grid 4xl:grid-cols-[1080px_auto]',
           )}
         >
-          <div className={classes('flex flex-col items-start gap-4')}>
+          <div className={classes('flex flex-col items-start gap-6 md:gap-10')}>
             <h2
               className={classes(
                 'text-balance text-display6 text-neutral-900',
@@ -43,10 +43,6 @@ export const FooterDao = () => {
             >
               IDRISS DAO
             </h2>
-            <span className="text-body4 text-neutralGreen-900">
-              The decentralized organization overseeing the economy <br />
-              and governance of the IDRISS app.
-            </span>
             <Button
               intent="negative"
               size="medium"
