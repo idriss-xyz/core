@@ -23,6 +23,15 @@ class DonationGoalService {
     });
   }
 
+  async getActiveDonationGoalByCreatorName(creatorName: string) {
+    return this.donationGoalViewRepository.findOne({
+      where: {
+        creatorName,
+        active: true,
+      },
+    });
+  }
+
   async getActiveGoalByCreatorId(
     creatorId: number,
   ): Promise<DonationGoal | null> {

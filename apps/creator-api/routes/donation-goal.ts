@@ -31,6 +31,34 @@ router.get(
   },
 );
 
+// Get active donation goal by creator name
+router.get(
+  '/:creatorName/active',
+  tightCors,
+  verifyToken(),
+  async (req: Request, res: Response) => {
+    const { creatorName } = req.params;
+    const activeGoal =
+      await donationGoalService.getActiveDonationGoalByCreatorName(creatorName);
+
+    if (!activeGoal) {
+      res.status(404).json({ error: 'No active donation goal found' });
+      return;
+    }
+
+    // Parse the active goal and add topDonor field
+    const parsedActiveGoal = {
+      ...activeGoal,
+      topDonor: {
+        name: activeGoal.topDonorName,
+        amount: activeGoal.topDonorAmount,
+      },
+    };
+
+    res.status(200).json(parsedActiveGoal);
+  },
+);
+
 // Create new donation goal for creator
 router.post(
   '/',

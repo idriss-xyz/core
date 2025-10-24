@@ -28,8 +28,10 @@ export function GoalsList() {
   const goalListQuery = useGetDonationGoals(creator?.name, {
     enabled: ready && authenticated && !!creator?.name,
   });
-  const allGoals = useMemo(() => {
-    return goalListQuery.data ?? [];
+  const inactiveGoals = useMemo(() => {
+    return (goalListQuery.data ?? []).filter((goal) => {
+      return !goal.active;
+    });
   }, [goalListQuery.data]);
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
 
@@ -39,7 +41,7 @@ export function GoalsList() {
     <>
       <h5 className="text-heading5 text-neutralGreen-900">Goals list</h5>
       <div className="flex flex-wrap justify-start gap-4">
-        {allGoals.map((goal) => {
+        {inactiveGoals.map((goal) => {
           const progressPercentage = (goal.progress / goal.targetAmount) * 100;
           return (
             <Card
@@ -94,21 +96,6 @@ export function GoalsList() {
                       return setIsRemoveModalOpen(true);
                     }}
                   />
-                  {!goal.active && (
-                    <Button
-                      intent="secondary"
-                      size="medium"
-                      className="py-auto h-11 px-6 uppercase"
-                      onClick={async () => {
-                        await handleActivateGoal(goal.id);
-                        void queryClient.invalidateQueries({
-                          queryKey: ['donation-goals', goal.creatorName],
-                        });
-                      }}
-                    >
-                      Activate
-                    </Button>
-                  )}
                 </div>
               </CardBody>
             </Card>

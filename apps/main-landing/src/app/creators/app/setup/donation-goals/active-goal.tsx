@@ -1,25 +1,37 @@
+'use client';
+
 import { Badge } from '@idriss-xyz/ui/badge';
 import { Button } from '@idriss-xyz/ui/button';
 import { Card, CardBody, CardHeader } from '@idriss-xyz/ui/card';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { ProgressBarV2 } from '@idriss-xyz/ui/progress-bar-v2';
+import { usePrivy } from '@privy-io/react-auth';
 
 import { getTimeRemaining } from '@/app/creators/utils';
+import { useAuth } from '@/app/creators/context/auth-context';
+import { useGetActiveDonationGoal } from '@/app/creators/app/commands/get-active-donation-goal';
 
 export default function ActiveGoal() {
-  const goal = {
-    id: '1',
-    name: 'Goal Title',
-    description: 'Goal Description',
-    progress: 500,
-    targetAmount: 1000,
-    startDate: '17732107239',
-    endDate: '17732107239',
-    topDonor: {
-      name: 'John Doe',
-      amount: 50,
-    },
-  };
+  const { creator } = useAuth();
+  const { ready, authenticated } = usePrivy();
+  const activeGoalQuery = useGetActiveDonationGoal(creator?.name, {
+    enabled: ready && authenticated && !!creator?.name,
+  });
+
+  const goal = activeGoalQuery.data;
+
+  if (activeGoalQuery.isLoading) {
+    return (
+      <div>
+        <h5 className="text-heading5 text-neutralGreen-900">Active goal</h5>
+        <Card className="h-[183px] w-full border shadow-none" />
+      </div>
+    );
+  }
+
+  if (!goal) {
+    return null; // No active goal to display
+  }
 
   const progressPercentage = (goal.progress / goal.targetAmount) * 100;
 
