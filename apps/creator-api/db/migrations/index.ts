@@ -33,3 +33,4 @@ export { RemoveWwwFromUrls1758590345135 } from './1758590345135-RemoveWwwFromUrl
 export { AddTokenEnabledToCreator1758728078982 } from './1758728078982-AddTokenEnabledToCreator';
 export { SplitNftMetadata1759318771000 } from './1759318771000-split-nft-metadata';
 export { FixIncorrectNftNames1759846236000 } from './1759846236000-FixIncorrectNftNames';
+export { UpdateUrlsToNewStructure1761231247000 } from './1761231247000-UpdateUrlsToNewStructure';

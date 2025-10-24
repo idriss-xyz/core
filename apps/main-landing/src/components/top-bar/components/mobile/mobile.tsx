@@ -5,12 +5,9 @@ import { VisuallyHidden } from '@idriss-xyz/ui/visually-hidden';
 import { Button } from '@idriss-xyz/ui/button';
 import Link from 'next/link';
 import { NavigationMenu } from '@idriss-xyz/ui/navigation-menu';
-import { DOCUMENTATION_LINK } from '@idriss-xyz/constants';
+import { DOCUMENTATION_LINK_DAO } from '@idriss-xyz/constants';
 
 import { EXTERNAL_LINK, INTERNAL_LINK } from '@/constants';
-
-import { APPS_SECTION_NAVIGATION_ITEMS } from '../../constants';
-import { Section } from '../section';
 
 import { Socials } from './socials';
 
@@ -43,29 +40,26 @@ export const Mobile = () => {
               <NavigationMenu.Root className="flex h-full">
                 <NavigationMenu.List className="flex h-full flex-col justify-between">
                   <div className="space-y-6">
-                    <div>
-                      <NavigationMenu.Item>
-                        <NavigationMenu.Link asChild>
-                          <span>
-                            <Link href="/#" passHref legacyBehavior>
-                              <Button
-                                intent="tertiary"
-                                size="large"
-                                onClick={close}
-                                asLink
-                              >
-                                APPS
-                              </Button>
-                            </Link>
-                          </span>
-                        </NavigationMenu.Link>
-                      </NavigationMenu.Item>
-                      <Section
-                        className="px-5"
-                        items={APPS_SECTION_NAVIGATION_ITEMS}
-                        onItemClick={close}
-                      />
-                    </div>
+                    <NavigationMenu.Item>
+                      <NavigationMenu.Link asChild>
+                        <span>
+                          <Link
+                            href={INTERNAL_LINK.CREATORS}
+                            passHref
+                            legacyBehavior
+                          >
+                            <Button
+                              intent="tertiary"
+                              size="large"
+                              onClick={close}
+                              asLink
+                            >
+                              APP
+                            </Button>
+                          </Link>
+                        </span>
+                      </NavigationMenu.Link>
+                    </NavigationMenu.Item>
 
                     <NavigationMenu.Link asChild>
                       <span>
@@ -111,7 +105,7 @@ export const Mobile = () => {
                           intent="tertiary"
                           size="large"
                           onClick={close}
-                          href={DOCUMENTATION_LINK}
+                          href={DOCUMENTATION_LINK_DAO}
                           isExternal
                           asLink
                         >

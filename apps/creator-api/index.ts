@@ -31,7 +31,7 @@ import siweRouter from './routes/siwe';
 import { AppDataSource, initializeDatabase } from './db/database';
 import { Creator } from './db/entities';
 import { isAllowedOrigin, openCors } from './config/cors';
-import { CREATORS_LINK } from '@idriss-xyz/constants';
+import { MAIN_LANDING_LINK } from '@idriss-xyz/constants';
 
 initializeDatabase()
   .then(() => console.log('DB connected...'))
@@ -118,7 +118,7 @@ overlayWS.use(async (socket: Socket, next) => {
   const creatorRepo = AppDataSource.getRepository(Creator);
   const creator = await creatorRepo.findOne({
     where: {
-      obsUrl: `${CREATORS_LINK}/donation-overlay/${overlayToken}`,
+      obsUrl: `${MAIN_LANDING_LINK}/alert-overlay/${overlayToken}`,
     },
   });
 

@@ -12,7 +12,7 @@ import {
   DEFAULT_DONATION_MIN_ALERT_AMOUNT,
   DEFAULT_DONATION_MIN_TTS_AMOUNT,
   DEFAULT_DONATION_MIN_SFX_AMOUNT,
-  CREATORS_LINK,
+  MAIN_LANDING_LINK,
   CREATOR_CHAIN,
   CHAIN_ID_TO_TOKENS,
 } from '@idriss-xyz/constants';
@@ -89,9 +89,9 @@ class CreatorProfileService {
     creator.profilePictureUrl = creatorData.profilePictureUrl;
     creator.privyId = req.user.id;
     creator.email = creatorData.email;
-    creator.donationUrl = `${CREATORS_LINK}/${creatorData.name}`;
+    creator.donationUrl = `${MAIN_LANDING_LINK}/${creatorData.name}`;
     const obsUrlSecret = randomBytes(24).toString('base64url');
-    creator.obsUrl = `${CREATORS_LINK}/donation-overlay/${obsUrlSecret}`;
+    creator.obsUrl = `${MAIN_LANDING_LINK}/alert-overlay/${obsUrlSecret}`;
     creator.isDonor = isDonor;
 
     // Create and save new creator

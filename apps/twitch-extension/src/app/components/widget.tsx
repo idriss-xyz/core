@@ -10,9 +10,9 @@ import {
   StoredDonationData,
   NULL_ADDRESS,
 } from '@idriss-xyz/constants';
-import { useGetTipHistory } from '@idriss-xyz/main-landing/app/creators/app/commands/get-donate-history';
-import { getPublicCreatorProfile } from '@idriss-xyz/main-landing/app/creators/utils/index';
-import { Leaderboard } from '@idriss-xyz/main-landing/app/creators/donate/components/leaderboard';
+import { useGetTipHistory } from '@idriss-xyz/main-landing/app/app/commands/get-donate-history';
+import { getPublicCreatorProfile } from '@idriss-xyz/main-landing/app/utils/index';
+import { Leaderboard } from '@idriss-xyz/main-landing/app/donate/components/leaderboard';
 import { QueryProvider } from '@idriss-xyz/main-landing/providers';
 import { calculateDonationLeaderboard } from '@idriss-xyz/utils';
 
