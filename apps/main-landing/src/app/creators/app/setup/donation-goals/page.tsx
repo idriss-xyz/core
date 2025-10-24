@@ -11,9 +11,10 @@ import { CopyInput } from '@/app/creators/components/copy-input/copy-input';
 
 import { GoalsList } from './goals-list';
 import { NewGoalForm } from './components/new-goal-form';
+import ActiveGoal from './active-goal';
 
 // ts-unused-exports:disable-next-line
-export default function ActiveGoalPage() {
+export default function DonationGoalsPage() {
   const { creator } = useAuth();
   const queryClient = useQueryClient();
 
@@ -99,6 +100,8 @@ export default function ActiveGoalPage() {
           />
         </div>
       </div>
+
+      <ActiveGoal />
 
       <GoalsList />
 
