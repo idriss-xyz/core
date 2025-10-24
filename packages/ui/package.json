@@ -98,6 +98,7 @@
     "react-number-format": "^5.4.2",
     "react-day-picker": "^9.11.1",
     "recharts": "^3.0.0",
-    "tailwind-merge": "^2.5.2"
+    "tailwind-merge": "^2.5.2",
+    "date-fns": "^4.1.0"
   }
 }

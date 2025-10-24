@@ -96,6 +96,19 @@ export function GoalsList() {
                       return setIsRemoveModalOpen(true);
                     }}
                   />
+                  <Button
+                    intent="secondary"
+                    size="medium"
+                    className="py-auto h-11 px-6 uppercase"
+                    onClick={async () => {
+                      await handleActivateGoal(goal.id);
+                      void queryClient.invalidateQueries({
+                        queryKey: ['donation-goals', goal.creatorName],
+                      });
+                    }}
+                  >
+                    Activate
+                  </Button>
                 </div>
               </CardBody>
             </Card>

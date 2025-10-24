@@ -24,6 +24,8 @@ export default function GoalOverlay({ creatorName }: Properties) {
     targetAmount: 500,
     startDate: 1_742_807_935_000,
     endDate: 1_752_807_935_000,
+    active: true,
+    creatorName: 'daniel0ar',
     topDonor: { name: 'geoist_', amount: 50 },
   });
 
