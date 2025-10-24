@@ -5,6 +5,7 @@ import {
   PriceHistoryQuery,
   ALCHEMY_NATIVE_TOKENS,
   NETWORK_TO_ALCHEMY,
+  NATIVE_COIN_ADDRESS,
 } from '@idriss-xyz/constants';
 
 import { getChainByNetworkName } from '@idriss-xyz/utils';
@@ -184,7 +185,7 @@ export async function getAlchemyPrices(
   const erc20Addresses: { address: string; network: string }[] = [];
 
   for (const t of tokens) {
-    if (t.address === zeroAddress) {
+    if (t.address === zeroAddress || t.address === NATIVE_COIN_ADDRESS) {
       const sym =
         ALCHEMY_NATIVE_TOKENS[t.network as keyof typeof ALCHEMY_NATIVE_TOKENS];
       if (sym) nativeSymbols.push(sym);
@@ -202,14 +203,18 @@ export async function getAlchemyPrices(
     try {
       const nativePrices = await fetchNativePricesFromAlchemy(nativeSymbols);
       for (const t of tokens) {
-        if (t.address !== zeroAddress) continue;
+        if (t.address !== zeroAddress && t.address !== NATIVE_COIN_ADDRESS)
+          continue;
+
         const sym =
           ALCHEMY_NATIVE_TOKENS[
             t.network as keyof typeof ALCHEMY_NATIVE_TOKENS
           ];
         const price = sym ? nativePrices[sym] : undefined;
+
         if (price !== undefined) {
           result[`${t.network}:${zeroAddress}`] = price;
+          result[`${t.network}:${NATIVE_COIN_ADDRESS}`] = price;
         }
       }
     } catch (error) {
