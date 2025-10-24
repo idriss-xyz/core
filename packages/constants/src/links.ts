@@ -7,7 +7,6 @@ export const STATIC_ORIGINS = [
   'https://www.main-landing-staging.up.railway.app',
   'http://localhost:3000',
 ];
-export const COPILOT_API_URL = 'https://copilot-api.idriss.xyz';
 export const CREATOR_API_URL = 'https://core-staging-4c69.up.railway.app';
 
 export const SOCIAL_LINK = {

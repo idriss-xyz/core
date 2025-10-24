@@ -27,7 +27,6 @@ export {
   SUPPORT_LINK,
   STATIC_ORIGINS,
   CREATOR_API_URL,
-  COPILOT_API_URL,
   ZAPPER_API_URL,
 } from './links';
 
