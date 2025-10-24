@@ -33,7 +33,7 @@ export const HeroSection = () => {
         >
           IDRISS DAO
         </h1>
-        <span className="text-center text-body2 text-neutralGreen-900">
+        <span className="text-center text-body2 text-neutralGreen-900/70">
           The decentralized organization overseeing the economy <br />
           and governance of the IDRISS app.
         </span>
