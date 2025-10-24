@@ -47,6 +47,12 @@ import {
   banner43,
   banner44,
   banner45,
+  banner46,
+  banner47,
+  banner48,
+  banner49,
+  banner50,
+  banner51,
 } from './assets';
 import { FilterOption } from './utils';
 
@@ -107,6 +113,12 @@ const banners: Banner[] = [
   { src: banner43.src, type: 'avalanche' },
   { src: banner44.src, type: 'avalanche' },
   { src: banner45.src, type: 'avalanche' },
+  { src: banner46.src, type: 'Off The Grid' },
+  { src: banner47.src, type: 'Off The Grid' },
+  { src: banner48.src, type: 'Off The Grid' },
+  { src: banner49.src, type: 'Off The Grid' },
+  { src: banner50.src, type: 'Off The Grid' },
+  { src: banner51.src, type: 'Off The Grid' },
 ];
 
 interface Properties {
