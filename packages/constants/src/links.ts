@@ -7,7 +7,8 @@ export const STATIC_ORIGINS = [
   'https://www.main-landing-staging.up.railway.app',
   'http://localhost:3000',
 ];
-export const IDRISS_LEGACY_API_URL = 'https://api.idriss.xyz';
+
+export const CREATOR_API_URL = 'https://creators-api.idriss.xyz';
 
 export const SOCIAL_LINK = {
   X: 'https://x.com/idriss_xyz',
@@ -17,6 +18,7 @@ export const SOCIAL_LINK = {
   TIKTOK: 'https://www.tiktok.com/@idriss_xyz_',
   YOUTUBE: 'https://www.youtube.com/@idriss_xyz',
 };
+export const ZAPPER_API_URL = 'https://public.zapper.xyz/graphql';
 
 /**
  * Our things announced by us

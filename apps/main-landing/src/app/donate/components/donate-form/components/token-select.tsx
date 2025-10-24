@@ -1,5 +1,6 @@
 import { useMemo, ReactNode } from 'react';
 import { Token } from '@idriss-xyz/constants';
+import { AssetLogo } from '@idriss-xyz/ui/asset-logo';
 
 import { Select } from './select';
 
@@ -35,10 +36,11 @@ export const TokenSelect = ({
   const autoRenderLeft = selectedToken
     ? () => {
         return (
-          <img
-            src={selectedToken.logo}
-            alt={selectedToken.symbol}
+          <AssetLogo
+            logo={selectedToken.logo}
+            iconName={selectedToken.iconName}
             className="size-6 rounded-full"
+            alt={selectedToken.symbol}
           />
         );
       }
@@ -64,9 +66,9 @@ const optionsFrom = (tokens: (Token & { suffix?: ReactNode })[]) => {
       value: token.symbol,
       suffix: token.suffix,
       prefix: (
-        <img
-          src={token.logo}
-          alt={token.symbol}
+        <AssetLogo
+          logo={token.logo}
+          iconName={token.iconName}
           className="size-6 rounded-full"
         />
       ),

@@ -41,6 +41,18 @@ import {
   banner36,
   banner38,
   banner39,
+  banner40,
+  banner41,
+  banner42,
+  banner43,
+  banner44,
+  banner45,
+  banner46,
+  banner47,
+  banner48,
+  banner49,
+  banner50,
+  banner51,
 } from './assets';
 import { FilterOption } from './utils';
 
@@ -95,6 +107,18 @@ const banners: Banner[] = [
   { src: banner37.src, type: 'parallel' },
   { src: banner38.src, type: 'parallel' },
   { src: banner39.src, type: 'parallel' },
+  { src: banner40.src, type: 'avalanche' },
+  { src: banner41.src, type: 'avalanche' },
+  { src: banner42.src, type: 'avalanche' },
+  { src: banner43.src, type: 'avalanche' },
+  { src: banner44.src, type: 'avalanche' },
+  { src: banner45.src, type: 'avalanche' },
+  { src: banner46.src, type: 'off the grid' },
+  { src: banner47.src, type: 'off the grid' },
+  { src: banner48.src, type: 'off the grid' },
+  { src: banner49.src, type: 'off the grid' },
+  { src: banner50.src, type: 'off the grid' },
+  { src: banner51.src, type: 'off the grid' },
 ];
 
 interface Properties {

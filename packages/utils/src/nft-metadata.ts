@@ -1,7 +1,6 @@
 import { Hex } from 'viem';
-
-import { NFT_ABI } from '../../constants/src';
-import { clients } from '../../blockchain-clients/src';
+import { NFT_ABI } from '@idriss-xyz/constants';
+import { clients } from '@idriss-xyz/blockchain-clients';
 
 type NftMeta = {
   name?: string;
@@ -41,11 +40,7 @@ export async function getNftMetadata(
   if (!uri) return { name: 'NFT', image: undefined, collectionName };
 
   /* ---------- fix Parallel “/tokens/” URLs ---------- */
-  if (
-    uri &&
-    uri.includes('nftdata.parallelnft.com') &&
-    uri.includes('/tokens/')
-  ) {
+  if (uri.includes('nftdata.parallelnft.com') && uri.includes('/tokens/')) {
     const hexId = `0x${id.toString(16).toUpperCase()}`;
 
     try {

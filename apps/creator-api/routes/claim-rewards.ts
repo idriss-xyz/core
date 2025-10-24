@@ -3,9 +3,7 @@ import { Request, Response, Router } from 'express';
 import { getAddress } from 'viem';
 
 import dotenv from 'dotenv';
-import { AppDataSource } from '../db/database';
-import { Creator, Referral } from '../db/entities';
-import { verifyToken } from '../db/middleware/auth.middleware';
+
 import { LAMBDA_CLIENT, LAMBDA_REWARDS } from '../config/aws-config';
 import { getAvailableRewards } from '../services/reward-calculating-utils';
 import { calculateDollarsInIdrissToken } from '@idriss-xyz/utils';
@@ -16,6 +14,8 @@ import {
 } from '../utils/drip-utils';
 import { base } from 'viem/chains';
 import { tightCors } from '../config/cors';
+import { verifyToken } from '../middleware/auth.middleware';
+import { AppDataSource, Creator, Referral } from '@idriss-xyz/db';
 
 dotenv.config();
 

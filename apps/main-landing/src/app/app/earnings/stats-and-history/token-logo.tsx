@@ -9,8 +9,8 @@ const symbolToIconNameMap: Record<string, IconName> = {
   RON: 'RoninToken',
   YGG: 'YggToken',
   NFT: 'CardCoin',
-  // AVAX: 'AvaxToken',
-  // GUN: 'GunToken',
+  AVAX: 'AvaxToken',
+  GUN: 'GunToken',
 };
 
 interface TokenLogoProperties {

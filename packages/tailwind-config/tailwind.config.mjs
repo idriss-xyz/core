@@ -12,6 +12,7 @@ export default {
     path.resolve(__dirname, '../../apps/extension/src/**/*.{ts,tsx}'),
     path.resolve(__dirname, '../../apps/main-landing/src/**/*.{ts,tsx}'),
     path.resolve(__dirname, '../../apps/twitch-extension/src/**/*.{ts,tsx}'),
+    path.resolve(__dirname, '../../apps/ponder-indexer/src/**/*.{ts,tsx}'),
   ],
   theme: {
     colors: {

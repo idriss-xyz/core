@@ -14,6 +14,7 @@ import {
   DEFAULT_ALLOWED_CHAINS_IDS,
   DEFAULT_DONATION_MIN_SFX_AMOUNT,
   NftBalance,
+  TOKENS_ORDER,
 } from '@idriss-xyz/constants';
 import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -81,12 +82,18 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
     const possibleTokens: Token[] = useMemo(() => {
       const tokensSymbols = (creatorInfo.token ?? '').toLowerCase().split(',');
       const allPossibleTokens = Object.values(TOKEN);
-      const tokens = allPossibleTokens.filter((token) => {
-        return tokensSymbols.includes(token.symbol.toLowerCase());
-      });
+      const tokens = allPossibleTokens
+        .filter((token) => {
+          return tokensSymbols.includes(token.symbol.toLowerCase());
+        })
+        .sort((a, b) => {
+          return TOKENS_ORDER[a.symbol] - TOKENS_ORDER[b.symbol];
+        });
 
       if (tokens.length === 0) {
-        return allPossibleTokens;
+        return allPossibleTokens.sort((a, b) => {
+          return TOKENS_ORDER[a.symbol] - TOKENS_ORDER[b.symbol];
+        });
       }
 
       return tokens;
@@ -208,12 +215,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       donor?.name,
     );
 
-    const callbackOnSend = useDonationCallback(
-      sfx,
-      creatorInfo.address.isValid
-        ? (creatorInfo.address.data ?? undefined)
-        : undefined,
-    );
+    const callbackOnSend = useDonationCallback(sfx);
 
     // Derive the current amount based on active tab
     const amount = activeTab === 'token' ? tokenAmount : collectibleAmount;

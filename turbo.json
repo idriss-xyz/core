@@ -181,6 +181,27 @@
       "cache": false,
       "persistent": true
     },
+    "@idriss-xyz/ponder-indexer#dev": {
+      "cache": false,
+      "persistent": true,
+      "env": [
+        "DATABASE_URL",
+        "ZAPPER_API_KEY",
+        "ALCHEMY_API_KEY",
+        "OPENSEA_API_KEY"
+      ]
+    },
+    "@idriss-xyz/ponder-indexer#start": {
+      "cache": true,
+      "persistent": true,
+      "env": [
+        "DATABASE_URL",
+        "ZAPPER_API_KEY",
+        "ALCHEMY_API_KEY",
+        "OPENSEA_API_KEY",
+        "RAILWAY_PROJECT_ID"
+      ]
+    },
     "lint": {
       "inputs": [
         "$TURBO_DEFAULT$",

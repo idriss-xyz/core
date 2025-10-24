@@ -1,12 +1,11 @@
 import { Router, Request, Response } from 'express';
-import { AppDataSource } from '../db/database';
-import { Creator, Referral } from '../db/entities';
 
-import { verifyToken } from '../db/middleware/auth.middleware';
 import { fetchTwitchUserFollowersCount } from '../utils/twitch-api';
 import { creatorProfileService } from '../services/creator-profile.service';
 import { Hex } from 'viem';
 import { tightCors } from '../config/cors';
+import { verifyToken } from '../middleware/auth.middleware';
+import { AppDataSource, Creator, Referral } from '@idriss-xyz/db';
 
 const router = Router();
 

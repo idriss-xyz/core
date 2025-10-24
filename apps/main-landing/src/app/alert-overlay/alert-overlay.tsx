@@ -1,48 +1,31 @@
 'use client';
 
 import { io, Socket } from 'socket.io-client';
-import { useCallback, useEffect, useState, useRef } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { type AbiEvent, type Hex, isAddress, parseAbiItem } from 'viem';
+import { isAddress } from 'viem';
 import {
-  CHAIN_ID_TO_TOKENS,
   CREATOR_API_URL,
   MAIN_LANDING_LINK,
-  DEFAULT_ALLOWED_CHAINS_IDS,
   DEFAULT_DONATION_MIN_ALERT_AMOUNT,
   DEFAULT_DONATION_MIN_SFX_AMOUNT,
   DEFAULT_DONATION_MIN_TTS_AMOUNT,
-  NATIVE_COIN_ADDRESS,
-  NULL_ADDRESS,
+  StoredDonationData,
 } from '@idriss-xyz/constants';
-import { clients } from '@idriss-xyz/blockchain-clients';
 import { FullscreenOverlay } from '@idriss-xyz/ui/fullscreen-overlay';
 import { ExternalLink } from '@idriss-xyz/ui/external-link';
 import { classes } from '@idriss-xyz/ui/utils';
-import { getNftMetadata } from '@idriss-xyz/utils';
 
-import { CHAIN_TO_IDRISS_TIPPING_ADDRESS } from '../donate/constants';
 import { useCreators } from '../hooks/use-creators';
-import {
-  getPublicCreatorProfileBySlug,
-  getCreatorNameAndPicOrAnon,
-} from '../utils';
+import { getPublicCreatorProfileBySlug } from '../utils';
 import { Address } from '../donate/types';
 
 import DonationNotification from './components/donation-notification';
-import {
-  calculateDollar,
-  fetchDonationSfxText,
-  TIP_MESSAGE_EVENT_ABI,
-} from './utils';
+import { fetchDonationSfxText } from './utils';
 import { containsBadWords } from './utils/bad-words';
 import { DonationNotificationProperties, MinimumAmounts } from './types';
 
-const FETCH_INTERVAL = 5000;
-const BLOCK_LOOKBACK_RANGE = 5n;
 const DONATION_MIN_OVERALL_VISIBLE_DURATION = 11_000;
-
-const latestCheckedBlocks = new Map();
 
 interface Properties {
   creatorName?: string;
@@ -158,6 +141,99 @@ export default function DonationOverlay({ creatorName }: Properties) {
       addDonation(queuedDonation);
     });
 
+    socket.on('newDonation', async (donation: StoredDonationData) => {
+      try {
+        if (isLegacyLink) return;
+
+        if (!address?.data) return;
+
+        if (donation.toAddress.toLowerCase() !== address?.data.toLowerCase())
+          return;
+
+        const message = donation.comment ?? '';
+        if (message && containsBadWords(message, customBadWords)) {
+          console.log('Filtered donation with inappropriate message');
+          return;
+        }
+
+        await new Promise((resolve) => {
+          return setTimeout(resolve, 2500);
+        });
+        const sfxText = await fetchDonationSfxText(donation.transactionHash);
+        if (sfxText && containsBadWords(sfxText, customBadWords)) {
+          console.log('Filtered donation with inappropriate sfx text');
+          return;
+        }
+
+        const donorDisplay =
+          donation.fromUser?.displayName ?? donation.fromAddress;
+        const avatarUrl = donation.fromUser?.avatarUrl;
+
+        if (donation.kind === 'token') {
+          const tokenDetails = donation.token
+            ? {
+                address: donation.token.address,
+                symbol: donation.token.symbol,
+                decimals: donation.token.decimals,
+                name: donation.token.name ?? donation.token.symbol,
+                logo: donation.token.imageUrl ?? '',
+              }
+            : undefined;
+
+          addDonation({
+            avatarUrl,
+            message,
+            sfxText,
+            amount: String(donation.tradeValue), // string expected
+            donor: donorDisplay,
+            txnHash: donation.transactionHash,
+            token: {
+              amount: BigInt(donation.amountRaw),
+              details: tokenDetails,
+            },
+            minimumAmounts,
+            enableToggles,
+            alertSound,
+            voiceId,
+            creatorName: name,
+          });
+        } else if (donation.kind === 'nft') {
+          const nftLogo =
+            donation.imgPreferred ??
+            donation.imgLarge ??
+            donation.imgMedium ??
+            donation.imgSmall;
+
+          addDonation({
+            avatarUrl,
+            message,
+            sfxText,
+            amount: String(donation.quantity),
+            donor: donorDisplay,
+            txnHash: donation.transactionHash,
+            token: {
+              amount: BigInt(donation.quantity),
+              details: {
+                id: BigInt(donation.tokenId),
+                name: donation.name,
+                logo: nftLogo,
+                collectionName:
+                  donation.collectionShortName ?? donation.collectionSlug,
+              },
+            },
+            minimumAmounts,
+            enableToggles,
+            alertSound,
+            voiceId,
+            creatorName: name,
+            forceDisplay: true,
+          });
+        }
+      } catch (error) {
+        console.error('Failed to handle newDonation event:', error);
+      }
+    });
+
     socket.on('connect_error', (error) => {
       console.error('Overlay auth failed:', error.message);
     });
@@ -173,6 +249,8 @@ export default function DonationOverlay({ creatorName }: Properties) {
     alertSound,
     voiceId,
     isLegacyLink,
+    customBadWords,
+    address?.data,
   ]);
 
   // If creator name present use info from db, if not, use params only
@@ -260,208 +338,11 @@ export default function DonationOverlay({ creatorName }: Properties) {
     }
   }, [donationsQueue, isDisplayingDonation]);
 
-  const fetchTipMessageLogs = useCallback(async () => {
-    if (isLegacyLink) return;
-
-    if (!address?.data) return;
-
-    for (const { chain, client } of clients) {
-      try {
-        const eventSignature = TIP_MESSAGE_EVENT_ABI;
-        if (!DEFAULT_ALLOWED_CHAINS_IDS.includes(chain)) {
-          continue;
-        }
-
-        const latestBlock = await client.getBlockNumber();
-        const lastCheckedBlock =
-          latestCheckedBlocks.get(chain) ?? latestBlock - BLOCK_LOOKBACK_RANGE;
-
-        if (latestBlock <= lastCheckedBlock) continue;
-
-        const parsedEvent = parseAbiItem(eventSignature) as AbiEvent;
-
-        const tipMessageLogs = await client.getLogs({
-          address: CHAIN_TO_IDRISS_TIPPING_ADDRESS[chain],
-          event: parsedEvent,
-          fromBlock: lastCheckedBlock + 1n,
-          toBlock: latestBlock,
-        });
-
-        latestCheckedBlocks.set(chain, latestBlock);
-
-        if (tipMessageLogs.length === 0) {
-          continue;
-        }
-
-        for (const log of tipMessageLogs) {
-          if (!log.topics) {
-            continue;
-          }
-
-          // destructure event arguments
-          const {
-            recipientAddress,
-            message,
-            sender,
-            tokenAddress,
-            amount,
-            assetType,
-            assetId,
-          } = log.args as {
-            recipientAddress: Hex;
-            message: string;
-            sender: Hex;
-            tokenAddress: Hex;
-            amount: bigint;
-            fee: bigint;
-            assetType: number;
-            assetId: bigint;
-          };
-
-          if (recipientAddress.toLowerCase() !== address?.data.toLowerCase())
-            continue;
-
-          if (message && containsBadWords(message, customBadWords)) {
-            console.log('Filtered donation with inappropriate message');
-            continue;
-          }
-
-          const { profilePicUrl, name: resolvedName } =
-            await getCreatorNameAndPicOrAnon(sender);
-
-          const effectiveTokenAddress =
-            tokenAddress === NULL_ADDRESS ? NATIVE_COIN_ADDRESS : tokenAddress;
-
-          /* ── fetch SFX text once for either asset type ─────────────── */
-          await new Promise((resolve) => {
-            return setTimeout(resolve, 2500);
-          });
-          const sfxText = await fetchDonationSfxText(log.transactionHash!);
-
-          if (sfxText && containsBadWords(sfxText, customBadWords)) {
-            console.log('Filtered donation with inappropriate sfx text');
-            continue; // skip this log
-          }
-
-          const isToken = assetType <= 1 && assetId === BigInt(0);
-
-          if (isToken) {
-            const amountInDollar = await calculateDollar(
-              effectiveTokenAddress,
-              amount,
-              chain,
-            );
-
-            const tokenDetails = CHAIN_ID_TO_TOKENS[chain]?.find((token) => {
-              return (
-                token.address?.toLowerCase() ===
-                effectiveTokenAddress.toLowerCase()
-              );
-            });
-
-            if (!name) {
-              console.error('Creator name not available, skipping donation');
-              continue;
-            }
-
-            addDonation({
-              avatarUrl: profilePicUrl,
-              message: message ?? '',
-              sfxText,
-              amount: amountInDollar,
-              donor: resolvedName,
-              txnHash: log.transactionHash!,
-              token: {
-                amount: amount,
-                details: tokenDetails,
-              },
-              minimumAmounts,
-              enableToggles,
-              alertSound,
-              voiceId,
-              creatorName: name,
-            });
-            continue; // prevent fall-through
-          }
-
-          const {
-            name: nftName,
-            image: nftImage,
-            collectionName,
-          } = await getNftMetadata(
-            client,
-            effectiveTokenAddress,
-            assetId,
-            assetType,
-          );
-
-          addDonation({
-            avatarUrl: profilePicUrl,
-            message: message ?? '',
-            sfxText,
-            amount: amount.toString(),
-            donor: resolvedName,
-            txnHash: log.transactionHash!,
-            token: {
-              amount,
-              details: {
-                id: assetId,
-                name: nftName,
-                logo: nftImage,
-                collectionName,
-              },
-            },
-            minimumAmounts,
-            enableToggles,
-            alertSound,
-            voiceId,
-            creatorName: name,
-            forceDisplay: true, // always display NFTs for now
-          });
-        }
-      } catch (error) {
-        console.error('Error fetching tip message log:', error);
-      }
-    }
-  }, [
-    address?.data,
-    addDonation,
-    minimumAmounts,
-    enableToggles,
-    customBadWords,
-    alertSound,
-    voiceId,
-    name,
-    isLegacyLink,
-  ]);
-
-  const savedFetchTipMessageLogs = useRef(fetchTipMessageLogs);
-
-  useEffect(() => {
-    savedFetchTipMessageLogs.current = fetchTipMessageLogs;
-  }, [fetchTipMessageLogs]);
-
   useEffect(() => {
     if (!isDisplayingDonation && donationsQueue.length > 0) {
       displayNextDonation();
     }
   }, [donationsQueue, isDisplayingDonation, displayNextDonation]);
-
-  useEffect(() => {
-    if (isLegacyLink) return;
-
-    if (!address?.isValid) return;
-
-    const intervalId = setInterval(() => {
-      return savedFetchTipMessageLogs.current();
-    }, FETCH_INTERVAL);
-
-    return () => {
-      return clearInterval(intervalId);
-    };
-    // TODO: check why adding fetchTipMessageLogs makes infinite render loop
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [address?.isValid, isLegacyLink]);
 
   const currentDonationData = donationsQueue[0];
   const shouldDisplayDonation =
