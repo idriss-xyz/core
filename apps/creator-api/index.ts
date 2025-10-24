@@ -30,8 +30,12 @@ import dripRouter from './routes/drip';
 import siweRouter from './routes/siwe';
 import { AppDataSource, Creator, initializeDatabase } from '@idriss-xyz/db';
 import { isAllowedOrigin, openCors } from './config/cors';
-import { CREATORS_LINK } from '@idriss-xyz/constants';
+import { MAIN_LANDING_LINK } from '@idriss-xyz/constants';
 import { startDbListener } from './services/db-listener';
+
+initializeDatabase()
+  .then(() => console.log('DB connected...'))
+  .catch((err) => console.error('Error during DB initialization:', err));
 
 const app: Application = express();
 app.use(express.json());
@@ -126,7 +130,7 @@ overlayWS.use(async (socket: Socket, next) => {
   const creatorRepo = AppDataSource.getRepository(Creator);
   const creator = await creatorRepo.findOne({
     where: {
-      obsUrl: `${CREATORS_LINK}/donation-overlay/${overlayToken}`,
+      obsUrl: `${MAIN_LANDING_LINK}/alert-overlay/${overlayToken}`,
     },
   });
 

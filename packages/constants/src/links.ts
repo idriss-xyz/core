@@ -47,13 +47,14 @@ export const EXTERNAL_ANNOUNCEMENT_LINK = {
 };
 
 export const DOCUMENTATION_LINK = 'https://docs.idriss.xyz/';
+export const DOCUMENTATION_LINK_DAO = 'https://docs.idriss.xyz/idriss-token';
 export const SUPPORT_LINK = 'https://discord.gg/WC4fvKB8RC';
 export const CREATOR_SETUP_GUIDE_LINK =
   'https://docs.idriss.xyz/user-guides/creators#setup-guide';
 export const EXTENSION_USER_GUIDE_LINK =
   'https://docs.idriss.xyz/user-guides/extension';
 export const GITHUB_LINK = 'https://www.github.com/idriss-xyz';
-export const BLOG_LINK = 'https://www.paragraph.xyz/@idriss';
+export const DAO_LINK = 'https://idriss.xyz/dao';
 export const BRAND_KIT_LINK =
   'https://docs.idriss.xyz/contributor-guides/brand-resources';
 export const BRAND_GUIDELINE_LINK = 'https://docs.idriss.xyz/resources/brand';
@@ -68,8 +69,6 @@ export const TOKENOMICS_DOCS_LINK =
   'https://docs.idriss.xyz/idriss-token/tokenomics';
 
 export const SNAPSHOT_IDRISS_LINK = 'https://snapshot.box/#/s:idrissxyz.eth';
-
-export const CREATORS_LINK = 'https://idriss.xyz/creators';
 
 export const CHROME_EXTENSION_LINK =
   'https://chromewebstore.google.com/detail/idriss/fghhpjoffbgecjikiipbkpdakfmkbmig';

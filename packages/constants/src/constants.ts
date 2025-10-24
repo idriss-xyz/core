@@ -581,6 +581,9 @@ export const DEFAULT_ALLOWED_CHAINS_IDS = [
   CREATOR_CHAIN.ABSTRACT.id,
 ];
 
+export const COPILOT_API_URL = 'https://copilot-api.idriss.xyz';
+export const CREATOR_API_URL = 'https://creators-api.idriss.xyz';
+
 export const CHAIN_TO_IDRISS_TIPPING_ADDRESS = {
   [CREATOR_CHAIN.ETHEREUM.id]: '0xBDc14c9946A957C7038900dE19Fb2Aa3f72CFAc2',
   [CREATOR_CHAIN.BASE.id]: '0x1A5dc020dcd36C997f6349801583738CFb4bD44a',

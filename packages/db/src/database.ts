@@ -55,6 +55,7 @@ import {
   SplitNftMetadata1759318771000,
   FixIncorrectNftNames1759846236000,
   AddNewDonationTrigger1760958133000,
+  UpdateUrlsToNewStructure1761231247000,
 } from './migrations';
 import { CreatorProfileView } from './views';
 
@@ -117,6 +118,7 @@ export const AppDataSource = new DataSource({
     SplitNftMetadata1759318771000,
     FixIncorrectNftNames1759846236000,
     AddNewDonationTrigger1760958133000,
+    UpdateUrlsToNewStructure1761231247000,
   ],
 });
 
