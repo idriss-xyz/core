@@ -27,12 +27,14 @@ export type Chain = ViemChain & {
   logo: string;
   shortName: string;
   dbName: string;
+  iconName?: string;
 };
 
 export interface Token {
   name: string;
   logo: string;
   symbol: string;
+  iconName?: string;
 }
 
 export interface ChainToken extends Token {

@@ -1,5 +1,6 @@
 import { ReactNode, useMemo } from 'react';
 import { CREATOR_CHAIN, Chain } from '@idriss-xyz/constants';
+import { AssetLogo } from '@idriss-xyz/ui/asset-logo';
 
 import { Select, Option } from './select';
 
@@ -30,8 +31,8 @@ export const ChainSelect = ({
     return getOptions(allowedChainsIds, suffixByChainId);
   }, [allowedChainsIds, suffixByChainId]);
 
-  const selectedChain = useMemo(() => {
-    return Object.values(CREATOR_CHAIN).find((c) => {
+  const selectedChain = useMemo<Chain | undefined>(() => {
+    return (Object.values(CREATOR_CHAIN) as Chain[]).find((c) => {
       return c.id === value;
     });
   }, [value]);
@@ -39,10 +40,11 @@ export const ChainSelect = ({
   const autoRenderLeft = selectedChain
     ? () => {
         return (
-          <img
-            src={selectedChain.logo}
+          <AssetLogo
+            logo={selectedChain.logo}
+            iconName={selectedChain.iconName}
             className="size-6 rounded-full"
-            alt=""
+            alt={selectedChain.name}
           />
         );
       }
@@ -67,7 +69,14 @@ const optionsFrom = (chain: Chain, suffix?: ReactNode): Option<number> => {
     value: chain.id,
     label: chain.name,
     suffix,
-    prefix: <img src={chain.logo} className="size-6 rounded-full" alt="" />,
+    prefix: (
+      <AssetLogo
+        logo={chain.logo}
+        iconName={chain.iconName}
+        className="size-6 rounded-full"
+        alt={chain.name}
+      />
+    ),
   };
 };
 

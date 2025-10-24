@@ -1,7 +1,6 @@
 import { PublicKey } from '@solana/web3.js';
 import { Hex } from 'viem';
-
-import { CHAIN, NATIVE_COIN_ADDRESS } from '../../constants/src';
+import { CHAIN, NATIVE_COIN_ADDRESS } from '@idriss-xyz/constants';
 
 export const formatBigNumber = (number: number | string): string => {
   if (Number(number) < 1000) {

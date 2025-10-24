@@ -28,10 +28,10 @@ import referralRouter from './routes/referral-history';
 import claimRewardsRouter from './routes/claim-rewards';
 import dripRouter from './routes/drip';
 import siweRouter from './routes/siwe';
-import { AppDataSource, initializeDatabase } from './db/database';
-import { Creator } from './db/entities';
+import { AppDataSource, Creator, initializeDatabase } from '@idriss-xyz/db';
 import { isAllowedOrigin, openCors } from './config/cors';
 import { MAIN_LANDING_LINK } from '@idriss-xyz/constants';
+import { startDbListener } from './services/db-listener';
 
 initializeDatabase()
   .then(() => console.log('DB connected...'))
@@ -80,9 +80,20 @@ const io = new SocketIOServer(server, {
   },
 });
 
+(async () => {
+  try {
+    await initializeDatabase();
+    console.log('DB connected...');
+    await startDbListener(io);
+    console.log('Trigger listener started...');
+  } catch (err) {
+    console.error('Startup failure:', err);
+    process.exit(1);
+  }
+})();
+
 app.set('io', io);
 
-// Socket.IO connection handler (mirroring your copilot-api)
 io.on('connection', (socket: Socket) => {
   console.log('Client connected');
 
@@ -159,6 +170,21 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Creator API Socket server is running');
 });
 
+app.get('/health', (req: Request, res: Response) => {
+  res.send('ok');
+});
+
 server.listen(PORT, HOST, () => {
   console.log(`Server is running at http://${HOST}:${PORT}`);
+});
+
+// Graceful shutdown for Railway
+process.on('SIGTERM', async () => {
+  console.log('SIGTERM received. Closing...');
+  io.close();
+  server.close(async () => {
+    if (AppDataSource.isInitialized) await AppDataSource.destroy();
+    console.log('Shutdown complete');
+    process.exit(0);
+  });
 });

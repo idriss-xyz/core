@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    // Type checking
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+
+    // Interop constraints
+    "verbatimModuleSyntax": false,
+    "esModuleInterop": true,
+    // "isolatedModules": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+
+    // Language and environment
+    "moduleResolution": "node16",
+    "module": "node16",
+    "noEmit": true,
+    "lib": ["ES2022"],
+    "target": "ES2022",
+
+    // Skip type checking for node modules
+    "skipLibCheck": true,
+
+    // "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
+  },
+  "include": ["src", "ponder-env.d.ts"],
+  "skipLibCheck": true,
+  "exclude": ["node_modules"]
+}

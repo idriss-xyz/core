@@ -1,0 +1,43 @@
+{
+  "name": "@idriss-xyz/ponder-indexer",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "ponder dev",
+    "start": "ponder start",
+    "db": "ponder db",
+    "codegen": "ponder codegen",
+    "format": "prettier --check --config ../../prettier.config.mjs --ignore-path .prettierignore .",
+    "format:fix": "prettier --write --config ../../prettier.config.mjs --ignore-path .prettierignore .",
+    "lint": "eslint --ext .ts --max-warnings=0",
+    "lint:fix": "eslint --ext .ts --max-warnings=0 --fix",
+    "type-check": "tsc --noEmit",
+    "circular-dependencies": "depcruise --config .dependency-cruiser.cjs src",
+    "unused-exports": "ts-unused-exports ./tsconfig.json --excludePathsFromReport=./src/api/index.ts",
+    "typecheck": "tsc",
+    "serve": "ponder serve --api src/api/index.ts"
+  },
+  "dependencies": {
+    "@idriss-xyz/constants": "workspace:*",
+    "@idriss-xyz/db": "workspace:*",
+    "@idriss-xyz/utils": "workspace:*",
+    "@idriss-xyz/blockchain-clients": "workspace:*",
+    "dotenv": "^16.4.5",
+    "hono": "^4.5.0",
+    "pg": "^8.13.1",
+    "ponder": "^0.13.13",
+    "viem": "^2.21.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.9.0",
+    "dependency-cruiser": "^16.4.2",
+    "eslint": "^8.53.0",
+    "eslint-config-ponder": "^0.13.13",
+    "ts-unused-exports": "^10.1.0",
+    "typescript": "^5.2.2"
+  },
+  "engines": {
+    "node": ">=18.14"
+  }
+}

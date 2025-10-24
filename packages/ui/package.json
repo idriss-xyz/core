@@ -2,6 +2,7 @@
   "name": "@idriss-xyz/ui",
   "private": true,
   "exports": {
+    "./asset-logo": "./src/components/asset-logo/index.ts",
     "./button": "./src/components/button/index.ts",
     "./dialog": "./src/components/dialog/index.ts",
     "./dropdown": "./src/components/dropdown/index.ts",

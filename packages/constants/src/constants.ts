@@ -9,14 +9,11 @@ import {
   zksync,
   scroll,
   celo,
-  // avalanche,
+  avalanche,
 } from 'viem/chains';
 
 import {
-  AAVEGOTCHI_LOGO,
   BASE_LOGO,
-  DAI_LOGO,
-  DEGEN_LOGO,
   IDRISS_LOGO,
   ECHELON_PRIME_LOGO,
   ETHEREUM_LOGO,
@@ -36,11 +33,13 @@ import {
   SCROLL_LOGO,
   CELO_LOGO,
   BNB_LOGO,
-  // AVAX_LOGO,
-  // GUNZ_LOGO,
+  AVAX_LOGO,
+  GUNZ_LOGO,
 } from './logos';
 import { Chain, Token, ChainToken, NftCollection } from './types';
 
+export const IDRISS_TOKEN_ADDRESS =
+  '0x000096630066820566162c94874a776532705231';
 export const STAKER_ADDRESS = '0x085e2DC1b05dcdbE011B5ad377C9f2fcD69B7057';
 export const REWARDS_ADDRESS = '0x4D66A8e9Da1F007802338B372aD348B78b455aBB';
 
@@ -49,7 +48,70 @@ export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
 export const DUMMY_RECIPIENT = '0x0000000000000000000000000000000000000001';
 export const DEMO_ADDRESS = '0x57658D89126610CbD05CAb564b6B13e7E3D1c843';
 
+export const EMPTY_HEX = '0x';
+
+export const DEFAULT_DONATION_MIN_ALERT_AMOUNT = 1;
+export const DEFAULT_DONATION_MIN_TTS_AMOUNT = 3;
+export const DEFAULT_DONATION_MIN_SFX_AMOUNT = 10;
+
+export const TEST_DONATION_MESSAGE = 'This is a test donation';
+
 export const CREATOR_CHAIN = {
+  BASE: {
+    ...base,
+    blockExplorers: {
+      ...base.blockExplorers,
+      blockscout: {
+        name: 'Blockscout',
+        url: 'https://base.blockscout.com',
+      },
+    },
+    shortName: 'Base',
+    dbName: 'BASE_MAINNET',
+    logo: BASE_LOGO,
+    iconName: 'BaseLogo',
+  },
+  ETHEREUM: {
+    ...mainnet,
+    blockExplorers: {
+      ...mainnet.blockExplorers,
+      blockscout: {
+        name: 'Blockscout',
+        url: 'https://eth.blockscout.com',
+      },
+    },
+    shortName: 'Ethereum',
+    dbName: 'ETHEREUM_MAINNET',
+    logo: ETHEREUM_LOGO,
+    iconName: 'EthToken',
+  },
+  AVALANCHE: {
+    ...avalanche,
+    shortName: 'Avalanche',
+    dbName: 'AVALANCHE_MAINNET',
+    logo: AVAX_LOGO,
+    iconName: 'AvaxToken',
+  },
+  RONIN: {
+    id: 2020,
+    name: 'Ronin',
+    shortName: 'Ronin',
+    dbName: 'RONIN_MAINNET',
+    logo: RONIN_LOGO,
+    iconName: 'RoninTeam',
+    nativeCurrency: {
+      name: 'Ronin',
+      symbol: 'RON',
+      decimals: 18,
+    },
+    rpcUrls: { default: { http: ['https://api.roninchain.com/rpc'] } },
+    blockExplorers: {
+      default: {
+        name: 'Evm Explorer',
+        url: 'https://app.roninchain.com',
+      },
+    },
+  },
   ABSTRACT: {
     id: 2741,
     name: 'Abstract',
@@ -69,57 +131,6 @@ export const CREATOR_CHAIN = {
       },
     },
   },
-  RONIN: {
-    id: 2020,
-    name: 'Ronin',
-    shortName: 'Ronin',
-    dbName: 'RONIN_MAINNET',
-    logo: RONIN_LOGO,
-    nativeCurrency: {
-      name: 'Ronin',
-      symbol: 'RON',
-      decimals: 18,
-    },
-    rpcUrls: { default: { http: ['https://api.roninchain.com/rpc'] } },
-    blockExplorers: {
-      default: {
-        name: 'Evm Explorer',
-        url: 'https://app.roninchain.com',
-      },
-    },
-  },
-  BASE: {
-    ...base,
-    blockExplorers: {
-      ...base.blockExplorers,
-      blockscout: {
-        name: 'Blockscout',
-        url: 'https://base.blockscout.com',
-      },
-    },
-    shortName: 'Base',
-    dbName: 'BASE_MAINNET',
-    logo: BASE_LOGO,
-  },
-  ETHEREUM: {
-    ...mainnet,
-    blockExplorers: {
-      ...mainnet.blockExplorers,
-      blockscout: {
-        name: 'Blockscout',
-        url: 'https://eth.blockscout.com',
-      },
-    },
-    shortName: 'Ethereum',
-    dbName: 'ETHEREUM_MAINNET',
-    logo: ETHEREUM_LOGO,
-  },
-  // AVALANCHE: {
-  //   ...avalanche,
-  //   shortName: 'Avalanche',
-  //   dbName: 'AVALANCHE_MAINNET',
-  //   logo: AVAX_LOGO,
-  // },
 } satisfies Record<string, Chain>;
 
 export const CHAIN = Object.assign(CREATOR_CHAIN, {
@@ -211,167 +222,88 @@ export const CHAIN = Object.assign(CREATOR_CHAIN, {
 }) satisfies Record<string, Chain>;
 
 export const TOKEN = {
-  // AVAX: {
-  //   name: 'Avalanche',
-  //   symbol: 'AVAX',
-  //   logo: AVAX_LOGO,
-  // },
+  AVAX: {
+    name: 'Avalanche',
+    symbol: 'AVAX',
+    logo: AVAX_LOGO,
+    iconName: 'AvaxToken',
+  },
   ETHEREUM: {
     name: 'Ethereum',
     symbol: 'ETH',
     logo: ETHEREUM_LOGO,
+    iconName: 'EthToken',
   },
   USDC: {
     name: 'USDC',
     symbol: 'USDC',
     logo: USDC_LOGO,
-  },
-  DAI: {
-    name: 'Dai',
-    symbol: 'DAI',
-    logo: DAI_LOGO,
+    iconName: 'UsdcToken',
   },
   ECHELON_PRIME: {
     name: 'Echelon Prime',
     symbol: 'PRIME',
     logo: ECHELON_PRIME_LOGO,
+    iconName: 'PrimeToken',
   },
-  PENGU: { name: 'Pudgy Penguins', symbol: 'PENGU', logo: PENGU_LOGO },
-  AAVEGOTCHI: {
-    name: 'Aavegotchi',
-    symbol: 'GHST',
-    logo: AAVEGOTCHI_LOGO,
+  PENGU: {
+    name: 'Pudgy Penguins',
+    symbol: 'PENGU',
+    logo: PENGU_LOGO,
   },
-  DEGEN: { name: 'Degen', symbol: 'DEGEN', logo: DEGEN_LOGO },
-  IDRISS: { name: 'IDRISS', symbol: 'IDRISS', logo: IDRISS_LOGO },
+  IDRISS: {
+    name: 'IDRISS',
+    symbol: 'IDRISS',
+    logo: IDRISS_LOGO,
+    iconName: 'IdrissToken',
+  },
   YGG: {
     name: 'Yield Guild Games',
     symbol: 'YGG',
     logo: YGG_LOGO,
+    iconName: 'YggToken',
   },
   AXIE: {
     name: 'Axie Infinity',
     symbol: 'AXS',
     logo: AXIE_LOGO,
   },
-  // GUN: {
-  //   name: 'Gunz',
-  //   symbol: 'GUN',
-  //   logo: GUNZ_LOGO,
-  // },
-  // PIXEL: {
-  //   name: 'Pixels',
-  //   symbol: 'PIXEL',
-  //   logo: PIXELS_LOGO,
-  // },
+  GUN: {
+    name: 'GUNZ',
+    symbol: 'GUN',
+    logo: GUNZ_LOGO,
+  },
   RONIN: {
     name: 'Ronin',
     symbol: 'RON',
     logo: RONIN_LOGO,
+    iconName: 'RoninToken',
   },
   PDT: {
     name: 'ParagonsDAO',
     symbol: 'PDT',
     logo: PDT_LOGO,
+    iconName: 'PdtToken',
   },
 } as const satisfies Record<string, Token>;
 
 export type TokenSymbol = (typeof TOKEN)[keyof typeof TOKEN]['symbol'];
 
+export const TOKENS_ORDER: Record<TokenSymbol, number> = {
+  IDRISS: 1,
+  ETH: 2,
+  USDC: 3,
+  PRIME: 4,
+  AVAX: 5,
+  GUN: 6,
+  RON: 7,
+  AXS: 8,
+  YGG: 9,
+  PENGU: 10,
+  PDT: 11,
+};
+
 export const CHAIN_ID_TO_TOKENS = {
-  [CREATOR_CHAIN.ABSTRACT.id]: [
-    {
-      ...TOKEN.ETHEREUM,
-      decimals: 18,
-      address: NATIVE_COIN_ADDRESS,
-    },
-    {
-      ...TOKEN.USDC,
-      decimals: 6,
-      address: '0x84A71ccD554Cc1b02749b35d22F684CC8ec987e1',
-    },
-    {
-      ...TOKEN.PENGU,
-      decimals: 18,
-      address: '0x9eBe3A824Ca958e4b3Da772D2065518F009CBa62',
-    },
-  ],
-  // [CREATOR_CHAIN.AVALANCHE.id]: [
-  //   {
-  //     ...TOKEN.AVAX,
-  //     decimals: 18,
-  //     address: NATIVE_COIN_ADDRESS,
-  //   },
-  //   {
-  //     ...TOKEN.GUN,
-  //     decimals: 18,
-  //     address: '0x26debd39d5ed069770406fca10a0e4f8d2c743eb',
-  //   },
-  //   {
-  //     ...TOKEN.USDC,
-  //     decimals: 6,
-  //     address: '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E',
-  //   },
-  // ],
-  [CREATOR_CHAIN.ETHEREUM.id]: [
-    {
-      ...TOKEN.ETHEREUM,
-      decimals: 18,
-      address: NATIVE_COIN_ADDRESS,
-    },
-    {
-      ...TOKEN.USDC,
-      decimals: 6,
-      address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-    },
-    {
-      ...TOKEN.ECHELON_PRIME,
-      decimals: 18,
-      address: '0xb23d80f5FefcDDaa212212F028021B41DEd428CF',
-    },
-    {
-      ...TOKEN.YGG,
-      decimals: 18,
-      address: '0x25f8087EAD173b73D6e8B84329989A8eEA16CF73',
-    },
-    {
-      ...TOKEN.PDT,
-      decimals: 18,
-      address: '0x375aBB85C329753b1Ba849a601438AE77eEc9893',
-    },
-  ],
-  [CREATOR_CHAIN.RONIN.id]: [
-    {
-      ...TOKEN.RONIN,
-      decimals: 18,
-      address: NATIVE_COIN_ADDRESS,
-    },
-    {
-      ...TOKEN.ETHEREUM,
-      decimals: 18,
-      address: '0xc99a6A985eD2Cac1ef41640596C5A5f9F4E19Ef5',
-    },
-    {
-      ...TOKEN.USDC,
-      decimals: 6,
-      address: '0x0B7007c13325C48911F73A2daD5FA5dCBf808aDc',
-    },
-    {
-      ...TOKEN.AXIE,
-      decimals: 18,
-      address: '0x97a9107C1793BC407d6F527b77e7fff4D812bece',
-    },
-    {
-      ...TOKEN.YGG,
-      decimals: 18,
-      address: '0x1c306872bC82525d72Bf3562E8F0aA3f8F26e857',
-    },
-    // {
-    //   ...TOKEN.PIXEL,
-    //   decimals: 18,
-    //   address: '0x7eae20d11ef8c779433eb24503def900b9d28ad7',
-    // },
-  ],
   [CREATOR_CHAIN.BASE.id]: [
     {
       ...TOKEN.ETHEREUM,
@@ -402,6 +334,94 @@ export const CHAIN_ID_TO_TOKENS = {
       ...TOKEN.IDRISS,
       decimals: 18,
       address: '0x000096630066820566162C94874A776532705231',
+    },
+  ],
+  [CREATOR_CHAIN.ETHEREUM.id]: [
+    {
+      ...TOKEN.ETHEREUM,
+      decimals: 18,
+      address: NATIVE_COIN_ADDRESS,
+    },
+    {
+      ...TOKEN.USDC,
+      decimals: 6,
+      address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+    },
+    {
+      ...TOKEN.ECHELON_PRIME,
+      decimals: 18,
+      address: '0xb23d80f5FefcDDaa212212F028021B41DEd428CF',
+    },
+    {
+      ...TOKEN.YGG,
+      decimals: 18,
+      address: '0x25f8087EAD173b73D6e8B84329989A8eEA16CF73',
+    },
+    {
+      ...TOKEN.PDT,
+      decimals: 18,
+      address: '0x375aBB85C329753b1Ba849a601438AE77eEc9893',
+    },
+  ],
+  [CREATOR_CHAIN.AVALANCHE.id]: [
+    {
+      ...TOKEN.AVAX,
+      decimals: 18,
+      address: NATIVE_COIN_ADDRESS,
+    },
+    {
+      ...TOKEN.GUN,
+      decimals: 18,
+      address: '0x26debd39d5ed069770406fca10a0e4f8d2c743eb',
+    },
+    {
+      ...TOKEN.USDC,
+      decimals: 6,
+      address: '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E',
+    },
+  ],
+  [CREATOR_CHAIN.RONIN.id]: [
+    {
+      ...TOKEN.RONIN,
+      decimals: 18,
+      address: NATIVE_COIN_ADDRESS,
+    },
+    {
+      ...TOKEN.ETHEREUM,
+      decimals: 18,
+      address: '0xc99a6A985eD2Cac1ef41640596C5A5f9F4E19Ef5',
+    },
+    {
+      ...TOKEN.USDC,
+      decimals: 6,
+      address: '0x0B7007c13325C48911F73A2daD5FA5dCBf808aDc',
+    },
+    {
+      ...TOKEN.AXIE,
+      decimals: 18,
+      address: '0x97a9107C1793BC407d6F527b77e7fff4D812bece',
+    },
+    {
+      ...TOKEN.YGG,
+      decimals: 18,
+      address: '0x1c306872bC82525d72Bf3562E8F0aA3f8F26e857',
+    },
+  ],
+  [CREATOR_CHAIN.ABSTRACT.id]: [
+    {
+      ...TOKEN.ETHEREUM,
+      decimals: 18,
+      address: NATIVE_COIN_ADDRESS,
+    },
+    {
+      ...TOKEN.USDC,
+      decimals: 6,
+      address: '0x84A71ccD554Cc1b02749b35d22F684CC8ec987e1',
+    },
+    {
+      ...TOKEN.PENGU,
+      decimals: 18,
+      address: '0x9eBe3A824Ca958e4b3Da772D2065518F009CBa62',
     },
   ],
 } satisfies Record<string, ChainToken[]>;
@@ -554,25 +574,20 @@ export const CHAIN_ID_TO_NFT_COLLECTIONS: Record<number, NftCollection[]> = {
 };
 
 export const DEFAULT_ALLOWED_CHAINS_IDS = [
-  CREATOR_CHAIN.ABSTRACT.id,
   CREATOR_CHAIN.BASE.id,
   CREATOR_CHAIN.ETHEREUM.id,
+  CREATOR_CHAIN.AVALANCHE.id,
   CREATOR_CHAIN.RONIN.id,
-  // CREATOR_CHAIN.AVALANCHE.id,
+  CREATOR_CHAIN.ABSTRACT.id,
 ];
 
-export const EMPTY_HEX = '0x';
-
-export const COPILOT_API_URL = 'https://copilot-api.idriss.xyz';
-export const CREATOR_API_URL = 'https://creators-api.idriss.xyz';
-
-export const DEFAULT_DONATION_MIN_ALERT_AMOUNT = 1;
-export const DEFAULT_DONATION_MIN_TTS_AMOUNT = 3;
-export const DEFAULT_DONATION_MIN_SFX_AMOUNT = 10;
-export const IDRISS_TOKEN_ADDRESS =
-  '0x000096630066820566162c94874a776532705231';
-
-export const TEST_DONATION_MESSAGE = 'This is a test donation';
+export const CHAIN_TO_IDRISS_TIPPING_ADDRESS = {
+  [CREATOR_CHAIN.ETHEREUM.id]: '0xBDc14c9946A957C7038900dE19Fb2Aa3f72CFAc2',
+  [CREATOR_CHAIN.BASE.id]: '0x1A5dc020dcd36C997f6349801583738CFb4bD44a',
+  [CREATOR_CHAIN.RONIN.id]: '0x7DE583608091c21A09040Bf24A178a9156c18219',
+  [CREATOR_CHAIN.ABSTRACT.id]: '0xBDc14c9946A957C7038900dE19Fb2Aa3f72CFAc2',
+  [CREATOR_CHAIN.AVALANCHE.id]: '0xBDc14c9946A957C7038900dE19Fb2Aa3f72CFAc2',
+} as const;
 
 export const CHAIN_ID_TO_OPENSEA_NETWORK_NAMES: Record<number, string> = {
   [CREATOR_CHAIN.BASE.id]: 'base',
@@ -619,3 +634,38 @@ export const TEST_NFT_DONATION = {
     },
   },
 };
+
+export const PriceHistoryQuery = `
+query ($address: Address!, $currency: Currency!, $timeFrame: TimeFrame!, $chainId: Int!) {
+  fungibleTokenV2(address: $address, chainId: $chainId){
+    priceData {
+      price
+      priceTicks(currency: $currency, timeFrame: $timeFrame) {
+        timestamp
+        median
+      }
+    }
+  }
+}`;
+
+export const NETWORK_TO_ALCHEMY = {
+  BASE_MAINNET: 'base-mainnet',
+  ABSTRACT_MAINNET: 'abstract-mainnet',
+  ETHEREUM_MAINNET: 'eth-mainnet',
+  POLYGON_MAINNET: 'polygon-mainnet',
+  OPTIMISM_MAINNET: 'optimism-mainnet',
+  MANTLE_MAINNET: 'mantle-mainnet',
+  RONIN_MAINNET: 'ronin-mainnet',
+  AVALANCHE_MAINNET: 'avax-mainnet',
+} as const;
+
+export const ALCHEMY_NATIVE_TOKENS = {
+  ETHEREUM_MAINNET: 'ETH',
+  ABSTRACT_MAINNET: 'ETH',
+  BASE_MAINNET: 'ETH',
+  MANTLE_MAINNET: 'MNT',
+  OPTIMISM_MAINNET: 'ETH',
+  POLYGON_MAINNET: 'POL',
+  RONIN_MAINNET: 'RON',
+  AVALANCHE_MAINNET: 'AVAX',
+} as const;
