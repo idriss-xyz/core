@@ -79,7 +79,7 @@ export const TopBar = ({
               isSticky &&
                 'min-w-[unset] max-w-[75px] xs:min-w-20 xs:max-w-none',
             )}
-            src="/idriss-creators-dark-logo.svg"
+            src="/idriss-dark-logo.svg"
           />
         </Link>
 

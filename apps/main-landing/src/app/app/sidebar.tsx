@@ -32,7 +32,7 @@ export function Sidebar() {
         <div className="flex flex-col gap-12">
           <div className="flex justify-center">
             <Link href="/">
-              <img src="/idriss-creators-dark-logo.svg" height={50} alt="" />
+              <img src="/idriss-dark-logo.svg" height={50} alt="" />
             </Link>
           </div>
 
