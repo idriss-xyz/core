@@ -176,12 +176,6 @@ const nextConfig: NextConfig = {
         permanent: false,
       },
       {
-        source: '/service-status',
-        destination: 'https://api.idriss.xyz/service-status',
-        basePath: false,
-        permanent: false,
-      },
-      {
         source: '/tokenomics',
         destination: 'https://docs.idriss.xyz/idriss-token',
         basePath: false,

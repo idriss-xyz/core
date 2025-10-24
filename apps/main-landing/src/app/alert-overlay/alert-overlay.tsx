@@ -250,6 +250,7 @@ export default function DonationOverlay({ creatorName }: Properties) {
     voiceId,
     isLegacyLink,
     customBadWords,
+    address?.data,
   ]);
 
   // If creator name present use info from db, if not, use params only
