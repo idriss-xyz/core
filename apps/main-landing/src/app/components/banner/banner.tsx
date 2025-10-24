@@ -113,12 +113,12 @@ const banners: Banner[] = [
   { src: banner43.src, type: 'avalanche' },
   { src: banner44.src, type: 'avalanche' },
   { src: banner45.src, type: 'avalanche' },
-  { src: banner46.src, type: 'Off The Grid' },
-  { src: banner47.src, type: 'Off The Grid' },
-  { src: banner48.src, type: 'Off The Grid' },
-  { src: banner49.src, type: 'Off The Grid' },
-  { src: banner50.src, type: 'Off The Grid' },
-  { src: banner51.src, type: 'Off The Grid' },
+  { src: banner46.src, type: 'off the grid' },
+  { src: banner47.src, type: 'off the grid' },
+  { src: banner48.src, type: 'off the grid' },
+  { src: banner49.src, type: 'off the grid' },
+  { src: banner50.src, type: 'off the grid' },
+  { src: banner51.src, type: 'off the grid' },
 ];
 
 interface Properties {
