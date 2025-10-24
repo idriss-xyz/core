@@ -114,10 +114,10 @@ In this step, you need to decide whether you're using [local test](https://dev.t
 ```ts
 import { QueryProvider } from "@idriss-xyz/main-landing/providers";
 
-import { Leaderboard } from "@idriss-xyz/main-landing/app/creators/donate/components/leaderboard";
+import { Leaderboard } from "@idriss-xyz/main-landing/app/donate/components/leaderboard";
 
-import { StoredDonationData, LeaderboardStats } from "@idriss-xyz/main-landing/app/creators/donate/types";
+import { StoredDonationData, LeaderboardStats } from "@idriss-xyz/main-landing/app/donate/types";
 
-import { useGetTipHistory } from "@idriss-xyz/main-landing/app/creators/donate/commands/get-donate-history";
+import { useGetTipHistory } from "@idriss-xyz/main-landing/app/donate/commands/get-donate-history";
 ```
 

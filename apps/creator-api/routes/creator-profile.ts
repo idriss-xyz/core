@@ -11,7 +11,7 @@ import {
 import { Hex } from 'viem';
 
 import {
-  CREATORS_LINK,
+  MAIN_LANDING_LINK,
   CREATOR_CHAIN,
   CHAIN_ID_TO_TOKENS,
   TEST_TOKEN_DONATION,
@@ -185,7 +185,7 @@ router.get(
 );
 
 router.get(
-  '/donation-overlay/:slug',
+  '/alert-overlay/:slug',
   [param('slug').isString().notEmpty()],
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
@@ -199,7 +199,7 @@ router.get(
       const creatorRepo = AppDataSource.getRepository(Creator);
       const creator = await creatorRepo.findOne({
         where: {
-          obsUrl: `${CREATORS_LINK}/donation-overlay/${slug}`,
+          obsUrl: `${MAIN_LANDING_LINK}/alert-overlay/${slug}`,
         },
       });
 

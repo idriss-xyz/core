@@ -6,7 +6,7 @@ type Properties = {
   name: string;
   title: string;
   features: string[];
-  actions: ReactNode;
+  actions?: ReactNode;
 };
 
 export const ProductTile = ({ name, title, features, actions }: Properties) => {
@@ -34,9 +34,11 @@ export const ProductTile = ({ name, title, features, actions }: Properties) => {
           );
         })}
       </ul>
-      <div className="mt-auto flex w-full flex-row items-center justify-center gap-2 rounded-[15px] text-center transition-opacity lg:absolute lg:bottom-[2px] lg:right-[1.667px] lg:gap-4 lg:bg-[linear-gradient(180deg,_rgba(255,255,255,0)_0%,_rgba(255,255,255,0.96)_24.58%)] lg:px-10 lg:pb-6 lg:pt-10 lg:opacity-0 lg:group-hover:opacity-100">
-        {actions}
-      </div>
+      {actions ? (
+        <div className="mt-auto flex w-full flex-row items-center justify-center gap-2 rounded-[15px] text-center transition-opacity lg:absolute lg:bottom-[2px] lg:right-[1.667px] lg:gap-4 lg:bg-[linear-gradient(180deg,_rgba(255,255,255,0)_0%,_rgba(255,255,255,0.96)_24.58%)] lg:px-10 lg:pb-6 lg:pt-10 lg:opacity-0 lg:group-hover:opacity-100">
+          {actions}
+        </div>
+      ) : null}
 
       <GradientBorder gradientDirection="toTop" borderRadius={24} />
     </div>

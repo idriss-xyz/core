@@ -1,19 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
-import { Button } from '@idriss-xyz/ui/button';
-import {
-  CHROME_EXTENSION_LINK,
-  CREATORS_LINK,
-  EXTENSION_USER_GUIDE_LINK,
-} from '@idriss-xyz/constants';
 import { classes } from '@idriss-xyz/ui/utils';
 
 import { ProductTile } from './components/product-tile';
 import { TopWave } from './components/top-wave';
-import {
-  CREATORS_INFO,
-  EXTENSION_INFO,
-  COMMUNITY_NOTES_INFO,
-} from './constans';
+import { DAO_INFO, APP_INFO } from './constans';
 import { stackedHex } from './assets';
 
 export const SuperpowersSection = () => {
@@ -41,7 +31,10 @@ export const SuperpowersSection = () => {
                   'lg:mt-[60px] lg:text-display3',
                 )}
               >
-                SUPERPOWERS FOR YOUR INTERNET
+                TWO PARTS
+                <span className="hidden md:inline"> </span>
+                <br className="md:hidden" />
+                BUT ONE MISSION
               </h2>
               <p
                 className={classes(
@@ -50,79 +43,18 @@ export const SuperpowersSection = () => {
                   '4xl:text-body1',
                 )}
               >
-                Our apps bring the power of crypto and AI to your browsing
-                experience, empower creators through digital ownership, and help
-                find what’s true on the internet.
+                Helping creators earn more onchain.
               </p>
             </div>
             <div
               className={classes(
                 'flex flex-col items-start justify-center gap-6',
                 'md:grid md:grid-cols-[minmax(auto,_600px)] md:grid-rows-[repeat(3,1fr)]',
-                'lg:grid-cols-[repeat(3,_minmax(auto,_431px))] lg:grid-rows-1 lg:flex-row',
+                'lg:grid-cols-[repeat(2,_minmax(auto,_646px))] lg:grid-rows-1 lg:flex-row',
               )}
             >
-              <ProductTile
-                {...EXTENSION_INFO}
-                actions={
-                  <>
-                    <Button
-                      intent="primary"
-                      size="large"
-                      suffixIconName="IdrissArrowRight"
-                      asLink
-                      href={CHROME_EXTENSION_LINK}
-                      isExternal
-                      className="w-full"
-                    >
-                      DOWNLOAD
-                    </Button>
-                    <Button
-                      intent="secondary"
-                      size="large"
-                      asLink
-                      href={EXTENSION_USER_GUIDE_LINK}
-                      isExternal
-                      className="w-full"
-                    >
-                      LEARN MORE
-                    </Button>
-                  </>
-                }
-              />
-              <ProductTile
-                {...CREATORS_INFO}
-                actions={
-                  <>
-                    <Button
-                      intent="primary"
-                      size="large"
-                      suffixIconName="IdrissArrowRight"
-                      className="w-full"
-                      asLink
-                      href={CREATORS_LINK}
-                      isExternal
-                    >
-                      START EARNING
-                    </Button>
-                  </>
-                }
-              />
-              <ProductTile
-                {...COMMUNITY_NOTES_INFO}
-                actions={
-                  <>
-                    <Button
-                      intent="secondary"
-                      disabled
-                      size="large"
-                      className="w-full"
-                    >
-                      COMING SOON
-                    </Button>
-                  </>
-                }
-              />
+              <ProductTile {...APP_INFO} />
+              <ProductTile {...DAO_INFO} />
             </div>
           </div>
         </div>
