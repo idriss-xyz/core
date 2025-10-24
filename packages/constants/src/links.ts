@@ -8,8 +8,7 @@ export const STATIC_ORIGINS = [
   'http://localhost:3000',
 ];
 
-// export const CREATOR_API_URL = 'https://creators-api.idriss.xyz';
-export const CREATOR_API_URL = 'https://core-staging-4c69.up.railway.app';
+export const CREATOR_API_URL = 'https://creators-api.idriss.xyz';
 
 export const SOCIAL_LINK = {
   X: 'https://x.com/idriss_xyz',
