@@ -306,7 +306,7 @@ export default function DonationOverlay({ creatorName }: Properties) {
         !addressParameter.data &&
         !slugFromUrl
       ) {
-        router.push(CREATORS_LINK);
+        router.push(MAIN_LANDING_LINK);
         return;
       }
     };
