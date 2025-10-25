@@ -122,6 +122,9 @@ export function GoalsList() {
                       void queryClient.invalidateQueries({
                         queryKey: ['donation-goals', goal.creatorName],
                       });
+                      void queryClient.invalidateQueries({
+                        queryKey: ['active-donation-goal', goal.creatorName],
+                      });
                     }}
                   >
                     Activate
