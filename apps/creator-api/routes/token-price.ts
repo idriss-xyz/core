@@ -34,14 +34,12 @@ router.get('/', async (req: Request, res: Response) => {
     }
 
     const key = `${network_key}:${buyToken.toLowerCase()}`;
-    console.log(key);
     let prices: Record<string, number> = {};
 
     try {
       prices = await getAlchemyPrices([
         { address: buyToken, network: network_key },
       ]);
-      console.log('Price alchemy', prices);
     } catch (error) {
       console.error('Failed to fetch Alchemy prices:', error);
     }
@@ -49,7 +47,6 @@ router.get('/', async (req: Request, res: Response) => {
     let buyUsd = prices[key];
     if (buyUsd === undefined) {
       buyUsd = (await getZapperPrice(buyToken, network_key, new Date())) ?? 0;
-      console.log('price zapper', buyUsd);
     }
 
     if (!buyUsd || buyUsd === 0) {
