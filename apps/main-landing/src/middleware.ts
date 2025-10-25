@@ -13,6 +13,7 @@ const CSP = [
   `script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com${DEV ? " 'unsafe-eval'" : ''}`,
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com",
+  "media-src 'self' https://creators-api.idriss.xyz",
   "img-src 'self' data: blob: https://ipfs.io https://nft-cdn.alchemy.com https://nftmedia.parallelnft.com https://assets.coingecko.com https://cdn.discordapp.com https://cdn.pixabay.com https://res.cloudinary.com https://imagedelivery.net https://i.imgur.com https://storage.googleapis.com https://static-cdn.jtvnw.net https://euc.li https://idriss.xyz https://explorer-api.walletconnect.com",
   'child-src https://auth.privy.io https://verify.walletconnect.com https://verify.walletconnect.org',
   'frame-src https://auth.privy.io https://verify.walletconnect.com https://verify.walletconnect.org https://challenges.cloudflare.com',

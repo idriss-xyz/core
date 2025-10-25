@@ -6,23 +6,14 @@ import { LeaderboardAvatar } from './leaderboard-avatar';
 type Properties = {
   item: LeaderboardStats;
   index: number;
-  isDemo?: boolean;
 };
 
-export const LeaderboardItemDonor = ({
-  item,
-  index,
-  isDemo = false,
-}: Properties) => {
+export const LeaderboardItemDonor = ({ item, index }: Properties) => {
   const avatarSourceUrl = item.avatarUrl;
 
   return (
     <>
-      <LeaderboardAvatar
-        rank={index}
-        avatarUrl={avatarSourceUrl}
-        allowAllUrls={isDemo}
-      />
+      <LeaderboardAvatar rank={index} avatarUrl={avatarSourceUrl} />
 
       <Link
         size="xs"
