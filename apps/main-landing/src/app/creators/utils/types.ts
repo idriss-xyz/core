@@ -39,6 +39,7 @@ export type DonationGoal = {
   startDate: number;
   endDate: number;
   active: boolean;
+  deleted: boolean;
   creatorName: string;
   topDonor: { name: string; amount: number };
 };

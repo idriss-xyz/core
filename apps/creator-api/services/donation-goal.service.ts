@@ -1,21 +1,17 @@
 import { AppDataSource } from '../db/database';
 import { DonationGoal, Creator, Donation } from '../db/entities';
 import { DonationGoalView } from '../db/views';
-import { LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 class DonationGoalService {
   private donationGoalViewRepository: Repository<DonationGoalView> =
     AppDataSource.getRepository(DonationGoalView);
   private donationGoalRepository: Repository<DonationGoal> =
     AppDataSource.getRepository(DonationGoal);
-  private donationRepository: Repository<Donation> =
-    AppDataSource.getRepository(Donation);
-  private creatorRepository: Repository<Creator> =
-    AppDataSource.getRepository(Creator);
 
   async getDonationGoalsByCreatorName(creatorName: string) {
     return this.donationGoalViewRepository.find({
-      where: { creatorName },
+      where: { creatorName, deleted: false },
       order: {
         active: 'DESC', // Active goals first
         endDate: 'DESC', // Most recent goals next
@@ -86,6 +82,18 @@ class DonationGoalService {
 
     goal.active = false;
     return this.donationGoalRepository.save(goal);
+  }
+
+  async deleteDonationGoal(goalId: number): Promise<void> {
+    const goal = await this.donationGoalRepository.findOne({
+      where: { id: goalId },
+    });
+
+    if (!goal) {
+      throw new Error(`Donation goal with ID ${goalId} not found`);
+    }
+
+    await this.donationGoalRepository.save({ ...goal, deleted: true });
   }
 
   private async deactivateCreatorGoals(creatorId: number): Promise<void> {

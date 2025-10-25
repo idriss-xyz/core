@@ -29,6 +29,9 @@ export class DonationGoal {
   @Column({ type: 'boolean', name: 'active', default: false })
   active!: boolean;
 
+  @Column({ type: 'boolean', name: 'deleted', default: false })
+  deleted!: boolean;
+
   @ManyToOne(() => Creator, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'creator_id' })
   creator!: Creator;

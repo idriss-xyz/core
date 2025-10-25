@@ -56,3 +56,16 @@ export const deactivateDonationGoal = async (
     throw new Error('Failed to deactivate donation goal');
   }
 };
+
+export const deleteDonationGoal = async (goalId: number, authToken: string) => {
+  const response = await fetch(`${CREATOR_API_URL}/donation-goal/${goalId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`,
+    },
+  });
+  if (!response.ok) {
+    throw new Error('Failed to delete donation goal');
+  }
+};

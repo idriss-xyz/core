@@ -5,11 +5,22 @@ import { Button } from '@idriss-xyz/ui/button';
 import { Card, CardBody, CardHeader } from '@idriss-xyz/ui/card';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { ProgressBarV2 } from '@idriss-xyz/ui/progress-bar-v2';
-import { usePrivy } from '@privy-io/react-auth';
+import { getAccessToken, usePrivy } from '@privy-io/react-auth';
 
 import { getTimeRemaining } from '@/app/creators/utils';
 import { useAuth } from '@/app/creators/context/auth-context';
 import { useGetActiveDonationGoal } from '@/app/creators/app/commands/get-active-donation-goal';
+import { deactivateDonationGoal } from '@/app/creators/utils/donation-goals';
+import { useQueryClient } from '@tanstack/react-query';
+
+const handleEndGoal = async (goalId: number) => {
+  const authToken = await getAccessToken();
+  if (!authToken) {
+    console.error('No auth token found');
+    return;
+  }
+  await deactivateDonationGoal(goalId, authToken);
+};
 
 export default function ActiveGoal() {
   const { creator } = useAuth();
@@ -17,6 +28,7 @@ export default function ActiveGoal() {
   const activeGoalQuery = useGetActiveDonationGoal(creator?.name, {
     enabled: ready && authenticated && !!creator?.name,
   });
+  const queryClient = useQueryClient();
 
   const goal = activeGoalQuery.data;
 
@@ -88,6 +100,15 @@ export default function ActiveGoal() {
               className="h-11 px-6 uppercase"
               intent="secondary"
               size="medium"
+              onClick={async () => {
+                await handleEndGoal(goal.id);
+                await queryClient.invalidateQueries({
+                  queryKey: ['donation-goals', creator?.name],
+                });
+                await queryClient.invalidateQueries({
+                  queryKey: ['active-donation-goal', creator?.name],
+                });
+              }}
             >
               End goal
             </Button>

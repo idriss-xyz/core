@@ -32,8 +32,6 @@ export default function DonationGoalsPage() {
     setIsCopyModalOpen(true);
   };
 
-  // TODO: Fetch creator goals and display here on page load
-
   return (
     <Card className="flex w-full flex-col gap-6">
       <div className="flex flex-col gap-6">

@@ -16,6 +16,7 @@ export class AddDonationGoal1760651767821 implements MigrationInterface {
           "start_date" bigint NOT NULL,
           "end_date" bigint NOT NULL,
           "active" boolean NOT NULL DEFAULT false,
+          "deleted" boolean NOT NULL DEFAULT false,
           "creator_id" integer NOT NULL,
           CONSTRAINT "PK_donation_goal" PRIMARY KEY ("id"),
           CONSTRAINT "FK_donation_goal_creator" FOREIGN KEY ("creator_id") REFERENCES "creator"("id") ON DELETE CASCADE ON UPDATE CASCADE
@@ -80,6 +81,7 @@ export class AddDonationGoal1760651767821 implements MigrationInterface {
         g.start_date AS "startDate",
         g.end_date AS "endDate",
         g.active AS active,
+        g.deleted AS deleted,
         c.name AS "creatorName",
         COALESCE(SUM(d.trade_value), 0) AS progress,
         (

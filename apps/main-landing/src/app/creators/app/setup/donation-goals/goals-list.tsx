@@ -11,7 +11,10 @@ import { useQueryClient } from '@tanstack/react-query';
 import { ConfirmationModal } from '@/app/creators/components/confirmation-modal';
 import { useAuth } from '@/app/creators/context/auth-context';
 import { useGetDonationGoals } from '@/app/creators/app/commands/get-donation-goals';
-import { activateDonationGoal } from '@/app/creators/utils/donation-goals';
+import {
+  activateDonationGoal,
+  deleteDonationGoal,
+} from '@/app/creators/utils/donation-goals';
 
 const handleActivateGoal = async (goalId: number) => {
   const authToken = await getAccessToken();
@@ -34,8 +37,21 @@ export function GoalsList() {
     });
   }, [goalListQuery.data]);
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
+  const [goalToDelete, setGoalToDelete] = useState<number | null>(null);
 
   const queryClient = useQueryClient();
+
+  const handleDeleteGoal = async (goalId: number) => {
+    const authToken = await getAccessToken();
+    if (!authToken) {
+      console.error('No auth token found');
+      return;
+    }
+    await deleteDonationGoal(goalId, authToken);
+    void queryClient.invalidateQueries({
+      queryKey: ['donation-goals', creator?.name],
+    });
+  };
 
   return (
     <>
@@ -93,6 +109,7 @@ export function GoalsList() {
                     size="small"
                     className="size-10 border"
                     onClick={() => {
+                      setGoalToDelete(goal.id);
                       return setIsRemoveModalOpen(true);
                     }}
                   />
@@ -119,9 +136,14 @@ export function GoalsList() {
         isOpened={isRemoveModalOpen}
         onClose={() => {
           setIsRemoveModalOpen(false);
+          setGoalToDelete(null);
         }}
-        onConfirm={() => {
-          console.log('Delete'); //TODO: Call api and delete
+        onConfirm={async () => {
+          if (goalToDelete) {
+            await handleDeleteGoal(goalToDelete);
+          }
+          setIsRemoveModalOpen(false);
+          setGoalToDelete(null);
         }}
         title="Confirm before removing"
         sectionSubtitle="You are removing one of your donation goals, which means incoming donations won't add to this goal anymore. This action cannot be undone."

@@ -141,4 +141,26 @@ router.patch(
   },
 );
 
+// Delete a donation goal
+router.delete(
+  '/:goalId',
+  tightCors,
+  verifyToken(),
+  async (req: Request, res: Response) => {
+    if (!req.user?.id) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+
+    try {
+      const goalId = parseInt(req.params.goalId);
+      const deletedGoal = await donationGoalService.deleteDonationGoal(goalId);
+      res.status(200).json(deletedGoal);
+    } catch (error) {
+      console.error('Error deleting donation goal:', error);
+      res.status(500).json({ error: 'Failed to delete donation goal' });
+    }
+  },
+);
+
 export default router;
