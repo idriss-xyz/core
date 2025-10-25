@@ -13,7 +13,7 @@ const RANK_COLORS = ['text-[#FAC928]', 'text-[#979797]', 'text-[#934F0A]'];
 interface Properties {
   rank: number; // 0–based
   avatarUrl?: string | null; // may be '', undefined, null
-  allowAllUrls?: boolean; // only true for demo account
+  allowAllUrls?: boolean; // only true for non-twith extension allowed
 }
 
 export const LeaderboardAvatar = ({

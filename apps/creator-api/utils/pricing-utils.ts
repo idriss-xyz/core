@@ -12,6 +12,11 @@ import { getChainByNetworkName } from '@idriss-xyz/utils';
 
 type PriceTick = { timestamp: number; median: number };
 
+type ZapperCacheEntry = {
+  priceTicks: PriceTick[];
+  currentPrice: number | null;
+};
+
 type AlchemyPriceResponse = {
   data: { address: string; network: string; prices?: { value: string }[] }[];
 };
@@ -25,7 +30,7 @@ type OpenSeaBestOfferResponse = {
   };
 };
 
-const zapperHistoryCache: Record<string, PriceTick[]> = {};
+const zapperHistoryCache: Record<string, ZapperCacheEntry> = {};
 
 async function retryWithBackoff<T>(
   function_: () => Promise<T>,
@@ -52,11 +57,13 @@ export async function getZapperPrice(
   txDate: Date,
 ): Promise<number | null> {
   const zapperCacheKey = `${network}_${tokenAddress}`;
-  const priceTicks = zapperHistoryCache[zapperCacheKey];
-  let fallbackPrice: number | null = null;
+  const cachedEntry = zapperHistoryCache[zapperCacheKey];
 
-  // Fetch entire price history if not cached
-  if (!priceTicks) {
+  let priceTicks = cachedEntry?.priceTicks;
+  let fallbackPrice = cachedEntry?.currentPrice ?? null;
+
+  // Fetch if not in cache
+  if (!cachedEntry) {
     try {
       const chain = getChainByNetworkName(network);
 
@@ -89,15 +96,21 @@ export async function getZapperPrice(
           };
         };
       };
+
       fallbackPrice = json.data?.fungibleTokenV2?.priceData?.price ?? null;
-      zapperHistoryCache[zapperCacheKey] =
-        json.data?.fungibleTokenV2?.priceData?.priceTicks ?? [];
+      priceTicks = json.data?.fungibleTokenV2?.priceData?.priceTicks ?? [];
+
+      zapperHistoryCache[zapperCacheKey] = {
+        priceTicks,
+        currentPrice: fallbackPrice,
+      };
     } catch (error) {
       console.error('Zapper price fetch failed:', error);
       return null;
     }
   }
-  // Find closest price within 24 hours
+
+  // If we have history, search for a relevant price tick
   if (priceTicks && priceTicks.length > 0) {
     const closestTick = priceTicks.find((tick) => {
       const tickTime =
@@ -111,6 +124,7 @@ export async function getZapperPrice(
     }
   }
 
+  // Fallback to latest price
   return fallbackPrice;
 }
 

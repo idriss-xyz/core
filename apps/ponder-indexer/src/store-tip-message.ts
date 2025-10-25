@@ -59,6 +59,8 @@ async function getHourlyTokenPriceUSD(
     getOldestZapperPrice(lookupAddress, network) ??
     null;
 
+  console.log('FOUND PRICE', price, network, lookupAddress, key);
+
   if (price !== null) HOURLY_PRICE_CACHE.set(key, price);
   return price;
 }

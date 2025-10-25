@@ -6,7 +6,7 @@ import { Spinner } from '@idriss-xyz/ui/spinner';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { ColumnDefinition, Table } from '@idriss-xyz/ui/table';
-import { DEMO_ADDRESS, LeaderboardStats } from '@idriss-xyz/constants';
+import { LeaderboardStats } from '@idriss-xyz/constants';
 import {
   Tooltip,
   TooltipContent,
@@ -108,7 +108,6 @@ export const Leaderboard = ({
 }: Properties) => {
   const { creator } = useAuth();
 
-  const isDemo = address.data === DEMO_ADDRESS;
   const columns: ColumnDefinition<LeaderboardStats>[] = [
     {
       id: 'rank',
@@ -122,9 +121,7 @@ export const Leaderboard = ({
       id: 'donor',
       name: perspective === 'creator' ? 'Creator' : 'Donor',
       accessor: (item, index) => {
-        return (
-          <LeaderboardItemDonor item={item} index={index} isDemo={isDemo} />
-        );
+        return <LeaderboardItemDonor item={item} index={index} />;
       },
       className: 'flex items-center gap-x-1.5 overflow-hidden',
     },
@@ -345,7 +342,6 @@ export const Leaderboard = ({
                         }}
                         donateAmount={item.totalAmount}
                         isTwitchExtension={isTwitchExtension}
-                        isDemo={isDemo}
                         key={item.address}
                       />
                     );
@@ -384,7 +380,6 @@ export const Leaderboard = ({
                         }}
                         donateAmount={item.totalAmount}
                         isTwitchExtension={isTwitchExtension}
-                        isDemo={isDemo}
                         key={item.address}
                       />
                     );
@@ -422,7 +417,6 @@ export const Leaderboard = ({
                                 displayName: item.displayName,
                               }}
                               donateAmount={item.totalAmount}
-                              isDemo={isDemo}
                               key={item.address}
                             />
                           );
@@ -453,7 +447,6 @@ export const Leaderboard = ({
                             displayName: item.displayName,
                           }}
                           donateAmount={item.totalAmount}
-                          isDemo={isDemo}
                           key={item.address}
                         />
                       );

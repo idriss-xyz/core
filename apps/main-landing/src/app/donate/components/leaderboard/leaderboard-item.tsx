@@ -29,7 +29,6 @@ type Properties = {
   hideBottomBorder?: boolean;
   isTwitchExtension?: boolean;
   onDonorClick?: (displayName: string) => void;
-  isDemo?: boolean;
 };
 
 export const LeaderboardItem = ({
@@ -39,17 +38,12 @@ export const LeaderboardItem = ({
   donateAmount,
   onDonorClick,
   donorDetails,
-  isDemo,
 }: Properties) => {
   const displayName = donorDetails.displayName ?? 'anon';
   const avatarSourceUrl = donorDetails.avatarUrl;
 
   const avatarImage = (
-    <LeaderboardAvatar
-      rank={donorRank}
-      avatarUrl={avatarSourceUrl}
-      allowAllUrls={isDemo}
-    />
+    <LeaderboardAvatar rank={donorRank} avatarUrl={avatarSourceUrl} />
   );
 
   return (
