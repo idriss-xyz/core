@@ -2,7 +2,6 @@ import { Button } from '@idriss-xyz/ui/button';
 
 import { TopBar } from '@/components';
 
-
 // ts-unused-exports:disable-next-line
 export default function NotFound() {
   return (
