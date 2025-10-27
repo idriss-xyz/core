@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { usePrivy } from '@privy-io/react-auth';
 import { Hex } from 'viem';
 
@@ -18,6 +18,18 @@ export default function TopDonors() {
     type: 'donor',
     period: periodMap[activeFilter]!,
   });
+
+  const onDonorClick = useCallback(
+    (displayName: string) => {
+      const donor = leaderboardQuery.data?.find((d) => {
+        return d.displayName === displayName;
+      });
+      if (donor && donor.displayName !== 'anon') {
+        window.open(`/fan/${donor.displayName}`);
+      }
+    },
+    [leaderboardQuery.data],
+  );
 
   if (leaderboardQuery.isLoading || !ready || !authenticated) {
     return <SkeletonRanking />;
@@ -40,6 +52,7 @@ export default function TopDonors() {
         activeFilter={activeFilter}
         onFilterChange={setActiveFilter}
         scope="global"
+        onDonorClick={onDonorClick}
       />
     </div>
   );

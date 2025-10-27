@@ -1,7 +1,6 @@
 import { Link } from '@idriss-xyz/ui/link';
 import { formatFiatValue, getTimeDifferenceString } from '@idriss-xyz/utils';
 import { classes } from '@idriss-xyz/ui/utils';
-import { Hex } from 'viem';
 import { DonationUser } from '@idriss-xyz/constants';
 import { Icon } from '@idriss-xyz/ui/icon';
 
@@ -25,7 +24,7 @@ type Properties = {
   donorDetails: DonationUser;
   hideBottomBorder?: boolean;
   isTwitchExtension?: boolean;
-  onDonorClick?: (address: Hex) => void;
+  onDonorClick?: (displayName: string) => void;
 };
 
 export const LeaderboardItem = ({
@@ -63,7 +62,7 @@ export const LeaderboardItem = ({
           size="xs"
           onClick={() => {
             if (onDonorClick) {
-              onDonorClick(donorDetails.address);
+              onDonorClick(donorDetails.displayName ?? 'anon');
             }
           }}
           className={classes(
