@@ -20,14 +20,12 @@ export default function TopCreators() {
   });
 
   const onDonorClick = useCallback(
-    (address: Hex) => {
+    (displayName: string) => {
       const donor = leaderboardQuery.data?.find((d) => {
-        return d.address === address;
+        return d.displayName === displayName;
       });
-      if (donor?.donateLink) {
+      if (donor && donor.displayName !== 'anon') {
         window.open(`${donor.donateLink}`, '_blank');
-      } else if (donor?.displayName && donor.displayNameSource != 'ADDRESS') {
-        window.open(`/${donor.displayName}`);
       }
     },
     [leaderboardQuery.data],

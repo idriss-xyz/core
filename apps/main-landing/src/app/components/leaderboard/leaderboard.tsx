@@ -42,7 +42,7 @@ type Properties = {
   leaderboardError: boolean;
   leaderboardLoading: boolean;
   leaderboard: LeaderboardStats[];
-  onDonorClick?: (address: Hex) => void;
+  onDonorClick?: (displayName: string) => void;
   updateCurrentContent?: (content: DonateContentValues) => void;
   activeFilter?: string;
   onFilterChange?: (filter: string) => void;
@@ -121,7 +121,13 @@ export const Leaderboard = ({
       id: 'donor',
       name: perspective === 'creator' ? 'Creator' : 'Donor',
       accessor: (item, index) => {
-        return <LeaderboardItemDonor item={item} index={index} />;
+        return (
+          <LeaderboardItemDonor
+            item={item}
+            index={index}
+            onDonorClick={onDonorClick}
+          />
+        );
       },
       className: 'flex items-center gap-x-1.5 overflow-hidden',
     },
