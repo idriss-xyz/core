@@ -2,6 +2,8 @@ import { AppDataSource, Creator, getTokenAndNftRows } from '@idriss-xyz/db';
 import { connectedClients } from './socket-server';
 import { Server } from 'socket.io';
 import { ILike } from 'typeorm';
+import { createAddressToCreatorMap } from '@idriss-xyz/utils';
+import { enrichDonationsWithCreatorInfo } from '../utils/calculate-stats';
 
 export async function startDbListener(io: Server) {
   const creatorRepository = AppDataSource.getRepository(Creator);
@@ -23,11 +25,17 @@ export async function startDbListener(io: Server) {
       const { id } = JSON.parse(msg.payload);
 
       const [donation] = await getTokenAndNftRows({ id }, true);
+      if (!donation) return;
+
+      const allCreators = await creatorRepository.find({
+        relations: ['associatedAddresses'],
+      });
+      const addressToCreatorMap = createAddressToCreatorMap(allCreators);
+      enrichDonationsWithCreatorInfo([donation], addressToCreatorMap);
+
       const creator = await creatorRepository.findOne({
         where: { primaryAddress: ILike(donation.toAddress) },
       });
-
-      if (!donation) return;
 
       const clients = connectedClients.get(donation.toAddress.toLowerCase());
       if (clients) {
@@ -35,10 +43,10 @@ export async function startDbListener(io: Server) {
           client.emit('newDonation', donation);
         }
       }
+
       if (creator) {
         const overlayWS = io.of('/overlay');
         const userId = creator.privyId.toLowerCase();
-
         overlayWS.to(userId).emit('newDonation', donation);
       }
     } catch (error) {
