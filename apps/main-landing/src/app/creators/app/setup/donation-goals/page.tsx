@@ -19,6 +19,7 @@ export default function DonationGoalsPage() {
   const queryClient = useQueryClient();
 
   const [isCopyModalOpen, setIsCopyModalOpen] = useState(false);
+  const [isNewGoalFormOpen, setIsNewGoalFormOpen] = useState(false);
   const [isUrlWarningConfirmed, setIsUrlWarningConfirmed] = useState(false);
   const [confirmButtonText, setConfirmButtonText] = useState('Copy link');
   const [wasCopied, setWasCopied] = useState(false);
@@ -89,19 +90,24 @@ export default function DonationGoalsPage() {
           </div>
           <hr />
 
-          <NewGoalForm
-            onGoalCreated={() => {
-              void queryClient.invalidateQueries({
-                queryKey: ['donation-goals', creator?.name],
-              });
-            }}
-          />
+          {isNewGoalFormOpen && (
+            <NewGoalForm
+              onGoalCreated={() => {
+                void queryClient.invalidateQueries({
+                  queryKey: ['donation-goals', creator?.name],
+                });
+              }}
+              onClose={() => {
+                return setIsNewGoalFormOpen(false);
+              }}
+            />
+          )}
         </div>
       </div>
 
       <ActiveGoal />
 
-      <GoalsList />
+      <GoalsList setIsNewGoalFormOpen={setIsNewGoalFormOpen} />
 
       <ConfirmationModal
         isOpened={isCopyModalOpen}

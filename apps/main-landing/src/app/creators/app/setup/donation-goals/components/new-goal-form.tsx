@@ -25,9 +25,10 @@ const errorSaveSettingsToast: Omit<ToastData, 'id'> = {
 
 interface NewGoalFormProperties {
   onGoalCreated?: () => void;
+  onClose?: () => void;
 }
 
-export function NewGoalForm({ onGoalCreated }: NewGoalFormProperties) {
+export function NewGoalForm({ onGoalCreated, onClose }: NewGoalFormProperties) {
   const { creator } = useAuth();
   const { toast, removeToast } = useToast();
 
@@ -164,7 +165,7 @@ export function NewGoalForm({ onGoalCreated }: NewGoalFormProperties) {
                 <Form.Field
                   name="endDate"
                   className="max-w-[360px]"
-                  label="End date"
+                  label="End date (optional)"
                   helperText={fieldState.error?.message}
                   error={Boolean(fieldState.error?.message)}
                   datePicker
@@ -180,16 +181,24 @@ export function NewGoalForm({ onGoalCreated }: NewGoalFormProperties) {
           />
         </FormFieldWrapper>
 
-        {isDirty && (
+        <div className="flex gap-4">
+          <Button
+            size="medium"
+            intent="secondary"
+            className="mt-4 uppercase"
+            onClick={onClose}
+          >
+            Cancel
+          </Button>
           <Button
             size="medium"
             intent="primary"
-            className="mt-4"
+            className="mt-4 uppercase"
             onClick={formMethods.handleSubmit(onSubmit)}
           >
-            SAVE SETTINGS
+            Save
           </Button>
-        )}
+        </div>
       </Form>
     </>
   );

@@ -25,7 +25,11 @@ const handleActivateGoal = async (goalId: number) => {
   await activateDonationGoal(goalId, authToken);
 };
 
-export function GoalsList() {
+interface GoalListProperties {
+  setIsNewGoalFormOpen: (isOpen: boolean) => void;
+}
+
+export function GoalsList({ setIsNewGoalFormOpen }: GoalListProperties) {
   const { creator } = useAuth();
   const { ready, authenticated } = usePrivy();
   const goalListQuery = useGetDonationGoals(creator?.name, {
@@ -55,7 +59,19 @@ export function GoalsList() {
 
   return (
     <>
-      <h5 className="text-heading5 text-neutralGreen-900">Goals list</h5>
+      <div className="flex items-center gap-3">
+        <h5 className="text-heading5 text-neutralGreen-900">Goals list</h5>
+        <Button
+          intent="primary"
+          size="medium"
+          onClick={() => {
+            return setIsNewGoalFormOpen(true);
+          }}
+          suffixIconName="Plus"
+        >
+          Create new goal
+        </Button>
+      </div>
       <div className="flex flex-wrap justify-start gap-4">
         {inactiveGoals.map((goal) => {
           const progressPercentage = (goal.progress / goal.targetAmount) * 100;

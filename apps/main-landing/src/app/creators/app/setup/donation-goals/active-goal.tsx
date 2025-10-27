@@ -6,12 +6,12 @@ import { Card, CardBody, CardHeader } from '@idriss-xyz/ui/card';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { ProgressBarV2 } from '@idriss-xyz/ui/progress-bar-v2';
 import { getAccessToken, usePrivy } from '@privy-io/react-auth';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { getTimeRemaining } from '@/app/creators/utils';
 import { useAuth } from '@/app/creators/context/auth-context';
 import { useGetActiveDonationGoal } from '@/app/creators/app/commands/get-active-donation-goal';
 import { deactivateDonationGoal } from '@/app/creators/utils/donation-goals';
-import { useQueryClient } from '@tanstack/react-query';
 
 const handleEndGoal = async (goalId: number) => {
   const authToken = await getAccessToken();
