@@ -180,10 +180,13 @@ export const DonateHistoryItem = ({
               <Link
                 size="xs"
                 onClick={() => {
-                  router.push(redirectUrl);
+                  if (nameToDisplay !== 'anon') {
+                    router.push(redirectUrl);
+                  }
                 }}
                 className={classes(
-                  'cursor-pointer border-0 align-middle text-label3 text-neutral-900 no-underline lg:text-label3',
+                  'border-0 align-middle text-label3 text-neutral-900 no-underline lg:text-label3',
+                  nameToDisplay !== 'anon' && 'cursor-pointer',
                 )}
               >
                 {nameToDisplay}
