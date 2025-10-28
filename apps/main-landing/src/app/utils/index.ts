@@ -80,7 +80,14 @@ export const getCreatorNameAndPicOrAnon = async (
 };
 
 export const isHomeCallback = (u: string) => {
-  return u === '/' || u.startsWith('/?');
+  try {
+    const url = new URL(u, window.location.origin);
+    // Only treat it as home when it's exactly "/" with no query parameters
+    return url.pathname === '/' && url.search === '';
+  } catch {
+    // Fallback when u is already just a pathname
+    return u === '/';
+  }
 };
 
 export {
