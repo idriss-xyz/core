@@ -66,8 +66,13 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        source: '/creators/:path*',
-        destination: '/:path*',
+        source: '/creators',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/creators/:path+',
+        destination: '/:path+',
         permanent: true,
       },
       {
