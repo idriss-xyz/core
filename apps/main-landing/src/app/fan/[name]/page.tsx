@@ -2,7 +2,7 @@
 'use client';
 
 import { useCallback, useMemo, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 
 import { backgroundLines2 } from '@/assets';
 import { RainbowKitProviders } from '@/app/donate/providers';
@@ -82,6 +82,16 @@ function DonorContent() {
     updateCurrentContent,
     donorHistory.isLoading,
   ]);
+
+  if (!donorName) notFound();
+
+  if (donorHistory.isLoading || donorHistory.isFetching) {
+    return null;
+  }
+
+  if (donorHistory.isError || !donorStats) {
+    notFound();
+  }
 
   return (
     <>
