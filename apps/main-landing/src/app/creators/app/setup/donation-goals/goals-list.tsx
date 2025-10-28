@@ -4,17 +4,16 @@ import { Card, CardBody, CardHeader } from '@idriss-xyz/ui/card';
 import { Button } from '@idriss-xyz/ui/button';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
-import { useMemo, useState } from 'react';
-import { getAccessToken, usePrivy } from '@privy-io/react-auth';
-import { useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+import { getAccessToken } from '@privy-io/react-auth';
 
 import { ConfirmationModal } from '@/app/creators/components/confirmation-modal';
-import { useAuth } from '@/app/creators/context/auth-context';
-import { useGetDonationGoals } from '@/app/creators/app/commands/get-donation-goals';
 import {
   activateDonationGoal,
   deleteDonationGoal,
 } from '@/app/creators/utils/donation-goals';
+
+import { useDonationGoals } from './context/donation-goals-context';
 
 const handleActivateGoal = async (goalId: number) => {
   const authToken = await getAccessToken();
@@ -25,25 +24,43 @@ const handleActivateGoal = async (goalId: number) => {
   await activateDonationGoal(goalId, authToken);
 };
 
+interface NoGoalsProperties {
+  setIsNewGoalFormOpen: (isOpen: boolean) => void;
+}
+
+const NoGoals = ({ setIsNewGoalFormOpen }: NoGoalsProperties) => {
+  return (
+    <div className="mx-auto flex min-h-[548px] w-[477px] flex-col items-center justify-center gap-4">
+      <span className="text-center text-heading6 uppercase text-neutral-900">
+        No goals yet
+      </span>
+      <span className="mx-8 text-center text-display5 uppercase gradient-text">
+        Start something your fans can support
+      </span>
+      <Button
+        intent="primary"
+        size="medium"
+        onClick={() => {
+          return setIsNewGoalFormOpen(true);
+        }}
+        suffixIconName="Plus"
+      >
+        Create new goal
+      </Button>
+    </div>
+  );
+};
+
 interface GoalListProperties {
   setIsNewGoalFormOpen: (isOpen: boolean) => void;
 }
 
 export function GoalsList({ setIsNewGoalFormOpen }: GoalListProperties) {
-  const { creator } = useAuth();
-  const { ready, authenticated } = usePrivy();
-  const goalListQuery = useGetDonationGoals(creator?.name, {
-    enabled: ready && authenticated && !!creator?.name,
-  });
-  const inactiveGoals = useMemo(() => {
-    return (goalListQuery.data ?? []).filter((goal) => {
-      return !goal.active;
-    });
-  }, [goalListQuery.data]);
+  const { activeGoal, inactiveGoals, refetch } = useDonationGoals();
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
   const [goalToDelete, setGoalToDelete] = useState<number | null>(null);
-
-  const queryClient = useQueryClient();
+  console.log('activeGoal', activeGoal);
+  console.log('inactiveGoals', inactiveGoals);
 
   const handleDeleteGoal = async (goalId: number) => {
     const authToken = await getAccessToken();
@@ -52,12 +69,10 @@ export function GoalsList({ setIsNewGoalFormOpen }: GoalListProperties) {
       return;
     }
     await deleteDonationGoal(goalId, authToken);
-    void queryClient.invalidateQueries({
-      queryKey: ['donation-goals', creator?.name],
-    });
+    await refetch();
   };
 
-  return (
+  return inactiveGoals && inactiveGoals.length > 0 ? (
     <>
       <div className="flex items-center gap-3">
         <h5 className="text-heading5 text-neutralGreen-900">Goals list</h5>
@@ -73,7 +88,7 @@ export function GoalsList({ setIsNewGoalFormOpen }: GoalListProperties) {
         </Button>
       </div>
       <div className="flex flex-wrap justify-start gap-4">
-        {inactiveGoals.map((goal) => {
+        {inactiveGoals?.map((goal) => {
           const progressPercentage = (goal.progress / goal.targetAmount) * 100;
           return (
             <Card
@@ -135,12 +150,7 @@ export function GoalsList({ setIsNewGoalFormOpen }: GoalListProperties) {
                     className="py-auto h-11 px-6 uppercase"
                     onClick={async () => {
                       await handleActivateGoal(goal.id);
-                      void queryClient.invalidateQueries({
-                        queryKey: ['donation-goals', goal.creatorName],
-                      });
-                      void queryClient.invalidateQueries({
-                        queryKey: ['active-donation-goal', goal.creatorName],
-                      });
+                      await refetch();
                     }}
                   >
                     Activate
@@ -170,5 +180,9 @@ export function GoalsList({ setIsNewGoalFormOpen }: GoalListProperties) {
         confirmButtonIntent="secondary"
       />
     </>
+  ) : inactiveGoals?.length == 0 && !activeGoal ? (
+    <NoGoals setIsNewGoalFormOpen={setIsNewGoalFormOpen} />
+  ) : (
+    <></>
   );
 }

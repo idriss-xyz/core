@@ -5,13 +5,12 @@ import { Button } from '@idriss-xyz/ui/button';
 import { Card, CardBody, CardHeader } from '@idriss-xyz/ui/card';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { ProgressBarV2 } from '@idriss-xyz/ui/progress-bar-v2';
-import { getAccessToken, usePrivy } from '@privy-io/react-auth';
-import { useQueryClient } from '@tanstack/react-query';
+import { getAccessToken } from '@privy-io/react-auth';
 
 import { getTimeRemaining } from '@/app/creators/utils';
-import { useAuth } from '@/app/creators/context/auth-context';
-import { useGetActiveDonationGoal } from '@/app/creators/app/commands/get-active-donation-goal';
 import { deactivateDonationGoal } from '@/app/creators/utils/donation-goals';
+
+import { useDonationGoals } from './context/donation-goals-context';
 
 const handleEndGoal = async (goalId: number) => {
   const authToken = await getAccessToken();
@@ -23,23 +22,9 @@ const handleEndGoal = async (goalId: number) => {
 };
 
 export default function ActiveGoal() {
-  const { creator } = useAuth();
-  const { ready, authenticated } = usePrivy();
-  const activeGoalQuery = useGetActiveDonationGoal(creator?.name, {
-    enabled: ready && authenticated && !!creator?.name,
-  });
-  const queryClient = useQueryClient();
+  const { activeGoal, refetch } = useDonationGoals();
 
-  const goal = activeGoalQuery.data;
-
-  if (activeGoalQuery.isLoading) {
-    return (
-      <div>
-        <h5 className="text-heading5 text-neutralGreen-900">Active goal</h5>
-        <Card className="h-[183px] w-full border shadow-none" />
-      </div>
-    );
-  }
+  const goal = activeGoal;
 
   if (!goal) {
     return null; // No active goal to display
@@ -102,12 +87,7 @@ export default function ActiveGoal() {
               size="medium"
               onClick={async () => {
                 await handleEndGoal(goal.id);
-                await queryClient.invalidateQueries({
-                  queryKey: ['donation-goals', creator?.name],
-                });
-                await queryClient.invalidateQueries({
-                  queryKey: ['active-donation-goal', creator?.name],
-                });
+                await refetch();
               }}
             >
               End goal
