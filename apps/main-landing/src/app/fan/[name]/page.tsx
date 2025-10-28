@@ -2,7 +2,7 @@
 'use client';
 
 import { useCallback, useMemo, useState } from 'react';
-import { notFound, useParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 
 import { backgroundLines2 } from '@/assets';
 import { RainbowKitProviders } from '@/app/donate/providers';
@@ -37,7 +37,6 @@ function DonorContent() {
 
   const donorStats = donorHistory.data?.stats;
   const donorDonations = donorHistory.data?.donations;
-  if (!donorStats) notFound();
 
   const updateCurrentContent = useCallback((content: DonateContentValues) => {
     setCurrentContent((previous) => {
