@@ -32,7 +32,6 @@ export const verifyToken = () => {
         return;
       }
 
-      const creatorsRepo = AppDataSource.getRepository(Creator);
       const privyId = decoded.sub;
 
       // We only check req.user on patch routes, on post it's ok to have empty string
