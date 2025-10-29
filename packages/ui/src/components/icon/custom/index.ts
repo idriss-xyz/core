@@ -12,6 +12,7 @@ export { AvaxToken } from './token/avax-token';
 export { GunToken } from './token/gun-token';
 export { IdrissToken } from './token/idriss-token';
 export { ParallelTeam } from './team/parallel-team';
+export { OtgTeam } from './team/off-the-grid-team';
 export { RoninTeam } from './team/ronin-team';
 export { PudgyTeam } from './team/pudgy-team';
 export { PdtToken } from './token/pdt-token';

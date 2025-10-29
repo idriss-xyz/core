@@ -11,7 +11,7 @@ const TWITCH_CLIENT_SECRET = process.env.TWITCH_CLIENT_SECRET;
 // This is the callback URL that Twitch will call on our backend
 const API_CALLBACK_URI = `${CREATOR_API_URL}/auth/twitch/callback`;
 // This is the callback URL on our frontend that the backend will redirect to
-const FRONTEND_CALLBACK_URL = `${process.env.BASE_URL}/creators`;
+const FRONTEND_CALLBACK_URL = `${process.env.BASE_URL}`;
 
 router.get('/twitch', (req, res) => {
   const { callback } = req.query;

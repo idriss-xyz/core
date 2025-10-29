@@ -16,11 +16,14 @@
   "devDependencies": {
     "@idriss-xyz/eslint-config": "workspace:*",
     "@idriss-xyz/typescript-config": "workspace:*",
+    "@idriss-xyz/blockchain-clients": "workspace:*",
+    "@types/node": "^24.7.2",
     "dependency-cruiser": "^16.4.2",
     "ts-unused-exports": "^10.1.0",
     "typescript": "^5.6.2"
   },
   "dependencies": {
+    "@idriss-xyz/constants": "workspace:*",
     "@solana/web3.js": "^1.98.0",
     "@swc/helpers": "^0.5.13",
     "viem": "^2.31.7"

@@ -1,6 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { AppDataSource } from '../db/database';
-import { User } from '../db/entities/user.entity';
+import { AppDataSource, User } from '@idriss-xyz/db';
 import { refetchEnsAvatar } from '../utils/refetch-ens-avatar';
 import { Hex } from 'viem';
 

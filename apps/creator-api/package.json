@@ -19,6 +19,7 @@
     "@aws-sdk/client-s3": "^3.842.0",
     "@idriss-xyz/constants": "workspace:*",
     "@idriss-xyz/utils": "workspace:*",
+    "@idriss-xyz/db": "workspace:*",
     "axios": "^1.10.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",

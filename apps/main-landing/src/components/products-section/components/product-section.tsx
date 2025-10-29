@@ -6,10 +6,7 @@ import { classes } from '@idriss-xyz/ui/utils';
 
 import { ImageSequencer } from '@/components/image-sequencer';
 
-import { tabOptions } from '../constants';
-
 import { ProductInfo } from './product-info';
-import { Tabs } from './tabs';
 
 type ProductSectionProperties = {
   activeOptionKey: string;
@@ -17,11 +14,9 @@ type ProductSectionProperties = {
   description: string;
   actions: ReactNode;
   features: ProductSectionFeature[];
-  tabsAsLinks: boolean;
   className?: string;
   headerClassName?: string;
   fadeOut: boolean;
-  tabsVisibile?: boolean;
   marginX?: number;
   marginY?: number;
   borderRadius?: number;
@@ -60,12 +55,10 @@ export const ProductSection = ({
   description,
   actions,
   features,
-  tabsAsLinks,
   fadeOut,
   borderRadius,
   marginX,
   marginY,
-  tabsVisibile = true,
   ...properties
 }: ProductSectionProperties) => {
   return (
@@ -108,13 +101,6 @@ export const ProductSection = ({
                   }
             }
           >
-            {tabsVisibile && (
-              <Tabs
-                options={tabOptions}
-                activeOptionKey={activeOptionKey}
-                asLink={tabsAsLinks}
-              />
-            )}
             <div
               className={classes(
                 'z-1 flex flex-col gap-4',

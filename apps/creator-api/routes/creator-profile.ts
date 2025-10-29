@@ -1,17 +1,17 @@
 import { Router, Request, Response } from 'express';
 import { param, validationResult } from 'express-validator';
 import { creatorProfileService } from '../services/creator-profile.service';
-import { AppDataSource } from '../db/database';
 import {
   Creator,
   DonationParameters,
   CreatorToken,
   CreatorNetwork,
-} from '../db/entities';
+  AppDataSource,
+} from '@idriss-xyz/db';
 import { Hex } from 'viem';
 
 import {
-  CREATORS_LINK,
+  MAIN_LANDING_LINK,
   CREATOR_CHAIN,
   CHAIN_ID_TO_TOKENS,
   TEST_TOKEN_DONATION,
@@ -19,7 +19,7 @@ import {
 } from '@idriss-xyz/constants';
 
 import { tightCors } from '../config/cors';
-import { verifyToken } from '../db/middleware/auth.middleware';
+import { verifyToken } from '../middleware/auth.middleware';
 import { streamAudioFromS3 } from '../utils/audio-utils';
 import type { StoredDonationData } from '@idriss-xyz/constants';
 
@@ -185,7 +185,7 @@ router.get(
 );
 
 router.get(
-  '/donation-overlay/:slug',
+  '/alert-overlay/:slug',
   [param('slug').isString().notEmpty()],
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
@@ -199,7 +199,7 @@ router.get(
       const creatorRepo = AppDataSource.getRepository(Creator);
       const creator = await creatorRepo.findOne({
         where: {
-          obsUrl: `${CREATORS_LINK}/donation-overlay/${slug}`,
+          obsUrl: `${MAIN_LANDING_LINK}/alert-overlay/${slug}`,
         },
       });
 

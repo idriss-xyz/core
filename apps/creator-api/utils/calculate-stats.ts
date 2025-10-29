@@ -1,9 +1,13 @@
 import { CREATOR_LINKS, monthNames } from '../constants';
 import {
+  AppDataSource,
+  Creator,
+  CreatorAddress,
   fetchDonations,
   fetchDonationRecipients,
-} from '../db/fetch-known-donations';
-import { getAddress, Hex } from 'viem';
+  getCreatorNameOrAnon,
+} from '@idriss-xyz/db';
+import { Hex } from 'viem';
 import {
   StoredDonationData,
   DonationToken,
@@ -17,39 +21,8 @@ import {
   createAddressToCreatorMap,
   getFilteredDonationsByPeriod,
 } from '@idriss-xyz/utils';
-import { AppDataSource } from '../db/database';
-import { Creator, CreatorAddress } from '../db/entities';
+
 import { ILike } from 'typeorm';
-
-async function getCreatorNameOrAnon(address: string): Promise<string> {
-  address = getAddress(address);
-  const creatorRepository = AppDataSource.getRepository(Creator);
-
-  // First, try to find creator by primary address
-  const creatorByPrimaryAddress = await creatorRepository.findOne({
-    where: { primaryAddress: address as Hex },
-  });
-
-  if (creatorByPrimaryAddress) {
-    return creatorByPrimaryAddress.name;
-  }
-
-  // If not found, search in associated addresses
-  const creatorByAssociatedAddress = await creatorRepository.findOne({
-    where: {
-      associatedAddresses: {
-        address: address as Hex,
-      },
-    },
-    relations: ['associatedAddresses'],
-  });
-
-  if (creatorByAssociatedAddress) {
-    return creatorByAssociatedAddress.name;
-  }
-
-  return 'anon';
-}
 
 export async function calculateStatsForDonor(
   donations: StoredDonationData[],

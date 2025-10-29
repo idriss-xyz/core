@@ -1,34 +1,38 @@
 import {
-  BLOG_LINK,
   BRAND_GUIDELINE_LINK,
+  DAO_LINK,
   DOCUMENTATION_LINK,
   GITHUB_LINK,
+  SNAPSHOT_IDRISS_LINK,
   SOCIAL_LINK,
 } from '@idriss-xyz/constants';
 
-import { INTERNAL_LINK } from '@/constants';
-
 import { SectionItem } from './types';
 
-export const INTERNAL_LINKS: SectionItem[] = [
+export const EXTERNAL_RESOURCES_DAO: SectionItem[] = [
   {
-    link: INTERNAL_LINK.EXTENSION,
-    name: 'EXTENSION',
-    isExternal: false,
+    link: DOCUMENTATION_LINK,
+    name: 'DOCS',
+    isExternal: true,
   },
   {
-    link: INTERNAL_LINK.CREATORS,
-    name: 'CREATORS',
-    isExternal: false,
+    link: SNAPSHOT_IDRISS_LINK,
+    name: 'SNAPSHOT',
+    isExternal: true,
   },
   {
-    link: INTERNAL_LINK.COMMUNITY_NOTES,
-    name: 'COMMUNITY NOTES',
-    isExternal: false,
+    link: GITHUB_LINK,
+    name: 'GITHUB',
+    isExternal: true,
+  },
+  {
+    link: BRAND_GUIDELINE_LINK,
+    name: 'BRAND',
+    isExternal: true,
   },
 ];
 
-export const EXTERNAL_RESOURCES: SectionItem[] = [
+export const EXTERNAL_RESOURCES_LANDING: SectionItem[] = [
   {
     link: DOCUMENTATION_LINK,
     name: 'DOCS',
@@ -40,8 +44,8 @@ export const EXTERNAL_RESOURCES: SectionItem[] = [
     isExternal: true,
   },
   {
-    link: BLOG_LINK,
-    name: 'BLOG',
+    link: DAO_LINK,
+    name: 'DAO',
     isExternal: true,
   },
   {

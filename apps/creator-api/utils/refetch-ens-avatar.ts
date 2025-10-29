@@ -2,7 +2,7 @@ import { createPublicClient, http, Hex } from 'viem';
 import { mainnet } from 'viem/chains';
 import { normalize } from 'viem/ens';
 import { Repository } from 'typeorm';
-import { User } from '../db/entities/user.entity';
+import { User } from '@idriss-xyz/db';
 
 const publicClient = createPublicClient({
   chain: mainnet,

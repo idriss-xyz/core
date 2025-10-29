@@ -1,13 +1,7 @@
-import { useMemo, createElement, useRef } from 'react';
+import { createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import {
-  useLocationInfo,
-  ExtensionPopup,
-  Final,
-  NotificationsPopup,
-} from 'final';
-import { LookUpWalletAddress } from 'application/look-up-wallet-address';
+import { ExtensionPopup, Final } from 'final';
 
 import { Providers } from './providers';
 
@@ -60,20 +54,8 @@ const bootstrap = () => {
 };
 
 const ApplicationWithProviders = () => {
-  const { isTwitter } = useLocationInfo();
-  const isSwapEventListenerAdded = useRef(false);
-
-  const disabledWalletRdns = useMemo(() => {
-    if (isTwitter) {
-      return ['coinbase'];
-    }
-    return [];
-  }, [isTwitter]);
-
   return (
-    <Providers disabledWalletRdns={disabledWalletRdns}>
-      <LookUpWalletAddress />
-      <NotificationsPopup isSwapEventListenerAdded={isSwapEventListenerAdded} />
+    <Providers>
       <ExtensionPopup />
       <Final />
     </Providers>

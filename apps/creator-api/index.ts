@@ -7,6 +7,7 @@ import express, { Application, Request, Response } from 'express';
 import http from 'http';
 import { Server as SocketIOServer, Socket } from 'socket.io';
 import { connectedClients } from './services/socket-server';
+import tokenPriceRouter from './routes/token-price';
 import tipHistoryRouter from './routes/tip-history';
 import recipientHistoryRouter from './routes/recipient-history';
 import donorHistoryRouter from './routes/donor-history';
@@ -28,10 +29,10 @@ import claimRewardsRouter from './routes/claim-rewards';
 import dripRouter from './routes/drip';
 import siweRouter from './routes/siwe';
 import donationGoalRouter from './routes/donation-goal';
-import { AppDataSource, initializeDatabase } from './db/database';
-import { Creator } from './db/entities';
+import { AppDataSource, Creator, initializeDatabase } from '@idriss-xyz/db';
 import { isAllowedOrigin, openCors } from './config/cors';
-import { CREATORS_LINK } from '@idriss-xyz/constants';
+import { MAIN_LANDING_LINK } from '@idriss-xyz/constants';
+import { startDbListener } from './services/db-listener';
 
 initializeDatabase()
   .then(() => console.log('DB connected...'))
@@ -50,6 +51,7 @@ app.use('/creator-leaderboard', creatorLeaderboardRouter);
 app.use('/donor-leaderboard', donorLeaderboardRouter);
 app.use('/force-refresh-ens', refetchENSRouter);
 app.use('/text-to-speech', textToSpeechRouter);
+app.use('/token-price', tokenPriceRouter);
 app.use('/creator-profile', creatorProfileRouter);
 app.use('/get-balances', getBalances);
 app.use('/donation-parameters', donationParametersRouter);
@@ -80,9 +82,20 @@ const io = new SocketIOServer(server, {
   },
 });
 
+(async () => {
+  try {
+    await initializeDatabase();
+    console.log('DB connected...');
+    await startDbListener(io);
+    console.log('Trigger listener started...');
+  } catch (err) {
+    console.error('Startup failure:', err);
+    process.exit(1);
+  }
+})();
+
 app.set('io', io);
 
-// Socket.IO connection handler (mirroring your copilot-api)
 io.on('connection', (socket: Socket) => {
   console.log('Client connected');
 
@@ -118,7 +131,7 @@ overlayWS.use(async (socket: Socket, next) => {
   const creatorRepo = AppDataSource.getRepository(Creator);
   const creator = await creatorRepo.findOne({
     where: {
-      obsUrl: `${CREATORS_LINK}/donation-overlay/${overlayToken}`,
+      obsUrl: `${MAIN_LANDING_LINK}/alert-overlay/${overlayToken}`,
     },
   });
 
@@ -159,6 +172,21 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Creator API Socket server is running');
 });
 
+app.get('/health', (req: Request, res: Response) => {
+  res.send('ok');
+});
+
 server.listen(PORT, HOST, () => {
   console.log(`Server is running at http://${HOST}:${PORT}`);
+});
+
+// Graceful shutdown for Railway
+process.on('SIGTERM', async () => {
+  console.log('SIGTERM received. Closing...');
+  io.close();
+  server.close(async () => {
+    if (AppDataSource.isInitialized) await AppDataSource.destroy();
+    console.log('Shutdown complete');
+    process.exit(0);
+  });
 });

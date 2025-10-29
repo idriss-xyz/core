@@ -1,5 +1,5 @@
 import { createPublicClient, http, Hex, formatUnits, erc1155Abi } from 'viem';
-import { Token } from '../db/entities/token.entity';
+import { AppDataSource, Token, NftDonation } from '@idriss-xyz/db';
 import {
   Chain,
   CHAIN_ID_TO_NFT_COLLECTIONS,
@@ -7,15 +7,13 @@ import {
   NftBalance,
   NULL_ADDRESS,
 } from '@idriss-xyz/constants';
-import { AppDataSource } from '../db/database';
 import {
+  fetchNftFloorFromOpensea,
   getAlchemyPrices,
   getZapperPrice,
-  fetchNftFloorFromOpensea,
-} from './price-fetchers';
-import { getChainById, getChainByNetworkName } from '@idriss-xyz/utils';
+} from './pricing-utils';
 import { ALCHEMY_BASE_URLS, OPENSEA_BASE_URLS } from '../constants';
-import { NftDonation } from '../db/entities/nft-donation.entity';
+import { getChainById, getChainByNetworkName } from '@idriss-xyz/utils';
 
 export async function calculateBalances(userAddress: Hex) {
   const tokenRepository = AppDataSource.getRepository(Token);
