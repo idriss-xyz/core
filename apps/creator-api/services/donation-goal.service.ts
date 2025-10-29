@@ -1,6 +1,4 @@
-import { AppDataSource } from '../db/database';
-import { DonationGoal, Creator, Donation } from '../db/entities';
-import { DonationGoalView } from '../db/views';
+import { DonationGoal, AppDataSource, DonationGoalView } from '@idriss-xyz/db';
 import { Repository } from 'typeorm';
 
 class DonationGoalService {

@@ -1,10 +1,9 @@
 import { Router, Request, Response } from 'express';
 
 import { tightCors } from '../config/cors';
-import { verifyToken } from '../db/middleware/auth.middleware';
+import { verifyToken } from '../middleware/auth.middleware';
 import { donationGoalService } from '../services/donation-goal.service';
-import { Creator, DonationGoal } from '../db/entities';
-import { AppDataSource } from '../db/database';
+import { Creator, DonationGoal, AppDataSource } from '@idriss-xyz/db';
 
 const router = Router();
 
