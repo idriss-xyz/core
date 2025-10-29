@@ -5,6 +5,7 @@
     "./asset-logo": "./src/components/asset-logo/index.ts",
     "./button": "./src/components/button/index.ts",
     "./dialog": "./src/components/dialog/index.ts",
+    "./date-picker": "./src/components/date-picker/index.ts",
     "./dropdown": "./src/components/dropdown/index.ts",
     "./external-link": "./src/components/external-link/index.ts",
     "./icon": "./src/components/icon/index.ts",
@@ -79,6 +80,7 @@
     "@radix-ui/react-dropdown-menu": "^2.1.2",
     "@radix-ui/react-form": "^0.1.0",
     "@radix-ui/react-navigation-menu": "^1.2.1",
+    "@radix-ui/react-popover": "^1.1.2",
     "@radix-ui/react-portal": "^1.1.2",
     "@radix-ui/react-progress": "^1.1.0",
     "@radix-ui/react-radio-group": "^1.2.2",
@@ -95,7 +97,9 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-number-format": "^5.4.2",
+    "react-day-picker": "^9.11.1",
     "recharts": "^3.0.0",
-    "tailwind-merge": "^2.5.2"
+    "tailwind-merge": "^2.5.2",
+    "date-fns": "^4.1.0"
   }
 }

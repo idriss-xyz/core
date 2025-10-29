@@ -11,7 +11,7 @@ export const ProgressBarV2 = ({ progress }: Properties) => {
       className="relative size-full overflow-hidden rounded-full bg-gray-200"
     >
       <Progress.Indicator
-        className="block h-full bg-mint-400 transition-all duration-200"
+        className="block h-full rounded-full bg-mint-400 transition-all duration-200"
         style={{ width: `${progress}%` }}
       />
     </Progress.Root>

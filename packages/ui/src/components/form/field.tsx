@@ -1,10 +1,12 @@
 import * as RadixForm from '@radix-ui/react-form';
 import { ComponentProps, ForwardedRef, forwardRef, ReactNode } from 'react';
+import { format } from 'date-fns';
 
 import { classes } from '../../utils';
 import { Icon } from '../icon';
 import { Input } from '../input';
 import { NumericInput } from '../numeric-input';
+import { DatePicker } from '../date-picker';
 
 type InputProperties = ComponentProps<typeof Input>;
 type InputUnion = InputProperties extends infer T
@@ -19,6 +21,9 @@ type Properties = InputUnion & {
   helperText?: string;
   numeric?: boolean;
   decimalScale?: number;
+  datePicker?: boolean;
+  dateValue?: Date;
+  onDateChange?: (date: Date | undefined) => void;
   onChange: (value: string) => void;
 };
 
@@ -31,6 +36,9 @@ export const Field = forwardRef(
       className,
       numeric,
       decimalScale,
+      datePicker,
+      dateValue,
+      onDateChange,
       placeholderTooltip,
       onChange,
       ...inputProperties
@@ -45,7 +53,19 @@ export const Field = forwardRef(
           </RadixForm.Label>
         )}
         <RadixForm.Control asChild>
-          {numeric ? (
+          {datePicker ? (
+            <DatePicker date={dateValue} onSelect={onDateChange}>
+              <div>
+                <Input
+                  {...inputProperties}
+                  value={dateValue ? format(dateValue, 'dd/MM/yyyy') : ''}
+                  placeholder="DD/MM/YYYY"
+                  asTextArea={false}
+                  onChange={() => {}} // Prevent direct input
+                />
+              </div>
+            </DatePicker>
+          ) : numeric ? (
             <NumericInput
               {...inputProperties}
               decimalScale={decimalScale}

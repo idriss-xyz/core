@@ -28,6 +28,7 @@ import referralRouter from './routes/referral-history';
 import claimRewardsRouter from './routes/claim-rewards';
 import dripRouter from './routes/drip';
 import siweRouter from './routes/siwe';
+import donationGoalRouter from './routes/donation-goal';
 import { AppDataSource, Creator, initializeDatabase } from '@idriss-xyz/db';
 import { isAllowedOrigin, openCors } from './config/cors';
 import { MAIN_LANDING_LINK } from '@idriss-xyz/constants';
@@ -64,6 +65,7 @@ app.use('/claim-rewards', claimRewardsRouter);
 app.use('/drip', dripRouter);
 app.use('/creator-profile-from-referral', creatorProfileFromReferral);
 app.use('/siwe', siweRouter);
+app.use('/donation-goal', donationGoalRouter);
 
 const HOST = process.env.HOST;
 const PORT = Number(process.env.PORT) || 4000;

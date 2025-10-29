@@ -79,6 +79,24 @@ export const getCreatorNameAndPicOrAnon = async (
   }
 };
 
+export const getTimeRemaining = (endDate: number): string => {
+  const now = new Date();
+  const end = new Date(endDate);
+  const diffInMs = end.getTime() - now.getTime();
+
+  if (diffInMs <= 0) {
+    return 'Goal ended';
+  }
+
+  const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24));
+
+  if (diffInDays === 1) {
+    return '1 day left';
+  }
+
+  return `${diffInDays} days left`;
+};
+
 export const isHomeCallback = (u: string) => {
   try {
     const url = new URL(u, window.location.origin);
@@ -102,3 +120,4 @@ export {
   getPublicCreatorProfileBySlug,
 } from './server-session';
 export { useStartEarningNavigation } from './navigation';
+export { createDonationGoal } from './donation-goals';

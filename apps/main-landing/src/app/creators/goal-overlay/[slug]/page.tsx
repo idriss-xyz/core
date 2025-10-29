@@ -1,10 +1,11 @@
 import { notFound } from 'next/navigation';
 
-import DonationOverlay from '../alert-overlay';
-import { getPublicCreatorProfileBySlug } from '../../utils';
+import { getPublicCreatorProfileBySlug } from '@/app/utils';
+
+import GoalOverlay from '../goal-overlay';
 
 // ts-unused-exports:disable-next-line
-export default async function DonationOverlayPage({
+export default async function GoalOverlayPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
@@ -16,5 +17,5 @@ export default async function DonationOverlayPage({
     notFound();
   }
 
-  return <DonationOverlay creatorName={profile.name} />;
+  return <GoalOverlay creatorName={profile.name} />;
 }
