@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 
 import GoalOverlay from '../goal-overlay';
-import { getPublicCreatorProfileBySlug } from '../../utils';
+import { getPublicCreatorProfileBySlug } from '@/app/utils';
 
 // ts-unused-exports:disable-next-line
 export default async function GoalOverlayPage({

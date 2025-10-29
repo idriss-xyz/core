@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
 } from 'typeorm';
+
 import { Creator } from './creator.entity';
 import { Donation } from './donations.entity';
 
@@ -32,10 +33,22 @@ export class DonationGoal {
   @Column({ type: 'boolean', name: 'deleted', default: false })
   deleted!: boolean;
 
-  @ManyToOne(() => Creator, { onDelete: 'CASCADE' })
+  @ManyToOne(
+    () => {
+      return Creator;
+    },
+    { onDelete: 'CASCADE' },
+  )
   @JoinColumn({ name: 'creator_id' })
   creator!: Creator;
 
-  @OneToMany(() => Donation, (donation) => donation.donationGoal)
+  @OneToMany(
+    () => {
+      return Donation;
+    },
+    (donation) => {
+      return donation.donationGoal;
+    },
+  )
   donations!: Donation[];
 }

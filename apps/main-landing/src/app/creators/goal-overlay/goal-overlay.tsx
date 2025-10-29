@@ -8,8 +8,8 @@ import { classes } from '@idriss-xyz/ui/utils';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { Badge } from '@idriss-xyz/ui/badge';
 
-import { getTimeRemaining } from '../utils';
-import { DonationGoal } from '../utils/types';
+import { getTimeRemaining } from '@/app/utils';
+import { DonationGoal } from '@/app/utils/types';
 
 interface Properties {
   creatorName?: string;

@@ -8,11 +8,7 @@ import {
 import { Hex } from 'viem';
 
 import { User } from './user.entity';
-<<<<<<< HEAD:apps/creator-api/db/entities/donations.entity.ts
-import { ZapperNode } from '../../types';
 import { DonationGoal } from './donation-goal.entity';
-=======
->>>>>>> new-staging:packages/db/src/entities/donations.entity.ts
 
 @Entity('creator_donations')
 export abstract class Donation {
@@ -69,15 +65,19 @@ export abstract class Donation {
   toUser!: User;
 
   @Column({ type: 'json' })
-<<<<<<< HEAD:apps/creator-api/db/entities/donations.entity.ts
-  data!: ZapperNode;
+  data!: object;
 
-  @ManyToOne(() => DonationGoal, (donationGoal) => donationGoal.donations, {
-    nullable: true,
-  })
+  @ManyToOne(
+    () => {
+      return DonationGoal;
+    },
+    (donationGoal) => {
+      return donationGoal.donations;
+    },
+    {
+      nullable: true,
+    },
+  )
   @JoinColumn({ name: 'donation_goal_id' })
   donationGoal?: DonationGoal;
-=======
-  data!: object;
->>>>>>> new-staging:packages/db/src/entities/donations.entity.ts
 }

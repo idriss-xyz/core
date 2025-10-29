@@ -133,9 +133,9 @@ export class AddDonationGoal1760651767821 implements MigrationInterface {
 
     // Remove foreign key and column
     const table = await queryRunner.getTable('creator_donations');
-    const foreignKey = table?.foreignKeys.find(
-      (fk) => fk.columnNames.indexOf('donation_goal_id') !== -1,
-    );
+    const foreignKey = table?.foreignKeys.find((fk) => {
+      return fk.columnNames.includes('donation_goal_id');
+    });
     if (foreignKey) {
       await queryRunner.dropForeignKey('creator_donations', foreignKey);
     }
