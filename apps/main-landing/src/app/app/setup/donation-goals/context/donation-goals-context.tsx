@@ -3,9 +3,9 @@
 import { createContext, useContext, ReactNode } from 'react';
 import { usePrivy } from '@privy-io/react-auth';
 
-import { useAuth } from '@/app/creators/context/auth-context';
-import { useGetDonationGoals } from '@/app/creators/app/commands/get-donation-goals';
-import { useGetActiveDonationGoal } from '@/app/creators/app/commands/get-active-donation-goal';
+import { useAuth } from '@/app/context/auth-context';
+import { useGetDonationGoals } from '@/app/app/commands/get-donation-goals';
+import { useGetActiveDonationGoal } from '@/app/app/commands/get-active-donation-goal';
 
 interface DonationGoalsContextValue {
   activeGoal: ReturnType<typeof useGetActiveDonationGoal>['data'];

@@ -7,8 +7,8 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { ProgressBarV2 } from '@idriss-xyz/ui/progress-bar-v2';
 import { getAccessToken } from '@privy-io/react-auth';
 
-import { getTimeRemaining } from '@/app/creators/utils';
-import { deactivateDonationGoal } from '@/app/creators/utils/donation-goals';
+import { getTimeRemaining } from '@/app/utils';
+import { deactivateDonationGoal } from '@/app/utils/donation-goals';
 
 import { useDonationGoals } from './context/donation-goals-context';
 

@@ -7,11 +7,11 @@ import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { useState } from 'react';
 import { getAccessToken } from '@privy-io/react-auth';
 
-import { ConfirmationModal } from '@/app/creators/components/confirmation-modal';
+import { ConfirmationModal } from '@/app/components/confirmation-modal';
 import {
   activateDonationGoal,
   deleteDonationGoal,
-} from '@/app/creators/utils/donation-goals';
+} from '@/app/utils/donation-goals';
 
 import { useDonationGoals } from './context/donation-goals-context';
 
@@ -25,10 +25,10 @@ const handleActivateGoal = async (goalId: number) => {
 };
 
 interface NoGoalsProperties {
-  setIsNewGoalFormOpen: (isOpen: boolean) => void;
+  setIsNewGoalFormOpenAction: (isOpen: boolean) => void;
 }
 
-const NoGoals = ({ setIsNewGoalFormOpen }: NoGoalsProperties) => {
+const NoGoals = ({ setIsNewGoalFormOpenAction }: NoGoalsProperties) => {
   return (
     <div className="mx-auto flex min-h-[548px] w-[477px] flex-col items-center justify-center gap-4">
       <span className="text-center text-heading6 uppercase text-neutral-900">
@@ -41,7 +41,7 @@ const NoGoals = ({ setIsNewGoalFormOpen }: NoGoalsProperties) => {
         intent="primary"
         size="medium"
         onClick={() => {
-          return setIsNewGoalFormOpen(true);
+          return setIsNewGoalFormOpenAction(true);
         }}
         suffixIconName="Plus"
       >
@@ -52,10 +52,10 @@ const NoGoals = ({ setIsNewGoalFormOpen }: NoGoalsProperties) => {
 };
 
 interface GoalListProperties {
-  setIsNewGoalFormOpen: (isOpen: boolean) => void;
+  setIsNewGoalFormOpenAction: (isOpen: boolean) => void;
 }
 
-export function GoalsList({ setIsNewGoalFormOpen }: GoalListProperties) {
+export function GoalsList({ setIsNewGoalFormOpenAction }: GoalListProperties) {
   const { activeGoal, inactiveGoals, refetch } = useDonationGoals();
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
   const [goalToDelete, setGoalToDelete] = useState<number | null>(null);
@@ -80,7 +80,7 @@ export function GoalsList({ setIsNewGoalFormOpen }: GoalListProperties) {
           intent="primary"
           size="medium"
           onClick={() => {
-            return setIsNewGoalFormOpen(true);
+            return setIsNewGoalFormOpenAction(true);
           }}
           suffixIconName="Plus"
         >
@@ -175,13 +175,14 @@ export function GoalsList({ setIsNewGoalFormOpen }: GoalListProperties) {
           setGoalToDelete(null);
         }}
         title="Confirm before removing"
-        sectionSubtitle="You are removing one of your donation goals, which means incoming donations won't add to this goal anymore. This action cannot be undone."
+        sectionSubtitle="You are
+        removing one of your donation goals, which means incoming donations won't add to this goal anymore. This action cannot be undone."
         confirmButtonText="REMOVE"
         confirmButtonIntent="secondary"
       />
     </>
   ) : inactiveGoals?.length == 0 && !activeGoal ? (
-    <NoGoals setIsNewGoalFormOpen={setIsNewGoalFormOpen} />
+    <NoGoals setIsNewGoalFormOpenAction={setIsNewGoalFormOpenAction} />
   ) : (
     <></>
   );

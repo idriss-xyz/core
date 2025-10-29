@@ -5,10 +5,10 @@ import { getAccessToken } from '@privy-io/react-auth';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { useAuth } from '@/app/creators/context/auth-context';
-import { FormFieldWrapper } from '@/app/creators/components/layout';
-import { ToastData, useToast } from '@/app/creators/context/toast-context';
-import { createDonationGoal } from '@/app/creators/utils';
+import { useAuth } from '@/app/context/auth-context';
+import { FormFieldWrapper } from '@/app/components/layout';
+import { ToastData, useToast } from '@/app/context/toast-context';
+import { createDonationGoal } from '@/app/utils';
 
 type FormPayload = {
   name: string;

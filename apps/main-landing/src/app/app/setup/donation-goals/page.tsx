@@ -5,9 +5,9 @@ import { Card } from '@idriss-xyz/ui/card';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { classes } from '@idriss-xyz/ui/utils';
 
-import { useAuth } from '@/app/creators/context/auth-context';
-import { ConfirmationModal } from '@/app/creators/components/confirmation-modal/confirmation-modal';
-import { CopyInput } from '@/app/creators/components/copy-input/copy-input';
+import { useAuth } from '@/app/context/auth-context';
+import { ConfirmationModal } from '@/app/components/confirmation-modal/confirmation-modal';
+import { CopyInput } from '@/app/components/copy-input/copy-input';
 
 import { GoalsList } from './goals-list';
 import { NewGoalForm } from './components/new-goal-form';
@@ -111,7 +111,7 @@ export default function DonationGoalsPage() {
 
         <ActiveGoal />
 
-        <GoalsList setIsNewGoalFormOpen={setIsNewGoalFormOpen} />
+        <GoalsList setIsNewGoalFormOpenAction={setIsNewGoalFormOpen} />
 
         <ConfirmationModal
           isOpened={isCopyModalOpen}
