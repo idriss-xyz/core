@@ -298,14 +298,17 @@ export default function PaymentMethods() {
           heading: 'Settings saved',
           autoClose: true,
         });
-      } else {
-        toast({
-          type: 'error',
-          heading: 'Unable to save settings',
-          description: 'Please try again later',
-          autoClose: true,
-        });
+
+        formMethods.reset(data);
+        return;
       }
+
+      toast({
+        type: 'error',
+        heading: 'Unable to save settings',
+        description: 'Please try again later',
+        autoClose: true,
+      });
     } catch (error) {
       console.error('Error saving profile:', error);
       toast({
