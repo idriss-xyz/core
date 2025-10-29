@@ -2,7 +2,6 @@
 import { Button } from '@idriss-xyz/ui/button';
 import { Form } from '@idriss-xyz/ui/form';
 import { getAccessToken } from '@privy-io/react-auth';
-import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { useAuth } from '@/app/context/auth-context';
@@ -30,15 +29,11 @@ interface NewGoalFormProperties {
 
 export function NewGoalForm({ onGoalCreated, onClose }: NewGoalFormProperties) {
   const { creator } = useAuth();
-  const { toast, removeToast } = useToast();
-
-  const [unsavedChangesToastId, setUnsavedChangesToastId] = useState('');
+  const { toast } = useToast();
 
   const formMethods = useForm<FormPayload>({
     mode: 'onSubmit',
   });
-
-  const { isDirty } = formMethods.formState;
 
   const onSubmit = async (data: FormPayload) => {
     try {
@@ -62,8 +57,7 @@ export function NewGoalForm({ onGoalCreated, onClose }: NewGoalFormProperties) {
         },
         authToken,
       );
-      removeToast(unsavedChangesToastId);
-      setUnsavedChangesToastId('');
+
       formMethods.reset();
 
       toast({
@@ -80,34 +74,6 @@ export function NewGoalForm({ onGoalCreated, onClose }: NewGoalFormProperties) {
       toast(errorSaveSettingsToast);
     }
   };
-
-  useEffect(() => {
-    if (isDirty && !unsavedChangesToastId) {
-      console.log('creating new toast');
-      // Create new toast when dirty and no toast exists
-      const toastId = toast({
-        type: 'error',
-        heading: 'You have unsaved changes',
-        description: 'Don´t forget to save when you are done',
-        iconName: 'RefreshCw',
-        closable: false,
-      });
-      setUnsavedChangesToastId(toastId);
-    } else if (!isDirty && unsavedChangesToastId) {
-      // Remove toast when no longer dirty
-      removeToast(unsavedChangesToastId);
-      setUnsavedChangesToastId('');
-    }
-  }, [isDirty, unsavedChangesToastId, toast, removeToast]);
-
-  // Cleanup toast on unmount
-  useEffect(() => {
-    return () => {
-      if (unsavedChangesToastId) {
-        removeToast(unsavedChangesToastId);
-      }
-    };
-  }, [unsavedChangesToastId, removeToast]);
 
   return (
     <>
