@@ -51,11 +51,11 @@ export default function SetupLayout({
     },
     {
       name: 'Donation goals',
-      href: '/creators/app/setup/donation-goals',
+      href: '/app/setup/donation-goals',
       iconName: 'Goal',
       isActive:
-        pathname === '/creators/app/setup/donation-goals/active' ||
-        pathname === '/creators/app/setup/donation-goals/history',
+        pathname === '/app/setup/donation-goals/active' ||
+        pathname === '/app/setup/donation-goals/history',
     },
     {
       name: 'Page customization',
