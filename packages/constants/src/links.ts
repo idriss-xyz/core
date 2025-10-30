@@ -1,10 +1,14 @@
-export const MAIN_LANDING_LINK = 'https://www.idriss.xyz';
-export const VAULT_LINK = 'https://www.idriss.xyz/vault';
+export const MAIN_LANDING_LINK = 'https://idriss.xyz';
+export const VAULT_LINK = 'https://idriss.xyz/vault';
 export const STATIC_ORIGINS = [
   'https://idriss.xyz',
+  'https://www.idriss.xyz',
   'https://main-landing-staging.up.railway.app',
+  'https://www.main-landing-staging.up.railway.app',
   'http://localhost:3000',
 ];
+
+export const CREATOR_API_URL = 'https://creators-api.idriss.xyz';
 
 export const SOCIAL_LINK = {
   X: 'https://x.com/idriss_xyz',
@@ -14,6 +18,7 @@ export const SOCIAL_LINK = {
   TIKTOK: 'https://www.tiktok.com/@idriss_xyz_',
   YOUTUBE: 'https://www.youtube.com/@idriss_xyz',
 };
+export const ZAPPER_API_URL = 'https://public.zapper.xyz/graphql';
 
 /**
  * Our things announced by us
@@ -41,13 +46,14 @@ export const EXTERNAL_ANNOUNCEMENT_LINK = {
 };
 
 export const DOCUMENTATION_LINK = 'https://docs.idriss.xyz/';
+export const DOCUMENTATION_LINK_DAO = 'https://docs.idriss.xyz/idriss-token';
 export const SUPPORT_LINK = 'https://discord.gg/WC4fvKB8RC';
 export const CREATOR_SETUP_GUIDE_LINK =
   'https://docs.idriss.xyz/user-guides/creators#setup-guide';
 export const EXTENSION_USER_GUIDE_LINK =
   'https://docs.idriss.xyz/user-guides/extension';
 export const GITHUB_LINK = 'https://www.github.com/idriss-xyz';
-export const BLOG_LINK = 'https://www.paragraph.xyz/@idriss';
+export const DAO_LINK = 'https://idriss.xyz/dao';
 export const BRAND_KIT_LINK =
   'https://docs.idriss.xyz/contributor-guides/brand-resources';
 export const BRAND_GUIDELINE_LINK = 'https://docs.idriss.xyz/resources/brand';
@@ -63,10 +69,6 @@ export const TOKENOMICS_DOCS_LINK =
 
 export const SNAPSHOT_IDRISS_LINK = 'https://snapshot.box/#/s:idrissxyz.eth';
 
-export const CREATORS_LINK = 'https://www.idriss.xyz/creators';
-export const CREATORS_FORM_LINK = 'https://www.idriss.xyz/creators/app';
-export const CREATORS_DONATE_LINK = 'https://www.idriss.xyz/creators/donate';
-
 export const CHROME_EXTENSION_LINK =
   'https://chromewebstore.google.com/detail/idriss/fghhpjoffbgecjikiipbkpdakfmkbmig';
 
@@ -75,6 +77,9 @@ export const TWITCH_EXTENSION_LINK =
 
 export const CREATORS_USER_GUIDE_LINK =
   'https://docs.idriss.xyz/user-guides/creators';
+
+export const CREATORS_NFT_DONATIONS_X_POST =
+  'https://x.com/idriss_xyz/status/1973146133469024326';
 
 export const TOKEN_TERMS_AND_CONDITIONS_LINK =
   'https://docs.idriss.xyz/idriss-token/terms-and-conditions';

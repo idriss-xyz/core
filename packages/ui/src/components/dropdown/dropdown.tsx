@@ -11,6 +11,7 @@ type Properties = {
   children: (properties: ChildrenRenderProperties) => ReactNode;
   className?: string;
   contentAlign?: 'start' | 'center' | 'end';
+  onChange?: (opened: boolean) => void;
 };
 
 const DropdownBase = ({
@@ -18,12 +19,17 @@ const DropdownBase = ({
   children,
   className,
   contentAlign,
+  onChange,
 }: Properties) => {
   const [isOpened, setIsOpened] = useState(false);
 
-  const onOpenChange = useCallback((opened: boolean) => {
-    setIsOpened(opened);
-  }, []);
+  const onOpenChange = useCallback(
+    (opened: boolean) => {
+      setIsOpened(opened);
+      onChange?.(opened);
+    },
+    [onChange],
+  );
 
   const close = useCallback(() => {
     onOpenChange(false);

@@ -2,4 +2,5 @@ export type WidgetVariants =
   | 'panel'
   | 'videoOverlay'
   | 'videoComponent'
-  | 'creatorsDashboard';
+  | 'creatorsDashboard'
+  | 'donatePage';

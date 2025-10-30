@@ -48,6 +48,7 @@ import {
   PlayCircle,
   GalleryVertical,
   RefreshCw,
+  RotateCcw,
   FileUp,
   Gamepad2,
   Paintbrush,
@@ -56,6 +57,11 @@ import {
   MailCheck,
   Handshake,
   Send,
+  Search,
+  Filter,
+  Layers,
+  Star,
+  ExternalLink,
 } from 'lucide-react';
 
 import * as customIcons from './custom';
@@ -110,6 +116,7 @@ export const ICON = {
   PlayCircle,
   GalleryVertical,
   RefreshCw,
+  RotateCcw,
   FileUp,
   Gamepad2,
   Paintbrush,
@@ -118,5 +125,10 @@ export const ICON = {
   MailCheck,
   Handshake,
   Send,
+  Search,
+  Filter,
+  Layers,
+  Star,
+  ExternalLink,
   ...customIcons,
 };

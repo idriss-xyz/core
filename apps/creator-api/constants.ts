@@ -1,118 +1,4 @@
-export const ZAPPER_API_URL = 'https://public.zapper.xyz/graphql';
-
-export const TipHistoryQuery = `
-  query TransactionsForAppV2($slug: String!, $after: String) {
-  transactionsForAppV2(slug: $slug first: 25, after: $after) {
-    edges {
-      node {
-        timestamp
-          network
-          transaction {
-            hash
-            fromUser {
-              address
-              displayName {
-                value
-                source
-              }
-              avatar {
-                value {
-                  ... on AvatarUrl {
-                    url
-                  }
-                }
-                source
-              }
-              farcasterProfile {
-                username
-                metadata {
-                  displayName
-                  imageUrl
-                }
-              }
-            }
-            toUser {
-              address
-            }
-            decodedInputV2 {
-              data {
-                value
-                name
-              }
-            }
-          }
-          interpretation {
-            descriptionDisplayItems {
-              ... on TokenDisplayItem {
-                network
-                amountRaw
-                tokenV2 {
-                  symbol
-                  imageUrlV2
-                  priceData {
-                    price
-                  }
-                  address
-                  decimals
-                  name
-                }
-              }
-              ... on StringDisplayItem {
-                stringValue
-              }
-              ... on ActorDisplayItem {
-                account {
-                  address
-                  displayName {
-                    source
-                    value
-                  }
-                  avatar {
-                    value {
-                      ... on AvatarUrl {
-                        url
-                      }
-                    }
-                    source
-                  }
-                  farcasterProfile {
-                    username
-                    metadata {
-                      displayName
-                      imageUrl
-                    }
-                  }
-                }
-              }
-            }
-          }
-          app {
-            slug
-          }
-        }
-      }
-      pageInfo {
-        hasNextPage
-        endCursor
-      }
-    }
-  }
-`;
-
-export const PriceHistoryQuery = `
-query ($address: Address!, $currency: Currency!, $timeFrame: TimeFrame!, $chainId: Int!) {
-  fungibleTokenV2(address: $address, chainId: $chainId){
-    priceData {
-      price
-      priceTicks(currency: $currency, timeFrame: $timeFrame) {
-        timestamp
-        median
-      }
-    }
-  }
-}`;
-
-export const OLDEST_TRANSACTION_TIMESTAMP = 1_702_339_200;
+import { CREATOR_CHAIN } from '@idriss-xyz/constants';
 
 export const CREATOR_LINKS: Record<string, string> = {
   '0xc4607e7ab9200f955ec617698b2a4ee0c66f3fb4':
@@ -145,25 +31,15 @@ export const CREATOR_LINKS: Record<string, string> = {
     'https://www.idriss.xyz/creators/donate?address=0x0519861371532dBcDBA321DdC0E3108885f6E2FF&token=ETH,USDC,DAI,PRIME,GHST,YGG,PDT,RON,AXS,PENGU,DEGEN,IDRISS&network=Abstract,Aleph,Ronin,Base,Ethereum,Mantle,Optimism,Polygon&creatorName=Dur4zn1ll0',
 };
 
-export const NETWORK_TO_ALCHEMY = {
-  BASE_MAINNET: 'base-mainnet',
-  ABSTRACT_MAINNET: 'abstract-mainnet',
-  ETHEREUM_MAINNET: 'eth-mainnet',
-  POLYGON_MAINNET: 'polygon-mainnet',
-  OPTIMISM_MAINNET: 'optimism-mainnet',
-  MANTLE_MAINNET: 'mantle-mainnet',
-  RONIN_MAINNET: 'ronin-mainnet',
-} as const;
+export const OPENSEA_BASE_URLS: Record<number, string> = {
+  [CREATOR_CHAIN.ETHEREUM.id]: `https://api.opensea.io/api/v2/chain/ethereum`,
+  [CREATOR_CHAIN.BASE.id]: `https://api.opensea.io/api/v2/chain/base`,
+};
 
-export const ALCHEMY_NATIVE_TOKENS = {
-  ETHEREUM_MAINNET: 'ETH',
-  ABSTRACT_MAINNET: 'ETH',
-  BASE_MAINNET: 'ETH',
-  MANTLE_MAINNET: 'MNT',
-  OPTIMISM_MAINNET: 'ETH',
-  POLYGON_MAINNET: 'POL',
-  RONIN_MAINNET: 'RON',
-} as const;
+export const ALCHEMY_BASE_URLS: Record<number, string> = {
+  [CREATOR_CHAIN.ETHEREUM.id]: `https://eth-mainnet.g.alchemy.com`,
+  [CREATOR_CHAIN.BASE.id]: `https://base-mainnet.g.alchemy.com`,
+};
 
 export const monthNames = [
   'January',

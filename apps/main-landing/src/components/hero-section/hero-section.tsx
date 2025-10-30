@@ -23,7 +23,7 @@ export const HeroSection = () => {
         className="pointer-events-none absolute top-0 hidden opacity-40 lg:block"
         alt=""
       />
-      <div className="z-1 px-safe">
+      <div className="z-1 flex flex-col items-center gap-4 text-center px-safe md:gap-8">
         <h1
           className={classes(
             'container my-0 text-balance text-center text-display4 font-normal gradient-text lg:text-display2',
@@ -31,20 +31,24 @@ export const HeroSection = () => {
             '4xl:text-display1',
           )}
         >
-          BUILDING <br className="sm:hidden" /> ONCHAIN APPS <br /> THAT MATTER
+          IDRISS DAO
         </h1>
+        <span className="text-center text-body2 text-neutralGreen-900/70">
+          The decentralized organization overseeing the economy <br />
+          and governance of the IDRISS app.
+        </span>
+        <Button
+          aria-label="Get started"
+          intent="primary"
+          size="large"
+          className="z-1 lg:mb-0"
+          suffixIconName="IdrissArrowRight"
+          asLink
+          href={INTERNAL_LINK.SUPERPOWERS}
+        >
+          EXPLORE
+        </Button>
       </div>
-      <Button
-        aria-label="Get started"
-        intent="primary"
-        size="large"
-        className="z-1 my-9 lg:mb-0 lg:mt-9"
-        suffixIconName="IdrissArrowRight"
-        asLink
-        href={INTERNAL_LINK.SUPERPOWERS}
-      >
-        EXPLORE
-      </Button>
       <link rel="preload" as="image" href={tokensFlow.src} />
       <img
         data-blurdataul={tokensFlow.src}

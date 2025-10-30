@@ -134,7 +134,8 @@
         "AWS_S3_BUCKET",
         "AWS_LAMBDA_FAUCET_NAME",
         "AWS_LAMBDA_REWARDS_NAME",
-        "FAUCET_ADDRESS"
+        "FAUCET_ADDRESS",
+        "OPENSEA_API_KEY"
       ]
     },
     "@idriss-xyz/creator-api#prod": {
@@ -160,7 +161,8 @@
         "AWS_S3_BUCKET",
         "AWS_LAMBDA_FAUCET_NAME",
         "AWS_LAMBDA_REWARDS_NAME",
-        "FAUCET_ADDRESS"
+        "FAUCET_ADDRESS",
+        "OPENSEA_API_KEY"
       ]
     },
     "@idriss-xyz/creator-api#test": {
@@ -178,6 +180,27 @@
     "@idriss-xyz/twitch-extension#dev": {
       "cache": false,
       "persistent": true
+    },
+    "@idriss-xyz/ponder-indexer#dev": {
+      "cache": false,
+      "persistent": true,
+      "env": [
+        "DATABASE_URL",
+        "ZAPPER_API_KEY",
+        "ALCHEMY_API_KEY",
+        "OPENSEA_API_KEY"
+      ]
+    },
+    "@idriss-xyz/ponder-indexer#start": {
+      "cache": true,
+      "persistent": true,
+      "env": [
+        "DATABASE_URL",
+        "ZAPPER_API_KEY",
+        "ALCHEMY_API_KEY",
+        "OPENSEA_API_KEY",
+        "RAILWAY_PROJECT_ID"
+      ]
     },
     "lint": {
       "inputs": [

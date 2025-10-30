@@ -73,11 +73,11 @@ This command will create a `dist` directory inside your twitch-extension app dir
 
    > Select how you will configure your extension: `Extension Configuration Service`
 
-   > Allowlist for Image Domains: `https://imagedelivery.net, https://i.imgur.com, https://ik.imagekit.io/lens/media-snapshot, https://euc.li`
+   > Allowlist for Image Domains: `https://static-cdn.jtvnw.net`
 
    > Allowlist for Media Domains: `https://twitch.tv/, https://dev.twitch.tv/`
 
-   > Allowlist for URL Fetching Domains: `wss://creators-api.idriss.xyz, https://creators-api.idriss.xyz, https://eth.llamarpc.com, https://euc.li, https://api.idriss.xyz`
+   > Allowlist for URL Fetching Domains: `wss://creators-api.idriss.xyz, https://creators-api.idriss.xyz, https://eth.llamarpc.com`
 
 &nbsp;
 
@@ -114,10 +114,10 @@ In this step, you need to decide whether you're using [local test](https://dev.t
 ```ts
 import { QueryProvider } from "@idriss-xyz/main-landing/providers";
 
-import { Leaderboard } from "@idriss-xyz/main-landing/app/creators/donate/components/leaderboard";
+import { Leaderboard } from "@idriss-xyz/main-landing/app/donate/components/leaderboard";
 
-import { DonationData, LeaderboardStats } from "@idriss-xyz/main-landing/app/creators/donate/types";
+import { StoredDonationData, LeaderboardStats } from "@idriss-xyz/main-landing/app/donate/types";
 
-import { useGetTipHistory } from "@idriss-xyz/main-landing/app/creators/donate/commands/get-donate-history";
+import { useGetTipHistory } from "@idriss-xyz/main-landing/app/donate/commands/get-donate-history";
 ```
 

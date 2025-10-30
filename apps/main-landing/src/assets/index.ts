@@ -9,7 +9,6 @@ export { default as DEFAULT_CASH_REGISTER_SOUND } from './default-cash-register.
 export { default as BILL } from './bill.mp3';
 export { default as LAURA } from './laura.mp3';
 export { default as LIAM } from './liam.mp3';
-export { default as TEST_TTS_MESSAGE_SOUND } from './test-tts-message.mp3';
 export { default as IDRISS_COIN } from './idriss-coin.png';
 export { default as IDRISS_SCENE_STREAM } from './idriss-scene-stream.png';
 export { default as IDRISS_SCENE_STREAM_2 } from './idriss-scene-stream-2.png';
@@ -24,3 +23,5 @@ export { default as AxieLogo } from './game-logos/axie.svg';
 export { default as OffTheGridLogo } from './game-logos/offthegrid.svg';
 export { default as RoninLogo } from './game-logos/ronin.svg';
 export { default as ParallelLogo } from './game-logos/parallel.svg';
+export { default as ACCOUNT_CARD } from './account-card.svg';
+export { default as GUEST_CARD } from './guest-card.svg';

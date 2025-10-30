@@ -1,14 +1,13 @@
 import { Hex, parseUnits } from 'viem';
-
 import {
   Chain,
   CHAIN_ID_TO_TOKENS,
   CREATOR_CHAIN,
-  DonationData,
+  StoredDonationData,
   IDRISS_TOKEN_ADDRESS,
   LeaderboardStats,
   TokenBalance,
-} from '../../constants/src';
+} from '@idriss-xyz/constants';
 
 import { getTokenPerDollar } from './get-token-per-dollar';
 
@@ -36,7 +35,7 @@ export const calculateDollarsInIdrissToken = async (
 };
 
 export const getFilteredDonationsByPeriod = (
-  donations: DonationData[],
+  donations: StoredDonationData[],
   period?: string,
 ) => {
   if (!period || period === 'all') {
@@ -63,7 +62,7 @@ export const getFilteredDonationsByPeriod = (
 };
 
 export function calculateDonationLeaderboard(
-  donations: DonationData[],
+  donations: StoredDonationData[],
   addressToCreatorMap?: Map<string, MappableCreator>,
 ): LeaderboardStats[] {
   const groupedDonations: Record<
@@ -79,13 +78,20 @@ export function calculateDonationLeaderboard(
   > = {};
 
   for (const donation of donations) {
-    const creator = addressToCreatorMap?.get(
-      donation.fromAddress.toLowerCase(),
-    );
+    const fromAddrLower = donation.fromAddress.toLowerCase();
 
-    const groupKey = creator
-      ? creator.primaryAddress.toLowerCase()
-      : donation.fromAddress.toLowerCase();
+    const donorDisplayName = donation.fromUser?.displayName ?? 'anon';
+    const donorAvatarUrl = donation.fromUser?.avatarUrl ?? '';
+
+    const creator = addressToCreatorMap?.get(fromAddrLower);
+
+    const isRegisteredDonor = !creator && donorDisplayName !== 'anon';
+
+    const groupKey: string = creator
+      ? creator.primaryAddress.toLowerCase() // bundle all creator wallets
+      : isRegisteredDonor
+        ? donorDisplayName.toLowerCase() // bundle by user name
+        : fromAddrLower; // anonymous → per-address
 
     if (!groupedDonations[groupKey]) {
       groupedDonations[groupKey] = {
@@ -97,10 +103,14 @@ export function calculateDonationLeaderboard(
         donorSince: donation.timestamp,
         displayName: creator
           ? creator.displayName
-          : donation.fromUser.displayName!,
+          : isRegisteredDonor
+            ? donorDisplayName
+            : 'anon',
         avatarUrl: creator
-          ? (creator.profilePictureUrl ?? donation.fromUser.avatarUrl!)
-          : donation.fromUser.avatarUrl!,
+          ? (creator.profilePictureUrl ?? '')
+          : isRegisteredDonor
+            ? donorAvatarUrl
+            : '',
       };
     }
 
@@ -196,8 +206,6 @@ export function calculateTokensToSend({
   const totalTokenBalance = parseUnits(balance.balance, balance.decimals);
   const totalUsdValue = balance.usdValue;
 
-  // Use 18 decimals for high-precision floating point math, a common
-  // standard in crypto, to prevent rounding errors.
   const precision = 1e18;
   const scaledRequestedAmount = BigInt(
     Math.round(requestedUsdAmount * precision),

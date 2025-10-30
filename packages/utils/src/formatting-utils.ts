@@ -1,7 +1,6 @@
 import { PublicKey } from '@solana/web3.js';
-import { Hex, isAddress } from 'viem';
-
-import { CHAIN, NATIVE_COIN_ADDRESS } from '../../constants/src';
+import { Hex } from 'viem';
+import { CHAIN, NATIVE_COIN_ADDRESS } from '@idriss-xyz/constants';
 
 export const formatBigNumber = (number: number | string): string => {
   if (Number(number) < 1000) {
@@ -126,17 +125,7 @@ export const getSafeNumber = (
 };
 
 export const getShortWalletHex = (walletAddress: string) => {
-  return `${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}`;
-};
-
-export const getModifiedLeaderboardName = (name: string) => {
-  if (isAddress(name) || (name.startsWith('0x') && name.includes('...'))) {
-    return 'anon';
-  }
-  if (name.includes('.')) {
-    return name.split('.')[0];
-  }
-  return name;
+  return `${walletAddress.slice(0, 6)}...${walletAddress.slice(-6)}`;
 };
 
 export const getFormattedTimeDifference = (

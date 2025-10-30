@@ -27,17 +27,46 @@ export type Chain = ViemChain & {
   logo: string;
   shortName: string;
   dbName: string;
+  iconName?: string;
 };
 
 export interface Token {
   name: string;
   logo: string;
   symbol: string;
+  iconName?: string;
 }
 
 export interface ChainToken extends Token {
   decimals: number;
   address: Hex;
+}
+
+export interface NftCollection {
+  address: Hex;
+  name: string;
+  standard: 'erc1155' | 'erc721';
+  slug: string;
+  image: string;
+  shortName: string;
+  category: string;
+}
+
+export interface NftOption {
+  tokenId: string;
+  name: string;
+  image: string;
+  balance: string;
+  type: 'erc721' | 'erc1155';
+}
+
+export interface CollectionOption {
+  address: Hex;
+  chainId: number;
+  name: string;
+  image: string;
+  usdValue: number;
+  itemsCount: number;
 }
 
 export interface TipHistoryTokenV2 {
@@ -101,23 +130,8 @@ export interface TipHistoryNode {
 }
 
 export interface TipHistoryResponse {
-  donations: DonationData[];
+  donations: StoredDonationData[];
   leaderboard: LeaderboardStats[];
-}
-
-export interface DonationData {
-  transactionHash: Hex;
-  fromAddress: Hex;
-  toAddress: Hex;
-  timestamp: number;
-  comment?: string;
-  tradeValue: number;
-  tokenAddress: Hex;
-  network: string;
-  fromUser: DonationUser;
-  toUser: DonationUser;
-  token: DonationToken;
-  amountRaw: string;
 }
 
 export interface LeaderboardStats extends DonationUser {
@@ -135,6 +149,20 @@ export interface DonationUser {
   avatarSource?: string;
 }
 
+export interface DonorHistoryStats {
+  totalDonationsCount: number;
+  totalDonationAmount: number;
+  totalNftDonationAmount: number;
+  mostDonatedToAddress: Hex;
+  mostDonatedToUser: DonationUser;
+  biggestDonationAmount: number;
+  favoriteDonationToken: string;
+  favoriteTokenMetadata: DonationToken | null;
+  donorDisplayName: string | null;
+  donorAvatarUrl: string | null;
+  positionInLeaderboard: number | null;
+}
+
 export interface DonationToken {
   address: Hex;
   symbol: string;
@@ -144,8 +172,96 @@ export interface DonationToken {
   name?: string;
 }
 
+export interface TokenEarnings {
+  tokenData: DonationToken;
+  totalAmount: number;
+  donationCount: number;
+}
+
+export interface DonationWithTimeAndAmount {
+  year: number;
+  month: string;
+  amount: number;
+}
+
+export interface RecipientDonationStats {
+  distinctDonorsCount: number;
+  totalDonationsCount: number;
+  biggestDonation: number;
+  donationsWithTimeAndAmount: DonationWithTimeAndAmount[];
+  earningsByTokenOverview: TokenEarnings[];
+}
+
 export interface BalanceTableItem {
   totalAmount: number;
   totalValue: number;
   token: DonationToken;
 }
+
+/* ────────────── common donation shape ────────────── */
+interface BaseDonationData {
+  transactionHash: Hex;
+  fromAddress: Hex;
+  toAddress: Hex;
+  timestamp: number;
+  comment?: string;
+  tradeValue: number;
+  fromUser: DonationUser;
+  toUser: DonationUser;
+}
+
+/* ────────────── token donation ────────────── */
+export interface TokenDonationData extends BaseDonationData {
+  kind: 'token';
+  tokenAddress: Hex;
+  amountRaw: string;
+  network: string;
+  token: DonationToken;
+}
+
+/* ────────────── nft donation ──────────────── */
+export interface NftDonationData extends BaseDonationData {
+  kind: 'nft';
+  collectionAddress: Hex;
+  tokenId: number;
+  quantity: number;
+  network: string;
+
+  /* token-level meta */
+  name: string;
+  imgSmall?: string;
+  imgMedium?: string;
+  imgLarge?: string;
+  imgPreferred?: string;
+
+  /* collection-level meta */
+  collectionShortName: string;
+  collectionSlug: string;
+  collectionCategory: string;
+}
+
+export type NftBalance = {
+  chainId: number;
+  contract: Hex;
+  collection: string;
+  tokenId: string;
+  balance: string;
+  type: 'erc721' | 'erc1155';
+
+  /* token meta */
+  name: string;
+  imgSmall?: string;
+  imgMedium?: string;
+  imgLarge?: string;
+  imgPreferred?: string;
+
+  /* collection meta */
+  collectionImage: string;
+  collectionShortName: string;
+  collectionCategory: string;
+
+  usdValue?: number;
+};
+
+/* ────────────── union used by creator-api ─── */
+export type StoredDonationData = TokenDonationData | NftDonationData;

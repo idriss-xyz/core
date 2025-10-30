@@ -1,19 +1,19 @@
 import { Router, Request, Response } from 'express';
-import { Hex } from 'viem';
-import { fetchDonationsByToAddress } from '../db/fetch-known-donations';
 import { TipHistoryResponse } from '../types';
-import { syncAndStoreNewDonations } from '../services/zapper/process-donations';
-import { connectedClients } from '../services/socket-server';
 import {
   calculateDonationLeaderboard,
   createAddressToCreatorMap,
 } from '@idriss-xyz/utils';
-import { DonationData } from '@idriss-xyz/constants';
+import { enrichDonationsWithCreatorInfo } from '../utils/calculate-stats';
+import { DEMO_ADDRESS, StoredDonationData } from '@idriss-xyz/constants';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
-import { DEMO_ADDRESS } from '../tests/test-data/constants';
-import { AppDataSource } from '../db/database';
-import { Creator, CreatorAddress } from '../db/entities';
+import {
+  AppDataSource,
+  Creator,
+  fetchDonationsByToAddress,
+} from '@idriss-xyz/db';
+import { resolveCreatorAndAddresses } from '../utils/calculate-stats';
 
 const router = Router();
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -27,9 +27,9 @@ const RETRY_INTERVAL = 5000;
 async function handleFetchTipHistory(req: Request, res: Response) {
   try {
     // Support address from either URL parameter (GET) or body (POST)
-    const address = (req.params.address || req.body.address) as string;
+    const identifier = (req.params.address || req.body.address) as string;
 
-    if (address && address === DEMO_ADDRESS) {
+    if (identifier && identifier === DEMO_ADDRESS) {
       const mockData = JSON.parse(
         readFileSync(
           resolve(__dirname, '../tests/test-data/mock-donations.json'),
@@ -40,32 +40,13 @@ async function handleFetchTipHistory(req: Request, res: Response) {
       return;
     }
 
-    if (!address || typeof address !== 'string') {
+    if (!identifier || typeof identifier !== 'string') {
       res.status(400).json({ error: 'Invalid or missing address' });
       return;
     }
-    const hexAddress = address as Hex;
 
-    const creatorRepository = AppDataSource.getRepository(Creator);
-    const creatorAddressRepository =
-      AppDataSource.getRepository(CreatorAddress);
-
-    let creator = await creatorRepository.findOne({
-      where: { address: hexAddress },
-      relations: ['associatedAddresses'],
-    });
-
-    if (!creator) {
-      const secondaryAddress = await creatorAddressRepository.findOne({
-        where: { address: hexAddress },
-        relations: ['creator', 'creator.associatedAddresses'],
-      });
-      creator = secondaryAddress?.creator ?? null;
-    }
-
-    const allAddresses = creator
-      ? [creator.address, ...creator.associatedAddresses.map((a) => a.address)]
-      : [hexAddress];
+    const { addresses: allAddresses } =
+      await resolveCreatorAndAddresses(identifier);
 
     const donations = (
       await Promise.all(
@@ -73,29 +54,13 @@ async function handleFetchTipHistory(req: Request, res: Response) {
       )
     ).flat();
 
+    const creatorRepository = AppDataSource.getRepository(Creator);
     const allCreators = await creatorRepository.find({
       relations: ['associatedAddresses'],
     });
     const addressToCreatorMap = createAddressToCreatorMap(allCreators);
 
-    for (const donation of donations) {
-      if (creator) {
-        donation.toUser.displayName = creator.displayName;
-        if (creator.profilePictureUrl) {
-          donation.toUser.avatarUrl = creator.profilePictureUrl;
-        }
-      }
-
-      const donorCreator = addressToCreatorMap.get(
-        donation.fromAddress.toLowerCase(),
-      );
-      if (donorCreator) {
-        donation.fromUser.displayName = donorCreator.displayName;
-        if (donorCreator.profilePictureUrl) {
-          donation.fromUser.avatarUrl = donorCreator.profilePictureUrl;
-        }
-      }
-    }
+    enrichDonationsWithCreatorInfo(donations, addressToCreatorMap);
 
     const leaderboard = await calculateDonationLeaderboard(
       donations,
@@ -121,65 +86,5 @@ router.get('/:address', handleFetchTipHistory);
 // --- Endpoint 1.1: BACKWARD COMPATIBILITY for old clients ---
 // This keeps the old POST endpoint working.
 router.post('/', handleFetchTipHistory);
-
-// --- Endpoint 2: Sync All Donations and Push to Clients ---
-router.post('/sync', async (req: Request, res: Response) => {
-  try {
-    // Address of the creator expecting the donation, used to control retries.
-    const { address } = req.body;
-    if (!address || typeof address !== 'string') {
-      res.status(400).json({ error: 'Invalid or missing address' });
-      return;
-    }
-
-    let retries = 0;
-    let foundDonationForUser = false;
-    const allNewlySyncedDonations: DonationData[] = [];
-
-    while (retries < MAX_RETRIES && !foundDonationForUser) {
-      if (retries > 0) {
-        await delay(RETRY_INTERVAL);
-      }
-      retries++;
-
-      const newDonations = await syncAndStoreNewDonations();
-
-      // Always process all new donations found in this batch
-      if (newDonations.length > 0) {
-        allNewlySyncedDonations.push(...newDonations);
-
-        // Check if the donation for the specific user is in this batch
-        if (
-          newDonations.some(
-            (d) => d.toAddress.toLowerCase() === address.toLowerCase(),
-          )
-        ) {
-          foundDonationForUser = true;
-        }
-
-        // Distribute ALL new donations to their respective clients via WebSockets
-        for (const donation of newDonations) {
-          const clients = connectedClients.get(
-            donation.toAddress.toLowerCase(),
-          );
-          if (clients) {
-            for (const socket of clients) {
-              socket.emit('newDonation', donation);
-            }
-          }
-        }
-      }
-    }
-
-    if (allNewlySyncedDonations.length > 0) {
-      res.json({ data: allNewlySyncedDonations });
-    } else {
-      res.status(200).json({ message: 'No new donations found after retries' });
-    }
-  } catch (error) {
-    console.error('Donation sync error:', error);
-    res.status(500).json({ error: 'Failed to sync donation data' });
-  }
-});
 
 export default router;

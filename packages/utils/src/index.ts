@@ -13,7 +13,6 @@ export {
   getTransactionUrls,
   getSafeNumber,
   getShortWalletHex,
-  getModifiedLeaderboardName,
   getFormattedTimeDifference,
   getTimeDifferenceString,
   isSolanaAddress,
@@ -33,3 +32,5 @@ export {
 } from './donation-utils';
 
 export { getTokenPerDollar } from './get-token-per-dollar';
+
+export { getNftMetadata, fetchPreferredImage } from './nft-metadata';

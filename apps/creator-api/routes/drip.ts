@@ -1,9 +1,16 @@
 import { Router, Request, Response } from 'express';
 import { getAddress, Hex } from 'viem';
+import {
+  CHAIN_ID_TO_NFT_COLLECTIONS,
+  NULL_ADDRESS,
+} from '@idriss-xyz/constants';
 import dotenv from 'dotenv';
-import { AppDataSource } from '../db/database';
-import { Creator } from '../db/entities';
-import { verifyToken } from '../db/middleware/auth.middleware';
+import {
+  AppDataSource,
+  Creator,
+  hasClaimedToday,
+  recordClaim,
+} from '@idriss-xyz/db';
 import { LAMBDA_CLIENT, LAMBDA_FAUCET } from '../config/aws-config';
 import { creatorProfileService } from '../services/creator-profile.service';
 import {
@@ -12,11 +19,12 @@ import {
   chainMap,
   decodeLambda,
   estimateErc20GasOrDefault,
+  estimateNftGasOrDefault,
   getClient,
 } from '../utils/drip-utils';
-import { hasClaimedToday, recordClaim } from '../db/drip-quota';
 import { CHAIN_ID_TO_TOKENS } from '@idriss-xyz/constants';
 import { tightCors } from '../config/cors';
+import { verifyToken } from '../middleware/auth.middleware';
 
 dotenv.config();
 
@@ -27,7 +35,18 @@ router.post(
   tightCors,
   verifyToken(),
   async (req: Request, res: Response) => {
-    const { chainId, token } = req.body;
+    const { chainId, token, type, tokenId } = req.body;
+
+    const tokenParam: string = typeof token === 'string' ? token : NULL_ADDRESS;
+    const isNft = type && ['erc721', 'erc1155'].includes(type);
+
+    let checkedTokenAddress: Hex;
+    try {
+      checkedTokenAddress = getAddress(tokenParam);
+    } catch {
+      res.status(400).json({ error: 'Invalid token address' });
+      return;
+    }
 
     if (!Object.keys(chainMap).includes(String(chainId))) {
       res.status(400).json({ error: 'Unsupported chainId' });
@@ -35,11 +54,26 @@ router.post(
     }
 
     const chain = chainMap[String(chainId) as keyof typeof chainMap];
-    const allowedTokens = CHAIN_ID_TO_TOKENS[Number(chain.id)]?.map((t) =>
-      getAddress(t.address),
-    );
+    let allowedTokens: `0x${string}`[] = [];
+    try {
+      const allowedErc20Tokens = CHAIN_ID_TO_TOKENS[Number(chain.id)]?.map(
+        (t) => getAddress(t.address),
+      );
+      const allowedNftTokens = CHAIN_ID_TO_NFT_COLLECTIONS[
+        Number(chain.id)
+      ]?.map((t) => getAddress(t.address));
+      allowedTokens = [...allowedErc20Tokens, ...allowedNftTokens];
+    } catch {
+      res.status(400).json({ error: 'Error parsing allowed tokens' });
+      return;
+    }
 
-    if (token && (!allowedTokens || !allowedTokens.includes(token))) {
+    const parsedTokenId = tokenId !== undefined ? BigInt(tokenId) : BigInt(1);
+
+    if (
+      tokenParam !== NULL_ADDRESS &&
+      (!allowedTokens || !allowedTokens.includes(checkedTokenAddress))
+    ) {
       res.status(400).json({ error: 'Unsupported token for this chain' });
       return;
     }
@@ -74,21 +108,42 @@ router.post(
       return;
     }
 
-    const client = getClient(chain);
+    let client;
+    try {
+      client = getClient(chain);
+    } catch {
+      res.status(400).json({ error: 'Could not get client for chain' });
+      return;
+    }
 
-    const faucetAddress = getAddress(process.env.FAUCET_ADDRESS || '');
-    const userAddress = getAddress(fullProfile.primaryAddress);
+    let faucetAddress: Hex, userAddress: Hex;
+    try {
+      faucetAddress = getAddress(process.env.FAUCET_ADDRESS || '');
+      userAddress = getAddress(fullProfile.primaryAddress);
+    } catch {
+      res.status(400).json({ error: 'Invalid faucet or user address' });
+      return;
+    }
+
     const nonce = await client.getTransactionCount({
       address: faucetAddress,
       blockTag: 'pending',
     });
 
-    const gasLimit = await estimateErc20GasOrDefault({
-      client,
-      token,
-      from: userAddress,
-      to: faucetAddress,
-    });
+    const gasLimit = isNft
+      ? await estimateNftGasOrDefault({
+          client,
+          token: checkedTokenAddress,
+          from: userAddress,
+          to: faucetAddress,
+          tokenId: parsedTokenId,
+        })
+      : await estimateErc20GasOrDefault({
+          client,
+          token: checkedTokenAddress,
+          from: userAddress,
+          to: faucetAddress,
+        });
 
     const amountWei = await calcDripWei({ client, gasLimit });
 

@@ -7,11 +7,12 @@ import {
   hexSchema,
   CREATOR_API_URL,
   LeaderboardStats,
-  DonationData,
+  StoredDonationData,
+  NULL_ADDRESS,
 } from '@idriss-xyz/constants';
-import { useGetTipHistory } from '@idriss-xyz/main-landing/app/creators/app/commands/get-donate-history';
-import { getPublicCreatorProfile } from '@idriss-xyz/main-landing/app/creators/utils/index';
-import { Leaderboard } from '@idriss-xyz/main-landing/app/creators/donate/components/leaderboard';
+import { useGetTipHistory } from '@idriss-xyz/main-landing/app/app/commands/get-donate-history';
+import { getPublicCreatorProfile } from '@idriss-xyz/main-landing/app/utils/index';
+import { Leaderboard } from '@idriss-xyz/main-landing/app/donate/components/leaderboard';
 import { QueryProvider } from '@idriss-xyz/main-landing/providers';
 import { calculateDonationLeaderboard } from '@idriss-xyz/utils';
 
@@ -85,8 +86,9 @@ function WidgetContent({ variant }: ContentProperties) {
 
         const profileResponse = await getPublicCreatorProfile(name);
         if (!profileResponse) {
-          setAddress(null);
-          throw new Error('Not found');
+          setAddress(NULL_ADDRESS);
+          console.info('No creator account found, setting default');
+          return;
         }
         setAddress(profileResponse.primaryAddress);
       },
@@ -100,8 +102,6 @@ function WidgetContent({ variant }: ContentProperties) {
 
   useEffect(() => {
     if (donationsHistory.data) {
-      console.log(donationsHistory);
-
       const allTimeLeaderboard = calculateDonationLeaderboard(
         donationsHistory.data.donations,
       );
@@ -123,7 +123,7 @@ function WidgetContent({ variant }: ContentProperties) {
           }
         });
 
-        socket.on('newDonation', (donation: DonationData) => {
+        socket.on('newDonation', (donation: StoredDonationData) => {
           setLeaderboard((previousState) => {
             const leaderboard = [...previousState];
 

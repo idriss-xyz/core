@@ -5,6 +5,9 @@ import { ReactNode } from 'react';
 import { headers } from 'next/headers';
 import { GoogleAnalytics } from '@next/third-parties/google';
 
+import { CreatorsProviders } from './creators-providers';
+import { PrivyModalHider } from './components/privy-modal-hider';
+
 const aeonikPro = localFont({
   src: [
     {
@@ -35,7 +38,17 @@ const DEPLOYMENT_URL = process.env.RAILWAY_PUBLIC_DOMAIN
 export const metadata: Metadata = {
   title: 'IDRISS',
   description:
-    'Our apps bring the power of crypto and AI to your browsing experience, empower creators through digital ownership, and help find what’s true on the internet.',
+    'Creator monetization app that helps you earn more with instant payouts and near-zero platform cuts.',
+  openGraph: {
+    title: 'Make more, grow faster, take control',
+    description:
+      'Creator monetization app that helps you earn more with instant payouts and near-zero platform cuts.',
+    images: [
+      {
+        url: '/og.png',
+      },
+    ],
+  },
   icons: [
     {
       rel: 'apple-touch-icon',
@@ -56,18 +69,6 @@ export const metadata: Metadata = {
     },
   ],
   metadataBase: DEPLOYMENT_URL,
-  openGraph: {
-    type: 'website',
-    url: DEPLOYMENT_URL,
-    title: 'Superpowers for your internet',
-    description:
-      'Our apps bring the power of crypto and AI to your browsing experience, empower creators through digital ownership, and help find what’s true on the internet.',
-    images: [
-      {
-        url: '/og.png',
-      },
-    ],
-  },
 };
 
 // ts-unused-exports:disable-next-line
@@ -80,9 +81,9 @@ export const viewport: Viewport = {
 // ts-unused-exports:disable-next-line
 export default async function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: ReactNode;
-}>) {
+}) {
   const headersList = await headers();
 
   const withMaintenance = headersList.get('x-with-maintenance');
@@ -103,8 +104,8 @@ export default async function RootLayout({
       <body
         className={`${aeonikPro.variable} flex min-h-screen flex-col font-sans antialiased`}
       >
-        {children}
-
+        <PrivyModalHider />
+        <CreatorsProviders>{children}</CreatorsProviders>
         <GoogleAnalytics gaId="G-YM1B80KWY4" />
       </body>
     </html>

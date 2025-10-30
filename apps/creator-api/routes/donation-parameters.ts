@@ -1,6 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { DonationParameters } from '../db/entities/donation-parameters.entity';
-import { AppDataSource } from '../db/database';
+import { AppDataSource, DonationParameters } from '@idriss-xyz/db';
 import { body, validationResult } from 'express-validator';
 
 const router = Router();
@@ -13,6 +12,8 @@ const validationRules = [
   body('ttsEnabled').isBoolean().notEmpty(),
   body('sfxEnabled').isBoolean().notEmpty(),
   body('customBadWords').optional().isArray(),
+  body('tokenEnabled').isBoolean().notEmpty(),
+  body('collectibleEnabled').isBoolean().notEmpty(),
 ];
 
 router.post('/', validationRules, async (req: Request, res: Response) => {
@@ -31,6 +32,8 @@ router.post('/', validationRules, async (req: Request, res: Response) => {
     ttsEnabled,
     sfxEnabled,
     customBadWords = [],
+    tokenEnabled,
+    collectibleEnabled,
   } = req.body;
 
   try {
@@ -42,6 +45,8 @@ router.post('/', validationRules, async (req: Request, res: Response) => {
       ttsEnabled,
       sfxEnabled,
       customBadWords,
+      tokenEnabled,
+      collectibleEnabled,
       creator: {
         id: req.body.creatorId,
       },

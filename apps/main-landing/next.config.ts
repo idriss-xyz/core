@@ -33,19 +33,9 @@ const loadEnvironmentConfig = () => {
 
 loadEnvironmentConfig();
 
-const LEGACY_URLS = [
-  '/partner-whitelist',
-  '/pricing',
-  '/token-price',
-  '/v1/getTwitterIDPlugin',
-  '/v2/getTwitterIDPlugin',
-  '/v2/getTwitterNamesPlugin',
-  '/v1/getTwitterID',
-  '/v1/getTwitterNames',
-];
-
 const nextConfig: NextConfig = {
   generateBuildId: () => {
+    // eslint-disable-next-line turbo/no-undeclared-env-vars
     return process.env.RAILWAY_GIT_COMMIT_SHA ?? `build-${Date.now()}`;
   },
 
@@ -57,37 +47,52 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/donors/ranking',
-        destination: '/creators/donor/ranking',
+        destination: '/fan/ranking',
         permanent: true,
       },
       {
         source: '/streamers',
-        destination: '/creators',
+        destination: '/',
         permanent: true,
       },
       {
         source: '/streamers/donate',
-        destination: '/creators/donate',
+        destination: '/donate',
+        permanent: true,
+      },
+      {
+        source: '/creators/donation-overlay/:slug*',
+        destination: '/alert-overlay/:slug*',
+        permanent: true,
+      },
+      {
+        source: '/creators',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/creators/:path+',
+        destination: '/:path+',
         permanent: true,
       },
       {
         source: '/token',
-        destination: '/#token',
+        destination: '/dao#token',
         permanent: true,
       },
       {
         source: '/buy',
-        destination: '/#token',
+        destination: '/dao#token',
         permanent: true,
       },
       {
         source: '/prediction-markets',
-        destination: '/#community-notes',
+        destination: '/',
         permanent: true,
       },
       {
         source: '/#prediction-markets',
-        destination: '/#community-notes',
+        destination: '/',
         permanent: true,
       },
       {
@@ -134,7 +139,7 @@ const nextConfig: NextConfig = {
       {
         source: '/extension',
         destination:
-          'https://chromewebstore.google.com/detail/idriss/fghhpjoffbgecjikiipbkpdakfmkbmig',
+          'https://dashboard.twitch.tv/extensions/0rvai4arse2wu9ucj2omj2zvajdc3m-0.0.1 ',
         basePath: false,
         permanent: false,
       },
@@ -176,12 +181,6 @@ const nextConfig: NextConfig = {
         permanent: false,
       },
       {
-        source: '/service-status',
-        destination: 'https://api.idriss.xyz/service-status',
-        basePath: false,
-        permanent: false,
-      },
-      {
         source: '/tokenomics',
         destination: 'https://docs.idriss.xyz/idriss-token',
         basePath: false,
@@ -206,30 +205,26 @@ const nextConfig: NextConfig = {
         basePath: false,
         permanent: false,
       },
-      {
-        source: '/creators/obs/:slug*',
-        destination: '/creators/donation-overlay/:slug*',
-        permanent: true,
-      },
-      ...LEGACY_URLS.map((url) => {
-        return {
-          source: url,
-          destination: `https://legacy.idriss.xyz${url}`,
-          permanent: false,
-        };
-      }),
     ];
   },
   webpack(config) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     config.module.rules.push({
       test: /\.mp3$/,
       type: 'asset/resource',
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return config;
   },
   images: {
-    domains: ['localhost', 'storage.googleapis.com', 'static-cdn.jtvnw.net'],
+    domains: [
+      'localhost',
+      'storage.googleapis.com',
+      'static-cdn.jtvnw.net',
+      'images.zapper.xyz',
+      'nftmedia.parallelnft.com',
+    ],
   },
   env: {
     DEV_LOGIN_PASSWORD: process.env.DEV_LOGIN_PASSWORD || '',
@@ -238,4 +233,5 @@ const nextConfig: NextConfig = {
   },
 };
 
+// eslint-disable-next-line import/no-default-export
 export default withBundleAnalyzer({ enabled: false })(nextConfig);

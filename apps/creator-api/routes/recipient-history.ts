@@ -1,20 +1,24 @@
 import { Router, Request, Response } from 'express';
 
-import { fetchDonationsByToAddress } from '../db/fetch-known-donations';
 import { calculateStatsForRecipientAddress } from '../utils/calculate-stats';
-import { Hex } from 'viem';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
-import { DEMO_ADDRESS } from '../tests/test-data/constants';
-import { AppDataSource } from '../db/database';
-import { Creator, CreatorAddress } from '../db/entities';
+import { resolveCreatorAndAddresses } from '../utils/calculate-stats';
+import {
+  AppDataSource,
+  Creator,
+  fetchDonationsByToAddress,
+} from '@idriss-xyz/db';
+import { enrichDonationsWithCreatorInfo } from '../utils/calculate-stats';
+import { createAddressToCreatorMap } from '@idriss-xyz/utils';
+import { DEMO_ADDRESS } from '@idriss-xyz/constants';
 
 const router = Router();
 
 router.post('/', async (req: Request, res: Response) => {
   try {
-    const { address } = req.body;
-    if (address && address === DEMO_ADDRESS) {
+    const { address: identifier } = req.body;
+    if (identifier && identifier === DEMO_ADDRESS) {
       const mockData = JSON.parse(
         readFileSync(
           resolve(__dirname, '../tests/test-data/mock-donations.json'),
@@ -27,38 +31,24 @@ router.post('/', async (req: Request, res: Response) => {
       res.json(recipientDonationStats);
       return;
     }
-    if (!address || typeof address !== 'string') {
+    if (!identifier || typeof identifier !== 'string') {
       res.status(400).json({ error: 'Invalid or missing address' });
       return;
     }
-    const hexAddress = address as Hex;
-
-    const creatorRepository = AppDataSource.getRepository(Creator);
-    const creatorAddressRepository =
-      AppDataSource.getRepository(CreatorAddress);
-
-    let creator = await creatorRepository.findOne({
-      where: { address: hexAddress },
-      relations: ['associatedAddresses'],
-    });
-
-    if (!creator) {
-      const secondaryAddress = await creatorAddressRepository.findOne({
-        where: { address: hexAddress },
-        relations: ['creator', 'creator.associatedAddresses'],
-      });
-      creator = secondaryAddress?.creator ?? null;
-    }
-
-    const allAddresses = creator
-      ? [creator.address, ...creator.associatedAddresses.map((a) => a.address)]
-      : [hexAddress];
+    const { addresses: allAddresses } =
+      await resolveCreatorAndAddresses(identifier);
 
     const allDonations = (
       await Promise.all(
         allAddresses.map((addr) => fetchDonationsByToAddress(addr)),
       )
     ).flat();
+
+    const creators = await AppDataSource.getRepository(Creator).find({
+      relations: ['associatedAddresses'],
+    });
+    const addressToCreatorMap = createAddressToCreatorMap(creators);
+    enrichDonationsWithCreatorInfo(allDonations, addressToCreatorMap);
 
     const recipientDonationStats =
       calculateStatsForRecipientAddress(allDonations);
