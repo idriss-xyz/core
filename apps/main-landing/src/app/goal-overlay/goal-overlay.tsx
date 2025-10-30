@@ -10,7 +10,7 @@ import { Badge } from '@idriss-xyz/ui/badge';
 
 import { getTimeRemaining } from '@/app/utils';
 
-import { useDonationGoals } from '../context/donation-goals-context';
+import { useGetActiveDonationGoal } from '../app/commands/get-active-donation-goal';
 
 interface Properties {
   creatorName?: string;
@@ -25,8 +25,8 @@ export default function GoalOverlay({
   const [recentDonationAmount, setRecentDonationAmount] = useState<
     number | null
   >(null);
-  // TODO: set real goal data here
-  const { activeGoal, refetch } = useDonationGoals();
+  const activeGoalQuery = useGetActiveDonationGoal(creatorName);
+  const activeGoal = activeGoalQuery.data;
 
   const progressPercentage = activeGoal
     ? Math.min((activeGoal.progress / activeGoal.targetAmount) * 100, 100)
@@ -60,7 +60,7 @@ export default function GoalOverlay({
       console.error('DonationGoal overlay auth failed:', error.message);
     });
 
-    socket.on('newDonation', (donation: StoredDonationData) => {
+    socket.on('newDonation', async (donation: StoredDonationData) => {
       try {
         // Check if this donation should update our goal
         if (
@@ -70,9 +70,7 @@ export default function GoalOverlay({
         }
 
         // Update the goal progress with the new donation amount
-        //
-        // TODO: create updateDonationGoalProgress patch req to backend
-        //  and call here and if success call refetch
+        await activeGoalQuery.refetch();
 
         // For new donation chip
         setRecentDonationAmount(donation.tradeValue);
@@ -87,7 +85,7 @@ export default function GoalOverlay({
     return () => {
       socket.disconnect();
     };
-  }, [creatorName, creatorAddress, activeGoal]);
+  }, [creatorName, creatorAddress, activeGoal, activeGoalQuery]);
 
   useEffect(() => {
     if (recentDonationAmount !== null) {
@@ -124,14 +122,15 @@ export default function GoalOverlay({
                   {activeGoal.name}
                 </h2>
               </div>
-              <div className="flex items-center justify-end gap-2 rounded-full bg-mint-400 py-1.5 pl-1 pr-3">
-                <div className="flex size-6 items-center justify-center rounded-full bg-mint-200">
-                  <Icon name="Check" className="text-mint-500" size={20} />
-                </div>
-                {recentDonationAmount && (
+              {recentDonationAmount && (
+                <div className="flex items-center justify-end gap-2 rounded-full bg-mint-400 py-1.5 pl-1 pr-3">
+                  <div className="flex size-6 items-center justify-center rounded-full bg-mint-200">
+                    <Icon name="Check" className="text-mint-500" size={20} />
+                  </div>
+
                   <span className="text-label4">${recentDonationAmount}</span>
-                )}
-              </div>
+                </div>
+              )}
             </div>
 
             {/* Progress Bar and info*/}
@@ -148,8 +147,8 @@ export default function GoalOverlay({
                   {getTimeRemaining(activeGoal.endDate)}
                 </Badge>
                 <span className="text-neutral-900">
-                  ${activeGoal.progress}/${activeGoal.targetAmount} (
-                  {progressPercentage.toFixed(0)}%)
+                  ${Number(activeGoal.progress).toFixed(2)}/$
+                  {activeGoal.targetAmount} ({progressPercentage.toFixed(0)}%)
                 </span>
               </div>
             </div>
@@ -159,7 +158,8 @@ export default function GoalOverlay({
               <Icon name="Users2" size={20} />
               <span className="text-neutral-600">Top donor:</span>
               <span className="text-neutral-900">
-                {activeGoal.topDonor.name} (${activeGoal.topDonor.amount})
+                {activeGoal.topDonor.name} ($
+                {Number(activeGoal.topDonor.amount).toFixed(2)})
               </span>
             </div>
           </div>

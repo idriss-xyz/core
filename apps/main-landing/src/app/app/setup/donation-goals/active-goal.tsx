@@ -59,7 +59,7 @@ export default function ActiveGoal() {
             </div>
             <div className="flex items-center gap-2">
               <span className="text-label3 text-black">
-                ${goal.progress}/${goal.targetAmount} (
+                ${Number(goal.progress).toFixed(2)}/${goal.targetAmount} (
                 {progressPercentage.toFixed(0)}%)
               </span>
               <Badge
@@ -77,7 +77,8 @@ export default function ActiveGoal() {
               <Icon name="Users2" size={20} />
               <span className="text-neutral-600">Top donor:</span>
               <span className="text-neutral-900">
-                {goal.topDonor.name} (${goal.topDonor.amount})
+                {goal.topDonor.name} (${Number(goal.topDonor.amount).toFixed(2)}
+                )
               </span>
             </div>
             <Button

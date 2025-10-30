@@ -58,8 +58,6 @@ export function GoalsList({ setIsNewGoalFormOpenAction }: GoalListProperties) {
   const { activeGoal, inactiveGoals, refetch } = useDonationGoals();
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
   const [goalToDelete, setGoalToDelete] = useState<number | null>(null);
-  console.log('activeGoal', activeGoal);
-  console.log('inactiveGoals', inactiveGoals);
 
   const handleDeleteGoal = async (goalId: number) => {
     const authToken = await getAccessToken();
