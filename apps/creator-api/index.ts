@@ -34,10 +34,6 @@ import { isAllowedOrigin, openCors } from './config/cors';
 import { MAIN_LANDING_LINK } from '@idriss-xyz/constants';
 import { startDbListener } from './services/db-listener';
 
-initializeDatabase()
-  .then(() => console.log('DB connected...'))
-  .catch((err) => console.error('Error during DB initialization:', err));
-
 const app: Application = express();
 app.use(express.json());
 
