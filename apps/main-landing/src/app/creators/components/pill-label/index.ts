@@ -1,5 +1,1 @@
-export {
-  PillLabel,
-  type PillLabelProperties,
-  type PillLabelOption,
-} from './pill-label.component';
+export { PillLabel } from './pill-label.component';

@@ -6,8 +6,8 @@ import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { Link } from '@idriss-xyz/ui/link';
 
 import { backgroundLines2, IDRISS_SCENE_STREAM_4 } from '@/assets';
-import { CopyInput } from '@/app/creators/components/copy-input/copy-input';
-import { useAuth } from '@/app/creators/context/auth-context';
+import { useAuth } from '@/app/context/auth-context';
+import { CopyInput } from '@/app/components/copy-input/copy-input';
 
 export default function InviteBanner() {
   const { creator } = useAuth();

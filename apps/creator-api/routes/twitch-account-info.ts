@@ -1,8 +1,8 @@
-import { Router, Request, Response } from 'express';
 import {
-  fetchTwitchUserInfo,
   fetchTwitchStreamStatus,
-} from '../utils/twitch-api';
+  fetchTwitchUserInfo,
+} from '@idriss-xyz/utils/server';
+import { Router, Request, Response } from 'express';
 
 const router = Router();
 

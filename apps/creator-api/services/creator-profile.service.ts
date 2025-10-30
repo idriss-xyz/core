@@ -18,11 +18,11 @@ import {
   CHAIN_ID_TO_TOKENS,
 } from '@idriss-xyz/constants';
 import { Hex } from 'viem';
-import {
-  fetchTwitchUserInfo,
-  fetchTwitchStreamStatus,
-} from '../utils/twitch-api';
 import { ILike } from 'typeorm';
+import {
+  fetchTwitchStreamStatus,
+  fetchTwitchUserInfo,
+} from '@idriss-xyz/utils/server';
 
 interface EnrichedCreatorProfile extends CreatorProfileView {
   streamStatus?: boolean;

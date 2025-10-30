@@ -10,7 +10,7 @@ import {
 
 import { Avatar } from '@/app/creators/components/avatar/avatar';
 import { PillLabel } from '@/app/creators/components/pill-label';
-import { gameLogoMap } from '@/app/creators/constants';
+import { gameLogoMap } from '@/app/constants';
 
 interface Streamer {
   id: string;

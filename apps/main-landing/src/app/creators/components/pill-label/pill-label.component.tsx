@@ -4,13 +4,13 @@ import { Icon, IconName } from '@idriss-xyz/ui/icon';
 import { classes } from '@idriss-xyz/ui/utils';
 import { ReactNode } from 'react';
 
-export interface PillLabelOption {
+interface PillLabelOption {
   label: string;
   icon?: IconName;
   customClass?: string;
 }
 
-export interface PillLabelProperties {
+interface PillLabelProperties {
   option: PillLabelOption;
   isActive?: boolean;
   onClick?: (label: string) => void;

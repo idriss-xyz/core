@@ -1,14 +1,14 @@
 import {
+  fetchTwitchUserFollowersCount,
+  fetchTwitchUserInfo,
+} from '@idriss-xyz/utils/server';
+import {
   MigrationInterface,
   QueryRunner,
   Table,
   TableColumn,
   TableForeignKey,
 } from 'typeorm';
-import {
-  fetchTwitchUserInfo,
-  fetchTwitchUserFollowersCount,
-} from '../../utils/twitch-api';
 
 interface CreatorRow {
   id: number;
@@ -31,7 +31,7 @@ async function getTwitchInfoForCreator(creatorName: string) {
       displayName: userInfo.display_name,
       profileImageUrl: userInfo.profile_image_url,
       description: userInfo.description,
-      followerCount: followersInfo?.total || 0,
+      followerCount: followersInfo?.total ?? 0,
     };
   } catch (error) {
     console.error(`Error fetching Twitch info for ${creatorName}:`, error);
@@ -228,9 +228,9 @@ export class AddTwitchInfoEntity1756826671316 implements MigrationInterface {
 
     // Drop foreign key
     const table = await queryRunner.getTable('creator');
-    const foreignKey = table?.foreignKeys.find(
-      (fk) => fk.columnNames.indexOf('twitch_id') !== -1,
-    );
+    const foreignKey = table?.foreignKeys.find((fk) => {
+      return fk.columnNames.includes('twitch_id');
+    });
     if (foreignKey) {
       await queryRunner.dropForeignKey('creator', foreignKey);
     }

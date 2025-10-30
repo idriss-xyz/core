@@ -1,4 +1,5 @@
-import { twitchAuthManager } from '../services/twitch-auth-manager';
+/* eslint-disable turbo/no-undeclared-env-vars */
+import { twitchAuthManager } from './twitch-auth-manager';
 
 interface TwitchUserInfo {
   id: string;
@@ -33,6 +34,7 @@ async function getHeaders(): Promise<Record<string, string>> {
 }
 
 // Reference: https://dev.twitch.tv/docs/api/reference/#get-users
+// ts-unused-exports:disable-next-line
 export async function fetchTwitchUserInfo(
   name: string,
 ): Promise<TwitchUserInfo | null> {
@@ -46,8 +48,8 @@ export async function fetchTwitchUserInfo(
       throw new Error(`Twitch API error: ${response.status}`);
     }
 
-    const data = await response.json();
-    return data.data?.[0] || null;
+    const data = (await response.json()) as { data?: TwitchUserInfo[] };
+    return data.data?.[0] ?? null;
   } catch (error) {
     console.error('Error fetching Twitch user info:', error);
     return null;
@@ -55,6 +57,7 @@ export async function fetchTwitchUserInfo(
 }
 
 // Reference: https://dev.twitch.tv/docs/api/reference/#get-stream-key
+// ts-unused-exports:disable-next-line
 export async function fetchTwitchStreamStatus(
   name: string,
 ): Promise<TwitchStreamInfo> {
@@ -69,7 +72,7 @@ export async function fetchTwitchStreamStatus(
       throw new Error(`Twitch API error: ${response.status}`);
     }
 
-    const data = await response.json();
+    const data = (await response.json()) as { data: unknown[] };
     return { isLive: data.data.length > 0 };
   } catch (error) {
     console.error('Error fetching Twitch stream status:', error);
@@ -78,6 +81,7 @@ export async function fetchTwitchStreamStatus(
 }
 
 // Reference: https://dev.twitch.tv/docs/api/reference/#get-channel-followers
+// ts-unused-exports:disable-next-line
 export async function fetchTwitchUserFollowersCount(
   name: string,
 ): Promise<TwitchUserFollowersInfo | null> {
@@ -95,7 +99,7 @@ export async function fetchTwitchUserFollowersCount(
     if (!response.ok) {
       throw new Error(`Twitch API error: ${response.status}`);
     }
-    return await response.json();
+    return (await response.json()) as TwitchUserFollowersInfo;
   } catch (error) {
     console.error('Error fetching Twitch user info:', error);
     return null;

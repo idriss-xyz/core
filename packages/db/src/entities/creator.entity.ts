@@ -49,7 +49,12 @@ export class Creator {
   @Column({ type: 'text', name: 'twitch_id', nullable: false, unique: true })
   twitchId!: string;
 
-  @OneToOne(() => TwitchInfo, { nullable: false })
+  @OneToOne(
+    () => {
+      return TwitchInfo;
+    },
+    { nullable: false },
+  )
   @JoinColumn({ name: 'twitch_id', referencedColumnName: 'twitchId' })
   twitchInfo!: TwitchInfo;
 
