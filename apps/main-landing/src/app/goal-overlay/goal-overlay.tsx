@@ -2,7 +2,7 @@
 
 import { io, Socket } from 'socket.io-client';
 import { useEffect, useState } from 'react';
-import { CREATOR_API_URL } from '@idriss-xyz/constants';
+import { CREATOR_API_URL, StoredDonationData } from '@idriss-xyz/constants';
 import { ProgressBarV2 } from '@idriss-xyz/ui/progress-bar-v2';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Icon } from '@idriss-xyz/ui/icon';
@@ -13,10 +13,18 @@ import { DonationGoal } from '@/app/utils/types';
 
 interface Properties {
   creatorName?: string;
+  creatorAddress: string;
 }
 
 // ts-unused-exports:disable-next-line
-export default function GoalOverlay({ creatorName }: Properties) {
+export default function GoalOverlay({
+  creatorName,
+  creatorAddress,
+}: Properties) {
+  const [recentDonationAmount, setRecentDonationAmount] = useState<
+    number | null
+  >(null);
+  // TODO: set real goal data here
   const [goalData, setGoalData] = useState<DonationGoal>({
     id: 1,
     name: 'New Gaming Setup',
@@ -56,19 +64,66 @@ export default function GoalOverlay({ creatorName }: Properties) {
       window.location.href = url.toString();
     });
 
-    socket.on('goalDataUpdated', (data: DonationGoal) => {
-      console.log('Got new goal data', data);
-      setGoalData(data);
-    });
-
     socket.on('connect_error', (error) => {
       console.error('DonationGoal overlay auth failed:', error.message);
+    });
+
+    socket.on('newDonation', (donation: StoredDonationData) => {
+      try {
+        // Check if this donation should update our goal
+        if (
+          donation.toAddress.toLowerCase() !== creatorAddress?.toLowerCase()
+        ) {
+          return;
+        }
+
+        // Update the goal progress with the new donation amount
+        setGoalData((previousGoal) => {
+          const newProgress = previousGoal.progress + donation.tradeValue;
+          const updatedGoal = {
+            ...previousGoal,
+            progress: newProgress,
+          };
+
+          // Check if this donation makes them the top donor
+          const donationAmount = donation.tradeValue;
+          if (donationAmount > updatedGoal.topDonor.amount) {
+            updatedGoal.topDonor = {
+              name: donation.fromUser?.displayName ?? donation.fromAddress,
+              amount: donationAmount,
+            };
+          }
+
+          return updatedGoal;
+        });
+
+        // For new donation chip
+        setRecentDonationAmount(donation.tradeValue);
+      } catch (error) {
+        console.error(
+          'Failed to handle newDonation event in goal overlay:',
+          error,
+        );
+      }
     });
 
     return () => {
       socket.disconnect();
     };
-  }, [creatorName]);
+  }, [creatorName, creatorAddress]);
+
+  useEffect(() => {
+    if (recentDonationAmount !== null) {
+      const timer = setTimeout(() => {
+        setRecentDonationAmount(null);
+      }, 3000);
+
+      return () => {
+        return clearTimeout(timer);
+      };
+    }
+    return;
+  }, [recentDonationAmount]);
 
   return (
     <>
@@ -95,8 +150,9 @@ export default function GoalOverlay({ creatorName }: Properties) {
               <div className="flex size-6 items-center justify-center rounded-full bg-mint-200">
                 <Icon name="Check" className="text-mint-500" size={20} />
               </div>
-              <span className="text-label4">$20</span>{' '}
-              {/* TODO: Replace for incoming donation amounts*/}
+              {recentDonationAmount && (
+                <span className="text-label4">${recentDonationAmount}</span>
+              )}
             </div>
           </div>
 

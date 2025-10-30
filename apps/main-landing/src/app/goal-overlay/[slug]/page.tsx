@@ -17,5 +17,7 @@ export default async function GoalOverlayPage({
     notFound();
   }
 
-  return <GoalOverlay creatorName={profile.name} />;
+  return (
+    <GoalOverlay creatorName={profile.name} creatorAddress={profile.address} />
+  );
 }

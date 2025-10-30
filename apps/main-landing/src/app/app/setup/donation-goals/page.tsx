@@ -100,6 +100,7 @@ export default function DonationGoalsPage() {
                   void queryClient.invalidateQueries({
                     queryKey: ['donation-goals', creator?.name],
                   });
+                  setIsNewGoalFormOpen(false);
                 }}
                 onClose={() => {
                   return setIsNewGoalFormOpen(false);
