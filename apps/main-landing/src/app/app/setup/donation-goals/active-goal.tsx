@@ -9,8 +9,7 @@ import { getAccessToken } from '@privy-io/react-auth';
 
 import { getTimeRemaining } from '@/app/utils';
 import { deactivateDonationGoal } from '@/app/utils/donation-goals';
-
-import { useDonationGoals } from './context/donation-goals-context';
+import { useDonationGoals } from '@/app/context/donation-goals-context';
 
 const handleEndGoal = async (goalId: number) => {
   const authToken = await getAccessToken();

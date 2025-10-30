@@ -12,8 +12,7 @@ import {
   activateDonationGoal,
   deleteDonationGoal,
 } from '@/app/utils/donation-goals';
-
-import { useDonationGoals } from './context/donation-goals-context';
+import { useDonationGoals } from '@/app/context/donation-goals-context';
 
 const handleActivateGoal = async (goalId: number) => {
   const authToken = await getAccessToken();

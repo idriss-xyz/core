@@ -12,7 +12,6 @@ import { CopyInput } from '@/app/components/copy-input/copy-input';
 import { GoalsList } from './goals-list';
 import { NewGoalForm } from './components/new-goal-form';
 import ActiveGoal from './active-goal';
-import { DonationGoalsProvider } from './context/donation-goals-context';
 
 // ts-unused-exports:disable-next-line
 export default function DonationGoalsPage() {
@@ -35,110 +34,106 @@ export default function DonationGoalsPage() {
   };
 
   return (
-    <DonationGoalsProvider>
-      <Card className="flex w-full flex-col gap-6">
+    <Card className="flex w-full flex-col gap-6">
+      <div className="flex flex-col gap-6">
+        <h5 className="text-heading5 text-neutralGreen-900">Donation goals</h5>
         <div className="flex flex-col gap-6">
-          <h5 className="text-heading5 text-neutralGreen-900">
-            Donation goals
-          </h5>
-          <div className="flex flex-col gap-6">
-            <div className="flex items-center gap-4">
-              <div className="flex flex-col gap-1">
-                <label
-                  className={classes('pb-1 text-label4 text-neutralGreen-700')}
+          <div className="flex items-center gap-4">
+            <div className="flex flex-col gap-1">
+              <label
+                className={classes('pb-1 text-label4 text-neutralGreen-700')}
+              >
+                Goal overlay link
+              </label>
+              {/* TODO: Replace for donation goal overlay link*/}
+              <CopyInput
+                value={`${creator?.obsUrl ?? ''}`}
+                wasCopied={wasCopied}
+                onIconClick={
+                  isUrlWarningConfirmed
+                    ? () => {
+                        if (creator?.obsUrl) {
+                          void navigator.clipboard.writeText(creator.obsUrl);
+                          setWasCopied(true);
+                          setTimeout(() => {
+                            return setWasCopied(false);
+                          }, 2000);
+                        }
+                      }
+                    : () => {
+                        return openConfirmationModal('icon');
+                      }
+                }
+                onTextClick={
+                  isUrlWarningConfirmed
+                    ? () => {}
+                    : () => {
+                        return openConfirmationModal('text');
+                      }
+                }
+              />
+              <div className="flex items-center pt-1">
+                <span
+                  className={classes(
+                    'flex items-center space-x-1 text-label7 text-neutral-600 lg:text-label7',
+                  )}
                 >
-                  Goal overlay link
-                </label>
-                {/* TODO: Replace for donation goal overlay link*/}
-                <CopyInput
-                  value={`${creator?.obsUrl ?? ''}`}
-                  wasCopied={wasCopied}
-                  onIconClick={
-                    isUrlWarningConfirmed
-                      ? () => {
-                          if (creator?.obsUrl) {
-                            void navigator.clipboard.writeText(creator.obsUrl);
-                            setWasCopied(true);
-                            setTimeout(() => {
-                              return setWasCopied(false);
-                            }, 2000);
-                          }
-                        }
-                      : () => {
-                          return openConfirmationModal('icon');
-                        }
-                  }
-                  onTextClick={
-                    isUrlWarningConfirmed
-                      ? () => {}
-                      : () => {
-                          return openConfirmationModal('text');
-                        }
-                  }
+                  Copy this permanent link to show your goal on stream.
+                </span>
+                <Icon
+                  name="HelpCircle"
+                  size={16}
+                  className="p-0.5 text-neutral-600"
                 />
-                <div className="flex items-center pt-1">
-                  <span
-                    className={classes(
-                      'flex items-center space-x-1 text-label7 text-neutral-600 lg:text-label7',
-                    )}
-                  >
-                    Copy this permanent link to show your goal on stream.
-                  </span>
-                  <Icon
-                    name="HelpCircle"
-                    size={16}
-                    className="p-0.5 text-neutral-600"
-                  />
-                </div>
               </div>
             </div>
-            <hr />
-
-            {isNewGoalFormOpen && (
-              <NewGoalForm
-                onGoalCreated={() => {
-                  void queryClient.invalidateQueries({
-                    queryKey: ['donation-goals', creator?.name],
-                  });
-                  setIsNewGoalFormOpen(false);
-                }}
-                onClose={() => {
-                  return setIsNewGoalFormOpen(false);
-                }}
-              />
-            )}
           </div>
+          <hr />
+
+          {isNewGoalFormOpen && (
+            <NewGoalForm
+              onGoalCreated={() => {
+                void queryClient.invalidateQueries({
+                  queryKey: ['donation-goals', creator?.name],
+                });
+                setIsNewGoalFormOpen(false);
+              }}
+              onClose={() => {
+                return setIsNewGoalFormOpen(false);
+              }}
+            />
+          )}
         </div>
+      </div>
 
-        <ActiveGoal />
+      <ActiveGoal />
 
-        <GoalsList setIsNewGoalFormOpenAction={setIsNewGoalFormOpen} />
+      <GoalsList setIsNewGoalFormOpenAction={setIsNewGoalFormOpen} />
 
-        <ConfirmationModal
-          isOpened={isCopyModalOpen}
-          onClose={() => {
-            setIsCopyModalOpen(false);
-            setIsUrlWarningConfirmed(true);
-          }}
-          onConfirm={() => {
-            {
-              /* TODO: Replace for donation goal overlay link (add property on backend)*/
-            }
-            if (confirmButtonText === 'COPY LINK' && creator?.obsUrl) {
-              void navigator.clipboard.writeText(creator.obsUrl);
-              setWasCopied(true);
-              setTimeout(() => {
-                return setWasCopied(false);
-              }, 2000);
-            }
-          }}
-          title="Confirm before copying"
-          sectionSubtitle="Anyone with this link can embed your donation goal on their own stream or website.
+      <ConfirmationModal
+        isOpened={isCopyModalOpen}
+        onClose={() => {
+          setIsCopyModalOpen(false);
+          setIsUrlWarningConfirmed(true);
+        }}
+        onConfirm={() => {
+          {
+            /* TODO: Replace for donation goal overlay link (add property on backend)*/
+          }
+          if (confirmButtonText === 'COPY LINK' && creator?.obsUrl) {
+            void navigator.clipboard.writeText(creator.obsUrl);
+            setWasCopied(true);
+            setTimeout(() => {
+              return setWasCopied(false);
+            }, 2000);
+          }
+        }}
+        title="Confirm before copying"
+        sectionSubtitle="Anyone with this link can embed your donation goal on their own stream or website.
           Do not share it with anyone or show it on stream."
-          confirmButtonText={confirmButtonText}
-          confirmButtonIntent="secondary"
-        />
-      </Card>
-    </DonationGoalsProvider>
+        confirmButtonText={confirmButtonText}
+        confirmButtonIntent="secondary"
+      />
+    </Card>
   );
 }
