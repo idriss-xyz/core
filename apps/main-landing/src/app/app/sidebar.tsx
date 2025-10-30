@@ -77,7 +77,7 @@ export function Sidebar() {
             </NavigationMenu.Item>
             <NavigationMenu.Item className={getLinkClasses('')}>
               <Link
-                href="/creators/app/rewards/invites"
+                href="/app/rewards/invites"
                 className="flex w-full items-center rounded-lg hover:text-mint-600"
               >
                 <Icon size={20} name="Gift" className="mr-3 size-5" />

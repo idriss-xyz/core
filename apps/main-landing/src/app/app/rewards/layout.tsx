@@ -16,15 +16,15 @@ export default function RewardsLayout({
   const rewardsTabs: TabItem[] = [
     {
       name: 'Invites',
-      href: '/creators/app/rewards/invites',
+      href: '/app/rewards/invites',
       iconName: 'MailCheck',
-      isActive: pathname === '/creators/app/rewards/invites',
+      isActive: pathname === '/app/rewards/invites',
     },
     {
       name: 'Partner rewards',
-      href: '/creators/app/rewards/partner-rewards',
+      href: '/app/rewards/partner-rewards',
       iconName: 'Handshake',
-      isActive: pathname === '/creators/app/rewards/partner-rewards',
+      isActive: pathname === '/app/rewards/partner-rewards',
     },
   ];
 

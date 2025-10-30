@@ -8,8 +8,8 @@ import {
   getTimeDifferenceString,
 } from '@idriss-xyz/utils';
 
-import { Avatar } from '@/app/creators/components/avatar/avatar';
-import { PillLabel } from '@/app/creators/components/pill-label';
+import { Avatar } from '@/app/components/avatar/avatar';
+import { PillLabel } from '@/app/components/pill-label';
 import { gameLogoMap } from '@/app/constants';
 
 interface Streamer {
