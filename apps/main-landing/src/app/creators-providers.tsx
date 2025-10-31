@@ -6,6 +6,7 @@ import { abstract, base, mainnet, ronin, avalanche } from 'viem/chains';
 import { AuthProvider } from './context/auth-context';
 import { PrivyAuthSync } from './privy-auth-sync';
 import { Providers } from './providers';
+import { DonationGoalsProvider } from './context/donation-goals-context';
 
 export function CreatorsProviders({ children }: { children: React.ReactNode }) {
   return (
@@ -22,7 +23,7 @@ export function CreatorsProviders({ children }: { children: React.ReactNode }) {
           }}
         >
           <PrivyAuthSync />
-          {children}
+          <DonationGoalsProvider>{children}</DonationGoalsProvider>
         </PrivyProvider>
       </AuthProvider>
     </Providers>

@@ -43,6 +43,9 @@ export class Creator {
   @Column({ type: 'text', name: 'obs_url', nullable: true })
   obsUrl?: string;
 
+  @Column({ type: 'text', name: 'goal_url', nullable: true })
+  goalUrl?: string;
+
   @CreateDateColumn({ type: 'timestamp with time zone', name: 'joined_at' })
   joinedAt!: Date;
 

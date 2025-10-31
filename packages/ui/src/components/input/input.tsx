@@ -29,6 +29,8 @@ type Properties =
   | (BaseProperties & {
       asTextArea: true;
       readOnly: false;
+      // allow the same API as the normal input
+      suffixElement?: ReactElement;
     })
   | (BaseProperties & {
       asTextArea?: false;
@@ -122,7 +124,7 @@ export const Input = forwardRef(
           {properties.suffixElement && (
             <div
               ref={suffixReference}
-              className="flex h-full items-center pr-3"
+              className="flex items-center self-stretch pr-3"
             >
               {properties.suffixElement}
             </div>

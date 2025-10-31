@@ -1,7 +1,6 @@
 'use client';
 
 import { createContext, useContext, ReactNode } from 'react';
-import { usePrivy } from '@privy-io/react-auth';
 
 import { useAuth } from '@/app/context/auth-context';
 import { useGetDonationGoals } from '@/app/app/commands/get-donation-goals';
@@ -26,14 +25,13 @@ export function DonationGoalsProvider({
   children,
 }: DonationGoalsProviderProperties) {
   const { creator } = useAuth();
-  const { ready, authenticated } = usePrivy();
 
   const activeGoalQuery = useGetActiveDonationGoal(creator?.name, {
-    enabled: ready && authenticated && !!creator?.name,
+    enabled: !!creator?.name,
   });
 
   const goalListQuery = useGetDonationGoals(creator?.name, {
-    enabled: ready && authenticated && !!creator?.name,
+    enabled: !!creator?.name,
   });
 
   const inactiveGoals = (goalListQuery.data ?? []).filter((goal) => {

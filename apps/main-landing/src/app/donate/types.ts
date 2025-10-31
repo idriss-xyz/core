@@ -29,6 +29,7 @@ export type CreatorProfile = {
   profilePictureUrl?: string;
   donationUrl?: string;
   obsUrl?: string;
+  goalUrl?: string;
   minimumAlertAmount: number;
   minimumTTSAmount: number;
   minimumSfxAmount: number;

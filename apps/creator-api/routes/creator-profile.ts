@@ -117,7 +117,8 @@ router.get(
         return;
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { email, receiveEmails, obsUrl, ...publicProfile } = profile;
+      const { email, receiveEmails, obsUrl, goalUrl, ...publicProfile } =
+        profile;
       res.json(publicProfile);
     } catch (error) {
       console.error('Error fetching creator profile by name:', error);
@@ -146,7 +147,8 @@ router.get(
         return;
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { email, receiveEmails, obsUrl, ...publicProfile } = profile;
+      const { email, receiveEmails, obsUrl, goalUrl, ...publicProfile } =
+        profile;
       res.json(publicProfile);
     } catch (error) {
       console.error('Error fetching creator profile by ID:', error);
@@ -175,7 +177,8 @@ router.get(
         return;
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { email, receiveEmails, obsUrl, ...publicProfile } = profile;
+      const { email, receiveEmails, obsUrl, goalUrl, ...publicProfile } =
+        profile;
       res.json(publicProfile);
     } catch (error) {
       console.error('Error fetching creator profile by address:', error);
@@ -217,7 +220,7 @@ router.get(
         return;
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { email, obsUrl, ...publicProfile } = profile;
+      const { email, obsUrl, goalUrl, ...publicProfile } = profile;
       res.json(publicProfile);
     } catch (error) {
       console.error('Error fetching creator profile by address:', error);

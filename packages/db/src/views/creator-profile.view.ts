@@ -16,6 +16,7 @@ import { CreatorNetwork, CreatorToken, DonationParameters } from '../entities';
       .addSelect('c.profile_picture_url', 'profilePictureUrl')
       .addSelect('c.donation_url', 'donationUrl')
       .addSelect('c.obs_url', 'obsUrl')
+      .addSelect('c.goal_url', 'goalUrl')
       .addSelect('c.joined_at', 'joinedAt')
       .addSelect('c.done_setup', 'doneSetup')
       .addSelect('c.receive_emails', 'receiveEmails')
@@ -52,6 +53,7 @@ import { CreatorNetwork, CreatorToken, DonationParameters } from '../entities';
       .addGroupBy('c.profile_picture_url')
       .addGroupBy('c.donation_url')
       .addGroupBy('c.obs_url')
+      .addGroupBy('c.goal_url')
       .addGroupBy('c.joined_at')
       .addGroupBy('c.done_setup')
       .addGroupBy('c.receiveEmails')
@@ -94,6 +96,9 @@ export class CreatorProfileView {
 
   @ViewColumn()
   obsUrl!: string | null;
+
+  @ViewColumn()
+  goalUrl!: string | null;
 
   @ViewColumn()
   joinedAt!: Date;

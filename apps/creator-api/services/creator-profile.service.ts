@@ -92,6 +92,7 @@ class CreatorProfileService {
     creator.donationUrl = `${MAIN_LANDING_LINK}/${creatorData.name}`;
     const obsUrlSecret = randomBytes(24).toString('base64url');
     creator.obsUrl = `${MAIN_LANDING_LINK}/alert-overlay/${obsUrlSecret}`;
+    creator.goalUrl = `${MAIN_LANDING_LINK}/goal-overlay/${obsUrlSecret}`;
     creator.isDonor = isDonor;
 
     // Create and save new creator
