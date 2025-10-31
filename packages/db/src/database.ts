@@ -17,6 +17,7 @@ import {
   Referral,
   CreatorAddress,
   DripDailyClaim,
+  TwitchInfo,
 } from './entities';
 import {
   AddAmountRaw1743181200000,
@@ -80,6 +81,7 @@ export const AppDataSource = new DataSource({
     CreatorAddress,
     Referral,
     DripDailyClaim,
+    TwitchInfo,
   ],
   synchronize: false,
   migrations: [
