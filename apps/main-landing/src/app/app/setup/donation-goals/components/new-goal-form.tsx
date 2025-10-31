@@ -66,9 +66,9 @@ export function NewGoalForm({ onGoalCreated, onClose }: NewGoalFormProperties) {
         autoClose: true,
       });
 
-      if (onGoalCreated) {
-        onGoalCreated();
-      }
+      // Refresh goal list (if needed) and close the form
+      onGoalCreated?.();
+      onClose?.();
     } catch (error) {
       console.error('Error saving donation goal:', error);
       toast(errorSaveSettingsToast);
