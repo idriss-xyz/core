@@ -39,7 +39,7 @@ async function getTwitchInfoForCreator(creatorName: string) {
   }
 }
 
-export class AddTwitchInfoEntity1756826671316 implements MigrationInterface {
+export class AddTwitchInfoEntity1761906619000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     // Create twitch_info table
     await queryRunner.createTable(
@@ -197,6 +197,9 @@ export class AddTwitchInfoEntity1756826671316 implements MigrationInterface {
         c.done_setup AS "doneSetup",
         c.receive_emails AS "receiveEmails",
         c.twitch_id AS "twitchId",
+        c.is_donor AS "isDonor",
+        dp.token_enabled AS "tokenEnabled",
+        dp.collectible_enabled AS "collectibleEnabled",
         dp.minimum_alert_amount AS "minimumAlertAmount",
         dp.minimum_tts_amount AS "minimumTTSAmount",
         dp.minimum_sfx_amount AS "minimumSfxAmount",
@@ -215,7 +218,8 @@ export class AddTwitchInfoEntity1756826671316 implements MigrationInterface {
       GROUP BY
         c.id, c.address, c.primary_address, c.name, c.display_name, c.email,
         c.profile_picture_url, c.donation_url, c.obs_url, c.joined_at,
-        c.done_setup, c.receive_emails, c.twitch_id,
+        c.done_setup, c.receive_emails, c.twitch_id, c.is_donor,
+        dp.token_enabled, dp.collectible_enabled,
         dp.minimum_alert_amount, dp.minimum_tts_amount, dp.minimum_sfx_amount,
         dp.voice_id, dp.alert_sound, dp.alert_enabled, dp.tts_enabled,
         dp.sfx_enabled, dp.custom_bad_words
@@ -257,6 +261,9 @@ export class AddTwitchInfoEntity1756826671316 implements MigrationInterface {
         c.joined_at AS "joinedAt",
         c.done_setup AS "doneSetup",
         c.receive_emails AS "receiveEmails",
+        c.is_donor AS "isDonor",
+        dp.token_enabled AS "tokenEnabled",
+        dp.collectible_enabled AS "collectibleEnabled",
         dp.minimum_alert_amount AS "minimumAlertAmount",
         dp.minimum_tts_amount AS "minimumTTSAmount",
         dp.minimum_sfx_amount AS "minimumSfxAmount",
@@ -275,7 +282,8 @@ export class AddTwitchInfoEntity1756826671316 implements MigrationInterface {
       GROUP BY
         c.id, c.address, c.primary_address, c.name, c.display_name, c.email,
         c.profile_picture_url, c.donation_url, c.obs_url, c.joined_at,
-        c.done_setup, c.receive_emails,
+        c.done_setup, c.receive_emails, c.is_donor,
+        dp.token_enabled, dp.collectible_enabled,
         dp.minimum_alert_amount, dp.minimum_tts_amount, dp.minimum_sfx_amount,
         dp.voice_id, dp.alert_sound, dp.alert_enabled, dp.tts_enabled,
         dp.sfx_enabled, dp.custom_bad_words

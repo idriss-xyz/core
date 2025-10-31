@@ -56,7 +56,7 @@ import { CreatorNetwork, CreatorToken, DonationParameters } from '../entities';
       .addGroupBy('c.twitch_id')
       .addGroupBy('c.joined_at')
       .addGroupBy('c.done_setup')
-      .addGroupBy('c.receiveEmails')
+      .addGroupBy('c.receive_emails')
       .addGroupBy('c.is_donor')
       .addGroupBy('dp.minimum_alert_amount')
       .addGroupBy('dp.minimum_tts_amount')

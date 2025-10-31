@@ -35,4 +35,4 @@ export { SplitNftMetadata1759318771000 } from './1759318771000-split-nft-metadat
 export { FixIncorrectNftNames1759846236000 } from './1759846236000-FixIncorrectNftNames';
 export { AddNewDonationTrigger1760958133000 } from './1760958133000-AddNewDonationTrigger';
 export { UpdateUrlsToNewStructure1761231247000 } from './1761231247000-UpdateUrlsToNewStructure';
-export { AddTwitchInfoEntity1756826671316 } from './1756826671316-AddTwitchInfoEntity';
+export { AddTwitchInfoEntity1761906619000 } from './1761906619000-AddTwitchInfoEntity';

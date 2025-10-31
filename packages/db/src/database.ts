@@ -57,7 +57,7 @@ import {
   FixIncorrectNftNames1759846236000,
   AddNewDonationTrigger1760958133000,
   UpdateUrlsToNewStructure1761231247000,
-  AddTwitchInfoEntity1756826671316,
+  AddTwitchInfoEntity1761906619000,
 } from './migrations';
 import { CreatorProfileView } from './views';
 
@@ -122,7 +122,7 @@ export const AppDataSource = new DataSource({
     FixIncorrectNftNames1759846236000,
     AddNewDonationTrigger1760958133000,
     UpdateUrlsToNewStructure1761231247000,
-    AddTwitchInfoEntity1756826671316,
+    AddTwitchInfoEntity1761906619000,
   ],
 });
 
