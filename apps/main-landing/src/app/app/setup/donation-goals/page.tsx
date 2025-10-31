@@ -47,13 +47,13 @@ export default function DonationGoalsPage() {
               </label>
               {/* TODO: Replace for donation goal overlay link*/}
               <CopyInput
-                value={`${creator?.obsUrl ?? ''}`}
+                value={`${creator?.goalUrl ?? ''}`}
                 wasCopied={wasCopied}
                 onIconClick={
                   isUrlWarningConfirmed
                     ? () => {
-                        if (creator?.obsUrl) {
-                          void navigator.clipboard.writeText(creator.obsUrl);
+                        if (creator?.goalUrl) {
+                          void navigator.clipboard.writeText(creator.goalUrl);
                           setWasCopied(true);
                           setTimeout(() => {
                             return setWasCopied(false);
@@ -120,8 +120,8 @@ export default function DonationGoalsPage() {
           {
             /* TODO: Replace for donation goal overlay link (add property on backend)*/
           }
-          if (confirmButtonText === 'COPY LINK' && creator?.obsUrl) {
-            void navigator.clipboard.writeText(creator.obsUrl);
+          if (confirmButtonText === 'COPY LINK' && creator?.goalUrl) {
+            void navigator.clipboard.writeText(creator.goalUrl);
             setWasCopied(true);
             setTimeout(() => {
               return setWasCopied(false);
