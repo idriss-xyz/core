@@ -34,7 +34,8 @@ const NoGoals = ({ setIsNewGoalFormOpenAction }: NoGoalsProperties) => {
         No goals yet
       </span>
       <span className="mx-8 text-center text-display5 uppercase gradient-text">
-        Start something your fans can support
+        Start something <br />
+        your fans can support
       </span>
       <Button
         intent="primary"
@@ -171,10 +172,9 @@ export function GoalsList({ setIsNewGoalFormOpenAction }: GoalListProperties) {
           setIsRemoveModalOpen(false);
           setGoalToDelete(null);
         }}
-        title="Confirm before removing"
-        sectionSubtitle="You are
-        removing one of your donation goals, which means incoming donations won't add to this goal anymore. This action cannot be undone."
-        confirmButtonText="REMOVE"
+        title="Remove this goal?"
+        sectionSubtitle="Removing this goal will permanently delete it from your list. Once removed, you won’t be able to bring it back or make it active again in the future."
+        confirmButtonText="REPLACE"
         confirmButtonIntent="secondary"
       />
     </>

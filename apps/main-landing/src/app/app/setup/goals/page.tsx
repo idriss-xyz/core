@@ -36,7 +36,7 @@ export default function DonationGoalsPage() {
   return (
     <Card className="flex w-full flex-col gap-6">
       <div className="flex flex-col gap-6">
-        <h5 className="text-heading5 text-neutralGreen-900">Donation goals</h5>
+        <h5 className="text-heading5 text-neutralGreen-900">Goals</h5>
         <div className="flex flex-col gap-6">
           <div className="flex items-center gap-4">
             <div className="flex flex-col gap-1">
@@ -78,7 +78,7 @@ export default function DonationGoalsPage() {
                     'flex items-center space-x-1 text-label7 text-neutral-600 lg:text-label7',
                   )}
                 >
-                  Copy this permanent link to show your goal on stream.
+                  Add this as a browser source in your streaming software
                 </span>
                 <Icon
                   name="HelpCircle"

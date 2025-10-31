@@ -50,12 +50,12 @@ export default function SetupLayout({
       isActive: pathname === '/app/setup/donation-panel',
     },
     {
-      name: 'Donation goals',
-      href: '/app/setup/donation-goals',
+      name: 'Goals',
+      href: '/app/setup/goals',
       iconName: 'Goal',
       isActive:
-        pathname === '/app/setup/donation-goals/active' ||
-        pathname === '/app/setup/donation-goals/history',
+        pathname === '/app/setup/goals/active' ||
+        pathname === '/app/setup/goals/history',
     },
     {
       name: 'Page customization',

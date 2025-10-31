@@ -77,14 +77,14 @@ export default function ActiveGoal() {
             <div className="flex items-center gap-2">
               <Icon name="Users2" size={20} />
               <span className="text-neutral-600">Top donor:</span>
-              {goal.topDonor.name?.trim()
-                ? (
-                  <span className="text-neutral-900">
-                    {goal.topDonor.name} ($
-                    {formatFiatValue(Number(activeGoal.topDonor.amount))})
-                  </span>
-                )
-                : <span className="text-neutral-900">–</span>}
+              {goal.topDonor.name?.trim() ? (
+                <span className="text-neutral-900">
+                  {goal.topDonor.name} ($
+                  {formatFiatValue(Number(activeGoal.topDonor.amount))})
+                </span>
+              ) : (
+                <span className="text-neutral-900">–</span>
+              )}
             </div>
             <Button
               className="h-11 px-6 uppercase"

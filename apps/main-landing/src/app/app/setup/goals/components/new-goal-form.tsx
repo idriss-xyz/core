@@ -78,7 +78,7 @@ export function NewGoalForm({ onGoalCreated, onClose }: NewGoalFormProperties) {
   return (
     <>
       <h5 className="pb-1 text-heading5 text-neutralGreen-900">
-        Creating a new goal
+        Create new goal
       </h5>
       <Form
         onSubmit={formMethods.handleSubmit(onSubmit)}

@@ -62,8 +62,8 @@ export const siteMap: SiteMapItem[] = [
       { name: 'Stream alerts', path: 'stream-alerts' },
       { name: 'Donation panel', path: 'donation-panel' },
       {
-        name: 'Donation goals',
-        path: 'donation-goals',
+        name: 'Goals',
+        path: 'goals',
         children: [
           { name: 'Active', path: 'active' },
           { name: 'History', path: 'history' },
