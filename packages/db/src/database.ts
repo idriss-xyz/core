@@ -17,6 +17,7 @@ import {
   Referral,
   CreatorAddress,
   DripDailyClaim,
+  TwitchInfo,
 } from './entities';
 import {
   AddAmountRaw1743181200000,
@@ -56,6 +57,7 @@ import {
   FixIncorrectNftNames1759846236000,
   AddNewDonationTrigger1760958133000,
   UpdateUrlsToNewStructure1761231247000,
+  AddTwitchInfoEntity1761906619000,
 } from './migrations';
 import { CreatorProfileView } from './views';
 
@@ -79,6 +81,7 @@ export const AppDataSource = new DataSource({
     CreatorAddress,
     Referral,
     DripDailyClaim,
+    TwitchInfo,
   ],
   synchronize: false,
   migrations: [
@@ -119,6 +122,7 @@ export const AppDataSource = new DataSource({
     FixIncorrectNftNames1759846236000,
     AddNewDonationTrigger1760958133000,
     UpdateUrlsToNewStructure1761231247000,
+    AddTwitchInfoEntity1761906619000,
   ],
 });
 

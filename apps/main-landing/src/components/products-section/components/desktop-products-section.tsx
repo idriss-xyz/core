@@ -221,7 +221,7 @@ export const DesktopProductsSection = ({
     return () => {
       window.removeEventListener('landingPageScroll', handleScroll);
     };
-  }, []);
+  }, [numberOfSections]);
 
   useEffect(() => {
     let timeoutReference: NodeJS.Timeout;

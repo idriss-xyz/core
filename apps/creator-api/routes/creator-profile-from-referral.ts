@@ -1,11 +1,11 @@
 import { Router, Request, Response } from 'express';
 
-import { fetchTwitchUserFollowersCount } from '../utils/twitch-api';
 import { creatorProfileService } from '../services/creator-profile.service';
 import { Hex } from 'viem';
 import { tightCors } from '../config/cors';
 import { verifyToken } from '../middleware/auth.middleware';
 import { AppDataSource, Creator, Referral } from '@idriss-xyz/db';
+import { fetchTwitchUserFollowersCount } from '@idriss-xyz/utils/server';
 
 const router = Router();
 
