@@ -6,6 +6,7 @@ import { Card, CardBody, CardHeader } from '@idriss-xyz/ui/card';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { ProgressBarV2 } from '@idriss-xyz/ui/progress-bar-v2';
 import { getAccessToken } from '@privy-io/react-auth';
+import { formatFiatValue } from '@idriss-xyz/utils';
 
 import { getTimeRemaining } from '@/app/utils';
 import { deactivateDonationGoal } from '@/app/utils/donation-goals';
@@ -76,10 +77,14 @@ export default function ActiveGoal() {
             <div className="flex items-center gap-2">
               <Icon name="Users2" size={20} />
               <span className="text-neutral-600">Top donor:</span>
-              <span className="text-neutral-900">
-                {goal.topDonor.name} (${Number(goal.topDonor.amount).toFixed(2)}
+              {goal.topDonor.name?.trim()
+                ? (
+                  <span className="text-neutral-900">
+                    {goal.topDonor.name} ($
+                    {formatFiatValue(Number(activeGoal.topDonor.amount))})
+                  </span>
                 )
-              </span>
+                : <span className="text-neutral-900">–</span>}
             </div>
             <Button
               className="h-11 px-6 uppercase"

@@ -7,6 +7,7 @@ import { ProgressBarV2 } from '@idriss-xyz/ui/progress-bar-v2';
 import { classes } from '@idriss-xyz/ui/utils';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { Badge } from '@idriss-xyz/ui/badge';
+import { formatFiatValue } from '@idriss-xyz/utils';
 
 import { getTimeRemaining } from '@/app/utils';
 
@@ -157,10 +158,14 @@ export default function GoalOverlay({
             <div className="flex items-center gap-2 text-label4">
               <Icon name="Users2" size={20} />
               <span className="text-neutral-600">Top donor:</span>
-              <span className="text-neutral-900">
-                {activeGoal.topDonor.name} ($
-                {Number(activeGoal.topDonor.amount).toFixed(2)})
-              </span>
+              {activeGoal.topDonor.name?.trim()
+                ? (
+                  <span className="text-neutral-900">
+                    {activeGoal.topDonor.name} ($
+                    {formatFiatValue(Number(activeGoal.topDonor.amount))})
+                  </span>
+                )
+                : <span className="text-neutral-900">–</span>}
             </div>
           </div>
         </div>
