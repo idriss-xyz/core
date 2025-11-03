@@ -87,7 +87,11 @@ export function GoalsList({ setIsNewGoalFormOpenAction }: GoalListProperties) {
       </div>
       <div className="flex flex-wrap justify-start gap-4">
         {inactiveGoals?.map((goal) => {
-          const progressPercentage = (goal.progress / goal.targetAmount) * 100;
+          const cappedProgress =
+            goal.progress >= goal.targetAmount
+              ? goal.targetAmount
+              : goal.progress;
+          const progressPercentage = (cappedProgress / goal.targetAmount) * 100;
           return (
             <Card
               key={goal.id}
@@ -100,10 +104,7 @@ export function GoalsList({ setIsNewGoalFormOpenAction }: GoalListProperties) {
                   <span className="text-label2">{goal.name}</span>
                 </CardHeader>
                 <span className="text-label3 text-black">
-                  $
-                  {goal.progress >= goal.targetAmount
-                    ? goal.targetAmount
-                    : goal.progress}
+                  ${Number(cappedProgress).toFixed(2)}
                   /${goal.targetAmount} ({progressPercentage.toFixed(0)}%)
                 </span>
               </div>
