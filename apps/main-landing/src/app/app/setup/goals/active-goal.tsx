@@ -11,6 +11,7 @@ import { formatFiatValue } from '@idriss-xyz/utils';
 import { getTimeRemaining } from '@/app/utils';
 import { deactivateDonationGoal } from '@/app/utils/donation-goals';
 import { useDonationGoals } from '@/app/context/donation-goals-context';
+import { classes } from '@idriss-xyz/ui/utils';
 
 const handleEndGoal = async (goalId: number) => {
   const authToken = await getAccessToken();
@@ -31,6 +32,9 @@ export default function ActiveGoal() {
   }
 
   const progressPercentage = (goal.progress / goal.targetAmount) * 100;
+  const cappedProgress =
+    goal.progress >= goal.targetAmount ? goal.targetAmount : goal.progress;
+  const isCompleted = progressPercentage >= 100;
 
   return (
     <>
@@ -59,16 +63,30 @@ export default function ActiveGoal() {
               />
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-label3 text-black">
-                ${Number(goal.progress).toFixed(2)}/${goal.targetAmount} (
-                {progressPercentage.toFixed(0)}%)
+              <span
+                className={classes(
+                  'text-label3',
+                  isCompleted ? 'text-mint-600' : 'text-black',
+                )}
+              >
+                ${Number(cappedProgress).toFixed(2)}/${goal.targetAmount} (
+                {(progressPercentage <= 100 ? progressPercentage : 100).toFixed(
+                  0,
+                )}
+                %)
               </span>
               <Badge
                 type="success"
                 variant="subtle"
                 className="w-fit lowercase"
               >
-                {getTimeRemaining(Number(goal.endDate))}
+                {progressPercentage >= 100 ? (
+                  <p className="capitalize">Completed</p>
+                ) : (
+                  <p className="lowercase">
+                    {getTimeRemaining(activeGoal.endDate)}
+                  </p>
+                )}
               </Badge>
             </div>
           </div>

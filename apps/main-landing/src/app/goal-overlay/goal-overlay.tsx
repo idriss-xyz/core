@@ -32,6 +32,7 @@ export default function GoalOverlay({
   const progressPercentage = activeGoal
     ? Math.min((activeGoal.progress / activeGoal.targetAmount) * 100, 100)
     : 0;
+  const isCompleted = progressPercentage >= 100;
 
   useEffect(() => {
     if (!activeGoal) {
@@ -149,12 +150,22 @@ export default function GoalOverlay({
                     <p className="capitalize">Completed</p>
                   ) : (
                     <p className="lowercase">
-                      getTimeRemaining(activeGoal.endDate)
+                      {getTimeRemaining(activeGoal.endDate)}
                     </p>
                   )}
                 </Badge>
-                <span className="text-neutral-900">
-                  ${Number(activeGoal.progress).toFixed(2)}/$
+                <span
+                  className={classes(
+                    isCompleted ? 'text-mint-600' : 'text-neutral-900',
+                  )}
+                >
+                  $
+                  {Number(
+                    activeGoal.progress >= activeGoal.targetAmount
+                      ? activeGoal.targetAmount
+                      : activeGoal.progress,
+                  ).toFixed(2)}
+                  /$
                   {activeGoal.targetAmount} ({progressPercentage.toFixed(0)}%)
                 </span>
               </div>

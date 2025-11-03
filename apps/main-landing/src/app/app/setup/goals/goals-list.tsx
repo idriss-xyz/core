@@ -100,8 +100,11 @@ export function GoalsList({ setIsNewGoalFormOpenAction }: GoalListProperties) {
                   <span className="text-label2">{goal.name}</span>
                 </CardHeader>
                 <span className="text-label3 text-black">
-                  ${goal.progress}/${goal.targetAmount} (
-                  {progressPercentage.toFixed(0)}%)
+                  $
+                  {goal.progress >= goal.targetAmount
+                    ? goal.targetAmount
+                    : goal.progress}
+                  /${goal.targetAmount} ({progressPercentage.toFixed(0)}%)
                 </span>
               </div>
               {/* Body section */}
@@ -180,6 +183,20 @@ export function GoalsList({ setIsNewGoalFormOpenAction }: GoalListProperties) {
     </>
   ) : inactiveGoals?.length == 0 && !activeGoal ? (
     <NoGoals setIsNewGoalFormOpenAction={setIsNewGoalFormOpenAction} />
+  ) : inactiveGoals?.length == 0 && activeGoal ? (
+    <div className="flex items-center gap-3">
+      <h5 className="text-heading5 text-neutralGreen-900">Goals list</h5>
+      <Button
+        intent="primary"
+        size="medium"
+        onClick={() => {
+          return setIsNewGoalFormOpenAction(true);
+        }}
+        suffixIconName="Plus"
+      >
+        Create new goal
+      </Button>
+    </div>
   ) : (
     <></>
   );
