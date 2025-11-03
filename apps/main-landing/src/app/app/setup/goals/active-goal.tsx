@@ -7,11 +7,11 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { ProgressBarV2 } from '@idriss-xyz/ui/progress-bar-v2';
 import { getAccessToken } from '@privy-io/react-auth';
 import { formatFiatValue } from '@idriss-xyz/utils';
+import { classes } from '@idriss-xyz/ui/utils';
 
 import { getTimeRemaining } from '@/app/utils';
 import { deactivateDonationGoal } from '@/app/utils/donation-goals';
 import { useDonationGoals } from '@/app/context/donation-goals-context';
-import { classes } from '@idriss-xyz/ui/utils';
 
 const handleEndGoal = async (goalId: number) => {
   const authToken = await getAccessToken();
