@@ -85,14 +85,14 @@ export class AddDonationGoal1760651767821 implements MigrationInterface {
         c.name AS "creatorName",
         COALESCE(SUM(d.trade_value), 0) AS progress,
         (
-          SELECT u.display_name
+          SELECT c.name
           FROM creator_donations du
-          LEFT JOIN users u
-            ON LOWER(u.address) = LOWER(du.from_address)
+          LEFT JOIN creator c ON c.id = g.creator_id
+          LEFT JOIN creator_address ca ON ca.creator_id = c.id AND LOWER(ca.address) = LOWER(du.from_address)
           WHERE du.donation_goal_id = g.id
             AND du.timestamp >= g.start_date
             AND du.timestamp <= g.end_date
-          GROUP BY du.from_address, u.display_name
+          GROUP BY du.from_address, c.name
           ORDER BY SUM(du.trade_value) DESC
           LIMIT 1
         ) AS "topDonorName",
