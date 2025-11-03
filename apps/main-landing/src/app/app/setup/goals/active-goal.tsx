@@ -31,10 +31,11 @@ export default function ActiveGoal() {
     return null; // No active goal to display
   }
 
-  const progressPercentage = (goal.progress / goal.targetAmount) * 100;
   const cappedProgress =
     goal.progress >= goal.targetAmount ? goal.targetAmount : goal.progress;
+  const progressPercentage = (cappedProgress / goal.targetAmount) * 100;
   const isCompleted = progressPercentage >= 100;
+  const isExpired = getTimeRemaining(activeGoal.endDate) === 'Expired';
 
   return (
     <>
@@ -76,7 +77,7 @@ export default function ActiveGoal() {
                 %)
               </span>
               <Badge
-                type="success"
+                type={isExpired ? 'info' : 'success'}
                 variant="subtle"
                 className="w-fit lowercase"
               >

@@ -33,6 +33,7 @@ export default function GoalOverlay({
     ? Math.min((activeGoal.progress / activeGoal.targetAmount) * 100, 100)
     : 0;
   const isCompleted = progressPercentage >= 100;
+  const isExpired = getTimeRemaining(activeGoal?.endDate ?? 0) === 'Expired';
 
   useEffect(() => {
     if (!activeGoal) {
@@ -145,8 +146,12 @@ export default function GoalOverlay({
                 <ProgressBarV2 progress={progressPercentage} />
               </div>
               <div className="flex items-center justify-between text-label4">
-                <Badge type="success" variant="subtle" className="w-fit">
-                  {progressPercentage >= 100 ? (
+                <Badge
+                  type={isExpired ? 'info' : 'success'}
+                  variant="subtle"
+                  className="w-fit"
+                >
+                  {isCompleted ? (
                     <p className="capitalize">Completed</p>
                   ) : (
                     <p className="lowercase">
