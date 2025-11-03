@@ -4,6 +4,7 @@ import { Card, CardBody, CardHeader } from '@idriss-xyz/ui/card';
 import { Button } from '@idriss-xyz/ui/button';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
+import { formatFiatValue } from '@idriss-xyz/utils';
 import { useState } from 'react';
 import { getAccessToken } from '@privy-io/react-auth';
 
@@ -104,7 +105,7 @@ export function GoalsList({ setIsNewGoalFormOpenAction }: GoalListProperties) {
                   <span className="text-label2">{goal.name}</span>
                 </CardHeader>
                 <span className="text-label3 text-black">
-                  ${Number(cappedProgress).toFixed(2)}
+                  ${formatFiatValue(cappedProgress)}
                   /${goal.targetAmount} ({progressPercentage.toFixed(0)}%)
                 </span>
               </div>

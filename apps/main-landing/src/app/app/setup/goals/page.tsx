@@ -45,7 +45,6 @@ export default function DonationGoalsPage() {
               >
                 Goal overlay link
               </label>
-              {/* TODO: Replace for donation goal overlay link*/}
               <CopyInput
                 value={`${creator?.goalUrl ?? ''}`}
                 wasCopied={wasCopied}
@@ -117,9 +116,6 @@ export default function DonationGoalsPage() {
           setIsUrlWarningConfirmed(true);
         }}
         onConfirm={() => {
-          {
-            /* TODO: Replace for donation goal overlay link (add property on backend)*/
-          }
           if (confirmButtonText === 'COPY LINK' && creator?.goalUrl) {
             void navigator.clipboard.writeText(creator.goalUrl);
             setWasCopied(true);

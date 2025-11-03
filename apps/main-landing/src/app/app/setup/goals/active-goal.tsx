@@ -31,11 +31,12 @@ export default function ActiveGoal() {
     return null; // No active goal to display
   }
 
-  const cappedProgress =
-    goal.progress >= goal.targetAmount ? goal.targetAmount : goal.progress;
+  const cappedProgress = Number(
+    goal.progress >= goal.targetAmount ? goal.targetAmount : goal.progress,
+  );
   const progressPercentage = (cappedProgress / goal.targetAmount) * 100;
   const isCompleted = progressPercentage >= 100;
-  const isExpired = getTimeRemaining(activeGoal.endDate) === 'Expired';
+  const isExpired = getTimeRemaining(goal.endDate) === 'Expired';
 
   return (
     <>
@@ -70,7 +71,7 @@ export default function ActiveGoal() {
                   isCompleted ? 'text-mint-600' : 'text-black',
                 )}
               >
-                ${Number(cappedProgress).toFixed(2)}/${goal.targetAmount} (
+                ${formatFiatValue(cappedProgress)}/${goal.targetAmount} (
                 {(progressPercentage <= 100 ? progressPercentage : 100).toFixed(
                   0,
                 )}
@@ -83,6 +84,8 @@ export default function ActiveGoal() {
               >
                 {progressPercentage >= 100 ? (
                   <p className="capitalize">Completed</p>
+                ) : isExpired ? (
+                  <p className="capitalize">Expired</p>
                 ) : (
                   <p className="lowercase">
                     {getTimeRemaining(activeGoal.endDate)}

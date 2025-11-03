@@ -153,6 +153,8 @@ export default function GoalOverlay({
                 >
                   {isCompleted ? (
                     <p className="capitalize">Completed</p>
+                  ) : isExpired ? (
+                    <p className="capitalize">Expired</p>
                   ) : (
                     <p className="lowercase">
                       {getTimeRemaining(activeGoal.endDate)}
@@ -165,11 +167,13 @@ export default function GoalOverlay({
                   )}
                 >
                   $
-                  {Number(
-                    activeGoal.progress >= activeGoal.targetAmount
-                      ? activeGoal.targetAmount
-                      : activeGoal.progress,
-                  ).toFixed(2)}
+                  {formatFiatValue(
+                    Number(
+                      activeGoal.progress >= activeGoal.targetAmount
+                        ? activeGoal.targetAmount
+                        : activeGoal.progress,
+                    ),
+                  )}
                   /$
                   {activeGoal.targetAmount} ({progressPercentage.toFixed(0)}%)
                 </span>
