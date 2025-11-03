@@ -85,7 +85,7 @@ export class AddDonationGoal1760651767821 implements MigrationInterface {
         c.name AS "creatorName",
         COALESCE(SUM(d.trade_value), 0) AS progress,
         (
-          SELECT COALESCE(c2.name, cc.name)
+        SELECT COALESCE(c2.name, cc.name, 'anon')
           FROM creator_donations du
           LEFT JOIN creator c2 ON LOWER(c2.address) = LOWER(du.from_address)
           LEFT JOIN creator_address ca ON LOWER(ca.address) = LOWER(du.from_address)
