@@ -92,7 +92,7 @@ export default function GoalOverlay({
     if (recentDonationAmount !== null) {
       const timer = setTimeout(() => {
         setRecentDonationAmount(null);
-      }, 3000);
+      }, 6000);
 
       return () => {
         return clearTimeout(timer);
@@ -114,7 +114,7 @@ export default function GoalOverlay({
           <div className="flex w-full max-w-md flex-col gap-6 rounded-lg border bg-white/90 p-4">
             {/* DonationGoal name and incoming donation chip*/}
             <div className="flex w-full items-center">
-              <div className="flex grow items-center">
+              <div className="flex min-h-[36px] grow items-center">
                 <h2
                   className={classes(
                     'text-center text-heading5 text-neutralGreen-900',
@@ -124,12 +124,16 @@ export default function GoalOverlay({
                 </h2>
               </div>
               {recentDonationAmount && (
-                <div className="flex items-center justify-end gap-2 rounded-full bg-mint-400 py-1.5 pl-1 pr-3">
+                <div
+                  key={recentDonationAmount} // Forces re-mount for each new donation
+                  className="flex animate-slide-in-from-right items-center justify-end gap-2 rounded-full bg-mint-400 py-1.5 pl-1 pr-3 transition-all"
+                >
                   <div className="flex size-6 items-center justify-center rounded-full bg-mint-200">
                     <Icon name="Check" className="text-mint-500" size={20} />
                   </div>
-
-                  <span className="text-label4">${recentDonationAmount}</span>
+                  <span className="text-label4">
+                    ${Number(recentDonationAmount).toFixed(2)}
+                  </span>
                 </div>
               )}
             </div>
@@ -140,12 +144,14 @@ export default function GoalOverlay({
                 <ProgressBarV2 progress={progressPercentage} />
               </div>
               <div className="flex items-center justify-between text-label4">
-                <Badge
-                  type="success"
-                  variant="subtle"
-                  className="w-fit lowercase"
-                >
-                  {getTimeRemaining(activeGoal.endDate)}
+                <Badge type="success" variant="subtle" className="w-fit">
+                  {progressPercentage >= 100 ? (
+                    <p className="capitalize">Completed</p>
+                  ) : (
+                    <p className="lowercase">
+                      getTimeRemaining(activeGoal.endDate)
+                    </p>
+                  )}
                 </Badge>
                 <span className="text-neutral-900">
                   ${Number(activeGoal.progress).toFixed(2)}/$
