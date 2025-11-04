@@ -201,7 +201,7 @@ export function GoalsList({ setIsNewGoalFormOpenAction }: GoalListProperties) {
         }}
         title="Remove this goal?"
         sectionSubtitle="Removing this goal will permanently delete it from your list. Once removed, you won’t be able to bring it back or make it active again in the future."
-        confirmButtonText="REPLACE"
+        confirmButtonText="REMOVE"
         confirmButtonIntent="secondary"
       />
     </>

@@ -126,6 +126,14 @@ export function NewGoalForm({ onGoalCreated, onClose }: NewGoalFormProperties) {
           <Controller
             name="endDate"
             control={formMethods.control}
+            rules={{
+              validate: (value) => {
+                if (value && value < new Date()) {
+                  return 'End date cannot be in the past';
+                }
+                return true;
+              },
+            }}
             render={({ field, fieldState }) => {
               return (
                 <Form.Field
@@ -136,6 +144,7 @@ export function NewGoalForm({ onGoalCreated, onClose }: NewGoalFormProperties) {
                   error={Boolean(fieldState.error?.message)}
                   datePicker
                   dateValue={field.value}
+                  disableBeforeToday
                   onDateChange={(date) => {
                     field.onChange(date);
                   }}

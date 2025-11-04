@@ -53,9 +53,7 @@ export default function SetupLayout({
       name: 'Goals',
       href: '/app/setup/goals',
       iconName: 'Goal',
-      isActive:
-        pathname === '/app/setup/goals/active' ||
-        pathname === '/app/setup/goals/history',
+      isActive: pathname === '/app/setup/goals',
     },
     {
       name: 'Page customization',

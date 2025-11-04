@@ -29,6 +29,7 @@ type Properties = InputUnion & {
   decimalScale?: number;
   datePicker?: boolean;
   dateValue?: Date;
+  disableBeforeToday?: boolean;
   onDateChange?: (date: Date | undefined) => void;
   onChange: (value: string) => void;
 };
@@ -44,6 +45,7 @@ export const Field = forwardRef(
       decimalScale,
       datePicker,
       dateValue,
+      disableBeforeToday,
       onDateChange,
       placeholderTooltip,
       onChange,
@@ -77,7 +79,11 @@ export const Field = forwardRef(
         )}
         <RadixForm.Control asChild>
           {datePicker ? (
-            <DatePicker date={dateValue} onSelect={onDateChange}>
+            <DatePicker
+              date={dateValue}
+              onSelect={onDateChange}
+              disableBeforeToday={disableBeforeToday}
+            >
               <div>
                 <Input
                   {...inputProperties}
