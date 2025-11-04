@@ -12,6 +12,7 @@ export type CreatorProfileResponse = {
   receiveEmails?: boolean;
   donationUrl: string;
   obsUrl?: string;
+  goalUrl?: string;
   joinedAt: string;
   doneSetup: boolean;
   isDonor: boolean;

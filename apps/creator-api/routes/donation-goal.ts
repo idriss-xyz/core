@@ -8,33 +8,27 @@ import { Creator, DonationGoal, AppDataSource } from '@idriss-xyz/db';
 const router = Router();
 
 // Get donation goals by creator name
-router.get(
-  '/:creatorName',
-  tightCors,
-  verifyToken(),
-  async (req: Request, res: Response) => {
-    const { creatorName } = req.params;
-    const donationGoals =
-      await donationGoalService.getDonationGoalsByCreatorName(creatorName);
+router.get('/:creatorName', tightCors, async (req: Request, res: Response) => {
+  const { creatorName } = req.params;
+  const donationGoals =
+    await donationGoalService.getDonationGoalsByCreatorName(creatorName);
 
-    // Parse each donation goal and add topDonor field
-    const parsedDonationGoals = donationGoals.map((donationGoal) => ({
-      ...donationGoal,
-      topDonor: {
-        name: donationGoal.topDonorName,
-        amount: donationGoal.topDonorAmount,
-      },
-    }));
+  // Parse each donation goal and add topDonor field
+  const parsedDonationGoals = donationGoals.map((donationGoal) => ({
+    ...donationGoal,
+    topDonor: {
+      name: donationGoal.topDonorName,
+      amount: donationGoal.topDonorAmount,
+    },
+  }));
 
-    res.status(200).json(parsedDonationGoals);
-  },
-);
+  res.status(200).json(parsedDonationGoals);
+});
 
 // Get active donation goal by creator name
 router.get(
   '/:creatorName/active',
   tightCors,
-  verifyToken(),
   async (req: Request, res: Response) => {
     const { creatorName } = req.params;
     const activeGoal =

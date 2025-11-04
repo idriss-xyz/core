@@ -4,6 +4,7 @@ import { Card, CardBody, CardHeader } from '@idriss-xyz/ui/card';
 import { Button } from '@idriss-xyz/ui/button';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
+import { formatFiatValue } from '@idriss-xyz/utils';
 import { useState } from 'react';
 import { getAccessToken } from '@privy-io/react-auth';
 
@@ -12,8 +13,7 @@ import {
   activateDonationGoal,
   deleteDonationGoal,
 } from '@/app/utils/donation-goals';
-
-import { useDonationGoals } from './context/donation-goals-context';
+import { useDonationGoals } from '@/app/context/donation-goals-context';
 
 const handleActivateGoal = async (goalId: number) => {
   const authToken = await getAccessToken();
@@ -35,7 +35,8 @@ const NoGoals = ({ setIsNewGoalFormOpenAction }: NoGoalsProperties) => {
         No goals yet
       </span>
       <span className="mx-8 text-center text-display5 uppercase gradient-text">
-        Start something your fans can support
+        Start something <br />
+        your fans can support
       </span>
       <Button
         intent="primary"
@@ -59,8 +60,6 @@ export function GoalsList({ setIsNewGoalFormOpenAction }: GoalListProperties) {
   const { activeGoal, inactiveGoals, refetch } = useDonationGoals();
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
   const [goalToDelete, setGoalToDelete] = useState<number | null>(null);
-  console.log('activeGoal', activeGoal);
-  console.log('inactiveGoals', inactiveGoals);
 
   const handleDeleteGoal = async (goalId: number) => {
     const authToken = await getAccessToken();
@@ -89,7 +88,11 @@ export function GoalsList({ setIsNewGoalFormOpenAction }: GoalListProperties) {
       </div>
       <div className="flex flex-wrap justify-start gap-4">
         {inactiveGoals?.map((goal) => {
-          const progressPercentage = (goal.progress / goal.targetAmount) * 100;
+          const cappedProgress =
+            goal.progress >= goal.targetAmount
+              ? goal.targetAmount
+              : goal.progress;
+          const progressPercentage = (cappedProgress / goal.targetAmount) * 100;
           return (
             <Card
               key={goal.id}
@@ -102,8 +105,8 @@ export function GoalsList({ setIsNewGoalFormOpenAction }: GoalListProperties) {
                   <span className="text-label2">{goal.name}</span>
                 </CardHeader>
                 <span className="text-label3 text-black">
-                  ${goal.progress}/${goal.targetAmount} (
-                  {progressPercentage.toFixed(0)}%)
+                  ${formatFiatValue(cappedProgress)}
+                  /${goal.targetAmount} ({progressPercentage.toFixed(0)}%)
                 </span>
               </div>
               {/* Body section */}
@@ -174,15 +177,28 @@ export function GoalsList({ setIsNewGoalFormOpenAction }: GoalListProperties) {
           setIsRemoveModalOpen(false);
           setGoalToDelete(null);
         }}
-        title="Confirm before removing"
-        sectionSubtitle="You are
-        removing one of your donation goals, which means incoming donations won't add to this goal anymore. This action cannot be undone."
-        confirmButtonText="REMOVE"
+        title="Remove this goal?"
+        sectionSubtitle="Removing this goal will permanently delete it from your list. Once removed, you won’t be able to bring it back or make it active again in the future."
+        confirmButtonText="REPLACE"
         confirmButtonIntent="secondary"
       />
     </>
   ) : inactiveGoals?.length == 0 && !activeGoal ? (
     <NoGoals setIsNewGoalFormOpenAction={setIsNewGoalFormOpenAction} />
+  ) : inactiveGoals?.length == 0 && activeGoal ? (
+    <div className="flex items-center gap-3">
+      <h5 className="text-heading5 text-neutralGreen-900">Goals list</h5>
+      <Button
+        intent="primary"
+        size="medium"
+        onClick={() => {
+          return setIsNewGoalFormOpenAction(true);
+        }}
+        suffixIconName="Plus"
+      >
+        Create new goal
+      </Button>
+    </div>
   ) : (
     <></>
   );

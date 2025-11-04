@@ -298,6 +298,8 @@ export default {
         'slide-in-from-bottom': 'slide-in-from-bottom 200ms ease-out',
         'slide-in-from-left': 'slide-in-from-left 200ms ease-out',
         'slide-in-from-right': 'slide-in-from-right 200ms ease-out',
+        'progress-glow': 'progress-glow 1s ease-in-out infinite alternate',
+        'progress-complete': 'progress-complete 500ms ease-in-out',
       },
       keyframes: {
         'collapsibleSlideDown': {
@@ -361,6 +363,21 @@ export default {
         'slide-in-from-right': {
           '0%': { transform: 'translateX(4px)' },
           '100%': { transform: 'translateX(0)' },
+        },
+        'progress-glow': {
+          '0%': { 
+            opacity: '0.4',
+            transform: 'scale(1)',
+          },
+          '100%': { 
+            opacity: '0.7',
+            transform: 'scale(1.05)',
+          },
+        },
+        'progress-complete': {
+          '0%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.1)' },
+          '100%': { transform: 'scale(1)' },
         },
       },
     },

@@ -81,11 +81,12 @@ export const getCreatorNameAndPicOrAnon = async (
 
 export const getTimeRemaining = (endDate: number): string => {
   const now = new Date();
-  const end = new Date(endDate);
+  const end = new Date(Number(endDate));
+
   const diffInMs = end.getTime() - now.getTime();
 
   if (diffInMs <= 0) {
-    return 'Goal ended';
+    return 'Expired';
   }
 
   const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24));

@@ -19,14 +19,18 @@ import { Donation } from '../entities/donations.entity';
         // total donated so far (progress)
         .addSelect('COALESCE(SUM(d.trade_value), 0)', 'progress')
         .addSelect(
-          `(SELECT u.display_name
-          FROM creator_donations du
-          LEFT JOIN users u
-            ON u.address = du.from_address
-          WHERE du.donation_goal_id = g.id
-          GROUP BY du.from_address, u.display_name
-          ORDER BY SUM(du.trade_value) DESC
-          LIMIT 1)`,
+          `(SELECT COALESCE(c2.name, cc.name, 'anon')
+            FROM creator_donations du
+            LEFT JOIN creator c2 ON LOWER(c2.address) = LOWER(du.from_address)
+            LEFT JOIN creator_address ca ON LOWER(ca.address) = LOWER(du.from_address)
+            LEFT JOIN creator cc ON cc.id = ca.creator_id
+            WHERE du.donation_goal_id = g.id
+              AND du.timestamp >= g.start_date
+              AND du.timestamp <= g.end_date
+            GROUP BY c2.name, cc.name
+            ORDER BY SUM(du.trade_value) DESC
+            LIMIT 1
+          )`,
           'topDonorName',
         )
         // top donor total amount

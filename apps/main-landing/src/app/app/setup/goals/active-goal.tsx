@@ -6,11 +6,12 @@ import { Card, CardBody, CardHeader } from '@idriss-xyz/ui/card';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { ProgressBarV2 } from '@idriss-xyz/ui/progress-bar-v2';
 import { getAccessToken } from '@privy-io/react-auth';
+import { formatFiatValue } from '@idriss-xyz/utils';
+import { classes } from '@idriss-xyz/ui/utils';
 
 import { getTimeRemaining } from '@/app/utils';
 import { deactivateDonationGoal } from '@/app/utils/donation-goals';
-
-import { useDonationGoals } from './context/donation-goals-context';
+import { useDonationGoals } from '@/app/context/donation-goals-context';
 
 const handleEndGoal = async (goalId: number) => {
   const authToken = await getAccessToken();
@@ -30,7 +31,12 @@ export default function ActiveGoal() {
     return null; // No active goal to display
   }
 
-  const progressPercentage = (goal.progress / goal.targetAmount) * 100;
+  const cappedProgress = Number(
+    goal.progress >= goal.targetAmount ? goal.targetAmount : goal.progress,
+  );
+  const progressPercentage = (cappedProgress / goal.targetAmount) * 100;
+  const isCompleted = progressPercentage >= 100;
+  const isExpired = getTimeRemaining(goal.endDate) === 'Expired';
 
   return (
     <>
@@ -59,16 +65,32 @@ export default function ActiveGoal() {
               />
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-label3 text-black">
-                ${goal.progress}/${goal.targetAmount} (
-                {progressPercentage.toFixed(0)}%)
+              <span
+                className={classes(
+                  'text-label3',
+                  isCompleted ? 'text-mint-600' : 'text-black',
+                )}
+              >
+                ${formatFiatValue(cappedProgress)}/${goal.targetAmount} (
+                {(progressPercentage <= 100 ? progressPercentage : 100).toFixed(
+                  0,
+                )}
+                %)
               </span>
               <Badge
-                type="success"
+                type={isExpired ? 'info' : 'success'}
                 variant="subtle"
                 className="w-fit lowercase"
               >
-                {getTimeRemaining(Number(goal.endDate))}
+                {progressPercentage >= 100 ? (
+                  <p className="capitalize">Completed</p>
+                ) : isExpired ? (
+                  <p className="capitalize">Expired</p>
+                ) : (
+                  <p className="lowercase">
+                    {getTimeRemaining(activeGoal.endDate)}
+                  </p>
+                )}
               </Badge>
             </div>
           </div>
@@ -77,9 +99,14 @@ export default function ActiveGoal() {
             <div className="flex items-center gap-2">
               <Icon name="Users2" size={20} />
               <span className="text-neutral-600">Top donor:</span>
-              <span className="text-neutral-900">
-                {goal.topDonor.name} (${goal.topDonor.amount})
-              </span>
+              {goal.topDonor.name?.trim() ? (
+                <span className="text-neutral-900">
+                  {goal.topDonor.name} ($
+                  {formatFiatValue(Number(activeGoal.topDonor.amount))})
+                </span>
+              ) : (
+                <span className="text-neutral-900">–</span>
+              )}
             </div>
             <Button
               className="h-11 px-6 uppercase"
