@@ -15,6 +15,7 @@ import 'react-day-picker/style.css';
 import { classes } from '../../utils';
 import { Icon } from '../icon';
 import { Input } from '../input';
+import { IconButton } from '../icon-button';
 
 type InputProperties = ComponentProps<typeof Input>;
 type InputUnion = InputProperties extends infer T
@@ -52,6 +53,49 @@ const formatDateInput = (value: string) => {
 
   return formatted;
 };
+
+function Chevron(properties: {
+  className?: string;
+  /**
+   * The size of the chevron.
+   *
+   * @defaultValue 24
+   */
+  size?: number;
+  /** Set to `true` to disable the chevron. */
+  disabled?: boolean;
+  /** The orientation of the chevron. */
+  orientation?: 'up' | 'down' | 'left' | 'right';
+}) {
+  const { orientation = 'left', className } = properties;
+
+  return (
+    <>
+      {orientation === 'left' && (
+        <IconButton
+          iconName="IdrissArrowLeft"
+          intent="tertiary"
+          size="small"
+          className={classes(
+            'rounded-xl border shadow-[0_0_0_4px_rgba(242,242,242,0.14)]',
+            className,
+          )}
+        />
+      )}
+      {orientation === 'right' && (
+        <IconButton
+          iconName="IdrissArrowRight"
+          intent="tertiary"
+          size="small"
+          className={classes(
+            'rounded-xl border shadow-[0_0_0_4px_rgba(242,242,242,0.14)]',
+            className,
+          )}
+        />
+      )}
+    </>
+  );
+}
 
 export const DatePickerField = forwardRef(
   (
@@ -126,7 +170,10 @@ export const DatePickerField = forwardRef(
         <Popover.Portal>
           <Popover.Content
             sideOffset={8}
-            className="w-auto rounded-md border border-gray-200 bg-white p-2 shadow-md"
+            className="z-10 w-auto rounded-2xl border border-gray-200 bg-white p-4 shadow-md"
+            side="bottom"
+            align="center"
+            avoidCollisions={false}
           >
             <DayPicker
               mode="single"
@@ -138,6 +185,15 @@ export const DatePickerField = forwardRef(
                 selected: `bg-mint-500 rounded-full text-white`,
                 root: `${defaultClassNames.root} shadow-none`,
                 chevron: `fill-black`,
+                caption_label: 'text-label1',
+                month: 'flex flex-col gap-4',
+                month_caption: 'flex items-center h-[40px]',
+                nav: `${defaultClassNames.nav} gap-3`,
+                weekday: 'text-label3',
+                day: 'text-label4 text-neutral-700',
+              }}
+              components={{
+                Chevron: Chevron,
               }}
             />
             <Popover.Arrow className="fill-white" />
