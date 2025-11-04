@@ -62,6 +62,8 @@ export function GoalsList({ setIsNewGoalFormOpenAction }: GoalListProperties) {
   const { activeGoal, inactiveGoals, refetch } = useDonationGoals();
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
   const [goalToDelete, setGoalToDelete] = useState<number | null>(null);
+  const [isReplaceGoalModalOpen, setIsReplaceGoalModalOpen] = useState(false);
+  const [goalToActivate, setGoalToActivate] = useState<number | null>(null);
 
   const handleDeleteGoal = async (goalId: number) => {
     const authToken = await getAccessToken();
@@ -173,8 +175,13 @@ export function GoalsList({ setIsNewGoalFormOpenAction }: GoalListProperties) {
                       size="medium"
                       className="py-auto h-11 px-6 uppercase"
                       onClick={async () => {
-                        await handleActivateGoal(goal.id);
-                        await refetch();
+                        if (activeGoal) {
+                          setGoalToActivate(goal.id);
+                          setIsReplaceGoalModalOpen(true);
+                        } else {
+                          await handleActivateGoal(goal.id);
+                          await refetch();
+                        }
                       }}
                     >
                       Activate
@@ -200,8 +207,27 @@ export function GoalsList({ setIsNewGoalFormOpenAction }: GoalListProperties) {
           setGoalToDelete(null);
         }}
         title="Remove this goal?"
-        sectionSubtitle="Removing this goal will permanently delete it from your list. Once removed, you won’t be able to bring it back or make it active again in the future."
+        sectionSubtitle="Removing this goal will permanently delete it from your list. Once removed, you won't be able to bring it back or make it active again in the future."
         confirmButtonText="REMOVE"
+        confirmButtonIntent="secondary"
+      />
+      <ConfirmationModal
+        isOpened={isReplaceGoalModalOpen}
+        onClose={() => {
+          setIsReplaceGoalModalOpen(false);
+          setGoalToActivate(null);
+        }}
+        onConfirm={async () => {
+          if (goalToActivate) {
+            await handleActivateGoal(goalToActivate);
+            await refetch();
+          }
+          setIsReplaceGoalModalOpen(false);
+          setGoalToActivate(null);
+        }}
+        title="Replace the current active goal?"
+        sectionSubtitle="You already have an active goal. Activating this one will move your current goal to the goals list, and new donations will count toward this one instead."
+        confirmButtonText="REPLACE"
         confirmButtonIntent="secondary"
       />
     </>
