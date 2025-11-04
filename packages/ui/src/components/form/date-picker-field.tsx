@@ -4,16 +4,17 @@ import {
   ForwardedRef,
   forwardRef,
   ReactNode,
-  useRef,
   useState,
   useEffect,
 } from 'react';
 import { format, parse, isValid } from 'date-fns';
+import * as Popover from '@radix-ui/react-popover';
+import { DayPicker, getDefaultClassNames } from 'react-day-picker';
+import 'react-day-picker/style.css';
 
 import { classes } from '../../utils';
 import { Icon } from '../icon';
 import { Input } from '../input';
-import { DatePicker } from '../date-picker';
 
 type InputProperties = ComponentProps<typeof Input>;
 type InputUnion = InputProperties extends infer T
@@ -67,7 +68,6 @@ export const DatePickerField = forwardRef(
     }: Properties,
     reference: ForwardedRef<HTMLDivElement>,
   ) => {
-    const suffixReference = useRef<HTMLDivElement>(null);
     const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
     const [inputValue, setInputValue] = useState(
       dateValue ? format(dateValue, 'dd/MM/yyyy') : '',
@@ -91,16 +91,59 @@ export const DatePickerField = forwardRef(
       }
     };
 
+    const handleCalendarSelect = (selectedDate: Date | undefined) => {
+      if (!onDateChange) return;
+      if (selectedDate) {
+        const endOfDay = new Date(selectedDate);
+        endOfDay.setHours(23, 59, 59, 999);
+        onDateChange(endOfDay);
+        setInputValue(format(selectedDate, 'dd/MM/yyyy'));
+      } else {
+        setInputValue('');
+      }
+      setIsDatePickerOpen(false);
+    };
+
+    const defaultClassNames = getDefaultClassNames();
+    const disabledDays = disableBeforeToday
+      ? [{ before: new Date() }]
+      : undefined;
+
     const calendarSuffix = (
-      <div
-        ref={suffixReference}
-        className="flex h-full shrink-0 cursor-pointer items-center self-stretch border-l border-gray-200 pl-3 hover:text-mint-600"
-        onClick={() => {
-          setIsDatePickerOpen(true);
-        }}
-      >
-        <Icon name="CalendarDays" size={16} />
-      </div>
+      <Popover.Root open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
+        <Popover.Trigger asChild>
+          <div
+            className="flex h-full shrink-0 cursor-pointer items-center self-stretch border-l border-gray-200 pl-3 hover:text-mint-600"
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              setIsDatePickerOpen(true);
+            }}
+          >
+            <Icon name="CalendarDays" size={16} />
+          </div>
+        </Popover.Trigger>
+        <Popover.Portal>
+          <Popover.Content
+            sideOffset={8}
+            className="w-auto rounded-md border border-gray-200 bg-white p-2 shadow-md"
+          >
+            <DayPicker
+              mode="single"
+              selected={dateValue}
+              onSelect={handleCalendarSelect}
+              disabled={disabledDays}
+              classNames={{
+                today: `rounded-full text-mint-500`,
+                selected: `bg-mint-500 rounded-full text-white`,
+                root: `${defaultClassNames.root} shadow-none`,
+                chevron: `fill-black`,
+              }}
+            />
+            <Popover.Arrow className="fill-white" />
+          </Popover.Content>
+        </Popover.Portal>
+      </Popover.Root>
     );
 
     return (
@@ -111,33 +154,16 @@ export const DatePickerField = forwardRef(
           </RadixForm.Label>
         )}
         <RadixForm.Control asChild>
-          <DatePicker
-            date={dateValue}
-            onSelect={(date) => {
-              onDateChange?.(date);
-              if (date) {
-                setInputValue(format(date, 'dd/MM/yyyy'));
-              } else {
-                setInputValue('');
-              }
+          <Input
+            {...inputProperties}
+            suffixElement={inputProperties.suffixElement ?? calendarSuffix}
+            value={inputValue}
+            placeholder="DD/MM/YYYY"
+            asTextArea={false}
+            onChange={(event) => {
+              handleDateInputChange(event.target.value);
             }}
-            disableBeforeToday={disableBeforeToday}
-            open={isDatePickerOpen}
-            onOpenChange={setIsDatePickerOpen}
-          >
-            <div>
-              <Input
-                {...inputProperties}
-                suffixElement={inputProperties.suffixElement ?? calendarSuffix}
-                value={inputValue}
-                placeholder="DD/MM/YYYY"
-                asTextArea={false}
-                onChange={(event) => {
-                  handleDateInputChange(event.target.value);
-                }}
-              />
-            </div>
-          </DatePicker>
+          />
         </RadixForm.Control>
         {helperText && (
           <span
