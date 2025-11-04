@@ -8,6 +8,8 @@ interface DatePickerProperties {
   onSelect?: (date: Date | undefined) => void;
   children: ReactNode;
   disableBeforeToday?: boolean;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export const DatePicker = ({
@@ -15,6 +17,8 @@ export const DatePicker = ({
   onSelect,
   children,
   disableBeforeToday = false,
+  open,
+  onOpenChange,
 }: DatePickerProperties) => {
   const defaultClassNames = getDefaultClassNames();
 
@@ -34,10 +38,11 @@ export const DatePicker = ({
     if (selectedDate) {
       onSelect(setToEndOfDay(selectedDate));
     }
+    onOpenChange?.(false);
   };
 
   return (
-    <Popover.Root>
+    <Popover.Root open={open} onOpenChange={onOpenChange}>
       <Popover.Trigger asChild>{children}</Popover.Trigger>
 
       <Popover.Portal>
