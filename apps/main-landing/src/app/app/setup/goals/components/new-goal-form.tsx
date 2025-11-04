@@ -126,21 +126,27 @@ export function NewGoalForm({ onGoalCreated, onClose }: NewGoalFormProperties) {
           <Controller
             name="endDate"
             control={formMethods.control}
+            rules={{
+              validate: (value) => {
+                if (value && value < new Date()) {
+                  return 'End date cannot be in the past';
+                }
+                return true;
+              },
+            }}
             render={({ field, fieldState }) => {
               return (
-                <Form.Field
+                <Form.DatePickerField
                   name="endDate"
                   className="max-w-[360px]"
                   label="End date (optional)"
                   helperText={fieldState.error?.message}
                   error={Boolean(fieldState.error?.message)}
-                  datePicker
                   dateValue={field.value}
+                  disableBeforeToday
                   onDateChange={(date) => {
                     field.onChange(date);
                   }}
-                  value={field.value?.toString()} // Required prop but not used for date picker
-                  onChange={() => {}} // Required prop but not used for date picker
                 />
               );
             }}
