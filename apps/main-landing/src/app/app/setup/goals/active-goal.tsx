@@ -71,7 +71,7 @@ export default function ActiveGoal() {
                   isCompleted ? 'text-mint-600' : 'text-black',
                 )}
               >
-                ${formatFiatValue(cappedProgress)}/${goal.targetAmount} (
+                {formatFiatValue(Number(cappedProgress))}/${goal.targetAmount} (
                 {(progressPercentage <= 100 ? progressPercentage : 100).toFixed(
                   0,
                 )}
@@ -101,7 +101,7 @@ export default function ActiveGoal() {
               <span className="text-neutral-600">Top donor:</span>
               {goal.topDonor.name?.trim() ? (
                 <span className="text-neutral-900">
-                  {goal.topDonor.name} ($
+                  {goal.topDonor.name} (
                   {formatFiatValue(Number(activeGoal.topDonor.amount))})
                 </span>
               ) : (

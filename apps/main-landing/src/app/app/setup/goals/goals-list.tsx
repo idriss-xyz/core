@@ -1,6 +1,7 @@
 'use client';
 
 import { Card, CardBody, CardHeader } from '@idriss-xyz/ui/card';
+import { Badge } from '@idriss-xyz/ui/badge';
 import { Button } from '@idriss-xyz/ui/button';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
@@ -14,6 +15,7 @@ import {
   deleteDonationGoal,
 } from '@/app/utils/donation-goals';
 import { useDonationGoals } from '@/app/context/donation-goals-context';
+import { getTimeRemaining } from '@/app/utils';
 
 const handleActivateGoal = async (goalId: number) => {
   const authToken = await getAccessToken();
@@ -88,11 +90,20 @@ export function GoalsList({ setIsNewGoalFormOpenAction }: GoalListProperties) {
       </div>
       <div className="flex flex-wrap justify-start gap-4">
         {inactiveGoals?.map((goal) => {
+          {
+            /* Goal variables */
+          }
           const cappedProgress =
             goal.progress >= goal.targetAmount
               ? goal.targetAmount
               : goal.progress;
           const progressPercentage = (cappedProgress / goal.targetAmount) * 100;
+          // const isExpired = new Date(goal.endDate) > new Date();
+          const isExpired = getTimeRemaining(goal.endDate) === 'Expired';
+
+          {
+            /* Goal jsx */
+          }
           return (
             <Card
               key={goal.id}
@@ -103,9 +114,18 @@ export function GoalsList({ setIsNewGoalFormOpenAction }: GoalListProperties) {
                 <CardHeader className="flex items-center gap-[6px] text-label2">
                   <Icon name="Goal" size={20} />
                   <span className="text-label2">{goal.name}</span>
+                  {isExpired && (
+                    <Badge
+                      type="info"
+                      variant="subtle"
+                      className="w-fit capitalize"
+                    >
+                      Expired
+                    </Badge>
+                  )}
                 </CardHeader>
                 <span className="text-label3 text-black">
-                  ${formatFiatValue(cappedProgress)}
+                  {formatFiatValue(Number(cappedProgress))}
                   /${goal.targetAmount} ({progressPercentage.toFixed(0)}%)
                 </span>
               </div>
@@ -147,17 +167,19 @@ export function GoalsList({ setIsNewGoalFormOpenAction }: GoalListProperties) {
                       return setIsRemoveModalOpen(true);
                     }}
                   />
-                  <Button
-                    intent="secondary"
-                    size="medium"
-                    className="py-auto h-11 px-6 uppercase"
-                    onClick={async () => {
-                      await handleActivateGoal(goal.id);
-                      await refetch();
-                    }}
-                  >
-                    Activate
-                  </Button>
+                  {!isExpired && (
+                    <Button
+                      intent="secondary"
+                      size="medium"
+                      className="py-auto h-11 px-6 uppercase"
+                      onClick={async () => {
+                        await handleActivateGoal(goal.id);
+                        await refetch();
+                      }}
+                    >
+                      Activate
+                    </Button>
+                  )}
                 </div>
               </CardBody>
             </Card>

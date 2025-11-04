@@ -166,7 +166,6 @@ export default function GoalOverlay({
                     isCompleted ? 'text-mint-600' : 'text-neutral-900',
                   )}
                 >
-                  $
                   {formatFiatValue(
                     Number(
                       activeGoal.progress >= activeGoal.targetAmount
@@ -186,7 +185,7 @@ export default function GoalOverlay({
               <span className="text-neutral-600">Top donor:</span>
               {activeGoal.topDonor.name?.trim() ? (
                 <span className="text-neutral-900">
-                  {activeGoal.topDonor.name} ($
+                  {activeGoal.topDonor.name} (
                   {formatFiatValue(Number(activeGoal.topDonor.amount))})
                 </span>
               ) : (
