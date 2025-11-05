@@ -4,6 +4,7 @@ import { AppDataSource, Creator, Referral, Donation } from '@idriss-xyz/db';
 import { In } from 'typeorm';
 import { verifyToken } from '../middleware/auth.middleware';
 import { tightCors } from '../config/cors';
+import { fetchTwitchStreamStatus } from '@idriss-xyz/utils/server';
 
 const router = Router();
 
@@ -19,6 +20,7 @@ interface InvitedStreamersData {
   profilePictureUrl: string;
   numberOfFollowers: number;
   joinDate: Date;
+  streamStatus: boolean;
 }
 
 router.get(
@@ -72,12 +74,25 @@ router.get(
         followersByCreatorId.set(r.referred.id, r.numberOfFollowers ?? 0),
       );
 
+      /*  fetch live / offline status for every streamer in parallel  */
+      const streamStatuses = await Promise.all(
+        streamers.map(async (s) => {
+          try {
+            const { isLive } = await fetchTwitchStreamStatus(s.displayName);
+            return isLive;
+          } catch {
+            return false;
+          }
+        }),
+      );
+
       const successfulInvitesUsers: InvitedStreamersData[] = streamers.map(
-        ({ id, displayName, profilePictureUrl, joinedAt }) => ({
+        ({ id, displayName, profilePictureUrl, joinedAt }, idx) => ({
           displayName,
           profilePictureUrl: profilePictureUrl ?? '',
           numberOfFollowers: followersByCreatorId.get(id) ?? 0,
           joinDate: joinedAt,
+          streamStatus: streamStatuses[idx],
         }),
       );
 

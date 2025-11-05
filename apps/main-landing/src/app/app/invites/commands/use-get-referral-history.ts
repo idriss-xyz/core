@@ -9,6 +9,14 @@ export interface ReferralHistoryResponse {
     profilePictureUrl: string;
     numberOfFollowers: number;
     joinDate: string;
+    streamStatus: boolean;
+  }[];
+  suggestedInvitees: {
+    displayName: string;
+    profilePictureUrl: string;
+    numberOfFollowers: number;
+    joinDate: string;
+    streamStatus: boolean;
   }[];
   inviteRank: number;
   networkEarnings: number;

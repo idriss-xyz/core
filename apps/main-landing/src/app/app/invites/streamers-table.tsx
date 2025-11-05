@@ -1,13 +1,13 @@
 'use client';
+import { useState } from 'react';
 import { Card, CardBody, CardHeader } from '@idriss-xyz/ui/card';
 import { ColumnDefinition, Table } from '@idriss-xyz/ui/table';
+import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { TabItem, TabsPill } from '@idriss-xyz/ui/tabs-pill';
 import { Badge } from '@idriss-xyz/ui/badge';
-import {
-  formatFollowerCount,
-  getTimeDifferenceString,
-} from '@idriss-xyz/utils';
+import { formatFollowerCount } from '@idriss-xyz/utils';
 
+import { TimeAgoCell } from '@/app/components/time-ago-cell';
 import { Avatar } from '@/app/components/avatar/avatar';
 import { PillLabel } from '@/app/components/pill-label';
 import { gameLogoMap } from '@/app/constants';
@@ -23,40 +23,23 @@ interface Streamer {
   games: string[];
 }
 
-// TODO: Remove and use real data
-const streamers: Streamer[] = [
-  {
-    id: '1',
-    name: 'airev',
-    profilePictureUrl:
-      'https://static-cdn.jtvnw.net/jtv_user_pictures/70c95583-d288-4f71-b787-15c75f95da54-profile_image-300x300.png',
-    streamStatus: true,
-    followers: 25_400,
-    reward: 60,
-    joined: '2025-07-15',
-    games: ['Axie Infinity', 'Ronin', 'Parallel'],
-  },
-  {
-    id: '2',
-    name: 'ramzes',
-    profilePictureUrl: '',
-    streamStatus: false,
-    followers: 8700,
-    reward: 30,
-    joined: '2025-01-10',
-    games: ['Axie Infinity', 'Ronin', 'Parallel'],
-  },
-  {
-    id: '3',
-    name: 'illojuan',
-    profilePictureUrl:
-      'https://static-cdn.jtvnw.net/user-default-pictures-uv/cdd517fe-def4-11e9-948e-784f43822e80-profile_image-300x300.png',
-    streamStatus: false,
-    followers: 44_123,
-    reward: 100,
-    games: ['Parallel'],
-  },
-];
+// ---------- props ----------
+type Properties = {
+  invited: {
+    displayName: string;
+    profilePictureUrl: string;
+    numberOfFollowers: number;
+    joinDate: string;
+    streamStatus: boolean;
+  }[];
+  suggested: {
+    displayName: string;
+    profilePictureUrl: string;
+    numberOfFollowers: number;
+    joinDate: string;
+    streamStatus: boolean;
+  }[];
+};
 
 const columns: ColumnDefinition<Streamer>[] = [
   {
@@ -65,6 +48,7 @@ const columns: ColumnDefinition<Streamer>[] = [
     accessor: (_, index) => {
       return index + 1;
     },
+    className: 'w-[40px] text-right',
   },
   {
     id: 'name',
@@ -91,6 +75,7 @@ const columns: ColumnDefinition<Streamer>[] = [
       );
     },
     sortable: false,
+    className: 'flex items-center gap-x-1.5 overflow-hidden',
   },
   {
     id: 'followers',
@@ -107,13 +92,7 @@ const columns: ColumnDefinition<Streamer>[] = [
     id: 'joined',
     name: 'Joined',
     accessor: (item) => {
-      return item.joined
-        ? getTimeDifferenceString({
-            text: 'ago',
-            variant: 'short',
-            timestamp: item.joined,
-          })
-        : null;
+      return <TimeAgoCell timestamp={item.joined} />;
     },
     sortable: true,
     sortFunction: (a, b) => {
@@ -156,23 +135,75 @@ const columns: ColumnDefinition<Streamer>[] = [
   },
 ];
 
-export default function StreamersTable() {
-  const streamersData = {
-    columns: columns,
-    data: streamers,
+const MAX_ROWS_BEFORE_SCROLL = 10;
+
+export default function StreamersTable({
+  invited = [],
+  suggested = [],
+}: Properties) {
+  /* helper to convert API user → table row */
+  const mapToRows = (array: Properties['invited']): Streamer[] => {
+    return array.map((u, index) => {
+      return {
+        id: index.toString(),
+        name: u.displayName,
+        profilePictureUrl: u.profilePictureUrl,
+        streamStatus: u.streamStatus ?? false,
+        followers: u.numberOfFollowers,
+        reward: 0,
+        joined: u.joinDate,
+        games: [], // backend not implemented yet
+      };
+    });
   };
+
+  const [activeTab, setActiveTab] = useState<'Suggested' | 'Invited'>(
+    'Suggested',
+  );
+
+  const rows =
+    activeTab === 'Suggested' ? mapToRows(suggested) : mapToRows(invited);
+
+  const emptyState = (
+    <div className="mx-auto flex min-h-[130px] w-full flex-col items-center justify-center gap-4">
+      <span className="text-center text-heading6 uppercase text-neutral-900">
+        {activeTab === 'Suggested'
+          ? 'No suggestions, start following people on twitch to get suggestions'
+          : 'Invite streamers to see results'}
+      </span>
+    </div>
+  );
+
+  const table = (
+    <Table
+      columns={columns}
+      data={rows}
+      keyExtractor={(item) => {
+        return item.id;
+      }}
+      emptyState={emptyState}
+      className="w-full table-fixed text-neutral-900"
+    />
+  );
+
   const streamersTableTabs: TabItem[] = [
     {
       name: 'Suggested',
-      href: '',
+      href: '#',
       iconName: 'Users2',
-      isActive: true,
+      isActive: activeTab === 'Suggested',
+      onClick: () => {
+        return setActiveTab('Suggested');
+      },
     },
     {
       name: 'Invited',
-      href: '',
+      href: '#',
       iconName: 'MailCheck',
-      isActive: false,
+      isActive: activeTab === 'Invited',
+      onClick: () => {
+        return setActiveTab('Invited');
+      },
     },
   ];
   return (
@@ -181,15 +212,12 @@ export default function StreamersTable() {
         <span className="text-label3 text-neutral-900">Streamers</span>
         <TabsPill tabs={streamersTableTabs} />
       </CardHeader>
-      <CardBody>
-        <Table
-          columns={streamersData.columns}
-          data={streamersData.data}
-          keyExtractor={(item) => {
-            return item.id;
-          }}
-          className="text-neutral-900"
-        />
+      <CardBody className="p-0">
+        {rows.length > MAX_ROWS_BEFORE_SCROLL ? (
+          <ScrollArea className="max-h-[520px]">{table}</ScrollArea>
+        ) : (
+          table
+        )}
       </CardBody>
     </Card>
   );

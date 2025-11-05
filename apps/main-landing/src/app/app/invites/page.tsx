@@ -5,16 +5,18 @@ import SuccessfulInvitesCard from './succesful-invites';
 import StreamersTable from './streamers-table';
 import GeneralStatCard from './general-stat';
 import { useGetReferralHistory } from './commands/use-get-referral-history';
+import SkeletonCard from './card-loading';
 
 export default function InvitesPage() {
   const { data, isLoading, isError } = useGetReferralHistory();
 
-  if (isLoading) return <div>Loading…</div>;
+  if (isLoading) return <SkeletonCard />;
   if (isError || !data) return <div>Error loading invites</div>;
 
   const {
     successfulInvites,
     successfulInvitesUsers,
+    suggestedInvitees,
     inviteRank,
     networkEarnings,
   } = data;
@@ -31,7 +33,10 @@ export default function InvitesPage() {
           header="Network earnings"
           stat={formatFiatValue(networkEarnings)}
         />
-        <StreamersTable />
+        <StreamersTable
+          invited={successfulInvitesUsers}
+          suggested={suggestedInvitees}
+        />
       </div>
     </div>
   );
