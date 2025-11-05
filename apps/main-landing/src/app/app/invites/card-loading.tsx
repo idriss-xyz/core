@@ -79,7 +79,7 @@ const SkeletonCard = () => {
           </div>
 
           {/* Table body */}
-          {Array.from({ length: 10 }).map((_, index) => {
+          {Array.from({ length: 6 }).map((_, index) => {
             return (
               <div
                 key={index}

@@ -11,6 +11,8 @@ import { TimeAgoCell } from '@/app/components/time-ago-cell';
 import { Avatar } from '@/app/components/avatar/avatar';
 import { PillLabel } from '@/app/components/pill-label';
 import { gameLogoMap } from '@/app/constants';
+import { CopyButton } from '@/app/components/copy-button/copy-button';
+import { useAuth } from '@/app/context/auth-context';
 
 interface Streamer {
   id: string;
@@ -141,6 +143,7 @@ export default function StreamersTable({
   invited = [],
   suggested = [],
 }: Properties) {
+  const { creator } = useAuth(); // ← current user info (for invite URL)
   /* helper to convert API user → table row */
   const mapToRows = (array: Properties['invited']): Streamer[] => {
     return array.map((u, index) => {
@@ -165,15 +168,21 @@ export default function StreamersTable({
     activeTab === 'Suggested' ? mapToRows(suggested) : mapToRows(invited);
 
   const emptyState = (
-    <div className="mx-auto flex min-h-[130px] w-full flex-col items-center justify-center gap-4">
+    <div className="mx-auto flex min-h-[200px] w-full flex-col items-center justify-center gap-4">
       <span className="text-center text-heading6 uppercase text-neutral-900">
-        {activeTab === 'Suggested'
-          ? 'No suggestions, start following people on twitch to get suggestions'
-          : 'Invite streamers to see results'}
+        No streamers yet
       </span>
+      <span className="mx-8 text-center text-display5 uppercase gradient-text">
+        SHARE YOUR LINK
+        <br />
+        TO INVITE FRIENDS
+      </span>
+      <CopyButton
+        text={`https://idriss.xyz/invite/${creator?.name}`}
+        disabled={!creator}
+      />
     </div>
   );
-
   const table = (
     <Table
       columns={columns}
