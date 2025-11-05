@@ -101,17 +101,16 @@ export const useDonationNotification = (
     }
 
     const processDonationAsync = async () => {
+      const numericAmount = Number.parseFloat(amount);
+      const overSfxThreshold =
+        numericAmount > priceDropCalculatedAmount(minimumSfxAmount);
+      const overTtsThreshold =
+        numericAmount > priceDropCalculatedAmount(minimumTTSAmount);
+
       const useSfx =
-        sfxText &&
-        sfxEnabled &&
-        (forceDisplay ??
-          Number.parseFloat(amount) >
-            priceDropCalculatedAmount(minimumSfxAmount));
-      const useTts =
-        ttsEnabled &&
-        (forceDisplay ??
-          Number.parseFloat(amount) >
-            priceDropCalculatedAmount(minimumTTSAmount));
+        !!sfxText && sfxEnabled && (forceDisplay ? true : overSfxThreshold);
+
+      const useTts = ttsEnabled && (forceDisplay ? true : overTtsThreshold);
 
       let sfxAudioForPlayback: HTMLAudioElement | null = null;
       let ttsAudioForPlayback: HTMLAudioElement | null = null;
