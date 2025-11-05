@@ -56,9 +56,13 @@ const NoGoals = ({ setIsNewGoalFormOpenAction }: NoGoalsProperties) => {
 
 interface GoalListProperties {
   setIsNewGoalFormOpenAction: (isOpen: boolean) => void;
+  isNewGoalFormOpen: boolean;
 }
 
-export function GoalsList({ setIsNewGoalFormOpenAction }: GoalListProperties) {
+export function GoalsList({
+  setIsNewGoalFormOpenAction,
+  isNewGoalFormOpen,
+}: GoalListProperties) {
   const { activeGoal, inactiveGoals, refetch } = useDonationGoals();
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
   const [goalToDelete, setGoalToDelete] = useState<number | null>(null);
@@ -231,7 +235,7 @@ export function GoalsList({ setIsNewGoalFormOpenAction }: GoalListProperties) {
         confirmButtonIntent="secondary"
       />
     </>
-  ) : inactiveGoals?.length == 0 && !activeGoal ? (
+  ) : inactiveGoals?.length == 0 && !activeGoal && !isNewGoalFormOpen ? (
     <NoGoals setIsNewGoalFormOpenAction={setIsNewGoalFormOpenAction} />
   ) : inactiveGoals?.length == 0 && activeGoal ? (
     <div className="flex items-center gap-3">

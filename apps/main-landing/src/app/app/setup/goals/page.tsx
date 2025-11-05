@@ -107,7 +107,10 @@ export default function DonationGoalsPage() {
 
       <ActiveGoal />
 
-      <GoalsList setIsNewGoalFormOpenAction={setIsNewGoalFormOpen} />
+      <GoalsList
+        setIsNewGoalFormOpenAction={setIsNewGoalFormOpen}
+        isNewGoalFormOpen={isNewGoalFormOpen}
+      />
 
       <ConfirmationModal
         isOpened={isCopyModalOpen}

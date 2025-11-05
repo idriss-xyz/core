@@ -113,10 +113,10 @@ export default function GoalOverlay({
       `}</style>
       {activeGoal && (
         <div className="flex h-screen w-screen items-center justify-center bg-transparent p-6">
-          <div className="flex w-full max-w-md flex-col gap-6 rounded-lg border bg-white/90 p-4">
+          <div className="flex w-full max-w-md flex-col gap-6 rounded-lg border bg-white p-4">
             {/* DonationGoal name and incoming donation chip*/}
             <div className="flex w-full items-center">
-              <div className="flex min-h-[36px] grow items-center">
+              <div className="flex grow items-center py-2">
                 <h2
                   className={classes(
                     'text-center text-heading5 text-neutralGreen-900',
@@ -131,7 +131,10 @@ export default function GoalOverlay({
                   className="flex animate-slide-in-from-right items-center justify-end gap-2 rounded-full bg-mint-400 py-1.5 pl-1 pr-3 transition-all"
                 >
                   <div className="flex size-6 items-center justify-center rounded-full bg-mint-200">
-                    <Icon name="Check" className="text-mint-500" size={20} />
+                    <Icon
+                      name="Check"
+                      className="h-full w-auto p-0.5 text-mint-500"
+                    />
                   </div>
                   <span className="text-label4">
                     ${Number(recentDonationAmount).toFixed(2)}
@@ -180,8 +183,8 @@ export default function GoalOverlay({
             </div>
 
             {/* Top donor */}
-            <div className="flex items-center gap-2 text-label4">
-              <Icon name="Users2" size={20} />
+            <div className="flex h-5 items-center gap-2 text-label4">
+              <Icon name="Users2" className="h-full w-auto" />
               <span className="text-neutral-600">Top donor:</span>
               {activeGoal.topDonor.name?.trim() ? (
                 <span className="text-neutral-900">

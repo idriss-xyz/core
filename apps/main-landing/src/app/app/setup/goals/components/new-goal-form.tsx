@@ -153,11 +153,11 @@ export function NewGoalForm({ onGoalCreated, onClose }: NewGoalFormProperties) {
           />
         </FormFieldWrapper>
 
-        <div className="flex gap-4">
+        <div className="flex max-w-[360px] gap-4">
           <Button
             size="medium"
             intent="secondary"
-            className="mt-4 uppercase"
+            className="mt-4 w-full uppercase"
             onClick={onClose}
           >
             Cancel
@@ -165,7 +165,7 @@ export function NewGoalForm({ onGoalCreated, onClose }: NewGoalFormProperties) {
           <Button
             size="medium"
             intent="primary"
-            className="mt-4 uppercase"
+            className="mt-4 w-full uppercase"
             onClick={formMethods.handleSubmit(onSubmit)}
           >
             Save
