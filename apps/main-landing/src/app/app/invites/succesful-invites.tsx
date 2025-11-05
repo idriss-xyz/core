@@ -4,7 +4,12 @@ import Image from 'next/image';
 
 type Properties = {
   successfulInvites: number;
-  successfulInvitesUsers: { profilePictureUrl: string; displayName: string }[];
+  successfulInvitesUsers: {
+    profilePictureUrl: string;
+    displayName: string;
+    numberOfFollowers: number;
+    joinDate: string | Date;
+  }[];
 };
 
 // ts-unused-exports:disable-next-line

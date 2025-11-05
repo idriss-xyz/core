@@ -1,45 +1,36 @@
-// import AvailableRewardsCard from './available-rewards';
+'use client';
 import { formatFiatValue } from '@idriss-xyz/utils';
-import { TOKEN } from '@idriss-xyz/constants';
 
 import SuccessfulInvitesCard from './succesful-invites';
-// import TotalRewardsCard from './total-rewards';
 import StreamersTable from './streamers-table';
 import GeneralStatCard from './general-stat';
+import { useGetReferralHistory } from './commands/use-get-referral-history';
 
-// ts-unused-exports:disable-next-line
 export default function InvitesPage() {
+  const { data, isLoading, isError } = useGetReferralHistory();
+
+  if (isLoading) return <div>Loading…</div>;
+  if (isError || !data) return <div>Error loading invites</div>;
+
   const {
-    // availableRewards,s
     successfulInvites,
     successfulInvitesUsers,
-    // totalRewards,
-  } = {
-    // availableRewards: 32,
-    successfulInvites: 32,
-    successfulInvitesUsers: [
-      {
-        profilePictureUrl: TOKEN.IDRISS.logo,
-        displayName: 'John Doe',
-      },
-      {
-        profilePictureUrl: TOKEN.IDRISS.logo,
-        displayName: 'Jane Doe',
-      },
-    ],
-    // totalRewards: 100,
-  }; // TODO: Hook to data (useRewards)
+    inviteRank,
+    networkEarnings,
+  } = data;
+
   return (
     <div>
       <div className="grid grid-cols-3 gap-4">
-        {/* <AvailableRewardsCard availableRewards={availableRewards} /> */}
         <SuccessfulInvitesCard
           successfulInvites={successfulInvites}
           successfulInvitesUsers={successfulInvitesUsers}
         />
-        <GeneralStatCard header="Invite rank" stat="#16" />
-        <GeneralStatCard header="Network earnings" stat={formatFiatValue(1152.42)} />
-        {/* <TotalRewardsCard totalRewards={totalRewards} /> */}
+        <GeneralStatCard header="Invite rank" stat={`#${inviteRank}`} />
+        <GeneralStatCard
+          header="Network earnings"
+          stat={formatFiatValue(networkEarnings)}
+        />
         <StreamersTable />
       </div>
     </div>

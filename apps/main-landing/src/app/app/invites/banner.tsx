@@ -40,7 +40,7 @@ export default function InviteBanner() {
                   <CopyInput
                     value={`https://idriss.xyz/invite/${creator?.name}`}
                     className="w-[496px] bg-white font-medium"
-                    textClassName='text-body4'
+                    textClassName="text-body4"
                   />
                   <span>or</span>
                   <Button

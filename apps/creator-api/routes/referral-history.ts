@@ -1,29 +1,24 @@
 import { Router, Request, Response } from 'express';
 
-import { AppDataSource, Creator, Referral } from '@idriss-xyz/db';
+import { AppDataSource, Creator, Referral, Donation } from '@idriss-xyz/db';
 import { In } from 'typeorm';
 import { verifyToken } from '../middleware/auth.middleware';
-import {
-  calculateReward,
-  getAvailableRewards,
-} from '../services/reward-calculating-utils';
 import { tightCors } from '../config/cors';
 
 const router = Router();
 
 interface CreatorReferralStats {
-  totalInvites: number;
-  totalRewards: number;
-  availableRewards: number;
-  referrals: InvitedStreamersData[];
+  successfulInvites: number;
+  successfulInvitesUsers: InvitedStreamersData[];
+  inviteRank: number;
+  networkEarnings: number;
 }
 
 interface InvitedStreamersData {
-  name: string;
+  displayName: string;
   profilePictureUrl: string;
   numberOfFollowers: number;
   joinDate: Date;
-  reward: number;
 }
 
 router.get(
@@ -56,37 +51,71 @@ router.get(
         relations: ['referrer', 'referred'],
       });
 
-      const totalInvites = referrals.length;
-      const totalRewards = referrals.reduce(
-        (sum, referral) => sum + calculateReward(referral.numberOfFollowers!),
-        0,
-      );
-      const availableRewards = getAvailableRewards(referrals);
+      const successfulInvites = referrals.length;
 
+      /* ----- invited creators (avatar + display-name) ----- */
       const streamerIds = referrals.map((referral) => referral.referred.id);
-
       const streamers = await creatorRepository.find({
         where: { id: In(streamerIds) },
+        select: [
+          'id',
+          'displayName',
+          'profilePictureUrl',
+          'primaryAddress',
+          'joinedAt',
+        ],
       });
 
-      const streamersData = streamers.map((streamer) => {
-        const referred = referrals.find(
-          (referral) => referral.referred.id === streamer.id,
-        );
-        return {
-          name: streamer.name,
-          profilePictureUrl: streamer.profilePictureUrl,
-          numberOfFollowers: referred?.numberOfFollowers,
-          joinDate: streamer.joinedAt,
-          reward: calculateReward(referred?.numberOfFollowers!),
-        };
-      });
+      /* map creatorId → numberOfFollowers coming from Referral rows */
+      const followersByCreatorId = new Map<number, number>();
+      referrals.forEach((r) =>
+        followersByCreatorId.set(r.referred.id, r.numberOfFollowers ?? 0),
+      );
+
+      const successfulInvitesUsers: InvitedStreamersData[] = streamers.map(
+        ({ id, displayName, profilePictureUrl, joinedAt }) => ({
+          displayName,
+          profilePictureUrl: profilePictureUrl ?? '',
+          numberOfFollowers: followersByCreatorId.get(id) ?? 0,
+          joinDate: joinedAt,
+        }),
+      );
+
+      /* ----- network earnings (Σ donations to all invited creators) ----- */
+      let networkEarnings = 0;
+      if (streamers.length) {
+        const donationRepository = AppDataSource.getRepository(Donation);
+        const result = await donationRepository
+          .createQueryBuilder('d')
+          .select('COALESCE(SUM(d.trade_value), 0)', 'total')
+          .where('LOWER(d.to_address) IN (:...addresses)', {
+            addresses: streamers.map((s) => s.primaryAddress.toLowerCase()),
+          })
+          .getRawOne<{ total: string }>();
+
+        networkEarnings = Number(result?.total ?? 0);
+      }
+
+      /* ----- invite rank (by successfulInvites) ----- */
+      const globalInviteCounts = await referralRepository
+        .createQueryBuilder('r')
+        .leftJoin('r.referrer', 'ref')
+        .select('ref.id', 'referrerId')
+        .addSelect('COUNT(r.id)', 'invite_count')
+        .groupBy('ref.id')
+        .orderBy('invite_count', 'DESC')
+        .getRawMany<{ referrerId: string; invite_count: string }>();
+
+      const inviteRank =
+        globalInviteCounts.findIndex(
+          (row) => Number(row.referrerId) === referrer.id,
+        ) + 1;
 
       res.json({
-        totalInvites,
-        totalRewards,
-        availableRewards,
-        referrals: streamersData,
+        successfulInvites,
+        successfulInvitesUsers,
+        inviteRank,
+        networkEarnings,
       } as CreatorReferralStats);
     } catch (error) {
       console.error('Referral history error:', error);

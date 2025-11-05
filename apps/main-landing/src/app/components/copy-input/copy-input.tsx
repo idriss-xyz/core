@@ -58,7 +58,10 @@ export function CopyInput({
       )}
     >
       <span
-        className={classes("grow cursor-pointer truncate p-3 text-sm", textClassName,)}
+        className={classes(
+          'grow cursor-pointer truncate p-3 text-sm',
+          textClassName,
+        )}
         onClick={handleTextClick}
       >
         {value}
