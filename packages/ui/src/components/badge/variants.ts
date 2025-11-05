@@ -2,7 +2,7 @@ import { FullyRequired } from '@idriss-xyz/utils';
 import { cva, VariantProps } from 'class-variance-authority';
 
 export const badge = cva(
-  ['rounded-[4px] px-1 py-0.5 text-label7 uppercase text-white'],
+  ['rounded-sm px-1 py-0.5 text-label7 uppercase text-white'],
   {
     variants: {
       type: {
