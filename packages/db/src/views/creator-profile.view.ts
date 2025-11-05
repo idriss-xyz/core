@@ -58,6 +58,8 @@ import { CreatorNetwork, CreatorToken, DonationParameters } from '../entities';
       .addGroupBy('c.done_setup')
       .addGroupBy('c.receive_emails')
       .addGroupBy('c.is_donor')
+      .addGroupBy('dp.token_enabled')
+      .addGroupBy('dp.collectible_enabled')
       .addGroupBy('dp.minimum_alert_amount')
       .addGroupBy('dp.minimum_tts_amount')
       .addGroupBy('dp.minimum_sfx_amount')

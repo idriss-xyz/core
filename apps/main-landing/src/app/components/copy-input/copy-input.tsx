@@ -8,6 +8,7 @@ import { useToast } from '../../context/toast-context';
 type CopyInputProperties = {
   value: string;
   className?: string;
+  textClassName?: string;
   onTextClick?: () => void;
   onIconClick?: () => void;
   iconName?: IconName;
@@ -20,6 +21,7 @@ export function CopyInput({
   value,
   message,
   className,
+  textClassName,
   onTextClick,
   onIconClick,
   iconName,
@@ -56,7 +58,7 @@ export function CopyInput({
       )}
     >
       <span
-        className="grow cursor-pointer truncate p-3 text-sm"
+        className={classes("grow cursor-pointer truncate p-3 text-sm", textClassName,)}
         onClick={handleTextClick}
       >
         {value}

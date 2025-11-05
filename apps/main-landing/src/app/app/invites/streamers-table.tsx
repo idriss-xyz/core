@@ -93,22 +93,6 @@ const columns: ColumnDefinition<Streamer>[] = [
     sortable: false,
   },
   {
-    id: 'status',
-    name: 'Status',
-    accessor: (item) => {
-      return item.joined ? (
-        <Badge type="success" variant="subtle" className="normal-case">
-          Joined
-        </Badge>
-      ) : (
-        <Badge type="info" variant="subtle" className="normal-case">
-          Invite to get ${item.reward}
-        </Badge>
-      );
-    },
-    sortable: false,
-  },
-  {
     id: 'followers',
     name: 'Followers',
     accessor: (item) => {
@@ -117,17 +101,6 @@ const columns: ColumnDefinition<Streamer>[] = [
     sortable: true,
     sortFunction: (a, b) => {
       return a.followers - b.followers;
-    },
-  },
-  {
-    id: 'reward',
-    name: 'Reward',
-    accessor: (item) => {
-      return `$${item.reward}`;
-    },
-    sortable: true,
-    sortFunction: (a, b) => {
-      return a.reward - b.reward;
     },
   },
   {
@@ -198,7 +171,7 @@ export default function StreamersTable() {
     {
       name: 'Invited',
       href: '',
-      iconName: 'Send',
+      iconName: 'MailCheck',
       isActive: false,
     },
   ];

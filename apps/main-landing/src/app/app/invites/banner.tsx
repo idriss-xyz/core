@@ -27,8 +27,7 @@ export default function InviteBanner() {
         <div className="px-24 py-8">
           <div className="flex max-w-[659px] flex-col gap-3">
             <h2 className="text-display5 uppercase gradient-text">
-              Invite a streamer with 100+ followers. You will both get $10 or
-              more.
+              HELP YOUR FRIENDS START EARNING
             </h2>
             <div className="relative w-fit rounded-lg bg-white/60 p-4 backdrop-blur-lg">
               <GradientBorder
@@ -39,8 +38,9 @@ export default function InviteBanner() {
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-4">
                   <CopyInput
-                    value={`https://idriss.xyz/join/${creator?.name}`}
+                    value={`https://idriss.xyz/invite/${creator?.name}`}
                     className="w-[496px] bg-white font-medium"
+                    textClassName='text-body4'
                   />
                   <span>or</span>
                   <Button
@@ -48,7 +48,7 @@ export default function InviteBanner() {
                     intent="primary"
                     suffixIconName="TwitterX"
                   >
-                    Post on
+                    SHARE
                   </Button>
                 </div>
                 <p className="text-body6 text-neutral-900">

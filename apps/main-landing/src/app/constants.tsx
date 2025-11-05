@@ -80,9 +80,8 @@ export const siteMap: SiteMapItem[] = [
     ],
   },
   {
-    name: 'Rewards',
-    path: 'rewards',
-    children: [{ name: 'Invites', path: 'invites' }],
+    name: 'Invites',
+    path: 'invites',
   },
 ];
 
