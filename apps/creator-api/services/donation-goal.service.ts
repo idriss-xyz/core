@@ -72,6 +72,7 @@ class DonationGoalService {
   async deactivateGoal(goalId: number): Promise<DonationGoal> {
     const goal = await this.donationGoalRepository.findOne({
       where: { id: goalId },
+      relations: ['creator'],
     });
 
     if (!goal) {
