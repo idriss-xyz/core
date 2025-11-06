@@ -85,6 +85,10 @@ export default function GoalOverlay({
       }
     });
 
+    socket.on('activeGoalChanged', async () => {
+      await activeGoalQuery.refetch();
+    });
+
     return () => {
       socket.disconnect();
     };

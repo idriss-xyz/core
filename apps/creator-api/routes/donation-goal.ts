@@ -104,6 +104,11 @@ router.patch(
     try {
       const goalId = parseInt(req.params.goalId);
       const activatedGoal = await donationGoalService.activateGoal(goalId);
+      const io = req.app.get('io');
+      const overlayWS = io.of('/overlay');
+      overlayWS
+        .to(activatedGoal.creator.privyId.toLowerCase())
+        .emit('activeGoalChanged');
       res.status(200).json(activatedGoal);
     } catch (error) {
       console.error('Error activating donation goal:', error);
@@ -126,6 +131,11 @@ router.patch(
     try {
       const goalId = parseInt(req.params.goalId);
       const deactivatedGoal = await donationGoalService.deactivateGoal(goalId);
+      const io = req.app.get('io');
+      const overlayWS = io.of('/overlay');
+      overlayWS
+        .to(deactivatedGoal.creator.privyId.toLowerCase())
+        .emit('activeGoalChanged');
       res.status(200).json(deactivatedGoal);
     } catch (error) {
       console.error('Error deactivating donation goal:', error);
