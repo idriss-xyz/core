@@ -143,7 +143,7 @@ export default function StreamersTable({
   invited = [],
   suggested = [],
 }: Properties) {
-  const { creator } = useAuth(); // ← current user info (for invite URL)
+  const { creator } = useAuth();
   /* helper to convert API user → table row */
   const mapToRows = (array: Properties['invited']): Streamer[] => {
     return array.map((u, index) => {
@@ -167,6 +167,11 @@ export default function StreamersTable({
   const rows =
     activeTab === 'Suggested' ? mapToRows(suggested) : mapToRows(invited);
 
+  const columnsToRender =
+    activeTab === 'Suggested'
+      ? columns.filter((column) => {return column.id !== 'joined'})
+      : columns;
+
   const emptyState = (
     <div className="mx-auto flex min-h-[200px] w-full flex-col items-center justify-center gap-4">
       <span className="text-center text-heading6 uppercase text-neutral-900">
@@ -185,11 +190,9 @@ export default function StreamersTable({
   );
   const table = (
     <Table
-      columns={columns}
+      columns={columnsToRender}
       data={rows}
-      keyExtractor={(item) => {
-        return item.id;
-      }}
+      keyExtractor={(item) => {return item.id}}
       emptyState={emptyState}
       className="w-full table-fixed text-neutral-900"
     />
@@ -198,7 +201,6 @@ export default function StreamersTable({
   const streamersTableTabs: TabItem[] = [
     {
       name: 'Suggested',
-      href: '#',
       iconName: 'Users2',
       isActive: activeTab === 'Suggested',
       onClick: () => {
@@ -207,7 +209,6 @@ export default function StreamersTable({
     },
     {
       name: 'Invited',
-      href: '#',
       iconName: 'MailCheck',
       isActive: activeTab === 'Invited',
       onClick: () => {
