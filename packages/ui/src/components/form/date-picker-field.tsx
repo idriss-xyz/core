@@ -173,7 +173,7 @@ export const DatePickerField = forwardRef(
             className="relative z-10 w-auto rounded-2xl border border-gray-200 bg-white p-4 shadow-md"
             side="bottom"
             align="center"
-            avoidCollisions
+            avoidCollisions={false}
           >
             <DayPicker
               mode="single"
