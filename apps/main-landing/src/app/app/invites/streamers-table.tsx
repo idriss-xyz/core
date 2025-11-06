@@ -169,7 +169,9 @@ export default function StreamersTable({
 
   const columnsToRender =
     activeTab === 'Suggested'
-      ? columns.filter((column) => {return column.id !== 'joined'})
+      ? columns.filter((column) => {
+          return column.id !== 'joined';
+        })
       : columns;
 
   const emptyState = (
@@ -192,7 +194,9 @@ export default function StreamersTable({
     <Table
       columns={columnsToRender}
       data={rows}
-      keyExtractor={(item) => {return item.id}}
+      keyExtractor={(item) => {
+        return item.id;
+      }}
       emptyState={emptyState}
       className="w-full table-fixed text-neutral-900"
     />
