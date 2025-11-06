@@ -167,35 +167,37 @@ export const DatePickerField = forwardRef(
             <Icon name="CalendarDays" size={16} />
           </div>
         </Popover.Trigger>
-        <Popover.Content
-          sideOffset={8}
-          className="relative z-10 w-auto rounded-2xl border border-gray-200 bg-white p-4 shadow-md"
-          side="bottom"
-          align="center"
-          avoidCollisions={false}
-        >
-          <DayPicker
-            mode="single"
-            selected={dateValue}
-            onSelect={handleCalendarSelect}
-            disabled={disabledDays}
-            classNames={{
-              today: `rounded-full text-mint-500`,
-              selected: `bg-mint-500 rounded-full text-white`,
-              root: `${defaultClassNames.root} shadow-none`,
-              chevron: `fill-black`,
-              caption_label: 'text-label1',
-              month: 'flex flex-col gap-4',
-              month_caption: 'flex items-center h-[40px]',
-              nav: `${defaultClassNames.nav} gap-3`,
-              weekday: 'text-label3',
-              day: 'text-label4 text-neutral-700',
-            }}
-            components={{
-              Chevron: Chevron,
-            }}
-          />
-        </Popover.Content>
+        <Popover.Portal>
+          <Popover.Content
+            sideOffset={8}
+            className="relative z-10 w-auto rounded-2xl border border-gray-200 bg-white p-4 shadow-md"
+            side="bottom"
+            align="center"
+            avoidCollisions
+          >
+            <DayPicker
+              mode="single"
+              selected={dateValue}
+              onSelect={handleCalendarSelect}
+              disabled={disabledDays}
+              classNames={{
+                today: `rounded-full text-mint-500`,
+                selected: `bg-mint-500 rounded-full text-white`,
+                root: `${defaultClassNames.root} shadow-none`,
+                chevron: `fill-black`,
+                caption_label: 'text-label1',
+                month: 'flex flex-col gap-4',
+                month_caption: 'flex items-center h-[40px]',
+                nav: `${defaultClassNames.nav} gap-3`,
+                weekday: 'text-label3',
+                day: 'text-label4 text-neutral-700',
+              }}
+              components={{
+                Chevron: Chevron,
+              }}
+            />
+          </Popover.Content>
+        </Popover.Portal>
       </Popover.Root>
     );
 
