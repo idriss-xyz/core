@@ -4,7 +4,10 @@ import { AppDataSource, Creator, Referral, Donation } from '@idriss-xyz/db';
 import { In } from 'typeorm';
 import { verifyToken } from '../middleware/auth.middleware';
 import { tightCors } from '../config/cors';
-import { fetchTwitchStreamStatus } from '@idriss-xyz/utils/server';
+import {
+  fetchTwitchStreamStatus,
+  fetchTwitchUserFollowersCount,
+} from '@idriss-xyz/utils/server';
 import { DEFAULT_FOLLOWED_CHANNELS } from '@idriss-xyz/utils/server';
 import { CreatorFollowedChannel } from '@idriss-xyz/db';
 
@@ -43,7 +46,7 @@ router.get(
       });
 
       if (!referrer) {
-        console.error('Referrer with given name does not exist');
+        console.log('Referrer with given name does not exist');
         res
           .status(400)
           .json({ error: 'Referrer with given name does not exist' });
@@ -58,8 +61,7 @@ router.get(
 
       const successfulInvites = referrals.length;
 
-      /* ----- invited creators (avatar + display-name) ----- */
-      const streamerIds = referrals.map((referral) => referral.referred.id);
+      const streamerIds = referrals.map((r) => r.referred.id);
       const streamers = await creatorRepository.find({
         where: { id: In(streamerIds) },
         select: [
@@ -71,13 +73,11 @@ router.get(
         ],
       });
 
-      /* map creatorId → numberOfFollowers coming from Referral rows */
       const followersByCreatorId = new Map<number, number>();
       referrals.forEach((r) =>
         followersByCreatorId.set(r.referred.id, r.numberOfFollowers ?? 0),
       );
 
-      /*  fetch live / offline status for every streamer in parallel  */
       const streamStatuses = await Promise.all(
         streamers.map(async (s) => {
           try {
@@ -99,7 +99,6 @@ router.get(
         }),
       );
 
-      /* ----- network earnings (Σ donations to all invited creators) ----- */
       let networkEarnings = 0;
       if (streamers.length) {
         const donationRepository = AppDataSource.getRepository(Donation);
@@ -114,7 +113,6 @@ router.get(
         networkEarnings = Number(result?.total ?? 0);
       }
 
-      /* ----- invite rank (by successfulInvites) ----- */
       const globalInviteCounts = await referralRepository
         .createQueryBuilder('r')
         .leftJoin('r.referrer', 'ref')
@@ -135,17 +133,20 @@ router.get(
       });
 
       const followedIds = followed.map((r) => r.channelTwitchId);
+      let existing: { tid: string }[] = [];
 
-      const existing = await creatorRepository
-        .createQueryBuilder('c')
-        .select('c.twitch_id', 'tid')
-        .where('c.is_donor = false')
-        .andWhere('c.twitch_id IN (:...ids)', { ids: followedIds })
-        .getRawMany<{ tid: string }>();
+      if (followedIds.length > 0) {
+        existing = await creatorRepository
+          .createQueryBuilder('c')
+          .select('c.twitch_id', 'tid')
+          .where('c.is_donor = false')
+          .andWhere('c.twitch_id IN (:...ids)', { ids: followedIds })
+          .getRawMany<{ tid: string }>();
+      }
 
       const existingSet = new Set(existing.map((r) => r.tid));
 
-      let baseList =
+      const baseList =
         followed.length === 0
           ? DEFAULT_FOLLOWED_CHANNELS.filter(
               (d) => !existingSet.has(d.broadcasterId),
@@ -166,20 +167,20 @@ router.get(
                 streamStatus: false,
               }));
 
-      const statuses = await Promise.all(
+      const suggestedInvitees = await Promise.all(
         baseList.map(async (c) => {
-          try {
-            const { isLive } = await fetchTwitchStreamStatus(c.displayName);
-            return isLive;
-          } catch {
-            return false;
-          }
+          const [stream, followers] = await Promise.all([
+            fetchTwitchStreamStatus(c.displayName),
+            fetchTwitchUserFollowersCount(c.displayName),
+          ]);
+
+          return {
+            ...c,
+            numberOfFollowers: followers?.total ?? c.numberOfFollowers,
+            streamStatus: stream.isLive,
+          };
         }),
       );
-      const suggestedInvitees = baseList.map((c, i) => ({
-        ...c,
-        streamStatus: statuses[i],
-      }));
 
       res.json({
         successfulInvites,
@@ -189,7 +190,7 @@ router.get(
         suggestedInvitees,
       } as CreatorReferralStats);
     } catch (error) {
-      console.error('Referral history error:', error);
+      console.log('Referral history error:', error);
       res.status(500).json({ error: 'Failed to fetch referral history' });
     }
   },
