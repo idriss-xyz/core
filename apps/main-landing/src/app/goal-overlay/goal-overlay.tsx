@@ -27,6 +27,7 @@ export default function GoalOverlay({
     number | null
   >(null);
   const activeGoalQuery = useGetActiveDonationGoal(creatorName);
+  const { refetch: refetchActiveGoal } = activeGoalQuery;
   const activeGoal = activeGoalQuery.data;
 
   const progressPercentage = activeGoal
@@ -36,9 +37,6 @@ export default function GoalOverlay({
   const isExpired = getTimeRemaining(activeGoal?.endDate ?? 0) === 'Expired';
 
   useEffect(() => {
-    if (!activeGoal) {
-      return;
-    }
     if (!creatorName) return;
 
     const overlayToken = window.location.pathname.split('/').pop()!;
@@ -73,7 +71,7 @@ export default function GoalOverlay({
         }
 
         // Update the goal progress with the new donation amount
-        await activeGoalQuery.refetch();
+        await refetchActiveGoal();
 
         // For new donation chip
         setRecentDonationAmount(donation.tradeValue);
@@ -86,13 +84,13 @@ export default function GoalOverlay({
     });
 
     socket.on('activeGoalChanged', async () => {
-      await activeGoalQuery.refetch();
+      await refetchActiveGoal();
     });
 
     return () => {
       socket.disconnect();
     };
-  }, [creatorName, creatorAddress, activeGoal, activeGoalQuery]);
+  }, [creatorName, creatorAddress, refetchActiveGoal]);
 
   useEffect(() => {
     if (recentDonationAmount !== null) {
