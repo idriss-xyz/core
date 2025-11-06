@@ -5,6 +5,8 @@ import { In } from 'typeorm';
 import { verifyToken } from '../middleware/auth.middleware';
 import { tightCors } from '../config/cors';
 import { fetchTwitchStreamStatus } from '@idriss-xyz/utils/server';
+import { DEFAULT_FOLLOWED_CHANNELS } from '@idriss-xyz/utils/server';
+import { CreatorFollowedChannel } from '@idriss-xyz/db';
 
 const router = Router();
 
@@ -13,6 +15,7 @@ interface CreatorReferralStats {
   successfulInvitesUsers: InvitedStreamersData[];
   inviteRank: number;
   networkEarnings: number;
+  suggestedInvitees: InvitedStreamersData[];
 }
 
 interface InvitedStreamersData {
@@ -126,11 +129,64 @@ router.get(
           (row) => Number(row.referrerId) === referrer.id,
         ) + 1;
 
+      const followedRepo = AppDataSource.getRepository(CreatorFollowedChannel);
+      const followed = await followedRepo.find({
+        where: { creator: { id: referrer.id } },
+      });
+
+      const followedIds = followed.map((r) => r.channelTwitchId);
+
+      const existing = await creatorRepository
+        .createQueryBuilder('c')
+        .select('c.twitch_id', 'tid')
+        .where('c.is_donor = false')
+        .andWhere('c.twitch_id IN (:...ids)', { ids: followedIds })
+        .getRawMany<{ tid: string }>();
+
+      const existingSet = new Set(existing.map((r) => r.tid));
+
+      let baseList =
+        followed.length === 0
+          ? DEFAULT_FOLLOWED_CHANNELS.filter(
+              (d) => !existingSet.has(d.broadcasterId),
+            ).map((d) => ({
+              displayName: d.name,
+              profilePictureUrl: d.profileImage,
+              numberOfFollowers: d.followers,
+              joinDate: new Date(0),
+              streamStatus: false,
+            }))
+          : followed
+              .filter((r) => !existingSet.has(r.channelTwitchId))
+              .map((r) => ({
+                displayName: r.channelDisplayName ?? r.channelName,
+                profilePictureUrl: r.channelProfileImageUrl ?? '',
+                numberOfFollowers: 0,
+                joinDate: new Date(0),
+                streamStatus: false,
+              }));
+
+      const statuses = await Promise.all(
+        baseList.map(async (c) => {
+          try {
+            const { isLive } = await fetchTwitchStreamStatus(c.displayName);
+            return isLive;
+          } catch {
+            return false;
+          }
+        }),
+      );
+      const suggestedInvitees = baseList.map((c, i) => ({
+        ...c,
+        streamStatus: statuses[i],
+      }));
+
       res.json({
         successfulInvites,
         successfulInvitesUsers,
         inviteRank,
         networkEarnings,
+        suggestedInvitees,
       } as CreatorReferralStats);
     } catch (error) {
       console.error('Referral history error:', error);

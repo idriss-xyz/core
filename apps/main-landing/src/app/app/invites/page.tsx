@@ -7,6 +7,7 @@ import GeneralStatCard from './general-stat';
 import { useGetReferralHistory } from './commands/use-get-referral-history';
 import SkeletonCard from './card-loading';
 
+// ts-unused-exports:disable-next-line
 export default function InvitesPage() {
   const { data, isLoading, isError } = useGetReferralHistory();
 

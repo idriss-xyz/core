@@ -2,7 +2,7 @@ import { getAccessToken } from '@privy-io/react-auth';
 import { CREATOR_API_URL } from '@idriss-xyz/constants';
 import { useQuery } from '@tanstack/react-query';
 
-export interface ReferralHistoryResponse {
+interface ReferralHistoryResponse {
   successfulInvites: number;
   successfulInvitesUsers: {
     displayName: string;

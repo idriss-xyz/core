@@ -4,4 +4,7 @@ export {
   fetchTwitchUserInfo,
   fetchTwitchStreamStatus,
   fetchTwitchUserFollowersCount,
+  fetchUserFollowedChannels,
+  DEFAULT_FOLLOWED_CHANNELS,
+  type FollowedChannel,
 } from './twitch-api';

@@ -13,6 +13,7 @@ import { CreatorAddress } from './creator-address.entity';
 import { CreatorNetwork } from './creator-network.entity';
 import { CreatorToken } from './creator-token.entity';
 import { TwitchInfo } from './twitch-info.entity';
+import { CreatorFollowedChannel } from './creator-followed-channel.entity';
 
 @Entity('creator')
 export class Creator {
@@ -106,4 +107,14 @@ export class Creator {
     },
   )
   associatedAddresses!: CreatorAddress[];
+
+  @OneToMany(
+    () => {
+      return CreatorFollowedChannel;
+    },
+    (c) => {
+      return c.creator;
+    },
+  )
+  followedChannels!: CreatorFollowedChannel[];
 }
