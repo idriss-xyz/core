@@ -50,7 +50,7 @@ export function CopyInput({
   return (
     <div
       className={classes(
-        'bg-neutral-50 flex w-[360px] items-center rounded-xl border border-neutral-200',
+        'bg-neutral-50 flex min-h-[44px] w-[360px] items-center rounded-xl border border-neutral-200',
         className,
       )}
     >
