@@ -150,6 +150,9 @@ export const DatePickerField = forwardRef(
               inputProperties.error && 'text-red-500',
             )}
           >
+            {inputProperties.error && (
+              <Icon name="AlertCircle" size={16} className="p-0.5" />
+            )}
             {helperText}
           </span>
         )}
