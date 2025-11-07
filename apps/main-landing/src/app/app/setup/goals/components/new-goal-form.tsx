@@ -104,11 +104,20 @@ export function NewGoalForm({ onGoalCreated, onClose }: NewGoalFormProperties) {
           <Controller
             name="targetAmount"
             control={formMethods.control}
+            rules={{
+              validate: (value) => {
+                if (value && !Number.isInteger(value)) {
+                  return 'Target amount must be a whole number';
+                }
+                return true;
+              },
+            }}
             render={({ field, fieldState }) => {
               return (
                 <Form.Field
                   className="max-w-[360px]"
                   numeric
+                  decimalScale={0}
                   label="Target amount"
                   helperText={fieldState.error?.message}
                   error={Boolean(fieldState.error?.message)}
