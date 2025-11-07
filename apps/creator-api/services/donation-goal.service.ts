@@ -22,6 +22,7 @@ class DonationGoalService {
       where: {
         creatorName,
         active: true,
+        deleted: false,
       },
     });
   }
@@ -33,6 +34,7 @@ class DonationGoalService {
       where: {
         creator: { id: creatorId },
         active: true,
+        deleted: false,
       },
       relations: ['creator'],
     });
@@ -51,7 +53,7 @@ class DonationGoalService {
 
   async activateGoal(goalId: number): Promise<DonationGoal> {
     const goal = await this.donationGoalRepository.findOne({
-      where: { id: goalId },
+      where: { id: goalId, deleted: false },
       relations: ['creator'],
     });
 
@@ -71,7 +73,7 @@ class DonationGoalService {
 
   async deactivateGoal(goalId: number): Promise<DonationGoal> {
     const goal = await this.donationGoalRepository.findOne({
-      where: { id: goalId },
+      where: { id: goalId, deleted: false },
       relations: ['creator'],
     });
 
@@ -85,14 +87,18 @@ class DonationGoalService {
 
   async deleteDonationGoal(goalId: number): Promise<void> {
     const goal = await this.donationGoalRepository.findOne({
-      where: { id: goalId },
+      where: { id: goalId, deleted: false },
     });
 
     if (!goal) {
       throw new Error(`Donation goal with ID ${goalId} not found`);
     }
 
-    await this.donationGoalRepository.save({ ...goal, deleted: true });
+    await this.donationGoalRepository.save({
+      ...goal,
+      active: false,
+      deleted: true,
+    });
   }
 
   private async deactivateCreatorGoals(creatorId: number): Promise<void> {
@@ -100,7 +106,9 @@ class DonationGoalService {
       .createQueryBuilder()
       .update(DonationGoal)
       .set({ active: false })
-      .where('creator_id = :creatorId AND active = true', { creatorId })
+      .where('creator_id = :creatorId AND active = true AND deleted = false', {
+        creatorId,
+      })
       .execute();
   }
 }
