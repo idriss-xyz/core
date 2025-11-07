@@ -13,3 +13,4 @@ export { DonationEffect } from './donation-effect.entity';
 export { CreatorAddress } from './creator-address.entity';
 export { Referral } from './referral.entity';
 export { DripDailyClaim } from './daily-drip.entity';
+export { DonationGoal } from './donation-goal.entity';

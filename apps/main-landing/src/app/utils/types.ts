@@ -12,6 +12,7 @@ export type CreatorProfileResponse = {
   receiveEmails?: boolean;
   donationUrl: string;
   obsUrl?: string;
+  goalUrl?: string;
   joinedAt: string;
   doneSetup: boolean;
   isDonor: boolean;
@@ -29,4 +30,17 @@ export type CreatorProfileResponse = {
   privyId: string;
   customBadWords: string[];
   alertSound: string;
+};
+
+export type DonationGoal = {
+  id: number;
+  name: string;
+  targetAmount: number;
+  progress: number;
+  startDate: number;
+  endDate: number;
+  active: boolean;
+  deleted: boolean;
+  creatorName: string;
+  topDonor: { name: string; amount: number };
 };

@@ -8,6 +8,7 @@ import {
 import { Hex } from 'viem';
 
 import { User } from './user.entity';
+import { DonationGoal } from './donation-goal.entity';
 
 @Entity('creator_donations')
 export abstract class Donation {
@@ -65,4 +66,18 @@ export abstract class Donation {
 
   @Column({ type: 'json' })
   data!: object;
+
+  @ManyToOne(
+    () => {
+      return DonationGoal;
+    },
+    (donationGoal) => {
+      return donationGoal.donations;
+    },
+    {
+      nullable: true,
+    },
+  )
+  @JoinColumn({ name: 'donation_goal_id' })
+  donationGoal?: DonationGoal;
 }
