@@ -63,7 +63,7 @@ export const DatePicker = ({
       onSelect={onSelect}
       disabled={disabledDays}
       classNames={{
-        today: 'bg-mint-500 rounded-full text-mint-500',
+        today: 'rounded-full text-mint-500',
         selected: 'bg-mint-500 rounded-full text-white',
         root: `${defaultClassNames.root} shadow-none`,
         chevron: 'fill-black',
