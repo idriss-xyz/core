@@ -57,6 +57,7 @@ export class AddDonationGoal1760651767821 implements MigrationInterface {
         JOIN creator c ON c.id = dg.creator_id
         WHERE LOWER(NEW.to_address) = LOWER(c.address)
           AND dg.active = true
+          AND dg.deleted = false
           AND NEW.timestamp >= dg.start_date
           AND NEW.timestamp <= dg.end_date
         LIMIT 1;
