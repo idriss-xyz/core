@@ -204,21 +204,21 @@ export const CollectibleGallery = ({
     <div>
       <div className="flex gap-6">
         {/* Desktop Collection Filter - hidden below md */}
-        <ScrollArea className="hidden max-h-96 overflow-y-auto md:block">
+        <div className="hidden md:block">
           <div className="w-48 shrink-0">
             <div className="mb-3 flex items-center justify-between">
               <h3 className="text-label3 text-neutralGreen-900">Collections</h3>
               <Link
                 size="m"
                 onClick={handleSelectAllCollections}
-                className="cursor-pointer lg:text-label7"
+                className="mr-2 cursor-pointer lg:text-label7"
               >
                 {_selectedCollections.length > 0
                   ? 'Unselect all'
                   : 'Select all'}
               </Link>
             </div>
-            <div className="space-y-2">
+            <ScrollArea className="max-h-[355px] space-y-2 overflow-y-auto">
               {Object.entries(groupedCollections).map(([category, cols]) => {
                 return (
                   <div key={category} className="mb-4">
@@ -256,9 +256,9 @@ export const CollectibleGallery = ({
                   </div>
                 );
               })}
-            </div>
+            </ScrollArea>
           </div>
-        </ScrollArea>
+        </div>
 
         {/* Gallery */}
         <div className="min-h-[300px] flex-1">
@@ -387,7 +387,7 @@ export const CollectibleGallery = ({
                 <Link
                   size="s"
                   onClick={handleSelectAllCollections}
-                  className="cursor-pointer lg:text-label7"
+                  className="mr-2 cursor-pointer lg:text-label7"
                 >
                   {_selectedCollections.length > 0
                     ? 'Unselect all'
