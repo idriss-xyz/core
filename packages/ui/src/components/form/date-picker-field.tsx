@@ -167,13 +167,13 @@ export const DatePickerField = forwardRef(
             <Icon name="CalendarDays" size={16} />
           </div>
         </Popover.Trigger>
-        <Popover.Portal>
+        <Popover.Portal container={document.body}>
           <Popover.Content
             sideOffset={8}
-            className="relative z-10 w-auto rounded-2xl border border-gray-200 bg-white p-4 shadow-md"
+            className="relative z-portal w-auto rounded-2xl border border-gray-200 bg-white p-4 shadow-md"
             side="bottom"
             align="center"
-            avoidCollisions={false}
+            avoidCollisions
           >
             <DayPicker
               mode="single"
