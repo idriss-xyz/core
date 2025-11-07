@@ -154,6 +154,9 @@ export const DatePickerField = forwardRef(
               <Icon name="AlertCircle" size={16} className="p-0.5" />
             )}
             {helperText}
+            {!inputProperties.error && (
+              <Icon name="HelpCircle" size={16} className="p-0.5" />
+            )}
           </span>
         )}
       </RadixForm.Field>
