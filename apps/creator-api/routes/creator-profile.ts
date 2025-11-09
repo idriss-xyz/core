@@ -377,6 +377,9 @@ router.patch(
       const creator = await creatorRepository.findOne({
         where: { name },
       });
+      const displayTopDonorChanged =
+        typeof req.body.displayTopDonor === 'boolean' &&
+        req.body.displayTopDonor !== creator?.displayTopDonor;
 
       if (!creator) {
         res.status(404).json({ error: 'Creator profile not found' });
@@ -607,6 +610,10 @@ router.patch(
           tokens: updatedTokenEntities,
           networks: updatedNetworkEntities,
         });
+        // if the creator toggled the "Show top donor" switch, tell goal overlays to refresh
+        if (displayTopDonorChanged) {
+          overlayWS.to(userId).emit('activeGoalChanged');
+        }
       } catch {
         console.log('Streamer not online, will load on stream start.');
       }

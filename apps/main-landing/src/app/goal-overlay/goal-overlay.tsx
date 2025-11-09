@@ -73,8 +73,9 @@ export default function GoalOverlay({
         // Update the goal progress with the new donation amount
         await refetchActiveGoal();
 
-        // For new donation chip
-        setRecentDonationAmount(donation.tradeValue);
+        setTimeout(() => {
+          setRecentDonationAmount(donation.tradeValue);
+        }, 8000);
       } catch (error) {
         console.error(
           'Failed to handle newDonation event in goal overlay:',
@@ -185,18 +186,20 @@ export default function GoalOverlay({
             </div>
 
             {/* Top donor */}
-            <div className="flex h-5 items-center gap-2 text-label4">
-              <Icon name="Users2" className="h-full w-auto" />
-              <span className="text-neutral-600">Top donor:</span>
-              {activeGoal.topDonor.name?.trim() ? (
-                <span className="text-neutral-900">
-                  {activeGoal.topDonor.name} (
-                  {formatFiatValue(Number(activeGoal.topDonor.amount))})
-                </span>
-              ) : (
-                <span className="text-neutral-900">–</span>
-              )}
-            </div>
+            {activeGoal.displayTopDonor && (
+              <div className="flex h-5 items-center gap-2 text-label4">
+                <Icon name="Users2" className="h-full w-auto" />
+                <span className="text-neutral-600">Top donor:</span>
+                {activeGoal.topDonor.name?.trim() ? (
+                  <span className="text-neutral-900">
+                    {activeGoal.topDonor.name} (
+                    {formatFiatValue(Number(activeGoal.topDonor.amount))})
+                  </span>
+                ) : (
+                  <span className="text-neutral-900">–</span>
+                )}
+              </div>
+            )}
           </div>
         </div>
       )}

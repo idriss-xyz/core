@@ -18,6 +18,7 @@ import { Donation } from '../entities/donations.entity';
         .addSelect('c.name', 'creatorName')
         // total donated so far (progress)
         .addSelect('COALESCE(SUM(d.trade_value), 0)', 'progress')
+        .addSelect('c.display_top_donor', 'displayTopDonor')
         .addSelect(
           `(SELECT COALESCE(c2.name, cc.name, 'anon')
             FROM creator_donations du
@@ -58,6 +59,7 @@ import { Donation } from '../entities/donations.entity';
         .addGroupBy('g.active')
         .addGroupBy('g.deleted')
         .addGroupBy('c.name')
+        .addGroupBy('c.display_top_donor')
     );
   },
 })
@@ -85,6 +87,9 @@ export class DonationGoalView {
 
   @ViewColumn()
   creatorName!: string;
+
+  @ViewColumn()
+  displayTopDonor!: boolean;
 
   @ViewColumn()
   progress!: number;
