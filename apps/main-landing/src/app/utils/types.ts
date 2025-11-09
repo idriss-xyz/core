@@ -25,6 +25,7 @@ export type CreatorProfileResponse = {
   sfxEnabled: boolean;
   tokenEnabled: boolean;
   collectibleEnabled: boolean;
+  displayTopDonor: boolean;
   networks: string[];
   tokens: string[];
   privyId: string;
@@ -42,5 +43,6 @@ export type DonationGoal = {
   active: boolean;
   deleted: boolean;
   creatorName: string;
+  displayTopDonor: boolean;
   topDonor: { name: string; amount: number };
 };

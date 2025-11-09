@@ -16,10 +16,6 @@ import {
 import { resolveCreatorAndAddresses } from '../utils/calculate-stats';
 
 const router = Router();
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-const MAX_RETRIES = 6;
-const RETRY_INTERVAL = 5000;
 
 /**
  * Shared logic to fetch and process tip history for a given address.

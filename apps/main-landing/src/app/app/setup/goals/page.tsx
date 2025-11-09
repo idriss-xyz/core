@@ -1,10 +1,14 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Card } from '@idriss-xyz/ui/card';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { classes } from '@idriss-xyz/ui/utils';
+import { Controller, useForm } from 'react-hook-form';
+import { Toggle } from '@idriss-xyz/ui/toggle';
+import { getAccessToken } from '@privy-io/react-auth';
 
+import { editCreatorProfile } from '@/app/utils';
 import { useAuth } from '@/app/context/auth-context';
 import { ConfirmationModal } from '@/app/components/confirmation-modal/confirmation-modal';
 import { CopyInput } from '@/app/components/copy-input/copy-input';
@@ -15,7 +19,7 @@ import ActiveGoal from './active-goal';
 
 // ts-unused-exports:disable-next-line
 export default function DonationGoalsPage() {
-  const { creator } = useAuth();
+  const { creator, setCreator } = useAuth();
   const queryClient = useQueryClient();
 
   const [isCopyModalOpen, setIsCopyModalOpen] = useState(false);
@@ -24,6 +28,18 @@ export default function DonationGoalsPage() {
   const [confirmButtonText, setConfirmButtonText] = useState('Copy link');
   const [wasCopied, setWasCopied] = useState(false);
 
+  type FormPayload = { displayTopDonor: boolean };
+
+  const formMethods = useForm<FormPayload>({
+    defaultValues: { displayTopDonor: creator?.displayTopDonor ?? true },
+  });
+
+  useEffect(() => {
+    if (creator) {
+      formMethods.reset({ displayTopDonor: creator.displayTopDonor ?? true });
+    }
+  }, [creator, formMethods]);
+
   const openConfirmationModal = (source: 'text' | 'icon') => {
     if (source === 'icon') {
       setConfirmButtonText('COPY LINK');
@@ -31,6 +47,21 @@ export default function DonationGoalsPage() {
       setConfirmButtonText('GOT IT');
     }
     setIsCopyModalOpen(true);
+  };
+
+  const onSubmitToggles = async ({ displayTopDonor }: FormPayload) => {
+    try {
+      const authToken = await getAccessToken();
+      if (!authToken || !creator?.name) return;
+
+      await editCreatorProfile(creator.name, { displayTopDonor }, authToken);
+
+      setCreator((previous) => {
+        return previous ? { ...previous, displayTopDonor } : previous;
+      });
+    } catch (error) {
+      console.error('Error saving displayTopDonor:', error);
+    }
   };
 
   return (
@@ -85,6 +116,26 @@ export default function DonationGoalsPage() {
                   className="p-0.5 text-neutral-600"
                 />
               </div>
+              <Controller
+                name="displayTopDonor"
+                control={formMethods.control}
+                render={({ field }) => {
+                  return (
+                    <Toggle
+                      label="Show top donor"
+                      sublabel="Displays the current top donor on your goal overlay"
+                      value={field.value}
+                      onChange={(v) => {
+                        field.onChange(v);
+                        setTimeout(() => {
+                          void formMethods.handleSubmit(onSubmitToggles)();
+                        }, 0);
+                      }}
+                      className="w-fit pt-3"
+                    />
+                  );
+                }}
+              />
             </div>
           </div>
           <hr />

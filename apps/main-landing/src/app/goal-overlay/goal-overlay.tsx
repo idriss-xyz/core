@@ -185,18 +185,20 @@ export default function GoalOverlay({
             </div>
 
             {/* Top donor */}
-            <div className="flex h-5 items-center gap-2 text-label4">
-              <Icon name="Users2" className="h-full w-auto" />
-              <span className="text-neutral-600">Top donor:</span>
-              {activeGoal.topDonor.name?.trim() ? (
-                <span className="text-neutral-900">
-                  {activeGoal.topDonor.name} (
-                  {formatFiatValue(Number(activeGoal.topDonor.amount))})
-                </span>
-              ) : (
-                <span className="text-neutral-900">–</span>
-              )}
-            </div>
+            {activeGoal.displayTopDonor && (
+              <div className="flex h-5 items-center gap-2 text-label4">
+                <Icon name="Users2" className="h-full w-auto" />
+                <span className="text-neutral-600">Top donor:</span>
+                {activeGoal.topDonor.name?.trim() ? (
+                  <span className="text-neutral-900">
+                    {activeGoal.topDonor.name} (
+                    {formatFiatValue(Number(activeGoal.topDonor.amount))})
+                  </span>
+                ) : (
+                  <span className="text-neutral-900">–</span>
+                )}
+              </div>
+            )}
           </div>
         </div>
       )}
