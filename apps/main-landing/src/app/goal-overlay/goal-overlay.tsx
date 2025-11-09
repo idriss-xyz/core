@@ -73,8 +73,9 @@ export default function GoalOverlay({
         // Update the goal progress with the new donation amount
         await refetchActiveGoal();
 
-        // For new donation chip
-        setRecentDonationAmount(donation.tradeValue);
+        setTimeout(() => {
+          setRecentDonationAmount(donation.tradeValue);
+        }, 8000);
       } catch (error) {
         console.error(
           'Failed to handle newDonation event in goal overlay:',
