@@ -59,6 +59,7 @@ import {
   AddNewDonationTrigger1760958133000,
   UpdateUrlsToNewStructure1761231247000,
   AddGoalOverlayLinkField1761869331633,
+  AddDisplayTopDonor1762624664000,
 } from './migrations';
 import { CreatorProfileView, DonationGoalView } from './views';
 
@@ -126,6 +127,7 @@ export const AppDataSource = new DataSource({
     AddNewDonationTrigger1760958133000,
     UpdateUrlsToNewStructure1761231247000,
     AddGoalOverlayLinkField1761869331633,
+    AddDisplayTopDonor1762624664000,
   ],
 });
 

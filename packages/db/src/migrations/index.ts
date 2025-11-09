@@ -37,3 +37,4 @@ export { AddDonationGoal1760651767821 } from './1760651767821-AddDonationGoal';
 export { AddNewDonationTrigger1760958133000 } from './1760958133000-AddNewDonationTrigger';
 export { UpdateUrlsToNewStructure1761231247000 } from './1761231247000-UpdateUrlsToNewStructure';
 export { AddGoalOverlayLinkField1761869331633 } from './1761869331633-AddGoalOverlayLinkField';
+export { AddDisplayTopDonor1762624664000 } from './1762624664000-AddDisplayTopDonor';
