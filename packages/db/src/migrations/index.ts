@@ -41,3 +41,4 @@ export { CreateCreatorFollowedChannel1762428522000 } from './1762428522000-Creat
 export { AddChannelTwitchId1762431896000 } from './1762431896000-AddChannelTwitchId';
 export { AddGoalOverlayLinkField1761869331633 } from './1761869331633-AddGoalOverlayLinkField';
 export { AddDisplayTopDonor1762624664000 } from './1762624664000-AddDisplayTopDonor';
+export { CreatorProfileViewUpdate1762797156607 } from './1762797156607-CreatorProfileViewUpdate';

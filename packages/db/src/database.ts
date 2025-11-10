@@ -65,6 +65,7 @@ import {
   AddChannelTwitchId1762431896000,
   AddGoalOverlayLinkField1761869331633,
   AddDisplayTopDonor1762624664000,
+  CreatorProfileViewUpdate1762797156607,
 } from './migrations';
 import { CreatorProfileView, DonationGoalView } from './views';
 
@@ -138,6 +139,7 @@ export const AppDataSource = new DataSource({
     AddChannelTwitchId1762431896000,
     AddGoalOverlayLinkField1761869331633,
     AddDisplayTopDonor1762624664000,
+    CreatorProfileViewUpdate1762797156607,
   ],
 });
 
