@@ -95,6 +95,12 @@ class CreatorProfileService {
     creator.goalUrl = `${MAIN_LANDING_LINK}/goal-overlay/${obsUrlSecret}`;
     creator.isDonor = isDonor;
 
+    const twitchInfoforCreator = await fetchTwitchUserInfo(creatorData.name);
+    if (!twitchInfoforCreator) {
+      throw new Error('Could not find creator on Twitch api');
+    }
+    creator.twitchId = twitchInfoforCreator.id;
+
     // Create and save new creator
     const savedCreator = await creatorRepository.save(creator);
 
