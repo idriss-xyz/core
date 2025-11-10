@@ -17,6 +17,28 @@ interface TwitchUserFollowersInfo {
   total: number;
 }
 
+// ts-unused-exports:disable-next-line
+export interface FollowedChannel {
+  broadcasterId: string;
+  login: string;
+  name: string;
+  profileImage: string;
+  followers: number;
+  followedAt: string;
+}
+
+// ts-unused-exports:disable-next-line
+export const DEFAULT_FOLLOWED_CHANNELS: FollowedChannel[] = [
+  {
+    broadcasterId: '000000',
+    login: 'example_streamer',
+    name: 'Example Streamer',
+    profileImage: '',
+    followers: 0,
+    followedAt: new Date(0).toISOString(),
+  },
+];
+
 const TWITCH_BASE_URL = 'https://api.twitch.tv/helix';
 
 async function getHeaders(): Promise<Record<string, string>> {
@@ -103,5 +125,92 @@ export async function fetchTwitchUserFollowersCount(
   } catch (error) {
     console.error('Error fetching Twitch user info:', error);
     return null;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// user-scoped: top N channels a user follows
+// Requires a USER access token that has `user:read:follows` scope
+// ---------------------------------------------------------------------------
+// ts-unused-exports:disable-next-line
+export async function fetchUserFollowedChannels(
+  userAccessToken: string,
+  userId: string,
+  limit = 30,
+): Promise<FollowedChannel[]> {
+  const clientId = process.env.TWITCH_CLIENT_ID;
+  if (!clientId) throw new Error('Missing TWITCH_CLIENT_ID env var');
+
+  try {
+    const headers = {
+      'Authorization': `Bearer ${userAccessToken}`,
+      'Client-Id': clientId,
+    };
+
+    const pageSize = 100;
+    const allFollows: {
+      broadcaster_id: string;
+      broadcaster_login: string;
+      broadcaster_name: string;
+      followed_at: string;
+    }[] = [];
+
+    let cursor: string | undefined;
+    do {
+      const url = new URL(`${TWITCH_BASE_URL}/channels/followed`);
+      url.searchParams.set('user_id', userId);
+      url.searchParams.set('first', String(pageSize));
+      if (cursor) url.searchParams.set('after', cursor);
+
+      const response = await fetch(url.toString(), { headers });
+      if (!response.ok) {
+        throw new Error(`Twitch /channels/followed error: ${response.status}`);
+      }
+
+      const json = (await response.json()) as {
+        data: typeof allFollows;
+        pagination?: { cursor?: string };
+      };
+
+      allFollows.push(...json.data);
+      cursor = json.pagination?.cursor;
+    } while (cursor);
+
+    if (allFollows.length === 0) return DEFAULT_FOLLOWED_CHANNELS;
+
+    /* ------------ enrich each channel -------------------------------- */
+    const concurrency = 10;
+    const enriched: FollowedChannel[] = [];
+
+    for (let index = 0; index < allFollows.length; index += concurrency) {
+      const slice = allFollows.slice(index, index + concurrency);
+      const chunk = await Promise.all(
+        slice.map(async (row) => {
+          const [userInfo, followersInfo] = await Promise.all([
+            fetchTwitchUserInfo(row.broadcaster_login),
+            fetchTwitchUserFollowersCount(row.broadcaster_login),
+          ]);
+
+          return {
+            broadcasterId: row.broadcaster_id,
+            login: row.broadcaster_login,
+            name: row.broadcaster_name,
+            profileImage: userInfo?.profile_image_url ?? '',
+            followers: followersInfo?.total ?? 0,
+            followedAt: row.followed_at,
+          } as FollowedChannel;
+        }),
+      );
+      enriched.push(...chunk);
+    }
+
+    /* ------------ sort by followers and return top `limit` ----------- */
+    enriched.sort((a, b) => {
+      return b.followers - a.followers;
+    });
+    return enriched.slice(0, limit);
+  } catch (error) {
+    console.error('Error fetching followed channels:', error);
+    return DEFAULT_FOLLOWED_CHANNELS;
   }
 }

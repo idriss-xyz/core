@@ -18,6 +18,7 @@ import {
   CreatorAddress,
   DripDailyClaim,
   TwitchInfo,
+  CreatorFollowedChannel,
 } from './entities';
 import {
   AddAmountRaw1743181200000,
@@ -58,6 +59,8 @@ import {
   AddNewDonationTrigger1760958133000,
   UpdateUrlsToNewStructure1761231247000,
   AddTwitchInfoEntity1761906619000,
+  CreateCreatorFollowedChannel1762428522000,
+  AddChannelTwitchId1762431896000,
 } from './migrations';
 import { CreatorProfileView } from './views';
 
@@ -82,6 +85,7 @@ export const AppDataSource = new DataSource({
     Referral,
     DripDailyClaim,
     TwitchInfo,
+    CreatorFollowedChannel,
   ],
   synchronize: false,
   migrations: [
@@ -123,6 +127,8 @@ export const AppDataSource = new DataSource({
     AddNewDonationTrigger1760958133000,
     UpdateUrlsToNewStructure1761231247000,
     AddTwitchInfoEntity1761906619000,
+    CreateCreatorFollowedChannel1762428522000,
+    AddChannelTwitchId1762431896000,
   ],
 });
 

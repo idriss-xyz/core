@@ -3,6 +3,12 @@ import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import { URLSearchParams } from 'url';
 import { CREATOR_API_URL } from '@idriss-xyz/constants';
+import { AppDataSource, Creator, CreatorFollowedChannel } from '@idriss-xyz/db';
+import {
+  fetchUserFollowedChannels,
+  DEFAULT_FOLLOWED_CHANNELS,
+  FollowedChannel,
+} from '@idriss-xyz/utils/server';
 
 const router = Router();
 
@@ -23,7 +29,7 @@ router.get('/twitch', (req, res) => {
     client_id: TWITCH_CLIENT_ID!,
     redirect_uri: API_CALLBACK_URI,
     response_type: 'code',
-    scope: 'user:read:email',
+    scope: 'user:read:email user:read:follows',
     ...(state && { state }),
   })}`;
   res.redirect(authUrl);
@@ -61,6 +67,42 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
     const twitchUser = userResponse.data.data[0];
     if (!twitchUser) {
       throw new Error('Failed to fetch user profile from Twitch.');
+    }
+
+    let followed: FollowedChannel[];
+    try {
+      followed = await fetchUserFollowedChannels(
+        access_token,
+        twitchUser.id,
+        30,
+      );
+    } catch (err) {
+      console.error('fetchUserFollowedChannels failed:', err);
+      followed = [];
+    }
+    try {
+      const creatorRepo = AppDataSource.getRepository(Creator);
+      const followsRepo = AppDataSource.getRepository(CreatorFollowedChannel);
+      const creator = await creatorRepo.findOne({
+        where: { twitchId: twitchUser.id },
+      });
+
+      if (creator && followed.length) {
+        await followsRepo.delete({ creator: { id: creator.id } });
+        await followsRepo.insert(
+          followed.map((c) =>
+            followsRepo.create({
+              creator,
+              channelTwitchId: c.broadcasterId,
+              channelName: c.login,
+              channelDisplayName: c.name,
+              channelProfileImageUrl: c.profileImage,
+            }),
+          ),
+        );
+      }
+    } catch (err) {
+      console.error('Storing followed channels failed:', err);
     }
 
     const payload = {

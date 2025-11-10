@@ -36,3 +36,5 @@ export { FixIncorrectNftNames1759846236000 } from './1759846236000-FixIncorrectN
 export { AddNewDonationTrigger1760958133000 } from './1760958133000-AddNewDonationTrigger';
 export { UpdateUrlsToNewStructure1761231247000 } from './1761231247000-UpdateUrlsToNewStructure';
 export { AddTwitchInfoEntity1761906619000 } from './1761906619000-AddTwitchInfoEntity';
+export { CreateCreatorFollowedChannel1762428522000 } from './1762428522000-CreateCreatorFollowedChannel';
+export { AddChannelTwitchId1762431896000 } from './1762431896000-AddChannelTwitchId';
