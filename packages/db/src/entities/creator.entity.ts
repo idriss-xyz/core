@@ -58,6 +58,8 @@ export class Creator {
   )
   @JoinColumn({ name: 'twitch_id', referencedColumnName: 'twitchId' })
   twitchInfo!: TwitchInfo;
+  @Column({ type: 'text', name: 'goal_url', nullable: true })
+  goalUrl?: string;
 
   @CreateDateColumn({ type: 'timestamp with time zone', name: 'joined_at' })
   joinedAt!: Date;
@@ -77,6 +79,9 @@ export class Creator {
 
   @Column({ type: 'boolean', name: 'is_donor', default: false })
   isDonor!: boolean;
+
+  @Column({ type: 'boolean', name: 'display_top_donor', default: true })
+  displayTopDonor!: boolean;
 
   @OneToMany(
     () => {
