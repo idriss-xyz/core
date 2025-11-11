@@ -32,7 +32,22 @@ async function handleFetchTipHistory(req: Request, res: Response) {
           'utf-8',
         ),
       );
-      res.json(mockData);
+
+      const donationsWithShiftedTimestamps = mockData.donations.map(
+        (d: StoredDonationData) => ({
+          ...d,
+          timestamp:
+            new Date(d.timestamp).setMonth(
+              new Date(d.timestamp).getMonth() + 4,
+            ) +
+            7 * 24 * 60 * 60 * 1000,
+        }),
+      );
+
+      res.json({
+        ...mockData,
+        donations: donationsWithShiftedTimestamps,
+      });
       return;
     }
 
