@@ -188,6 +188,7 @@
         "DATABASE_URL",
         "ZAPPER_API_KEY",
         "ALCHEMY_API_KEY",
+        "INFURA_API_KEY",
         "OPENSEA_API_KEY"
       ]
     },
@@ -198,6 +199,7 @@
         "DATABASE_URL",
         "ZAPPER_API_KEY",
         "ALCHEMY_API_KEY",
+        "INFURA_API_KEY",
         "OPENSEA_API_KEY",
         "RAILWAY_PROJECT_ID"
       ]
