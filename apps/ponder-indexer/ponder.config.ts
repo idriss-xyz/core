@@ -17,8 +17,10 @@ export default createConfig({
   chains: {
     ethereum: {
       id: 1,
+      pollingInterval: 5000,
       rpc: fallback([
         http('https://eth.drpc.org'),
+        http(`https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`),
         http(
           `https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
         ),
@@ -26,8 +28,11 @@ export default createConfig({
     },
     base: {
       id: 8453,
+      pollingInterval: 3000,
       rpc: fallback([
         http('https://base.llamarpc.com'),
+        http('https://mainnet.base.org'),
+        http(`https://base-mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`),
         http(
           `https://base-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
         ),
@@ -35,6 +40,7 @@ export default createConfig({
     },
     ronin: {
       id: 2020,
+      pollingInterval: 3000,
       rpc: fallback([
         http('https://ronin.drpc.org'),
         http(
@@ -44,6 +50,7 @@ export default createConfig({
     },
     abstract: {
       id: 2741,
+      pollingInterval: 3000,
       rpc: fallback([
         http('https://api.mainnet.abs.xyz'),
         http(
@@ -53,8 +60,12 @@ export default createConfig({
     },
     avalanche: {
       id: 43114,
+      pollingInterval: 3000,
       rpc: fallback([
         http('https://api.avax.network/ext/bc/C/rpc'),
+        http(
+          `https://avalanche-mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
+        ),
         http(
           `https://avax-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
         ),

@@ -321,6 +321,7 @@ export async function calculateNftBalances(
           entry.name = entry.name ?? metaInfo.name ?? undefined;
         }
         results.push(entry);
+        //todo: add those nfts to the nft metadata entity
       }
 
       for (const [contract, ids] of Object.entries(erc1155Buckets)) {
