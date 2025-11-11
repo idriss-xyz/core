@@ -4,6 +4,7 @@ import {
   TIPPING_ABI,
   CHAIN_TO_IDRISS_TIPPING_ADDRESS,
 } from '@idriss-xyz/constants';
+import { fallback, http } from 'viem';
 
 dotenv({
   path:
@@ -16,38 +17,48 @@ export default createConfig({
   chains: {
     ethereum: {
       id: 1,
-      rpc: [
-        `https://eth.drpc.org`,
-        `https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
-      ],
+      rpc: fallback([
+        http('https://eth.drpc.org'),
+        http(
+          `https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
+        ),
+      ]),
     },
     base: {
       id: 8453,
-      rpc: [
-        `https://1rpc.io/base`,
-        `https://base-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
-      ],
+      rpc: fallback([
+        http('https://base.llamarpc.com'),
+        http(
+          `https://base-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
+        ),
+      ]),
     },
     ronin: {
       id: 2020,
-      rpc: [
-        `https://ronin.drpc.org`,
-        `https://ronin-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
-      ],
+      rpc: fallback([
+        http('https://ronin.drpc.org'),
+        http(
+          `https://ronin-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
+        ),
+      ]),
     },
     abstract: {
       id: 2741,
-      rpc: [
-        `https://api.mainnet.abs.xyz`,
-        `https://abstract-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
-      ],
+      rpc: fallback([
+        http('https://api.mainnet.abs.xyz'),
+        http(
+          `https://abstract-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
+        ),
+      ]),
     },
     avalanche: {
       id: 43114,
-      rpc: [
-        `https://api.avax.network/ext/bc/C/rpc`,
-        `https://avax-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
-      ],
+      rpc: fallback([
+        http('https://api.avax.network/ext/bc/C/rpc'),
+        http(
+          `https://avax-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
+        ),
+      ]),
     },
   },
   contracts: {
