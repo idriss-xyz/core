@@ -1,4 +1,9 @@
-import { CREATOR_CHAIN, ERC20_ABI, NULL_ADDRESS } from '@idriss-xyz/constants';
+import {
+  CREATOR_CHAIN,
+  ERC20_ABI,
+  NATIVE_COIN_ADDRESS,
+  NULL_ADDRESS,
+} from '@idriss-xyz/constants';
 import {
   Chain,
   createPublicClient,
@@ -38,7 +43,11 @@ export async function estimateErc20GasOrDefault(params: {
   to: Hex;
 }) {
   const fallback = BigInt(65000);
-  if (!params.token || params.token === NULL_ADDRESS) {
+  if (
+    !params.token ||
+    params.token === NULL_ADDRESS ||
+    params.token == NATIVE_COIN_ADDRESS
+  ) {
     return fallback;
   }
   let tokenAddr;

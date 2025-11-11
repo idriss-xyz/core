@@ -11,7 +11,7 @@ import {
 } from '@idriss-xyz/db';
 import { enrichDonationsWithCreatorInfo } from '../utils/calculate-stats';
 import { createAddressToCreatorMap } from '@idriss-xyz/utils';
-import { DEMO_ADDRESS } from '@idriss-xyz/constants';
+import { DEMO_ADDRESS, StoredDonationData } from '@idriss-xyz/constants';
 
 const router = Router();
 
@@ -25,9 +25,22 @@ router.post('/', async (req: Request, res: Response) => {
           'utf-8',
         ),
       );
-      const recipientDonationStats = calculateStatsForRecipientAddress(
-        mockData.donations,
+
+      const donationsWithShiftedTimestamps = mockData.donations.map(
+        (d: StoredDonationData) => ({
+          ...d,
+          timestamp:
+            new Date(d.timestamp).setMonth(
+              new Date(d.timestamp).getMonth() + 4,
+            ) +
+            7 * 24 * 60 * 60 * 1000,
+        }),
       );
+
+      const recipientDonationStats = calculateStatsForRecipientAddress(
+        donationsWithShiftedTimestamps,
+      );
+
       res.json(recipientDonationStats);
       return;
     }
