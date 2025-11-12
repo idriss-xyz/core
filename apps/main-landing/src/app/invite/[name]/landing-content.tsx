@@ -1,4 +1,5 @@
 'use client';
+import { useEffect } from 'react';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 
 import { OAuthCallbackHandler } from '@/app/components/oauth-callback-handler';
@@ -10,12 +11,16 @@ type LandingContentProperties = {
 };
 
 const LandingContent = ({ creator }: LandingContentProperties) => {
-  localStorage.setItem('referrerName', creator.name);
-  localStorage.setItem('referrerAddress', creator.address);
-  localStorage.setItem(
-    'referrerProfilePictureUrl',
-    creator.profilePictureUrl ?? '',
-  );
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('referrerName', creator.name);
+      sessionStorage.setItem('referrerAddress', creator.address);
+      sessionStorage.setItem(
+        'referrerProfilePictureUrl',
+        creator.profilePictureUrl ?? '',
+      );
+    }
+  }, [creator]);
 
   return (
     <div className="relative flex h-screen">

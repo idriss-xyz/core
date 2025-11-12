@@ -107,7 +107,10 @@ export function PrivyAuthSync() {
           wallet = await createWallet();
         }
 
-        const referrerAddress = localStorage.getItem('referrerAddress');
+        const referrerAddress =
+          typeof window === 'undefined'
+            ? null
+            : sessionStorage.getItem('referrerAddress');
 
         await saveCreatorProfile(
           wallet.address as Hex,
@@ -128,9 +131,9 @@ export function PrivyAuthSync() {
         }
 
         setCreator(newCreator);
-        localStorage.removeItem('referrerName');
-        localStorage.removeItem('referrerAddress');
-        localStorage.removeItem('referrerProfilePictureUrl');
+        sessionStorage.removeItem('referrerName');
+        sessionStorage.removeItem('referrerAddress');
+        sessionStorage.removeItem('referrerProfilePictureUrl');
         if (callbackUrl && !isHomeCallback(callbackUrl)) {
           setDonor(newCreator);
           setDonorLoading(false);
