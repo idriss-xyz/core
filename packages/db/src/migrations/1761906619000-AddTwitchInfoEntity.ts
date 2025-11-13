@@ -91,41 +91,6 @@ export class AddTwitchInfoEntity1761906619000 implements MigrationInterface {
       }),
     );
 
-    // Get all existing creators
-    const creators = (await queryRunner.query(
-      'SELECT id, name FROM creator',
-    )) as CreatorRow[];
-
-    // Fetch Twitch info for each creator and populate twitch_info table
-    for (const creator of creators) {
-      const twitchInfo = await getTwitchInfoForCreator(creator.name);
-
-      if (twitchInfo) {
-        // Insert into twitch_info table
-        await queryRunner.query(
-          `INSERT INTO twitch_info (twitch_id, username, description, follower_count, created_at, updated_at)
-           VALUES ($1, $2, $3, $4, now(), now())`,
-          [
-            twitchInfo.twitchId,
-            twitchInfo.username,
-            twitchInfo.description,
-            twitchInfo.followerCount,
-          ],
-        );
-      } else {
-        // Create a placeholder record with the creator name as fallback
-        const fallbackTwitchId = `fallback_${creator.id}_${Date.now()}`;
-        console.error(
-          `No Twitch info found for ${creator.name}, Update it manually after migration runs.`,
-        );
-        await queryRunner.query(
-          `INSERT INTO twitch_info (twitch_id, username, description, follower_count, created_at, updated_at)
-           VALUES ($1, $2, $3, $4, now(), now())`,
-          [fallbackTwitchId, creator.name, null, 0],
-        );
-      }
-    }
-
     // Add twitch_id column to creator table (temporarily nullable)
     await queryRunner.addColumn(
       'creator',
@@ -137,21 +102,36 @@ export class AddTwitchInfoEntity1761906619000 implements MigrationInterface {
       }),
     );
 
-    // Update creators with their corresponding twitch_id
+    const creators = (await queryRunner.query(
+      'SELECT id, name FROM creator',
+    )) as CreatorRow[];
+
+    // Populate twitch_info and update creator in one pass
     for (const creator of creators) {
       const twitchInfo = await getTwitchInfoForCreator(creator.name);
+      const twitchId = twitchInfo
+        ? twitchInfo.twitchId
+        : `fallback_${creator.id}_${Date.now()}`;
 
-      if (twitchInfo) {
-        await queryRunner.query(
-          'UPDATE creator SET twitch_id = $1 WHERE id = $2',
-          [twitchInfo.twitchId, creator.id],
-        );
-      } else {
-        // Use the fallback twitch_id we created
-        const fallbackTwitchId = `fallback_${creator.id}_${Date.now()}`;
-        await queryRunner.query(
-          'UPDATE creator SET twitch_id = $1 WHERE id = $2',
-          [fallbackTwitchId, creator.id],
+      await queryRunner.query(
+        `INSERT INTO twitch_info (twitch_id, username, description, follower_count, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, now(), now())`,
+        [
+          twitchId,
+          twitchInfo?.username ?? creator.name,
+          twitchInfo?.description ?? null,
+          twitchInfo?.followerCount ?? 0,
+        ],
+      );
+
+      await queryRunner.query(
+        'UPDATE creator SET twitch_id = $1 WHERE id = $2',
+        [twitchId, creator.id],
+      );
+
+      if (!twitchInfo) {
+        console.error(
+          `No Twitch info found for ${creator.name}, update manually after migration runs.`,
         );
       }
     }
