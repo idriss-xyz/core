@@ -6,7 +6,6 @@ import { CREATOR_API_URL } from '@idriss-xyz/constants';
 import { AppDataSource, Creator, CreatorFollowedChannel } from '@idriss-xyz/db';
 import {
   fetchUserFollowedChannels,
-  DEFAULT_FOLLOWED_CHANNELS,
   FollowedChannel,
 } from '@idriss-xyz/utils/server';
 

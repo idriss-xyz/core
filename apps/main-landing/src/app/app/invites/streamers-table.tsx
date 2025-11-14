@@ -167,6 +167,10 @@ export default function StreamersTable({
   const rows =
     activeTab === 'Suggested' ? mapToRows(suggested) : mapToRows(invited);
 
+  rows.sort((a, b) => {
+    return b.followers - a.followers;
+  });
+
   const columnsToRender =
     activeTab === 'Suggested'
       ? columns.filter((column) => {
