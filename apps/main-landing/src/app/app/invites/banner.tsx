@@ -48,7 +48,7 @@ export default function InviteBanner() {
                     intent="primary"
                     suffixIconName="TwitterX"
                     href={`https://x.com/intent/tweet?text=${encodeURIComponent(
-                      `All my streamer friends should start earning on IDRISS!\n\nhttps://idriss.xyz/invite/${creator?.name}`,
+                      `Streamer friends, come earn on @idriss_xyz with me.\nhttps://idriss.xyz/invite/${creator?.name}`,
                     )}`}
                     rel="noopener noreferrer"
                     target="_blank"
