@@ -33,12 +33,14 @@ export const TopBar = ({
   const InvitedByBanner = () => {
     return (
       <div className="w-full items-center bg-white px-safe">
-        <div className="container flex max-h-12 items-center gap-x-1 py-1 sm:gap-x-2 lg:py-3">
+        <div className="container flex max-h-12 items-center gap-x-2 py-1 sm:gap-x-2 lg:py-3">
           <Avatar src={referrerProfilePictureUrl ?? undefined} size={32} />
-          <span className="flex text-label5 uppercase gradient-text">
-            {referrerName}
-            <Icon name="Send" className="mx-2 text-mint-600" size={16} />
-            invites you to join!
+          <span className="flex flex-wrap text-label5 uppercase leading-tight gradient-text">
+            <span className="mr-2 break-words">{referrerName}</span>
+            <span className="inline-flex shrink-0 items-center">
+              <Icon name="Send" className="mr-2 text-mint-600" size={16} />
+              invites you to join!
+            </span>
           </span>
         </div>
       </div>
