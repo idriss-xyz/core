@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/no-document-cookie */
 'use client';
 import { useEffect } from 'react';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
@@ -5,6 +6,7 @@ import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { OAuthCallbackHandler } from '@/app/components/oauth-callback-handler';
 import Content from '@/app/content';
 import { CreatorProfileResponse } from '@/app/utils/types';
+import { setCookie } from '@/app/cookies';
 
 type LandingContentProperties = {
   creator: CreatorProfileResponse;
@@ -12,14 +14,10 @@ type LandingContentProperties = {
 
 const LandingContent = ({ creator }: LandingContentProperties) => {
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      sessionStorage.setItem('referrerName', creator.name);
-      sessionStorage.setItem('referrerAddress', creator.address);
-      sessionStorage.setItem(
-        'referrerProfilePictureUrl',
-        creator.profilePictureUrl ?? '',
-      );
-    }
+    if (!creator) return;
+    setCookie('referrerName', creator.name, 7);
+    setCookie('referrerAddress', creator.address, 7);
+    setCookie('referrerProfilePictureUrl', creator.profilePictureUrl ?? '', 7);
   }, [creator]);
 
   return (

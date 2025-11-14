@@ -15,6 +15,7 @@ import {
   isHomeCallback,
 } from './utils';
 import { useAuth } from './context/auth-context';
+import { deleteCookie, getCookie } from './cookies';
 
 export function PrivyAuthSync() {
   const hasRunAuth = useRef(false);
@@ -108,9 +109,7 @@ export function PrivyAuthSync() {
         }
 
         const referrerAddress =
-          typeof window === 'undefined'
-            ? null
-            : sessionStorage.getItem('referrerAddress');
+          typeof window === 'undefined' ? null : getCookie('referrerAddress');
 
         await saveCreatorProfile(
           wallet.address as Hex,
@@ -131,9 +130,9 @@ export function PrivyAuthSync() {
         }
 
         setCreator(newCreator);
-        sessionStorage.removeItem('referrerName');
-        sessionStorage.removeItem('referrerAddress');
-        sessionStorage.removeItem('referrerProfilePictureUrl');
+        deleteCookie('referrerName');
+        deleteCookie('referrerAddress');
+        deleteCookie('referrerProfilePictureUrl');
         if (callbackUrl && !isHomeCallback(callbackUrl)) {
           setDonor(newCreator);
           setDonorLoading(false);
