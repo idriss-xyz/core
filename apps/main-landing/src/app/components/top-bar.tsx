@@ -34,7 +34,9 @@ export const TopBar = ({
     return (
       <div className="w-full items-center bg-white px-safe">
         <div className="container flex max-h-12 items-center gap-x-2 py-1 sm:gap-x-2 lg:py-3">
-          <Avatar src={referrerProfilePictureUrl ?? undefined} size={32} />
+          <div className="shrink-0">
+            <Avatar src={referrerProfilePictureUrl ?? undefined} size={32} />
+          </div>
           <span className="flex flex-wrap text-label5 uppercase leading-tight gradient-text">
             <span className="mr-2 break-words">{referrerName}</span>
             <span className="inline-flex shrink-0 items-center">
