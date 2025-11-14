@@ -4,12 +4,16 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   OneToMany,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
 import { Hex } from 'viem';
 
 import { CreatorAddress } from './creator-address.entity';
 import { CreatorNetwork } from './creator-network.entity';
 import { CreatorToken } from './creator-token.entity';
+import { TwitchInfo } from './twitch-info.entity';
+import { CreatorFollowedChannel } from './creator-followed-channel.entity';
 
 @Entity('creator')
 export class Creator {
@@ -43,6 +47,17 @@ export class Creator {
   @Column({ type: 'text', name: 'obs_url', nullable: true })
   obsUrl?: string;
 
+  @Column({ type: 'text', name: 'twitch_id', nullable: false, unique: true })
+  twitchId!: string;
+
+  @OneToOne(
+    () => {
+      return TwitchInfo;
+    },
+    { nullable: false },
+  )
+  @JoinColumn({ name: 'twitch_id', referencedColumnName: 'twitchId' })
+  twitchInfo!: TwitchInfo;
   @Column({ type: 'text', name: 'goal_url', nullable: true })
   goalUrl?: string;
 
@@ -97,4 +112,14 @@ export class Creator {
     },
   )
   associatedAddresses!: CreatorAddress[];
+
+  @OneToMany(
+    () => {
+      return CreatorFollowedChannel;
+    },
+    (c) => {
+      return c.creator;
+    },
+  )
+  followedChannels!: CreatorFollowedChannel[];
 }

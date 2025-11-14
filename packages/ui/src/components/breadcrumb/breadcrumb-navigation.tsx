@@ -112,6 +112,14 @@ export function BreadcrumbNavigation({
       }
     }
 
+    if (
+      items.length === 1 &&
+      items[0]?.isCurrentPage &&
+      ['profile', 'invites'].includes(items[0].path.split('/').pop() ?? '')
+    ) {
+      items.unshift({ name: 'Home', path: '/', isCurrentPage: false });
+    }
+
     return items;
   }, [pathname, siteMap, basePath]);
 

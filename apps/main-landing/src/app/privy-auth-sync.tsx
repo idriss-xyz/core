@@ -15,6 +15,7 @@ import {
   isHomeCallback,
 } from './utils';
 import { useAuth } from './context/auth-context';
+import { deleteCookie, getCookie } from './cookies';
 
 export function PrivyAuthSync() {
   const hasRunAuth = useRef(false);
@@ -107,6 +108,9 @@ export function PrivyAuthSync() {
           wallet = await createWallet();
         }
 
+        const referrerAddress =
+          typeof window === 'undefined' ? null : getCookie('referrerAddress');
+
         await saveCreatorProfile(
           wallet.address as Hex,
           newCreatorName,
@@ -116,6 +120,7 @@ export function PrivyAuthSync() {
           user.id,
           authToken,
           isDonor,
+          referrerAddress,
         );
 
         const newCreator = await getCreatorProfile(authToken);
@@ -125,6 +130,9 @@ export function PrivyAuthSync() {
         }
 
         setCreator(newCreator);
+        deleteCookie('referrerName');
+        deleteCookie('referrerAddress');
+        deleteCookie('referrerProfilePictureUrl');
         if (callbackUrl && !isHomeCallback(callbackUrl)) {
           setDonor(newCreator);
           setDonorLoading(false);

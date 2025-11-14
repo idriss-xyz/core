@@ -18,11 +18,11 @@ import {
   CHAIN_ID_TO_TOKENS,
 } from '@idriss-xyz/constants';
 import { Hex } from 'viem';
-import {
-  fetchTwitchUserInfo,
-  fetchTwitchStreamStatus,
-} from '../utils/twitch-api';
 import { ILike } from 'typeorm';
+import {
+  fetchTwitchStreamStatus,
+  fetchTwitchUserInfo,
+} from '@idriss-xyz/utils/server';
 
 interface EnrichedCreatorProfile extends CreatorProfileView {
   streamStatus?: boolean;
@@ -94,6 +94,12 @@ class CreatorProfileService {
     creator.obsUrl = `${MAIN_LANDING_LINK}/alert-overlay/${obsUrlSecret}`;
     creator.goalUrl = `${MAIN_LANDING_LINK}/goal-overlay/${obsUrlSecret}`;
     creator.isDonor = isDonor;
+
+    const twitchInfoforCreator = await fetchTwitchUserInfo(creatorData.name);
+    if (!twitchInfoforCreator) {
+      throw new Error('Could not find creator on Twitch api');
+    }
+    creator.twitchId = twitchInfoforCreator.id;
 
     // Create and save new creator
     const savedCreator = await creatorRepository.save(creator);

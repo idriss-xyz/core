@@ -16,10 +16,12 @@ import { CreatorNetwork, CreatorToken, DonationParameters } from '../entities';
       .addSelect('c.profile_picture_url', 'profilePictureUrl')
       .addSelect('c.donation_url', 'donationUrl')
       .addSelect('c.obs_url', 'obsUrl')
+      .addSelect('c.twitch_id', 'twitchId')
       .addSelect('c.goal_url', 'goalUrl')
       .addSelect('c.joined_at', 'joinedAt')
       .addSelect('c.done_setup', 'doneSetup')
       .addSelect('c.receive_emails', 'receiveEmails')
+      .addSelect('c.twitch_id', 'twitchId')
       .addSelect('c.is_donor', 'isDonor')
       .addSelect('c.display_top_donor', 'displayTopDonor')
       .addSelect('dp.token_enabled', 'tokenEnabled')
@@ -54,11 +56,15 @@ import { CreatorNetwork, CreatorToken, DonationParameters } from '../entities';
       .addGroupBy('c.profile_picture_url')
       .addGroupBy('c.donation_url')
       .addGroupBy('c.obs_url')
+      .addGroupBy('c.twitch_id')
       .addGroupBy('c.goal_url')
       .addGroupBy('c.joined_at')
       .addGroupBy('c.done_setup')
-      .addGroupBy('c.receiveEmails')
+      .addGroupBy('c.receive_emails')
+      .addGroupBy('c.twitch_id')
       .addGroupBy('c.is_donor')
+      .addGroupBy('dp.token_enabled')
+      .addGroupBy('dp.collectible_enabled')
       .addGroupBy('c.display_top_donor')
       .addGroupBy('dp.minimum_alert_amount')
       .addGroupBy('dp.minimum_tts_amount')
@@ -100,6 +106,7 @@ export class CreatorProfileView {
   obsUrl!: string | null;
 
   @ViewColumn()
+  twitchId!: string;
   goalUrl!: string | null;
 
   @ViewColumn()

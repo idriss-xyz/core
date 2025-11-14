@@ -1,3 +1,4 @@
+/* eslint-disable turbo/no-undeclared-env-vars */
 class TwitchAuthManager {
   private static instance: TwitchAuthManager;
   private authToken: string | null = null;
@@ -52,7 +53,7 @@ class TwitchAuthManager {
         throw new Error(`Auth request failed: ${response.status}`);
       }
 
-      const data = await response.json();
+      const data = (await response.json()) as { access_token: string };
       this.authToken = data.access_token;
       this.tokenExpiry = Date.now() + 60 * 60 * 1000; // 1 hour
 

@@ -9,6 +9,10 @@ import {
   DEFAULT_TRUMPET_SOUND,
   LAURA,
   LIAM,
+  AxieLogo,
+  OffTheGridLogo,
+  RoninLogo,
+  ParallelLogo,
 } from '@/assets';
 
 type SocialOption = {
@@ -83,6 +87,10 @@ export const siteMap: SiteMapItem[] = [
       { name: 'Top fans', path: 'top-fans' },
     ],
   },
+  {
+    name: 'Invites',
+    path: 'invites',
+  },
 ];
 
 export const soundMap: Record<string, string> = {
@@ -102,3 +110,10 @@ export const defaultAlertSounds = [
   { value: 'DEFAULT_COIN_SOUND', label: 'Coin drop' },
   { value: 'DEFAULT_CASH_REGISTER_SOUND', label: 'Cash register' },
 ];
+
+export const gameLogoMap: Record<string, string> = {
+  'Axie Infinity': AxieLogo.src,
+  'Off The Grid': OffTheGridLogo.src,
+  'Ronin': RoninLogo.src,
+  'Parallel': ParallelLogo.src,
+};

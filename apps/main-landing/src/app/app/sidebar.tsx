@@ -75,16 +75,15 @@ export function Sidebar() {
                 Ranking
               </Link>
             </NavigationMenu.Item>
-            {/* Uncomment when Rewards gets implemented*/}
-            {/* <NavigationMenu.Item className={getLinkClasses('')}>
+            <NavigationMenu.Item className={getLinkClasses('')}>
               <Link
-                href="" // TODO: Add link
+                href="/app/invites"
                 className="flex w-full items-center rounded-lg hover:text-mint-600"
               >
-                <Icon size={20} name="Gift" className="mr-3 size-5" />
-                Rewards
+                <Icon size={20} name="Send" className="mr-3 size-5" />
+                Invites
               </Link>
-            </NavigationMenu.Item> */}
+            </NavigationMenu.Item>
           </NavigationMenu.List>
         </div>
 
