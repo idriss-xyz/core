@@ -66,6 +66,7 @@ import {
   AddGoalOverlayLinkField1761869331633,
   AddDisplayTopDonor1762624664000,
   CreatorProfileViewUpdate1762797156607,
+  AddGameToCreatorFollowedChannel1763232396000,
 } from './migrations';
 import { CreatorProfileView, DonationGoalView } from './views';
 
@@ -140,6 +141,7 @@ export const AppDataSource = new DataSource({
     AddGoalOverlayLinkField1761869331633,
     AddDisplayTopDonor1762624664000,
     CreatorProfileViewUpdate1762797156607,
+    AddGameToCreatorFollowedChannel1763232396000,
   ],
 });
 

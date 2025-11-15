@@ -39,4 +39,7 @@ export class CreatorFollowedChannel {
 
   @Column({ type: 'text', name: 'channel_profile_image_url', nullable: true })
   channelProfileImageUrl?: string;
+
+  @Column({ type: 'jsonb', nullable: true })
+  game?: { name: string; url: string } | null;
 }

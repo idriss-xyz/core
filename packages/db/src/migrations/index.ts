@@ -42,3 +42,4 @@ export { AddChannelTwitchId1762431896000 } from './1762431896000-AddChannelTwitc
 export { AddGoalOverlayLinkField1761869331633 } from './1761869331633-AddGoalOverlayLinkField';
 export { AddDisplayTopDonor1762624664000 } from './1762624664000-AddDisplayTopDonor';
 export { CreatorProfileViewUpdate1762797156607 } from './1762797156607-CreatorProfileViewUpdate';
+export { AddGameToCreatorFollowedChannel1763232396000 } from './1763232396000-add-game-to-creator-followed-channel';

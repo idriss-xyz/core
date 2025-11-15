@@ -10,7 +10,6 @@ import { formatFollowerCount } from '@idriss-xyz/utils';
 import { TimeAgoCell } from '@/app/components/time-ago-cell';
 import { Avatar } from '@/app/components/avatar/avatar';
 import { PillLabel } from '@/app/components/pill-label';
-import { gameLogoMap } from '@/app/constants';
 import { CopyButton } from '@/app/components/copy-button/copy-button';
 import { useAuth } from '@/app/context/auth-context';
 
@@ -22,7 +21,7 @@ interface Streamer {
   followers: number;
   reward: number;
   joined?: string;
-  games: string[];
+  game?: { name: string; url: string } | null;
 }
 
 // ---------- props ----------
@@ -33,6 +32,7 @@ type Properties = {
     numberOfFollowers: number;
     joinDate: string;
     streamStatus: boolean;
+    game: { name: string; url: string } | null;
   }[];
   suggested: {
     displayName: string;
@@ -40,6 +40,7 @@ type Properties = {
     numberOfFollowers: number;
     joinDate: string;
     streamStatus: boolean;
+    game: { name: string; url: string } | null;
   }[];
 };
 
@@ -105,32 +106,27 @@ const columns: ColumnDefinition<Streamer>[] = [
     },
   },
   {
-    id: 'games',
-    name: 'Games',
+    id: 'game',
+    name: 'Game',
     accessor: (item) => {
+      if (!item.game) return null;
+      const { name, url } = item.game;
       return (
-        <div className="flex flex-wrap gap-1.5">
-          {item.games.map((game) => {
-            return (
-              <PillLabel
-                key={game}
-                option={{ label: game }}
-                className="w-fit border-neutral-300"
-              >
-                <div className="flex items-center gap-1.5">
-                  {gameLogoMap[game] && (
-                    <img
-                      src={gameLogoMap[game]}
-                      alt={`${game} logo`}
-                      className="size-4"
-                    />
-                  )}
-                  {game}
-                </div>
-              </PillLabel>
-            );
-          })}
-        </div>
+        <PillLabel
+          option={{ label: name }}
+          className="w-fit border-neutral-300"
+        >
+          <div className="flex items-center gap-1.5">
+            {url && (
+              <img
+                src={url}
+                alt={`${name} logo`}
+                className="size-5 rounded-full object-cover"
+              />
+            )}
+            {name}
+          </div>
+        </PillLabel>
       );
     },
     sortable: false,
@@ -155,7 +151,7 @@ export default function StreamersTable({
         followers: u.numberOfFollowers,
         reward: 0,
         joined: u.joinDate,
-        games: [], // backend not implemented yet
+        game: u.game,
       };
     });
   };

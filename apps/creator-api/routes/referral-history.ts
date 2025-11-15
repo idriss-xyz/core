@@ -7,6 +7,7 @@ import { tightCors } from '../config/cors';
 import {
   fetchTwitchStreamStatus,
   fetchTwitchUserFollowersCount,
+  fetchTwitchUserInfo,
 } from '@idriss-xyz/utils/server';
 import { DEFAULT_FOLLOWED_CHANNELS } from '@idriss-xyz/utils/server';
 import { CreatorFollowedChannel } from '@idriss-xyz/db';
@@ -27,6 +28,7 @@ interface InvitedStreamersData {
   numberOfFollowers: number;
   joinDate: Date;
   streamStatus: boolean;
+  game: { name: string; url: string } | null;
 }
 
 router.get(
@@ -78,25 +80,24 @@ router.get(
         followersByCreatorId.set(r.referred.id, r.numberOfFollowers ?? 0),
       );
 
-      const streamStatuses = await Promise.all(
-        streamers.map(async (s) => {
-          try {
-            const { isLive } = await fetchTwitchStreamStatus(s.displayName);
-            return isLive;
-          } catch {
-            return false;
-          }
-        }),
-      );
+      const successfulInvitesUsers: InvitedStreamersData[] = await Promise.all(
+        streamers.map(
+          async ({ id, displayName, profilePictureUrl, joinedAt }) => {
+            const [streamInfo, userInfo] = await Promise.all([
+              fetchTwitchStreamStatus(displayName),
+              fetchTwitchUserInfo(displayName),
+            ]);
 
-      const successfulInvitesUsers: InvitedStreamersData[] = streamers.map(
-        ({ id, displayName, profilePictureUrl, joinedAt }, idx) => ({
-          displayName,
-          profilePictureUrl: profilePictureUrl ?? '',
-          numberOfFollowers: followersByCreatorId.get(id) ?? 0,
-          joinDate: joinedAt,
-          streamStatus: streamStatuses[idx],
-        }),
+            return {
+              displayName,
+              profilePictureUrl: profilePictureUrl ?? '',
+              numberOfFollowers: followersByCreatorId.get(id) ?? 0,
+              joinDate: joinedAt,
+              streamStatus: streamInfo.isLive,
+              game: userInfo?.game ?? null,
+            };
+          },
+        ),
       );
 
       let networkEarnings = 0;
@@ -156,6 +157,7 @@ router.get(
               numberOfFollowers: d.followers,
               joinDate: new Date(0),
               streamStatus: false,
+              game: d.game,
             }))
           : followed
               .filter((r) => !existingSet.has(r.channelTwitchId))
@@ -165,6 +167,7 @@ router.get(
                 numberOfFollowers: 0,
                 joinDate: new Date(0),
                 streamStatus: false,
+                game: r.game,
               }));
 
       const suggestedInvitees = await Promise.all(

@@ -10,6 +10,7 @@ interface ReferralHistoryResponse {
     numberOfFollowers: number;
     joinDate: string;
     streamStatus: boolean;
+    game: { name: string; url: string } | null;
   }[];
   suggestedInvitees: {
     displayName: string;
@@ -17,6 +18,7 @@ interface ReferralHistoryResponse {
     numberOfFollowers: number;
     joinDate: string;
     streamStatus: boolean;
+    game: { name: string; url: string } | null;
   }[];
   inviteRank: number;
   networkEarnings: number;

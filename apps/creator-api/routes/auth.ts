@@ -96,6 +96,7 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
               channelName: c.login,
               channelDisplayName: c.name,
               channelProfileImageUrl: c.profileImage,
+              game: c.game,
             }),
           ),
         );
