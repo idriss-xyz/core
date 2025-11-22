@@ -16,7 +16,7 @@ export const NftSection = () => {
               <h2
                 className={classes(
                   'w-full whitespace-pre-wrap text-display5 uppercase gradient-text',
-                  'sm:whitespace-nowrap sm:text-center md:text-display4',
+                  'sm:text-center md:text-display4',
                   'lg:whitespace-pre-wrap lg:text-left lg:text-display3',
                 )}
               >
@@ -47,7 +47,7 @@ export const NftSection = () => {
               </Button>
             </div>
 
-            <div className="relative mx-auto mb-px max-w-[600px] rounded-[24px] px-2 py-10 lg:max-w-none lg:p-6">
+            <div className="relative mx-auto mb-px rounded-[24px] px-2 py-10 lg:p-6">
               <img
                 alt=""
                 className="w-full"
