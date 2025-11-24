@@ -56,15 +56,17 @@ router.post(
     const chain = chainMap[String(chainId) as keyof typeof chainMap];
     let allowedTokens: `0x${string}`[] = [];
     try {
-      const allowedErc20Tokens = CHAIN_ID_TO_TOKENS[Number(chain.id)]?.map(
-        (t) => getAddress(t.address),
-      );
-      const allowedNftTokens = CHAIN_ID_TO_NFT_COLLECTIONS[
-        Number(chain.id)
-      ]?.map((t) => getAddress(t.address));
+      const allowedErc20Tokens =
+        CHAIN_ID_TO_TOKENS[Number(chain.id)]?.map((t) =>
+          getAddress(t.address),
+        ) ?? [];
+      const allowedNftTokens =
+        CHAIN_ID_TO_NFT_COLLECTIONS[Number(chain.id)]?.map((t) =>
+          getAddress(t.address),
+        ) ?? [];
       allowedTokens = [...allowedErc20Tokens, ...allowedNftTokens];
-    } catch (e) {
-      res.status(400).json({ error: `Error parsing allowed tokens: ${e}` });
+    } catch {
+      res.status(400).json({ error: 'Error parsing allowed tokens' });
       return;
     }
 
