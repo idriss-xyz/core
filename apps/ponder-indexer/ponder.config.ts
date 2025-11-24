@@ -30,12 +30,13 @@ export default createConfig({
       id: 8453,
       pollingInterval: 3000,
       rpc: fallback([
-        http('https://base.llamarpc.com'),
         http('https://mainnet.base.org'),
+
         http(`https://base-mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`),
         http(
           `https://base-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
         ),
+        http('https://base.llamarpc.com'),
       ]),
     },
     ronin: {
