@@ -63,8 +63,8 @@ router.post(
         Number(chain.id)
       ]?.map((t) => getAddress(t.address));
       allowedTokens = [...allowedErc20Tokens, ...allowedNftTokens];
-    } catch {
-      res.status(400).json({ error: 'Error parsing allowed tokens' });
+    } catch (e) {
+      res.status(400).json({ error: `Error parsing allowed tokens: ${e}` });
       return;
     }
 
