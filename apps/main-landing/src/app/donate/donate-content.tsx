@@ -265,8 +265,11 @@ export function DonateContent({ creatorProfile }: Properties) {
 
   return (
     <>
-      <TopBar />
-      {/* Temproarily use a div instead of ScrollArea (not dispatching event) */}
+      <TopBar
+        {...(creatorInfo?.name
+          ? { creatorDonationPage: creatorInfo.name }
+          : {})}
+      />{' '}
       <ScrollArea
         onScroll={(event) => {
           const scrollTop = (event.target as HTMLDivElement).scrollTop;

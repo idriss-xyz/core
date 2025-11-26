@@ -1,9 +1,7 @@
 'use client';
-import { TOKEN_TERMS_AND_CONDITIONS_LINK } from '@idriss-xyz/constants';
 import { Button } from '@idriss-xyz/ui/button';
 import { Card } from '@idriss-xyz/ui/card';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
-import { Link } from '@idriss-xyz/ui/link';
 
 import { backgroundLines2, IDRISS_SCENE_STREAM_4 } from '@/assets';
 import { useAuth } from '@/app/context/auth-context';
@@ -58,7 +56,8 @@ export default function InviteBanner() {
                     SHARE
                   </Button>
                 </div>
-                <p className="text-body6 text-neutral-900">
+                {/* Comment out for now as there are no financial rewards */}
+                {/* <p className="text-body6 text-neutral-900">
                   By participating, you agree to the{' '}
                   <Link
                     size="medium"
@@ -68,7 +67,7 @@ export default function InviteBanner() {
                   >
                     Terms and conditions
                   </Link>
-                </p>
+                </p> */}
               </div>
             </div>
           </div>

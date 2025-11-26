@@ -26,6 +26,7 @@ type Properties = {
   isSticky?: boolean;
   isLanding?: boolean;
   displayMobileCTA?: boolean;
+  creatorDonationPage?: string;
 };
 
 export const Desktop = ({
@@ -34,6 +35,7 @@ export const Desktop = ({
   isSticky,
   isLanding,
   displayMobileCTA,
+  creatorDonationPage,
 }: Properties) => {
   const handleStartEarningClick = useStartEarningNavigation();
   const { creator, donor } = useAuth();
@@ -212,13 +214,17 @@ export const Desktop = ({
       ) : (
         <div className="flex items-center gap-x-2">
           <MobileMenu />
-          {creator?.isDonor && (
+          {(!creator || creator.isDonor) && (
             <Button
               asLink
               isExternal
               size="small"
               intent="secondary"
-              href={MAIN_LANDING_LINK}
+              href={
+                creatorDonationPage
+                  ? `${MAIN_LANDING_LINK}/invite/${creatorDonationPage}`
+                  : MAIN_LANDING_LINK
+              }
               className="uppercase md:px-5 md:py-3.5"
             >
               Create your page

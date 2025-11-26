@@ -16,6 +16,7 @@ type Properties = {
   heroButtonReference?: RefObject<HTMLButtonElement>;
   referrerName?: string | null;
   referrerProfilePictureUrl?: string | null;
+  creatorDonationPage?: string;
 };
 
 export const TopBar = ({
@@ -25,6 +26,7 @@ export const TopBar = ({
   heroButtonReference,
   referrerName,
   referrerProfilePictureUrl,
+  creatorDonationPage,
 }: Properties) => {
   const [displayMobileCTA, setDisplayMobileCTA] = useState<boolean>(false);
   const [isSticky, setIsSticky] = useState(false);
@@ -116,6 +118,7 @@ export const TopBar = ({
           displayCTA={displayCTA}
           hideNavigation={hideNavigation}
           displayMobileCTA={displayMobileCTA}
+          creatorDonationPage={creatorDonationPage}
         />
       </div>
 
