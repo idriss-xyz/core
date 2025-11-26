@@ -15,12 +15,15 @@ export async function GET(request: Request) {
     return r.arrayBuffer();
   });
 
+  const CANVAS_W = 2400;
+  const CANVAS_H = 1260;
+
   return new ImageResponse(
     (
       <div
         style={{
-          width: 1200,
-          height: 630,
+          width: CANVAS_W,
+          height: CANVAS_H,
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'flex-end',
@@ -32,8 +35,8 @@ export async function GET(request: Request) {
         <img
           src="http://localhost:3000/og.png"
           alt=""
-          width={1200}
-          height={630}
+          width={CANVAS_W}
+          height={CANVAS_H}
           style={{
             position: 'absolute',
             inset: 0,
@@ -46,9 +49,9 @@ export async function GET(request: Request) {
         <div
           style={{
             width: '100%',
-            paddingTop: 1.11,
-            paddingBottom: 1.11,
-            marginBottom: 34,
+            paddingTop: 2.22,
+            paddingBottom: 2.22,
+            marginBottom: 68,
             backgroundImage:
               'linear-gradient(180deg, rgba(145, 206, 154, 0.5) 0%, #55EB3C 99.33%)',
             display: 'flex',
@@ -57,34 +60,29 @@ export async function GET(request: Request) {
           <div
             style={{
               width: '100%',
-              paddingLeft: 45,
-              paddingRight: 8,
+              paddingLeft: 90,
+              paddingRight: 16,
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',
               backgroundColor: 'rgba(255,255,255,0.5)',
-              backdropFilter: 'blur(100.21723937988281px)',
+              backdropFilter: 'blur(200px)',
             }}
           >
             <div
               style={{
-                maxHeight: 92,
+                maxHeight: 184,
                 display: 'flex',
                 alignItems: 'center',
               }}
             >
-              <div
-                style={{
-                  flexShrink: 0,
-                  display: 'flex',
-                }}
-              >
+              <div style={{ flexShrink: 0, display: 'flex' }}>
                 <div
                   style={{
                     position: 'relative',
-                    width: 72,
-                    height: 72,
-                    padding: 10,
+                    width: 144,
+                    height: 144,
+                    padding: 20,
                     opacity: 1,
                     transform: 'rotate(0deg)',
                     boxSizing: 'border-box',
@@ -95,14 +93,14 @@ export async function GET(request: Request) {
                     <img
                       alt=""
                       src={avatar}
-                      width={72}
-                      height={72}
+                      width={144}
+                      height={144}
                       style={{
                         width: '100%',
                         height: '100%',
                         borderRadius: '50%',
                         objectFit: 'cover',
-                        border: '1px solid rgb(219 221 226)',
+                        border: '2px solid rgb(219 221 226)',
                         display: 'block',
                       }}
                     />
@@ -115,8 +113,8 @@ export async function GET(request: Request) {
                   display: 'flex',
                   flexWrap: 'wrap',
                   textTransform: 'uppercase',
-                  fontSize: 24,
-                  lineHeight: '28px',
+                  fontSize: 48,
+                  lineHeight: '56px',
                   fontWeight: 500,
                   letterSpacing: '0px',
                   alignItems: 'center',
@@ -124,7 +122,7 @@ export async function GET(request: Request) {
               >
                 <span
                   style={{
-                    marginRight: 8,
+                    marginRight: 16,
                     wordBreak: 'break-word',
                     backgroundImage:
                       'radial-gradient(65.65% 168.51% at 47.77% 27.64%, #000A05 0%, #176410 100%)',
@@ -136,12 +134,11 @@ export async function GET(request: Request) {
                   {name}
                 </span>
 
-                {/* arrow icon – bigger, brighter, thinner stroke */}
                 <svg
-                  style={{ marginRight: 8, flexShrink: 0 }}
+                  style={{ marginRight: 16, flexShrink: 0 }}
                   xmlns="http://www.w3.org/2000/svg"
-                  width={32}
-                  height={32}
+                  width={64}
+                  height={64}
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="#05AB13"
@@ -172,8 +169,8 @@ export async function GET(request: Request) {
       </div>
     ),
     {
-      width: 1200,
-      height: 630,
+      width: CANVAS_W,
+      height: CANVAS_H,
       fonts: [
         {
           name: 'AeonikPro',
