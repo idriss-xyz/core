@@ -122,13 +122,13 @@ export async function GET(request: Request) {
               >
                 <span
                   style={{
-                    marginRight: 16,
                     wordBreak: 'break-word',
                     backgroundImage:
                       'radial-gradient(65.65% 168.51% at 47.77% 27.64%, #000A05 0%, #176410 100%)',
                     WebkitBackgroundClip: 'text',
                     backgroundClip: 'text',
                     color: 'transparent',
+                    flexShrink: 0,
                   }}
                 >
                   {name}
