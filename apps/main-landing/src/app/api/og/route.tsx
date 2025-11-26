@@ -1,7 +1,9 @@
 import { ImageResponse } from 'next/og';
 
+// ts-unused-exports:disable-next-line
 export const runtime = 'edge';
 
+// ts-unused-exports:disable-next-line
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const name = searchParams.get('name') ?? '';
