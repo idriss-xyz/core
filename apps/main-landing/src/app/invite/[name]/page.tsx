@@ -18,7 +18,14 @@ export async function generateMetadata({
   if (!profile) {
     return { robots: { index: false, follow: false } };
   }
-  return {};
+
+  const ogUrl = `/api/og?name=${encodeURIComponent(profile.name)}&avatar=${encodeURIComponent(profile.profilePictureUrl ?? '')}`;
+
+  return {
+    openGraph: {
+      images: [{ url: ogUrl }],
+    },
+  };
 }
 
 // ts-unused-exports:disable-next-line
