@@ -27,7 +27,7 @@ export const TopCreators = () => {
               'lg:text-display3',
             )}
           >
-            Trusted by top creators
+            Trusted by top streamers
           </h2>
 
           <p
@@ -35,7 +35,7 @@ export const TopCreators = () => {
               'text-center text-body2 text-neutralGreen-900/70 lg:text-balance',
             )}
           >
-            Join a growing community of creators taking control of their
+            Join a growing community of streamers taking control of their
             earnings.
           </p>
         </div>

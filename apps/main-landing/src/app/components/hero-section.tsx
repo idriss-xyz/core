@@ -78,7 +78,7 @@ export const HeroSection = ({
               'lg:text-left',
             )}
           >
-            Creator monetization app that helps you earn more with instant
+            Streamer monetization app that helps you earn more with instant
             payouts and near-zero platform cuts.
           </p>
 
