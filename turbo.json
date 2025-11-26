@@ -17,7 +17,8 @@
         "PUBLIC_ACCESS_ENABLED",
         "CI",
         "CREATOR_LINKS_SECRET",
-        "NEXT_PUBLIC_PRIVY_APP_ID"
+        "NEXT_PUBLIC_PRIVY_APP_ID",
+        "GITHUB_FONTS_TOKEN"
       ]
     },
     "@idriss-xyz/main-landing#start": {
@@ -31,7 +32,8 @@
         "PUBLIC_ACCESS_ENABLED",
         "CI",
         "CREATOR_LINKS_SECRET",
-        "NEXT_PUBLIC_PRIVY_APP_ID"
+        "NEXT_PUBLIC_PRIVY_APP_ID",
+        "GITHUB_FONTS_TOKEN"
       ]
     },
     "@idriss-xyz/main-landing#dev": {
@@ -44,7 +46,8 @@
         "PUBLIC_ACCESS_ENABLED",
         "CI",
         "CREATOR_LINKS_SECRET",
-        "NEXT_PUBLIC_PRIVY_APP_ID"
+        "NEXT_PUBLIC_PRIVY_APP_ID",
+        "GITHUB_FONTS_TOKEN"
       ]
     },
     "@idriss-xyz/extension#dev": {

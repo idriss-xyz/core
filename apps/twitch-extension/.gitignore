@@ -22,6 +22,9 @@
 # production
 /build
 
+# fonts
+/app/fonts
+
 # misc
 .DS_Store
 *.pem
