@@ -25,7 +25,11 @@ export default function CollectibleBalanceGallery({
           >
             <div className="flex h-[400px] w-full items-center justify-center overflow-hidden rounded-xl bg-gray-200">
               <img
-                src={collectible.imgPreferred ?? collectible.imgLarge}
+                src={
+                  collectible.imgPreferred ??
+                  collectible.imgLarge ??
+                  collectible.imgMedium
+                }
                 alt={collectible.name}
                 className="h-full w-auto object-contain"
               />
