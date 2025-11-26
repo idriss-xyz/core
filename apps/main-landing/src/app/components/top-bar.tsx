@@ -34,7 +34,17 @@ export const TopBar = ({
 
   const InvitedByBanner = () => {
     return (
-      <div className="w-full items-center bg-white px-safe">
+      <div
+        className="flex w-full items-center bg-white px-safe"
+        style={{
+          borderWidth: '1.11px 0',
+          borderStyle: 'solid',
+          borderImageSlice: 1,
+          borderImageSource:
+            'linear-gradient(180deg, rgba(145, 206, 154, 0.5) 0%, #55EB3C 99.33%)',
+          borderColor: '#55EB3C',
+        }}
+      >
         <div className="container flex max-h-12 items-center gap-x-2 py-1 sm:gap-x-2 lg:py-3">
           <div className="shrink-0">
             <Avatar src={referrerProfilePictureUrl ?? undefined} size={32} />
