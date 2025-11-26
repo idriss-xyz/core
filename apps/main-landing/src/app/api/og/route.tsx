@@ -10,7 +10,7 @@ export async function GET(request: Request) {
   const avatar = searchParams.get('avatar') ?? '';
 
   const mediumFontData = await fetch(
-    new URL('../../fonts/AeonikPro-Medium.woff2', import.meta.url),
+    new URL('../../fonts/AeonikPro-Medium.woff', import.meta.url),
   ).then((r) => {
     return r.arrayBuffer();
   });

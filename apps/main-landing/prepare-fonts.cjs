@@ -72,6 +72,7 @@ async function main() {
     'AeonikPro-Regular.woff2',
     'AeonikPro-RegularItalic.woff2',
     'AeonikPro-Medium.woff2',
+    'AeonikPro-Medium.woff',
   ];
 
   for (const f of files) {
