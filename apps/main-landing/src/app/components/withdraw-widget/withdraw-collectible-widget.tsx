@@ -97,7 +97,8 @@ export const WithdrawCollectibleWidget = ({
         return {
           tokenId: b.tokenId,
           name: b.name ?? `NFT #${b.tokenId}`,
-          image: b.imgSmall ?? '',
+          image:
+            b.imgSmall ?? b.imgMedium ?? b.imgLarge ?? b.imgPreferred ?? '',
           balance: b.balance,
           type: b.type,
         };
