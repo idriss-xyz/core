@@ -2,7 +2,6 @@
 import { useEffect, useState, useRef, RefObject } from 'react';
 import Link from 'next/link';
 import { classes } from '@idriss-xyz/ui/utils';
-import { Icon } from '@idriss-xyz/ui/icon';
 
 import { Navigation } from './top-bar/navigation';
 import { Avatar } from './avatar/avatar';
@@ -49,12 +48,23 @@ export const TopBar = ({
           <div className="shrink-0">
             <Avatar src={referrerProfilePictureUrl ?? undefined} size={32} />
           </div>
-          <span className="flex flex-wrap text-label5 uppercase leading-tight gradient-text">
+          <span className="flex flex-wrap items-center text-label5 uppercase leading-tight gradient-text">
             <span className="mr-2 break-words">{referrerName}</span>
-            <span className="inline-flex shrink-0 items-center">
-              <Icon name="Send" className="mr-2 text-mint-600" size={16} />
-              invites you to join!
-            </span>
+            <svg
+              className="mr-2 shrink-0"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#05AB13"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M14.536 21.686a.5.5 0 0 0 .937-.24l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z" />
+              <path d="m21.854 2.147-10.94 10.939" />
+            </svg>
+            <span className="shrink-0">invites you to join!</span>
           </span>
         </div>
       </div>

@@ -55,8 +55,8 @@ export async function GET(request: Request) {
           <div
             style={{
               width: '100%',
-              paddingLeft: 16,
-              paddingRight: 16,
+              paddingLeft: 45,
+              paddingRight: 8,
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',
@@ -66,12 +66,9 @@ export async function GET(request: Request) {
           >
             <div
               style={{
-                maxHeight: 96,
+                maxHeight: 92,
                 display: 'flex',
                 alignItems: 'center',
-                gap: 10,
-                paddingTop: 4,
-                paddingBottom: 4,
               }}
             >
               <div
@@ -120,40 +117,50 @@ export async function GET(request: Request) {
                   lineHeight: '28px',
                   fontWeight: 500,
                   letterSpacing: '0px',
-                  color: '#176410',
+                  alignItems: 'center',
                 }}
               >
                 <span
                   style={{
                     marginRight: 8,
                     wordBreak: 'break-word',
+                    backgroundImage:
+                      'radial-gradient(65.65% 168.51% at 47.77% 27.64%, #000A05 0%, #176410 100%)',
+                    WebkitBackgroundClip: 'text',
+                    backgroundClip: 'text',
+                    color: 'transparent',
                   }}
                 >
                   {name}
                 </span>
 
+                {/* arrow icon – bigger, brighter, thinner stroke */}
+                <svg
+                  style={{ marginRight: 8, flexShrink: 0 }}
+                  xmlns="http://www.w3.org/2000/svg"
+                  width={32}
+                  height={32}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#05AB13"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M14.536 21.686a.5.5 0 0 0 .937-.24l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z" />
+                  <path d="m21.854 2.147-10.94 10.939" />
+                </svg>
+
                 <span
                   style={{
-                    display: 'flex',
-                    alignItems: 'center',
+                    backgroundImage:
+                      'radial-gradient(65.65% 168.51% at 47.77% 27.64%, #000A05 0%, #176410 100%)',
+                    WebkitBackgroundClip: 'text',
+                    backgroundClip: 'text',
+                    color: 'transparent',
                     flexShrink: 0,
-                    gap: 10,
                   }}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width={32}
-                    height={32}
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="rgb(5 171 19)"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M14.536 21.686a.5.5 0 0 0 .937-.24l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z" />
-                    <path d="m21.854 2.147-10.94 10.939" />
-                  </svg>
                   invites you to join!
                 </span>
               </span>
