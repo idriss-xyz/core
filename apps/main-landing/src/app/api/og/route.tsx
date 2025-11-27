@@ -1,5 +1,7 @@
 import { ImageResponse } from 'next/og';
 
+import mediumFont from '../../fonts/AeonikPro-Medium.woff';
+
 // ts-unused-exports:disable-next-line
 export const runtime = 'edge';
 
@@ -9,13 +11,7 @@ export async function GET(request: Request) {
   const name = searchParams.get('name') ?? '';
   const avatar = searchParams.get('avatar') ?? '';
 
-  const fontPath = ['..', '..', 'fonts', 'AeonikPro-Medium.woff'].join('/');
-
-  const mediumFontData = await fetch(new URL(fontPath, import.meta.url)).then(
-    (r) => {
-      return r.arrayBuffer();
-    },
-  );
+  const mediumFontData = await mediumFont.arrayBuffer();
 
   const CANVAS_W = 2400;
   const CANVAS_H = 1260;
@@ -85,8 +81,6 @@ export async function GET(request: Request) {
                     width: 144,
                     height: 144,
                     padding: 20,
-                    opacity: 1,
-                    transform: 'rotate(0deg)',
                     boxSizing: 'border-box',
                     display: 'flex',
                   }}
