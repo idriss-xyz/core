@@ -41,6 +41,8 @@ jobs:
 
       - name: Build main landing
         run: pnpm --filter=@idriss-xyz/main-landing build
+        env:
+          FONTS_TOKEN: ${{ secrets.FONTS_TOKEN }}
 
 
       - name: Run type-check
