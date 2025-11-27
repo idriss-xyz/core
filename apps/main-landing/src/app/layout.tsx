@@ -38,11 +38,11 @@ const DEPLOYMENT_URL = process.env.RAILWAY_PUBLIC_DOMAIN
 export const metadata: Metadata = {
   title: 'IDRISS',
   description:
-    'Creator monetization app that helps you earn more with instant payouts and near-zero platform cuts.',
+    'Streamer monetization app that helps you earn more with instant payouts and near-zero platform cuts.',
   openGraph: {
     title: 'Make more, grow faster, take control',
     description:
-      'Creator monetization app that helps you earn more with instant payouts and near-zero platform cuts.',
+      'Streamer monetization app that helps you earn more with instant payouts and near-zero platform cuts.',
     images: [
       {
         url: '/og.png',

@@ -83,6 +83,10 @@ export const siteMap: SiteMapItem[] = [
       { name: 'Top fans', path: 'top-fans' },
     ],
   },
+  {
+    name: 'Invites',
+    path: 'invites',
+  },
 ];
 
 export const soundMap: Record<string, string> = {

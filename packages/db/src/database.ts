@@ -17,6 +17,8 @@ import {
   Referral,
   CreatorAddress,
   DripDailyClaim,
+  TwitchInfo,
+  CreatorFollowedChannel,
   DonationGoal,
 } from './entities';
 import {
@@ -58,8 +60,13 @@ import {
   AddDonationGoal1760651767821,
   AddNewDonationTrigger1760958133000,
   UpdateUrlsToNewStructure1761231247000,
+  AddTwitchInfoEntity1761906619000,
+  CreateCreatorFollowedChannel1762428522000,
+  AddChannelTwitchId1762431896000,
   AddGoalOverlayLinkField1761869331633,
   AddDisplayTopDonor1762624664000,
+  CreatorProfileViewUpdate1762797156607,
+  AddGameToCreatorFollowedChannel1763232396000,
 } from './migrations';
 import { CreatorProfileView, DonationGoalView } from './views';
 
@@ -84,6 +91,8 @@ export const AppDataSource = new DataSource({
     CreatorAddress,
     Referral,
     DripDailyClaim,
+    TwitchInfo,
+    CreatorFollowedChannel,
     DonationGoal,
   ],
   synchronize: false,
@@ -126,8 +135,13 @@ export const AppDataSource = new DataSource({
     AddDonationGoal1760651767821,
     AddNewDonationTrigger1760958133000,
     UpdateUrlsToNewStructure1761231247000,
+    AddTwitchInfoEntity1761906619000,
+    CreateCreatorFollowedChannel1762428522000,
+    AddChannelTwitchId1762431896000,
     AddGoalOverlayLinkField1761869331633,
     AddDisplayTopDonor1762624664000,
+    CreatorProfileViewUpdate1762797156607,
+    AddGameToCreatorFollowedChannel1763232396000,
   ],
 });
 

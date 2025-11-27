@@ -6,6 +6,7 @@ type Properties = {
   displayCTA?: boolean;
   hideNavigation?: boolean;
   displayMobileCTA?: boolean;
+  creatorDonationPage?: string;
 };
 
 export const Navigation = ({
@@ -14,6 +15,7 @@ export const Navigation = ({
   displayCTA,
   hideNavigation,
   displayMobileCTA,
+  creatorDonationPage,
 }: Properties) => {
   return (
     <Desktop
@@ -22,6 +24,7 @@ export const Navigation = ({
       isSticky={isSticky}
       isLanding={isLanding}
       displayMobileCTA={displayMobileCTA}
+      creatorDonationPage={creatorDonationPage}
     />
   );
 };

@@ -70,7 +70,7 @@ export const ProsSection = () => {
                 'lg:text-display3',
               )}
             >
-              Why creators
+              Why streamers
               {'\n'}choose Idriss
             </h2>
 

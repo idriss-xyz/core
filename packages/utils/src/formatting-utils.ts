@@ -280,3 +280,15 @@ export const formatFiatValue = (
   }
   return '$' + value.toFixed(2);
 };
+
+export const formatFollowerCount = (number_: number): string => {
+  if (number_ < 1000) {
+    return number_.toString();
+  } else if (number_ < 1_000_000) {
+    return (number_ / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+  } else if (number_ < 1_000_000_000) {
+    return (number_ / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
+  } else {
+    return (number_ / 1_000_000_000).toFixed(1).replace(/\.0$/, '') + 'B';
+  }
+};

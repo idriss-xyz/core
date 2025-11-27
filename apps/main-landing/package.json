@@ -2,9 +2,10 @@
   "name": "@idriss-xyz/main-landing",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "pnpm run prepare-fonts && next dev",
+    "build": "pnpm run prepare-fonts && next build",
     "start": "next start",
+    "prepare-fonts": "node ./prepare-fonts.cjs",
     "format": "prettier --check --config ../../prettier.config.mjs --ignore-path .prettierignore .",
     "format:fix": "prettier --write --config ../../prettier.config.mjs --ignore-path .prettierignore .",
     "lint": "next lint",

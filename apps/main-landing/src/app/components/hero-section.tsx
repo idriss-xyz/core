@@ -14,9 +14,13 @@ import { LoginModal } from './login-modal';
 
 type Properties = {
   heroButtonReference?: RefObject<HTMLButtonElement>;
+  referrerName?: string | null;
 };
 
-export const HeroSection = ({ heroButtonReference }: Properties) => {
+export const HeroSection = ({
+  heroButtonReference,
+  referrerName,
+}: Properties) => {
   const [isMobileNotSupportedOpen, setIsMobileNotSupportedOpen] =
     useState(false);
 
@@ -33,8 +37,10 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
   return (
     <header
       className={classes(
-        'relative flex w-full flex-col items-center overflow-hidden bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] px-4 pb-[40px] pt-[88px]',
-        'lg:bg-[radial-gradient(222.94%_366.93%_at_16.62%_20%,_#E7F5E7_0%,_#76C282_100%)] lg:pb-[80px] lg:pt-[160px]',
+        'relative flex w-full flex-col items-center overflow-hidden bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] px-4 pb-[40px]',
+        // Conditional padding-top based on referrerName presence
+        referrerName ? 'pt-[128px] lg:pt-[208px]' : 'pt-[88px] lg:pt-[160px]',
+        'lg:bg-[radial-gradient(222.94%_366.93%_at_16.62%_20%,_#E7F5E7_0%,_#76C282_100%)] lg:pb-[80px]',
       )}
     >
       <link rel="preload" as="image" href={backgroundLines.src} />
@@ -72,7 +78,7 @@ export const HeroSection = ({ heroButtonReference }: Properties) => {
               'lg:text-left',
             )}
           >
-            Creator monetization app that helps you earn more with instant
+            Streamer monetization app that helps you earn more with instant
             payouts and near-zero platform cuts.
           </p>
 

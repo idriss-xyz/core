@@ -7,12 +7,6 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { ColumnDefinition, Table } from '@idriss-xyz/ui/table';
 import { LeaderboardStats } from '@idriss-xyz/constants';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@idriss-xyz/ui/tooltip';
 import { formatFiatValue } from '@idriss-xyz/utils';
 
 import { IDRISS_SCENE_STREAM_2 } from '@/assets';
@@ -20,8 +14,8 @@ import { IDRISS_SCENE_STREAM_2 } from '@/assets';
 import { useAuth } from '../../context/auth-context';
 import { WidgetVariants } from '../../../../../twitch-extension/src/app/types';
 import { DonateContentValues } from '../../donate/types';
-import { useTimeAgo } from '../../donate/hooks/use-time-ago';
 import { CopyButton } from '../copy-button/copy-button';
+import { TimeAgoCell } from '../time-ago-cell';
 
 import {
   LeaderboardItem,
@@ -56,39 +50,6 @@ type Properties = {
 const baseClassName =
   'z-1 w-[360px] max-w-full rounded-xl bg-white flex flex-col items-center relative overflow-hidden';
 
-const TimeAgoCell = ({ timestamp }: { timestamp?: string | number }) => {
-  const timeAgo = useTimeAgo({ timestamp });
-
-  if (!timestamp) {
-    return <>{timeAgo}</>;
-  }
-
-  return (
-    <TooltipProvider delayDuration={400}>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <span>{timeAgo}</span>
-        </TooltipTrigger>
-        <TooltipContent className="w-fit bg-black text-white">
-          <p className="text-body6">
-            {new Intl.DateTimeFormat('en-US', {
-              year: 'numeric',
-              month: '2-digit',
-              day: '2-digit',
-              hour: '2-digit',
-              minute: '2-digit',
-              second: '2-digit',
-              hour12: false,
-            })
-              .format(new Date(timestamp))
-              .replaceAll('/', '-')}
-          </p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  );
-};
-
 export const Leaderboard = ({
   variant,
   address,
@@ -115,7 +76,7 @@ export const Leaderboard = ({
       accessor: (_: LeaderboardStats, index: number) => {
         return index + 1;
       },
-      className: 'w-[40px]',
+      className: 'w-[40px] text-right',
     },
     {
       id: 'donor',

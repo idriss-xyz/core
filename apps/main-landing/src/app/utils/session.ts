@@ -37,6 +37,7 @@ export const saveCreatorProfile = async (
   privyId?: string | null,
   authToken?: string,
   isDonor?: boolean,
+  referrerAddress?: string | null,
 ): Promise<void> => {
   if (!address || !name || !privyId) {
     throw new Error('No wallet address, name or privyId to create creator');
@@ -46,23 +47,32 @@ export const saveCreatorProfile = async (
     throw new Error('No auth token provided');
   }
 
-  const response = await fetch(`${CREATOR_API_URL}/creator-profile`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${authToken}`,
-    },
-    body: JSON.stringify({
-      address: address,
-      primaryAddress: address,
-      displayName,
-      profilePictureUrl,
-      name,
-      email,
-      privyId,
-      isDonor,
-    }),
+  const stringifiedBody = JSON.stringify({
+    address: address,
+    primaryAddress: address,
+    displayName,
+    profilePictureUrl,
+    name,
+    email,
+    privyId,
+    isDonor,
   });
+
+  const creatorProfileBackendEndpoint = referrerAddress
+    ? `creator-profile-from-referral/${referrerAddress}`
+    : 'creator-profile';
+
+  const response = await fetch(
+    `${CREATOR_API_URL}/${creatorProfileBackendEndpoint}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`,
+      },
+      body: stringifiedBody,
+    },
+  );
 
   if (!response.ok) {
     throw new Error('Failed to register creator');

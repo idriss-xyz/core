@@ -51,7 +51,6 @@ export default function GoalOverlay({
     });
 
     socket.on('forceRefresh', () => {
-      console.log('Got force refresh');
       const url = new URL(window.location.href);
       url.searchParams.set('t', Date.now().toString());
       window.location.href = url.toString();

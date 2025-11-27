@@ -1,6 +1,6 @@
 import { Referral } from '@idriss-xyz/db';
 
-export const calculateReward = (followersCount: number) => {
+const calculateReward = (followersCount: number) => {
   let reward;
 
   switch (true) {
