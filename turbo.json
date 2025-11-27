@@ -18,7 +18,7 @@
         "CI",
         "CREATOR_LINKS_SECRET",
         "NEXT_PUBLIC_PRIVY_APP_ID",
-        "GITHUB_FONTS_TOKEN"
+        "FONTS_TOKEN"
       ]
     },
     "@idriss-xyz/main-landing#start": {
@@ -33,7 +33,7 @@
         "CI",
         "CREATOR_LINKS_SECRET",
         "NEXT_PUBLIC_PRIVY_APP_ID",
-        "GITHUB_FONTS_TOKEN"
+        "FONTS_TOKEN"
       ]
     },
     "@idriss-xyz/main-landing#dev": {
@@ -47,7 +47,7 @@
         "CI",
         "CREATOR_LINKS_SECRET",
         "NEXT_PUBLIC_PRIVY_APP_ID",
-        "GITHUB_FONTS_TOKEN"
+        "FONTS_TOKEN"
       ]
     },
     "@idriss-xyz/extension#dev": {

@@ -5,10 +5,10 @@ const path = require('node:path');
 const https = require('node:https');
 
 // -------------------------------------
-// Load ONLY GITHUB_FONTS_TOKEN locally
+// Load ONLY FONTS_TOKEN locally
 // -------------------------------------
 
-if (!process.env.CI && !process.env.GITHUB_FONTS_TOKEN) {
+if (!process.env.CI && !process.env.FONTS_TOKEN) {
   const environment = process.env.ENVIRONMENT || 'development';
   const file =
     environment === 'production' ? '.env.production' : '.env.development';
@@ -18,9 +18,9 @@ if (!process.env.CI && !process.env.GITHUB_FONTS_TOKEN) {
     const lines = fs.readFileSync(environmentPath, 'utf8').split('\n');
 
     for (const line of lines) {
-      if (line.startsWith('GITHUB_FONTS_TOKEN=')) {
+      if (line.startsWith('FONTS_TOKEN=')) {
         const [, value] = line.split('=');
-        if (value) process.env.GITHUB_FONTS_TOKEN = value.trim();
+        if (value) process.env.FONTS_TOKEN = value.trim();
       }
     }
   }
@@ -30,9 +30,9 @@ if (!process.env.CI && !process.env.GITHUB_FONTS_TOKEN) {
 // Validate token
 // -------------------------------------
 
-const token = process.env.GITHUB_FONTS_TOKEN;
+const token = process.env.FONTS_TOKEN;
 if (!token) {
-  console.warn('[prepare-fonts] Missing GITHUB_FONTS_TOKEN');
+  console.warn('[prepare-fonts] Missing FONTS_TOKEN');
   // eslint-disable-next-line unicorn/no-process-exit
   process.exit(0);
 }
